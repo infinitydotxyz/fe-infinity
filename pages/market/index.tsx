@@ -10,11 +10,11 @@ const Market: NextPage = () => {
     <div>
       <Head>
         <title>Market</title>
-        <meta name='description' content='Infinity NFT marketplace' />
-        <link rel='icon' href='/favicon.ico' />
+        <meta name="description" content="Infinity NFT marketplace" />
+        <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className='m-10'>
+      <main className="m-10">
         <h1>Market</h1>
 
         <OrderDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
