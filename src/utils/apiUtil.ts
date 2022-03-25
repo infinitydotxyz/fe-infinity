@@ -1,12 +1,15 @@
-import axios, { AxiosInstance } from 'axios';
-// import { errorToast } from 'components/Toast/Toast';
-import qs from 'query-string';
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+import useSWR, { SWRConfiguration } from 'swr';
+import { stringify } from 'query-string';
 import { API_BASE } from './constants';
 import { ProviderManager } from './providers/ProviderManager';
 
 const errorToast = (message: string) => {
   console.log(message);
 };
+
+// eslint-disable-next-line
+const buildQueryString = (queryObj: any) => (queryObj ? '?' + stringify(queryObj) : '');
 
 const axiosApi: AxiosInstance = axios.create({
   headers: {}
@@ -21,6 +24,7 @@ export async function dummyFetch(mockData = []) {
   return mockData;
 }
 
+// eslint-disable-next-line
 const catchError = (err: any) => {
   console.error('catchError', err, err?.response);
   return { error: { message: typeof err === 'object' ? err?.message : err }, status: err?.response?.status };
@@ -32,8 +36,18 @@ export const getAuthHeaders = async (attemptLogin = true) => {
   return authHeaders;
 };
 
-export const apiGet = async (path: string, query?: any, options?: any, doNotAttemptLogin?: boolean) => {
-  const queryStr = query ? '?' + qs.stringify(query) : '';
+interface ApiParams {
+  query?: unknown;
+  payload?: unknown;
+  options?: AxiosRequestConfig;
+  doNotAttemptLogin?: boolean;
+  [key: string]: unknown;
+}
+
+// example: const { result, error, status } = await apiGet(`/api/path`, { query: { page: 1 } });
+export const apiGet = async (path: string, params?: ApiParams) => {
+  const queryStr = buildQueryString(params?.query);
+
   try {
     const userEndpointRegex = /\/u\//;
     const publicUserEndpoint = /\/p\/u\//;
@@ -41,7 +55,7 @@ export const apiGet = async (path: string, query?: any, options?: any, doNotAtte
 
     let authHeaders = {};
     if (requiresAuth) {
-      const attemptLogin = !doNotAttemptLogin;
+      const attemptLogin = !params?.doNotAttemptLogin;
       authHeaders = await getAuthHeaders(attemptLogin);
     }
 
@@ -49,10 +63,10 @@ export const apiGet = async (path: string, query?: any, options?: any, doNotAtte
       url: path.startsWith('http') ? path : `${API_BASE}${path}${queryStr}`,
       method: 'GET',
       headers: authHeaders,
-      ...options
+      ...params?.options
     });
     return { result: data, status };
-  } catch (err: any) {
+  } catch (err) {
     const { error, status } = catchError(err);
     if (status === 401) {
       errorToast('Unauthorized');
@@ -62,21 +76,21 @@ export const apiGet = async (path: string, query?: any, options?: any, doNotAtte
   }
 };
 
-export const apiPost = async (path: string, query?: any, payload?: any) => {
-  const queryStr = query ? '?' + qs.stringify(query) : '';
+export const apiPost = async (path: string, params?: ApiParams) => {
+  const queryStr = buildQueryString(params?.query);
   const headers = await getAuthHeaders();
-
   try {
     const { data, status } = await axiosApi({
       url: `${API_BASE}${path}${queryStr}`,
       method: 'POST',
       headers,
-      data: payload
+      data: params?.payload
     });
 
     return { result: data, status };
-  } catch (err: any) {
+  } catch (err) {
     const { error, status } = catchError(err);
+
     if (status === 429) {
       errorToast("You've been rate limited, please try again in a few minutes");
     }
@@ -84,10 +98,9 @@ export const apiPost = async (path: string, query?: any, payload?: any) => {
   }
 };
 
-export const apiDelete = async (path: string, query?: any) => {
-  const queryStr = query ? '?' + qs.stringify(query) : '';
+export const apiDelete = async (path: string, params?: ApiParams) => {
+  const queryStr = buildQueryString(params?.query);
   const headers = await getAuthHeaders();
-
   try {
     const { data, status } = await axiosApi({
       url: `${API_BASE}${path}${queryStr}`,
@@ -100,3 +113,29 @@ export const apiDelete = async (path: string, query?: any) => {
     return { error, status };
   }
 };
+
+// helper fn for 'useFetch'
+export const swrFetch = async (path: string) => {
+  const { result, error } = await apiGet(path);
+  if (error) {
+    throw new Error('Error completing request');
+  }
+  return result;
+};
+
+// useFetch - example: const { result, error, isLoading } = useFetch<{ data: User[] }>(`https://fakerapi.it/api/v1/persons`);
+interface useFetchParams {
+  query?: unknown;
+  swrOptions?: SWRConfiguration<unknown> | undefined;
+  [key: string]: unknown;
+}
+export function useFetch<T>(path: string, params: useFetchParams = {}) {
+  const queryStr = buildQueryString(params?.query);
+  const { data, error } = useSWR(`${path}${queryStr}`, swrFetch, params?.swrOptions || {});
+  return {
+    result: error ? null : (data as T),
+    isLoading: !error && !data,
+    isError: !!error,
+    error
+  };
+}
