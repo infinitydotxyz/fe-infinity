@@ -14,7 +14,6 @@ module.exports = {
   rules: {
     '@next/next/no-img-element': 'off',
     'react-hooks/exhaustive-deps': 0,
-    'no-shadow': 2,
     'no-shadow-restricted-names': 2,
     'no-console': 0,
     'linebreak-style': ['error', 'unix'],
@@ -24,8 +23,10 @@ module.exports = {
     'no-unreachable': 2,
     'no-empty-pattern': 2,
 
-    'no-unused-vars': 'off',
+    'no-unused-vars': 0,
     '@typescript-eslint/no-unused-vars': ['error'],
+    'no-shadow': 0,
+    '@typescript-eslint/no-shadow': ['error'],
 
     'no-alert': 2,
     'no-empty-function': 2,
