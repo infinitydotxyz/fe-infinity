@@ -7,12 +7,20 @@ module.exports = {
     },
     extend: {
       colors: {
-        primary: '#000',
-        secondary: '#666',
         gray: {
-          dark: '#666',
-          light: '#f0f0f0'
+          600: '#666',
+          50: '#f0f0f0',
+          400: '#bebebe'
         }
+      },
+      width: {
+        120: '30rem',
+        128: '32rem',
+        144: '36rem'
+      },
+      letterSpacing: {
+        wide: '0.01rem',
+        tight: '-.01em'
       }
     }
   },
