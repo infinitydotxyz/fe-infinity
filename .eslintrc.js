@@ -26,7 +26,6 @@ module.exports = {
     'no-empty-pattern': 2,
     'no-shadow-restricted-names': 2,
     'no-unused-vars': 0,
-    '@typescript-eslint/no-unused-vars': ['error'],
 
     'no-alert': 2,
     'no-empty-function': 2,
