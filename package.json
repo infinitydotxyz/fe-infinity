@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "npm run update:lib && next dev",
-    "build": "npm install && npm run update:lib && rimraf ./build && cross-env NODE_ENV=production next build",
+    "build": "npm install && npm run update:lib && rimraf ./build && cross-env next build",
     "start": "next start -p 8080",
     "lint": "next lint",
     "format": "prettier --write src/**/*.{tsx,ts}",
