@@ -4,7 +4,6 @@ module.exports = {
     JSX: true
   },
   parser: '@typescript-eslint/parser',
-
   env: {
     node: true
   },
@@ -24,14 +23,14 @@ module.exports = {
     'no-unreachable': 2,
     'no-empty-pattern': 2,
     // 'no-unused-vars': 2,
-    // 'no-alert': 2,
+    'no-alert': 2,
     'no-empty-function': 2,
     'no-caller': 2,
     'no-eval': 2,
     'no-floating-decimal': 2,
     'no-new-func': 2,
     'no-new-wrappers': 2,
-    // 'no-param-reassign': 2,
+    'no-param-reassign': 2,
     'no-return-assign': 2,
     'no-unmodified-loop-condition': 2,
     'no-unused-expressions': 2,
@@ -45,14 +44,14 @@ module.exports = {
     // 'no-bitwise': 2,
     'no-multi-assign': 2,
     'no-tabs': 2,
-    // quotes: [
-    //   2,
-    //   'single',
-    //   {
-    //     avoidEscape: true,
-    //     allowTemplateLiterals: true
-    //   }
-    // ],
+    quotes: [
+      2,
+      'single',
+      {
+        avoidEscape: true,
+        allowTemplateLiterals: true
+      }
+    ],
     // semi: [2, 'never'],
     'no-duplicate-imports': 2,
     // 'no-extra-parens': [
@@ -128,13 +127,13 @@ module.exports = {
     'comma-style': 2,
     curly: 2,
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
-    // 'object-curly-spacing': [
-    //   2,
-    //   'always',
-    //   {
-    //     objectsInObjects: false
-    //   }
-    // ],
+    'object-curly-spacing': [
+      2,
+      'always',
+      {
+        objectsInObjects: false
+      }
+    ],
     'keyword-spacing': 2,
     'arrow-spacing': 2,
     'comma-spacing': 2,

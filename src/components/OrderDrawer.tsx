@@ -7,6 +7,7 @@ import { MinusCircleIcon } from '@heroicons/react/solid';
 import { BigNumberish } from 'ethers';
 import { nowSeconds } from '@infinityxyz/lib/utils';
 import { TextInput, Spacer, Button } from '.';
+import { DatePicker } from './DatePicker/DatePicker';
 
 interface ListItemData {
   tokenName: string;
@@ -124,12 +125,12 @@ export function OrderDrawer({ open, onClose }: Props) {
     <>
       <div>Start Time</div>
 
-      {/* <DatePicker
+      <DatePicker
         value={new Date(parseInt(startTime.toString()) * 1000)}
         onChange={(date) => {
           setStartTime(date.getTime() / 1000);
         }}
-      /> */}
+      />
     </>
   );
 
@@ -137,12 +138,12 @@ export function OrderDrawer({ open, onClose }: Props) {
     <>
       <div>End Time</div>
 
-      {/* <DatePicker
+      <DatePicker
         value={new Date(parseInt(endTime.toString()) * 1000)}
         onChange={(date) => {
           setEndTime(date.getTime() / 1000);
         }}
-      /> */}
+      />
     </>
   );
 
