@@ -17,13 +17,13 @@ type Props = {
 };
 
 export const DatePicker = ({ placeholder = 'Dec 8, 2021  12:00 PM', value, onChange }: Props) => {
-  // let myFp: Flatpickr | null;
+  let myFp: Flatpickr | null;
 
   return (
     <div className={styles.wrapper}>
       <Flatpickr
-        ref={() => {
-          // myFp = fp;
+        ref={(fp) => {
+          myFp = fp;
         }}
         data-enable-time
         options={{
@@ -43,11 +43,11 @@ export const DatePicker = ({ placeholder = 'Dec 8, 2021  12:00 PM', value, onCha
         onClick={() => {
           // at this point it's always closed since any click closes the existing popup
           // tried to get it to toggle properly, but will fix later if possible
-          // if (myFp) {
-          //   if (!myFp.isOpen) {
-          //     myFp.flatpickr.toggle();
-          //   }
-          // }
+          if (myFp) {
+            if (!myFp.flatpickr.isOpen) {
+              myFp.flatpickr.toggle();
+            }
+          }
         }}
       >
         Icon

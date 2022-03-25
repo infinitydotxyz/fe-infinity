@@ -1,13 +1,10 @@
-/* This example requires Tailwind CSS v2.0+ */
 import { Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { XIcon } from '@heroicons/react/outline';
 import { MinusCircleIcon } from '@heroicons/react/solid';
-// import { DatePicker } from 'components/DatePicker/DatePicker';
 import { BigNumberish } from 'ethers';
 import { nowSeconds } from '@infinityxyz/lib/utils';
-import { TextInput, Spacer, Button } from '.';
-import { DatePicker } from './DatePicker/DatePicker';
+import { TextInput, Spacer, Button, DateInput } from '.';
 
 interface ListItemData {
   tokenName: string;
@@ -122,29 +119,23 @@ export function OrderDrawer({ open, onClose }: Props) {
   );
 
   const startTimeField = (
-    <>
-      <div>Start Time</div>
-
-      <DatePicker
-        value={new Date(parseInt(startTime.toString()) * 1000)}
-        onChange={(date) => {
-          setStartTime(date.getTime() / 1000);
-        }}
-      />
-    </>
+    <DateInput
+      label="Start Time"
+      value={new Date(parseInt(startTime.toString()) * 1000)}
+      onChange={(date) => {
+        setStartTime(date.getTime() / 1000);
+      }}
+    />
   );
 
   const endTimeField = (
-    <>
-      <div>End Time</div>
-
-      <DatePicker
-        value={new Date(parseInt(endTime.toString()) * 1000)}
-        onChange={(date) => {
-          setEndTime(date.getTime() / 1000);
-        }}
-      />
-    </>
+    <DateInput
+      label="End Time"
+      value={new Date(parseInt(endTime.toString()) * 1000)}
+      onChange={(date) => {
+        setEndTime(date.getTime() / 1000);
+      }}
+    />
   );
 
   return (
