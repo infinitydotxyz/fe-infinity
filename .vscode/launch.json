@@ -1,0 +1,20 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "dev-launch",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceRoot}/src",
+      "userDataDir": false // A new browser can't be launched if an instance is already running from userDataDir. Use attach mode instead
+    },
+    {
+      "name": "dev-attach",
+      "type": "chrome",
+      "request": "attach",
+      "port": 9222,
+      "urlFilter": "http://localhost:3000/*"
+    }
+  ]
+}
