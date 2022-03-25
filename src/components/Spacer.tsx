@@ -1,3 +1,3 @@
 export function Spacer(): JSX.Element {
-  return <div className="flex-1" />;
+  return <div className='flex-1' />;
 }

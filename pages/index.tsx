@@ -6,8 +6,8 @@ const Home: NextPage = () => {
     <div>
       <Head>
         <title>Infinity</title>
-        <meta name="description" content="Infinity NFT marketplace" />
-        <link rel="icon" href="/favicon.ico" />
+        <meta name='description' content='Infinity NFT marketplace' />
+        <link rel='icon' href='/favicon.ico' />
       </Head>
 
       <main>

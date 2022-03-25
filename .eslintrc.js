@@ -156,7 +156,7 @@ module.exports = {
       {
         markers: ['global', 'globals', 'eslint', 'eslint-disable', '*package', '!', ',']
       }
-    ]
-    // 'jsx-quotes': [2, 'prefer-single']
+    ],
+    'jsx-quotes': [2, 'prefer-single']
   }
 };
