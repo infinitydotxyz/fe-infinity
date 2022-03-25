@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { NotFoundPage } from './not-found-page';
-import { Page } from '@components/page';
+import { Page } from 'src/components/page';
 
 export const NotFound: FC = () => {
   return (

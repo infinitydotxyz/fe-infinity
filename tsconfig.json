@@ -27,16 +27,7 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "incremental": true,
-    "baseUrl": ".",
-    "paths": {
-      "@abi/*": ["./src/abi/*"],
-      "@components/*": ["./src/components/*"],
-      "@config/*": ["./src/config/*"],
-      "@hooks/*": ["./src/hooks/*"],
-      "@pages/*": ["./src/pages/*"],
-      "@typings/*": ["./src/typings/*"],
-      "@utils/*": ["./src/utils/*"]
-    }
+    "baseUrl": "."
   },
   "include": ["next-env.d.ts", "src/**/*.ts", "src/**/*.tsx", "pages/**/*.ts", "pages/**/*.tsx"],
   "exclude": ["node_modules"]

@@ -1,6 +1,6 @@
 import { lazy } from 'react';
 import { RouteObject } from 'react-router';
-import { Loadable } from '@components/loadable';
+import { Loadable } from 'src/components/loadable';
 
 // Authentication pages
 const NotFound = Loadable(lazy(() => import('./pages/not-found')));

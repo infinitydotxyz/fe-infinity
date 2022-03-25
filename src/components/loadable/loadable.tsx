@@ -1,5 +1,5 @@
 import { Suspense, LazyExoticComponent, ReactElement, FC } from 'react';
-import LoadingScreen from '@components/loading-screen';
+import LoadingScreen from 'src/components/loading-screen';
 
 export const Loadable = (Component: LazyExoticComponent<FC>) =>
   function Loadable(props: Record<string, unknown>): ReactElement {
