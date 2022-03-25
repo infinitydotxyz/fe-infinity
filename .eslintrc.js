@@ -17,6 +17,7 @@ module.exports = {
 
     '@next/next/no-img-element': 'off',
     'react-hooks/exhaustive-deps': 0,
+    'no-shadow-restricted-names': 2,
     'no-console': 0,
     'linebreak-style': ['error', 'unix'],
     'default-case': 2,
@@ -24,8 +25,11 @@ module.exports = {
     'no-undef': 2,
     'no-unreachable': 2,
     'no-empty-pattern': 2,
-    'no-shadow-restricted-names': 2,
+
     'no-unused-vars': 0,
+    '@typescript-eslint/no-unused-vars': ['error'],
+    'no-shadow': 0,
+    '@typescript-eslint/no-shadow': ['error'],
 
     'no-alert': 2,
     'no-empty-function': 2,
@@ -152,6 +156,7 @@ module.exports = {
     'generator-star-spacing': 2,
     'handle-callback-err': [2, '^(err|error)$'],
     'key-spacing': 2,
+    'new-cap': 2,
     'operator-linebreak': 2,
     'spaced-comment': [
       2,
