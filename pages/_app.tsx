@@ -1,3 +1,5 @@
+import '../styles/globals.css';
+
 import type { AppProps } from 'next/app';
 import { ComponentType, createElement, FunctionComponent, memo, StrictMode } from 'react';
 import { BrowserRouter } from 'react-router-dom';
