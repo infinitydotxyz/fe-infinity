@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import React, { ReactElement } from 'react';
-import { Spacer } from './Spacer';
+import { Spacer } from 'src/components/spacer';
 import { useRouter } from 'next/router';
 
 type Props = {
