@@ -1,5 +1,6 @@
 module.exports = {
-  extends: ['next/core-web-vitals', 'prettier'],
+  plugins: ['@typescript-eslint'],
+  extends: ['next/core-web-vitals', 'plugin:@typescript-eslint/recommended', 'prettier'],
   globals: {
     JSX: true
   },
@@ -22,7 +23,10 @@ module.exports = {
     'no-undef': 2,
     'no-unreachable': 2,
     'no-empty-pattern': 2,
-    // 'no-unused-vars': 2,
+
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': ['error'],
+
     'no-alert': 2,
     'no-empty-function': 2,
     'no-caller': 2,
