@@ -2,12 +2,21 @@ import { ReactElement } from 'react';
 
 interface Props {
   children?: ReactElement | ReactElement[] | string;
-  onClick?: () => void;
+  onClick: () => void;
 }
 
 export function Button({ children, onClick }: Props): JSX.Element {
   return (
-    <button type="button" className="rounded-full bg-black text-white px-4 py-1 text-sm  " onClick={onClick}>
+    <button
+      type="button"
+      className="rounded-full bg-black text-white px-4 py-1 text-sm  "
+      onClick={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
+
+        onClick();
+      }}
+    >
       <span className="sr-only">Close panel</span>
       {children}
     </button>

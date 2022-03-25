@@ -185,7 +185,7 @@ export class ProviderManager implements Omit<Optional<Provider, 'type'>, 'init'>
 
         await this._provider?.init();
       }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: Error | UserRejectException | any) {
       throw err;
     }

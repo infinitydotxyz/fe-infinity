@@ -12,6 +12,9 @@ module.exports = {
     ecmaVersion: 2018
   },
   rules: {
+    // turn this on after fixing the utils code
+    '@typescript-eslint/no-explicit-any': 0,
+
     '@next/next/no-img-element': 'off',
     'react-hooks/exhaustive-deps': 0,
     'no-shadow-restricted-names': 2,

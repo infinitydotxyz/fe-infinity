@@ -46,3 +46,10 @@ export const POLYGON_WETH_ADDRESS = '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619'
 
 export const LOGIN_MESSAGE =
   'Welcome to Infinity. Click "Sign" to sign in. No password needed. This request will not trigger a blockchain transaction or cost any gas fees.';
+
+// ADI: added to get commonUtils compiling, might be old
+export const LISTING_TYPE = {
+  FIXED_PRICE: 'fixedPrice',
+  DUTCH_AUCTION: 'dutchAuction',
+  ENGLISH_AUCTION: 'englishAuction'
+};
