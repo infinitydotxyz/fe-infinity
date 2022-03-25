@@ -156,7 +156,6 @@ module.exports = {
     'generator-star-spacing': 2,
     'handle-callback-err': [2, '^(err|error)$'],
     'key-spacing': 2,
-    'new-cap': 2,
     'operator-linebreak': 2,
     'spaced-comment': [
       2,

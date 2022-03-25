@@ -131,7 +131,7 @@ export async function approveERC20(user: User, order: OBOrder, signer: JsonRpcSi
         await contract.approve(exchange, constants.MaxUint256);
       }
     }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
     console.error('failed granting erc20 approvals');
     throw new Error(e);
@@ -148,7 +148,7 @@ export async function approveERC721(user: User, order: OBOrder, signer: JsonRpcS
         await contract.setApprovalForAll(exchange, true);
       }
     }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
     console.error('failed granting erc721 approvals');
     throw new Error(e);
@@ -204,7 +204,8 @@ export async function constructOBOrder(
     ]
   };
 
-  // const calcDigest = _getCalculatedDigest(chainId, contractAddress, order);
+  const calcDigest = _getCalculatedDigest(chainId, contractAddress, order);
+  console.log(calcDigest);
   const constraints = [
     order.numItems,
     order.startPrice,
@@ -344,7 +345,7 @@ function _getDomainSeparator(chainId: BigNumberish, exchangeAddr: BytesLike): By
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-function _printTypeEncodedData(domain: any, types: any, orderToSign: any) {
+export function _printTypeEncodedData(domain: any, types: any, orderToSign: any) {
   const domainSeparator = _TypedDataEncoder.hashDomain(domain);
   const typedDataEncoder = _TypedDataEncoder.from(types);
   const primaryType = typedDataEncoder.primaryType;

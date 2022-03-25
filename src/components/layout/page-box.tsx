@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import React, { ReactElement } from 'react';
-import { Spacer } from './Spacer';
+import { Spacer } from 'src/components/spacer';
 import { useRouter } from 'next/router';
 
 type Props = {
@@ -39,7 +39,7 @@ export const PageHeader = ({ title, rightSide }: Props2): JSX.Element => {
   return (
     <div className="flex flex-row">
       <div
-        className="mb-10 text-4xl font-medium cursor-pointer"
+        className="mb-10 text-4xl  font-medium cursor-pointer"
         onClick={() => {
           router.push('/');
         }}

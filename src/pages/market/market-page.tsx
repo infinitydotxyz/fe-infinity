@@ -1,6 +1,8 @@
-import type { NextPage } from 'next';
 import React, { useEffect, useState } from 'react';
-import { PageBox, Button, OrderDrawer, BuyOrderList, SellOrderList } from 'src/components';
+import { PageBox } from 'src/components/layout';
+import { Button } from 'src/components/button';
+import { OrderDrawer } from './components/order-drawer';
+import { BuyOrderList, SellOrderList } from './components/order-list';
 import { showAppError, showAppMessage, User } from 'src/utils/context/AppContext';
 import {
   addBuy,
@@ -12,7 +14,7 @@ import {
 } from 'src/utils/marketUtils';
 import { BuyOrderMatch, MarketListIdType, MarketListingsBody, OBOrder } from '@infinityxyz/lib/types/core';
 
-const Market: NextPage = () => {
+export const MarketPage = () => {
   const [cartOpen, setCartOpen] = useState<boolean>(false);
   const [buyOrders, setBuyOrders] = useState<OBOrder[]>([]);
   const [sellOrders, setSellOrders] = useState<OBOrder[]>([]);
@@ -403,8 +405,6 @@ const Market: NextPage = () => {
     </PageBox>
   );
 };
-
-export default Market;
 
 // =====================================================
 

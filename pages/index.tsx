@@ -1,12 +1,3 @@
-import { PageBox } from 'src/components';
-import type { NextPage } from 'next';
+import App from 'src/app';
 
-const Home: NextPage = () => {
-  return (
-    <PageBox title="Infinity">
-      <h1>Hola Amigo</h1>
-    </PageBox>
-  );
-};
-
-export default Home;
+export default App;

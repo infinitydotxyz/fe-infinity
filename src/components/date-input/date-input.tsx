@@ -1,4 +1,4 @@
-import { DatePicker } from './DatePicker/DatePicker';
+import { DatePicker } from 'src/components/date-picker';
 
 interface Props {
   label: string;
