@@ -345,7 +345,7 @@ function _getDomainSeparator(chainId: BigNumberish, exchangeAddr: BytesLike): By
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-function _printTypeEncodedData(domain: any, types: any, orderToSign: any) {
+export function _printTypeEncodedData(domain: any, types: any, orderToSign: any) {
   const domainSeparator = _TypedDataEncoder.hashDomain(domain);
   const typedDataEncoder = _TypedDataEncoder.from(types);
   const primaryType = typedDataEncoder.primaryType;
