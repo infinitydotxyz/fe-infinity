@@ -13,7 +13,7 @@ module.exports = {
   },
   rules: {
     // turn this on after fixing the utils code
-    '@typescript-eslint/no-explicit-any': 0,
+    '@typescript-eslint/no-explicit-any': 1,
 
     '@next/next/no-img-element': 'off',
     'react-hooks/exhaustive-deps': 0,

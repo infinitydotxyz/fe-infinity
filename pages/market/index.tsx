@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import React, { useEffect, useState } from 'react';
-import { PageBox, Button, OrderDrawer, BuyOrderList, SellOrderList } from 'components';
-import { showAppError, showAppMessage, User } from 'utils/context/AppContext';
+import { PageBox, Button, OrderDrawer, BuyOrderList, SellOrderList } from 'src/components';
+import { showAppError, showAppMessage, User } from 'src/utils/context/AppContext';
 import {
   addBuy,
   addSell,
@@ -9,7 +9,7 @@ import {
   marketDeleteOrder,
   marketMatches,
   marketSellOrders
-} from 'utils/marketUtils';
+} from 'src/utils/marketUtils';
 import { BuyOrderMatch, MarketListIdType, MarketListingsBody, OBOrder } from '@infinityxyz/lib/types/core';
 
 const Market: NextPage = () => {

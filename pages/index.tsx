@@ -1,4 +1,4 @@
-import { PageBox } from 'components';
+import { PageBox } from 'src/components';
 import type { NextPage } from 'next';
 
 const Home: NextPage = () => {

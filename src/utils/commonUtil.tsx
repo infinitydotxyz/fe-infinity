@@ -7,12 +7,12 @@ import {
   POLYGON_WETH_ADDRESS,
   ETHEREUM_NETWORK_NAME,
   POLYGON_NETWORK_NAME,
-  LISTING_TYPE,
   POLYGON_CHAIN_SCANNER_BASE,
   NFT_DATA_SOURCES
 } from './constants';
 import { UnmarshalNFTAsset } from '@infinityxyz/lib/types/services/unmarshal';
 import { AlchemyUserAsset } from '@infinityxyz/lib/types/services/alchemy';
+import { trimLowerCase } from '@infinityxyz/lib/utils';
 
 // OpenSea's EventType
 export enum EventType {
@@ -62,7 +62,7 @@ export const ellipsisAddress = (address: string, left = 6, right = 4) => {
 
 export const addressesEqual = (left?: string, right?: string): boolean => {
   if (left && right) {
-    return left.toLowerCase() === right.toLowerCase();
+    return trimLowerCase(left) === trimLowerCase(right);
   }
 
   return false;
@@ -79,26 +79,6 @@ export const ellipsisString = (inString?: string, left = 6, right = 4): string =
   }
 
   return '';
-};
-
-export const getToken = (listingType?: string, chainId?: string): 'WETH' | 'ETH' | '' => {
-  if (listingType) {
-    return listingType === LISTING_TYPE.ENGLISH_AUCTION ? 'WETH' : 'ETH';
-  }
-  if (chainId) {
-    return chainId === '1' ? 'ETH' : 'WETH';
-  }
-
-  return '';
-};
-
-export const getPaymentTokenAddress = (listingType?: string, chainId?: string): string | undefined => {
-  if (chainId === '1') {
-    return listingType === LISTING_TYPE.ENGLISH_AUCTION ? WETH_ADDRESS : undefined;
-  } else if (chainId === '137') {
-    return POLYGON_WETH_ADDRESS;
-  }
-  return;
 };
 
 // parse a Timestamp string (in millis or secs)
@@ -147,45 +127,6 @@ export const transformOpenSea = (item: any, owner: string, chainId: string) => {
     schemaName: item['asset_contract']['schema_name'],
     chainId,
     data: item
-  } as CardData;
-};
-
-export const transformCovalent = (item: any, owner: string, chainId: string) => {
-  if (!item) {
-    return null;
-  }
-
-  const nftDataArr = item?.nft_data;
-  if (!nftDataArr || !nftDataArr.length || nftDataArr.length === 0) {
-    return null;
-  }
-
-  let schemaName = '';
-  const supportedInterfaces = item?.supports_erc;
-  for (const iface of supportedInterfaces) {
-    if (iface.trim().toLowerCase() === 'erc721') {
-      schemaName = 'ERC721';
-    } else if (iface.trim().toLowerCase() === 'erc1155') {
-      schemaName = 'ERC1155';
-    }
-  }
-
-  const data = item;
-  data.traits = item?.nft_data[0]?.external_data?.attributes;
-
-  return {
-    id: `${item?.contract_address}_${item?.nft_data[0]?.token_id}`,
-    title: item?.nft_data[0]?.external_data?.name,
-    description: item?.nft_data[0]?.external_data?.description,
-    image: item?.nft_data[0]?.external_data?.image,
-    imagePreview: item?.nft_data[0]?.external_data?.image_512,
-    tokenAddress: item?.contract_address,
-    tokenId: item?.nft_data[0]?.token_id,
-    collectionName: item?.contract_name,
-    owner,
-    schemaName,
-    chainId,
-    data
   } as CardData;
 };
 
@@ -328,7 +269,7 @@ export const uuidv4 = () => {
 };
 
 // makes number strings from strings or numbers
-export const numStr = (value: any): string => {
+export const numStr = (value: string | number): string => {
   let short;
 
   if (typeof value === 'undefined' || value === null) {
@@ -341,22 +282,20 @@ export const numStr = (value: any): string => {
       }
     }
     short = value;
-  } else if (typeof value === 'number') {
-    short = value.toFixed(4);
   } else {
-    short = value.toString();
+    short = value.toFixed(4);
   }
 
   // remove .0000
   let zeros = '.0000';
   if (short.endsWith(zeros)) {
-    short = short.substring(0, short.length - zeros.length);
+    short = short?.substring(0, short.length - zeros.length);
   }
 
   // .9800 -> .98
   if (short.includes('.')) {
     zeros = '00';
-    if (short.endsWith(zeros)) {
+    if (short?.endsWith(zeros)) {
       short = short.substring(0, short.length - zeros.length);
     }
   }
@@ -390,17 +329,6 @@ export const getCanonicalWeth = (chain: string): { address: string; decimals: nu
     return { address: POLYGON_WETH_ADDRESS, decimals: 18 };
   }
   return { address: '', decimals: 0 };
-};
-
-export const getWyvernChainName = (chainId?: string): string | null => {
-  if (chainId === '1') {
-    return 'main';
-  } else if (chainId === '137') {
-    return 'polygon';
-  } else if (chainId === '31337') {
-    return 'localhost';
-  }
-  return null;
 };
 
 export const getChainScannerBase = (chainId?: string): string | null => {

@@ -1,8 +1,8 @@
 import React from 'react';
-import { uuidv4 } from 'utils/commonUtil';
+import { uuidv4 } from 'src/utils/commonUtil';
 import styles from './styles.module.scss';
 import { OBOrder } from '@infinityxyz/lib/types/core';
-import { Button } from 'components';
+import { Button } from 'src/components';
 
 // =======================================================
 
