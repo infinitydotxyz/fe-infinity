@@ -38,7 +38,7 @@ export const getAuthHeaders = async (attemptLogin = true) => {
 
 interface ApiParams {
   query?: unknown;
-  payload?: unknown;
+  data?: unknown;
   options?: AxiosRequestConfig;
   doNotAttemptLogin?: boolean;
   [key: string]: unknown;
@@ -84,7 +84,7 @@ export const apiPost = async (path: string, params?: ApiParams) => {
       url: `${API_BASE}${path}${queryStr}`,
       method: 'POST',
       headers,
-      data: params?.payload
+      data: params?.data
     });
 
     return { result: data, status };
