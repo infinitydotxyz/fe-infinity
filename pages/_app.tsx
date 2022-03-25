@@ -4,9 +4,9 @@ import { BrowserRouter } from 'react-router-dom';
 
 const providers: readonly ComponentType[] = [BrowserRouter];
 
-const Component: FunctionComponent<AppProps> = ({ Component, pageProps }) => <Component {...pageProps} />;
+const PageComponent: FunctionComponent<AppProps> = ({ Component, pageProps }) => <Component {...pageProps} />;
 
-const MemoizedComponent = memo(Component, (p, n) => p.Component === n.Component && p.pageProps === n.pageProps);
+const MemoizedComponent = memo(PageComponent, (p, n) => p.Component === n.Component && p.pageProps === n.pageProps);
 
 const App: FunctionComponent<AppProps> = (props) => {
   return typeof window === 'undefined' ? null : (
