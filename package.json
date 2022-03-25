@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "npm run update:lib && APP_ENV=prod next dev",
-    "build": "npm install && npm run update:lib && rimraf ./build && cross-env APP_ENV=prod next build",
-    "start": "APP_ENV=prod next start -p 8080",
+    "dev": "npm run update:lib && APP_ENV=dev next dev",
+    "build": "npm install && npm run update:lib && rimraf ./build && cross-env APP_ENV=dev next build",
+    "start": "APP_ENV=dev next start -p 8080",
     "lint": "next lint",
     "format": "prettier --write src/**/*.{tsx,ts}",
     "update:lib": "npm update @infinityxyz/lib"
