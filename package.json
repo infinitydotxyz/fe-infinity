@@ -1,0 +1,36 @@
+{
+  "name": "infinity-fe",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "npm run update:lib && next dev",
+    "build": "npm install && npm run update:lib && rimraf ./build && cross-env NODE_ENV=production next build",
+    "start": "next start -p 8080",
+    "lint": "next lint",
+    "format": "prettier --write src/**/*.{tsx,ts}",
+    "update:lib": "npm update @infinityxyz/lib"
+  },
+  "dependencies": {
+    "@infinityxyz/lib": "^1.32.3",
+    "cross-env": "^7.0.3",
+    "next": "12.1.0",
+    "react": "17.0.2",
+    "react-dom": "17.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "17.0.23",
+    "@types/react": "17.0.43",
+    "autoprefixer": "^10.4.4",
+    "eslint": "8.11.0",
+    "eslint-config-next": "12.1.0",
+    "postcss": "^8.4.12",
+    "tailwindcss": "^3.0.23",
+    "typescript": "4.6.3"
+  },
+  "prettier": {
+    "tabWidth": 2,
+    "printWidth": 120,
+    "singleQuote": true,
+    "trailingComma": "none"
+  }
+}
