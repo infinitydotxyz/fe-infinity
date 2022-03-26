@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { PageBox } from 'src/components/layout';
+import { PageBox } from 'src/components/common/layout';
 import { Button } from 'src/components/common';
 import { OrderDrawer } from './components/order-drawer';
 import { BuyOrderList, SellOrderList } from './components/order-list';
