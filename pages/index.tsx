@@ -1,3 +1,12 @@
-import App from 'src/app';
+import type { FC } from 'react';
+import { CommonHead } from 'src/components/common';
 
-export default App;
+export const Home: FC = () => {
+  return (
+    <CommonHead title="Home">
+      <h6>Hola</h6>
+    </CommonHead>
+  );
+};
+
+export default Home;
