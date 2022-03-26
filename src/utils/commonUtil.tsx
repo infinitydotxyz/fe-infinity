@@ -359,3 +359,12 @@ export const getPageOffsetForAssetQuery = (source: number, currentPage: number, 
   // default
   return currentPage;
 };
+
+// get search params from the current URL - example: getSearchParams('name')
+export const getSearchParam = (paramName: string) => {
+  if (typeof document !== 'undefined') {
+    const params = new URL(document.location.toString()).searchParams;
+    return params?.get(paramName);
+  }
+  return null;
+};
