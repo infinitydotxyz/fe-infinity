@@ -5,4 +5,5 @@ export * from 'src/components/common/head';
 export * from 'src/components/common/loadable';
 export * from 'src/components/common/loading-screen';
 export * from 'src/components/common/spacer';
+export * from 'src/components/common/page-box';
 export * from 'src/components/common/text-input';
