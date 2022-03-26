@@ -2,16 +2,18 @@ import Head from 'next/head';
 import React, { ReactElement } from 'react';
 import { Spacer } from 'src/components/common';
 import { useRouter } from 'next/router';
+import { twMerge } from 'tailwind-merge';
 
 type Props = {
   title: string;
   rightSide?: JSX.Element;
   children?: ReactElement | ReactElement[] | string;
+  className?: string;
 };
 
-export const PageBox = ({ title, rightSide, children }: Props): JSX.Element => {
+export const PageBox = ({ title, rightSide, children, className }: Props): JSX.Element => {
   return (
-    <div className="flex flex-row justify-center m-4">
+    <div className={twMerge(`flex flex-row justify-center m-4 ${className ?? ''}`)}>
       <Head>
         <title>{title}</title>
         <meta name="description" content="Infinity NFT marketplace" />
@@ -28,18 +30,18 @@ export const PageBox = ({ title, rightSide, children }: Props): JSX.Element => {
 
 // ==================================================
 
-type Props2 = {
+type PageHeaderProps = {
   title: string;
   rightSide?: JSX.Element;
 };
 
-export const PageHeader = ({ title, rightSide }: Props2): JSX.Element => {
+export const PageHeader = ({ title, rightSide }: PageHeaderProps): JSX.Element => {
   const router = useRouter();
 
   return (
     <div className="flex flex-row">
       <div
-        className="mb-10 text-4xl  font-medium cursor-pointer"
+        className="mb-6 text-4xl  font-medium cursor-pointer"
         onClick={() => {
           router.push('/');
         }}
