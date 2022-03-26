@@ -4,7 +4,7 @@ import { XIcon } from '@heroicons/react/outline';
 import { MinusCircleIcon } from '@heroicons/react/solid';
 import { BigNumberish } from 'ethers';
 import { nowSeconds } from '@infinityxyz/lib/utils';
-import { TextInput, Spacer, Button, DateInput } from 'src/components/common';
+import { TextInput, Spacer, Button, DateInput, OutlineButton } from 'src/components/common';
 
 interface ListItemData {
   tokenName: string;
@@ -57,14 +57,10 @@ export function OrderDrawer({ open, onClose }: Props) {
       <div className="flex items-start justify-between">
         <Dialog.Title className="text-lg font-medium text-gray-900">{title}</Dialog.Title>
         <div className="ml-3 flex h-7 items-center">
-          <button
-            type="button"
-            className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:ring-2 focus:ring-indigo-500"
-            onClick={onClose}
-          >
+          <OutlineButton onClick={onClose}>
             <span className="sr-only">Close panel</span>
             <XIcon className="h-6 w-6" aria-hidden="true" />
-          </button>
+          </OutlineButton>
         </div>
       </div>
     </div>
