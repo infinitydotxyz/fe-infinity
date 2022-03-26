@@ -11,7 +11,7 @@ type Props = {
 
 export const PageBox = ({ title, rightSide, children }: Props): JSX.Element => {
   return (
-    <div className="flex flex-row m-4">
+    <div className="flex flex-row justify-center m-4">
       <Head>
         <title>{title}</title>
         <meta name="description" content="Infinity NFT marketplace" />
