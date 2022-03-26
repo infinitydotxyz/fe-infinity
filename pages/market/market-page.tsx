@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { PageBox } from 'src/components/common/layout';
 import { Button } from 'src/components/common';
-import { OrderDrawer } from './components/order-drawer';
-import { BuyOrderList, SellOrderList } from './components/order-list';
+import { OrderDrawer } from 'src/components/market/order-drawer';
+import { BuyOrderList, SellOrderList } from 'src/components/market/order-list';
 import { showAppError, showAppMessage, User } from 'src/utils/context/AppContext';
 import {
   addBuy,
@@ -430,3 +430,5 @@ const Header = ({ title }: Props2): JSX.Element => {
     </div>
   );
 };
+
+export default MarketPage;
