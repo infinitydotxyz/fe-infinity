@@ -1,0 +1,62 @@
+.matchCard {
+  position: relative;
+
+  border-radius: 12px;
+  padding: 10px 20px;
+  display: flex;
+  border: 1px solid #ddd;
+  gap: 20px;
+
+  .acceptButton {
+    position: absolute;
+    right: 10px;
+    z-index: 10;
+    top: 10px;
+  }
+}
+
+.cardList {
+  display: flex;
+
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 280px;
+  background-color: #fafafa;
+  border: 1px solid #ddd;
+  padding: 10px 20px;
+  font-size: 0.7rem;
+  border-radius: 12px;
+  box-shadow: 0 0 11px #eee;
+
+  .title {
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  .cardButtons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.buyCard {
+  @extend .card;
+}
+
+.sellCard {
+  @extend .card;
+  background-color: #eafaea;
+}
+
+.expiredCard {
+  @extend .card;
+  background-color: #faeaea;
+}
