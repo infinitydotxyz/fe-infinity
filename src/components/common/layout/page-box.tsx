@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import React, { ReactElement } from 'react';
-import { Spacer } from 'src/components/spacer';
+import { Spacer } from 'src/components/common';
 import { useRouter } from 'next/router';
 
 type Props = {
@@ -11,7 +11,7 @@ type Props = {
 
 export const PageBox = ({ title, rightSide, children }: Props): JSX.Element => {
   return (
-    <div className="flex flex-row  m-4">
+    <div className="flex flex-row m-4">
       <Head>
         <title>{title}</title>
         <meta name="description" content="Infinity NFT marketplace" />

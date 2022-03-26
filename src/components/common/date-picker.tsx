@@ -5,7 +5,7 @@ import Flatpickr from 'react-flatpickr';
 // date picker themes
 // import './theme.css';
 import 'flatpickr/dist/themes/airbnb.css';
-import { OutlineButton } from 'src/components/button';
+import { OutlineButton } from 'src/components/common';
 // import 'flatpickr/dist/themes/dark.css';
 // import 'flatpickr/dist/themes/light.css';
 // import 'flatpickr/dist/themes/material_blue.css';

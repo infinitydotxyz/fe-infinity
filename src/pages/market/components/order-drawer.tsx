@@ -4,10 +4,7 @@ import { XIcon } from '@heroicons/react/outline';
 import { MinusCircleIcon } from '@heroicons/react/solid';
 import { BigNumberish } from 'ethers';
 import { nowSeconds } from '@infinityxyz/lib/utils';
-import { TextInput } from 'src/components/text-input';
-import { Spacer } from 'src/components/spacer';
-import { Button } from 'src/components/button';
-import { DateInput } from 'src/components/date-input';
+import { TextInput, Spacer, Button, DateInput } from 'src/components/common';
 
 interface ListItemData {
   tokenName: string;
