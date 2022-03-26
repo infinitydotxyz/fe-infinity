@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import { FaTwitter, FaFacebook, FaEdit } from 'react-icons/fa';
+import { Button } from 'src/components/common';
 import { Card } from 'src/components/common/card';
 import Chip from 'src/components/common/chip';
 
@@ -14,9 +15,18 @@ export const SandboxPage: FC = () => {
         <div className="text-secondary">text-secondary</div>
       </div>
 
-      <h3># Button - WIP</h3>
-      <div className="flex flex-row space-x-4">
-        <button>Button</button>
+      <h3># Button</h3>
+      <div className="flex space-x-4">
+        <Button variant="primary">Primary</Button>
+        <Button variant="primary">Secondary</Button>
+        <Button variant="outline">Outline</Button>
+        <Button variant="outline" className="flex items-center space-x-2">
+          <FaEdit />
+          <span>With Icon</span>
+        </Button>
+        <Button variant="plain" size="plain">
+          Unstyled Button
+        </Button>
       </div>
 
       <h3># Chip</h3>

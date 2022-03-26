@@ -5,7 +5,8 @@ import Flatpickr from 'react-flatpickr';
 // date picker themes
 // import './theme.css';
 import 'flatpickr/dist/themes/airbnb.css';
-import { OutlineButton } from 'src/components/common';
+import { Button } from 'src/components/common';
+import { FaCaretDown } from 'react-icons/fa';
 // import 'flatpickr/dist/themes/dark.css';
 // import 'flatpickr/dist/themes/light.css';
 // import 'flatpickr/dist/themes/material_blue.css';
@@ -39,7 +40,10 @@ export const DatePicker = ({ placeholder = 'Dec 8, 2021  12:00 PM', value, onCha
         }}
       />
 
-      <OutlineButton
+      <Button
+        variant="plain"
+        size="plain"
+        className="p-2"
         onClick={() => {
           // at this point it's always closed since any click closes the existing popup
           // tried to get it to toggle properly, but will fix later if possible
@@ -50,8 +54,8 @@ export const DatePicker = ({ placeholder = 'Dec 8, 2021  12:00 PM', value, onCha
           }
         }}
       >
-        Icon
-      </OutlineButton>
+        <FaCaretDown />
+      </Button>
     </div>
   );
 };
