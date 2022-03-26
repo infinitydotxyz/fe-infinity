@@ -1,33 +1,49 @@
-import { ReactElement } from 'react';
+import React, { forwardRef, ReactElement } from 'react';
 
-interface Props {
-  children?: ReactElement | ReactElement[] | string;
-  onClick: () => void;
-}
+const classes = {
+  base: 'focus:outline-none transition ease-in-out duration-300 hover:bg-gray-700 hover:text-white active:bg-gray-900 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50',
+  disabled: 'opacity-50 cursor-not-allowed',
+  pill: 'rounded-full',
+  size: {
+    plain: '',
+    small: 'px-2 py-1 text-sm',
+    normal: 'px-6 py-2',
+    large: 'px-8 py-3 text-lg'
+  },
+  variant: {
+    plain: '',
+    primary: 'border rounded-3xl border-gray-100 bg-black text-white',
+    secondary: 'border rounded-3xl border-gray-100 bg-black text-white',
+    outline: 'border rounded-3xl border border-gray-300 text-gray-900',
+    danger: 'bg-red-500 hover:bg-red-800 focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 text-white'
+  }
+};
 
-export function Button({ children, onClick }: Props): JSX.Element {
-  return (
+type ButtonProps = JSX.IntrinsicElements['button'] & {
+  children: ReactElement | ReactElement[] | string;
+  variant?: 'plain' | 'primary' | 'secondary' | 'outline' | 'danger';
+  size?: 'plain' | 'small' | 'normal' | 'large';
+};
+
+// eslint-disable-next-line
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ children, className, variant = 'primary', size = 'normal', disabled = false, ...rest }: ButtonProps, ref) => (
     <button
       type="button"
-      className="rounded-full bg-black text-white px-4 py-1 text-sm  "
-      onClick={(e) => {
-        e.stopPropagation();
-        e.preventDefault();
-
-        onClick();
-      }}
+      ref={ref}
+      disabled={disabled}
+      className={`
+        ${classes.base}
+        ${classes.size[size]}
+        ${classes.variant[variant]}
+        ${disabled && classes.disabled}
+        ${className}
+      `}
+      {...rest}
     >
-      <span className="sr-only">Close panel</span>
       {children}
     </button>
-  );
-}
+  )
+);
 
-export function OutlineButton({ children, onClick }: Props): JSX.Element {
-  return (
-    <button type="button" className="rounded-md bg-white text-black hover:text-gray-500  " onClick={onClick}>
-      <span className="sr-only">Close panel</span>
-      {children}
-    </button>
-  );
-}
+export default Button;
