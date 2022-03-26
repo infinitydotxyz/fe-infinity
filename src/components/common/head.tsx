@@ -6,7 +6,7 @@ export interface PageProps {
   children: ReactNode;
 }
 
-export const Page: FunctionComponent<PageProps> = ({ title, children }) => {
+export const CommonHead: FunctionComponent<PageProps> = ({ title, children }) => {
   return (
     <>
       <Head>

@@ -1,12 +1,11 @@
 import type { FC } from 'react';
-import { NotFoundPage } from './not-found-page';
-import { Page } from 'src/components/page';
+import { CommonHead } from 'src/components/common';
 
 export const NotFound: FC = () => {
   return (
-    <Page title="Error: Not Found">
-      <NotFoundPage />
-    </Page>
+    <CommonHead title="Error: Not Found">
+      <h6>Not Found</h6>
+    </CommonHead>
   );
 };
 
