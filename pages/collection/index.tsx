@@ -31,7 +31,7 @@ export function CollectionPage() {
 
       <div className="text-sm font-bold mt-6">
         <div>Ownership includes</div>
-        <div className="flex space-x-8 mt-2">
+        <div className="flex space-x-8 mt-2 font-normal">
           <div className="flex text-gray-500">
             <FaCheck className="mr-2" />
             Access
@@ -53,10 +53,10 @@ export function CollectionPage() {
 
       <table className="mt-8 text-sm w-1/2">
         <tr className="text-gray-400">
-          <th className="text-left">Items</th>
-          <th className="text-left">Owned by</th>
-          <th className="text-left">Floor price</th>
-          <th className="text-left">Volume traded</th>
+          <th className="text-left font-medium">Items</th>
+          <th className="text-left font-medium">Owned by</th>
+          <th className="text-left font-medium">Floor price</th>
+          <th className="text-left font-medium">Volume traded</th>
         </tr>
         <tr className="font-bold">
           <td>379</td>
