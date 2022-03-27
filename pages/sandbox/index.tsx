@@ -3,6 +3,7 @@ import { FaTwitter, FaFacebook, FaEdit } from 'react-icons/fa';
 import { Button } from 'src/components/common';
 import { Card } from 'src/components/common/card';
 import Chip from 'src/components/common/chip';
+import RoundedNav from 'src/components/common/rounded-nav';
 
 export const SandboxPage: FC = () => {
   return (
@@ -36,6 +37,9 @@ export const SandboxPage: FC = () => {
         <Chip content={<FaTwitter />} />
         <Chip content={<FaFacebook />} />
       </div>
+
+      <h3># RoundedNav</h3>
+      <RoundedNav items={[{ title: 'NFT' }, { title: 'Community' }]} className="w-80 mt-6" />
 
       <h3># Card - WIP</h3>
       <div className="flex flex-row space-x-4">
