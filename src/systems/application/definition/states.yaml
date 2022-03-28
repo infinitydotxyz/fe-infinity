@@ -1,0 +1,39 @@
+id: application
+type: parallel
+context: {}
+preserveActionOrder: true
+states:
+  interface:
+    type: parallel
+    states:
+      layout:
+        initial: standard
+        states:
+          scientific:
+            on:
+              layout.next: standard
+              layout.prev: standard
+              layout.choose.standard: standard
+              layout.choose.scientific: scientific
+          standard:
+            on:
+              layout.next: scientific
+              layout.prev: scientific
+              layout.choose.standard: standard
+              layout.choose.scientific: scientific
+
+      theme:
+        initial: dark
+        states:
+          light:
+            on:
+              theme.next: dark
+              theme.prev: dark
+              theme.choose.dark: dark
+              theme.choose.light: light
+          dark:
+            on:
+              theme.next: light
+              theme.prev: light
+              theme.choose.dark: dark
+              theme.choose.light: light
