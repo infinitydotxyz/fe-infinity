@@ -1,0 +1,232 @@
+.closeBanner {
+  position: fixed !important;
+  right: 20px;
+  top: 18px;
+  margin-right: 10px;
+  height: 14px;
+  width: 14px;
+  border-radius: 0px;
+  z-index: 1;
+  background-color: none;
+  cursor: pointer;
+}
+
+.bannerText {
+  position: fixed;
+  width: 100%;
+  height: 19px;
+  top: 16px;
+
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 19px;
+  margin-right: 20px;
+
+  text-align: center;
+  letter-spacing: 0.624px;
+  color: #ffffff;
+}
+
+.header {
+  height: 76px;
+  margin-bottom: 2rem;
+
+  .banner {
+    position: fixed;
+    z-index: 1;
+    width: 100%;
+    height: 51px;
+    left: 0px;
+    top: 0px;
+    background: var(--chakra-colors-brandColor);
+  }
+
+  .lockout {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+  }
+
+  .hdf {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    background-color: var(--chakra-colors-headerBg, red);
+
+    :global(body.chakra-ui-dark) & {
+      background-color: var(--chakra-colors-headerBgDark, red);
+    }
+
+    backdrop-filter: blur(12px);
+    z-index: 2;
+    padding: 20px 0;
+  }
+
+  .links {
+    display: flex;
+    font-weight: bold;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .linksButtons {
+    display: flex;
+    font-weight: bold;
+    align-items: center;
+    gap: 6px;
+
+    letter-spacing: -0.025em;
+  }
+
+  .connectButton {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    border-radius: 60px;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+
+    color: #333;
+    box-shadow: 0px 6px 6px rgba(64, 71, 255, 0.15);
+    border: 1px solid #eee;
+
+    span {
+      margin-top: -5px;
+    }
+
+    :global(body.chakra-ui-dark) & {
+      background-color: var(--chakra-colors-brandGray, red);
+      color: #333;
+
+      // box-shadow: 0px 6px 6px rgba(64, 71, 255, 0.15);
+      box-shadow: none;
+      border: 1px solid #333;
+    }
+
+    &:hover {
+      background-color: #eee;
+
+      :global(body.chakra-ui-dark) & {
+        background-color: #333;
+
+        background-color: var(--chakra-colors-brandColor, red);
+        color: #fff;
+      }
+    }
+
+    & svg {
+      margin-right: 8px;
+    }
+  }
+}
+
+.exploreButton {
+  padding: 8px 14px;
+  border-radius: 100px;
+  color: #333;
+  cursor: pointer;
+  transition: 0.1s all ease-in;
+
+  &:hover {
+    // background-color: var(--chakra-colors-brandColor, red);
+    background-color: var(--chakra-colors-brandColor);
+    color: #fff;
+  }
+
+  &.active {
+    // background-color: var(--chakra-colors-brandColor, red);
+    background-color: var(--chakra-colors-brandColor);
+    color: #fff;
+  }
+}
+
+.showLargeNav {
+  display: flex;
+}
+
+.showConnectButton {
+  display: flex;
+}
+
+.showMediumNav {
+  display: none;
+}
+
+.showMobileMenu {
+  display: none;
+
+  :global(body.chakra-ui-dark) & {
+    color: white;
+  }
+}
+
+.showExplore {
+  display: flex;
+}
+
+.showSmallLogo {
+  display: none;
+}
+
+.showLargeLogo {
+  display: flex;
+}
+
+@media (min-width: 650px) and (max-width: 1000px) {
+  .showLargeNav {
+    display: none;
+  }
+  .showConnectButton {
+    display: flex;
+  }
+  .showMediumNav {
+    display: flex;
+  }
+  .showMobileMenu {
+    display: none;
+  }
+  .showExplore {
+    display: flex;
+  }
+
+  .showSmallLogo {
+    display: none;
+  }
+
+  .showLargeLogo {
+    display: flex;
+  }
+}
+
+@media (max-width: 650px) {
+  .showLargeNav {
+    display: none;
+  }
+  .showConnectButton {
+    display: none;
+  }
+  .showMediumNav {
+    display: none;
+  }
+  .showMobileMenu {
+    display: flex;
+  }
+  .showExplore {
+    display: none;
+  }
+
+  .showSmallLogo {
+    display: flex;
+    max-height: 35px;
+  }
+
+  .showLargeLogo {
+    display: none;
+  }
+}

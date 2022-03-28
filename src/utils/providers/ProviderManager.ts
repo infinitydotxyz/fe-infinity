@@ -77,7 +77,8 @@ export class ProviderManager implements Omit<Optional<Provider, 'type'>, 'init'>
     } else {
       const requiresSignIn = !this.isLoggedInAndAuthenticated;
       if (requiresSignIn) {
-        throw new Error('Please login');
+        // todo: uncomment
+        // throw new Error('Please login');
       }
     }
     return {
@@ -194,11 +195,13 @@ export class ProviderManager implements Omit<Optional<Provider, 'type'>, 'init'>
     }
   }
 
+  // todo: why is this reqd? this is getting called too many times
   private get isLoggedInAndAuthenticated(): boolean {
     const currentUser = this.account.toLowerCase();
     if (currentUser && this.authMessage && this.authSignature) {
       try {
         const signer = ethers.utils.verifyMessage(this.authMessage, this.authSignature).toLowerCase();
+        console.log(signer);
         if (currentUser === signer) {
           return true;
         }
@@ -207,7 +210,6 @@ export class ProviderManager implements Omit<Optional<Provider, 'type'>, 'init'>
         return false;
       }
     }
-
     return false;
   }
 
