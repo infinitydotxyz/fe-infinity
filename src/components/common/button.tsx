@@ -1,4 +1,4 @@
-import React, { forwardRef, ReactElement } from 'react';
+import React, { forwardRef, ReactNode } from 'react';
 
 const classes = {
   base: 'focus:outline-none transition ease-in-out duration-300 hover:bg-gray-700 hover:text-white active:bg-gray-900 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50',
@@ -20,7 +20,7 @@ const classes = {
 };
 
 type ButtonProps = JSX.IntrinsicElements['button'] & {
-  children: ReactElement | ReactElement[] | string;
+  children: ReactNode;
   variant?: 'plain' | 'primary' | 'secondary' | 'outline' | 'danger';
   size?: 'plain' | 'small' | 'normal' | 'large';
 };

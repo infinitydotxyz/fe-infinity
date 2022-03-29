@@ -4,8 +4,6 @@ import Flatpickr from 'react-flatpickr';
 // date picker themes
 // import './theme.css';
 import 'flatpickr/dist/themes/airbnb.css';
-import { Button } from 'src/components/common';
-import { FaCalendar } from 'react-icons/fa';
 // import 'flatpickr/dist/themes/dark.css';
 // import 'flatpickr/dist/themes/light.css';
 // import 'flatpickr/dist/themes/material_blue.css';
@@ -17,14 +15,9 @@ type Props = {
 };
 
 export const DatePicker = ({ placeholder = 'Dec 8, 2021  12:00 PM', value, onChange }: Props) => {
-  let myFp: Flatpickr | null;
-
   return (
-    <div className="flex flex-row w-full border border-slate-100 rounded-md">
+    <div className="flex flex-row w-full     rounded-md">
       <Flatpickr
-        ref={(fp) => {
-          myFp = fp;
-        }}
         data-enable-time
         options={{
           enableTime: true,
@@ -38,23 +31,6 @@ export const DatePicker = ({ placeholder = 'Dec 8, 2021  12:00 PM', value, onCha
           onChange(date[0]);
         }}
       />
-
-      <Button
-        variant="plain"
-        size="plain"
-        className="p-2"
-        onClick={() => {
-          // at this point it's always closed since any click closes the existing popup
-          // tried to get it to toggle properly, but will fix later if possible
-          if (myFp) {
-            if (!myFp.flatpickr.isOpen) {
-              myFp.flatpickr.toggle();
-            }
-          }
-        }}
-      >
-        <FaCalendar />
-      </Button>
     </div>
   );
 };

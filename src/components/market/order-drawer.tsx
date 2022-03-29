@@ -154,7 +154,7 @@ export function OrderDrawer({ open, onClose }: Props) {
                 <div className="flex h-full flex-col overflow-y-auto bg-white shadow-xl">
                   {header}
                   {list}
-                  <div className="flex flex-col px-6">
+                  <div className="flex flex-col space-y-2 px-6">
                     {numItemsField}
                     {startPriceField}
                     {endPriceField}
