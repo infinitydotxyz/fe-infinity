@@ -3,6 +3,7 @@ import useSWR, { SWRConfiguration } from 'swr';
 import { stringify } from 'query-string';
 import { API_BASE } from './constants';
 import { ProviderManager } from './providers/ProviderManager';
+import HttpStatusCode from './HttpStatusCode';
 
 const errorToast = (message: string) => {
   console.log(message);
@@ -37,11 +38,10 @@ export const getAuthHeaders = async (attemptLogin = true) => {
 };
 
 interface ApiParams {
-  query?: unknown;
-  data?: unknown;
+  query?: unknown; // query object - will be converted to query string (?param1=value1&param2=value2...).
+  data?: unknown; // data (payload) for Post, Put, Delete
   options?: AxiosRequestConfig;
   doNotAttemptLogin?: boolean;
-  [key: string]: unknown;
 }
 
 // example: const { result, error, status } = await apiGet(`/api/path`, { query: { page: 1 } });
@@ -68,7 +68,7 @@ export const apiGet = async (path: string, params?: ApiParams) => {
     return { result: data, status };
   } catch (err) {
     const { error, status } = catchError(err);
-    if (status === 401) {
+    if (status === HttpStatusCode.UNAUTHORIZED) {
       errorToast('Unauthorized');
       return { error: new Error('Unauthorized'), status };
     }
@@ -76,6 +76,7 @@ export const apiGet = async (path: string, params?: ApiParams) => {
   }
 };
 
+// example: const { result, error, status } = await apiPost(`/api/path`, { data: { somekey: 'somevalue' } });
 export const apiPost = async (path: string, params?: ApiParams) => {
   const queryStr = buildQueryString(params?.query);
   const headers = await getAuthHeaders();
@@ -84,18 +85,24 @@ export const apiPost = async (path: string, params?: ApiParams) => {
       url: `${API_BASE}${path}${queryStr}`,
       method: 'POST',
       headers,
-      data: params?.data
+      data: params?.data,
+      ...params?.options
     });
 
     return { result: data, status };
   } catch (err) {
     const { error, status } = catchError(err);
 
-    if (status === 429) {
+    if (status === HttpStatusCode.TOO_MANY_REQUESTS) {
       errorToast("You've been rate limited, please try again in a few minutes");
     }
     return { error, status };
   }
+};
+
+// same as apiPost but with PUT method.
+export const apiPut = (path: string, params?: ApiParams) => {
+  return apiPost(path, { ...params, options: { ...params?.options, method: 'PUT' } });
 };
 
 export const apiDelete = async (path: string, params?: ApiParams) => {
