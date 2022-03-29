@@ -34,7 +34,7 @@ export const PageBox = ({ title, rightSide, children, center = true, showConnect
         </>
       )}
 
-      <div className="flex flex-col w-full m-4 max-w-screen-md">
+      <div className="flex flex-col w-full m-4 max-w-screen-lg">
         <PageHeader title={title} rightSide={rightSide} />
 
         <main>{children}</main>
