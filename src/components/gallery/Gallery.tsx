@@ -6,7 +6,7 @@ import { ITEMS_PER_PAGE } from 'src/utils/constants';
 import { Button } from '../common';
 import { Card } from '../common/card';
 import { FetchMore } from '../common/fetch-more';
-import Filter from '../filter/filter';
+import FilterPanel from '../filter/filter-panel';
 
 type Asset = {
   address: string;
@@ -108,8 +108,8 @@ export function Gallery({ collection }: GalleryProps) {
 
       <div className="flex">
         {filterShowed && (
-          <div className="w-1/3">
-            <Filter />
+          <div className="">
+            <FilterPanel />
           </div>
         )}
 
