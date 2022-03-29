@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, PageBox } from 'src/components/common';
 import { OrderDrawer } from 'src/components/market/order-drawer';
 import { BuyOrderList, SellOrderList } from 'src/components/market/order-list';
-import { showAppError, showAppMessage, User } from 'src/utils/context/AppContext';
+import { useAppContext } from 'src/utils/context/AppContext';
 import {
   addBuy,
   addSell,
@@ -12,17 +12,19 @@ import {
   marketSellOrders
 } from 'src/utils/marketUtils';
 import { BuyOrderMatch, MarketListIdType, MarketListingsBody, OBOrder } from '@infinityxyz/lib/types/core';
+import { NextPage } from 'next';
+import Layout from 'src/containers/layout';
 
-export const MarketPage = () => {
+export default function MarketPage() {
   const [cartOpen, setCartOpen] = useState<boolean>(false);
   const [buyOrders, setBuyOrders] = useState<OBOrder[]>([]);
   const [sellOrders, setSellOrders] = useState<OBOrder[]>([]);
   const [matchOrders, setMatchOrders] = useState<BuyOrderMatch[]>([]);
+  const { showAppError, showAppMessage, user } = useAppContext();
   // const { user, chainId, showAppError, showAppMessage, providerManager } = useAppContext();
   // const [buyModalShown, setBuyModalShown] = useState(false);
   // const [sellModalShown, setSellModalShown] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [user, setUser] = useState<User>({ address: '0xslkdjflskdjf' });
 
   const [buyOrdersValidInactive, setBuyOrdersValidInactive] = useState<OBOrder[]>([]);
   const [buyOrdersInvalid, setBuyOrdersInvalid] = useState<OBOrder[]>([]);
@@ -190,10 +192,8 @@ export const MarketPage = () => {
         onClick={async () => {
           refreshAllLists();
 
-          if (this === 'sdf') {
-            buy({} as OBOrder);
-            sell({} as OBOrder);
-          }
+          buy({} as OBOrder);
+          sell({} as OBOrder);
         }}
       >
         Refresh
@@ -403,7 +403,7 @@ export const MarketPage = () => {
       </div>
     </PageBox>
   );
-};
+}
 
 // =====================================================
 
@@ -430,4 +430,4 @@ const Header = ({ title }: Props2): JSX.Element => {
   );
 };
 
-export default MarketPage;
+MarketPage.getLayout = (page: NextPage) => <Layout>{page}</Layout>;

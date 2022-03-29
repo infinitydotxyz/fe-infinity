@@ -5,7 +5,7 @@ import { UserRejectException } from 'src/utils/providers/UserRejectException';
 import { ProviderManager } from 'src/utils/providers/ProviderManager';
 
 export type User = {
-  account: string;
+  address: string;
 };
 
 export type AppContextType = {
@@ -44,7 +44,7 @@ export function AppContextProvider({ children }: any) {
         providerManagerInstance
           .signIn()
           .then(() => {
-            setUser({ account: providerManagerInstance.account });
+            setUser({ address: providerManagerInstance.account });
             const chainIdNew = providerManagerInstance.chainId ?? 1;
             setChainId(`${chainIdNew}`);
           })
@@ -66,7 +66,7 @@ export function AppContextProvider({ children }: any) {
       try {
         await providerManager.connectWallet(walletType);
         await providerManager.signIn();
-        setUser({ account: providerManager.account ?? '' });
+        setUser({ address: providerManager.account ?? '' });
         const chainIdNew = providerManager.chainId ?? 1;
         setChainId(`${chainIdNew}`);
         setUserReady(true);
@@ -98,7 +98,7 @@ export function AppContextProvider({ children }: any) {
             isChangingAccount = false;
             try {
               await providerManager?.signIn();
-              setUser({ account: providerManager?.account ?? '' });
+              setUser({ address: providerManager?.account ?? '' });
               const chainIdNew = providerManager?.chainId ?? 1;
               setChainId(`${chainIdNew}`);
             } catch (err) {

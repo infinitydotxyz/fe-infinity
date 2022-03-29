@@ -8,7 +8,7 @@ const Header = (): JSX.Element => {
   const { user } = useAppContext();
   const headerRef = useRef<HTMLElement | null>(null);
 
-  const signedIn = !!user?.account;
+  const signedIn = !!user?.address;
 
   let accountButton;
 

@@ -14,7 +14,7 @@ export default function ConnectWallet() {
   const { connectWallet, user, userReady } = useAppContext();
 
   useEffect(() => {
-    if (user?.account && userReady) {
+    if (user?.address && userReady) {
       router.back();
     }
   }, [userReady, user]);
