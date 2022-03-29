@@ -74,7 +74,7 @@ export function CollectionPage() {
 
       <div className="mt-6">{currentTab === 0 ? <>Tab 1</> : <>Tab 2</>}</div>
 
-      <Gallery collection={collection} />
+      {collection && <Gallery collection={collection} />}
     </PageBox>
   );
 }

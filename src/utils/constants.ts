@@ -11,7 +11,7 @@ export const SITE_HOST =
     : process.env.APP_ENV === 'dev'
     ? 'https://dev.nftcompany.com'
     : 'http://localhost:3000';
-export const ITEMS_PER_PAGE = 50;
+export const ITEMS_PER_PAGE = 10;
 export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 export const PAGE_NAMES = {

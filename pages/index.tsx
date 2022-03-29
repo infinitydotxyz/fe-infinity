@@ -10,14 +10,6 @@ export const Home: FC = () => {
       <div className="flex flex-col space-y-4 items-center">
         <Button
           onClick={() => {
-            router.push('/market');
-          }}
-        >
-          Market
-        </Button>
-
-        <Button
-          onClick={() => {
             router.push('/connect');
           }}
         >
@@ -26,18 +18,27 @@ export const Home: FC = () => {
 
         <Button
           onClick={() => {
-            router.push('/sandbox');
+            router.push('/market');
           }}
         >
-          SandBox
+          Market
         </Button>
 
         <Button
           onClick={() => {
-            router.push('/collection');
+            router.push('/collection?name=cyphercity');
           }}
         >
           Collection
+        </Button>
+
+        <Button
+          variant="outline"
+          onClick={() => {
+            router.push('/sandbox');
+          }}
+        >
+          SandBox
         </Button>
       </div>
     </PageBox>
