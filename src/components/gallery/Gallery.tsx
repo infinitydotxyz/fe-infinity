@@ -107,6 +107,8 @@ export function Gallery({ collection }: GalleryProps) {
         {filterShowed && <div className="w-1/3">Filter Panel</div>}
 
         <div className="flex flex-wrap mt-6">
+          {isFetching && <div>Loading..</div>}
+
           {data.map((item, idx) => {
             return <Card key={idx} data={item} className="ml-8 mt-8" />;
           })}
