@@ -1,12 +1,11 @@
 import React from 'react';
-import styles from './DatePicker.module.scss';
 import Flatpickr from 'react-flatpickr';
 
 // date picker themes
 // import './theme.css';
 import 'flatpickr/dist/themes/airbnb.css';
 import { Button } from 'src/components/common';
-import { FaCaretDown } from 'react-icons/fa';
+import { FaCalendar } from 'react-icons/fa';
 // import 'flatpickr/dist/themes/dark.css';
 // import 'flatpickr/dist/themes/light.css';
 // import 'flatpickr/dist/themes/material_blue.css';
@@ -21,7 +20,7 @@ export const DatePicker = ({ placeholder = 'Dec 8, 2021  12:00 PM', value, onCha
   let myFp: Flatpickr | null;
 
   return (
-    <div className={styles.wrapper}>
+    <div className="flex flex-row w-full border border-slate-100 rounded-md">
       <Flatpickr
         ref={(fp) => {
           myFp = fp;
@@ -34,7 +33,7 @@ export const DatePicker = ({ placeholder = 'Dec 8, 2021  12:00 PM', value, onCha
         }}
         placeholder={placeholder}
         value={value}
-        className={styles.flatpicker}
+        className="flex border-none outline-none w-full"
         onChange={(date) => {
           onChange(date[0]);
         }}
@@ -54,7 +53,7 @@ export const DatePicker = ({ placeholder = 'Dec 8, 2021  12:00 PM', value, onCha
           }
         }}
       >
-        <FaCaretDown />
+        <FaCalendar />
       </Button>
     </div>
   );
