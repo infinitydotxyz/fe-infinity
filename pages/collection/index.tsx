@@ -67,12 +67,12 @@ export function CollectionPage() {
       </table>
 
       <RoundedNav
-        items={[{ title: 'NFT' }, { title: 'Community' }]}
+        items={[{ title: 'NFTs' }, { title: 'Community' }]}
         onChange={(currentIndex) => setCurrentTab(currentIndex)}
         className="w-80 mt-6"
       />
 
-      <div className="mt-6">{currentTab === 0 ? <>Tab 1</> : <>Tab 2</>}</div>
+      <div className="mt-6 text-3xl">{currentTab === 0 ? <>NFTs</> : <>Community</>}</div>
 
       {collection && <Gallery collection={collection} />}
     </PageBox>
