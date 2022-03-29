@@ -3,7 +3,7 @@ import useSWR, { SWRConfiguration } from 'swr';
 import { stringify } from 'query-string';
 import { API_BASE } from './constants';
 import { ProviderManager } from './providers/ProviderManager';
-import HttpStatusCode from './HttpStatusCode';
+import HttpStatusCode from './httpStatusCode';
 
 const errorToast = (message: string) => {
   console.log(message);
