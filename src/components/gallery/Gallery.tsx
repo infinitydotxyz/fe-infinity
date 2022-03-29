@@ -6,6 +6,7 @@ import { ITEMS_PER_PAGE } from 'src/utils/constants';
 import { Button } from '../common';
 import { Card } from '../common/card';
 import { FetchMore } from '../common/fetch-more';
+import Filter from '../filter/filter';
 
 type Asset = {
   address: string;
@@ -106,7 +107,11 @@ export function Gallery({ collection }: GalleryProps) {
       </header>
 
       <div className="flex">
-        {filterShowed && <div className="w-1/3">Filter Panel</div>}
+        {filterShowed && (
+          <div className="w-1/3">
+            <Filter />
+          </div>
+        )}
 
         <div className="flex flex-wrap mt-6">
           {isFetching && <div>Loading..</div>}

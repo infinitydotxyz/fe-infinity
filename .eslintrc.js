@@ -135,13 +135,7 @@ module.exports = {
     'comma-style': 2,
     curly: 2,
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
-    'object-curly-spacing': [
-      2,
-      'always',
-      {
-        objectsInObjects: false
-      }
-    ],
+    'object-curly-spacing': [2, 'always'],
     'keyword-spacing': 2,
     'arrow-spacing': 2,
     'comma-spacing': 2,
