@@ -1,15 +1,13 @@
 import type { FC } from 'react';
 import { FaTwitter, FaFacebook, FaEdit } from 'react-icons/fa';
-import { Button } from 'src/components/common';
+import { Button, PageBox } from 'src/components/common';
 import { Card } from 'src/components/common/card';
 import Chip from 'src/components/common/chip';
 import RoundedNav from 'src/components/common/rounded-nav';
 
 export const SandboxPage: FC = () => {
   return (
-    <div className="m-4 flex-col space-y-8">
-      <h1>Sandbox</h1>
-
+    <PageBox title="SandBox">
       <h3># Text</h3>
       <div>
         <div className="text-primary">text-primary</div>
@@ -62,7 +60,7 @@ export const SandboxPage: FC = () => {
           }}
         />
       </div>
-    </div>
+    </PageBox>
   );
 };
 
