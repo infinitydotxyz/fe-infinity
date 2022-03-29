@@ -66,8 +66,10 @@ export function Gallery({ collection }: GalleryProps) {
     const moreData = (result?.listings || []).map((item: Listing) => {
       return {
         id: item.id + item.metadata.asset.address + item.metadata.asset.id,
-        title: '',
-        image: item.metadata.asset.image
+        title: item.metadata.asset.collectionName,
+        image: item.metadata.asset.image,
+        price: item.metadata.basePriceInEth,
+        tokenId: item.metadata.asset.id
       };
     });
 
