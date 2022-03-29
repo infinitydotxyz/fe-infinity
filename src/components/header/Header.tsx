@@ -4,6 +4,8 @@ import { useAppContext } from 'src/utils/context/AppContext';
 
 import styles from './Header.module.scss';
 import { Button, Spacer } from '../common';
+import logo from 'src/images/logo-new.svg';
+import miniLogo from 'src/images/logo-mini-new.svg';
 
 const Header = (): JSX.Element => {
   const { user, signOut } = useAppContext();
@@ -46,7 +48,7 @@ const Header = (): JSX.Element => {
       <div className={styles.pageHeader}>
         <div className={styles.showLargeLogo}>
           <Link href="/" passHref>
-            <img className="can-click" alt="logo" src={'/img/logo-new.svg'} width={160} />
+            <img className="can-click" alt="logo" src={logo.src} width={logo.width} />
           </Link>
         </div>
         <div className={styles.showSmallLogo}>
@@ -55,8 +57,8 @@ const Header = (): JSX.Element => {
               style={{ flex: '0 1 auto' }}
               className="can-click"
               alt="logo"
-              src="/img/logo-mini-new.svg"
-              width={60}
+              src={miniLogo.src}
+              width={miniLogo.width}
             />
           </Link>
         </div>

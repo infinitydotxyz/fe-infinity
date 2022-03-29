@@ -5,6 +5,10 @@ import { useRouter } from 'next/router';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { WalletType } from 'src/utils/providers/AbstractProvider';
 import { PageBox } from 'src/components/common';
+import logo from 'src/images/logo-new.svg';
+import metamask from 'src/images/metamask.svg';
+import coinbase from 'src/images/coinbase.svg';
+import walletConnect from 'src/images/walletConnect.svg';
 
 export default function ConnectWallet() {
   const router = useRouter();
@@ -64,7 +68,7 @@ export default function ConnectWallet() {
       <div>
         <Link href="/">
           <a>
-            <img alt="Infinity" src={dark ? '/img/logo-new.svg' : '/img/logo-new.svg'} width={240} />
+            <img alt="Infinity" src={dark ? logo.src : logo.src} width={logo.width} />
           </a>
         </Link>
 
@@ -74,21 +78,21 @@ export default function ConnectWallet() {
 
           <ConnectItem
             onClick={connectMetaMask}
-            img="/img/metamask.svg"
+            img={metamask.src}
             title="Metamask"
             subtitle="Connect using browser wallet"
           />
 
           <ConnectItem
             onClick={connectWalletConnect}
-            img="/img/walletConnect.svg"
+            img={walletConnect.src}
             title="WalletConnect"
             subtitle="Connect using mobile wallet"
           />
 
           <ConnectItem
             onClick={connectCoinbase}
-            img="/img/coinbase.svg"
+            img={coinbase.src}
             title="Coinbase"
             subtitle="Connect using Coinbase wallet"
           />
