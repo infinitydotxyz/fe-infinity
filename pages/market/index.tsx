@@ -12,8 +12,6 @@ import {
   marketSellOrders
 } from 'src/utils/marketUtils';
 import { BuyOrderMatch, MarketListIdType, MarketListingsBody, OBOrder } from '@infinityxyz/lib/types/core';
-import { NextPage } from 'next';
-import Layout from 'src/containers/layout';
 
 export default function MarketPage() {
   const [cartOpen, setCartOpen] = useState<boolean>(false);
@@ -429,5 +427,3 @@ const Header = ({ title }: Props2): JSX.Element => {
     </div>
   );
 };
-
-MarketPage.getLayout = (page: NextPage) => <Layout>{page}</Layout>;

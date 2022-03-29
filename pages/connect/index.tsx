@@ -1,13 +1,11 @@
 import React, { useEffect } from 'react';
-import Head from 'next/head';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import styles from './Connect.module.scss';
-import { NextPage } from 'next';
-import Layout from 'src/containers/layout';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { WalletType } from 'src/utils/providers/AbstractProvider';
+import { PageBox } from 'src/components/common';
 
 export default function ConnectWallet() {
   const router = useRouter();
@@ -34,10 +32,7 @@ export default function ConnectWallet() {
   const dark = 'dark';
 
   return (
-    <>
-      <Head>
-        <title>Connect Wallet</title>
-      </Head>
+    <PageBox title="Connect Wallet" showConnect={false}>
       <div className={styles.connect}>
         <div className="container container-min">
           <div className={styles.center}>
@@ -143,9 +138,6 @@ export default function ConnectWallet() {
           </div>
         </div>
       </div>
-    </>
+    </PageBox>
   );
 }
-
-// eslint-disable-next-line react/display-name
-ConnectWallet.getLayout = (page: NextPage) => <Layout connect>{page}</Layout>;

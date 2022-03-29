@@ -3,15 +3,17 @@ import React, { ReactElement } from 'react';
 import { Spacer } from 'src/components/common';
 import { useRouter } from 'next/router';
 import { twMerge } from 'tailwind-merge';
+import Header from 'src/components/header/Header';
 
 type Props = {
   title: string;
   rightSide?: JSX.Element;
   children?: ReactElement | ReactElement[] | string;
   className?: string;
+  showConnect?: boolean;
 };
 
-export const PageBox = ({ title, rightSide, children, className }: Props): JSX.Element => {
+export const PageBox = ({ title, rightSide, children, className, showConnect = true }: Props): JSX.Element => {
   return (
     <div className={twMerge(`flex flex-row justify-center m-4 ${className ?? ''}`)}>
       <Head>
@@ -22,6 +24,8 @@ export const PageBox = ({ title, rightSide, children, className }: Props): JSX.E
 
       <div className="flex flex-col w-full m-4 max-w-screen-md">
         <PageHeader title={title} rightSide={rightSide} />
+        {showConnect && <Header />}
+
         <main>{children}</main>
       </div>
     </div>

@@ -1,34 +1,26 @@
 import '../styles/globals.css';
 
 import type { AppProps } from 'next/app';
-import { NextPage } from 'next';
-import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import React, { ComponentType, createElement, FunctionComponent, memo, StrictMode, useEffect } from 'react';
 import * as gtag from '../lib/ga/gtag';
 const isProduction = process.env.NODE_ENV === 'production';
-// import { ComponentType, createElement, FunctionComponent, memo, StrictMode } from 'react';
-// import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
+import { AppContextProvider } from 'src/utils/context/AppContext';
+import { useRouter } from 'next/router';
+import { isLocalhost } from 'src/utils/commonUtil';
+import LogRocket from 'logrocket';
 
-// const providers: readonly ComponentType[] = [BrowserRouter];
+const providers: readonly ComponentType[] = [BrowserRouter];
 
-// const PageComponent: FunctionComponent<AppProps> = ({ Component, pageProps }) => <Component {...pageProps} />;
+const PageComponent: FunctionComponent<AppProps> = ({ Component, pageProps }) => <Component {...pageProps} />;
 
-// const MemoizedComponent = memo(PageComponent, (p, n) => p.Component === n.Component && p.pageProps === n.pageProps);
+const MemoizedComponent = memo(PageComponent, (p, n) => p.Component === n.Component && p.pageProps === n.pageProps);
 
-// const App: FunctionComponent<AppProps> = (props) => {
-//   return typeof window === 'undefined' ? null : (
-//     <StrictMode>
-//       {providers.reduceRight(
-//         (children, provider) => createElement(provider, undefined, children),
-//         <MemoizedComponent {...props} />
-//       )}
-//     </StrictMode>
-//   );
-// };
+if (!isLocalhost()) {
+  LogRocket.init('0pu9ak/nftco');
+}
 
-// export default App;
-
-function MyApp({ Component, pageProps }: AppProps) {
+const App: FunctionComponent<AppProps> = (props) => {
   const router = useRouter();
 
   useEffect(() => {
@@ -44,8 +36,16 @@ function MyApp({ Component, pageProps }: AppProps) {
     };
   }, [router.events]);
 
-  const getLayout = (Component as any).getLayout || ((page: NextPage) => page);
-  return getLayout(<Component {...pageProps} />);
-}
+  return typeof window === 'undefined' ? null : (
+    <StrictMode>
+      {providers.reduceRight(
+        (children, provider) => createElement(provider, undefined, children),
+        <AppContextProvider>
+          <MemoizedComponent {...props} />
+        </AppContextProvider>
+      )}
+    </StrictMode>
+  );
+};
 
-export default MyApp;
+export default App;
