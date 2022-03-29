@@ -70,7 +70,7 @@ export function AppContextProvider({ children }: any) {
         const chainIdNew = providerManager.chainId ?? 1;
         setChainId(`${chainIdNew}`);
         setUserReady(true);
-      } catch (err: Error | any) {
+      } catch (err: Error | unknown) {
         console.log(err);
         if (err instanceof UserRejectException) {
           showAppError(err.message);

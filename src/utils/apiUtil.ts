@@ -108,7 +108,7 @@ export const apiDelete = async (path: string, params?: ApiParams) => {
       headers
     });
     return { result: data, status };
-  } catch (err: any) {
+  } catch (err: Error | unknown) {
     const { error, status } = catchError(err);
     return { error, status };
   }

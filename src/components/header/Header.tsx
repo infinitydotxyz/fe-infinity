@@ -3,9 +3,10 @@ import Link from 'next/link';
 import { useAppContext } from 'src/utils/context/AppContext';
 
 import styles from './Header.module.scss';
+import { Button, Spacer } from '../common';
 
 const Header = (): JSX.Element => {
-  const { user } = useAppContext();
+  const { user, signOut } = useAppContext();
   const headerRef = useRef<HTMLElement | null>(null);
 
   const signedIn = !!user?.address;
@@ -13,6 +14,15 @@ const Header = (): JSX.Element => {
   let accountButton;
 
   if (signedIn) {
+    accountButton = (
+      <Button
+        onClick={() => {
+          signOut();
+        }}
+      >
+        Sign Out
+      </Button>
+    );
   } else {
     accountButton = (
       <Link href="/connect" passHref>
@@ -32,8 +42,8 @@ const Header = (): JSX.Element => {
   }
 
   return (
-    <header ref={headerRef} className={styles.header} style={{ height: '76px' }}>
-      <div className="page-container-header">
+    <header ref={headerRef} className={styles.header}>
+      <div className={styles.pageHeader}>
         <div className={styles.showLargeLogo}>
           <Link href="/" passHref>
             <img className="can-click" alt="logo" src={'/img/logo-new.svg'} width={160} />
@@ -50,6 +60,8 @@ const Header = (): JSX.Element => {
             />
           </Link>
         </div>
+
+        <Spacer />
 
         <div className={styles.links}>
           <div className={styles.showConnectButton}>{accountButton}</div>

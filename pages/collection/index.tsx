@@ -19,7 +19,7 @@ export function CollectionPage() {
   console.log('result, isLoading, isError, error', collection, isLoading, isError, error);
 
   return (
-    <PageBox title={collectionName} className="justify-start">
+    <PageBox title={collectionName} center={false}>
       <div className="flex flex-row space-x-4">
         <Chip content="Watch" />
         <Chip left={<FaEdit />} content="Edit" />

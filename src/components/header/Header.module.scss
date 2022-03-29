@@ -31,6 +31,8 @@
 .header {
   height: 76px;
   margin-bottom: 2rem;
+  width: 100%;
+  position: fixed;
 
   .banner {
     position: fixed;
@@ -124,6 +126,24 @@
       margin-right: 8px;
     }
   }
+}
+
+.pageHeader {
+  width: 100%;
+  margin: 0 auto;
+  max-width: 1600px;
+  padding: 0 20px;
+
+  @media (min-width: 768px) {
+    padding: 0 32px;
+  }
+
+  @media (min-width: 1200px) {
+    padding: 0 72px;
+  }
+
+  display: flex;
+  align-items: center;
 }
 
 .exploreButton {

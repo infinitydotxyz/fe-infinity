@@ -1,30 +1,41 @@
 import Head from 'next/head';
-import React, { ReactElement } from 'react';
+import React, { ReactNode } from 'react';
 import { Spacer } from 'src/components/common';
 import { useRouter } from 'next/router';
-import { twMerge } from 'tailwind-merge';
 import Header from 'src/components/header/Header';
 
 type Props = {
   title: string;
   rightSide?: JSX.Element;
-  children?: ReactElement | ReactElement[] | string;
-  className?: string;
+  children?: ReactNode;
+  center?: boolean;
   showConnect?: boolean;
 };
 
-export const PageBox = ({ title, rightSide, children, className, showConnect = true }: Props): JSX.Element => {
+export const PageBox = ({ title, rightSide, children, center = true, showConnect = true }: Props): JSX.Element => {
+  let justify = 'items-start';
+
+  if (center) {
+    justify = 'items-center';
+  }
+
   return (
-    <div className={twMerge(`flex flex-row justify-center m-4 ${className ?? ''}`)}>
+    <div className={`flex flex-col  ${justify} m-4`}>
       <Head>
-        <title>{title}</title>
+        <title>{title} | Infinity</title>
         <meta name="description" content="Infinity NFT marketplace" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      {showConnect && (
+        <>
+          <Header />
+          <div style={{ height: '99px' }} />
+        </>
+      )}
+
       <div className="flex flex-col w-full m-4 max-w-screen-md">
         <PageHeader title={title} rightSide={rightSide} />
-        {showConnect && <Header />}
 
         <main>{children}</main>
       </div>
