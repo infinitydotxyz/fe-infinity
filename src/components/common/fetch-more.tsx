@@ -30,11 +30,9 @@ type FetchMoreProps = {
 };
 
 export const FetchMore = ({ onFetchMore, data, currentPage }: FetchMoreProps) => {
-  console.log('FetchMore data ', data?.length, currentPage);
   return (
     <InView>
       {({ inView, ref }) => {
-        console.log('inView', inView);
         return (
           <div ref={ref}>
             <FetchMoreElement inView={inView} onFetchMore={onFetchMore} data={data} currentPage={currentPage} />
