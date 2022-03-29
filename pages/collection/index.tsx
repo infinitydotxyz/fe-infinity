@@ -27,7 +27,7 @@ export function CollectionPage() {
         <Chip content={<FaFacebook />} />
       </div>
 
-      <div className="text-gray-400 mt-6">{collection?.metadata.description ?? ''}</div>
+      <div className="text-gray-500 mt-6">{collection?.metadata.description ?? ''}</div>
 
       <div className="text-sm font-bold mt-6">
         <div>Ownership includes</div>
@@ -72,9 +72,9 @@ export function CollectionPage() {
         className="w-80 mt-6"
       />
 
-      <div className="mt-6 text-3xl">{currentTab === 0 ? <>NFTs</> : <>Community</>}</div>
-
-      {collection && <Gallery collection={collection} />}
+      <div className="mt-6">
+        {currentTab === 0 ? <>{collection && <Gallery collection={collection} />}</> : <>Community</>}
+      </div>
     </PageBox>
   );
 }
