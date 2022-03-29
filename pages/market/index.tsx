@@ -12,17 +12,17 @@ import {
   marketSellOrders
 } from 'src/utils/marketUtils';
 import { BuyOrderMatch, MarketListIdType, MarketListingsBody, OBOrder } from '@infinityxyz/lib/types/core';
+import { prepareOBOrder } from 'src/utils/exchange/orders';
+import { MarketOrderModal } from 'src/components/market/market-order-modal';
 
 export default function MarketPage() {
   const [cartOpen, setCartOpen] = useState<boolean>(false);
   const [buyOrders, setBuyOrders] = useState<OBOrder[]>([]);
   const [sellOrders, setSellOrders] = useState<OBOrder[]>([]);
   const [matchOrders, setMatchOrders] = useState<BuyOrderMatch[]>([]);
-  const { showAppError, showAppMessage, user } = useAppContext();
-  // const { user, chainId, showAppError, showAppMessage, providerManager } = useAppContext();
-  // const [buyModalShown, setBuyModalShown] = useState(false);
-  // const [sellModalShown, setSellModalShown] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { showAppError, showAppMessage, chainId, user, providerManager } = useAppContext();
+  const [buyModalShown, setBuyModalShown] = useState(false);
+  const [sellModalShown, setSellModalShown] = useState(false);
 
   const [buyOrdersValidInactive, setBuyOrdersValidInactive] = useState<OBOrder[]>([]);
   const [buyOrdersInvalid, setBuyOrdersInvalid] = useState<OBOrder[]>([]);
@@ -34,7 +34,7 @@ export default function MarketPage() {
 
   useEffect(() => {
     if (user) {
-      // refreshActiveLists();
+      refreshActiveLists();
     }
   }, [user]);
 
@@ -43,13 +43,12 @@ export default function MarketPage() {
   // buy orders
 
   const buy = async (order: OBOrder) => {
-    // if (!user || !providerManager) {
-    if (!user) {
+    if (!user || !providerManager) {
       console.error('no user or provider');
       return;
     }
-    // const signer = providerManager.getEthersProvider().getSigner();
-    // await prepareOBOrder(user, chainId, signer, order);
+    const signer = providerManager.getEthersProvider().getSigner();
+    await prepareOBOrder(user, chainId, signer, order);
 
     const match = await addBuy(order);
 
@@ -170,7 +169,7 @@ export default function MarketPage() {
         onClick={async () => {
           setClickedOrder(undefined);
 
-          // setBuyModalShown(true);
+          setBuyModalShown(true);
         }}
       >
         Buy
@@ -180,7 +179,7 @@ export default function MarketPage() {
         onClick={async () => {
           setClickedOrder(undefined);
 
-          // setSellModalShown(true);
+          setSellModalShown(true);
         }}
       >
         Sell
@@ -230,9 +229,9 @@ export default function MarketPage() {
         setClickedOrder(order);
 
         if (!order.isSellOrder) {
-          // setBuyModalShown(true);
+          setBuyModalShown(true);
         } else {
-          // setSellModalShown(true);
+          setSellModalShown(true);
         }
         break;
       case 'delete':
@@ -263,32 +262,33 @@ export default function MarketPage() {
     }
   };
 
-  // const modalComponent = (buyMode: boolean) => {
-  //   return (
-  //     <MarketOrderModal
-  //       inOrder={clickedOrder}
-  //       onClose={async (obOrder) => {
-  //         if (buyMode) {
-  //           setBuyModalShown(false);
+  const modalComponent = (buyMode: boolean) => {
+    return (
+      <MarketOrderModal
+        inOrder={clickedOrder}
+        isOpen={buyMode ? buyModalShown : sellModalShown}
+        onClose={async (obOrder) => {
+          if (buyMode) {
+            setBuyModalShown(false);
 
-  //           if (obOrder) {
-  //             await buy(obOrder);
+            if (obOrder) {
+              await buy(obOrder);
 
-  //             listBuyOrders();
-  //           }
-  //         } else {
-  //           setSellModalShown(false);
+              listBuyOrders();
+            }
+          } else {
+            setSellModalShown(false);
 
-  //           if (obOrder) {
-  //             await sell(obOrder);
+            if (obOrder) {
+              await sell(obOrder);
 
-  //             listSellOrders();
-  //           }
-  //         }
-  //       }}
-  //     />
-  //   );
-  // };
+              listSellOrders();
+            }
+          }
+        }}
+      />
+    );
+  };
 
   return (
     <PageBox
@@ -396,8 +396,8 @@ export default function MarketPage() {
           {sellOrdersInvalid.length === 0 && <NothingFound />}
         </div>
 
-        {/* {buyModalShown && modalComponent(true)}
-        {sellModalShown && modalComponent(false)} */}
+        {modalComponent(true)}
+        {modalComponent(false)}
       </div>
     </PageBox>
   );
