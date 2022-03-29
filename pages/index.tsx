@@ -7,7 +7,7 @@ export const Home: FC = () => {
 
   return (
     <PageBox title="Home">
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col space-y-4 items-center">
         <Button
           onClick={() => {
             router.push('/market');
