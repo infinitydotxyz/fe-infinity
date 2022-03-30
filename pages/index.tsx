@@ -33,6 +33,14 @@ export const Home: FC = () => {
         </Button>
 
         <Button
+          onClick={() => {
+            router.push('/analytics');
+          }}
+        >
+          Analytics
+        </Button>
+
+        <Button
           variant="outline"
           onClick={() => {
             router.push('/sandbox');

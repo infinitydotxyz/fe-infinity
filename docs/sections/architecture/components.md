@@ -1,3 +1,0 @@
-# Component Patterns
-
-> TODO
