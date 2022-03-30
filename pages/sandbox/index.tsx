@@ -4,7 +4,7 @@ import { Button, PageBox } from 'src/components/common';
 import { Card } from 'src/components/common/card';
 import Chip from 'src/components/common/chip';
 import RoundedNav from 'src/components/common/rounded-nav';
-import { cardTestData } from './data';
+import testData from './data.json';
 
 export const SandboxPage: FC = () => {
   return (
@@ -43,8 +43,8 @@ export const SandboxPage: FC = () => {
 
         <h3># Card - WIP</h3>
         <div className="flex flex-row space-x-4">
-          <Card data={cardTestData[0]} />
-          <Card data={cardTestData[1]} />
+          <Card data={testData.cardTestData[0]} />
+          <Card data={testData.cardTestData[1]} />
         </div>
       </div>
     </PageBox>
