@@ -8,12 +8,15 @@ interface Props {
 }
 
 export function Card({ data, className }: Props): JSX.Element {
+  const tokenId = (data.tokenId ?? '').length > 18 ? data.tokenId?.slice(0, 18) + '...' : data.tokenId;
   return (
     <div className={twMerge(`w-48 ${className ?? ''}`)}>
       <img className="rounded-2xl max-h-80 overflow-hidden" src={data.image ?? ''} alt="card" />
       <div className="p-1">
         <div className="font-bold">{data.title}</div>
-        <div className="text-sm">{data.tokenId}</div>
+        <div className="text-sm" title={data.tokenId}>
+          {tokenId}
+        </div>
       </div>
 
       <footer className="text-sm flex items-center justify-between">
