@@ -7,7 +7,7 @@ import { ExecParams, ExtraParams, Item, OBOrder } from '@infinityxyz/lib/types/c
 import { nowSeconds } from '@infinityxyz/lib/utils';
 import { DateInput, TextInput } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { CollectionAddr, CollectionManager } from 'src/utils/marketUtils';
+import { bigNumToDate, CollectionAddr, CollectionManager } from 'src/utils/marketUtils';
 import { Modal } from 'src/components/common/modal';
 import { ComboInput } from '../common/combo-input';
 
@@ -16,12 +16,13 @@ const isServer = typeof window === 'undefined';
 interface Props {
   isOpen: boolean;
   inOrder?: OBOrder;
+  buyMode?: boolean; // use this if inOrder is null
   onClose: (order?: OBOrder) => void;
 }
 
 const ORDER_NONCE = 1;
 
-export const MarketOrderModal: React.FC<Props> = ({ isOpen, inOrder, onClose }: Props) => {
+export const MarketOrderModal: React.FC<Props> = ({ isOpen, buyMode = true, inOrder, onClose }: Props) => {
   const { user, chainId, showAppError } = useAppContext();
 
   // form data
@@ -45,6 +46,8 @@ export const MarketOrderModal: React.FC<Props> = ({ isOpen, inOrder, onClose }: 
       setEndTime(inOrder.endTime);
       setStartPrice(inOrder.startPrice);
       setEndPrice(inOrder.endTime);
+    } else {
+      setIsSellOrder(!buyMode);
     }
   }, [inOrder]);
 
@@ -171,7 +174,7 @@ export const MarketOrderModal: React.FC<Props> = ({ isOpen, inOrder, onClose }: 
     <div>
       <DateInput
         label="Start Time"
-        value={new Date(parseInt(startTime.toString()) * 1000)}
+        value={bigNumToDate(startTime)}
         onChange={(date) => {
           setStartTime(date.getTime() / 1000);
         }}
@@ -183,7 +186,7 @@ export const MarketOrderModal: React.FC<Props> = ({ isOpen, inOrder, onClose }: 
     <div>
       <DateInput
         label="End Time"
-        value={new Date(parseInt(endTime.toString()) * 1000)}
+        value={bigNumToDate(endTime)}
         onChange={(date) => {
           setEndTime(date.getTime() / 1000);
         }}

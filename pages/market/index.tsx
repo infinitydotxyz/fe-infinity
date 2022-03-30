@@ -47,8 +47,9 @@ export default function MarketPage() {
       console.error('no user or provider');
       return;
     }
-    const signer = providerManager.getEthersProvider().getSigner();
-    await prepareOBOrder(user, chainId, signer, order);
+    // crashes
+    // const signer = providerManager.getEthersProvider().getSigner();
+    // await prepareOBOrder(user, chainId, signer, order);
 
     const match = await addBuy(order);
 
@@ -263,6 +264,7 @@ export default function MarketPage() {
     return (
       <MarketOrderModal
         inOrder={clickedOrder}
+        buyMode={buyMode}
         isOpen={buyMode ? buyModalShown : sellModalShown}
         onClose={async (obOrder) => {
           if (buyMode) {

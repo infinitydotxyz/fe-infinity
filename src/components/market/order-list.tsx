@@ -5,6 +5,7 @@ import { OBOrder } from '@infinityxyz/lib/types/core';
 import { Button } from 'src/components/common';
 import { getCurrentOrderPrice, isOrderExpired } from '@infinityxyz/lib/utils';
 import { formatEther } from 'ethers/lib/utils';
+import { bigNumToDate } from 'src/utils/marketUtils';
 
 // =======================================================
 
@@ -47,13 +48,13 @@ const BuyOrderCard = ({ order, onClickAction }: Props2): JSX.Element => {
       {/* <div>budget: {order.budget}</div>
       <div>collectionAddresses: {addresses.join(', ')}</div> */}
       {/* <div>collectionNames: {names.join(', ')}</div> */}
-      {/* <div>minNFTs: {order.minNFTs}</div> */}
-      {/* <div>chainId: {order.chainId}</div> */}
-      {/* <div>startTime: {new Date(order.startTime * 1000).toLocaleString()}</div>
-      <div>endTime: {new Date(order.endTime * 1000).toLocaleString()}</div> */}
+      <div>numItems: {order.numItems}</div>
+      <div>chainId: {order.chainId}</div>
+      <div>startTime: {bigNumToDate(order.startTime).toLocaleString()}</div>
+      <div>endTime: {bigNumToDate(order.endTime).toLocaleString()}</div>
       {/* <div>user: {order.user}</div> */}
-      {/* <div>id: {order.id}</div>
-      <div>expired: {isOrderExpired(order) ? 'YES' : 'NO'}</div> */}
+      <div>id: {order.id}</div>
+      <div>expired: {isOrderExpired(order) ? 'YES' : 'NO'}</div>
 
       <div className={styles.cardButtons}>
         <Button
@@ -112,9 +113,9 @@ const SellOrderCard = ({ order, onClickAction }: Props11): JSX.Element => {
       <div>tokenId: {order.tokenId}</div> */}
       {/* <div>collectionAddress: {order.collectionAddress.address}</div>
       <div>collectionName: {order.collectionAddress.name}</div> */}
-      {/* <div>chainId: {order.chainId}</div> */}
-      {/* <div>startTime: {new Date(order.startTime * 1000).toLocaleString()}</div>
-      <div>endTime: {new Date(order.endTime * 1000).toLocaleString()}</div> */}
+      <div>chainId: {order.chainId}</div>
+      <div>startTime: {bigNumToDate(order.startTime).toLocaleString()}</div>
+      <div>endTime: {bigNumToDate(order.endTime).toLocaleString()}</div>
       {/* <div>user: {order.user}</div> */}
       <div>id: {order.id}</div>
       <div>expired: {isOrderExpired(order) ? 'YES' : 'NO'}</div>

@@ -1,4 +1,5 @@
 import { MarketListIdType, MarketListingsBody, OBOrder } from '@infinityxyz/lib/types/core';
+import { BigNumber, BigNumberish } from 'ethers';
 import { apiPost } from 'src/utils/apiUtil';
 
 export interface BuyOrderMatch {
@@ -174,6 +175,10 @@ export const executeBuyOrder = async (orderId: string): Promise<string> => {
   console.log('An error occured: executeBuyOrder');
 
   return 'error';
+};
+
+export const bigNumToDate = (time: BigNumberish): Date => {
+  return new Date(BigNumber.from(time).toNumber() * 1000);
 };
 
 // ======================================================
