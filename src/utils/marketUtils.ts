@@ -110,7 +110,7 @@ const list = async (body: MarketListingsBody): Promise<OBOrder[]> => {
       }
     }
   }
-  console.log('An error occured: buy');
+  console.log('An error occured: list');
   return [];
 };
 
@@ -129,7 +129,7 @@ export const marketMatches = async (): Promise<BuyOrderMatch[]> => {
       return res.matches;
     }
   }
-  console.log('An error occured: matches');
+  console.log('An error occured: marketMatches');
 
   return [];
 };
@@ -147,7 +147,7 @@ export const marketDeleteOrder = async (body: MarketListingsBody): Promise<strin
     }
   }
 
-  console.log('An error occured: buy');
+  console.log('An error occured: marketDeleteOrder');
 
   return 'error';
 };
@@ -171,7 +171,7 @@ export const executeBuyOrder = async (orderId: string): Promise<string> => {
     }
   }
 
-  console.log('An error occured: buy');
+  console.log('An error occured: executeBuyOrder');
 
   return 'error';
 };
