@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Modal from 'src/components/common/modal';
+import { Modal } from 'src/components/common/modal';
 import { Button } from '../common';
 import { ToggleSwitchButton } from 'src/components/asset/toggle-switch-button';
 import { TextInput } from 'src/components/common/text-input';
@@ -19,7 +19,7 @@ const ListModal: React.FC = () => {
   return (
     <div>
       <button onClick={openModal}>List</button>
-      <Modal isOpen={modalIsOpen} closeModal={closeModal}>
+      <Modal isOpen={modalIsOpen} onClose={closeModal} hideActionButtons={false}>
         <div className="modal-body p-4 lg:p-12 rounded-3xl">
           <p className="font-bold text-2xl tracking-tight">List NFT</p>
           <ToggleSwitchButton className="mt-5" />

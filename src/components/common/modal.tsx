@@ -5,13 +5,22 @@ import { Button } from './button';
 interface Props {
   children: ReactNode;
   isOpen: boolean;
-  title: string;
-  okButton: string;
+  title?: string;
+  okButton?: string;
   onClose: () => void;
-  onSubmit: () => void;
+  onSubmit?: () => void;
+  hideActionButtons?: boolean;
 }
 
-export const Modal = ({ children, onSubmit, okButton = 'OK', title, isOpen, onClose }: Props) => {
+export const Modal = ({
+  children,
+  onSubmit,
+  okButton = 'OK',
+  title,
+  isOpen,
+  onClose,
+  hideActionButtons = false
+}: Props) => {
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="fixed inset-0 z-10 overflow-y-auto" onClose={onClose}>
@@ -48,17 +57,19 @@ export const Modal = ({ children, onSubmit, okButton = 'OK', title, isOpen, onCl
 
               {children}
 
-              <div className="flex space-x-1 mt-4">
-                <div className="mt-4">
-                  <Button variant="outline" onClick={onClose}>
-                    Cancel
-                  </Button>
-                </div>
+              {hideActionButtons && (
+                <div className="flex space-x-1 mt-4">
+                  <div className="mt-4">
+                    <Button variant="outline" onClick={onClose}>
+                      Cancel
+                    </Button>
+                  </div>
 
-                <div className="mt-4">
-                  <Button onClick={onSubmit}>{okButton}</Button>
+                  <div className="mt-4">
+                    <Button onClick={onSubmit}>{okButton}</Button>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </Transition.Child>
         </div>

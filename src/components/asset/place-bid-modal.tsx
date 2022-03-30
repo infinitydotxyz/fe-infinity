@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Modal from 'src/components/common/modal';
+import { Modal } from 'src/components/common/modal';
 import Link from 'next/link';
 import { Button, CurrencyInput } from '../common';
 
@@ -17,7 +17,7 @@ const PlaceBidModal: React.FC = () => {
   return (
     <div>
       <button onClick={openModal}>Place a bid</button>
-      <Modal isOpen={modalIsOpen} closeModal={closeModal}>
+      <Modal isOpen={modalIsOpen} onClose={closeModal} hideActionButtons={false}>
         <div className="modal-body p-4 lg:p-12 rounded-3xl">
           <p className="font-bold text-2xl tracking-tight mb-8">Place a bid</p>
           <CurrencyInput
