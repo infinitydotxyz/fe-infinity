@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Button, PageBox } from 'src/components/common';
 import { OrderDrawer } from 'src/components/market/order-drawer';
-import { BuyOrderList, SellOrderList } from 'src/components/market/order-list';
+import { BuyOrderList, BuyOrderMatchList, SellOrderList } from 'src/components/market/order-list';
 import { useAppContext } from 'src/utils/context/AppContext';
 import {
   addBuy,
   addSell,
+  executeBuyOrder,
   marketBuyOrders,
   marketDeleteOrder,
   marketMatches,
@@ -213,12 +214,12 @@ export default function MarketPage() {
     listSellOrdersInvalid();
   };
 
-  // const handleAcceptClick = async (buyOrder: OBOrder) => {
-  //   await executeBuyOrder(buyOrder.id ?? '');
+  const handleAcceptClick = async (buyOrder: OBOrder) => {
+    await executeBuyOrder(buyOrder.id ?? '');
 
-  //   refreshActiveLists();
-  //   refreshInactiveLists();
-  // };
+    refreshActiveLists();
+    refreshInactiveLists();
+  };
 
   const handleCardClick = async (order: OBOrder, action: string, listId: MarketListIdType) => {
     switch (action) {
@@ -335,12 +336,12 @@ export default function MarketPage() {
           <Header title="Matched Orders" onClick={() => listMatcheOrders()} />
           {matchOrders.length > 0 && (
             <>
-              {/* <BuyOrderMatchList
+              <BuyOrderMatchList
                 matches={matchOrders}
                 onBuyClick={(order, action) => handleCardClick(order, action, 'validActive')}
                 onSellClick={(order, action) => handleCardClick(order, action, 'validActive')}
                 onAcceptClick={handleAcceptClick}
-              /> */}
+              />
             </>
           )}
           {matchOrders.length === 0 && <NothingFound />}

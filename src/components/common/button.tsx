@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 
 const classes = {
-  base: 'focus:outline-none transition ease-in-out duration-300 hover:bg-gray-700 hover:text-white active:bg-gray-900 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50',
+  base: 'focus:ring-0 transition ease-in-out duration-300 hover:bg-gray-700 hover:text-white active:bg-gray-900 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50',
   disabled: 'opacity-50 cursor-not-allowed',
   pill: 'rounded-full',
   size: {

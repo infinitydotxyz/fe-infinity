@@ -1,11 +1,11 @@
 import React from 'react';
 import { uuidv4 } from 'src/utils/commonUtil';
 import styles from './styles.module.scss';
-import { OBOrder } from '@infinityxyz/lib/types/core';
 import { Button } from 'src/components/common';
 import { getCurrentOrderPrice, isOrderExpired } from '@infinityxyz/lib/utils';
 import { formatEther } from 'ethers/lib/utils';
 import { bigNumToDate } from 'src/utils/marketUtils';
+import { BuyOrderMatch, OBOrder } from '@infinityxyz/lib/types/core';
 
 // =======================================================
 
@@ -41,19 +41,18 @@ const BuyOrderCard = ({ order, onClickAction }: Props2): JSX.Element => {
 
   // const classes = isOrderExpired(order) ? styles.expiredCard : styles.buyCard;
   const classes = styles.buyCard;
+  const collections = order.nfts.map((e) => e.collection);
 
   return (
     <div className={classes} onClick={() => onClickAction(order, 'card')}>
       <div className={styles.title}>Buy Order</div>
       <div>startPrice: {order.startPrice.toString()}</div>
       <div>endPrice: {order.endPrice.toString()}</div>
-      {/* <div>collectionAddresses: {addresses.join(', ')}</div> */}
-      {/* <div>collectionNames: {names.join(', ')}</div> */}
+      <div>collections: {collections.join(', ')}</div>
       <div>numItems: {order.numItems}</div>
       <div>chainId: {order.chainId}</div>
       <div>startTime: {bigNumToDate(order.startTime).toLocaleString()}</div>
       <div>endTime: {bigNumToDate(order.endTime).toLocaleString()}</div>
-      {/* <div>user: {order.user}</div> */}
       <div>id: {order.id}</div>
       <div>expired: {isOrderExpired(order) ? 'YES' : 'NO'}</div>
 
@@ -104,20 +103,18 @@ const SellOrderCard = ({ order, onClickAction }: Props11): JSX.Element => {
   // const classes = isOrderExpired(order) ? styles.expiredCard : styles.sellCard;
   const classes = styles.sellCard;
 
+  const collections = order.nfts.map((e) => e.collection);
+
   return (
     <div className={classes} onClick={() => onClickAction(order, 'card')}>
       <div className={styles.title}>Sell Order</div>
       <div>currentPrice: {formatEther(currentPrice)}</div>
       <div>startPrice: {order.startPrice.toString()}</div>
       <div>endPrice: {order.endPrice.toString()}</div>
-      {/* <div>tokenName: {order.tokenName}</div>
-      <div>tokenId: {order.tokenId}</div> */}
-      {/* <div>collectionAddress: {order.collectionAddress.address}</div>
-      <div>collectionName: {order.collectionAddress.name}</div> */}
+      <div>collections: {collections.join(', ')}</div>
       <div>chainId: {order.chainId}</div>
       <div>startTime: {bigNumToDate(order.startTime).toLocaleString()}</div>
       <div>endTime: {bigNumToDate(order.endTime).toLocaleString()}</div>
-      {/* <div>user: {order.user}</div> */}
       <div>id: {order.id}</div>
       <div>expired: {isOrderExpired(order) ? 'YES' : 'NO'}</div>
 
@@ -136,68 +133,68 @@ const SellOrderCard = ({ order, onClickAction }: Props11): JSX.Element => {
 
 // =======================================================
 
-// type Props20 = {
-//   matches: BuyOrderMatch[];
-//   onSellClick: (order: OBOrder, action: string) => void;
-//   onBuyClick: (order: OBOrder, action: string) => void;
-//   onAcceptClick: (order: OBOrder) => void;
-// };
+type Props20 = {
+  matches: BuyOrderMatch[];
+  onSellClick: (order: OBOrder, action: string) => void;
+  onBuyClick: (order: OBOrder, action: string) => void;
+  onAcceptClick: (order: OBOrder) => void;
+};
 
-// export const BuyOrderMatchList = ({ matches, onAcceptClick, onBuyClick, onSellClick }: Props20): JSX.Element => {
-//   if (matches.length === 0) {
-//     return <></>;
-//   }
+export const BuyOrderMatchList = ({ matches, onAcceptClick, onBuyClick, onSellClick }: Props20): JSX.Element => {
+  if (matches.length === 0) {
+    return <></>;
+  }
 
-//   return (
-//     <>
-//       {matches.map((match) => {
-//         return (
-//           <div key={uuidv4()}>
-//             <BuyOrderMatchCard
-//               key={uuidv4()}
-//               match={match}
-//               onBuyClick={onBuyClick}
-//               onSellClick={onSellClick}
-//               onAcceptClick={onAcceptClick}
-//             />
-//           </div>
-//         );
-//       })}
-//     </>
-//   );
-// };
+  return (
+    <>
+      {matches.map((match) => {
+        return (
+          <div key={uuidv4()}>
+            <BuyOrderMatchCard
+              key={uuidv4()}
+              match={match}
+              onBuyClick={onBuyClick}
+              onSellClick={onSellClick}
+              onAcceptClick={onAcceptClick}
+            />
+          </div>
+        );
+      })}
+    </>
+  );
+};
 
 // =======================================================
 
-// type Props21 = {
-//   match: BuyOrderMatch;
-//   onSellClick: (order: OBOrder, action: string) => void;
-//   onBuyClick: (order: OBOrder, action: string) => void;
-//   onAcceptClick: (order: OBOrder) => void;
-// };
+type Props21 = {
+  match: BuyOrderMatch;
+  onSellClick: (order: OBOrder, action: string) => void;
+  onBuyClick: (order: OBOrder, action: string) => void;
+  onAcceptClick: (order: OBOrder) => void;
+};
 
-// const BuyOrderMatchCard = ({ match, onAcceptClick, onSellClick, onBuyClick }: Props21): JSX.Element => {
-//   let buyCard;
-//   if (match.buyOrder) {
-//     buyCard = <BuyOrderCard order={match.buyOrder} onClickAction={onBuyClick} />;
-//   }
+const BuyOrderMatchCard = ({ match, onAcceptClick, onSellClick, onBuyClick }: Props21): JSX.Element => {
+  let buyCard;
+  if (match.buyOrder) {
+    buyCard = <BuyOrderCard order={match.buyOrder} onClickAction={onBuyClick} />;
+  }
 
-//   return (
-//     <div className={styles.matchCard}>
-//       <div className={styles.acceptButton}>
-//         <Button variant="ghost" backgroundColor="transparent" size="sm" onClick={() => onAcceptClick(match.buyOrder)}>
-//           Accept
-//         </Button>
-//       </div>
+  return (
+    <div className={styles.matchCard}>
+      <div className={styles.acceptButton}>
+        <Button variant="plain" onClick={() => onAcceptClick(match.buyOrder)}>
+          Accept
+        </Button>
+      </div>
 
-//       <div>Buy Order</div>
-//       {buyCard}
+      <div>Buy Order</div>
+      {buyCard}
 
-//       <div>Sell Orders</div>
+      <div>Sell Orders</div>
 
-//       {match.sellOrders && match.sellOrders.length > 0 && (
-//         <SellOrderList orders={match.sellOrders} onClickAction={onSellClick} />
-//       )}
-//     </div>
-//   );
-// };
+      {match.sellOrders && match.sellOrders.length > 0 && (
+        <SellOrderList orders={match.sellOrders} onClickAction={onSellClick} />
+      )}
+    </div>
+  );
+};
