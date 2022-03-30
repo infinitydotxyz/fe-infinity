@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { FaTwitter, FaFacebook, FaEdit } from 'react-icons/fa';
-import { Button, PageBox } from 'src/components/common';
+import { Button, Dropdown, PageBox } from 'src/components/common';
 import { Card } from 'src/components/common/card';
 import Chip from 'src/components/common/chip';
 import RoundedNav from 'src/components/common/rounded-nav';
@@ -36,6 +36,25 @@ export const SandboxPage: FC = () => {
           <Chip left={<FaEdit />} content="Edit" />
           <Chip content={<FaTwitter />} />
           <Chip content={<FaFacebook />} />
+        </div>
+
+        <h3># Dropdown</h3>
+        <div className="flex flex-row space-x-4">
+          <Dropdown
+            label="Dropdown"
+            items={[
+              { label: 'Item 1', onClick: console.log },
+              { label: 'Item 2', onClick: console.log }
+            ]}
+          />
+          <Dropdown
+            label="Custom Dropdown"
+            toggler={<div className="border rounded-3xl py-2 px-4 bg-black text-white">Custom Toggler</div>}
+            items={[
+              { label: 'Item 3', onClick: console.log },
+              { label: 'Item 4', onClick: console.log }
+            ]}
+          />
         </div>
 
         <h3># RoundedNav</h3>

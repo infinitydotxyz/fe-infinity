@@ -6,7 +6,7 @@ interface Props {
   right?: ReactElement;
 }
 
-export default function Chip({ left, content, right }: Props) {
+export function Chip({ left, content, right }: Props) {
   return (
     <div className="flex justify-center items-center m-1 font-medium py-1 px-1 rounded-full border border-gray-300 cursor-pointer hover:bg-gray-200">
       {left && <div className="pl-3">{left}</div>}
@@ -15,3 +15,5 @@ export default function Chip({ left, content, right }: Props) {
     </div>
   );
 }
+
+export default Chip;
