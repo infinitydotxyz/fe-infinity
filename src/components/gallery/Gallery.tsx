@@ -7,6 +7,7 @@ import { Button } from '../common';
 import { Card } from '../common/card';
 import { FetchMore } from '../common/fetch-more';
 import FilterPanel from '../filter/filter-panel';
+import GallerySort from './gallery-sort';
 
 type Asset = {
   address: string;
@@ -36,9 +37,13 @@ export function Gallery({ collection }: GalleryProps) {
   const [currentPage, setCurrentPage] = useState(-1);
   const [dataLoaded, setDataLoaded] = useState(false);
 
-  const fetchData = async () => {
+  const fetchData = async (isRefresh = false) => {
     setIsFetching(true);
-    const newCurrentPage = currentPage + 1;
+    console.log('currentPage', currentPage);
+    let newCurrentPage = currentPage + 1;
+    if (isRefresh) {
+      newCurrentPage = 0;
+    }
 
     const offset = currentPage > 0 ? currentPage * ITEMS_PER_PAGE : 0;
     const { result } = await apiGet(`/listings`, {
@@ -63,18 +68,17 @@ export function Gallery({ collection }: GalleryProps) {
     });
 
     setIsFetching(false);
-    setData([...data, ...moreData]);
+    if (isRefresh) {
+      setData([...moreData]);
+    } else {
+      setData([...data, ...moreData]);
+    }
     setCurrentPage(newCurrentPage);
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    setCurrentPage(-1);
     setData([]);
-    fetchData();
+    fetchData(true);
   }, [filterState]);
 
   useEffect(() => {
@@ -92,12 +96,11 @@ export function Gallery({ collection }: GalleryProps) {
           onClick={() => {
             setFilterShowed((flag) => !flag);
           }}
+          className="mr-2"
         >
           {filterShowed ? 'Hide' : 'Show'} Filter
         </Button>
-        <Button variant="outline" className="ml-2">
-          Sort
-        </Button>
+        <GallerySort />
       </header>
 
       <div className="flex items-start">
@@ -119,6 +122,7 @@ export function Gallery({ collection }: GalleryProps) {
               currentPage={currentPage}
               data={data}
               onFetchMore={async () => {
+                console.log('onFetchMore');
                 // setDataLoaded(false);
                 await fetchData();
               }}
