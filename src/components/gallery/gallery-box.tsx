@@ -26,7 +26,7 @@ interface GalleryProps {
   collection: BaseCollection | null;
 }
 
-export function Gallery({ collection }: GalleryProps) {
+export function GalleryBox({ collection }: GalleryProps) {
   const { filterState } = useFilterContext();
 
   const [filterShowed, setFilterShowed] = useState(true);
@@ -132,4 +132,4 @@ export function Gallery({ collection }: GalleryProps) {
   );
 }
 
-export default Gallery;
+export default GalleryBox;
