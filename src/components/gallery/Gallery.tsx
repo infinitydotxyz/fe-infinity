@@ -1,5 +1,4 @@
 import { BaseCollection, CardData } from '@infinityxyz/lib/types/core';
-import { getSearchFriendlyString } from '@infinityxyz/lib/utils';
 import { useEffect, useState } from 'react';
 import { apiGet } from 'src/utils/apiUtil';
 import { ITEMS_PER_PAGE } from 'src/utils/constants';
