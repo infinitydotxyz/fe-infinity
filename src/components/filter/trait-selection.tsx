@@ -113,7 +113,7 @@ export const TraitSelection = ({ collectionAddress, onChange }: Props) => {
             {openState[item.trait_type] && (
               <div>
                 <input
-                  className="border rounded-lg p-2 ml-2"
+                  className="border rounded-lg p-2 ml-2 mt-1 text-sm w-full"
                   defaultValue={searchState[item.trait_type]}
                   onChange={(ev) => {
                     const text = ev.target.value;
@@ -127,32 +127,34 @@ export const TraitSelection = ({ collectionAddress, onChange }: Props) => {
                   placeholder="Filter"
                 />
 
-                {item.values.map((value) => {
-                  const searchText = (searchState[item.trait_type] || '').toLowerCase();
-                  if (searchText && value.toLowerCase().indexOf(searchText) < 0) {
-                    return null;
-                  }
-                  return (
-                    <div key={`${item.trait_type}_${value}`}>
-                      <label>
-                        <input
-                          type="checkbox"
-                          checked={(typeValueMap[item.trait_type] || {})[value] ?? false}
-                          onChange={(ev) => {
-                            typeValueMap[item.trait_type] = typeValueMap[item.trait_type] || {};
-                            typeValueMap[item.trait_type][value] = ev.target.checked;
+                <div className="pl-2 h-40 overflow-scroll text-sm">
+                  {item.values.map((value) => {
+                    const searchText = (searchState[item.trait_type] || '').toLowerCase();
+                    if (searchText && value.toLowerCase().indexOf(searchText) < 0) {
+                      return null;
+                    }
+                    return (
+                      <div key={`${item.trait_type}_${value}`} className="mt-1">
+                        <label>
+                          <input
+                            type="checkbox"
+                            checked={(typeValueMap[item.trait_type] || {})[value] ?? false}
+                            onChange={(ev) => {
+                              typeValueMap[item.trait_type] = typeValueMap[item.trait_type] || {};
+                              typeValueMap[item.trait_type][value] = ev.target.checked;
 
-                            const [traitTypes, traitValues] = getSelections(typeValueMap);
-                            if (onChange) {
-                              onChange(traitTypes, traitValues);
-                            }
-                          }}
-                        />{' '}
-                        {value}
-                      </label>
-                    </div>
-                  );
-                })}
+                              const [traitTypes, traitValues] = getSelections(typeValueMap);
+                              if (onChange) {
+                                onChange(traitTypes, traitValues);
+                              }
+                            }}
+                          />{' '}
+                          {value}
+                        </label>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             )}
           </>
