@@ -44,10 +44,11 @@ export function Gallery({ collection }: GalleryProps) {
     const offset = currentPage > 0 ? currentPage * ITEMS_PER_PAGE : 0;
     const { result } = await apiGet(`/listings`, {
       query: {
-        offset, // not "startAfter" because this is not firebase query.
+        offset,
         limit: ITEMS_PER_PAGE,
         chainId: '1',
-        collectionName: getSearchFriendlyString(collection?.slug),
+        listingSource: 'infinity',
+        collectionIds: collection?.address,
         ...filterState
       }
     });

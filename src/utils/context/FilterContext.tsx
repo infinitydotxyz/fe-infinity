@@ -5,8 +5,8 @@ export type Filter = {
   listingType?: ListingType | '';
   traitTypes?: string;
   traitValues?: string;
-  minPrice?: string;
-  maxPrice?: string;
+  priceMin?: string;
+  priceMax?: string;
 };
 
 const defaultFilter: Filter = {
