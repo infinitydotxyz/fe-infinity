@@ -32,8 +32,6 @@ export const FilerPanel = ({ collectionAddress }: Props) => {
     newFilter.priceMin = minPriceVal;
     newFilter.priceMax = maxPriceVal;
     setFilterState(newFilter);
-
-    console.log('newFilter', newFilter);
   };
 
   const handleClickClear = () => {
@@ -124,8 +122,6 @@ export const FilerPanel = ({ collectionAddress }: Props) => {
           newFilter.traitTypes = traitTypes.join(',');
           newFilter.traitValues = traitValues.join(',');
           setFilterState(newFilter);
-
-          console.log('newFilter', newFilter);
         }}
       />
     </div>
