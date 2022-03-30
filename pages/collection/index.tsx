@@ -16,7 +16,7 @@ export function CollectionPage() {
 
   const path = `/collections/${getSearchFriendlyString(collectionName)}`;
   const { result: collection, isLoading, isError, error } = useFetch<BaseCollection>(path, { chainId: '1' });
-  console.log('result, isLoading, isError, error', collection, isLoading, isError, error);
+  console.log('isLoading, isError, error', isLoading, isError, error);
 
   return (
     <PageBox title={collectionName} center={false}>
