@@ -1,12 +1,19 @@
 import { ListingType } from '@infinityxyz/lib/types/core';
 import { useState } from 'react';
 import { Button } from '../common';
+import TraitSelection from './trait-list';
 
-type Filter = {
+export type Filter = {
   listingType?: ListingType | undefined;
+  traitTypes?: string;
+  traitValues?: string;
 };
 
-export const FilerPanel = () => {
+interface Props {
+  collectionAddress?: string;
+}
+
+export const FilerPanel = ({ collectionAddress }: Props) => {
   const [filter, setFilter] = useState<Filter>({});
 
   const handleClickListingType = (listingType: ListingType | undefined) => {
@@ -68,8 +75,10 @@ export const FilerPanel = () => {
         Clear
       </Button>
 
+      <hr className="mt-8" />
+
       <div className="text-lg mt-6">Properties</div>
-      <div>Shirt</div>
+      <TraitSelection collectionAddress={collectionAddress} onChange={console.log} />
     </div>
   );
 };
