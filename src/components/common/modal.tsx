@@ -1,6 +1,6 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, ReactNode } from 'react';
-import Button from './button';
+import { Button } from './button';
 
 interface Props {
   children: ReactNode;

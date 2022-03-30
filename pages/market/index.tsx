@@ -188,9 +188,6 @@ export default function MarketPage() {
       <Button
         onClick={async () => {
           refreshAllLists();
-
-          buy({} as OBOrder);
-          sell({} as OBOrder);
         }}
       >
         Refresh

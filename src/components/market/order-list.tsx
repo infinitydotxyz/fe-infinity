@@ -3,6 +3,8 @@ import { uuidv4 } from 'src/utils/commonUtil';
 import styles from './styles.module.scss';
 import { OBOrder } from '@infinityxyz/lib/types/core';
 import { Button } from 'src/components/common';
+import { getCurrentOrderPrice, isOrderExpired } from '@infinityxyz/lib/utils';
+import { formatEther } from 'ethers/lib/utils';
 
 // =======================================================
 
@@ -43,14 +45,14 @@ const BuyOrderCard = ({ order, onClickAction }: Props2): JSX.Element => {
     <div className={classes} onClick={() => onClickAction(order, 'card')}>
       <div className={styles.title}>Buy Order</div>
       {/* <div>budget: {order.budget}</div>
-      <div>collectionAddresses: {addresses.join(', ')}</div>
-      <div>collectionNames: {names.join(', ')}</div>
-      <div>minNFTs: {order.minNFTs}</div>
-      <div>chainId: {order.chainId}</div>
-      <div>startTime: {new Date(order.startTime * 1000).toLocaleString()}</div>
-      <div>endTime: {new Date(order.endTime * 1000).toLocaleString()}</div>
-      <div>user: {order.user}</div>
-      <div>id: {order.id}</div>
+      <div>collectionAddresses: {addresses.join(', ')}</div> */}
+      {/* <div>collectionNames: {names.join(', ')}</div> */}
+      {/* <div>minNFTs: {order.minNFTs}</div> */}
+      {/* <div>chainId: {order.chainId}</div> */}
+      {/* <div>startTime: {new Date(order.startTime * 1000).toLocaleString()}</div>
+      <div>endTime: {new Date(order.endTime * 1000).toLocaleString()}</div> */}
+      {/* <div>user: {order.user}</div> */}
+      {/* <div>id: {order.id}</div>
       <div>expired: {isOrderExpired(order) ? 'YES' : 'NO'}</div> */}
 
       <div className={styles.cardButtons}>
@@ -95,7 +97,7 @@ type Props11 = {
 };
 
 const SellOrderCard = ({ order, onClickAction }: Props11): JSX.Element => {
-  //   const currentPrice = getCurrentOrderPrice(order);
+  const currentPrice = getCurrentOrderPrice(order);
 
   // const classes = isOrderExpired(order) ? styles.expiredCard : styles.sellCard;
   const classes = styles.sellCard;
@@ -103,19 +105,19 @@ const SellOrderCard = ({ order, onClickAction }: Props11): JSX.Element => {
   return (
     <div className={classes} onClick={() => onClickAction(order, 'card')}>
       <div className={styles.title}>Sell Order</div>
-      {/* <div>currentPrice: {currentPrice}</div>
-      <div>startPrice: {order.startPrice}</div>
-      <div>endPrice: {order.endPrice}</div>
-      <div>tokenName: {order.tokenName}</div>
-      <div>tokenId: {order.tokenId}</div>
-      <div>collectionAddress: {order.collectionAddress.address}</div>
-      <div>collectionName: {order.collectionAddress.name}</div>
-      <div>chainId: {order.chainId}</div>
-      <div>startTime: {new Date(order.startTime * 1000).toLocaleString()}</div>
-      <div>endTime: {new Date(order.endTime * 1000).toLocaleString()}</div>
-      <div>user: {order.user}</div>
+      <div>currentPrice: {formatEther(currentPrice)}</div>
+      <div>startPrice: {order.startPrice.toString()}</div>
+      <div>endPrice: {order.endPrice.toString()}</div>
+      {/* <div>tokenName: {order.tokenName}</div>
+      <div>tokenId: {order.tokenId}</div> */}
+      {/* <div>collectionAddress: {order.collectionAddress.address}</div>
+      <div>collectionName: {order.collectionAddress.name}</div> */}
+      {/* <div>chainId: {order.chainId}</div> */}
+      {/* <div>startTime: {new Date(order.startTime * 1000).toLocaleString()}</div>
+      <div>endTime: {new Date(order.endTime * 1000).toLocaleString()}</div> */}
+      {/* <div>user: {order.user}</div> */}
       <div>id: {order.id}</div>
-      <div>expired: {isOrderExpired(order) ? 'YES' : 'NO'}</div> */}
+      <div>expired: {isOrderExpired(order) ? 'YES' : 'NO'}</div>
 
       <div className={styles.cardButtons}>
         <Button

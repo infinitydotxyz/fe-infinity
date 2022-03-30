@@ -7,8 +7,9 @@ import { ExecParams, ExtraParams, Item, OBOrder } from '@infinityxyz/lib/types/c
 import { nowSeconds } from '@infinityxyz/lib/utils';
 import { DateInput, TextInput } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { CollectionAddr, CollectionManager } from './marketUtils';
+import { CollectionAddr, CollectionManager } from 'src/utils/marketUtils';
 import { Modal } from 'src/components/common/modal';
+import { ComboInput } from '../common/combo-input';
 
 const isServer = typeof window === 'undefined';
 
@@ -99,7 +100,16 @@ export const MarketOrderModal: React.FC<Props> = ({ isOpen, inOrder, onClose }: 
   };
 
   const collectionAddressesField = (
-    <div>todo</div>
+    <div>
+      <ComboInput
+        label="Collection Address"
+        value={collections[0]}
+        options={CollectionManager.collections()}
+        onChange={(item) => {
+          setCollections([item]);
+        }}
+      />
+    </div>
     // <div>
     //   <div className={styles.formLabel}>Collection Address</div>
 
