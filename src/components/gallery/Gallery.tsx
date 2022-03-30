@@ -3,9 +3,7 @@ import { useEffect, useState } from 'react';
 import { apiGet } from 'src/utils/apiUtil';
 import { ITEMS_PER_PAGE } from 'src/utils/constants';
 import { useFilterContext } from 'src/utils/context/FilterContext';
-import { Button } from '../common';
-import { Card } from '../common/card';
-import { FetchMore } from '../common/fetch-more';
+import { Button, Card, FetchMore } from 'src/components/common';
 import FilterPanel from '../filter/filter-panel';
 import GallerySort from './gallery-sort';
 
