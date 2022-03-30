@@ -1,5 +1,4 @@
 import { BaseCollection, CardData } from '@infinityxyz/lib/types/core';
-import { getSearchFriendlyString } from '@infinityxyz/lib/utils';
 import { useEffect, useState } from 'react';
 import { apiGet } from 'src/utils/apiUtil';
 import { ITEMS_PER_PAGE } from 'src/utils/constants';
@@ -44,10 +43,11 @@ export function Gallery({ collection }: GalleryProps) {
     const offset = currentPage > 0 ? currentPage * ITEMS_PER_PAGE : 0;
     const { result } = await apiGet(`/listings`, {
       query: {
-        offset, // not "startAfter" because this is not firebase query.
+        offset,
         limit: ITEMS_PER_PAGE,
         chainId: '1',
-        collectionName: getSearchFriendlyString(collection?.slug),
+        listingSource: 'infinity',
+        collectionIds: collection?.address,
         ...filterState
       }
     });
@@ -119,7 +119,6 @@ export function Gallery({ collection }: GalleryProps) {
               currentPage={currentPage}
               data={data}
               onFetchMore={async () => {
-                console.log('***** onFetchMore', data.length);
                 // setDataLoaded(false);
                 await fetchData();
               }}
