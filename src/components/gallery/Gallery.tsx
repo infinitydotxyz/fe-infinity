@@ -106,10 +106,10 @@ export function Gallery({ collection }: GalleryProps) {
         </Button>
       </header>
 
-      <div className="flex">
+      <div className="flex items-start">
         {filterShowed && (
           <div className="">
-            <FilterPanel />
+            <FilterPanel collectionAddress={collection?.address} />
           </div>
         )}
 

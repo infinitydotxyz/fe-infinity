@@ -9,7 +9,7 @@ interface Props {
 
 export function Card({ data, className }: Props): JSX.Element {
   return (
-    <div className={twMerge(`w-48 h-70 ${className ?? ''}`)}>
+    <div className={twMerge(`w-48 ${className ?? ''}`)}>
       <img className="rounded-2xl max-h-80 overflow-hidden" src={data.image ?? ''} alt="card" />
       <div className="p-1">
         <div className="font-bold">{data.title}</div>
