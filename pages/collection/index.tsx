@@ -5,7 +5,7 @@ import { FaCheck, FaEdit, FaFacebook, FaTwitter } from 'react-icons/fa';
 import { Button, PageBox } from 'src/components/common';
 import Chip from 'src/components/common/chip';
 import RoundedNav from 'src/components/common/rounded-nav';
-import Gallery from 'src/components/gallery/Gallery';
+import GalleryBox from 'src/components/gallery/gallery-box';
 import { useFetch } from 'src/utils/apiUtil';
 import { getSearchParam } from 'src/utils/commonUtil';
 
@@ -72,7 +72,7 @@ export function CollectionPage() {
       />
 
       <div className="mt-6">
-        {currentTab === 0 ? <>{collection && <Gallery collection={collection} />}</> : <>Community</>}
+        {currentTab === 0 ? <>{collection && <GalleryBox collection={collection} />}</> : <>Community</>}
       </div>
     </PageBox>
   );
