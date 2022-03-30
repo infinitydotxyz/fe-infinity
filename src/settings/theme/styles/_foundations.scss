@@ -1,0 +1,48 @@
+::-webkit-scrollbar {
+  width: 5px;
+  cursor: pointer;
+}
+
+::-webkit-scrollbar-track {
+  background-color: rgba(20, 20, 20, 0.1);
+  cursor: pointer;
+}
+
+::-webkit-scrollbar-thumb {
+  cursor: pointer;
+  background-color: #010101;
+}
+
+/*
+  ======================================
+    Fonts
+  ======================================
+*/
+
+@font-face {
+  font-family: F37 Bolton;
+  font-weight: 400;
+  font-display: auto;
+  src: url(/fonts/F37Bolton-Regular.woff2) format('woff2');
+}
+
+@font-face {
+  font-family: F37 Bolton;
+  font-weight: bold;
+  font-display: auto;
+  src: url(/fonts/F37Bolton-Bold.woff2) format('woff2');
+}
+
+@font-face {
+  font-family: F37 Zagma Mono;
+  font-weight: 400;
+  font-display: auto;
+  src: url(/fonts/F37ZagmaMono-Regular.woff2) format('woff2');
+}
+
+@font-face {
+  font-family: F37 Zagma Mono;
+  font-weight: bold;
+  font-display: auto;
+  src: url(/fonts/F37ZagmaMono-Bold.woff2) format('woff2');
+}
