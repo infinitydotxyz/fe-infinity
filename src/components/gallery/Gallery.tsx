@@ -3,10 +3,11 @@ import { getSearchFriendlyString } from '@infinityxyz/lib/utils';
 import { useEffect, useState } from 'react';
 import { apiGet } from 'src/utils/apiUtil';
 import { ITEMS_PER_PAGE } from 'src/utils/constants';
+import { useFilterContext } from 'src/utils/context/FilterContext';
 import { Button } from '../common';
 import { Card } from '../common/card';
 import { FetchMore } from '../common/fetch-more';
-import Filter from '../filter/filter';
+import FilterPanel from '../filter/filter-panel';
 
 type Asset = {
   address: string;
@@ -28,27 +29,13 @@ interface GalleryProps {
 }
 
 export function Gallery({ collection }: GalleryProps) {
+  const { filterState } = useFilterContext();
+
   const [filterShowed, setFilterShowed] = useState(true);
   const [isFetching, setIsFetching] = useState(false);
   const [data, setData] = useState<CardData[]>([]);
   const [currentPage, setCurrentPage] = useState(-1);
   const [dataLoaded, setDataLoaded] = useState(false);
-
-  // const path = `/listings`;
-  // const { result, isLoading, isError, error } = useFetch<{ listings: Listing[] }>(path, {
-  //   chainId: '1',
-  //   collectionName: getSearchFriendlyString(collection?.slug),
-  //   offet: 0,
-  //   limit: ITEMS_PER_PAGE
-  // });
-  // console.log('result, isLoading, isError, error', result, isLoading, isError, error);
-  // const listings = result?.listings ?? [];
-
-  // const data: CardData[] = listings.map((listing) => ({
-  //   id: listing.id,
-  //   title: '',
-  //   image: listing.metadata.asset.image
-  // }));
 
   const fetchData = async () => {
     setIsFetching(true);
@@ -60,7 +47,8 @@ export function Gallery({ collection }: GalleryProps) {
         offset, // not "startAfter" because this is not firebase query.
         limit: ITEMS_PER_PAGE,
         chainId: '1',
-        collectionName: getSearchFriendlyString(collection?.slug)
+        collectionName: getSearchFriendlyString(collection?.slug),
+        ...filterState
       }
     });
 
@@ -82,6 +70,12 @@ export function Gallery({ collection }: GalleryProps) {
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    setCurrentPage(-1);
+    setData([]);
+    fetchData();
+  }, [filterState]);
 
   useEffect(() => {
     if (currentPage < 0 || data.length < currentPage * ITEMS_PER_PAGE) {
@@ -106,10 +100,10 @@ export function Gallery({ collection }: GalleryProps) {
         </Button>
       </header>
 
-      <div className="flex">
+      <div className="flex items-start">
         {filterShowed && (
-          <div className="w-1/3">
-            <Filter />
+          <div className="">
+            <FilterPanel collectionAddress={collection?.address} />
           </div>
         )}
 
