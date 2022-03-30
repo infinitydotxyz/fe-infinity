@@ -45,7 +45,7 @@ export const MarketOrderModal: React.FC<Props> = ({ isOpen, buyMode = true, inOr
       setStartTime(inOrder.startTime);
       setEndTime(inOrder.endTime);
       setStartPrice(inOrder.startPrice);
-      setEndPrice(inOrder.endTime);
+      setEndPrice(inOrder.endPrice);
     } else {
       setIsSellOrder(!buyMode);
     }

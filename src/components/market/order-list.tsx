@@ -45,8 +45,9 @@ const BuyOrderCard = ({ order, onClickAction }: Props2): JSX.Element => {
   return (
     <div className={classes} onClick={() => onClickAction(order, 'card')}>
       <div className={styles.title}>Buy Order</div>
-      {/* <div>budget: {order.budget}</div>
-      <div>collectionAddresses: {addresses.join(', ')}</div> */}
+      <div>startPrice: {order.startPrice.toString()}</div>
+      <div>endPrice: {order.endPrice.toString()}</div>
+      {/* <div>collectionAddresses: {addresses.join(', ')}</div> */}
       {/* <div>collectionNames: {names.join(', ')}</div> */}
       <div>numItems: {order.numItems}</div>
       <div>chainId: {order.chainId}</div>
