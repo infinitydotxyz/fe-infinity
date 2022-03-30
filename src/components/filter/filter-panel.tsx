@@ -1,7 +1,8 @@
 import { ListingType } from '@infinityxyz/lib/types/core';
+import { useEffect, useState } from 'react';
 import { Filter, useFilterContext } from 'src/utils/context/FilterContext';
 import { Button } from '../common';
-import TraitSelection from './trait-list';
+import TraitSelection from './trait-selection';
 
 interface Props {
   collectionAddress?: string;
@@ -9,6 +10,12 @@ interface Props {
 
 export const FilerPanel = ({ collectionAddress }: Props) => {
   const { filterState, setFilterState } = useFilterContext();
+  const [minPriceVal, setMinPriceVal] = useState('');
+  const [maxPriceVal, setMaxPriceVal] = useState('');
+
+  useEffect(() => {
+    console.log('filterState', filterState);
+  }, [filterState]);
 
   const handleClickListingType = (listingType: ListingType | '') => {
     let newValue = listingType;
@@ -18,8 +25,24 @@ export const FilerPanel = ({ collectionAddress }: Props) => {
     const newFilter = { ...filterState };
     newFilter.listingType = newValue;
     setFilterState(newFilter);
+  };
+
+  const handleClickApply = () => {
+    const newFilter = { ...filterState };
+    newFilter.minPrice = minPriceVal;
+    newFilter.maxPrice = maxPriceVal;
+    setFilterState(newFilter);
 
     console.log('newFilter', newFilter);
+  };
+
+  const handleClickClear = () => {
+    const newFilter = { ...filterState };
+    newFilter.minPrice = '';
+    newFilter.maxPrice = '';
+    setMinPriceVal('');
+    setMaxPriceVal('');
+    setFilterState(newFilter);
   };
 
   return (
@@ -64,12 +87,30 @@ export const FilerPanel = ({ collectionAddress }: Props) => {
 
       <div className="text-lg mt-6">Price (ETH)</div>
       <div className="flex mt-4 mb-6">
-        <input className="border rounded-lg p-2 w-1/2" placeholder="Min Price" />
-        <input className="border rounded-lg p-2 w-1/2 ml-2" placeholder="Max Price" />
+        <input
+          type="number"
+          className="border rounded-lg p-2 w-1/2"
+          placeholder="Min Price"
+          value={minPriceVal}
+          onChange={(ev) => {
+            setMinPriceVal(ev.target.value);
+          }}
+        />
+        <input
+          type="number"
+          className="border rounded-lg p-2 w-1/2 ml-2"
+          placeholder="Max Price"
+          value={maxPriceVal}
+          onChange={(ev) => {
+            setMaxPriceVal(ev.target.value);
+          }}
+        />
       </div>
 
-      <Button variant="outline">Apply</Button>
-      <Button variant="outline" className="ml-2">
+      <Button variant="outline" onClick={handleClickApply}>
+        Apply
+      </Button>
+      <Button variant="outline" className="ml-2" onClick={handleClickClear}>
         Clear
       </Button>
 
