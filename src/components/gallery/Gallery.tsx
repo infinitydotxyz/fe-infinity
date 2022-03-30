@@ -119,7 +119,6 @@ export function Gallery({ collection }: GalleryProps) {
               currentPage={currentPage}
               data={data}
               onFetchMore={async () => {
-                console.log('***** onFetchMore', data.length);
                 // setDataLoaded(false);
                 await fetchData();
               }}
