@@ -6,3 +6,6 @@ export * from 'src/components/common/loading-screen';
 export * from 'src/components/common/spacer';
 export * from 'src/components/common/page-box';
 export * from 'src/components/common/text-input';
+export * from 'src/components/common/currency-input';
+export * from 'src/components/common/blue-check-icon';
+export * from 'src/components/common/transfer-icon';

@@ -2,10 +2,10 @@ import { InputBox } from './input-box';
 
 interface Props {
   label: string;
-  value: string;
+  value: string | number;
   type: string;
   placeholder: string;
-  onChange: (value: string) => void;
+  onChange: (value: string | number) => void;
 }
 
 export function TextInput({ value, label, type, placeholder, onChange }: Props): JSX.Element {
