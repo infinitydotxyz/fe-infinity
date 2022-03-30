@@ -1,6 +1,7 @@
 import { CardData } from '@infinityxyz/lib/types/core';
 import { twMerge } from 'tailwind-merge';
 import { AiOutlineEye } from 'react-icons/ai';
+import Dropdown from './dropdown';
 
 interface Props {
   data: CardData;
@@ -23,8 +24,14 @@ export function Card({ data, className }: Props): JSX.Element {
         <div className="border border-gray-300 rounded-3xl flex-1 text-center py-2 h-10">
           <span className="font-medium">Buy</span> {data.price} ETH
         </div>
-        <div className="border border-gray-300 rounded-3xl ml-1 p-2 w-10 h-10 flex justify-center items-center text-lg">
-          <AiOutlineEye />
+        <div className="border border-gray-300 rounded-3xl ml-1 pt-1 w-10 h-10 flex justify-center items-center text-lg">
+          <Dropdown
+            toggler={<AiOutlineEye />}
+            items={[
+              { label: 'Action 1', onClick: console.log },
+              { label: 'Action 2', onClick: console.log }
+            ]}
+          />
         </div>
       </footer>
     </div>
