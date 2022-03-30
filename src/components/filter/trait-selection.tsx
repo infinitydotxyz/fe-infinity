@@ -64,7 +64,6 @@ export const TraitSelection = ({ collectionAddress, onChange }: Props) => {
 
   const { result } = useFetch<{ traits: TraitData[] }>(`/collections/${collectionAddress}/traits`);
   const traitData = result?.traits;
-  console.log('', !!setTypeValueMap);
 
   useEffect(() => {
     // when filterState changed (somewhere else) => parse it and set to TypeValueMap for checkboxes' states
@@ -127,14 +126,14 @@ export const TraitSelection = ({ collectionAddress, onChange }: Props) => {
                   placeholder="Filter"
                 />
 
-                <div className="pl-2 h-40 overflow-scroll text-sm">
+                <div className="pl-2 h-40 overflow-scroll">
                   {item.values.map((value) => {
                     const searchText = (searchState[item.trait_type] || '').toLowerCase();
                     if (searchText && value.toLowerCase().indexOf(searchText) < 0) {
                       return null;
                     }
                     return (
-                      <div key={`${item.trait_type}_${value}`} className="mt-1">
+                      <div key={`${item.trait_type}_${value}`} className="mt-2">
                         <label>
                           <input
                             type="checkbox"
@@ -148,7 +147,8 @@ export const TraitSelection = ({ collectionAddress, onChange }: Props) => {
                                 onChange(traitTypes, traitValues);
                               }
                             }}
-                          />{' '}
+                            className="mr-2"
+                          />
                           {value}
                         </label>
                       </div>
