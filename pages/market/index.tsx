@@ -266,8 +266,6 @@ export default function MarketPage() {
         buyMode={buyMode}
         isOpen={buyMode ? buyModalShown : sellModalShown}
         onClose={async (obOrder) => {
-          console.log(JSON.stringify(obOrder));
-
           if (buyMode) {
             setBuyModalShown(false);
 
