@@ -5,8 +5,8 @@ module.exports = {
   content: [
     './pages/**/*.{js,ts,jsx,tsx}',
     './public/**/*.html',
-    './src/**/*.{js,jsx,ts,tsx,vue,css,scss,yaml}',
-    './src/**/**/*.{js,jsx,ts,tsx,vue,css,scss,yaml}'
+    './src/**/*.{js,jsx,ts,tsx,css,scss}',
+    './src/**/**/*.{js,jsx,ts,tsx,css,scss}'
   ],
   darkMode: 'class',
   theme: {
