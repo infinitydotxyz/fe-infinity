@@ -4,6 +4,7 @@ import { Button, PageBox } from 'src/components/common';
 import { Card } from 'src/components/common/card';
 import Chip from 'src/components/common/chip';
 import RoundedNav from 'src/components/common/rounded-nav';
+import { cardTestData } from './data';
 
 export const SandboxPage: FC = () => {
   return (
@@ -42,26 +43,8 @@ export const SandboxPage: FC = () => {
 
         <h3># Card - WIP</h3>
         <div className="flex flex-row space-x-4">
-          <Card
-            data={{
-              id: 'nft1',
-              title: 'NFT 1',
-              tokenId: 'Token1',
-              price: 1.5,
-              image:
-                'https://media.voguebusiness.com/photos/61b8dfb99ba90ab572dea0bd/3:4/w_1998,h_2664,c_limit/adidas-nft-voguebus-adidas-nft-dec-21-story.jpg'
-            }}
-          />
-          <Card
-            data={{
-              id: 'nft2',
-              title: 'NFT 2',
-              tokenId: 'Token2',
-              price: 2.5,
-              image:
-                'https://media.voguebusiness.com/photos/61b8dfb99ba90ab572dea0bd/3:4/w_1998,h_2664,c_limit/adidas-nft-voguebus-adidas-nft-dec-21-story.jpg'
-            }}
-          />
+          <Card data={cardTestData[0]} />
+          <Card data={cardTestData[1]} />
         </div>
       </div>
     </PageBox>
