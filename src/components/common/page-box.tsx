@@ -1,18 +1,26 @@
 import Head from 'next/head';
-import React, { ReactNode } from 'react';
+import React, { ReactElement, ReactNode } from 'react';
 import { Spacer } from 'src/components/common';
 import { useRouter } from 'next/router';
 import Header from 'src/components/header/Header';
 
 type Props = {
   title: string;
+  titleElement?: ReactElement;
   rightSide?: JSX.Element;
   children?: ReactNode;
   center?: boolean;
   showConnect?: boolean;
 };
 
-export const PageBox = ({ title, rightSide, children, center = true, showConnect = true }: Props): JSX.Element => {
+export const PageBox = ({
+  title,
+  titleElement,
+  rightSide,
+  children,
+  center = true,
+  showConnect = true
+}: Props): JSX.Element => {
   let justify = 'items-start';
 
   if (center) {
@@ -35,7 +43,7 @@ export const PageBox = ({ title, rightSide, children, center = true, showConnect
       )}
 
       <div className="flex flex-col w-full m-4 max-w-screen-lg">
-        <PageHeader title={title} rightSide={rightSide} />
+        <PageHeader title={titleElement || title} rightSide={rightSide} />
 
         <main>{children}</main>
       </div>
@@ -46,7 +54,7 @@ export const PageBox = ({ title, rightSide, children, center = true, showConnect
 // ==================================================
 
 type PageHeaderProps = {
-  title: string;
+  title: ReactElement | string;
   rightSide?: JSX.Element;
 };
 
