@@ -8,7 +8,8 @@
     "start": "APP_ENV=local next start -p 8080",
     "lint": "next lint --fix",
     "format": "prettier --write src/**/*.{tsx,ts}",
-    "update:lib": "npm update @infinityxyz/lib"
+    "update:lib": "npm update @infinityxyz/lib",
+    "docs": "npx serve docs"
   },
   "dependencies": {
     "@infinityxyz/lib": "^1.32.4",
