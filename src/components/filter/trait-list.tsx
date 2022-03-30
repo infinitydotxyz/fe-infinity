@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { FaChevronDown } from 'react-icons/fa';
 import { useFetch } from 'src/utils/apiUtil';
-import { Filter } from './filter-panel';
+import { useFilterContext } from 'src/utils/context/FilterContext';
 
 type ValueMapItem = {
   [k: string]: boolean;
@@ -57,20 +57,20 @@ type Props = {
 };
 
 export const TraitSelection = ({ collectionAddress, onChange }: Props) => {
-  const [filterState, setFilterState] = useState<Filter>({}); // useSearchContext();
+  const { filterState } = useFilterContext();
   const [openState, setOpenState] = useState<OpenState>({});
   const [searchState, setSearchState] = useState<SearchState>({});
   const [typeValueMap, setTypeValueMap] = useState<TypeValueMap>({});
 
   const { result } = useFetch<{ traits: TraitData[] }>(`/collections/${collectionAddress}/traits`);
-  console.log('setFilterState', setFilterState);
   const traitData = result?.traits;
+  console.log('', !!setTypeValueMap);
 
   useEffect(() => {
     // when filterState changed (somewhere else) => parse it and set to TypeValueMap for checkboxes' states
     const traitTypes = (filterState?.traitTypes || '').split(',');
     const traitValues = (filterState?.traitValues || '').split(',');
-    const map: any = {};
+    const map: TypeValueMap = {};
     for (let i = 0; i < traitTypes.length; i++) {
       const type = traitTypes[i];
       if (!type) {

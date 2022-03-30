@@ -1,27 +1,25 @@
 import { ListingType } from '@infinityxyz/lib/types/core';
-import { useState } from 'react';
+import { Filter, useFilterContext } from 'src/utils/context/FilterContext';
 import { Button } from '../common';
 import TraitSelection from './trait-list';
-
-export type Filter = {
-  listingType?: ListingType | undefined;
-  traitTypes?: string;
-  traitValues?: string;
-};
 
 interface Props {
   collectionAddress?: string;
 }
 
 export const FilerPanel = ({ collectionAddress }: Props) => {
-  const [filter, setFilter] = useState<Filter>({});
+  const { filterState, setFilterState } = useFilterContext();
 
-  const handleClickListingType = (listingType: ListingType | undefined) => {
-    let newListType = listingType;
-    if (listingType === filter.listingType) {
-      newListType = undefined;
+  const handleClickListingType = (listingType: ListingType | '') => {
+    let newValue = listingType;
+    if (listingType === filterState.listingType) {
+      newValue = ''; // toggle listingType
     }
-    setFilter((currentFilter: Filter) => ({ ...currentFilter, listingType: newListType }));
+    const newFilter = { ...filterState };
+    newFilter.listingType = newValue;
+    setFilterState(newFilter);
+
+    console.log('newFilter', newFilter);
   };
 
   return (
@@ -34,7 +32,7 @@ export const FilerPanel = ({ collectionAddress }: Props) => {
           <label>
             <input
               type="checkbox"
-              checked={filter.listingType === ListingType.FixedPrice}
+              checked={filterState.listingType === ListingType.FixedPrice}
               onChange={() => handleClickListingType(ListingType.FixedPrice)}
             />
             <span className="ml-2 align-middle">Fixed Price</span>
@@ -44,7 +42,7 @@ export const FilerPanel = ({ collectionAddress }: Props) => {
           <label>
             <input
               type="checkbox"
-              checked={filter.listingType === ListingType.DutchAuction}
+              checked={filterState.listingType === ListingType.DutchAuction}
               onChange={() => handleClickListingType(ListingType.DutchAuction)}
             />
             <span className="ml-2 align-middle">Declining Price</span>
@@ -54,7 +52,7 @@ export const FilerPanel = ({ collectionAddress }: Props) => {
           <label>
             <input
               type="checkbox"
-              checked={filter.listingType === ListingType.EnglishAuction}
+              checked={filterState.listingType === ListingType.EnglishAuction}
               onChange={() => handleClickListingType(ListingType.EnglishAuction)}
             />
             <span className="ml-2 align-middle">On Aunction</span>
@@ -78,7 +76,17 @@ export const FilerPanel = ({ collectionAddress }: Props) => {
       <hr className="mt-8" />
 
       <div className="text-lg mt-6">Properties</div>
-      <TraitSelection collectionAddress={collectionAddress} onChange={console.log} />
+      <TraitSelection
+        collectionAddress={collectionAddress}
+        onChange={(traitTypes, traitValues) => {
+          const newFilter: Filter = { ...filterState };
+          newFilter.traitTypes = traitTypes.join(',');
+          newFilter.traitValues = traitValues.join(',');
+          setFilterState(newFilter);
+
+          console.log('newFilter', newFilter);
+        }}
+      />
     </div>
   );
 };

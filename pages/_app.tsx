@@ -6,6 +6,7 @@ import * as gtag from '../lib/ga/gtag';
 const isProduction = process.env.NODE_ENV === 'production';
 import { BrowserRouter } from 'react-router-dom';
 import { AppContextProvider } from 'src/utils/context/AppContext';
+import { FilterContextProvider } from 'src/utils/context/FilterContext';
 import { useRouter } from 'next/router';
 import { isLocalhost } from 'src/utils/commonUtil';
 import LogRocket from 'logrocket';
@@ -41,7 +42,9 @@ const App: FunctionComponent<AppProps> = (props) => {
       {providers.reduceRight(
         (children, provider) => createElement(provider, undefined, children),
         <AppContextProvider>
-          <MemoizedComponent {...props} />
+          <FilterContextProvider>
+            <MemoizedComponent {...props} />
+          </FilterContextProvider>
         </AppContextProvider>
       )}
     </StrictMode>
