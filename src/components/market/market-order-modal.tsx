@@ -8,8 +8,8 @@ import { nowSeconds } from '@infinityxyz/lib/utils';
 import { DateInput, TextInput } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { bigNumToDate, CollectionAddr, CollectionManager } from 'src/utils/marketUtils';
-import { Modal } from 'src/components/common/modal';
-import { ComboInput } from '../common/combo-input';
+import { Modal } from 'src/components/market/modal';
+import { ComboInput } from 'src/components/common/combo-input';
 
 const isServer = typeof window === 'undefined';
 
