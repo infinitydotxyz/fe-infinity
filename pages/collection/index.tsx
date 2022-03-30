@@ -15,8 +15,7 @@ export function CollectionPage() {
   const collectionName = getSearchParam('name') ?? '';
 
   const path = `/collections/${getSearchFriendlyString(collectionName)}`;
-  const { result: collection, isLoading, isError, error } = useFetch<BaseCollection>(path, { chainId: '1' });
-  console.log('result, isLoading, isError, error', collection, isLoading, isError, error);
+  const { result: collection } = useFetch<BaseCollection>(path, { chainId: '1' });
 
   return (
     <PageBox title={collectionName} center={false}>
@@ -27,7 +26,7 @@ export function CollectionPage() {
         <Chip content={<FaFacebook />} />
       </div>
 
-      <div className="text-gray-400 mt-6">{collection?.metadata.description ?? ''}</div>
+      <div className="text-gray-500 mt-6">{collection?.metadata.description ?? ''}</div>
 
       <div className="text-sm font-bold mt-6">
         <div>Ownership includes</div>
@@ -67,14 +66,14 @@ export function CollectionPage() {
       </table>
 
       <RoundedNav
-        items={[{ title: 'NFT' }, { title: 'Community' }]}
+        items={[{ title: 'NFTs' }, { title: 'Community' }]}
         onChange={(currentIndex) => setCurrentTab(currentIndex)}
         className="w-80 mt-6"
       />
 
-      <div className="mt-6">{currentTab === 0 ? <>Tab 1</> : <>Tab 2</>}</div>
-
-      {collection && <Gallery collection={collection} />}
+      <div className="mt-6">
+        {currentTab === 0 ? <>{collection && <Gallery collection={collection} />}</> : <>Community</>}
+      </div>
     </PageBox>
   );
 }

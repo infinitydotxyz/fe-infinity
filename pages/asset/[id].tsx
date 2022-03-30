@@ -13,7 +13,7 @@ import PlaceBidModal from 'src/components/asset/place-bid-modal';
 import MakeOfferModal from 'src/components/asset/make-offer-modal';
 import ShortAddress from 'src/components/common/short-address';
 
-const AssertDetail: FunctionComponent<{}> = () => {
+const AssetDetail: FunctionComponent<{}> = () => {
   return (
     <PageBox title="Asset Detail" hideTitle>
       {/* <CancelModal /> */}
@@ -95,4 +95,4 @@ const AssertDetail: FunctionComponent<{}> = () => {
   );
 };
 
-export default AssertDetail;
+export default AssetDetail;

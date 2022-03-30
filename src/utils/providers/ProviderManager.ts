@@ -36,7 +36,7 @@ export class ProviderManager implements Omit<Optional<Provider, 'type'>, 'init'>
   private _emitter: EventEmitter;
 
   private authSignature?: Signature;
-  private authMessage?: string;
+  private authMessage: string = '';
 
   /**
    * SINGLETON
@@ -201,7 +201,6 @@ export class ProviderManager implements Omit<Optional<Provider, 'type'>, 'init'>
     if (currentUser && this.authMessage && this.authSignature) {
       try {
         const signer = ethers.utils.verifyMessage(this.authMessage, this.authSignature).toLowerCase();
-        console.log(signer);
         if (currentUser === signer) {
           return true;
         }
@@ -252,7 +251,7 @@ export class ProviderManager implements Omit<Optional<Provider, 'type'>, 'init'>
     const localStorage = window.localStorage;
     localStorage.setItem(StorageKeys.Wallet, this._provider?.type ?? '');
     localStorage.setItem(StorageKeys.AuthSignature, JSON.stringify(this.authSignature ?? {}));
-    localStorage.setItem(StorageKeys.AuthMessage, this.authMessage ?? '');
+    localStorage.setItem(StorageKeys.AuthMessage, this.authMessage);
   }
 
   /**

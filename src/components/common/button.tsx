@@ -1,7 +1,7 @@
-import React, { forwardRef, ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 
 const classes = {
-  base: 'focus:outline-none transition ease-in-out duration-300 hover:bg-gray-700 hover:text-white active:bg-gray-900 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50',
+  base: 'focus:ring-0 transition ease-in-out duration-300 hover:bg-gray-700 hover:text-white active:bg-gray-900 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50',
   disabled: 'opacity-50 cursor-not-allowed',
   pill: 'rounded-full',
   size: {
@@ -19,31 +19,45 @@ const classes = {
   }
 };
 
-type ButtonProps = JSX.IntrinsicElements['button'] & {
+interface Props {
+  onClick?: () => void;
   children: ReactNode;
   variant?: 'plain' | 'primary' | 'secondary' | 'outline' | 'danger';
   size?: 'plain' | 'small' | 'normal' | 'large';
-};
+  disabled?: boolean;
+  className?: string;
+}
 
-// eslint-disable-next-line
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ children, className, variant = 'primary', size = 'normal', disabled = false, ...rest }: ButtonProps, ref) => (
+export function Button({
+  variant = 'primary',
+  size = 'normal',
+  disabled = false,
+  children,
+  className = '',
+  onClick
+}: Props): JSX.Element {
+  return (
     <button
       type="button"
-      ref={ref}
       disabled={disabled}
       className={`
-        ${classes.base}
-        ${classes.size[size]}
-        ${classes.variant[variant]}
-        ${disabled && classes.disabled}
-        ${className}
-      `}
-      {...rest}
+      ${classes.base}
+      ${classes.size[size]}
+      ${classes.variant[variant]}
+      ${disabled && classes.disabled}
+      ${className}
+     `}
+      onClick={(e) => {
+        // this allows a button to be in a clickable div
+        e.stopPropagation();
+        e.preventDefault();
+
+        if (onClick) {
+          onClick();
+        }
+      }}
     >
       {children}
     </button>
-  )
-);
-
-export default Button;
+  );
+}
