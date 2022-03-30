@@ -3,6 +3,7 @@ export * from 'src/components/common/card';
 export * from 'src/components/common/chip';
 export * from 'src/components/common/date-input';
 export * from 'src/components/common/date-picker';
+export * from 'src/components/common/dropdown';
 export * from 'src/components/common/fetch-more';
 export * from 'src/components/common/loadable';
 export * from 'src/components/common/loading-screen';
