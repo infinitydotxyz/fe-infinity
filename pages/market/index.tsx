@@ -12,7 +12,6 @@ import {
   marketSellOrders
 } from 'src/utils/marketUtils';
 import { BuyOrderMatch, MarketListIdType, MarketListingsBody, OBOrder } from '@infinityxyz/lib/types/core';
-import { prepareOBOrder } from 'src/utils/exchange/orders';
 import { MarketOrderModal } from 'src/components/market/market-order-modal';
 
 export default function MarketPage() {
@@ -20,7 +19,7 @@ export default function MarketPage() {
   const [buyOrders, setBuyOrders] = useState<OBOrder[]>([]);
   const [sellOrders, setSellOrders] = useState<OBOrder[]>([]);
   const [matchOrders, setMatchOrders] = useState<BuyOrderMatch[]>([]);
-  const { showAppError, showAppMessage, chainId, user, providerManager } = useAppContext();
+  const { showAppError, showAppMessage, user, providerManager } = useAppContext();
   const [buyModalShown, setBuyModalShown] = useState(false);
   const [sellModalShown, setSellModalShown] = useState(false);
 
@@ -267,6 +266,8 @@ export default function MarketPage() {
         buyMode={buyMode}
         isOpen={buyMode ? buyModalShown : sellModalShown}
         onClose={async (obOrder) => {
+          console.log(JSON.stringify(obOrder));
+
           if (buyMode) {
             setBuyModalShown(false);
 

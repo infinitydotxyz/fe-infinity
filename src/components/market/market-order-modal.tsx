@@ -33,7 +33,7 @@ export const MarketOrderModal: React.FC<Props> = ({ isOpen, buyMode = true, inOr
   const [startTime, setStartTime] = useState<BigNumberish>(nowSeconds());
   const [endTime, setEndTime] = useState<BigNumberish>(nowSeconds().add(1000));
   const [collections, setCollections] = useState<CollectionAddr[]>([CollectionManager.collections()[0]]);
-  const [tokenId, setTokenId] = useState<string>('1');
+  const [tokenId, setTokenId] = useState<string>('12345');
   const [complicationAddress, setComplicationAddress] = useState<string>('');
   const [currencyAddress, setCurrencyAddress] = useState<string>('');
   const [buyer, setBuyer] = useState<string>('');
@@ -129,21 +129,17 @@ export const MarketOrderModal: React.FC<Props> = ({ isOpen, buyMode = true, inOr
   );
 
   const tokenIdField = (
-    <div>
-      <TextInput type="text" label="Token Ids" placeholder="1234" value={tokenId} onChange={(e) => setTokenId(e)} />
-    </div>
+    <TextInput type="text" label="Token Ids" placeholder="1234" value={tokenId} onChange={(e) => setTokenId(e)} />
   );
 
   const numItemsField = (
-    <div>
-      <TextInput
-        label="Min NFTs"
-        type="number"
-        placeholder="4"
-        value={numItems.toString()}
-        onChange={(e) => setNumItems(parseInt(e))}
-      />
-    </div>
+    <TextInput
+      label="Min NFTs"
+      type="number"
+      placeholder="4"
+      value={numItems.toString()}
+      onChange={(e) => setNumItems(parseInt(e))}
+    />
   );
 
   const startPriceField = (
@@ -159,39 +155,33 @@ export const MarketOrderModal: React.FC<Props> = ({ isOpen, buyMode = true, inOr
   );
 
   const endPriceField = (
-    <div>
-      <TextInput
-        label="End Price"
-        type="number"
-        placeholder="2.33"
-        value={endPrice.toString()}
-        onChange={(e) => setEndPrice(parseFloat(e))}
-      />
-    </div>
+    <TextInput
+      label="End Price"
+      type="number"
+      placeholder="2.33"
+      value={endPrice.toString()}
+      onChange={(e) => setEndPrice(parseFloat(e))}
+    />
   );
 
   const startTimeField = (
-    <div>
-      <DateInput
-        label="Start Time"
-        value={bigNumToDate(startTime)}
-        onChange={(date) => {
-          setStartTime(date.getTime() / 1000);
-        }}
-      />
-    </div>
+    <DateInput
+      label="Start Time"
+      value={bigNumToDate(startTime)}
+      onChange={(date) => {
+        setStartTime(date.getTime() / 1000);
+      }}
+    />
   );
 
   const endTimeField = (
-    <div>
-      <DateInput
-        label="End Time"
-        value={bigNumToDate(endTime)}
-        onChange={(date) => {
-          setEndTime(date.getTime() / 1000);
-        }}
-      />
-    </div>
+    <DateInput
+      label="End Time"
+      value={bigNumToDate(endTime)}
+      onChange={(date) => {
+        setEndTime(date.getTime() / 1000);
+      }}
+    />
   );
 
   let content = null;
