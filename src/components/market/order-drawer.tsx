@@ -107,20 +107,38 @@ export function OrderDrawer({ open, onClose }: Props) {
     />
   );
 
+  let contents = (
+    <div className={'flex   h-full   justify-center content-center items-center text-sm'}>
+      <div className={'text-center'}>
+        <span className="text-lg font-semibold">Cart is empty</span>
+        <br />
+        Add an order to the cart.
+      </div>
+    </div>
+  );
+
+  if (buyCartItems.length > 0) {
+    contents = (
+      <>
+        {list}
+        <div className="flex flex-col space-y-2">
+          {numItemsField}
+          {startPriceField}
+          {endPriceField}
+          {startTimeField}
+          {endTimeField}
+        </div>
+
+        <Spacer />
+
+        {footer}
+      </>
+    );
+  }
+
   return (
     <Drawer open={open} onClose={onClose} title={title}>
-      {list}
-      <div className="flex flex-col space-y-2 px-6">
-        {numItemsField}
-        {startPriceField}
-        {endPriceField}
-        {startTimeField}
-        {endTimeField}
-      </div>
-
-      <Spacer />
-
-      {footer}
+      {contents}
     </Drawer>
   );
 }

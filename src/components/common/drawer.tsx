@@ -44,7 +44,7 @@ export function Drawer({ open, onClose, title, children }: Props) {
               <div className="pointer-events-auto w-screen max-w-md">
                 <div className="flex h-full flex-col overflow-y-auto bg-white shadow-xl">
                   {header}
-                  <div className="flex flex-col space-y-2 px-6">{children}</div>
+                  <div className="flex h-full flex-col px-6">{children}</div>
                 </div>
               </div>
             </Transition.Child>
