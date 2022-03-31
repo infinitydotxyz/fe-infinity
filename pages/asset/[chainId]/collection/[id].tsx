@@ -1,6 +1,6 @@
 import { FunctionComponent } from 'react';
 import Link from 'next/link';
-import { Button, PageBox, BlueCheckIcon, TransferIcon, ShortAddress, ReadMoreText } from '../../src/components/common';
+import { Button, PageBox, BlueCheckIcon, ShortAddress, ReadMoreText } from '../../../../src/components/common';
 import {
   TraitList,
   ActivityList,
@@ -11,7 +11,7 @@ import {
   TransferNFTModal,
   PlaceBidModal,
   MakeOfferModal
-} from '../../src/components/asset';
+} from '../../../../src/components/asset';
 
 const AssetDetail: FunctionComponent<{}> = () => {
   return (

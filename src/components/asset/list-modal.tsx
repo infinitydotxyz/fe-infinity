@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Button, Toggle, TextInput } from '../common';
-import { ToggleSwitchButton } from './toggle-switch-button';
+import { ToggleSwitchButton } from './toggle-switch-button/toggle-switch-button';
 
 export const ListModal: React.FC = () => {
   const [price, setPrice] = useState(0);
