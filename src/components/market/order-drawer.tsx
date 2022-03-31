@@ -1,11 +1,10 @@
-import { Fragment, useState } from 'react';
-import { Dialog, Transition } from '@headlessui/react';
-import { XIcon } from '@heroicons/react/outline';
+import { useState } from 'react';
 import { MinusCircleIcon } from '@heroicons/react/solid';
 import { BigNumberish } from 'ethers';
 import { nowSeconds } from '@infinityxyz/lib/utils';
 import { TextInput, Spacer, Button, DateInput } from 'src/components/common';
 import { useOrderContext } from 'src/utils/context/OrderContext';
+import { Drawer } from '../common/drawer';
 
 export interface OrderCartItem {
   tokenName: string;
@@ -39,20 +38,6 @@ export function OrderDrawer({ open, onClose }: Props) {
   );
 
   const title = 'Create Order';
-
-  const header = (
-    <div className="p-6">
-      <div className="flex items-start justify-between">
-        <Dialog.Title className="text-lg font-medium text-gray-900">{title}</Dialog.Title>
-        <div className="ml-3 flex h-7 items-center">
-          <Button variant="outline" onClick={onClose}>
-            <span className="sr-only">Close panel</span>
-            <XIcon className="h-6 w-6" aria-hidden="true" />
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
 
   const footer = (
     <div className="flex flex-col items-center mb-4">
@@ -122,44 +107,39 @@ export function OrderDrawer({ open, onClose }: Props) {
     />
   );
 
-  return (
-    <Transition.Root show={open} as={Fragment}>
-      <Dialog as="div" className="z-50 fixed inset-0 overflow-hidden" onClose={onClose}>
-        <div className="absolute inset-0 overflow-hidden">
-          <Dialog.Overlay className="absolute inset-0" />
+  let contents = (
+    <div className={'flex   h-full   justify-center content-center items-center text-sm'}>
+      <div className={'text-center'}>
+        <span className="text-lg font-semibold">Cart is empty</span>
+        <br />
+        Add an order to the cart.
+      </div>
+    </div>
+  );
 
-          <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16">
-            <Transition.Child
-              as={Fragment}
-              enter="transform transition ease-in-out duration-300 sm:duration-500"
-              enterFrom="translate-x-full"
-              enterTo="translate-x-0"
-              leave="transform transition ease-in-out duration-300 sm:duration-500"
-              leaveFrom="translate-x-0"
-              leaveTo="translate-x-full"
-            >
-              <div className="pointer-events-auto w-screen max-w-md">
-                <div className="flex h-full flex-col overflow-y-auto bg-white shadow-xl">
-                  {header}
-                  {list}
-                  <div className="flex flex-col space-y-2 px-6">
-                    {numItemsField}
-                    {startPriceField}
-                    {endPriceField}
-                    {startTimeField}
-                    {endTimeField}
-                  </div>
-
-                  <Spacer />
-
-                  {footer}
-                </div>
-              </div>
-            </Transition.Child>
-          </div>
+  if (buyCartItems.length > 0) {
+    contents = (
+      <>
+        {list}
+        <div className="flex flex-col space-y-2">
+          {numItemsField}
+          {startPriceField}
+          {endPriceField}
+          {startTimeField}
+          {endTimeField}
         </div>
-      </Dialog>
-    </Transition.Root>
+
+        <Spacer />
+
+        {footer}
+      </>
+    );
+  }
+
+  return (
+    <Drawer open={open} onClose={onClose} title={title}>
+      {contents}
+    </Drawer>
   );
 }
 
