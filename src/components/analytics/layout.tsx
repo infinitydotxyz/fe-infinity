@@ -9,6 +9,7 @@ import Navigation from 'src/components/common/navbar';
 interface Props {
   children?: React.ReactNode;
   title?: string;
+  props?: any;
 }
 
 export const Layout = React.forwardRef(({ children, title, ...props }: Props, ref) => {
@@ -38,9 +39,10 @@ export const Layout = React.forwardRef(({ children, title, ...props }: Props, re
   return (
     <>
       <div {...styles?.container}>
-        <Header {...styles?.header} />
-        <Navigation />
-        <div {...styles?.content?.container}>{children}</div>
+        <Header {...styles?.header}>
+          <Navigation />
+          <div {...styles?.content?.container}>{children}</div>
+        </Header>
       </div>
     </>
   );
