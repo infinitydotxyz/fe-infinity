@@ -1,4 +1,4 @@
-import React, { ComponentType, createElement, FunctionComponent, memo, StrictMode, useEffect } from 'react';
+import React, { FunctionComponent, memo, StrictMode, useEffect } from 'react';
 import type { AppProps } from 'next/app';
 import 'src/settings/theme/globals.scss';
 import { useRouter } from 'next/router';
@@ -20,7 +20,10 @@ import { OrderContextProvider } from 'src/utils/context/OrderContext';
 const Page: FunctionComponent<AppProps> = ({ Component, pageProps }) => <Component {...pageProps} />;
 const Memoized = memo(Page, (p, n) => p.Component === n.Component && p.pageProps === n.pageProps);
 const isProduction = process.env.NODE_ENV === 'production';
-!isLocalhost() && LogRocket.init('0pu9ak/nftco');
+
+if (!isLocalhost()) {
+  LogRocket.init('0pu9ak/nftco');
+}
 
 const App: FunctionComponent<AppProps> = (props) => {
   /*
