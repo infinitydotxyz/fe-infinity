@@ -33,7 +33,7 @@ export const PlaceBidModal: React.FC = () => {
               <input type="checkbox" className="border-gray-300 text-black focus:outline-none rounded h-5 w-5" />
             </div>
             <div className="ml-3">
-              <span className="text-gray-600">{"By checking this box, you agree to Infinity's"}</span>
+              <span className="text-theme-light-800">{"By checking this box, you agree to Infinity's"}</span>
               <div className="underline">
                 <Link href="/terms-of-service">Terms of Service</Link>
               </div>

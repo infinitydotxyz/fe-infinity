@@ -16,7 +16,7 @@ export function CurrencyInput({ value, label, type, placeholder, onChange }: Pro
   return (
     <InputBox>
       <div className="flex-1">
-        <label className="block text-xs font-medium text-gray-600">{label}</label>
+        <label className="block text-xs font-medium text-theme-light-800">{label}</label>
         <div className="flex">
           Ξ&nbsp;&nbsp;
           <input
@@ -28,7 +28,7 @@ export function CurrencyInput({ value, label, type, placeholder, onChange }: Pro
           />
         </div>
       </div>
-      <div className="dropdown z-10 relative flex items-center py-3 pl-5 pr-6 rounded-full bg-gray-50">
+      <div className="dropdown z-10 relative flex items-center py-3 pl-5 pr-6 rounded-full bg-theme-light-300">
         <span className="uppercase text-heading mr-2">{currency}</span>
         <img src={downArrow.src} alt="list currencies" />
         <ul className="dropdown-menu top-12 right-0 absolute hidden text-gray-700 pt-1">

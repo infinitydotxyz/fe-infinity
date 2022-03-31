@@ -47,7 +47,7 @@ const AssetDetail: FunctionComponent<{}> = () => {
         <h3 className="text-black font-body text-2xl font-bold leading-9 tracking-wide pb-1">ON1</h3>
         <div className="flex items-center sm:mb-8">
           <Link href={`${window.origin}/collection/${name}`}>
-            <a href={`${window.origin}/collection/${name}`} className="text-gray-600 tracking-tight mr-2">
+            <a href={`${window.origin}/collection/${name}`} className="text-theme-light-800 tracking-tight mr-2">
               ON1
             </a>
           </Link>

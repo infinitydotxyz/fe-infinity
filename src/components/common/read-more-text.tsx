@@ -114,13 +114,13 @@ export class ReadMoreText extends React.Component<ReadMoreTextPropType, ReadMore
     if (!this.state.secondaryText) {
       displayText = (
         <div>
-          <span className="text-gray-600">{`${this.state.primaryText} ${this.state.secondaryText}`}</span>
+          <span className="text-theme-light-800">{`${this.state.primaryText} ${this.state.secondaryText}`}</span>
         </div>
       );
     } else if (this.state.displaySecondary) {
       displayText = (
         <div>
-          <span className="text-gray-600">{`${this.state.primaryText} ${this.state.secondaryText}`}</span>
+          <span className="text-theme-light-800">{`${this.state.primaryText} ${this.state.secondaryText}`}</span>
           <span
             className="ml-2 underline text-black underline-offset-2 cursor-pointer"
             onClick={this.setStatus.bind(this)}
@@ -132,7 +132,7 @@ export class ReadMoreText extends React.Component<ReadMoreTextPropType, ReadMore
     } else {
       displayText = (
         <div>
-          <span className="text-gray-600">
+          <span className="text-theme-light-800">
             {this.state.primaryText}
             <span style={{ display: 'none' }}>{this.state.secondaryText}</span>
             <span

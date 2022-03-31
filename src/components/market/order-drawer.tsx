@@ -186,7 +186,7 @@ function ListItem({ nft }: Props2) {
   const menu = (
     <button
       type="button"
-      className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:ring-2 focus:ring-indigo-500"
+      className="rounded-md bg-white text-gray-400 hover:text-theme-light-3000 focus:ring-2 focus:ring-indigo-500"
       onClick={() => {
         console.log('flsjdfksjdlf');
       }}
@@ -200,14 +200,14 @@ function ListItem({ nft }: Props2) {
   return (
     <li key={nft.tokenName}>
       <div className="group  relative">
-        <div className="flex items-center py-6 px-5 group-hover:bg-gray-50">
+        <div className="flex items-center py-6 px-5 group-hover:bg-theme-light-300">
           <div className="relative flex min-w-0 flex-1 items-center">
             <span className="relative inline-block flex-shrink-0">
               <img className="h-10 w-10 rounded-2xl" src={nft.imageUrl} alt="" />
             </span>
             <div className="ml-4 truncate">
               <p className="truncate text-sm font-medium text-gray-900">{nft.tokenName}</p>
-              <p className="truncate text-sm text-gray-500">{'@' + nft.collectionName}</p>
+              <p className="truncate text-sm text-theme-light-3000">{'@' + nft.collectionName}</p>
             </div>
           </div>
           {menu}
