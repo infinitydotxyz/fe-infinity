@@ -1,6 +1,6 @@
 import { MarketListIdType, MarketListingsBody, OBOrder } from '@infinityxyz/lib/types/core';
 import { BigNumber, BigNumberish } from 'ethers';
-import { apiPost } from 'src/utils/apiUtil';
+import { apiPost } from 'src/utils/apiUtils';
 
 export interface BuyOrderMatch {
   buyOrder: OBOrder;
