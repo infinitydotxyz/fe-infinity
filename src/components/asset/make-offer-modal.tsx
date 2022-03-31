@@ -3,6 +3,7 @@ import { Button, DateInput, CurrencyInput, Modal } from 'src/components/common';
 
 export const MakeOfferModal: React.FC = () => {
   const [price, setPrice] = useState(0);
+  const [date, setDate] = new Date();
   const [modalIsOpen, setIsOpen] = React.useState(false);
   function openModal() {
     setIsOpen(true);
@@ -31,7 +32,14 @@ export const MakeOfferModal: React.FC = () => {
             />
           </div>
           <div className="mt-4">
-            <DateInput placeholder="Expiry date" />
+            <DateInput
+              placeholder="Expiry date"
+              label="label"
+              value={date}
+              onChange={(newDate) => {
+                setDate(newDate);
+              }}
+            />
           </div>
           <div className="flex">
             <Button className="flex-1 mr-4 mt-12 rounded-full text-heading" size="large">
