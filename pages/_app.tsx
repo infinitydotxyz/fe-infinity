@@ -1,8 +1,7 @@
-import '../styles/globals.css';
-
+import 'src/settings/theme/globals.scss';
 import type { AppProps } from 'next/app';
 import React, { ComponentType, createElement, FunctionComponent, memo, StrictMode, useEffect } from 'react';
-import * as gtag from '../lib/ga/gtag';
+import * as gtag from 'lib/ga/gtag';
 const isProduction = process.env.NODE_ENV === 'production';
 import { BrowserRouter } from 'react-router-dom';
 import { AppContextProvider } from 'src/utils/context/AppContext';
