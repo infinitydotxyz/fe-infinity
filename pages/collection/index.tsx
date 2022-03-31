@@ -6,7 +6,7 @@ import { FaCheck, FaEdit, FaFacebook, FaTwitter } from 'react-icons/fa';
 import { Button, Chip, PageBox, RoundedNav } from 'src/components/common';
 import GalleryBox from 'src/components/gallery/gallery-box';
 import { useFetch } from 'src/utils/apiUtil';
-import { getSearchParam } from 'src/utils/commonUtil';
+import { getSearchParam } from 'src/utils/commonUtils';
 import CollectionFeed from 'src/components/feed/collection-feed';
 
 export function CollectionPage() {
