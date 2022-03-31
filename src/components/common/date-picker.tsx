@@ -16,9 +16,8 @@ type Props = {
 
 export const DatePicker = React.forwardRef(({ placeholder = 'Dec 8, 2021  12:00 PM', value, onChange }: Props, ref) => {
   return (
-    <div className="flex flex-row w-full     rounded-md">
+    <div className="flex flex-row w-full rounded-md">
       <Flatpickr
-        ref={ref as ForwardedRef<unknown>}
         data-enable-time
         options={{
           enableTime: true,
