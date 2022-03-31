@@ -82,8 +82,7 @@ module.exports = {
     'blur-100': 'blur(100px)'
   },
   fontFamily: {
-    body:
-      'F37 Bolton,SF UI Text,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol',
+    body: 'F37 Bolton,SF UI Text,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol',
     heading:
       'F37 Zagma Mono, SF UI Display,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol',
     monospace: 'SF Mono,Monaco,Inconsolata,Fira Mono,Droid Sans Mono,Source Code Pro,monospace'
@@ -91,6 +90,8 @@ module.exports = {
   colors: {
     background: 'transparent',
     current: 'currentColor',
+    primary: '#000',
+    secondary: '#aaa',
     theme: {
       dark: {
         50: '#FFFFFF',
