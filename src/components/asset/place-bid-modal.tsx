@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Button, CurrencyInput, Modal } from '../common';
+import { Button, CurrencyInput, Modal } from 'src/components/common';
 
 export const PlaceBidModal: React.FC = () => {
   const [price, setPrice] = useState(0);

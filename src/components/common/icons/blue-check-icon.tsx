@@ -1,4 +1,4 @@
-import blueCheckImage from 'src/images/blue-check.png';
+import blueCheckImage from 'src/images/blue-check.svg';
 
 interface Props {
   hasBlueCheck?: boolean;

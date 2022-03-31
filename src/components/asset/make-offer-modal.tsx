@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, DateInput, CurrencyInput, Modal } from '../common';
+import { Button, DateInput, CurrencyInput, Modal } from 'src/components/common';
 
 export const MakeOfferModal: React.FC = () => {
   const [price, setPrice] = useState(0);

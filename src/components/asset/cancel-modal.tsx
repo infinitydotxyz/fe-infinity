@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Modal } from '../common';
+import { Button, Modal } from 'src/components/common';
 
 export const CancelModal: React.FC = () => {
   const [modalIsOpen, setIsOpen] = React.useState(false);

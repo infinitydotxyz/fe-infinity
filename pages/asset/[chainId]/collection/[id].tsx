@@ -1,6 +1,7 @@
 import { FunctionComponent } from 'react';
 import Link from 'next/link';
-import { Button, PageBox, BlueCheckIcon, ShortAddress, ReadMoreText } from '../../../../src/components/common';
+import { Button, PageBox, ShortAddress, ReadMoreText } from 'src/components/common';
+import { BlueCheckIcon } from 'src/components/common/icons';
 import {
   TraitList,
   ActivityList,
