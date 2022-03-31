@@ -22,7 +22,10 @@ export function CollectionPage() {
       title={collectionName}
       titleElement={
         <span>
-          {collectionName} <Image src="/images/blue-check.png" width={24} height={24} alt="Blue check icon" />
+          {collectionName}{' '}
+          {collection?.hasBlueCheck ? (
+            <Image src="/images/blue-check.png" width={24} height={24} alt="Blue check icon" />
+          ) : null}
         </span>
       }
       center={false}
