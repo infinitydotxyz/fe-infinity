@@ -29,11 +29,11 @@ export function OrderDrawer({ open, onClose }: Props) {
   const list = (
     <ul role="list" className="  divide-y divide-gray-200 overflow-y-auto">
       {buyCartItems.map((item) => (
-        <ListItem key={item.tokenName} nft={item} />
+        <ListItem key={item.tokenName} cartItem={item} />
       ))}
 
       {sellCartItems.map((item) => (
-        <ListItem key={item.tokenName} nft={item} />
+        <ListItem key={item.tokenName} cartItem={item} />
       ))}
     </ul>
   );
@@ -167,35 +167,37 @@ export function OrderDrawer({ open, onClose }: Props) {
 // ==================================================================
 
 interface Props2 {
-  nft: OrderCartItem;
+  cartItem: OrderCartItem;
 }
 
-function ListItem({ nft }: Props2) {
+function ListItem({ cartItem }: Props2) {
+  const { removeBuyCartItem } = useOrderContext();
+
   const menu = (
     <button
       type="button"
       className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:ring-2 focus:ring-indigo-500"
       onClick={() => {
-        console.log('flsjdfksjdlf');
+        removeBuyCartItem(cartItem);
       }}
     >
       <span className="flex h-full w-full items-center justify-center rounded-full">
-        <MinusCircleIcon className="h-5 w-5" aria-hidden="true" />
+        <MinusCircleIcon className="h-5 w-5 focus:ring-0" aria-hidden="true" />
       </span>
     </button>
   );
 
   return (
-    <li key={nft.tokenName}>
+    <li key={cartItem.tokenName}>
       <div className="group  relative">
         <div className="flex items-center py-6 px-5 group-hover:bg-gray-50">
           <div className="relative flex min-w-0 flex-1 items-center">
             <span className="relative inline-block flex-shrink-0">
-              <img className="h-10 w-10 rounded-2xl" src={nft.imageUrl} alt="" />
+              <img className="h-10 w-10 rounded-2xl" src={cartItem.imageUrl} alt="" />
             </span>
             <div className="ml-4 truncate">
-              <p className="truncate text-sm font-medium text-gray-900">{nft.tokenName}</p>
-              <p className="truncate text-sm text-gray-500">{'@' + nft.collectionName}</p>
+              <p className="truncate text-sm font-medium text-gray-900">{cartItem.tokenName}</p>
+              <p className="truncate text-sm text-gray-500">{'@' + cartItem.collectionName}</p>
             </div>
           </div>
           {menu}

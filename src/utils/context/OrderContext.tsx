@@ -16,6 +16,9 @@ export type OrderContextType = {
 
   addBuyCartItem: (order: OrderCartItem) => void;
   addSellCartItem: (order: OrderCartItem) => void;
+
+  removeBuyCartItem: (order: OrderCartItem) => void;
+  removeSellCartItem: (order: OrderCartItem) => void;
 };
 
 const OrderContext = React.createContext<OrderContextType | null>(null);
@@ -33,31 +36,35 @@ export function OrderContextProvider({ children }: Props) {
   const [sellCartItems, setSellCartItems] = useState<OrderCartItem[]>([]);
 
   const addBuyOrder = (order: OBOrder) => {
-    console.log('addOrder');
-    console.log(JSON.stringify(order));
-
     setBuyOrders([...buyOrders, order]);
   };
 
   const addSellOrder = (order: OBOrder) => {
-    console.log('addSellOrder');
-    console.log(JSON.stringify(order));
-
     setSellOrders([...buyOrders, order]);
   };
 
   const addBuyCartItem = (item: OrderCartItem) => {
-    console.log('addBuyCartItem');
-    console.log(JSON.stringify(item));
-
     setBuyCartItems([...buyCartItems, item]);
   };
 
   const addSellCartItem = (item: OrderCartItem) => {
-    console.log('addSellCartItem');
-    console.log(JSON.stringify(item));
-
     setSellCartItems([...sellCartItems, item]);
+  };
+
+  const removeBuyCartItem = (item: OrderCartItem) => {
+    const newItems = buyCartItems.filter((e) => {
+      return e.tokenName !== item.tokenName || e.collectionName !== item.collectionName;
+    });
+
+    setBuyCartItems(newItems);
+  };
+
+  const removeSellCartItem = (item: OrderCartItem) => {
+    const newItems = sellCartItems.filter((e) => {
+      return e.tokenName !== item.tokenName || e.collectionName !== item.collectionName;
+    });
+
+    setSellCartItems(newItems);
   };
 
   const value: OrderContextType = {
@@ -70,7 +77,9 @@ export function OrderContextProvider({ children }: Props) {
     addBuyCartItem,
     addSellCartItem,
     buyCartItems,
-    sellCartItems
+    sellCartItems,
+    removeSellCartItem,
+    removeBuyCartItem
   };
 
   return <OrderContext.Provider value={value}>{children}</OrderContext.Provider>;
