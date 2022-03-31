@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { getCustomExceptionMsg } from 'src/utils/commonUtil';
+import { getCustomExceptionMsg } from 'src/utils/commonUtils';
 import { ProviderEvents, WalletType } from 'src/utils/providers/AbstractProvider';
 import { UserRejectException } from 'src/utils/providers/UserRejectException';
 import { ProviderManager } from 'src/utils/providers/ProviderManager';
