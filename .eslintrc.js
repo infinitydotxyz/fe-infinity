@@ -14,6 +14,7 @@ module.exports = {
   rules: {
     // turn this on after fixing the utils code
     '@typescript-eslint/no-explicit-any': 1,
+    '@typescript-eslint/no-var-requires': 0,
 
     '@next/next/no-img-element': 'off',
     'react-hooks/exhaustive-deps': 0,

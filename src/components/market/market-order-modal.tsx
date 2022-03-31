@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from './styles.module.scss';
 import { BigNumberish } from 'ethers';
-import { solidityKeccak256 } from 'ethers/lib/utils';
+import { formatEther, parseEther, solidityKeccak256 } from 'ethers/lib/utils';
 import { ExecParams, ExtraParams, Item, OBOrder } from '@infinityxyz/lib/types/core';
 import { nowSeconds } from '@infinityxyz/lib/utils';
 import { DateInput, TextInput } from 'src/components/common';
@@ -44,8 +44,8 @@ export const MarketOrderModal: React.FC<Props> = ({ isOpen, buyMode = true, inOr
       setNumItems(inOrder.numItems);
       setStartTime(inOrder.startTime);
       setEndTime(inOrder.endTime);
-      setStartPrice(inOrder.startPrice);
-      setEndPrice(inOrder.endPrice);
+      setStartPrice(formatEther(inOrder.startPrice));
+      setEndPrice(formatEther(inOrder.endPrice));
     } else {
       setIsSellOrder(!buyMode);
     }
@@ -66,8 +66,8 @@ export const MarketOrderModal: React.FC<Props> = ({ isOpen, buyMode = true, inOr
         numItems,
         startTime: startTime,
         endTime: endTime,
-        startPrice: startPrice,
-        endPrice: endPrice,
+        startPrice: parseEther(startPrice.toString()),
+        endPrice: parseEther(endPrice.toString()),
         minBpsToSeller: 9000,
         nonce: ORDER_NONCE,
         nfts: getItems(),
@@ -85,7 +85,8 @@ export const MarketOrderModal: React.FC<Props> = ({ isOpen, buyMode = true, inOr
 
   const getItems = (): Item[] => {
     const items: Item[] = [];
-    for (let i = 0; i < numItems; i++) {
+
+    for (let i = 0; i < collections.length; i++) {
       items.push({
         tokenIds: [tokenId],
         collection: collections[i].address
@@ -134,7 +135,7 @@ export const MarketOrderModal: React.FC<Props> = ({ isOpen, buyMode = true, inOr
 
   const numItemsField = (
     <TextInput
-      label="Min NFTs"
+      label="Num Items"
       type="number"
       placeholder="4"
       value={numItems.toString()}
