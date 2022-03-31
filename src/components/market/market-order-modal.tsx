@@ -33,7 +33,7 @@ export const MarketOrderModal: React.FC<Props> = ({ isOpen, buyMode = true, inOr
   const [startTime, setStartTime] = useState<BigNumberish>(nowSeconds());
   const [endTime, setEndTime] = useState<BigNumberish>(nowSeconds().add(1000));
   const [collections, setCollections] = useState<CollectionAddr[]>([CollectionManager.collections()[0]]);
-  const [tokenId, setTokenId] = useState<string>('12345');
+  const [tokenId, setTokenId] = useState('12345');
   const [complicationAddress, setComplicationAddress] = useState<string>('');
   const [currencyAddress, setCurrencyAddress] = useState<string>('');
   const [buyer, setBuyer] = useState<string>('');
@@ -130,7 +130,15 @@ export const MarketOrderModal: React.FC<Props> = ({ isOpen, buyMode = true, inOr
   );
 
   const tokenIdField = (
-    <TextInput type="text" label="Token Ids" placeholder="1234" value={tokenId} onChange={(e) => setTokenId(e)} />
+    <TextInput
+      type="text"
+      label="Token Ids"
+      placeholder="1234"
+      value={tokenId}
+      onChange={(e) => {
+        setTokenId(e as string);
+      }}
+    />
   );
 
   const numItemsField = (
