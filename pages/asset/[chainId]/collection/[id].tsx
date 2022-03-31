@@ -1,7 +1,7 @@
 import { FunctionComponent } from 'react';
 import Link from 'next/link';
 import { Button, PageBox, ShortAddress, ReadMoreText } from 'src/components/common';
-import { BlueCheckIcon } from 'src/components/common/icons';
+import blueCheckImage from 'src/images/blue-check.svg';
 import {
   TraitList,
   ActivityList,
@@ -51,7 +51,7 @@ const AssetDetail: FunctionComponent<{}> = () => {
               ON1
             </a>
           </Link>
-          <BlueCheckIcon hasBlueCheck={true} />
+          <img className="w-5 h-5" src={blueCheckImage.src} alt={'Verified'} />
         </div>
         <ShortAddress
           address="0xADADADADADADADADADADADADADA"

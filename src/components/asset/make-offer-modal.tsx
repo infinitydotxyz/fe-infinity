@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, DateInput, CurrencyInput, Dialog } from 'src/components/common';
+import { Button, DateInput, CurrencyInput, Modal } from 'src/components/common';
 
 export const MakeOfferModal: React.FC = () => {
   const [price, setPrice] = useState(0);
@@ -15,7 +15,7 @@ export const MakeOfferModal: React.FC = () => {
   return (
     <div>
       <button onClick={openModal}>Make offer</button>
-      <Dialog isOpen={modalIsOpen} onClose={closeModal}>
+      <Modal isOpen={modalIsOpen} onClose={closeModal}>
         <div className="modal-body p-4 rounded-3xl">
           <p className="font-bold text-2xl tracking-tight mb-12">Make offer</p>
           <p className="mb-4 text-base">Buy this NFT for the price shown</p>
@@ -39,7 +39,7 @@ export const MakeOfferModal: React.FC = () => {
             </Button>
           </div>
         </div>
-      </Dialog>
+      </Modal>
     </div>
   );
 };
