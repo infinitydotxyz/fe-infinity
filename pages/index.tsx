@@ -48,6 +48,14 @@ export const Home: FC = () => {
         >
           SandBox
         </Button>
+        <Button
+          variant="outline"
+          onClick={() => {
+            router.push('/asset/1/collection/2');
+          }}
+        >
+          Asset Detail
+        </Button>
       </div>
     </PageBox>
   );

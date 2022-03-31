@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Button, CurrencyInput, Modal } from 'src/components/common';
+import { Button, CurrencyInput, Dialog } from 'src/components/common';
 
 export const PlaceBidModal: React.FC = () => {
   const [price, setPrice] = useState(0);
@@ -16,7 +16,7 @@ export const PlaceBidModal: React.FC = () => {
   return (
     <div>
       <button onClick={openModal}>Place a bid</button>
-      <Modal isOpen={modalIsOpen} onClose={closeModal} hideActionButtons={false}>
+      <Dialog isOpen={modalIsOpen} onClose={closeModal} hideActionButtons={false}>
         <div className="modal-body p-4 rounded-3xl">
           <p className="font-bold text-2xl tracking-tight mb-12">Place a bid</p>
           <CurrencyInput
@@ -48,7 +48,7 @@ export const PlaceBidModal: React.FC = () => {
             </Button>
           </div>
         </div>
-      </Modal>
+      </Dialog>
     </div>
   );
 };

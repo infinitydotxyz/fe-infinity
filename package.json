@@ -11,7 +11,7 @@
     "update:lib": "npm update @infinityxyz/lib"
   },
   "dependencies": {
-    "@infinityxyz/lib": "^1.32.4",
+    "@infinityxyz/lib": "^1.33.0",
     "@tailwindcss/aspect-ratio": "^0.4.0",
     "@tailwindcss/typography": "^0.5.2",
     "axios": "0.26.1",
