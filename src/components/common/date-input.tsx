@@ -6,7 +6,7 @@ import flatpickr from 'flatpickr';
 interface Props {
   label: string;
   value: Date;
-  placeholder: string;
+  placeholder?: string;
   onChange: (value: Date) => void;
 }
 

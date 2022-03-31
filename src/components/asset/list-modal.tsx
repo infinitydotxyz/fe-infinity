@@ -23,11 +23,11 @@ export const ListModal: React.FC = () => {
           <p className="mt-12 mb-4 text-base">Sell at a fixed or declining price.</p>
           <TextInput
             type="number"
-            value={price}
+            value={price.toString()}
             label="Price"
             placeholder=""
             onChange={(value) => {
-              setPrice(value as number);
+              setPrice(Number(value));
             }}
           />
           <div className="flex mt-12">

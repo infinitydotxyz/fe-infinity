@@ -35,7 +35,7 @@ type OptionProps = {
 const Option = ({ text, onChange }: OptionProps) => {
   return (
     <div className="flex justify-between">
-      <span className="font-theme-heading text-theme-light-800">{text}</span>
+      <span className="font-body text-theme-light-800">{text}</span>
       <input type="checkbox" className="border-gray-300 text-black focus:outline-none rounded h-5 w-5" />
     </div>
   );
