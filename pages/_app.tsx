@@ -9,6 +9,7 @@ import { FilterContextProvider } from 'src/utils/context/FilterContext';
 import { useRouter } from 'next/router';
 import { isLocalhost } from 'src/utils/commonUtil';
 import LogRocket from 'logrocket';
+import { OrderContextProvider } from 'src/utils/context/OrderContext';
 
 const providers: readonly ComponentType[] = [BrowserRouter];
 
@@ -42,7 +43,9 @@ const App: FunctionComponent<AppProps> = (props) => {
         (children, provider) => createElement(provider, undefined, children),
         <AppContextProvider>
           <FilterContextProvider>
-            <MemoizedComponent {...props} />
+            <OrderContextProvider>
+              <MemoizedComponent {...props} />
+            </OrderContextProvider>
           </FilterContextProvider>
         </AppContextProvider>
       )}

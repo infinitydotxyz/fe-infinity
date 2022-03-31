@@ -5,30 +5,13 @@ import { MinusCircleIcon } from '@heroicons/react/solid';
 import { BigNumberish } from 'ethers';
 import { nowSeconds } from '@infinityxyz/lib/utils';
 import { TextInput, Spacer, Button, DateInput } from 'src/components/common';
+import { useOrderContext } from 'src/utils/context/OrderContext';
 
-interface ListItemData {
+export interface OrderCartItem {
   tokenName: string;
   collectionName: string;
   imageUrl: string;
 }
-
-const nfts: ListItemData[] = [
-  {
-    tokenName: 'Crpto Bois',
-    collectionName: 'ONI Force',
-    imageUrl: 'https://picsum.photos/80'
-  },
-  {
-    tokenName: 'Douchy Punk',
-    collectionName: 'GReAT aPes',
-    imageUrl: 'https://picsum.photos/80'
-  },
-  {
-    tokenName: 'Fireballz Latchkey',
-    collectionName: 'Storkz Bros',
-    imageUrl: 'https://picsum.photos/80'
-  }
-];
 
 interface Props {
   open: boolean;
@@ -41,11 +24,16 @@ export function OrderDrawer({ open, onClose }: Props) {
   const [startTime, setStartTime] = useState<BigNumberish>(nowSeconds());
   const [endTime, setEndTime] = useState<BigNumberish>(nowSeconds().add(1000));
   const [numItems, setNumItems] = useState<BigNumberish>(1);
+  const { buyCartItems, sellCartItems } = useOrderContext();
 
   const list = (
     <ul role="list" className="  divide-y divide-gray-200 overflow-y-auto">
-      {nfts.map((nft) => (
-        <ListItem key={nft.tokenName} nft={nft} />
+      {buyCartItems.map((item) => (
+        <ListItem key={item.tokenName} cartItem={item} />
+      ))}
+
+      {sellCartItems.map((item) => (
+        <ListItem key={item.tokenName} cartItem={item} />
       ))}
     </ul>
   );
@@ -179,35 +167,37 @@ export function OrderDrawer({ open, onClose }: Props) {
 // ==================================================================
 
 interface Props2 {
-  nft: ListItemData;
+  cartItem: OrderCartItem;
 }
 
-function ListItem({ nft }: Props2) {
+function ListItem({ cartItem }: Props2) {
+  const { removeBuyCartItem } = useOrderContext();
+
   const menu = (
     <button
       type="button"
       className="rounded-md bg-white text-gray-400 hover:text-theme-light-3000 focus:ring-2 focus:ring-indigo-500"
       onClick={() => {
-        console.log('flsjdfksjdlf');
+        removeBuyCartItem(cartItem);
       }}
     >
       <span className="flex h-full w-full items-center justify-center rounded-full">
-        <MinusCircleIcon className="h-5 w-5" aria-hidden="true" />
+        <MinusCircleIcon className="h-5 w-5 focus:ring-0" aria-hidden="true" />
       </span>
     </button>
   );
 
   return (
-    <li key={nft.tokenName}>
+    <li key={cartItem.tokenName}>
       <div className="group  relative">
         <div className="flex items-center py-6 px-5 group-hover:bg-theme-light-300">
           <div className="relative flex min-w-0 flex-1 items-center">
             <span className="relative inline-block flex-shrink-0">
-              <img className="h-10 w-10 rounded-2xl" src={nft.imageUrl} alt="" />
+              <img className="h-10 w-10 rounded-2xl" src={cartItem.imageUrl} alt="" />
             </span>
             <div className="ml-4 truncate">
-              <p className="truncate text-sm font-medium text-gray-900">{nft.tokenName}</p>
-              <p className="truncate text-sm text-theme-light-3000">{'@' + nft.collectionName}</p>
+              <p className="truncate text-sm font-medium text-gray-900">{cartItem.tokenName}</p>
+              <p className="truncate text-sm text-gray-500">{'@' + cartItem.collectionName}</p>
             </div>
           </div>
           {menu}
