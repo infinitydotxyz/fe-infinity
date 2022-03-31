@@ -5,30 +5,13 @@ import { MinusCircleIcon } from '@heroicons/react/solid';
 import { BigNumberish } from 'ethers';
 import { nowSeconds } from '@infinityxyz/lib/utils';
 import { TextInput, Spacer, Button, DateInput } from 'src/components/common';
+import { useOrderContext } from 'src/utils/context/OrderContext';
 
-interface ListItemData {
+export interface OrderCartItem {
   tokenName: string;
   collectionName: string;
   imageUrl: string;
 }
-
-const nfts: ListItemData[] = [
-  {
-    tokenName: 'Crpto Bois',
-    collectionName: 'ONI Force',
-    imageUrl: 'https://picsum.photos/80'
-  },
-  {
-    tokenName: 'Douchy Punk',
-    collectionName: 'GReAT aPes',
-    imageUrl: 'https://picsum.photos/80'
-  },
-  {
-    tokenName: 'Fireballz Latchkey',
-    collectionName: 'Storkz Bros',
-    imageUrl: 'https://picsum.photos/80'
-  }
-];
 
 interface Props {
   open: boolean;
@@ -41,11 +24,16 @@ export function OrderDrawer({ open, onClose }: Props) {
   const [startTime, setStartTime] = useState<BigNumberish>(nowSeconds());
   const [endTime, setEndTime] = useState<BigNumberish>(nowSeconds().add(1000));
   const [numItems, setNumItems] = useState<BigNumberish>(1);
+  const { buyCartItems, sellCartItems } = useOrderContext();
 
   const list = (
     <ul role="list" className="  divide-y divide-gray-200 overflow-y-auto">
-      {nfts.map((nft) => (
-        <ListItem key={nft.tokenName} nft={nft} />
+      {buyCartItems.map((item) => (
+        <ListItem key={item.tokenName} nft={item} />
+      ))}
+
+      {sellCartItems.map((item) => (
+        <ListItem key={item.tokenName} nft={item} />
       ))}
     </ul>
   );
@@ -179,7 +167,7 @@ export function OrderDrawer({ open, onClose }: Props) {
 // ==================================================================
 
 interface Props2 {
-  nft: ListItemData;
+  nft: OrderCartItem;
 }
 
 function ListItem({ nft }: Props2) {

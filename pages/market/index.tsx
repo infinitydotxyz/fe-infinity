@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, PageBox } from 'src/components/common';
+import { Button, Card, PageBox } from 'src/components/common';
 import { OrderDrawer } from 'src/components/market/order-drawer';
 import { BuyOrderList, BuyOrderMatchList, SellOrderList } from 'src/components/market/order-list';
 import { useAppContext } from 'src/utils/context/AppContext';
@@ -12,11 +12,34 @@ import {
   marketMatches,
   marketSellOrders
 } from 'src/utils/marketUtils';
-import { BuyOrderMatch, MarketListIdType, MarketListingsBody, OBOrder } from '@infinityxyz/lib/types/core';
+import { BuyOrderMatch, CardData, MarketListIdType, MarketListingsBody, OBOrder } from '@infinityxyz/lib/types/core';
 import { MarketOrderModal } from 'src/components/market/market-order-modal';
+import { useOrderContext } from 'src/utils/context/OrderContext';
+
+const testCardData: CardData[] = [
+  {
+    id: 'nft1',
+    title: 'NFT 1',
+    collectionName: 'Bearded Apes',
+    tokenId: '0x23432434234',
+    tokenAddress: '0xlaksjdlasdjf234234lkj',
+    price: 1.5,
+    image:
+      'https://media.voguebusiness.com/photos/61b8dfb99ba90ab572dea0bd/3:4/w_1998,h_2664,c_limit/adidas-nft-voguebus-adidas-nft-dec-21-story.jpg'
+  },
+  {
+    id: 'nft2',
+    title: 'NFT 2',
+    collectionName: 'Wholely Wrappers',
+    tokenAddress: '0xlakdsfsjdlasdjf234234lkj',
+    tokenId: '0x34234234242342342342',
+    price: 2.5,
+    image:
+      'https://media.voguebusiness.com/photos/61b8dfb99ba90ab572dea0bd/3:4/w_1998,h_2664,c_limit/adidas-nft-voguebus-adidas-nft-dec-21-story.jpg'
+  }
+];
 
 export default function MarketPage() {
-  const [cartOpen, setCartOpen] = useState<boolean>(false);
   const [buyOrders, setBuyOrders] = useState<OBOrder[]>([]);
   const [sellOrders, setSellOrders] = useState<OBOrder[]>([]);
   const [matchOrders, setMatchOrders] = useState<BuyOrderMatch[]>([]);
@@ -28,6 +51,8 @@ export default function MarketPage() {
   const [buyOrdersInvalid, setBuyOrdersInvalid] = useState<OBOrder[]>([]);
   const [sellOrdersValidInactive, setSellOrdersValidInactive] = useState<OBOrder[]>([]);
   const [sellOrdersInvalid, setSellOrdersInvalid] = useState<OBOrder[]>([]);
+
+  const { orderDrawerOpen, setOrderDrawerOpen } = useOrderContext();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [clickedOrder, setClickedOrder] = useState<OBOrder>();
@@ -295,16 +320,21 @@ export default function MarketPage() {
       rightSide={
         <Button
           onClick={async () => {
-            setCartOpen(!cartOpen);
+            setOrderDrawerOpen(!orderDrawerOpen);
           }}
         >
           Cart
         </Button>
       }
     >
-      <OrderDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
+      <OrderDrawer open={orderDrawerOpen} onClose={() => setOrderDrawerOpen(false)} />
 
       <div className={'xx'}>
+        <div className="flex flex-row space-x-4 mb-6">
+          <Card data={testCardData[0]} />
+          <Card data={testCardData[1]} />
+        </div>
+
         <div className="xx">
           {buttons}
 
