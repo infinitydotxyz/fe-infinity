@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import { Modal } from 'src/components/common/modal';
-import { Button } from '../common';
-import { TextInput } from 'src/components/common/text-input';
+import { Modal, Button, TextInput } from '../common';
 
-const TransferNFTModal: React.FC = () => {
+export const TransferNFTModal: React.FC = () => {
   const [address, setAddress] = useState('');
   const [modalIsOpen, setIsOpen] = React.useState(false);
   function openModal() {
@@ -18,18 +16,18 @@ const TransferNFTModal: React.FC = () => {
     <div>
       <button onClick={openModal}>Transfer NFT</button>
       <Modal isOpen={modalIsOpen} onClose={closeModal} hideActionButtons={false}>
-        <div className="modal-body p-4 lg:p-12 rounded-3xl">
-          <p className="font-bold text-2xl tracking-tight mb-5">Transfer NFT</p>
+        <div className="modal-body p-4 rounded-3xl">
+          <p className="font-bold text-2xl tracking-tight mb-12">Transfer NFT</p>
           <TextInput
             type="address"
             value={address}
             label="Address or ENSName"
             placeholder=""
             onChange={(value) => {
-              setAddress(value);
+              setAddress(value as string);
             }}
           />
-          <div className="flex mt-8">
+          <div className="flex mt-12">
             <Button className="flex-1 mr-4 rounded-full" size="large">
               Transfer
             </Button>
@@ -42,5 +40,3 @@ const TransferNFTModal: React.FC = () => {
     </div>
   );
 };
-
-export default TransferNFTModal;

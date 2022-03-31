@@ -1,6 +1,8 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, ReactNode } from 'react';
 import { Button } from './button';
+import { Spacer } from '.';
+import closeIcon from '../../images/close.svg';
 
 interface Props {
   children: ReactNode;
@@ -54,6 +56,10 @@ export const Modal = ({
               <Dialog.Title as="h2" className="text-lg font-bold leading-6 text-gray-900 mb-2">
                 {title}
               </Dialog.Title>
+              <div className="flex">
+                <Spacer />
+                <img src={closeIcon.src} alt="close modal" onClick={onClose} />
+              </div>
 
               {children}
 

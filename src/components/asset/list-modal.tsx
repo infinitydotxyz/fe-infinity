@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
-import { Modal } from 'src/components/common/modal';
-import { Button } from '../common';
-import { ToggleSwitchButton } from 'src/components/asset/toggle-switch-button';
-import { TextInput } from 'src/components/common/text-input';
-import Toggle from '../common/toggle';
+import { Modal, Button, Toggle, TextInput } from '../common';
+import { ToggleSwitchButton } from './toggle-switch-button';
 
-const ListModal: React.FC = () => {
+export const ListModal: React.FC = () => {
   const [price, setPrice] = useState(0);
   const [modalIsOpen, setIsOpen] = React.useState(false);
   function openModal() {
@@ -20,8 +17,8 @@ const ListModal: React.FC = () => {
     <div>
       <button onClick={openModal}>List</button>
       <Modal isOpen={modalIsOpen} onClose={closeModal} hideActionButtons={false}>
-        <div className="modal-body p-4 lg:p-12 rounded-3xl">
-          <p className="font-bold text-2xl tracking-tight">List NFT</p>
+        <div className="modal-body p-4 rounded-3xl">
+          <p className="font-bold text-2xl tracking-tight mb-5">List NFT</p>
           <ToggleSwitchButton className="mt-5" />
           <p className="mt-12 mb-4 text-base">Sell at a fixed or declining price.</p>
           <TextInput
@@ -55,5 +52,3 @@ const ListModal: React.FC = () => {
     </div>
   );
 };
-
-export default ListModal;

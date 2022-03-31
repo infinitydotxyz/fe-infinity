@@ -4,7 +4,7 @@ interface ToggleProps {
   title: string;
 }
 
-const Toggle: React.FC<ToggleProps> = ({ title }: ToggleProps) => {
+export const Toggle: React.FC<ToggleProps> = ({ title }: ToggleProps) => {
   return (
     <div className="w-full mb-12">
       <label htmlFor="toggleButton" className="flex justify-between items-center cursor-pointer">
@@ -18,5 +18,3 @@ const Toggle: React.FC<ToggleProps> = ({ title }: ToggleProps) => {
     </div>
   );
 };
-
-export default Toggle;

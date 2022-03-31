@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '../common';
 
-const Filter: React.FC = () => {
+export const Filter: React.FC = () => {
   const [showFilter, setShowFilter] = useState(false);
 
   return (
@@ -16,8 +16,12 @@ const Filter: React.FC = () => {
         } flex-col space-between rounded-3xl`}
       >
         <Option text="Sales" />
-        <Option text="Transfers" />
-        <Option text="Offers" />
+        <div className="mt-8">
+          <Option text="Transfers" />
+        </div>
+        <div className="mt-8">
+          <Option text="Offers" />
+        </div>
       </div>
     </div>
   );
@@ -30,11 +34,9 @@ type OptionProps = {
 
 const Option = ({ text, onChange }: OptionProps) => {
   return (
-    <div className="mt-8 flex justify-between">
+    <div className="flex justify-between">
       <span className="font-heading text-gray-600">{text}</span>
       <input type="checkbox" className="border-gray-300 text-black focus:outline-none rounded h-5 w-5" />
     </div>
   );
 };
-
-export default Filter;

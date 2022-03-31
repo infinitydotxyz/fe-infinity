@@ -15,7 +15,7 @@ export function TextInput({ value, label, type, placeholder, onChange }: Props):
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className=" p-0 border-none focus:ring-0  block w-full  text-sm    "
+        className=" p-0 border-none focus:ring-0  block w-full  text-base"
         placeholder={placeholder}
       />
     </InputBox>

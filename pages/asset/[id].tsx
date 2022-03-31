@@ -1,30 +1,34 @@
 import { FunctionComponent } from 'react';
-import { ToggleSwitchButton } from 'src/components/asset/toggle-switch-button';
 import Link from 'next/link';
-import { Button, PageBox, BlueCheckIcon, TransferIcon } from 'src/components/common';
-import { ReadMoreText } from 'src/components/common/read-more-text';
-import TraitList from 'src/components/asset/trait-list';
-import { ActivityList } from 'src/components/asset/activiy/activity-list';
-import Filter from 'src/components/asset/filter';
-import ListModal from 'src/components/asset/list-modal';
-import CancelModal from 'src/components/asset/cancel-modal';
-import TransferNFTModal from 'src/components/asset/transfer-nft-modal';
-import PlaceBidModal from 'src/components/asset/place-bid-modal';
-import MakeOfferModal from 'src/components/asset/make-offer-modal';
-import ShortAddress from 'src/components/common/short-address';
+import { Button, PageBox, BlueCheckIcon, TransferIcon, ShortAddress, ReadMoreText } from '../../src/components/common';
+import {
+  TraitList,
+  ActivityList,
+  Filter,
+  ToggleSwitchButton,
+  ListModal,
+  CancelModal,
+  TransferNFTModal,
+  PlaceBidModal,
+  MakeOfferModal
+} from '../../src/components/asset';
 
 const AssetDetail: FunctionComponent<{}> = () => {
   return (
     <PageBox title="Asset Detail" hideTitle>
-      {/* <CancelModal /> */}
+      <CancelModal />
       <TransferNFTModal />
-
+      <ListModal />
+      <CancelModal />
+      <TransferNFTModal />
+      <MakeOfferModal />
+      <PlaceBidModal />
       {/* <div className="grid grid-cols-6 m-4">
         <ListModal />
         <CancelModal />
         <TransferNFTModal />
         <PlaceBidModal />
-        <MakeOfferModal />
+        <TransferNFTModal />
       </div> */}
       <div className="mb-4">
         <div className="w-80 mx-auto sm:float-left sm:w-64 md:w-80  lg:w-96 xl:w-128 sm:mr-6 md:mr-8 lg:mr-16 mb-4">
@@ -55,14 +59,14 @@ const AssetDetail: FunctionComponent<{}> = () => {
           tooltip="0xADADADADADADADADADADADADADA"
         />
         <ShortAddress address="#3460" href="#" label="Token ID:" tooltip="#3460" />
-        <div className="grid cta-buttons gap-4 my-4 lg:my-8">
+        <div className="flex flex-col md:flex-row gap-4 my-4 lg:my-8">
           <Button variant="primary" size="large" className="p-4 rounded-full">
             Buy&nbsp;3.30 ETH
           </Button>
           <Button variant="outline" size="large" className="p-4 rounded-full">
             Make offer
           </Button>
-          <TransferIcon />
+          {/* <TransferIcon /> */}
         </div>
         <p className="font-body text-black">Description</p>
         <div>

@@ -64,7 +64,7 @@ const traitsData = [
   }
 ];
 
-export const Traits: FC = () => {
+export const TraitList: FC = () => {
   return (
     <div className="mt-20">
       <p className="mt-4 sm:mt-6 sm:mb-4 tracking-base text-black">Traits</p>
@@ -76,5 +76,3 @@ export const Traits: FC = () => {
     </div>
   );
 };
-
-export default Traits;

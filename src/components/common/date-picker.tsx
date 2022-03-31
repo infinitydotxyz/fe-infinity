@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ForwardedRef } from 'react';
 import Flatpickr from 'react-flatpickr';
 
 // date picker themes
@@ -14,10 +14,11 @@ type Props = {
   placeholder?: string;
 };
 
-export const DatePicker = ({ placeholder = 'Dec 8, 2021  12:00 PM', value, onChange }: Props) => {
+export const DatePicker = React.forwardRef(({ placeholder = 'Dec 8, 2021  12:00 PM', value, onChange }: Props, ref) => {
   return (
     <div className="flex flex-row w-full     rounded-md">
       <Flatpickr
+        ref={ref as ForwardedRef<unknown>}
         data-enable-time
         options={{
           enableTime: true,
@@ -33,4 +34,6 @@ export const DatePicker = ({ placeholder = 'Dec 8, 2021  12:00 PM', value, onCha
       />
     </div>
   );
-};
+});
+
+DatePicker.displayName = 'DatePicker';

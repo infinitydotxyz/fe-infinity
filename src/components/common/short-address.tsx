@@ -8,7 +8,7 @@ interface ShortAddressProps {
   tooltip: string;
 }
 
-const ShortAddress: React.FC<ShortAddressProps> = ({ address, href, label, tooltip }) => {
+export const ShortAddress: React.FC<ShortAddressProps> = ({ address, href, label, tooltip }) => {
   return (
     <div className="relative flex">
       <span className="text-body text-base">{label}</span>
@@ -26,5 +26,3 @@ const ShortAddress: React.FC<ShortAddressProps> = ({ address, href, label, toolt
     </div>
   );
 };
-
-export default ShortAddress;
