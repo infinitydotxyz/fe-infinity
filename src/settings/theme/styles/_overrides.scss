@@ -1,0 +1,44 @@
+/*
+  ======================================
+    This file overrides default stylings
+    of regular HTML components, like scrollbar
+    and headings and paragraphs.
+  ======================================
+*/
+
+::-webkit-scrollbar {
+  width: 5px;
+  cursor: pointer;
+}
+
+::-webkit-scrollbar-track {
+  background-color: rgba(20, 20, 20, 0.1);
+  cursor: pointer;
+}
+
+::-webkit-scrollbar-thumb {
+  cursor: pointer;
+  background-color: #010101;
+}
+
+/*
+  ======================================
+    Headings and Body should have font
+    based on how it's defined in the
+    configuration file.
+  ======================================
+*/
+
+html,
+body {
+  @apply font-body;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply font-heading;
+}
