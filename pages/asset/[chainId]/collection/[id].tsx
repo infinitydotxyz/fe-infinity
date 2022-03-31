@@ -1,7 +1,6 @@
 import { FunctionComponent } from 'react';
 import Link from 'next/link';
 import { Button, PageBox, ShortAddress, ReadMoreText } from 'src/components/common';
-import blueCheckImage from 'src/images/blue-check.svg';
 import {
   TraitList,
   ActivityList,
@@ -14,6 +13,9 @@ import {
   MakeOfferModal
 } from '../../../../src/components/asset';
 
+import blueCheckImage from 'src/images/blue-check.svg';
+import transferImage from 'src/images/transfer.svg';
+
 const AssetDetail: FunctionComponent<{}> = () => {
   return (
     <PageBox title="Asset Detail" hideTitle>
@@ -24,13 +26,7 @@ const AssetDetail: FunctionComponent<{}> = () => {
       <TransferNFTModal />
       <MakeOfferModal />
       <PlaceBidModal />
-      {/* <div className="grid grid-cols-6 m-4">
-        <ListModal />
-        <CancelModal />
-        <TransferNFTModal />
-        <PlaceBidModal />
-        <TransferNFTModal />
-      </div> */}
+
       <div className="mb-4">
         <div className="w-80 mx-auto sm:float-left sm:w-64 md:w-80  lg:w-96 xl:w-128 sm:mr-6 md:mr-8 lg:mr-16 mb-4">
           <img
@@ -44,7 +40,7 @@ const AssetDetail: FunctionComponent<{}> = () => {
         <div className="mb-2 md:pb-4">
           <ToggleSwitchButton />
         </div>
-        <h3 className="text-black font-body text-2xl font-bold leading-9 tracking-wide pb-1">ON1</h3>
+        <h3 className="text-black theme-font-body text-2xl font-bold leading-9 tracking-wide pb-1">ON1</h3>
         <div className="flex items-center sm:mb-8">
           <Link href={`${window.origin}/collection/${name}`}>
             <a href={`${window.origin}/collection/${name}`} className="text-theme-light-800 tracking-tight mr-2">
@@ -67,9 +63,11 @@ const AssetDetail: FunctionComponent<{}> = () => {
           <Button variant="outline" size="large" className="p-4 rounded-full">
             Make offer
           </Button>
-          {/* <TransferIcon /> */}
+          {/* <div className="border w-12 h-12 flex justify-center items-center rounded-full">
+      <img src={transferImage.src} alt="Transfer" />
+    </div>*/}
         </div>
-        <p className="font-body text-black">Description</p>
+        <p className="theme-font-body text-black">Description</p>
         <div>
           <ReadMoreText
             text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
@@ -88,7 +86,7 @@ const AssetDetail: FunctionComponent<{}> = () => {
 
         <div className="mt-4 md:mt-8">
           <div className="flex items-center justify-between">
-            <p className="mt-4 sm:mt-6 sm:mb-4 font-body tracking-base text-black">Activity</p>
+            <p className="mt-4 sm:mt-6 sm:mb-4 theme-font-body tracking-base text-black">Activity</p>
             <Filter />
           </div>
         </div>
