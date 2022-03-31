@@ -1,11 +1,12 @@
 import Head from 'next/head';
-import React, { ReactNode } from 'react';
+import React, { ReactElement, ReactNode } from 'react';
 import { Spacer } from 'src/components/common';
 import { useRouter } from 'next/router';
 import Header from 'src/components/header/Header';
 
 type Props = {
   title: string;
+  titleElement?: ReactElement;
   rightSide?: JSX.Element;
   children?: ReactNode;
   center?: boolean;
@@ -15,11 +16,11 @@ type Props = {
 
 export const PageBox = ({
   title,
+  titleElement,
   rightSide,
   children,
   center = true,
-  showConnect = true,
-  hideTitle = false
+  showConnect = true
 }: Props): JSX.Element => {
   let justify = 'items-start';
 
@@ -43,7 +44,7 @@ export const PageBox = ({
       )}
 
       <div className="flex flex-col w-full m-4 max-w-screen-lg">
-        {!hideTitle && <PageHeader title={title} rightSide={rightSide} />}
+        <PageHeader title={titleElement || title} rightSide={rightSide} />
 
         <main>{children}</main>
       </div>
@@ -54,7 +55,7 @@ export const PageBox = ({
 // ==================================================
 
 type PageHeaderProps = {
-  title: string;
+  title: ReactElement | string;
   rightSide?: JSX.Element;
 };
 

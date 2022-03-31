@@ -7,6 +7,7 @@ export type Filter = {
   traitValues?: string;
   priceMin?: string;
   priceMax?: string;
+  sortByPrice?: 'ASC' | 'DESC' | '';
 };
 
 const defaultFilter: Filter = {

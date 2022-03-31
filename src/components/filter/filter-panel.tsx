@@ -1,7 +1,7 @@
 import { ListingType } from '@infinityxyz/lib/types/core';
 import { useEffect, useState } from 'react';
 import { Filter, useFilterContext } from 'src/utils/context/FilterContext';
-import { Button } from '../common';
+import { Button } from 'src/components/common';
 import TraitSelection from './trait-selection';
 
 interface Props {

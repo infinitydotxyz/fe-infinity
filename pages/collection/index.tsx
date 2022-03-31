@@ -1,11 +1,10 @@
+import React, { useState } from 'react';
+import Image from 'next/image';
 import { BaseCollection } from '@infinityxyz/lib/types/core';
 import { getSearchFriendlyString } from '@infinityxyz/lib/utils';
-import React, { useState } from 'react';
 import { FaCheck, FaEdit, FaFacebook, FaTwitter } from 'react-icons/fa';
-import { Button, PageBox } from 'src/components/common';
-import Chip from 'src/components/common/chip';
-import RoundedNav from 'src/components/common/rounded-nav';
-import Gallery from 'src/components/gallery/Gallery';
+import { Button, Chip, PageBox, RoundedNav } from 'src/components/common';
+import GalleryBox from 'src/components/gallery/gallery-box';
 import { useFetch } from 'src/utils/apiUtil';
 import { getSearchParam } from 'src/utils/commonUtil';
 
@@ -18,7 +17,15 @@ export function CollectionPage() {
   const { result: collection } = useFetch<BaseCollection>(path, { chainId: '1' });
 
   return (
-    <PageBox title={collectionName} center={false}>
+    <PageBox
+      title={collectionName}
+      titleElement={
+        <span>
+          {collectionName} <Image src="/images/blue-check.png" width={24} height={24} alt="Blue check icon" />
+        </span>
+      }
+      center={false}
+    >
       <div className="flex flex-row space-x-4">
         <Chip content="Watch" />
         <Chip left={<FaEdit />} content="Edit" />
@@ -72,7 +79,7 @@ export function CollectionPage() {
       />
 
       <div className="mt-6">
-        {currentTab === 0 ? <>{collection && <Gallery collection={collection} />}</> : <>Community</>}
+        {currentTab === 0 ? <>{collection && <GalleryBox collection={collection} />}</> : <>Community</>}
       </div>
     </PageBox>
   );
