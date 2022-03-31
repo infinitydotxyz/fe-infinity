@@ -11,7 +11,7 @@
     "update:lib": "npm update @infinityxyz/lib"
   },
   "dependencies": {
-    "@infinityxyz/lib": "^1.32.4",
+    "@infinityxyz/lib": "^1.32.8",
     "axios": "0.26.1",
     "classnames": "^2.3.1",
     "cross-env": "^7.0.3",

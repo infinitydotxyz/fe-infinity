@@ -1,5 +1,4 @@
 export * from './filter';
-export * from './toggle-switch-button';
 export * from './trait-list';
 export * from './activiy/activity-list';
 export * from './list-modal';
@@ -7,3 +6,4 @@ export * from './cancel-modal';
 export * from './transfer-nft-modal';
 export * from './place-bid-modal';
 export * from './make-offer-modal';
+export * from './toggle-switch-button/toggle-switch-button';
