@@ -7,6 +7,7 @@ import { Button, Chip, PageBox, RoundedNav } from 'src/components/common';
 import GalleryBox from 'src/components/gallery/gallery-box';
 import { useFetch } from 'src/utils/apiUtil';
 import { getSearchParam } from 'src/utils/commonUtil';
+import CollectionFeed from 'src/components/feed/collection-feed';
 
 export function CollectionPage() {
   const [currentTab, setCurrentTab] = useState(0);
@@ -79,7 +80,13 @@ export function CollectionPage() {
       />
 
       <div className="mt-6">
-        {currentTab === 0 ? <>{collection && <GalleryBox collection={collection} />}</> : <>Community</>}
+        {currentTab === 0 ? (
+          <>{collection && <GalleryBox collection={collection} />}</>
+        ) : (
+          <>
+            <CollectionFeed />
+          </>
+        )}
       </div>
     </PageBox>
   );
