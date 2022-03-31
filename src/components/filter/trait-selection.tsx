@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaChevronDown } from 'react-icons/fa';
 import { useFetch } from 'src/utils/apiUtil';
 import { useFilterContext } from 'src/utils/context/FilterContext';
@@ -95,8 +95,8 @@ export const TraitSelection = ({ collectionAddress, onChange }: Props) => {
     <div>
       {traitData?.map((item) => {
         return (
-          <>
-            <div key={item.trait_type} className="p-2 border-b mt-2 flex items-center cursor-pointer">
+          <React.Fragment key={item.trait_type}>
+            <div className="p-2 border-b mt-2 flex items-center cursor-pointer">
               <div
                 className="flex-1"
                 onClick={() => {
@@ -126,7 +126,7 @@ export const TraitSelection = ({ collectionAddress, onChange }: Props) => {
                   placeholder="Filter"
                 />
 
-                <div className="pl-2 h-40 overflow-scroll">
+                <div className="pl-2 h-40 overflow-y-scroll">
                   {item.values.map((value) => {
                     const searchText = (searchState[item.trait_type] || '').toLowerCase();
                     if (searchText && value.toLowerCase().indexOf(searchText) < 0) {
@@ -157,7 +157,7 @@ export const TraitSelection = ({ collectionAddress, onChange }: Props) => {
                 </div>
               </div>
             )}
-          </>
+          </React.Fragment>
         );
       })}
     </div>

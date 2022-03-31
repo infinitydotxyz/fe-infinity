@@ -65,6 +65,9 @@ export const SandboxPage: FC = () => {
           <Card data={testData.cardTestData[0]} />
           <Card data={testData.cardTestData[1]} />
         </div>
+
+        <h3># More</h3>
+        <div>&nbsp;</div>
       </div>
     </PageBox>
   );
