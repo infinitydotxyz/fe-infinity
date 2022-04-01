@@ -19,7 +19,7 @@ export const TransferNFTModal: React.FC = () => {
         <div className="modal-body p-4 rounded-3xl">
           <p className="font-bold text-2xl tracking-tight mb-12">Transfer NFT</p>
           <TextInput
-            type="address"
+            type="text"
             value={address}
             label="Address or ENSName"
             placeholder=""
