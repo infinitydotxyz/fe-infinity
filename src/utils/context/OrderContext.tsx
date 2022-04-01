@@ -19,8 +19,11 @@ export type OrderContextType = {
 
   removeBuyCartItem: (order: OrderCartItem) => void;
   removeSellCartItem: (order: OrderCartItem) => void;
+  clearCartItems: () => void;
 
+  isOrderEmpty: () => boolean;
   isCartEmpty: () => boolean;
+  isOrderBuilderEmpty: () => boolean;
 };
 
 const OrderContext = React.createContext<OrderContextType | null>(null);
@@ -37,8 +40,17 @@ export function OrderContextProvider({ children }: Props) {
   const [buyCartItems, setBuyCartItems] = useState<OrderCartItem[]>([]);
   const [sellCartItems, setSellCartItems] = useState<OrderCartItem[]>([]);
 
-  const isCartEmpty = (): boolean => {
+  const isOrderBuilderEmpty = (): boolean => {
     return buyCartItems.length === 0 && sellCartItems.length === 0;
+  };
+
+  const isCartEmpty = (): boolean => {
+    return sellOrders.length === 0 && buyOrders.length === 0;
+  };
+
+  // used to show the drawer button
+  const isOrderEmpty = (): boolean => {
+    return isOrderBuilderEmpty() && isCartEmpty();
   };
 
   const addBuyOrder = (order: OBOrder) => {
@@ -65,6 +77,11 @@ export function OrderContextProvider({ children }: Props) {
     setBuyCartItems(newItems);
   };
 
+  const clearCartItems = () => {
+    setBuyCartItems([]);
+    setSellCartItems([]);
+  };
+
   const removeSellCartItem = (item: OrderCartItem) => {
     const newItems = sellCartItems.filter((e) => {
       return e.tokenName !== item.tokenName || e.collectionName !== item.collectionName;
@@ -86,7 +103,10 @@ export function OrderContextProvider({ children }: Props) {
     sellCartItems,
     removeSellCartItem,
     removeBuyCartItem,
-    isCartEmpty
+    isCartEmpty,
+    isOrderBuilderEmpty,
+    isOrderEmpty,
+    clearCartItems
   };
 
   return <OrderContext.Provider value={value}>{children}</OrderContext.Provider>;

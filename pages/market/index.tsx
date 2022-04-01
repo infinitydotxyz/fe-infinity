@@ -53,7 +53,7 @@ export default function MarketPage() {
   const [sellOrdersValidInactive, setSellOrdersValidInactive] = useState<OBOrder[]>([]);
   const [sellOrdersInvalid, setSellOrdersInvalid] = useState<OBOrder[]>([]);
 
-  const { orderDrawerOpen, setOrderDrawerOpen, isCartEmpty } = useOrderContext();
+  const { orderDrawerOpen, setOrderDrawerOpen, isOrderEmpty } = useOrderContext();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [clickedOrder, setClickedOrder] = useState<OBOrder>();
@@ -319,7 +319,7 @@ export default function MarketPage() {
     <PageBox
       title="Market"
       rightSide={
-        !isCartEmpty() ? (
+        !isOrderEmpty() ? (
           <Button
             variant="outline"
             onClick={async () => {

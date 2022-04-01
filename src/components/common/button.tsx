@@ -12,7 +12,7 @@ const classes = {
     large: 'px-8 py-3 text-lg'
   },
   variant: {
-    plain: '',
+    plain: 'rounded-3xl', // hover fill needs to be rounded
     primary: 'border rounded-3xl border-gray-100 bg-black text-white',
     secondary: 'border rounded-3xl border-gray-100 bg-black text-white',
     outline: 'border rounded-3xl border border-gray-300 text-gray-900',
