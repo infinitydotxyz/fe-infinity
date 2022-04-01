@@ -10,7 +10,7 @@ interface ActivityListPropType {
   tokenId: string;
 }
 
-export enum ACTIVITY_TYPE {
+export enum EventType {
   Sale = 'sale',
   Transfer = 'transfer',
   Offer = 'offer'
@@ -22,7 +22,7 @@ export const ActivityList: React.FC<ActivityListPropType> = ({
   collectionAddress,
   tokenId
 }: ActivityListPropType) => {
-  const [activityTypes, setActivityTypes] = useState<ACTIVITY_TYPE[]>([ACTIVITY_TYPE.Sale]);
+  const [activityTypes, setActivityTypes] = useState<EventType[]>([EventType.Sale]);
   const [activityList, setActivityList] = useState([]);
 
   // { query: { eventType: 'sale', limit: 50 } }
@@ -46,7 +46,7 @@ export const ActivityList: React.FC<ActivityListPropType> = ({
   }, [chainId, collectionAddress, tokenId, activityTypes]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const curType = event.target.name as ACTIVITY_TYPE;
+    const curType = event.target.name as EventType;
     if (event.target.checked) {
       setActivityTypes([...activityTypes, curType]);
     } else {

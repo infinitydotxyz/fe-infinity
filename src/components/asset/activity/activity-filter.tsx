@@ -2,10 +2,10 @@ import React, { Fragment } from 'react';
 
 import { Popover, Transition } from '@headlessui/react';
 
-import { ACTIVITY_TYPE } from './activity-list';
+import { EventType } from './activity-list';
 
 interface FilterProps {
-  activityTypes: Array<ACTIVITY_TYPE>;
+  activityTypes: Array<EventType>;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -37,7 +37,7 @@ export const ActivityFilter: React.FC<FilterProps> = ({ activityTypes, onChange 
             <Popover.Panel className="absolute z-10  max-w-sm px-4 mt-3 right-0 transform sm:px-0 ">
               <div className="overflow-hidden rounded-lg  shadow-lg ring-1 ring-black ring-opacity-5">
                 <div className="p-5 bg-theme-light-50 w-80">
-                  {[ACTIVITY_TYPE.Sale, ACTIVITY_TYPE.Transfer, ACTIVITY_TYPE.Offer].map((type: ACTIVITY_TYPE) => (
+                  {[EventType.Sale, EventType.Transfer, EventType.Offer].map((type: EventType) => (
                     <div key={type} className="flex justify-between p-3">
                       <span className="font-body text-theme-light-800 text-lg">
                         {type.charAt(0).toUpperCase() + type.slice(1)}s
