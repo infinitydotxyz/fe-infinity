@@ -24,7 +24,7 @@ export function Dropdown({ label, items, toggler, className }: DropdownProps) {
         ) : (
           <span>
             <Menu.Button
-              className="transition ease-in-out duration-300 hover:bg-gray-700  active:bg-gray-900 focus:ring-2 focus:ring-black focus:ring-opacity-50
+              className="transition ease-in-out duration-300 hover:bg-gray-700  active:bg-gray-900 focus:outline-none focus-visible:ring focus:ring-black focus:ring-opacity-50
           px-6 py-2
           border rounded-3xl border-gray-300 text-gray-900
           hover:text-white
@@ -71,7 +71,7 @@ function CustomMenuItem(props: CustomMenuItemProps) {
     <Menu.Item {...props}>
       {({ active, disabled }) => (
         <a
-          href="javascript:;"
+          href="#"
           className={classNames(
             'flex w-full justify-between px-4 py-2 text-left text-sm leading-5 ',
             active ? 'bg-black text-white' : 'text-gray-700',

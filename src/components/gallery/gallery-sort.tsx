@@ -48,15 +48,9 @@ export const GallerySort = () => {
             </div> */}
 
             <div className="py-1">
-              <CustomMenuItem href="javascript:;" onClick={() => onClickSort('ASC')}>
-                Low to High
-              </CustomMenuItem>
-              <CustomMenuItem href="javascript:;" onClick={() => onClickSort('DESC')}>
-                High to Low
-              </CustomMenuItem>
-              <CustomMenuItem href="javascript:;" onClick={() => onClickSort('')}>
-                Clear
-              </CustomMenuItem>
+              <CustomMenuItem onClick={() => onClickSort('ASC')}>Low to High</CustomMenuItem>
+              <CustomMenuItem onClick={() => onClickSort('DESC')}>High to Low</CustomMenuItem>
+              <CustomMenuItem onClick={() => onClickSort('')}>Clear</CustomMenuItem>
             </div>
           </Menu.Items>
         </Menu>
@@ -66,7 +60,6 @@ export const GallerySort = () => {
 };
 
 interface CustomMenuItemProps {
-  href: string;
   onClick: () => void;
   children: ReactElement | string;
 }
@@ -75,7 +68,7 @@ function CustomMenuItem(props: CustomMenuItemProps) {
     <Menu.Item {...props}>
       {({ active, disabled }) => (
         <a
-          href={props.href}
+          href="#"
           className={classNames(
             'flex w-full justify-between px-4 py-2 text-left text-sm leading-5',
             active ? 'bg-indigo-500 text-white' : 'text-gray-700',

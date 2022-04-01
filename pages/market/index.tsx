@@ -1,31 +1,49 @@
 import React, { useState } from 'react';
-import { Button, Card, ToggleTab, useToggleTab, PageBox } from 'src/components/common';
+import { Button, Card, ToggleTab, useToggleTab, PageBox, Spacer, Dropdown } from 'src/components/common';
 import { OrderDrawer } from 'src/components/market/order-drawer';
 import { CardData } from '@infinityxyz/lib/types/core';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { FaShoppingBag } from 'react-icons/fa';
 import { OrderDebug } from 'src/components/market/order_debug';
+import { RiLayoutGridFill } from 'react-icons/ri';
 
+// get image ids here https://picsum.photos/images
 const testCardData: CardData[] = [
   {
     id: 'nft1',
     title: 'NFT 1',
     collectionName: 'Bearded Apes',
-    tokenId: '0x23432434234',
-    tokenAddress: '0xlaksjdlasdjf234234lkj',
+    tokenId: '0x2343ddd2434234',
+    tokenAddress: '0xlaksdjdlasdjf234234lkj',
     price: 1.5,
-    image:
-      'https://media.voguebusiness.com/photos/61b8dfb99ba90ab572dea0bd/3:4/w_1998,h_2664,c_limit/adidas-nft-voguebus-adidas-nft-dec-21-story.jpg'
+    image: 'https://picsum.photos/id/1004/200'
   },
   {
     id: 'nft2',
     title: 'NFT 2',
     collectionName: 'Wholely Wrappers',
-    tokenAddress: '0xlakdsfsjdlasdjf234234lkj',
-    tokenId: '0x34234234242342342342',
+    tokenAddress: '0xlakdsfsjdlddasdjf234234lkj',
+    tokenId: '0x34234dd2342423423dd42342',
     price: 2.5,
-    image:
-      'https://media.voguebusiness.com/photos/61b8dfb99ba90ab572dea0bd/3:4/w_1998,h_2664,c_limit/adidas-nft-voguebus-adidas-nft-dec-21-story.jpg'
+    image: 'https://picsum.photos/id/1005/200'
+  },
+  {
+    id: 'nft3',
+    title: 'Not bad',
+    collectionName: 'Meth and Love',
+    tokenAddress: '0xlakdsfddsjdlasdjf234234lkj',
+    tokenId: '0x342342dd34242ff342342342',
+    price: 2.5,
+    image: 'https://picsum.photos/id/1027/200'
+  },
+  {
+    id: 'nft4',
+    title: 'NFT Poop',
+    collectionName: 'Meth and Love',
+    tokenAddress: '0xlakdsddfsjdlasdjf234234lkj',
+    tokenId: '0x34234234242342342ff342',
+    price: 2.5,
+    image: 'https://picsum.photos/id/1033/200'
   }
 ];
 
@@ -33,6 +51,8 @@ export default function MarketPage() {
   const [showDebugTools, setShowDebugTools] = useState(false);
   const { orderDrawerOpen, setOrderDrawerOpen, isOrderEmpty } = useOrderContext();
   const { options, onChange, selected } = useToggleTab(['Assets', 'Orderbook'], 'Assets');
+
+  const cards = testCardData.map((e) => <Card key={e.tokenId} data={e} />);
 
   return (
     <PageBox
@@ -55,15 +75,21 @@ export default function MarketPage() {
       <div>
         {!showDebugTools && (
           <>
-            <div className="flex justify-between items-center mb-2">
+            <div className="flex space-x-2 items-center mb-2">
               <ToggleTab options={options} selected={selected} onChange={onChange} />
+              <Spacer />
               <Button variant="outline">Filter</Button>
+              <Dropdown
+                label="Sort"
+                items={[
+                  { label: 'High to low', onClick: console.log },
+                  { label: 'Low to high', onClick: console.log }
+                ]}
+              />
+              <RiLayoutGridFill />
             </div>
 
-            <div className="flex flex-row space-x-4 mb-6">
-              <Card data={testCardData[0]} />
-              <Card data={testCardData[1]} />
-            </div>
+            <div className="flex flex-row flex-wrap space-x-4 mb-6">{cards}</div>
           </>
         )}
 
