@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import { BaseCollection } from '@infinityxyz/lib/types/core';
-import { getSearchFriendlyString } from '@infinityxyz/lib/utils';
 import { FaCheck, FaEdit, FaFacebook, FaTwitter } from 'react-icons/fa';
 import { Button, Chip, PageBox, RoundedNav } from 'src/components/common';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
@@ -10,11 +10,15 @@ import { getSearchParam } from 'src/utils/commonUtils';
 import { CollectionFeed } from 'src/components/feed/collection-feed';
 
 export function CollectionPage() {
+  const {
+    query: { name }
+  } = useRouter();
   const [currentTab, setCurrentTab] = useState(0);
+  console.log('name', name);
 
   const collectionName = getSearchParam('name') ?? '';
 
-  const path = `/collections/${getSearchFriendlyString(collectionName)}`;
+  const path = `/collections/${name}`;
   const { result: collection } = useFetch<BaseCollection>(path, { chainId: '1' });
 
   return (
