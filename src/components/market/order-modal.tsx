@@ -8,8 +8,7 @@ import { nowSeconds } from '@infinityxyz/lib/utils';
 import { DateInput, TextInput, SimpleModal, ComboInput } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { bigNumToDate, CollectionAddr, CollectionManager } from 'src/utils/marketUtils';
-
-const isServer = typeof window === 'undefined';
+import { isServer } from 'src/utils';
 
 interface Props {
   isOpen: boolean;
@@ -200,7 +199,7 @@ export const OrderModal: React.FC<Props> = ({ isOpen, buyMode = true, inOrder, o
 
   return (
     <>
-      {!isServer && (
+      {!isServer() && (
         <SimpleModal
           isOpen={isOpen}
           onClose={() => onClose()}

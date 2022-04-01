@@ -1,6 +1,25 @@
 import { OBOrder } from '@infinityxyz/lib/types/core';
 import React, { ReactNode, useContext, useState } from 'react';
-import { OrderCartItem } from 'src/components/market/order-drawer';
+
+export interface OrderCartItem {
+  tokenName: string;
+  collectionName: string;
+  imageUrl: string;
+}
+
+export const isCartItemEqual = (a: OrderCartItem, b: OrderCartItem): boolean => {
+  return a.tokenName === b.tokenName && a.collectionName === b.collectionName;
+};
+
+export const indexOfCartItem = (list: OrderCartItem[], item: OrderCartItem): number => {
+  for (let i = 0; i < list.length; i++) {
+    if (isCartItemEqual(item, list[i])) {
+      return i;
+    }
+  }
+
+  return -1;
+};
 
 export type OrderContextType = {
   orderDrawerOpen: boolean;
@@ -62,19 +81,30 @@ export function OrderContextProvider({ children }: Props) {
   };
 
   const addBuyCartItem = (item: OrderCartItem) => {
-    setBuyCartItems([...buyCartItems, item]);
+    const index = indexOfCartItem(buyCartItems, item);
+
+    if (index === -1) {
+      setBuyCartItems([...buyCartItems, item]);
+    }
   };
 
   const addSellCartItem = (item: OrderCartItem) => {
-    setSellCartItems([...sellCartItems, item]);
+    const index = indexOfCartItem(sellCartItems, item);
+
+    if (index === -1) {
+      setSellCartItems([...sellCartItems, item]);
+    }
   };
 
   const removeBuyCartItem = (item: OrderCartItem) => {
-    const newItems = buyCartItems.filter((e) => {
-      return e.tokenName !== item.tokenName || e.collectionName !== item.collectionName;
-    });
+    const index = indexOfCartItem(buyCartItems, item);
 
-    setBuyCartItems(newItems);
+    if (index !== -1) {
+      const copy = [...buyCartItems];
+      copy.splice(index, 1);
+
+      setBuyCartItems(copy);
+    }
   };
 
   const clearCartItems = () => {
@@ -83,11 +113,14 @@ export function OrderContextProvider({ children }: Props) {
   };
 
   const removeSellCartItem = (item: OrderCartItem) => {
-    const newItems = sellCartItems.filter((e) => {
-      return e.tokenName !== item.tokenName || e.collectionName !== item.collectionName;
-    });
+    const index = indexOfCartItem(sellCartItems, item);
 
-    setSellCartItems(newItems);
+    if (index !== -1) {
+      const copy = [...sellCartItems];
+      copy.splice(index, 1);
+
+      setSellCartItems(copy);
+    }
   };
 
   const value: OrderContextType = {

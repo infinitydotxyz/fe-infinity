@@ -7,7 +7,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { AppContextProvider } from 'src/utils/context/AppContext';
 import { FilterContextProvider } from 'src/utils/context/FilterContext';
 import { useRouter } from 'next/router';
-import { isLocalhost } from 'src/utils/commonUtils';
+import { isLocalhost, isServer } from 'src/utils/commonUtils';
 import LogRocket from 'logrocket';
 import { OrderContextProvider } from 'src/utils/context/OrderContext';
 
@@ -37,7 +37,7 @@ const App: FunctionComponent<AppProps> = (props) => {
     };
   }, [router.events]);
 
-  return typeof window === 'undefined' ? null : (
+  return isServer() ? null : (
     <StrictMode>
       {providers.reduceRight(
         (children, provider) => createElement(provider, undefined, children),

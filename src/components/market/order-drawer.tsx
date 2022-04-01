@@ -3,16 +3,10 @@ import { MinusCircleIcon } from '@heroicons/react/solid';
 import { BigNumberish } from 'ethers';
 import { nowSeconds } from '@infinityxyz/lib/utils';
 import { TextInput, Spacer, Divider, Button, Drawer, DateInput } from 'src/components/common';
-import { useOrderContext } from 'src/utils/context/OrderContext';
+import { OrderCartItem, useOrderContext } from 'src/utils/context/OrderContext';
 import { parseEther } from 'ethers/lib/utils';
 import { ExecParams, ExtraParams, Item, OBOrder } from '@infinityxyz/lib/types/core';
 import { useAppContext } from 'src/utils/context/AppContext';
-
-export interface OrderCartItem {
-  tokenName: string;
-  collectionName: string;
-  imageUrl: string;
-}
 
 interface Props {
   open: boolean;
@@ -236,17 +230,15 @@ function ListItem({ cartItem }: Props2) {
   const { removeBuyCartItem } = useOrderContext();
 
   const menu = (
-    <button
-      type="button"
-      className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:ring-2 focus:ring-indigo-500"
+    <Button
+      variant="plain"
+      size="small"
       onClick={() => {
         removeBuyCartItem(cartItem);
       }}
     >
-      <span className="flex h-full w-full items-center justify-center rounded-full">
-        <MinusCircleIcon className="h-5 w-5 focus:ring-0" aria-hidden="true" />
-      </span>
-    </button>
+      <MinusCircleIcon className="h-5 w-5" />
+    </Button>
   );
 
   return (
