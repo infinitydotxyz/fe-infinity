@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Icon } from 'src/components/common/icon';
+import Modal, { Content } from 'src/components/common/modal';
 
 export function Navigation() {
   const styles = {
@@ -91,13 +92,19 @@ export function Navigation() {
             bg-transparent
           `
       },
-      button: {
+      modal: {
+        interactive: false,
         className: `
             transition w-full h-full overflow-hidden
             justify-self-end
             font-mono text-xs
             bg-theme-light-900 text-theme-light-100 hover:underline rounded-full
-          `
+          `,
+        content: ({ close }: Content) => (
+          <>
+            <div className="w-1/3 h-5/6 bg-theme-light-50 ring ring-inset ring-theme-light-700 rounded-xl"></div>
+          </>
+        )
       }
     }
   };
@@ -163,7 +170,7 @@ export function Navigation() {
           </Link>
         </div>
         <div {...styles?.connect?.container}>
-          <button {...styles?.connect?.button}>{content?.buttons?.connect?.label}</button>
+          <Modal {...styles?.connect?.modal}>{content?.buttons?.connect?.label}</Modal>
         </div>
       </div>
     </>

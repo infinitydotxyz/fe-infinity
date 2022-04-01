@@ -17,16 +17,15 @@ import { Dialog, Disclosure, Transition } from '@headlessui/react';
   ======================================
 */
 
+export type Content = {
+  open?: boolean;
+  close(focusableElement?: HTMLElement | React.MutableRefObject<HTMLElement | null>): void;
+};
+
 interface Props {
   children?: React.ReactNode;
   interactive?: boolean;
-  content?: ({
-    open,
-    close
-  }: {
-    open: boolean;
-    close(focusableElement?: HTMLElement | React.MutableRefObject<HTMLElement | null>): void;
-  }) => React.ReactNode;
+  content?: ({ open, close }: Content) => React.ReactNode;
   styles?: {
     overlay?: {
       transition?: {
@@ -132,3 +131,5 @@ export function Modal({ children, interactive, content, ...props }: Props): JSX.
     </>
   );
 }
+
+export default Modal;
