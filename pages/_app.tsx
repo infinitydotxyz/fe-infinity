@@ -9,6 +9,7 @@ import { useRouter } from 'next/router';
 import { isLocalhost } from 'src/utils/commonUtils';
 import LogRocket from 'logrocket';
 import { OrderContextProvider } from 'src/utils/context/OrderContext';
+import { NextNProgress } from 'src/components/common/next-progressbar';
 
 if (!isLocalhost()) {
   LogRocket.init('0pu9ak/nftco');
@@ -31,13 +32,16 @@ const App = ({ Component, pageProps }: AppProps) => {
   }, [router.events]);
 
   return (
-    <AppContextProvider>
-      <FilterContextProvider>
-        <OrderContextProvider>
-          <Component {...pageProps} />
-        </OrderContextProvider>
-      </FilterContextProvider>
-    </AppContextProvider>
+    <>
+      <NextNProgress />
+      <AppContextProvider>
+        <FilterContextProvider>
+          <OrderContextProvider>
+            <Component {...pageProps} />
+          </OrderContextProvider>
+        </FilterContextProvider>
+      </AppContextProvider>
+    </>
   );
 };
 
