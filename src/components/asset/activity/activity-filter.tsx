@@ -3,15 +3,14 @@ import React, { Fragment } from 'react';
 import { Popover, Transition } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/solid';
 
-import { ACTIVITY_FILTER_TYPE } from './activiy/activity-list';
+import { ACTIVITY_TYPE } from './activity-list';
 
 interface FilterProps {
-  filters: Array<ACTIVITY_FILTER_TYPE>;
+  activityTypes: Array<ACTIVITY_TYPE>;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const Filter: React.FC<FilterProps> = ({ filters, onChange }) => {
-  console.log({ filters });
+export const ActivityFilter: React.FC<FilterProps> = ({ activityTypes, onChange }) => {
   return (
     <Popover className="relative">
       {({ open }) => (
@@ -40,22 +39,20 @@ export const Filter: React.FC<FilterProps> = ({ filters, onChange }) => {
             <Popover.Panel className="absolute z-10  max-w-sm px-4 mt-3 right-0 transform sm:px-0 ">
               <div className="overflow-hidden rounded-lg  shadow-lg ring-1 ring-black ring-opacity-5">
                 <div className="p-8 bg-theme-light-50 w-80">
-                  {[ACTIVITY_FILTER_TYPE.Sale, ACTIVITY_FILTER_TYPE.Transfer, ACTIVITY_FILTER_TYPE.Offer].map(
-                    (filter: ACTIVITY_FILTER_TYPE) => (
-                      <div key={filter} className="flex justify-between p-2">
-                        <span className="font-body text-theme-light-800 text-lg">
-                          {filter.charAt(0).toUpperCase() + filter.slice(1)}s
-                        </span>
-                        <input
-                          checked={filters.indexOf(filter) >= 0}
-                          name={filter}
-                          onChange={onChange}
-                          type="checkbox"
-                          className="border-gray-300 text-black focus:outline-none rounded h-5 w-5"
-                        />
-                      </div>
-                    )
-                  )}
+                  {[ACTIVITY_TYPE.Sale, ACTIVITY_TYPE.Transfer, ACTIVITY_TYPE.Offer].map((type: ACTIVITY_TYPE) => (
+                    <div key={type} className="flex justify-between p-2">
+                      <span className="font-body text-theme-light-800 text-lg">
+                        {type.charAt(0).toUpperCase() + type.slice(1)}s
+                      </span>
+                      <input
+                        checked={activityTypes.indexOf(type) >= 0}
+                        name={type}
+                        onChange={onChange}
+                        type="checkbox"
+                        className="border-gray-300 text-black focus:outline-none rounded h-5 w-5"
+                      />
+                    </div>
+                  ))}
                 </div>
               </div>
             </Popover.Panel>
