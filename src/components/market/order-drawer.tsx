@@ -231,7 +231,7 @@ function ListItem({ cartItem }: Props2) {
 
   const menu = (
     <Button
-      variant="plain"
+      variant="ghost"
       size="small"
       onClick={() => {
         removeBuyCartItem(cartItem);

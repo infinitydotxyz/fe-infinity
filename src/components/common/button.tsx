@@ -6,13 +6,14 @@ const classes = {
   disabled: 'opacity-50 cursor-not-allowed',
   pill: 'rounded-full',
   size: {
-    plain: 'px-4', // hover fill needs padding
+    plain: '',
     small: 'px-2 py-1 text-sm',
     normal: 'px-6 py-2',
     large: 'px-8 py-3 text-lg'
   },
   variant: {
-    plain: 'rounded-3xl', // hover fill needs to be rounded
+    plain: '',
+    ghost: 'rounded-3xl', // hover fill needs to be rounded
     primary: 'border rounded-3xl border-gray-100 bg-black text-white',
     secondary: 'border rounded-3xl border-gray-100 bg-black text-white',
     outline: 'border rounded-3xl border border-gray-300 text-gray-900',
@@ -23,7 +24,7 @@ const classes = {
 interface Props {
   onClick?: () => void;
   children: ReactNode;
-  variant?: 'plain' | 'primary' | 'secondary' | 'outline' | 'danger';
+  variant?: 'plain' | 'primary' | 'secondary' | 'outline' | 'danger' | 'ghost';
   size?: 'plain' | 'small' | 'normal' | 'large';
   disabled?: boolean;
   className?: string;

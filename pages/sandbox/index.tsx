@@ -30,6 +30,7 @@ const SandboxPage: FC = () => {
           <Button variant="plain" size="plain">
             Unstyled Button
           </Button>
+          <Button variant="ghost">Ghost</Button>
         </div>
 
         <h3># Chip</h3>

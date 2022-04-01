@@ -16,7 +16,7 @@ export function Drawer({ open, onClose, title, children }: Props) {
       <div className="flex items-start justify-between">
         <Dialog.Title className="text-lg font-medium text-gray-900">{title}</Dialog.Title>
         <div className="ml-3 flex h-7 items-center">
-          <Button variant="plain" size="small" onClick={onClose}>
+          <Button variant="ghost" size="small" onClick={onClose}>
             <span className="sr-only">Close panel</span>
             <XIcon className="h-6 w-6" aria-hidden="true" />
           </Button>
