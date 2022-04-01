@@ -1,5 +1,6 @@
 import { FunctionComponent } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button, PageBox, ShortAddress, ReadMoreText } from 'src/components/common';
 import { apiGet } from 'src/utils';
 import { Token, Collection } from '@infinityxyz/lib/types/core';
@@ -65,7 +66,7 @@ const AssetDetail: FunctionComponent<AssetDetailProps> = ({ token, collection })
                 {collection.metadata.name}
               </a>
             </Link>
-            <img className="w-4 h-4 -mt-0.5" src={BlueCheckSvg.src} alt={'Verified'} />
+            <Image width={16} height={16} className="-mt-0.5" src={BlueCheckSvg.src} alt={'Verified'} />
           </div>
           <ShortAddress
             label="Contact address:"

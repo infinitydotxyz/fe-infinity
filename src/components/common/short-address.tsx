@@ -11,12 +11,14 @@ interface ShortAddressProps {
 
 export const ShortAddress: React.FC<ShortAddressProps> = ({ address, href, label, tooltip }) => {
   return (
-    <div className="relative flex">
+    <div className="relative flex items-center flex-wrap">
       <span className="text-body text-base">{label}</span>
-      <a className="ml-4 text-heading text-base underline" href={href} title={tooltip}>
-        {address ? `${ellipsisAddress(address)}` : address}
-      </a>
-      <ClipboardButton textToCopy={address} />
+      <div>
+        <a className="ml-4 text-heading text-base underline" href={href} title={tooltip}>
+          {address ? `${ellipsisAddress(address)}` : address}
+        </a>
+        <ClipboardButton textToCopy={address} />
+      </div>
     </div>
   );
 };

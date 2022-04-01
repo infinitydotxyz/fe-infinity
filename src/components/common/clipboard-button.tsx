@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Image from 'next/image';
 import copy from 'src/images/copy.svg';
 
 interface ClipboardButtonProps {
@@ -28,7 +29,9 @@ export const ClipboardButton: React.FC<ClipboardButtonProps> = ({ textToCopy }) 
       {copied ? (
         <span className="pl-4 cursor-pointer">✓</span>
       ) : (
-        <img className="ml-4 cursor-pointer" src={copy.src} alt="copy icon" onClick={copyToClipboard} />
+        <button className="ml-4 pt-1cursor-pointer">
+          <Image width={16} height={16} src={copy.src} alt="copy icon" onClick={copyToClipboard} />
+        </button>
       )}
     </>
   );
