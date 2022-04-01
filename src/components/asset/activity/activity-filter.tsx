@@ -38,7 +38,7 @@ export const ActivityFilter: React.FC<FilterProps> = ({ activityTypes, onChange 
               <div className="overflow-hidden rounded-lg  shadow-lg ring-1 ring-black ring-opacity-5">
                 <div className="p-5 bg-theme-light-50 w-80">
                   {[ACTIVITY_TYPE.Sale, ACTIVITY_TYPE.Transfer, ACTIVITY_TYPE.Offer].map((type: ACTIVITY_TYPE) => (
-                    <div key={type} className="flex justify-between p-4">
+                    <div key={type} className="flex justify-between p-3">
                       <span className="font-body text-theme-light-800 text-lg">
                         {type.charAt(0).toUpperCase() + type.slice(1)}s
                       </span>
