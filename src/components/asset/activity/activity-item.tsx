@@ -1,5 +1,4 @@
 import React from 'react';
-import { ITEMS_PER_PAGE } from 'src/utils';
 
 export interface NftActivity {
   address: string;
@@ -21,28 +20,35 @@ interface ActivityItemProps {
   item: NftActivity;
 }
 
+const shortAddress = (address: string | undefined | null) =>
+  address && address.length > 20 ? `${address.slice(0, 6)}...${address.slice(-4)}` : address;
+
 export const ActivityItem: React.FC<ActivityItemProps> = ({ item }) => {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-x-4 gap-y-3 bg-theme-light-300 px-6 sm:px-6 md:px-8 lg:px-16 -mx-1 my-2 sm:my-4 py-5 md:py-4 md:pt-12 md:pb-14 rounded-3xl">
       <div>
-        <p className="font-body tracking-tight text-theme-light-800">Seller</p>
-        <p className="font-body font-bold tracking-tight text-black">{item.fromDisplayName || item.from}</p>
+        <p className="font-body tracking-tight text-theme-light-800 leading-normal">Seller</p>
+        <p className="font-body font-bold tracking-tight text-black">
+          {shortAddress(item.fromDisplayName || item.from)}
+        </p>
       </div>
       <div>
-        <p className="font-body tracking-tight text-theme-light-800">Buyer</p>
-        <p className="font-body font-bold tracking-tight text-black">{item.toDisplayName || item.to}</p>
+        <p className="font-body tracking-tight text-theme-light-800 leading-normal">Buyer</p>
+        <p className="font-body font-bold tracking-tight text-black">{shortAddress(item.toDisplayName || item.to)}</p>
       </div>
       <div>
-        <p className="font-body tracking-tight text-theme-light-800">Price</p>
+        <p className="font-body tracking-tight text-theme-light-800 leading-normal">Price</p>
         <p className="font-body font-bold tracking-tight text-black">Ξ {item.price}</p>
       </div>
       <div>
-        <p className="font-body tracking-tight text-theme-light-800">Date</p>
+        <p className="font-body tracking-tight text-theme-light-800 leading-normal">Date</p>
         <p className="font-body font-bold tracking-tight text-black">15 mins ago</p>
       </div>
       <div>
-        <p className="font-body tracking-tight text-theme-light-800">Link</p>
-        <p className="font-body font-bold tracking-tight text-black">{item.internalUrl || item.externalUrl}</p>
+        <p className="font-body tracking-tight text-theme-light-800 leading-normal">Link</p>
+        <a className="font-body font-bold tracking-tight text-black" rel="noopener noreferrer" href={item.externalUrl}>
+          {shortAddress(item.externalUrl ? item.externalUrl.replace('https://etherscan.io/tx/', '') : 'No Txn')}
+        </a>
       </div>
     </div>
   );
