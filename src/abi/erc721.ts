@@ -192,4 +192,3 @@ export const erc721Abi = [
   },
   { inputs: [], name: 'withdraw', outputs: [], stateMutability: 'nonpayable', type: 'function' }
 ];
-
