@@ -11,7 +11,7 @@ interface Props {
   onSubmit: () => void;
 }
 
-export const Modal = ({ children, onSubmit, okButton = 'OK', title, isOpen, onClose }: Props) => {
+export const SimpleModal = ({ children, onSubmit, okButton = 'OK', title, isOpen, onClose }: Props) => {
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="fixed inset-0 z-10 overflow-y-auto" onClose={onClose}>

@@ -5,11 +5,9 @@ import { BigNumberish } from 'ethers';
 import { formatEther, parseEther, solidityKeccak256 } from 'ethers/lib/utils';
 import { ExecParams, ExtraParams, Item, OBOrder } from '@infinityxyz/lib/types/core';
 import { nowSeconds } from '@infinityxyz/lib/utils';
-import { DateInput, TextInput } from 'src/components/common';
+import { DateInput, TextInput, SimpleModal, ComboInput } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { bigNumToDate, CollectionAddr, CollectionManager } from 'src/utils/marketUtils';
-import { Modal } from 'src/components/market/modal';
-import { ComboInput } from 'src/components/common/combo-input';
 
 const isServer = typeof window === 'undefined';
 
@@ -203,7 +201,7 @@ export const OrderModal: React.FC<Props> = ({ isOpen, buyMode = true, inOrder, o
   return (
     <>
       {!isServer && (
-        <Modal
+        <SimpleModal
           isOpen={isOpen}
           onClose={() => onClose()}
           title={!isSellOrder ? 'Buy Order' : 'Sell Order'}
@@ -215,7 +213,7 @@ export const OrderModal: React.FC<Props> = ({ isOpen, buyMode = true, inOrder, o
           <div>
             <div className="flex flex-col ">{content}</div>
           </div>
-        </Modal>
+        </SimpleModal>
       )}
     </>
   );
