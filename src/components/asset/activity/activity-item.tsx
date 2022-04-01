@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React from 'react';
 
 export interface NftActivity {
@@ -42,7 +43,7 @@ export const ActivityItem: React.FC<ActivityItemProps> = ({ item }) => {
       </div>
       <div>
         <p className="font-body tracking-tight text-theme-light-800 leading-normal">Date</p>
-        <p className="font-body font-bold tracking-tight text-black">15 mins ago</p>
+        <p className="font-body font-bold tracking-tight text-black">{moment(item.timestamp).fromNow()}</p>
       </div>
       <div>
         <p className="font-body tracking-tight text-theme-light-800 leading-normal">Link</p>
