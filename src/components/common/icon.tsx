@@ -1,7 +1,3 @@
-/* eslint-disable react/display-name */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import React from 'react';
 import * as FA from 'react-icons/fa';
 import * as HI from 'react-icons/hi';
@@ -38,7 +34,18 @@ import * as VSC from 'react-icons/vsc';
     this file.
   ======================================
 */
-export const SVG: any = {
+
+interface SVG {
+  [key: string]: React.ElementType;
+}
+
+interface Icons {
+  [family: string]: {
+    [name: string]: React.ElementType;
+  };
+}
+
+export const SVG: SVG = {
   infinity: ({ ...props }) => (
     <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 62 60" {...props}>
       <path
@@ -294,7 +301,7 @@ export const SVG: any = {
   )
 };
 
-export const Icons: any = {
+export const Icons: Icons = {
   FA,
   HI,
   CG,
@@ -313,6 +320,7 @@ export const Icons: any = {
   BI,
   BS,
   AI,
+  WI,
   IO5,
   VSC,
   SVG
@@ -322,12 +330,12 @@ interface Props {
   children?: React.ReactNode;
   family?: string;
   name?: string;
-  props?: any;
+  className?: string;
 }
 
-export const Icon = React.forwardRef(({ children, family = '', name = '', ...props }: Props, ref) => {
-  const Component = Icons?.[family]?.[name] ? Icons?.[family]?.[name] : null;
-  return <>{Component && <Component {...props} />}</>;
-});
+export function Icon({ family = '', name = '', ...props }: Props): JSX.Element {
+  const Component: React.ElementType | null = Icons?.[family]?.[name] ? Icons?.[family]?.[name] : null;
+  return Component ? <Component {...props} /> : <></>;
+}
 
 export default Icon;

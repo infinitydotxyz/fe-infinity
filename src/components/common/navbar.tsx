@@ -1,18 +1,9 @@
-/* eslint-disable react/display-name */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import React from 'react';
-import { useRouter } from 'next/router';
 
 import Link from 'next/link';
 import Icon from 'src/components/common/icon';
 
-interface Props {
-  children?: React.ReactNode;
-}
-
-export const Navigation = React.forwardRef(({ children, ...props }: Props, ref) => {
+export function Navigation() {
   const styles = {
     container: {
       className: `
@@ -21,7 +12,7 @@ export const Navigation = React.forwardRef(({ children, ...props }: Props, ref) 
           row-span-2 col-span-24
           bg-transparent glass
           grid grid-rows-1 grid-cols-[1fr,10fr,1fr,1fr,1fr] gap-2
-          px-8 py-4
+          py-4
         `
     },
     logo: {
@@ -178,6 +169,6 @@ export const Navigation = React.forwardRef(({ children, ...props }: Props, ref) 
       </div>
     </>
   );
-});
+}
 
 export default Navigation;

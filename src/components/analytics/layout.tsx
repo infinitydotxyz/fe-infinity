@@ -1,7 +1,3 @@
-/* eslint-disable react/display-name */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import React from 'react';
 import Header from 'src/components/analytics/header';
 import Navigation from 'src/components/common/navbar';
@@ -9,10 +5,9 @@ import Navigation from 'src/components/common/navbar';
 interface Props {
   children?: React.ReactNode;
   title?: string;
-  props?: any;
 }
 
-export const Layout = React.forwardRef(({ children, title, ...props }: Props, ref) => {
+export function Layout({ children, title }: Props): JSX.Element {
   const styles = {
     header: {
       title: title
@@ -30,7 +25,6 @@ export const Layout = React.forwardRef(({ children, title, ...props }: Props, re
           transition w-full h-full
           row-span-24 col-span-24
           bg-theme-light-50
-          bg-theme-light-50
           grid place-items-center
         `
       }
@@ -46,6 +40,6 @@ export const Layout = React.forwardRef(({ children, title, ...props }: Props, re
       </div>
     </>
   );
-});
+}
 
 export default Layout;

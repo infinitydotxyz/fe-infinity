@@ -1,7 +1,3 @@
-/* eslint-disable react/display-name */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import React, { Fragment } from 'react';
 import { Dialog, Disclosure, Transition } from '@headlessui/react';
 
@@ -24,23 +20,35 @@ import { Dialog, Disclosure, Transition } from '@headlessui/react';
 interface Props {
   children?: React.ReactNode;
   interactive?: boolean;
-  content?: ({ open, close }: { open: boolean; close: any }) => React.ReactNode;
-  props?: any;
+  content?: ({
+    open,
+    close
+  }: {
+    open: boolean;
+    close(focusableElement?: HTMLElement | React.MutableRefObject<HTMLElement | null>): void;
+  }) => React.ReactNode;
   styles?: {
     overlay?: {
-      transition?: any;
-      element?: any;
+      transition?: {
+        className?: string;
+      };
+      element?: {
+        className?: string;
+      };
     };
     content?: {
-      transition?: any;
-      element?: any;
+      transition?: {
+        className?: string;
+      };
+      element?: {
+        className?: string;
+      };
     };
   };
 }
 
-export const Modal = React.forwardRef<HTMLButtonElement, Props>(
-  ({ children, interactive, content, ...props }: Props, ref) => {
-    /*
+export function Modal({ children, interactive, content, ...props }: Props): JSX.Element {
+  /*
     ======================================
       All props to every component in the
       markup are structured logically in
@@ -53,42 +61,42 @@ export const Modal = React.forwardRef<HTMLButtonElement, Props>(
       the review).
     ======================================
   */
-    const styles = {
-      overlay: {
-        transition: {
-          enter: 'transition duration-300 ease-out',
-          enterFrom: 'transform opacity-0',
-          enterTo: 'transform opacity-100',
-          leave: 'transition duration-100 ease-out',
-          leaveFrom: 'transform opacity-100',
-          leaveTo: 'transform opacity-0',
-          ...props?.styles?.overlay?.transition
-        },
-        element: {
-          className:
-            'w-full h-full overflow-hidden fixed top-0 glass ring-black ring-inset ring-opacity-20 bg-black bg-opacity-20',
-          ...props?.styles?.overlay?.element
-        }
+  const styles = {
+    overlay: {
+      transition: {
+        enter: 'transition duration-300 ease-out',
+        enterFrom: 'transform opacity-0',
+        enterTo: 'transform opacity-100',
+        leave: 'transition duration-100 ease-out',
+        leaveFrom: 'transform opacity-100',
+        leaveTo: 'transform opacity-0',
+        ...props?.styles?.overlay?.transition
       },
-      content: {
-        transition: (close: any) => ({
-          enter: 'transition duration-300 ease-out',
-          enterFrom: 'transform scale-95 opacity-0',
-          enterTo: 'transform scale-100 opacity-100',
-          leave: 'transition duration-100 ease-out',
-          leaveFrom: 'transform scale-100 opacity-100',
-          leaveTo: 'transform scale-95 opacity-0',
-          onClick: interactive ? null : close,
-          ...props?.styles?.content?.transition
-        }),
-        element: {
-          className: 'w-full h-full overflow-hidden fixed top-0 grid place-items-center',
-          ...props?.styles?.content?.element
-        }
+      element: {
+        className:
+          'w-full h-full overflow-hidden fixed top-0 glass ring-black ring-inset ring-opacity-20 bg-black bg-opacity-20',
+        ...props?.styles?.overlay?.element
       }
-    };
+    },
+    content: {
+      transition: (close: (focusableElement?: HTMLElement | React.MutableRefObject<HTMLElement | null>) => void) => ({
+        enter: 'transition duration-300 ease-out',
+        enterFrom: 'transform scale-95 opacity-0',
+        enterTo: 'transform scale-100 opacity-100',
+        leave: 'transition duration-100 ease-out',
+        leaveFrom: 'transform scale-100 opacity-100',
+        leaveTo: 'transform scale-95 opacity-0',
+        onClick: interactive ? null : close,
+        ...props?.styles?.content?.transition
+      }),
+      element: {
+        className: 'w-full h-full overflow-hidden fixed top-0 grid place-items-center',
+        ...props?.styles?.content?.element
+      }
+    }
+  };
 
-    /*
+  /*
     ======================================
       Modal can be built with a combination
       of Disclosure and a Dialog. Disclosure
@@ -98,34 +106,29 @@ export const Modal = React.forwardRef<HTMLButtonElement, Props>(
     ======================================
   */
 
-    return (
-      <>
-        <Disclosure>
-          {({ open, close }) => (
-            <>
-              <Disclosure.Button {...props} ref={ref}>
-                {children}
-              </Disclosure.Button>
-              <Disclosure.Panel hidden static>
-                {content && (
-                  <Transition as={Fragment} show={open}>
-                    <Dialog onClose={() => close()}>
-                      <Transition.Child as={Fragment} {...styles?.overlay?.transition}>
-                        <Dialog.Overlay {...styles?.overlay?.element} />
-                      </Transition.Child>
-                      <Transition.Child as={Fragment} {...styles?.content?.transition(close)}>
-                        <div {...styles?.content?.element}>{content ? content({ open, close }) : null}</div>
-                      </Transition.Child>
-                    </Dialog>
-                  </Transition>
-                )}
-              </Disclosure.Panel>
-            </>
-          )}
-        </Disclosure>
-      </>
-    );
-  }
-);
-
-export default Modal;
+  return (
+    <>
+      <Disclosure>
+        {({ open, close }) => (
+          <>
+            <Disclosure.Button {...props}>{children}</Disclosure.Button>
+            <Disclosure.Panel hidden static>
+              {content && (
+                <Transition as={Fragment} show={open}>
+                  <Dialog onClose={() => close()}>
+                    <Transition.Child as={Fragment} {...styles?.overlay?.transition}>
+                      <Dialog.Overlay {...styles?.overlay?.element} />
+                    </Transition.Child>
+                    <Transition.Child as={Fragment} {...styles?.content?.transition(close)}>
+                      <div {...styles?.content?.element}>{content ? content({ open, close }) : null}</div>
+                    </Transition.Child>
+                  </Dialog>
+                </Transition>
+              )}
+            </Disclosure.Panel>
+          </>
+        )}
+      </Disclosure>
+    </>
+  );
+}

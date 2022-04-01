@@ -1,7 +1,3 @@
-/* eslint-disable react/display-name */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import React from 'react';
 import Head from 'next/head';
 
@@ -10,7 +6,7 @@ interface Props {
   title?: string;
 }
 
-export const Header = ({ children, title = 'Home', ...props }: Props) => {
+export const Header = ({ children, title = 'Home' }: Props) => {
   return (
     <>
       <Head>
