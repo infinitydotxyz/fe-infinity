@@ -26,7 +26,7 @@ export const Home: FC = () => {
 
         <Button
           onClick={() => {
-            router.push('/collection?name=cyphercity');
+            router.push('/collection/ens');
           }}
         >
           Collection

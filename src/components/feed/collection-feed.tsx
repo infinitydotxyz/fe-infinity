@@ -17,7 +17,7 @@ export function CollectionFeed() {
   const [newEvents, setNewEvents] = useState<FeedEvent[]>([]); // new feed events
   const [filter, setFilter] = useState<Filter>({});
   const [filteredEvents, setFilteredEvents] = useState<FeedEvent[]>([]);
-  console.log('temp', setFilter, filteredEvents);
+  console.log('', typeof setFilter, filteredEvents);
 
   async function getEvents() {
     try {
@@ -52,8 +52,7 @@ export function CollectionFeed() {
     }
     setFilteredEvents(arr);
   }, [events]);
-
-  console.log('events', events);
+  // console.log('events', events);
 
   // const data: FeedEvent[] = [
   //   {

@@ -37,7 +37,6 @@ export function GalleryBox({ collection }: GalleryProps) {
 
   const fetchData = async (isRefresh = false) => {
     setIsFetching(true);
-    console.log('currentPage', currentPage);
     let newCurrentPage = currentPage + 1;
     if (isRefresh) {
       newCurrentPage = 0;
@@ -120,7 +119,6 @@ export function GalleryBox({ collection }: GalleryProps) {
               currentPage={currentPage}
               data={data}
               onFetchMore={async () => {
-                console.log('onFetchMore');
                 // setDataLoaded(false);
                 await fetchData();
               }}
