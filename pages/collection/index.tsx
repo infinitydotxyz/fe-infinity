@@ -4,10 +4,10 @@ import { BaseCollection } from '@infinityxyz/lib/types/core';
 import { getSearchFriendlyString } from '@infinityxyz/lib/utils';
 import { FaCheck, FaEdit, FaFacebook, FaTwitter } from 'react-icons/fa';
 import { Button, Chip, PageBox, RoundedNav } from 'src/components/common';
-import GalleryBox from 'src/components/gallery/gallery-box';
+import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { useFetch } from 'src/utils/apiUtils';
 import { getSearchParam } from 'src/utils/commonUtils';
-import CollectionFeed from 'src/components/feed/collection-feed';
+import { CollectionFeed } from 'src/components/feed/collection-feed';
 
 export function CollectionPage() {
   const [currentTab, setCurrentTab] = useState(0);

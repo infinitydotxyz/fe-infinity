@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import React from 'react';
-import Layout from 'src/components/analytics/layout';
+import { Layout } from 'src/components/analytics/layout';
 
 export const Analytics = () => {
   const styles = {

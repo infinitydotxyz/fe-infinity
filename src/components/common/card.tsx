@@ -1,7 +1,7 @@
 import { CardData } from '@infinityxyz/lib/types/core';
 import { twMerge } from 'tailwind-merge';
 import { AiOutlineEye } from 'react-icons/ai';
-import Dropdown from './dropdown';
+import { Dropdown } from './dropdown';
 import { Button } from './button';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 

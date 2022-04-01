@@ -1,12 +1,14 @@
 import type { FC } from 'react';
 import { FaTwitter, FaFacebook, FaEdit } from 'react-icons/fa';
-import { Button, Dropdown, PageBox } from 'src/components/common';
+import { Button, Dropdown, PageBox, ToggleTab, useToggleTab } from 'src/components/common';
 import { Card } from 'src/components/common/card';
-import Chip from 'src/components/common/chip';
-import RoundedNav from 'src/components/common/rounded-nav';
+import { Chip } from 'src/components/common/chip';
+import { RoundedNav } from 'src/components/common/rounded-nav';
 import testData from './data.json';
 
-export const SandboxPage: FC = () => {
+const SandboxPage: FC = () => {
+  const { options, onChange, selected } = useToggleTab(['Buy NFTs', 'Sell NFTs', 'Trade NFTs'], 'Buy NFTs');
+
   return (
     <PageBox title="SandBox">
       <div className="space-y-4">
@@ -59,6 +61,9 @@ export const SandboxPage: FC = () => {
 
         <h3># RoundedNav</h3>
         <RoundedNav items={[{ title: 'NFT' }, { title: 'Community' }]} className="w-80 mt-6" />
+
+        <h3># ToggleTab</h3>
+        <ToggleTab options={options} selected={selected} onChange={onChange} />
 
         <h3># Card - WIP</h3>
         <div className="flex flex-row space-x-4">

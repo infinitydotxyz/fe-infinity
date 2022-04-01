@@ -6,7 +6,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 import { AppContextProvider } from 'src/utils/context/AppContext';
 import { FilterContextProvider } from 'src/utils/context/FilterContext';
 import { useRouter } from 'next/router';
-import { isLocalhost } from 'src/utils/commonUtils';
+import { isLocalhost, isServer } from 'src/utils/commonUtils';
 import LogRocket from 'logrocket';
 import { OrderContextProvider } from 'src/utils/context/OrderContext';
 
@@ -30,7 +30,7 @@ const App: FunctionComponent<AppProps> = ({ Component, pageProps }: AppProps) =>
     };
   }, [router.events]);
 
-  return typeof window === 'undefined' ? null : (
+  return isServer() ? null : (
     <StrictMode>
       <AppContextProvider>
         <FilterContextProvider>

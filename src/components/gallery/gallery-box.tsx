@@ -4,8 +4,8 @@ import { apiGet } from 'src/utils/apiUtils';
 import { ITEMS_PER_PAGE } from 'src/utils/constants';
 import { useFilterContext } from 'src/utils/context/FilterContext';
 import { Button, Card, FetchMore } from 'src/components/common';
-import FilterPanel from '../filter/filter-panel';
-import GallerySort from './gallery-sort';
+import { FilterPanel } from '../filter/filter-panel';
+import { GallerySort } from './gallery-sort';
 
 type Asset = {
   address: string;
@@ -131,5 +131,3 @@ export function GalleryBox({ collection }: GalleryProps) {
     </div>
   );
 }
-
-export default GalleryBox;

@@ -329,5 +329,3 @@ export const Icon = React.forwardRef(({ children, family = '', name = '', ...pro
   const Component = Icons?.[family]?.[name] ? Icons?.[family]?.[name] : null;
   return <>{Component && <Component {...props} />}</>;
 });
-
-export default Icon;

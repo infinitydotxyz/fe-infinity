@@ -15,5 +15,3 @@ export function Chip({ left, content, right }: Props) {
     </div>
   );
 }
-
-export default Chip;

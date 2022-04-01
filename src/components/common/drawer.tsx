@@ -16,7 +16,7 @@ export function Drawer({ open, onClose, title, children }: Props) {
       <div className="flex items-start justify-between">
         <Dialog.Title className="text-lg font-medium text-gray-900">{title}</Dialog.Title>
         <div className="ml-3 flex h-7 items-center">
-          <Button variant="outline" onClick={onClose}>
+          <Button variant="plain" size="small" onClick={onClose}>
             <span className="sr-only">Close panel</span>
             <XIcon className="h-6 w-6" aria-hidden="true" />
           </Button>
@@ -44,7 +44,7 @@ export function Drawer({ open, onClose, title, children }: Props) {
               <div className="pointer-events-auto w-screen max-w-md">
                 <div className="flex h-full flex-col overflow-y-auto bg-white shadow-xl">
                   {header}
-                  <div className="flex h-full flex-col px-6">{children}</div>
+                  <div className="flex h-full flex-col">{children}</div>
                 </div>
               </div>
             </Transition.Child>
