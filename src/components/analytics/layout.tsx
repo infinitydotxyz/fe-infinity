@@ -1,6 +1,6 @@
 import React from 'react';
-import Header from 'src/components/analytics/header';
-import Navigation from 'src/components/common/navbar';
+import { Header } from 'src/components/analytics/header';
+import { Navigation } from 'src/components/common/navbar';
 
 interface Props {
   children?: React.ReactNode;

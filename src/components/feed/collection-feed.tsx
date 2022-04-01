@@ -1,6 +1,6 @@
 import { FeedEventType } from '@infinityxyz/lib/types/core/feed/FeedEvent';
 import { useEffect, useState } from 'react';
-import FeedItem, { FeedEvent } from './feed-item';
+import { FeedItem, FeedEvent } from './feed-item';
 import { COLL_FEED, subscribe } from 'src/utils/firestore/firestoreUtils';
 
 // export const COLL_FEED = 'feed'; // collection: /feed - to store feed events
@@ -102,5 +102,3 @@ export function CollectionFeed() {
     </div>
   );
 }
-
-export default CollectionFeed;

@@ -1,17 +1,18 @@
 import React, { ReactNode } from 'react';
 
 const classes = {
-  base: 'focus:ring-0 transition ease-in-out duration-300 hover:bg-gray-700 hover:text-white active:bg-gray-900 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50',
+  // focus ring appears on keyboard tab key navigation for accessibility, not on clicks
+  base: 'focus:outline-none focus-visible:ring focus:ring-black focus:ring-opacity-50 transition ease-in-out duration-300 hover:bg-gray-700 hover:text-white active:bg-gray-900',
   disabled: 'opacity-50 cursor-not-allowed',
   pill: 'rounded-full',
   size: {
-    plain: '',
+    plain: 'px-4', // hover fill needs padding
     small: 'px-2 py-1 text-sm',
     normal: 'px-6 py-2',
     large: 'px-8 py-3 text-lg'
   },
   variant: {
-    plain: '',
+    plain: 'rounded-3xl', // hover fill needs to be rounded
     primary: 'border rounded-3xl border-gray-100 bg-black text-white',
     secondary: 'border rounded-3xl border-gray-100 bg-black text-white',
     outline: 'border rounded-3xl border border-gray-300 text-gray-900',

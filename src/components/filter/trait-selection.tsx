@@ -163,4 +163,3 @@ export const TraitSelection = ({ collectionAddress, onChange }: Props) => {
     </div>
   );
 };
-export default TraitSelection;

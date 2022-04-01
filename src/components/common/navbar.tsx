@@ -1,7 +1,6 @@
 import React from 'react';
-
 import Link from 'next/link';
-import Icon from 'src/components/common/icon';
+import { Icon } from 'src/components/common/icon';
 
 export function Navigation() {
   const styles = {

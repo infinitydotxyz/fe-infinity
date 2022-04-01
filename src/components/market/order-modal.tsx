@@ -5,11 +5,9 @@ import { BigNumberish } from 'ethers';
 import { formatEther, parseEther, solidityKeccak256 } from 'ethers/lib/utils';
 import { ExecParams, ExtraParams, Item, OBOrder } from '@infinityxyz/lib/types/core';
 import { nowSeconds } from '@infinityxyz/lib/utils';
-import { DateInput, TextInput } from 'src/components/common';
+import { DateInput, TextInput, SimpleModal, ComboInput } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { bigNumToDate, CollectionAddr, CollectionManager } from 'src/utils/marketUtils';
-import { Modal } from 'src/components/market/modal';
-import { ComboInput } from 'src/components/common/combo-input';
 
 const isServer = typeof window === 'undefined';
 
@@ -22,7 +20,7 @@ interface Props {
 
 const ORDER_NONCE = 1;
 
-export const MarketOrderModal: React.FC<Props> = ({ isOpen, buyMode = true, inOrder, onClose }: Props) => {
+export const OrderModal: React.FC<Props> = ({ isOpen, buyMode = true, inOrder, onClose }: Props) => {
   const { user, chainId, showAppError } = useAppContext();
 
   // form data
@@ -203,7 +201,7 @@ export const MarketOrderModal: React.FC<Props> = ({ isOpen, buyMode = true, inOr
   return (
     <>
       {!isServer && (
-        <Modal
+        <SimpleModal
           isOpen={isOpen}
           onClose={() => onClose()}
           title={!isSellOrder ? 'Buy Order' : 'Sell Order'}
@@ -215,7 +213,7 @@ export const MarketOrderModal: React.FC<Props> = ({ isOpen, buyMode = true, inOr
           <div>
             <div className="flex flex-col ">{content}</div>
           </div>
-        </Modal>
+        </SimpleModal>
       )}
     </>
   );

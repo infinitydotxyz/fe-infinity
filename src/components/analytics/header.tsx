@@ -17,5 +17,3 @@ export const Header = ({ children, title = 'Home' }: Props) => {
     </>
   );
 };
-
-export default Header;

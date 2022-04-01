@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { useAppContext } from 'src/utils/context/AppContext';
 
@@ -7,9 +7,8 @@ import { Button, Spacer } from '../common';
 import logo from 'src/images/logo-new.svg';
 import miniLogo from 'src/images/logo-mini-new.svg';
 
-const Header = (): JSX.Element => {
+export const Header = (): JSX.Element => {
   const { user, signOut } = useAppContext();
-  const headerRef = useRef<HTMLElement | null>(null);
 
   const signedIn = !!user?.address;
 
@@ -44,8 +43,8 @@ const Header = (): JSX.Element => {
   }
 
   return (
-    <header ref={headerRef} className={styles.header}>
-      <div className={styles.pageHeader}>
+    <header className={styles.header}>
+      <div className={`${styles.pageHeader} max-w-screen-lg`}>
         <div className={styles.showLargeLogo}>
           <Link href="/" passHref>
             <img className="can-click" alt="logo" src={logo.src} width={logo.width} />
@@ -65,12 +64,8 @@ const Header = (): JSX.Element => {
 
         <Spacer />
 
-        <div className={styles.links}>
-          <div className={styles.showConnectButton}>{accountButton}</div>
-        </div>
+        <div className={styles.links}>{accountButton}</div>
       </div>
     </header>
   );
 };
-
-export default Header;

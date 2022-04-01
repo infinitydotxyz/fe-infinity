@@ -2,13 +2,13 @@ import { ListingType } from '@infinityxyz/lib/types/core';
 import { useEffect, useState } from 'react';
 import { Filter, useFilterContext } from 'src/utils/context/FilterContext';
 import { Button } from 'src/components/common';
-import TraitSelection from './trait-selection';
+import { TraitSelection } from './trait-selection';
 
 interface Props {
   collectionAddress?: string;
 }
 
-export const FilerPanel = ({ collectionAddress }: Props) => {
+export const FilterPanel = ({ collectionAddress }: Props) => {
   const { filterState, setFilterState } = useFilterContext();
   const [minPriceVal, setMinPriceVal] = useState('');
   const [maxPriceVal, setMaxPriceVal] = useState('');
@@ -127,5 +127,3 @@ export const FilerPanel = ({ collectionAddress }: Props) => {
     </div>
   );
 };
-
-export default FilerPanel;

@@ -35,5 +35,3 @@ export function FeedItem({ data }: FeedItemProps) {
 function TweetEvent({ data }: FeedItemProps) {
   return <div className="mt-2 border rounded-xl p-2">{data.title}</div>;
 }
-
-export default FeedItem;
