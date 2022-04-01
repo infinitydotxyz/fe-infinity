@@ -13,10 +13,6 @@ export const FilterPanel = ({ collectionAddress }: Props) => {
   const [minPriceVal, setMinPriceVal] = useState('');
   const [maxPriceVal, setMaxPriceVal] = useState('');
 
-  useEffect(() => {
-    console.log('filterState', filterState);
-  }, [filterState]);
-
   const handleClickListingType = (listingType: ListingType | '') => {
     let newValue = listingType;
     if (listingType === filterState.listingType) {
