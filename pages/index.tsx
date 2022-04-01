@@ -50,7 +50,7 @@ export const Home: FC = () => {
         </Button>
         <Button
           onClick={() => {
-            router.push('/asset/1/0x004f5683e183908d0f6b688239e3e2d5bbb066ca/0');
+            router.push('/asset/1/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/8880');
           }}
         >
           Asset Detail
