@@ -14,7 +14,7 @@ export function CollectionPage() {
   } = useRouter();
   const [currentTab, setCurrentTab] = useState(0);
   const path = `/collections/${name}`;
-  const { result: collection } = useFetch<BaseCollection>(path, { chainId: '1' });
+  const { result: collection } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
 
   return (
     <PageBox
@@ -61,18 +61,22 @@ export function CollectionPage() {
       </Button>
 
       <table className="mt-8 text-sm w-1/2">
-        <tr className="text-gray-400">
-          <th className="text-left font-medium">Items</th>
-          <th className="text-left font-medium">Owned by</th>
-          <th className="text-left font-medium">Floor price</th>
-          <th className="text-left font-medium">Volume traded</th>
-        </tr>
-        <tr className="font-bold">
-          <td>379</td>
-          <td>999</td>
-          <td>0.40 ETH</td>
-          <td>899</td>
-        </tr>
+        <thead>
+          <tr className="text-gray-400">
+            <th className="text-left font-medium">Items</th>
+            <th className="text-left font-medium">Owned by</th>
+            <th className="text-left font-medium">Floor price</th>
+            <th className="text-left font-medium">Volume traded</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr className="font-bold">
+            <td>379</td>
+            <td>999</td>
+            <td>0.40 ETH</td>
+            <td>899</td>
+          </tr>
+        </tbody>
       </table>
 
       <RoundedNav
