@@ -32,7 +32,7 @@ type OptionProps = {
   onChange?: (value: boolean) => void;
 };
 
-const Option = ({ text, onChange }: OptionProps) => {
+const Option = ({ text }: OptionProps) => {
   return (
     <div className="flex justify-between">
       <span className="font-body text-theme-light-800">{text}</span>

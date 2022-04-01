@@ -14,7 +14,7 @@ import {
 } from 'src/components/asset';
 
 import BlueCheckSvg from 'src/images/blue-check.svg';
-import TransferSvg from 'src/images/transfer.svg';
+//import TransferSvg from 'src/images/transfer.svg';
 
 import { NextPageContext } from 'next';
 
