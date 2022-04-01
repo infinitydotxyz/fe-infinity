@@ -119,5 +119,14 @@ module.exports = {
         900: '#000000'
       }
     }
+  },
+  letterSpacing: {
+    wide: '0.01rem',
+    tight: '-.01em'
+  },
+  width: {
+    120: '30rem',
+    128: '32rem',
+    144: '36rem'
   }
 };

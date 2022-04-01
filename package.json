@@ -11,7 +11,7 @@
     "update:lib": "npm update @infinityxyz/lib"
   },
   "dependencies": {
-    "@infinityxyz/lib": "^1.32.4",
+    "@infinityxyz/lib": "^1.33.0",
     "@tailwindcss/aspect-ratio": "^0.4.0",
     "@tailwindcss/typography": "^0.5.2",
     "axios": "0.26.1",
@@ -20,6 +20,7 @@
     "ethers": "5.6.2",
     "firebase": "^9.6.9",
     "logrocket": "^2.2.1",
+    "moment": "^2.29.1",
     "next": "12.1.2",
     "nprogress": "^0.2.0",
     "postcss-import": "^14.1.0",

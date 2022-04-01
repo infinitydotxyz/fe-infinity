@@ -244,7 +244,7 @@ function ListItem({ cartItem }: Props2) {
   return (
     <li key={cartItem.tokenName}>
       <div className="group  relative">
-        <div className="flex items-center py-6 px-5 group-hover:bg-gray-50">
+        <div className="flex items-center py-6 px-5 group-hover:bg-theme-light-300">
           <div className="relative flex min-w-0 flex-1 items-center">
             <span className="relative inline-block flex-shrink-0">
               <img className="h-10 w-10 rounded-2xl" src={cartItem.imageUrl} alt="" />

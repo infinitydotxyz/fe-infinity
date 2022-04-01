@@ -37,20 +37,20 @@ export function CollectionPage() {
         <Chip content={<FaFacebook />} />
       </div>
 
-      <div className="text-gray-500 mt-6">{collection?.metadata.description ?? ''}</div>
+      <div className="text-theme-light-3000 mt-6">{collection?.metadata.description ?? ''}</div>
 
       <div className="text-sm font-bold mt-6">
         <div>Ownership includes</div>
         <div className="flex space-x-8 mt-2 font-normal">
-          <div className="flex text-gray-500">
+          <div className="flex text-theme-light-3000">
             <FaCheck className="mr-2" />
             Access
           </div>
-          <div className="flex text-gray-500">
+          <div className="flex text-theme-light-3000">
             <FaCheck className="mr-2" />
             Royalties
           </div>
-          <div className="flex text-gray-500">
+          <div className="flex text-theme-light-3000">
             <FaCheck className="mr-2" />
             IP rights
           </div>
