@@ -66,13 +66,13 @@ const AssetDetail: FunctionComponent<AssetDetailProps> = ({ token, collection })
           <ShortAddress
             label="Contact address:"
             address={collection.address}
-            href={`${window.origin}/collection/${collection.address}`}
+            href={`/collection/${collection.address}`}
             tooltip={collection.address}
           />
           <ShortAddress
             label="Token ID:"
             address={token.tokenId}
-            href={`${window.origin}/asset/${token.chainId}/${collection.address}/${token.tokenId}`}
+            href={`/asset/${token.chainId}/${collection.address}/${token.tokenId}`}
             tooltip="#3460"
           />
           <div className="md:-ml-1.5">
