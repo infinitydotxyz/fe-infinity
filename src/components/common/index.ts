@@ -16,3 +16,4 @@ export * from 'src/components/common/currency-input';
 export * from 'src/components/common/read-more-text';
 export * from 'src/components/common/short-address';
 export * from 'src/components/common/modal';
+export * from 'src/components/common/clipboard-button';
