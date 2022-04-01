@@ -83,7 +83,7 @@ interface ReadMoreTextPropType {
 }
 
 export const ReadMoreText: React.FC<ReadMoreTextPropType> = (props) => {
-  const [displaySecondary, setDisplaySecondary] = useState(true);
+  const [displaySecondary, setDisplaySecondary] = useState(false);
   const [primaryText, secondaryText] = trimText(props.text, props.min, props.ideal, props.max);
 
   const setStatus = React.useCallback(() => {
@@ -113,7 +113,7 @@ export const ReadMoreText: React.FC<ReadMoreTextPropType> = (props) => {
           {primaryText}
           <span style={{ display: 'none' }}>{secondaryText}</span>
           <span className={'ml-2 underline text-black underline-offset-2 cursor-pointer'} onClick={setStatus}>
-            Read More...
+            Read More
           </span>
         </span>
       </div>
