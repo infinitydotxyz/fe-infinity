@@ -11,7 +11,7 @@ interface ShortAddressProps {
 
 export const ShortAddress: React.FC<ShortAddressProps> = ({ address, href, label, tooltip }) => {
   return (
-    <div className="relative flex items-center flex-wrap">
+    <div className="relative flex items-center flex-wrap py-0.5">
       <span className="text-body text-base">{label}</span>
       <div>
         <a className="ml-4 text-heading text-base underline" href={href} title={tooltip}>
