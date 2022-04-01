@@ -15,6 +15,7 @@ import {
 import { BuyOrderMatch, CardData, MarketListIdType, MarketListingsBody, OBOrder } from '@infinityxyz/lib/types/core';
 import { MarketOrderModal } from 'src/components/market/market-order-modal';
 import { useOrderContext } from 'src/utils/context/OrderContext';
+import { FaShoppingBag } from 'react-icons/fa';
 
 const testCardData: CardData[] = [
   {
@@ -52,7 +53,7 @@ export default function MarketPage() {
   const [sellOrdersValidInactive, setSellOrdersValidInactive] = useState<OBOrder[]>([]);
   const [sellOrdersInvalid, setSellOrdersInvalid] = useState<OBOrder[]>([]);
 
-  const { orderDrawerOpen, setOrderDrawerOpen } = useOrderContext();
+  const { orderDrawerOpen, setOrderDrawerOpen, isCartEmpty } = useOrderContext();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [clickedOrder, setClickedOrder] = useState<OBOrder>();
@@ -318,13 +319,16 @@ export default function MarketPage() {
     <PageBox
       title="Market"
       rightSide={
-        <Button
-          onClick={async () => {
-            setOrderDrawerOpen(!orderDrawerOpen);
-          }}
-        >
-          Cart
-        </Button>
+        !isCartEmpty() ? (
+          <Button
+            variant="outline"
+            onClick={async () => {
+              setOrderDrawerOpen(!orderDrawerOpen);
+            }}
+          >
+            <FaShoppingBag />
+          </Button>
+        ) : undefined
       }
     >
       <OrderDrawer open={orderDrawerOpen} onClose={() => setOrderDrawerOpen(false)} />

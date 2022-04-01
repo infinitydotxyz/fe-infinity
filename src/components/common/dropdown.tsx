@@ -1,6 +1,7 @@
 import { Menu } from '@headlessui/react';
 import classNames from 'classnames';
 import { ReactElement } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 type DropdownItems = {
   label: string | ReactElement;
@@ -10,54 +11,54 @@ type DropdownItems = {
 interface DropdownProps {
   label?: string | ReactElement;
   items: DropdownItems[];
-  toggler?: ReactElement;
+  toggler?: ReactElement; // custom toggler element.
+  className?: string;
 }
 
-export function Dropdown({ label, items, toggler }: DropdownProps) {
+export function Dropdown({ label, items, toggler, className }: DropdownProps) {
   return (
-    <span className="">
-      <div className="relative inline-block text-left">
-        <Menu>
-          {toggler ? (
-            <Menu.Button>{toggler}</Menu.Button>
-          ) : (
-            <span>
-              <Menu.Button
-                className="transition ease-in-out duration-300 hover:bg-gray-700 hover:text-white active:bg-gray-900 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50
+    <div className={twMerge(`relative inline-block text-left ${className ?? ''}`)}>
+      <Menu>
+        {toggler ? (
+          <Menu.Button>{toggler}</Menu.Button>
+        ) : (
+          <span>
+            <Menu.Button
+              className="transition ease-in-out duration-300 hover:bg-gray-700  active:bg-gray-900 focus:ring-2 focus:ring-black focus:ring-opacity-50
           px-6 py-2
           border rounded-3xl border-gray-300 text-gray-900
+          hover:text-white
           false flex"
+            >
+              <span>{label}</span>
+              <svg
+                className="ml-2 -mr-1 h-5 w-5 transition-transform duration-150 pt-1"
+                viewBox="0 0 20 20"
+                fill="currentColor"
               >
-                <span>{label}</span>
-                <svg
-                  className="ml-2 -mr-1 h-5 w-5 transition-transform duration-150 pt-1"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </Menu.Button>
-            </span>
-          )}
+                <path
+                  fillRule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </Menu.Button>
+          </span>
+        )}
 
-          <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md border border-gray-200 bg-white shadow-lg outline-none">
-            <div className="py-1">
-              {items.map((item, idx) => {
-                return (
-                  <CustomMenuItem key={idx} onClick={item.onClick}>
-                    {item.label}
-                  </CustomMenuItem>
-                );
-              })}
-            </div>
-          </Menu.Items>
-        </Menu>
-      </div>
-    </span>
+        <Menu.Items className="absolute mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md border border-gray-200 bg-white shadow-lg outline-none">
+          <div className="py-1">
+            {items.map((item, idx) => {
+              return (
+                <CustomMenuItem key={idx} onClick={item.onClick}>
+                  {item.label}
+                </CustomMenuItem>
+              );
+            })}
+          </div>
+        </Menu.Items>
+      </Menu>
+    </div>
   );
 }
 
@@ -72,8 +73,8 @@ function CustomMenuItem(props: CustomMenuItemProps) {
         <a
           href="javascript:;"
           className={classNames(
-            'flex w-full justify-between px-4 py-2 text-left text-sm leading-5',
-            active ? 'bg-indigo-500 text-white' : 'text-gray-700',
+            'flex w-full justify-between px-4 py-2 text-left text-sm leading-5 ',
+            active ? 'bg-black text-white' : 'text-gray-700',
             disabled && 'cursor-not-allowed opacity-50'
           )}
         >

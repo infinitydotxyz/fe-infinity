@@ -1,5 +1,5 @@
 import React from 'react';
-import { uuidv4 } from 'src/utils/commonUtil';
+import { uuidv4 } from 'src/utils/commonUtils';
 import styles from './styles.module.scss';
 import { Button } from 'src/components/common';
 import { getCurrentOrderPrice, isOrderExpired } from '@infinityxyz/lib/utils';

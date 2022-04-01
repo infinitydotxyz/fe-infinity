@@ -5,8 +5,8 @@ import { getSearchFriendlyString } from '@infinityxyz/lib/utils';
 import { FaCheck, FaEdit, FaFacebook, FaTwitter } from 'react-icons/fa';
 import { Button, Chip, PageBox, RoundedNav } from 'src/components/common';
 import GalleryBox from 'src/components/gallery/gallery-box';
-import { useFetch } from 'src/utils/apiUtil';
-import { getSearchParam } from 'src/utils/commonUtil';
+import { useFetch } from 'src/utils/apiUtils';
+import { getSearchParam } from 'src/utils/commonUtils';
 import CollectionFeed from 'src/components/feed/collection-feed';
 
 export function CollectionPage() {
@@ -22,7 +22,10 @@ export function CollectionPage() {
       title={collectionName}
       titleElement={
         <span>
-          {collectionName} <Image src="/images/blue-check.png" width={24} height={24} alt="Blue check icon" />
+          {collectionName}{' '}
+          {collection?.hasBlueCheck ? (
+            <Image src="/images/blue-check.png" width={24} height={24} alt="Blue check icon" />
+          ) : null}
         </span>
       }
       center={false}

@@ -19,6 +19,8 @@ export type OrderContextType = {
 
   removeBuyCartItem: (order: OrderCartItem) => void;
   removeSellCartItem: (order: OrderCartItem) => void;
+
+  isCartEmpty: () => boolean;
 };
 
 const OrderContext = React.createContext<OrderContextType | null>(null);
@@ -34,6 +36,10 @@ export function OrderContextProvider({ children }: Props) {
   const [sellOrders, setSellOrders] = useState<OBOrder[]>([]);
   const [buyCartItems, setBuyCartItems] = useState<OrderCartItem[]>([]);
   const [sellCartItems, setSellCartItems] = useState<OrderCartItem[]>([]);
+
+  const isCartEmpty = (): boolean => {
+    return buyCartItems.length === 0 && sellCartItems.length === 0;
+  };
 
   const addBuyOrder = (order: OBOrder) => {
     setBuyOrders([...buyOrders, order]);
@@ -79,7 +85,8 @@ export function OrderContextProvider({ children }: Props) {
     buyCartItems,
     sellCartItems,
     removeSellCartItem,
-    removeBuyCartItem
+    removeBuyCartItem,
+    isCartEmpty
   };
 
   return <OrderContext.Provider value={value}>{children}</OrderContext.Provider>;

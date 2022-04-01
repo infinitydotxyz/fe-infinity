@@ -1,6 +1,6 @@
 import { BaseCollection, CardData } from '@infinityxyz/lib/types/core';
 import { useEffect, useState } from 'react';
-import { apiGet } from 'src/utils/apiUtil';
+import { apiGet } from 'src/utils/apiUtils';
 import { ITEMS_PER_PAGE } from 'src/utils/constants';
 import { useFilterContext } from 'src/utils/context/FilterContext';
 import { Button, Card, FetchMore } from 'src/components/common';

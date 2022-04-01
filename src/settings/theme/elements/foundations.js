@@ -90,6 +90,8 @@ module.exports = {
   colors: {
     background: 'transparent',
     current: 'currentColor',
+    primary: '#000',
+    secondary: '#aaa',
     theme: {
       dark: {
         50: '#FFFFFF',
