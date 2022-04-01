@@ -86,7 +86,7 @@ const AssetDetail: FunctionComponent<AssetDetailProps> = ({ token, collection })
                 </div>*/}
             </div>
           </div>
-          <p className="font-body text-black">Description</p>
+          <p className="font-body text-black mb-1">Description</p>
           <div>
             <ReadMoreText
               text={collection?.metadata?.description}

@@ -113,13 +113,13 @@ export class ReadMoreText extends React.Component<ReadMoreTextPropType, ReadMore
     let displayText;
     if (!this.state.secondaryText) {
       displayText = (
-        <div>
+        <div className="leading-normal">
           <span className="text-theme-light-800">{`${this.state.primaryText} ${this.state.secondaryText}`}</span>
         </div>
       );
     } else if (this.state.displaySecondary) {
       displayText = (
-        <div>
+        <div className="leading-normal">
           <span className="text-theme-light-800">{`${this.state.primaryText} ${this.state.secondaryText}`}</span>
           <span
             className="ml-2 underline text-black underline-offset-2 cursor-pointer"
@@ -131,7 +131,7 @@ export class ReadMoreText extends React.Component<ReadMoreTextPropType, ReadMore
       );
     } else {
       displayText = (
-        <div>
+        <div className="leading-normal">
           <span className="text-theme-light-800">
             {this.state.primaryText}
             <span style={{ display: 'none' }}>{this.state.secondaryText}</span>
