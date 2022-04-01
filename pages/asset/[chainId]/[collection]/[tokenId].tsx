@@ -36,8 +36,8 @@ const AssetDetail: FunctionComponent<AssetDetailProps> = ({ token, collection })
   console.log({ token, collection });
   return (
     <PageBox title={`${token?.metadata?.name} - ${collection?.metadata?.name}`} hideTitle>
-      <div className="mb-4 sm:flex">
-        <div className="min-h-12 w-80 mx-auto sm:w-96 md:w-96 lg:w-144 sm:mr-6 md:mr-8 lg:mr-12">
+      <div className="pb-4 sm:flex">
+        <div className="min-h-12 w-80 mx-auto sm:w-96 md:w-96 lg:w-144 sm:mr-6 md:mr-8 lg:mr-12 mb-4">
           <img
             className="rounded-3xl w-full"
             src={token.image.url || 'https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png'}
@@ -45,7 +45,7 @@ const AssetDetail: FunctionComponent<AssetDetailProps> = ({ token, collection })
           />
         </div>
         <div className="flex-1">
-          <div className="mb-2 md:pb-4 lg:pb-16">
+          <div className="mb-2 md:pb-4 lg:pb-16 text-center sm:text-left">
             <ToggleSwitchButton />
           </div>
           <h3 className="text-black font-body text-2xl font-bold leading-9 tracking-wide pb-1">
