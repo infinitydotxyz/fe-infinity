@@ -23,8 +23,6 @@ export const ClipboardButton: React.FC<ClipboardButtonProps> = ({ textToCopy }) 
     );
   };
 
-  const btnStyle = copied ? 'bg-gray-500 text-white' : '';
-
   return (
     <>
       {copied ? (
