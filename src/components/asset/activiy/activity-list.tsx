@@ -1,11 +1,10 @@
 import React from 'react';
 import { ActivityItem } from './activity-item';
+import { Filter } from 'src/components/asset';
 
 interface ActivityListPropType {
   className?: string;
 }
-
-import { Filter } from 'src/components/asset';
 
 export const ActivityList: React.FC<ActivityListPropType> = ({ className = '' }: ActivityListPropType) => {
   return (

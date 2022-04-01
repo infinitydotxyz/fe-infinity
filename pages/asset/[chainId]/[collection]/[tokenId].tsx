@@ -23,7 +23,7 @@ interface AssetDetailProps {
   collection: any;
 }
 
-const AssetDetail: FunctionComponent<AssetDetailProps> = ({ token, collection, activity }) => {
+const AssetDetail: FunctionComponent<AssetDetailProps> = ({ token, collection }) => {
   if (!token) {
     return (
       <PageBox title={'Asset Detail - Error'} hideTitle>
