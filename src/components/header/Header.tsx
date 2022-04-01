@@ -7,7 +7,7 @@ import { Button, Spacer } from '../common';
 import logo from 'src/images/logo-new.svg';
 import miniLogo from 'src/images/logo-mini-new.svg';
 
-const Header = (): JSX.Element => {
+export const Header = (): JSX.Element => {
   const { user, signOut } = useAppContext();
 
   const signedIn = !!user?.address;
@@ -69,5 +69,3 @@ const Header = (): JSX.Element => {
     </header>
   );
 };
-
-export default Header;

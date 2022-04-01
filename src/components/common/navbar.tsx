@@ -6,7 +6,7 @@ import React from 'react';
 import { useRouter } from 'next/router';
 
 import Link from 'next/link';
-import Icon from 'src/components/common/icon';
+import { Icon } from 'src/components/common/icon';
 
 interface Props {
   children?: React.ReactNode;
@@ -179,5 +179,3 @@ export const Navigation = React.forwardRef(({ children, ...props }: Props, ref) 
     </>
   );
 });
-
-export default Navigation;

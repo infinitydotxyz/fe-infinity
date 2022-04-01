@@ -47,5 +47,3 @@ export function RoundedNav({ items, defaultIndex, onChange, className }: Props) 
     </nav>
   );
 }
-
-export default RoundedNav;

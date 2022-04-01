@@ -89,5 +89,3 @@ function CustomMenuItem(props: CustomMenuItemProps) {
     </Menu.Item>
   );
 }
-
-export default GallerySort;

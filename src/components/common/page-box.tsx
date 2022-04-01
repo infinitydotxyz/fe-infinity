@@ -2,7 +2,7 @@ import Head from 'next/head';
 import React, { ReactElement, ReactNode } from 'react';
 import { Spacer } from 'src/components/common';
 import { useRouter } from 'next/router';
-import Header from 'src/components/header/Header';
+import { Header } from 'src/components/header/Header';
 
 type Props = {
   title: string;

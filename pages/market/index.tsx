@@ -32,7 +32,7 @@ const testCardData: CardData[] = [
 export default function MarketPage() {
   const [showDebugTools, setShowDebugTools] = useState(false);
   const { orderDrawerOpen, setOrderDrawerOpen, isOrderEmpty } = useOrderContext();
-  const { options, onChange, selected: period } = useToggleTab(['Assets', 'Orderbook'], 'Assets');
+  const { options, onChange, selected } = useToggleTab(['Assets', 'Orderbook'], 'Assets');
 
   return (
     <PageBox
@@ -53,7 +53,7 @@ export default function MarketPage() {
       <OrderDrawer open={orderDrawerOpen} onClose={() => setOrderDrawerOpen(false)} />
 
       <div className="flex justify-between items-center mb-2">
-        <ToggleTab options={options} selected={period} onChange={onChange} />
+        <ToggleTab options={options} selected={selected} onChange={onChange} />
         <Button variant="outline">Filter</Button>
       </div>
 

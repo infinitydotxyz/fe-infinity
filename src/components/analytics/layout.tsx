@@ -3,8 +3,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import React from 'react';
-import Header from 'src/components/analytics/header';
-import Navigation from 'src/components/common/navbar';
+import { Header } from 'src/components/analytics/header';
+import { Navigation } from 'src/components/common/navbar';
 
 interface Props {
   children?: React.ReactNode;
@@ -45,5 +45,3 @@ export const Layout = React.forwardRef(({ children, title, ...props }: Props, re
     </>
   );
 });
-
-export default Layout;
