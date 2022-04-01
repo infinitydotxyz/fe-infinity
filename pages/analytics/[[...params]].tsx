@@ -1,9 +1,5 @@
-/* eslint-disable react/display-name */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import React from 'react';
-import useSWR from 'swr';
 import Link from 'next/link';
 import { Tab } from '@headlessui/react';
 import { useRouter } from 'next/router';
