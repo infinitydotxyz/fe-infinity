@@ -37,7 +37,7 @@ const AssetDetail: FunctionComponent<AssetDetailProps> = ({ token, collection })
   return (
     <PageBox title={`${token?.metadata?.name} - ${collection?.metadata?.name}`} hideTitle>
       <div className="mb-4 sm:flex">
-        <div className="min-h-12 w-80 mx-auto sm:w-96 md:w-96 lg:w-144 sm:mr-6 md:mr-8 lg:mr-12 mb-4">
+        <div className="min-h-12 w-80 mx-auto sm:w-96 md:w-96 lg:w-144 sm:mr-6 md:mr-8 lg:mr-12">
           <img
             className="rounded-3xl w-full"
             src={token.image.url || 'https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png'}
