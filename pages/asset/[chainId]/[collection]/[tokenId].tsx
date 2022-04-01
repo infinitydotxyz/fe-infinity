@@ -94,7 +94,6 @@ const AssetDetail: FunctionComponent<AssetDetailProps> = ({ token, collection })
               min={100}
               ideal={120}
               max={200}
-              readMoreText="Read more"
             />
           </div>
         </div>

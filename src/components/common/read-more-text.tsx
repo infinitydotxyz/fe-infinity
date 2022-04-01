@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const PUNCTUATION_LIST = ['.', ',', '!', '?', "'", '{', '}', '(', ')', '[', ']', '/'];
 
@@ -80,72 +80,45 @@ interface ReadMoreTextPropType {
   min: number;
   ideal: number;
   max: number;
-  readMoreText: string;
 }
 
-interface ReadMoreTextState {
-  displaySecondary: boolean;
-  primaryText: string;
-  secondaryText: string;
-  readMoreText: string;
-}
+export const ReadMoreText: React.FC<ReadMoreTextPropType> = (props) => {
+  const [displaySecondary, setDisplaySecondary] = useState(true);
+  const [primaryText, secondaryText] = trimText(props.text, props.min, props.ideal, props.max);
 
-export class ReadMoreText extends React.Component<ReadMoreTextPropType, ReadMoreTextState> {
-  constructor(props: ReadMoreTextPropType) {
-    super(props);
+  const setStatus = React.useCallback(() => {
+    setDisplaySecondary(!displaySecondary);
+  }, [displaySecondary]);
 
-    const [primaryText, secondaryText] = trimText(this.props.text, this.props.min, this.props.ideal, this.props.max);
-
-    this.state = {
-      displaySecondary: true,
-      primaryText,
-      secondaryText,
-      readMoreText: this.props.readMoreText
-    } as ReadMoreTextState;
-  }
-
-  setStatus() {
-    const display = !this.state.displaySecondary;
-    this.setState({ displaySecondary: display });
-  }
-
-  render() {
-    let displayText;
-    if (!this.state.secondaryText) {
-      displayText = (
-        <div className="leading-normal">
-          <span className="text-theme-light-800">{`${this.state.primaryText} ${this.state.secondaryText}`}</span>
-        </div>
-      );
-    } else if (this.state.displaySecondary) {
-      displayText = (
-        <div className="leading-normal">
-          <span className="text-theme-light-800">{`${this.state.primaryText} ${this.state.secondaryText}`}</span>
-          <span
-            className="ml-2 underline text-black underline-offset-2 cursor-pointer"
-            onClick={this.setStatus.bind(this)}
-          >
-            Less...
+  let displayText;
+  if (!secondaryText) {
+    displayText = (
+      <div className="leading-normal">
+        <span className="text-theme-light-800">{`${primaryText} ${secondaryText}`}</span>
+      </div>
+    );
+  } else if (displaySecondary) {
+    displayText = (
+      <div className="leading-normal">
+        <span className="text-theme-light-800">{`${primaryText} ${secondaryText}`}</span>
+        <span className="ml-2 underline text-black underline-offset-2 cursor-pointer" onClick={setStatus}>
+          Less...
+        </span>
+      </div>
+    );
+  } else {
+    displayText = (
+      <div className="leading-normal">
+        <span className="text-theme-light-800">
+          {primaryText}
+          <span style={{ display: 'none' }}>{secondaryText}</span>
+          <span className={'ml-2 underline text-black underline-offset-2 cursor-pointer'} onClick={setStatus}>
+            Read More...
           </span>
-        </div>
-      );
-    } else {
-      displayText = (
-        <div className="leading-normal">
-          <span className="text-theme-light-800">
-            {this.state.primaryText}
-            <span style={{ display: 'none' }}>{this.state.secondaryText}</span>
-            <span
-              className={'ml-2 underline text-black underline-offset-2 cursor-pointer'}
-              onClick={this.setStatus.bind(this)}
-            >
-              {this.state.readMoreText}
-            </span>
-          </span>
-        </div>
-      );
-    }
-
-    return displayText;
+        </span>
+      </div>
+    );
   }
-}
+
+  return displayText;
+};
