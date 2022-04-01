@@ -20,12 +20,11 @@ export const PlaceBidModal: React.FC = () => {
         <div className="modal-body p-4 rounded-3xl">
           <p className="font-bold text-2xl tracking-tight mb-12">Place a bid</p>
           <CurrencyInput
-            type="number"
             value={price}
             label="Enter offer"
             placeholder=""
             onChange={(value) => {
-              setPrice(value as number);
+              setPrice(parseFloat(value));
             }}
           />
           <div className="mt-6 flex">

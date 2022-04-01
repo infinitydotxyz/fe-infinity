@@ -5,12 +5,11 @@ import { useState } from 'react';
 interface Props {
   label: string;
   value: string | number;
-  type: string;
   placeholder: string;
-  onChange: (value: string | number) => void;
+  onChange: (value: string) => void;
 }
 
-export function CurrencyInput({ value, label, type, placeholder, onChange }: Props): JSX.Element {
+export function CurrencyInput({ value, label, placeholder, onChange }: Props): JSX.Element {
   const [currency, setCurrency] = useState('WETH');
 
   return (
@@ -20,7 +19,7 @@ export function CurrencyInput({ value, label, type, placeholder, onChange }: Pro
         <div className="flex">
           Ξ&nbsp;&nbsp;
           <input
-            type={type}
+            type="number"
             value={value}
             onChange={(e) => onChange(e.target.value)}
             className="p-0 border-none focus:ring-0 block w-full text-base"

@@ -21,12 +21,11 @@ export const MakeOfferModal: React.FC = () => {
           <p className="mb-4 text-base">Buy this NFT for the price shown</p>
           <div>
             <CurrencyInput
-              type="number"
               value={price}
               label="Enter offer"
               placeholder=""
               onChange={(value) => {
-                setPrice(value as number);
+                setPrice(parseFloat(value));
               }}
             />
           </div>

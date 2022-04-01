@@ -1,6 +1,6 @@
-import type { FC } from 'react';
+import { FC, useState } from 'react';
 import { FaTwitter, FaFacebook, FaEdit } from 'react-icons/fa';
-import { Button, Dropdown, PageBox, ToggleTab, useToggleTab } from 'src/components/common';
+import { Button, CurrencyInput, Dropdown, PageBox, ToggleTab, useToggleTab } from 'src/components/common';
 import { Card } from 'src/components/common/card';
 import { Chip } from 'src/components/common/chip';
 import { RoundedNav } from 'src/components/common/rounded-nav';
@@ -8,6 +8,7 @@ import testData from './data.json';
 
 const SandboxPage: FC = () => {
   const { options, onChange, selected } = useToggleTab(['Buy NFTs', 'Sell NFTs', 'Trade NFTs'], 'Buy NFTs');
+  const [currency, setCurrency] = useState<number>(12.33);
 
   return (
     <PageBox title="SandBox">
@@ -71,6 +72,15 @@ const SandboxPage: FC = () => {
           <Card data={testData.cardTestData[0]} />
           <Card data={testData.cardTestData[1]} />
         </div>
+
+        <CurrencyInput
+          value={currency}
+          label="Enter offer"
+          placeholder=""
+          onChange={(value) => {
+            setCurrency(parseFloat(value));
+          }}
+        />
 
         <h3># More</h3>
         <div>&nbsp;</div>
