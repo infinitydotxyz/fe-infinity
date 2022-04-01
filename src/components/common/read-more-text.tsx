@@ -102,7 +102,7 @@ export const ReadMoreText: React.FC<ReadMoreTextPropType> = (props) => {
       <div className="leading-normal">
         <span className="text-theme-light-800">{`${primaryText} ${secondaryText}`}</span>
         <span className="ml-2 underline text-black underline-offset-2 cursor-pointer" onClick={setStatus}>
-          Less...
+          Less
         </span>
       </div>
     );
