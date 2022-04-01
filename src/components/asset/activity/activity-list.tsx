@@ -50,11 +50,12 @@ export const ActivityList: React.FC<ActivityListPropType> = ({
     if (event.target.checked) {
       setActivityTypes([...activityTypes, curType]);
     } else {
+      const _activityTypes = [...activityTypes];
       const index = activityTypes.indexOf(curType);
       if (index > -1) {
-        activityTypes.splice(index, 1);
+        _activityTypes.splice(index, 1);
       }
-      setActivityTypes(activityTypes);
+      setActivityTypes(_activityTypes);
     }
   };
 
