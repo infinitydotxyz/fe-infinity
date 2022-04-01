@@ -27,34 +27,3 @@
   @import './styles/overrides';
   @import './styles/foundations';
 }
-
-input:checked ~ .dot {
-  transform: translateX(100%);
-}
-
-/* remove updown arrows from html number input */
-/* Chrome, Safari, Edge, Opera */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-/* Firefox */
-input[type='number'] {
-  -moz-appearance: textfield;
-}
-
-.dropdown:hover .dropdown-menu {
-  display: block;
-}
-
-textarea:focus,
-input:focus {
-  outline: none;
-  box-shadow: none;
-}
-
-button:focus {
-  box-shadow: none;
-}

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Button, PageBox, ShortAddress, ReadMoreText } from 'src/components/common';
 import { apiGet } from 'src/utils';
 import { Token, Collection } from '@infinityxyz/lib/types/core';
+import Image from 'next/image';
 import {
   TraitList,
   ActivityList,
@@ -30,7 +31,7 @@ const AssetDetail: FunctionComponent<AssetDetailProps> = ({ token, collection })
   if (!token || !collection) {
     return (
       <PageBox title={'Asset Detail - Error'} hideTitle>
-        <h1>Sorry! Failed to fetch the nft info</h1>
+        <h1>Error: Invalid page parameters.</h1>
       </PageBox>
     );
   }
@@ -43,7 +44,12 @@ const AssetDetail: FunctionComponent<AssetDetailProps> = ({ token, collection })
     <PageBox title={assetName} hideTitle>
       <div className="pb-4 sm:flex">
         <div className="min-h-12 w-80 mx-auto sm:w-96 md:w-96 lg:w-144 sm:mr-6 md:mr-8 lg:mr-12 mb-4">
-          <img className="rounded-3xl w-full" src={token.image.url || BLANK_IMAGE_URL} alt={assetName} />
+          <Image
+            className="rounded-3xl w-80 mx-auto sm:w-96 md:w-96 lg:w-144"
+            layout="responsive"
+            src={token.image.url || BLANK_IMAGE_URL}
+            alt={assetName}
+          />
         </div>
         <div className="flex-1">
           <div className="mb-2 md:pb-4 lg:pb-16 text-center sm:text-left">
@@ -119,9 +125,9 @@ export async function getServerSideProps(context: NextPageContext) {
   const NFT_API_ENDPOINT = `/collections/${query.chainId}:${query.collection}/nfts/${query.tokenId}`;
   const COL_API_ENDPOINT = `/collections/${query.chainId}:${query.collection}`;
 
-  const response = await Promise.all([apiGet(NFT_API_ENDPOINT), apiGet(COL_API_ENDPOINT)]);
+  const responses = await Promise.all([apiGet(NFT_API_ENDPOINT), apiGet(COL_API_ENDPOINT)]);
 
-  if (response[0].error || response[0].error) {
+  if (responses[0].error || responses[0].error) {
     return {
       props: {
         token: null,
@@ -131,8 +137,8 @@ export async function getServerSideProps(context: NextPageContext) {
   }
   return {
     props: {
-      token: response[0].result as Token,
-      collection: response[1].result as Collection
+      token: responses[0].result as Token,
+      collection: responses[1].result as Collection
     }
   };
 }
