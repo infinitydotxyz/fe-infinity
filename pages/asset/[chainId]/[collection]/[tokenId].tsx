@@ -33,15 +33,18 @@ const AssetDetail: FunctionComponent<AssetDetailProps> = ({ token, collection })
     );
   }
 
-  console.log({ token, collection });
+  const assetName =
+    token.metadata.name && collection.metadata.name
+      ? `${token.metadata.name} - ${collection.metadata.name}`
+      : token.metadata.name || collection.metadata.name || 'No Name';
   return (
-    <PageBox title={`${token?.metadata?.name} - ${collection?.metadata?.name}`} hideTitle>
+    <PageBox title={assetName} hideTitle>
       <div className="pb-4 sm:flex">
         <div className="min-h-12 w-80 mx-auto sm:w-96 md:w-96 lg:w-144 sm:mr-6 md:mr-8 lg:mr-12 mb-4">
           <img
             className="rounded-3xl w-full"
             src={token.image.url || 'https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png'}
-            alt={`${token.metadata.name} - ${collection.metadata.name}`}
+            alt={assetName}
           />
         </div>
         <div className="flex-1">
@@ -49,12 +52,12 @@ const AssetDetail: FunctionComponent<AssetDetailProps> = ({ token, collection })
             <ToggleSwitchButton />
           </div>
           <h3 className="text-black font-body text-2xl font-bold leading-9 tracking-wide pb-1">
-            {token.metadata.name}
+            {token.metadata.name ? token.metadata.name : `${collection.metadata.name} #${token.tokenId}`}
           </h3>
           <div className="flex items-center sm:mb-6">
-            <Link href={`${window.origin}/collection/${collection?.address}`}>
+            <Link href={`/collection/${collection.metadata.name || collection.address}`}>
               <a
-                href={`${window.origin}/collection/${collection?.address}`}
+                href={`/collection/${collection.metadata.name || collection.address}`}
                 className="text-theme-light-800 font-heading tracking-tight mr-2"
               >
                 {collection.metadata.name}

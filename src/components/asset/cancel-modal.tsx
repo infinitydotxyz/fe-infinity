@@ -21,7 +21,7 @@ export const CancelModal: React.FC = () => {
             <Button className="flex-1 mr-4 rounded-full" size="large">
               Confirm
             </Button>
-            <Button className="flex-1 rounded-full" size="large" variant="outline">
+            <Button className="flex-1 rounded-full" size="large" variant="outline" onClick={closeModal}>
               Cancel
             </Button>
           </div>

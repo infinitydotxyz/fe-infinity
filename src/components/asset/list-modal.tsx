@@ -43,7 +43,7 @@ export const ListModal: React.FC = () => {
             <Button className="flex-1 mr-4 rounded-full" size="large">
               List
             </Button>
-            <Button className="flex-1 rounded-full" size="large" variant="outline">
+            <Button className="flex-1 rounded-full" size="large" variant="outline" onClick={closeModal}>
               Cancel
             </Button>
           </div>
