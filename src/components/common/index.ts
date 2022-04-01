@@ -11,3 +11,6 @@ export * from 'src/components/common/rounded-nav';
 export * from 'src/components/common/spacer';
 export * from 'src/components/common/page-box';
 export * from 'src/components/common/text-input';
+export * from 'src/components/common/divider';
+export * from 'src/components/common/drawer';
+export * from 'src/components/common/toggle-tab';

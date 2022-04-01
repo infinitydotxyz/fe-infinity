@@ -22,7 +22,7 @@ interface Props {
 
 const ORDER_NONCE = 1;
 
-export const MarketOrderModal: React.FC<Props> = ({ isOpen, buyMode = true, inOrder, onClose }: Props) => {
+export const OrderModal: React.FC<Props> = ({ isOpen, buyMode = true, inOrder, onClose }: Props) => {
   const { user, chainId, showAppError } = useAppContext();
 
   // form data
