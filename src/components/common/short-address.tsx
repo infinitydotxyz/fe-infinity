@@ -15,7 +15,7 @@ export const ShortAddress: React.FC<ShortAddressProps> = ({ address, href, label
       <a className="ml-4 text-heading text-base underline" href={href} title={tooltip}>
         {address && address.length > 10 ? `${address.slice(0, 6)}...${address.slice(-4)}` : address}
       </a>
-      <ClipboardButton textToCopy="address" />
+      <ClipboardButton textToCopy={address} />
     </div>
   );
 };
