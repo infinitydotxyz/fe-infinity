@@ -24,6 +24,8 @@ interface ActivityItemProps {
 const shortAddress = (address: string | undefined | null) =>
   address && address.length > 20 ? `${address.slice(0, 6)}...${address.slice(-4)}` : address;
 
+const ETHERSCAN_URL = 'https://etherscan.io/tx/';
+
 export const ActivityItem: React.FC<ActivityItemProps> = ({ item }) => {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-x-4 gap-y-3 bg-theme-light-300 px-6 sm:px-6 md:px-8 lg:px-16 -mx-1 my-2 sm:my-4 py-5 md:py-4 md:pt-12 md:pb-14 rounded-3xl">
@@ -48,7 +50,7 @@ export const ActivityItem: React.FC<ActivityItemProps> = ({ item }) => {
       <div>
         <p className="font-body tracking-tight text-theme-light-800 leading-normal">Link</p>
         <a className="font-body font-bold tracking-tight text-black" rel="noopener noreferrer" href={item.externalUrl}>
-          {shortAddress(item.externalUrl ? item.externalUrl.replace('https://etherscan.io/tx/', '') : 'No Txn')}
+          {shortAddress(item.externalUrl ? item.externalUrl.replace(ETHERSCAN_URL, '') : 'No Txn')}
         </a>
       </div>
     </div>
