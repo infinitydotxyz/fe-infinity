@@ -11,7 +11,7 @@ export const Trait: FC<Props> = ({ trait, description }) => {
         <p className="text-center text-sm text-theme-light-800 mb-1 font-body">{trait.trait_type}</p>
         <p className="text-center text-sm font-body font-semibold">{trait.value}</p>
       </div>
-      <p className="text-center text-xs text-theme-light-800 bg-theme-light-300 rounded-3xl py-1 mt-3 font-body tracking-tighter">
+      <p className="text-center text-xs text-theme-light-800 bg-theme-light-300 rounded-3xl py-1 mt-3.5 lg:mt-5 font-body tracking-tighter px-2">
         {description}
       </p>
     </div>
