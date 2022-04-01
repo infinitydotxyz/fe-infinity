@@ -59,7 +59,7 @@ const AssetDetail: FunctionComponent<AssetDetailProps> = ({ token, collection })
                 {collection?.metadata?.name}
               </a>
             </Link>
-            <img className="w-4 h-4" src={BlueCheckSvg.src} alt={'Verified'} />
+            <img className="w-4 h-4 -mt-0.5" src={BlueCheckSvg.src} alt={'Verified'} />
           </div>
           <ShortAddress
             label="Contact address:"
@@ -100,7 +100,7 @@ const AssetDetail: FunctionComponent<AssetDetailProps> = ({ token, collection })
       </div>
 
       <TraitList traits={token?.metadata?.attributes} collectionTraits={collection?.attributes} />
-      <ActivityList />
+      <ActivityList chainId={collection?.chainId} collectionAddress={collection?.address} tokenId={token?.tokenId} />
 
       <CancelModal />
       <TransferNFTModal />
@@ -117,16 +117,10 @@ export async function getServerSideProps(context: NextPageContext) {
   const { query } = context;
   const NFT_API_ENDPOINT = `/collections/${query.chainId}:${query.collection}/nfts/${query.tokenId}`;
   const COL_API_ENDPOINT = `/collections/${query.chainId}:${query.collection}`;
-  const ACTIVITY_ENDPOINT = `/collections/${query.chainId}:${query.collection}/nfts/${query.tokenId}/activity`;
 
-  const response = await Promise.all([
-    apiGet(NFT_API_ENDPOINT),
-    apiGet(COL_API_ENDPOINT),
-    apiGet(ACTIVITY_ENDPOINT, { query: { eventType: 'sale', limit: 50 } })
-  ]);
+  const response = await Promise.all([apiGet(NFT_API_ENDPOINT), apiGet(COL_API_ENDPOINT)]);
 
-  console.log(response[2].error);
-  if (response[0].error || response[0].error || response[2].error) {
+  if (response[0].error || response[0].error) {
     return {
       props: {
         token: null,
