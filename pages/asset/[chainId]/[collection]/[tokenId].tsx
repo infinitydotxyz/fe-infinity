@@ -54,7 +54,7 @@ const AssetDetail: FunctionComponent<AssetDetailProps> = ({ token, collection })
           <div className="mb-2 md:pb-4 lg:pb-16 text-center sm:text-left">
             <ToggleSwitchButton />
           </div>
-          <h3 className="text-black font-body text-2xl font-bold leading-9 tracking-wide pb-1">
+          <h3 className="text-black font-body text-2xl font-bold leading-normal tracking-wide pb-1">
             {token.metadata.name ? token.metadata.name : `${collection.metadata.name} #${token.tokenId}`}
           </h3>
           <div className="flex items-center sm:mb-6">
@@ -66,7 +66,9 @@ const AssetDetail: FunctionComponent<AssetDetailProps> = ({ token, collection })
                 {collection.metadata.name}
               </a>
             </Link>
-            <Image width={16} height={16} className="-mt-0.5" src={BlueCheckSvg.src} alt={'Verified'} />
+            <div className="mt-1">
+              <Image width={18} height={18} src={BlueCheckSvg.src} alt={'Verified'} />
+            </div>
           </div>
           <ShortAddress
             label="Contact address:"
