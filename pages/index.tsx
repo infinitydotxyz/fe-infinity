@@ -49,7 +49,6 @@ export const Home: FC = () => {
           SandBox
         </Button>
         <Button
-          variant="outline"
           onClick={() => {
             router.push('/asset/1/0x004f5683e183908d0f6b688239e3e2d5bbb066ca/0');
           }}
