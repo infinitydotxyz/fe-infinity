@@ -20,12 +20,12 @@ import BlueCheckSvg from 'src/images/blue-check.svg';
 import { NextPageContext } from 'next';
 
 interface AssetDetailProps {
-  token: Token;
-  collection: Collection;
+  token: Token | null;
+  collection: Collection | null;
 }
 
 const AssetDetail: FunctionComponent<AssetDetailProps> = ({ token, collection }) => {
-  if (!token) {
+  if (!token || !collection) {
     return (
       <PageBox title={'Asset Detail - Error'} hideTitle>
         <h1>Sorry! Failed to fetch the nft info</h1>
