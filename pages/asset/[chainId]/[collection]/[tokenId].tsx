@@ -2,6 +2,7 @@ import { FunctionComponent } from 'react';
 import Link from 'next/link';
 import { Button, PageBox, ShortAddress, ReadMoreText } from 'src/components/common';
 import { apiGet } from 'src/utils';
+import { Token, Collection } from '@infinityxyz/lib/types/core';
 import {
   TraitList,
   ActivityList,
@@ -19,8 +20,8 @@ import BlueCheckSvg from 'src/images/blue-check.svg';
 import { NextPageContext } from 'next';
 
 interface AssetDetailProps {
-  token: any;
-  collection: any;
+  token: Token;
+  collection: Collection;
 }
 
 const AssetDetail: FunctionComponent<AssetDetailProps> = ({ token, collection }) => {
@@ -39,8 +40,8 @@ const AssetDetail: FunctionComponent<AssetDetailProps> = ({ token, collection })
         <div className="min-h-12 w-80 mx-auto sm:w-96 md:w-96 lg:w-144 sm:mr-6 md:mr-8 lg:mr-12 mb-4">
           <img
             className="rounded-3xl w-full"
-            src={token?.image?.url || 'https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png'}
-            alt={`${token?.metadata?.name} - ${collection?.metadata?.name}`}
+            src={token.image.url || 'https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png'}
+            alt={`${token.metadata.name} - ${collection.metadata.name}`}
           />
         </div>
         <div className="flex-1">
@@ -48,7 +49,7 @@ const AssetDetail: FunctionComponent<AssetDetailProps> = ({ token, collection })
             <ToggleSwitchButton />
           </div>
           <h3 className="text-black font-body text-2xl font-bold leading-9 tracking-wide pb-1">
-            {token?.metadata?.name}
+            {token.metadata.name}
           </h3>
           <div className="flex items-center sm:mb-6">
             <Link href={`${window.origin}/collection/${collection?.address}`}>
@@ -56,21 +57,21 @@ const AssetDetail: FunctionComponent<AssetDetailProps> = ({ token, collection })
                 href={`${window.origin}/collection/${collection?.address}`}
                 className="text-theme-light-800 font-heading tracking-tight mr-2"
               >
-                {collection?.metadata?.name}
+                {collection.metadata.name}
               </a>
             </Link>
             <img className="w-4 h-4 -mt-0.5" src={BlueCheckSvg.src} alt={'Verified'} />
           </div>
           <ShortAddress
             label="Contact address:"
-            address={collection?.address}
-            href={`${window.origin}/collection/${collection?.address}`}
-            tooltip={collection?.address}
+            address={collection.address}
+            href={`${window.origin}/collection/${collection.address}`}
+            tooltip={collection.address}
           />
           <ShortAddress
             label="Token ID:"
-            address={token?.tokenId}
-            href={`${window.origin}/asset/${token?.chainId}/${collection?.address}/${token?.tokenId}`}
+            address={token.tokenId}
+            href={`${window.origin}/asset/${token.chainId}/${collection.address}/${token.tokenId}`}
             tooltip="#3460"
           />
           <div className="md:-ml-1.5">
@@ -89,7 +90,7 @@ const AssetDetail: FunctionComponent<AssetDetailProps> = ({ token, collection })
           <p className="font-body text-black mb-1">Description</p>
           <div>
             <ReadMoreText
-              text={collection?.metadata?.description}
+              text={collection.metadata.description}
               min={100}
               ideal={120}
               max={200}
@@ -99,8 +100,8 @@ const AssetDetail: FunctionComponent<AssetDetailProps> = ({ token, collection })
         </div>
       </div>
 
-      <TraitList traits={token?.metadata?.attributes} collectionTraits={collection?.attributes} />
-      <ActivityList chainId={collection?.chainId} collectionAddress={collection?.address} tokenId={token?.tokenId} />
+      <TraitList traits={token.metadata.attributes} collectionTraits={collection.attributes} />
+      <ActivityList chainId={collection.chainId} collectionAddress={collection.address} tokenId={token.tokenId} />
 
       <CancelModal />
       <TransferNFTModal />
@@ -130,8 +131,8 @@ export async function getServerSideProps(context: NextPageContext) {
   }
   return {
     props: {
-      token: response[0].result,
-      collection: response[1].result
+      token: response[0].result as Token,
+      collection: response[1].result as Collection
     }
   };
 }

@@ -1,6 +1,8 @@
 import type { FC } from 'react';
+import { Erc721Attribute } from '@infinityxyz/lib/types/core';
+
 interface Props {
-  trait: any;
+  trait: Erc721Attribute;
   description: string;
 }
 
