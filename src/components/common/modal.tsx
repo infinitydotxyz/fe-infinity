@@ -127,5 +127,3 @@ export const Modal = React.forwardRef<HTMLButtonElement, Props>(
     );
   }
 );
-
-export default Modal;

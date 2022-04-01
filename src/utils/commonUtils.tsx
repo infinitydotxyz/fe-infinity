@@ -35,8 +35,7 @@ export enum EventType {
 
 export const isServer = () => typeof window === 'undefined';
 
-export const isLocalhost = () =>
-  typeof window !== 'undefined' && (window?.location?.host || '').indexOf('localhost') >= 0;
+export const isLocalhost = () => !isServer() && (window?.location?.host || '').indexOf('localhost') >= 0;
 
 export const toChecksumAddress = (address?: string): string => {
   if (address) {

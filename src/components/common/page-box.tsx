@@ -2,7 +2,7 @@ import Head from 'next/head';
 import React, { ReactElement, ReactNode } from 'react';
 import { Spacer } from 'src/components/common';
 import { useRouter } from 'next/router';
-import Header from 'src/components/header/Header';
+import { Header } from 'src/components/header/Header';
 
 type Props = {
   title: string;
@@ -35,12 +35,7 @@ export const PageBox = ({
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      {showConnect && (
-        <>
-          <Header />
-          <div style={{ height: '99px' }} />
-        </>
-      )}
+      {showConnect && <Header />}
 
       <div className="flex flex-col w-full m-4 max-w-screen-lg">
         <PageHeader title={titleElement || title} rightSide={rightSide} />

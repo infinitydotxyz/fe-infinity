@@ -7,6 +7,9 @@ import * as gtag from 'lib/ga/gtag';
 import { isLocalhost } from 'src/utils/commonUtils';
 import { AppContextProvider } from 'src/utils/context/AppContext';
 import { FilterContextProvider } from 'src/utils/context/FilterContext';
+import { useRouter } from 'next/router';
+import { isLocalhost, isServer } from 'src/utils/commonUtils';
+import LogRocket from 'logrocket';
 import { OrderContextProvider } from 'src/utils/context/OrderContext';
 
 /*
@@ -48,7 +51,7 @@ const App: FunctionComponent<AppProps> = (props) => {
       within context providers.
     ======================================
   */
-  return typeof window === 'undefined' ? null : (
+  return isServer() ? null : (
     <StrictMode>
       <AppContextProvider>
         <FilterContextProvider>
