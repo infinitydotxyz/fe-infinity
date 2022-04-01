@@ -18,7 +18,7 @@ export const TraitList: FC<TraitListProps> = ({ traits, collectionTraits }) => {
             trait={trait}
             description={
               trait.trait_type
-                ? `${collectionTraits[trait.trait_type]?.values[trait?.value].percent} % have this`
+                ? `${Math.floor(collectionTraits[trait.trait_type]?.values[trait?.value].percent) || 1} % have this`
                 : 'None'
             }
           />
