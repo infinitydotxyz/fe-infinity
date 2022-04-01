@@ -1,5 +1,6 @@
 import React from 'react';
 import { ClipboardButton } from 'src/components/common/clipboard-button';
+import { ellipsisAddress } from 'src/utils';
 
 interface ShortAddressProps {
   address: string;
@@ -13,7 +14,7 @@ export const ShortAddress: React.FC<ShortAddressProps> = ({ address, href, label
     <div className="relative flex">
       <span className="text-body text-base">{label}</span>
       <a className="ml-4 text-heading text-base underline" href={href} title={tooltip}>
-        {address && address.length > 10 ? `${address.slice(0, 6)}...${address.slice(-4)}` : address}
+        {address ? `${ellipsisAddress(address)}` : address}
       </a>
       <ClipboardButton textToCopy={address} />
     </div>

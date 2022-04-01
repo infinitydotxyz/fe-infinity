@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { Button, PageBox, ShortAddress, ReadMoreText } from 'src/components/common';
 import { apiGet } from 'src/utils';
 import { Token, Collection } from '@infinityxyz/lib/types/core';
-import Image from 'next/image';
 import {
   TraitList,
   ActivityList,
@@ -44,9 +43,8 @@ const AssetDetail: FunctionComponent<AssetDetailProps> = ({ token, collection })
     <PageBox title={assetName} hideTitle>
       <div className="pb-4 sm:flex">
         <div className="min-h-12 w-80 mx-auto sm:w-96 md:w-96 lg:w-144 sm:mr-6 md:mr-8 lg:mr-12 mb-4">
-          <Image
+          <img
             className="rounded-3xl w-80 mx-auto sm:w-96 md:w-96 lg:w-144"
-            layout="responsive"
             src={token.image.url || BLANK_IMAGE_URL}
             alt={assetName}
           />
@@ -79,7 +77,7 @@ const AssetDetail: FunctionComponent<AssetDetailProps> = ({ token, collection })
             label="Token ID:"
             address={token.tokenId}
             href={`/asset/${token.chainId}/${collection.address}/${token.tokenId}`}
-            tooltip="#3460"
+            tooltip={token.tokenId}
           />
           <div className="md:-ml-1.5">
             <div className="flex flex-col md:flex-row gap-2 my-4 md:my-6 lg:my-10 lg:mb-16">

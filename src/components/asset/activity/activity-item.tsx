@@ -1,5 +1,6 @@
-import moment from 'moment';
 import React from 'react';
+import moment from 'moment';
+import { ellipsisAddress } from 'src/utils';
 
 export interface NftActivity {
   address: string;
@@ -22,7 +23,7 @@ interface ActivityItemProps {
 }
 
 const shortAddress = (address: string | undefined | null) =>
-  address && address.length > 20 ? `${address.slice(0, 6)}...${address.slice(-4)}` : address;
+  address && address.length > 20 ? `${ellipsisAddress(address)}` : address;
 
 const ETHERSCAN_URL = 'https://etherscan.io/tx/';
 
