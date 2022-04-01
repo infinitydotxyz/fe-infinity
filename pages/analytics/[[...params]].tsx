@@ -1,5 +1,4 @@
 import React from 'react';
-import Link from 'next/link';
 import { Tab } from '@headlessui/react';
 import { useRouter } from 'next/router';
 import Layout from 'src/components/analytics/layout';
@@ -241,8 +240,8 @@ export const Analytics = () => {
                 runs and updates the route.
               ======================================
             */
-            const interval = content?.options?.timeframes?.[index]?.id;
-            router.push(`/analytics/${page}/${interval}`);
+            const _interval = content?.options?.timeframes?.[index]?.id;
+            router.push(`/analytics/${page}/${_interval}`);
           }
         },
         container: {
@@ -273,8 +272,8 @@ export const Analytics = () => {
                 runs and updates the route.
               ======================================
             */
-            const page = content?.options?.actions?.links?.[index]?.id;
-            router.push(`/analytics/${page}/${interval}`);
+            const _page = content?.options?.actions?.links?.[index]?.id;
+            router.push(`/analytics/${_page}/${interval}`);
           }
         },
         container: {
