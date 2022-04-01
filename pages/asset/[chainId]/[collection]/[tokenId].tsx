@@ -90,7 +90,7 @@ const AssetDetail: FunctionComponent<AssetDetailProps> = ({ token, collection })
           <p className="font-body text-black mb-1">Description</p>
           <div>
             <ReadMoreText
-              text={collection.metadata.description}
+              text={collection.metadata.description || token.metadata.description}
               min={100}
               ideal={120}
               max={200}
