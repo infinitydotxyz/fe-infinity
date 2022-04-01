@@ -51,7 +51,7 @@ export const Home: FC = () => {
         <Button
           variant="outline"
           onClick={() => {
-            router.push('/asset/1/collection/2');
+            router.push('/asset/1/0x004f5683e183908d0f6b688239e3e2d5bbb066ca/0');
           }}
         >
           Asset Detail
