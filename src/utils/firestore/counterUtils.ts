@@ -1,4 +1,4 @@
-import { firestoreConfig } from '../../../creds/firestore';
+import { firestoreConfig } from './creds';
 import { initializeApp } from 'firebase/app';
 // Add Firebase products that you want to use
 import { getFirestore, doc } from 'firebase/firestore';

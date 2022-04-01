@@ -17,7 +17,7 @@ import {
 } from 'firebase/firestore'; // access firestore database service
 
 import { increaseComments, increaseLikes } from './counterUtils';
-import { firestoreConfig } from '../../../creds/firestore';
+import { firestoreConfig } from './creds';
 import { FeedEventType } from '@infinityxyz/lib/types/core/feed';
 import { FeedEvent } from 'src/components/feed/feed-item';
 
