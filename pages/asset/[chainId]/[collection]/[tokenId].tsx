@@ -24,6 +24,8 @@ interface AssetDetailProps {
   collection: Collection | null;
 }
 
+const BLANK_IMAGE_URL = 'https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png';
+
 const AssetDetail: FunctionComponent<AssetDetailProps> = ({ token, collection }) => {
   if (!token || !collection) {
     return (
@@ -41,11 +43,7 @@ const AssetDetail: FunctionComponent<AssetDetailProps> = ({ token, collection })
     <PageBox title={assetName} hideTitle>
       <div className="pb-4 sm:flex">
         <div className="min-h-12 w-80 mx-auto sm:w-96 md:w-96 lg:w-144 sm:mr-6 md:mr-8 lg:mr-12 mb-4">
-          <img
-            className="rounded-3xl w-full"
-            src={token.image.url || 'https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png'}
-            alt={assetName}
-          />
+          <img className="rounded-3xl w-full" src={token.image.url || BLANK_IMAGE_URL} alt={assetName} />
         </div>
         <div className="flex-1">
           <div className="mb-2 md:pb-4 lg:pb-16 text-center sm:text-left">
