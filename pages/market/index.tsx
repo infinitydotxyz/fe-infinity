@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Card, ToggleTab, useToggleTab, PageBox } from 'src/components/common';
 import { OrderDrawer } from 'src/components/market/order-drawer';
 import { CardData } from '@infinityxyz/lib/types/core';
@@ -30,6 +30,7 @@ const testCardData: CardData[] = [
 ];
 
 export default function MarketPage() {
+  const [showDebugTools, setShowDebugTools] = useState(false);
   const { orderDrawerOpen, setOrderDrawerOpen, isOrderEmpty } = useOrderContext();
   const { options, onChange, selected: period } = useToggleTab(['Assets', 'Orderbook'], 'Assets');
 
@@ -50,14 +51,23 @@ export default function MarketPage() {
       }
     >
       <OrderDrawer open={orderDrawerOpen} onClose={() => setOrderDrawerOpen(false)} />
-      <ToggleTab options={options} selected={period} onChange={onChange} />
+
+      <div className="flex justify-between items-center mb-2">
+        <ToggleTab options={options} selected={period} onChange={onChange} />
+        <Button variant="outline">Filter</Button>
+      </div>
+
       <div className={'xx'}>
         <div className="flex flex-row space-x-4 mb-6">
           <Card data={testCardData[0]} />
           <Card data={testCardData[1]} />
         </div>
 
-        <OrderDebug />
+        <Button className="my-5" onClick={() => setShowDebugTools(!showDebugTools)} variant="outline">
+          Debug Tools
+        </Button>
+
+        {showDebugTools && <OrderDebug />}
       </div>
     </PageBox>
   );

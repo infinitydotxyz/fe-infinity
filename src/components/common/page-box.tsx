@@ -35,12 +35,7 @@ export const PageBox = ({
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      {showConnect && (
-        <>
-          <Header />
-          <div style={{ height: '99px' }} />
-        </>
-      )}
+      {showConnect && <Header />}
 
       <div className="flex flex-col w-full m-4 max-w-screen-lg">
         <PageHeader title={titleElement || title} rightSide={rightSide} />
