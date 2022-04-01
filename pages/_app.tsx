@@ -1,9 +1,8 @@
 import 'src/settings/theme/globals.scss';
 import type { AppProps } from 'next/app';
-import React, { ComponentType, createElement, FunctionComponent, memo, StrictMode, useEffect } from 'react';
+import React, { FunctionComponent, StrictMode, useEffect } from 'react';
 import * as gtag from 'lib/ga/gtag';
 const isProduction = process.env.NODE_ENV === 'production';
-import { BrowserRouter } from 'react-router-dom';
 import { AppContextProvider } from 'src/utils/context/AppContext';
 import { FilterContextProvider } from 'src/utils/context/FilterContext';
 import { useRouter } from 'next/router';
@@ -11,17 +10,11 @@ import { isLocalhost } from 'src/utils/commonUtils';
 import LogRocket from 'logrocket';
 import { OrderContextProvider } from 'src/utils/context/OrderContext';
 
-const providers: readonly ComponentType[] = [BrowserRouter];
-
-const PageComponent: FunctionComponent<AppProps> = ({ Component, pageProps }) => <Component {...pageProps} />;
-
-const MemoizedComponent = memo(PageComponent, (p, n) => p.Component === n.Component && p.pageProps === n.pageProps);
-
 if (!isLocalhost()) {
   LogRocket.init('0pu9ak/nftco');
 }
 
-const App: FunctionComponent<AppProps> = (props) => {
+const App: FunctionComponent<AppProps> = ({ Component, pageProps }: AppProps) => {
   const router = useRouter();
 
   useEffect(() => {
@@ -39,16 +32,13 @@ const App: FunctionComponent<AppProps> = (props) => {
 
   return typeof window === 'undefined' ? null : (
     <StrictMode>
-      {providers.reduceRight(
-        (children, provider) => createElement(provider, undefined, children),
-        <AppContextProvider>
-          <FilterContextProvider>
-            <OrderContextProvider>
-              <MemoizedComponent {...props} />
-            </OrderContextProvider>
-          </FilterContextProvider>
-        </AppContextProvider>
-      )}
+      <AppContextProvider>
+        <FilterContextProvider>
+          <OrderContextProvider>
+            <Component {...pageProps} />
+          </OrderContextProvider>
+        </FilterContextProvider>
+      </AppContextProvider>
     </StrictMode>
   );
 };

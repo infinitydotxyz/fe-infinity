@@ -1,4 +1,4 @@
-import React, { ForwardedRef } from 'react';
+import React from 'react';
 import Flatpickr from 'react-flatpickr';
 
 // date picker themes
@@ -14,7 +14,7 @@ type Props = {
   placeholder?: string;
 };
 
-export const DatePicker = React.forwardRef(({ placeholder = 'Dec 8, 2021  12:00 PM', value, onChange }: Props, ref) => {
+export const DatePicker = React.forwardRef(({ placeholder = 'Dec 8, 2021  12:00 PM', value, onChange }: Props) => {
   return (
     <div className="flex flex-row w-full rounded-md">
       <Flatpickr

@@ -14,7 +14,7 @@ import {
 } from 'src/components/asset';
 
 import BlueCheckSvg from 'src/images/blue-check.svg';
-//import TransferSvg from 'src/images/transfer.svg';
+// import TransferSvg from 'src/images/transfer.svg';
 
 import { NextPageContext } from 'next';
 
@@ -74,7 +74,7 @@ const AssetDetail: FunctionComponent<AssetDetailProps> = ({ token, collection })
             tooltip="#3460"
           />
           <div className="-ml-4">
-            <div className=" flex flex-col md:flex-row gap-2 my-4 md:my-6 lg:my-10 lg:mb-16">
+            <div className="flex flex-col md:flex-row gap-2 my-4 md:my-6 lg:my-10 lg:mb-16">
               <Button variant="primary" size="large" className="p-4 rounded-full">
                 Buy&nbsp;3.30 ETH
               </Button>
