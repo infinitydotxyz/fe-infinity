@@ -230,15 +230,9 @@ function ListItem({ cartItem }: Props2) {
   const { removeBuyCartItem } = useOrderContext();
 
   const menu = (
-<<<<<<< HEAD
-    <button
-      type="button"
-      className="rounded-md bg-white text-gray-400 hover:text-theme-light-3000 focus:ring-2 focus:ring-indigo-500"
-=======
     <Button
       variant="plain"
       size="small"
->>>>>>> 0645d7862fa66aab444179d4f7a94dbddf63a69e
       onClick={() => {
         removeBuyCartItem(cartItem);
       }}
