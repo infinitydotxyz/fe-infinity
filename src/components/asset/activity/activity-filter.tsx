@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react';
 
 import { Popover, Transition } from '@headlessui/react';
-import { ChevronDownIcon } from '@heroicons/react/solid';
 
 import { ACTIVITY_TYPE } from './activity-list';
 
@@ -13,19 +12,18 @@ interface FilterProps {
 export const ActivityFilter: React.FC<FilterProps> = ({ activityTypes, onChange }) => {
   return (
     <Popover className="relative">
-      {({ open }) => (
+      {() => (
         <>
           <Popover.Button
             className={`
-                ${open ? '' : 'text-opacity-90'}
-                border rounded-3xl border-theme-light-800  group text-black px-5 py-2 inline-flex items-center text-base font-medium hover:text-opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75`}
+            transition ease-in-out duration-300 hover:bg-gray-700  active:bg-gray-900
+            focus:outline-none focus-visible:ring focus:ring-black focus:ring-opacity-50
+             px-6 py-2
+             border rounded-3xl border-gray-300 text-gray-900
+             hover:text-white
+             false flex items-center space-x-1`}
           >
             <span>Filter</span>
-            <ChevronDownIcon
-              className={`${open ? '' : 'text-opacity-70'}
-                  ml-2 h-5 w-5 text-black group-hover:text-opacity-80 transition ease-in-out duration-150`}
-              aria-hidden="true"
-            />
           </Popover.Button>
           <Transition
             as={Fragment}
@@ -38,9 +36,9 @@ export const ActivityFilter: React.FC<FilterProps> = ({ activityTypes, onChange 
           >
             <Popover.Panel className="absolute z-10  max-w-sm px-4 mt-3 right-0 transform sm:px-0 ">
               <div className="overflow-hidden rounded-lg  shadow-lg ring-1 ring-black ring-opacity-5">
-                <div className="p-8 bg-theme-light-50 w-80">
+                <div className="p-5 bg-theme-light-50 w-80">
                   {[ACTIVITY_TYPE.Sale, ACTIVITY_TYPE.Transfer, ACTIVITY_TYPE.Offer].map((type: ACTIVITY_TYPE) => (
-                    <div key={type} className="flex justify-between p-2">
+                    <div key={type} className="flex justify-between p-4">
                       <span className="font-body text-theme-light-800 text-lg">
                         {type.charAt(0).toUpperCase() + type.slice(1)}s
                       </span>
