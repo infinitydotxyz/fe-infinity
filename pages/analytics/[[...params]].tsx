@@ -155,28 +155,32 @@ export const Analytics = () => {
           props: {}
         }
       ],
-      actions: [
-        {
-          type: 'button',
-          url: '',
-          label: 'Filter',
-          props: {}
-        },
-        {
-          type: 'link',
-          id: 'trending',
-          url: `/analytics/trending/${interval}`,
-          label: 'Trending',
-          props: {}
-        },
-        {
-          type: 'link',
-          id: 'following',
-          url: `/analytics/following/${interval}`,
-          label: 'Following ',
-          props: {}
-        }
-      ]
+      actions: {
+        links: [
+          {
+            type: 'link',
+            id: 'trending',
+            url: `/analytics/trending/${interval}`,
+            label: 'Trending',
+            props: {}
+          },
+          {
+            type: 'link',
+            id: 'following',
+            url: `/analytics/following/${interval}`,
+            label: 'Following ',
+            props: {}
+          }
+        ],
+        buttons: [
+          {
+            type: 'button',
+            url: '',
+            label: 'Filter',
+            props: {}
+          }
+        ]
+      }
     }
   };
 
@@ -229,7 +233,17 @@ export const Analytics = () => {
       timeframes: {
         group: {
           defaultIndex: content?.options?.timeframes?.findIndex((x) => x.id === interval),
-          selectedIndex: content?.options?.timeframes?.findIndex((x) => x.id === interval)
+          onChange: (index: number): void => {
+            /*
+              ======================================
+                When you change the interval via
+                keyboard arrow keys, this function
+                runs and updates the route.
+              ======================================
+            */
+            const interval = content?.options?.timeframes?.[index]?.id;
+            router.push(`/analytics/${page}/${interval}`);
+          }
         },
         container: {
           className: `
@@ -250,8 +264,18 @@ export const Analytics = () => {
       },
       actions: {
         group: {
-          defaultIndex: content?.options?.actions?.findIndex((x) => x.id === page),
-          selectedIndex: content?.options?.actions?.findIndex((x) => x.id === page)
+          defaultIndex: content?.options?.actions?.links?.findIndex((x) => x.id === page),
+          onChange: (index: number): void => {
+            /*
+              ======================================
+                When you change the page via
+                keyboard arrow keys, this function
+                runs and updates the route.
+              ======================================
+            */
+            const page = content?.options?.actions?.links?.[index]?.id;
+            router.push(`/analytics/${page}/${interval}`);
+          }
         },
         container: {
           className: `
@@ -335,9 +359,7 @@ export const Analytics = () => {
               */}
                 {content?.options?.timeframes?.map((tab, i) => (
                   <React.Fragment key={i}>
-                    <Link passHref href={tab.url}>
-                      <Tab {...styles?.options?.timeframes?.tab}>{tab?.label}</Tab>
-                    </Link>
+                    <Tab {...styles?.options?.timeframes?.tab}>{tab?.label}</Tab>
                   </React.Fragment>
                 ))}
               </Tab.List>
@@ -352,13 +374,11 @@ export const Analytics = () => {
                   (like  filter and possibly anything else in future).
                 ====================================
               */}
-                {content?.options?.actions
-                  ?.filter((x) => x.type === 'button')
-                  ?.map((tab, i) => (
-                    <React.Fragment key={i}>
-                      <button {...styles?.options?.actions?.button}>{tab?.label}</button>
-                    </React.Fragment>
-                  ))}
+                {content?.options?.actions?.buttons?.map((tab, i) => (
+                  <React.Fragment key={i}>
+                    <button {...styles?.options?.actions?.button}>{tab?.label}</button>
+                  </React.Fragment>
+                ))}
                 {/*
                   ====================================
                     After rendering the buttons, we
@@ -371,16 +391,11 @@ export const Analytics = () => {
                     the data back.
                   ====================================
                 */}
-                {content?.options?.actions
-                  ?.filter((x) => x.type === 'link')
-                  ?.reverse()
-                  ?.map((link, i) => (
-                    <React.Fragment key={i}>
-                      <Link passHref href={link.url}>
-                        <Tab {...styles?.options?.actions?.tab}>{link?.label}</Tab>
-                      </Link>
-                    </React.Fragment>
-                  ))}
+                {content?.options?.actions?.links?.reverse()?.map((link, i) => (
+                  <React.Fragment key={i}>
+                    <Tab {...styles?.options?.actions?.tab}>{link?.label}</Tab>
+                  </React.Fragment>
+                ))}
               </Tab.List>
             </Tab.Group>
           </div>
