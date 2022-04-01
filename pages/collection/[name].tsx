@@ -6,7 +6,6 @@ import { FaCheck, FaEdit, FaFacebook, FaTwitter } from 'react-icons/fa';
 import { Button, Chip, PageBox, RoundedNav } from 'src/components/common';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { useFetch } from 'src/utils/apiUtils';
-import { getSearchParam } from 'src/utils/commonUtils';
 import { CollectionFeed } from 'src/components/feed/collection-feed';
 
 export function CollectionPage() {
@@ -14,19 +13,15 @@ export function CollectionPage() {
     query: { name }
   } = useRouter();
   const [currentTab, setCurrentTab] = useState(0);
-  console.log('name', name);
-
-  const collectionName = getSearchParam('name') ?? '';
-
   const path = `/collections/${name}`;
   const { result: collection } = useFetch<BaseCollection>(path, { chainId: '1' });
 
   return (
     <PageBox
-      title={collectionName}
+      title={name?.toString() ?? ''}
       titleElement={
         <span>
-          {collectionName}{' '}
+          {name}{' '}
           {collection?.hasBlueCheck ? (
             <Image src="/images/blue-check.png" width={24} height={24} alt="Blue check icon" />
           ) : null}
