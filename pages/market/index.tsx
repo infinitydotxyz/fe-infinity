@@ -52,22 +52,26 @@ export default function MarketPage() {
     >
       <OrderDrawer open={orderDrawerOpen} onClose={() => setOrderDrawerOpen(false)} />
 
-      <div className="flex justify-between items-center mb-2">
-        <ToggleTab options={options} selected={selected} onChange={onChange} />
-        <Button variant="outline">Filter</Button>
-      </div>
+      <div>
+        {!showDebugTools && (
+          <>
+            <div className="flex justify-between items-center mb-2">
+              <ToggleTab options={options} selected={selected} onChange={onChange} />
+              <Button variant="outline">Filter</Button>
+            </div>
 
-      <div className={'xx'}>
-        <div className="flex flex-row space-x-4 mb-6">
-          <Card data={testCardData[0]} />
-          <Card data={testCardData[1]} />
-        </div>
-
-        <Button className="my-5" onClick={() => setShowDebugTools(!showDebugTools)} variant="outline">
-          Debug Tools
-        </Button>
+            <div className="flex flex-row space-x-4 mb-6">
+              <Card data={testCardData[0]} />
+              <Card data={testCardData[1]} />
+            </div>
+          </>
+        )}
 
         {showDebugTools && <OrderDebug />}
+
+        <Button className="fixed bottom-1 left-1 " onClick={() => setShowDebugTools(!showDebugTools)} variant="outline">
+          Debug
+        </Button>
       </div>
     </PageBox>
   );
