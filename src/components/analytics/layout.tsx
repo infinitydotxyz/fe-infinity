@@ -7,7 +7,7 @@ interface Props {
   title?: string;
 }
 
-export const Layout = React.forwardRef(({ children, title }: Props, ref) => {
+export function Layout({ children, title }: Props): JSX.Element {
   const styles = {
     header: {
       title: title
@@ -25,7 +25,6 @@ export const Layout = React.forwardRef(({ children, title }: Props, ref) => {
           transition w-full h-full
           row-span-24 col-span-24
           bg-theme-light-50
-          bg-theme-light-50
           grid place-items-center
         `
       }
@@ -34,10 +33,13 @@ export const Layout = React.forwardRef(({ children, title }: Props, ref) => {
   return (
     <>
       <div {...styles?.container}>
-        <Header {...styles?.header} />
-        <Navigation />
-        <div {...styles?.content?.container}>{children}</div>
+        <Header {...styles?.header}>
+          <Navigation />
+          <div {...styles?.content?.container}>{children}</div>
+        </Header>
       </div>
     </>
   );
-});
+}
+
+export default Layout;

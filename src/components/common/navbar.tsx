@@ -1,14 +1,9 @@
 import React from 'react';
-import { useRouter } from 'next/router';
-
 import Link from 'next/link';
 import { Icon } from 'src/components/common/icon';
+import Modal from 'src/components/common/modal';
 
-interface Props {
-  children?: React.ReactNode;
-}
-
-export const Navigation = React.forwardRef(({ children, ...props }: Props, ref) => {
+export function Navigation() {
   const styles = {
     container: {
       className: `
@@ -17,7 +12,7 @@ export const Navigation = React.forwardRef(({ children, ...props }: Props, ref) 
           row-span-2 col-span-24
           bg-transparent glass
           grid grid-rows-1 grid-cols-[1fr,10fr,1fr,1fr,1fr] gap-2
-          px-8 py-4
+          py-4
         `
     },
     logo: {
@@ -97,13 +92,19 @@ export const Navigation = React.forwardRef(({ children, ...props }: Props, ref) 
             bg-transparent
           `
       },
-      button: {
+      modal: {
+        interactive: false,
         className: `
             transition w-full h-full overflow-hidden
             justify-self-end
             font-mono text-xs
             bg-theme-light-900 text-theme-light-100 hover:underline rounded-full
-          `
+          `,
+        content: () => (
+          <>
+            <div className="w-3/4 h-5/6 bg-theme-light-50 ring ring-inset ring-theme-light-700 rounded-xl"></div>
+          </>
+        )
       }
     }
   };
@@ -169,9 +170,11 @@ export const Navigation = React.forwardRef(({ children, ...props }: Props, ref) 
           </Link>
         </div>
         <div {...styles?.connect?.container}>
-          <button {...styles?.connect?.button}>{content?.buttons?.connect?.label}</button>
+          <Modal {...styles?.connect?.modal}>{content?.buttons?.connect?.label}</Modal>
         </div>
       </div>
     </>
   );
-});
+}
+
+export default Navigation;

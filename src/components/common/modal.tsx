@@ -1,85 +1,135 @@
-import { Dialog, Transition } from '@headlessui/react';
-import { Fragment, ReactNode } from 'react';
-import { Button } from './button';
-import { Spacer } from '.';
-import { XIcon } from '@heroicons/react/outline';
+import React, { Fragment } from 'react';
+import { Dialog, Disclosure, Transition } from '@headlessui/react';
+
+/*
+  ======================================
+    Even though making a modal is easy
+    it's better to have a modal with some
+    defaults. You don't want to spend
+    a lot of time making this again and
+    again. The children of this component
+    could be anything (it's the trigger for modal)
+    and the `content` prop should get a render prop
+    component of the form: ({ open, close }) => <></>
+
+    * `open`: tells whether modal is open.` (a boolean)
+    * `close`: will close the modal (a function)
+  ======================================
+*/
+
+export type Content = {
+  open?: boolean;
+  close(focusableElement?: HTMLElement | React.MutableRefObject<HTMLElement | null>): void;
+};
 
 interface Props {
-  children: ReactNode;
-  isOpen: boolean;
-  title?: string;
-  okButton?: string;
-  onClose: () => void;
-  onSubmit?: () => void;
-  hideActionButtons?: boolean;
+  children?: React.ReactNode;
+  interactive?: boolean;
+  content?: ({ open, close }: Content) => React.ReactNode;
+  styles?: {
+    overlay?: {
+      transition?: {
+        className?: string;
+      };
+      element?: {
+        className?: string;
+      };
+    };
+    content?: {
+      transition?: {
+        className?: string;
+      };
+      element?: {
+        className?: string;
+      };
+    };
+  };
 }
 
-export const Modal = ({
-  children,
-  onSubmit,
-  okButton = 'OK',
-  title,
-  isOpen,
-  onClose,
-  hideActionButtons = false
-}: Props) => {
+export function Modal({ children, interactive, content, ...props }: Props): JSX.Element {
+  /*
+    ======================================
+      All props to every component in the
+      markup are structured logically in
+      this object, and then passed down
+      to the elements by spreading the values.
+      This makes maintenance easy.
+      (Mark it up if you don't like it, imo
+      this is better, will remove this comment
+      and do it the usual way if this fails
+      the review).
+    ======================================
+  */
+  const styles = {
+    overlay: {
+      transition: {
+        enter: 'transition duration-300 ease-out',
+        enterFrom: 'transform opacity-0',
+        enterTo: 'transform opacity-100',
+        leave: 'transition duration-100 ease-out',
+        leaveFrom: 'transform opacity-100',
+        leaveTo: 'transform opacity-0',
+        ...props?.styles?.overlay?.transition
+      },
+      element: {
+        className:
+          'w-full h-full overflow-hidden fixed top-0 glass ring-black ring-inset ring-opacity-20 bg-black bg-opacity-20',
+        ...props?.styles?.overlay?.element
+      }
+    },
+    content: {
+      transition: (close: (focusableElement?: HTMLElement | React.MutableRefObject<HTMLElement | null>) => void) => ({
+        enter: 'transition duration-300 ease-out',
+        enterFrom: 'transform scale-95 opacity-0',
+        enterTo: 'transform scale-100 opacity-100',
+        leave: 'transition duration-100 ease-out',
+        leaveFrom: 'transform scale-100 opacity-100',
+        leaveTo: 'transform scale-95 opacity-0',
+        onClick: interactive ? null : close,
+        ...props?.styles?.content?.transition
+      }),
+      element: {
+        className: 'w-full h-full overflow-hidden fixed top-0 grid place-items-center',
+        ...props?.styles?.content?.element
+      }
+    }
+  };
+
+  /*
+    ======================================
+      Modal can be built with a combination
+      of Disclosure and a Dialog. Disclosure
+      provides the states that a Modal needs
+      and Dialog + Transition provides the
+      behavior that the model needs to exhibit.
+    ======================================
+  */
+
   return (
-    <Transition appear show={isOpen} as={Fragment}>
-      <Dialog as="div" className="fixed inset-0 z-10 overflow-y-auto" onClose={onClose}>
-        <div className="min-h-screen px-4 text-center">
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <Dialog.Overlay className="fixed inset-0" />
-          </Transition.Child>
-
-          {/* This element is to trick the browser into centering the modal contents. */}
-          <span className="inline-block h-screen align-middle" aria-hidden="true">
-            &#8203;
-          </span>
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0 scale-95"
-            enterTo="opacity-100 scale-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100 scale-100"
-            leaveTo="opacity-0 scale-95"
-          >
-            <div className="inline-block w-full max-w-lg p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
-              <Dialog.Title as="h2" className="text-lg font-bold leading-6 text-gray-900 mb-2">
-                {title}
-              </Dialog.Title>
-              <div className="flex">
-                <Spacer />
-                <XIcon className="h-6 w-6" onClick={onClose} />
-              </div>
-
-              {children}
-
-              {hideActionButtons && (
-                <div className="flex space-x-1 mt-4">
-                  <div className="mt-4">
-                    <Button variant="outline" onClick={onClose}>
-                      Cancel
-                    </Button>
-                  </div>
-
-                  <div className="mt-4">
-                    <Button onClick={onSubmit}>{okButton}</Button>
-                  </div>
-                </div>
+    <>
+      <Disclosure>
+        {({ open, close }) => (
+          <>
+            <Disclosure.Button {...props}>{children}</Disclosure.Button>
+            <Disclosure.Panel hidden static>
+              {content && (
+                <Transition as={Fragment} show={open}>
+                  <Dialog onClose={() => close()}>
+                    <Transition.Child as={Fragment} {...styles?.overlay?.transition}>
+                      <Dialog.Overlay {...styles?.overlay?.element} />
+                    </Transition.Child>
+                    <Transition.Child as={Fragment} {...styles?.content?.transition(close)}>
+                      <div {...styles?.content?.element}>{content ? content({ open, close }) : null}</div>
+                    </Transition.Child>
+                  </Dialog>
+                </Transition>
               )}
-            </div>
-          </Transition.Child>
-        </div>
-      </Dialog>
-    </Transition>
+            </Disclosure.Panel>
+          </>
+        )}
+      </Disclosure>
+    </>
   );
-};
+}
+
+export default Modal;
