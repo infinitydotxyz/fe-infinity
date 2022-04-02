@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { DatePicker } from 'src/components/common';
 import { ComboBox, ComboBoxBaseType } from './combo-box';
+import { CalendarIcon } from '@heroicons/react/outline';
 
 interface Props {
   label?: string;
@@ -28,7 +29,12 @@ interface Props2 {
 export function DatePickerBox({ label, value, onChange, placeholder }: Props2): JSX.Element {
   return (
     <InputBox label={label}>
-      <DatePicker value={value} onChange={onChange} placeholder={placeholder} />
+      <div className="flex items-center">
+        <div className="pr-2">
+          <CalendarIcon className="h-4 w-4" />
+        </div>
+        <DatePicker value={value} onChange={onChange} placeholder={placeholder} />
+      </div>
     </InputBox>
   );
 }
@@ -57,19 +63,24 @@ interface Props4 {
   value: string;
   type: string;
   placeholder: string;
+  addEthSymbol?: boolean;
   onChange: (value: string) => void;
 }
 
-export function TextInputBox({ value, label, type, placeholder, onChange }: Props4): JSX.Element {
+export function TextInputBox({ value, label, addEthSymbol = false, type, placeholder, onChange }: Props4): JSX.Element {
   return (
     <InputBox label={label}>
-      <input
-        type={type}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className=" p-0 border-none focus:ring-0  block w-full  text-base"
-        placeholder={placeholder}
-      />
+      <div className="flex items-center">
+        {addEthSymbol && <div className="pr-2">Ξ</div>}
+
+        <input
+          type={type}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className=" p-0 border-none focus:ring-0  block w-full  text-base"
+          placeholder={placeholder}
+        />
+      </div>
     </InputBox>
   );
 }

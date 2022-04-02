@@ -53,6 +53,7 @@ export function OrderDrawer({ open, onClose }: Props) {
       type="number"
       value={startPrice.toString()}
       placeholder="2.33"
+      addEthSymbol={true}
       label="Start Price"
       // onSubmit={() => {
       //   onSubmit();
@@ -66,6 +67,7 @@ export function OrderDrawer({ open, onClose }: Props) {
       type="number"
       value={endPrice.toString()}
       placeholder="2.33"
+      addEthSymbol={true}
       label="End Price"
       // onSubmit={() => {
       //   onSubmit();

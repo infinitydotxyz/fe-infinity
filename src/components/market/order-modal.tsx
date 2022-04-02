@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import styles from './styles.module.scss';
 import { BigNumberish } from 'ethers';
 import { formatEther, parseEther, solidityKeccak256 } from 'ethers/lib/utils';
 import { ExecParams, ExtraParams, Item, OBOrder } from '@infinityxyz/lib/types/core';
@@ -30,8 +29,11 @@ export const OrderModal: React.FC<Props> = ({ isOpen, buyMode = true, inOrder, o
   const [endTime, setEndTime] = useState<BigNumberish>(nowSeconds().add(1000));
   const [collections, setCollections] = useState<CollectionAddr[]>([CollectionManager.collections()[0]]);
   const [tokenId, setTokenId] = useState<string>('12345');
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [complicationAddress, setComplicationAddress] = useState<string>('');
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [currencyAddress, setCurrencyAddress] = useState<string>('');
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [buyer, setBuyer] = useState<string>('');
 
   useEffect(() => {
@@ -146,6 +148,7 @@ export const OrderModal: React.FC<Props> = ({ isOpen, buyMode = true, inOrder, o
         type="number"
         placeholder="2.33"
         value={startPrice.toString()}
+        addEthSymbol={true}
         onChange={(e) => setStartPrice(parseFloat(e))}
       />
     </div>
@@ -157,6 +160,7 @@ export const OrderModal: React.FC<Props> = ({ isOpen, buyMode = true, inOrder, o
       type="number"
       placeholder="2.33"
       value={endPrice.toString()}
+      addEthSymbol={true}
       onChange={(e) => setEndPrice(parseFloat(e))}
     />
   );

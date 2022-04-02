@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { ethers, Signature } from 'ethers';
 import { AbstractProvider, WalletType } from './AbstractProvider';
 import { JSONRPCRequestPayload, JSONRPCResponsePayload } from './Provider';

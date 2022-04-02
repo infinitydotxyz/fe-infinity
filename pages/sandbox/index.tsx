@@ -1,15 +1,32 @@
 import { FC, useState } from 'react';
 import { FaTwitter, FaFacebook, FaEdit } from 'react-icons/fa';
 import { CancelModal } from 'src/components/asset';
-import { Button, CurrencyInput, Dropdown, PageBox, ShortAddress, ToggleTab, useToggleTab } from 'src/components/common';
+import {
+  Button,
+  CurrencyInput,
+  Dropdown,
+  PageBox,
+  ShortAddress,
+  Toggle,
+  ToggleTab,
+  useToggleTab
+} from 'src/components/common';
 import { Card } from 'src/components/common/card';
 import { Chip } from 'src/components/common/chip';
+import { ComboBox, ComboBoxBaseType } from 'src/components/common/combo-box';
 import { RoundedNav } from 'src/components/common/rounded-nav';
 import testData from './data.json';
+
+const comboValues: ComboBoxBaseType[] = [
+  { id: 0, name: 'Empty Trash' },
+  { id: 1, name: 'Save File' },
+  { id: 2, name: 'Download' }
+];
 
 const SandboxPage: FC = () => {
   const { options, onChange, selected } = useToggleTab(['Buy NFTs', 'Sell NFTs', 'Trade NFTs'], 'Buy NFTs');
   const [currency, setCurrency] = useState<number>(12.33);
+  const [comboValue, setComboValue] = useState<ComboBoxBaseType>(comboValues[0]);
 
   return (
     <PageBox title="SandBox">
@@ -94,6 +111,11 @@ const SandboxPage: FC = () => {
 
         <h3># CancelModal</h3>
         <CancelModal />
+
+        <h3># Toggle</h3>
+        <Toggle title="Toggle" />
+
+        <ComboBox options={comboValues} value={comboValue} onChange={(value) => setComboValue(value)} />
 
         <h3># More</h3>
         <div>&nbsp;</div>

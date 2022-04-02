@@ -26,7 +26,7 @@ export const DatePicker = ({ placeholder = 'Dec 8, 2021  12:00 PM', value, onCha
         }}
         placeholder={placeholder}
         value={value}
-        className="flex border-none outline-none w-full"
+        className="flex border-none outline-none focus:ring-0 p-0 focus:outline-none  w-full"
         onChange={(date) => {
           onChange(date[0]);
         }}
