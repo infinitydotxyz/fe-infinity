@@ -36,7 +36,7 @@ export class ProviderManager implements Omit<Optional<Provider, 'type'>, 'init'>
   private _emitter: EventEmitter;
 
   private authSignature?: Signature;
-  private authMessage: string = '';
+  private authMessage = '';
 
   /**
    * SINGLETON
