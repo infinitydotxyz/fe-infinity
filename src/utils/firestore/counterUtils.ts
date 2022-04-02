@@ -10,8 +10,8 @@ export async function increaseLikes(userAccount: string, itemId: string) {
   const db = getFirestore(firebaseApp);
 
   const docRef = doc(db, `${COLL_FEED}/${itemId}`);
-  // @ts-ignore
-  const likes = new Counter(docRef, 'likes', userAccount, itemId); // initialize the sharded counter.
+  // eslint-disable-next-line
+  const likes = new Counter(docRef, 'likes'); // initialize the sharded counter.
 
   likes.incrementBy(1); // .then(($: any) => console.log('returning document >>>>', $));
 
@@ -32,8 +32,8 @@ export async function increaseComments(userAccount: string, itemId: string) {
   const db = getFirestore(firebaseApp);
 
   const docRef = doc(db, `${COLL_FEED}/${itemId}`);
-  // @ts-ignore
-  const likes = new Counter(docRef, 'comments', userAccount, itemId); // initialize the sharded counter.
+  // eslint-disable-next-line
+  const likes = new Counter(docRef, 'comments'); // initialize the sharded counter.
 
   likes.incrementBy(1);
 }
