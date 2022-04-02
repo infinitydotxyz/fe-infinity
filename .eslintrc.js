@@ -2,7 +2,8 @@ module.exports = {
   plugins: ['@typescript-eslint'],
   extends: ['next/core-web-vitals', 'plugin:@typescript-eslint/recommended', 'prettier'],
   globals: {
-    JSX: true
+    JSX: true,
+    NodeJS: true
   },
   parser: '@typescript-eslint/parser',
   env: {

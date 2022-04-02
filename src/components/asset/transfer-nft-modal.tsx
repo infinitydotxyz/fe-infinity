@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, Button, TextInput } from '../common';
+import { Modal, Button, TextInputBox } from '../common';
 
 export const TransferNFTModal: React.FC = () => {
   const [address, setAddress] = useState('');
@@ -18,7 +18,7 @@ export const TransferNFTModal: React.FC = () => {
       <Modal isOpen={modalIsOpen} onClose={closeModal} hideActionButtons={false}>
         <div className="modal-body p-4 rounded-3xl">
           <p className="font-bold text-2xl tracking-tight mb-12">Transfer NFT</p>
-          <TextInput
+          <TextInputBox
             type="text"
             value={address}
             label="Address or ENSName"

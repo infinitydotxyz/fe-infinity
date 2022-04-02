@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { MinusCircleIcon } from '@heroicons/react/solid';
 import { BigNumberish } from 'ethers';
 import { nowSeconds } from '@infinityxyz/lib/utils';
-import { TextInput, Spacer, Divider, Button, Drawer, DateInput } from 'src/components/common';
+import { TextInputBox, Spacer, Divider, Button, Drawer, DatePickerBox } from 'src/components/common';
 import { OrderCartItem, useOrderContext } from 'src/utils/context/OrderContext';
 import { parseEther } from 'ethers/lib/utils';
 import { ExecParams, ExtraParams, Item, OBOrder } from '@infinityxyz/lib/types/core';
@@ -36,7 +36,7 @@ export function OrderDrawer({ open, onClose }: Props) {
   );
 
   const numItemsField = (
-    <TextInput
+    <TextInputBox
       type="number"
       placeholder="4"
       label="Num Items"
@@ -49,7 +49,7 @@ export function OrderDrawer({ open, onClose }: Props) {
   );
 
   const startPriceField = (
-    <TextInput
+    <TextInputBox
       type="number"
       value={startPrice.toString()}
       placeholder="2.33"
@@ -62,7 +62,7 @@ export function OrderDrawer({ open, onClose }: Props) {
   );
 
   const endPriceField = (
-    <TextInput
+    <TextInputBox
       type="number"
       value={endPrice.toString()}
       placeholder="2.33"
@@ -75,7 +75,7 @@ export function OrderDrawer({ open, onClose }: Props) {
   );
 
   const startTimeField = (
-    <DateInput
+    <DatePickerBox
       label="Start Time"
       value={new Date(parseInt(startTime.toString()) * 1000)}
       onChange={(date) => {
@@ -85,7 +85,7 @@ export function OrderDrawer({ open, onClose }: Props) {
   );
 
   const endTimeField = (
-    <DateInput
+    <DatePickerBox
       label="End Time"
       value={new Date(parseInt(endTime.toString()) * 1000)}
       onChange={(date) => {

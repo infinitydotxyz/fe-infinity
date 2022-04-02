@@ -29,7 +29,7 @@ export const MakeOfferModal: React.FC = () => {
               }}
             />
           </div>
-          <div className="mt-4">{/* <DateInput placeholder="Expiry date" label="label" /> */}</div>
+          <div className="mt-4">{/* <DatePickerBox placeholder="Expiry date" label="label" /> */}</div>
           <div className="flex">
             <Button className="flex-1 mr-4 mt-12 rounded-full text-heading" size="large">
               Make an offer

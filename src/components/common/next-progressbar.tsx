@@ -53,7 +53,7 @@ export function NextNProgress({
    */
   nonce?: string;
 }) {
-  let timer: any = null;
+  let timer: NodeJS.Timeout;
 
   React.useEffect(() => {
     if (options) {
