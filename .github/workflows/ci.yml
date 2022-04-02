@@ -42,4 +42,7 @@ jobs:
       #     branch: ${{ github.head_ref }}
 
       - name: Build
+        run: npm run lint
+
+      - name: Build
         run: npm run build

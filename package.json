@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "npm run update:lib && APP_ENV=local next dev",
-    "build": "npm install && npm run lint && npm run update:lib && rimraf ./build && cross-env APP_ENV=local next build",
+    "build": "npm install && npm run update:lib && rimraf ./build && cross-env APP_ENV=local next build",
     "start": "APP_ENV=local next start -p 8080",
     "lint": "eslint . --fix",
     "format": "prettier --write src/**/*.{tsx,ts}",
