@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import styles from './styles.module.scss';
 import { BigNumberish } from 'ethers';

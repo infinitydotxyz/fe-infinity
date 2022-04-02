@@ -231,6 +231,7 @@ export function OrderDebug() {
         }
         break;
       case 'delete':
+        // eslint-disable-next-line
         const body: MarketListingsBody = {
           orderType: !order.isSellOrder ? 'buyOrders' : 'sellOrders',
           action: 'delete',

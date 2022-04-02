@@ -129,7 +129,9 @@ export class ProviderManager implements Omit<Optional<Provider, 'type'>, 'init'>
   disconnect(): void {
     try {
       this._provider?.disconnect?.();
-    } catch {}
+    } catch (err) {
+      console.error(err);
+    }
     this._provider = undefined;
     this.authMessage = '';
     this.authSignature = undefined;
@@ -271,7 +273,9 @@ export class ProviderManager implements Omit<Optional<Provider, 'type'>, 'init'>
       let parsedSignature;
       try {
         parsedSignature = JSON.parse(authSignature || '');
-      } catch {}
+      } catch (err) {
+        console.error(err);
+      }
       if (
         parsedSignature &&
         'r' in parsedSignature &&
@@ -284,7 +288,9 @@ export class ProviderManager implements Omit<Optional<Provider, 'type'>, 'init'>
       this.authMessage = authMessage ?? '';
       try {
         await this.connectWallet(preferredWallet);
-      } catch {}
+      } catch (err) {
+        console.error(err);
+      }
     }
 
     return;
