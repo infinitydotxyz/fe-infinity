@@ -2,6 +2,7 @@ import { FeedEventType } from '@infinityxyz/lib/types/core/feed/FeedEvent';
 import { useEffect, useState } from 'react';
 import { FeedItem, FeedEvent } from './feed-item';
 import { COLL_FEED, subscribe } from 'src/utils/firestore/firestoreUtils';
+import { CommentPanel } from './comment-panel';
 
 // export const COLL_FEED = 'feed'; // collection: /feed - to store feed events
 // const EVENTS_PER_PAGE = 10;
@@ -17,6 +18,7 @@ export function CollectionFeed() {
   const [newEvents, setNewEvents] = useState<FeedEvent[]>([]); // new feed events
   const [filter, setFilter] = useState<Filter>({});
   const [filteredEvents, setFilteredEvents] = useState<FeedEvent[]>([]);
+  const [commentPanelEvent, setCommentPanelEvent] = useState<FeedEvent | null>(null);
   console.log('', typeof setFilter, filteredEvents);
 
   async function getEvents() {
@@ -52,26 +54,6 @@ export function CollectionFeed() {
     }
     setFilteredEvents(arr);
   }, [events]);
-  // console.log('events', events);
-
-  // const data: FeedEvent[] = [
-  //   {
-  //     id: 'ev1',
-  //     type: FeedEventType.TwitterTweet,
-  //     title: 'Title 1',
-  //     likes: 0,
-  //     comments: 0,
-  //     timestamp: 0
-  //   },
-  //   {
-  //     id: 'ev2',
-  //     type: FeedEventType.TwitterTweet,
-  //     title: 'Title 2',
-  //     likes: 0,
-  //     comments: 0,
-  //     timestamp: 0
-  //   }
-  // ];
 
   return (
     <div>
@@ -93,11 +75,31 @@ export function CollectionFeed() {
         {events.map((item, idx) => {
           return (
             <li key={idx} className="">
-              <FeedItem data={item} />
+              <FeedItem
+                data={item}
+                onLike={(ev) => {
+                  const foundEv = events.find((e) => e.id === ev.id);
+                  if (foundEv?.likes !== undefined) {
+                    foundEv.likes = foundEv.likes + 1;
+                  }
+                  setEvents([...events]);
+                }}
+                onComment={(ev) => setCommentPanelEvent(ev)}
+              />
             </li>
           );
         })}
       </ul>
+
+      {commentPanelEvent && (
+        <CommentPanel
+          isOpen={!!commentPanelEvent}
+          event={commentPanelEvent}
+          onClose={() => {
+            setCommentPanelEvent(null);
+          }}
+        />
+      )}
     </div>
   );
 }
