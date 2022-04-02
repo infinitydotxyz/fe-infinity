@@ -1,4 +1,4 @@
-import { firestoreConfig } from '../../../creds/firestore';
+import { firestoreConfig } from './creds';
 import { initializeApp } from 'firebase/app';
 // Add Firebase products that you want to use
 import { getFirestore, doc } from 'firebase/firestore';
@@ -10,8 +10,8 @@ export async function increaseLikes(userAccount: string, itemId: string) {
   const db = getFirestore(firebaseApp);
 
   const docRef = doc(db, `${COLL_FEED}/${itemId}`);
-  // @ts-ignore
-  const likes = new Counter(docRef, 'likes', userAccount, itemId); // initialize the sharded counter.
+  // eslint-disable-next-line
+  const likes = new Counter(docRef as any, 'likes'); // initialize the sharded counter. // used any for 3rd-party code to work.
 
   likes.incrementBy(1); // .then(($: any) => console.log('returning document >>>>', $));
 
@@ -32,8 +32,8 @@ export async function increaseComments(userAccount: string, itemId: string) {
   const db = getFirestore(firebaseApp);
 
   const docRef = doc(db, `${COLL_FEED}/${itemId}`);
-  // @ts-ignore
-  const likes = new Counter(docRef, 'comments', userAccount, itemId); // initialize the sharded counter.
+  // eslint-disable-next-line
+  const likes = new Counter(docRef as any, 'comments'); // initialize the sharded counter. // used any for 3rd-party code to work.
 
   likes.incrementBy(1);
 }

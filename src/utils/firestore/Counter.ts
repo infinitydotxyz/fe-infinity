@@ -18,7 +18,14 @@ import * as uuid from 'uuid';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
-import { doc, setDoc, onSnapshot, collection, CollectionReference, DocumentData } from 'firebase/firestore';
+import {
+  doc as firestoreDoc,
+  setDoc,
+  onSnapshot,
+  collection,
+  CollectionReference,
+  DocumentData
+} from 'firebase/firestore';
 
 const SHARD_COLLECTION_ID = '_counter_shards_';
 const COOKIE_NAME = 'FIRESTORE_COUNTER_SHARD_ID';
@@ -44,14 +51,12 @@ export class Counter {
    */
   constructor(
     private doc: firebase.firestore.DocumentReference,
-    private field: string,
-    private userAccount: string,
-    private itemId: string
+    private field: string // private userAccount: string, // private itemId: string
   ) {
     this.db = doc.firestore;
     firebase.initializeApp(this.db.app.options);
 
-    this.shardId = getShardId(COOKIE_NAME, userAccount, itemId);
+    this.shardId = getShardId(COOKIE_NAME);
     this.shardsRef = collection(this.db, doc.path, SHARD_COLLECTION_ID);
     this.shards[doc.path] = 0;
     this.shards[this.shardsRef.path + '/' + this.shardId] = 0;
@@ -117,7 +122,7 @@ export class Counter {
       .reduce((value, name) => ({ [name]: value }), increment);
     // console.log('*** update', update);
 
-    return setDoc(doc(this.shardsRef, this.shardId), update, { merge: true });
+    return setDoc(firestoreDoc(this.shardsRef, this.shardId), update, { merge: true });
   }
 
   /**
@@ -144,8 +149,9 @@ async function schedule<T>(func: () => T): Promise<T> {
   });
 }
 
-function getShardId(cookie: string, userAccount: string, itemId: string): string {
-  // @ts-ignore
+// function getShardId(cookie: string, userAccount: string, itemId: string): string {
+function getShardId(cookie: string): string {
+  // eslint-disable-next-line
   const result = new RegExp('(?:^|; )' + encodeURIComponent(cookie) + '=([^;]*)').exec(document.cookie);
   console.log('result', result);
   if (result) {
