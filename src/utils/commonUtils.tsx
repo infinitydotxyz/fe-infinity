@@ -35,8 +35,7 @@ export enum EventType {
 
 export const isServer = () => typeof window === 'undefined';
 
-export const isLocalhost = () =>
-  typeof window !== 'undefined' && (window?.location?.host || '').indexOf('localhost') >= 0;
+export const isLocalhost = () => !isServer() && (window?.location?.host || '').indexOf('localhost') >= 0;
 
 export const toChecksumAddress = (address?: string): string => {
   if (address) {
@@ -109,6 +108,7 @@ export const stringToFloat = (numStr?: string, defaultValue = 0) => {
   return num;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const transformOpenSea = (item: any, owner: string, chainId: string) => {
   if (!item) {
     return null;
@@ -211,6 +211,7 @@ export const getCustomExceptionMsg = (msg: ReactNode) => {
   return customMsg;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getCustomMessage = (eventName: string, data: any) => {
   const arr: string[] = [];
   Object.keys(data).forEach((k: string) => {

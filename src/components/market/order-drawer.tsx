@@ -2,17 +2,11 @@ import { useState } from 'react';
 import { MinusCircleIcon } from '@heroicons/react/solid';
 import { BigNumberish } from 'ethers';
 import { nowSeconds } from '@infinityxyz/lib/utils';
-import { TextInput, Spacer, Divider, Button, Drawer, DateInput } from 'src/components/common';
-import { useOrderContext } from 'src/utils/context/OrderContext';
+import { TextInputBox, Spacer, Divider, Button, Drawer, DatePickerBox } from 'src/components/common';
+import { OrderCartItem, useOrderContext } from 'src/utils/context/OrderContext';
 import { parseEther } from 'ethers/lib/utils';
 import { ExecParams, ExtraParams, Item, OBOrder } from '@infinityxyz/lib/types/core';
 import { useAppContext } from 'src/utils/context/AppContext';
-
-export interface OrderCartItem {
-  tokenName: string;
-  collectionName: string;
-  imageUrl: string;
-}
 
 interface Props {
   open: boolean;
@@ -42,7 +36,7 @@ export function OrderDrawer({ open, onClose }: Props) {
   );
 
   const numItemsField = (
-    <TextInput
+    <TextInputBox
       type="number"
       placeholder="4"
       label="Num Items"
@@ -55,7 +49,7 @@ export function OrderDrawer({ open, onClose }: Props) {
   );
 
   const startPriceField = (
-    <TextInput
+    <TextInputBox
       type="number"
       value={startPrice.toString()}
       placeholder="2.33"
@@ -68,7 +62,7 @@ export function OrderDrawer({ open, onClose }: Props) {
   );
 
   const endPriceField = (
-    <TextInput
+    <TextInputBox
       type="number"
       value={endPrice.toString()}
       placeholder="2.33"
@@ -81,7 +75,7 @@ export function OrderDrawer({ open, onClose }: Props) {
   );
 
   const startTimeField = (
-    <DateInput
+    <DatePickerBox
       label="Start Time"
       value={new Date(parseInt(startTime.toString()) * 1000)}
       onChange={(date) => {
@@ -91,7 +85,7 @@ export function OrderDrawer({ open, onClose }: Props) {
   );
 
   const endTimeField = (
-    <DateInput
+    <DatePickerBox
       label="End Time"
       value={new Date(parseInt(endTime.toString()) * 1000)}
       onChange={(date) => {
@@ -236,23 +230,21 @@ function ListItem({ cartItem }: Props2) {
   const { removeBuyCartItem } = useOrderContext();
 
   const menu = (
-    <button
-      type="button"
-      className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:ring-2 focus:ring-indigo-500"
+    <Button
+      variant="ghost"
+      size="small"
       onClick={() => {
         removeBuyCartItem(cartItem);
       }}
     >
-      <span className="flex h-full w-full items-center justify-center rounded-full">
-        <MinusCircleIcon className="h-5 w-5 focus:ring-0" aria-hidden="true" />
-      </span>
-    </button>
+      <MinusCircleIcon className="h-5 w-5" />
+    </Button>
   );
 
   return (
     <li key={cartItem.tokenName}>
       <div className="group  relative">
-        <div className="flex items-center py-6 px-5 group-hover:bg-gray-50">
+        <div className="flex items-center py-6 px-5 group-hover:bg-theme-light-300">
           <div className="relative flex min-w-0 flex-1 items-center">
             <span className="relative inline-block flex-shrink-0">
               <img className="h-10 w-10 rounded-2xl" src={cartItem.imageUrl} alt="" />

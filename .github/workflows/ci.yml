@@ -41,5 +41,8 @@ jobs:
       #     commit_message: auto format
       #     branch: ${{ github.head_ref }}
 
+      - name: Lint
+        run: npm run lint
+
       - name: Build
         run: npm run build

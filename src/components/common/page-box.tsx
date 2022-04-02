@@ -11,6 +11,7 @@ type Props = {
   children?: ReactNode;
   center?: boolean;
   showConnect?: boolean;
+  hideTitle?: boolean;
 };
 
 export const PageBox = ({
@@ -19,7 +20,8 @@ export const PageBox = ({
   rightSide,
   children,
   center = true,
-  showConnect = true
+  showConnect = true,
+  hideTitle = false
 }: Props): JSX.Element => {
   let justify = 'items-start';
 
@@ -38,7 +40,7 @@ export const PageBox = ({
       {showConnect && <Header />}
 
       <div className="flex flex-col w-full m-4 max-w-screen-lg">
-        <PageHeader title={titleElement || title} rightSide={rightSide} />
+        {!hideTitle && <PageHeader title={titleElement || title} rightSide={rightSide} />}
 
         <main>{children}</main>
       </div>

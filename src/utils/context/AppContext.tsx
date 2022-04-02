@@ -23,7 +23,7 @@ export type AppContextType = {
 
 const AppContext = React.createContext<AppContextType | null>(null);
 
-export function AppContextProvider({ children }: any) {
+export function AppContextProvider(props: React.PropsWithChildren<unknown>) {
   const [user, setUser] = React.useState<User | null>(null);
   const [userReady, setUserReady] = React.useState(false);
   const [chainId, setChainId] = React.useState('1');
@@ -156,7 +156,7 @@ export function AppContextProvider({ children }: any) {
     providerManager
   };
 
-  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
+  return <AppContext.Provider value={value} {...props} />;
 }
 
 export function useAppContext(): AppContextType {

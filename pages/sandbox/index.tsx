@@ -1,6 +1,7 @@
-import type { FC } from 'react';
+import { FC, useState } from 'react';
 import { FaTwitter, FaFacebook, FaEdit } from 'react-icons/fa';
-import { Button, Dropdown, PageBox, ToggleTab, useToggleTab } from 'src/components/common';
+import { CancelModal } from 'src/components/asset';
+import { Button, CurrencyInput, Dropdown, PageBox, ShortAddress, ToggleTab, useToggleTab } from 'src/components/common';
 import { Card } from 'src/components/common/card';
 import { Chip } from 'src/components/common/chip';
 import { RoundedNav } from 'src/components/common/rounded-nav';
@@ -8,6 +9,7 @@ import testData from './data.json';
 
 const SandboxPage: FC = () => {
   const { options, onChange, selected } = useToggleTab(['Buy NFTs', 'Sell NFTs', 'Trade NFTs'], 'Buy NFTs');
+  const [currency, setCurrency] = useState<number>(12.33);
 
   return (
     <PageBox title="SandBox">
@@ -30,6 +32,7 @@ const SandboxPage: FC = () => {
           <Button variant="plain" size="plain">
             Unstyled Button
           </Button>
+          <Button variant="ghost">Ghost</Button>
         </div>
 
         <h3># Chip</h3>
@@ -70,6 +73,27 @@ const SandboxPage: FC = () => {
           <Card data={testData.cardTestData[0]} />
           <Card data={testData.cardTestData[1]} />
         </div>
+
+        <h3># CurrencyInput</h3>
+        <CurrencyInput
+          value={currency}
+          label="Enter offer"
+          placeholder=""
+          onChange={(value) => {
+            setCurrency(parseFloat(value));
+          }}
+        />
+
+        <h3># ShortAddress</h3>
+        <ShortAddress
+          label="Contact address:"
+          address={'0x78979787978'}
+          href={`/collection/xxx`}
+          tooltip={'0x78979787978'}
+        />
+
+        <h3># CancelModal</h3>
+        <CancelModal />
 
         <h3># More</h3>
         <div>&nbsp;</div>

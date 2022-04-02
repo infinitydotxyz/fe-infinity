@@ -1,15 +1,13 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import styles from './styles.module.scss';
 import { BigNumberish } from 'ethers';
 import { formatEther, parseEther, solidityKeccak256 } from 'ethers/lib/utils';
 import { ExecParams, ExtraParams, Item, OBOrder } from '@infinityxyz/lib/types/core';
 import { nowSeconds } from '@infinityxyz/lib/utils';
-import { DateInput, TextInput, SimpleModal, ComboInput } from 'src/components/common';
+import { DatePickerBox, TextInputBox, SimpleModal, ComboInputBox } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { bigNumToDate, CollectionAddr, CollectionManager } from 'src/utils/marketUtils';
-
-const isServer = typeof window === 'undefined';
+import { isServer } from 'src/utils';
 
 interface Props {
   isOpen: boolean;
@@ -103,7 +101,7 @@ export const OrderModal: React.FC<Props> = ({ isOpen, buyMode = true, inOrder, o
 
   const collectionAddressesField = (
     <div>
-      <ComboInput
+      <ComboInputBox
         label="Collection Address"
         value={collections[0]}
         options={CollectionManager.collections()}
@@ -128,11 +126,11 @@ export const OrderModal: React.FC<Props> = ({ isOpen, buyMode = true, inOrder, o
   );
 
   const tokenIdField = (
-    <TextInput type="text" label="Token Ids" placeholder="1234" value={tokenId} onChange={(e) => setTokenId(e)} />
+    <TextInputBox type="text" label="Token Ids" placeholder="1234" value={tokenId} onChange={(e) => setTokenId(e)} />
   );
 
   const numItemsField = (
-    <TextInput
+    <TextInputBox
       label="Num Items"
       type="number"
       placeholder="4"
@@ -143,7 +141,7 @@ export const OrderModal: React.FC<Props> = ({ isOpen, buyMode = true, inOrder, o
 
   const startPriceField = (
     <div>
-      <TextInput
+      <TextInputBox
         label="Start Price"
         type="number"
         placeholder="2.33"
@@ -154,7 +152,7 @@ export const OrderModal: React.FC<Props> = ({ isOpen, buyMode = true, inOrder, o
   );
 
   const endPriceField = (
-    <TextInput
+    <TextInputBox
       label="End Price"
       type="number"
       placeholder="2.33"
@@ -164,7 +162,7 @@ export const OrderModal: React.FC<Props> = ({ isOpen, buyMode = true, inOrder, o
   );
 
   const startTimeField = (
-    <DateInput
+    <DatePickerBox
       label="Start Time"
       value={bigNumToDate(startTime)}
       onChange={(date) => {
@@ -174,7 +172,7 @@ export const OrderModal: React.FC<Props> = ({ isOpen, buyMode = true, inOrder, o
   );
 
   const endTimeField = (
-    <DateInput
+    <DatePickerBox
       label="End Time"
       value={bigNumToDate(endTime)}
       onChange={(date) => {
@@ -200,7 +198,7 @@ export const OrderModal: React.FC<Props> = ({ isOpen, buyMode = true, inOrder, o
 
   return (
     <>
-      {!isServer && (
+      {!isServer() && (
         <SimpleModal
           isOpen={isOpen}
           onClose={() => onClose()}

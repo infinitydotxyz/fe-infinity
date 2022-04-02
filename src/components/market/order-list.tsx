@@ -182,7 +182,7 @@ const BuyOrderMatchCard = ({ match, onAcceptClick, onSellClick, onBuyClick }: Pr
   return (
     <div className={styles.matchCard}>
       <div className={styles.acceptButton}>
-        <Button variant="plain" onClick={() => onAcceptClick(match.buyOrder)}>
+        <Button variant="ghost" onClick={() => onAcceptClick(match.buyOrder)}>
           Accept
         </Button>
       </div>

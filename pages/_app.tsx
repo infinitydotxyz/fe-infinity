@@ -4,6 +4,8 @@ import 'src/settings/theme/globals.scss';
 import { useRouter } from 'next/router';
 import LogRocket from 'logrocket';
 import * as gtag from 'lib/ga/gtag';
+
+import { NextNProgress } from 'src/components/common/next-progressbar';
 import { AppContextProvider } from 'src/utils/context/AppContext';
 import { FilterContextProvider } from 'src/utils/context/FilterContext';
 import { isLocalhost, isServer } from 'src/utils/commonUtils';
@@ -50,6 +52,7 @@ const App: FunctionComponent<AppProps> = (props) => {
   */
   return isServer() ? null : (
     <StrictMode>
+      <NextNProgress />
       <AppContextProvider>
         <FilterContextProvider>
           <OrderContextProvider>

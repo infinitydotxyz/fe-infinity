@@ -26,7 +26,7 @@ export const Home: FC = () => {
 
         <Button
           onClick={() => {
-            router.push('/collection?name=cyphercity');
+            router.push('/collection/ens');
           }}
         >
           Collection
@@ -47,6 +47,13 @@ export const Home: FC = () => {
           }}
         >
           SandBox
+        </Button>
+        <Button
+          onClick={() => {
+            router.push('/asset/1/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/8880');
+          }}
+        >
+          Asset Detail
         </Button>
       </div>
     </PageBox>
