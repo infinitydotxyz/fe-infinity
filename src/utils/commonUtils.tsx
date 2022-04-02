@@ -108,6 +108,7 @@ export const stringToFloat = (numStr?: string, defaultValue = 0) => {
   return num;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const transformOpenSea = (item: any, owner: string, chainId: string) => {
   if (!item) {
     return null;
@@ -210,6 +211,7 @@ export const getCustomExceptionMsg = (msg: ReactNode) => {
   return customMsg;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getCustomMessage = (eventName: string, data: any) => {
   const arr: string[] = [];
   Object.keys(data).forEach((k: string) => {

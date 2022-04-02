@@ -7,7 +7,6 @@ import { Token, Collection } from '@infinityxyz/lib/types/core';
 import {
   TraitList,
   ActivityList,
-  ToggleSwitchButton,
   ListModal,
   CancelModal,
   TransferNFTModal,
@@ -51,9 +50,7 @@ const AssetDetail: FunctionComponent<AssetDetailProps> = ({ token, collection })
           />
         </div>
         <div className="flex-1">
-          <div className="mb-2 md:pb-4 lg:pb-16 text-center sm:text-left">
-            <ToggleSwitchButton />
-          </div>
+          <div className="mb-2 md:pb-4 lg:pb-16 text-center sm:text-left">{/* <ToggleTab /> */}</div>
           <h3 className="text-black font-body text-2xl font-bold leading-normal tracking-wide pb-1">
             {token.metadata.name ? token.metadata.name : `${collection.metadata.name} #${token.tokenId}`}
           </h3>

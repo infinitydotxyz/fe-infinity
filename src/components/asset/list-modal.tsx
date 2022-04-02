@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Modal, Button, Toggle, TextInputBox } from 'src/components/common';
-import { ToggleSwitchButton } from './toggle-switch-button/toggle-switch-button';
 
 export const ListModal: React.FC = () => {
   const [price, setPrice] = useState(0);
@@ -19,7 +18,7 @@ export const ListModal: React.FC = () => {
       <Modal isOpen={modalIsOpen} onClose={closeModal} hideActionButtons={false}>
         <div className="modal-body p-4 rounded-3xl">
           <p className="font-bold text-2xl tracking-tight mb-5">List NFT</p>
-          <ToggleSwitchButton className="mt-5" />
+          {/* <ToggleTab className="mt-5" /> */}
           <p className="mt-12 mb-4 text-base">Sell at a fixed or declining price.</p>
           <TextInputBox
             type="number"

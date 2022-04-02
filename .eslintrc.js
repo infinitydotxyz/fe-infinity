@@ -5,6 +5,7 @@ module.exports = {
     JSX: true,
     NodeJS: true
   },
+  ignorePatterns: ['**/node_modules/**', '**/build/**'],
   parser: '@typescript-eslint/parser',
   env: {
     node: true

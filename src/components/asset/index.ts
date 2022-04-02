@@ -6,4 +6,3 @@ export * from './cancel-modal';
 export * from './transfer-nft-modal';
 export * from './place-bid-modal';
 export * from './make-offer-modal';
-export * from './toggle-switch-button/toggle-switch-button';
