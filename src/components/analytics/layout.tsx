@@ -1,7 +1,3 @@
-/* eslint-disable react/display-name */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import React from 'react';
 import { Header } from 'src/components/analytics/header';
 import { Navigation } from 'src/components/common/navbar';
@@ -11,7 +7,7 @@ interface Props {
   title?: string;
 }
 
-export const Layout = React.forwardRef(({ children, title, ...props }: Props, ref) => {
+export const Layout = React.forwardRef(({ children, title }: Props, ref) => {
   const styles = {
     header: {
       title: title

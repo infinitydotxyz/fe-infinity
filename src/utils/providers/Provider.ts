@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Signature } from 'ethers';
 import { ProviderEvents, WalletType } from './AbstractProvider';
 export interface JSONRPCRequestPayload {

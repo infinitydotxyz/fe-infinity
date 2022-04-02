@@ -141,7 +141,7 @@ export class Counter {
 }
 
 async function schedule<T>(func: () => T): Promise<T> {
-  return new Promise<T>(async (resolve) => {
+  return new Promise<T>((resolve) => {
     setTimeout(async () => {
       const result = func();
       resolve(result);

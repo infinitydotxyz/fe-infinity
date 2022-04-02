@@ -10,6 +10,9 @@
     "format": "prettier --write src/**/*.{tsx,ts}",
     "update:lib": "npm update @infinityxyz/lib"
   },
+  "engines": {
+    "node": ">=16"
+  },
   "dependencies": {
     "@infinityxyz/lib": "^1.33.0",
     "@tailwindcss/aspect-ratio": "^0.4.0",
@@ -52,6 +55,8 @@
     "eslint": "^8.12.0",
     "eslint-config-next": "12.1.2",
     "eslint-config-prettier": "8.5.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^4.0.0",
     "postcss": "^8.4.12",
     "prettier": "2.6.1",
     "sass": "1.49.9",
