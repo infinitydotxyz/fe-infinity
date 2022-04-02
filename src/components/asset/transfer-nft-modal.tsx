@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Modal, Button, TextInputBox } from '../common';
+import { Button, TextInputBox } from '../common';
+import { Modal } from 'src/components/asset/modal';
 
 export const TransferNFTModal: React.FC = () => {
   const [address, setAddress] = useState('');
