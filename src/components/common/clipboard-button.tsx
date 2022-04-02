@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import Image from 'next/image';
-import copy from 'src/images/copy.svg';
+import { MdOutlineContentCopy } from 'react-icons/md';
 
 interface ClipboardButtonProps {
   textToCopy: string;
@@ -30,7 +29,7 @@ export const ClipboardButton: React.FC<ClipboardButtonProps> = ({ textToCopy }) 
         <span className="pl-4 cursor-pointer">✓</span>
       ) : (
         <button className="ml-4 pt-1cursor-pointer">
-          <Image width={16} height={16} src={copy.src} alt="copy icon" onClick={copyToClipboard} />
+          <MdOutlineContentCopy width={16} height={16} onClick={copyToClipboard} />
         </button>
       )}
     </>

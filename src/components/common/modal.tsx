@@ -2,7 +2,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, ReactNode } from 'react';
 import { Button } from './button';
 import { Spacer } from '.';
-import closeIcon from '../../images/close.svg';
+import { XIcon } from '@heroicons/react/outline';
 
 interface Props {
   children: ReactNode;
@@ -58,7 +58,7 @@ export const Modal = ({
               </Dialog.Title>
               <div className="flex">
                 <Spacer />
-                <img src={closeIcon.src} alt="close modal" onClick={onClose} />
+                <XIcon className="h-6 w-6" onClick={onClose} />
               </div>
 
               {children}

@@ -1,6 +1,6 @@
 import { InputBox } from './input-box';
-import downArrow from 'src/images/down-arrow.svg';
 import { useState } from 'react';
+import { BiCaretDown } from 'react-icons/bi';
 
 interface Props {
   label: string;
@@ -29,7 +29,7 @@ export function CurrencyInput({ value, label, placeholder, onChange }: Props): J
       </div>
       <div className="dropdown z-10 relative flex items-center py-3 pl-5 pr-6 rounded-full bg-theme-light-300">
         <span className="uppercase text-heading mr-2">{currency}</span>
-        <img src={downArrow.src} alt="list currencies" />
+        <BiCaretDown className="h-3 w-3" />
         <ul className="dropdown-menu top-12 right-0 absolute hidden text-gray-700 pt-1">
           <li onClick={() => setCurrency('WETH')}>
             <a className="rounded-t bg-gray-200 hover:bg-gray-400 py-2 px-4 block whitespace-no-wrap" href="#">

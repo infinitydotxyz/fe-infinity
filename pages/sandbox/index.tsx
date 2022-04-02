@@ -1,6 +1,7 @@
 import { FC, useState } from 'react';
 import { FaTwitter, FaFacebook, FaEdit } from 'react-icons/fa';
-import { Button, CurrencyInput, Dropdown, PageBox, ToggleTab, useToggleTab } from 'src/components/common';
+import { CancelModal } from 'src/components/asset';
+import { Button, CurrencyInput, Dropdown, PageBox, ShortAddress, ToggleTab, useToggleTab } from 'src/components/common';
 import { Card } from 'src/components/common/card';
 import { Chip } from 'src/components/common/chip';
 import { RoundedNav } from 'src/components/common/rounded-nav';
@@ -73,6 +74,7 @@ const SandboxPage: FC = () => {
           <Card data={testData.cardTestData[1]} />
         </div>
 
+        <h3># CurrencyInput</h3>
         <CurrencyInput
           value={currency}
           label="Enter offer"
@@ -81,6 +83,17 @@ const SandboxPage: FC = () => {
             setCurrency(parseFloat(value));
           }}
         />
+
+        <h3># ShortAddress</h3>
+        <ShortAddress
+          label="Contact address:"
+          address={'0x78979787978'}
+          href={`/collection/xxx`}
+          tooltip={'0x78979787978'}
+        />
+
+        <h3># CancelModal</h3>
+        <CancelModal />
 
         <h3># More</h3>
         <div>&nbsp;</div>
