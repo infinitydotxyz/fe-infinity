@@ -11,7 +11,7 @@ export async function increaseLikes(userAccount: string, itemId: string) {
 
   const docRef = doc(db, `${COLL_FEED}/${itemId}`);
   // eslint-disable-next-line
-  const likes = new Counter(docRef, 'likes'); // initialize the sharded counter.
+  const likes = new Counter(docRef as any, 'likes'); // initialize the sharded counter. // used any for 3rd-party code to work.
 
   likes.incrementBy(1); // .then(($: any) => console.log('returning document >>>>', $));
 
@@ -33,7 +33,7 @@ export async function increaseComments(userAccount: string, itemId: string) {
 
   const docRef = doc(db, `${COLL_FEED}/${itemId}`);
   // eslint-disable-next-line
-  const likes = new Counter(docRef, 'comments'); // initialize the sharded counter.
+  const likes = new Counter(docRef as any, 'comments'); // initialize the sharded counter. // used any for 3rd-party code to work.
 
   likes.incrementBy(1);
 }
