@@ -8,13 +8,15 @@
     "start": "APP_ENV=local next start -p 8080",
     "lint": "eslint . --fix",
     "format": "prettier --write {src,pages}/**/*.{tsx,ts}",
-    "update:lib": "npm update @infinityxyz/lib"
+    "update:lib": "npm update @infinityxyz/lib",
+    "analyze": "ANALYZE=true next build"
   },
   "engines": {
     "node": ">=16"
   },
   "dependencies": {
     "@infinityxyz/lib": "^1.33.0",
+    "@next/bundle-analyzer": "^12.1.4",
     "@tailwindcss/aspect-ratio": "^0.4.0",
     "@tailwindcss/typography": "^0.5.2",
     "axios": "0.26.1",

@@ -39,6 +39,7 @@ module.exports = {
     '/**/__snapshots__',
     'build/**',
     '*.config.js',
-    'src/settings/theme/**/*.js'
+    'src/settings/theme/**/*.js',
+    'node_modules/**'
   ]
 };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tab } from '@headlessui/react';
 import { useRouter } from 'next/router';
-import Layout from 'src/components/analytics/layout';
+import { Layout } from 'src/components/analytics/layout';
 
 export const Analytics = () => {
   const router = useRouter();
