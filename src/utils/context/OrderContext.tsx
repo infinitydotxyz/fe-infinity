@@ -41,13 +41,14 @@ export type OrderContextType = {
 
   removeBuyCartItem: (order: OrderCartItem) => void;
   removeSellCartItem: (order: OrderCartItem) => void;
-  clearCartItems: () => void;
 
-  isOrderEmpty: () => boolean;
+  isOrderStateEmpty: () => boolean;
   isCartEmpty: () => boolean;
   isOrderBuilderEmpty: () => boolean;
 
   isSellOrder: () => boolean;
+
+  executeOrder: () => void;
 
   // drawer form
   startPrice: BigNumberish;
@@ -91,7 +92,7 @@ export function OrderContextProvider({ children }: Props) {
   };
 
   // used to show the drawer button
-  const isOrderEmpty = (): boolean => {
+  const isOrderStateEmpty = (): boolean => {
     return isOrderBuilderEmpty() && isCartEmpty();
   };
 
@@ -99,6 +100,12 @@ export function OrderContextProvider({ children }: Props) {
   const isSellOrder = (): boolean => {
     return sellCartItems.length > 0;
     // return buyCartItems.length > 0;
+  };
+
+  const executeOrder = () => {
+    setBuyCartItems([]);
+    setSellCartItems([]);
+    setOrder(undefined);
   };
 
   const addBuyCartItem = (item: OrderCartItem) => {
@@ -128,11 +135,6 @@ export function OrderContextProvider({ children }: Props) {
     }
   };
 
-  const clearCartItems = () => {
-    setBuyCartItems([]);
-    setSellCartItems([]);
-  };
-
   const removeSellCartItem = (item: OrderCartItem) => {
     const index = indexOfCartItem(sellCartItems, item);
 
@@ -157,10 +159,9 @@ export function OrderContextProvider({ children }: Props) {
     removeBuyCartItem,
     isCartEmpty,
     isOrderBuilderEmpty,
-    isOrderEmpty,
-    clearCartItems,
+    isOrderStateEmpty,
     isSellOrder,
-
+    executeOrder,
     startPrice,
     setStartPrice,
     endPrice,

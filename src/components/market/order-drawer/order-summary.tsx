@@ -1,33 +1,56 @@
+import { formatEther } from 'ethers/lib/utils';
 import { useOrderContext } from 'src/utils/context/OrderContext';
+import { bigNumToDate } from 'src/utils/marketUtils';
+import { OrderListItem } from './order-list-item';
+import { SimpleTable, SimpleTableItem } from './simple-table';
 
-interface Props {
-  open?: boolean;
-}
+export function OrderSummary() {
+  const { isSellOrder, buyCartItems, sellCartItems, order } = useOrderContext();
 
-export function OrderSummary({ open }: Props) {
-  let contents;
+  const list = (
+    <ul role="list" className="  divide-y divide-gray-200 overflow-y-auto">
+      {buyCartItems.map((item) => (
+        <OrderListItem key={item.tokenName} cartItem={item} allowDelete={false} />
+      ))}
 
-  console.log(open);
+      {sellCartItems.map((item) => (
+        <OrderListItem key={item.tokenName} cartItem={item} allowDelete={false} />
+      ))}
+    </ul>
+  );
 
-  const { isSellOrder } = useOrderContext();
+  const items: SimpleTableItem[] = [];
+  let header;
 
   if (isSellOrder()) {
-    contents = (
+    items.push({ title: 'Max spending', value: <div>{formatEther(order?.endPrice ?? 0)}</div> });
+    items.push({ title: 'Min NFTs to buy', value: <div>{order?.numItems}</div> });
+    items.push({ title: 'Start Date', value: <div>{bigNumToDate(order?.startTime ?? 0).toLocaleString()}</div> });
+    items.push({ title: 'Expiration Date', value: <div>{bigNumToDate(order?.endTime ?? 0).toLocaleString()}</div> });
+
+    header = (
       <div>
-        <div>Max spending</div>
-        <div>Min NFTs to buy</div>
-        <div>Expiration Date</div>
+        <div>Sell Order</div>
       </div>
     );
   } else {
-    contents = (
+    items.push({ title: 'Max spending', value: <div>{formatEther(order?.endPrice ?? 0)}</div> });
+    items.push({ title: 'Min NFTs to buy', value: <div>{order?.numItems}</div> });
+    items.push({ title: 'Start Date', value: <div>{bigNumToDate(order?.startTime ?? 0).toLocaleString()}</div> });
+    items.push({ title: 'Expiration Date', value: <div>{bigNumToDate(order?.endTime ?? 0).toLocaleString()}</div> });
+
+    header = (
       <div>
-        <div>Max spending</div>
-        <div>Min NFTs to buy</div>
-        <div>Expiration Date</div>
+        <div>Buy Order</div>
       </div>
     );
   }
 
-  return contents;
+  return (
+    <>
+      {list}
+      {header}
+      <SimpleTable items={items} />
+    </>
+  );
 }

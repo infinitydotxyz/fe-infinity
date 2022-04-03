@@ -13,11 +13,11 @@ interface Props {
 
 export function OrderDrawer({ open, onClose }: Props) {
   const {
-    clearCartItems,
     setOrder,
     isCartEmpty,
-    isOrderEmpty,
+    isOrderStateEmpty,
     isOrderBuilderEmpty,
+    executeOrder,
     startPrice,
     endPrice,
     startTime,
@@ -70,8 +70,31 @@ export function OrderDrawer({ open, onClose }: Props) {
   let title = 'Create order';
   let footer;
 
-  if (isOrderEmpty()) {
+  if (isOrderStateEmpty()) {
     contents = emptyCart;
+  } else if (!isCartEmpty()) {
+    // ready to checkout, we have an order
+    title = 'Cart';
+    footer = buildFooter(() => {
+      executeOrder();
+    }, 'Checkout');
+
+    contents = (
+      <>
+        <div className="flex flex-col px-6 space-y-2">
+          <OrderSummary />
+        </div>
+
+        <div className="flex  justify-center items-center mt-4">
+          <Button variant="ghost" size="small" onClick={() => setOrder(undefined)}>
+            Remove from Cart
+          </Button>
+        </div>
+        <Spacer />
+
+        {footer}
+      </>
+    );
   } else if (!isOrderBuilderEmpty()) {
     // an order is being built, so let them finish it
     title = 'Buy order';
@@ -94,33 +117,12 @@ export function OrderDrawer({ open, onClose }: Props) {
       };
 
       setOrder(order);
-
-      // clear out items
-      clearCartItems();
     }, 'Add order to cart');
 
     contents = (
       <>
         <div className="flex flex-col px-6 space-y-2">
           <OrderBuilder />
-        </div>
-
-        <Spacer />
-
-        {footer}
-      </>
-    );
-  } else if (!isCartEmpty()) {
-    // ready to checkout, we have an order
-    title = 'Cart';
-    footer = buildFooter(() => {
-      // sdf
-    }, 'Checkout');
-
-    contents = (
-      <>
-        <div className="flex flex-col px-6 space-y-2">
-          <OrderSummary />
         </div>
 
         <Spacer />

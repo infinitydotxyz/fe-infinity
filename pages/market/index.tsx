@@ -48,7 +48,7 @@ const testCardData: CardData[] = [
 
 export default function MarketPage() {
   const [showDebugTools, setShowDebugTools] = useState(false);
-  const { orderDrawerOpen, setOrderDrawerOpen, isOrderEmpty } = useOrderContext();
+  const { orderDrawerOpen, setOrderDrawerOpen, isOrderStateEmpty } = useOrderContext();
   const { options, onChange, selected } = useToggleTab(['Assets', 'Orderbook'], 'Assets');
 
   let contents;
@@ -82,7 +82,7 @@ export default function MarketPage() {
     <PageBox
       title="Market"
       rightSide={
-        !isOrderEmpty() ? (
+        !isOrderStateEmpty() ? (
           <Button
             variant="outline"
             onClick={async () => {

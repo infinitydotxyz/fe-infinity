@@ -2,11 +2,7 @@ import { TextInputBox, Spacer, DatePickerBox } from 'src/components/common';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { OrderListItem } from './order-list-item';
 
-interface Props {
-  none?: boolean;
-}
-
-export function OrderBuilder({ none }: Props) {
+export function OrderBuilder() {
   const {
     buyCartItems,
     sellCartItems,
@@ -23,16 +19,14 @@ export function OrderBuilder({ none }: Props) {
     setNumItems
   } = useOrderContext();
 
-  console.log(none);
-
   const list = (
     <ul role="list" className="  divide-y divide-gray-200 overflow-y-auto">
       {buyCartItems.map((item) => (
-        <OrderListItem key={item.tokenName} cartItem={item} />
+        <OrderListItem key={item.tokenName} cartItem={item} allowDelete={true} />
       ))}
 
       {sellCartItems.map((item) => (
-        <OrderListItem key={item.tokenName} cartItem={item} />
+        <OrderListItem key={item.tokenName} cartItem={item} allowDelete={true} />
       ))}
     </ul>
   );
@@ -43,9 +37,6 @@ export function OrderBuilder({ none }: Props) {
       placeholder="4"
       label="Num Items"
       value={numItems.toString()}
-      // onSubmit={() => {
-      //   onSubmit();
-      // }}
       onChange={(value) => setNumItems(parseInt(value))}
     />
   );
