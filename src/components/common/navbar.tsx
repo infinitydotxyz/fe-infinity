@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
-import { Icon } from 'src/components/common/icon';
+import { BiSearchAlt2 } from 'react-icons/bi';
+import { SVG } from 'src/components/common/icon';
 import Modal from 'src/components/common/modal';
 
 export function Navigation() {
@@ -40,8 +41,6 @@ export function Navigation() {
           `
       },
       icon: {
-        name: 'BiSearchAlt2',
-        family: 'BI',
         className: 'w-5 h-5'
       }
     },
@@ -123,12 +122,14 @@ export function Navigation() {
     buttons: {
       home: {
         label: 'Home',
+        icon: SVG.infinity,
         props: {
           href: '/'
         }
       },
       search: {
-        label: 'Search'
+        label: 'Search',
+        icon: BiSearchAlt2
       },
       explore: {
         label: 'Explore',
@@ -152,11 +153,11 @@ export function Navigation() {
     <>
       <div {...styles?.container}>
         <Link {...content?.buttons?.home?.props}>
-          <Icon {...styles?.logo}></Icon>
+          <content.buttons.home.icon {...styles?.logo}></content.buttons.home.icon>
         </Link>
         <div {...styles?.search?.container}>
           <button {...styles?.search?.button}>
-            <Icon {...styles?.search?.icon}></Icon>
+            <content.buttons.search.icon {...styles?.search?.icon}></content.buttons.search.icon>
           </button>
         </div>
         <div {...styles?.explore?.container}>
