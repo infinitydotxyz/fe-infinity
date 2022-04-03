@@ -1,10 +1,12 @@
 import { Spacer, Divider, Button, Drawer } from 'src/components/common';
 import { useOrderContext } from 'src/utils/context/OrderContext';
-import { parseEther } from 'ethers/lib/utils';
+import { formatEther, parseEther } from 'ethers/lib/utils';
 import { ExecParams, ExtraParams, Item, OBOrder } from '@infinityxyz/lib/types/core';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { OrderBuilder } from './order-builder';
 import { OrderSummary } from './order-summary';
+import { SimpleTable } from './simple-table';
+import { EthPrice } from 'src/components/common/eth-price';
 
 interface Props {
   open: boolean;
@@ -20,6 +22,7 @@ export function OrderDrawer({ open, onClose }: Props) {
     isOrderStateEmpty,
     isOrderBuilderEmpty,
     executeOrder,
+    order,
     startPrice,
     endPrice,
     startTime,
@@ -37,11 +40,33 @@ export function OrderDrawer({ open, onClose }: Props) {
     </div>
   );
 
-  const buildFooter = (buttonClick: () => void, buttonTitle: string) => {
+  const buildFooter = (buttonClick: () => void) => {
+    let buttonTitle = 'Add order to cart';
+    let topWidget;
+
+    if (!isCartEmpty()) {
+      buttonTitle = 'Checkout';
+
+      const items = [];
+
+      items.push({
+        title: 'Max budget',
+        value: <EthPrice label={formatEther(order?.endPrice ?? 0)} />
+      });
+      items.push({ title: 'Number of NFTs', value: <div>{order?.numItems}</div> });
+
+      topWidget = (
+        <div className="mb-6 w-full px-6">
+          <SimpleTable items={items} />
+        </div>
+      );
+    }
+
     return (
       <div className="flex flex-col items-center mb-4">
         <Divider />
 
+        {topWidget}
         <Button onClick={buttonClick}>{buttonTitle}</Button>
       </div>
     );
@@ -78,7 +103,7 @@ export function OrderDrawer({ open, onClose }: Props) {
     title = 'Cart';
     footer = buildFooter(() => {
       executeOrder();
-    }, 'Checkout');
+    });
 
     contents = (
       <>
@@ -118,7 +143,7 @@ export function OrderDrawer({ open, onClose }: Props) {
       };
 
       setOrder(order);
-    }, 'Add order to cart');
+    });
 
     contents = (
       <>
