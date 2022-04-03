@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import { ellipsisAddress } from 'src/utils';
+import { EthSymbol } from 'src/components/common/eth-price';
 
 export interface NftActivity {
   address: string;
@@ -42,7 +43,7 @@ export const ActivityItem: React.FC<ActivityItemProps> = ({ item }) => {
       </div>
       <div>
         <p className="font-body tracking-tight text-theme-light-800 leading-normal">Price</p>
-        <p className="font-body font-bold tracking-tight text-black">Ξ {item.price}</p>
+        <p className="font-body font-bold tracking-tight text-black">{`${EthSymbol} ${item.price}`}</p>
       </div>
       <div>
         <p className="font-body tracking-tight text-theme-light-800 leading-normal">Date</p>

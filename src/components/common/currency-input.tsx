@@ -1,6 +1,7 @@
 import { InputBox } from './input-box';
 import { useState } from 'react';
 import { BiCaretDown } from 'react-icons/bi';
+import { EthSymbol } from './eth-price';
 
 interface Props {
   label: string;
@@ -17,7 +18,7 @@ export function CurrencyInput({ value, label, placeholder, onChange }: Props): J
       <div className="flex-1">
         <label className="block text-xs font-medium text-theme-light-800">{label}</label>
         <div className="flex">
-          Ξ&nbsp;&nbsp;
+          {EthSymbol}&nbsp;&nbsp;
           <input
             type="number"
             value={value}

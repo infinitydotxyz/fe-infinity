@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import { DatePicker } from 'src/components/common';
 import { ComboBox, ComboBoxBaseType } from './combo-box';
 import { CalendarIcon } from '@heroicons/react/outline';
+import { EthSymbol } from './eth-price';
 
 interface Props {
   label?: string;
@@ -71,13 +72,13 @@ export function TextInputBox({ value, label, addEthSymbol = false, type, placeho
   return (
     <InputBox label={label}>
       <div className="flex items-center">
-        {addEthSymbol && <div className="pr-2">Ξ</div>}
+        {addEthSymbol && <div className="pr-2">{EthSymbol}</div>}
 
         <input
           type={type}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className=" p-0 border-none focus:ring-0  block w-full  text-base"
+          className="p-0 border-none focus:ring-0 block w-full text-base"
           placeholder={placeholder}
         />
       </div>

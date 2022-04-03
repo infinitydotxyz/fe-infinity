@@ -103,9 +103,21 @@ export function OrderContextProvider({ children }: Props) {
   };
 
   const executeOrder = () => {
+    setOrderDrawerOpen(false);
+
+    _resetStateValues();
+  };
+
+  const _resetStateValues = () => {
+    setOrder(undefined);
     setBuyCartItems([]);
     setSellCartItems([]);
-    setOrder(undefined);
+
+    setStartPrice(1);
+    setEndPrice(1);
+    setStartTime(nowSeconds());
+    setEndTime(nowSeconds().add(1000));
+    setNumItems(1);
   };
 
   const addBuyCartItem = (item: OrderCartItem) => {

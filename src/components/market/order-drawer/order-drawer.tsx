@@ -12,6 +12,8 @@ interface Props {
 }
 
 export function OrderDrawer({ open, onClose }: Props) {
+  const { user, chainId } = useAppContext();
+
   const {
     setOrder,
     isCartEmpty,
@@ -24,7 +26,6 @@ export function OrderDrawer({ open, onClose }: Props) {
     endTime,
     numItems
   } = useOrderContext();
-  const { user, chainId } = useAppContext();
 
   const emptyCart = (
     <div className={'flex   h-full   justify-center content-center items-center text-sm'}>
