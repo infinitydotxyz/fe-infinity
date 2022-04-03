@@ -31,8 +31,11 @@ export function Card({ data, className }: Props): JSX.Element {
           onClick={() => {
             addBuyCartItem({
               collectionName: data.collectionName ?? '(no name)',
+              collectionAddress: data.tokenAddress ?? '(no address)',
               imageUrl: data.image ?? '',
-              tokenName: data.title ?? '(no name)'
+              tokenName: data.title ?? '(no name)',
+              tokenId: data.tokenAddress ?? '(no address)',
+              isSellOrder: false
             });
             setOrderDrawerOpen(true);
           }}

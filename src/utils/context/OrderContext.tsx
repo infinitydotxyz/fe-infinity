@@ -1,10 +1,15 @@
 import { OBOrder } from '@infinityxyz/lib/types/core';
+import { nowSeconds } from '@infinityxyz/lib/utils';
+import { BigNumberish } from 'ethers';
 import React, { ReactNode, useContext, useState } from 'react';
 
 export interface OrderCartItem {
-  tokenName: string;
-  collectionName: string;
+  isSellOrder: boolean;
   imageUrl: string;
+  tokenName?: string;
+  tokenId?: string;
+  collectionName: string;
+  collectionAddress: string;
 }
 
 export const isCartItemEqual = (a: OrderCartItem, b: OrderCartItem): boolean => {
@@ -25,10 +30,8 @@ export type OrderContextType = {
   orderDrawerOpen: boolean;
   setOrderDrawerOpen: (flag: boolean) => void;
 
-  buyOrders: OBOrder[];
-  sellOrders: OBOrder[];
-  addBuyOrder: (order: OBOrder) => void;
-  addSellOrder: (order: OBOrder) => void;
+  order?: OBOrder;
+  setOrder: (order?: OBOrder) => void;
 
   buyCartItems: OrderCartItem[];
   sellCartItems: OrderCartItem[];
@@ -43,6 +46,20 @@ export type OrderContextType = {
   isOrderEmpty: () => boolean;
   isCartEmpty: () => boolean;
   isOrderBuilderEmpty: () => boolean;
+
+  isSellOrder: () => boolean;
+
+  // drawer form
+  startPrice: BigNumberish;
+  setStartPrice: (price: BigNumberish) => void;
+  endPrice: BigNumberish;
+  setEndPrice: (price: BigNumberish) => void;
+  startTime: BigNumberish;
+  setStartTime: (time: BigNumberish) => void;
+  endTime: BigNumberish;
+  setEndTime: (time: BigNumberish) => void;
+  numItems: BigNumberish;
+  setNumItems: (items: BigNumberish) => void;
 };
 
 const OrderContext = React.createContext<OrderContextType | null>(null);
@@ -54,17 +71,23 @@ interface Props {
 export function OrderContextProvider({ children }: Props) {
   const [orderDrawerOpen, setOrderDrawerOpen] = useState<boolean>(false);
 
-  const [buyOrders, setBuyOrders] = useState<OBOrder[]>([]);
-  const [sellOrders, setSellOrders] = useState<OBOrder[]>([]);
+  const [order, setOrder] = useState<OBOrder>();
   const [buyCartItems, setBuyCartItems] = useState<OrderCartItem[]>([]);
   const [sellCartItems, setSellCartItems] = useState<OrderCartItem[]>([]);
+
+  // drawer form
+  const [startPrice, setStartPrice] = useState<BigNumberish>(1);
+  const [endPrice, setEndPrice] = useState<BigNumberish>(1);
+  const [startTime, setStartTime] = useState<BigNumberish>(nowSeconds());
+  const [endTime, setEndTime] = useState<BigNumberish>(nowSeconds().add(1000));
+  const [numItems, setNumItems] = useState<BigNumberish>(1);
 
   const isOrderBuilderEmpty = (): boolean => {
     return buyCartItems.length === 0 && sellCartItems.length === 0;
   };
 
   const isCartEmpty = (): boolean => {
-    return sellOrders.length === 0 && buyOrders.length === 0;
+    return order === undefined;
   };
 
   // used to show the drawer button
@@ -72,12 +95,10 @@ export function OrderContextProvider({ children }: Props) {
     return isOrderBuilderEmpty() && isCartEmpty();
   };
 
-  const addBuyOrder = (order: OBOrder) => {
-    setBuyOrders([...buyOrders, order]);
-  };
-
-  const addSellOrder = (order: OBOrder) => {
-    setSellOrders([...buyOrders, order]);
+  // the drawer can be in sell or buy mode depending on the items added
+  const isSellOrder = (): boolean => {
+    return sellCartItems.length > 0;
+    // return buyCartItems.length > 0;
   };
 
   const addBuyCartItem = (item: OrderCartItem) => {
@@ -126,10 +147,8 @@ export function OrderContextProvider({ children }: Props) {
   const value: OrderContextType = {
     orderDrawerOpen,
     setOrderDrawerOpen,
-    addBuyOrder,
-    addSellOrder,
-    buyOrders,
-    sellOrders,
+    order,
+    setOrder,
     addBuyCartItem,
     addSellCartItem,
     buyCartItems,
@@ -139,7 +158,19 @@ export function OrderContextProvider({ children }: Props) {
     isCartEmpty,
     isOrderBuilderEmpty,
     isOrderEmpty,
-    clearCartItems
+    clearCartItems,
+    isSellOrder,
+
+    startPrice,
+    setStartPrice,
+    endPrice,
+    setEndPrice,
+    startTime,
+    setStartTime,
+    endTime,
+    setEndTime,
+    numItems,
+    setNumItems
   };
 
   return <OrderContext.Provider value={value}>{children}</OrderContext.Provider>;

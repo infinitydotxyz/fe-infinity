@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { Button, Card, ToggleTab, useToggleTab, PageBox, Spacer, Dropdown } from 'src/components/common';
-import { OrderDrawer } from 'src/components/market/order-drawer';
+import { OrderDrawer, OrderDebug } from 'src/components/market';
 import { CardData } from '@infinityxyz/lib/types/core';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { FaShoppingBag } from 'react-icons/fa';
-import { OrderDebug } from 'src/components/market/order_debug';
 import { RiLayoutGridFill } from 'react-icons/ri';
 
 // get image ids here https://picsum.photos/images
@@ -52,7 +51,32 @@ export default function MarketPage() {
   const { orderDrawerOpen, setOrderDrawerOpen, isOrderEmpty } = useOrderContext();
   const { options, onChange, selected } = useToggleTab(['Assets', 'Orderbook'], 'Assets');
 
-  const cards = testCardData.map((e) => <Card key={e.tokenId} data={e} />);
+  let contents;
+  if (showDebugTools) {
+    contents = <OrderDebug />;
+  } else {
+    const cards = testCardData.map((e) => <Card key={e.tokenId} data={e} />);
+
+    contents = (
+      <>
+        <div className="flex space-x-2 items-center mb-2">
+          <ToggleTab options={options} selected={selected} onChange={onChange} />
+          <Spacer />
+          <Button variant="outline">Filter</Button>
+          <Dropdown
+            label="Sort"
+            items={[
+              { label: 'High to low', onClick: console.log },
+              { label: 'Low to high', onClick: console.log }
+            ]}
+          />
+          <RiLayoutGridFill />
+        </div>
+
+        <div className="flex flex-row flex-wrap space-x-4 mb-6">{cards}</div>
+      </>
+    );
+  }
 
   return (
     <PageBox
@@ -73,27 +97,7 @@ export default function MarketPage() {
       <OrderDrawer open={orderDrawerOpen} onClose={() => setOrderDrawerOpen(false)} />
 
       <div>
-        {!showDebugTools && (
-          <>
-            <div className="flex space-x-2 items-center mb-2">
-              <ToggleTab options={options} selected={selected} onChange={onChange} />
-              <Spacer />
-              <Button variant="outline">Filter</Button>
-              <Dropdown
-                label="Sort"
-                items={[
-                  { label: 'High to low', onClick: console.log },
-                  { label: 'Low to high', onClick: console.log }
-                ]}
-              />
-              <RiLayoutGridFill />
-            </div>
-
-            <div className="flex flex-row flex-wrap space-x-4 mb-6">{cards}</div>
-          </>
-        )}
-
-        {showDebugTools && <OrderDebug />}
+        {contents}
 
         <Button className="fixed bottom-1 left-1 " onClick={() => setShowDebugTools(!showDebugTools)} variant="outline">
           Debug
