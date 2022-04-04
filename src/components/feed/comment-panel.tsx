@@ -18,11 +18,13 @@ export function CommentPanel({ isOpen, onClose, event }: Props) {
   const [currentPage, setCurrentPage] = useState(0);
   const [text, setText] = useState('');
   const [data, setData] = useState<Comment[]>([]);
+  const [isFetched, setIsFetched] = useState(false);
 
   const fetchData = async () => {
     const commentsArr = await fetchComments(event.id);
     setData(commentsArr as Comment[]);
     event.comments = commentsArr.length;
+    setIsFetched(true);
   };
 
   useEffect(() => {
@@ -49,13 +51,15 @@ export function CommentPanel({ isOpen, onClose, event }: Props) {
           </Button>
         </div>
 
+        {isFetched && data.length === 0 && <div>There are no comments.</div>}
+
         {data.map((item, idx: number) => {
           return (
             <div key={idx}>
               <div className="flex items-center">
                 <img alt="" className="border rounded-3xl p-4" />
                 <div className="ml-4">{ellipsisString(item.userAddress)}</div>
-                <div color="gray.500" title={new Date(item.timestamp).toLocaleString()}>
+                <div className="ml-4 text-secondary" title={new Date(item.timestamp).toLocaleString()}>
                   {format(item.timestamp)}
                 </div>
               </div>

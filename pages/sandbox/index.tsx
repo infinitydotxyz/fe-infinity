@@ -47,7 +47,7 @@ const SandboxPage: FC = () => {
             <span>With Icon</span>
           </Button>
           <Button variant="plain" size="plain">
-            Unstyled Button
+            Unstyled (plain)
           </Button>
           <Button variant="ghost">Ghost</Button>
         </div>
@@ -55,7 +55,7 @@ const SandboxPage: FC = () => {
         <h3># Chip</h3>
         <div className="flex flex-row space-x-4">
           <Chip content="Watch" />
-          <Chip left={<FaEdit />} content="Edit" />
+          <Chip left={<FaEdit />} content="Edit" active={true} />
           <Chip content={<FaTwitter />} />
           <Chip content={<FaFacebook />} />
         </div>
