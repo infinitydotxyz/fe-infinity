@@ -25,8 +25,9 @@ export const COLL_FEED = 'feed'; // collection: /feed - to store feed events
 const EVENTS_PER_PAGE = 10;
 const COMMENTS_PER_PAGE = 10;
 
-type FeedFilter = {
+export type FeedFilter = {
   type?: FeedEventType;
+  collectionAddress?: string;
 };
 
 export type Comment = {
@@ -95,8 +96,24 @@ export async function subscribe(collectionPath: string, filter: FeedFilter, onCh
     const coll = collection(firestoreDb, collectionPath);
 
     let q;
-    if (filter?.type) {
-      q = query(coll, where('type', 'in', [filter?.type]), orderBy('timestamp', 'desc'), limit(EVENTS_PER_PAGE)); // query(coll, limit(3), orderBy('timestamp', 'desc'))
+    console.log('filter?.type', filter?.type, filter?.collectionAddress);
+    if (filter?.type && filter?.collectionAddress) {
+      q = query(
+        coll,
+        where('type', 'in', [filter?.type]),
+        where('collectionAddress', '==', filter?.collectionAddress),
+        orderBy('timestamp', 'desc'),
+        limit(EVENTS_PER_PAGE)
+      );
+    } else if (filter?.type) {
+      q = query(coll, where('type', 'in', [filter?.type]), orderBy('timestamp', 'desc'), limit(EVENTS_PER_PAGE));
+    } else if (filter?.collectionAddress) {
+      q = query(
+        coll,
+        where('collectionAddress', '==', filter?.collectionAddress),
+        orderBy('timestamp', 'desc'),
+        limit(EVENTS_PER_PAGE)
+      );
     } else {
       q = query(coll, orderBy('timestamp', 'desc'), limit(EVENTS_PER_PAGE)); // query(coll, limit(3), orderBy('timestamp', 'desc'))
     }
