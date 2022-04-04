@@ -15,6 +15,13 @@ export function CollectionPage() {
   const [currentTab, setCurrentTab] = useState(0);
   const path = `/collections/${name}`;
   const { result: collection } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
+  // const { result: stats } = useFetch<BaseCollection>(
+  //   name
+  //     ? path +
+  //         '/stats?limit=10&interval=oneDay&orderBy=volume&orderDirection=asc&minDate=0&maxDate=2648764957623&period=daily'
+  //     : '',
+  //   { chainId: '1' }
+  // );
 
   return (
     <PageBox
@@ -89,10 +96,19 @@ export function CollectionPage() {
         {currentTab === 0 ? (
           <>{collection && <GalleryBox collection={collection} />}</>
         ) : (
-          <>
-            <div className="text-3xl mb-6">Feed</div>
-            <CollectionFeed collectionAddress={collection?.address ?? ''} />
-          </>
+          <div className="flex">
+            <div className="w-2/3">
+              <div className="text-3xl mb-6">Feed</div>
+              <CollectionFeed collectionAddress={collection?.address ?? ''} />
+            </div>
+            <div className="w-1/3">
+              <div className="text-3xl mb-6">
+                Trending
+                <span className="ml-6 text-secondary">7 day vol</span>
+              </div>
+              <div>Trending component</div>
+            </div>
+          </div>
         )}
       </div>
     </PageBox>

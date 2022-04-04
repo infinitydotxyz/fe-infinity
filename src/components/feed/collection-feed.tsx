@@ -77,7 +77,7 @@ export function CollectionFeed({ collectionAddress, type }: CollectionFeedProps)
       <div className="flex mb-6">
         <Chip content={'All'} active={activeType === '' && true} onClick={() => onClickFilterType('')} />
         <Chip
-          content={'Tweet'}
+          content={'Tweets'}
           active={activeType === FeedEventType.TwitterTweet && true}
           onClick={() => onClickFilterType(FeedEventType.TwitterTweet)}
         />
