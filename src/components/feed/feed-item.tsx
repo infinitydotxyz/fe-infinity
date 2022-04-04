@@ -41,7 +41,9 @@ export function FeedItem({ data, onLike, onComment }: FeedItemProps) {
       <header className="flex items-center">
         <span className="border border-gray-300 p-2 rounded-3xl w-10 bg-gray-100">&nbsp;</span>
         <div className="ml-2">
-          <div className="font-medium text-sm">Username - {timestampStr}</div>
+          <div className="font-medium text-sm">
+            Username <span className="ml-4 text-secondary">{timestampStr}</span>
+          </div>
           <div className="text-gray-500 text-sm">{TypeName[data.type] ?? ''}</div>
         </div>
       </header>
