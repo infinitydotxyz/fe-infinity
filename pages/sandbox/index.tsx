@@ -87,8 +87,8 @@ const SandboxPage: FC = () => {
 
         <h3># Card - WIP</h3>
         <div className="flex flex-row space-x-4">
-          <Card data={testData.cardTestData[0]} />
-          <Card data={testData.cardTestData[1]} />
+          <Card data={testData.cardTestData[0]} onClick={() => console.log('click')} isSellCard={false} />
+          <Card data={testData.cardTestData[1]} onClick={() => console.log('click')} isSellCard={false} />
         </div>
 
         <h3># CurrencyInput</h3>

@@ -111,7 +111,15 @@ export function GalleryBox({ collection }: GalleryProps) {
           {isFetching && <div>Loading..</div>}
 
           {data.map((item, idx) => {
-            return <Card key={idx} data={item} className="ml-8 mt-8" />;
+            return (
+              <Card
+                key={idx}
+                data={item}
+                className="ml-8 mt-8"
+                onClick={() => console.log('click')}
+                isSellCard={false}
+              />
+            );
           })}
 
           {dataLoaded && (

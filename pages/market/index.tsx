@@ -48,14 +48,50 @@ const testCardData: CardData[] = [
 
 export default function MarketPage() {
   const [showDebugTools, setShowDebugTools] = useState(false);
-  const { orderDrawerOpen, setOrderDrawerOpen, isOrderStateEmpty } = useOrderContext();
+  const { orderDrawerOpen, setOrderDrawerOpen, isOrderStateEmpty, addBuyCartItem, addSellCartItem } = useOrderContext();
   const { options, onChange, selected } = useToggleTab(['Assets', 'Orderbook'], 'Assets');
 
   let contents;
   if (showDebugTools) {
     contents = <OrderDebug />;
   } else {
-    const cards = testCardData.map((e) => <Card key={e.tokenId} data={e} />);
+    const buyCards = testCardData.map((cardData) => (
+      <Card
+        key={cardData.tokenId}
+        data={cardData}
+        onClick={() => {
+          addBuyCartItem({
+            collectionName: cardData.collectionName ?? '(no name)',
+            collectionAddress: cardData.tokenAddress ?? '(no address)',
+            imageUrl: cardData.image ?? '',
+            tokenName: cardData.title ?? '(no name)',
+            tokenId: cardData.tokenAddress ?? '(no address)',
+            isSellOrder: false
+          });
+          setOrderDrawerOpen(true);
+        }}
+        isSellCard={false}
+      />
+    ));
+
+    const sellCards = testCardData.map((cardData) => (
+      <Card
+        key={cardData.tokenId}
+        data={cardData}
+        onClick={() => {
+          addSellCartItem({
+            collectionName: cardData.collectionName ?? '(no name)',
+            collectionAddress: cardData.tokenAddress ?? '(no address)',
+            imageUrl: cardData.image ?? '',
+            tokenName: cardData.title ?? '(no name)',
+            tokenId: cardData.tokenAddress ?? '(no address)',
+            isSellOrder: true
+          });
+          setOrderDrawerOpen(true);
+        }}
+        isSellCard={true}
+      />
+    ));
 
     contents = (
       <>
@@ -73,7 +109,9 @@ export default function MarketPage() {
           <RiLayoutGridFill />
         </div>
 
-        <div className="flex flex-row flex-wrap space-x-4 mb-6">{cards}</div>
+        <div className="flex flex-row flex-wrap space-x-4 mb-6">{buyCards}</div>
+
+        <div className="flex flex-row flex-wrap space-x-4 mb-6">{sellCards}</div>
       </>
     );
   }
