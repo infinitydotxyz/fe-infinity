@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { FeedItem, FeedEvent } from './feed-item';
 import { COLL_FEED, FeedFilter, subscribe } from 'src/utils/firestore/firestoreUtils';
 import { CommentPanel } from './comment-panel';
+import { FeedEventType } from '@infinityxyz/lib/types/core/feed';
+import { Chip } from '../common';
 
 // export const COLL_FEED = 'feed'; // collection: /feed - to store feed events
 // const EVENTS_PER_PAGE = 10;
@@ -10,13 +12,15 @@ import { CommentPanel } from './comment-panel';
 let eventsInit = false;
 
 interface CollectionFeedProps {
-  collectionAddress: string;
+  collectionAddress?: string;
+  type?: FeedEventType;
 }
 
-export function CollectionFeed({ collectionAddress }: CollectionFeedProps) {
+export function CollectionFeed({ collectionAddress, type }: CollectionFeedProps) {
   const [events, setEvents] = useState<FeedEvent[]>([]);
   const [newEvents, setNewEvents] = useState<FeedEvent[]>([]); // new feed events
-  const [filter, setFilter] = useState<FeedFilter>({ collectionAddress });
+  const [filter, setFilter] = useState<FeedFilter>({ collectionAddress, type });
+  const [activeType, setActiveType] = useState<FeedEventType | ''>('');
   const [filteredEvents, setFilteredEvents] = useState<FeedEvent[]>([]);
   const [commentPanelEvent, setCommentPanelEvent] = useState<FeedEvent | null>(null);
   console.log('', typeof setFilter, filteredEvents);
@@ -24,7 +28,6 @@ export function CollectionFeed({ collectionAddress }: CollectionFeedProps) {
   async function getEvents() {
     try {
       subscribe(COLL_FEED, filter, (type: string, data: FeedEvent) => {
-        // console.log('--- change: ', type, data);
         if (type === 'added') {
           if (eventsInit === false) {
             setEvents((currentEvents) => [data, ...currentEvents]); // add initial feed events.
@@ -44,6 +47,9 @@ export function CollectionFeed({ collectionAddress }: CollectionFeedProps) {
   }
 
   useEffect(() => {
+    eventsInit = false;
+    setEvents([]);
+    setNewEvents([]);
     getEvents();
   }, [filter]);
 
@@ -55,9 +61,32 @@ export function CollectionFeed({ collectionAddress }: CollectionFeedProps) {
     setFilteredEvents(arr);
   }, [events]);
 
+  const onClickFilterType = (type: FeedEventType | '') => {
+    const newFilter = { ...filter };
+    if (type) {
+      newFilter.type = type;
+    } else {
+      delete newFilter.type;
+    }
+    setActiveType(type);
+    setFilter(newFilter);
+  };
+
   return (
     <div>
-      <div className="text-3xl mb-6">Feed</div>
+      <div className="flex mb-6">
+        <Chip content={'All'} active={activeType === '' && true} onClick={() => onClickFilterType('')} />
+        <Chip
+          content={'Tweet'}
+          active={activeType === FeedEventType.TwitterTweet && true}
+          onClick={() => onClickFilterType(FeedEventType.TwitterTweet)}
+        />
+        <Chip
+          content={'Sales'}
+          active={activeType === FeedEventType.NftSale && true}
+          onClick={() => onClickFilterType(FeedEventType.NftSale)}
+        />
+      </div>
 
       {newEvents.length > 0 ? (
         <div
