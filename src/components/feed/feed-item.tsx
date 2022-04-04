@@ -21,6 +21,11 @@ export type Comment = {
   timestamp: number;
 };
 
+const TypeName: { [key: string]: string } = {
+  [FeedEventType.TwitterTweet]: 'Tweet',
+  [FeedEventType.NftSale]: 'Sale'
+};
+
 interface FeedItemProps {
   data: FeedEvent;
   onLike?: (event: FeedEvent) => void;
@@ -37,7 +42,7 @@ export function FeedItem({ data, onLike, onComment }: FeedItemProps) {
         <span className="border border-gray-300 p-2 rounded-3xl w-10 bg-gray-100">&nbsp;</span>
         <div className="ml-2">
           <div className="font-medium text-sm">Username - {timestampStr}</div>
-          <div className="text-gray-500 text-sm">Type</div>
+          <div className="text-gray-500 text-sm">{TypeName[data.type] ?? ''}</div>
         </div>
       </header>
       <div className="ml-12">
@@ -86,7 +91,7 @@ function SaleEvent({ data }: FeedItemProps) {
   return (
     <div className="mt-2 border rounded-xl p-2 flex items-center">
       <img src={data.image} className="w-20 h-20 rounded-xl" alt="NFT Image" />
-      <div className="flex w-full justify-between ml-4">
+      <div className="flex w-full justify-between mx-8">
         <div className="text-sm">
           <div className="text-gray-400">Link</div>
           <div>{ellipsisAddress(data.txHash)}</div>

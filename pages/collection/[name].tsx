@@ -90,7 +90,7 @@ export function CollectionPage() {
           <>{collection && <GalleryBox collection={collection} />}</>
         ) : (
           <>
-            <CollectionFeed />
+            <CollectionFeed collectionAddress={collection?.address ?? ''} />
           </>
         )}
       </div>
