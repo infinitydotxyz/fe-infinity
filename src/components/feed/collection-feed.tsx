@@ -1,22 +1,22 @@
-import { FeedEventType } from '@infinityxyz/lib/types/core/feed/FeedEvent';
 import { useEffect, useState } from 'react';
 import { FeedItem, FeedEvent } from './feed-item';
-import { COLL_FEED, subscribe } from 'src/utils/firestore/firestoreUtils';
+import { COLL_FEED, FeedFilter, subscribe } from 'src/utils/firestore/firestoreUtils';
 import { CommentPanel } from './comment-panel';
 
 // export const COLL_FEED = 'feed'; // collection: /feed - to store feed events
 // const EVENTS_PER_PAGE = 10;
 // const COMMENTS_PER_PAGE = 10;
 
-type Filter = {
-  type?: FeedEventType;
-};
 let eventsInit = false;
 
-export function CollectionFeed() {
+interface CollectionFeedProps {
+  collectionAddress: string;
+}
+
+export function CollectionFeed({ collectionAddress }: CollectionFeedProps) {
   const [events, setEvents] = useState<FeedEvent[]>([]);
   const [newEvents, setNewEvents] = useState<FeedEvent[]>([]); // new feed events
-  const [filter, setFilter] = useState<Filter>({});
+  const [filter, setFilter] = useState<FeedFilter>({ collectionAddress });
   const [filteredEvents, setFilteredEvents] = useState<FeedEvent[]>([]);
   const [commentPanelEvent, setCommentPanelEvent] = useState<FeedEvent | null>(null);
   console.log('', typeof setFilter, filteredEvents);
