@@ -34,6 +34,14 @@ export const Home: FC = () => {
 
         <Button
           onClick={() => {
+            router.push('/home');
+          }}
+        >
+          Homepage Feed
+        </Button>
+
+        <Button
+          onClick={() => {
             router.push('/analytics');
           }}
         >
