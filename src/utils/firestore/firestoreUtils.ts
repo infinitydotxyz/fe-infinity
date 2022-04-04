@@ -96,7 +96,6 @@ export async function subscribe(collectionPath: string, filter: FeedFilter, onCh
     const coll = collection(firestoreDb, collectionPath);
 
     let q;
-    console.log('filter?.type', filter?.type, filter?.collectionAddress);
     if (filter?.type && filter?.collectionAddress) {
       q = query(
         coll,
@@ -125,7 +124,6 @@ export async function subscribe(collectionPath: string, filter: FeedFilter, onCh
       snapshot.docChanges().forEach((change) => {
         if (onChange && change.type === 'added') {
           const docData = { ...change.doc.data(), id: change.doc.id };
-          // console.log('docData', docData);
           lastDoc = change.doc;
           onChange(change.type, docData as FeedEvent);
         }
