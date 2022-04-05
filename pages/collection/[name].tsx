@@ -7,6 +7,7 @@ import { Chip, PageBox, RoundedNav } from 'src/components/common';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { useFetch } from 'src/utils/apiUtils';
 import { CollectionFeed } from 'src/components/feed/collection-feed';
+import { ellipsisAddress } from 'src/utils';
 
 export function CollectionPage() {
   const {
@@ -30,6 +31,7 @@ export function CollectionPage() {
       title={name?.toString() ?? ''}
       titleElement={
         <span>
+          <img src={collection?.metadata.profileImage} />
           {name}{' '}
           {collection?.hasBlueCheck ? (
             <Image src="/images/blue-check.png" width={24} height={24} alt="Blue check icon" />
@@ -38,13 +40,15 @@ export function CollectionPage() {
       }
       center={false}
     >
-      <div className="flex flex-row space-x-4">
+      <div className="text-secondary mb-8">{ellipsisAddress(collection?.owner ?? '')}</div>
+
+      <div className="flex flex-row space-x-1">
         <Chip content="+ Follow" />
         <Chip content="Edit" />
         <Chip
           left={<FaTwitter />}
           content={
-            <span className="flex">
+            <span className="flex items-center">
               {lastStats?.twitterFollowers}
               {(lastStats?.twitterFollowersPercentChange ?? 0) < 0 ? (
                 <span className="ml-2 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
@@ -61,7 +65,7 @@ export function CollectionPage() {
         <Chip
           left={<FaDiscord />}
           content={
-            <span className="flex">
+            <span className="flex items-center">
               {lastStats?.discordFollowers}
               {(lastStats?.discordFollowersPercentChange ?? 0) < 0 ? (
                 <span className="ml-2 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
@@ -123,7 +127,7 @@ export function CollectionPage() {
       <RoundedNav
         items={[{ title: 'NFTs' }, { title: 'Community' }]}
         onChange={(currentIndex) => setCurrentTab(currentIndex)}
-        className="w-40 mt-6"
+        className="w-40 mt-8"
       />
 
       <div className="mt-6">
