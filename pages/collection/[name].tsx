@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { BaseCollection } from '@infinityxyz/lib/types/core';
-import { FaCheck, FaEdit, FaFacebook, FaTwitter } from 'react-icons/fa';
-import { Button, Chip, PageBox, RoundedNav } from 'src/components/common';
+import { BaseCollection, CollectionStats } from '@infinityxyz/lib/types/core';
+import { FaCaretDown, FaCaretUp, FaCheck, FaDiscord, FaTwitter } from 'react-icons/fa';
+import { Chip, PageBox, RoundedNav } from 'src/components/common';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { useFetch } from 'src/utils/apiUtils';
 import { CollectionFeed } from 'src/components/feed/collection-feed';
+import { ellipsisAddress } from 'src/utils';
 
 export function CollectionPage() {
   const {
@@ -15,19 +16,22 @@ export function CollectionPage() {
   const [currentTab, setCurrentTab] = useState(0);
   const path = `/collections/${name}`;
   const { result: collection } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
-  // const { result: stats } = useFetch<BaseCollection>(
-  //   name
-  //     ? path +
-  //         '/stats?limit=10&interval=oneDay&orderBy=volume&orderDirection=asc&minDate=0&maxDate=2648764957623&period=daily'
-  //     : '',
-  //   { chainId: '1' }
-  // );
+  const { result: stats } = useFetch<{ data: CollectionStats[] }>(
+    name
+      ? path +
+          '/stats?limit=10&interval=oneDay&orderBy=volume&orderDirection=asc&minDate=0&maxDate=2648764957623&period=daily'
+      : '',
+    { chainId: '1' }
+  );
+  const lastStats = stats?.data[stats?.data.length - 1];
+  console.log('lastStats', lastStats);
 
   return (
     <PageBox
       title={name?.toString() ?? ''}
       titleElement={
         <span>
+          <img src={collection?.metadata.profileImage} className="w-20 h-20" />
           {name}{' '}
           {collection?.hasBlueCheck ? (
             <Image src="/images/blue-check.png" width={24} height={24} alt="Blue check icon" />
@@ -36,36 +40,70 @@ export function CollectionPage() {
       }
       center={false}
     >
-      <div className="flex flex-row space-x-4">
-        <Chip content="Watch" />
-        <Chip left={<FaEdit />} content="Edit" />
-        <Chip content={<FaTwitter />} />
-        <Chip content={<FaFacebook />} />
+      <div className="text-secondary mb-8 text-sm">{ellipsisAddress(collection?.owner ?? '')}</div>
+
+      <div className="flex flex-row space-x-1">
+        <Chip content="+ Follow" />
+        <Chip content="Edit" />
+        <Chip
+          left={<FaTwitter />}
+          content={
+            <span className="flex items-center">
+              {lastStats?.twitterFollowers?.toLocaleString()}
+              {(lastStats?.twitterFollowersPercentChange ?? 0) < 0 ? (
+                <span className="ml-2 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
+                  <FaCaretDown /> {`${(lastStats?.twitterFollowersPercentChange ?? 0) * 100}`.slice(0, 4)}%
+                </span>
+              ) : (
+                <span className="ml-2 px-2 rounded-xl bg-green-500 text-white text-xs flex items-center">
+                  <FaCaretUp /> {`${(lastStats?.twitterFollowersPercentChange ?? 0) * 100}`.slice(0, 4)}%
+                </span>
+              )}
+            </span>
+          }
+        />
+        <Chip
+          left={<FaDiscord />}
+          content={
+            <span className="flex items-center">
+              {lastStats?.discordFollowers?.toLocaleString()}
+              {(lastStats?.discordFollowersPercentChange ?? 0) < 0 ? (
+                <span className="ml-2 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
+                  <FaCaretDown /> {`${(lastStats?.discordFollowersPercentChange ?? 0) * 100}`.slice(0, 4)}%
+                </span>
+              ) : (
+                <span className="ml-2 px-2 rounded-xl bg-green-500 text-white text-xs flex items-center">
+                  <FaCaretUp /> {`${(lastStats?.discordFollowersPercentChange ?? 0) * 100}`.slice(0, 4)}%
+                </span>
+              )}
+            </span>
+          }
+        />
       </div>
 
-      <div className="text-theme-light-3000 mt-6">{collection?.metadata.description ?? ''}</div>
+      <div className="text-secondary mt-6 text-sm">{collection?.metadata.description ?? ''}</div>
 
       <div className="text-sm font-bold mt-6">
         <div>Ownership includes</div>
-        <div className="flex space-x-8 mt-2 font-normal">
-          <div className="flex text-theme-light-3000">
+        <div className="flex space-x-8 mt-4 font-normal">
+          <div className="flex text-secondary">
             <FaCheck className="mr-2" />
             Access
           </div>
-          <div className="flex text-theme-light-3000">
+          <div className="flex text-secondary">
             <FaCheck className="mr-2" />
             Royalties
           </div>
-          <div className="flex text-theme-light-3000">
+          <div className="flex text-secondary">
             <FaCheck className="mr-2" />
             IP rights
           </div>
         </div>
       </div>
 
-      <Button variant="outline" className="mt-6">
+      {/* <Button variant="outline" className="mt-6">
         Claim Collection
-      </Button>
+      </Button> */}
 
       <table className="mt-8 text-sm w-1/2">
         <thead>
@@ -78,10 +116,10 @@ export function CollectionPage() {
         </thead>
         <tbody>
           <tr className="font-bold">
-            <td>379</td>
-            <td>999</td>
-            <td>0.40 ETH</td>
-            <td>899</td>
+            <td>{collection?.numNfts}</td>
+            <td>{collection?.numOwners}</td>
+            <td>{lastStats?.floorPrice ?? '—'}</td>
+            <td>{lastStats?.volume ?? ''}</td>
           </tr>
         </tbody>
       </table>
@@ -89,7 +127,7 @@ export function CollectionPage() {
       <RoundedNav
         items={[{ title: 'NFTs' }, { title: 'Community' }]}
         onChange={(currentIndex) => setCurrentTab(currentIndex)}
-        className="w-80 mt-6"
+        className="w-40 mt-8"
       />
 
       <div className="mt-6">

@@ -1,7 +1,6 @@
 import { CollectionAttributes } from '@infinityxyz/lib/types/core';
 import React, { useEffect, useState } from 'react';
 import { FaChevronDown } from 'react-icons/fa';
-import { useFetch } from 'src/utils/apiUtils';
 import { useFilterContext } from 'src/utils/context/FilterContext';
 
 type ValueMapItem = {
@@ -46,10 +45,10 @@ const getSelections = (typeValueMap: TypeValueMap) => {
   return [traitTypes, traitValues];
 };
 
-type TraitData = {
-  trait_type: string;
-  values: string[];
-};
+// type TraitData = {
+//   trait_type: string;
+//   values: string[];
+// };
 
 type Props = {
   traits?: CollectionAttributes;
@@ -58,7 +57,7 @@ type Props = {
   onChange: (traitTypes: string[], traitValues: string[]) => void;
 };
 
-export const TraitSelection = ({ traits, collectionAddress, onChange }: Props) => {
+export const TraitSelection = ({ traits, onChange }: Props) => {
   const { filterState } = useFilterContext();
   const [openState, setOpenState] = useState<OpenState>({});
   const [searchState, setSearchState] = useState<SearchState>({});

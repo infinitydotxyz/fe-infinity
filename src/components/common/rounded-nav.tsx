@@ -27,12 +27,12 @@ export function RoundedNav({ items, defaultIndex, onChange, className }: Props) 
     >
       {items.map((item, index: number) => {
         const isActive = index === activeIndex;
-        const activeCx = isActive ? 'bg-gray-900 text-white' : '';
+        const activeCx = isActive ? 'bg-black text-white' : '';
         return (
           <a
             key={item.title}
             href=""
-            className={`px-10 py-2 font-medium rounded-3xl text-sm bg-gray-200 ${activeCx}`}
+            className={twMerge(`px-10 py-2 font-medium rounded-3xl text-sm bg-gray-200 ${activeCx}`)}
             onClick={(e) => {
               e.preventDefault();
               setActiveIndex(index);
