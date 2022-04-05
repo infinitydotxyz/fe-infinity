@@ -1,4 +1,4 @@
-import { BaseCollection, CardData } from '@infinityxyz/lib/types/core';
+import { BaseCollection, BaseToken, CardData } from '@infinityxyz/lib/types/core';
 import { useEffect, useState } from 'react';
 import { apiGet } from 'src/utils/apiUtils';
 import { ITEMS_PER_PAGE } from 'src/utils/constants';
@@ -43,25 +43,27 @@ export function GalleryBox({ collection }: GalleryProps) {
     }
 
     const offset = currentPage > 0 ? currentPage * ITEMS_PER_PAGE : 0;
-    const { result } = await apiGet(`/listings`, {
+    const { result } = await apiGet(`/collections/1:${collection?.address}/nfts`, {
       query: {
         offset,
         limit: ITEMS_PER_PAGE,
-        chainId: '1',
-        listingSource: 'infinity',
-        collectionIds: collection?.address, // TODO: old api
-        tokenAddresses: collection?.address, // new api
+        orderBy: 'rarityRank',
+        orderDirection: 'desc',
+        // chainId: '1',
+        // listingSource: 'infinity',
+        // collectionIds: collection?.address, // TODO: old api
+        // tokenAddresses: collection?.address, // new api
         ...filterState
       }
     });
 
-    const moreData = (result?.listings || []).map((item: Listing) => {
+    const moreData = (result?.data || []).map((item: BaseToken) => {
       return {
-        id: item.id + item.metadata.asset.address + item.metadata.asset.id,
-        title: item.metadata.asset.collectionName,
-        image: item.metadata.asset.image,
-        price: item.metadata.basePriceInEth,
-        tokenId: item.metadata.asset.id
+        id: collection?.address + '_' + item.tokenId,
+        title: item.tokenId,
+        image: item.image.url,
+        price: 0,
+        tokenId: item.tokenId
       };
     });
 
