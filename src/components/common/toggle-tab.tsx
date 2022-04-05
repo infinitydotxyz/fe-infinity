@@ -19,7 +19,7 @@ export function useToggleTab(options: string[], defaultOption: string) {
 export function ToggleTab({ options, onChange, selected }: ToggleTab) {
   return (
     <div className="flex">
-      <div className="cursor-pointer flex m-2 gap-1 rounded-full items-center">
+      <div className="cursor-pointer flex m-2 gap-1 rounded-full items-center bg-slate-100">
         {options.map((option: string) => {
           return (
             <div
@@ -33,7 +33,7 @@ export function ToggleTab({ options, onChange, selected }: ToggleTab) {
             </div>
           );
         })}
-      </div>{' '}
+      </div>
     </div>
   );
 }

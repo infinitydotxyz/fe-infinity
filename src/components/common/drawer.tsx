@@ -12,9 +12,9 @@ interface Props {
 
 export function Drawer({ open, onClose, title, children }: Props) {
   const header = (
-    <div className="p-6">
+    <div className="p-8">
       <div className="flex items-start justify-between">
-        <Dialog.Title className="text-lg font-medium text-gray-900">{title}</Dialog.Title>
+        <Dialog.Title className="text-2xl font-bold text-gray-900">{title}</Dialog.Title>
         <div className="ml-3 flex h-7 items-center">
           <Button variant="ghost" size="small" onClick={onClose}>
             <span className="sr-only">Close panel</span>

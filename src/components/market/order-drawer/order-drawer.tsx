@@ -1,11 +1,10 @@
-import { Spacer, Divider, Button, Drawer } from 'src/components/common';
+import { Spacer, Divider, Button, Drawer, SimpleTable } from 'src/components/common';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { formatEther, parseEther } from 'ethers/lib/utils';
 import { ExecParams, ExtraParams, Item, OBOrder } from '@infinityxyz/lib/types/core';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { OrderBuilder } from './order-builder';
 import { OrderSummary } from './order-summary';
-import { SimpleTable } from './simple-table';
 import { EthPrice } from 'src/components/common/eth-price';
 
 interface Props {
@@ -56,7 +55,7 @@ export function OrderDrawer({ open, onClose }: Props) {
       items.push({ title: 'Number of NFTs', value: <div>{order?.numItems}</div> });
 
       topWidget = (
-        <div className="mb-6 w-full px-6">
+        <div className="mb-6 w-full px-8">
           <SimpleTable items={items} />
         </div>
       );
@@ -107,15 +106,10 @@ export function OrderDrawer({ open, onClose }: Props) {
 
     contents = (
       <>
-        <div className="flex flex-col px-6 space-y-2">
+        <div className="flex flex-col px-8 space-y-2">
           <OrderSummary />
         </div>
 
-        <div className="flex  justify-center items-center mt-4">
-          <Button variant="ghost" size="small" onClick={() => setOrder(undefined)}>
-            Remove from Cart
-          </Button>
-        </div>
         <Spacer />
 
         {footer}
@@ -147,7 +141,7 @@ export function OrderDrawer({ open, onClose }: Props) {
 
     contents = (
       <>
-        <div className="flex flex-col px-6 space-y-2">
+        <div className="flex flex-col px-8 space-y-2">
           <OrderBuilder />
         </div>
 

@@ -38,7 +38,7 @@ export const ListModal: React.FC = () => {
             <p className="flex-1 text-body">Royalty</p>
             <p className="text-heading font-black">5%</p>
           </div>
-          <Toggle title="Include ending price" />
+          <Toggle title="Include ending price" className="mb-12" />
           <div className="flex">
             <Button className="flex-1 mr-4 rounded-full" size="large">
               List

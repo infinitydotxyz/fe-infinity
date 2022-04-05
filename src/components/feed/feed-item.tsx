@@ -6,6 +6,7 @@ import { ellipsisAddress } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { addUserLike } from 'src/utils/firestore/firestoreUtils';
 import { Button } from '../common';
+import { EthPrice } from '../common/eth-price';
 
 export type FeedEvent = BaseFeedEvent &
   ExchangeEvent & {
@@ -19,6 +20,11 @@ export type Comment = {
   userAddress: string;
   comment: string;
   timestamp: number;
+};
+
+const TypeName: { [key: string]: string } = {
+  [FeedEventType.TwitterTweet]: 'Tweet',
+  [FeedEventType.NftSale]: 'Sale'
 };
 
 interface FeedItemProps {
@@ -36,8 +42,11 @@ export function FeedItem({ data, onLike, onComment }: FeedItemProps) {
       <header className="flex items-center">
         <span className="border border-gray-300 p-2 rounded-3xl w-10 bg-gray-100">&nbsp;</span>
         <div className="ml-2">
-          <div className="font-medium text-sm">Username - {timestampStr}</div>
-          <div className="text-gray-500 text-sm">Type</div>
+          <div className="font-medium text-sm">
+            <span className="font-bold">{data.collectionName}</span>{' '}
+            <span className="ml-4 text-secondary">{timestampStr}</span>
+          </div>
+          <div className="text-gray-500 text-sm">{TypeName[data.type] ?? ''}</div>
         </div>
       </header>
       <div className="ml-12">
@@ -84,9 +93,9 @@ function TweetEvent({ data }: FeedItemProps) {
 
 function SaleEvent({ data }: FeedItemProps) {
   return (
-    <div className="mt-2 border rounded-xl p-2 flex items-center">
+    <div className="mt-2 border rounded-xl p-2 flex items-center bg-gray-100">
       <img src={data.image} className="w-20 h-20 rounded-xl" alt="NFT Image" />
-      <div className="flex w-full justify-between ml-4">
+      <div className="flex w-full justify-between mx-8">
         <div className="text-sm">
           <div className="text-gray-400">Link</div>
           <div>{ellipsisAddress(data.txHash)}</div>
@@ -101,7 +110,9 @@ function SaleEvent({ data }: FeedItemProps) {
         </div>
         <div className="text-sm">
           <div className="text-gray-400">Price</div>
-          <div>{data.price}</div>
+          <div>
+            <EthPrice label={`${data.price}`} />
+          </div>
         </div>
       </div>
     </div>
