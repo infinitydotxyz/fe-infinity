@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { BaseCollection, Stats } from '@infinityxyz/lib/types/core';
-import { FaCheck, FaFacebook, FaTwitter } from 'react-icons/fa';
+import { BaseCollection, CollectionStats } from '@infinityxyz/lib/types/core';
+import { FaCheck, FaDiscord, FaTwitter } from 'react-icons/fa';
 import { Button, Chip, PageBox, RoundedNav } from 'src/components/common';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { useFetch } from 'src/utils/apiUtils';
@@ -15,14 +15,15 @@ export function CollectionPage() {
   const [currentTab, setCurrentTab] = useState(0);
   const path = `/collections/${name}`;
   const { result: collection } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
-  const { result: stats } = useFetch<{ data: Stats[] }>(
+  const { result: stats } = useFetch<{ data: CollectionStats[] }>(
     name
       ? path +
           '/stats?limit=10&interval=oneDay&orderBy=volume&orderDirection=asc&minDate=0&maxDate=2648764957623&period=daily'
       : '',
     { chainId: '1' }
   );
-  console.log('stats', stats?.data[0].floorPrice);
+  const lastStats = stats?.data[stats?.data.length - 1];
+  console.log('lastStats', lastStats);
 
   return (
     <PageBox
@@ -40,8 +41,8 @@ export function CollectionPage() {
       <div className="flex flex-row space-x-4">
         <Chip content="Watch" />
         <Chip content="Edit" />
-        <Chip content={<FaTwitter />} />
-        <Chip content={<FaFacebook />} />
+        <Chip left={<FaTwitter />} content={`${lastStats?.twitterFollowers}`} />
+        <Chip left={<FaDiscord />} content={`${lastStats?.discordFollowers}`} />
       </div>
 
       <div className="text-secondary mt-6">{collection?.metadata.description ?? ''}</div>
@@ -81,8 +82,8 @@ export function CollectionPage() {
           <tr className="font-bold">
             <td>{collection?.numNfts}</td>
             <td>{collection?.numOwners}</td>
-            <td>{stats?.data[0]?.floorPrice ?? ''}</td>
-            <td>{stats?.data[0]?.volume ?? ''}</td>
+            <td>{lastStats?.floorPrice ?? '—'}</td>
+            <td>{lastStats?.volume ?? ''}</td>
           </tr>
         </tbody>
       </table>
