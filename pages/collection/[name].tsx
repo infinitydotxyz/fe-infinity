@@ -7,7 +7,7 @@ import { Chip, PageBox, RoundedNav } from 'src/components/common';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { useFetch } from 'src/utils/apiUtils';
 import { CollectionFeed } from 'src/components/feed/collection-feed';
-import { ellipsisAddress } from 'src/utils';
+import { ellipsisAddress, getChainScannerBase } from 'src/utils';
 
 export function CollectionPage() {
   const {
@@ -16,23 +16,31 @@ export function CollectionPage() {
   const [currentTab, setCurrentTab] = useState(0);
   const path = `/collections/${name}`;
   const { result: collection } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
-  const { result: stats } = useFetch<{ data: CollectionStats[] }>(
+  const { result: dailyStats } = useFetch<{ data: CollectionStats[] }>(
     name
       ? path +
           '/stats?limit=10&interval=oneDay&orderBy=volume&orderDirection=asc&minDate=0&maxDate=2648764957623&period=daily'
       : '',
     { chainId: '1' }
   );
-  const lastStats = stats?.data[stats?.data.length - 1];
-  console.log('lastStats', lastStats);
+  const { result: weeklyStats } = useFetch<{ data: CollectionStats[] }>(
+    name
+      ? path +
+          '/stats?limit=10&interval=oneDay&orderBy=volume&orderDirection=asc&minDate=0&maxDate=2648764957623&period=weekly'
+      : '',
+    { chainId: '1' }
+  );
+  const lastStats = dailyStats?.data[dailyStats?.data.length - 1];
+  const lastWeeklyStats = weeklyStats?.data[weeklyStats?.data.length - 1];
+  console.log('lastWeeklyStats', lastWeeklyStats);
 
   return (
     <PageBox
-      title={name?.toString() ?? ''}
+      title={collection?.metadata?.name ?? ''}
       titleElement={
         <span>
           <img src={collection?.metadata.profileImage} className="w-20 h-20" />
-          {name}{' '}
+          {collection?.metadata?.name}{' '}
           {collection?.hasBlueCheck ? (
             <Image src="/images/blue-check.png" width={24} height={24} alt="Blue check icon" />
           ) : null}
@@ -40,7 +48,12 @@ export function CollectionPage() {
       }
       center={false}
     >
-      <div className="text-secondary mb-8 text-sm">{ellipsisAddress(collection?.owner ?? '')}</div>
+      <div className="text-secondary mb-8 text-sm">
+        Created by{' '}
+        <button onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection?.owner)}>
+          {ellipsisAddress(collection?.owner ?? '')}
+        </button>
+      </div>
 
       <div className="flex flex-row space-x-1">
         <Chip content="+ Follow" />
@@ -81,21 +94,21 @@ export function CollectionPage() {
         />
       </div>
 
-      <div className="text-secondary mt-6 text-sm">{collection?.metadata.description ?? ''}</div>
+      <div className="text-secondary mt-6 text-sm w-1/3">{collection?.metadata.description ?? ''}</div>
 
       <div className="text-sm font-bold mt-6">
         <div>Ownership includes</div>
         <div className="flex space-x-8 mt-4 font-normal">
           <div className="flex text-secondary">
-            <FaCheck className="mr-2" />
+            <FaCheck className="mt-1 mr-2 text-black" />
             Access
           </div>
           <div className="flex text-secondary">
-            <FaCheck className="mr-2" />
+            <FaCheck className="mt-1 mr-2 text-black" />
             Royalties
           </div>
           <div className="flex text-secondary">
-            <FaCheck className="mr-2" />
+            <FaCheck className="mt-1 mr-2 text-black" />
             IP rights
           </div>
         </div>
@@ -116,10 +129,10 @@ export function CollectionPage() {
         </thead>
         <tbody>
           <tr className="font-bold">
-            <td>{collection?.numNfts}</td>
-            <td>{collection?.numOwners}</td>
+            <td>{collection?.numNfts?.toLocaleString()}</td>
+            <td>{collection?.numOwners?.toLocaleString()}</td>
             <td>{lastStats?.floorPrice ?? '—'}</td>
-            <td>{lastStats?.volume ?? ''}</td>
+            <td>{lastStats?.volume?.toLocaleString() ?? ''}</td>
           </tr>
         </tbody>
       </table>
