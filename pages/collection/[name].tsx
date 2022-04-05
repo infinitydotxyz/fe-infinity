@@ -81,7 +81,7 @@ export function CollectionPage() {
         />
       </div>
 
-      <div className="text-secondary mt-6">{collection?.metadata.description ?? ''}</div>
+      <div className="text-secondary mt-6 text-sm">{collection?.metadata.description ?? ''}</div>
 
       <div className="text-sm font-bold mt-6">
         <div>Ownership includes</div>
