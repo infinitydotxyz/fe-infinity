@@ -55,6 +55,13 @@ export const Home: FC = () => {
         >
           Asset Detail
         </Button>
+        <Button
+          onClick={() => {
+            router.push('/explore');
+          }}
+        >
+          Explore
+        </Button>
       </div>
     </PageBox>
   );
