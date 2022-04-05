@@ -8,6 +8,9 @@ export function HomePage() {
     query: { name }
   } = useRouter();
 
+  // name not used lint error fix
+  console.log(name);
+
   return (
     <PageBox title={'Homepage'} center={false}>
       <div className="text-3xl mb-6">Feed</div>

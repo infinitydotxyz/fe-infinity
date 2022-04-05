@@ -46,7 +46,7 @@ export type OrderContextType = {
   isCartEmpty: () => boolean;
   isOrderBuilderEmpty: () => boolean;
 
-  isSellOrder: () => boolean;
+  isSellOrderCart: () => boolean;
 
   executeOrder: () => void;
 
@@ -97,7 +97,7 @@ export function OrderContextProvider({ children }: Props) {
   };
 
   // the drawer can be in sell or buy mode depending on the items added
-  const isSellOrder = (): boolean => {
+  const isSellOrderCart = (): boolean => {
     return sellCartItems.length > 0;
     // return buyCartItems.length > 0;
   };
@@ -172,7 +172,7 @@ export function OrderContextProvider({ children }: Props) {
     isCartEmpty,
     isOrderBuilderEmpty,
     isOrderStateEmpty,
-    isSellOrder,
+    isSellOrderCart,
     executeOrder,
     startPrice,
     setStartPrice,

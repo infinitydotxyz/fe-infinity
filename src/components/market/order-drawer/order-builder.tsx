@@ -6,7 +6,7 @@ export function OrderBuilder() {
   const {
     buyCartItems,
     sellCartItems,
-    isSellOrder,
+    isSellOrderCart,
     startPrice,
     setStartPrice,
     endPrice,
@@ -19,16 +19,14 @@ export function OrderBuilder() {
     setNumItems
   } = useOrderContext();
 
-  const list = (
-    <ul role="list" className="  divide-y divide-gray-200 overflow-y-auto">
-      {buyCartItems.map((item) => (
-        <OrderListItem key={item.tokenName} cartItem={item} allowDelete={true} />
-      ))}
+  const cartItems = isSellOrderCart() ? sellCartItems : buyCartItems;
 
-      {sellCartItems.map((item) => (
+  const list = (
+    <div className="overflow-y-auto">
+      {cartItems.map((item) => (
         <OrderListItem key={item.tokenName} cartItem={item} allowDelete={true} />
       ))}
-    </ul>
+    </div>
   );
 
   const numItemsField = (
@@ -86,11 +84,11 @@ export function OrderBuilder() {
   let contents;
   let footer;
 
-  if (isSellOrder()) {
+  if (isSellOrderCart()) {
     contents = (
       <>
         {list}
-        <div className="flex flex-col px-6 space-y-2">
+        <div className="flex flex-col space-y-2">
           {numItemsField}
           {startPriceField}
           {endPriceField}
@@ -107,7 +105,7 @@ export function OrderBuilder() {
     contents = (
       <>
         {list}
-        <div className="flex flex-col px-6 space-y-2">
+        <div className="flex flex-col space-y-2">
           {numItemsField}
           {startPriceField}
           {endPriceField}
