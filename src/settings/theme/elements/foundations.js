@@ -91,7 +91,7 @@ module.exports = {
     background: 'transparent',
     current: 'currentColor',
     primary: '#000',
-    secondary: '#aaa',
+    secondary: '#666',
     theme: {
       dark: {
         50: '#FFFFFF',
