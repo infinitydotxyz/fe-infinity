@@ -34,7 +34,7 @@ const ExplorePage: React.FC = () => {
             </p>
           </div>
         ))}
-        <FetchMore onFetchMore={handleFetchMore} data={data} currentPage={0} />
+        <FetchMore onFetchMore={handleFetchMore} data={data} currentPage={page} />
       </div>
     </PageBox>
   );
