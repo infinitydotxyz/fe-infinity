@@ -92,7 +92,7 @@ export function GalleryBox({ collection }: GalleryProps) {
           onClick={() => {
             setFilterShowed((flag) => !flag);
           }}
-          className="mr-2"
+          className="mr-2 text-sm font-heading"
         >
           {filterShowed ? 'Hide' : 'Show'} Filter
         </Button>

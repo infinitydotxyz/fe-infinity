@@ -27,10 +27,10 @@ export function Card({ data, className, onClick, isSellCard }: Props): JSX.Eleme
       <>
         {data.price ? (
           <>
-            <span className="font-medium">Buy</span> {data.price} ETH
+            <span className="font-medium font-heading">Buy</span> {data.price} ETH
           </>
         ) : (
-          <span className="font-medium">Details</span>
+          <span className="font-medium font-heading">Details</span>
         )}
       </>
     );

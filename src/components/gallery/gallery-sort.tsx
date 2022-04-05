@@ -16,14 +16,14 @@ export const GallerySort = () => {
   label = filterState.sortByPrice === 'DESC' ? 'High to Low' : label;
 
   return (
-    <span className="">
+    <span className="mr-32">
       <div className="relative inline-block text-left">
         <Menu>
           <span className="">
             <Menu.Button
               className="transition ease-in-out duration-300 hover:bg-gray-700 hover:text-white active:bg-gray-900 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50
           px-6 py-2
-          border rounded-3xl border-gray-300 text-gray-900
+          border rounded-3xl border-gray-300 text-gray-900 text-sm font-heading
           false flex"
             >
               <span>{label}</span>

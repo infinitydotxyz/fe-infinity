@@ -48,7 +48,7 @@ export function CollectionPage() {
       }
       center={false}
     >
-      <div className="text-secondary mb-8 ml-2 text-sm">
+      <div className="text-secondary mb-6 ml-2 text-sm font-heading">
         Created by{' '}
         <button onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection?.owner)}>
           {ellipsisAddress(collection?.owner ?? '')}
@@ -56,7 +56,7 @@ export function CollectionPage() {
       </div>
 
       <div className="flex flex-row space-x-1">
-        <Chip content="+ Follow" />
+        <Chip content="Watch" />
         <Chip content="Edit" />
         <Chip
           left={<FaTwitter />}
@@ -121,14 +121,14 @@ export function CollectionPage() {
       <table className="mt-8 text-sm w-1/2">
         <thead>
           <tr className="text-gray-400">
-            <th className="text-left font-medium">Items</th>
-            <th className="text-left font-medium">Owned by</th>
-            <th className="text-left font-medium">Floor price</th>
-            <th className="text-left font-medium">Volume traded</th>
+            <th className="text-left font-medium font-heading">Items</th>
+            <th className="text-left font-medium font-heading">Owned by</th>
+            <th className="text-left font-medium font-heading">Floor price</th>
+            <th className="text-left font-medium font-heading">Volume traded</th>
           </tr>
         </thead>
         <tbody>
-          <tr className="font-bold">
+          <tr className="font-bold font-heading">
             <td>{collection?.numNfts?.toLocaleString()}</td>
             <td>{collection?.numOwners?.toLocaleString()}</td>
             <td>{lastStats?.floorPrice ?? '—'}</td>
