@@ -17,3 +17,5 @@ export const collectionIconWidthInPx = (): number => {
 export const pixelsPerRem = () => {
   return parseFloat(getComputedStyle(document.documentElement).fontSize) * 0.25;
 };
+
+export const iconButtonStyle = 'h-6 w-6';

@@ -1,7 +1,7 @@
 import { MinusCircleIcon } from '@heroicons/react/solid';
 import { Button } from 'src/components/common';
 import { OrderCartItem, useOrderContext } from 'src/utils/context/OrderContext';
-import { collectionIconStyle } from './ui-constants';
+import { collectionIconStyle, iconButtonStyle } from './ui-constants';
 
 interface Props {
   cartItem: OrderCartItem;
@@ -22,7 +22,7 @@ export function OrderListItem({ cartItem, allowDelete }: Props) {
           removeBuyCartItem(cartItem);
         }}
       >
-        <MinusCircleIcon className="h-5 w-5" />
+        <MinusCircleIcon className={iconButtonStyle} />
       </Button>
     );
   }

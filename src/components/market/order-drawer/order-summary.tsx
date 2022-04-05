@@ -5,7 +5,7 @@ import { EthPrice } from 'src/components/common/eth-price';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { bigNumToDate } from 'src/utils/marketUtils';
 import { SimpleTable, SimpleTableItem } from './simple-table';
-import { collectionIconHeight, collectionIconStyle, collectionIconWidthInPx } from './ui-constants';
+import { collectionIconHeight, collectionIconStyle, collectionIconWidthInPx, iconButtonStyle } from './ui-constants';
 
 export function OrderSummary() {
   const { isSellOrderCart, buyCartItems, setOrder, sellCartItems, order } = useOrderContext();
@@ -20,24 +20,14 @@ export function OrderSummary() {
     leftOffset = iconLeft + 4;
 
     return (
-      <>
-        <div
-          key={item.collectionAddress + 'blank'}
-          className={`absolute ${collectionIconStyle} bg-white`}
-          style={{ left: whiteBoxLeft }}
-        />
-
-        <img
-          key={item.collectionAddress}
-          className={`absolute ${collectionIconStyle}`}
-          src={item.imageUrl}
-          alt=""
-          style={{ left: iconLeft }}
-        />
-      </>
+      <div key={item.collectionAddress + '-icons'}>
+        <div className={`absolute ${collectionIconStyle} bg-white`} style={{ left: whiteBoxLeft }} />
+        <img className={`absolute ${collectionIconStyle}`} src={item.imageUrl} alt="" style={{ left: iconLeft }} />
+      </div>
     );
   });
 
+  const numCollectionsSuffix = cartItems.length > 1 ? 'Collections' : 'Collection';
   const iconWidth = collectionIconWidthInPx();
 
   const collectionIcons = (
@@ -46,12 +36,12 @@ export function OrderSummary() {
         {iconStack}
       </div>
 
-      <div className="ml-4">{`${cartItems.length} Collections`}</div>
+      <div className="ml-4">{`${cartItems.length} ${numCollectionsSuffix}`}</div>
 
       <Spacer />
 
       <Button variant="ghost" size="small" onClick={() => setOrder(undefined)}>
-        <RiEditCircleFill className="h-5 w-5" />
+        <RiEditCircleFill className={iconButtonStyle} />
       </Button>
     </div>
   );
