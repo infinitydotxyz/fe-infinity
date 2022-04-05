@@ -31,7 +31,7 @@ export function CollectionPage() {
       title={name?.toString() ?? ''}
       titleElement={
         <span>
-          <img src={collection?.metadata.profileImage} />
+          <img src={collection?.metadata.profileImage} className="w-20 h-20" />
           {name}{' '}
           {collection?.hasBlueCheck ? (
             <Image src="/images/blue-check.png" width={24} height={24} alt="Blue check icon" />
@@ -40,7 +40,7 @@ export function CollectionPage() {
       }
       center={false}
     >
-      <div className="text-secondary mb-8">{ellipsisAddress(collection?.owner ?? '')}</div>
+      <div className="text-secondary mb-8 text-sm">{ellipsisAddress(collection?.owner ?? '')}</div>
 
       <div className="flex flex-row space-x-1">
         <Chip content="+ Follow" />
