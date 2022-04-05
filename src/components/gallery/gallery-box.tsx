@@ -49,10 +49,6 @@ export function GalleryBox({ collection }: GalleryProps) {
         limit: ITEMS_PER_PAGE,
         orderBy: 'rarityRank',
         orderDirection: 'desc',
-        // chainId: '1',
-        // listingSource: 'infinity',
-        // collectionIds: collection?.address, // TODO: old api
-        // tokenAddresses: collection?.address, // new api
         ...filterState
       }
     });
@@ -60,7 +56,7 @@ export function GalleryBox({ collection }: GalleryProps) {
     const moreData = (result?.data || []).map((item: BaseToken) => {
       return {
         id: collection?.address + '_' + item.tokenId,
-        title: item.tokenId,
+        title: collection?.metadata?.name,
         image: item.image.url,
         price: 0,
         tokenId: item.tokenId
