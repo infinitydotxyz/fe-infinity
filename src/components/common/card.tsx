@@ -12,6 +12,7 @@ interface Props {
 }
 
 export function Card({ data, className, onClick, isSellCard }: Props): JSX.Element {
+  const title = (data.title ?? '').length > 18 ? data.title?.slice(0, 18) + '...' : data.title;
   const tokenId = (data.tokenId ?? '').length > 18 ? data.tokenId?.slice(0, 18) + '...' : data.tokenId;
 
   let buttonContents;
@@ -24,7 +25,13 @@ export function Card({ data, className, onClick, isSellCard }: Props): JSX.Eleme
   } else {
     buttonContents = (
       <>
-        <span className="font-medium">Buy</span> {data.price} ETH
+        {data.price ? (
+          <>
+            <span className="font-medium">Buy</span> {data.price} ETH
+          </>
+        ) : (
+          <span className="font-medium">Details</span>
+        )}
       </>
     );
   }
@@ -33,8 +40,10 @@ export function Card({ data, className, onClick, isSellCard }: Props): JSX.Eleme
     <div className={twMerge(`w-48 ${className ?? ''}`)}>
       <img className="rounded-2xl max-h-80 overflow-hidden" src={data.image ?? ''} alt="card" />
       <div className="p-1">
-        <div className="font-bold">{data.title}</div>
-        <div className="text-sm" title={data.tokenId}>
+        <div className="font-bold" title={data.title}>
+          {title}
+        </div>
+        <div className="text-sm text-secondary" title={data.tokenId}>
           {tokenId}
         </div>
       </div>

@@ -4,7 +4,7 @@ import { useAppContext } from 'src/utils/context/AppContext';
 
 import styles from './Header.module.scss';
 import { Button, Spacer } from '../common';
-import logo from 'src/images/logo-new.svg';
+import logo from 'src/images/logo-mini-new.svg';
 import miniLogo from 'src/images/logo-mini-new.svg';
 
 export const Header = (): JSX.Element => {

@@ -61,7 +61,7 @@ export const PageHeader = ({ title, rightSide }: PageHeaderProps): JSX.Element =
   return (
     <div className="flex flex-row">
       <div
-        className="mb-6 text-4xl  font-medium cursor-pointer"
+        className="mb-6 text-7xl font-medium cursor-pointer"
         onClick={() => {
           router.push('/');
         }}
