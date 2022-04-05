@@ -1,14 +1,15 @@
-import { ListingType } from '@infinityxyz/lib/types/core';
+import { BaseCollection, ListingType } from '@infinityxyz/lib/types/core';
 import { useState } from 'react';
 import { Filter, useFilterContext } from 'src/utils/context/FilterContext';
 import { Button } from 'src/components/common';
 import { TraitSelection } from './trait-selection';
 
 interface Props {
+  collection?: BaseCollection;
   collectionAddress?: string;
 }
 
-export const FilterPanel = ({ collectionAddress }: Props) => {
+export const FilterPanel = ({ collection, collectionAddress }: Props) => {
   const { filterState, setFilterState } = useFilterContext();
   const [minPriceVal, setMinPriceVal] = useState('');
   const [maxPriceVal, setMaxPriceVal] = useState('');
@@ -112,6 +113,7 @@ export const FilterPanel = ({ collectionAddress }: Props) => {
 
       <div className="text-lg mt-6">Properties</div>
       <TraitSelection
+        traits={collection?.attributes}
         collectionAddress={collectionAddress}
         onChange={(traitTypes, traitValues) => {
           const newFilter: Filter = { ...filterState };

@@ -49,7 +49,8 @@ export function GalleryBox({ collection }: GalleryProps) {
         limit: ITEMS_PER_PAGE,
         chainId: '1',
         listingSource: 'infinity',
-        collectionIds: collection?.address,
+        collectionIds: collection?.address, // TODO: old api
+        tokenAddresses: collection?.address, // new api
         ...filterState
       }
     });
@@ -101,9 +102,9 @@ export function GalleryBox({ collection }: GalleryProps) {
       </header>
 
       <div className="flex items-start">
-        {filterShowed && (
+        {collection && filterShowed && (
           <div className="">
-            <FilterPanel collectionAddress={collection?.address} />
+            <FilterPanel collection={collection} collectionAddress={collection?.address} />
           </div>
         )}
 
