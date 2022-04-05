@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { NextPageContext } from 'next';
 import { PageBox } from 'src/components/common';
-import { apiGet } from 'src/utils';
-import { Collection } from '@infinityxyz/lib/types/core';
-import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { FetchMore } from 'src/components/common';
+//import { NextPageContext } from 'next';
+//import { apiGet } from 'src/utils';
+//import { Collection } from '@infinityxyz/lib/types/core';
+//import { GalleryBox } from 'src/components/gallery/gallery-box';
 
 // get image ids here https://picsum.photos/images
 const BLANK_IMAGE_URL =
