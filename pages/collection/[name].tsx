@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { BaseCollection, CollectionStats } from '@infinityxyz/lib/types/core';
-import { FaCheck, FaDiscord, FaTwitter } from 'react-icons/fa';
-import { Button, Chip, PageBox, RoundedNav } from 'src/components/common';
+import { FaCaretDown, FaCaretUp, FaCheck, FaDiscord, FaTwitter } from 'react-icons/fa';
+import { Chip, PageBox, RoundedNav } from 'src/components/common';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { useFetch } from 'src/utils/apiUtils';
 import { CollectionFeed } from 'src/components/feed/collection-feed';
@@ -39,9 +39,25 @@ export function CollectionPage() {
       center={false}
     >
       <div className="flex flex-row space-x-4">
-        <Chip content="Watch" />
+        <Chip content="+ Follow" />
         <Chip content="Edit" />
-        <Chip left={<FaTwitter />} content={`${lastStats?.twitterFollowers}`} />
+        <Chip
+          left={<FaTwitter />}
+          content={
+            <span className="flex">
+              {lastStats?.twitterFollowers}
+              {(lastStats?.twitterFollowersPercentChange ?? 0) < 0 ? (
+                <span className="ml-2 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
+                  <FaCaretDown /> {`${(lastStats?.twitterFollowersPercentChange ?? 0) * 100}`.slice(0, 4)}%
+                </span>
+              ) : (
+                <span className="ml-2 px-2 rounded-xl bg-green-500 text-white text-xs flex items-center">
+                  <FaCaretUp /> {`${(lastStats?.twitterFollowersPercentChange ?? 0) * 100}`.slice(0, 4)}%
+                </span>
+              )}
+            </span>
+          }
+        />
         <Chip left={<FaDiscord />} content={`${lastStats?.discordFollowers}`} />
       </div>
 
@@ -49,7 +65,7 @@ export function CollectionPage() {
 
       <div className="text-sm font-bold mt-6">
         <div>Ownership includes</div>
-        <div className="flex space-x-8 mt-2 font-normal">
+        <div className="flex space-x-8 mt-4 font-normal">
           <div className="flex text-secondary">
             <FaCheck className="mr-2" />
             Access
@@ -65,9 +81,9 @@ export function CollectionPage() {
         </div>
       </div>
 
-      <Button variant="outline" className="mt-6">
+      {/* <Button variant="outline" className="mt-6">
         Claim Collection
-      </Button>
+      </Button> */}
 
       <table className="mt-8 text-sm w-1/2">
         <thead>
