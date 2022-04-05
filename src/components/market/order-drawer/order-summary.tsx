@@ -1,11 +1,10 @@
 import { formatEther } from 'ethers/lib/utils';
 import { RiEditCircleFill } from 'react-icons/ri';
-import { Button, Spacer } from 'src/components/common';
+import { Button, SimpleTable, SimpleTableItem, Spacer } from 'src/components/common';
 import { EthPrice } from 'src/components/common/eth-price';
 import { shortDate } from 'src/utils';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { bigNumToDate } from 'src/utils/marketUtils';
-import { SimpleTable, SimpleTableItem } from './simple-table';
 import { collectionIconHeight, collectionIconStyle, collectionIconWidthInPx, iconButtonStyle } from './ui-constants';
 
 export function OrderSummary() {

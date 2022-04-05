@@ -1,11 +1,10 @@
-import { Spacer, Divider, Button, Drawer } from 'src/components/common';
+import { Spacer, Divider, Button, Drawer, SimpleTable } from 'src/components/common';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { formatEther, parseEther } from 'ethers/lib/utils';
 import { ExecParams, ExtraParams, Item, OBOrder } from '@infinityxyz/lib/types/core';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { OrderBuilder } from './order-builder';
 import { OrderSummary } from './order-summary';
-import { SimpleTable } from './simple-table';
 import { EthPrice } from 'src/components/common/eth-price';
 
 interface Props {
