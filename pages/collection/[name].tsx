@@ -66,7 +66,7 @@ export function CollectionPage() {
           left={<FaDiscord />}
           content={
             <span className="flex items-center">
-              {lastStats?.discordFollowers.toLocaleString()}
+              {lastStats?.discordFollowers?.toLocaleString()}
               {(lastStats?.discordFollowersPercentChange ?? 0) < 0 ? (
                 <span className="ml-2 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
                   <FaCaretDown /> {`${(lastStats?.discordFollowersPercentChange ?? 0) * 100}`.slice(0, 4)}%
