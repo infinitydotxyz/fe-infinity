@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { PageBox } from 'src/components/common';
 import { FetchMore } from 'src/components/common';
+import Link from 'next/link';
 //import { NextPageContext } from 'next';
 //import { apiGet } from 'src/utils';
 //import { Collection } from '@infinityxyz/lib/types/core';
@@ -28,10 +29,14 @@ const ExplorePage: React.FC = () => {
       <div className="flex justify-between flex-wrap -mx-4">
         {res.map((val, key) => (
           <div key={key} className="w-full sm:w-72 lg:w-80 p-4">
-            <img className="rounded-3xl" src={BLANK_IMAGE_URL} />
-            <p className="mt-3 px-2 font-theme-heading">
-              Psychic Blossom NFT name or a really long name that takes up a lot of space
-            </p>
+            <Link href={`/asset/1/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/8880`}>
+              <a href={`/asset/1/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/8880`}>
+                <img className="rounded-3xl" src={BLANK_IMAGE_URL} />
+                <p className="mt-3 px-2 font-theme-heading">
+                  Psychic Blossom NFT name or a really long name that takes up a lot of space
+                </p>
+              </a>
+            </Link>
           </div>
         ))}
         <FetchMore onFetchMore={handleFetchMore} data={data} currentPage={page} />
