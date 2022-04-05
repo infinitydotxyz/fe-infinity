@@ -25,7 +25,13 @@ export function Card({ data, className, onClick, isSellCard }: Props): JSX.Eleme
   } else {
     buttonContents = (
       <>
-        <span className="font-medium">Buy</span> {data.price} ETH
+        {data.price ? (
+          <>
+            <span className="font-medium">Buy</span> {data.price} ETH
+          </>
+        ) : (
+          <span className="font-medium">Details</span>
+        )}
       </>
     );
   }
@@ -37,7 +43,7 @@ export function Card({ data, className, onClick, isSellCard }: Props): JSX.Eleme
         <div className="font-bold" title={data.title}>
           {title}
         </div>
-        <div className="text-sm" title={data.tokenId}>
+        <div className="text-sm text-secondary" title={data.tokenId}>
           {tokenId}
         </div>
       </div>

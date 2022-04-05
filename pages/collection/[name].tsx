@@ -48,7 +48,7 @@ export function CollectionPage() {
       }
       center={false}
     >
-      <div className="text-secondary mb-8 text-sm">
+      <div className="text-secondary mb-8 ml-2 text-sm">
         Created by{' '}
         <button onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection?.owner)}>
           {ellipsisAddress(collection?.owner ?? '')}
