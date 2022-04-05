@@ -15,7 +15,7 @@ export function SimpleTable({ items }: Props) {
       <div key={item.title} className="flex w-full">
         <div>{item.title}</div>
         <Spacer />
-        <div>{item.value}</div>
+        <div className="font-bold">{item.value}</div>
       </div>
     );
   });

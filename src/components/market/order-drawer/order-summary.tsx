@@ -2,6 +2,7 @@ import { formatEther } from 'ethers/lib/utils';
 import { RiEditCircleFill } from 'react-icons/ri';
 import { Button, Spacer } from 'src/components/common';
 import { EthPrice } from 'src/components/common/eth-price';
+import { shortDate } from 'src/utils';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { bigNumToDate } from 'src/utils/marketUtils';
 import { SimpleTable, SimpleTableItem } from './simple-table';
@@ -36,7 +37,7 @@ export function OrderSummary() {
         {iconStack}
       </div>
 
-      <div className="ml-4">{`${cartItems.length} ${numCollectionsSuffix}`}</div>
+      <div className="ml-4 font-bold">{`${cartItems.length} ${numCollectionsSuffix}`}</div>
 
       <Spacer />
 
@@ -55,8 +56,8 @@ export function OrderSummary() {
       value: <EthPrice label={formatEther(order?.endPrice ?? 0)} />
     });
     items.push({ title: 'Min NFTs to buy', value: <div>{order?.numItems}</div> });
-    items.push({ title: 'Start Date', value: <div>{bigNumToDate(order?.startTime ?? 0).toLocaleString()}</div> });
-    items.push({ title: 'Expiration Date', value: <div>{bigNumToDate(order?.endTime ?? 0).toLocaleString()}</div> });
+    // items.push({ title: 'Start Date', value: <div>{bigNumToDate(order?.startTime ?? 0).toLocaleString()}</div> });
+    items.push({ title: 'Expiration Date', value: <div>{shortDate(bigNumToDate(order?.endTime ?? 0))}</div> });
 
     header = (
       <div>
@@ -69,8 +70,8 @@ export function OrderSummary() {
       value: <EthPrice label={formatEther(order?.endPrice ?? 0)} />
     });
     items.push({ title: 'Min NFTs to buy', value: <div>{order?.numItems}</div> });
-    items.push({ title: 'Start Date', value: <div>{bigNumToDate(order?.startTime ?? 0).toLocaleString()}</div> });
-    items.push({ title: 'Expiration Date', value: <div>{bigNumToDate(order?.endTime ?? 0).toLocaleString()}</div> });
+    // items.push({ title: 'Start Date', value: <div>{bigNumToDate(order?.startTime ?? 0).toLocaleString()}</div> });
+    items.push({ title: 'Expiration Date', value: <div>{shortDate(bigNumToDate(order?.endTime ?? 0))}</div> });
 
     header = (
       <div>
