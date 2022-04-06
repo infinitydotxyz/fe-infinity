@@ -42,7 +42,6 @@ const getSelections = (typeValueMap: TypeValueMap) => {
       traitValues.push(arr.join('|'));
     }
   }
-  const testLint: any = 'unused';
   return [traitTypes, traitValues];
 };
 
