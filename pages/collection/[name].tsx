@@ -48,7 +48,7 @@ export function CollectionPage() {
       }
       center={false}
     >
-      <div className="text-secondary mb-8 ml-2 text-sm">
+      <div className="text-secondary mb-6 ml-2 text-sm font-heading">
         Created by{' '}
         <button onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection?.owner)}>
           {ellipsisAddress(collection?.owner ?? '')}
@@ -60,16 +60,19 @@ export function CollectionPage() {
         <Chip content="Edit" />
         <Chip
           left={<FaTwitter />}
+          onClick={() => window.open(collection?.metadata.links.twitter)}
           content={
             <span className="flex items-center">
               {lastStats?.twitterFollowers?.toLocaleString()}
               {(lastStats?.twitterFollowersPercentChange ?? 0) < 0 ? (
-                <span className="ml-2 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
-                  <FaCaretDown /> {`${(lastStats?.twitterFollowersPercentChange ?? 0) * 100}`.slice(0, 4)}%
+                <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
+                  <FaCaretDown className="mr-1" />{' '}
+                  {`${Math.abs(lastStats?.twitterFollowersPercentChange ?? 0) * 100}`.slice(0, 4)}%
                 </span>
               ) : (
-                <span className="ml-2 px-2 rounded-xl bg-green-500 text-white text-xs flex items-center">
-                  <FaCaretUp /> {`${(lastStats?.twitterFollowersPercentChange ?? 0) * 100}`.slice(0, 4)}%
+                <span className="ml-2 py-1 px-2 rounded-xl bg-green-500 text-white text-xs flex items-center">
+                  <FaCaretUp className="mr-1" />{' '}
+                  {`${Math.abs(lastStats?.twitterFollowersPercentChange ?? 0) * 100}`.slice(0, 4)}%
                 </span>
               )}
             </span>
@@ -77,16 +80,19 @@ export function CollectionPage() {
         />
         <Chip
           left={<FaDiscord />}
+          onClick={() => window.open(collection?.metadata.links.discord)}
           content={
             <span className="flex items-center">
               {lastStats?.discordFollowers?.toLocaleString()}
               {(lastStats?.discordFollowersPercentChange ?? 0) < 0 ? (
-                <span className="ml-2 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
-                  <FaCaretDown /> {`${(lastStats?.discordFollowersPercentChange ?? 0) * 100}`.slice(0, 4)}%
+                <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
+                  <FaCaretDown className="mr-1" />{' '}
+                  {`${Math.abs(lastStats?.discordFollowersPercentChange ?? 0) * 100}`.slice(0, 4)}%
                 </span>
               ) : (
-                <span className="ml-2 px-2 rounded-xl bg-green-500 text-white text-xs flex items-center">
-                  <FaCaretUp /> {`${(lastStats?.discordFollowersPercentChange ?? 0) * 100}`.slice(0, 4)}%
+                <span className="ml-2 py-1 px-2 rounded-xl bg-green-500 text-white text-xs flex items-center">
+                  <FaCaretUp className="mr-1" />{' '}
+                  {`${Math.abs(lastStats?.discordFollowersPercentChange ?? 0) * 100}`.slice(0, 4)}%
                 </span>
               )}
             </span>
@@ -94,7 +100,7 @@ export function CollectionPage() {
         />
       </div>
 
-      <div className="text-secondary mt-6 text-sm w-1/3">{collection?.metadata.description ?? ''}</div>
+      <div className="text-secondary mt-6 text-sm w-2/3">{collection?.metadata.description ?? ''}</div>
 
       <div className="text-sm font-bold mt-6">
         <div>Ownership includes</div>
@@ -121,14 +127,14 @@ export function CollectionPage() {
       <table className="mt-8 text-sm w-1/2">
         <thead>
           <tr className="text-gray-400">
-            <th className="text-left font-medium">Items</th>
-            <th className="text-left font-medium">Owned by</th>
-            <th className="text-left font-medium">Floor price</th>
-            <th className="text-left font-medium">Volume traded</th>
+            <th className="text-left font-medium font-heading">Items</th>
+            <th className="text-left font-medium font-heading">Owned by</th>
+            <th className="text-left font-medium font-heading">Floor price</th>
+            <th className="text-left font-medium font-heading">Volume traded</th>
           </tr>
         </thead>
         <tbody>
-          <tr className="font-bold">
+          <tr className="font-bold font-heading">
             <td>{collection?.numNfts?.toLocaleString()}</td>
             <td>{collection?.numOwners?.toLocaleString()}</td>
             <td>{lastStats?.floorPrice ?? '—'}</td>
@@ -137,11 +143,13 @@ export function CollectionPage() {
         </tbody>
       </table>
 
-      <RoundedNav
-        items={[{ title: 'NFTs' }, { title: 'Community' }]}
-        onChange={(currentIndex) => setCurrentTab(currentIndex)}
-        className="w-40 mt-8"
-      />
+      <div className="w-40">
+        <RoundedNav
+          items={[{ title: 'NFTs' }, { title: 'Community' }]}
+          onChange={(currentIndex) => setCurrentTab(currentIndex)}
+          className="mt-8"
+        />
+      </div>
 
       <div className="mt-6">
         {currentTab === 0 ? (

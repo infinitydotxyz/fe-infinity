@@ -6,24 +6,25 @@ import { useFilterContext } from 'src/utils/context/FilterContext';
 export const GallerySort = () => {
   const { filterState, setFilterState } = useFilterContext();
 
-  const onClickSort = (sortByPrice: 'ASC' | 'DESC' | '') => {
+  const onClickSort = (orderDirection: 'asc' | 'desc' | '') => {
     const newFilter = { ...filterState };
-    newFilter.sortByPrice = sortByPrice;
+    newFilter.orderBy = 'rarityRank';
+    newFilter.orderDirection = orderDirection;
     setFilterState(newFilter);
   };
   let label = 'Sort';
-  label = filterState.sortByPrice === 'ASC' ? 'Low to High' : label;
-  label = filterState.sortByPrice === 'DESC' ? 'High to Low' : label;
+  label = filterState.orderDirection === 'asc' ? 'High Rarity Rank to Low' : label;
+  label = filterState.orderDirection === 'desc' ? 'Low Rarity Rank to High' : label;
 
   return (
-    <span className="">
+    <span className="mr-32">
       <div className="relative inline-block text-left">
         <Menu>
           <span className="">
             <Menu.Button
               className="transition ease-in-out duration-300 hover:bg-gray-700 hover:text-white active:bg-gray-900 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50
           px-6 py-2
-          border rounded-3xl border-gray-300 text-gray-900
+          border rounded-3xl border-gray-300 text-gray-900 text-sm font-heading
           false flex"
             >
               <span>{label}</span>
@@ -48,9 +49,9 @@ export const GallerySort = () => {
             </div> */}
 
             <div className="py-1">
-              <CustomMenuItem onClick={() => onClickSort('ASC')}>Low to High</CustomMenuItem>
-              <CustomMenuItem onClick={() => onClickSort('DESC')}>High to Low</CustomMenuItem>
-              <CustomMenuItem onClick={() => onClickSort('')}>Clear</CustomMenuItem>
+              <CustomMenuItem onClick={() => onClickSort('asc')}>High Rarity Rank to Low</CustomMenuItem>
+              <CustomMenuItem onClick={() => onClickSort('desc')}>Low Rarity Rank to High</CustomMenuItem>
+              <CustomMenuItem onClick={() => onClickSort('desc')}>Clear</CustomMenuItem>
             </div>
           </Menu.Items>
         </Menu>

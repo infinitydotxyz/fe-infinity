@@ -17,10 +17,10 @@ type ListingMetadata = {
   asset: Asset;
   basePriceInEth: number;
 };
-type Listing = {
-  id: string;
-  metadata: ListingMetadata;
-};
+// type Listing = {
+//   id: string;
+//   metadata: ListingMetadata;
+// };
 
 interface GalleryProps {
   collection: BaseCollection | null;
@@ -43,12 +43,14 @@ export function GalleryBox({ collection }: GalleryProps) {
     }
 
     const offset = currentPage > 0 ? currentPage * ITEMS_PER_PAGE : 0;
+    if (!filterState.orderBy) {
+      filterState.orderBy = 'rarityRank'; // set defaults
+      filterState.orderDirection = 'asc';
+    }
     const { result } = await apiGet(`/collections/1:${collection?.address}/nfts`, {
       query: {
         offset,
         limit: ITEMS_PER_PAGE,
-        orderBy: 'rarityRank',
-        orderDirection: 'desc',
         ...filterState
       }
     });
@@ -92,7 +94,7 @@ export function GalleryBox({ collection }: GalleryProps) {
           onClick={() => {
             setFilterShowed((flag) => !flag);
           }}
-          className="mr-2"
+          className="mr-2 text-sm font-heading"
         >
           {filterShowed ? 'Hide' : 'Show'} Filter
         </Button>
