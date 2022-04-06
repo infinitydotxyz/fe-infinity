@@ -105,6 +105,7 @@ export default function MarketPage() {
               { label: 'High to low', onClick: console.log },
               { label: 'Low to high', onClick: console.log }
             ]}
+            className="mt-20"
           />
           <RiLayoutGridFill />
         </div>

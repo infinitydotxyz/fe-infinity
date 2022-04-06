@@ -8,12 +8,16 @@ export type Filter = {
   priceMin?: string;
   priceMax?: string;
   sortByPrice?: 'ASC' | 'DESC' | '';
+  orderBy?: 'rarityRank' | '';
+  orderDirection?: 'asc' | 'desc' | '';
 };
 
 const defaultFilter: Filter = {
   listingType: '',
   traitTypes: '',
-  traitValues: ''
+  traitValues: '',
+  orderBy: '',
+  orderDirection: ''
 };
 
 export type FilterContextType = {
