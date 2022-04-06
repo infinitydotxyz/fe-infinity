@@ -15,7 +15,7 @@ export const TransferNFTModal: React.FC = () => {
   return (
     <div>
       <button onClick={openModal}>Transfer NFT</button>
-      <SimpleModal isOpen={modalIsOpen} onClose={closeModal} hideActionButtons={false}>
+      <SimpleModal isOpen={modalIsOpen} onClose={closeModal} showActionButtons={false}>
         <div className="modal-body p-4 rounded-3xl">
           <p className="font-bold text-2xl tracking-tight mb-12">Transfer NFT</p>
           <TextInputBox

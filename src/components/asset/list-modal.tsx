@@ -15,7 +15,7 @@ export const ListModal: React.FC = () => {
   return (
     <div>
       <button onClick={openModal}>List</button>
-      <SimpleModal isOpen={modalIsOpen} onClose={closeModal} hideActionButtons={false}>
+      <SimpleModal isOpen={modalIsOpen} onClose={closeModal} showActionButtons={false}>
         <div className="modal-body p-4 rounded-3xl">
           <p className="font-bold text-2xl tracking-tight mb-5">List NFT</p>
           {/* <ToggleTab className="mt-5" /> */}

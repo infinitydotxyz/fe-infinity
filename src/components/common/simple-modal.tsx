@@ -11,7 +11,7 @@ interface Props {
   okButton?: string;
   onClose: () => void;
   onSubmit?: () => void;
-  hideActionButtons?: boolean;
+  showActionButtons?: boolean;
 }
 
 export const SimpleModal = ({
@@ -21,7 +21,7 @@ export const SimpleModal = ({
   title,
   isOpen,
   onClose,
-  hideActionButtons = false
+  showActionButtons = false
 }: Props) => {
   return (
     <Transition appear show={isOpen} as={Fragment}>
@@ -63,7 +63,7 @@ export const SimpleModal = ({
 
               {children}
 
-              {hideActionButtons && (
+              {showActionButtons && (
                 <div className="flex space-x-1 mt-4">
                   <div className="mt-4">
                     <Button variant="outline" onClick={onClose}>
