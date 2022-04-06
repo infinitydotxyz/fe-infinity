@@ -52,7 +52,7 @@ export function CollectionFeed({ collectionAddress, types }: CollectionFeedProps
   useEffect(() => {
     let arr = events;
     if (filter.types) {
-      arr = events.filter((ev) => (filter.types ?? []).indexOf(event?.type as FeedEventType) >= 0);
+      arr = events.filter((event) => (filter.types ?? []).indexOf(event?.type as FeedEventType) >= 0);
     }
     setFilteredEvents(arr);
   }, [events]);

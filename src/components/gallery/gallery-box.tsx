@@ -7,16 +7,16 @@ import { Button, Card, FetchMore } from 'src/components/common';
 import { FilterPanel } from '../filter/filter-panel';
 import { GallerySort } from './gallery-sort';
 
-type Asset = {
-  address: string;
-  collectionName: string;
-  id: string;
-  image: string;
-};
-type ListingMetadata = {
-  asset: Asset;
-  basePriceInEth: number;
-};
+// type Asset = {
+//   address: string;
+//   collectionName: string;
+//   id: string;
+//   image: string;
+// };
+// type ListingMetadata = {
+//   asset: Asset;
+//   basePriceInEth: number;
+// };
 // type Listing = {
 //   id: string;
 //   metadata: ListingMetadata;
