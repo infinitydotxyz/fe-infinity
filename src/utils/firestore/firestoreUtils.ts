@@ -26,7 +26,7 @@ const EVENTS_PER_PAGE = 10;
 const COMMENTS_PER_PAGE = 10;
 
 export type FeedFilter = {
-  type?: FeedEventType;
+  types?: FeedEventType[];
   collectionAddress?: string;
 };
 
@@ -61,10 +61,10 @@ export async function fetchMoreEvents(filter: FeedFilter) {
 
   if (lastDoc) {
     let q;
-    if (filter?.type) {
+    if (filter?.types) {
       q = query(
         coll,
-        where('type', 'in', [filter?.type]),
+        where('type', 'in', filter?.types),
         orderBy('timestamp', 'desc'),
         limit(EVENTS_PER_PAGE),
         startAfter(lastDoc)
@@ -96,16 +96,16 @@ export async function subscribe(collectionPath: string, filter: FeedFilter, onCh
     const coll = collection(firestoreDb, collectionPath);
 
     let q;
-    if (filter?.type && filter?.collectionAddress) {
+    if (filter?.types && filter?.types.length > 0 && filter?.collectionAddress) {
       q = query(
         coll,
-        where('type', 'in', [filter?.type]),
+        where('type', 'in', filter?.types),
         where('collectionAddress', '==', filter?.collectionAddress),
         orderBy('timestamp', 'desc'),
         limit(EVENTS_PER_PAGE)
       );
-    } else if (filter?.type) {
-      q = query(coll, where('type', 'in', [filter?.type]), orderBy('timestamp', 'desc'), limit(EVENTS_PER_PAGE));
+    } else if (filter?.types && filter?.types.length > 0) {
+      q = query(coll, where('type', 'in', filter?.types), orderBy('timestamp', 'desc'), limit(EVENTS_PER_PAGE));
     } else if (filter?.collectionAddress) {
       q = query(
         coll,

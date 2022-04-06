@@ -26,7 +26,7 @@ export const Home: FC = () => {
 
         <Button
           onClick={() => {
-            router.push('/collection/ens');
+            router.push('/collection/boredapeyachtclub');
           }}
         >
           Collection

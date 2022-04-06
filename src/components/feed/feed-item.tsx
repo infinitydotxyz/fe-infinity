@@ -1,6 +1,7 @@
 // import { ExchangeEvent } from '@infinityxyz/lib/types/core/feed/NftEvent';
 import { ExchangeEvent } from '@infinityxyz/lib/types/core/feed';
 import { BaseFeedEvent, FeedEventType } from '@infinityxyz/lib/types/core/feed/FeedEvent';
+import { ReactNode } from 'react';
 import { AiOutlineComment, AiOutlineLike } from 'react-icons/ai';
 import { ellipsisAddress } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
@@ -22,9 +23,11 @@ export type Comment = {
   timestamp: number;
 };
 
-const TypeName: { [key: string]: string } = {
-  [FeedEventType.TwitterTweet]: 'Tweet',
-  [FeedEventType.NftSale]: 'Sale'
+const TypeName: { [key: string]: ReactNode } = {
+  [FeedEventType.TwitterTweet]: (
+    <span className="rounded-xl bg-blue-400 text-white py-0.5 px-2 text-xs pb-1">Tweet</span>
+  ),
+  [FeedEventType.NftSale]: <span className="rounded-xl bg-blue-700 text-white py-0.5 px-2 text-xs pb-1">Sale</span>
 };
 
 interface FeedItemProps {
@@ -46,7 +49,7 @@ export function FeedItem({ data, onLike, onComment }: FeedItemProps) {
             <span className="font-bold">{data.collectionName}</span>{' '}
             <span className="ml-4 text-secondary">{timestampStr}</span>
           </div>
-          <div className="text-gray-500 text-sm">{TypeName[data.type] ?? ''}</div>
+          <div className="text-gray-500 text-sm mt-1">{TypeName[data.type] ?? ''}</div>
         </div>
       </header>
       <div className="ml-12">
@@ -88,12 +91,12 @@ export function FeedItem({ data, onLike, onComment }: FeedItemProps) {
 }
 
 function TweetEvent({ data }: FeedItemProps) {
-  return <div className="mt-2 border rounded-xl p-2">{data.title}</div>;
+  return <div className="mt-4">{data.title}</div>;
 }
 
 function SaleEvent({ data }: FeedItemProps) {
   return (
-    <div className="mt-2 border rounded-xl p-2 flex items-center bg-gray-100">
+    <div className="mt-2 border rounded-xl p-2 flex items-center bg-gray-100 font-heading">
       <img src={data.image} className="w-20 h-20 rounded-xl" alt="NFT Image" />
       <div className="flex w-full justify-between mx-8">
         <div className="text-sm">

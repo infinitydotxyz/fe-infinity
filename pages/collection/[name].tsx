@@ -157,15 +157,15 @@ export function CollectionPage() {
         ) : (
           <div className="flex">
             <div className="w-2/3">
-              <div className="text-3xl mb-6">Feed</div>
+              {/* <div className="text-3xl mb-6">Feed</div> */}
               <CollectionFeed collectionAddress={collection?.address ?? ''} />
             </div>
-            <div className="w-1/3">
+            <div className="w-1/3 ml-4">
               <div className="text-3xl mb-6">
                 Trending
                 <span className="ml-6 text-secondary">7 day vol</span>
               </div>
-              <div>Trending component</div>
+              {/* <div>Trending component</div> */}
             </div>
           </div>
         )}

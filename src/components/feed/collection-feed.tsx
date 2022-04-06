@@ -3,26 +3,22 @@ import { FeedItem, FeedEvent } from './feed-item';
 import { COLL_FEED, FeedFilter, subscribe } from 'src/utils/firestore/firestoreUtils';
 import { CommentPanel } from './comment-panel';
 import { FeedEventType } from '@infinityxyz/lib/types/core/feed';
-import { Chip } from '../common';
-
-// export const COLL_FEED = 'feed'; // collection: /feed - to store feed events
-// const EVENTS_PER_PAGE = 10;
-// const COMMENTS_PER_PAGE = 10;
+import { FeedFilterDropdown } from './feed-filter-dropdown';
 
 let eventsInit = false;
 
 interface CollectionFeedProps {
   collectionAddress?: string;
-  type?: FeedEventType;
+  types?: FeedEventType[];
 }
 
-export function CollectionFeed({ collectionAddress, type }: CollectionFeedProps) {
+export function CollectionFeed({ collectionAddress, types }: CollectionFeedProps) {
   const [events, setEvents] = useState<FeedEvent[]>([]);
   const [newEvents, setNewEvents] = useState<FeedEvent[]>([]); // new feed events
-  const [filter, setFilter] = useState<FeedFilter>({ collectionAddress, type });
-  const [activeType, setActiveType] = useState<FeedEventType | ''>('');
+  const [filter, setFilter] = useState<FeedFilter>({ collectionAddress, types });
   const [filteredEvents, setFilteredEvents] = useState<FeedEvent[]>([]);
   const [commentPanelEvent, setCommentPanelEvent] = useState<FeedEvent | null>(null);
+  const [filteringTypes, setFilteringTypes] = useState<FeedEventType[]>([]);
   console.log('', typeof setFilter, filteredEvents);
 
   async function getEvents() {
@@ -55,37 +51,44 @@ export function CollectionFeed({ collectionAddress, type }: CollectionFeedProps)
 
   useEffect(() => {
     let arr = events;
-    if (filter.type) {
-      arr = events.filter((ev) => ev.type === filter.type);
+    if (filter.types) {
+      arr = events.filter((ev) => (filter.types ?? []).indexOf(event?.type as FeedEventType) >= 0);
     }
     setFilteredEvents(arr);
   }, [events]);
 
-  const onClickFilterType = (type: FeedEventType | '') => {
+  const onChangeFilterDropdown = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newFilter = { ...filter };
-    if (type) {
-      newFilter.type = type;
-    } else {
-      delete newFilter.type;
+
+    if (event.target.name === '') {
+      setFilteringTypes([]);
+      delete newFilter.types;
+      setFilter(newFilter);
+      return;
     }
-    setActiveType(type);
-    setFilter(newFilter);
+    const selectedType = event.target.name as FeedEventType;
+    if (event.target.checked) {
+      newFilter.types = [...filteringTypes, selectedType];
+      setFilter(newFilter);
+      setFilteringTypes(newFilter.types);
+    } else {
+      const _newTypes = [...filteringTypes];
+      const index = filteringTypes.indexOf(selectedType);
+      if (index >= 0) {
+        _newTypes.splice(index, 1);
+      }
+      newFilter.types = _newTypes;
+      setFilter(newFilter);
+      setFilteringTypes(_newTypes);
+    }
   };
+  console.log('filteringTypes', filteringTypes);
 
   return (
     <div>
-      <div className="flex mb-6">
-        <Chip content={'All'} active={activeType === '' && true} onClick={() => onClickFilterType('')} />
-        <Chip
-          content={'Tweets'}
-          active={activeType === FeedEventType.TwitterTweet && true}
-          onClick={() => onClickFilterType(FeedEventType.TwitterTweet)}
-        />
-        <Chip
-          content={'Sales'}
-          active={activeType === FeedEventType.NftSale && true}
-          onClick={() => onClickFilterType(FeedEventType.NftSale)}
-        />
+      <div className="flex justify-between">
+        <div className="text-3xl mb-6">Feed</div>
+        <FeedFilterDropdown selectedTypes={filteringTypes} onChange={onChangeFilterDropdown} />
       </div>
 
       {newEvents.length > 0 ? (
@@ -115,6 +118,7 @@ export function CollectionFeed({ collectionAddress, type }: CollectionFeedProps)
                 }}
                 onComment={(ev) => setCommentPanelEvent(ev)}
               />
+              <hr className="mt-6 mb-10 text-gray-100" />
             </li>
           );
         })}
