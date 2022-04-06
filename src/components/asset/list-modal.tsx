@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Toggle, TextInputBox } from 'src/components/common';
-import { Modal } from 'src/components/asset/modal';
+import { Button, Toggle, TextInputBox, SimpleModal } from 'src/components/common';
 
 export const ListModal: React.FC = () => {
   const [price, setPrice] = useState(0);
@@ -16,7 +15,7 @@ export const ListModal: React.FC = () => {
   return (
     <div>
       <button onClick={openModal}>List</button>
-      <Modal isOpen={modalIsOpen} onClose={closeModal} hideActionButtons={false}>
+      <SimpleModal isOpen={modalIsOpen} onClose={closeModal} hideActionButtons={false}>
         <div className="modal-body p-4 rounded-3xl">
           <p className="font-bold text-2xl tracking-tight mb-5">List NFT</p>
           {/* <ToggleTab className="mt-5" /> */}
@@ -48,7 +47,7 @@ export const ListModal: React.FC = () => {
             </Button>
           </div>
         </div>
-      </Modal>
+      </SimpleModal>
     </div>
   );
 };

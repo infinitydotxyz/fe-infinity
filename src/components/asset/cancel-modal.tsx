@@ -1,6 +1,5 @@
 import React from 'react';
-import { Button } from 'src/components/common';
-import { Modal } from 'src/components/asset/modal';
+import { Button, SimpleModal } from 'src/components/common';
 
 export const CancelModal: React.FC = () => {
   const [modalIsOpen, setIsOpen] = React.useState(false);
@@ -15,7 +14,7 @@ export const CancelModal: React.FC = () => {
   return (
     <div>
       <button onClick={openModal}>Cancel</button>
-      <Modal isOpen={modalIsOpen} onClose={closeModal} hideActionButtons={false}>
+      <SimpleModal isOpen={modalIsOpen} onClose={closeModal} hideActionButtons={false}>
         <div className="modal-body p-4 rounded-3xl">
           <p className="font-bold text-2xl tracking-tight mb-12">Cancel this listing?</p>
           <div className="flex">
@@ -27,7 +26,7 @@ export const CancelModal: React.FC = () => {
             </Button>
           </div>
         </div>
-      </Modal>
+      </SimpleModal>
     </div>
   );
 };
