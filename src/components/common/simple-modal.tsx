@@ -1,17 +1,28 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, ReactNode } from 'react';
 import { Button } from 'src/components/common/button';
+import { Spacer } from 'src/components/common/spacer';
+import { XIcon } from '@heroicons/react/outline';
 
 interface Props {
   children: ReactNode;
   isOpen: boolean;
-  title: string;
-  okButton: string;
+  title?: string;
+  okButton?: string;
   onClose: () => void;
-  onSubmit: () => void;
+  onSubmit?: () => void;
+  hideActionButtons?: boolean;
 }
 
-export const SimpleModal = ({ children, onSubmit, okButton = 'OK', title, isOpen, onClose }: Props) => {
+export const SimpleModal = ({
+  children,
+  onSubmit,
+  okButton = 'OK',
+  title,
+  isOpen,
+  onClose,
+  hideActionButtons = false
+}: Props) => {
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="fixed inset-0 z-10 overflow-y-auto" onClose={onClose}>
@@ -42,23 +53,29 @@ export const SimpleModal = ({ children, onSubmit, okButton = 'OK', title, isOpen
             leaveTo="opacity-0 scale-95"
           >
             <div className="inline-block w-full max-w-lg p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
-              <Dialog.Title as="h2" className="text-lg font-bold leading-6 text-gray-900 mb-2">
+              <Dialog.Title as="h2" className="flex text-lg font-bold leading-6 text-gray-900 mb-2">
                 {title}
+                <Spacer />
+                <Button size="small" variant="ghost" onClick={onClose}>
+                  <XIcon className="h-6 w-6" />
+                </Button>
               </Dialog.Title>
 
               {children}
 
-              <div className="flex space-x-1 mt-4">
-                <div className="mt-4">
-                  <Button variant="outline" onClick={onClose}>
-                    Cancel
-                  </Button>
-                </div>
+              {hideActionButtons && (
+                <div className="flex space-x-1 mt-4">
+                  <div className="mt-4">
+                    <Button variant="outline" onClick={onClose}>
+                      Cancel
+                    </Button>
+                  </div>
 
-                <div className="mt-4">
-                  <Button onClick={onSubmit}>{okButton}</Button>
+                  <div className="mt-4">
+                    <Button onClick={onSubmit}>{okButton}</Button>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </Transition.Child>
         </div>

@@ -48,7 +48,7 @@ const testCardData: CardData[] = [
 
 export default function MarketPage() {
   const [showDebugTools, setShowDebugTools] = useState(false);
-  const { orderDrawerOpen, setOrderDrawerOpen, isOrderStateEmpty, addBuyCartItem, addSellCartItem } = useOrderContext();
+  const { orderDrawerOpen, setOrderDrawerOpen, isOrderStateEmpty, addCartItem } = useOrderContext();
   const { options, onChange, selected } = useToggleTab(['Assets', 'Orderbook'], 'Assets');
 
   let contents;
@@ -60,7 +60,7 @@ export default function MarketPage() {
         key={cardData.tokenId}
         data={cardData}
         onClick={() => {
-          addBuyCartItem({
+          addCartItem({
             collectionName: cardData.collectionName ?? '(no name)',
             collectionAddress: cardData.tokenAddress ?? '(no address)',
             imageUrl: cardData.image ?? '',
@@ -79,7 +79,7 @@ export default function MarketPage() {
         key={cardData.tokenId}
         data={cardData}
         onClick={() => {
-          addSellCartItem({
+          addCartItem({
             collectionName: cardData.collectionName ?? '(no name)',
             collectionAddress: cardData.tokenAddress ?? '(no address)',
             imageUrl: cardData.image ?? '',

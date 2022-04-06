@@ -8,9 +8,7 @@ import { bigNumToDate } from 'src/utils/marketUtils';
 import { collectionIconHeight, collectionIconStyle, collectionIconWidthInPx, iconButtonStyle } from './ui-constants';
 
 export function OrderSummary() {
-  const { isSellOrderCart, buyCartItems, setOrder, sellCartItems, order } = useOrderContext();
-
-  const cartItems = isSellOrderCart() ? sellCartItems : buyCartItems;
+  const { isSellOrderCart, cartItems, setOrder, order } = useOrderContext();
 
   let leftOffset = 0;
   const iconStack = cartItems.map((item, index) => {

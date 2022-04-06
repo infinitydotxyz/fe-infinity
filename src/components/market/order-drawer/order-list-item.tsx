@@ -9,7 +9,7 @@ interface Props {
 }
 
 export function OrderListItem({ cartItem, allowDelete }: Props) {
-  const { removeBuyCartItem } = useOrderContext();
+  const { removeCartItem } = useOrderContext();
 
   let deleteButton = <></>;
 
@@ -19,7 +19,7 @@ export function OrderListItem({ cartItem, allowDelete }: Props) {
         variant="ghost"
         size="small"
         onClick={() => {
-          removeBuyCartItem(cartItem);
+          removeCartItem(cartItem);
         }}
       >
         <MinusCircleIcon className={iconButtonStyle} />

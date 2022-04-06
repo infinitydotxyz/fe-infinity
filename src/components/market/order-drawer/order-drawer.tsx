@@ -16,6 +16,7 @@ export function OrderDrawer({ open, onClose }: Props) {
   const { user, chainId } = useAppContext();
 
   const {
+    isSellOrderCart,
     setOrder,
     isCartEmpty,
     isOrderStateEmpty,
@@ -117,12 +118,12 @@ export function OrderDrawer({ open, onClose }: Props) {
     );
   } else if (!isOrderBuilderEmpty()) {
     // an order is being built, so let them finish it
-    title = 'Buy order';
+    title = isSellOrderCart() ? 'Sell Order' : 'Buy order';
     footer = buildFooter(() => {
       const order: OBOrder = {
         id: '????',
         chainId: chainId,
-        isSellOrder: false,
+        isSellOrder: isSellOrderCart(),
         signerAddress: user?.address ?? '????',
         numItems,
         startTime: startTime,

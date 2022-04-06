@@ -33,14 +33,9 @@ export type OrderContextType = {
   order?: OBOrder;
   setOrder: (order?: OBOrder) => void;
 
-  buyCartItems: OrderCartItem[];
-  sellCartItems: OrderCartItem[];
-
-  addBuyCartItem: (order: OrderCartItem) => void;
-  addSellCartItem: (order: OrderCartItem) => void;
-
-  removeBuyCartItem: (order: OrderCartItem) => void;
-  removeSellCartItem: (order: OrderCartItem) => void;
+  cartItems: OrderCartItem[];
+  addCartItem: (order: OrderCartItem) => void;
+  removeCartItem: (order: OrderCartItem) => void;
 
   isOrderStateEmpty: () => boolean;
   isCartEmpty: () => boolean;
@@ -73,8 +68,7 @@ export function OrderContextProvider({ children }: Props) {
   const [orderDrawerOpen, setOrderDrawerOpen] = useState<boolean>(false);
 
   const [order, setOrder] = useState<OBOrder>();
-  const [buyCartItems, setBuyCartItems] = useState<OrderCartItem[]>([]);
-  const [sellCartItems, setSellCartItems] = useState<OrderCartItem[]>([]);
+  const [cartItems, setCartItems] = useState<OrderCartItem[]>([]);
 
   // drawer form
   const [startPrice, setStartPrice] = useState<BigNumberish>(1);
@@ -84,7 +78,7 @@ export function OrderContextProvider({ children }: Props) {
   const [numItems, setNumItems] = useState<BigNumberish>(1);
 
   const isOrderBuilderEmpty = (): boolean => {
-    return buyCartItems.length === 0 && sellCartItems.length === 0;
+    return cartItems.length === 0;
   };
 
   const isCartEmpty = (): boolean => {
@@ -98,8 +92,11 @@ export function OrderContextProvider({ children }: Props) {
 
   // the drawer can be in sell or buy mode depending on the items added
   const isSellOrderCart = (): boolean => {
-    return sellCartItems.length > 0;
-    // return buyCartItems.length > 0;
+    if (cartItems.length > 0) {
+      return cartItems[0].isSellOrder;
+    }
+
+    return false;
   };
 
   const executeOrder = () => {
@@ -110,9 +107,7 @@ export function OrderContextProvider({ children }: Props) {
 
   const _resetStateValues = () => {
     setOrder(undefined);
-    setBuyCartItems([]);
-    setSellCartItems([]);
-
+    setCartItems([]);
     setStartPrice(1);
     setEndPrice(1);
     setStartTime(nowSeconds());
@@ -120,41 +115,26 @@ export function OrderContextProvider({ children }: Props) {
     setNumItems(1);
   };
 
-  const addBuyCartItem = (item: OrderCartItem) => {
-    const index = indexOfCartItem(buyCartItems, item);
+  const addCartItem = (item: OrderCartItem) => {
+    if (isSellOrderCart() !== item.isSellOrder) {
+      setCartItems([item]);
+    } else {
+      const index = indexOfCartItem(cartItems, item);
 
-    if (index === -1) {
-      setBuyCartItems([...buyCartItems, item]);
+      if (index === -1) {
+        setCartItems([...cartItems, item]);
+      }
     }
   };
 
-  const addSellCartItem = (item: OrderCartItem) => {
-    const index = indexOfCartItem(sellCartItems, item);
-
-    if (index === -1) {
-      setSellCartItems([...sellCartItems, item]);
-    }
-  };
-
-  const removeBuyCartItem = (item: OrderCartItem) => {
-    const index = indexOfCartItem(buyCartItems, item);
+  const removeCartItem = (item: OrderCartItem) => {
+    const index = indexOfCartItem(cartItems, item);
 
     if (index !== -1) {
-      const copy = [...buyCartItems];
+      const copy = [...cartItems];
       copy.splice(index, 1);
 
-      setBuyCartItems(copy);
-    }
-  };
-
-  const removeSellCartItem = (item: OrderCartItem) => {
-    const index = indexOfCartItem(sellCartItems, item);
-
-    if (index !== -1) {
-      const copy = [...sellCartItems];
-      copy.splice(index, 1);
-
-      setSellCartItems(copy);
+      setCartItems(copy);
     }
   };
 
@@ -163,12 +143,9 @@ export function OrderContextProvider({ children }: Props) {
     setOrderDrawerOpen,
     order,
     setOrder,
-    addBuyCartItem,
-    addSellCartItem,
-    buyCartItems,
-    sellCartItems,
-    removeSellCartItem,
-    removeBuyCartItem,
+    addCartItem,
+    cartItems,
+    removeCartItem,
     isCartEmpty,
     isOrderBuilderEmpty,
     isOrderStateEmpty,
