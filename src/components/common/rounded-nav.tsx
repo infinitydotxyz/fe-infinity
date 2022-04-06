@@ -21,7 +21,7 @@ export function RoundedNav({ items, defaultIndex, onChange, className }: Props) 
   }, [defaultIndex]);
 
   return (
-    <nav
+    <div
       className={twMerge(`flex justify-between space-x-4 bg-gray-100 rounded-2xl ${className ?? ''}`)}
       aria-label="Tabs"
     >
@@ -47,6 +47,6 @@ export function RoundedNav({ items, defaultIndex, onChange, className }: Props) 
           </a>
         );
       })}
-    </nav>
+    </div>
   );
 }

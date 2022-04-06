@@ -143,11 +143,13 @@ export function CollectionPage() {
         </tbody>
       </table>
 
-      <RoundedNav
-        items={[{ title: 'NFTs' }, { title: 'Community' }]}
-        onChange={(currentIndex) => setCurrentTab(currentIndex)}
-        className="w-40 mt-8"
-      />
+      <div className="w-40">
+        <RoundedNav
+          items={[{ title: 'NFTs' }, { title: 'Community' }]}
+          onChange={(currentIndex) => setCurrentTab(currentIndex)}
+          className="mt-8"
+        />
+      </div>
 
       <div className="mt-6">
         {currentTab === 0 ? (
