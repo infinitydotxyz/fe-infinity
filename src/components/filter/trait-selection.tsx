@@ -1,6 +1,6 @@
 import { CollectionAttributes } from '@infinityxyz/lib/types/core';
 import React, { useEffect, useState } from 'react';
-import { FaChevronDown } from 'react-icons/fa';
+import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { useFilterContext } from 'src/utils/context/FilterContext';
 
 type ValueMapItem = {
@@ -112,17 +112,15 @@ export const TraitSelection = ({ traits, onChange }: Props) => {
 
         return (
           <React.Fragment key={item.name}>
-            <div className="p-2 border-b mt-2 flex items-center cursor-pointer">
-              <div
-                className="flex-1"
-                onClick={() => {
-                  const newOpenState = { ...openState, [item.name]: !openState[item.name] };
-                  setOpenState(newOpenState);
-                }}
-              >
-                {item.name}
-              </div>
-              <FaChevronDown className="text-xs" />
+            <div
+              className="p-2 mt-2 flex items-center cursor-pointer font-heading"
+              onClick={() => {
+                const newOpenState = { ...openState, [item.name]: !openState[item.name] };
+                setOpenState(newOpenState);
+              }}
+            >
+              <div className="flex-1">{item.name}</div>
+              {openState[item.name] ? <FaChevronUp className="text-xs" /> : <FaChevronDown className="text-xs" />}
             </div>
 
             {openState[item.name] && (
@@ -149,7 +147,7 @@ export const TraitSelection = ({ traits, onChange }: Props) => {
                       return null;
                     }
                     return (
-                      <div key={`${item.name}_${value.name}`} className="mt-2">
+                      <div key={`${item.name}_${value.name}`} className="mt-2 font-heading font-light text-secondary">
                         <label>
                           <input
                             type="checkbox"
