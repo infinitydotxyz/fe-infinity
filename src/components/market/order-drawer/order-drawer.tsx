@@ -171,10 +171,11 @@ export function OrderDrawer({ open, onClose }: Props) {
           </div>
         }
       >
-        <div className="modal-body p-4 rounded-3xl">
+        <div className="flex flex-col modal-body p-4 rounded-3xl">
           <div className="font-bold text-xlg">Thank you,</div>
           <div className="font-bold mb-6 text-xlg">Order Submitted</div>
           <div>Confirmation: 234234</div>
+          <Button className="mt-6">Done</Button>
         </div>
       </SimpleModal>
 
