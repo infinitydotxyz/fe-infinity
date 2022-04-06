@@ -1,4 +1,4 @@
-import { Spacer, Divider, Button, Drawer, SimpleTable } from 'src/components/common';
+import { Spacer, Divider, Button, Drawer, SimpleTable, SimpleModal } from 'src/components/common';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { formatEther, parseEther } from 'ethers/lib/utils';
 import { ExecParams, ExtraParams, Item, OBOrder } from '@infinityxyz/lib/types/core';
@@ -6,6 +6,7 @@ import { useAppContext } from 'src/utils/context/AppContext';
 import { OrderBuilder } from './order-builder';
 import { OrderSummary } from './order-summary';
 import { EthPrice } from 'src/components/common/eth-price';
+import { useState } from 'react';
 
 interface Props {
   open: boolean;
@@ -13,6 +14,7 @@ interface Props {
 }
 
 export function OrderDrawer({ open, onClose }: Props) {
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const { user, chainId } = useAppContext();
 
   const {
@@ -102,7 +104,9 @@ export function OrderDrawer({ open, onClose }: Props) {
     // ready to checkout, we have an order
     title = 'Cart';
     footer = buildFooter(() => {
-      executeOrder();
+      if (executeOrder()) {
+        setShowSuccessModal(true);
+      }
     });
 
     contents = (
@@ -154,8 +158,18 @@ export function OrderDrawer({ open, onClose }: Props) {
   }
 
   return (
-    <Drawer open={open} onClose={onClose} title={title}>
-      {contents}
-    </Drawer>
+    <>
+      <SimpleModal isOpen={showSuccessModal} onClose={() => setShowSuccessModal(false)} showActionButtons={false}>
+        <div className="modal-body p-4 rounded-3xl">
+          <div className="font-bold text-xlg">Thank you,</div>
+          <div className="font-bold mb-6 text-xlg">Order Submitted</div>
+          <div>Confirmation: 234234</div>
+        </div>
+      </SimpleModal>
+
+      <Drawer open={open} onClose={onClose} title={title}>
+        {contents}
+      </Drawer>
+    </>
   );
 }

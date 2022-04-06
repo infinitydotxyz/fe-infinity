@@ -43,7 +43,7 @@ export type OrderContextType = {
 
   isSellOrderCart: () => boolean;
 
-  executeOrder: () => void;
+  executeOrder: () => boolean;
 
   // drawer form
   startPrice: BigNumberish;
@@ -99,10 +99,12 @@ export function OrderContextProvider({ children }: Props) {
     return false;
   };
 
-  const executeOrder = () => {
+  const executeOrder = (): boolean => {
     setOrderDrawerOpen(false);
 
     _resetStateValues();
+
+    return true;
   };
 
   const _resetStateValues = () => {
