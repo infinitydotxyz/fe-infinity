@@ -35,6 +35,7 @@ export function CommentPanel({ isOpen, onClose, event, contentOnly }: Props) {
   const replyBox = (
     <div className="flex ">
       <textarea
+        value={text}
         placeholder="Reply here"
         onChange={(ev) => setText(ev.target.value)}
         className="mb-6 w-full text-xl  border-none"
