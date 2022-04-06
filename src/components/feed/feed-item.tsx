@@ -3,7 +3,7 @@ import { ExchangeEvent } from '@infinityxyz/lib/types/core/feed';
 import { BaseFeedEvent, FeedEventType } from '@infinityxyz/lib/types/core/feed/FeedEvent';
 import { ReactNode } from 'react';
 import { AiOutlineComment, AiOutlineLike } from 'react-icons/ai';
-import { ellipsisAddress } from 'src/utils';
+import { ellipsisAddress, getChainScannerBase } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { addUserLike } from 'src/utils/firestore/firestoreUtils';
 import { Button } from '../common';
@@ -46,7 +46,9 @@ export function FeedItem({ data, onLike, onComment }: FeedItemProps) {
         <span className="border border-gray-300 p-2 rounded-3xl w-10 bg-gray-100">&nbsp;</span>
         <div className="ml-2">
           <div className="font-medium text-sm">
-            <span className="font-bold">{data.collectionName}</span>{' '}
+            <span className="font-bold">
+              <a href={`/collection/${data.collectionSlug}`}>{data.collectionName}</a>
+            </span>{' '}
             <span className="ml-4 text-secondary">{timestampStr}</span>
           </div>
           <div className="text-gray-500 text-sm mt-1">{TypeName[data.type] ?? ''}</div>
@@ -101,15 +103,27 @@ function SaleEvent({ data }: FeedItemProps) {
       <div className="flex w-full justify-between mx-8">
         <div className="text-sm">
           <div className="text-gray-400">Link</div>
-          <div>{ellipsisAddress(data.txHash)}</div>
+          <div>
+            <a href={`${getChainScannerBase('1')}/tx/${data.txHash}`} target="_blank" rel="noopener noreferrer">
+              {ellipsisAddress(data.txHash)}
+            </a>
+          </div>
         </div>
         <div className="text-sm">
           <div className="text-gray-400">Buyer</div>
-          <div>{data.buyerDisplayName ? ellipsisAddress(data.buyerDisplayName) : ellipsisAddress(data.buyer)}</div>
+          <div>
+            <a href={`${getChainScannerBase('1')}/address/${data.buyer}`} target="_blank" rel="noopener noreferrer">
+              {data.buyerDisplayName ? ellipsisAddress(data.buyerDisplayName) : ellipsisAddress(data.buyer)}
+            </a>
+          </div>
         </div>
         <div className="text-sm">
           <div className="text-gray-400">Seller</div>
-          <div>{data.sellerDisplayName ? ellipsisAddress(data.sellerDisplayName) : ellipsisAddress(data.seller)}</div>
+          <div>
+            <a href={`${getChainScannerBase('1')}/address/${data.seller}`} target="_blank" rel="noopener noreferrer">
+              {data.sellerDisplayName ? ellipsisAddress(data.sellerDisplayName) : ellipsisAddress(data.seller)}
+            </a>
+          </div>
         </div>
         <div className="text-sm">
           <div className="text-gray-400">Price</div>
