@@ -3,13 +3,16 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "npm run update:lib && APP_ENV=dev next dev",
-    "build": "npm install && npm run update:lib && rimraf ./build && cross-env APP_ENV=dev next build",
-    "start": "APP_ENV=dev next start -p 8080",
+    "dev": "npm run update:lib && next dev",
+    "build": "npm install && npm run update:lib && rimraf ./build && cross-env next build",
+    "start": "next start -p 8080",
     "lint": "eslint . --fix",
     "format": "prettier --write {src,pages}/**/*.{tsx,ts}",
     "update:lib": "npm update @infinityxyz/lib",
     "analyze": "ANALYZE=true next build"
+  },
+  "engines": {
+    "node": "16.x"
   },
   "dependencies": {
     "@infinityxyz/lib": "^1.33.0",
