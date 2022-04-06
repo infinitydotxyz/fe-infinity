@@ -7,6 +7,7 @@ import { OrderBuilder } from './order-builder';
 import { OrderSummary } from './order-summary';
 import { EthPrice } from 'src/components/common/eth-price';
 import { useState } from 'react';
+import { AiOutlineCheckCircle } from 'react-icons/ai';
 
 interface Props {
   open: boolean;
@@ -159,7 +160,17 @@ export function OrderDrawer({ open, onClose }: Props) {
 
   return (
     <>
-      <SimpleModal isOpen={showSuccessModal} onClose={() => setShowSuccessModal(false)} showActionButtons={false}>
+      <SimpleModal
+        dialogWidth="max-w-sm"
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        showActionButtons={false}
+        titleChildren={
+          <div>
+            <AiOutlineCheckCircle className="h-12 w-12" />
+          </div>
+        }
+      >
         <div className="modal-body p-4 rounded-3xl">
           <div className="font-bold text-xlg">Thank you,</div>
           <div className="font-bold mb-6 text-xlg">Order Submitted</div>
