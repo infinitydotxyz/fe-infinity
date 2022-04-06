@@ -11,9 +11,6 @@
     "update:lib": "npm update @infinityxyz/lib",
     "analyze": "ANALYZE=true next build"
   },
-  "engines": {
-    "node": ">=16"
-  },
   "dependencies": {
     "@infinityxyz/lib": "^1.33.0",
     "@next/bundle-analyzer": "^12.1.4",
