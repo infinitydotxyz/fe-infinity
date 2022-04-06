@@ -13,6 +13,8 @@ import {
 } from 'src/utils/marketUtils';
 import { BuyOrderMatch, MarketListIdType, MarketListingsBody, OBOrder } from '@infinityxyz/lib/types/core';
 import { OrderModal } from 'src/components/market/order-modal';
+import { RefreshIcon } from '@heroicons/react/outline';
+import { iconButtonStyle } from './order-drawer/ui-constants';
 
 export function OrderDebug() {
   const [buyOrders, setBuyOrders] = useState<OBOrder[]>([]);
@@ -77,6 +79,9 @@ export function OrderDebug() {
 
     if (match) {
       const orders: OBOrder[] = match;
+
+      console.log(orders);
+      console.log(listId);
 
       switch (listId) {
         case 'validActive':
@@ -403,12 +408,14 @@ interface Props2 {
   onClick: () => void;
 }
 
-const Header = ({ title }: Props2): JSX.Element => {
+const Header = ({ title, onClick }: Props2): JSX.Element => {
   return (
-    <div className={'my-4 flex flex-col content-center items-center'}>
+    <div className={'my-4 flex justify-center items-center'}>
       <div className={'text-center text-md bold'}>{title}</div>
 
-      {/* <IconButton aria-label="" variant="ghost" icon={<RepeatIcon />} isRound onClick={onClick} /> */}
+      <Button size="small" variant="ghost" onClick={onClick}>
+        <RefreshIcon className={iconButtonStyle} />
+      </Button>
     </div>
   );
 };

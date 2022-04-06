@@ -21,7 +21,7 @@ export const SimpleModal = ({
   title,
   isOpen,
   onClose,
-  showActionButtons = false
+  showActionButtons = true
 }: Props) => {
   return (
     <Transition appear show={isOpen} as={Fragment}>

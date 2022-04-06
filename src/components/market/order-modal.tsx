@@ -208,7 +208,6 @@ export const OrderModal: React.FC<Props> = ({ isOpen, buyMode = true, inOrder, o
           onClose={() => onClose()}
           title={!isSellOrder ? 'Buy Order' : 'Sell Order'}
           okButton={!isSellOrder ? 'Buy' : 'Sell'}
-          showActionButtons={true}
           onSubmit={() => {
             onSubmit();
           }}
