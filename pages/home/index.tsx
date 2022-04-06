@@ -13,7 +13,7 @@ export function HomePage() {
 
   return (
     <PageBox title={'Homepage'} center={false}>
-      <div className="text-3xl mb-6">Feed</div>
+      {/* <div className="text-3xl mb-6">Feed</div> */}
 
       <CollectionFeed collectionAddress={''} />
     </PageBox>
