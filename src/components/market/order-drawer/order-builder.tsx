@@ -4,8 +4,7 @@ import { OrderListItem } from './order-list-item';
 
 export function OrderBuilder() {
   const {
-    buyCartItems,
-    sellCartItems,
+    cartItems,
     isSellOrderCart,
     startPrice,
     setStartPrice,
@@ -18,8 +17,6 @@ export function OrderBuilder() {
     numItems,
     setNumItems
   } = useOrderContext();
-
-  const cartItems = isSellOrderCart() ? sellCartItems : buyCartItems;
 
   const list = (
     <div className="overflow-y-auto">
