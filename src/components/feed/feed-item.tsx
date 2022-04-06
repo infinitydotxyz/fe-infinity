@@ -43,7 +43,7 @@ export function FeedItem({ data, onLike, onComment }: FeedItemProps) {
   return (
     <div>
       <header className="flex items-center">
-        <span className="border border-gray-300 p-2 rounded-3xl w-10 bg-gray-100">&nbsp;</span>
+        <img src={data.image} className="border border-gray-300 p-2 rounded-3xl w-10 bg-gray-100" />
         <div className="ml-2">
           <div className="font-medium text-sm">
             <span className="font-bold">

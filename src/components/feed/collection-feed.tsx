@@ -116,15 +116,34 @@ export function CollectionFeed({ collectionAddress, types }: CollectionFeedProps
                   }
                   setEvents([...events]);
                 }}
-                onComment={(ev) => setCommentPanelEvent(ev)}
+                onComment={(ev) => {
+                  if (ev.id === commentPanelEvent?.id) {
+                    setCommentPanelEvent(null);
+                  } else {
+                    setCommentPanelEvent(ev);
+                  }
+                }}
               />
+              {commentPanelEvent && item.id === commentPanelEvent.id && (
+                <div className="ml-20 p-4 ">
+                  <CommentPanel
+                    contentOnly={true}
+                    isOpen={!!commentPanelEvent}
+                    event={commentPanelEvent}
+                    onClose={() => {
+                      setCommentPanelEvent(null);
+                    }}
+                  />
+                </div>
+              )}
+
               <hr className="mt-6 mb-10 text-gray-100" />
             </li>
           );
         })}
       </ul>
 
-      {commentPanelEvent && (
+      {/* {commentPanelEvent && (
         <CommentPanel
           isOpen={!!commentPanelEvent}
           event={commentPanelEvent}
@@ -132,7 +151,7 @@ export function CollectionFeed({ collectionAddress, types }: CollectionFeedProps
             setCommentPanelEvent(null);
           }}
         />
-      )}
+      )} */}
     </div>
   );
 }
