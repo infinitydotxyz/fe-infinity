@@ -1,16 +1,5 @@
-export const API_BASE =
-  process.env.APP_ENV === 'prod'
-    ? 'https://sv.infinity.xyz'
-    : process.env.APP_ENV === 'dev'
-    ? 'https://sv-dev.nftcompany.com'
-    : 'http://localhost:9090';
-
-export const SITE_HOST =
-  process.env.APP_ENV === 'prod'
-    ? 'https://infinity.xyz'
-    : process.env.APP_ENV === 'dev'
-    ? 'https://dev.nftcompany.com'
-    : 'http://localhost:3000';
+export const API_BASE = 'http://localhost:9090';
+export const SITE_HOST = 'http://localhost:3000';
 export const ITEMS_PER_PAGE = 10;
 export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
 
