@@ -8,6 +8,7 @@ import { useAppContext } from 'src/utils/context/AppContext';
 import { addUserLike } from 'src/utils/firestore/firestoreUtils';
 import { Button } from '../common';
 import { EthPrice } from '../common/eth-price';
+import NftImage from '../common/nft-image';
 
 export type FeedEvent = BaseFeedEvent &
   ExchangeEvent & {
@@ -43,7 +44,11 @@ export function FeedItem({ data, onLike, onComment }: FeedItemProps) {
   return (
     <div>
       <header className="flex items-center">
-        <img src={data.image} className="border border-gray-300 p-2 rounded-3xl w-10 bg-gray-100" />
+        <NftImage
+          chainId={data.chainId ?? '1'}
+          collectionAddress={data.collectionAddress}
+          className="border border-gray-300 rounded-3xl w-10 bg-gray-100"
+        />
         <div className="ml-2">
           <div className="font-medium text-sm">
             <span className="font-bold">
