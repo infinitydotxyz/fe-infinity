@@ -1,0 +1,29 @@
+import type { FC } from 'react';
+import { Erc721Attribute, CollectionAttributes } from '@infinityxyz/lib/types/core';
+import Trait from './trait';
+
+interface TraitListProps {
+  traits: Erc721Attribute[];
+  collectionTraits: CollectionAttributes;
+}
+
+export const TraitList: FC<TraitListProps> = ({ traits, collectionTraits }) => {
+  return (
+    <div className="mt-16">
+      <p className="mt-4 sm:mt-6 sm:mb-4 tracking-base text-black">Traits</p>
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-6">
+        {traits.map((trait: Erc721Attribute) => (
+          <Trait
+            key={trait.trait_type}
+            trait={trait}
+            description={
+              trait.trait_type
+                ? `${Math.floor(collectionTraits[trait.trait_type]?.values[trait?.value].percent) || 1} % have this`
+                : 'None'
+            }
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
