@@ -115,6 +115,7 @@ export function CollectionFeed({ collectionAddress, type }: CollectionFeedProps)
                 }}
                 onComment={(ev) => setCommentPanelEvent(ev)}
               />
+              <hr className="mt-6 mb-10 text-gray-100" />
             </li>
           );
         })}

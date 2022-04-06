@@ -1,6 +1,7 @@
 // import { ExchangeEvent } from '@infinityxyz/lib/types/core/feed/NftEvent';
 import { ExchangeEvent } from '@infinityxyz/lib/types/core/feed';
 import { BaseFeedEvent, FeedEventType } from '@infinityxyz/lib/types/core/feed/FeedEvent';
+import { ReactNode } from 'react';
 import { AiOutlineComment, AiOutlineLike } from 'react-icons/ai';
 import { ellipsisAddress } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
@@ -22,9 +23,9 @@ export type Comment = {
   timestamp: number;
 };
 
-const TypeName: { [key: string]: string } = {
-  [FeedEventType.TwitterTweet]: 'Tweet',
-  [FeedEventType.NftSale]: 'Sale'
+const TypeName: { [key: string]: ReactNode } = {
+  [FeedEventType.TwitterTweet]: <span className="rounded-xl bg-blue-400 text-white py-0.5 px-2 text-xs">Tweet</span>,
+  [FeedEventType.NftSale]: <span className="rounded-xl bg-blue-700 text-white py-0.5 px-2 text-xs">Sale</span>
 };
 
 interface FeedItemProps {
@@ -88,7 +89,7 @@ export function FeedItem({ data, onLike, onComment }: FeedItemProps) {
 }
 
 function TweetEvent({ data }: FeedItemProps) {
-  return <div className="mt-2 border rounded-xl p-2">{data.title}</div>;
+  return <div className="mt-4">{data.title}</div>;
 }
 
 function SaleEvent({ data }: FeedItemProps) {
