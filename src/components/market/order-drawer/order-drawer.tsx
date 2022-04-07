@@ -75,8 +75,8 @@ export function OrderDrawer({ open, onClose }: Props) {
     }
 
     return (
-      <div className="flex flex-col items-center mb-4">
-        <Divider />
+      <div className="flex flex-col items-center mb-8">
+        <Divider className="mb-8" />
 
         {topWidget}
         <Button onClick={buttonClick}>{buttonTitle}</Button>
