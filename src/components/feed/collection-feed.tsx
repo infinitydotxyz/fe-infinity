@@ -92,7 +92,7 @@ export function CollectionFeed({ collectionAddress, types }: CollectionFeedProps
 
       {newEvents.length > 0 ? (
         <div
-          className="p-4 border border-gray-200 hover:bg-gray-100 mb-4 cursor-pointer w-1/3"
+          className="p-4 border border-gray-200 hover:bg-gray-100 mb-4 cursor-pointer w-1/3 sm:w-full"
           onClick={() => {
             setEvents((currentEvents) => [...newEvents, ...currentEvents]);
             setNewEvents([]);

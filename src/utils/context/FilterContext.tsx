@@ -3,8 +3,8 @@ import React, { useContext, useState } from 'react';
 
 export type Filter = {
   listingType?: ListingType | '';
-  traitTypes?: string;
-  traitValues?: string;
+  traitTypes?: string[];
+  traitValues?: string[];
   priceMin?: string;
   priceMax?: string;
   sortByPrice?: 'ASC' | 'DESC' | '';
@@ -14,8 +14,8 @@ export type Filter = {
 
 const defaultFilter: Filter = {
   listingType: '',
-  traitTypes: '',
-  traitValues: '',
+  traitTypes: [],
+  traitValues: [],
   orderBy: '',
   orderDirection: ''
 };

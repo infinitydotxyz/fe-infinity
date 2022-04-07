@@ -40,7 +40,7 @@ export function Card({ data, className, onClick, isSellCard }: Props): JSX.Eleme
   }
 
   return (
-    <div className={twMerge(`w-48 ${className ?? ''}`)}>
+    <div className={twMerge(`md:w-48 ${className ?? ''}`)}>
       <Link href={`/asset/${data.chainId}/${data.tokenAddress}/${data.tokenId}`} passHref={true}>
         <a>
           <img className="rounded-2xl max-h-80 overflow-hidden" src={data.image ?? ''} alt="card" />
