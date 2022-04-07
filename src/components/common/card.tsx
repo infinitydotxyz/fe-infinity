@@ -3,6 +3,7 @@ import { twMerge } from 'tailwind-merge';
 import { AiOutlineEye } from 'react-icons/ai';
 import { Dropdown } from './dropdown';
 import { Button } from './button';
+import Link from 'next/link';
 
 interface Props {
   data: CardData;
@@ -30,15 +31,22 @@ export function Card({ data, className, onClick, isSellCard }: Props): JSX.Eleme
             <span className="font-medium font-heading">Buy</span> {data.price} ETH
           </>
         ) : (
-          <span className="font-medium font-heading">Details</span>
+          <Link href={`/asset/${data.chainId}/${data.tokenAddress}/${data.tokenId}`} passHref={true}>
+            <a className="font-medium font-heading">Details</a>
+          </Link>
         )}
       </>
     );
   }
+  console.log('data', data);
 
   return (
     <div className={twMerge(`w-48 ${className ?? ''}`)}>
-      <img className="rounded-2xl max-h-80 overflow-hidden" src={data.image ?? ''} alt="card" />
+      <Link href={`/asset/${data.chainId}/${data.tokenAddress}/${data.tokenId}`} passHref={true}>
+        <a>
+          <img className="rounded-2xl max-h-80 overflow-hidden" src={data.image ?? ''} alt="card" />
+        </a>
+      </Link>
       <div className="p-1">
         <div className="font-bold" title={data.title}>
           {title}
