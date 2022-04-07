@@ -3,9 +3,10 @@ import React, { ReactNode } from 'react';
 interface Props {
   children: ReactNode;
   setShow: (show: boolean) => void;
+  className?: string;
 }
 
-export const Tooltip = ({ setShow, children }: Props) => {
+export const Tooltip = ({ setShow, children, className = '' }: Props) => {
   const handleMouseOver = () => {
     setShow(true);
   };
@@ -15,7 +16,7 @@ export const Tooltip = ({ setShow, children }: Props) => {
   };
 
   return (
-    <div className="relative">
+    <div className={className}>
       <div onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
         <div>{children}</div>
       </div>
@@ -31,7 +32,7 @@ interface Props3 {
 
 const HoverText = ({ tooltip }: Props3) => {
   return (
-    <div className="absolute z-100 top-full  right-0 left-0 pointer-events-none p-6 bg-white shadow-lg rounded-2xl">
+    <div className="absolute z-50 top-full  right-0 left-0 pointer-events-none p-6 bg-white shadow-lg rounded-2xl">
       {tooltip}
     </div>
   );

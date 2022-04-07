@@ -33,6 +33,7 @@ export function OrderBuilder() {
       label="Num Items"
       value={numItems.toString()}
       onChange={(value) => setNumItems(parseInt(value))}
+      tooltip="The min number you want to buy from the collections listed in the order"
     />
   );
 
@@ -44,6 +45,7 @@ export function OrderBuilder() {
       addEthSymbol={true}
       label="Start Price"
       onChange={(value) => setStartPrice(parseFloat(value))}
+      tooltip="(tooltip goes here)"
     />
   );
 
@@ -55,6 +57,7 @@ export function OrderBuilder() {
       addEthSymbol={true}
       label="End Price"
       onChange={(value) => setEndPrice(parseFloat(value))}
+      tooltip="(tooltip goes here)"
     />
   );
 
