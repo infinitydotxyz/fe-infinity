@@ -3,14 +3,14 @@ import { DatePicker } from 'src/components/common';
 import { ComboBox, ComboBoxBaseType } from './combo-box';
 import { CalendarIcon } from '@heroicons/react/outline';
 import { EthSymbol } from './eth-price';
-import { Tooltip, TooltipWrapper } from './tool-tip';
+import { Tooltip, TooltipSpec, TooltipWrapper } from './tool-tip';
 import { IoMdInformationCircleOutline } from 'react-icons/io';
 import { smallIconButtonStyle } from '../market/order-drawer/ui-constants';
 
 interface Props {
   label?: string;
   children: ReactNode;
-  tooltip?: string;
+  tooltip?: TooltipSpec;
 }
 
 export function InputBox({ tooltip, label, children }: Props): JSX.Element {
@@ -41,7 +41,7 @@ interface Props2 {
   value: Date;
   placeholder?: string;
   onChange: (value: Date) => void;
-  tooltip?: string;
+  tooltip?: TooltipSpec;
 }
 
 export function DatePickerBox({ tooltip, label, value, onChange, placeholder }: Props2): JSX.Element {
@@ -64,7 +64,7 @@ interface Props3<T extends ComboBoxBaseType> {
   options: T[];
   value: T;
   onChange: (value: T) => void;
-  tooltip?: string;
+  tooltip?: TooltipSpec;
 }
 
 export function ComboInputBox<T extends ComboBoxBaseType>({
@@ -90,7 +90,7 @@ interface Props4 {
   placeholder: string;
   addEthSymbol?: boolean;
   onChange: (value: string) => void;
-  tooltip?: string;
+  tooltip?: TooltipSpec;
 }
 
 export function TextInputBox({

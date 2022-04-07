@@ -2,7 +2,7 @@ import { Fragment, ReactNode, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { XIcon } from '@heroicons/react/outline';
 import { Button } from 'src/components/common';
-import { Tooltip, TooltipWrapper } from './tool-tip';
+import { Tooltip, TooltipSpec, TooltipWrapper } from './tool-tip';
 import { IoMdInformationCircleOutline } from 'react-icons/io';
 import { smallIconButtonStyle } from '../market/order-drawer/ui-constants';
 
@@ -10,7 +10,7 @@ interface Props {
   open: boolean;
   onClose: () => void;
   title: string;
-  tooltip?: string;
+  tooltip?: TooltipSpec;
   children: ReactNode;
 }
 

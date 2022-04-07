@@ -8,6 +8,7 @@ import { OrderSummary } from './order-summary';
 import { EthPrice } from 'src/components/common/eth-price';
 import { useState } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
+import { TooltipSpec } from 'src/components/common/tool-tip';
 
 interface Props {
   open: boolean;
@@ -98,14 +99,14 @@ export function OrderDrawer({ open, onClose }: Props) {
   let contents;
   let title = 'Create order';
   let footer;
-  let tooltip;
+  let tooltip: TooltipSpec | undefined;
 
   if (isOrderStateEmpty()) {
     contents = emptyCart;
   } else if (!isCartEmpty()) {
     // ready to checkout, we have an order
     title = 'Cart';
-    tooltip = '(tooltip goes here)';
+    tooltip = { title: '(tooltip goes here)', content: '(tooltip goes here)' };
     footer = buildFooter(() => {
       if (executeOrder()) {
         setShowSuccessModal(true);
@@ -127,8 +128,12 @@ export function OrderDrawer({ open, onClose }: Props) {
     // an order is being built, so let them finish it
     title = isSellOrderCart() ? 'Sell Order' : 'Buy order';
     tooltip = isSellOrderCart()
-      ? 'Selected NFT(s) will be automatically sold when there’s a matching buy order'
-      : 'Any NFT(s) from selected collections will be automatically bought when there’s a matching sell order';
+      ? { title: 'Sell order', content: 'Selected NFT(s) will be automatically sold when there’s a matching buy order' }
+      : {
+          title: 'Buy order',
+          content:
+            'Any NFT(s) from selected collections will be automatically bought when there’s a matching sell order'
+        };
     footer = buildFooter(() => {
       const order: OBOrder = {
         id: '????',

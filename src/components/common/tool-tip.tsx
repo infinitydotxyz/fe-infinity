@@ -1,5 +1,10 @@
 import React, { ReactNode } from 'react';
 
+export interface TooltipSpec {
+  title: string;
+  content: string;
+}
+
 interface Props {
   children: ReactNode;
   setShow: (show: boolean) => void;
@@ -27,13 +32,14 @@ export const Tooltip = ({ setShow, children, className = '' }: Props) => {
 // ================================================
 
 interface Props3 {
-  tooltip: string;
+  tooltip: TooltipSpec;
 }
 
-const HoverText = ({ tooltip }: Props3) => {
+const TooltipContent = ({ tooltip }: Props3) => {
   return (
     <div className="absolute z-50 top-full  right-0 left-0 pointer-events-none p-6 bg-white shadow-lg rounded-2xl">
-      {tooltip}
+      <div className="font-bold">{tooltip.title}</div>
+      <div>{tooltip.content}</div>
     </div>
   );
 };
@@ -42,7 +48,7 @@ const HoverText = ({ tooltip }: Props3) => {
 
 interface Props4 {
   show: boolean;
-  tooltip?: string;
+  tooltip?: TooltipSpec;
   children: ReactNode;
 }
 
@@ -51,7 +57,7 @@ export const TooltipWrapper = ({ children, show, tooltip }: Props4) => {
     <div className="relative">
       {children}
 
-      {tooltip && show && <HoverText tooltip={tooltip} />}
+      {tooltip && show && <TooltipContent tooltip={tooltip} />}
     </div>
   );
 };
