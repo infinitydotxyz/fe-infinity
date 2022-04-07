@@ -29,6 +29,9 @@ const TypeName: { [key: string]: ReactNode } = {
   [FeedEventType.TwitterTweet]: (
     <span className="rounded-xl bg-blue-400 text-white py-0.5 px-2 text-xs pb-1">Tweet</span>
   ),
+  [FeedEventType.DiscordAnnouncement]: (
+    <span className="rounded-xl bg-black text-white py-0.5 px-2 text-xs pb-1">Discord</span>
+  ),
   [FeedEventType.NftSale]: <span className="rounded-xl bg-blue-700 text-white py-0.5 px-2 text-xs pb-1">Sale</span>
 };
 
@@ -62,6 +65,7 @@ export function FeedItem({ data, onLike, onComment }: FeedItemProps) {
       </header>
       <div className="ml-12">
         {data.type === FeedEventType.TwitterTweet && <TweetEvent data={data} />}
+        {data.type === FeedEventType.DiscordAnnouncement && <Discord data={data} />}
         {data.type === FeedEventType.NftSale && <SaleEvent data={data} />}
 
         <footer className="text-sm mt-2 text-gray-500 flex items-center">
@@ -99,6 +103,10 @@ export function FeedItem({ data, onLike, onComment }: FeedItemProps) {
 }
 
 function TweetEvent({ data }: FeedItemProps) {
+  return <div className="mt-4">{data.title}</div>;
+}
+
+function Discord({ data }: FeedItemProps) {
   return <div className="mt-4">{data.title}</div>;
 }
 

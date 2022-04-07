@@ -19,6 +19,10 @@ export const FeedFilterDropdown: React.FC<FeedFilterDropdownProps> = ({ selected
       value: FeedEventType.TwitterTweet
     },
     {
+      label: 'Discord',
+      value: FeedEventType.DiscordAnnouncement
+    },
+    {
       label: 'Sales',
       value: FeedEventType.NftSale
     }
