@@ -38,7 +38,6 @@ export function Card({ data, className, onClick, isSellCard }: Props): JSX.Eleme
       </>
     );
   }
-  console.log('data', data);
 
   return (
     <div className={twMerge(`w-48 ${className ?? ''}`)}>
