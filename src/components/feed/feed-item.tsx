@@ -112,10 +112,10 @@ function Discord({ data }: FeedItemProps) {
 
 function SaleEvent({ data }: FeedItemProps) {
   return (
-    <div className="mt-2 border rounded-xl p-2 flex items-center bg-gray-100 font-heading">
+    <div className="mt-4 border rounded-xl p-4 flex items-center bg-gray-100 font-heading">
       <Link href={`/asset/${data.chainId}/${data.collectionAddress}/${data.tokenId}`} passHref={true}>
         <a>
-          <img src={data.image} className="w-20 h-20 rounded-xl" alt="NFT Image" />
+          <img src={data.image} className="w-24 rounded-xl" alt="NFT Image" />
         </a>
       </Link>
       <div className="flex w-full justify-between mx-8">
