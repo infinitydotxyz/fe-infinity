@@ -3,9 +3,7 @@ import { DatePicker } from 'src/components/common';
 import { ComboBox, ComboBoxBaseType } from './combo-box';
 import { CalendarIcon } from '@heroicons/react/outline';
 import { EthSymbol } from './eth-price';
-import { Tooltip, TooltipSpec, TooltipWrapper } from './tool-tip';
-import { IoMdInformationCircleOutline } from 'react-icons/io';
-import { smallIconButtonStyle } from '../market/order-drawer/ui-constants';
+import { Tooltip, TooltipIcon, TooltipSpec, TooltipWrapper } from './tool-tip';
 
 interface Props {
   label?: string;
@@ -25,7 +23,7 @@ export function InputBox({ tooltip, label, children }: Props): JSX.Element {
 
           {tooltip && (
             <Tooltip className="absolute top-0 bottom-0 right-2 flex flex-col justify-center" setShow={setShowTooltip}>
-              <IoMdInformationCircleOutline className={smallIconButtonStyle} />
+              <TooltipIcon />
             </Tooltip>
           )}
         </div>

@@ -2,9 +2,7 @@ import { Fragment, ReactNode, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { XIcon } from '@heroicons/react/outline';
 import { Button } from 'src/components/common';
-import { Tooltip, TooltipSpec, TooltipWrapper } from './tool-tip';
-import { IoMdInformationCircleOutline } from 'react-icons/io';
-import { smallIconButtonStyle } from '../market/order-drawer/ui-constants';
+import { Tooltip, TooltipIcon, TooltipSpec, TooltipWrapper } from './tool-tip';
 
 interface Props {
   open: boolean;
@@ -27,7 +25,7 @@ export function Drawer({ open, tooltip, onClose, title, children }: Props) {
 
               {tooltip && (
                 <Tooltip setShow={setShowTooltip}>
-                  <IoMdInformationCircleOutline className={smallIconButtonStyle} />
+                  <TooltipIcon />
                 </Tooltip>
               )}
             </div>

@@ -1,9 +1,15 @@
 import React, { ReactNode } from 'react';
+import { IoMdInformationCircleOutline } from 'react-icons/io';
+import { smallIconButtonStyle } from '../market/order-drawer/ui-constants';
 
 export interface TooltipSpec {
   title: string;
   content: string;
 }
+
+export const TooltipIcon = () => {
+  return <IoMdInformationCircleOutline className={`fill-slate-500 ${smallIconButtonStyle}`} />;
+};
 
 interface Props {
   children: ReactNode;
