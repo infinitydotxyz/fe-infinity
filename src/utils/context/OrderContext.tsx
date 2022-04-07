@@ -120,6 +120,7 @@ export function OrderContextProvider({ children }: Props) {
   const addCartItem = (item: OrderCartItem) => {
     if (isSellOrderCart() !== item.isSellOrder) {
       setCartItems([item]);
+      setOrder(undefined);
     } else {
       const index = indexOfCartItem(cartItems, item);
 

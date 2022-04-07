@@ -53,11 +53,19 @@ export function OrderDrawer({ open, onClose }: Props) {
 
       const items = [];
 
-      items.push({
-        title: 'Max budget',
-        value: <EthPrice label={formatEther(order?.endPrice ?? 0)} />
-      });
-      items.push({ title: 'Number of NFTs', value: <div>{order?.numItems}</div> });
+      if (isSellOrderCart()) {
+        items.push({
+          title: 'Min total sale price',
+          value: <EthPrice label={formatEther(order?.endPrice ?? 0)} />
+        });
+        items.push({ title: 'Max NFTs to sell', value: <div>{order?.numItems}</div> });
+      } else {
+        items.push({
+          title: 'Max spending',
+          value: <EthPrice label={formatEther(order?.endPrice ?? 0)} />
+        });
+        items.push({ title: 'Min NFTs to buy', value: <div>{order?.numItems}</div> });
+      }
 
       topWidget = (
         <div className="mb-6 w-full px-8">
@@ -185,7 +193,9 @@ export function OrderDrawer({ open, onClose }: Props) {
           <div className="font-bold text-xlg">Thank you,</div>
           <div className="font-bold mb-6 text-xlg">Order Submitted</div>
           <div>Confirmation: 234234</div>
-          <Button className="mt-6">Done</Button>
+          <Button className="mt-6" onClick={() => setShowSuccessModal(false)}>
+            Done
+          </Button>
         </div>
       </SimpleModal>
 
