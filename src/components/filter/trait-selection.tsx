@@ -75,8 +75,8 @@ export const TraitSelection = ({ traits, onChange }: Props) => {
 
   useEffect(() => {
     // when filterState changed (somewhere else) => parse it and set to TypeValueMap for checkboxes' states
-    const traitTypes = (filterState?.traitTypes || '').split(',');
-    const traitValues = (filterState?.traitValues || '').split(',');
+    const traitTypes = filterState?.traitTypes || [];
+    const traitValues = filterState?.traitValues || [];
     const map: TypeValueMap = {};
     for (let i = 0; i < traitTypes.length; i++) {
       const type = traitTypes[i];
@@ -158,6 +158,7 @@ export const TraitSelection = ({ traits, onChange }: Props) => {
 
                               const [traitTypes, traitValues] = getSelections(typeValueMap);
                               if (onChange) {
+                                console.log('traitTypes, traitValues', traitTypes, traitValues);
                                 onChange(traitTypes, traitValues);
                               }
                             }}
