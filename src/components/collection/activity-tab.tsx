@@ -23,7 +23,7 @@ export function ActivityTab({ weeklyStats }: ActivityTabProps) {
         </thead>
         <tbody>
           <tr className="font-bold font-heading">
-            <td>{weeklyStats?.data[0]?.averagePrice ?? '—'}</td>
+            <td>{weeklyStats?.data[0]?.avgPrice ?? '—'}</td>
             <td>{weeklyStats?.data[0]?.volume.toLocaleString()}</td>
           </tr>
         </tbody>
