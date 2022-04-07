@@ -19,3 +19,4 @@ export const pixelsPerRem = () => {
 };
 
 export const iconButtonStyle = 'h-6 w-6';
+export const smallIconButtonStyle = 'h-5 w-5';

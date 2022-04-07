@@ -1,6 +1,6 @@
 import { MarketListIdType, MarketListingsBody, OBOrder } from '@infinityxyz/lib/types/core';
 import { BigNumber, BigNumberish } from 'ethers';
-import { apiPost } from 'src/utils/apiUtils';
+import { apiPost, isStatusOK } from 'src/utils/apiUtils';
 
 export interface BuyOrderMatch {
   buyOrder: OBOrder;
@@ -37,7 +37,7 @@ export const addBuy = async (order: OBOrder): Promise<BuyOrderMatch[]> => {
     if (response.result) {
       const res: TradeResponse | null = response.result;
 
-      if (res && response.status === 200) {
+      if (res && isStatusOK(response)) {
         return res.matches;
       }
     }
@@ -58,7 +58,7 @@ export const addSell = async (order: OBOrder): Promise<BuyOrderMatch[]> => {
     if (response.result) {
       const res: TradeResponse | null = response.result;
 
-      if (res && response.status === 200) {
+      if (res && isStatusOK(response)) {
         return res.matches;
       }
     }
@@ -97,7 +97,7 @@ const list = async (body: MarketListingsBody): Promise<OBOrder[]> => {
   if (response.result) {
     const match: MarketListingsResponse | null = response.result;
 
-    if (response.status === 200) {
+    if (isStatusOK(response)) {
       if (match) {
         if (body.orderType === 'buyOrders') {
           const buys: OBOrder[] = match.buyOrders as OBOrder[];
@@ -126,7 +126,7 @@ export const marketMatches = async (): Promise<BuyOrderMatch[]> => {
   if (response.result) {
     const res: MarketListingsResponse | null = response.result;
 
-    if (res && response.status === 200) {
+    if (res && isStatusOK(response)) {
       return res.matches;
     }
   }
@@ -141,7 +141,7 @@ export const marketDeleteOrder = async (body: MarketListingsBody): Promise<strin
   if (response.result) {
     const match: MarketListingsResponse | null = response.result;
 
-    if (response.status === 200) {
+    if (isStatusOK(response)) {
       if (match) {
         return match.success;
       }
@@ -165,7 +165,7 @@ export const executeBuyOrder = async (orderId: string): Promise<string> => {
   if (response.result) {
     const match: MarketListingsResponse | null = response.result;
 
-    if (response.status === 200) {
+    if (isStatusOK(response)) {
       if (match) {
         return match.success;
       }

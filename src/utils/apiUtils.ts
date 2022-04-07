@@ -9,6 +9,10 @@ const errorToast = (message: string) => {
   console.log(message);
 };
 
+export const isStatusOK = (response: ApiResponse) => {
+  return response.status >= 200 && response.status < 300;
+};
+
 // eslint-disable-next-line
 const buildQueryString = (queryObj: any) => (queryObj ? '?' + stringify(queryObj) : '');
 
@@ -44,8 +48,16 @@ interface ApiParams {
   doNotAttemptLogin?: boolean;
 }
 
+export interface ApiResponse {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  error?: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  result?: any;
+  status: number;
+}
+
 // example: const { result, error, status } = await apiGet(`/api/path`, { query: { page: 1 } });
-export const apiGet = async (path: string, params?: ApiParams) => {
+export const apiGet = async (path: string, params?: ApiParams): Promise<ApiResponse> => {
   const queryStr = buildQueryString(params?.query);
 
   try {
@@ -77,7 +89,7 @@ export const apiGet = async (path: string, params?: ApiParams) => {
 };
 
 // example: const { result, error, status } = await apiPost(`/api/path`, { data: { somekey: 'somevalue' } });
-export const apiPost = async (path: string, params?: ApiParams) => {
+export const apiPost = async (path: string, params?: ApiParams): Promise<ApiResponse> => {
   const queryStr = buildQueryString(params?.query);
   const headers = await getAuthHeaders();
   try {
@@ -105,7 +117,7 @@ export const apiPut = (path: string, params?: ApiParams) => {
   return apiPost(path, { ...params, options: { ...params?.options, method: 'PUT' } });
 };
 
-export const apiDelete = async (path: string, params?: ApiParams) => {
+export const apiDelete = async (path: string, params?: ApiParams): Promise<ApiResponse> => {
   const queryStr = buildQueryString(params?.query);
   const headers = await getAuthHeaders();
   try {

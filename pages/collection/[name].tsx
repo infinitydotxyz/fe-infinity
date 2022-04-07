@@ -8,6 +8,7 @@ import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { useFetch } from 'src/utils/apiUtils';
 import { CollectionFeed } from 'src/components/feed/collection-feed';
 import { ellipsisAddress, getChainScannerBase } from 'src/utils';
+import { ActivityTab } from 'src/components/collection/activity-tab';
 
 export function CollectionPage() {
   const {
@@ -30,7 +31,7 @@ export function CollectionPage() {
       : '',
     { chainId: '1' }
   );
-  const lastStats = dailyStats?.data[dailyStats?.data.length - 1];
+  const lastDailyStats = dailyStats?.data[dailyStats?.data.length - 1];
   const lastWeeklyStats = weeklyStats?.data[weeklyStats?.data.length - 1];
   console.log('lastWeeklyStats', lastWeeklyStats);
 
@@ -39,14 +40,13 @@ export function CollectionPage() {
       title={collection?.metadata?.name ?? ''}
       titleElement={
         <span>
-          <img src={collection?.metadata.profileImage} className="w-20 h-20" />
+          <img src={collection?.metadata.profileImage} className="w-20 h-20 mb-4" />
           {collection?.metadata?.name}{' '}
           {collection?.hasBlueCheck ? (
             <Image src="/images/blue-check.png" width={24} height={24} alt="Blue check icon" />
           ) : null}
         </span>
       }
-      center={false}
     >
       <div className="text-secondary mb-6 ml-2 text-sm font-heading">
         Created by{' '}
@@ -63,17 +63,21 @@ export function CollectionPage() {
           onClick={() => window.open(collection?.metadata.links.twitter)}
           content={
             <span className="flex items-center">
-              {lastStats?.twitterFollowers?.toLocaleString()}
-              {(lastStats?.twitterFollowersPercentChange ?? 0) < 0 ? (
-                <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
-                  <FaCaretDown className="mr-1" />{' '}
-                  {`${Math.abs(lastStats?.twitterFollowersPercentChange ?? 0) * 100}`.slice(0, 4)}%
-                </span>
-              ) : (
-                <span className="ml-2 py-1 px-2 rounded-xl bg-green-500 text-white text-xs flex items-center">
-                  <FaCaretUp className="mr-1" />{' '}
-                  {`${Math.abs(lastStats?.twitterFollowersPercentChange ?? 0) * 100}`.slice(0, 4)}%
-                </span>
+              {lastWeeklyStats?.twitterFollowers?.toLocaleString() ?? '—'}
+              {lastWeeklyStats?.twitterFollowersPercentChange && (
+                <>
+                  {(lastWeeklyStats?.twitterFollowersPercentChange ?? 0) < 0 ? (
+                    <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
+                      <FaCaretDown className="mr-1" />{' '}
+                      {`${Math.abs(lastWeeklyStats?.twitterFollowersPercentChange ?? 0)}`.slice(0, 4)}%
+                    </span>
+                  ) : (
+                    <span className="ml-2 py-1 px-2 rounded-xl bg-green-500 text-white text-xs flex items-center">
+                      <FaCaretUp className="mr-1" />{' '}
+                      {`${Math.abs(lastWeeklyStats?.twitterFollowersPercentChange ?? 0)}`.slice(0, 4)}%
+                    </span>
+                  )}
+                </>
               )}
             </span>
           }
@@ -83,17 +87,21 @@ export function CollectionPage() {
           onClick={() => window.open(collection?.metadata.links.discord)}
           content={
             <span className="flex items-center">
-              {lastStats?.discordFollowers?.toLocaleString()}
-              {(lastStats?.discordFollowersPercentChange ?? 0) < 0 ? (
-                <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
-                  <FaCaretDown className="mr-1" />{' '}
-                  {`${Math.abs(lastStats?.discordFollowersPercentChange ?? 0) * 100}`.slice(0, 4)}%
-                </span>
-              ) : (
-                <span className="ml-2 py-1 px-2 rounded-xl bg-green-500 text-white text-xs flex items-center">
-                  <FaCaretUp className="mr-1" />{' '}
-                  {`${Math.abs(lastStats?.discordFollowersPercentChange ?? 0) * 100}`.slice(0, 4)}%
-                </span>
+              {lastWeeklyStats?.discordFollowers?.toLocaleString() ?? '—'}
+              {lastWeeklyStats?.discordFollowersPercentChange && (
+                <>
+                  {(lastWeeklyStats?.discordFollowersPercentChange ?? 0) < 0 ? (
+                    <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
+                      <FaCaretDown className="mr-1" />{' '}
+                      {`${Math.abs(lastWeeklyStats?.discordFollowersPercentChange ?? 0)}`.slice(0, 4)}%
+                    </span>
+                  ) : (
+                    <span className="ml-2 py-1 px-2 rounded-xl bg-green-500 text-white text-xs flex items-center">
+                      <FaCaretUp className="mr-1" />{' '}
+                      {`${Math.abs(lastWeeklyStats?.discordFollowersPercentChange ?? 0)}`.slice(0, 4)}%
+                    </span>
+                  )}
+                </>
               )}
             </span>
           }
@@ -137,34 +145,29 @@ export function CollectionPage() {
           <tr className="font-bold font-heading">
             <td>{collection?.numNfts?.toLocaleString()}</td>
             <td>{collection?.numOwners?.toLocaleString()}</td>
-            <td>{lastStats?.floorPrice ?? '—'}</td>
-            <td>{lastStats?.volume?.toLocaleString() ?? ''}</td>
+            <td>{lastDailyStats?.floorPrice ?? '—'}</td>
+            <td>{lastDailyStats?.volume?.toLocaleString() ?? ''}</td>
           </tr>
         </tbody>
       </table>
 
-      <div className="w-40">
-        <RoundedNav
-          items={[{ title: 'NFTs' }, { title: 'Community' }]}
-          onChange={(currentIndex) => setCurrentTab(currentIndex)}
-          className="mt-8"
-        />
-      </div>
+      <RoundedNav
+        items={[{ title: 'NFT' }, { title: 'Activity' }, { title: 'Community' }]}
+        onChange={(currentIndex) => setCurrentTab(currentIndex)}
+        className="mt-8"
+      />
 
       <div className="mt-6">
-        {currentTab === 0 ? (
-          <>{collection && <GalleryBox collection={collection} />}</>
-        ) : (
+        {currentTab === 0 && <>{collection && <GalleryBox collection={collection} />}</>}
+        {currentTab === 1 && <ActivityTab dailyStats={dailyStats} weeklyStats={weeklyStats} />}
+        {currentTab === 2 && (
           <div className="flex">
             <div className="w-2/3">
               {/* <div className="text-3xl mb-6">Feed</div> */}
               <CollectionFeed collectionAddress={collection?.address ?? ''} />
             </div>
             <div className="w-1/3 ml-4">
-              <div className="text-3xl mb-6">
-                Trending
-                <span className="ml-6 text-secondary">7 day vol</span>
-              </div>
+              <div className="text-3xl mb-6">Top Holders</div>
               {/* <div>Trending component</div> */}
             </div>
           </div>

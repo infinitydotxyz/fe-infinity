@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Button, TextInputBox } from '../common';
-import { Modal } from 'src/components/asset/modal';
+import { Button, SimpleModal, TextInputBox } from '../common';
 
 export const TransferNFTModal: React.FC = () => {
   const [address, setAddress] = useState('');
@@ -16,7 +15,7 @@ export const TransferNFTModal: React.FC = () => {
   return (
     <div>
       <button onClick={openModal}>Transfer NFT</button>
-      <Modal isOpen={modalIsOpen} onClose={closeModal} hideActionButtons={false}>
+      <SimpleModal isOpen={modalIsOpen} onClose={closeModal} showActionButtons={false}>
         <div className="modal-body p-4 rounded-3xl">
           <p className="font-bold text-2xl tracking-tight mb-12">Transfer NFT</p>
           <TextInputBox
@@ -37,7 +36,7 @@ export const TransferNFTModal: React.FC = () => {
             </Button>
           </div>
         </div>
-      </Modal>
+      </SimpleModal>
     </div>
   );
 };

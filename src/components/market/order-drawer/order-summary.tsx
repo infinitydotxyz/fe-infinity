@@ -8,9 +8,7 @@ import { bigNumToDate } from 'src/utils/marketUtils';
 import { collectionIconHeight, collectionIconStyle, collectionIconWidthInPx, iconButtonStyle } from './ui-constants';
 
 export function OrderSummary() {
-  const { isSellOrderCart, buyCartItems, setOrder, sellCartItems, order } = useOrderContext();
-
-  const cartItems = isSellOrderCart() ? sellCartItems : buyCartItems;
+  const { isSellOrderCart, cartItems, setOrder, order } = useOrderContext();
 
   let leftOffset = 0;
   const iconStack = cartItems.map((item, index) => {
@@ -47,7 +45,6 @@ export function OrderSummary() {
   );
 
   const items: SimpleTableItem[] = [];
-  let header;
 
   if (isSellOrderCart()) {
     items.push({
@@ -57,12 +54,6 @@ export function OrderSummary() {
     items.push({ title: 'Min NFTs to buy', value: <div>{order?.numItems}</div> });
     // items.push({ title: 'Start Date', value: <div>{bigNumToDate(order?.startTime ?? 0).toLocaleString()}</div> });
     items.push({ title: 'Expiration Date', value: <div>{shortDate(bigNumToDate(order?.endTime ?? 0))}</div> });
-
-    header = (
-      <div>
-        <div>Sell Order</div>
-      </div>
-    );
   } else {
     items.push({
       title: 'Max spending',
@@ -71,18 +62,11 @@ export function OrderSummary() {
     items.push({ title: 'Min NFTs to buy', value: <div>{order?.numItems}</div> });
     // items.push({ title: 'Start Date', value: <div>{bigNumToDate(order?.startTime ?? 0).toLocaleString()}</div> });
     items.push({ title: 'Expiration Date', value: <div>{shortDate(bigNumToDate(order?.endTime ?? 0))}</div> });
-
-    header = (
-      <div>
-        <div>Buy Order</div>
-      </div>
-    );
   }
 
   return (
     <>
       {collectionIcons}
-      {header}
       <SimpleTable items={items} />
     </>
   );

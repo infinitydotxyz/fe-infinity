@@ -1,12 +1,39 @@
 import React from 'react';
 import { Tab } from '@headlessui/react';
-import { useRouter } from 'next/router';
 import { Layout } from 'src/components/analytics/layout';
+import { Field } from 'src/components/analytics/field';
+import { useRouter } from 'next/router';
+import { useAppContext } from 'src/utils/context/AppContext';
 
 export const Analytics = () => {
   const router = useRouter();
-  const page = router.query.params?.[0] ? router.query.params?.[0] : 'trending';
-  const interval = router.query.params?.[1] ? router.query.params?.[1] : '1h';
+  const { user } = useAppContext();
+  const connected = user?.address ? true : false;
+  const [page, setPage] = React.useState(router.query.params?.[0] ? router.query.params?.[0] : 'trending');
+  const [interval, setInterval] = React.useState(router.query.params?.[1] ? router.query.params?.[1] : 'hourly');
+
+  React.useEffect(() => {
+    /*
+      ======================================
+        If user logs out when 'following' tab
+        is selected (or any other tab that is
+        to be shown only when user is connected),
+        we'll redirect user to trending page.
+      ======================================
+    */
+    if (!connected) setPage('trending');
+  }, [connected]);
+
+  React.useEffect(() => {
+    /*
+      ======================================
+        Whenever page or time interval changes,
+        change the URL (so that component refreshes,
+        and data is refetched and cached...)
+      ======================================
+    */
+    router.push(`/analytics/${page}/${interval}`);
+  }, [page, interval]);
 
   /*
     ======================================
@@ -22,152 +49,190 @@ export const Analytics = () => {
   const content = {
     title: 'Analytics',
     statistics: [
-      {
-        id: 1,
-        name: 'NFT Collection Name',
-        fields: [
-          {
-            label: 'Trust',
-            type: 'percentage',
-            value: '11%'
-          },
-          {
-            label: 'Items',
-            type: 'number',
-            value: 25048
-          },
-          {
-            label: 'Owners',
-            type: 'number',
-            value: 8102
-          },
-          {
-            label: 'Floor Price',
-            type: 'number',
-            value: 62340
-          },
-          {
-            label: 'Volume',
-            type: 'percentage',
-            value: 10345
-          }
-        ]
-      },
-      {
-        id: 2,
-        name: 'NFT Collection Name',
-        fields: [
-          {
-            label: 'Trust',
-            type: 'percentage',
-            value: '11%'
-          },
-          {
-            label: 'Items',
-            type: 'number',
-            value: 25048
-          },
-          {
-            label: 'Owners',
-            type: 'number',
-            value: 8102
-          },
-          {
-            label: 'Floor Price',
-            type: 'number',
-            value: 62340
-          },
-          {
-            label: 'Volume',
-            type: 'percentage',
-            value: 10345
-          }
-        ]
-      },
-      {
-        id: 3,
-        name: 'NFT Collection Name',
-        fields: [
-          {
-            label: 'Trust',
-            type: 'percentage',
-            value: '11%'
-          },
-          {
-            label: 'Items',
-            type: 'number',
-            value: 25048
-          },
-          {
-            label: 'Owners',
-            type: 'number',
-            value: 8102
-          },
-          {
-            label: 'Floor Price',
-            type: 'number',
-            value: 62340
-          },
-          {
-            label: 'Volume',
-            type: 'percentage',
-            value: 10345
-          }
-        ]
-      }
+      [
+        {
+          type: 'image',
+          value: 'https://www.dogtime.com/assets/uploads/2011/03/puppy-development.jpg'
+        },
+        {
+          type: 'string',
+          value: 'NFT Collection Name #1'
+        },
+        {
+          label: 'Trust',
+          type: 'percentage',
+          value: '11%'
+        },
+        {
+          label: 'Items',
+          type: 'number',
+          value: '25,048'
+        },
+        {
+          label: 'Owners',
+          type: 'number',
+          value: '8,102'
+        },
+        {
+          label: 'Floor Price',
+          type: 'number',
+          value: '62,340'
+        },
+        {
+          label: 'Volume',
+          type: 'number',
+          value: '10,345'
+        },
+        {
+          type: 'action',
+          props: {}
+        }
+      ],
+      [
+        {
+          type: 'image',
+          value:
+            'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1.00xw:0.669xh;0,0.190xh&resize=980:*'
+        },
+        {
+          type: 'string',
+          value: 'NFT Collection Name #2'
+        },
+        {
+          label: 'Trust',
+          type: 'percentage',
+          value: '25%'
+        },
+        {
+          label: 'Items',
+          type: 'number',
+          value: '25,048'
+        },
+        {
+          label: 'Owners',
+          type: 'number',
+          value: '8,102'
+        },
+        {
+          label: 'Floor Price',
+          type: 'number',
+          value: '62,340'
+        },
+        {
+          label: 'Volume',
+          type: 'number',
+          value: '10,345'
+        },
+        {
+          type: 'action',
+          props: {}
+        }
+      ],
+      [
+        {
+          type: 'image',
+          value:
+            'https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=278%2C340%2C4644%2C3098&q=45&auto=format&w=926&fit=clip'
+        },
+        {
+          type: 'string',
+          value: 'NFT Collection Name #3'
+        },
+        {
+          label: 'Trust',
+          type: 'percentage',
+          value: '75%'
+        },
+        {
+          label: 'Items',
+          type: 'number',
+          value: '25,048'
+        },
+        {
+          label: 'Owners',
+          type: 'number',
+          value: '8,102'
+        },
+        {
+          label: 'Floor Price',
+          type: 'number',
+          value: '62,340'
+        },
+        {
+          label: 'Volume',
+          type: 'number',
+          value: '10,345'
+        },
+        {
+          type: 'action',
+          props: {}
+        }
+      ]
     ],
     options: {
       timeframes: [
         {
           type: 'tab',
-          id: '1h',
-          url: `/analytics/${page}/1h`,
+          id: 'hourly',
+          url: `/analytics/${page}/hourly`,
           label: '1 hr',
           props: {}
         },
         {
           type: 'tab',
-          id: '1d',
-          url: `/analytics/${page}/1d`,
+          id: 'daily',
+          url: `/analytics/${page}/daily`,
           label: '1 day',
           props: {}
         },
         {
           type: 'tab',
-          id: '7d',
-          url: `/analytics/${page}/7d`,
+          id: 'weekly',
+          url: `/analytics/${page}/weekly`,
           label: '7 days',
           props: {}
         },
         {
           type: 'tab',
-          id: '30d',
-          url: `/analytics/${page}/30d`,
+          id: 'monthly',
+          url: `/analytics/${page}/monthly`,
           label: '30 days',
           props: {}
         },
         {
           type: 'tab',
-          id: 'total',
-          url: `/analytics/${page}/total`,
+          id: 'all',
+          url: `/analytics/${page}/all`,
           label: 'All',
           props: {}
         }
       ],
       actions: {
         links: [
+          /*
+            ======================================
+              We need to show the 'following' tab
+              only when the user is connected. So
+              we insert it into this links array only
+              when user is connected.
+            ======================================
+          */
+          ...(connected
+            ? [
+                {
+                  type: 'link',
+                  id: 'following',
+                  url: `/analytics/following/${interval}`,
+                  label: 'Following ',
+                  props: {}
+                }
+              ]
+            : []),
           {
             type: 'link',
             id: 'trending',
             url: `/analytics/trending/${interval}`,
             label: 'Trending',
-            props: {}
-          },
-          {
-            type: 'link',
-            id: 'following',
-            url: `/analytics/following/${interval}`,
-            label: 'Following ',
             props: {}
           }
         ],
@@ -198,9 +263,10 @@ export const Analytics = () => {
     },
     container: {
       className: `
-        w-full h-full overflow-hidden
+        w-full h-full
         bg-theme-light-50
         grid grid-rows-24 grid-cols-24
+        pb-8
       `
     },
     heading: {
@@ -233,15 +299,7 @@ export const Analytics = () => {
         group: {
           defaultIndex: content?.options?.timeframes?.findIndex((x) => x.id === interval),
           onChange: (index: number): void => {
-            /*
-              ======================================
-                When you change the interval via
-                keyboard arrow keys, this function
-                runs and updates the route.
-              ======================================
-            */
-            const _interval = content?.options?.timeframes?.[index]?.id;
-            router.push(`/analytics/${page}/${_interval}`);
+            setInterval(content?.options?.timeframes?.reverse()?.[index]?.id);
           }
         },
         container: {
@@ -265,15 +323,7 @@ export const Analytics = () => {
         group: {
           defaultIndex: content?.options?.actions?.links?.findIndex((x) => x.id === page),
           onChange: (index: number): void => {
-            /*
-              ======================================
-                When you change the page via
-                keyboard arrow keys, this function
-                runs and updates the route.
-              ======================================
-            */
-            const _page = content?.options?.actions?.links?.[index]?.id;
-            router.push(`/analytics/${_page}/${interval}`);
+            setPage(content?.options?.actions?.links?.[index]?.id);
           }
         },
         container: {
@@ -323,9 +373,34 @@ export const Analytics = () => {
         item: {
           container: {
             className: `
-              w-full h-full min-h-[170px] rounded-xl
+              w-full h-full min-h-[170px] overflow-hidden rounded-xl
               bg-theme-light-300
+              grid grid-rows-1
+              ${connected ? 'grid-cols-[2fr,6fr,6fr,3fr,3fr,3fr,3fr,2fr]' : 'grid-cols-[2fr,7fr,7fr,3fr,3fr,3fr,3fr]'}
+              place-items-center
             `
+          },
+          field: {
+            container: {
+              className: `
+                w-full h-full
+                row-span-1 col-span-1
+              `
+            },
+            image: {
+              className: `
+                w-full h-full
+                row-span-1 col-span-1
+                bg-red-200
+              `
+            },
+            name: {
+              className: `
+                w-full h-full
+                row-span-1 col-span-1
+                bg-blue-200
+              `
+            }
           }
         }
       }
@@ -390,7 +465,7 @@ export const Analytics = () => {
                     the data back.
                   ====================================
                 */}
-                {content?.options?.actions?.links?.reverse()?.map((link, i) => (
+                {content?.options?.actions?.links?.map((link, i) => (
                   <React.Fragment key={i}>
                     <Tab {...styles?.options?.actions?.tab}>{link?.label}</Tab>
                   </React.Fragment>
@@ -408,7 +483,15 @@ export const Analytics = () => {
             <div {...styles?.statistics?.list?.container}>
               {content?.statistics?.map((data, i) => (
                 <React.Fragment key={i}>
-                  <div {...styles?.statistics?.list?.item?.container}></div>
+                  <div {...styles?.statistics?.list?.item?.container}>
+                    {data?.map((field, j) => (
+                      <React.Fragment key={j}>
+                        <div {...styles?.statistics?.list?.item?.field?.container}>
+                          <Field type={field?.type} label={field?.label} value={field?.value} />
+                        </div>
+                      </React.Fragment>
+                    ))}
+                  </div>
                 </React.Fragment>
               ))}
             </div>

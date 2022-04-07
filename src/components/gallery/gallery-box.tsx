@@ -55,12 +55,14 @@ export function GalleryBox({ collection }: GalleryProps) {
       }
     });
 
-    const moreData = (result?.data || []).map((item: BaseToken) => {
+    const moreData: CardData[] = (result?.data || []).map((item: BaseToken) => {
       return {
         id: collection?.address + '_' + item.tokenId,
         title: collection?.metadata?.name,
         image: item.image.url,
         price: 0,
+        chainId: item.chainId,
+        tokenAddress: collection?.address,
         tokenId: item.tokenId
       };
     });
