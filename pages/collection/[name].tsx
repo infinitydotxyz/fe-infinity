@@ -31,7 +31,7 @@ export function CollectionPage() {
       : '',
     { chainId: '1' }
   );
-  const lastStats = dailyStats?.data[dailyStats?.data.length - 1];
+  const lastDailyStats = dailyStats?.data[dailyStats?.data.length - 1];
   const lastWeeklyStats = weeklyStats?.data[weeklyStats?.data.length - 1];
   console.log('lastWeeklyStats', lastWeeklyStats);
 
@@ -40,7 +40,7 @@ export function CollectionPage() {
       title={collection?.metadata?.name ?? ''}
       titleElement={
         <span>
-          <img src={collection?.metadata.profileImage} className="w-20 h-20" />
+          <img src={collection?.metadata.profileImage} className="w-20 h-20 mb-4" />
           {collection?.metadata?.name}{' '}
           {collection?.hasBlueCheck ? (
             <Image src="/images/blue-check.png" width={24} height={24} alt="Blue check icon" />
@@ -63,17 +63,21 @@ export function CollectionPage() {
           onClick={() => window.open(collection?.metadata.links.twitter)}
           content={
             <span className="flex items-center">
-              {lastStats?.twitterFollowers?.toLocaleString()}
-              {(lastStats?.twitterFollowersPercentChange ?? 0) < 0 ? (
-                <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
-                  <FaCaretDown className="mr-1" />{' '}
-                  {`${Math.abs(lastStats?.twitterFollowersPercentChange ?? 0) * 100}`.slice(0, 4)}%
-                </span>
-              ) : (
-                <span className="ml-2 py-1 px-2 rounded-xl bg-green-500 text-white text-xs flex items-center">
-                  <FaCaretUp className="mr-1" />{' '}
-                  {`${Math.abs(lastStats?.twitterFollowersPercentChange ?? 0) * 100}`.slice(0, 4)}%
-                </span>
+              {lastWeeklyStats?.twitterFollowers?.toLocaleString() ?? '—'}
+              {lastWeeklyStats?.twitterFollowersPercentChange && (
+                <>
+                  {(lastWeeklyStats?.twitterFollowersPercentChange ?? 0) < 0 ? (
+                    <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
+                      <FaCaretDown className="mr-1" />{' '}
+                      {`${Math.abs(lastWeeklyStats?.twitterFollowersPercentChange ?? 0)}`.slice(0, 4)}%
+                    </span>
+                  ) : (
+                    <span className="ml-2 py-1 px-2 rounded-xl bg-green-500 text-white text-xs flex items-center">
+                      <FaCaretUp className="mr-1" />{' '}
+                      {`${Math.abs(lastWeeklyStats?.twitterFollowersPercentChange ?? 0)}`.slice(0, 4)}%
+                    </span>
+                  )}
+                </>
               )}
             </span>
           }
@@ -83,17 +87,21 @@ export function CollectionPage() {
           onClick={() => window.open(collection?.metadata.links.discord)}
           content={
             <span className="flex items-center">
-              {lastStats?.discordFollowers?.toLocaleString()}
-              {(lastStats?.discordFollowersPercentChange ?? 0) < 0 ? (
-                <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
-                  <FaCaretDown className="mr-1" />{' '}
-                  {`${Math.abs(lastStats?.discordFollowersPercentChange ?? 0) * 100}`.slice(0, 4)}%
-                </span>
-              ) : (
-                <span className="ml-2 py-1 px-2 rounded-xl bg-green-500 text-white text-xs flex items-center">
-                  <FaCaretUp className="mr-1" />{' '}
-                  {`${Math.abs(lastStats?.discordFollowersPercentChange ?? 0) * 100}`.slice(0, 4)}%
-                </span>
+              {lastWeeklyStats?.discordFollowers?.toLocaleString() ?? '—'}
+              {lastWeeklyStats?.discordFollowersPercentChange && (
+                <>
+                  {(lastWeeklyStats?.discordFollowersPercentChange ?? 0) < 0 ? (
+                    <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
+                      <FaCaretDown className="mr-1" />{' '}
+                      {`${Math.abs(lastWeeklyStats?.discordFollowersPercentChange ?? 0)}`.slice(0, 4)}%
+                    </span>
+                  ) : (
+                    <span className="ml-2 py-1 px-2 rounded-xl bg-green-500 text-white text-xs flex items-center">
+                      <FaCaretUp className="mr-1" />{' '}
+                      {`${Math.abs(lastWeeklyStats?.discordFollowersPercentChange ?? 0)}`.slice(0, 4)}%
+                    </span>
+                  )}
+                </>
               )}
             </span>
           }
@@ -137,14 +145,14 @@ export function CollectionPage() {
           <tr className="font-bold font-heading">
             <td>{collection?.numNfts?.toLocaleString()}</td>
             <td>{collection?.numOwners?.toLocaleString()}</td>
-            <td>{lastStats?.floorPrice ?? '—'}</td>
-            <td>{lastStats?.volume?.toLocaleString() ?? ''}</td>
+            <td>{lastDailyStats?.floorPrice ?? '—'}</td>
+            <td>{lastDailyStats?.volume?.toLocaleString() ?? ''}</td>
           </tr>
         </tbody>
       </table>
 
       <RoundedNav
-        items={[{ title: 'NFTs' }, { title: 'Activity' }, { title: 'Community' }]}
+        items={[{ title: 'NFT' }, { title: 'Activity' }, { title: 'Community' }]}
         onChange={(currentIndex) => setCurrentTab(currentIndex)}
         className="mt-8"
       />

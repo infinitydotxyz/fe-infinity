@@ -22,10 +22,7 @@ export function RoundedNav({ items, defaultIndex, onChange, className }: Props) 
 
   return (
     <div className="flex">
-      <div
-        className={twMerge(`flex justify-between space-x-1 bg-gray-100 rounded-2xl ${className ?? ''}`)}
-        aria-label="Tabs"
-      >
+      <div className={twMerge(`flex justify-between bg-gray-100 rounded-3xl ${className ?? ''}`)} aria-label="Tabs">
         {items.map((item, index: number) => {
           const isActive = index === activeIndex;
           const activeCx = isActive ? 'bg-black text-white' : '';
@@ -34,7 +31,7 @@ export function RoundedNav({ items, defaultIndex, onChange, className }: Props) 
               key={item.title}
               href=""
               className={twMerge(
-                `px-10 py-2 font-medium font-heading rounded-3xl text-sm bg-gray-100 text-secondary ${activeCx}`
+                `px-10 py-2 my-1 font-medium font-heading rounded-3xl text-sm bg-gray-100 text-secondary ${activeCx}`
               )}
               onClick={(e) => {
                 e.preventDefault();
