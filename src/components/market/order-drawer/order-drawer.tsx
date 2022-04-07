@@ -98,12 +98,14 @@ export function OrderDrawer({ open, onClose }: Props) {
   let contents;
   let title = 'Create order';
   let footer;
+  let tooltip;
 
   if (isOrderStateEmpty()) {
     contents = emptyCart;
   } else if (!isCartEmpty()) {
     // ready to checkout, we have an order
     title = 'Cart';
+    tooltip = '(tooltip goes here)';
     footer = buildFooter(() => {
       if (executeOrder()) {
         setShowSuccessModal(true);
@@ -124,6 +126,9 @@ export function OrderDrawer({ open, onClose }: Props) {
   } else if (!isOrderBuilderEmpty()) {
     // an order is being built, so let them finish it
     title = isSellOrderCart() ? 'Sell Order' : 'Buy order';
+    tooltip = isSellOrderCart()
+      ? 'Selected NFT(s) will be automatically sold when there’s a matching buy order'
+      : 'Any NFT(s) from selected collections will be automatically bought when there’s a matching sell order';
     footer = buildFooter(() => {
       const order: OBOrder = {
         id: '????',
@@ -179,7 +184,7 @@ export function OrderDrawer({ open, onClose }: Props) {
         </div>
       </SimpleModal>
 
-      <Drawer open={open} onClose={onClose} title={title}>
+      <Drawer open={open} onClose={onClose} title={title} tooltip={tooltip}>
         {contents}
       </Drawer>
     </>
