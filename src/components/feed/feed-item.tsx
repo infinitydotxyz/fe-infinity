@@ -54,7 +54,7 @@ export function FeedItem({ data, onLike, onComment }: FeedItemProps) {
           className="border border-gray-300 rounded-3xl w-10 bg-gray-100"
         />
         <div className="ml-2">
-          <div className="font-medium text-sm">
+          <div className="font-medium">
             <span className="font-bold">
               <a href={`/collection/${data.collectionSlug}`}>{data.collectionName}</a>
             </span>{' '}
