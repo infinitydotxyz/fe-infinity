@@ -66,13 +66,13 @@ export function CommentPanel({ isOpen, onClose, event, contentOnly }: Props) {
             <hr className="mb-8 text-gray-100" />
 
             <div className="flex items-center">
-              <img alt="" className="border rounded-3xl bg-gray-100 p-4" />
-              <div className="ml-4">{ellipsisString(item.userAddress)}</div>
+              <img alt="profile image" className="border rounded-3xl bg-gray-100 p-5" />
+              <div className="ml-4 font-bold">{ellipsisString(item.userAddress)}</div>
               <div className="ml-4 text-secondary" title={new Date(item.timestamp).toLocaleString()}>
                 {format(item.timestamp)}
               </div>
             </div>
-            <pre className="p-4">{item.comment}</pre>
+            <pre className="ml-14 mt-4 mb-8 font-body">{item.comment}</pre>
           </div>
         );
       })}
