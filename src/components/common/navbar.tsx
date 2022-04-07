@@ -65,7 +65,7 @@ export function Navigation() {
           w-5/6 h-full
           sticky top-0
           row-span-2 col-span-24
-          bg-transparent glass
+          bg-white bg-opacity-70 glass
           grid grid-rows-1 grid-cols-[1fr,10fr,1fr,1fr,1fr] gap-2
           py-4
         `

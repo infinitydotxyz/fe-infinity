@@ -2,15 +2,86 @@ import React from 'react';
 import { Tab } from '@headlessui/react';
 import { Layout } from 'src/components/analytics/layout';
 import { Field } from 'src/components/analytics/field';
+import { useFetch } from 'src/utils/apiUtils';
 import { useRouter } from 'next/router';
 import { useAppContext } from 'src/utils/context/AppContext';
-
+import { CollectionStats } from '@infinityxyz/lib/types/core';
 export const Analytics = () => {
   const router = useRouter();
   const { user } = useAppContext();
   const connected = user?.address ? true : false;
   const [page, setPage] = React.useState(router.query.params?.[0] ? router.query.params?.[0] : 'trending');
   const [interval, setInterval] = React.useState(router.query.params?.[1] ? router.query.params?.[1] : 'hourly');
+  const [date, setDate] = React.useState(Date.now());
+
+  /*
+    ======================================
+      Following code is required to fetch
+      data from BE and then convert it into
+      a format that's acceptable to this component.
+      Currently it looks kind of dirty, and should
+      be updated later to include different
+      filter parameters.
+    ======================================
+  */
+  let statistics = null;
+  const query =
+    page === 'trending'
+      ? `/collections/rankings?orderBy=volume&orderDirection=desc&period=${interval}&date=${date}&limit=10`
+      : `/user/${user?.address}/watchlist?orderBy=discordFollowers&orderDirection=desc&period=${interval}&date=${date}&limit=10`;
+
+  const data = useFetch<{ data: CollectionStats[] }>(query);
+
+  if (data.result) {
+    statistics = data.result.data.map((d) => {
+      const name = d.name;
+      const image = d.profileImage;
+      const trust = d.votesFor > 0 ? `${(d.votesFor / (d.votesAgainst + d.votesFor)) * 100}%` : '0%';
+      const items = d.numNfts ? d.numNfts : '-';
+      const owners = d.numOwners ? d.numOwners : '-';
+      const volume = d.volume ? d.volume : '-';
+      const floorPrice = d.floorPrice ? d.floorPrice : `-`;
+      return [
+        {
+          type: 'image',
+          value: image
+        },
+        {
+          type: 'string',
+          value: name
+        },
+        {
+          label: 'Trust',
+          type: 'percentage',
+          value: trust
+        },
+        {
+          label: 'Items',
+          type: 'number',
+          value: items.toLocaleString()
+        },
+        {
+          label: 'Owners',
+          type: 'number',
+          value: owners.toLocaleString()
+        },
+        {
+          label: 'Floor Price',
+          type: 'number',
+          value: floorPrice.toLocaleString()
+        },
+        {
+          label: 'Volume',
+          type: 'number',
+          value: volume.toLocaleString()
+        },
+        {
+          type: 'action',
+          props: {}
+        }
+      ];
+    });
+  }
 
   React.useEffect(() => {
     /*
@@ -19,8 +90,10 @@ export const Analytics = () => {
         is selected (or any other tab that is
         to be shown only when user is connected),
         we'll redirect user to trending page.
+        Resetting the date is important for query.
       ======================================
     */
+    setDate(Date.now());
     if (!connected) setPage('trending');
   }, [connected]);
 
@@ -30,8 +103,10 @@ export const Analytics = () => {
         Whenever page or time interval changes,
         change the URL (so that component refreshes,
         and data is refetched and cached...)
+        Resetting the date is important for the query.
       ======================================
     */
+    setDate(Date.now());
     router.push(`/analytics/${page}/${interval}`);
   }, [page, interval]);
 
@@ -48,127 +123,7 @@ export const Analytics = () => {
   */
   const content = {
     title: 'Analytics',
-    statistics: [
-      [
-        {
-          type: 'image',
-          value: 'https://www.dogtime.com/assets/uploads/2011/03/puppy-development.jpg'
-        },
-        {
-          type: 'string',
-          value: 'NFT Collection Name #1'
-        },
-        {
-          label: 'Trust',
-          type: 'percentage',
-          value: '11%'
-        },
-        {
-          label: 'Items',
-          type: 'number',
-          value: '25,048'
-        },
-        {
-          label: 'Owners',
-          type: 'number',
-          value: '8,102'
-        },
-        {
-          label: 'Floor Price',
-          type: 'number',
-          value: '62,340'
-        },
-        {
-          label: 'Volume',
-          type: 'number',
-          value: '10,345'
-        },
-        {
-          type: 'action',
-          props: {}
-        }
-      ],
-      [
-        {
-          type: 'image',
-          value:
-            'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1.00xw:0.669xh;0,0.190xh&resize=980:*'
-        },
-        {
-          type: 'string',
-          value: 'NFT Collection Name #2'
-        },
-        {
-          label: 'Trust',
-          type: 'percentage',
-          value: '25%'
-        },
-        {
-          label: 'Items',
-          type: 'number',
-          value: '25,048'
-        },
-        {
-          label: 'Owners',
-          type: 'number',
-          value: '8,102'
-        },
-        {
-          label: 'Floor Price',
-          type: 'number',
-          value: '62,340'
-        },
-        {
-          label: 'Volume',
-          type: 'number',
-          value: '10,345'
-        },
-        {
-          type: 'action',
-          props: {}
-        }
-      ],
-      [
-        {
-          type: 'image',
-          value:
-            'https://images.theconversation.com/files/377569/original/file-20210107-17-q20ja9.jpg?ixlib=rb-1.1.0&rect=278%2C340%2C4644%2C3098&q=45&auto=format&w=926&fit=clip'
-        },
-        {
-          type: 'string',
-          value: 'NFT Collection Name #3'
-        },
-        {
-          label: 'Trust',
-          type: 'percentage',
-          value: '75%'
-        },
-        {
-          label: 'Items',
-          type: 'number',
-          value: '25,048'
-        },
-        {
-          label: 'Owners',
-          type: 'number',
-          value: '8,102'
-        },
-        {
-          label: 'Floor Price',
-          type: 'number',
-          value: '62,340'
-        },
-        {
-          label: 'Volume',
-          type: 'number',
-          value: '10,345'
-        },
-        {
-          type: 'action',
-          props: {}
-        }
-      ]
-    ],
+    statistics: statistics,
     options: {
       timeframes: [
         {
@@ -265,8 +220,7 @@ export const Analytics = () => {
       className: `
         w-full h-full
         bg-theme-light-50
-        grid grid-rows-24 grid-cols-24
-        pb-8
+        flex flex-col
       `
     },
     heading: {
@@ -274,7 +228,7 @@ export const Analytics = () => {
         className: `
           w-full h-full overflow-hidden
           bg-theme-light-50
-          row-start-1 col-start-1 row-span-8 col-span-24
+          flex-[0.8]
           grid grid-rows-8 grid-cols-24
         `
       },
@@ -291,7 +245,7 @@ export const Analytics = () => {
         className: `
           w-full h-full overflow-hidden
           bg-theme-light-50
-          row-start-9 col-start-1 row-span-2 col-span-24
+          flex-[0.2]
           grid grid-rows-1 grid-cols-24
         `
       },
@@ -299,7 +253,7 @@ export const Analytics = () => {
         group: {
           defaultIndex: content?.options?.timeframes?.findIndex((x) => x.id === interval),
           onChange: (index: number): void => {
-            setInterval(content?.options?.timeframes?.reverse()?.[index]?.id);
+            setInterval(content?.options?.timeframes?.[index]?.id);
           }
         },
         container: {
@@ -358,7 +312,7 @@ export const Analytics = () => {
         className: `
           w-full h-full
           bg-theme-light-50
-          row-start-11 col-start-1 row-span-14 col-span-24
+          flex-[1.4]
           grid grid-rows-1 grid-cols-24
         `
       },
@@ -481,19 +435,35 @@ export const Analytics = () => {
               ====================================
             */}
             <div {...styles?.statistics?.list?.container}>
-              {content?.statistics?.map((data, i) => (
-                <React.Fragment key={i}>
-                  <div {...styles?.statistics?.list?.item?.container}>
-                    {data?.map((field, j) => (
-                      <React.Fragment key={j}>
-                        <div {...styles?.statistics?.list?.item?.field?.container}>
-                          <Field type={field?.type} label={field?.label} value={field?.value} />
-                        </div>
-                      </React.Fragment>
-                    ))}
-                  </div>
-                </React.Fragment>
-              ))}
+              {data.isLoading ? (
+                <>
+                  <div className="w-full h-[170px] bg-blue-50 rounded-xl"></div>
+                  <div className="w-full h-[170px] bg-blue-50 rounded-xl"></div>
+                  <div className="w-full h-[170px] bg-blue-50 rounded-xl"></div>
+                </>
+              ) : data.isError || content?.statistics?.length === 0 ? (
+                <>
+                  <div className="w-full h-[170px] bg-red-50 rounded-xl"></div>
+                  <div className="w-full h-[170px] bg-red-50 rounded-xl"></div>
+                  <div className="w-full h-[170px] bg-red-50 rounded-xl"></div>
+                </>
+              ) : (
+                <>
+                  {content?.statistics?.map((stat, i) => (
+                    <React.Fragment key={i}>
+                      <div {...styles?.statistics?.list?.item?.container}>
+                        {stat?.map((field, j) => (
+                          <React.Fragment key={j}>
+                            <div {...styles?.statistics?.list?.item?.field?.container}>
+                              <Field type={field?.type} label={field?.label} value={field?.value} />
+                            </div>
+                          </React.Fragment>
+                        ))}
+                      </div>
+                    </React.Fragment>
+                  ))}
+                </>
+              )}
             </div>
           </div>
         </div>
