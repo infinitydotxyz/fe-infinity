@@ -37,9 +37,9 @@ interface Props3 {
 
 const TooltipContent = ({ tooltip }: Props3) => {
   return (
-    <div className="absolute z-50 top-full  right-0 left-0 pointer-events-none p-6 bg-white shadow-lg rounded-2xl">
-      <div className="font-bold">{tooltip.title}</div>
-      <div>{tooltip.content}</div>
+    <div className="absolute z-50 top-full  right-0 left-0 pointer-events-none px-6 py-4 bg-white shadow-lg rounded-2xl">
+      <div className="font-bold text-sm mb-1">{tooltip.title}</div>
+      <div className="text-xs">{tooltip.content}</div>
     </div>
   );
 };
