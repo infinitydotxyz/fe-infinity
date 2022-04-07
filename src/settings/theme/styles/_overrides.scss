@@ -42,3 +42,24 @@ h5,
 h6 {
   @apply font-heading;
 }
+
+input:checked ~ .dot {
+  transform: translateX(100%);
+}
+
+/* remove updown arrows from html number input */
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
