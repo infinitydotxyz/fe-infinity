@@ -108,7 +108,7 @@ export function CollectionPage() {
         />
       </div>
 
-      <div className="text-secondary mt-6 text-sm w-2/3">{collection?.metadata.description ?? ''}</div>
+      <div className="text-secondary mt-6 text-sm md:w-2/3">{collection?.metadata.description ?? ''}</div>
 
       <div className="text-sm font-bold mt-6">
         <div>Ownership includes</div>
@@ -132,7 +132,7 @@ export function CollectionPage() {
         Claim Collection
       </Button> */}
 
-      <table className="mt-8 text-sm w-1/2">
+      <table className="mt-8 text-sm md:w-1/2">
         <thead>
           <tr className="text-gray-400">
             <th className="text-left font-medium font-heading">Items</th>
