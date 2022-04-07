@@ -1,6 +1,5 @@
 import { BaseCollection, CollectionStats } from '@infinityxyz/lib/types/core';
 import { LineChart, Line, XAxis, YAxis, Tooltip, Legend } from 'recharts';
-import { useFetch } from 'src/utils';
 
 type StatsData = {
   data: CollectionStats[];
