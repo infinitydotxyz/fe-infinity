@@ -1,4 +1,4 @@
-import { BaseCollection, CollectionStats } from '@infinityxyz/lib/types/core';
+import { CollectionStats } from '@infinityxyz/lib/types/core';
 import { LineChart, Line, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 
 type StatsData = {
@@ -6,7 +6,6 @@ type StatsData = {
 };
 
 interface ActivityTabProps {
-  collection: BaseCollection;
   dailyStats?: StatsData | null;
   weeklyStats?: StatsData | null;
 }
