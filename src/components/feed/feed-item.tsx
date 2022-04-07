@@ -1,4 +1,5 @@
 // import { ExchangeEvent } from '@infinityxyz/lib/types/core/feed/NftEvent';
+import Link from 'next/link';
 import { ExchangeEvent } from '@infinityxyz/lib/types/core/feed';
 import { BaseFeedEvent, FeedEventType } from '@infinityxyz/lib/types/core/feed/FeedEvent';
 import { ReactNode } from 'react';
@@ -104,7 +105,11 @@ function TweetEvent({ data }: FeedItemProps) {
 function SaleEvent({ data }: FeedItemProps) {
   return (
     <div className="mt-2 border rounded-xl p-2 flex items-center bg-gray-100 font-heading">
-      <img src={data.image} className="w-20 h-20 rounded-xl" alt="NFT Image" />
+      <Link href={`/asset/${data.chainId}/${data.collectionAddress}/${data.tokenId}`} passHref={true}>
+        <a>
+          <img src={data.image} className="w-20 h-20 rounded-xl" alt="NFT Image" />
+        </a>
+      </Link>
       <div className="flex w-full justify-between mx-8">
         <div className="text-sm">
           <div className="text-gray-400">Link</div>

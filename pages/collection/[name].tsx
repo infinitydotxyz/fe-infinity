@@ -46,7 +46,6 @@ export function CollectionPage() {
           ) : null}
         </span>
       }
-      center={false}
     >
       <div className="text-secondary mb-6 ml-2 text-sm font-heading">
         Created by{' '}
