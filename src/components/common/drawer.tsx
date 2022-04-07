@@ -1,27 +1,44 @@
-import { Fragment, ReactNode } from 'react';
+import { Fragment, ReactNode, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { XIcon } from '@heroicons/react/outline';
 import { Button } from 'src/components/common';
+import { Tooltip, TooltipIcon, TooltipSpec, TooltipWrapper } from './tool-tip';
 
 interface Props {
   open: boolean;
   onClose: () => void;
   title: string;
+  tooltip?: TooltipSpec;
   children: ReactNode;
 }
 
-export function Drawer({ open, onClose, title, children }: Props) {
+export function Drawer({ open, tooltip, onClose, title, children }: Props) {
+  const [showTooltip, setShowTooltip] = useState(false);
+
   const header = (
     <div className="p-8">
-      <div className="flex items-start justify-between">
-        <Dialog.Title className="text-2xl font-bold text-gray-900">{title}</Dialog.Title>
-        <div className="ml-3 flex h-7 items-center">
-          <Button variant="ghost" size="small" onClick={onClose}>
-            <span className="sr-only">Close panel</span>
-            <XIcon className="h-6 w-6" aria-hidden="true" />
-          </Button>
+      <TooltipWrapper show={showTooltip} tooltip={tooltip}>
+        <div className="flex items-start justify-between">
+          <Dialog.Title className="text-2xl font-bold text-gray-900">
+            <div className="flex items-center">
+              <div className="mr-2">{title}</div>
+
+              {tooltip && (
+                <Tooltip setShow={setShowTooltip}>
+                  <TooltipIcon />
+                </Tooltip>
+              )}
+            </div>
+          </Dialog.Title>
+
+          <div className="ml-3 flex h-7 items-center">
+            <Button variant="ghost" size="small" onClick={onClose}>
+              <span className="sr-only">Close panel</span>
+              <XIcon className="h-6 w-6" aria-hidden="true" />
+            </Button>
+          </div>
         </div>
-      </div>
+      </TooltipWrapper>
     </div>
   );
 

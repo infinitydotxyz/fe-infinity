@@ -351,16 +351,16 @@ export function _printTypeEncodedData(domain: any, types: any, orderToSign: any)
   const primaryType = typedDataEncoder.primaryType;
   const primary = typedDataEncoder.encodeType(primaryType);
   const hashedType = solidityKeccak256(['string'], [primary]);
-  console.log('primary type:', primaryType);
-  console.log('domain separator:', domainSeparator);
-  console.log('type hash:', hashedType);
+  console.log('print primary type:', primaryType);
+  console.log('print domain separator:', domainSeparator);
+  console.log('print type hash:', hashedType);
   const encodedData = typedDataEncoder.encode(orderToSign);
   const hashedEncoded = typedDataEncoder.hash(orderToSign);
-  console.log('encoded typed data:', encodedData);
-  console.log('typed data hash:', hashedEncoded);
+  console.log('print encoded typed data:', encodedData);
+  console.log('print typed data hash:', hashedEncoded);
 
   const orderDigest = _TypedDataEncoder.hash(domain, types, orderToSign);
-  console.log('typed data digest', orderDigest);
+  console.log('print typed data digest', orderDigest);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

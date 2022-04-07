@@ -7,6 +7,8 @@ import { OrderBuilder } from './order-builder';
 import { OrderSummary } from './order-summary';
 import { EthPrice } from 'src/components/common/eth-price';
 import { useState } from 'react';
+import { AiOutlineCheckCircle } from 'react-icons/ai';
+import { TooltipSpec } from 'src/components/common/tool-tip';
 
 interface Props {
   open: boolean;
@@ -51,11 +53,19 @@ export function OrderDrawer({ open, onClose }: Props) {
 
       const items = [];
 
-      items.push({
-        title: 'Max budget',
-        value: <EthPrice label={formatEther(order?.endPrice ?? 0)} />
-      });
-      items.push({ title: 'Number of NFTs', value: <div>{order?.numItems}</div> });
+      if (isSellOrderCart()) {
+        items.push({
+          title: 'Min total sale price',
+          value: <EthPrice label={formatEther(order?.endPrice ?? 0)} />
+        });
+        items.push({ title: 'Max NFTs to sell', value: <div>{order?.numItems}</div> });
+      } else {
+        items.push({
+          title: 'Max spending',
+          value: <EthPrice label={formatEther(order?.endPrice ?? 0)} />
+        });
+        items.push({ title: 'Min NFTs to buy', value: <div>{order?.numItems}</div> });
+      }
 
       topWidget = (
         <div className="mb-6 w-full px-8">
@@ -65,8 +75,8 @@ export function OrderDrawer({ open, onClose }: Props) {
     }
 
     return (
-      <div className="flex flex-col items-center mb-4">
-        <Divider />
+      <div className="flex flex-col items-center mb-8">
+        <Divider className="mb-8" />
 
         {topWidget}
         <Button onClick={buttonClick}>{buttonTitle}</Button>
@@ -97,12 +107,14 @@ export function OrderDrawer({ open, onClose }: Props) {
   let contents;
   let title = 'Create order';
   let footer;
+  let tooltip: TooltipSpec | undefined;
 
   if (isOrderStateEmpty()) {
     contents = emptyCart;
   } else if (!isCartEmpty()) {
     // ready to checkout, we have an order
     title = 'Cart';
+    tooltip = { title: '(tooltip goes here)', content: '(tooltip goes here)' };
     footer = buildFooter(() => {
       if (executeOrder()) {
         setShowSuccessModal(true);
@@ -123,6 +135,13 @@ export function OrderDrawer({ open, onClose }: Props) {
   } else if (!isOrderBuilderEmpty()) {
     // an order is being built, so let them finish it
     title = isSellOrderCart() ? 'Sell Order' : 'Buy order';
+    tooltip = isSellOrderCart()
+      ? { title: 'Sell order', content: 'Selected NFT(s) will be automatically sold when there’s a matching buy order' }
+      : {
+          title: 'Buy order',
+          content:
+            'Any NFT(s) from selected collections will be automatically bought when there’s a matching sell order'
+        };
     footer = buildFooter(() => {
       const order: OBOrder = {
         id: '????',
@@ -159,15 +178,28 @@ export function OrderDrawer({ open, onClose }: Props) {
 
   return (
     <>
-      <SimpleModal isOpen={showSuccessModal} onClose={() => setShowSuccessModal(false)} showActionButtons={false}>
-        <div className="modal-body p-4 rounded-3xl">
+      <SimpleModal
+        dialogWidth="max-w-sm"
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        showActionButtons={false}
+        titleChildren={
+          <div>
+            <AiOutlineCheckCircle className="h-12 w-12" />
+          </div>
+        }
+      >
+        <div className="flex flex-col modal-body p-4 rounded-3xl">
           <div className="font-bold text-xlg">Thank you,</div>
           <div className="font-bold mb-6 text-xlg">Order Submitted</div>
           <div>Confirmation: 234234</div>
+          <Button className="mt-6" onClick={() => setShowSuccessModal(false)}>
+            Done
+          </Button>
         </div>
       </SimpleModal>
 
-      <Drawer open={open} onClose={onClose} title={title}>
+      <Drawer open={open} onClose={onClose} title={title} tooltip={tooltip}>
         {contents}
       </Drawer>
     </>

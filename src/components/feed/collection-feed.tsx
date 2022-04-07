@@ -16,10 +16,10 @@ export function CollectionFeed({ collectionAddress, types }: CollectionFeedProps
   const [events, setEvents] = useState<FeedEvent[]>([]);
   const [newEvents, setNewEvents] = useState<FeedEvent[]>([]); // new feed events
   const [filter, setFilter] = useState<FeedFilter>({ collectionAddress, types });
-  const [filteredEvents, setFilteredEvents] = useState<FeedEvent[]>([]);
+  // const [filteredEvents, setFilteredEvents] = useState<FeedEvent[]>([]);
   const [commentPanelEvent, setCommentPanelEvent] = useState<FeedEvent | null>(null);
   const [filteringTypes, setFilteringTypes] = useState<FeedEventType[]>([]);
-  console.log('', typeof setFilter, filteredEvents);
+  // console.log('', typeof filteredEvents);
 
   async function getEvents() {
     try {
@@ -49,13 +49,13 @@ export function CollectionFeed({ collectionAddress, types }: CollectionFeedProps
     getEvents();
   }, [filter]);
 
-  useEffect(() => {
-    let arr = events;
-    if (filter.types) {
-      arr = events.filter((event) => (filter.types ?? []).indexOf(event?.type as FeedEventType) >= 0);
-    }
-    setFilteredEvents(arr);
-  }, [events]);
+  // useEffect(() => {
+  //   let arr = events;
+  //   if (filter.types) {
+  //     arr = events.filter((event) => (filter.types ?? []).indexOf(event?.type as FeedEventType) >= 0);
+  //   }
+  //   setFilteredEvents(arr);
+  // }, [events]);
 
   const onChangeFilterDropdown = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newFilter = { ...filter };
@@ -82,7 +82,6 @@ export function CollectionFeed({ collectionAddress, types }: CollectionFeedProps
       setFilteringTypes(_newTypes);
     }
   };
-  console.log('filteringTypes', filteringTypes);
 
   return (
     <div>
@@ -116,15 +115,34 @@ export function CollectionFeed({ collectionAddress, types }: CollectionFeedProps
                   }
                   setEvents([...events]);
                 }}
-                onComment={(ev) => setCommentPanelEvent(ev)}
+                onComment={(ev) => {
+                  if (ev.id === commentPanelEvent?.id) {
+                    setCommentPanelEvent(null);
+                  } else {
+                    setCommentPanelEvent(ev);
+                  }
+                }}
               />
+              {commentPanelEvent && item.id === commentPanelEvent.id && (
+                <div className="ml-20 p-4 ">
+                  <CommentPanel
+                    contentOnly={true}
+                    isOpen={!!commentPanelEvent}
+                    event={commentPanelEvent}
+                    onClose={() => {
+                      setCommentPanelEvent(null);
+                    }}
+                  />
+                </div>
+              )}
+
               <hr className="mt-6 mb-10 text-gray-100" />
             </li>
           );
         })}
       </ul>
 
-      {commentPanelEvent && (
+      {/* {commentPanelEvent && (
         <CommentPanel
           isOpen={!!commentPanelEvent}
           event={commentPanelEvent}
@@ -132,7 +150,7 @@ export function CollectionFeed({ collectionAddress, types }: CollectionFeedProps
             setCommentPanelEvent(null);
           }}
         />
-      )}
+      )} */}
     </div>
   );
 }

@@ -11,9 +11,10 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   event: FeedEvent;
+  contentOnly?: boolean;
 }
 
-export function CommentPanel({ isOpen, onClose, event }: Props) {
+export function CommentPanel({ isOpen, onClose, event, contentOnly }: Props) {
   const { user } = useAppContext();
   const [currentPage, setCurrentPage] = useState(0);
   const [text, setText] = useState('');
@@ -31,42 +32,66 @@ export function CommentPanel({ isOpen, onClose, event }: Props) {
     fetchData();
   }, []);
 
+  const replyBox = (
+    <div className="flex ">
+      <textarea
+        value={text}
+        placeholder="Reply here"
+        onChange={(ev) => setText(ev.target.value)}
+        className="mb-6 w-full text-xl  border-none"
+      />
+      <Button
+        variant="outline"
+        onClick={async () => {
+          await addUserComments(event.id || '', user?.address ?? '', text);
+          setData([]);
+          setCurrentPage(0);
+          fetchData();
+          setText('');
+        }}
+        className="h-10 ml-2 font-heading text-secondary"
+      >
+        Reply
+      </Button>
+    </div>
+  );
+
+  const content = (
+    <>
+      {isFetched && data.length === 0 && <div>There are no comments.</div>}
+
+      {data.map((item, idx: number) => {
+        return (
+          <div key={idx}>
+            <hr className="mb-8 text-gray-100" />
+
+            <div className="flex items-center">
+              <img alt="profile image" className="border rounded-3xl bg-gray-100 p-5" />
+              <div className="ml-4 font-bold">{ellipsisString(item.userAddress)}</div>
+              <div className="ml-4 text-secondary" title={new Date(item.timestamp).toLocaleString()}>
+                {format(item.timestamp)}
+              </div>
+            </div>
+            <pre className="ml-14 mt-4 mb-8 font-body">{item.comment}</pre>
+          </div>
+        );
+      })}
+    </>
+  );
+
+  if (contentOnly) {
+    return (
+      <>
+        {replyBox} {content}
+      </>
+    );
+  }
   return (
     <Drawer open={isOpen} onClose={onClose} title="Comments">
       <div className="p-4">
-        <div className="flex">
-          <textarea onChange={(ev) => setText(ev.target.value)} className="mb-6 w-full" />
-          <Button
-            variant="outline"
-            onClick={async () => {
-              await addUserComments(event.id || '', user?.address ?? '', text);
-              setData([]);
-              setCurrentPage(0);
-              fetchData();
-              setText('');
-            }}
-            className="h-10 ml-2"
-          >
-            Submit
-          </Button>
-        </div>
+        {replyBox}
 
-        {isFetched && data.length === 0 && <div>There are no comments.</div>}
-
-        {data.map((item, idx: number) => {
-          return (
-            <div key={idx}>
-              <div className="flex items-center">
-                <img alt="" className="border rounded-3xl p-4" />
-                <div className="ml-4">{ellipsisString(item.userAddress)}</div>
-                <div className="ml-4 text-secondary" title={new Date(item.timestamp).toLocaleString()}>
-                  {format(item.timestamp)}
-                </div>
-              </div>
-              <pre className="p-4">{item.comment}</pre>
-            </div>
-          );
-        })}
+        {content}
 
         <FetchMore
           currentPage={currentPage}

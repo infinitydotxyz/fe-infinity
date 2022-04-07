@@ -1,20 +1,34 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import { DatePicker } from 'src/components/common';
 import { ComboBox, ComboBoxBaseType } from './combo-box';
 import { CalendarIcon } from '@heroicons/react/outline';
 import { EthSymbol } from './eth-price';
+import { Tooltip, TooltipIcon, TooltipSpec, TooltipWrapper } from './tool-tip';
 
 interface Props {
   label?: string;
   children: ReactNode;
+  tooltip?: TooltipSpec;
 }
 
-export function InputBox({ label, children }: Props): JSX.Element {
+export function InputBox({ tooltip, label, children }: Props): JSX.Element {
+  const [showTooltip, setShowTooltip] = useState(false);
+
   return (
-    <div className="py-2 pl-6 pr-2 mb-1 outline outline-1 outline-slate-300 rounded-2xl ">
-      {label && <label className="block text-xs font-medium text-gray-700">{label}</label>}
-      <div className="mt-1 flex items-center">{children}</div>
-    </div>
+    <TooltipWrapper show={showTooltip} tooltip={tooltip}>
+      <div className="py-2 pl-6 pr-2 mb-1 outline outline-1 outline-slate-300 rounded-2xl ">
+        {label && <label className="block text-xs font-medium text-gray-700">{label}</label>}
+        <div className="mt-1 flex items-center">
+          <div className="flex items-center">{children}</div>
+
+          {tooltip && (
+            <Tooltip className="absolute top-0 bottom-0 right-2 flex flex-col justify-center" setShow={setShowTooltip}>
+              <TooltipIcon />
+            </Tooltip>
+          )}
+        </div>
+      </div>
+    </TooltipWrapper>
   );
 }
 
@@ -25,11 +39,12 @@ interface Props2 {
   value: Date;
   placeholder?: string;
   onChange: (value: Date) => void;
+  tooltip?: TooltipSpec;
 }
 
-export function DatePickerBox({ label, value, onChange, placeholder }: Props2): JSX.Element {
+export function DatePickerBox({ tooltip, label, value, onChange, placeholder }: Props2): JSX.Element {
   return (
-    <InputBox label={label}>
+    <InputBox label={label} tooltip={tooltip}>
       <div className="flex items-center">
         <div className="pr-2">
           <CalendarIcon className="h-4 w-4" />
@@ -47,11 +62,18 @@ interface Props3<T extends ComboBoxBaseType> {
   options: T[];
   value: T;
   onChange: (value: T) => void;
+  tooltip?: TooltipSpec;
 }
 
-export function ComboInputBox<T extends ComboBoxBaseType>({ label, options, onChange, value }: Props3<T>): JSX.Element {
+export function ComboInputBox<T extends ComboBoxBaseType>({
+  tooltip,
+  label,
+  options,
+  onChange,
+  value
+}: Props3<T>): JSX.Element {
   return (
-    <InputBox label={label}>
+    <InputBox label={label} tooltip={tooltip}>
       <ComboBox options={options} value={value} onChange={onChange} />
     </InputBox>
   );
@@ -66,11 +88,20 @@ interface Props4 {
   placeholder: string;
   addEthSymbol?: boolean;
   onChange: (value: string) => void;
+  tooltip?: TooltipSpec;
 }
 
-export function TextInputBox({ value, label, addEthSymbol = false, type, placeholder, onChange }: Props4): JSX.Element {
+export function TextInputBox({
+  tooltip,
+  value,
+  label,
+  addEthSymbol = false,
+  type,
+  placeholder,
+  onChange
+}: Props4): JSX.Element {
   return (
-    <InputBox label={label}>
+    <InputBox label={label} tooltip={tooltip}>
       <div className="flex items-center">
         {addEthSymbol && <div className="pr-2">{EthSymbol}</div>}
 
