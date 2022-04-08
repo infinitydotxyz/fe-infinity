@@ -1,4 +1,5 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import { Combobox, Transition } from '@headlessui/react';
 import { CheckIcon } from '@heroicons/react/solid';
 import { useFetch } from 'src/utils';
@@ -11,6 +12,7 @@ type CollectionItem = BaseCollection & {
 
 export function SearchBox() {
   const [query, setQuery] = useState('');
+  const router = useRouter();
 
   const { result } = useFetch<{ data: CollectionItem[] }>(`/collections/search?query=${query}&limit=15`);
   const data = result?.data ?? [];
@@ -23,6 +25,13 @@ export function SearchBox() {
       : data.filter((coll) =>
           coll.name.toLowerCase().replace(/\s+/g, '').includes(query.toLowerCase().replace(/\s+/g, ''))
         );
+
+  useEffect(() => {
+    // after searching and selecting a collection: navigate to it:
+    if (selected?.slug) {
+      router.push(`/collection/${selected.slug}`);
+    }
+  }, [selected]);
 
   return (
     <div className="w-72 mb-8">
