@@ -1,9 +1,11 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import { Combobox, Transition } from '@headlessui/react';
 import { CheckIcon } from '@heroicons/react/solid';
 import { useFetch } from 'src/utils';
 import { BaseCollection } from '@infinityxyz/lib/types/core';
 import { FaSearch } from 'react-icons/fa';
+import Image from 'next/image';
 
 type CollectionItem = BaseCollection & {
   name: string;
@@ -11,6 +13,7 @@ type CollectionItem = BaseCollection & {
 
 export function SearchBox() {
   const [query, setQuery] = useState('');
+  const router = useRouter();
 
   const { result } = useFetch<{ data: CollectionItem[] }>(`/collections/search?query=${query}&limit=15`);
   const data = result?.data ?? [];
@@ -24,12 +27,20 @@ export function SearchBox() {
           coll.name.toLowerCase().replace(/\s+/g, '').includes(query.toLowerCase().replace(/\s+/g, ''))
         );
 
+  useEffect(() => {
+    // after searching and selecting a collection: navigate to it:
+    if (selected?.slug) {
+      router.push(`/collection/${selected.slug}`);
+    }
+  }, [selected]);
+
   return (
     <div className="w-72 mb-8">
       <Combobox value={selected} onChange={setSelected}>
         <div className="relative mt-1">
           <div className="p-2 relative w-full text-left bg-white rounded-lg border cursor-default focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-white focus-visible:ring-offset-teal-300 focus-visible:ring-offset-2 sm:text-sm overflow-hidden">
             <Combobox.Input
+              placeholder="Search"
               className="w-full border-none focus:ring-0 py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 text-lg"
               displayValue={(item: CollectionItem) => item?.name ?? ''}
               onChange={(event) => setQuery(event.target.value)}
@@ -62,8 +73,11 @@ export function SearchBox() {
                   >
                     {({ selected, active }) => (
                       <>
-                        <span className={`block truncate ${selected ? 'font-medium' : 'font-normal'}`}>
-                          {coll.name}
+                        <span className={`flex items-center truncate ${selected ? 'font-medium' : 'font-normal'}`}>
+                          <span className="mr-1">{coll.name}</span>
+                          {coll?.hasBlueCheck ? (
+                            <Image src="/images/blue-check.png" width={18} height={18} alt="Blue check icon" />
+                          ) : null}
                         </span>
                         {selected ? (
                           <span
