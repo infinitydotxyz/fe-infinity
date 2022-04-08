@@ -80,9 +80,6 @@ export function OrderDebug() {
     if (match) {
       const orders: OBOrder[] = match;
 
-      console.log(orders);
-      console.log(listId);
-
       switch (listId) {
         case 'validActive':
           setBuyOrders(orders);
@@ -153,7 +150,7 @@ export function OrderDebug() {
   // ===========================================================
   // matching orders
 
-  const listMatcheOrders = async () => {
+  const listMatchedOrders = async () => {
     const matches = await marketMatches();
 
     setMatchOrders(matches);
@@ -205,7 +202,7 @@ export function OrderDebug() {
   };
 
   const refreshActiveLists = async () => {
-    listMatcheOrders();
+    listMatchedOrders();
     listBuyOrders();
     listSellOrders();
   };
@@ -324,7 +321,7 @@ export function OrderDebug() {
           {sellOrders.length === 0 && <NothingFound />}
 
           {/* === Match Orders === */}
-          <Header title="Matched Orders" onClick={() => listMatcheOrders()} />
+          <Header title="Matched Orders" onClick={() => listMatchedOrders()} />
           {matchOrders.length > 0 && (
             <>
               <BuyOrderMatchList

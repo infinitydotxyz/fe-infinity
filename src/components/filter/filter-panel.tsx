@@ -122,8 +122,8 @@ export const FilterPanel = ({ collection, collectionAddress }: Props) => {
         collectionAddress={collectionAddress}
         onChange={(traitTypes, traitValues) => {
           const newFilter: Filter = { ...filterState };
-          newFilter.traitTypes = traitTypes.join(',');
-          newFilter.traitValues = traitValues.join(',');
+          newFilter.traitTypes = traitTypes;
+          newFilter.traitValues = traitValues;
           setFilterState(newFilter);
         }}
       />

@@ -9,8 +9,6 @@ export const collectionIconWidth = `w-${collectionIconRem}`;
 export const collectionIconStyle = `${collectionIconHeight} ${collectionIconWidth} rounded-2xl`;
 
 export const collectionIconWidthInPx = (): number => {
-  console.log(pixelsPerRem() * collectionIconRem);
-
   return pixelsPerRem() * collectionIconRem;
 };
 

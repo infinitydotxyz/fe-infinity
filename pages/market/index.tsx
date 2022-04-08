@@ -15,7 +15,20 @@ const testCardData: CardData[] = [
     tokenId: '0x2343ddd2434234',
     tokenAddress: '0xlaksdjdlasdjf234234lkj',
     price: 1.5,
-    image: 'https://picsum.photos/id/1004/200'
+    image: 'https://picsum.photos/id/1004/200',
+
+    name: 'string',
+    description: 'string',
+    cardImage: 'string',
+    imagePreview: 'string',
+    inStock: 11,
+    maker: 'string',
+    owner: 'string',
+    chainId: '1',
+    expirationTime: '12/12/23',
+    hasBlueCheck: false
+    //  metadata?: Metadata;
+    // order: Order,
   },
   {
     id: 'nft2',
@@ -24,7 +37,20 @@ const testCardData: CardData[] = [
     tokenAddress: '0xlakdsfsjdlddasdjf234234lkj',
     tokenId: '0x34234dd2342423423dd42342',
     price: 2.5,
-    image: 'https://picsum.photos/id/1005/200'
+    image: 'https://picsum.photos/id/1005/200',
+
+    name: 'string',
+    description: 'string',
+    cardImage: 'string',
+    imagePreview: 'string',
+    inStock: 11,
+    maker: 'string',
+    owner: 'string',
+    chainId: '1',
+    expirationTime: '12/12/23',
+    hasBlueCheck: false
+    //  metadata?: Metadata;
+    // order: Order,
   },
   {
     id: 'nft3',
@@ -33,7 +59,20 @@ const testCardData: CardData[] = [
     tokenAddress: '0xlakdsfddsjdlasdjf234234lkj',
     tokenId: '0x342342dd34242ff342342342',
     price: 2.5,
-    image: 'https://picsum.photos/id/1027/200'
+    image: 'https://picsum.photos/id/1027/200',
+
+    name: 'string',
+    description: 'string',
+    cardImage: 'string',
+    imagePreview: 'string',
+    inStock: 11,
+    maker: 'string',
+    owner: 'string',
+    chainId: '1',
+    expirationTime: '12/12/23',
+    hasBlueCheck: false
+    //  metadata?: Metadata;
+    // order: Order,
   },
   {
     id: 'nft4',
@@ -42,7 +81,20 @@ const testCardData: CardData[] = [
     tokenAddress: '0xlakdsddfsjdlasdjf234234lkj',
     tokenId: '0x34234234242342342ff342',
     price: 2.5,
-    image: 'https://picsum.photos/id/1033/200'
+    image: 'https://picsum.photos/id/1033/200',
+
+    name: 'string',
+    description: 'string',
+    cardImage: 'string',
+    imagePreview: 'string',
+    inStock: 11,
+    maker: 'string',
+    owner: 'string',
+    chainId: '1',
+    expirationTime: '12/12/23',
+    hasBlueCheck: false
+    //  metadata?: Metadata;
+    // order: Order,
   }
 ];
 

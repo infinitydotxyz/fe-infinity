@@ -2,6 +2,8 @@ import { OBOrder } from '@infinityxyz/lib/types/core';
 import { nowSeconds } from '@infinityxyz/lib/utils';
 import { BigNumberish } from 'ethers';
 import React, { ReactNode, useContext, useState } from 'react';
+import { useAppContext } from './AppContext';
+import { addBuy, addSell } from 'src/utils/marketUtils';
 
 export interface OrderCartItem {
   isSellOrder: boolean;
@@ -77,6 +79,9 @@ export function OrderContextProvider({ children }: Props) {
   const [endTime, setEndTime] = useState<BigNumberish>(nowSeconds().add(1000));
   const [numItems, setNumItems] = useState<BigNumberish>(1);
 
+  // for executing orders
+  const { showAppError, showAppMessage, user, providerManager } = useAppContext();
+
   const isOrderBuilderEmpty = (): boolean => {
     return cartItems.length === 0;
   };
@@ -101,6 +106,12 @@ export function OrderContextProvider({ children }: Props) {
 
   const executeOrder = (): boolean => {
     setOrderDrawerOpen(false);
+
+    if (isSellOrderCart()) {
+      executeSell();
+    } else {
+      executeBuy();
+    }
 
     _resetStateValues();
 
@@ -140,6 +151,44 @@ export function OrderContextProvider({ children }: Props) {
       setCartItems(copy);
     }
   };
+
+  // ===============================================================
+
+  const executeBuy = async () => {
+    if (!user || !providerManager) {
+      console.error('no user or provider');
+      return;
+    }
+    if (order) {
+      // crashes
+      // const signer = providerManager.getEthersProvider().getSigner();
+      // await prepareOBOrder(user, chainId, signer, order);
+
+      const match = await addBuy(order);
+
+      if (match) {
+        console.log(match);
+
+        showAppMessage('Buy successful');
+      } else {
+        showAppError('Buy submitted');
+      }
+    }
+  };
+
+  const executeSell = async () => {
+    if (order) {
+      const match = await addSell(order);
+      if (match) {
+        console.log(match);
+        showAppMessage('sell successful.');
+      } else {
+        showAppMessage('sell submitted');
+      }
+    }
+  };
+
+  // ===============================================================
 
   const value: OrderContextType = {
     orderDrawerOpen,

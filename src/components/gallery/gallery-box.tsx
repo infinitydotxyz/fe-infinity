@@ -47,7 +47,7 @@ export function GalleryBox({ collection }: GalleryProps) {
       filterState.orderBy = 'rarityRank'; // set defaults
       filterState.orderDirection = 'asc';
     }
-    const { result } = await apiGet(`/collections/1:${collection?.address}/nfts`, {
+    const { result } = await apiGet(`/collections/${collection?.chainId}:${collection?.address}/nfts`, {
       query: {
         offset,
         limit: ITEMS_PER_PAGE,
