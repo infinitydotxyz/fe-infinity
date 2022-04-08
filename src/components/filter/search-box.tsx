@@ -10,11 +10,12 @@ type CollectionItem = BaseCollection & {
 };
 
 export function SearchBox() {
-  const { result } = useFetch<{ data: CollectionItem[] }>('/collections/search?query=ape&limit=15');
+  const [query, setQuery] = useState('');
+
+  const { result } = useFetch<{ data: CollectionItem[] }>(`/collections/search?query=${query}&limit=15`);
   const data = result?.data ?? [];
 
   const [selected, setSelected] = useState(data[0]);
-  const [query, setQuery] = useState('');
 
   const filteredPeople =
     query === ''
@@ -29,8 +30,8 @@ export function SearchBox() {
         <div className="relative mt-1">
           <div className="p-2 relative w-full text-left bg-white rounded-lg border cursor-default focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-white focus-visible:ring-offset-teal-300 focus-visible:ring-offset-2 sm:text-sm overflow-hidden">
             <Combobox.Input
-              className="w-full border-none focus:ring-0 py-2 pl-3 pr-10 text-sm leading-5 text-gray-900"
-              displayValue={(item: CollectionItem) => item.name}
+              className="w-full border-none focus:ring-0 py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 text-lg"
+              displayValue={(item: CollectionItem) => item?.name ?? ''}
               onChange={(event) => setQuery(event.target.value)}
             />
             <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
