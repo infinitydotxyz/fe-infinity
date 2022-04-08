@@ -31,7 +31,8 @@ export function OrderDrawer({ open, onClose }: Props) {
     endPrice,
     startTime,
     endTime,
-    numItems
+    numItems,
+    cartItems
   } = useOrderContext();
 
   const emptyCart = (
@@ -87,12 +88,13 @@ export function OrderDrawer({ open, onClose }: Props) {
   const getItems = (): Item[] => {
     const items: Item[] = [];
 
-    // for (let i = 0; i < collections.length; i++) {
-    //   items.push({
-    //     tokenIds: [tokenId],
-    //     collection: collections[i].address
-    //   });
-    // }
+    for (const cartItem of cartItems) {
+      items.push({
+        tokenIds: [cartItem.tokenId ?? '????'],
+        collection: cartItem.collectionAddress
+      });
+    }
+
     return items;
   };
 
