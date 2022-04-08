@@ -33,7 +33,6 @@ export function CollectionPage() {
   );
   const lastDailyStats = dailyStats?.data[dailyStats?.data.length - 1];
   const lastWeeklyStats = weeklyStats?.data[weeklyStats?.data.length - 1];
-  console.log('lastWeeklyStats', lastWeeklyStats);
 
   return (
     <PageBox

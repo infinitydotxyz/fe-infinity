@@ -66,7 +66,11 @@ export function CommentPanel({ isOpen, onClose, event, contentOnly }: Props) {
             <hr className="mb-8 text-gray-100" />
 
             <div className="flex items-center">
-              <img alt="profile image" className="border rounded-3xl bg-gray-100 p-5" />
+              <img
+                alt="profile image"
+                src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
+                className="border rounded-3xl bg-gray-100 p-5"
+              />
               <div className="ml-4 font-bold">{ellipsisString(item.userAddress)}</div>
               <div className="ml-4 text-secondary" title={new Date(item.timestamp).toLocaleString()}>
                 {format(item.timestamp)}
