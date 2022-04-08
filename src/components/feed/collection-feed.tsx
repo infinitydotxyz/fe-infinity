@@ -19,7 +19,6 @@ export function CollectionFeed({ collectionAddress, types }: CollectionFeedProps
   // const [filteredEvents, setFilteredEvents] = useState<FeedEvent[]>([]);
   const [commentPanelEvent, setCommentPanelEvent] = useState<FeedEvent | null>(null);
   const [filteringTypes, setFilteringTypes] = useState<FeedEventType[]>([]);
-  // console.log('', typeof filteredEvents);
 
   async function getEvents() {
     try {
@@ -38,7 +37,7 @@ export function CollectionFeed({ collectionAddress, types }: CollectionFeedProps
         }
       });
     } catch (err) {
-      console.log('ERR: ', err);
+      console.error('ERR: ', err);
     }
   }
 
