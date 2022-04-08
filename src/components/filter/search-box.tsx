@@ -5,6 +5,7 @@ import { CheckIcon } from '@heroicons/react/solid';
 import { useFetch } from 'src/utils';
 import { BaseCollection } from '@infinityxyz/lib/types/core';
 import { FaSearch } from 'react-icons/fa';
+import Image from 'next/image';
 
 type CollectionItem = BaseCollection & {
   name: string;
@@ -71,8 +72,11 @@ export function SearchBox() {
                   >
                     {({ selected, active }) => (
                       <>
-                        <span className={`block truncate ${selected ? 'font-medium' : 'font-normal'}`}>
-                          {coll.name}
+                        <span className={`flex items-center truncate ${selected ? 'font-medium' : 'font-normal'}`}>
+                          <span className="mr-1">{coll.name}</span>
+                          {coll?.hasBlueCheck ? (
+                            <Image src="/images/blue-check.png" width={18} height={18} alt="Blue check icon" />
+                          ) : null}
                         </span>
                         {selected ? (
                           <span
