@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { apiGet } from 'src/utils/apiUtils';
 import { ITEMS_PER_PAGE } from 'src/utils/constants';
 import { useFilterContext } from 'src/utils/context/FilterContext';
-import { Button, Card, FetchMore } from 'src/components/common';
+import { Button, Card, FetchMore, Spinner } from 'src/components/common';
 import { FilterPanel } from '../filter/filter-panel';
 import { GallerySort } from './gallery-sort';
 
@@ -111,7 +111,11 @@ export function GalleryBox({ collection }: GalleryProps) {
         )}
 
         <div className="flex flex-wrap mt-6">
-          {isFetching && <div>Loading..</div>}
+          {isFetching && (
+            <div className="w-full">
+              <Spinner className="ml-8" />
+            </div>
+          )}
 
           {data.map((item, idx) => {
             return <Card key={idx} data={item} className="ml-8 mt-8" onClick={() => console.log} isSellCard={false} />;

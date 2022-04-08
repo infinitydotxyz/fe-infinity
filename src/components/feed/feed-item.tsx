@@ -16,6 +16,7 @@ export type FeedEvent = BaseFeedEvent &
     id?: string;
     type?: FeedEventType;
     title?: string;
+    text?: string;
     userDisplayName?: string;
   };
 
@@ -30,7 +31,7 @@ const TypeName: { [key: string]: ReactNode } = {
     <span className="rounded-xl bg-blue-400 text-white py-0.5 px-2 text-xs pb-1">Tweet</span>
   ),
   [FeedEventType.DiscordAnnouncement]: (
-    <span className="rounded-xl bg-black text-white py-0.5 px-2 text-xs pb-1">Discord</span>
+    <span className="rounded-xl bg-blue-600 text-white py-0.5 px-2 text-xs pb-1">Discord</span>
   ),
   [FeedEventType.NftSale]: <span className="rounded-xl bg-blue-700 text-white py-0.5 px-2 text-xs pb-1">Sale</span>
 };
@@ -103,7 +104,7 @@ export function FeedItem({ data, onLike, onComment }: FeedItemProps) {
 }
 
 function TweetEvent({ data }: FeedItemProps) {
-  return <div className="mt-4">{data.title}</div>;
+  return <div className="mt-4">{data.text ?? data.title}</div>;
 }
 
 function Discord({ data }: FeedItemProps) {
