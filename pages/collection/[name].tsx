@@ -162,8 +162,7 @@ export function CollectionPage() {
         {currentTab === 2 && (
           <div className="flex">
             <div className="w-2/3">
-              {/* <div className="text-3xl mb-6">Feed</div> */}
-              <CollectionFeed collectionAddress={collection?.address ?? ''} />
+              <CollectionFeed header="Feed" collectionAddress={collection?.address ?? ''} />
             </div>
             <div className="w-1/3 ml-4">
               <div className="text-3xl mb-6">Top Holders</div>

@@ -1,5 +1,6 @@
 import { CollectionStats } from '@infinityxyz/lib/types/core';
 import { LineChart, Line, XAxis, YAxis, Tooltip, Legend } from 'recharts';
+import { CollectionFeed } from '../feed/collection-feed';
 
 type StatsData = {
   data: CollectionStats[];
@@ -58,6 +59,8 @@ export function ActivityTab({ dailyStats, weeklyStats }: ActivityTabProps) {
           {/* <Line type="monotone" dataKey="uv" stroke="#82ca9d" /> */}
         </LineChart>
       </div>
+
+      <CollectionFeed header="Heading" forActivity={true} />
     </>
   );
 }
