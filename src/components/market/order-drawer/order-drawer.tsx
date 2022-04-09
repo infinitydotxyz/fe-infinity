@@ -23,7 +23,8 @@ export function OrderDrawer({ open, onClose }: Props) {
     isOrderStateEmpty,
     isOrderBuilderEmpty,
     executeOrder,
-    ordersInCart
+    ordersInCart,
+    isEditingOrder
   } = useOrderContext();
 
   const emptyCart = (
@@ -66,6 +67,10 @@ export function OrderDrawer({ open, onClose }: Props) {
           <SimpleTable items={items} />
         </div>
       );
+    } else {
+      if (isEditingOrder) {
+        buttonTitle = 'Update order';
+      }
     }
 
     return (

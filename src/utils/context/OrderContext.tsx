@@ -42,6 +42,7 @@ export type OrderContextType = {
 
   ordersInCart: OrderInCart[];
   editOrderFromCart: (id: number) => void;
+  isEditingOrder: boolean;
   addOrderToCart: () => void;
 
   cartItems: OrderCartItem[];
@@ -73,6 +74,7 @@ interface Props {
 
 export function OrderContextProvider({ children }: Props) {
   const [orderDrawerOpen, setOrderDrawerOpen] = useState<boolean>(false);
+  const [isEditingOrder, setIsEditingOrder] = useState<boolean>(false);
 
   const [ordersInCart, setOrdersInCart] = useState<OrderInCart[]>([]);
 
@@ -126,30 +128,30 @@ export function OrderContextProvider({ children }: Props) {
   };
 
   const editOrderFromCart = (id: number) => {
-    for (const orderInCart of ordersInCart) {
-      if (orderInCart.id === id) {
-        const index = indexOfOrderInCart(id);
+    const index = indexOfOrderInCart(id);
 
-        if (index != -1) {
-          const orderInCart = ordersInCart[index];
+    if (index != -1) {
+      const orderInCart = ordersInCart[index];
 
-          if (index !== -1) {
-            const copy = [...ordersInCart];
-            copy.splice(index, 1);
+      setIsEditingOrder(true);
 
-            setOrdersInCart(copy);
-          }
+      if (index !== -1) {
+        const copy = [...ordersInCart];
+        copy.splice(index, 1);
 
-          setCartItems(orderInCart.cartItems);
-          setPrice(formatEther(orderInCart.order.startPrice));
-          setExpirationDate(orderInCart.order.endTime);
-          setNumItems(orderInCart.order.numItems);
-        }
+        setOrdersInCart(copy);
       }
+
+      setCartItems(orderInCart.cartItems);
+      setPrice(formatEther(orderInCart.order.startPrice));
+      setExpirationDate(orderInCart.order.endTime);
+      setNumItems(orderInCart.order.numItems);
     }
   };
 
   const addOrderToCart = () => {
+    setIsEditingOrder(false);
+
     const order: OBOrder = {
       id: '????',
       chainId: chainId,
@@ -220,6 +222,7 @@ export function OrderContextProvider({ children }: Props) {
     setPrice(1);
     setExpirationDate(nowSeconds().add(thirtyDaySeconds));
     setNumItems(1);
+    setIsEditingOrder(false);
   };
 
   const addCartItem = (item: OrderCartItem) => {
@@ -241,6 +244,11 @@ export function OrderContextProvider({ children }: Props) {
     if (index !== -1) {
       const copy = [...cartItems];
       copy.splice(index, 1);
+
+      // we have cleared out the items, so the next item added will be an add, not an update
+      if (copy.length === 0) {
+        setIsEditingOrder(false);
+      }
 
       setCartItems(copy);
     }
@@ -288,6 +296,7 @@ export function OrderContextProvider({ children }: Props) {
   const value: OrderContextType = {
     orderDrawerOpen,
     setOrderDrawerOpen,
+    isEditingOrder,
     ordersInCart,
     addOrderToCart,
     editOrderFromCart,
