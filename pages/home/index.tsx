@@ -14,7 +14,7 @@ export function HomePage() {
   return (
     <PageBox title={'Homepage'}>
       <div className="flex">
-        <CollectionFeed />
+        <CollectionFeed header="Feed" />
         <div className="w-1/3 ml-4">
           <div className="text-3xl mb-6">Trending</div>
           <div>Trending Component</div>

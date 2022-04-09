@@ -4,15 +4,18 @@ import { COLL_FEED, FeedFilter, subscribe } from 'src/utils/firestore/firestoreU
 import { CommentPanel } from './comment-panel';
 import { FeedEventType } from '@infinityxyz/lib/types/core/feed';
 import { FeedFilterDropdown } from './feed-filter-dropdown';
+import { ActivityItem } from './activity-item';
 
 let eventsInit = false;
 
 interface CollectionFeedProps {
+  header: string;
   collectionAddress?: string;
   types?: FeedEventType[];
+  forActivity?: boolean;
 }
 
-export function CollectionFeed({ collectionAddress, types }: CollectionFeedProps) {
+export function CollectionFeed({ header, collectionAddress, types, forActivity }: CollectionFeedProps) {
   const [events, setEvents] = useState<FeedEvent[]>([]);
   const [newEvents, setNewEvents] = useState<FeedEvent[]>([]); // new feed events
   const [filter, setFilter] = useState<FeedFilter>({ collectionAddress, types });
@@ -85,7 +88,7 @@ export function CollectionFeed({ collectionAddress, types }: CollectionFeedProps
   return (
     <div>
       <div className="flex justify-between">
-        <div className="text-3xl mb-6">Feed</div>
+        <div className="text-3xl mb-6">{header}</div>
         <FeedFilterDropdown selectedTypes={filteringTypes} onChange={onChangeFilterDropdown} />
       </div>
 
@@ -102,11 +105,14 @@ export function CollectionFeed({ collectionAddress, types }: CollectionFeedProps
       ) : null}
 
       <ul className="space-y-8">
-        {events.map((item, idx) => {
+        {events.map((event, idx) => {
+          if (forActivity) {
+            return <ActivityItem event={event} />;
+          }
           return (
             <li key={idx} className="">
               <FeedItem
-                data={item}
+                data={event}
                 onLike={(ev) => {
                   const foundEv = events.find((e) => e.id === ev.id);
                   if (foundEv?.likes !== undefined) {
@@ -122,7 +128,7 @@ export function CollectionFeed({ collectionAddress, types }: CollectionFeedProps
                   }
                 }}
               />
-              {commentPanelEvent && item.id === commentPanelEvent.id && (
+              {commentPanelEvent && event.id === commentPanelEvent.id && (
                 <div className="ml-20 p-4 ">
                   <CommentPanel
                     contentOnly={true}
@@ -140,16 +146,6 @@ export function CollectionFeed({ collectionAddress, types }: CollectionFeedProps
           );
         })}
       </ul>
-
-      {/* {commentPanelEvent && (
-        <CommentPanel
-          isOpen={!!commentPanelEvent}
-          event={commentPanelEvent}
-          onClose={() => {
-            setCommentPanelEvent(null);
-          }}
-        />
-      )} */}
     </div>
   );
 }
