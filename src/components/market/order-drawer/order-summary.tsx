@@ -48,7 +48,7 @@ export function OrderSummary() {
 
   if (isSellOrderCart()) {
     items.push({
-      title: 'Max spending',
+      title: 'Max budget',
       value: <EthPrice label={formatEther(order?.endPrice ?? 0)} />
     });
     items.push({ title: 'Min NFTs to buy', value: <div>{order?.numItems}</div> });
@@ -56,7 +56,7 @@ export function OrderSummary() {
     items.push({ title: 'Expiration Date', value: <div>{shortDate(bigNumToDate(order?.endTime ?? 0))}</div> });
   } else {
     items.push({
-      title: 'Max spending',
+      title: 'Max budget',
       value: <EthPrice label={formatEther(order?.endPrice ?? 0)} />
     });
     items.push({ title: 'Min NFTs to buy', value: <div>{order?.numItems}</div> });

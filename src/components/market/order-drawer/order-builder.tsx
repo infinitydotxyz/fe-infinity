@@ -16,8 +16,18 @@ export function OrderBuilder() {
 
   const numItemsField = () => {
     let label = 'Min NFTs to buy';
+    let tooltip = {
+      title: label,
+      content: 'The min number you want to buy from the collections listed in the order'
+    };
+
     if (isSellOrderCart()) {
       label = 'Max NFTs to sell';
+
+      tooltip = {
+        title: label,
+        content: 'The max number you want to sell from the collections listed in the order'
+      };
     }
 
     return (
@@ -27,27 +37,38 @@ export function OrderBuilder() {
         label={label}
         value={numItems.toString()}
         onChange={(value) => setNumItems(parseInt(value))}
-        tooltip={{
-          title: 'Min nuber to buy',
-          content: 'The min number you want to buy from the collections listed in the order'
-        }}
+        tooltip={tooltip}
       />
     );
   };
 
   const priceField = () => {
+    const multiple = cartItems.length > 1;
+
+    let label = multiple ? 'Max budget' : 'Max budget';
+    let tooltip = {
+      title: label,
+      content: 'tooltip goes here'
+    };
+
+    if (isSellOrderCart()) {
+      label = multiple ? 'Min combined price' : 'Min price';
+
+      tooltip = {
+        title: label,
+        content: 'tooltip goes here'
+      };
+    }
+
     return (
       <TextInputBox
         type="number"
         value={price.toString()}
         placeholder="2.33"
         addEthSymbol={true}
-        label="Start Price"
+        label={label}
         onChange={(value) => setPrice(parseFloat(value))}
-        tooltip={{
-          title: 'Tooltip title',
-          content: 'tooltip goes here'
-        }}
+        tooltip={tooltip}
       />
     );
   };
@@ -55,7 +76,7 @@ export function OrderBuilder() {
   const expirationDateField = () => {
     return (
       <DatePickerBox
-        label="End Time"
+        label="Expiration Date"
         value={new Date(parseInt(expirationDate.toString()) * 1000)}
         onChange={(date) => {
           setExpirationDate(date.getTime() / 1000);
@@ -72,8 +93,8 @@ export function OrderBuilder() {
       <>
         {list}
         <div className="flex flex-col space-y-2">
-          {numItemsField()}
           {priceField()}
+          {numItemsField()}
           {expirationDateField()}
         </div>
 
@@ -87,8 +108,8 @@ export function OrderBuilder() {
       <>
         {list}
         <div className="flex flex-col space-y-2">
-          {numItemsField()}
           {priceField()}
+          {numItemsField()}
           {expirationDateField()}
         </div>
 

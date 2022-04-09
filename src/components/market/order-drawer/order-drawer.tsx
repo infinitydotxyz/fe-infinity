@@ -62,7 +62,7 @@ export function OrderDrawer({ open, onClose }: Props) {
         items.push({ title: 'Max NFTs to sell', value: <div>{order?.numItems}</div> });
       } else {
         items.push({
-          title: 'Max spending',
+          title: 'Max budget',
           value: <EthPrice label={formatEther(order?.endPrice ?? 0)} />
         });
         items.push({ title: 'Min NFTs to buy', value: <div>{order?.numItems}</div> });
