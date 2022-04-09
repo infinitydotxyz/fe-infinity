@@ -1,10 +1,11 @@
-import { OBOrder } from '@infinityxyz/lib/types/core';
+import { ExecParams, ExtraParams, Item, OBOrder } from '@infinityxyz/lib/types/core';
 import { nowSeconds } from '@infinityxyz/lib/utils';
 import { BigNumberish } from 'ethers';
 import React, { ReactNode, useContext, useState } from 'react';
 import { useAppContext } from './AppContext';
 import { addBuy, addSell } from 'src/utils/marketUtils';
 import { thirtyDaySeconds } from 'src/components/market/order-drawer/ui-constants';
+import { formatEther, parseEther } from 'ethers/lib/utils';
 
 export interface OrderCartItem {
   isSellOrder: boolean;
@@ -15,11 +16,17 @@ export interface OrderCartItem {
   collectionAddress: string;
 }
 
-export const isCartItemEqual = (a: OrderCartItem, b: OrderCartItem): boolean => {
+export interface OrderInCart {
+  id: number;
+  cartItems: OrderCartItem[];
+  order: OBOrder;
+}
+
+const isCartItemEqual = (a: OrderCartItem, b: OrderCartItem): boolean => {
   return a.tokenName === b.tokenName && a.collectionName === b.collectionName;
 };
 
-export const indexOfCartItem = (list: OrderCartItem[], item: OrderCartItem): number => {
+const indexOfCartItem = (list: OrderCartItem[], item: OrderCartItem): number => {
   for (let i = 0; i < list.length; i++) {
     if (isCartItemEqual(item, list[i])) {
       return i;
@@ -33,15 +40,16 @@ export type OrderContextType = {
   orderDrawerOpen: boolean;
   setOrderDrawerOpen: (flag: boolean) => void;
 
-  order?: OBOrder;
-  setOrder: (order?: OBOrder) => void;
+  ordersInCart: OrderInCart[];
+  editOrderFromCart: (id: number) => void;
+  addOrderToCart: () => void;
 
   cartItems: OrderCartItem[];
   addCartItem: (order: OrderCartItem) => void;
   removeCartItem: (order: OrderCartItem) => void;
 
   isOrderStateEmpty: () => boolean;
-  isCartEmpty: () => boolean;
+  readyToCheckout: () => boolean;
   isOrderBuilderEmpty: () => boolean;
 
   isSellOrderCart: () => boolean;
@@ -66,7 +74,8 @@ interface Props {
 export function OrderContextProvider({ children }: Props) {
   const [orderDrawerOpen, setOrderDrawerOpen] = useState<boolean>(false);
 
-  const [order, setOrder] = useState<OBOrder>();
+  const [ordersInCart, setOrdersInCart] = useState<OrderInCart[]>([]);
+
   const [cartItems, setCartItems] = useState<OrderCartItem[]>([]);
 
   // drawer form
@@ -75,14 +84,102 @@ export function OrderContextProvider({ children }: Props) {
   const [numItems, setNumItems] = useState<BigNumberish>(1);
 
   // for executing orders
-  const { showAppError, showAppMessage, user, providerManager } = useAppContext();
+  const { showAppError, showAppMessage, user, providerManager, chainId } = useAppContext();
 
   const isOrderBuilderEmpty = (): boolean => {
     return cartItems.length === 0;
   };
 
+  const readyToCheckout = () => {
+    return !isCartEmpty() && isOrderBuilderEmpty();
+  };
+
+  const getItems = (): Item[] => {
+    const items: Item[] = [];
+
+    for (const cartItem of cartItems) {
+      items.push({
+        tokenIds: [cartItem.tokenId ?? '????'],
+        collection: cartItem.collectionAddress
+      });
+    }
+
+    return items;
+  };
+
+  const getExecParams = (): ExecParams => {
+    return { complicationAddress: '????', currencyAddress: '????' };
+  };
+
+  const getExtraParams = (): ExtraParams => {
+    return { buyer: '????' };
+  };
+
+  const indexOfOrderInCart = (id: number): number => {
+    for (let i = 0; i < ordersInCart.length; i++) {
+      if (ordersInCart[i].id === id) {
+        return i;
+      }
+    }
+
+    return -1;
+  };
+
+  const editOrderFromCart = (id: number) => {
+    for (const orderInCart of ordersInCart) {
+      if (orderInCart.id === id) {
+        const index = indexOfOrderInCart(id);
+
+        if (index != -1) {
+          const orderInCart = ordersInCart[index];
+
+          if (index !== -1) {
+            const copy = [...ordersInCart];
+            copy.splice(index, 1);
+
+            setOrdersInCart(copy);
+          }
+
+          setCartItems(orderInCart.cartItems);
+          setPrice(formatEther(orderInCart.order.startPrice));
+          setExpirationDate(orderInCart.order.endTime);
+          setNumItems(orderInCart.order.numItems);
+        }
+      }
+    }
+  };
+
+  const addOrderToCart = () => {
+    const order: OBOrder = {
+      id: '????',
+      chainId: chainId,
+      isSellOrder: isSellOrderCart(),
+      signerAddress: user?.address ?? '????',
+      numItems,
+      startTime: nowSeconds(),
+      endTime: expirationDate,
+      startPrice: parseEther(price.toString()),
+      endPrice: parseEther(price.toString()),
+      minBpsToSeller: 9000,
+      nonce: 1,
+      nfts: getItems(),
+      execParams: getExecParams(),
+      extraParams: getExtraParams()
+    };
+
+    const orderInCart: OrderInCart = {
+      id: Math.random(),
+      order: order,
+      cartItems: cartItems
+    };
+
+    setOrdersInCart([...ordersInCart, orderInCart]);
+
+    setCartItems([]);
+  };
+
   const isCartEmpty = (): boolean => {
-    return order === undefined;
+    return ordersInCart.length === 0;
   };
 
   // used to show the drawer button
@@ -92,6 +189,10 @@ export function OrderContextProvider({ children }: Props) {
 
   // the drawer can be in sell or buy mode depending on the items added
   const isSellOrderCart = (): boolean => {
+    if (ordersInCart.length > 0) {
+      return ordersInCart[0].order.isSellOrder;
+    }
+
     if (cartItems.length > 0) {
       return cartItems[0].isSellOrder;
     }
@@ -114,7 +215,7 @@ export function OrderContextProvider({ children }: Props) {
   };
 
   const _resetStateValues = () => {
-    setOrder(undefined);
+    setOrdersInCart([]);
     setCartItems([]);
     setPrice(1);
     setExpirationDate(nowSeconds().add(thirtyDaySeconds));
@@ -124,7 +225,7 @@ export function OrderContextProvider({ children }: Props) {
   const addCartItem = (item: OrderCartItem) => {
     if (isSellOrderCart() !== item.isSellOrder) {
       setCartItems([item]);
-      setOrder(undefined);
+      setOrdersInCart([]);
     } else {
       const index = indexOfCartItem(cartItems, item);
 
@@ -152,31 +253,32 @@ export function OrderContextProvider({ children }: Props) {
       console.error('no user or provider');
       return;
     }
-    if (order) {
-      // crashes
-      // const signer = providerManager.getEthersProvider().getSigner();
-      // await prepareOBOrder(user, chainId, signer, order);
+    if (ordersInCart.length > 0) {
+      for (const orderInCart of ordersInCart) {
+        // crashes
+        // const signer = providerManager.getEthersProvider().getSigner();
+        // await prepareOBOrder(user, chainId, signer, order);
 
-      const match = await addBuy(order);
+        const match = await addBuy(orderInCart.order);
 
-      if (match) {
-        console.log(match);
-
-        showAppMessage('Buy successful');
-      } else {
-        showAppError('Buy submitted');
+        if (match) {
+          showAppMessage('Buy successful');
+        } else {
+          showAppError('Buy submitted');
+        }
       }
     }
   };
 
   const executeSell = async () => {
-    if (order) {
-      const match = await addSell(order);
-      if (match) {
-        console.log(match);
-        showAppMessage('sell successful.');
-      } else {
-        showAppMessage('sell submitted');
+    if (ordersInCart.length > 0) {
+      for (const orderInCart of ordersInCart) {
+        const match = await addSell(orderInCart.order);
+        if (match) {
+          showAppMessage('sell successful.');
+        } else {
+          showAppMessage('sell submitted');
+        }
       }
     }
   };
@@ -186,12 +288,13 @@ export function OrderContextProvider({ children }: Props) {
   const value: OrderContextType = {
     orderDrawerOpen,
     setOrderDrawerOpen,
-    order,
-    setOrder,
+    ordersInCart,
+    addOrderToCart,
+    editOrderFromCart,
     addCartItem,
     cartItems,
     removeCartItem,
-    isCartEmpty,
+    readyToCheckout,
     isOrderBuilderEmpty,
     isOrderStateEmpty,
     isSellOrderCart,
