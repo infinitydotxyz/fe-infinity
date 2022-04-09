@@ -153,7 +153,7 @@ async function schedule<T>(func: () => T): Promise<T> {
 function getShardId(cookie: string): string {
   // eslint-disable-next-line
   const result = new RegExp('(?:^|; )' + encodeURIComponent(cookie) + '=([^;]*)').exec(document.cookie);
-  console.log('result', result);
+  // console.log('result', result);
   if (result) {
     return result[1];
   }

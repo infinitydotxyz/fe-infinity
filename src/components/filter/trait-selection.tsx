@@ -158,7 +158,6 @@ export const TraitSelection = ({ traits, onChange }: Props) => {
 
                               const [traitTypes, traitValues] = getSelections(typeValueMap);
                               if (onChange) {
-                                console.log('traitTypes, traitValues', traitTypes, traitValues);
                                 onChange(traitTypes, traitValues);
                               }
                             }}

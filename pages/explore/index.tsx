@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { PageBox } from 'src/components/common';
 import { FetchMore } from 'src/components/common';
 import Link from 'next/link';
+import { SearchBox } from 'src/components/filter/search-box';
 //import { NextPageContext } from 'next';
 //import { apiGet } from 'src/utils';
 //import { Collection } from '@infinityxyz/lib/types/core';
@@ -25,6 +26,8 @@ const ExplorePage: React.FC = () => {
 
   return (
     <PageBox title="Explore" hideTitle>
+      <SearchBox />
+
       <h1 className="text-heading text-3xl">Collections</h1>
       <div className="flex justify-between flex-wrap -mx-4">
         {res.map((val, key) => (
