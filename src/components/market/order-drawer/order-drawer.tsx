@@ -9,6 +9,8 @@ import { EthPrice } from 'src/components/common/eth-price';
 import { useState } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { TooltipSpec } from 'src/components/common/tool-tip';
+import { nowSeconds } from '@infinityxyz/lib/utils';
+import { BigNumberish } from 'ethers';
 
 interface Props {
   open: boolean;
@@ -27,10 +29,8 @@ export function OrderDrawer({ open, onClose }: Props) {
     isOrderBuilderEmpty,
     executeOrder,
     order,
-    startPrice,
-    endPrice,
-    startTime,
-    endTime,
+    price,
+    expirationDate,
     numItems,
     cartItems
   } = useOrderContext();
@@ -144,6 +144,18 @@ export function OrderDrawer({ open, onClose }: Props) {
           content:
             'Any NFT(s) from selected collections will be automatically bought when there’s a matching sell order'
         };
+
+    let sPrice: BigNumberish = 0;
+    let ePrice: BigNumberish = 0;
+
+    if (isSellOrderCart()) {
+      sPrice = parseEther(price.toString());
+      ePrice = parseEther(price.toString());
+    } else {
+      sPrice = parseEther(price.toString());
+      ePrice = parseEther(price.toString());
+    }
+
     footer = buildFooter(() => {
       const order: OBOrder = {
         id: '????',
@@ -151,10 +163,10 @@ export function OrderDrawer({ open, onClose }: Props) {
         isSellOrder: isSellOrderCart(),
         signerAddress: user?.address ?? '????',
         numItems,
-        startTime: startTime,
-        endTime: endTime,
-        startPrice: parseEther(startPrice.toString()),
-        endPrice: parseEther(endPrice.toString()),
+        startTime: nowSeconds(),
+        endTime: expirationDate,
+        startPrice: sPrice,
+        endPrice: ePrice,
         minBpsToSeller: 9000,
         nonce: 1,
         nfts: getItems(),

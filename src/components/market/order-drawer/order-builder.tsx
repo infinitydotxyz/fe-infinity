@@ -3,20 +3,8 @@ import { useOrderContext } from 'src/utils/context/OrderContext';
 import { OrderListItem } from './order-list-item';
 
 export function OrderBuilder() {
-  const {
-    cartItems,
-    isSellOrderCart,
-    startPrice,
-    setStartPrice,
-    endPrice,
-    setEndPrice,
-    startTime,
-    setStartTime,
-    endTime,
-    setEndTime,
-    numItems,
-    setNumItems
-  } = useOrderContext();
+  const { cartItems, isSellOrderCart, price, setPrice, expirationDate, setExpirationDate, numItems, setNumItems } =
+    useOrderContext();
 
   const list = (
     <div className="overflow-y-auto">
@@ -47,15 +35,15 @@ export function OrderBuilder() {
     );
   };
 
-  const startPriceField = () => {
+  const priceField = () => {
     return (
       <TextInputBox
         type="number"
-        value={startPrice.toString()}
+        value={price.toString()}
         placeholder="2.33"
         addEthSymbol={true}
         label="Start Price"
-        onChange={(value) => setStartPrice(parseFloat(value))}
+        onChange={(value) => setPrice(parseFloat(value))}
         tooltip={{
           title: 'Tooltip title',
           content: 'tooltip goes here'
@@ -64,42 +52,13 @@ export function OrderBuilder() {
     );
   };
 
-  const endPriceField = () => {
-    return (
-      <TextInputBox
-        type="number"
-        value={endPrice.toString()}
-        placeholder="2.33"
-        addEthSymbol={true}
-        label="End Price"
-        onChange={(value) => setEndPrice(parseFloat(value))}
-        tooltip={{
-          title: 'Tooltip title',
-          content: 'tooltip goes here'
-        }}
-      />
-    );
-  };
-
-  const startTimeField = () => {
-    return (
-      <DatePickerBox
-        label="Start Time"
-        value={new Date(parseInt(startTime.toString()) * 1000)}
-        onChange={(date) => {
-          setStartTime(date.getTime() / 1000);
-        }}
-      />
-    );
-  };
-
-  const endTimeField = () => {
+  const expirationDateField = () => {
     return (
       <DatePickerBox
         label="End Time"
-        value={new Date(parseInt(endTime.toString()) * 1000)}
+        value={new Date(parseInt(expirationDate.toString()) * 1000)}
         onChange={(date) => {
-          setEndTime(date.getTime() / 1000);
+          setExpirationDate(date.getTime() / 1000);
         }}
       />
     );
@@ -114,10 +73,8 @@ export function OrderBuilder() {
         {list}
         <div className="flex flex-col space-y-2">
           {numItemsField()}
-          {startPriceField()}
-          {endPriceField()}
-          {startTimeField()}
-          {endTimeField()}
+          {priceField()}
+          {expirationDateField()}
         </div>
 
         <Spacer />
@@ -131,10 +88,8 @@ export function OrderBuilder() {
         {list}
         <div className="flex flex-col space-y-2">
           {numItemsField()}
-          {startPriceField()}
-          {endPriceField()}
-          {startTimeField()}
-          {endTimeField()}
+          {priceField()}
+          {expirationDateField()}
         </div>
 
         <Spacer />

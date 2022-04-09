@@ -4,6 +4,7 @@ import { BigNumberish } from 'ethers';
 import React, { ReactNode, useContext, useState } from 'react';
 import { useAppContext } from './AppContext';
 import { addBuy, addSell } from 'src/utils/marketUtils';
+import { thirtyDaySeconds } from 'src/components/market/order-drawer/ui-constants';
 
 export interface OrderCartItem {
   isSellOrder: boolean;
@@ -48,14 +49,10 @@ export type OrderContextType = {
   executeOrder: () => boolean;
 
   // drawer form
-  startPrice: BigNumberish;
-  setStartPrice: (price: BigNumberish) => void;
-  endPrice: BigNumberish;
-  setEndPrice: (price: BigNumberish) => void;
-  startTime: BigNumberish;
-  setStartTime: (time: BigNumberish) => void;
-  endTime: BigNumberish;
-  setEndTime: (time: BigNumberish) => void;
+  price: BigNumberish;
+  setPrice: (price: BigNumberish) => void;
+  expirationDate: BigNumberish;
+  setExpirationDate: (time: BigNumberish) => void;
   numItems: BigNumberish;
   setNumItems: (items: BigNumberish) => void;
 };
@@ -73,10 +70,8 @@ export function OrderContextProvider({ children }: Props) {
   const [cartItems, setCartItems] = useState<OrderCartItem[]>([]);
 
   // drawer form
-  const [startPrice, setStartPrice] = useState<BigNumberish>(1);
-  const [endPrice, setEndPrice] = useState<BigNumberish>(1);
-  const [startTime, setStartTime] = useState<BigNumberish>(nowSeconds());
-  const [endTime, setEndTime] = useState<BigNumberish>(nowSeconds().add(1000));
+  const [price, setPrice] = useState<BigNumberish>(1);
+  const [expirationDate, setExpirationDate] = useState<BigNumberish>(nowSeconds().add(thirtyDaySeconds));
   const [numItems, setNumItems] = useState<BigNumberish>(1);
 
   // for executing orders
@@ -121,10 +116,8 @@ export function OrderContextProvider({ children }: Props) {
   const _resetStateValues = () => {
     setOrder(undefined);
     setCartItems([]);
-    setStartPrice(1);
-    setEndPrice(1);
-    setStartTime(nowSeconds());
-    setEndTime(nowSeconds().add(1000));
+    setPrice(1);
+    setExpirationDate(nowSeconds().add(thirtyDaySeconds));
     setNumItems(1);
   };
 
@@ -203,14 +196,10 @@ export function OrderContextProvider({ children }: Props) {
     isOrderStateEmpty,
     isSellOrderCart,
     executeOrder,
-    startPrice,
-    setStartPrice,
-    endPrice,
-    setEndPrice,
-    startTime,
-    setStartTime,
-    endTime,
-    setEndTime,
+    price,
+    setPrice,
+    expirationDate,
+    setExpirationDate,
     numItems,
     setNumItems
   };

@@ -7,6 +7,7 @@ import { DatePickerBox, TextInputBox, SimpleModal, ComboInputBox } from 'src/com
 import { useAppContext } from 'src/utils/context/AppContext';
 import { bigNumToDate, CollectionAddr, CollectionManager } from 'src/utils/marketUtils';
 import { isServer } from 'src/utils';
+import { thirtyDaySeconds } from './order-drawer/ui-constants';
 
 interface Props {
   isOpen: boolean;
@@ -26,7 +27,7 @@ export const OrderModal: React.FC<Props> = ({ isOpen, buyMode = true, inOrder, o
   const [startPrice, setStartPrice] = useState<BigNumberish>(1);
   const [endPrice, setEndPrice] = useState<BigNumberish>(1);
   const [startTime, setStartTime] = useState<BigNumberish>(nowSeconds());
-  const [endTime, setEndTime] = useState<BigNumberish>(nowSeconds().add(1000));
+  const [endTime, setEndTime] = useState<BigNumberish>(nowSeconds().add(thirtyDaySeconds));
   const [collections, setCollections] = useState<CollectionAddr[]>([CollectionManager.collections()[0]]);
   const [tokenId, setTokenId] = useState<string>('12345');
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
