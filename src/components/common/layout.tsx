@@ -5,9 +5,10 @@ import { Navbar } from 'src/components/common/navbar';
 interface Props {
   children?: React.ReactNode;
   title?: string;
+  className?: string;
 }
 
-export function Layout({ children, title }: Props): JSX.Element {
+export function Layout({ children, title, className }: Props): JSX.Element {
   const styles = {
     header: {
       title: title

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Card, PageBox } from 'src/components/common';
+import { Card } from 'src/components/common';
+import { Layout } from 'src/components/common/layout';
 import { FetchMore } from 'src/components/common';
 // import Link from 'next/link';
 import { SearchBox } from 'src/components/filter/search-box';
@@ -21,12 +22,14 @@ const ExplorePage: React.FC = () => {
   };
 
   return (
-    <PageBox title="Explore" hideTitle>
-      <SearchBox />
+    <Layout title="Explore">
+      <div className="flex flex-col m-4 max-w-screen-lg">
+        <main>
+          <SearchBox />
 
-      <h1 className="text-heading text-3xl">Collections</h1>
-      <div className="flex justify-between flex-wrap -mx-4">
-        {/* {res.map((val, key) => (
+          <h1 className="text-heading text-3xl">Collections</h1>
+          <div className="flex justify-between flex-wrap -mx-4">
+            {/* {res.map((val, key) => (
           <div key={key} className="w-full sm:w-72 lg:w-80 p-4">
             <Link href={`/asset/1/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/8880`}>
               <a href={`/asset/1/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/8880`}>
@@ -38,24 +41,26 @@ const ExplorePage: React.FC = () => {
             </Link>
           </div>
         ))} */}
-        {res.map((val, key) => {
-          const dt = {
-            id: 'nft1',
-            title: 'NFT 1',
-            tokenId: 'Token1',
-            price: 1.5,
-            image:
-              'https://media.voguebusiness.com/photos/61b8dfb99ba90ab572dea0bd/3:4/w_1998,h_2664,c_limit/adidas-nft-voguebus-adidas-nft-dec-21-story.jpg'
-          };
-          return (
-            <React.Fragment key={key}>
-              <Card data={dt} onClick={console.log} className="mt-8 ml-8" />
-            </React.Fragment>
-          );
-        })}
-        <FetchMore onFetchMore={handleFetchMore} data={data} currentPage={page} />
+            {res.map((val, key) => {
+              const dt = {
+                id: 'nft1',
+                title: 'NFT 1',
+                tokenId: 'Token1',
+                price: 1.5,
+                image:
+                  'https://media.voguebusiness.com/photos/61b8dfb99ba90ab572dea0bd/3:4/w_1998,h_2664,c_limit/adidas-nft-voguebus-adidas-nft-dec-21-story.jpg'
+              };
+              return (
+                <React.Fragment key={key}>
+                  <Card data={dt} onClick={console.log} className="mt-8 ml-8" />
+                </React.Fragment>
+              );
+            })}
+            <FetchMore onFetchMore={handleFetchMore} data={data} currentPage={page} />
+          </div>
+        </main>
       </div>
-    </PageBox>
+    </Layout>
   );
 };
 
