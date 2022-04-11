@@ -9,7 +9,7 @@ interface Props {
   data: CardData;
   className?: string;
   onClick: () => void;
-  isSellCard: boolean;
+  isSellCard?: boolean;
 }
 
 export function Card({ data, className, onClick, isSellCard }: Props): JSX.Element {

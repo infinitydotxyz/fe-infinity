@@ -35,7 +35,6 @@ export function CollectionPage() {
   );
   const lastDailyStats = dailyStats?.data[dailyStats?.data.length - 1];
   const lastWeeklyStats = weeklyStats?.data[weeklyStats?.data.length - 1];
-  console.log('lastWeeklyStats', lastWeeklyStats);
 
   return (
     <PageBox
@@ -159,14 +158,14 @@ export function CollectionPage() {
         className="mt-8"
       />
 
-      <div className="mt-6">
+      <div className="mt-6 min-h-[1024px]">
         {currentTab === 0 && <>{collection && <GalleryBox collection={collection} />}</>}
         {currentTab === 1 && <ActivityTab dailyStats={dailyStats} weeklyStats={weeklyStats} />}
         {currentTab === 2 && (
           <div className="grid lg:grid-cols-7 gap-6">
             <div className="col-span-4">
               {/* <div className="text-3xl mb-6">Feed</div> */}
-              <CollectionFeed collectionAddress={collection?.address ?? ''} />
+              <CollectionFeed header="Feed" collectionAddress={collection?.address ?? ''} />
             </div>
             <div className="col-span-3">
               <CommunityRightPanel />

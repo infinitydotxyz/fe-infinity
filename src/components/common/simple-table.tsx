@@ -24,7 +24,7 @@ interface Props {
 export function SimpleTable({ items }: Props) {
   const table = items.map((item) => {
     return (
-      <div key={item.title} className="flex w-full mb-2">
+      <div key={Math.random()} className="flex w-full mb-2">
         <div>{item.title}</div>
         <Spacer />
         <div className="font-bold">{item.value}</div>

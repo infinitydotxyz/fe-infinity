@@ -18,3 +18,7 @@ export const pixelsPerRem = () => {
 
 export const iconButtonStyle = 'h-6 w-6';
 export const smallIconButtonStyle = 'h-5 w-5';
+
+export const secondsPerDay = 86400;
+export const weekSeconds = secondsPerDay * 7;
+export const thirtyDaySeconds = secondsPerDay * 30;

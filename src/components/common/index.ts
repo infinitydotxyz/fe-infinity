@@ -20,5 +20,6 @@ export * from 'src/components/common/divider';
 export * from 'src/components/common/drawer';
 export * from 'src/components/common/toggle-tab';
 export * from 'src/components/common/simple-modal';
+export * from 'src/components/common/spinner';
 export * from 'src/components/common/modal';
 export * from 'src/components/common/simple-table';

@@ -1,8 +1,6 @@
 import { Spacer, Divider, Button, Drawer, SimpleTable, SimpleModal } from 'src/components/common';
 import { useOrderContext } from 'src/utils/context/OrderContext';
-import { formatEther, parseEther } from 'ethers/lib/utils';
-import { ExecParams, ExtraParams, Item, OBOrder } from '@infinityxyz/lib/types/core';
-import { useAppContext } from 'src/utils/context/AppContext';
+import { formatEther } from 'ethers/lib/utils';
 import { OrderBuilder } from './order-builder';
 import { OrderSummary } from './order-summary';
 import { EthPrice } from 'src/components/common/eth-price';
@@ -17,22 +15,16 @@ interface Props {
 
 export function OrderDrawer({ open, onClose }: Props) {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const { user, chainId } = useAppContext();
 
   const {
     isSellOrderCart,
-    setOrder,
-    isCartEmpty,
+    addOrderToCart,
+    readyToCheckout,
     isOrderStateEmpty,
     isOrderBuilderEmpty,
     executeOrder,
-    order,
-    startPrice,
-    endPrice,
-    startTime,
-    endTime,
-    numItems,
-    cartItems
+    ordersInCart,
+    isEditingOrder
   } = useOrderContext();
 
   const emptyCart = (
@@ -49,23 +41,25 @@ export function OrderDrawer({ open, onClose }: Props) {
     let buttonTitle = 'Add order to cart';
     let topWidget;
 
-    if (!isCartEmpty()) {
+    if (readyToCheckout()) {
       buttonTitle = 'Checkout';
 
       const items = [];
 
-      if (isSellOrderCart()) {
-        items.push({
-          title: 'Min total sale price',
-          value: <EthPrice label={formatEther(order?.endPrice ?? 0)} />
-        });
-        items.push({ title: 'Max NFTs to sell', value: <div>{order?.numItems}</div> });
-      } else {
-        items.push({
-          title: 'Max spending',
-          value: <EthPrice label={formatEther(order?.endPrice ?? 0)} />
-        });
-        items.push({ title: 'Min NFTs to buy', value: <div>{order?.numItems}</div> });
+      for (const orderInCart of ordersInCart) {
+        if (isSellOrderCart()) {
+          items.push({
+            title: 'Min total sale price',
+            value: <EthPrice label={formatEther(orderInCart.order.endPrice ?? 0)} />
+          });
+          items.push({ title: 'Max NFTs to sell', value: <div>{orderInCart.order.numItems}</div> });
+        } else {
+          items.push({
+            title: 'Max budget',
+            value: <EthPrice label={formatEther(orderInCart.order.endPrice ?? 0)} />
+          });
+          items.push({ title: 'Min NFTs to buy', value: <div>{orderInCart.order.numItems}</div> });
+        }
       }
 
       topWidget = (
@@ -73,6 +67,10 @@ export function OrderDrawer({ open, onClose }: Props) {
           <SimpleTable items={items} />
         </div>
       );
+    } else {
+      if (isEditingOrder) {
+        buttonTitle = 'Update order';
+      }
     }
 
     return (
@@ -85,27 +83,6 @@ export function OrderDrawer({ open, onClose }: Props) {
     );
   };
 
-  const getItems = (): Item[] => {
-    const items: Item[] = [];
-
-    for (const cartItem of cartItems) {
-      items.push({
-        tokenIds: [cartItem.tokenId ?? '????'],
-        collection: cartItem.collectionAddress
-      });
-    }
-
-    return items;
-  };
-
-  const getExecParams = (): ExecParams => {
-    return { complicationAddress: '????', currencyAddress: '????' };
-  };
-
-  const getExtraParams = (): ExtraParams => {
-    return { buyer: '????' };
-  };
-
   let contents;
   let title = 'Create order';
   let footer;
@@ -113,7 +90,7 @@ export function OrderDrawer({ open, onClose }: Props) {
 
   if (isOrderStateEmpty()) {
     contents = emptyCart;
-  } else if (!isCartEmpty()) {
+  } else if (readyToCheckout()) {
     // ready to checkout, we have an order
     title = 'Cart';
     tooltip = { title: '(tooltip goes here)', content: '(tooltip goes here)' };
@@ -144,25 +121,9 @@ export function OrderDrawer({ open, onClose }: Props) {
           content:
             'Any NFT(s) from selected collections will be automatically bought when there’s a matching sell order'
         };
-    footer = buildFooter(() => {
-      const order: OBOrder = {
-        id: '????',
-        chainId: chainId,
-        isSellOrder: isSellOrderCart(),
-        signerAddress: user?.address ?? '????',
-        numItems,
-        startTime: startTime,
-        endTime: endTime,
-        startPrice: parseEther(startPrice.toString()),
-        endPrice: parseEther(endPrice.toString()),
-        minBpsToSeller: 9000,
-        nonce: 1,
-        nfts: getItems(),
-        execParams: getExecParams(),
-        extraParams: getExtraParams()
-      };
 
-      setOrder(order);
+    footer = buildFooter(() => {
+      addOrderToCart();
     });
 
     contents = (

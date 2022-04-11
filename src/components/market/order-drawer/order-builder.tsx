@@ -3,20 +3,8 @@ import { useOrderContext } from 'src/utils/context/OrderContext';
 import { OrderListItem } from './order-list-item';
 
 export function OrderBuilder() {
-  const {
-    cartItems,
-    isSellOrderCart,
-    startPrice,
-    setStartPrice,
-    endPrice,
-    setEndPrice,
-    startTime,
-    setStartTime,
-    endTime,
-    setEndTime,
-    numItems,
-    setNumItems
-  } = useOrderContext();
+  const { cartItems, isSellOrderCart, price, setPrice, expirationDate, setExpirationDate, numItems, setNumItems } =
+    useOrderContext();
 
   const list = (
     <div className="overflow-y-auto">
@@ -28,8 +16,18 @@ export function OrderBuilder() {
 
   const numItemsField = () => {
     let label = 'Min NFTs to buy';
+    let tooltip = {
+      title: label,
+      content: 'The min number you want to buy from the collections listed in the order'
+    };
+
     if (isSellOrderCart()) {
       label = 'Max NFTs to sell';
+
+      tooltip = {
+        title: label,
+        content: 'The max number you want to sell from the collections listed in the order'
+      };
     }
 
     return (
@@ -39,67 +37,49 @@ export function OrderBuilder() {
         label={label}
         value={numItems.toString()}
         onChange={(value) => setNumItems(parseInt(value))}
-        tooltip={{
-          title: 'Min nuber to buy',
-          content: 'The min number you want to buy from the collections listed in the order'
-        }}
+        tooltip={tooltip}
       />
     );
   };
 
-  const startPriceField = () => {
+  const priceField = () => {
+    const multiple = cartItems.length > 1;
+
+    let label = multiple ? 'Max budget' : 'Max budget';
+    let tooltip = {
+      title: label,
+      content: 'tooltip goes here'
+    };
+
+    if (isSellOrderCart()) {
+      label = multiple ? 'Min combined price' : 'Min price';
+
+      tooltip = {
+        title: label,
+        content: 'tooltip goes here'
+      };
+    }
+
     return (
       <TextInputBox
         type="number"
-        value={startPrice.toString()}
+        value={price.toString()}
         placeholder="2.33"
         addEthSymbol={true}
-        label="Start Price"
-        onChange={(value) => setStartPrice(parseFloat(value))}
-        tooltip={{
-          title: 'Tooltip title',
-          content: 'tooltip goes here'
-        }}
+        label={label}
+        onChange={(value) => setPrice(parseFloat(value))}
+        tooltip={tooltip}
       />
     );
   };
 
-  const endPriceField = () => {
-    return (
-      <TextInputBox
-        type="number"
-        value={endPrice.toString()}
-        placeholder="2.33"
-        addEthSymbol={true}
-        label="End Price"
-        onChange={(value) => setEndPrice(parseFloat(value))}
-        tooltip={{
-          title: 'Tooltip title',
-          content: 'tooltip goes here'
-        }}
-      />
-    );
-  };
-
-  const startTimeField = () => {
+  const expirationDateField = () => {
     return (
       <DatePickerBox
-        label="Start Time"
-        value={new Date(parseInt(startTime.toString()) * 1000)}
+        label="Expiration Date"
+        value={new Date(parseInt(expirationDate.toString()) * 1000)}
         onChange={(date) => {
-          setStartTime(date.getTime() / 1000);
-        }}
-      />
-    );
-  };
-
-  const endTimeField = () => {
-    return (
-      <DatePickerBox
-        label="End Time"
-        value={new Date(parseInt(endTime.toString()) * 1000)}
-        onChange={(date) => {
-          setEndTime(date.getTime() / 1000);
+          setExpirationDate(date.getTime() / 1000);
         }}
       />
     );
@@ -113,11 +93,9 @@ export function OrderBuilder() {
       <>
         {list}
         <div className="flex flex-col space-y-2">
+          {priceField()}
           {numItemsField()}
-          {startPriceField()}
-          {endPriceField()}
-          {startTimeField()}
-          {endTimeField()}
+          {expirationDateField()}
         </div>
 
         <Spacer />
@@ -130,11 +108,9 @@ export function OrderBuilder() {
       <>
         {list}
         <div className="flex flex-col space-y-2">
+          {priceField()}
           {numItemsField()}
-          {startPriceField()}
-          {endPriceField()}
-          {startTimeField()}
-          {endTimeField()}
+          {expirationDateField()}
         </div>
 
         <Spacer />
