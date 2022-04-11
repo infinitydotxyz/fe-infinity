@@ -1,6 +1,6 @@
 import React from 'react';
-import { Header } from 'src/components/analytics/header';
-import { Navigation } from 'src/components/common/navbar';
+import { Header } from 'src/components/common/header';
+import { Navbar } from 'src/components/common/navbar';
 
 interface Props {
   children?: React.ReactNode;
@@ -34,7 +34,7 @@ export function Layout({ children, title }: Props): JSX.Element {
     <>
       <div {...styles?.container}>
         <Header {...styles?.header}>
-          <Navigation />
+          <Navbar />
           <div {...styles?.content?.container}>{children}</div>
         </Header>
       </div>
