@@ -1,12 +1,13 @@
 import { useRouter } from 'next/router';
 import type { FC } from 'react';
-import { Button, PageBox } from 'src/components/common';
+import { Button } from 'src/components/common';
+import { Layout } from 'src/components/common/layout';
 
 export const Home: FC = () => {
   const router = useRouter();
 
   return (
-    <PageBox title="Home">
+    <Layout title="Home">
       <div className="flex flex-col space-y-4 items-center">
         <Button
           onClick={() => {
@@ -70,7 +71,7 @@ export const Home: FC = () => {
           Explore
         </Button>
       </div>
-    </PageBox>
+    </Layout>
   );
 };
 

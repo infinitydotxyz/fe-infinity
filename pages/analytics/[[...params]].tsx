@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tab } from '@headlessui/react';
-import { Layout } from 'src/components/analytics/layout';
+import { Layout } from 'src/components/common/layout';
 import { Field } from 'src/components/analytics/field';
 import { useFetch } from 'src/utils/apiUtils';
 import { useRouter } from 'next/router';
