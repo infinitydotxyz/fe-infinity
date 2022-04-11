@@ -156,7 +156,7 @@ export function CollectionPage() {
         className="mt-8"
       />
 
-      <div className="mt-6">
+      <div className="mt-6 min-h-[1024px]">
         {currentTab === 0 && <>{collection && <GalleryBox collection={collection} />}</>}
         {currentTab === 1 && <ActivityTab dailyStats={dailyStats} weeklyStats={weeklyStats} />}
         {currentTab === 2 && (
