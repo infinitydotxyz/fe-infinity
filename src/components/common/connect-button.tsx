@@ -92,7 +92,7 @@ export const ConnectButton: React.FC = () => {
               {content?.menu?.map((item, i) => (
                 <React.Fragment key={i}>
                   {item.type === 'link' && (
-                    <Link {...item?.props}>
+                    <Link passHref href={item?.props?.href ? item.props.href : ''}>
                       <Menu.Item as="button" {...styles?.menu?.item}>
                         {item?.label}
                       </Menu.Item>

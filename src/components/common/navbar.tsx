@@ -286,7 +286,7 @@ export function Navbar() {
                 */}
                 {item.type === 'link' && (
                   <div {...styles?.actions?.item?.container}>
-                    <Link {...item?.props}>
+                    <Link passHref href={item?.props?.href ? item.props.href : ''}>
                       <button {...styles?.actions?.item?.button}>{item?.label}</button>
                     </Link>
                   </div>
@@ -311,7 +311,7 @@ export function Navbar() {
                               ====================================
                             */}
                               {x.type === 'link' && (
-                                <Link {...x?.props}>
+                                <Link passHref href={x?.props?.href ? x.props.href : ''}>
                                   <Menu.Item as="button" {...styles?.actions?.item?.menu?.item}>
                                     {x?.label}
                                   </Menu.Item>
