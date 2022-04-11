@@ -30,7 +30,7 @@ export const PageBox = ({
   }
 
   return (
-    <div className={`flex flex-col  ${justify} m-4`}>
+    <div className={`flex flex-col ${justify}`}>
       <Head>
         <title>{title} | Infinity</title>
         <meta name="description" content="Infinity NFT marketplace" />
@@ -39,7 +39,7 @@ export const PageBox = ({
 
       {showConnect && <Header />}
 
-      <div className="flex flex-col w-full m-4 max-w-screen-lg">
+      <div className="flex flex-col w-full max-w-screen-2xl px-6 lg:px-8 xl:px-10">
         {!hideTitle && <PageHeader title={titleElement || title} rightSide={rightSide} />}
 
         <main>{children}</main>

@@ -11,7 +11,7 @@ export const TraitList: FC<TraitListProps> = ({ traits, collectionTraits }) => {
   return (
     <div className="mt-10">
       <p className="mt-4 sm:mt-6 sm:mb-4 tracking-base text-black">Traits</p>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-4 mt-6">
         {traits.map((trait: Erc721Attribute) => (
           <Trait
             key={trait.trait_type}
