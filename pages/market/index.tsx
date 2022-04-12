@@ -161,9 +161,19 @@ export default function MarketPage() {
           <RiLayoutGridFill />
         </div>
 
-        <div className="flex flex-row flex-wrap space-x-4 mb-6">{buyCards}</div>
+        {selected === 'Assets' && (
+          <>
+            <div className="flex flex-row flex-wrap space-x-4 mb-6">{buyCards}</div>
 
-        <div className="flex flex-row flex-wrap space-x-4 mb-6">{sellCards}</div>
+            <div className="flex flex-row flex-wrap space-x-4 mb-6">{sellCards}</div>
+          </>
+        )}
+
+        {selected === 'Orderbook' && (
+          <>
+            <div>Orderbook goes here</div>
+          </>
+        )}
       </>
     );
   }
@@ -172,16 +182,15 @@ export default function MarketPage() {
     <PageBox
       title="Market"
       rightSide={
-        !isOrderStateEmpty() ? (
-          <Button
-            variant="outline"
-            onClick={async () => {
-              setOrderDrawerOpen(!orderDrawerOpen);
-            }}
-          >
-            <FaShoppingBag />
-          </Button>
-        ) : undefined
+        <Button
+          disabled={isOrderStateEmpty()}
+          variant="outline"
+          onClick={async () => {
+            setOrderDrawerOpen(!orderDrawerOpen);
+          }}
+        >
+          <FaShoppingBag />
+        </Button>
       }
     >
       <OrderDrawer open={orderDrawerOpen} onClose={() => setOrderDrawerOpen(false)} />

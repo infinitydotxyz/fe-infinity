@@ -7,6 +7,7 @@ import { EthPrice } from 'src/components/common/eth-price';
 import { useState } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { TooltipSpec } from 'src/components/common/tool-tip';
+import { BigNumber } from '@ethersproject/bignumber/lib/bignumber';
 
 interface Props {
   open: boolean;
@@ -46,20 +47,26 @@ export function OrderDrawer({ open, onClose }: Props) {
 
       const items = [];
 
+      let totalEth: BigNumber = BigNumber.from(0);
+      let totalNFTs: BigNumber = BigNumber.from(0);
+
       for (const orderInCart of ordersInCart) {
-        if (isSellOrderCart()) {
-          items.push({
-            title: 'Min total sale price',
-            value: <EthPrice label={formatEther(orderInCart.order.endPrice ?? 0)} />
-          });
-          items.push({ title: 'Max NFTs to sell', value: <div>{orderInCart.order.numItems}</div> });
-        } else {
-          items.push({
-            title: 'Max budget',
-            value: <EthPrice label={formatEther(orderInCart.order.endPrice ?? 0)} />
-          });
-          items.push({ title: 'Min NFTs to buy', value: <div>{orderInCart.order.numItems}</div> });
-        }
+        totalEth = totalEth.add(orderInCart.order.endPrice);
+        totalNFTs = totalNFTs.add(orderInCart.order.numItems);
+      }
+
+      if (isSellOrderCart()) {
+        items.push({
+          title: 'Min total sale price',
+          value: <EthPrice label={formatEther(totalEth)} />
+        });
+        items.push({ title: 'Max NFTs to sell', value: <div>{totalNFTs.toString()}</div> });
+      } else {
+        items.push({
+          title: 'Max budget',
+          value: <EthPrice label={formatEther(totalEth)} />
+        });
+        items.push({ title: 'Min NFTs to buy', value: <div>{totalNFTs.toString()}</div> });
       }
 
       topWidget = (
