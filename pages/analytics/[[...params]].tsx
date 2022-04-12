@@ -211,15 +211,6 @@ export const Analytics = () => {
     }
   };
 
-  /*
-    ======================================
-      Whenever page or interval changes,
-      (which they do because tabs in this page
-      are actually links that pass in query parameters),
-      we make
-    ======================================
-  */
-
   const styles = {
     layout: {
       title: 'Analytics'
@@ -329,17 +320,20 @@ export const Analytics = () => {
           className: `
             w-full h-full
             row-start-1 col-start-3 row-span-1 col-span-20
+            ring ring-inset ring-transparent
             flex flex-col gap-4
           `
         },
         loading: {
           className: `
-            w-full h-[170px] bg-blue-50 rounded-xl
+            w-full h-[170px] bg-blue-50 ring ring-inset ring-blue-100 rounded-xl
+            animate-pulse
           `
         },
         error: {
           className: `
-            w-full h-[170px] bg-red-50 rounded-xl
+            w-full h-[170px] bg-red-50 ring ring-inset ring-red-100 rounded-xl
+            animate-pulse
           `
         },
         item: {
@@ -450,6 +444,11 @@ export const Analytics = () => {
               ====================================
                 This is where we show the data that
                 we get based on the query parameters.
+                If data doesn't come out, we show
+                skeleton components (same number as that
+                of limit - this is important because
+                it prevents the page from jumping around on
+                route changes).
               ====================================
             */}
             <div {...styles?.statistics?.list?.container}>
