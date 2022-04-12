@@ -1,30 +1,14 @@
-import { MarketListIdType, MarketListingsBody, OBOrder } from '@infinityxyz/lib/types/core';
+import {
+  BuyOrderMatch,
+  MarketListIdType,
+  MarketListingsBody,
+  MarketListingsResponse,
+  OBOrder,
+  TradeBody,
+  TradeResponse
+} from '@infinityxyz/lib/types/core';
 import { BigNumber, BigNumberish } from 'ethers';
 import { apiPost, isStatusOK } from 'src/utils/apiUtils';
-
-export interface BuyOrderMatch {
-  buyOrder: OBOrder;
-  sellOrders: OBOrder[];
-}
-
-export interface TradeBody {
-  buyOrder?: OBOrder;
-  sellOrder?: OBOrder;
-}
-
-export interface MarketListingsResponse {
-  buyOrders: OBOrder[];
-  sellOrders: OBOrder[];
-  matches: BuyOrderMatch[];
-  success: string;
-  error: string;
-}
-
-export interface TradeResponse {
-  matches: BuyOrderMatch[];
-  success: string;
-  error: string;
-}
 
 export const addBuy = async (order: OBOrder): Promise<BuyOrderMatch[]> => {
   try {
@@ -92,7 +76,7 @@ export const marketSellOrders = async (listId: MarketListIdType): Promise<OBOrde
 };
 
 const list = async (body: MarketListingsBody): Promise<OBOrder[]> => {
-  const response = await apiPost(`/marketListings`, { data: body });
+  const response = await apiPost(`/market-listings`, { data: body });
 
   if (response.result) {
     const match: MarketListingsResponse | null = response.result;
@@ -100,11 +84,11 @@ const list = async (body: MarketListingsBody): Promise<OBOrder[]> => {
     if (isStatusOK(response)) {
       if (match) {
         if (body.orderType === 'buyOrders') {
-          const buys: OBOrder[] = match.buyOrders as OBOrder[];
+          const buys: OBOrder[] = match.buyOrders.orders;
 
           return buys;
         } else if (body.orderType === 'sellOrders') {
-          const sells: OBOrder[] = match.sellOrders as OBOrder[];
+          const sells: OBOrder[] = match.sellOrders.orders;
 
           return sells;
         }
@@ -121,7 +105,7 @@ export const marketMatches = async (): Promise<BuyOrderMatch[]> => {
     orderType: 'buyOrders'
   };
 
-  const response = await apiPost(`/marketListings`, { data: body });
+  const response = await apiPost(`/market-listings`, { data: body });
 
   if (response.result) {
     const res: MarketListingsResponse | null = response.result;
@@ -136,7 +120,7 @@ export const marketMatches = async (): Promise<BuyOrderMatch[]> => {
 };
 
 export const marketDeleteOrder = async (body: MarketListingsBody): Promise<string> => {
-  const response = await apiPost(`/marketListings`, { data: body });
+  const response = await apiPost(`/market-listings`, { data: body });
 
   if (response.result) {
     const match: MarketListingsResponse | null = response.result;
@@ -160,7 +144,7 @@ export const executeBuyOrder = async (orderId: string): Promise<string> => {
     orderType: 'buyOrders'
   };
 
-  const response = await apiPost(`/marketListings`, { data: body });
+  const response = await apiPost(`/market-listings`, { data: body });
 
   if (response.result) {
     const match: MarketListingsResponse | null = response.result;
