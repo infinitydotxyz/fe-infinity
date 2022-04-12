@@ -1,8 +1,9 @@
 import { FunctionComponent } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import { Button, PageBox, ShortAddress, ReadMoreText } from 'src/components/common';
-import { apiGet } from 'src/utils';
+import { apiGet, useFetch } from 'src/utils';
 import { Token, Collection } from '@infinityxyz/lib/types/core';
 import {
   TraitList,
@@ -19,18 +20,45 @@ import BlueCheckSvg from 'src/images/blue-check.svg';
 
 import { NextPageContext } from 'next';
 
-interface AssetDetailProps {
-  token: Token | null;
-  collection: Collection | null;
-}
-
 const BLANK_IMAGE_URL = 'https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png';
 
-const AssetDetail: FunctionComponent<AssetDetailProps> = ({ token, collection }) => {
-  if (!token || !collection) {
+const useFetchAssertInfo = (chainId: string, collection: string, tokenId: string) => {
+  const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
+  const COL_API_ENDPOINT = `/collections/${chainId}:${collection}`;
+
+  const tokenResponse = useFetch<Token>(NFT_API_ENDPOINT);
+  const collectionResponse = useFetch<Collection>(COL_API_ENDPOINT);
+
+  return {
+    isLoading: tokenResponse.isLoading || collectionResponse.isLoading,
+    error: tokenResponse.error || collectionResponse.error,
+    token: tokenResponse.result,
+    collection: collectionResponse.result
+  };
+};
+
+const AssetDetail: FunctionComponent = () => {
+  const { query } = useRouter();
+
+  if (typeof query.chainId !== 'string' || typeof query.collection !== 'string' || typeof query.tokenId !== 'string') {
     return (
       <PageBox title={'Asset Detail - Error'} hideTitle>
-        <h1>Error: Invalid page parameters.</h1>
+        <p>Error: Invalid page parameters.</p>
+      </PageBox>
+    );
+  }
+
+  const { isLoading, error, token, collection } = useFetchAssertInfo(query.chainId, query.collection, query.tokenId);
+
+  if (isLoading) {
+    return <PageBox title={'Asset Detail - Loading...'} hideTitle></PageBox>;
+  }
+
+  if (error || !token || !collection) {
+    console.error(error);
+    return (
+      <PageBox title={'Asset Detail - Error'} hideTitle>
+        <p>Error: Fetching Data Failed.</p>
       </PageBox>
     );
   }
@@ -119,28 +147,5 @@ const AssetDetail: FunctionComponent<AssetDetailProps> = ({ token, collection })
     </PageBox>
   );
 };
-
-export async function getServerSideProps(context: NextPageContext) {
-  const { query } = context;
-  const NFT_API_ENDPOINT = `/collections/${query.chainId}:${query.collection}/nfts/${query.tokenId}`;
-  const COL_API_ENDPOINT = `/collections/${query.chainId}:${query.collection}`;
-
-  const responses = await Promise.all([apiGet(NFT_API_ENDPOINT), apiGet(COL_API_ENDPOINT)]);
-
-  if (responses[0].error || responses[0].error) {
-    return {
-      props: {
-        token: null,
-        collection: null
-      }
-    };
-  }
-  return {
-    props: {
-      token: responses[0].result as Token,
-      collection: responses[1].result as Collection
-    }
-  };
-}
 
 export default AssetDetail;
