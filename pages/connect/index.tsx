@@ -4,7 +4,6 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { WalletType } from 'src/utils/providers/AbstractProvider';
-import { PageBox } from 'src/components/common';
 import SVG from 'src/components/common/svg';
 import metamask from 'src/images/metamask.svg';
 import coinbase from 'src/images/coinbase.svg';
@@ -31,8 +30,6 @@ export default function ConnectWallet() {
   const connectWalletConnect = async () => {
     await connectWallet?.(WalletType.WalletConnect);
   };
-
-  const dark = 'dark';
 
   const connectImage = (
     <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none">

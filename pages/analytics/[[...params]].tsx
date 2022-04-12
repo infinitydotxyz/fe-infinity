@@ -11,7 +11,7 @@ export const Analytics = () => {
   const router = useRouter();
   const { user } = useAppContext();
   const connected = user?.address ? true : false;
-  const [limit, setLimit] = React.useState(10);
+  const [limit] = React.useState(10);
   const [page, setPage] = React.useState(router.query.params?.[0] ? router.query.params?.[0] : 'trending');
   const [interval, setInterval] = React.useState(router.query.params?.[1] ? router.query.params?.[1] : 'hourly');
   const [date, setDate] = React.useState(Date.now());

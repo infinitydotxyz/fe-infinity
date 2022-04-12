@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { BaseCollection, CollectionStats } from '@infinityxyz/lib/types/core';
 import { FaCaretDown, FaCaretUp, FaCheck, FaDiscord, FaTwitter } from 'react-icons/fa';
-import { Chip, PageBox, RoundedNav } from 'src/components/common';
+import { Chip, RoundedNav } from 'src/components/common';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { useFetch } from 'src/utils/apiUtils';
 import { CollectionFeed } from 'src/components/feed/collection-feed';

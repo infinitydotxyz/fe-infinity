@@ -6,10 +6,9 @@ interface Props {
   children?: React.ReactNode;
   title?: string;
   className?: string;
-  center?: boolean;
 }
 
-export function Layout({ children, title, className, center }: Props): JSX.Element {
+export function Layout({ children, title, className }: Props): JSX.Element {
   const styles = {
     header: {
       title: title

@@ -2,7 +2,6 @@ import React from 'react';
 import Link from 'next/link';
 import { BiSearchAlt2 } from 'react-icons/bi';
 import { SVG } from 'src/components/common/svg';
-import { SearchBox } from 'src/components/filter/search-box';
 import { Menu, Transition } from '@headlessui/react';
 import { ConnectButton } from 'src/components/common/connect-button';
 import { IoMdArrowDropdown } from 'react-icons/io';
@@ -278,7 +277,7 @@ export function Navbar() {
         */}
             <div {...styles?.actions?.search?.container}>
               <button {...styles?.actions?.search?.button}>
-                <content.buttons.search.icon {...styles?.search}></content.buttons.search.icon>
+                <content.buttons.search.icon {...styles?.actions?.search?.icon}></content.buttons.search.icon>
               </button>
             </div>
             <div {...styles?.actions?.items?.container}>

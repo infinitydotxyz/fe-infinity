@@ -60,7 +60,7 @@ const AssetDetail: FunctionComponent = () => {
   if (error || !token || !collection) {
     console.error(error);
     return (
-      <Layout title={assetName} className="w-full h-full grid place-items-center">
+      <Layout title={'Asset Detail - Error'} className="w-full h-full grid place-items-center">
         <div className="flex flex-col max-w-screen-2xl mt-4">
           <main>
             <p>Error: Fetching Data Failed.</p>
