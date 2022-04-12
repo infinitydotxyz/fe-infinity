@@ -1,15 +1,9 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useEffect, useState } from 'react';
 import { PageBox } from 'src/components/common';
 import { FetchMore } from 'src/components/common';
-// import Link from 'next/link';
-import { SearchBox } from 'src/components/filter/search-box';
-import { useFetch } from 'src/utils';
+import { apiGet } from 'src/utils';
 import { CollectionCard } from 'src/components/common';
-
-//import { NextPageContext } from 'next';
-//import { apiGet } from 'src/utils';
-//import { Collection } from '@infinityxyz/lib/types/core';
-//import { GalleryBox } from 'src/components/gallery/gallery-box';
+import debounce from 'lodash/debounce';
 
 export interface CollectionSearchDto {
   description: string;
@@ -28,21 +22,61 @@ interface CollectionSearchArrayDto {
   hasNextPage: boolean;
 }
 
-const ExplorePage: FunctionComponent = () => {
+const fetchCollections = async (query: string, cursor: undefined | string) => {
   const API_ENDPOINT = '/collections/search';
-
-  const { result, isLoading, error } = useFetch<CollectionSearchArrayDto>(API_ENDPOINT, {
+  const response = await apiGet(API_ENDPOINT, {
     query: {
-      query: '',
-      limit: 100
+      query,
+      limit: 24,
+      cursor
     }
   });
+  return response;
+};
 
-  if (isLoading) {
-    return <PageBox title={'Loading...'} hideTitle></PageBox>;
-  }
+const ExplorePage: FunctionComponent = () => {
+  const [collections, setCollections] = useState<CollectionSearchDto[]>([]);
+  const [query, setQuery] = useState('');
 
-  if (error || !result) {
+  const [error, setError] = useState(false);
+  const [cursor, setCursor] = useState<undefined | string>(undefined);
+  const [hasNextPage, setHasNextPage] = useState(false);
+
+  const handleFetchMore = async () => {
+    const response = await fetchCollections(query, cursor);
+    if (response.error) {
+      setError(response.error);
+    } else {
+      const result = response.result as CollectionSearchArrayDto;
+      setCollections([...collections, ...result.data]);
+      setCursor(result.cursor);
+      setHasNextPage(result.hasNextPage);
+    }
+  };
+
+  const handleChange = async (value: string) => {
+    setQuery(value);
+    searchCollections(value);
+  };
+
+  const searchCollections = debounce(async (value: string) => {
+    const response = await fetchCollections(value, undefined);
+    if (response.error) {
+      setError(response.error);
+      setCollections([]);
+    } else {
+      const result = response.result as CollectionSearchArrayDto;
+      setCursor(result.cursor);
+      setHasNextPage(result.hasNextPage);
+      setCollections([...result.data]);
+    }
+  }, 300);
+
+  useEffect(() => {
+    handleFetchMore();
+  }, []);
+
+  if (error) {
     console.error(error);
     return (
       <PageBox title={'Explore - Error'} hideTitle>
@@ -51,16 +85,21 @@ const ExplorePage: FunctionComponent = () => {
     );
   }
 
-  const collections = result.data;
-
   return (
     <PageBox title={'Explore'} hideTitle>
+      {/* <SearchBox searchKeyWord={query} onChange={handleChange} /> */}
       <h1 className="text-2xl font-body font-bold mb-3">All collections</h1>
+      <input
+        value={query}
+        className="w-full border border-gray-500 focus:ring-0 py-2 my-2 pl-3 pr-10 text-lg leading-5 text-gray-900 "
+        onChange={(event) => handleChange(event.target.value)}
+      />
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12 ">
         {collections.map((collection) => (
           <CollectionCard key={collection.slug} collection={collection} />
         ))}
       </div>
+      {hasNextPage && <FetchMore onFetchMore={handleFetchMore} />}
     </PageBox>
   );
 };
