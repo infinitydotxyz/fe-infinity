@@ -1,59 +1,64 @@
-import React, { useState } from 'react';
-import { Card, PageBox } from 'src/components/common';
+import { FunctionComponent } from 'react';
+import { PageBox } from 'src/components/common';
 import { FetchMore } from 'src/components/common';
 // import Link from 'next/link';
 import { SearchBox } from 'src/components/filter/search-box';
+import { useFetch } from 'src/utils';
+import { CollectionCard } from 'src/components/common';
+
 //import { NextPageContext } from 'next';
 //import { apiGet } from 'src/utils';
 //import { Collection } from '@infinityxyz/lib/types/core';
 //import { GalleryBox } from 'src/components/gallery/gallery-box';
 
-const sampleArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+export interface CollectionSearchDto {
+  description: string;
+  address: string;
+  chainId: string;
+  profileImage: string;
+  hasBlueCheck: boolean;
+  slug: string;
+  name: string;
+}
 
-const ExplorePage: React.FC = () => {
-  const [res, setRes] = useState<Array<number>>([]);
-  const [page, setPage] = useState(0);
-  const [data] = useState<Array<number>>(() => [...sampleArray]);
+interface CollectionSearchArrayDto {
+  data: CollectionSearchDto[];
+  cursor: string;
+  hasNextPage: boolean;
+}
 
-  const handleFetchMore = async () => {
-    setRes([...res, ...data]);
-    setPage(page + 1);
-  };
+const ExplorePage: FunctionComponent = () => {
+  const API_ENDPOINT = '/collections/search';
+
+  const { result, isLoading, error } = useFetch<CollectionSearchArrayDto>(API_ENDPOINT, {
+    query: {
+      query: '',
+      limit: 100
+    }
+  });
+
+  if (isLoading) {
+    return <PageBox title={'Loading...'} hideTitle></PageBox>;
+  }
+
+  if (error || !result) {
+    console.error(error);
+    return (
+      <PageBox title={'Explore - Error'} hideTitle>
+        <p>Error: Fetching Data Failed.</p>
+      </PageBox>
+    );
+  }
+
+  const collections = result.data;
 
   return (
-    <PageBox title="Explore" hideTitle>
-      <SearchBox />
-
-      <h1 className="text-heading text-3xl">Collections</h1>
-      <div className="flex justify-between flex-wrap -mx-4">
-        {/* {res.map((val, key) => (
-          <div key={key} className="w-full sm:w-72 lg:w-80 p-4">
-            <Link href={`/asset/1/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/8880`}>
-              <a href={`/asset/1/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/8880`}>
-                <img className="rounded-3xl" src={BLANK_IMAGE_URL} />
-                <p className="mt-3 px-2 font-theme-heading">
-                  Psychic Blossom NFT name or a really long name that takes up a lot of space
-                </p>
-              </a>
-            </Link>
-          </div>
-        ))} */}
-        {res.map((val, key) => {
-          const dt = {
-            id: 'nft1',
-            title: 'NFT 1',
-            tokenId: 'Token1',
-            price: 1.5,
-            image:
-              'https://media.voguebusiness.com/photos/61b8dfb99ba90ab572dea0bd/3:4/w_1998,h_2664,c_limit/adidas-nft-voguebus-adidas-nft-dec-21-story.jpg'
-          };
-          return (
-            <React.Fragment key={key}>
-              <Card data={dt} onClick={console.log} className="mt-8 ml-8" />
-            </React.Fragment>
-          );
-        })}
-        <FetchMore onFetchMore={handleFetchMore} data={data} currentPage={page} />
+    <PageBox title={'Explore'} hideTitle>
+      <h1 className="text-2xl font-body font-bold mb-3">All collections</h1>
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12 ">
+        {collections.map((collection) => (
+          <CollectionCard key={collection.slug} collection={collection} />
+        ))}
       </div>
     </PageBox>
   );
