@@ -34,7 +34,7 @@ export const ConnectButton: React.FC = () => {
       item: {
         className: `
           w-full h-full
-          px-8 py-2 text-sm rounded-xl
+          pl-4 pr-20 py-2 text-sm rounded-xl
           flex hover:bg-theme-light-200
         `
       },
