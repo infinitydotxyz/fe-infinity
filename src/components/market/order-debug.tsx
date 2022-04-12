@@ -11,7 +11,14 @@ import {
   marketMatches,
   marketSellOrders
 } from 'src/utils/marketUtils';
-import { BuyOrderMatch, MarketListIdType, MarketListingsBody, OBOrder } from '@infinityxyz/lib/types/core';
+import {
+  BuyOrderMatch,
+  MarketAction,
+  MarketListId,
+  MarketListingsBody,
+  MarketOrder,
+  OBOrder
+} from '@infinityxyz/lib/types/core';
 import { OrderModal } from 'src/components/market/order-modal';
 import { RefreshIcon } from '@heroicons/react/outline';
 import { iconButtonStyle } from './order-drawer/ui-constants';
@@ -63,38 +70,38 @@ export function OrderDebug() {
   };
 
   const listBuyOrders = async () => {
-    await _listBuyOrders('validActive');
+    await _listBuyOrders(MarketListId.ValidActive);
   };
 
   const listBuyOrdersValidInactive = async () => {
-    await _listBuyOrders('validInactive');
+    await _listBuyOrders(MarketListId.ValidInactive);
   };
 
   const listBuyOrdersInvalid = async () => {
-    await _listBuyOrders('invalid');
+    await _listBuyOrders(MarketListId.Invalid);
   };
 
-  const _listBuyOrders = async (listId: MarketListIdType) => {
+  const _listBuyOrders = async (listId: MarketListId) => {
     const match = await marketBuyOrders(listId);
 
     if (match) {
       const orders: OBOrder[] = match;
 
       switch (listId) {
-        case 'validActive':
+        case MarketListId.ValidActive:
           setBuyOrders(orders);
           break;
-        case 'invalid':
+        case MarketListId.Invalid:
           setBuyOrdersInvalid(orders);
           break;
-        case 'validInactive':
+        case MarketListId.ValidInactive:
           setBuyOrdersValidInactive(orders);
           break;
         default:
           console.log('hit default case');
       }
     } else {
-      showAppError('An error occured: listBuyOrders');
+      showAppError('An error occurred: listBuyOrders');
     }
   };
 
@@ -112,31 +119,31 @@ export function OrderDebug() {
   };
 
   const listSellOrders = async () => {
-    await _listSellOrders('validActive');
+    await _listSellOrders(MarketListId.ValidActive);
   };
 
   const listSellOrdersValidInactive = async () => {
-    await _listSellOrders('validInactive');
+    await _listSellOrders(MarketListId.ValidInactive);
   };
 
   const listSellOrdersInvalid = async () => {
-    await _listSellOrders('invalid');
+    await _listSellOrders(MarketListId.Invalid);
   };
 
-  const _listSellOrders = async (listId: MarketListIdType) => {
+  const _listSellOrders = async (listId: MarketListId) => {
     const match = await marketSellOrders(listId);
 
     if (match) {
       const orders: OBOrder[] = match;
 
       switch (listId) {
-        case 'validActive':
+        case MarketListId.ValidActive:
           setSellOrders(orders);
           break;
-        case 'invalid':
+        case MarketListId.Invalid:
           setSellOrdersInvalid(orders);
           break;
-        case 'validInactive':
+        case MarketListId.ValidInactive:
           setSellOrdersValidInactive(orders);
           break;
         default:
@@ -221,7 +228,7 @@ export function OrderDebug() {
     refreshInactiveLists();
   };
 
-  const handleCardClick = async (order: OBOrder, action: string, listId: MarketListIdType) => {
+  const handleCardClick = async (order: OBOrder, action: string, listId: MarketListId) => {
     switch (action) {
       case 'card':
         setClickedOrder(order);
@@ -235,8 +242,8 @@ export function OrderDebug() {
       case 'delete':
         // eslint-disable-next-line
         const body: MarketListingsBody = {
-          orderType: !order.isSellOrder ? 'buyOrders' : 'sellOrders',
-          action: 'delete',
+          orderType: !order.isSellOrder ? MarketOrder.BuyOrders : MarketOrder.SellOrders,
+          action: MarketAction.Delete,
           listId: listId,
           orderId: order.id
         };
@@ -302,7 +309,7 @@ export function OrderDebug() {
             <>
               <BuyOrderList
                 orders={buyOrders}
-                onClickAction={(order, action) => handleCardClick(order, action, 'validActive')}
+                onClickAction={(order, action) => handleCardClick(order, action, MarketListId.ValidActive)}
               />
             </>
           )}
@@ -314,7 +321,7 @@ export function OrderDebug() {
             <>
               <SellOrderList
                 orders={sellOrders}
-                onClickAction={(order, action) => handleCardClick(order, action, 'validActive')}
+                onClickAction={(order, action) => handleCardClick(order, action, MarketListId.ValidActive)}
               />
             </>
           )}
@@ -326,8 +333,8 @@ export function OrderDebug() {
             <>
               <BuyOrderMatchList
                 matches={matchOrders}
-                onBuyClick={(order, action) => handleCardClick(order, action, 'validActive')}
-                onSellClick={(order, action) => handleCardClick(order, action, 'validActive')}
+                onBuyClick={(order, action) => handleCardClick(order, action, MarketListId.ValidActive)}
+                onSellClick={(order, action) => handleCardClick(order, action, MarketListId.ValidActive)}
                 onAcceptClick={handleAcceptClick}
               />
             </>
@@ -340,7 +347,7 @@ export function OrderDebug() {
             <>
               <BuyOrderList
                 orders={buyOrdersValidInactive}
-                onClickAction={(order, action) => handleCardClick(order, action, 'validInactive')}
+                onClickAction={(order, action) => handleCardClick(order, action, MarketListId.ValidInactive)}
               />
             </>
           )}
@@ -352,7 +359,7 @@ export function OrderDebug() {
             <>
               <BuyOrderList
                 orders={buyOrdersInvalid}
-                onClickAction={(order, action) => handleCardClick(order, action, 'invalid')}
+                onClickAction={(order, action) => handleCardClick(order, action, MarketListId.Invalid)}
               />
             </>
           )}
@@ -364,7 +371,7 @@ export function OrderDebug() {
             <>
               <SellOrderList
                 orders={sellOrdersValidInactive}
-                onClickAction={(order, action) => handleCardClick(order, action, 'validInactive')}
+                onClickAction={(order, action) => handleCardClick(order, action, MarketListId.ValidInactive)}
               />
             </>
           )}
@@ -376,7 +383,7 @@ export function OrderDebug() {
             <>
               <SellOrderList
                 orders={sellOrdersInvalid}
-                onClickAction={(order, action) => handleCardClick(order, action, 'invalid')}
+                onClickAction={(order, action) => handleCardClick(order, action, MarketListId.Invalid)}
               />
             </>
           )}

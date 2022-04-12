@@ -19,12 +19,19 @@ export function Navbar() {
     ======================================
   */
   const styles = {
-    container: {
+    background: {
       className: `
-          w-5/6 h-full
+          w-full h-full z-50
           sticky top-0
           row-span-2 col-span-24
           bg-white bg-opacity-70 glass
+          grid place-items-center
+        `
+    },
+    container: {
+      className: `
+          w-5/6 h-full
+          row-span-2 col-span-24
           grid grid-rows-1 grid-cols-[1fr,13fr]
           py-4
         `
@@ -115,7 +122,7 @@ export function Navbar() {
           item: {
             className: `
               w-full h-full
-              px-8 py-2 text-sm rounded-xl
+              pl-4 pr-20 py-2 text-sm rounded-xl
               flex hover:bg-theme-light-200
             `
           },
@@ -207,24 +214,31 @@ export function Navbar() {
               }
             },
             {
-              type: 'link',
+              type: 'external',
               label: 'Twitter',
               props: {
-                href: 'https://twitter.com'
+                href: 'https://twitter.com/infinitydotxyz'
               }
             },
             {
-              type: 'link',
+              type: 'external',
               label: 'Discord',
               props: {
-                href: 'https://discord.com'
+                href: 'http://discord.gg/4VFcGY3W7H'
               }
             },
             {
-              type: 'link',
+              type: 'external',
               label: 'Medium',
               props: {
-                href: 'https://medium.com'
+                href: 'https://medium.com/@infinitydotxyz'
+              }
+            },
+            {
+              type: 'external',
+              label: 'Governance',
+              props: {
+                href: 'https://commonwealth.im/infinity'
               }
             }
           ]
@@ -238,19 +252,20 @@ export function Navbar() {
 
   return (
     <>
-      <div {...styles?.container}>
-        <Link {...content?.buttons?.home?.props}>
-          {/*
+      <div {...styles?.background}>
+        <div {...styles?.container}>
+          <Link {...content?.buttons?.home?.props}>
+            {/*
             ====================================
               This is where we render the 'home'
               button - logo that takes you back
               to home page.
             ====================================
           */}
-          <content.buttons.home.icon {...styles?.logo}></content.buttons.home.icon>
-        </Link>
-        <div {...styles?.actions?.container}>
-          {/*
+            <content.buttons.home.icon {...styles?.logo}></content.buttons.home.icon>
+          </Link>
+          <div {...styles?.actions?.container}>
+            {/*
           ====================================
             This is where we render the search.
             Requirement: Search is initially
@@ -260,21 +275,21 @@ export function Navbar() {
             type and search something upon enter.
           ====================================
         */}
-          <div {...styles?.actions?.search?.container}>
-            <button {...styles?.actions?.search?.button}>
-              <content.buttons.search.icon {...styles?.actions?.search?.icon}></content.buttons.search.icon>
-            </button>
-          </div>
-          <div {...styles?.actions?.items?.container}>
-            {/*
+            <div {...styles?.actions?.search?.container}>
+              <button {...styles?.actions?.search?.button}>
+                <content.buttons.search.icon {...styles?.actions?.search?.icon}></content.buttons.search.icon>
+              </button>
+            </div>
+            <div {...styles?.actions?.items?.container}>
+              {/*
               ====================================
                 This is where we render all the
                 navigation action buttons (or dropdowns).
               ====================================
             */}
-            {content?.buttons?.items?.map((item, i) => (
-              <React.Fragment key={i}>
-                {/*
+              {content?.buttons?.items?.map((item, i) => (
+                <React.Fragment key={i}>
+                  {/*
                   ====================================
                     If content type is a link, then
                     it should render a link, otherwise
@@ -284,24 +299,40 @@ export function Navbar() {
                     dropdowns used anywhere else.
                   ====================================
                 */}
-                {item.type === 'link' && (
-                  <div {...styles?.actions?.item?.container}>
-                    <Link passHref href={item?.props?.href ? item.props.href : ''}>
-                      <button {...styles?.actions?.item?.button}>{item?.label}</button>
-                    </Link>
-                  </div>
-                )}
-                {item.type === 'dropdown' && (
-                  <div {...styles?.actions?.item?.container}>
-                    <Menu as="div" {...styles?.actions?.item?.menu?.container}>
-                      <Menu.Button {...styles?.actions?.item?.menu?.button}>
-                        {item?.label} <IoMdArrowDropdown />
-                      </Menu.Button>
-                      <Transition {...styles?.actions?.item?.menu?.transition}>
-                        <Menu.Items {...styles?.actions?.item?.menu?.items}>
-                          {item?.menu?.map((x, j) => (
-                            <React.Fragment key={j}>
-                              {/*
+                  {item.type === 'external' && (
+                    <div {...styles?.actions?.item?.container}>
+                      <Link passHref href={item?.props?.href ? item.props.href : ''}>
+                        <a target="_blank" rel="noopener noreferrer">
+                          <button {...styles?.actions?.item?.button}>{item?.label}</button>
+                        </a>
+                      </Link>
+                    </div>
+                  )}
+                  {item.type === 'link' && (
+                    <div {...styles?.actions?.item?.container}>
+                      <Link passHref href={item?.props?.href ? item.props.href : ''}>
+                        <button {...styles?.actions?.item?.button}>{item?.label}</button>
+                      </Link>
+                    </div>
+                  )}
+                  {item.type === 'dropdown' && (
+                    <div {...styles?.actions?.item?.container}>
+                      <Menu as="div" {...styles?.actions?.item?.menu?.container}>
+                        <Menu.Button {...styles?.actions?.item?.menu?.button}>
+                          {item?.label} <IoMdArrowDropdown />
+                        </Menu.Button>
+                        <Transition
+                          enter="transition duration-100 ease-out"
+                          enterFrom="transform scale-95 opacity-0"
+                          enterTo="transform scale-100 opacity-100"
+                          leave="transition duration-75 ease-out"
+                          leaveFrom="transform scale-100 opacity-100"
+                          leaveTo="transform scale-95 opacity-0"
+                        >
+                          <Menu.Items {...styles?.actions?.item?.menu?.items}>
+                            {item?.menu?.map((x, j) => (
+                              <React.Fragment key={j}>
+                                {/*
                               ====================================
                                 Dropdown content can have a menu
                                 array, which renders links or action
@@ -310,30 +341,39 @@ export function Navbar() {
                                  for the tabs.
                               ====================================
                             */}
-                              {x.type === 'link' && (
-                                <Link passHref href={x?.props?.href ? x.props.href : ''}>
-                                  <Menu.Item as="button" {...styles?.actions?.item?.menu?.item}>
+                                {x.type === 'external' && (
+                                  <Link passHref href={x?.props?.href ? x.props.href : ''}>
+                                    <a target="_blank" rel="noopener noreferrer">
+                                      <Menu.Item as="button" {...styles?.actions?.item?.menu?.item}>
+                                        {x?.label}
+                                      </Menu.Item>
+                                    </a>
+                                  </Link>
+                                )}
+                                {x.type === 'link' && (
+                                  <Link passHref href={x?.props?.href ? x.props.href : ''}>
+                                    <Menu.Item as="button" {...styles?.actions?.item?.menu?.item}>
+                                      {x?.label}
+                                    </Menu.Item>
+                                  </Link>
+                                )}
+                                {x.type === 'button' && (
+                                  <Menu.Item as="button" {...styles?.actions?.item?.menu?.item} {...x?.props}>
                                     {x?.label}
                                   </Menu.Item>
-                                </Link>
-                              )}
-                              {x.type === 'button' && (
-                                <Menu.Item as="button" {...styles?.actions?.item?.menu?.item} {...x?.props}>
-                                  {x?.label}
-                                </Menu.Item>
-                              )}
-                            </React.Fragment>
-                          ))}
-                        </Menu.Items>
-                      </Transition>
-                    </Menu>
-                  </div>
-                )}
-              </React.Fragment>
-            ))}
-          </div>
-          <div {...styles?.actions?.connect?.container}>
-            {/*
+                                )}
+                              </React.Fragment>
+                            ))}
+                          </Menu.Items>
+                        </Transition>
+                      </Menu>
+                    </div>
+                  )}
+                </React.Fragment>
+              ))}
+            </div>
+            <div {...styles?.actions?.connect?.container}>
+              {/*
             ====================================
               This renders the connect button.
               Connect button encapsulates a dropdown
@@ -344,7 +384,8 @@ export function Navbar() {
               appears.
             ====================================
           */}
-            <ConnectButton />
+              <ConnectButton />
+            </div>
           </div>
         </div>
       </div>

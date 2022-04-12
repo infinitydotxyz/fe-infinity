@@ -1,5 +1,5 @@
-import { FunctionComponent, useEffect, useState } from 'react';
-import { PageBox } from 'src/components/common';
+import React, { useState, useEffect, FunctionComponent } from 'react';
+import { Layout } from 'src/components/common/layout';
 import { FetchMore } from 'src/components/common';
 import { apiGet } from 'src/utils';
 import { CollectionCard } from 'src/components/common';
@@ -79,14 +79,14 @@ const ExplorePage: FunctionComponent = () => {
   if (error) {
     console.error(error);
     return (
-      <PageBox title={'Explore - Error'} hideTitle>
+      <Layout title={'Explore - Error'}>
         <p>Error: Fetching Data Failed.</p>
-      </PageBox>
+      </Layout>
     );
   }
 
   return (
-    <PageBox title={'Explore'} hideTitle>
+    <Layout title="Explore" className="grid place-items-center">
       {/* <SearchBox searchKeyWord={query} onChange={handleChange} /> */}
       <h1 className="text-2xl font-body font-bold mb-3">All collections</h1>
       <input
@@ -100,7 +100,7 @@ const ExplorePage: FunctionComponent = () => {
         ))}
       </div>
       {hasNextPage && <FetchMore onFetchMore={handleFetchMore} />}
-    </PageBox>
+    </Layout>
   );
 };
 
