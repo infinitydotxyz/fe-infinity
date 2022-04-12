@@ -17,6 +17,7 @@ export interface CollectionSearchDto {
   chainId: string;
   profileImage: string;
   hasBlueCheck: boolean;
+  bannerImage: string;
   slug: string;
   name: string;
 }

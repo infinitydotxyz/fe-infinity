@@ -10,19 +10,38 @@ interface CollectionCardProps {
   collection: CollectionSearchDto;
 }
 
-export const CollectionCard: FunctionComponent<CollectionCardProps> = ({ collection }) => {
-  const shortText = trimText(collection.description, 80, 100, 120)[0];
+const getAvatarUrl = (imgUrl: string) => {
+  if (!imgUrl) return null;
+  else {
+    const index = imgUrl.indexOf('=');
+    if (index) {
+      return imgUrl.slice(0, index) + '=h200';
+    }
+    return imgUrl;
+  }
+};
 
+export const CollectionCard: FunctionComponent<CollectionCardProps> = ({ collection }) => {
+  const shortText = trimText(collection.description, 60, 80, 100)[0];
   const isTrimText = shortText.length !== collection.description.length;
 
+  const avatarUrl = getAvatarUrl(collection.bannerImage) || BLANK_IMAGE_URL;
+
   return (
-    <article className="w-full max-w-xs mx-auto sm:mx-0 bg-theme-light-100 pb-3 shadow-md rounded-2xl overflow-hidden hover:shadow-xl cursor-pointer">
+    <article className="w-full mx-auto sm:mx-0 bg-theme-light-100 border border-theme-light-100 shadow-md rounded-2xl overflow-hidden hover:shadow-xl cursor-pointer">
       <Link href={`/collection/${collection.slug}`}>
         <a href={`/collection/${collection.slug}`} className="text-theme-light-800 font-heading tracking-tight mr-2">
-          <img src={collection.profileImage || BLANK_IMAGE_URL} className="w-full" alt="collection image url" />
-          <div className="p-4 text-center">
-            <h6 className="font-body text-base font-bold">{collection.name}</h6>
-            <p className="font-body pt-2 text-sm px-2 text-theme-light-800">
+          <div style={{ height: '200px' }}>
+            <img
+              src={avatarUrl}
+              className="w-full"
+              alt="collection image url"
+              style={{ objectFit: 'cover', transition: 'opacity 400ms ease 0s', height: '100%' }}
+            />
+          </div>
+          <div className="pt-4  text-center">
+            <h6 className="font-body text-base font-bold text-black">{collection.name}</h6>
+            <p className="font-body pt-2 text-base px-5 text-theme-light-800">
               {shortText}
               {isTrimText && ' ...'}
             </p>
