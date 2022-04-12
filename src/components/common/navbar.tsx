@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { BiSearchAlt2 } from 'react-icons/bi';
 import { SVG } from 'src/components/common/svg';
+import { SearchBox } from 'src/components/filter/search-box';
 import { Menu, Transition } from '@headlessui/react';
 import { ConnectButton } from 'src/components/common/connect-button';
 import { IoMdArrowDropdown } from 'react-icons/io';
@@ -207,24 +208,31 @@ export function Navbar() {
               }
             },
             {
-              type: 'link',
+              type: 'external',
               label: 'Twitter',
               props: {
-                href: 'https://twitter.com'
+                href: 'https://twitter.com/infinitydotxyz'
               }
             },
             {
-              type: 'link',
+              type: 'external',
               label: 'Discord',
               props: {
-                href: 'https://discord.com'
+                href: 'http://discord.gg/4VFcGY3W7H'
               }
             },
             {
-              type: 'link',
+              type: 'external',
               label: 'Medium',
               props: {
-                href: 'https://medium.com'
+                href: 'https://medium.com/@infinitydotxyz'
+              }
+            },
+            {
+              type: 'external',
+              label: 'Governance',
+              props: {
+                href: 'https://commonwealth.im/infinity'
               }
             }
           ]
@@ -262,7 +270,7 @@ export function Navbar() {
         */}
           <div {...styles?.actions?.search?.container}>
             <button {...styles?.actions?.search?.button}>
-              <content.buttons.search.icon {...styles?.actions?.search?.icon}></content.buttons.search.icon>
+              <content.buttons.search.icon {...styles?.search}></content.buttons.search.icon>
             </button>
           </div>
           <div {...styles?.actions?.items?.container}>
@@ -284,6 +292,15 @@ export function Navbar() {
                     dropdowns used anywhere else.
                   ====================================
                 */}
+                {item.type === 'external' && (
+                  <div {...styles?.actions?.item?.container}>
+                    <Link passHref href={item?.props?.href ? item.props.href : ''}>
+                      <a target="_blank" rel="noopener noreferrer">
+                        <button {...styles?.actions?.item?.button}>{item?.label}</button>
+                      </a>
+                    </Link>
+                  </div>
+                )}
                 {item.type === 'link' && (
                   <div {...styles?.actions?.item?.container}>
                     <Link passHref href={item?.props?.href ? item.props.href : ''}>
@@ -297,7 +314,14 @@ export function Navbar() {
                       <Menu.Button {...styles?.actions?.item?.menu?.button}>
                         {item?.label} <IoMdArrowDropdown />
                       </Menu.Button>
-                      <Transition {...styles?.actions?.item?.menu?.transition}>
+                      <Transition
+                        enter="transition duration-100 ease-out"
+                        enterFrom="transform scale-95 opacity-0"
+                        enterTo="transform scale-100 opacity-100"
+                        leave="transition duration-75 ease-out"
+                        leaveFrom="transform scale-100 opacity-100"
+                        leaveTo="transform scale-95 opacity-0"
+                      >
                         <Menu.Items {...styles?.actions?.item?.menu?.items}>
                           {item?.menu?.map((x, j) => (
                             <React.Fragment key={j}>
@@ -310,6 +334,15 @@ export function Navbar() {
                                  for the tabs.
                               ====================================
                             */}
+                              {x.type === 'external' && (
+                                <Link passHref href={x?.props?.href ? x.props.href : ''}>
+                                  <a target="_blank" rel="noopener noreferrer">
+                                    <Menu.Item as="button" {...styles?.actions?.item?.menu?.item}>
+                                      {x?.label}
+                                    </Menu.Item>
+                                  </a>
+                                </Link>
+                              )}
                               {x.type === 'link' && (
                                 <Link passHref href={x?.props?.href ? x.props.href : ''}>
                                   <Menu.Item as="button" {...styles?.actions?.item?.menu?.item}>

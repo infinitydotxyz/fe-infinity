@@ -39,7 +39,7 @@ export const PageBox = ({
 
       {showConnect && <Header />}
 
-      <div className="flex flex-col w-full m-4 max-w-screen-lg">
+      <div className="w-full m-4 max-w-screen-lg">
         {!hideTitle && <PageHeader title={titleElement || title} rightSide={rightSide} />}
 
         <main>{children}</main>

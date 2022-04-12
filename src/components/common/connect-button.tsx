@@ -59,10 +59,10 @@ export const ConnectButton: React.FC = () => {
     button: connected ? `${address?.substring(0, 8)}` : 'Connect',
     menu: [
       {
-        type: 'link',
+        type: 'external',
         label: 'Etherscan',
         props: {
-          href: '/'
+          href: `https://etherscan.io/address/${address}`
         }
       },
       {
@@ -91,6 +91,15 @@ export const ConnectButton: React.FC = () => {
             <Menu.Items {...styles?.menu?.items}>
               {content?.menu?.map((item, i) => (
                 <React.Fragment key={i}>
+                  {item.type === 'external' && (
+                    <Link passHref href={item?.props?.href ? item.props.href : ''}>
+                      <a target="_blank" rel="noopener noreferrer">
+                        <Menu.Item as="button" {...styles?.menu?.item}>
+                          {item?.label}
+                        </Menu.Item>
+                      </a>
+                    </Link>
+                  )}
                   {item.type === 'link' && (
                     <Link passHref href={item?.props?.href ? item.props.href : ''}>
                       <Menu.Item as="button" {...styles?.menu?.item}>

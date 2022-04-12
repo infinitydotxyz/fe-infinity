@@ -6,6 +6,7 @@ import { useFetch } from 'src/utils/apiUtils';
 import { useRouter } from 'next/router';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CollectionStats } from '@infinityxyz/lib/types/core';
+
 export const Analytics = () => {
   const router = useRouter();
   const { user } = useAppContext();
@@ -324,6 +325,16 @@ export const Analytics = () => {
             flex flex-col gap-4
           `
         },
+        loading: {
+          className: `
+            w-full h-[170px] bg-blue-50 rounded-xl
+          `
+        },
+        error: {
+          className: `
+            w-full h-[170px] bg-red-50 rounded-xl
+          `
+        },
         item: {
           container: {
             className: `
@@ -437,15 +448,15 @@ export const Analytics = () => {
             <div {...styles?.statistics?.list?.container}>
               {data.isLoading ? (
                 <>
-                  <div className="w-full h-[170px] bg-blue-50 rounded-xl"></div>
-                  <div className="w-full h-[170px] bg-blue-50 rounded-xl"></div>
-                  <div className="w-full h-[170px] bg-blue-50 rounded-xl"></div>
+                  <div {...styles?.statistics?.list?.loading}></div>
+                  <div {...styles?.statistics?.list?.loading}></div>
+                  <div {...styles?.statistics?.list?.loading}></div>
                 </>
               ) : data.isError || content?.statistics?.length === 0 ? (
                 <>
-                  <div className="w-full h-[170px] bg-red-50 rounded-xl"></div>
-                  <div className="w-full h-[170px] bg-red-50 rounded-xl"></div>
-                  <div className="w-full h-[170px] bg-red-50 rounded-xl"></div>
+                  <div {...styles?.statistics?.list?.error}></div>
+                  <div {...styles?.statistics?.list?.error}></div>
+                  <div {...styles?.statistics?.list?.error}></div>
                 </>
               ) : (
                 <>
