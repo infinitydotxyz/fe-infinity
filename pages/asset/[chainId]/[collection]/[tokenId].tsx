@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { Button, PageBox, ShortAddress, ReadMoreText } from 'src/components/common';
-import { apiGet, useFetch } from 'src/utils';
+import { useFetch } from 'src/utils';
 import { Token, Collection } from '@infinityxyz/lib/types/core';
 import {
   TraitList,
@@ -17,8 +17,6 @@ import {
 
 import BlueCheckSvg from 'src/images/blue-check.svg';
 // import {HiOutlineSwitchHorizontal} from 'react-icons';
-
-import { NextPageContext } from 'next';
 
 const BLANK_IMAGE_URL = 'https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png';
 
@@ -93,9 +91,11 @@ const AssetDetail: FunctionComponent = () => {
                 {collection.metadata.name}
               </a>
             </Link>
-            <div className="mt-1">
-              <Image width={18} height={18} src={BlueCheckSvg.src} alt={'Verified'} />
-            </div>
+            {collection.hasBlueCheck && (
+              <div className="mt-1">
+                <Image width={18} height={18} src={BlueCheckSvg.src} alt={'Verified'} />
+              </div>
+            )}
           </div>
           <ShortAddress
             label="Contact address:"
