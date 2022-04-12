@@ -7,7 +7,7 @@ export const Home: FC = () => {
   const router = useRouter();
 
   return (
-    <Layout title="Home">
+    <Layout title="Home" className="w-full h-full grid place-content-center">
       <div className="flex flex-col space-y-4 items-center">
         <Button
           onClick={() => {

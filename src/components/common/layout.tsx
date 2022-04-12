@@ -6,9 +6,10 @@ interface Props {
   children?: React.ReactNode;
   title?: string;
   className?: string;
+  center?: boolean;
 }
 
-export function Layout({ children, title, className }: Props): JSX.Element {
+export function Layout({ children, title, className, center }: Props): JSX.Element {
   const styles = {
     header: {
       title: title
@@ -23,13 +24,15 @@ export function Layout({ children, title, className }: Props): JSX.Element {
     content: {
       container: {
         className: `
-          transition w-full h-full
+          transition w-full h-content min-h-full
           row-span-24 col-span-24
-          bg-theme-light-50
         `
       },
       element: {
-        className: className ? className : ''
+        className: `
+          w-full h-content min-h-full
+          ${className}
+        `
       }
     }
   };
