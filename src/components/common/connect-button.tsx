@@ -66,13 +66,6 @@ export const ConnectButton: React.FC = () => {
         }
       },
       {
-        type: 'link',
-        label: 'Account',
-        props: {
-          href: '/'
-        }
-      },
-      {
         type: 'button',
         label: 'Sign Out',
         props: {
