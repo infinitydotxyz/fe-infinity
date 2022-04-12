@@ -51,7 +51,7 @@ const AssetDetail: FunctionComponent = () => {
   const { isLoading, error, token, collection } = useFetchAssertInfo(query.chainId, query.collection, query.tokenId);
 
   if (isLoading) {
-    return <PageBox title={'Asset Detail - Loading...'} hideTitle></PageBox>;
+    return <PageBox title={'Loading...'} hideTitle></PageBox>;
   }
 
   if (error || !token || !collection) {
