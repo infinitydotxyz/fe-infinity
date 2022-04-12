@@ -11,6 +11,7 @@ export const Analytics = () => {
   const router = useRouter();
   const { user } = useAppContext();
   const connected = user?.address ? true : false;
+  const [limit, setLimit] = React.useState(10);
   const [page, setPage] = React.useState(router.query.params?.[0] ? router.query.params?.[0] : 'trending');
   const [interval, setInterval] = React.useState(router.query.params?.[1] ? router.query.params?.[1] : 'hourly');
   const [date, setDate] = React.useState(Date.now());
@@ -28,8 +29,8 @@ export const Analytics = () => {
   let statistics = null;
   const query =
     page === 'trending'
-      ? `/collections/rankings?orderBy=volume&orderDirection=desc&period=${interval}&date=${date}&limit=10`
-      : `/user/${user?.address}/watchlist?orderBy=discordFollowers&orderDirection=desc&period=${interval}&date=${date}&limit=10`;
+      ? `/collections/rankings?orderBy=volume&orderDirection=desc&period=${interval}&date=${date}&limit=${limit}`
+      : `/user/${user?.address}/watchlist?orderBy=discordFollowers&orderDirection=desc&period=${interval}&date=${date}&limit=${limit}`;
 
   const data = useFetch<{ data: CollectionStats[] }>(query);
 
@@ -108,7 +109,13 @@ export const Analytics = () => {
       ======================================
     */
     setDate(Date.now());
-    router.push(`/analytics/${page}/${interval}`);
+    router.push(
+      {
+        pathname: `/analytics/${page}/${interval}`
+      },
+      undefined,
+      { scroll: false }
+    );
   }, [page, interval]);
 
   /*
@@ -448,15 +455,19 @@ export const Analytics = () => {
             <div {...styles?.statistics?.list?.container}>
               {data.isLoading ? (
                 <>
-                  <div {...styles?.statistics?.list?.loading}></div>
-                  <div {...styles?.statistics?.list?.loading}></div>
-                  <div {...styles?.statistics?.list?.loading}></div>
+                  {Array.from(Array(limit).keys())?.map((x, i) => (
+                    <React.Fragment key={i}>
+                      <div {...styles?.statistics?.list?.loading}></div>
+                    </React.Fragment>
+                  ))}
                 </>
               ) : data.isError || content?.statistics?.length === 0 ? (
                 <>
-                  <div {...styles?.statistics?.list?.error}></div>
-                  <div {...styles?.statistics?.list?.error}></div>
-                  <div {...styles?.statistics?.list?.error}></div>
+                  {Array.from(Array(limit).keys())?.map((x, i) => (
+                    <React.Fragment key={i}>
+                      <div {...styles?.statistics?.list?.error}></div>
+                    </React.Fragment>
+                  ))}
                 </>
               ) : (
                 <>
