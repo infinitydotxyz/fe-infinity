@@ -105,12 +105,12 @@ export const SearchInput: React.FC = () => {
           `
         },
         option: {
-          className: ({ active, selected }: { active: boolean; selected: boolean }) => `
+          className: ({ active }: { active: boolean }) => `
             font-body text-sm py-1 px-4
             hover:bg-theme-light-200 rounded-xl
             flex gap-4 place-items-center
             hover:cursor-pointer
-            ${active && "bg-theme-light-300"}
+            ${active && 'bg-theme-light-300'}
           `
         }
       }
