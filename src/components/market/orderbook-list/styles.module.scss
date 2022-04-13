@@ -1,0 +1,80 @@
+.list {
+  display: flex;
+  flex-direction: column;
+
+  // this fixes everthing, no idea why
+  align-items: flex-start;
+
+  .item {
+    flex-direction: column;
+    display: flex;
+
+    .itemTitle {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      font-weight: bold;
+    }
+
+    .itemValue {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      font-weight: bold;
+    }
+
+    .imageCropper {
+      display: flex;
+      justify-content: center;
+      overflow: hidden;
+      border-radius: 50%;
+      height: 48px;
+      width: 48px;
+    }
+  }
+
+  .row {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    background-color: #f0f0f0;
+    border-radius: 24px;
+    margin-bottom: 12px;
+    padding: 32px 30px;
+
+    .starButton {
+      margin-left: 20px;
+    }
+
+    .gridRow {
+      width: 100%;
+      position: relative;
+      display: grid;
+      gap: 20px;
+      // grid-template-columns is set in code dynamically
+      align-items: center;
+
+      .subtitle {
+        display: flex;
+        align-items: center;
+        margin-top: 6px;
+
+        .partnership {
+          border-radius: 100px;
+          padding: 4px 12px 8px 12px;
+          line-height: 1;
+          font-size: 0.8rem;
+
+          background-color: rgba(255, 255, 255, 0.7);
+        }
+      }
+    }
+  }
+}
+
+// search box
+.typeahead {
+  input {
+    border-radius: 10rem;
+  }
+}

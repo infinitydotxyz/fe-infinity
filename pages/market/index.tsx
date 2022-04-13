@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Button, Card, ToggleTab, useToggleTab, PageBox, Spacer, Dropdown } from 'src/components/common';
-import { OrderDrawer, OrderDebug, BuyOrderList, SellOrderList } from 'src/components/market';
+import { OrderDrawer, OrderDebug } from 'src/components/market';
 import { CardData } from '@infinityxyz/lib/types/core';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { FaShoppingBag } from 'react-icons/fa';
 import { RiLayoutGridFill } from 'react-icons/ri';
-import { useOrderPager } from 'src/components/market/useTrendingStats';
+import { OrderbookList } from 'src/components/market/orderbook-list';
 
 // get image ids here https://picsum.photos/images
 const testCardData: CardData[] = [
@@ -103,7 +103,6 @@ export default function MarketPage() {
   const [showDebugTools, setShowDebugTools] = useState(false);
   const { orderDrawerOpen, setOrderDrawerOpen, isOrderStateEmpty, addCartItem } = useOrderContext();
   const { options, onChange, selected } = useToggleTab(['Assets', 'Orderbook'], 'Assets');
-  const { buyOrders, sellOrders, fetchMore } = useOrderPager(true, 4);
 
   let contents;
   if (showDebugTools) {
@@ -177,19 +176,7 @@ export default function MarketPage() {
           <>
             <div>Orderbook goes here</div>
 
-            <BuyOrderList
-              orders={buyOrders}
-              onClickAction={() => {
-                console.log('click');
-              }}
-            />
-
-            <SellOrderList
-              orders={sellOrders}
-              onClickAction={() => {
-                console.log('click');
-              }}
-            />
+            <OrderbookList />
           </>
         )}
       </>
@@ -215,10 +202,6 @@ export default function MarketPage() {
 
       <div>
         {contents}
-
-        <Button className="fixed bottom-1 right-1 " onClick={() => fetchMore()} variant="outline">
-          more
-        </Button>
 
         <Button className="fixed bottom-1 left-1 " onClick={() => setShowDebugTools(!showDebugTools)} variant="outline">
           Debug
