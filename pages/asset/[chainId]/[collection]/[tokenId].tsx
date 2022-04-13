@@ -41,7 +41,7 @@ const AssetDetail: FunctionComponent = () => {
 
   if (typeof query.chainId !== 'string' || typeof query.collection !== 'string' || typeof query.tokenId !== 'string') {
     return (
-      <Layout title={'Asset Detail - Error'} padded>
+      <Layout title="Asset Detail - Error" padded>
         <div className="flex flex-col max-w-screen-2xl mt-4">
           <main>
             <p>Error: Invalid page parameters.</p>
@@ -54,13 +54,13 @@ const AssetDetail: FunctionComponent = () => {
   const { isLoading, error, token, collection } = useFetchAssertInfo(query.chainId, query.collection, query.tokenId);
 
   if (isLoading) {
-    return <Layout title={'Loading...'}></Layout>;
+    return <Layout title="Loading..."></Layout>;
   }
 
   if (error || !token || !collection) {
     console.error(error);
     return (
-      <Layout title={'Asset Detail - Error'} className="w-full h-full grid place-items-center">
+      <Layout title="Asset Detail - Error" className="w-full h-full grid place-items-center">
         <div className="flex flex-col max-w-screen-2xl mt-4">
           <main>
             <p>Error: Fetching Data Failed.</p>

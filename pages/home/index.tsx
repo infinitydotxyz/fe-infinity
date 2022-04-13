@@ -12,7 +12,7 @@ export function HomePage() {
   console.log(name);
 
   return (
-    <Layout title={'Home'} className="w-full h-full grid place-items-center">
+    <Layout title="Home" className="w-full h-full grid place-items-center">
       <div className="flex">
         <CollectionFeed header="Feed" />
         <div className="w-1/3 ml-4">
