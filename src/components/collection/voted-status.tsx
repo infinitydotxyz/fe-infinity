@@ -1,9 +1,10 @@
 import { FunctionComponent, useEffect, useState } from 'react';
 import { Button } from '../common';
+import clsx from 'classnames';
 
 const VotedStatus: FunctionComponent = () => {
   const [isVoted, setVoted] = useState(true);
-  const [percentage, setPercentage] = useState(100);
+  const [percentage, setPercentage] = useState(70);
   const handleVote = () => {
     setVoted(!isVoted);
   };
@@ -14,7 +15,7 @@ const VotedStatus: FunctionComponent = () => {
 
   return (
     <>
-      <div className="text-5xl mb-6 lg:mb-10">You Voted</div>
+      <div className="text-4xl mb-6 lg:mb-10">You Voted</div>
       <div className="grid grid-cols-2 gap-10 mb-6">
         <Button
           variant={isVoted ? 'primary' : 'outline'}
@@ -36,15 +37,15 @@ const VotedStatus: FunctionComponent = () => {
       <div className="flex">
         <div
           style={{ width: `${percentage}%`, background: '#92DEFF' }}
-          className="border-l border-t border-b rounded-l-3xl py-3 pl-5 font-bold font-body tracking-tight"
+          className={clsx('border-l border-t border-b rounded-l-3xl py-3 pl-5 font-heading tracking-tight')}
         >
-          {percentage}% Good
+          <b>{percentage}%</b> Good
         </div>
         <div
           style={{ width: `${100 - percentage}%`, background: '#F6F6F6' }}
-          className="border-r border-t border-b rounded-r-3xl py-3 font-bold font-body tracking-tight pr-5 text-right"
+          className="border-r border-t border-b rounded-r-3xl py-3 font-heading tracking-tight pr-5 text-right"
         >
-          {100 - percentage}% Bad
+          <b>{100 - percentage}%</b> Bad
         </div>
       </div>
     </>
