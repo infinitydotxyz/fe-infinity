@@ -11,7 +11,7 @@ import { ellipsisAddress, getChainScannerBase } from 'src/utils';
 import { ActivityTab } from 'src/components/collection/activity-tab';
 import { Layout } from 'src/components/common/layout';
 
-import { CommunityRightPanel } from 'src/components/market/community-right-panel';
+import { CommunityRightPanel } from 'src/components/collection/community-right-panel';
 
 export function CollectionPage() {
   const {
@@ -161,12 +161,12 @@ export function CollectionPage() {
             {currentTab === 0 && <>{collection && <GalleryBox collection={collection} />}</>}
             {currentTab === 1 && <ActivityTab dailyStats={dailyStats} weeklyStats={weeklyStats} />}
             {currentTab === 2 && (
-              <div className="grid lg:grid-cols-7 gap-6">
-                <div className="col-span-4">
+              <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-16">
+                <div className="lg:col-span-1 xl:col-span-2">
                   {/* <div className="text-3xl mb-6">Feed</div> */}
                   <CollectionFeed header="Feed" collectionAddress={collection?.address ?? ''} />
                 </div>
-                <div className="col-span-3">
+                <div className="col-span-1">
                   <CommunityRightPanel />
                 </div>
               </div>
