@@ -22,8 +22,8 @@ const ExplorePage: React.FC = () => {
   };
 
   return (
-    <Layout title="Explore" className="grid place-items-center">
-      <div className="flex flex-col m-4 max-w-screen-lg">
+    <Layout title="Explore" padded>
+      <div className="flex flex-col max-w-screen-lg">
         <main>
           <SearchBox />
 

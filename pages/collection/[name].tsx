@@ -36,7 +36,7 @@ export function CollectionPage() {
   const lastWeeklyStats = weeklyStats?.data[weeklyStats?.data.length - 1];
 
   return (
-    <Layout title={collection?.metadata?.name ?? ''} className="w-full h-full grid place-items-center">
+    <Layout title={collection?.metadata?.name ?? ''} padded>
       <div className="flex flex-col max-w-screen-lg mt-4">
         <span>
           <img src={collection?.metadata.profileImage} className="w-20 h-20 mb-4" />
