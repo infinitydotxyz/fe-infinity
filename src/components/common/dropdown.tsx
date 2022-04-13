@@ -28,7 +28,7 @@ export function Dropdown({ label, items, toggler, className }: DropdownProps) {
               className="transition ease-in-out duration-300 hover:bg-gray-700  active:bg-gray-900
                focus:outline-none focus-visible:ring focus:ring-black focus:ring-opacity-50
                 px-6 py-2
-                border rounded-3xl border-gray-300 text-gray-900
+                border rounded-3xl border-gray-300 text-gray-900 font-heading text-sm
                 hover:text-white
                 false flex items-center space-x-1"
             >
@@ -65,7 +65,7 @@ function CustomMenuItem(props: CustomMenuItemProps) {
         <a
           href="#"
           className={classNames(
-            'flex w-full justify-between px-4 py-2 text-left text-sm leading-5 ',
+            'flex w-full justify-between px-4 py-2 text-left text-sm leading-5 font-heading ',
             active ? 'bg-black text-white' : 'text-gray-700',
             disabled && 'cursor-not-allowed opacity-50'
           )}
