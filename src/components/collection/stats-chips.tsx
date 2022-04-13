@@ -1,19 +1,38 @@
+import toast, { Toaster } from 'react-hot-toast';
 import { BaseCollection, CollectionStats } from '@infinityxyz/lib/types/core';
 import { FaCaretDown, FaCaretUp, FaDiscord, FaTwitter } from 'react-icons/fa';
+import { apiPost } from 'src/utils';
+import { useAppContext } from 'src/utils/context/AppContext';
 import { Chip } from '../common';
-
 interface Props {
   collection: BaseCollection | null;
   weeklyStatsData: CollectionStats[];
 }
 
 export function StatsChips({ collection, weeklyStatsData }: Props) {
+  const { user } = useAppContext();
+
   const lastWeeklyStats = weeklyStatsData[weeklyStatsData.length - 1];
   const twitterChangePct = `${Math.abs(lastWeeklyStats?.twitterFollowersPercentChange ?? 0)}`.slice(0, 4);
   const discordChangePct = `${Math.abs(lastWeeklyStats?.discordFollowersPercentChange ?? 0)}`.slice(0, 4);
   return (
     <div className="flex flex-row space-x-1">
-      <Chip content="+ Follow" />
+      <Chip
+        content="+ Follow"
+        onClick={async () => {
+          const { error } = await apiPost(`/user/1:${user?.address}/followingCollections`, {
+            data: {
+              collectionChainId: collection?.chainId,
+              collectionAddress: collection?.address
+            }
+          });
+          if (error) {
+            toast.error(error?.errorResponse?.message);
+          } else {
+            toast.success('Followed ' + collection?.metadata?.name);
+          }
+        }}
+      />
       <Chip content="Edit" />
       <Chip
         left={<FaTwitter />}
@@ -63,6 +82,8 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
           </span>
         }
       />
+
+      <Toaster />
     </div>
   );
 }
