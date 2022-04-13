@@ -14,7 +14,7 @@ import { StatsChips } from 'src/components/collection/stats-chips';
 
 import { CommunityRightPanel } from 'src/components/collection/community-right-panel';
 
-export function CollectionPage() {
+export default function CollectionPage() {
   const {
     query: { name },
     push: pushRoute
@@ -131,5 +131,3 @@ export function CollectionPage() {
     </Layout>
   );
 }
-
-export default CollectionPage;
