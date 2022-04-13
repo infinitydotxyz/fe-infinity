@@ -116,7 +116,7 @@ export const FilterPanel = ({ collection, collectionAddress }: Props) => {
 
       <hr className="mt-8" />
 
-      <div className="text-lg mt-6 font-heading">Properties</div>
+      <div className="text-lg mt-6 mb-4 font-heading">Properties</div>
       <TraitSelection
         traits={collection?.attributes}
         collectionAddress={collectionAddress}

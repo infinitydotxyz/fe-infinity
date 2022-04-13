@@ -113,7 +113,7 @@ export const TraitSelection = ({ traits, onChange }: Props) => {
         return (
           <React.Fragment key={item.name}>
             <div
-              className="p-2 mt-2 flex items-center cursor-pointer font-heading"
+              className="py-2 mb-2 flex items-center cursor-pointer font-heading font-thin"
               onClick={() => {
                 const newOpenState = { ...openState, [item.name]: !openState[item.name] };
                 setOpenState(newOpenState);

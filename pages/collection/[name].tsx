@@ -40,7 +40,7 @@ export function CollectionPage() {
       <div className="flex flex-col mt-4">
         <span>
           <img src={collection?.metadata.profileImage} className="w-20 h-20 mb-4" />
-          {collection?.metadata?.name}{' '}
+          <span className="text-7xl mr-2">{collection?.metadata?.name}</span>
           {collection?.hasBlueCheck ? (
             <Image src="/images/blue-check.png" width={24} height={24} alt="Blue check icon" />
           ) : null}
@@ -57,8 +57,8 @@ export function CollectionPage() {
 
           <div className="text-secondary mt-6 text-sm md:w-2/3">{collection?.metadata.description ?? ''}</div>
 
-          <div className="text-sm font-bold mt-6">
-            <div>Ownership includes</div>
+          <div className="text-sm mt-6">
+            <div className="font-medium">Ownership includes</div>
             <div className="flex space-x-8 mt-4 font-normal">
               <div className="flex text-secondary">
                 <FaCheck className="mt-1 mr-2 text-black" />
