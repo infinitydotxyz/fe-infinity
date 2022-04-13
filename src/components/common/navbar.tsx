@@ -239,7 +239,7 @@ export function Navbar() {
     <>
       <div {...styles?.background}>
         <div {...styles?.container}>
-          <Link {...content?.buttons?.home?.props}>
+          <Link passHref {...content?.buttons?.home?.props}>
             {/*
             ====================================
               This is where we render the 'home'
@@ -247,7 +247,9 @@ export function Navbar() {
               to home page.
             ====================================
           */}
-            <content.buttons.home.icon {...styles?.logo}></content.buttons.home.icon>
+            <a>
+              <content.buttons.home.icon {...styles?.logo}></content.buttons.home.icon>
+            </a>
           </Link>
           <div {...styles?.actions?.container}>
             <div></div>

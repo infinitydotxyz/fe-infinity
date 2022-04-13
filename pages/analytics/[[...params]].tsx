@@ -259,20 +259,20 @@ export const Analytics = () => {
         container: {
           className: `
             row-start-1 col-start-3 row-span-1 col-span-10
-            flex flex-col place-content-center
+            grid place-items-start items-center
           `
         },
         list: {
           container: {
             className: `
               w-content h-content overflow-hidden
-              flex flex-row rounded-full
+              grid rounded-full
             `
           },
           background: {
             className: `
             w-content h-content overflow-hidden
-            bg-theme-light-200
+            bg-theme-light-300
             flex flex-row gap-1 p-1 rounded-full
           `
           }
@@ -313,7 +313,7 @@ export const Analytics = () => {
           className: `
             w-content h-content overflow-hidden
             bg-theme-light-50 text-theme-light-800 ring-1 ring-inset ring-theme-light-700
-            hover:bg-theme-light-200 active:bg-theme-light-50
+            hover:bg-theme-light-300 active:bg-theme-light-50
             px-6 py-2 rounded-full
             font-mono font-bold text-sm
           `
