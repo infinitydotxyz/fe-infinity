@@ -65,10 +65,10 @@ export const Home: FC = () => {
         </Button>
         <Button
           onClick={() => {
-            router.push('/explore');
+            router.push('/explore-collections');
           }}
         >
-          Explore
+          All Collections
         </Button>
       </div>
     </Layout>
