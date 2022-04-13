@@ -34,7 +34,6 @@ export function CollectionPage() {
     { chainId: '1' }
   );
   const lastDailyStats = dailyStats?.data[dailyStats?.data.length - 1];
-  const lastWeeklyStats = weeklyStats?.data[weeklyStats?.data.length - 1];
 
   return (
     <Layout title={collection?.metadata?.name ?? ''} padded>
