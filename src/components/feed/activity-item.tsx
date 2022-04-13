@@ -13,7 +13,7 @@ export function ActivityItem({ event }: Props) {
       <div className="bg-gray-100 p-4 rounded-2xl flex items-center">
         <Link href={`/asset/${event.chainId}/${event.collectionAddress}/${event.tokenId}`} passHref={true}>
           <a>
-            <img src={event.image} className="w-24 rounded-xl" alt="NFT Image" />
+            <img src={event.image} className="w-24 max-h-[80px] rounded-xl" alt="NFT Image" />
           </a>
         </Link>
         <div className="flex justify-between w-full mx-8">

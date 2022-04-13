@@ -1,15 +1,18 @@
 import React from 'react';
 import { Tab } from '@headlessui/react';
-import { Layout } from 'src/components/analytics/layout';
+import { Layout } from 'src/components/common/layout';
 import { Field } from 'src/components/analytics/field';
 import { useFetch } from 'src/utils/apiUtils';
 import { useRouter } from 'next/router';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CollectionStats } from '@infinityxyz/lib/types/core';
+import { ITEMS_PER_PAGE } from 'src/utils/constants';
+
 export const Analytics = () => {
   const router = useRouter();
   const { user } = useAppContext();
   const connected = user?.address ? true : false;
+  const [limit] = React.useState(ITEMS_PER_PAGE);
   const [page, setPage] = React.useState(router.query.params?.[0] ? router.query.params?.[0] : 'trending');
   const [interval, setInterval] = React.useState(router.query.params?.[1] ? router.query.params?.[1] : 'hourly');
   const [date, setDate] = React.useState(Date.now());
@@ -27,8 +30,8 @@ export const Analytics = () => {
   let statistics = null;
   const query =
     page === 'trending'
-      ? `/collections/rankings?orderBy=volume&orderDirection=desc&period=${interval}&date=${date}&limit=10`
-      : `/user/${user?.address}/watchlist?orderBy=discordFollowers&orderDirection=desc&period=${interval}&date=${date}&limit=10`;
+      ? `/collections/rankings?orderBy=volume&orderDirection=desc&period=${interval}&date=${date}&limit=${limit}`
+      : `/user/${user?.address}/watchlist?orderBy=volume&orderDirection=desc&period=${interval}&date=${date}&limit=${limit}`;
 
   const data = useFetch<{ data: CollectionStats[] }>(query);
 
@@ -107,7 +110,13 @@ export const Analytics = () => {
       ======================================
     */
     setDate(Date.now());
-    router.push(`/analytics/${page}/${interval}`);
+    router.push(
+      {
+        pathname: `/analytics/${page}/${interval}`
+      },
+      undefined,
+      { scroll: false }
+    );
   }, [page, interval]);
 
   /*
@@ -203,15 +212,6 @@ export const Analytics = () => {
     }
   };
 
-  /*
-    ======================================
-      Whenever page or interval changes,
-      (which they do because tabs in this page
-      are actually links that pass in query parameters),
-      we make
-    ======================================
-  */
-
   const styles = {
     layout: {
       title: 'Analytics'
@@ -258,11 +258,24 @@ export const Analytics = () => {
         },
         container: {
           className: `
-            w-full h-full overflow-hidden
-            bg-theme-light-50
             row-start-1 col-start-3 row-span-1 col-span-10
-            flex flex-row gap-2 py-4
+            grid place-items-start items-center
           `
+        },
+        list: {
+          container: {
+            className: `
+              w-content h-content overflow-hidden
+              grid rounded-full
+            `
+          },
+          background: {
+            className: `
+            w-content h-content overflow-hidden
+            bg-theme-light-300
+            flex flex-row gap-1 p-1 rounded-full
+          `
+          }
         },
         tab: {
           className: ({ selected }: { selected: boolean }) => `
@@ -300,7 +313,7 @@ export const Analytics = () => {
           className: `
             w-content h-content overflow-hidden
             bg-theme-light-50 text-theme-light-800 ring-1 ring-inset ring-theme-light-700
-            hover:bg-theme-light-200 active:bg-theme-light-50
+            hover:bg-theme-light-300 active:bg-theme-light-50
             px-6 py-2 rounded-full
             font-mono font-bold text-sm
           `
@@ -321,7 +334,20 @@ export const Analytics = () => {
           className: `
             w-full h-full
             row-start-1 col-start-3 row-span-1 col-span-20
+            ring ring-inset ring-transparent
             flex flex-col gap-4
+          `
+        },
+        loading: {
+          className: `
+            w-full h-[170px] bg-blue-50 ring ring-inset ring-blue-100 rounded-xl
+            animate-pulse
+          `
+        },
+        error: {
+          className: `
+            w-full h-[170px] bg-red-50 ring ring-inset ring-red-100 rounded-xl
+            animate-pulse
           `
         },
         item: {
@@ -376,8 +402,10 @@ export const Analytics = () => {
           </div>
           <div {...styles?.options?.container}>
             <Tab.Group {...styles?.options?.timeframes?.group}>
-              <Tab.List {...styles?.options?.timeframes?.container}>
-                {/*
+              <div {...styles?.options?.timeframes?.container}>
+                <div {...styles?.options?.timeframes?.list?.container}>
+                  <Tab.List {...styles?.options?.timeframes?.list?.background}>
+                    {/*
                 ====================================
                   This is where we render the timeframe
                   tabs (clicking on them changes the route
@@ -385,12 +413,14 @@ export const Analytics = () => {
                   a request to fetch that data is made and cached).
                 ====================================
               */}
-                {content?.options?.timeframes?.map((tab, i) => (
-                  <React.Fragment key={i}>
-                    <Tab {...styles?.options?.timeframes?.tab}>{tab?.label}</Tab>
-                  </React.Fragment>
-                ))}
-              </Tab.List>
+                    {content?.options?.timeframes?.map((tab, i) => (
+                      <React.Fragment key={i}>
+                        <Tab {...styles?.options?.timeframes?.tab}>{tab?.label}</Tab>
+                      </React.Fragment>
+                    ))}
+                  </Tab.List>
+                </div>
+              </div>
             </Tab.Group>
             <Tab.Group {...styles?.options?.actions?.group}>
               <Tab.List {...styles?.options?.actions?.container}>
@@ -432,20 +462,29 @@ export const Analytics = () => {
               ====================================
                 This is where we show the data that
                 we get based on the query parameters.
+                If data doesn't come out, we show
+                skeleton components (same number as that
+                of limit - this is important because
+                it prevents the page from jumping around on
+                route changes).
               ====================================
             */}
             <div {...styles?.statistics?.list?.container}>
               {data.isLoading ? (
                 <>
-                  <div className="w-full h-[170px] bg-blue-50 rounded-xl"></div>
-                  <div className="w-full h-[170px] bg-blue-50 rounded-xl"></div>
-                  <div className="w-full h-[170px] bg-blue-50 rounded-xl"></div>
+                  {Array.from(Array(limit).keys())?.map((x, i) => (
+                    <React.Fragment key={i}>
+                      <div {...styles?.statistics?.list?.loading}></div>
+                    </React.Fragment>
+                  ))}
                 </>
               ) : data.isError || content?.statistics?.length === 0 ? (
                 <>
-                  <div className="w-full h-[170px] bg-red-50 rounded-xl"></div>
-                  <div className="w-full h-[170px] bg-red-50 rounded-xl"></div>
-                  <div className="w-full h-[170px] bg-red-50 rounded-xl"></div>
+                  {Array.from(Array(limit).keys())?.map((x, i) => (
+                    <React.Fragment key={i}>
+                      <div {...styles?.statistics?.list?.error}></div>
+                    </React.Fragment>
+                  ))}
                 </>
               ) : (
                 <>

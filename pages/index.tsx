@@ -1,12 +1,13 @@
 import { useRouter } from 'next/router';
 import type { FC } from 'react';
-import { Button, PageBox } from 'src/components/common';
+import { Button } from 'src/components/common';
+import { Layout } from 'src/components/common/layout';
 
 export const Home: FC = () => {
   const router = useRouter();
 
   return (
-    <PageBox title="Home">
+    <Layout title="Home" className="w-full h-full grid place-content-center">
       <div className="flex flex-col space-y-4 items-center">
         <Button
           onClick={() => {
@@ -42,7 +43,7 @@ export const Home: FC = () => {
 
         <Button
           onClick={() => {
-            router.push('/analytics');
+            router.push('/analytics/trending/hourly');
           }}
         >
           Analytics
@@ -64,13 +65,13 @@ export const Home: FC = () => {
         </Button>
         <Button
           onClick={() => {
-            router.push('/explore');
+            router.push('/explore-collections');
           }}
         >
-          Explore
+          All Collections
         </Button>
       </div>
-    </PageBox>
+    </Layout>
   );
 };
 

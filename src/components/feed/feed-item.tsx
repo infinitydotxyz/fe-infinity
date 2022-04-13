@@ -103,12 +103,28 @@ export function FeedItem({ data, onLike, onComment }: FeedItemProps) {
   );
 }
 
+const renderTextWithLinks = (txt: string | undefined) => {
+  const urlRegex = /^(https?:\/\/[^/]+(\/[\w-]+)+)/;
+  return (txt ?? '')
+    .replace(/\n/g, ' ')
+    .split(' ')
+    .map((part) => {
+      return urlRegex.test(part) ? (
+        <a href={part} className="text-blue-500" target="_blank" rel="noopener noreferrer">
+          {part}{' '}
+        </a>
+      ) : (
+        part + ' '
+      );
+    });
+};
+
 function TweetEvent({ data }: FeedItemProps) {
-  return <div className="mt-4">{data.text ?? data.title}</div>;
+  return <div className="mt-4">{renderTextWithLinks(data.text ?? data.title)}</div>;
 }
 
 function Discord({ data }: FeedItemProps) {
-  return <div className="mt-4">{data.title}</div>;
+  return <div className="mt-4">{renderTextWithLinks(data.title)}</div>;
 }
 
 function SaleEvent({ data }: FeedItemProps) {

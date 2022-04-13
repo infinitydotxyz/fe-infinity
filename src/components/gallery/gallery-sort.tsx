@@ -17,7 +17,7 @@ export const GallerySort = () => {
   label = filterState.orderDirection === 'desc' ? 'Low Rarity Rank to High' : label;
 
   return (
-    <span className="mr-32">
+    <span className="mr-44">
       <div className="relative inline-block text-left">
         <Menu>
           <span className="">

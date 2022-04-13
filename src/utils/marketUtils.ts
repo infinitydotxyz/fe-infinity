@@ -1,30 +1,16 @@
-import { MarketListIdType, MarketListingsBody, OBOrder } from '@infinityxyz/lib/types/core';
+import {
+  BuyOrderMatch,
+  MarketAction,
+  MarketListId,
+  MarketListingsBody,
+  MarketListingsResponse,
+  MarketOrder,
+  OBOrder,
+  TradeBody,
+  TradeResponse
+} from '@infinityxyz/lib/types/core';
 import { BigNumber, BigNumberish } from 'ethers';
 import { apiPost, isStatusOK } from 'src/utils/apiUtils';
-
-export interface BuyOrderMatch {
-  buyOrder: OBOrder;
-  sellOrders: OBOrder[];
-}
-
-export interface TradeBody {
-  buyOrder?: OBOrder;
-  sellOrder?: OBOrder;
-}
-
-export interface MarketListingsResponse {
-  buyOrders: OBOrder[];
-  sellOrders: OBOrder[];
-  matches: BuyOrderMatch[];
-  success: string;
-  error: string;
-}
-
-export interface TradeResponse {
-  matches: BuyOrderMatch[];
-  success: string;
-  error: string;
-}
 
 export const addBuy = async (order: OBOrder): Promise<BuyOrderMatch[]> => {
   try {
@@ -63,7 +49,7 @@ export const addSell = async (order: OBOrder): Promise<BuyOrderMatch[]> => {
       }
     }
 
-    console.log('An error occured: sell');
+    console.log('An error occurred: sell');
   } catch (err) {
     console.log(err);
   }
@@ -71,20 +57,20 @@ export const addSell = async (order: OBOrder): Promise<BuyOrderMatch[]> => {
   return [];
 };
 
-export const marketBuyOrders = async (listId: MarketListIdType): Promise<OBOrder[]> => {
+export const marketBuyOrders = async (listId: MarketListId): Promise<OBOrder[]> => {
   const body: MarketListingsBody = {
-    orderType: 'buyOrders',
-    action: 'list',
+    orderType: MarketOrder.BuyOrders,
+    action: MarketAction.List,
     listId: listId
   };
 
   return list(body);
 };
 
-export const marketSellOrders = async (listId: MarketListIdType): Promise<OBOrder[]> => {
+export const marketSellOrders = async (listId: MarketListId): Promise<OBOrder[]> => {
   const body: MarketListingsBody = {
-    orderType: 'sellOrders',
-    action: 'list',
+    orderType: MarketOrder.SellOrders,
+    action: MarketAction.List,
     listId: listId
   };
 
@@ -92,7 +78,7 @@ export const marketSellOrders = async (listId: MarketListIdType): Promise<OBOrde
 };
 
 const list = async (body: MarketListingsBody): Promise<OBOrder[]> => {
-  const response = await apiPost(`/marketListings`, { data: body });
+  const response = await apiPost(`/market-listings`, { data: body });
 
   if (response.result) {
     const match: MarketListingsResponse | null = response.result;
@@ -100,11 +86,11 @@ const list = async (body: MarketListingsBody): Promise<OBOrder[]> => {
     if (isStatusOK(response)) {
       if (match) {
         if (body.orderType === 'buyOrders') {
-          const buys: OBOrder[] = match.buyOrders as OBOrder[];
+          const buys: OBOrder[] = match.buyOrders.orders;
 
           return buys;
         } else if (body.orderType === 'sellOrders') {
-          const sells: OBOrder[] = match.sellOrders as OBOrder[];
+          const sells: OBOrder[] = match.sellOrders.orders;
 
           return sells;
         }
@@ -117,11 +103,11 @@ const list = async (body: MarketListingsBody): Promise<OBOrder[]> => {
 
 export const marketMatches = async (): Promise<BuyOrderMatch[]> => {
   const body: MarketListingsBody = {
-    action: 'match',
-    orderType: 'buyOrders'
+    action: MarketAction.Match,
+    orderType: MarketOrder.BuyOrders
   };
 
-  const response = await apiPost(`/marketListings`, { data: body });
+  const response = await apiPost(`/market-listings`, { data: body });
 
   if (response.result) {
     const res: MarketListingsResponse | null = response.result;
@@ -130,13 +116,13 @@ export const marketMatches = async (): Promise<BuyOrderMatch[]> => {
       return res.matches;
     }
   }
-  console.log('An error occured: marketMatches');
+  console.log('An error occurred: marketMatches');
 
   return [];
 };
 
 export const marketDeleteOrder = async (body: MarketListingsBody): Promise<string> => {
-  const response = await apiPost(`/marketListings`, { data: body });
+  const response = await apiPost(`/market-listings`, { data: body });
 
   if (response.result) {
     const match: MarketListingsResponse | null = response.result;
@@ -148,19 +134,19 @@ export const marketDeleteOrder = async (body: MarketListingsBody): Promise<strin
     }
   }
 
-  console.log('An error occured: marketDeleteOrder');
+  console.log('An error occurred: marketDeleteOrder');
 
   return 'error';
 };
 
 export const executeBuyOrder = async (orderId: string): Promise<string> => {
   const body: MarketListingsBody = {
-    action: 'buy',
+    action: MarketAction.Buy,
     orderId: orderId,
-    orderType: 'buyOrders'
+    orderType: MarketOrder.BuyOrders
   };
 
-  const response = await apiPost(`/marketListings`, { data: body });
+  const response = await apiPost(`/market-listings`, { data: body });
 
   if (response.result) {
     const match: MarketListingsResponse | null = response.result;
@@ -172,7 +158,7 @@ export const executeBuyOrder = async (orderId: string): Promise<string> => {
     }
   }
 
-  console.log('An error occured: executeBuyOrder');
+  console.log('An error occurred: executeBuyOrder');
 
   return 'error';
 };

@@ -5,7 +5,6 @@ import {
   Button,
   CurrencyInput,
   Dropdown,
-  PageBox,
   ShortAddress,
   SimpleTable,
   SimpleTableItem,
@@ -13,6 +12,7 @@ import {
   ToggleTab,
   useToggleTab
 } from 'src/components/common';
+import { Layout } from 'src/components/common/layout';
 import { Card } from 'src/components/common/card';
 import { Chip } from 'src/components/common/chip';
 import { ComboBox, ComboBoxBaseType } from 'src/components/common/combo-box';
@@ -35,8 +35,11 @@ const SandboxPage: FC = () => {
   tableItems.push({ title: 'Budget', value: <div className="font-bold">3 Eth</div> });
 
   return (
-    <PageBox title="SandBox">
-      <div className=" ">
+    <Layout title="SandBox" padded className="py-8">
+      <div>
+        <h1 className="text-start font-body font-bold text-3xl tracking-tight">Sandbox</h1>
+      </div>
+      <div className="w-full">
         <SBHeader># Text</SBHeader>
         <div>
           <div className="text-primary">text-primary</div>
@@ -133,7 +136,7 @@ const SandboxPage: FC = () => {
           <SimpleTable items={tableItems} />
         </div>
       </div>
-    </PageBox>
+    </Layout>
   );
 };
 
