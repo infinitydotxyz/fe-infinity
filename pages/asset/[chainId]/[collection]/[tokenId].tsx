@@ -41,7 +41,7 @@ const AssetDetail: FunctionComponent = () => {
 
   if (typeof query.chainId !== 'string' || typeof query.collection !== 'string' || typeof query.tokenId !== 'string') {
     return (
-      <Layout title={'Asset Detail - Error'} className="grid place-items-center">
+      <Layout title={'Asset Detail - Error'} padded>
         <div className="flex flex-col max-w-screen-2xl mt-4">
           <main>
             <p>Error: Invalid page parameters.</p>
@@ -75,7 +75,7 @@ const AssetDetail: FunctionComponent = () => {
       ? `${token.metadata.name} - ${collection.metadata.name}`
       : token.metadata.name || collection.metadata.name || 'No Name';
   return (
-    <Layout title={assetName} className="grid place-items-center">
+    <Layout title={assetName} padded>
       <div className="flex flex-col max-w-screen-2xl mt-4">
         <main>
           <div className="sm:flex">

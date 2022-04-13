@@ -1,10 +1,10 @@
 import React from 'react';
 import Link from 'next/link';
-import { BiSearchAlt2 } from 'react-icons/bi';
 import { SVG } from 'src/components/common/svg';
 import { Menu, Transition } from '@headlessui/react';
 import { ConnectButton } from 'src/components/common/connect-button';
 import { IoMdArrowDropdown } from 'react-icons/io';
+import { SearchInput } from 'src/components/common/search-input';
 
 export function Navbar() {
   /*
@@ -32,7 +32,7 @@ export function Navbar() {
       className: `
           w-5/6 h-full
           row-span-2 col-span-24
-          grid grid-rows-1 grid-cols-[1fr,13fr]
+          grid grid-rows-1 grid-cols-[1fr,13fr] gap-8
           py-4
         `
     },
@@ -48,7 +48,7 @@ export function Navbar() {
       container: {
         className: `
           w-full h-full col-span-1 row-span-1
-          grid grid-rows-1 grid-cols-[5fr,10fr,2fr] gap-1
+          grid grid-rows-1 grid-cols-[1fr,3fr,11fr,2fr] gap-1
         `
       },
       search: {
@@ -56,19 +56,8 @@ export function Navbar() {
           className: `
             transition w-full h-full
             col-span-1 row-span-1
-            grid
-            bg-transparent
+            grid bg-transparent
           `
-        },
-        button: {
-          className: `
-            w-contain h-full px-4 rounded-full
-            bg-transparent
-            justify-self-end
-          `
-        },
-        icon: {
-          className: 'w-5 h-5'
         }
       },
       items: {
@@ -169,10 +158,6 @@ export function Navbar() {
           href: '/'
         }
       },
-      search: {
-        label: 'Search',
-        icon: BiSearchAlt2
-      },
       items: [
         {
           type: 'link',
@@ -192,7 +177,7 @@ export function Navbar() {
           type: 'link',
           label: 'Marketplace',
           props: {
-            href: '/marketplace'
+            href: '/market'
           }
         },
         {
@@ -265,20 +250,9 @@ export function Navbar() {
             <content.buttons.home.icon {...styles?.logo}></content.buttons.home.icon>
           </Link>
           <div {...styles?.actions?.container}>
-            {/*
-          ====================================
-            This is where we render the search.
-            Requirement: Search is initially
-            an icon button, when it is clicked
-            it should transition to the left side
-            of the input element and allow user to
-            type and search something upon enter.
-          ====================================
-        */}
+            <div></div>
             <div {...styles?.actions?.search?.container}>
-              <button {...styles?.actions?.search?.button}>
-                <content.buttons.search.icon {...styles?.actions?.search?.icon}></content.buttons.search.icon>
-              </button>
+              <SearchInput />
             </div>
             <div {...styles?.actions?.items?.container}>
               {/*
