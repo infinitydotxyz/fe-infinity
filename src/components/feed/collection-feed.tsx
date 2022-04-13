@@ -13,9 +13,10 @@ interface CollectionFeedProps {
   collectionAddress?: string;
   types?: FeedEventType[];
   forActivity?: boolean;
+  className?: string;
 }
 
-export function CollectionFeed({ header, collectionAddress, types, forActivity }: CollectionFeedProps) {
+export function CollectionFeed({ header, collectionAddress, types, forActivity, className }: CollectionFeedProps) {
   const [events, setEvents] = useState<FeedEvent[]>([]);
   const [newEvents, setNewEvents] = useState<FeedEvent[]>([]); // new feed events
   const [filter, setFilter] = useState<FeedFilter>({ collectionAddress, types });
@@ -86,7 +87,7 @@ export function CollectionFeed({ header, collectionAddress, types, forActivity }
   };
 
   return (
-    <div>
+    <div className={`min-h-[1024px] ${className}`}>
       <div className="flex justify-between">
         <div className="text-3xl mb-6">{header}</div>
         <FeedFilterDropdown selectedTypes={filteringTypes} onChange={onChangeFilterDropdown} />
@@ -94,7 +95,8 @@ export function CollectionFeed({ header, collectionAddress, types, forActivity }
 
       {newEvents.length > 0 ? (
         <div
-          className="p-4 border border-gray-200 hover:bg-gray-100 mb-4 cursor-pointer w-1/3 sm:w-full"
+          //  w-1/3 sm:w-full
+          className="p-4 border border-gray-200 hover:bg-gray-100 mb-4 cursor-pointer"
           onClick={() => {
             setEvents((currentEvents) => [...newEvents, ...currentEvents]);
             setNewEvents([]);
