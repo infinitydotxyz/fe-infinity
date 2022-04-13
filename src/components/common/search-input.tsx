@@ -100,16 +100,17 @@ export const SearchInput: React.FC = () => {
           className: `
             absolute z-60
             w-content h-content
-            px-2 py-2 ring ring-inset ring-theme-light-200 rounded-xl
+            px-2 py-2 ring-1 ring-inset ring-theme-light-200 rounded-xl
             flex flex-col bg-theme-light-50
           `
         },
         option: {
-          className: `
+          className: ({ active, selected }: { active: boolean; selected: boolean }) => `
             font-body text-sm py-1 px-4
             hover:bg-theme-light-200 rounded-xl
             flex gap-4 place-items-center
             hover:cursor-pointer
+            ${active && "bg-theme-light-300"}
           `
         }
       }
