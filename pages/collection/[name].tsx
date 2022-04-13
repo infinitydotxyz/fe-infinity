@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { BaseCollection, CollectionStats } from '@infinityxyz/lib/types/core';
 import { FaCheck } from 'react-icons/fa';
-import { RoundedNav } from 'src/components/common';
+import { Chip, RoundedNav } from 'src/components/common';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { useFetch } from 'src/utils/apiUtils';
 import { CollectionFeed } from 'src/components/feed/collection-feed';
@@ -16,7 +16,8 @@ import { CommunityRightPanel } from 'src/components/collection/community-right-p
 
 export function CollectionPage() {
   const {
-    query: { name }
+    query: { name },
+    push: pushRoute
   } = useRouter();
   const [currentTab, setCurrentTab] = useState(0);
   const path = `/collections/${name}`;
@@ -35,6 +36,8 @@ export function CollectionPage() {
       : '',
     { chainId: '1' }
   );
+  const onEdit = useCallback(() => pushRoute(`/collection/${collection?.slug}/edit`), [collection?.slug]);
+
   const lastDailyStats = dailyStats?.data[dailyStats?.data.length - 1];
 
   return (
@@ -55,7 +58,11 @@ export function CollectionPage() {
             </button>
           </div>
 
-          <StatsChips collection={collection} weeklyStatsData={weeklyStats?.data ?? []} />
+          <div className="flex flex-row space-x-1">
+            <Chip content="+ Follow" />
+            <Chip content="Edit" onClick={onEdit} />
+            <StatsChips collection={collection} weeklyStatsData={weeklyStats?.data ?? []} />
+          </div>
 
           <div className="text-secondary mt-6 text-sm md:w-2/3">{collection?.metadata.description ?? ''}</div>
 

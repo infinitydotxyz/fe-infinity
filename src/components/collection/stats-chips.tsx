@@ -12,9 +12,7 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
   const twitterChangePct = `${Math.abs(lastWeeklyStats?.twitterFollowersPercentChange ?? 0)}`.slice(0, 4);
   const discordChangePct = `${Math.abs(lastWeeklyStats?.discordFollowersPercentChange ?? 0)}`.slice(0, 4);
   return (
-    <div className="flex flex-row space-x-1">
-      <Chip content="+ Follow" />
-      <Chip content="Edit" />
+    <>
       <Chip
         left={<FaTwitter />}
         onClick={() => window.open(collection?.metadata.links.twitter)}
@@ -63,6 +61,6 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
           </span>
         }
       />
-    </div>
+    </>
   );
 }
