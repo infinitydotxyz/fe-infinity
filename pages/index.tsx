@@ -65,7 +65,7 @@ export const Home: FC = () => {
         </Button>
         <Button
           onClick={() => {
-            router.push('/explore');
+            router.push('/all-collections');
           }}
         >
           All Collections

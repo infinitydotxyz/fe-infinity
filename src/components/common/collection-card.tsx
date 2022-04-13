@@ -25,13 +25,13 @@ export const CollectionCard: FunctionComponent<CollectionCardProps> = ({ collect
   const shortText = trimText(collection.description, 60, 80, 100)[0];
   const isTrimText = shortText.length !== collection.description.length;
 
-  const avatarUrl = getAvatarUrl(collection.bannerImage) || BLANK_IMAGE_URL;
+  const avatarUrl = getAvatarUrl(collection.profileImage) || BLANK_IMAGE_URL;
 
   return (
     <article className="w-full mx-auto sm:mx-0 bg-theme-light-100 border border-theme-light-100 shadow-md rounded-2xl overflow-hidden hover:shadow-xl cursor-pointer">
       <Link href={`/collection/${collection.slug}`}>
         <a href={`/collection/${collection.slug}`} className="text-theme-light-800 font-heading tracking-tight mr-2">
-          <div style={{ height: '200px' }}>
+          <div style={{ height: '400px' }}>
             <img
               src={avatarUrl}
               className="w-full"
