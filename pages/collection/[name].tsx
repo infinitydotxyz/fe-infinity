@@ -166,9 +166,7 @@ export function CollectionPage() {
                   {/* <div className="text-3xl mb-6">Feed</div> */}
                   <CollectionFeed header="Feed" collectionAddress={collection?.address ?? ''} />
                 </div>
-                <div className="col-span-1">
-                  <CommunityRightPanel />
-                </div>
+                <div className="col-span-1">{collection && <CommunityRightPanel collection={collection} />}</div>
               </div>
             )}
           </div>
