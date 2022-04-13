@@ -68,7 +68,7 @@ export const Home: FC = () => {
             router.push('/explore');
           }}
         >
-          Explore
+          All Collections
         </Button>
       </div>
     </Layout>
