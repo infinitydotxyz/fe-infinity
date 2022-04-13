@@ -1,14 +1,10 @@
 import React from 'react';
-import { Combobox } from '@headlessui/react';
 import { BiSearchAlt2 } from 'react-icons/bi';
-import { Transition } from '@headlessui/react';
 
 export const SearchInput: React.FC = () => {
   const [isActive, setIsActive] = React.useState(false);
-  const [text, setText] = React.useState('');
-  const inputRef: React.RefObject<HTMLInputElement> = React.useRef();
-  const activate = (e: React.MouseEvent<HTMLButtonElement>) => setIsActive(true);
-  const deactivate = (e: React.MouseEvent<HTMLButtonElement>) => setIsActive(false);
+  const inputRef: React.RefObject<HTMLInputElement> = React.useRef(null);
+  const activate = () => setIsActive(true);
 
   React.useEffect(() => {
     isActive ? inputRef?.current?.focus() : inputRef?.current?.blur();
