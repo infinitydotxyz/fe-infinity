@@ -2,7 +2,7 @@ import { FunctionComponent } from 'react';
 import { trimText } from './read-more-text';
 import Link from 'next/link';
 
-import { CollectionSearchDto } from 'pages/explore';
+import { CollectionSearchDto } from 'pages/explore-collections';
 
 const BLANK_IMAGE_URL = 'https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png';
 
