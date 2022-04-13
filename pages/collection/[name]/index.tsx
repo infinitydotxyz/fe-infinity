@@ -13,6 +13,7 @@ import { Layout } from 'src/components/common/layout';
 import { StatsChips } from 'src/components/collection/stats-chips';
 
 import { CommunityRightPanel } from 'src/components/collection/community-right-panel';
+import { AvatarImage } from 'src/components/collection/avatar-image';
 
 export default function CollectionPage() {
   const {
@@ -44,7 +45,7 @@ export default function CollectionPage() {
     <Layout title={collection?.metadata?.name ?? ''} padded>
       <div className="flex flex-col mt-4">
         <span>
-          <img src={collection?.metadata.profileImage} className="w-20 h-20 mb-4" />
+          <AvatarImage url={collection?.metadata.profileImage} className="mb-4" />
           <span className="text-7xl mr-2">{collection?.metadata?.name}</span>
           {collection?.hasBlueCheck ? (
             <Image src="/images/blue-check.png" width={24} height={24} alt="Blue check icon" />
