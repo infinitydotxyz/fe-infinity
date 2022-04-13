@@ -43,7 +43,7 @@ export const Home: FC = () => {
 
         <Button
           onClick={() => {
-            router.push('/analytics');
+            router.push('/analytics/trending/hourly');
           }}
         >
           Analytics
