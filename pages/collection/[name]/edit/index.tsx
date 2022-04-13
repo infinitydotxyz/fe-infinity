@@ -17,21 +17,21 @@ export default function EditCollectionPage() {
     <div className="transition w-[100vw] h-[100vh] overflow-y-auto">
       <header className="flex justify-between p-5">
         <img alt="logo" src={logo.src} width={logo.width} />
-        <div className="flex flex-row space-x-2">
+        <nav className="flex flex-row space-x-2">
           <Button variant="outline" onClick={router.back}>
             Cancel
           </Button>
           <Button>Save</Button>
-        </div>
+        </nav>
       </header>
-      <main className="flex flex-col my-0 mx-auto w-144">
-        <section className="flex flex-row items-center">
+      <main className="flex flex-col my-4 mx-auto w-144">
+        <article className="flex flex-row items-center">
           <AvatarImage url={collection?.metadata.profileImage} size="large" />
           <div className="flex flex-col space-y-2 ml-2">
             <Button>Upload</Button>
             <Button variant="outline">Delete</Button>
           </div>
-        </section>
+        </article>
       </main>
     </div>
   );
