@@ -2,14 +2,15 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { BaseCollection, CollectionStats } from '@infinityxyz/lib/types/core';
-import { FaCaretDown, FaCaretUp, FaCheck, FaDiscord, FaTwitter } from 'react-icons/fa';
-import { Chip, RoundedNav } from 'src/components/common';
+import { FaCheck } from 'react-icons/fa';
+import { RoundedNav } from 'src/components/common';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { useFetch } from 'src/utils/apiUtils';
 import { CollectionFeed } from 'src/components/feed/collection-feed';
 import { ellipsisAddress, getChainScannerBase } from 'src/utils';
 import { ActivityTab } from 'src/components/collection/activity-tab';
 import { Layout } from 'src/components/common/layout';
+import { StatsChips } from 'src/components/collection/stats-chips';
 
 export function CollectionPage() {
   const {
@@ -33,83 +34,31 @@ export function CollectionPage() {
     { chainId: '1' }
   );
   const lastDailyStats = dailyStats?.data[dailyStats?.data.length - 1];
-  const lastWeeklyStats = weeklyStats?.data[weeklyStats?.data.length - 1];
 
   return (
     <Layout title={collection?.metadata?.name ?? ''} padded>
-      <div className="flex flex-col max-w-screen-lg mt-4">
+      <div className="flex flex-col mt-4">
         <span>
           <img src={collection?.metadata.profileImage} className="w-20 h-20 mb-4" />
-          {collection?.metadata?.name}{' '}
+          <span className="text-7xl mr-2">{collection?.metadata?.name}</span>
           {collection?.hasBlueCheck ? (
             <Image src="/images/blue-check.png" width={24} height={24} alt="Blue check icon" />
           ) : null}
         </span>
         <main>
-          <div className="text-secondary mb-6 ml-2 text-sm font-heading">
+          <div className="text-secondary mt-6 mb-6 text-sm font-heading">
             Created by{' '}
             <button onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection?.owner)}>
               {ellipsisAddress(collection?.owner ?? '')}
             </button>
           </div>
 
-          <div className="flex flex-row space-x-1">
-            <Chip content="+ Follow" />
-            <Chip content="Edit" />
-            <Chip
-              left={<FaTwitter />}
-              onClick={() => window.open(collection?.metadata.links.twitter)}
-              content={
-                <span className="flex items-center">
-                  {lastWeeklyStats?.twitterFollowers?.toLocaleString() ?? '—'}
-                  {lastWeeklyStats?.twitterFollowersPercentChange && (
-                    <>
-                      {(lastWeeklyStats?.twitterFollowersPercentChange ?? 0) < 0 ? (
-                        <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
-                          <FaCaretDown className="mr-1" />{' '}
-                          {`${Math.abs(lastWeeklyStats?.twitterFollowersPercentChange ?? 0)}`.slice(0, 4)}%
-                        </span>
-                      ) : (
-                        <span className="ml-2 py-1 px-2 rounded-xl bg-green-500 text-white text-xs flex items-center">
-                          <FaCaretUp className="mr-1" />{' '}
-                          {`${Math.abs(lastWeeklyStats?.twitterFollowersPercentChange ?? 0)}`.slice(0, 4)}%
-                        </span>
-                      )}
-                    </>
-                  )}
-                </span>
-              }
-            />
-            <Chip
-              left={<FaDiscord />}
-              onClick={() => window.open(collection?.metadata.links.discord)}
-              content={
-                <span className="flex items-center">
-                  {lastWeeklyStats?.discordFollowers?.toLocaleString() ?? '—'}
-                  {lastWeeklyStats?.discordFollowersPercentChange && (
-                    <>
-                      {(lastWeeklyStats?.discordFollowersPercentChange ?? 0) < 0 ? (
-                        <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
-                          <FaCaretDown className="mr-1" />{' '}
-                          {`${Math.abs(lastWeeklyStats?.discordFollowersPercentChange ?? 0)}`.slice(0, 4)}%
-                        </span>
-                      ) : (
-                        <span className="ml-2 py-1 px-2 rounded-xl bg-green-500 text-white text-xs flex items-center">
-                          <FaCaretUp className="mr-1" />{' '}
-                          {`${Math.abs(lastWeeklyStats?.discordFollowersPercentChange ?? 0)}`.slice(0, 4)}%
-                        </span>
-                      )}
-                    </>
-                  )}
-                </span>
-              }
-            />
-          </div>
+          <StatsChips collection={collection} weeklyStatsData={weeklyStats?.data ?? []} />
 
           <div className="text-secondary mt-6 text-sm md:w-2/3">{collection?.metadata.description ?? ''}</div>
 
-          <div className="text-sm font-bold mt-6">
-            <div>Ownership includes</div>
+          <div className="text-sm mt-6">
+            <div className="font-medium">Ownership includes</div>
             <div className="flex space-x-8 mt-4 font-normal">
               <div className="flex text-secondary">
                 <FaCheck className="mt-1 mr-2 text-black" />
@@ -127,8 +76,8 @@ export function CollectionPage() {
           </div>
 
           {/* <Button variant="outline" className="mt-6">
-        Claim Collection
-      </Button> */}
+            Claim Collection
+          </Button> */}
 
           <table className="mt-8 text-sm md:w-1/2">
             <thead>

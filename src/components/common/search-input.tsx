@@ -1,9 +1,9 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { BiSearchAlt2 } from 'react-icons/bi';
 import { useFetch } from 'src/utils';
 import { BaseCollection } from '@infinityxyz/lib/types/core';
 import { useRouter } from 'next/router';
-import { Combobox, Transition } from '@headlessui/react';
+import { Combobox } from '@headlessui/react';
 
 type CollectionItem = BaseCollection & {
   name: string;
@@ -25,7 +25,7 @@ export const SearchInput: React.FC = () => {
 
   const { result } = useFetch<{ data: CollectionItem[] | null }>(`/collections/search?query=${text}&limit=15`);
   const data = result?.data ?? [];
-  const [selected, setSelected] = React.useState(undefined);
+  const [selected, setSelected] = React.useState<CollectionItem | null>(null);
 
   React.useEffect(() => {
     if (selected?.slug) {
