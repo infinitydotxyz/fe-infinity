@@ -12,11 +12,11 @@ export function HomePage() {
   console.log(name);
 
   return (
-    <Layout title="Home" className="w-full h-full grid place-items-center">
-      <div className="flex md:w-[1024px] sm:w-full">
-        <CollectionFeed header="Feed" className="w-2/3 sm:w-full" />
+    <Layout title="Home" padded>
+      <div className="flex">
+        <CollectionFeed header="Feed" className="md:w-2/3 sm:w-full" />
 
-        <div className="ml-4 w-1/3 sm:w-full">
+        <div className="ml-4 md:w-1/3 sm:w-full">
           <div className="text-3xl mb-6">Trending</div>
           <div>Trending Component</div>
         </div>
