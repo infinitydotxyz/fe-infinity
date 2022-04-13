@@ -11,7 +11,7 @@ import { ellipsisAddress, getChainScannerBase } from 'src/utils';
 import { ActivityTab } from 'src/components/collection/activity-tab';
 import { Layout } from 'src/components/common/layout';
 
-import { CommunityRightPanel } from 'src/components/market/community-right-panel';
+import { CommunityRightPanel } from 'src/components/collection/community-right-panel';
 
 export function CollectionPage() {
   const {

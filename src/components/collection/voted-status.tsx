@@ -3,7 +3,7 @@ import { Button } from '../common';
 
 const VotedStatus: FunctionComponent = () => {
   const [isVoted, setVoted] = useState(true);
-  const [percentage, setPercentage] = useState(60);
+  const [percentage, setPercentage] = useState(100);
   const handleVote = () => {
     setVoted(!isVoted);
   };
