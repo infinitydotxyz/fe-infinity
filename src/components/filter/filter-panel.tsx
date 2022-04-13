@@ -42,7 +42,7 @@ export const FilterPanel = ({ collection, collectionAddress }: Props) => {
   const showSaleAndPriceFilters = false;
 
   return (
-    <div className="w-60">
+    <div className="w-60 mr-8">
       <div className="text-lg">Filter</div>
 
       {showSaleAndPriceFilters && (

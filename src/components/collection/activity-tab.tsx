@@ -97,7 +97,7 @@ export function ActivityTab({ dailyStats, weeklyStats }: ActivityTabProps) {
         </LineChart>
       </div>
 
-      <CollectionFeed header="Heading" forActivity={true} />
+      <CollectionFeed header="Activity" forActivity={true} />
     </>
   );
 }
