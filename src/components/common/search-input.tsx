@@ -3,7 +3,7 @@ import { BiSearchAlt2 } from 'react-icons/bi';
 
 export const SearchInput: React.FC = () => {
   const [isActive, setIsActive] = React.useState(false);
-  const inputRef: React.RefObject<HTMLInputElement> = React.useRef(null);
+  const inputRef = React.useRef<HTMLInputElement>(null);
   const activate = () => setIsActive(true);
 
   React.useEffect(() => {
