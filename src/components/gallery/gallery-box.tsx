@@ -118,7 +118,7 @@ export function GalleryBox({ collection }: GalleryProps) {
           )}
 
           {data.map((item, idx) => {
-            return <Card key={idx} data={item} className="ml-8 mt-8" onClick={() => console.log} isSellCard={false} />;
+            return <Card key={idx} data={item} className="mr-16 mt-8" onClick={() => console.log} isSellCard={false} />;
           })}
 
           {dataLoaded && (

@@ -79,7 +79,7 @@ const ExplorePage: FunctionComponent = () => {
   if (error) {
     console.error(error);
     return (
-      <Layout title={'Explore - Error'} padded>
+      <Layout title="Explore - Error" padded>
         <p>Error: Fetching Data Failed.</p>
       </Layout>
     );

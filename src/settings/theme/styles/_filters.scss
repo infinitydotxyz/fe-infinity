@@ -6,13 +6,13 @@
 */
 
 .glass {
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(10px);
   @apply ring-1 ring-inset ring-white ring-opacity-20
     bg-white bg-opacity-5;
 }
 
 .dark\:glass {
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(10px);
   @apply ring-1 ring-inset ring-black ring-opacity-20
     bg-black bg-opacity-5;
 }
