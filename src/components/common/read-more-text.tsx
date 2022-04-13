@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 const PUNCTUATION_LIST = ['.', ',', '!', '?', "'", '{', '}', '(', ')', '[', ']', '/'];
 
-const trimText = (text: string, min = 80, ideal = 100, max = 200) => {
+export const trimText = (text: string, min = 80, ideal = 100, max = 200) => {
   if (max < min || ideal > max || ideal < min) {
     throw new Error(
       'The minimum length must be less than the maximum, and the ideal must be between the minimum and maximum.'
