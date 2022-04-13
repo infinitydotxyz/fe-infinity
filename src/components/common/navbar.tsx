@@ -163,7 +163,7 @@ export function Navbar() {
           type: 'link',
           label: 'Analytics',
           props: {
-            href: '/analytics'
+            href: '/analytics/trending/1h'
           }
         },
         {
