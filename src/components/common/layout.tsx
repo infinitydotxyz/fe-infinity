@@ -1,13 +1,14 @@
 import React from 'react';
-import { Header } from 'src/components/analytics/header';
-import { Navigation } from 'src/components/common/navbar';
+import { Header } from 'src/components/common/header';
+import { Navbar } from 'src/components/common/navbar';
 
 interface Props {
   children?: React.ReactNode;
   title?: string;
+  className?: string;
 }
 
-export function Layout({ children, title }: Props): JSX.Element {
+export function Layout({ children, title, className }: Props): JSX.Element {
   const styles = {
     header: {
       title: title
@@ -22,10 +23,14 @@ export function Layout({ children, title }: Props): JSX.Element {
     content: {
       container: {
         className: `
-          transition w-full h-full
+          transition w-full h-content min-h-full
           row-span-24 col-span-24
-          bg-theme-light-50
-          grid place-items-center
+        `
+      },
+      element: {
+        className: `
+          w-full h-content min-h-full
+          ${className}
         `
       }
     }
@@ -34,8 +39,10 @@ export function Layout({ children, title }: Props): JSX.Element {
     <>
       <div {...styles?.container}>
         <Header {...styles?.header}>
-          <Navigation />
-          <div {...styles?.content?.container}>{children}</div>
+          <Navbar />
+          <div {...styles?.content?.container}>
+            <div {...styles?.content?.element}>{children}</div>
+          </div>
         </Header>
       </div>
     </>
