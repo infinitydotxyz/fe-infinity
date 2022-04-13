@@ -31,7 +31,7 @@ export const Analytics = () => {
   const query =
     page === 'trending'
       ? `/collections/rankings?orderBy=volume&orderDirection=desc&period=${interval}&date=${date}&limit=${limit}`
-      : `/user/${user?.address}/watchlist?orderBy=discordFollowers&orderDirection=desc&period=${interval}&date=${date}&limit=${limit}`;
+      : `/user/${user?.address}/watchlist?orderBy=volume&orderDirection=desc&period=${interval}&date=${date}&limit=${limit}`;
 
   const data = useFetch<{ data: CollectionStats[] }>(query);
 
@@ -258,11 +258,24 @@ export const Analytics = () => {
         },
         container: {
           className: `
-            w-full h-full overflow-hidden
-            bg-theme-light-50
             row-start-1 col-start-3 row-span-1 col-span-10
-            flex flex-row gap-2 py-4
+            flex flex-col place-content-center
           `
+        },
+        list: {
+          container: {
+            className: `
+              w-content h-content overflow-hidden
+              flex flex-row rounded-full
+            `
+          },
+          background: {
+            className: `
+            w-content h-content overflow-hidden
+            bg-theme-light-200
+            flex flex-row gap-1 p-1 rounded-full
+          `
+          }
         },
         tab: {
           className: ({ selected }: { selected: boolean }) => `
@@ -389,8 +402,10 @@ export const Analytics = () => {
           </div>
           <div {...styles?.options?.container}>
             <Tab.Group {...styles?.options?.timeframes?.group}>
-              <Tab.List {...styles?.options?.timeframes?.container}>
-                {/*
+              <div {...styles?.options?.timeframes?.container}>
+                <div {...styles?.options?.timeframes?.list?.container}>
+                  <Tab.List {...styles?.options?.timeframes?.list?.background}>
+                    {/*
                 ====================================
                   This is where we render the timeframe
                   tabs (clicking on them changes the route
@@ -398,12 +413,14 @@ export const Analytics = () => {
                   a request to fetch that data is made and cached).
                 ====================================
               */}
-                {content?.options?.timeframes?.map((tab, i) => (
-                  <React.Fragment key={i}>
-                    <Tab {...styles?.options?.timeframes?.tab}>{tab?.label}</Tab>
-                  </React.Fragment>
-                ))}
-              </Tab.List>
+                    {content?.options?.timeframes?.map((tab, i) => (
+                      <React.Fragment key={i}>
+                        <Tab {...styles?.options?.timeframes?.tab}>{tab?.label}</Tab>
+                      </React.Fragment>
+                    ))}
+                  </Tab.List>
+                </div>
+              </div>
             </Tab.Group>
             <Tab.Group {...styles?.options?.actions?.group}>
               <Tab.List {...styles?.options?.actions?.container}>

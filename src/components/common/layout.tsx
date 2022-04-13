@@ -6,9 +6,10 @@ interface Props {
   children?: React.ReactNode;
   title?: string;
   className?: string;
+  padded?: boolean;
 }
 
-export function Layout({ children, title, className }: Props): JSX.Element {
+export function Layout({ children, title, padded, className }: Props): JSX.Element {
   const styles = {
     header: {
       title: title
@@ -23,7 +24,7 @@ export function Layout({ children, title, className }: Props): JSX.Element {
     content: {
       container: {
         className: `
-          transition w-full h-content min-h-full
+          transition ${padded ? 'w-5/6' : 'w-full'} h-content min-h-full
           row-span-24 col-span-24
         `
       },

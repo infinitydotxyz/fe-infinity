@@ -35,11 +35,11 @@ const SandboxPage: FC = () => {
   tableItems.push({ title: 'Budget', value: <div className="font-bold">3 Eth</div> });
 
   return (
-    <Layout title="SandBox" className="grid place-items-center py-8">
+    <Layout title="SandBox" padded className="py-8">
       <div>
         <h1 className="text-start font-body font-bold text-3xl tracking-tight">Sandbox</h1>
       </div>
-      <div className="w-3/5">
+      <div className="w-full">
         <SBHeader># Text</SBHeader>
         <div>
           <div className="text-primary">text-primary</div>

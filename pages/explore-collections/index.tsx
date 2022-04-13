@@ -79,14 +79,14 @@ const ExplorePage: FunctionComponent = () => {
   if (error) {
     console.error(error);
     return (
-      <Layout title={'Explore - Error'}>
+      <Layout title={'Explore - Error'} padded>
         <p>Error: Fetching Data Failed.</p>
       </Layout>
     );
   }
 
   return (
-    <Layout title="Explore">
+    <Layout title="Explore" padded>
       {/* <SearchBox searchKeyWord={query} onChange={handleChange} /> */}
       <h1 className="text-2xl font-body font-bold mb-3">All collections</h1>
       <input
