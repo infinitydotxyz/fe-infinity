@@ -67,6 +67,7 @@ const VotedStatus: FunctionComponent<VotedStatusProps> = ({ chainId, collectionA
     if (result) {
       setVotesFor(result.votesFor);
       setVotesAgainst(result.votesAgainst);
+      setUserVote(VOTE_ACTION.NO_VOTES);
     }
   }, [result]);
 
@@ -77,23 +78,23 @@ const VotedStatus: FunctionComponent<VotedStatusProps> = ({ chainId, collectionA
 
   return (
     <>
-      <div className="text-4xl mb-6 lg:mb-10">You Voted</div>
-      <div className="grid grid-cols-2 gap-10 mb-6">
+      <div className="text-3xl mb-8">You Voted</div>
+      <div className="grid grid-cols-2 gap-10 mb-4">
         <Button
           variant={userVote === VOTE_ACTION.VOTES_FOR ? 'primary' : 'outline'}
           size="plain"
-          className="p-3 text-base border rounded-3xl w-full"
+          className="p-2.5 text-base border rounded-3xl w-full"
           onClick={handleVoteFor}
         >
-          Good {userVote === VOTE_ACTION.VOTES_FOR && '✓'}
+          Good <span className="w-1 inline-block">{userVote === VOTE_ACTION.VOTES_FOR && '✓'}</span>
         </Button>
         <Button
           variant={userVote === VOTE_ACTION.VOTES_AGAINST ? 'primary' : 'outline'}
           size="plain"
-          className="p-3 text-base border rounded-3xl w-full"
+          className="p-2.5 text-base border rounded-3xl w-full"
           onClick={handleVoteAgainst}
         >
-          Bad {userVote === VOTE_ACTION.VOTES_AGAINST && '✓'}
+          Bad <span className="w-1 inline-block">{userVote === VOTE_ACTION.VOTES_AGAINST && '✓'}</span>
         </Button>
       </div>
       <div className="flex">

@@ -23,7 +23,7 @@ const TwitterSupporter: FunctionComponent = () => {
 const TwitterSupporterList: FunctionComponent = () => {
   return (
     <>
-      <div className="text-4xl mb-6 lg:mb-10 mt-24">Top Twitter supporters</div>
+      <div className="text-3xl mb-6 mt-16">Top Twitter supporters</div>
       <TwitterSupporter />
       <TwitterSupporter />
       <TwitterSupporter />

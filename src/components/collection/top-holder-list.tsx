@@ -25,7 +25,7 @@ const TopHolder = ({ index }: { index: number }) => {
 export const TopHolderList: FunctionComponent = () => {
   return (
     <>
-      <div className="text-4xl mb-6 lg:mb-10 mt-24">Top Holders</div>
+      <div className="text-3xl mb-6 mt-16">Top Holders</div>
       <TopHolder index={1} />
       <TopHolder index={2} />
       <TopHolder index={3} />
