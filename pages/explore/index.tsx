@@ -86,7 +86,7 @@ const ExplorePage: FunctionComponent = () => {
   }
 
   return (
-    <Layout title="Explore" className="grid place-items-center">
+    <Layout title="Explore">
       {/* <SearchBox searchKeyWord={query} onChange={handleChange} /> */}
       <h1 className="text-2xl font-body font-bold mb-3">All collections</h1>
       <input
