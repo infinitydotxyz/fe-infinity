@@ -7,6 +7,7 @@ export function Toaster() {
   return <RHTRoaster position="top-center" />;
 }
 
+// styles: https://tailwindui.com/components/application-ui/overlays/notifications
 const ToasterTemplate = ({
   t,
   icon,
