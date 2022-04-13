@@ -43,7 +43,7 @@ export function ActivityTab({ dailyStats, weeklyStats }: ActivityTabProps) {
     <>
       <div className="text-3xl mb-6">Activity trend</div>
 
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center w-1/2">
         <table className="mt-8 text-sm w-1/2">
           <thead>
             <tr className="text-gray-400">
