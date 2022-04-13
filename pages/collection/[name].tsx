@@ -39,7 +39,7 @@ export function CollectionPage() {
 
   return (
     <Layout title={collection?.metadata?.name ?? ''} className="w-full h-full grid place-items-center">
-      <div className="flex flex-col max-w-screen-lg mt-4">
+      <div className="flex flex-col px-8 mt-4">
         <span>
           <img src={collection?.metadata.profileImage} className="w-20 h-20 mb-4" />
           {collection?.metadata?.name}{' '}
