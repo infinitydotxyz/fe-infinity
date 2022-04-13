@@ -1,9 +1,9 @@
-import toast, { Toaster } from 'react-hot-toast';
 import { BaseCollection, CollectionStats } from '@infinityxyz/lib/types/core';
 import { FaCaretDown, FaCaretUp, FaDiscord, FaTwitter } from 'react-icons/fa';
 import { apiPost } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { Chip } from '../common';
+import { Toaster, toastError, toastSuccess } from '../common/toaster';
 interface Props {
   collection: BaseCollection | null;
   weeklyStatsData: CollectionStats[];
@@ -27,9 +27,9 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
             }
           });
           if (error) {
-            toast.error(error?.errorResponse?.message);
+            toastError(error?.errorResponse?.message);
           } else {
-            toast.success('Followed ' + collection?.metadata?.name);
+            toastSuccess('Followed ' + collection?.metadata?.name);
           }
         }}
       />
