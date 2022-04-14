@@ -15,7 +15,7 @@ interface Props {
 }
 
 export function CommentPanel({ isOpen, onClose, event, contentOnly }: Props) {
-  const { user } = useAppContext();
+  const { user, checkSignedIn } = useAppContext();
   const [currentPage, setCurrentPage] = useState(0);
   const [text, setText] = useState('');
   const [data, setData] = useState<Comment[]>([]);
@@ -32,6 +32,17 @@ export function CommentPanel({ isOpen, onClose, event, contentOnly }: Props) {
     fetchData();
   }, []);
 
+  const onClickReply = async () => {
+    if (!checkSignedIn()) {
+      return;
+    }
+    await addUserComments(event.id || '', user?.address ?? '', text);
+    setData([]);
+    setCurrentPage(0);
+    fetchData();
+    setText('');
+  };
+
   const replyBox = (
     <div className="flex ">
       <textarea
@@ -40,17 +51,7 @@ export function CommentPanel({ isOpen, onClose, event, contentOnly }: Props) {
         onChange={(ev) => setText(ev.target.value)}
         className="mb-6 w-full text-xl  border-none"
       />
-      <Button
-        variant="outline"
-        onClick={async () => {
-          await addUserComments(event.id || '', user?.address ?? '', text);
-          setData([]);
-          setCurrentPage(0);
-          fetchData();
-          setText('');
-        }}
-        className="h-10 ml-2 font-heading text-secondary"
-      >
+      <Button variant="outline" onClick={onClickReply} className="h-10 ml-2 font-heading text-secondary">
         Reply
       </Button>
     </div>
