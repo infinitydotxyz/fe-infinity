@@ -5,6 +5,20 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module'
   },
+  overrides: [
+    // overrides is needed for switch-exhaustiveness-check
+    // seems hacky, but it seems to work
+    // https://stackoverflow.com/questions/58510287/parseroptions-project-has-been-set-for-typescript-eslint-parser
+    {
+      files: ['*.ts', '*.tsx'],
+      parserOptions: {
+        project: ['./tsconfig.json']
+      },
+      rules: {
+        '@typescript-eslint/switch-exhaustiveness-check': 'warn'
+      }
+    }
+  ],
   plugins: ['node', 'react', 'prettier', '@typescript-eslint'],
   extends: [
     'eslint:recommended',
