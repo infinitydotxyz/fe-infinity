@@ -172,13 +172,7 @@ export default function MarketPage() {
           </>
         )}
 
-        {selected === 'Orderbook' && (
-          <>
-            <div>Orderbook goes here</div>
-
-            <OrderbookList />
-          </>
-        )}
+        {selected === 'Orderbook' && <OrderbookList />}
       </>
     );
   }

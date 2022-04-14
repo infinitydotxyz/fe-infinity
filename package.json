@@ -26,6 +26,7 @@
     "firebase": "^9.6.10",
     "lodash": "^4.17.21",
     "logrocket": "^2.2.1",
+    "mitt": "^3.0.0",
     "moment": "^2.29.2",
     "next": "12.1.4",
     "nprogress": "^0.2.0",

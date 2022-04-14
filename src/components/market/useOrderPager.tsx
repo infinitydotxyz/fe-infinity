@@ -8,44 +8,47 @@ import {
 import { useEffect, useState } from 'react';
 import { apiPost } from 'src/utils';
 
-export function useOrderPager(buyOrder: boolean, limit: number) {
-  const [marketListing, setMarketListing] = useState<MarketListingsResponse>();
+export function useOrderPager(limit: number) {
+  const [buyMarketListing, setBuyMarketListing] = useState<MarketListingsResponse>();
+  const [sellMarketListing, setSellMarketListing] = useState<MarketListingsResponse>();
+  const [orders, setOrders] = useState<OBOrder[]>([]);
   const [buyOrders, setBuyOrders] = useState<OBOrder[]>([]);
   const [sellOrders, setSellOrders] = useState<OBOrder[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(false);
+  const [hasMoreBuy, setHasMoreBuy] = useState(true);
+  const [hasMoreSell, setHasMoreSell] = useState(true);
 
   useEffect(() => {
-    let isActive = true;
+    // let isActive = true;
 
-    setIsLoading(true);
-    fetchData(false)
-      .then((listing) => {
-        if (isActive) {
-          handleResult(listing);
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    fetchData(false);
 
     return () => {
-      isActive = false;
+      // isActive = false;
     };
   }, []);
 
-  const handleResult = (listing: MarketListingsResponse) => {
-    if (buyOrder) {
-      setBuyOrders([...buyOrders, ...listing.buyOrders.orders]);
-      setHasMore(listing.buyOrders.orders.length > 0);
-    } else {
-      setSellOrders([...sellOrders, ...listing.sellOrders.orders]);
-      setHasMore(listing.sellOrders.orders.length > 0);
+  const handleResult = (buyListing?: MarketListingsResponse, sellListing?: MarketListingsResponse) => {
+    let buys = buyOrders;
+    let sells = sellOrders;
+
+    if (buyListing) {
+      buys = [...buys, ...buyListing.buyOrders.orders];
+
+      setHasMoreBuy(buyListing.buyOrders.orders.length > 0);
+      setBuyMarketListing(buyListing);
     }
-    setMarketListing(listing);
+
+    if (sellListing) {
+      sells = [...sellOrders, ...sellListing.sellOrders.orders];
+
+      setHasMoreSell(sellListing.sellOrders.orders.length > 0);
+      setSellMarketListing(sellListing);
+    }
+
+    setOrders([...buys, ...sells]);
+    setBuyOrders(buys);
+    setSellOrders(sells);
   };
 
   const emptyResponse = (): MarketListingsResponse => {
@@ -58,9 +61,9 @@ export function useOrderPager(buyOrder: boolean, limit: number) {
     };
   };
 
-  const fetchMarketListings = async (cursor: string): Promise<MarketListingsResponse> => {
+  const fetchMarketListings = async (buyOrder: boolean, cursor: string): Promise<MarketListingsResponse> => {
     const body: MarketListingsBody = {
-      orderType: MarketOrder.BuyOrders,
+      orderType: buyOrder ? MarketOrder.BuyOrders : MarketOrder.SellOrders,
       action: MarketAction.List,
       limit,
       cursor
@@ -76,44 +79,51 @@ export function useOrderPager(buyOrder: boolean, limit: number) {
     return result as MarketListingsResponse;
   };
 
+  const hasMore = () => {
+    return hasMoreBuy || hasMoreSell;
+  };
+
   const fetchMore = async () => {
-    if (!hasMore) {
+    if (!hasMore()) {
       return;
     }
 
-    setIsLoading(true);
-
-    return fetchData(true)
-      .then((listing) => {
-        handleResult(listing);
-      })
-      .catch((err) => {
-        console.error(err);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    return fetchData(true);
   };
 
-  const fetchData = async (fetchMore: boolean): Promise<MarketListingsResponse> => {
-    let cursor = '';
+  const fetchData = async (fetchMore: boolean) => {
+    let buyCursor = '';
+    let sellCursor = '';
 
     if (fetchMore) {
-      cursor = buyOrder ? marketListing?.buyOrders.cursor ?? '' : marketListing?.sellOrders.cursor ?? '';
+      buyCursor = buyMarketListing?.buyOrders.cursor ?? '';
+      sellCursor = sellMarketListing?.sellOrders.cursor ?? '';
     }
 
     try {
-      const result = await fetchMarketListings(cursor);
+      setIsLoading(true);
 
-      return result;
+      let buyListing;
+      let sellListing;
+
+      if (hasMoreBuy) {
+        buyListing = await fetchMarketListings(true, buyCursor);
+      }
+
+      if (hasMoreSell) {
+        sellListing = await fetchMarketListings(false, sellCursor);
+      }
+
+      handleResult(buyListing, sellListing);
     } catch (err) {
       console.error(err);
+    } finally {
+      setIsLoading(false);
     }
-
-    return emptyResponse();
   };
 
   return {
+    orders,
     buyOrders,
     sellOrders,
     isLoading,

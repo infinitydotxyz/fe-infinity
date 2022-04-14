@@ -1,7 +1,9 @@
 import { OBOrder } from '@infinityxyz/lib/types/core';
+import { formatEther } from 'ethers/lib/utils';
 import { EthPrice } from 'src/components/common/eth-price';
-import { numStr } from 'src/utils';
-import { DataColumn, DataColumnType, defaultDataColumns } from './data-columns';
+import { numStr, shortDate } from 'src/utils';
+import { bigNumToDate } from 'src/utils/marketUtils';
+import { DataColumn, defaultDataColumns } from './data-columns';
 import { OrderbookItem } from './orderbook_item';
 
 type Props3 = {
@@ -10,49 +12,68 @@ type Props3 = {
 
 export const OrderbookRow = ({ order }: Props3): JSX.Element => {
   const valueDiv = (dataColumn: DataColumn) => {
-    const value = order.id;
+    let value = order.id;
+
+    switch (dataColumn.field) {
+      case 'name':
+        break;
+      case 'type':
+        value = order.isSellOrder ? 'Sell' : 'Buy';
+        break;
+      case 'minSalePrice':
+        value = formatEther(order.startPrice);
+        break;
+      case 'numNFTs':
+        value = numStr(order.numItems.toString());
+        break;
+      case 'expirationDate':
+        value = shortDate(bigNumToDate(order.endTime));
+        break;
+    }
 
     switch (dataColumn.type) {
-      case DataColumnType.Text:
+      case 'Text':
         return (
-          <div className="flex flex-row items-center">
-            {value ? <div className="truncate font-bold">{numStr(value)}</div> : <div>---</div>}
+          <div className="flex truncate flex-row items-center">
+            {value ? <div className="truncate font-bold">{value}</div> : <div>---</div>}
           </div>
         );
         break;
-      case DataColumnType.Currency:
+      case 'Currency':
         return (
           <div className="flex flex-row items-center">
-            <EthPrice label={numStr(value)} labelClassName="font-bold" />
+            <EthPrice label={value} labelClassName="font-bold" />
           </div>
         );
-
-      default:
+      case 'Name':
         return <></>;
     }
   };
 
-  // build dynamic grid based on columns shown
-  // 60px for image, next is name
-  let gridTemplate = '50px minmax(120px, 220px)';
+  let gridTemplate = '';
 
   defaultDataColumns.forEach((data) => {
-    gridTemplate += ` minmax(${data.minWidth}px, ${data.maxWidth}px)`;
+    gridTemplate += ` ${data.width}`;
   });
 
   return (
-    <div className={'rounded-3xl flex items-center mb-3 p-8 w-full bg-slate-100'}>
-      <div className={'grid items-center relative w-full gap-5'} style={{ gridTemplateColumns: gridTemplate }}>
-        <OrderbookItem order={order} image={true} />
-        <OrderbookItem order={order} nameItem={true} />
-
+    <div className={'rounded-3xl mb-3 p-8 w-full bg-slate-100'}>
+      <div className={'grid items-start relative w-full gap-5'} style={{ gridTemplateColumns: gridTemplate }}>
         {defaultDataColumns.map((data) => {
           const content = valueDiv(data);
 
           // don't show title on progress bars
           const title = data.name;
 
-          return <OrderbookItem key={Math.random()} title={title} order={order} content={content} />;
+          return (
+            <OrderbookItem
+              nameItem={data.type === 'Name'}
+              key={`${order.id} ${data.field}`}
+              title={title}
+              order={order}
+              content={content}
+            />
+          );
         })}
       </div>
     </div>
