@@ -1,15 +1,20 @@
 interface Props {
   label: string;
   className?: string;
+  ethClassName?: string;
+  labelClassName?: string;
 }
 
 export const EthSymbol = 'Ξ';
 
-export function EthPrice({ label, className = 'pr-2 font-bold' }: Props): JSX.Element {
+export function EthPrice({ label, className = '', ethClassName = '', labelClassName = '' }: Props): JSX.Element {
   return (
-    <div className="flex items-center">
-      <div className={className}>{EthSymbol}</div>
-      <div>{label}</div>
+    <div className={className}>
+      <div className="flex items-center">
+        <div className={`pr-2 font-extrabold ${ethClassName}`}>{EthSymbol}</div>
+
+        <div className={labelClassName}>{label}</div>
+      </div>
     </div>
   );
 }
