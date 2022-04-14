@@ -4,9 +4,15 @@ import { ProviderEvents, WalletType } from 'src/utils/providers/AbstractProvider
 import { UserRejectException } from 'src/utils/providers/UserRejectException';
 import { ProviderManager } from 'src/utils/providers/ProviderManager';
 import { Toaster, toastWarning } from 'src/components/common/toaster';
+import { apiGet } from '../apiUtils';
 
 export type User = {
   address: string;
+};
+
+export type FollowingCollection = {
+  collectionAddress: string;
+  collectionChainid: string;
 };
 
 export type AppContextType = {
@@ -21,6 +27,7 @@ export type AppContextType = {
   setHeaderPosition: (bottom: number) => void;
   connectWallet: (walletType: WalletType) => Promise<void>;
   providerManager?: ProviderManager;
+  userFollowingCollections: FollowingCollection[];
 };
 
 const AppContext = React.createContext<AppContextType | null>(null);
@@ -28,6 +35,7 @@ const AppContext = React.createContext<AppContextType | null>(null);
 export function AppContextProvider(props: React.PropsWithChildren<unknown>) {
   const [user, setUser] = React.useState<User | null>(null);
   const [userReady, setUserReady] = React.useState(false);
+  const [followingCollections, setFollowingCollections] = React.useState([]);
   const [chainId, setChainId] = React.useState('1');
   const [headerPosition, setHeaderPosition] = React.useState(0);
   const showAppError = (message: React.ReactNode) => {
@@ -37,7 +45,17 @@ export function AppContextProvider(props: React.PropsWithChildren<unknown>) {
 
   const showAppMessage = (message: React.ReactNode) => message;
 
+  const fetchFollowingCollections = async () => {
+    if (user?.address) {
+      const { result, error } = await apiGet(`/user/${chainId}:${user?.address}/followingCollections`);
+      if (!error) {
+        setFollowingCollections(result.data);
+      }
+    }
+  };
+
   React.useEffect(() => {
+    // check & set logged in user:
     let isActive = true;
     ProviderManager.getInstance().then((providerManagerInstance) => {
       if (isActive) {
@@ -62,6 +80,11 @@ export function AppContextProvider(props: React.PropsWithChildren<unknown>) {
       isActive = false;
     };
   }, []);
+
+  React.useEffect(() => {
+    // get & keep user's following collections:
+    fetchFollowingCollections();
+  }, [userReady]);
 
   const connectWallet = async (walletType: WalletType) => {
     if (providerManager?.connectWallet) {
@@ -164,7 +187,8 @@ export function AppContextProvider(props: React.PropsWithChildren<unknown>) {
     headerPosition,
     setHeaderPosition,
     connectWallet,
-    providerManager
+    providerManager,
+    userFollowingCollections: followingCollections
   };
 
   return (

@@ -1,8 +1,9 @@
 import { BaseCollection, CollectionStats } from '@infinityxyz/lib/types/core';
+import { useEffect, useState } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { FaCaretDown, FaCaretUp, FaDiscord, FaInstagram, FaTwitter } from 'react-icons/fa';
-import { apiPost } from 'src/utils';
-import { useAppContext } from 'src/utils/context/AppContext';
+import { apiDelete, apiPost } from 'src/utils';
+import { FollowingCollection, useAppContext } from 'src/utils/context/AppContext';
 import { Chip } from '../common';
 import { Toaster, toastError, toastSuccess } from '../common/toaster';
 interface Props {
@@ -11,22 +12,46 @@ interface Props {
 }
 
 export function StatsChips({ collection, weeklyStatsData }: Props) {
-  const { user, checkSignedIn } = useAppContext();
+  const { user, checkSignedIn, userFollowingCollections } = useAppContext();
+  const [isFollowing, setIsFollowing] = useState(false);
+
+  useEffect(() => {
+    const _isFollowing = !!userFollowingCollections.find(
+      (item: FollowingCollection) => item.collectionAddress === collection?.address
+    );
+    setIsFollowing(_isFollowing);
+  }, [userFollowingCollections]);
 
   const onClickFollow = async () => {
     if (!checkSignedIn()) {
       return;
     }
-    const { error } = await apiPost(`/user/1:${user?.address}/followingCollections`, {
-      data: {
-        collectionChainId: collection?.chainId,
-        collectionAddress: collection?.address
+    if (isFollowing) {
+      const { error } = await apiDelete(`/user/1:${user?.address}/followingCollections`, {
+        data: {
+          collectionChainId: collection?.chainId,
+          collectionAddress: collection?.address
+        }
+      });
+      if (error) {
+        toastError(error?.errorResponse?.message);
+      } else {
+        toastSuccess('Unfollowed ' + collection?.metadata?.name);
+        setIsFollowing(false);
       }
-    });
-    if (error) {
-      toastError(error?.errorResponse?.message);
     } else {
-      toastSuccess('Followed ' + collection?.metadata?.name);
+      const { error } = await apiPost(`/user/1:${user?.address}/followingCollections`, {
+        data: {
+          collectionChainId: collection?.chainId,
+          collectionAddress: collection?.address
+        }
+      });
+      if (error) {
+        toastError(error?.errorResponse?.message);
+      } else {
+        toastSuccess('Followed ' + collection?.metadata?.name);
+        setIsFollowing(true);
+      }
     }
   };
 
@@ -39,10 +64,17 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
       <Chip
         content={
           <span className="flex items-center">
-            <AiOutlinePlus className="mr-1" /> Follow
+            {isFollowing ? (
+              'Followed'
+            ) : (
+              <>
+                <AiOutlinePlus className="mr-1" /> Follow
+              </>
+            )}
           </span>
         }
         onClick={onClickFollow}
+        active={isFollowing}
       />
       <Chip content="Edit" />
 
