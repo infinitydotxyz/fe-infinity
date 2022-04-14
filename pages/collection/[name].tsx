@@ -12,6 +12,8 @@ import { ActivityTab } from 'src/components/collection/activity-tab';
 import { Layout } from 'src/components/common/layout';
 import { StatsChips } from 'src/components/collection/stats-chips';
 
+import { CommunityRightPanel } from 'src/components/collection/community-right-panel';
+
 export function CollectionPage() {
   const {
     query: { name }
@@ -108,14 +110,12 @@ export function CollectionPage() {
             {currentTab === 0 && <>{collection && <GalleryBox collection={collection} />}</>}
             {currentTab === 1 && <ActivityTab dailyStats={dailyStats} weeklyStats={weeklyStats} />}
             {currentTab === 2 && (
-              <div className="flex">
-                <div className="w-2/3">
+              <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-16">
+                <div className="lg:col-span-1 xl:col-span-2">
+                  {/* <div className="text-3xl mb-6">Feed</div> */}
                   <CollectionFeed header="Feed" collectionAddress={collection?.address ?? ''} />
                 </div>
-                <div className="w-1/3 ml-4">
-                  <div className="text-3xl mb-6">Top Holders</div>
-                  {/* <div>Trending component</div> */}
-                </div>
+                <div className="col-span-1">{collection && <CommunityRightPanel collection={collection} />}</div>
               </div>
             )}
           </div>
