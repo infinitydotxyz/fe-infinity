@@ -68,7 +68,7 @@ export const apiGet = async (path: string, params?: ApiParams): Promise<ApiRespo
   const queryStr = buildQueryString(params?.query);
 
   try {
-    const userEndpointRegex = /\/u\//;
+    const userEndpointRegex = /\/(u|user)\//;
     const publicUserEndpoint = /\/p\/u\//;
     const requiresAuth = userEndpointRegex.test(path) && !publicUserEndpoint.test(path);
 
@@ -131,7 +131,9 @@ export const apiDelete = async (path: string, params?: ApiParams): Promise<ApiRe
     const { data, status } = await axiosApi({
       url: `${API_BASE}${path}${queryStr}`,
       method: 'DELETE',
-      headers
+      headers,
+      data: params?.data,
+      ...params?.options
     });
     return { result: data, status };
   } catch (err: Error | unknown) {
