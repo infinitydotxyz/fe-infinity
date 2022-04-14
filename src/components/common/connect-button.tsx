@@ -134,7 +134,8 @@ export const ConnectButton: React.FC = () => {
       {
         type: 'button',
         label: <>Copy Address {copied ? <BiCheck /> : <BiCopyAlt />}</>,
-        props: ({ open, close }: { open: boolean; close(): void }) => ({
+        props: () => ({
+          href: '',
           onClick: () => {
             address ? copyToClipboard(address) : null;
           }
@@ -143,7 +144,7 @@ export const ConnectButton: React.FC = () => {
       {
         type: 'external',
         label: 'Etherscan',
-        props: ({ open, close }: { open: boolean; close(): void }) => ({
+        props: () => ({
           href: `https://etherscan.io/address/${address}`
         })
       },
@@ -151,6 +152,7 @@ export const ConnectButton: React.FC = () => {
         type: 'button',
         label: 'Sign Out',
         props: ({ open, close }: { open: boolean; close(): void }) => ({
+          href: '',
           onClick: () => {
             signOut();
             open ? close() : null;

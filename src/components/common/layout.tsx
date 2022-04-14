@@ -24,7 +24,9 @@ export function Layout({ children, title, padded, className }: Props): JSX.Eleme
     content: {
       container: {
         className: `
-          transition ${padded ? 'desktop:w-5/6 desktop-sm:w-[95%] tabloid:w-[95%] mobile:w-[98%]' : 'w-full'} h-content min-h-full
+          transition ${
+            padded ? 'desktop:w-5/6 desktop-sm:w-[95%] tabloid:w-[95%] mobile:w-[98%]' : 'w-full'
+          } h-content min-h-full
           row-span-24 col-span-24
         `
       },
