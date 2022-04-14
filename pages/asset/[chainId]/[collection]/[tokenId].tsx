@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { Button, ShortAddress, ReadMoreText } from 'src/components/common';
-import { useFetch } from 'src/utils';
+import { BLANK_IMAGE_URL, useFetch } from 'src/utils';
 import { Token, Collection } from '@infinityxyz/lib/types/core';
 import { Layout } from 'src/components/common/layout';
 import {
@@ -18,8 +18,6 @@ import {
 
 import BlueCheckSvg from 'src/images/blue-check.svg';
 // import {HiOutlineSwitchHorizontal} from 'react-icons';
-
-const BLANK_IMAGE_URL = 'https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png';
 
 const useFetchAssertInfo = (chainId: string, collection: string, tokenId: string) => {
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
