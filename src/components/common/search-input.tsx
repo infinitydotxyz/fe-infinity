@@ -4,6 +4,7 @@ import { useFetch } from 'src/utils';
 import { BaseCollection } from '@infinityxyz/lib/types/core';
 import { useRouter } from 'next/router';
 import { Combobox } from '@headlessui/react';
+import Image from 'next/image';
 
 type CollectionItem = BaseCollection & {
   name: string;
@@ -49,10 +50,12 @@ export const SearchInput: React.FC = () => {
   const styles = {
     container: {
       className: `
-        w-full h-full px-4 rounded-full
+        w-full h-full px-4 rounded-full max-h-full
         flex place-items-center gap-2
         ${
-          isActive ? 'flex-row ring-1 ring-inset ring-theme-light-700' : 'justify-end ring-inset ring-theme-transparent'
+          isActive
+            ? 'flex-row ring-1 ring-inset ring-theme-light-700'
+            : 'flex-row-reverse ring-1 ring-inset ring-transparent '
         }
       `
     },
@@ -65,7 +68,7 @@ export const SearchInput: React.FC = () => {
       },
       element: {
         className: `
-          flex-[1] w-5 h-5
+          flex-[1] w-5 h-5 max-h-full
           ${isActive ? 'justify-self-start' : 'justify-self-end'}
         `
       }
@@ -73,13 +76,13 @@ export const SearchInput: React.FC = () => {
     input: {
       container: {
         className: `
-          w-full h-full flex-[10] outline-none
+          w-full h-full max-h-full flex-[10] outline-none
           ${isActive ? 'visible' : 'hidden'}
         `
       },
       element: {
         className: `
-          w-full h-full bg-transparent
+          w-full h-full bg-transparent max-h-full p-0
           hover:outline-none hover:ring-transparent hover:border-transparent hover:shadow-none
           focus:outline-none focus:ring-transparent focus:border-transparent focus:shadow-none
           focus-visible:outline-none focus:ring-transparent focus:border-transparent focus:shadow-none
@@ -98,9 +101,9 @@ export const SearchInput: React.FC = () => {
       options: {
         container: {
           className: `
-            absolute z-60
-            w-content h-content
-            px-2 py-2 ring-1 ring-inset ring-theme-light-200 rounded-xl
+            absolute z-60 -mx-8
+            w-content h-content max-h-content
+            py-2 ring-1 ring-inset ring-theme-light-200 rounded-xl
             flex flex-col bg-theme-light-50
           `
         },
@@ -130,6 +133,9 @@ export const SearchInput: React.FC = () => {
         element: {
           className: ``
         }
+      },
+      blueCheck: {
+        className: `grid`
       }
     }
   };
@@ -155,6 +161,13 @@ export const SearchInput: React.FC = () => {
                   <img src={collection?.profileImage} alt={collection?.name} {...styles?.collection?.image?.element} />
                 </div>
                 <div {...styles?.collection?.name}>{collection?.name}</div>
+                <div {...styles?.collection?.blueCheck}>
+                  {collection?.hasBlueCheck ? (
+                    <Image src="/images/blue-check.png" width={18} height={18} alt="Blue check icon" />
+                  ) : (
+                    <></>
+                  )}
+                </div>
               </Combobox.Option>
             ))}
           </Combobox.Options>
