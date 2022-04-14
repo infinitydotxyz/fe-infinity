@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios';
 import useSWR, { SWRConfiguration } from 'swr';
 import { stringify } from 'query-string';
 import { API_BASE } from './constants';
@@ -6,7 +6,7 @@ import { ProviderManager } from './providers/ProviderManager';
 import HttpStatusCode from './httpStatusCode';
 
 const errorToast = (message: string) => {
-  console.log(message);
+  console.error(message);
 };
 
 export const isStatusOK = (response: ApiResponse) => {
@@ -31,8 +31,15 @@ export async function dummyFetch(mockData = []) {
 
 // eslint-disable-next-line
 const catchError = (err: any) => {
+  const errorObj = err as Error | AxiosError;
+  const errorData = { message: typeof err === 'object' ? err?.message : err, errorResponse: null };
+
+  if (axios.isAxiosError(errorObj)) {
+    // some APIs return response when an error occurred (status !== 200)
+    errorData.errorResponse = (errorObj as AxiosError).response?.data ?? null;
+  }
   console.error('catchError', err, err?.response);
-  return { error: { message: typeof err === 'object' ? err?.message : err }, status: err?.response?.status };
+  return { error: errorData, status: err?.response?.status };
 };
 
 export const getAuthHeaders = async (attemptLogin = true) => {

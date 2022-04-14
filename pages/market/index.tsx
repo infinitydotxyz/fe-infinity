@@ -5,6 +5,7 @@ import { CardData } from '@infinityxyz/lib/types/core';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { FaShoppingBag } from 'react-icons/fa';
 import { RiLayoutGridFill } from 'react-icons/ri';
+import { OrderbookList } from 'src/components/market/orderbook-list';
 
 // get image ids here https://picsum.photos/images
 const testCardData: CardData[] = [
@@ -150,7 +151,9 @@ export default function MarketPage() {
         <div className="flex space-x-2 items-center mb-2">
           <ToggleTab options={options} selected={selected} onChange={onChange} />
           <Spacer />
-          <Button variant="outline">Filter</Button>
+          <Button variant="outline" className="font-heading">
+            Filter
+          </Button>
           <Dropdown
             label="Sort"
             items={[
@@ -161,9 +164,15 @@ export default function MarketPage() {
           <RiLayoutGridFill />
         </div>
 
-        <div className="flex flex-row flex-wrap space-x-4 mb-6">{buyCards}</div>
+        {selected === 'Assets' && (
+          <>
+            <div className="flex flex-row flex-wrap space-x-4 mb-6">{buyCards}</div>
 
-        <div className="flex flex-row flex-wrap space-x-4 mb-6">{sellCards}</div>
+            <div className="flex flex-row flex-wrap space-x-4 mb-6">{sellCards}</div>
+          </>
+        )}
+
+        {selected === 'Orderbook' && <OrderbookList />}
       </>
     );
   }
@@ -172,16 +181,15 @@ export default function MarketPage() {
     <PageBox
       title="Market"
       rightSide={
-        !isOrderStateEmpty() ? (
-          <Button
-            variant="outline"
-            onClick={async () => {
-              setOrderDrawerOpen(!orderDrawerOpen);
-            }}
-          >
-            <FaShoppingBag />
-          </Button>
-        ) : undefined
+        <Button
+          disabled={isOrderStateEmpty()}
+          variant="outline"
+          onClick={async () => {
+            setOrderDrawerOpen(!orderDrawerOpen);
+          }}
+        >
+          <FaShoppingBag />
+        </Button>
       }
     >
       <OrderDrawer open={orderDrawerOpen} onClose={() => setOrderDrawerOpen(false)} />

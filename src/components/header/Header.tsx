@@ -44,7 +44,7 @@ export const Header = (): JSX.Element => {
 
   return (
     <header className={styles.header}>
-      <div className={`${styles.pageHeader} max-w-screen-lg`}>
+      <div className={`${styles.pageHeader} w-full max-w-screen-2xl px-6 lg:px-8 xl:px-10`}>
         <div className={styles.showLargeLogo}>
           <Link href="/" passHref>
             <img className="can-click" alt="logo" src={logo.src} width={logo.width} />

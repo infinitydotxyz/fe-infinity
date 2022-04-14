@@ -1,4 +1,5 @@
 import { CollectionStats } from '@infinityxyz/lib/types/core';
+import { useEffect, useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 import { CollectionFeed } from '../feed/collection-feed';
 
@@ -11,32 +12,68 @@ interface ActivityTabProps {
   weeklyStats?: StatsData | null;
 }
 
+type ChartData = {
+  name: string;
+  average: number;
+};
+
 export function ActivityTab({ dailyStats, weeklyStats }: ActivityTabProps) {
-  const data = dailyStats?.data.map((item) => {
-    return {
-      name: new Date(item.timestamp).toLocaleDateString(),
-      average: item.avgPrice
-    };
-  });
+  const [type, setType] = useState<'DAY' | 'WEEK'>('DAY');
+  const [data, setData] = useState<ChartData[] | []>([]);
+
+  useEffect(() => {
+    const dt = (type === 'DAY' ? dailyStats : weeklyStats)?.data.map((item) => {
+      return {
+        name: new Date(item.timestamp).toLocaleDateString(),
+        average: item.avgPrice
+      };
+    });
+    setData(dt ?? []);
+  }, [type]);
+
+  const onClickType = () => {
+    if (type === 'DAY') {
+      setType('WEEK');
+    } else {
+      setType('DAY');
+    }
+  };
 
   return (
     <>
       <div className="text-3xl mb-6">Activity trend</div>
 
-      <table className="mt-8 text-sm w-1/2">
-        <thead>
-          <tr className="text-gray-400">
-            <th className="text-left font-medium font-heading">Average Price</th>
-            <th className="text-left font-medium font-heading">Volume</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr className="font-bold font-heading text-xl">
-            <td>{weeklyStats?.data[0]?.avgPrice.toLocaleString() ?? '—'} ETH</td>
-            <td>{weeklyStats?.data[0]?.volume.toLocaleString()}</td>
-          </tr>
-        </tbody>
-      </table>
+      <div className="flex justify-between items-center w-1/2">
+        <table className="mt-8 text-sm w-1/2">
+          <thead>
+            <tr className="text-gray-400">
+              <th className="text-left font-medium font-heading">Average Price</th>
+              <th className="text-left font-medium font-heading">Volume</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="font-bold font-heading text-xl">
+              <td>{weeklyStats?.data[0]?.avgPrice.toLocaleString() ?? '—'} ETH</td>
+              <td>{weeklyStats?.data[0]?.volume.toLocaleString()}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div className="space-x-4">
+          <button
+            className={type === 'DAY' ? `rounded-3xl bg-black text-white py-2 px-3` : 'py-2 px-3'}
+            onClick={onClickType}
+          >
+            1d
+          </button>
+          <button
+            className={type === 'WEEK' ? `rounded-3xl bg-black text-white py-2 px-3` : 'py-2 px-3'}
+            onClick={onClickType}
+          >
+            1w
+          </button>
+        </div>
+      </div>
 
       <div className="mt-8">
         <LineChart
@@ -60,7 +97,7 @@ export function ActivityTab({ dailyStats, weeklyStats }: ActivityTabProps) {
         </LineChart>
       </div>
 
-      <CollectionFeed header="Heading" forActivity={true} />
+      <CollectionFeed header="Activity" forActivity={true} />
     </>
   );
 }

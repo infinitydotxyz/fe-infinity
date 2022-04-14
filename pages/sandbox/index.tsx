@@ -5,7 +5,6 @@ import {
   Button,
   CurrencyInput,
   Dropdown,
-  PageBox,
   ShortAddress,
   SimpleTable,
   SimpleTableItem,
@@ -13,11 +12,13 @@ import {
   ToggleTab,
   useToggleTab
 } from 'src/components/common';
+import { Layout } from 'src/components/common/layout';
 import { Card } from 'src/components/common/card';
 import { Chip } from 'src/components/common/chip';
 import { ComboBox, ComboBoxBaseType } from 'src/components/common/combo-box';
 import { RoundedNav } from 'src/components/common/rounded-nav';
 import testData from './data.json';
+import { Toaster, toastError, toastSuccess, toastWarning } from 'src/components/common/toaster';
 
 const comboValues: ComboBoxBaseType[] = [
   { id: 0, name: 'Empty Trash' },
@@ -35,8 +36,11 @@ const SandboxPage: FC = () => {
   tableItems.push({ title: 'Budget', value: <div className="font-bold">3 Eth</div> });
 
   return (
-    <PageBox title="SandBox">
-      <div className=" ">
+    <Layout title="SandBox" padded className="py-8">
+      <div>
+        <h1 className="text-start font-body font-bold text-3xl tracking-tight">Sandbox</h1>
+      </div>
+      <div className="w-full">
         <SBHeader># Text</SBHeader>
         <div>
           <div className="text-primary">text-primary</div>
@@ -132,8 +136,17 @@ const SandboxPage: FC = () => {
         <div className="w-1/2">
           <SimpleTable items={tableItems} />
         </div>
+
+        <SBHeader># Toaster</SBHeader>
+        <div className="w-1/2">
+          <Button onClick={() => toastSuccess('Success', 'Content (optional)')}>Success</Button>
+          <Button onClick={() => toastError('Error', 'Content (optional)')}>Error</Button>
+          <Button onClick={() => toastWarning('Warning', 'Content (optional)')}>Warning</Button>
+
+          <Toaster />
+        </div>
       </div>
-    </PageBox>
+    </Layout>
   );
 };
 
