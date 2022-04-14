@@ -10,29 +10,32 @@ interface Props {
 }
 
 export function StatsChips({ collection, weeklyStatsData }: Props) {
-  const { user } = useAppContext();
+  const { user, checkSignedIn } = useAppContext();
+
+  const onClickFollow = async () => {
+    if (!checkSignedIn()) {
+      return;
+    }
+    const { error } = await apiPost(`/user/1:${user?.address}/followingCollections`, {
+      data: {
+        collectionChainId: collection?.chainId,
+        collectionAddress: collection?.address
+      }
+    });
+    if (error) {
+      toastError(error?.errorResponse?.message);
+    } else {
+      toastSuccess('Followed ' + collection?.metadata?.name);
+    }
+  };
 
   const lastWeeklyStats = weeklyStatsData[weeklyStatsData.length - 1];
   const twitterChangePct = `${Math.abs(lastWeeklyStats?.twitterFollowersPercentChange ?? 0)}`.slice(0, 4);
   const discordChangePct = `${Math.abs(lastWeeklyStats?.discordFollowersPercentChange ?? 0)}`.slice(0, 4);
+
   return (
     <div className="flex flex-row space-x-1">
-      <Chip
-        content="+ Follow"
-        onClick={async () => {
-          const { error } = await apiPost(`/user/1:${user?.address}/followingCollections`, {
-            data: {
-              collectionChainId: collection?.chainId,
-              collectionAddress: collection?.address
-            }
-          });
-          if (error) {
-            toastError(error?.errorResponse?.message);
-          } else {
-            toastSuccess('Followed ' + collection?.metadata?.name);
-          }
-        }}
-      />
+      <Chip content="+ Follow" onClick={onClickFollow} />
       <Chip content="Edit" />
       <Chip
         left={<FaTwitter />}

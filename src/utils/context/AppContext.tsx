@@ -3,6 +3,7 @@ import { getCustomExceptionMsg } from 'src/utils/commonUtils';
 import { ProviderEvents, WalletType } from 'src/utils/providers/AbstractProvider';
 import { UserRejectException } from 'src/utils/providers/UserRejectException';
 import { ProviderManager } from 'src/utils/providers/ProviderManager';
+import { Toaster, toastWarning } from 'src/components/common/toaster';
 
 export type User = {
   address: string;
@@ -11,6 +12,7 @@ export type User = {
 export type AppContextType = {
   user: User | null;
   signOut: () => void;
+  checkSignedIn: () => boolean;
   userReady: boolean;
   chainId: string;
   showAppError: (msg: string) => void;
@@ -143,9 +145,18 @@ export function AppContextProvider(props: React.PropsWithChildren<unknown>) {
     window.location.reload();
   };
 
+  const checkSignedIn = () => {
+    if (!user?.address) {
+      toastWarning('Please sign in.');
+      return false;
+    }
+    return true;
+  };
+
   const value: AppContextType = {
     user,
     signOut,
+    checkSignedIn,
     userReady,
     chainId,
     showAppError,
@@ -156,7 +167,13 @@ export function AppContextProvider(props: React.PropsWithChildren<unknown>) {
     providerManager
   };
 
-  return <AppContext.Provider value={value} {...props} />;
+  return (
+    <AppContext.Provider value={value} {...props}>
+      {props.children}
+
+      <Toaster />
+    </AppContext.Provider>
+  );
 }
 
 export function useAppContext(): AppContextType {
