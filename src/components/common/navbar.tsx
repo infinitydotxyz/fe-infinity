@@ -5,6 +5,7 @@ import { Menu, Transition } from '@headlessui/react';
 import { ConnectButton } from 'src/components/common/connect-button';
 import { IoMdArrowDropdown } from 'react-icons/io';
 import { SearchInput } from 'src/components/common/search-input';
+import { GiHamburgerMenu } from 'react-icons/gi';
 
 export function Navbar() {
   /*
@@ -30,9 +31,23 @@ export function Navbar() {
     },
     container: {
       className: `
-          w-5/6 h-full
+          h-full
           row-span-2 col-span-24
-          grid grid-rows-1 grid-cols-[1fr,13fr] gap-8
+          grid grid-rows-1
+          desktop:w-5/6
+          desktop-sm:w-[95%]
+          tabloid:w-[95%]
+          mobile:w-[98%]
+          desktop-8k:grid-cols-[1fr,8fr] desktop-8k:gap-8
+          desktop-4k:grid-cols-[1fr,8fr] desktop-4k:gap-8
+          desktop-lg:grid-cols-[1fr,8fr] desktop-lg:gap-8
+          desktop-md:grid-cols-[1fr,6fr] desktop-md:gap-8
+          desktop-sm:grid-cols-[1fr,6fr] desktop-sm:gap-4
+          tablet:grid-cols-[1fr,6fr] tablet:gap-2
+          mobile-xl:grid-cols-[3fr,9fr] mobile:gap-2
+          mobile-lg:grid-cols-[4fr,9fr] mobile:gap-2
+          mobile-md:grid-cols-[4fr,9fr] mobile:gap-2
+          mobile-sm:grid-cols-[3fr,9fr] mobile:gap-2
           py-4
         `
     },
@@ -40,21 +55,30 @@ export function Navbar() {
       family: 'SVG',
       name: 'infinity',
       className: `
-          w-min h-full col-span-1
-          justify-self-start hover:cursor-pointer
+          col-span-1
+          desktop:w-full
+          justify-self-start text-center hover:cursor-pointer
         `
     },
     actions: {
       container: {
         className: `
           w-full h-full col-span-1 row-span-1
-          grid grid-rows-1 grid-cols-[1fr,3fr,11fr,2fr] gap-1
+          grid grid-rows-1 gap-1
+
+          desktop-8k:grid-cols-[2fr,3fr,10fr,2fr]
+          desktop-4k:grid-cols-[2fr,3fr,10fr,2fr]
+          desktop-lg:grid-cols-[2fr,3fr,10fr,2fr]
+          desktop-md:grid-cols-[2fr,3fr,10fr,2fr]
+          desktop-sm:grid-cols-[0fr,4fr,13fr,3fr]
+          tablet:grid-cols-[0fr,4fr,13fr,3fr]
+          mobile:grid-cols-[0fr,3fr,1fr,auto]
         `
       },
       search: {
         container: {
           className: `
-            transition w-full h-full
+            transition w-full h-full max-h-full
             col-span-1 row-span-1
             grid bg-transparent
           `
@@ -66,6 +90,17 @@ export function Navbar() {
             w-full h-full
             row-span-1 col-span-1
             flex flex-row
+            mobile:hidden
+          `
+        },
+        mobile: {
+          className: `
+            w-full h-full
+            row-span-1 col-span-1
+            flex flex-row
+            desktop:hidden
+            tablet:hidden
+            mobile:visible
           `
         }
       },
@@ -76,14 +111,20 @@ export function Navbar() {
             col-span-1 row-span-1
             grid items-center
             bg-transparent
+            desktop:text-sm
+            tabloid:text-xs
+            mobile:text-xs
           `
         },
         button: {
           className: `
             transition w-full h-full
             justify-self-end
-            font-mono text-sm
+            font-mono
             text-theme-light-900 hover:underline rounded-full
+            desktop:text-sm
+            tabloid:text-xs
+            mobile:text-xs
           `
         },
         menu: {
@@ -103,6 +144,7 @@ export function Navbar() {
           items: {
             className: `
               absolute w-content h-content py-2 px-2
+              mobile:left-[-80px]
               flex flex-col bg-theme-light-50
               shadow-xl rounded-xl
               ring-1 ring-inset ring-slate-400 ring-opacity-10
@@ -110,18 +152,25 @@ export function Navbar() {
           },
           item: {
             className: `
-              w-full h-full
-              pl-4 pr-20 py-2 text-sm rounded-xl
-              flex hover:bg-theme-light-200
+              w-full h-full rounded-xl
+              flex flex-nowrap whitespace-nowrap hover:bg-theme-light-200 items-center gap-2
+              desktop:pl-4 desktop:pr-20 desktop:py-2
+              tabloid:pl-2 tabloid:pr-10 tabloid:py-2
+              mobile:pl-2 mobile:pr-10 mobile:py-2
+              desktop:text-sm
+              tabloid:text-xs
+              mobile:text-xs
             `
           },
           button: {
             className: `
               transition w-full h-full
-              font-mono text-sm
-              text-theme-light-900 hover:underline rounded-full
               justify-self-end
               flex gap-2 place-items-center place-content-center
+              font-mono text-theme-light-900 hover:underline rounded-full
+              desktop:text-sm
+              tabloid:text-xs
+              mobile:text-xs
             `
           }
         }
@@ -155,7 +204,8 @@ export function Navbar() {
         label: 'Home',
         icon: SVG.logo,
         props: {
-          href: '/'
+          href: '/',
+          className: `w-full h-full flex`
         }
       },
       items: [
@@ -175,16 +225,9 @@ export function Navbar() {
         },
         {
           type: 'link',
-          label: 'Marketplace',
+          label: 'Orderbook',
           props: {
-            href: '/market'
-          }
-        },
-        {
-          type: 'link',
-          label: 'Rewards',
-          props: {
-            href: '/rewards'
+            href: '/orderbook'
           }
         },
         {
@@ -218,13 +261,6 @@ export function Navbar() {
               props: {
                 href: 'https://medium.com/@infinitydotxyz'
               }
-            },
-            {
-              type: 'external',
-              label: 'Governance',
-              props: {
-                href: 'https://commonwealth.im/infinity'
-              }
             }
           ]
         }
@@ -247,7 +283,7 @@ export function Navbar() {
               to home page.
             ====================================
           */}
-            <a>
+            <a {...content?.buttons?.home?.props}>
               <content.buttons.home.icon {...styles?.logo}></content.buttons.home.icon>
             </a>
           </Link>
@@ -255,6 +291,62 @@ export function Navbar() {
             <div></div>
             <div {...styles?.actions?.search?.container}>
               <SearchInput />
+            </div>
+            <div {...styles?.actions?.items?.mobile}>
+              <Menu as="div" {...styles?.actions?.item?.menu?.container}>
+                <Menu.Button {...styles?.actions?.item?.menu?.button}>
+                  <GiHamburgerMenu />
+                </Menu.Button>
+                <Transition {...styles?.actions?.item?.menu?.transition}>
+                  <Menu.Items {...styles?.actions?.item?.menu?.items}>
+                    {content?.buttons?.items?.map((item, i) => (
+                      <React.Fragment key={i}>
+                        {item.type === 'external' && (
+                          <Link passHref href={item?.props?.href ? item.props.href : ''}>
+                            <a target="_blank" rel="noopener noreferrer">
+                              <Menu.Item as="button" {...styles?.actions?.item?.menu?.item}>
+                                {item?.label}
+                              </Menu.Item>
+                            </a>
+                          </Link>
+                        )}
+                        {item.type === 'link' && (
+                          <Link passHref href={item?.props?.href ? item.props.href : ''}>
+                            <Menu.Item as="button" {...styles?.actions?.item?.menu?.item}>
+                              {item?.label}
+                            </Menu.Item>
+                          </Link>
+                        )}
+                        {item.type === 'dropdown' && (
+                          <>
+                            <hr className="my-1" />
+                            {item?.menu?.map((x, j) => (
+                              <React.Fragment key={j}>
+                                {x.type === 'external' && (
+                                  <Link passHref href={x?.props?.href ? x.props.href : ''}>
+                                    <a target="_blank" rel="noopener noreferrer">
+                                      <Menu.Item as="button" {...styles?.actions?.item?.menu?.item}>
+                                        {x?.label}
+                                      </Menu.Item>
+                                    </a>
+                                  </Link>
+                                )}
+                                {x.type === 'link' && (
+                                  <Link passHref href={x?.props?.href ? x.props.href : ''}>
+                                    <Menu.Item as="button" {...styles?.actions?.item?.menu?.item}>
+                                      {x?.label}
+                                    </Menu.Item>
+                                  </Link>
+                                )}
+                              </React.Fragment>
+                            ))}
+                          </>
+                        )}
+                      </React.Fragment>
+                    ))}
+                  </Menu.Items>
+                </Transition>
+              </Menu>
             </div>
             <div {...styles?.actions?.items?.container}>
               {/*
@@ -297,14 +389,7 @@ export function Navbar() {
                         <Menu.Button {...styles?.actions?.item?.menu?.button}>
                           {item?.label} <IoMdArrowDropdown />
                         </Menu.Button>
-                        <Transition
-                          enter="transition duration-100 ease-out"
-                          enterFrom="transform scale-95 opacity-0"
-                          enterTo="transform scale-100 opacity-100"
-                          leave="transition duration-75 ease-out"
-                          leaveFrom="transform scale-100 opacity-100"
-                          leaveTo="transform scale-95 opacity-0"
-                        >
+                        <Transition {...styles?.actions?.item?.menu?.transition}>
                           <Menu.Items {...styles?.actions?.item?.menu?.items}>
                             {item?.menu?.map((x, j) => (
                               <React.Fragment key={j}>
