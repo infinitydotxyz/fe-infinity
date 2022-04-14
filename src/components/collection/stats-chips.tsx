@@ -2,6 +2,8 @@ import { BaseCollection, CollectionStats } from '@infinityxyz/lib/types/core';
 import { useEffect, useState } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { FaCaretDown, FaCaretUp, FaDiscord, FaInstagram, FaTwitter } from 'react-icons/fa';
+import { HiOutlineExternalLink } from 'react-icons/hi';
+
 import { apiDelete, apiPost } from 'src/utils';
 import { FollowingCollection, useAppContext } from 'src/utils/context/AppContext';
 import { Chip } from '../common';
@@ -78,10 +80,10 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
       />
       <Chip content="Edit" />
 
-      {collection?.metadata.links.twitter && (
+      {collection?.metadata?.links?.twitter && (
         <Chip
           left={<FaTwitter />}
-          onClick={() => window.open(collection?.metadata.links.twitter)}
+          onClick={() => window.open(collection?.metadata?.links?.twitter)}
           content={
             <span className="flex items-center">
               {lastWeeklyStats?.twitterFollowers?.toLocaleString() ?? '—'}
@@ -105,10 +107,10 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
         />
       )}
 
-      {collection?.metadata.links.discord && (
+      {collection?.metadata?.links?.discord && (
         <Chip
           left={<FaDiscord />}
-          onClick={() => window.open(collection?.metadata.links.discord)}
+          onClick={() => window.open(collection?.metadata?.links?.discord)}
           content={
             <span className="flex items-center">
               {lastWeeklyStats?.discordFollowers?.toLocaleString() ?? '—'}
@@ -132,10 +134,18 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
         />
       )}
 
-      {collection?.metadata.links.instagram && (
+      {collection?.metadata?.links?.instagram && (
         <Chip
           content={<FaInstagram className="text-lg" />}
-          onClick={() => window.open(collection?.metadata.links.instagram)}
+          onClick={() => window.open(collection?.metadata?.links?.instagram)}
+          className="p-0"
+        />
+      )}
+
+      {collection?.metadata?.links?.external && (
+        <Chip
+          content={<HiOutlineExternalLink className="text-lg" />}
+          onClick={() => window.open(collection?.metadata?.links?.external)}
           className="p-0"
         />
       )}
