@@ -17,15 +17,16 @@ const classes = {
     primary: 'border rounded-3xl border-gray-100 bg-black text-white',
     secondary: 'border rounded-3xl border-gray-100 bg-black text-white',
     outline: 'border rounded-3xl border border-gray-300 text-gray-900',
-    danger: 'bg-red-500 hover:bg-red-800 focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 text-white'
+    danger: 'bg-red-500 hover:bg-red-800 focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 text-white',
+    gray: 'border rounded-3xl border-gray-100 bg-gray-100 text-black' // TODO: find better name
   }
 };
 
 interface Props {
   onClick?: () => void;
   children: ReactNode;
-  variant?: 'plain' | 'primary' | 'secondary' | 'outline' | 'danger' | 'ghost';
-  size?: 'plain' | 'small' | 'normal' | 'large';
+  variant?: keyof typeof classes.variant;
+  size?: keyof typeof classes.size;
   disabled?: boolean;
   className?: string;
 }
