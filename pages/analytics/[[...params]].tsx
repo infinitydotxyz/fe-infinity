@@ -214,7 +214,8 @@ export const Analytics = () => {
 
   const styles = {
     layout: {
-      title: 'Analytics'
+      title: 'Analytics',
+      padded: true
     },
     container: {
       className: `
@@ -229,13 +230,13 @@ export const Analytics = () => {
           w-full h-full overflow-hidden
           bg-theme-light-50
           flex-[0.8]
-          grid grid-rows-8 grid-cols-24
+          grid grid-rows-6 grid-cols-24
         `
       },
       element: {
         className: `
           w-full h-full overflow-hidden
-          row-start-5 col-start-3 row-span-3 col-span-12
+          row-start-4 col-start-1 row-span-3 col-span-14
           text-start font-body font-bold text-[80px] tracking-tight
         `
       }
@@ -258,7 +259,7 @@ export const Analytics = () => {
         },
         container: {
           className: `
-            row-start-1 col-start-3 row-span-1 col-span-10
+            row-start-1 col-start-1 row-span-1 col-span-14
             grid place-items-start items-center
           `
         },
@@ -297,7 +298,7 @@ export const Analytics = () => {
           className: `
             w-full h-full overflow-hidden
             bg-theme-light-50
-            row-start-1 col-start-13 row-span-1 col-span-10
+            row-start-1 col-start-13 row-span-1 col-span-12
             flex flex-row-reverse gap-2 py-4
           `
         },
@@ -333,7 +334,7 @@ export const Analytics = () => {
         container: {
           className: `
             w-full h-full
-            row-start-1 col-start-3 row-span-1 col-span-20
+            row-start-1 col-start-1 row-span-1 col-span-24
             ring ring-inset ring-transparent
             flex flex-col gap-4
           `

@@ -43,7 +43,7 @@ export default function CollectionPage() {
 
   return (
     <Layout title={collection?.metadata?.name ?? ''} padded>
-      <div className="flex flex-col mt-4">
+      <div className="flex flex-col mt-10">
         <span>
           <AvatarImage url={collection?.metadata.profileImage} className="mb-4" />
           <span className="text-7xl mr-2">{collection?.metadata?.name}</span>

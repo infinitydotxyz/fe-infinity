@@ -1,12 +1,7 @@
 import { useEffect, useState } from 'react';
 import { apiGet } from 'src/utils/apiUtils';
+import { BLANK_IMG } from 'src/utils';
 import { BaseCollection } from '@infinityxyz/lib/types/core';
-
-const BLANK_IMG = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
-
-type ApiResponse = {
-  result: BaseCollection;
-};
 
 interface Props {
   chainId: string;
@@ -25,8 +20,10 @@ const NftImage = ({ chainId, collectionAddress, src, alt, ...rest }: Props) => {
     if (!collectionAddress || unmounted) {
       return;
     }
-    const { result }: ApiResponse = (await apiGet(`/collections/${chainId}:${collectionAddress}`)) as ApiResponse;
-    setImageUrl(result?.metadata.profileImage ?? BLANK_IMG);
+    const { result } = await apiGet(`/collections/${chainId}:${collectionAddress}`);
+    const collection = result as BaseCollection;
+
+    setImageUrl(collection?.metadata.profileImage ?? BLANK_IMG);
   };
 
   useEffect(() => {

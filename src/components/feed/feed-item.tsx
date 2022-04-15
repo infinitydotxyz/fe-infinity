@@ -43,7 +43,7 @@ interface FeedItemProps {
 }
 
 export function FeedItem({ data, onLike, onComment }: FeedItemProps) {
-  const { user } = useAppContext();
+  const { user, checkSignedIn } = useAppContext();
 
   const timestampStr = data.timestamp > 0 ? new Date(data.timestamp).toLocaleString() : '';
   return (
@@ -73,6 +73,9 @@ export function FeedItem({ data, onLike, onComment }: FeedItemProps) {
           <Button
             variant="plain"
             onClick={async () => {
+              if (!checkSignedIn()) {
+                return;
+              }
               if (user && user?.address) {
                 await addUserLike(data.id || '', user?.address, () => {
                   if (onLike) {

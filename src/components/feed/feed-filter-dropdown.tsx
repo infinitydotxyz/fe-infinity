@@ -55,7 +55,9 @@ export const FeedFilterDropdown: React.FC<FeedFilterDropdownProps> = ({ selected
               <div className="overflow-hidden rounded-lg  shadow-lg ring-1 ring-black ring-opacity-5">
                 <div className="p-5 bg-theme-light-50 w-80">
                   {options.map((item, idx) => (
-                    <div key={idx} className="flex space-x-6 p-3">
+                    <label key={idx} className="flex justify-between mt-4">
+                      <div className="text-theme-light-800 font-heading">{item.label}</div>
+
                       <input
                         checked={selectedTypes.indexOf(item.value as FeedEventType) >= 0}
                         name={item.value}
@@ -63,8 +65,7 @@ export const FeedFilterDropdown: React.FC<FeedFilterDropdownProps> = ({ selected
                         type="checkbox"
                         className="border-gray-300 text-black focus:outline-none rounded h-5 w-5"
                       />
-                      <span className="text-theme-light-800 font-heading">{item.label}</span>
-                    </div>
+                    </label>
                   ))}
                 </div>
               </div>

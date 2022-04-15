@@ -176,7 +176,11 @@ export interface CollectionAddr {
 }
 
 const collectionMap = new Map<string, CollectionAddr>();
-collectionMap.set('0xAddress1', { id: 1, address: '0xAddress1', name: 'Dump Trux' });
+collectionMap.set('0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d', {
+  id: 1,
+  address: '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d',
+  name: 'Dump Trux'
+});
 collectionMap.set('0xAddress2', { id: 2, address: '0xAddress2', name: 'Ape People' });
 collectionMap.set('0xAddress3', { id: 3, address: '0xAddress3', name: 'DigiKraap' });
 collectionMap.set('0xAddress4', { id: 4, address: '0xAddress4', name: 'Sik Art' });
