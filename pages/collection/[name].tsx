@@ -2,13 +2,12 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { BaseCollection, CollectionStats } from '@infinityxyz/lib/types/core';
-import { RoundedNav } from 'src/components/common';
+import { RoundedNav, Layout } from 'src/components/common';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { useFetch } from 'src/utils/apiUtils';
 import { CollectionFeed } from 'src/components/feed/collection-feed';
 import { ellipsisAddress, getChainScannerBase } from 'src/utils';
 import { ActivityTab } from 'src/components/collection/activity-tab';
-import { Layout } from 'src/components/common/layout';
 import { StatsChips } from 'src/components/collection/stats-chips';
 
 import { CommunityRightPanel } from 'src/components/collection/community-right-panel';
@@ -22,16 +21,18 @@ export function CollectionPage() {
   const path = `/collections/${name}`;
   const { result: collection } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
   const { result: dailyStats } = useFetch<{ data: CollectionStats[] }>(
-    name ? path + '/stats?limit=10&orderBy=volume&orderDirection=asc&minDate=0&maxDate=2648764957623&period=daily' : '',
+    name
+      ? path + '/stats?limit=10&orderBy=volume&orderDirection=desc&minDate=0&maxDate=2648764957623&period=daily'
+      : '',
     { chainId: '1' }
   );
   const { result: weeklyStats } = useFetch<{ data: CollectionStats[] }>(
     name
-      ? path + '/stats?limit=10&orderBy=volume&orderDirection=asc&minDate=0&maxDate=2648764957623&period=weekly'
+      ? path + '/stats?limit=10&orderBy=volume&orderDirection=desc&minDate=0&maxDate=2648764957623&period=weekly'
       : '',
     { chainId: '1' }
   );
-  const lastDailyStats = dailyStats?.data[dailyStats?.data.length - 1];
+  const firstDailyStats = dailyStats?.data[0];
 
   return (
     <Layout title={collection?.metadata?.name ?? ''} padded>
@@ -88,10 +89,10 @@ export function CollectionPage() {
             </thead>
             <tbody>
               <tr className="font-bold font-heading text-2xl">
-                <td>{collection?.numNfts?.toLocaleString()}</td>
-                <td>{collection?.numOwners?.toLocaleString()}</td>
-                <td>{lastDailyStats?.floorPrice ?? '—'}</td>
-                <td>{lastDailyStats?.volume?.toLocaleString() ?? ''}</td>
+                <td>{collection?.numNfts?.toLocaleString() ?? '—'}</td>
+                <td>{collection?.numOwners?.toLocaleString() ?? '—'}</td>
+                <td>{firstDailyStats?.floorPrice ?? '—'}</td>
+                <td>{firstDailyStats?.volume?.toLocaleString() ?? '—'}</td>
               </tr>
             </tbody>
           </table>
