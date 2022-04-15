@@ -16,7 +16,7 @@ export function InputBox({ tooltip, label, children }: Props): JSX.Element {
 
   return (
     <TooltipWrapper show={showTooltip} tooltip={tooltip}>
-      <div className="py-2 pl-6 pr-2 mb-1 outline outline-1 outline-slate-300 rounded-2xl ">
+      <div className="py-2 pl-6 pr-2 mb-1 outline outline-1 outline-gray-300 rounded-2xl ">
         {label && <label className="block text-xs font-medium text-gray-700">{label}</label>}
         <div className="mt-1 flex items-center">
           <div className="flex items-center">{children}</div>
