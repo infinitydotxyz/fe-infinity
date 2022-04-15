@@ -1,16 +1,35 @@
-import { BaseCollection } from '@infinityxyz/lib/types/core';
+import { BaseCollection, CollectionMetadata } from '@infinityxyz/lib/types/core';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useEffect, useReducer } from 'react';
 import { AvatarImage } from 'src/components/collection/avatar-image';
 import SocialsInputGroup from 'src/components/collection/socials-input-group';
 import { Button, TextAreaInputBox, TextInputBox } from 'src/components/common';
 import { Heading } from 'src/components/common/heading';
 import logo from 'src/images/logo-mini-new.svg';
 import { useFetch } from 'src/utils';
+import { DeepPartial } from 'src/utils/typeUtils';
 
 const spaces = {
   article: 'space-y-5'
 };
+
+function reducer(
+  state: DeepPartial<CollectionMetadata>,
+  action: { type: 'update' | 'updateLink' | 'addPartnership' | 'addBenefit'; metadata: DeepPartial<CollectionMetadata> }
+): DeepPartial<CollectionMetadata> {
+  switch (action.type) {
+    case 'update':
+      return { ...state, ...action.metadata };
+    case 'updateLink':
+      return { ...state, links: { ...state.links, ...action.metadata.links } };
+    case 'addBenefit':
+      return { ...state, benefits: [...(state.benefits ?? []), ...(action.metadata.benefits ?? [])] };
+    case 'addPartnership':
+      return { ...state, partnerships: [...(state.partnerships ?? []), ...(action.metadata.partnerships ?? [])] };
+    default:
+      throw new Error();
+  }
+}
 
 export default function EditCollectionPage() {
   const router = useRouter();
@@ -18,6 +37,9 @@ export default function EditCollectionPage() {
     router.query.name ? `/collections/${router.query.name}` : '',
     { chainId: '1' }
   );
+  const [metadata, dispatchMetadata] = useReducer(reducer, {});
+
+  useEffect(() => dispatchMetadata({ type: 'update', metadata: collection?.metadata ?? {} }), [collection]);
 
   return (
     <div className="transition w-[100vw] h-[100vh] overflow-y-auto">
@@ -32,7 +54,7 @@ export default function EditCollectionPage() {
       </header>
       <main className="flex flex-col my-4 mx-auto w-144 space-y-5">
         <article className="flex flex-row items-center">
-          <AvatarImage url={collection?.metadata.profileImage} size="large" />
+          <AvatarImage url={metadata.profileImage} size="large" />
           <div className="flex flex-col space-y-2 ml-2">
             <Button>Upload</Button>
             <Button variant="outline">Delete</Button>
@@ -43,16 +65,16 @@ export default function EditCollectionPage() {
           <Heading as="h3">Edit collection</Heading>
           <TextInputBox
             label="Collection name"
-            value=""
+            value={metadata?.name || ''}
             type="text"
-            onChange={console.log}
+            onChange={(name) => dispatchMetadata({ type: 'update', metadata: { name } })}
             placeholder="Vortex"
             isFullWidth
           />
           <TextAreaInputBox
             label="Description"
-            value=""
-            onChange={console.log}
+            value={metadata?.description || ''}
+            onChange={(description) => dispatchMetadata({ type: 'update', metadata: { description } })}
             placeholder=" Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
             dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
             ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
@@ -67,17 +89,17 @@ export default function EditCollectionPage() {
           <SocialsInputGroup>
             <TextInputBox
               label="Twitter"
-              value=""
+              value={metadata.links?.twitter || ''}
               type="text"
-              onChange={console.log}
+              onChange={(twitter) => dispatchMetadata({ type: 'updateLink', metadata: { links: { twitter } } })}
               placeholder="https://twitter.com/user"
               isFullWidth
             />
             <TextInputBox
               label="Instagram"
-              value=""
+              value={metadata.links?.instagram || ''}
               type="text"
-              onChange={console.log}
+              onChange={(instagram) => dispatchMetadata({ type: 'updateLink', metadata: { links: { instagram } } })}
               placeholder="https://instagram.com/user"
               isFullWidth
             />
@@ -85,17 +107,17 @@ export default function EditCollectionPage() {
           <SocialsInputGroup>
             <TextInputBox
               label="Facebook"
-              value=""
+              value={metadata.links?.facebook || ''}
               type="text"
-              onChange={console.log}
+              onChange={(facebook) => dispatchMetadata({ type: 'updateLink', metadata: { links: { facebook } } })}
               placeholder="https://facebook.com/page"
               isFullWidth
             />
             <TextInputBox
               label="Discord"
-              value=""
+              value={metadata.links?.discord || ''}
               type="text"
-              onChange={console.log}
+              onChange={(discord) => dispatchMetadata({ type: 'updateLink', metadata: { links: { discord } } })}
               placeholder="https://discord.com/invite"
               isFullWidth
             />
@@ -103,17 +125,17 @@ export default function EditCollectionPage() {
           <SocialsInputGroup>
             <TextInputBox
               label="Medium"
-              value=""
+              value={metadata.links?.medium || ''}
               type="text"
-              onChange={console.log}
+              onChange={(medium) => dispatchMetadata({ type: 'updateLink', metadata: { links: { medium } } })}
               placeholder="https://medium.com/user"
               isFullWidth
             />
             <TextInputBox
               label="Telegram"
-              value=""
+              value={metadata.links?.telegram || ''}
               type="text"
-              onChange={console.log}
+              onChange={(telegram) => dispatchMetadata({ type: 'updateLink', metadata: { links: { telegram } } })}
               placeholder="https://t.me/invite"
               isFullWidth
             />
@@ -121,17 +143,17 @@ export default function EditCollectionPage() {
           <SocialsInputGroup>
             <TextInputBox
               label="External"
-              value=""
+              value={metadata.links?.external || ''}
               type="text"
-              onChange={console.log}
+              onChange={(external) => dispatchMetadata({ type: 'updateLink', metadata: { links: { external } } })}
               placeholder="https://example.com"
               isFullWidth
             />
             <TextInputBox
               label="Wiki"
-              value=""
+              value={metadata.links?.wiki || ''}
               type="text"
-              onChange={console.log}
+              onChange={(wiki) => dispatchMetadata({ type: 'updateLink', metadata: { links: { wiki } } })}
               placeholder="https://example.com/wiki"
               isFullWidth
             />
