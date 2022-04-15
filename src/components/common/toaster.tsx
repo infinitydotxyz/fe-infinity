@@ -61,6 +61,7 @@ const ToasterTemplate = ({
   </div>
 );
 
+// Toast a success message - first, include <Toaster /> in JSX.
 export function toastSuccess(message: ReactNode, content?: ReactNode) {
   toast.custom((t) => (
     <ToasterTemplate
@@ -72,6 +73,7 @@ export function toastSuccess(message: ReactNode, content?: ReactNode) {
   ));
 }
 
+// Toast an error message - first, include <Toaster /> in JSX.
 export function toastError(message: ReactNode, content?: ReactNode) {
   toast.custom((t) => (
     <ToasterTemplate
@@ -83,6 +85,7 @@ export function toastError(message: ReactNode, content?: ReactNode) {
   ));
 }
 
+// Toast a warning message - first, include <Toaster /> in JSX.
 export function toastWarning(message: ReactNode, content?: ReactNode) {
   toast.custom((t) => (
     <ToasterTemplate
