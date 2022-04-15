@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { BaseCollection, CollectionStats } from '@infinityxyz/lib/types/core';
-import { FaCheck } from 'react-icons/fa';
 import { RoundedNav } from 'src/components/common';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { useFetch } from 'src/utils/apiUtils';
@@ -13,6 +12,7 @@ import { Layout } from 'src/components/common/layout';
 import { StatsChips } from 'src/components/collection/stats-chips';
 
 import { CommunityRightPanel } from 'src/components/collection/community-right-panel';
+import { AiOutlineCheck } from 'react-icons/ai';
 
 export function CollectionPage() {
   const {
@@ -22,16 +22,12 @@ export function CollectionPage() {
   const path = `/collections/${name}`;
   const { result: collection } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
   const { result: dailyStats } = useFetch<{ data: CollectionStats[] }>(
-    name
-      ? path +
-          '/stats?limit=10&interval=oneDay&orderBy=volume&orderDirection=asc&minDate=0&maxDate=2648764957623&period=daily'
-      : '',
+    name ? path + '/stats?limit=10&orderBy=volume&orderDirection=asc&minDate=0&maxDate=2648764957623&period=daily' : '',
     { chainId: '1' }
   );
   const { result: weeklyStats } = useFetch<{ data: CollectionStats[] }>(
     name
-      ? path +
-          '/stats?limit=10&interval=oneDay&orderBy=volume&orderDirection=asc&minDate=0&maxDate=2648764957623&period=weekly'
+      ? path + '/stats?limit=10&orderBy=volume&orderDirection=asc&minDate=0&maxDate=2648764957623&period=weekly'
       : '',
     { chainId: '1' }
   );
@@ -41,7 +37,7 @@ export function CollectionPage() {
     <Layout title={collection?.metadata?.name ?? ''} padded>
       <div className="flex flex-col mt-10">
         <span>
-          <img src={collection?.metadata.profileImage} className="w-20 h-20 mb-4" />
+          <img src={collection?.metadata.profileImage} className="w-28 h-28 mb-2" />
           <span className="text-7xl mr-2">{collection?.metadata?.name}</span>
           {collection?.hasBlueCheck ? (
             <Image src="/images/blue-check.png" width={24} height={24} alt="Blue check icon" />
@@ -59,19 +55,19 @@ export function CollectionPage() {
 
           <div className="text-secondary mt-6 text-sm md:w-2/3">{collection?.metadata.description ?? ''}</div>
 
-          <div className="text-sm mt-6">
+          <div className="text-sm mt-7">
             <div className="font-medium">Ownership includes</div>
-            <div className="flex space-x-8 mt-4 font-normal">
+            <div className="flex space-x-8 mt-3 font-normal">
               <div className="flex text-secondary">
-                <FaCheck className="mt-1 mr-2 text-black" />
+                <AiOutlineCheck className="text-xs mt-1 mr-2 text-black" />
                 Access
               </div>
               <div className="flex text-secondary">
-                <FaCheck className="mt-1 mr-2 text-black" />
+                <AiOutlineCheck className="text-xs mt-1 mr-2 text-black" />
                 Royalties
               </div>
               <div className="flex text-secondary">
-                <FaCheck className="mt-1 mr-2 text-black" />
+                <AiOutlineCheck className="text-xs mt-1 mr-2 text-black" />
                 IP rights
               </div>
             </div>
@@ -91,7 +87,7 @@ export function CollectionPage() {
               </tr>
             </thead>
             <tbody>
-              <tr className="font-bold font-heading">
+              <tr className="font-bold font-heading text-2xl">
                 <td>{collection?.numNfts?.toLocaleString()}</td>
                 <td>{collection?.numOwners?.toLocaleString()}</td>
                 <td>{lastDailyStats?.floorPrice ?? '—'}</td>
