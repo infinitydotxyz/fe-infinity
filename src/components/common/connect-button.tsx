@@ -45,7 +45,7 @@ export const ConnectButton: React.FC = () => {
       items: {
         className: `
           absolute w-content h-content py-2 px-2
-          desktop:left-[-20px]
+          desktop:left-[0px]
           tablet:left-[-30px]
           mobile:left-[-80px]
           flex flex-col bg-theme-light-50
