@@ -7,12 +7,12 @@ import Link from 'next/link';
 
 interface Props {
   data: CardData;
-  className?: string;
   onClick: () => void;
   isSellCard?: boolean;
+  className?: string;
 }
 
-export function Card({ data, className, onClick, isSellCard }: Props): JSX.Element {
+export function Card({ data, onClick, isSellCard, className }: Props): JSX.Element {
   const title = (data.title ?? '').length > 18 ? data.title?.slice(0, 18) + '...' : data.title;
   const tokenId = (data.tokenId ?? '').length > 18 ? data.tokenId?.slice(0, 18) + '...' : data.tokenId;
 
@@ -40,7 +40,7 @@ export function Card({ data, className, onClick, isSellCard }: Props): JSX.Eleme
   }
 
   return (
-    <div className={twMerge(`md:w-48 ${className ?? ''}`)}>
+    <div className={twMerge(`sm:mx-0 ${className ?? ''}`)}>
       <Link href={`/asset/${data.chainId}/${data.tokenAddress}/${data.tokenId}`} passHref={true}>
         <a>
           <img className="rounded-2xl max-h-80 overflow-hidden" src={data.image ?? ''} alt="card" />

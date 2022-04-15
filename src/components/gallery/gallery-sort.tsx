@@ -21,7 +21,7 @@ export const GallerySort = () => {
   }, [filterState]);
 
   return (
-    <span className="mr-40">
+    <span>
       <Dropdown
         label={label}
         items={[
