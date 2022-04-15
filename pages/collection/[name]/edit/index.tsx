@@ -5,8 +5,10 @@ import { AvatarImage } from 'src/components/collection/avatar-image';
 import SocialsInputGroup from 'src/components/collection/socials-input-group';
 import { Button, TextAreaInputBox, TextInputBox } from 'src/components/common';
 import { Heading } from 'src/components/common/heading';
+import { Toaster, toastError, toastSuccess } from 'src/components/common/toaster';
 import logo from 'src/images/logo-mini-new.svg';
-import { useFetch } from 'src/utils';
+import { apiPut, useFetch } from 'src/utils';
+import { useAppContext } from 'src/utils/context/AppContext';
 import { DeepPartial } from 'src/utils/typeUtils';
 
 const spaces = {
@@ -66,14 +68,38 @@ function reducer(
 
 export default function EditCollectionPage() {
   const router = useRouter();
+  const [metadata, dispatchMetadata] = useReducer(reducer, {});
+  const { user, chainId, checkSignedIn } = useAppContext();
+  // TODO: maybe we can fetch this data on the server side too?
   const { result: collection } = useFetch<BaseCollection>(
     router.query.name ? `/collections/${router.query.name}` : '',
     { chainId: '1' }
   );
-  const [metadata, dispatchMetadata] = useReducer(reducer, {});
 
   useEffect(() => dispatchMetadata({ type: 'updateMetadata', metadata: collection?.metadata ?? {} }), [collection]);
 
+  const submit = async () => {
+    // console.log(metadata);
+
+    if (!checkSignedIn()) {
+      return;
+    }
+
+    const { error } = await apiPut(`/user/${chainId}:${user?.address}/collections/${router.query.name}`, {
+      data: { metadata }
+    });
+
+    if (error) {
+      console.error(error);
+      toastError(error?.errorResponse?.message);
+      return;
+    }
+
+    toastSuccess('Collection metadata saved');
+    // router.back(); // TODO: navigate back on success
+  };
+
+  // TODO: add nextjs progressbar
   return (
     <div className="transition w-[100vw] h-[100vh] overflow-y-auto">
       <header className="flex justify-between p-5">
@@ -82,7 +108,7 @@ export default function EditCollectionPage() {
           <Button variant="outline" onClick={router.back}>
             Cancel
           </Button>
-          <Button>Save</Button>
+          <Button onClick={submit}>Save</Button>
         </nav>
       </header>
       <main className="flex flex-col my-4 mx-auto w-144 space-y-5">
@@ -256,6 +282,8 @@ export default function EditCollectionPage() {
       </main>
 
       <footer className="p-5"></footer>
+
+      <Toaster />
     </div>
   );
 }
