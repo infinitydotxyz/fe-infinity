@@ -178,6 +178,8 @@ export default function EditCollectionPage() {
           </Button>
         </article>
       </main>
+
+      <footer className="p-5"></footer>
     </div>
   );
 }
