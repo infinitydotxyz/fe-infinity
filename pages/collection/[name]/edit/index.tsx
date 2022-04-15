@@ -78,6 +78,8 @@ export default function EditCollectionPage() {
 
   useEffect(() => dispatchMetadata({ type: 'updateMetadata', metadata: collection?.metadata ?? {} }), [collection]);
 
+  const close = () => router.replace(`/collection/${router.query.name}`);
+
   const submit = async () => {
     // console.log(metadata);
 
@@ -96,7 +98,7 @@ export default function EditCollectionPage() {
     }
 
     toastSuccess('Collection metadata saved');
-    // router.back(); // TODO: navigate back on success
+    close();
   };
 
   // TODO: add nextjs progressbar
@@ -105,7 +107,7 @@ export default function EditCollectionPage() {
       <header className="flex justify-between p-5">
         <img alt="logo" src={logo.src} width={logo.width} />
         <nav className="flex flex-row space-x-2">
-          <Button variant="outline" onClick={router.back}>
+          <Button variant="outline" onClick={close}>
             Cancel
           </Button>
           <Button onClick={submit}>Save</Button>
@@ -121,7 +123,9 @@ export default function EditCollectionPage() {
         </article>
 
         <article className={spaces.article}>
-          <Heading as="h3">Edit collection</Heading>
+          <Heading as="h3" className="font-bold">
+            Edit collection
+          </Heading>
           <TextInputBox
             label="Collection name"
             value={metadata?.name || ''}
@@ -144,7 +148,9 @@ export default function EditCollectionPage() {
         </article>
 
         <article className={spaces.article}>
-          <Heading as="h3">Socials</Heading>
+          <Heading as="h3" className="font-bold">
+            Socials
+          </Heading>
           <SocialsInputGroup>
             <TextInputBox
               label="Twitter"
@@ -220,7 +226,9 @@ export default function EditCollectionPage() {
         </article>
 
         <article className={spaces.article}>
-          <Heading as="h3">Benefits</Heading>
+          <Heading as="h3" className="font-bold">
+            Benefits
+          </Heading>
           {metadata.benefits?.map((benefit, i) => (
             <TextInputBox
               key={i}
@@ -244,7 +252,9 @@ export default function EditCollectionPage() {
         </article>
 
         <article className={spaces.article}>
-          <Heading as="h3">Partnerships</Heading>
+          <Heading as="h3" className="font-bold">
+            Partnerships
+          </Heading>
           {metadata.partnerships?.map((partnership, i) => (
             <SocialsInputGroup key={i}>
               <TextInputBox
