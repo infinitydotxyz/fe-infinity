@@ -104,6 +104,46 @@ export default function EditCollectionPage() {
             Add social
           </Button>
         </article>
+
+        <article className={spaces.article}>
+          <Heading as="h3">Benefits</Heading>
+          <TextInputBox
+            label="Benefit 1"
+            value=""
+            type="text"
+            onChange={console.log}
+            placeholder="1st benefit"
+            isFullWidth
+          />
+          <Button variant="gray" className="w-full">
+            Add benefit
+          </Button>
+        </article>
+
+        <article className={spaces.article}>
+          <Heading as="h3">Partnerships</Heading>
+          <SocialsInputGroup>
+            <TextInputBox
+              label="Partner name"
+              value=""
+              type="text"
+              onChange={console.log}
+              placeholder="Name"
+              isFullWidth
+            />
+            <TextInputBox
+              label="Partnership website"
+              value=""
+              type="text"
+              onChange={console.log}
+              placeholder="Website URL"
+              isFullWidth
+            />
+          </SocialsInputGroup>
+          <Button variant="gray" className="w-full">
+            Add partnership
+          </Button>
+        </article>
       </main>
     </div>
   );
