@@ -15,7 +15,7 @@ export function Chip({ left, content, right, active, onClick, className }: Props
   return (
     <button
       className={twMerge(
-        `flex justify-center items-center m-1 font-medium font-heading py-2 px-4 rounded-full border border-gray-300 cursor-pointer hover:bg-gray-200 ${activeCx} ${
+        `flex justify-center items-center m-1 font-medium font-heading py-3 px-4 rounded-full border border-gray-300 cursor-pointer hover:bg-gray-200 ${activeCx} ${
           className ?? ''
         }`
       )}
