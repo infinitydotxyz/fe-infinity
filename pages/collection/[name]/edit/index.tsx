@@ -13,21 +13,54 @@ const spaces = {
   article: 'space-y-5'
 };
 
+type MetadataAction = 'updateMetadata';
+type LinkAction = 'updateLinks';
+type PartnershipAction = 'createPartnership' | 'updatePartnership' | 'deletePartnership';
+type BenefitAction = 'createBenefit' | 'updateBenefit' | 'deleteBenefit';
+type Action = MetadataAction | LinkAction | PartnershipAction | BenefitAction;
+
 function reducer(
   state: DeepPartial<CollectionMetadata>,
-  action: { type: 'update' | 'updateLink' | 'addPartnership' | 'addBenefit'; metadata: DeepPartial<CollectionMetadata> }
+  action: {
+    type: Action;
+    metadata: DeepPartial<CollectionMetadata>;
+    key?: string | number;
+  }
 ): DeepPartial<CollectionMetadata> {
   switch (action.type) {
-    case 'update':
+    case 'updateMetadata':
       return { ...state, ...action.metadata };
-    case 'updateLink':
+    case 'updateLinks':
       return { ...state, links: { ...state.links, ...action.metadata.links } };
-    case 'addBenefit':
+    case 'createBenefit':
       return { ...state, benefits: [...(state.benefits ?? []), ...(action.metadata.benefits ?? [])] };
-    case 'addPartnership':
+    case 'updateBenefit':
+      // eslint-disable-next-line no-case-declarations
+      const benefitUpdate = (action.metadata.benefits ?? [])[0];
+
+      if (typeof action.key == 'number') {
+        const benefits = state.benefits?.map((benefit, i) => (i === action.key ? benefitUpdate : benefit));
+        return { ...state, benefits };
+      } else {
+        throw new Error(`key '${action.key}' must be an index!`);
+      }
+    case 'createPartnership':
       return { ...state, partnerships: [...(state.partnerships ?? []), ...(action.metadata.partnerships ?? [])] };
+    case 'updatePartnership':
+      // eslint-disable-next-line no-case-declarations
+      const partnershipUpdate = (action.metadata.partnerships ?? [])[0];
+
+      if (typeof action.key == 'number') {
+        const partnerships = state.partnerships?.map((partnership, i) =>
+          i === action.key ? { ...partnership, ...partnershipUpdate } : partnership
+        );
+
+        return { ...state, partnerships };
+      } else {
+        throw new Error(`key '${action.key}' must be an index!`);
+      }
     default:
-      throw new Error();
+      throw new Error(`Unknown action type '${action.type}'!`);
   }
 }
 
@@ -39,7 +72,7 @@ export default function EditCollectionPage() {
   );
   const [metadata, dispatchMetadata] = useReducer(reducer, {});
 
-  useEffect(() => dispatchMetadata({ type: 'update', metadata: collection?.metadata ?? {} }), [collection]);
+  useEffect(() => dispatchMetadata({ type: 'updateMetadata', metadata: collection?.metadata ?? {} }), [collection]);
 
   return (
     <div className="transition w-[100vw] h-[100vh] overflow-y-auto">
@@ -67,14 +100,14 @@ export default function EditCollectionPage() {
             label="Collection name"
             value={metadata?.name || ''}
             type="text"
-            onChange={(name) => dispatchMetadata({ type: 'update', metadata: { name } })}
+            onChange={(name) => dispatchMetadata({ type: 'updateMetadata', metadata: { name } })}
             placeholder="Vortex"
             isFullWidth
           />
           <TextAreaInputBox
             label="Description"
             value={metadata?.description || ''}
-            onChange={(description) => dispatchMetadata({ type: 'update', metadata: { description } })}
+            onChange={(description) => dispatchMetadata({ type: 'updateMetadata', metadata: { description } })}
             placeholder=" Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
             dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
             ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
@@ -91,7 +124,7 @@ export default function EditCollectionPage() {
               label="Twitter"
               value={metadata.links?.twitter || ''}
               type="text"
-              onChange={(twitter) => dispatchMetadata({ type: 'updateLink', metadata: { links: { twitter } } })}
+              onChange={(twitter) => dispatchMetadata({ type: 'updateLinks', metadata: { links: { twitter } } })}
               placeholder="https://twitter.com/user"
               isFullWidth
             />
@@ -99,7 +132,7 @@ export default function EditCollectionPage() {
               label="Instagram"
               value={metadata.links?.instagram || ''}
               type="text"
-              onChange={(instagram) => dispatchMetadata({ type: 'updateLink', metadata: { links: { instagram } } })}
+              onChange={(instagram) => dispatchMetadata({ type: 'updateLinks', metadata: { links: { instagram } } })}
               placeholder="https://instagram.com/user"
               isFullWidth
             />
@@ -109,7 +142,7 @@ export default function EditCollectionPage() {
               label="Facebook"
               value={metadata.links?.facebook || ''}
               type="text"
-              onChange={(facebook) => dispatchMetadata({ type: 'updateLink', metadata: { links: { facebook } } })}
+              onChange={(facebook) => dispatchMetadata({ type: 'updateLinks', metadata: { links: { facebook } } })}
               placeholder="https://facebook.com/page"
               isFullWidth
             />
@@ -117,7 +150,7 @@ export default function EditCollectionPage() {
               label="Discord"
               value={metadata.links?.discord || ''}
               type="text"
-              onChange={(discord) => dispatchMetadata({ type: 'updateLink', metadata: { links: { discord } } })}
+              onChange={(discord) => dispatchMetadata({ type: 'updateLinks', metadata: { links: { discord } } })}
               placeholder="https://discord.com/invite"
               isFullWidth
             />
@@ -127,7 +160,7 @@ export default function EditCollectionPage() {
               label="Medium"
               value={metadata.links?.medium || ''}
               type="text"
-              onChange={(medium) => dispatchMetadata({ type: 'updateLink', metadata: { links: { medium } } })}
+              onChange={(medium) => dispatchMetadata({ type: 'updateLinks', metadata: { links: { medium } } })}
               placeholder="https://medium.com/user"
               isFullWidth
             />
@@ -135,7 +168,7 @@ export default function EditCollectionPage() {
               label="Telegram"
               value={metadata.links?.telegram || ''}
               type="text"
-              onChange={(telegram) => dispatchMetadata({ type: 'updateLink', metadata: { links: { telegram } } })}
+              onChange={(telegram) => dispatchMetadata({ type: 'updateLinks', metadata: { links: { telegram } } })}
               placeholder="https://t.me/invite"
               isFullWidth
             />
@@ -145,7 +178,7 @@ export default function EditCollectionPage() {
               label="External"
               value={metadata.links?.external || ''}
               type="text"
-              onChange={(external) => dispatchMetadata({ type: 'updateLink', metadata: { links: { external } } })}
+              onChange={(external) => dispatchMetadata({ type: 'updateLinks', metadata: { links: { external } } })}
               placeholder="https://example.com"
               isFullWidth
             />
@@ -153,7 +186,7 @@ export default function EditCollectionPage() {
               label="Wiki"
               value={metadata.links?.wiki || ''}
               type="text"
-              onChange={(wiki) => dispatchMetadata({ type: 'updateLink', metadata: { links: { wiki } } })}
+              onChange={(wiki) => dispatchMetadata({ type: 'updateLinks', metadata: { links: { wiki } } })}
               placeholder="https://example.com/wiki"
               isFullWidth
             />
@@ -162,40 +195,61 @@ export default function EditCollectionPage() {
 
         <article className={spaces.article}>
           <Heading as="h3">Benefits</Heading>
-          <TextInputBox
-            label="Benefit 1"
-            value=""
-            type="text"
-            onChange={console.log}
-            placeholder="1st benefit"
-            isFullWidth
-          />
-          <Button variant="gray" className="w-full">
+          {metadata.benefits?.map((benefit, i) => (
+            <TextInputBox
+              key={i}
+              label={`Benefit ${i + 1}`}
+              value={benefit || ''}
+              type="text"
+              onChange={(benefit) =>
+                dispatchMetadata({ type: 'updateBenefit', metadata: { benefits: [benefit] }, key: i })
+              }
+              placeholder={`benefit ${i + 1}`}
+              isFullWidth
+            />
+          ))}
+          <Button
+            variant="gray"
+            className="w-full"
+            onClick={() => dispatchMetadata({ type: 'createBenefit', metadata: { benefits: [''] } })}
+          >
             Add benefit
           </Button>
         </article>
 
         <article className={spaces.article}>
           <Heading as="h3">Partnerships</Heading>
-          <SocialsInputGroup>
-            <TextInputBox
-              label="Partner name"
-              value=""
-              type="text"
-              onChange={console.log}
-              placeholder="Name"
-              isFullWidth
-            />
-            <TextInputBox
-              label="Partnership website"
-              value=""
-              type="text"
-              onChange={console.log}
-              placeholder="Website URL"
-              isFullWidth
-            />
-          </SocialsInputGroup>
-          <Button variant="gray" className="w-full">
+          {metadata.partnerships?.map((partnership, i) => (
+            <SocialsInputGroup key={i}>
+              <TextInputBox
+                label="Partner name"
+                value={partnership?.name || ''}
+                type="text"
+                onChange={(name) =>
+                  dispatchMetadata({ type: 'updatePartnership', metadata: { partnerships: [{ name }] }, key: i })
+                }
+                placeholder="Name"
+                isFullWidth
+              />
+              <TextInputBox
+                label="Partnership website"
+                value={partnership?.link || ''}
+                type="text"
+                onChange={(link) =>
+                  dispatchMetadata({ type: 'updatePartnership', metadata: { partnerships: [{ link }] }, key: i })
+                }
+                placeholder="Website link"
+                isFullWidth
+              />
+            </SocialsInputGroup>
+          ))}
+          <Button
+            variant="gray"
+            className="w-full"
+            onClick={() =>
+              dispatchMetadata({ type: 'createPartnership', metadata: { partnerships: [{ link: '', name: '' }] } })
+            }
+          >
             Add partnership
           </Button>
         </article>
