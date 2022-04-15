@@ -7,7 +7,7 @@
     "build": "npm install && npm run update:lib && rimraf ./build && cross-env next build",
     "start": "next start -p 8080",
     "lint": "eslint . --fix",
-    "format": "prettier --write {src,pages}/**/*.{tsx,ts}",
+    "format": "prettier --write {src,pages}/**/{**,}/*.{tsx,ts}",
     "update:lib": "npm update @infinityxyz/lib",
     "analyze": "ANALYZE=true next build"
   },

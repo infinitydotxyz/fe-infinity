@@ -68,7 +68,7 @@ export const apiGet = async (path: string, params?: ApiParams): Promise<ApiRespo
   const queryStr = buildQueryString(params?.query);
 
   try {
-    const userEndpointRegex = /\/u\//;
+    const userEndpointRegex = /\/(u|user)\//;
     const publicUserEndpoint = /\/p\/u\//;
     const requiresAuth = userEndpointRegex.test(path) && !publicUserEndpoint.test(path);
 
@@ -131,7 +131,9 @@ export const apiDelete = async (path: string, params?: ApiParams): Promise<ApiRe
     const { data, status } = await axiosApi({
       url: `${API_BASE}${path}${queryStr}`,
       method: 'DELETE',
-      headers
+      headers,
+      data: params?.data,
+      ...params?.options
     });
     return { result: data, status };
   } catch (err: Error | unknown) {
@@ -155,9 +157,9 @@ interface useFetchParams {
   swrOptions?: SWRConfiguration<unknown> | undefined;
   [key: string]: unknown;
 }
-export function useFetch<T>(path: string, params: useFetchParams = {}) {
+export function useFetch<T>(path: string | null, params: useFetchParams = {}) {
   const queryStr = buildQueryString(params?.query);
-  const { data, error } = useSWR(`${path}${queryStr}`, swrFetch, params?.swrOptions || {});
+  const { data, error } = useSWR(path ? `${path}${queryStr}`: null, swrFetch, params?.swrOptions || {});
   return {
     result: error ? null : (data as T),
     isLoading: !error && !data,

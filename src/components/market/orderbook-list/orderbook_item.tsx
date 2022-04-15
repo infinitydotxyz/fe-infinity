@@ -52,7 +52,7 @@ export const OrderbookItem = ({ title, content, nameItem, order }: Props4): JSX.
 
   return (
     <div className="flex flex-col">
-      <div className="text-slate-500">{title}</div>
+      <div className="text-gray-500">{title}</div>
 
       {content}
     </div>
