@@ -12,7 +12,7 @@ import { useAppContext } from 'src/utils/context/AppContext';
 import { DeepPartial } from 'src/utils/typeUtils';
 
 const spaces = {
-  article: 'space-y-5'
+  article: 'space-y-3 md:space-y-5'
 };
 
 type MetadataAction = 'updateMetadata';
@@ -103,7 +103,7 @@ export default function EditCollectionPage() {
 
   // TODO: add nextjs progressbar
   return (
-    <div className="transition w-[100vw] h-[100vh] overflow-y-auto">
+    <div className="transition w-[100vw] h-[100vh] overflow-y-auto p-4 md:p-0">
       <header className="flex justify-between p-5">
         <img alt="logo" src={logo.src} width={logo.width} />
         <nav className="flex flex-row space-x-2">
@@ -113,8 +113,8 @@ export default function EditCollectionPage() {
           <Button onClick={submit}>Save</Button>
         </nav>
       </header>
-      <main className="flex flex-col my-4 mx-auto w-144 space-y-5">
-        <article className="flex flex-row items-center">
+      <main className="flex flex-col my-4 mx-auto max-w-xl space-y-5">
+        <article className="flex flex-row items-center justify-between md:justify-start">
           <AvatarImage url={metadata.profileImage} size="large" />
           <div className="flex flex-col space-y-2 ml-2">
             <Button>Upload</Button>
