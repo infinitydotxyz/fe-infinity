@@ -90,19 +90,6 @@ export function GalleryBox({ collection }: GalleryProps) {
 
   return (
     <div>
-      <header className="text-right">
-        <Button
-          variant="outline"
-          onClick={() => {
-            setFilterShowed((flag) => !flag);
-          }}
-          className="mr-2 text-sm font-heading"
-        >
-          {filterShowed ? 'Hide' : 'Show'} Filter
-        </Button>
-        <GallerySort />
-      </header>
-
       <div className="flex items-start">
         {collection && filterShowed && (
           <div className="">
@@ -110,7 +97,20 @@ export function GalleryBox({ collection }: GalleryProps) {
           </div>
         )}
 
-        <div className="flex flex-wrap mt-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-8 mt-6">
+          <header className="sm:col-span-2 lg:col-span-3 xl:col-span-4 text-right">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setFilterShowed((flag) => !flag);
+              }}
+              className="mr-2 text-sm font-heading"
+            >
+              {filterShowed ? 'Hide' : 'Show'} Filter
+            </Button>
+            <GallerySort />
+          </header>
+
           {isFetching && (
             <div className="w-full">
               <Spinner className="ml-8" />
@@ -118,7 +118,7 @@ export function GalleryBox({ collection }: GalleryProps) {
           )}
 
           {data.map((item, idx) => {
-            return <Card key={idx} data={item} className="mr-16 mt-8" onClick={() => console.log} isSellCard={false} />;
+            return <Card key={idx} data={item} className="mr-8 mb-8" onClick={() => console.log} />;
           })}
 
           {dataLoaded && (

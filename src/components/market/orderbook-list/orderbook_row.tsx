@@ -57,7 +57,7 @@ export const OrderbookRow = ({ order }: Props3): JSX.Element => {
   });
 
   return (
-    <div className={'rounded-3xl mb-3 p-8 w-full bg-slate-100'}>
+    <div className={'rounded-3xl mb-3 p-8 w-full bg-gray-100'}>
       <div className={'grid items-start relative w-full gap-5'} style={{ gridTemplateColumns: gridTemplate }}>
         {defaultDataColumns.map((data) => {
           const content = valueDiv(data);
