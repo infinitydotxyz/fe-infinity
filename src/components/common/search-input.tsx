@@ -24,7 +24,9 @@ export const SearchInput: React.FC = () => {
     isActive ? inputRef?.current?.focus() : inputRef?.current?.blur();
   }, [isActive]);
 
-  const { result } = useFetch<{ data: CollectionItem[] | null }>(`/collections/search?query=${text}&limit=15`);
+  const { result } = useFetch<{ data: CollectionItem[] | null }>(
+    text ? `/collections/search?query=${text}&limit=15` : null
+  );
   const data = result?.data ?? [];
   const [selected, setSelected] = React.useState<CollectionItem | null>(null);
 

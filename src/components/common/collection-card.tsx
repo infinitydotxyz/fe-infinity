@@ -1,9 +1,8 @@
 import { FunctionComponent } from 'react';
 import { trimText } from './read-more-text';
 import Link from 'next/link';
-
-import { CollectionSearchDto } from 'pages/explore-collections';
 import { BLANK_IMAGE_URL } from 'src/utils';
+import { CollectionSearchDto } from './collection-grid';
 
 interface CollectionCardProps {
   collection: CollectionSearchDto;
