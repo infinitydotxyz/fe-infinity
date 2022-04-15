@@ -14,12 +14,12 @@ interface Props {
 }
 
 export function StatsChips({ collection, weeklyStatsData }: Props) {
-  const { user, checkSignedIn, userFollowingCollections } = useAppContext();
+  const { user, checkSignedIn, userFollowingCollections, fetchFollowingCollections } = useAppContext();
   const [isFollowing, setIsFollowing] = useState(false);
 
   useEffect(() => {
     const _isFollowing = !!userFollowingCollections.find(
-      (item: FollowingCollection) => item.collectionAddress === collection?.address
+      (item: FollowingCollection) => item.collectionAddress && item.collectionAddress === collection?.address
     );
     setIsFollowing(_isFollowing);
   }, [userFollowingCollections]);
@@ -40,6 +40,7 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
       } else {
         toastSuccess('Unfollowed ' + collection?.metadata?.name);
         setIsFollowing(false);
+        fetchFollowingCollections();
       }
     } else {
       const { error } = await apiPost(`/user/1:${user?.address}/followingCollections`, {
@@ -53,6 +54,7 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
       } else {
         toastSuccess('Followed ' + collection?.metadata?.name);
         setIsFollowing(true);
+        fetchFollowingCollections();
       }
     }
   };
