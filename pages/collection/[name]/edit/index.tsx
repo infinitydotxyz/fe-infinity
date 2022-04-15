@@ -70,7 +70,7 @@ export default function EditCollectionPage() {
               value=""
               type="text"
               onChange={console.log}
-              placeholder="twitter.com/name"
+              placeholder="https://twitter.com/user"
               isFullWidth
             />
             <TextInputBox
@@ -78,7 +78,7 @@ export default function EditCollectionPage() {
               value=""
               type="text"
               onChange={console.log}
-              placeholder="instagram.com/name"
+              placeholder="https://instagram.com/user"
               isFullWidth
             />
           </SocialsInputGroup>
@@ -88,7 +88,7 @@ export default function EditCollectionPage() {
               value=""
               type="text"
               onChange={console.log}
-              placeholder="facebook.com/name"
+              placeholder="https://facebook.com/page"
               isFullWidth
             />
             <TextInputBox
@@ -96,13 +96,46 @@ export default function EditCollectionPage() {
               value=""
               type="text"
               onChange={console.log}
-              placeholder="discord.com/invite"
+              placeholder="https://discord.com/invite"
               isFullWidth
             />
           </SocialsInputGroup>
-          <Button variant="gray" className="w-full">
-            Add social
-          </Button>
+          <SocialsInputGroup>
+            <TextInputBox
+              label="Medium"
+              value=""
+              type="text"
+              onChange={console.log}
+              placeholder="https://medium.com/user"
+              isFullWidth
+            />
+            <TextInputBox
+              label="Telegram"
+              value=""
+              type="text"
+              onChange={console.log}
+              placeholder="https://t.me/invite"
+              isFullWidth
+            />
+          </SocialsInputGroup>
+          <SocialsInputGroup>
+            <TextInputBox
+              label="External"
+              value=""
+              type="text"
+              onChange={console.log}
+              placeholder="https://example.com"
+              isFullWidth
+            />
+            <TextInputBox
+              label="Wiki"
+              value=""
+              type="text"
+              onChange={console.log}
+              placeholder="https://example.com/wiki"
+              isFullWidth
+            />
+          </SocialsInputGroup>
         </article>
 
         <article className={spaces.article}>
