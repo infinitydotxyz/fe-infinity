@@ -1,8 +1,6 @@
 import { OBOrderSpec, OBOrderSpecToken } from '@infinityxyz/lib/types/core';
 import Link from 'next/link';
 import { ReactNode } from 'react';
-import { useAppContext } from 'src/utils/context/AppContext';
-import { useCollectionCache } from './collection-cache';
 
 type Props4 = {
   content?: ReactNode;
@@ -13,9 +11,6 @@ type Props4 = {
 };
 
 export const OrderbookItem = ({ title, content, nameItem, order }: Props4): JSX.Element => {
-  const { nameForCollection } = useCollectionCache();
-  const { chainId } = useAppContext();
-
   const tokenDiv = (collectionName: string, token?: OBOrderSpecToken) => {
     return (
       <div className="flex gap-2">
@@ -24,7 +19,7 @@ export const OrderbookItem = ({ title, content, nameItem, order }: Props4): JSX.
         </div>
 
         <div className="flex flex-col truncate">
-          <div className={'truncate'}>{nameForCollection(parseInt(chainId), collectionName)}</div>
+          <div className={'truncate'}>{collectionName}</div>
 
           {token && (
             <Link passHref href={`/collection/${order.id}`}>

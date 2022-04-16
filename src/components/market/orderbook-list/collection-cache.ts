@@ -2,12 +2,37 @@ import { BaseCollection, BaseToken } from '@infinityxyz/lib/types/core';
 import { useEffect, useState } from 'react';
 import { apiGet } from 'src/utils/apiUtils';
 import mitt from 'mitt';
+import { CollectionSearchArrayDto } from 'src/components/common/collection-grid';
 
 class _CollectionCache {
   cCache = new Map<string, BaseCollection>();
   tCache = new Map<string, BaseToken>();
   fetchingKeySet = new Set<string>();
   emitter = mitt();
+
+  oneCollection = async (query: string): Promise<BaseCollection | undefined> => {
+    const API_ENDPOINT = '/collections/search';
+    const response = await apiGet(API_ENDPOINT, {
+      query: {
+        query,
+        limit: 24
+      }
+    });
+
+    if (response.error) {
+      console.log(response.error);
+    } else {
+      const dtoData = response.result as CollectionSearchArrayDto;
+      if (dtoData.data && dtoData.data.length > 0) {
+        const dto = dtoData.data[0];
+
+        const { result } = await apiGet(`/collections/${dto.chainId}:${dto.address}`);
+        const collection = result as BaseCollection;
+
+        return collection;
+      }
+    }
+  };
 
   getCollection = (chainId: number, collectionAddress: string): BaseCollection | undefined => {
     const key = `${chainId.toString()}-${collectionAddress}`;
