@@ -6,11 +6,12 @@ import { secondsPerDay } from 'src/components/market/order-drawer/ui-constants';
 
 export interface OrderCartItem {
   isSellOrder: boolean;
-  imageUrl: string;
+  imageUrl?: string;
   tokenName?: string;
   tokenId?: number;
   collectionName: string;
   collectionAddress: string;
+  profileImage?: string;
 }
 
 export interface OrderInCart {
@@ -20,7 +21,13 @@ export interface OrderInCart {
 }
 
 const isCartItemEqual = (a: OrderCartItem, b: OrderCartItem): boolean => {
-  return a.tokenName === b.tokenName && a.collectionName === b.collectionName;
+  return (
+    a.tokenName === b.tokenName &&
+    a.collectionName === b.collectionName &&
+    a.collectionAddress === b.collectionAddress &&
+    a.isSellOrder === b.isSellOrder &&
+    a.imageUrl === b.imageUrl
+  );
 };
 
 const indexOfCartItem = (list: OrderCartItem[], item: OrderCartItem): number => {
@@ -99,8 +106,18 @@ export function OrderContextProvider({ children }: Props) {
     for (const cartItem of cartItems) {
       items.push({
         collectionAddress: cartItem.collectionAddress,
-        collectionName: cartItem.collectionAddress,
-        tokens: [{ tokenId: cartItem.tokenId ?? 0, tokenName: cartItem.tokenName ?? '' }]
+        collectionName: cartItem.collectionName,
+        profileImage: cartItem.profileImage ?? '',
+        tokens:
+          cartItem.tokenId !== undefined
+            ? [
+                {
+                  tokenId: cartItem.tokenId ?? 0,
+                  tokenName: cartItem.tokenName ?? '',
+                  imageUrl: cartItem.imageUrl ?? ''
+                }
+              ]
+            : []
       });
     }
 

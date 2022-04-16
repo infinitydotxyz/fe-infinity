@@ -60,7 +60,6 @@ export const OrderbookRow = ({ order }: Props3): JSX.Element => {
         {defaultDataColumns.map((data) => {
           const content = valueDiv(data);
 
-          // don't show title on progress bars
           const title = data.name;
 
           return (

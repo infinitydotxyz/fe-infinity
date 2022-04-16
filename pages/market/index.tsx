@@ -58,7 +58,7 @@ export default function MarketPage() {
                 addCartItem({
                   collectionName: collection.name ?? '(no name)',
                   collectionAddress: collection.address ?? '(no address)',
-                  imageUrl: collection.profileImage ?? '',
+                  profileImage: collection.profileImage ?? '',
                   isSellOrder: false
                 });
               }}
@@ -71,7 +71,7 @@ export default function MarketPage() {
                 addCartItem({
                   collectionName: collection.name ?? '(no name)',
                   collectionAddress: collection.address ?? '(no address)',
-                  imageUrl: collection.profileImage ?? '',
+                  profileImage: collection.profileImage ?? '',
                   isSellOrder: false
                 });
               }}
