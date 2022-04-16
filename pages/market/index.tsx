@@ -151,7 +151,7 @@ export default function MarketPage() {
         <div className="flex space-x-2 items-center mb-2">
           <ToggleTab options={options} selected={selected} onChange={onChange} />
           <Spacer />
-          <Button variant="outline" className="font-heading text-sm">
+          <Button variant="outline" className="font-heading">
             Filter
           </Button>
           <Dropdown
