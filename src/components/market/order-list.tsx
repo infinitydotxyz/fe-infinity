@@ -2,8 +2,6 @@ import React from 'react';
 import { uuidv4 } from 'src/utils/commonUtils';
 import styles from './styles.module.scss';
 import { Button } from 'src/components/common';
-import { formatEther } from 'ethers/lib/utils';
-import { bigNumToDate } from 'src/utils/marketUtils';
 import { BuyOrderMatch, OBOrderSpec, getCurrentOrderSpecPrice, isOrderSpecExpired } from '@infinityxyz/lib/types/core';
 
 // =======================================================
@@ -45,13 +43,13 @@ const BuyOrderCard = ({ order, onClickAction }: Props2): JSX.Element => {
   return (
     <div className={classes} onClick={() => onClickAction(order, 'card')}>
       <div className={styles.title}>Buy Order</div>
-      <div>startPrice: {formatEther(order.startPrice)}</div>
-      <div>endPrice: {formatEther(order.endPrice)}</div>
+      <div>startPrice: {order.startPrice}</div>
+      <div>endPrice: {order.endPrice}</div>
       <div>collections: {collections.join(', ')}</div>
       <div>numItems: {order.numItems}</div>
       <div>chainId: {order.chainId}</div>
-      <div>startTime: {bigNumToDate(order.startTime).toLocaleString()}</div>
-      <div>endTime: {bigNumToDate(order.endTime).toLocaleString()}</div>
+      <div>startTime: {new Date(order.startTime).toLocaleString()}</div>
+      <div>endTime: {new Date(order.endTime).toLocaleString()}</div>
       <div>id: {order.id}</div>
       <div>expired: {isOrderSpecExpired(order) ? 'YES' : 'NO'}</div>
 
@@ -107,13 +105,13 @@ const SellOrderCard = ({ order, onClickAction }: Props11): JSX.Element => {
   return (
     <div className={classes} onClick={() => onClickAction(order, 'card')}>
       <div className={styles.title}>Sell Order</div>
-      <div>currentPrice: {formatEther(currentPrice)}</div>
-      <div>startPrice: {formatEther(order.startPrice)}</div>
-      <div>endPrice: {formatEther(order.endPrice)}</div>
+      <div>currentPrice: {currentPrice}</div>
+      <div>startPrice: {order.startPrice}</div>
+      <div>endPrice: {order.endPrice}</div>
       <div>collections: {collections.join(', ')}</div>
       <div>chainId: {order.chainId}</div>
-      <div>startTime: {bigNumToDate(order.startTime).toLocaleString()}</div>
-      <div>endTime: {bigNumToDate(order.endTime).toLocaleString()}</div>
+      <div>startTime: {new Date(order.startTime).toLocaleString()}</div>
+      <div>endTime: {new Date(order.endTime).toLocaleString()}</div>
       <div>id: {order.id}</div>
       <div>expired: {isOrderSpecExpired(order) ? 'YES' : 'NO'}</div>
 

@@ -24,7 +24,7 @@ export const OrderbookItem = ({ title, content, nameItem, order }: Props4): JSX.
         </div>
 
         <div className="flex flex-col truncate">
-          <div className={'truncate'}>{nameForCollection(chainId, collectionName)}</div>
+          <div className={'truncate'}>{nameForCollection(parseInt(chainId), collectionName)}</div>
 
           {token && (
             <Link passHref href={`/collection/${order.id}`}>

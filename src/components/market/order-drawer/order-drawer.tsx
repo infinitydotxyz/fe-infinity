@@ -1,13 +1,12 @@
 import { Spacer, Divider, Button, Drawer, SimpleTable, SimpleModal } from 'src/components/common';
 import { useOrderContext } from 'src/utils/context/OrderContext';
-import { formatEther } from 'ethers/lib/utils';
 import { OrderBuilder } from './order-builder';
 import { OrderSummary } from './order-summary';
 import { EthPrice } from 'src/components/common/eth-price';
 import { useState } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { TooltipSpec } from 'src/components/common/tool-tip';
-import { BigNumber } from '@ethersproject/bignumber/lib/bignumber';
+import { numStr } from 'src/utils';
 
 interface Props {
   open: boolean;
@@ -47,24 +46,24 @@ export function OrderDrawer({ open, onClose }: Props) {
 
       const items = [];
 
-      let totalEth: BigNumber = BigNumber.from(0);
-      let totalNFTs: BigNumber = BigNumber.from(0);
+      let totalEth = 0;
+      let totalNFTs = 0;
 
       for (const orderInCart of ordersInCart) {
-        totalEth = totalEth.add(orderInCart.order.endPrice);
-        totalNFTs = totalNFTs.add(orderInCart.order.numItems);
+        totalEth = totalEth + orderInCart.order.endPrice;
+        totalNFTs = totalNFTs + orderInCart.order.numItems;
       }
 
       if (isSellOrderCart()) {
         items.push({
           title: 'Min total sale price',
-          value: <EthPrice label={formatEther(totalEth)} />
+          value: <EthPrice label={numStr(totalEth)} />
         });
         items.push({ title: 'Max NFTs to sell', value: <div>{totalNFTs.toString()}</div> });
       } else {
         items.push({
           title: 'Max budget',
-          value: <EthPrice label={formatEther(totalEth)} />
+          value: <EthPrice label={numStr(totalEth)} />
         });
         items.push({ title: 'Min NFTs to buy', value: <div>{totalNFTs.toString()}</div> });
       }
