@@ -1,5 +1,4 @@
 import { BaseCollection, BaseToken } from '@infinityxyz/lib/types/core';
-import { BigNumberish } from 'ethers';
 import { useEffect, useState } from 'react';
 import { apiGet } from 'src/utils/apiUtils';
 import mitt from 'mitt';
@@ -10,7 +9,7 @@ class _CollectionCache {
   fetchingKeySet = new Set<string>();
   emitter = mitt();
 
-  getCollection = (chainId: BigNumberish, collectionAddress: string): BaseCollection | undefined => {
+  getCollection = (chainId: number, collectionAddress: string): BaseCollection | undefined => {
     const key = `${chainId.toString()}-${collectionAddress}`;
 
     const collection = this.cCache.get(key);
@@ -27,7 +26,7 @@ class _CollectionCache {
     }
   };
 
-  getCollectionAsync = async (chainId: BigNumberish, collectionAddress: string): Promise<BaseCollection> => {
+  getCollectionAsync = async (chainId: number, collectionAddress: string): Promise<BaseCollection> => {
     const key = `${chainId.toString()}-${collectionAddress}`;
 
     let collection = this.cCache.get(key);
@@ -43,7 +42,7 @@ class _CollectionCache {
     return collection;
   };
 
-  getToken = (chainId: BigNumberish, collectionAddress: string, tokenId: string): BaseToken | undefined => {
+  getToken = (chainId: number, collectionAddress: string, tokenId: string): BaseToken | undefined => {
     const key = `${chainId.toString()}-${collectionAddress}-${tokenId}`;
 
     const token = this.tCache.get(key);
@@ -60,7 +59,7 @@ class _CollectionCache {
     }
   };
 
-  getTokenAsync = async (chainId: BigNumberish, collectionAddress: string, tokenId: string): Promise<BaseToken> => {
+  getTokenAsync = async (chainId: number, collectionAddress: string, tokenId: string): Promise<BaseToken> => {
     const key = `${chainId.toString()}-${collectionAddress}-${tokenId}`;
 
     let token = this.tCache.get(key);
@@ -98,13 +97,13 @@ export function useCollectionCache() {
     setTrigger(t);
   };
 
-  const nameForTokenId = (chainId: BigNumberish, collectionAddress: string, tokenId: string): string => {
+  const nameForTokenId = (chainId: number, collectionAddress: string, tokenId: string): string => {
     CollectionCache.getToken(chainId, collectionAddress, tokenId);
 
     return tokenId;
   };
 
-  const imageForTokenId = (chainId: BigNumberish, collectionAddress: string, tokenId: string): string => {
+  const imageForTokenId = (chainId: number, collectionAddress: string, tokenId: string): string => {
     const token = CollectionCache.getToken(chainId, collectionAddress, tokenId);
 
     if (token) {
@@ -114,7 +113,7 @@ export function useCollectionCache() {
     return tokenId;
   };
 
-  const nameForCollection = (chainId: BigNumberish, collectionAddress: string): string => {
+  const nameForCollection = (chainId: number, collectionAddress: string): string => {
     const collection = CollectionCache.getCollection(chainId, collectionAddress);
 
     if (collection) {
