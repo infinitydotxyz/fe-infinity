@@ -56,19 +56,19 @@ export function CollectionPage() {
 
           <div className="text-secondary mt-6 text-sm md:w-2/3">{collection?.metadata.description ?? ''}</div>
 
-          <div className="text-sm mt-7">
+          <div className="mt-7">
             <div className="font-medium">Ownership includes</div>
             <div className="flex space-x-8 mt-3 font-normal">
-              <div className="flex text-secondary">
-                <AiOutlineCheck className="text-xs mt-1 mr-2 text-black" />
+              <div className="flex items-center text-secondary">
+                <AiOutlineCheck className="mr-2 text-black" />
                 Access
               </div>
-              <div className="flex text-secondary">
-                <AiOutlineCheck className="text-xs mt-1 mr-2 text-black" />
+              <div className="flex items-center text-secondary">
+                <AiOutlineCheck className="mr-2 text-black" />
                 Royalties
               </div>
-              <div className="flex text-secondary">
-                <AiOutlineCheck className="text-xs mt-1 mr-2 text-black" />
+              <div className="flex items-center text-secondary">
+                <AiOutlineCheck className="mr-2 text-black" />
                 IP rights
               </div>
             </div>
@@ -100,7 +100,7 @@ export function CollectionPage() {
           <RoundedNav
             items={[{ title: 'NFT' }, { title: 'Activity' }, { title: 'Community' }]}
             onChange={(currentIndex) => setCurrentTab(currentIndex)}
-            className="mt-8"
+            className="mt-12"
           />
 
           <div className="mt-6 min-h-[1024px]">

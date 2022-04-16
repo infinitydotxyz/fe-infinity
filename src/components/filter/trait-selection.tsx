@@ -126,7 +126,7 @@ export const TraitSelection = ({ traits, onChange }: Props) => {
             {openState[item.name] && (
               <div>
                 <input
-                  className="border rounded-lg p-2 ml-2 mt-1 text-sm w-[90%]"
+                  className="border rounded-lg p-2 mt-1 text-sm w-[90%]"
                   defaultValue={searchState[item.name]}
                   onChange={(ev) => {
                     const text = ev.target.value;
@@ -140,7 +140,7 @@ export const TraitSelection = ({ traits, onChange }: Props) => {
                   placeholder="Filter"
                 />
 
-                <div className="pl-2 h-80 overflow-y-scroll">
+                <div className="h-80 overflow-y-scroll">
                   {valuesArr.map((value) => {
                     const searchText = (searchState[item.name] || '').toLowerCase();
                     if (searchText && value.name.toLowerCase().indexOf(searchText) < 0) {

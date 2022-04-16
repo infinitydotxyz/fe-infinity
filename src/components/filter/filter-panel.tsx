@@ -7,9 +7,10 @@ import { TraitSelection } from './trait-selection';
 interface Props {
   collection?: BaseCollection;
   collectionAddress?: string;
+  className?: string;
 }
 
-export const FilterPanel = ({ collection, collectionAddress }: Props) => {
+export const FilterPanel = ({ collection, collectionAddress, className }: Props) => {
   const { filterState, setFilterState } = useFilterContext();
   const [minPriceVal, setMinPriceVal] = useState('');
   const [maxPriceVal, setMaxPriceVal] = useState('');
@@ -42,7 +43,7 @@ export const FilterPanel = ({ collection, collectionAddress }: Props) => {
   const showSaleAndPriceFilters = false;
 
   return (
-    <div className="w-60 mr-8 mt-5">
+    <div className={`w-80 mr-12 ${className ?? ''}`}>
       <div className="text-2xl font-bold">Filter</div>
 
       {showSaleAndPriceFilters && (
