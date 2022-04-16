@@ -2,7 +2,7 @@ import React from 'react';
 
 interface Props {
   type?: string;
-  label?: string;
+  label?: string | React.ReactNode;
   value?: string;
 }
 
@@ -12,12 +12,12 @@ export function Field({ type, label, value }: Props) {
       positioner: {
         className: `
           w-full h-full overflow-hidden
-          grid items-center justify-end
+          grid items-center justify-center
         `
       },
       container: {
         className: `
-          w-[48px] h-[48px] overflow-hidden
+          w-[50px] h-[50px] overflow-hidden
           rounded-full
         `
       },
@@ -32,7 +32,7 @@ export function Field({ type, label, value }: Props) {
       container: {
         className: `
           w-full h-full overflow-hidden
-          grid place-items-center
+          grid justify-start items-center
         `
       },
       element: {
@@ -45,7 +45,7 @@ export function Field({ type, label, value }: Props) {
       container: {
         className: `
           w-full h-full overflow-hidden
-          grid place-items-center
+          grid justify-start items-center
         `
       },
       label: {
@@ -63,11 +63,36 @@ export function Field({ type, label, value }: Props) {
         `
       }
     },
+    change: {
+      container: {
+        className: `
+          w-full h-full overflow-hidden
+          grid justify-start items-center
+        `
+      },
+      label: {
+        className: `
+          self-end
+          font-bold font-mono
+          text-sm text-theme-light-800
+        `
+      },
+      value: (value: number) => ({
+        className: `
+          self-start
+          font-bold font-mono
+          text-sm text-theme-light-900
+          ${value > 0 && 'text-theme-light-500'}
+          ${value < 0 && 'text-theme-light-600'}
+          ${value == 0 && 'text-theme-light-900'}
+        `
+      })
+    },
     percentage: {
       container: {
         className: `
           w-full h-full overflow-hidden
-          grid place-items-center px-4
+          grid justify-start items-center px-4
         `
       },
       pill: {
@@ -125,6 +150,12 @@ export function Field({ type, label, value }: Props) {
         <div {...styles?.number?.container}>
           <p {...styles?.number?.label}>{label}</p>
           <p {...styles?.number?.value}>{value}</p>
+        </div>
+      )}
+      {type === 'change' && (
+        <div {...styles?.change?.container}>
+          <p {...styles?.change?.label}>{label}</p>
+          <p {...styles?.change?.value(value)}>{value.toLocaleString()}</p>
         </div>
       )}
       {type === 'percentage' && (

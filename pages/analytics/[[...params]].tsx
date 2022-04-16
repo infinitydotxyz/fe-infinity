@@ -6,7 +6,7 @@ import { useFetch } from 'src/utils/apiUtils';
 import { useRouter } from 'next/router';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CollectionStats } from '@infinityxyz/lib/types/core';
-import { ITEMS_PER_PAGE } from 'src/utils/constants';
+import { ITEMS_PER_PAGE, BLANK_IMG } from 'src/utils/constants';
 
 export const Analytics = () => {
   const router = useRouter();
@@ -31,19 +31,22 @@ export const Analytics = () => {
   const query =
     page === 'trending'
       ? `/collections/rankings?orderBy=volume&orderDirection=desc&period=${interval}&date=${date}&limit=${limit}`
-      : `/user/${user?.address}/watchlist?orderBy=volume&orderDirection=desc&period=${interval}&date=${date}&limit=${limit}`;
+      : `/user/1:${user?.address}/watchlist?orderBy=volume&orderDirection=desc&period=${interval}&date=${date}&limit=${limit}`;
 
   const data = useFetch<{ data: CollectionStats[] }>(query);
 
   if (data.result) {
     statistics = data.result.data.map((d) => {
       const name = d.name;
-      const image = d.profileImage;
+      const image = d.profileImage ? d.profileImage : BLANK_IMG;
       const trust = d.votesFor > 0 ? `${(d.votesFor / (d.votesAgainst + d.votesFor)) * 100}%` : '0%';
       const items = d.numNfts ? d.numNfts : '-';
       const owners = d.numOwners ? d.numOwners : '-';
       const volume = d.volume ? d.volume : '-';
-      const floorPrice = d.floorPrice ? d.floorPrice : `-`;
+      const floorPrice = d.floorPrice ? d.floorPrice : '-';
+      const volumePercentChange = d.volumePercentChange ? d.volumePercentChange : '-';
+      const floorPricePercentChange = d.floorPricePercentChange ? d.floorPricePercentChange : '-';
+
       return [
         {
           type: 'image',
@@ -52,11 +55,6 @@ export const Analytics = () => {
         {
           type: 'string',
           value: name
-        },
-        {
-          label: 'Trust',
-          type: 'percentage',
-          value: trust
         },
         {
           label: 'Items',
@@ -69,14 +67,24 @@ export const Analytics = () => {
           value: owners.toLocaleString()
         },
         {
-          label: 'Floor Price',
-          type: 'number',
-          value: floorPrice.toLocaleString()
-        },
-        {
           label: 'Volume',
           type: 'number',
-          value: volume.toLocaleString()
+          value: `Ξ ${volume.toLocaleString()}`
+        },
+        {
+          label: 'Vol. change',
+          type: 'change',
+          value: volumePercentChange
+        },
+        {
+          label: 'Floor Price',
+          type: 'number',
+          value: `Ξ ${floorPrice.toLocaleString()}`
+        },
+        {
+          label: 'Fl. change',
+          type: 'change',
+          value: floorPricePercentChange
         },
         {
           type: 'action',
@@ -221,7 +229,7 @@ export const Analytics = () => {
       className: `
         w-full h-full
         bg-theme-light-50
-        flex flex-col
+        flex flex-col gap-2
       `
     },
     heading: {
@@ -336,7 +344,7 @@ export const Analytics = () => {
             w-full h-full
             row-start-1 col-start-1 row-span-1 col-span-24
             ring ring-inset ring-transparent
-            flex flex-col gap-4
+            flex flex-col gap-2
           `
         },
         loading: {
@@ -354,10 +362,14 @@ export const Analytics = () => {
         item: {
           container: {
             className: `
-              w-full h-full min-h-[170px] overflow-hidden rounded-xl
+              w-full h-full min-h-[144px] overflow-hidden rounded-xl
               bg-theme-light-300
               grid grid-rows-1
-              ${connected ? 'grid-cols-[2fr,6fr,6fr,3fr,3fr,3fr,3fr,2fr]' : 'grid-cols-[2fr,7fr,7fr,3fr,3fr,3fr,3fr]'}
+              ${
+                connected
+                  ? 'grid-cols-[3fr,4fr,3fr,3fr,3fr,3fr,3fr,3fr,2fr]'
+                  : 'grid-cols-[3fr,4fr,3fr,3fr,3fr,3fr,3fr,2fr]'
+              }
               place-items-center
             `
           },
@@ -366,20 +378,6 @@ export const Analytics = () => {
               className: `
                 w-full h-full
                 row-span-1 col-span-1
-              `
-            },
-            image: {
-              className: `
-                w-full h-full
-                row-span-1 col-span-1
-                bg-red-200
-              `
-            },
-            name: {
-              className: `
-                w-full h-full
-                row-span-1 col-span-1
-                bg-blue-200
               `
             }
           }
