@@ -11,14 +11,18 @@ type CollectionItem = BaseCollection & {
   profileImage: string;
 };
 
-export const SearchInput: React.FC = () => {
+interface Props {
+  opened?: boolean;
+}
+
+export const SearchInput: React.FC<Props> = ({ opened }) => {
   const router = useRouter();
   const [isActive, setIsActive] = React.useState(false);
   const [text, setText] = React.useState('');
   const inputRef: React.RefObject<HTMLInputElement> = React.useRef(null);
 
   const activate = () => setIsActive(true);
-  const deactivate = () => (text.length == 0 ? setIsActive(false) : null);
+  const deactivate = () => (text.length == 0 && !opened ? setIsActive(false) : null);
 
   React.useEffect(() => {
     isActive ? inputRef?.current?.focus() : inputRef?.current?.blur();
@@ -48,6 +52,10 @@ export const SearchInput: React.FC = () => {
       : data.filter((collection) =>
           collection.name.toLowerCase().replace(/\s+/g, '').includes(text.toLowerCase().replace(/\s+/g, ''))
         );
+
+  React.useEffect(() => {
+    if (opened) setIsActive(true);
+  }, [opened]);
 
   const styles = {
     container: {
