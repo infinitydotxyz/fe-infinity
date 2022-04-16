@@ -77,7 +77,7 @@ export function Navbar() {
 
           desktop-8k:grid-cols-[8fr,3fr,8fr,2fr]
           desktop-4k:grid-cols-[8fr,3fr,8fr,2fr]
-          desktop-lg:grid-cols-[2fr,3fr,10fr,2fr]
+          desktop-lg:grid-cols-[3fr,2fr,6fr,1fr]
           desktop-md:grid-cols-[2fr,3fr,10fr,2fr]
           desktop-sm:grid-cols-[0fr,4fr,13fr,3fr]
           tablet:grid-cols-[0fr,4fr,13fr,3fr]
