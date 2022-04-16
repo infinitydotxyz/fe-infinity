@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Card, ToggleTab, useToggleTab, PageBox, Spacer, Dropdown } from 'src/components/common';
 import { OrderDrawer, OrderDebug } from 'src/components/market';
-import { CardData } from '@infinityxyz/lib/types/core';
+import { BaseCollection, CardData } from '@infinityxyz/lib/types/core';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { FaShoppingBag } from 'react-icons/fa';
 import { RiLayoutGridFill } from 'react-icons/ri';
 import { OrderbookList } from 'src/components/market/orderbook-list';
+import { CollectionGrid } from 'src/components/common/collection-grid';
+import { GalleryBox } from 'src/components/gallery/gallery-box';
+import { CollectionCache } from 'src/components/market/orderbook-list/collection-cache';
 
 // get image ids here https://picsum.photos/images
 const testCardData: CardData[] = [
@@ -104,6 +107,18 @@ export default function MarketPage() {
   const { orderDrawerOpen, setOrderDrawerOpen, isOrderStateEmpty, addCartItem } = useOrderContext();
   const { options, onChange, selected } = useToggleTab(['Assets', 'Orderbook'], 'Assets');
 
+  const [collection, setCollection] = useState<BaseCollection | undefined>();
+
+  const updateCollections = async () => {
+    const col = await CollectionCache.oneCollection('f');
+
+    setCollection(col);
+  };
+
+  useEffect(() => {
+    updateCollections();
+  }, []);
+
   let contents;
   if (showDebugTools) {
     contents = <OrderDebug />;
@@ -201,6 +216,11 @@ export default function MarketPage() {
           Debug
         </Button>
       </div>
+
+      <CollectionGrid query="fan" className="my-4" />
+      <CollectionGrid query="fan" className="my-4" />
+
+      {collection && <GalleryBox collection={collection} />}
     </PageBox>
   );
 }
