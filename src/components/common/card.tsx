@@ -7,7 +7,7 @@ import Link from 'next/link';
 
 interface Props {
   data: CardData;
-  onClick: () => void;
+  onClick: (data: CardData) => void;
   isSellCard?: boolean;
   className?: string;
 }
@@ -31,9 +31,7 @@ export function Card({ data, onClick, isSellCard, className }: Props): JSX.Eleme
             <span className="font-medium font-heading">Buy</span> {data.price} ETH
           </>
         ) : (
-          <Link href={`/asset/${data.chainId}/${data.tokenAddress}/${data.tokenId}`} passHref={true}>
-            <a className="font-medium font-heading">Details</a>
-          </Link>
+          <a className="font-medium font-heading">Details</a>
         )}
       </>
     );
@@ -56,7 +54,7 @@ export function Card({ data, onClick, isSellCard, className }: Props): JSX.Eleme
       </div>
 
       <footer className="text-sm flex items-center justify-between mt-3">
-        <Button variant="outline" className="flex-1 py-3" onClick={onClick}>
+        <Button variant="outline" className="flex-1 py-3" onClick={() => onClick(data)}>
           {buttonContents}
         </Button>
         <div className="border border-gray-300 rounded-3xl ml-1 pt-1 w-10 h-10 flex justify-center items-center text-lg">

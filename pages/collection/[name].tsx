@@ -14,9 +14,11 @@ import { CommunityRightPanel } from 'src/components/collection/community-right-p
 import { AiOutlineCheck } from 'react-icons/ai';
 
 export function CollectionPage() {
+  const router = useRouter();
   const {
     query: { name }
-  } = useRouter();
+  } = router;
+
   const [currentTab, setCurrentTab] = useState(0);
   const path = `/collections/${name}`;
   const { result: collection } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
@@ -104,7 +106,14 @@ export function CollectionPage() {
           />
 
           <div className="mt-6 min-h-[1024px]">
-            {currentTab === 0 && <>{collection && <GalleryBox collection={collection} />}</>}
+            {currentTab === 0 && collection && (
+              <GalleryBox
+                collection={collection}
+                onClick={(data) => {
+                  router.push(`/asset/${data.chainId}/${data.tokenAddress}/${data.tokenId}`);
+                }}
+              />
+            )}
             {currentTab === 1 && <ActivityTab dailyStats={dailyStats} weeklyStats={weeklyStats} />}
             {currentTab === 2 && (
               <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-16">

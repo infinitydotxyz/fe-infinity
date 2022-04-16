@@ -222,6 +222,8 @@ export function OrderContextProvider({ children }: Props) {
         setCartItems([...cartItems, item]);
       }
     }
+
+    setOrderDrawerOpen(true);
   };
 
   const removeCartItem = (item: OrderCartItem) => {
