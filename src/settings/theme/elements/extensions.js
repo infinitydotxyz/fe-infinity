@@ -19,7 +19,11 @@ module.exports = {
     23: 'repeat(23, minmax(0, 1fr))',
     24: 'repeat(24, minmax(0, 1fr))',
     25: 'repeat(25, minmax(0, 1fr))',
-    26: 'repeat(26, minmax(0, 1fr))'
+    26: 'repeat(26, minmax(0, 1fr))',
+    27: 'repeat(27, minmax(0, 1fr))',
+    28: 'repeat(28, minmax(0, 1fr))',
+    29: 'repeat(29, minmax(0, 1fr))',
+    30: 'repeat(30, minmax(0, 1fr))'
   },
   gridTemplateColumns: {
     7: 'repeat(7, minmax(0, 1fr))',
@@ -41,7 +45,11 @@ module.exports = {
     23: 'repeat(23, minmax(0, 1fr))',
     24: 'repeat(24, minmax(0, 1fr))',
     25: 'repeat(25, minmax(0, 1fr))',
-    26: 'repeat(26, minmax(0, 1fr))'
+    26: 'repeat(26, minmax(0, 1fr))',
+    27: 'repeat(27, minmax(0, 1fr))',
+    28: 'repeat(28, minmax(0, 1fr))',
+    29: 'repeat(29, minmax(0, 1fr))',
+    30: 'repeat(30, minmax(0, 1fr))'
   },
   gridRow: {
     'span-7': 'span 7 / span 7',
@@ -63,7 +71,11 @@ module.exports = {
     'span-23': 'span 23 / span 23',
     'span-24': 'span 24 / span 24',
     'span-25': 'span 25 / span 25',
-    'span-26': 'span 26 / span 26'
+    'span-26': 'span 26 / span 26',
+    'span-27': 'span 27 / span 27',
+    'span-28': 'span 28 / span 28',
+    'span-29': 'span 29 / span 29',
+    'span-30': 'span 30 / span 30'
   },
   gridColumn: {
     'span-7': 'span 7 / span 7',
@@ -85,7 +97,11 @@ module.exports = {
     'span-23': 'span 23 / span 23',
     'span-24': 'span 24 / span 24',
     'span-25': 'span 25 / span 25',
-    'span-26': 'span 26 / span 26'
+    'span-26': 'span 26 / span 26',
+    'span-27': 'span 27 / span 27',
+    'span-28': 'span 28 / span 28',
+    'span-29': 'span 29 / span 29',
+    'span-30': 'span 30 / span 30'
   },
   gridRowStart: {
     7: '7',

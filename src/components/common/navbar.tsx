@@ -24,7 +24,7 @@ export function Navbar() {
       className: `
           w-full h-full z-50
           sticky top-0
-          row-span-2 col-span-24
+          row-span-1 col-span-24
           bg-white bg-opacity-70 glass
           grid place-items-center
         `
@@ -38,27 +38,36 @@ export function Navbar() {
           desktop-sm:w-[95%]
           tabloid:w-[95%]
           mobile:w-[98%]
-          desktop-8k:grid-cols-[1fr,8fr] desktop-8k:gap-8
-          desktop-4k:grid-cols-[1fr,8fr] desktop-4k:gap-8
-          desktop-lg:grid-cols-[1fr,8fr] desktop-lg:gap-8
+          desktop-8k:grid-cols-[1fr,10fr] desktop-8k:gap-8
+          desktop-4k:grid-cols-[1fr,10fr] desktop-4k:gap-8
+          desktop-lg:grid-cols-[1fr,10fr] desktop-lg:gap-8
           desktop-md:grid-cols-[1fr,6fr] desktop-md:gap-8
           desktop-sm:grid-cols-[1fr,6fr] desktop-sm:gap-4
-          tablet:grid-cols-[1fr,6fr] tablet:gap-2
-          mobile-xl:grid-cols-[3fr,9fr] mobile:gap-2
-          mobile-lg:grid-cols-[4fr,9fr] mobile:gap-2
-          mobile-md:grid-cols-[4fr,9fr] mobile:gap-2
-          mobile-sm:grid-cols-[3fr,9fr] mobile:gap-2
+          tablet:grid-cols-[40px,6fr] tablet:gap-2
+          mobile-xl:grid-cols-[40px,9fr] mobile:gap-2
+          mobile-lg:grid-cols-[40px,9fr] mobile:gap-2
+          mobile-md:grid-cols-[40px,9fr] mobile:gap-2
+          mobile-sm:grid-cols-[40px,9fr] mobile:gap-2
           py-4
         `
     },
     logo: {
-      family: 'SVG',
-      name: 'infinity',
-      className: `
+      regular: {
+        className: `
           col-span-1
           desktop:w-full
+          tabloid:hidden
           justify-self-start text-center hover:cursor-pointer
         `
+      },
+      mobile: {
+        className: `
+          col-span-1
+          desktop:hidden
+          tabloid:w-[40px]
+          justify-self-start text-center hover:cursor-pointer
+        `
+      }
     },
     actions: {
       container: {
@@ -66,8 +75,8 @@ export function Navbar() {
           w-full h-full col-span-1 row-span-1
           grid grid-rows-1 gap-1
 
-          desktop-8k:grid-cols-[2fr,3fr,10fr,2fr]
-          desktop-4k:grid-cols-[2fr,3fr,10fr,2fr]
+          desktop-8k:grid-cols-[8fr,3fr,8fr,2fr]
+          desktop-4k:grid-cols-[8fr,3fr,8fr,2fr]
           desktop-lg:grid-cols-[2fr,3fr,10fr,2fr]
           desktop-md:grid-cols-[2fr,3fr,10fr,2fr]
           desktop-sm:grid-cols-[0fr,4fr,13fr,3fr]
@@ -81,6 +90,16 @@ export function Navbar() {
             transition w-full h-full max-h-full
             col-span-1 row-span-1
             grid bg-transparent
+          `
+        },
+        desktop: {
+          className: `
+            w-full h-full desktop:visible tabloid:hidden
+          `
+        },
+        mobile: {
+          className: `
+            w-full h-full desktop:hidden tabloid:visible
           `
         }
       },
@@ -111,7 +130,11 @@ export function Navbar() {
             col-span-1 row-span-1
             grid items-center
             bg-transparent
-            desktop:text-sm
+            desktop-8k:text-md
+            desktop-4k:text-md
+            desktop-lg:text-sm
+            desktop-md:text-sm
+            desktop-sm:text-sm
             tabloid:text-xs
             mobile:text-xs
           `
@@ -122,7 +145,11 @@ export function Navbar() {
             justify-self-end
             font-mono
             text-theme-light-900 hover:underline rounded-full
-            desktop:text-sm
+            desktop-8k:text-md
+            desktop-4k:text-md
+            desktop-lg:text-sm
+            desktop-md:text-sm
+            desktop-sm:text-sm
             tabloid:text-xs
             mobile:text-xs
           `
@@ -157,7 +184,11 @@ export function Navbar() {
               desktop:pl-4 desktop:pr-20 desktop:py-2
               tabloid:pl-2 tabloid:pr-10 tabloid:py-2
               mobile:pl-2 mobile:pr-10 mobile:py-2
-              desktop:text-sm
+              desktop-8k:text-md
+              desktop-4k:text-md
+              desktop-lg:text-sm
+              desktop-md:text-sm
+              desktop-sm:text-sm
               tabloid:text-xs
               mobile:text-xs
             `
@@ -168,7 +199,11 @@ export function Navbar() {
               justify-self-end
               flex gap-2 place-items-center place-content-center
               font-mono text-theme-light-900 hover:underline rounded-full
-              desktop:text-sm
+              desktop-8k:text-md
+              desktop-4k:text-md
+              desktop-lg:text-sm
+              desktop-md:text-sm
+              desktop-sm:text-sm
               tabloid:text-xs
               mobile:text-xs
             `
@@ -202,7 +237,10 @@ export function Navbar() {
     buttons: {
       home: {
         label: 'Home',
-        icon: SVG.logo,
+        icon: {
+          regular: SVG.logo,
+          mobile: SVG.infinity
+        },
         props: {
           href: '/',
           className: `w-full h-full flex`
@@ -284,13 +322,19 @@ export function Navbar() {
             ====================================
           */}
             <a {...content?.buttons?.home?.props}>
-              <content.buttons.home.icon {...styles?.logo}></content.buttons.home.icon>
+              <content.buttons.home.icon.regular {...styles?.logo?.regular}></content.buttons.home.icon.regular>
+              <content.buttons.home.icon.mobile {...styles?.logo?.mobile}></content.buttons.home.icon.mobile>
             </a>
           </Link>
           <div {...styles?.actions?.container}>
             <div></div>
             <div {...styles?.actions?.search?.container}>
-              <SearchInput />
+              <div {...styles?.actions?.search?.desktop}>
+                <SearchInput />
+              </div>
+              <div {...styles?.actions?.search?.mobile}>
+                <SearchInput opened />
+              </div>
             </div>
             <div {...styles?.actions?.items?.mobile}>
               <Menu as="div" {...styles?.actions?.item?.menu?.container}>
