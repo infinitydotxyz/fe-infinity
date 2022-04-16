@@ -91,13 +91,13 @@ export function GalleryBox({ collection }: GalleryProps) {
   return (
     <div className="flex items-start">
       {collection && filterShowed && (
-        <div className="">
+        <div className="mt-4">
           <FilterPanel collection={collection} collectionAddress={collection?.address} />
         </div>
       )}
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-8 mt-[-68px]">
-        <header className="sm:col-span-2 lg:col-span-3 xl:col-span-4 text-right mb-2">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-x-12 gap-y-20 mt-[-70px]">
+        <header className="sm:col-span-2 lg:col-span-3 xl:col-span-3 text-right mb-[-40px]">
           <Button
             variant="outline"
             onClick={() => {
@@ -117,7 +117,7 @@ export function GalleryBox({ collection }: GalleryProps) {
         )}
 
         {data.map((item, idx) => {
-          return <Card key={idx} data={item} className="mr-8 mb-8" onClick={() => console.log} />;
+          return <Card key={idx} data={item} className="" onClick={() => console.log} />;
         })}
 
         {dataLoaded && (
