@@ -214,9 +214,7 @@ export const ConnectButton: React.FC = () => {
         <>
           <Link href="/connect" passHref>
             <div {...styles?.menu?.button?.container}>
-              <div {...styles?.menu?.button?.disconnected}>
-                {content?.button}
-              </div>
+              <div {...styles?.menu?.button?.disconnected}>{content?.button}</div>
             </div>
           </Link>
         </>
