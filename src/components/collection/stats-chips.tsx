@@ -14,12 +14,12 @@ interface Props {
 }
 
 export function StatsChips({ collection, weeklyStatsData }: Props) {
-  const { user, checkSignedIn, userFollowingCollections } = useAppContext();
+  const { user, checkSignedIn, userFollowingCollections, fetchFollowingCollections } = useAppContext();
   const [isFollowing, setIsFollowing] = useState(false);
 
   useEffect(() => {
     const _isFollowing = !!userFollowingCollections.find(
-      (item: FollowingCollection) => item.collectionAddress === collection?.address
+      (item: FollowingCollection) => item.collectionAddress && item.collectionAddress === collection?.address
     );
     setIsFollowing(_isFollowing);
   }, [userFollowingCollections]);
@@ -40,6 +40,7 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
       } else {
         toastSuccess('Unfollowed ' + collection?.metadata?.name);
         setIsFollowing(false);
+        fetchFollowingCollections();
       }
     } else {
       const { error } = await apiPost(`/user/1:${user?.address}/followingCollections`, {
@@ -53,6 +54,7 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
       } else {
         toastSuccess('Followed ' + collection?.metadata?.name);
         setIsFollowing(true);
+        fetchFollowingCollections();
       }
     }
   };
@@ -67,7 +69,9 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
         content={
           <span className="flex items-center">
             {isFollowing ? (
-              'Followed'
+              <>
+                <AiOutlinePlus className="mr-1" /> Following
+              </>
             ) : (
               <>
                 <AiOutlinePlus className="mr-1" /> Follow
@@ -138,7 +142,7 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
         <Chip
           content={<FaInstagram className="text-lg" />}
           onClick={() => window.open(collection?.metadata?.links?.instagram)}
-          className="p-0"
+          className="p-2"
         />
       )}
 
@@ -146,7 +150,7 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
         <Chip
           content={<HiOutlineExternalLink className="text-lg" />}
           onClick={() => window.open(collection?.metadata?.links?.external)}
-          className="p-0"
+          className="p-2"
         />
       )}
 

@@ -1,10 +1,8 @@
-import { formatEther } from 'ethers/lib/utils';
 import { RiEditCircleFill } from 'react-icons/ri';
 import { Button, SimpleTable, SimpleTableItem, Spacer } from 'src/components/common';
 import { EthPrice } from 'src/components/common/eth-price';
 import { shortDate } from 'src/utils';
 import { OrderInCart, useOrderContext } from 'src/utils/context/OrderContext';
-import { bigNumToDate } from 'src/utils/marketUtils';
 import { collectionIconHeight, collectionIconStyle, collectionIconWidthInPx, iconButtonStyle } from './ui-constants';
 
 export function OrderSummary() {
@@ -59,19 +57,19 @@ export function OrderSummary() {
     if (isSellOrderCart()) {
       items.push({
         title: 'Max budget',
-        value: <EthPrice label={formatEther(orderInCart.order.endPrice ?? 0)} />
+        value: <EthPrice label={orderInCart.order.endPrice.toString()} />
       });
       items.push({ title: 'Min NFTs to buy', value: <div>{orderInCart.order.numItems}</div> });
-      items.push({ title: 'Expiration Date', value: <div>{shortDate(bigNumToDate(orderInCart.order.endTime))}</div> });
+      items.push({ title: 'Expiration Date', value: <div>{shortDate(new Date(orderInCart.order.endTime))}</div> });
     } else {
       items.push({
         title: 'Max budget',
-        value: <EthPrice label={formatEther(orderInCart.order.endPrice ?? 0)} />
+        value: <EthPrice label={orderInCart.order.endPrice.toString()} />
       });
       items.push({ title: 'Min NFTs to buy', value: <div>{orderInCart.order.numItems}</div> });
       items.push({
         title: 'Expiration Date',
-        value: <div>{shortDate(bigNumToDate(orderInCart.order.endTime ?? 0))}</div>
+        value: <div>{shortDate(new Date(orderInCart.order.endTime ?? 0))}</div>
       });
     }
 

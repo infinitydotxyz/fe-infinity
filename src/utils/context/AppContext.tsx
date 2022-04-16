@@ -28,6 +28,7 @@ export type AppContextType = {
   connectWallet: (walletType: WalletType) => Promise<void>;
   providerManager?: ProviderManager;
   userFollowingCollections: FollowingCollection[];
+  fetchFollowingCollections: () => void;
 };
 
 const AppContext = React.createContext<AppContextType | null>(null);
@@ -188,7 +189,8 @@ export function AppContextProvider(props: React.PropsWithChildren<unknown>) {
     setHeaderPosition,
     connectWallet,
     providerManager,
-    userFollowingCollections: followingCollections
+    userFollowingCollections: followingCollections,
+    fetchFollowingCollections
   };
 
   return (

@@ -89,49 +89,47 @@ export function GalleryBox({ collection }: GalleryProps) {
   }, [currentPage]);
 
   return (
-    <div>
-      <div className="flex items-start">
-        {collection && filterShowed && (
-          <div className="">
-            <FilterPanel collection={collection} collectionAddress={collection?.address} />
+    <div className="flex items-start">
+      {collection && filterShowed && (
+        <div className="mt-4">
+          <FilterPanel collection={collection} collectionAddress={collection?.address} />
+        </div>
+      )}
+
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-x-12 gap-y-20 mt-[-70px]">
+        <header className="sm:col-span-2 lg:col-span-3 xl:col-span-3 text-right mb-[-40px]">
+          <Button
+            variant="outline"
+            onClick={() => {
+              setFilterShowed((flag) => !flag);
+            }}
+            className="py-2.5 mr-2 font-heading"
+          >
+            {filterShowed ? 'Hide' : 'Show'} filter
+          </Button>
+          <GallerySort />
+        </header>
+
+        {isFetching && (
+          <div className="w-full">
+            <Spinner className="ml-8" />
           </div>
         )}
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-8 mt-6">
-          <header className="sm:col-span-2 lg:col-span-3 xl:col-span-4 text-right">
-            <Button
-              variant="outline"
-              onClick={() => {
-                setFilterShowed((flag) => !flag);
-              }}
-              className="mr-2 text-sm font-heading"
-            >
-              {filterShowed ? 'Hide' : 'Show'} Filter
-            </Button>
-            <GallerySort />
-          </header>
+        {data.map((item, idx) => {
+          return <Card key={idx} data={item} className="" onClick={() => console.log} />;
+        })}
 
-          {isFetching && (
-            <div className="w-full">
-              <Spinner className="ml-8" />
-            </div>
-          )}
-
-          {data.map((item, idx) => {
-            return <Card key={idx} data={item} className="mr-8 mb-8" onClick={() => console.log} />;
-          })}
-
-          {dataLoaded && (
-            <FetchMore
-              currentPage={currentPage}
-              data={data}
-              onFetchMore={async () => {
-                // setDataLoaded(false);
-                await fetchData();
-              }}
-            />
-          )}
-        </div>
+        {dataLoaded && (
+          <FetchMore
+            currentPage={currentPage}
+            data={data}
+            onFetchMore={async () => {
+              // setDataLoaded(false);
+              await fetchData();
+            }}
+          />
+        )}
       </div>
     </div>
   );

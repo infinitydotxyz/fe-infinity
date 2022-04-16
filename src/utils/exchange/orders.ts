@@ -2,11 +2,18 @@ import { BigNumber, BigNumberish, BytesLike, constants, Contract } from 'ethers'
 import { defaultAbiCoder, keccak256, solidityKeccak256, splitSignature, _TypedDataEncoder } from 'ethers/lib/utils';
 import { NULL_ADDRESS } from '../constants';
 import { ProviderManager } from '../providers/ProviderManager';
-import { OBOrder, Item, ExtraParams, ExecParams, SignedOBOrder } from '@infinityxyz/lib/types/core';
+import {
+  getCurrentOrderPrice,
+  OBOrder,
+  Item,
+  ExtraParams,
+  ExecParams,
+  SignedOBOrder
+} from '@infinityxyz/lib/types/core';
 import { infinityExchangeAbi } from '../../abi/infinityExchange';
 import { User } from '../context/AppContext';
 import { erc721Abi } from '../../abi/erc721';
-import { getCurrentOrderPrice, nowSeconds, trimLowerCase } from '@infinityxyz/lib/utils';
+import { nowSeconds, trimLowerCase } from '@infinityxyz/lib/utils';
 import { erc20Abi } from '../../abi/erc20';
 import { JsonRpcSigner } from '@ethersproject/providers';
 
