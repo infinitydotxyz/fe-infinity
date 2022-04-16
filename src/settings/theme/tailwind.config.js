@@ -22,7 +22,6 @@ module.exports = {
     require('postcss-import'),
     require('tailwindcss/nesting'),
     require('@tailwindcss/typography'),
-    require('@tailwindcss/forms'),
-    require('tailwindcss-filters')
+    require('@tailwindcss/forms')
   ]
 };
