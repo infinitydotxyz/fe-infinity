@@ -3,8 +3,6 @@ import { Button } from 'src/components/common';
 import { BuyOrderList, BuyOrderMatchList, SellOrderList } from 'src/components/market/order-list';
 import { useAppContext } from 'src/utils/context/AppContext';
 import {
-  addBuy,
-  addSell,
   executeBuyOrder,
   marketBuyOrders,
   marketDeleteOrder,
@@ -17,27 +15,21 @@ import {
   MarketListId,
   MarketListingsBody,
   MarketOrder,
-  OBOrder
+  OBOrderSpec
 } from '@infinityxyz/lib/types/core';
-import { OrderModal } from 'src/components/market/order-modal';
 import { RefreshIcon } from '@heroicons/react/outline';
 import { iconButtonStyle } from './order-drawer/ui-constants';
 
 export function OrderDebug() {
-  const [buyOrders, setBuyOrders] = useState<OBOrder[]>([]);
-  const [sellOrders, setSellOrders] = useState<OBOrder[]>([]);
+  const [buyOrders, setBuyOrders] = useState<OBOrderSpec[]>([]);
+  const [sellOrders, setSellOrders] = useState<OBOrderSpec[]>([]);
   const [matchOrders, setMatchOrders] = useState<BuyOrderMatch[]>([]);
-  const { showAppError, showAppMessage, user, providerManager } = useAppContext();
-  const [buyModalShown, setBuyModalShown] = useState(false);
-  const [sellModalShown, setSellModalShown] = useState(false);
+  const { showAppError, showAppMessage, user } = useAppContext();
 
-  const [buyOrdersValidInactive, setBuyOrdersValidInactive] = useState<OBOrder[]>([]);
-  const [buyOrdersInvalid, setBuyOrdersInvalid] = useState<OBOrder[]>([]);
-  const [sellOrdersValidInactive, setSellOrdersValidInactive] = useState<OBOrder[]>([]);
-  const [sellOrdersInvalid, setSellOrdersInvalid] = useState<OBOrder[]>([]);
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [clickedOrder, setClickedOrder] = useState<OBOrder>();
+  const [buyOrdersValidInactive, setBuyOrdersValidInactive] = useState<OBOrderSpec[]>([]);
+  const [buyOrdersInvalid, setBuyOrdersInvalid] = useState<OBOrderSpec[]>([]);
+  const [sellOrdersValidInactive, setSellOrdersValidInactive] = useState<OBOrderSpec[]>([]);
+  const [sellOrdersInvalid, setSellOrdersInvalid] = useState<OBOrderSpec[]>([]);
 
   useEffect(() => {
     if (user) {
@@ -48,26 +40,6 @@ export function OrderDebug() {
   // ===========================================================
 
   // buy orders
-
-  const buy = async (order: OBOrder) => {
-    if (!user || !providerManager) {
-      console.error('no user or provider');
-      return;
-    }
-    // crashes
-    // const signer = providerManager.getEthersProvider().getSigner();
-    // await prepareOBOrder(user, chainId, signer, order);
-
-    const match = await addBuy(order);
-
-    if (match) {
-      setMatchOrders(match);
-
-      showAppMessage('Buy successful');
-    } else {
-      showAppError('Buy submitted');
-    }
-  };
 
   const listBuyOrders = async () => {
     await _listBuyOrders(MarketListId.ValidActive);
@@ -85,7 +57,7 @@ export function OrderDebug() {
     const match = await marketBuyOrders(listId);
 
     if (match) {
-      const orders: OBOrder[] = match;
+      const orders: OBOrderSpec[] = match;
 
       switch (listId) {
         case MarketListId.ValidActive:
@@ -108,16 +80,6 @@ export function OrderDebug() {
   // ===========================================================
   // sell orders
 
-  const sell = async (order: OBOrder) => {
-    const match = await addSell(order);
-    if (match) {
-      setMatchOrders(match);
-      showAppMessage('sell successful.');
-    } else {
-      showAppMessage('sell submitted');
-    }
-  };
-
   const listSellOrders = async () => {
     await _listSellOrders(MarketListId.ValidActive);
   };
@@ -134,7 +96,7 @@ export function OrderDebug() {
     const match = await marketSellOrders(listId);
 
     if (match) {
-      const orders: OBOrder[] = match;
+      const orders: OBOrderSpec[] = match;
 
       switch (listId) {
         case MarketListId.ValidActive:
@@ -175,26 +137,6 @@ export function OrderDebug() {
     <div className={'xx'}>
       <Button
         onClick={async () => {
-          setClickedOrder(undefined);
-
-          setBuyModalShown(true);
-        }}
-      >
-        Buy
-      </Button>
-
-      <Button
-        onClick={async () => {
-          setClickedOrder(undefined);
-
-          setSellModalShown(true);
-        }}
-      >
-        Sell
-      </Button>
-
-      <Button
-        onClick={async () => {
           refreshAllLists();
         }}
       >
@@ -221,23 +163,16 @@ export function OrderDebug() {
     listSellOrdersInvalid();
   };
 
-  const handleAcceptClick = async (buyOrder: OBOrder) => {
+  const handleAcceptClick = async (buyOrder: OBOrderSpec) => {
     await executeBuyOrder(buyOrder.id ?? '');
 
     refreshActiveLists();
     refreshInactiveLists();
   };
 
-  const handleCardClick = async (order: OBOrder, action: string, listId: MarketListId) => {
+  const handleCardClick = async (order: OBOrderSpec, action: string, listId: MarketListId) => {
     switch (action) {
       case 'card':
-        setClickedOrder(order);
-
-        if (!order.isSellOrder) {
-          setBuyModalShown(true);
-        } else {
-          setSellModalShown(true);
-        }
         break;
       case 'delete':
         // eslint-disable-next-line
@@ -266,35 +201,6 @@ export function OrderDebug() {
         console.log(`not handled: ${action}`);
         break;
     }
-  };
-
-  const modalComponent = (buyMode: boolean) => {
-    return (
-      <OrderModal
-        inOrder={clickedOrder}
-        buyMode={buyMode}
-        isOpen={buyMode ? buyModalShown : sellModalShown}
-        onClose={async (obOrder) => {
-          if (buyMode) {
-            setBuyModalShown(false);
-
-            if (obOrder) {
-              await buy(obOrder);
-
-              listBuyOrders();
-            }
-          } else {
-            setSellModalShown(false);
-
-            if (obOrder) {
-              await sell(obOrder);
-
-              listSellOrders();
-            }
-          }
-        }}
-      />
-    );
   };
 
   return (
@@ -389,9 +295,6 @@ export function OrderDebug() {
           )}
           {sellOrdersInvalid.length === 0 && <NothingFound />}
         </div>
-
-        {modalComponent(true)}
-        {modalComponent(false)}
       </div>
     </div>
   );

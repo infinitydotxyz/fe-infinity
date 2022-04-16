@@ -118,7 +118,7 @@ export default function MarketPage() {
             collectionAddress: cardData.tokenAddress ?? '(no address)',
             imageUrl: cardData.image ?? '',
             tokenName: cardData.title ?? '(no name)',
-            tokenId: cardData.tokenAddress ?? '(no address)',
+            tokenId: parseInt(cardData.tokenId ?? '0'),
             isSellOrder: false
           });
           setOrderDrawerOpen(true);
@@ -137,7 +137,7 @@ export default function MarketPage() {
             collectionAddress: cardData.tokenAddress ?? '(no address)',
             imageUrl: cardData.image ?? '',
             tokenName: cardData.title ?? '(no name)',
-            tokenId: cardData.tokenAddress ?? '(no address)',
+            tokenId: parseInt(cardData.tokenId ?? '0'),
             isSellOrder: true
           });
           setOrderDrawerOpen(true);

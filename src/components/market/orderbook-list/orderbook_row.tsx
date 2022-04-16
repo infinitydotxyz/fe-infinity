@@ -1,4 +1,4 @@
-import { OBOrder } from '@infinityxyz/lib/types/core';
+import { OBOrderSpec } from '@infinityxyz/lib/types/core';
 import { formatEther } from 'ethers/lib/utils';
 import { EthPrice } from 'src/components/common/eth-price';
 import { numStr, shortDate } from 'src/utils';
@@ -7,7 +7,7 @@ import { DataColumn, defaultDataColumns } from './data-columns';
 import { OrderbookItem } from './orderbook_item';
 
 type Props3 = {
-  order: OBOrder;
+  order: OBOrderSpec;
 };
 
 export const OrderbookRow = ({ order }: Props3): JSX.Element => {
