@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { ethers } from 'ethers';
+import { getAddress } from '@ethersproject/address';
 import { CardData } from '@infinityxyz/lib/types/core';
 import {
   WETH_ADDRESS,
@@ -43,7 +43,7 @@ export const toChecksumAddress = (address?: string): string => {
 
     try {
       // this crashes if the address isn't valid
-      result = ethers.utils.getAddress(address);
+      result = getAddress(address);
     } catch (err) {
       // do nothing
     }

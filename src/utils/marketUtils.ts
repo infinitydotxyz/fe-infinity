@@ -9,7 +9,7 @@ import {
   TradeBody,
   TradeResponse
 } from '@infinityxyz/lib/types/core';
-import { BigNumber, BigNumberish } from 'ethers';
+import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { apiPost, isStatusOK } from 'src/utils/apiUtils';
 
 export const addBuy = async (order: OBOrderSpec): Promise<BuyOrderMatch[]> => {

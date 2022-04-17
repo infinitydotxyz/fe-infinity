@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Signature } from 'ethers';
+import { Signature } from '@ethersproject/bytes';
 import { ProviderEvents, WalletType } from './AbstractProvider';
 export interface JSONRPCRequestPayload {
   params: any[];
