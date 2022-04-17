@@ -43,7 +43,8 @@ export const OrderbookItem = ({ title, content, nameItem, order }: Props4): JSX.
 
   if (nameItem) {
     const nFts = [];
-    const nfts = order.nftsWithMetadata;
+    // todo: temp fix
+    const nfts = order.nftsWithMetadata ?? order.nfts ?? [];
     for (const n of nfts) {
       if (n.tokens.length > 0) {
         for (const t of n.tokens) {
