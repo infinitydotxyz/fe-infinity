@@ -150,15 +150,16 @@ export function OrderContextProvider({ children }: Props) {
       }
 
       setCartItems(orderInCart.cartItems);
-      setPrice(orderInCart.order.startPrice);
-      setExpirationDate(orderInCart.order.endTime);
-      setNumItems(orderInCart.order.numItems);
+      setPrice(parseFloat(orderInCart.order.startPrice.toString()));
+      setExpirationDate(parseInt(orderInCart.order.endTime.toString()));
+      setNumItems(parseInt(orderInCart.order.numItems.toString()));
     }
   };
 
   const addOrderToCart = () => {
     setIsEditingOrder(false);
 
+    // todo: put in missing values
     const order: OBOrderSpec = {
       id: '????',
       chainId: parseInt(chainId),
@@ -169,7 +170,23 @@ export function OrderContextProvider({ children }: Props) {
       endTime: expirationDate,
       startPrice: price,
       endPrice: price,
-      nfts: getItems()
+      nftsWithMetadata: getItems(),
+      makerAddress: user?.address ?? '????',
+      makerUsername: '',
+      takerAddress: '',
+      takerUsername: '',
+      ownerAddress: '',
+      ownerUsername: '',
+      nonce: 1,
+      minBpsToSeller: 9000,
+      execParams: {
+        currencyAddress: '',
+        complicationAddress: ''
+      },
+      extraParams: {
+        buyer: ''
+      },
+      nfts: []
     };
 
     const orderInCart: OrderInCart = {

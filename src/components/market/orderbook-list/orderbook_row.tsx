@@ -25,7 +25,7 @@ export const OrderbookRow = ({ order }: Props3): JSX.Element => {
         value = numStr(order.numItems.toString());
         break;
       case 'expirationDate':
-        value = shortDate(new Date(order.endTime));
+        value = shortDate(new Date(parseInt(order.endTime.toString()) * 1000));
         break;
     }
 
