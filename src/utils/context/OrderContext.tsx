@@ -186,7 +186,11 @@ export function OrderContextProvider({ children }: Props) {
       extraParams: {
         buyer: ''
       },
-      nfts: []
+      nfts: [],
+      buyerAddress: '',
+      buyerUsername: '',
+      startPriceEth: 1,
+      endPriceEth: 1
     };
 
     const orderInCart: OrderInCart = {
