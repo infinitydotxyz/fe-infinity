@@ -1,8 +1,8 @@
 import { BaseCollection, CollectionMetadata } from '@infinityxyz/lib/types/core';
 import { useRouter } from 'next/router';
 import React, { useEffect, useReducer } from 'react';
-import { AvatarImage } from 'src/components/collection/avatar-image';
 import { PlusButton } from 'src/components/collection/edit/buttons';
+import { ProfileImageForm } from 'src/components/collection/edit/profile-image-form';
 import SocialsInputGroup from 'src/components/collection/socials-input-group';
 import { Button, TextAreaInputBox, TextInputBox } from 'src/components/common';
 import { Heading } from 'src/components/common/heading';
@@ -102,6 +102,45 @@ export default function EditCollectionPage() {
     close();
   };
 
+  const deleteProfileImage = async () => {
+    if (!checkSignedIn()) {
+      return;
+    }
+
+    const { error } = await apiPut(`/user/${chainId}:${user?.address}/collections/${router.query.name}`, {
+      data: { deleteProfileImage: true }
+    });
+
+    if (error) {
+      console.error(error);
+      toastError(error?.errorResponse?.message);
+      return;
+    }
+
+    toastSuccess('Successfully removed collection profile image');
+  };
+
+  const uploadProfileImage = async (file: File) => {
+    if (!checkSignedIn()) {
+      return;
+    }
+
+    const fd = new FormData();
+    fd.append('profileImage', file);
+
+    const { error } = await apiPut(`/user/${chainId}:${user?.address}/collections/${router.query.name}`, {
+      data: fd
+    });
+
+    if (error) {
+      console.error(error);
+      toastError(error?.errorResponse?.message);
+      return;
+    }
+
+    toastSuccess('Successfully updated collection profile image');
+  };
+
   // TODO: add nextjs progressbar
   return (
     <div className="transition w-[100vw] h-[100vh] overflow-y-auto p-4 md:p-0">
@@ -115,13 +154,13 @@ export default function EditCollectionPage() {
         </nav>
       </header>
       <main className="flex flex-col my-4 mx-auto max-w-xl space-y-5">
-        <article className="flex flex-row items-center justify-between md:justify-start">
-          {/* TODO: Show 'browse file' icon/text on hover over avatar image. Once clicked, the user should be able to upload it via the 'Upload' button below (see old FE for inspiration). */}
-          <AvatarImage url={metadata.profileImage} alt={metadata.name} size="large" />
-          <div className="flex flex-col space-y-2 ml-2">
-            <Button>Upload</Button>
-            <Button variant="outline">Delete</Button>
-          </div>
+        <article>
+          <ProfileImageForm
+            url={metadata.profileImage}
+            alt={metadata.name}
+            onDelete={deleteProfileImage}
+            onUpload={uploadProfileImage}
+          />
         </article>
 
         <article className={spaces.article}>

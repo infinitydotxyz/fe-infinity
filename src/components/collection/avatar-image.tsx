@@ -2,7 +2,7 @@ import { twMerge } from 'tailwind-merge';
 
 const sizes = {
   medium: 'w-28 h-28',
-  large: 'w-30 h-30'
+  large: 'w-32 h-32'
 };
 
 export interface Props {
