@@ -31,7 +31,7 @@ export function RoundedNav({ items, defaultIndex, onChange, className }: Props) 
               key={item.title}
               href=""
               className={twMerge(
-                `px-10 py-2 my-1 font-medium font-heading rounded-3xl text-sm bg-gray-100 text-secondary ${activeCx}`
+                `min-w-[130px] text-center px-10 py-2.5 my-1 font-medium font-heading rounded-3xl bg-gray-100 text-secondary ${activeCx}`
               )}
               onClick={(e) => {
                 e.preventDefault();

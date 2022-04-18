@@ -14,7 +14,7 @@ export interface CollectionSearchDto {
   name: string;
 }
 
-interface CollectionSearchArrayDto {
+export interface CollectionSearchArrayDto {
   data: CollectionSearchDto[];
   cursor: string;
   hasNextPage: boolean;
@@ -37,9 +37,11 @@ const fetchCollections = async (query: string, cursor: undefined | string) => {
 
 interface Props {
   query: string;
+  className?: string;
+  onClick: (collection: CollectionSearchDto) => void;
 }
 
-export const CollectionGrid = ({ query }: Props) => {
+export const CollectionGrid = ({ query, className, onClick }: Props) => {
   const [collections, setCollections] = useState<CollectionSearchDto[]>([]);
   const [error, setError] = useState(false);
   const [cursor, setCursor] = useState<string>('');
@@ -72,21 +74,21 @@ export const CollectionGrid = ({ query }: Props) => {
   if (error) {
     console.error(error);
     return (
-      <div>
+      <div className={className}>
         <div>Error: Fetching Data Failed.</div>
       </div>
     );
   }
 
   return (
-    <>
+    <div className={className}>
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12 ">
         {collections.map((collection) => (
-          <CollectionCard key={collection.slug} collection={collection} />
+          <CollectionCard key={collection.slug} collection={collection} onClick={onClick} />
         ))}
       </div>
 
       {hasNextPage && <FetchMore onFetchMore={() => handleFetch(cursor)} />}
-    </>
+    </div>
   );
 };

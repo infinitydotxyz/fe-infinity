@@ -1,4 +1,4 @@
-import { OBOrder } from '@infinityxyz/lib/types/core';
+import { OBOrderSpec } from '@infinityxyz/lib/types/core';
 import { Button } from 'src/components/common';
 import { useOrderPager } from '../useOrderPager';
 import { OrderbookRow } from './orderbook_row';
@@ -9,7 +9,7 @@ export const OrderbookList = (): JSX.Element => {
   return (
     <>
       <div className={'flex flex-col items-start'}>
-        {orders.map((order: OBOrder) => {
+        {orders.map((order: OBOrderSpec) => {
           return <OrderbookRow key={order.id} order={order} />;
         })}
 

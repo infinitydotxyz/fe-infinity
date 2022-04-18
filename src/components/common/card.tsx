@@ -7,7 +7,7 @@ import Link from 'next/link';
 
 interface Props {
   data: CardData;
-  onClick: () => void;
+  onClick: (data: CardData) => void;
   isSellCard?: boolean;
   className?: string;
 }
@@ -31,9 +31,7 @@ export function Card({ data, onClick, isSellCard, className }: Props): JSX.Eleme
             <span className="font-medium font-heading">Buy</span> {data.price} ETH
           </>
         ) : (
-          <Link href={`/asset/${data.chainId}/${data.tokenAddress}/${data.tokenId}`} passHref={true}>
-            <a className="font-medium font-heading">Details</a>
-          </Link>
+          <a className="font-medium font-heading">Details</a>
         )}
       </>
     );
@@ -43,20 +41,20 @@ export function Card({ data, onClick, isSellCard, className }: Props): JSX.Eleme
     <div className={twMerge(`sm:mx-0 ${className ?? ''}`)}>
       <Link href={`/asset/${data.chainId}/${data.tokenAddress}/${data.tokenId}`} passHref={true}>
         <a>
-          <img className="rounded-2xl max-h-80 overflow-hidden" src={data.image ?? ''} alt="card" />
+          <img className="rounded-2xl w-[290px] overflow-hidden" src={data.image ?? ''} alt="card" />
         </a>
       </Link>
-      <div className="p-1">
+      <div className="p-1 mt-3">
         <div className="font-bold" title={data.title}>
           {title}
         </div>
-        <div className="text-sm text-secondary" title={data.tokenId}>
+        <div className="text-secondary" title={data.tokenId}>
           {tokenId}
         </div>
       </div>
 
-      <footer className="text-sm flex items-center justify-between">
-        <Button variant="outline" className="flex-1" onClick={onClick}>
+      <footer className="text-sm flex items-center justify-between mt-3">
+        <Button variant="outline" className="flex-1 py-3" onClick={() => onClick(data)}>
           {buttonContents}
         </Button>
         <div className="border border-gray-300 rounded-3xl ml-1 pt-1 w-10 h-10 flex justify-center items-center text-lg">

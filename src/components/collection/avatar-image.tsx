@@ -1,7 +1,7 @@
 import { twMerge } from 'tailwind-merge';
 
 const sizes = {
-  medium: 'w-20 h-20',
+  medium: 'w-28 h-28',
   large: 'w-30 h-30'
 };
 

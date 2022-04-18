@@ -1,4 +1,4 @@
-import { Signature } from 'ethers';
+import { Signature } from '@ethersproject/bytes';
 import EventEmitter from 'events';
 import { JSONRPCRequestPayload, JSONRPCResponsePayload, Provider } from './Provider';
 

@@ -29,7 +29,7 @@ const ExplorePage: FunctionComponent = () => {
         onChange={(event) => handleChange(event.target.value)}
       />
 
-      <CollectionGrid query={debouncedQuery} />
+      <CollectionGrid query={debouncedQuery} onClick={(data) => console.log(data)} />
     </Layout>
   );
 };
