@@ -24,10 +24,10 @@ import { GallerySort } from './gallery-sort';
 
 interface GalleryProps {
   collection: BaseCollection | null;
-  onClick: (data: CardData) => void;
+  onCardClick: (data: CardData) => void;
 }
 
-export function GalleryBox({ collection, onClick }: GalleryProps) {
+export function GalleryBox({ collection, onCardClick }: GalleryProps) {
   const { filterState } = useFilterContext();
 
   const [filterShowed, setFilterShowed] = useState(true);
@@ -118,7 +118,18 @@ export function GalleryBox({ collection, onClick }: GalleryProps) {
         )}
 
         {data.map((item, idx) => {
-          return <Card key={idx} data={item} className="" onClick={() => onClick(item)} />;
+          return (
+            <Card
+              key={idx}
+              data={item}
+              dropdownActions={[
+                { label: 'Action 1', onClick: console.log },
+                { label: 'Action 2', onClick: console.log }
+              ]}
+              className=""
+              onClick={() => onCardClick(item)}
+            />
+          );
         })}
 
         {dataLoaded && (

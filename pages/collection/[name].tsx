@@ -109,7 +109,7 @@ export function CollectionPage() {
             {currentTab === 0 && collection && (
               <GalleryBox
                 collection={collection}
-                onClick={(data) => {
+                onCardClick={(data) => {
                   router.push(`/asset/${data.chainId}/${data.tokenAddress}/${data.tokenId}`);
                 }}
               />

@@ -4,7 +4,7 @@ import { ReactElement } from 'react';
 import { BiCaretDown } from 'react-icons/bi';
 import { twMerge } from 'tailwind-merge';
 
-type DropdownItems = {
+export type DropdownItems = {
   label: string | ReactElement;
   onClick: () => void;
 };

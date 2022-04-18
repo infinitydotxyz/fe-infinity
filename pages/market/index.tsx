@@ -80,7 +80,7 @@ export default function MarketPage() {
             {collection && (
               <GalleryBox
                 collection={collection}
-                onClick={(data) => {
+                onCardClick={(data) => {
                   addCartItem({
                     collectionName: data.collectionName ?? '(no name)',
                     collectionAddress: data.tokenAddress ?? '(no address)',
