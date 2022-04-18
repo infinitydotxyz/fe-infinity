@@ -29,7 +29,7 @@ export function Card({ data, cardActions, dropdownActions, className }: CardProp
           <Button
             key={idx}
             variant="outline"
-            className="flex-1 py-3 font-medium font-heading"
+            className="flex-1 py-3 font-medium"
             onClick={(ev) => {
               cardAction.onClick(ev, data);
             }}
