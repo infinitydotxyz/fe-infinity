@@ -1,4 +1,4 @@
-import { BaseCollection, CollectionMetadata, Metadata } from '@infinityxyz/lib/types/core';
+import { BaseCollection, CollectionMetadata } from '@infinityxyz/lib/types/core';
 import { useRouter } from 'next/router';
 import React, { useEffect, useReducer } from 'react';
 import { PlusButton } from 'src/components/collection/edit/buttons';
