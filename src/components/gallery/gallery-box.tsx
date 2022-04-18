@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { apiGet } from 'src/utils/apiUtils';
 import { ITEMS_PER_PAGE } from 'src/utils/constants';
 import { useFilterContext } from 'src/utils/context/FilterContext';
-import { Button, Card, FetchMore, Spinner } from 'src/components/common';
+import { Button, Card, CardProps, FetchMore, Spinner } from 'src/components/common';
 import { FilterPanel } from '../filter/filter-panel';
 import { GallerySort } from './gallery-sort';
 
@@ -24,10 +24,10 @@ import { GallerySort } from './gallery-sort';
 
 interface GalleryProps {
   collection: BaseCollection | null;
-  onClick: (data: CardData) => void;
+  cardProps?: CardProps;
 }
 
-export function GalleryBox({ collection, onClick }: GalleryProps) {
+export function GalleryBox({ collection, cardProps }: GalleryProps) {
   const { filterState } = useFilterContext();
 
   const [filterShowed, setFilterShowed] = useState(true);
@@ -118,7 +118,7 @@ export function GalleryBox({ collection, onClick }: GalleryProps) {
         )}
 
         {data.map((item, idx) => {
-          return <Card key={idx} data={item} className="" onClick={() => onClick(item)} />;
+          return <Card key={idx} data={item} {...cardProps} />;
         })}
 
         {dataLoaded && (

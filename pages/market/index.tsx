@@ -80,15 +80,22 @@ export default function MarketPage() {
             {collection && (
               <GalleryBox
                 collection={collection}
-                onClick={(data) => {
-                  addCartItem({
-                    collectionName: data.collectionName ?? '(no name)',
-                    collectionAddress: data.tokenAddress ?? '(no address)',
-                    imageUrl: data.image ?? '',
-                    tokenName: data.title ?? '(no name)',
-                    tokenId: parseInt(data.tokenId ?? '0'),
-                    isSellOrder: false
-                  });
+                cardProps={{
+                  cardActions: [
+                    {
+                      label: 'Add',
+                      onClick: (ev, data) => {
+                        addCartItem({
+                          collectionName: data?.collectionName ?? '(no name)',
+                          collectionAddress: data?.tokenAddress ?? '(no address)',
+                          imageUrl: data?.image ?? '',
+                          tokenName: data?.title ?? '(no name)',
+                          tokenId: parseInt(data?.tokenId ?? '0'),
+                          isSellOrder: false
+                        });
+                      }
+                    }
+                  ]
                 }}
               />
             )}
