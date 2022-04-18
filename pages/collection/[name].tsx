@@ -109,8 +109,15 @@ export function CollectionPage() {
             {currentTab === 0 && collection && (
               <GalleryBox
                 collection={collection}
-                onCardClick={(data) => {
-                  router.push(`/asset/${data.chainId}/${data.tokenAddress}/${data.tokenId}`);
+                cardProps={{
+                  cardActions: [
+                    {
+                      label: 'Details',
+                      onClick: (ev, data) => {
+                        router.push(`/asset/${data?.chainId}/${data?.tokenAddress}/${data?.tokenId}`);
+                      }
+                    }
+                  ]
                 }}
               />
             )}
