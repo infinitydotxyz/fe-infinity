@@ -27,9 +27,14 @@ export interface ProfileImageFormProps {
 export const ProfileImageForm: React.FC<ProfileImageFormProps> = (props) => {
   const inputFileRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | undefined>();
-  const [previewUrl, setPreviewUrl] = useState(props.url);
+  const [previewUrl, setPreviewUrl] = useState<string | undefined>(props.url);
 
-  useEffect(() => setPreviewUrl(props.url), [props.url]);
+  // Reset the preview and locally selected file whenever the default source url prop changes.
+  // Triggers like this usually happen when a new profile image has been uploaded.
+  useEffect(() => {
+    setFile(undefined);
+    setPreviewUrl(props.url);
+  }, [props.url]);
 
   const onFileChanged = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -42,13 +47,13 @@ export const ProfileImageForm: React.FC<ProfileImageFormProps> = (props) => {
   };
 
   const onDelete = () => {
-    if (file != null) {
+    // Only resets the preview and currently selected file if we haven't actually uploaded it yet.
+    if (file) {
       setFile(undefined);
       setPreviewUrl(props.url);
-      return;
+    } else {
+      props.onDelete();
     }
-
-    props.onDelete();
   };
 
   return (
@@ -63,8 +68,8 @@ export const ProfileImageForm: React.FC<ProfileImageFormProps> = (props) => {
         accept="image/*"
       ></input>
       <div className="flex flex-col space-y-2 ml-2">
-        <Button onClick={() => (file != null ? props.onUpload(file) : inputFileRef.current?.click())}>
-          {file != null ? 'Upload' : 'Select'}
+        <Button onClick={() => (file ? props.onUpload(file) : inputFileRef.current?.click())}>
+          {file ? 'Upload' : 'Select'}
         </Button>
         <Button onClick={onDelete} variant="outline">
           Delete

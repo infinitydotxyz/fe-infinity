@@ -1,4 +1,4 @@
-import { BaseCollection, CollectionMetadata } from '@infinityxyz/lib/types/core';
+import { BaseCollection, CollectionMetadata, Metadata } from '@infinityxyz/lib/types/core';
 import { useRouter } from 'next/router';
 import React, { useEffect, useReducer } from 'react';
 import { PlusButton } from 'src/components/collection/edit/buttons';
@@ -11,6 +11,7 @@ import logo from 'src/images/logo-mini-new.svg';
 import { apiPut, useFetch } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { DeepPartial } from 'src/utils/typeUtils';
+import { useSWRConfig } from 'swr';
 
 const spaces = {
   article: 'space-y-3 md:space-y-5'
@@ -71,11 +72,10 @@ export default function EditCollectionPage() {
   const router = useRouter();
   const [metadata, dispatchMetadata] = useReducer(reducer, {});
   const { user, chainId, checkSignedIn } = useAppContext();
+  const path = router.query.name ? `/collections/${router.query.name}` : '';
   // TODO: maybe we can fetch this data on the server side too?
-  const { result: collection } = useFetch<BaseCollection>(
-    router.query.name ? `/collections/${router.query.name}` : '',
-    { chainId }
-  );
+  const { result: collection } = useFetch<BaseCollection>(path, { chainId });
+  const { mutate } = useSWRConfig();
 
   useEffect(() => dispatchMetadata({ type: 'updateMetadata', metadata: collection?.metadata ?? {} }), [collection]);
 
@@ -118,6 +118,7 @@ export default function EditCollectionPage() {
     }
 
     toastSuccess('Successfully removed collection profile image');
+    mutate(path, (metadata: CollectionMetadata) => ({ ...metadata, profileImage: '' } as CollectionMetadata));
   };
 
   const uploadProfileImage = async (file: File) => {
@@ -139,6 +140,7 @@ export default function EditCollectionPage() {
     }
 
     toastSuccess('Successfully updated collection profile image');
+    mutate(path);
   };
 
   // TODO: add nextjs progressbar
