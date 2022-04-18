@@ -43,7 +43,7 @@ export default function CollectionPage() {
     <Layout title={collection?.metadata?.name ?? ''} padded>
       <div className="flex flex-col mt-10">
         <span>
-          <AvatarImage url={collection?.metadata.profileImage} className="mb-4" />
+          <AvatarImage url={collection?.metadata.profileImage} alt={collection?.metadata.name} className="mb-4" />
           <span className="text-7xl mr-2">{collection?.metadata?.name}</span>
           {collection?.hasBlueCheck ? (
             <Image src="/images/blue-check.png" width={24} height={24} alt="Blue check icon" />

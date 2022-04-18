@@ -10,8 +10,9 @@ export interface Props {
   onClick?: () => void;
   size?: keyof typeof sizes;
   className?: string;
+  alt?: string;
 }
 
-export function AvatarImage({ url, onClick, className, size = 'medium' }: Props) {
-  return <img src={url} className={twMerge(sizes[size], className)} onClick={onClick} />;
+export function AvatarImage({ url, onClick, className, alt, size = 'medium' }: Props) {
+  return <img src={url} alt={alt} className={twMerge(sizes[size], className)} onClick={onClick} />;
 }

@@ -116,7 +116,8 @@ export default function EditCollectionPage() {
       </header>
       <main className="flex flex-col my-4 mx-auto max-w-xl space-y-5">
         <article className="flex flex-row items-center justify-between md:justify-start">
-          <AvatarImage url={metadata.profileImage} size="large" />
+          {/* TODO: Show 'browse file' icon/text on hover over avatar image. Once clicked, the user should be able to upload it via the 'Upload' button below (see old FE for inspiration). */}
+          <AvatarImage url={metadata.profileImage} alt={metadata.name} size="large" />
           <div className="flex flex-col space-y-2 ml-2">
             <Button>Upload</Button>
             <Button variant="outline">Delete</Button>
