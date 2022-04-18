@@ -74,7 +74,7 @@ export default function EditCollectionPage() {
   // TODO: maybe we can fetch this data on the server side too?
   const { result: collection } = useFetch<BaseCollection>(
     router.query.name ? `/collections/${router.query.name}` : '',
-    { chainId: '1' }
+    { chainId }
   );
 
   useEffect(() => dispatchMetadata({ type: 'updateMetadata', metadata: collection?.metadata ?? {} }), [collection]);
