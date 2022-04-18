@@ -1,18 +1,19 @@
 import { CardData } from '@infinityxyz/lib/types/core';
 import { twMerge } from 'tailwind-merge';
 import { AiOutlineEye } from 'react-icons/ai';
-import { Dropdown } from './dropdown';
+import { Dropdown, DropdownItems } from './dropdown';
 import { Button } from './button';
 import Link from 'next/link';
 
-interface Props {
+export interface CardProps {
   data: CardData;
   onClick: (data: CardData) => void;
   isSellCard?: boolean;
+  dropdownActions?: DropdownItems[];
   className?: string;
 }
 
-export function Card({ data, onClick, isSellCard, className }: Props): JSX.Element {
+export function Card({ data, onClick, isSellCard, dropdownActions, className }: Props): JSX.Element {
   const title = (data.title ?? '').length > 18 ? data.title?.slice(0, 18) + '...' : data.title;
   const tokenId = (data.tokenId ?? '').length > 18 ? data.tokenId?.slice(0, 18) + '...' : data.tokenId;
 
@@ -57,15 +58,12 @@ export function Card({ data, onClick, isSellCard, className }: Props): JSX.Eleme
         <Button variant="outline" className="flex-1 py-3" onClick={() => onClick(data)}>
           {buttonContents}
         </Button>
-        <div className="border border-gray-300 rounded-3xl ml-1 pt-1 w-10 h-10 flex justify-center items-center text-lg">
-          <Dropdown
-            toggler={<AiOutlineEye className="w-10" />}
-            items={[
-              { label: 'Action 1', onClick: console.log },
-              { label: 'Action 2', onClick: console.log }
-            ]}
-          />
-        </div>
+
+        {(dropdownActions ?? []).length > 0 ? (
+          <div className="border border-gray-300 rounded-3xl ml-1 pt-1 w-10 h-10 flex justify-center items-center text-lg">
+            <Dropdown toggler={<AiOutlineEye className="w-10" />} items={dropdownActions} />
+          </div>
+        ) : null}
       </footer>
     </div>
   );
