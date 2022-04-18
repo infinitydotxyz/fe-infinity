@@ -1,8 +1,8 @@
 import { BaseCollection, CollectionMetadata } from '@infinityxyz/lib/types/core';
 import { useRouter } from 'next/router';
 import React, { useEffect, useReducer } from 'react';
-import { AiOutlinePlus } from 'react-icons/ai';
 import { AvatarImage } from 'src/components/collection/avatar-image';
+import { PlusButton } from 'src/components/collection/edit/buttons';
 import SocialsInputGroup from 'src/components/collection/socials-input-group';
 import { Button, TextAreaInputBox, TextInputBox } from 'src/components/common';
 import { Heading } from 'src/components/common/heading';
@@ -244,16 +244,9 @@ export default function EditCollectionPage() {
               isFullWidth
             />
           ))}
-          <Button
-            variant="gray"
-            className="w-full"
-            onClick={() => dispatchMetadata({ type: 'createBenefit', metadata: { benefits: [''] } })}
-          >
-            <span className="flex flex-row items-center justify-center">
-              <span className="hidden md:inline">Add benefit</span>
-              <AiOutlinePlus className="ml-1 text-lg font-bold" />
-            </span>
-          </Button>
+          <PlusButton onClick={() => dispatchMetadata({ type: 'createBenefit', metadata: { benefits: [''] } })}>
+            Add benefit
+          </PlusButton>
         </article>
 
         <article className={spaces.article}>
@@ -284,18 +277,13 @@ export default function EditCollectionPage() {
               />
             </SocialsInputGroup>
           ))}
-          <Button
-            variant="gray"
-            className="w-full"
+          <PlusButton
             onClick={() =>
               dispatchMetadata({ type: 'createPartnership', metadata: { partnerships: [{ link: '', name: '' }] } })
             }
           >
-            <span className="flex flex-row items-center justify-center">
-              <span className="hidden md:inline">Add partnership</span>
-              <AiOutlinePlus className="ml-1 text-lg font-bold" />
-            </span>
-          </Button>
+            Add partnership
+          </PlusButton>
         </article>
       </main>
 
