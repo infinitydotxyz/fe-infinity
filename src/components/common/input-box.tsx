@@ -123,7 +123,7 @@ export function TextInputBox({
 
 // ================================================================
 
-interface Props5 {
+interface TextAreaInputBoxProps {
   label: string;
   value: string;
   placeholder: string;
@@ -140,7 +140,7 @@ export function TextAreaInputBox({
   onChange,
   className,
   ...props
-}: Props5 & Omit<React.HTMLProps<HTMLTextAreaElement>, 'onChange'>): JSX.Element {
+}: TextAreaInputBoxProps & Omit<React.HTMLProps<HTMLTextAreaElement>, 'onChange'>): JSX.Element {
   return (
     <InputBox label={label} tooltip={tooltip} isFullWidth>
       <div className={twMerge('flex items-center w-full', className)}>
