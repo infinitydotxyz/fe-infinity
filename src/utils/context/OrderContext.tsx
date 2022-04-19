@@ -1,8 +1,9 @@
-import { OBOrderSpecNFT, OBOrderSpec } from '@infinityxyz/lib/types/core';
+import { OBOrderSpecNFT, OBOrderSpec, SignedOBOrderSpec } from '@infinityxyz/lib/types/core';
 import React, { ReactNode, useContext, useState } from 'react';
 import { useAppContext } from './AppContext';
-import { addBuy, addSell } from 'src/utils/marketUtils';
 import { secondsPerDay } from 'src/components/market/order-drawer/ui-constants';
+import { signOBSpecOrder } from '../exchange/orders';
+import { postOrders } from '../marketUtils';
 
 export interface OrderCartItem {
   isSellOrder: boolean;
@@ -59,7 +60,7 @@ export type OrderContextType = {
 
   isSellOrderCart: () => boolean;
 
-  executeOrder: () => boolean;
+  executeOrder: () => Promise<boolean>;
 
   // drawer form
   price: number;
@@ -90,7 +91,7 @@ export function OrderContextProvider({ children }: Props) {
   const [numItems, setNumItems] = useState<number>(1);
 
   // for executing orders
-  const { showAppError, showAppMessage, user, providerManager, chainId } = useAppContext();
+  const { showAppError, user, providerManager, chainId } = useAppContext();
 
   const isOrderBuilderEmpty = (): boolean => {
     return cartItems.length === 0;
@@ -175,8 +176,6 @@ export function OrderContextProvider({ children }: Props) {
       makerUsername: '',
       takerAddress: '',
       takerUsername: '',
-      ownerAddress: '',
-      ownerUsername: '',
       nonce: 1,
       minBpsToSeller: 9000,
       execParams: {
@@ -187,8 +186,6 @@ export function OrderContextProvider({ children }: Props) {
         buyer: ''
       },
       nfts: [],
-      buyerAddress: '',
-      buyerUsername: '',
       startPriceEth: 1,
       endPriceEth: 1
     };
@@ -226,14 +223,29 @@ export function OrderContextProvider({ children }: Props) {
     return false;
   };
 
-  const executeOrder = (): boolean => {
+  const executeOrder = async (): Promise<boolean> => {
+    if (!user) {
+      showAppError('You must be logged in to execute an order');
+      return false;
+    }
+    if (!providerManager) {
+      showAppError('Provider manager not found');
+      return false;
+    }
+    const signer = providerManager.getEthersProvider().getSigner();
     setOrderDrawerOpen(false);
 
-    if (isSellOrderCart()) {
-      executeSell();
-    } else {
-      executeBuy();
+    // sign orders
+    const signedOrders: SignedOBOrderSpec[] = [];
+    for (const orderInCart of ordersInCart) {
+      const order = await signOBSpecOrder(user, chainId, signer, orderInCart.order);
+      if (order) {
+        signedOrders.push(order);
+      }
     }
+
+    // post orders
+    await postOrders(user.address, signedOrders);
 
     _resetStateValues();
 
@@ -277,43 +289,6 @@ export function OrderContextProvider({ children }: Props) {
       }
 
       setCartItems(copy);
-    }
-  };
-
-  // ===============================================================
-
-  const executeBuy = async () => {
-    if (!user || !providerManager) {
-      console.error('no user or provider');
-      return;
-    }
-    if (ordersInCart.length > 0) {
-      for (const orderInCart of ordersInCart) {
-        // crashes
-        // const signer = providerManager.getEthersProvider().getSigner();
-        // await prepareOBOrder(user, chainId, signer, order);
-
-        const match = await addBuy(orderInCart.order);
-
-        if (match) {
-          showAppMessage('Buy successful');
-        } else {
-          showAppError('Buy submitted');
-        }
-      }
-    }
-  };
-
-  const executeSell = async () => {
-    if (ordersInCart.length > 0) {
-      for (const orderInCart of ordersInCart) {
-        const match = await addSell(orderInCart.order);
-        if (match) {
-          showAppMessage('sell successful.');
-        } else {
-          showAppMessage('sell submitted');
-        }
-      }
     }
   };
 

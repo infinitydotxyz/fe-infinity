@@ -1,5 +1,12 @@
 import { JsonRpcSigner } from '@ethersproject/providers';
-import { getCurrentOrderSpecPrice, OBOrder, OrderItem, SignedOBOrder } from '@infinityxyz/lib/types/core';
+import {
+  getCurrentOrderSpecPrice,
+  OBOrder,
+  OBOrderSpec,
+  OrderItem,
+  SignedOBOrder,
+  SignedOBOrderSpec
+} from '@infinityxyz/lib/types/core';
 import { nowSeconds, trimLowerCase } from '@infinityxyz/lib/utils';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { Contract } from '@ethersproject/contracts';
@@ -8,15 +15,59 @@ import { defaultAbiCoder } from '@ethersproject/abi';
 import { splitSignature } from '@ethersproject/bytes';
 import { erc20Abi } from '../../abi/erc20';
 import { erc721Abi } from '../../abi/erc721';
-import { NULL_ADDRESS } from '../constants';
+import { NULL_ADDRESS, WETH_ADDRESS } from '../constants';
 import { User } from '../context/AppContext';
+import { infinityExchangeAbi } from 'src/abi/infinityExchange';
 
 // constants
 // todo: move to constants
-// const exchange = '0x9E545E3C0baAB3E08CdfD552C960A1050f373042'.toLowerCase();
-// const complicationAddress = '0xffa7CA1AEEEbBc30C874d32C7e22F052BbEa0429';
+const infinityExchangeAddress = '0x9E545E3C0baAB3E08CdfD552C960A1050f373042'.toLowerCase();
+const infinityFeeTreasuryAddress = '0x9E545E3C0baAB3E08CdfD552C960A1050f373042'.toLowerCase();
+const complicationAddress = '0xffa7CA1AEEEbBc30C874d32C7e22F052BbEa0429';
+const currencyAddress = WETH_ADDRESS;
 // const collections = ['0xE6E340D132b5f46d1e472DebcD681B2aBc16e57E'];
 // const ORDER_NONCE = 1;
+
+export async function signOBSpecOrder(
+  user: User,
+  chainId: BigNumberish,
+  signer: JsonRpcSigner,
+  order: OBOrderSpec
+): Promise<SignedOBOrderSpec | undefined> {
+  // parse OBOrder
+  const obOrder: OBOrder = {
+    id: order.id,
+    chainId: order.chainId,
+    isSellOrder: order.isSellOrder,
+    signerAddress: order.signerAddress,
+    numItems: order.numItems,
+    startPrice: order.startPrice,
+    endPrice: order.endPrice,
+    startTime: order.startTime,
+    endTime: order.endTime,
+    minBpsToSeller: order.minBpsToSeller,
+    nonce: order.nonce,
+    nfts: order.nfts,
+    execParams: order.execParams,
+    extraParams: order.extraParams
+  };
+  // sign
+  const infinityExchange = new Contract(infinityExchangeAddress, infinityExchangeAbi, signer);
+  const signedOrder = await prepareOBOrder(
+    user,
+    chainId,
+    signer,
+    obOrder,
+    infinityExchange,
+    infinityFeeTreasuryAddress
+  );
+  if (!signedOrder) {
+    console.error('signOBSpecOrder: failed to sign order');
+    return undefined;
+  }
+  const signedOBOrderSpec: SignedOBOrderSpec = { ...order, signedOrder };
+  return signedOBOrderSpec;
+}
 
 // Orderbook orders
 export async function prepareOBOrder(
@@ -28,28 +79,32 @@ export async function prepareOBOrder(
   infinityFeeTreasuryAddress: string
 ): Promise<SignedOBOrder | undefined> {
   // check if order is still valid
-  const validOrder = await isOrderValid(user, order, infinityExchange, signer);
-  if (!validOrder) {
-    return undefined;
-  }
 
-  // grant approvals
-  const approvals = await grantApprovals(user, order, signer, infinityExchange.address, infinityFeeTreasuryAddress);
-  if (!approvals) {
-    return undefined;
-  }
+  console.log(infinityFeeTreasuryAddress);
+  // todo: uncomment below code when contracts are deployed
+  // const validOrder = await isOrderValid(user, order, infinityExchange, signer);
+  // if (!validOrder) {
+  //   return undefined;
+  // }
+
+  // // grant approvals
+  // const approvals = await grantApprovals(user, order, signer, infinityExchange.address, infinityFeeTreasuryAddress);
+  // if (!approvals) {
+  //   return undefined;
+  // }
 
   // sign order
   const signedOBOrder = await signOBOrder(chainId, infinityExchange.address, order, signer);
 
   console.log('Verifying signature');
-  const isSigValid = await infinityExchange.verifyOrderSig(signedOBOrder);
-  if (!isSigValid) {
-    console.error('Signature is invalid');
-    return undefined;
-  } else {
-    console.log('Signature is valid');
-  }
+  // todo: remove this
+  // const isSigValid = await infinityExchange.verifyOrderSig(signedOBOrder);
+  // if (!isSigValid) {
+  //   console.error('Signature is invalid');
+  //   return undefined;
+  // } else {
+  //   console.log('Signature is valid');
+  // }
   return signedOBOrder;
 }
 
@@ -223,8 +278,6 @@ export async function signOBOrder(
     ]
   };
 
-  // _getCalculatedDigest(chainId, contractAddress, order);
-
   const constraints = [
     order.numItems,
     order.startPrice,
@@ -234,8 +287,12 @@ export async function signOBOrder(
     order.minBpsToSeller,
     order.nonce
   ];
-  const execParams = [order.execParams.complicationAddress, order.execParams.currencyAddress];
-  const extraParams = defaultAbiCoder.encode(['address'], [order.extraParams.buyer ?? NULL_ADDRESS]);
+  // don't use ?? operator here
+  const execParams = [
+    order.execParams.complicationAddress || complicationAddress,
+    order.execParams.currencyAddress || currencyAddress
+  ];
+  const extraParams = defaultAbiCoder.encode(['address'], [order.extraParams.buyer || NULL_ADDRESS]); // don't use ?? operator here
 
   const orderToSign = {
     isSellOrder: order.isSellOrder,
