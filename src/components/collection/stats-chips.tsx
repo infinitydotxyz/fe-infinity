@@ -64,7 +64,7 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
   const discordChangePct = `${Math.abs(lastWeeklyStats?.discordFollowersPercentChange ?? 0)}`.slice(0, 4);
 
   return (
-    <div className="flex flex-row space-x-1">
+    <div className="flex flex-row space-x-2">
       <Chip
         content={
           <span className="flex items-center">
