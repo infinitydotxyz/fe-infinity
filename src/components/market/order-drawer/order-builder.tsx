@@ -77,7 +77,7 @@ export function OrderBuilder() {
     return (
       <DatePickerBox
         label="Expiration Date"
-        value={new Date(parseInt(expirationDate.toString()) * 1000)}
+        value={new Date(parseInt(expirationDate.toString()))}
         onChange={(date) => {
           setExpirationDate(date.getTime() / 1000);
         }}

@@ -1,8 +1,8 @@
 import { BaseCollection, BaseToken } from '@infinityxyz/lib/types/core';
-import { BigNumberish } from 'ethers';
 import { useEffect, useState } from 'react';
 import { apiGet } from 'src/utils/apiUtils';
 import mitt from 'mitt';
+import { CollectionSearchArrayDto } from 'src/components/common/collection-grid';
 
 class _CollectionCache {
   cCache = new Map<string, BaseCollection>();
@@ -10,7 +10,31 @@ class _CollectionCache {
   fetchingKeySet = new Set<string>();
   emitter = mitt();
 
-  getCollection = (chainId: BigNumberish, collectionAddress: string): BaseCollection | undefined => {
+  oneCollection = async (query: string): Promise<BaseCollection | undefined> => {
+    const API_ENDPOINT = '/collections/search';
+    const response = await apiGet(API_ENDPOINT, {
+      query: {
+        query,
+        limit: 24
+      }
+    });
+
+    if (response.error) {
+      console.log(response.error);
+    } else {
+      const dtoData = response.result as CollectionSearchArrayDto;
+      if (dtoData.data && dtoData.data.length > 0) {
+        const dto = dtoData.data[0];
+
+        const { result } = await apiGet(`/collections/${dto.chainId}:${dto.address}`);
+        const collection = result as BaseCollection;
+
+        return collection;
+      }
+    }
+  };
+
+  getCollection = (chainId: number, collectionAddress: string): BaseCollection | undefined => {
     const key = `${chainId.toString()}-${collectionAddress}`;
 
     const collection = this.cCache.get(key);
@@ -27,7 +51,7 @@ class _CollectionCache {
     }
   };
 
-  getCollectionAsync = async (chainId: BigNumberish, collectionAddress: string): Promise<BaseCollection> => {
+  getCollectionAsync = async (chainId: number, collectionAddress: string): Promise<BaseCollection> => {
     const key = `${chainId.toString()}-${collectionAddress}`;
 
     let collection = this.cCache.get(key);
@@ -43,7 +67,7 @@ class _CollectionCache {
     return collection;
   };
 
-  getToken = (chainId: BigNumberish, collectionAddress: string, tokenId: string): BaseToken | undefined => {
+  getToken = (chainId: number, collectionAddress: string, tokenId: string): BaseToken | undefined => {
     const key = `${chainId.toString()}-${collectionAddress}-${tokenId}`;
 
     const token = this.tCache.get(key);
@@ -60,7 +84,7 @@ class _CollectionCache {
     }
   };
 
-  getTokenAsync = async (chainId: BigNumberish, collectionAddress: string, tokenId: string): Promise<BaseToken> => {
+  getTokenAsync = async (chainId: number, collectionAddress: string, tokenId: string): Promise<BaseToken> => {
     const key = `${chainId.toString()}-${collectionAddress}-${tokenId}`;
 
     let token = this.tCache.get(key);
@@ -98,13 +122,13 @@ export function useCollectionCache() {
     setTrigger(t);
   };
 
-  const nameForTokenId = (chainId: BigNumberish, collectionAddress: string, tokenId: string): string => {
+  const nameForTokenId = (chainId: number, collectionAddress: string, tokenId: string): string => {
     CollectionCache.getToken(chainId, collectionAddress, tokenId);
 
     return tokenId;
   };
 
-  const imageForTokenId = (chainId: BigNumberish, collectionAddress: string, tokenId: string): string => {
+  const imageForTokenId = (chainId: number, collectionAddress: string, tokenId: string): string => {
     const token = CollectionCache.getToken(chainId, collectionAddress, tokenId);
 
     if (token) {
@@ -114,7 +138,7 @@ export function useCollectionCache() {
     return tokenId;
   };
 
-  const nameForCollection = (chainId: BigNumberish, collectionAddress: string): string => {
+  const nameForCollection = (chainId: number, collectionAddress: string): string => {
     const collection = CollectionCache.getCollection(chainId, collectionAddress);
 
     if (collection) {

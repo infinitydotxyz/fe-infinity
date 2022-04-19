@@ -17,7 +17,15 @@ export function Layout({ children, title, padded, className }: Props): JSX.Eleme
     container: {
       className: `
         transition w-[100vw] h-[100vh] overflow-y-auto overflow-x-hidden
-        grid grid-rows-26 grid-cols-24
+        grid
+        desktop-8k:grid-rows-[1fr,30fr]
+        desktop-4k:grid-rows-[1fr,30fr]
+        desktop-lg:grid-rows-[2fr,24fr]
+        desktop-md:grid-rows-[2fr,24fr]
+        desktop-sm:grid-rows-[2fr,24fr]
+        tablet:grid-rows-[2fr,24fr]
+        mobile:grid-rows-[2fr,24fr]
+        grid-cols-24
         justify-items-center
       `
     },
@@ -27,7 +35,7 @@ export function Layout({ children, title, padded, className }: Props): JSX.Eleme
           transition ${
             padded ? 'desktop:w-5/6 desktop-sm:w-[95%] tabloid:w-[95%] mobile:w-[98%]' : 'w-full'
           } h-content min-h-full
-          row-span-24 col-span-24
+          row-span-1 col-span-24
         `
       },
       element: {

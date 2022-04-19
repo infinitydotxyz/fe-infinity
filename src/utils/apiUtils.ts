@@ -159,7 +159,7 @@ interface useFetchParams {
 }
 export function useFetch<T>(path: string | null, params: useFetchParams = {}) {
   const queryStr = buildQueryString(params?.query);
-  const { data, error } = useSWR(path ? `${path}${queryStr}`: null, swrFetch, params?.swrOptions || {});
+  const { data, error } = useSWR(path ? `${path}${queryStr}` : null, swrFetch, params?.swrOptions || {});
   return {
     result: error ? null : (data as T),
     isLoading: !error && !data,

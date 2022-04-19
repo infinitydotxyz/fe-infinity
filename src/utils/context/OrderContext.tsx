@@ -1,29 +1,33 @@
-import { ExecParams, ExtraParams, Item, OBOrder } from '@infinityxyz/lib/types/core';
-import { nowSeconds } from '@infinityxyz/lib/utils';
-import { BigNumberish } from 'ethers';
+import { OBOrderSpecNFT, OBOrderSpec } from '@infinityxyz/lib/types/core';
 import React, { ReactNode, useContext, useState } from 'react';
 import { useAppContext } from './AppContext';
 import { addBuy, addSell } from 'src/utils/marketUtils';
-import { thirtyDaySeconds } from 'src/components/market/order-drawer/ui-constants';
-import { formatEther, parseEther } from 'ethers/lib/utils';
+import { secondsPerDay } from 'src/components/market/order-drawer/ui-constants';
 
 export interface OrderCartItem {
   isSellOrder: boolean;
-  imageUrl: string;
+  imageUrl?: string;
   tokenName?: string;
-  tokenId?: string;
+  tokenId?: number;
   collectionName: string;
   collectionAddress: string;
+  profileImage?: string;
 }
 
 export interface OrderInCart {
   id: number;
   cartItems: OrderCartItem[];
-  order: OBOrder;
+  order: OBOrderSpec;
 }
 
 const isCartItemEqual = (a: OrderCartItem, b: OrderCartItem): boolean => {
-  return a.tokenName === b.tokenName && a.collectionName === b.collectionName;
+  return (
+    a.tokenName === b.tokenName &&
+    a.collectionName === b.collectionName &&
+    a.collectionAddress === b.collectionAddress &&
+    a.isSellOrder === b.isSellOrder &&
+    a.imageUrl === b.imageUrl
+  );
 };
 
 const indexOfCartItem = (list: OrderCartItem[], item: OrderCartItem): number => {
@@ -58,12 +62,12 @@ export type OrderContextType = {
   executeOrder: () => boolean;
 
   // drawer form
-  price: BigNumberish;
-  setPrice: (price: BigNumberish) => void;
-  expirationDate: BigNumberish;
-  setExpirationDate: (time: BigNumberish) => void;
-  numItems: BigNumberish;
-  setNumItems: (items: BigNumberish) => void;
+  price: number;
+  setPrice: (price: number) => void;
+  expirationDate: number;
+  setExpirationDate: (time: number) => void;
+  numItems: number;
+  setNumItems: (items: number) => void;
 };
 
 const OrderContext = React.createContext<OrderContextType | null>(null);
@@ -81,9 +85,9 @@ export function OrderContextProvider({ children }: Props) {
   const [cartItems, setCartItems] = useState<OrderCartItem[]>([]);
 
   // drawer form
-  const [price, setPrice] = useState<BigNumberish>(1);
-  const [expirationDate, setExpirationDate] = useState<BigNumberish>(nowSeconds().add(thirtyDaySeconds));
-  const [numItems, setNumItems] = useState<BigNumberish>(1);
+  const [price, setPrice] = useState<number>(1);
+  const [expirationDate, setExpirationDate] = useState<number>(Date.now() + secondsPerDay * 30 * 1000);
+  const [numItems, setNumItems] = useState<number>(1);
 
   // for executing orders
   const { showAppError, showAppMessage, user, providerManager, chainId } = useAppContext();
@@ -96,25 +100,28 @@ export function OrderContextProvider({ children }: Props) {
     return !isCartEmpty() && isOrderBuilderEmpty();
   };
 
-  const getItems = (): Item[] => {
-    const items: Item[] = [];
+  const getItems = (): OBOrderSpecNFT[] => {
+    const items: OBOrderSpecNFT[] = [];
 
     for (const cartItem of cartItems) {
       items.push({
-        tokenIds: [cartItem.tokenId ?? '????'],
-        collection: cartItem.collectionAddress
+        collectionAddress: cartItem.collectionAddress,
+        collectionName: cartItem.collectionName,
+        profileImage: cartItem.profileImage ?? '',
+        tokens:
+          cartItem.tokenId !== undefined
+            ? [
+                {
+                  tokenId: cartItem.tokenId ?? 0,
+                  tokenName: cartItem.tokenName ?? '',
+                  imageUrl: cartItem.imageUrl ?? ''
+                }
+              ]
+            : []
       });
     }
 
     return items;
-  };
-
-  const getExecParams = (): ExecParams => {
-    return { complicationAddress: '????', currencyAddress: '????' };
-  };
-
-  const getExtraParams = (): ExtraParams => {
-    return { buyer: '????' };
   };
 
   const indexOfOrderInCart = (id: number): number => {
@@ -143,30 +150,47 @@ export function OrderContextProvider({ children }: Props) {
       }
 
       setCartItems(orderInCart.cartItems);
-      setPrice(formatEther(orderInCart.order.startPrice));
-      setExpirationDate(orderInCart.order.endTime);
-      setNumItems(orderInCart.order.numItems);
+      setPrice(parseFloat(orderInCart.order.startPrice.toString()));
+      setExpirationDate(parseInt(orderInCart.order.endTime.toString()));
+      setNumItems(parseInt(orderInCart.order.numItems.toString()));
     }
   };
 
   const addOrderToCart = () => {
     setIsEditingOrder(false);
 
-    const order: OBOrder = {
+    // todo: put in missing values
+    const order: OBOrderSpec = {
       id: '????',
-      chainId: chainId,
+      chainId: parseInt(chainId),
       isSellOrder: isSellOrderCart(),
       signerAddress: user?.address ?? '????',
       numItems,
-      startTime: nowSeconds(),
+      startTime: Date.now(),
       endTime: expirationDate,
-      startPrice: parseEther(price.toString()),
-      endPrice: parseEther(price.toString()),
-      minBpsToSeller: 9000,
+      startPrice: price,
+      endPrice: price,
+      nftsWithMetadata: getItems(),
+      makerAddress: user?.address ?? '????',
+      makerUsername: '',
+      takerAddress: '',
+      takerUsername: '',
+      ownerAddress: '',
+      ownerUsername: '',
       nonce: 1,
-      nfts: getItems(),
-      execParams: getExecParams(),
-      extraParams: getExtraParams()
+      minBpsToSeller: 9000,
+      execParams: {
+        currencyAddress: '',
+        complicationAddress: ''
+      },
+      extraParams: {
+        buyer: ''
+      },
+      nfts: [],
+      buyerAddress: '',
+      buyerUsername: '',
+      startPriceEth: 1,
+      endPriceEth: 1
     };
 
     const orderInCart: OrderInCart = {
@@ -220,7 +244,7 @@ export function OrderContextProvider({ children }: Props) {
     setOrdersInCart([]);
     setCartItems([]);
     setPrice(1);
-    setExpirationDate(nowSeconds().add(thirtyDaySeconds));
+    setExpirationDate(Date.now() + secondsPerDay * 30 * 1000);
     setNumItems(1);
     setIsEditingOrder(false);
   };
@@ -236,6 +260,8 @@ export function OrderContextProvider({ children }: Props) {
         setCartItems([...cartItems, item]);
       }
     }
+
+    setOrderDrawerOpen(true);
   };
 
   const removeCartItem = (item: OrderCartItem) => {

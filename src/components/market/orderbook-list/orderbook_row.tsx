@@ -1,13 +1,11 @@
-import { OBOrder } from '@infinityxyz/lib/types/core';
-import { formatEther } from 'ethers/lib/utils';
+import { OBOrderSpec } from '@infinityxyz/lib/types/core';
 import { EthPrice } from 'src/components/common/eth-price';
 import { numStr, shortDate } from 'src/utils';
-import { bigNumToDate } from 'src/utils/marketUtils';
 import { DataColumn, defaultDataColumns } from './data-columns';
 import { OrderbookItem } from './orderbook_item';
 
 type Props3 = {
-  order: OBOrder;
+  order: OBOrderSpec;
 };
 
 export const OrderbookRow = ({ order }: Props3): JSX.Element => {
@@ -21,13 +19,13 @@ export const OrderbookRow = ({ order }: Props3): JSX.Element => {
         value = order.isSellOrder ? 'Sell' : 'Buy';
         break;
       case 'minSalePrice':
-        value = formatEther(order.startPrice);
+        value = order.startPrice.toString();
         break;
       case 'numNFTs':
         value = numStr(order.numItems.toString());
         break;
       case 'expirationDate':
-        value = shortDate(bigNumToDate(order.endTime));
+        value = shortDate(new Date(parseInt(order.endTime.toString()) * 1000));
         break;
     }
 
@@ -62,7 +60,6 @@ export const OrderbookRow = ({ order }: Props3): JSX.Element => {
         {defaultDataColumns.map((data) => {
           const content = valueDiv(data);
 
-          // don't show title on progress bars
           const title = data.name;
 
           return (

@@ -69,7 +69,9 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
         content={
           <span className="flex items-center">
             {isFollowing ? (
-              'Followed'
+              <>
+                <AiOutlinePlus className="mr-1" /> Following
+              </>
             ) : (
               <>
                 <AiOutlinePlus className="mr-1" /> Follow
@@ -140,7 +142,7 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
         <Chip
           content={<FaInstagram className="text-lg" />}
           onClick={() => window.open(collection?.metadata?.links?.instagram)}
-          className="p-0"
+          className="p-2"
         />
       )}
 
@@ -148,7 +150,7 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
         <Chip
           content={<HiOutlineExternalLink className="text-lg" />}
           onClick={() => window.open(collection?.metadata?.links?.external)}
-          className="p-0"
+          className="p-2"
         />
       )}
 

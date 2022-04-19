@@ -5,14 +5,14 @@ import {
   MarketListingsBody,
   MarketListingsResponse,
   MarketOrder,
-  OBOrder,
+  OBOrderSpec,
   TradeBody,
   TradeResponse
 } from '@infinityxyz/lib/types/core';
-import { BigNumber, BigNumberish } from 'ethers';
+import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { apiPost, isStatusOK } from 'src/utils/apiUtils';
 
-export const addBuy = async (order: OBOrder): Promise<BuyOrderMatch[]> => {
+export const addBuy = async (order: OBOrderSpec): Promise<BuyOrderMatch[]> => {
   try {
     const body: TradeBody = {
       buyOrder: order
@@ -34,7 +34,7 @@ export const addBuy = async (order: OBOrder): Promise<BuyOrderMatch[]> => {
   return [];
 };
 
-export const addSell = async (order: OBOrder): Promise<BuyOrderMatch[]> => {
+export const addSell = async (order: OBOrderSpec): Promise<BuyOrderMatch[]> => {
   try {
     const body: TradeBody = {
       sellOrder: order
@@ -57,7 +57,7 @@ export const addSell = async (order: OBOrder): Promise<BuyOrderMatch[]> => {
   return [];
 };
 
-export const marketBuyOrders = async (listId: MarketListId): Promise<OBOrder[]> => {
+export const marketBuyOrders = async (listId: MarketListId): Promise<OBOrderSpec[]> => {
   const body: MarketListingsBody = {
     orderType: MarketOrder.BuyOrders,
     action: MarketAction.List,
@@ -67,7 +67,7 @@ export const marketBuyOrders = async (listId: MarketListId): Promise<OBOrder[]> 
   return list(body);
 };
 
-export const marketSellOrders = async (listId: MarketListId): Promise<OBOrder[]> => {
+export const marketSellOrders = async (listId: MarketListId): Promise<OBOrderSpec[]> => {
   const body: MarketListingsBody = {
     orderType: MarketOrder.SellOrders,
     action: MarketAction.List,
@@ -77,7 +77,7 @@ export const marketSellOrders = async (listId: MarketListId): Promise<OBOrder[]>
   return list(body);
 };
 
-const list = async (body: MarketListingsBody): Promise<OBOrder[]> => {
+const list = async (body: MarketListingsBody): Promise<OBOrderSpec[]> => {
   const response = await apiPost(`/market-listings`, { data: body });
 
   if (response.result) {
@@ -86,11 +86,11 @@ const list = async (body: MarketListingsBody): Promise<OBOrder[]> => {
     if (isStatusOK(response)) {
       if (match) {
         if (body.orderType === 'buyOrders') {
-          const buys: OBOrder[] = match.buyOrders.orders;
+          const buys: OBOrderSpec[] = match.buyOrders.orders;
 
           return buys;
         } else if (body.orderType === 'sellOrders') {
-          const sells: OBOrder[] = match.sellOrders.orders;
+          const sells: OBOrderSpec[] = match.sellOrders.orders;
 
           return sells;
         }
