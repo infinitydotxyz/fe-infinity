@@ -57,19 +57,22 @@ export function OrderSummary() {
     if (isSellOrderCart()) {
       items.push({
         title: 'Max budget',
-        value: <EthPrice label={orderInCart.order.endPrice.toString()} />
+        value: <EthPrice label={orderInCart.order.endPriceEth.toString()} />
       });
-      items.push({ title: 'Min NFTs to buy', value: <div>{orderInCart.order.numItems}</div> });
-      items.push({ title: 'Expiration Date', value: <div>{shortDate(new Date(orderInCart.order.endTime))}</div> });
+      items.push({ title: 'Min NFTs to buy', value: <div>{orderInCart.order.numItems.toString()}</div> });
+      items.push({
+        title: 'Expiration Date',
+        value: <div>{shortDate(new Date(orderInCart.order.endTimeMs))}</div>
+      });
     } else {
       items.push({
         title: 'Max budget',
-        value: <EthPrice label={orderInCart.order.endPrice.toString()} />
+        value: <EthPrice label={orderInCart.order.endPriceEth.toString()} />
       });
-      items.push({ title: 'Min NFTs to buy', value: <div>{orderInCart.order.numItems}</div> });
+      items.push({ title: 'Min NFTs to buy', value: <div>{orderInCart.order.numItems.toString()}</div> });
       items.push({
         title: 'Expiration Date',
-        value: <div>{shortDate(new Date(orderInCart.order.endTime ?? 0))}</div>
+        value: <div>{shortDate(new Date(orderInCart.order.endTimeMs ?? 0))}</div>
       });
     }
 

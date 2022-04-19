@@ -97,8 +97,28 @@ const SandboxPage: FC = () => {
 
         <SBHeader># Card - WIP</SBHeader>
         <div className="flex flex-row space-x-4">
-          <Card data={testData.cardTestData[0]} onClick={() => console.log('click')} isSellCard={false} />
-          <Card data={testData.cardTestData[1]} onClick={() => console.log('click')} isSellCard={false} />
+          <Card
+            data={testData.cardTestData[0]}
+            cardActions={[
+              {
+                label: 'Details',
+                onClick: console.log
+              }
+            ]}
+            dropdownActions={[
+              { label: 'Dropdown Action 1', onClick: console.log },
+              { label: 'Dropdown Action 2', onClick: console.log }
+            ]}
+          />
+          <Card
+            data={testData.cardTestData[1]}
+            cardActions={[
+              {
+                label: 'Details',
+                onClick: console.log
+              }
+            ]}
+          />
         </div>
 
         <SBHeader># CurrencyInput</SBHeader>
