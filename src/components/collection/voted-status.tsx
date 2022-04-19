@@ -1,5 +1,5 @@
 import { FunctionComponent, useEffect, useState } from 'react';
-import { useFetch } from 'src/utils';
+import { apiPost, useFetch } from 'src/utils';
 import { Button } from '../common';
 import clsx from 'classnames';
 import { useAppContext } from 'src/utils/context/AppContext';
@@ -16,6 +16,10 @@ interface CollectionVotesDto {
   votesAgainst: number;
 }
 
+interface UserVote {
+  votedFor: boolean;
+}
+
 enum VOTE_ACTION {
   VOTES_FOR = 'VOTES_FOR',
   VOTES_AGAINST = 'VOTES_AGAINST',
@@ -23,9 +27,14 @@ enum VOTE_ACTION {
 }
 
 const VotedStatus: FunctionComponent<VotedStatusProps> = ({ chainId, collectionAddress }) => {
-  const { result } = useFetch<CollectionVotesDto>(`/collections/${chainId}:${collectionAddress}/votes`);
-  const [userVote, setUserVote] = useState<VOTE_ACTION>(VOTE_ACTION.NO_VOTES);
   const { user } = useAppContext();
+
+  const { result } = useFetch<CollectionVotesDto>(`/collections/${chainId}:${collectionAddress}/votes`);
+
+  const API_USER_COLLECTION_ADDR = `/user/${chainId}:${user?.address}/collectionVotes/${chainId}:${collectionAddress}`;
+
+  const { result: userCollectionVote, error: userCollectionVoteError } = useFetch<UserVote>(API_USER_COLLECTION_ADDR);
+  const [userVote, setUserVote] = useState<VOTE_ACTION>(VOTE_ACTION.NO_VOTES);
 
   const [votesFor, setVotesFor] = useState(0);
   const [votesAgainst, setVotesAgainst] = useState(0);
@@ -33,19 +42,17 @@ const VotedStatus: FunctionComponent<VotedStatusProps> = ({ chainId, collectionA
   const handleVoteFor = () => {
     switch (userVote) {
       case VOTE_ACTION.NO_VOTES:
-        console.log('yes');
         setVotesFor(votesFor + 1);
         break;
       case VOTE_ACTION.VOTES_FOR:
-        setVotesFor(votesFor - 1);
-        break;
+        return;
       case VOTE_ACTION.VOTES_AGAINST:
         setVotesFor(votesFor + 1);
         setVotesAgainst(votesAgainst - 1);
         break;
     }
-    const newStatus = userVote === VOTE_ACTION.VOTES_FOR ? VOTE_ACTION.NO_VOTES : VOTE_ACTION.VOTES_FOR;
-    setUserVote(newStatus);
+    apiPost(API_USER_COLLECTION_ADDR, { data: { votedFor: true } });
+    setUserVote(VOTE_ACTION.VOTES_FOR);
   };
 
   const handleVoteAgainst = () => {
@@ -54,24 +61,34 @@ const VotedStatus: FunctionComponent<VotedStatusProps> = ({ chainId, collectionA
         setVotesAgainst(votesAgainst + 1);
         break;
       case VOTE_ACTION.VOTES_AGAINST:
-        setVotesAgainst(votesAgainst - 1);
-        break;
+        return;
       case VOTE_ACTION.VOTES_FOR:
         setVotesAgainst(votesAgainst + 1);
         setVotesFor(votesFor - 1);
         break;
     }
-    const newStatus = userVote === VOTE_ACTION.VOTES_AGAINST ? VOTE_ACTION.NO_VOTES : VOTE_ACTION.VOTES_AGAINST;
-    setUserVote(newStatus);
+    apiPost(API_USER_COLLECTION_ADDR, { data: { votedFor: false } });
+    setUserVote(VOTE_ACTION.VOTES_AGAINST);
   };
 
   useEffect(() => {
     if (result) {
       setVotesFor(result.votesFor);
       setVotesAgainst(result.votesAgainst);
-      setUserVote(VOTE_ACTION.NO_VOTES);
     }
   }, [result]);
+
+  useEffect(() => {
+    if (userCollectionVoteError) {
+      setUserVote(VOTE_ACTION.NO_VOTES);
+    } else if (userCollectionVote) {
+      if (userCollectionVote.votedFor) {
+        setUserVote(VOTE_ACTION.VOTES_FOR);
+      } else {
+        setUserVote(VOTE_ACTION.VOTES_AGAINST);
+      }
+    }
+  }, [userCollectionVote, userCollectionVoteError]);
 
   const total = votesAgainst + votesFor;
   const percentage = total !== 0 ? Math.ceil((votesFor * 100) / total) : 0;
