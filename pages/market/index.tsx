@@ -90,7 +90,7 @@ export default function MarketPage() {
                           collectionAddress: data?.tokenAddress ?? '(no address)',
                           imageUrl: data?.image ?? '',
                           tokenName: data?.title ?? '(no name)',
-                          tokenId: parseInt(data?.tokenId ?? '0'),
+                          tokenId: data?.tokenId ?? '0',
                           isSellOrder: false
                         });
                       }

@@ -2,13 +2,13 @@ import React from 'react';
 import { uuidv4 } from 'src/utils/commonUtils';
 import styles from './styles.module.scss';
 import { Button } from 'src/components/common';
-import { BuyOrderMatch, OBOrderSpec, getCurrentOrderSpecPrice, isOrderSpecExpired } from '@infinityxyz/lib/types/core';
+import { BuyOrderMatch, OBOrder, getCurrentOBOrderPrice, isOBOrderExpired } from '@infinityxyz/lib/types/core';
 
 // =======================================================
 
 type Props = {
-  orders: OBOrderSpec[];
-  onClickAction: (order: OBOrderSpec, action: string) => void;
+  orders: OBOrder[];
+  onClickAction: (order: OBOrder, action: string) => void;
 };
 
 export const BuyOrderList = ({ orders, onClickAction }: Props): JSX.Element => {
@@ -28,30 +28,30 @@ export const BuyOrderList = ({ orders, onClickAction }: Props): JSX.Element => {
 // =======================================================
 
 type Props2 = {
-  order: OBOrderSpec;
-  onClickAction: (order: OBOrderSpec, action: string) => void;
+  order: OBOrder;
+  onClickAction: (order: OBOrder, action: string) => void;
 };
 
 const BuyOrderCard = ({ order, onClickAction }: Props2): JSX.Element => {
   // const addresses = order.collectionAddresses.map((e) => e.address);
   // const names = order.collectionAddresses.map((e) => e.name);
 
-  // const classes = isOrderExpired(order) ? styles.expiredCard : styles.buyCard;
+  // const classes = isOBOrderExpired(order) ? styles.expiredCard : styles.buyCard;
   const classes = styles.buyCard;
-  const collections = order.nftsWithMetadata.map((e) => e.collectionAddress);
+  const collections = order.nfts.map((e) => e.collectionAddress);
 
   return (
     <div className={classes} onClick={() => onClickAction(order, 'card')}>
       <div className={styles.title}>Buy Order</div>
-      <div>startPrice: {order.startPrice.toString()}</div>
-      <div>endPrice: {order.endPrice.toString()}</div>
+      <div>startPrice: {order.startPriceEth}</div>
+      <div>endPrice: {order.endPriceEth}</div>
       <div>collections: {collections.join(', ')}</div>
       <div>numItems: {order.numItems.toString()}</div>
       <div>chainId: {order.chainId}</div>
-      <div>startTime: {new Date(parseInt(order.startTime.toString()) * 1000).toLocaleString()}</div>
-      <div>endTime: {new Date(parseInt(order.endTime.toString()) * 1000).toLocaleString()}</div>
+      <div>startTime: {new Date(order.startTimeMs).toLocaleString()}</div>
+      <div>endTime: {new Date(order.endTimeMs).toLocaleString()}</div>
       <div>id: {order.id}</div>
-      <div>expired: {isOrderSpecExpired(order) ? 'YES' : 'NO'}</div>
+      <div>expired: {isOBOrderExpired(order) ? 'YES' : 'NO'}</div>
 
       <div className={styles.cardButtons}>
         <Button
@@ -69,8 +69,8 @@ const BuyOrderCard = ({ order, onClickAction }: Props2): JSX.Element => {
 // =======================================================
 
 type Props10 = {
-  orders: OBOrderSpec[];
-  onClickAction: (order: OBOrderSpec, action: string) => void;
+  orders: OBOrder[];
+  onClickAction: (order: OBOrder, action: string) => void;
 };
 
 export const SellOrderList = ({ orders, onClickAction }: Props10): JSX.Element => {
@@ -90,30 +90,30 @@ export const SellOrderList = ({ orders, onClickAction }: Props10): JSX.Element =
 // =======================================================
 
 type Props11 = {
-  order: OBOrderSpec;
-  onClickAction: (order: OBOrderSpec, action: string) => void;
+  order: OBOrder;
+  onClickAction: (order: OBOrder, action: string) => void;
 };
 
 const SellOrderCard = ({ order, onClickAction }: Props11): JSX.Element => {
-  const currentPrice = getCurrentOrderSpecPrice(order);
+  const currentPrice = getCurrentOBOrderPrice(order);
 
-  // const classes = isOrderExpired(order) ? styles.expiredCard : styles.sellCard;
+  // const classes = isOBOrderExpired(order) ? styles.expiredCard : styles.sellCard;
   const classes = styles.sellCard;
 
-  const collections = order.nftsWithMetadata.map((e) => e.collectionAddress);
+  const collections = order.nfts.map((e) => e.collectionAddress);
 
   return (
     <div className={classes} onClick={() => onClickAction(order, 'card')}>
       <div className={styles.title}>Sell Order</div>
       <div>currentPrice: {currentPrice}</div>
-      <div>startPrice: {order.startPrice.toString()}</div>
-      <div>endPrice: {order.endPrice.toString()}</div>
+      <div>startPrice: {order.startPriceEth}</div>
+      <div>endPrice: {order.endPriceEth}</div>
       <div>collections: {collections.join(', ')}</div>
       <div>chainId: {order.chainId}</div>
-      <div>startTime: {new Date(parseInt(order.startTime.toString()) * 1000).toLocaleString()}</div>
-      <div>endTime: {new Date(parseInt(order.endTime.toString()) * 1000).toLocaleString()}</div>
+      <div>startTime: {new Date(order.startTimeMs).toLocaleString()}</div>
+      <div>endTime: {new Date(order.endTimeMs).toLocaleString()}</div>
       <div>id: {order.id}</div>
-      <div>expired: {isOrderSpecExpired(order) ? 'YES' : 'NO'}</div>
+      <div>expired: {isOBOrderExpired(order) ? 'YES' : 'NO'}</div>
 
       <div className={styles.cardButtons}>
         <Button
@@ -132,9 +132,9 @@ const SellOrderCard = ({ order, onClickAction }: Props11): JSX.Element => {
 
 type Props20 = {
   matches: BuyOrderMatch[];
-  onSellClick: (order: OBOrderSpec, action: string) => void;
-  onBuyClick: (order: OBOrderSpec, action: string) => void;
-  onAcceptClick: (order: OBOrderSpec) => void;
+  onSellClick: (order: OBOrder, action: string) => void;
+  onBuyClick: (order: OBOrder, action: string) => void;
+  onAcceptClick: (order: OBOrder) => void;
 };
 
 export const BuyOrderMatchList = ({ matches, onAcceptClick, onBuyClick, onSellClick }: Props20): JSX.Element => {
@@ -165,9 +165,9 @@ export const BuyOrderMatchList = ({ matches, onAcceptClick, onBuyClick, onSellCl
 
 type Props21 = {
   match: BuyOrderMatch;
-  onSellClick: (order: OBOrderSpec, action: string) => void;
-  onBuyClick: (order: OBOrderSpec, action: string) => void;
-  onAcceptClick: (order: OBOrderSpec) => void;
+  onSellClick: (order: OBOrder, action: string) => void;
+  onBuyClick: (order: OBOrder, action: string) => void;
+  onAcceptClick: (order: OBOrder) => void;
 };
 
 const BuyOrderMatchCard = ({ match, onAcceptClick, onSellClick, onBuyClick }: Props21): JSX.Element => {

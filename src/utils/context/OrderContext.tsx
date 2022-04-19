@@ -1,24 +1,26 @@
-import { OBOrderSpecNFT, OBOrderSpec, SignedOBOrderSpec } from '@infinityxyz/lib/types/core';
+import { OBOrderItem, OBOrder, SignedOBOrder } from '@infinityxyz/lib/types/core';
 import React, { ReactNode, useContext, useState } from 'react';
 import { useAppContext } from './AppContext';
 import { secondsPerDay } from 'src/components/market/order-drawer/ui-constants';
-import { signOBSpecOrder } from '../exchange/orders';
+import { getSignedOBOrder } from '../exchange/orders';
 import { postOrders } from '../marketUtils';
+import { parseEther } from '@ethersproject/units';
 
 export interface OrderCartItem {
   isSellOrder: boolean;
   imageUrl?: string;
   tokenName?: string;
-  tokenId?: number;
+  tokenId?: string;
   collectionName: string;
   collectionAddress: string;
   profileImage?: string;
+  numTokens?: number;
 }
 
 export interface OrderInCart {
   id: number;
   cartItems: OrderCartItem[];
-  order: OBOrderSpec;
+  order: OBOrder;
 }
 
 const isCartItemEqual = (a: OrderCartItem, b: OrderCartItem): boolean => {
@@ -101,8 +103,8 @@ export function OrderContextProvider({ children }: Props) {
     return !isCartEmpty() && isOrderBuilderEmpty();
   };
 
-  const getItems = (): OBOrderSpecNFT[] => {
-    const items: OBOrderSpecNFT[] = [];
+  const getItems = (): OBOrderItem[] => {
+    const items: OBOrderItem[] = [];
 
     for (const cartItem of cartItems) {
       items.push({
@@ -115,7 +117,8 @@ export function OrderContextProvider({ children }: Props) {
                 {
                   tokenId: cartItem.tokenId ?? 0,
                   tokenName: cartItem.tokenName ?? '',
-                  imageUrl: cartItem.imageUrl ?? ''
+                  imageUrl: cartItem.imageUrl ?? '',
+                  numTokens: cartItem.numTokens ?? 1
                 }
               ]
             : []
@@ -151,9 +154,9 @@ export function OrderContextProvider({ children }: Props) {
       }
 
       setCartItems(orderInCart.cartItems);
-      setPrice(parseFloat(orderInCart.order.startPrice.toString()));
-      setExpirationDate(parseInt(orderInCart.order.endTime.toString()));
-      setNumItems(parseInt(orderInCart.order.numItems.toString()));
+      setPrice(orderInCart.order.startPriceEth);
+      setExpirationDate(orderInCart.order.endTimeMs);
+      setNumItems(orderInCart.order.numItems);
     }
   };
 
@@ -161,22 +164,23 @@ export function OrderContextProvider({ children }: Props) {
     setIsEditingOrder(false);
 
     // todo: put in missing values
-    const order: OBOrderSpec = {
+    const order: OBOrder = {
       id: '????',
-      chainId: parseInt(chainId),
+      chainId: chainId,
       isSellOrder: isSellOrderCart(),
-      signerAddress: user?.address ?? '????',
-      numItems,
-      startTime: Date.now(),
-      endTime: expirationDate,
-      startPrice: price,
-      endPrice: price,
-      nftsWithMetadata: getItems(),
       makerAddress: user?.address ?? '????',
+      numItems,
+      startTimeMs: Date.now(),
+      endTimeMs: expirationDate,
+      startPriceEth: price,
+      endPriceEth: price,
+      startPriceWei: parseEther(price.toString()).toString(),
+      endPriceWei: parseEther(price.toString()).toString(),
+      nfts: getItems(),
       makerUsername: '',
       takerAddress: '',
       takerUsername: '',
-      nonce: 1,
+      nonce: '1',
       minBpsToSeller: 9000,
       execParams: {
         currencyAddress: '',
@@ -184,10 +188,7 @@ export function OrderContextProvider({ children }: Props) {
       },
       extraParams: {
         buyer: ''
-      },
-      nfts: [],
-      startPriceEth: 1,
-      endPriceEth: 1
+      }
     };
 
     const orderInCart: OrderInCart = {
@@ -236,15 +237,16 @@ export function OrderContextProvider({ children }: Props) {
     setOrderDrawerOpen(false);
 
     // sign orders
-    const signedOrders: SignedOBOrderSpec[] = [];
+    const signedOrders: SignedOBOrder[] = [];
     for (const orderInCart of ordersInCart) {
-      const order = await signOBSpecOrder(user, chainId, signer, orderInCart.order);
+      const order = await getSignedOBOrder(user, chainId, signer, orderInCart.order);
       if (order) {
         signedOrders.push(order);
       }
     }
 
     // post orders
+    console.log('signed orders', signedOrders);
     await postOrders(user.address, signedOrders);
 
     _resetStateValues();

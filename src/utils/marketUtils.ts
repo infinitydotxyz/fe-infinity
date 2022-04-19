@@ -5,13 +5,13 @@ import {
   MarketListingsBody,
   MarketListingsResponse,
   MarketOrder,
-  OBOrderSpec,
-  SignedOBOrderSpec
+  OBOrder,
+  SignedOBOrder
 } from '@infinityxyz/lib/types/core';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { apiPost, isStatusOK } from 'src/utils/apiUtils';
 
-export const postOrders = async (user: string, orders: SignedOBOrderSpec[]) => {
+export const postOrders = async (user: string, orders: SignedOBOrder[]) => {
   try {
     const body = {
       orders: orders
@@ -32,7 +32,7 @@ export const postOrders = async (user: string, orders: SignedOBOrderSpec[]) => {
   }
 };
 
-export const marketBuyOrders = async (listId: MarketListId): Promise<OBOrderSpec[]> => {
+export const marketBuyOrders = async (listId: MarketListId): Promise<OBOrder[]> => {
   const body: MarketListingsBody = {
     orderType: MarketOrder.BuyOrders,
     action: MarketAction.List,
@@ -42,7 +42,7 @@ export const marketBuyOrders = async (listId: MarketListId): Promise<OBOrderSpec
   return list(body);
 };
 
-export const marketSellOrders = async (listId: MarketListId): Promise<OBOrderSpec[]> => {
+export const marketSellOrders = async (listId: MarketListId): Promise<OBOrder[]> => {
   const body: MarketListingsBody = {
     orderType: MarketOrder.SellOrders,
     action: MarketAction.List,
@@ -52,7 +52,7 @@ export const marketSellOrders = async (listId: MarketListId): Promise<OBOrderSpe
   return list(body);
 };
 
-const list = async (body: MarketListingsBody): Promise<OBOrderSpec[]> => {
+const list = async (body: MarketListingsBody): Promise<OBOrder[]> => {
   const response = await apiPost(`/market-listings`, { data: body });
 
   if (response.result) {
@@ -61,11 +61,11 @@ const list = async (body: MarketListingsBody): Promise<OBOrderSpec[]> => {
     if (isStatusOK(response)) {
       if (match) {
         if (body.orderType === 'buyOrders') {
-          const buys: OBOrderSpec[] = match.buyOrders.orders;
+          const buys: OBOrder[] = match.buyOrders.orders;
 
           return buys;
         } else if (body.orderType === 'sellOrders') {
-          const sells: OBOrderSpec[] = match.sellOrders.orders;
+          const sells: OBOrder[] = match.sellOrders.orders;
 
           return sells;
         }
