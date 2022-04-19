@@ -1,9 +1,11 @@
 import React from 'react';
+import { GoTriangleUp } from 'react-icons/go';
+import { GoTriangleDown } from 'react-icons/go';
 
 interface Props {
   type?: string;
   label?: string | React.ReactNode;
-  value?: string;
+  value?: string | number;
 }
 
 export function Field({ type, label, value }: Props) {
@@ -85,6 +87,7 @@ export function Field({ type, label, value }: Props) {
           ${value > 0 && 'text-theme-light-500'}
           ${value < 0 && 'text-theme-light-600'}
           ${value == 0 && 'text-theme-light-900'}
+          flex gap-1 items-center
         `
       })
     },
@@ -155,7 +158,19 @@ export function Field({ type, label, value }: Props) {
       {type === 'change' && (
         <div {...styles?.change?.container}>
           <p {...styles?.change?.label}>{label}</p>
-          <p {...styles?.change?.value(value)}>{value.toLocaleString()}</p>
+          <p {...styles?.change?.value(Number(value))}>
+            {Number(value) > 0 ? (
+              <>
+                <GoTriangleUp /> {value?.toLocaleString()} %
+              </>
+            ) : Number(value) < 0 ? (
+              <>
+                <GoTriangleDown /> {String(Math.abs(Number(value)))?.toLocaleString()} %
+              </>
+            ) : (
+              `-`
+            )}
+          </p>
         </div>
       )}
       {type === 'percentage' && (

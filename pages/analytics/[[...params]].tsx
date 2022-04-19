@@ -1,9 +1,10 @@
 import React from 'react';
 import { Tab } from '@headlessui/react';
+import { useRouter } from 'next/router';
+import { useFetch } from 'src/utils/apiUtils';
+import { Drawer } from 'src/components/common/drawer';
 import { Layout } from 'src/components/common/layout';
 import { Field } from 'src/components/analytics/field';
-import { useFetch } from 'src/utils/apiUtils';
-import { useRouter } from 'next/router';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CollectionStats } from '@infinityxyz/lib/types/core';
 import { ITEMS_PER_PAGE, BLANK_IMG } from 'src/utils/constants';
@@ -16,7 +17,14 @@ export const Analytics = () => {
   const [page, setPage] = React.useState(router.query.params?.[0] ? router.query.params?.[0] : 'trending');
   const [interval, setInterval] = React.useState(router.query.params?.[1] ? router.query.params?.[1] : 'hourly');
   const [date, setDate] = React.useState(Date.now());
-
+  const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
+  const [filterCheckboxes, setFilterCheckboxes] = React.useState([]);
+  const closeDrawer = () => setIsDrawerOpen(false);
+  const toggleDrawer = () => (isDrawerOpen ? setIsDrawerOpen(false) : setIsDrawerOpen(true));
+  const selectFilterCheckboxes = () => {
+    const currentLength = filterCheckboxes.length
+    if (currentLength <= limit) filterCheckboxes.push()
+  }
   /*
     ======================================
       Following code is required to fetch
@@ -46,45 +54,70 @@ export const Analytics = () => {
       const floorPrice = d.floorPrice ? d.floorPrice : '-';
       const volumePercentChange = d.volumePercentChange ? d.volumePercentChange : '-';
       const floorPricePercentChange = d.floorPricePercentChange ? d.floorPricePercentChange : '-';
-
+      const twitterFollowers = d.twitterFollowers ? d.twitterFollowers : '-';
+      const twitterPercentageChange = d.twitterPercentageChange ? d.twitterPercentageChange : '-';
+      const discordFollowers = d.discordFollowers ? d.discordFollowers : '-';
+      const discordPercentageChange = d.discordPercentageChange ? d.discordPercentageChange : '-';
       return [
         {
+          id: 'image',
           type: 'image',
-          value: image
+          value: image,
+          filterable: true,
+          sortable: true
         },
         {
+          id: 'name',
           type: 'string',
-          value: name
+          value: name,
+          filterable: true,
+          sortable: true
         },
         {
+          id: 'numNfts',
           label: 'Items',
           type: 'number',
-          value: items.toLocaleString()
+          value: items.toLocaleString(),
+          filterable: true,
+          sortable: true
         },
         {
+          id: 'owners',
           label: 'Owners',
           type: 'number',
-          value: owners.toLocaleString()
+          value: owners.toLocaleString(),
+          filterable: true,
+          sortable: true
         },
         {
+          id: 'volume',
           label: 'Volume',
           type: 'number',
-          value: `Ξ ${volume.toLocaleString()}`
+          value: `Ξ ${volume.toLocaleString()}`,
+          filterable: true,
+          sortable: true
         },
         {
+          id: 'volumePercentChange',
           label: 'Vol. change',
           type: 'change',
           value: volumePercentChange
         },
         {
+          id: 'floorPrice',
           label: 'Floor Price',
           type: 'number',
-          value: `Ξ ${floorPrice.toLocaleString()}`
+          value: `Ξ ${floorPrice.toLocaleString()}`,
+          filterable: true,
+          sortable: true
         },
         {
+          id: 'floorPricePercentChange',
           label: 'Fl. change',
           type: 'change',
-          value: floorPricePercentChange
+          value: floorPricePercentChange,
+          filterable: true,
+          sortable: true
         },
         {
           type: 'action',
@@ -141,6 +174,51 @@ export const Analytics = () => {
   const content = {
     title: 'Analytics',
     statistics: statistics,
+    filter: {
+      limit: 5,
+      params: [
+        {
+          id: 'floorPrice',
+          label: 'Floor Price'
+        },
+        {
+          id: 'floorPricePercentChange',
+          label: 'Floor Price % change'
+        },
+        {
+          id: 'volume',
+          label: 'Volume'
+        },
+        {
+          id: 'volumePercentChange',
+          label: 'Volume % change'
+        },
+        {
+          id: 'items',
+          label: 'Items'
+        },
+        {
+          id: 'Owners',
+          label: 'Owners'
+        },
+        {
+          id: 'twitterFollowers',
+          label: 'Twitter Followers'
+        },
+        {
+          id: 'twitterPercentageChange',
+          label: 'Twitter % change'
+        },
+        {
+          id: 'discordFollowers',
+          label: 'Discord members'
+        },
+        {
+          id: 'discordPercentageChange',
+          label: 'Discord % change'
+        }
+      ]
+    },
     options: {
       timeframes: [
         {
@@ -181,6 +259,13 @@ export const Analytics = () => {
       ],
       actions: {
         links: [
+          {
+            type: 'link',
+            id: 'trending',
+            url: `/analytics/trending/${interval}`,
+            label: 'Trending',
+            props: {}
+          },
           /*
             ======================================
               We need to show the 'following' tab
@@ -199,21 +284,25 @@ export const Analytics = () => {
                   props: {}
                 }
               ]
-            : []),
-          {
-            type: 'link',
-            id: 'trending',
-            url: `/analytics/trending/${interval}`,
-            label: 'Trending',
-            props: {}
-          }
+            : [])
         ],
         buttons: [
           {
-            type: 'button',
+            type: 'drawer',
             url: '',
             label: 'Filter',
-            props: {}
+            drawer: {
+              props: {
+                open: isDrawerOpen,
+                onClose: closeDrawer,
+                title: 'Filter',
+                subtitle: 'Select upto 5',
+                divide: true
+              }
+            },
+            props: {
+              onClick: () => toggleDrawer()
+            }
           }
         ]
       }
@@ -307,7 +396,7 @@ export const Analytics = () => {
             w-full h-full overflow-hidden
             bg-theme-light-50
             row-start-1 col-start-13 row-span-1 col-span-12
-            flex flex-row-reverse gap-2 py-4
+            flex justify-end gap-2 py-4
           `
         },
         tab: {
@@ -383,6 +472,54 @@ export const Analytics = () => {
           }
         }
       }
+    },
+    drawer: {
+      content: {
+        container: {
+          className: `
+            w-full h-full overflow-hidden px-8 pb-8
+          `
+        },
+        grid: {
+          className: `
+            w-full h-full overflow-hidden grid grid-rows-[10fr,1fr] gap-2
+          `
+        },
+        form: {
+          container: {
+            className: `
+              w-full h-full overflow-hidden flex flex-col gap-1
+            `
+          },
+          row: {
+            className: `
+              w-full h-full overflow-hidden flex flex-row gap-1
+            `
+          },
+          label: {
+            className: `
+              w-full h-full overflow-hidden flex-[0.8] flex justify-start items-center text-gray-700 font-mono text-md
+            `
+          },
+          checkbox: {
+            container: {
+              className: `
+                w-full h-full overflow-hidden flex-[0.2] flex justify-center items-center text-gray-700 font-mono text-md
+              `
+            },
+            element: {
+              type: 'checkbox'
+            }
+          }
+        },
+        actions: {
+          container: {
+            className: `
+              w-full h-full overflow-hidden flex flex-row gap-2 py-2
+            `
+          }
+        }
+      }
     }
   };
 
@@ -405,13 +542,13 @@ export const Analytics = () => {
                 <div {...styles?.options?.timeframes?.list?.container}>
                   <Tab.List {...styles?.options?.timeframes?.list?.background}>
                     {/*
-                ====================================
-                  This is where we render the timeframe
-                  tabs (clicking on them changes the route
-                  params as well, and when they get changed
-                  a request to fetch that data is made and cached).
-                ====================================
-              */}
+                      ====================================
+                        This is where we render the timeframe
+                        tabs (clicking on them changes the route
+                        params as well, and when they get changed
+                        a request to fetch that data is made and cached).
+                      ====================================
+                    */}
                     {content?.options?.timeframes?.map((tab, i) => (
                       <React.Fragment key={i}>
                         <Tab {...styles?.options?.timeframes?.tab}>{tab?.label}</Tab>
@@ -423,19 +560,6 @@ export const Analytics = () => {
             </Tab.Group>
             <Tab.Group {...styles?.options?.actions?.group}>
               <Tab.List {...styles?.options?.actions?.container}>
-                {/*
-                ====================================
-                  As for the right side of the actions,
-                  starting from the right (because it's a flexbox
-                  row-reversed), we first render the action buttons
-                  (like  filter and possibly anything else in future).
-                ====================================
-              */}
-                {content?.options?.actions?.buttons?.map((tab, i) => (
-                  <React.Fragment key={i}>
-                    <button {...styles?.options?.actions?.button}>{tab?.label}</button>
-                  </React.Fragment>
-                ))}
                 {/*
                   ====================================
                     After rendering the buttons, we
@@ -451,6 +575,56 @@ export const Analytics = () => {
                 {content?.options?.actions?.links?.map((link, i) => (
                   <React.Fragment key={i}>
                     <Tab {...styles?.options?.actions?.tab}>{link?.label}</Tab>
+                  </React.Fragment>
+                ))}
+                {/*
+                ====================================
+                  As for the right side of the actions,
+                  starting from the right (because it's a flexbox
+                  row-reversed), we first render the action buttons
+                  (like  filter and possibly anything else in future).
+                ====================================
+              */}
+                {content?.options?.actions?.buttons?.map((tab, i) => (
+                  <React.Fragment key={i}>
+                    {tab.type === 'drawer' && (
+                      <>
+                        <button {...styles?.options?.actions?.button} {...tab?.props}>
+                          {tab?.label}
+                        </button>
+                        <Drawer {...tab?.drawer?.props}>
+                          <>
+                            <div {...styles?.drawer?.content?.container}>
+                              <div {...styles?.drawer?.content?.grid}>
+                                <div {...styles?.drawer?.content?.form?.container}>
+                                  {content?.filter?.params?.map((x, i) => (
+                                    <React.Fragment key={i}>
+                                      <div {...styles?.drawer?.content?.form?.row}>
+                                        <div {...styles?.drawer?.content?.form?.label}>{x?.label}</div>
+                                        <div {...styles?.drawer?.content?.form?.checkbox?.container}>
+                                          <input {...styles?.drawer?.content?.form?.checkbox?.element} />
+                                        </div>
+                                      </div>
+                                    </React.Fragment>
+                                  ))}
+                                </div>
+                                <div {...styles?.drawer?.content?.actions?.container}>
+                                  <button className="w-full h-full overflow-hidden bg-theme-light-50 ring-1 ring-inset ring-theme-light-700 rounded-full"></button>
+                                  <button className="w-full h-full overflow-hidden bg-theme-light-900 ring-1 ring-inset ring-theme-light-900 rounded-full"></button>
+                                </div>
+                              </div>
+                            </div>
+                          </>
+                        </Drawer>
+                      </>
+                    )}
+                    {tab.type === 'button' && (
+                      <>
+                        <button {...styles?.options?.actions?.button} {...tab?.props}>
+                          {tab?.label}
+                        </button>
+                      </>
+                    )}
                   </React.Fragment>
                 ))}
               </Tab.List>
