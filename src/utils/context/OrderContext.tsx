@@ -6,13 +6,13 @@ import { getSignedOBOrder } from '../exchange/orders';
 import { postOrders } from '../marketUtils';
 import { parseEther } from '@ethersproject/units';
 import {
+  error,
   getOBComplicationAddress,
   getOrderId,
   getOrderNonce,
   getTxnCurrencyAddress,
   NULL_HASH
 } from '@infinityxyz/lib/utils';
-import { error } from 'console';
 
 export interface OrderCartItem {
   isSellOrder: boolean;
