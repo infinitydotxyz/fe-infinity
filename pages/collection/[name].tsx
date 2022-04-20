@@ -122,7 +122,8 @@ export function CollectionPage() {
                 }}
               />
             )}
-            {currentTab === 1 && <ActivityTab dailyStats={dailyStats} weeklyStats={weeklyStats} />}
+            {/* {currentTab === 1 && <ActivityTab dailyStats={dailyStats} weeklyStats={weeklyStats} />} */}
+            {currentTab === 1 && <ActivityTab />}
             {currentTab === 2 && (
               <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-16">
                 <div className="lg:col-span-1 xl:col-span-2">
