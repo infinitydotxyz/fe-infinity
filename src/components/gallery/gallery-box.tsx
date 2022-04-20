@@ -97,8 +97,8 @@ export function GalleryBox({ collection, cardProps }: GalleryProps) {
         </div>
       )}
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-x-12 gap-y-20 mt-[-70px]">
-        <header className="sm:col-span-2 lg:col-span-3 xl:col-span-3 text-right mb-[-40px]">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-12 gap-y-20 mt-[-70px]">
+        <header className="sm:col-span-2 lg:col-span-3 xl:col-span-4 text-right mb-[-40px]">
           <Button
             variant="outline"
             onClick={() => {
