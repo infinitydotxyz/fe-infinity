@@ -1,6 +1,13 @@
 import { JsonRpcSigner } from '@ethersproject/providers';
 import { getCurrentOBOrderPrice, OBOrder, OBOrderItem, ChainOBOrder, SignedOBOrder } from '@infinityxyz/lib/types/core';
-import { trimLowerCase } from '@infinityxyz/lib/utils';
+import {
+  getExchangeAddress,
+  getFeeTreasuryAddress,
+  getOBComplicationAddress,
+  getTxnCurrencyAddress,
+  NULL_ADDRESS,
+  trimLowerCase
+} from '@infinityxyz/lib/utils';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { Contract } from '@ethersproject/contracts';
 import { MaxUint256 } from '@ethersproject/constants';
@@ -8,18 +15,8 @@ import { defaultAbiCoder } from '@ethersproject/abi';
 import { splitSignature } from '@ethersproject/bytes';
 import { erc20Abi } from '../../abi/erc20';
 import { erc721Abi } from '../../abi/erc721';
-import { NULL_ADDRESS, WETH_ADDRESS } from '../constants';
 import { User } from '../context/AppContext';
 import { infinityExchangeAbi } from 'src/abi/infinityExchange';
-
-// constants
-// todo: move to constants
-const infinityExchangeAddress = '0x9E545E3C0baAB3E08CdfD552C960A1050f373042'.toLowerCase();
-const infinityFeeTreasuryAddress = '0x9E545E3C0baAB3E08CdfD552C960A1050f373042'.toLowerCase();
-const complicationAddress = '0xffa7CA1AEEEbBc30C874d32C7e22F052BbEa0429';
-const currencyAddress = WETH_ADDRESS;
-// const collections = ['0xE6E340D132b5f46d1e472DebcD681B2aBc16e57E'];
-// const ORDER_NONCE = 1;
 
 export async function getSignedOBOrder(
   user: User,
@@ -28,6 +25,8 @@ export async function getSignedOBOrder(
   order: OBOrder
 ): Promise<SignedOBOrder | undefined> {
   // sign
+  const infinityExchangeAddress = getExchangeAddress(chainId.toString());
+  const infinityFeeTreasuryAddress = getFeeTreasuryAddress(chainId.toString());
   const infinityExchange = new Contract(infinityExchangeAddress, infinityExchangeAbi, signer);
   const signedOrder = await prepareOBOrder(user, chainId, signer, order, infinityExchange, infinityFeeTreasuryAddress);
   if (!signedOrder) {
@@ -271,6 +270,8 @@ export async function signOBOrder(
     });
   }
   // don't use ?? operator here
+  const complicationAddress = getOBComplicationAddress(chainId.toString());
+  const currencyAddress = getTxnCurrencyAddress(chainId.toString());
   const execParams = [
     order.execParams.complicationAddress || complicationAddress,
     order.execParams.currencyAddress || currencyAddress
