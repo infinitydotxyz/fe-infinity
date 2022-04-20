@@ -1,15 +1,74 @@
 import React from 'react';
 import { GoTriangleUp } from 'react-icons/go';
 import { GoTriangleDown } from 'react-icons/go';
+import { AiOutlineCaretUp } from 'react-icons/ai';
+import { AiOutlineCaretDown } from 'react-icons/ai';
+import { AiOutlinePlus } from 'react-icons/ai';
 
 interface Props {
   type?: string;
-  label?: string | React.ReactNode;
   value?: string | number;
+  label?: string | React.ReactNode;
+  sortable?: boolean;
+  onSort?: ((direction: string) => void) | ((direction: string) => void) | null | undefined;
 }
 
-export function Field({ type, label, value }: Props) {
+export function Field({ onSort, sortable = false, type, label, value }: Props) {
   const styles = {
+    stat: {
+      container: {
+        className: `
+          w-full h-full overflow-hidden
+          flex flex-row place-content-center
+        `
+      },
+      field: {
+        container: {
+          className: `
+            ${sortable ? 'w-content h-content' : 'w-full h-full '}
+            overflow-hidden
+            flex flex-row
+          `
+        }
+      },
+      sorting: {
+        container: {
+          className: `
+            w-full h-full overflow-hidden
+            flex flex-col ${sortable ? 'flex-[0.5]' : ''}
+            place-items-center gap-0
+          `
+        },
+        asc: {
+          container: {
+            className: `
+              w-full h-full
+              flex flex-row items-end justify-center
+            `
+          },
+          element: {
+            className: `
+              text-xs hover:cursor-pointer
+              transition active:translate-y-1 hover:text-green-700
+            `
+          }
+        },
+        desc: {
+          container: {
+            className: `
+              w-full h-full
+              flex flex-row items-start justify-center
+            `
+          },
+          element: {
+            className: `
+              text-xs active:-translate-y-1 hover:cursor-pointer
+              transition hover:text-red-600
+            `
+          }
+        }
+      }
+    },
     image: {
       positioner: {
         className: `
@@ -29,7 +88,28 @@ export function Field({ type, label, value }: Props) {
         `
       }
     },
-    action: {},
+    action: {
+      container: {
+        className: `
+          w-full h-full overflow-hidden
+          grid items-center justify-center
+        `
+      },
+      button: {
+        container: {
+          className: `
+            w-content h-content overflow-hidden
+            bg-black rounded-full p-2
+            grid
+          `
+        },
+        icon: {
+          className: `
+            text-white font-bold
+          `
+        }
+      }
+    },
     string: {
       container: {
         className: `
@@ -69,7 +149,7 @@ export function Field({ type, label, value }: Props) {
       container: {
         className: `
           w-full h-full overflow-hidden
-          grid justify-start items-center
+          grid justify-center items-center
         `
       },
       label: {
@@ -136,54 +216,74 @@ export function Field({ type, label, value }: Props) {
 
   return (
     <>
-      {type === 'image' && (
-        <div {...styles?.image?.positioner}>
-          <div {...styles?.image?.container}>
-            <img src={value} {...styles?.image?.element} />
-          </div>
-        </div>
-      )}
-      {type === 'action' && <></>}
-      {type === 'string' && (
-        <div {...styles?.string?.container}>
-          <p {...styles?.string?.element}>{value}</p>
-        </div>
-      )}
-      {type === 'number' && (
-        <div {...styles?.number?.container}>
-          <p {...styles?.number?.label}>{label}</p>
-          <p {...styles?.number?.value}>{value}</p>
-        </div>
-      )}
-      {type === 'change' && (
-        <div {...styles?.change?.container}>
-          <p {...styles?.change?.label}>{label}</p>
-          <p {...styles?.change?.value(Number(value))}>
-            {Number(value) > 0 ? (
-              <>
-                <GoTriangleUp /> {value?.toLocaleString()} %
-              </>
-            ) : Number(value) < 0 ? (
-              <>
-                <GoTriangleDown /> {String(Math.abs(Number(value)))?.toLocaleString()} %
-              </>
-            ) : (
-              `-`
-            )}
-          </p>
-        </div>
-      )}
-      {type === 'percentage' && (
-        <div {...styles?.percentage?.container}>
-          <div {...styles?.percentage?.pill}>
-            <div {...styles?.percentage?.progress}></div>
-            <div {...styles?.percentage?.grid}>
-              <p {...styles?.percentage?.label}>{label}</p>
-              <p {...styles?.percentage?.value}>{value}</p>
+      <div {...styles?.stat?.container}>
+        <div {...styles?.stat?.field?.container}>
+          {type === 'image' && (
+            <div {...styles?.image?.positioner}>
+              <div {...styles?.image?.container}>
+                <img src={String(value)} {...styles?.image?.element} />
+              </div>
             </div>
-          </div>
+          )}
+          {type === 'string' && (
+            <div {...styles?.string?.container}>
+              <p {...styles?.string?.element}>{value}</p>
+            </div>
+          )}
+          {type === 'number' && (
+            <div {...styles?.number?.container}>
+              <p {...styles?.number?.label}>{label}</p>
+              <p {...styles?.number?.value}>{value}</p>
+            </div>
+          )}
+          {type === 'change' && (
+            <div {...styles?.change?.container}>
+              <p {...styles?.change?.label}>{label}</p>
+              <p {...styles?.change?.value(Number(value))}>
+                {Number(value) > 0 ? (
+                  <>
+                    <GoTriangleUp /> {value?.toLocaleString()} %
+                  </>
+                ) : Number(value) < 0 ? (
+                  <>
+                    <GoTriangleDown /> {String(Math.abs(Number(value)))?.toLocaleString()} %
+                  </>
+                ) : (
+                  `-`
+                )}
+              </p>
+            </div>
+          )}
+          {type === 'percentage' && (
+            <div {...styles?.percentage?.container}>
+              <div {...styles?.percentage?.pill}>
+                <div {...styles?.percentage?.progress}></div>
+                <div {...styles?.percentage?.grid}>
+                  <p {...styles?.percentage?.label}>{label}</p>
+                  <p {...styles?.percentage?.value}>{value}</p>
+                </div>
+              </div>
+            </div>
+          )}
+          {type === 'action' && (
+            <div {...styles?.action?.container}>
+              <button {...styles?.action?.button?.container}>
+                <AiOutlinePlus {...styles?.action?.button?.icon} />
+              </button>
+            </div>
+          )}
         </div>
-      )}
+        {sortable && (
+          <div {...styles?.stat?.sorting?.container}>
+            <button {...styles?.stat?.sorting?.asc?.container} onClick={() => onSort?.('asc')}>
+              <AiOutlineCaretUp {...styles?.stat?.sorting?.asc?.element} />
+            </button>
+            <button {...styles?.stat?.sorting?.desc?.container} onClick={() => onSort?.('desc')}>
+              <AiOutlineCaretDown {...styles?.stat?.sorting?.desc?.element} />
+            </button>
+          </div>
+        )}
+      </div>
     </>
   );
 }

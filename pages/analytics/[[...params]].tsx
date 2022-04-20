@@ -18,13 +18,48 @@ export const Analytics = () => {
   const [interval, setInterval] = React.useState(router.query.params?.[1] ? router.query.params?.[1] : 'hourly');
   const [date, setDate] = React.useState(Date.now());
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
-  const [filterCheckboxes, setFilterCheckboxes] = React.useState([]);
   const closeDrawer = () => setIsDrawerOpen(false);
   const toggleDrawer = () => (isDrawerOpen ? setIsDrawerOpen(false) : setIsDrawerOpen(true));
-  const selectFilterCheckboxes = () => {
-    const currentLength = filterCheckboxes.length
-    if (currentLength <= limit) filterCheckboxes.push()
-  }
+  const [filterLimit] = React.useState(6);
+  const [orderBy, setOrderBy] = React.useState('volume');
+  const [orderDirection, setOrderDirection] = React.useState('desc');
+
+  const [columns, setColumns] = React.useState<{ [key: string]: boolean }>({
+    floorPrice: true,
+    floorPricePercentChange: true,
+    volume: true,
+    volumePercentChange: true,
+    numNfts: true,
+    numOwners: true,
+    twitterFollowers: false,
+    twitterFollowersPercentChange: false,
+    discordFollowers: false,
+    discordFollowersPercentChange: false
+  });
+
+  const [filterCheckboxes, setFilterCheckboxes] = React.useState<{ [key: string]: boolean }>(columns);
+
+  const clearCheckboxes = () => {
+    const reset = {
+      floorPrice: true,
+      floorPricePercentChange: true,
+      volume: true,
+      volumePercentChange: true,
+      numNfts: true,
+      numOwners: true,
+      twitterFollowers: false,
+      twitterFollowersPercentChange: false,
+      discordFollowers: false,
+      discordFollowersPercentChange: false
+    };
+    setFilterCheckboxes(reset);
+    setColumns(reset);
+  };
+
+  const applyCheckboxes = () => setColumns(filterCheckboxes);
+
+  const checkboxToggle = (id: string) => setFilterCheckboxes({ ...filterCheckboxes, [id]: !filterCheckboxes[id] });
+
   /*
     ======================================
       Following code is required to fetch
@@ -38,16 +73,17 @@ export const Analytics = () => {
   let statistics = null;
   const query =
     page === 'trending'
-      ? `/collections/rankings?orderBy=volume&orderDirection=desc&period=${interval}&date=${date}&limit=${limit}`
-      : `/user/1:${user?.address}/watchlist?orderBy=volume&orderDirection=desc&period=${interval}&date=${date}&limit=${limit}`;
+      ? `/collections/rankings?orderBy=${orderBy}&orderDirection=${orderDirection}&period=${interval}&date=${date}&limit=${limit}`
+      : `/user/1:${user?.address}/watchlist?orderBy=${orderBy}&orderDirection=${orderDirection}&period=${interval}&date=${date}&limit=${limit}`;
 
   const data = useFetch<{ data: CollectionStats[] }>(query);
 
   if (data.result) {
     statistics = data.result.data.map((d) => {
+      const address = d.collectionAddress;
       const name = d.name;
       const image = d.profileImage ? d.profileImage : BLANK_IMG;
-      const trust = d.votesFor > 0 ? `${(d.votesFor / (d.votesAgainst + d.votesFor)) * 100}%` : '0%';
+      // const trust = d.votesFor > 0 ? `${(d.votesFor / (d.votesAgainst + d.votesFor)) * 100}%` : '0%';
       const items = d.numNfts ? d.numNfts : '-';
       const owners = d.numOwners ? d.numOwners : '-';
       const volume = d.volume ? d.volume : '-';
@@ -55,72 +91,166 @@ export const Analytics = () => {
       const volumePercentChange = d.volumePercentChange ? d.volumePercentChange : '-';
       const floorPricePercentChange = d.floorPricePercentChange ? d.floorPricePercentChange : '-';
       const twitterFollowers = d.twitterFollowers ? d.twitterFollowers : '-';
-      const twitterPercentageChange = d.twitterPercentageChange ? d.twitterPercentageChange : '-';
+      const twitterFollowersPercentChange = d.twitterFollowersPercentChange ? d.twitterFollowersPercentChange : '-';
       const discordFollowers = d.discordFollowers ? d.discordFollowers : '-';
-      const discordPercentageChange = d.discordPercentageChange ? d.discordPercentageChange : '-';
+      const discordFollowersPercentChange = d.discordFollowersPercentChange ? d.discordFollowersPercentChange : '-';
+
       return [
         {
           id: 'image',
           type: 'image',
           value: image,
-          filterable: true,
-          sortable: true
+          placement: 'start',
+          sortable: false,
+          onSort: null
         },
         {
           id: 'name',
           type: 'string',
           value: name,
-          filterable: true,
-          sortable: true
+          placement: 'start',
+          sortable: false,
+          onSort: (direction: string) => {
+            setOrderDirection(direction);
+            setOrderBy('name');
+          }
         },
         {
           id: 'numNfts',
           label: 'Items',
           type: 'number',
           value: items.toLocaleString(),
-          filterable: true,
-          sortable: true
+          show: columns['numNfts'],
+          placement: 'middle',
+          sortable: false,
+          onSort: (direction: string) => {
+            setOrderDirection(direction);
+            setOrderBy('numNfts');
+          }
         },
         {
-          id: 'owners',
+          id: 'numOwners',
           label: 'Owners',
           type: 'number',
           value: owners.toLocaleString(),
-          filterable: true,
-          sortable: true
+          show: columns['numOwners'],
+          placement: 'middle',
+          sortable: false,
+          onSort: (direction: string) => {
+            setOrderDirection(direction);
+            setOrderBy('numOwners');
+          }
         },
         {
           id: 'volume',
           label: 'Volume',
           type: 'number',
           value: `Ξ ${volume.toLocaleString()}`,
-          filterable: true,
-          sortable: true
+          show: columns['volume'],
+          placement: 'middle',
+          sortable: true,
+          onSort: (direction: string) => {
+            setOrderDirection(direction);
+            setOrderBy('volume');
+          }
         },
         {
           id: 'volumePercentChange',
           label: 'Vol. change',
           type: 'change',
-          value: volumePercentChange
+          value: volumePercentChange,
+          show: columns['volumePercentChange'],
+          placement: 'middle',
+          sortable: true,
+          onSort: (direction: string) => {
+            setOrderDirection(direction);
+            setOrderBy('volumePercentChange');
+          }
         },
         {
           id: 'floorPrice',
           label: 'Floor Price',
           type: 'number',
           value: `Ξ ${floorPrice.toLocaleString()}`,
-          filterable: true,
-          sortable: true
+          show: columns['floorPrice'],
+          placement: 'middle',
+          sortable: true,
+          onSort: (direction: string) => {
+            setOrderDirection(direction);
+            setOrderBy('floorPrice');
+          }
         },
         {
           id: 'floorPricePercentChange',
           label: 'Fl. change',
           type: 'change',
           value: floorPricePercentChange,
-          filterable: true,
-          sortable: true
+          show: columns['floorPricePercentChange'],
+          placement: 'middle',
+          sortable: true,
+          onSort: (direction: string) => {
+            setOrderDirection(direction);
+            setOrderBy('floorPricePercentChange');
+          }
         },
         {
+          id: 'discordFollowers',
+          label: 'Discord Followers',
+          type: 'number',
+          value: `${discordFollowers.toLocaleString()}`,
+          show: columns['discordFollowers'],
+          placement: 'middle',
+          sortable: true,
+          onSort: (direction: string) => {
+            setOrderDirection(direction);
+            setOrderBy('discordFollowers');
+          }
+        },
+        {
+          id: 'discordFollowersPercentChange',
+          label: 'Discord % change',
+          type: 'change',
+          value: `${discordFollowersPercentChange.toLocaleString()}`,
+          show: columns['discordFollowersPercentChange'],
+          placement: 'middle',
+          sortable: true,
+          onSort: (direction: string) => {
+            setOrderDirection(direction);
+            setOrderBy('discordFollowersPercentChange');
+          }
+        },
+        {
+          id: 'twitterFollowers',
+          label: 'Twitter Followers',
+          type: 'number',
+          value: `${twitterFollowers.toLocaleString()}`,
+          show: columns['twitterFollowers'],
+          placement: 'middle',
+          sortable: true,
+          onSort: (direction: string) => {
+            setOrderDirection(direction);
+            setOrderBy('twitterFollowers');
+          }
+        },
+        {
+          id: 'twitterFollowersPercentChange',
+          label: 'Discord % change',
+          type: 'change',
+          value: `${twitterFollowersPercentChange.toLocaleString()}`,
+          show: columns['twitterFollowersPercentChange'],
+          placement: 'middle',
+          sortable: true,
+          onSort: (direction: string) => {
+            setOrderDirection(direction);
+            setOrderBy('twitterFollowersPercentChange');
+          }
+        },
+        {
+          id: 'followCollection',
           type: 'action',
+          label: '',
+          value: address,
+          placement: 'end',
           props: {}
         }
       ];
@@ -158,7 +288,7 @@ export const Analytics = () => {
       undefined,
       { scroll: false }
     );
-  }, [page, interval]);
+  }, [page, interval, orderBy, orderDirection]);
 
   /*
     ======================================
@@ -179,43 +309,93 @@ export const Analytics = () => {
       params: [
         {
           id: 'floorPrice',
-          label: 'Floor Price'
+          label: 'Floor Price',
+          props: {
+            checked: filterCheckboxes['floorPrice'],
+            defaultChecked: filterCheckboxes['floorPrice'],
+            onChange: () => checkboxToggle('floorPrice')
+          }
         },
         {
           id: 'floorPricePercentChange',
-          label: 'Floor Price % change'
+          label: 'Floor Price % change',
+          props: {
+            checked: filterCheckboxes['floorPricePercentChange'],
+            defaultChecked: filterCheckboxes['floorPricePercentChange'],
+            onChange: () => checkboxToggle('floorPricePercentChange')
+          }
         },
         {
           id: 'volume',
-          label: 'Volume'
+          label: 'Volume',
+          props: {
+            checked: filterCheckboxes['volume'],
+            defaultChecked: filterCheckboxes['volume'],
+            onChange: () => checkboxToggle('volume')
+          }
         },
         {
           id: 'volumePercentChange',
-          label: 'Volume % change'
+          label: 'Volume % change',
+          props: {
+            checked: filterCheckboxes['volumePercentChange'],
+            defaultChecked: filterCheckboxes['volumePercentChange'],
+            onChange: () => checkboxToggle('volumePercentChange')
+          }
         },
         {
-          id: 'items',
-          label: 'Items'
+          id: 'numNfts',
+          label: 'Items',
+          props: {
+            checked: filterCheckboxes['numNfts'],
+            defaultChecked: filterCheckboxes['numNfts'],
+            onChange: () => checkboxToggle('numNfts')
+          }
         },
         {
-          id: 'Owners',
-          label: 'Owners'
+          id: 'numOwners',
+          label: 'Owners',
+          props: {
+            checked: filterCheckboxes['numOwners'],
+            defaultChecked: filterCheckboxes['numOwners'],
+            onChange: () => checkboxToggle('numOwners')
+          }
         },
         {
           id: 'twitterFollowers',
-          label: 'Twitter Followers'
+          label: 'Twitter Followers',
+          props: {
+            checked: filterCheckboxes['twitterFollowers'],
+            defaultChecked: filterCheckboxes['twitterFollowers'],
+            onChange: () => checkboxToggle('twitterFollowers')
+          }
         },
         {
-          id: 'twitterPercentageChange',
-          label: 'Twitter % change'
+          id: 'twitterFollowersPercentChange',
+          label: 'Twitter % change',
+          props: {
+            checked: filterCheckboxes['twitterFollowersPercentChange'],
+            defaultChecked: filterCheckboxes['twitterFollowersPercentChange'],
+            onChange: () => checkboxToggle('twitterFollowersPercentChange')
+          }
         },
         {
           id: 'discordFollowers',
-          label: 'Discord members'
+          label: 'Discord members',
+          props: {
+            checked: filterCheckboxes['discordFollowers'],
+            defaultChecked: filterCheckboxes['discordFollowers'],
+            onChange: () => checkboxToggle('discordFollowers')
+          }
         },
         {
-          id: 'discordPercentageChange',
-          label: 'Discord % change'
+          id: 'discordFollowersPercentChange',
+          label: 'Discord % change',
+          props: {
+            checked: filterCheckboxes['discordFollowersPercentChange'],
+            defaultChecked: filterCheckboxes['discordFollowersPercentChange'],
+            onChange: () => checkboxToggle('discordFollowersPercentChange')
+          }
         }
       ]
     },
@@ -296,7 +476,7 @@ export const Analytics = () => {
                 open: isDrawerOpen,
                 onClose: closeDrawer,
                 title: 'Filter',
-                subtitle: 'Select upto 5',
+                subtitle: `Select upto ${filterLimit}`,
                 divide: true
               }
             },
@@ -457,7 +637,7 @@ export const Analytics = () => {
               ${
                 connected
                   ? 'grid-cols-[3fr,4fr,3fr,3fr,3fr,3fr,3fr,3fr,2fr]'
-                  : 'grid-cols-[3fr,4fr,3fr,3fr,3fr,3fr,3fr,2fr]'
+                  : 'grid-cols-[3fr,4fr,3fr,3fr,3fr,3fr,3fr,3fr,2fr]'
               }
               place-items-center
             `
@@ -498,13 +678,17 @@ export const Analytics = () => {
           },
           label: {
             className: `
-              w-full h-full overflow-hidden flex-[0.8] flex justify-start items-center text-gray-700 font-mono text-md
+              w-full h-full overflow-hidden
+              flex-[0.8] flex justify-start items-center
+              text-gray-700 font-mono text-md
             `
           },
           checkbox: {
             container: {
               className: `
-                w-full h-full overflow-hidden flex-[0.2] flex justify-center items-center text-gray-700 font-mono text-md
+                w-full h-full overflow-hidden
+                flex-[0.2] flex justify-center items-center
+                text-gray-700 font-mono text-md
               `
             },
             element: {
@@ -515,7 +699,22 @@ export const Analytics = () => {
         actions: {
           container: {
             className: `
-              w-full h-full overflow-hidden flex flex-row gap-2 py-2
+              w-full h-full overflow-hidden
+              flex flex-row gap-2 py-2
+            `
+          },
+          clear: {
+            className: `
+              w-full h-full overflow-hidden
+              bg-theme-light-50 ring-1 ring-inset ring-theme-light-700
+              rounded-full font-mono text-sm
+            `
+          },
+          apply: {
+            className: `
+              w-full h-full overflow-hidden
+              bg-theme-light-900 ring-1 ring-inset ring-theme-light-900
+              rounded-full font-mono text-sm text-theme-light-50
             `
           }
         }
@@ -602,15 +801,19 @@ export const Analytics = () => {
                                       <div {...styles?.drawer?.content?.form?.row}>
                                         <div {...styles?.drawer?.content?.form?.label}>{x?.label}</div>
                                         <div {...styles?.drawer?.content?.form?.checkbox?.container}>
-                                          <input {...styles?.drawer?.content?.form?.checkbox?.element} />
+                                          <input {...styles?.drawer?.content?.form?.checkbox?.element} {...x?.props} />
                                         </div>
                                       </div>
                                     </React.Fragment>
                                   ))}
                                 </div>
                                 <div {...styles?.drawer?.content?.actions?.container}>
-                                  <button className="w-full h-full overflow-hidden bg-theme-light-50 ring-1 ring-inset ring-theme-light-700 rounded-full"></button>
-                                  <button className="w-full h-full overflow-hidden bg-theme-light-900 ring-1 ring-inset ring-theme-light-900 rounded-full"></button>
+                                  <button {...styles?.drawer?.content?.actions?.clear} onClick={clearCheckboxes}>
+                                    Clear All
+                                  </button>
+                                  <button {...styles?.drawer?.content?.actions?.apply} onClick={applyCheckboxes}>
+                                    Apply
+                                  </button>
                                 </div>
                               </div>
                             </div>
@@ -664,13 +867,43 @@ export const Analytics = () => {
                   {content?.statistics?.map((stat, i) => (
                     <React.Fragment key={i}>
                       <div {...styles?.statistics?.list?.item?.container}>
-                        {stat?.map((field, j) => (
-                          <React.Fragment key={j}>
-                            <div {...styles?.statistics?.list?.item?.field?.container}>
-                              <Field type={field?.type} label={field?.label} value={field?.value} />
-                            </div>
-                          </React.Fragment>
-                        ))}
+                        {stat
+                          ?.filter((s) => s.placement === 'start')
+                          .map((field, j) => (
+                            <React.Fragment key={j}>
+                              <div {...styles?.statistics?.list?.item?.field?.container}>
+                                <Field type={field?.type} label={field?.label} value={field?.value} />
+                                <div className=""></div>
+                              </div>
+                            </React.Fragment>
+                          ))}
+                        {stat
+                          ?.filter((s) => s.placement === 'middle' && s.show === true)
+                          .splice(0, filterLimit)
+                          .map((field, j) => (
+                            <React.Fragment key={j}>
+                              <div {...styles?.statistics?.list?.item?.field?.container}>
+                                <Field
+                                  sortable={field?.sortable}
+                                  onSort={field?.onSort}
+                                  type={field?.type}
+                                  label={field?.label}
+                                  value={field?.value}
+                                />
+                                <div className=""></div>
+                              </div>
+                            </React.Fragment>
+                          ))}
+                        {stat
+                          ?.filter((s) => s.placement === 'end')
+                          .map((field, j) => (
+                            <React.Fragment key={j}>
+                              <div {...styles?.statistics?.list?.item?.field?.container}>
+                                <Field type={field?.type} label={field?.label} value={field?.value} />
+                                <div className=""></div>
+                              </div>
+                            </React.Fragment>
+                          ))}
                       </div>
                     </React.Fragment>
                   ))}
