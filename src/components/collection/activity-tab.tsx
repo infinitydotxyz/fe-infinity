@@ -1,47 +1,48 @@
-import { CollectionStats } from '@infinityxyz/lib/types/core';
-import { useEffect, useState } from 'react';
-import { LineChart, Line, XAxis, YAxis, Tooltip, Legend } from 'recharts';
+// import { CollectionStats } from '@infinityxyz/lib/types/core';
+// import { useEffect, useState } from 'react';
+// import { LineChart, Line, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 import { CollectionFeed } from '../feed/collection-feed';
 
-type StatsData = {
-  data: CollectionStats[];
-};
+// type StatsData = {
+//   data: CollectionStats[];
+// };
 
-interface ActivityTabProps {
-  dailyStats?: StatsData | null;
-  weeklyStats?: StatsData | null;
-}
+// interface ActivityTabProps {
+//   dailyStats?: StatsData | null;
+//   weeklyStats?: StatsData | null;
+// }
 
-type ChartData = {
-  name: string;
-  average: number;
-};
+// type ChartData = {
+//   name: string;
+//   average: number;
+// };
 
-export function ActivityTab({ dailyStats, weeklyStats }: ActivityTabProps) {
-  const [type, setType] = useState<'DAY' | 'WEEK'>('DAY');
-  const [data, setData] = useState<ChartData[] | []>([]);
+// export function ActivityTab({ dailyStats, weeklyStats }: ActivityTabProps) {
+export function ActivityTab() {
+  // const [type, setType] = useState<'DAY' | 'WEEK'>('DAY');
+  // const [data, setData] = useState<ChartData[] | []>([]);
 
-  useEffect(() => {
-    const dt = (type === 'DAY' ? dailyStats : weeklyStats)?.data.map((item) => {
-      return {
-        name: new Date(item.timestamp).toLocaleDateString(),
-        average: item.avgPrice
-      };
-    });
-    setData(dt ?? []);
-  }, [type]);
+  // useEffect(() => {
+  //   const dt = (type === 'DAY' ? dailyStats : weeklyStats)?.data.map((item) => {
+  //     return {
+  //       name: new Date(item.timestamp).toLocaleDateString(),
+  //       average: item.avgPrice
+  //     };
+  //   });
+  //   setData(dt ?? []);
+  // }, [type]);
 
-  const onClickType = () => {
-    if (type === 'DAY') {
-      setType('WEEK');
-    } else {
-      setType('DAY');
-    }
-  };
+  // const onClickType = () => {
+  //   if (type === 'DAY') {
+  //     setType('WEEK');
+  //   } else {
+  //     setType('DAY');
+  //   }
+  // };
 
   return (
     <>
-      <div className="text-3xl mb-6">Activity trend</div>
+      {/* <div className="text-3xl mb-6">Activity trend</div>
 
       <div className="flex justify-between items-center w-1/2">
         <table className="mt-8 text-sm w-1/2">
@@ -87,15 +88,13 @@ export function ActivityTab({ dailyStats, weeklyStats }: ActivityTabProps) {
             bottom: 5
           }}
         >
-          {/* <CartesianGrid strokeDasharray="3 3" /> */}
           <XAxis dataKey="name" />
           <YAxis />
           <Tooltip />
           <Legend />
           <Line type="monotone" dataKey="average" stroke="#0000ff" activeDot={{ r: 8 }} />
-          {/* <Line type="monotone" dataKey="uv" stroke="#82ca9d" /> */}
         </LineChart>
-      </div>
+      </div> */}
 
       <CollectionFeed header="Activity" forActivity={true} />
     </>

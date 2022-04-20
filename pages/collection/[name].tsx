@@ -100,7 +100,8 @@ export function CollectionPage() {
           </table>
 
           <RoundedNav
-            items={[{ title: 'NFT' }, { title: 'Activity' }, { title: 'Community' }]}
+            // items={[{ title: 'NFT' }, { title: 'Activity' }, { title: 'Community' }]}
+            items={[{ title: 'NFT' }, { title: 'Activity' }]}
             onChange={(currentIndex) => setCurrentTab(currentIndex)}
             className="mt-12"
           />
