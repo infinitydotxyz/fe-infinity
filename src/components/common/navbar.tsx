@@ -1,11 +1,11 @@
 import React from 'react';
 import Link from 'next/link';
 import { SVG } from 'src/components/common/svg';
-import { Menu, Transition } from '@headlessui/react';
-import { ConnectButton } from 'src/components/common/connect-button';
-import { IoMdArrowDropdown } from 'react-icons/io';
-import { SearchInput } from 'src/components/common/search-input';
 import { GiHamburgerMenu } from 'react-icons/gi';
+import { IoMdArrowDropdown } from 'react-icons/io';
+import { Menu, Transition } from '@headlessui/react';
+import { SearchInput } from 'src/components/common/search-input';
+import { ConnectButton } from 'src/components/common/connect-button';
 
 export function Navbar() {
   /*
@@ -74,7 +74,6 @@ export function Navbar() {
         className: `
           w-full h-full col-span-1 row-span-1
           grid grid-rows-1 gap-1
-
           desktop-8k:grid-cols-[8fr,3fr,8fr,2fr]
           desktop-4k:grid-cols-[8fr,3fr,8fr,2fr]
           desktop-lg:grid-cols-[3fr,2fr,6fr,1fr]

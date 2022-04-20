@@ -1,12 +1,13 @@
 import React from 'react';
 import { Tab } from '@headlessui/react';
+import { useRouter } from 'next/router';
+import { useFetch } from 'src/utils/apiUtils';
+import { Drawer } from 'src/components/common/drawer';
 import { Layout } from 'src/components/common/layout';
 import { Field } from 'src/components/analytics/field';
-import { useFetch } from 'src/utils/apiUtils';
-import { useRouter } from 'next/router';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CollectionStats } from '@infinityxyz/lib/types/core';
-import { ITEMS_PER_PAGE } from 'src/utils/constants';
+import { ITEMS_PER_PAGE, BLANK_IMG } from 'src/utils/constants';
 
 export const Analytics = () => {
   const router = useRouter();
@@ -16,6 +17,48 @@ export const Analytics = () => {
   const [page, setPage] = React.useState(router.query.params?.[0] ? router.query.params?.[0] : 'trending');
   const [interval, setInterval] = React.useState(router.query.params?.[1] ? router.query.params?.[1] : 'hourly');
   const [date, setDate] = React.useState(Date.now());
+  const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
+  const closeDrawer = () => setIsDrawerOpen(false);
+  const toggleDrawer = () => (isDrawerOpen ? setIsDrawerOpen(false) : setIsDrawerOpen(true));
+  const [filterLimit] = React.useState(6);
+  const [orderBy, setOrderBy] = React.useState('volume');
+  const [orderDirection, setOrderDirection] = React.useState('desc');
+
+  const [columns, setColumns] = React.useState<{ [key: string]: boolean }>({
+    floorPrice: true,
+    floorPricePercentChange: true,
+    volume: true,
+    volumePercentChange: true,
+    numNfts: true,
+    numOwners: true,
+    twitterFollowers: false,
+    twitterFollowersPercentChange: false,
+    discordFollowers: false,
+    discordFollowersPercentChange: false
+  });
+
+  const [filterCheckboxes, setFilterCheckboxes] = React.useState<{ [key: string]: boolean }>(columns);
+
+  const clearCheckboxes = () => {
+    const reset = {
+      floorPrice: true,
+      floorPricePercentChange: true,
+      volume: true,
+      volumePercentChange: true,
+      numNfts: true,
+      numOwners: true,
+      twitterFollowers: false,
+      twitterFollowersPercentChange: false,
+      discordFollowers: false,
+      discordFollowersPercentChange: false
+    };
+    setFilterCheckboxes(reset);
+    setColumns(reset);
+  };
+
+  const applyCheckboxes = () => setColumns(filterCheckboxes);
+
+  const checkboxToggle = (id: string) => setFilterCheckboxes({ ...filterCheckboxes, [id]: !filterCheckboxes[id] });
 
   /*
     ======================================
@@ -30,56 +73,184 @@ export const Analytics = () => {
   let statistics = null;
   const query =
     page === 'trending'
-      ? `/collections/rankings?orderBy=volume&orderDirection=desc&period=${interval}&date=${date}&limit=${limit}`
-      : `/user/${user?.address}/watchlist?orderBy=volume&orderDirection=desc&period=${interval}&date=${date}&limit=${limit}`;
+      ? `/collections/rankings?orderBy=${orderBy}&orderDirection=${orderDirection}&period=${interval}&date=${date}&limit=${limit}`
+      : `/user/1:${user?.address}/watchlist?orderBy=${orderBy}&orderDirection=${orderDirection}&period=${interval}&date=${date}&limit=${limit}`;
 
   const data = useFetch<{ data: CollectionStats[] }>(query);
 
   if (data.result) {
     statistics = data.result.data.map((d) => {
+      const address = d.collectionAddress;
       const name = d.name;
-      const image = d.profileImage;
-      const trust = d.votesFor > 0 ? `${(d.votesFor / (d.votesAgainst + d.votesFor)) * 100}%` : '0%';
+      const image = d.profileImage ? d.profileImage : BLANK_IMG;
+      // const trust = d.votesFor > 0 ? `${(d.votesFor / (d.votesAgainst + d.votesFor)) * 100}%` : '0%';
       const items = d.numNfts ? d.numNfts : '-';
       const owners = d.numOwners ? d.numOwners : '-';
       const volume = d.volume ? d.volume : '-';
-      const floorPrice = d.floorPrice ? d.floorPrice : `-`;
+      const floorPrice = d.floorPrice ? d.floorPrice : '-';
+      const volumePercentChange = d.volumePercentChange ? d.volumePercentChange : '-';
+      const floorPricePercentChange = d.floorPricePercentChange ? d.floorPricePercentChange : '-';
+      const twitterFollowers = d.twitterFollowers ? d.twitterFollowers : '-';
+      const twitterFollowersPercentChange = d.twitterFollowersPercentChange ? d.twitterFollowersPercentChange : '-';
+      const discordFollowers = d.discordFollowers ? d.discordFollowers : '-';
+      const discordFollowersPercentChange = d.discordFollowersPercentChange ? d.discordFollowersPercentChange : '-';
+
       return [
         {
+          id: 'image',
           type: 'image',
-          value: image
+          value: image,
+          placement: 'start',
+          sortable: false,
+          onSort: null
         },
         {
+          id: 'name',
           type: 'string',
-          value: name
+          value: name,
+          placement: 'start',
+          sortable: false,
+          onSort: (direction: string) => {
+            setOrderDirection(direction);
+            setOrderBy('name');
+          }
         },
         {
-          label: 'Trust',
-          type: 'percentage',
-          value: trust
-        },
-        {
+          id: 'numNfts',
           label: 'Items',
           type: 'number',
-          value: items.toLocaleString()
+          value: items.toLocaleString(),
+          show: columns['numNfts'],
+          placement: 'middle',
+          sortable: false,
+          onSort: (direction: string) => {
+            setOrderDirection(direction);
+            setOrderBy('numNfts');
+          }
         },
         {
+          id: 'numOwners',
           label: 'Owners',
           type: 'number',
-          value: owners.toLocaleString()
+          value: owners.toLocaleString(),
+          show: columns['numOwners'],
+          placement: 'middle',
+          sortable: false,
+          onSort: (direction: string) => {
+            setOrderDirection(direction);
+            setOrderBy('numOwners');
+          }
         },
         {
-          label: 'Floor Price',
-          type: 'number',
-          value: floorPrice.toLocaleString()
-        },
-        {
+          id: 'volume',
           label: 'Volume',
           type: 'number',
-          value: volume.toLocaleString()
+          value: `Ξ ${volume.toLocaleString()}`,
+          show: columns['volume'],
+          placement: 'middle',
+          sortable: true,
+          onSort: (direction: string) => {
+            setOrderDirection(direction);
+            setOrderBy('volume');
+          }
         },
         {
+          id: 'volumePercentChange',
+          label: 'Vol. change',
+          type: 'change',
+          value: volumePercentChange,
+          show: columns['volumePercentChange'],
+          placement: 'middle',
+          sortable: true,
+          onSort: (direction: string) => {
+            setOrderDirection(direction);
+            setOrderBy('volumePercentChange');
+          }
+        },
+        {
+          id: 'floorPrice',
+          label: 'Floor Price',
+          type: 'number',
+          value: `Ξ ${floorPrice.toLocaleString()}`,
+          show: columns['floorPrice'],
+          placement: 'middle',
+          sortable: true,
+          onSort: (direction: string) => {
+            setOrderDirection(direction);
+            setOrderBy('floorPrice');
+          }
+        },
+        {
+          id: 'floorPricePercentChange',
+          label: 'Fl. change',
+          type: 'change',
+          value: floorPricePercentChange,
+          show: columns['floorPricePercentChange'],
+          placement: 'middle',
+          sortable: true,
+          onSort: (direction: string) => {
+            setOrderDirection(direction);
+            setOrderBy('floorPricePercentChange');
+          }
+        },
+        {
+          id: 'discordFollowers',
+          label: 'Discord Followers',
+          type: 'number',
+          value: `${discordFollowers.toLocaleString()}`,
+          show: columns['discordFollowers'],
+          placement: 'middle',
+          sortable: true,
+          onSort: (direction: string) => {
+            setOrderDirection(direction);
+            setOrderBy('discordFollowers');
+          }
+        },
+        {
+          id: 'discordFollowersPercentChange',
+          label: 'Discord % change',
+          type: 'change',
+          value: `${discordFollowersPercentChange.toLocaleString()}`,
+          show: columns['discordFollowersPercentChange'],
+          placement: 'middle',
+          sortable: true,
+          onSort: (direction: string) => {
+            setOrderDirection(direction);
+            setOrderBy('discordFollowersPercentChange');
+          }
+        },
+        {
+          id: 'twitterFollowers',
+          label: 'Twitter Followers',
+          type: 'number',
+          value: `${twitterFollowers.toLocaleString()}`,
+          show: columns['twitterFollowers'],
+          placement: 'middle',
+          sortable: true,
+          onSort: (direction: string) => {
+            setOrderDirection(direction);
+            setOrderBy('twitterFollowers');
+          }
+        },
+        {
+          id: 'twitterFollowersPercentChange',
+          label: 'Discord % change',
+          type: 'change',
+          value: `${twitterFollowersPercentChange.toLocaleString()}`,
+          show: columns['twitterFollowersPercentChange'],
+          placement: 'middle',
+          sortable: true,
+          onSort: (direction: string) => {
+            setOrderDirection(direction);
+            setOrderBy('twitterFollowersPercentChange');
+          }
+        },
+        {
+          id: 'followCollection',
           type: 'action',
+          label: '',
+          value: address,
+          placement: 'end',
           props: {}
         }
       ];
@@ -117,7 +288,7 @@ export const Analytics = () => {
       undefined,
       { scroll: false }
     );
-  }, [page, interval]);
+  }, [page, interval, orderBy, orderDirection]);
 
   /*
     ======================================
@@ -133,6 +304,101 @@ export const Analytics = () => {
   const content = {
     title: 'Analytics',
     statistics: statistics,
+    filter: {
+      limit: 5,
+      params: [
+        {
+          id: 'floorPrice',
+          label: 'Floor Price',
+          props: {
+            checked: filterCheckboxes['floorPrice'],
+            defaultChecked: filterCheckboxes['floorPrice'],
+            onChange: () => checkboxToggle('floorPrice')
+          }
+        },
+        {
+          id: 'floorPricePercentChange',
+          label: 'Floor Price % change',
+          props: {
+            checked: filterCheckboxes['floorPricePercentChange'],
+            defaultChecked: filterCheckboxes['floorPricePercentChange'],
+            onChange: () => checkboxToggle('floorPricePercentChange')
+          }
+        },
+        {
+          id: 'volume',
+          label: 'Volume',
+          props: {
+            checked: filterCheckboxes['volume'],
+            defaultChecked: filterCheckboxes['volume'],
+            onChange: () => checkboxToggle('volume')
+          }
+        },
+        {
+          id: 'volumePercentChange',
+          label: 'Volume % change',
+          props: {
+            checked: filterCheckboxes['volumePercentChange'],
+            defaultChecked: filterCheckboxes['volumePercentChange'],
+            onChange: () => checkboxToggle('volumePercentChange')
+          }
+        },
+        {
+          id: 'numNfts',
+          label: 'Items',
+          props: {
+            checked: filterCheckboxes['numNfts'],
+            defaultChecked: filterCheckboxes['numNfts'],
+            onChange: () => checkboxToggle('numNfts')
+          }
+        },
+        {
+          id: 'numOwners',
+          label: 'Owners',
+          props: {
+            checked: filterCheckboxes['numOwners'],
+            defaultChecked: filterCheckboxes['numOwners'],
+            onChange: () => checkboxToggle('numOwners')
+          }
+        },
+        {
+          id: 'twitterFollowers',
+          label: 'Twitter Followers',
+          props: {
+            checked: filterCheckboxes['twitterFollowers'],
+            defaultChecked: filterCheckboxes['twitterFollowers'],
+            onChange: () => checkboxToggle('twitterFollowers')
+          }
+        },
+        {
+          id: 'twitterFollowersPercentChange',
+          label: 'Twitter % change',
+          props: {
+            checked: filterCheckboxes['twitterFollowersPercentChange'],
+            defaultChecked: filterCheckboxes['twitterFollowersPercentChange'],
+            onChange: () => checkboxToggle('twitterFollowersPercentChange')
+          }
+        },
+        {
+          id: 'discordFollowers',
+          label: 'Discord members',
+          props: {
+            checked: filterCheckboxes['discordFollowers'],
+            defaultChecked: filterCheckboxes['discordFollowers'],
+            onChange: () => checkboxToggle('discordFollowers')
+          }
+        },
+        {
+          id: 'discordFollowersPercentChange',
+          label: 'Discord % change',
+          props: {
+            checked: filterCheckboxes['discordFollowersPercentChange'],
+            defaultChecked: filterCheckboxes['discordFollowersPercentChange'],
+            onChange: () => checkboxToggle('discordFollowersPercentChange')
+          }
+        }
+      ]
+    },
     options: {
       timeframes: [
         {
@@ -173,6 +439,13 @@ export const Analytics = () => {
       ],
       actions: {
         links: [
+          {
+            type: 'link',
+            id: 'trending',
+            url: `/analytics/trending/${interval}`,
+            label: 'Trending',
+            props: {}
+          },
           /*
             ======================================
               We need to show the 'following' tab
@@ -191,21 +464,25 @@ export const Analytics = () => {
                   props: {}
                 }
               ]
-            : []),
-          {
-            type: 'link',
-            id: 'trending',
-            url: `/analytics/trending/${interval}`,
-            label: 'Trending',
-            props: {}
-          }
+            : [])
         ],
         buttons: [
           {
-            type: 'button',
+            type: 'drawer',
             url: '',
             label: 'Filter',
-            props: {}
+            drawer: {
+              props: {
+                open: isDrawerOpen,
+                onClose: closeDrawer,
+                title: 'Filter',
+                subtitle: `Select upto ${filterLimit}`,
+                divide: true
+              }
+            },
+            props: {
+              onClick: () => toggleDrawer()
+            }
           }
         ]
       }
@@ -221,7 +498,7 @@ export const Analytics = () => {
       className: `
         w-full h-full
         bg-theme-light-50
-        flex flex-col
+        flex flex-col gap-2
       `
     },
     heading: {
@@ -299,7 +576,7 @@ export const Analytics = () => {
             w-full h-full overflow-hidden
             bg-theme-light-50
             row-start-1 col-start-13 row-span-1 col-span-12
-            flex flex-row-reverse gap-2 py-4
+            flex justify-end gap-2 py-4
           `
         },
         tab: {
@@ -336,7 +613,7 @@ export const Analytics = () => {
             w-full h-full
             row-start-1 col-start-1 row-span-1 col-span-24
             ring ring-inset ring-transparent
-            flex flex-col gap-4
+            flex flex-col gap-2
           `
         },
         loading: {
@@ -354,10 +631,14 @@ export const Analytics = () => {
         item: {
           container: {
             className: `
-              w-full h-full min-h-[170px] overflow-hidden rounded-xl
+              w-full h-full min-h-[144px] overflow-hidden rounded-xl
               bg-theme-light-300
               grid grid-rows-1
-              ${connected ? 'grid-cols-[2fr,6fr,6fr,3fr,3fr,3fr,3fr,2fr]' : 'grid-cols-[2fr,7fr,7fr,3fr,3fr,3fr,3fr]'}
+              ${
+                connected
+                  ? 'grid-cols-[3fr,4fr,3fr,3fr,3fr,3fr,3fr,3fr,2fr]'
+                  : 'grid-cols-[3fr,4fr,3fr,3fr,3fr,3fr,3fr,3fr,2fr]'
+              }
               place-items-center
             `
           },
@@ -367,21 +648,74 @@ export const Analytics = () => {
                 w-full h-full
                 row-span-1 col-span-1
               `
-            },
-            image: {
-              className: `
-                w-full h-full
-                row-span-1 col-span-1
-                bg-red-200
-              `
-            },
-            name: {
-              className: `
-                w-full h-full
-                row-span-1 col-span-1
-                bg-blue-200
-              `
             }
+          }
+        }
+      }
+    },
+    drawer: {
+      content: {
+        container: {
+          className: `
+            w-full h-full overflow-hidden px-8 pb-8
+          `
+        },
+        grid: {
+          className: `
+            w-full h-full overflow-hidden grid grid-rows-[10fr,1fr] gap-2
+          `
+        },
+        form: {
+          container: {
+            className: `
+              w-full h-full overflow-hidden flex flex-col gap-1
+            `
+          },
+          row: {
+            className: `
+              w-full h-full overflow-hidden flex flex-row gap-1
+            `
+          },
+          label: {
+            className: `
+              w-full h-full overflow-hidden
+              flex-[0.8] flex justify-start items-center
+              text-gray-700 font-mono text-md
+            `
+          },
+          checkbox: {
+            container: {
+              className: `
+                w-full h-full overflow-hidden
+                flex-[0.2] flex justify-center items-center
+                text-gray-700 font-mono text-md
+              `
+            },
+            element: {
+              type: 'checkbox'
+            }
+          }
+        },
+        actions: {
+          container: {
+            className: `
+              w-full h-full overflow-hidden
+              flex flex-row gap-2 py-2
+            `
+          },
+          clear: {
+            className: `
+              w-full h-full overflow-hidden
+              bg-theme-light-50 ring-1 ring-inset ring-theme-light-700
+              rounded-full font-mono text-sm
+            `
+          },
+          apply: {
+            className: `
+              w-full h-full overflow-hidden
+              bg-theme-light-900 ring-1 ring-inset ring-theme-light-900
+              rounded-full font-mono text-sm text-theme-light-50
+            `
           }
         }
       }
@@ -407,13 +741,13 @@ export const Analytics = () => {
                 <div {...styles?.options?.timeframes?.list?.container}>
                   <Tab.List {...styles?.options?.timeframes?.list?.background}>
                     {/*
-                ====================================
-                  This is where we render the timeframe
-                  tabs (clicking on them changes the route
-                  params as well, and when they get changed
-                  a request to fetch that data is made and cached).
-                ====================================
-              */}
+                      ====================================
+                        This is where we render the timeframe
+                        tabs (clicking on them changes the route
+                        params as well, and when they get changed
+                        a request to fetch that data is made and cached).
+                      ====================================
+                    */}
                     {content?.options?.timeframes?.map((tab, i) => (
                       <React.Fragment key={i}>
                         <Tab {...styles?.options?.timeframes?.tab}>{tab?.label}</Tab>
@@ -425,19 +759,6 @@ export const Analytics = () => {
             </Tab.Group>
             <Tab.Group {...styles?.options?.actions?.group}>
               <Tab.List {...styles?.options?.actions?.container}>
-                {/*
-                ====================================
-                  As for the right side of the actions,
-                  starting from the right (because it's a flexbox
-                  row-reversed), we first render the action buttons
-                  (like  filter and possibly anything else in future).
-                ====================================
-              */}
-                {content?.options?.actions?.buttons?.map((tab, i) => (
-                  <React.Fragment key={i}>
-                    <button {...styles?.options?.actions?.button}>{tab?.label}</button>
-                  </React.Fragment>
-                ))}
                 {/*
                   ====================================
                     After rendering the buttons, we
@@ -453,6 +774,60 @@ export const Analytics = () => {
                 {content?.options?.actions?.links?.map((link, i) => (
                   <React.Fragment key={i}>
                     <Tab {...styles?.options?.actions?.tab}>{link?.label}</Tab>
+                  </React.Fragment>
+                ))}
+                {/*
+                ====================================
+                  As for the right side of the actions,
+                  starting from the right (because it's a flexbox
+                  row-reversed), we first render the action buttons
+                  (like  filter and possibly anything else in future).
+                ====================================
+              */}
+                {content?.options?.actions?.buttons?.map((tab, i) => (
+                  <React.Fragment key={i}>
+                    {tab.type === 'drawer' && (
+                      <>
+                        <button {...styles?.options?.actions?.button} {...tab?.props}>
+                          {tab?.label}
+                        </button>
+                        <Drawer {...tab?.drawer?.props}>
+                          <>
+                            <div {...styles?.drawer?.content?.container}>
+                              <div {...styles?.drawer?.content?.grid}>
+                                <div {...styles?.drawer?.content?.form?.container}>
+                                  {content?.filter?.params?.map((x, i) => (
+                                    <React.Fragment key={i}>
+                                      <div {...styles?.drawer?.content?.form?.row}>
+                                        <div {...styles?.drawer?.content?.form?.label}>{x?.label}</div>
+                                        <div {...styles?.drawer?.content?.form?.checkbox?.container}>
+                                          <input {...styles?.drawer?.content?.form?.checkbox?.element} {...x?.props} />
+                                        </div>
+                                      </div>
+                                    </React.Fragment>
+                                  ))}
+                                </div>
+                                <div {...styles?.drawer?.content?.actions?.container}>
+                                  <button {...styles?.drawer?.content?.actions?.clear} onClick={clearCheckboxes}>
+                                    Clear All
+                                  </button>
+                                  <button {...styles?.drawer?.content?.actions?.apply} onClick={applyCheckboxes}>
+                                    Apply
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </>
+                        </Drawer>
+                      </>
+                    )}
+                    {tab.type === 'button' && (
+                      <>
+                        <button {...styles?.options?.actions?.button} {...tab?.props}>
+                          {tab?.label}
+                        </button>
+                      </>
+                    )}
                   </React.Fragment>
                 ))}
               </Tab.List>
@@ -492,13 +867,43 @@ export const Analytics = () => {
                   {content?.statistics?.map((stat, i) => (
                     <React.Fragment key={i}>
                       <div {...styles?.statistics?.list?.item?.container}>
-                        {stat?.map((field, j) => (
-                          <React.Fragment key={j}>
-                            <div {...styles?.statistics?.list?.item?.field?.container}>
-                              <Field type={field?.type} label={field?.label} value={field?.value} />
-                            </div>
-                          </React.Fragment>
-                        ))}
+                        {stat
+                          ?.filter((s) => s.placement === 'start')
+                          .map((field, j) => (
+                            <React.Fragment key={j}>
+                              <div {...styles?.statistics?.list?.item?.field?.container}>
+                                <Field type={field?.type} label={field?.label} value={field?.value} />
+                                <div className=""></div>
+                              </div>
+                            </React.Fragment>
+                          ))}
+                        {stat
+                          ?.filter((s) => s.placement === 'middle' && s.show === true)
+                          .splice(0, filterLimit)
+                          .map((field, j) => (
+                            <React.Fragment key={j}>
+                              <div {...styles?.statistics?.list?.item?.field?.container}>
+                                <Field
+                                  sortable={field?.sortable}
+                                  onSort={field?.onSort}
+                                  type={field?.type}
+                                  label={field?.label}
+                                  value={field?.value}
+                                />
+                                <div className=""></div>
+                              </div>
+                            </React.Fragment>
+                          ))}
+                        {stat
+                          ?.filter((s) => s.placement === 'end')
+                          .map((field, j) => (
+                            <React.Fragment key={j}>
+                              <div {...styles?.statistics?.list?.item?.field?.container}>
+                                <Field type={field?.type} label={field?.label} value={field?.value} />
+                                <div className=""></div>
+                              </div>
+                            </React.Fragment>
+                          ))}
                       </div>
                     </React.Fragment>
                   ))}
