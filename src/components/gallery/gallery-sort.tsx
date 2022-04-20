@@ -26,8 +26,8 @@ export const GallerySort = () => {
         label={label}
         items={[
           { label: 'High Rarity Rank to Low', onClick: () => onClickSort('asc') },
-          { label: 'Low Rarity Rank to High', onClick: () => onClickSort('desc') },
-          { label: 'Clear', onClick: () => onClickSort('desc') }
+          { label: 'Low Rarity Rank to High', onClick: () => onClickSort('desc') }
+          // { label: 'Clear', onClick: () => onClickSort('desc') }
         ]}
       />
     </span>

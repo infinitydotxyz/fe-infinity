@@ -100,7 +100,8 @@ export function CollectionPage() {
           </table>
 
           <RoundedNav
-            items={[{ title: 'NFT' }, { title: 'Activity' }, { title: 'Community' }]}
+            // items={[{ title: 'NFT' }, { title: 'Activity' }, { title: 'Community' }]}
+            items={[{ title: 'NFT' }, { title: 'Activity' }]}
             onChange={(currentIndex) => setCurrentTab(currentIndex)}
             className="mt-12"
           />
@@ -121,7 +122,8 @@ export function CollectionPage() {
                 }}
               />
             )}
-            {currentTab === 1 && <ActivityTab dailyStats={dailyStats} weeklyStats={weeklyStats} />}
+            {/* {currentTab === 1 && <ActivityTab dailyStats={dailyStats} weeklyStats={weeklyStats} />} */}
+            {currentTab === 1 && <ActivityTab />}
             {currentTab === 2 && (
               <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-16">
                 <div className="lg:col-span-1 xl:col-span-2">
