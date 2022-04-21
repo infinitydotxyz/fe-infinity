@@ -266,7 +266,6 @@ export function OrderContextProvider({ children }: Props) {
     }
 
     // post orders
-    console.log('signed orders', signedOrders);
     await postOrders(user.address, signedOrders);
 
     _resetStateValues();

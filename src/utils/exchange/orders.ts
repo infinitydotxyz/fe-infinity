@@ -290,7 +290,6 @@ export async function signOBOrder(
 
   // sign order
   try {
-    console.log('Signing order');
     const sig = await signer._signTypedData(domain, types, orderToSign);
     const splitSig = splitSignature(sig ?? '');
     const encodedSig = defaultAbiCoder.encode(['bytes32', 'bytes32', 'uint8'], [splitSig.r, splitSig.s, splitSig.v]);
