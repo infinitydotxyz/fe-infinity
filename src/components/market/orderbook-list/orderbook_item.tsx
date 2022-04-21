@@ -1,11 +1,11 @@
-import { OBOrderSpec, OBOrderSpecToken } from '@infinityxyz/lib/types/core';
+import { OBOrder, OBTokenInfo } from '@infinityxyz/lib/types/core';
 import Link from 'next/link';
 import { ReactNode, useState } from 'react';
 
 type Props4 = {
   content?: ReactNode;
   title?: string;
-  order: OBOrderSpec;
+  order: OBOrder;
   nameItem?: boolean;
   sortClick?: () => void;
 };
@@ -13,7 +13,7 @@ type Props4 = {
 export const OrderbookItem = ({ title, content, nameItem, order }: Props4): JSX.Element => {
   const [expanded, setExpanded] = useState(false);
 
-  const tokenDiv = (collectionName: string, profileImage: string, token?: OBOrderSpecToken) => {
+  const tokenDiv = (collectionName: string, profileImage: string, token?: OBTokenInfo) => {
     return (
       <div className="flex gap-2 items-center mb-3">
         {token && (
@@ -44,7 +44,7 @@ export const OrderbookItem = ({ title, content, nameItem, order }: Props4): JSX.
   if (nameItem) {
     const nFts = [];
     // todo: temp fix
-    const nfts = order.nftsWithMetadata ?? order.nfts ?? [];
+    const nfts = order.nfts ?? order.nfts ?? [];
     for (const n of nfts) {
       if (n.tokens.length > 0) {
         for (const t of n.tokens) {

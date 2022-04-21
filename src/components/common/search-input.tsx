@@ -73,6 +73,7 @@ export const SearchInput: React.FC<Props> = ({ opened }) => {
       container: {
         className: `
           w-content h-content
+          hover:cursor-pointer
         `,
         onClick: activate
       },

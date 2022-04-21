@@ -3,7 +3,7 @@ import {
   MarketListingsBody,
   MarketListingsResponse,
   MarketOrder,
-  OBOrderSpec
+  OBOrder
 } from '@infinityxyz/lib/types/core';
 import { useEffect, useState } from 'react';
 import { apiPost } from 'src/utils';
@@ -11,9 +11,9 @@ import { apiPost } from 'src/utils';
 export function useOrderPager(limit: number) {
   const [buyMarketListing, setBuyMarketListing] = useState<MarketListingsResponse>();
   const [sellMarketListing, setSellMarketListing] = useState<MarketListingsResponse>();
-  const [orders, setOrders] = useState<OBOrderSpec[]>([]);
-  const [buyOrders, setBuyOrders] = useState<OBOrderSpec[]>([]);
-  const [sellOrders, setSellOrders] = useState<OBOrderSpec[]>([]);
+  const [orders, setOrders] = useState<OBOrder[]>([]);
+  const [buyOrders, setBuyOrders] = useState<OBOrder[]>([]);
+  const [sellOrders, setSellOrders] = useState<OBOrder[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMoreBuy, setHasMoreBuy] = useState(true);
   const [hasMoreSell, setHasMoreSell] = useState(true);

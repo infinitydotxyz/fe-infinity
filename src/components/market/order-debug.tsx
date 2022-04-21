@@ -15,21 +15,21 @@ import {
   MarketListId,
   MarketListingsBody,
   MarketOrder,
-  OBOrderSpec
+  OBOrder
 } from '@infinityxyz/lib/types/core';
 import { RefreshIcon } from '@heroicons/react/outline';
 import { iconButtonStyle } from './order-drawer/ui-constants';
 
 export function OrderDebug() {
-  const [buyOrders, setBuyOrders] = useState<OBOrderSpec[]>([]);
-  const [sellOrders, setSellOrders] = useState<OBOrderSpec[]>([]);
+  const [buyOrders, setBuyOrders] = useState<OBOrder[]>([]);
+  const [sellOrders, setSellOrders] = useState<OBOrder[]>([]);
   const [matchOrders, setMatchOrders] = useState<BuyOrderMatch[]>([]);
   const { showAppError, showAppMessage, user } = useAppContext();
 
-  const [buyOrdersValidInactive, setBuyOrdersValidInactive] = useState<OBOrderSpec[]>([]);
-  const [buyOrdersInvalid, setBuyOrdersInvalid] = useState<OBOrderSpec[]>([]);
-  const [sellOrdersValidInactive, setSellOrdersValidInactive] = useState<OBOrderSpec[]>([]);
-  const [sellOrdersInvalid, setSellOrdersInvalid] = useState<OBOrderSpec[]>([]);
+  const [buyOrdersValidInactive, setBuyOrdersValidInactive] = useState<OBOrder[]>([]);
+  const [buyOrdersInvalid, setBuyOrdersInvalid] = useState<OBOrder[]>([]);
+  const [sellOrdersValidInactive, setSellOrdersValidInactive] = useState<OBOrder[]>([]);
+  const [sellOrdersInvalid, setSellOrdersInvalid] = useState<OBOrder[]>([]);
 
   useEffect(() => {
     if (user) {
@@ -57,7 +57,7 @@ export function OrderDebug() {
     const match = await marketBuyOrders(listId);
 
     if (match) {
-      const orders: OBOrderSpec[] = match;
+      const orders: OBOrder[] = match;
 
       switch (listId) {
         case MarketListId.ValidActive:
@@ -96,7 +96,7 @@ export function OrderDebug() {
     const match = await marketSellOrders(listId);
 
     if (match) {
-      const orders: OBOrderSpec[] = match;
+      const orders: OBOrder[] = match;
 
       switch (listId) {
         case MarketListId.ValidActive:
@@ -163,14 +163,14 @@ export function OrderDebug() {
     listSellOrdersInvalid();
   };
 
-  const handleAcceptClick = async (buyOrder: OBOrderSpec) => {
+  const handleAcceptClick = async (buyOrder: OBOrder) => {
     await executeBuyOrder(buyOrder.id ?? '');
 
     refreshActiveLists();
     refreshInactiveLists();
   };
 
-  const handleCardClick = async (order: OBOrderSpec, action: string, listId: MarketListId) => {
+  const handleCardClick = async (order: OBOrder, action: string, listId: MarketListId) => {
     switch (action) {
       case 'card':
         break;
