@@ -109,13 +109,13 @@ const AssetDetail: FunctionComponent = () => {
               <ShortAddress
                 label="Contact address:"
                 address={collection.address}
-                href={`/collection/${collection.address}`}
+                href={`https://etherscan.io/address/${collection.address}`}
                 tooltip={collection.address}
               />
               <ShortAddress
                 label="Token ID:"
                 address={token.tokenId}
-                href={`/asset/${token.chainId}/${collection.address}/${token.tokenId}`}
+                href={`https://etherscan.io/token/${collection.address}?a=${token.tokenId}`}
                 tooltip={token.tokenId}
               />
               <div className="md:-ml-1.5">
