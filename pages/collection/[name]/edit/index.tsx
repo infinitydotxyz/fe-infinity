@@ -1,6 +1,6 @@
 import { BaseCollection, CollectionMetadata } from '@infinityxyz/lib/types/core';
 import { useRouter } from 'next/router';
-import React, { useEffect, useReducer } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import { PlusButton } from 'src/components/collection/edit/buttons';
 import { ProfileImageForm } from 'src/components/collection/edit/profile-image-form';
 import SocialsInputGroup from 'src/components/collection/socials-input-group';
@@ -71,13 +71,17 @@ function reducer(
 export default function EditCollectionPage() {
   const router = useRouter();
   const [metadata, dispatchMetadata] = useReducer(reducer, {});
+  const [address, setAddress] = useState<string>();
   const { user, chainId, checkSignedIn } = useAppContext();
   const path = router.query.name ? `/collections/${router.query.name}` : '';
   // TODO: maybe we can fetch this data on the server side too?
   const { result: collection } = useFetch<BaseCollection>(path, { chainId });
   const { mutate } = useSWRConfig();
 
-  useEffect(() => dispatchMetadata({ type: 'updateMetadata', metadata: collection?.metadata ?? {} }), [collection]);
+  useEffect(() => {
+    dispatchMetadata({ type: 'updateMetadata', metadata: collection?.metadata ?? {} });
+    setAddress(collection?.address);
+  }, [collection]);
 
   const close = () => router.replace(`/collection/${router.query.name}`);
 
@@ -89,7 +93,7 @@ export default function EditCollectionPage() {
     }
 
     const { error } = await apiPut(`/user/${chainId}:${user?.address}/collections/${router.query.name}`, {
-      data: { metadata }
+      data: { metadata, address }
     });
 
     if (error) {
@@ -175,6 +179,14 @@ export default function EditCollectionPage() {
             type="text"
             onChange={(name) => dispatchMetadata({ type: 'updateMetadata', metadata: { name } })}
             placeholder="Vortex"
+            isFullWidth
+          />
+          <TextInputBox
+            label="Address"
+            value={address || ''}
+            type="text"
+            onChange={setAddress}
+            placeholder="0x13f131717A2a435E372864bFC09061a4513E61A8"
             isFullWidth
           />
           <TextAreaInputBox

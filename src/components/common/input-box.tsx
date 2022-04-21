@@ -106,7 +106,7 @@ export function TextInputBox({
 }: Props4 & Omit<Props, 'children'>): JSX.Element {
   return (
     <InputBox label={label} tooltip={tooltip} {...props}>
-      <div className={twMerge('flex items-center', className)}>
+      <div className={twMerge('flex items-center', className, props.isFullWidth ? 'w-full' : '')}>
         {addEthSymbol && <div className="pr-2">{EthSymbol}</div>}
 
         <input
