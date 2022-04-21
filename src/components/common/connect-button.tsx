@@ -72,7 +72,7 @@ export const ConnectButton: React.FC = () => {
       button: {
         container: {
           className: `
-            transition w-full h-full rounded-full
+            transition w-full h-full min-h-[48px] rounded-full
             justify-self-end
             font-mono grid place-content-center
             ${
@@ -214,7 +214,7 @@ export const ConnectButton: React.FC = () => {
         <>
           <Link href="/connect" passHref>
             <div {...styles?.menu?.button?.container}>
-              <div {...styles?.menu?.button?.disconnected}>{content?.button}</div>
+              <button {...styles?.menu?.button?.disconnected}>{content?.button}</button>
             </div>
           </Link>
         </>
