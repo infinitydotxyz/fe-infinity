@@ -4,7 +4,7 @@ import { Button } from 'src/components/common/button';
 import { Spacer } from 'src/components/common/spacer';
 import { XIcon } from '@heroicons/react/outline';
 
-interface Props {
+export interface SimpleModalProps {
   children: ReactNode;
   isOpen: boolean;
   title?: string;
@@ -26,7 +26,7 @@ export const SimpleModal = ({
   onClose,
   showActionButtons = true,
   dialogWidth = 'max-w-lg'
-}: Props) => {
+}: SimpleModalProps) => {
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="fixed inset-0 z-10 overflow-y-auto" onClose={onClose}>
