@@ -1,18 +1,18 @@
 import { ReactNode } from 'react';
-import { ethers } from 'ethers';
+import { getAddress } from '@ethersproject/address';
 import { CardData } from '@infinityxyz/lib/types/core';
-import {
-  WETH_ADDRESS,
-  CHAIN_SCANNER_BASE,
-  POLYGON_WETH_ADDRESS,
-  ETHEREUM_NETWORK_NAME,
-  POLYGON_NETWORK_NAME,
-  POLYGON_CHAIN_SCANNER_BASE,
-  NFT_DATA_SOURCES
-} from './constants';
+import { NFT_DATA_SOURCES } from './constants';
 import { UnmarshalNFTAsset } from '@infinityxyz/lib/types/services/unmarshal';
 import { AlchemyUserAsset } from '@infinityxyz/lib/types/services/alchemy';
-import { trimLowerCase } from '@infinityxyz/lib/utils';
+import {
+  ETHEREUM_CHAIN_SCANNER_BASE,
+  ETHEREUM_NETWORK_NAME,
+  ETHEREUM_WETH_ADDRESS,
+  POLYGON_CHAIN_SCANNER_BASE,
+  POLYGON_NETWORK_NAME,
+  POLYGON_WETH_ADDRESS,
+  trimLowerCase
+} from '@infinityxyz/lib/utils';
 
 // OpenSea's EventType
 export enum EventType {
@@ -43,7 +43,7 @@ export const toChecksumAddress = (address?: string): string => {
 
     try {
       // this crashes if the address isn't valid
-      result = ethers.utils.getAddress(address);
+      result = getAddress(address);
     } catch (err) {
       // do nothing
     }
@@ -325,7 +325,7 @@ export const getCanonicalWeth = (chain: string): { address: string; decimals: nu
     return { address: '', decimals: 0 };
   }
   if (chain === ETHEREUM_NETWORK_NAME) {
-    return { address: WETH_ADDRESS, decimals: 18 };
+    return { address: ETHEREUM_WETH_ADDRESS, decimals: 18 };
   } else if (chain === POLYGON_NETWORK_NAME) {
     return { address: POLYGON_WETH_ADDRESS, decimals: 18 };
   }
@@ -334,7 +334,7 @@ export const getCanonicalWeth = (chain: string): { address: string; decimals: nu
 
 export const getChainScannerBase = (chainId?: string): string | null => {
   if (chainId === '1') {
-    return CHAIN_SCANNER_BASE;
+    return ETHEREUM_CHAIN_SCANNER_BASE;
   } else if (chainId === '137') {
     return POLYGON_CHAIN_SCANNER_BASE;
   }

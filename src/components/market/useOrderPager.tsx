@@ -3,7 +3,7 @@ import {
   MarketListingsBody,
   MarketListingsResponse,
   MarketOrder,
-  OBOrderSpec
+  OBOrder
 } from '@infinityxyz/lib/types/core';
 import { useEffect, useState } from 'react';
 import { apiPost } from 'src/utils';
@@ -11,9 +11,9 @@ import { apiPost } from 'src/utils';
 export function useOrderPager(limit: number) {
   const [buyMarketListing, setBuyMarketListing] = useState<MarketListingsResponse>();
   const [sellMarketListing, setSellMarketListing] = useState<MarketListingsResponse>();
-  const [orders, setOrders] = useState<OBOrderSpec[]>([]);
-  const [buyOrders, setBuyOrders] = useState<OBOrderSpec[]>([]);
-  const [sellOrders, setSellOrders] = useState<OBOrderSpec[]>([]);
+  const [orders, setOrders] = useState<OBOrder[]>([]);
+  const [buyOrders, setBuyOrders] = useState<OBOrder[]>([]);
+  const [sellOrders, setSellOrders] = useState<OBOrder[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMoreBuy, setHasMoreBuy] = useState(true);
   const [hasMoreSell, setHasMoreSell] = useState(true);
@@ -21,7 +21,8 @@ export function useOrderPager(limit: number) {
   useEffect(() => {
     // let isActive = true;
 
-    fetchData(false);
+    // fetchData(false);
+    fetchOrders(false);
 
     return () => {
       // isActive = false;
@@ -88,9 +89,10 @@ export function useOrderPager(limit: number) {
       return;
     }
 
-    return fetchData(true);
+    return fetchOrders(true);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const fetchData = async (fetchMore: boolean) => {
     let buyCursor = '';
     let sellCursor = '';
@@ -115,6 +117,28 @@ export function useOrderPager(limit: number) {
       }
 
       handleResult(buyListing, sellListing);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // todo: make this prod ready
+  const fetchOrders = async (fetchMore: boolean) => {
+    console.log(fetchMore);
+    try {
+      setIsLoading(true);
+
+      const body = {};
+      const { result, error } = await apiPost('/orders/get', { data: body });
+
+      if (error !== undefined) {
+        console.log(error);
+        return emptyResponse();
+      }
+
+      setOrders(result.orders);
     } catch (err) {
       console.error(err);
     } finally {

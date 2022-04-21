@@ -1,15 +1,14 @@
-import React, { FunctionComponent, memo, StrictMode, useEffect } from 'react';
-import type { AppProps } from 'next/app';
-import 'src/settings/theme/globals.scss';
-import { useRouter } from 'next/router';
 import LogRocket from 'logrocket';
 import * as gtag from 'lib/ga/gtag';
-
-import { NextNProgress } from 'src/components/common/next-progressbar';
-import { AppContextProvider } from 'src/utils/context/AppContext';
-import { FilterContextProvider } from 'src/utils/context/FilterContext';
+import { useRouter } from 'next/router';
+import type { AppProps } from 'next/app';
+import 'src/settings/theme/globals.scss';
 import { isLocalhost, isServer } from 'src/utils/commonUtils';
+import { AppContextProvider } from 'src/utils/context/AppContext';
 import { OrderContextProvider } from 'src/utils/context/OrderContext';
+import { NextNProgress } from 'src/components/common/next-progressbar';
+import { FilterContextProvider } from 'src/utils/context/FilterContext';
+import React, { FunctionComponent, memo, StrictMode, useEffect } from 'react';
 
 /*
   ======================================
