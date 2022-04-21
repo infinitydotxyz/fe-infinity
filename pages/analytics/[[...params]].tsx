@@ -16,7 +16,7 @@ export const Analytics = () => {
   const [limit] = React.useState(ITEMS_PER_PAGE);
   const [page, setPage] = React.useState(router.query.params?.[0] ? router.query.params?.[0] : 'trending');
   const [interval, setInterval] = React.useState(router.query.params?.[1] ? router.query.params?.[1] : 'hourly');
-  const [date, setDate] = React.useState(Date.now());
+  const [date] = React.useState(Date.now());
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
   const closeDrawer = () => setIsDrawerOpen(false);
   const toggleDrawer = () => (isDrawerOpen ? setIsDrawerOpen(false) : setIsDrawerOpen(true));
@@ -267,7 +267,6 @@ export const Analytics = () => {
         Resetting the date is important for query.
       ======================================
     */
-    setDate(Date.now());
     if (!connected) setPage('trending');
   }, [connected]);
 
@@ -280,7 +279,6 @@ export const Analytics = () => {
         Resetting the date is important for the query.
       ======================================
     */
-    setDate(Date.now());
     router.push(
       {
         pathname: `/analytics/${page}/${interval}`
