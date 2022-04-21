@@ -110,6 +110,7 @@ const AssetDetail: FunctionComponent = () => {
                 label="Contact address:"
                 address={collection.address}
                 href={`https://etherscan.io/address/${collection.address}`}
+                target="_blank"
                 tooltip={collection.address}
               />
               <span className="text-body text-base">
