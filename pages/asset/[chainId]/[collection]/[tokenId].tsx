@@ -109,15 +109,19 @@ const AssetDetail: FunctionComponent = () => {
               <ShortAddress
                 label="Contact address:"
                 address={collection.address}
-                href={`/collection/${collection.address}`}
+                href={`https://etherscan.io/address/${collection.address}`}
+                target="_blank"
                 tooltip={collection.address}
               />
-              <ShortAddress
+              <span className="text-body text-base">
+                Token ID:<span className="ml-4">{token.tokenId}</span>
+              </span>
+              {/* <ShortAddress
                 label="Token ID:"
                 address={token.tokenId}
-                href={`/asset/${token.chainId}/${collection.address}/${token.tokenId}`}
+                href={`https://etherscan.io/token/${collection.address}?a=${token.tokenId}`}
                 tooltip={token.tokenId}
-              />
+              /> */}
               <div className="md:-ml-1.5">
                 <div className="flex flex-col md:flex-row gap-2 my-4 md:my-6 lg:my-10 lg:mb-16">
                   <Button variant="primary" size="large" className="p-4 rounded-full">

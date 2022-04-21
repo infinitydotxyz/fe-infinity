@@ -8,27 +8,29 @@ interface Props {
   open: boolean;
   onClose: () => void;
   title: string;
+  subtitle?: string;
+  divide?: boolean;
   tooltip?: TooltipSpec;
   children: ReactNode;
 }
 
-export function Drawer({ open, tooltip, onClose, title, children }: Props) {
+export function Drawer({ open, tooltip, subtitle, divide, onClose, title, children }: Props) {
   const [showTooltip, setShowTooltip] = useState(false);
 
   const header = (
     <div className="p-8">
       <TooltipWrapper show={showTooltip} tooltip={tooltip}>
         <div className="flex items-start justify-between">
-          <Dialog.Title className="text-2xl font-bold text-gray-900">
+          <Dialog.Title>
             <div className="flex items-center">
-              <div className="mr-2">{title}</div>
-
+              <div className="mr-2 text-2xl font-bold text-gray-900">{title}</div>
               {tooltip && (
                 <Tooltip setShow={setShowTooltip}>
                   <TooltipIcon />
                 </Tooltip>
               )}
             </div>
+            {subtitle && <div className="mr-2 text-md text-gray-600">{subtitle}</div>}
           </Dialog.Title>
 
           <div className="ml-3 flex h-7 items-center">
@@ -39,6 +41,7 @@ export function Drawer({ open, tooltip, onClose, title, children }: Props) {
           </div>
         </div>
       </TooltipWrapper>
+      {divide && <hr className="mt-4 text-gray-700" />}
     </div>
   );
 
