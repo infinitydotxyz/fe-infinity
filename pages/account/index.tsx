@@ -44,11 +44,11 @@ import { Chip } from 'src/components/common';
 import { ellipsisAddress } from 'src/utils';
 import { Dropdown } from 'src/components/common';
 import { BiCaretDown, BiCaretUp } from 'react-icons/bi';
-import { ProfileSettingsModal } from 'src/components/profile/profile-settings-modal';
-import { ProfileImage } from 'src/components/profile/profile-image';
-import { ProfileBackground } from 'src/components/profile/profile-background';
+import { AccountSettingsModal } from 'src/components/account/account-settings-modal';
+import { ProfileImage } from 'src/components/account/profile-image';
+import { ProfileBackground } from 'src/components/account/profile-background';
 
-const ProfilePage: FunctionComponent = () => {
+const AccountPage: FunctionComponent = () => {
   const router = useRouter();
   const [currentTab, setCurrentTab] = useState(0);
 
@@ -75,16 +75,8 @@ const ProfilePage: FunctionComponent = () => {
   const { user } = useAppContext();
 
   if (!user) {
-    return 'Please Connect Your Wallet';
+    return <div>'Please Connect Your Wallet';</div>;
   }
-
-  const openSettingsModal = () => {
-    setOpenSettings(true);
-  };
-
-  const closeSettingsModal = () => {
-    setOpenSettings(false);
-  };
 
   return (
     <Layout title={'profile'} className="mb-12">
@@ -151,7 +143,9 @@ const ProfilePage: FunctionComponent = () => {
                 <span className="pl-2">Edit profile</span>
               </span>
             }
-            onClick={openSettingsModal}
+            onClick={() => {
+              router.push(`/account/settings`);
+            }}
           />
           <Chip
             content={
@@ -205,9 +199,8 @@ const ProfilePage: FunctionComponent = () => {
           )}
         </div>
       </div>
-      <ProfileSettingsModal isOpen={IsOpenSettings} close={closeSettingsModal} />
     </Layout>
   );
 };
 
-export default ProfilePage;
+export default AccountPage;
