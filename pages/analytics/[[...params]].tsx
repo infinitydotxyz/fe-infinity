@@ -267,7 +267,6 @@ export const Analytics = () => {
         Resetting the date is important for query.
       ======================================
     */
-    setDate(Date.now());
     if (!connected) setPage('trending');
   }, [connected]);
 
@@ -280,7 +279,6 @@ export const Analytics = () => {
         Resetting the date is important for the query.
       ======================================
     */
-    setDate(Date.now());
     router.push(
       {
         pathname: `/analytics/${page}/${interval}`
