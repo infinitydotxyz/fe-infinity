@@ -5,6 +5,14 @@ import { secondsPerDay } from 'src/components/market/order-drawer/ui-constants';
 import { getSignedOBOrder } from '../exchange/orders';
 import { postOrders } from '../marketUtils';
 import { parseEther } from '@ethersproject/units';
+import {
+  error,
+  getOBComplicationAddress,
+  getOrderId,
+  getOrderNonce,
+  getTxnCurrencyAddress,
+  NULL_HASH
+} from '@infinityxyz/lib/utils';
 
 export interface OrderCartItem {
   isSellOrder: boolean;
@@ -163,9 +171,21 @@ export function OrderContextProvider({ children }: Props) {
   const addOrderToCart = () => {
     setIsEditingOrder(false);
 
+    if (!user || !user.address) {
+      error('user is null');
+      return;
+    }
+
+    const orderNonce = getOrderNonce(user.address, chainId);
+    const orderId = getOrderId(user.address, orderNonce, chainId);
+    if (orderId === NULL_HASH) {
+      error('orderId is null');
+      return;
+    }
+
     // todo: put in missing values
     const order: OBOrder = {
-      id: '????',
+      id: orderId,
       chainId: chainId,
       isSellOrder: isSellOrderCart(),
       makerAddress: user?.address ?? '????',
@@ -180,11 +200,11 @@ export function OrderContextProvider({ children }: Props) {
       makerUsername: '',
       takerAddress: '',
       takerUsername: '',
-      nonce: '1',
+      nonce: orderNonce,
       minBpsToSeller: 9000,
       execParams: {
-        currencyAddress: '',
-        complicationAddress: ''
+        currencyAddress: getTxnCurrencyAddress(chainId),
+        complicationAddress: getOBComplicationAddress(chainId)
       },
       extraParams: {
         buyer: ''
@@ -246,7 +266,6 @@ export function OrderContextProvider({ children }: Props) {
     }
 
     // post orders
-    console.log('signed orders', signedOrders);
     await postOrders(user.address, signedOrders);
 
     _resetStateValues();
