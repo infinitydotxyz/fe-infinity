@@ -14,19 +14,17 @@ export const OrderbookItem = ({ title, content, nameItem, order }: Props4): JSX.
   const [expanded, setExpanded] = useState(false);
 
   const tokenDiv = (collectionName: string, profileImage: string, token?: OBTokenInfo) => {
+    let image = profileImage;
+
+    if (token) {
+      image = token.tokenImage;
+    }
+
     return (
       <div className="flex gap-2 items-center mb-3">
-        {token && (
-          <div className={'flex justify-center shrink-0 h-12 overflow-hidden w-12 rounded-2xl'}>
-            <img alt={'token image'} src={token.imageUrl} />
-          </div>
-        )}
-
-        {profileImage && (
-          <div className={'flex justify-center shrink-0 h-12 overflow-hidden w-12 rounded-2xl'}>
-            <img alt={'profile image'} src={profileImage} />
-          </div>
-        )}
+        <div className={'flex justify-center shrink-0 h-12 overflow-hidden w-12 rounded-2xl'}>
+          <img alt={'token image'} src={image} />
+        </div>
 
         <div className="flex flex-col truncate">
           <div className={'truncate'}>{collectionName}</div>
@@ -44,14 +42,14 @@ export const OrderbookItem = ({ title, content, nameItem, order }: Props4): JSX.
   if (nameItem) {
     const nFts = [];
     // todo: temp fix
-    const nfts = order.nfts ?? order.nfts ?? [];
+    const nfts = order.nfts ?? [];
     for (const n of nfts) {
       if (n.tokens.length > 0) {
         for (const t of n.tokens) {
           nFts.push(tokenDiv(n.collectionName, '', t));
         }
       } else {
-        nFts.push(tokenDiv(n.collectionName, n.profileImage));
+        nFts.push(tokenDiv(n.collectionName, n.collectionImage));
       }
 
       if (!expanded) {

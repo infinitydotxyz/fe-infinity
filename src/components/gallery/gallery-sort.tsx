@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react';
 import { useFilterContext } from 'src/utils/context/FilterContext';
 import { Dropdown } from '../common';
 
+const RARITY_HIGH_LABEL = 'Rarity high';
+const RARITY_LOW_LABEL = 'Rarity low';
+
 export const GallerySort = () => {
   const { filterState, setFilterState } = useFilterContext();
   const [label, setLabel] = useState('Sort');
@@ -15,8 +18,8 @@ export const GallerySort = () => {
 
   useEffect(() => {
     let newLabel = label;
-    newLabel = filterState.orderDirection === 'asc' ? 'High Rarity Rank to Low' : newLabel;
-    newLabel = filterState.orderDirection === 'desc' ? 'Low Rarity Rank to High' : newLabel;
+    newLabel = filterState.orderDirection === 'asc' ? RARITY_HIGH_LABEL : newLabel;
+    newLabel = filterState.orderDirection === 'desc' ? RARITY_LOW_LABEL : newLabel;
     setLabel(newLabel);
   }, [filterState]);
 
@@ -25,10 +28,11 @@ export const GallerySort = () => {
       <Dropdown
         label={label}
         items={[
-          { label: 'High Rarity Rank to Low', onClick: () => onClickSort('asc') },
-          { label: 'Low Rarity Rank to High', onClick: () => onClickSort('desc') }
+          { label: RARITY_HIGH_LABEL, onClick: () => onClickSort('asc') },
+          { label: RARITY_LOW_LABEL, onClick: () => onClickSort('desc') }
           // { label: 'Clear', onClick: () => onClickSort('desc') }
         ]}
+        contentClassName="right-0"
       />
     </span>
   );

@@ -15,7 +15,7 @@
     "node": "16.x"
   },
   "dependencies": {
-    "@infinityxyz/lib": "^1.38.4",
+    "@infinityxyz/lib": "^1.38.36",
     "@next/bundle-analyzer": "^12.1.5",
     "@tailwindcss/aspect-ratio": "^0.4.0",
     "@tailwindcss/typography": "^0.5.2",
@@ -24,6 +24,7 @@
     "cross-env": "^7.0.3",
     "ethers": "5.6.4",
     "firebase": "^9.6.11",
+    "formik": "^2.2.9",
     "lodash": "^4.17.21",
     "logrocket": "^2.2.1",
     "mitt": "^3.0.0",
@@ -39,11 +40,13 @@
     "react-icons": "^4.3.1",
     "react-intersection-observer": "^8.34.0",
     "react-router-dom": "^6.3.0",
+    "react-share": "^4.4.0",
     "recharts": "^2.1.9",
     "swr": "^1.3.0",
     "tailwind-merge": "^1.2.1",
     "timeago.js": "^4.0.2",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@headlessui/react": "0.0.0-insiders.79b3015",

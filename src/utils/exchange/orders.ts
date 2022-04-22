@@ -1,6 +1,7 @@
 import { JsonRpcSigner } from '@ethersproject/providers';
-import { getCurrentOBOrderPrice, OBOrder, OBOrderItem, ChainOBOrder, SignedOBOrder } from '@infinityxyz/lib/types/core';
+import { OBOrder, OBOrderItem, ChainOBOrder, SignedOBOrder } from '@infinityxyz/lib/types/core';
 import {
+  getCurrentOBOrderPrice,
   getExchangeAddress,
   getFeeTreasuryAddress,
   getOBComplicationAddress,
@@ -13,6 +14,7 @@ import { Contract } from '@ethersproject/contracts';
 import { MaxUint256 } from '@ethersproject/constants';
 import { defaultAbiCoder } from '@ethersproject/abi';
 import { splitSignature } from '@ethersproject/bytes';
+import { parseEther } from '@ethersproject/units';
 import { erc20Abi } from '../../abi/erc20';
 import { erc721Abi } from '../../abi/erc721';
 import { User } from '../context/AppContext';
@@ -246,8 +248,8 @@ export async function signOBOrder(
 
   const constraints = [
     order.numItems,
-    order.startPriceWei,
-    order.endPriceWei,
+    parseEther(String(order.startPriceEth)),
+    parseEther(String(order.endPriceEth)),
     Math.floor(order.startTimeMs / 1000),
     Math.floor(order.endTimeMs / 1000),
     order.minBpsToSeller,
@@ -290,7 +292,6 @@ export async function signOBOrder(
 
   // sign order
   try {
-    console.log('Signing order');
     const sig = await signer._signTypedData(domain, types, orderToSign);
     const splitSig = splitSignature(sig ?? '');
     const encodedSig = defaultAbiCoder.encode(['bytes32', 'bytes32', 'uint8'], [splitSig.r, splitSig.s, splitSig.v]);
