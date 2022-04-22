@@ -11,7 +11,7 @@ import { UserProfileDto } from './user-profile-dto';
 import { ProfileBannerImageUpload } from './profile-banner-image-upload';
 import { UserProfileForm } from './user-profile-form';
 import { UserProfileSchema } from './schemas/user-profile-schema';
-import { UserWalletForm } from './user-wallet-form';
+// import { UserWalletForm } from './user-wallet-form';
 
 interface AccountSettingsProps {
   user: User;

@@ -5,8 +5,9 @@ export const UserProfileSchema = Yup.object().shape({
   bio: Yup.string().min(10, 'Too Short!').required('Required'),
   displayName: Yup.string().required('Required'),
   username: Yup.string()
-    .min(2, 'Too Short!')
-    .max(50, 'Too Long!')
+    .min(5, 'Too Short!')
+    .max(14, 'Too Long!')
+    .matches(/[a-zA-Z0-9_]+$/, 'a-z, A-Z, 0-9, _ can be used')
     .required('Required')
     .test(
       'Unique username',
