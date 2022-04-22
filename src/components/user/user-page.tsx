@@ -37,7 +37,7 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
                 </span>
               }
               onClick={() => {
-                router.push(`/account/settings`);
+                router.push(`/profile/settings`);
               }}
             />
           )}
