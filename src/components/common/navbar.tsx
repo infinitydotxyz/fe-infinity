@@ -264,7 +264,7 @@ export function Navbar() {
           type: 'link',
           label: 'Orderbook',
           props: {
-            href: '/orderbook'
+            href: '/market'
           }
         },
         {
