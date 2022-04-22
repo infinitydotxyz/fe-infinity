@@ -17,7 +17,7 @@ interface DropdownProps {
   className?: string;
 }
 
-export function Dropdown({ label, items, toggler, togglerClose, className }: DropdownProps) {
+export function Dropdown({ label, items, toggler, className }: DropdownProps) {
   return (
     <div className={twMerge(`relative inline-block text-left ${className ?? ''}`)}>
       <Menu>
@@ -42,15 +42,6 @@ export function Dropdown({ label, items, toggler, togglerClose, className }: Dro
               </span>
             )}
 
-            <Transition
-              show={open}
-              enter="transition ease-out duration-100"
-              enterFrom="transform opacity-0 scale-95"
-              enterTo="transform opacity-100 scale-100"
-              leave="transition ease-in duration-75"
-              leaveFrom="transform opacity-100 scale-100"
-              leaveTo="transform opacity-0 scale-95"
-            >
               <Menu.Items className="absolute mt-2 p-4 w-72 origin-top-right divide-y divide-gray-100 rounded-3xl border border-gray-200 bg-white shadow-2xl outline-none">
                 <div className="py-1">
                   {items.map((item, idx) => {
@@ -63,7 +54,7 @@ export function Dropdown({ label, items, toggler, togglerClose, className }: Dro
                 </div>
               </Menu.Items>
             </Transition>
-          </>
+        
         )}
       </Menu>
     </div>

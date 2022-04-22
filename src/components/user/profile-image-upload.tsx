@@ -1,18 +1,20 @@
 import { FunctionComponent, useState } from 'react';
 import { FaPen } from 'react-icons/fa';
 import { ImageUploader, Button } from 'src/components/common';
-import clsx from 'classnames';
 
 interface ProfileImageProps {
+  imgSource?: string;
   className?: string;
   onUpload: (file: File) => void;
+  onDelete: () => void;
 }
 
 const FORM_LABEL = 'profile-image-upload';
 
-export const ProfileImageUpload: FunctionComponent<ProfileImageProps> = ({ className, onUpload }) => {
-  const [imgSrc, setImgSrc] = useState<string | null>(null);
+export const ProfileImageUpload: FunctionComponent<ProfileImageProps> = ({ onUpload, onDelete, imgSource = null }) => {
+  const [imgSrc, setImgSrc] = useState<string | null>(imgSource);
   const [file, setFile] = useState<File | null>(null);
+  const [isLoading, setLoading] = useState(false);
 
   const handleChangeFile = (file: File) => {
     try {
@@ -24,10 +26,20 @@ export const ProfileImageUpload: FunctionComponent<ProfileImageProps> = ({ class
     }
   };
 
+  const handleImageRemove = async () => {
+    setLoading(true);
+    await onDelete();
+    setLoading(false);
+    setImgSrc(null);
+  };
+
   const handleUploadImage = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     if (file) {
-      onUpload(file);
+      setLoading(true);
+      await onUpload(file);
+      setLoading(false);
+      setFile(null);
     }
   };
 
@@ -55,13 +67,18 @@ export const ProfileImageUpload: FunctionComponent<ProfileImageProps> = ({ class
       <div className="sm:pl-8 mt-2 sm:mt-0">
         <Button
           variant="primary"
-          className="my-1 py-2.5 w-44 px-12 mb-2 block mx-auto sm:mx-0"
+          className="my-1 py-2.5 px-12 mb-2 block w-full sm:w-44"
           onClick={handleUploadImage}
-          disabled={!file}
+          disabled={!file || isLoading}
         >
           Upload
         </Button>
-        <Button variant="outline" className="my-1 py-2 w-44 px-12 d-block mx-auto sm:mx-0 block">
+        <Button
+          variant="outline"
+          className="my-1 py-2 px-12 d-block w-full sm:w-44 block"
+          disabled={isLoading || !imgSrc}
+          onClick={handleImageRemove}
+        >
           Delete
         </Button>
       </div>

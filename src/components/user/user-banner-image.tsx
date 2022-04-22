@@ -16,7 +16,7 @@ export const UserBannerImage: FunctionComponent<UserBannerImageProps> = ({ imgSr
   };
 
   return (
-    <div className="h-48 lg:h-56 xl:h-64 overflow-hidden bg-theme-light-200">
+    <div className="h-48 lg:h-64 xl:h-72 overflow-hidden bg-theme-light-200">
       <div className="w-full h-full overflow-hidden">
         {imgSrc ? (
           <img className="w-full object-cover" src={imgSrc} />

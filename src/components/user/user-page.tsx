@@ -19,7 +19,7 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
   return (
     <>
       <UserBannerImage imgSrc={userInfo.bannerImage} isOwner={isOwner} />
-      <div className="flex flex-col mx-auto px-4 lg:px-32 translate-x-1 -mt-11">
+      <div className="flex flex-col mx-auto px-4 lg:px-32 translate-x-1 -mt-16">
         <UserProfileImage imgSrc={userInfo.profileImage} isOwner={isOwner} />
         <h2 className="my-6 font-heading text-6xl">{userInfo.displayName || 'No Display Name'}</h2>
         <div className="flex flex-wrap font-heading -mx-4 mb-8">
