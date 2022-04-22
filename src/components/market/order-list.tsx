@@ -2,7 +2,8 @@ import React from 'react';
 import { uuidv4 } from 'src/utils/commonUtils';
 import styles from './styles.module.scss';
 import { Button } from 'src/components/common';
-import { BuyOrderMatch, OBOrder, getCurrentOBOrderPrice, isOBOrderExpired } from '@infinityxyz/lib/types/core';
+import { BuyOrderMatch, OBOrder } from '@infinityxyz/lib/types/core';
+import { getCurrentOBOrderPrice, isOBOrderExpired } from '@infinityxyz/lib/utils';
 
 // =======================================================
 

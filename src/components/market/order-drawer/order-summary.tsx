@@ -16,10 +16,16 @@ export function OrderSummary() {
 
       leftOffset = iconLeft + 4;
 
+      // a collection or a token image
+      let image = item.imageUrl;
+      if (!image) {
+        image = item.profileImage;
+      }
+
       return (
         <div key={item.collectionAddress + '-icons'}>
           <div className={`absolute ${collectionIconStyle} bg-white`} style={{ left: whiteBoxLeft }} />
-          <img className={`absolute ${collectionIconStyle}`} src={item.imageUrl} alt="" style={{ left: iconLeft }} />
+          <img className={`absolute ${collectionIconStyle}`} src={image} alt="" style={{ left: iconLeft }} />
         </div>
       );
     });
