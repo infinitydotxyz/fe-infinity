@@ -51,7 +51,7 @@ export const ProfileBannerImageUpload: FunctionComponent<BannerImageProps> = ({
   return (
     <div className="sm:flex items-center flex-wrap ">
       <label htmlFor={FORM_LABEL} className="flex-1">
-        <div className="w-full h-40 rounded-xl overflow-hidden border-1 border-theme-light-800">
+        <div className="w-full h-40 rounded-xl overflow-hidden border border-1 border-theme-light-700">
           {imgSrc ? (
             <img className="w-full object-cover" src={imgSrc} />
           ) : (

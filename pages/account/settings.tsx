@@ -22,12 +22,9 @@ const AccountSettings: FunctionComponent = () => {
   }
 
   return (
-    <div className="pb-8">
-      <Head>
-        <title>Account Settings</title>
-      </Head>
+    <Layout title="Account" className="pb-8">
       <AccountSettingsPage user={user} chainId={chainId} userInfo={result as UserProfileDto} />
-    </div>
+    </Layout>
   );
 };
 

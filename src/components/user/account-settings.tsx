@@ -104,8 +104,8 @@ export const AccountSettingsPage: FunctionComponent<AccountSettingsProps> = (pro
                 imgSource={userInfo.profileImage}
               />
             </div>
-            <h2 className="font-body text-4xl mt-10 mb-10 font-bold">Wallets</h2>
-            <UserWalletForm />
+            {/* <h2 className="font-body text-4xl mt-10 mb-10 font-bold">Wallets</h2> */}
+            {/* <UserWalletForm /> */}
             <div className="sm:grid sm:grid-cols-2 sm:gap-2 mt-10">
               <Button variant="primary" className="py-2.5 w-full" type="submit" disabled={isSubmitting}>
                 Save

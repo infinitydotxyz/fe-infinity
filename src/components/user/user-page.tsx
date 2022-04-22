@@ -5,6 +5,7 @@ import { UserBannerImage } from './user-banner-image';
 import { UserProfileImage } from './user-profile-image';
 import { UserWatchList } from './user-watch-list';
 import { UserProfileShare } from './user-profile-share';
+import { UserProfileTab } from './user-profile-tab';
 import { Chip } from 'src/components/common';
 import { FaPen } from 'react-icons/fa';
 
@@ -22,11 +23,11 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
       <div className="flex flex-col mx-auto px-4 lg:px-32 translate-x-1 -mt-16">
         <UserProfileImage imgSrc={userInfo.profileImage} isOwner={isOwner} />
         <h2 className="my-6 font-heading text-6xl">{userInfo.displayName || 'No Display Name'}</h2>
-        <div className="flex flex-wrap font-heading -mx-4 mb-8">
+        <div className="flex flex-wrap font-heading -ml-3 mb-8">
           <p className="leading-wide mx-4 font-bold">@{userInfo.username || 'no-username'}</p>
           <UserWatchList userWatchList={[userInfo.address, userInfo.address]} />
         </div>
-        <div className="my-4 -m-3 flex flex-wrap">
+        <div className="my-4 -ml-2 flex flex-wrap">
           {isOwner && (
             <Chip
               content={
@@ -42,7 +43,8 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
           )}
           <UserProfileShare />
         </div>
-        <p className="text-theme-light-800 mt-8 max-w-md">{userInfo.bio || '---'}</p>
+        <p className="text-theme-light-800 mt-8 ml-1 max-w-md">{userInfo.bio || '---'}</p>
+        <UserProfileTab />
       </div>
     </>
   );
