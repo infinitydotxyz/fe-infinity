@@ -49,9 +49,9 @@ export const CollectionCard: FunctionComponent<CollectionCardProps> = ({ collect
         </a>
       </Link>
 
-      <Button variant="outline" className="flex-1 py-3" onClick={() => onClick(collection)}>
+      {/* <Button variant="outline" className="flex-1 py-3" onClick={() => onClick(collection)}>
         Buy
-      </Button>
+      </Button> */}
     </article>
   );
 };
