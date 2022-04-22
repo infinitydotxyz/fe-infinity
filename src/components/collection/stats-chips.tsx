@@ -38,7 +38,7 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
       if (error) {
         toastError(error?.errorResponse?.message);
       } else {
-        toastSuccess('Unfollowed ' + collection?.metadata?.name);
+        // toastSuccess('Unfollowed ' + collection?.metadata?.name);
         setIsFollowing(false);
         fetchFollowingCollections();
       }
@@ -52,7 +52,7 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
       if (error) {
         toastError(error?.errorResponse?.message);
       } else {
-        toastSuccess('Followed ' + collection?.metadata?.name);
+        // toastSuccess('Followed ' + collection?.metadata?.name);
         setIsFollowing(true);
         fetchFollowingCollections();
       }
