@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { UserProfileDto } from './user-profile-dto';
 import { UserBannerImage } from './user-banner-image';
 import { UserProfileImage } from './user-profile-image';
-import { UserWatchList } from './user-watch-list';
+// import { UserWatchList } from './user-watch-list';
 import { UserProfileShare } from './user-profile-share';
 import { UserProfileTab } from './user-profile-tab';
 import { Chip } from 'src/components/common';
@@ -25,7 +25,7 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
         <h2 className="my-6 font-heading text-6xl">{userInfo.displayName || 'No Display Name'}</h2>
         <div className="flex flex-wrap font-heading -ml-3 mb-8">
           <p className="leading-wide mx-4 font-bold">@{userInfo.username || 'no-username'}</p>
-          <UserWatchList userWatchList={[userInfo.address, userInfo.address]} />
+          {/* <UserWatchList userWatchList={[userInfo.address, userInfo.address]} /> */}
         </div>
         <div className="my-4 -ml-2 flex flex-wrap">
           {isOwner && (
@@ -41,7 +41,7 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
               }}
             />
           )}
-          <UserProfileShare />
+          <UserProfileShare userAddress={userInfo.address} />
         </div>
         <p className="text-theme-light-800 mt-8 ml-1 max-w-md">{userInfo.bio || '---'}</p>
         <UserProfileTab />

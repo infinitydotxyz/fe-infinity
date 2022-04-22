@@ -18,10 +18,12 @@ import {
   WhatsappIcon
 } from 'react-share';
 
-interface UserProfileShareProps {}
+interface UserProfileShareProps {
+  userAddress?: string;
+}
 
-export const UserProfileShare: FunctionComponent<UserProfileShareProps> = ({}) => {
-  const profileLink = window.location.href;
+export const UserProfileShare: FunctionComponent<UserProfileShareProps> = ({ userAddress }) => {
+  const profileLink = `${window.location.origin}/user/${userAddress}`;
   return (
     <div className="relative inline-block text-left">
       <Menu>
