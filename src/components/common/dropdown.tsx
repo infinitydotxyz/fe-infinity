@@ -1,7 +1,7 @@
-import { Menu, Transition } from '@headlessui/react';
+import { Menu } from '@headlessui/react';
 import classNames from 'classnames';
 import { ReactElement } from 'react';
-import { BiCaretDown, BiCaretUp } from 'react-icons/bi';
+import { BiCaretDown } from 'react-icons/bi';
 import { twMerge } from 'tailwind-merge';
 
 export type DropdownItems = {
@@ -13,49 +13,49 @@ interface DropdownProps {
   label?: string | ReactElement;
   items: DropdownItems[];
   toggler?: ReactElement; // custom toggler element.
-  togglerClose?: ReactElement; // custom toggler element.
+  contentClassName?: string; // className for the dropdown content panel.
   className?: string;
 }
 
-export function Dropdown({ label, items, toggler, className }: DropdownProps) {
+export function Dropdown({ label, items, toggler, contentClassName, className }: DropdownProps) {
   return (
     <div className={twMerge(`relative inline-block text-left ${className ?? ''}`)}>
       <Menu>
-        {({ open }) => (
-          <>
-            {toggler ? (
-              <Menu.Button>{togglerClose && open ? togglerClose : toggler}</Menu.Button>
-            ) : (
-              <span>
-                <Menu.Button
-                  className="transition ease-in-out duration-300 hover:bg-gray-700  active:bg-gray-900
+        {toggler ? (
+          <Menu.Button>{toggler}</Menu.Button>
+        ) : (
+          <span>
+            <Menu.Button
+              className="transition ease-in-out duration-300 hover:bg-gray-700  active:bg-gray-900
                focus:outline-none focus-visible:ring focus:ring-black focus:ring-opacity-50
                 px-6 py-2
                 border rounded-3xl border-gray-300 text-gray-900 font-heading
                 hover:text-white
                 false flex items-center space-x-1"
-                >
-                  <div>{label}</div>
-                  {open && <BiCaretUp />}
-                  {!open && <BiCaretDown />}
-                </Menu.Button>
-              </span>
-            )}
-
-              <Menu.Items className="absolute mt-2 p-4 w-72 origin-top-right divide-y divide-gray-100 rounded-3xl border border-gray-200 bg-white shadow-2xl outline-none">
-                <div className="py-1">
-                  {items.map((item, idx) => {
-                    return (
-                      <CustomMenuItem key={idx} onClick={item.onClick}>
-                        {item.label}
-                      </CustomMenuItem>
-                    );
-                  })}
-                </div>
-              </Menu.Items>
-            </Transition>
-        
+            >
+              <div>{label}</div>
+              <BiCaretDown />
+            </Menu.Button>
+          </span>
         )}
+
+        <Menu.Items
+          className={twMerge(
+            `absolute mt-2 p-4 w-72 z-10 origin-top-right divide-y divide-gray-100 rounded-3xl border border-gray-200 bg-white shadow-2xl outline-none ${
+              contentClassName ?? ''
+            }`
+          )}
+        >
+          <div className="py-1">
+            {items.map((item, idx) => {
+              return (
+                <CustomMenuItem key={idx} onClick={item.onClick}>
+                  {item.label}
+                </CustomMenuItem>
+              );
+            })}
+          </div>
+        </Menu.Items>
       </Menu>
     </div>
   );
