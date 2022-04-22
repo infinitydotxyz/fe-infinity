@@ -7,7 +7,7 @@ import { HiOutlineExternalLink } from 'react-icons/hi';
 import { apiDelete, apiPost } from 'src/utils';
 import { FollowingCollection, useAppContext } from 'src/utils/context/AppContext';
 import { Chip } from '../common';
-import { Toaster, toastError, toastSuccess } from '../common/toaster';
+import { Toaster, toastError } from '../common/toaster';
 interface Props {
   collection: BaseCollection | null;
   weeklyStatsData: CollectionStats[];
