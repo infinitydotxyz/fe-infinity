@@ -1,18 +1,23 @@
 import { FunctionComponent } from 'react';
+import { useRouter } from 'next/router';
 import { Layout } from 'src/components/common';
-import { UserPage } from 'src/components/user/user-page';
-import { useAppContext } from 'src/utils/context/AppContext';
 import { useFetch } from 'src/utils';
+import { UserPage } from 'src/components/user/user-page';
 import { UserProfileDto } from 'src/components/user/user-profile-dto';
+import { useAppContext } from 'src/utils/context/AppContext';
 
 const USER_API_END_POINT = '/user';
 
-const AccountPage: FunctionComponent = () => {
+const UserDetailPage: FunctionComponent = () => {
   const { user } = useAppContext();
+  const router = useRouter();
+  const { query } = router;
 
-  if (!user) return <Layout title={'Account'} className="mb-12"></Layout>;
+  if (!query.userId) {
+    return <Layout title="Loading..."></Layout>;
+  }
 
-  const { result, isLoading, isError, error } = useFetch(`${USER_API_END_POINT}/${user.address}`);
+  const { result, isLoading, isError, error } = useFetch(`${USER_API_END_POINT}/${query.userId}`);
 
   if (isLoading) {
     return <Layout title="Loading..."></Layout>;
@@ -30,9 +35,9 @@ const AccountPage: FunctionComponent = () => {
   const userInfo = result as UserProfileDto;
   return (
     <Layout title={userInfo.username || userInfo.address} className="pb-8">
-      <UserPage userInfo={result as UserProfileDto} isOwner />
+      <UserPage userInfo={result as UserProfileDto} isOwner={!!(user && user.address === userInfo.address)} />
     </Layout>
   );
 };
 
-export default AccountPage;
+export default UserDetailPage;

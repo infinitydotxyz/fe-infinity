@@ -2,10 +2,14 @@ import * as React from 'react';
 import { Dialog } from '@headlessui/react';
 import clsx from 'classnames';
 import { Button, RoundedNav, TextInputBox, TextAreaBox } from '../common';
-import { ProfileImage } from './profile-image';
-import { ProfileBackground } from './profile-background';
 import { FaPlus, FaDiscord, FaTwitter, FaTelegram, FaFacebook } from 'react-icons/fa';
 import { BiPlus } from 'react-icons/bi';
+
+import { useAppContext } from 'src/utils/context/AppContext';
+import { apiPut } from 'src/utils';
+
+import { ProfileImageUpload } from './profile-image-upload';
+import { ProfileBannerImageUpload } from './profile-banner-image-upload';
 
 export const AccountSettingsPage: React.FunctionComponent = () => {
   const [displayName, setDisplayName] = React.useState('Sandy K.');
@@ -14,11 +18,25 @@ export const AccountSettingsPage: React.FunctionComponent = () => {
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.'
   );
 
+  const { user, chainId } = useAppContext();
+
+  if (!user) {
+    return <div> Please connect your wallet </div>;
+  }
+
+  const IMAGE_UPLOAD_PATH = `/user/${chainId}:${user.address}/images`;
+
+  const handleProfileImageUpload = async (file: File) => {
+    const formData = new FormData();
+    formData.append('profileImage', file);
+    await apiPut(IMAGE_UPLOAD_PATH, { data: formData });
+  };
+
   return (
-    <div className="flex flex-col bg-white max-w-3xl mx-auto  px-4 sm:px-12  rounded-3xl">
+    <div className="flex flex-col bg-white max-w-2xl mx-auto  px-4 sm:px-12  rounded-3xl">
       <div className="pl-2 mt-12">
         <div>
-          <ProfileImage className="w-32 h-32" />
+          <ProfileImageUpload onUpload={handleProfileImageUpload} />
           <h2 className="font-body text-4xl mt-20 mb-10">Edit Profile</h2>
           <div className="mt-4">
             <div className="my-6">
@@ -57,19 +75,15 @@ export const AccountSettingsPage: React.FunctionComponent = () => {
           </div>
           <div className="flex mt-4 my-6 items-center">
             <div className="w-full h-32 rounded-md overflow-hidden">
-              <ProfileBackground />
+              <ProfileBannerImageUpload />
             </div>
             <div className="pl-4">
-              <div>
-                <Button variant="primary" className="py-2.5 w-44 px-12 mb-2 d-block">
-                  Upload
-                </Button>
-              </div>
-              <div>
-                <Button variant="outline" className="py-2 w-44 px-12 d-block">
-                  Delete
-                </Button>
-              </div>
+              <Button variant="primary" className="py-2.5 w-44 px-12 mb-2 block">
+                Upload
+              </Button>
+              <Button variant="outline" className="py-2 w-44 px-12 block">
+                Delete
+              </Button>
             </div>
           </div>
         </div>

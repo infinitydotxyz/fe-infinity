@@ -12,5 +12,5 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ formLabel, onChang
     }
   };
 
-  return <input type="file" onChange={handleImageChange} hidden id={formLabel} />;
+  return <input type="file" onChange={handleImageChange} hidden id={formLabel} accept="image/*" />;
 };

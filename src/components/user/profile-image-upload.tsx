@@ -10,7 +10,7 @@ interface ProfileImageProps {
 
 const FORM_LABEL = 'profile-image-upload';
 
-export const ProfileImage: FunctionComponent<ProfileImageProps> = ({ className, onUpload }) => {
+export const ProfileImageUpload: FunctionComponent<ProfileImageProps> = ({ className, onUpload }) => {
   const [imgSrc, setImgSrc] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
 
@@ -32,10 +32,10 @@ export const ProfileImage: FunctionComponent<ProfileImageProps> = ({ className, 
   };
 
   return (
-    <div className="flex items-center flex-wrap ">
+    <div className="sm:flex items-center flex-wrap ">
       <label htmlFor={FORM_LABEL}>
         <div
-          className={clsx('overflow-hidden bg-theme-light-200 w-32 h-32', className)}
+          className="overflow-hidden bg-theme-light-200 w-28 h-28 mx-auto sm:mx-0"
           style={{
             border: '3px solid rgb(251, 253, 255)',
             boxShadow: 'rgb(14 14 14 / 60%) 0px 0px 2px 0px',
@@ -52,11 +52,16 @@ export const ProfileImage: FunctionComponent<ProfileImageProps> = ({ className, 
           <ImageUploader formLabel={FORM_LABEL} onChangeFile={handleChangeFile} />
         </div>
       </label>
-      <div className="pl-4">
-        <Button variant="primary" className="py-2.5 w-44 px-12 mb-2 block" onClick={handleUploadImage} disabled={!file}>
+      <div className="sm:pl-8 mt-2 sm:mt-0">
+        <Button
+          variant="primary"
+          className="my-1 py-2.5 w-44 px-12 mb-2 block mx-auto sm:mx-0"
+          onClick={handleUploadImage}
+          disabled={!file}
+        >
           Upload
         </Button>
-        <Button variant="outline" className="py-2 w-44 px-12 d-block block">
+        <Button variant="outline" className="my-1 py-2 w-44 px-12 d-block mx-auto sm:mx-0 block">
           Delete
         </Button>
       </div>
