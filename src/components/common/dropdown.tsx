@@ -13,10 +13,11 @@ interface DropdownProps {
   label?: string | ReactElement;
   items: DropdownItems[];
   toggler?: ReactElement; // custom toggler element.
+  contentClassName?: string; // className for the dropdown content panel.
   className?: string;
 }
 
-export function Dropdown({ label, items, toggler, className }: DropdownProps) {
+export function Dropdown({ label, items, toggler, contentClassName, className }: DropdownProps) {
   return (
     <div className={twMerge(`relative inline-block text-left ${className ?? ''}`)}>
       <Menu>
@@ -38,7 +39,13 @@ export function Dropdown({ label, items, toggler, className }: DropdownProps) {
           </span>
         )}
 
-        <Menu.Items className="absolute mt-2 p-4 w-72 origin-top-right divide-y divide-gray-100 rounded-3xl border border-gray-200 bg-white shadow-2xl outline-none">
+        <Menu.Items
+          className={twMerge(
+            `absolute mt-2 p-4 w-72 origin-top-right divide-y divide-gray-100 rounded-3xl border border-gray-200 bg-white shadow-2xl outline-none ${
+              contentClassName ?? ''
+            }`
+          )}
+        >
           <div className="py-1">
             {items.map((item, idx) => {
               return (
