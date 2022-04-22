@@ -4,9 +4,9 @@ import { useAppContext } from './AppContext';
 import { secondsPerDay } from 'src/components/market/order-drawer/ui-constants';
 import { getSignedOBOrder } from '../exchange/orders';
 import { postOrders } from '../marketUtils';
-import { parseEther } from '@ethersproject/units';
 import {
   error,
+  getExchangeAddress,
   getOBComplicationAddress,
   getOrderId,
   getOrderNonce,
@@ -118,15 +118,17 @@ export function OrderContextProvider({ children }: Props) {
       items.push({
         collectionAddress: cartItem.collectionAddress,
         collectionName: cartItem.collectionName,
-        profileImage: cartItem.profileImage ?? '',
+        collectionImage: cartItem.profileImage ?? '',
         tokens:
           cartItem.tokenId !== undefined
             ? [
                 {
                   tokenId: cartItem.tokenId ?? 0,
                   tokenName: cartItem.tokenName ?? '',
-                  imageUrl: cartItem.imageUrl ?? '',
-                  numTokens: cartItem.numTokens ?? 1
+                  tokenImage: cartItem.imageUrl ?? '',
+                  numTokens: cartItem.numTokens ?? 1,
+                  takerAddress: '',
+                  takerUsername: '' // todo: change this
                 }
               ]
             : []
@@ -176,16 +178,10 @@ export function OrderContextProvider({ children }: Props) {
       return;
     }
 
-    const orderNonce = getOrderNonce(user.address, chainId);
-    const orderId = getOrderId(user.address, orderNonce, chainId);
-    if (orderId === NULL_HASH) {
-      error('orderId is null');
-      return;
-    }
-
     // todo: put in missing values
+    const orderNonce = getOrderNonce(user.address, chainId);
     const order: OBOrder = {
-      id: orderId,
+      id: '',
       chainId: chainId,
       isSellOrder: isSellOrderCart(),
       makerAddress: user?.address ?? '????',
@@ -194,12 +190,8 @@ export function OrderContextProvider({ children }: Props) {
       endTimeMs: expirationDate,
       startPriceEth: price,
       endPriceEth: price,
-      startPriceWei: parseEther(price.toString()).toString(),
-      endPriceWei: parseEther(price.toString()).toString(),
       nfts: getItems(),
       makerUsername: '',
-      takerAddress: '',
-      takerUsername: '',
       nonce: orderNonce,
       minBpsToSeller: 9000,
       execParams: {
@@ -210,6 +202,12 @@ export function OrderContextProvider({ children }: Props) {
         buyer: ''
       }
     };
+
+    const orderId = getOrderId(chainId, getExchangeAddress(chainId), order);
+    if (orderId === NULL_HASH) {
+      error('orderId is null');
+      return;
+    }
 
     const orderInCart: OrderInCart = {
       id: Math.random(),

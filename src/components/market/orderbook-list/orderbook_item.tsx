@@ -17,7 +17,7 @@ export const OrderbookItem = ({ title, content, nameItem, order }: Props4): JSX.
     let image = profileImage;
 
     if (token) {
-      image = token.imageUrl;
+      image = token.tokenImage;
     }
 
     return (
@@ -49,7 +49,7 @@ export const OrderbookItem = ({ title, content, nameItem, order }: Props4): JSX.
           nFts.push(tokenDiv(n.collectionName, '', t));
         }
       } else {
-        nFts.push(tokenDiv(n.collectionName, n.profileImage));
+        nFts.push(tokenDiv(n.collectionName, n.collectionImage));
       }
 
       if (!expanded) {
