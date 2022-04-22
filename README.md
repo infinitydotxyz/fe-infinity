@@ -1,3 +1,12 @@
+# Infinity Frontend
+
+## Scripts
+
+- `npm install`: Install or update dependencies, @infinityxyz/lib types.
+- `npm run build`: Build this project, output to `build`.
+- `npm start`: Start (launch) the built project: url: http://localhost:8080
+- `npm run dev`: Start dev mode: http://localhost:3000
+
 ## Using the Debugger
 
 - The debugger can be connected in one of two modes `launch` or `attach`
