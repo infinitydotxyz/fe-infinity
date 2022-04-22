@@ -1,8 +1,6 @@
 import { FunctionComponent } from 'react';
 import { Menu, Transition } from '@headlessui/react';
-
-import { Dropdown, Chip } from 'src/components/common';
-
+import { Chip } from 'src/components/common';
 import { FaShareAlt } from 'react-icons/fa';
 
 import {

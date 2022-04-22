@@ -1,5 +1,4 @@
 import { FunctionComponent } from 'react';
-import Head from 'next/head';
 import { AccountSettingsPage } from 'src/components/user/account-settings';
 import { Layout } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';

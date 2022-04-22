@@ -15,7 +15,7 @@
     "node": ">=16"
   },
   "dependencies": {
-    "@infinityxyz/lib": "^1.38.4",
+    "@infinityxyz/lib": "^1.38.36",
     "@next/bundle-analyzer": "^12.1.5",
     "@tailwindcss/aspect-ratio": "^0.4.0",
     "@tailwindcss/typography": "^0.5.2",
