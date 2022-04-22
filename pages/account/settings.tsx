@@ -1,4 +1,5 @@
 import { FunctionComponent } from 'react';
+import Head from 'next/head';
 import { AccountSettingsPage } from 'src/components/user/account-settings';
 import { Layout } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
@@ -21,9 +22,12 @@ const AccountSettings: FunctionComponent = () => {
   }
 
   return (
-    <Layout title="Account Settings" className="pb-8">
+    <div className="pb-8">
+      <Head>
+        <title>Account Settings</title>
+      </Head>
       <AccountSettingsPage user={user} chainId={chainId} userInfo={result as UserProfileDto} />
-    </Layout>
+    </div>
   );
 };
 

@@ -51,7 +51,7 @@ export const ProfileBannerImageUpload: FunctionComponent<BannerImageProps> = ({
   return (
     <div className="sm:flex items-center flex-wrap ">
       <label htmlFor={FORM_LABEL} className="flex-1">
-        <div className="w-full h-40 rounded-xl overflow-hidden">
+        <div className="w-full h-40 rounded-xl overflow-hidden border-1 border-theme-light-800">
           {imgSrc ? (
             <img className="w-full object-cover" src={imgSrc} />
           ) : (
@@ -62,6 +62,7 @@ export const ProfileBannerImageUpload: FunctionComponent<BannerImageProps> = ({
           <ImageUploader formLabel={FORM_LABEL} onChangeFile={handleChangeFile} />
         </div>
       </label>
+
       <div className="sm:pl-8 mt-2 sm:mt-0">
         <Button
           variant="primary"

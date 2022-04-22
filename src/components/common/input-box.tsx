@@ -4,6 +4,7 @@ import { ComboBox, ComboBoxBaseType } from './combo-box';
 import { CalendarIcon } from '@heroicons/react/outline';
 import { EthSymbol } from './eth-price';
 import { Tooltip, TooltipIcon, TooltipSpec, TooltipWrapper } from './tool-tip';
+import { Field, FieldConfig, FieldProps } from 'formik';
 
 interface Props {
   label?: string;
@@ -90,25 +91,58 @@ export function ComboInputBox<T extends ComboBoxBaseType>({
 
 interface Props4 {
   label: string;
-  value: string;
+  value?: string;
   type: string;
   placeholder: string;
   addEthSymbol?: boolean;
-  onChange: (value: string) => void;
+  onChange?: (value: string) => void;
   tooltip?: TooltipSpec;
   icon?: ReactNode;
+  bind?: string;
+  fieldProps?: FieldConfig;
 }
 
 export function TextInputBox({
+  bind,
   tooltip,
-  value,
+  value = '',
   label,
   icon,
+  fieldProps,
   addEthSymbol = false,
   type,
   placeholder,
   onChange
 }: Props4): JSX.Element {
+  if (bind) {
+    return (
+      <Field validateOnChange name={bind} {...fieldProps}>
+        {({ meta, field, form }: FieldProps) => (
+          <div className="my-4 sm:my-6">
+            <InputBox label={label} tooltip={tooltip} icon={icon}>
+              <div className="flex items-center w-full">
+                {addEthSymbol && <div className="pr-2">{EthSymbol}</div>}
+                <input
+                  type={type}
+                  value={field.value || ''}
+                  className="p-0 border-none focus:ring-0 block w-full text-base"
+                  placeholder={placeholder}
+                  onChange={(e) => {
+                    if (onChange) onChange(e.target.value);
+                    if (!e.defaultPrevented) {
+                      form.setFieldValue(bind, e.target.value);
+                    }
+                  }}
+                />
+              </div>
+            </InputBox>
+            {meta.touched && meta.error && <div className="text-red-800 text-xs pl-6">{meta.error}</div>}
+          </div>
+        )}
+      </Field>
+    );
+  }
+
   return (
     <InputBox label={label} tooltip={tooltip} icon={icon}>
       <div className="flex items-center w-full">
@@ -117,7 +151,7 @@ export function TextInputBox({
         <input
           type={type}
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => onChange && onChange(e.target.value)}
           className="p-0 border-none focus:ring-0 block w-full text-base"
           placeholder={placeholder}
         />
@@ -128,21 +162,59 @@ export function TextInputBox({
 
 interface Props5 {
   label: string;
-  value: string;
+  value?: string;
   rows?: number;
   placeholder: string;
   tooltip?: TooltipSpec;
-  onChange: (value: string) => void;
+  onChange?: (value: string) => void;
+  bind?: string;
+  fieldProps?: FieldConfig;
 }
 
-export function TextAreaBox({ value, label, placeholder, tooltip, onChange, rows = 3 }: Props5): JSX.Element {
+export function TextAreaBox({
+  value = '',
+  label,
+  placeholder,
+  tooltip,
+  onChange,
+  rows = 3,
+  bind,
+  fieldProps
+}: Props5): JSX.Element {
+  if (bind) {
+    return (
+      <Field validateOnChange name={bind} {...fieldProps}>
+        {({ meta, field, form }: FieldProps) => (
+          <div className="my-4 sm:my-6">
+            <InputBox label={label} tooltip={tooltip}>
+              <div className="flex items-center w-full">
+                <textarea
+                  rows={rows}
+                  value={field.value || ''}
+                  onChange={(e) => {
+                    if (onChange) onChange(e.target.value);
+                    if (!e.defaultPrevented) {
+                      form.setFieldValue(bind, e.target.value);
+                    }
+                  }}
+                  className="p-0 border-none focus:ring-0 block w-full text-base"
+                  placeholder={placeholder}
+                />
+              </div>
+            </InputBox>
+            {meta.touched && meta.error && <div className="text-red-800 text-xs pl-6">{meta.error}</div>}
+          </div>
+        )}
+      </Field>
+    );
+  }
   return (
     <InputBox label={label} tooltip={tooltip}>
       <div className="flex items-center w-full">
         <textarea
           rows={rows}
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => onChange && onChange(e.target.value)}
           className="p-0 border-none focus:ring-0 block w-full text-base"
           placeholder={placeholder}
         />
