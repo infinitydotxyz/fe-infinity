@@ -1,7 +1,6 @@
 import { OBOrder } from '@infinityxyz/lib/types/core';
 import { EthPrice } from 'src/components/common/eth-price';
 import { numStr, shortDate } from 'src/utils';
-import { deleteOrder } from 'src/utils/marketUtils';
 import { DataColumn, defaultDataColumns } from './data-columns';
 import { OrderbookItem } from './orderbook_item';
 
@@ -73,15 +72,6 @@ export const OrderbookRow = ({ order }: Props3): JSX.Element => {
             />
           );
         })}
-
-        <div
-          className="p-2"
-          onClick={() => {
-            deleteOrder(order.id);
-          }}
-        >
-          X
-        </div>
       </div>
     </div>
   );

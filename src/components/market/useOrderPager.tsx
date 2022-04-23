@@ -1,4 +1,4 @@
-import { MarketListingsResponse, OBOrder } from '@infinityxyz/lib/types/core';
+import { OBOrder } from '@infinityxyz/lib/types/core';
 import { useEffect, useState } from 'react';
 import { apiPost } from 'src/utils';
 
@@ -17,7 +17,7 @@ export function useOrderPager() {
     };
   }, []);
 
-  const emptyResponse = (): MarketListingsResponse => {
+  const emptyResponse = () => {
     return {
       buyOrders: { cursor: '', orders: [] },
       sellOrders: { cursor: '', orders: [] },
