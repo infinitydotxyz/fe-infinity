@@ -3,10 +3,11 @@ import { trimText } from './read-more-text';
 import Link from 'next/link';
 import { BLANK_IMAGE_URL } from 'src/utils';
 import { CollectionSearchDto } from './collection-grid';
+import { Button } from './button';
 
 interface CollectionCardProps {
   collection: CollectionSearchDto;
-  onClick: (collection: CollectionSearchDto) => void;
+  onClick?: (collection: CollectionSearchDto) => void;
 }
 
 const getAvatarUrl = (imgUrl: string) => {
@@ -20,7 +21,7 @@ const getAvatarUrl = (imgUrl: string) => {
   }
 };
 
-export const CollectionCard: FunctionComponent<CollectionCardProps> = ({ collection }) => {
+export const CollectionCard: FunctionComponent<CollectionCardProps> = ({ collection, onClick }) => {
   const shortText = trimText(collection.description, 60, 80, 100)[0];
   const isTrimText = shortText.length !== collection.description.length;
 
@@ -48,9 +49,11 @@ export const CollectionCard: FunctionComponent<CollectionCardProps> = ({ collect
         </a>
       </Link>
 
-      {/* <Button variant="outline" className="flex-1 py-3" onClick={() => onClick(collection)}>
-        Buy
-      </Button> */}
+      {onClick && (
+        <Button variant="outline" className="flex-1 py-3" onClick={() => onClick(collection)}>
+          Buy
+        </Button>
+      )}
     </article>
   );
 };

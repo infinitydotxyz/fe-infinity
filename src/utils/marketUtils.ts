@@ -52,27 +52,13 @@ export const marketSellOrders = async (listId: MarketListId): Promise<OBOrder[]>
   return list(body);
 };
 
-const list = async (body: MarketListingsBody): Promise<OBOrder[]> => {
-  const response = await apiPost(`/market-listings`, { data: body });
+const list = async (body: MarketListingsBody): Promise<SignedOBOrder[]> => {
+  const response = await apiPost(`/orders/get`, { data: body });
 
   if (response.result) {
-    const match: MarketListingsResponse | null = response.result;
-
-    if (isStatusOK(response)) {
-      if (match) {
-        if (body.orderType === 'buyOrders') {
-          const buys: OBOrder[] = match.buyOrders.orders;
-
-          return buys;
-        } else if (body.orderType === 'sellOrders') {
-          const sells: OBOrder[] = match.sellOrders.orders;
-
-          return sells;
-        }
-      }
-    }
+    return response.result.orders as SignedOBOrder[];
   }
-  console.log('An error occured: list');
+
   return [];
 };
 
@@ -114,6 +100,16 @@ export const marketDeleteOrder = async (body: MarketListingsBody): Promise<strin
   return 'error';
 };
 
+export const deleteOrder = async (orderId: string): Promise<void> => {
+  const response = await apiPost(`/orders/delete`, { data: { orderId } });
+
+  if (response.result) {
+    console.log(response.result);
+  }
+
+  console.log('An error occurred: deleteOrder');
+};
+
 export const executeBuyOrder = async (orderId: string): Promise<string> => {
   const body: MarketListingsBody = {
     action: MarketAction.Buy,
@@ -141,28 +137,3 @@ export const executeBuyOrder = async (orderId: string): Promise<string> => {
 export const bigNumToDate = (time: BigNumberish): Date => {
   return new Date(BigNumber.from(time).toNumber() * 1000);
 };
-
-// ======================================================
-
-export interface CollectionAddr {
-  id: number;
-  address: string;
-  name: string;
-}
-
-const collectionMap = new Map<string, CollectionAddr>();
-collectionMap.set('0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d', {
-  id: 1,
-  address: '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d',
-  name: 'Dump Trux'
-});
-collectionMap.set('0xAddress2', { id: 2, address: '0xAddress2', name: 'Ape People' });
-collectionMap.set('0xAddress3', { id: 3, address: '0xAddress3', name: 'DigiKraap' });
-collectionMap.set('0xAddress4', { id: 4, address: '0xAddress4', name: 'Sik Art' });
-collectionMap.set('0xAddress5', { id: 5, address: '0xAddress5', name: 'Blu Balz' });
-collectionMap.set('0xAddress6', { id: 6, address: '0xAddress6', name: 'Unkle Fester' });
-collectionMap.set('0xAddress7', { id: 7, address: '0xAddress7', name: 'Badass Pix' });
-
-export class CollectionManager {
-  static collections = (): CollectionAddr[] => Array.from(collectionMap.values());
-}
