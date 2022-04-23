@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'react';
-import { AccountSettingsPage } from 'src/components/user/account-settings';
+import { AccountSettingsPage } from 'src/components/user/profile-settings';
 import { Layout } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { UserProfileDto } from 'src/components/user/user-profile-dto';

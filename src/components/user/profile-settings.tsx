@@ -114,7 +114,7 @@ export const AccountSettingsPage: FunctionComponent<AccountSettingsProps> = (pro
                 variant="outline"
                 className="py-2.5 w-full"
                 onClick={() => {
-                  router.push('/account');
+                  router.push('/profile');
                 }}
               >
                 Cancel
