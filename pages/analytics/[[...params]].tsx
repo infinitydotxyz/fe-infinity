@@ -512,7 +512,7 @@ export const Analytics = () => {
         className: `
           w-full h-full overflow-hidden
           row-start-4 col-start-1 row-span-3 col-span-14
-          text-start font-body font-bold text-[80px] tracking-tight
+          text-start font-body text-6xl tracking-tight mt-4 mb-8
         `
       }
     },
