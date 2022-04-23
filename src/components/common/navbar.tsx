@@ -250,7 +250,7 @@ export function Navbar() {
           type: 'link',
           label: 'Analytics',
           props: {
-            href: '/analytics/trending/1h'
+            href: '/analytics/trending/weekly'
           }
         },
         {
