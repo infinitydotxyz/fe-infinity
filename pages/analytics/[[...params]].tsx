@@ -15,7 +15,7 @@ export const Analytics = () => {
   const connected = user?.address ? true : false;
   const [limit] = React.useState(ITEMS_PER_PAGE);
   const [page, setPage] = React.useState(router.query.params?.[0] ? router.query.params?.[0] : 'trending');
-  const [interval, setInterval] = React.useState(router.query.params?.[1] ? router.query.params?.[1] : 'hourly');
+  const [interval, setInterval] = React.useState(router.query.params?.[1] ? router.query.params?.[1] : 'weekly');
   const [date] = React.useState(Date.now());
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
   const closeDrawer = () => setIsDrawerOpen(false);
@@ -725,27 +725,15 @@ export const Analytics = () => {
       <Layout {...styles?.layout}>
         <div {...styles?.container}>
           <div {...styles?.heading?.container}>
-            {/*
-            ====================================
-              This is where the heading of
-              the page gets rendered.
-            ====================================
-          */}
             <h1 {...styles?.heading?.element}>{content?.title}</h1>
           </div>
+
           <div {...styles?.options?.container}>
             <Tab.Group {...styles?.options?.timeframes?.group}>
               <div {...styles?.options?.timeframes?.container}>
                 <div {...styles?.options?.timeframes?.list?.container}>
                   <Tab.List {...styles?.options?.timeframes?.list?.background}>
-                    {/*
-                      ====================================
-                        This is where we render the timeframe
-                        tabs (clicking on them changes the route
-                        params as well, and when they get changed
-                        a request to fetch that data is made and cached).
-                      ====================================
-                    */}
+                    {/* timeframe tabs */}
                     {content?.options?.timeframes?.map((tab, i) => (
                       <React.Fragment key={i}>
                         <Tab {...styles?.options?.timeframes?.tab}>{tab?.label}</Tab>
@@ -755,6 +743,7 @@ export const Analytics = () => {
                 </div>
               </div>
             </Tab.Group>
+
             <Tab.Group {...styles?.options?.actions?.group}>
               <Tab.List {...styles?.options?.actions?.container}>
                 {/*
