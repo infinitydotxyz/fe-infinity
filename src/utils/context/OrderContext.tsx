@@ -16,12 +16,12 @@ import {
 
 export interface OrderCartItem {
   isSellOrder: boolean;
-  imageUrl?: string;
+  tokenImage?: string;
   tokenName?: string;
   tokenId?: string;
   collectionName: string;
   collectionAddress: string;
-  profileImage?: string;
+  collectionImage?: string;
   numTokens?: number;
 }
 
@@ -37,7 +37,7 @@ const isCartItemEqual = (a: OrderCartItem, b: OrderCartItem): boolean => {
     a.collectionName === b.collectionName &&
     a.collectionAddress === b.collectionAddress &&
     a.isSellOrder === b.isSellOrder &&
-    a.imageUrl === b.imageUrl
+    a.tokenImage === b.tokenImage
   );
 };
 
@@ -118,14 +118,14 @@ export function OrderContextProvider({ children }: Props) {
       items.push({
         collectionAddress: cartItem.collectionAddress,
         collectionName: cartItem.collectionName,
-        collectionImage: cartItem.profileImage ?? '',
+        collectionImage: cartItem.collectionImage ?? '',
         tokens:
           cartItem.tokenId !== undefined
             ? [
                 {
                   tokenId: cartItem.tokenId ?? 0,
                   tokenName: cartItem.tokenName ?? '',
-                  tokenImage: cartItem.imageUrl ?? '',
+                  tokenImage: cartItem.tokenImage ?? '',
                   numTokens: cartItem.numTokens ?? 1,
                   takerAddress: '',
                   takerUsername: '' // todo: change this

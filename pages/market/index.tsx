@@ -58,7 +58,7 @@ export default function MarketPage() {
                 addCartItem({
                   collectionName: collection.name ?? '(no name)',
                   collectionAddress: collection.address ?? '(no address)',
-                  profileImage: collection.profileImage ?? '',
+                  collectionImage: collection.profileImage ?? '',
                   isSellOrder: false
                 });
               }}
@@ -71,7 +71,7 @@ export default function MarketPage() {
                 addCartItem({
                   collectionName: collection.name ?? '(no name)',
                   collectionAddress: collection.address ?? '(no address)',
-                  profileImage: collection.profileImage ?? '',
+                  collectionImage: collection.profileImage ?? '',
                   isSellOrder: false
                 });
               }}
@@ -88,7 +88,7 @@ export default function MarketPage() {
                         addCartItem({
                           collectionName: data?.collectionName ?? '(no name)',
                           collectionAddress: data?.tokenAddress ?? '(no address)',
-                          imageUrl: data?.image ?? '',
+                          tokenImage: data?.image ?? '',
                           tokenName: data?.title ?? '(no name)',
                           tokenId: data?.tokenId ?? '0',
                           isSellOrder: false

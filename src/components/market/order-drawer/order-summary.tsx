@@ -17,9 +17,9 @@ export function OrderSummary() {
       leftOffset = iconLeft + 4;
 
       // a collection or a token image
-      let image = item.imageUrl;
+      let image = item.tokenImage;
       if (!image) {
-        image = item.profileImage;
+        image = item.collectionImage;
       }
 
       return (
