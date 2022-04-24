@@ -21,31 +21,32 @@ export default function DiscordIntegration() {
       return;
     }
 
+    const metadata: Partial<CollectionMetadata> = {};
+
     if (integrationType === 'discord') {
-      const metadata: Partial<CollectionMetadata> = {
-        integrations: {
-          discord: {
-            guildId: query.guildId as string
-          }
+      metadata.integrations = {
+        discord: {
+          guildId: query.guildId as string
         }
       };
-
-      (async () => {
-        const { error } = await apiPut(`/user/${chainId}:${user?.address}/collections/${collectionAddress}`, {
-          data: { metadata }
-        });
-
-        if (error) {
-          console.error(error);
-          setStatus('Error: ' + error?.errorResponse?.message);
-          return;
-        }
-
-        setStatus('Integration enabled successfully. You may now close this page.'); // TODO: auto-redirect to homepage or collection after 3 seconds or so.
-      })();
     } else {
       setStatus('Unknown integration.');
+      return;
     }
+
+    (async () => {
+      const { error } = await apiPut(`/user/${chainId}:${user?.address}/collections/${collectionAddress}`, {
+        data: { metadata }
+      });
+
+      if (error) {
+        console.error(error);
+        setStatus('Error: ' + error?.errorResponse?.message);
+        return;
+      }
+
+      setStatus('Integration enabled successfully. You may now close this page.'); // TODO: auto-redirect to homepage or collection after 3 seconds or so.
+    })();
   }, [user, integrationType, collectionAddress]);
 
   return (
