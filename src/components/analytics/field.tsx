@@ -11,9 +11,10 @@ interface Props {
   label?: string | React.ReactNode;
   sortable?: boolean;
   onSort?: ((direction: string) => void) | ((direction: string) => void) | null | undefined;
+  onClick?: () => void;
 }
 
-export function Field({ onSort, sortable = false, type, label, value }: Props) {
+export function Field({ onSort, sortable = false, onClick, type, label, value }: Props) {
   const styles = {
     stat: {
       container: {
@@ -226,7 +227,7 @@ export function Field({ onSort, sortable = false, type, label, value }: Props) {
             </div>
           )}
           {type === 'string' && (
-            <div {...styles?.string?.container}>
+            <div {...styles?.string?.container} onClick={onClick}>
               <p {...styles?.string?.element}>{value}</p>
             </div>
           )}
