@@ -19,9 +19,10 @@ const spaces = {
 
 type MetadataAction = 'updateMetadata';
 type LinkAction = 'updateLinks';
-type PartnershipAction = 'createPartnership' | 'updatePartnership' | 'deletePartnership';
 type BenefitAction = 'createBenefit' | 'updateBenefit' | 'deleteBenefit';
-type Action = MetadataAction | LinkAction | PartnershipAction | BenefitAction;
+type PartnershipAction = 'createPartnership' | 'updatePartnership' | 'deletePartnership';
+type DiscordAcrion = 'createDiscordChannel' | 'updateDiscordChannel' | 'deleteDiscordChannel';
+type Action = MetadataAction | LinkAction | PartnershipAction | BenefitAction | DiscordAcrion;
 
 function reducer(
   state: DeepPartial<CollectionMetadata>,
@@ -48,6 +49,8 @@ function reducer(
       } else {
         throw new Error(`key '${action.key}' must be an index!`);
       }
+    case 'deleteBenefit':
+      return { ...state, benefits: state.benefits?.filter((_, i) => i !== action.key) ?? [] };
     case 'createPartnership':
       return { ...state, partnerships: [...(state.partnerships ?? []), ...(action.metadata.partnerships ?? [])] };
     case 'updatePartnership':
@@ -63,6 +66,54 @@ function reducer(
       } else {
         throw new Error(`key '${action.key}' must be an index!`);
       }
+    case 'deletePartnership':
+      return { ...state, partnerships: state.partnerships?.filter((_, i) => i !== action.key) ?? [] };
+    case 'createDiscordChannel':
+      return {
+        ...state,
+        integrations: {
+          ...state.integrations,
+          discord: {
+            ...state.integrations?.discord,
+            channels: [
+              ...(state.integrations?.discord?.channels ?? []),
+              ...(action.metadata.integrations?.discord?.channels || [])
+            ]
+          }
+        }
+      };
+    case 'updateDiscordChannel':
+      // eslint-disable-next-line no-case-declarations
+      const discordChannelUpdate = (action.metadata.integrations?.discord?.channels ?? [])[0];
+
+      if (typeof action.key == 'number') {
+        const channels = state.integrations?.discord?.channels?.map((channel, i) =>
+          i === action.key ? discordChannelUpdate : channel
+        );
+        return {
+          ...state,
+          integrations: {
+            ...state.integrations,
+            discord: {
+              ...state.integrations?.discord,
+              channels
+            }
+          }
+        };
+      } else {
+        throw new Error(`key '${action.key}' must be an index!`);
+      }
+    case 'deleteDiscordChannel':
+      return {
+        ...state,
+        integrations: {
+          ...state.integrations,
+          discord: {
+            ...state.integrations?.discord,
+            channels: state.integrations?.discord?.channels?.filter((_, i) => action.key != i) ?? []
+          }
+        }
+      };
     default:
       throw new Error(`Unknown action type '${action.type}'!`);
   }
@@ -377,14 +428,34 @@ export default function EditCollectionPage() {
           )}
           {/* TODO: remove/disable discord integration */}
           {metadata.integrations?.discord?.guildId != null && <p>Discord integration is enabled.</p>}
-          <TextInputBox
-            label="Channels to monitor"
-            value={''}
-            type="text"
-            onChange={console.log}
-            placeholder="announcements,952902403055812650"
-            isFullWidth
-          />
+          {metadata.integrations?.discord?.channels?.map((channel, i) => (
+            <TextInputBox
+              key={i}
+              label="Channel name or ID"
+              value={channel || ''}
+              type="text"
+              onChange={(value) =>
+                dispatchMetadata({
+                  type: 'updateDiscordChannel',
+                  metadata: { integrations: { discord: { channels: [value] } } },
+                  key: i
+                })
+              }
+              placeholder="announcements,952902403055812650"
+              isFullWidth
+            />
+          ))}
+          <PlusButton
+            disabled={(metadata.integrations?.discord?.channels?.length ?? 0) >= 3}
+            onClick={() =>
+              dispatchMetadata({
+                type: 'createDiscordChannel',
+                metadata: { integrations: { discord: { channels: [''] } } }
+              })
+            }
+          >
+            Add discord channel
+          </PlusButton>
 
           <Heading as="h4" className="font-bold">
             Twitter
