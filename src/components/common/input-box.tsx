@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react';
+import React, { ReactElement, ReactNode, useState } from 'react';
 import { DatePicker } from 'src/components/common';
 import { ComboBox, ComboBoxBaseType } from './combo-box';
 import { CalendarIcon } from '@heroicons/react/outline';
@@ -91,6 +91,7 @@ interface Props4 {
   addEthSymbol?: boolean;
   onChange: (value: string) => void;
   className?: string;
+  renderRightIcon?: () => ReactElement;
 }
 
 export function TextInputBox({
@@ -102,13 +103,13 @@ export function TextInputBox({
   placeholder,
   onChange,
   className,
+  renderRightIcon,
   ...props
 }: Props4 & Omit<Props, 'children'>): JSX.Element {
   return (
     <InputBox label={label} tooltip={tooltip} {...props}>
       <div className={twMerge('flex items-center', className, props.isFullWidth ? 'w-full' : '')}>
         {addEthSymbol && <div className="pr-2">{EthSymbol}</div>}
-
         <input
           type={type}
           value={value}
@@ -116,6 +117,7 @@ export function TextInputBox({
           className="p-0 border-none focus:ring-0 block w-full text-base"
           placeholder={placeholder}
         />
+        {renderRightIcon?.()}
       </div>
     </InputBox>
   );

@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useReducer, useState } from 'react';
 import { PlusButton } from 'src/components/collection/edit/buttons';
 import { ProfileImageForm } from 'src/components/collection/edit/profile-image-form';
+import { RemoveIcon } from 'src/components/collection/edit/remove-icon';
 import SocialsInputGroup from 'src/components/collection/socials-input-group';
 import { Button, TextAreaInputBox, TextInputBox } from 'src/components/common';
 import { Heading } from 'src/components/common/heading';
@@ -345,6 +346,9 @@ export default function EditCollectionPage() {
                 dispatchMetadata({ type: 'updateBenefit', metadata: { benefits: [benefit] }, key: i })
               }
               placeholder={`benefit ${i + 1}`}
+              renderRightIcon={() => (
+                <RemoveIcon onClick={() => dispatchMetadata({ type: 'deleteBenefit', key: i, metadata: {} })} />
+              )}
               isFullWidth
             />
           ))}
@@ -377,6 +381,9 @@ export default function EditCollectionPage() {
                   dispatchMetadata({ type: 'updatePartnership', metadata: { partnerships: [{ link }] }, key: i })
                 }
                 placeholder="Website link"
+                renderRightIcon={() => (
+                  <RemoveIcon onClick={() => dispatchMetadata({ type: 'deletePartnership', key: i, metadata: {} })} />
+                )}
                 isFullWidth
               />
             </SocialsInputGroup>
@@ -427,7 +434,7 @@ export default function EditCollectionPage() {
             </>
           )}
           {/* TODO: remove/disable discord integration */}
-          {metadata.integrations?.discord?.guildId != null && <p>Discord integration is enabled.</p>}
+          {metadata.integrations?.discord?.guildId != null && <p>This integration is enabled.</p>}
           {metadata.integrations?.discord?.channels?.map((channel, i) => (
             <TextInputBox
               key={i}
@@ -442,6 +449,9 @@ export default function EditCollectionPage() {
                 })
               }
               placeholder="announcements,952902403055812650"
+              renderRightIcon={() => (
+                <RemoveIcon onClick={() => dispatchMetadata({ type: 'deleteDiscordChannel', key: i, metadata: {} })} />
+              )}
               isFullWidth
             />
           ))}
