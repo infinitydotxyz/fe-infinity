@@ -233,14 +233,6 @@ export default function EditCollectionPage() {
             placeholder="Vortex"
             isFullWidth
           />
-          <TextInputBox
-            label="Address"
-            value={address || ''}
-            type="text"
-            onChange={setAddress}
-            placeholder="0x13f131717A2a435E372864bFC09061a4513E61A8"
-            isFullWidth
-          />
           <TextAreaInputBox
             label="Description"
             value={metadata?.description || ''}
