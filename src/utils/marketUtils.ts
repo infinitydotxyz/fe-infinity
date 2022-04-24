@@ -16,7 +16,7 @@ export const postOrders = async (user: string, orders: SignedOBOrder[]) => {
     if (response.result) {
       const res = response.result;
       if (res && isStatusOK(response)) {
-        console.log('Orders posted successfully');
+        console.log('Orders sent successfully');
       }
     }
   } catch (err) {
