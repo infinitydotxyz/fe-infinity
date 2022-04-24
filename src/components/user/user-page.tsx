@@ -46,8 +46,6 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
         </div>
         {userInfo.bio && <p className="text-theme-light-800 mt-8 ml-1 max-w-md">{userInfo.bio || ''}</p>}
 
-        {/* <UserProfileTab /> */}
-
         <RoundedNav
           items={[{ title: 'Collected' }, { title: 'Activity' }]}
           onChange={(currentTab) => setCurrentTab(currentTab)}
