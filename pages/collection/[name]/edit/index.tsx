@@ -8,7 +8,7 @@ import { Button, TextAreaInputBox, TextInputBox } from 'src/components/common';
 import { Heading } from 'src/components/common/heading';
 import { Toaster, toastError, toastSuccess } from 'src/components/common/toaster';
 import logo from 'src/images/logo-mini-new.svg';
-import { apiPut, useFetch } from 'src/utils';
+import { apiPut, DISCORD_BOT_INVITE_URL, useFetch } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { DeepPartial } from 'src/utils/typeUtils';
 import { useSWRConfig } from 'swr';
@@ -337,6 +337,51 @@ export default function EditCollectionPage() {
           >
             Add partnership
           </PlusButton>
+        </article>
+
+        <article className={spaces.article}>
+          <Heading as="h3" className="font-bold">
+            Integrations
+          </Heading>
+          <p>Enable integrations with third party platforms.</p>
+
+          <Heading as="h4" className="font-bold">
+            Discord
+          </Heading>
+          <p>
+            Add the official infinity.xyz bot to your Discord server and let it cross-post <code>#announcements</code>{' '}
+            to the feed!
+          </p>
+          <ol className="list-decimal list-inside">
+            <li>
+              Add the{' '}
+              <a className="underline" href={DISCORD_BOT_INVITE_URL} target="_blank">
+                official infinity.xyz bot
+              </a>{' '}
+              to your server.
+            </li>
+            <li>
+              Type the following command to complete the integration. Make sure you are the server owner or have a role
+              with the 'Use Application Commands' permission!
+              <p>
+                <code className="bg-gray-100">/infinity verify {collection?.address || ''} </code>
+              </p>
+            </li>
+            <li>Configure the text channels to monitor for announcements below.</li>
+          </ol>
+          <TextInputBox
+            label="Channels to monitor"
+            value={''}
+            type="text"
+            onChange={console.log}
+            placeholder="announcements,952902403055812650"
+            isFullWidth
+          />
+
+          <Heading as="h4" className="font-bold">
+            Twitter
+          </Heading>
+          <p>Twitter integrations are already enabled by default.</p>
         </article>
       </main>
 

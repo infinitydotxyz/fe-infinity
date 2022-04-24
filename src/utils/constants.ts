@@ -1,5 +1,7 @@
 export const API_BASE = 'http://localhost:9090';
 export const SITE_HOST = 'http://localhost:3000';
+export const DISCORD_BOT_INVITE_URL =
+  'https://discord.com/api/oauth2/authorize?client_id=956292440778743838&scope=applications.commands';
 export const ITEMS_PER_PAGE = 10;
 export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
 
