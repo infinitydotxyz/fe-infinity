@@ -348,27 +348,35 @@ export default function EditCollectionPage() {
           <Heading as="h4" className="font-bold">
             Discord
           </Heading>
-          <p>
-            Add the official infinity.xyz bot to your Discord server and let it cross-post <code>#announcements</code>{' '}
-            to the feed!
-          </p>
-          <ol className="list-decimal list-inside">
-            <li>
-              Add the{' '}
-              <a className="underline" href={DISCORD_BOT_INVITE_URL} target="_blank">
-                official infinity.xyz bot
-              </a>{' '}
-              to your server.
-            </li>
-            <li>
-              Type the following command to complete the integration. Make sure you are the server owner or have a role
-              with the 'Use Application Commands' permission!
+          {metadata.integrations?.discord?.guildId == null && (
+            <>
               <p>
-                <code className="bg-gray-100">/infinity verify {collection?.address || ''} </code>
+                Add the official infinity.xyz bot to your Discord server and let it cross-post{' '}
+                <code>#announcements</code> to the feed!
               </p>
-            </li>
-            <li>Configure the text channels to monitor for announcements below.</li>
-          </ol>
+              <ol className="list-decimal list-inside">
+                <li>
+                  Add the{' '}
+                  <a className="underline" href={DISCORD_BOT_INVITE_URL} target="_blank">
+                    official infinity.xyz bot
+                  </a>{' '}
+                  to your server.
+                </li>
+                <li>
+                  Type the following command to complete the integration. Make sure you are the server owner or have a
+                  role with the 'Use Application Commands' permission!
+                  <p>
+                    <code className="bg-gray-100">
+                      /infinity verify {`${collection?.chainId || ''}:${collection?.address || ''}`}{' '}
+                    </code>
+                  </p>
+                </li>
+                <li>Configure the text channels to monitor for announcements below.</li>
+              </ol>
+            </>
+          )}
+          {/* TODO: remove/disable discord integration */}
+          {metadata.integrations?.discord?.guildId != null && <p>Discord integration is enabled.</p>}
           <TextInputBox
             label="Channels to monitor"
             value={''}
@@ -381,7 +389,7 @@ export default function EditCollectionPage() {
           <Heading as="h4" className="font-bold">
             Twitter
           </Heading>
-          <p>Twitter integrations are already enabled by default.</p>
+          <p>This integration is already enabled by default.</p>
         </article>
       </main>
 
