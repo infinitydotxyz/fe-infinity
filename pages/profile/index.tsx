@@ -7,7 +7,7 @@ import { UserProfileDto } from 'src/components/user/user-profile-dto';
 
 const USER_API_END_POINT = '/user';
 
-const AccountPage: FunctionComponent = () => {
+const ProfilePage: FunctionComponent = () => {
   const { user } = useAppContext();
 
   if (!user) return <Layout title={'Account'} className="mb-12"></Layout>;
@@ -35,4 +35,4 @@ const AccountPage: FunctionComponent = () => {
   );
 };
 
-export default AccountPage;
+export default ProfilePage;

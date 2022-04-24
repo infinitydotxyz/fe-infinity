@@ -1,13 +1,13 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useState } from 'react';
 import { useRouter } from 'next/router';
 import { UserProfileDto } from './user-profile-dto';
 import { UserBannerImage } from './user-banner-image';
 import { UserProfileImage } from './user-profile-image';
 // import { UserWatchList } from './user-watch-list';
 import { UserProfileShare } from './user-profile-share';
-import { UserProfileTab } from './user-profile-tab';
-import { Chip } from 'src/components/common';
+import { Chip, RoundedNav } from 'src/components/common';
 import { FaPen } from 'react-icons/fa';
+import { UserPageNftsTab } from './user-page-nfts-tab';
 
 interface UserPageProps {
   userInfo: UserProfileDto;
@@ -16,6 +16,7 @@ interface UserPageProps {
 
 export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner = false }) => {
   const router = useRouter();
+  const [currentTab, setCurrentTab] = useState(0);
 
   return (
     <>
@@ -45,7 +46,15 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
         </div>
         {userInfo.bio && <p className="text-theme-light-800 mt-8 ml-1 max-w-md">{userInfo.bio || ''}</p>}
 
-        <UserProfileTab />
+        <RoundedNav
+          items={[{ title: 'Collected' }, { title: 'Activity' }]}
+          onChange={(currentTab) => setCurrentTab(currentTab)}
+          className="mt-14 -ml-2"
+        />
+        <div className="mt-6 min-h-[1024px]">
+          {currentTab === 0 && <UserPageNftsTab />}
+          {currentTab === 1 && <div>Activity Tab Content</div>}
+        </div>
       </div>
     </>
   );
