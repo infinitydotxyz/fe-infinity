@@ -859,7 +859,12 @@ export const Analytics = () => {
                           .map((field, j) => (
                             <React.Fragment key={j}>
                               <div {...styles?.statistics?.list?.item?.field?.container}>
-                                <Field type={field?.type} label={field?.label} value={field?.value} />
+                                <Field
+                                  type={field?.type}
+                                  label={field?.label}
+                                  value={field?.value}
+                                  onClick={() => console.log(stat)}
+                                />
                                 <div className=""></div>
                               </div>
                             </React.Fragment>
