@@ -12,9 +12,10 @@ interface Props {
   children: ReactNode;
   tooltip?: TooltipSpec;
   isFullWidth?: boolean;
+  renderRightIcon?: () => ReactElement;
 }
 
-export function InputBox({ tooltip, label, children, isFullWidth }: Props): JSX.Element {
+export function InputBox({ tooltip, label, children, isFullWidth, renderRightIcon }: Props): JSX.Element {
   const [showTooltip, setShowTooltip] = useState(false);
 
   return (
@@ -28,6 +29,9 @@ export function InputBox({ tooltip, label, children, isFullWidth }: Props): JSX.
             <Tooltip className="absolute top-0 bottom-0 right-2 flex flex-col justify-center" setShow={setShowTooltip}>
               <TooltipIcon />
             </Tooltip>
+          )}
+          {renderRightIcon && (
+            <div className="absolute top-0 bottom-0 right-2 flex flex-col justify-center">{renderRightIcon()}</div>
           )}
         </div>
       </div>
@@ -91,7 +95,6 @@ interface Props4 {
   addEthSymbol?: boolean;
   onChange: (value: string) => void;
   className?: string;
-  renderRightIcon?: () => ReactElement;
 }
 
 export function TextInputBox({
@@ -103,7 +106,6 @@ export function TextInputBox({
   placeholder,
   onChange,
   className,
-  renderRightIcon,
   ...props
 }: Props4 & Omit<Props, 'children'>): JSX.Element {
   return (
@@ -117,7 +119,6 @@ export function TextInputBox({
           className="p-0 border-none focus:ring-0 block w-full text-base"
           placeholder={placeholder}
         />
-        {renderRightIcon?.()}
       </div>
     </InputBox>
   );
