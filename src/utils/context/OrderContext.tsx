@@ -2,13 +2,11 @@ import { OBOrderItem, OBOrder, SignedOBOrder } from '@infinityxyz/lib/types/core
 import React, { ReactNode, useContext, useState } from 'react';
 import { useAppContext } from './AppContext';
 import { secondsPerDay } from 'src/components/market/order-drawer/ui-constants';
-import { getSignedOBOrder } from '../exchange/orders';
+import { getOrderId, getSignedOBOrder } from '../exchange/orders';
 import { postOrders } from '../marketUtils';
 import {
-  error,
   getExchangeAddress,
   getOBComplicationAddress,
-  getOrderId,
   getOrderNonce,
   getTxnCurrencyAddress,
   NULL_HASH
@@ -113,7 +111,6 @@ export function OrderContextProvider({ children }: Props) {
 
   const getItems = (): OBOrderItem[] => {
     const items: OBOrderItem[] = [];
-
     for (const cartItem of cartItems) {
       items.push({
         collectionAddress: cartItem.collectionAddress,
@@ -172,9 +169,8 @@ export function OrderContextProvider({ children }: Props) {
 
   const addOrderToCart = () => {
     setIsEditingOrder(false);
-
     if (!user || !user.address) {
-      error('user is null');
+      console.error('user is null');
       return;
     }
 
@@ -205,8 +201,10 @@ export function OrderContextProvider({ children }: Props) {
 
     const orderId = getOrderId(chainId, getExchangeAddress(chainId), order);
     if (orderId === NULL_HASH) {
-      error('orderId is null');
+      console.error('orderId is null');
       return;
+    } else {
+      order.id = orderId;
     }
 
     const orderInCart: OrderInCart = {

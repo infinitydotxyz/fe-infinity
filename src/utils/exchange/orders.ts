@@ -1,5 +1,5 @@
 import { JsonRpcSigner } from '@ethersproject/providers';
-import { OBOrder, OBOrderItem, ChainOBOrder, SignedOBOrder } from '@infinityxyz/lib/types/core';
+import { OBOrder, OBOrderItem, ChainOBOrder, SignedOBOrder, OBTokenInfo } from '@infinityxyz/lib/types/core';
 import {
   getCurrentOBOrderPrice,
   getExchangeAddress,
@@ -7,6 +7,7 @@ import {
   getOBComplicationAddress,
   getTxnCurrencyAddress,
   NULL_ADDRESS,
+  NULL_HASH,
   trimLowerCase
 } from '@infinityxyz/lib/utils';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
@@ -19,6 +20,9 @@ import { erc20Abi } from '../../abi/erc20';
 import { erc721Abi } from '../../abi/erc721';
 import { User } from '../context/AppContext';
 import { infinityExchangeAbi } from 'src/abi/infinityExchange';
+import { keccak256 as solidityKeccak256 } from '@ethersproject/solidity';
+import { keccak256 } from '@ethersproject/keccak256';
+import { BytesLike } from '@ethersproject/bytes';
 
 export async function getSignedOBOrder(
   user: User,
@@ -300,4 +304,90 @@ export async function signOBOrder(
   } catch (e) {
     console.error('Error signing order', e);
   }
+}
+
+export function getOrderId(chainId: string, exchangeAddr: string, order: OBOrder): string {
+  try {
+    const fnSign =
+      'Order(bool isSellOrder,address signer,uint256[] constraints,OrderItem[] nfts,address[] execParams,bytes extraParams)OrderItem(address collection,TokenInfo[] tokens)TokenInfo(uint256 tokenId,uint256 numTokens)';
+    const orderTypeHash = solidityKeccak256(['string'], [fnSign]);
+    // console.log('Order type hash', orderTypeHash);
+
+    const constraints = [
+      order.numItems,
+      parseEther(String(order.startPriceEth)),
+      parseEther(String(order.endPriceEth)),
+      Math.floor(order.startTimeMs / 1000),
+      Math.floor(order.endTimeMs / 1000),
+      order.minBpsToSeller,
+      order.nonce
+    ];
+    const execParams = [order.execParams.complicationAddress, order.execParams.currencyAddress];
+    const extraParams = defaultAbiCoder.encode(['address'], [order.extraParams.buyer || NULL_ADDRESS]);
+
+    const constraintsHash = keccak256(
+      defaultAbiCoder.encode(['uint256', 'uint256', 'uint256', 'uint256', 'uint256', 'uint256', 'uint256'], constraints)
+    );
+    // console.log('constraints hash', constraintsHash);
+    const nftsHash = _getNftsHash(order.nfts);
+    const execParamsHash = keccak256(defaultAbiCoder.encode(['address', 'address'], execParams));
+    // console.log('execParamsHash', execParamsHash);
+
+    const calcEncode = defaultAbiCoder.encode(
+      ['bytes32', 'bool', 'address', 'bytes32', 'bytes32', 'bytes32', 'bytes32'],
+      [
+        orderTypeHash,
+        order.isSellOrder,
+        order.makerAddress,
+        constraintsHash,
+        nftsHash,
+        execParamsHash,
+        keccak256(extraParams)
+      ]
+    );
+    const orderHash = keccak256(calcEncode);
+    return orderHash;
+  } catch (e) {
+    console.error('Error calculating orderId', e);
+  }
+  return NULL_HASH;
+}
+
+function _getNftsHash(nfts: OBOrderItem[]): BytesLike {
+  const fnSign = 'OrderItem(address collection,TokenInfo[] tokens)TokenInfo(uint256 tokenId,uint256 numTokens)';
+  const typeHash = solidityKeccak256(['string'], [fnSign]);
+  // console.log('Order item type hash', typeHash);
+
+  const hashes = [];
+  for (const nft of nfts) {
+    const hash = keccak256(
+      defaultAbiCoder.encode(
+        ['bytes32', 'uint256', 'bytes32'],
+        [typeHash, nft.collectionAddress, _getTokensHash(nft.tokens)]
+      )
+    );
+    hashes.push(hash);
+  }
+  const encodeTypeArray = hashes.map(() => 'bytes32');
+  const nftsHash = keccak256(defaultAbiCoder.encode(encodeTypeArray, hashes));
+  // console.log('nftsHash', nftsHash);
+  return nftsHash;
+}
+
+function _getTokensHash(tokens: OBTokenInfo[]): BytesLike {
+  const fnSign = 'TokenInfo(uint256 tokenId,uint256 numTokens)';
+  const typeHash = solidityKeccak256(['string'], [fnSign]);
+  // console.log('Token info type hash', typeHash);
+
+  const hashes = [];
+  for (const token of tokens) {
+    const hash = keccak256(
+      defaultAbiCoder.encode(['bytes32', 'uint256', 'uint256'], [typeHash, token.tokenId, token.numTokens])
+    );
+    hashes.push(hash);
+  }
+  const encodeTypeArray = hashes.map(() => 'bytes32');
+  const tokensHash = keccak256(defaultAbiCoder.encode(encodeTypeArray, hashes));
+  // console.log('tokensHash', tokensHash);
+  return tokensHash;
 }

@@ -28,7 +28,7 @@ export const getOrders = async (): Promise<SignedOBOrder[]> => {
   const response = await apiGet(`/orders/get`, {});
 
   if (response.result) {
-    return response.result.orders as SignedOBOrder[];
+    return response.result as SignedOBOrder[];
   }
 
   return [];
