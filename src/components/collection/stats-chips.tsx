@@ -95,9 +95,7 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
 
   return (
     <div className="flex flex-row space-x-1">
-      <VerificationModal isOpen={modalOpen} onSubmit={verifyOwnership} onClose={() => setModalOpen(false)}>
-        Content here.
-      </VerificationModal>
+      <VerificationModal isOpen={modalOpen} onSubmit={verifyOwnership} onClose={() => setModalOpen(false)} />
 
       <Chip
         content={

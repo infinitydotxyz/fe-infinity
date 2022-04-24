@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, SimpleModal, SimpleModalProps } from 'src/components/common';
 
-export const VerificationModal: React.FC<SimpleModalProps> = (props) => {
+export const VerificationModal: React.FC<Omit<SimpleModalProps, 'children'>> = (props) => {
   return (
     <SimpleModal {...props} showActionButtons={false}>
       <div className="modal-body p-4 rounded-3xl">
