@@ -55,9 +55,9 @@ export const ConnectButton: React.FC = () => {
       },
       item: {
         className: `
-          w-full h-full rounded-xl
+          w-full h-full rounded-xl font-heading
           flex flex-nowrap whitespace-nowrap hover:bg-theme-light-200 items-center gap-2
-          desktop:pl-2 desktop:pr-2 desktop:py-2
+          desktop:pl-2 desktop:pr-2 desktop:py-4
           tablet:pl-2 tablet:pr-2 tablet:py-2
           mobile:pl-2 mobile:pr-2 mobile:py-2
           desktop-8k:text-md
