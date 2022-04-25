@@ -116,6 +116,7 @@ export function Field({ onSort, sortable = false, onClick, type, label, value }:
         className: `
           w-full h-full overflow-hidden
           grid justify-start items-center
+          cursor-pointer
         `
       },
       element: {

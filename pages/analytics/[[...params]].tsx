@@ -113,6 +113,10 @@ export const Analytics = () => {
           onSort: (direction: string) => {
             setOrderDirection(direction);
             setOrderBy('name');
+          },
+          onClick: () => {
+            // eslint-disable-next-line
+            router.push(`/collection/${(d as any).slug}`); // TODO: adding slug to type
           }
         },
         {
@@ -863,7 +867,7 @@ export const Analytics = () => {
                                   type={field?.type}
                                   label={field?.label}
                                   value={field?.value}
-                                  onClick={() => console.log(stat)}
+                                  onClick={field?.onClick}
                                 />
                                 <div className=""></div>
                               </div>
