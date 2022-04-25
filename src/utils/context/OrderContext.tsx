@@ -3,7 +3,7 @@ import React, { ReactNode, useContext, useState } from 'react';
 import { useAppContext } from './AppContext';
 import { secondsPerDay } from 'src/components/market/order-drawer/ui-constants';
 import { getOrderId, getSignedOBOrder } from '../exchange/orders';
-import { fetchOrderNonce, postOrders } from '../marketUtils';
+import { fetchMinBpsToSeller, fetchOrderNonce, postOrders } from '../marketUtils';
 import { getExchangeAddress, getOBComplicationAddress, getTxnCurrencyAddress, NULL_HASH } from '@infinityxyz/lib/utils';
 
 export interface OrderCartItem {
@@ -170,6 +170,9 @@ export function OrderContextProvider({ children }: Props) {
 
     try {
       const orderNonce = await fetchOrderNonce(user.address);
+      const nfts = getItems();
+      const minBpsToSeller = await fetchMinBpsToSeller(chainId, nfts);
+      console.log('minBpsToSeller', minBpsToSeller);
       const order: OBOrder = {
         id: '',
         chainId: chainId,
@@ -180,10 +183,10 @@ export function OrderContextProvider({ children }: Props) {
         endTimeMs: expirationDate,
         startPriceEth: price,
         endPriceEth: price,
-        nfts: getItems(),
+        nfts,
         makerUsername: '', // todo: put in username
         nonce: orderNonce,
-        minBpsToSeller: 9000,
+        minBpsToSeller,
         execParams: {
           currencyAddress: getTxnCurrencyAddress(chainId),
           complicationAddress: getOBComplicationAddress(chainId)

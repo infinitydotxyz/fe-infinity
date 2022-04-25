@@ -1,9 +1,9 @@
-import { SignedOBOrder } from '@infinityxyz/lib/types/core';
+import { OBOrderItem, SignedOBOrder } from '@infinityxyz/lib/types/core';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
-import { apiPost, isStatusOK } from 'src/utils/apiUtils';
+import { apiPost } from 'src/utils/apiUtils';
 import { apiGet } from '.';
 
-export const postOrders = async (user: string, orders: SignedOBOrder[]) => {
+export const postOrders = async (user: string, orders: SignedOBOrder[]): Promise<string> => {
   try {
     const body = {
       orders: orders
@@ -13,14 +13,10 @@ export const postOrders = async (user: string, orders: SignedOBOrder[]) => {
       data: body,
       options: { headers: { 'Content-Type': 'application/json' } }
     });
-    if (response.result) {
-      const res = response.result;
-      if (res && isStatusOK(response)) {
-        console.log('Orders sent successfully');
-      }
-    }
+    return response.result as string;
   } catch (err) {
-    console.log(err);
+    console.error(err);
+    throw err;
   }
 };
 
@@ -40,6 +36,22 @@ export const fetchOrderNonce = async (user: string): Promise<string> => {
     return response.result as string;
   } catch (err) {
     console.error('Failed fetching order nonce');
+    throw err;
+  }
+};
+
+export const fetchMinBpsToSeller = async (chainId: string, nfts: OBOrderItem[]): Promise<number> => {
+  try {
+    const collections: string[] = [];
+    for (const nft of nfts) {
+      collections.push(nft.collectionAddress);
+    }
+    const response = await apiGet(`/orders/minbps`, {
+      query: { chainId, collections }
+    });
+    return response.result as number;
+  } catch (err) {
+    console.error('Failed fetching minbps');
     throw err;
   }
 };
