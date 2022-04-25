@@ -4,13 +4,7 @@ import { useAppContext } from './AppContext';
 import { secondsPerDay } from 'src/components/market/order-drawer/ui-constants';
 import { getOrderId, getSignedOBOrder } from '../exchange/orders';
 import { postOrders } from '../marketUtils';
-import {
-  getExchangeAddress,
-  getOBComplicationAddress,
-  getOrderNonce,
-  getTxnCurrencyAddress,
-  NULL_HASH
-} from '@infinityxyz/lib/utils';
+import { getExchangeAddress, getOBComplicationAddress, getTxnCurrencyAddress, NULL_HASH } from '@infinityxyz/lib/utils';
 
 export interface OrderCartItem {
   isSellOrder: boolean;
@@ -175,7 +169,6 @@ export function OrderContextProvider({ children }: Props) {
     }
 
     // todo: put in missing values
-    const orderNonce = getOrderNonce(user.address, chainId);
     const order: OBOrder = {
       id: '',
       chainId: chainId,
@@ -188,7 +181,7 @@ export function OrderContextProvider({ children }: Props) {
       endPriceEth: price,
       nfts: getItems(),
       makerUsername: '',
-      nonce: orderNonce,
+      nonce: '', // will be filled in backend,
       minBpsToSeller: 9000,
       execParams: {
         currencyAddress: getTxnCurrencyAddress(chainId),

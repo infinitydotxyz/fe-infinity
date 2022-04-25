@@ -11,7 +11,6 @@ import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { CollectionCache } from 'src/components/market/orderbook-list/collection-cache';
 
 export default function MarketPage() {
-  const [showDebugTools, setShowDebugTools] = useState(false);
   const { orderDrawerOpen, setOrderDrawerOpen, isOrderStateEmpty, addCartItem } = useOrderContext();
   const { options, onChange, selected } = useToggleTab(['Assets', 'Orderbook'], 'Assets');
 
@@ -119,13 +118,7 @@ export default function MarketPage() {
     >
       <OrderDrawer open={orderDrawerOpen} onClose={() => setOrderDrawerOpen(false)} />
 
-      <div>
-        {contents}
-
-        <Button className="fixed bottom-1 left-1 " onClick={() => setShowDebugTools(!showDebugTools)} variant="outline">
-          Debug
-        </Button>
-      </div>
+      <div>{contents}</div>
     </PageBox>
   );
 }
