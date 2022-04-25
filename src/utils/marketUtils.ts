@@ -34,6 +34,16 @@ export const getOrders = async (): Promise<SignedOBOrder[]> => {
   return [];
 };
 
+export const fetchOrderNonce = async (user: string): Promise<string> => {
+  try {
+    const response = await apiGet(`/orders/${user}/nonce`, {});
+    return response.result as string;
+  } catch (err) {
+    console.error('Failed fetching order nonce');
+    throw err;
+  }
+};
+
 export const bigNumToDate = (time: BigNumberish): Date => {
   return new Date(BigNumber.from(time).toNumber() * 1000);
 };

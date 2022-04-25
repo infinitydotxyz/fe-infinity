@@ -3,7 +3,7 @@ import React, { ReactNode, useContext, useState } from 'react';
 import { useAppContext } from './AppContext';
 import { secondsPerDay } from 'src/components/market/order-drawer/ui-constants';
 import { getOrderId, getSignedOBOrder } from '../exchange/orders';
-import { postOrders } from '../marketUtils';
+import { fetchOrderNonce, postOrders } from '../marketUtils';
 import { getExchangeAddress, getOBComplicationAddress, getTxnCurrencyAddress, NULL_HASH } from '@infinityxyz/lib/utils';
 
 export interface OrderCartItem {
@@ -161,54 +161,60 @@ export function OrderContextProvider({ children }: Props) {
     }
   };
 
-  const addOrderToCart = () => {
+  const addOrderToCart = async () => {
     setIsEditingOrder(false);
     if (!user || !user.address) {
       console.error('user is null');
       return;
     }
 
-    // todo: put in missing values
-    const order: OBOrder = {
-      id: '',
-      chainId: chainId,
-      isSellOrder: isSellOrderCart(),
-      makerAddress: user?.address ?? '????',
-      numItems,
-      startTimeMs: Date.now(),
-      endTimeMs: expirationDate,
-      startPriceEth: price,
-      endPriceEth: price,
-      nfts: getItems(),
-      makerUsername: '',
-      nonce: '', // will be filled in backend,
-      minBpsToSeller: 9000,
-      execParams: {
-        currencyAddress: getTxnCurrencyAddress(chainId),
-        complicationAddress: getOBComplicationAddress(chainId)
-      },
-      extraParams: {
-        buyer: ''
+    try {
+      const orderNonce = await fetchOrderNonce(user.address);
+      const order: OBOrder = {
+        id: '',
+        chainId: chainId,
+        isSellOrder: isSellOrderCart(),
+        makerAddress: user.address,
+        numItems,
+        startTimeMs: Date.now(),
+        endTimeMs: expirationDate,
+        startPriceEth: price,
+        endPriceEth: price,
+        nfts: getItems(),
+        makerUsername: '', // todo: put in username
+        nonce: orderNonce,
+        minBpsToSeller: 9000,
+        execParams: {
+          currencyAddress: getTxnCurrencyAddress(chainId),
+          complicationAddress: getOBComplicationAddress(chainId)
+        },
+        extraParams: {
+          buyer: ''
+        }
+      };
+
+      const orderId = getOrderId(chainId, getExchangeAddress(chainId), order);
+      if (orderId === NULL_HASH) {
+        console.error('orderId is null');
+        return;
+      } else {
+        order.id = orderId;
       }
-    };
 
-    const orderId = getOrderId(chainId, getExchangeAddress(chainId), order);
-    if (orderId === NULL_HASH) {
-      console.error('orderId is null');
+      const orderInCart: OrderInCart = {
+        id: Math.random(),
+        order: order,
+        cartItems: cartItems
+      };
+
+      setOrdersInCart([...ordersInCart, orderInCart]);
+
+      setCartItems([]);
+    } catch (err) {
+      console.error(err);
+      showAppError('Failed constructing order');
       return;
-    } else {
-      order.id = orderId;
     }
-
-    const orderInCart: OrderInCart = {
-      id: Math.random(),
-      order: order,
-      cartItems: cartItems
-    };
-
-    setOrdersInCart([...ordersInCart, orderInCart]);
-
-    setCartItems([]);
   };
 
   const isCartEmpty = (): boolean => {
