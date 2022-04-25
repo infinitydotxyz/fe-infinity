@@ -8,6 +8,7 @@ import { UserProfileShare } from './user-profile-share';
 import { Chip, RoundedNav } from 'src/components/common';
 import { FaPen } from 'react-icons/fa';
 import { UserPageNftsTab } from './user-page-nfts-tab';
+import { UserPageActivityTab } from './user-page-activity-tab';
 
 interface UserPageProps {
   userInfo: UserProfileDto;
@@ -53,7 +54,7 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
         />
         <div className="mt-6 min-h-[1024px]">
           {currentTab === 0 && <UserPageNftsTab />}
-          {currentTab === 1 && <div>Activity Tab Content</div>}
+          {currentTab === 1 && <UserPageActivityTab />}
         </div>
       </div>
     </>

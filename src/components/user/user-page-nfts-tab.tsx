@@ -16,7 +16,6 @@ export const UserPageNftsTab: FunctionComponent = () => {
       }
     });
     setData(result?.data);
-    console.log('result', result);
   };
 
   useEffect(() => {
@@ -25,8 +24,6 @@ export const UserPageNftsTab: FunctionComponent = () => {
 
   return (
     <div>
-      <h2 className="text-xl">Collected NFTs: {data?.length}</h2>
-
       <div className="mt-20">
         <GalleryBox
           getEndpoint={`/user/${user?.address}/nfts?chainId=1&limit=50`}
