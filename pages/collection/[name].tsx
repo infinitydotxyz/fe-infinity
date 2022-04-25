@@ -48,9 +48,13 @@ export function CollectionPage() {
         </span>
         <main>
           <div className="text-secondary mt-6 mb-6 text-sm font-heading">
-            Created by{' '}
+            <span>Created by </span>
             <button onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection?.owner)}>
               {ellipsisAddress(collection?.owner ?? '')}
+            </button>
+            <span className="ml-12">Collection address </span>
+            <button onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection?.address)}>
+              {ellipsisAddress(collection?.address ?? '')}
             </button>
           </div>
 
