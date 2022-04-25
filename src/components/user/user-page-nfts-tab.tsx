@@ -1,26 +1,11 @@
-import { FunctionComponent, useEffect, useState } from 'react';
+import { FunctionComponent } from 'react';
 import { useRouter } from 'next/router';
-import { apiGet } from 'src/utils';
 import { GalleryBox } from '../gallery/gallery-box';
 import { useAppContext } from 'src/utils/context/AppContext';
 
 export const UserPageNftsTab: FunctionComponent = () => {
   const router = useRouter();
   const { user } = useAppContext();
-  const [data, setData] = useState([]);
-
-  const fetchData = async () => {
-    const { result } = await apiGet(`/user/${user?.address}/nfts?chainId=1&limit=50`, {
-      query: {
-        limit: 50
-      }
-    });
-    setData(result?.data);
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   return (
     <div>
