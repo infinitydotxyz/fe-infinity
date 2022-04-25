@@ -124,8 +124,8 @@ export function OrderContextProvider({ children }: Props) {
                   tokenName: cartItem.tokenName ?? '',
                   tokenImage: cartItem.tokenImage ?? '',
                   numTokens: cartItem.numTokens ?? 1,
-                  takerAddress: '',
-                  takerUsername: '' // todo: change this
+                  takerAddress: '', // takerAddress and username will be filled in the backend
+                  takerUsername: ''
                 }
               ]
             : []
