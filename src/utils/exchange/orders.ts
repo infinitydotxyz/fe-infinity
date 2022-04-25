@@ -56,14 +56,14 @@ export async function prepareOBOrder(
 
   // todo: uncomment below code when contracts are deployed; remove log
   console.log(infinityFeeTreasuryAddress);
-  // const validOrder = await isOrderValid(user, order, infinityExchange, signer);
-  // if (!validOrder) {
-  //   return undefined;
-  // }
-
   // // grant approvals
   // const approvals = await grantApprovals(user, order, signer, infinityExchange.address, infinityFeeTreasuryAddress);
   // if (!approvals) {
+  //   return undefined;
+  // }
+
+  // const validOrder = await isOrderValid(user, order, infinityExchange, signer);
+  // if (!validOrder) {
   //   return undefined;
   // }
 
