@@ -17,10 +17,23 @@ export interface OrderCartItem {
   numTokens?: number;
 }
 
+export interface OBOrderSpec {
+  chainId: string;
+  isSellOrder: boolean;
+  numItems: number;
+  makerUsername: string;
+  makerAddress: string;
+  startPriceEth: number;
+  endPriceEth: number;
+  startTimeMs: number;
+  endTimeMs: number;
+  nfts: OBOrderItem[];
+}
+
 export interface OrderInCart {
   id: number;
   cartItems: OrderCartItem[];
-  order: OBOrder;
+  orderSpec: OBOrderSpec;
 }
 
 const isCartItemEqual = (a: OrderCartItem, b: OrderCartItem): boolean => {
@@ -155,9 +168,9 @@ export function OrderContextProvider({ children }: Props) {
       }
 
       setCartItems(orderInCart.cartItems);
-      setPrice(orderInCart.order.startPriceEth);
-      setExpirationDate(orderInCart.order.endTimeMs);
-      setNumItems(orderInCart.order.numItems);
+      setPrice(orderInCart.orderSpec.startPriceEth);
+      setExpirationDate(orderInCart.orderSpec.endTimeMs);
+      setNumItems(orderInCart.orderSpec.numItems);
     }
   };
 
@@ -169,12 +182,9 @@ export function OrderContextProvider({ children }: Props) {
     }
 
     try {
-      const orderNonce = await fetchOrderNonce(user.address);
       const nfts = getItems();
-      const minBpsToSeller = await fetchMinBpsToSeller(chainId, nfts);
-      console.log('minBpsToSeller', minBpsToSeller);
-      const order: OBOrder = {
-        id: '',
+
+      const orderSpec: OBOrderSpec = {
         chainId: chainId,
         isSellOrder: isSellOrderCart(),
         makerAddress: user.address,
@@ -184,29 +194,12 @@ export function OrderContextProvider({ children }: Props) {
         startPriceEth: price,
         endPriceEth: price,
         nfts,
-        makerUsername: '', // todo: put in username
-        nonce: orderNonce,
-        minBpsToSeller,
-        execParams: {
-          currencyAddress: getTxnCurrencyAddress(chainId),
-          complicationAddress: getOBComplicationAddress(chainId)
-        },
-        extraParams: {
-          buyer: ''
-        }
+        makerUsername: '' // todo: put in username
       };
-
-      const orderId = getOrderId(chainId, getExchangeAddress(chainId), order);
-      if (orderId === NULL_HASH) {
-        console.error('orderId is null');
-        return;
-      } else {
-        order.id = orderId;
-      }
 
       const orderInCart: OrderInCart = {
         id: Math.random(),
-        order: order,
+        orderSpec: orderSpec,
         cartItems: cartItems
       };
 
@@ -232,7 +225,7 @@ export function OrderContextProvider({ children }: Props) {
   // the drawer can be in sell or buy mode depending on the items added
   const isSellOrderCart = (): boolean => {
     if (ordersInCart.length > 0) {
-      return ordersInCart[0].order.isSellOrder;
+      return ordersInCart[0].orderSpec.isSellOrder;
     }
 
     if (cartItems.length > 0) {
@@ -240,6 +233,53 @@ export function OrderContextProvider({ children }: Props) {
     }
 
     return false;
+  };
+
+  const specToOBOrder = async (spec: OBOrderSpec): Promise<OBOrder | undefined> => {
+    if (!user || !user.address) {
+      console.error('user is null');
+      return;
+    }
+
+    try {
+      const orderNonce = await fetchOrderNonce(user.address);
+      const minBpsToSeller = await fetchMinBpsToSeller(chainId, spec.nfts);
+
+      const order: OBOrder = {
+        id: '',
+        chainId: spec.chainId,
+        isSellOrder: spec.isSellOrder,
+        makerAddress: spec.makerAddress,
+        numItems: spec.numItems,
+        startTimeMs: spec.startTimeMs,
+        endTimeMs: expirationDate,
+        startPriceEth: price,
+        endPriceEth: price,
+        nfts: spec.nfts,
+        makerUsername: spec.makerUsername, // todo: put in username
+        nonce: orderNonce,
+        minBpsToSeller,
+        execParams: {
+          currencyAddress: getTxnCurrencyAddress(chainId),
+          complicationAddress: getOBComplicationAddress(chainId)
+        },
+        extraParams: {
+          buyer: ''
+        }
+      };
+
+      const orderId = getOrderId(chainId, getExchangeAddress(chainId), order);
+      if (orderId === NULL_HASH) {
+        console.error('orderId is null');
+        return;
+      } else {
+        order.id = orderId;
+      }
+
+      return order;
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const executeOrder = async (): Promise<boolean> => {
@@ -257,9 +297,13 @@ export function OrderContextProvider({ children }: Props) {
     // sign orders
     const signedOrders: SignedOBOrder[] = [];
     for (const orderInCart of ordersInCart) {
-      const order = await getSignedOBOrder(user, chainId, signer, orderInCart.order);
+      const order = await specToOBOrder(orderInCart.orderSpec);
+
       if (order) {
-        signedOrders.push(order);
+        const signedOrder = await getSignedOBOrder(user, chainId, signer, order);
+        if (signedOrder) {
+          signedOrders.push(signedOrder);
+        }
       }
     }
 
