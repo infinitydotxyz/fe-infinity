@@ -14,7 +14,7 @@ import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { Contract } from '@ethersproject/contracts';
 import { MaxUint256 } from '@ethersproject/constants';
 import { defaultAbiCoder } from '@ethersproject/abi';
-import { splitSignature } from '@ethersproject/bytes';
+import { splitSignature, BytesLike } from '@ethersproject/bytes';
 import { parseEther } from '@ethersproject/units';
 import { erc20Abi } from '../../abi/erc20';
 import { erc721Abi } from '../../abi/erc721';
@@ -22,7 +22,6 @@ import { User } from '../context/AppContext';
 import { infinityExchangeAbi } from 'src/abi/infinityExchange';
 import { keccak256 as solidityKeccak256 } from '@ethersproject/solidity';
 import { keccak256 } from '@ethersproject/keccak256';
-import { BytesLike } from '@ethersproject/bytes';
 
 export async function getSignedOBOrder(
   user: User,
