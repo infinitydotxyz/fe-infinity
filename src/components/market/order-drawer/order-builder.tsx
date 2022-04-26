@@ -9,7 +9,11 @@ export function OrderBuilder() {
   const list = (
     <div className="overflow-y-auto">
       {cartItems.map((item) => (
-        <OrderListItem key={item.tokenName} cartItem={item} allowDelete={true} />
+        <OrderListItem
+          key={`${item.tokenName} ${item.collectionAddress} ${item.tokenId}`}
+          cartItem={item}
+          allowDelete={true}
+        />
       ))}
     </div>
   );

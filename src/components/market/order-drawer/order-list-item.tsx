@@ -33,7 +33,7 @@ export function OrderListItem({ cartItem, allowDelete }: Props) {
   }
 
   return (
-    <div key={cartItem.tokenName} className="mb-4">
+    <div className="mb-4">
       <div className="flex items-center">
         <div className="flex min-w-0 flex-1 items-center">
           <span className="inline-block flex-shrink-0">
