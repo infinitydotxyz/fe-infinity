@@ -1,7 +1,7 @@
-import { MinusCircleIcon } from '@heroicons/react/solid';
 import { Button } from 'src/components/common';
 import { OrderCartItem, useOrderContext } from 'src/utils/context/OrderContext';
 import { collectionIconStyle, iconButtonStyle } from './ui-constants';
+import deleteIcon from 'src/images/gray-delete.svg';
 
 interface Props {
   cartItem: OrderCartItem;
@@ -22,7 +22,7 @@ export function OrderListItem({ cartItem, allowDelete }: Props) {
           removeCartItem(cartItem);
         }}
       >
-        <MinusCircleIcon className={iconButtonStyle} />
+        <img alt="logo" src={deleteIcon.src} className={iconButtonStyle} />
       </Button>
     );
   }
