@@ -90,7 +90,11 @@ export function OrderDrawer({ open, onClose }: Props) {
         <Divider className="mb-8" />
 
         {topWidget}
-        <Button onClick={buttonClick}>{buttonTitle}</Button>
+        <div className="px-12 w-full">
+          <Button className="w-full" onClick={buttonClick}>
+            {buttonTitle}
+          </Button>
+        </div>
       </div>
     );
   };
