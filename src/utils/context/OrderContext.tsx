@@ -252,9 +252,9 @@ export function OrderContextProvider({ children }: Props) {
         makerAddress: spec.makerAddress,
         numItems: spec.numItems,
         startTimeMs: spec.startTimeMs,
-        endTimeMs: expirationDate,
-        startPriceEth: price,
-        endPriceEth: price,
+        endTimeMs: spec.endTimeMs,
+        startPriceEth: spec.startPriceEth,
+        endPriceEth: spec.endPriceEth,
         nfts: spec.nfts,
         makerUsername: spec.makerUsername, // todo: put in username
         nonce: orderNonce,
