@@ -27,9 +27,9 @@ export function OrderListItem({ cartItem, allowDelete }: Props) {
     );
   }
 
-  let image = cartItem.imageUrl;
+  let image = cartItem.tokenImage;
   if (!image) {
-    image = cartItem.profileImage;
+    image = cartItem.collectionImage;
   }
 
   return (

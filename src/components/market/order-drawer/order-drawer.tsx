@@ -49,8 +49,8 @@ export function OrderDrawer({ open, onClose }: Props) {
       let totalNFTs = 0;
 
       for (const orderInCart of ordersInCart) {
-        totalEth = totalEth + orderInCart.order.endPriceEth;
-        totalNFTs = totalNFTs + orderInCart.order.numItems;
+        totalEth = totalEth + orderInCart.orderSpec.endPriceEth;
+        totalNFTs = totalNFTs + orderInCart.orderSpec.numItems;
       }
 
       if (isSellOrderCart()) {

@@ -25,9 +25,10 @@ import { GallerySort } from './gallery-sort';
 interface GalleryProps {
   collection: BaseCollection | null;
   cardProps?: CardProps;
+  getEndpoint?: string;
 }
 
-export function GalleryBox({ collection, cardProps }: GalleryProps) {
+export function GalleryBox({ collection, cardProps, getEndpoint }: GalleryProps) {
   const { filterState } = useFilterContext();
 
   const [filterShowed, setFilterShowed] = useState(true);
@@ -48,7 +49,7 @@ export function GalleryBox({ collection, cardProps }: GalleryProps) {
       filterState.orderBy = 'rarityRank'; // set defaults
       filterState.orderDirection = 'asc';
     }
-    const { result } = await apiGet(`/collections/${collection?.chainId}:${collection?.address}/nfts`, {
+    const { result } = await apiGet(getEndpoint ?? `/collections/${collection?.chainId}:${collection?.address}/nfts`, {
       query: {
         offset,
         limit: ITEMS_PER_PAGE,
@@ -60,7 +61,8 @@ export function GalleryBox({ collection, cardProps }: GalleryProps) {
       return {
         id: collection?.address + '_' + item.tokenId,
         title: collection?.metadata?.name,
-        image: item.image.url,
+        // eslint-disable-next-line
+        image: (item.metadata as any).image_url ?? item.image.url, // TODO: remove any after having proper data.
         price: 0,
         chainId: item.chainId,
         tokenAddress: collection?.address,
@@ -98,18 +100,20 @@ export function GalleryBox({ collection, cardProps }: GalleryProps) {
       )}
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-12 gap-y-20 mt-[-70px]">
-        <header className="sm:col-span-2 lg:col-span-3 xl:col-span-4 text-right mb-[-40px]">
-          <Button
-            variant="outline"
-            onClick={() => {
-              setFilterShowed((flag) => !flag);
-            }}
-            className="py-2.5 mr-2 font-heading"
-          >
-            {filterShowed ? 'Hide' : 'Show'} filter
-          </Button>
-          <GallerySort />
-        </header>
+        {data.length > 0 && (
+          <header className="sm:col-span-2 lg:col-span-3 xl:col-span-4 text-right mb-[-40px]">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setFilterShowed((flag) => !flag);
+              }}
+              className="py-2.5 mr-2 font-heading"
+            >
+              {filterShowed ? 'Hide' : 'Show'} filter
+            </Button>
+            <GallerySort />
+          </header>
+        )}
 
         {isFetching && (
           <div className="w-full">

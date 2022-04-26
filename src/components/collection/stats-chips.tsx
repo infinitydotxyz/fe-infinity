@@ -7,7 +7,7 @@ import { HiOutlineExternalLink } from 'react-icons/hi';
 import { apiDelete, apiPost } from 'src/utils';
 import { FollowingCollection, useAppContext } from 'src/utils/context/AppContext';
 import { Chip } from '../common';
-import { Toaster, toastError, toastSuccess } from '../common/toaster';
+import { Toaster, toastError } from '../common/toaster';
 interface Props {
   collection: BaseCollection | null;
   weeklyStatsData: CollectionStats[];
@@ -38,7 +38,7 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
       if (error) {
         toastError(error?.errorResponse?.message);
       } else {
-        toastSuccess('Unfollowed ' + collection?.metadata?.name);
+        // toastSuccess('Unfollowed ' + collection?.metadata?.name);
         setIsFollowing(false);
         fetchFollowingCollections();
       }
@@ -52,7 +52,7 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
       if (error) {
         toastError(error?.errorResponse?.message);
       } else {
-        toastSuccess('Followed ' + collection?.metadata?.name);
+        // toastSuccess('Followed ' + collection?.metadata?.name);
         setIsFollowing(true);
         fetchFollowingCollections();
       }

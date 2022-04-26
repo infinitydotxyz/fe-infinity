@@ -1,6 +1,6 @@
 import { FunctionComponent } from 'react';
 import { useRouter } from 'next/router';
-import { Layout } from 'src/components/common';
+import { PageBox } from 'src/components/common';
 import { useFetch } from 'src/utils';
 import { UserPage } from 'src/components/user/user-page';
 import { UserProfileDto } from 'src/components/user/user-profile-dto';
@@ -14,29 +14,29 @@ const UserDetailPage: FunctionComponent = () => {
   const { query } = router;
 
   if (!query.userId) {
-    return <Layout title="Loading..."></Layout>;
+    return <PageBox title="Loading..."></PageBox>;
   }
 
   const { result, isLoading, isError, error } = useFetch(`${USER_API_END_POINT}/${query.userId}`);
 
   if (isLoading) {
-    return <Layout title="Loading..."></Layout>;
+    return <PageBox title="Loading..."></PageBox>;
   }
 
   if (isError) {
     console.error(error);
     return (
-      <Layout title={'Error'} className="mb-12">
+      <PageBox title={'Error'} className="mb-12">
         Failed Fetch User Info
-      </Layout>
+      </PageBox>
     );
   }
 
   const userInfo = result as UserProfileDto;
   return (
-    <Layout title={userInfo.username || userInfo.address} className="pb-8">
+    <PageBox title={userInfo.username || userInfo.address} className="pb-8">
       <UserPage userInfo={result as UserProfileDto} isOwner={!!(user && user.address === userInfo.address)} />
-    </Layout>
+    </PageBox>
   );
 };
 

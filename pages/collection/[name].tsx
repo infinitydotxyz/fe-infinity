@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { BaseCollection, CollectionStats } from '@infinityxyz/lib/types/core';
-import { RoundedNav, Layout } from 'src/components/common';
+import { RoundedNav, PageBox } from 'src/components/common';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { useFetch } from 'src/utils/apiUtils';
 import { CollectionFeed } from 'src/components/feed/collection-feed';
@@ -37,7 +37,7 @@ export function CollectionPage() {
   const firstDailyStats = dailyStats?.data[0];
 
   return (
-    <Layout title={collection?.metadata?.name ?? ''} padded>
+    <PageBox title={collection?.metadata?.name ?? ''}>
       <div className="flex flex-col mt-10">
         <span>
           <img src={collection?.metadata.profileImage} className="w-28 h-28 mb-2" />
@@ -48,9 +48,13 @@ export function CollectionPage() {
         </span>
         <main>
           <div className="text-secondary mt-6 mb-6 text-sm font-heading">
-            Created by{' '}
+            <span>Created by </span>
             <button onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection?.owner)}>
               {ellipsisAddress(collection?.owner ?? '')}
+            </button>
+            <span className="ml-12">Collection address </span>
+            <button onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection?.address)}>
+              {ellipsisAddress(collection?.address ?? '')}
             </button>
           </div>
 
@@ -136,7 +140,7 @@ export function CollectionPage() {
           </div>
         </main>
       </div>
-    </Layout>
+    </PageBox>
   );
 }
 

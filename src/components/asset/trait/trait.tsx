@@ -19,5 +19,3 @@ export const Trait: FC<Props> = ({ trait, description }) => {
     </div>
   );
 };
-
-export default Trait;

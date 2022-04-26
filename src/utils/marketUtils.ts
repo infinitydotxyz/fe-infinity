@@ -1,17 +1,9 @@
-import {
-  BuyOrderMatch,
-  MarketAction,
-  MarketListId,
-  MarketListingsBody,
-  MarketListingsResponse,
-  MarketOrder,
-  OBOrder,
-  SignedOBOrder
-} from '@infinityxyz/lib/types/core';
+import { OBOrderItem, SignedOBOrder } from '@infinityxyz/lib/types/core';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
-import { apiPost, isStatusOK } from 'src/utils/apiUtils';
+import { apiPost } from 'src/utils/apiUtils';
+import { apiGet } from '.';
 
-export const postOrders = async (user: string, orders: SignedOBOrder[]) => {
+export const postOrders = async (user: string, orders: SignedOBOrder[]): Promise<string> => {
   try {
     const body = {
       orders: orders
@@ -21,148 +13,49 @@ export const postOrders = async (user: string, orders: SignedOBOrder[]) => {
       data: body,
       options: { headers: { 'Content-Type': 'application/json' } }
     });
-    if (response.result) {
-      const res = response.result;
-      if (res && isStatusOK(response)) {
-        console.log('Orders posted successfully');
-      }
-    }
+    return response.result as string;
   } catch (err) {
-    console.log(err);
+    console.error(err);
+    throw err;
   }
 };
 
-export const marketBuyOrders = async (listId: MarketListId): Promise<OBOrder[]> => {
-  const body: MarketListingsBody = {
-    orderType: MarketOrder.BuyOrders,
-    action: MarketAction.List,
-    listId: listId
-  };
-
-  return list(body);
-};
-
-export const marketSellOrders = async (listId: MarketListId): Promise<OBOrder[]> => {
-  const body: MarketListingsBody = {
-    orderType: MarketOrder.SellOrders,
-    action: MarketAction.List,
-    listId: listId
-  };
-
-  return list(body);
-};
-
-const list = async (body: MarketListingsBody): Promise<OBOrder[]> => {
-  const response = await apiPost(`/market-listings`, { data: body });
+export const getOrders = async (): Promise<SignedOBOrder[]> => {
+  const response = await apiGet(`/orders/get`, {});
 
   if (response.result) {
-    const match: MarketListingsResponse | null = response.result;
-
-    if (isStatusOK(response)) {
-      if (match) {
-        if (body.orderType === 'buyOrders') {
-          const buys: OBOrder[] = match.buyOrders.orders;
-
-          return buys;
-        } else if (body.orderType === 'sellOrders') {
-          const sells: OBOrder[] = match.sellOrders.orders;
-
-          return sells;
-        }
-      }
-    }
+    return response.result as SignedOBOrder[];
   }
-  console.log('An error occured: list');
-  return [];
-};
-
-export const marketMatches = async (): Promise<BuyOrderMatch[]> => {
-  const body: MarketListingsBody = {
-    action: MarketAction.Match,
-    orderType: MarketOrder.BuyOrders
-  };
-
-  const response = await apiPost(`/market-listings`, { data: body });
-
-  if (response.result) {
-    const res: MarketListingsResponse | null = response.result;
-
-    if (res && isStatusOK(response)) {
-      return res.matches;
-    }
-  }
-  console.log('An error occurred: marketMatches');
 
   return [];
 };
 
-export const marketDeleteOrder = async (body: MarketListingsBody): Promise<string> => {
-  const response = await apiPost(`/market-listings`, { data: body });
-
-  if (response.result) {
-    const match: MarketListingsResponse | null = response.result;
-
-    if (isStatusOK(response)) {
-      if (match) {
-        return match.success;
-      }
-    }
+export const fetchOrderNonce = async (user: string): Promise<string> => {
+  try {
+    const response = await apiGet(`/orders/${user}/nonce`, {});
+    return response.result as string;
+  } catch (err) {
+    console.error('Failed fetching order nonce');
+    throw err;
   }
-
-  console.log('An error occurred: marketDeleteOrder');
-
-  return 'error';
 };
 
-export const executeBuyOrder = async (orderId: string): Promise<string> => {
-  const body: MarketListingsBody = {
-    action: MarketAction.Buy,
-    orderId: orderId,
-    orderType: MarketOrder.BuyOrders
-  };
-
-  const response = await apiPost(`/market-listings`, { data: body });
-
-  if (response.result) {
-    const match: MarketListingsResponse | null = response.result;
-
-    if (isStatusOK(response)) {
-      if (match) {
-        return match.success;
-      }
+export const fetchMinBpsToSeller = async (chainId: string, nfts: OBOrderItem[]): Promise<number> => {
+  try {
+    const collections: string[] = [];
+    for (const nft of nfts) {
+      collections.push(nft.collectionAddress);
     }
+    const response = await apiGet(`/orders/minbps`, {
+      query: { chainId, collections }
+    });
+    return response.result as number;
+  } catch (err) {
+    console.error('Failed fetching minbps');
+    throw err;
   }
-
-  console.log('An error occurred: executeBuyOrder');
-
-  return 'error';
 };
 
 export const bigNumToDate = (time: BigNumberish): Date => {
   return new Date(BigNumber.from(time).toNumber() * 1000);
 };
-
-// ======================================================
-
-export interface CollectionAddr {
-  id: number;
-  address: string;
-  name: string;
-}
-
-const collectionMap = new Map<string, CollectionAddr>();
-collectionMap.set('0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d', {
-  id: 1,
-  address: '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d',
-  name: 'Dump Trux'
-});
-collectionMap.set('0xAddress2', { id: 2, address: '0xAddress2', name: 'Ape People' });
-collectionMap.set('0xAddress3', { id: 3, address: '0xAddress3', name: 'DigiKraap' });
-collectionMap.set('0xAddress4', { id: 4, address: '0xAddress4', name: 'Sik Art' });
-collectionMap.set('0xAddress5', { id: 5, address: '0xAddress5', name: 'Blu Balz' });
-collectionMap.set('0xAddress6', { id: 6, address: '0xAddress6', name: 'Unkle Fester' });
-collectionMap.set('0xAddress7', { id: 7, address: '0xAddress7', name: 'Badass Pix' });
-
-export class CollectionManager {
-  static collections = (): CollectionAddr[] => Array.from(collectionMap.values());
-}

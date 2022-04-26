@@ -2,8 +2,7 @@ import React from 'react';
 import { Tab } from '@headlessui/react';
 import { useRouter } from 'next/router';
 import { useFetch } from 'src/utils/apiUtils';
-import { Drawer } from 'src/components/common/drawer';
-import { Layout } from 'src/components/common/layout';
+import { Drawer, PageBox } from 'src/components/common';
 import { Field } from 'src/components/analytics/field';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CollectionStats } from '@infinityxyz/lib/types/core';
@@ -15,7 +14,7 @@ export const Analytics = () => {
   const connected = user?.address ? true : false;
   const [limit] = React.useState(ITEMS_PER_PAGE);
   const [page, setPage] = React.useState(router.query.params?.[0] ? router.query.params?.[0] : 'trending');
-  const [interval, setInterval] = React.useState(router.query.params?.[1] ? router.query.params?.[1] : 'hourly');
+  const [interval, setInterval] = React.useState(router.query.params?.[1] ? router.query.params?.[1] : 'weekly');
   const [date] = React.useState(Date.now());
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
   const closeDrawer = () => setIsDrawerOpen(false);
@@ -113,6 +112,10 @@ export const Analytics = () => {
           onSort: (direction: string) => {
             setOrderDirection(direction);
             setOrderBy('name');
+          },
+          onClick: () => {
+            // eslint-disable-next-line
+            router.push(`/collection/${(d as any).slug}`); // TODO: adding slug to type
           }
         },
         {
@@ -300,7 +303,6 @@ export const Analytics = () => {
     ======================================
   */
   const content = {
-    title: 'Analytics',
     statistics: statistics,
     filter: {
       limit: 5,
@@ -488,10 +490,6 @@ export const Analytics = () => {
   };
 
   const styles = {
-    layout: {
-      title: 'Analytics',
-      padded: true
-    },
     container: {
       className: `
         w-full h-full
@@ -512,7 +510,7 @@ export const Analytics = () => {
         className: `
           w-full h-full overflow-hidden
           row-start-4 col-start-1 row-span-3 col-span-14
-          text-start font-body font-bold text-[80px] tracking-tight
+          text-start font-body text-6xl tracking-tight mt-4 mb-8
         `
       }
     },
@@ -722,30 +720,14 @@ export const Analytics = () => {
 
   return (
     <>
-      <Layout {...styles?.layout}>
+      <PageBox title="Analytics">
         <div {...styles?.container}>
-          <div {...styles?.heading?.container}>
-            {/*
-            ====================================
-              This is where the heading of
-              the page gets rendered.
-            ====================================
-          */}
-            <h1 {...styles?.heading?.element}>{content?.title}</h1>
-          </div>
           <div {...styles?.options?.container}>
             <Tab.Group {...styles?.options?.timeframes?.group}>
               <div {...styles?.options?.timeframes?.container}>
                 <div {...styles?.options?.timeframes?.list?.container}>
                   <Tab.List {...styles?.options?.timeframes?.list?.background}>
-                    {/*
-                      ====================================
-                        This is where we render the timeframe
-                        tabs (clicking on them changes the route
-                        params as well, and when they get changed
-                        a request to fetch that data is made and cached).
-                      ====================================
-                    */}
+                    {/* timeframe tabs */}
                     {content?.options?.timeframes?.map((tab, i) => (
                       <React.Fragment key={i}>
                         <Tab {...styles?.options?.timeframes?.tab}>{tab?.label}</Tab>
@@ -755,6 +737,7 @@ export const Analytics = () => {
                 </div>
               </div>
             </Tab.Group>
+
             <Tab.Group {...styles?.options?.actions?.group}>
               <Tab.List {...styles?.options?.actions?.container}>
                 {/*
@@ -870,7 +853,12 @@ export const Analytics = () => {
                           .map((field, j) => (
                             <React.Fragment key={j}>
                               <div {...styles?.statistics?.list?.item?.field?.container}>
-                                <Field type={field?.type} label={field?.label} value={field?.value} />
+                                <Field
+                                  type={field?.type}
+                                  label={field?.label}
+                                  value={field?.value}
+                                  onClick={field?.onClick}
+                                />
                                 <div className=""></div>
                               </div>
                             </React.Fragment>
@@ -910,7 +898,7 @@ export const Analytics = () => {
             </div>
           </div>
         </div>
-      </Layout>
+      </PageBox>
     </>
   );
 };

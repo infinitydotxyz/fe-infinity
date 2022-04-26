@@ -11,6 +11,8 @@ export const Header = ({ children, title = 'Home' }: Props) => {
     <>
       <Head>
         <link rel="shortcut icon" href="/favicon.svg" />
+        <meta name="description" content="Infinity NFT marketplace" />
+
         <title>{title} | Infinity</title>
       </Head>
       {children}

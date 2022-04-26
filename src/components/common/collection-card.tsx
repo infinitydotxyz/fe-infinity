@@ -7,7 +7,7 @@ import { Button } from './button';
 
 interface CollectionCardProps {
   collection: CollectionSearchDto;
-  onClick: (collection: CollectionSearchDto) => void;
+  onClick?: (collection: CollectionSearchDto) => void;
 }
 
 const getAvatarUrl = (imgUrl: string) => {
@@ -49,9 +49,11 @@ export const CollectionCard: FunctionComponent<CollectionCardProps> = ({ collect
         </a>
       </Link>
 
-      <Button variant="outline" className="flex-1 py-3" onClick={() => onClick(collection)}>
-        Buy
-      </Button>
+      {onClick && (
+        <Button variant="outline" className="flex-1 py-3" onClick={() => onClick(collection)}>
+          Buy
+        </Button>
+      )}
     </article>
   );
 };

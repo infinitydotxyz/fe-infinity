@@ -2,33 +2,38 @@ import { OBOrderItem, OBOrder, SignedOBOrder } from '@infinityxyz/lib/types/core
 import React, { ReactNode, useContext, useState } from 'react';
 import { useAppContext } from './AppContext';
 import { secondsPerDay } from 'src/components/market/order-drawer/ui-constants';
-import { getSignedOBOrder } from '../exchange/orders';
-import { postOrders } from '../marketUtils';
-import {
-  error,
-  getExchangeAddress,
-  getOBComplicationAddress,
-  getOrderId,
-  getOrderNonce,
-  getTxnCurrencyAddress,
-  NULL_HASH
-} from '@infinityxyz/lib/utils';
+import { getOrderId, getSignedOBOrder } from '../exchange/orders';
+import { fetchMinBpsToSeller, fetchOrderNonce, postOrders } from '../marketUtils';
+import { getExchangeAddress, getOBComplicationAddress, getTxnCurrencyAddress, NULL_HASH } from '@infinityxyz/lib/utils';
 
 export interface OrderCartItem {
   isSellOrder: boolean;
-  imageUrl?: string;
+  tokenImage?: string;
   tokenName?: string;
   tokenId?: string;
   collectionName: string;
   collectionAddress: string;
-  profileImage?: string;
+  collectionImage?: string;
   numTokens?: number;
+}
+
+export interface OBOrderSpec {
+  chainId: string;
+  isSellOrder: boolean;
+  numItems: number;
+  makerUsername: string;
+  makerAddress: string;
+  startPriceEth: number;
+  endPriceEth: number;
+  startTimeMs: number;
+  endTimeMs: number;
+  nfts: OBOrderItem[];
 }
 
 export interface OrderInCart {
   id: number;
   cartItems: OrderCartItem[];
-  order: OBOrder;
+  orderSpec: OBOrderSpec;
 }
 
 const isCartItemEqual = (a: OrderCartItem, b: OrderCartItem): boolean => {
@@ -37,7 +42,7 @@ const isCartItemEqual = (a: OrderCartItem, b: OrderCartItem): boolean => {
     a.collectionName === b.collectionName &&
     a.collectionAddress === b.collectionAddress &&
     a.isSellOrder === b.isSellOrder &&
-    a.imageUrl === b.imageUrl
+    a.tokenImage === b.tokenImage
   );
 };
 
@@ -113,22 +118,21 @@ export function OrderContextProvider({ children }: Props) {
 
   const getItems = (): OBOrderItem[] => {
     const items: OBOrderItem[] = [];
-
     for (const cartItem of cartItems) {
       items.push({
         collectionAddress: cartItem.collectionAddress,
         collectionName: cartItem.collectionName,
-        collectionImage: cartItem.profileImage ?? '',
+        collectionImage: cartItem.collectionImage ?? '',
         tokens:
           cartItem.tokenId !== undefined
             ? [
                 {
                   tokenId: cartItem.tokenId ?? 0,
                   tokenName: cartItem.tokenName ?? '',
-                  tokenImage: cartItem.imageUrl ?? '',
+                  tokenImage: cartItem.tokenImage ?? '',
                   numTokens: cartItem.numTokens ?? 1,
-                  takerAddress: '',
-                  takerUsername: '' // todo: change this
+                  takerAddress: '', // takerAddress and username will be filled in the backend
+                  takerUsername: ''
                 }
               ]
             : []
@@ -164,60 +168,49 @@ export function OrderContextProvider({ children }: Props) {
       }
 
       setCartItems(orderInCart.cartItems);
-      setPrice(orderInCart.order.startPriceEth);
-      setExpirationDate(orderInCart.order.endTimeMs);
-      setNumItems(orderInCart.order.numItems);
+      setPrice(orderInCart.orderSpec.startPriceEth);
+      setExpirationDate(orderInCart.orderSpec.endTimeMs);
+      setNumItems(orderInCart.orderSpec.numItems);
     }
   };
 
-  const addOrderToCart = () => {
+  const addOrderToCart = async () => {
     setIsEditingOrder(false);
-
     if (!user || !user.address) {
-      error('user is null');
+      console.error('user is null');
       return;
     }
 
-    // todo: put in missing values
-    const orderNonce = getOrderNonce(user.address, chainId);
-    const order: OBOrder = {
-      id: '',
-      chainId: chainId,
-      isSellOrder: isSellOrderCart(),
-      makerAddress: user?.address ?? '????',
-      numItems,
-      startTimeMs: Date.now(),
-      endTimeMs: expirationDate,
-      startPriceEth: price,
-      endPriceEth: price,
-      nfts: getItems(),
-      makerUsername: '',
-      nonce: orderNonce,
-      minBpsToSeller: 9000,
-      execParams: {
-        currencyAddress: getTxnCurrencyAddress(chainId),
-        complicationAddress: getOBComplicationAddress(chainId)
-      },
-      extraParams: {
-        buyer: ''
-      }
-    };
+    try {
+      const nfts = getItems();
 
-    const orderId = getOrderId(chainId, getExchangeAddress(chainId), order);
-    if (orderId === NULL_HASH) {
-      error('orderId is null');
+      const orderSpec: OBOrderSpec = {
+        chainId: chainId,
+        isSellOrder: isSellOrderCart(),
+        makerAddress: user.address,
+        numItems,
+        startTimeMs: Date.now(),
+        endTimeMs: expirationDate,
+        startPriceEth: price,
+        endPriceEth: price,
+        nfts,
+        makerUsername: '' // todo: put in username
+      };
+
+      const orderInCart: OrderInCart = {
+        id: Math.random(),
+        orderSpec: orderSpec,
+        cartItems: cartItems
+      };
+
+      setOrdersInCart([...ordersInCart, orderInCart]);
+
+      setCartItems([]);
+    } catch (err) {
+      console.error(err);
+      showAppError('Failed constructing order');
       return;
     }
-
-    const orderInCart: OrderInCart = {
-      id: Math.random(),
-      order: order,
-      cartItems: cartItems
-    };
-
-    setOrdersInCart([...ordersInCart, orderInCart]);
-
-    setCartItems([]);
   };
 
   const isCartEmpty = (): boolean => {
@@ -232,7 +225,7 @@ export function OrderContextProvider({ children }: Props) {
   // the drawer can be in sell or buy mode depending on the items added
   const isSellOrderCart = (): boolean => {
     if (ordersInCart.length > 0) {
-      return ordersInCart[0].order.isSellOrder;
+      return ordersInCart[0].orderSpec.isSellOrder;
     }
 
     if (cartItems.length > 0) {
@@ -240,6 +233,53 @@ export function OrderContextProvider({ children }: Props) {
     }
 
     return false;
+  };
+
+  const specToOBOrder = async (spec: OBOrderSpec): Promise<OBOrder | undefined> => {
+    if (!user || !user.address) {
+      console.error('user is null');
+      return;
+    }
+
+    try {
+      const orderNonce = await fetchOrderNonce(user.address);
+      const minBpsToSeller = await fetchMinBpsToSeller(chainId, spec.nfts);
+
+      const order: OBOrder = {
+        id: '',
+        chainId: spec.chainId,
+        isSellOrder: spec.isSellOrder,
+        makerAddress: spec.makerAddress,
+        numItems: spec.numItems,
+        startTimeMs: spec.startTimeMs,
+        endTimeMs: spec.endTimeMs,
+        startPriceEth: spec.startPriceEth,
+        endPriceEth: spec.endPriceEth,
+        nfts: spec.nfts,
+        makerUsername: spec.makerUsername,
+        nonce: orderNonce,
+        minBpsToSeller,
+        execParams: {
+          currencyAddress: getTxnCurrencyAddress(chainId),
+          complicationAddress: getOBComplicationAddress(chainId)
+        },
+        extraParams: {
+          buyer: ''
+        }
+      };
+
+      const orderId = getOrderId(chainId, getExchangeAddress(chainId), order);
+      if (orderId === NULL_HASH) {
+        console.error('orderId is null');
+        return;
+      } else {
+        order.id = orderId;
+      }
+
+      return order;
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const executeOrder = async (): Promise<boolean> => {
@@ -257,9 +297,13 @@ export function OrderContextProvider({ children }: Props) {
     // sign orders
     const signedOrders: SignedOBOrder[] = [];
     for (const orderInCart of ordersInCart) {
-      const order = await getSignedOBOrder(user, chainId, signer, orderInCart.order);
+      const order = await specToOBOrder(orderInCart.orderSpec);
+
       if (order) {
-        signedOrders.push(order);
+        const signedOrder = await getSignedOBOrder(user, chainId, signer, order);
+        if (signedOrder) {
+          signedOrders.push(signedOrder);
+        }
       }
     }
 

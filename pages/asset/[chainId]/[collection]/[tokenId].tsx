@@ -2,10 +2,9 @@ import { FunctionComponent } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { Button, ShortAddress, ReadMoreText } from 'src/components/common';
+import { Button, ShortAddress, PageBox, ReadMoreText } from 'src/components/common';
 import { BLANK_IMAGE_URL, useFetch } from 'src/utils';
 import { Token, Collection } from '@infinityxyz/lib/types/core';
-import { Layout } from 'src/components/common/layout';
 import {
   TraitList,
   ActivityList,
@@ -39,32 +38,32 @@ const AssetDetail: FunctionComponent = () => {
 
   if (typeof query.chainId !== 'string' || typeof query.collection !== 'string' || typeof query.tokenId !== 'string') {
     return (
-      <Layout title="Asset Detail - Error" padded>
+      <PageBox title="Asset Detail - Error">
         <div className="flex flex-col max-w-screen-2xl mt-4">
           <main>
             <p>Error: Invalid page parameters.</p>
           </main>
         </div>
-      </Layout>
+      </PageBox>
     );
   }
 
   const { isLoading, error, token, collection } = useFetchAssertInfo(query.chainId, query.collection, query.tokenId);
 
   if (isLoading) {
-    return <Layout title="Loading..."></Layout>;
+    return <PageBox title="Loading..."></PageBox>;
   }
 
   if (error || !token || !collection) {
     console.error(error);
     return (
-      <Layout title="Asset Detail - Error" className="w-full h-full grid place-items-center">
+      <PageBox title="Asset Detail - Error" className="w-full h-full grid place-items-center">
         <div className="flex flex-col max-w-screen-2xl mt-4">
           <main>
             <p>Error: Fetching Data Failed.</p>
           </main>
         </div>
-      </Layout>
+      </PageBox>
     );
   }
 
@@ -73,7 +72,7 @@ const AssetDetail: FunctionComponent = () => {
       ? `${token.metadata.name} - ${collection.metadata.name}`
       : token.metadata.name || collection.metadata.name || 'No Name';
   return (
-    <Layout title={assetName} padded>
+    <PageBox title={assetName}>
       <div className="flex flex-col max-w-screen-2xl mt-4">
         <main>
           <div className="sm:flex">
@@ -159,7 +158,7 @@ const AssetDetail: FunctionComponent = () => {
           <PlaceBidModal />
         </main>
       </div>
-    </Layout>
+    </PageBox>
   );
 };
 

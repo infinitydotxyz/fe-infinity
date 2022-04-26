@@ -9,7 +9,7 @@ import { useAppContext } from 'src/utils/context/AppContext';
 import { addUserLike } from 'src/utils/firestore/firestoreUtils';
 import { Button } from '../common';
 import { EthPrice } from '../common/eth-price';
-import NftImage from '../common/nft-image';
+import { NftImage } from '../common/nft-image';
 
 export type FeedEvent = BaseFeedEvent &
   ExchangeEvent & {

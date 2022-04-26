@@ -12,7 +12,7 @@ interface Props {
   [key: string]: string | number | undefined;
 }
 
-const NftImage = ({ chainId, collectionAddress, src, alt, ...rest }: Props) => {
+export const NftImage = ({ chainId, collectionAddress, src, alt, ...rest }: Props) => {
   const [unmounted, setUnmounted] = useState(false);
   const [imageUrl, setImageUrl] = useState(src || '');
 
@@ -40,5 +40,3 @@ const NftImage = ({ chainId, collectionAddress, src, alt, ...rest }: Props) => {
   }
   return <img src={imageUrl} {...rest} alt={alt} />;
 };
-
-export default NftImage;

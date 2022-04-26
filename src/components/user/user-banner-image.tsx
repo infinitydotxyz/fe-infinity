@@ -12,7 +12,7 @@ export const UserBannerImage: FunctionComponent<UserBannerImageProps> = ({ imgSr
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
-    if (isOwner) router.push('/account/settings');
+    if (isOwner) router.push('/profile/settings');
   };
 
   return (

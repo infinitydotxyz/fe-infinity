@@ -169,10 +169,10 @@ export function Navbar() {
           },
           items: {
             className: `
-              absolute w-content h-content py-2 px-2
+              absolute w-content h-content py-4 px-2
               mobile:left-[-80px]
               flex flex-col bg-theme-light-50
-              shadow-xl rounded-xl
+              shadow-xl rounded-xl font-heading
               ring-1 ring-inset ring-slate-400 ring-opacity-10
             `
           },
@@ -180,16 +180,16 @@ export function Navbar() {
             className: `
               w-full h-full rounded-xl
               flex flex-nowrap whitespace-nowrap hover:bg-theme-light-200 items-center gap-2
-              desktop:pl-4 desktop:pr-20 desktop:py-2
+              desktop:pl-4 desktop:pr-20 desktop:py-4
               tabloid:pl-2 tabloid:pr-10 tabloid:py-2
               mobile:pl-2 mobile:pr-10 mobile:py-2
               desktop-8k:text-md
               desktop-4k:text-md
-              desktop-lg:text-sm
-              desktop-md:text-sm
-              desktop-sm:text-sm
-              tabloid:text-xs
-              mobile:text-xs
+              desktop-lg:text-md
+              desktop-md:text-md
+              desktop-sm:text-md
+              tabloid:text-md
+              mobile:text-md
             `
           },
           button: {
@@ -250,7 +250,7 @@ export function Navbar() {
           type: 'link',
           label: 'Analytics',
           props: {
-            href: '/analytics/trending/1h'
+            href: '/analytics/trending/weekly'
           }
         },
         {
@@ -264,7 +264,7 @@ export function Navbar() {
           type: 'link',
           label: 'Orderbook',
           props: {
-            href: '/orderbook'
+            href: '/market'
           }
         },
         {
@@ -496,5 +496,3 @@ export function Navbar() {
     </>
   );
 }
-
-export default Navbar;

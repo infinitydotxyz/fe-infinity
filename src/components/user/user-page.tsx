@@ -1,13 +1,14 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useState } from 'react';
 import { useRouter } from 'next/router';
 import { UserProfileDto } from './user-profile-dto';
 import { UserBannerImage } from './user-banner-image';
 import { UserProfileImage } from './user-profile-image';
 // import { UserWatchList } from './user-watch-list';
 import { UserProfileShare } from './user-profile-share';
-import { UserProfileTab } from './user-profile-tab';
-import { Chip } from 'src/components/common';
+import { Chip, RoundedNav } from 'src/components/common';
 import { FaPen } from 'react-icons/fa';
+import { UserPageNftsTab } from './user-page-nfts-tab';
+import { UserPageActivityTab } from './user-page-activity-tab';
 
 interface UserPageProps {
   userInfo: UserProfileDto;
@@ -16,13 +17,14 @@ interface UserPageProps {
 
 export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner = false }) => {
   const router = useRouter();
+  const [currentTab, setCurrentTab] = useState(0);
 
   return (
     <>
       <UserBannerImage imgSrc={userInfo.bannerImage} isOwner={isOwner} />
       <div className="flex flex-col mx-auto px-4 lg:px-32 translate-x-1 -mt-16">
         <UserProfileImage imgSrc={userInfo.profileImage} isOwner={isOwner} />
-        <h2 className="my-6 font-heading text-6xl">{userInfo.displayName || 'No Display Name'}</h2>
+        <h2 className="my-6 text-6xl font-body">{userInfo.displayName || 'No Display Name'}</h2>
         <div className="flex flex-wrap font-heading -ml-3 mb-8">
           <p className="leading-wide mx-4 font-bold">@{userInfo.username || 'no-username'}</p>
           {/* <UserWatchList userWatchList={[userInfo.address, userInfo.address]} /> */}
@@ -37,14 +39,23 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
                 </span>
               }
               onClick={() => {
-                router.push(`/account/settings`);
+                router.push(`/profile/settings`);
               }}
             />
           )}
           <UserProfileShare userAddress={userInfo.address} />
         </div>
-        <p className="text-theme-light-800 mt-8 ml-1 max-w-md">{userInfo.bio || '---'}</p>
-        <UserProfileTab />
+        {userInfo.bio && <p className="text-theme-light-800 mt-8 ml-1 max-w-md">{userInfo.bio || ''}</p>}
+
+        <RoundedNav
+          items={[{ title: 'Collected' }, { title: 'Activity' }]}
+          onChange={(currentTab) => setCurrentTab(currentTab)}
+          className="mt-14 -ml-2"
+        />
+        <div className="mt-6 min-h-[1024px]">
+          {currentTab === 0 && <UserPageNftsTab />}
+          {currentTab === 1 && <UserPageActivityTab />}
+        </div>
       </div>
     </>
   );

@@ -1,6 +1,6 @@
 import { FunctionComponent } from 'react';
-import { AccountSettingsPage } from 'src/components/user/account-settings';
-import { Layout } from 'src/components/common';
+import { AccountSettingsPage } from 'src/components/user/profile-settings';
+import { PageBox } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { UserProfileDto } from 'src/components/user/user-profile-dto';
 import { useFetch } from 'src/utils';
@@ -11,19 +11,19 @@ const AccountSettings: FunctionComponent = () => {
   const { user, chainId } = useAppContext();
 
   if (!user) {
-    return <Layout title="Account Settings"></Layout>;
+    return <PageBox title="Account Settings"></PageBox>;
   }
 
   const { result, isLoading } = useFetch(`${USER_API_END_POINT}/${user.address}`);
 
   if (isLoading) {
-    return <Layout title="Loading..."></Layout>;
+    return <PageBox title="Loading..."></PageBox>;
   }
 
   return (
-    <Layout title="Account" className="pb-8">
+    <PageBox title="Account" className="pb-8">
       <AccountSettingsPage user={user} chainId={chainId} userInfo={result as UserProfileDto} />
-    </Layout>
+    </PageBox>
   );
 };
 

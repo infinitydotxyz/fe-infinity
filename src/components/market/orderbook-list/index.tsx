@@ -4,7 +4,7 @@ import { useOrderPager } from '../useOrderPager';
 import { OrderbookRow } from './orderbook_row';
 
 export const OrderbookList = (): JSX.Element => {
-  const { orders, fetchMore, isLoading } = useOrderPager(4);
+  const { orders, fetchMore, isLoading } = useOrderPager();
 
   return (
     <>
