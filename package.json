@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "npm run update:lib && next dev",
     "build": "npm install && npm run update:lib && rimraf ./build && cross-env next build",
-    "start": "next start -p 8080",
+    "start": "next start",
     "lint": "eslint . --fix",
     "format": "prettier --write {src,pages}/**/{**,}/*.{tsx,ts}",
     "update:lib": "npm update @infinityxyz/lib",

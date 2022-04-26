@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react';
 import { IoMdInformationCircleOutline } from 'react-icons/io';
+import { twMerge } from 'tailwind-merge';
 import { smallIconButtonStyle } from '../market/order-drawer/ui-constants';
 
 export interface TooltipSpec {
@@ -56,13 +57,13 @@ interface Props4 {
   show: boolean;
   tooltip?: TooltipSpec;
   children: ReactNode;
+  className?: string;
 }
 
-export const TooltipWrapper = ({ children, show, tooltip }: Props4) => {
+export const TooltipWrapper = ({ children, show, tooltip, className }: Props4) => {
   return (
-    <div className="relative">
+    <div className={twMerge('relative', className)}>
       {children}
-
       {tooltip && show && <TooltipContent tooltip={tooltip} />}
     </div>
   );
