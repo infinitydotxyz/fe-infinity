@@ -17,7 +17,7 @@ import { Dialog, Disclosure, Transition } from '@headlessui/react';
   ======================================
 */
 
-export type Content = {
+export type IContent = {
   open?: boolean;
   close(focusableElement?: HTMLElement | React.MutableRefObject<HTMLElement | null>): void;
 };
@@ -25,7 +25,7 @@ export type Content = {
 interface Props {
   children?: React.ReactNode;
   interactive?: boolean;
-  content?: ({ open, close }: Content) => React.ReactNode;
+  content?: ({ open, close }: IContent) => React.ReactNode;
   styles?: {
     overlay?: {
       transition?: {
@@ -73,7 +73,7 @@ export function Modal({ children, interactive, content, ...props }: Props): JSX.
       },
       element: {
         className:
-          'w-full h-full overflow-hidden fixed top-0 glass ring-black ring-inset ring-opacity-20 bg-black bg-opacity-20',
+          'z-[60] w-full h-full overflow-hidden fixed top-0 glass ring-black ring-inset ring-opacity-20 bg-black bg-opacity-20',
         ...props?.styles?.overlay?.element
       }
     },
@@ -89,7 +89,7 @@ export function Modal({ children, interactive, content, ...props }: Props): JSX.
         ...props?.styles?.content?.transition
       }),
       element: {
-        className: 'w-full h-full overflow-hidden fixed top-0 grid place-items-center',
+        className: 'z-[60] w-full h-full overflow-hidden fixed top-0 grid place-items-center',
         ...props?.styles?.content?.element
       }
     }
@@ -131,5 +131,3 @@ export function Modal({ children, interactive, content, ...props }: Props): JSX.
     </>
   );
 }
-
-export default Modal;

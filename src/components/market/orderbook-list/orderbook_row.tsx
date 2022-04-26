@@ -1,11 +1,11 @@
-import { OBOrderSpec } from '@infinityxyz/lib/types/core';
+import { OBOrder } from '@infinityxyz/lib/types/core';
 import { EthPrice } from 'src/components/common/eth-price';
 import { numStr, shortDate } from 'src/utils';
 import { DataColumn, defaultDataColumns } from './data-columns';
 import { OrderbookItem } from './orderbook_item';
 
 type Props3 = {
-  order: OBOrderSpec;
+  order: OBOrder;
 };
 
 export const OrderbookRow = ({ order }: Props3): JSX.Element => {
@@ -19,13 +19,13 @@ export const OrderbookRow = ({ order }: Props3): JSX.Element => {
         value = order.isSellOrder ? 'Sell' : 'Buy';
         break;
       case 'minSalePrice':
-        value = order.startPrice.toString();
+        value = order.startPriceEth.toString();
         break;
       case 'numNFTs':
         value = numStr(order.numItems.toString());
         break;
       case 'expirationDate':
-        value = shortDate(new Date(parseInt(order.endTime.toString()) * 1000));
+        value = shortDate(new Date(order.endTimeMs));
         break;
     }
 

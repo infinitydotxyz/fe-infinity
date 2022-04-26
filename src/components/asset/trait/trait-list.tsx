@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { Erc721Attribute, CollectionAttributes } from '@infinityxyz/lib/types/core';
-import Trait from './trait';
+import { Trait } from './trait';
 
 interface TraitListProps {
   traits: Erc721Attribute[];

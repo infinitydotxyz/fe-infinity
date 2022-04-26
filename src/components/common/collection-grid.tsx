@@ -30,15 +30,13 @@ const fetchCollections = async (query: string, cursor: undefined | string) => {
     }
   });
 
-  console.log(query);
-  console.log(response);
   return response;
 };
 
 interface Props {
   query: string;
   className?: string;
-  onClick: (collection: CollectionSearchDto) => void;
+  onClick?: (collection: CollectionSearchDto) => void;
 }
 
 export const CollectionGrid = ({ query, className, onClick }: Props) => {

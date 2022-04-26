@@ -2,10 +2,9 @@ import { FunctionComponent } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { Button, ShortAddress, ReadMoreText } from 'src/components/common';
+import { Button, ShortAddress, PageBox, ReadMoreText } from 'src/components/common';
 import { BLANK_IMAGE_URL, useFetch } from 'src/utils';
 import { Token, Collection } from '@infinityxyz/lib/types/core';
-import { Layout } from 'src/components/common/layout';
 import {
   TraitList,
   ActivityList,
@@ -39,32 +38,32 @@ const AssetDetail: FunctionComponent = () => {
 
   if (typeof query.chainId !== 'string' || typeof query.collection !== 'string' || typeof query.tokenId !== 'string') {
     return (
-      <Layout title="Asset Detail - Error" padded>
+      <PageBox title="Asset Detail - Error">
         <div className="flex flex-col max-w-screen-2xl mt-4">
           <main>
             <p>Error: Invalid page parameters.</p>
           </main>
         </div>
-      </Layout>
+      </PageBox>
     );
   }
 
   const { isLoading, error, token, collection } = useFetchAssertInfo(query.chainId, query.collection, query.tokenId);
 
   if (isLoading) {
-    return <Layout title="Loading..."></Layout>;
+    return <PageBox title="Loading..."></PageBox>;
   }
 
   if (error || !token || !collection) {
     console.error(error);
     return (
-      <Layout title="Asset Detail - Error" className="w-full h-full grid place-items-center">
+      <PageBox title="Asset Detail - Error" className="w-full h-full grid place-items-center">
         <div className="flex flex-col max-w-screen-2xl mt-4">
           <main>
             <p>Error: Fetching Data Failed.</p>
           </main>
         </div>
-      </Layout>
+      </PageBox>
     );
   }
 
@@ -73,7 +72,7 @@ const AssetDetail: FunctionComponent = () => {
       ? `${token.metadata.name} - ${collection.metadata.name}`
       : token.metadata.name || collection.metadata.name || 'No Name';
   return (
-    <Layout title={assetName} padded>
+    <PageBox title={assetName}>
       <div className="flex flex-col max-w-screen-2xl mt-4">
         <main>
           <div className="sm:flex">
@@ -109,15 +108,19 @@ const AssetDetail: FunctionComponent = () => {
               <ShortAddress
                 label="Contact address:"
                 address={collection.address}
-                href={`/collection/${collection.address}`}
+                href={`https://etherscan.io/address/${collection.address}`}
+                target="_blank"
                 tooltip={collection.address}
               />
-              <ShortAddress
+              <span className="text-body text-base">
+                Token ID:<span className="ml-4">{token.tokenId}</span>
+              </span>
+              {/* <ShortAddress
                 label="Token ID:"
                 address={token.tokenId}
-                href={`/asset/${token.chainId}/${collection.address}/${token.tokenId}`}
+                href={`https://etherscan.io/token/${collection.address}?a=${token.tokenId}`}
                 tooltip={token.tokenId}
-              />
+              /> */}
               <div className="md:-ml-1.5">
                 <div className="flex flex-col md:flex-row gap-2 my-4 md:my-6 lg:my-10 lg:mb-16">
                   <Button variant="primary" size="large" className="p-4 rounded-full">
@@ -155,7 +158,7 @@ const AssetDetail: FunctionComponent = () => {
           <PlaceBidModal />
         </main>
       </div>
-    </Layout>
+    </PageBox>
   );
 };
 

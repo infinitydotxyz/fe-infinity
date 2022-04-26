@@ -4,7 +4,7 @@ import { ReactElement } from 'react';
 import { BiCaretDown } from 'react-icons/bi';
 import { twMerge } from 'tailwind-merge';
 
-type DropdownItems = {
+export type DropdownItems = {
   label: string | ReactElement;
   onClick: () => void;
 };
@@ -13,10 +13,11 @@ interface DropdownProps {
   label?: string | ReactElement;
   items: DropdownItems[];
   toggler?: ReactElement; // custom toggler element.
+  contentClassName?: string; // className for the dropdown content panel.
   className?: string;
 }
 
-export function Dropdown({ label, items, toggler, className }: DropdownProps) {
+export function Dropdown({ label, items, toggler, contentClassName, className }: DropdownProps) {
   return (
     <div className={twMerge(`relative inline-block text-left ${className ?? ''}`)}>
       <Menu>
@@ -38,7 +39,13 @@ export function Dropdown({ label, items, toggler, className }: DropdownProps) {
           </span>
         )}
 
-        <Menu.Items className="absolute mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md border border-gray-200 bg-white shadow-lg outline-none">
+        <Menu.Items
+          className={twMerge(
+            `absolute mt-2 p-4 w-72 origin-top-right divide-y divide-gray-100 rounded-3xl border border-gray-200 bg-white shadow-2xl outline-none ${
+              contentClassName ?? ''
+            }`
+          )}
+        >
           <div className="py-1">
             {items.map((item, idx) => {
               return (
@@ -65,7 +72,7 @@ function CustomMenuItem(props: CustomMenuItemProps) {
         <a
           href="#"
           className={classNames(
-            'flex w-full justify-between px-4 py-2 text-left text-sm leading-5 font-heading ',
+            'flex w-full justify-between px-4 py-4 text-left leading-5 font-heading ',
             active ? 'bg-black text-white' : 'text-gray-700',
             disabled && 'cursor-not-allowed opacity-50'
           )}

@@ -1,15 +1,15 @@
-import { OBOrderSpec } from '@infinityxyz/lib/types/core';
+import { OBOrder } from '@infinityxyz/lib/types/core';
 import { Button } from 'src/components/common';
 import { useOrderPager } from '../useOrderPager';
 import { OrderbookRow } from './orderbook_row';
 
 export const OrderbookList = (): JSX.Element => {
-  const { orders, fetchMore, isLoading } = useOrderPager(4);
+  const { orders, fetchMore, isLoading } = useOrderPager();
 
   return (
     <>
       <div className={'flex flex-col items-start'}>
-        {orders.map((order: OBOrderSpec) => {
+        {orders.map((order: OBOrder) => {
           return <OrderbookRow key={order.id} order={order} />;
         })}
 

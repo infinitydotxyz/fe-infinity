@@ -1,0 +1,30 @@
+import { FunctionComponent } from 'react';
+import { AccountSettingsPage } from 'src/components/user/profile-settings';
+import { PageBox } from 'src/components/common';
+import { useAppContext } from 'src/utils/context/AppContext';
+import { UserProfileDto } from 'src/components/user/user-profile-dto';
+import { useFetch } from 'src/utils';
+
+const USER_API_END_POINT = '/user';
+
+const AccountSettings: FunctionComponent = () => {
+  const { user, chainId } = useAppContext();
+
+  if (!user) {
+    return <PageBox title="Account Settings"></PageBox>;
+  }
+
+  const { result, isLoading } = useFetch(`${USER_API_END_POINT}/${user.address}`);
+
+  if (isLoading) {
+    return <PageBox title="Loading..."></PageBox>;
+  }
+
+  return (
+    <PageBox title="Account" className="pb-8">
+      <AccountSettingsPage user={user} chainId={chainId} userInfo={result as UserProfileDto} />
+    </PageBox>
+  );
+};
+
+export default AccountSettings;

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { apiGet } from 'src/utils/apiUtils';
 import { ITEMS_PER_PAGE } from 'src/utils/constants';
 import { useFilterContext } from 'src/utils/context/FilterContext';
-import { Button, Card, FetchMore, Spinner } from 'src/components/common';
+import { Button, Card, CardProps, FetchMore, Spinner } from 'src/components/common';
 import { FilterPanel } from '../filter/filter-panel';
 import { GallerySort } from './gallery-sort';
 
@@ -24,10 +24,11 @@ import { GallerySort } from './gallery-sort';
 
 interface GalleryProps {
   collection: BaseCollection | null;
-  onClick: (data: CardData) => void;
+  cardProps?: CardProps;
+  getEndpoint?: string;
 }
 
-export function GalleryBox({ collection, onClick }: GalleryProps) {
+export function GalleryBox({ collection, cardProps, getEndpoint }: GalleryProps) {
   const { filterState } = useFilterContext();
 
   const [filterShowed, setFilterShowed] = useState(true);
@@ -48,7 +49,7 @@ export function GalleryBox({ collection, onClick }: GalleryProps) {
       filterState.orderBy = 'rarityRank'; // set defaults
       filterState.orderDirection = 'asc';
     }
-    const { result } = await apiGet(`/collections/${collection?.chainId}:${collection?.address}/nfts`, {
+    const { result } = await apiGet(getEndpoint ?? `/collections/${collection?.chainId}:${collection?.address}/nfts`, {
       query: {
         offset,
         limit: ITEMS_PER_PAGE,
@@ -60,7 +61,8 @@ export function GalleryBox({ collection, onClick }: GalleryProps) {
       return {
         id: collection?.address + '_' + item.tokenId,
         title: collection?.metadata?.name,
-        image: item.image.url,
+        // eslint-disable-next-line
+        image: (item.metadata as any).image_url ?? item.image.url, // TODO: remove any after having proper data.
         price: 0,
         chainId: item.chainId,
         tokenAddress: collection?.address,
@@ -97,19 +99,21 @@ export function GalleryBox({ collection, onClick }: GalleryProps) {
         </div>
       )}
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-x-12 gap-y-20 mt-[-70px]">
-        <header className="sm:col-span-2 lg:col-span-3 xl:col-span-3 text-right mb-[-40px]">
-          <Button
-            variant="outline"
-            onClick={() => {
-              setFilterShowed((flag) => !flag);
-            }}
-            className="py-2.5 mr-2 font-heading"
-          >
-            {filterShowed ? 'Hide' : 'Show'} filter
-          </Button>
-          <GallerySort />
-        </header>
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-12 gap-y-20 mt-[-70px]">
+        {data.length > 0 && (
+          <header className="sm:col-span-2 lg:col-span-3 xl:col-span-4 text-right mb-[-40px]">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setFilterShowed((flag) => !flag);
+              }}
+              className="py-2.5 mr-2 font-heading"
+            >
+              {filterShowed ? 'Hide' : 'Show'} filter
+            </Button>
+            <GallerySort />
+          </header>
+        )}
 
         {isFetching && (
           <div className="w-full">
@@ -118,7 +122,7 @@ export function GalleryBox({ collection, onClick }: GalleryProps) {
         )}
 
         {data.map((item, idx) => {
-          return <Card key={idx} data={item} className="" onClick={() => onClick(item)} />;
+          return <Card key={idx} data={item} {...cardProps} />;
         })}
 
         {dataLoaded && (

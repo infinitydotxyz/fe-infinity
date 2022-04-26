@@ -10,10 +10,10 @@ import {
   SimpleTableItem,
   Toggle,
   ToggleTab,
-  useToggleTab
+  useToggleTab,
+  PageBox,
+  Card
 } from 'src/components/common';
-import { Layout } from 'src/components/common/layout';
-import { Card } from 'src/components/common/card';
 import { Chip } from 'src/components/common/chip';
 import { ComboBox, ComboBoxBaseType } from 'src/components/common/combo-box';
 import { RoundedNav } from 'src/components/common/rounded-nav';
@@ -36,10 +36,7 @@ const SandboxPage: FC = () => {
   tableItems.push({ title: 'Budget', value: <div className="font-bold">3 Eth</div> });
 
   return (
-    <Layout title="SandBox" padded className="py-8">
-      <div>
-        <h1 className="text-start font-body font-bold text-3xl tracking-tight">Sandbox</h1>
-      </div>
+    <PageBox title="SandBox">
       <div className="w-full">
         <SBHeader># Text</SBHeader>
         <div>
@@ -97,8 +94,28 @@ const SandboxPage: FC = () => {
 
         <SBHeader># Card - WIP</SBHeader>
         <div className="flex flex-row space-x-4">
-          <Card data={testData.cardTestData[0]} onClick={() => console.log('click')} isSellCard={false} />
-          <Card data={testData.cardTestData[1]} onClick={() => console.log('click')} isSellCard={false} />
+          <Card
+            data={testData.cardTestData[0]}
+            cardActions={[
+              {
+                label: 'Details',
+                onClick: console.log
+              }
+            ]}
+            dropdownActions={[
+              { label: 'Dropdown Action 1', onClick: console.log },
+              { label: 'Dropdown Action 2', onClick: console.log }
+            ]}
+          />
+          <Card
+            data={testData.cardTestData[1]}
+            cardActions={[
+              {
+                label: 'Details',
+                onClick: console.log
+              }
+            ]}
+          />
         </div>
 
         <SBHeader># CurrencyInput</SBHeader>
@@ -146,7 +163,7 @@ const SandboxPage: FC = () => {
           <Toaster />
         </div>
       </div>
-    </Layout>
+    </PageBox>
   );
 };
 

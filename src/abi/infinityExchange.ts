@@ -15,6 +15,11 @@ export const infinityExchangeAbi = [
         internalType: 'address',
         name: '_WETH',
         type: 'address'
+      },
+      {
+        internalType: 'address',
+        name: '_matchExecutor',
+        type: 'address'
       }
     ],
     stateMutability: 'nonpayable',
@@ -24,7 +29,7 @@ export const infinityExchangeAbi = [
     anonymous: false,
     inputs: [
       {
-        indexed: true,
+        indexed: false,
         internalType: 'address',
         name: 'user',
         type: 'address'
@@ -43,7 +48,7 @@ export const infinityExchangeAbi = [
     anonymous: false,
     inputs: [
       {
-        indexed: true,
+        indexed: false,
         internalType: 'address',
         name: 'user',
         type: 'address'
@@ -62,7 +67,7 @@ export const infinityExchangeAbi = [
     anonymous: false,
     inputs: [
       {
-        indexed: true,
+        indexed: false,
         internalType: 'address',
         name: 'complicationRegistry',
         type: 'address'
@@ -75,7 +80,7 @@ export const infinityExchangeAbi = [
     anonymous: false,
     inputs: [
       {
-        indexed: true,
+        indexed: false,
         internalType: 'address',
         name: 'currencyRegistry',
         type: 'address'
@@ -88,26 +93,39 @@ export const infinityExchangeAbi = [
     anonymous: false,
     inputs: [
       {
-        indexed: true,
+        indexed: false,
         internalType: 'address',
-        name: 'infinityFeeDistributor',
+        name: 'infinityFeeTreasury',
         type: 'address'
       }
     ],
-    name: 'NewInfinityFeeDistributor',
+    name: 'NewInfinityFeeTreasury',
     type: 'event'
   },
   {
     anonymous: false,
     inputs: [
       {
-        indexed: true,
+        indexed: false,
         internalType: 'address',
-        name: 'nftTransferSelector',
+        name: 'infinityTradingRewards',
         type: 'address'
       }
     ],
-    name: 'NewNFTTransferSelector',
+    name: 'NewInfinityTradingRewards',
+    type: 'event'
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'matchExecutor',
+        type: 'address'
+      }
+    ],
+    name: 'NewMatchExecutor',
     type: 'event'
   },
   {
@@ -157,14 +175,26 @@ export const infinityExchangeAbi = [
             type: 'address'
           },
           {
-            internalType: 'uint256[]',
-            name: 'tokenIds',
-            type: 'uint256[]'
+            components: [
+              {
+                internalType: 'uint256',
+                name: 'tokenId',
+                type: 'uint256'
+              },
+              {
+                internalType: 'uint256',
+                name: 'numTokens',
+                type: 'uint256'
+              }
+            ],
+            internalType: 'struct OrderTypes.TokenInfo[]',
+            name: 'tokens',
+            type: 'tuple[]'
           }
         ],
         indexed: false,
-        internalType: 'struct OrderTypes.Item[]',
-        name: 'items',
+        internalType: 'struct OrderTypes.OrderItem[]',
+        name: 'nfts',
         type: 'tuple[]'
       },
       {
@@ -225,6 +255,53 @@ export const infinityExchangeAbi = [
   {
     inputs: [
       {
+        internalType: 'address',
+        name: 'from',
+        type: 'address'
+      },
+      {
+        internalType: 'address',
+        name: 'to',
+        type: 'address'
+      },
+      {
+        components: [
+          {
+            internalType: 'address',
+            name: 'collection',
+            type: 'address'
+          },
+          {
+            components: [
+              {
+                internalType: 'uint256',
+                name: 'tokenId',
+                type: 'uint256'
+              },
+              {
+                internalType: 'uint256',
+                name: 'numTokens',
+                type: 'uint256'
+              }
+            ],
+            internalType: 'struct OrderTypes.TokenInfo[]',
+            name: 'tokens',
+            type: 'tuple[]'
+          }
+        ],
+        internalType: 'struct OrderTypes.OrderItem[]',
+        name: 'items',
+        type: 'tuple[]'
+      }
+    ],
+    name: 'batchTransferNFTs',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
         internalType: 'uint256',
         name: 'minNonce',
         type: 'uint256'
@@ -276,10 +353,23 @@ export const infinityExchangeAbi = [
   },
   {
     inputs: [],
-    name: 'infinityFeeDistributor',
+    name: 'infinityFeeTreasury',
     outputs: [
       {
-        internalType: 'contract IInfinityFeeDistributor',
+        internalType: 'contract IInfinityFeeTreasury',
+        name: '',
+        type: 'address'
+      }
+    ],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    inputs: [],
+    name: 'infinityTradingRewards',
+    outputs: [
+      {
+        internalType: 'contract IInfinityTradingRewards',
         name: '',
         type: 'address'
       }
@@ -326,11 +416,6 @@ export const infinityExchangeAbi = [
             type: 'address'
           },
           {
-            internalType: 'bytes32',
-            name: 'dataHash',
-            type: 'bytes32'
-          },
-          {
             internalType: 'uint256[]',
             name: 'constraints',
             type: 'uint256[]'
@@ -343,12 +428,24 @@ export const infinityExchangeAbi = [
                 type: 'address'
               },
               {
-                internalType: 'uint256[]',
-                name: 'tokenIds',
-                type: 'uint256[]'
+                components: [
+                  {
+                    internalType: 'uint256',
+                    name: 'tokenId',
+                    type: 'uint256'
+                  },
+                  {
+                    internalType: 'uint256',
+                    name: 'numTokens',
+                    type: 'uint256'
+                  }
+                ],
+                internalType: 'struct OrderTypes.TokenInfo[]',
+                name: 'tokens',
+                type: 'tuple[]'
               }
             ],
-            internalType: 'struct OrderTypes.Item[]',
+            internalType: 'struct OrderTypes.OrderItem[]',
             name: 'nfts',
             type: 'tuple[]'
           },
@@ -385,11 +482,6 @@ export const infinityExchangeAbi = [
             type: 'address'
           },
           {
-            internalType: 'bytes32',
-            name: 'dataHash',
-            type: 'bytes32'
-          },
-          {
             internalType: 'uint256[]',
             name: 'constraints',
             type: 'uint256[]'
@@ -402,12 +494,24 @@ export const infinityExchangeAbi = [
                 type: 'address'
               },
               {
-                internalType: 'uint256[]',
-                name: 'tokenIds',
-                type: 'uint256[]'
+                components: [
+                  {
+                    internalType: 'uint256',
+                    name: 'tokenId',
+                    type: 'uint256'
+                  },
+                  {
+                    internalType: 'uint256',
+                    name: 'numTokens',
+                    type: 'uint256'
+                  }
+                ],
+                internalType: 'struct OrderTypes.TokenInfo[]',
+                name: 'tokens',
+                type: 'tuple[]'
               }
             ],
-            internalType: 'struct OrderTypes.Item[]',
+            internalType: 'struct OrderTypes.OrderItem[]',
             name: 'nfts',
             type: 'tuple[]'
           },
@@ -444,11 +548,6 @@ export const infinityExchangeAbi = [
             type: 'address'
           },
           {
-            internalType: 'bytes32',
-            name: 'dataHash',
-            type: 'bytes32'
-          },
-          {
             internalType: 'uint256[]',
             name: 'constraints',
             type: 'uint256[]'
@@ -461,12 +560,24 @@ export const infinityExchangeAbi = [
                 type: 'address'
               },
               {
-                internalType: 'uint256[]',
-                name: 'tokenIds',
-                type: 'uint256[]'
+                components: [
+                  {
+                    internalType: 'uint256',
+                    name: 'tokenId',
+                    type: 'uint256'
+                  },
+                  {
+                    internalType: 'uint256',
+                    name: 'numTokens',
+                    type: 'uint256'
+                  }
+                ],
+                internalType: 'struct OrderTypes.TokenInfo[]',
+                name: 'tokens',
+                type: 'tuple[]'
               }
             ],
-            internalType: 'struct OrderTypes.Item[]',
+            internalType: 'struct OrderTypes.OrderItem[]',
             name: 'nfts',
             type: 'tuple[]'
           },
@@ -489,24 +600,21 @@ export const infinityExchangeAbi = [
         internalType: 'struct OrderTypes.Order[]',
         name: 'constructs',
         type: 'tuple[]'
+      },
+      {
+        internalType: 'bool',
+        name: 'tradingRewards',
+        type: 'bool'
+      },
+      {
+        internalType: 'bool',
+        name: 'feeDiscountEnabled',
+        type: 'bool'
       }
     ],
     name: 'matchOrders',
     outputs: [],
     stateMutability: 'nonpayable',
-    type: 'function'
-  },
-  {
-    inputs: [],
-    name: 'nftTransferSelector',
-    outputs: [
-      {
-        internalType: 'contract INFTTransferSelector',
-        name: '',
-        type: 'address'
-      }
-    ],
-    stateMutability: 'view',
     type: 'function'
   },
   {
@@ -532,6 +640,42 @@ export const infinityExchangeAbi = [
   {
     inputs: [
       {
+        internalType: 'address',
+        name: 'destination',
+        type: 'address'
+      }
+    ],
+    name: 'rescueETH',
+    outputs: [],
+    stateMutability: 'payable',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'destination',
+        type: 'address'
+      },
+      {
+        internalType: 'address',
+        name: 'currency',
+        type: 'address'
+      },
+      {
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256'
+      }
+    ],
+    name: 'rescueTokens',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
         components: [
           {
             internalType: 'bool',
@@ -542,11 +686,6 @@ export const infinityExchangeAbi = [
             internalType: 'address',
             name: 'signer',
             type: 'address'
-          },
-          {
-            internalType: 'bytes32',
-            name: 'dataHash',
-            type: 'bytes32'
           },
           {
             internalType: 'uint256[]',
@@ -561,12 +700,24 @@ export const infinityExchangeAbi = [
                 type: 'address'
               },
               {
-                internalType: 'uint256[]',
-                name: 'tokenIds',
-                type: 'uint256[]'
+                components: [
+                  {
+                    internalType: 'uint256',
+                    name: 'tokenId',
+                    type: 'uint256'
+                  },
+                  {
+                    internalType: 'uint256',
+                    name: 'numTokens',
+                    type: 'uint256'
+                  }
+                ],
+                internalType: 'struct OrderTypes.TokenInfo[]',
+                name: 'tokens',
+                type: 'tuple[]'
               }
             ],
-            internalType: 'struct OrderTypes.Item[]',
+            internalType: 'struct OrderTypes.OrderItem[]',
             name: 'nfts',
             type: 'tuple[]'
           },
@@ -603,11 +754,6 @@ export const infinityExchangeAbi = [
             type: 'address'
           },
           {
-            internalType: 'bytes32',
-            name: 'dataHash',
-            type: 'bytes32'
-          },
-          {
             internalType: 'uint256[]',
             name: 'constraints',
             type: 'uint256[]'
@@ -620,12 +766,24 @@ export const infinityExchangeAbi = [
                 type: 'address'
               },
               {
-                internalType: 'uint256[]',
-                name: 'tokenIds',
-                type: 'uint256[]'
+                components: [
+                  {
+                    internalType: 'uint256',
+                    name: 'tokenId',
+                    type: 'uint256'
+                  },
+                  {
+                    internalType: 'uint256',
+                    name: 'numTokens',
+                    type: 'uint256'
+                  }
+                ],
+                internalType: 'struct OrderTypes.TokenInfo[]',
+                name: 'tokens',
+                type: 'tuple[]'
               }
             ],
-            internalType: 'struct OrderTypes.Item[]',
+            internalType: 'struct OrderTypes.OrderItem[]',
             name: 'nfts',
             type: 'tuple[]'
           },
@@ -648,6 +806,16 @@ export const infinityExchangeAbi = [
         internalType: 'struct OrderTypes.Order[]',
         name: 'takerOrders',
         type: 'tuple[]'
+      },
+      {
+        internalType: 'bool',
+        name: 'tradingRewards',
+        type: 'bool'
+      },
+      {
+        internalType: 'bool',
+        name: 'feeDiscountEnabled',
+        type: 'bool'
       }
     ],
     name: 'takeOrders',
@@ -698,11 +866,11 @@ export const infinityExchangeAbi = [
     inputs: [
       {
         internalType: 'address',
-        name: '_infinityFeeDistributor',
+        name: '_infinityFeeTreasury',
         type: 'address'
       }
     ],
-    name: 'updateInfinityFeeDistributor',
+    name: 'updateInfinityFeeTreasury',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function'
@@ -711,11 +879,24 @@ export const infinityExchangeAbi = [
     inputs: [
       {
         internalType: 'address',
-        name: '_nftTransferSelector',
+        name: '_infinityTradingRewards',
         type: 'address'
       }
     ],
-    name: 'updateNFTTransferSelector',
+    name: 'updateInfinityTradingRewards',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_matchExecutor',
+        type: 'address'
+      }
+    ],
+    name: 'updateMatchExecutor',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function'
@@ -754,11 +935,6 @@ export const infinityExchangeAbi = [
             type: 'address'
           },
           {
-            internalType: 'bytes32',
-            name: 'dataHash',
-            type: 'bytes32'
-          },
-          {
             internalType: 'uint256[]',
             name: 'constraints',
             type: 'uint256[]'
@@ -771,12 +947,24 @@ export const infinityExchangeAbi = [
                 type: 'address'
               },
               {
-                internalType: 'uint256[]',
-                name: 'tokenIds',
-                type: 'uint256[]'
+                components: [
+                  {
+                    internalType: 'uint256',
+                    name: 'tokenId',
+                    type: 'uint256'
+                  },
+                  {
+                    internalType: 'uint256',
+                    name: 'numTokens',
+                    type: 'uint256'
+                  }
+                ],
+                internalType: 'struct OrderTypes.TokenInfo[]',
+                name: 'tokens',
+                type: 'tuple[]'
               }
             ],
-            internalType: 'struct OrderTypes.Item[]',
+            internalType: 'struct OrderTypes.OrderItem[]',
             name: 'nfts',
             type: 'tuple[]'
           },

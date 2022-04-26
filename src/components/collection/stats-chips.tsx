@@ -8,7 +8,7 @@ import { HiOutlineExternalLink } from 'react-icons/hi';
 import { apiDelete, apiGet, apiPost } from 'src/utils';
 import { FollowingCollection, useAppContext } from 'src/utils/context/AppContext';
 import { Chip } from '../common';
-import { Toaster, toastError, toastSuccess } from '../common/toaster';
+import { Toaster, toastError } from '../common/toaster';
 import { VerificationModal } from './edit/modals';
 interface Props {
   collection: BaseCollection | null;
@@ -44,7 +44,7 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
       if (error) {
         toastError(error?.errorResponse?.message);
       } else {
-        toastSuccess('Unfollowed ' + collection?.metadata?.name);
+        // toastSuccess('Unfollowed ' + collection?.metadata?.name);
         setIsFollowing(false);
         fetchFollowingCollections();
       }
@@ -58,7 +58,7 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
       if (error) {
         toastError(error?.errorResponse?.message);
       } else {
-        toastSuccess('Followed ' + collection?.metadata?.name);
+        // toastSuccess('Followed ' + collection?.metadata?.name);
         setIsFollowing(true);
         fetchFollowingCollections();
       }
@@ -89,12 +89,12 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
     }
   };
 
-  const lastWeeklyStats = weeklyStatsData[weeklyStatsData.length - 1];
-  const twitterChangePct = `${Math.abs(lastWeeklyStats?.twitterFollowersPercentChange ?? 0)}`.slice(0, 4);
-  const discordChangePct = `${Math.abs(lastWeeklyStats?.discordFollowersPercentChange ?? 0)}`.slice(0, 4);
+  const firstWeeklyStats = weeklyStatsData[0];
+  const twitterChangePct = `${Math.abs(firstWeeklyStats?.twitterFollowersPercentChange ?? 0)}`.slice(0, 4);
+  const discordChangePct = `${Math.abs(firstWeeklyStats?.discordFollowersPercentChange ?? 0)}`.slice(0, 4);
 
   return (
-    <div className="flex flex-row space-x-1">
+    <div className="flex flex-row space-x-2">
       <VerificationModal isOpen={modalOpen} onSubmit={verifyOwnership} onClose={() => setModalOpen(false)} />
 
       <Chip
@@ -122,10 +122,10 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
           onClick={() => window.open(collection?.metadata?.links?.twitter)}
           content={
             <span className="flex items-center">
-              {lastWeeklyStats?.twitterFollowers?.toLocaleString() ?? '—'}
-              {lastWeeklyStats?.twitterFollowersPercentChange && twitterChangePct !== '0.00' ? (
+              {firstWeeklyStats?.twitterFollowers?.toLocaleString() ?? '—'}
+              {firstWeeklyStats?.twitterFollowersPercentChange && twitterChangePct !== '0.00' ? (
                 <>
-                  {(lastWeeklyStats?.twitterFollowersPercentChange ?? 0) < 0 ? (
+                  {(firstWeeklyStats?.twitterFollowersPercentChange ?? 0) < 0 ? (
                     <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
                       <FaCaretDown className="mr-1" /> {twitterChangePct}%
                     </span>
@@ -149,10 +149,10 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
           onClick={() => window.open(collection?.metadata?.links?.discord)}
           content={
             <span className="flex items-center">
-              {lastWeeklyStats?.discordFollowers?.toLocaleString() ?? '—'}
-              {lastWeeklyStats?.discordFollowersPercentChange && discordChangePct !== '0.00' ? (
+              {firstWeeklyStats?.discordFollowers?.toLocaleString() ?? '—'}
+              {firstWeeklyStats?.discordFollowersPercentChange && discordChangePct !== '0.00' ? (
                 <>
-                  {(lastWeeklyStats?.discordFollowersPercentChange ?? 0) < 0 ? (
+                  {(firstWeeklyStats?.discordFollowersPercentChange ?? 0) < 0 ? (
                     <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
                       <FaCaretDown className="mr-1" /> {discordChangePct}%
                     </span>

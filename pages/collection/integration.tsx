@@ -1,7 +1,7 @@
 import { CollectionMetadata } from '@infinityxyz/lib/types/core';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { Layout } from 'src/components/common';
+import { PageBox } from 'src/components/common';
 import { apiPut } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 
@@ -49,9 +49,5 @@ export default function DiscordIntegration() {
     })();
   }, [user, integrationType, collectionAddress]);
 
-  return (
-    <Layout title="Enable integration" padded>
-      {status}
-    </Layout>
-  );
+  return <PageBox title="Enable integration">{status}</PageBox>;
 }

@@ -22,12 +22,12 @@ export function ToggleTab({ options, onChange, selected, className = '' }: Toggl
     <div className={`flex ${className}`}>
       <div className="cursor-pointer flex gap-1 rounded-full items-center p-1 bg-gray-100">
         {options.map((option: string) => {
+          const activeCx = selected === option ? 'bg-black text-white' : '';
+
           return (
             <div
               key={option}
-              className={`flex items-center justify-center py-2 px-8 text-center text-xs whitespace-no-wrap rounded-full ${
-                selected === option ? 'bg-black text-white' : ''
-              }`}
+              className={`flex min-w-[130px] text-md items-center justify-center py-2.5 px-10 text-center whitespace-no-wrap font-medium rounded-full text-secondary ${activeCx}`}
               onClick={() => onChange(option)}
             >
               {option}

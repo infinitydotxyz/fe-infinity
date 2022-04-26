@@ -7,7 +7,6 @@ import { useState } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { TooltipSpec } from 'src/components/common/tool-tip';
 import { numStr } from 'src/utils';
-
 interface Props {
   open: boolean;
   onClose: () => void;
@@ -50,8 +49,8 @@ export function OrderDrawer({ open, onClose }: Props) {
       let totalNFTs = 0;
 
       for (const orderInCart of ordersInCart) {
-        totalEth = totalEth + parseFloat(orderInCart.order.endPrice.toString());
-        totalNFTs = totalNFTs + parseInt(orderInCart.order.numItems.toString());
+        totalEth = totalEth + orderInCart.orderSpec.endPriceEth;
+        totalNFTs = totalNFTs + orderInCart.orderSpec.numItems;
       }
 
       if (isSellOrderCart()) {
@@ -100,8 +99,8 @@ export function OrderDrawer({ open, onClose }: Props) {
     // ready to checkout, we have an order
     title = 'Cart';
     tooltip = { title: '(tooltip goes here)', content: '(tooltip goes here)' };
-    footer = buildFooter(() => {
-      if (executeOrder()) {
+    footer = buildFooter(async () => {
+      if (await executeOrder()) {
         setShowSuccessModal(true);
       }
     });

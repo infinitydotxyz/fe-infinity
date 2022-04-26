@@ -22,15 +22,17 @@ const classes = {
 };
 
 export interface Props {
-  onClick?: () => void;
+  onClick?: (ev: React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => void;
   children: ReactNode;
   variant?: keyof typeof classes.variant;
   size?: keyof typeof classes.size;
   disabled?: boolean;
   className?: string;
+  type?: 'submit' | 'button';
 }
 
 export function Button({
+  type = 'button',
   variant = 'primary',
   size = 'normal',
   disabled = false,
@@ -40,7 +42,7 @@ export function Button({
 }: Props): JSX.Element {
   return (
     <button
-      type="button"
+      type={type}
       disabled={disabled}
       className={`
       ${classes.base}
@@ -50,12 +52,14 @@ export function Button({
       ${className}
      `}
       onClick={(e) => {
-        // this allows a button to be in a clickable div
-        e.stopPropagation();
-        e.preventDefault();
+        if (type === 'button') {
+          // this allows a button to be in a clickable div
+          e.stopPropagation();
+          e.preventDefault();
 
-        if (onClick) {
-          onClick();
+          if (onClick) {
+            onClick(e);
+          }
         }
       }}
     >

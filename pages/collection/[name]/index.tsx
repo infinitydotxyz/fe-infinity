@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { BaseCollection, CollectionStats } from '@infinityxyz/lib/types/core';
-import { RoundedNav, Layout } from 'src/components/common';
+import { RoundedNav, PageBox } from 'src/components/common';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { useFetch } from 'src/utils/apiUtils';
 import { CollectionFeed } from 'src/components/feed/collection-feed';
@@ -38,7 +38,7 @@ export default function CollectionPage() {
   const firstDailyStats = dailyStats?.data[0];
 
   return (
-    <Layout title={collection?.metadata?.name ?? ''} padded>
+    <PageBox title={collection?.metadata?.name ?? ''}>
       <div className="flex flex-col mt-10">
         <span>
           <AvatarImage url={collection?.metadata.profileImage} className="mb-2" />
@@ -49,9 +49,13 @@ export default function CollectionPage() {
         </span>
         <main>
           <div className="text-secondary mt-6 mb-6 text-sm font-heading">
-            Created by{' '}
+            <span>Created by </span>
             <button onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection?.owner)}>
               {ellipsisAddress(collection?.owner ?? '')}
+            </button>
+            <span className="ml-12">Collection address </span>
+            <button onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection?.address)}>
+              {ellipsisAddress(collection?.address ?? '')}
             </button>
           </div>
 
@@ -101,7 +105,8 @@ export default function CollectionPage() {
           </table>
 
           <RoundedNav
-            items={[{ title: 'NFT' }, { title: 'Activity' }, { title: 'Community' }]}
+            // items={[{ title: 'NFT' }, { title: 'Activity' }, { title: 'Community' }]}
+            items={[{ title: 'NFT' }, { title: 'Activity' }]}
             onChange={(currentIndex) => setCurrentTab(currentIndex)}
             className="mt-12"
           />
@@ -110,12 +115,20 @@ export default function CollectionPage() {
             {currentTab === 0 && collection && (
               <GalleryBox
                 collection={collection}
-                onClick={(data) => {
-                  router.push(`/asset/${data.chainId}/${data.tokenAddress}/${data.tokenId}`);
+                cardProps={{
+                  cardActions: [
+                    {
+                      label: 'Details',
+                      onClick: (ev, data) => {
+                        router.push(`/asset/${data?.chainId}/${data?.tokenAddress}/${data?.tokenId}`);
+                      }
+                    }
+                  ]
                 }}
               />
             )}
-            {currentTab === 1 && <ActivityTab dailyStats={dailyStats} weeklyStats={weeklyStats} />}
+            {/* {currentTab === 1 && <ActivityTab dailyStats={dailyStats} weeklyStats={weeklyStats} />} */}
+            {currentTab === 1 && <ActivityTab />}
             {currentTab === 2 && (
               <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-16">
                 <div className="lg:col-span-1 xl:col-span-2">
@@ -128,6 +141,6 @@ export default function CollectionPage() {
           </div>
         </main>
       </div>
-    </Layout>
+    </PageBox>
   );
 }

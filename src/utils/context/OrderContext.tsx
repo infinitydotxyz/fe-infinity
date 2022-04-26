@@ -1,23 +1,39 @@
-import { OBOrderSpecNFT, OBOrderSpec } from '@infinityxyz/lib/types/core';
+import { OBOrderItem, OBOrder, SignedOBOrder } from '@infinityxyz/lib/types/core';
 import React, { ReactNode, useContext, useState } from 'react';
 import { useAppContext } from './AppContext';
-import { addBuy, addSell } from 'src/utils/marketUtils';
 import { secondsPerDay } from 'src/components/market/order-drawer/ui-constants';
+import { getOrderId, getSignedOBOrder } from '../exchange/orders';
+import { fetchMinBpsToSeller, fetchOrderNonce, postOrders } from '../marketUtils';
+import { getExchangeAddress, getOBComplicationAddress, getTxnCurrencyAddress, NULL_HASH } from '@infinityxyz/lib/utils';
 
 export interface OrderCartItem {
   isSellOrder: boolean;
-  imageUrl?: string;
+  tokenImage?: string;
   tokenName?: string;
-  tokenId?: number;
+  tokenId?: string;
   collectionName: string;
   collectionAddress: string;
-  profileImage?: string;
+  collectionImage?: string;
+  numTokens?: number;
+}
+
+export interface OBOrderSpec {
+  chainId: string;
+  isSellOrder: boolean;
+  numItems: number;
+  makerUsername: string;
+  makerAddress: string;
+  startPriceEth: number;
+  endPriceEth: number;
+  startTimeMs: number;
+  endTimeMs: number;
+  nfts: OBOrderItem[];
 }
 
 export interface OrderInCart {
   id: number;
   cartItems: OrderCartItem[];
-  order: OBOrderSpec;
+  orderSpec: OBOrderSpec;
 }
 
 const isCartItemEqual = (a: OrderCartItem, b: OrderCartItem): boolean => {
@@ -26,7 +42,7 @@ const isCartItemEqual = (a: OrderCartItem, b: OrderCartItem): boolean => {
     a.collectionName === b.collectionName &&
     a.collectionAddress === b.collectionAddress &&
     a.isSellOrder === b.isSellOrder &&
-    a.imageUrl === b.imageUrl
+    a.tokenImage === b.tokenImage
   );
 };
 
@@ -59,7 +75,7 @@ export type OrderContextType = {
 
   isSellOrderCart: () => boolean;
 
-  executeOrder: () => boolean;
+  executeOrder: () => Promise<boolean>;
 
   // drawer form
   price: number;
@@ -90,7 +106,7 @@ export function OrderContextProvider({ children }: Props) {
   const [numItems, setNumItems] = useState<number>(1);
 
   // for executing orders
-  const { showAppError, showAppMessage, user, providerManager, chainId } = useAppContext();
+  const { showAppError, user, providerManager, chainId } = useAppContext();
 
   const isOrderBuilderEmpty = (): boolean => {
     return cartItems.length === 0;
@@ -100,21 +116,23 @@ export function OrderContextProvider({ children }: Props) {
     return !isCartEmpty() && isOrderBuilderEmpty();
   };
 
-  const getItems = (): OBOrderSpecNFT[] => {
-    const items: OBOrderSpecNFT[] = [];
-
+  const getItems = (): OBOrderItem[] => {
+    const items: OBOrderItem[] = [];
     for (const cartItem of cartItems) {
       items.push({
         collectionAddress: cartItem.collectionAddress,
         collectionName: cartItem.collectionName,
-        profileImage: cartItem.profileImage ?? '',
+        collectionImage: cartItem.collectionImage ?? '',
         tokens:
           cartItem.tokenId !== undefined
             ? [
                 {
                   tokenId: cartItem.tokenId ?? 0,
                   tokenName: cartItem.tokenName ?? '',
-                  imageUrl: cartItem.imageUrl ?? ''
+                  tokenImage: cartItem.tokenImage ?? '',
+                  numTokens: cartItem.numTokens ?? 1,
+                  takerAddress: '', // takerAddress and username will be filled in the backend
+                  takerUsername: ''
                 }
               ]
             : []
@@ -150,58 +168,49 @@ export function OrderContextProvider({ children }: Props) {
       }
 
       setCartItems(orderInCart.cartItems);
-      setPrice(parseFloat(orderInCart.order.startPrice.toString()));
-      setExpirationDate(parseInt(orderInCart.order.endTime.toString()));
-      setNumItems(parseInt(orderInCart.order.numItems.toString()));
+      setPrice(orderInCart.orderSpec.startPriceEth);
+      setExpirationDate(orderInCart.orderSpec.endTimeMs);
+      setNumItems(orderInCart.orderSpec.numItems);
     }
   };
 
-  const addOrderToCart = () => {
+  const addOrderToCart = async () => {
     setIsEditingOrder(false);
+    if (!user || !user.address) {
+      console.error('user is null');
+      return;
+    }
 
-    // todo: put in missing values
-    const order: OBOrderSpec = {
-      id: '????',
-      chainId: parseInt(chainId),
-      isSellOrder: isSellOrderCart(),
-      signerAddress: user?.address ?? '????',
-      numItems,
-      startTime: Date.now(),
-      endTime: expirationDate,
-      startPrice: price,
-      endPrice: price,
-      nftsWithMetadata: getItems(),
-      makerAddress: user?.address ?? '????',
-      makerUsername: '',
-      takerAddress: '',
-      takerUsername: '',
-      ownerAddress: '',
-      ownerUsername: '',
-      nonce: 1,
-      minBpsToSeller: 9000,
-      execParams: {
-        currencyAddress: '',
-        complicationAddress: ''
-      },
-      extraParams: {
-        buyer: ''
-      },
-      nfts: [],
-      buyerAddress: '',
-      buyerUsername: '',
-      startPriceEth: 1,
-      endPriceEth: 1
-    };
+    try {
+      const nfts = getItems();
 
-    const orderInCart: OrderInCart = {
-      id: Math.random(),
-      order: order,
-      cartItems: cartItems
-    };
+      const orderSpec: OBOrderSpec = {
+        chainId: chainId,
+        isSellOrder: isSellOrderCart(),
+        makerAddress: user.address,
+        numItems,
+        startTimeMs: Date.now(),
+        endTimeMs: expirationDate,
+        startPriceEth: price,
+        endPriceEth: price,
+        nfts,
+        makerUsername: '' // todo: put in username
+      };
 
-    setOrdersInCart([...ordersInCart, orderInCart]);
+      const orderInCart: OrderInCart = {
+        id: Math.random(),
+        orderSpec: orderSpec,
+        cartItems: cartItems
+      };
 
-    setCartItems([]);
+      setOrdersInCart([...ordersInCart, orderInCart]);
+
+      setCartItems([]);
+    } catch (err) {
+      console.error(err);
+      showAppError('Failed constructing order');
+      return;
+    }
   };
 
   const isCartEmpty = (): boolean => {
@@ -216,7 +225,7 @@ export function OrderContextProvider({ children }: Props) {
   // the drawer can be in sell or buy mode depending on the items added
   const isSellOrderCart = (): boolean => {
     if (ordersInCart.length > 0) {
-      return ordersInCart[0].order.isSellOrder;
+      return ordersInCart[0].orderSpec.isSellOrder;
     }
 
     if (cartItems.length > 0) {
@@ -226,14 +235,80 @@ export function OrderContextProvider({ children }: Props) {
     return false;
   };
 
-  const executeOrder = (): boolean => {
+  const specToOBOrder = async (spec: OBOrderSpec): Promise<OBOrder | undefined> => {
+    if (!user || !user.address) {
+      console.error('user is null');
+      return;
+    }
+
+    try {
+      const orderNonce = await fetchOrderNonce(user.address);
+      const minBpsToSeller = await fetchMinBpsToSeller(chainId, spec.nfts);
+
+      const order: OBOrder = {
+        id: '',
+        chainId: spec.chainId,
+        isSellOrder: spec.isSellOrder,
+        makerAddress: spec.makerAddress,
+        numItems: spec.numItems,
+        startTimeMs: spec.startTimeMs,
+        endTimeMs: spec.endTimeMs,
+        startPriceEth: spec.startPriceEth,
+        endPriceEth: spec.endPriceEth,
+        nfts: spec.nfts,
+        makerUsername: spec.makerUsername,
+        nonce: orderNonce,
+        minBpsToSeller,
+        execParams: {
+          currencyAddress: getTxnCurrencyAddress(chainId),
+          complicationAddress: getOBComplicationAddress(chainId)
+        },
+        extraParams: {
+          buyer: ''
+        }
+      };
+
+      const orderId = getOrderId(chainId, getExchangeAddress(chainId), order);
+      if (orderId === NULL_HASH) {
+        console.error('orderId is null');
+        return;
+      } else {
+        order.id = orderId;
+      }
+
+      return order;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const executeOrder = async (): Promise<boolean> => {
+    if (!user) {
+      showAppError('You must be logged in to execute an order');
+      return false;
+    }
+    if (!providerManager) {
+      showAppError('Provider manager not found');
+      return false;
+    }
+    const signer = providerManager.getEthersProvider().getSigner();
     setOrderDrawerOpen(false);
 
-    if (isSellOrderCart()) {
-      executeSell();
-    } else {
-      executeBuy();
+    // sign orders
+    const signedOrders: SignedOBOrder[] = [];
+    for (const orderInCart of ordersInCart) {
+      const order = await specToOBOrder(orderInCart.orderSpec);
+
+      if (order) {
+        const signedOrder = await getSignedOBOrder(user, chainId, signer, order);
+        if (signedOrder) {
+          signedOrders.push(signedOrder);
+        }
+      }
     }
+
+    // post orders
+    await postOrders(user.address, signedOrders);
 
     _resetStateValues();
 
@@ -277,43 +352,6 @@ export function OrderContextProvider({ children }: Props) {
       }
 
       setCartItems(copy);
-    }
-  };
-
-  // ===============================================================
-
-  const executeBuy = async () => {
-    if (!user || !providerManager) {
-      console.error('no user or provider');
-      return;
-    }
-    if (ordersInCart.length > 0) {
-      for (const orderInCart of ordersInCart) {
-        // crashes
-        // const signer = providerManager.getEthersProvider().getSigner();
-        // await prepareOBOrder(user, chainId, signer, order);
-
-        const match = await addBuy(orderInCart.order);
-
-        if (match) {
-          showAppMessage('Buy successful');
-        } else {
-          showAppError('Buy submitted');
-        }
-      }
-    }
-  };
-
-  const executeSell = async () => {
-    if (ordersInCart.length > 0) {
-      for (const orderInCart of ordersInCart) {
-        const match = await addSell(orderInCart.order);
-        if (match) {
-          showAppMessage('sell successful.');
-        } else {
-          showAppMessage('sell submitted');
-        }
-      }
     }
   };
 

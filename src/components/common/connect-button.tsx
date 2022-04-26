@@ -55,9 +55,9 @@ export const ConnectButton: React.FC = () => {
       },
       item: {
         className: `
-          w-full h-full rounded-xl
+          w-full h-full rounded-xl font-heading
           flex flex-nowrap whitespace-nowrap hover:bg-theme-light-200 items-center gap-2
-          desktop:pl-2 desktop:pr-2 desktop:py-2
+          desktop:pl-2 desktop:pr-2 desktop:py-4
           tablet:pl-2 tablet:pr-2 tablet:py-2
           mobile:pl-2 mobile:pr-2 mobile:py-2
           desktop-8k:text-md
@@ -72,7 +72,7 @@ export const ConnectButton: React.FC = () => {
       button: {
         container: {
           className: `
-            transition w-full h-full rounded-full
+            transition w-full h-full min-h-[48px] rounded-full
             justify-self-end
             font-mono grid place-content-center
             ${
@@ -214,7 +214,7 @@ export const ConnectButton: React.FC = () => {
         <>
           <Link href="/connect" passHref>
             <div {...styles?.menu?.button?.container}>
-              <div {...styles?.menu?.button?.disconnected}>{content?.button}</div>
+              <button {...styles?.menu?.button?.disconnected}>{content?.button}</button>
             </div>
           </Link>
         </>
@@ -222,5 +222,3 @@ export const ConnectButton: React.FC = () => {
     </>
   );
 };
-
-export default ConnectButton;

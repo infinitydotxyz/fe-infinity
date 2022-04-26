@@ -1,71 +1,70 @@
+import { ReactNode } from 'react';
 import { CardData } from '@infinityxyz/lib/types/core';
 import { twMerge } from 'tailwind-merge';
 import { AiOutlineEye } from 'react-icons/ai';
-import { Dropdown } from './dropdown';
+import { Dropdown, DropdownItems } from './dropdown';
 import { Button } from './button';
 import Link from 'next/link';
 
-interface Props {
-  data: CardData;
-  onClick: (data: CardData) => void;
-  isSellCard?: boolean;
+type CardAction = {
+  label: string | ReactNode;
+  onClick: (ev: React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>, data?: CardData) => void;
+};
+
+export interface CardProps {
+  data?: CardData;
+  cardActions?: CardAction[];
+  dropdownActions?: DropdownItems[];
   className?: string;
 }
 
-export function Card({ data, onClick, isSellCard, className }: Props): JSX.Element {
-  const title = (data.title ?? '').length > 18 ? data.title?.slice(0, 18) + '...' : data.title;
-  const tokenId = (data.tokenId ?? '').length > 18 ? data.tokenId?.slice(0, 18) + '...' : data.tokenId;
+export function Card({ data, cardActions, dropdownActions, className }: CardProps): JSX.Element {
+  const title = (data?.title ?? '').length > 18 ? data?.title?.slice(0, 18) + '...' : data?.title;
+  const tokenId = (data?.tokenId ?? '').length > 18 ? data?.tokenId?.slice(0, 18) + '...' : data?.tokenId;
 
-  let buttonContents;
-  if (isSellCard) {
-    buttonContents = (
-      <>
-        <span className="font-medium">List</span>
-      </>
-    );
-  } else {
-    buttonContents = (
-      <>
-        {data.price ? (
-          <>
-            <span className="font-medium font-heading">Buy</span> {data.price} ETH
-          </>
-        ) : (
-          <a className="font-medium font-heading">Details</a>
-        )}
-      </>
-    );
-  }
+  const buttonJsx = (
+    <>
+      {(cardActions ?? []).map((cardAction, idx) => {
+        return (
+          <Button
+            key={idx}
+            variant="outline"
+            className="flex-1 py-3 font-medium"
+            onClick={(ev) => {
+              cardAction.onClick(ev, data);
+            }}
+          >
+            {cardAction.label}
+          </Button>
+        );
+      })}
+    </>
+  );
 
   return (
     <div className={twMerge(`sm:mx-0 ${className ?? ''}`)}>
-      <Link href={`/asset/${data.chainId}/${data.tokenAddress}/${data.tokenId}`} passHref={true}>
+      <Link href={`/asset/${data?.chainId}/${data?.tokenAddress}/${data?.tokenId}`} passHref={true}>
         <a>
-          <img className="rounded-2xl w-[290px] overflow-hidden" src={data.image ?? ''} alt="card" />
+          <img className="rounded-2xl w-[290px] overflow-hidden" src={data?.image ?? ''} alt="card" />
         </a>
       </Link>
       <div className="p-1 mt-3">
-        <div className="font-bold" title={data.title}>
+        <div className="font-bold" title={data?.title}>
           {title}
         </div>
-        <div className="text-secondary" title={data.tokenId}>
+        <div className="text-secondary" title={data?.tokenId}>
           {tokenId}
         </div>
       </div>
 
       <footer className="text-sm flex items-center justify-between mt-3">
-        <Button variant="outline" className="flex-1 py-3" onClick={() => onClick(data)}>
-          {buttonContents}
-        </Button>
-        <div className="border border-gray-300 rounded-3xl ml-1 pt-1 w-10 h-10 flex justify-center items-center text-lg">
-          <Dropdown
-            toggler={<AiOutlineEye className="w-10" />}
-            items={[
-              { label: 'Action 1', onClick: console.log },
-              { label: 'Action 2', onClick: console.log }
-            ]}
-          />
-        </div>
+        {buttonJsx}
+
+        {(dropdownActions ?? []).length > 0 ? (
+          <div className="border border-gray-300 rounded-3xl ml-1 pt-1 w-10 h-10 flex justify-center items-center text-lg">
+            <Dropdown toggler={<AiOutlineEye className="w-10" />} items={dropdownActions ?? []} />
+          </div>
+        ) : null}
       </footer>
     </div>
   );
