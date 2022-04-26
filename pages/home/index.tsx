@@ -12,7 +12,7 @@ export function HomePage() {
   console.log(name);
 
   return (
-    <PageBox title="Home" padded>
+    <PageBox title="Home">
       <div className="flex">
         <CollectionFeed header="Feed" className="md:w-2/3 sm:w-full" />
 

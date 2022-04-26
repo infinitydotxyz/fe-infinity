@@ -8,11 +8,11 @@ interface Props {
   children?: React.ReactNode;
   title: string;
   className?: string;
-  padded?: boolean;
+  fullWidth?: boolean;
   rightToolbar?: JSX.Element;
 }
 
-export function PageBox({ children, title, padded, className, rightToolbar }: Props): JSX.Element {
+export function PageBox({ children, title, fullWidth, className, rightToolbar }: Props): JSX.Element {
   const styles = {
     header: {
       title: title
@@ -36,7 +36,7 @@ export function PageBox({ children, title, padded, className, rightToolbar }: Pr
       container: {
         className: `
           transition ${
-            padded ? 'desktop:w-5/6 desktop-sm:w-[95%] tabloid:w-[95%] mobile:w-[98%]' : 'w-full'
+            fullWidth ? 'w-full' : 'desktop:w-5/6 desktop-sm:w-[95%] tabloid:w-[95%] mobile:w-[98%]'
           } h-content min-h-full
           row-span-1 col-span-24
         `

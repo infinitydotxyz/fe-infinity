@@ -490,10 +490,6 @@ export const Analytics = () => {
   };
 
   const styles = {
-    layout: {
-      title: 'Analytics',
-      padded: true
-    },
     container: {
       className: `
         w-full h-full
@@ -724,7 +720,7 @@ export const Analytics = () => {
 
   return (
     <>
-      <PageBox {...styles?.layout}>
+      <PageBox title="Analytics">
         <div {...styles?.container}>
           <div {...styles?.options?.container}>
             <Tab.Group {...styles?.options?.timeframes?.group}>

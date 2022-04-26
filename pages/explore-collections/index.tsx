@@ -21,7 +21,7 @@ const HomePage: FunctionComponent = () => {
   );
 
   return (
-    <PageBox title="All collections" padded>
+    <PageBox title="All collections">
       <input
         value={query}
         className="w-full border border-gray-500 focus:ring-0 py-2 my-2 pl-3 pr-10 text-lg leading-5 text-gray-900 "

@@ -37,7 +37,7 @@ export function CollectionPage() {
   const firstDailyStats = dailyStats?.data[0];
 
   return (
-    <PageBox title={collection?.metadata?.name ?? ''} padded>
+    <PageBox title={collection?.metadata?.name ?? ''}>
       <div className="flex flex-col mt-10">
         <span>
           <img src={collection?.metadata.profileImage} className="w-28 h-28 mb-2" />

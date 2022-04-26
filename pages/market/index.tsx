@@ -104,7 +104,6 @@ export default function MarketPage() {
   return (
     <PageBox
       title="Market"
-      padded={true}
       rightToolbar={
         <Button
           disabled={isOrderStateEmpty()}

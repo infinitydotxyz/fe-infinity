@@ -36,7 +36,7 @@ const SandboxPage: FC = () => {
   tableItems.push({ title: 'Budget', value: <div className="font-bold">3 Eth</div> });
 
   return (
-    <PageBox title="SandBox" padded className="py-8">
+    <PageBox title="SandBox">
       <div className="w-full">
         <SBHeader># Text</SBHeader>
         <div>
