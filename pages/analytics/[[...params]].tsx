@@ -255,7 +255,7 @@ export const Analytics = () => {
   }, [connected]);
 
   React.useEffect(() => {
-    router.push(
+    void router.push(
       {
         pathname: `/analytics/${page}/${interval}`
       },

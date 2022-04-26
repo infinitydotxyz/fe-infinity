@@ -51,7 +51,7 @@ const VotedStatus: FunctionComponent<VotedStatusProps> = ({ chainId, collectionA
         setVotesAgainst(votesAgainst - 1);
         break;
     }
-    apiPost(API_USER_COLLECTION_ADDR, { data: { votedFor: true } });
+    void apiPost(API_USER_COLLECTION_ADDR, { data: { votedFor: true } });
     setUserVote(VOTE_ACTION.VOTES_FOR);
   };
 

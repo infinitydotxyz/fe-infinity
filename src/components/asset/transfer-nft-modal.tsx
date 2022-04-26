@@ -24,7 +24,7 @@ export const TransferNFTModal: React.FC = () => {
             label="Address or ENSName"
             placeholder=""
             onChange={(value) => {
-              setAddress(value as string);
+              setAddress(value);
             }}
           />
           <div className="flex mt-12">

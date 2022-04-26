@@ -9,7 +9,7 @@ export const TestPage = () => {
       <div className="flex flex-col space-y-4 items-center">
         <Button
           onClick={() => {
-            router.push('/connect');
+            void router.push('/connect');
           }}
         >
           Connect
@@ -17,7 +17,7 @@ export const TestPage = () => {
 
         <Button
           onClick={() => {
-            router.push('/market');
+            void router.push('/market');
           }}
         >
           Market
@@ -25,7 +25,7 @@ export const TestPage = () => {
 
         <Button
           onClick={() => {
-            router.push('/collection/boredapeyachtclub');
+            void router.push('/collection/boredapeyachtclub');
           }}
         >
           Collection
@@ -33,7 +33,7 @@ export const TestPage = () => {
 
         <Button
           onClick={() => {
-            router.push('/home');
+            void router.push('/home');
           }}
         >
           Homepage Feed
@@ -41,7 +41,7 @@ export const TestPage = () => {
 
         <Button
           onClick={() => {
-            router.push('/analytics/trending/hourly');
+            void router.push('/analytics/trending/hourly');
           }}
         >
           Analytics
@@ -49,7 +49,7 @@ export const TestPage = () => {
 
         <Button
           onClick={() => {
-            router.push('/sandbox');
+            void router.push('/sandbox');
           }}
         >
           SandBox
@@ -57,7 +57,7 @@ export const TestPage = () => {
 
         <Button
           onClick={() => {
-            router.push('/profile');
+            void router.push('/profile');
           }}
         >
           Profile
@@ -65,7 +65,7 @@ export const TestPage = () => {
 
         <Button
           onClick={() => {
-            router.push('/asset/1/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/8880');
+            void router.push('/asset/1/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/8880');
           }}
         >
           Asset Detail
@@ -73,7 +73,7 @@ export const TestPage = () => {
 
         <Button
           onClick={() => {
-            router.push('/explore-collections');
+            void router.push('/explore-collections');
           }}
         >
           All Collections

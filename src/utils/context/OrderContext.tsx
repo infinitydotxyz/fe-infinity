@@ -174,7 +174,7 @@ export function OrderContextProvider({ children }: Props) {
     }
   };
 
-  const addOrderToCart = async () => {
+  const addOrderToCart = () => {
     setIsEditingOrder(false);
     if (!user || !user.address) {
       console.error('user is null');

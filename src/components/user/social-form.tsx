@@ -17,7 +17,7 @@ export const SocialForm = () => {
           label="Discord Username"
           placeholder=""
           onChange={(value) => {
-            setUserName(value as string);
+            setUserName(value);
           }}
         />
       </div>
@@ -29,7 +29,7 @@ export const SocialForm = () => {
           label="Twitter Username"
           placeholder=""
           onChange={(value) => {
-            setUserName(value as string);
+            setUserName(value);
           }}
         />
       </div>
@@ -41,7 +41,7 @@ export const SocialForm = () => {
           label="Telegram Username"
           placeholder=""
           onChange={(value) => {
-            setUserName(value as string);
+            setUserName(value);
           }}
         />
       </div>
@@ -53,7 +53,7 @@ export const SocialForm = () => {
           label="Facebook Username"
           placeholder=""
           onChange={(value) => {
-            setUserName(value as string);
+            setUserName(value);
           }}
         />
       </div>

@@ -12,8 +12,14 @@ module.exports = {
     {
       files: ['*.ts', '*.tsx'],
       parserOptions: {
-        project: ['./tsconfig.json']
+        project: ['./tsconfig.json'],
+        tsconfigRootDir: __dirname
       },
+      extends: [
+        // turn this on to see a shit load of errors
+        // 'plugin:@typescript-eslint/recommended',
+        // 'plugin:@typescript-eslint/recommended-requiring-type-checking'
+      ],
       rules: {
         '@typescript-eslint/switch-exhaustiveness-check': 'warn'
       }
@@ -34,7 +40,6 @@ module.exports = {
     'prettier/prettier': 'error',
     '@typescript-eslint/no-unused-vars': 'error',
     '@typescript-eslint/no-explicit-any': 'error',
-    '@typescript-eslint/no-var-requires': 'off',
     'node/no-unsupported-features/es-syntax': ['error', { ignores: ['modules'] }],
     'no-duplicate-imports': 'error',
 
@@ -44,7 +49,7 @@ module.exports = {
   },
   settings: {
     node: {
-      tryExtensions: ['.js', '.json', '.node', '.ts']
+      tryExtensions: ['.js', '.json', '.node', '.ts', '.d.ts']
     }
   },
   ignorePatterns: [
