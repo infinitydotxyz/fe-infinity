@@ -1,18 +1,6 @@
 import { ReactNode } from 'react';
 import { getAddress } from '@ethersproject/address';
-import { CardData } from '@infinityxyz/lib/types/core';
-import { NFT_DATA_SOURCES } from './constants';
-import { UnmarshalNFTAsset } from '@infinityxyz/lib/types/services/unmarshal';
-import { AlchemyUserAsset } from '@infinityxyz/lib/types/services/alchemy';
-import {
-  ETHEREUM_CHAIN_SCANNER_BASE,
-  ETHEREUM_NETWORK_NAME,
-  ETHEREUM_WETH_ADDRESS,
-  POLYGON_CHAIN_SCANNER_BASE,
-  POLYGON_NETWORK_NAME,
-  POLYGON_WETH_ADDRESS,
-  trimLowerCase
-} from '@infinityxyz/lib/utils';
+import { ETHEREUM_CHAIN_SCANNER_BASE, POLYGON_CHAIN_SCANNER_BASE, trimLowerCase } from '@infinityxyz/lib/utils';
 
 // OpenSea's EventType
 export enum EventType {
@@ -108,98 +96,6 @@ export const stringToFloat = (numStr?: string, defaultValue = 0) => {
   return num;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const transformOpenSea = (item: any, owner: string, chainId: string) => {
-  if (!item) {
-    return null;
-  }
-
-  return {
-    id: `${item?.asset_contract?.address}_${item?.token_id}`,
-    title: item.name,
-    description: item.description,
-    image: item.image_url,
-    imagePreview: item.image_preview_url,
-    tokenAddress: item.asset_contract.address,
-    tokenId: item.token_id,
-    collectionName: item.asset_contract.name,
-    owner: owner,
-    schemaName: item['asset_contract']['schema_name'],
-    chainId,
-    data: item
-  } as CardData;
-};
-
-export const transformUnmarshal = (item: UnmarshalNFTAsset, owner: string, chainId: string) => {
-  if (!item) {
-    return null;
-  }
-
-  let schemaName = '';
-  const nftType = item?.type;
-  if (nftType === '721') {
-    schemaName = 'ERC721';
-  } else if (nftType === '1155') {
-    schemaName = 'ERC1155';
-  }
-
-  const data = item;
-  data.traits = item?.nft_metadata;
-
-  return {
-    id: `${item?.asset_contract}_${item?.token_id}`,
-    title: item?.issuer_specific_data?.name,
-    description: item?.description,
-    image: item?.issuer_specific_data?.image_url,
-    imagePreview: item?.issuer_specific_data?.image_url,
-    tokenAddress: item?.asset_contract,
-    tokenId: item?.token_id,
-    collectionName: item?.issuer_specific_data?.name,
-    owner,
-    schemaName,
-    chainId,
-    data
-  } as CardData;
-};
-
-export const transformAlchemy = (item: AlchemyUserAsset, owner: string, chainId: string) => {
-  if (!item) {
-    return null;
-  }
-
-  let schemaName = '';
-  const nftType = item?.id?.tokenMetadata?.tokenType;
-  if (nftType?.trim().toLowerCase() === 'erc721') {
-    schemaName = 'ERC721';
-  } else if (nftType?.trim().toLowerCase() === 'erc1155') {
-    schemaName = 'ERC1155';
-  }
-
-  const data = item;
-  // data.traits = item?.metadata?.attributes;
-
-  let image = item?.metadata?.image;
-  // special case
-  if (image.startsWith('ipfs://')) {
-    image = item?.media[0]?.uri?.gateway;
-  }
-
-  return {
-    id: `${item?.contract?.address}_${item?.id?.tokenId}`,
-    title: item?.title,
-    description: item?.description,
-    image: image,
-    imagePreview: image,
-    tokenAddress: item?.contract?.address,
-    tokenId: item?.id?.tokenId,
-    collectionName: item?.title, // this should ideally be coll name; todo: adi handle this case
-    owner,
-    schemaName,
-    chainId,
-    data
-  } as CardData;
-};
-
 export const getCustomExceptionMsg = (msg: ReactNode) => {
   let customMsg = msg;
   if (typeof msg === 'string' && msg.indexOf('err: insufficient funds for gas * price + value') > 0) {
@@ -209,64 +105,6 @@ export const getCustomExceptionMsg = (msg: ReactNode) => {
     customMsg = 'MetaMask: User denied transaction signature';
   }
   return customMsg;
-};
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const getCustomMessage = (eventName: string, data: any) => {
-  const arr: string[] = [];
-  Object.keys(data).forEach((k: string) => {
-    if (typeof data[k] !== 'object') {
-      arr.push(`${k}: ${data[k]}`);
-    }
-  });
-  const defaultMsg = `${eventName}: ${arr.join(', ')}`;
-  let customMsg: JSX.Element | string | null = defaultMsg;
-
-  const createLink = (transactionHash: string) => (
-    <a
-      className="toast-link"
-      href={`${getChainScannerBase(data.chainId)}/tx/${transactionHash}`}
-      target="_blank"
-      rel="noreferrer"
-    >
-      {data?.transactionHash}
-    </a>
-  );
-
-  if (
-    eventName === EventType.MatchOrders ||
-    eventName === EventType.CreateOrder ||
-    eventName === EventType.CancelOrder ||
-    eventName === EventType.OrderDenied ||
-    eventName === EventType.TransactionDenied
-  ) {
-    // for these events, MetaMask pops up, no need to show messages.
-    return null;
-  }
-  // customize OpenSea messages:
-  if (eventName === EventType.TransactionCreated) {
-    customMsg = <span>Your transaction has been sent to chain: {createLink(data?.transactionHash)}</span>;
-  }
-  if (eventName === EventType.TransactionConfirmed) {
-    customMsg = 'Transaction confirmed';
-  }
-  if (eventName === EventType.TransactionFailed) {
-    customMsg = 'Transaction failed';
-  }
-  if (eventName === EventType.ApproveCurrency) {
-    customMsg = 'Approving currency for trading';
-  }
-  return customMsg;
-};
-
-// if items used their title as a key they ran the risk of having the same value
-// to fix this we can use a guid generator instead
-export const uuidv4 = () => {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-    const r = (Math.random() * 16) | 0;
-    const v = c === 'x' ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
 };
 
 // makes number strings from strings or numbers
@@ -310,62 +148,11 @@ export const numStr = (value: string | number): string => {
   return short;
 };
 
-// get search-friendly string, e.g. `/collections/${getSearchFriendlyString(collectionName)}`
-export const getSearchFriendlyString = (input: string): string => {
-  if (!input) {
-    return '';
-  }
-  // remove spaces, dashes and underscores only
-  const output = input.replace(/[\s-_]/g, '');
-  return output.toLowerCase();
-};
-
-export const getCanonicalWeth = (chain: string): { address: string; decimals: number } => {
-  if (!chain) {
-    return { address: '', decimals: 0 };
-  }
-  if (chain === ETHEREUM_NETWORK_NAME) {
-    return { address: ETHEREUM_WETH_ADDRESS, decimals: 18 };
-  } else if (chain === POLYGON_NETWORK_NAME) {
-    return { address: POLYGON_WETH_ADDRESS, decimals: 18 };
-  }
-  return { address: '', decimals: 0 };
-};
-
 export const getChainScannerBase = (chainId?: string): string | null => {
   if (chainId === '1') {
     return ETHEREUM_CHAIN_SCANNER_BASE;
   } else if (chainId === '137') {
     return POLYGON_CHAIN_SCANNER_BASE;
-  }
-  return null;
-};
-
-export const getNftDataSource = (chainId?: string): number => {
-  if (chainId === '1') {
-    return NFT_DATA_SOURCES.OPENSEA;
-  } else if (chainId === '137') {
-    return NFT_DATA_SOURCES.UNMARSHAL;
-  }
-  // default
-  return NFT_DATA_SOURCES.OPENSEA;
-};
-
-export const getPageOffsetForAssetQuery = (source: number, currentPage: number, itemsPerPage: number): number => {
-  if (source === NFT_DATA_SOURCES.OPENSEA) {
-    return currentPage * itemsPerPage;
-  } else if (source === NFT_DATA_SOURCES.UNMARSHAL) {
-    return currentPage;
-  }
-  // default
-  return currentPage;
-};
-
-// get search params from the current URL - example: getSearchParams('name')
-export const getSearchParam = (paramName: string) => {
-  if (typeof document !== 'undefined') {
-    const params = new URL(document.location.toString()).searchParams;
-    return params?.get(paramName);
   }
   return null;
 };
