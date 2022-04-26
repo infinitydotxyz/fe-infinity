@@ -81,10 +81,6 @@ export function CollectionPage() {
             </div>
           </div>
 
-          {/* <Button variant="outline" className="mt-6">
-            Claim Collection
-          </Button> */}
-
           <table className="mt-8 text-sm md:w-1/2">
             <thead>
               <tr className="text-gray-400">
@@ -127,7 +123,6 @@ export function CollectionPage() {
             {selected === '???' && (
               <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-16">
                 <div className="lg:col-span-1 xl:col-span-2">
-                  {/* <div className="text-3xl mb-6">Feed</div> */}
                   <CollectionFeed header="Feed" collectionAddress={collection?.address ?? ''} />
                 </div>
                 <div className="col-span-1">{collection && <CommunityRightPanel collection={collection} />}</div>

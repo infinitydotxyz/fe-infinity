@@ -59,16 +59,6 @@ export const Analytics = () => {
 
   const checkboxToggle = (id: string) => setFilterCheckboxes({ ...filterCheckboxes, [id]: !filterCheckboxes[id] });
 
-  /*
-    ======================================
-      Following code is required to fetch
-      data from BE and then convert it into
-      a format that's acceptable to this component.
-      Currently it looks kind of dirty, and should
-      be updated later to include different
-      filter parameters.
-    ======================================
-  */
   let statistics = null;
   const query =
     page === 'trending'
@@ -261,27 +251,10 @@ export const Analytics = () => {
   }
 
   React.useEffect(() => {
-    /*
-      ======================================
-        If user logs out when 'following' tab
-        is selected (or any other tab that is
-        to be shown only when user is connected),
-        we'll redirect user to trending page.
-        Resetting the date is important for query.
-      ======================================
-    */
     if (!connected) setPage('trending');
   }, [connected]);
 
   React.useEffect(() => {
-    /*
-      ======================================
-        Whenever page or time interval changes,
-        change the URL (so that component refreshes,
-        and data is refetched and cached...)
-        Resetting the date is important for the query.
-      ======================================
-    */
     router.push(
       {
         pathname: `/analytics/${page}/${interval}`
@@ -291,17 +264,6 @@ export const Analytics = () => {
     );
   }, [page, interval, orderBy, orderDirection]);
 
-  /*
-    ======================================
-      This object contains the content
-      (both static and dynamic) used in
-      the page. Markup cares only about
-      this object (and the styles object)
-      to show the data, so if you derive some
-      state from some hook, update this object
-      with it instead.
-    ======================================
-  */
   const content = {
     statistics: statistics,
     filter: {
@@ -446,14 +408,7 @@ export const Analytics = () => {
             label: 'Trending',
             props: {}
           },
-          /*
-            ======================================
-              We need to show the 'following' tab
-              only when the user is connected. So
-              we insert it into this links array only
-              when user is connected.
-            ======================================
-          */
+
           ...(connected
             ? [
                 {
@@ -727,7 +682,6 @@ export const Analytics = () => {
               <div {...styles?.options?.timeframes?.container}>
                 <div {...styles?.options?.timeframes?.list?.container}>
                   <Tab.List {...styles?.options?.timeframes?.list?.background}>
-                    {/* timeframe tabs */}
                     {content?.options?.timeframes?.map((tab, i) => (
                       <React.Fragment key={i}>
                         <Tab {...styles?.options?.timeframes?.tab}>{tab?.label}</Tab>
@@ -740,31 +694,12 @@ export const Analytics = () => {
 
             <Tab.Group {...styles?.options?.actions?.group}>
               <Tab.List {...styles?.options?.actions?.container}>
-                {/*
-                  ====================================
-                    After rendering the buttons, we
-                    render the links (they determine what
-                    kind of data to show, example: trending,
-                    following, etc). We need to reverse
-                    this array before rendering because we've
-                    flex-row-reversed the Tab.List container.
-                    This makes it behave weird if we don't reverse
-                    the data back.
-                  ====================================
-                */}
                 {content?.options?.actions?.links?.map((link, i) => (
                   <React.Fragment key={i}>
                     <Tab {...styles?.options?.actions?.tab}>{link?.label}</Tab>
                   </React.Fragment>
                 ))}
-                {/*
-                ====================================
-                  As for the right side of the actions,
-                  starting from the right (because it's a flexbox
-                  row-reversed), we first render the action buttons
-                  (like  filter and possibly anything else in future).
-                ====================================
-              */}
+
                 {content?.options?.actions?.buttons?.map((tab, i) => (
                   <React.Fragment key={i}>
                     {tab.type === 'drawer' && (
@@ -815,17 +750,6 @@ export const Analytics = () => {
             </Tab.Group>
           </div>
           <div {...styles?.statistics?.container}>
-            {/*
-              ====================================
-                This is where we show the data that
-                we get based on the query parameters.
-                If data doesn't come out, we show
-                skeleton components (same number as that
-                of limit - this is important because
-                it prevents the page from jumping around on
-                route changes).
-              ====================================
-            */}
             <div {...styles?.statistics?.list?.container}>
               {data.isLoading ? (
                 <>

@@ -3,7 +3,9 @@ import useSWR, { SWRConfiguration } from 'swr';
 import { stringify } from 'query-string';
 import { API_BASE } from './constants';
 import { ProviderManager } from './providers/ProviderManager';
-import HttpStatusCode from './httpStatusCode';
+
+const HTTP_UNAUTHORIZED = 401;
+const HTTP_TOO_MANY_REQUESTS = 429;
 
 const errorToast = (message: string) => {
   console.error(message);
@@ -87,7 +89,7 @@ export const apiGet = async (path: string, params?: ApiParams): Promise<ApiRespo
     return { result: data, status };
   } catch (err) {
     const { error, status } = catchError(err);
-    if (status === HttpStatusCode.UNAUTHORIZED) {
+    if (status === HTTP_UNAUTHORIZED) {
       errorToast('Unauthorized');
       return { error: new Error('Unauthorized'), status };
     }
@@ -112,7 +114,7 @@ export const apiPost = async (path: string, params?: ApiParams): Promise<ApiResp
   } catch (err) {
     const { error, status } = catchError(err);
 
-    if (status === HttpStatusCode.TOO_MANY_REQUESTS) {
+    if (status === HTTP_TOO_MANY_REQUESTS) {
       errorToast("You've been rate limited, please try again in a few minutes");
     }
     return { error, status };
