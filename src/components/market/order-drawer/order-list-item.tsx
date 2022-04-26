@@ -22,7 +22,7 @@ export function OrderListItem({ cartItem, allowDelete }: Props) {
           removeCartItem(cartItem);
         }}
       >
-        <img alt="logo" src={deleteIcon.src} className={iconButtonStyle} />
+        <img alt="remove" src={deleteIcon.src} className={iconButtonStyle} />
       </Button>
     );
   }

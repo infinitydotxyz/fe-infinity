@@ -1,6 +1,7 @@
 import { ReactNode, useState } from 'react';
 import { FaTwitter, FaFacebook, FaEdit } from 'react-icons/fa';
 import { CancelModal } from 'src/components/asset';
+import { RemoveIcon } from 'src/components/collection/edit/remove-icon';
 import {
   Button,
   CurrencyInput,
@@ -156,6 +157,10 @@ const SandboxPage = () => {
 
         <SBHeader># CancelModal</SBHeader>
         <CancelModal />
+
+        <SBHeader># RemoveIcon</SBHeader>
+
+        <RemoveIcon onClick={() => console.log('removeIcon clicked')} />
 
         <SBHeader># Toggle</SBHeader>
         <div className="w-1/2">
