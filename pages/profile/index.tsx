@@ -10,7 +10,9 @@ const USER_API_END_POINT = '/user';
 const ProfilePage: FunctionComponent = () => {
   const { user } = useAppContext();
 
-  if (!user) return <PageBox title={'Account'} className="mb-12"></PageBox>;
+  if (!user) {
+    return <PageBox title={'Account'} className="mb-12"></PageBox>;
+  }
 
   const { result, isLoading, isError, error } = useFetch(`${USER_API_END_POINT}/${user.address}`);
 

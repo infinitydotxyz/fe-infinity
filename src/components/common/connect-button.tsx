@@ -125,21 +125,6 @@ export const ConnectButton: React.FC = () => {
     button: connected ? `${address?.substring(0, 8)}` : 'Connect',
     wallet: <AiOutlineWallet />,
     menu: [
-      /*
-        ======================================
-          Menu props returns an object. Props of
-          each item in the dropdown looks
-          weird because each of these item can
-          either close the popover manually or it
-          can choose not to depending on their function.
-          For example: If you want to sign out, the
-          popover should close, but if you want to
-          copy address - the popover should not close.
-          So to give the power to close popover, we need to
-          use Popover comopnent (instead of Menu) and do
-          it this way.
-        ======================================
-      */
       {
         type: 'button',
         label: <>Copy Address {copied ? <BiCheck /> : <BiCopyAlt />}</>,

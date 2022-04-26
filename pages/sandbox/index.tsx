@@ -1,4 +1,4 @@
-import { FC, ReactNode, useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { FaTwitter, FaFacebook, FaEdit } from 'react-icons/fa';
 import { CancelModal } from 'src/components/asset';
 import {
@@ -16,9 +16,26 @@ import {
 } from 'src/components/common';
 import { Chip } from 'src/components/common/chip';
 import { ComboBox, ComboBoxBaseType } from 'src/components/common/combo-box';
-import { RoundedNav } from 'src/components/common/rounded-nav';
-import testData from './data.json';
 import { Toaster, toastError, toastSuccess, toastWarning } from 'src/components/common/toaster';
+
+const cardTestData = [
+  {
+    id: 'nft1',
+    title: 'NFT 1',
+    tokenId: 'Token1',
+    price: 1.5,
+    image:
+      'https://media.voguebusiness.com/photos/61b8dfb99ba90ab572dea0bd/3:4/w_1998,h_2664,c_limit/adidas-nft-voguebus-adidas-nft-dec-21-story.jpg'
+  },
+  {
+    id: 'nft2',
+    title: 'NFT 2',
+    tokenId: 'Token2 - very long long long token id',
+    price: 2.5,
+    image:
+      'https://media.voguebusiness.com/photos/61b8dfb99ba90ab572dea0bd/3:4/w_1998,h_2664,c_limit/adidas-nft-voguebus-adidas-nft-dec-21-story.jpg'
+  }
+];
 
 const comboValues: ComboBoxBaseType[] = [
   { id: 0, name: 'Empty Trash' },
@@ -26,7 +43,7 @@ const comboValues: ComboBoxBaseType[] = [
   { id: 2, name: 'Download' }
 ];
 
-const SandboxPage: FC = () => {
+const SandboxPage = () => {
   const { options, onChange, selected } = useToggleTab(['Buy NFTs', 'Sell NFTs', 'Trade NFTs'], 'Buy NFTs');
   const [currency, setCurrency] = useState<number>(12.33);
   const [comboValue, setComboValue] = useState<ComboBoxBaseType>(comboValues[0]);
@@ -86,16 +103,13 @@ const SandboxPage: FC = () => {
           />
         </div>
 
-        <SBHeader># RoundedNav</SBHeader>
-        <RoundedNav items={[{ title: 'NFT' }, { title: 'Community' }]} className="w-80 mt-6" />
-
         <SBHeader># ToggleTab</SBHeader>
         <ToggleTab options={options} selected={selected} onChange={onChange} />
 
         <SBHeader># Card - WIP</SBHeader>
         <div className="flex flex-row space-x-4">
           <Card
-            data={testData.cardTestData[0]}
+            data={cardTestData[0]}
             cardActions={[
               {
                 label: 'Details',
@@ -108,7 +122,7 @@ const SandboxPage: FC = () => {
             ]}
           />
           <Card
-            data={testData.cardTestData[1]}
+            data={cardTestData[1]}
             cardActions={[
               {
                 label: 'Details',

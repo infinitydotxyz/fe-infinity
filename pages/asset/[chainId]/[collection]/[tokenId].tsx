@@ -84,9 +84,6 @@ const AssetDetail: FunctionComponent = () => {
               />
             </div>
             <div className="flex-1">
-              {/* <div className="mb-2 md:pb-4 lg:pb-16 text-center sm:text-left">
-            <ToggleTab />
-          </div> */}
               <h3 className="text-black font-body text-2xl font-bold leading-normal tracking-wide pb-1">
                 {token.metadata.name ? token.metadata.name : `${collection.metadata.name} #${token.tokenId}`}
               </h3>
@@ -115,12 +112,7 @@ const AssetDetail: FunctionComponent = () => {
               <span className="text-body text-base">
                 Token ID:<span className="ml-4">{token.tokenId}</span>
               </span>
-              {/* <ShortAddress
-                label="Token ID:"
-                address={token.tokenId}
-                href={`https://etherscan.io/token/${collection.address}?a=${token.tokenId}`}
-                tooltip={token.tokenId}
-              /> */}
+
               <div className="md:-ml-1.5">
                 <div className="flex flex-col md:flex-row gap-2 my-4 md:my-6 lg:my-10 lg:mb-16">
                   <Button variant="primary" size="large" className="p-4 rounded-full">
@@ -129,9 +121,6 @@ const AssetDetail: FunctionComponent = () => {
                   <Button variant="outline" size="large" className="p-4 rounded-full">
                     Make offer
                   </Button>
-                  {/* <div className="border w-12 h-12 flex justify-center items-center rounded-full">
-                    <img src={TransferSvg.src} alt="Transfer" />
-                </div>*/}
                 </div>
               </div>
               <p className="font-body text-black mb-1">Description</p>

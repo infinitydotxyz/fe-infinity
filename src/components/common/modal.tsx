@@ -47,19 +47,6 @@ interface Props {
 }
 
 export function Modal({ children, interactive, content, ...props }: Props): JSX.Element {
-  /*
-    ======================================
-      All props to every component in the
-      markup are structured logically in
-      this object, and then passed down
-      to the elements by spreading the values.
-      This makes maintenance easy.
-      (Mark it up if you don't like it, imo
-      this is better, will remove this comment
-      and do it the usual way if this fails
-      the review).
-    ======================================
-  */
   const styles = {
     overlay: {
       transition: {
@@ -94,16 +81,6 @@ export function Modal({ children, interactive, content, ...props }: Props): JSX.
       }
     }
   };
-
-  /*
-    ======================================
-      Modal can be built with a combination
-      of Disclosure and a Dialog. Disclosure
-      provides the states that a Modal needs
-      and Dialog + Transition provides the
-      behavior that the model needs to exhibit.
-    ======================================
-  */
 
   return (
     <>

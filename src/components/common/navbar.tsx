@@ -8,17 +8,6 @@ import { SearchInput } from 'src/components/common/search-input';
 import { ConnectButton } from 'src/components/common/connect-button';
 
 export function Navbar() {
-  /*
-    ======================================
-      This object contains all styles
-      of elements used in this component.
-      It's advisable to look at the markup
-      first and then hit 'Goto reference'
-      key of your editor to find out which
-      object is being spread as props in
-      the markup that you're looking for.
-    ======================================
-  */
   const styles = {
     background: {
       className: `
@@ -222,16 +211,6 @@ export function Navbar() {
     }
   };
 
-  /*
-    ======================================
-      Modify this object if you wish
-      to change the data associated
-      with the navbar. Later this component
-      will be updated so that data can be
-      passed as props. But for now this is
-      how Navbar works.
-    ======================================
-  */
   const content = {
     buttons: {
       home: {
