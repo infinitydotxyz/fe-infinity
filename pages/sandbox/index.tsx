@@ -16,7 +16,6 @@ import {
 } from 'src/components/common';
 import { Chip } from 'src/components/common/chip';
 import { ComboBox, ComboBoxBaseType } from 'src/components/common/combo-box';
-import { RoundedNav } from 'src/components/common/rounded-nav';
 import testData from './data.json';
 import { Toaster, toastError, toastSuccess, toastWarning } from 'src/components/common/toaster';
 
@@ -85,9 +84,6 @@ const SandboxPage: FC = () => {
             ]}
           />
         </div>
-
-        <SBHeader># RoundedNav</SBHeader>
-        <RoundedNav items={[{ title: 'NFT' }, { title: 'Community' }]} className="w-80 mt-6" />
 
         <SBHeader># ToggleTab</SBHeader>
         <ToggleTab options={options} selected={selected} onChange={onChange} />

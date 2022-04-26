@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { BaseCollection, CollectionStats } from '@infinityxyz/lib/types/core';
-import { RoundedNav, PageBox } from 'src/components/common';
+import { ToggleTab, PageBox, useToggleTab } from 'src/components/common';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { useFetch } from 'src/utils/apiUtils';
 import { CollectionFeed } from 'src/components/feed/collection-feed';
@@ -19,7 +19,8 @@ export function CollectionPage() {
     query: { name }
   } = router;
 
-  const [currentTab, setCurrentTab] = useState(0);
+  const { options, onChange, selected } = useToggleTab(['NFT', 'Activity'], 'NFT');
+
   const path = `/collections/${name}`;
   const { result: collection } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
   const { result: dailyStats } = useFetch<{ data: CollectionStats[] }>(
@@ -103,15 +104,10 @@ export function CollectionPage() {
             </tbody>
           </table>
 
-          <RoundedNav
-            // items={[{ title: 'NFT' }, { title: 'Activity' }, { title: 'Community' }]}
-            items={[{ title: 'NFT' }, { title: 'Activity' }]}
-            onChange={(currentIndex) => setCurrentTab(currentIndex)}
-            className="mt-12"
-          />
+          <ToggleTab className="mt-12" options={options} selected={selected} onChange={onChange} />
 
           <div className="mt-6 min-h-[1024px]">
-            {currentTab === 0 && collection && (
+            {selected === 'NFT' && collection && (
               <GalleryBox
                 collection={collection}
                 cardProps={{
@@ -127,8 +123,8 @@ export function CollectionPage() {
               />
             )}
             {/* {currentTab === 1 && <ActivityTab dailyStats={dailyStats} weeklyStats={weeklyStats} />} */}
-            {currentTab === 1 && <ActivityTab />}
-            {currentTab === 2 && (
+            {selected === 'Activity' && <ActivityTab />}
+            {selected === '???' && (
               <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-16">
                 <div className="lg:col-span-1 xl:col-span-2">
                   {/* <div className="text-3xl mb-6">Feed</div> */}
