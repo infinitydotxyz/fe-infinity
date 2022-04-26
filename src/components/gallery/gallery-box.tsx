@@ -61,8 +61,7 @@ export function GalleryBox({ collection, cardProps, getEndpoint }: GalleryProps)
       return {
         id: collection?.address + '_' + item.tokenId,
         title: collection?.metadata?.name,
-        // eslint-disable-next-line
-        image: (item.metadata as any).image_url ?? item.image.url, // TODO: remove any after having proper data.
+        image: item.image.url,
         price: 0,
         chainId: item.chainId,
         tokenAddress: collection?.address,

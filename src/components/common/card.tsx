@@ -45,7 +45,7 @@ export function Card({ data, cardActions, dropdownActions, className }: CardProp
     <div className={twMerge(`sm:mx-0 ${className ?? ''}`)}>
       <Link href={`/asset/${data?.chainId}/${data?.tokenAddress}/${data?.tokenId}`} passHref={true}>
         <a>
-          <img className="rounded-2xl w-[290px] overflow-hidden" src={data?.image ?? ''} alt="card" />
+          <img className="rounded-2xl w-[290px] min-h-[247px] overflow-hidden" src={data?.image ?? ''} alt="card" />
         </a>
       </Link>
       <div className="p-1 mt-3">
