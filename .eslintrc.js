@@ -3,34 +3,18 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 2018,
-    sourceType: 'module'
+    sourceType: 'module',
+    project: ['./tsconfig.json'],
+    tsconfigRootDir: __dirname
   },
-  overrides: [
-    // overrides is needed for switch-exhaustiveness-check
-    // seems hacky, but it seems to work
-    // https://stackoverflow.com/questions/58510287/parseroptions-project-has-been-set-for-typescript-eslint-parser
-    {
-      files: ['*.ts', '*.tsx'],
-      parserOptions: {
-        project: ['./tsconfig.json'],
-        tsconfigRootDir: __dirname
-      },
-      extends: [
-        // turn this on to see a shit load of errors
-        // 'plugin:@typescript-eslint/recommended',
-        // 'plugin:@typescript-eslint/recommended-requiring-type-checking'
-      ],
-      rules: {
-        '@typescript-eslint/switch-exhaustiveness-check': 'warn'
-      }
-    }
-  ],
   plugins: ['node', 'react', 'prettier', '@typescript-eslint'],
   extends: [
     'eslint:recommended',
     'plugin:@next/next/recommended',
     'plugin:prettier/recommended',
     'plugin:@typescript-eslint/recommended',
+    // We need to enable this and fix all the errors
+    // 'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'prettier'
   ],
   env: {
@@ -42,6 +26,7 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'error',
     'node/no-unsupported-features/es-syntax': ['error', { ignores: ['modules'] }],
     'no-duplicate-imports': 'error',
+    '@typescript-eslint/switch-exhaustiveness-check': 'warn',
 
     // https://nextjs.org/docs/messages/next-image-unconfigured-host
     // Image is bullshit, turn off this lint error in NextJS
@@ -60,7 +45,9 @@ module.exports = {
     '/.yarn',
     '/**/__snapshots__',
     'build/**',
+    'node_modules/**',
     '*.config.js',
-    'node_modules/**'
+    '**/theme/elements/*.js',
+    '.eslintrc.js'
   ]
 };
