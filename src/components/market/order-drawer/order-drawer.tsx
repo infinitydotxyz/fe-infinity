@@ -91,7 +91,7 @@ export function OrderDrawer({ open, onClose }: Props) {
 
         {topWidget}
         <div className="px-12 w-full">
-          <Button className="w-full" onClick={buttonClick}>
+          <Button size="large" className="w-full" onClick={buttonClick}>
             {buttonTitle}
           </Button>
         </div>
