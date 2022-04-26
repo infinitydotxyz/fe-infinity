@@ -72,9 +72,7 @@ export const ConnectButton: React.FC = () => {
       button: {
         container: {
           className: `
-            transition w-full h-full min-h-[48px] rounded-full
-            justify-self-end
-            font-mono grid place-content-center
+            transition w-full h-full rounded-full font-mono  
             ${
               connected
                 ? 'bg-theme-light-50 font-bold hover:bg-theme-light-200 ring-1 ring-inset ring-theme-light-700'

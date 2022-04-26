@@ -6,9 +6,9 @@ import 'src/settings/theme/globals.scss';
 import { isLocalhost, isServer } from 'src/utils/commonUtils';
 import { AppContextProvider } from 'src/utils/context/AppContext';
 import { OrderContextProvider } from 'src/utils/context/OrderContext';
-import { NextNProgress } from 'src/components/common/next-progressbar';
 import { FilterContextProvider } from 'src/utils/context/FilterContext';
 import React, { FunctionComponent, memo, StrictMode, useEffect } from 'react';
+import NextNProgress from 'nextjs-progressbar';
 
 const Page: FunctionComponent<AppProps> = ({ Component, pageProps }) => <Component {...pageProps} />;
 const Memoized = memo(Page, (p, n) => p.Component === n.Component && p.pageProps === n.pageProps);

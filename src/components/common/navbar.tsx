@@ -292,13 +292,6 @@ export function Navbar() {
       <div {...styles?.background}>
         <div {...styles?.container}>
           <Link passHref {...content?.buttons?.home?.props}>
-            {/*
-            ====================================
-              This is where we render the 'home'
-              button - logo that takes you back
-              to home page.
-            ====================================
-          */}
             <a {...content?.buttons?.home?.props}>
               <content.buttons.home.icon.regular {...styles?.logo?.regular}></content.buttons.home.icon.regular>
               <content.buttons.home.icon.mobile {...styles?.logo?.mobile}></content.buttons.home.icon.mobile>
@@ -371,24 +364,8 @@ export function Navbar() {
               </Menu>
             </div>
             <div {...styles?.actions?.items?.container}>
-              {/*
-              ====================================
-                This is where we render all the
-                navigation action buttons (or dropdowns).
-              ====================================
-            */}
               {content?.buttons?.items?.map((item, i) => (
                 <React.Fragment key={i}>
-                  {/*
-                  ====================================
-                    If content type is a link, then
-                    it should render a link, otherwise
-                    if it's a dropdown then it should
-                    render a special dropdown component
-                    that's different slightly from the
-                    dropdowns used anywhere else.
-                  ====================================
-                */}
                   {item.type === 'external' && (
                     <div {...styles?.actions?.item?.container}>
                       <Link passHref href={item?.props?.href ? item.props.href : ''}>
@@ -415,15 +392,6 @@ export function Navbar() {
                           <Menu.Items {...styles?.actions?.item?.menu?.items}>
                             {item?.menu?.map((x, j) => (
                               <React.Fragment key={j}>
-                                {/*
-                              ====================================
-                                Dropdown content can have a menu
-                                array, which renders links or action
-                                buttons based on the type described in
-                                the content, similar to how we did above
-                                 for the tabs.
-                              ====================================
-                            */}
                                 {x.type === 'external' && (
                                   <Link passHref href={x?.props?.href ? x.props.href : ''}>
                                     <a target="_blank" rel="noopener noreferrer">
@@ -456,17 +424,6 @@ export function Navbar() {
               ))}
             </div>
             <div {...styles?.actions?.connect?.container}>
-              {/*
-            ====================================
-              This renders the connect button.
-              Connect button encapsulates a dropdown
-              in itself according to requirements as of
-              now (as I'm writing this comment). This can
-              change but please don't make any of the containers
-              above `overflow-hidden` so that the dropdown
-              appears.
-            ====================================
-          */}
               <ConnectButton />
             </div>
           </div>
