@@ -1,5 +1,10 @@
 # Infinity Frontend
 
+Tools:
+
+- nvm, node 16.
+- recommend: vscode and extensions like eslint, prettier, editor config, git lense.
+
 ## Scripts
 
 - `npm install`: Install or update dependencies, @infinityxyz/lib types.
