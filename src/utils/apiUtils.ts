@@ -34,11 +34,12 @@ export async function dummyFetch(mockData = []) {
 // eslint-disable-next-line
 const catchError = (err: any) => {
   const errorObj = err as Error | AxiosError;
-  const errorData = { message: typeof err === 'object' ? err?.message : err, errorResponse: null };
+  const errorData = { message: typeof err === 'object' ? err?.message : err, errorResponse: '' };
 
   if (axios.isAxiosError(errorObj)) {
     // some APIs return response when an error occurred (status !== 200)
-    errorData.errorResponse = (errorObj as AxiosError).response?.data ?? null;
+    // NOTE: added <string> to get around lint errors, not tested, not sure if it works
+    errorData.errorResponse = (errorObj as AxiosError<string>).response?.data ?? '';
   }
   console.error('catchError', err, err?.response);
   return { error: errorData, status: err?.response?.status };
