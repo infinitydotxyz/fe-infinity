@@ -22,7 +22,7 @@ export function InputBox({ tooltip, label, children, icon, renderRightIcon, isFu
 
   return (
     <TooltipWrapper show={showTooltip} tooltip={tooltip} className={classNames({ 'w-full': isFullWidth })}>
-      <div className="py-2 pl-6 pr-2 outline outline-1 outline-gray-300 rounded-2xl w-full flex items-center">
+      <div className="py-3 pl-6 pr-2 outline outline-1 outline-gray-300 rounded-2xl w-full flex items-center">
         {icon && <span className="pr-8">{icon}</span>}
         <div className="w-full">
           {label && <label className="block text-xs font-medium text-gray-700">{label}</label>}

@@ -46,8 +46,7 @@ function reducer(
       return { ...state, links: { ...state.links, ...action.metadata.links } };
     case 'createBenefit':
       return { ...state, benefits: [...(state.benefits ?? []), ...(action.metadata.benefits ?? [])] };
-    case 'updateBenefit':
-      // eslint-disable-next-line no-case-declarations
+    case 'updateBenefit': {
       const benefitUpdate = (action.metadata.benefits ?? [])[0];
 
       if (typeof action.key == 'number') {
@@ -56,12 +55,12 @@ function reducer(
       } else {
         throw new Error(`key '${action.key}' must be an index!`);
       }
+    }
     case 'deleteBenefit':
       return { ...state, benefits: state.benefits?.filter((_, i) => i !== action.key) ?? [] };
     case 'createPartnership':
       return { ...state, partnerships: [...(state.partnerships ?? []), ...(action.metadata.partnerships ?? [])] };
-    case 'updatePartnership':
-      // eslint-disable-next-line no-case-declarations
+    case 'updatePartnership': {
       const partnershipUpdate = (action.metadata.partnerships ?? [])[0];
 
       if (typeof action.key == 'number') {
@@ -73,6 +72,7 @@ function reducer(
       } else {
         throw new Error(`key '${action.key}' must be an index!`);
       }
+    }
     case 'deletePartnership':
       return { ...state, partnerships: state.partnerships?.filter((_, i) => i !== action.key) ?? [] };
     case 'createDiscordChannel':
@@ -89,8 +89,7 @@ function reducer(
           }
         }
       };
-    case 'updateDiscordChannel':
-      // eslint-disable-next-line no-case-declarations
+    case 'updateDiscordChannel': {
       const discordChannelUpdate = (action.metadata.integrations?.discord?.channels ?? [])[0];
 
       if (typeof action.key == 'number') {
@@ -110,6 +109,7 @@ function reducer(
       } else {
         throw new Error(`key '${action.key}' must be an index!`);
       }
+    }
     case 'deleteDiscordChannel':
       return {
         ...state,
