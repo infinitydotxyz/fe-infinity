@@ -9,7 +9,7 @@ export interface TooltipSpec {
 }
 
 export const TooltipIcon = () => {
-  return <IoMdInformationCircleOutline className={`fill-gray-500 ${smallIconButtonStyle}`} />;
+  return <IoMdInformationCircleOutline className={`fill-gray-600 ${smallIconButtonStyle}`} />;
 };
 
 interface Props {

@@ -114,7 +114,7 @@ export function OrderDrawer({ open, onClose }: Props) {
 
     contents = (
       <>
-        <div className="flex flex-col px-8 space-y-2">
+        <div className="flex flex-col px-12 space-y-2">
           <OrderSummary />
         </div>
 
@@ -140,7 +140,7 @@ export function OrderDrawer({ open, onClose }: Props) {
 
     contents = (
       <>
-        <div className="flex flex-col px-8 space-y-2">
+        <div className="flex flex-col px-12 space-y-2">
           <OrderBuilder />
         </div>
 
