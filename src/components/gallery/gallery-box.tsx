@@ -34,14 +34,17 @@ export function GalleryBox({ collection, cardProps, getEndpoint }: GalleryProps)
   const [filterShowed, setFilterShowed] = useState(true);
   const [isFetching, setIsFetching] = useState(false);
   const [data, setData] = useState<CardData[]>([]);
+  const [cursor, setCursor] = useState('');
   const [currentPage, setCurrentPage] = useState(-1);
   const [dataLoaded, setDataLoaded] = useState(false);
 
   const fetchData = async (isRefresh = false) => {
     setIsFetching(true);
     let newCurrentPage = currentPage + 1;
+    let newCursor = cursor;
     if (isRefresh) {
       newCurrentPage = 0;
+      newCursor = '';
     }
 
     const offset = currentPage > 0 ? currentPage * ITEMS_PER_PAGE : 0;
@@ -53,9 +56,13 @@ export function GalleryBox({ collection, cardProps, getEndpoint }: GalleryProps)
       query: {
         offset,
         limit: ITEMS_PER_PAGE,
+        cursor: newCursor,
         ...filterState
       }
     });
+    if (result?.hasNextPage === true) {
+      setCursor(result?.cursor);
+    }
 
     const moreData: CardData[] = (result?.data || []).map((item: BaseToken) => {
       return {
@@ -65,13 +72,15 @@ export function GalleryBox({ collection, cardProps, getEndpoint }: GalleryProps)
         price: 0,
         chainId: item.chainId,
         tokenAddress: collection?.address,
-        tokenId: item.tokenId
+        tokenId: item.tokenId,
+        rarityScore: item.rarityScore
       };
     });
 
     setIsFetching(false);
     if (isRefresh) {
       setData([...moreData]);
+      setCursor('');
     } else {
       setData([...data, ...moreData]);
     }
@@ -80,7 +89,8 @@ export function GalleryBox({ collection, cardProps, getEndpoint }: GalleryProps)
 
   useEffect(() => {
     setData([]);
-    fetchData(true);
+    setCursor('');
+    fetchData(true); // refetch data when filterState changed somewhere (ex: from Sort comp, etc.)
   }, [filterState]);
 
   useEffect(() => {
