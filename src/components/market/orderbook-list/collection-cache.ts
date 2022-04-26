@@ -2,7 +2,7 @@ import { BaseCollection, BaseToken } from '@infinityxyz/lib/types/core';
 import { useEffect, useState } from 'react';
 import { apiGet } from 'src/utils/apiUtils';
 import mitt from 'mitt';
-import { CollectionSearchArrayDto } from 'src/components/common/collection-grid';
+import { CollectionSearchArrayDto } from 'src/components/common';
 
 class _CollectionCache {
   cCache = new Map<string, BaseCollection>();

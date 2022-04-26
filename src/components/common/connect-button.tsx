@@ -2,8 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Popover, Transition } from '@headlessui/react';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { BiCopyAlt } from 'react-icons/bi';
-import { BiCheck } from 'react-icons/bi';
+import { BiCopyAlt, BiCheck } from 'react-icons/bi';
 import { AiOutlineWallet } from 'react-icons/ai';
 
 export const ConnectButton: React.FC = () => {

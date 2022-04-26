@@ -1,5 +1,5 @@
 import { AiOutlinePlus } from 'react-icons/ai';
-import { Button, Props as ButtonProps } from 'src/components/common/button';
+import { Button, Props as ButtonProps } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 
 export const PlusButton: React.FC<ButtonProps> = ({ children, className, ...props }) => (

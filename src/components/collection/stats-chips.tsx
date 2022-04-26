@@ -7,8 +7,7 @@ import { HiOutlineExternalLink } from 'react-icons/hi';
 
 import { apiDelete, apiGet, apiPost } from 'src/utils';
 import { FollowingCollection, useAppContext } from 'src/utils/context/AppContext';
-import { Chip } from '../common';
-import { Toaster, toastError } from '../common/toaster';
+import { Chip, Toaster, toastError } from 'src/components/common';
 import { VerificationModal } from './edit/modals';
 interface Props {
   collection: BaseCollection | null;

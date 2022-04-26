@@ -36,6 +36,7 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'error',
     '@typescript-eslint/no-var-requires': 'off',
     'node/no-unsupported-features/es-syntax': ['error', { ignores: ['modules'] }],
+    'no-duplicate-imports': 'error',
 
     // https://nextjs.org/docs/messages/next-image-unconfigured-host
     // Image is bullshit, turn off this lint error in NextJS

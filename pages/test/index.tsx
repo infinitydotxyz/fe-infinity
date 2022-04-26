@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router';
-import { Button } from 'src/components/common';
-import { PageBox } from 'src/components/common';
+import { Button, PageBox } from 'src/components/common';
 
 export const TestPage = () => {
   const router = useRouter();

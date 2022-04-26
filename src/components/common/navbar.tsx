@@ -1,11 +1,9 @@
 import React from 'react';
 import Link from 'next/link';
-import { SVG } from 'src/components/common/svg';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { IoMdArrowDropdown } from 'react-icons/io';
 import { Menu, Transition } from '@headlessui/react';
-import { SearchInput } from 'src/components/common/search-input';
-import { ConnectButton } from 'src/components/common/connect-button';
+import { SVG, SearchInput, ConnectButton } from 'src/components/common';
 
 export function Navbar() {
   const styles = {

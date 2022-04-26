@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Button, ToggleTab, useToggleTab, Spacer, Dropdown, PageBox } from 'src/components/common';
+import { Button, ToggleTab, useToggleTab, Spacer, Dropdown, PageBox, CollectionGrid } from 'src/components/common';
 import { OrderDrawer } from 'src/components/market';
 import { BaseCollection } from '@infinityxyz/lib/types/core';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { FaShoppingBag } from 'react-icons/fa';
 import { RiLayoutGridFill } from 'react-icons/ri';
 import { OrderbookList } from 'src/components/market/orderbook-list';
-import { CollectionGrid } from 'src/components/common/collection-grid';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { CollectionCache } from 'src/components/market/orderbook-list/collection-cache';
 

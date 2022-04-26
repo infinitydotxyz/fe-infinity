@@ -1,7 +1,6 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, ReactNode } from 'react';
-import { Button } from 'src/components/common/button';
-import { Spacer } from 'src/components/common/spacer';
+import { Spacer, Button } from 'src/components/common';
 import { XIcon } from '@heroicons/react/outline';
 
 export interface SimpleModalProps {

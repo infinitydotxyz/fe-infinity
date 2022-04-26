@@ -1,6 +1,6 @@
 import { FunctionComponent, useEffect, useState } from 'react';
 import { apiPost, useFetch } from 'src/utils';
-import { Button } from '../common';
+import { Button } from 'src/components/common';
 import clsx from 'classnames';
 import { useAppContext } from 'src/utils/context/AppContext';
 

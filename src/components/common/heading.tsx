@@ -12,7 +12,7 @@ const sizes: Record<HeadingType, string> = {
   h6: 'text-2xl'
 };
 
-export interface Props {
+interface Props {
   as?: HeadingType;
   className?: string;
 }

@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'react';
-import { TextInputBox, TextAreaBox } from '../common';
+import { TextInputBox, TextAreaBox } from 'src/components/common';
 
 export const UserProfileForm: FunctionComponent = () => {
   return (

@@ -7,9 +7,7 @@ import { AiOutlineComment, AiOutlineLike } from 'react-icons/ai';
 import { ellipsisAddress, getChainScannerBase } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { addUserLike } from 'src/utils/firestore/firestoreUtils';
-import { Button } from '../common';
-import { EthPrice } from '../common/eth-price';
-import { NftImage } from '../common/nft-image';
+import { Button, NftImage, EthPrice } from 'src/components/common';
 
 export type FeedEvent = BaseFeedEvent &
   ExchangeEvent & {

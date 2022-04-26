@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import { ellipsisAddress } from 'src/utils';
-import { EthSymbol } from 'src/components/common/eth-price';
+import { EthSymbol } from 'src/components/common';
 
 export interface NftActivity {
   address: string;

@@ -1,6 +1,5 @@
 import { RiEditCircleFill } from 'react-icons/ri';
-import { Button, SimpleTable, SimpleTableItem, Spacer } from 'src/components/common';
-import { EthPrice } from 'src/components/common/eth-price';
+import { EthPrice, Button, SimpleTable, SimpleTableItem, Spacer } from 'src/components/common';
 import { shortDate } from 'src/utils';
 import { OrderInCart, useOrderContext } from 'src/utils/context/OrderContext';
 import { collectionIconHeight, collectionIconStyle, collectionIconWidthInPx, iconButtonStyle } from './ui-constants';

@@ -3,8 +3,7 @@ import { ellipsisString } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { addUserComments, fetchComments, fetchMoreComments } from 'src/utils/firestore/firestoreUtils';
 import { format } from 'timeago.js';
-import { Button, FetchMore } from '../common';
-import { Drawer } from '../common/drawer';
+import { Button, Drawer, FetchMore } from 'src/components/common';
 import { Comment, FeedEvent } from './feed-item';
 
 interface Props {

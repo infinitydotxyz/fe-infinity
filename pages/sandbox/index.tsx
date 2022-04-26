@@ -12,11 +12,15 @@ import {
   ToggleTab,
   useToggleTab,
   PageBox,
-  Card
+  Card,
+  Toaster,
+  toastError,
+  toastSuccess,
+  toastWarning,
+  Chip,
+  ComboBox,
+  ComboBoxBaseType
 } from 'src/components/common';
-import { Chip } from 'src/components/common/chip';
-import { ComboBox, ComboBoxBaseType } from 'src/components/common/combo-box';
-import { Toaster, toastError, toastSuccess, toastWarning } from 'src/components/common/toaster';
 
 const cardTestData = [
   {

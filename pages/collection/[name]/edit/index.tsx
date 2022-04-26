@@ -5,9 +5,15 @@ import { PlusButton } from 'src/components/collection/edit/buttons';
 import { ProfileImageForm } from 'src/components/collection/edit/profile-image-form';
 import { RemoveIcon } from 'src/components/collection/edit/remove-icon';
 import SocialsInputGroup from 'src/components/collection/socials-input-group';
-import { Button, TextAreaInputBox, TextInputBox } from 'src/components/common';
-import { Heading } from 'src/components/common/heading';
-import { Toaster, toastError, toastSuccess } from 'src/components/common/toaster';
+import {
+  Button,
+  TextAreaInputBox,
+  TextInputBox,
+  Heading,
+  Toaster,
+  toastError,
+  toastSuccess
+} from 'src/components/common';
 import logo from 'src/images/logo-mini-new.svg';
 import { apiPut, DISCORD_BOT_INVITE_URL, useFetch } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
