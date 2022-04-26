@@ -1,9 +1,8 @@
 import { useRouter } from 'next/router';
-import type { FC } from 'react';
 import { Button } from 'src/components/common';
 import { PageBox } from 'src/components/common';
 
-export const TestPage: FC = () => {
+export const TestPage = () => {
   const router = useRouter();
 
   return (
@@ -56,13 +55,15 @@ export const TestPage: FC = () => {
         >
           SandBox
         </Button>
+
         <Button
           onClick={() => {
-            router.push('/account');
+            router.push('/profile');
           }}
         >
-          Account
+          Profile
         </Button>
+
         <Button
           onClick={() => {
             router.push('/asset/1/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/8880');
@@ -70,6 +71,7 @@ export const TestPage: FC = () => {
         >
           Asset Detail
         </Button>
+
         <Button
           onClick={() => {
             router.push('/explore-collections');

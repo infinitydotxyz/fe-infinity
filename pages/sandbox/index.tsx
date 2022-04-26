@@ -1,4 +1,4 @@
-import { FC, ReactNode, useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { FaTwitter, FaFacebook, FaEdit } from 'react-icons/fa';
 import { CancelModal } from 'src/components/asset';
 import {
@@ -25,7 +25,7 @@ const comboValues: ComboBoxBaseType[] = [
   { id: 2, name: 'Download' }
 ];
 
-const SandboxPage: FC = () => {
+const SandboxPage = () => {
   const { options, onChange, selected } = useToggleTab(['Buy NFTs', 'Sell NFTs', 'Trade NFTs'], 'Buy NFTs');
   const [currency, setCurrency] = useState<number>(12.33);
   const [comboValue, setComboValue] = useState<ComboBoxBaseType>(comboValues[0]);
