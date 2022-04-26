@@ -73,6 +73,14 @@ export const TestPage = () => {
 
         <Button
           onClick={() => {
+            void router.push('/user/0x24c24f9ddce175039136bae9b3943b5b051a1514');
+          }}
+        >
+          User
+        </Button>
+
+        <Button
+          onClick={() => {
             void router.push('/explore-collections');
           }}
         >
