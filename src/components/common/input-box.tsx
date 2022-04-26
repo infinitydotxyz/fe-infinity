@@ -31,7 +31,7 @@ export function InputBox({ tooltip, label, children, icon, renderRightIcon, isFu
 
             {tooltip && (
               <Tooltip
-                className="absolute top-0 bottom-0 right-2 flex flex-col justify-center"
+                className="absolute top-0 bottom-0 right-4 flex flex-col justify-center"
                 setShow={setShowTooltip}
               >
                 <TooltipIcon />
@@ -39,7 +39,7 @@ export function InputBox({ tooltip, label, children, icon, renderRightIcon, isFu
             )}
 
             {renderRightIcon && (
-              <div className="absolute top-0 bottom-0 right-2 flex flex-col justify-center">{renderRightIcon()}</div>
+              <div className="absolute top-0 bottom-0 right-4 flex flex-col justify-center">{renderRightIcon()}</div>
             )}
           </div>
         </div>
