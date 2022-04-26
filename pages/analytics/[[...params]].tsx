@@ -251,7 +251,9 @@ export const Analytics = () => {
   }
 
   React.useEffect(() => {
-    if (!connected) setPage('trending');
+    if (!connected) {
+      setPage('trending');
+    }
   }, [connected]);
 
   React.useEffect(() => {

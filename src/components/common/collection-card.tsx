@@ -11,8 +11,9 @@ interface CollectionCardProps {
 }
 
 const getAvatarUrl = (imgUrl: string) => {
-  if (!imgUrl) return null;
-  else {
+  if (!imgUrl) {
+    return null;
+  } else {
     const index = imgUrl.indexOf('=');
     if (index) {
       return imgUrl.slice(0, index) + '=h200';

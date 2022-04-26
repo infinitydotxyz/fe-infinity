@@ -12,7 +12,9 @@ export const UserProfileImage: FunctionComponent<UserProfileImageProps> = ({ img
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
-    if (isOwner) router.push('/profile/settings');
+    if (isOwner) {
+      router.push('/profile/settings');
+    }
   };
 
   return (

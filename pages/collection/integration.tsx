@@ -14,7 +14,9 @@ export default function DiscordIntegration() {
   const collectionAddress = query.address as string;
 
   useEffect(() => {
-    if (!integrationType || !collectionAddress) return;
+    if (!integrationType || !collectionAddress) {
+      return;
+    }
 
     if (!user?.address) {
       setStatus('Please connect your wallet.');

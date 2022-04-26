@@ -65,7 +65,9 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
   };
 
   const onClickEdit = () => {
-    if (!checkSignedIn()) return;
+    if (!checkSignedIn()) {
+      return;
+    }
     setModalOpen(true);
   };
 

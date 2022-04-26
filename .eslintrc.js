@@ -27,6 +27,7 @@ module.exports = {
     'node/no-unsupported-features/es-syntax': ['error', { ignores: ['modules'] }],
     'no-duplicate-imports': 'error',
     '@typescript-eslint/switch-exhaustiveness-check': 'warn',
+    curly: 1,
 
     // https://nextjs.org/docs/messages/next-image-unconfigured-host
     // Image is bullshit, turn off this lint error in NextJS

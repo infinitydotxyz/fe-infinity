@@ -138,7 +138,9 @@ export function TextInputBox({
                   className="p-0 border-none focus:ring-0 block w-full text-base"
                   placeholder={placeholder}
                   onChange={(e) => {
-                    if (onChange) onChange(e.target.value);
+                    if (onChange) {
+                      onChange(e.target.value);
+                    }
                     if (!e.defaultPrevented) {
                       form.setFieldValue(bind, e.target.value);
                     }
@@ -201,7 +203,9 @@ export function TextAreaBox({
                   rows={rows}
                   value={field.value || ''}
                   onChange={(e) => {
-                    if (onChange) onChange(e.target.value);
+                    if (onChange) {
+                      onChange(e.target.value);
+                    }
                     if (!e.defaultPrevented) {
                       form.setFieldValue(bind, e.target.value);
                     }
