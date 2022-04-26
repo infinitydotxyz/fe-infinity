@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, ToggleTab, useToggleTab, PageBox, Spacer, Dropdown } from 'src/components/common';
+import { Button, ToggleTab, useToggleTab, Spacer, Dropdown, PageBox } from 'src/components/common';
 import { OrderDrawer } from 'src/components/market';
 import { BaseCollection } from '@infinityxyz/lib/types/core';
 import { useOrderContext } from 'src/utils/context/OrderContext';
@@ -104,7 +104,8 @@ export default function MarketPage() {
   return (
     <PageBox
       title="Market"
-      rightSide={
+      padded={true}
+      rightToolbar={
         <Button
           disabled={isOrderStateEmpty()}
           variant="outline"

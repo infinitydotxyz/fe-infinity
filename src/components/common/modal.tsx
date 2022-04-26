@@ -131,5 +131,3 @@ export function Modal({ children, interactive, content, ...props }: Props): JSX.
     </>
   );
 }
-
-export default Modal;

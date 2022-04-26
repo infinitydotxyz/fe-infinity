@@ -1,9 +1,8 @@
-import type { FC } from 'react';
 import { PageBox } from 'src/components/common';
 
-export const NotFound: FC = () => {
+export const NotFound = () => {
   return (
-    <PageBox title="Error: Not Found">
+    <PageBox padded={true} title="404: Not Found">
       <h6>Not Found</h6>
     </PageBox>
   );

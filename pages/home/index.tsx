@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { CollectionFeed } from 'src/components/feed/collection-feed';
-import { Layout } from 'src/components/common/layout';
+import { PageBox } from 'src/components/common';
 
 export function HomePage() {
   const {
@@ -12,7 +12,7 @@ export function HomePage() {
   console.log(name);
 
   return (
-    <Layout title="Home" padded>
+    <PageBox title="Home" padded>
       <div className="flex">
         <CollectionFeed header="Feed" className="md:w-2/3 sm:w-full" />
 
@@ -21,7 +21,7 @@ export function HomePage() {
           <div>Trending Component</div>
         </div>
       </div>
-    </Layout>
+    </PageBox>
   );
 }
 

@@ -2,8 +2,7 @@ import React from 'react';
 import { Tab } from '@headlessui/react';
 import { useRouter } from 'next/router';
 import { useFetch } from 'src/utils/apiUtils';
-import { Drawer } from 'src/components/common/drawer';
-import { Layout } from 'src/components/common/layout';
+import { Drawer, PageBox } from 'src/components/common';
 import { Field } from 'src/components/analytics/field';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CollectionStats } from '@infinityxyz/lib/types/core';
@@ -304,7 +303,6 @@ export const Analytics = () => {
     ======================================
   */
   const content = {
-    title: 'Analytics',
     statistics: statistics,
     filter: {
       limit: 5,
@@ -726,12 +724,8 @@ export const Analytics = () => {
 
   return (
     <>
-      <Layout {...styles?.layout}>
+      <PageBox {...styles?.layout}>
         <div {...styles?.container}>
-          <div {...styles?.heading?.container}>
-            <h1 {...styles?.heading?.element}>{content?.title}</h1>
-          </div>
-
           <div {...styles?.options?.container}>
             <Tab.Group {...styles?.options?.timeframes?.group}>
               <div {...styles?.options?.timeframes?.container}>
@@ -908,7 +902,7 @@ export const Analytics = () => {
             </div>
           </div>
         </div>
-      </Layout>
+      </PageBox>
     </>
   );
 };

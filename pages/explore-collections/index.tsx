@@ -1,5 +1,5 @@
 import React, { useState, FunctionComponent, useCallback } from 'react';
-import { Layout } from 'src/components/common/layout';
+import { PageBox } from 'src/components/common';
 import debounce from 'lodash/debounce';
 import { CollectionGrid } from 'src/components/common/collection-grid';
 
@@ -21,8 +21,7 @@ const HomePage: FunctionComponent = () => {
   );
 
   return (
-    <Layout title="Explore" padded>
-      <h1 className="text-2xl font-body font-bold mb-3">All collections</h1>
+    <PageBox title="All collections" padded>
       <input
         value={query}
         className="w-full border border-gray-500 focus:ring-0 py-2 my-2 pl-3 pr-10 text-lg leading-5 text-gray-900 "
@@ -30,7 +29,7 @@ const HomePage: FunctionComponent = () => {
       />
 
       <CollectionGrid query={debouncedQuery} onClick={(data) => console.log(data)} />
-    </Layout>
+    </PageBox>
   );
 };
 

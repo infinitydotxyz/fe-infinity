@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { WalletType } from 'src/utils/providers/AbstractProvider';
-import SVG from 'src/components/common/svg';
+import { SVG } from 'src/components/common/svg';
 import metamask from 'src/images/metamask.svg';
 import coinbase from 'src/images/coinbase.svg';
 import walletConnect from 'src/images/walletConnect.svg';

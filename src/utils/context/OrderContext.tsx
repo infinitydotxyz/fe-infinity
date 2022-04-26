@@ -256,7 +256,7 @@ export function OrderContextProvider({ children }: Props) {
         startPriceEth: spec.startPriceEth,
         endPriceEth: spec.endPriceEth,
         nfts: spec.nfts,
-        makerUsername: spec.makerUsername, // todo: put in username
+        makerUsername: spec.makerUsername,
         nonce: orderNonce,
         minBpsToSeller,
         execParams: {

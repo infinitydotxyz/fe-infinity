@@ -1,67 +1,85 @@
-import Head from 'next/head';
-import React, { ReactElement, ReactNode } from 'react';
-import { Spacer } from 'src/components/common';
 import { useRouter } from 'next/router';
-import { Header } from 'src/components/header/Header';
+import React from 'react';
+import { Header } from 'src/components/common/header';
+import { Navbar } from 'src/components/common/navbar';
+import { Spacer } from './spacer';
 
-type Props = {
+interface Props {
+  children?: React.ReactNode;
   title: string;
-  titleElement?: ReactElement;
-  rightSide?: JSX.Element;
-  children?: ReactNode;
-  center?: boolean;
-  showConnect?: boolean;
-  hideTitle?: boolean;
-};
+  className?: string;
+  padded?: boolean;
+  rightToolbar?: JSX.Element;
+}
 
-export const PageBox = ({
-  title,
-  titleElement,
-  rightSide,
-  children,
-  center = true,
-  showConnect = true,
-  hideTitle = false
-}: Props): JSX.Element => {
-  let justify = 'items-start';
-
-  if (center) {
-    justify = 'items-center';
-  }
-
+export function PageBox({ children, title, padded, className, rightToolbar }: Props): JSX.Element {
+  const styles = {
+    header: {
+      title: title
+    },
+    container: {
+      className: `
+        transition w-[100vw] h-[100vh] overflow-y-auto overflow-x-hidden
+        grid
+        desktop-8k:grid-rows-[1fr,30fr]
+        desktop-4k:grid-rows-[1fr,30fr]
+        desktop-lg:grid-rows-[2fr,24fr]
+        desktop-md:grid-rows-[2fr,24fr]
+        desktop-sm:grid-rows-[2fr,24fr]
+        tablet:grid-rows-[2fr,24fr]
+        mobile:grid-rows-[2fr,24fr]
+        grid-cols-24
+        justify-items-center
+      `
+    },
+    content: {
+      container: {
+        className: `
+          transition ${
+            padded ? 'desktop:w-5/6 desktop-sm:w-[95%] tabloid:w-[95%] mobile:w-[98%]' : 'w-full'
+          } h-content min-h-full
+          row-span-1 col-span-24
+        `
+      },
+      element: {
+        className: `
+          w-full h-content min-h-full
+          ${className}
+        `
+      }
+    }
+  };
   return (
-    <div className={`flex flex-col ${justify}`}>
-      <Head>
-        <title>{title} | Infinity</title>
-        <meta name="description" content="Infinity NFT marketplace" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+    <>
+      <div {...styles?.container}>
+        <Header {...styles?.header}>
+          <Navbar />
 
-      {showConnect && <Header />}
+          <div {...styles?.content?.container}>
+            <PageHeader title={title} rightToolbar={rightToolbar} />
 
-      <div className="flex flex-col w-full max-w-screen-2xl px-6 lg:px-8 xl:px-10 my-4">
-        {!hideTitle && <PageHeader title={titleElement || title} rightSide={rightSide} />}
-
-        <main>{children}</main>
+            <div {...styles?.content?.element}>{children}</div>
+          </div>
+        </Header>
       </div>
-    </div>
+    </>
   );
-};
+}
 
 // ==================================================
 
 type PageHeaderProps = {
-  title: ReactElement | string;
-  rightSide?: JSX.Element;
+  title?: string;
+  rightToolbar?: JSX.Element;
 };
 
-export const PageHeader = ({ title, rightSide }: PageHeaderProps): JSX.Element => {
+export const PageHeader = ({ title, rightToolbar }: PageHeaderProps): JSX.Element => {
   const router = useRouter();
 
   return (
-    <div className="flex flex-row">
+    <div className="flex flex-row items-center">
       <div
-        className="mb-6 text-7xl font-medium cursor-pointer"
+        className="font-medium cursor-pointer text-6xl tracking-tight mt-4 mb-8"
         onClick={() => {
           router.push('/');
         }}
@@ -69,10 +87,10 @@ export const PageHeader = ({ title, rightSide }: PageHeaderProps): JSX.Element =
         {title}
       </div>
 
-      {rightSide && (
+      {rightToolbar && (
         <>
           <Spacer />
-          <div>{rightSide}</div>
+          <div>{rightToolbar}</div>
         </>
       )}
     </div>

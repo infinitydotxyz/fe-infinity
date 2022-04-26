@@ -289,5 +289,3 @@ export const SVG: SVG = {
     </svg>
   )
 };
-
-export default SVG;

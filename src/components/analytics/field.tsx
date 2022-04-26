@@ -289,5 +289,3 @@ export function Field({ onSort, sortable = false, onClick, type, label, value }:
     </>
   );
 }
-
-export default Field;

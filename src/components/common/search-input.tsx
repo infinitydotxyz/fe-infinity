@@ -187,5 +187,3 @@ export const SearchInput: React.FC<Props> = ({ opened }) => {
     </>
   );
 };
-
-export default SearchInput;

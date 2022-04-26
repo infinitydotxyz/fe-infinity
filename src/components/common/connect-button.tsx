@@ -222,5 +222,3 @@ export const ConnectButton: React.FC = () => {
     </>
   );
 };
-
-export default ConnectButton;
