@@ -1,8 +1,6 @@
 import { useRouter } from 'next/router';
 import React from 'react';
-import { Header } from 'src/components/common/header';
-import { Navbar } from 'src/components/common/navbar';
-import { Spacer } from './spacer';
+import { Navbar, Spacer, Header } from 'src/components/common';
 
 interface Props {
   children?: React.ReactNode;

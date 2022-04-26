@@ -54,7 +54,9 @@ export const SearchInput: React.FC<Props> = ({ opened }) => {
         );
 
   React.useEffect(() => {
-    if (opened) setIsActive(true);
+    if (opened) {
+      setIsActive(true);
+    }
   }, [opened]);
 
   const styles = {

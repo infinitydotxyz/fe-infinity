@@ -1,4 +1,4 @@
-import React, { MouseEvent, ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 
 const classes = {
   // focus ring appears on keyboard tab key navigation for accessibility, not on clicks
@@ -21,11 +21,11 @@ const classes = {
   }
 };
 
-interface Props {
+export interface Props {
   onClick?: (ev: React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => void;
   children: ReactNode;
-  variant?: 'plain' | 'primary' | 'secondary' | 'outline' | 'danger' | 'ghost';
-  size?: 'plain' | 'small' | 'normal' | 'large';
+  variant?: keyof typeof classes.variant;
+  size?: keyof typeof classes.size;
   disabled?: boolean;
   className?: string;
   type?: 'submit' | 'button';

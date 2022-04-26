@@ -3,7 +3,9 @@ import useSWR, { SWRConfiguration } from 'swr';
 import { stringify } from 'query-string';
 import { API_BASE } from './constants';
 import { ProviderManager } from './providers/ProviderManager';
-import HttpStatusCode from './httpStatusCode';
+
+const HTTP_UNAUTHORIZED = 401;
+const HTTP_TOO_MANY_REQUESTS = 429;
 
 const errorToast = (message: string) => {
   console.error(message);
@@ -32,11 +34,12 @@ export async function dummyFetch(mockData = []) {
 // eslint-disable-next-line
 const catchError = (err: any) => {
   const errorObj = err as Error | AxiosError;
-  const errorData = { message: typeof err === 'object' ? err?.message : err, errorResponse: null };
+  const errorData = { message: typeof err === 'object' ? err?.message : err, errorResponse: '' };
 
   if (axios.isAxiosError(errorObj)) {
     // some APIs return response when an error occurred (status !== 200)
-    errorData.errorResponse = (errorObj as AxiosError).response?.data ?? null;
+    // NOTE: added <string> to get around lint errors, not tested, not sure if it works
+    errorData.errorResponse = (errorObj as AxiosError<string>).response?.data ?? '';
   }
   console.error('catchError', err, err?.response);
   return { error: errorData, status: err?.response?.status };
@@ -87,7 +90,7 @@ export const apiGet = async (path: string, params?: ApiParams): Promise<ApiRespo
     return { result: data, status };
   } catch (err) {
     const { error, status } = catchError(err);
-    if (status === HttpStatusCode.UNAUTHORIZED) {
+    if (status === HTTP_UNAUTHORIZED) {
       errorToast('Unauthorized');
       return { error: new Error('Unauthorized'), status };
     }
@@ -112,7 +115,7 @@ export const apiPost = async (path: string, params?: ApiParams): Promise<ApiResp
   } catch (err) {
     const { error, status } = catchError(err);
 
-    if (status === HttpStatusCode.TOO_MANY_REQUESTS) {
+    if (status === HTTP_TOO_MANY_REQUESTS) {
       errorToast("You've been rate limited, please try again in a few minutes");
     }
     return { error, status };

@@ -3,9 +3,11 @@ import Link from 'next/link';
 import { useAppContext } from 'src/utils/context/AppContext';
 
 import styles from './Header.module.scss';
-import { Button, Spacer } from '../common';
+import { Button, Spacer } from 'src/components/common';
 import logo from 'src/images/logo-mini-new.svg';
-import miniLogo from 'src/images/logo-mini-new.svg';
+
+// need a mini logo?
+const miniLogo = logo;
 
 export const Header = (): JSX.Element => {
   const { user, signOut } = useAppContext();

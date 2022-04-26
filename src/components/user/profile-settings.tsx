@@ -1,6 +1,6 @@
 import { FunctionComponent, useState } from 'react';
 import { useRouter } from 'next/router';
-import { Button } from '../common';
+import { Button } from 'src/components/common';
 import { Formik, Form } from 'formik';
 
 import { User } from 'src/utils/context/AppContext';

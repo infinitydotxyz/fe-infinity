@@ -1,18 +1,14 @@
 import React from 'react';
 
-/*
-  ======================================
-    If you have any custom SVGs, it's
-    better to use this Icon component
-    and pass SVG as 'family' prop and the
-    key within below SVG object as the 'name' prop,
-    like so:
+// If you have any custom SVGs, it's
+// better to use this Icon component
+// and pass SVG as 'family' prop and the
+// key within below SVG object as the 'name' prop,
+// like so:
 
-    <Icon name="infinity" family="SVG" />,
-    where Icon is the default export of
-    this file.
-  ======================================
-*/
+// <Icon name="infinity" family="SVG" />,
+// where Icon is the default export of
+// this file.
 
 interface SVG {
   [key: string]: React.ElementType;

@@ -1,11 +1,18 @@
-import { Spacer, Divider, Button, Drawer, SimpleTable, SimpleModal } from 'src/components/common';
+import {
+  Spacer,
+  Divider,
+  TooltipSpec,
+  EthPrice,
+  Button,
+  Drawer,
+  SimpleTable,
+  SimpleModal
+} from 'src/components/common';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { OrderBuilder } from './order-builder';
 import { OrderSummary } from './order-summary';
-import { EthPrice } from 'src/components/common/eth-price';
 import { useState } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
-import { TooltipSpec } from 'src/components/common/tool-tip';
 import { numStr } from 'src/utils';
 interface Props {
   open: boolean;
@@ -107,7 +114,7 @@ export function OrderDrawer({ open, onClose }: Props) {
 
     contents = (
       <>
-        <div className="flex flex-col px-8 space-y-2">
+        <div className="flex flex-col px-12 space-y-2">
           <OrderSummary />
         </div>
 
@@ -133,7 +140,7 @@ export function OrderDrawer({ open, onClose }: Props) {
 
     contents = (
       <>
-        <div className="flex flex-col px-8 space-y-2">
+        <div className="flex flex-col px-12 space-y-2">
           <OrderBuilder />
         </div>
 

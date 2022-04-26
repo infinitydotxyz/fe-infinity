@@ -1,6 +1,6 @@
 import { FunctionComponent, useEffect, useState } from 'react';
 import { apiPost, useFetch } from 'src/utils';
-import { Button } from '../common';
+import { Button } from 'src/components/common';
 import clsx from 'classnames';
 import { useAppContext } from 'src/utils/context/AppContext';
 
@@ -51,7 +51,7 @@ const VotedStatus: FunctionComponent<VotedStatusProps> = ({ chainId, collectionA
         setVotesAgainst(votesAgainst - 1);
         break;
     }
-    apiPost(API_USER_COLLECTION_ADDR, { data: { votedFor: true } });
+    void apiPost(API_USER_COLLECTION_ADDR, { data: { votedFor: true } });
     setUserVote(VOTE_ACTION.VOTES_FOR);
   };
 

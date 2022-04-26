@@ -1,5 +1,5 @@
 import React from 'react';
-import { ClipboardButton } from 'src/components/common/clipboard-button';
+import { ClipboardButton } from 'src/components/common';
 import { ellipsisAddress } from 'src/utils';
 
 interface ShortAddressProps {

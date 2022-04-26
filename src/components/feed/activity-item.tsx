@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { ellipsisAddress, getChainScannerBase } from 'src/utils';
-import { EthPrice } from '../common/eth-price';
+import { EthPrice } from 'src/components/common';
 import { FeedEvent } from './feed-item';
 
 interface Props {

@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'react';
-import { TextInputBox } from '../common';
+import { TextInputBox } from 'src/components/common';
 import { BiPlus } from 'react-icons/bi';
 
 export const UserWalletForm: FunctionComponent = () => {

@@ -1,11 +1,3 @@
-/*
-  ======================================
-    This file overrides default stylings
-    of regular HTML components, like scrollbar
-    and headings and paragraphs.
-  ======================================
-*/
-
 ::-webkit-scrollbar {
   width: 5px;
   cursor: pointer;
@@ -20,14 +12,6 @@
   cursor: pointer;
   background-color: #010101;
 }
-
-/*
-  ======================================
-    Headings and Body should have font
-    based on how it's defined in the
-    configuration file.
-  ======================================
-*/
 
 html,
 body {

@@ -3,7 +3,7 @@ import { getCustomExceptionMsg } from 'src/utils/commonUtils';
 import { ProviderEvents, WalletType } from 'src/utils/providers/AbstractProvider';
 import { UserRejectException } from 'src/utils/providers/UserRejectException';
 import { ProviderManager } from 'src/utils/providers/ProviderManager';
-import { Toaster, toastWarning } from 'src/components/common/toaster';
+import { Toaster, toastWarning } from 'src/components/common';
 import { apiGet } from '../apiUtils';
 
 export type User = {

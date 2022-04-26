@@ -1,9 +1,7 @@
 import { useRouter } from 'next/router';
-import type { FC } from 'react';
-import { Button } from 'src/components/common';
-import { PageBox } from 'src/components/common';
+import { Button, PageBox } from 'src/components/common';
 
-export const TestPage: FC = () => {
+export const TestPage = () => {
   const router = useRouter();
 
   return (
@@ -11,7 +9,7 @@ export const TestPage: FC = () => {
       <div className="flex flex-col space-y-4 items-center">
         <Button
           onClick={() => {
-            router.push('/connect');
+            void router.push('/connect');
           }}
         >
           Connect
@@ -19,7 +17,7 @@ export const TestPage: FC = () => {
 
         <Button
           onClick={() => {
-            router.push('/market');
+            void router.push('/market');
           }}
         >
           Market
@@ -27,7 +25,7 @@ export const TestPage: FC = () => {
 
         <Button
           onClick={() => {
-            router.push('/collection/boredapeyachtclub');
+            void router.push('/collection/boredapeyachtclub');
           }}
         >
           Collection
@@ -35,7 +33,7 @@ export const TestPage: FC = () => {
 
         <Button
           onClick={() => {
-            router.push('/home');
+            void router.push('/home');
           }}
         >
           Homepage Feed
@@ -43,7 +41,7 @@ export const TestPage: FC = () => {
 
         <Button
           onClick={() => {
-            router.push('/analytics/trending/hourly');
+            void router.push('/analytics/trending/hourly');
           }}
         >
           Analytics
@@ -51,28 +49,31 @@ export const TestPage: FC = () => {
 
         <Button
           onClick={() => {
-            router.push('/sandbox');
+            void router.push('/sandbox');
           }}
         >
           SandBox
         </Button>
+
         <Button
           onClick={() => {
-            router.push('/account');
+            void router.push('/profile');
           }}
         >
-          Account
+          Profile
         </Button>
+
         <Button
           onClick={() => {
-            router.push('/asset/1/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/8880');
+            void router.push('/asset/1/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/8880');
           }}
         >
           Asset Detail
         </Button>
+
         <Button
           onClick={() => {
-            router.push('/explore-collections');
+            void router.push('/explore-collections');
           }}
         >
           All Collections

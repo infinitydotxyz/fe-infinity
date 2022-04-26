@@ -87,6 +87,10 @@ module.exports = {
       'F37 Zagma Mono, SF UI Display,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol',
     monospace: 'SF Mono,Monaco,Inconsolata,Fira Mono,Droid Sans Mono,Source Code Pro,monospace'
   },
+  boxShadow: {
+    // used for tooltip shadow
+    ttip: '0 2px 18px rgba(0, 0, 0, 0.12)'
+  },
   colors: {
     background: 'transparent',
     current: 'currentColor',

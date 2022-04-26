@@ -7,9 +7,13 @@ export function OrderBuilder() {
     useOrderContext();
 
   const list = (
-    <div className="overflow-y-auto">
+    <div className="overflow-y-auto flex flex-col space-y-3 mb-8">
       {cartItems.map((item) => (
-        <OrderListItem key={item.tokenName} cartItem={item} allowDelete={true} />
+        <OrderListItem
+          key={`${item.tokenName} ${item.collectionAddress} ${item.tokenId}`}
+          cartItem={item}
+          allowDelete={true}
+        />
       ))}
     </div>
   );
@@ -92,7 +96,7 @@ export function OrderBuilder() {
     contents = (
       <>
         {list}
-        <div className="flex flex-col space-y-2">
+        <div className="flex flex-col space-y-3">
           {priceField()}
           {numItemsField()}
           {expirationDateField()}
@@ -107,7 +111,7 @@ export function OrderBuilder() {
     contents = (
       <>
         {list}
-        <div className="flex flex-col space-y-2">
+        <div className="flex flex-col space-y-3">
           {priceField()}
           {numItemsField()}
           {expirationDateField()}

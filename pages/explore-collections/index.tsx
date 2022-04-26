@@ -1,7 +1,6 @@
 import React, { useState, FunctionComponent, useCallback } from 'react';
-import { PageBox } from 'src/components/common';
+import { PageBox, CollectionGrid } from 'src/components/common';
 import debounce from 'lodash/debounce';
-import { CollectionGrid } from 'src/components/common/collection-grid';
 
 const HomePage: FunctionComponent = () => {
   const [query, setQuery] = useState('');

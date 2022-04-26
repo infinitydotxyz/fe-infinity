@@ -3,28 +3,18 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 2018,
-    sourceType: 'module'
+    sourceType: 'module',
+    project: ['./tsconfig.json'],
+    tsconfigRootDir: __dirname
   },
-  overrides: [
-    // overrides is needed for switch-exhaustiveness-check
-    // seems hacky, but it seems to work
-    // https://stackoverflow.com/questions/58510287/parseroptions-project-has-been-set-for-typescript-eslint-parser
-    {
-      files: ['*.ts', '*.tsx'],
-      parserOptions: {
-        project: ['./tsconfig.json']
-      },
-      rules: {
-        '@typescript-eslint/switch-exhaustiveness-check': 'warn'
-      }
-    }
-  ],
   plugins: ['node', 'react', 'prettier', '@typescript-eslint'],
   extends: [
     'eslint:recommended',
     'plugin:@next/next/recommended',
     'plugin:prettier/recommended',
     'plugin:@typescript-eslint/recommended',
+    // We need to enable this and fix all the errors
+    // 'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'prettier'
   ],
   env: {
@@ -34,8 +24,10 @@ module.exports = {
     'prettier/prettier': 'error',
     '@typescript-eslint/no-unused-vars': 'error',
     '@typescript-eslint/no-explicit-any': 'error',
-    '@typescript-eslint/no-var-requires': 'off',
     'node/no-unsupported-features/es-syntax': ['error', { ignores: ['modules'] }],
+    'no-duplicate-imports': 'error',
+    '@typescript-eslint/switch-exhaustiveness-check': 'warn',
+    curly: 1,
 
     // https://nextjs.org/docs/messages/next-image-unconfigured-host
     // Image is bullshit, turn off this lint error in NextJS
@@ -43,7 +35,7 @@ module.exports = {
   },
   settings: {
     node: {
-      tryExtensions: ['.js', '.json', '.node', '.ts']
+      tryExtensions: ['.js', '.json', '.node', '.ts', '.d.ts']
     }
   },
   ignorePatterns: [
@@ -54,8 +46,9 @@ module.exports = {
     '/.yarn',
     '/**/__snapshots__',
     'build/**',
+    'node_modules/**',
     '*.config.js',
-    'src/settings/theme/**/*.js',
-    'node_modules/**'
+    '**/theme/elements/*.js',
+    '.eslintrc.js'
   ]
 };

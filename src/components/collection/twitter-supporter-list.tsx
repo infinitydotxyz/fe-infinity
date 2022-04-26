@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'react';
-import { Button } from '../common';
+import { Button } from 'src/components/common';
 
 const imgUrl =
   'https://lh3.googleusercontent.com/y_hVyUtNEgy2dAewTXkSAKlipHn3oehM3Pt7zV9M117zayWvwOcqOTxkcldQz_ibAZxF5R_pmUAol4oSenz2H-zPCJGsZQwce-H-=w600';

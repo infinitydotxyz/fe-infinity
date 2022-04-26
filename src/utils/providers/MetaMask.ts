@@ -19,10 +19,10 @@ export class MetaMask extends AbstractProvider {
      * by checking for overrideIsMetaMask we won't open wallet link when we
      * want to open MetaMask
      */
-    if (window.ethereum?.isMetaMask && !(window.ethereum as any).overrideIsMetaMask) {
+    if (window.ethereum?.isMetaMask && !window.ethereum.overrideIsMetaMask) {
       this._provider = window.ethereum;
     } else {
-      const metamaskProvider = ((window.ethereum as any)?.providers || []).find(
+      const metamaskProvider = (window.ethereum?.providers || []).find(
         (item: any) => item?.isMetaMask && !item?.overrideIsMetaMask
       );
       if (metamaskProvider) {

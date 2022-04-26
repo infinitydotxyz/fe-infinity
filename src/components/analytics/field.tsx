@@ -1,9 +1,6 @@
 import React from 'react';
-import { GoTriangleUp } from 'react-icons/go';
-import { GoTriangleDown } from 'react-icons/go';
-import { AiOutlineCaretUp } from 'react-icons/ai';
-import { AiOutlineCaretDown } from 'react-icons/ai';
-import { AiOutlinePlus } from 'react-icons/ai';
+import { GoTriangleUp, GoTriangleDown } from 'react-icons/go';
+import { AiOutlinePlus, AiOutlineCaretUp, AiOutlineCaretDown } from 'react-icons/ai';
 
 interface Props {
   type?: string;

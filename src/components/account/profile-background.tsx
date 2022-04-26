@@ -1,6 +1,6 @@
 import { FunctionComponent, useState } from 'react';
 import { FaPen } from 'react-icons/fa';
-import { ImageUploader } from '../common';
+import { ImageUploader } from 'src/components/common';
 
 const FORM_LABEL = 'profile-background-upload';
 

@@ -1,5 +1,5 @@
 import { OBOrder } from '@infinityxyz/lib/types/core';
-import { EthPrice } from 'src/components/common/eth-price';
+import { EthPrice } from 'src/components/common';
 import { numStr, shortDate } from 'src/utils';
 import { DataColumn, defaultDataColumns } from './data-columns';
 import { OrderbookItem } from './orderbook_item';

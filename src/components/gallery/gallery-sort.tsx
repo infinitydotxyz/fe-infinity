@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useFilterContext } from 'src/utils/context/FilterContext';
-import { Dropdown } from '../common';
+import { Dropdown } from 'src/components/common';
 
 const RARITY_HIGH_LABEL = 'Rarity high';
 const RARITY_LOW_LABEL = 'Rarity low';

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { FetchMore } from 'src/components/common';
+import { FetchMore, CollectionCard } from 'src/components/common';
 import { apiGet } from 'src/utils';
-import { CollectionCard } from 'src/components/common';
 
 export interface CollectionSearchDto {
   description: string;

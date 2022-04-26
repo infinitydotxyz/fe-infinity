@@ -1,21 +1,26 @@
 import { BaseCollection, CollectionStats } from '@infinityxyz/lib/types/core';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { FaCaretDown, FaCaretUp, FaDiscord, FaInstagram, FaTwitter } from 'react-icons/fa';
 import { HiOutlineExternalLink } from 'react-icons/hi';
 
-import { apiDelete, apiPost } from 'src/utils';
+import { apiDelete, apiGet, apiPost } from 'src/utils';
 import { FollowingCollection, useAppContext } from 'src/utils/context/AppContext';
-import { Chip } from '../common';
-import { Toaster, toastError } from '../common/toaster';
+import { Chip, Toaster, toastError } from 'src/components/common';
+import { VerificationModal } from './edit/modals';
 interface Props {
   collection: BaseCollection | null;
   weeklyStatsData: CollectionStats[];
 }
 
 export function StatsChips({ collection, weeklyStatsData }: Props) {
-  const { user, checkSignedIn, userFollowingCollections, fetchFollowingCollections } = useAppContext();
+  const { user, checkSignedIn, userFollowingCollections, fetchFollowingCollections, chainId } = useAppContext();
   const [isFollowing, setIsFollowing] = useState(false);
+  const { push: pushRoute } = useRouter();
+  // TODO(sleeyax): we should probably refactor both 'edit' and 'follow' buttons; they shouldn't be part of this 'social stats' component.
+  const [modalOpen, setModalOpen] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const _isFollowing = !!userFollowingCollections.find(
@@ -59,12 +64,40 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
     }
   };
 
+  const onClickEdit = () => {
+    if (!checkSignedIn()) {
+      return;
+    }
+    setModalOpen(true);
+  };
+
+  const verifyOwnership = async () => {
+    const { error, result } = await apiGet(
+      `/user/${chainId}:${user?.address}/collections/${router.query.name}/permissions`
+    );
+
+    if (error) {
+      toastError(error?.errorResponse?.message);
+      return;
+    }
+
+    setModalOpen(false);
+
+    if (result.canModify) {
+      pushRoute(`/collection/${collection?.slug}/edit`);
+    } else {
+      toastError('Unauthorized. Please try a different wallet.');
+    }
+  };
+
   const firstWeeklyStats = weeklyStatsData[0];
   const twitterChangePct = `${Math.abs(firstWeeklyStats?.twitterFollowersPercentChange ?? 0)}`.slice(0, 4);
   const discordChangePct = `${Math.abs(firstWeeklyStats?.discordFollowersPercentChange ?? 0)}`.slice(0, 4);
 
   return (
     <div className="flex flex-row space-x-2">
+      <VerificationModal isOpen={modalOpen} onSubmit={verifyOwnership} onClose={() => setModalOpen(false)} />
+
       <Chip
         content={
           <span className="flex items-center">
@@ -82,7 +115,7 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
         onClick={onClickFollow}
         active={isFollowing}
       />
-      <Chip content="Edit" />
+      <Chip content="Edit" onClick={onClickEdit} />
 
       {collection?.metadata?.links?.twitter && (
         <Chip

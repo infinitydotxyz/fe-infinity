@@ -2,8 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Popover, Transition } from '@headlessui/react';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { BiCopyAlt } from 'react-icons/bi';
-import { BiCheck } from 'react-icons/bi';
+import { BiCopyAlt, BiCheck } from 'react-icons/bi';
 import { AiOutlineWallet } from 'react-icons/ai';
 
 export const ConnectButton: React.FC = () => {
@@ -72,9 +71,7 @@ export const ConnectButton: React.FC = () => {
       button: {
         container: {
           className: `
-            transition w-full h-full min-h-[48px] rounded-full
-            justify-self-end
-            font-mono grid place-content-center
+            transition w-full h-full rounded-full font-mono  
             ${
               connected
                 ? 'bg-theme-light-50 font-bold hover:bg-theme-light-200 ring-1 ring-inset ring-theme-light-700'
@@ -125,21 +122,6 @@ export const ConnectButton: React.FC = () => {
     button: connected ? `${address?.substring(0, 8)}` : 'Connect',
     wallet: <AiOutlineWallet />,
     menu: [
-      /*
-        ======================================
-          Menu props returns an object. Props of
-          each item in the dropdown looks
-          weird because each of these item can
-          either close the popover manually or it
-          can choose not to depending on their function.
-          For example: If you want to sign out, the
-          popover should close, but if you want to
-          copy address - the popover should not close.
-          So to give the power to close popover, we need to
-          use Popover comopnent (instead of Menu) and do
-          it this way.
-        ======================================
-      */
       {
         type: 'button',
         label: <>Copy Address {copied ? <BiCheck /> : <BiCopyAlt />}</>,

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, SimpleModal, TextInputBox } from '../common';
+import { Button, SimpleModal, TextInputBox } from 'src/components/common';
 
 export const TransferNFTModal: React.FC = () => {
   const [address, setAddress] = useState('');
@@ -24,7 +24,7 @@ export const TransferNFTModal: React.FC = () => {
             label="Address or ENSName"
             placeholder=""
             onChange={(value) => {
-              setAddress(value as string);
+              setAddress(value);
             }}
           />
           <div className="flex mt-12">
