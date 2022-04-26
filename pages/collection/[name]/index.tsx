@@ -12,8 +12,9 @@ import { StatsChips } from 'src/components/collection/stats-chips';
 
 import { CommunityRightPanel } from 'src/components/collection/community-right-panel';
 import { AiOutlineCheck } from 'react-icons/ai';
+import { AvatarImage } from 'src/components/collection/avatar-image';
 
-export function CollectionPage() {
+export default function CollectionPage() {
   const router = useRouter();
   const {
     query: { name }
@@ -41,7 +42,7 @@ export function CollectionPage() {
     <PageBox title={collection?.metadata?.name ?? ''}>
       <div className="flex flex-col mt-10">
         <span>
-          <img src={collection?.metadata.profileImage} className="w-28 h-28 mb-2" />
+          <AvatarImage url={collection?.metadata.profileImage} className="mb-2" />
           <span className="text-7xl mr-2">{collection?.metadata?.name}</span>
           {collection?.hasBlueCheck ? (
             <Image src="/images/blue-check.png" width={24} height={24} alt="Blue check icon" />
@@ -134,5 +135,3 @@ export function CollectionPage() {
     </PageBox>
   );
 }
-
-export default CollectionPage;
