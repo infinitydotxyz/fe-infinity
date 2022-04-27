@@ -117,7 +117,7 @@ export const OrderSummaryItem = ({ orderInCart }: Props) => {
 
         <Spacer />
 
-        <Button variant="ghost" size="small" onClick={() => editOrderFromCart(orderInCart.id)}>
+        <Button variant="round" size="plain" onClick={() => editOrderFromCart(orderInCart.id)}>
           <SVG.editCircle className={iconButtonStyle} />
         </Button>
       </div>

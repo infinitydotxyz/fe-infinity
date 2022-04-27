@@ -56,7 +56,7 @@ export function ImageAndText({ title, subtitle, image, buttonIcon, onClick }: Pr
 
   if (onClick && buttonIcon) {
     deleteButton = (
-      <Button variant="ghost" size="small" onClick={onClick}>
+      <Button variant="round" size="plain" onClick={onClick}>
         {buttonIcon}
       </Button>
     );

@@ -17,7 +17,8 @@ const classes = {
     primary: 'border rounded-3xl border-gray-100 bg-black text-white',
     secondary: 'border rounded-3xl border-gray-100 bg-black text-white',
     outline: 'border rounded-3xl border border-gray-300 text-gray-900',
-    danger: 'bg-red-500 hover:bg-red-800 focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 text-white'
+    danger: 'bg-red-500 hover:bg-red-800 focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 text-white',
+    round: 'rounded-full p-1' // use plain size
   }
 };
 
