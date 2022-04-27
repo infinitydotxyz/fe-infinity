@@ -124,12 +124,7 @@ export async function subscribe(collectionPath: string, filter: FeedFilter, onCh
       );
     } else if (filter?.userAddress) {
       // console.log('filter?.userAddress', filter?.userAddress);
-      q = query(
-        coll,
-        where('userAddress', '==', filter?.userAddress),
-        orderBy('timestamp', 'desc'),
-        limit(EVENTS_PER_PAGE)
-      );
+      q = query(coll, where('buyer', '==', filter?.userAddress), orderBy('timestamp', 'desc'), limit(EVENTS_PER_PAGE));
     } else {
       q = query(coll, orderBy('timestamp', 'desc'), limit(EVENTS_PER_PAGE)); // query(coll, limit(3), orderBy('timestamp', 'desc'))
     }
