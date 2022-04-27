@@ -24,8 +24,8 @@ export function OrderListItem({ cartItem, allowDelete }: Props) {
   return (
     <ImageAndText
       image={<img className={`${collectionIconStyle}`} src={image} alt="" />}
-      title={cartItem.tokenName ?? ''}
-      subtitle={'@' + cartItem.collectionName}
+      title={cartItem.tokenName}
+      subtitle={cartItem.collectionName}
       onClick={onDelete}
       buttonIcon={<SVG.grayDelete className={iconButtonStyle} />}
     />
@@ -36,7 +36,7 @@ export function OrderListItem({ cartItem, allowDelete }: Props) {
 
 interface Props2 {
   image: ReactNode;
-  title: string;
+  title?: string;
   subtitle?: string;
   onClick?: () => void;
   buttonIcon?: ReactNode;
@@ -68,15 +68,22 @@ export function ImageAndText({ title, subtitle, image, buttonIcon, onClick }: Pr
 // ===========================================================================
 
 interface Props3 {
-  title: string;
+  title?: string;
   subtitle?: string;
 }
 
 export function TitleAndSubtitle({ title, subtitle }: Props3) {
+  const titleStyle = 'truncate text-md font-bold text-gray-900';
+  let subtitleStyle = 'truncate text-sm text-gray-500';
+
+  if (!title) {
+    subtitleStyle = titleStyle;
+  }
+
   return (
     <div className="ml-4 truncate">
-      <div className="truncate text-md font-bold text-gray-900">{title}</div>
-      {subtitle && <div className="truncate text-sm text-gray-500">{subtitle}</div>}
+      {title && <div className={titleStyle}>{title}</div>}
+      {subtitle && <div className={subtitleStyle}>{subtitle}</div>}
     </div>
   );
 }

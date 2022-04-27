@@ -90,7 +90,7 @@ export const OrderSummaryItem = ({ orderInCart }: Props) => {
       if (orderInCart.cartItems.length > 0) {
         const item = orderInCart.cartItems[0];
 
-        info = <TitleAndSubtitle title={item.tokenName ?? ''} subtitle={'@' + item.collectionName} />;
+        info = <TitleAndSubtitle title={item.tokenName} subtitle={item.collectionName} />;
       }
     }
 
