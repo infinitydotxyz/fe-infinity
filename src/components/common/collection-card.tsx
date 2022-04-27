@@ -1,6 +1,4 @@
-import { FunctionComponent } from 'react';
 import { trimText } from './read-more-text';
-import Link from 'next/link';
 import { BLANK_IMAGE_URL } from 'src/utils';
 import { CollectionSearchDto } from './collection-grid';
 import { Button } from './button';
@@ -23,33 +21,40 @@ const getAvatarUrl = (imgUrl: string) => {
   }
 };
 
-export const CollectionCard: FunctionComponent<CollectionCardProps> = ({ collection, onButtonClick, buttonName }) => {
+export const CollectionCard = ({ collection, onButtonClick, buttonName }: CollectionCardProps) => {
   const shortText = trimText(collection.description, 60, 80, 100)[0];
   const isTrimText = shortText.length !== collection.description.length;
 
   const avatarUrl = getAvatarUrl(collection.bannerImage) || BLANK_IMAGE_URL;
 
   return (
-    <article className="w-full mx-auto sm:mx-0 bg-theme-light-100 border border-theme-light-100 shadow-md rounded-2xl overflow-hidden hover:shadow-xl cursor-pointer">
-      <Link href={`/collection/${collection.slug}`}>
-        <a href={`/collection/${collection.slug}`} className="text-theme-light-800 font-heading tracking-tight mr-2">
-          <div style={{ height: '200px' }}>
-            <img
-              src={avatarUrl}
-              className="w-full"
-              alt="collection image url"
-              style={{ objectFit: 'cover', transition: 'opacity 400ms ease 0s', height: '100%' }}
-            />
+    <div className="w-full mx-auto sm:mx-0 bg-theme-light-100 border border-theme-light-100 shadow-md rounded-2xl overflow-hidden hover:shadow-xl cursor-pointer">
+      <a href={`/collection/${collection.slug}`} className="text-theme-light-800 font-heading tracking-tight mr-2">
+        <div style={{ height: '200px' }}>
+          <img
+            src={avatarUrl}
+            className="w-full"
+            alt="collection image url"
+            style={{ objectFit: 'cover', transition: 'opacity 400ms ease 0s', height: '100%' }}
+          />
+        </div>
+        <div className="pt-4  text-center">
+          <div className="font-body text-base font-bold text-black">{collection.name}</div>
+          <div
+            className="font-body pt-2 text-base px-5 text-theme-light-800"
+            // Steve: debugging (will remove when done)
+            // onClick={(e) => {
+            //     e.preventDefault();
+            //     e.stopPropagation();
+
+            //     console.log(JSON.stringify(collection, null, '  '));
+            //   }}
+          >
+            {shortText}
+            {isTrimText && ' ...'}
           </div>
-          <div className="pt-4  text-center">
-            <h6 className="font-body text-base font-bold text-black">{collection.name}</h6>
-            <p className="font-body pt-2 text-base px-5 text-theme-light-800">
-              {shortText}
-              {isTrimText && ' ...'}
-            </p>
-          </div>
-        </a>
-      </Link>
+        </div>
+      </a>
 
       {onButtonClick && (
         <div className="flex justify-center w-full mb-4">
@@ -58,6 +63,6 @@ export const CollectionCard: FunctionComponent<CollectionCardProps> = ({ collect
           </Button>
         </div>
       )}
-    </article>
+    </div>
   );
 };

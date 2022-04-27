@@ -69,7 +69,10 @@ export function GalleryBox({ collection, className, cardProps, getEndpoint }: Ga
     const moreData: CardData[] = (result?.data || []).map((item: BaseToken) => {
       return {
         id: collection?.address + '_' + item.tokenId,
+        name: item.metadata?.name,
+        collectionName: collection?.metadata?.name,
         title: collection?.metadata?.name,
+        description: item.metadata.description,
         image: item.image.url,
         price: 0,
         chainId: item.chainId,
