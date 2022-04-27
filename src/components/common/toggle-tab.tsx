@@ -19,7 +19,7 @@ export function useToggleTab(options: string[], defaultOption: string) {
 
 export function ToggleTab({ options, onChange, selected, className = '' }: ToggleTab) {
   return (
-    <div className={`flex ${className}`}>
+    <div className={`flex font-heading ${className}`}>
       <div className="cursor-pointer flex gap-1 rounded-full items-center p-1 bg-gray-100">
         {options.map((option: string) => {
           const activeCx = selected === option ? 'bg-black text-white' : '';

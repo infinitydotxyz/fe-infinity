@@ -92,8 +92,8 @@ export function CollectionFeed({ header, collectionAddress, types, forActivity, 
 
   return (
     <div className={`min-h-[1024px] ${className}`}>
-      <div className="flex justify-between">
-        <div className="text-3xl mb-6">{header}</div>
+      <div className="flex justify-between mt-[-66px] mb-6">
+        <div className="text-3xl mb-6">&nbsp;</div>
         <FeedFilterDropdown selectedTypes={filteringTypes} onChange={onChangeFilterDropdown} />
       </div>
 
