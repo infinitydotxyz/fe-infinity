@@ -7,7 +7,8 @@ import { Button } from './button';
 
 interface CollectionCardProps {
   collection: CollectionSearchDto;
-  onClick?: (collection: CollectionSearchDto) => void;
+  buttonName?: string;
+  onButtonClick?: (collection: CollectionSearchDto) => void;
 }
 
 const getAvatarUrl = (imgUrl: string) => {
@@ -22,7 +23,7 @@ const getAvatarUrl = (imgUrl: string) => {
   }
 };
 
-export const CollectionCard: FunctionComponent<CollectionCardProps> = ({ collection, onClick }) => {
+export const CollectionCard: FunctionComponent<CollectionCardProps> = ({ collection, onButtonClick, buttonName }) => {
   const shortText = trimText(collection.description, 60, 80, 100)[0];
   const isTrimText = shortText.length !== collection.description.length;
 
@@ -50,10 +51,12 @@ export const CollectionCard: FunctionComponent<CollectionCardProps> = ({ collect
         </a>
       </Link>
 
-      {onClick && (
-        <Button variant="outline" className="flex-1 py-3" onClick={() => onClick(collection)}>
-          Buy
-        </Button>
+      {onButtonClick && (
+        <div className="flex justify-center w-full mb-4">
+          <Button variant="outline" onClick={() => onButtonClick(collection)}>
+            {buttonName ?? '???'}
+          </Button>
+        </div>
       )}
     </article>
   );

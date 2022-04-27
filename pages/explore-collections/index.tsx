@@ -27,7 +27,7 @@ const HomePage: FunctionComponent = () => {
         onChange={(event) => handleChange(event.target.value)}
       />
 
-      <CollectionGrid query={debouncedQuery} onClick={(data) => console.log(data)} />
+      <CollectionGrid query={debouncedQuery} />
     </PageBox>
   );
 };

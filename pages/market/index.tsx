@@ -48,7 +48,8 @@ export default function MarketPage() {
           <CollectionGrid
             query="fan"
             className="my-4"
-            onClick={(collection) => {
+            buttonName="Buy"
+            onButtonClick={(collection) => {
               addCartItem({
                 collectionName: collection.name ?? '(no name)',
                 collectionAddress: collection.address ?? '(no address)',
@@ -61,7 +62,8 @@ export default function MarketPage() {
           <CollectionGrid
             query="fan"
             className="my-4"
-            onClick={(collection) => {
+            buttonName="Sell"
+            onButtonClick={(collection) => {
               addCartItem({
                 collectionName: collection.name ?? '(no name)',
                 collectionAddress: collection.address ?? '(no address)',
