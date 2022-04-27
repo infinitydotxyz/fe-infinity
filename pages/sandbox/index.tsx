@@ -173,9 +173,7 @@ const SandboxPage = () => {
         </div>
 
         <SBHeader># SimpleTable</SBHeader>
-        <div className="w-1/2">
-          <SimpleTable items={tableItems} />
-        </div>
+        <SimpleTable items={tableItems} className="w-1/2" />
 
         <SBHeader># Toaster</SBHeader>
         <div className="w-1/2">

@@ -22,13 +22,22 @@ export function OrderListItem({ cartItem, allowDelete }: Props) {
   }
 
   return (
-    <ImageAndText
-      image={<img className={`${collectionIconStyle}`} src={image} alt="" />}
-      title={cartItem.tokenName}
-      subtitle={cartItem.collectionName}
-      onClick={onDelete}
-      buttonIcon={<SVG.grayDelete className={iconButtonStyle} />}
-    />
+    <div
+    // Steve: debugging (will remove when done)
+    // onClick={(e) => {
+    //   e.preventDefault();
+    //   e.stopPropagation();
+    //   console.log(JSON.stringify(cartItem, null, '  '));
+    // }}
+    >
+      <ImageAndText
+        image={<img className={`${collectionIconStyle}`} src={image} alt="" />}
+        title={cartItem.tokenName}
+        subtitle={cartItem.collectionName}
+        onClick={onDelete}
+        buttonIcon={<SVG.grayDelete className={iconButtonStyle} />}
+      />
+    </div>
   );
 }
 
