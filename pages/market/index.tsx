@@ -66,13 +66,14 @@ export default function MarketPage() {
                 collectionName: collection.name ?? '(no name)',
                 collectionAddress: collection.address ?? '(no address)',
                 collectionImage: collection.profileImage ?? '',
-                isSellOrder: false
+                isSellOrder: true
               });
             }}
           />
 
           {collection && (
             <GalleryBox
+              className="mt-28"
               collection={collection}
               cardProps={{
                 cardActions: [
