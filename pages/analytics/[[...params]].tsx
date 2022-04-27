@@ -676,156 +676,154 @@ export const Analytics = () => {
   };
 
   return (
-    <>
-      <PageBox title="Analytics">
-        <div {...styles?.container}>
-          <div {...styles?.options?.container}>
-            <Tab.Group {...styles?.options?.timeframes?.group}>
-              <div {...styles?.options?.timeframes?.container}>
-                <div {...styles?.options?.timeframes?.list?.container}>
-                  <Tab.List {...styles?.options?.timeframes?.list?.background}>
-                    {content?.options?.timeframes?.map((tab, i) => (
-                      <React.Fragment key={i}>
-                        <Tab {...styles?.options?.timeframes?.tab}>{tab?.label}</Tab>
-                      </React.Fragment>
-                    ))}
-                  </Tab.List>
-                </div>
+    <PageBox title="Analytics">
+      <div {...styles?.container}>
+        <div {...styles?.options?.container}>
+          <Tab.Group {...styles?.options?.timeframes?.group}>
+            <div {...styles?.options?.timeframes?.container}>
+              <div {...styles?.options?.timeframes?.list?.container}>
+                <Tab.List {...styles?.options?.timeframes?.list?.background}>
+                  {content?.options?.timeframes?.map((tab, i) => (
+                    <React.Fragment key={i}>
+                      <Tab {...styles?.options?.timeframes?.tab}>{tab?.label}</Tab>
+                    </React.Fragment>
+                  ))}
+                </Tab.List>
               </div>
-            </Tab.Group>
+            </div>
+          </Tab.Group>
 
-            <Tab.Group {...styles?.options?.actions?.group}>
-              <Tab.List {...styles?.options?.actions?.container}>
-                {content?.options?.actions?.links?.map((link, i) => (
-                  <React.Fragment key={i}>
-                    <Tab {...styles?.options?.actions?.tab}>{link?.label}</Tab>
-                  </React.Fragment>
-                ))}
+          <Tab.Group {...styles?.options?.actions?.group}>
+            <Tab.List {...styles?.options?.actions?.container}>
+              {content?.options?.actions?.links?.map((link, i) => (
+                <React.Fragment key={i}>
+                  <Tab {...styles?.options?.actions?.tab}>{link?.label}</Tab>
+                </React.Fragment>
+              ))}
 
-                {content?.options?.actions?.buttons?.map((tab, i) => (
-                  <React.Fragment key={i}>
-                    {tab.type === 'drawer' && (
-                      <>
-                        <button {...styles?.options?.actions?.button} {...tab?.props}>
-                          {tab?.label}
-                        </button>
-                        <Drawer {...tab?.drawer?.props}>
-                          <>
-                            <div {...styles?.drawer?.content?.container}>
-                              <div {...styles?.drawer?.content?.grid}>
-                                <div {...styles?.drawer?.content?.form?.container}>
-                                  {content?.filter?.params?.map((x, i) => (
-                                    <React.Fragment key={i}>
-                                      <div {...styles?.drawer?.content?.form?.row}>
-                                        <div {...styles?.drawer?.content?.form?.label}>{x?.label}</div>
-                                        <div {...styles?.drawer?.content?.form?.checkbox?.container}>
-                                          <input {...styles?.drawer?.content?.form?.checkbox?.element} {...x?.props} />
-                                        </div>
+              {content?.options?.actions?.buttons?.map((tab, i) => (
+                <React.Fragment key={i}>
+                  {tab.type === 'drawer' && (
+                    <>
+                      <button {...styles?.options?.actions?.button} {...tab?.props}>
+                        {tab?.label}
+                      </button>
+                      <Drawer {...tab?.drawer?.props}>
+                        <>
+                          <div {...styles?.drawer?.content?.container}>
+                            <div {...styles?.drawer?.content?.grid}>
+                              <div {...styles?.drawer?.content?.form?.container}>
+                                {content?.filter?.params?.map((x, i) => (
+                                  <React.Fragment key={i}>
+                                    <div {...styles?.drawer?.content?.form?.row}>
+                                      <div {...styles?.drawer?.content?.form?.label}>{x?.label}</div>
+                                      <div {...styles?.drawer?.content?.form?.checkbox?.container}>
+                                        <input {...styles?.drawer?.content?.form?.checkbox?.element} {...x?.props} />
                                       </div>
-                                    </React.Fragment>
-                                  ))}
-                                </div>
-                                <div {...styles?.drawer?.content?.actions?.container}>
-                                  <button {...styles?.drawer?.content?.actions?.clear} onClick={clearCheckboxes}>
-                                    Clear All
-                                  </button>
-                                  <button {...styles?.drawer?.content?.actions?.apply} onClick={applyCheckboxes}>
-                                    Apply
-                                  </button>
-                                </div>
+                                    </div>
+                                  </React.Fragment>
+                                ))}
+                              </div>
+                              <div {...styles?.drawer?.content?.actions?.container}>
+                                <button {...styles?.drawer?.content?.actions?.clear} onClick={clearCheckboxes}>
+                                  Clear All
+                                </button>
+                                <button {...styles?.drawer?.content?.actions?.apply} onClick={applyCheckboxes}>
+                                  Apply
+                                </button>
                               </div>
                             </div>
-                          </>
-                        </Drawer>
-                      </>
-                    )}
-                    {tab.type === 'button' && (
-                      <>
-                        <button {...styles?.options?.actions?.button} {...tab?.props}>
-                          {tab?.label}
-                        </button>
-                      </>
-                    )}
+                          </div>
+                        </>
+                      </Drawer>
+                    </>
+                  )}
+                  {tab.type === 'button' && (
+                    <>
+                      <button {...styles?.options?.actions?.button} {...tab?.props}>
+                        {tab?.label}
+                      </button>
+                    </>
+                  )}
+                </React.Fragment>
+              ))}
+            </Tab.List>
+          </Tab.Group>
+        </div>
+        <div {...styles?.statistics?.container}>
+          <div {...styles?.statistics?.list?.container}>
+            {data.isLoading ? (
+              <>
+                {Array.from(Array(limit).keys())?.map((x, i) => (
+                  <React.Fragment key={i}>
+                    <div {...styles?.statistics?.list?.loading}></div>
                   </React.Fragment>
                 ))}
-              </Tab.List>
-            </Tab.Group>
-          </div>
-          <div {...styles?.statistics?.container}>
-            <div {...styles?.statistics?.list?.container}>
-              {data.isLoading ? (
-                <>
-                  {Array.from(Array(limit).keys())?.map((x, i) => (
-                    <React.Fragment key={i}>
-                      <div {...styles?.statistics?.list?.loading}></div>
-                    </React.Fragment>
-                  ))}
-                </>
-              ) : data.isError || content?.statistics?.length === 0 ? (
-                <>
-                  {Array.from(Array(limit).keys())?.map((x, i) => (
-                    <React.Fragment key={i}>
-                      <div {...styles?.statistics?.list?.error}></div>
-                    </React.Fragment>
-                  ))}
-                </>
-              ) : (
-                <>
-                  {content?.statistics?.map((stat, i) => (
-                    <React.Fragment key={i}>
-                      <div {...styles?.statistics?.list?.item?.container}>
-                        {stat
-                          ?.filter((s) => s.placement === 'start')
-                          .map((field, j) => (
-                            <React.Fragment key={j}>
-                              <div {...styles?.statistics?.list?.item?.field?.container}>
-                                <Field
-                                  type={field?.type}
-                                  label={field?.label}
-                                  value={field?.value}
-                                  onClick={field?.onClick}
-                                />
-                                <div className=""></div>
-                              </div>
-                            </React.Fragment>
-                          ))}
-                        {stat
-                          ?.filter((s) => s.placement === 'middle' && s.show === true)
-                          .splice(0, filterLimit)
-                          .map((field, j) => (
-                            <React.Fragment key={j}>
-                              <div {...styles?.statistics?.list?.item?.field?.container}>
-                                <Field
-                                  sortable={field?.sortable}
-                                  onSort={field?.onSort}
-                                  type={field?.type}
-                                  label={field?.label}
-                                  value={field?.value}
-                                />
-                                <div className=""></div>
-                              </div>
-                            </React.Fragment>
-                          ))}
-                        {stat
-                          ?.filter((s) => s.placement === 'end')
-                          .map((field, j) => (
-                            <React.Fragment key={j}>
-                              <div {...styles?.statistics?.list?.item?.field?.container}>
-                                <Field type={field?.type} label={field?.label} value={field?.value} />
-                                <div className=""></div>
-                              </div>
-                            </React.Fragment>
-                          ))}
-                      </div>
-                    </React.Fragment>
-                  ))}
-                </>
-              )}
-            </div>
+              </>
+            ) : data.isError || content?.statistics?.length === 0 ? (
+              <>
+                {Array.from(Array(limit).keys())?.map((x, i) => (
+                  <React.Fragment key={i}>
+                    <div {...styles?.statistics?.list?.error}></div>
+                  </React.Fragment>
+                ))}
+              </>
+            ) : (
+              <>
+                {content?.statistics?.map((stat, i) => (
+                  <React.Fragment key={i}>
+                    <div {...styles?.statistics?.list?.item?.container}>
+                      {stat
+                        ?.filter((s) => s.placement === 'start')
+                        .map((field, j) => (
+                          <React.Fragment key={j}>
+                            <div {...styles?.statistics?.list?.item?.field?.container}>
+                              <Field
+                                type={field?.type}
+                                label={field?.label}
+                                value={field?.value}
+                                onClick={field?.onClick}
+                              />
+                              <div className=""></div>
+                            </div>
+                          </React.Fragment>
+                        ))}
+                      {stat
+                        ?.filter((s) => s.placement === 'middle' && s.show === true)
+                        .splice(0, filterLimit)
+                        .map((field, j) => (
+                          <React.Fragment key={j}>
+                            <div {...styles?.statistics?.list?.item?.field?.container}>
+                              <Field
+                                sortable={field?.sortable}
+                                onSort={field?.onSort}
+                                type={field?.type}
+                                label={field?.label}
+                                value={field?.value}
+                              />
+                              <div className=""></div>
+                            </div>
+                          </React.Fragment>
+                        ))}
+                      {stat
+                        ?.filter((s) => s.placement === 'end')
+                        .map((field, j) => (
+                          <React.Fragment key={j}>
+                            <div {...styles?.statistics?.list?.item?.field?.container}>
+                              <Field type={field?.type} label={field?.label} value={field?.value} />
+                              <div className=""></div>
+                            </div>
+                          </React.Fragment>
+                        ))}
+                    </div>
+                  </React.Fragment>
+                ))}
+              </>
+            )}
           </div>
         </div>
-      </PageBox>
-    </>
+      </div>
+    </PageBox>
   );
 };
 
