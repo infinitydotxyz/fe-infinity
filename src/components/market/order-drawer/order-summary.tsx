@@ -72,11 +72,21 @@ export const OrderSummaryItem = ({ orderInCart }: Props) => {
     return null;
   };
 
+  const isCollectionsOrder = () => {
+    for (const x of orderInCart.cartItems) {
+      if (!x.tokenId) {
+        return true;
+      }
+    }
+
+    return false;
+  };
+
   const collectionIconsForOrder = () => {
     const numCollectionsSuffix = orderInCart.cartItems.length > 1 ? 'Collections' : 'Collection';
     const iconWidth = collectionIconWidthInPx();
 
-    const collectionsOrder = false;
+    const collectionsOrder = isCollectionsOrder();
 
     let icon;
     let info;
@@ -107,7 +117,7 @@ export const OrderSummaryItem = ({ orderInCart }: Props) => {
 
         <Spacer />
 
-        <Button variant="ghost" size="small" onClick={() => editOrderFromCart(orderInCart.id)}>
+        <Button variant="round" size="plain" onClick={() => editOrderFromCart(orderInCart.id)}>
           <SVG.editCircle className={iconButtonStyle} />
         </Button>
       </div>

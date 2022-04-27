@@ -1,4 +1,5 @@
 import { Spacer } from 'src/components/common';
+import { twMerge } from 'tailwind-merge';
 
 // ---------------------------------
 // Example
@@ -19,12 +20,13 @@ export interface SimpleTableItem {
 
 interface Props {
   items: SimpleTableItem[];
+  className?: string;
 }
 
-export function SimpleTable({ items }: Props) {
+export const SimpleTable = ({ items, className = '' }: Props) => {
   const table = items.map((item) => {
     return (
-      <div key={Math.random()} className="flex w-full mb-2">
+      <div key={Math.random()} className="flex w-full">
         <div>{item.title}</div>
         <Spacer />
         <div className="font-bold">{item.value}</div>
@@ -32,5 +34,5 @@ export function SimpleTable({ items }: Props) {
     );
   });
 
-  return <>{table}</>;
-}
+  return <div className={twMerge(className, 'space-y-2')}>{table}</div>;
+};
