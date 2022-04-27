@@ -1,20 +1,21 @@
 import { EthPrice, Button, SimpleTable, SimpleTableItem, Spacer, SVG } from 'src/components/common';
 import { shortDate } from 'src/utils';
 import { OrderInCart, useOrderContext } from 'src/utils/context/OrderContext';
+import { TitleAndSubtitle } from './order-list-item';
 import { collectionIconHeight, collectionIconStyle, collectionIconWidthInPx, iconButtonStyle } from './ui-constants';
 
 export function OrderSummary() {
   const { isSellOrderCart, ordersInCart, editOrderFromCart } = useOrderContext();
 
-  const iconStackForOrder = (orderInCart: OrderInCart) => {
+  const collectionStackForOrder = (orderInCart: OrderInCart) => {
     let leftOffset = 0;
+
     const iconStack = orderInCart.cartItems.map((item, index) => {
       const whiteBoxLeft = leftOffset;
       const iconLeft = leftOffset + (index === 0 ? 0 : 2);
 
       leftOffset = iconLeft + 4;
 
-      // a collection or a token image
       let image = item.tokenImage;
       if (!image) {
         image = item.collectionImage;
@@ -31,9 +32,49 @@ export function OrderSummary() {
     return iconStack;
   };
 
+  const tokenStackForOrder = (orderInCart: OrderInCart) => {
+    if (orderInCart.cartItems.length > 0) {
+      const item = orderInCart.cartItems[0];
+
+      let image = item.collectionImage;
+      if (!image) {
+        image = item.tokenImage;
+      }
+
+      return (
+        <div className={'relative '}>
+          <img className={`absolute ${collectionIconStyle}`} src={image} alt="" />
+          <div className="absolute -top-1 right-0 z-50 text-center shadow-lg rounded-full h-6 w-6 bg-white">
+            {orderInCart.cartItems.length}
+          </div>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   const collectionIconsForOrder = (orderInCart: OrderInCart) => {
     const numCollectionsSuffix = orderInCart.cartItems.length > 1 ? 'Collections' : 'Collection';
     const iconWidth = collectionIconWidthInPx();
+
+    const collectionsOrder = false;
+
+    let icon;
+    let info;
+
+    if (collectionsOrder) {
+      icon = collectionStackForOrder(orderInCart);
+      info = <div className="ml-4 font-bold">{`${orderInCart.cartItems.length} ${numCollectionsSuffix}`}</div>;
+    } else {
+      icon = tokenStackForOrder(orderInCart);
+
+      if (orderInCart.cartItems.length > 0) {
+        const item = orderInCart.cartItems[0];
+
+        info = <TitleAndSubtitle title={item.tokenName ?? ''} subtitle={'@' + item.collectionName} />;
+      }
+    }
 
     return (
       <div className={`relative ${collectionIconHeight} mb-4 w-full flex items-center`}>
@@ -41,10 +82,10 @@ export function OrderSummary() {
           className={`${collectionIconHeight}`}
           style={{ width: `${iconWidth + (orderInCart.cartItems.length - 1) * 4}px` }}
         >
-          {iconStackForOrder(orderInCart)}
+          {icon}
         </div>
 
-        <div className="ml-4 font-bold">{`${orderInCart.cartItems.length} ${numCollectionsSuffix}`}</div>
+        {info}
 
         <Spacer />
 
@@ -90,10 +131,9 @@ export function OrderSummary() {
       <div key={orderInCart.id}>
         {collectionIconsForOrder(orderInCart)}
         <SimpleTable items={tableItemsForOrder(orderInCart)} />
-        <div className="h-6" />
       </div>
     );
   }
 
-  return <>{orderDivs}</>;
+  return <div className="space-y-6">{orderDivs}</div>;
 }
