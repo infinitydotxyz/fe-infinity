@@ -24,6 +24,10 @@ export function CollectionFeed({ header, collectionAddress, types, forActivity, 
   const [commentPanelEvent, setCommentPanelEvent] = useState<FeedEvent | null>(null);
   const [filteringTypes, setFilteringTypes] = useState<FeedEventType[]>([]);
 
+  if (forActivity && !collectionAddress) {
+    return null; // require collectionAddress
+  }
+
   async function getEvents() {
     try {
       subscribe(COLL_FEED, filter, (type: string, data: FeedEvent) => {

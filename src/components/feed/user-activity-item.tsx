@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { ellipsisAddress, getChainScannerBase } from 'src/utils';
 import { EthPrice } from 'src/components/common';
 import { FeedEvent } from './feed-item';
-import { FeedEventType } from '@infinityxyz/lib/types/core/feed';
+import { FeedEventTypeNames } from '@infinityxyz/lib/types/core/feed';
 
 interface Props {
   event: FeedEvent;
@@ -11,7 +11,7 @@ interface Props {
 export function UserActivityItem({ event }: Props) {
   return (
     <div>
-      <div className="bg-gray-100 p-10 rounded-2xl flex items-center">
+      <div className="bg-gray-100 p-10 rounded-2xl flex items-center font-heading">
         <Link href={`/asset/${event.chainId}/${event.collectionAddress}/${event.tokenId}`} passHref={true}>
           <a>
             <img src={event.image} className="w-16 max-h-[80px] rounded-[50%]" alt="NFT Image" />
@@ -32,11 +32,11 @@ export function UserActivityItem({ event }: Props) {
             <div className="text-gray-400">Event</div>
             <div className="font-bold">
               <a
-                href={`${getChainScannerBase(event.chainId)}/address/${event.seller}`}
+                href={`${getChainScannerBase(event.chainId)}/tx/${event.txHash}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {event.type === FeedEventType.NftSale && 'Sale'}
+                {FeedEventTypeNames[event.type]}
               </a>
             </div>
           </div>

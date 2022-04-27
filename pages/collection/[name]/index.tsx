@@ -120,7 +120,8 @@ export default function CollectionPage() {
               />
             )}
             {/* {currentTab === 1 && <ActivityTab dailyStats={dailyStats} weeklyStats={weeklyStats} />} */}
-            {selected === 'Activity' && <ActivityTab />}
+            {selected === 'Activity' && <ActivityTab collectionAddress={collection?.address ?? ''} />}
+
             {selected === '???' && (
               <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-16">
                 <div className="lg:col-span-1 xl:col-span-2">
