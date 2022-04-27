@@ -86,7 +86,7 @@ export default function MarketPage() {
                         collectionName: data?.collectionName ?? '(no name)',
                         collectionAddress: data?.tokenAddress ?? '(no address)',
                         tokenImage: data?.image ?? '',
-                        tokenName: data?.title ?? '(no name)',
+                        tokenName: data?.name ?? '(no name)',
                         tokenId: data?.tokenId ?? '0',
                         isSellOrder: false
                       });
