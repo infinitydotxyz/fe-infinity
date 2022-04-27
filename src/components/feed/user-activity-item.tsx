@@ -31,7 +31,11 @@ export function UserActivityItem({ event }: Props) {
           <div>
             <div className="text-gray-400">Event</div>
             <div className="font-bold">
-              <a href={`${getChainScannerBase('1')}/address/${event.seller}`} target="_blank" rel="noopener noreferrer">
+              <a
+                href={`${getChainScannerBase(event.chainId)}/address/${event.seller}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 {event.type === FeedEventType.NftSale && 'Sale'}
               </a>
             </div>
@@ -39,7 +43,11 @@ export function UserActivityItem({ event }: Props) {
           <div>
             <div className="text-gray-400">From</div>
             <div className="font-bold">
-              <a href={`${getChainScannerBase('1')}/address/${event.seller}`} target="_blank" rel="noopener noreferrer">
+              <a
+                href={`${getChainScannerBase(event.chainId)}/address/${event.seller}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 {event.sellerDisplayName ? ellipsisAddress(event.sellerDisplayName) : ellipsisAddress(event.seller)}
               </a>
             </div>
@@ -47,7 +55,11 @@ export function UserActivityItem({ event }: Props) {
           <div>
             <div className="text-gray-400">To</div>
             <div className="font-bold">
-              <a href={`${getChainScannerBase('1')}/address/${event.buyer}`} target="_blank" rel="noopener noreferrer">
+              <a
+                href={`${getChainScannerBase(event.chainId)}/address/${event.buyer}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 {event.buyerDisplayName ? ellipsisAddress(event.buyerDisplayName) : ellipsisAddress(event.buyer)}
               </a>
             </div>

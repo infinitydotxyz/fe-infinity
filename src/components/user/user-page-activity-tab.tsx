@@ -7,9 +7,7 @@ export const UserPageActivityTab: FunctionComponent = () => {
 
   return (
     <div>
-      {user?.address && (
-        <UserProfileFeed header="Activity" userAddress={user?.address} forUserActivity={true} forActivity={true} />
-      )}
+      {user?.address && <UserProfileFeed header="Activity" userAddress={user?.address} forUserActivity={true} />}
     </div>
   );
 };
