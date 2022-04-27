@@ -28,6 +28,7 @@ const COMMENTS_PER_PAGE = 20;
 export type FeedFilter = {
   types?: FeedEventType[];
   collectionAddress?: string;
+  userAddress?: string;
 };
 
 export type Comment = {
@@ -104,12 +105,28 @@ export async function subscribe(collectionPath: string, filter: FeedFilter, onCh
         orderBy('timestamp', 'desc'),
         limit(EVENTS_PER_PAGE)
       );
+    } else if (filter?.types && filter?.types.length > 0 && filter?.userAddress) {
+      q = query(
+        coll,
+        where('type', 'in', filter?.types),
+        where('buyer', '==', filter?.userAddress),
+        orderBy('timestamp', 'desc'),
+        limit(EVENTS_PER_PAGE)
+      );
     } else if (filter?.types && filter?.types.length > 0) {
       q = query(coll, where('type', 'in', filter?.types), orderBy('timestamp', 'desc'), limit(EVENTS_PER_PAGE));
     } else if (filter?.collectionAddress) {
       q = query(
         coll,
         where('collectionAddress', '==', filter?.collectionAddress),
+        orderBy('timestamp', 'desc'),
+        limit(EVENTS_PER_PAGE)
+      );
+    } else if (filter?.userAddress) {
+      // console.log('filter?.userAddress', filter?.userAddress);
+      q = query(
+        coll,
+        where('userAddress', '==', filter?.userAddress),
         orderBy('timestamp', 'desc'),
         limit(EVENTS_PER_PAGE)
       );
