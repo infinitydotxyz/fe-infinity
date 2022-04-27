@@ -8,19 +8,18 @@ import { ActivityItem } from './activity-item';
 
 let eventsInit = false;
 
-interface CollectionFeedProps {
+interface UserProfileFeedProps {
   header: string;
-  collectionAddress?: string;
+  userAddress?: string;
   types?: FeedEventType[];
   forActivity?: boolean;
   className?: string;
 }
 
-export function CollectionFeed({ header, collectionAddress, types, forActivity, className }: CollectionFeedProps) {
+export function UserProfileFeed({ header, userAddress, types, forActivity, className }: UserProfileFeedProps) {
   const [events, setEvents] = useState<FeedEvent[]>([]);
   const [newEvents, setNewEvents] = useState<FeedEvent[]>([]); // new feed events
-  const [filter, setFilter] = useState<FeedFilter>({ collectionAddress, types });
-  // const [filteredEvents, setFilteredEvents] = useState<FeedEvent[]>([]);
+  const [filter, setFilter] = useState<FeedFilter>({ userAddress, types });
   const [commentPanelEvent, setCommentPanelEvent] = useState<FeedEvent | null>(null);
   const [filteringTypes, setFilteringTypes] = useState<FeedEventType[]>([]);
 
@@ -51,14 +50,6 @@ export function CollectionFeed({ header, collectionAddress, types, forActivity, 
     setNewEvents([]);
     getEvents();
   }, [filter]);
-
-  // useEffect(() => {
-  //   let arr = events;
-  //   if (filter.types) {
-  //     arr = events.filter((event) => (filter.types ?? []).indexOf(event?.type as FeedEventType) >= 0);
-  //   }
-  //   setFilteredEvents(arr);
-  // }, [events]);
 
   const onChangeFilterDropdown = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newFilter = { ...filter };

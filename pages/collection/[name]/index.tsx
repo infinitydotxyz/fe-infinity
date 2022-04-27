@@ -39,7 +39,7 @@ export default function CollectionPage() {
   const firstDailyStats = dailyStats?.data[0];
 
   return (
-    <PageBox title={collection?.metadata?.name ?? ''}>
+    <PageBox showTitle={false} title={collection?.metadata?.name ?? ''}>
       <div className="flex flex-col mt-10">
         <span>
           <AvatarImage url={collection?.metadata.profileImage} className="mb-2" />
