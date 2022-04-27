@@ -7,10 +7,11 @@ import { CollectionFeed } from '../feed/collection-feed';
 //   data: CollectionStats[];
 // };
 
-// interface ActivityTabProps {
-//   dailyStats?: StatsData | null;
-//   weeklyStats?: StatsData | null;
-// }
+interface ActivityTabProps {
+  // dailyStats?: StatsData | null;
+  // weeklyStats?: StatsData | null;
+  collectionAddress?: string;
+}
 
 // type ChartData = {
 //   name: string;
@@ -18,7 +19,7 @@ import { CollectionFeed } from '../feed/collection-feed';
 // };
 
 // export function ActivityTab({ dailyStats, weeklyStats }: ActivityTabProps) {
-export function ActivityTab() {
+export function ActivityTab({ collectionAddress }: ActivityTabProps) {
   // const [type, setType] = useState<'DAY' | 'WEEK'>('DAY');
   // const [data, setData] = useState<ChartData[] | []>([]);
 
@@ -96,7 +97,7 @@ export function ActivityTab() {
         </LineChart>
       </div> */}
 
-      <CollectionFeed header="Activity" forActivity={true} />
+      <CollectionFeed forActivity={true} collectionAddress={collectionAddress ?? ''} />
     </>
   );
 }

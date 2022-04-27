@@ -9,20 +9,23 @@ import { ActivityItem } from './activity-item';
 let eventsInit = false;
 
 interface CollectionFeedProps {
-  header: string;
   collectionAddress?: string;
   types?: FeedEventType[];
   forActivity?: boolean;
   className?: string;
 }
 
-export function CollectionFeed({ header, collectionAddress, types, forActivity, className }: CollectionFeedProps) {
+export function CollectionFeed({ collectionAddress, types, forActivity, className }: CollectionFeedProps) {
   const [events, setEvents] = useState<FeedEvent[]>([]);
   const [newEvents, setNewEvents] = useState<FeedEvent[]>([]); // new feed events
   const [filter, setFilter] = useState<FeedFilter>({ collectionAddress, types });
   // const [filteredEvents, setFilteredEvents] = useState<FeedEvent[]>([]);
   const [commentPanelEvent, setCommentPanelEvent] = useState<FeedEvent | null>(null);
   const [filteringTypes, setFilteringTypes] = useState<FeedEventType[]>([]);
+
+  if (forActivity && !collectionAddress) {
+    return null; // require collectionAddress
+  }
 
   async function getEvents() {
     try {
@@ -88,8 +91,8 @@ export function CollectionFeed({ header, collectionAddress, types, forActivity, 
 
   return (
     <div className={`min-h-[1024px] ${className}`}>
-      <div className="flex justify-between">
-        <div className="text-3xl mb-6">{header}</div>
+      <div className="flex justify-between mt-[-66px] mb-6">
+        <div className="text-3xl mb-6">&nbsp;</div>
         <FeedFilterDropdown selectedTypes={filteringTypes} onChange={onChangeFilterDropdown} />
       </div>
 

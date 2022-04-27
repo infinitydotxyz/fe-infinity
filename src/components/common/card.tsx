@@ -46,10 +46,8 @@ export function Card({ data, cardActions, dropdownActions, className }: CardProp
       <Link href={`/asset/${data?.chainId}/${data?.tokenAddress}/${data?.tokenId}`} passHref={true}>
         <img className="rounded-3xl w-[290px] overflow-hidden" src={data?.image ?? ''} alt="card" />
       </Link>
-      {data?.rarityScore && (
-        <span className="absolute bg-gray-100 top-3 right-3 py-2 px-3 rounded-3xl">
-          {Math.round(data?.rarityScore)}
-        </span>
+      {data?.rarityRank && (
+        <span className="absolute bg-gray-100 top-3 right-3 py-2 px-3 rounded-3xl">{Math.round(data?.rarityRank)}</span>
       )}
 
       <div className="p-1 mt-3">
