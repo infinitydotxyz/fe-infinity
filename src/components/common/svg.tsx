@@ -15,10 +15,17 @@ interface SVG {
 }
 
 export const SVG: SVG = {
+  grayDelete: ({ ...props }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" {...props}>
+      <circle fill="#ddd" cx="12" cy="12" r="12" />
+
+      <rect fill="black" x="6" y="11" width="12" height="2" />
+    </svg>
+  ),
   editCircle: ({ ...props }) => (
     <svg viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
       <mask id="myMask">
-        <circle fill="white" cx="5" cy="5" r="5" mask="url(#myMask)" />
+        <circle fill="white" cx="5" cy="5" r="5" />
 
         <path
           transform="scale(.5) translate(5,5)"

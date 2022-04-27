@@ -1,7 +1,6 @@
-import { Button } from 'src/components/common';
+import { Button, SVG } from 'src/components/common';
 import { OrderCartItem, useOrderContext } from 'src/utils/context/OrderContext';
 import { collectionIconStyle, iconButtonStyle } from './ui-constants';
-import deleteIcon from 'src/images/gray-delete.svg';
 
 interface Props {
   cartItem: OrderCartItem;
@@ -22,7 +21,7 @@ export function OrderListItem({ cartItem, allowDelete }: Props) {
           removeCartItem(cartItem);
         }}
       >
-        <img alt="remove" src={deleteIcon.src} className={iconButtonStyle} />
+        <SVG.grayDelete className={iconButtonStyle} />
       </Button>
     );
   }
