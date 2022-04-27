@@ -4,10 +4,28 @@ import { OrderInCart, useOrderContext } from 'src/utils/context/OrderContext';
 import { TitleAndSubtitle } from './order-list-item';
 import { collectionIconHeight, collectionIconStyle, collectionIconWidthInPx, iconButtonStyle } from './ui-constants';
 
-export function OrderSummary() {
-  const { isSellOrderCart, ordersInCart, editOrderFromCart } = useOrderContext();
+export const OrderSummary = () => {
+  const { ordersInCart } = useOrderContext();
 
-  const collectionStackForOrder = (orderInCart: OrderInCart) => {
+  const orderDivs = [];
+
+  for (const orderInCart of ordersInCart) {
+    orderDivs.push(<OrderSummaryItem key={orderInCart.id} orderInCart={orderInCart} />);
+  }
+
+  return <div className="space-y-6">{orderDivs}</div>;
+};
+
+// =======================================================================
+
+interface Props {
+  orderInCart: OrderInCart;
+}
+
+export const OrderSummaryItem = ({ orderInCart }: Props) => {
+  const { isSellOrderCart, editOrderFromCart } = useOrderContext();
+
+  const collectionStackForOrder = () => {
     let leftOffset = 0;
 
     const iconStack = orderInCart.cartItems.map((item, index) => {
@@ -32,7 +50,7 @@ export function OrderSummary() {
     return iconStack;
   };
 
-  const tokenStackForOrder = (orderInCart: OrderInCart) => {
+  const tokenStackForOrder = () => {
     if (orderInCart.cartItems.length > 0) {
       const item = orderInCart.cartItems[0];
 
@@ -54,7 +72,7 @@ export function OrderSummary() {
     return null;
   };
 
-  const collectionIconsForOrder = (orderInCart: OrderInCart) => {
+  const collectionIconsForOrder = () => {
     const numCollectionsSuffix = orderInCart.cartItems.length > 1 ? 'Collections' : 'Collection';
     const iconWidth = collectionIconWidthInPx();
 
@@ -64,10 +82,10 @@ export function OrderSummary() {
     let info;
 
     if (collectionsOrder) {
-      icon = collectionStackForOrder(orderInCart);
+      icon = collectionStackForOrder();
       info = <div className="ml-4 font-bold">{`${orderInCart.cartItems.length} ${numCollectionsSuffix}`}</div>;
     } else {
-      icon = tokenStackForOrder(orderInCart);
+      icon = tokenStackForOrder();
 
       if (orderInCart.cartItems.length > 0) {
         const item = orderInCart.cartItems[0];
@@ -124,16 +142,10 @@ export function OrderSummary() {
     return items;
   };
 
-  const orderDivs = [];
-
-  for (const orderInCart of ordersInCart) {
-    orderDivs.push(
-      <div key={orderInCart.id}>
-        {collectionIconsForOrder(orderInCart)}
-        <SimpleTable items={tableItemsForOrder(orderInCart)} />
-      </div>
-    );
-  }
-
-  return <div className="space-y-6">{orderDivs}</div>;
-}
+  return (
+    <>
+      {collectionIconsForOrder()}
+      <SimpleTable items={tableItemsForOrder(orderInCart)} />
+    </>
+  );
+};
