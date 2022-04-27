@@ -9,14 +9,13 @@ import { ActivityItem } from './activity-item';
 let eventsInit = false;
 
 interface CollectionFeedProps {
-  header: string;
   collectionAddress?: string;
   types?: FeedEventType[];
   forActivity?: boolean;
   className?: string;
 }
 
-export function CollectionFeed({ header, collectionAddress, types, forActivity, className }: CollectionFeedProps) {
+export function CollectionFeed({ collectionAddress, types, forActivity, className }: CollectionFeedProps) {
   const [events, setEvents] = useState<FeedEvent[]>([]);
   const [newEvents, setNewEvents] = useState<FeedEvent[]>([]); // new feed events
   const [filter, setFilter] = useState<FeedFilter>({ collectionAddress, types });

@@ -14,7 +14,7 @@ export function HomePage() {
   return (
     <PageBox title="Home">
       <div className="flex">
-        <CollectionFeed header="Feed" className="md:w-2/3 sm:w-full" />
+        <CollectionFeed className="md:w-2/3 sm:w-full" />
 
         <div className="ml-4 md:w-1/3 sm:w-full">
           <div className="text-3xl mb-6">Trending</div>

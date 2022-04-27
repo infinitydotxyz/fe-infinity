@@ -97,7 +97,7 @@ export function ActivityTab({ collectionAddress }: ActivityTabProps) {
         </LineChart>
       </div> */}
 
-      <CollectionFeed header="Activity" forActivity={true} collectionAddress={collectionAddress ?? ''} />
+      <CollectionFeed forActivity={true} collectionAddress={collectionAddress ?? ''} />
     </>
   );
 }

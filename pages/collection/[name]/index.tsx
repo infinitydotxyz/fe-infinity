@@ -125,7 +125,7 @@ export default function CollectionPage() {
             {selected === '???' && (
               <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-16">
                 <div className="lg:col-span-1 xl:col-span-2">
-                  <CollectionFeed header="Feed" collectionAddress={collection?.address ?? ''} />
+                  <CollectionFeed collectionAddress={collection?.address ?? ''} />
                 </div>
                 <div className="col-span-1">{collection && <CommunityRightPanel collection={collection} />}</div>
               </div>
