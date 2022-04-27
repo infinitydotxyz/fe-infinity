@@ -5,13 +5,13 @@ import { Navbar, Spacer, Header } from 'src/components/common';
 interface Props {
   children?: React.ReactNode;
   title: string;
-  showTitle?: boolean; // Render title or not. Some pages render their own title in the page.
+  showTitle?: boolean;
   className?: string;
   fullWidth?: boolean;
   rightToolbar?: JSX.Element;
 }
 
-export function PageBox({ children, title, showTitle, fullWidth, className, rightToolbar }: Props): JSX.Element {
+export function PageBox({ children, title, showTitle = true, fullWidth, className, rightToolbar }: Props): JSX.Element {
   const styles = {
     header: {
       title: title
@@ -55,7 +55,7 @@ export function PageBox({ children, title, showTitle, fullWidth, className, righ
           <Navbar />
 
           <div {...styles?.content?.container}>
-            {showTitle === false ? null : <PageHeader title={title} rightToolbar={rightToolbar} />}
+            {showTitle ? <PageHeader title={title} rightToolbar={rightToolbar} /> : null}
 
             <div {...styles?.content?.element}>{children}</div>
           </div>

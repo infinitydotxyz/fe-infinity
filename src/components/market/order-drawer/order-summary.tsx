@@ -1,5 +1,4 @@
-import { RiEditCircleFill } from 'react-icons/ri';
-import { EthPrice, Button, SimpleTable, SimpleTableItem, Spacer } from 'src/components/common';
+import { EthPrice, Button, SimpleTable, SimpleTableItem, Spacer, SVG } from 'src/components/common';
 import { shortDate } from 'src/utils';
 import { OrderInCart, useOrderContext } from 'src/utils/context/OrderContext';
 import { collectionIconHeight, collectionIconStyle, collectionIconWidthInPx, iconButtonStyle } from './ui-constants';
@@ -50,7 +49,7 @@ export function OrderSummary() {
         <Spacer />
 
         <Button variant="ghost" size="small" onClick={() => editOrderFromCart(orderInCart.id)}>
-          <RiEditCircleFill className={iconButtonStyle} />
+          <SVG.editCircle className={iconButtonStyle} />
         </Button>
       </div>
     );
