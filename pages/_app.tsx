@@ -3,7 +3,7 @@ import * as gtag from 'lib/ga/gtag';
 import { useRouter } from 'next/router';
 import type { AppProps } from 'next/app';
 import 'src/settings/theme/globals.scss';
-import { isLocalhost, isServer } from 'src/utils/commonUtils';
+import { isLocalhost } from 'src/utils/commonUtils';
 import { AppContextProvider } from 'src/utils/context/AppContext';
 import { OrderContextProvider } from 'src/utils/context/OrderContext';
 import { FilterContextProvider } from 'src/utils/context/FilterContext';
@@ -28,7 +28,7 @@ const App: FunctionComponent<AppProps> = (props) => {
     return () => router.events.off('routeChangeComplete', handleRouteChange);
   }, [router.events]);
 
-  return isServer() ? null : (
+  return (
     <StrictMode>
       <NextNProgress />
       <AppContextProvider>

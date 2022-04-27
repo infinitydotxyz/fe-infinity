@@ -6,6 +6,7 @@ import { useFilterContext } from 'src/utils/context/FilterContext';
 import { Button, Card, CardProps, FetchMore, Spinner } from 'src/components/common';
 import { FilterPanel } from '../filter/filter-panel';
 import { GallerySort } from './gallery-sort';
+import { twMerge } from 'tailwind-merge';
 
 // type Asset = {
 //   address: string;
@@ -26,9 +27,10 @@ interface GalleryProps {
   collection: BaseCollection | null;
   cardProps?: CardProps;
   getEndpoint?: string;
+  className?: string;
 }
 
-export function GalleryBox({ collection, cardProps, getEndpoint }: GalleryProps) {
+export function GalleryBox({ collection, className, cardProps, getEndpoint }: GalleryProps) {
   const { filterState } = useFilterContext();
 
   const [filterShowed, setFilterShowed] = useState(true);
@@ -67,7 +69,10 @@ export function GalleryBox({ collection, cardProps, getEndpoint }: GalleryProps)
     const moreData: CardData[] = (result?.data || []).map((item: BaseToken) => {
       return {
         id: collection?.address + '_' + item.tokenId,
+        name: item.metadata?.name,
+        collectionName: collection?.metadata?.name,
         title: collection?.metadata?.name,
+        description: item.metadata.description,
         image: item.image.url,
         price: 0,
         chainId: item.chainId,
@@ -101,7 +106,7 @@ export function GalleryBox({ collection, cardProps, getEndpoint }: GalleryProps)
   }, [currentPage]);
 
   return (
-    <div className="flex items-start">
+    <div className={twMerge(className, 'flex items-start')}>
       {collection && filterShowed && (
         <div className="mt-4">
           <FilterPanel collection={collection} collectionAddress={collection?.address} />

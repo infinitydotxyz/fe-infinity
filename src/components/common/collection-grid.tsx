@@ -35,10 +35,11 @@ const fetchCollections = async (query: string, cursor: undefined | string) => {
 interface Props {
   query: string;
   className?: string;
-  onClick?: (collection: CollectionSearchDto) => void;
+  buttonName?: string;
+  onButtonClick?: (collection: CollectionSearchDto) => void;
 }
 
-export const CollectionGrid = ({ query, className, onClick }: Props) => {
+export const CollectionGrid = ({ query, className, onButtonClick, buttonName }: Props) => {
   const [collections, setCollections] = useState<CollectionSearchDto[]>([]);
   const [error, setError] = useState(false);
   const [cursor, setCursor] = useState<string>('');
@@ -81,7 +82,12 @@ export const CollectionGrid = ({ query, className, onClick }: Props) => {
     <div className={className}>
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12 ">
         {collections.map((collection) => (
-          <CollectionCard key={collection.slug} collection={collection} onClick={onClick} />
+          <CollectionCard
+            key={collection.slug}
+            collection={collection}
+            buttonName={buttonName}
+            onButtonClick={onButtonClick}
+          />
         ))}
       </div>
 

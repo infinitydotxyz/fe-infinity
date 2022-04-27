@@ -44,9 +44,7 @@ export function Card({ data, cardActions, dropdownActions, className }: CardProp
   return (
     <div className={twMerge(`sm:mx-0 relative ${className ?? ''}`)}>
       <Link href={`/asset/${data?.chainId}/${data?.tokenAddress}/${data?.tokenId}`} passHref={true}>
-        <a className="relative">
-          <img className="rounded-3xl w-[290px] overflow-hidden" src={data?.image ?? ''} alt="card" />
-        </a>
+        <img className="rounded-3xl w-[290px] overflow-hidden" src={data?.image ?? ''} alt="card" />
       </Link>
       {data?.rarityScore && (
         <span className="absolute bg-gray-100 top-3 right-3 py-2 px-3 rounded-3xl">
@@ -55,7 +53,17 @@ export function Card({ data, cardActions, dropdownActions, className }: CardProp
       )}
 
       <div className="p-1 mt-3">
-        <div className="font-bold" title={data?.title}>
+        <div
+          className="font-bold"
+          title={data?.title}
+          // Steve: debugging (will remove when done)
+          // onClick={(e) => {
+          //   e.preventDefault();
+          //   e.stopPropagation();
+
+          //   console.log(JSON.stringify(data, null, '  '));
+          // }}
+        >
           {title}
         </div>
         <div className="text-secondary" title={data?.tokenId}>
