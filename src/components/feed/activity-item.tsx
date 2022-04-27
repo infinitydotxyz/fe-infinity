@@ -20,7 +20,11 @@ export function ActivityItem({ event }: Props) {
           <div className="text-sm">
             <div className="text-gray-400">Token</div>
             <div>
-              <a href={`${getChainScannerBase('1')}/tx/${event.txHash}`} target="_blank" rel="noopener noreferrer">
+              <a
+                href={`${getChainScannerBase(event.chainId)}/tx/${event.txHash}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 {ellipsisAddress(event.txHash)}
               </a>
             </div>
@@ -28,7 +32,11 @@ export function ActivityItem({ event }: Props) {
           <div className="text-sm">
             <div className="text-gray-400">Buyer</div>
             <div>
-              <a href={`${getChainScannerBase('1')}/address/${event.buyer}`} target="_blank" rel="noopener noreferrer">
+              <a
+                href={`${getChainScannerBase(event.chainId)}/address/${event.buyer}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 {event.buyerDisplayName ? ellipsisAddress(event.buyerDisplayName) : ellipsisAddress(event.buyer)}
               </a>
             </div>
@@ -36,7 +44,11 @@ export function ActivityItem({ event }: Props) {
           <div className="text-sm">
             <div className="text-gray-400">Seller</div>
             <div>
-              <a href={`${getChainScannerBase('1')}/address/${event.seller}`} target="_blank" rel="noopener noreferrer">
+              <a
+                href={`${getChainScannerBase(event.chainId)}/address/${event.seller}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 {event.sellerDisplayName ? ellipsisAddress(event.sellerDisplayName) : ellipsisAddress(event.seller)}
               </a>
             </div>
