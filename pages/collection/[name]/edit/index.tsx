@@ -1,19 +1,14 @@
 import { BaseCollection, CollectionMetadata } from '@infinityxyz/lib/types/core';
 import { useRouter } from 'next/router';
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useEffect, useReducer } from 'react';
+import { Toaster } from 'react-hot-toast';
 import { PlusButton } from 'src/components/collection/edit/buttons';
 import { ProfileImageForm } from 'src/components/collection/edit/profile-image-form';
 import { RemoveIcon } from 'src/components/collection/edit/remove-icon';
 import SocialsInputGroup from 'src/components/collection/socials-input-group';
-import {
-  Button,
-  TextAreaInputBox,
-  TextInputBox,
-  Heading,
-  Toaster,
-  toastError,
-  toastSuccess
-} from 'src/components/common';
+import { Button, TextAreaInputBox, TextInputBox } from 'src/components/common';
+import { Heading } from 'src/components/common/heading';
+import { toastError, toastSuccess } from 'src/components/common/toaster';
 import logo from 'src/images/logo-mini-new.svg';
 import { apiPut, DISCORD_BOT_INVITE_URL, useFetch } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
@@ -129,7 +124,6 @@ function reducer(
 export default function EditCollectionPage() {
   const router = useRouter();
   const [metadata, dispatchMetadata] = useReducer(reducer, {});
-  const [address, setAddress] = useState<string>();
   const { user, chainId, checkSignedIn } = useAppContext();
   const path = router.query.name ? `/collections/${router.query.name}` : '';
   // TODO: maybe we can fetch this data on the server side too?
@@ -138,7 +132,6 @@ export default function EditCollectionPage() {
 
   useEffect(() => {
     dispatchMetadata({ type: 'updateMetadata', metadata: collection?.metadata ?? {} });
-    setAddress(collection?.address);
   }, [collection]);
 
   const close = () => router.replace(`/collection/${router.query.name}`);
@@ -151,7 +144,7 @@ export default function EditCollectionPage() {
     }
 
     const { error } = await apiPut(`/user/${chainId}:${user?.address}/collections/${router.query.name}`, {
-      data: { metadata, address }
+      data: { metadata }
     });
 
     if (error) {
@@ -160,8 +153,9 @@ export default function EditCollectionPage() {
       return;
     }
 
+    await close();
+
     toastSuccess('Collection metadata saved');
-    close();
   };
 
   const deleteProfileImage = async () => {
