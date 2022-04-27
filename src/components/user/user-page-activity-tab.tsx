@@ -6,6 +6,10 @@ export const UserPageActivityTab: FunctionComponent = () => {
   const { user } = useAppContext();
 
   return (
-    <div>{user?.address && <UserProfileFeed header="Activity" userAddress={user?.address} forActivity={true} />}</div>
+    <div>
+      {user?.address && (
+        <UserProfileFeed header="Activity" userAddress={user?.address} forUserActivity={true} forActivity={true} />
+      )}
+    </div>
   );
 };

@@ -5,6 +5,7 @@ import { CommentPanel } from './comment-panel';
 import { FeedEventType } from '@infinityxyz/lib/types/core/feed';
 import { FeedFilterDropdown } from './feed-filter-dropdown';
 import { ActivityItem } from './activity-item';
+import { UserActivityItem } from './user-activity-item';
 
 let eventsInit = false;
 
@@ -13,10 +14,18 @@ interface UserProfileFeedProps {
   userAddress?: string;
   types?: FeedEventType[];
   forActivity?: boolean;
+  forUserActivity?: boolean;
   className?: string;
 }
 
-export function UserProfileFeed({ header, userAddress, types, forActivity, className }: UserProfileFeedProps) {
+export function UserProfileFeed({
+  header,
+  userAddress,
+  types,
+  forActivity,
+  forUserActivity,
+  className
+}: UserProfileFeedProps) {
   const [events, setEvents] = useState<FeedEvent[]>([]);
   const [newEvents, setNewEvents] = useState<FeedEvent[]>([]); // new feed events
   const [filter, setFilter] = useState<FeedFilter>({ userAddress, types });
@@ -101,6 +110,9 @@ export function UserProfileFeed({ header, userAddress, types, forActivity, class
         {events.map((event, idx) => {
           if (forActivity) {
             return <ActivityItem key={idx} event={event} />;
+          }
+          if (forUserActivity) {
+            return <UserActivityItem key={idx} event={event} />;
           }
           return (
             <li key={idx} className="">
