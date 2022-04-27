@@ -28,7 +28,6 @@ export const defaultDataColumns = (order: OBOrder): DataColumn[] => {
       width: '2fr'
     },
     {
-      // TODO look into issues with changing field name
       name: 'Event',
       type: 'Text',
       field: 'type',
