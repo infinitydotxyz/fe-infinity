@@ -3,9 +3,9 @@ import toast, { Toast, Toaster as RHTRoaster } from 'react-hot-toast';
 import { IoMdCheckmarkCircleOutline } from 'react-icons/io';
 import { MdErrorOutline, MdWarningAmber } from 'react-icons/md';
 
-export function Toaster() {
+export const Toaster = () => {
   return <RHTRoaster />;
-}
+};
 
 // styles: https://tailwindui.com/components/application-ui/overlays/notifications
 const ToasterTemplate = ({

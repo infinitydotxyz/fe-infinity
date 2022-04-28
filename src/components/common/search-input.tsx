@@ -62,7 +62,7 @@ export const SearchInput: React.FC<Props> = ({ opened }) => {
   const styles = {
     container: {
       className: `
-        w-full h-full px-4 rounded-full max-h-full
+        w-full px-4 py-2 rounded-full max-h-full
         flex place-items-center gap-2
         ${
           isActive

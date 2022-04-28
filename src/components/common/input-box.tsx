@@ -17,7 +17,7 @@ interface Props {
   icon?: ReactNode;
 }
 
-export function InputBox({ tooltip, label, children, icon, renderRightIcon, isFullWidth }: Props): JSX.Element {
+export const InputBox = ({ tooltip, label, children, icon, renderRightIcon, isFullWidth }: Props): JSX.Element => {
   const [showTooltip, setShowTooltip] = useState(false);
 
   return (
@@ -46,7 +46,7 @@ export function InputBox({ tooltip, label, children, icon, renderRightIcon, isFu
       </div>
     </TooltipWrapper>
   );
-}
+};
 
 // =======================================================
 
@@ -58,7 +58,7 @@ interface Props2 {
   tooltip?: TooltipSpec;
 }
 
-export function DatePickerBox({ tooltip, label, value, onChange, placeholder }: Props2): JSX.Element {
+export const DatePickerBox = ({ tooltip, label, value, onChange, placeholder }: Props2): JSX.Element => {
   return (
     <InputBox label={label} tooltip={tooltip}>
       <div className="flex items-center">
@@ -69,7 +69,7 @@ export function DatePickerBox({ tooltip, label, value, onChange, placeholder }: 
       </div>
     </InputBox>
   );
-}
+};
 
 // ================================================================
 
@@ -81,19 +81,19 @@ interface Props3<T extends ComboBoxBaseType> {
   tooltip?: TooltipSpec;
 }
 
-export function ComboInputBox<T extends ComboBoxBaseType>({
+export const ComboInputBox = <T extends ComboBoxBaseType>({
   tooltip,
   label,
   options,
   onChange,
   value
-}: Props3<T>): JSX.Element {
+}: Props3<T>): JSX.Element => {
   return (
     <InputBox label={label} tooltip={tooltip}>
       <ComboBox options={options} value={value} onChange={onChange} />
     </InputBox>
   );
-}
+};
 
 // ================================================================
 
@@ -111,7 +111,7 @@ interface Props4 {
   className?: string;
 }
 
-export function TextInputBox({
+export const TextInputBox = ({
   bind,
   tooltip,
   value = '',
@@ -123,7 +123,7 @@ export function TextInputBox({
   onChange,
   fieldProps,
   ...props
-}: Props4 & Omit<Props, 'children'>): JSX.Element {
+}: Props4 & Omit<Props, 'children'>): JSX.Element => {
   if (bind) {
     return (
       <Field validateOnChange name={bind} {...fieldProps}>
@@ -169,7 +169,7 @@ export function TextInputBox({
       </div>
     </InputBox>
   );
-}
+};
 
 interface Props5 {
   label: string;
@@ -182,7 +182,7 @@ interface Props5 {
   fieldProps?: FieldConfig;
 }
 
-export function TextAreaBox({
+export const TextAreaBox = ({
   value = '',
   label,
   placeholder,
@@ -191,7 +191,7 @@ export function TextAreaBox({
   rows = 3,
   bind,
   fieldProps
-}: Props5): JSX.Element {
+}: Props5): JSX.Element => {
   if (bind) {
     return (
       <Field validateOnChange name={bind} {...fieldProps}>
@@ -234,7 +234,7 @@ export function TextAreaBox({
       </div>
     </InputBox>
   );
-}
+};
 
 // ================================================================
 
@@ -247,7 +247,7 @@ interface TextAreaInputBoxProps {
   className?: string;
 }
 
-export function TextAreaInputBox({
+export const TextAreaInputBox = ({
   tooltip,
   value,
   label,
@@ -255,7 +255,7 @@ export function TextAreaInputBox({
   onChange,
   className,
   ...props
-}: TextAreaInputBoxProps & Omit<React.HTMLProps<HTMLTextAreaElement>, 'onChange'>): JSX.Element {
+}: TextAreaInputBoxProps & Omit<React.HTMLProps<HTMLTextAreaElement>, 'onChange'>): JSX.Element => {
   return (
     <InputBox label={label} tooltip={tooltip} isFullWidth>
       <div className={twMerge('flex items-center w-full', className)}>
@@ -269,4 +269,4 @@ export function TextAreaInputBox({
       </div>
     </InputBox>
   );
-}
+};

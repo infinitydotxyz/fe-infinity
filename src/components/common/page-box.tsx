@@ -2,6 +2,9 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { Navbar, Spacer, Header } from 'src/components/common';
 
+// used in the Header
+export const pageStyles = 'mx-auto desktop:w-5/6 desktop-sm:w-[95%] tabloid:w-[95%] mobile:w-[98%]';
+
 interface Props {
   children?: React.ReactNode;
   title: string;
@@ -15,35 +18,16 @@ export function PageBox({ children, title, showTitle = true, fullWidth, classNam
   const styles = {
     content: {
       container: {
-        className: `
-          transition ${
-            fullWidth ? 'w-full' : 'desktop:w-5/6 desktop-sm:w-[95%] tabloid:w-[95%] mobile:w-[98%]'
-          } h-content min-h-full
-          row-span-1 col-span-24
-        `
+        className: `transition min-h-full ${fullWidth ? 'w-full' : pageStyles}`
       },
       element: {
-        className: `
-          w-full h-content min-h-full
-          ${className}
-        `
+        className: `w-full min-h-full  ${className} `
       }
     }
   };
   return (
     <>
-      <div
-        className="transition w-[100vw] h-[100vh] overflow-y-auto overflow-x-hidden grid
-        desktop-8k:grid-rows-[1fr,30fr]
-        desktop-4k:grid-rows-[1fr,30fr]
-        desktop-lg:grid-rows-[2fr,24fr]
-        desktop-md:grid-rows-[2fr,24fr]
-        desktop-sm:grid-rows-[2fr,24fr]
-        tablet:grid-rows-[2fr,24fr]
-        mobile:grid-rows-[2fr,24fr]
-        grid-cols-24
-        justify-items-center"
-      >
+      <div className="transition w-[100vw] h-[100vh] overflow-y-auto overflow-x-hidden justify-items-center">
         <Header title={title}>
           <Navbar />
 
