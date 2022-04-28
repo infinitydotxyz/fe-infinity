@@ -15,6 +15,7 @@ export const OrderbookRow = ({ order }: OrderbookRowProps): JSX.Element => {
 
     switch (dataColumn.field) {
       case 'name':
+      case 'buyOrSell':
         break;
       case 'type':
         value = order.isSellOrder ? 'Listing' : 'Offer';
@@ -54,6 +55,7 @@ export const OrderbookRow = ({ order }: OrderbookRowProps): JSX.Element => {
           </div>
         );
       case 'Name':
+      case 'Button':
         return <></>;
     }
   };
