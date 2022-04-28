@@ -9,7 +9,7 @@ import metamask from 'src/images/metamask.svg';
 import coinbase from 'src/images/coinbase.svg';
 import walletConnect from 'src/images/walletConnect.svg';
 
-export default function ConnectWallet() {
+const ConnectWallet = () => {
   const router = useRouter();
   const { connectWallet, user, userReady } = useAppContext();
 
@@ -95,7 +95,9 @@ export default function ConnectWallet() {
       </div>
     </div>
   );
-}
+};
+
+export default ConnectWallet;
 
 // ===============================================
 
@@ -106,7 +108,7 @@ interface Props {
   onClick: () => void;
 }
 
-function ConnectItem({ title, img, subtitle, onClick }: Props): JSX.Element {
+const ConnectItem = ({ title, img, subtitle, onClick }: Props): JSX.Element => {
   const arrowImage = (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" className="ml-auto">
       <path
@@ -132,4 +134,4 @@ function ConnectItem({ title, img, subtitle, onClick }: Props): JSX.Element {
       {arrowImage}
     </div>
   );
-}
+};

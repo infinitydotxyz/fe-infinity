@@ -196,6 +196,6 @@ interface Props {
   children: ReactNode;
 }
 
-export function SBHeader({ children }: Props) {
+const SBHeader = ({ children }: Props) => {
   return <div className="my-6 px-6 py-3 bg-slate-100 font-bold rounded-lg">{children}</div>;
-}
+};

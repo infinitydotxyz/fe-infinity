@@ -121,7 +121,7 @@ function reducer(
   }
 }
 
-export default function EditCollectionPage() {
+const EditCollectionPage = () => {
   const router = useRouter();
   const [metadata, dispatchMetadata] = useReducer(reducer, {});
   const { user, chainId, checkSignedIn } = useAppContext();
@@ -471,4 +471,6 @@ export default function EditCollectionPage() {
       <Toaster />
     </div>
   );
-}
+};
+
+export default EditCollectionPage;

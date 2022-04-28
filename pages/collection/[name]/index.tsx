@@ -16,7 +16,7 @@ import { AvatarImage } from 'src/components/collection/avatar-image';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { OrderDrawer } from 'src/components/market/order-drawer/order-drawer';
 
-export default function CollectionPage() {
+const CollectionPage = () => {
   const { orderDrawerOpen, setOrderDrawerOpen, addCartItem } = useOrderContext();
   const router = useRouter();
   const {
@@ -153,4 +153,6 @@ export default function CollectionPage() {
       <OrderDrawer open={orderDrawerOpen} onClose={() => setOrderDrawerOpen(false)} />
     </PageBox>
   );
-}
+};
+
+export default CollectionPage;
