@@ -24,11 +24,7 @@ export const InputBox = ({ tooltip, label, children, icon, renderRightIcon, isFu
       <div className="py-3 pl-6 pr-2 outline outline-1 rounded-3xl w-full flex items-center outline-theme-light-700">
         {icon && <span className="pr-8">{icon}</span>}
         <div className="w-full">
-          {label && (
-            <label className="block font-normal font-zagmamono text-sm" style={{ color: '#666666' }}>
-              {label}
-            </label>
-          )}
+          {label && <label className="block font-normal font-zagmamono text-sm text-theme-light-800">{label}</label>}
           <div className="flex items-center w-full">
             <div className="flex items-center w-full">{children}</div>
 
@@ -156,7 +152,7 @@ export const TextAreaBox = ({ value, label, placeholder, tooltip, onChange, rows
           rows={rows}
           value={value}
           onChange={(e) => onChange && onChange(e.target.value)}
-          className="p-0 mt-2 border-none focus:ring-0 block w-full text-base font-zagmamono"
+          className="p-0 border-none focus:ring-0 block w-full text-base"
           placeholder={placeholder}
         />
       </div>
