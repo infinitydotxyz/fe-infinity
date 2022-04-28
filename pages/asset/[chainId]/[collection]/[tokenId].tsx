@@ -48,6 +48,7 @@ const AssetDetail: FunctionComponent = () => {
     );
   }
 
+  // NOTE:  this is buggy, can't call hooks after if statement above
   const { isLoading, error, token, collection } = useFetchAssertInfo(query.chainId, query.collection, query.tokenId);
 
   if (isLoading) {
