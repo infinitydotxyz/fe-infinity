@@ -96,7 +96,7 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
   const discordChangePct = `${Math.abs(firstWeeklyStats?.discordFollowersPercentChange ?? 0)}`.slice(0, 4);
 
   return (
-    <div className="flex flex-row space-x-2">
+    <div className="flex flex-row space-x-2 items-center">
       <VerificationModal isOpen={modalOpen} onSubmit={verifyOwnership} onClose={() => setModalOpen(false)} />
 
       <Chip
