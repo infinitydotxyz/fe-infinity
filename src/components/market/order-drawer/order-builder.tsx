@@ -3,8 +3,17 @@ import { useOrderContext } from 'src/utils/context/OrderContext';
 import { OrderListItem } from './order-list-item';
 
 export const OrderBuilder = () => {
-  const { cartItems, isSellOrderCart, price, setPrice, expirationDate, setExpirationDate, numItems, setNumItems } =
-    useOrderContext();
+  const {
+    cartItems,
+    isCollectionsCart,
+    isSellOrderCart,
+    price,
+    setPrice,
+    expirationDate,
+    setExpirationDate,
+    numItems,
+    setNumItems
+  } = useOrderContext();
 
   const list = (
     <div className="overflow-y-auto flex flex-col space-y-3 mb-8">
@@ -112,7 +121,7 @@ export const OrderBuilder = () => {
         {list}
         <div className="flex flex-col space-y-3">
           {priceField()}
-          {numItemsField()}
+          {isCollectionsCart() && numItemsField()}
           {expirationDateField()}
         </div>
 

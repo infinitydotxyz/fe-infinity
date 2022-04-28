@@ -162,8 +162,12 @@ export const TextInputBox = ({
         <input
           type={type}
           value={value}
-          onChange={(e) => onChange && onChange(e.target.value)}
-          className="p-0 border-none focus:ring-0 block w-full text-base"
+          onChange={(e) => {
+            if (onChange) {
+              onChange(e.target.value);
+            }
+          }}
+          className="p-0 border-none focus:ring-0 font-bold block w-full"
           placeholder={placeholder}
         />
       </div>

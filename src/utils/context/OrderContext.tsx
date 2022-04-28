@@ -74,6 +74,7 @@ export type OrderContextType = {
   isOrderBuilderEmpty: () => boolean;
 
   isSellOrderCart: () => boolean;
+  isCollectionsCart: () => boolean;
 
   executeOrder: () => Promise<boolean>;
 
@@ -325,7 +326,11 @@ export const OrderContextProvider = ({ children }: Props) => {
   };
 
   const addCartItem = (item: OrderCartItem) => {
-    if (isSellOrderCart() !== item.isSellOrder) {
+    // if we add a buy to a sell cart, or add a collection to a token cart
+    // clear out everything.
+    const collectionItem = !item.tokenId;
+
+    if (isSellOrderCart() !== item.isSellOrder || isCollectionsCart() !== collectionItem) {
       setCartItems([item]);
       setOrdersInCart([]);
     } else {
@@ -355,6 +360,17 @@ export const OrderContextProvider = ({ children }: Props) => {
     }
   };
 
+  // the builder only handles all tokens or all collections
+  const isCollectionsCart = () => {
+    for (const x of cartItems) {
+      if (!x.tokenId) {
+        return true;
+      }
+    }
+
+    return false;
+  };
+
   // ===============================================================
 
   const value: OrderContextType = {
@@ -371,6 +387,7 @@ export const OrderContextProvider = ({ children }: Props) => {
     isOrderBuilderEmpty,
     isOrderStateEmpty,
     isSellOrderCart,
+    isCollectionsCart,
     executeOrder,
     price,
     setPrice,
