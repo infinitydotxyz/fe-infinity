@@ -13,8 +13,11 @@ import { StatsChips } from 'src/components/collection/stats-chips';
 import { CommunityRightPanel } from 'src/components/collection/community-right-panel';
 import { AiOutlineCheck } from 'react-icons/ai';
 import { AvatarImage } from 'src/components/collection/avatar-image';
+import { useOrderContext } from 'src/utils/context/OrderContext';
+import { OrderDrawer } from 'src/components/market/order-drawer/order-drawer';
 
 export default function CollectionPage() {
+  const { orderDrawerOpen, setOrderDrawerOpen, addCartItem } = useOrderContext();
   const router = useRouter();
   const {
     query: { name }
@@ -38,31 +41,35 @@ export default function CollectionPage() {
   );
   const firstDailyStats = dailyStats?.data[0];
 
+  if (!collection) {
+    return <div>Loading</div>;
+  }
+
   return (
-    <PageBox showTitle={false} title={collection?.metadata?.name ?? ''}>
+    <PageBox showTitle={false} title={collection.metadata?.name ?? ''}>
       <div className="flex flex-col mt-10">
         <span>
-          <AvatarImage url={collection?.metadata.profileImage} className="mb-2" />
-          <span className="text-7xl mr-2">{collection?.metadata?.name}</span>
-          {collection?.hasBlueCheck ? (
+          <AvatarImage url={collection.metadata.profileImage} className="mb-2" />
+          <span className="text-7xl mr-2">{collection.metadata?.name}</span>
+          {collection.hasBlueCheck ? (
             <Image src="/images/blue-check.png" width={24} height={24} alt="Blue check icon" />
           ) : null}
         </span>
         <main>
           <div className="text-secondary mt-6 mb-6 text-sm font-heading">
             <span>Created by </span>
-            <button onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection?.owner)}>
-              {ellipsisAddress(collection?.owner ?? '')}
+            <button onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection.owner)}>
+              {ellipsisAddress(collection.owner ?? '')}
             </button>
             <span className="ml-12">Collection address </span>
-            <button onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection?.address)}>
-              {ellipsisAddress(collection?.address ?? '')}
+            <button onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection.address)}>
+              {ellipsisAddress(collection.address ?? '')}
             </button>
           </div>
 
           <StatsChips collection={collection} weeklyStatsData={weeklyStats?.data ?? []} />
 
-          <div className="text-secondary mt-6 text-sm md:w-2/3">{collection?.metadata.description ?? ''}</div>
+          <div className="text-secondary mt-6 text-sm md:w-2/3">{collection.metadata.description ?? ''}</div>
 
           <div className="mt-7">
             <div className="font-medium">Ownership includes</div>
@@ -93,8 +100,8 @@ export default function CollectionPage() {
             </thead>
             <tbody>
               <tr className="font-bold font-heading text-2xl">
-                <td>{collection?.numNfts?.toLocaleString() ?? '—'}</td>
-                <td>{collection?.numOwners?.toLocaleString() ?? '—'}</td>
+                <td>{collection.numNfts?.toLocaleString() ?? '—'}</td>
+                <td>{collection.numOwners?.toLocaleString() ?? '—'}</td>
                 <td>{firstDailyStats?.floorPrice ?? '—'}</td>
                 <td>{firstDailyStats?.volume?.toLocaleString() ?? '—'}</td>
               </tr>
@@ -110,9 +117,18 @@ export default function CollectionPage() {
                 cardProps={{
                   cardActions: [
                     {
-                      label: 'Details',
+                      // label: 'Details',
+                      label: 'Add to order',
                       onClick: (ev, data) => {
-                        router.push(`/asset/${data?.chainId}/${data?.tokenAddress}/${data?.tokenId}`);
+                        addCartItem({
+                          collectionName: data?.collectionName ?? '(no name)',
+                          collectionAddress: data?.tokenAddress ?? '(no address)',
+                          tokenImage: data?.image ?? '',
+                          tokenName: data?.name ?? '(no name)',
+                          tokenId: data?.tokenId ?? '0',
+                          isSellOrder: false
+                        });
+                        // router.push(`/asset/${data?.chainId}/${data?.tokenAddress}/${data?.tokenId}`);
                       }
                     }
                   ]
@@ -120,12 +136,12 @@ export default function CollectionPage() {
               />
             )}
             {/* {currentTab === 1 && <ActivityTab dailyStats={dailyStats} weeklyStats={weeklyStats} />} */}
-            {selected === 'Activity' && <ActivityTab collectionAddress={collection?.address ?? ''} />}
+            {selected === 'Activity' && <ActivityTab collectionAddress={collection.address ?? ''} />}
 
             {selected === '???' && (
               <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-16">
                 <div className="lg:col-span-1 xl:col-span-2">
-                  <CollectionFeed collectionAddress={collection?.address ?? ''} />
+                  <CollectionFeed collectionAddress={collection.address ?? ''} />
                 </div>
                 <div className="col-span-1">{collection && <CommunityRightPanel collection={collection} />}</div>
               </div>
@@ -133,6 +149,8 @@ export default function CollectionPage() {
           </div>
         </main>
       </div>
+
+      <OrderDrawer open={orderDrawerOpen} onClose={() => setOrderDrawerOpen(false)} />
     </PageBox>
   );
 }

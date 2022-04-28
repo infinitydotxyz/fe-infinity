@@ -4,13 +4,13 @@ import { useEffect, useState } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { FaCaretDown, FaCaretUp, FaDiscord, FaInstagram, FaTwitter } from 'react-icons/fa';
 import { HiOutlineExternalLink } from 'react-icons/hi';
-
 import { apiDelete, apiGet, apiPost } from 'src/utils';
 import { FollowingCollection, useAppContext } from 'src/utils/context/AppContext';
-import { Chip, Toaster, toastError } from 'src/components/common';
+import { Button, Chip, Toaster, toastError } from 'src/components/common';
 import { VerificationModal } from './edit/modals';
+import { useOrderContext } from 'src/utils/context/OrderContext';
 interface Props {
-  collection: BaseCollection | null;
+  collection: BaseCollection;
   weeklyStatsData: CollectionStats[];
 }
 
@@ -21,6 +21,7 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
   // TODO(sleeyax): we should probably refactor both 'edit' and 'follow' buttons; they shouldn't be part of this 'social stats' component.
   const [modalOpen, setModalOpen] = useState(false);
   const router = useRouter();
+  const { addCartItem } = useOrderContext();
 
   useEffect(() => {
     const _isFollowing = !!userFollowingCollections.find(
@@ -186,6 +187,20 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
           iconOnly={true}
         />
       )}
+
+      <Button
+        onClick={() => {
+          // assumes parent view has a drawer
+          addCartItem({
+            collectionName: collection.metadata.name ?? '(no name)',
+            collectionAddress: collection.address ?? '(no address)',
+            collectionImage: collection.metadata.profileImage ?? '',
+            isSellOrder: false
+          });
+        }}
+      >
+        Sweep
+      </Button>
 
       <Toaster />
     </div>
