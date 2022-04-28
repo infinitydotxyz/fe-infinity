@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { CollectionFeed } from 'src/components/feed/collection-feed';
 import { PageBox } from 'src/components/common';
 
-export function HomePage() {
+const HomePage = () => {
   const {
     query: { name }
   } = useRouter();
@@ -23,6 +23,6 @@ export function HomePage() {
       </div>
     </PageBox>
   );
-}
+};
 
 export default HomePage;

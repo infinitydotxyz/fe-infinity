@@ -4,23 +4,24 @@ import { useEffect, useState } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { FaCaretDown, FaCaretUp, FaDiscord, FaInstagram, FaTwitter } from 'react-icons/fa';
 import { HiOutlineExternalLink } from 'react-icons/hi';
-
 import { apiDelete, apiGet, apiPost } from 'src/utils';
 import { FollowingCollection, useAppContext } from 'src/utils/context/AppContext';
-import { Chip, Toaster, toastError } from 'src/components/common';
+import { Button, Chip, Toaster, toastError } from 'src/components/common';
 import { VerificationModal } from './edit/modals';
+import { useOrderContext } from 'src/utils/context/OrderContext';
 interface Props {
-  collection: BaseCollection | null;
+  collection: BaseCollection;
   weeklyStatsData: CollectionStats[];
 }
 
-export function StatsChips({ collection, weeklyStatsData }: Props) {
+export const StatsChips = ({ collection, weeklyStatsData }: Props) => {
   const { user, checkSignedIn, userFollowingCollections, fetchFollowingCollections, chainId } = useAppContext();
   const [isFollowing, setIsFollowing] = useState(false);
   const { push: pushRoute } = useRouter();
   // TODO(sleeyax): we should probably refactor both 'edit' and 'follow' buttons; they shouldn't be part of this 'social stats' component.
   const [modalOpen, setModalOpen] = useState(false);
   const router = useRouter();
+  const { addCartItem } = useOrderContext();
 
   useEffect(() => {
     const _isFollowing = !!userFollowingCollections.find(
@@ -95,7 +96,7 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
   const discordChangePct = `${Math.abs(firstWeeklyStats?.discordFollowersPercentChange ?? 0)}`.slice(0, 4);
 
   return (
-    <div className="flex flex-row space-x-2">
+    <div className="flex flex-row space-x-2 items-center">
       <VerificationModal isOpen={modalOpen} onSubmit={verifyOwnership} onClose={() => setModalOpen(false)} />
 
       <Chip
@@ -175,7 +176,7 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
         <Chip
           content={<FaInstagram className="text-lg" />}
           onClick={() => window.open(collection?.metadata?.links?.instagram)}
-          className="p-2"
+          iconOnly={true}
         />
       )}
 
@@ -183,11 +184,25 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
         <Chip
           content={<HiOutlineExternalLink className="text-lg" />}
           onClick={() => window.open(collection?.metadata?.links?.external)}
-          className="p-2"
+          iconOnly={true}
         />
       )}
+
+      <Button
+        onClick={() => {
+          // assumes parent view has a drawer
+          addCartItem({
+            collectionName: collection.metadata.name ?? '(no name)',
+            collectionAddress: collection.address ?? '(no address)',
+            collectionImage: collection.metadata.profileImage ?? '',
+            isSellOrder: false
+          });
+        }}
+      >
+        Sweep
+      </Button>
 
       <Toaster />
     </div>
   );
-}
+};

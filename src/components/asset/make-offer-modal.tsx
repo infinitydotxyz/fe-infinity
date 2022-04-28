@@ -4,13 +4,13 @@ import { Button, SimpleModal, CurrencyInput } from 'src/components/common';
 export const MakeOfferModal: React.FC = () => {
   const [price, setPrice] = useState(0);
   const [modalIsOpen, setIsOpen] = React.useState(false);
-  function openModal() {
+  const openModal = () => {
     setIsOpen(true);
-  }
+  };
 
-  function closeModal() {
+  const closeModal = () => {
     setIsOpen(false);
-  }
+  };
 
   return (
     <div>

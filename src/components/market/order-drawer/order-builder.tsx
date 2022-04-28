@@ -2,9 +2,18 @@ import { TextInputBox, Spacer, DatePickerBox } from 'src/components/common';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { OrderListItem } from './order-list-item';
 
-export function OrderBuilder() {
-  const { cartItems, isSellOrderCart, price, setPrice, expirationDate, setExpirationDate, numItems, setNumItems } =
-    useOrderContext();
+export const OrderBuilder = () => {
+  const {
+    cartItems,
+    isCollectionsCart,
+    isSellOrderCart,
+    price,
+    setPrice,
+    expirationDate,
+    setExpirationDate,
+    numItems,
+    setNumItems
+  } = useOrderContext();
 
   const list = (
     <div className="overflow-y-auto flex flex-col space-y-3 mb-8">
@@ -98,7 +107,6 @@ export function OrderBuilder() {
         {list}
         <div className="flex flex-col space-y-3">
           {priceField()}
-          {numItemsField()}
           {expirationDateField()}
         </div>
 
@@ -113,7 +121,7 @@ export function OrderBuilder() {
         {list}
         <div className="flex flex-col space-y-3">
           {priceField()}
-          {numItemsField()}
+          {isCollectionsCart() && numItemsField()}
           {expirationDateField()}
         </div>
 
@@ -125,4 +133,4 @@ export function OrderBuilder() {
   }
 
   return contents;
-}
+};

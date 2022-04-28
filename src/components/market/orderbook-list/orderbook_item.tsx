@@ -62,7 +62,7 @@ const MultiCollectionCell = ({ nfts }: MultiCollectionCellProps) => {
       </div>
 
       <div className="flex flex-col truncate">
-        <div className={'truncate font-bold'}>{nfts.length} Collections</div>
+        <div className="truncate font-bold">{nfts.length} Collections</div>
       </div>
     </div>
   );
@@ -78,7 +78,7 @@ type SingleCollectionCellProps = {
 const SingleCollectionCell = ({ image, title, token, count = 0 }: SingleCollectionCellProps) => {
   return (
     <div className="flex gap-2 items-center mb-3">
-      <div className={'flex justify-center shrink-0 h-12 w-12'}>
+      <div className="flex justify-center shrink-0 h-12 w-12">
         <span className="inline-block relative">
           <img className="h-12 w-12 rounded-2xl" src={image} alt="" />
           {count > 1 && (
@@ -90,11 +90,11 @@ const SingleCollectionCell = ({ image, title, token, count = 0 }: SingleCollecti
       </div>
 
       <div className="flex flex-col truncate">
-        <div className={'truncate'}>{title}</div>
+        <div className="truncate">{title}</div>
 
         {token && (
           <Link passHref href={`/collection/${token.tokenId}`}>
-            <div className={'truncate font-bold'}>{token?.tokenName}</div>
+            <div className="truncate font-bold">{token?.tokenName}</div>
           </Link>
         )}
       </div>

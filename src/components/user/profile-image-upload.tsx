@@ -52,16 +52,9 @@ export const ProfileImageUpload: FunctionComponent<ProfileImageProps> = ({ onUpl
   }, [file]);
 
   return (
-    <div className="sm:flex items-center flex-wrap ">
+    <div className="sm:flex items-center flex-wrap mb-5">
       <label htmlFor={FORM_LABEL}>
-        <div
-          className="overflow-hidden bg-theme-light-200 w-28 h-28 mx-auto sm:mx-0"
-          style={{
-            border: '3px solid rgb(251, 253, 255)',
-            boxShadow: 'rgb(14 14 14 / 60%) 0px 0px 2px 0px',
-            borderRadius: '50%'
-          }}
-        >
+        <div className="overflow-hidden bg-theme-light-200 w-28 h-28 mx-auto sm:mx-0 rounded-full">
           {imgSrc ? (
             <img alt="" className="object-cover h-full cursor-pointer" src={imgSrc} />
           ) : (
@@ -75,7 +68,7 @@ export const ProfileImageUpload: FunctionComponent<ProfileImageProps> = ({ onUpl
       <div className="sm:pl-8 mt-2 sm:mt-0">
         <Button
           variant="primary"
-          className="my-1 py-2.5 px-12 mb-2 block w-full sm:w-44"
+          className="my-1 py-2.5 px-12 mb-3 block w-full sm:w-44 font-zagmamono"
           onClick={onUploadButtonClick}
           disabled={isLoading}
         >
@@ -84,7 +77,7 @@ export const ProfileImageUpload: FunctionComponent<ProfileImageProps> = ({ onUpl
         <ImageUploaderButtonRef buttonRef={uploadInput} onChangeFile={handleChangeFile} />
         <Button
           variant="outline"
-          className="my-1 py-2 px-12 d-block w-full sm:w-44 block"
+          className="my-1 py-2 px-12 d-block w-full sm:w-44 block font-zagmamono"
           disabled={isLoading || !imgSrc}
           onClick={handleImageRemove}
         >

@@ -14,7 +14,7 @@ interface Props {
   children: ReactNode;
 }
 
-export function Drawer({ open, tooltip, subtitle, divide, onClose, title, children }: Props) {
+export const Drawer = ({ open, tooltip, subtitle, divide, onClose, title, children }: Props) => {
   const [showTooltip, setShowTooltip] = useState(false);
 
   const header = (
@@ -73,4 +73,4 @@ export function Drawer({ open, tooltip, subtitle, divide, onClose, title, childr
       </Dialog>
     </Transition.Root>
   );
-}
+};

@@ -4,13 +4,13 @@ import { Button, Toggle, TextInputBox, SimpleModal } from 'src/components/common
 export const ListModal: React.FC = () => {
   const [price, setPrice] = useState(0);
   const [modalIsOpen, setIsOpen] = React.useState(false);
-  function openModal() {
+  const openModal = () => {
     setIsOpen(true);
-  }
+  };
 
-  function closeModal() {
+  const closeModal = () => {
     setIsOpen(false);
-  }
+  };
 
   return (
     <div>

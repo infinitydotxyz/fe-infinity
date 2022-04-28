@@ -5,7 +5,7 @@ const Home: FunctionComponent = () => {
   useEffect(() => {
     const { pathname } = Router;
     if (pathname == '/') {
-      void Router.push('/analytics/trending/weekly');
+      void Router.push('/test');
     }
   });
 

@@ -18,21 +18,21 @@ interface UserProfileFeedProps {
   className?: string;
 }
 
-export function UserProfileFeed({
+export const UserProfileFeed = ({
   header,
   userAddress,
   types,
   forActivity,
   forUserActivity,
   className
-}: UserProfileFeedProps) {
+}: UserProfileFeedProps) => {
   const [events, setEvents] = useState<FeedEvent[]>([]);
   const [newEvents, setNewEvents] = useState<FeedEvent[]>([]); // new feed events
   const [filter, setFilter] = useState<FeedFilter>({ userAddress, types });
   const [commentPanelEvent, setCommentPanelEvent] = useState<FeedEvent | null>(null);
   const [filteringTypes, setFilteringTypes] = useState<FeedEventType[]>([]);
 
-  async function getEvents() {
+  const getEvents = () => {
     try {
       subscribe(COLL_FEED, filter, (type: string, data: FeedEvent) => {
         if (type === 'added') {
@@ -51,7 +51,7 @@ export function UserProfileFeed({
     } catch (err) {
       console.error('ERR: ', err);
     }
-  }
+  };
 
   useEffect(() => {
     eventsInit = false;
@@ -153,4 +153,4 @@ export function UserProfileFeed({
       </ul>
     </div>
   );
-}
+};

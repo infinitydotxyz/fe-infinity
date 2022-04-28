@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { Button, ShortAddress, PageBox, ReadMoreText } from 'src/components/common';
 import { BLANK_IMAGE_URL, useFetch } from 'src/utils';
-import { Token, Collection } from '@infinityxyz/lib/types/core';
+import { Token, Collection, Erc721Metadata } from '@infinityxyz/lib/types/core';
 import {
   TraitList,
   ActivityList,
@@ -48,6 +48,7 @@ const AssetDetail: FunctionComponent = () => {
     );
   }
 
+  // NOTE:  this is buggy, can't call hooks after if statement above
   const { isLoading, error, token, collection } = useFetchAssertInfo(query.chainId, query.collection, query.tokenId);
 
   if (isLoading) {
@@ -67,10 +68,13 @@ const AssetDetail: FunctionComponent = () => {
     );
   }
 
+  // TODO: Joe to update Erc721Metadata type
+  const tokenMetadata = token.metadata as Erc721Metadata;
+
   const assetName =
-    token.metadata.name && collection.metadata.name
-      ? `${token.metadata.name} - ${collection.metadata.name}`
-      : token.metadata.name || collection.metadata.name || 'No Name';
+    tokenMetadata.name && collection.metadata.name
+      ? `${tokenMetadata.name} - ${collection.metadata.name}`
+      : tokenMetadata.name || collection.metadata.name || 'No Name';
   return (
     <PageBox title={assetName}>
       <div className="flex flex-col max-w-screen-2xl mt-4">
@@ -85,7 +89,7 @@ const AssetDetail: FunctionComponent = () => {
             </div>
             <div className="flex-1">
               <h3 className="text-black font-body text-2xl font-bold leading-normal tracking-wide pb-1">
-                {token.metadata.name ? token.metadata.name : `${collection.metadata.name} #${token.tokenId}`}
+                {tokenMetadata.name ? tokenMetadata.name : `${collection.metadata.name} #${token.tokenId}`}
               </h3>
               <div className="flex items-center sm:mb-6">
                 <Link href={`/collection/${collection.metadata.name || collection.address}`}>
@@ -98,7 +102,7 @@ const AssetDetail: FunctionComponent = () => {
                 </Link>
                 {collection.hasBlueCheck && (
                   <div className="mt-1">
-                    <Image width={18} height={18} src={BlueCheckSvg.src} alt={'Verified'} />
+                    <Image width={18} height={18} src={BlueCheckSvg.src} alt="Verified" />
                   </div>
                 )}
               </div>
@@ -126,7 +130,7 @@ const AssetDetail: FunctionComponent = () => {
               <p className="font-body text-black mb-1">Description</p>
               <div>
                 <ReadMoreText
-                  text={collection.metadata.description || token.metadata.description}
+                  text={collection.metadata.description || tokenMetadata.description}
                   min={100}
                   ideal={120}
                   max={200}
@@ -135,7 +139,7 @@ const AssetDetail: FunctionComponent = () => {
             </div>
           </div>
 
-          <TraitList traits={token.metadata.attributes} collectionTraits={collection.attributes} />
+          <TraitList traits={tokenMetadata.attributes} collectionTraits={collection.attributes} />
           <ActivityList chainId={collection.chainId} collectionAddress={collection.address} tokenId={token.tokenId} />
 
           <CancelModal />

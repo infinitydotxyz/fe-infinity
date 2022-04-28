@@ -74,6 +74,7 @@ export type OrderContextType = {
   isOrderBuilderEmpty: () => boolean;
 
   isSellOrderCart: () => boolean;
+  isCollectionsCart: () => boolean;
 
   executeOrder: () => Promise<boolean>;
 
@@ -92,7 +93,7 @@ interface Props {
   children: ReactNode;
 }
 
-export function OrderContextProvider({ children }: Props) {
+export const OrderContextProvider = ({ children }: Props) => {
   const [orderDrawerOpen, setOrderDrawerOpen] = useState<boolean>(false);
   const [isEditingOrder, setIsEditingOrder] = useState<boolean>(false);
 
@@ -325,7 +326,11 @@ export function OrderContextProvider({ children }: Props) {
   };
 
   const addCartItem = (item: OrderCartItem) => {
-    if (isSellOrderCart() !== item.isSellOrder) {
+    // if we add a buy to a sell cart, or add a collection to a token cart
+    // clear out everything.
+    const collectionItem = !item.tokenId;
+
+    if (isSellOrderCart() !== item.isSellOrder || isCollectionsCart() !== collectionItem) {
       setCartItems([item]);
       setOrdersInCart([]);
     } else {
@@ -355,6 +360,17 @@ export function OrderContextProvider({ children }: Props) {
     }
   };
 
+  // the builder only handles all tokens or all collections
+  const isCollectionsCart = () => {
+    for (const x of cartItems) {
+      if (!x.tokenId) {
+        return true;
+      }
+    }
+
+    return false;
+  };
+
   // ===============================================================
 
   const value: OrderContextType = {
@@ -371,6 +387,7 @@ export function OrderContextProvider({ children }: Props) {
     isOrderBuilderEmpty,
     isOrderStateEmpty,
     isSellOrderCart,
+    isCollectionsCart,
     executeOrder,
     price,
     setPrice,
@@ -381,8 +398,8 @@ export function OrderContextProvider({ children }: Props) {
   };
 
   return <OrderContext.Provider value={value}>{children}</OrderContext.Provider>;
-}
+};
 
-export function useOrderContext(): OrderContextType {
+export const useOrderContext = (): OrderContextType => {
   return useContext(OrderContext) as OrderContextType;
-}
+};

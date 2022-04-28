@@ -3,13 +3,13 @@ import { Button, SimpleModal } from 'src/components/common';
 
 export const CancelModal: React.FC = () => {
   const [modalIsOpen, setIsOpen] = React.useState(false);
-  function openModal() {
+  const openModal = () => {
     setIsOpen(true);
-  }
+  };
 
-  function closeModal() {
+  const closeModal = () => {
     setIsOpen(false);
-  }
+  };
 
   return (
     <div>

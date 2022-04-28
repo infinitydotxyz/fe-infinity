@@ -5,7 +5,7 @@ import { PageBox } from 'src/components/common';
 import { apiPut } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 
-export default function DiscordIntegration() {
+const DiscordIntegration = () => {
   const { query } = useRouter();
   const { user, chainId } = useAppContext();
   const [status, setStatus] = useState('Loading');
@@ -52,4 +52,6 @@ export default function DiscordIntegration() {
   }, [user, integrationType, collectionAddress]);
 
   return <PageBox title="Enable integration">{status}</PageBox>;
-}
+};
+
+export default DiscordIntegration;

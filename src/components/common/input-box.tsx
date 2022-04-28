@@ -5,7 +5,6 @@ import { CalendarIcon } from '@heroicons/react/outline';
 import { EthSymbol } from './eth-price';
 import { Tooltip, TooltipIcon, TooltipSpec, TooltipWrapper } from './tool-tip';
 import { twMerge } from 'tailwind-merge';
-import { Field, FieldConfig, FieldProps } from 'formik';
 import classNames from 'classnames';
 
 interface Props {
@@ -15,18 +14,23 @@ interface Props {
   isFullWidth?: boolean;
   renderRightIcon?: () => ReactElement;
   icon?: ReactNode;
+  labelClassname?: string;
 }
 
-export function InputBox({ tooltip, label, children, icon, renderRightIcon, isFullWidth }: Props): JSX.Element {
+export const InputBox = ({ tooltip, label, children, icon, renderRightIcon, isFullWidth, labelClassname }: Props) => {
   const [showTooltip, setShowTooltip] = useState(false);
 
   return (
     <TooltipWrapper show={showTooltip} tooltip={tooltip} className={classNames({ 'w-full': isFullWidth })}>
-      <div className="py-3 pl-6 pr-2 outline outline-1 outline-gray-400 rounded-3xl w-full flex items-center">
+      <div className="py-3 pl-6 pr-2 outline outline-1 rounded-3xl w-full flex items-center outline-theme-light-700">
         {icon && <span className="pr-8">{icon}</span>}
         <div className="w-full">
-          {label && <label className="block text-xs font-medium text-gray-700">{label}</label>}
-          <div className="mt-1 flex items-center w-full">
+          {label && (
+            <label className={twMerge('block font-normal font-zagmamono text-sm text-theme-light-800', labelClassname)}>
+              {label}
+            </label>
+          )}
+          <div className="flex items-center w-full">
             <div className="flex items-center w-full">{children}</div>
 
             {tooltip && (
@@ -46,7 +50,7 @@ export function InputBox({ tooltip, label, children, icon, renderRightIcon, isFu
       </div>
     </TooltipWrapper>
   );
-}
+};
 
 // =======================================================
 
@@ -58,7 +62,7 @@ interface Props2 {
   tooltip?: TooltipSpec;
 }
 
-export function DatePickerBox({ tooltip, label, value, onChange, placeholder }: Props2): JSX.Element {
+export const DatePickerBox = ({ tooltip, label, value, onChange, placeholder }: Props2) => {
   return (
     <InputBox label={label} tooltip={tooltip}>
       <div className="flex items-center">
@@ -69,7 +73,7 @@ export function DatePickerBox({ tooltip, label, value, onChange, placeholder }: 
       </div>
     </InputBox>
   );
-}
+};
 
 // ================================================================
 
@@ -81,19 +85,13 @@ interface Props3<T extends ComboBoxBaseType> {
   tooltip?: TooltipSpec;
 }
 
-export function ComboInputBox<T extends ComboBoxBaseType>({
-  tooltip,
-  label,
-  options,
-  onChange,
-  value
-}: Props3<T>): JSX.Element {
+export const ComboInputBox = <T extends ComboBoxBaseType>({ tooltip, label, options, onChange, value }: Props3<T>) => {
   return (
     <InputBox label={label} tooltip={tooltip}>
       <ComboBox options={options} value={value} onChange={onChange} />
     </InputBox>
   );
-}
+};
 
 // ================================================================
 
@@ -106,13 +104,11 @@ interface Props4 {
   onChange?: (value: string) => void;
   tooltip?: TooltipSpec;
   icon?: ReactNode;
-  bind?: string;
-  fieldProps?: FieldConfig;
-  className?: string;
+  isFullWidth?: boolean;
+  renderRightIcon?: () => ReactElement;
 }
 
-export function TextInputBox({
-  bind,
+export const TextInputBox = ({
   tooltip,
   value = '',
   label,
@@ -121,106 +117,39 @@ export function TextInputBox({
   type,
   placeholder,
   onChange,
-  fieldProps,
-  ...props
-}: Props4 & Omit<Props, 'children'>): JSX.Element {
-  if (bind) {
-    return (
-      <Field validateOnChange name={bind} {...fieldProps}>
-        {({ meta, field, form }: FieldProps) => (
-          <div className="my-4 sm:my-6">
-            <InputBox label={label} tooltip={tooltip} icon={icon} {...props}>
-              <div className="flex items-center w-full">
-                {addEthSymbol && <div className="pr-2">{EthSymbol}</div>}
-                <input
-                  type={type}
-                  value={field.value || ''}
-                  className="p-0 border-none focus:ring-0 block w-full text-base"
-                  placeholder={placeholder}
-                  onChange={(e) => {
-                    if (onChange) {
-                      onChange(e.target.value);
-                    }
-                    if (!e.defaultPrevented) {
-                      form.setFieldValue(bind, e.target.value);
-                    }
-                  }}
-                />
-              </div>
-            </InputBox>
-            {meta.touched && meta.error && <div className="text-red-800 text-xs pl-6">{meta.error}</div>}
-          </div>
-        )}
-      </Field>
-    );
-  }
-
+  isFullWidth,
+  renderRightIcon
+}: Props4) => {
   return (
-    <InputBox label={label} tooltip={tooltip} icon={icon} {...props}>
+    <InputBox label={label} tooltip={tooltip} icon={icon} isFullWidth={isFullWidth} renderRightIcon={renderRightIcon}>
       <div className="flex items-center w-full">
         {addEthSymbol && <div className="pr-2">{EthSymbol}</div>}
         <input
           type={type}
           value={value}
-          onChange={(e) => onChange && onChange(e.target.value)}
-          className="p-0 border-none focus:ring-0 block w-full text-base"
+          onChange={(e) => {
+            if (onChange) {
+              onChange(e.target.value);
+            }
+          }}
+          className="p-0 border-none focus:ring-0 font-bold block w-full font-zagmamono"
           placeholder={placeholder}
         />
       </div>
     </InputBox>
   );
-}
+};
 
 interface Props5 {
   label: string;
-  value?: string;
+  value: string;
   rows?: number;
   placeholder: string;
   tooltip?: TooltipSpec;
   onChange?: (value: string) => void;
-  bind?: string;
-  fieldProps?: FieldConfig;
 }
 
-export function TextAreaBox({
-  value = '',
-  label,
-  placeholder,
-  tooltip,
-  onChange,
-  rows = 3,
-  bind,
-  fieldProps
-}: Props5): JSX.Element {
-  if (bind) {
-    return (
-      <Field validateOnChange name={bind} {...fieldProps}>
-        {({ meta, field, form }: FieldProps) => (
-          <div className="my-4 sm:my-6">
-            <InputBox label={label} tooltip={tooltip}>
-              <div className="flex items-center w-full">
-                <textarea
-                  rows={rows}
-                  value={field.value || ''}
-                  onChange={(e) => {
-                    if (onChange) {
-                      onChange(e.target.value);
-                    }
-                    if (!e.defaultPrevented) {
-                      form.setFieldValue(bind, e.target.value);
-                    }
-                  }}
-                  className="p-0 border-none focus:ring-0 block w-full text-base"
-                  placeholder={placeholder}
-                />
-              </div>
-            </InputBox>
-            {meta.touched && meta.error && <div className="text-red-800 text-xs pl-6">{meta.error}</div>}
-          </div>
-        )}
-      </Field>
-    );
-  }
+export const TextAreaBox = ({ value, label, placeholder, tooltip, onChange, rows = 3 }: Props5) => {
   return (
     <InputBox label={label} tooltip={tooltip}>
       <div className="flex items-center w-full">
@@ -234,7 +163,7 @@ export function TextAreaBox({
       </div>
     </InputBox>
   );
-}
+};
 
 // ================================================================
 
@@ -245,23 +174,24 @@ interface TextAreaInputBoxProps {
   onChange: (value: string) => void;
   tooltip?: TooltipSpec;
   className?: string;
+  rows: number;
 }
 
-export function TextAreaInputBox({
+export const TextAreaInputBox = ({
   tooltip,
   value,
   label,
   placeholder,
   onChange,
-  className,
-  ...props
-}: TextAreaInputBoxProps & Omit<React.HTMLProps<HTMLTextAreaElement>, 'onChange'>): JSX.Element {
+  rows,
+  className
+}: TextAreaInputBoxProps) => {
   return (
     <InputBox label={label} tooltip={tooltip} isFullWidth>
       <div className={twMerge('flex items-center w-full', className)}>
         <textarea
-          {...props}
           value={value}
+          rows={rows}
           onChange={(e) => onChange(e.target.value)}
           className="p-0 border-none focus:ring-0 block w-full text-base"
           placeholder={placeholder}
@@ -269,4 +199,4 @@ export function TextAreaInputBox({
       </div>
     </InputBox>
   );
-}
+};
