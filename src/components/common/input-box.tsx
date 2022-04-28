@@ -14,9 +14,10 @@ interface Props {
   isFullWidth?: boolean;
   renderRightIcon?: () => ReactElement;
   icon?: ReactNode;
+  labelClassNames?: string[];
 }
 
-export const InputBox = ({ tooltip, label, children, icon, renderRightIcon, isFullWidth }: Props) => {
+export const InputBox = ({ tooltip, label, children, icon, renderRightIcon, isFullWidth, labelClassNames }: Props) => {
   const [showTooltip, setShowTooltip] = useState(false);
 
   return (
@@ -24,7 +25,16 @@ export const InputBox = ({ tooltip, label, children, icon, renderRightIcon, isFu
       <div className="py-3 pl-6 pr-2 outline outline-1 rounded-3xl w-full flex items-center outline-theme-light-700">
         {icon && <span className="pr-8">{icon}</span>}
         <div className="w-full">
-          {label && <label className="block font-normal font-zagmamono text-sm text-theme-light-800">{label}</label>}
+          {label && (
+            <label
+              className={
+                'block font-normal font-zagmamono text-sm text-theme-light-800' +
+                (labelClassNames ? ' ' + classNames(labelClassNames) : '')
+              }
+            >
+              {label}
+            </label>
+          )}
           <div className="flex items-center w-full">
             <div className="flex items-center w-full">{children}</div>
 
