@@ -11,7 +11,11 @@ const ProfilePage: FunctionComponent = () => {
   const { user } = useAppContext();
 
   if (!user) {
-    return <PageBox title={'Account'} className="mb-12"></PageBox>;
+    return (
+      <PageBox title="Account" className="mb-12">
+        Please sign in.
+      </PageBox>
+    );
   }
 
   const { result, isLoading, isError, error } = useFetch(`${USER_API_END_POINT}/${user.address}`);
@@ -23,7 +27,7 @@ const ProfilePage: FunctionComponent = () => {
   if (isError) {
     console.error(error);
     return (
-      <PageBox title={'Error'} className="mb-12">
+      <PageBox title="Error" className="mb-12">
         Failed Fetch User Info
       </PageBox>
     );

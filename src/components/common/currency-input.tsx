@@ -10,7 +10,7 @@ interface Props {
   onChange: (value: string) => void;
 }
 
-export function CurrencyInput({ value, label, placeholder, onChange }: Props): JSX.Element {
+export const CurrencyInput = ({ value, label, placeholder, onChange }: Props): JSX.Element => {
   const [currency, setCurrency] = useState('WETH');
 
   return (
@@ -51,4 +51,4 @@ export function CurrencyInput({ value, label, placeholder, onChange }: Props): J
       </div>
     </InputBox>
   );
-}
+};

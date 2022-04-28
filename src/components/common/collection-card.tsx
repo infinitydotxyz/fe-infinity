@@ -44,11 +44,11 @@ export const CollectionCard = ({ collection, onButtonClick, buttonName }: Collec
             className="font-body pt-2 text-base px-5 text-theme-light-800"
             // Steve: debugging (will remove when done)
             // onClick={(e) => {
-            //     e.preventDefault();
-            //     e.stopPropagation();
+            //   e.preventDefault();
+            //   e.stopPropagation();
 
-            //     console.log(JSON.stringify(collection, null, '  '));
-            //   }}
+            //   console.log(JSON.stringify(collection, null, '  '));
+            // }}
           >
             {shortText}
             {isTrimText && ' ...'}

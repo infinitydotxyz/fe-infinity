@@ -4,7 +4,7 @@ interface Props {
   className: string;
 }
 
-export function Spinner({ className }: Props) {
+export const Spinner = ({ className }: Props) => {
   return (
     <svg
       role="status"
@@ -23,4 +23,4 @@ export function Spinner({ className }: Props) {
       />
     </svg>
   );
-}
+};

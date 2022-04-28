@@ -14,7 +14,7 @@ interface Props {
   children: ReactNode;
 }
 
-export function Drawer({ open, tooltip, subtitle, divide, onClose, title, children }: Props) {
+export const Drawer = ({ open, tooltip, subtitle, divide, onClose, title, children }: Props) => {
   const [showTooltip, setShowTooltip] = useState(false);
 
   const header = (
@@ -34,7 +34,7 @@ export function Drawer({ open, tooltip, subtitle, divide, onClose, title, childr
           </Dialog.Title>
 
           <div className="ml-3 flex h-7 items-center">
-            <Button variant="ghost" size="small" onClick={onClose}>
+            <Button variant="round" size="plain" onClick={onClose}>
               <span className="sr-only">Close panel</span>
               <XIcon className="h-6 w-6" aria-hidden="true" />
             </Button>
@@ -73,4 +73,4 @@ export function Drawer({ open, tooltip, subtitle, divide, onClose, title, childr
       </Dialog>
     </Transition.Root>
   );
-}
+};

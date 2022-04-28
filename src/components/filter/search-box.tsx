@@ -6,12 +6,13 @@ import { useFetch } from 'src/utils';
 import { BaseCollection } from '@infinityxyz/lib/types/core';
 import { FaSearch } from 'react-icons/fa';
 import Image from 'next/image';
+import BlueCheckSvg from 'src/images/blue-check.svg';
 
 type CollectionItem = BaseCollection & {
   name: string;
 };
 
-export function SearchBox() {
+export const SearchBox = () => {
   const [query, setQuery] = useState('');
   const router = useRouter();
 
@@ -76,7 +77,7 @@ export function SearchBox() {
                         <span className={`flex items-center truncate ${selected ? 'font-medium' : 'font-normal'}`}>
                           <span className="mr-1">{coll.name}</span>
                           {coll?.hasBlueCheck ? (
-                            <Image src="/images/blue-check.png" width={18} height={18} alt="Blue check icon" />
+                            <Image width={18} height={18} src={BlueCheckSvg.src} alt="Verified" />
                           ) : null}
                         </span>
                         {selected ? (
@@ -99,4 +100,4 @@ export function SearchBox() {
       </Combobox>
     </div>
   );
-}
+};

@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 
-interface ToggleTab {
+interface Props {
   selected: string;
   className?: string;
   options: string[];
   onChange: (option: string) => void;
 }
 
-export function useToggleTab(options: string[], defaultOption: string) {
+export const useToggleTab = (options: string[], defaultOption: string) => {
   const [selected, setSelected] = useState(defaultOption);
 
   const onChange = (option: string) => {
@@ -15,11 +15,11 @@ export function useToggleTab(options: string[], defaultOption: string) {
   };
 
   return { onChange, selected, options };
-}
+};
 
-export function ToggleTab({ options, onChange, selected, className = '' }: ToggleTab) {
+export const ToggleTab = ({ options, onChange, selected, className = '' }: Props) => {
   return (
-    <div className={`flex ${className}`}>
+    <div className={`flex font-heading ${className}`}>
       <div className="cursor-pointer flex gap-1 rounded-full items-center p-1 bg-gray-100">
         {options.map((option: string) => {
           const activeCx = selected === option ? 'bg-black text-white' : '';
@@ -37,4 +37,4 @@ export function ToggleTab({ options, onChange, selected, className = '' }: Toggl
       </div>
     </div>
   );
-}
+};

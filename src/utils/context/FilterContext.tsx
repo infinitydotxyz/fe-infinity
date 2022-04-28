@@ -27,14 +27,14 @@ export type FilterContextType = {
 
 const FilterContext = React.createContext<FilterContextType | null>(null);
 
-export function FilterContextProvider(props: React.PropsWithChildren<unknown>) {
+export const FilterContextProvider = (props: React.PropsWithChildren<unknown>) => {
   const [filterState, setFilterState] = useState<Filter>(defaultFilter);
 
   const value: FilterContextType = { filterState, setFilterState };
 
   return <FilterContext.Provider value={value} {...props} />;
-}
+};
 
-export function useFilterContext(): FilterContextType {
+export const useFilterContext = (): FilterContextType => {
   return useContext(FilterContext) as FilterContextType;
-}
+};

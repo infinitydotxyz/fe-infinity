@@ -2,7 +2,7 @@ import { OBOrder } from '@infinityxyz/lib/types/core';
 import { useEffect, useState } from 'react';
 import { getOrders } from 'src/utils/marketUtils';
 
-export function useOrderPager() {
+export const useOrderPager = () => {
   const [orders, setOrders] = useState<OBOrder[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -44,4 +44,4 @@ export function useOrderPager() {
     isLoading,
     fetchMore
   };
-}
+};

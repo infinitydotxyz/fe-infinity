@@ -30,7 +30,7 @@ interface GalleryProps {
   className?: string;
 }
 
-export function GalleryBox({ collection, className, cardProps, getEndpoint }: GalleryProps) {
+export const GalleryBox = ({ collection, className, cardProps, getEndpoint }: GalleryProps) => {
   const { filterState } = useFilterContext();
 
   const [filterShowed, setFilterShowed] = useState(true);
@@ -78,7 +78,7 @@ export function GalleryBox({ collection, className, cardProps, getEndpoint }: Ga
         chainId: item.chainId,
         tokenAddress: collection?.address,
         tokenId: item.tokenId,
-        rarityScore: item.rarityScore
+        rarityRank: item.rarityRank
       };
     });
 
@@ -152,4 +152,4 @@ export function GalleryBox({ collection, className, cardProps, getEndpoint }: Ga
       </div>
     </div>
   );
-}
+};

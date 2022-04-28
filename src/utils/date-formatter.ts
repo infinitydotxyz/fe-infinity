@@ -58,15 +58,15 @@ export const fullDate = (date: Date) => {
 };
 
 export const dateToString = (date: Date, components: object[], separator: string) => {
-  function build(t: Date, a: object[], s: string) {
-    function format(m: object) {
+  const build = (t: Date, a: object[], s: string) => {
+    const format = (m: object) => {
       const f = new Intl.DateTimeFormat('en', m);
 
       return f.format(t);
-    }
+    };
 
     return a.map(format).join(s);
-  }
+  };
 
   const s = build(date, components, separator);
 

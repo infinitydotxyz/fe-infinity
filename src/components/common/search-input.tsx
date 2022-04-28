@@ -5,6 +5,7 @@ import { BaseCollection } from '@infinityxyz/lib/types/core';
 import { useRouter } from 'next/router';
 import { Combobox } from '@headlessui/react';
 import Image from 'next/image';
+import BlueCheckSvg from 'src/images/blue-check.svg';
 
 type CollectionItem = BaseCollection & {
   name: string;
@@ -62,7 +63,7 @@ export const SearchInput: React.FC<Props> = ({ opened }) => {
   const styles = {
     container: {
       className: `
-        w-full h-full px-4 rounded-full max-h-full
+        w-full px-4 py-2 rounded-full max-h-full
         flex place-items-center gap-2
         ${
           isActive
@@ -176,7 +177,7 @@ export const SearchInput: React.FC<Props> = ({ opened }) => {
                 <div {...styles?.collection?.name}>{collection?.name}</div>
                 <div {...styles?.collection?.blueCheck}>
                   {collection?.hasBlueCheck ? (
-                    <Image src="/images/blue-check.png" width={18} height={18} alt="Blue check icon" />
+                    <Image width={18} height={18} src={BlueCheckSvg.src} alt="Verified" />
                   ) : (
                     <></>
                   )}

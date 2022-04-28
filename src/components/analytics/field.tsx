@@ -11,7 +11,7 @@ interface Props {
   onClick?: () => void;
 }
 
-export function Field({ onSort, sortable = false, onClick, type, label, value }: Props) {
+export const Field = ({ onSort, sortable = false, onClick, type, label, value }: Props) => {
   const styles = {
     stat: {
       container: {
@@ -163,9 +163,9 @@ export function Field({ onSort, sortable = false, onClick, type, label, value }:
           self-start
           font-bold font-mono
           text-sm text-theme-light-900
-          ${value > 0 && 'text-theme-light-500'}
-          ${value < 0 && 'text-theme-light-600'}
-          ${value == 0 && 'text-theme-light-900'}
+          ${value > 0 ? 'text-theme-light-500' : ''}
+          ${value < 0 ? 'text-theme-light-600' : ''}
+          ${value == 0 ? 'text-theme-light-900' : ''}
           flex gap-1 items-center
         `
       })
@@ -285,4 +285,4 @@ export function Field({ onSort, sortable = false, onClick, type, label, value }:
       </div>
     </>
   );
-}
+};

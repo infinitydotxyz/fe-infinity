@@ -9,9 +9,9 @@ import { OrderbookList } from 'src/components/market/orderbook-list';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { CollectionCache } from 'src/components/market/orderbook-list/collection-cache';
 
-export default function MarketPage() {
+const MarketPage = () => {
   const { orderDrawerOpen, setOrderDrawerOpen, isOrderStateEmpty, addCartItem } = useOrderContext();
-  const { options, onChange, selected } = useToggleTab(['Assets', 'Orderbook'], 'Assets');
+  const { options, onChange, selected } = useToggleTab(['Orderbook', 'Assets'], 'Orderbook');
 
   const [collection, setCollection] = useState<BaseCollection | undefined>();
 
@@ -22,7 +22,7 @@ export default function MarketPage() {
   };
 
   useEffect(() => {
-    updateCollections();
+    void updateCollections();
   }, []);
 
   const contents = (
@@ -30,21 +30,24 @@ export default function MarketPage() {
       <div className="flex space-x-2 items-center mb-2">
         <ToggleTab options={options} selected={selected} onChange={onChange} />
         <Spacer />
-        <Button variant="outline" className="font-heading">
-          Filter
-        </Button>
-        <Dropdown
-          label="Sort"
-          items={[
-            { label: 'High to low', onClick: console.log },
-            { label: 'Low to high', onClick: console.log }
-          ]}
-        />
-        <RiLayoutGridFill />
       </div>
 
       {selected === 'Assets' && (
         <>
+          {/* moving here for now */}
+          <div className="flex space-x-2 items-center mb-2">
+            <Button variant="outline" className="font-heading">
+              Filter
+            </Button>
+            <Dropdown
+              label="Sort"
+              items={[
+                { label: 'High to low', onClick: console.log },
+                { label: 'Low to high', onClick: console.log }
+              ]}
+            />
+            <RiLayoutGridFill />
+          </div>
           <CollectionGrid
             query="fan"
             className="my-4"
@@ -86,7 +89,7 @@ export default function MarketPage() {
                         collectionName: data?.collectionName ?? '(no name)',
                         collectionAddress: data?.tokenAddress ?? '(no address)',
                         tokenImage: data?.image ?? '',
-                        tokenName: data?.title ?? '(no name)',
+                        tokenName: data?.name ?? '(no name)',
                         tokenId: data?.tokenId ?? '0',
                         isSellOrder: false
                       });
@@ -123,4 +126,6 @@ export default function MarketPage() {
       <div>{contents}</div>
     </PageBox>
   );
-}
+};
+
+export default MarketPage;

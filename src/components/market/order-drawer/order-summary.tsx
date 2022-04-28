@@ -53,6 +53,7 @@ export const OrderSummaryItem = ({ orderInCart }: Props) => {
   const tokenStackForOrder = () => {
     if (orderInCart.cartItems.length > 0) {
       const item = orderInCart.cartItems[0];
+      const showNum = orderInCart.cartItems.length > 1;
 
       let image = item.collectionImage;
       if (!image) {
@@ -60,11 +61,14 @@ export const OrderSummaryItem = ({ orderInCart }: Props) => {
       }
 
       return (
-        <div className={'relative '}>
-          <img className={`absolute ${collectionIconStyle}`} src={image} alt="" />
-          <div className="absolute -top-1 right-0 z-50 text-center shadow-lg rounded-full h-6 w-6 bg-white">
-            {orderInCart.cartItems.length}
-          </div>
+        <div className="relative">
+          <img className={collectionIconStyle} src={image} alt="" />
+
+          {showNum && (
+            <div className="absolute -top-1 right-0 z-50 text-center shadow-lg rounded-full h-6 w-6 bg-white">
+              {orderInCart.cartItems.length}
+            </div>
+          )}
         </div>
       );
     }
@@ -72,11 +76,21 @@ export const OrderSummaryItem = ({ orderInCart }: Props) => {
     return null;
   };
 
+  const isCollectionsOrder = () => {
+    for (const x of orderInCart.cartItems) {
+      if (!x.tokenId) {
+        return true;
+      }
+    }
+
+    return false;
+  };
+
   const collectionIconsForOrder = () => {
     const numCollectionsSuffix = orderInCart.cartItems.length > 1 ? 'Collections' : 'Collection';
     const iconWidth = collectionIconWidthInPx();
 
-    const collectionsOrder = false;
+    const collectionsOrder = isCollectionsOrder();
 
     let icon;
     let info;
@@ -90,7 +104,7 @@ export const OrderSummaryItem = ({ orderInCart }: Props) => {
       if (orderInCart.cartItems.length > 0) {
         const item = orderInCart.cartItems[0];
 
-        info = <TitleAndSubtitle title={item.tokenName ?? ''} subtitle={'@' + item.collectionName} />;
+        info = <TitleAndSubtitle title={item.collectionName} subtitle={item.tokenId} />;
       }
     }
 
@@ -107,7 +121,7 @@ export const OrderSummaryItem = ({ orderInCart }: Props) => {
 
         <Spacer />
 
-        <Button variant="ghost" size="small" onClick={() => editOrderFromCart(orderInCart.id)}>
+        <Button variant="round" size="plain" onClick={() => editOrderFromCart(orderInCart.id)}>
           <SVG.editCircle className={iconButtonStyle} />
         </Button>
       </div>
@@ -122,7 +136,6 @@ export const OrderSummaryItem = ({ orderInCart }: Props) => {
         title: 'Max budget',
         value: <EthPrice label={orderInCart.orderSpec.endPriceEth.toString()} />
       });
-      items.push({ title: 'Min NFTs to buy', value: <div>{orderInCart.orderSpec.numItems.toString()}</div> });
       items.push({
         title: 'Expiration Date',
         value: <div>{shortDate(new Date(orderInCart.orderSpec.endTimeMs))}</div>
@@ -132,7 +145,9 @@ export const OrderSummaryItem = ({ orderInCart }: Props) => {
         title: 'Max budget',
         value: <EthPrice label={orderInCart.orderSpec.endPriceEth.toString()} />
       });
-      items.push({ title: 'Min NFTs to buy', value: <div>{orderInCart.orderSpec.numItems.toString()}</div> });
+      if (isCollectionsOrder()) {
+        items.push({ title: 'Min NFTs to buy', value: <div>{orderInCart.orderSpec.numItems.toString()}</div> });
+      }
       items.push({
         title: 'Expiration Date',
         value: <div>{shortDate(new Date(orderInCart.orderSpec.endTimeMs ?? 0))}</div>

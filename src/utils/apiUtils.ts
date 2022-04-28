@@ -22,14 +22,14 @@ const axiosApi: AxiosInstance = axios.create({
   headers: {}
 });
 
-function sleep(ms: number) {
+export const sleep = (ms: number) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
-}
+};
 
-export async function dummyFetch(mockData = []) {
+export const dummyFetch = async (mockData = []) => {
   await sleep(1000);
   return mockData;
-}
+};
 
 // eslint-disable-next-line
 const catchError = (err: any) => {
@@ -160,13 +160,17 @@ interface useFetchParams {
   swrOptions?: SWRConfiguration<unknown> | undefined;
   [key: string]: unknown;
 }
-export function useFetch<T>(path: string | null, params: useFetchParams = {}) {
+export const useFetch = <T>(path: string | null, params: useFetchParams = {}) => {
   const queryStr = buildQueryString(params?.query);
-  const { data, error } = useSWR(path ? `${path}${queryStr}` : null, swrFetch, params?.swrOptions || {});
+  const options = {
+    errorRetryCount: 3,
+    ...params?.swrOptions
+  };
+  const { data, error } = useSWR(path ? `${path}${queryStr}` : null, swrFetch, options);
   return {
     result: error ? null : (data as T),
     isLoading: !error && !data,
     isError: !!error,
     error
   };
-}
+};

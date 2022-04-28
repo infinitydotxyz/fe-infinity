@@ -33,7 +33,7 @@ export type AppContextType = {
 
 const AppContext = React.createContext<AppContextType | null>(null);
 
-export function AppContextProvider(props: React.PropsWithChildren<unknown>) {
+export const AppContextProvider = (props: React.PropsWithChildren<unknown>) => {
   const [user, setUser] = React.useState<User | null>(null);
   const [userReady, setUserReady] = React.useState(false);
   const [followingCollections, setFollowingCollections] = React.useState([]);
@@ -200,8 +200,8 @@ export function AppContextProvider(props: React.PropsWithChildren<unknown>) {
       <Toaster />
     </AppContext.Provider>
   );
-}
+};
 
-export function useAppContext(): AppContextType {
+export const useAppContext = (): AppContextType => {
   return React.useContext(AppContext) as AppContextType;
-}
+};

@@ -12,7 +12,7 @@ export const UserProfileSchema = Yup.object().shape({
     .test(
       'Unique username',
       'Username already in use', // <- key, message
-      function (value) {
+      (value) => {
         return new Promise((resolve, reject) => {
           apiGet('/user/checkUserName', { query: { username: value } })
             .then(({ result, error }) => {

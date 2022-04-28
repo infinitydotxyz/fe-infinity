@@ -9,14 +9,13 @@ import { ActivityItem } from './activity-item';
 let eventsInit = false;
 
 interface CollectionFeedProps {
-  header: string;
   collectionAddress?: string;
   types?: FeedEventType[];
   forActivity?: boolean;
   className?: string;
 }
 
-export function CollectionFeed({ header, collectionAddress, types, forActivity, className }: CollectionFeedProps) {
+export const CollectionFeed = ({ collectionAddress, types, forActivity, className }: CollectionFeedProps) => {
   const [events, setEvents] = useState<FeedEvent[]>([]);
   const [newEvents, setNewEvents] = useState<FeedEvent[]>([]); // new feed events
   const [filter, setFilter] = useState<FeedFilter>({ collectionAddress, types });
@@ -24,7 +23,11 @@ export function CollectionFeed({ header, collectionAddress, types, forActivity, 
   const [commentPanelEvent, setCommentPanelEvent] = useState<FeedEvent | null>(null);
   const [filteringTypes, setFilteringTypes] = useState<FeedEventType[]>([]);
 
-  async function getEvents() {
+  if (forActivity && !collectionAddress) {
+    return null; // require collectionAddress
+  }
+
+  const getEvents = () => {
     try {
       subscribe(COLL_FEED, filter, (type: string, data: FeedEvent) => {
         if (type === 'added') {
@@ -43,7 +46,7 @@ export function CollectionFeed({ header, collectionAddress, types, forActivity, 
     } catch (err) {
       console.error('ERR: ', err);
     }
-  }
+  };
 
   useEffect(() => {
     eventsInit = false;
@@ -88,8 +91,8 @@ export function CollectionFeed({ header, collectionAddress, types, forActivity, 
 
   return (
     <div className={`min-h-[1024px] ${className}`}>
-      <div className="flex justify-between">
-        <div className="text-3xl mb-6">{header}</div>
+      <div className="flex justify-between mt-[-66px] mb-6">
+        <div className="text-3xl mb-6">&nbsp;</div>
         <FeedFilterDropdown selectedTypes={filteringTypes} onChange={onChangeFilterDropdown} />
       </div>
 
@@ -150,4 +153,4 @@ export function CollectionFeed({ header, collectionAddress, types, forActivity, 
       </ul>
     </div>
   );
-}
+};

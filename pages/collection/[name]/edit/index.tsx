@@ -1,19 +1,14 @@
 import { BaseCollection, CollectionMetadata } from '@infinityxyz/lib/types/core';
 import { useRouter } from 'next/router';
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useEffect, useReducer } from 'react';
+import { Toaster } from 'react-hot-toast';
 import { PlusButton } from 'src/components/collection/edit/buttons';
 import { ProfileImageForm } from 'src/components/collection/edit/profile-image-form';
 import { RemoveIcon } from 'src/components/collection/edit/remove-icon';
 import SocialsInputGroup from 'src/components/collection/socials-input-group';
-import {
-  Button,
-  TextAreaInputBox,
-  TextInputBox,
-  Heading,
-  Toaster,
-  toastError,
-  toastSuccess
-} from 'src/components/common';
+import { Button, TextAreaInputBox, TextInputBox } from 'src/components/common';
+import { Heading } from 'src/components/common/heading';
+import { toastError, toastSuccess } from 'src/components/common/toaster';
 import logo from 'src/images/logo-mini-new.svg';
 import { apiPut, DISCORD_BOT_INVITE_URL, useFetch } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
@@ -31,14 +26,14 @@ type PartnershipAction = 'createPartnership' | 'updatePartnership' | 'deletePart
 type DiscordAcrion = 'createDiscordChannel' | 'updateDiscordChannel' | 'deleteDiscordChannel';
 type Action = MetadataAction | LinkAction | PartnershipAction | BenefitAction | DiscordAcrion;
 
-function reducer(
+const reducer = (
   state: DeepPartial<CollectionMetadata>,
   action: {
     type: Action;
     metadata: DeepPartial<CollectionMetadata>;
     key?: string | number;
   }
-): DeepPartial<CollectionMetadata> {
+): DeepPartial<CollectionMetadata> => {
   switch (action.type) {
     case 'updateMetadata':
       return { ...state, ...action.metadata };
@@ -124,12 +119,11 @@ function reducer(
     default:
       throw new Error(`Unknown action type '${action.type}'!`);
   }
-}
+};
 
-export default function EditCollectionPage() {
+const EditCollectionPage = () => {
   const router = useRouter();
   const [metadata, dispatchMetadata] = useReducer(reducer, {});
-  const [address, setAddress] = useState<string>();
   const { user, chainId, checkSignedIn } = useAppContext();
   const path = router.query.name ? `/collections/${router.query.name}` : '';
   // TODO: maybe we can fetch this data on the server side too?
@@ -138,7 +132,6 @@ export default function EditCollectionPage() {
 
   useEffect(() => {
     dispatchMetadata({ type: 'updateMetadata', metadata: collection?.metadata ?? {} });
-    setAddress(collection?.address);
   }, [collection]);
 
   const close = () => router.replace(`/collection/${router.query.name}`);
@@ -151,7 +144,7 @@ export default function EditCollectionPage() {
     }
 
     const { error } = await apiPut(`/user/${chainId}:${user?.address}/collections/${router.query.name}`, {
-      data: { metadata, address }
+      data: { metadata }
     });
 
     if (error) {
@@ -160,8 +153,9 @@ export default function EditCollectionPage() {
       return;
     }
 
+    await close();
+
     toastSuccess('Collection metadata saved');
-    close();
   };
 
   const deleteProfileImage = async () => {
@@ -423,7 +417,7 @@ export default function EditCollectionPage() {
                   role with the 'Use Application Commands' permission!
                   <p>
                     <code className="bg-gray-100">
-                      /infinity verify {`${collection?.chainId || ''}:${collection?.address || ''}`}{' '}
+                      /infinity verify {`${collection?.chainId || ''}:${collection?.address || ''}`}
                     </code>
                   </p>
                 </li>
@@ -477,4 +471,6 @@ export default function EditCollectionPage() {
       <Toaster />
     </div>
   );
-}
+};
+
+export default EditCollectionPage;

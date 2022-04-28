@@ -13,7 +13,7 @@ interface Props {
   contentOnly?: boolean;
 }
 
-export function CommentPanel({ isOpen, onClose, event, contentOnly }: Props) {
+export const CommentPanel = ({ isOpen, onClose, event, contentOnly }: Props) => {
   const { user, checkSignedIn } = useAppContext();
   const [currentPage, setCurrentPage] = useState(0);
   const [text, setText] = useState('');
@@ -38,7 +38,7 @@ export function CommentPanel({ isOpen, onClose, event, contentOnly }: Props) {
     await addUserComments(event.id || '', user?.address ?? '', text);
     setData([]);
     setCurrentPage(0);
-    fetchData();
+    void fetchData();
     setText('');
   };
 
@@ -108,4 +108,4 @@ export function CommentPanel({ isOpen, onClose, event, contentOnly }: Props) {
       </div>
     </Drawer>
   );
-}
+};

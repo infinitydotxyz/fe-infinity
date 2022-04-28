@@ -19,11 +19,25 @@ interface Props {
 }
 
 export const Tooltip = ({ setShow, children, className = '' }: Props) => {
+  let timeout: NodeJS.Timeout | undefined;
+
+  const cancelTimeout = () => {
+    if (timeout) {
+      clearTimeout(timeout);
+      timeout = undefined;
+    }
+  };
+
   const handleMouseOver = () => {
-    setShow(true);
+    cancelTimeout();
+
+    timeout = setTimeout(() => {
+      setShow(true);
+    }, 500);
   };
 
   const handleMouseOut = () => {
+    cancelTimeout();
     setShow(false);
   };
 

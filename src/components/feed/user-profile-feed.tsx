@@ -5,6 +5,7 @@ import { CommentPanel } from './comment-panel';
 import { FeedEventType } from '@infinityxyz/lib/types/core/feed';
 import { FeedFilterDropdown } from './feed-filter-dropdown';
 import { ActivityItem } from './activity-item';
+import { UserActivityItem } from './user-activity-item';
 
 let eventsInit = false;
 
@@ -13,17 +14,25 @@ interface UserProfileFeedProps {
   userAddress?: string;
   types?: FeedEventType[];
   forActivity?: boolean;
+  forUserActivity?: boolean;
   className?: string;
 }
 
-export function UserProfileFeed({ header, userAddress, types, forActivity, className }: UserProfileFeedProps) {
+export const UserProfileFeed = ({
+  header,
+  userAddress,
+  types,
+  forActivity,
+  forUserActivity,
+  className
+}: UserProfileFeedProps) => {
   const [events, setEvents] = useState<FeedEvent[]>([]);
   const [newEvents, setNewEvents] = useState<FeedEvent[]>([]); // new feed events
   const [filter, setFilter] = useState<FeedFilter>({ userAddress, types });
   const [commentPanelEvent, setCommentPanelEvent] = useState<FeedEvent | null>(null);
   const [filteringTypes, setFilteringTypes] = useState<FeedEventType[]>([]);
 
-  async function getEvents() {
+  const getEvents = () => {
     try {
       subscribe(COLL_FEED, filter, (type: string, data: FeedEvent) => {
         if (type === 'added') {
@@ -42,7 +51,7 @@ export function UserProfileFeed({ header, userAddress, types, forActivity, class
     } catch (err) {
       console.error('ERR: ', err);
     }
-  }
+  };
 
   useEffect(() => {
     eventsInit = false;
@@ -102,6 +111,9 @@ export function UserProfileFeed({ header, userAddress, types, forActivity, class
           if (forActivity) {
             return <ActivityItem key={idx} event={event} />;
           }
+          if (forUserActivity) {
+            return <UserActivityItem key={idx} event={event} />;
+          }
           return (
             <li key={idx} className="">
               <FeedItem
@@ -141,4 +153,4 @@ export function UserProfileFeed({ header, userAddress, types, forActivity, class
       </ul>
     </div>
   );
-}
+};

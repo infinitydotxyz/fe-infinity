@@ -173,9 +173,7 @@ const SandboxPage = () => {
         </div>
 
         <SBHeader># SimpleTable</SBHeader>
-        <div className="w-1/2">
-          <SimpleTable items={tableItems} />
-        </div>
+        <SimpleTable items={tableItems} className="w-1/2" />
 
         <SBHeader># Toaster</SBHeader>
         <div className="w-1/2">
@@ -198,6 +196,6 @@ interface Props {
   children: ReactNode;
 }
 
-export function SBHeader({ children }: Props) {
+const SBHeader = ({ children }: Props) => {
   return <div className="my-6 px-6 py-3 bg-slate-100 font-bold rounded-lg">{children}</div>;
-}
+};

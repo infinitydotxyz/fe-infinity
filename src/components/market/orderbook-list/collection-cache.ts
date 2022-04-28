@@ -105,7 +105,7 @@ export const CollectionCache = new _CollectionCache();
 
 // ================================================
 
-export function useCollectionCache() {
+export const useCollectionCache = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [trigger, setTrigger] = useState<number>(0);
 
@@ -153,4 +153,4 @@ export function useCollectionCache() {
     imageForTokenId,
     nameForCollection
   };
-}
+};
