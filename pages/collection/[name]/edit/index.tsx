@@ -155,7 +155,7 @@ const EditCollectionPage = () => {
 
     await close();
 
-    toastSuccess('Collection metadata saved');
+    toastSuccess('Collection saved successfully. Your changes will reflect in a minute or two.');
   };
 
   const deleteProfileImage = async () => {
