@@ -22,7 +22,7 @@ export default function MarketPage() {
   };
 
   useEffect(() => {
-    updateCollections();
+    void updateCollections();
   }, []);
 
   const contents = (

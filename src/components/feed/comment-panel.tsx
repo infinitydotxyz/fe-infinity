@@ -38,7 +38,7 @@ export function CommentPanel({ isOpen, onClose, event, contentOnly }: Props) {
     await addUserComments(event.id || '', user?.address ?? '', text);
     setData([]);
     setCurrentPage(0);
-    fetchData();
+    void fetchData();
     setText('');
   };
 

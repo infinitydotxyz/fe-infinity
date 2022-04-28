@@ -49,7 +49,7 @@ export function Button({
       ${classes.base}
       ${classes.size[size]}
       ${classes.variant[variant]}
-      ${disabled && classes.disabled}
+      ${disabled ? classes.disabled : ''}
       ${className}
      `}
       onClick={(e) => {
