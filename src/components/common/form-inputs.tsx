@@ -38,7 +38,7 @@ export const TextInputForm = ({
               <input
                 type={type}
                 value={field.value || ''}
-                className="p-0 border-none focus:ring-0 block w-full text-base"
+                className="p-0 border-none focus:ring-0 block w-full text-base font-zagmamono"
                 placeholder={placeholder}
                 onChange={(e) => {
                   if (onChange) {
@@ -75,7 +75,7 @@ export const TextAreaForm = ({ label, placeholder, tooltip, onChange, rows = 3, 
     <Field validateOnChange name={bind} {...fieldProps}>
       {({ meta, field, form }: FieldProps) => (
         <div className="my-4 sm:my-6">
-          <InputBox label={label} tooltip={tooltip}>
+          <InputBox label={label} tooltip={tooltip} labelClassname="mt-4">
             <div className="flex items-center w-full">
               <textarea
                 rows={rows}
@@ -88,7 +88,7 @@ export const TextAreaForm = ({ label, placeholder, tooltip, onChange, rows = 3, 
                     form.setFieldValue(bind, e.target.value);
                   }
                 }}
-                className="p-0 border-none focus:ring-0 block w-full text-base"
+                className="p-0 mt-2 border-none focus:ring-0 block w-full text-base font-zagmamono"
                 placeholder={placeholder}
               />
             </div>
