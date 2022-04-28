@@ -32,8 +32,8 @@ export const OrderListItem = ({ cartItem, allowDelete }: Props) => {
     >
       <ImageAndText
         image={<img className={`${collectionIconStyle}`} src={image} alt="" />}
-        title={cartItem.tokenName}
-        subtitle={cartItem.collectionName}
+        title={cartItem.collectionName}
+        subtitle={cartItem.tokenId}
         onClick={onDelete}
         buttonIcon={<SVG.grayDelete className={iconButtonStyle} />}
       />
