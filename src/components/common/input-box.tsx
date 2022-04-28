@@ -5,7 +5,6 @@ import { CalendarIcon } from '@heroicons/react/outline';
 import { EthSymbol } from './eth-price';
 import { Tooltip, TooltipIcon, TooltipSpec, TooltipWrapper } from './tool-tip';
 import { twMerge } from 'tailwind-merge';
-import { Field, FieldConfig, FieldProps } from 'formik';
 import classNames from 'classnames';
 
 interface Props {
@@ -17,7 +16,7 @@ interface Props {
   icon?: ReactNode;
 }
 
-export const InputBox = ({ tooltip, label, children, icon, renderRightIcon, isFullWidth }: Props): JSX.Element => {
+export const InputBox = ({ tooltip, label, children, icon, renderRightIcon, isFullWidth }: Props) => {
   const [showTooltip, setShowTooltip] = useState(false);
 
   return (
@@ -58,7 +57,7 @@ interface Props2 {
   tooltip?: TooltipSpec;
 }
 
-export const DatePickerBox = ({ tooltip, label, value, onChange, placeholder }: Props2): JSX.Element => {
+export const DatePickerBox = ({ tooltip, label, value, onChange, placeholder }: Props2) => {
   return (
     <InputBox label={label} tooltip={tooltip}>
       <div className="flex items-center">
@@ -81,13 +80,7 @@ interface Props3<T extends ComboBoxBaseType> {
   tooltip?: TooltipSpec;
 }
 
-export const ComboInputBox = <T extends ComboBoxBaseType>({
-  tooltip,
-  label,
-  options,
-  onChange,
-  value
-}: Props3<T>): JSX.Element => {
+export const ComboInputBox = <T extends ComboBoxBaseType>({ tooltip, label, options, onChange, value }: Props3<T>) => {
   return (
     <InputBox label={label} tooltip={tooltip}>
       <ComboBox options={options} value={value} onChange={onChange} />
@@ -106,13 +99,11 @@ interface Props4 {
   onChange?: (value: string) => void;
   tooltip?: TooltipSpec;
   icon?: ReactNode;
-  bind?: string;
-  fieldProps?: FieldConfig;
-  className?: string;
+  isFullWidth?: boolean;
+  renderRightIcon?: () => ReactElement;
 }
 
 export const TextInputBox = ({
-  bind,
   tooltip,
   value = '',
   label,
@@ -121,42 +112,11 @@ export const TextInputBox = ({
   type,
   placeholder,
   onChange,
-  fieldProps,
-  ...props
-}: Props4 & Omit<Props, 'children'>): JSX.Element => {
-  if (bind) {
-    return (
-      <Field validateOnChange name={bind} {...fieldProps}>
-        {({ meta, field, form }: FieldProps) => (
-          <div className="my-4 sm:my-6">
-            <InputBox label={label} tooltip={tooltip} icon={icon} {...props}>
-              <div className="flex items-center w-full">
-                {addEthSymbol && <div className="pr-2">{EthSymbol}</div>}
-                <input
-                  type={type}
-                  value={field.value || ''}
-                  className="p-0 border-none focus:ring-0 block w-full text-base"
-                  placeholder={placeholder}
-                  onChange={(e) => {
-                    if (onChange) {
-                      onChange(e.target.value);
-                    }
-                    if (!e.defaultPrevented) {
-                      form.setFieldValue(bind, e.target.value);
-                    }
-                  }}
-                />
-              </div>
-            </InputBox>
-            {meta.touched && meta.error && <div className="text-red-800 text-xs pl-6">{meta.error}</div>}
-          </div>
-        )}
-      </Field>
-    );
-  }
-
+  isFullWidth,
+  renderRightIcon
+}: Props4) => {
   return (
-    <InputBox label={label} tooltip={tooltip} icon={icon} {...props}>
+    <InputBox label={label} tooltip={tooltip} icon={icon} isFullWidth={isFullWidth} renderRightIcon={renderRightIcon}>
       <div className="flex items-center w-full">
         {addEthSymbol && <div className="pr-2">{EthSymbol}</div>}
         <input
@@ -177,54 +137,14 @@ export const TextInputBox = ({
 
 interface Props5 {
   label: string;
-  value?: string;
+  value: string;
   rows?: number;
   placeholder: string;
   tooltip?: TooltipSpec;
   onChange?: (value: string) => void;
-  bind?: string;
-  fieldProps?: FieldConfig;
 }
 
-export const TextAreaBox = ({
-  value = '',
-  label,
-  placeholder,
-  tooltip,
-  onChange,
-  rows = 3,
-  bind,
-  fieldProps
-}: Props5): JSX.Element => {
-  if (bind) {
-    return (
-      <Field validateOnChange name={bind} {...fieldProps}>
-        {({ meta, field, form }: FieldProps) => (
-          <div className="my-4 sm:my-6">
-            <InputBox label={label} tooltip={tooltip}>
-              <div className="flex items-center w-full">
-                <textarea
-                  rows={rows}
-                  value={field.value || ''}
-                  onChange={(e) => {
-                    if (onChange) {
-                      onChange(e.target.value);
-                    }
-                    if (!e.defaultPrevented) {
-                      form.setFieldValue(bind, e.target.value);
-                    }
-                  }}
-                  className="p-0 border-none focus:ring-0 block w-full text-base"
-                  placeholder={placeholder}
-                />
-              </div>
-            </InputBox>
-            {meta.touched && meta.error && <div className="text-red-800 text-xs pl-6">{meta.error}</div>}
-          </div>
-        )}
-      </Field>
-    );
-  }
+export const TextAreaBox = ({ value, label, placeholder, tooltip, onChange, rows = 3 }: Props5) => {
   return (
     <InputBox label={label} tooltip={tooltip}>
       <div className="flex items-center w-full">
@@ -249,6 +169,7 @@ interface TextAreaInputBoxProps {
   onChange: (value: string) => void;
   tooltip?: TooltipSpec;
   className?: string;
+  rows: number;
 }
 
 export const TextAreaInputBox = ({
@@ -257,15 +178,15 @@ export const TextAreaInputBox = ({
   label,
   placeholder,
   onChange,
-  className,
-  ...props
-}: TextAreaInputBoxProps & Omit<React.HTMLProps<HTMLTextAreaElement>, 'onChange'>): JSX.Element => {
+  rows,
+  className
+}: TextAreaInputBoxProps) => {
   return (
     <InputBox label={label} tooltip={tooltip} isFullWidth>
       <div className={twMerge('flex items-center w-full', className)}>
         <textarea
-          {...props}
           value={value}
+          rows={rows}
           onChange={(e) => onChange(e.target.value)}
           className="p-0 border-none focus:ring-0 block w-full text-base"
           placeholder={placeholder}
