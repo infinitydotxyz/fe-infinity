@@ -76,28 +76,44 @@ export const AccountSettingsPage: FunctionComponent<AccountSettingsProps> = (pro
   };
 
   return (
-    <div className="flex flex-col bg-white max-w-3xl mx-auto  px-4 sm:px-12  rounded-3xl">
-      <div className="mt-12">
-        <ProfileImageUpload
-          onUpload={handleProfileImageUpload}
-          onDelete={handleProfileImageRemove}
-          imgSource={userInfo.profileImage}
-        />
-      </div>
-      <h2 className="font-body text-4xl mt-20 mb-4 font-bold">Edit Profile</h2>
-      <Formik
-        initialValues={userInfo}
-        validationSchema={UserProfileSchema}
-        onSubmit={async (values, { setSubmitting }) => {
-          setSubmitting(true);
-          await handleSubmit(values);
-          setSubmitting(false);
-        }}
-      >
-        {({ isSubmitting }) => (
-          <Form>
-            <UserProfileForm />
+    <Formik
+      initialValues={userInfo}
+      validationSchema={UserProfileSchema}
+      onSubmit={async (values, { setSubmitting }) => {
+        setSubmitting(true);
+        await handleSubmit(values);
+        setSubmitting(false);
+      }}
+    >
+      {({ isSubmitting }) => (
+        <Form>
+          <div className="flex flex-row justify-end my-12">
+            <Button
+              variant="outline"
+              className="py-2.5 mx-3 w-auto font-button"
+              onClick={() => {
+                router.push('/profile');
+              }}
+            >
+              Cancel
+            </Button>
+            <Button variant="primary" className="py-2.5 w-auto font-button" type="submit" disabled={isSubmitting}>
+              Save
+            </Button>
+          </div>
+          <div className="flex flex-col bg-white max-w-3xl mx-auto px-4 sm:px-12 rounded-3xl">
             <div className="mt-12">
+              <ProfileImageUpload
+                onUpload={handleProfileImageUpload}
+                onDelete={handleProfileImageRemove}
+                imgSource={userInfo.profileImage}
+              />
+            </div>
+            {/* <h2 className="font-body text-4xl mt-20 mb-4 font-bold">Edit Profile</h2> */}
+
+            <UserProfileForm />
+            <div className="mt-4 mb-12">
+              <h3 className="font-body text-2xl mt-10 mb-10 font-bold">Header photo</h3>
               <ProfileBannerImageUpload
                 onUpload={handleBannerImageUpload}
                 onDelete={handleBannerImageRemove}
@@ -106,23 +122,9 @@ export const AccountSettingsPage: FunctionComponent<AccountSettingsProps> = (pro
             </div>
             {/* <h2 className="font-body text-4xl mt-10 mb-10 font-bold">Wallets</h2> */}
             {/* <UserWalletForm /> */}
-            <div className="sm:grid sm:grid-cols-2 sm:gap-2 mt-10">
-              <Button variant="primary" className="py-2.5 w-full" type="submit" disabled={isSubmitting}>
-                Save
-              </Button>
-              <Button
-                variant="outline"
-                className="py-2.5 w-full"
-                onClick={() => {
-                  router.push('/profile');
-                }}
-              >
-                Cancel
-              </Button>
-            </div>
-          </Form>
-        )}
-      </Formik>
-    </div>
+          </div>
+        </Form>
+      )}
+    </Formik>
   );
 };

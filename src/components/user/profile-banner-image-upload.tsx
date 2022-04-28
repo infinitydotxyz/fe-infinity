@@ -50,7 +50,7 @@ export const ProfileBannerImageUpload: FunctionComponent<BannerImageProps> = ({
   return (
     <div className="sm:flex items-center flex-wrap ">
       <label htmlFor={FORM_LABEL} className="flex-1">
-        <div className="w-full h-40 rounded-xl overflow-hidden border border-1 border-theme-light-700">
+        <div className="w-full h-40 rounded-3xl overflow-hidden">
           {imgSrc ? (
             <img className="w-full object-cover" src={imgSrc} />
           ) : (
@@ -65,7 +65,7 @@ export const ProfileBannerImageUpload: FunctionComponent<BannerImageProps> = ({
       <div className="sm:pl-8 mt-2 sm:mt-0">
         <Button
           variant="primary"
-          className="my-1 py-2.5 px-12 mb-2 block w-full sm:w-44"
+          className="my-1 py-2.5 px-12 mb-2 block w-full sm:w-44 font-button"
           onClick={handleUploadImage}
           disabled={!file || isLoading}
         >
@@ -73,7 +73,7 @@ export const ProfileBannerImageUpload: FunctionComponent<BannerImageProps> = ({
         </Button>
         <Button
           variant="outline"
-          className="my-1 py-2 px-12 d-block w-full sm:w-44 block"
+          className="my-1 py-2 px-12 d-block w-full sm:w-44 block font-button"
           disabled={isLoading || !imgSrc}
           onClick={handleImageRemove}
         >

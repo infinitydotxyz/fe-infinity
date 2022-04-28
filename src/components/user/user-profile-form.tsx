@@ -6,7 +6,7 @@ export const UserProfileForm: FunctionComponent = () => {
     <div>
       <TextInputBox bind="displayName" type="text" label="Display name" placeholder="Display Name" />
       <TextInputBox bind="username" type="text" label="Username" placeholder="User Name" />
-      <TextAreaBox bind="bio" label="bio" placeholder="Bio" rows={8} />
+      <TextAreaBox bind="bio" label="Description" placeholder="Description" rows={8} />
     </div>
   );
 };

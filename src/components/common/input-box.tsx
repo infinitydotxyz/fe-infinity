@@ -22,11 +22,18 @@ export function InputBox({ tooltip, label, children, icon, renderRightIcon, isFu
 
   return (
     <TooltipWrapper show={showTooltip} tooltip={tooltip} className={classNames({ 'w-full': isFullWidth })}>
-      <div className="py-3 pl-6 pr-2 outline outline-1 outline-gray-400 rounded-3xl w-full flex items-center">
+      <div
+        className="py-3 pl-6 pr-2 outline outline-1 rounded-3xl w-full flex items-center"
+        style={{ outlineColor: '#BEBEBE' }}
+      >
         {icon && <span className="pr-8">{icon}</span>}
         <div className="w-full">
-          {label && <label className="block text-xs font-medium text-gray-700">{label}</label>}
-          <div className="mt-1 flex items-center w-full">
+          {label && (
+            <label className="block font-normal font-label text-sm" style={{ color: '#666666' }}>
+              {label}
+            </label>
+          )}
+          <div className="flex items-center w-full">
             <div className="flex items-center w-full">{children}</div>
 
             {tooltip && (
@@ -135,7 +142,7 @@ export function TextInputBox({
                 <input
                   type={type}
                   value={field.value || ''}
-                  className="p-0 border-none focus:ring-0 block w-full text-base"
+                  className="p-0 border-none focus:ring-0 block w-full text-base font-input"
                   placeholder={placeholder}
                   onChange={(e) => {
                     if (onChange) {
@@ -210,7 +217,7 @@ export function TextAreaBox({
                       form.setFieldValue(bind, e.target.value);
                     }
                   }}
-                  className="p-0 border-none focus:ring-0 block w-full text-base"
+                  className="p-0 mt-2 border-none focus:ring-0 block w-full text-base font-input"
                   placeholder={placeholder}
                 />
               </div>
