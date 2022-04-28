@@ -175,7 +175,7 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
         <Chip
           content={<FaInstagram className="text-lg" />}
           onClick={() => window.open(collection?.metadata?.links?.instagram)}
-          className="p-2"
+          iconOnly={true}
         />
       )}
 
@@ -183,7 +183,7 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
         <Chip
           content={<HiOutlineExternalLink className="text-lg" />}
           onClick={() => window.open(collection?.metadata?.links?.external)}
-          className="p-2"
+          iconOnly={true}
         />
       )}
 
