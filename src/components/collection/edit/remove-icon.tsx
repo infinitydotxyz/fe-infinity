@@ -8,13 +8,6 @@ export interface RemoveIconProps {
 
 export const RemoveIcon: React.FC<RemoveIconProps> = ({ onClick }) => {
   return (
-    <Image
-      width={20}
-      height={20}
-      src={RemoveSvg.src}
-      alt={'Remove item'}
-      className="cursor-pointer"
-      onClick={onClick}
-    />
+    <Image width={20} height={20} src={RemoveSvg.src} alt="Remove item" className="cursor-pointer" onClick={onClick} />
   );
 };

@@ -13,7 +13,7 @@ interface Props<T extends ComboBoxBaseType> {
   onChange: (value: T) => void;
 }
 
-export function ComboBox<T extends ComboBoxBaseType>({ options, value, onChange }: Props<T>) {
+export const ComboBox = <T extends ComboBoxBaseType>({ options, value, onChange }: Props<T>) => {
   const [query, setQuery] = useState('');
 
   let filteredPeople: T[] = options;
@@ -82,4 +82,4 @@ export function ComboBox<T extends ComboBoxBaseType>({ options, value, onChange 
       </Combobox>
     </div>
   );
-}
+};

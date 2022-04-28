@@ -8,7 +8,7 @@ interface Props {
   allowDelete: boolean;
 }
 
-export function OrderListItem({ cartItem, allowDelete }: Props) {
+export const OrderListItem = ({ cartItem, allowDelete }: Props) => {
   const { removeCartItem } = useOrderContext();
 
   let onDelete;
@@ -32,14 +32,14 @@ export function OrderListItem({ cartItem, allowDelete }: Props) {
     >
       <ImageAndText
         image={<img className={`${collectionIconStyle}`} src={image} alt="" />}
-        title={cartItem.tokenName}
-        subtitle={cartItem.collectionName}
+        title={cartItem.collectionName}
+        subtitle={cartItem.tokenId}
         onClick={onDelete}
         buttonIcon={<SVG.grayDelete className={iconButtonStyle} />}
       />
     </div>
   );
-}
+};
 
 // ===========================================================================
 
@@ -51,7 +51,7 @@ interface Props2 {
   buttonIcon?: ReactNode;
 }
 
-export function ImageAndText({ title, subtitle, image, buttonIcon, onClick }: Props2) {
+export const ImageAndText = ({ title, subtitle, image, buttonIcon, onClick }: Props2) => {
   let deleteButton;
 
   if (onClick && buttonIcon) {
@@ -72,7 +72,7 @@ export function ImageAndText({ title, subtitle, image, buttonIcon, onClick }: Pr
       {deleteButton}
     </div>
   );
-}
+};
 
 // ===========================================================================
 
@@ -81,7 +81,7 @@ interface Props3 {
   subtitle?: string;
 }
 
-export function TitleAndSubtitle({ title, subtitle }: Props3) {
+export const TitleAndSubtitle = ({ title, subtitle }: Props3) => {
   const titleStyle = 'truncate text-md font-bold text-gray-900';
   let subtitleStyle = 'truncate text-sm text-gray-500';
 
@@ -95,4 +95,4 @@ export function TitleAndSubtitle({ title, subtitle }: Props3) {
       {subtitle && <div className={subtitleStyle}>{subtitle}</div>}
     </div>
   );
-}
+};

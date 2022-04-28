@@ -11,7 +11,7 @@ interface Props {
   onClick?: () => void;
 }
 
-export function Field({ onSort, sortable = false, onClick, type, label, value }: Props) {
+export const Field = ({ onSort, sortable = false, onClick, type, label, value }: Props) => {
   const styles = {
     stat: {
       container: {
@@ -285,4 +285,4 @@ export function Field({ onSort, sortable = false, onClick, type, label, value }:
       </div>
     </>
   );
-}
+};

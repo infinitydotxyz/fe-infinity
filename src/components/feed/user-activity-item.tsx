@@ -8,7 +8,7 @@ interface Props {
   event: FeedEvent;
 }
 
-export function UserActivityItem({ event }: Props) {
+export const UserActivityItem = ({ event }: Props) => {
   return (
     <div>
       <div className="bg-gray-100 p-10 rounded-2xl flex items-center font-heading">
@@ -74,4 +74,4 @@ export function UserActivityItem({ event }: Props) {
       </div>
     </div>
   );
-}
+};

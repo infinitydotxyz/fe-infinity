@@ -17,7 +17,7 @@ interface DropdownProps {
   className?: string;
 }
 
-export function Dropdown({ label, items, toggler, contentClassName, className }: DropdownProps) {
+export const Dropdown = ({ label, items, toggler, contentClassName, className }: DropdownProps) => {
   return (
     <div className={twMerge(`relative inline-block text-left ${className ?? ''}`)}>
       <Menu>
@@ -58,13 +58,13 @@ export function Dropdown({ label, items, toggler, contentClassName, className }:
       </Menu>
     </div>
   );
-}
+};
 
 interface CustomMenuItemProps {
   onClick: () => void;
   children: ReactElement | string;
 }
-function CustomMenuItem(props: CustomMenuItemProps) {
+export const CustomMenuItem = (props: CustomMenuItemProps) => {
   return (
     <Menu.Item {...props}>
       {({ active, disabled }) => (
@@ -82,4 +82,4 @@ function CustomMenuItem(props: CustomMenuItemProps) {
       )}
     </Menu.Item>
   );
-}
+};

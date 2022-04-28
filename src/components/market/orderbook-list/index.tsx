@@ -36,7 +36,7 @@ export const OrderbookList = (): JSX.Element => {
               <OrderbookFilters />
             </div>
           )}
-          <div className={'flex flex-col items-start'}>
+          <div className="flex flex-col items-start">
             {orders.map((order: OBOrder) => {
               return <OrderbookRow key={order.id} order={order} />;
             })}

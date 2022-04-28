@@ -9,7 +9,7 @@ import { OrderbookList } from 'src/components/market/orderbook-list';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { CollectionCache } from 'src/components/market/orderbook-list/collection-cache';
 
-export default function MarketPage() {
+const MarketPage = () => {
   const { orderDrawerOpen, setOrderDrawerOpen, isOrderStateEmpty, addCartItem } = useOrderContext();
   const { options, onChange, selected } = useToggleTab(['Orderbook', 'Assets'], 'Orderbook');
 
@@ -126,4 +126,6 @@ export default function MarketPage() {
       <div>{contents}</div>
     </PageBox>
   );
-}
+};
+
+export default MarketPage;

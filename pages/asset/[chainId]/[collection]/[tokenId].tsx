@@ -48,6 +48,7 @@ const AssetDetail: FunctionComponent = () => {
     );
   }
 
+  // NOTE:  this is buggy, can't call hooks after if statement above
   const { isLoading, error, token, collection } = useFetchAssertInfo(query.chainId, query.collection, query.tokenId);
 
   if (isLoading) {
@@ -98,7 +99,7 @@ const AssetDetail: FunctionComponent = () => {
                 </Link>
                 {collection.hasBlueCheck && (
                   <div className="mt-1">
-                    <Image width={18} height={18} src={BlueCheckSvg.src} alt={'Verified'} />
+                    <Image width={18} height={18} src={BlueCheckSvg.src} alt="Verified" />
                   </div>
                 )}
               </div>
