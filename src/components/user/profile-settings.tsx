@@ -90,14 +90,14 @@ export const AccountSettingsPage: FunctionComponent<AccountSettingsProps> = (pro
           <div className="flex flex-row justify-end my-12">
             <Button
               variant="outline"
-              className="py-2.5 mx-3 w-auto font-button"
+              className="py-2.5 mx-3 w-auto font-zagmamono"
               onClick={() => {
                 router.push('/profile');
               }}
             >
               Cancel
             </Button>
-            <Button variant="primary" className="py-2.5 w-auto font-button" type="submit" disabled={isSubmitting}>
+            <Button variant="primary" className="py-2.5 w-auto font-zagmamono" type="submit" disabled={isSubmitting}>
               Save
             </Button>
           </div>
