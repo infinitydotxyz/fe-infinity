@@ -19,7 +19,7 @@ interface Props {
   onClose: () => void;
 }
 
-export function OrderDrawer({ open, onClose }: Props) {
+export const OrderDrawer = ({ open, onClose }: Props) => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const {
@@ -179,4 +179,4 @@ export function OrderDrawer({ open, onClose }: Props) {
       </Drawer>
     </>
   );
-}
+};

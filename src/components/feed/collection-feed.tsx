@@ -15,7 +15,7 @@ interface CollectionFeedProps {
   className?: string;
 }
 
-export function CollectionFeed({ collectionAddress, types, forActivity, className }: CollectionFeedProps) {
+export const CollectionFeed = ({ collectionAddress, types, forActivity, className }: CollectionFeedProps) => {
   const [events, setEvents] = useState<FeedEvent[]>([]);
   const [newEvents, setNewEvents] = useState<FeedEvent[]>([]); // new feed events
   const [filter, setFilter] = useState<FeedFilter>({ collectionAddress, types });
@@ -27,7 +27,7 @@ export function CollectionFeed({ collectionAddress, types, forActivity, classNam
     return null; // require collectionAddress
   }
 
-  async function getEvents() {
+  const getEvents = () => {
     try {
       subscribe(COLL_FEED, filter, (type: string, data: FeedEvent) => {
         if (type === 'added') {
@@ -46,7 +46,7 @@ export function CollectionFeed({ collectionAddress, types, forActivity, classNam
     } catch (err) {
       console.error('ERR: ', err);
     }
-  }
+  };
 
   useEffect(() => {
     eventsInit = false;
@@ -153,4 +153,4 @@ export function CollectionFeed({ collectionAddress, types, forActivity, classNam
       </ul>
     </div>
   );
-}
+};

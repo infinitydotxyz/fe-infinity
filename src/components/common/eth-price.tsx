@@ -7,7 +7,7 @@ interface Props {
 
 export const EthSymbol = 'Ξ';
 
-export function EthPrice({ label, className = '', ethClassName = '', labelClassName = '' }: Props): JSX.Element {
+export const EthPrice = ({ label, className = '', ethClassName = '', labelClassName = '' }: Props): JSX.Element => {
   return (
     <div className={className}>
       <div className="flex items-center">
@@ -17,4 +17,4 @@ export function EthPrice({ label, className = '', ethClassName = '', labelClassN
       </div>
     </div>
   );
-}
+};

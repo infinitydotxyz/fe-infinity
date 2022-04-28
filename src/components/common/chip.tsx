@@ -11,7 +11,7 @@ interface Props {
   className?: string;
 }
 
-export function Chip({ left, content, right, iconOnly, active, onClick, className = '' }: Props) {
+export const Chip = ({ left, content, right, iconOnly, active, onClick, className = '' }: Props) => {
   const activeCx = active === true ? 'bg-gray-900 text-white' : '';
   return (
     <button
@@ -28,4 +28,4 @@ export function Chip({ left, content, right, iconOnly, active, onClick, classNam
       {right && <div className="flex flex-auto flex-row-reverse pr-3">{right}</div>}
     </button>
   );
-}
+};

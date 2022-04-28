@@ -92,7 +92,7 @@ interface Props {
   children: ReactNode;
 }
 
-export function OrderContextProvider({ children }: Props) {
+export const OrderContextProvider = ({ children }: Props) => {
   const [orderDrawerOpen, setOrderDrawerOpen] = useState<boolean>(false);
   const [isEditingOrder, setIsEditingOrder] = useState<boolean>(false);
 
@@ -381,8 +381,8 @@ export function OrderContextProvider({ children }: Props) {
   };
 
   return <OrderContext.Provider value={value}>{children}</OrderContext.Provider>;
-}
+};
 
-export function useOrderContext(): OrderContextType {
+export const useOrderContext = (): OrderContextType => {
   return useContext(OrderContext) as OrderContextType;
-}
+};

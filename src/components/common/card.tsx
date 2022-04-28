@@ -18,7 +18,7 @@ export interface CardProps {
   className?: string;
 }
 
-export function Card({ data, cardActions, dropdownActions, className }: CardProps): JSX.Element {
+export const Card = ({ data, cardActions, dropdownActions, className }: CardProps): JSX.Element => {
   const title = (data?.title ?? '').length > 18 ? data?.title?.slice(0, 18) + '...' : data?.title;
   const tokenId = (data?.tokenId ?? '').length > 18 ? data?.tokenId?.slice(0, 18) + '...' : data?.tokenId;
 
@@ -80,4 +80,4 @@ export function Card({ data, cardActions, dropdownActions, className }: CardProp
       </footer>
     </div>
   );
-}
+};

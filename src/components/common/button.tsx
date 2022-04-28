@@ -32,7 +32,7 @@ export interface Props {
   type?: 'submit' | 'button';
 }
 
-export function Button({
+export const Button = ({
   type = 'button',
   variant = 'primary',
   size = 'normal',
@@ -40,7 +40,7 @@ export function Button({
   children,
   className = '',
   onClick
-}: Props): JSX.Element {
+}: Props): JSX.Element => {
   return (
     <button
       type={type}
@@ -67,4 +67,4 @@ export function Button({
       {children}
     </button>
   );
-}
+};

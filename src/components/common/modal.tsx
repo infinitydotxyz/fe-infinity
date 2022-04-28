@@ -46,7 +46,7 @@ interface Props {
   };
 }
 
-export function Modal({ children, interactive, content, ...props }: Props): JSX.Element {
+export const Modal = ({ children, interactive, content, ...props }: Props): JSX.Element => {
   const styles = {
     overlay: {
       transition: {
@@ -107,4 +107,4 @@ export function Modal({ children, interactive, content, ...props }: Props): JSX.
       </Disclosure>
     </>
   );
-}
+};

@@ -4,13 +4,13 @@ import { Button, SimpleModal, TextInputBox } from 'src/components/common';
 export const TransferNFTModal: React.FC = () => {
   const [address, setAddress] = useState('');
   const [modalIsOpen, setIsOpen] = React.useState(false);
-  function openModal() {
+  const openModal = () => {
     setIsOpen(true);
-  }
+  };
 
-  function closeModal() {
+  const closeModal = () => {
     setIsOpen(false);
-  }
+  };
 
   return (
     <div>

@@ -40,7 +40,7 @@ interface FeedItemProps {
   onComment?: (event: FeedEvent) => void;
 }
 
-export function FeedItem({ data, onLike, onComment }: FeedItemProps) {
+export const FeedItem = ({ data, onLike, onComment }: FeedItemProps) => {
   const { user, checkSignedIn } = useAppContext();
 
   const timestampStr = data.timestamp > 0 ? new Date(data.timestamp).toLocaleString() : '';
@@ -102,7 +102,7 @@ export function FeedItem({ data, onLike, onComment }: FeedItemProps) {
       </div>
     </div>
   );
-}
+};
 
 const renderTextWithLinks = (txt: string | undefined) => {
   const urlRegex = /^(https?:\/\/[^/]+(\/[\w-]+)+)/;
@@ -120,15 +120,15 @@ const renderTextWithLinks = (txt: string | undefined) => {
     });
 };
 
-function TweetEvent({ data }: FeedItemProps) {
+const TweetEvent = ({ data }: FeedItemProps) => {
   return <div className="mt-4">{renderTextWithLinks(data.text ?? data.title)}</div>;
-}
+};
 
-function Discord({ data }: FeedItemProps) {
+const Discord = ({ data }: FeedItemProps) => {
   return <div className="mt-4">{renderTextWithLinks(data.title)}</div>;
-}
+};
 
-function SaleEvent({ data }: FeedItemProps) {
+const SaleEvent = ({ data }: FeedItemProps) => {
   return (
     <div className="mt-4 border rounded-xl p-4 flex items-center bg-gray-100 font-heading">
       <Link href={`/asset/${data.chainId}/${data.collectionAddress}/${data.tokenId}`} passHref={true}>
@@ -170,4 +170,4 @@ function SaleEvent({ data }: FeedItemProps) {
       </div>
     </div>
   );
-}
+};

@@ -7,7 +7,7 @@ import { SVG, SearchInput, ConnectButton, Spacer, CustomMenuItem, pageStyles } f
 import { twMerge } from 'tailwind-merge';
 import { useRouter } from 'next/router';
 
-export function Navbar() {
+export const Navbar = () => {
   const router = useRouter();
 
   const content = {
@@ -129,7 +129,7 @@ export function Navbar() {
       </div>
     </div>
   );
-}
+};
 
 // <div {...styles?.actions?.items?.mobile}>
 // <Menu as="div" {...styles?.actions?.item?.menu?.container}>

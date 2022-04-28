@@ -42,7 +42,7 @@ const CollectionPage = () => {
   const firstDailyStats = dailyStats?.data[0];
 
   if (!collection) {
-    return <div>Loading</div>;
+    return <></>;
   }
 
   return (

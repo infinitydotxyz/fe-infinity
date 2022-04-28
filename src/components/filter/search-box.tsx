@@ -11,7 +11,7 @@ type CollectionItem = BaseCollection & {
   name: string;
 };
 
-export function SearchBox() {
+export const SearchBox = () => {
   const [query, setQuery] = useState('');
   const router = useRouter();
 
@@ -99,4 +99,4 @@ export function SearchBox() {
       </Combobox>
     </div>
   );
-}
+};

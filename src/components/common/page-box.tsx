@@ -14,7 +14,14 @@ interface Props {
   rightToolbar?: JSX.Element;
 }
 
-export function PageBox({ children, title, showTitle = true, fullWidth, className, rightToolbar }: Props): JSX.Element {
+export const PageBox = ({
+  children,
+  title,
+  showTitle = true,
+  fullWidth,
+  className,
+  rightToolbar
+}: Props): JSX.Element => {
   const styles = {
     content: {
       container: {
@@ -43,7 +50,7 @@ export function PageBox({ children, title, showTitle = true, fullWidth, classNam
       </div>
     </>
   );
-}
+};
 
 // ==================================================
 

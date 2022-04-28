@@ -18,8 +18,8 @@ interface ActivityTabProps {
 //   average: number;
 // };
 
-// export function ActivityTab({ dailyStats, weeklyStats }: ActivityTabProps) {
-export function ActivityTab({ collectionAddress }: ActivityTabProps) {
+// export const ActivityTab = ({ dailyStats, weeklyStats }: ActivityTabProps)=> {
+export const ActivityTab = ({ collectionAddress }: ActivityTabProps) => {
   // const [type, setType] = useState<'DAY' | 'WEEK'>('DAY');
   // const [data, setData] = useState<ChartData[] | []>([]);
 
@@ -100,4 +100,4 @@ export function ActivityTab({ collectionAddress }: ActivityTabProps) {
       <CollectionFeed forActivity={true} collectionAddress={collectionAddress ?? ''} />
     </>
   );
-}
+};

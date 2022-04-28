@@ -26,14 +26,14 @@ type PartnershipAction = 'createPartnership' | 'updatePartnership' | 'deletePart
 type DiscordAcrion = 'createDiscordChannel' | 'updateDiscordChannel' | 'deleteDiscordChannel';
 type Action = MetadataAction | LinkAction | PartnershipAction | BenefitAction | DiscordAcrion;
 
-function reducer(
+const reducer = (
   state: DeepPartial<CollectionMetadata>,
   action: {
     type: Action;
     metadata: DeepPartial<CollectionMetadata>;
     key?: string | number;
   }
-): DeepPartial<CollectionMetadata> {
+): DeepPartial<CollectionMetadata> => {
   switch (action.type) {
     case 'updateMetadata':
       return { ...state, ...action.metadata };
@@ -119,7 +119,7 @@ function reducer(
     default:
       throw new Error(`Unknown action type '${action.type}'!`);
   }
-}
+};
 
 const EditCollectionPage = () => {
   const router = useRouter();

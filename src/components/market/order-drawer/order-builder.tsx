@@ -2,7 +2,7 @@ import { TextInputBox, Spacer, DatePickerBox } from 'src/components/common';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { OrderListItem } from './order-list-item';
 
-export function OrderBuilder() {
+export const OrderBuilder = () => {
   const { cartItems, isSellOrderCart, price, setPrice, expirationDate, setExpirationDate, numItems, setNumItems } =
     useOrderContext();
 
@@ -124,4 +124,4 @@ export function OrderBuilder() {
   }
 
   return contents;
-}
+};

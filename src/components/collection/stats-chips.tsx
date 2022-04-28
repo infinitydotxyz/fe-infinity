@@ -14,7 +14,7 @@ interface Props {
   weeklyStatsData: CollectionStats[];
 }
 
-export function StatsChips({ collection, weeklyStatsData }: Props) {
+export const StatsChips = ({ collection, weeklyStatsData }: Props) => {
   const { user, checkSignedIn, userFollowingCollections, fetchFollowingCollections, chainId } = useAppContext();
   const [isFollowing, setIsFollowing] = useState(false);
   const { push: pushRoute } = useRouter();
@@ -205,4 +205,4 @@ export function StatsChips({ collection, weeklyStatsData }: Props) {
       <Toaster />
     </div>
   );
-}
+};
