@@ -1,6 +1,5 @@
 import { FunctionComponent } from 'react';
 import { Menu, Transition } from '@headlessui/react';
-import { Chip } from 'src/components/common';
 import { FaShareAlt } from 'react-icons/fa';
 
 import {
@@ -22,20 +21,17 @@ interface UserProfileShareProps {
 
 export const UserProfileShare: FunctionComponent<UserProfileShareProps> = ({ userAddress }) => {
   const profileLink = `${window.location.origin}/user/${userAddress}`;
+
   return (
     <div className="relative inline-block text-left">
       <Menu>
         {({ open }) => (
           <>
             <Menu.Button>
-              <Chip
-                content={
-                  <span className="flex items-center">
-                    <FaShareAlt className="text-md" />
-                    <span className="pl-2">Share</span>
-                  </span>
-                }
-              />
+              <div className="flex justify-center items-center m-1 font-medium font-heading px-4 h-[50px] rounded-full border border-gray-300 cursor-pointer hover:bg-gray-200 ">
+                <FaShareAlt className="text-md" />
+                <div className="pl-2">Share</div>
+              </div>
             </Menu.Button>
 
             <Transition
