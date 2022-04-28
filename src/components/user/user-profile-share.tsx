@@ -45,7 +45,7 @@ export const UserProfileShare: FunctionComponent<UserProfileShareProps> = ({ use
             >
               <Menu.Items className="absolute mt-2 pl-8 pr-0 pt-4 pb-4 w-72 origin-top-right divide-y divide-gray-100 rounded-3xl border border-gray-200 bg-white shadow-2xl outline-none">
                 <div className="flex flex-wrap gap-4">
-                  <EmailShareButton subject="Infinity User Profile" body={'Infinity User Profile'} url={profileLink}>
+                  <EmailShareButton subject="Infinity User Profile" body="Infinity User Profile" url={profileLink}>
                     <EmailIcon size={32} />
                   </EmailShareButton>
                   <FacebookShareButton url={profileLink}>

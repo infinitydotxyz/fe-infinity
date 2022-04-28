@@ -26,7 +26,7 @@ const UserDetailPage: FunctionComponent = () => {
   if (isError) {
     console.error(error);
     return (
-      <PageBox title={'Error'} className="mb-12">
+      <PageBox title="Error" className="mb-12">
         Failed Fetch User Info
       </PageBox>
     );

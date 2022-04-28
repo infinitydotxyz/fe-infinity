@@ -98,7 +98,7 @@ const AssetDetail: FunctionComponent = () => {
                 </Link>
                 {collection.hasBlueCheck && (
                   <div className="mt-1">
-                    <Image width={18} height={18} src={BlueCheckSvg.src} alt={'Verified'} />
+                    <Image width={18} height={18} src={BlueCheckSvg.src} alt="Verified" />
                   </div>
                 )}
               </div>

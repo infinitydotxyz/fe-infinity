@@ -103,7 +103,7 @@ export const Navbar = () => {
                 <Menu>
                   <Menu.Button>
                     <div className="flex gap-2 items-center">
-                      {item?.label} <IoMdArrowDropdown />{' '}
+                      {item?.label} <IoMdArrowDropdown />
                     </div>
                   </Menu.Button>
                   <Menu.Items

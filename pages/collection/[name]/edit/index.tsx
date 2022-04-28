@@ -417,7 +417,7 @@ const EditCollectionPage = () => {
                   role with the 'Use Application Commands' permission!
                   <p>
                     <code className="bg-gray-100">
-                      /infinity verify {`${collection?.chainId || ''}:${collection?.address || ''}`}{' '}
+                      /infinity verify {`${collection?.chainId || ''}:${collection?.address || ''}`}
                     </code>
                   </p>
                 </li>

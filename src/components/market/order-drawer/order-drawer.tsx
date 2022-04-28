@@ -34,8 +34,8 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
   } = useOrderContext();
 
   const emptyCart = (
-    <div className={'flex   h-full   justify-center content-center items-center text-sm'}>
-      <div className={'text-center'}>
+    <div className="flex h-full justify-center content-center items-center text-sm">
+      <div className="text-center">
         <span className="text-lg font-semibold">Cart is empty</span>
         <br />
         Add an item to the order.

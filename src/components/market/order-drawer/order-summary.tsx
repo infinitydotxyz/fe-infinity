@@ -60,7 +60,7 @@ export const OrderSummaryItem = ({ orderInCart }: Props) => {
       }
 
       return (
-        <div className={'relative '}>
+        <div className="relative">
           <img className={`absolute ${collectionIconStyle}`} src={image} alt="" />
           <div className="absolute -top-1 right-0 z-50 text-center shadow-lg rounded-full h-6 w-6 bg-white">
             {orderInCart.cartItems.length}

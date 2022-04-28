@@ -12,7 +12,7 @@ const ProfilePage: FunctionComponent = () => {
 
   if (!user) {
     return (
-      <PageBox title={'Account'} className="mb-12">
+      <PageBox title="Account" className="mb-12">
         Please sign in.
       </PageBox>
     );
@@ -27,7 +27,7 @@ const ProfilePage: FunctionComponent = () => {
   if (isError) {
     console.error(error);
     return (
-      <PageBox title={'Error'} className="mb-12">
+      <PageBox title="Error" className="mb-12">
         Failed Fetch User Info
       </PageBox>
     );
