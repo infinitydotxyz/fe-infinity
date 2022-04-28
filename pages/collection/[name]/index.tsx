@@ -9,7 +9,7 @@ import { CollectionFeed } from 'src/components/feed/collection-feed';
 import { ellipsisAddress, getChainScannerBase } from 'src/utils';
 import { ActivityTab } from 'src/components/collection/activity-tab';
 import { StatsChips } from 'src/components/collection/stats-chips';
-
+import BlueCheckSvg from 'src/images/blue-check.svg';
 import { CommunityRightPanel } from 'src/components/collection/community-right-panel';
 import { AiOutlineCheck } from 'react-icons/ai';
 import { AvatarImage } from 'src/components/collection/avatar-image';
@@ -51,9 +51,7 @@ const CollectionPage = () => {
         <span>
           <AvatarImage url={collection.metadata.profileImage} className="mb-2" />
           <span className="text-7xl mr-2">{collection.metadata?.name}</span>
-          {collection.hasBlueCheck ? (
-            <Image src="/images/blue-check.png" width={24} height={24} alt="Blue check icon" />
-          ) : null}
+          {collection.hasBlueCheck ? <Image width={24} height={24} src={BlueCheckSvg.src} alt="Verified" /> : null}
         </span>
         <main>
           <div className="text-secondary mt-6 mb-6 text-sm font-heading">
