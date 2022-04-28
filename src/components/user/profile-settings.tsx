@@ -20,7 +20,7 @@ interface AccountSettingsProps {
 }
 
 export const AccountSettingsPage: FunctionComponent<AccountSettingsProps> = (props) => {
-  const { user, chainId } = props;
+  const { user } = props;
   const router = useRouter();
   const [userInfo, setUserInfo] = useState(props.userInfo);
 
