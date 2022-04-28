@@ -5,19 +5,19 @@ interface Props {
   left?: ReactElement;
   content: string | ReactElement;
   right?: ReactElement;
+  iconOnly?: boolean;
   active?: boolean;
   onClick?: () => void;
   className?: string;
 }
 
-export function Chip({ left, content, right, active, onClick, className }: Props) {
+export function Chip({ left, content, right, iconOnly, active, onClick, className }: Props) {
   const activeCx = active === true ? 'bg-gray-900 text-white' : '';
   return (
     <button
       className={twMerge(
-        `flex justify-center items-center m-1 font-medium font-heading py-4 px-4 rounded-full border border-gray-300 cursor-pointer hover:bg-gray-200 ${activeCx} ${
-          className ?? ''
-        }`
+        `flex justify-center items-center m-1 font-medium font-heading px-4 h-[50px] ${iconOnly ? 'w-[50px] p-2' : ''}
+        rounded-full border border-gray-300 cursor-pointer hover:bg-gray-200 ${activeCx} ${className ?? ''}`
       )}
       onClick={onClick}
     >
