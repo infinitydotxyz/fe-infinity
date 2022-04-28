@@ -1,6 +1,6 @@
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent, useEffect, useRef, useState } from 'react';
 import { FaPen } from 'react-icons/fa';
-import { Button, ImageUploader } from 'src/components/common';
+import { Button, ImageUploader, ImageUploaderButtonRef } from 'src/components/common';
 
 const FORM_LABEL = 'profile-background-upload';
 
@@ -19,6 +19,7 @@ export const ProfileBannerImageUpload: FunctionComponent<BannerImageProps> = ({
   const [imgSrc, setImgSrc] = useState<string | null>(imgSource);
   const [file, setFile] = useState<File | null>(null);
   const [isLoading, setLoading] = useState(false);
+  const uploadInput = useRef<HTMLInputElement>(null);
 
   const handleChangeFile = (file: File) => {
     try {
@@ -37,24 +38,31 @@ export const ProfileBannerImageUpload: FunctionComponent<BannerImageProps> = ({
     setImgSrc(null);
   };
 
-  const handleUploadImage = async (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    if (file) {
-      setLoading(true);
-      await onUpload(file);
-      setLoading(false);
-      setFile(null);
-    }
+  const onUploadButtonClick = () => {
+    uploadInput?.current?.click();
   };
+
+  useEffect(() => {
+    const uploadFile = async () => {
+      if (file) {
+        setLoading(true);
+        await onUpload(file);
+        setLoading(false);
+        setFile(null);
+      }
+    };
+
+    uploadFile().catch(console.error);
+  }, [file]);
 
   return (
     <div className="sm:flex items-center flex-wrap ">
       <label htmlFor={FORM_LABEL} className="flex-1">
         <div className="w-full h-40 rounded-3xl overflow-hidden">
           {imgSrc ? (
-            <img className="w-full object-cover" src={imgSrc} />
+            <img className="w-full object-cover cursor-pointer" src={imgSrc} />
           ) : (
-            <div className="w-full h-full flex flex-row items-center justify-center bg-theme-light-200">
+            <div className="w-full h-full flex flex-row items-center justify-center bg-theme-light-200 cursor-pointer">
               <FaPen />
             </div>
           )}
@@ -66,11 +74,12 @@ export const ProfileBannerImageUpload: FunctionComponent<BannerImageProps> = ({
         <Button
           variant="primary"
           className="my-1 py-2.5 px-12 mb-2 block w-full sm:w-44 font-zagmamono"
-          onClick={handleUploadImage}
-          disabled={!file || isLoading}
+          onClick={onUploadButtonClick}
+          disabled={isLoading}
         >
           Upload
         </Button>
+        <ImageUploaderButtonRef buttonRef={uploadInput} onChangeFile={handleChangeFile} />
         <Button
           variant="outline"
           className="my-1 py-2 px-12 d-block w-full sm:w-44 block font-zagmamono"

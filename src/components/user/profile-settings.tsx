@@ -20,11 +20,11 @@ interface AccountSettingsProps {
 }
 
 export const AccountSettingsPage: FunctionComponent<AccountSettingsProps> = (props) => {
-  const { user, chainId } = props;
+  const { user } = props;
   const router = useRouter();
   const [userInfo, setUserInfo] = useState(props.userInfo);
 
-  const IMAGE_UPLOAD_PATH = `/user/${chainId}:${user.address}/images`;
+  const IMAGE_UPLOAD_PATH = `/user/${user.address}/images`;
 
   const handleProfileImageUpload = async (file: File) => {
     const formData = new FormData();
@@ -117,7 +117,7 @@ export const AccountSettingsPage: FunctionComponent<AccountSettingsProps> = (pro
               <ProfileBannerImageUpload
                 onUpload={handleBannerImageUpload}
                 onDelete={handleBannerImageRemove}
-                imgSource={userInfo.profileImage}
+                imgSource={userInfo.bannerImage}
               />
             </div>
             {/* <h2 className="font-body text-4xl mt-10 mb-10 font-bold">Wallets</h2> */}
