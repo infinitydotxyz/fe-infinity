@@ -14,10 +14,10 @@ interface Props {
   isFullWidth?: boolean;
   renderRightIcon?: () => ReactElement;
   icon?: ReactNode;
-  labelClassNames?: string[];
+  labelClassname?: string;
 }
 
-export const InputBox = ({ tooltip, label, children, icon, renderRightIcon, isFullWidth, labelClassNames }: Props) => {
+export const InputBox = ({ tooltip, label, children, icon, renderRightIcon, isFullWidth, labelClassname }: Props) => {
   const [showTooltip, setShowTooltip] = useState(false);
 
   return (
@@ -26,12 +26,7 @@ export const InputBox = ({ tooltip, label, children, icon, renderRightIcon, isFu
         {icon && <span className="pr-8">{icon}</span>}
         <div className="w-full">
           {label && (
-            <label
-              className={
-                'block font-normal font-zagmamono text-sm text-theme-light-800' +
-                (labelClassNames ? ' ' + classNames(labelClassNames) : '')
-              }
-            >
+            <label className={twMerge('block font-normal font-zagmamono text-sm text-theme-light-800', labelClassname)}>
               {label}
             </label>
           )}

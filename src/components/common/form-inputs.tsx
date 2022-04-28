@@ -75,7 +75,7 @@ export const TextAreaForm = ({ label, placeholder, tooltip, onChange, rows = 3, 
     <Field validateOnChange name={bind} {...fieldProps}>
       {({ meta, field, form }: FieldProps) => (
         <div className="my-4 sm:my-6">
-          <InputBox label={label} tooltip={tooltip} labelClassNames={['mt-4']}>
+          <InputBox label={label} tooltip={tooltip} labelClassname="mt-4">
             <div className="flex items-center w-full">
               <textarea
                 rows={rows}
