@@ -8,7 +8,7 @@ export type Filter = {
   priceMin?: string;
   priceMax?: string;
   sortByPrice?: 'ASC' | 'DESC' | '';
-  orderBy?: 'rarityRank' | '';
+  orderBy?: 'rarityRank' | 'price' | '';
   orderDirection?: 'asc' | 'desc' | '';
 };
 
