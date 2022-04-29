@@ -26,7 +26,7 @@ export const GallerySort = () => {
   }, [filterState]);
 
   return (
-    <span>
+    <span className="pointer-events-auto">
       <Dropdown
         label={label}
         items={[
