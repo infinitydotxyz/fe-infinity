@@ -1,4 +1,4 @@
-import { BaseCollection, BaseToken, Erc721Metadata } from '@infinityxyz/lib/types/core';
+import { BaseCollection, BaseToken } from '@infinityxyz/lib/types/core';
 import { useEffect, useState } from 'react';
 import { apiGet } from 'src/utils/apiUtils';
 import mitt from 'mitt';

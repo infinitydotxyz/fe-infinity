@@ -69,7 +69,7 @@ const AssetDetail: FunctionComponent = () => {
   }
 
   // TODO: Joe to update Erc721Metadata type
-  const tokenMetadata = token.metadata;
+  const tokenMetadata = token.metadata as Erc721Metadata;
 
   const assetName =
     tokenMetadata.name && collection.metadata.name
