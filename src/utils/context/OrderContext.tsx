@@ -1,10 +1,10 @@
-import { OBOrderItem, OBOrder, SignedOBOrder } from '@infinityxyz/lib/types/core';
+import { OBOrder, OBOrderItem, SignedOBOrder } from '@infinityxyz/lib/types/core';
+import { getOBComplicationAddress, getTxnCurrencyAddress } from '@infinityxyz/lib/utils';
 import React, { ReactNode, useContext, useState } from 'react';
-import { useAppContext } from './AppContext';
 import { secondsPerDay } from 'src/components/market/order-drawer/ui-constants';
-import { getOrderId, getSignedOBOrder } from '../exchange/orders';
+import { getSignedOBOrder } from '../exchange/orders';
 import { fetchMinBpsToSeller, fetchOrderNonce, postOrders } from '../marketUtils';
-import { getExchangeAddress, getOBComplicationAddress, getTxnCurrencyAddress, NULL_HASH } from '@infinityxyz/lib/utils';
+import { useAppContext } from './AppContext';
 
 export interface OrderCartItem {
   isSellOrder: boolean;
@@ -268,14 +268,6 @@ export const OrderContextProvider = ({ children }: Props) => {
           buyer: ''
         }
       };
-
-      const orderId = getOrderId(chainId, getExchangeAddress(chainId), order);
-      if (orderId === NULL_HASH) {
-        console.error('orderId is null');
-        return;
-      } else {
-        order.id = orderId;
-      }
 
       return order;
     } catch (err) {
