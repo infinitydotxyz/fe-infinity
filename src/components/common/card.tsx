@@ -6,8 +6,10 @@ import { Dropdown, DropdownItems } from './dropdown';
 import { Button } from './button';
 import Link from 'next/link';
 
+type labelFn = (data?: CardData) => ReactNode;
+
 type CardAction = {
-  label: string | ReactNode;
+  label: string | ReactNode | labelFn;
   onClick: (ev: React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>, data?: CardData) => void;
 };
 
@@ -34,7 +36,7 @@ export const Card = ({ data, cardActions, dropdownActions, className }: CardProp
               cardAction.onClick(ev, data);
             }}
           >
-            {cardAction.label}
+            {typeof cardAction.label === 'function' ? cardAction.label(data) : cardAction.label}
           </Button>
         );
       })}
@@ -64,7 +66,7 @@ export const Card = ({ data, cardActions, dropdownActions, className }: CardProp
         >
           {title}
         </div>
-        <div className="text-secondary" title={data?.tokenId}>
+        <div className="text-secondary font-zagmamono" title={data?.tokenId}>
           {tokenId}
         </div>
       </div>
