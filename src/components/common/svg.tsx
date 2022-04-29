@@ -1,28 +1,15 @@
 import React from 'react';
 
-// If you have any custom SVGs, it's
-// better to use this Icon component
-// and pass SVG as 'family' prop and the
-// key within below SVG object as the 'name' prop,
-// like so:
-
-// <Icon name="infinity" family="SVG" />,
-// where Icon is the default export of
-// this file.
-
-interface SVG {
-  [key: string]: React.ElementType;
-}
-
-export const SVG: SVG = {
-  grayDelete: ({ ...props }) => (
+export class SVG {
+  static grayDelete = ({ ...props }) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" {...props}>
       <circle fill="#ddd" cx="12" cy="12" r="12" />
 
       <rect fill="black" x="6" y="11" width="12" height="2" />
     </svg>
-  ),
-  editCircle: ({ ...props }) => (
+  );
+
+  static editCircle = ({ ...props }) => (
     <svg viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
       <mask id="myMask">
         <circle fill="white" cx="5" cy="5" r="5" />
@@ -36,8 +23,8 @@ export const SVG: SVG = {
 
       <circle fill="currentColor" cx="5" cy="5" r="5" mask="url(#myMask)" />
     </svg>
-  ),
-  infinity: ({ ...props }) => (
+  );
+  static infinity = ({ ...props }) => (
     <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 62 60" {...props}>
       <path
         d="M48.288 60H13.356C5.96 60 0 54.2 0 47V13C0 5.8 5.959 0 13.356 0h34.932c7.397 0 13.356 5.8 13.356 13v34c0 7.2-5.96 13-13.356 13Z"
@@ -48,8 +35,8 @@ export const SVG: SVG = {
         fill="#fff"
       />
     </svg>
-  ),
-  logo: ({ ...props }) => (
+  );
+  static logo = ({ ...props }) => (
     <svg viewBox="0 0 208 50" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
       <path
         d="M108.756 27.137V38.17H104.3v-9.802c0-4.611-1.65-5.755-3.895-5.755-2.575 0-3.895 2.305-3.895 5.755v9.802h-4.456V19.146h4.456v4.61a6.86 6.86 0 0 1 2.242-3.61 6.473 6.473 0 0 1 3.881-1.513c2.79-.136 6.123 1.588 6.123 8.504ZM158.336 27.137V38.17h-4.456v-9.802c0-4.611-1.651-5.755-3.895-5.755-2.592 0-3.912 2.305-3.912 5.755v9.802h-4.456V19.146h4.456v4.61a6.858 6.858 0 0 1 2.249-3.614 6.473 6.473 0 0 1 3.891-1.509c2.773-.136 6.123 1.588 6.123 8.504ZM114.911 16.755c0-3.518 1.651-5.123 4.952-5.123h3.895v4.064h-4.457v3.415h4.457v4.03h-4.457V38.17h-4.39V23.193H111v-4.047h3.911v-2.391ZM177.266 23.107h-3.895V19.06h3.895v-5.123h4.456v5.123h4.457v4.03h-4.457v10.947h4.457v4.132h-3.895c-3.4 0-4.952-1.708-4.952-5.208l-.066-9.854ZM133.117 16.191c1.386 0 2.509-1.162 2.509-2.595 0-1.434-1.123-2.596-2.509-2.596-1.385 0-2.509 1.162-2.509 2.596 0 1.433 1.124 2.595 2.509 2.595ZM138.828 34.054l-3.334.017V19.06h-8.351v4.047h3.895v10.946h-3.895v4.03h11.685v-4.03ZM88.703 34.053l-6.124.018V15.61h6.124v-4.03H72v4.03h6.123v18.442L72 34.036v4.03l16.703.018v-4.03ZM167.101 16.191c1.385 0 2.508-1.162 2.508-2.595 0-1.434-1.123-2.596-2.508-2.596-1.386 0-2.509 1.162-2.509 2.596 0 1.433 1.123 2.595 2.509 2.595ZM172.811 34.054l-3.35.017V19.06h-8.352v4.047h3.895v10.946h-3.895v4.03h11.702v-4.03Z"
@@ -64,8 +51,8 @@ export const SVG: SVG = {
         fill="#fff"
       />
     </svg>
-  ),
-  uniswap: ({ ...props }) => {
+  );
+  static uniswap = ({ ...props }) => {
     return (
       <svg
         id="prefix__Layer_1"
@@ -94,8 +81,8 @@ export const SVG: SVG = {
         />
       </svg>
     );
-  },
-  ethereum: ({ ...props }) => {
+  };
+  static ethereum = ({ ...props }) => {
     return (
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" {...props}>
         <g fill="none" fillRule="evenodd">
@@ -111,8 +98,8 @@ export const SVG: SVG = {
         </g>
       </svg>
     );
-  },
-  matic: ({ ...props }) => {
+  };
+  static matic = ({ ...props }) => {
     return (
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38.4 33.5" {...props}>
         <path
@@ -121,8 +108,8 @@ export const SVG: SVG = {
         />
       </svg>
     );
-  },
-  solana: ({ ...props }) => {
+  };
+  static solana = ({ ...props }) => {
     return (
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 397.7 311.7" {...props}>
         <linearGradient
@@ -175,8 +162,8 @@ export const SVG: SVG = {
         />
       </svg>
     );
-  },
-  avalanche: ({ ...props }) => {
+  };
+  static avalanche = ({ ...props }) => {
     return (
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 254 254" xmlSpace="preserve" {...props}>
         <circle
@@ -197,8 +184,8 @@ export const SVG: SVG = {
         />
       </svg>
     );
-  },
-  metamask: ({ ...props }) => {
+  };
+  static metamask = ({ ...props }) => {
     return (
       <svg
         id="prefix__Layer_1"
@@ -288,8 +275,8 @@ export const SVG: SVG = {
         />
       </svg>
     );
-  },
-  walletconnect: ({ ...props }) => (
+  };
+  static walletconnect = ({ ...props }) => (
     <svg viewBox="0 0 300 185" xmlns="http://www.w3.org/2000/svg" {...props}>
       <path
         d="M61.439 36.256c48.91-47.888 128.212-47.888 177.123 0l5.886 5.764a6.041 6.041 0 010 8.67l-20.136 19.716a3.179 3.179 0 01-4.428 0l-8.101-7.931c-34.122-33.408-89.444-33.408-123.566 0l-8.675 8.494a3.179 3.179 0 01-4.428 0L54.978 51.253a6.041 6.041 0 010-8.67l6.46-6.327zM280.206 77.03l17.922 17.547a6.041 6.041 0 010 8.67l-80.81 79.122c-2.446 2.394-6.41 2.394-8.856 0l-57.354-56.155a1.59 1.59 0 00-2.214 0L91.54 182.37c-2.446 2.394-6.411 2.394-8.857 0L1.872 103.247a6.041 6.041 0 010-8.671l17.922-17.547c2.445-2.394 6.41-2.394 8.856 0l57.355 56.155a1.59 1.59 0 002.214 0L145.57 77.03c2.446-2.394 6.41-2.395 8.856 0l57.355 56.155a1.59 1.59 0 002.214 0L271.35 77.03c2.446-2.394 6.41-2.394 8.856 0z"
@@ -297,13 +284,13 @@ export const SVG: SVG = {
         fillRule="nonzero"
       />
     </svg>
-  ),
-  coinbasewallet: ({ ...props }) => (
+  );
+  static coinbasewallet = ({ ...props }) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" {...props}>
       <g fill="#255DEF">
         <path d="M183.3 42.6c-22.8 2.7-47.6 11.3-65.8 22.6-35.6 22.3-61.6 57.4-71.9 97.3-11.1 42.3-4.2 88.2 18.7 125.2 24.7 39.8 64.2 66.4 111.2 74.9 7 1.2 15 1.8 26.5 1.8 18.4 0 29.8-1.6 46.5-6.6 55.6-16.5 99.2-63.4 111.3-119.9 7.4-33.9 4-68.1-9.6-98.9-21.2-48-61.9-81.8-112.7-93.6-9.3-2.1-28.4-4.4-36.5-4.3-3.6.1-11.6.7-17.7 1.5zm34.2 66.8c57.2 10.1 92.1 67 74.8 122-15.9 50.6-70.5 78.3-120.4 61.2-31.9-10.9-54.8-36.3-62.6-69.2-2.2-9.5-2.4-29.7-.4-38.9 5.7-25.9 19.7-46.5 41.6-60.9 19.6-12.9 44.4-18.2 67-14.2z" />
         <path d="M174.2 174.6c-2.2 1.5-2.2 1.8-2.2 28.3 0 24.7.1 26.9 1.8 28.4 1.6 1.5 5.1 1.7 28.4 1.7 24.4 0 26.6-.1 28.1-1.8 1.5-1.6 1.7-5.1 1.7-28.4 0-24.4-.1-26.6-1.8-28.1-1.6-1.5-5.1-1.7-27.8-1.7-21.9 0-26.3.2-28.2 1.6z" />
       </g>
     </svg>
-  )
-};
+  );
+}

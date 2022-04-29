@@ -20,7 +20,8 @@ import {
   toastWarning,
   Chip,
   ComboBox,
-  ComboBoxBaseType
+  ComboBoxBaseType,
+  SVG
 } from 'src/components/common';
 
 const cardTestData = [
@@ -56,6 +57,8 @@ const SandboxPage = () => {
   const tableItems: SimpleTableItem[] = [];
   tableItems.push({ title: 'Balance', value: <div className="font-bold">23 Eth</div> });
   tableItems.push({ title: 'Budget', value: <div className="font-bold">3 Eth</div> });
+
+  const iconClass = 'w-12 h-12 m-3';
 
   return (
     <PageBox title="SandBox">
@@ -110,6 +113,22 @@ const SandboxPage = () => {
 
         <SBHeader># ToggleTab</SBHeader>
         <ToggleTab options={options} selected={selected} onChange={onChange} />
+
+        <SBHeader># SVGs </SBHeader>
+        <div className="flex flex-wrap">
+          <SVGPreview svg={<SVG.avalanche className={iconClass} />} name="avalanche" />
+          <SVGPreview svg={<SVG.coinbasewallet className={iconClass} />} name="coinbasewallet" />
+          <SVGPreview svg={<SVG.editCircle className={iconClass} />} name="editCircle" />
+          <SVGPreview svg={<SVG.ethereum className={iconClass} />} name="ethereum" />
+          <SVGPreview svg={<SVG.grayDelete className={iconClass} />} name="grayDelete" />
+          <SVGPreview svg={<SVG.infinity className={iconClass} />} name="infinity" />
+          <SVGPreview svg={<SVG.logo className={iconClass} />} name="logo" />
+          <SVGPreview svg={<SVG.matic className={iconClass} />} name="matic" />
+          <SVGPreview svg={<SVG.metamask className={iconClass} />} name="metamask" />
+          <SVGPreview svg={<SVG.solana className={iconClass} />} name="solana" />
+          <SVGPreview svg={<SVG.uniswap className={iconClass} />} name="uniswap" />
+          <SVGPreview svg={<SVG.walletconnect className={iconClass} />} name="walletconnect" />
+        </div>
 
         <SBHeader># Card - WIP</SBHeader>
         <div className="flex flex-row space-x-4">
@@ -198,4 +217,20 @@ interface Props {
 
 const SBHeader = ({ children }: Props) => {
   return <div className="my-6 px-6 py-3 bg-slate-100 font-bold rounded-lg">{children}</div>;
+};
+
+// ==========================================================================
+
+interface Props3 {
+  name: string;
+  svg: JSX.Element;
+}
+
+const SVGPreview = ({ name, svg }: Props3) => {
+  return (
+    <div className="flex flex-col m-4 text-center">
+      {svg}
+      {name}
+    </div>
+  );
 };
