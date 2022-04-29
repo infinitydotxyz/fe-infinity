@@ -1,4 +1,4 @@
-import { BaseCollection, BaseToken, CardData, Erc721Metadata } from '@infinityxyz/lib/types/core';
+import { BaseCollection, BaseToken, CardData } from '@infinityxyz/lib/types/core';
 import { useEffect, useState } from 'react';
 import { apiGet } from 'src/utils/apiUtils';
 import { ITEMS_PER_PAGE } from 'src/utils/constants';
@@ -66,14 +66,13 @@ export const GalleryBox = ({ collection, className, cardProps, getEndpoint }: Ga
       setCursor(result?.cursor);
     }
 
-    // TODO: Joe to update Erc721Metadata type
     const moreData: CardData[] = (result?.data || []).map((item: BaseToken) => {
       return {
         id: collection?.address + '_' + item.tokenId,
-        name: (item.metadata as Erc721Metadata)?.name,
+        name: item.metadata?.name,
         collectionName: collection?.metadata?.name,
         title: collection?.metadata?.name,
-        description: (item.metadata as Erc721Metadata).description,
+        description: item.metadata.description,
         image: item.image.url,
         price: 0,
         chainId: item.chainId,
