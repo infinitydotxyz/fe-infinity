@@ -1,10 +1,10 @@
 import { FunctionComponent } from 'react';
-import { useRouter } from 'next/router';
+// import { useRouter } from 'next/router';
 import { GalleryBox } from '../gallery/gallery-box';
 import { useAppContext } from 'src/utils/context/AppContext';
 
 export const UserPageNftsTab: FunctionComponent = () => {
-  const router = useRouter();
+  // const router = useRouter();
   const { user } = useAppContext();
 
   return (
@@ -12,17 +12,18 @@ export const UserPageNftsTab: FunctionComponent = () => {
       <div className="mt-20">
         <GalleryBox
           getEndpoint={`/user/${user?.address}/nfts?chainId=1&limit=50`}
-          collection={null}
+          filterShowedDefault={false}
           cardProps={{
             cardActions: [
-              {
-                label: 'Details',
-                onClick: (ev, data) => {
-                  router.push(`/asset/${data?.chainId}/${data?.tokenAddress}/${data?.tokenId}`);
-                }
-              }
+              // {
+              //   label: 'Details',
+              //   onClick: (ev, data) => {
+              //     router.push(`/asset/${data?.chainId}/${data?.tokenAddress}/${data?.tokenId}`);
+              //   }
+              // }
             ]
           }}
+          className="mt-[-82px]"
         />
       </div>
     </div>

@@ -38,7 +38,7 @@ const AssetDetail: FunctionComponent = () => {
 
   if (typeof query.chainId !== 'string' || typeof query.collection !== 'string' || typeof query.tokenId !== 'string') {
     return (
-      <PageBox title="Asset Detail - Error">
+      <PageBox title="Asset - Error">
         <div className="flex flex-col max-w-screen-2xl mt-4">
           <main>
             <p>Error: Invalid page parameters.</p>
@@ -58,7 +58,7 @@ const AssetDetail: FunctionComponent = () => {
   if (error || !token || !collection) {
     console.error(error);
     return (
-      <PageBox title="Asset Detail - Error" className="w-full h-full grid place-items-center">
+      <PageBox title="Asset - Error" className="w-full h-full grid place-items-center">
         <div className="flex flex-col max-w-screen-2xl mt-4">
           <main>
             <p>Error: Fetching Data Failed.</p>

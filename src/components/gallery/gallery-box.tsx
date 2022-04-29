@@ -24,16 +24,17 @@ import { twMerge } from 'tailwind-merge';
 // };
 
 interface GalleryProps {
-  collection: BaseCollection | null;
+  collection?: BaseCollection | null;
   cardProps?: CardProps;
   getEndpoint?: string;
   className?: string;
+  filterShowedDefault?: boolean;
 }
 
-export const GalleryBox = ({ collection, className, cardProps, getEndpoint }: GalleryProps) => {
+export const GalleryBox = ({ collection, className, cardProps, getEndpoint, filterShowedDefault }: GalleryProps) => {
   const { filterState } = useFilterContext();
 
-  const [filterShowed, setFilterShowed] = useState(true);
+  const [filterShowed, setFilterShowed] = useState(filterShowedDefault);
   const [isFetching, setIsFetching] = useState(false);
   const [data, setData] = useState<CardData[]>([]);
   const [cursor, setCursor] = useState('');
@@ -108,9 +109,9 @@ export const GalleryBox = ({ collection, className, cardProps, getEndpoint }: Ga
 
   return (
     <div className={twMerge(className, 'flex items-start')}>
-      {collection && filterShowed && (
+      {filterShowed && (
         <div className="mt-4">
-          <FilterPanel collection={collection} collectionAddress={collection?.address} />
+          <FilterPanel collection={collection as BaseCollection} collectionAddress={collection?.address} />
         </div>
       )}
 
