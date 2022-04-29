@@ -78,7 +78,8 @@ export const GalleryBox = ({ collection, className, cardProps, getEndpoint }: Ga
         chainId: item.chainId,
         tokenAddress: collection?.address,
         tokenId: item.tokenId,
-        rarityRank: item.rarityRank
+        rarityRank: item.rarityRank,
+        orderSnippet: item.ordersSnippet
       };
     });
 

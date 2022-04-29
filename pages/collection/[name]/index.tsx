@@ -50,7 +50,7 @@ const CollectionPage = () => {
       <div className="flex flex-col mt-10">
         <span>
           <AvatarImage url={collection.metadata.profileImage} className="mb-2" />
-          <span className="text-7xl mr-2">{collection.metadata?.name}</span>
+          <span className="text-6xl mr-2">{collection.metadata?.name}</span>
           {collection.hasBlueCheck ? <Image width={24} height={24} src={BlueCheckSvg.src} alt="Verified" /> : null}
         </span>
         <main>
@@ -116,7 +116,18 @@ const CollectionPage = () => {
                   cardActions: [
                     {
                       // label: 'Details',
-                      label: 'Add to order',
+                      label: (data) => {
+                        const price = data?.orderSnippet?.offer?.orderItem?.endPriceEth ?? '';
+                        if (price) {
+                          return (
+                            <>
+                              <span className="mr-4 font-bold">Buy</span>
+                              <span className="font-zagmamono">{price} ETH</span>
+                            </>
+                          );
+                        }
+                        return <span className="font-bold">Add to order</span>;
+                      },
                       onClick: (ev, data) => {
                         addCartItem({
                           collectionName: data?.collectionName ?? '(no name)',
