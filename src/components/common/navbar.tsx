@@ -71,37 +71,39 @@ export const Navbar = () => {
   };
 
   const mobileMenu = (
-    <Menu>
-      <Menu.Button>
-        <GiHamburgerMenu size="24px" />
-      </Menu.Button>
-      <Menu.Items
-        className={twMerge(
-          `absolute mt-2 p-4 w-72 origin-top-right divide-y divide-gray-100 rounded-3xl z-50
+    <div className="relative">
+      <Menu>
+        <Menu.Button>
+          <GiHamburgerMenu size="24px" />
+        </Menu.Button>
+        <Menu.Items
+          className={twMerge(
+            `absolute mt-2 p-4 w-72 origin-top-right divide-y divide-gray-100 rounded-3xl z-50
             border border-gray-200 bg-white shadow-2xl outline-none`
-        )}
-      >
-        {content?.buttons?.items?.map((item, i) => (
-          <React.Fragment key={i}>
-            {item.type === 'link' && (
-              <CustomMenuItem key={i} onClick={() => router.push(item.props?.href ?? '')}>
-                {item?.label}
-              </CustomMenuItem>
-            )}
-            {item.type === 'dropdown' && (
-              <>
-                <hr className="my-1" />
-                {item?.menu?.map((x, j) => (
-                  <CustomMenuItem key={j} onClick={x.onClick}>
-                    {x?.label}
-                  </CustomMenuItem>
-                ))}
-              </>
-            )}
-          </React.Fragment>
-        ))}
-      </Menu.Items>
-    </Menu>
+          )}
+        >
+          {content?.buttons?.items?.map((item, i) => (
+            <React.Fragment key={i}>
+              {item.type === 'link' && (
+                <CustomMenuItem key={i} onClick={() => router.push(item.props?.href ?? '')}>
+                  {item?.label}
+                </CustomMenuItem>
+              )}
+              {item.type === 'dropdown' && (
+                <>
+                  <hr className="my-1" />
+                  {item?.menu?.map((x, j) => (
+                    <CustomMenuItem key={j} onClick={x.onClick}>
+                      {x?.label}
+                    </CustomMenuItem>
+                  ))}
+                </>
+              )}
+            </React.Fragment>
+          ))}
+        </Menu.Items>
+      </Menu>
+    </div>
   );
 
   const mobileNavbar = (
