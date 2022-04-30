@@ -4,10 +4,12 @@ import { twMerge } from 'tailwind-merge';
 import { AiOutlineEye } from 'react-icons/ai';
 import { Dropdown, DropdownItems } from './dropdown';
 import { Button } from './button';
-import Link from 'next/link';
+import { NextLink } from './next-link';
+
+type labelFn = (data?: CardData) => ReactNode;
 
 type CardAction = {
-  label: string | ReactNode;
+  label: string | ReactNode | labelFn;
   onClick: (ev: React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>, data?: CardData) => void;
 };
 
@@ -34,7 +36,7 @@ export const Card = ({ data, cardActions, dropdownActions, className }: CardProp
               cardAction.onClick(ev, data);
             }}
           >
-            {cardAction.label}
+            {typeof cardAction.label === 'function' ? cardAction.label(data) : cardAction.label}
           </Button>
         );
       })}
@@ -42,10 +44,14 @@ export const Card = ({ data, cardActions, dropdownActions, className }: CardProp
   );
 
   return (
-    <div className={twMerge(`sm:mx-0 relative ${className ?? ''}`)}>
-      <Link href={`/asset/${data?.chainId}/${data?.tokenAddress}/${data?.tokenId}`} passHref={true}>
-        <img className="rounded-3xl w-[290px] overflow-hidden" src={data?.image ?? ''} alt="card" />
-      </Link>
+    <div className={twMerge(`sm:mx-0 relative flex flex-col pointer-events-auto ${className ?? ''}`)}>
+      <NextLink
+        href={`/asset/${data?.chainId}/${data?.tokenAddress}/${data?.tokenId}`}
+        className="rounded-3xl w-[290px] flex-1 overflow-hidden"
+      >
+        <img src={data?.image ?? ''} alt="card" />
+      </NextLink>
+
       {data?.rarityRank && (
         <span className="absolute bg-gray-100 top-3 right-3 py-2 px-3 rounded-3xl">{Math.round(data?.rarityRank)}</span>
       )}
@@ -64,7 +70,7 @@ export const Card = ({ data, cardActions, dropdownActions, className }: CardProp
         >
           {title}
         </div>
-        <div className="text-secondary" title={data?.tokenId}>
+        <div className="text-secondary font-zagmamono" title={data?.tokenId}>
           {tokenId}
         </div>
       </div>

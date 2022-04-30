@@ -14,18 +14,23 @@ interface Props {
   isFullWidth?: boolean;
   renderRightIcon?: () => ReactElement;
   icon?: ReactNode;
+  labelClassname?: string;
 }
 
-export const InputBox = ({ tooltip, label, children, icon, renderRightIcon, isFullWidth }: Props) => {
+export const InputBox = ({ tooltip, label, children, icon, renderRightIcon, isFullWidth, labelClassname }: Props) => {
   const [showTooltip, setShowTooltip] = useState(false);
 
   return (
     <TooltipWrapper show={showTooltip} tooltip={tooltip} className={classNames({ 'w-full': isFullWidth })}>
-      <div className="py-3 pl-6 pr-2 outline outline-1 outline-gray-400 rounded-3xl w-full flex items-center">
+      <div className="py-3 pl-6 pr-2 outline outline-1 rounded-3xl w-full flex items-center outline-theme-light-700">
         {icon && <span className="pr-8">{icon}</span>}
         <div className="w-full">
-          {label && <label className="block text-xs font-medium text-gray-700">{label}</label>}
-          <div className="mt-1 flex items-center w-full">
+          {label && (
+            <label className={twMerge('block font-normal font-zagmamono text-sm text-theme-light-800', labelClassname)}>
+              {label}
+            </label>
+          )}
+          <div className="flex items-center w-full">
             <div className="flex items-center w-full">{children}</div>
 
             {tooltip && (
@@ -127,7 +132,7 @@ export const TextInputBox = ({
               onChange(e.target.value);
             }
           }}
-          className="p-0 border-none focus:ring-0 font-bold block w-full"
+          className="p-0 border-none focus:ring-0 font-bold block w-full font-zagmamono"
           placeholder={placeholder}
         />
       </div>

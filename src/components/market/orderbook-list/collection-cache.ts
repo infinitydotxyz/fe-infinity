@@ -131,8 +131,13 @@ export const useCollectionCache = () => {
   const imageForTokenId = (chainId: number, collectionAddress: string, tokenId: string): string => {
     const token = CollectionCache.getToken(chainId, collectionAddress, tokenId);
 
-    if (token) {
-      return token.metadata.title ?? token.metadata.name;
+    const tokenMetadata = token?.metadata;
+
+    if (token && tokenMetadata) {
+      if ('title' in tokenMetadata) {
+        return tokenMetadata.title ?? tokenMetadata.name;
+      }
+      return tokenMetadata.name;
     }
 
     return tokenId;

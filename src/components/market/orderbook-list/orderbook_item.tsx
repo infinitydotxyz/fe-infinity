@@ -1,6 +1,6 @@
 import { OBOrder, OBOrderItem, OBTokenInfo } from '@infinityxyz/lib/types/core';
-import Link from 'next/link';
 import { ReactNode } from 'react';
+import { NextLink } from 'src/components/common';
 
 type Props4 = {
   content?: ReactNode;
@@ -93,9 +93,9 @@ const SingleCollectionCell = ({ image, title, token, count = 0 }: SingleCollecti
         <div className="truncate">{title}</div>
 
         {token && (
-          <Link passHref href={`/collection/${token.tokenId}`}>
-            <div className="truncate font-bold">{token?.tokenName}</div>
-          </Link>
+          <NextLink href={`/collection/${token.tokenId}`} className="truncate font-bold">
+            {token?.tokenName}
+          </NextLink>
         )}
       </div>
     </div>

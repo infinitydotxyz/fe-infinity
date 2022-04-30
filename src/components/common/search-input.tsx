@@ -4,8 +4,7 @@ import { useFetch } from 'src/utils';
 import { BaseCollection } from '@infinityxyz/lib/types/core';
 import { useRouter } from 'next/router';
 import { Combobox } from '@headlessui/react';
-import Image from 'next/image';
-import BlueCheckSvg from 'src/images/blue-check.svg';
+import { SVG } from './svg';
 
 type CollectionItem = BaseCollection & {
   name: string;
@@ -13,17 +12,17 @@ type CollectionItem = BaseCollection & {
 };
 
 interface Props {
-  opened?: boolean;
+  expanded?: boolean;
 }
 
-export const SearchInput: React.FC<Props> = ({ opened }) => {
+export const SearchInput: React.FC<Props> = ({ expanded }) => {
   const router = useRouter();
   const [isActive, setIsActive] = React.useState(false);
   const [text, setText] = React.useState('');
   const inputRef: React.RefObject<HTMLInputElement> = React.useRef(null);
 
   const activate = () => setIsActive(true);
-  const deactivate = () => (text.length == 0 && !opened ? setIsActive(false) : null);
+  const deactivate = () => (text.length == 0 && !expanded ? setIsActive(false) : null);
 
   React.useEffect(() => {
     isActive ? inputRef?.current?.focus() : inputRef?.current?.blur();
@@ -55,10 +54,10 @@ export const SearchInput: React.FC<Props> = ({ opened }) => {
         );
 
   React.useEffect(() => {
-    if (opened) {
+    if (expanded) {
       setIsActive(true);
     }
-  }, [opened]);
+  }, [expanded]);
 
   const styles = {
     container: {
@@ -176,11 +175,7 @@ export const SearchInput: React.FC<Props> = ({ opened }) => {
                 </div>
                 <div {...styles?.collection?.name}>{collection?.name}</div>
                 <div {...styles?.collection?.blueCheck}>
-                  {collection?.hasBlueCheck ? (
-                    <Image width={18} height={18} src={BlueCheckSvg.src} alt="Verified" />
-                  ) : (
-                    <></>
-                  )}
+                  {collection?.hasBlueCheck ? <SVG.blueCheck className="h-5 w-5" /> : <></>}
                 </div>
               </Combobox.Option>
             ))}

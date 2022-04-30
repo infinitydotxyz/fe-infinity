@@ -21,7 +21,7 @@ const AccountSettings: FunctionComponent = () => {
   }
 
   return (
-    <PageBox title="Account" className="pb-8">
+    <PageBox title="Account" showTitle={false} className="pb-8">
       <AccountSettingsPage user={user} chainId={chainId} userInfo={result as UserProfileDto} />
     </PageBox>
   );

@@ -21,9 +21,12 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
   return (
     <>
       <UserBannerImage imgSrc={userInfo.bannerImage} isOwner={isOwner} />
-      <div className="flex flex-col mx-auto px-4 lg:px-32 translate-x-1 -mt-16">
+
+      <div className="flex flex-col mx-auto translate-x-1 -mt-16">
         <UserProfileImage imgSrc={userInfo.profileImage} isOwner={isOwner} />
+
         <h2 className="my-6 text-6xl font-body">{userInfo.displayName || 'No Display Name'}</h2>
+
         <div className="flex flex-wrap font-heading -ml-3 mb-8">
           <p className="leading-wide mx-4 font-bold">@{userInfo.username || 'no-username'}</p>
           {/* <UserWatchList userWatchList={[userInfo.address, userInfo.address]} /> */}

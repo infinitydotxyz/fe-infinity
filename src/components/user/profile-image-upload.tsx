@@ -1,6 +1,6 @@
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent, useEffect, useRef, useState } from 'react';
 import { FaPen } from 'react-icons/fa';
-import { ImageUploader, Button } from 'src/components/common';
+import { ImageUploader, Button, ImageUploaderButtonRef } from 'src/components/common';
 
 interface ProfileImageProps {
   imgSource?: string;
@@ -15,6 +15,7 @@ export const ProfileImageUpload: FunctionComponent<ProfileImageProps> = ({ onUpl
   const [imgSrc, setImgSrc] = useState<string | null>(imgSource);
   const [file, setFile] = useState<File | null>(null);
   const [isLoading, setLoading] = useState(false);
+  const uploadInput = useRef<HTMLInputElement>(null);
 
   const handleChangeFile = (file: File) => {
     try {
@@ -33,31 +34,31 @@ export const ProfileImageUpload: FunctionComponent<ProfileImageProps> = ({ onUpl
     setImgSrc(null);
   };
 
-  const handleUploadImage = async (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    if (file) {
-      setLoading(true);
-      await onUpload(file);
-      setLoading(false);
-      setFile(null);
-    }
+  const onUploadButtonClick = () => {
+    uploadInput?.current?.click();
   };
 
+  useEffect(() => {
+    const uploadFile = async () => {
+      if (file) {
+        setLoading(true);
+        await onUpload(file);
+        setLoading(false);
+        setFile(null);
+      }
+    };
+
+    uploadFile().catch(console.error);
+  }, [file]);
+
   return (
-    <div className="sm:flex items-center flex-wrap ">
+    <div className="sm:flex items-center flex-wrap mb-5">
       <label htmlFor={FORM_LABEL}>
-        <div
-          className="overflow-hidden bg-theme-light-200 w-28 h-28 mx-auto sm:mx-0"
-          style={{
-            border: '3px solid rgb(251, 253, 255)',
-            boxShadow: 'rgb(14 14 14 / 60%) 0px 0px 2px 0px',
-            borderRadius: '50%'
-          }}
-        >
+        <div className="overflow-hidden bg-theme-light-200 w-28 h-28 mx-auto sm:mx-0 rounded-full">
           {imgSrc ? (
-            <img alt="" className="object-cover" src={imgSrc} />
+            <img alt="" className="object-cover h-full cursor-pointer" src={imgSrc} />
           ) : (
-            <div className="w-full h-full flex flex-row items-center justify-center">
+            <div className="w-full h-full flex flex-row items-center justify-center cursor-pointer">
               <FaPen className=" -mt-0.5" />
             </div>
           )}
@@ -67,15 +68,16 @@ export const ProfileImageUpload: FunctionComponent<ProfileImageProps> = ({ onUpl
       <div className="sm:pl-8 mt-2 sm:mt-0">
         <Button
           variant="primary"
-          className="my-1 py-2.5 px-12 mb-2 block w-full sm:w-44"
-          onClick={handleUploadImage}
-          disabled={!file || isLoading}
+          className="my-1 py-2.5 px-12 mb-3 block w-full sm:w-44 font-zagmamono"
+          onClick={onUploadButtonClick}
+          disabled={isLoading}
         >
           Upload
         </Button>
+        <ImageUploaderButtonRef buttonRef={uploadInput} onChangeFile={handleChangeFile} />
         <Button
           variant="outline"
-          className="my-1 py-2 px-12 d-block w-full sm:w-44 block"
+          className="my-1 py-2 px-12 d-block w-full sm:w-44 block font-zagmamono"
           disabled={isLoading || !imgSrc}
           onClick={handleImageRemove}
         >

@@ -24,16 +24,17 @@ import { twMerge } from 'tailwind-merge';
 // };
 
 interface GalleryProps {
-  collection: BaseCollection | null;
+  collection?: BaseCollection | null;
   cardProps?: CardProps;
   getEndpoint?: string;
   className?: string;
+  filterShowedDefault?: boolean;
 }
 
-export const GalleryBox = ({ collection, className, cardProps, getEndpoint }: GalleryProps) => {
+export const GalleryBox = ({ collection, className, cardProps, getEndpoint, filterShowedDefault }: GalleryProps) => {
   const { filterState } = useFilterContext();
 
-  const [filterShowed, setFilterShowed] = useState(true);
+  const [filterShowed, setFilterShowed] = useState(filterShowedDefault);
   const [isFetching, setIsFetching] = useState(false);
   const [data, setData] = useState<CardData[]>([]);
   const [cursor, setCursor] = useState('');
@@ -78,7 +79,8 @@ export const GalleryBox = ({ collection, className, cardProps, getEndpoint }: Ga
         chainId: item.chainId,
         tokenAddress: collection?.address,
         tokenId: item.tokenId,
-        rarityRank: item.rarityRank
+        rarityRank: item.rarityRank,
+        orderSnippet: item.ordersSnippet
       };
     });
 
@@ -107,26 +109,26 @@ export const GalleryBox = ({ collection, className, cardProps, getEndpoint }: Ga
 
   return (
     <div className={twMerge(className, 'flex items-start')}>
-      {collection && filterShowed && (
+      {filterShowed && (
         <div className="mt-4">
-          <FilterPanel collection={collection} collectionAddress={collection?.address} />
+          <FilterPanel collection={collection as BaseCollection} collectionAddress={collection?.address} />
         </div>
       )}
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-12 gap-y-20 mt-[-70px]">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-12 gap-y-20 mt-[-73px] pointer-events-none">
         {data.length > 0 && (
-          <header className="sm:col-span-2 lg:col-span-3 xl:col-span-4 text-right mb-[-40px]">
+          <div className="sm:col-span-2 lg:col-span-3 xl:col-span-4 text-right">
             <Button
               variant="outline"
               onClick={() => {
                 setFilterShowed((flag) => !flag);
               }}
-              className="py-2.5 mr-2 font-heading"
+              className="py-2.5 mr-2 font-heading pointer-events-auto"
             >
               {filterShowed ? 'Hide' : 'Show'} filter
             </Button>
             <GallerySort />
-          </header>
+          </div>
         )}
 
         {isFetching && (
@@ -136,7 +138,7 @@ export const GalleryBox = ({ collection, className, cardProps, getEndpoint }: Ga
         )}
 
         {data.map((item, idx) => {
-          return <Card key={idx} data={item} {...cardProps} />;
+          return <Card key={idx} data={item} {...cardProps} className="mt-[-30px]" />;
         })}
 
         {dataLoaded && (
