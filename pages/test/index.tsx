@@ -9,6 +9,14 @@ export const TestPage = () => {
       <div className="flex flex-col space-y-4 items-center">
         <Button
           onClick={() => {
+            void router.push('/sandbox');
+          }}
+        >
+          Component Preview
+        </Button>
+
+        <Button
+          onClick={() => {
             void router.push('/connect');
           }}
         >
@@ -45,14 +53,6 @@ export const TestPage = () => {
           }}
         >
           Analytics
-        </Button>
-
-        <Button
-          onClick={() => {
-            void router.push('/sandbox');
-          }}
-        >
-          SandBox
         </Button>
 
         <Button

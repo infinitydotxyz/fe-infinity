@@ -1,15 +1,13 @@
 import React from 'react';
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { BaseCollection, CollectionStats } from '@infinityxyz/lib/types/core';
-import { ToggleTab, PageBox, useToggleTab } from 'src/components/common';
+import { ToggleTab, PageBox, useToggleTab, SVG } from 'src/components/common';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { useFetch } from 'src/utils/apiUtils';
 import { CollectionFeed } from 'src/components/feed/collection-feed';
 import { ellipsisAddress, getChainScannerBase } from 'src/utils';
 import { ActivityTab } from 'src/components/collection/activity-tab';
 import { StatsChips } from 'src/components/collection/stats-chips';
-import BlueCheckSvg from 'src/images/blue-check.svg';
 import { CommunityRightPanel } from 'src/components/collection/community-right-panel';
 import { AiOutlineCheck } from 'react-icons/ai';
 import { AvatarImage } from 'src/components/collection/avatar-image';
@@ -50,8 +48,11 @@ const CollectionPage = () => {
       <div className="flex flex-col mt-10">
         <span>
           <AvatarImage url={collection.metadata.profileImage} className="mb-2" />
-          <span className="text-6xl mr-2">{collection.metadata?.name}</span>
-          {collection.hasBlueCheck ? <Image width={24} height={24} src={BlueCheckSvg.src} alt="Verified" /> : null}
+
+          <div className="flex gap-3 items-center">
+            <div className="text-6xl  ">{collection.metadata?.name}</div>
+            {collection.hasBlueCheck ? <SVG.blueCheck className="h-6 w-6" /> : null}
+          </div>
         </span>
         <main>
           <div className="text-secondary mt-6 mb-6 text-sm font-heading">

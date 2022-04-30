@@ -1,6 +1,5 @@
-import Link from 'next/link';
 import { ellipsisAddress, getChainScannerBase } from 'src/utils';
-import { EthPrice } from 'src/components/common';
+import { EthPrice, NextLink } from 'src/components/common';
 import { FeedEvent } from './feed-item';
 import { format } from 'timeago.js';
 import { FeedEventTypeNames } from '@infinityxyz/lib/types/core/feed';
@@ -13,11 +12,12 @@ export const ActivityItem = ({ event }: Props) => {
   return (
     <div>
       <div className="bg-gray-100 p-10 rounded-2xl flex items-center font-heading">
-        <Link href={`/asset/${event.chainId}/${event.collectionAddress}/${event.tokenId}`} passHref={true}>
-          <a>
-            <img src={event.image} className="w-16 max-h-[80px] rounded-[50%]" alt="NFT Image" />
-          </a>
-        </Link>
+        <NextLink
+          href={`/asset/${event.chainId}/${event.collectionAddress}/${event.tokenId}`}
+          className="w-16 max-h-[80px] rounded-[50%]"
+        >
+          <img src={event.image} alt="NFT Image" />
+        </NextLink>
         <div className="flex justify-between w-full mx-8">
           <div className="">
             <div className="text-black font-bold">
