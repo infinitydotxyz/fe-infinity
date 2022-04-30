@@ -24,6 +24,7 @@ export class SVG {
       <circle fill="currentColor" cx="5" cy="5" r="5" mask="url(#myMask)" />
     </svg>
   );
+
   static infinity = ({ ...props }) => (
     <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 62 60" {...props}>
       <path
@@ -36,6 +37,7 @@ export class SVG {
       />
     </svg>
   );
+
   static logo = ({ ...props }) => (
     <svg viewBox="0 0 208 50" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
       <path
@@ -52,6 +54,7 @@ export class SVG {
       />
     </svg>
   );
+
   static uniswap = ({ ...props }) => {
     return (
       <svg
@@ -82,6 +85,7 @@ export class SVG {
       </svg>
     );
   };
+
   static ethereum = ({ ...props }) => {
     return (
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" {...props}>
@@ -99,6 +103,7 @@ export class SVG {
       </svg>
     );
   };
+
   static matic = ({ ...props }) => {
     return (
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38.4 33.5" {...props}>
@@ -109,6 +114,7 @@ export class SVG {
       </svg>
     );
   };
+
   static solana = ({ ...props }) => {
     return (
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 397.7 311.7" {...props}>
@@ -163,6 +169,7 @@ export class SVG {
       </svg>
     );
   };
+
   static avalanche = ({ ...props }) => {
     return (
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 254 254" xmlSpace="preserve" {...props}>
@@ -185,6 +192,7 @@ export class SVG {
       </svg>
     );
   };
+
   static metamask = ({ ...props }) => {
     return (
       <svg
@@ -276,6 +284,7 @@ export class SVG {
       </svg>
     );
   };
+
   static walletconnect = ({ ...props }) => (
     <svg viewBox="0 0 300 185" xmlns="http://www.w3.org/2000/svg" {...props}>
       <path
@@ -285,12 +294,19 @@ export class SVG {
       />
     </svg>
   );
+
   static coinbasewallet = ({ ...props }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" {...props}>
-      <g fill="#255DEF">
-        <path d="M183.3 42.6c-22.8 2.7-47.6 11.3-65.8 22.6-35.6 22.3-61.6 57.4-71.9 97.3-11.1 42.3-4.2 88.2 18.7 125.2 24.7 39.8 64.2 66.4 111.2 74.9 7 1.2 15 1.8 26.5 1.8 18.4 0 29.8-1.6 46.5-6.6 55.6-16.5 99.2-63.4 111.3-119.9 7.4-33.9 4-68.1-9.6-98.9-21.2-48-61.9-81.8-112.7-93.6-9.3-2.1-28.4-4.4-36.5-4.3-3.6.1-11.6.7-17.7 1.5zm34.2 66.8c57.2 10.1 92.1 67 74.8 122-15.9 50.6-70.5 78.3-120.4 61.2-31.9-10.9-54.8-36.3-62.6-69.2-2.2-9.5-2.4-29.7-.4-38.9 5.7-25.9 19.7-46.5 41.6-60.9 19.6-12.9 44.4-18.2 67-14.2z" />
-        <path d="M174.2 174.6c-2.2 1.5-2.2 1.8-2.2 28.3 0 24.7.1 26.9 1.8 28.4 1.6 1.5 5.1 1.7 28.4 1.7 24.4 0 26.6-.1 28.1-1.8 1.5-1.6 1.7-5.1 1.7-28.4 0-24.4-.1-26.6-1.8-28.1-1.6-1.5-5.1-1.7-27.8-1.7-21.9 0-26.3.2-28.2 1.6z" />
-      </g>
+    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <path
+        d="M20 40C31.0457 40 40 31.0457 40 20C40 8.9543 31.0457 0 20 0C8.9543 0 0 8.9543 0 20C0 31.0457 8.9543 40 20 40Z"
+        fill="#1652F0"
+      />
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M5.45508 20.0006C5.45508 28.0338 11.9673 34.546 20.0006 34.546C28.0338 34.546 34.546 28.0338 34.546 20.0006C34.546 11.9673 28.0338 5.45508 20.0006 5.45508C11.9673 5.45508 5.45508 11.9673 5.45508 20.0006ZM17.3137 15.3145C16.2091 15.3145 15.3137 16.2099 15.3137 17.3145V22.6882C15.3137 23.7928 16.2091 24.6882 17.3137 24.6882H22.6874C23.792 24.6882 24.6874 23.7928 24.6874 22.6882V17.3145C24.6874 16.2099 23.792 15.3145 22.6874 15.3145H17.3137Z"
+        fill="white"
+      />
     </svg>
   );
 }

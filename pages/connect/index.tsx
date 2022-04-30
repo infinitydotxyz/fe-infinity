@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { WalletType } from 'src/utils/providers/AbstractProvider';
-import { SVG } from 'src/components/common';
+import { SVG, NextLink } from 'src/components/common';
 import metamask from 'src/images/metamask.svg';
 import coinbase from 'src/images/coinbase.svg';
 import walletConnect from 'src/images/walletConnect.svg';
@@ -62,11 +61,9 @@ const ConnectWallet = () => {
 
   return (
     <div className="w-[100vw] h-[100vh] overflow-hidden grid gap-2 place-content-center">
-      <Link href="/">
-        <a className="w-1/2 place-self-center">
-          <SVG.logo />
-        </a>
-      </Link>
+      <NextLink href="/" className="w-1/2 place-self-center">
+        <SVG.logo />
+      </NextLink>
 
       <div className="drop-shadow-2xl bg-white rounded-xl flex flex-col items-center mx-0 my-4 p-8">
         {connectImage}
