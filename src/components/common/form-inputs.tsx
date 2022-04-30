@@ -51,7 +51,8 @@ export const TextInputForm = ({
               />
             </div>
           </InputBox>
-          {meta.touched && meta.error && <div className="text-red-800 text-xs pl-6">{meta.error}</div>}
+          {/* {meta.touched && meta.error && <div className="text-red-800 text-xs pl-6">{meta.error}</div>} */}
+          {meta.error && <div className="text-red-800 text-xs pl-6">{meta.error}</div>}
         </div>
       )}
     </Field>
@@ -83,8 +84,8 @@ export const TextAreaForm = ({ label, placeholder, tooltip, onChange, rows = 3, 
                 value={field.value || ''}
                 onBlur={field.onBlur}
                 onChange={(e) => {
-                  if (onChange) {
-                    onChange(e.target.value);
+                  if (field.onChange) {
+                    field.onChange(e.target.value);
                   }
                   if (!e.defaultPrevented) {
                     form.setFieldValue(bind, e.target.value);
@@ -95,7 +96,8 @@ export const TextAreaForm = ({ label, placeholder, tooltip, onChange, rows = 3, 
               />
             </div>
           </InputBox>
-          {meta.touched && meta.error && <div className="text-red-800 text-xs pl-6">{meta.error}</div>}
+          {/* {meta.touched && meta.error && <div className="text-red-800 text-xs pl-6">{meta.error}</div>} */}
+          {meta.error && <div className="text-red-800 text-xs pl-6">{meta.error}</div>}
         </div>
       )}
     </Field>

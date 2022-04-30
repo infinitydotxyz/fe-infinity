@@ -57,10 +57,6 @@ export const AccountSettingsPage: FunctionComponent<AccountSettingsProps> = (pro
       facebookUsername = ''
     } = values;
 
-    console.log('values here');
-    console.log(displayName);
-    console.log(username);
-
     const postBody: { [key: string]: any } = {
       displayName,
       username,
@@ -77,9 +73,6 @@ export const AccountSettingsPage: FunctionComponent<AccountSettingsProps> = (pro
         delete postBody[key];
       }
     });
-
-    console.log('data here');
-    console.log(postBody);
 
     const { error } = await apiPut(`/user/${user.address}`, {
       data: postBody
