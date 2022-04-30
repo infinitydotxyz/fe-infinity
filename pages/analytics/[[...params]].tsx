@@ -79,7 +79,7 @@ export const Analytics = () => {
   const data = useFetch<{ data: CollectionStats[] }>(query);
 
   if (data.result) {
-    statistics = data.result.data.map((d) => {
+    statistics = data.result.data.map((d, index) => {
       const address = d.collectionAddress;
       const name = d.name;
       const image = d.profileImage ? d.profileImage : BLANK_IMG;
@@ -96,6 +96,14 @@ export const Analytics = () => {
       const discordFollowersPercentChange = d.discordFollowersPercentChange ? d.discordFollowersPercentChange : '-';
 
       return [
+        {
+          id: 'index',
+          type: 'index',
+          value: index + 1,
+          placement: 'start',
+          sortable: false,
+          onSort: null
+        },
         {
           id: 'image',
           type: 'image',
@@ -636,10 +644,11 @@ export const Analytics = () => {
               w-full h-full min-h-[144px] overflow-hidden rounded-xl
               bg-theme-light-300
               grid grid-rows-1
+              px-5
               ${
                 connected
-                  ? 'grid-cols-[3fr,4fr,3fr,3fr,3fr,3fr,3fr,3fr,2fr]'
-                  : 'grid-cols-[3fr,4fr,3fr,3fr,3fr,3fr,3fr,3fr,2fr]'
+                  ? 'grid-cols-[2fr,2fr,4fr,3fr,3fr,3fr,3fr,3fr,3fr,2fr]'
+                  : 'grid-cols-[2fr,2fr,4fr,3fr,3fr,3fr,3fr,3fr,3fr,2fr]'
               }
               place-items-center
             `

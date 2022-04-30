@@ -111,6 +111,19 @@ export function Field({ onSort, sortable = false, onClick, type, label, value }:
         }
       }
     },
+    index: {
+      container: {
+        className: `
+          w-full h-full overflow-hidden
+          grid justify-center items-center 
+        `
+      },
+      element: {
+        className: `
+          text-theme-light-800 text-2xl 
+        `
+      }
+    },
     string: {
       container: {
         className: `
@@ -230,6 +243,11 @@ export function Field({ onSort, sortable = false, onClick, type, label, value }:
           {type === 'string' && (
             <div {...styles?.string?.container} onClick={onClick}>
               <p {...styles?.string?.element}>{value}</p>
+            </div>
+          )}
+          {type === 'index' && (
+            <div {...styles?.index?.container} onClick={onClick}>
+              <p {...styles?.index?.element}>{value}</p>
             </div>
           )}
           {type === 'number' && (
