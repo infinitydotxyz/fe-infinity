@@ -118,6 +118,7 @@ const SandboxPage = () => {
         <div className="flex flex-wrap bg-slate-200">
           <SVGPreview svg={<SVG.remove className={iconClass} />} name="remove" />
           <SVGPreview svg={<SVG.avalanche className={iconClass} />} name="avalanche" />
+          <SVGPreview svg={<SVG.connectImage className={iconClass} />} name="connectImage" />
           <SVGPreview svg={<SVG.coinbasewallet className={iconClass} />} name="coinbasewallet" />
           <SVGPreview svg={<SVG.coinbasewalletAlt className={iconClass} />} name="coinbasewalletAlt" />
           <SVGPreview svg={<SVG.editCircle className={iconClass} />} name="editCircle" />
@@ -235,7 +236,7 @@ interface Props3 {
 
 const SVGPreview = ({ name, svg }: Props3) => {
   return (
-    <div className="flex flex-col m-4 text-center">
+    <div className="flex items-center flex-col m-4 text-center">
       {svg}
       {name}
     </div>
