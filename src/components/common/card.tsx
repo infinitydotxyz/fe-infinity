@@ -44,13 +44,14 @@ export const Card = ({ data, cardActions, dropdownActions, className }: CardProp
   );
 
   return (
-    <div className={twMerge(`sm:mx-0 relative flex flex-col ${className ?? ''}`)}>
+    <div className={twMerge(`sm:mx-0 relative flex flex-col pointer-events-auto ${className ?? ''}`)}>
       <NextLink
         href={`/asset/${data?.chainId}/${data?.tokenAddress}/${data?.tokenId}`}
         className="rounded-3xl w-[290px] flex-1 overflow-hidden"
       >
         <img src={data?.image ?? ''} alt="card" />
       </NextLink>
+
       {data?.rarityRank && (
         <span className="absolute bg-gray-100 top-3 right-3 py-2 px-3 rounded-3xl">{Math.round(data?.rarityRank)}</span>
       )}
