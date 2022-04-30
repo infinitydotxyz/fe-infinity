@@ -1,7 +1,7 @@
 import { FunctionComponent, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Button } from 'src/components/common';
-import { Formik, Form } from 'formik';
+import { Formik, Form, validateYupSchema, yupToFormErrors } from 'formik';
 
 import { User } from 'src/utils/context/AppContext';
 import { apiPut } from 'src/utils';
@@ -56,8 +56,33 @@ export const AccountSettingsPage: FunctionComponent<AccountSettingsProps> = (pro
       instagramUsername = '',
       facebookUsername = ''
     } = values;
+
+    console.log('values here');
+    console.log(displayName);
+    console.log(username);
+
+    const postBody: { [key: string]: any } = {
+      displayName,
+      username,
+      bio,
+      discordUsername,
+      twitterUsername,
+      instagramUsername,
+      facebookUsername
+    };
+
+    // TODO: why can we not put a display name without username
+    Object.keys(postBody).forEach((key) => {
+      if (postBody[key] === '' || postBody[key] === undefined) {
+        delete postBody[key];
+      }
+    });
+
+    console.log('data here');
+    console.log(postBody);
+
     const { error } = await apiPut(`/user/${user.address}`, {
-      data: { displayName, username, bio, discordUsername, twitterUsername, instagramUsername, facebookUsername }
+      data: postBody
     });
     if (error) {
       console.error(error);

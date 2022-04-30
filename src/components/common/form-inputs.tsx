@@ -41,8 +41,8 @@ export const TextInputForm = ({
                 className="p-0 border-none focus:ring-0 block w-full text-base font-zagmamono"
                 placeholder={placeholder}
                 onChange={(e) => {
-                  if (onChange) {
-                    onChange(e.target.value);
+                  if (field.onChange) {
+                    field.onChange(e.target.value);
                   }
                   if (!e.defaultPrevented) {
                     form.setFieldValue(bind, e.target.value);
@@ -79,7 +79,9 @@ export const TextAreaForm = ({ label, placeholder, tooltip, onChange, rows = 3, 
             <div className="flex items-center w-full">
               <textarea
                 rows={rows}
+                name={field.name}
                 value={field.value || ''}
+                onBlur={field.onBlur}
                 onChange={(e) => {
                   if (onChange) {
                     onChange(e.target.value);
