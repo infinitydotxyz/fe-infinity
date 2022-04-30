@@ -118,6 +118,7 @@ const SandboxPage = () => {
         <div className="flex flex-wrap">
           <SVGPreview svg={<SVG.avalanche className={iconClass} />} name="avalanche" />
           <SVGPreview svg={<SVG.coinbasewallet className={iconClass} />} name="coinbasewallet" />
+          <SVGPreview svg={<SVG.coinbasewalletAlt className={iconClass} />} name="coinbasewalletAlt" />
           <SVGPreview svg={<SVG.editCircle className={iconClass} />} name="editCircle" />
           <SVGPreview svg={<SVG.ethereum className={iconClass} />} name="ethereum" />
           <SVGPreview svg={<SVG.grayDelete className={iconClass} />} name="grayDelete" />
@@ -125,9 +126,11 @@ const SandboxPage = () => {
           <SVGPreview svg={<SVG.logo className={iconClass} />} name="logo" />
           <SVGPreview svg={<SVG.matic className={iconClass} />} name="matic" />
           <SVGPreview svg={<SVG.metamask className={iconClass} />} name="metamask" />
+          <SVGPreview svg={<SVG.metamaskAlt className={iconClass} />} name="metamaskAlt" />
           <SVGPreview svg={<SVG.solana className={iconClass} />} name="solana" />
           <SVGPreview svg={<SVG.uniswap className={iconClass} />} name="uniswap" />
           <SVGPreview svg={<SVG.walletconnect className={iconClass} />} name="walletconnect" />
+          <SVGPreview svg={<SVG.walletconnectAlt className={iconClass} />} name="walletconnectAlt" />
         </div>
 
         <SBHeader># Card - WIP</SBHeader>
