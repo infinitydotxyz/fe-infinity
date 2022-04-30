@@ -56,8 +56,26 @@ export const AccountSettingsPage: FunctionComponent<AccountSettingsProps> = (pro
       instagramUsername = '',
       facebookUsername = ''
     } = values;
+
+    const postBody: { [key: string]: string | undefined } = {
+      displayName,
+      username,
+      bio,
+      discordUsername,
+      twitterUsername,
+      instagramUsername,
+      facebookUsername
+    };
+
+    // TODO: why can we not put a display name without username
+    Object.keys(postBody).forEach((key) => {
+      if (postBody[key] === '' || postBody[key] === undefined) {
+        delete postBody[key];
+      }
+    });
+
     const { error } = await apiPut(`/user/${user.address}`, {
-      data: { displayName, username, bio, discordUsername, twitterUsername, instagramUsername, facebookUsername }
+      data: postBody
     });
     if (error) {
       console.error(error);
