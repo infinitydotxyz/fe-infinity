@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import Link from 'next/link';
-import { Button, SimpleModal, CurrencyInput } from 'src/components/common';
+import { Button, SimpleModal, CurrencyInput, NextLink } from 'src/components/common';
 
 export const PlaceBidModal: React.FC = () => {
   const [price, setPrice] = useState(0);
@@ -34,7 +33,7 @@ export const PlaceBidModal: React.FC = () => {
             <div className="ml-3">
               <span className="text-theme-light-800">{"By checking this box, you agree to Infinity's"}</span>
               <div className="underline">
-                <Link href="/terms-of-service">Terms of Service</Link>
+                <NextLink href="/terms-of-service">Terms of Service</NextLink>
               </div>
             </div>
           </div>

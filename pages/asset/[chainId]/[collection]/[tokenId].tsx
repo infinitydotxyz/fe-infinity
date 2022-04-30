@@ -1,7 +1,6 @@
 import { FunctionComponent } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Button, ShortAddress, PageBox, ReadMoreText, SVG } from 'src/components/common';
+import { Button, ShortAddress, PageBox, ReadMoreText, SVG, NextLink } from 'src/components/common';
 import { BLANK_IMAGE_URL, useFetch } from 'src/utils';
 import { Token, Collection, Erc721Metadata } from '@infinityxyz/lib/types/core';
 import {
@@ -90,14 +89,12 @@ const AssetDetail: FunctionComponent = () => {
                 {tokenMetadata.name ? tokenMetadata.name : `${collection.metadata.name} #${token.tokenId}`}
               </h3>
               <div className="flex items-center sm:mb-6">
-                <Link href={`/collection/${collection.metadata.name || collection.address}`}>
-                  <a
-                    href={`/collection/${collection.metadata.name || collection.address}`}
-                    className="text-theme-light-800 font-heading tracking-tight mr-2"
-                  >
-                    {collection.metadata.name}
-                  </a>
-                </Link>
+                <NextLink
+                  href={`/collection/${collection.metadata.name || collection.address}`}
+                  className="text-theme-light-800 font-heading tracking-tight mr-2"
+                >
+                  {collection.metadata.name}
+                </NextLink>
                 {collection.hasBlueCheck && <SVG.blueCheck className="h-5 w-5" />}
               </div>
               <ShortAddress
