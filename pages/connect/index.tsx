@@ -1,12 +1,8 @@
 import React, { useEffect } from 'react';
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { WalletType } from 'src/utils/providers/AbstractProvider';
 import { SVG, NextLink } from 'src/components/common';
-import metamask from 'src/images/metamask.svg';
-import coinbase from 'src/images/coinbase.svg';
-import walletConnect from 'src/images/walletConnect.svg';
 
 const ConnectWallet = () => {
   const router = useRouter();
@@ -71,21 +67,21 @@ const ConnectWallet = () => {
 
         <ConnectItem
           onClick={connectMetaMask}
-          img={metamask.src}
+          icon={<SVG.metamask className="h-16" />}
           title="Metamask"
           subtitle="Connect using browser wallet"
         />
 
         <ConnectItem
           onClick={connectWalletConnect}
-          img={walletConnect.src}
+          icon={<SVG.walletconnect className="h-16" />}
           title="WalletConnect"
           subtitle="Connect using mobile wallet"
         />
 
         <ConnectItem
           onClick={connectCoinbase}
-          img={coinbase.src}
+          icon={<SVG.coinbasewallet className="h-16" />}
           title="Coinbase"
           subtitle="Connect using Coinbase wallet"
         />
@@ -101,11 +97,11 @@ export default ConnectWallet;
 interface Props {
   title: string;
   subtitle: string;
-  img: string;
+  icon: JSX.Element;
   onClick: () => void;
 }
 
-const ConnectItem = ({ title, img, subtitle, onClick }: Props): JSX.Element => {
+const ConnectItem = ({ title, icon, subtitle, onClick }: Props): JSX.Element => {
   const arrowImage = (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" className="ml-auto">
       <path
@@ -121,11 +117,9 @@ const ConnectItem = ({ title, img, subtitle, onClick }: Props): JSX.Element => {
 
   return (
     <div className="rounded-lg border-solid border cursor-pointer flex items-center mb-2 p-5 w-full" onClick={onClick}>
-      <div className="logo-metamask d-flex align-self-center">
-        <Image alt="Infinity" src={img} width={56} height={56} className="align-self-center" />
-      </div>
-      <div className="d-flex flex-column text-left align-self-center px-10">
-        <p className="tg-desc">{title}</p>
+      {icon}
+      <div className="flex-column text-left align-self-center px-10">
+        <p className="text-lg font-bold">{title}</p>
         <p className="text-gray">{subtitle}</p>
       </div>
       {arrowImage}
