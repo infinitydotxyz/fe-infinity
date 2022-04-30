@@ -1,7 +1,7 @@
 import { FunctionComponent, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Button } from 'src/components/common';
-import { Formik, Form, validateYupSchema, yupToFormErrors } from 'formik';
+import { Formik, Form } from 'formik';
 
 import { User } from 'src/utils/context/AppContext';
 import { apiPut } from 'src/utils';

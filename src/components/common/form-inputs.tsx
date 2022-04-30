@@ -82,7 +82,6 @@ export const TextAreaForm = ({ label, placeholder, tooltip, onChange, rows = 3, 
                 rows={rows}
                 name={field.name}
                 value={field.value || ''}
-                onBlur={field.onBlur}
                 onChange={(e) => {
                   if (field.onChange) {
                     field.onChange(e.target.value);
