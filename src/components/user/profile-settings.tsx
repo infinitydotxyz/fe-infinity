@@ -57,7 +57,7 @@ export const AccountSettingsPage: FunctionComponent<AccountSettingsProps> = (pro
       facebookUsername = ''
     } = values;
 
-    const postBody: { [key: string]: any } = {
+    const postBody: { [key: string]: string | undefined } = {
       displayName,
       username,
       bio,
