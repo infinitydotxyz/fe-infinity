@@ -1,8 +1,6 @@
 import { FunctionComponent } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { Button, ShortAddress, PageBox, ReadMoreText } from 'src/components/common';
+import { Button, ShortAddress, PageBox, ReadMoreText, SVG, NextLink } from 'src/components/common';
 import { BLANK_IMAGE_URL, useFetch } from 'src/utils';
 import { Token, Collection, Erc721Metadata } from '@infinityxyz/lib/types/core';
 import {
@@ -15,7 +13,6 @@ import {
   MakeOfferModal
 } from 'src/components/asset';
 
-import BlueCheckSvg from 'src/images/blue-check.svg';
 // import {HiOutlineSwitchHorizontal} from 'react-icons';
 
 const useFetchAssertInfo = (chainId: string, collection: string, tokenId: string) => {
@@ -38,7 +35,7 @@ const AssetDetail: FunctionComponent = () => {
 
   if (typeof query.chainId !== 'string' || typeof query.collection !== 'string' || typeof query.tokenId !== 'string') {
     return (
-      <PageBox title="Asset Detail - Error">
+      <PageBox title="Asset - Error">
         <div className="flex flex-col max-w-screen-2xl mt-4">
           <main>
             <p>Error: Invalid page parameters.</p>
@@ -58,7 +55,7 @@ const AssetDetail: FunctionComponent = () => {
   if (error || !token || !collection) {
     console.error(error);
     return (
-      <PageBox title="Asset Detail - Error" className="w-full h-full grid place-items-center">
+      <PageBox title="Asset - Error" className="w-full h-full grid place-items-center">
         <div className="flex flex-col max-w-screen-2xl mt-4">
           <main>
             <p>Error: Fetching Data Failed.</p>
@@ -92,19 +89,13 @@ const AssetDetail: FunctionComponent = () => {
                 {tokenMetadata.name ? tokenMetadata.name : `${collection.metadata.name} #${token.tokenId}`}
               </h3>
               <div className="flex items-center sm:mb-6">
-                <Link href={`/collection/${collection.metadata.name || collection.address}`}>
-                  <a
-                    href={`/collection/${collection.metadata.name || collection.address}`}
-                    className="text-theme-light-800 font-heading tracking-tight mr-2"
-                  >
-                    {collection.metadata.name}
-                  </a>
-                </Link>
-                {collection.hasBlueCheck && (
-                  <div className="mt-1">
-                    <Image width={18} height={18} src={BlueCheckSvg.src} alt="Verified" />
-                  </div>
-                )}
+                <NextLink
+                  href={`/collection/${collection.metadata.name || collection.address}`}
+                  className="text-theme-light-800 font-heading tracking-tight mr-2"
+                >
+                  {collection.metadata.name}
+                </NextLink>
+                {collection.hasBlueCheck && <SVG.blueCheck className="h-5 w-5" />}
               </div>
               <ShortAddress
                 label="Contact address:"

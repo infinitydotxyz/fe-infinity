@@ -30,7 +30,9 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
     isOrderBuilderEmpty,
     executeOrder,
     ordersInCart,
-    isEditingOrder
+    isEditingOrder,
+    isCollectionsCart,
+    cartItems
   } = useOrderContext();
 
   const emptyCart = (
@@ -97,6 +99,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
 
   let contents;
   let title = 'Create order';
+  let subtitle = '';
   let footer;
   let tooltip: TooltipSpec | undefined;
 
@@ -125,14 +128,42 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
     );
   } else if (!isOrderBuilderEmpty()) {
     // an order is being built, so let them finish it
-    title = isSellOrderCart() ? 'Sell Order' : 'Buy order';
-    tooltip = isSellOrderCart()
-      ? { title: 'Sell order', content: 'Selected NFT(s) will be automatically sold when there’s a matching buy order' }
-      : {
-          title: 'Buy order',
-          content:
-            'Any NFT(s) from selected collections will be automatically bought when there’s a matching sell order'
-        };
+
+    let content = '';
+    if (isSellOrderCart()) {
+      title = 'Sell order';
+
+      if (isCollectionsCart()) {
+        content = ''; // not supported
+      } else {
+        // content = 'Selected NFT(s) will be automatically sold when there’s a matching buy order';
+
+        if (cartItems.length > 1) {
+          content = "We'll sell one of these for the min price listed";
+          subtitle = content;
+        } else {
+          content = "We'll sell this NFT for the min price listed";
+          // subtitle = content;
+        }
+      }
+    } else {
+      title = 'Buy order';
+
+      if (isCollectionsCart()) {
+        content =
+          'Any NFT(s) from selected collections will be automatically bought when there’s a matching sell order';
+      } else {
+        if (cartItems.length > 1) {
+          content = "We'll buy the first one that becomes available for sale within your budget";
+          subtitle = content;
+        } else {
+          content = "We'll by the NFT when it becomes available for sale within your budget";
+          // subtitle = content;
+        }
+      }
+    }
+
+    tooltip = { title: title, content: content };
 
     footer = buildFooter(() => {
       addOrderToCart();
@@ -174,7 +205,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
         </div>
       </SimpleModal>
 
-      <Drawer open={open} onClose={onClose} title={title} tooltip={tooltip}>
+      <Drawer open={open} onClose={onClose} subtitle={subtitle} title={title} tooltip={tooltip}>
         {contents}
       </Drawer>
     </>

@@ -30,7 +30,7 @@ export const Drawer = ({ open, tooltip, subtitle, divide, onClose, title, childr
                 </Tooltip>
               )}
             </div>
-            {subtitle && <div className="mr-2 text-md text-gray-600">{subtitle}</div>}
+            {subtitle && <div className="mt-3 text-sm text-gray-600">{subtitle}</div>}
           </Dialog.Title>
 
           <div className="ml-3 flex h-7 items-center">

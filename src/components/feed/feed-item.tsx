@@ -1,5 +1,4 @@
 // import { ExchangeEvent } from '@infinityxyz/lib/types/core/feed/NftEvent';
-import Link from 'next/link';
 import { ExchangeEvent } from '@infinityxyz/lib/types/core/feed';
 import { BaseFeedEvent, FeedEventType } from '@infinityxyz/lib/types/core/feed/FeedEvent';
 import { ReactNode } from 'react';
@@ -7,7 +6,7 @@ import { AiOutlineComment, AiOutlineLike } from 'react-icons/ai';
 import { ellipsisAddress, getChainScannerBase } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { addUserLike } from 'src/utils/firestore/firestoreUtils';
-import { Button, NftImage, EthPrice } from 'src/components/common';
+import { Button, NftImage, EthPrice, NextLink } from 'src/components/common';
 
 export type FeedEvent = BaseFeedEvent &
   ExchangeEvent & {
@@ -131,11 +130,9 @@ const Discord = ({ data }: FeedItemProps) => {
 const SaleEvent = ({ data }: FeedItemProps) => {
   return (
     <div className="mt-4 border rounded-xl p-4 flex items-center bg-gray-100 font-heading">
-      <Link href={`/asset/${data.chainId}/${data.collectionAddress}/${data.tokenId}`} passHref={true}>
-        <a>
-          <img src={data.image} className="w-24 rounded-xl" alt="NFT Image" />
-        </a>
-      </Link>
+      <NextLink href={`/asset/${data.chainId}/${data.collectionAddress}/${data.tokenId}`} className="w-24 rounded-xl">
+        <img src={data.image} alt="NFT Image" />
+      </NextLink>
       <div className="flex w-full justify-between mx-8">
         <div className="text-sm">
           <div className="text-gray-400">Link</div>

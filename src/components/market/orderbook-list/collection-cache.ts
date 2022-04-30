@@ -1,4 +1,4 @@
-import { BaseCollection, BaseToken, Erc721Metadata } from '@infinityxyz/lib/types/core';
+import { BaseCollection, BaseToken } from '@infinityxyz/lib/types/core';
 import { useEffect, useState } from 'react';
 import { apiGet } from 'src/utils/apiUtils';
 import mitt from 'mitt';
@@ -131,11 +131,13 @@ export const useCollectionCache = () => {
   const imageForTokenId = (chainId: number, collectionAddress: string, tokenId: string): string => {
     const token = CollectionCache.getToken(chainId, collectionAddress, tokenId);
 
-    // TODO: Joe to update Erc721Metadata type
-    const tokenMetadata = token?.metadata as Erc721Metadata;
+    const tokenMetadata = token?.metadata;
 
-    if (token) {
-      return tokenMetadata.title ?? tokenMetadata.name;
+    if (token && tokenMetadata) {
+      if ('title' in tokenMetadata) {
+        return tokenMetadata.title ?? tokenMetadata.name;
+      }
+      return tokenMetadata.name;
     }
 
     return tokenId;

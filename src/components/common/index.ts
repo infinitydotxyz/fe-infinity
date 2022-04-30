@@ -15,6 +15,7 @@ export * from 'src/components/common/short-address';
 export * from 'src/components/common/modal';
 export * from 'src/components/common/clipboard-button';
 export * from 'src/components/common/nft-image';
+export * from 'src/components/common/next-link';
 export * from 'src/components/common/tool-tip';
 export * from 'src/components/common/divider';
 export * from 'src/components/common/drawer';

@@ -10,8 +10,7 @@ export const postOrders = async (user: string, orders: SignedOBOrder[]): Promise
     };
 
     const response = await apiPost(`/orders/${user}/create`, {
-      data: body,
-      options: { headers: { 'Content-Type': 'application/json' } }
+      data: body
     });
     return response.result as string;
   } catch (err) {

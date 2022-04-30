@@ -10,7 +10,7 @@ import { ProfileImageUpload } from './profile-image-upload';
 import { UserProfileDto } from './user-profile-dto';
 import { ProfileBannerImageUpload } from './profile-banner-image-upload';
 import { UserProfileForm } from './user-profile-form';
-import { UserProfileSchema } from './schemas/user-profile-schema';
+import { getUserProfileSchema } from './schemas/user-profile-schema';
 // import { UserWalletForm } from './user-wallet-form';
 
 interface AccountSettingsProps {
@@ -103,7 +103,7 @@ export const AccountSettingsPage: FunctionComponent<AccountSettingsProps> = (pro
   return (
     <Formik
       initialValues={userInfo}
-      validationSchema={UserProfileSchema}
+      validationSchema={getUserProfileSchema({ user })}
       onSubmit={async (values, { setSubmitting }) => {
         setSubmitting(true);
         await handleSubmit(values);
