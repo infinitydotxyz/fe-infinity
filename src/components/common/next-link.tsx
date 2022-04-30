@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react';
 import Link from 'next/link';
+import { twMerge } from 'tailwind-merge';
 
 interface Props {
   href: string;
@@ -12,7 +13,7 @@ interface Props {
 export const NextLink = ({ children, className = '', href }: Props) => {
   return (
     <Link href={href}>
-      <a className={className}>{children}</a>
+      <a className={twMerge('whitespace-nowrap cursor-pointer', className)}>{children}</a>
     </Link>
   );
 };
@@ -21,7 +22,7 @@ export const NextLink = ({ children, className = '', href }: Props) => {
 export const ExternalLink = ({ children, className = '', href }: Props) => {
   return (
     <div onClick={() => window.open(href)}>
-      <a className={className}>{children}</a>
+      <a className={twMerge('whitespace-nowrap cursor-pointer', className)}>{children}</a>
     </div>
   );
 };
