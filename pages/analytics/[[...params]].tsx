@@ -55,7 +55,12 @@ export const Analytics = () => {
     setColumns(reset);
   };
 
-  const applyCheckboxes = () => setColumns(filterCheckboxes);
+  const applyCheckboxes = () =>{
+    if (Object.keys(filterCheckboxes).filter((key) => filterCheckboxes[key]).length < filterLimit){
+      setColumns(filterCheckboxes);
+      setIsDrawerOpen(false);
+    } 
+  } 
 
   const checkboxToggle = (id: string) => setFilterCheckboxes({ ...filterCheckboxes, [id]: !filterCheckboxes[id] });
 
@@ -83,7 +88,6 @@ export const Analytics = () => {
       const twitterFollowersPercentChange = d.twitterFollowersPercentChange ? d.twitterFollowersPercentChange : '-';
       const discordFollowers = d.discordFollowers ? d.discordFollowers : '-';
       const discordFollowersPercentChange = d.discordFollowersPercentChange ? d.discordFollowersPercentChange : '-';
-
       return [
         {
           id: 'image',
@@ -433,7 +437,7 @@ export const Analytics = () => {
                 open: isDrawerOpen,
                 onClose: closeDrawer,
                 title: 'Filter',
-                subtitle: `Select upto ${filterLimit}`,
+                subtitle: `Select up to ${filterLimit}`,
                 divide: true
               }
             },
@@ -666,15 +670,15 @@ export const Analytics = () => {
           apply: {
             className: `
               w-full h-full overflow-hidden
-              bg-theme-light-900 ring-1 ring-inset ring-theme-light-900
+              bg-theme-light-900 ring-1 ring-inset 
               rounded-full font-mono text-sm text-theme-light-50
+              ${Object.keys(filterCheckboxes).filter((key) => filterCheckboxes[key]).length > filterLimit ? 'bg-theme-light-700 ring-theme-light-700':'ring-theme-light-900'}
             `
           }
         }
       }
     }
   };
-
   return (
     <PageBox title="Analytics">
       <div {...styles?.container}>
@@ -728,7 +732,7 @@ export const Analytics = () => {
                                 <button {...styles?.drawer?.content?.actions?.clear} onClick={clearCheckboxes}>
                                   Clear All
                                 </button>
-                                <button {...styles?.drawer?.content?.actions?.apply} onClick={applyCheckboxes}>
+                                <button disabled={Object.keys(filterCheckboxes).filter((key) => filterCheckboxes[key]).length > filterLimit}{...styles?.drawer?.content?.actions?.apply} onClick={applyCheckboxes}>
                                   Apply
                                 </button>
                               </div>
