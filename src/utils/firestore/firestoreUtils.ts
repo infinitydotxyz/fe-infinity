@@ -66,12 +66,12 @@ export async function fetchMoreEvents(filter: FeedFilter) {
       q = query(
         coll,
         where('type', 'in', filter?.types),
-        orderBy('timestamp', 'asc'),
+        orderBy('timestamp', 'desc'),
         limit(EVENTS_PER_PAGE),
         startAfter(lastDoc)
-      ); // query(coll, limit(3), orderBy('timestamp', 'asc'))
+      ); // query(coll, limit(3), orderBy('timestamp', 'desc'))
     } else {
-      q = query(coll, orderBy('timestamp', 'asc'), limit(EVENTS_PER_PAGE), startAfter(lastDoc)); // query(coll, limit(3), orderBy('timestamp', 'desc'))
+      q = query(coll, orderBy('timestamp', 'desc'), limit(EVENTS_PER_PAGE), startAfter(lastDoc)); // query(coll, limit(3), orderBy('timestamp', 'desc'))
     }
 
     const items = await getDocs(q);
@@ -102,7 +102,7 @@ export async function subscribe(collectionPath: string, filter: FeedFilter, onCh
         coll,
         where('type', 'in', filter?.types),
         where('collectionAddress', '==', filter?.collectionAddress),
-        orderBy('timestamp', 'asc'),
+        orderBy('timestamp', 'desc'),
         limit(EVENTS_PER_PAGE)
       );
     } else if (filter?.types && filter?.types.length > 0 && filter?.userAddress) {
@@ -110,23 +110,23 @@ export async function subscribe(collectionPath: string, filter: FeedFilter, onCh
         coll,
         where('type', 'in', filter?.types),
         where('buyer', '==', filter?.userAddress),
-        orderBy('timestamp', 'asc'),
+        orderBy('timestamp', 'desc'),
         limit(EVENTS_PER_PAGE)
       );
     } else if (filter?.types && filter?.types.length > 0) {
-      q = query(coll, where('type', 'in', filter?.types), orderBy('timestamp', 'asc'), limit(EVENTS_PER_PAGE));
+      q = query(coll, where('type', 'in', filter?.types), orderBy('timestamp', 'desc'), limit(EVENTS_PER_PAGE));
     } else if (filter?.collectionAddress) {
       q = query(
         coll,
         where('collectionAddress', '==', filter?.collectionAddress),
-        orderBy('timestamp', 'asc'),
+        orderBy('timestamp', 'desc'),
         limit(EVENTS_PER_PAGE)
       );
     } else if (filter?.userAddress) {
       // console.log('filter?.userAddress', filter?.userAddress);
-      q = query(coll, where('buyer', '==', filter?.userAddress), orderBy('timestamp', 'asc'), limit(EVENTS_PER_PAGE));
+      q = query(coll, where('buyer', '==', filter?.userAddress), orderBy('timestamp', 'desc'), limit(EVENTS_PER_PAGE));
     } else {
-      q = query(coll, orderBy('timestamp', 'asc'), limit(EVENTS_PER_PAGE)); // query(coll, limit(3), orderBy('timestamp', 'asc'))
+      q = query(coll, orderBy('timestamp', 'desc'), limit(EVENTS_PER_PAGE)); // query(coll, limit(3), orderBy('timestamp', 'desc'))
     }
 
     if (unsubscribe) {
@@ -179,7 +179,7 @@ export async function fetchComments(eventId?: string) {
   }
   try {
     const coll = collection(firestoreDb, `feed/${eventId}/userComments`);
-    const q = query(coll, orderBy('timestamp', 'asc'), limit(COMMENTS_PER_PAGE)); // query(coll, limit(3), orderBy('timestamp', 'asc'))
+    const q = query(coll, orderBy('timestamp', 'desc'), limit(COMMENTS_PER_PAGE)); // query(coll, limit(3), orderBy('timestamp', 'desc'))
     const snapshot = await getDocs(q);
 
     if (snapshot.docs.length > 0) {
@@ -206,7 +206,7 @@ export async function fetchMoreComments(eventId?: string) {
   const coll = collection(firestoreDb, `feed/${eventId}/userComments`);
 
   if (lastCommentDoc) {
-    const q = query(coll, orderBy('timestamp', 'asc'), limit(COMMENTS_PER_PAGE), startAfter(lastCommentDoc)); // query(coll, limit(3), orderBy('timestamp', 'asc'))
+    const q = query(coll, orderBy('timestamp', 'desc'), limit(COMMENTS_PER_PAGE), startAfter(lastCommentDoc)); // query(coll, limit(3), orderBy('timestamp', 'desc'))
     const items = await getDocs(q);
 
     if (items.docs.length > 0) {
