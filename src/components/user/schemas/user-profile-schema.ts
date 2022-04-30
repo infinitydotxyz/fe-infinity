@@ -11,7 +11,7 @@ export const getUserProfileSchema = ({ user }: { user: User }) =>
       .max(14, 'Max is 14 characters.')
       .matches(/[a-zA-Z0-9_]+$/, 'a-z, A-Z, 0-9, _ can be used')
       .test('Unique username', 'Username already in use', (value) => {
-        if (!!value) {
+        if (value) {
           return new Promise((resolve, reject) => {
             apiGet(`/user/${user.address}/checkUsername`, { query: { username: value } })
               .then(({ result, error }) => {
