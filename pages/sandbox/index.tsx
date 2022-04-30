@@ -23,6 +23,7 @@ import {
   ComboBoxBaseType,
   SVG
 } from 'src/components/common';
+import { twMerge } from 'tailwind-merge';
 
 const cardTestData = [
   {
@@ -131,6 +132,15 @@ const SandboxPage = () => {
           <SVGPreview svg={<SVG.uniswap className={iconClass} />} name="uniswap" />
           <SVGPreview svg={<SVG.walletconnect className={iconClass} />} name="walletconnect" />
           <SVGPreview svg={<SVG.walletconnectAlt className={iconClass} />} name="walletconnectAlt" />
+          <SVGPreview svg={<SVG.arrowImage className={iconClass} />} name="arrowImage" />
+          <SVGPreview
+            svg={
+              <SVG.spinner
+                className={twMerge(iconClass, 'text-gray-200 animate-spin dark:text-gray-600 fill-blue-600')}
+              />
+            }
+            name="spinner"
+          />
 
           <SVGPreview svg={<SVG.logo className={iconClass} />} name="logo" />
           <SVGPreview svg={<SVG.miniLogoDark className={iconClass} />} name="miniLogoDark" />
