@@ -115,15 +115,14 @@ const SandboxPage = () => {
         <ToggleTab options={options} selected={selected} onChange={onChange} />
 
         <SBHeader># SVGs </SBHeader>
-        <div className="flex flex-wrap">
+        <div className="flex flex-wrap bg-slate-200">
+          <SVGPreview svg={<SVG.remove className={iconClass} />} name="remove" />
           <SVGPreview svg={<SVG.avalanche className={iconClass} />} name="avalanche" />
           <SVGPreview svg={<SVG.coinbasewallet className={iconClass} />} name="coinbasewallet" />
           <SVGPreview svg={<SVG.coinbasewalletAlt className={iconClass} />} name="coinbasewalletAlt" />
           <SVGPreview svg={<SVG.editCircle className={iconClass} />} name="editCircle" />
           <SVGPreview svg={<SVG.ethereum className={iconClass} />} name="ethereum" />
           <SVGPreview svg={<SVG.grayDelete className={iconClass} />} name="grayDelete" />
-          <SVGPreview svg={<SVG.infinity className={iconClass} />} name="infinity" />
-          <SVGPreview svg={<SVG.logo className={iconClass} />} name="logo" />
           <SVGPreview svg={<SVG.matic className={iconClass} />} name="matic" />
           <SVGPreview svg={<SVG.metamask className={iconClass} />} name="metamask" />
           <SVGPreview svg={<SVG.metamaskAlt className={iconClass} />} name="metamaskAlt" />
@@ -131,6 +130,11 @@ const SandboxPage = () => {
           <SVGPreview svg={<SVG.uniswap className={iconClass} />} name="uniswap" />
           <SVGPreview svg={<SVG.walletconnect className={iconClass} />} name="walletconnect" />
           <SVGPreview svg={<SVG.walletconnectAlt className={iconClass} />} name="walletconnectAlt" />
+
+          <SVGPreview svg={<SVG.logo className={iconClass} />} name="logo" />
+          <SVGPreview svg={<SVG.miniLogoDark className={iconClass} />} name="miniLogoDark" />
+          <SVGPreview svg={<SVG.miniLogo className={iconClass} />} name="miniLogo" />
+          <SVGPreview svg={<SVG.blueCheck className={iconClass} />} name="blueCheck" />
         </div>
 
         <SBHeader># Card - WIP</SBHeader>

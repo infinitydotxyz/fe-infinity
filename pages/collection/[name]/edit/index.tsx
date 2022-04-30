@@ -6,10 +6,9 @@ import { PlusButton } from 'src/components/collection/edit/buttons';
 import { ProfileImageForm } from 'src/components/collection/edit/profile-image-form';
 import { RemoveIcon } from 'src/components/collection/edit/remove-icon';
 import SocialsInputGroup from 'src/components/collection/socials-input-group';
-import { Button, TextAreaInputBox, TextInputBox } from 'src/components/common';
+import { Button, SVG, TextAreaInputBox, TextInputBox } from 'src/components/common';
 import { Heading } from 'src/components/common/heading';
 import { toastError, toastSuccess } from 'src/components/common/toaster';
-import logo from 'src/images/logo-mini-new.svg';
 import { apiPut, DISCORD_BOT_INVITE_URL, useFetch } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { DeepPartial } from 'src/utils/typeUtils';
@@ -199,11 +198,10 @@ const EditCollectionPage = () => {
     mutate(path);
   };
 
-  // TODO: add nextjs progressbar
   return (
     <div className="transition w-[100vw] h-[100vh] overflow-y-auto p-4 md:p-0">
       <header className="flex justify-between p-5">
-        <img alt="logo" src={logo.src} width={logo.width} />
+        <SVG.miniLogo className="h-6 w-6" />
         <nav className="flex flex-row space-x-2">
           <Button variant="outline" onClick={close}>
             Cancel
