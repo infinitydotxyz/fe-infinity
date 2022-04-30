@@ -4,8 +4,7 @@ import { useFetch } from 'src/utils';
 import { BaseCollection } from '@infinityxyz/lib/types/core';
 import { useRouter } from 'next/router';
 import { Combobox } from '@headlessui/react';
-import Image from 'next/image';
-import BlueCheckSvg from 'src/images/blue-check.svg';
+import { SVG } from './svg';
 
 type CollectionItem = BaseCollection & {
   name: string;
@@ -176,11 +175,7 @@ export const SearchInput: React.FC<Props> = ({ opened }) => {
                 </div>
                 <div {...styles?.collection?.name}>{collection?.name}</div>
                 <div {...styles?.collection?.blueCheck}>
-                  {collection?.hasBlueCheck ? (
-                    <Image width={18} height={18} src={BlueCheckSvg.src} alt="Verified" />
-                  ) : (
-                    <></>
-                  )}
+                  {collection?.hasBlueCheck ? <SVG.blueCheck className="h-5 w-5" /> : <></>}
                 </div>
               </Combobox.Option>
             ))}

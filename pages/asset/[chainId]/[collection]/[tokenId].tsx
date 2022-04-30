@@ -1,8 +1,7 @@
 import { FunctionComponent } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { Button, ShortAddress, PageBox, ReadMoreText } from 'src/components/common';
+import { Button, ShortAddress, PageBox, ReadMoreText, SVG } from 'src/components/common';
 import { BLANK_IMAGE_URL, useFetch } from 'src/utils';
 import { Token, Collection, Erc721Metadata } from '@infinityxyz/lib/types/core';
 import {
@@ -15,7 +14,6 @@ import {
   MakeOfferModal
 } from 'src/components/asset';
 
-import BlueCheckSvg from 'src/images/blue-check.svg';
 // import {HiOutlineSwitchHorizontal} from 'react-icons';
 
 const useFetchAssertInfo = (chainId: string, collection: string, tokenId: string) => {
@@ -100,11 +98,7 @@ const AssetDetail: FunctionComponent = () => {
                     {collection.metadata.name}
                   </a>
                 </Link>
-                {collection.hasBlueCheck && (
-                  <div className="mt-1">
-                    <Image width={18} height={18} src={BlueCheckSvg.src} alt="Verified" />
-                  </div>
-                )}
+                {collection.hasBlueCheck && <SVG.blueCheck className="h-5 w-5" />}
               </div>
               <ShortAddress
                 label="Contact address:"
