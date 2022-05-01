@@ -2,6 +2,7 @@ import { CollectionAttributes } from '@infinityxyz/lib/types/core';
 import React, { useEffect, useState } from 'react';
 import { useFilterContext } from 'src/utils/context/FilterContext';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
+import { Checkbox } from '../common';
 
 type ValueMapItem = {
   [k: string]: boolean;
@@ -140,31 +141,29 @@ export const TraitSelection = ({ traits, onChange }: Props) => {
                   placeholder="Filter"
                 />
 
-                <div className="h-80 overflow-y-auto">
+                <div className="h-80 overflow-y-auto space-y-2">
                   {valuesArr.map((value) => {
                     const searchText = (searchState[item.name] || '').toLowerCase();
                     if (searchText && value.name.toLowerCase().indexOf(searchText) < 0) {
                       return null;
                     }
-                    return (
-                      <div key={`${item.name}_${value.name}`} className="mt-8 font-heading font-light text-secondary">
-                        <label className="flex justify-between items-center">
-                          {value.name}
-                          <input
-                            type="checkbox"
-                            checked={(typeValueMap[item.name] || {})[value.name] ?? false}
-                            onChange={(ev) => {
-                              typeValueMap[item.name] = typeValueMap[item.name] || {};
-                              typeValueMap[item.name][value.name] = ev.target.checked;
 
-                              const [traitTypes, traitValues] = getSelections(typeValueMap);
-                              if (onChange) {
-                                onChange(traitTypes, traitValues);
-                              }
-                            }}
-                            className="mr-2"
-                          />
-                        </label>
+                    return (
+                      <div key={`${item.name}_${value.name}`} className="mr-2">
+                        <Checkbox
+                          boxOnLeft={false}
+                          checked={(typeValueMap[item.name] || {})[value.name] ?? false}
+                          onChange={(checked) => {
+                            typeValueMap[item.name] = typeValueMap[item.name] || {};
+                            typeValueMap[item.name][value.name] = checked;
+
+                            const [traitTypes, traitValues] = getSelections(typeValueMap);
+                            if (onChange) {
+                              onChange(traitTypes, traitValues);
+                            }
+                          }}
+                          label={value.name}
+                        />
                       </div>
                     );
                   })}

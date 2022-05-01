@@ -13,10 +13,12 @@ interface Props {
 
 export const Checkbox = ({ label, boxOnLeft = true, checked, onChange, disabled = false, className = '' }: Props) => {
   const labelClass = boxOnLeft ? 'ml-2' : '';
-  const checkLabel = <label className={twMerge('text-theme-light-800 font-heading', labelClass)}>{label}</label>;
+  const checkLabel = (
+    <div className={twMerge('text-theme-light-800 font-heading select-none', labelClass)}>{label}</div>
+  );
 
   return (
-    <div className={twMerge('flex items-center', className)}>
+    <label className={twMerge('flex items-center', className)}>
       {!boxOnLeft && (
         <>
           {checkLabel}
@@ -34,6 +36,6 @@ export const Checkbox = ({ label, boxOnLeft = true, checked, onChange, disabled 
       />
 
       {boxOnLeft && checkLabel}
-    </div>
+    </label>
   );
 };

@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 
 const classes = {
   // focus ring appears on keyboard tab key navigation for accessibility, not on clicks
-  base: 'focus:outline-none focus-visible:ring focus:ring-black focus:ring-opacity-50 transition ease-in-out duration-300 hover:bg-gray-700 hover:text-white active:bg-gray-900',
+  base: 'select-none focus:outline-none focus-visible:ring focus:ring-black focus:ring-opacity-50 transition ease-in-out duration-300 hover:bg-gray-700 hover:text-white active:bg-gray-900',
   disabled: 'opacity-50 cursor-not-allowed',
   pill: 'rounded-full',
   size: {
