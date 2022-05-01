@@ -149,7 +149,7 @@ export const TraitSelection = ({ traits, onChange }: Props) => {
                     }
 
                     return (
-                      <div key={`${item.name}_${value.name}`} className="mr-2">
+                      <div key={`${item.name}_${value.name}`} className="mr-4">
                         <Checkbox
                           boxOnLeft={false}
                           checked={(typeValueMap[item.name] || {})[value.name] ?? false}
