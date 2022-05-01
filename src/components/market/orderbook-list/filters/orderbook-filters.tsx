@@ -86,6 +86,7 @@ export const OrderbookFilters = () => {
         <div className="max-h-80 overflow-y-auto space-y-4">
           {orderTypesData.map((orderType) => (
             <Checkbox
+              key={orderType}
               className="ml-1"
               checked={orderTypes.includes(orderType)}
               onChange={(checked) => updateFilterArray('orderTypes', orderTypes, orderType, checked)}
@@ -112,8 +113,10 @@ export const OrderbookFilters = () => {
               if (searchText && collection.toLowerCase().indexOf(searchText) < 0) {
                 return null;
               }
+
               return (
                 <Checkbox
+                  key={collection}
                   className="ml-1"
                   checked={collections.includes(collection)}
                   onChange={(checked) => updateFilterArray('collections', collections, collection, checked)}
