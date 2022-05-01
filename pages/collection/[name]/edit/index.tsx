@@ -206,10 +206,12 @@ const EditCollectionPage = () => {
     <PageBox showTitle={false} title="Edit collection">
       <div className="flex flex-row-reverse p-5">
         <div className="flex flex-row space-x-2">
-          <Button variant="outline" onClick={close}>
+          <Button variant="outline" onClick={close} className="font-zagmamono">
             Cancel
           </Button>
-          <Button onClick={submit}>Save</Button>
+          <Button onClick={submit} className="font-zagmamono">
+            Save
+          </Button>
         </div>
       </div>
       <main className="flex flex-col my-4 mx-auto max-w-xl space-y-20">
@@ -247,7 +249,7 @@ const EditCollectionPage = () => {
           />
         </article>
         <article className={spaces.article}>
-          <Heading as="h6" className="font-medium mb-9">
+          <Heading as="h6" className="font-medium mb-8">
             Socials
           </Heading>
           <SocialsInputGroup>
@@ -324,7 +326,7 @@ const EditCollectionPage = () => {
           </SocialsInputGroup>
         </article>
         <article className={spaces.article}>
-          <Heading as="h6" className="font-medium mb-9">
+          <Heading as="h6" className="font-medium">
             Benefits
           </Heading>
           {metadata.benefits?.map((benefit, i) => (
@@ -348,7 +350,7 @@ const EditCollectionPage = () => {
           </PlusButton>
         </article>
         <article className={spaces.article}>
-          <Heading as="h6" className="font-medium mb-9">
+          <Heading as="h6" className="font-medium">
             Partnerships
           </Heading>
           {metadata.partnerships?.map((partnership, i) => (
@@ -387,11 +389,12 @@ const EditCollectionPage = () => {
           </PlusButton>
         </article>
         <article className={spaces.article}>
-          <Heading as="h3" className="font-bold">
+          <Heading as="h6" className="font-medium mb-7">
             Integrations
           </Heading>
           <p>Enable integrations with third party platforms.</p>
-          <Heading as="h4" className="font-bold">
+
+          <Heading as="h6" className="font-medium mb-7">
             Discord
           </Heading>
           {metadata.integrations?.discord?.guildId == null && (
@@ -454,7 +457,8 @@ const EditCollectionPage = () => {
           >
             Add discord channel
           </PlusButton>
-          <Heading as="h4" className="font-bold">
+
+          <Heading as="h6" className="font-medium mb-7">
             Twitter
           </Heading>
           <p>This integration is already enabled by default.</p>
