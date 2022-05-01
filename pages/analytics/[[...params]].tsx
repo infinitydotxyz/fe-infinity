@@ -55,12 +55,12 @@ export const Analytics = () => {
     setColumns(reset);
   };
 
-  const applyCheckboxes = () =>{
-    if (Object.keys(filterCheckboxes).filter((key) => filterCheckboxes[key]).length < filterLimit){
+  const applyCheckboxes = () => {
+    if (Object.keys(filterCheckboxes).filter((key) => filterCheckboxes[key]).length < filterLimit) {
       setColumns(filterCheckboxes);
       setIsDrawerOpen(false);
-    } 
-  } 
+    }
+  };
 
   const checkboxToggle = (id: string) => setFilterCheckboxes({ ...filterCheckboxes, [id]: !filterCheckboxes[id] });
 
@@ -681,7 +681,11 @@ export const Analytics = () => {
               w-full h-full overflow-hidden
               bg-theme-light-900 ring-1 ring-inset 
               rounded-full font-mono text-sm text-theme-light-50
-              ${Object.keys(filterCheckboxes).filter((key) => filterCheckboxes[key]).length > filterLimit ? 'bg-theme-light-700 ring-theme-light-700':'ring-theme-light-900'}
+              ${
+                Object.keys(filterCheckboxes).filter((key) => filterCheckboxes[key]).length > filterLimit
+                  ? 'bg-theme-light-700 ring-theme-light-700'
+                  : 'ring-theme-light-900'
+              }
             `
           }
         }
@@ -741,7 +745,14 @@ export const Analytics = () => {
                                 <button {...styles?.drawer?.content?.actions?.clear} onClick={clearCheckboxes}>
                                   Clear All
                                 </button>
-                                <button disabled={Object.keys(filterCheckboxes).filter((key) => filterCheckboxes[key]).length > filterLimit}{...styles?.drawer?.content?.actions?.apply} onClick={applyCheckboxes}>
+                                <button
+                                  disabled={
+                                    Object.keys(filterCheckboxes).filter((key) => filterCheckboxes[key]).length >
+                                    filterLimit
+                                  }
+                                  {...styles?.drawer?.content?.actions?.apply}
+                                  onClick={applyCheckboxes}
+                                >
                                   Apply
                                 </button>
                               </div>

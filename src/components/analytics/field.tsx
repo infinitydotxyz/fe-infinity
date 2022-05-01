@@ -12,7 +12,7 @@ interface Props {
 }
 
 export const Field = ({ onSort, sortable = false, onClick, type, label, value }: Props) => {
-  const [sortOrder, setSortOrder] = useState('desc')
+  const [sortOrder, setSortOrder] = useState('desc');
   const styles = {
     stat: {
       container: {
@@ -230,14 +230,14 @@ export const Field = ({ onSort, sortable = false, onClick, type, label, value }:
     }
   };
 
-  const handleOnClick =  ()=>{
-    if(onClick) {
-      onClick()
+  const handleOnClick = () => {
+    if (onClick) {
+      onClick();
     } else if (onSort) {
-      onSort?.(sortOrder)
-      setSortOrder(sortOrder ==='desc'? 'asc':'desc')
+      onSort?.(sortOrder);
+      setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc');
     }
-  } 
+  };
 
   return (
     <>
