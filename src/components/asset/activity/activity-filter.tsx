@@ -3,10 +3,11 @@ import React, { Fragment } from 'react';
 import { Popover, Transition } from '@headlessui/react';
 
 import { EventType } from './activity-list';
+import { Checkbox } from 'src/components/common';
 
 interface FilterProps {
   activityTypes: Array<EventType>;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (checked: boolean, checkId: string) => void;
 }
 
 export const ActivityFilter: React.FC<FilterProps> = ({ activityTypes, onChange }) => {
@@ -36,21 +37,20 @@ export const ActivityFilter: React.FC<FilterProps> = ({ activityTypes, onChange 
           >
             <Popover.Panel className="absolute z-10  max-w-sm px-4 mt-3 right-0 transform sm:px-0 ">
               <div className="overflow-hidden rounded-lg  shadow-lg ring-1 ring-black ring-opacity-5">
-                <div className="p-5 bg-theme-light-50 w-80">
-                  {[EventType.Sale, EventType.Transfer, EventType.Offer].map((type: EventType) => (
-                    <div key={type} className="flex justify-between p-3">
-                      <span className="font-body text-theme-light-800 text-lg">
-                        {type.charAt(0).toUpperCase() + type.slice(1)}s
-                      </span>
-                      <input
-                        checked={activityTypes.indexOf(type) >= 0}
-                        name={type}
-                        onChange={onChange}
-                        type="checkbox"
-                        className="border-gray-300 text-black focus:outline-none rounded h-5 w-5"
-                      />
-                    </div>
-                  ))}
+                <div className="p-5 bg-theme-light-50 w-80 space-y-4">
+                  {[EventType.Sale, EventType.Transfer, EventType.Offer].map((type: EventType) => {
+                    const label = `${type.charAt(0).toUpperCase() + type.slice(1)}s`;
+
+                    return (
+                      <div key={type} className="flex justify-between p-3">
+                        <Checkbox
+                          label={label}
+                          checked={activityTypes.indexOf(type) >= 0}
+                          onChange={(checked) => onChange(checked, type)}
+                        />
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </Popover.Panel>

@@ -45,9 +45,9 @@ export const ActivityList: React.FC<ActivityListPropType> = ({
     }
   }, [chainId, collectionAddress, tokenId, activityTypes]);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const curType = event.target.name as EventType;
-    if (event.target.checked) {
+  const handleChange = (checked: boolean, checkId: string) => {
+    const curType = checkId as EventType;
+    if (checked) {
       setActivityTypes([...activityTypes, curType]);
     } else {
       const _activityTypes = [...activityTypes];
