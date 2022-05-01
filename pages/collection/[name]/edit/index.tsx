@@ -247,7 +247,7 @@ const EditCollectionPage = () => {
         </article>
 
         <article className={spaces.article}>
-          <Heading as="h6" className="font-medium mb-9">
+          <Heading as="h6" className="font-medium mb-8">
             Socials
           </Heading>
           <SocialsInputGroup>
@@ -325,7 +325,7 @@ const EditCollectionPage = () => {
         </article>
 
         <article className={spaces.article}>
-          <Heading as="h6" className="font-medium mb-9">
+          <Heading as="h6" className="font-medium">
             Benefits
           </Heading>
           {metadata.benefits?.map((benefit, i) => (
@@ -350,7 +350,7 @@ const EditCollectionPage = () => {
         </article>
 
         <article className={spaces.article}>
-          <Heading as="h6" className="font-medium mb-9">
+          <Heading as="h6" className="font-medium">
             Partnerships
           </Heading>
           {metadata.partnerships?.map((partnership, i) => (
@@ -390,12 +390,12 @@ const EditCollectionPage = () => {
         </article>
 
         <article className={spaces.article}>
-          <Heading as="h3" className="font-bold">
+          <Heading as="h6" className="font-medium mb-7">
             Integrations
           </Heading>
           <p>Enable integrations with third party platforms.</p>
 
-          <Heading as="h4" className="font-bold">
+          <Heading as="h6" className="font-medium mb-7">
             Discord
           </Heading>
           {metadata.integrations?.discord?.guildId == null && (
@@ -459,7 +459,7 @@ const EditCollectionPage = () => {
             Add discord channel
           </PlusButton>
 
-          <Heading as="h4" className="font-bold">
+          <Heading as="h6" className="font-medium mb-7">
             Twitter
           </Heading>
           <p>This integration is already enabled by default.</p>
