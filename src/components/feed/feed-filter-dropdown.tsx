@@ -2,10 +2,11 @@ import React, { Fragment } from 'react';
 
 import { Popover, Transition } from '@headlessui/react';
 import { FeedEventType } from '@infinityxyz/lib/types/core/feed';
+import { Checkbox } from '../common';
 
 interface FeedFilterDropdownProps {
   selectedTypes: Array<FeedEventType>;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (checked: boolean, checkId: string) => void;
 }
 
 export const FeedFilterDropdown: React.FC<FeedFilterDropdownProps> = ({ selectedTypes, onChange }) => {
@@ -53,19 +54,17 @@ export const FeedFilterDropdown: React.FC<FeedFilterDropdownProps> = ({ selected
           >
             <Popover.Panel className="absolute z-10  max-w-sm px-4 mt-3 right-0 transform sm:px-0 ">
               <div className="overflow-hidden rounded-lg  shadow-lg ring-1 ring-black ring-opacity-5">
-                <div className="p-5 bg-theme-light-50 w-80">
+                <div className="p-5 bg-theme-light-50 w-80 space-y-4">
                   {options.map((item, idx) => (
-                    <label key={idx} className="flex justify-between mt-4">
-                      <div className="text-theme-light-800 font-heading">{item.label}</div>
-
-                      <input
-                        checked={selectedTypes.indexOf(item.value as FeedEventType) >= 0}
-                        name={item.value}
-                        onChange={onChange}
-                        type="checkbox"
-                        className="border-gray-300 text-black focus:outline-none rounded h-5 w-5"
-                      />
-                    </label>
+                    <Checkbox
+                      boxOnLeft={false}
+                      key={idx}
+                      label={item.label}
+                      checked={selectedTypes.indexOf(item.value as FeedEventType) >= 0}
+                      onChange={(checked) => {
+                        onChange(checked, item.value);
+                      }}
+                    />
                   ))}
                 </div>
               </div>
