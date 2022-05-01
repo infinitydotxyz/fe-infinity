@@ -174,6 +174,7 @@ interface TextAreaInputBoxProps {
   onChange: (value: string) => void;
   tooltip?: TooltipSpec;
   className?: string;
+  labelClassname?: string;
   rows: number;
 }
 
@@ -184,16 +185,17 @@ export const TextAreaInputBox = ({
   placeholder,
   onChange,
   rows,
-  className
+  className,
+  labelClassname
 }: TextAreaInputBoxProps) => {
   return (
-    <InputBox label={label} tooltip={tooltip} isFullWidth>
+    <InputBox label={label} tooltip={tooltip} labelClassname={labelClassname} isFullWidth>
       <div className={twMerge('flex items-center w-full', className)}>
         <textarea
           value={value}
           rows={rows}
           onChange={(e) => onChange(e.target.value)}
-          className="p-0 border-none focus:ring-0 block w-full text-base"
+          className="p-0 border-none focus:ring-0 block w-full text-base font-zagmamono"
           placeholder={placeholder}
         />
       </div>
