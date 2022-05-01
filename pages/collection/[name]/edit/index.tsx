@@ -203,10 +203,12 @@ const EditCollectionPage = () => {
       <header className="flex justify-between p-5">
         <SVG.miniLogo className="h-6 w-6" />
         <nav className="flex flex-row space-x-2">
-          <Button variant="outline" onClick={close}>
+          <Button variant="outline" onClick={close} className="font-zagmamono">
             Cancel
           </Button>
-          <Button onClick={submit}>Save</Button>
+          <Button onClick={submit} className="font-zagmamono">
+            Save
+          </Button>
         </nav>
       </header>
       <main className="flex flex-col my-4 mx-auto max-w-xl space-y-20">

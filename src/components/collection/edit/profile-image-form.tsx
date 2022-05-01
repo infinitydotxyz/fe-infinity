@@ -72,7 +72,7 @@ export const ProfileImageForm: React.FC<ProfileImageFormProps> = (props) => {
           className="my-1 py-2.5 px-12 mb-2 block w-full sm:w-44 font-zagmamono"
           onClick={() => (file ? props.onUpload(file) : inputFileRef.current?.click())}
         >
-          {/* {file ? 'Upload' : 'Upload'} */}
+          {/* {file ? 'Upload' : 'Select'} */}
           Upload
         </Button>
         <Button className="py-2 px-12 d-block w-full sm:w-44 block font-zagmamono" onClick={onDelete} variant="outline">
