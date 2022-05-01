@@ -15,7 +15,7 @@ import { DeepPartial } from 'src/utils/typeUtils';
 import { useSWRConfig } from 'swr';
 
 const spaces = {
-  article: 'space-y-3 md:space-y-5'
+  article: 'space-y-3 md:space-y-7'
 };
 
 type MetadataAction = 'updateMetadata';
@@ -209,8 +209,11 @@ const EditCollectionPage = () => {
           <Button onClick={submit}>Save</Button>
         </nav>
       </header>
-      <main className="flex flex-col my-4 mx-auto max-w-xl space-y-5">
+      <main className="flex flex-col my-4 mx-auto max-w-xl space-y-20">
         <article>
+          <Heading as="h5" className="font-medium mb-12">
+            Edit collection
+          </Heading>
           <ProfileImageForm
             url={metadata.profileImage}
             alt={metadata.name}
@@ -220,9 +223,6 @@ const EditCollectionPage = () => {
         </article>
 
         <article className={spaces.article}>
-          <Heading as="h3" className="font-bold">
-            Edit collection
-          </Heading>
           <TextInputBox
             label="Collection name"
             value={metadata?.name || ''}
@@ -241,11 +241,13 @@ const EditCollectionPage = () => {
             nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit
             anim id est laborum."
             rows={7}
+            labelClassname="mt-4"
+            className="py-3"
           />
         </article>
 
         <article className={spaces.article}>
-          <Heading as="h3" className="font-bold">
+          <Heading as="h6" className="font-medium mb-9">
             Socials
           </Heading>
           <SocialsInputGroup>
@@ -323,7 +325,7 @@ const EditCollectionPage = () => {
         </article>
 
         <article className={spaces.article}>
-          <Heading as="h3" className="font-bold">
+          <Heading as="h6" className="font-medium mb-9">
             Benefits
           </Heading>
           {metadata.benefits?.map((benefit, i) => (
@@ -348,7 +350,7 @@ const EditCollectionPage = () => {
         </article>
 
         <article className={spaces.article}>
-          <Heading as="h3" className="font-bold">
+          <Heading as="h6" className="font-medium mb-9">
             Partnerships
           </Heading>
           {metadata.partnerships?.map((partnership, i) => (

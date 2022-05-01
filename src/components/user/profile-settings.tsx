@@ -67,7 +67,6 @@ export const AccountSettingsPage: FunctionComponent<AccountSettingsProps> = (pro
       facebookUsername
     };
 
-    // TODO: why can we not put a display name without username
     Object.keys(postBody).forEach((key) => {
       if (postBody[key] === '' || postBody[key] === undefined) {
         delete postBody[key];
