@@ -8,7 +8,7 @@ export * from 'src/components/common/dropdown';
 export * from 'src/components/common/fetch-more';
 export * from 'src/components/common/spacer';
 export * from 'src/components/common/page-box';
-export * from 'src/components/common/toggle';
+export * from 'src/components/common/switch';
 export * from 'src/components/common/currency-input';
 export * from 'src/components/common/read-more-text';
 export * from 'src/components/common/short-address';

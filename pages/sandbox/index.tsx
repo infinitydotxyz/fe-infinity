@@ -9,7 +9,7 @@ import {
   ShortAddress,
   SimpleTable,
   SimpleTableItem,
-  Toggle,
+  Switch,
   ToggleTab,
   useToggleTab,
   PageBox,
@@ -222,9 +222,9 @@ const SandboxPage = () => {
 
         <RemoveIcon onClick={() => console.log('removeIcon clicked')} />
 
-        <SBHeader># Toggle</SBHeader>
+        <SBHeader># Switch</SBHeader>
         <div className="w-1/2">
-          <Toggle title="Dark mode" />
+          <Switch title="Dark mode" />
         </div>
 
         <SBHeader># ComboBox</SBHeader>
