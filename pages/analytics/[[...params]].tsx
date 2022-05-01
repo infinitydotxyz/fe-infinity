@@ -55,7 +55,12 @@ export const Analytics = () => {
     setColumns(reset);
   };
 
-  const applyCheckboxes = () => setColumns(filterCheckboxes);
+  const applyCheckboxes = () =>{
+    if (Object.keys(filterCheckboxes).filter((key) => filterCheckboxes[key]).length < filterLimit){
+      setColumns(filterCheckboxes);
+      setIsDrawerOpen(false);
+    } 
+  } 
 
   const checkboxToggle = (id: string) => setFilterCheckboxes({ ...filterCheckboxes, [id]: !filterCheckboxes[id] });
 
@@ -68,7 +73,7 @@ export const Analytics = () => {
   const data = useFetch<{ data: CollectionStats[] }>(query);
 
   if (data.result) {
-    statistics = data.result.data.map((d) => {
+    statistics = data.result.data.map((d, index) => {
       const address = d.collectionAddress;
       const name = d.name;
       const image = d.profileImage ? d.profileImage : BLANK_IMG;
@@ -83,8 +88,15 @@ export const Analytics = () => {
       const twitterFollowersPercentChange = d.twitterFollowersPercentChange ? d.twitterFollowersPercentChange : '-';
       const discordFollowers = d.discordFollowers ? d.discordFollowers : '-';
       const discordFollowersPercentChange = d.discordFollowersPercentChange ? d.discordFollowersPercentChange : '-';
-
       return [
+        {
+          id: 'index',
+          type: 'index',
+          value: index + 1,
+          placement: 'start',
+          sortable: false,
+          onSort: null
+        },
         {
           id: 'image',
           type: 'image',
@@ -433,7 +445,7 @@ export const Analytics = () => {
                 open: isDrawerOpen,
                 onClose: closeDrawer,
                 title: 'Filter',
-                subtitle: `Select upto ${filterLimit}`,
+                subtitle: `Select up to ${filterLimit}`,
                 divide: true
               }
             },
@@ -587,10 +599,11 @@ export const Analytics = () => {
               w-full h-full min-h-[144px] overflow-hidden rounded-xl
               bg-theme-light-300
               grid grid-rows-1
+              px-5
               ${
                 connected
-                  ? 'grid-cols-[3fr,4fr,3fr,3fr,3fr,3fr,3fr,3fr,2fr]'
-                  : 'grid-cols-[3fr,4fr,3fr,3fr,3fr,3fr,3fr,3fr,2fr]'
+                  ? 'grid-cols-[2fr,2fr,4fr,3fr,3fr,3fr,3fr,3fr,3fr,2fr]'
+                  : 'grid-cols-[2fr,2fr,4fr,3fr,3fr,3fr,3fr,3fr,3fr,2fr]'
               }
               place-items-center
             `
@@ -666,15 +679,15 @@ export const Analytics = () => {
           apply: {
             className: `
               w-full h-full overflow-hidden
-              bg-theme-light-900 ring-1 ring-inset ring-theme-light-900
+              bg-theme-light-900 ring-1 ring-inset 
               rounded-full font-mono text-sm text-theme-light-50
+              ${Object.keys(filterCheckboxes).filter((key) => filterCheckboxes[key]).length > filterLimit ? 'bg-theme-light-700 ring-theme-light-700':'ring-theme-light-900'}
             `
           }
         }
       }
     }
   };
-
   return (
     <PageBox title="Analytics">
       <div {...styles?.container}>
@@ -728,7 +741,7 @@ export const Analytics = () => {
                                 <button {...styles?.drawer?.content?.actions?.clear} onClick={clearCheckboxes}>
                                   Clear All
                                 </button>
-                                <button {...styles?.drawer?.content?.actions?.apply} onClick={applyCheckboxes}>
+                                <button disabled={Object.keys(filterCheckboxes).filter((key) => filterCheckboxes[key]).length > filterLimit}{...styles?.drawer?.content?.actions?.apply} onClick={applyCheckboxes}>
                                   Apply
                                 </button>
                               </div>

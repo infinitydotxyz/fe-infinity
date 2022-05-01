@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { GoTriangleUp, GoTriangleDown } from 'react-icons/go';
 import { AiOutlinePlus, AiOutlineCaretUp, AiOutlineCaretDown } from 'react-icons/ai';
 
@@ -12,6 +12,7 @@ interface Props {
 }
 
 export const Field = ({ onSort, sortable = false, onClick, type, label, value }: Props) => {
+  const [sortOrder, setSortOrder] = useState('desc')
   const styles = {
     stat: {
       container: {
@@ -108,6 +109,19 @@ export const Field = ({ onSort, sortable = false, onClick, type, label, value }:
         }
       }
     },
+    index: {
+      container: {
+        className: `
+          w-full h-full overflow-hidden
+          grid justify-center items-center 
+        `
+      },
+      element: {
+        className: `
+          text-theme-light-800 text-2xl 
+        `
+      }
+    },
     string: {
       container: {
         className: `
@@ -127,6 +141,7 @@ export const Field = ({ onSort, sortable = false, onClick, type, label, value }:
         className: `
           w-full h-full overflow-hidden
           grid justify-start items-center
+          ${sortable ? 'cursor-pointer' : ''}
         `
       },
       label: {
@@ -149,6 +164,7 @@ export const Field = ({ onSort, sortable = false, onClick, type, label, value }:
         className: `
           w-full h-full overflow-hidden
           grid justify-center items-center
+          ${sortable ? 'cursor-pointer' : ''}
         `
       },
       label: {
@@ -175,6 +191,7 @@ export const Field = ({ onSort, sortable = false, onClick, type, label, value }:
         className: `
           w-full h-full overflow-hidden
           grid justify-start items-center px-4
+          ${sortable ? 'cursor-pointer' : ''}
         `
       },
       pill: {
@@ -213,6 +230,15 @@ export const Field = ({ onSort, sortable = false, onClick, type, label, value }:
     }
   };
 
+  const handleOnClick =  ()=>{
+    if(onClick) {
+      onClick()
+    } else if (onSort) {
+      onSort?.(sortOrder)
+      setSortOrder(sortOrder ==='desc'? 'asc':'desc')
+    }
+  } 
+
   return (
     <>
       <div {...styles?.stat?.container}>
@@ -229,14 +255,19 @@ export const Field = ({ onSort, sortable = false, onClick, type, label, value }:
               <p {...styles?.string?.element}>{value}</p>
             </div>
           )}
+          {type === 'index' && (
+            <div {...styles?.index?.container} onClick={onClick}>
+              <p {...styles?.index?.element}>{value}</p>
+            </div>
+          )}
           {type === 'number' && (
-            <div {...styles?.number?.container}>
+            <div {...styles?.number?.container} onClick={handleOnClick}>
               <p {...styles?.number?.label}>{label}</p>
               <p {...styles?.number?.value}>{value}</p>
             </div>
           )}
           {type === 'change' && (
-            <div {...styles?.change?.container}>
+            <div {...styles?.change?.container} onClick={handleOnClick}>
               <p {...styles?.change?.label}>{label}</p>
               <p {...styles?.change?.value(Number(value))}>
                 {Number(value) > 0 ? (
@@ -254,7 +285,7 @@ export const Field = ({ onSort, sortable = false, onClick, type, label, value }:
             </div>
           )}
           {type === 'percentage' && (
-            <div {...styles?.percentage?.container}>
+            <div {...styles?.percentage?.container} onClick={handleOnClick}>
               <div {...styles?.percentage?.pill}>
                 <div {...styles?.percentage?.progress}></div>
                 <div {...styles?.percentage?.grid}>

@@ -51,7 +51,8 @@ export const TextInputForm = ({
               />
             </div>
           </InputBox>
-          {meta.touched && meta.error && <div className="text-red-800 text-xs pl-6">{meta.error}</div>}
+          {/* {meta.touched && meta.error && <div className="text-red-800 text-xs pl-6">{meta.error}</div>} */}
+          {meta.error && <div className="text-red-800 text-xs pl-6">{meta.error}</div>}
         </div>
       )}
     </Field>
@@ -79,6 +80,7 @@ export const TextAreaForm = ({ label, placeholder, tooltip, onChange, rows = 3, 
             <div className="flex items-center w-full">
               <textarea
                 rows={rows}
+                name={field.name}
                 value={field.value || ''}
                 onChange={(e) => {
                   if (onChange) {
@@ -93,7 +95,8 @@ export const TextAreaForm = ({ label, placeholder, tooltip, onChange, rows = 3, 
               />
             </div>
           </InputBox>
-          {meta.touched && meta.error && <div className="text-red-800 text-xs pl-6">{meta.error}</div>}
+          {/* {meta.touched && meta.error && <div className="text-red-800 text-xs pl-6">{meta.error}</div>} */}
+          {meta.error && <div className="text-red-800 text-xs pl-6">{meta.error}</div>}
         </div>
       )}
     </Field>

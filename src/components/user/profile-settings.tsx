@@ -10,7 +10,7 @@ import { ProfileImageUpload } from './profile-image-upload';
 import { UserProfileDto } from './user-profile-dto';
 import { ProfileBannerImageUpload } from './profile-banner-image-upload';
 import { UserProfileForm } from './user-profile-form';
-import { UserProfileSchema } from './schemas/user-profile-schema';
+import { getUserProfileSchema } from './schemas/user-profile-schema';
 // import { UserWalletForm } from './user-wallet-form';
 
 interface AccountSettingsProps {
@@ -56,8 +56,25 @@ export const AccountSettingsPage: FunctionComponent<AccountSettingsProps> = (pro
       instagramUsername = '',
       facebookUsername = ''
     } = values;
+
+    const postBody: { [key: string]: string | undefined } = {
+      displayName,
+      username,
+      bio,
+      discordUsername,
+      twitterUsername,
+      instagramUsername,
+      facebookUsername
+    };
+
+    Object.keys(postBody).forEach((key) => {
+      if (postBody[key] === '' || postBody[key] === undefined) {
+        delete postBody[key];
+      }
+    });
+
     const { error } = await apiPut(`/user/${user.address}`, {
-      data: { displayName, username, bio, discordUsername, twitterUsername, instagramUsername, facebookUsername }
+      data: postBody
     });
     if (error) {
       console.error(error);
@@ -78,7 +95,7 @@ export const AccountSettingsPage: FunctionComponent<AccountSettingsProps> = (pro
   return (
     <Formik
       initialValues={userInfo}
-      validationSchema={UserProfileSchema}
+      validationSchema={getUserProfileSchema({ user })}
       onSubmit={async (values, { setSubmitting }) => {
         setSubmitting(true);
         await handleSubmit(values);

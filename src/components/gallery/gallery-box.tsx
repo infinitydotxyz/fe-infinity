@@ -133,7 +133,7 @@ export const GalleryBox = ({ collection, className, cardProps, getEndpoint, filt
 
         {isFetching && (
           <div className="w-full">
-            <Spinner className="ml-8" />
+            <Spinner className="ml-8 mt-24" />
           </div>
         )}
 
