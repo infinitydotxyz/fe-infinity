@@ -21,7 +21,8 @@ import {
   Chip,
   ComboBox,
   ComboBoxBaseType,
-  SVG
+  SVG,
+  Checkbox
 } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 
@@ -53,6 +54,8 @@ const comboValues: ComboBoxBaseType[] = [
 const SandboxPage = () => {
   const { options, onChange, selected } = useToggleTab(['Buy NFTs', 'Sell NFTs', 'Trade NFTs'], 'Buy NFTs');
   const [currency, setCurrency] = useState<number>(12.33);
+  const [checked, setChecked] = useState<boolean>(false);
+  const [checked2, setChecked2] = useState<boolean>(false);
   const [comboValue, setComboValue] = useState<ComboBoxBaseType>(comboValues[0]);
 
   const tableItems: SimpleTableItem[] = [];
@@ -91,6 +94,26 @@ const SandboxPage = () => {
           <Chip left={<FaEdit />} content="Edit" active={true} />
           <Chip content={<FaTwitter />} />
           <Chip content={<FaFacebook />} />
+        </div>
+
+        <SBHeader># Checkbox</SBHeader>
+        <div className="w-1/2">
+          <Checkbox
+            label="Normal Checkbox"
+            checked={checked}
+            onChange={(isChecked) => {
+              setChecked(isChecked);
+            }}
+          />
+
+          <Checkbox
+            label="Checkbox on Right"
+            boxOnLeft={false}
+            checked={checked2}
+            onChange={(isChecked) => {
+              setChecked2(isChecked);
+            }}
+          />
         </div>
 
         <SBHeader># Dropdown</SBHeader>
