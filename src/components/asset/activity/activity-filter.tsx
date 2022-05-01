@@ -42,13 +42,12 @@ export const ActivityFilter: React.FC<FilterProps> = ({ activityTypes, onChange 
                     const label = `${type.charAt(0).toUpperCase() + type.slice(1)}s`;
 
                     return (
-                      <div key={type} className="flex justify-between p-3">
-                        <Checkbox
-                          label={label}
-                          checked={activityTypes.indexOf(type) >= 0}
-                          onChange={(checked) => onChange(checked, type)}
-                        />
-                      </div>
+                      <Checkbox
+                        key={type}
+                        label={label}
+                        checked={activityTypes.indexOf(type) >= 0}
+                        onChange={(checked) => onChange(checked, type)}
+                      />
                     );
                   })}
                 </div>
