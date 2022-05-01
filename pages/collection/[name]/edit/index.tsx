@@ -3,12 +3,12 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useReducer } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { PlusButton } from 'src/components/collection/edit/buttons';
-import { ProfileImageForm } from 'src/components/collection/edit/profile-image-form';
 import { RemoveIcon } from 'src/components/collection/edit/remove-icon';
 import SocialsInputGroup from 'src/components/collection/socials-input-group';
-import { Button, SVG, TextAreaInputBox, TextInputBox } from 'src/components/common';
+import { Button, PageBox, TextAreaInputBox, TextInputBox } from 'src/components/common';
 import { Heading } from 'src/components/common/heading';
 import { toastError, toastSuccess } from 'src/components/common/toaster';
+import { ProfileImageUpload } from 'src/components/user/profile-image-upload';
 import { apiPut, DISCORD_BOT_INVITE_URL, useFetch } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { DeepPartial } from 'src/utils/typeUtils';
@@ -126,7 +126,7 @@ const EditCollectionPage = () => {
   const { user, chainId, checkSignedIn } = useAppContext();
   const path = router.query.name ? `/collections/${router.query.name}` : '';
   // TODO: maybe we can fetch this data on the server side too?
-  const { result: collection } = useFetch<BaseCollection>(path, { chainId });
+  const { result: collection, isLoading } = useFetch<BaseCollection>(path, { chainId });
   const { mutate } = useSWRConfig();
 
   useEffect(() => {
@@ -198,32 +198,33 @@ const EditCollectionPage = () => {
     mutate(path);
   };
 
+  if (isLoading || !Object.keys(metadata).length) {
+    return <PageBox title="Loading..."></PageBox>;
+  }
+
   return (
-    <div className="transition w-[100vw] h-[100vh] overflow-y-auto p-4 md:p-0">
-      <header className="flex justify-between p-5">
-        <SVG.miniLogo className="h-6 w-6" />
-        <nav className="flex flex-row space-x-2">
+    <PageBox showTitle={false} title="Edit collection">
+      <div className="flex flex-row-reverse p-5">
+        <div className="flex flex-row space-x-2">
           <Button variant="outline" onClick={close} className="font-zagmamono">
             Cancel
           </Button>
           <Button onClick={submit} className="font-zagmamono">
             Save
           </Button>
-        </nav>
-      </header>
+        </div>
+      </div>
       <main className="flex flex-col my-4 mx-auto max-w-xl space-y-20">
         <article>
           <Heading as="h5" className="font-medium mb-12">
             Edit collection
           </Heading>
-          <ProfileImageForm
-            url={metadata.profileImage}
-            alt={metadata.name}
-            onDelete={deleteProfileImage}
+          <ProfileImageUpload
             onUpload={uploadProfileImage}
+            onDelete={deleteProfileImage}
+            imgSource={metadata.profileImage}
           />
         </article>
-
         <article className={spaces.article}>
           <TextInputBox
             label="Collection name"
@@ -247,7 +248,6 @@ const EditCollectionPage = () => {
             className="py-3"
           />
         </article>
-
         <article className={spaces.article}>
           <Heading as="h6" className="font-medium mb-8">
             Socials
@@ -325,7 +325,6 @@ const EditCollectionPage = () => {
             />
           </SocialsInputGroup>
         </article>
-
         <article className={spaces.article}>
           <Heading as="h6" className="font-medium">
             Benefits
@@ -350,7 +349,6 @@ const EditCollectionPage = () => {
             Add benefit
           </PlusButton>
         </article>
-
         <article className={spaces.article}>
           <Heading as="h6" className="font-medium">
             Partnerships
@@ -390,7 +388,6 @@ const EditCollectionPage = () => {
             Add partnership
           </PlusButton>
         </article>
-
         <article className={spaces.article}>
           <Heading as="h6" className="font-medium mb-7">
             Integrations
@@ -467,11 +464,9 @@ const EditCollectionPage = () => {
           <p>This integration is already enabled by default.</p>
         </article>
       </main>
-
       <footer className="p-5"></footer>
-
       <Toaster />
-    </div>
+    </PageBox>
   );
 };
 
