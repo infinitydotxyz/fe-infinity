@@ -93,6 +93,14 @@ export const TestPage = () => {
             >
               All Collections
             </Button>
+
+            <Button
+              onClick={() => {
+                void router.push('/pixel-score');
+              }}
+            >
+              Pixel Score
+            </Button>
           </div>
         </div>
       </div>
