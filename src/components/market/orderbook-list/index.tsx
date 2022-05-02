@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { OBOrder } from '@infinityxyz/lib/types/core';
 import { Button } from 'src/components/common';
-import { useOrderPager } from '../useOrderPager';
+import { useOrderbook } from '../OrderbookContext';
 import { OrderbookRow } from './orderbook_row';
 import { OrderbookFilters } from './filters/orderbook-filters';
 
 export const OrderbookList = (): JSX.Element => {
-  const { orders, fetchMore, isLoading } = useOrderPager();
+  const { orders, fetchMore, isLoading } = useOrderbook();
   const [showFilters, setShowFilters] = useState<boolean>(false);
 
   if (orders.length === 0) {
