@@ -1,4 +1,3 @@
-import { FunctionComponent } from 'react';
 import { FaPen } from 'react-icons/fa';
 import { useRouter } from 'next/router';
 
@@ -7,7 +6,7 @@ interface UserBannerImageProps {
   isOwner?: boolean;
 }
 
-export const UserBannerImage: FunctionComponent<UserBannerImageProps> = ({ imgSrc, isOwner = false }) => {
+export const UserBannerImage = ({ imgSrc, isOwner = false }: UserBannerImageProps) => {
   const router = useRouter();
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -18,10 +17,13 @@ export const UserBannerImage: FunctionComponent<UserBannerImageProps> = ({ imgSr
   };
 
   return (
-    <div className="h-48 lg:h-64 xl:h-72 overflow-hidden bg-theme-light-200 w-[200%] ml-[-50%]">
+    <div className="h-48 lg:h-64 xl:h-72 overflow-hidden bg-theme-light-200">
       <div className="w-full h-full overflow-hidden">
         {imgSrc ? (
-          <img className="w-full object-cover" src={imgSrc} />
+          <div
+            className={`w-full h-full bg-cover bg-center bg-no-repeat`}
+            style={{ backgroundImage: `url(${imgSrc})` }}
+          />
         ) : (
           <div
             className="w-full h-full flex flex-row items-center justify-center bg-theme-light-200 cursor-pointer"

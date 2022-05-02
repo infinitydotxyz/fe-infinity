@@ -17,7 +17,17 @@ const ProfilePage = () => {
     );
   }
 
-  const { result, isLoading, isError, error } = useFetch(`${USER_API_END_POINT}/${user.address}`);
+  return <ProfilePageContents userAddress={user.address} />;
+};
+
+// ================================================
+
+interface Props {
+  userAddress: string;
+}
+
+const ProfilePageContents = ({ userAddress }: Props) => {
+  const { result, isLoading, isError, error } = useFetch(`${USER_API_END_POINT}/${userAddress}`);
 
   if (isLoading) {
     return <PageBox title="Loading..."></PageBox>;
