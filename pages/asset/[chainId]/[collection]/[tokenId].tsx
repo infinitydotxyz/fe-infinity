@@ -12,8 +12,6 @@ import {
   MakeOfferModal
 } from 'src/components/asset';
 
-// import {HiOutlineSwitchHorizontal} from 'react-icons';
-
 const useFetchAssertInfo = (chainId: string, collection: string, tokenId: string) => {
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
   const COL_API_ENDPOINT = `/collections/${chainId}:${collection}`;
@@ -44,8 +42,19 @@ const AssetDetail = () => {
     );
   }
 
-  // NOTE:  this is buggy, can't call hooks after if statement above
-  const { isLoading, error, token, collection } = useFetchAssertInfo(query.chainId, query.collection, query.tokenId);
+  return <AssetDetailContent qchainId={query.chainId} qcollection={query.collection} qtokenId={query.tokenId} />;
+};
+
+// ====================================================================
+
+interface Props {
+  qchainId: string;
+  qcollection: string;
+  qtokenId: string;
+}
+
+const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
+  const { isLoading, error, token, collection } = useFetchAssertInfo(qchainId, qcollection, qtokenId);
 
   if (isLoading) {
     return <PageBox title="Loading..."></PageBox>;
