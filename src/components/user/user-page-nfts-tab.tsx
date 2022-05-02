@@ -1,9 +1,8 @@
-import { FunctionComponent } from 'react';
 // import { useRouter } from 'next/router';
 import { GalleryBox } from '../gallery/gallery-box';
 import { useAppContext } from 'src/utils/context/AppContext';
 
-export const UserPageNftsTab: FunctionComponent = () => {
+export const UserPageNftsTab = () => {
   // const router = useRouter();
   const { user } = useAppContext();
 

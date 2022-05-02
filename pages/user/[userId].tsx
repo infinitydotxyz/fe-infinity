@@ -1,4 +1,3 @@
-import { FunctionComponent } from 'react';
 import { useRouter } from 'next/router';
 import { PageBox } from 'src/components/common';
 import { useFetch } from 'src/utils';
@@ -8,7 +7,7 @@ import { useAppContext } from 'src/utils/context/AppContext';
 
 const USER_API_END_POINT = '/user';
 
-const UserDetailPage: FunctionComponent = () => {
+const UserDetailPage = () => {
   const { user } = useAppContext();
   const router = useRouter();
   const { query } = router;

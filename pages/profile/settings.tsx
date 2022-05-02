@@ -1,4 +1,3 @@
-import { FunctionComponent } from 'react';
 import { AccountSettingsPage } from 'src/components/user/profile-settings';
 import { PageBox } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
@@ -7,7 +6,7 @@ import { useFetch } from 'src/utils';
 
 const USER_API_END_POINT = '/user';
 
-const AccountSettings: FunctionComponent = () => {
+const AccountSettings = () => {
   const { user, chainId } = useAppContext();
 
   if (!user) {

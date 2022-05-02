@@ -1,4 +1,3 @@
-import { FunctionComponent } from 'react';
 import { useRouter } from 'next/router';
 import { Button, ShortAddress, PageBox, ReadMoreText, SVG, NextLink } from 'src/components/common';
 import { BLANK_IMAGE_URL, useFetch } from 'src/utils';
@@ -30,7 +29,7 @@ const useFetchAssertInfo = (chainId: string, collection: string, tokenId: string
   };
 };
 
-const AssetDetail: FunctionComponent = () => {
+const AssetDetail = () => {
   const { query } = useRouter();
 
   if (typeof query.chainId !== 'string' || typeof query.collection !== 'string' || typeof query.tokenId !== 'string') {

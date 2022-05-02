@@ -1,4 +1,3 @@
-import { FunctionComponent } from 'react';
 import { PageBox } from 'src/components/common';
 import { UserPage } from 'src/components/user/user-page';
 import { useAppContext } from 'src/utils/context/AppContext';
@@ -7,13 +6,13 @@ import { UserProfileDto } from 'src/components/user/user-profile-dto';
 
 const USER_API_END_POINT = '/user';
 
-const ProfilePage: FunctionComponent = () => {
+const ProfilePage = () => {
   const { user } = useAppContext();
 
   if (!user) {
     return (
       <PageBox title="Account" className="mb-12">
-        Please sign in.
+        Please sign in
       </PageBox>
     );
   }
