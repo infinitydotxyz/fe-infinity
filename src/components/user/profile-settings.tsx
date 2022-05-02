@@ -100,6 +100,9 @@ export const AccountSettingsPage: FunctionComponent<AccountSettingsProps> = (pro
         setSubmitting(true);
         await handleSubmit(values);
         setSubmitting(false);
+
+        // go back
+        router.push('/profile');
       }}
     >
       {({ isSubmitting }) => (

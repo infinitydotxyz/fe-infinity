@@ -13,7 +13,7 @@ const AccountSettings = () => {
     return <PageBox title="Account Settings"></PageBox>;
   }
 
-  <AccountSettingsContent user={user} chainId={chainId} />;
+  return <AccountSettingsContent user={user} chainId={chainId} />;
 };
 
 // ==============================================
