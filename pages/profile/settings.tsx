@@ -1,6 +1,6 @@
 import { AccountSettingsPage } from 'src/components/user/profile-settings';
 import { PageBox } from 'src/components/common';
-import { useAppContext } from 'src/utils/context/AppContext';
+import { useAppContext, User } from 'src/utils/context/AppContext';
 import { UserProfileDto } from 'src/components/user/user-profile-dto';
 import { useFetch } from 'src/utils';
 
@@ -13,6 +13,17 @@ const AccountSettings = () => {
     return <PageBox title="Account Settings"></PageBox>;
   }
 
+  <AccountSettingsContent user={user} chainId={chainId} />;
+};
+
+// ==============================================
+
+interface Props {
+  user: User;
+  chainId: string;
+}
+
+const AccountSettingsContent = ({ user, chainId }: Props) => {
   const { result, isLoading } = useFetch(`${USER_API_END_POINT}/${user.address}`);
 
   if (isLoading) {
