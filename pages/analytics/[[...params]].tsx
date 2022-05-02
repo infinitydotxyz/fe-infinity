@@ -37,7 +37,8 @@ export const Analytics = () => {
   });
 
   const [filterCheckboxes, setFilterCheckboxes] = React.useState<{ [key: string]: boolean }>(columns);
-
+  const [columnLayout, setColumnLayout] = React.useState<string>('2fr,2fr,4fr,3fr,3fr,3fr,3fr,3fr,3fr,2fr');
+  
   const clearCheckboxes = () => {
     const reset = {
       floorPrice: true,
@@ -58,6 +59,10 @@ export const Analytics = () => {
   const applyCheckboxes = () => {
     if (Object.keys(filterCheckboxes).filter((key) => filterCheckboxes[key]).length < filterLimit) {
       setColumns(filterCheckboxes);
+      const fractions = content?.statistics?.map(stat=> { stat.map(s=>{if(s.show) return s.fraction }) }).join(',')
+      if (fractions) {
+        setColumnLayout(fractions);
+      }
       setIsDrawerOpen(false);
     }
   };
@@ -71,7 +76,7 @@ export const Analytics = () => {
       : `/user/1:${user?.address}/watchlist?orderBy=${orderBy}&orderDirection=${orderDirection}&period=${interval}&date=${date}&limit=${limit}`;
 
   const data = useFetch<{ data: CollectionStats[] }>(query);
-
+  // [2fr,2fr,4fr,3fr,3fr,3fr,3fr,3fr,3fr,2fr]
   if (data.result) {
     statistics = data.result.data.map((d, index) => {
       const address = d.collectionAddress;
@@ -95,7 +100,8 @@ export const Analytics = () => {
           value: index + 1,
           placement: 'start',
           sortable: false,
-          onSort: null
+          onSort: null,
+          fraction: '2fr'
         },
         {
           id: 'image',
@@ -103,7 +109,8 @@ export const Analytics = () => {
           value: image,
           placement: 'start',
           sortable: false,
-          onSort: null
+          onSort: null,
+          fraction:'2fr'
         },
         {
           id: 'name',
@@ -111,6 +118,7 @@ export const Analytics = () => {
           value: name,
           placement: 'start',
           sortable: false,
+          fraction:'4fr',
           onSort: (direction: string) => {
             setOrderDirection(direction);
             setOrderBy('name');
@@ -128,6 +136,7 @@ export const Analytics = () => {
           show: columns['numNfts'],
           placement: 'middle',
           sortable: false,
+          fraction:'3fr',
           onSort: (direction: string) => {
             setOrderDirection(direction);
             setOrderBy('numNfts');
@@ -141,6 +150,7 @@ export const Analytics = () => {
           show: columns['numOwners'],
           placement: 'middle',
           sortable: false,
+          fraction:'3fr',
           onSort: (direction: string) => {
             setOrderDirection(direction);
             setOrderBy('numOwners');
@@ -154,6 +164,7 @@ export const Analytics = () => {
           show: columns['volume'],
           placement: 'middle',
           sortable: true,
+          fraction:'3fr',
           onSort: (direction: string) => {
             setOrderDirection(direction);
             setOrderBy('volume');
@@ -167,6 +178,7 @@ export const Analytics = () => {
           show: columns['volumePercentChange'],
           placement: 'middle',
           sortable: true,
+          fraction:'3fr',
           onSort: (direction: string) => {
             setOrderDirection(direction);
             setOrderBy('volumePercentChange');
@@ -193,6 +205,7 @@ export const Analytics = () => {
           show: columns['floorPricePercentChange'],
           placement: 'middle',
           sortable: true,
+          fraction:'3fr',
           onSort: (direction: string) => {
             setOrderDirection(direction);
             setOrderBy('floorPricePercentChange');
@@ -206,6 +219,7 @@ export const Analytics = () => {
           show: columns['discordFollowers'],
           placement: 'middle',
           sortable: true,
+          fraction:'3fr',
           onSort: (direction: string) => {
             setOrderDirection(direction);
             setOrderBy('discordFollowers');
@@ -219,6 +233,7 @@ export const Analytics = () => {
           show: columns['discordFollowersPercentChange'],
           placement: 'middle',
           sortable: true,
+          fraction:'3fr',
           onSort: (direction: string) => {
             setOrderDirection(direction);
             setOrderBy('discordFollowersPercentChange');
@@ -232,6 +247,7 @@ export const Analytics = () => {
           show: columns['twitterFollowers'],
           placement: 'middle',
           sortable: true,
+          fraction:'3fr',
           onSort: (direction: string) => {
             setOrderDirection(direction);
             setOrderBy('twitterFollowers');
@@ -245,6 +261,7 @@ export const Analytics = () => {
           show: columns['twitterFollowersPercentChange'],
           placement: 'middle',
           sortable: true,
+          fraction:'3fr',
           onSort: (direction: string) => {
             setOrderDirection(direction);
             setOrderBy('twitterFollowersPercentChange');
@@ -256,7 +273,8 @@ export const Analytics = () => {
           label: '',
           value: address,
           placement: 'end',
-          props: {}
+          props: {},
+          fraction:'2fr',
         }
       ];
     });
@@ -602,8 +620,8 @@ export const Analytics = () => {
               px-5
               ${
                 connected
-                  ? 'grid-cols-[2fr,2fr,4fr,3fr,3fr,3fr,3fr,3fr,3fr,2fr]'
-                  : 'grid-cols-[2fr,2fr,4fr,3fr,3fr,3fr,3fr,3fr,3fr,2fr]'
+                  ? `grid-cols-[2fr,2fr,4fr,3fr,3fr,3fr,3fr,3fr,3fr,2fr]`
+                  :  `grid-cols-[2fr,2fr,4fr,3fr,3fr,3fr,3fr,3fr,3fr,2fr]`
               }
               place-items-center
             `
