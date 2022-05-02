@@ -35,7 +35,7 @@ const ProfilePage: FunctionComponent = () => {
 
   const userInfo = result as UserProfileDto;
   return (
-    <PageBox showTitle={false} title={userInfo.username || userInfo.address} className="pb-12">
+    <PageBox showTitle={false} title={userInfo.username || userInfo.address}>
       <UserPage userInfo={result as UserProfileDto} isOwner />
     </PageBox>
   );
