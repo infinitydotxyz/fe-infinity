@@ -4,6 +4,7 @@ import { useOrderContext } from 'src/utils/context/OrderContext';
 import { FaShoppingBag } from 'react-icons/fa';
 import { RiLayoutGridFill } from 'react-icons/ri';
 import { OrderbookList } from 'src/components/market/orderbook-list';
+import { OrderbookProvider } from 'src/components/market/OrderbookContext';
 
 const MarketPage = () => {
   const { orderDrawerOpen, setOrderDrawerOpen, isOrderStateEmpty } = useOrderContext();
@@ -34,7 +35,11 @@ const MarketPage = () => {
         </>
       )}
 
-      {selected === 'Orderbook' && <OrderbookList />}
+      {selected === 'Orderbook' && (
+        <OrderbookProvider>
+          <OrderbookList />
+        </OrderbookProvider>
+      )}
     </>
   );
 

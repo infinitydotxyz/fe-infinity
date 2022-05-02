@@ -1,4 +1,4 @@
-import { OBOrderItem, SignedOBOrder } from '@infinityxyz/lib/types/core';
+import { GetOrderItemsQuery, OBOrderItem, SignedOBOrder } from '@infinityxyz/lib/types/core';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { apiPost } from 'src/utils/apiUtils';
 import { apiGet } from '.';
@@ -19,8 +19,10 @@ export const postOrders = async (user: string, orders: SignedOBOrder[]): Promise
   }
 };
 
-export const getOrders = async (): Promise<SignedOBOrder[]> => {
-  const response = await apiGet(`/orders/get`, {});
+export const getOrders = async (filters: GetOrderItemsQuery = {}): Promise<SignedOBOrder[]> => {
+  const response = await apiGet(`/orders/get`, {
+    query: { ...filters }
+  });
 
   if (response.result) {
     return response.result as SignedOBOrder[];
