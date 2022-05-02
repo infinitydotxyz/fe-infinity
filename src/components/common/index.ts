@@ -29,7 +29,6 @@ export * from 'src/components/common/collection-grid';
 export * from 'src/components/common/toggle-tab';
 export * from 'src/components/common/combo-box';
 export * from 'src/components/common/svg';
-export * from 'src/components/common/simple-modal';
 export * from 'src/components/common/toaster';
 export * from 'src/components/common/heading';
 export * from 'src/components/common/spinner';

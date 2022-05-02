@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, SimpleModal, CurrencyInput, NextLink } from 'src/components/common';
+import { Button, Modal, CurrencyInput, NextLink } from 'src/components/common';
 
 export const PlaceBidModal: React.FC = () => {
   const [price, setPrice] = useState(0);
@@ -15,7 +15,7 @@ export const PlaceBidModal: React.FC = () => {
   return (
     <div>
       <button onClick={openModal}>Place a bid</button>
-      <SimpleModal isOpen={modalIsOpen} onClose={closeModal} showActionButtons={false}>
+      <Modal isOpen={modalIsOpen} onClose={closeModal} showActionButtons={false}>
         <div className="modal-body p-4 rounded-3xl">
           <p className="font-bold text-2xl tracking-tight mb-12">Place a bid</p>
           <CurrencyInput
@@ -46,7 +46,7 @@ export const PlaceBidModal: React.FC = () => {
             </Button>
           </div>
         </div>
-      </SimpleModal>
+      </Modal>
     </div>
   );
 };

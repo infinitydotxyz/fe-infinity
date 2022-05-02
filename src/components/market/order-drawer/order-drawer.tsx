@@ -1,13 +1,4 @@
-import {
-  Spacer,
-  Divider,
-  TooltipSpec,
-  EthPrice,
-  Button,
-  Drawer,
-  SimpleTable,
-  SimpleModal
-} from 'src/components/common';
+import { Spacer, Divider, TooltipSpec, EthPrice, Button, Drawer, SimpleTable, Modal } from 'src/components/common';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { OrderBuilder } from './order-builder';
 import { OrderSummary } from './order-summary';
@@ -184,7 +175,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
 
   return (
     <>
-      <SimpleModal
+      <Modal
         dialogWidth="max-w-sm"
         isOpen={showSuccessModal}
         onClose={() => setShowSuccessModal(false)}
@@ -203,7 +194,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
             Done
           </Button>
         </div>
-      </SimpleModal>
+      </Modal>
 
       <Drawer open={open} onClose={onClose} subtitle={subtitle} title={title} tooltip={tooltip}>
         {contents}
