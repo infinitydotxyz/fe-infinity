@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { Button, Modal, CurrencyInput } from 'src/components/common';
+import { Modal, CurrencyInput, DatePickerBox } from 'src/components/common';
 
 export const MakeOfferModal: React.FC = () => {
   const [price, setPrice] = useState(0);
   const [modalIsOpen, setIsOpen] = React.useState(false);
+  const [expirationDate, setExpirationDate] = useState(Date.now() + 1000);
+
   const openModal = () => {
     setIsOpen(true);
   };
@@ -15,10 +17,10 @@ export const MakeOfferModal: React.FC = () => {
   return (
     <div>
       <button onClick={openModal}>Make offer</button>
-      <Modal isOpen={modalIsOpen} onClose={closeModal}>
+      <Modal isOpen={modalIsOpen} onClose={closeModal} okButton="Make offer">
         <div className="modal-body p-4 rounded-3xl">
-          <p className="font-bold text-2xl tracking-tight mb-12">Make offer</p>
-          <p className="mb-4 text-base">Buy this NFT for the price shown</p>
+          <div className="font-bold text-2xl tracking-tight mb-12">Make offer</div>
+          <div className="mb-4 text-base">Buy this NFT for the price shown</div>
           <div>
             <CurrencyInput
               value={price}
@@ -29,11 +31,15 @@ export const MakeOfferModal: React.FC = () => {
               }}
             />
           </div>
-          <div className="mt-4">{/* <DatePickerBox placeholder="Expiry date" label="label" /> */}</div>
-          <div className="flex">
-            <Button className="flex-1 mr-4 mt-12 rounded-full text-heading" size="large">
-              Make an offer
-            </Button>
+          <div className="mt-4">
+            <DatePickerBox
+              placeholder="Expiry date"
+              label="Expiry date"
+              value={new Date(parseInt(expirationDate.toString()))}
+              onChange={(date) => {
+                setExpirationDate(date.getTime() / 1000);
+              }}
+            />
           </div>
         </div>
       </Modal>
