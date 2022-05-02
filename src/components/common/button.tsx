@@ -64,7 +64,7 @@ export const Button = ({
         }
       }}
     >
-      {children}
+      <div className="whitespace-nowrap">{children}</div>
     </button>
   );
 };
