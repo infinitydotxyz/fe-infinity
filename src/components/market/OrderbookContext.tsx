@@ -6,11 +6,18 @@ import { getOrders } from 'src/utils/marketUtils';
 import { ParsedUrlQuery } from 'querystring';
 
 export type OBFilters = {
+  sort?: string;
   orderTypes?: string[];
   collections?: string[];
   minPrice?: number;
   maxPrice?: number;
   numberOfNfts?: number;
+};
+
+export const SORT_FILTERS = {
+  highestPrice: 'highestPrice',
+  lowestPrice: 'lowestPrice',
+  mostRecent: 'mostRecent'
 };
 
 const getIsSellOrder = (orderTypes: OBFilters['orderTypes']) => {
@@ -30,6 +37,20 @@ const parseFiltersToApiQueryParams = (filters: OBFilters): GetOrderItemsQuery =>
 
   Object.keys(filters).forEach((filter) => {
     switch (filter) {
+      case 'sort':
+        if (filters.sort === SORT_FILTERS.lowestPrice) {
+          parsedFilters.orderBy = 'startPriceEth';
+          parsedFilters.orderByDirection = 'asc';
+        }
+        if (filters.sort === SORT_FILTERS.highestPrice) {
+          parsedFilters.orderBy = 'startPriceEth';
+          parsedFilters.orderByDirection = 'desc';
+        }
+        if (filters.sort === SORT_FILTERS.mostRecent) {
+          parsedFilters.orderBy = 'startTimeMs';
+          parsedFilters.orderByDirection = 'desc';
+        }
+        break;
       case 'orderTypes':
         if (filters?.orderTypes?.length) {
           parsedFilters.isSellOrder = getIsSellOrder(filters?.orderTypes);
@@ -62,7 +83,7 @@ const parseFiltersToApiQueryParams = (filters: OBFilters): GetOrderItemsQuery =>
 };
 
 const parseRouterQueryParamsToFilters = (query: ParsedUrlQuery): OBFilters => {
-  const { collections: _collections, orderTypes: _orderTypes, minPrice, maxPrice, numberOfNfts } = query;
+  const { collections: _collections, orderTypes: _orderTypes, minPrice, maxPrice, numberOfNfts, sort } = query;
 
   const newFilters: OBFilters = {};
 
@@ -99,6 +120,10 @@ const parseRouterQueryParamsToFilters = (query: ParsedUrlQuery): OBFilters => {
 
   if (numberOfNfts) {
     newFilters.numberOfNfts = parseInt(numberOfNfts as string);
+  }
+
+  if (sort) {
+    newFilters.sort = sort as string;
   }
 
   return newFilters;
