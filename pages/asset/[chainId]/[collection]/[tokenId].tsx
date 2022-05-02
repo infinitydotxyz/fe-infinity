@@ -142,9 +142,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
           <ActivityList chainId={collection.chainId} collectionAddress={collection.address} tokenId={token.tokenId} />
 
           <CancelModal />
-          <TransferNFTModal />
           <ListModal />
-          <CancelModal />
           <TransferNFTModal />
           <MakeOfferModal />
           <PlaceBidModal />
