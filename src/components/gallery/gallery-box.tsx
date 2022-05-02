@@ -1,6 +1,6 @@
 import { BaseCollection, BaseToken, CardData } from '@infinityxyz/lib/types/core';
 import { useEffect, useState } from 'react';
-import { apiGet } from 'src/utils/apiUtils';
+import { apiGet, ApiError } from 'src/utils/apiUtils';
 import { ITEMS_PER_PAGE } from 'src/utils/constants';
 import { useFilterContext } from 'src/utils/context/FilterContext';
 import { Button, Card, CardProps, FetchMore, Spinner } from 'src/components/common';
@@ -37,6 +37,7 @@ export const GalleryBox = ({ collection, className, cardProps, getEndpoint, filt
   const [filterShowed, setFilterShowed] = useState(filterShowedDefault);
   const [isFetching, setIsFetching] = useState(false);
   const [data, setData] = useState<CardData[]>([]);
+  const [error, setError] = useState<ApiError>(null);
   const [cursor, setCursor] = useState('');
   const [currentPage, setCurrentPage] = useState(-1);
   const [dataLoaded, setDataLoaded] = useState(false);
@@ -55,14 +56,18 @@ export const GalleryBox = ({ collection, className, cardProps, getEndpoint, filt
       filterState.orderBy = 'rarityRank'; // set defaults
       filterState.orderDirection = 'asc';
     }
-    const { result } = await apiGet(getEndpoint ?? `/collections/${collection?.chainId}:${collection?.address}/nfts`, {
-      query: {
-        offset,
-        limit: ITEMS_PER_PAGE,
-        cursor: newCursor,
-        ...filterState
+    const { result, error } = await apiGet(
+      getEndpoint ?? `/collections/${collection?.chainId}:${collection?.address}/nfts`,
+      {
+        query: {
+          offset,
+          limit: ITEMS_PER_PAGE,
+          cursor: newCursor,
+          ...filterState
+        }
       }
-    });
+    );
+    setError(error);
     if (result?.hasNextPage === true) {
       setCursor(result?.cursor);
     }
@@ -136,6 +141,8 @@ export const GalleryBox = ({ collection, className, cardProps, getEndpoint, filt
             <Spinner className="ml-8 mt-24" />
           </div>
         )}
+
+        {error ? <div className="mt-24">Unable to load data.</div> : null}
 
         {data.map((item, idx) => {
           return <Card key={idx} data={item} {...cardProps} className="mt-[-30px]" />;

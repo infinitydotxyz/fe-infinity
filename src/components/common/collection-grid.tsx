@@ -73,7 +73,7 @@ export const CollectionGrid = ({ query, className, onButtonClick, buttonName }: 
     console.error(error);
     return (
       <div className={className}>
-        <div>Error: Fetching Data Failed.</div>
+        <div>Unable to load data.</div>
       </div>
     );
   }
