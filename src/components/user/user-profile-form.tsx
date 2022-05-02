@@ -1,7 +1,6 @@
-import { FunctionComponent } from 'react';
 import { TextAreaForm, TextInputForm } from 'src/components/common';
 
-export const UserProfileForm: FunctionComponent = () => {
+export const UserProfileForm = () => {
   return (
     <div>
       <TextInputForm bind="displayName" type="text" label="Display name" placeholder="Display Name" />

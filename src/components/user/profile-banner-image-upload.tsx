@@ -60,7 +60,10 @@ export const ProfileBannerImageUpload: FunctionComponent<BannerImageProps> = ({
       <label htmlFor={FORM_LABEL} className="flex-1">
         <div className="w-full h-40 rounded-3xl overflow-hidden">
           {imgSrc ? (
-            <img className="w-full object-cover cursor-pointer" src={imgSrc} />
+            <div
+              className="w-full h-full bg-cover bg-center bg-no-repeat"
+              style={{ backgroundImage: `url(${imgSrc})` }}
+            />
           ) : (
             <div className="w-full h-full flex flex-row items-center justify-center bg-theme-light-200 cursor-pointer">
               <FaPen />

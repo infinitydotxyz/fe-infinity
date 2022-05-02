@@ -1,8 +1,8 @@
-import React, { useState, FunctionComponent, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { PageBox, CollectionGrid } from 'src/components/common';
 import debounce from 'lodash/debounce';
 
-const HomePage: FunctionComponent = () => {
+const ExplorePage = () => {
   const [query, setQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
 
@@ -32,4 +32,4 @@ const HomePage: FunctionComponent = () => {
   );
 };
 
-export default HomePage;
+export default ExplorePage;

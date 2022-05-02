@@ -1,4 +1,3 @@
-import { FunctionComponent } from 'react';
 import { useRouter } from 'next/router';
 import { Button, ShortAddress, PageBox, ReadMoreText, SVG, NextLink } from 'src/components/common';
 import { BLANK_IMAGE_URL, useFetch } from 'src/utils';
@@ -12,8 +11,6 @@ import {
   PlaceBidModal,
   MakeOfferModal
 } from 'src/components/asset';
-
-// import {HiOutlineSwitchHorizontal} from 'react-icons';
 
 const useFetchAssertInfo = (chainId: string, collection: string, tokenId: string) => {
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
@@ -30,7 +27,7 @@ const useFetchAssertInfo = (chainId: string, collection: string, tokenId: string
   };
 };
 
-const AssetDetail: FunctionComponent = () => {
+const AssetDetail = () => {
   const { query } = useRouter();
 
   if (typeof query.chainId !== 'string' || typeof query.collection !== 'string' || typeof query.tokenId !== 'string') {
@@ -45,8 +42,19 @@ const AssetDetail: FunctionComponent = () => {
     );
   }
 
-  // NOTE:  this is buggy, can't call hooks after if statement above
-  const { isLoading, error, token, collection } = useFetchAssertInfo(query.chainId, query.collection, query.tokenId);
+  return <AssetDetailContent qchainId={query.chainId} qcollection={query.collection} qtokenId={query.tokenId} />;
+};
+
+// ====================================================================
+
+interface Props {
+  qchainId: string;
+  qcollection: string;
+  qtokenId: string;
+}
+
+const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
+  const { isLoading, error, token, collection } = useFetchAssertInfo(qchainId, qcollection, qtokenId);
 
   if (isLoading) {
     return <PageBox title="Loading..."></PageBox>;
@@ -134,9 +142,7 @@ const AssetDetail: FunctionComponent = () => {
           <ActivityList chainId={collection.chainId} collectionAddress={collection.address} tokenId={token.tokenId} />
 
           <CancelModal />
-          <TransferNFTModal />
           <ListModal />
-          <CancelModal />
           <TransferNFTModal />
           <MakeOfferModal />
           <PlaceBidModal />

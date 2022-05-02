@@ -1,7 +1,7 @@
-import React, { FunctionComponent, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import Router from 'next/router';
 
-const Home: FunctionComponent = () => {
+const Home = () => {
   useEffect(() => {
     const { pathname } = Router;
     if (pathname == '/') {

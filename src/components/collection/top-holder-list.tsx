@@ -1,5 +1,3 @@
-import { FunctionComponent } from 'react';
-
 const TopHolder = ({ index }: { index: number }) => {
   return (
     <div className="rounded-xl border px-5 py-5 bg-theme-light-200 flex my-3  items-center">
@@ -22,7 +20,7 @@ const TopHolder = ({ index }: { index: number }) => {
   );
 };
 
-export const TopHolderList: FunctionComponent = () => {
+export const TopHolderList = () => {
   return (
     <>
       <div className="text-3xl mb-6 mt-16">Top Holders</div>

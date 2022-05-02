@@ -1,4 +1,3 @@
-import { FunctionComponent } from 'react';
 import { PageBox } from 'src/components/common';
 import { UserPage } from 'src/components/user/user-page';
 import { useAppContext } from 'src/utils/context/AppContext';
@@ -7,18 +6,28 @@ import { UserProfileDto } from 'src/components/user/user-profile-dto';
 
 const USER_API_END_POINT = '/user';
 
-const ProfilePage: FunctionComponent = () => {
+const ProfilePage = () => {
   const { user } = useAppContext();
 
   if (!user) {
     return (
       <PageBox title="Account" className="mb-12">
-        Please sign in.
+        Please sign in
       </PageBox>
     );
   }
 
-  const { result, isLoading, isError, error } = useFetch(`${USER_API_END_POINT}/${user.address}`);
+  return <ProfilePageContents userAddress={user.address} />;
+};
+
+// ================================================
+
+interface Props {
+  userAddress: string;
+}
+
+const ProfilePageContents = ({ userAddress }: Props) => {
+  const { result, isLoading, isError, error } = useFetch(`${USER_API_END_POINT}/${userAddress}`);
 
   if (isLoading) {
     return <PageBox title="Loading..."></PageBox>;
@@ -35,7 +44,7 @@ const ProfilePage: FunctionComponent = () => {
 
   const userInfo = result as UserProfileDto;
   return (
-    <PageBox title={userInfo.username || userInfo.address} className="pb-12">
+    <PageBox showTitle={false} title={userInfo.username || userInfo.address}>
       <UserPage userInfo={result as UserProfileDto} isOwner />
     </PageBox>
   );

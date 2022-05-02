@@ -1,9 +1,8 @@
-import { FunctionComponent } from 'react';
 import { Button } from 'src/components/common';
 
 const imgUrl =
   'https://lh3.googleusercontent.com/y_hVyUtNEgy2dAewTXkSAKlipHn3oehM3Pt7zV9M117zayWvwOcqOTxkcldQz_ibAZxF5R_pmUAol4oSenz2H-zPCJGsZQwce-H-=w600';
-const TwitterSupporter: FunctionComponent = () => {
+const TwitterSupporter = () => {
   return (
     <div className="rounded-xl border px-5 py-5 bg-theme-light-200 flex justify-between my-3 flex-wrap">
       <div className="flex mr-2 items-center">
@@ -20,7 +19,7 @@ const TwitterSupporter: FunctionComponent = () => {
   );
 };
 
-const TwitterSupporterList: FunctionComponent = () => {
+const TwitterSupporterList = () => {
   return (
     <>
       <div className="text-3xl mb-6 mt-16">Top Twitter supporters</div>

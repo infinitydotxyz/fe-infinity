@@ -1,8 +1,7 @@
-import { FunctionComponent } from 'react';
 import { TextInputForm } from 'src/components/common';
 import { BiPlus } from 'react-icons/bi';
 
-export const UserWalletForm: FunctionComponent = () => {
+export const UserWalletForm = () => {
   return (
     <div>
       <TextInputForm bind="displayName" type="text" label="Address or ENS Name" placeholder="Address or ENS Name" />

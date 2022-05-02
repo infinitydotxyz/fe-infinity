@@ -1,11 +1,11 @@
 import React from 'react';
 
-interface ToggleProps {
+interface Props {
   title: string;
   className?: string;
 }
 
-export const Toggle: React.FC<ToggleProps> = ({ title, className = '' }: ToggleProps) => {
+export const Switch = ({ title, className = '' }: Props) => {
   return (
     <div className={`w-full ${className}`}>
       <label htmlFor="toggleButton" className="flex justify-between items-center cursor-pointer">

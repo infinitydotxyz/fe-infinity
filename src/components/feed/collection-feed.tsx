@@ -63,17 +63,17 @@ export const CollectionFeed = ({ collectionAddress, types, forActivity, classNam
   //   setFilteredEvents(arr);
   // }, [events]);
 
-  const onChangeFilterDropdown = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onChangeFilterDropdown = (checked: boolean, checkId: string) => {
     const newFilter = { ...filter };
 
-    if (event.target.name === '') {
+    if (checkId === '') {
       setFilteringTypes([]);
       delete newFilter.types;
       setFilter(newFilter);
       return;
     }
-    const selectedType = event.target.name as FeedEventType;
-    if (event.target.checked) {
+    const selectedType = checkId as FeedEventType;
+    if (checked) {
       newFilter.types = [...filteringTypes, selectedType];
       setFilter(newFilter);
       setFilteringTypes(newFilter.types);

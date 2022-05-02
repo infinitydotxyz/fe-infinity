@@ -1,10 +1,10 @@
-import { FunctionComponent, useState } from 'react';
+import { useState } from 'react';
 import { FaPen } from 'react-icons/fa';
 import { ImageUploader } from 'src/components/common';
 
 const FORM_LABEL = 'profile-background-upload';
 
-export const ProfileBackground: FunctionComponent = () => {
+export const ProfileBackground = () => {
   const [imgSrc, setImgSrc] = useState<string | null>(null);
 
   const handleChangeFile = (file: File) => {

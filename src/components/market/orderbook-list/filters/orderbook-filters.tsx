@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
-import { Button, EthSymbol, InputBox } from 'src/components/common';
+import { Button, Checkbox, EthSymbol, InputBox } from 'src/components/common';
 
 type OpenFilterState = {
   [filter: string]: boolean;
@@ -83,19 +83,15 @@ export const OrderbookFilters = () => {
     <div className="flex flex-col mr-12">
       <div className="text-2xl font-bold">Filter</div>
       <OrderbookFilterItem key="Order type" openState={openState} setOpenState={setOpenState} item="Order type">
-        <div className="max-h-80 overflow-y-scroll">
+        <div className="max-h-80 overflow-y-auto space-y-4">
           {orderTypesData.map((orderType) => (
-            <div className="mt-8 ml-1 font-heading font-light text-secondary">
-              <label className="flex items-center">
-                <input
-                  type="checkbox"
-                  checked={orderTypes.includes(orderType)}
-                  onChange={(e) => updateFilterArray('orderTypes', orderTypes, orderType, e.target.checked)}
-                  className="mr-2"
-                />
-                {orderType}
-              </label>
-            </div>
+            <Checkbox
+              key={orderType}
+              className="ml-1"
+              checked={orderTypes.includes(orderType)}
+              onChange={(checked) => updateFilterArray('orderTypes', orderTypes, orderType, checked)}
+              label={orderType}
+            />
           ))}
         </div>
       </OrderbookFilterItem>
@@ -111,24 +107,21 @@ export const OrderbookFilters = () => {
             placeholder="Filter"
           />
 
-          <div className="max-h-80 overflow-y-scroll">
+          <div className="mt-2 max-h-80 overflow-y-auto space-y-4">
             {collectionsData.map((collection) => {
               const searchText = (collectionSearchState || '').toLowerCase();
               if (searchText && collection.toLowerCase().indexOf(searchText) < 0) {
                 return null;
               }
+
               return (
-                <div className="mt-8 ml-1 font-heading font-light text-secondary">
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={collections.includes(collection)}
-                      onChange={(e) => updateFilterArray('collections', collections, collection, e.target.checked)}
-                      className="mr-2"
-                    />
-                    {collection}
-                  </label>
-                </div>
+                <Checkbox
+                  key={collection}
+                  className="ml-1"
+                  checked={collections.includes(collection)}
+                  onChange={(checked) => updateFilterArray('collections', collections, collection, checked)}
+                  label={collection}
+                />
               );
             })}
           </div>

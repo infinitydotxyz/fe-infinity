@@ -1,7 +1,7 @@
 import { BaseCollection, ListingType } from '@infinityxyz/lib/types/core';
 import { useState } from 'react';
 import { Filter, useFilterContext } from 'src/utils/context/FilterContext';
-import { Button } from 'src/components/common';
+import { Button, Checkbox } from 'src/components/common';
 import { TraitSelection } from './trait-selection';
 
 interface Props {
@@ -51,34 +51,25 @@ export const FilterPanel = ({ collection, collectionAddress, className }: Props)
           <div className="text-lg mt-6 mb-4">Sale Type</div>
           <ul>
             <li>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={filterState.listingType === ListingType.FixedPrice}
-                  onChange={() => handleClickListingType(ListingType.FixedPrice)}
-                />
-                <span className="ml-2 align-middle">Fixed Price</span>
-              </label>
+              <Checkbox
+                checked={filterState.listingType === ListingType.FixedPrice}
+                onChange={() => handleClickListingType(ListingType.FixedPrice)}
+                label="Fixed Price"
+              />
             </li>
             <li>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={filterState.listingType === ListingType.DutchAuction}
-                  onChange={() => handleClickListingType(ListingType.DutchAuction)}
-                />
-                <span className="ml-2 align-middle">Declining Price</span>
-              </label>
+              <Checkbox
+                checked={filterState.listingType === ListingType.DutchAuction}
+                onChange={() => handleClickListingType(ListingType.DutchAuction)}
+                label="Declining Price"
+              />
             </li>
             <li>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={filterState.listingType === ListingType.EnglishAuction}
-                  onChange={() => handleClickListingType(ListingType.EnglishAuction)}
-                />
-                <span className="ml-2 align-middle">On Aunction</span>
-              </label>
+              <Checkbox
+                checked={filterState.listingType === ListingType.EnglishAuction}
+                onChange={() => handleClickListingType(ListingType.EnglishAuction)}
+                label="On Auction"
+              />
             </li>
           </ul>
 
