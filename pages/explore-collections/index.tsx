@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { PageBox, CollectionGrid } from 'src/components/common';
 import debounce from 'lodash/debounce';
 
-const HomePage = () => {
+const ExplorePage = () => {
   const [query, setQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
 
@@ -32,4 +32,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default ExplorePage;
