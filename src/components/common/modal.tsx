@@ -12,7 +12,7 @@ interface Props {
   onClose: () => void;
   onSubmit?: () => void;
   showActionButtons?: boolean;
-  dialogWidth?: string;
+  wide?: boolean;
 }
 
 export const Modal = ({
@@ -24,66 +24,64 @@ export const Modal = ({
   isOpen,
   onClose,
   showActionButtons = true,
-  dialogWidth = 'max-w-lg'
+  wide = true
 }: Props) => {
   return (
     <Transition appear show={isOpen} as={Fragment}>
-      <Dialog as="div" className="fixed inset-0 z-10 overflow-y-auto" onClose={onClose}>
-        <div className="min-h-screen px-4 text-center">
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <Dialog.Overlay className="fixed inset-0" />
-          </Transition.Child>
+      <Dialog as="div" className="relative z-10" onClose={onClose}>
+        <Transition.Child
+          as={Fragment}
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div className="fixed inset-0 bg-black bg-opacity-25" />
+        </Transition.Child>
 
-          {/* This element is to trick the browser into centering the modal contents. */}
-          <span className="inline-block h-screen align-middle" aria-hidden="true">
-            &#8203;
-          </span>
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0 scale-95"
-            enterTo="opacity-100 scale-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100 scale-100"
-            leaveTo="opacity-0 scale-95"
-          >
-            <div
-              className={`inline-block w-full ${dialogWidth} p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl`}
+        <div className="fixed inset-0 overflow-y-auto">
+          <div className="flex min-h-full items-center justify-center p-4 text-center">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Title as="h2" className="flex text-lg font-bold leading-6 text-gray-900 mb-2">
-                {title}
-                {titleChildren}
-                <Spacer />
-                <Button size="small" variant="ghost" onClick={onClose}>
-                  <XIcon className="h-6 w-6" />
-                </Button>
-              </Dialog.Title>
+              <Dialog.Panel
+                className={`w-full ${
+                  wide ? 'max-w-lg' : 'max-w-md'
+                } transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all`}
+              >
+                <Dialog.Title as="h3" className="flex items-center text-lg font-medium leading-6 text-gray-900">
+                  {title}
+                  {titleChildren}
 
-              {children}
+                  <Spacer />
 
-              {showActionButtons && (
-                <div className="flex space-x-1 mt-4">
-                  <div className="mt-4">
+                  <Button size="small" variant="ghost" onClick={onClose}>
+                    <XIcon className="h-6 w-6" />
+                  </Button>
+                </Dialog.Title>
+
+                {children}
+
+                {showActionButtons && (
+                  <div className="flex space-x-4 mt-8">
                     <Button variant="outline" onClick={onClose}>
                       Cancel
                     </Button>
-                  </div>
 
-                  <div className="mt-4">
                     <Button onClick={onSubmit}>{okButton}</Button>
                   </div>
-                </div>
-              )}
-            </div>
-          </Transition.Child>
+                )}
+              </Dialog.Panel>
+            </Transition.Child>
+          </div>
         </div>
       </Dialog>
     </Transition>

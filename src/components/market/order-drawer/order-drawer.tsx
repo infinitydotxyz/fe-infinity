@@ -176,7 +176,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
   return (
     <>
       <Modal
-        dialogWidth="max-w-sm"
+        wide={false}
         isOpen={showSuccessModal}
         onClose={() => setShowSuccessModal(false)}
         showActionButtons={false}
