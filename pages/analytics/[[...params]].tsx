@@ -37,7 +37,6 @@ export const Analytics = () => {
   });
 
   const [filterCheckboxes, setFilterCheckboxes] = React.useState<{ [key: string]: boolean }>(columns);
-  const [columnLayout, setColumnLayout] = React.useState<string>('2fr,2fr,4fr,3fr,3fr,3fr,3fr,3fr,3fr,2fr');
   
   const clearCheckboxes = () => {
     const reset = {
@@ -59,10 +58,6 @@ export const Analytics = () => {
   const applyCheckboxes = () => {
     if (Object.keys(filterCheckboxes).filter((key) => filterCheckboxes[key]).length < filterLimit) {
       setColumns(filterCheckboxes);
-      const fractions = content?.statistics?.map(stat=> { stat.map(s=>{if(s.show) return s.fraction }) }).join(',')
-      if (fractions) {
-        setColumnLayout(fractions);
-      }
       setIsDrawerOpen(false);
     }
   };
@@ -616,13 +611,8 @@ export const Analytics = () => {
             className: `
               w-full h-full min-h-[144px] overflow-hidden rounded-xl
               bg-theme-light-300
-              grid grid-rows-1
-              px-5
-              ${
-                connected
-                  ? `grid-cols-[2fr,2fr,4fr,3fr,3fr,3fr,3fr,3fr,3fr,2fr]`
-                  :  `grid-cols-[2fr,2fr,4fr,3fr,3fr,3fr,3fr,3fr,3fr,2fr]`
-              }
+              grid grid-cols-analytics
+              
               place-items-center
             `
           },
