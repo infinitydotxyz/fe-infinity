@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Modal, CurrencyInput, NextLink } from 'src/components/common';
+import { Modal, CurrencyInput, NextLink } from 'src/components/common';
 
 export const PlaceBidModal: React.FC = () => {
   const [price, setPrice] = useState(0);
@@ -18,8 +18,10 @@ export const PlaceBidModal: React.FC = () => {
       <Modal
         isOpen={modalIsOpen}
         onClose={closeModal}
-        showActionButtons={false}
-        onOKButton={() => console.log('hello')}
+        okButton="Place bid"
+        cancelButton="Convert ETH"
+        onOKButton={() => console.log('Place bid')}
+        onCancelButton={() => console.log('Convert ETH')}
       >
         <div className="modal-body p-4 rounded-3xl">
           <p className="font-bold text-2xl tracking-tight mb-12">Place a bid</p>
@@ -41,14 +43,6 @@ export const PlaceBidModal: React.FC = () => {
                 <NextLink href="/terms-of-service">Terms of Service</NextLink>
               </div>
             </div>
-          </div>
-          <div className="grid md:grid-cols-2 gap-4 mt-12">
-            <Button className="flex-1 mr-4 text-heading rounded-full" size="large">
-              Place bid
-            </Button>
-            <Button className="flex-1 text-heading rounded-full" size="large" variant="outline">
-              Convert ETH
-            </Button>
           </div>
         </div>
       </Modal>
