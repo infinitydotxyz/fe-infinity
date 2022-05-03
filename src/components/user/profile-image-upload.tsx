@@ -110,7 +110,7 @@ export const ProfileImageUpload: FunctionComponent<ProfileImageProps> = ({ onUpl
         </Button>
       </div>
       {/* Image resizing modal */}
-      <Modal isOpen={modalIsOpen} onClose={() => setIsOpen(false)} okButton="Save" onSubmit={onClickSave}>
+      <Modal isOpen={modalIsOpen} onClose={() => setIsOpen(false)} okButton="Save" onOKButton={onClickSave}>
         <AvatarEditor
           ref={editorRef}
           image={tempImgSrc || ''}

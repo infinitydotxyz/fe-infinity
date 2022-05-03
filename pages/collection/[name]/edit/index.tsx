@@ -176,7 +176,7 @@ const EditCollectionPage = () => {
     mutate(path, (metadata: CollectionMetadata) => ({ ...metadata, profileImage: '' } as CollectionMetadata));
   };
 
-  const uploadProfileImage = async (file: File) => {
+  const uploadProfileImage = async (file: File | Blob) => {
     if (!checkSignedIn()) {
       return;
     }
