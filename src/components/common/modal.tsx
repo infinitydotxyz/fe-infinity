@@ -80,19 +80,8 @@ export const Modal = ({
                 {showActionButtons && (
                   <div className="flex space-x-4 mt-8">
                     <Button
-                      variant="outline"
-                      onClick={() => {
-                        if (onCancelButton) {
-                          onCancelButton();
-                        } else {
-                          onClose();
-                        }
-                      }}
-                    >
-                      {cancelButton}
-                    </Button>
-
-                    <Button
+                      className="flex-1"
+                      size="large"
                       onClick={() => {
                         if (onOKButton) {
                           onOKButton();
@@ -102,6 +91,21 @@ export const Modal = ({
                       }}
                     >
                       {okButton}
+                    </Button>
+
+                    <Button
+                      className="flex-1"
+                      variant="outline"
+                      size="large"
+                      onClick={() => {
+                        if (onCancelButton) {
+                          onCancelButton();
+                        } else {
+                          onClose();
+                        }
+                      }}
+                    >
+                      {cancelButton}
                     </Button>
                   </div>
                 )}
