@@ -1,6 +1,5 @@
 import { ReactNode, useState } from 'react';
 import { FaTwitter, FaFacebook, FaEdit } from 'react-icons/fa';
-import { CancelModal } from 'src/components/asset';
 import { RemoveIcon } from 'src/components/collection/edit/remove-icon';
 import {
   Button,
@@ -217,9 +216,6 @@ const SandboxPage = () => {
         href={`/collection/xxx`}
         tooltip={'0x78979787978'}
       />
-
-      <SBHeader># CancelModal</SBHeader>
-      <CancelModal />
 
       <SBHeader># RemoveIcon</SBHeader>
 

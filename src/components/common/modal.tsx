@@ -46,6 +46,7 @@ export const Modal = ({
   if (okButton) {
     buttons.push(
       <Button
+        key={Math.random()}
         className="flex-1"
         disabled={disableOK}
         onClick={() => {
@@ -65,6 +66,7 @@ export const Modal = ({
   if (cancelButton) {
     buttons.push(
       <Button
+        key={Math.random()}
         className="flex-1"
         disabled={disableCancel}
         variant="outline"
