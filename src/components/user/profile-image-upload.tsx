@@ -1,11 +1,13 @@
 import { FunctionComponent, useEffect, useRef, useState } from 'react';
 import { FaPen } from 'react-icons/fa';
-import { ImageUploader, Button, ImageUploaderButtonRef } from 'src/components/common';
+import AvatarEditor from 'react-avatar-editor';
+
+import { ImageUploader, Button, ImageUploaderButtonRef, Modal } from 'src/components/common';
 
 interface ProfileImageProps {
   imgSource?: string;
   className?: string;
-  onUpload: (file: File) => void;
+  onUpload: (file: File | Blob) => void;
   onDelete: () => void;
 }
 
@@ -13,15 +15,19 @@ const FORM_LABEL = 'profile-image-upload';
 
 export const ProfileImageUpload: FunctionComponent<ProfileImageProps> = ({ onUpload, onDelete, imgSource = null }) => {
   const [imgSrc, setImgSrc] = useState<string | null>(imgSource);
-  const [file, setFile] = useState<File | null>(null);
+  const [tempImgSrc, setTempImgSrc] = useState<string | null>(imgSource);
+  const [file, setFile] = useState<File | Blob | null>(null);
   const [isLoading, setLoading] = useState(false);
+  const [modalIsOpen, setIsOpen] = useState(false);
+  const [tempImgScale, setTempImgScale] = useState(1);
   const uploadInput = useRef<HTMLInputElement>(null);
+  const editorRef = useRef<AvatarEditor>(null);
 
   const handleChangeFile = (file: File) => {
     try {
+      setIsOpen(true);
       const imageUrl = URL.createObjectURL(file);
-      setFile(file);
-      setImgSrc(imageUrl);
+      setTempImgSrc(imageUrl);
     } catch (err) {
       console.error(err);
     }
@@ -36,6 +42,25 @@ export const ProfileImageUpload: FunctionComponent<ProfileImageProps> = ({ onUpl
 
   const onUploadButtonClick = () => {
     uploadInput?.current?.click();
+  };
+
+  const onClickSave = () => {
+    if (editorRef) {
+      editorRef?.current?.getImage().toBlob((blob: Blob | null) => {
+        if (blob) {
+          const imageUrl = URL.createObjectURL(blob);
+          setFile(blob);
+          setImgSrc(imageUrl);
+        }
+      });
+    }
+
+    setIsOpen(false);
+  };
+
+  const handleScale = (e: any) => {
+    const scale = parseFloat(e.target.value);
+    setTempImgScale(scale);
   };
 
   useEffect(() => {
@@ -84,6 +109,35 @@ export const ProfileImageUpload: FunctionComponent<ProfileImageProps> = ({ onUpl
           Delete
         </Button>
       </div>
+      {/* Image resizing modal */}
+      <Modal isOpen={modalIsOpen} onClose={() => setIsOpen(false)} okButton="Save" onSubmit={onClickSave}>
+        <AvatarEditor
+          ref={editorRef}
+          image={tempImgSrc || ''}
+          width={250}
+          height={250}
+          border={50}
+          borderRadius={150}
+          color={[255, 255, 255, 0.6]}
+          scale={tempImgScale}
+        />
+        <div className="flex flex-row gap-2">
+          {/* <span>Zoom:</span> */}
+          <label htmlFor="zoomRange" className="form-label">
+            Zoom:
+          </label>
+          <input
+            id="zoomRange"
+            name="scale"
+            type="range"
+            onChange={handleScale}
+            min="1"
+            max="2"
+            step="0.01"
+            defaultValue="1"
+          />
+        </div>
+      </Modal>
     </div>
   );
 };
