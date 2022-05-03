@@ -75,7 +75,7 @@ const CollectionPage = () => {
               <LoadingDescription />
             </div>
           ) : (
-            <div className="text-secondary mt-6 md:w-2/3">{collection.metadata.description ?? ''}</div>
+            <div className="text-secondary mt-12 md:w-2/3">{collection.metadata.description ?? ''}</div>
           )}
 
           <div className="mt-7">
