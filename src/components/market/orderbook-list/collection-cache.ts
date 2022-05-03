@@ -1,21 +1,94 @@
-import { BaseCollection, BaseToken } from '@infinityxyz/lib/types/core';
+import { BaseCollection, BaseToken, CollectionStats } from '@infinityxyz/lib/types/core';
 import { useEffect, useState } from 'react';
 import { apiGet } from 'src/utils/apiUtils';
 import mitt from 'mitt';
 import { CollectionSearchArrayDto } from 'src/components/common';
 
+const DEFAULT_LIMIT = 24;
+
+export type CollectionSearchItem = {
+  name: string;
+  id: string;
+  chainId: string;
+};
 class _CollectionCache {
   cCache = new Map<string, BaseCollection>();
   tCache = new Map<string, BaseToken>();
   fetchingKeySet = new Set<string>();
   emitter = mitt();
 
+  // TODO hookup to cache
+  getTopCollections = async (): Promise<CollectionSearchItem[] | undefined> => {
+    const response = await apiGet(
+      `/collections/rankings?period=monthly&date=${Date.now()}&orderBy=floorPrice&orderDirection=desc&limit=${DEFAULT_LIMIT}`
+    );
+
+    if (response.error) {
+      console.log(response.error);
+    } else {
+      return response.result.data.map(({ name, collectionAddress, chainId }: CollectionStats) => ({
+        name,
+        chainId,
+        id: collectionAddress
+      }));
+    }
+  };
+
+  // TODO hookup to cache
+  getCollectionsByIds = async (ids: string[]): Promise<CollectionSearchItem[] | undefined> => {
+    const apiCalls = ids.map((id) => {
+      return apiGet(`/collections/${id}`);
+    });
+    const responses = await Promise.all(apiCalls);
+
+    const data = responses.map((response) => {
+      if (response.error) {
+        console.log(response.error);
+      } else {
+        const {
+          metadata: { name },
+          address,
+          chainId
+        } = response.result;
+        return {
+          name,
+          id: address,
+          chainId
+        };
+      }
+    });
+    return data as CollectionSearchItem[];
+  };
+
+  // TODO hookup to cache
+  getCollectionsByName = async (query: string): Promise<CollectionSearchItem[] | undefined> => {
+    const API_ENDPOINT = '/collections/search';
+    const response = await apiGet(API_ENDPOINT, {
+      query: {
+        query,
+        limit: DEFAULT_LIMIT
+      }
+    });
+
+    if (response.error) {
+      console.log(response.error);
+    } else {
+      return response.result.data.map(
+        ({ name, address, chainId }: { name: string; address: string; chainId: string }) => ({
+          name,
+          id: address,
+          chainId
+        })
+      );
+    }
+  };
+
   oneCollection = async (query: string): Promise<BaseCollection | undefined> => {
     const API_ENDPOINT = '/collections/search';
     const response = await apiGet(API_ENDPOINT, {
       query: {
         query,
-        limit: 24
+        limit: DEFAULT_LIMIT
       }
     });
 
@@ -153,9 +226,24 @@ export const useCollectionCache = () => {
     return collectionAddress;
   };
 
+  const getTopCollections = () => {
+    return CollectionCache.getTopCollections();
+  };
+
+  const getCollectionsByName = (query: string) => {
+    return CollectionCache.getCollectionsByName(query);
+  };
+
+  const getCollectionsByIds = (ids: string[]) => {
+    return CollectionCache.getCollectionsByIds(ids);
+  };
+
   return {
     nameForTokenId,
     imageForTokenId,
-    nameForCollection
+    nameForCollection,
+    getTopCollections,
+    getCollectionsByName,
+    getCollectionsByIds
   };
 };

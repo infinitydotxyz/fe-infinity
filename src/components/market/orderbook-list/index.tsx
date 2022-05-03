@@ -22,10 +22,6 @@ export const OrderbookList = (): JSX.Element => {
   const [showFilters, setShowFilters] = useState<boolean>(false);
   const [label, setLabel] = useState<string>(getSortLabel(filters?.sort));
 
-  if (orders.length === 0) {
-    return <div className="flex items-center justify-center">Loading</div>;
-  }
-
   const onClickSort = (_label: string, sortOrder: string) => {
     setLabel(_label);
     updateFilter('sort', sortOrder);
@@ -72,9 +68,13 @@ export const OrderbookList = (): JSX.Element => {
             </div>
           )}
           <div className="flex flex-col items-start">
-            {orders.map((order: OBOrder, i) => {
-              return <OrderbookRow key={`${i}-${order.id}`} order={order} />;
-            })}
+            {orders.length > 0 ? (
+              orders.map((order: OBOrder, i) => {
+                return <OrderbookRow key={`${i}-${order.id}`} order={order} />;
+              })
+            ) : (
+              <div>No Results</div>
+            )}
 
             {isLoading && <div className="w-full text-center">Loading</div>}
           </div>

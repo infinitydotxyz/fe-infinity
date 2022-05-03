@@ -58,7 +58,10 @@ const parseFiltersToApiQueryParams = (filters: OBFilters): GetOrderItemsQuery =>
         break;
       case 'collections':
         if (filters?.collections?.length) {
-          parsedFilters.collections = filters?.collections;
+          parsedFilters.collections = filters?.collections.map((collection) => {
+            const decoded = decodeURIComponent(collection);
+            return decoded.split(':')[1];
+          });
         }
         break;
       case 'minPrice':
