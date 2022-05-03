@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { Button, SVG } from 'src/components/common';
 import { OrderCartItem, useOrderContext } from 'src/utils/context/OrderContext';
-import { collectionIconStyle, iconButtonStyle } from './ui-constants';
+import { collectionIconStyle, iconButtonStyle } from 'src/utils/ui-constants';
 
 interface Props {
   cartItem: OrderCartItem;

@@ -2,7 +2,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, ReactNode } from 'react';
 import { Spacer, Button } from 'src/components/common';
 import { XIcon } from '@heroicons/react/outline';
-import { iconButtonStyle } from '../market/order-drawer/ui-constants';
+import { iconButtonStyle } from 'src/utils/ui-constants';
 
 interface Props {
   isOpen: boolean;

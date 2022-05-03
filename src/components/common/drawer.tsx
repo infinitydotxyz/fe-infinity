@@ -3,7 +3,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import { XIcon } from '@heroicons/react/outline';
 import { Button } from 'src/components/common';
 import { Tooltip, TooltipIcon, TooltipSpec, TooltipWrapper } from './tool-tip';
-import { iconButtonStyle } from '../market/order-drawer/ui-constants';
+import { iconButtonStyle } from 'src/utils/ui-constants';
 
 interface Props {
   open: boolean;

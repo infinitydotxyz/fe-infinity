@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { IoMdInformationCircleOutline } from 'react-icons/io';
 import { twMerge } from 'tailwind-merge';
-import { smallIconButtonStyle } from '../market/order-drawer/ui-constants';
+import { smallIconButtonStyle } from 'src/utils/ui-constants';
 
 export interface TooltipSpec {
   title: string;

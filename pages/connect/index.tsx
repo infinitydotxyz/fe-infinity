@@ -4,7 +4,7 @@ import { useAppContext } from 'src/utils/context/AppContext';
 import { WalletType } from 'src/utils/providers/AbstractProvider';
 import { SVG, NextLink } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
-import { iconButtonStyle } from 'src/components/market/order-drawer/ui-constants';
+import { iconButtonStyle } from 'src/utils/ui-constants';
 
 const ConnectWallet = () => {
   const router = useRouter();

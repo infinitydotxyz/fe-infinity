@@ -14,7 +14,7 @@ import { AvatarImage } from 'src/components/collection/avatar-image';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { OrderDrawer } from 'src/components/market/order-drawer/order-drawer';
 import ContentLoader from 'react-content-loader';
-import { iconButtonStyle } from 'src/components/market/order-drawer/ui-constants';
+import { iconButtonStyle } from 'src/utils/ui-constants';
 
 const CollectionPage = () => {
   const { orderDrawerOpen, setOrderDrawerOpen, addCartItem } = useOrderContext();
