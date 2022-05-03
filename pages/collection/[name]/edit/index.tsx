@@ -216,7 +216,7 @@ const EditCollectionPage = () => {
       </div>
       <main className="flex flex-col my-4 mx-auto max-w-xl space-y-20">
         <article>
-          <Heading as="h5" className="font-medium mb-12">
+          <Heading as="h5" className="font-medium mb-12 font-bolton">
             Edit collection
           </Heading>
           <ProfileImageUpload
@@ -249,7 +249,7 @@ const EditCollectionPage = () => {
           />
         </article>
         <article className={spaces.article}>
-          <Heading as="h6" className="font-medium mb-8">
+          <Heading as="h6" className="font-medium mb-8 font-bolton">
             Socials
           </Heading>
           <SocialsInputGroup>
@@ -326,7 +326,7 @@ const EditCollectionPage = () => {
           </SocialsInputGroup>
         </article>
         <article className={spaces.article}>
-          <Heading as="h6" className="font-medium">
+          <Heading as="h6" className="font-medium font-bolton">
             Benefits
           </Heading>
           {metadata.benefits?.map((benefit, i) => (
@@ -350,7 +350,7 @@ const EditCollectionPage = () => {
           </PlusButton>
         </article>
         <article className={spaces.article}>
-          <Heading as="h6" className="font-medium">
+          <Heading as="h6" className="font-medium font-bolton">
             Partnerships
           </Heading>
           {metadata.partnerships?.map((partnership, i) => (
@@ -388,13 +388,16 @@ const EditCollectionPage = () => {
             Add partnership
           </PlusButton>
         </article>
+
         <article className={spaces.article}>
-          <Heading as="h6" className="font-medium mb-7">
+          <Heading as="h6" className="font-medium mb-7 font-bolton">
             Integrations
           </Heading>
           <p>Enable integrations with third party platforms.</p>
+        </article>
 
-          <Heading as="h6" className="font-medium mb-7">
+        <article className={spaces.article}>
+          <Heading as="h6" className="font-medium mb-7 font-bolton">
             Discord
           </Heading>
           {metadata.integrations?.discord?.guildId == null && (
@@ -457,8 +460,9 @@ const EditCollectionPage = () => {
           >
             Add discord channel
           </PlusButton>
-
-          <Heading as="h6" className="font-medium mb-7">
+        </article>
+        <article className={spaces.article}>
+          <Heading as="h6" className="font-medium mb-7 font-bolton">
             Twitter
           </Heading>
           <p>This integration is already enabled by default.</p>
