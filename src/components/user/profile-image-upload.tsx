@@ -58,7 +58,7 @@ export const ProfileImageUpload: FunctionComponent<ProfileImageProps> = ({ onUpl
     setIsOpen(false);
   };
 
-  const handleScale = (e: any) => {
+  const handleScale = (e: React.ChangeEvent<HTMLInputElement>) => {
     const scale = parseFloat(e.target.value);
     setTempImgScale(scale);
   };

@@ -1,4 +1,4 @@
-import { FunctionComponent, LegacyRef, useEffect, useRef, useState } from 'react';
+import { FunctionComponent, useEffect, useRef, useState } from 'react';
 import AvatarEditor from 'react-avatar-editor';
 import { FaPen } from 'react-icons/fa';
 
@@ -62,7 +62,7 @@ export const ProfileBannerImageUpload: FunctionComponent<BannerImageProps> = ({
     setIsOpen(false);
   };
 
-  const handleScale = (e: any) => {
+  const handleScale = (e: React.ChangeEvent<HTMLInputElement>) => {
     const scale = parseFloat(e.target.value);
     setTempImgScale(scale);
   };
