@@ -2,6 +2,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, ReactNode } from 'react';
 import { Spacer, Button } from 'src/components/common';
 import { XIcon } from '@heroicons/react/outline';
+import { iconButtonStyle } from '../market/order-drawer/ui-constants';
 
 interface Props {
   children: ReactNode;
@@ -64,7 +65,7 @@ export const Modal = ({
                   <Spacer />
 
                   <Button size="small" variant="ghost" onClick={onClose}>
-                    <XIcon className="h-6 w-6" />
+                    <XIcon className={iconButtonStyle} />
                   </Button>
                 </Dialog.Title>
 

@@ -3,6 +3,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import { XIcon } from '@heroicons/react/outline';
 import { Button } from 'src/components/common';
 import { Tooltip, TooltipIcon, TooltipSpec, TooltipWrapper } from './tool-tip';
+import { iconButtonStyle } from '../market/order-drawer/ui-constants';
 
 interface Props {
   open: boolean;
@@ -36,7 +37,7 @@ export const Drawer = ({ open, tooltip, subtitle, divide, onClose, title, childr
           <div className="ml-3 flex h-7 items-center">
             <Button variant="round" size="plain" onClick={onClose}>
               <span className="sr-only">Close panel</span>
-              <XIcon className="h-6 w-6" aria-hidden="true" />
+              <XIcon className={iconButtonStyle} aria-hidden="true" />
             </Button>
           </div>
         </div>

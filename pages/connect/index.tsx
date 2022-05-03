@@ -3,6 +3,8 @@ import { useRouter } from 'next/router';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { WalletType } from 'src/utils/providers/AbstractProvider';
 import { SVG, NextLink } from 'src/components/common';
+import { twMerge } from 'tailwind-merge';
+import { iconButtonStyle } from 'src/components/market/order-drawer/ui-constants';
 
 const ConnectWallet = () => {
   const router = useRouter();
@@ -79,7 +81,7 @@ const ConnectItem = ({ title, icon, subtitle, onClick }: Props): JSX.Element => 
         <p className="text-lg font-bold">{title}</p>
         <p className="text-gray">{subtitle}</p>
       </div>
-      <SVG.arrowImage className="h-6 w-6 ml-auto" />
+      <SVG.arrowImage className={twMerge(iconButtonStyle, 'ml-auto')} />
     </div>
   );
 };
