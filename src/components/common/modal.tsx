@@ -115,7 +115,7 @@ export const Modal = ({
               <Dialog.Panel
                 className={`w-full ${
                   wide ? 'max-w-lg' : 'max-w-md'
-                } transform overflow-hidden rounded-2xl bg-white py-6 px-7 text-left align-middle shadow-xl transition-all`}
+                } transform overflow-hidden rounded-2xl bg-white py-8 px-9 text-left align-middle shadow-xl transition-all`}
               >
                 <Dialog.Title
                   as="h3"
@@ -135,7 +135,7 @@ export const Modal = ({
                 </Dialog.Title>
 
                 {children}
-                {showActionButtons && <div className="flex space-x-4 mt-8">{buttons}</div>}
+                {showActionButtons && <div className="p-4 rounded-3xl flex space-x-4 mt-8">{buttons}</div>}
               </Dialog.Panel>
             </Transition.Child>
           </div>

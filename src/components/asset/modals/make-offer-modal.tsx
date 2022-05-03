@@ -17,10 +17,15 @@ export const MakeOfferModal = () => {
   return (
     <div>
       <button onClick={openModal}>Make offer</button>
-      <Modal isOpen={modalIsOpen} onClose={closeModal} okButton="Make offer" onOKButton={() => console.log('hello')}>
-        <div className="modal-body p-4 rounded-3xl">
-          <div className="font-bold text-2xl tracking-tight mb-12">Make offer</div>
-          <div className="mb-4 text-base">Buy this NFT for the price shown</div>
+      <Modal
+        isOpen={modalIsOpen}
+        onClose={closeModal}
+        okButton="Make offer"
+        title="Make offer"
+        onOKButton={() => console.log('hello')}
+      >
+        <div>
+          <div className="mb-4">Buy this NFT for the price shown</div>
           <div>
             <CurrencyInput
               value={price}

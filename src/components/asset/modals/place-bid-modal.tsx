@@ -26,9 +26,9 @@ export const PlaceBidModal = () => {
         cancelButton="Convert ETH"
         onOKButton={() => console.log('Place bid')}
         onCancelButton={() => console.log('Convert ETH')}
+        title="Place a bid"
       >
-        <div className="modal-body p-4 rounded-3xl">
-          <p className="font-bold text-2xl tracking-tight mb-12">Place a bid</p>
+        <div>
           <CurrencyInput
             value={price}
             label="Enter offer"
