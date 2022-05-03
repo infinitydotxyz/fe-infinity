@@ -1,12 +1,11 @@
-import { Button, ToggleTab, useToggleTab, Spacer, PageBox } from 'src/components/common';
+import { ToggleTab, useToggleTab, Spacer, PageBox } from 'src/components/common';
 import { OrderDrawer } from 'src/components/market';
 import { useOrderContext } from 'src/utils/context/OrderContext';
-import { FaShoppingBag } from 'react-icons/fa';
 import { OrderbookList } from 'src/components/market/orderbook-list';
 import { OrderbookProvider } from 'src/components/market/OrderbookContext';
 
 const MarketPage = () => {
-  const { orderDrawerOpen, setOrderDrawerOpen, isOrderStateEmpty } = useOrderContext();
+  const { orderDrawerOpen, setOrderDrawerOpen } = useOrderContext();
   const { options, onChange, selected } = useToggleTab(['Orderbook'], 'Orderbook');
 
   const contents = (
@@ -25,20 +24,7 @@ const MarketPage = () => {
   );
 
   return (
-    <PageBox
-      title="Market"
-      rightToolbar={
-        <Button
-          disabled={isOrderStateEmpty()}
-          variant="outline"
-          onClick={async () => {
-            setOrderDrawerOpen(!orderDrawerOpen);
-          }}
-        >
-          <FaShoppingBag />
-        </Button>
-      }
-    >
+    <PageBox title="Market">
       <OrderDrawer open={orderDrawerOpen} onClose={() => setOrderDrawerOpen(false)} />
 
       <div>{contents}</div>

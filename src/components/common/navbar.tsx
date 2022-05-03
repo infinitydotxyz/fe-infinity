@@ -2,7 +2,16 @@ import React from 'react';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { IoMdArrowDropdown } from 'react-icons/io';
 import { Menu } from '@headlessui/react';
-import { SVG, SearchInput, ConnectButton, Spacer, CustomMenuItem, pageStyles, NextLink } from 'src/components/common';
+import {
+  SVG,
+  SearchInput,
+  ConnectButton,
+  Spacer,
+  CustomMenuItem,
+  pageStyles,
+  NextLink,
+  ShoppingCartButton
+} from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 import { useRouter } from 'next/router';
 
@@ -155,7 +164,8 @@ export const Navbar = () => {
             )}
           </React.Fragment>
         ))}
-        <div>
+        <div className={`flex space-x-2`}>
+          <ShoppingCartButton />
           <ConnectButton />
         </div>
       </div>
