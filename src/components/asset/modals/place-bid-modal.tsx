@@ -30,6 +30,7 @@ export const PlaceBidModal = () => {
       >
         <div>
           <CurrencyInput
+            autoFocus={true}
             value={price}
             label="Enter offer"
             placeholder=""
@@ -44,9 +45,9 @@ export const PlaceBidModal = () => {
               label={
                 <>
                   <span className="text-theme-light-800">{"By checking this box, you agree to Infinity's"}</span>
-                  <div className="underline">
-                    <NextLink href="/terms-of-service">Terms of Service</NextLink>
-                  </div>
+                  <NextLink href="/terms-of-service" className="ml-2 underline">
+                    Terms of Service
+                  </NextLink>
                 </>
               }
             />

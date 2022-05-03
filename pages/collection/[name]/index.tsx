@@ -49,7 +49,7 @@ const CollectionPage = () => {
     <PageBox showTitle={false} title={collection.metadata?.name ?? ''}>
       <div className="flex flex-col mt-10">
         <span>
-          <AvatarImage url={collection.metadata.profileImage} className="mb-2" />
+          <AvatarImage url={collection.metadata.profileImage} className="mb-2 rounded-[50%]" />
 
           <div className="flex gap-3 items-center">
             <div className="text-6xl  ">{collection.metadata?.name}</div>
@@ -75,7 +75,7 @@ const CollectionPage = () => {
               <LoadingDescription />
             </div>
           ) : (
-            <div className="text-secondary mt-6 md:w-2/3">{collection.metadata.description ?? ''}</div>
+            <div className="text-secondary mt-12 md:w-2/3">{collection.metadata.description ?? ''}</div>
           )}
 
           <div className="mt-7">
@@ -96,7 +96,7 @@ const CollectionPage = () => {
             </div>
           </div>
 
-          <table className="mt-8 text-sm md:w-1/2">
+          <table className="mt-8 md:w-1/2">
             <thead>
               <tr className="text-gray-400">
                 <th className="text-left font-medium font-heading">Items</th>

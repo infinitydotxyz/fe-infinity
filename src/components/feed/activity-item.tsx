@@ -17,7 +17,7 @@ export const ActivityItem = ({ event }: Props) => {
         </NextLink>
         <div className="flex justify-between w-full mx-8">
           <div className="">
-            <div className="text-black font-bold">
+            <div className="text-black font-bold font-body">
               <a href={`/collection/${event.collectionSlug}`}>{event.collectionName}</a>
             </div>
             <div>

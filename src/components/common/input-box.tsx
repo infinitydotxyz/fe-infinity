@@ -106,6 +106,7 @@ interface Props4 {
   tooltip?: TooltipSpec;
   icon?: ReactNode;
   isFullWidth?: boolean;
+  autoFocus?: boolean;
   renderRightIcon?: () => ReactElement;
 }
 
@@ -119,6 +120,7 @@ export const TextInputBox = ({
   placeholder,
   onChange,
   isFullWidth,
+  autoFocus = false,
   renderRightIcon
 }: Props4) => {
   return (
@@ -126,6 +128,7 @@ export const TextInputBox = ({
       <div className="flex items-center w-full">
         {addEthSymbol && <div className="pr-2">{EthSymbol}</div>}
         <input
+          autoFocus={autoFocus}
           type={type}
           value={value}
           onChange={(e) => {

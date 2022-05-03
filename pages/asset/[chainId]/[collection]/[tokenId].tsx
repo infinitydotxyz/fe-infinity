@@ -119,7 +119,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
               <div className="md:-ml-1.5">
                 <div className="flex flex-col md:flex-row gap-2 my-4 md:my-6 lg:my-10 lg:mb-16">
                   <Button variant="primary" size="large" className="p-4 rounded-full">
-                    Buy&nbsp;3.30 ETH
+                    Buy 3.30 ETH
                   </Button>
                   <Button variant="outline" size="large" className="p-4 rounded-full">
                     Make offer
