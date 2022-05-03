@@ -14,9 +14,14 @@ export const CancelModal = () => {
   return (
     <div>
       <button onClick={openModal}>Cancel</button>
-      <Modal isOpen={modalIsOpen} onClose={closeModal} okButton="Confirm" onOKButton={() => console.log('hello')}>
-        <div className="font-bold text-2xl tracking-tight mb-12">Cancel this listing?</div>
-      </Modal>
+      <Modal
+        wide={false}
+        isOpen={modalIsOpen}
+        onClose={closeModal}
+        okButton="Confirm"
+        title="Cancel this listing?"
+        onOKButton={() => console.log('hello')}
+      />
     </div>
   );
 };

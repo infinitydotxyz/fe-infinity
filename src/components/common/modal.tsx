@@ -8,7 +8,8 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   title?: string | ReactNode;
-  message?: string | ReactNode;
+
+  showCloseIcon?: boolean;
 
   children?: ReactNode;
   // you can repurpose the ok/cancel buttons
@@ -35,9 +36,9 @@ export const Modal = ({
   okButton = 'OK',
   cancelButton = 'Cancel',
   disableOK = false,
+  showCloseIcon = false,
   disableCancel = false,
   title,
-  message,
   onClose, // X icon, or click outside dialog
   showActionButtons = true,
   wide = true
@@ -116,25 +117,24 @@ export const Modal = ({
                   wide ? 'max-w-lg' : 'max-w-md'
                 } transform overflow-hidden rounded-2xl bg-white py-6 px-7 text-left align-middle shadow-xl transition-all`}
               >
-                {title && (
-                  <Dialog.Title
-                    as="h3"
-                    className="flex items-center tracking-tight text-xl font-bold leading-6 text-gray-900 mb-4"
-                  >
-                    {title}
+                <Dialog.Title
+                  as="h3"
+                  className="flex items-center tracking-tight text-xl font-bold leading-6 text-gray-900 mb-4"
+                >
+                  {title}
 
-                    <Spacer />
+                  {showCloseIcon && (
+                    <>
+                      <Spacer />
 
-                    <Button size="plain" variant="round" onClick={onClose}>
-                      <XIcon className={iconButtonStyle} />
-                    </Button>
-                  </Dialog.Title>
-                )}
-
-                {message && <div className="font-medium text-xl tracking-tight text-gray-800 mb-4">{message}</div>}
+                      <Button size="plain" variant="round" onClick={onClose}>
+                        <XIcon className={iconButtonStyle} />
+                      </Button>
+                    </>
+                  )}
+                </Dialog.Title>
 
                 {children}
-
                 {showActionButtons && <div className="flex space-x-4 mt-8">{buttons}</div>}
               </Dialog.Panel>
             </Transition.Child>

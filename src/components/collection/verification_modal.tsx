@@ -13,8 +13,7 @@ export const VerificationModal = ({ isOpen, onSubmit, onClose }: Props) => {
       isOpen={isOpen}
       onOKButton={onSubmit}
       onClose={onClose}
-      title="Verify"
-      message="You need to verify that you are authorized to modify this collection."
+      title="You need to verify that you are authorized to modify this collection."
     />
   );
 };
