@@ -5,7 +5,7 @@ import { Token, Collection, Erc721Metadata } from '@infinityxyz/lib/types/core';
 import {
   TraitList,
   ActivityList,
-  ListModal,
+  ListNFTModal,
   CancelModal,
   TransferNFTModal,
   PlaceBidModal,
@@ -142,7 +142,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
           <ActivityList chainId={collection.chainId} collectionAddress={collection.address} tokenId={token.tokenId} />
 
           <CancelModal />
-          <ListModal />
+          <ListNFTModal />
           <TransferNFTModal />
           <MakeOfferModal />
           <PlaceBidModal />
