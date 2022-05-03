@@ -6,6 +6,7 @@ import { Dropdown, DropdownItems } from './dropdown';
 import { Button } from './button';
 import { NextLink } from './next-link';
 import ContentLoader from 'react-content-loader';
+import { inputBorderColor } from 'src/utils/ui-constants';
 
 type labelFn = (data?: CardData) => ReactNode;
 
@@ -95,9 +96,15 @@ export const Card = ({ data, cardActions, dropdownActions, isLoading, className 
         {buttonJsx}
 
         {(dropdownActions ?? []).length > 0 ? (
-          <div className="border border-gray-300 rounded-3xl ml-1 pt-1 w-10 h-10 flex justify-center items-center text-lg">
-            <Dropdown toggler={<AiOutlineEye className="w-10" />} items={dropdownActions ?? []} />
-          </div>
+          <Dropdown
+            className="ml-2"
+            toggler={
+              <div className={twMerge(inputBorderColor, 'border rounded-full w-10 h-10 flex flex-col justify-center')}>
+                <AiOutlineEye className="w-full text-lg" />
+              </div>
+            }
+            items={dropdownActions ?? []}
+          />
         ) : null}
       </footer>
     </div>
