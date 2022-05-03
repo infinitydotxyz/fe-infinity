@@ -17,7 +17,7 @@ export const MakeOfferModal: React.FC = () => {
   return (
     <div>
       <button onClick={openModal}>Make offer</button>
-      <Modal isOpen={modalIsOpen} onClose={closeModal} okButton="Make offer">
+      <Modal isOpen={modalIsOpen} onClose={closeModal} okButton="Make offer" onOKButton={() => console.log('hello')}>
         <div className="modal-body p-4 rounded-3xl">
           <div className="font-bold text-2xl tracking-tight mb-12">Make offer</div>
           <div className="mb-4 text-base">Buy this NFT for the price shown</div>

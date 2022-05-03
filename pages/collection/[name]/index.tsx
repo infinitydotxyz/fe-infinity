@@ -14,6 +14,7 @@ import { AvatarImage } from 'src/components/collection/avatar-image';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { OrderDrawer } from 'src/components/market/order-drawer/order-drawer';
 import ContentLoader from 'react-content-loader';
+import { iconButtonStyle } from 'src/components/market/order-drawer/ui-constants';
 
 const CollectionPage = () => {
   const { orderDrawerOpen, setOrderDrawerOpen, addCartItem } = useOrderContext();
@@ -52,7 +53,7 @@ const CollectionPage = () => {
 
           <div className="flex gap-3 items-center">
             <div className="text-6xl  ">{collection.metadata?.name}</div>
-            {collection.hasBlueCheck ? <SVG.blueCheck className="h-6 w-6" /> : null}
+            {collection.hasBlueCheck ? <SVG.blueCheck className={iconButtonStyle} /> : null}
           </div>
         </span>
         <main>

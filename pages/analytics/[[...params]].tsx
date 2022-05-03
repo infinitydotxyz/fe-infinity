@@ -37,7 +37,7 @@ export const Analytics = () => {
   });
 
   const [filterCheckboxes, setFilterCheckboxes] = React.useState<{ [key: string]: boolean }>(columns);
-  
+
   const clearCheckboxes = () => {
     const reset = {
       floorPrice: true,
@@ -105,7 +105,7 @@ export const Analytics = () => {
           placement: 'start',
           sortable: false,
           onSort: null,
-          fraction:'2fr'
+          fraction: '2fr'
         },
         {
           id: 'name',
@@ -113,7 +113,7 @@ export const Analytics = () => {
           value: name,
           placement: 'start',
           sortable: false,
-          fraction:'4fr',
+          fraction: '4fr',
           onSort: (direction: string) => {
             setOrderDirection(direction);
             setOrderBy('name');
@@ -131,7 +131,7 @@ export const Analytics = () => {
           show: columns['numNfts'],
           placement: 'middle',
           sortable: false,
-          fraction:'3fr',
+          fraction: '3fr',
           onSort: (direction: string) => {
             setOrderDirection(direction);
             setOrderBy('numNfts');
@@ -145,7 +145,7 @@ export const Analytics = () => {
           show: columns['numOwners'],
           placement: 'middle',
           sortable: false,
-          fraction:'3fr',
+          fraction: '3fr',
           onSort: (direction: string) => {
             setOrderDirection(direction);
             setOrderBy('numOwners');
@@ -159,7 +159,7 @@ export const Analytics = () => {
           show: columns['volume'],
           placement: 'middle',
           sortable: true,
-          fraction:'3fr',
+          fraction: '3fr',
           onSort: (direction: string) => {
             setOrderDirection(direction);
             setOrderBy('volume');
@@ -173,7 +173,7 @@ export const Analytics = () => {
           show: columns['volumePercentChange'],
           placement: 'middle',
           sortable: true,
-          fraction:'3fr',
+          fraction: '3fr',
           onSort: (direction: string) => {
             setOrderDirection(direction);
             setOrderBy('volumePercentChange');
@@ -200,7 +200,7 @@ export const Analytics = () => {
           show: columns['floorPricePercentChange'],
           placement: 'middle',
           sortable: true,
-          fraction:'3fr',
+          fraction: '3fr',
           onSort: (direction: string) => {
             setOrderDirection(direction);
             setOrderBy('floorPricePercentChange');
@@ -214,7 +214,7 @@ export const Analytics = () => {
           show: columns['discordFollowers'],
           placement: 'middle',
           sortable: true,
-          fraction:'3fr',
+          fraction: '3fr',
           onSort: (direction: string) => {
             setOrderDirection(direction);
             setOrderBy('discordFollowers');
@@ -228,7 +228,7 @@ export const Analytics = () => {
           show: columns['discordFollowersPercentChange'],
           placement: 'middle',
           sortable: true,
-          fraction:'3fr',
+          fraction: '3fr',
           onSort: (direction: string) => {
             setOrderDirection(direction);
             setOrderBy('discordFollowersPercentChange');
@@ -242,7 +242,7 @@ export const Analytics = () => {
           show: columns['twitterFollowers'],
           placement: 'middle',
           sortable: true,
-          fraction:'3fr',
+          fraction: '3fr',
           onSort: (direction: string) => {
             setOrderDirection(direction);
             setOrderBy('twitterFollowers');
@@ -256,7 +256,7 @@ export const Analytics = () => {
           show: columns['twitterFollowersPercentChange'],
           placement: 'middle',
           sortable: true,
-          fraction:'3fr',
+          fraction: '3fr',
           onSort: (direction: string) => {
             setOrderDirection(direction);
             setOrderBy('twitterFollowersPercentChange');
@@ -269,7 +269,7 @@ export const Analytics = () => {
           value: address,
           placement: 'end',
           props: {},
-          fraction:'2fr',
+          fraction: '2fr'
         }
       ];
     });

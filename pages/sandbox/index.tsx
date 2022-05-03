@@ -251,7 +251,12 @@ const SandboxPage = () => {
       <div>
         <Button onClick={() => setIsOpen(true)}>Show Modal</Button>
 
-        <Modal isOpen={modalIsOpen} onClose={() => setIsOpen(false)} okButton="Erase" onSubmit={() => setIsOpen(false)}>
+        <Modal
+          isOpen={modalIsOpen}
+          onClose={() => setIsOpen(false)}
+          okButton="Erase"
+          onOKButton={() => setIsOpen(false)}
+        >
           Erase Zip Drive?
         </Modal>
       </div>
