@@ -7,3 +7,8 @@
   @import './styles/overrides';
   @import './styles/foundations';
 }
+
+// https://v1.tailwindcss.com/docs/adding-new-utilities
+@layer utilities {
+  @import './styles/utils';
+}
