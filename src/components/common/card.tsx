@@ -73,7 +73,7 @@ export const Card = ({ data, cardActions, dropdownActions, isLoading, className 
         >
           {title}
         </div>
-        <div className="text-secondary font-zagmamono" title={data?.tokenId}>
+        <div className="text-secondary font-heading" title={data?.tokenId}>
           {tokenId}
         </div>
       </div>

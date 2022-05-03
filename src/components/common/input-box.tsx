@@ -27,7 +27,7 @@ export const InputBox = ({ tooltip, label, children, icon, renderRightIcon, isFu
         {icon && <span className="pr-8">{icon}</span>}
         <div className="w-full">
           {label && (
-            <label className={twMerge('block font-normal font-zagmamono text-sm text-theme-light-800', labelClassname)}>
+            <label className={twMerge('block font-normal font-heading text-sm text-theme-light-800', labelClassname)}>
               {label}
             </label>
           )}
@@ -136,7 +136,7 @@ export const TextInputBox = ({
               onChange(e.target.value);
             }
           }}
-          className="p-0 border-none focus:ring-0 font-bold block w-full font-zagmamono"
+          className="p-0 border-none focus:ring-0 font-bold block w-full font-heading"
           placeholder={placeholder}
         />
       </div>
@@ -199,7 +199,7 @@ export const TextAreaInputBox = ({
           value={value}
           rows={rows}
           onChange={(e) => onChange(e.target.value)}
-          className="p-0 border-none focus:ring-0 block w-full text-base font-zagmamono"
+          className="p-0 border-none focus:ring-0 block w-full text-base font-heading"
           placeholder={placeholder}
         />
       </div>

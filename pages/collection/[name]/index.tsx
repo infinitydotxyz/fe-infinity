@@ -57,12 +57,12 @@ const CollectionPage = () => {
           </div>
         </span>
         <main>
-          <div className="text-secondary mt-6 mb-6 font-zagmamono">
+          <div className="text-secondary mt-6 mb-6 font-heading">
             <span>Created by </span>
             <button onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection.owner)}>
               {ellipsisAddress(collection.owner ?? '')}
             </button>
-            <span className="ml-12 font-zagmamono">Collection address </span>
+            <span className="ml-12 font-heading">Collection address </span>
             <button onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection.address)}>
               {ellipsisAddress(collection.address ?? '')}
             </button>
@@ -131,7 +131,7 @@ const CollectionPage = () => {
                           return (
                             <>
                               <span className="mr-4 font-bold">Buy</span>
-                              <span className="font-zagmamono">{price} ETH</span>
+                              <span className="font-heading">{price} ETH</span>
                             </>
                           );
                         }

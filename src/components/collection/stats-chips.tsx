@@ -189,7 +189,7 @@ export const StatsChips = ({ collection, weeklyStatsData }: Props) => {
       )}
 
       <Button
-        className="h-[52px] font-zagmamono"
+        className="h-[52px] font-heading"
         onClick={() => {
           // assumes parent view has a drawer
           addCartItem({
