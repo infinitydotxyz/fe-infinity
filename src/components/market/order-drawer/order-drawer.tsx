@@ -179,7 +179,8 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
         wide={false}
         isOpen={showSuccessModal}
         onClose={() => setShowSuccessModal(false)}
-        showActionButtons={false}
+        cancelButton="" // hides cancel
+        okButton="Done"
         title={
           <div>
             <AiOutlineCheckCircle className="h-12 w-12" />
@@ -190,9 +191,6 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
           <div className="font-bold text-xlg">Thank you,</div>
           <div className="font-bold mb-6 text-xlg">Order Submitted</div>
           <div>Confirmation: 234234</div>
-          <Button className="mt-6" onClick={() => setShowSuccessModal(false)}>
-            Done
-          </Button>
         </div>
       </Modal>
 

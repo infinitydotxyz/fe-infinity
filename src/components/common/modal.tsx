@@ -11,6 +11,7 @@ interface Props {
   title?: string | ReactNode;
 
   // you can repurpose the ok/cancel buttons
+  // pass in '' to hide button
   okButton?: string;
   cancelButton?: string;
 
@@ -34,6 +35,47 @@ export const Modal = ({
   showActionButtons = true,
   wide = true
 }: Props) => {
+  const buttons = [];
+
+  // pass in '' to hide button
+  if (okButton) {
+    buttons.push(
+      <Button
+        className="flex-1"
+        size="large"
+        onClick={() => {
+          if (onOKButton) {
+            onOKButton();
+          } else {
+            onClose();
+          }
+        }}
+      >
+        {okButton}
+      </Button>
+    );
+  }
+
+  // pass in '' to hide button
+  if (cancelButton) {
+    buttons.push(
+      <Button
+        className="flex-1"
+        variant="outline"
+        size="large"
+        onClick={() => {
+          if (onCancelButton) {
+            onCancelButton();
+          } else {
+            onClose();
+          }
+        }}
+      >
+        {cancelButton}
+      </Button>
+    );
+  }
+
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={onClose}>
@@ -77,38 +119,7 @@ export const Modal = ({
 
                 {children}
 
-                {showActionButtons && (
-                  <div className="flex space-x-4 mt-8">
-                    <Button
-                      className="flex-1"
-                      size="large"
-                      onClick={() => {
-                        if (onOKButton) {
-                          onOKButton();
-                        } else {
-                          onClose();
-                        }
-                      }}
-                    >
-                      {okButton}
-                    </Button>
-
-                    <Button
-                      className="flex-1"
-                      variant="outline"
-                      size="large"
-                      onClick={() => {
-                        if (onCancelButton) {
-                          onCancelButton();
-                        } else {
-                          onClose();
-                        }
-                      }}
-                    >
-                      {cancelButton}
-                    </Button>
-                  </div>
-                )}
+                {showActionButtons && <div className="flex space-x-4 mt-8">{buttons}</div>}
               </Dialog.Panel>
             </Transition.Child>
           </div>
