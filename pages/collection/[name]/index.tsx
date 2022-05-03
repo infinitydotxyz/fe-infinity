@@ -57,12 +57,12 @@ const CollectionPage = () => {
           </div>
         </span>
         <main>
-          <div className="text-secondary mt-6 mb-6 text-sm font-heading">
+          <div className="text-secondary mt-6 mb-6 font-zagmamono">
             <span>Created by </span>
             <button onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection.owner)}>
               {ellipsisAddress(collection.owner ?? '')}
             </button>
-            <span className="ml-12">Collection address </span>
+            <span className="ml-12 font-zagmamono">Collection address </span>
             <button onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection.address)}>
               {ellipsisAddress(collection.address ?? '')}
             </button>
@@ -75,7 +75,7 @@ const CollectionPage = () => {
               <LoadingDescription />
             </div>
           ) : (
-            <div className="text-secondary mt-6 text-sm md:w-2/3">{collection.metadata.description ?? ''}</div>
+            <div className="text-secondary mt-6 md:w-2/3">{collection.metadata.description ?? ''}</div>
           )}
 
           <div className="mt-7">
