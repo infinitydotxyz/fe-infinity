@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Switch, TextInputBox, Modal } from 'src/components/common';
 
-export const ListModal: React.FC = () => {
+export const ListModal = () => {
   const [price, setPrice] = useState(0);
   const [modalIsOpen, setIsOpen] = React.useState(false);
   const openModal = () => {

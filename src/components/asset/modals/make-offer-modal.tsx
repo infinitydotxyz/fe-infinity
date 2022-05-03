@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, CurrencyInput, DatePickerBox } from 'src/components/common';
 
-export const MakeOfferModal: React.FC = () => {
+export const MakeOfferModal = () => {
   const [price, setPrice] = useState(0);
   const [modalIsOpen, setIsOpen] = React.useState(false);
   const [expirationDate, setExpirationDate] = useState(Date.now() + 1000);

@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { Modal, CurrencyInput, NextLink } from 'src/components/common';
+import { Modal, CurrencyInput, NextLink, Checkbox } from 'src/components/common';
 
-export const PlaceBidModal: React.FC = () => {
+export const PlaceBidModal = () => {
   const [price, setPrice] = useState(0);
-  const [modalIsOpen, setIsOpen] = React.useState(false);
+  const [modalIsOpen, setIsOpen] = useState(false);
+  const [termsChecked, setTermsChecked] = useState(false);
+
   const openModal = () => {
     setIsOpen(true);
   };
@@ -19,6 +21,8 @@ export const PlaceBidModal: React.FC = () => {
         isOpen={modalIsOpen}
         onClose={closeModal}
         okButton="Place bid"
+        disableOK={!termsChecked}
+        disableCancel={!termsChecked}
         cancelButton="Convert ETH"
         onOKButton={() => console.log('Place bid')}
         onCancelButton={() => console.log('Convert ETH')}
@@ -34,15 +38,18 @@ export const PlaceBidModal: React.FC = () => {
             }}
           />
           <div className="mt-6 flex">
-            <div className="flex items-center">
-              <input type="checkbox" className="border-gray-300 text-black focus:outline-none rounded h-5 w-5" />
-            </div>
-            <div className="ml-3">
-              <span className="text-theme-light-800">{"By checking this box, you agree to Infinity's"}</span>
-              <div className="underline">
-                <NextLink href="/terms-of-service">Terms of Service</NextLink>
-              </div>
-            </div>
+            <Checkbox
+              checked={termsChecked}
+              onChange={setTermsChecked}
+              label={
+                <>
+                  <span className="text-theme-light-800">{"By checking this box, you agree to Infinity's"}</span>
+                  <div className="underline">
+                    <NextLink href="/terms-of-service">Terms of Service</NextLink>
+                  </div>
+                </>
+              }
+            />
           </div>
         </div>
       </Modal>

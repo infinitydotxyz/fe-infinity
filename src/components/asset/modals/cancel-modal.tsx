@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal } from 'src/components/common';
 
-export const CancelModal: React.FC = () => {
+export const CancelModal = () => {
   const [modalIsOpen, setIsOpen] = React.useState(false);
   const openModal = () => {
     setIsOpen(true);

@@ -15,6 +15,9 @@ interface Props {
   okButton?: string;
   cancelButton?: string;
 
+  disableOK?: boolean;
+  disableCancel?: boolean;
+
   // if not set, it will call onClose
   onCancelButton?: () => void;
   onOKButton?: () => void;
@@ -30,6 +33,8 @@ export const Modal = ({
   onCancelButton,
   okButton = 'OK',
   cancelButton = 'Cancel',
+  disableOK = false,
+  disableCancel = false,
   title,
   onClose, // X icon, or click outside dialog
   showActionButtons = true,
@@ -42,7 +47,7 @@ export const Modal = ({
     buttons.push(
       <Button
         className="flex-1"
-        size="large"
+        disabled={disableOK}
         onClick={() => {
           if (onOKButton) {
             onOKButton();
@@ -61,8 +66,8 @@ export const Modal = ({
     buttons.push(
       <Button
         className="flex-1"
+        disabled={disableCancel}
         variant="outline"
-        size="large"
         onClick={() => {
           if (onCancelButton) {
             onCancelButton();

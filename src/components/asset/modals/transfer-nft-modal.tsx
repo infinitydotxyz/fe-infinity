@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, TextInputBox } from 'src/components/common';
 
-export const TransferNFTModal: React.FC = () => {
+export const TransferNFTModal = () => {
   const [address, setAddress] = useState('');
   const [modalIsOpen, setIsOpen] = React.useState(false);
   const openModal = () => {
