@@ -1,4 +1,4 @@
-import { debounce } from 'lodash';
+import { debounce, uniqBy } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
 import { Button, Checkbox, InputBox, TextInputBox } from 'src/components/common';
@@ -26,23 +26,23 @@ export const OrderbookFilters = () => {
   const { getTopCollections, getCollectionsByName, getCollectionsByIds } = useCollectionCache();
 
   useEffect(() => {
-    if (collections) {
-      const fetchInitialCollections = async () => {
-        const initialCollections = await getCollectionsByIds(collections);
-        if (initialCollections?.length) {
+    // loads the selected collections from query params and also provides some more options
+    const fetchInitialCollections = async () => {
+      const initialCollections = await getTopCollections();
+      if (initialCollections?.length) {
+        // query params passed on page load
+        if (collections.length > 0) {
+          const selectedCollections = await getCollectionsByIds(collections);
+          if (selectedCollections?.length) {
+            const _collections = uniqBy([...selectedCollections, ...initialCollections], 'id');
+            setCollectionsData(_collections);
+          }
+        } else {
           setCollectionsData(initialCollections);
         }
-      };
-      fetchInitialCollections().catch(console.error);
-    } else {
-      const fetchInitialCollections = async () => {
-        const initialCollections = await getTopCollections();
-        if (initialCollections?.length) {
-          setCollectionsData(initialCollections);
-        }
-      };
-      fetchInitialCollections().catch(console.error);
-    }
+      }
+    };
+    fetchInitialCollections().catch(console.error);
   }, []);
 
   const searchForCollections = debounce(async (searchTerm: string) => {
@@ -56,10 +56,19 @@ export const OrderbookFilters = () => {
     } else {
       const initialCollections = await getTopCollections();
       if (initialCollections?.length) {
-        setCollectionsData(initialCollections);
+        // query params
+        if (collections.length > 0) {
+          const selectedCollections = await getCollectionsByIds(collections);
+          if (selectedCollections?.length) {
+            const _collections = uniqBy([...selectedCollections, ...initialCollections], 'id');
+            setCollectionsData(_collections);
+          }
+        } else {
+          setCollectionsData(initialCollections);
+        }
       }
     }
-  }, 500);
+  }, 300);
 
   return (
     <div className="flex flex-col mr-12">
