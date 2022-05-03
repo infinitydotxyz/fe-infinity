@@ -13,6 +13,7 @@ import { AiOutlineCheck } from 'react-icons/ai';
 import { AvatarImage } from 'src/components/collection/avatar-image';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { OrderDrawer } from 'src/components/market/order-drawer/order-drawer';
+import ContentLoader from 'react-content-loader';
 
 const CollectionPage = () => {
   const { orderDrawerOpen, setOrderDrawerOpen, addCartItem } = useOrderContext();
@@ -24,7 +25,7 @@ const CollectionPage = () => {
   const { options, onChange, selected } = useToggleTab(['NFT', 'Activity'], 'NFT');
 
   const path = `/collections/${name}`;
-  const { result: collection } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
+  const { result: collection, isLoading } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
   const { result: dailyStats } = useFetch<{ data: CollectionStats[] }>(
     name
       ? path + '/stats?limit=10&orderBy=volume&orderDirection=desc&minDate=0&maxDate=2648764957623&period=daily'
@@ -68,7 +69,13 @@ const CollectionPage = () => {
 
           <StatsChips collection={collection} weeklyStatsData={weeklyStats?.data ?? []} />
 
-          <div className="text-secondary mt-6 text-sm md:w-2/3">{collection.metadata.description ?? ''}</div>
+          {isLoading ? (
+            <div className="mt-6">
+              <LoadingDescription />
+            </div>
+          ) : (
+            <div className="text-secondary mt-6 text-sm md:w-2/3">{collection.metadata.description ?? ''}</div>
+          )}
 
           <div className="mt-7">
             <div className="font-medium">Ownership includes</div>
@@ -164,5 +171,20 @@ const CollectionPage = () => {
     </PageBox>
   );
 };
+
+const LoadingDescription = () => (
+  <ContentLoader
+    speed={2}
+    width={400}
+    height={120}
+    viewBox="0 0 400 120"
+    backgroundColor="#f3f3f3"
+    foregroundColor="#ecebeb"
+  >
+    <rect x="3" y="3" rx="2" ry="2" width="390" height="14" />
+    <rect x="3" y="28" rx="2" ry="2" width="390" height="14" />
+    <rect x="3" y="52" rx="2" ry="2" width="222" height="14" />
+  </ContentLoader>
+);
 
 export default CollectionPage;

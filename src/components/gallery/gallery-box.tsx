@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { apiGet, ApiError } from 'src/utils/apiUtils';
 import { ITEMS_PER_PAGE } from 'src/utils/constants';
 import { useFilterContext } from 'src/utils/context/FilterContext';
-import { Button, Card, CardProps, FetchMore, Spinner } from 'src/components/common';
+import { Button, Card, CardProps, FetchMore } from 'src/components/common';
 import { FilterPanel } from '../filter/filter-panel';
 import { GallerySort } from './gallery-sort';
 import { twMerge } from 'tailwind-merge';
@@ -137,9 +137,15 @@ export const GalleryBox = ({ collection, className, cardProps, getEndpoint, filt
         )}
 
         {isFetching && (
-          <div className="w-full">
-            <Spinner className="ml-8 mt-24" />
-          </div>
+          <>
+            {/* <Spinner className="ml-8 mt-24" /> */}
+
+            <Card isLoading={true} className="mt-24" />
+
+            <Card isLoading={true} className="mt-24" />
+
+            <Card isLoading={true} className="mt-24" />
+          </>
         )}
 
         {error ? <div className="mt-24">Unable to load data.</div> : null}
