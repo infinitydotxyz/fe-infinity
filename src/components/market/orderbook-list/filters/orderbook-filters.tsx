@@ -89,7 +89,8 @@ export const OrderbookFilters = () => {
             <div className="flex-1">
               <label className="block text-xs font-medium text-theme-light-800">Min</label>
               <div className="flex">
-                {EthSymbol}&nbsp;&nbsp;
+                <div className="pr-2">{EthSymbol}</div>
+
                 <input
                   type="number"
                   value={minPrice}
@@ -103,7 +104,7 @@ export const OrderbookFilters = () => {
             <div className="flex-1">
               <label className="block text-xs font-medium text-theme-light-800">Max</label>
               <div className="flex">
-                {EthSymbol}&nbsp;&nbsp;
+                <div className="pr-2">{EthSymbol}</div>
                 <input
                   type="number"
                   value={maxPrice}
