@@ -2,7 +2,12 @@ import { EthPrice, Button, SimpleTable, SimpleTableItem, Spacer, SVG } from 'src
 import { shortDate } from 'src/utils';
 import { OrderInCart, useOrderContext } from 'src/utils/context/OrderContext';
 import { TitleAndSubtitle } from './order-list-item';
-import { collectionIconHeight, collectionIconStyle, collectionIconWidthInPx, iconButtonStyle } from './ui-constants';
+import {
+  collectionIconHeight,
+  collectionIconStyle,
+  collectionIconWidthInPx,
+  iconButtonStyle
+} from 'src/utils/ui-constants';
 
 export const OrderSummary = () => {
   const { ordersInCart } = useOrderContext();

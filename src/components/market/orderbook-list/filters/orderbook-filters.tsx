@@ -157,11 +157,7 @@ const OrderbookFilterItem = ({ openState, setOpenState, item, children }: Orderb
         {openState[item] ? <AiOutlineMinus className="text-lg" /> : <AiOutlinePlus className="text-lg" />}
       </div>
 
-      {openState[item] && (
-        <>
-          <div className="mb-6 pb-8 border-b border-gray-300">{children}</div>
-        </>
-      )}
+      {openState[item] && <div className="mb-6 pb-8 border-b border-gray-300">{children}</div>}
     </React.Fragment>
   );
 };

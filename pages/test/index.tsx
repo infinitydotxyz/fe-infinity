@@ -101,6 +101,14 @@ export const TestPage = () => {
             >
               Pixel Score
             </Button>
+
+            <Button
+              onClick={() => {
+                void router.push('/terms-of-service');
+              }}
+            >
+              Terms of Service
+            </Button>
           </div>
         </div>
       </div>

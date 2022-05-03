@@ -66,7 +66,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
       <PageBox title="Asset - Error" className="w-full h-full grid place-items-center">
         <div className="flex flex-col max-w-screen-2xl mt-4">
           <main>
-            <p>Error: Fetching Data Failed.</p>
+            <p>Unable to load data.</p>
           </main>
         </div>
       </PageBox>

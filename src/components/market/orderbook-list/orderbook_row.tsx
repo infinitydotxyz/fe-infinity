@@ -47,7 +47,6 @@ export const OrderbookRow = ({ order }: OrderbookRowProps): JSX.Element => {
             {value ? <div className="truncate font-bold">{value}</div> : <div>---</div>}
           </div>
         );
-        break;
       case 'Currency':
         return (
           <div className="flex flex-row items-center">
@@ -56,7 +55,6 @@ export const OrderbookRow = ({ order }: OrderbookRowProps): JSX.Element => {
         );
       case 'Name':
       case 'Button':
-        return <></>;
     }
   };
 

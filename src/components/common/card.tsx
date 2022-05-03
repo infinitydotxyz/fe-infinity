@@ -5,6 +5,8 @@ import { AiOutlineEye } from 'react-icons/ai';
 import { Dropdown, DropdownItems } from './dropdown';
 import { Button } from './button';
 import { NextLink } from './next-link';
+import ContentLoader from 'react-content-loader';
+import { inputBorderColor } from 'src/utils/ui-constants';
 
 type labelFn = (data?: CardData) => ReactNode;
 
@@ -17,10 +19,11 @@ export interface CardProps {
   data?: CardData;
   cardActions?: CardAction[];
   dropdownActions?: DropdownItems[];
+  isLoading?: boolean;
   className?: string;
 }
 
-export const Card = ({ data, cardActions, dropdownActions, className }: CardProps): JSX.Element => {
+export const Card = ({ data, cardActions, dropdownActions, isLoading, className }: CardProps): JSX.Element => {
   const title = (data?.title ?? '').length > 18 ? data?.title?.slice(0, 18) + '...' : data?.title;
   const tokenId = (data?.tokenId ?? '').length > 18 ? data?.tokenId?.slice(0, 18) + '...' : data?.tokenId;
 
@@ -43,13 +46,27 @@ export const Card = ({ data, cardActions, dropdownActions, className }: CardProp
     </>
   );
 
+  if (isLoading) {
+    return (
+      <ContentLoader
+        speed={2}
+        width={290}
+        height={290}
+        viewBox="0 0 400 460"
+        backgroundColor="#f3f3f3"
+        foregroundColor="#ecebeb"
+        className={className}
+      >
+        <rect x="7" y="415" rx="2" ry="2" width="227" height="16" />
+        <rect x="6" y="7" rx="45" ry="45" width="390" height="388" />
+        <rect x="6" y="440" rx="2" ry="2" width="227" height="16" />
+      </ContentLoader>
+    );
+  }
   return (
     <div className={twMerge(`sm:mx-0 relative flex flex-col pointer-events-auto ${className ?? ''}`)}>
-      <NextLink
-        href={`/asset/${data?.chainId}/${data?.tokenAddress}/${data?.tokenId}`}
-        className="rounded-3xl w-[290px] flex-1 overflow-hidden"
-      >
-        <img src={data?.image ?? ''} alt="card" />
+      <NextLink href={`/asset/${data?.chainId}/${data?.tokenAddress}/${data?.tokenId}`}>
+        <img className="rounded-3xl w-[290px] flex-1 overflow-hidden" src={data?.image ?? ''} alt="card" />
       </NextLink>
 
       {data?.rarityRank && (
@@ -79,9 +96,15 @@ export const Card = ({ data, cardActions, dropdownActions, className }: CardProp
         {buttonJsx}
 
         {(dropdownActions ?? []).length > 0 ? (
-          <div className="border border-gray-300 rounded-3xl ml-1 pt-1 w-10 h-10 flex justify-center items-center text-lg">
-            <Dropdown toggler={<AiOutlineEye className="w-10" />} items={dropdownActions ?? []} />
-          </div>
+          <Dropdown
+            className="ml-2"
+            toggler={
+              <div className={twMerge(inputBorderColor, 'border rounded-full w-10 h-10 flex flex-col justify-center')}>
+                <AiOutlineEye className="w-full text-lg" />
+              </div>
+            }
+            items={dropdownActions ?? []}
+          />
         ) : null}
       </footer>
     </div>
