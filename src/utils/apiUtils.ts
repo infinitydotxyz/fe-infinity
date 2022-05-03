@@ -58,9 +58,11 @@ interface ApiParams {
   doNotAttemptLogin?: boolean;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type ApiError = any;
+
 export interface ApiResponse {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  error?: any;
+  error?: ApiError;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   result?: any;
   status: number;
