@@ -96,7 +96,7 @@ const CollectionPage = () => {
             </div>
           </div>
 
-          <table className="mt-8 text-sm md:w-1/2">
+          <table className="mt-8 md:w-1/2">
             <thead>
               <tr className="text-gray-400">
                 <th className="text-left font-medium font-heading">Items</th>
