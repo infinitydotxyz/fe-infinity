@@ -5,11 +5,12 @@ import { XIcon } from '@heroicons/react/outline';
 import { iconButtonStyle } from '../market/order-drawer/ui-constants';
 
 interface Props {
-  children: ReactNode;
   isOpen: boolean;
   onClose: () => void;
   title?: string | ReactNode;
+  message?: string | ReactNode;
 
+  children?: ReactNode;
   // you can repurpose the ok/cancel buttons
   // pass in '' to hide button
   okButton?: string;
@@ -36,6 +37,7 @@ export const Modal = ({
   disableOK = false,
   disableCancel = false,
   title,
+  message,
   onClose, // X icon, or click outside dialog
   showActionButtons = true,
   wide = true
@@ -112,17 +114,24 @@ export const Modal = ({
               <Dialog.Panel
                 className={`w-full ${
                   wide ? 'max-w-lg' : 'max-w-md'
-                } transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all`}
+                } transform overflow-hidden rounded-2xl bg-white py-6 px-7 text-left align-middle shadow-xl transition-all`}
               >
-                <Dialog.Title as="h3" className="flex items-center text-lg font-medium leading-6 text-gray-900">
-                  {title}
+                {title && (
+                  <Dialog.Title
+                    as="h3"
+                    className="flex items-center tracking-tight text-xl font-bold leading-6 text-gray-900 mb-4"
+                  >
+                    {title}
 
-                  <Spacer />
+                    <Spacer />
 
-                  <Button size="small" variant="ghost" onClick={onClose}>
-                    <XIcon className={iconButtonStyle} />
-                  </Button>
-                </Dialog.Title>
+                    <Button size="plain" variant="round" onClick={onClose}>
+                      <XIcon className={iconButtonStyle} />
+                    </Button>
+                  </Dialog.Title>
+                )}
+
+                {message && <div className="font-medium text-xl tracking-tight text-gray-800 mb-4">{message}</div>}
 
                 {children}
 
