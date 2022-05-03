@@ -28,18 +28,24 @@ export const FeedFilterDropdown: React.FC<FeedFilterDropdownProps> = ({ selected
     }
   ];
   return (
-    <PopoverButton title="Filter">
-      {options.map((item, idx) => (
-        <Checkbox
-          boxOnLeft={false}
-          key={idx}
-          label={item.label}
-          checked={selectedTypes.indexOf(item.value as FeedEventType) >= 0}
-          onChange={(checked) => {
-            onChange(checked, item.value);
-          }}
-        />
-      ))}
+    <PopoverButton title="Filter" buttonClassName="font-heading">
+      {options.map((item, idx) => {
+        let isChecked = selectedTypes.indexOf(item.value as FeedEventType) >= 0;
+        if (item.value === '' && selectedTypes.length === 0) {
+          isChecked = true; // 'All' option selected.
+        }
+        return (
+          <Checkbox
+            boxOnLeft={false}
+            key={idx}
+            label={item.label}
+            checked={isChecked}
+            onChange={(checked) => {
+              onChange(checked, item.value);
+            }}
+          />
+        );
+      })}
     </PopoverButton>
   );
 };
