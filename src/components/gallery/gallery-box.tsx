@@ -138,8 +138,6 @@ export const GalleryBox = ({ collection, className, cardProps, getEndpoint, filt
 
         {isFetching && (
           <>
-            {/* <Spinner className="ml-8 mt-24" /> */}
-
             <Card isLoading={true} className="mt-24" />
 
             <Card isLoading={true} className="mt-24" />
