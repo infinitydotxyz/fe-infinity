@@ -7,23 +7,30 @@ import { iconButtonStyle } from '../market/order-drawer/ui-constants';
 interface Props {
   children: ReactNode;
   isOpen: boolean;
-  title?: string;
-  titleChildren?: ReactNode;
-  okButton?: string;
   onClose: () => void;
-  onSubmit?: () => void;
+  title?: string | ReactNode;
+
+  // you can repurpose the ok/cancel buttons
+  okButton?: string;
+  cancelButton?: string;
+
+  // if not set, it will call onClose
+  onCancelButton?: () => void;
+  onOKButton?: () => void;
+
   showActionButtons?: boolean;
   wide?: boolean;
 }
 
 export const Modal = ({
-  children,
-  onSubmit,
-  okButton = 'OK',
-  title,
-  titleChildren,
   isOpen,
-  onClose,
+  children,
+  onOKButton,
+  onCancelButton,
+  okButton = 'OK',
+  cancelButton = 'Cancel',
+  title,
+  onClose, // X icon, or click outside dialog
   showActionButtons = true,
   wide = true
 }: Props) => {
@@ -60,7 +67,6 @@ export const Modal = ({
               >
                 <Dialog.Title as="h3" className="flex items-center text-lg font-medium leading-6 text-gray-900">
                   {title}
-                  {titleChildren}
 
                   <Spacer />
 
@@ -73,11 +79,30 @@ export const Modal = ({
 
                 {showActionButtons && (
                   <div className="flex space-x-4 mt-8">
-                    <Button variant="outline" onClick={onClose}>
-                      Cancel
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        if (onCancelButton) {
+                          onCancelButton();
+                        } else {
+                          onClose();
+                        }
+                      }}
+                    >
+                      {cancelButton}
                     </Button>
 
-                    <Button onClick={onSubmit}>{okButton}</Button>
+                    <Button
+                      onClick={() => {
+                        if (onOKButton) {
+                          onOKButton();
+                        } else {
+                          onClose();
+                        }
+                      }}
+                    >
+                      {okButton}
+                    </Button>
                   </div>
                 )}
               </Dialog.Panel>

@@ -15,7 +15,12 @@ export const PlaceBidModal: React.FC = () => {
   return (
     <div>
       <button onClick={openModal}>Place a bid</button>
-      <Modal isOpen={modalIsOpen} onClose={closeModal} showActionButtons={false}>
+      <Modal
+        isOpen={modalIsOpen}
+        onClose={closeModal}
+        showActionButtons={false}
+        onOKButton={() => console.log('hello')}
+      >
         <div className="modal-body p-4 rounded-3xl">
           <p className="font-bold text-2xl tracking-tight mb-12">Place a bid</p>
           <CurrencyInput

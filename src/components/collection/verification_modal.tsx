@@ -9,7 +9,7 @@ interface Props {
 
 export const VerificationModal = ({ isOpen, onSubmit, onClose }: Props) => {
   return (
-    <Modal isOpen={isOpen} onSubmit={onSubmit} onClose={onClose} showActionButtons={false}>
+    <Modal isOpen={isOpen} onOKButton={onSubmit} onClose={onClose} showActionButtons={false}>
       <div className="modal-body p-4 rounded-3xl">
         <p className="font-bold text-2xl tracking-tight mb-12">
           You need to verify that you are authorized to modify this collection.

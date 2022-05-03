@@ -180,7 +180,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
         isOpen={showSuccessModal}
         onClose={() => setShowSuccessModal(false)}
         showActionButtons={false}
-        titleChildren={
+        title={
           <div>
             <AiOutlineCheckCircle className="h-12 w-12" />
           </div>

@@ -15,7 +15,7 @@ export const ListModal: React.FC = () => {
   return (
     <div>
       <button onClick={openModal}>List</button>
-      <Modal isOpen={modalIsOpen} onClose={closeModal} okButton="List">
+      <Modal isOpen={modalIsOpen} onClose={closeModal} okButton="List" onOKButton={() => console.log('hello')}>
         <p className="font-bold text-2xl tracking-tight mb-5">List NFT</p>
         {/* <ToggleTab className="mt-5" /> */}
         <p className="mt-12 mb-4 text-base">Sell at a fixed or declining price.</p>
