@@ -1,9 +1,9 @@
 import { OBOrder, OBOrderItem, SignedOBOrder } from '@infinityxyz/lib/types/core';
 import { getOBComplicationAddress, getTxnCurrencyAddress } from '@infinityxyz/lib/utils';
 import React, { ReactNode, useContext, useState } from 'react';
-import { secondsPerDay } from 'src/components/market/order-drawer/ui-constants';
 import { getSignedOBOrder } from '../exchange/orders';
 import { fetchMinBpsToSeller, fetchOrderNonce, postOrders } from '../marketUtils';
+import { secondsPerDay } from '../ui-constants';
 import { useAppContext } from './AppContext';
 
 export interface OrderCartItem {

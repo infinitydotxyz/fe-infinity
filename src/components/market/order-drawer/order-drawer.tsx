@@ -179,20 +179,18 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
         wide={false}
         isOpen={showSuccessModal}
         onClose={() => setShowSuccessModal(false)}
-        showActionButtons={false}
-        titleChildren={
+        cancelButton="" // hides cancel
+        okButton="Done"
+        title={
           <div>
             <AiOutlineCheckCircle className="h-12 w-12" />
           </div>
         }
       >
-        <div className="flex flex-col modal-body p-4 rounded-3xl">
+        <div className="flex flex-col">
           <div className="font-bold text-xlg">Thank you,</div>
           <div className="font-bold mb-6 text-xlg">Order Submitted</div>
           <div>Confirmation: 234234</div>
-          <Button className="mt-6" onClick={() => setShowSuccessModal(false)}>
-            Done
-          </Button>
         </div>
       </Modal>
 

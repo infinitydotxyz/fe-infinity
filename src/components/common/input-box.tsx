@@ -6,6 +6,7 @@ import { EthSymbol } from './eth-price';
 import { Tooltip, TooltipIcon, TooltipSpec, TooltipWrapper } from './tool-tip';
 import { twMerge } from 'tailwind-merge';
 import classNames from 'classnames';
+import { inputBorderColor } from '../../utils/ui-constants';
 
 interface Props {
   label?: string;
@@ -22,7 +23,7 @@ export const InputBox = ({ tooltip, label, children, icon, renderRightIcon, isFu
 
   return (
     <TooltipWrapper show={showTooltip} tooltip={tooltip} className={classNames({ 'w-full': isFullWidth })}>
-      <div className="py-3 pl-6 pr-2 outline outline-1 rounded-3xl w-full flex items-center outline-theme-light-700">
+      <div className={twMerge(inputBorderColor, 'py-3 pl-6 pr-2 border rounded-3xl w-full flex items-center')}>
         {icon && <span className="pr-8">{icon}</span>}
         <div className="w-full">
           {label && (

@@ -1,6 +1,5 @@
 import { ReactNode, useState } from 'react';
 import { FaTwitter, FaFacebook, FaEdit } from 'react-icons/fa';
-import { CancelModal } from 'src/components/asset';
 import { RemoveIcon } from 'src/components/collection/edit/remove-icon';
 import {
   Button,
@@ -218,9 +217,6 @@ const SandboxPage = () => {
         tooltip={'0x78979787978'}
       />
 
-      <SBHeader># CancelModal</SBHeader>
-      <CancelModal />
-
       <SBHeader># RemoveIcon</SBHeader>
 
       <RemoveIcon onClick={() => console.log('removeIcon clicked')} />
@@ -251,7 +247,12 @@ const SandboxPage = () => {
       <div>
         <Button onClick={() => setIsOpen(true)}>Show Modal</Button>
 
-        <Modal isOpen={modalIsOpen} onClose={() => setIsOpen(false)} okButton="Erase" onSubmit={() => setIsOpen(false)}>
+        <Modal
+          isOpen={modalIsOpen}
+          onClose={() => setIsOpen(false)}
+          okButton="Erase"
+          onOKButton={() => setIsOpen(false)}
+        >
           Erase Zip Drive?
         </Modal>
       </div>

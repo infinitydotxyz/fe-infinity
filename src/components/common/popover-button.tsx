@@ -1,5 +1,6 @@
 import React, { Fragment, ReactNode } from 'react';
 import { Popover, Transition } from '@headlessui/react';
+import { inputBorderColor } from '../../utils/ui-constants';
 
 interface Props {
   title: string;
@@ -13,10 +14,11 @@ export const PopoverButton = ({ title, children }: Props) => {
         <>
           <Popover.Button
             className={`
+                ${inputBorderColor}
                 transition ease-in-out duration-300 hover:bg-gray-700  active:bg-gray-900
                 focus:outline-none focus-visible:ring focus:ring-black focus:ring-opacity-50
                 px-6 py-2
-                border rounded-3xl border-gray-300 text-gray-900
+                border rounded-3xl text-gray-900
                 hover:text-white
                 false flex items-center space-x-1`}
           >

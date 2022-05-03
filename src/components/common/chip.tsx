@@ -1,5 +1,6 @@
 import { ReactElement } from 'react';
 import { twMerge } from 'tailwind-merge';
+import { inputBorderColor } from '../../utils/ui-constants';
 
 interface Props {
   left?: ReactElement;
@@ -16,7 +17,8 @@ export const Chip = ({ left, content, right, iconOnly, active, onClick, classNam
   return (
     <button
       className={twMerge(
-        'flex justify-center items-center m-1 font-medium font-heading px-4 h-[50px] rounded-full border border-gray-300 cursor-pointer hover:bg-gray-200',
+        inputBorderColor,
+        'flex justify-center items-center m-1 font-medium font-heading px-4 h-[50px] rounded-full border cursor-pointer hover:bg-gray-200',
         `${iconOnly ? 'w-[50px] p-2' : ''} ${activeCx} ${className}`
       )}
       onClick={onClick}

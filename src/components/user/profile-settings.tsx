@@ -26,7 +26,7 @@ export const AccountSettingsPage: FunctionComponent<AccountSettingsProps> = (pro
 
   const IMAGE_UPLOAD_PATH = `/user/${user.address}/images`;
 
-  const handleProfileImageUpload = async (file: File) => {
+  const handleProfileImageUpload = async (file: File | Blob) => {
     const formData = new FormData();
     formData.append('profileImage', file);
     await apiPut(IMAGE_UPLOAD_PATH, { data: formData });
@@ -36,7 +36,7 @@ export const AccountSettingsPage: FunctionComponent<AccountSettingsProps> = (pro
     await apiPut(IMAGE_UPLOAD_PATH, { data: { deleteProfileImage: true } });
   };
 
-  const handleBannerImageUpload = async (file: File) => {
+  const handleBannerImageUpload = async (file: File | Blob) => {
     const formData = new FormData();
     formData.append('bannerImage', file);
     await apiPut(IMAGE_UPLOAD_PATH, { data: formData });

@@ -14,6 +14,8 @@ import {
   WhatsappShareButton,
   WhatsappIcon
 } from 'react-share';
+import { twMerge } from 'tailwind-merge';
+import { inputBorderColor } from 'src/utils/ui-constants';
 
 interface UserProfileShareProps {
   userAddress?: string;
@@ -28,7 +30,12 @@ export const UserProfileShare: FunctionComponent<UserProfileShareProps> = ({ use
         {({ open }) => (
           <>
             <Menu.Button>
-              <div className="flex justify-center items-center m-1 font-medium font-heading px-4 h-[50px] rounded-full border border-gray-300 cursor-pointer hover:bg-gray-200 ">
+              <div
+                className={twMerge(
+                  inputBorderColor,
+                  'flex justify-center items-center m-1 font-medium font-heading px-4 h-[50px] rounded-full border cursor-pointer hover:bg-gray-200'
+                )}
+              >
                 <FaShareAlt className="text-md" />
                 <div className="pl-2">Share</div>
               </div>

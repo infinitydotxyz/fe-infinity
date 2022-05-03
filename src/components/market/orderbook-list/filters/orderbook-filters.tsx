@@ -1,37 +1,21 @@
 import React, { useState } from 'react';
-import { useRouter } from 'next/router';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
 import { Button, Checkbox, EthSymbol, InputBox } from 'src/components/common';
+import { useOrderbook } from '../../OrderbookContext';
 
 type OpenFilterState = {
   [filter: string]: boolean;
 };
 
 export const OrderbookFilters = () => {
-  // router
-  const router = useRouter();
-
-  const {
-    query: { collections: _collections, orderTypes: _orderTypes, minPrice, maxPrice, numberOfNfts }
-  } = router;
-
-  let collections: string[] = [];
-  if (typeof _collections === 'string') {
-    collections = [_collections];
-  }
-  if (typeof _collections === 'object') {
-    collections = [..._collections];
-  }
-
-  let orderTypes: string[] = [];
-  if (typeof _orderTypes === 'string') {
-    orderTypes = [_orderTypes];
-  }
-  if (typeof _orderTypes === 'object') {
-    orderTypes = [..._orderTypes];
-  }
-
   // state
+  const {
+    filters: { orderTypes = [], collections = [], minPrice, maxPrice, numberOfNfts },
+    clearFilter,
+    updateFilter,
+    updateFilterArray
+  } = useOrderbook();
+
   const [openState, setOpenState] = useState<OpenFilterState>({});
   const [collectionSearchState, setCollectionSearchState] = useState<string>();
 
@@ -48,36 +32,6 @@ export const OrderbookFilters = () => {
     'Collection 9'
   ];
   const orderTypesData = ['Listing', 'Offer'];
-
-  // filters helper functions
-  const removeQueryParam = (value: string) => {
-    const updateQueryParams = { ...router.query };
-    delete updateQueryParams[value];
-    router.replace({ pathname: router.pathname, query: { ...updateQueryParams } });
-  };
-
-  const clearFilter = (name: string) => {
-    removeQueryParam(name);
-  };
-
-  const updateFilterArray = (filterName: string, currentFitlers: string[], selectionName: string, checked: boolean) => {
-    let updatedSelections = [];
-    if (checked) {
-      updatedSelections = [...currentFitlers, selectionName];
-    } else {
-      updatedSelections = currentFitlers.filter((currentFilter) => currentFilter !== selectionName);
-    }
-
-    router.replace({ pathname: router.pathname, query: { ...router.query, [filterName]: updatedSelections } });
-  };
-
-  const updateFilter = (name: string, value: string) => {
-    if (!value) {
-      removeQueryParam(name);
-    } else {
-      router.replace({ pathname: router.pathname, query: { ...router.query, [name]: value } });
-    }
-  };
 
   return (
     <div className="flex flex-col mr-12">
@@ -138,7 +92,7 @@ export const OrderbookFilters = () => {
                 {EthSymbol}&nbsp;&nbsp;
                 <input
                   type="number"
-                  value={minPrice as string}
+                  value={minPrice}
                   onChange={(e) => updateFilter('minPrice', e.target.value)}
                   className="p-0 border-none focus:ring-0 block w-full text-base"
                 />
@@ -152,7 +106,7 @@ export const OrderbookFilters = () => {
                 {EthSymbol}&nbsp;&nbsp;
                 <input
                   type="number"
-                  value={maxPrice as string}
+                  value={maxPrice}
                   onChange={(e) => updateFilter('maxPrice', e.target.value)}
                   className="p-0 border-none focus:ring-0 block w-full text-base"
                 />
@@ -169,7 +123,7 @@ export const OrderbookFilters = () => {
               <div className="flex">
                 <input
                   type="number"
-                  value={numberOfNfts as string}
+                  value={numberOfNfts}
                   onChange={(e) => updateFilter('numberOfNfts', e.target.value)}
                   className="p-0 border-none focus:ring-0 block w-full text-base"
                 />
@@ -203,11 +157,7 @@ const OrderbookFilterItem = ({ openState, setOpenState, item, children }: Orderb
         {openState[item] ? <AiOutlineMinus className="text-lg" /> : <AiOutlinePlus className="text-lg" />}
       </div>
 
-      {openState[item] && (
-        <>
-          <div className="mb-6 pb-8 border-b border-gray-300">{children}</div>
-        </>
-      )}
+      {openState[item] && <div className="mb-6 pb-8 border-b border-gray-300">{children}</div>}
     </React.Fragment>
   );
 };

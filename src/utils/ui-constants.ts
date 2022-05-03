@@ -22,3 +22,6 @@ export const smallIconButtonStyle = 'h-5 w-5';
 export const secondsPerDay = 86400;
 export const weekSeconds = secondsPerDay * 7;
 export const thirtyDaySeconds = secondsPerDay * 30;
+
+// used for outline buttons, input boxes etc.
+export const inputBorderColor = 'border-gray-300';

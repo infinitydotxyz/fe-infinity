@@ -1,4 +1,6 @@
 import React, { ReactNode } from 'react';
+import { twMerge } from 'tailwind-merge';
+import { inputBorderColor } from '../../utils/ui-constants';
 
 const classes = {
   // focus ring appears on keyboard tab key navigation for accessibility, not on clicks
@@ -16,7 +18,7 @@ const classes = {
     ghost: 'rounded-3xl', // hover fill needs to be rounded
     primary: 'border rounded-3xl border-gray-100 bg-black text-white',
     secondary: 'border rounded-3xl border-gray-100 bg-black text-white',
-    outline: 'border rounded-3xl border border-gray-300 text-gray-900',
+    outline: twMerge(inputBorderColor, 'border rounded-3xl text-gray-900'),
     danger: 'bg-red-500 hover:bg-red-800 focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 text-white',
     round: 'rounded-full p-1' // use plain size
   }
