@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
+import { debounce } from 'lodash';
+import React, { useEffect, useState } from 'react';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
 import { Button, Checkbox, InputBox, TextInputBox } from 'src/components/common';
 import { useOrderbook } from '../../OrderbookContext';
+import { CollectionSearchItem, useCollectionCache } from '../collection-cache';
 
 type OpenFilterState = {
   [filter: string]: boolean;
 };
+
+const ORDER_TYPES = ['Listing', 'Offer'];
 
 export const OrderbookFilters = () => {
   // state
@@ -18,27 +22,51 @@ export const OrderbookFilters = () => {
 
   const [openState, setOpenState] = useState<OpenFilterState>({});
   const [collectionSearchState, setCollectionSearchState] = useState<string>();
+  const [collectionsData, setCollectionsData] = useState<CollectionSearchItem[]>([]);
+  const { getTopCollections, getCollectionsByName, getCollectionsByIds } = useCollectionCache();
 
-  // mock data
-  const collectionsData = [
-    'Collection 1',
-    'Collection 2',
-    'Collection 3',
-    'Collection 4',
-    'Collection 5',
-    'Collection 6',
-    'Collection 7',
-    'Collection 8',
-    'Collection 9'
-  ];
-  const orderTypesData = ['Listing', 'Offer'];
+  useEffect(() => {
+    if (collections) {
+      const fetchInitialCollections = async () => {
+        const initialCollections = await getCollectionsByIds(collections);
+        if (initialCollections?.length) {
+          setCollectionsData(initialCollections);
+        }
+      };
+      fetchInitialCollections().catch(console.error);
+    } else {
+      const fetchInitialCollections = async () => {
+        const initialCollections = await getTopCollections();
+        if (initialCollections?.length) {
+          setCollectionsData(initialCollections);
+        }
+      };
+      fetchInitialCollections().catch(console.error);
+    }
+  }, []);
+
+  const searchForCollections = debounce(async (searchTerm: string) => {
+    setCollectionSearchState(searchTerm);
+
+    if (searchTerm) {
+      const updatedCollections = await getCollectionsByName(searchTerm);
+      if (updatedCollections?.length) {
+        setCollectionsData(updatedCollections);
+      }
+    } else {
+      const initialCollections = await getTopCollections();
+      if (initialCollections?.length) {
+        setCollectionsData(initialCollections);
+      }
+    }
+  }, 500);
 
   return (
     <div className="flex flex-col mr-12">
       <div className="text-2xl font-bold">Filter</div>
       <OrderbookFilterItem key="Order type" openState={openState} setOpenState={setOpenState} item="Order type">
         <div className="max-h-80 overflow-y-auto space-y-4">
-          {orderTypesData.map((orderType) => (
+          {ORDER_TYPES.map((orderType) => (
             <Checkbox
               key={orderType}
               className="ml-1"
@@ -56,25 +84,22 @@ export const OrderbookFilters = () => {
             defaultValue={collectionSearchState}
             onChange={(ev) => {
               const text = ev.target.value;
-              setCollectionSearchState(text);
+              searchForCollections(text);
             }}
-            placeholder="Filter"
+            placeholder="Search"
           />
 
           <div className="mt-2 max-h-80 overflow-y-auto space-y-4">
-            {collectionsData.map((collection) => {
-              const searchText = (collectionSearchState || '').toLowerCase();
-              if (searchText && collection.toLowerCase().indexOf(searchText) < 0) {
-                return null;
-              }
-
+            {collectionsData.map((collection, i) => {
               return (
                 <Checkbox
-                  key={collection}
+                  key={`${i}-${collection.id}`}
                   className="ml-1"
-                  checked={collections.includes(collection)}
-                  onChange={(checked) => updateFilterArray('collections', collections, collection, checked)}
-                  label={collection}
+                  checked={collections.includes(`${collection.chainId}:${collection.id}`)}
+                  onChange={(checked) =>
+                    updateFilterArray('collections', collections, `${collection.chainId}:${collection.id}`, checked)
+                  }
+                  label={collection.name}
                 />
               );
             })}
