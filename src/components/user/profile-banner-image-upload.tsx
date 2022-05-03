@@ -101,7 +101,7 @@ export const ProfileBannerImageUpload: FunctionComponent<BannerImageProps> = ({
       <div className="sm:pl-8 mt-2 sm:mt-0">
         <Button
           variant="primary"
-          className="my-1 py-2.5 px-12 mb-2 block w-full sm:w-44 font-zagmamono"
+          className="my-1 py-2.5 px-12 mb-2 block w-full sm:w-44 font-heading"
           onClick={onUploadButtonClick}
           disabled={isLoading}
         >
@@ -110,7 +110,7 @@ export const ProfileBannerImageUpload: FunctionComponent<BannerImageProps> = ({
         <ImageUploaderButtonRef buttonRef={uploadInput} onChangeFile={handleChangeFile} />
         <Button
           variant="outline"
-          className="my-1 py-2 px-12 d-block w-full sm:w-44 block font-zagmamono"
+          className="my-1 py-2 px-12 d-block w-full sm:w-44 block font-heading"
           disabled={isLoading || !imgSrc}
           onClick={handleImageRemove}
         >
