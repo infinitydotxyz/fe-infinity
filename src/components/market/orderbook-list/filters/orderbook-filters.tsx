@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
-import { Button, Checkbox, EthSymbol, InputBox } from 'src/components/common';
+import { Button, Checkbox, InputBox, TextInputBox } from 'src/components/common';
 import { useOrderbook } from '../../OrderbookContext';
 
 type OpenFilterState = {
@@ -84,36 +84,28 @@ export const OrderbookFilters = () => {
         </div>
       </OrderbookFilterItem>
       <OrderbookFilterItem key="Sale price" openState={openState} setOpenState={setOpenState} item="Sale price">
-        <div className="flex flex-col">
-          <InputBox>
-            <div className="flex-1">
-              <label className="block text-xs font-medium text-theme-light-800">Min</label>
-              <div className="flex">
-                <div className="pr-2">{EthSymbol}</div>
+        <div className="flex flex-col space-y-2">
+          <TextInputBox
+            addEthSymbol={true}
+            type="number"
+            value={minPrice?.toString()}
+            label="Min"
+            placeholder=""
+            onChange={(value) => {
+              updateFilter('minPrice', value);
+            }}
+          />
 
-                <input
-                  type="number"
-                  value={minPrice}
-                  onChange={(e) => updateFilter('minPrice', e.target.value)}
-                  className="p-0 border-none focus:ring-0 block w-full text-base"
-                />
-              </div>
-            </div>
-          </InputBox>
-          <InputBox>
-            <div className="flex-1">
-              <label className="block text-xs font-medium text-theme-light-800">Max</label>
-              <div className="flex">
-                <div className="pr-2">{EthSymbol}</div>
-                <input
-                  type="number"
-                  value={maxPrice}
-                  onChange={(e) => updateFilter('maxPrice', e.target.value)}
-                  className="p-0 border-none focus:ring-0 block w-full text-base"
-                />
-              </div>
-            </div>
-          </InputBox>
+          <TextInputBox
+            addEthSymbol={true}
+            type="number"
+            value={maxPrice?.toString()}
+            label="Max"
+            placeholder=""
+            onChange={(value) => {
+              updateFilter('maxPrice', value);
+            }}
+          />
         </div>
       </OrderbookFilterItem>
       <OrderbookFilterItem key="Number of NFTs" openState={openState} setOpenState={setOpenState} item="Number of NFTs">
