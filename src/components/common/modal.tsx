@@ -119,7 +119,7 @@ export const Modal = ({
               >
                 <Dialog.Title
                   as="h3"
-                  className="flex items-center tracking-tight text-xl font-bold leading-6 text-gray-900 mb-4"
+                  className="flex items-center tracking-tight text-xl font-bold leading-6 text-gray-900 mb-6"
                 >
                   {title}
 

@@ -11,8 +11,9 @@ import {
   PlaceBidModal,
   MakeOfferModal
 } from 'src/components/asset';
+import { useState } from 'react';
 
-const useFetchAssertInfo = (chainId: string, collection: string, tokenId: string) => {
+const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
   const COL_API_ENDPOINT = `/collections/${chainId}:${collection}`;
 
@@ -26,6 +27,8 @@ const useFetchAssertInfo = (chainId: string, collection: string, tokenId: string
     collection: collectionResponse.result
   };
 };
+
+// ===========================================================
 
 const AssetDetail = () => {
   const { query } = useRouter();
@@ -45,7 +48,7 @@ const AssetDetail = () => {
   return <AssetDetailContent qchainId={query.chainId} qcollection={query.collection} qtokenId={query.tokenId} />;
 };
 
-// ====================================================================
+// ===========================================================
 
 interface Props {
   qchainId: string;
@@ -54,7 +57,13 @@ interface Props {
 }
 
 const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
-  const { isLoading, error, token, collection } = useFetchAssertInfo(qchainId, qcollection, qtokenId);
+  const { isLoading, error, token, collection } = useFetchAssetInfo(qchainId, qcollection, qtokenId);
+
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showListNFTModal, setShowListNFTModal] = useState(false);
+  const [showTransferModal, setShowTransferModal] = useState(false);
+  const [showMakeOfferModal, setShowMakeOfferModal] = useState(false);
+  const [showPlaceBidModal, setShowPlaceBidModal] = useState(false);
 
   if (isLoading) {
     return <PageBox title="Loading..."></PageBox>;
@@ -80,6 +89,17 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
     tokenMetadata.name && collection.metadata.name
       ? `${tokenMetadata.name} - ${collection.metadata.name}`
       : tokenMetadata.name || collection.metadata.name || 'No Name';
+
+  const onClickButton1 = () => {
+    console.log('one');
+    setShowPlaceBidModal(true);
+  };
+
+  const onClickButton2 = () => {
+    console.log('two');
+    setShowMakeOfferModal(true);
+  };
+
   return (
     <PageBox title={assetName}>
       <div className="flex flex-col max-w-screen-2xl mt-4">
@@ -118,10 +138,10 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
 
               <div className="md:-ml-1.5">
                 <div className="flex flex-col md:flex-row gap-2 my-4 md:my-6 lg:my-10 lg:mb-16">
-                  <Button variant="primary" size="large" className="p-4 rounded-full">
+                  <Button variant="primary" size="large" className="p-4 rounded-full" onClick={onClickButton1}>
                     Buy 3.30 ETH
                   </Button>
-                  <Button variant="outline" size="large" className="p-4 rounded-full">
+                  <Button variant="outline" size="large" className="p-4 rounded-full" onClick={onClickButton2}>
                     Make offer
                   </Button>
                 </div>
@@ -141,11 +161,37 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
           <TraitList traits={tokenMetadata.attributes} collectionTraits={collection.attributes} />
           <ActivityList chainId={collection.chainId} collectionAddress={collection.address} tokenId={token.tokenId} />
 
-          <CancelModal />
-          <ListNFTModal />
-          <TransferNFTModal />
-          <MakeOfferModal />
-          <PlaceBidModal />
+          <CancelModal
+            isOpen={showCancelModal}
+            onClose={() => setShowCancelModal(false)}
+            collection={collection}
+            token={token}
+          />
+
+          <ListNFTModal
+            isOpen={showListNFTModal}
+            onClose={() => setShowListNFTModal(false)}
+            collection={collection}
+            token={token}
+          />
+          <TransferNFTModal
+            isOpen={showTransferModal}
+            onClose={() => setShowTransferModal(false)}
+            collection={collection}
+            token={token}
+          />
+          <MakeOfferModal
+            isOpen={showMakeOfferModal}
+            onClose={() => setShowMakeOfferModal(false)}
+            collection={collection}
+            token={token}
+          />
+          <PlaceBidModal
+            isOpen={showPlaceBidModal}
+            onClose={() => setShowPlaceBidModal(false)}
+            collection={collection}
+            token={token}
+          />
         </main>
       </div>
     </PageBox>

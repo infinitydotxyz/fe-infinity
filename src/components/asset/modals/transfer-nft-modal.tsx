@@ -1,26 +1,28 @@
+import { Collection, Token } from '@infinityxyz/lib/types/core';
 import React, { useState } from 'react';
 import { Modal, TextInputBox } from 'src/components/common';
 
-export const TransferNFTModal = () => {
-  const [address, setAddress] = useState('');
-  const [modalIsOpen, setIsOpen] = React.useState(false);
-  const openModal = () => {
-    setIsOpen(true);
-  };
+interface Props {
+  isOpen: boolean;
+  collection: Collection;
+  token: Token;
+  onClose: () => void;
+}
 
-  const closeModal = () => {
-    setIsOpen(false);
-  };
+export const TransferNFTModal = ({ isOpen, onClose, collection, token }: Props) => {
+  const [address, setAddress] = useState('');
 
   return (
     <div>
-      <button onClick={openModal}>Transfer NFT</button>
       <Modal
-        isOpen={modalIsOpen}
-        onClose={closeModal}
+        isOpen={isOpen}
+        onClose={onClose}
         okButton="Transfer"
         title="Transfer NFT"
-        onOKButton={() => console.log('hello')}
+        onOKButton={() => {
+          console.log(collection);
+          console.log(token);
+        }}
       >
         <div>
           <TextInputBox
