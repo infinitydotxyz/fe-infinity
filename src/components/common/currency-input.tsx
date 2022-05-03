@@ -7,10 +7,11 @@ interface Props {
   label: string;
   value: string | number;
   placeholder: string;
+  autoFocus?: boolean;
   onChange: (value: string) => void;
 }
 
-export const CurrencyInput = ({ value, label, placeholder, onChange }: Props): JSX.Element => {
+export const CurrencyInput = ({ value, label, placeholder, onChange, autoFocus = false }: Props): JSX.Element => {
   const [currency, setCurrency] = useState('WETH');
 
   return (
@@ -20,6 +21,7 @@ export const CurrencyInput = ({ value, label, placeholder, onChange }: Props): J
         <div className="flex">
           {EthSymbol}&nbsp;&nbsp;
           <input
+            autoFocus={autoFocus}
             type="number"
             value={value}
             onChange={(e) => onChange(e.target.value)}

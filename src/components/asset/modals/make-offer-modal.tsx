@@ -28,6 +28,7 @@ export const MakeOfferModal = () => {
           <div className="mb-4">Buy this NFT for the price shown</div>
           <div>
             <CurrencyInput
+              autoFocus={true}
               value={price}
               label="Enter offer"
               placeholder=""

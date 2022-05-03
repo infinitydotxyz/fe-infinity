@@ -24,6 +24,7 @@ export const TransferNFTModal = () => {
       >
         <div>
           <TextInputBox
+            autoFocus={true}
             type="text"
             value={address}
             label="Address or ENSName"

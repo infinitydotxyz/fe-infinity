@@ -42,6 +42,7 @@ export const ListNFTModal = () => {
           <>
             <p className="mb-4">Sell at a fixed or declining price.</p>
             <TextInputBox
+              autoFocus={true}
               addEthSymbol={true}
               type="number"
               value={price.toString()}
