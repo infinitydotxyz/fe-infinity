@@ -198,7 +198,7 @@ const AssetDetailContent = ({ user, qchainId, qcollection, qtokenId }: Props) =>
           </span>
 
           <div className="md:-ml-1.5">
-            <div className="flex flex-col md:flex-row gap-2 my-4 md:my-6 lg:my-10 lg:mb-16">
+            <div className="flex flex-col md:flex-row gap-4 my-4 md:my-6 lg:my-10 lg:mb-16">
               <Button variant="primary" size="large" onClick={onClickButton1}>
                 <span className="mr-4">Buy</span>
                 <span className="font-heading">3.30 ETH</span>
