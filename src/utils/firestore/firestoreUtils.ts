@@ -22,7 +22,7 @@ import { FeedEventType } from '@infinityxyz/lib/types/core/feed';
 import { FeedEvent } from 'src/components/feed/feed-item';
 
 export const COLL_FEED = 'feed'; // collection: /feed - to store feed events
-const EVENTS_PER_PAGE = 100;
+const EVENTS_PER_PAGE = 30;
 const COMMENTS_PER_PAGE = 20;
 
 export type FeedFilter = {

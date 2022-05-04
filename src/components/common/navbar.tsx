@@ -32,7 +32,7 @@ export const Navbar = () => {
           type: 'link',
           label: 'My profile',
           props: {
-            href: '/profile'
+            href: '/profile/me'
           }
         },
         {

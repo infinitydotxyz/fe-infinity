@@ -102,7 +102,7 @@ export const AccountSettingsPage: FunctionComponent<AccountSettingsProps> = (pro
         setSubmitting(false);
 
         // go back
-        router.push('/profile');
+        router.push('/profile/me');
       }}
     >
       {({ isSubmitting }) => (
@@ -112,7 +112,7 @@ export const AccountSettingsPage: FunctionComponent<AccountSettingsProps> = (pro
               variant="outline"
               className="py-2.5 mx-3 w-auto font-heading"
               onClick={() => {
-                router.push('/profile');
+                router.push('/profile/me');
               }}
             >
               Cancel
