@@ -78,7 +78,7 @@ export const OrderbookFilters = () => {
           {ORDER_TYPES.map((orderType) => (
             <Checkbox
               key={orderType}
-              className="ml-1"
+              className="pb-4"
               checked={orderTypes.includes(orderType)}
               onChange={(checked) => updateFilterArray('orderTypes', orderTypes, orderType, checked)}
               label={orderType}
@@ -89,7 +89,7 @@ export const OrderbookFilters = () => {
       <OrderbookFilterItem key="Collection" openState={openState} setOpenState={setOpenState} item="Collection">
         <div>
           <input
-            className="border rounded-lg py-2 px-4 mt-1 font-heading w-[90%]"
+            className="border rounded-full py-2 px-4 mt-1 font-heading w-full"
             defaultValue={collectionSearchState}
             onChange={(ev) => {
               const text = ev.target.value;
@@ -98,12 +98,12 @@ export const OrderbookFilters = () => {
             placeholder="Search"
           />
 
-          <div className="mt-2 max-h-80 overflow-y-auto space-y-4">
+          <div className="mt-8 max-h-80 overflow-y-auto space-y-4">
             {collectionsData.map((collection, i) => {
               return (
                 <Checkbox
                   key={`${i}-${collection.id}`}
-                  className="ml-1"
+                  className="pb-4"
                   checked={collections.includes(`${collection.chainId}:${collection.id}`)}
                   onChange={(checked) =>
                     updateFilterArray('collections', collections, `${collection.chainId}:${collection.id}`, checked)
@@ -114,11 +114,13 @@ export const OrderbookFilters = () => {
             })}
           </div>
 
-          <Button onClick={() => clearFilter('collections')}>Clear</Button>
+          <Button className="mt-8 w-full" onClick={() => clearFilter('collections')}>
+            Clear
+          </Button>
         </div>
       </OrderbookFilterItem>
       <OrderbookFilterItem key="Sale price" openState={openState} setOpenState={setOpenState} item="Sale price">
-        <div className="flex flex-col space-y-2">
+        <div className="flex flex-col space-y-4">
           <TextInputBox
             addEthSymbol={true}
             type="number"

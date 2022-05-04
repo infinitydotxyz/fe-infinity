@@ -31,7 +31,7 @@ export const OrderbookList = (): JSX.Element => {
     <>
       <div className="flex flex-col gap-1">
         {/* Filters & Sort */}
-        <div className="text-right">
+        <div className="text-right pb-8">
           <Button
             variant="outline"
             onClick={() => {
@@ -84,12 +84,7 @@ export const OrderbookList = (): JSX.Element => {
       {/* Load More */}
       {!isLoading && (
         <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
-          <Button
-            variant="outline"
-            onClick={() => {
-              fetchMore();
-            }}
-          >
+          <Button variant="outline" onClick={fetchMore}>
             More
           </Button>
         </div>
