@@ -101,7 +101,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   };
 
   return (
-    <PageBox title={assetName}>
+    <PageBox title={''}>
       <div className="flex flex-col max-w-screen-2xl mt-4">
         <main>
           <div className="sm:flex">
@@ -133,13 +133,14 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
                 tooltip={collection.address}
               />
               <span className="text-body text-base">
-                Token ID:<span className="ml-4">{token.tokenId}</span>
+                Token ID:<span className="ml-4 font-heading underline">{token.tokenId}</span>
               </span>
 
               <div className="md:-ml-1.5">
                 <div className="flex flex-col md:flex-row gap-2 my-4 md:my-6 lg:my-10 lg:mb-16">
                   <Button variant="primary" size="large" className="p-4 rounded-full" onClick={onClickButton1}>
-                    Buy 3.30 ETH
+                    <span className="mr-4">Buy</span>
+                    <span className="font-heading">3.30 ETH</span>
                   </Button>
                   <Button variant="outline" size="large" className="p-4 rounded-full" onClick={onClickButton2}>
                     Make offer
