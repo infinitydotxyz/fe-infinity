@@ -29,34 +29,36 @@ const ConnectWallet = () => {
   };
 
   return (
-    <div className="w-[100vw] h-[100vh] overflow-hidden grid gap-2 place-content-center">
-      <NextLink href="/" className="w-1/2 place-self-center">
-        <SVG.logo />
-      </NextLink>
+    <div className="w-[100vw] h-[100vh] overflow-hidden grid place-content-center">
+      <div className="flex flex-col gap-2 items-center">
+        <NextLink href="/" className="w-1/2">
+          <SVG.logo />
+        </NextLink>
 
-      <div className="drop-shadow-2xl bg-white rounded-xl flex flex-col items-center mx-0 my-4 p-8">
-        <SVG.connectImage className="h-16 w-16" />
-        <h1 className="tg-desc text-center mb-3">Connect Wallet</h1>
+        <div className="drop-shadow-2xl bg-white rounded-3xl flex flex-col items-center mx-0 my-4 p-8">
+          <SVG.connectImage className="h-16 w-16" />
+          <h1 className="tg-desc text-center mb-3">Connect Wallet</h1>
 
-        <ConnectItem
-          onClick={connectMetaMask}
-          icon={<SVG.metamask className="h-16" />}
-          title="Metamask"
-          subtitle="Connect using browser wallet"
-        />
+          <ConnectItem
+            onClick={connectMetaMask}
+            icon={<SVG.metamask className="h-16" />}
+            title="Metamask"
+            subtitle="Connect using browser wallet"
+          />
 
-        <ConnectItem
-          onClick={connectWalletConnect}
-          icon={<SVG.walletconnect className="h-16" />}
-          title="WalletConnect"
-          subtitle="Connect using mobile wallet"
-        />
-        <ConnectItem
-          onClick={connectCoinbase}
-          icon={<SVG.coinbasewallet className="h-16" />}
-          title="Coinbase"
-          subtitle="Connect using Coinbase wallet"
-        />
+          <ConnectItem
+            onClick={connectWalletConnect}
+            icon={<SVG.walletconnect className="h-16" />}
+            title="WalletConnect"
+            subtitle="Connect using mobile wallet"
+          />
+          <ConnectItem
+            onClick={connectCoinbase}
+            icon={<SVG.coinbasewallet className="h-16" />}
+            title="Coinbase"
+            subtitle="Connect using Coinbase wallet"
+          />
+        </div>
       </div>
     </div>
   );
@@ -75,7 +77,10 @@ interface Props {
 
 const ConnectItem = ({ title, icon, subtitle, onClick }: Props): JSX.Element => {
   return (
-    <div className="rounded-lg border-solid border cursor-pointer flex items-center mb-2 p-5 w-full" onClick={onClick}>
+    <div
+      className="rounded-lg border-solid border cursor-pointer flex items-center mb-2 p-5 w-full hover:bg-gray-100"
+      onClick={onClick}
+    >
       {icon}
       <div className="flex-column text-left align-self-center px-10">
         <p className="text-lg font-bold">{title}</p>
