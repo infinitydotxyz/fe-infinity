@@ -2,7 +2,7 @@ import React from 'react';
 import { Tab } from '@headlessui/react';
 import { useRouter } from 'next/router';
 import { useFetch } from 'src/utils/apiUtils';
-import { Drawer, PageBox } from 'src/components/common';
+import { Checkbox, Drawer, PageBox } from 'src/components/common';
 import { Field } from 'src/components/analytics/field';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CollectionStats } from '@infinityxyz/lib/types/core';
@@ -631,7 +631,7 @@ export const Analytics = () => {
       content: {
         container: {
           className: `
-            w-full h-full overflow-hidden px-8 pb-8
+            w-full h-full overflow-hidden px-12 pb-8
           `
         },
         grid: {
@@ -661,12 +661,8 @@ export const Analytics = () => {
             container: {
               className: `
                 w-full h-full overflow-hidden
-                flex-[0.2] flex justify-center items-center
                 text-gray-700 font-mono text-md
               `
-            },
-            element: {
-              type: 'checkbox'
             }
           }
         },
@@ -741,9 +737,13 @@ export const Analytics = () => {
                                 {content?.filter?.params?.map((x, i) => (
                                   <React.Fragment key={i}>
                                     <div {...styles?.drawer?.content?.form?.row}>
-                                      <div {...styles?.drawer?.content?.form?.label}>{x?.label}</div>
                                       <div {...styles?.drawer?.content?.form?.checkbox?.container}>
-                                        <input {...styles?.drawer?.content?.form?.checkbox?.element} {...x?.props} />
+                                        <Checkbox
+                                          label={x?.label}
+                                          checked={x?.props.checked}
+                                          onChange={x?.props.onChange}
+                                          boxOnLeft={false}
+                                        />
                                       </div>
                                     </div>
                                   </React.Fragment>
