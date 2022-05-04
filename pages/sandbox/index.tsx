@@ -1,5 +1,6 @@
 import { ReactNode, useState } from 'react';
 import { FaTwitter, FaFacebook, FaEdit } from 'react-icons/fa';
+import { EventType } from 'src/components/asset/activity/activity-list';
 import { RemoveIcon } from 'src/components/collection/edit/remove-icon';
 import {
   Button,
@@ -22,7 +23,8 @@ import {
   ComboBoxBaseType,
   SVG,
   Checkbox,
-  Modal
+  Modal,
+  PopoverButton
 } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 
@@ -58,6 +60,7 @@ const SandboxPage = () => {
   const [checked2, setChecked2] = useState<boolean>(false);
   const [comboValue, setComboValue] = useState<ComboBoxBaseType>(comboValues[0]);
   const [modalIsOpen, setIsOpen] = useState(false);
+  const [activityTypes, setActivityTypes] = useState<EventType[]>([]);
 
   const tableItems: SimpleTableItem[] = [];
   tableItems.push({ title: 'Balance', value: <div className="font-bold">23 Eth</div> });
@@ -118,6 +121,31 @@ const SandboxPage = () => {
         />
       </div>
 
+      <SBHeader># PopoverButton</SBHeader>
+      <PopoverButton title="Filter" buttonClassName="font-heading">
+        {[EventType.Sale, EventType.Transfer, EventType.Offer].map((type: EventType) => {
+          const label = `${type.charAt(0).toUpperCase() + type.slice(1)}s`;
+
+          return (
+            <Checkbox
+              key={type}
+              label={label}
+              checked={activityTypes.indexOf(type) >= 0}
+              onChange={(checked) => {
+                if (checked) {
+                  setActivityTypes([...activityTypes, type]);
+                } else {
+                  setActivityTypes(activityTypes.splice(activityTypes.indexOf(type), 1));
+                }
+
+                return setActivityTypes(activityTypes);
+              }}
+              boxOnLeft={false}
+            />
+          );
+        })}
+      </PopoverButton>
+
       <SBHeader># Dropdown</SBHeader>
       <div className="flex flex-row space-x-4">
         <Dropdown
@@ -129,7 +157,7 @@ const SandboxPage = () => {
         />
         <Dropdown
           label="Custom Dropdown"
-          toggler={<div className="border rounded-3xl py-2 px-4 bg-black text-white">Custom Toggler</div>}
+          toggler={<div className="border rounded-full py-2 px-4 bg-black text-white">Custom Toggler</div>}
           items={[
             { label: 'Item 3', onClick: console.log },
             { label: 'Item 4', onClick: console.log }

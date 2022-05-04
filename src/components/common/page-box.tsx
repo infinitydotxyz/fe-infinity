@@ -18,8 +18,8 @@ export const PageBox = ({
   children,
   title,
   showTitle = true,
-  fullWidth,
-  className,
+  fullWidth = false,
+  className = '',
   rightToolbar
 }: Props): JSX.Element => {
   return (
