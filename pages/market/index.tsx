@@ -1,8 +1,7 @@
 import { ToggleTab, useToggleTab, Spacer, PageBox } from 'src/components/common';
 import { OrderDrawer } from 'src/components/market';
 import { useOrderContext } from 'src/utils/context/OrderContext';
-import { OrderbookList } from 'src/components/market/orderbook-list';
-import { OrderbookProvider } from 'src/components/market/OrderbookContext';
+import { OrderbookContainer } from 'src/components/market/orderbook-list';
 
 const MarketPage = () => {
   const { orderDrawerOpen, setOrderDrawerOpen } = useOrderContext();
@@ -15,11 +14,7 @@ const MarketPage = () => {
         <Spacer />
       </div>
 
-      {selected === 'Orderbook' && (
-        <OrderbookProvider>
-          <OrderbookList />
-        </OrderbookProvider>
-      )}
+      {selected === 'Orderbook' && <OrderbookContainer />}
     </>
   );
 
