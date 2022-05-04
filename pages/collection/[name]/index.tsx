@@ -15,6 +15,7 @@ import { useOrderContext } from 'src/utils/context/OrderContext';
 import { OrderDrawer } from 'src/components/market/order-drawer/order-drawer';
 import ContentLoader from 'react-content-loader';
 import { iconButtonStyle } from 'src/utils/ui-constants';
+import { OrderbookContainer } from 'src/components/market/orderbook-list';
 
 const CollectionPage = () => {
   const { orderDrawerOpen, setOrderDrawerOpen, addCartItem } = useOrderContext();
@@ -23,7 +24,7 @@ const CollectionPage = () => {
     query: { name }
   } = router;
 
-  const { options, onChange, selected } = useToggleTab(['NFT', 'Activity'], 'NFT');
+  const { options, onChange, selected } = useToggleTab(['NFT', 'Activity', 'Orderbook'], 'NFT');
 
   const path = `/collections/${name}`;
   const { result: collection, isLoading } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
@@ -153,6 +154,9 @@ const CollectionPage = () => {
                 }}
               />
             )}
+
+            {selected === 'Orderbook' && <OrderbookContainer collectionId={collection.address} />}
+
             {/* {currentTab === 1 && <ActivityTab dailyStats={dailyStats} weeklyStats={weeklyStats} />} */}
             {selected === 'Activity' && <ActivityTab collectionAddress={collection.address ?? ''} />}
 

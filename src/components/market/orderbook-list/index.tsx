@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { OBOrder } from '@infinityxyz/lib/types/core';
 import { Button, Dropdown, SVG } from 'src/components/common';
-import { SORT_FILTERS, useOrderbook } from '../OrderbookContext';
+import { OrderbookProvider, SORT_FILTERS, useOrderbook } from '../OrderbookContext';
 import { OrderbookRow } from './orderbook_row';
 import { OrderbookFilters } from './filters/orderbook-filters';
+import { getOrders } from 'src/utils/marketUtils';
 
 const SORT_LABELS: {
   [key: string]: string;
@@ -15,6 +16,56 @@ const SORT_LABELS: {
 
 const getSortLabel = (key: string | undefined) => {
   return key ? SORT_LABELS[key] || 'Sort' : 'Sort';
+};
+
+export const OrderbookContainer = ({ collectionId }: { collectionId?: string }): JSX.Element => {
+  if (collectionId) {
+    return (
+      <div>
+        <OrderbookForCollection id={collectionId} />
+      </div>
+    );
+  } else {
+    return (
+      <OrderbookProvider>
+        <OrderbookList />
+      </OrderbookProvider>
+    );
+  }
+};
+
+const AMOUNT_OF_ORDERS = 10;
+
+export const OrderbookForCollection = ({ id }: { id: string }): JSX.Element => {
+  const [orders, setOrders] = useState<OBOrder[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [limit, setLimit] = useState(AMOUNT_OF_ORDERS);
+
+  const fetchOrders = async () => {
+    try {
+      setIsLoading(true);
+      const orders = await getOrders({ collections: [id] }, limit);
+      setOrders(orders);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchOrders();
+  }, [limit]);
+
+  const fetchMore = async () => {
+    setLimit(limit + AMOUNT_OF_ORDERS);
+  };
+
+  return (
+    <div>
+      <OrderbookListDummy orders={orders} isLoading={isLoading} fetchMore={fetchMore} />
+    </div>
+  );
 };
 
 export const OrderbookList = (): JSX.Element => {
@@ -59,39 +110,50 @@ export const OrderbookList = (): JSX.Element => {
             ]}
           />
         </div>
-
-        {/* Orderbook List */}
-        <div className="flex justify-center align-items gap-4">
-          {showFilters && (
-            <div className="w-1/4 flex-none">
-              <OrderbookFilters />
-            </div>
-          )}
-          <div className="flex flex-col items-start">
-            {orders.length > 0 &&
-              orders.map((order: OBOrder, i) => {
-                return <OrderbookRow key={`${i}-${order.id}`} order={order} />;
-              })}
-
-            {orders.length === 0 && !isLoading && <div>No Results</div>}
-
-            {isLoading && (
-              <div className="w-full flex justify-center align-items">
-                <SVG.spinner className="w-12 h-12 m-3 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" />
-              </div>
-            )}
-
-            {/* Load More */}
-            {!isLoading && orders.length > 0 && (
-              <div className="w-full flex justify-center align-items">
-                <Button variant="outline" onClick={fetchMore}>
-                  More
-                </Button>
-              </div>
-            )}
-          </div>
-        </div>
+        <OrderbookListDummy orders={orders} showFilters={showFilters} isLoading={isLoading} fetchMore={fetchMore} />
       </div>
     </>
+  );
+};
+
+type OBListDummyProps = {
+  orders: OBOrder[];
+  isLoading: boolean;
+  fetchMore: () => Promise<void>;
+  showFilters?: boolean;
+};
+
+const OrderbookListDummy = ({ orders, showFilters, isLoading, fetchMore }: OBListDummyProps): JSX.Element => {
+  return (
+    <div className="flex justify-center align-items gap-4">
+      {showFilters && (
+        <div className="w-1/4 flex-none">
+          <OrderbookFilters />
+        </div>
+      )}
+      <div className="flex flex-col items-start">
+        {orders.length > 0 &&
+          orders.map((order: OBOrder, i) => {
+            return <OrderbookRow key={`${i}-${order.id}`} order={order} />;
+          })}
+
+        {orders.length === 0 && !isLoading && <div>No Results</div>}
+
+        {isLoading && (
+          <div className="w-full flex justify-center align-items">
+            <SVG.spinner className="w-12 h-12 m-3 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" />
+          </div>
+        )}
+
+        {/* Load More */}
+        {!isLoading && orders.length > 0 && (
+          <div className="w-full flex justify-center align-items">
+            <Button variant="outline" onClick={fetchMore}>
+              More
+            </Button>
+          </div>
+        )}
+      </div>
+    </div>
   );
 };

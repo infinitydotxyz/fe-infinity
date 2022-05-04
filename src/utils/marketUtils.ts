@@ -25,7 +25,7 @@ export const getOrders = async (filters: GetOrderItemsQuery = {}, limit = 5): Pr
   });
 
   if (response.result) {
-    return response.result as SignedOBOrder[];
+    return response.result.data as SignedOBOrder[];
   }
 
   return [];
