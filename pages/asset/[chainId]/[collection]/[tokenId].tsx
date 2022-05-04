@@ -85,7 +85,7 @@ const AssetDetailContent = ({ user, qchainId, qcollection, qtokenId }: Props) =>
   const [showPlaceBidModal, setShowPlaceBidModal] = useState(false);
 
   if (isLoading) {
-    return <PageBox title="Loading..."></PageBox>;
+    return <PageBox title="Loading..." showTitle={false}></PageBox>;
   }
 
   if (error || !token || !collection) {
