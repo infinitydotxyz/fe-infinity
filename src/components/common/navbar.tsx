@@ -127,7 +127,7 @@ export const Navbar = () => {
   );
 
   const desktopNavbar = (
-    <div className="w-full z-50 sticky top-0 bg-white bg-opacity-70 glass">
+    <div className="w-full bg-white bg-opacity-70 glass">
       <div className={`${pageStyles} flex space-x-6 items-center py-6 w-full`}>
         <NextLink href="/">
           <SVG.logo className="h-8" />
@@ -174,7 +174,8 @@ export const Navbar = () => {
 
   return (
     <>
-      <div className="desktop:visible tabloid:hidden">{desktopNavbar}</div>
+      {/* sticky had to be set here rather than desktopNavbar to work */}
+      <div className="desktop:visible tabloid:hidden z-2 sticky top-0">{desktopNavbar}</div>
       <div className="desktop:hidden tabloid:visible">{mobileNavbar}</div>
     </>
   );
