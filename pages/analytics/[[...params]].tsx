@@ -663,15 +663,15 @@ export const Analytics = () => {
                 w-full h-full overflow-hidden
                 text-gray-700 font-mono text-md
               `
-            },
-            element: {
-              type: 'checkbox',
-              className: `
-                cursor-pointer focus-visible:ring focus:ring-0 
-                checked:bg-black checked:hover:bg-black 
-                checked:focus:bg-black
-              `
             }
+            // element: {
+            //   type: 'checkbox',
+            //   className: `
+            //     cursor-pointer focus-visible:ring focus:ring-0
+            //     checked:bg-black checked:hover:bg-black
+            //     checked:focus:bg-black
+            //   `
+            // }
           }
         },
         actions: {
