@@ -14,6 +14,9 @@ const ProfilePage = () => {
   } = router;
   const { user } = useAppContext();
 
+  if (!address) {
+    return null;
+  }
   if (address === 'me' && !user) {
     return (
       <PageBox title="Account" className="mb-12">
@@ -22,7 +25,7 @@ const ProfilePage = () => {
     );
   }
 
-  return <ProfilePageContents userAddress={address === 'me' ? `${user?.address}` : `${address}`} />;
+  return <ProfilePageContents userAddress={address === 'me' ? `${user?.address ?? ''}` : `${address ?? ''}`} />;
 };
 
 // ================================================
