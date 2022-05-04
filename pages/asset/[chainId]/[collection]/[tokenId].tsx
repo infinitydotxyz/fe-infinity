@@ -107,8 +107,13 @@ const AssetDetailContent = ({ user, qchainId, qcollection, qtokenId }: Props) =>
   };
 
   debugLog(user);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const cpy: any = Object.assign({}, collection);
+  cpy['attributes'] = 'fuck that';
+
+  debugLog(cpy);
   debugLog(token);
-  debugLog(collection);
 
   // TODO: Joe to update Erc721Metadata type
   const tokenMetadata = token.metadata as Erc721Metadata;

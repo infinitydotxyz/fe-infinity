@@ -80,7 +80,7 @@ export const Navbar = () => {
   };
 
   const mobileMenu = (
-    <div className="relative">
+    <div className="relative flex justify-center">
       <Menu>
         <Menu.Button>
           <GiHamburgerMenu size="24px" />
