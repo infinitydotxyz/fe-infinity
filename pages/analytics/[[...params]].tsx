@@ -664,14 +664,6 @@ export const Analytics = () => {
                 text-gray-700 font-mono text-md
               `
             }
-            // element: {
-            //   type: 'checkbox',
-            //   className: `
-            //     cursor-pointer focus-visible:ring focus:ring-0
-            //     checked:bg-black checked:hover:bg-black
-            //     checked:focus:bg-black
-            //   `
-            // }
           }
         },
         actions: {
@@ -746,7 +738,6 @@ export const Analytics = () => {
                                   <React.Fragment key={i}>
                                     <div {...styles?.drawer?.content?.form?.row}>
                                       <div {...styles?.drawer?.content?.form?.checkbox?.container}>
-                                        {/* <input {...styles?.drawer?.content?.form?.checkbox?.element} {...x?.props} /> */}
                                         <Checkbox
                                           label={x?.label}
                                           checked={x.props.checked}
