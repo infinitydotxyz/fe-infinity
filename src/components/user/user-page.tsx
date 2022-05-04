@@ -52,7 +52,7 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
         <ToggleTab className="mt-14 -ml-2" options={options} selected={selected} onChange={onChange} />
 
         <div className="mt-6 min-h-[1024px]">
-          {selected === 'Collected' && <UserPageNftsTab />}
+          {selected === 'Collected' && <UserPageNftsTab userInfo={userInfo} />}
           {selected === 'Activity' && <UserPageActivityTab />}
         </div>
       </div>

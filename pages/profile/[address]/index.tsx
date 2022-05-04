@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import { PageBox } from 'src/components/common';
 import { UserPage } from 'src/components/user/user-page';
 import { useAppContext } from 'src/utils/context/AppContext';
@@ -7,17 +8,21 @@ import { UserProfileDto } from 'src/components/user/user-profile-dto';
 const USER_API_END_POINT = '/user';
 
 const ProfilePage = () => {
+  const router = useRouter();
+  const {
+    query: { address }
+  } = router;
   const { user } = useAppContext();
 
-  if (!user) {
+  if (address === 'me' && !user) {
     return (
       <PageBox title="Account" className="mb-12">
-        Please sign in
+        Please sign in.
       </PageBox>
     );
   }
 
-  return <ProfilePageContents userAddress={user.address} />;
+  return <ProfilePageContents userAddress={address === 'me' ? user.address : `${address}`} />;
 };
 
 // ================================================
