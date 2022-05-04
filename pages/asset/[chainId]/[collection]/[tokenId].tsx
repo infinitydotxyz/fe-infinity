@@ -190,10 +190,9 @@ const AssetDetailContent = ({ user, qchainId, qcollection, qtokenId }: Props) =>
             label="Contract address:"
             address={collection.address}
             href={`https://etherscan.io/address/${collection.address}`}
-            target="_blank"
             tooltip={collection.address}
           />
-          <span className="text-body text-base">
+          <span className="text-body text-base flex items-center">
             Token ID: <span className="ml-4 font-heading underline">#{token.tokenId}</span>
             <ClipboardButton textToCopy={token.tokenId} />
           </span>

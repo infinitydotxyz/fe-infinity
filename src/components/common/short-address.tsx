@@ -15,7 +15,8 @@ export const ShortAddress = ({ address, href, label, tooltip }: Props) => {
     <div className="flex items-center">
       <div>{label}</div>
 
-      <a className="ml-4 underline" href={href} title={tooltip}>
+      {/* do we need: target="_self" */}
+      <a className="ml-4 underline" href={href} title={tooltip} target="_blank">
         {ellipsisAddress(address)}
       </a>
 

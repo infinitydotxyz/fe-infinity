@@ -23,9 +23,6 @@ interface ActivityItemProps {
   item: NftActivity;
 }
 
-const shortAddress = (address: string | undefined | null) =>
-  address && address.length > 20 ? `${ellipsisAddress(address)}` : address;
-
 const ETHERSCAN_URL = 'https://etherscan.io/tx/';
 
 export const ActivityItem: React.FC<ActivityItemProps> = ({ item }) => {
@@ -34,12 +31,14 @@ export const ActivityItem: React.FC<ActivityItemProps> = ({ item }) => {
       <div>
         <p className="font-body tracking-tight text-theme-light-800 leading-normal">Seller</p>
         <p className="font-body font-bold tracking-tight text-black">
-          {shortAddress(item.fromDisplayName || item.from)}
+          {ellipsisAddress(item.fromDisplayName || item.from)}
         </p>
       </div>
       <div>
         <p className="font-body tracking-tight text-theme-light-800 leading-normal">Buyer</p>
-        <p className="font-body font-bold tracking-tight text-black">{shortAddress(item.toDisplayName || item.to)}</p>
+        <p className="font-body font-bold tracking-tight text-black">
+          {ellipsisAddress(item.toDisplayName || item.to)}
+        </p>
       </div>
       <div>
         <p className="font-body tracking-tight text-theme-light-800 leading-normal">Price</p>
@@ -52,7 +51,7 @@ export const ActivityItem: React.FC<ActivityItemProps> = ({ item }) => {
       <div>
         <p className="font-body tracking-tight text-theme-light-800 leading-normal">Link</p>
         <a className="font-body font-bold tracking-tight text-black" rel="noopener noreferrer" href={item.externalUrl}>
-          {shortAddress(item.externalUrl ? item.externalUrl.replace(ETHERSCAN_URL, '') : 'No Txn')}
+          {ellipsisAddress(item.externalUrl ? item.externalUrl.replace(ETHERSCAN_URL, '') : 'No Txn')}
         </a>
       </div>
     </div>

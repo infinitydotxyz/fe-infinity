@@ -43,7 +43,7 @@ export const toChecksumAddress = (address?: string): string => {
 };
 
 // use ellipsisString for non-address numbers, this gets the checksum address
-export const ellipsisAddress = (address: string, left = 6, right = 4) => {
+export const ellipsisAddress = (address?: string, left = 6, right = 4) => {
   return ellipsisString(toChecksumAddress(address), left, right);
 };
 
