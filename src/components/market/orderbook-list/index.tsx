@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { OBOrder } from '@infinityxyz/lib/types/core';
-import { Button, Dropdown } from 'src/components/common';
+import { Button, Dropdown, SVG } from 'src/components/common';
 import { SORT_FILTERS, useOrderbook } from '../OrderbookContext';
 import { OrderbookRow } from './orderbook_row';
 import { OrderbookFilters } from './filters/orderbook-filters';
@@ -31,7 +31,7 @@ export const OrderbookList = (): JSX.Element => {
     <>
       <div className="flex flex-col gap-1">
         {/* Filters & Sort */}
-        <div className="text-right">
+        <div className="text-right pb-8">
           <Button
             variant="outline"
             onClick={() => {
@@ -61,39 +61,37 @@ export const OrderbookList = (): JSX.Element => {
         </div>
 
         {/* Orderbook List */}
-        <div className="flex gap-4">
+        <div className="flex justify-center align-items gap-4">
           {showFilters && (
             <div className="w-1/4 flex-none">
               <OrderbookFilters />
             </div>
           )}
           <div className="flex flex-col items-start">
-            {orders.length > 0 ? (
+            {orders.length > 0 &&
               orders.map((order: OBOrder, i) => {
                 return <OrderbookRow key={`${i}-${order.id}`} order={order} />;
-              })
-            ) : (
-              <div>No Results</div>
+              })}
+
+            {orders.length === 0 && !isLoading && <div>No Results</div>}
+
+            {isLoading && (
+              <div className="w-full flex justify-center align-items">
+                <SVG.spinner className="w-12 h-12 m-3 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" />
+              </div>
             )}
 
-            {isLoading && <div className="w-full text-center">Loading</div>}
+            {/* Load More */}
+            {!isLoading && orders.length > 0 && (
+              <div className="w-full flex justify-center align-items">
+                <Button variant="outline" onClick={fetchMore}>
+                  More
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </div>
-
-      {/* Load More */}
-      {!isLoading && (
-        <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
-          <Button
-            variant="outline"
-            onClick={() => {
-              fetchMore();
-            }}
-          >
-            More
-          </Button>
-        </div>
-      )}
     </>
   );
 };
