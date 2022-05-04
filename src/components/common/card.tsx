@@ -97,8 +97,8 @@ const LoadingCard = ({ className }: { className?: string }) => (
     foregroundColor="#ecebeb"
     className={className}
   >
-    <rect x="7" y="415" rx="2" ry="2" width="227" height="16" />
-    <rect x="6" y="7" rx="45" ry="45" width="390" height="388" />
-    <rect x="6" y="440" rx="2" ry="2" width="227" height="16" />
+    <rect x="5" y="394" rx="18" ry="18" width="390" height="28" />
+    <rect x="6" y="7" rx="45" ry="45" width="390" height="372" />
+    <rect x="5" y="431" rx="18" ry="18" width="390" height="28" />
   </ContentLoader>
 );

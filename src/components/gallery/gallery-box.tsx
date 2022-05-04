@@ -143,6 +143,8 @@ export const GalleryBox = ({ collection, className, cardProps, getEndpoint, filt
             <Card isLoading={true} className="mt-24" />
 
             <Card isLoading={true} className="mt-24" />
+
+            <Card isLoading={true} className="mt-24" />
           </>
         )}
 
