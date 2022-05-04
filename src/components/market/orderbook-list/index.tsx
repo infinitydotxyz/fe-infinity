@@ -141,7 +141,7 @@ const OrderbookListDummy = ({ orders, showFilters, isLoading, fetchMore }: OBLis
 
         {isLoading && (
           <div className="w-full flex justify-center align-items">
-            <SVG.spinner className="w-12 h-12 m-3 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" />
+            <SVG.spinner className="w-12 h-12 m-3 text-gray-200 animate-spin dark:text-gray-600 fill-black" />
           </div>
         )}
 

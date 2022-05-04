@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { BaseCollection, CollectionStats } from '@infinityxyz/lib/types/core';
-import { ToggleTab, PageBox, useToggleTab, SVG } from 'src/components/common';
+import { ToggleTab, PageBox, useToggleTab, SVG, EthPrice } from 'src/components/common';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { useFetch } from 'src/utils/apiUtils';
 import { CollectionFeed } from 'src/components/feed/collection-feed';
@@ -45,6 +45,10 @@ const CollectionPage = () => {
   if (!collection) {
     return <></>;
   }
+
+  console.log('collection here');
+  console.log(collection);
+  console.log(firstDailyStats);
 
   return (
     <PageBox showTitle={false} title={collection.metadata?.name ?? ''}>
@@ -110,7 +114,13 @@ const CollectionPage = () => {
               <tr className="font-bold font-heading text-2xl">
                 <td>{collection.numNfts?.toLocaleString() ?? '—'}</td>
                 <td>{collection.numOwners?.toLocaleString() ?? '—'}</td>
-                <td>{firstDailyStats?.floorPrice ?? '—'}</td>
+                <td>
+                  {firstDailyStats?.floorPrice ? (
+                    <EthPrice label={String(firstDailyStats?.floorPrice) + ' ETH'} labelClassName="font-bold" />
+                  ) : (
+                    '—'
+                  )}
+                </td>
                 <td>{firstDailyStats?.volume?.toLocaleString() ?? '—'}</td>
               </tr>
             </tbody>

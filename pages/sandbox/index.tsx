@@ -188,9 +188,7 @@ const SandboxPage = () => {
         <SVGPreview svg={<SVG.arrowImage className={iconClass} />} name="arrowImage" />
         <SVGPreview
           svg={
-            <SVG.spinner
-              className={twMerge(iconClass, 'text-gray-200 animate-spin dark:text-gray-600 fill-blue-600')}
-            />
+            <SVG.spinner className={twMerge(iconClass, 'text-gray-200 animate-spin dark:text-gray-600 fill-black')} />
           }
           name="spinner"
         />
