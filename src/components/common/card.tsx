@@ -60,17 +60,7 @@ export const Card = ({ data, cardActions, dropdownActions, isLoading, className 
       )}
 
       <div className="p-1 mt-3">
-        <div
-          className="font-bold"
-          title={data?.title}
-          // Steve: debugging (will remove when done)
-          // onClick={(e) => {
-          //   e.preventDefault();
-          //   e.stopPropagation();
-
-          //   console.log(JSON.stringify(data, null, '  '));
-          // }}
-        >
+        <div className="font-bold" title={data?.title}>
           {title}
         </div>
         <div className="text-secondary font-heading" title={data?.tokenId}>
