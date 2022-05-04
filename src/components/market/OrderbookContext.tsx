@@ -149,6 +149,8 @@ type OBProvider = {
   children: ReactNode;
 };
 
+const AMOUNT_OF_ORDERS = 10;
+
 export const OrderbookProvider = ({ children }: OBProvider) => {
   const router = useRouter();
   const defaultFilters = parseRouterQueryParamsToFilters(router.query);
@@ -160,6 +162,7 @@ export const OrderbookProvider = ({ children }: OBProvider) => {
   const [orders, setOrders] = useState<OBOrder[]>([]);
   const [filters, setFilters] = useState<OBFilters>(defaultFilters);
   const [isLoading, setIsLoading] = useState(false);
+  const [limit, setLimit] = useState(AMOUNT_OF_ORDERS);
 
   useEffect(() => {
     const newFilters = parseRouterQueryParamsToFilters(router.query);
@@ -170,12 +173,11 @@ export const OrderbookProvider = ({ children }: OBProvider) => {
   }, [router.query]);
 
   useEffect(() => {
-    console.log('fetching orders...');
     fetchOrders();
-  }, [filters]);
+  }, [filters, limit]);
 
   const fetchMore = async () => {
-    return fetchOrders();
+    setLimit(limit + AMOUNT_OF_ORDERS);
   };
 
   // filters helper functions
@@ -212,7 +214,7 @@ export const OrderbookProvider = ({ children }: OBProvider) => {
   const fetchOrders = async () => {
     try {
       setIsLoading(true);
-      const orders = await getOrders(parseFiltersToApiQueryParams(filters));
+      const orders = await getOrders(parseFiltersToApiQueryParams(filters), limit);
       setOrders(orders);
     } catch (err) {
       console.error(err);

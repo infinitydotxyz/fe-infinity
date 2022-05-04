@@ -19,9 +19,9 @@ export const postOrders = async (user: string, orders: SignedOBOrder[]): Promise
   }
 };
 
-export const getOrders = async (filters: GetOrderItemsQuery = {}): Promise<SignedOBOrder[]> => {
+export const getOrders = async (filters: GetOrderItemsQuery = {}, limit = 5): Promise<SignedOBOrder[]> => {
   const response = await apiGet(`/orders/get`, {
-    query: { ...filters }
+    query: { ...filters, limit }
   });
 
   if (response.result) {
