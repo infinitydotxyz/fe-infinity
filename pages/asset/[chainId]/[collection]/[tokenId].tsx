@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { Button, ShortAddress, PageBox, ReadMoreText, SVG, NextLink } from 'src/components/common';
+import { Button, ShortAddress, PageBox, ReadMoreText, SVG, NextLink, ClipboardButton } from 'src/components/common';
 import { BLANK_IMAGE_URL, useFetch } from 'src/utils';
 import { Token, Collection, Erc721Metadata } from '@infinityxyz/lib/types/core';
 import {
@@ -126,14 +126,15 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
                 {collection.hasBlueCheck && <SVG.blueCheck className="h-5 w-5" />}
               </div>
               <ShortAddress
-                label="Contact address:"
+                label="Contract address:"
                 address={collection.address}
                 href={`https://etherscan.io/address/${collection.address}`}
                 target="_blank"
                 tooltip={collection.address}
               />
               <span className="text-body text-base">
-                Token ID:<span className="ml-4 font-heading underline">{token.tokenId}</span>
+                Token ID: <span className="ml-4 font-heading underline">#{token.tokenId}</span>
+                <ClipboardButton textToCopy={token.tokenId} />
               </span>
 
               <div className="md:-ml-1.5">
