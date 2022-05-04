@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { OBOrder } from '@infinityxyz/lib/types/core';
 import { Button, Dropdown, SVG } from 'src/components/common';
 import { OrderbookProvider, SORT_FILTERS, useOrderbook } from '../OrderbookContext';
 import { OrderbookRow } from './orderbook_row';
 import { OrderbookFilters } from './filters/orderbook-filters';
-import { getOrders } from 'src/utils/marketUtils';
 
 const SORT_LABELS: {
   [key: string]: string;
@@ -19,57 +18,15 @@ const getSortLabel = (key: string | undefined) => {
 };
 
 export const OrderbookContainer = ({ collectionId }: { collectionId?: string }): JSX.Element => {
-  if (collectionId) {
-    return (
-      <div>
-        <OrderbookForCollection id={collectionId} />
-      </div>
-    );
-  } else {
-    return (
-      <OrderbookProvider>
-        <OrderbookList />
-      </OrderbookProvider>
-    );
-  }
-};
-
-const AMOUNT_OF_ORDERS = 10;
-
-export const OrderbookForCollection = ({ id }: { id: string }): JSX.Element => {
-  const [orders, setOrders] = useState<OBOrder[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [limit, setLimit] = useState(AMOUNT_OF_ORDERS);
-
-  const fetchOrders = async () => {
-    try {
-      setIsLoading(true);
-      const orders = await getOrders({ collections: [id] }, limit);
-      setOrders(orders);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchOrders();
-  }, [limit]);
-
-  const fetchMore = async () => {
-    setLimit(limit + AMOUNT_OF_ORDERS);
-  };
-
   return (
-    <div>
-      <OrderbookListDummy orders={orders} isLoading={isLoading} fetchMore={fetchMore} />
-    </div>
+    <OrderbookProvider collectionId={collectionId}>
+      <OrderbookList />
+    </OrderbookProvider>
   );
 };
 
 export const OrderbookList = (): JSX.Element => {
-  const { orders, fetchMore, isLoading, updateFilter, filters } = useOrderbook();
+  const { orders, fetchMore, isLoading, updateFilter, filters, hasMoreOrders } = useOrderbook();
   const [showFilters, setShowFilters] = useState<boolean>(false);
   const [label, setLabel] = useState<string>(getSortLabel(filters?.sort));
 
@@ -110,7 +67,13 @@ export const OrderbookList = (): JSX.Element => {
             ]}
           />
         </div>
-        <OrderbookListDummy orders={orders} showFilters={showFilters} isLoading={isLoading} fetchMore={fetchMore} />
+        <OrderbookListDummy
+          orders={orders}
+          showFilters={showFilters}
+          isLoading={isLoading}
+          fetchMore={fetchMore}
+          hasMoreOrders={hasMoreOrders}
+        />
       </div>
     </>
   );
@@ -121,9 +84,16 @@ type OBListDummyProps = {
   isLoading: boolean;
   fetchMore: () => Promise<void>;
   showFilters?: boolean;
+  hasMoreOrders?: boolean;
 };
 
-const OrderbookListDummy = ({ orders, showFilters, isLoading, fetchMore }: OBListDummyProps): JSX.Element => {
+const OrderbookListDummy = ({
+  orders,
+  showFilters,
+  isLoading,
+  fetchMore,
+  hasMoreOrders
+}: OBListDummyProps): JSX.Element => {
   return (
     <div className="flex justify-center align-items gap-4">
       {showFilters && (
@@ -131,7 +101,7 @@ const OrderbookListDummy = ({ orders, showFilters, isLoading, fetchMore }: OBLis
           <OrderbookFilters />
         </div>
       )}
-      <div className="flex flex-col items-start">
+      <div className="flex flex-col items-start w-full">
         {orders.length > 0 &&
           orders.map((order: OBOrder, i) => {
             return <OrderbookRow key={`${i}-${order.id}`} order={order} />;
@@ -146,7 +116,7 @@ const OrderbookListDummy = ({ orders, showFilters, isLoading, fetchMore }: OBLis
         )}
 
         {/* Load More */}
-        {!isLoading && orders.length > 0 && (
+        {!isLoading && orders.length > 0 && hasMoreOrders && (
           <div className="w-full flex justify-center align-items">
             <Button variant="outline" onClick={fetchMore}>
               More

@@ -20,7 +20,7 @@ interface DropdownProps {
 
 export const Dropdown = ({ label, items, toggler, contentClassName, className }: DropdownProps) => {
   return (
-    <div className={twMerge(`relative inline-block text-left ${className ?? ''}`)}>
+    <div className={twMerge(`inline-block text-left ${className ?? ''}`)}>
       <Menu>
         {toggler ? (
           <Menu.Button>{toggler}</Menu.Button>

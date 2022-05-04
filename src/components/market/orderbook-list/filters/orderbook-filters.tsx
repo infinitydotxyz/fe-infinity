@@ -17,7 +17,8 @@ export const OrderbookFilters = () => {
     filters: { orderTypes = [], collections = [], minPrice, maxPrice, numberOfNfts },
     clearFilter,
     updateFilter,
-    updateFilterArray
+    updateFilterArray,
+    collectionId
   } = useOrderbook();
 
   const [openState, setOpenState] = useState<OpenFilterState>({});
@@ -86,39 +87,41 @@ export const OrderbookFilters = () => {
           ))}
         </div>
       </OrderbookFilterItem>
-      <OrderbookFilterItem key="Collection" openState={openState} setOpenState={setOpenState} item="Collection">
-        <div>
-          <input
-            className="border rounded-full py-2 px-4 mt-1 font-heading w-full"
-            defaultValue={collectionSearchState}
-            onChange={(ev) => {
-              const text = ev.target.value;
-              searchForCollections(text);
-            }}
-            placeholder="Search"
-          />
+      {!collectionId && (
+        <OrderbookFilterItem key="Collection" openState={openState} setOpenState={setOpenState} item="Collection">
+          <div>
+            <input
+              className="border rounded-full py-2 px-4 mt-1 font-heading w-full"
+              defaultValue={collectionSearchState}
+              onChange={(ev) => {
+                const text = ev.target.value;
+                searchForCollections(text);
+              }}
+              placeholder="Search"
+            />
 
-          <div className="mt-8 max-h-80 overflow-y-auto space-y-4">
-            {collectionsData.map((collection, i) => {
-              return (
-                <Checkbox
-                  key={`${i}-${collection.id}`}
-                  className="pb-4"
-                  checked={collections.includes(`${collection.chainId}:${collection.id}`)}
-                  onChange={(checked) =>
-                    updateFilterArray('collections', collections, `${collection.chainId}:${collection.id}`, checked)
-                  }
-                  label={collection.name}
-                />
-              );
-            })}
+            <div className="mt-8 max-h-80 overflow-y-auto space-y-4">
+              {collectionsData.map((collection, i) => {
+                return (
+                  <Checkbox
+                    key={`${i}-${collection.id}`}
+                    className="pb-4"
+                    checked={collections.includes(`${collection.chainId}:${collection.id}`)}
+                    onChange={(checked) =>
+                      updateFilterArray('collections', collections, `${collection.chainId}:${collection.id}`, checked)
+                    }
+                    label={collection.name}
+                  />
+                );
+              })}
+            </div>
+
+            <Button className="mt-8 w-full" onClick={() => clearFilter('collections')}>
+              Clear
+            </Button>
           </div>
-
-          <Button className="mt-8 w-full" onClick={() => clearFilter('collections')}>
-            Clear
-          </Button>
-        </div>
-      </OrderbookFilterItem>
+        </OrderbookFilterItem>
+      )}
       <OrderbookFilterItem key="Sale price" openState={openState} setOpenState={setOpenState} item="Sale price">
         <div className="flex flex-col space-y-4">
           <TextInputBox
