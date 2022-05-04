@@ -740,8 +740,8 @@ export const Analytics = () => {
                                       <div {...styles?.drawer?.content?.form?.checkbox?.container}>
                                         <Checkbox
                                           label={x?.label}
-                                          checked={x.props.checked}
-                                          onChange={x.props.onChange}
+                                          checked={x?.props.checked}
+                                          onChange={x?.props.onChange}
                                           boxOnLeft={false}
                                         />
                                       </div>
