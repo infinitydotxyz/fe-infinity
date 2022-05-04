@@ -46,10 +46,6 @@ const CollectionPage = () => {
     return <></>;
   }
 
-  console.log('collection here');
-  console.log(collection);
-  console.log(firstDailyStats);
-
   return (
     <PageBox showTitle={false} title={collection.metadata?.name ?? ''}>
       <div className="flex flex-col mt-10">
