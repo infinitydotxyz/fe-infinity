@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { BaseCollection, CollectionStats } from '@infinityxyz/lib/types/core';
 import { ToggleTab, PageBox, useToggleTab, SVG } from 'src/components/common';
@@ -24,7 +24,24 @@ const CollectionPage = () => {
     query: { name }
   } = router;
 
-  const { options, onChange, selected } = useToggleTab(['NFT', 'Activity', 'Orderbook'], 'NFT');
+  if (!router.isReady) {
+    return null;
+  }
+
+  const { options, onChange, selected } = useToggleTab(
+    ['NFT', 'Activity', 'Orderbook'],
+    (router.query.tab as string) || 'NFT'
+  );
+
+  useEffect(() => {
+    if (selected === 'NFT') {
+      const updateQueryParams = { ...router.query };
+      delete updateQueryParams.tab;
+      router.replace({ pathname: router.pathname, query: { ...updateQueryParams } });
+    } else {
+      router.replace({ pathname: router.pathname, query: { ...router.query, tab: selected } });
+    }
+  }, [selected]);
 
   const path = `/collections/${name}`;
   const { result: collection, isLoading } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
