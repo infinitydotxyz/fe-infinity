@@ -22,7 +22,7 @@ const ProfilePage = () => {
     );
   }
 
-  return <ProfilePageContents userAddress={address === 'me' ? user.address : `${address}`} />;
+  return <ProfilePageContents userAddress={address === 'me' ? `${user?.address}` : `${address}`} />;
 };
 
 // ================================================
