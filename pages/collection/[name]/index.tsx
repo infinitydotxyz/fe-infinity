@@ -203,9 +203,9 @@ const LoadingDescription = () => (
     backgroundColor="#f3f3f3"
     foregroundColor="#ecebeb"
   >
-    <rect x="3" y="3" rx="2" ry="2" width="390" height="14" />
-    <rect x="3" y="28" rx="2" ry="2" width="390" height="14" />
-    <rect x="3" y="52" rx="2" ry="2" width="222" height="14" />
+    <rect x="3" y="3" rx="12" ry="12" width="390" height="20" />
+    <rect x="3" y="34" rx="12" ry="12" width="390" height="20" />
+    <rect x="3" y="66" rx="12" ry="12" width="203" height="20" />
   </ContentLoader>
 );
 
