@@ -3,8 +3,7 @@ import { useEffect, useState } from 'react';
 import { apiGet } from 'src/utils/apiUtils';
 import mitt from 'mitt';
 import { CollectionSearchArrayDto } from 'src/components/common';
-
-const DEFAULT_LIMIT = 24;
+import { DEFAULT_LIMIT } from 'src/utils';
 
 export type CollectionSearchItem = {
   name: string;
