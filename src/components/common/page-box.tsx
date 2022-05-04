@@ -22,26 +22,16 @@ export const PageBox = ({
   className,
   rightToolbar
 }: Props): JSX.Element => {
-  const styles = {
-    content: {
-      container: {
-        className: `transition min-h-full ${fullWidth ? 'w-full' : pageStyles}`
-      },
-      element: {
-        className: `w-full min-h-full  ${className} `
-      }
-    }
-  };
   return (
     <>
       <div className="transition w-[100vw] h-[100vh] overflow-y-auto overflow-x-hidden justify-items-center">
         <Header title={title}>
           <Navbar />
 
-          <div {...styles?.content?.container}>
+          <div className={`transition ${fullWidth ? 'w-full' : pageStyles}`}>
             {showTitle ? <PageHeader title={title} rightToolbar={rightToolbar} /> : null}
 
-            <div {...styles?.content?.element}>{children}</div>
+            <div className={`w-full ${className}`}>{children}</div>
 
             {/* allows scroll so items aren't at the bottom of the screen */}
             <div style={{ height: 300 }} />
