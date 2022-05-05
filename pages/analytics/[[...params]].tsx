@@ -7,6 +7,7 @@ import { Field } from 'src/components/analytics/field';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CollectionStats } from '@infinityxyz/lib/types/core';
 import { ITEMS_PER_PAGE, BLANK_IMG } from 'src/utils/constants';
+import ContentLoader from 'react-content-loader';
 
 export const Analytics = () => {
   const router = useRouter();
@@ -771,11 +772,7 @@ export const Analytics = () => {
           <div {...styles?.statistics?.list?.container}>
             {data.isLoading ? (
               <>
-                {Array.from(Array(limit).keys())?.map((x, i) => (
-                  <React.Fragment key={i}>
-                    <div {...styles?.statistics?.list?.loading}></div>
-                  </React.Fragment>
-                ))}
+                <LoadingAnalytics />
               </>
             ) : data.isError || content?.statistics?.length === 0 ? (
               <>
@@ -843,5 +840,27 @@ export const Analytics = () => {
     </PageBox>
   );
 };
+
+const LoadingAnalytics = () => (
+  <ContentLoader
+    speed={2}
+    viewBox="0 0 100% 650"
+    height={650}
+    width={'100%'}
+    backgroundColor="#f3f3f3"
+    foregroundColor="#ecebeb"
+  >
+    <rect x="0" y="0" rx="12" ry="12" width="100%" height="144" />
+    <rect x="0" y="152" rx="12" ry="12" width="100%" height="144" />
+    <rect x="0" y="304" rx="12" ry="12" width="100%" height="144" />
+    <rect x="0" y="456" rx="12" ry="12" width="100%" height="144" />
+    <rect x="0" y="608" rx="12" ry="12" width="100%" height="144" />
+    <rect x="0" y="760" rx="12" ry="12" width="100%" height="144" />
+    <rect x="0" y="912" rx="12" ry="12" width="100%" height="144" />
+    <rect x="0" y="1064" rx="12" ry="12" width="100%" height="144" />
+    <rect x="0" y="1216" rx="12" ry="12" width="100%" height="144" />
+    <rect x="0" y="1368" rx="12" ry="12" width="100%" height="144" />
+  </ContentLoader>
+);
 
 export default Analytics;
