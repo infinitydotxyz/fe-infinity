@@ -16,8 +16,12 @@ export const PixelScore = () => {
   const ref = useRef<HTMLDivElement>(null);
 
   const onCardClick = (data: CardData) => {
-    setSelectedTokens([...selectedTokens, data]);
-    setShowCart(true);
+    const i = indexOfSelection(data);
+
+    if (i === -1) {
+      setSelectedTokens([...selectedTokens, data]);
+      setShowCart(true);
+    }
   };
 
   let tokensGrid;
@@ -29,6 +33,14 @@ export const PixelScore = () => {
   useEffect(() => {
     ref.current?.scrollTo({ left: 0, top: 0 });
   }, [collection]);
+
+  const indexOfSelection = (value: CardData) => {
+    const i = selectedTokens.findIndex((token) => {
+      return value.id === token.id;
+    });
+
+    return i;
+  };
 
   return (
     <div>
@@ -57,10 +69,13 @@ export const PixelScore = () => {
             <AstraCart
               tokens={selectedTokens}
               onRemove={(value) => {
-                for (const token of selectedTokens) {
-                  if (token.id === value.id) {
-                    // sdf
-                  }
+                const i = indexOfSelection(value);
+
+                if (i !== -1) {
+                  const copy = [...selectedTokens];
+                  copy.splice(i, 1);
+
+                  setSelectedTokens(copy);
                 }
               }}
             />
@@ -135,7 +150,7 @@ const AstraCart = ({ tokens, onRemove }: Props4) => {
     <div className="flex flex-col space-y-2 items-start w-48">
       {tokens.map((token, i) => {
         return (
-          <div className="flex items-center w-full">
+          <div key={token.id} className="flex items-center w-full">
             <div className="w-4 mr-2 text-right">{i + 1}.</div>
             <BGImage className={twMerge(largeIconButtonStyle, 'rounded-lg')} url={token.image} />
             <div className="ml-2">{token.tokenId}</div>
