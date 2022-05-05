@@ -111,9 +111,7 @@ export const StatsChips = ({ collection, weeklyStatsData }: Props) => {
           ) : (
             <span className="flex items-center">
               {isFollowing ? (
-                <>
-                  <AiOutlinePlus className="mr-1" /> Following
-                </>
+                <>Following</>
               ) : (
                 <>
                   <AiOutlinePlus className="mr-1" /> Follow
