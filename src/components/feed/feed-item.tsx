@@ -17,12 +17,6 @@ export type FeedEvent = BaseFeedEvent &
     userDisplayName?: string;
   };
 
-export type Comment = {
-  userAddress: string;
-  comment: string;
-  timestamp: number;
-};
-
 const TypeName: { [key: string]: ReactNode } = {
   [FeedEventType.TwitterTweet]: (
     <span className="rounded-xl bg-blue-400 text-white py-0.5 px-2 text-sm pb-1">Tweet</span>
