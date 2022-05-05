@@ -19,11 +19,12 @@ import { inputBorderColor } from 'src/utils/ui-constants';
 import { ClipboardButton } from '../common';
 
 interface UserProfileShareProps {
+  username?: string;
   userAddress?: string;
 }
 
-export const UserProfileShare: FunctionComponent<UserProfileShareProps> = ({ userAddress }) => {
-  const profileLink = `${window.location.origin}/user/${userAddress}`;
+export const UserProfileShare: FunctionComponent<UserProfileShareProps> = ({ username, userAddress }) => {
+  const profileLink = `${window.location.origin}/user/${username ?? userAddress ?? ''}`;
 
   return (
     <div className="relative inline-block text-left">
