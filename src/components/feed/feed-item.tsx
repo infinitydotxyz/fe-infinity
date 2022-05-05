@@ -25,12 +25,12 @@ export type Comment = {
 
 const TypeName: { [key: string]: ReactNode } = {
   [FeedEventType.TwitterTweet]: (
-    <span className="rounded-xl bg-blue-400 text-white py-0.5 px-2 text-xs pb-1">Tweet</span>
+    <span className="rounded-xl bg-blue-400 text-white py-0.5 px-2 text-sm pb-1">Tweet</span>
   ),
   [FeedEventType.DiscordAnnouncement]: (
-    <span className="rounded-xl bg-blue-600 text-white py-0.5 px-2 text-xs pb-1">Discord</span>
+    <span className="rounded-xl bg-blue-600 text-white py-0.5 px-2 text-sm pb-1">Discord</span>
   ),
-  [FeedEventType.NftSale]: <span className="rounded-xl bg-blue-700 text-white py-0.5 px-2 text-xs pb-1">Sale</span>
+  [FeedEventType.NftSale]: <span className="rounded-xl bg-blue-700 text-white py-0.5 px-2 text-sm pb-1">Sale</span>
 };
 
 interface FeedItemProps {
@@ -130,8 +130,8 @@ const Discord = ({ data }: FeedItemProps) => {
 const SaleEvent = ({ data }: FeedItemProps) => {
   return (
     <div className="mt-4 border rounded-xl p-4 flex items-center bg-gray-100 font-heading">
-      <NextLink href={`/asset/${data.chainId}/${data.collectionAddress}/${data.tokenId}`} className="w-24 rounded-xl">
-        <img src={data.image} alt="NFT Image" />
+      <NextLink href={`/asset/${data.chainId}/${data.collectionAddress}/${data.tokenId}`}>
+        <img src={data.image} alt="NFT Image" className="w-24 rounded-xl" />
       </NextLink>
       <div className="flex w-full justify-between mx-8">
         <div className="text-sm">
