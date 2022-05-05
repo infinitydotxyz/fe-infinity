@@ -2,7 +2,7 @@ import React from 'react';
 import { Tab } from '@headlessui/react';
 import { useRouter } from 'next/router';
 import { useFetch } from 'src/utils/apiUtils';
-import { Checkbox, Drawer, PageBox } from 'src/components/common';
+import { Button, Checkbox, Drawer, PageBox } from 'src/components/common';
 import { Field } from 'src/components/analytics/field';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CollectionStats } from '@infinityxyz/lib/types/core';
@@ -672,25 +672,6 @@ export const Analytics = () => {
               w-full h-full overflow-hidden
               flex flex-row gap-2 py-2
             `
-          },
-          clear: {
-            className: `
-              w-full h-full overflow-hidden
-              bg-theme-light-50 ring-1 ring-inset ring-theme-light-700
-              rounded-full font-mono text-sm
-            `
-          },
-          apply: {
-            className: `
-              w-full h-full overflow-hidden
-              bg-theme-light-900 ring-1 ring-inset 
-              rounded-full font-mono text-sm text-theme-light-50
-              ${
-                Object.keys(filterCheckboxes).filter((key) => filterCheckboxes[key]).length > filterLimit
-                  ? 'bg-theme-light-700 ring-theme-light-700'
-                  : 'ring-theme-light-900'
-              }
-            `
           }
         }
       }
@@ -750,19 +731,23 @@ export const Analytics = () => {
                                 ))}
                               </div>
                               <div {...styles?.drawer?.content?.actions?.container}>
-                                <button {...styles?.drawer?.content?.actions?.clear} onClick={clearCheckboxes}>
-                                  Clear All
-                                </button>
-                                <button
+                                <Button
+                                  variant="outline"
+                                  onClick={clearCheckboxes}
+                                  className="font-heading w-full h-full"
+                                >
+                                  Clear all
+                                </Button>
+                                <Button
                                   disabled={
                                     Object.keys(filterCheckboxes).filter((key) => filterCheckboxes[key]).length >
                                     filterLimit
                                   }
-                                  {...styles?.drawer?.content?.actions?.apply}
                                   onClick={applyCheckboxes}
+                                  className="font-heading w-full h-full"
                                 >
                                   Apply
-                                </button>
+                                </Button>
                               </div>
                             </div>
                           </div>
