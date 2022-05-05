@@ -6,7 +6,7 @@ import { FaCaretDown, FaCaretUp, FaDiscord, FaInstagram, FaTwitter } from 'react
 import { HiOutlineExternalLink } from 'react-icons/hi';
 import { apiDelete, apiGet, apiPost } from 'src/utils';
 import { FollowingCollection, useAppContext } from 'src/utils/context/AppContext';
-import { Button, Chip, Toaster, toastError } from 'src/components/common';
+import { Button, Chip, Toaster, Spinner, toastError } from 'src/components/common';
 import { VerificationModal } from './verification_modal';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 interface Props {
@@ -17,6 +17,7 @@ interface Props {
 export const StatsChips = ({ collection, weeklyStatsData }: Props) => {
   const { user, checkSignedIn, userFollowingCollections, fetchFollowingCollections, chainId } = useAppContext();
   const [isFollowing, setIsFollowing] = useState(false);
+  const [followingLoading, setFollowingLoading] = useState(false);
   const { push: pushRoute } = useRouter();
   // TODO(sleeyax): we should probably refactor both 'edit' and 'follow' buttons; they shouldn't be part of this 'social stats' component.
   const [modalOpen, setModalOpen] = useState(false);
@@ -34,6 +35,7 @@ export const StatsChips = ({ collection, weeklyStatsData }: Props) => {
     if (!checkSignedIn()) {
       return;
     }
+    setFollowingLoading(true);
     if (isFollowing) {
       const { error } = await apiDelete(`/user/1:${user?.address}/followingCollections`, {
         data: {
@@ -63,6 +65,7 @@ export const StatsChips = ({ collection, weeklyStatsData }: Props) => {
         fetchFollowingCollections();
       }
     }
+    setFollowingLoading(false);
   };
 
   const onClickEdit = () => {
@@ -101,17 +104,21 @@ export const StatsChips = ({ collection, weeklyStatsData }: Props) => {
 
       <Chip
         content={
-          <span className="flex items-center">
-            {isFollowing ? (
-              <>
-                <AiOutlinePlus className="mr-1" /> Following
-              </>
-            ) : (
-              <>
-                <AiOutlinePlus className="mr-1" /> Follow
-              </>
-            )}
-          </span>
+          followingLoading ? (
+            <span className="flex justify-center w-24">
+              <Spinner />
+            </span>
+          ) : (
+            <span className="flex items-center">
+              {isFollowing ? (
+                <>Following</>
+              ) : (
+                <>
+                  <AiOutlinePlus className="mr-1" /> Follow
+                </>
+              )}
+            </span>
+          )
         }
         onClick={onClickFollow}
         active={isFollowing}

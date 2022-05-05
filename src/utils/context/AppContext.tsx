@@ -5,9 +5,11 @@ import { UserRejectException } from 'src/utils/providers/UserRejectException';
 import { ProviderManager } from 'src/utils/providers/ProviderManager';
 import { Toaster, toastWarning } from 'src/components/common';
 import { apiGet } from '../apiUtils';
+import { UserProfileDto } from 'src/components/user/user-profile-dto';
 
 export type User = {
   address: string;
+  username?: string;
 };
 
 export type FollowingCollection = {
@@ -64,10 +66,12 @@ export const AppContextProvider = (props: React.PropsWithChildren<unknown>) => {
 
         providerManagerInstance
           .signIn()
-          .then(() => {
-            setUser({ address: providerManagerInstance.account });
+          .then(async () => {
+            const address = providerManagerInstance.account;
+            setUser({ address });
             const chainIdNew = providerManagerInstance.chainId ?? 1;
             setChainId(`${chainIdNew}`);
+            await fetchUserInfo(address);
           })
           .catch((err) => {
             console.error(err);
@@ -97,7 +101,7 @@ export const AppContextProvider = (props: React.PropsWithChildren<unknown>) => {
         setChainId(`${chainIdNew}`);
         setUserReady(true);
       } catch (err: Error | unknown) {
-        console.log(err);
+        console.error(err);
         if (err instanceof UserRejectException) {
           showAppError(err.message);
         }
@@ -106,6 +110,15 @@ export const AppContextProvider = (props: React.PropsWithChildren<unknown>) => {
       }
     } else {
       console.log(`Provider not ready yet`);
+    }
+  };
+
+  const fetchUserInfo = async (userAddress: string) => {
+    const { result, error } = await apiGet(`/user/${userAddress}`);
+    if (!error) {
+      const userInfo = result as UserProfileDto;
+      const _user = { address: userAddress, username: userInfo.username };
+      setUser(_user);
     }
   };
 

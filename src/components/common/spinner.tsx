@@ -2,7 +2,7 @@ import { twMerge } from 'tailwind-merge';
 import { SVG } from './svg';
 
 interface Props {
-  className: string;
+  className?: string;
 }
 
 export const Spinner = ({ className }: Props) => {

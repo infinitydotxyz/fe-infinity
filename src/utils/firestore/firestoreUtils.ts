@@ -33,6 +33,7 @@ export type FeedFilter = {
 
 export type Comment = {
   userAddress: string;
+  username?: string;
   comment: string;
   timestamp: number;
 };
@@ -137,6 +138,7 @@ export async function subscribe(collectionPath: string, filter: FeedFilter, onCh
         if (onChange && change.type === 'added') {
           const docData = { ...change.doc.data(), id: change.doc.id };
           lastDoc = change.doc;
+          // console.log('change.doc', change.doc.data());
           onChange(change.type, docData as FeedEvent);
         }
       });
@@ -166,10 +168,20 @@ export async function addUserLike(eventId: string, userAccount: string, doneCall
   }
 }
 
-export async function addUserComments(eventId: string, userAddress: string, comment: string) {
+export async function addUserComments({
+  eventId,
+  userAddress,
+  username,
+  comment
+}: {
+  eventId: string;
+  userAddress: string;
+  username?: string;
+  comment: string;
+}) {
   const timestamp = +new Date();
   const docRef = doc(firestoreDb, 'feed', eventId, 'userComments', userAddress + '_' + timestamp);
-  await setDoc(docRef, { userAddress, comment, timestamp });
+  await setDoc(docRef, { userAddress, username, comment, timestamp });
   increaseComments(userAddress ?? '', eventId);
 }
 
