@@ -144,6 +144,7 @@ const CollectionPage = () => {
           <div className="mt-6 min-h-[1024px]">
             {selected === 'NFT' && collection && (
               <GalleryBox
+                pageId="COLLECTION"
                 collection={collection}
                 cardProps={{
                   cardActions: [
