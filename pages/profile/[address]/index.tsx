@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { PageBox } from 'src/components/common';
 import { UserPage } from 'src/components/user/user-page';
-import { useAppContext } from 'src/utils/context/AppContext';
+import { useAppContext, User } from 'src/utils/context/AppContext';
 import { useFetch } from 'src/utils';
 import { UserProfileDto } from 'src/components/user/user-profile-dto';
 
@@ -25,16 +25,19 @@ const ProfilePage = () => {
     );
   }
 
-  return <ProfilePageContents userAddress={address === 'me' ? `${user?.address ?? ''}` : `${address ?? ''}`} />;
+  return (
+    <ProfilePageContents userAddress={address === 'me' ? `${user?.address ?? ''}` : `${address ?? ''}`} user={user} />
+  );
 };
 
 // ================================================
 
 interface Props {
+  user: User | null;
   userAddress: string;
 }
 
-const ProfilePageContents = ({ userAddress }: Props) => {
+const ProfilePageContents = ({ user, userAddress }: Props) => {
   const { result, isLoading, isError, error } = useFetch(`${USER_API_END_POINT}/${userAddress}`);
 
   if (isLoading) {
@@ -51,9 +54,10 @@ const ProfilePageContents = ({ userAddress }: Props) => {
   }
 
   const userInfo = result as UserProfileDto;
+
   return (
     <PageBox showTitle={false} title={userInfo.username || userInfo.address}>
-      <UserPage userInfo={result as UserProfileDto} isOwner />
+      <UserPage userInfo={result as UserProfileDto} isOwner={!!(user && user.address === userInfo.address)} />
     </PageBox>
   );
 };
