@@ -1,7 +1,7 @@
 import { trimText } from './read-more-text';
 import { BLANK_IMAGE_URL } from 'src/utils';
-import { CollectionSearchDto } from './collection-grid';
 import { Button } from './button';
+import { CollectionSearchDto } from '../../utils/types/collection-types';
 
 interface CollectionCardProps {
   collection: CollectionSearchDto;
