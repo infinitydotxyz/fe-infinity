@@ -39,7 +39,7 @@ export const Navbar = () => {
           type: 'link',
           label: 'Orderbook',
           props: {
-            href: '/market'
+            href: '/marketplace'
           }
         },
         {

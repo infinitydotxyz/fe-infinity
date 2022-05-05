@@ -3,9 +3,9 @@ import { OrderDrawer } from 'src/components/market';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
 
-const MarketPage = () => {
+const MarketplacePage = () => {
   const { orderDrawerOpen, setOrderDrawerOpen } = useOrderContext();
-  const { options, onChange, selected } = useToggleTab(['Orderbook'], 'Orderbook');
+  const { options, onChange, selected } = useToggleTab(['Orderbook', 'Buy', 'Sell'], 'Orderbook');
 
   const contents = (
     <>
@@ -19,7 +19,7 @@ const MarketPage = () => {
   );
 
   return (
-    <PageBox title="Market">
+    <PageBox title="Marketplace">
       <OrderDrawer open={orderDrawerOpen} onClose={() => setOrderDrawerOpen(false)} />
 
       <div>{contents}</div>
@@ -27,4 +27,4 @@ const MarketPage = () => {
   );
 };
 
-export default MarketPage;
+export default MarketplacePage;
