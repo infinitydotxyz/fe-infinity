@@ -12,13 +12,12 @@ import { CommunityRightPanel } from 'src/components/collection/community-right-p
 import { AiOutlineCheck } from 'react-icons/ai';
 import { AvatarImage } from 'src/components/collection/avatar-image';
 import { useOrderContext } from 'src/utils/context/OrderContext';
-import { OrderDrawer } from 'src/components/market/order-drawer/order-drawer';
 import ContentLoader from 'react-content-loader';
 import { iconButtonStyle } from 'src/utils/ui-constants';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
 
 const CollectionPage = () => {
-  const { orderDrawerOpen, setOrderDrawerOpen, addCartItem } = useOrderContext();
+  const { addCartItem } = useOrderContext();
   const router = useRouter();
   const {
     query: { name }
@@ -196,7 +195,7 @@ const CollectionPage = () => {
         </main>
       </div>
 
-      <OrderDrawer open={orderDrawerOpen} onClose={() => setOrderDrawerOpen(false)} />
+      {/* <OrderDrawer open={orderDrawerOpen} onClose={() => setOrderDrawerOpen(false)} /> */}
     </PageBox>
   );
 };
