@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 
 export const ShoppingCartButton: React.FC = () => {
   const { user } = useAppContext();
-  const { orderDrawerOpen, setOrderDrawerOpen, isOrderStateEmpty } = useOrderContext();
+  const { orderDrawerOpen, setOrderDrawerOpen } = useOrderContext();
   const router = useRouter();
 
   const connected = user?.address ? true : false;
