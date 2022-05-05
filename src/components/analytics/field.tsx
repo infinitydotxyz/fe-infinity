@@ -118,7 +118,7 @@ export const Field = ({ onSort, sortable = false, onClick, type, label, value }:
       },
       element: {
         className: `
-          text-theme-light-800 text-2xl 
+          text-theme-light-800 text-2xl font-heading
         `
       }
     },

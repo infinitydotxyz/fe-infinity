@@ -71,7 +71,7 @@ export const Analytics = () => {
       : `/user/1:${user?.address}/watchlist?orderBy=${orderBy}&orderDirection=${orderDirection}&period=${interval}&date=${date}&limit=${limit}`;
 
   const data = useFetch<{ data: CollectionStats[] }>(query);
-  // [2fr,2fr,4fr,3fr,3fr,3fr,3fr,3fr,3fr,2fr]
+
   if (data.result) {
     statistics = data.result.data.map((d, index) => {
       const address = d.collectionAddress;
@@ -80,10 +80,10 @@ export const Analytics = () => {
       // const trust = d.votesFor > 0 ? `${(d.votesFor / (d.votesAgainst + d.votesFor)) * 100}%` : '0%';
       const items = d.numNfts ? d.numNfts : '-';
       const owners = d.numOwners ? d.numOwners : '-';
-      const volume = d.volume ? d.volume : '-';
+      const volume = d.volume ? d.volume.toFixed(1) : '-';
       const floorPrice = d.floorPrice ? d.floorPrice : '-';
-      const volumePercentChange = d.volumePercentChange ? d.volumePercentChange : '-';
-      const floorPricePercentChange = d.floorPricePercentChange ? d.floorPricePercentChange : '-';
+      const volumePercentChange = d.volumePercentChange ? d.volumePercentChange.toFixed(1) : '-';
+      const floorPricePercentChange = d.floorPricePercentChange ? d.floorPricePercentChange.toFixed(1) : '-';
       const twitterFollowers = d.twitterFollowers ? d.twitterFollowers : '-';
       const twitterFollowersPercentChange = d.twitterFollowersPercentChange ? d.twitterFollowersPercentChange : '-';
       const discordFollowers = d.discordFollowers ? d.discordFollowers : '-';
