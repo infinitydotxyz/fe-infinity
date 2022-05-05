@@ -20,6 +20,7 @@ export * from 'src/components/common/checkbox';
 export * from 'src/components/common/next-link';
 export * from 'src/components/common/debounced-text-field';
 export * from 'src/components/common/tool-tip';
+export * from 'src/components/common/bg-image';
 export * from 'src/components/common/divider';
 export * from 'src/components/common/drawer';
 export * from 'src/components/common/eth-price';

@@ -2,17 +2,22 @@ import { BaseCollection, CardData } from '@infinityxyz/lib/types/core';
 import { useEffect, useRef, useState } from 'react';
 import { CollectionList } from 'src/components/astra/collection-list';
 import { TokensGrid } from 'src/components/astra/token-grid';
-import { Button, DebouncedTextField, NextLink, Spacer, SVG } from 'src/components/common';
+import { BGImage, Button, DebouncedTextField, NextLink, Spacer, SVG } from 'src/components/common';
 import { apiGet } from 'src/utils';
-import { largeIconButtonStyle } from 'src/utils/ui-constants';
+import { iconButtonStyle, largeIconButtonStyle } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
+import { XIcon } from '@heroicons/react/outline';
 
 export const PixelScore = () => {
   const [collection, setCollection] = useState<BaseCollection>();
+  const [selectedTokens, setSelectedTokens] = useState<CardData[]>([]);
   const [chainId, setChainId] = useState<string>();
+  const [showCart, setShowCart] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   const onCardClick = (data: CardData) => {
-    console.log(data);
+    setSelectedTokens([...selectedTokens, data]);
+    setShowCart(true);
   };
 
   let tokensGrid;
@@ -48,7 +53,18 @@ export const PixelScore = () => {
         )}
 
         <div className="row-span-2 col-span-1 overflow-y-auto">
-          <div className="hidden p-7">harry</div>
+          <div className={twMerge(showCart ? '' : 'hidden', 'p-7')}>
+            <AstraCart
+              tokens={selectedTokens}
+              onRemove={(value) => {
+                for (const token of selectedTokens) {
+                  if (token.id === value.id) {
+                    // sdf
+                  }
+                }
+              }}
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -95,7 +111,7 @@ const Sidebar = ({ onClick }: Props) => {
   return (
     <div className="flex flex-col pt-3 h-full items-center">
       <DebouncedTextField
-        className="px-4 mb-2"
+        className="px-4 mb-3"
         value={query}
         placeholder="Search"
         onChange={(value) => {
@@ -103,6 +119,40 @@ const Sidebar = ({ onClick }: Props) => {
         }}
       />
       <div className="overflow-y-auto overflow-x-hidden w-full px-4">{collectionsList}</div>
+    </div>
+  );
+};
+
+// ========================================================================================
+
+interface Props4 {
+  tokens: CardData[];
+  onRemove: (token: CardData) => void;
+}
+
+const AstraCart = ({ tokens, onRemove }: Props4) => {
+  return (
+    <div className="flex flex-col space-y-2 items-start w-48">
+      {tokens.map((token, i) => {
+        return (
+          <div className="flex items-center w-full">
+            <div className="w-4 mr-2 text-right">{i + 1}.</div>
+            <BGImage className={twMerge(largeIconButtonStyle, 'rounded-lg')} url={token.image} />
+            <div className="ml-2">{token.tokenId}</div>
+
+            <Spacer />
+            <Button
+              size="plain"
+              variant="round"
+              onClick={() => {
+                onRemove(token);
+              }}
+            >
+              <XIcon className={iconButtonStyle} />
+            </Button>
+          </div>
+        );
+      })}
     </div>
   );
 };

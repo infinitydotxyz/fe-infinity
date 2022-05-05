@@ -22,7 +22,7 @@ export const SearchInput: React.FC<Props> = ({ expanded }) => {
   const inputRef: React.RefObject<HTMLInputElement> = React.useRef(null);
 
   const activate = () => setIsActive(true);
-  const deactivate = () => (text.length == 0 && !expanded ? setIsActive(false) : null);
+  const deactivate = () => (text.length === 0 && !expanded ? setIsActive(false) : null);
 
   React.useEffect(() => {
     isActive ? inputRef?.current?.focus() : inputRef?.current?.blur();

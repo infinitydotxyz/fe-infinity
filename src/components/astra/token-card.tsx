@@ -1,5 +1,6 @@
 import { CardData } from '@infinityxyz/lib/types/core';
 import { twMerge } from 'tailwind-merge';
+import { BGImage } from '../common';
 
 interface Props {
   data: CardData;
@@ -15,10 +16,7 @@ export const TokenCard = ({ data, onClick }: Props): JSX.Element => {
       className={twMerge('overflow-clip shadow-lg', `rounded-2xl w-full h-[290px] relative flex flex-col`)}
       onClick={() => onClick(data)}
     >
-      <div
-        className={`w-full h-full bg-cover bg-center bg-no-repeat`}
-        style={{ backgroundImage: `url(${data?.image})` }}
-      />
+      <BGImage url={data?.image} />
 
       {data?.rarityRank && (
         <div className="absolute bg-gray-100 top-3 right-3 py-1 px-3 rounded-3xl">{Math.round(data?.rarityRank)}</div>

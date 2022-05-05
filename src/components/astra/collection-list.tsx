@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FetchMore } from 'src/components/common';
+import { BGImage, FetchMore } from 'src/components/common';
 import { apiGet, DEFAULT_LIMIT, BLANK_IMAGE_URL } from 'src/utils';
 import { trimText } from 'src/components/common/read-more-text';
 import { CollectionSearchArrayDto, CollectionSearchDto } from '../../utils/types/collection-types';
@@ -105,10 +105,7 @@ const CollectionListItem = ({ collection, onClick }: Props2) => {
       className="w-full cursor-pointer shadow bg-white p-1 rounded-lg overflow-clip h-24 relative"
       onClick={() => onClick(collection)}
     >
-      <div
-        className="w-full h-full bg-cover bg-center bg-no-repeat rounded-lg"
-        style={{ backgroundImage: `url(${avatarUrl})` }}
-      />
+      <BGImage url={avatarUrl} />
 
       <div className="text-theme-light-800 tracking-tight absolute bottom-0 left-0 right-0">
         <div className="bg-white bg-opacity-90 overflow-clip  pb-2 ">

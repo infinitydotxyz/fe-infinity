@@ -1,8 +1,10 @@
 import { BaseCollection, BaseToken, CardData } from '@infinityxyz/lib/types/core';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FetchMore } from 'src/components/common';
 import { apiGet, DEFAULT_LIMIT } from 'src/utils';
 import { Filter } from 'src/utils/context/FilterContext';
+import { useWindowSize } from 'src/utils/useWindowSize';
+import { twMerge } from 'tailwind-merge';
 import { NFTArray } from '../../utils/types/collection-types';
 import { TokenCard } from './token-card';
 
@@ -38,10 +40,20 @@ interface Props2 {
 export const TokensGrid = ({ collection, chainId, className, onClick }: Props2) => {
   const [tokens, setTokens] = useState<BaseToken[]>([]);
   const [error, setError] = useState(false);
+  const [gridWidth, setGridWidth] = useState(0);
   const [cursor, setCursor] = useState<string>('');
   const [hasNextPage, setHasNextPage] = useState(false);
 
+  const { width } = useWindowSize();
+
+  const ref = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
+    setGridWidth(ref.current ? ref.current.offsetWidth : 0);
+  }, [width]);
+
+  useEffect(() => {
+    setTokens([]);
     handleFetch('');
   }, [collection]);
 
@@ -74,9 +86,15 @@ export const TokensGrid = ({ collection, chainId, className, onClick }: Props2) 
     );
   }
 
+  let gridColumns = 'grid-cols-2';
+  if (gridWidth > 0) {
+    const cols = Math.round(gridWidth / 250);
+    gridColumns = `repeat(${cols}, minmax(0, 1fr))`;
+  }
+
   return (
-    <div className={className}>
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-x-8 gap-y-12 ">
+    <div ref={ref} className={className}>
+      <div className={twMerge('grid gap-x-8 gap-y-12 ')} style={{ gridTemplateColumns: gridColumns }}>
         {tokens.map((token) => {
           const data: CardData = {
             id: collection?.address + '_' + token.tokenId,
