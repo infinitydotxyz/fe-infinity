@@ -40,16 +40,7 @@ export const CollectionCard = ({ collection, onButtonClick, buttonName }: Collec
         </div>
         <div className="pt-4  text-center">
           <div className="font-body text-base font-bold text-black">{collection.name}</div>
-          <div
-            className="font-body pt-2 text-base px-5 text-theme-light-800"
-            // Steve: debugging (will remove when done)
-            // onClick={(e) => {
-            //   e.preventDefault();
-            //   e.stopPropagation();
-
-            //   console.log(JSON.stringify(collection, null, '  '));
-            // }}
-          >
+          <div className="font-body pt-2 text-base px-5 text-theme-light-800">
             {shortText}
             {isTrimText && ' ...'}
           </div>

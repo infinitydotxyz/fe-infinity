@@ -47,21 +47,7 @@ export const Card = ({ data, cardActions, dropdownActions, isLoading, className 
   );
 
   if (isLoading) {
-    return (
-      <ContentLoader
-        speed={2}
-        width={290}
-        height={290}
-        viewBox="0 0 400 460"
-        backgroundColor="#f3f3f3"
-        foregroundColor="#ecebeb"
-        className={className}
-      >
-        <rect x="7" y="415" rx="2" ry="2" width="227" height="16" />
-        <rect x="6" y="7" rx="45" ry="45" width="390" height="388" />
-        <rect x="6" y="440" rx="2" ry="2" width="227" height="16" />
-      </ContentLoader>
-    );
+    return <LoadingCard className={className} />;
   }
   return (
     <div className={twMerge(`sm:mx-0 relative flex flex-col pointer-events-auto ${className ?? ''}`)}>
@@ -70,24 +56,14 @@ export const Card = ({ data, cardActions, dropdownActions, isLoading, className 
       </NextLink>
 
       {data?.rarityRank && (
-        <span className="absolute bg-gray-100 top-3 right-3 py-2 px-3 rounded-3xl">{Math.round(data?.rarityRank)}</span>
+        <span className="absolute bg-gray-100 top-3 right-3 py-1 px-3 rounded-3xl">{Math.round(data?.rarityRank)}</span>
       )}
 
       <div className="p-1 mt-3">
-        <div
-          className="font-bold"
-          title={data?.title}
-          // Steve: debugging (will remove when done)
-          // onClick={(e) => {
-          //   e.preventDefault();
-          //   e.stopPropagation();
-
-          //   console.log(JSON.stringify(data, null, '  '));
-          // }}
-        >
+        <div className="font-bold" title={data?.title}>
           {title}
         </div>
-        <div className="text-secondary font-zagmamono" title={data?.tokenId}>
+        <div className="text-secondary font-heading" title={data?.tokenId}>
           {tokenId}
         </div>
       </div>
@@ -110,3 +86,19 @@ export const Card = ({ data, cardActions, dropdownActions, isLoading, className 
     </div>
   );
 };
+
+const LoadingCard = ({ className }: { className?: string }) => (
+  <ContentLoader
+    speed={2}
+    width={290}
+    height={290}
+    viewBox="0 0 400 460"
+    backgroundColor="#f3f3f3"
+    foregroundColor="#ecebeb"
+    className={className}
+  >
+    <rect x="5" y="394" rx="18" ry="18" width="390" height="28" />
+    <rect x="6" y="7" rx="45" ry="45" width="390" height="372" />
+    <rect x="5" y="431" rx="18" ry="18" width="390" height="28" />
+  </ContentLoader>
+);

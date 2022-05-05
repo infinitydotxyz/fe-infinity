@@ -2,7 +2,10 @@ export const API_BASE = 'https://sv-dev.nftcompany.com';
 export const SITE_HOST = 'https://dev.nftcompany.com';
 export const DISCORD_BOT_INVITE_URL =
   'https://discord.com/api/oauth2/authorize?client_id=956292440778743838&permissions=1024&scope=bot%20applications.commands';
+
+// not sure why there are two of these.
 export const ITEMS_PER_PAGE = 10;
+export const DEFAULT_LIMIT = 24;
 
 export const NFT_DATA_SOURCES = {
   INFINITY: 0,

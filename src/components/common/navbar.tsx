@@ -2,7 +2,16 @@ import React from 'react';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { IoMdArrowDropdown } from 'react-icons/io';
 import { Menu } from '@headlessui/react';
-import { SVG, SearchInput, ConnectButton, Spacer, CustomMenuItem, pageStyles, NextLink } from 'src/components/common';
+import {
+  SVG,
+  SearchInput,
+  ConnectButton,
+  Spacer,
+  CustomMenuItem,
+  pageStyles,
+  NextLink,
+  ShoppingCartButton
+} from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 import { useRouter } from 'next/router';
 
@@ -23,7 +32,7 @@ export const Navbar = () => {
           type: 'link',
           label: 'My profile',
           props: {
-            href: '/profile'
+            href: '/profile/me'
           }
         },
         {
@@ -71,7 +80,7 @@ export const Navbar = () => {
   };
 
   const mobileMenu = (
-    <div className="relative">
+    <div className="relative flex justify-center">
       <Menu>
         <Menu.Button>
           <GiHamburgerMenu size="24px" />
@@ -118,7 +127,7 @@ export const Navbar = () => {
   );
 
   const desktopNavbar = (
-    <div className="w-full z-50 sticky top-0 bg-white bg-opacity-70 glass">
+    <div className="w-full bg-white bg-opacity-70 glass">
       <div className={`${pageStyles} flex space-x-6 items-center py-6 w-full`}>
         <NextLink href="/">
           <SVG.logo className="h-8" />
@@ -155,7 +164,8 @@ export const Navbar = () => {
             )}
           </React.Fragment>
         ))}
-        <div>
+        <div className={`flex space-x-2`}>
+          <ShoppingCartButton />
           <ConnectButton />
         </div>
       </div>
@@ -164,7 +174,8 @@ export const Navbar = () => {
 
   return (
     <>
-      <div className="desktop:visible tabloid:hidden">{desktopNavbar}</div>
+      {/* sticky had to be set here rather than desktopNavbar to work */}
+      <div className="desktop:visible tabloid:hidden z-2 sticky top-0">{desktopNavbar}</div>
       <div className="desktop:hidden tabloid:visible">{mobileNavbar}</div>
     </>
   );

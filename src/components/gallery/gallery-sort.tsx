@@ -37,7 +37,7 @@ export const GallerySort = () => {
           { label: PRICE_LOW_LABEL, onClick: () => onClickSort('rarityRank', 'desc') }
           // { label: 'Clear', onClick: () => onClickSort('desc') }
         ]}
-        contentClassName="right-0"
+        contentClassName="right-0 w-64"
       />
     </span>
   );

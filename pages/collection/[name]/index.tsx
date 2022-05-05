@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { BaseCollection, CollectionStats } from '@infinityxyz/lib/types/core';
-import { ToggleTab, PageBox, useToggleTab, SVG } from 'src/components/common';
+import { ToggleTab, PageBox, useToggleTab, SVG, EthPrice } from 'src/components/common';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { useFetch } from 'src/utils/apiUtils';
 import { CollectionFeed } from 'src/components/feed/collection-feed';
@@ -15,6 +15,7 @@ import { useOrderContext } from 'src/utils/context/OrderContext';
 import { OrderDrawer } from 'src/components/market/order-drawer/order-drawer';
 import ContentLoader from 'react-content-loader';
 import { iconButtonStyle } from 'src/utils/ui-constants';
+import { OrderbookContainer } from 'src/components/market/orderbook-list';
 
 const CollectionPage = () => {
   const { orderDrawerOpen, setOrderDrawerOpen, addCartItem } = useOrderContext();
@@ -23,7 +24,24 @@ const CollectionPage = () => {
     query: { name }
   } = router;
 
-  const { options, onChange, selected } = useToggleTab(['NFT', 'Activity'], 'NFT');
+  if (!router.isReady) {
+    return null;
+  }
+
+  const { options, onChange, selected } = useToggleTab(
+    ['NFT', 'Activity', 'Orderbook'],
+    (router.query.tab as string) || 'NFT'
+  );
+
+  useEffect(() => {
+    if (selected === 'NFT') {
+      const updateQueryParams = { ...router.query };
+      delete updateQueryParams.tab;
+      router.replace({ pathname: router.pathname, query: { ...updateQueryParams } });
+    } else {
+      router.replace({ pathname: router.pathname, query: { ...router.query, tab: selected } });
+    }
+  }, [selected]);
 
   const path = `/collections/${name}`;
   const { result: collection, isLoading } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
@@ -49,7 +67,7 @@ const CollectionPage = () => {
     <PageBox showTitle={false} title={collection.metadata?.name ?? ''}>
       <div className="flex flex-col mt-10">
         <span>
-          <AvatarImage url={collection.metadata.profileImage} className="mb-2" />
+          <AvatarImage url={collection.metadata.profileImage} className="mb-2 rounded-[50%]" />
 
           <div className="flex gap-3 items-center">
             <div className="text-6xl  ">{collection.metadata?.name}</div>
@@ -57,12 +75,12 @@ const CollectionPage = () => {
           </div>
         </span>
         <main>
-          <div className="text-secondary mt-6 mb-6 text-sm font-heading">
+          <div className="text-secondary mt-6 mb-6 font-heading">
             <span>Created by </span>
             <button onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection.owner)}>
               {ellipsisAddress(collection.owner ?? '')}
             </button>
-            <span className="ml-12">Collection address </span>
+            <span className="ml-12 font-heading">Collection address </span>
             <button onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection.address)}>
               {ellipsisAddress(collection.address ?? '')}
             </button>
@@ -75,7 +93,7 @@ const CollectionPage = () => {
               <LoadingDescription />
             </div>
           ) : (
-            <div className="text-secondary mt-6 text-sm md:w-2/3">{collection.metadata.description ?? ''}</div>
+            <div className="text-secondary mt-12 md:w-2/3">{collection.metadata.description ?? ''}</div>
           )}
 
           <div className="mt-7">
@@ -96,7 +114,7 @@ const CollectionPage = () => {
             </div>
           </div>
 
-          <table className="mt-8 text-sm md:w-1/2">
+          <table className="mt-8 md:w-1/2">
             <thead>
               <tr className="text-gray-400">
                 <th className="text-left font-medium font-heading">Items</th>
@@ -109,7 +127,13 @@ const CollectionPage = () => {
               <tr className="font-bold font-heading text-2xl">
                 <td>{collection.numNfts?.toLocaleString() ?? '—'}</td>
                 <td>{collection.numOwners?.toLocaleString() ?? '—'}</td>
-                <td>{firstDailyStats?.floorPrice ?? '—'}</td>
+                <td>
+                  {firstDailyStats?.floorPrice ? (
+                    <EthPrice label={String(firstDailyStats?.floorPrice) + ' ETH'} labelClassName="font-bold" />
+                  ) : (
+                    '—'
+                  )}
+                </td>
                 <td>{firstDailyStats?.volume?.toLocaleString() ?? '—'}</td>
               </tr>
             </tbody>
@@ -131,7 +155,7 @@ const CollectionPage = () => {
                           return (
                             <>
                               <span className="mr-4 font-bold">Buy</span>
-                              <span className="font-zagmamono">{price} ETH</span>
+                              <span className="font-heading">{price} ETH</span>
                             </>
                           );
                         }
@@ -153,6 +177,9 @@ const CollectionPage = () => {
                 }}
               />
             )}
+
+            {selected === 'Orderbook' && <OrderbookContainer collectionId={collection.address} />}
+
             {/* {currentTab === 1 && <ActivityTab dailyStats={dailyStats} weeklyStats={weeklyStats} />} */}
             {selected === 'Activity' && <ActivityTab collectionAddress={collection.address ?? ''} />}
 
@@ -182,9 +209,9 @@ const LoadingDescription = () => (
     backgroundColor="#f3f3f3"
     foregroundColor="#ecebeb"
   >
-    <rect x="3" y="3" rx="2" ry="2" width="390" height="14" />
-    <rect x="3" y="28" rx="2" ry="2" width="390" height="14" />
-    <rect x="3" y="52" rx="2" ry="2" width="222" height="14" />
+    <rect x="3" y="3" rx="12" ry="12" width="390" height="20" />
+    <rect x="3" y="34" rx="12" ry="12" width="390" height="20" />
+    <rect x="3" y="66" rx="12" ry="12" width="203" height="20" />
   </ContentLoader>
 );
 

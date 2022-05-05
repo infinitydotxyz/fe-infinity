@@ -79,7 +79,7 @@ const SingleCollectionCell = ({ image, title, token, count = 0 }: SingleCollecti
   return (
     <div className="flex gap-2 items-center mb-3">
       <div className="flex justify-center shrink-0 h-12 w-12">
-        <span className="inline-block relative">
+        <span className="inline-block">
           <img className="h-12 w-12 rounded-2xl" src={image} alt="" />
           {count > 1 && (
             <div className="text-xs text-center pt-1 absolute top-0 right-0 block h-6 w-6 transform -translate-y-1/2 translate-x-1/2 rounded-full bg-white">

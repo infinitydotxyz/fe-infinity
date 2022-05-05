@@ -1,27 +1,26 @@
+import { Collection, Token } from '@infinityxyz/lib/types/core';
 import React from 'react';
 import { Modal } from 'src/components/common';
 
-export const CancelModal = () => {
-  const [modalIsOpen, setIsOpen] = React.useState(false);
-  const openModal = () => {
-    setIsOpen(true);
-  };
+interface Props {
+  isOpen: boolean;
+  collection: Collection;
+  token: Token;
+  onClose: () => void;
+}
 
-  const closeModal = () => {
-    setIsOpen(false);
-  };
-
+export const CancelModal = ({ isOpen, onClose, collection, token }: Props) => {
   return (
-    <div>
-      <button onClick={openModal}>Cancel</button>
-      <Modal
-        wide={false}
-        isOpen={modalIsOpen}
-        onClose={closeModal}
-        okButton="Confirm"
-        title="Cancel this listing?"
-        onOKButton={() => console.log('hello')}
-      />
-    </div>
+    <Modal
+      wide={false}
+      isOpen={isOpen}
+      onClose={onClose}
+      okButton="Confirm"
+      title="Cancel this listing?"
+      onOKButton={() => {
+        console.log(collection);
+        console.log(token);
+      }}
+    />
   );
 };

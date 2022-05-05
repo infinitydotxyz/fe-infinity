@@ -58,7 +58,10 @@ const parseFiltersToApiQueryParams = (filters: OBFilters): GetOrderItemsQuery =>
         break;
       case 'collections':
         if (filters?.collections?.length) {
-          parsedFilters.collections = filters?.collections;
+          parsedFilters.collections = filters?.collections.map((collection) => {
+            const decoded = decodeURIComponent(collection);
+            return decoded.split(':')[1];
+          });
         }
         break;
       case 'minPrice':
@@ -138,15 +141,20 @@ type OBContextType = {
   clearFilter: (name: string) => void;
   updateFilterArray: (filterName: string, currentFitlers: string[], selectionName: string, checked: boolean) => void;
   updateFilter: (name: string, value: string) => void;
+  collectionId: string | undefined;
+  hasMoreOrders: boolean;
 };
 
 const OrderbookContext = React.createContext<OBContextType | null>(null);
 
 type OBProvider = {
   children: ReactNode;
+  collectionId: string | undefined;
 };
 
-export const OrderbookProvider = ({ children }: OBProvider) => {
+const AMOUNT_OF_ORDERS = 10;
+
+export const OrderbookProvider = ({ children, collectionId }: OBProvider) => {
   const router = useRouter();
   const defaultFilters = parseRouterQueryParamsToFilters(router.query);
 
@@ -157,6 +165,12 @@ export const OrderbookProvider = ({ children }: OBProvider) => {
   const [orders, setOrders] = useState<OBOrder[]>([]);
   const [filters, setFilters] = useState<OBFilters>(defaultFilters);
   const [isLoading, setIsLoading] = useState(false);
+  const [limit, setLimit] = useState(AMOUNT_OF_ORDERS);
+  const [hasMoreOrders, setHasMoreOrders] = useState<boolean>(true);
+
+  useEffect(() => {
+    fetchOrders();
+  }, [collectionId]);
 
   useEffect(() => {
     const newFilters = parseRouterQueryParamsToFilters(router.query);
@@ -167,12 +181,11 @@ export const OrderbookProvider = ({ children }: OBProvider) => {
   }, [router.query]);
 
   useEffect(() => {
-    console.log('fetching orders...');
     fetchOrders();
-  }, [filters]);
+  }, [filters, limit]);
 
   const fetchMore = async () => {
-    return fetchOrders();
+    setLimit(limit + AMOUNT_OF_ORDERS);
   };
 
   // filters helper functions
@@ -209,8 +222,13 @@ export const OrderbookProvider = ({ children }: OBProvider) => {
   const fetchOrders = async () => {
     try {
       setIsLoading(true);
-      const orders = await getOrders(parseFiltersToApiQueryParams(filters));
+      const parsedFilters = parseFiltersToApiQueryParams(filters);
+      const orders = await getOrders(
+        { ...parsedFilters, collections: collectionId ? [collectionId] : parsedFilters.collections },
+        limit
+      );
       setOrders(orders);
+      setHasMoreOrders(orders.length === limit);
     } catch (err) {
       console.error(err);
     } finally {
@@ -226,7 +244,9 @@ export const OrderbookProvider = ({ children }: OBProvider) => {
     setFilters,
     clearFilter,
     updateFilterArray,
-    updateFilter
+    updateFilter,
+    collectionId,
+    hasMoreOrders
   };
 
   return <OrderbookContext.Provider value={value}>{children}</OrderbookContext.Provider>;

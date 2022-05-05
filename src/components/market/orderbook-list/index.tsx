@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { OBOrder } from '@infinityxyz/lib/types/core';
-import { Button, Dropdown } from 'src/components/common';
-import { SORT_FILTERS, useOrderbook } from '../OrderbookContext';
+import { Button, Dropdown, SVG } from 'src/components/common';
+import { OrderbookProvider, SORT_FILTERS, useOrderbook } from '../OrderbookContext';
 import { OrderbookRow } from './orderbook_row';
 import { OrderbookFilters } from './filters/orderbook-filters';
 
@@ -17,14 +17,18 @@ const getSortLabel = (key: string | undefined) => {
   return key ? SORT_LABELS[key] || 'Sort' : 'Sort';
 };
 
+export const OrderbookContainer = ({ collectionId }: { collectionId?: string }): JSX.Element => {
+  return (
+    <OrderbookProvider collectionId={collectionId}>
+      <OrderbookList />
+    </OrderbookProvider>
+  );
+};
+
 export const OrderbookList = (): JSX.Element => {
-  const { orders, fetchMore, isLoading, updateFilter, filters } = useOrderbook();
+  const { orders, fetchMore, isLoading, updateFilter, filters, hasMoreOrders } = useOrderbook();
   const [showFilters, setShowFilters] = useState<boolean>(false);
   const [label, setLabel] = useState<string>(getSortLabel(filters?.sort));
-
-  if (orders.length === 0) {
-    return <div className="flex items-center justify-center">Loading</div>;
-  }
 
   const onClickSort = (_label: string, sortOrder: string) => {
     setLabel(_label);
@@ -35,7 +39,7 @@ export const OrderbookList = (): JSX.Element => {
     <>
       <div className="flex flex-col gap-1">
         {/* Filters & Sort */}
-        <div className="text-right">
+        <div className="text-right pb-8">
           <Button
             variant="outline"
             onClick={() => {
@@ -63,37 +67,63 @@ export const OrderbookList = (): JSX.Element => {
             ]}
           />
         </div>
-
-        {/* Orderbook List */}
-        <div className="flex gap-4">
-          {showFilters && (
-            <div className="w-1/4 flex-none">
-              <OrderbookFilters />
-            </div>
-          )}
-          <div className="flex flex-col items-start">
-            {orders.map((order: OBOrder, i) => {
-              return <OrderbookRow key={`${i}-${order.id}`} order={order} />;
-            })}
-
-            {isLoading && <div className="w-full text-center">Loading</div>}
-          </div>
-        </div>
+        <OrderbookListDummy
+          orders={orders}
+          showFilters={showFilters}
+          isLoading={isLoading}
+          fetchMore={fetchMore}
+          hasMoreOrders={hasMoreOrders}
+        />
       </div>
+    </>
+  );
+};
 
-      {/* Load More */}
-      {!isLoading && (
-        <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
-          <Button
-            variant="outline"
-            onClick={() => {
-              fetchMore();
-            }}
-          >
-            More
-          </Button>
+type OBListDummyProps = {
+  orders: OBOrder[];
+  isLoading: boolean;
+  fetchMore: () => Promise<void>;
+  showFilters?: boolean;
+  hasMoreOrders?: boolean;
+};
+
+const OrderbookListDummy = ({
+  orders,
+  showFilters,
+  isLoading,
+  fetchMore,
+  hasMoreOrders
+}: OBListDummyProps): JSX.Element => {
+  return (
+    <div className="flex justify-center align-items gap-4">
+      {showFilters && (
+        <div className="w-1/4 flex-none">
+          <OrderbookFilters />
         </div>
       )}
-    </>
+      <div className="flex flex-col items-start w-full">
+        {orders.length > 0 &&
+          orders.map((order: OBOrder, i) => {
+            return <OrderbookRow key={`${i}-${order.id}`} order={order} />;
+          })}
+
+        {orders.length === 0 && !isLoading && <div>No Results</div>}
+
+        {isLoading && (
+          <div className="w-full flex justify-center align-items">
+            <SVG.spinner className="w-12 h-12 m-3 text-gray-200 animate-spin dark:text-gray-600 fill-black" />
+          </div>
+        )}
+
+        {/* Load More */}
+        {!isLoading && orders.length > 0 && hasMoreOrders && (
+          <div className="w-full flex justify-center align-items">
+            <Button variant="outline" onClick={fetchMore}>
+              More
+            </Button>
+          </div>
+        )}
+      </div>
+    </div>
   );
 };

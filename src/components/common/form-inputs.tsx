@@ -38,7 +38,7 @@ export const TextInputForm = ({
               <input
                 type={type}
                 value={field.value || ''}
-                className="p-0 border-none focus:ring-0 block w-full text-base font-zagmamono"
+                className="p-0 border-none focus:ring-0 block w-full text-base font-heading"
                 placeholder={placeholder}
                 onChange={(e) => {
                   if (onChange) {
@@ -90,7 +90,7 @@ export const TextAreaForm = ({ label, placeholder, tooltip, onChange, rows = 3, 
                     form.setFieldValue(bind, e.target.value);
                   }
                 }}
-                className="p-0 mt-2 border-none focus:ring-0 block w-full text-base font-zagmamono"
+                className="p-0 mt-2 border-none focus:ring-0 block w-full text-base font-heading"
                 placeholder={placeholder}
               />
             </div>

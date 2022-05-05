@@ -93,7 +93,7 @@ export const ProfileImageUpload: FunctionComponent<ProfileImageProps> = ({ onUpl
       <div className="sm:pl-8 mt-2 sm:mt-0">
         <Button
           variant="primary"
-          className="my-1 py-2.5 px-12 mb-3 block w-full sm:w-44 font-zagmamono"
+          className="my-1 py-2.5 px-12 mb-3 block w-full sm:w-44 font-heading"
           onClick={onUploadButtonClick}
           disabled={isLoading}
         >
@@ -102,7 +102,7 @@ export const ProfileImageUpload: FunctionComponent<ProfileImageProps> = ({ onUpl
         <ImageUploaderButtonRef buttonRef={uploadInput} onChangeFile={handleChangeFile} />
         <Button
           variant="outline"
-          className="my-1 py-2 px-12 d-block w-full sm:w-44 block font-zagmamono"
+          className="my-1 py-2 px-12 d-block w-full sm:w-44 block font-heading"
           disabled={isLoading || !imgSrc}
           onClick={handleImageRemove}
         >

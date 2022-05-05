@@ -12,7 +12,7 @@ interface Props {
 }
 
 export const Checkbox = ({ label, boxOnLeft = true, checked, onChange, disabled = false, className = '' }: Props) => {
-  const labelClass = boxOnLeft ? 'ml-2' : '';
+  const labelClass = boxOnLeft ? 'ml-4' : '';
   const checkLabel = (
     <div className={twMerge('text-theme-light-800 font-heading select-none', labelClass)}>{label}</div>
   );
@@ -32,7 +32,7 @@ export const Checkbox = ({ label, boxOnLeft = true, checked, onChange, disabled 
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
         // NOTE: "focus-visible:ring focus:ring-0" shows the focus ring on tab, but not click
-        className="focus-visible:ring focus:ring-0 rounded h-5 w-5"
+        className="focus-visible:ring focus:ring-0 rounded h-6 w-6 border-gray-300 cursor-pointer checked:bg-black checked:hover:bg-black checked:focus:bg-black"
       />
 
       {boxOnLeft && checkLabel}

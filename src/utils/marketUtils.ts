@@ -9,7 +9,7 @@ export const postOrders = async (user: string, orders: SignedOBOrder[]): Promise
       orders: orders
     };
 
-    const response = await apiPost(`/orders/${user}/create`, {
+    const response = await apiPost(`/orders/${user}`, {
       data: body
     });
     return response.result as string;
@@ -19,13 +19,13 @@ export const postOrders = async (user: string, orders: SignedOBOrder[]): Promise
   }
 };
 
-export const getOrders = async (filters: GetOrderItemsQuery = {}): Promise<SignedOBOrder[]> => {
-  const response = await apiGet(`/orders/get`, {
-    query: { ...filters }
+export const getOrders = async (filters: GetOrderItemsQuery = {}, limit = 5): Promise<SignedOBOrder[]> => {
+  const response = await apiGet(`/orders`, {
+    query: { ...filters, limit }
   });
 
   if (response.result) {
-    return response.result as SignedOBOrder[];
+    return response.result.data as SignedOBOrder[];
   }
 
   return [];

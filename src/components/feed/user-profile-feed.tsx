@@ -102,7 +102,7 @@ export const UserProfileFeed = ({
             setNewEvents([]);
           }}
         >
-          Show {newEvents.length} more events.
+          Show {newEvents.length} more event{newEvents.length === 1 ? '' : 's'}.
         </div>
       ) : null}
 

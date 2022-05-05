@@ -25,7 +25,7 @@ export const Chip = ({ left, content, right, iconOnly, active, onClick, classNam
     >
       {left && <div className="pl-3">{left}</div>}
 
-      <div className={`font-normal leading-none max-w-full flex-initial px-2`}>{content}</div>
+      <div className={`font-heading leading-none max-w-full flex-initial px-2`}>{content}</div>
 
       {right && <div className="flex flex-auto flex-row-reverse pr-3">{right}</div>}
     </button>

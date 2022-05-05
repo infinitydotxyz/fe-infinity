@@ -141,7 +141,7 @@ export const TraitSelection = ({ traits, onChange }: Props) => {
                   placeholder="Filter"
                 />
 
-                <div className="h-80 overflow-y-auto space-y-2">
+                <div className="max-h-80 overflow-y-auto my-8 space-y-8">
                   {valuesArr.map((value) => {
                     const searchText = (searchState[item.name] || '').toLowerCase();
                     if (searchText && value.name.toLowerCase().indexOf(searchText) < 0) {
@@ -163,6 +163,7 @@ export const TraitSelection = ({ traits, onChange }: Props) => {
                             }
                           }}
                           label={value.name}
+                          className=""
                         />
                       </div>
                     );

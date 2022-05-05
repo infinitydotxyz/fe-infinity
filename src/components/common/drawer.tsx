@@ -50,8 +50,7 @@ export const Drawer = ({ open, tooltip, subtitle, divide, onClose, title, childr
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="z-50 fixed inset-0 overflow-hidden" onClose={onClose}>
         <div className="absolute inset-0 overflow-hidden">
-          <Dialog.Overlay className="absolute inset-0" />
-
+          <Dialog.Overlay className="absolute inset-0 backdrop-blur-xl" />
           <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16">
             <Transition.Child
               as={Fragment}

@@ -38,3 +38,4 @@ export * from 'src/components/common/header';
 export * from 'src/components/common/collection-card';
 export * from 'src/components/common/image-uploader';
 export * from 'src/components/common/image-uploader-button-ref';
+export * from 'src/components/common/shopping-cart-button';

@@ -10,7 +10,7 @@ interface Props {
 
 export const ActivityFilter = ({ activityTypes, onChange }: Props) => {
   return (
-    <PopoverButton title="Filter">
+    <PopoverButton title="Filter" buttonClassName="font-heading">
       {[EventType.Sale, EventType.Transfer, EventType.Offer].map((type: EventType) => {
         const label = `${type.charAt(0).toUpperCase() + type.slice(1)}s`;
 
@@ -20,6 +20,7 @@ export const ActivityFilter = ({ activityTypes, onChange }: Props) => {
             label={label}
             checked={activityTypes.indexOf(type) >= 0}
             onChange={(checked) => onChange(checked, type)}
+            boxOnLeft={false}
           />
         );
       })}

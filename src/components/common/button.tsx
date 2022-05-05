@@ -15,10 +15,10 @@ const classes = {
   },
   variant: {
     plain: '',
-    ghost: 'rounded-3xl', // hover fill needs to be rounded
-    primary: 'border rounded-3xl border-gray-100 bg-black text-white',
-    secondary: 'border rounded-3xl border-gray-100 bg-black text-white',
-    outline: twMerge(inputBorderColor, 'border rounded-3xl text-gray-900'),
+    ghost: 'rounded-full', // hover fill needs to be rounded
+    primary: 'border rounded-full border-gray-100 bg-black text-white',
+    secondary: 'border rounded-full border-gray-100 bg-black text-white',
+    outline: twMerge(inputBorderColor, 'border rounded-full text-gray-900'),
     danger: 'bg-red-500 hover:bg-red-800 focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 text-white',
     round: 'rounded-full p-1' // use plain size
   }

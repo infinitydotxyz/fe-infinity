@@ -22,14 +22,7 @@ export const OrderListItem = ({ cartItem, allowDelete }: Props) => {
   }
 
   return (
-    <div
-    // Steve: debugging (will remove when done)
-    // onClick={(e) => {
-    //   e.preventDefault();
-    //   e.stopPropagation();
-    //   console.log(JSON.stringify(cartItem, null, '  '));
-    // }}
-    >
+    <div>
       <ImageAndText
         image={<img className={`${collectionIconStyle}`} src={image} alt="" />}
         title={cartItem.collectionName}

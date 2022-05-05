@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
+import { debounce, uniqBy } from 'lodash';
+import React, { useEffect, useState } from 'react';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
-import { Button, Checkbox, EthSymbol, InputBox } from 'src/components/common';
+import { Button, Checkbox, InputBox, TextInputBox } from 'src/components/common';
 import { useOrderbook } from '../../OrderbookContext';
+import { CollectionSearchItem, useCollectionCache } from '../collection-cache';
 
 type OpenFilterState = {
   [filter: string]: boolean;
 };
+
+const ORDER_TYPES = ['Listing', 'Offer'];
 
 export const OrderbookFilters = () => {
   // state
@@ -13,35 +17,69 @@ export const OrderbookFilters = () => {
     filters: { orderTypes = [], collections = [], minPrice, maxPrice, numberOfNfts },
     clearFilter,
     updateFilter,
-    updateFilterArray
+    updateFilterArray,
+    collectionId
   } = useOrderbook();
 
   const [openState, setOpenState] = useState<OpenFilterState>({});
   const [collectionSearchState, setCollectionSearchState] = useState<string>();
+  const [collectionsData, setCollectionsData] = useState<CollectionSearchItem[]>([]);
+  const { getTopCollections, getCollectionsByName, getCollectionsByIds } = useCollectionCache();
 
-  // mock data
-  const collectionsData = [
-    'Collection 1',
-    'Collection 2',
-    'Collection 3',
-    'Collection 4',
-    'Collection 5',
-    'Collection 6',
-    'Collection 7',
-    'Collection 8',
-    'Collection 9'
-  ];
-  const orderTypesData = ['Listing', 'Offer'];
+  useEffect(() => {
+    // loads the selected collections from query params and also provides some more options
+    const fetchInitialCollections = async () => {
+      const initialCollections = await getTopCollections();
+      if (initialCollections?.length) {
+        // query params passed on page load
+        if (collections.length > 0) {
+          const selectedCollections = await getCollectionsByIds(collections);
+          if (selectedCollections?.length) {
+            const _collections = uniqBy([...selectedCollections, ...initialCollections], 'id');
+            setCollectionsData(_collections);
+          }
+        } else {
+          setCollectionsData(initialCollections);
+        }
+      }
+    };
+    fetchInitialCollections().catch(console.error);
+  }, []);
+
+  const searchForCollections = debounce(async (searchTerm: string) => {
+    setCollectionSearchState(searchTerm);
+
+    if (searchTerm) {
+      const updatedCollections = await getCollectionsByName(searchTerm);
+      if (updatedCollections?.length) {
+        setCollectionsData(updatedCollections);
+      }
+    } else {
+      const initialCollections = await getTopCollections();
+      if (initialCollections?.length) {
+        // query params
+        if (collections.length > 0) {
+          const selectedCollections = await getCollectionsByIds(collections);
+          if (selectedCollections?.length) {
+            const _collections = uniqBy([...selectedCollections, ...initialCollections], 'id');
+            setCollectionsData(_collections);
+          }
+        } else {
+          setCollectionsData(initialCollections);
+        }
+      }
+    }
+  }, 300);
 
   return (
     <div className="flex flex-col mr-12">
       <div className="text-2xl font-bold">Filter</div>
       <OrderbookFilterItem key="Order type" openState={openState} setOpenState={setOpenState} item="Order type">
         <div className="max-h-80 overflow-y-auto space-y-4">
-          {orderTypesData.map((orderType) => (
+          {ORDER_TYPES.map((orderType) => (
             <Checkbox
               key={orderType}
-              className="ml-1"
+              className="pb-4"
               checked={orderTypes.includes(orderType)}
               onChange={(checked) => updateFilterArray('orderTypes', orderTypes, orderType, checked)}
               label={orderType}
@@ -49,70 +87,64 @@ export const OrderbookFilters = () => {
           ))}
         </div>
       </OrderbookFilterItem>
-      <OrderbookFilterItem key="Collection" openState={openState} setOpenState={setOpenState} item="Collection">
-        <div>
-          <input
-            className="border rounded-lg py-2 px-4 mt-1 font-heading w-[90%]"
-            defaultValue={collectionSearchState}
-            onChange={(ev) => {
-              const text = ev.target.value;
-              setCollectionSearchState(text);
+      {!collectionId && (
+        <OrderbookFilterItem key="Collection" openState={openState} setOpenState={setOpenState} item="Collection">
+          <div>
+            <input
+              className="border rounded-full py-2 px-4 mt-1 font-heading w-full"
+              defaultValue={collectionSearchState}
+              onChange={(ev) => {
+                const text = ev.target.value;
+                searchForCollections(text);
+              }}
+              placeholder="Search"
+            />
+
+            <div className="mt-8 max-h-80 overflow-y-auto space-y-4">
+              {collectionsData.map((collection, i) => {
+                return (
+                  <Checkbox
+                    key={`${i}-${collection.id}`}
+                    className="pb-4"
+                    checked={collections.includes(`${collection.chainId}:${collection.id}`)}
+                    onChange={(checked) =>
+                      updateFilterArray('collections', collections, `${collection.chainId}:${collection.id}`, checked)
+                    }
+                    label={collection.name}
+                  />
+                );
+              })}
+            </div>
+
+            <Button className="mt-8 w-full" onClick={() => clearFilter('collections')}>
+              Clear
+            </Button>
+          </div>
+        </OrderbookFilterItem>
+      )}
+      <OrderbookFilterItem key="Sale price" openState={openState} setOpenState={setOpenState} item="Sale price">
+        <div className="flex flex-col space-y-4">
+          <TextInputBox
+            addEthSymbol={true}
+            type="number"
+            value={minPrice?.toString()}
+            label="Min"
+            placeholder=""
+            onChange={(value) => {
+              updateFilter('minPrice', value);
             }}
-            placeholder="Filter"
           />
 
-          <div className="mt-2 max-h-80 overflow-y-auto space-y-4">
-            {collectionsData.map((collection) => {
-              const searchText = (collectionSearchState || '').toLowerCase();
-              if (searchText && collection.toLowerCase().indexOf(searchText) < 0) {
-                return null;
-              }
-
-              return (
-                <Checkbox
-                  key={collection}
-                  className="ml-1"
-                  checked={collections.includes(collection)}
-                  onChange={(checked) => updateFilterArray('collections', collections, collection, checked)}
-                  label={collection}
-                />
-              );
-            })}
-          </div>
-
-          <Button onClick={() => clearFilter('collections')}>Clear</Button>
-        </div>
-      </OrderbookFilterItem>
-      <OrderbookFilterItem key="Sale price" openState={openState} setOpenState={setOpenState} item="Sale price">
-        <div className="flex flex-col">
-          <InputBox>
-            <div className="flex-1">
-              <label className="block text-xs font-medium text-theme-light-800">Min</label>
-              <div className="flex">
-                {EthSymbol}&nbsp;&nbsp;
-                <input
-                  type="number"
-                  value={minPrice}
-                  onChange={(e) => updateFilter('minPrice', e.target.value)}
-                  className="p-0 border-none focus:ring-0 block w-full text-base"
-                />
-              </div>
-            </div>
-          </InputBox>
-          <InputBox>
-            <div className="flex-1">
-              <label className="block text-xs font-medium text-theme-light-800">Max</label>
-              <div className="flex">
-                {EthSymbol}&nbsp;&nbsp;
-                <input
-                  type="number"
-                  value={maxPrice}
-                  onChange={(e) => updateFilter('maxPrice', e.target.value)}
-                  className="p-0 border-none focus:ring-0 block w-full text-base"
-                />
-              </div>
-            </div>
-          </InputBox>
+          <TextInputBox
+            addEthSymbol={true}
+            type="number"
+            value={maxPrice?.toString()}
+            label="Max"
+            placeholder=""
+            onChange={(value) => {
+              updateFilter('maxPrice', value);
+            }}
+          />
         </div>
       </OrderbookFilterItem>
       <OrderbookFilterItem key="Number of NFTs" openState={openState} setOpenState={setOpenState} item="Number of NFTs">
