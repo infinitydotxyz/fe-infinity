@@ -102,7 +102,7 @@ const CollectionListItem = ({ collection, onClick }: Props2) => {
 
   return (
     <div
-      className="w-full cursor-pointer shadow-lg bg-white p-1 rounded-lg overflow-clip h-24 relative"
+      className="w-full cursor-pointer shadow bg-white p-1 rounded-lg overflow-clip h-24 relative"
       onClick={() => onClick(collection)}
     >
       <div
@@ -110,9 +110,10 @@ const CollectionListItem = ({ collection, onClick }: Props2) => {
         style={{ backgroundImage: `url(${avatarUrl})` }}
       />
 
-      <div className="text-theme-light-800 tracking-tight absolute bottom-0 ">
-        <div className=" bg-white bg-opacity-90 overflow-clip  pb-2 ">
+      <div className="text-theme-light-800 tracking-tight absolute bottom-0 left-0 right-0">
+        <div className="bg-white bg-opacity-90 overflow-clip  pb-2 ">
           <div className="text-center text-sm font-bold text-black">{collection.name}</div>
+
           <div className=" break-all  leading-3 text-xs px-5 text-theme-light-800">
             {shortText}
             {isTrimText && '...'}

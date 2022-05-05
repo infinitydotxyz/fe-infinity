@@ -29,7 +29,7 @@ export const DebouncedTextField = ({ value, placeholder, onChange, className = '
       <input
         value={query}
         placeholder={placeholder}
-        className="w-full border border-gray-400 rounded-lg focus:ring-0 py-2 px-3 text-lg leading-5 text-gray-900 "
+        className="w-full border border-gray-400 rounded-full focus:ring-0 py-2 px-4 text-lg leading-5 text-gray-900"
         onChange={(event) => handleChange(event.target.value)}
       />
     </div>

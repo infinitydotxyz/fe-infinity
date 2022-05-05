@@ -3,25 +3,22 @@ import { useEffect, useRef, useState } from 'react';
 import { CollectionList } from 'src/components/astra/collection-list';
 import { TokensGrid } from 'src/components/astra/token-grid';
 import { Button, DebouncedTextField, NextLink, Spacer, SVG } from 'src/components/common';
-import { OrderDrawer } from 'src/components/market/order-drawer/order-drawer';
 import { apiGet } from 'src/utils';
-import { useOrderContext } from 'src/utils/context/OrderContext';
 import { largeIconButtonStyle } from 'src/utils/ui-constants';
 
 export const PixelScore = () => {
-  const { orderDrawerOpen, setOrderDrawerOpen } = useOrderContext();
   const [collection, setCollection] = useState<BaseCollection>();
   const [chainId, setChainId] = useState<string>();
   const ref = useRef<HTMLDivElement>(null);
 
-  const onButtonClick = (data: CardData) => {
+  const onCardClick = (data: CardData) => {
     console.log(data);
   };
 
   let tokensGrid;
 
   if (collection && chainId) {
-    tokensGrid = <TokensGrid collection={collection} chainId={chainId} onClick={onButtonClick} />;
+    tokensGrid = <TokensGrid collection={collection} chainId={chainId} onClick={onCardClick} />;
   }
 
   useEffect(() => {
@@ -30,8 +27,8 @@ export const PixelScore = () => {
 
   return (
     <div>
-      <div className="h-screen w-screen grid grid-rows-[auto_1fr] grid-cols-[300px_1fr]">
-        <div className="col-span-2 border-b bg-slate-200">
+      <div className="h-screen w-screen grid grid-rows-[auto_1fr] grid-cols-[300px_1fr_auto]">
+        <div className="col-span-3 border-b bg-slate-200">
           <AstraHeader />
         </div>
 
@@ -49,9 +46,11 @@ export const PixelScore = () => {
             {tokensGrid}
           </div>
         )}
-      </div>
 
-      <OrderDrawer open={orderDrawerOpen} onClose={() => setOrderDrawerOpen(false)} />
+        <div className="row-span-2 col-span-1 overflow-y-auto">
+          <div className="hidden p-7">harry</div>
+        </div>
+      </div>
     </div>
   );
 };
@@ -89,13 +88,6 @@ const Sidebar = ({ onClick }: Props) => {
         const colt = result as BaseCollection;
 
         onClick(colt);
-
-        // addCartItem({
-        //   collectionName: collection.name ?? '(no name)',
-        //   collectionAddress: collection.address ?? '(no address)',
-        //   collectionImage: collection.profileImage ?? '',
-        //   isSellOrder: false
-        // });
       }}
     />
   );
@@ -103,7 +95,7 @@ const Sidebar = ({ onClick }: Props) => {
   return (
     <div className="flex flex-col pt-3 h-full items-center">
       <DebouncedTextField
-        className="px-4 mb-4"
+        className="px-4 mb-2"
         value={query}
         placeholder="Search"
         onChange={(value) => {
