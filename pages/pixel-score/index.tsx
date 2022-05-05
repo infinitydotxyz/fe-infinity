@@ -42,6 +42,11 @@ export const PixelScore = () => {
     return i;
   };
 
+  const handleCheckout = () => {
+    setSelectedTokens([]);
+    setShowCart(false);
+  };
+
   return (
     <div>
       <div className="h-screen w-screen grid grid-rows-[auto_1fr] grid-cols-[300px_1fr_auto]">
@@ -65,9 +70,10 @@ export const PixelScore = () => {
         )}
 
         <div className="row-span-2 col-span-1 overflow-y-auto">
-          <div className={twMerge(showCart ? '' : 'hidden', 'p-7')}>
+          <div className={twMerge(showCart ? '' : 'hidden', 'p-7 h-full')}>
             <AstraCart
               tokens={selectedTokens}
+              onCheckout={handleCheckout}
               onRemove={(value) => {
                 const i = indexOfSelection(value);
 
@@ -143,31 +149,38 @@ const Sidebar = ({ onClick }: Props) => {
 interface Props4 {
   tokens: CardData[];
   onRemove: (token: CardData) => void;
+  onCheckout: () => void;
 }
 
-const AstraCart = ({ tokens, onRemove }: Props4) => {
+const AstraCart = ({ tokens, onRemove, onCheckout }: Props4) => {
   return (
-    <div className="flex flex-col space-y-2 items-start w-48">
-      {tokens.map((token, i) => {
-        return (
-          <div key={token.id} className="flex items-center w-full">
-            <div className="w-4 mr-2 text-right">{i + 1}.</div>
-            <BGImage className={twMerge(largeIconButtonStyle, 'rounded-lg')} url={token.image} />
-            <div className="ml-2">{token.tokenId}</div>
+    <div className="w-48 h-full grid grid-rows-[1fr_auto]  ">
+      <div className="row-span-1 col-span-1 flex flex-col space-y-2 items-start flex-1">
+        {tokens.map((token, i) => {
+          return (
+            <div key={token.id} className="flex items-center w-full">
+              <div className="w-4 mr-2 text-right">{i + 1}.</div>
+              <BGImage className={twMerge(largeIconButtonStyle, 'rounded-lg')} url={token.image} />
+              <div className="ml-2">{token.tokenId}</div>
 
-            <Spacer />
-            <Button
-              size="plain"
-              variant="round"
-              onClick={() => {
-                onRemove(token);
-              }}
-            >
-              <XIcon className={iconButtonStyle} />
-            </Button>
-          </div>
-        );
-      })}
+              <Spacer />
+              <Button
+                size="plain"
+                variant="round"
+                onClick={() => {
+                  onRemove(token);
+                }}
+              >
+                <XIcon className={iconButtonStyle} />
+              </Button>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="row-span-1 col-span-2 flex flex-col">
+        <Button onClick={onCheckout}>Checkout</Button>
+      </div>
     </div>
   );
 };
