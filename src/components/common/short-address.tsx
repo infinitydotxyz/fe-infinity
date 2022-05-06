@@ -16,7 +16,8 @@ export const ShortAddress = ({ address, href, label, tooltip }: Props) => {
       <div>{label}</div>
 
       {/* do we need: target="_self" */}
-      <a className="ml-4 underline" href={href} title={tooltip} target="_blank">
+      {/* use "font-heading" per figma design */}
+      <a className="ml-4 underline font-heading" href={href} title={tooltip} target="_blank">
         {ellipsisAddress(address)}
       </a>
 
