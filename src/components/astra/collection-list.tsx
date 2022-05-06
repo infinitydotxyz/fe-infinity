@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { BGImage, FetchMore } from 'src/components/common';
-import { apiGet, DEFAULT_LIMIT, BLANK_IMAGE_URL } from 'src/utils';
-import { trimText } from 'src/components/common/read-more-text';
+import { FetchMore } from 'src/components/common';
+import { apiGet, DEFAULT_LIMIT } from 'src/utils';
 import { CollectionSearchArrayDto, CollectionSearchDto } from '../../utils/types/collection-types';
 import { BaseCollection } from '@infinityxyz/lib/types/core';
-import { twMerge } from 'tailwind-merge';
+import { CollectionListItem } from './collection-list-item';
 
 const fetchCollections = async (query: string, cursor: undefined | string) => {
   const API_ENDPOINT = '/collections/search';
@@ -79,56 +78,6 @@ export const CollectionList = ({ query, className, onClick, selectedCollection }
       </div>
 
       {hasNextPage && <FetchMore onFetchMore={() => handleFetch(cursor)} />}
-    </div>
-  );
-};
-
-// ===================================================================
-
-interface Props2 {
-  collection: CollectionSearchDto;
-  selected: boolean;
-  onClick: (collection: CollectionSearchDto) => void;
-}
-
-const getAvatarUrl = (imgUrl: string) => {
-  if (!imgUrl) {
-    return null;
-  } else {
-    const index = imgUrl.indexOf('=');
-    if (index) {
-      return imgUrl.slice(0, index) + '=h100';
-    }
-    return imgUrl;
-  }
-};
-
-const CollectionListItem = ({ collection, onClick, selected }: Props2) => {
-  const shortText = trimText(collection.description, 70, 70, 70)[0];
-  const isTrimText = shortText.length !== collection.description.length;
-
-  const avatarUrl = getAvatarUrl(collection.bannerImage) || BLANK_IMAGE_URL;
-
-  return (
-    <div
-      className={twMerge(
-        'w-full cursor-pointer border border-gray-400 bg-white   rounded-t-3xl overflow-clip h-24 relative',
-        selected ? 'outline-4 outline-slate-400 outline-offset-1 outline' : ''
-      )}
-      onClick={() => onClick(collection)}
-    >
-      <BGImage url={avatarUrl} />
-
-      <div className="text-theme-light-800 tracking-tight absolute bottom-0 left-0 right-0">
-        <div className="bg-white mx-3 rounded-t-lg bg-opacity-90 overflow-clip  pt-1 pb-2 ">
-          <div className="text-center text-sm font-bold text-black">{collection.name}</div>
-
-          <div className=" break-all  leading-3 text-xs px-5 text-theme-light-800">
-            {shortText}
-            {isTrimText && '...'}
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
