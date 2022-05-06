@@ -12,6 +12,7 @@ import {
   MakeOfferModal
 } from 'src/components/asset';
 import { useState } from 'react';
+import { useAppContext } from 'src/utils/context/AppContext';
 
 const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
@@ -65,6 +66,7 @@ interface Props {
 }
 
 const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
+  const { checkSignedIn } = useAppContext();
   const { isLoading, error, token, collection } = useFetchAssetInfo(qchainId, qcollection, qtokenId);
 
   const [showCancelModal, setShowCancelModal] = useState(false);
@@ -111,12 +113,16 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
       : tokenMetadata.name || collection.metadata.name || 'No Name';
 
   const onClickButton1 = () => {
-    console.log('one');
+    if (!checkSignedIn()) {
+      return;
+    }
     setShowPlaceBidModal(true);
   };
 
   const onClickButton2 = () => {
-    console.log('two');
+    if (!checkSignedIn()) {
+      return;
+    }
     setShowMakeOfferModal(true);
   };
 
