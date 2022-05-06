@@ -102,7 +102,7 @@ export const PixelScore = () => {
         )}
 
         <div className="row-span-2 col-span-1 overflow-y-auto">
-          <div className={twMerge(showCart ? '' : 'hidden', 'p-7 h-full')}>
+          <div className={twMerge(showCart ? '' : 'hidden', 'p-6 h-full')}>
             <AstraCart
               tokens={selectedTokens}
               onCheckout={handleCheckout}
