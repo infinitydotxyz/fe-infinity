@@ -1,13 +1,24 @@
 import { useEffect, useState } from 'react';
 import { FeedItem, FeedEvent } from './feed-item';
-import { COLL_FEED, FeedFilter, subscribe } from 'src/utils/firestore/firestoreUtils';
+import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
 import { CommentPanel } from './comment-panel';
 import { FeedEventType } from '@infinityxyz/lib/types/core/feed';
-import { FeedFilterDropdown } from './feed-filter-dropdown';
+// import { FeedFilterDropdown } from './feed-filter-dropdown';
 import { ActivityItem } from './activity-item';
 import { UserActivityItem } from './user-activity-item';
+import { apiGet } from 'src/utils';
+import { useAppContext } from 'src/utils/context/AppContext';
+import { FetchMore, Spinner } from '../common';
 
-let eventsInit = false;
+type UserActivityEvent = FeedEvent & {
+  makerAddress?: string;
+  makerUsername?: string;
+  takerAddress?: string;
+  takerUsername?: string;
+  usersInvolved?: string[];
+  startPriceEth?: number;
+};
+const ITEMS_LIMIT = 10;
 
 interface UserProfileFeedProps {
   header: string;
@@ -26,88 +37,104 @@ export const UserProfileFeed = ({
   forUserActivity,
   className
 }: UserProfileFeedProps) => {
+  const { user } = useAppContext();
   const [events, setEvents] = useState<FeedEvent[]>([]);
-  const [newEvents, setNewEvents] = useState<FeedEvent[]>([]); // new feed events
   const [filter, setFilter] = useState<FeedFilter>({ userAddress, types });
   const [commentPanelEvent, setCommentPanelEvent] = useState<FeedEvent | null>(null);
-  const [filteringTypes, setFilteringTypes] = useState<FeedEventType[]>([]);
+  // const [filteringTypes, setFilteringTypes] = useState<FeedEventType[]>([]);
+  const [data, setData] = useState<FeedEvent[]>([]);
+  const [isFetching, setIsFetching] = useState(false);
+  const [cursor, setCursor] = useState('');
+  const [hasNextPage, setHasNextPage] = useState(false);
+  console.log(setFilter);
 
-  const getEvents = () => {
-    try {
-      subscribe(COLL_FEED, filter, (type: string, data: FeedEvent) => {
-        if (type === 'added') {
-          if (eventsInit === false) {
-            setEvents((currentEvents) => [data, ...currentEvents]); // add initial feed events.
-            setTimeout(() => {
-              eventsInit = true;
-            }, 3000);
-          } else {
-            setNewEvents((currentEvents) => [data, ...currentEvents]);
-          }
-        } else {
-          setEvents((currentEvents) => [...currentEvents, data]);
-        }
+  const fetchData = async (isRefresh = false) => {
+    setIsFetching(true);
+    let newCursor = cursor;
+    if (isRefresh) {
+      newCursor = '';
+    }
+
+    const { result } = await apiGet(`/user/${user?.address}/activity`, {
+      query: {
+        limit: ITEMS_LIMIT,
+        cursor: newCursor
+      }
+    });
+    console.log('result?.hasNextPage', result?.hasNextPage);
+    if (result?.hasNextPage === true) {
+      console.log('result?.cursor', result?.cursor);
+      setCursor(result?.cursor);
+    }
+    setHasNextPage(result?.hasNextPage);
+
+    const moreData: FeedEvent[] = [];
+    // convert UserActivityEvent[] to FeedEvent[] for rendering.
+    result?.data?.map((activity: UserActivityEvent) => {
+      moreData.push({
+        ...activity,
+        seller: activity.makerAddress ?? '',
+        sellerDisplayName: activity.makerUsername === '_____' ? '' : activity.makerUsername ?? '',
+        buyer: activity.takerAddress ?? '',
+        buyerDisplayName: activity.takerUsername === '_____' ? '' : activity.takerUsername ?? '',
+        price: activity.startPriceEth ?? 0
       });
-    } catch (err) {
-      console.error('ERR: ', err);
+    });
+
+    setIsFetching(false);
+    if (isRefresh) {
+      setData([...moreData]);
+      setCursor('');
+    } else {
+      setData([...data, ...moreData]);
     }
   };
 
   useEffect(() => {
-    eventsInit = false;
     setEvents([]);
-    setNewEvents([]);
-    getEvents();
+
+    fetchData();
   }, [filter]);
 
-  const onChangeFilterDropdown = (checked: boolean, checkId: string) => {
-    const newFilter = { ...filter };
+  // const onChangeFilterDropdown = (checked: boolean, checkId: string) => {
+  //   const newFilter = { ...filter };
 
-    if (checkId === '') {
-      setFilteringTypes([]);
-      delete newFilter.types;
-      setFilter(newFilter);
-      return;
-    }
-    const selectedType = checkId as FeedEventType;
-    if (checked) {
-      newFilter.types = [...filteringTypes, selectedType];
-      setFilter(newFilter);
-      setFilteringTypes(newFilter.types);
-    } else {
-      const _newTypes = [...filteringTypes];
-      const index = filteringTypes.indexOf(selectedType);
-      if (index >= 0) {
-        _newTypes.splice(index, 1);
-      }
-      newFilter.types = _newTypes;
-      setFilter(newFilter);
-      setFilteringTypes(_newTypes);
-    }
-  };
+  //   if (checkId === '') {
+  //     setFilteringTypes([]);
+  //     delete newFilter.types;
+  //     setFilter(newFilter);
+  //     return;
+  //   }
+  //   const selectedType = checkId as FeedEventType;
+  //   if (checked) {
+  //     newFilter.types = [...filteringTypes, selectedType];
+  //     setFilter(newFilter);
+  //     setFilteringTypes(newFilter.types);
+  //   } else {
+  //     const _newTypes = [...filteringTypes];
+  //     const index = filteringTypes.indexOf(selectedType);
+  //     if (index >= 0) {
+  //       _newTypes.splice(index, 1);
+  //     }
+  //     newFilter.types = _newTypes;
+  //     setFilter(newFilter);
+  //     setFilteringTypes(_newTypes);
+  //   }
+  // };
 
   return (
     <div className={`min-h-[1024px] ${className}`}>
       <div className="flex justify-between">
         <div className="text-3xl mb-6">{header}</div>
-        <FeedFilterDropdown selectedTypes={filteringTypes} onChange={onChangeFilterDropdown} />
+        {/* <FeedFilterDropdown selectedTypes={filteringTypes} onChange={onChangeFilterDropdown} /> */}
       </div>
 
-      {newEvents.length > 0 ? (
-        <div
-          //  w-1/3 sm:w-full
-          className="p-4 border border-gray-200 hover:bg-gray-100 mb-4 cursor-pointer"
-          onClick={() => {
-            setEvents((currentEvents) => [...newEvents, ...currentEvents]);
-            setNewEvents([]);
-          }}
-        >
-          Show {newEvents.length} more event{newEvents.length === 1 ? '' : 's'}.
-        </div>
-      ) : null}
-
       <ul className="space-y-8">
-        {events.map((event, idx) => {
+        {isFetching && <Spinner />}
+
+        {hasNextPage === false && data?.length === 0 ? <div>No results.</div> : null}
+
+        {data?.map((event, idx) => {
           if (forActivity) {
             return <ActivityItem key={idx} event={event} />;
           }
@@ -150,6 +177,15 @@ export const UserProfileFeed = ({
             </li>
           );
         })}
+
+        {hasNextPage === true ? (
+          <FetchMore
+            data={data}
+            onFetchMore={async () => {
+              await fetchData();
+            }}
+          />
+        ) : null}
       </ul>
     </div>
   );
