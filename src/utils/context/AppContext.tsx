@@ -6,6 +6,7 @@ import { ProviderManager } from 'src/utils/providers/ProviderManager';
 import { Toaster, toastWarning } from 'src/components/common';
 import { apiGet } from '../apiUtils';
 import { UserProfileDto } from 'src/components/user/user-profile-dto';
+import { PleaseConnectMsg } from '..';
 
 export type User = {
   address: string;
@@ -184,7 +185,7 @@ export const AppContextProvider = (props: React.PropsWithChildren<unknown>) => {
 
   const checkSignedIn = () => {
     if (!user?.address) {
-      toastWarning('Please sign in.');
+      toastWarning(<PleaseConnectMsg />);
       return false;
     }
     return true;
