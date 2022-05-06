@@ -12,7 +12,7 @@ interface Props {
 
 export const AstraCart = ({ tokens, onRemove, onCheckout }: Props) => {
   return (
-    <div className="w-48 h-full grid grid-rows-[1fr_auto]  ">
+    <div className="w-48 h-full grid grid-rows-[1fr_auto]  grid-cols-[1fr]">
       <div className="row-span-1 col-span-1 flex flex-col space-y-2 items-start flex-1">
         {tokens.map((token, i) => {
           return (
