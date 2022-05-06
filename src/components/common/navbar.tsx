@@ -39,7 +39,7 @@ export const Navbar = () => {
           type: 'link',
           label: 'Orderbook',
           props: {
-            href: '/market'
+            href: '/marketplace'
           }
         },
         {
@@ -175,7 +175,7 @@ export const Navbar = () => {
   return (
     <>
       {/* sticky had to be set here rather than desktopNavbar to work */}
-      <div className="desktop:visible tabloid:hidden z-2 sticky top-0">{desktopNavbar}</div>
+      <div className="desktop:visible tabloid:hidden z-10 sticky top-0">{desktopNavbar}</div>
       <div className="desktop:hidden tabloid:visible">{mobileNavbar}</div>
     </>
   );

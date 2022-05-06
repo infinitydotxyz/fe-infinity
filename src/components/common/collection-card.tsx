@@ -1,11 +1,12 @@
 import { trimText } from './read-more-text';
 import { BLANK_IMAGE_URL } from 'src/utils';
-import { CollectionSearchDto } from './collection-grid';
 import { Button } from './button';
+import { CollectionSearchDto } from '../../utils/types/collection-types';
 
 interface CollectionCardProps {
   collection: CollectionSearchDto;
   buttonName?: string;
+  routerQuery?: string;
   onButtonClick?: (collection: CollectionSearchDto) => void;
 }
 
@@ -21,7 +22,7 @@ const getAvatarUrl = (imgUrl: string) => {
   }
 };
 
-export const CollectionCard = ({ collection, onButtonClick, buttonName }: CollectionCardProps) => {
+export const CollectionCard = ({ collection, onButtonClick, buttonName, routerQuery }: CollectionCardProps) => {
   const shortText = trimText(collection.description, 60, 80, 100)[0];
   const isTrimText = shortText.length !== collection.description.length;
 
@@ -29,7 +30,10 @@ export const CollectionCard = ({ collection, onButtonClick, buttonName }: Collec
 
   return (
     <div className="w-full mx-auto sm:mx-0 bg-theme-light-100 border border-theme-light-100 shadow-md rounded-2xl overflow-hidden hover:shadow-xl cursor-pointer">
-      <a href={`/collection/${collection.slug}`} className="text-theme-light-800 font-heading tracking-tight mr-2">
+      <a
+        href={`/collection/${collection.slug}${routerQuery ? `?${routerQuery}` : ''}`}
+        className="text-theme-light-800 font-heading tracking-tight mr-2"
+      >
         <div style={{ height: '200px' }}>
           <img
             src={avatarUrl}

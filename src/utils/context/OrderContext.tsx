@@ -156,7 +156,7 @@ export const OrderContextProvider = ({ children }: Props) => {
   const editOrderFromCart = (id: number) => {
     const index = indexOfOrderInCart(id);
 
-    if (index != -1) {
+    if (index !== -1) {
       const orderInCart = ordersInCart[index];
 
       setIsEditingOrder(true);

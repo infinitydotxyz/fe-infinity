@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { FetchMore, CollectionCard } from 'src/components/common';
+import { FetchMore } from 'src/components/common';
 import { apiGet, DEFAULT_LIMIT } from 'src/utils';
 import { CollectionSearchArrayDto, CollectionSearchDto } from '../../utils/types/collection-types';
+import { BaseCollection } from '@infinityxyz/lib/types/core';
+import { CollectionListItem } from './collection-list-item';
 
 const fetchCollections = async (query: string, cursor: undefined | string) => {
   const API_ENDPOINT = '/collections/search';
@@ -18,21 +20,12 @@ const fetchCollections = async (query: string, cursor: undefined | string) => {
 
 interface Props {
   query: string;
+  selectedCollection?: BaseCollection;
   className?: string;
-  buttonName?: string;
-  listMode?: boolean;
-  routerQuery?: string;
-  onButtonClick?: (collection: CollectionSearchDto) => void;
+  onClick: (collection: CollectionSearchDto) => void;
 }
 
-export const CollectionGrid = ({
-  listMode = false,
-  query,
-  className,
-  onButtonClick,
-  buttonName,
-  routerQuery
-}: Props) => {
+export const CollectionList = ({ query, className, onClick, selectedCollection }: Props) => {
   const [collections, setCollections] = useState<CollectionSearchDto[]>([]);
   const [error, setError] = useState(false);
   const [cursor, setCursor] = useState<string>('');
@@ -71,36 +64,16 @@ export const CollectionGrid = ({
     );
   }
 
-  if (listMode) {
-    return (
-      <div className={className}>
-        <div className="flex flex-col space-y-2">
-          {collections.map((collection) => (
-            <CollectionCard
-              key={collection.slug}
-              collection={collection}
-              buttonName={buttonName}
-              routerQuery={routerQuery}
-              onButtonClick={onButtonClick}
-            />
-          ))}
-        </div>
-
-        {hasNextPage && <FetchMore onFetchMore={() => handleFetch(cursor)} />}
-      </div>
-    );
-  }
-
   return (
     <div className={className}>
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12 ">
+      {/* pt-2 is for the first items selection rect, needs some space, or it clips */}
+      <div className="flex flex-col space-y-4 pt-2">
         {collections.map((collection) => (
-          <CollectionCard
+          <CollectionListItem
             key={collection.slug}
             collection={collection}
-            buttonName={buttonName}
-            routerQuery={routerQuery}
-            onButtonClick={onButtonClick}
+            onClick={onClick}
+            selected={collection.address === selectedCollection?.address}
           />
         ))}
       </div>

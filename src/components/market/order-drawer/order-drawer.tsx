@@ -5,6 +5,7 @@ import { OrderSummary } from './order-summary';
 import { useState } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { numStr } from 'src/utils';
+import { useRouter } from 'next/router';
 interface Props {
   open: boolean;
   onClose: () => void;
@@ -12,6 +13,7 @@ interface Props {
 
 export const OrderDrawer = ({ open, onClose }: Props) => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const router = useRouter();
 
   const {
     isSellOrderCart,
@@ -23,7 +25,8 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
     ordersInCart,
     isEditingOrder,
     isCollectionsCart,
-    cartItems
+    cartItems,
+    setOrderDrawerOpen
   } = useOrderContext();
 
   const emptyCart = (
@@ -32,6 +35,29 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
         <span className="text-lg font-semibold">Cart is empty</span>
         <br />
         Add an item to the order.
+        <div className="flex flex-row gap-2 py-2 w-full h-full mt-5">
+          <Button
+            size="large"
+            onClick={() => {
+              setOrderDrawerOpen(false);
+              router.push('/marketplace?tab=Buy');
+            }}
+            className="font-heading w-full h-full"
+          >
+            Buy
+          </Button>
+          <Button
+            size="large"
+            variant="outline"
+            onClick={() => {
+              setOrderDrawerOpen(false);
+              router.push('/marketplace?tab=Sell');
+            }}
+            className="font-heading w-full h-full"
+          >
+            Sell
+          </Button>
+        </div>
       </div>
     </div>
   );

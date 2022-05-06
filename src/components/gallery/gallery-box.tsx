@@ -29,9 +29,17 @@ interface GalleryProps {
   getEndpoint?: string;
   className?: string;
   filterShowedDefault?: boolean;
+  pageId?: 'COLLECTION' | 'PROFILE' | undefined;
 }
 
-export const GalleryBox = ({ collection, className, cardProps, getEndpoint, filterShowedDefault }: GalleryProps) => {
+export const GalleryBox = ({
+  collection,
+  className,
+  cardProps,
+  getEndpoint,
+  pageId,
+  filterShowedDefault
+}: GalleryProps) => {
   const { filterState } = useFilterContext();
 
   const [filterShowed, setFilterShowed] = useState(filterShowedDefault);
@@ -52,10 +60,15 @@ export const GalleryBox = ({ collection, className, cardProps, getEndpoint, filt
     }
 
     const offset = currentPage > 0 ? currentPage * ITEMS_PER_PAGE : 0;
-    if (!filterState.orderBy) {
+    if (pageId === 'COLLECTION' && !filterState.orderBy) {
       filterState.orderBy = 'rarityRank'; // set defaults
       filterState.orderDirection = 'asc';
     }
+    if (pageId === 'PROFILE') {
+      delete filterState.orderBy;
+      delete filterState.orderDirection;
+    }
+
     const { result, error } = await apiGet(
       getEndpoint ?? `/collections/${collection?.chainId}:${collection?.address}/nfts`,
       {

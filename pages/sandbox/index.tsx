@@ -58,6 +58,7 @@ const SandboxPage = () => {
   const [currency, setCurrency] = useState<number>(12.33);
   const [checked, setChecked] = useState<boolean>(false);
   const [checked2, setChecked2] = useState<boolean>(false);
+  const [switchChecked, setSwitchChecked] = useState<boolean>(false);
   const [comboValue, setComboValue] = useState<ComboBoxBaseType>(comboValues[0]);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [activityTypes, setActivityTypes] = useState<EventType[]>([]);
@@ -249,7 +250,14 @@ const SandboxPage = () => {
 
       <SBHeader># Switch</SBHeader>
       <div className="w-1/2">
-        <Switch title="Dark mode" />
+        <Switch
+          title="Dark mode"
+          checked={switchChecked}
+          onChange={() => {
+            console.log('switched');
+            setSwitchChecked(!switchChecked);
+          }}
+        />
       </div>
 
       <SBHeader># ComboBox</SBHeader>

@@ -43,7 +43,7 @@ const reducer = (
     case 'updateBenefit': {
       const benefitUpdate = (action.metadata.benefits ?? [])[0];
 
-      if (typeof action.key == 'number') {
+      if (typeof action.key === 'number') {
         const benefits = state.benefits?.map((benefit, i) => (i === action.key ? benefitUpdate : benefit));
         return { ...state, benefits };
       } else {
@@ -57,7 +57,7 @@ const reducer = (
     case 'updatePartnership': {
       const partnershipUpdate = (action.metadata.partnerships ?? [])[0];
 
-      if (typeof action.key == 'number') {
+      if (typeof action.key === 'number') {
         const partnerships = state.partnerships?.map((partnership, i) =>
           i === action.key ? { ...partnership, ...partnershipUpdate } : partnership
         );
@@ -86,7 +86,7 @@ const reducer = (
     case 'updateDiscordChannel': {
       const discordChannelUpdate = (action.metadata.integrations?.discord?.channels ?? [])[0];
 
-      if (typeof action.key == 'number') {
+      if (typeof action.key === 'number') {
         const channels = state.integrations?.discord?.channels?.map((channel, i) =>
           i === action.key ? discordChannelUpdate : channel
         );
@@ -111,7 +111,7 @@ const reducer = (
           ...state.integrations,
           discord: {
             ...state.integrations?.discord,
-            channels: state.integrations?.discord?.channels?.filter((_, i) => action.key != i) ?? []
+            channels: state.integrations?.discord?.channels?.filter((_, i) => action.key !== i) ?? []
           }
         }
       };
@@ -400,7 +400,7 @@ const EditCollectionPage = () => {
           <Heading as="h6" className="font-medium mb-7 font-body">
             Discord
           </Heading>
-          {metadata.integrations?.discord?.guildId == null && (
+          {!metadata.integrations?.discord?.guildId && (
             <>
               <p>
                 Add the official infinity.xyz bot to your Discord server and let it cross-post{' '}
@@ -428,7 +428,7 @@ const EditCollectionPage = () => {
             </>
           )}
           {/* TODO: remove/disable discord integration */}
-          {metadata.integrations?.discord?.guildId != null && <p>This integration is enabled.</p>}
+          {metadata.integrations?.discord?.guildId && <p>This integration is enabled.</p>}
           {metadata.integrations?.discord?.channels?.map((channel, i) => (
             <TextInputBox
               key={i}

@@ -7,6 +7,7 @@ import { Field } from 'src/components/analytics/field';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CollectionStats } from '@infinityxyz/lib/types/core';
 import { ITEMS_PER_PAGE, BLANK_IMG } from 'src/utils/constants';
+import ContentLoader from 'react-content-loader';
 
 export const Analytics = () => {
   const router = useRouter();
@@ -71,7 +72,7 @@ export const Analytics = () => {
       : `/user/1:${user?.address}/watchlist?orderBy=${orderBy}&orderDirection=${orderDirection}&period=${interval}&date=${date}&limit=${limit}`;
 
   const data = useFetch<{ data: CollectionStats[] }>(query);
-  // [2fr,2fr,4fr,3fr,3fr,3fr,3fr,3fr,3fr,2fr]
+
   if (data.result) {
     statistics = data.result.data.map((d, index) => {
       const address = d.collectionAddress;
@@ -80,10 +81,10 @@ export const Analytics = () => {
       // const trust = d.votesFor > 0 ? `${(d.votesFor / (d.votesAgainst + d.votesFor)) * 100}%` : '0%';
       const items = d.numNfts ? d.numNfts : '-';
       const owners = d.numOwners ? d.numOwners : '-';
-      const volume = d.volume ? d.volume : '-';
+      const volume = d.volume ? d.volume.toFixed(1) : '-';
       const floorPrice = d.floorPrice ? d.floorPrice : '-';
-      const volumePercentChange = d.volumePercentChange ? d.volumePercentChange : '-';
-      const floorPricePercentChange = d.floorPricePercentChange ? d.floorPricePercentChange : '-';
+      const volumePercentChange = d.volumePercentChange ? d.volumePercentChange.toFixed(1) : '-';
+      const floorPricePercentChange = d.floorPricePercentChange ? d.floorPricePercentChange.toFixed(1) : '-';
       const twitterFollowers = d.twitterFollowers ? d.twitterFollowers : '-';
       const twitterFollowersPercentChange = d.twitterFollowersPercentChange ? d.twitterFollowersPercentChange : '-';
       const discordFollowers = d.discordFollowers ? d.discordFollowers : '-';
@@ -771,11 +772,7 @@ export const Analytics = () => {
           <div {...styles?.statistics?.list?.container}>
             {data.isLoading ? (
               <>
-                {Array.from(Array(limit).keys())?.map((x, i) => (
-                  <React.Fragment key={i}>
-                    <div {...styles?.statistics?.list?.loading}></div>
-                  </React.Fragment>
-                ))}
+                <LoadingAnalytics />
               </>
             ) : data.isError || content?.statistics?.length === 0 ? (
               <>
@@ -843,5 +840,27 @@ export const Analytics = () => {
     </PageBox>
   );
 };
+
+const LoadingAnalytics = () => (
+  <ContentLoader
+    speed={2}
+    viewBox="0 0 100% 650"
+    height={650}
+    width={'100%'}
+    backgroundColor="#f3f3f3"
+    foregroundColor="#ecebeb"
+  >
+    <rect x="0" y="0" rx="12" ry="12" width="100%" height="144" />
+    <rect x="0" y="152" rx="12" ry="12" width="100%" height="144" />
+    <rect x="0" y="304" rx="12" ry="12" width="100%" height="144" />
+    <rect x="0" y="456" rx="12" ry="12" width="100%" height="144" />
+    <rect x="0" y="608" rx="12" ry="12" width="100%" height="144" />
+    <rect x="0" y="760" rx="12" ry="12" width="100%" height="144" />
+    <rect x="0" y="912" rx="12" ry="12" width="100%" height="144" />
+    <rect x="0" y="1064" rx="12" ry="12" width="100%" height="144" />
+    <rect x="0" y="1216" rx="12" ry="12" width="100%" height="144" />
+    <rect x="0" y="1368" rx="12" ry="12" width="100%" height="144" />
+  </ContentLoader>
+);
 
 export default Analytics;

@@ -1,65 +1,121 @@
 import { BaseCollection, CardData } from '@infinityxyz/lib/types/core';
-import { useState } from 'react';
-import { Button, CollectionGrid, PageBox, TokensGrid } from 'src/components/common';
-import { OrderDrawer } from 'src/components/market/order-drawer/order-drawer';
-import { apiGet } from 'src/utils';
-import { useOrderContext } from 'src/utils/context/OrderContext';
+import { useEffect, useRef, useState } from 'react';
+import { TokensGrid } from 'src/components/astra/token-grid';
+import { CenteredContent, Toaster, toastSuccess } from 'src/components/common';
+import { twMerge } from 'tailwind-merge';
+import { AstraNavbar } from 'src/components/astra/astra-navbar';
+import { AstraSidebar } from 'src/components/astra/astra-sidebar';
+import { AstraCart } from 'src/components/astra/astra-cart';
 
 export const PixelScore = () => {
-  const { orderDrawerOpen, setOrderDrawerOpen } = useOrderContext();
   const [collection, setCollection] = useState<BaseCollection>();
+  const [selectedTokens, setSelectedTokens] = useState<CardData[]>([]);
   const [chainId, setChainId] = useState<string>();
+  const [showCart, setShowCart] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
 
-  const onButtonClick = (ev: React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>, data: CardData) => {
-    console.log(ev);
-    console.log(data);
+  const onCardClick = (data: CardData) => {
+    const i = indexOfSelection(data);
+
+    if (i === -1) {
+      setSelectedTokens([...selectedTokens, data]);
+      setShowCart(true);
+    } else {
+      removeFromSelection(data);
+    }
   };
 
-  let contents;
+  let tokensGrid;
 
   if (collection && chainId) {
-    contents = (
-      <>
-        <Button
-          onClick={() => {
-            setCollection(undefined);
-            setChainId(undefined);
-          }}
-        >
-          Back
-        </Button>
-        <TokensGrid collection={collection} chainId={chainId} buttonName="Pixel Score" onButtonClick={onButtonClick} />
-      </>
-    );
-  } else {
-    contents = (
-      <CollectionGrid
-        query=""
-        buttonName="Tokens"
-        onButtonClick={async (collection) => {
-          // why is there a collectionSearchDto and BaseCollection???
-          const { result } = await apiGet(`/collections/${collection.chainId}:${collection.address}`);
-          const colt = result as BaseCollection;
+    tokensGrid = (
+      <TokensGrid
+        collection={collection}
+        chainId={chainId}
+        onClick={onCardClick}
+        isSelected={(data) => {
+          const i = indexOfSelection(data);
 
-          setCollection(colt);
-          setChainId(collection.chainId);
-
-          // addCartItem({
-          //   collectionName: collection.name ?? '(no name)',
-          //   collectionAddress: collection.address ?? '(no address)',
-          //   collectionImage: collection.profileImage ?? '',
-          //   isSellOrder: false
-          // });
+          return i !== -1;
         }}
       />
     );
+  } else {
+    tokensGrid = <CenteredContent>Select a Collection</CenteredContent>;
   }
 
+  useEffect(() => {
+    ref.current?.scrollTo({ left: 0, top: 0 });
+  }, [collection]);
+
+  const indexOfSelection = (value: CardData) => {
+    const i = selectedTokens.findIndex((token) => {
+      return value.id === token.id;
+    });
+
+    return i;
+  };
+
+  const removeFromSelection = (value: CardData) => {
+    const i = indexOfSelection(value);
+
+    if (i !== -1) {
+      const copy = [...selectedTokens];
+      copy.splice(i, 1);
+
+      setSelectedTokens(copy);
+
+      if (copy.length === 0) {
+        setShowCart(false);
+      }
+    }
+  };
+
+  const handleCheckout = () => {
+    setSelectedTokens([]);
+    setShowCart(false);
+
+    toastSuccess('Success', 'Something happened');
+  };
+
   return (
-    <PageBox title="Pixel Score">
-      {contents}
-      <OrderDrawer open={orderDrawerOpen} onClose={() => setOrderDrawerOpen(false)} />
-    </PageBox>
+    <div>
+      <div className="h-screen w-screen grid grid-rows-[auto_1fr] grid-cols-[300px_1fr_auto]">
+        <div className="col-span-3 border-b bg-slate-200">
+          <AstraNavbar />
+        </div>
+
+        <div className="row-span-2 col-span-1 border-r bg-slate-100">
+          <AstraSidebar
+            selectedCollection={collection}
+            onClick={(value) => {
+              setCollection(value);
+              setChainId(value.chainId);
+            }}
+          />
+        </div>
+
+        {tokensGrid && (
+          <div ref={ref} className="row-span-2 col-span-1 overflow-y-auto p-7">
+            {tokensGrid}
+          </div>
+        )}
+
+        <div className="row-span-2 col-span-1 overflow-y-auto">
+          <div className={twMerge(showCart ? '' : 'hidden', 'p-6 h-full')}>
+            <AstraCart
+              tokens={selectedTokens}
+              onCheckout={handleCheckout}
+              onRemove={(value) => {
+                removeFromSelection(value);
+              }}
+            />
+          </div>
+        </div>
+      </div>
+
+      <Toaster />
+    </div>
   );
 };
 

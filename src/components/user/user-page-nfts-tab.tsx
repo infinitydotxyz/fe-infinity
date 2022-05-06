@@ -15,6 +15,7 @@ export const UserPageNftsTab = ({ userInfo }: Props) => {
     <div>
       <div className="mt-20">
         <GalleryBox
+          pageId="PROFILE"
           getEndpoint={`/user/${userInfo?.address}/nfts?chainId=1&limit=50`}
           filterShowedDefault={false}
           cardProps={{

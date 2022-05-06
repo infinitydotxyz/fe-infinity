@@ -19,6 +19,8 @@ interface Props {
 
 export const ListNFTModal = ({ isOpen, onClose, collection, token }: Props) => {
   const [price, setPrice] = useState(0);
+  // TODO: do something with this ending price?
+  const [includeEndingPrice, setIncludeEndingPrice] = useState<boolean>(false);
   const { options, onChange, selected } = useToggleTab(['Set Price', 'Highest bid'], 'Set Price');
 
   const tableItems: SimpleTableItem[] = [];
@@ -54,7 +56,11 @@ export const ListNFTModal = ({ isOpen, onClose, collection, token }: Props) => {
           />
           <SimpleTable className="my-6" items={tableItems} />
 
-          <Switch title="Include ending price" />
+          <Switch
+            title="Include ending price"
+            checked={includeEndingPrice}
+            onChange={() => setIncludeEndingPrice(!includeEndingPrice)}
+          />
         </>
       )}
     </Modal>

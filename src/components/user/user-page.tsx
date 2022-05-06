@@ -5,7 +5,6 @@ import { UserBannerImage } from './user-banner-image';
 import { UserProfileImage } from './user-profile-image';
 import { UserProfileShare } from './user-profile-share';
 import { Chip, ToggleTab, useToggleTab } from 'src/components/common';
-import { FaPen } from 'react-icons/fa';
 import { UserPageNftsTab } from './user-page-nfts-tab';
 import { UserPageActivityTab } from './user-page-activity-tab';
 
@@ -34,18 +33,13 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
         <div className="my-4 -ml-2 flex flex-wrap">
           {isOwner && (
             <Chip
-              content={
-                <span className="flex items-center">
-                  <FaPen className="text-md" />
-                  <span className="pl-2">Edit profile</span>
-                </span>
-              }
+              content="Edit"
               onClick={() => {
                 router.push(`/profile/settings`);
               }}
             />
           )}
-          <UserProfileShare userAddress={userInfo.address} />
+          <UserProfileShare username={userInfo.username} userAddress={userInfo.address} />
         </div>
         {userInfo.bio && <p className="text-theme-light-800 mt-8 ml-1 max-w-md">{userInfo.bio || ''}</p>}
 

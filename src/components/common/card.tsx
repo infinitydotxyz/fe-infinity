@@ -56,7 +56,9 @@ export const Card = ({ data, cardActions, dropdownActions, isLoading, className 
       </NextLink>
 
       {data?.rarityRank && (
-        <span className="absolute bg-gray-100 top-3 right-3 py-1 px-3 rounded-3xl">{Math.round(data?.rarityRank)}</span>
+        <span className="absolute bg-gray-100 top-3 right-3 py-1 px-3 rounded-full">
+          {Math.round(data?.rarityRank)}
+        </span>
       )}
 
       <div className="p-1 mt-3">

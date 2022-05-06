@@ -2,8 +2,8 @@ import { BaseCollection, BaseToken, CollectionStats } from '@infinityxyz/lib/typ
 import { useEffect, useState } from 'react';
 import { apiGet } from 'src/utils/apiUtils';
 import mitt from 'mitt';
-import { CollectionSearchArrayDto } from 'src/components/common';
 import { DEFAULT_LIMIT } from 'src/utils';
+import { CollectionSearchArrayDto } from 'src/utils/types/collection-types';
 
 export type CollectionSearchItem = {
   name: string;

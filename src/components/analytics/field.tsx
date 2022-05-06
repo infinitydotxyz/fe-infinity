@@ -118,7 +118,7 @@ export const Field = ({ onSort, sortable = false, onClick, type, label, value }:
       },
       element: {
         className: `
-          text-theme-light-800 text-2xl 
+          text-theme-light-800 text-2xl font-heading
         `
       }
     },
@@ -181,7 +181,7 @@ export const Field = ({ onSort, sortable = false, onClick, type, label, value }:
           text-sm text-theme-light-900
           ${value > 0 ? 'text-theme-light-500' : ''}
           ${value < 0 ? 'text-theme-light-600' : ''}
-          ${value == 0 ? 'text-theme-light-900' : ''}
+          ${value === 0 ? 'text-theme-light-900' : ''}
           flex gap-1 items-center
         `
       })

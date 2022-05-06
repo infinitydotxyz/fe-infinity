@@ -16,13 +16,15 @@ import {
 } from 'react-share';
 import { twMerge } from 'tailwind-merge';
 import { inputBorderColor } from 'src/utils/ui-constants';
+import { ClipboardButton } from '../common';
 
 interface UserProfileShareProps {
+  username?: string;
   userAddress?: string;
 }
 
-export const UserProfileShare: FunctionComponent<UserProfileShareProps> = ({ userAddress }) => {
-  const profileLink = `${window.location.origin}/user/${userAddress}`;
+export const UserProfileShare: FunctionComponent<UserProfileShareProps> = ({ username, userAddress }) => {
+  const profileLink = `${window.location.origin}/user/${username ?? userAddress ?? ''}`;
 
   return (
     <div className="relative inline-block text-left">
@@ -67,6 +69,7 @@ export const UserProfileShare: FunctionComponent<UserProfileShareProps> = ({ use
                   <WhatsappShareButton url={profileLink}>
                     <WhatsappIcon size={32} />
                   </WhatsappShareButton>
+                  <ClipboardButton textToCopy={profileLink} className="ml-0 border p-2 bg-gray-50 cursor-pointer" />
                 </div>
               </Menu.Items>
             </Transition>

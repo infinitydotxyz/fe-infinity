@@ -32,7 +32,7 @@ export const TestPage = () => {
 
             <Button
               onClick={() => {
-                void router.push('/market');
+                void router.push('/marketplace');
               }}
             >
               Market
@@ -67,7 +67,7 @@ export const TestPage = () => {
                 void router.push('/pixel-score');
               }}
             >
-              Pixel Score
+              Astra
             </Button>
 
             <Button
