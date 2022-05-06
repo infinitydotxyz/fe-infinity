@@ -3,6 +3,8 @@ import { BGImage, FetchMore } from 'src/components/common';
 import { apiGet, DEFAULT_LIMIT, BLANK_IMAGE_URL } from 'src/utils';
 import { trimText } from 'src/components/common/read-more-text';
 import { CollectionSearchArrayDto, CollectionSearchDto } from '../../utils/types/collection-types';
+import { BaseCollection } from '@infinityxyz/lib/types/core';
+import { twMerge } from 'tailwind-merge';
 
 const fetchCollections = async (query: string, cursor: undefined | string) => {
   const API_ENDPOINT = '/collections/search';
@@ -19,11 +21,12 @@ const fetchCollections = async (query: string, cursor: undefined | string) => {
 
 interface Props {
   query: string;
+  selectedCollection?: BaseCollection;
   className?: string;
   onClick: (collection: CollectionSearchDto) => void;
 }
 
-export const CollectionList = ({ query, className, onClick }: Props) => {
+export const CollectionList = ({ query, className, onClick, selectedCollection }: Props) => {
   const [collections, setCollections] = useState<CollectionSearchDto[]>([]);
   const [error, setError] = useState(false);
   const [cursor, setCursor] = useState<string>('');
@@ -66,7 +69,12 @@ export const CollectionList = ({ query, className, onClick }: Props) => {
     <div className={className}>
       <div className="flex flex-col space-y-4 ">
         {collections.map((collection) => (
-          <CollectionListItem key={collection.slug} collection={collection} onClick={onClick} />
+          <CollectionListItem
+            key={collection.slug}
+            collection={collection}
+            onClick={onClick}
+            selected={collection.address === selectedCollection?.address}
+          />
         ))}
       </div>
 
@@ -79,6 +87,7 @@ export const CollectionList = ({ query, className, onClick }: Props) => {
 
 interface Props2 {
   collection: CollectionSearchDto;
+  selected: boolean;
   onClick: (collection: CollectionSearchDto) => void;
 }
 
@@ -94,7 +103,7 @@ const getAvatarUrl = (imgUrl: string) => {
   }
 };
 
-const CollectionListItem = ({ collection, onClick }: Props2) => {
+const CollectionListItem = ({ collection, onClick, selected }: Props2) => {
   const shortText = trimText(collection.description, 70, 70, 70)[0];
   const isTrimText = shortText.length !== collection.description.length;
 
@@ -102,7 +111,10 @@ const CollectionListItem = ({ collection, onClick }: Props2) => {
 
   return (
     <div
-      className="w-full cursor-pointer border border-gray-400 bg-white   rounded-t-3xl overflow-clip h-24 relative"
+      className={twMerge(
+        'w-full cursor-pointer border border-gray-400 bg-white   rounded-t-3xl overflow-clip h-24 relative',
+        selected ? 'outline-4 outline-slate-400 outline-offset-1 outline' : ''
+      )}
       onClick={() => onClick(collection)}
     >
       <BGImage url={avatarUrl} />

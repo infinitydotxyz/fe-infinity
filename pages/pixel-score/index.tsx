@@ -87,6 +87,7 @@ export const PixelScore = () => {
 
         <div className="row-span-2 col-span-1 border-r bg-slate-100">
           <AstraSidebar
+            selectedCollection={collection}
             onClick={(value) => {
               setCollection(value);
               setChainId(value.chainId);
