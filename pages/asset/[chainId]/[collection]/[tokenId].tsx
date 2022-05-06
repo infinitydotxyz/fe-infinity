@@ -12,7 +12,6 @@ import {
   MakeOfferModal
 } from 'src/components/asset';
 import { useState } from 'react';
-import { useAppContext, User } from 'src/utils/context/AppContext';
 
 const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
@@ -31,16 +30,10 @@ const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string)
 
 // ===========================================================
 
-const AssetDetail = () => {
+const AssetDetailPage = () => {
   const { query } = useRouter();
-  const { user } = useAppContext();
 
-  if (
-    typeof query.chainId !== 'string' ||
-    typeof query.collection !== 'string' ||
-    typeof query.tokenId !== 'string' ||
-    !user?.address
-  ) {
+  if (typeof query.chainId !== 'string' || typeof query.collection !== 'string' || typeof query.tokenId !== 'string') {
     return (
       <PageBox title="Asset - Error">
         <div className="flex flex-col max-w-screen-2xl mt-4">
@@ -51,10 +44,7 @@ const AssetDetail = () => {
       </PageBox>
     );
   }
-
-  return (
-    <AssetDetailContent user={user} qchainId={query.chainId} qcollection={query.collection} qtokenId={query.tokenId} />
-  );
+  return <AssetDetailContent qchainId={query.chainId} qcollection={query.collection} qtokenId={query.tokenId} />;
 };
 
 // ===========================================================
@@ -72,10 +62,9 @@ interface Props {
   qchainId: string;
   qcollection: string;
   qtokenId: string;
-  user: User;
 }
 
-const AssetDetailContent = ({ user, qchainId, qcollection, qtokenId }: Props) => {
+const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const { isLoading, error, token, collection } = useFetchAssetInfo(qchainId, qcollection, qtokenId);
 
   const [showCancelModal, setShowCancelModal] = useState(false);
@@ -101,19 +90,17 @@ const AssetDetailContent = ({ user, qchainId, qcollection, qtokenId }: Props) =>
     );
   }
 
-  const debugLog = (obj: object) => {
-    console.log('############################################');
-    console.log(JSON.stringify(obj, null, '  '));
-  };
+  // const debugLog = (obj: object) => {
+  //   console.log('############################################');
+  //   console.log(JSON.stringify(obj, null, '  '));
+  // };
 
-  debugLog(user);
+  // // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // const cpy: any = Object.assign({}, collection);
+  // cpy['attributes'] = 'fuck that';
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const cpy: any = Object.assign({}, collection);
-  cpy['attributes'] = 'fuck that';
-
-  debugLog(cpy);
-  debugLog(token);
+  // debugLog(cpy);
+  // debugLog(token);
 
   // TODO: Joe to update Erc721Metadata type
   const tokenMetadata = token.metadata as Erc721Metadata;
@@ -233,4 +220,4 @@ const AssetDetailContent = ({ user, qchainId, qcollection, qtokenId }: Props) =>
   );
 };
 
-export default AssetDetail;
+export default AssetDetailPage;
