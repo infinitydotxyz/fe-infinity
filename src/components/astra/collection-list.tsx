@@ -64,7 +64,7 @@ export const CollectionList = ({ query, className, onClick }: Props) => {
 
   return (
     <div className={className}>
-      <div className="flex flex-col space-y-3 ">
+      <div className="flex flex-col space-y-4 ">
         {collections.map((collection) => (
           <CollectionListItem key={collection.slug} collection={collection} onClick={onClick} />
         ))}
@@ -102,13 +102,13 @@ const CollectionListItem = ({ collection, onClick }: Props2) => {
 
   return (
     <div
-      className="w-full cursor-pointer shadow bg-white p-1 rounded-lg overflow-clip h-24 relative"
+      className="w-full cursor-pointer border border-gray-400 bg-white   rounded-t-3xl overflow-clip h-24 relative"
       onClick={() => onClick(collection)}
     >
       <BGImage url={avatarUrl} />
 
       <div className="text-theme-light-800 tracking-tight absolute bottom-0 left-0 right-0">
-        <div className="bg-white bg-opacity-90 overflow-clip  pb-2 ">
+        <div className="bg-white mx-3 rounded-t-lg bg-opacity-90 overflow-clip  pt-1 pb-2 ">
           <div className="text-center text-sm font-bold text-black">{collection.name}</div>
 
           <div className=" break-all  leading-3 text-xs px-5 text-theme-light-800">

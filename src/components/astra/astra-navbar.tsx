@@ -11,7 +11,7 @@ export const AstraNavbar = () => {
         <div className="ml-4 text-2xl font-bold">Astra</div>
       </NextLink>
       <Spacer />
-      <Button>Connect</Button>
+      <Button variant="outline">Connect</Button>
     </div>
   );
 };

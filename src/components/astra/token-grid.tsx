@@ -35,9 +35,10 @@ interface Props2 {
   chainId: string;
   className?: string;
   onClick?: (data: CardData) => void;
+  isSelected: (data: CardData) => boolean;
 }
 
-export const TokensGrid = ({ collection, chainId, className = '', onClick }: Props2) => {
+export const TokensGrid = ({ collection, chainId, className = '', onClick, isSelected }: Props2) => {
   const [tokens, setTokens] = useState<BaseToken[]>([]);
   const [error, setError] = useState(false);
   const [gridWidth, setGridWidth] = useState(0);
@@ -126,6 +127,7 @@ export const TokensGrid = ({ collection, chainId, className = '', onClick }: Pro
               <TokenCard
                 key={data.id}
                 data={data}
+                selected={isSelected(data)}
                 onClick={(data) => {
                   if (onClick) {
                     return onClick(data);

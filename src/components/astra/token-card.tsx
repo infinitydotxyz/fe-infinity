@@ -4,16 +4,21 @@ import { BGImage } from '../common';
 
 interface Props {
   data: CardData;
+  selected: boolean;
   onClick: (data: CardData) => void;
 }
 
-export const TokenCard = ({ data, onClick }: Props): JSX.Element => {
+export const TokenCard = ({ data, onClick, selected }: Props): JSX.Element => {
   const title = (data?.title ?? '').length > 18 ? data?.title?.slice(0, 18) + '...' : data?.title;
   const tokenId = (data?.tokenId ?? '').length > 18 ? data?.tokenId?.slice(0, 18) + '...' : data?.tokenId;
 
   return (
     <div
-      className={twMerge('overflow-clip shadow-lg', `rounded-2xl w-full h-[290px] relative flex flex-col`)}
+      className={twMerge(
+        'overflow-clip  border border-gray-300',
+        'rounded-2xl w-full h-[290px] relative flex flex-col',
+        selected ? 'outline-4 outline-slate-400 outline-offset-1 outline' : ''
+      )}
       onClick={() => onClick(data)}
     >
       <BGImage url={data?.image} />

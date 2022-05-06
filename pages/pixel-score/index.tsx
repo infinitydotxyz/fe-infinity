@@ -20,13 +20,26 @@ export const PixelScore = () => {
     if (i === -1) {
       setSelectedTokens([...selectedTokens, data]);
       setShowCart(true);
+    } else {
+      removeFromSelection(data);
     }
   };
 
   let tokensGrid;
 
   if (collection && chainId) {
-    tokensGrid = <TokensGrid collection={collection} chainId={chainId} onClick={onCardClick} />;
+    tokensGrid = (
+      <TokensGrid
+        collection={collection}
+        chainId={chainId}
+        onClick={onCardClick}
+        isSelected={(data) => {
+          const i = indexOfSelection(data);
+
+          return i !== -1;
+        }}
+      />
+    );
   } else {
     tokensGrid = <CenteredContent>Select a Collection</CenteredContent>;
   }
@@ -41,6 +54,21 @@ export const PixelScore = () => {
     });
 
     return i;
+  };
+
+  const removeFromSelection = (value: CardData) => {
+    const i = indexOfSelection(value);
+
+    if (i !== -1) {
+      const copy = [...selectedTokens];
+      copy.splice(i, 1);
+
+      setSelectedTokens(copy);
+
+      if (copy.length === 0) {
+        setShowCart(false);
+      }
+    }
   };
 
   const handleCheckout = () => {
@@ -78,18 +106,7 @@ export const PixelScore = () => {
               tokens={selectedTokens}
               onCheckout={handleCheckout}
               onRemove={(value) => {
-                const i = indexOfSelection(value);
-
-                if (i !== -1) {
-                  const copy = [...selectedTokens];
-                  copy.splice(i, 1);
-
-                  setSelectedTokens(copy);
-
-                  if (copy.length === 0) {
-                    setShowCart(false);
-                  }
-                }
+                removeFromSelection(value);
               }}
             />
           </div>
