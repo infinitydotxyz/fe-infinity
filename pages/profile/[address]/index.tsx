@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import { PageBox, Spinner } from 'src/components/common';
 import { UserPage } from 'src/components/user/user-page';
 import { useAppContext, User } from 'src/utils/context/AppContext';
-import { useFetch } from 'src/utils';
+import { PleaseConnectMsg, useFetch } from 'src/utils';
 import { UserProfileDto } from 'src/components/user/user-profile-dto';
 
 const USER_API_END_POINT = '/user';
@@ -20,7 +20,7 @@ const ProfilePage = () => {
   if (address === 'me' && !user) {
     return (
       <PageBox title="Account" className="mb-12">
-        Please sign in.
+        <PleaseConnectMsg />
       </PageBox>
     );
   }

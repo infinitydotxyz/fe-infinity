@@ -3,7 +3,7 @@ import moment from 'moment';
 import { Button, EthPrice } from 'src/components/common';
 import { numStr, shortDate } from 'src/utils';
 import { DataColumn, defaultDataColumns } from './data-columns';
-import { OrderbookItem } from './orderbook_item';
+import { OrderbookItem } from './orderbook-item';
 
 type OrderbookRowProps = {
   order: OBOrder;
