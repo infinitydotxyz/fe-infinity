@@ -1,5 +1,14 @@
 import { useRouter } from 'next/router';
-import { Button, ShortAddress, PageBox, ReadMoreText, SVG, NextLink, ClipboardButton } from 'src/components/common';
+import {
+  Button,
+  ShortAddress,
+  PageBox,
+  ReadMoreText,
+  SVG,
+  NextLink,
+  ClipboardButton,
+  Spinner
+} from 'src/components/common';
 import { BLANK_IMAGE_URL, useFetch } from 'src/utils';
 import { Token, Collection, Erc721Metadata } from '@infinityxyz/lib/types/core';
 import {
@@ -76,7 +85,11 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const [showPlaceBidModal, setShowPlaceBidModal] = useState(false);
 
   if (isLoading) {
-    return <PageBox title="Loading..." showTitle={false}></PageBox>;
+    return (
+      <PageBox title="Loading..." showTitle={false}>
+        <Spinner />
+      </PageBox>
+    );
   }
 
   if (error || !token || !collection) {

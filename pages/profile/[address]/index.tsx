@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { PageBox } from 'src/components/common';
+import { PageBox, Spinner } from 'src/components/common';
 import { UserPage } from 'src/components/user/user-page';
 import { useAppContext, User } from 'src/utils/context/AppContext';
 import { useFetch } from 'src/utils';
@@ -41,7 +41,11 @@ const ProfilePageContents = ({ user, userAddress }: Props) => {
   const { result, isLoading, isError, error } = useFetch(`${USER_API_END_POINT}/${userAddress}`);
 
   if (isLoading) {
-    return <PageBox title="Loading..."></PageBox>;
+    return (
+      <PageBox title="Loading..." showTitle={false}>
+        <Spinner />
+      </PageBox>
+    );
   }
 
   if (isError) {
