@@ -40,7 +40,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
             size="large"
             onClick={() => {
               setOrderDrawerOpen(false);
-              router.push('/market');
+              router.push('/marketplace?tab=Buy');
             }}
             className="font-heading w-full h-full"
           >
@@ -51,7 +51,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
             variant="outline"
             onClick={() => {
               setOrderDrawerOpen(false);
-              router.push('/market');
+              router.push('/marketplace?tab=Sell');
             }}
             className="font-heading w-full h-full"
           >

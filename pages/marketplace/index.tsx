@@ -1,10 +1,16 @@
 import { debounce } from 'lodash';
+import { useRouter } from 'next/router';
 import { useCallback, useState } from 'react';
 import { ToggleTab, useToggleTab, Spacer, PageBox, CollectionGrid, TextInputBox } from 'src/components/common';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
 
 const MarketplacePage = () => {
-  const { options, onChange, selected } = useToggleTab(['Orderbook', 'Buy', 'Sell'], 'Orderbook');
+  const router = useRouter();
+
+  // Checks the url for the 'tab' query parameter. If it doesn't exist, default to Orderbook
+  const tabDefault = router.query.tab && typeof router.query.tab === 'string' ? router.query.tab : 'Orderbook';
+
+  const { options, onChange, selected } = useToggleTab(['Orderbook', 'Buy', 'Sell'], tabDefault);
 
   const [query, setQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
