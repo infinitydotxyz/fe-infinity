@@ -2,7 +2,17 @@ import { BaseCollection, CardData } from '@infinityxyz/lib/types/core';
 import { useEffect, useRef, useState } from 'react';
 import { CollectionList } from 'src/components/astra/collection-list';
 import { TokensGrid } from 'src/components/astra/token-grid';
-import { BGImage, Button, DebouncedTextField, NextLink, Spacer, SVG } from 'src/components/common';
+import {
+  BGImage,
+  Button,
+  CenteredContent,
+  DebouncedTextField,
+  NextLink,
+  Spacer,
+  SVG,
+  Toaster,
+  toastSuccess
+} from 'src/components/common';
 import { apiGet } from 'src/utils';
 import { iconButtonStyle, largeIconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
@@ -28,6 +38,8 @@ export const PixelScore = () => {
 
   if (collection && chainId) {
     tokensGrid = <TokensGrid collection={collection} chainId={chainId} onClick={onCardClick} />;
+  } else {
+    tokensGrid = <CenteredContent>Select a Collection</CenteredContent>;
   }
 
   useEffect(() => {
@@ -45,6 +57,8 @@ export const PixelScore = () => {
   const handleCheckout = () => {
     setSelectedTokens([]);
     setShowCart(false);
+
+    toastSuccess('Success', 'Something happened');
   };
 
   return (
@@ -82,12 +96,18 @@ export const PixelScore = () => {
                   copy.splice(i, 1);
 
                   setSelectedTokens(copy);
+
+                  if (copy.length === 0) {
+                    setShowCart(false);
+                  }
                 }
               }}
             />
           </div>
         </div>
       </div>
+
+      <Toaster />
     </div>
   );
 };

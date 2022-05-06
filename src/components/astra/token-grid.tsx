@@ -1,9 +1,9 @@
 import { BaseCollection, BaseToken, CardData } from '@infinityxyz/lib/types/core';
-import React, { useState, useEffect, useRef } from 'react';
-import { FetchMore } from 'src/components/common';
+import React, { useState, useEffect } from 'react';
+import { useResizeDetector } from 'react-resize-detector';
+import { FetchMore, CenteredContent } from 'src/components/common';
 import { apiGet, DEFAULT_LIMIT } from 'src/utils';
 import { Filter } from 'src/utils/context/FilterContext';
-import { useWindowSize } from 'src/utils/useWindowSize';
 import { twMerge } from 'tailwind-merge';
 import { NFTArray } from '../../utils/types/collection-types';
 import { TokenCard } from './token-card';
@@ -43,10 +43,9 @@ export const TokensGrid = ({ collection, chainId, className, onClick }: Props2) 
   const [gridWidth, setGridWidth] = useState(0);
   const [cursor, setCursor] = useState<string>('');
   const [hasNextPage, setHasNextPage] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const { width } = useWindowSize();
-
-  const ref = useRef<HTMLDivElement>(null);
+  const { width, ref } = useResizeDetector();
 
   useEffect(() => {
     setGridWidth(ref.current ? ref.current.offsetWidth : 0);
@@ -54,6 +53,7 @@ export const TokensGrid = ({ collection, chainId, className, onClick }: Props2) 
 
   useEffect(() => {
     setTokens([]);
+    setLoading(true);
     handleFetch('');
   }, [collection]);
 
@@ -75,6 +75,8 @@ export const TokensGrid = ({ collection, chainId, className, onClick }: Props2) 
       setCursor(result.cursor);
       setHasNextPage(result.hasNextPage);
     }
+
+    setLoading(false);
   };
 
   if (error) {
@@ -92,40 +94,51 @@ export const TokensGrid = ({ collection, chainId, className, onClick }: Props2) 
     gridColumns = `repeat(${cols}, minmax(0, 1fr))`;
   }
 
+  let contents;
+
+  if (loading) {
+    contents = <CenteredContent>Loading</CenteredContent>;
+  } else {
+    contents = (
+      <>
+        <div className={twMerge('grid gap-x-8 gap-y-12 ')} style={{ gridTemplateColumns: gridColumns }}>
+          {tokens.map((token) => {
+            const data: CardData = {
+              id: collection?.address + '_' + token.tokenId,
+              name: token.metadata?.name,
+              collectionName: collection?.metadata?.name,
+              title: collection?.metadata?.name,
+              description: token.metadata.description,
+              image: token.image.url,
+              price: 0,
+              chainId: token.chainId,
+              tokenAddress: collection?.address,
+              tokenId: token.tokenId,
+              rarityRank: token.rarityRank,
+              orderSnippet: token.ordersSnippet
+            };
+
+            return (
+              <TokenCard
+                key={data.id}
+                data={data}
+                onClick={(data) => {
+                  if (onClick) {
+                    return onClick(data);
+                  }
+                }}
+              />
+            );
+          })}
+        </div>
+        {hasNextPage && <FetchMore onFetchMore={() => handleFetch(cursor)} />}
+      </>
+    );
+  }
+
   return (
     <div ref={ref} className={className}>
-      <div className={twMerge('grid gap-x-8 gap-y-12 ')} style={{ gridTemplateColumns: gridColumns }}>
-        {tokens.map((token) => {
-          const data: CardData = {
-            id: collection?.address + '_' + token.tokenId,
-            name: token.metadata?.name,
-            collectionName: collection?.metadata?.name,
-            title: collection?.metadata?.name,
-            description: token.metadata.description,
-            image: token.image.url,
-            price: 0,
-            chainId: token.chainId,
-            tokenAddress: collection?.address,
-            tokenId: token.tokenId,
-            rarityRank: token.rarityRank,
-            orderSnippet: token.ordersSnippet
-          };
-
-          return (
-            <TokenCard
-              key={data.id}
-              data={data}
-              onClick={(data) => {
-                if (onClick) {
-                  return onClick(data);
-                }
-              }}
-            />
-          );
-        })}
-      </div>
-
-      {hasNextPage && <FetchMore onFetchMore={() => handleFetch(cursor)} />}
+      {contents}
     </div>
   );
 };
