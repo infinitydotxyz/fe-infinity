@@ -67,7 +67,7 @@ export const TestPage = () => {
                 void router.push('/pixel-score');
               }}
             >
-              Pixel Score
+              Astra
             </Button>
 
             <Button
