@@ -1,3 +1,4 @@
+import { largeIconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { SVG } from './svg';
 
@@ -8,7 +9,7 @@ interface Props {
 export const Spinner = ({ className }: Props) => {
   return (
     <SVG.spinner
-      className={twMerge(`mr-2 w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-black ${className}`)}
+      className={twMerge(largeIconButtonStyle, ' text-gray-200 animate-spin dark:text-gray-600 fill-black', className)}
     />
   );
 };

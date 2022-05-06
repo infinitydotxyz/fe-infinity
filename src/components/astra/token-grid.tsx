@@ -1,7 +1,7 @@
 import { BaseCollection, BaseToken, CardData } from '@infinityxyz/lib/types/core';
 import React, { useState, useEffect } from 'react';
 import { useResizeDetector } from 'react-resize-detector';
-import { FetchMore, CenteredContent } from 'src/components/common';
+import { FetchMore, CenteredContent, Spinner } from 'src/components/common';
 import { apiGet, DEFAULT_LIMIT } from 'src/utils';
 import { Filter } from 'src/utils/context/FilterContext';
 import { twMerge } from 'tailwind-merge';
@@ -37,7 +37,7 @@ interface Props2 {
   onClick?: (data: CardData) => void;
 }
 
-export const TokensGrid = ({ collection, chainId, className, onClick }: Props2) => {
+export const TokensGrid = ({ collection, chainId, className = '', onClick }: Props2) => {
   const [tokens, setTokens] = useState<BaseToken[]>([]);
   const [error, setError] = useState(false);
   const [gridWidth, setGridWidth] = useState(0);
@@ -97,7 +97,11 @@ export const TokensGrid = ({ collection, chainId, className, onClick }: Props2) 
   let contents;
 
   if (loading) {
-    contents = <CenteredContent>Loading</CenteredContent>;
+    contents = (
+      <CenteredContent>
+        <Spinner />
+      </CenteredContent>
+    );
   } else {
     contents = (
       <>
@@ -137,7 +141,7 @@ export const TokensGrid = ({ collection, chainId, className, onClick }: Props2) 
   }
 
   return (
-    <div ref={ref} className={className}>
+    <div ref={ref} className={twMerge('h-full w-full', className)}>
       {contents}
     </div>
   );
