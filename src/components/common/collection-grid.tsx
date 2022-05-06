@@ -21,10 +21,18 @@ interface Props {
   className?: string;
   buttonName?: string;
   listMode?: boolean;
+  routerQuery?: string;
   onButtonClick?: (collection: CollectionSearchDto) => void;
 }
 
-export const CollectionGrid = ({ listMode = false, query, className, onButtonClick, buttonName }: Props) => {
+export const CollectionGrid = ({
+  listMode = false,
+  query,
+  className,
+  onButtonClick,
+  buttonName,
+  routerQuery
+}: Props) => {
   const [collections, setCollections] = useState<CollectionSearchDto[]>([]);
   const [error, setError] = useState(false);
   const [cursor, setCursor] = useState<string>('');
@@ -72,6 +80,7 @@ export const CollectionGrid = ({ listMode = false, query, className, onButtonCli
               key={collection.slug}
               collection={collection}
               buttonName={buttonName}
+              routerQuery={routerQuery}
               onButtonClick={onButtonClick}
             />
           ))}
@@ -90,6 +99,7 @@ export const CollectionGrid = ({ listMode = false, query, className, onButtonCli
             key={collection.slug}
             collection={collection}
             buttonName={buttonName}
+            routerQuery={routerQuery}
             onButtonClick={onButtonClick}
           />
         ))}
