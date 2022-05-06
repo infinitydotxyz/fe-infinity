@@ -128,12 +128,18 @@ const CollectionPage = () => {
                 <td>{collection.numOwners?.toLocaleString() ?? '—'}</td>
                 <td>
                   {firstDailyStats?.floorPrice ? (
-                    <EthPrice label={String(firstDailyStats?.floorPrice) + ' ETH'} labelClassName="font-bold" />
+                    <EthPrice label={String(firstDailyStats?.floorPrice)} labelClassName="font-bold" />
                   ) : (
                     '—'
                   )}
                 </td>
-                <td>{firstDailyStats?.volume?.toLocaleString() ?? '—'}</td>
+                <td>
+                  {firstDailyStats?.volume ? (
+                    <EthPrice label={String(firstDailyStats?.volume?.toLocaleString())} labelClassName="font-bold" />
+                  ) : (
+                    '—'
+                  )}
+                </td>
               </tr>
             </tbody>
           </table>
