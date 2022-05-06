@@ -1,11 +1,13 @@
 import { Button, NextLink, Spacer, SVG } from 'src/components/common';
-import { largeIconButtonStyle } from 'src/utils/ui-constants';
+import { inputBorderColor, largeIconButtonStyle } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
 
 // ========================================================================================
 
 export const AstraNavbar = () => {
   return (
-    <div className="flex px-4 py-3 items-center">
+    // relative added to give it a different layer so shadow isn't wiped out by sidebar
+    <div className={twMerge('flex px-4 py-3 items-center bg-slate-100 border-b shadow-lg relative', inputBorderColor)}>
       <NextLink href="/" className="flex items-center">
         <SVG.miniLogo className={largeIconButtonStyle} />
         <div className="ml-4 text-2xl font-bold">Astra</div>

@@ -67,7 +67,7 @@ export const CollectionList = ({ query, className, onClick, selectedCollection }
   return (
     <div className={className}>
       {/* pt-2 is for the first items selection rect, needs some space, or it clips */}
-      <div className="flex flex-col space-y-4 pt-2">
+      <div className="flex flex-col space-y-4 pt-4">
         {collections.map((collection) => (
           <CollectionListItem
             key={collection.slug}

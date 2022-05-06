@@ -1,8 +1,10 @@
 import { BaseCollection } from '@infinityxyz/lib/types/core';
 import { useState } from 'react';
 import { CollectionList } from 'src/components/astra/collection-list';
-import { DebouncedTextField } from 'src/components/common';
+import { DebouncedTextField, Divider } from 'src/components/common';
 import { apiGet } from 'src/utils';
+import { inputBorderColor } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
 
 interface Props {
   onClick: (value: BaseCollection) => void;
@@ -26,7 +28,7 @@ export const AstraSidebar = ({ onClick, selectedCollection }: Props) => {
   );
 
   return (
-    <div className="flex flex-col pt-3 h-full items-center">
+    <div className={twMerge('flex flex-col pt-3 h-full items-center bg-slate-100 border-r', inputBorderColor)}>
       <DebouncedTextField
         className="px-4 mb-3"
         value={query}
@@ -35,6 +37,7 @@ export const AstraSidebar = ({ onClick, selectedCollection }: Props) => {
           setQuery(value);
         }}
       />
+      <Divider className="" />
       <div className="overflow-y-auto overflow-x-hidden w-full px-4">{collectionsList}</div>
     </div>
   );

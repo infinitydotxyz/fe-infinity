@@ -81,11 +81,11 @@ export const PixelScore = () => {
   return (
     <div>
       <div className="h-screen w-screen grid grid-rows-[auto_1fr] grid-cols-[300px_1fr_auto]">
-        <div className="col-span-3 border-b bg-slate-200">
+        <div className="col-span-3">
           <AstraNavbar />
         </div>
 
-        <div className="row-span-2 col-span-1 border-r bg-slate-100">
+        <div className="row-span-2 col-span-1">
           <AstraSidebar
             selectedCollection={collection}
             onClick={(value) => {

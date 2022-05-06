@@ -4,6 +4,7 @@ import { BLANK_IMAGE_URL } from 'src/utils';
 import { trimText } from 'src/components/common/read-more-text';
 import { CollectionSearchDto } from '../../utils/types/collection-types';
 import { twMerge } from 'tailwind-merge';
+import { inputBorderColor } from 'src/utils/ui-constants';
 
 interface Props2 {
   collection: CollectionSearchDto;
@@ -32,7 +33,8 @@ export const CollectionListItem = ({ collection, onClick, selected }: Props2) =>
   return (
     <div
       className={twMerge(
-        'w-full cursor-pointer border border-gray-400 bg-white rounded-2xl overflow-clip h-24 relative',
+        'w-full cursor-pointer border bg-white rounded-2xl overflow-clip h-24 relative',
+        inputBorderColor,
         selected ? 'outline-4 outline-slate-400 outline-offset-1 outline' : ''
       )}
       onClick={() => onClick(collection)}
