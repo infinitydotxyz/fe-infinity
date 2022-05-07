@@ -26,7 +26,7 @@ export const AstraCart = ({ tokens, onRemove, onCheckout }: Props) => {
     const first = tokenArray[0];
 
     divList.push(
-      <div className="w-full rounded-md overflow-hidden bg-gray-100 p-2 font-bold truncate" key={`header-${first.id}`}>
+      <div className="w-full rounded-md bg-gray-100 p-2 font-bold truncate" key={`header-${first.id}`}>
         {first.collectionName}
       </div>
     );
@@ -39,7 +39,7 @@ export const AstraCart = ({ tokens, onRemove, onCheckout }: Props) => {
   });
 
   return (
-    <div className="w-48 h-full grid grid-rows-[1fr_auto] grid-cols-[1fr]">
+    <div className="h-full grid grid-rows-[1fr_auto] grid-cols-[1fr]">
       <div className="w-48 row-span-1 col-span-1 flex flex-col space-y-2 items-start flex-1">{divList}</div>
 
       <div className="row-span-1 col-span-2 flex flex-col">
