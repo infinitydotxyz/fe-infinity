@@ -25,7 +25,7 @@ interface Props {
   onClick: (collection: CollectionSearchDto) => void;
 }
 
-export const CollectionList = ({ query, className, onClick, selectedCollection }: Props) => {
+export const CollectionList = ({ query, className = '', onClick, selectedCollection }: Props) => {
   const [collections, setCollections] = useState<CollectionSearchDto[]>([]);
   const [error, setError] = useState(false);
   const [cursor, setCursor] = useState<string>('');
@@ -66,7 +66,7 @@ export const CollectionList = ({ query, className, onClick, selectedCollection }
 
   return (
     <div className={className}>
-      {/* pt-2 is for the first items selection rect, needs some space, or it clips */}
+      {/* pt-4 is for the first items selection rect, needs some space, or it clips */}
       <div className="flex flex-col space-y-4 pt-4">
         {collections.map((collection) => (
           <CollectionListItem

@@ -33,7 +33,7 @@ export const CollectionListItem = ({ collection, onClick, selected }: Props2) =>
   return (
     <div
       className={twMerge(
-        'w-full cursor-pointer border bg-white rounded-2xl overflow-clip h-24 relative',
+        'w-full cursor-pointer border bg-white rounded-xl overflow-clip h-24 relative',
         inputBorderColor,
         selected ? 'outline-4 outline-slate-400 outline-offset-1 outline' : ''
       )}
@@ -41,8 +41,8 @@ export const CollectionListItem = ({ collection, onClick, selected }: Props2) =>
     >
       <BGImage url={avatarUrl} />
 
-      <div className="text-theme-light-800 tracking-tight absolute bottom-0 left-0 right-0">
-        <div className="bg-white mx-3 rounded-t-lg bg-opacity-90 overflow-clip  pt-1 pb-2 ">
+      <div className="text-theme-light-800 tracking-tight absolute top-0 left-0 right-0">
+        <div className="bg-white mx-3 rounded-b-xl shadow-lg bg-opacity-90 overflow-clip  pt-1 pb-2 ">
           <div className="text-center text-sm font-bold text-black">{collection.name}</div>
 
           <div className=" break-all  leading-3 text-xs px-5 text-theme-light-800">

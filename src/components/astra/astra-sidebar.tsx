@@ -37,8 +37,10 @@ export const AstraSidebar = ({ onClick, selectedCollection }: Props) => {
           setQuery(value);
         }}
       />
-      <Divider className="" />
-      <div className="overflow-y-auto overflow-x-hidden w-full px-4">{collectionsList}</div>
+
+      <div className={twMerge(inputBorderColor, 'overflow-y-auto overflow-x-hidden w-full px-4 border-t')}>
+        {collectionsList}
+      </div>
     </div>
   );
 };
