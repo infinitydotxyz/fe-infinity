@@ -30,6 +30,7 @@ export const PixelScore = () => {
   if (collection && chainId) {
     tokensGrid = (
       <TokensGrid
+        className="p-8"
         collection={collection}
         chainId={chainId}
         onClick={onCardClick}
@@ -96,13 +97,13 @@ export const PixelScore = () => {
         </div>
 
         {tokensGrid && (
-          <div ref={ref} className="row-span-2 col-span-1 overflow-y-auto p-7">
+          <div ref={ref} className="row-span-2 col-span-1 overflow-y-auto overflow-x-hidden">
             {tokensGrid}
           </div>
         )}
 
-        <div className="row-span-2 col-span-1 overflow-y-auto">
-          <div className={twMerge(showCart ? '' : 'hidden', 'p-6 h-full')}>
+        <div className="row-span-2 col-span-1 overflow-y-auto overflow-x-hidden">
+          <div className={twMerge(showCart ? 'w-56' : 'w-0', 'transition-width duration-500 h-full')}>
             <AstraCart
               tokens={selectedTokens}
               onCheckout={handleCheckout}

@@ -39,8 +39,9 @@ export const AstraCart = ({ tokens, onRemove, onCheckout }: Props) => {
   });
 
   return (
-    <div className="h-full grid grid-rows-[1fr_auto] grid-cols-[1fr]">
-      <div className="w-48 row-span-1 col-span-1 flex flex-col space-y-2 items-start flex-1">{divList}</div>
+    <div className="h-full p-6 grid grid-rows-[1fr_auto] grid-cols-[1fr]">
+      {/* min-w-0 is important. otherwise text doesn't truncate */}
+      <div className="min-w-0 row-span-1 col-span-1 flex flex-col space-y-2 items-start flex-1">{divList}</div>
 
       <div className="row-span-1 col-span-2 flex flex-col">
         <Button onClick={onCheckout}>Checkout</Button>

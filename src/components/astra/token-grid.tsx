@@ -106,7 +106,7 @@ export const TokensGrid = ({ collection, chainId, className = '', onClick, isSel
   } else {
     contents = (
       <>
-        <div className={twMerge('grid gap-x-8 gap-y-12 ')} style={{ gridTemplateColumns: gridColumns }}>
+        <div className={twMerge('grid gap-8')} style={{ gridTemplateColumns: gridColumns }}>
           {tokens.map((token) => {
             const data: CardData = {
               id: collection?.address + '_' + token.tokenId,
