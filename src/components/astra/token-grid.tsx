@@ -2,33 +2,10 @@ import { BaseCollection, BaseToken, CardData } from '@infinityxyz/lib/types/core
 import React, { useState, useEffect } from 'react';
 import { useResizeDetector } from 'react-resize-detector';
 import { FetchMore, CenteredContent, Spinner } from 'src/components/common';
-import { apiGet, DEFAULT_LIMIT } from 'src/utils';
-import { Filter } from 'src/utils/context/FilterContext';
 import { twMerge } from 'tailwind-merge';
 import { NFTArray } from '../../utils/types/collection-types';
+import { fetchTokens } from './astra-utils';
 import { TokenCard } from './token-card';
-
-// =========================================================================
-
-const fetchTokens = async (collectionAddress: string, chainId: string, cursor: undefined | string) => {
-  const filterState: Filter = {};
-
-  filterState.orderBy = 'rarityRank'; // set defaults
-  filterState.orderDirection = 'asc';
-
-  const API_ENDPOINT = `/collections/${chainId}:${collectionAddress}/nfts`;
-  const response = await apiGet(API_ENDPOINT, {
-    query: {
-      limit: DEFAULT_LIMIT,
-      cursor,
-      ...filterState
-    }
-  });
-
-  return response;
-};
-
-// ==============================================================
 
 interface Props2 {
   collection: BaseCollection;

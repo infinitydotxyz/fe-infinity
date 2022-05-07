@@ -1,22 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { FetchMore } from 'src/components/common';
-import { apiGet, DEFAULT_LIMIT } from 'src/utils';
 import { CollectionSearchArrayDto, CollectionSearchDto } from '../../utils/types/collection-types';
 import { BaseCollection } from '@infinityxyz/lib/types/core';
 import { CollectionListItem } from './collection-list-item';
-
-const fetchCollections = async (query: string, cursor: undefined | string) => {
-  const API_ENDPOINT = '/collections/search';
-  const response = await apiGet(API_ENDPOINT, {
-    query: {
-      query,
-      limit: DEFAULT_LIMIT,
-      cursor
-    }
-  });
-
-  return response;
-};
+import { fetchCollections } from './astra-utils';
 
 interface Props {
   query: string;
