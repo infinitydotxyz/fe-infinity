@@ -10,8 +10,8 @@ interface Props {
 }
 
 export const TokenCard = ({ data, onClick, selected }: Props): JSX.Element => {
-  const title = (data?.title ?? '').length > 18 ? data?.title?.slice(0, 18) + '...' : data?.title;
-  const tokenId = (data?.tokenId ?? '').length > 18 ? data?.tokenId?.slice(0, 18) + '...' : data?.tokenId;
+  const title = data?.title ?? '';
+  const tokenId = data?.tokenId ?? '';
 
   return (
     <div
@@ -30,8 +30,8 @@ export const TokenCard = ({ data, onClick, selected }: Props): JSX.Element => {
       )}
 
       <div className="mt-3 mb-4 mx-3">
-        <div className="font-bold">{title}</div>
-        <div className="text-secondary font-heading" title={data?.tokenId}>
+        <div className="font-bold truncate">{title}</div>
+        <div className="text-secondary font-heading truncate" title={data?.tokenId}>
           {tokenId}
         </div>
       </div>
