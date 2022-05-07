@@ -6,6 +6,7 @@ export const DISCORD_BOT_INVITE_URL =
 // not sure why there are two of these.
 export const ITEMS_PER_PAGE = 10;
 export const DEFAULT_LIMIT = 24;
+export const LARGE_LIMIT = 40;
 
 export const NFT_DATA_SOURCES = {
   INFINITY: 0,

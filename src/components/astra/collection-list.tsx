@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { FetchMore } from 'src/components/common';
 import { CollectionSearchArrayDto, CollectionSearchDto } from '../../utils/types/collection-types';
 import { BaseCollection } from '@infinityxyz/lib/types/core';
 import { CollectionListItem } from './collection-list-item';
 import { fetchCollections } from './astra-utils';
+import { ScrollLoader } from './ScrollLoader';
 
 interface Props {
   query: string;
@@ -65,7 +65,13 @@ export const CollectionList = ({ query, className = '', onClick, selectedCollect
         ))}
       </div>
 
-      {hasNextPage && <FetchMore onFetchMore={() => handleFetch(cursor)} />}
+      {hasNextPage && (
+        <ScrollLoader
+          onFetchMore={async () => {
+            handleFetch(cursor);
+          }}
+        />
+      )}
     </div>
   );
 };

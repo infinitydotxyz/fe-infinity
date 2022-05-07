@@ -1,4 +1,4 @@
-import { DEFAULT_LIMIT, apiGet, ApiResponse } from 'src/utils';
+import { DEFAULT_LIMIT, apiGet, ApiResponse, LARGE_LIMIT } from 'src/utils';
 import { Filter } from 'src/utils/context/FilterContext';
 
 export const fetchTokens = async (
@@ -13,7 +13,7 @@ export const fetchTokens = async (
 
   const response = await apiGet(`/collections/${chainId}:${collectionAddress}/nfts`, {
     query: {
-      limit: DEFAULT_LIMIT,
+      limit: LARGE_LIMIT,
       cursor,
       ...filterState
     }
