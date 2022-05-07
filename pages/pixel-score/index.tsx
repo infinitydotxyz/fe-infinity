@@ -76,7 +76,7 @@ export const PixelScore = () => {
     setSelectedTokens([]);
     setShowCart(false);
 
-    toastSuccess('Success', 'Something happened');
+    toastSuccess('Success', 'Your Pixel Scores has been calculated');
   };
 
   return (
@@ -90,8 +90,11 @@ export const PixelScore = () => {
           <AstraSidebar
             selectedCollection={collection}
             onClick={(value) => {
-              setCollection(value);
-              setChainId(value.chainId);
+              // avoid clicking if already selected (avoids a network fetch)
+              if (value.address !== collection?.address) {
+                setCollection(value);
+                setChainId(value.chainId);
+              }
             }}
           />
         </div>
