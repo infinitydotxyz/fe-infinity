@@ -1,7 +1,7 @@
 import { BaseCollection } from '@infinityxyz/lib/types/core';
 import { useState } from 'react';
 import { CollectionList } from 'src/components/astra/collection-list';
-import { DebouncedTextField, Divider } from 'src/components/common';
+import { DebouncedTextField } from 'src/components/common';
 import { apiGet } from 'src/utils';
 import { inputBorderColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
