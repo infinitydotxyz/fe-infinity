@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { OBOrder } from '@infinityxyz/lib/types/core';
 import { Button, Dropdown, SVG } from 'src/components/common';
 import { OrderbookProvider, SORT_FILTERS, useOrderbook } from '../OrderbookContext';
-import { OrderbookRow } from './orderbook_row';
+import { OrderbookRow } from './orderbook-row';
 import { OrderbookFilters } from './filters/orderbook-filters';
 
 const SORT_LABELS: {

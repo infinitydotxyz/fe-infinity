@@ -2,14 +2,17 @@ import { OBOrder } from '@infinityxyz/lib/types/core';
 import moment from 'moment';
 import { Button, EthPrice } from 'src/components/common';
 import { numStr, shortDate } from 'src/utils';
+import { useAppContext } from 'src/utils/context/AppContext';
 import { DataColumn, defaultDataColumns } from './data-columns';
-import { OrderbookItem } from './orderbook_item';
+import { OrderbookItem } from './orderbook-item';
 
 type OrderbookRowProps = {
   order: OBOrder;
 };
 
 export const OrderbookRow = ({ order }: OrderbookRowProps): JSX.Element => {
+  const { checkSignedIn } = useAppContext();
+
   const valueDiv = (dataColumn: DataColumn) => {
     let value = order.id;
 
@@ -64,6 +67,12 @@ export const OrderbookRow = ({ order }: OrderbookRowProps): JSX.Element => {
     gridTemplate += ` ${data.width}`;
   });
 
+  const onClickBuySell = () => {
+    if (!checkSignedIn()) {
+      return;
+    }
+  };
+
   return (
     <div className="rounded-3xl mb-3 p-8 w-full bg-gray-100">
       <div className="grid items-start w-full gap-5" style={{ gridTemplateColumns: gridTemplate }}>
@@ -73,7 +82,7 @@ export const OrderbookRow = ({ order }: OrderbookRowProps): JSX.Element => {
           const title = data.name;
 
           if (data.field === 'buyOrSell') {
-            return <Button>{order.isSellOrder ? 'Buy' : 'Sell'}</Button>;
+            return <Button onClick={onClickBuySell}>{order.isSellOrder ? 'Buy' : 'Sell'}</Button>;
           }
 
           return (
