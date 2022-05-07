@@ -1,11 +1,10 @@
 import { BaseCollection, BaseToken, CardData } from '@infinityxyz/lib/types/core';
 import React, { useState, useEffect } from 'react';
 import { useResizeDetector } from 'react-resize-detector';
-import { CenteredContent, Spinner } from 'src/components/common';
+import { CenteredContent, ScrollLoader, Spinner } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 import { NFTArray } from '../../utils/types/collection-types';
 import { fetchTokens } from './astra-utils';
-import { ScrollLoader } from './ScrollLoader';
 import { TokenCard } from './token-card';
 
 interface Props2 {

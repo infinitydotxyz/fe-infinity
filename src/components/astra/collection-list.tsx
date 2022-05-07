@@ -3,7 +3,7 @@ import { CollectionSearchArrayDto, CollectionSearchDto } from '../../utils/types
 import { BaseCollection } from '@infinityxyz/lib/types/core';
 import { CollectionListItem } from './collection-list-item';
 import { fetchCollections } from './astra-utils';
-import { ScrollLoader } from './ScrollLoader';
+import { ScrollLoader } from '../common';
 
 interface Props {
   query: string;
