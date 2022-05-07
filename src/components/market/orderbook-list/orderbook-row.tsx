@@ -75,7 +75,7 @@ export const OrderbookRow = ({ order }: OrderbookRowProps): JSX.Element => {
 
   return (
     <div className="rounded-3xl mb-3 p-8 w-full bg-gray-100">
-      <div className="grid items-start w-full gap-5" style={{ gridTemplateColumns: gridTemplate }}>
+      <div className="items-center w-full hidden lg:grid" style={{ gridTemplateColumns: gridTemplate }}>
         {defaultDataColumns(order).map((data) => {
           const content = valueDiv(data);
 
@@ -95,6 +95,30 @@ export const OrderbookRow = ({ order }: OrderbookRowProps): JSX.Element => {
             />
           );
         })}
+      </div>
+      <div className="flex items-center w-full lg:hidden">
+        <div className="flex flex-col w-full">
+          <div className="mr-4">
+            <OrderbookItem nameItem={true} key={`${order.id} ${order.chainId}`} order={order} />
+          </div>
+          <div className="flex flex-col">
+            <div>{order.isSellOrder ? 'Listing' : 'Offer'}</div>
+            <div className="flex flex-row items-center">
+              <EthPrice
+                label={
+                  order.isSellOrder ? numStr(order.startPriceEth.toString()) : numStr(order.endPriceEth.toString())
+                }
+                labelClassName="font-bold"
+              />
+            </div>
+            <div>NFT Amount: {numStr(order.numItems.toString())}</div>
+          </div>
+        </div>
+        <div className="text-right">
+          <Button>{order.isSellOrder ? 'Buy' : 'Sell'}</Button>
+          <div>{moment(order.startTimeMs).fromNow()}</div>
+          <div>Expiring: {shortDate(new Date(order.endTimeMs))}</div>
+        </div>
       </div>
     </div>
   );
