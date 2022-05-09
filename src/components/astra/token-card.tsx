@@ -23,7 +23,7 @@ export const TokenCard = ({ data, onClick, selected }: Props): JSX.Element => {
       )}
       onClick={() => onClick(data)}
     >
-      <BGImage url={data?.image} />
+      <BGImage src={data?.image} />
 
       {data?.rarityRank && (
         <div className="absolute bg-gray-100 top-3 right-3 py-1 px-3 rounded-3xl">{Math.round(data?.rarityRank)}</div>

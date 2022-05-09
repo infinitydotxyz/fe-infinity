@@ -62,7 +62,7 @@ export const AstraCartItem = ({ token, index, onRemove }: Props2) => {
   return (
     <div key={token.id} className="flex items-center w-full">
       <div className="w-4 mr-2 text-right">{index + 1}.</div>
-      <BGImage className={twMerge(largeIconButtonStyle, 'rounded-lg')} url={token.image} />
+      <BGImage className={twMerge(largeIconButtonStyle, 'rounded-lg')} src={token.image} />
       <div className="ml-2">{token.tokenId}</div>
 
       <Spacer />

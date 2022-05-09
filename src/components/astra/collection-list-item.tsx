@@ -39,7 +39,7 @@ export const CollectionListItem = ({ collection, onClick, selected }: Props2) =>
       )}
       onClick={() => onClick(collection)}
     >
-      <BGImage url={avatarUrl} />
+      <BGImage src={avatarUrl} />
 
       <div className="text-theme-light-800 tracking-tight absolute top-0 left-0 right-0">
         <div className="bg-white mx-3 rounded-b-xl shadow-lg bg-opacity-90 overflow-clip  pt-1 pb-2 ">
