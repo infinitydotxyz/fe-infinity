@@ -29,7 +29,7 @@ const MarketplacePage = () => {
   );
   const contents = (
     <>
-      <div className="flex space-x-2 items-center relative lg:top-12 lg:-mt-12 pb-4 lg:pb-0">
+      <div className="flex space-x-2 items-center relative max-w-xl lg:top-12 lg:-mt-12 pb-4 lg:pb-0">
         <ToggleTab options={options} selected={selected} onChange={onChange} />
         <Spacer />
       </div>
