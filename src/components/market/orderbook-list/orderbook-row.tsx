@@ -1,7 +1,7 @@
 import { OBOrder } from '@infinityxyz/lib/types/core';
 import moment from 'moment';
 import { Button, EthPrice } from 'src/components/common';
-import { numStr, shortDate } from 'src/utils';
+import { ellipsisAddress, numStr, shortDate } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { DataColumn, defaultDataColumns } from './data-columns';
 import { OrderbookItem } from './orderbook-item';
@@ -24,7 +24,7 @@ export const OrderbookRow = ({ order }: OrderbookRowProps): JSX.Element => {
         value = order.isSellOrder ? 'Listing' : 'Offer';
         break;
       case 'makerUsername':
-        value = order.makerUsername || order.makerAddress;
+        value = order.makerUsername || ellipsisAddress(order.makerAddress);
         break;
       case 'minSalePrice':
         value = numStr(order.startPriceEth.toString());
