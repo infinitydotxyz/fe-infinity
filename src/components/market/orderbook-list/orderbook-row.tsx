@@ -91,7 +91,11 @@ export const OrderbookRow = ({ order }: OrderbookRowProps): JSX.Element => {
               key={`${order.id} ${data.field}`}
               title={title}
               order={order}
-              content={content}
+              content={
+                <span className={data.onClick ? 'cursor-pointer' : ''} onClick={data.onClick}>
+                  {content}
+                </span>
+              }
             />
           );
         })}
@@ -111,7 +115,7 @@ export const OrderbookRow = ({ order }: OrderbookRowProps): JSX.Element => {
                 labelClassName="font-bold"
               />
             </div>
-            <div>NFT Amount: {numStr(order.numItems.toString())}</div>
+            <div>NFT amount: {numStr(order.numItems.toString())}</div>
           </div>
         </div>
         <div className="text-right">
