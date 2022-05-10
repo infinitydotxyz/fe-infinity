@@ -839,11 +839,11 @@ export const Analytics = () => {
 const LoadingAnalytics = () => (
   <ContentLoader
     speed={2}
-    viewBox="0 0 100% 650"
     height={650}
     width={'100%'}
     backgroundColor="#f3f3f3"
     foregroundColor="#ecebeb"
+    uniqueKey="loading"
   >
     <rect x="0" y="0" rx="12" ry="12" width="100%" height="144" />
     <rect x="0" y="152" rx="12" ry="12" width="100%" height="144" />
