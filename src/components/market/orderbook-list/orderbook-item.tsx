@@ -48,7 +48,7 @@ type MultiCollectionCellProps = {
 
 const MultiCollectionCell = ({ nfts }: MultiCollectionCellProps) => {
   return (
-    <div className="flex gap-2 items-center mb-3">
+    <div className="flex gap-2 items-center">
       <div className="flex -space-x-8 overflow-hidden">
         {nfts.map((nft: OBOrderItem) => {
           return (
@@ -77,7 +77,7 @@ type SingleCollectionCellProps = {
 
 const SingleCollectionCell = ({ image, title, token, count = 0 }: SingleCollectionCellProps) => {
   return (
-    <div className="flex gap-2 items-center mb-3">
+    <div className="flex gap-2 items-center">
       <div className="flex justify-center shrink-0 h-12 w-12">
         <span className="inline-block">
           <img className="h-12 w-12 rounded-2xl" src={image} alt="" />

@@ -1,5 +1,14 @@
 import { useRouter } from 'next/router';
-import { Button, ShortAddress, PageBox, ReadMoreText, SVG, NextLink, ClipboardButton } from 'src/components/common';
+import {
+  Button,
+  ShortAddress,
+  PageBox,
+  ReadMoreText,
+  SVG,
+  NextLink,
+  ClipboardButton,
+  Spinner
+} from 'src/components/common';
 import { BLANK_IMAGE_URL, useFetch } from 'src/utils';
 import { Token, Collection, Erc721Metadata } from '@infinityxyz/lib/types/core';
 import {
@@ -12,7 +21,7 @@ import {
   MakeOfferModal
 } from 'src/components/asset';
 import { useState } from 'react';
-import { useAppContext, User } from 'src/utils/context/AppContext';
+import { useAppContext } from 'src/utils/context/AppContext';
 
 const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
@@ -31,16 +40,10 @@ const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string)
 
 // ===========================================================
 
-const AssetDetail = () => {
+const AssetDetailPage = () => {
   const { query } = useRouter();
-  const { user } = useAppContext();
 
-  if (
-    typeof query.chainId !== 'string' ||
-    typeof query.collection !== 'string' ||
-    typeof query.tokenId !== 'string' ||
-    !user?.address
-  ) {
+  if (typeof query.chainId !== 'string' || typeof query.collection !== 'string' || typeof query.tokenId !== 'string') {
     return (
       <PageBox title="Asset - Error">
         <div className="flex flex-col max-w-screen-2xl mt-4">
@@ -51,10 +54,7 @@ const AssetDetail = () => {
       </PageBox>
     );
   }
-
-  return (
-    <AssetDetailContent user={user} qchainId={query.chainId} qcollection={query.collection} qtokenId={query.tokenId} />
-  );
+  return <AssetDetailContent qchainId={query.chainId} qcollection={query.collection} qtokenId={query.tokenId} />;
 };
 
 // ===========================================================
@@ -72,10 +72,10 @@ interface Props {
   qchainId: string;
   qcollection: string;
   qtokenId: string;
-  user: User;
 }
 
-const AssetDetailContent = ({ user, qchainId, qcollection, qtokenId }: Props) => {
+const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
+  const { checkSignedIn } = useAppContext();
   const { isLoading, error, token, collection } = useFetchAssetInfo(qchainId, qcollection, qtokenId);
 
   const [showCancelModal, setShowCancelModal] = useState(false);
@@ -85,7 +85,11 @@ const AssetDetailContent = ({ user, qchainId, qcollection, qtokenId }: Props) =>
   const [showPlaceBidModal, setShowPlaceBidModal] = useState(false);
 
   if (isLoading) {
-    return <PageBox title="Loading..." showTitle={false}></PageBox>;
+    return (
+      <PageBox title="Loading..." showTitle={false}>
+        <Spinner />
+      </PageBox>
+    );
   }
 
   if (error || !token || !collection) {
@@ -101,19 +105,17 @@ const AssetDetailContent = ({ user, qchainId, qcollection, qtokenId }: Props) =>
     );
   }
 
-  const debugLog = (obj: object) => {
-    console.log('############################################');
-    console.log(JSON.stringify(obj, null, '  '));
-  };
+  // const debugLog = (obj: object) => {
+  //   console.log('############################################');
+  //   console.log(JSON.stringify(obj, null, '  '));
+  // };
 
-  debugLog(user);
+  // // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // const cpy: any = Object.assign({}, collection);
+  // cpy['attributes'] = 'fuck that';
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const cpy: any = Object.assign({}, collection);
-  cpy['attributes'] = 'fuck that';
-
-  debugLog(cpy);
-  debugLog(token);
+  // debugLog(cpy);
+  // debugLog(token);
 
   // TODO: Joe to update Erc721Metadata type
   const tokenMetadata = token.metadata as Erc721Metadata;
@@ -124,12 +126,16 @@ const AssetDetailContent = ({ user, qchainId, qcollection, qtokenId }: Props) =>
       : tokenMetadata.name || collection.metadata.name || 'No Name';
 
   const onClickButton1 = () => {
-    console.log('one');
+    if (!checkSignedIn()) {
+      return;
+    }
     setShowPlaceBidModal(true);
   };
 
   const onClickButton2 = () => {
-    console.log('two');
+    if (!checkSignedIn()) {
+      return;
+    }
     setShowMakeOfferModal(true);
   };
 
@@ -233,4 +239,4 @@ const AssetDetailContent = ({ user, qchainId, qcollection, qtokenId }: Props) =>
   );
 };
 
-export default AssetDetail;
+export default AssetDetailPage;

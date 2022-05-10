@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Tab } from '@headlessui/react';
 import { useRouter } from 'next/router';
 import { useFetch } from 'src/utils/apiUtils';
-import { Button, Checkbox, Drawer, PageBox } from 'src/components/common';
+import { Button, Checkbox, Drawer, PageBox, Spacer, ToggleTab, useToggleTab } from 'src/components/common';
 import { Field } from 'src/components/analytics/field';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CollectionStats } from '@infinityxyz/lib/types/core';
@@ -13,18 +13,15 @@ export const Analytics = () => {
   const router = useRouter();
   const { user } = useAppContext();
   const connected = user?.address ? true : false;
-  const [limit] = React.useState(ITEMS_PER_PAGE);
-  const [page, setPage] = React.useState(router.query.params?.[0] ? router.query.params?.[0] : 'trending');
-  const [interval, setInterval] = React.useState(router.query.params?.[1] ? router.query.params?.[1] : 'weekly');
-  const [date] = React.useState(Date.now());
-  const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
-  const closeDrawer = () => setIsDrawerOpen(false);
-  const toggleDrawer = () => (isDrawerOpen ? setIsDrawerOpen(false) : setIsDrawerOpen(true));
-  const [filterLimit] = React.useState(6);
-  const [orderBy, setOrderBy] = React.useState('volume');
-  const [orderDirection, setOrderDirection] = React.useState('desc');
+  const [page, setPage] = useState(router.query.params?.[0] ? router.query.params?.[0] : 'trending');
+  const [interval, setInterval] = useState(router.query.params?.[1] ? router.query.params?.[1] : 'weekly');
+  const [date] = useState(Date.now());
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [filterLimit] = useState(6);
+  const [orderBy, setOrderBy] = useState('volume');
+  const [orderDirection, setOrderDirection] = useState('desc');
 
-  const [columns, setColumns] = React.useState<{ [key: string]: boolean }>({
+  const [columns, setColumns] = useState<{ [key: string]: boolean }>({
     floorPrice: true,
     floorPricePercentChange: true,
     volume: true,
@@ -37,7 +34,32 @@ export const Analytics = () => {
     discordFollowersPercentChange: false
   });
 
-  const [filterCheckboxes, setFilterCheckboxes] = React.useState<{ [key: string]: boolean }>(columns);
+  const [filterCheckboxes, setFilterCheckboxes] = useState<{ [key: string]: boolean }>(columns);
+  const { options, onChange, selected } = useToggleTab(['1 hr', '1 day', '7 days', '30 days', 'All'], '1 hr');
+
+  const closeDrawer = () => {
+    setIsDrawerOpen(false);
+  };
+
+  const toggleDrawer = () => {
+    isDrawerOpen ? setIsDrawerOpen(false) : setIsDrawerOpen(true);
+  };
+
+  useEffect(() => {
+    if (!connected) {
+      setPage('trending');
+    }
+  }, [connected]);
+
+  useEffect(() => {
+    void router.push(
+      {
+        pathname: `/analytics/${page}/${interval}`
+      },
+      undefined,
+      { scroll: false }
+    );
+  }, [page, interval, orderBy, orderDirection]);
 
   const clearCheckboxes = () => {
     const reset = {
@@ -65,14 +87,14 @@ export const Analytics = () => {
 
   const checkboxToggle = (id: string) => setFilterCheckboxes({ ...filterCheckboxes, [id]: !filterCheckboxes[id] });
 
-  let statistics = null;
   const query =
     page === 'trending'
-      ? `/collections/rankings?orderBy=${orderBy}&orderDirection=${orderDirection}&period=${interval}&date=${date}&limit=${limit}`
-      : `/user/1:${user?.address}/watchlist?orderBy=${orderBy}&orderDirection=${orderDirection}&period=${interval}&date=${date}&limit=${limit}`;
+      ? `/collections/rankings?orderBy=${orderBy}&orderDirection=${orderDirection}&period=${interval}&date=${date}&limit=${ITEMS_PER_PAGE}`
+      : `/user/1:${user?.address}/watchlist?orderBy=${orderBy}&orderDirection=${orderDirection}&period=${interval}&date=${date}&limit=${ITEMS_PER_PAGE}`;
 
   const data = useFetch<{ data: CollectionStats[] }>(query);
 
+  let statistics = null;
   if (data.result) {
     statistics = data.result.data.map((d, index) => {
       const address = d.collectionAddress;
@@ -276,24 +298,7 @@ export const Analytics = () => {
     });
   }
 
-  React.useEffect(() => {
-    if (!connected) {
-      setPage('trending');
-    }
-  }, [connected]);
-
-  React.useEffect(() => {
-    void router.push(
-      {
-        pathname: `/analytics/${page}/${interval}`
-      },
-      undefined,
-      { scroll: false }
-    );
-  }, [page, interval, orderBy, orderDirection]);
-
   const content = {
-    statistics: statistics,
     filter: {
       limit: 5,
       params: [
@@ -390,51 +395,13 @@ export const Analytics = () => {
       ]
     },
     options: {
-      timeframes: [
-        {
-          type: 'tab',
-          id: 'hourly',
-          url: `/analytics/${page}/hourly`,
-          label: '1 hr',
-          props: {}
-        },
-        {
-          type: 'tab',
-          id: 'daily',
-          url: `/analytics/${page}/daily`,
-          label: '1 day',
-          props: {}
-        },
-        {
-          type: 'tab',
-          id: 'weekly',
-          url: `/analytics/${page}/weekly`,
-          label: '7 days',
-          props: {}
-        },
-        {
-          type: 'tab',
-          id: 'monthly',
-          url: `/analytics/${page}/monthly`,
-          label: '30 days',
-          props: {}
-        },
-        {
-          type: 'tab',
-          id: 'all',
-          url: `/analytics/${page}/all`,
-          label: 'All',
-          props: {}
-        }
-      ],
       actions: {
         links: [
           {
             type: 'link',
             id: 'trending',
             url: `/analytics/trending/${interval}`,
-            label: 'Trending',
-            props: {}
+            label: 'Trending'
           },
 
           ...(connected
@@ -443,355 +410,97 @@ export const Analytics = () => {
                   type: 'link',
                   id: 'following',
                   url: `/analytics/following/${interval}`,
-                  label: 'Following ',
-                  props: {}
+                  label: 'Following'
                 }
               ]
             : [])
-        ],
-        buttons: [
-          {
-            type: 'drawer',
-            url: '',
-            label: 'Filter',
-            drawer: {
-              props: {
-                open: isDrawerOpen,
-                onClose: closeDrawer,
-                title: 'Filter',
-                subtitle: `Select up to ${filterLimit}`,
-                divide: true
-              }
-            },
-            props: {
-              onClick: () => toggleDrawer()
-            }
-          }
         ]
       }
     }
   };
 
-  const styles = {
-    container: {
-      className: `
-        w-full h-full
-        bg-theme-light-50
-        flex flex-col gap-2
-      `
-    },
-    heading: {
-      container: {
-        className: `
-          w-full h-full overflow-hidden
-          bg-theme-light-50
-          flex-[0.8]
-          grid grid-rows-6 grid-cols-24
-        `
-      },
-      element: {
-        className: `
-          w-full h-full overflow-hidden
-          row-start-4 col-start-1 row-span-3 col-span-14
-          text-start font-body text-6xl tracking-tight mt-4 mb-8
-        `
-      }
-    },
-    options: {
-      container: {
-        className: `
-          w-full h-full overflow-hidden
-          bg-theme-light-50
-          flex-[0.2]
-          grid grid-rows-1 grid-cols-24
-        `
-      },
-      timeframes: {
-        group: {
-          defaultIndex: content?.options?.timeframes?.findIndex((x) => x.id === interval),
-          onChange: (index: number): void => {
-            setInterval(content?.options?.timeframes?.[index]?.id);
-          }
-        },
-        container: {
-          className: `
-            row-start-1 col-start-1 row-span-1 col-span-14
-            grid place-items-start items-center
-          `
-        },
-        list: {
-          container: {
-            className: `
-              w-content h-content overflow-hidden
-              grid rounded-full
-            `
-          },
-          background: {
-            className: `
-            w-content h-content overflow-hidden
-            bg-theme-light-300
-            flex flex-row gap-1 p-1 rounded-full
-          `
-          }
-        },
-        tab: {
-          className: ({ selected }: { selected: boolean }) => `
-            w-content h-content overflow-hidden
+  const tabStyles = {
+    className: ({ selected }: { selected: boolean }) => `
+            w-content h-content
             ${selected ? 'bg-theme-light-900 text-theme-light-50' : 'text-theme-light-800'}
             px-6 py-2 rounded-full
             font-mono font-bold text-sm
           `
-        }
-      },
-      actions: {
-        group: {
-          defaultIndex: content?.options?.actions?.links?.findIndex((x) => x.id === page),
-          onChange: (index: number): void => {
-            setPage(content?.options?.actions?.links?.[index]?.id);
-          }
-        },
-        container: {
-          className: `
-            w-full h-full overflow-hidden
-            bg-theme-light-50
-            row-start-1 col-start-13 row-span-1 col-span-12
-            flex justify-end gap-2 py-4
-          `
-        },
-        tab: {
-          className: ({ selected }: { selected: boolean }) => `
-            w-content h-content overflow-hidden
-            ${selected ? 'bg-theme-light-900 text-theme-light-50' : 'text-theme-light-800'}
-            px-6 py-2 rounded-full
-            font-mono font-bold text-sm
-          `
-        },
-        button: {
-          className: `
-            w-content h-content overflow-hidden
-            bg-theme-light-50 text-theme-light-800 ring-1 ring-inset ring-theme-light-700
-            hover:bg-theme-light-300 active:bg-theme-light-50
-            px-6 py-2 rounded-full
-            font-mono font-bold text-sm
-          `
-        }
-      }
-    },
-    statistics: {
-      container: {
-        className: `
-          w-full h-full
-          bg-theme-light-50
-          flex-[1.4]
-          grid grid-rows-1 grid-cols-24
-        `
-      },
-      list: {
-        container: {
-          className: `
-            w-full h-full
-            row-start-1 col-start-1 row-span-1 col-span-24
-            ring ring-inset ring-transparent
-            flex flex-col gap-2
-          `
-        },
-        loading: {
-          className: `
-            w-full h-[170px] bg-blue-50 ring ring-inset ring-blue-100 rounded-xl
-            animate-pulse
-          `
-        },
-        error: {
-          className: `
-            w-full h-[170px] bg-red-50 ring ring-inset ring-red-100 rounded-xl
-            animate-pulse
-          `
-        },
-        item: {
-          container: {
-            className: `
-              w-full h-full min-h-[144px] overflow-hidden rounded-xl
-              bg-theme-light-300
-              grid grid-cols-analytics
-              
-              place-items-center
-            `
-          },
-          field: {
-            container: {
-              className: `
-                w-full h-full
-                row-span-1 col-span-1
-              `
-            }
-          }
-        }
-      }
-    },
-    drawer: {
-      content: {
-        container: {
-          className: `
-            w-full h-full overflow-hidden px-12 pb-8
-          `
-        },
-        grid: {
-          className: `
-            w-full h-full overflow-hidden grid grid-rows-[10fr,1fr] gap-2
-          `
-        },
-        form: {
-          container: {
-            className: `
-              w-full h-full overflow-hidden flex flex-col gap-1
-            `
-          },
-          row: {
-            className: `
-              w-full h-full overflow-hidden flex flex-row gap-1
-            `
-          },
-          label: {
-            className: `
-              w-full h-full overflow-hidden
-              flex-[0.8] flex justify-start items-center
-              text-gray-700 font-mono text-md
-            `
-          },
-          checkbox: {
-            container: {
-              className: `
-                w-full h-full overflow-hidden
-                text-gray-700 font-mono text-md
-              `
-            }
-          }
-        },
-        actions: {
-          container: {
-            className: `
-              w-full h-full overflow-hidden
-              flex flex-row gap-2 py-2
-            `
-          }
-        }
-      }
-    }
   };
+
   return (
     <PageBox title="Analytics">
-      <div {...styles?.container}>
-        <div {...styles?.options?.container}>
-          <Tab.Group {...styles?.options?.timeframes?.group}>
-            <div {...styles?.options?.timeframes?.container}>
-              <div {...styles?.options?.timeframes?.list?.container}>
-                <Tab.List {...styles?.options?.timeframes?.list?.background}>
-                  {content?.options?.timeframes?.map((tab, i) => (
-                    <React.Fragment key={i}>
-                      <Tab {...styles?.options?.timeframes?.tab}>{tab?.label}</Tab>
-                    </React.Fragment>
-                  ))}
-                </Tab.List>
-              </div>
-            </div>
-          </Tab.Group>
+      <div className="w-full h-full flex flex-col gap-2">
+        <div className="w-full items-center flex-[0.2] grid grid-rows-1 grid-cols-24">
+          <ToggleTab
+            equalWidths={false}
+            options={options}
+            selected={selected}
+            onChange={(value) => {
+              onChange(value);
 
-          <Tab.Group {...styles?.options?.actions?.group}>
-            <Tab.List {...styles?.options?.actions?.container}>
+              switch (value) {
+                case '1 hr':
+                  setInterval('hourly');
+                  break;
+                case '1 day':
+                  setInterval('daily');
+                  break;
+                case '7 days':
+                  setInterval('weekly');
+                  break;
+                case '30 days':
+                  setInterval('monthly');
+                  break;
+                case 'All':
+                  setInterval('all');
+                  break;
+              }
+            }}
+          />
+
+          <Tab.Group
+            defaultIndex={content?.options?.actions?.links?.findIndex((x) => x.id === page)}
+            onChange={(index: number): void => {
+              setPage(content?.options?.actions?.links?.[index]?.id);
+            }}
+          >
+            <Tab.List className="w-full h-full  row-start-1 col-start-13 row-span-1 col-span-12 flex justify-end gap-2 py-4">
               {content?.options?.actions?.links?.map((link, i) => (
-                <React.Fragment key={i}>
-                  <Tab {...styles?.options?.actions?.tab}>{link?.label}</Tab>
-                </React.Fragment>
+                <Fragment key={i}>
+                  <Tab {...tabStyles}>{link?.label}</Tab>
+                </Fragment>
               ))}
 
-              {content?.options?.actions?.buttons?.map((tab, i) => (
-                <React.Fragment key={i}>
-                  {tab.type === 'drawer' && (
-                    <>
-                      <button {...styles?.options?.actions?.button} {...tab?.props}>
-                        {tab?.label}
-                      </button>
-                      <Drawer {...tab?.drawer?.props}>
-                        <>
-                          <div {...styles?.drawer?.content?.container}>
-                            <div {...styles?.drawer?.content?.grid}>
-                              <div {...styles?.drawer?.content?.form?.container}>
-                                {content?.filter?.params?.map((x, i) => (
-                                  <React.Fragment key={i}>
-                                    <div {...styles?.drawer?.content?.form?.row}>
-                                      <div {...styles?.drawer?.content?.form?.checkbox?.container}>
-                                        <Checkbox
-                                          label={x?.label}
-                                          checked={x?.props.checked}
-                                          onChange={x?.props.onChange}
-                                          boxOnLeft={false}
-                                        />
-                                      </div>
-                                    </div>
-                                  </React.Fragment>
-                                ))}
-                              </div>
-                              <div {...styles?.drawer?.content?.actions?.container}>
-                                <Button
-                                  variant="outline"
-                                  onClick={clearCheckboxes}
-                                  className="font-heading w-full h-full"
-                                >
-                                  Clear all
-                                </Button>
-                                <Button
-                                  disabled={
-                                    Object.keys(filterCheckboxes).filter((key) => filterCheckboxes[key]).length >
-                                    filterLimit
-                                  }
-                                  onClick={applyCheckboxes}
-                                  className="font-heading w-full h-full"
-                                >
-                                  Apply
-                                </Button>
-                              </div>
-                            </div>
-                          </div>
-                        </>
-                      </Drawer>
-                    </>
-                  )}
-                  {tab.type === 'button' && (
-                    <>
-                      <button {...styles?.options?.actions?.button} {...tab?.props}>
-                        {tab?.label}
-                      </button>
-                    </>
-                  )}
-                </React.Fragment>
-              ))}
+              <Button variant="outline" onClick={() => toggleDrawer()}>
+                Filter
+              </Button>
             </Tab.List>
           </Tab.Group>
         </div>
-        <div {...styles?.statistics?.container}>
-          <div {...styles?.statistics?.list?.container}>
+
+        <div className="w-full h-full  flex-[1.4]  grid grid-rows-1 grid-cols-24">
+          <div className="w-full h-full  row-start-1 col-start-1 row-span-1 col-span-24  ring ring-inset ring-transparent flex flex-col gap-2">
             {data.isLoading ? (
+              <LoadingAnalytics />
+            ) : data.isError || statistics?.length === 0 ? (
               <>
-                <LoadingAnalytics />
-              </>
-            ) : data.isError || content?.statistics?.length === 0 ? (
-              <>
-                {Array.from(Array(limit).keys())?.map((x, i) => (
-                  <React.Fragment key={i}>
-                    <div {...styles?.statistics?.list?.error}></div>
-                  </React.Fragment>
+                {Array.from(Array(ITEMS_PER_PAGE).keys())?.map((x, i) => (
+                  <Fragment key={i}>
+                    <div className="w-full h-[170px] bg-red-50 ring ring-inset ring-red-100 rounded-xl animate-pulse"></div>
+                  </Fragment>
                 ))}
               </>
             ) : (
               <>
-                {content?.statistics?.map((stat, i) => (
-                  <React.Fragment key={i}>
-                    <div {...styles?.statistics?.list?.item?.container}>
+                {statistics?.map((stat, i) => (
+                  <Fragment key={i}>
+                    <div className="w-full h-full min-h-[144px] overflow-hidden rounded-xl  bg-theme-light-300  grid grid-cols-analytics  place-items-center">
                       {stat
                         ?.filter((s) => s.placement === 'start')
                         .map((field, j) => (
-                          <React.Fragment key={j}>
-                            <div {...styles?.statistics?.list?.item?.field?.container}>
+                          <Fragment key={j}>
+                            <div className="w-full h-full  row-span-1 col-span-1">
                               <Field
                                 type={field?.type}
                                 label={field?.label}
@@ -800,14 +509,14 @@ export const Analytics = () => {
                               />
                               <div className=""></div>
                             </div>
-                          </React.Fragment>
+                          </Fragment>
                         ))}
                       {stat
                         ?.filter((s) => s.placement === 'middle' && s.show === true)
                         .splice(0, filterLimit)
                         .map((field, j) => (
-                          <React.Fragment key={j}>
-                            <div {...styles?.statistics?.list?.item?.field?.container}>
+                          <Fragment key={j}>
+                            <div className="w-full h-full  row-span-1 col-span-1">
                               <Field
                                 sortable={field?.sortable}
                                 onSort={field?.onSort}
@@ -817,38 +526,80 @@ export const Analytics = () => {
                               />
                               <div className=""></div>
                             </div>
-                          </React.Fragment>
+                          </Fragment>
                         ))}
                       {stat
                         ?.filter((s) => s.placement === 'end')
                         .map((field, j) => (
-                          <React.Fragment key={j}>
-                            <div {...styles?.statistics?.list?.item?.field?.container}>
+                          <Fragment key={j}>
+                            <div className="w-full h-full  row-span-1 col-span-1">
                               <Field type={field?.type} label={field?.label} value={field?.value} />
                               <div className=""></div>
                             </div>
-                          </React.Fragment>
+                          </Fragment>
                         ))}
                     </div>
-                  </React.Fragment>
+                  </Fragment>
                 ))}
               </>
             )}
           </div>
         </div>
       </div>
+
+      <Drawer
+        open={isDrawerOpen}
+        onClose={closeDrawer}
+        title="Filter"
+        subtitle={`Select up to ${filterLimit}`}
+        divide={true}
+      >
+        <div className="w-full h-full flex flex-col px-12">
+          <div className="w-full h-full flex flex-col space-y-4">
+            {content?.filter?.params?.map((x, i) => (
+              <Checkbox
+                key={i}
+                label={x?.label}
+                checked={x?.props.checked}
+                onChange={x?.props.onChange}
+                boxOnLeft={false}
+              />
+            ))}
+          </div>
+
+          <Spacer />
+
+          <div className="w-full flex flex-row gap-4 py-2 mb-6">
+            <Button variant="outline" onClick={clearCheckboxes} className="flex-1">
+              Clear all
+            </Button>
+
+            <Button
+              disabled={Object.keys(filterCheckboxes).filter((key) => filterCheckboxes[key]).length > filterLimit}
+              onClick={applyCheckboxes}
+              className="flex-1"
+            >
+              Apply
+            </Button>
+          </div>
+        </div>
+      </Drawer>
     </PageBox>
   );
 };
 
+export default Analytics;
+
+// =======================================================================
+
 const LoadingAnalytics = () => (
   <ContentLoader
     speed={2}
-    viewBox="0 0 100% 650"
     height={650}
     width={'100%'}
     backgroundColor="#f3f3f3"
     foregroundColor="#ecebeb"
+    uniqueKey="loading"
   >
     <rect x="0" y="0" rx="12" ry="12" width="100%" height="144" />
     <rect x="0" y="152" rx="12" ry="12" width="100%" height="144" />
@@ -862,5 +613,3 @@ const LoadingAnalytics = () => (
     <rect x="0" y="1368" rx="12" ry="12" width="100%" height="144" />
   </ContentLoader>
 );
-
-export default Analytics;

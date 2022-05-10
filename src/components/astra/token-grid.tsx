@@ -1,34 +1,11 @@
 import { BaseCollection, BaseToken, CardData } from '@infinityxyz/lib/types/core';
 import React, { useState, useEffect } from 'react';
 import { useResizeDetector } from 'react-resize-detector';
-import { FetchMore, CenteredContent, Spinner } from 'src/components/common';
-import { apiGet, DEFAULT_LIMIT } from 'src/utils';
-import { Filter } from 'src/utils/context/FilterContext';
+import { CenteredContent, ScrollLoader, Spinner } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 import { NFTArray } from '../../utils/types/collection-types';
+import { fetchTokens, tokensToCardData } from './astra-utils';
 import { TokenCard } from './token-card';
-
-// =========================================================================
-
-const fetchTokens = async (collectionAddress: string, chainId: string, cursor: undefined | string) => {
-  const filterState: Filter = {};
-
-  filterState.orderBy = 'rarityRank'; // set defaults
-  filterState.orderDirection = 'asc';
-
-  const API_ENDPOINT = `/collections/${chainId}:${collectionAddress}/nfts`;
-  const response = await apiGet(API_ENDPOINT, {
-    query: {
-      limit: DEFAULT_LIMIT,
-      cursor,
-      ...filterState
-    }
-  });
-
-  return response;
-};
-
-// ==============================================================
 
 interface Props2 {
   collection: BaseCollection;
@@ -104,25 +81,12 @@ export const TokensGrid = ({ collection, chainId, className = '', onClick, isSel
       </CenteredContent>
     );
   } else {
+    const cardData = tokensToCardData(tokens, collection);
+
     contents = (
       <>
-        <div className={twMerge('grid gap-x-8 gap-y-12 ')} style={{ gridTemplateColumns: gridColumns }}>
-          {tokens.map((token) => {
-            const data: CardData = {
-              id: collection?.address + '_' + token.tokenId,
-              name: token.metadata?.name,
-              collectionName: collection?.metadata?.name,
-              title: collection?.metadata?.name,
-              description: token.metadata.description,
-              image: token.image.url,
-              price: 0,
-              chainId: token.chainId,
-              tokenAddress: collection?.address,
-              tokenId: token.tokenId,
-              rarityRank: token.rarityRank,
-              orderSnippet: token.ordersSnippet
-            };
-
+        <div className={twMerge('grid gap-8')} style={{ gridTemplateColumns: gridColumns }}>
+          {cardData.map((data) => {
             return (
               <TokenCard
                 key={data.id}
@@ -137,7 +101,14 @@ export const TokensGrid = ({ collection, chainId, className = '', onClick, isSel
             );
           })}
         </div>
-        {hasNextPage && <FetchMore onFetchMore={() => handleFetch(cursor)} />}
+
+        {hasNextPage && (
+          <ScrollLoader
+            onFetchMore={async () => {
+              handleFetch(cursor);
+            }}
+          />
+        )}
       </>
     );
   }

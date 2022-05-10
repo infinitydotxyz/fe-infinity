@@ -1,22 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { FetchMore } from 'src/components/common';
-import { apiGet, DEFAULT_LIMIT } from 'src/utils';
 import { CollectionSearchArrayDto, CollectionSearchDto } from '../../utils/types/collection-types';
 import { BaseCollection } from '@infinityxyz/lib/types/core';
 import { CollectionListItem } from './collection-list-item';
-
-const fetchCollections = async (query: string, cursor: undefined | string) => {
-  const API_ENDPOINT = '/collections/search';
-  const response = await apiGet(API_ENDPOINT, {
-    query: {
-      query,
-      limit: DEFAULT_LIMIT,
-      cursor
-    }
-  });
-
-  return response;
-};
+import { fetchCollections } from './astra-utils';
+import { ScrollLoader } from '../common';
 
 interface Props {
   query: string;
@@ -25,7 +12,7 @@ interface Props {
   onClick: (collection: CollectionSearchDto) => void;
 }
 
-export const CollectionList = ({ query, className, onClick, selectedCollection }: Props) => {
+export const CollectionList = ({ query, className = '', onClick, selectedCollection }: Props) => {
   const [collections, setCollections] = useState<CollectionSearchDto[]>([]);
   const [error, setError] = useState(false);
   const [cursor, setCursor] = useState<string>('');
@@ -66,8 +53,8 @@ export const CollectionList = ({ query, className, onClick, selectedCollection }
 
   return (
     <div className={className}>
-      {/* pt-2 is for the first items selection rect, needs some space, or it clips */}
-      <div className="flex flex-col space-y-4 pt-2">
+      {/* pt-4 is for the first items selection rect, needs some space, or it clips */}
+      <div className="flex flex-col space-y-4 pt-4">
         {collections.map((collection) => (
           <CollectionListItem
             key={collection.slug}
@@ -78,7 +65,13 @@ export const CollectionList = ({ query, className, onClick, selectedCollection }
         ))}
       </div>
 
-      {hasNextPage && <FetchMore onFetchMore={() => handleFetch(cursor)} />}
+      {hasNextPage && (
+        <ScrollLoader
+          onFetchMore={async () => {
+            handleFetch(cursor);
+          }}
+        />
+      )}
     </div>
   );
 };

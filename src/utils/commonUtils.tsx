@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { getAddress } from '@ethersproject/address';
 import { ETHEREUM_CHAIN_SCANNER_BASE, POLYGON_CHAIN_SCANNER_BASE, trimLowerCase } from '@infinityxyz/lib/utils';
+import { NextLink } from 'src/components/common';
 
 // OpenSea's EventType
 export enum EventType {
@@ -156,3 +157,13 @@ export const getChainScannerBase = (chainId?: string): string | null => {
   }
   return null;
 };
+
+export const PleaseConnectMsg = () => (
+  <>
+    Please click{' '}
+    <NextLink href="/connect" className="font-bold">
+      Connect
+    </NextLink>{' '}
+    to sign in.
+  </>
+);

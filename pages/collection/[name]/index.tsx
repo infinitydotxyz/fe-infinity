@@ -128,12 +128,18 @@ const CollectionPage = () => {
                 <td>{collection.numOwners?.toLocaleString() ?? '—'}</td>
                 <td>
                   {firstDailyStats?.floorPrice ? (
-                    <EthPrice label={String(firstDailyStats?.floorPrice) + ' ETH'} labelClassName="font-bold" />
+                    <EthPrice label={String(firstDailyStats?.floorPrice)} labelClassName="font-bold" />
                   ) : (
                     '—'
                   )}
                 </td>
-                <td>{firstDailyStats?.volume?.toLocaleString() ?? '—'}</td>
+                <td>
+                  {firstDailyStats?.volume ? (
+                    <EthPrice label={String(firstDailyStats?.volume?.toLocaleString())} labelClassName="font-bold" />
+                  ) : (
+                    '—'
+                  )}
+                </td>
               </tr>
             </tbody>
           </table>
@@ -148,29 +154,32 @@ const CollectionPage = () => {
                 cardProps={{
                   cardActions: [
                     {
-                      // label: 'Details',
                       label: (data) => {
-                        const price = data?.orderSnippet?.offer?.orderItem?.endPriceEth ?? '';
+                        const price = data?.orderSnippet?.offer?.orderItem?.startPriceEth ?? '';
                         if (price) {
                           return (
-                            <>
+                            <div className="flex justify-center">
                               <span className="mr-4 font-bold">Buy</span>
-                              <span className="font-heading">{price} ETH</span>
-                            </>
+                              <EthPrice label={`${price}`} />
+                            </div>
                           );
                         }
-                        return <span className="font-bold">Add to order</span>;
+                        return <div className="font-bold">Add to order</div>;
                       },
                       onClick: (ev, data) => {
-                        addCartItem({
-                          collectionName: data?.collectionName ?? '(no name)',
-                          collectionAddress: data?.tokenAddress ?? '(no address)',
-                          tokenImage: data?.image ?? '',
-                          tokenName: data?.name ?? '(no name)',
-                          tokenId: data?.tokenId ?? '0',
-                          isSellOrder: false
-                        });
-                        // router.push(`/asset/${data?.chainId}/${data?.tokenAddress}/${data?.tokenId}`);
+                        const price = data?.orderSnippet?.offer?.orderItem?.startPriceEth ?? '';
+                        if (price) {
+                          // Buy button logic here.
+                        } else {
+                          addCartItem({
+                            collectionName: data?.collectionName ?? '(no name)',
+                            collectionAddress: data?.tokenAddress ?? '(no address)',
+                            tokenImage: data?.image ?? '',
+                            tokenName: data?.name ?? '(no name)',
+                            tokenId: data?.tokenId ?? '0',
+                            isSellOrder: false
+                          });
+                        }
                       }
                     }
                   ]

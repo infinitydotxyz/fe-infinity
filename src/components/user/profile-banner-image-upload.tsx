@@ -1,25 +1,21 @@
-import { FunctionComponent, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import AvatarEditor from 'react-avatar-editor';
 import { FaPen } from 'react-icons/fa';
 
-import { Button, ImageUploader, ImageUploaderButtonRef, Modal } from 'src/components/common';
+import { BGImage, Button, ImageUploader, ImageUploaderButtonRef, Modal } from 'src/components/common';
 
 const FORM_LABEL = 'profile-background-upload';
 
-interface BannerImageProps {
+interface Props {
   imgSource?: string;
   className?: string;
   onUpload: (file: File | Blob) => void;
   onDelete: () => void;
 }
 
-export const ProfileBannerImageUpload: FunctionComponent<BannerImageProps> = ({
-  onUpload,
-  onDelete,
-  imgSource = null
-}) => {
-  const [imgSrc, setImgSrc] = useState<string | null>(imgSource);
-  const [tempImgSrc, setTempImgSrc] = useState<string | null>(imgSource);
+export const ProfileBannerImageUpload = ({ onUpload, onDelete, imgSource }: Props) => {
+  const [imgSrc, setImgSrc] = useState<string | undefined>(imgSource);
+  const [tempImgSrc, setTempImgSrc] = useState<string | undefined>(imgSource);
   const [file, setFile] = useState<File | Blob | null>(null);
   const [isLoading, setLoading] = useState(false);
   const [modalIsOpen, setIsOpen] = useState(false);
@@ -41,7 +37,7 @@ export const ProfileBannerImageUpload: FunctionComponent<BannerImageProps> = ({
     setLoading(true);
     await onDelete();
     setLoading(false);
-    setImgSrc(null);
+    setImgSrc(undefined);
   };
 
   const onUploadButtonClick = () => {
@@ -85,10 +81,7 @@ export const ProfileBannerImageUpload: FunctionComponent<BannerImageProps> = ({
       <label htmlFor={FORM_LABEL} className="flex-1">
         <div className="w-full h-40 rounded-3xl overflow-hidden">
           {imgSrc ? (
-            <div
-              className="w-full h-full bg-cover bg-center bg-no-repeat"
-              style={{ backgroundImage: `url(${imgSrc})` }}
-            />
+            <BGImage src={imgSrc} />
           ) : (
             <div className="w-full h-full flex flex-row items-center justify-center bg-theme-light-200 cursor-pointer">
               <FaPen />

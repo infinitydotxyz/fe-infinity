@@ -30,6 +30,7 @@ export const PixelScore = () => {
   if (collection && chainId) {
     tokensGrid = (
       <TokensGrid
+        className="p-8"
         collection={collection}
         chainId={chainId}
         onClick={onCardClick}
@@ -75,34 +76,37 @@ export const PixelScore = () => {
     setSelectedTokens([]);
     setShowCart(false);
 
-    toastSuccess('Success', 'Something happened');
+    toastSuccess('Success', 'Your Pixel Scores has been calculated');
   };
 
   return (
     <div>
       <div className="h-screen w-screen grid grid-rows-[auto_1fr] grid-cols-[300px_1fr_auto]">
-        <div className="col-span-3 border-b bg-slate-200">
+        <div className="col-span-3">
           <AstraNavbar />
         </div>
 
-        <div className="row-span-2 col-span-1 border-r bg-slate-100">
+        <div className="row-span-2 col-span-1">
           <AstraSidebar
             selectedCollection={collection}
             onClick={(value) => {
-              setCollection(value);
-              setChainId(value.chainId);
+              // avoid clicking if already selected (avoids a network fetch)
+              if (value.address !== collection?.address) {
+                setCollection(value);
+                setChainId(value.chainId);
+              }
             }}
           />
         </div>
 
         {tokensGrid && (
-          <div ref={ref} className="row-span-2 col-span-1 overflow-y-auto p-7">
+          <div ref={ref} className="row-span-2 col-span-1 overflow-y-auto overflow-x-hidden">
             {tokensGrid}
           </div>
         )}
 
-        <div className="row-span-2 col-span-1 overflow-y-auto">
-          <div className={twMerge(showCart ? '' : 'hidden', 'p-6 h-full')}>
+        <div className="row-span-2 col-span-1 overflow-y-auto overflow-x-hidden">
+          <div className={twMerge(showCart ? 'w-56' : 'w-0', 'transition-width duration-500 h-full')}>
             <AstraCart
               tokens={selectedTokens}
               onCheckout={handleCheckout}

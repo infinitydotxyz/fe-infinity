@@ -135,5 +135,11 @@ module.exports = {
   },
   fontSize: {
     '6xl': '4rem'
+  },
+  // https://tailwindcss.com/docs/transition-property#customizing-your-theme
+  transitionProperty: {
+    height: 'height',
+    width: 'width',
+    spacing: 'margin, padding'
   }
 };

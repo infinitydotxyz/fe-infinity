@@ -23,6 +23,10 @@ import { twMerge } from 'tailwind-merge';
 //   metadata: ListingMetadata;
 // };
 
+type NftItem = BaseToken & {
+  collectionAddress?: string;
+};
+
 interface GalleryProps {
   collection?: BaseCollection | null;
   cardProps?: CardProps;
@@ -85,7 +89,7 @@ export const GalleryBox = ({
       setCursor(result?.cursor);
     }
 
-    const moreData: CardData[] = (result?.data || []).map((item: BaseToken) => {
+    let moreData: CardData[] = (result?.data || []).map((item: NftItem) => {
       return {
         id: collection?.address + '_' + item.tokenId,
         name: item.metadata?.name,
@@ -95,12 +99,16 @@ export const GalleryBox = ({
         image: item.image.url,
         price: 0,
         chainId: item.chainId,
-        tokenAddress: collection?.address,
+        tokenAddress: item.collectionAddress ?? collection?.address,
+        address: item.collectionAddress ?? collection?.address,
         tokenId: item.tokenId,
         rarityRank: item.rarityRank,
         orderSnippet: item.ordersSnippet
       };
     });
+
+    // remove any without tokenAddress (seeing bad NFTs in my profile)
+    moreData = moreData.filter((x) => x.tokenAddress);
 
     setIsFetching(false);
     if (isRefresh) {

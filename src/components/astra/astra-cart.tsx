@@ -3,6 +3,7 @@ import { BGImage, Button, Spacer } from 'src/components/common';
 import { iconButtonStyle, largeIconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { XIcon } from '@heroicons/react/outline';
+import { ReactNode } from 'react';
 
 interface Props {
   tokens: CardData[];
@@ -11,34 +12,69 @@ interface Props {
 }
 
 export const AstraCart = ({ tokens, onRemove, onCheckout }: Props) => {
-  return (
-    <div className="w-48 h-full grid grid-rows-[1fr_auto]  grid-cols-[1fr]">
-      <div className="row-span-1 col-span-1 flex flex-col space-y-2 items-start flex-1">
-        {tokens.map((token, i) => {
-          return (
-            <div key={token.id} className="flex items-center w-full">
-              <div className="w-4 mr-2 text-right">{i + 1}.</div>
-              <BGImage className={twMerge(largeIconButtonStyle, 'rounded-lg')} url={token.image} />
-              <div className="ml-2">{token.tokenId}</div>
+  const map = new Map<string, CardData[]>();
 
-              <Spacer />
-              <Button
-                size="plain"
-                variant="round"
-                onClick={() => {
-                  onRemove(token);
-                }}
-              >
-                <XIcon className={iconButtonStyle} />
-              </Button>
-            </div>
-          );
-        })}
+  for (const token of tokens) {
+    const tkns = map.get(token.tokenAddress ?? '') ?? [];
+    tkns.push(token);
+    map.set(token.tokenAddress ?? '', tkns);
+  }
+
+  const divList: ReactNode[] = [];
+  let index = 0;
+  map.forEach((tokenArray) => {
+    const first = tokenArray[0];
+
+    divList.push(
+      <div className="w-full rounded-md bg-gray-100 p-2 font-bold truncate" key={`header-${first.id}`}>
+        {first.collectionName}
       </div>
+    );
+
+    for (const t of tokenArray) {
+      divList.push(<AstraCartItem key={t.id} token={t} index={index++} onRemove={onRemove} />);
+    }
+
+    divList.push(<div key={Math.random()} className="h-1" />);
+  });
+
+  return (
+    <div className="h-full p-6 grid grid-rows-[1fr_auto] grid-cols-[1fr]">
+      {/* min-w-0 is important. otherwise text doesn't truncate */}
+      <div className="min-w-0 row-span-1 col-span-1 flex flex-col space-y-2 items-start flex-1">{divList}</div>
 
       <div className="row-span-1 col-span-2 flex flex-col">
         <Button onClick={onCheckout}>Checkout</Button>
       </div>
+    </div>
+  );
+};
+
+// ====================================================================
+
+interface Props2 {
+  token: CardData;
+  index: number;
+  onRemove: (token: CardData) => void;
+}
+
+export const AstraCartItem = ({ token, index, onRemove }: Props2) => {
+  return (
+    <div key={token.id} className="flex items-center w-full">
+      <div className="w-4 mr-2 text-right">{index + 1}.</div>
+      <BGImage className={twMerge(largeIconButtonStyle, 'rounded-lg')} src={token.image} />
+      <div className="ml-2">{token.tokenId}</div>
+
+      <Spacer />
+      <Button
+        size="plain"
+        variant="round"
+        onClick={() => {
+          onRemove(token);
+        }}
+      >
+        <XIcon className={iconButtonStyle} />
+      </Button>
     </div>
   );
 };
