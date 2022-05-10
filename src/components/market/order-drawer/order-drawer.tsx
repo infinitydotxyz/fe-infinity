@@ -216,7 +216,6 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
         <div className="flex flex-col">
           <div className="font-bold text-xlg">Thank you,</div>
           <div className="font-bold mb-6 text-xlg">Order Submitted</div>
-          <div>Confirmation: 234234</div>
         </div>
       </Modal>
 
