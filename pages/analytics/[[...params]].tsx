@@ -476,16 +476,14 @@ export const Analytics = () => {
     container: {
       className: `
         w-full h-full
-        bg-theme-light-50
-        flex flex-col gap-2
+         flex flex-col gap-2
       `
     },
     heading: {
       container: {
         className: `
           w-full h-full overflow-hidden
-          bg-theme-light-50
-          flex-[0.8]
+           flex-[0.8]
           grid grid-rows-6 grid-cols-24
         `
       },
@@ -501,8 +499,7 @@ export const Analytics = () => {
       container: {
         className: `
           w-full h-full overflow-hidden
-          bg-theme-light-50
-          flex-[0.2]
+           flex-[0.2]
           grid grid-rows-1 grid-cols-24
         `
       },
@@ -553,8 +550,7 @@ export const Analytics = () => {
         container: {
           className: `
             w-full h-full overflow-hidden
-            bg-theme-light-50
-            row-start-1 col-start-13 row-span-1 col-span-12
+             row-start-1 col-start-13 row-span-1 col-span-12
             flex justify-end gap-2 py-4
           `
         },
@@ -569,8 +565,8 @@ export const Analytics = () => {
         button: {
           className: `
             w-content h-content overflow-hidden
-            bg-theme-light-50 text-theme-light-800 ring-1 ring-inset ring-theme-light-700
-            hover:bg-theme-light-300 active:bg-theme-light-50
+              text-theme-light-800 ring-1 ring-inset ring-theme-light-700
+            hover:bg-theme-light-300  
             px-6 py-2 rounded-full
             font-mono font-bold text-sm
           `
@@ -581,8 +577,7 @@ export const Analytics = () => {
       container: {
         className: `
           w-full h-full
-          bg-theme-light-50
-          flex-[1.4]
+           flex-[1.4]
           grid grid-rows-1 grid-cols-24
         `
       },
