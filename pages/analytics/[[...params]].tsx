@@ -486,71 +486,9 @@ export const Analytics = () => {
           `
         }
       }
-    },
-    statistics: {
-      container: {
-        className: `
-          w-full h-full
-           flex-[1.4]
-          grid grid-rows-1 grid-cols-24
-        `
-      },
-      list: {
-        container: {
-          className: `
-            w-full h-full
-            row-start-1 col-start-1 row-span-1 col-span-24
-            ring ring-inset ring-transparent
-            flex flex-col gap-2
-          `
-        },
-        loading: {
-          className: `
-            w-full h-[170px] bg-blue-50 ring ring-inset ring-blue-100 rounded-xl
-            animate-pulse
-          `
-        },
-        error: {
-          className: `
-            w-full h-[170px] bg-red-50 ring ring-inset ring-red-100 rounded-xl
-            animate-pulse
-          `
-        },
-        item: {
-          container: {
-            className: `
-              w-full h-full min-h-[144px] overflow-hidden rounded-xl
-              bg-theme-light-300
-              grid grid-cols-analytics
-              
-              place-items-center
-            `
-          },
-          field: {
-            container: {
-              className: `
-                w-full h-full
-                row-span-1 col-span-1
-              `
-            }
-          }
-        }
-      }
-    },
-    drawer: {
-      content: {
-        form: {
-          label: {
-            className: `
-              w-full h-full overflow-hidden
-              flex-[0.8] flex justify-start items-center
-              text-gray-700 font-mono text-md
-            `
-          }
-        }
-      }
     }
   };
+
   return (
     <PageBox title="Analytics">
       <div className="w-full h-full flex flex-col gap-2">
@@ -648,15 +586,15 @@ export const Analytics = () => {
             </Tab.List>
           </Tab.Group>
         </div>
-        <div {...styles?.statistics?.container}>
-          <div {...styles?.statistics?.list?.container}>
+        <div className="w-full h-full  flex-[1.4]  grid grid-rows-1 grid-cols-24">
+          <div className="w-full h-full  row-start-1 col-start-1 row-span-1 col-span-24  ring ring-inset ring-transparent flex flex-col gap-2">
             {data.isLoading ? (
               <LoadingAnalytics />
             ) : data.isError || statistics?.length === 0 ? (
               <>
                 {Array.from(Array(ITEMS_PER_PAGE).keys())?.map((x, i) => (
                   <Fragment key={i}>
-                    <div {...styles?.statistics?.list?.error}></div>
+                    <div className="w-full h-[170px] bg-red-50 ring ring-inset ring-red-100 rounded-xl animate-pulse"></div>
                   </Fragment>
                 ))}
               </>
@@ -664,12 +602,12 @@ export const Analytics = () => {
               <>
                 {statistics?.map((stat, i) => (
                   <Fragment key={i}>
-                    <div {...styles?.statistics?.list?.item?.container}>
+                    <div className="w-full h-full min-h-[144px] overflow-hidden rounded-xl  bg-theme-light-300  grid grid-cols-analytics  place-items-center">
                       {stat
                         ?.filter((s) => s.placement === 'start')
                         .map((field, j) => (
                           <Fragment key={j}>
-                            <div {...styles?.statistics?.list?.item?.field?.container}>
+                            <div className="w-full h-full  row-span-1 col-span-1">
                               <Field
                                 type={field?.type}
                                 label={field?.label}
@@ -685,7 +623,7 @@ export const Analytics = () => {
                         .splice(0, filterLimit)
                         .map((field, j) => (
                           <Fragment key={j}>
-                            <div {...styles?.statistics?.list?.item?.field?.container}>
+                            <div className="w-full h-full  row-span-1 col-span-1">
                               <Field
                                 sortable={field?.sortable}
                                 onSort={field?.onSort}
@@ -701,7 +639,7 @@ export const Analytics = () => {
                         ?.filter((s) => s.placement === 'end')
                         .map((field, j) => (
                           <Fragment key={j}>
-                            <div {...styles?.statistics?.list?.item?.field?.container}>
+                            <div className="w-full h-full  row-span-1 col-span-1">
                               <Field type={field?.type} label={field?.label} value={field?.value} />
                               <div className=""></div>
                             </div>
