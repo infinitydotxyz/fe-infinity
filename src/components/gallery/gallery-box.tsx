@@ -23,6 +23,10 @@ import { twMerge } from 'tailwind-merge';
 //   metadata: ListingMetadata;
 // };
 
+type NftItem = BaseToken & {
+  address?: string;
+};
+
 interface GalleryProps {
   collection?: BaseCollection | null;
   cardProps?: CardProps;
@@ -85,7 +89,7 @@ export const GalleryBox = ({
       setCursor(result?.cursor);
     }
 
-    let moreData: CardData[] = (result?.data || []).map((item: BaseToken) => {
+    let moreData: CardData[] = (result?.data || []).map((item: NftItem) => {
       return {
         id: collection?.address + '_' + item.tokenId,
         name: item.metadata?.name,
@@ -95,7 +99,8 @@ export const GalleryBox = ({
         image: item.image.url,
         price: 0,
         chainId: item.chainId,
-        tokenAddress: collection?.address,
+        tokenAddress: item.address ?? collection?.address,
+        address: item.address ?? collection?.address,
         tokenId: item.tokenId,
         rarityRank: item.rarityRank,
         orderSnippet: item.ordersSnippet
