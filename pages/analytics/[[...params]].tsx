@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { Tab } from '@headlessui/react';
 import { useRouter } from 'next/router';
 import { useFetch } from 'src/utils/apiUtils';
-import { Button, Checkbox, Drawer, PageBox, Spacer } from 'src/components/common';
+import { Button, Checkbox, Drawer, PageBox, Spacer, ToggleTab, useToggleTab } from 'src/components/common';
 import { Field } from 'src/components/analytics/field';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CollectionStats } from '@infinityxyz/lib/types/core';
@@ -35,6 +35,7 @@ export const Analytics = () => {
   });
 
   const [filterCheckboxes, setFilterCheckboxes] = useState<{ [key: string]: boolean }>(columns);
+  const { options, onChange, selected } = useToggleTab(['1 hr', '1 day', '7 days', '30 days', 'All'], '1 hr');
 
   const closeDrawer = () => {
     setIsDrawerOpen(false);
@@ -394,34 +395,6 @@ export const Analytics = () => {
       ]
     },
     options: {
-      timeframes: [
-        {
-          id: 'hourly',
-          url: `/analytics/${page}/hourly`,
-          label: '1 hr'
-        },
-        {
-          id: 'daily',
-          url: `/analytics/${page}/daily`,
-          label: '1 day',
-          props: {}
-        },
-        {
-          id: 'weekly',
-          url: `/analytics/${page}/weekly`,
-          label: '7 days'
-        },
-        {
-          id: 'monthly',
-          url: `/analytics/${page}/monthly`,
-          label: '30 days'
-        },
-        {
-          id: 'all',
-          url: `/analytics/${page}/all`,
-          label: 'All'
-        }
-      ],
       actions: {
         links: [
           {
@@ -446,53 +419,45 @@ export const Analytics = () => {
     }
   };
 
-  const styles = {
-    options: {
-      timeframes: {
-        tab: {
-          className: ({ selected }: { selected: boolean }) => `
-            w-content h-content overflow-hidden
+  const tabStyles = {
+    className: ({ selected }: { selected: boolean }) => `
+            w-content h-content
             ${selected ? 'bg-theme-light-900 text-theme-light-50' : 'text-theme-light-800'}
             px-6 py-2 rounded-full
             font-mono font-bold text-sm
           `
-        }
-      },
-      actions: {
-        tab: {
-          className: ({ selected }: { selected: boolean }) => `
-            w-content h-content overflow-hidden
-            ${selected ? 'bg-theme-light-900 text-theme-light-50' : 'text-theme-light-800'}
-            px-6 py-2 rounded-full
-            font-mono font-bold text-sm
-          `
-        }
-      }
-    }
   };
 
   return (
     <PageBox title="Analytics">
       <div className="w-full h-full flex flex-col gap-2">
-        <div className="w-full h-full overflow-hidden  flex-[0.2] grid grid-rows-1 grid-cols-24">
-          <Tab.Group
-            defaultIndex={content?.options?.timeframes?.findIndex((x) => x.id === interval)}
-            onChange={(index: number): void => {
-              setInterval(content?.options?.timeframes?.[index]?.id);
+        <div className="w-full items-center flex-[0.2] grid grid-rows-1 grid-cols-24">
+          <ToggleTab
+            equalWidths={false}
+            options={options}
+            selected={selected}
+            onChange={(value) => {
+              onChange(value);
+
+              switch (value) {
+                case '1 hr':
+                  setInterval('hourly');
+                  break;
+                case '1 day':
+                  setInterval('daily');
+                  break;
+                case '7 days':
+                  setInterval('weekly');
+                  break;
+                case '30 days':
+                  setInterval('monthly');
+                  break;
+                case 'All':
+                  setInterval('all');
+                  break;
+              }
             }}
-          >
-            <div className="row-start-1 col-start-1 row-span-1 col-span-14  grid place-items-start items-center">
-              <div className="w-content h-content overflow-hidden  grid rounded-full">
-                <Tab.List className="w-content h-content overflow-hidden  bg-theme-light-300 flex flex-row gap-1 p-1 rounded-full">
-                  {content?.options?.timeframes?.map((tab, i) => (
-                    <Fragment key={i}>
-                      <Tab {...styles?.options?.timeframes?.tab}>{tab?.label}</Tab>
-                    </Fragment>
-                  ))}
-                </Tab.List>
-              </div>
-            </div>
-          </Tab.Group>
+          />
 
           <Tab.Group
             defaultIndex={content?.options?.actions?.links?.findIndex((x) => x.id === page)}
@@ -500,58 +465,20 @@ export const Analytics = () => {
               setPage(content?.options?.actions?.links?.[index]?.id);
             }}
           >
-            <Tab.List className="w-full h-full overflow-hidden  row-start-1 col-start-13 row-span-1 col-span-12 flex justify-end gap-2 py-4">
+            <Tab.List className="w-full h-full  row-start-1 col-start-13 row-span-1 col-span-12 flex justify-end gap-2 py-4">
               {content?.options?.actions?.links?.map((link, i) => (
                 <Fragment key={i}>
-                  <Tab {...styles?.options?.actions?.tab}>{link?.label}</Tab>
+                  <Tab {...tabStyles}>{link?.label}</Tab>
                 </Fragment>
               ))}
 
               <Button variant="outline" onClick={() => toggleDrawer()}>
-                'Filter'
+                Filter
               </Button>
-              <Drawer
-                open={isDrawerOpen}
-                onClose={closeDrawer}
-                title="Filter"
-                subtitle={`Select up to ${filterLimit}`}
-                divide={true}
-              >
-                <div className="w-full h-full flex flex-col px-12">
-                  <div className="w-full h-full flex flex-col space-y-4">
-                    {content?.filter?.params?.map((x, i) => (
-                      <Checkbox
-                        key={i}
-                        label={x?.label}
-                        checked={x?.props.checked}
-                        onChange={x?.props.onChange}
-                        boxOnLeft={false}
-                      />
-                    ))}
-                  </div>
-
-                  <Spacer />
-
-                  <div className="w-full flex flex-row gap-4 py-2 mb-6">
-                    <Button variant="outline" onClick={clearCheckboxes} className="flex-1">
-                      Clear all
-                    </Button>
-
-                    <Button
-                      disabled={
-                        Object.keys(filterCheckboxes).filter((key) => filterCheckboxes[key]).length > filterLimit
-                      }
-                      onClick={applyCheckboxes}
-                      className="flex-1"
-                    >
-                      Apply
-                    </Button>
-                  </div>
-                </div>
-              </Drawer>
             </Tab.List>
           </Tab.Group>
         </div>
+
         <div className="w-full h-full  flex-[1.4]  grid grid-rows-1 grid-cols-24">
           <div className="w-full h-full  row-start-1 col-start-1 row-span-1 col-span-24  ring ring-inset ring-transparent flex flex-col gap-2">
             {data.isLoading ? (
@@ -619,6 +546,44 @@ export const Analytics = () => {
           </div>
         </div>
       </div>
+
+      <Drawer
+        open={isDrawerOpen}
+        onClose={closeDrawer}
+        title="Filter"
+        subtitle={`Select up to ${filterLimit}`}
+        divide={true}
+      >
+        <div className="w-full h-full flex flex-col px-12">
+          <div className="w-full h-full flex flex-col space-y-4">
+            {content?.filter?.params?.map((x, i) => (
+              <Checkbox
+                key={i}
+                label={x?.label}
+                checked={x?.props.checked}
+                onChange={x?.props.onChange}
+                boxOnLeft={false}
+              />
+            ))}
+          </div>
+
+          <Spacer />
+
+          <div className="w-full flex flex-row gap-4 py-2 mb-6">
+            <Button variant="outline" onClick={clearCheckboxes} className="flex-1">
+              Clear all
+            </Button>
+
+            <Button
+              disabled={Object.keys(filterCheckboxes).filter((key) => filterCheckboxes[key]).length > filterLimit}
+              onClick={applyCheckboxes}
+              className="flex-1"
+            >
+              Apply
+            </Button>
+          </div>
+        </div>
+      </Drawer>
     </PageBox>
   );
 };
