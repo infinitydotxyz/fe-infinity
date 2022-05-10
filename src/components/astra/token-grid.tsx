@@ -4,7 +4,7 @@ import { useResizeDetector } from 'react-resize-detector';
 import { CenteredContent, ScrollLoader, Spinner } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 import { NFTArray } from '../../utils/types/collection-types';
-import { fetchTokens } from './astra-utils';
+import { fetchTokens, tokensToCardData } from './astra-utils';
 import { TokenCard } from './token-card';
 
 interface Props2 {
@@ -81,25 +81,12 @@ export const TokensGrid = ({ collection, chainId, className = '', onClick, isSel
       </CenteredContent>
     );
   } else {
+    const cardData = tokensToCardData(tokens, collection);
+
     contents = (
       <>
         <div className={twMerge('grid gap-8')} style={{ gridTemplateColumns: gridColumns }}>
-          {tokens.map((token) => {
-            const data: CardData = {
-              id: collection?.address + '_' + token.tokenId,
-              name: token.metadata?.name,
-              collectionName: collection?.metadata?.name,
-              title: collection?.metadata?.name,
-              description: token.metadata.description,
-              image: token.image.url,
-              price: 0,
-              chainId: token.chainId,
-              tokenAddress: collection?.address,
-              tokenId: token.tokenId,
-              rarityRank: token.rarityRank,
-              orderSnippet: token.ordersSnippet
-            };
-
+          {cardData.map((data) => {
             return (
               <TokenCard
                 key={data.id}
