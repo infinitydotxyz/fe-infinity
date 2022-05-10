@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Tab } from '@headlessui/react';
 import { useRouter } from 'next/router';
 import { useFetch } from 'src/utils/apiUtils';
@@ -13,18 +13,18 @@ export const Analytics = () => {
   const router = useRouter();
   const { user } = useAppContext();
   const connected = user?.address ? true : false;
-  const [limit] = React.useState(ITEMS_PER_PAGE);
-  const [page, setPage] = React.useState(router.query.params?.[0] ? router.query.params?.[0] : 'trending');
-  const [interval, setInterval] = React.useState(router.query.params?.[1] ? router.query.params?.[1] : 'weekly');
-  const [date] = React.useState(Date.now());
-  const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
+  const [limit] = useState(ITEMS_PER_PAGE);
+  const [page, setPage] = useState(router.query.params?.[0] ? router.query.params?.[0] : 'trending');
+  const [interval, setInterval] = useState(router.query.params?.[1] ? router.query.params?.[1] : 'weekly');
+  const [date] = useState(Date.now());
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const closeDrawer = () => setIsDrawerOpen(false);
   const toggleDrawer = () => (isDrawerOpen ? setIsDrawerOpen(false) : setIsDrawerOpen(true));
-  const [filterLimit] = React.useState(6);
-  const [orderBy, setOrderBy] = React.useState('volume');
-  const [orderDirection, setOrderDirection] = React.useState('desc');
+  const [filterLimit] = useState(6);
+  const [orderBy, setOrderBy] = useState('volume');
+  const [orderDirection, setOrderDirection] = useState('desc');
 
-  const [columns, setColumns] = React.useState<{ [key: string]: boolean }>({
+  const [columns, setColumns] = useState<{ [key: string]: boolean }>({
     floorPrice: true,
     floorPricePercentChange: true,
     volume: true,
@@ -37,7 +37,7 @@ export const Analytics = () => {
     discordFollowersPercentChange: false
   });
 
-  const [filterCheckboxes, setFilterCheckboxes] = React.useState<{ [key: string]: boolean }>(columns);
+  const [filterCheckboxes, setFilterCheckboxes] = useState<{ [key: string]: boolean }>(columns);
 
   const clearCheckboxes = () => {
     const reset = {
@@ -276,13 +276,13 @@ export const Analytics = () => {
     });
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!connected) {
       setPage('trending');
     }
   }, [connected]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     void router.push(
       {
         pathname: `/analytics/${page}/${interval}`
@@ -682,9 +682,9 @@ export const Analytics = () => {
               <div {...styles?.options?.timeframes?.list?.container}>
                 <Tab.List {...styles?.options?.timeframes?.list?.background}>
                   {content?.options?.timeframes?.map((tab, i) => (
-                    <React.Fragment key={i}>
+                    <Fragment key={i}>
                       <Tab {...styles?.options?.timeframes?.tab}>{tab?.label}</Tab>
-                    </React.Fragment>
+                    </Fragment>
                   ))}
                 </Tab.List>
               </div>
@@ -694,13 +694,13 @@ export const Analytics = () => {
           <Tab.Group {...styles?.options?.actions?.group}>
             <Tab.List {...styles?.options?.actions?.container}>
               {content?.options?.actions?.links?.map((link, i) => (
-                <React.Fragment key={i}>
+                <Fragment key={i}>
                   <Tab {...styles?.options?.actions?.tab}>{link?.label}</Tab>
-                </React.Fragment>
+                </Fragment>
               ))}
 
               {content?.options?.actions?.buttons?.map((tab, i) => (
-                <React.Fragment key={i}>
+                <Fragment key={i}>
                   {tab.type === 'drawer' && (
                     <>
                       <button {...styles?.options?.actions?.button} {...tab?.props}>
@@ -712,7 +712,7 @@ export const Analytics = () => {
                             <div {...styles?.drawer?.content?.grid}>
                               <div {...styles?.drawer?.content?.form?.container}>
                                 {content?.filter?.params?.map((x, i) => (
-                                  <React.Fragment key={i}>
+                                  <Fragment key={i}>
                                     <div {...styles?.drawer?.content?.form?.row}>
                                       <div {...styles?.drawer?.content?.form?.checkbox?.container}>
                                         <Checkbox
@@ -723,7 +723,7 @@ export const Analytics = () => {
                                         />
                                       </div>
                                     </div>
-                                  </React.Fragment>
+                                  </Fragment>
                                 ))}
                               </div>
                               <div {...styles?.drawer?.content?.actions?.container}>
@@ -758,7 +758,7 @@ export const Analytics = () => {
                       </button>
                     </>
                   )}
-                </React.Fragment>
+                </Fragment>
               ))}
             </Tab.List>
           </Tab.Group>
@@ -772,20 +772,20 @@ export const Analytics = () => {
             ) : data.isError || content?.statistics?.length === 0 ? (
               <>
                 {Array.from(Array(limit).keys())?.map((x, i) => (
-                  <React.Fragment key={i}>
+                  <Fragment key={i}>
                     <div {...styles?.statistics?.list?.error}></div>
-                  </React.Fragment>
+                  </Fragment>
                 ))}
               </>
             ) : (
               <>
                 {content?.statistics?.map((stat, i) => (
-                  <React.Fragment key={i}>
+                  <Fragment key={i}>
                     <div {...styles?.statistics?.list?.item?.container}>
                       {stat
                         ?.filter((s) => s.placement === 'start')
                         .map((field, j) => (
-                          <React.Fragment key={j}>
+                          <Fragment key={j}>
                             <div {...styles?.statistics?.list?.item?.field?.container}>
                               <Field
                                 type={field?.type}
@@ -795,13 +795,13 @@ export const Analytics = () => {
                               />
                               <div className=""></div>
                             </div>
-                          </React.Fragment>
+                          </Fragment>
                         ))}
                       {stat
                         ?.filter((s) => s.placement === 'middle' && s.show === true)
                         .splice(0, filterLimit)
                         .map((field, j) => (
-                          <React.Fragment key={j}>
+                          <Fragment key={j}>
                             <div {...styles?.statistics?.list?.item?.field?.container}>
                               <Field
                                 sortable={field?.sortable}
@@ -812,20 +812,20 @@ export const Analytics = () => {
                               />
                               <div className=""></div>
                             </div>
-                          </React.Fragment>
+                          </Fragment>
                         ))}
                       {stat
                         ?.filter((s) => s.placement === 'end')
                         .map((field, j) => (
-                          <React.Fragment key={j}>
+                          <Fragment key={j}>
                             <div {...styles?.statistics?.list?.item?.field?.container}>
                               <Field type={field?.type} label={field?.label} value={field?.value} />
                               <div className=""></div>
                             </div>
-                          </React.Fragment>
+                          </Fragment>
                         ))}
                     </div>
-                  </React.Fragment>
+                  </Fragment>
                 ))}
               </>
             )}
