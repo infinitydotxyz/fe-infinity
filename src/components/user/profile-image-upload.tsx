@@ -1,8 +1,7 @@
 import { FunctionComponent, useEffect, useRef, useState } from 'react';
 import { FaPen } from 'react-icons/fa';
 import AvatarEditor from 'react-avatar-editor';
-
-import { ImageUploader, Button, ImageUploaderButtonRef, Modal } from 'src/components/common';
+import { ImageUploader, Button, ImageUploaderButtonRef, Modal, BGImage } from 'src/components/common';
 
 interface ProfileImageProps {
   imgSource?: string;
@@ -81,7 +80,7 @@ export const ProfileImageUpload: FunctionComponent<ProfileImageProps> = ({ onUpl
       <label htmlFor={FORM_LABEL}>
         <div className="overflow-hidden bg-theme-light-200 w-28 h-28 mx-auto sm:mx-0 rounded-full">
           {imgSrc ? (
-            <img alt="" className="object-cover h-full cursor-pointer" src={imgSrc} />
+            <BGImage className="cursor-pointer" src={imgSrc} />
           ) : (
             <div className="w-full h-full flex flex-row items-center justify-center cursor-pointer">
               <FaPen className=" -mt-0.5" />
