@@ -17,8 +17,6 @@ export const Analytics = () => {
   const [interval, setInterval] = useState(router.query.params?.[1] ? router.query.params?.[1] : 'weekly');
   const [date] = useState(Date.now());
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const closeDrawer = () => setIsDrawerOpen(false);
-  const toggleDrawer = () => (isDrawerOpen ? setIsDrawerOpen(false) : setIsDrawerOpen(true));
   const [filterLimit] = useState(6);
   const [orderBy, setOrderBy] = useState('volume');
   const [orderDirection, setOrderDirection] = useState('desc');
@@ -37,6 +35,30 @@ export const Analytics = () => {
   });
 
   const [filterCheckboxes, setFilterCheckboxes] = useState<{ [key: string]: boolean }>(columns);
+
+  const closeDrawer = () => {
+    setIsDrawerOpen(false);
+  };
+
+  const toggleDrawer = () => {
+    isDrawerOpen ? setIsDrawerOpen(false) : setIsDrawerOpen(true);
+  };
+
+  useEffect(() => {
+    if (!connected) {
+      setPage('trending');
+    }
+  }, [connected]);
+
+  useEffect(() => {
+    void router.push(
+      {
+        pathname: `/analytics/${page}/${interval}`
+      },
+      undefined,
+      { scroll: false }
+    );
+  }, [page, interval, orderBy, orderDirection]);
 
   const clearCheckboxes = () => {
     const reset = {
@@ -64,7 +86,6 @@ export const Analytics = () => {
 
   const checkboxToggle = (id: string) => setFilterCheckboxes({ ...filterCheckboxes, [id]: !filterCheckboxes[id] });
 
-  let statistics = null;
   const query =
     page === 'trending'
       ? `/collections/rankings?orderBy=${orderBy}&orderDirection=${orderDirection}&period=${interval}&date=${date}&limit=${ITEMS_PER_PAGE}`
@@ -72,6 +93,7 @@ export const Analytics = () => {
 
   const data = useFetch<{ data: CollectionStats[] }>(query);
 
+  let statistics = null;
   if (data.result) {
     statistics = data.result.data.map((d, index) => {
       const address = d.collectionAddress;
@@ -275,22 +297,6 @@ export const Analytics = () => {
     });
   }
 
-  useEffect(() => {
-    if (!connected) {
-      setPage('trending');
-    }
-  }, [connected]);
-
-  useEffect(() => {
-    void router.push(
-      {
-        pathname: `/analytics/${page}/${interval}`
-      },
-      undefined,
-      { scroll: false }
-    );
-  }, [page, interval, orderBy, orderDirection]);
-
   const content = {
     filter: {
       limit: 5,
@@ -451,19 +457,7 @@ export const Analytics = () => {
           {
             type: 'drawer',
             url: '',
-            label: 'Filter',
-            drawer: {
-              props: {
-                open: isDrawerOpen,
-                onClose: closeDrawer,
-                title: 'Filter',
-                subtitle: `Select up to ${filterLimit}`,
-                divide: true
-              }
-            },
-            props: {
-              onClick: () => toggleDrawer()
-            }
+            label: 'Filter'
           }
         ]
       }
@@ -471,64 +465,8 @@ export const Analytics = () => {
   };
 
   const styles = {
-    container: {
-      className: `
-        w-full h-full
-         flex flex-col gap-2
-      `
-    },
-    heading: {
-      container: {
-        className: `
-          w-full h-full overflow-hidden
-           flex-[0.8]
-          grid grid-rows-6 grid-cols-24
-        `
-      },
-      element: {
-        className: `
-          w-full h-full overflow-hidden
-          row-start-4 col-start-1 row-span-3 col-span-14
-          text-start font-body text-6xl tracking-tight mt-4 mb-8
-        `
-      }
-    },
     options: {
-      container: {
-        className: `
-          w-full h-full overflow-hidden
-           flex-[0.2]
-          grid grid-rows-1 grid-cols-24
-        `
-      },
       timeframes: {
-        group: {
-          defaultIndex: content?.options?.timeframes?.findIndex((x) => x.id === interval),
-          onChange: (index: number): void => {
-            setInterval(content?.options?.timeframes?.[index]?.id);
-          }
-        },
-        container: {
-          className: `
-            row-start-1 col-start-1 row-span-1 col-span-14
-            grid place-items-start items-center
-          `
-        },
-        list: {
-          container: {
-            className: `
-              w-content h-content overflow-hidden
-              grid rounded-full
-            `
-          },
-          background: {
-            className: `
-            w-content h-content overflow-hidden
-            bg-theme-light-300
-            flex flex-row gap-1 p-1 rounded-full
-          `
-          }
-        },
         tab: {
           className: ({ selected }: { selected: boolean }) => `
             w-content h-content overflow-hidden
@@ -539,32 +477,10 @@ export const Analytics = () => {
         }
       },
       actions: {
-        group: {
-          defaultIndex: content?.options?.actions?.links?.findIndex((x) => x.id === page),
-          onChange: (index: number): void => {
-            setPage(content?.options?.actions?.links?.[index]?.id);
-          }
-        },
-        container: {
-          className: `
-            w-full h-full overflow-hidden
-             row-start-1 col-start-13 row-span-1 col-span-12
-            flex justify-end gap-2 py-4
-          `
-        },
         tab: {
           className: ({ selected }: { selected: boolean }) => `
             w-content h-content overflow-hidden
             ${selected ? 'bg-theme-light-900 text-theme-light-50' : 'text-theme-light-800'}
-            px-6 py-2 rounded-full
-            font-mono font-bold text-sm
-          `
-        },
-        button: {
-          className: `
-            w-content h-content overflow-hidden
-              text-theme-light-800 ring-1 ring-inset ring-theme-light-700
-            hover:bg-theme-light-300  
             px-6 py-2 rounded-full
             font-mono font-bold text-sm
           `
@@ -623,48 +539,12 @@ export const Analytics = () => {
     },
     drawer: {
       content: {
-        container: {
-          className: `
-            w-full h-full overflow-hidden px-12 pb-8
-          `
-        },
-        grid: {
-          className: `
-            w-full h-full overflow-hidden grid grid-rows-[10fr,1fr] gap-2
-          `
-        },
         form: {
-          container: {
-            className: `
-              w-full h-full overflow-hidden flex flex-col gap-1
-            `
-          },
-          row: {
-            className: `
-              w-full h-full overflow-hidden flex flex-row gap-1
-            `
-          },
           label: {
             className: `
               w-full h-full overflow-hidden
               flex-[0.8] flex justify-start items-center
               text-gray-700 font-mono text-md
-            `
-          },
-          checkbox: {
-            container: {
-              className: `
-                w-full h-full overflow-hidden
-                text-gray-700 font-mono text-md
-              `
-            }
-          }
-        },
-        actions: {
-          container: {
-            className: `
-              w-full h-full overflow-hidden
-              flex flex-row gap-2 py-2
             `
           }
         }
@@ -673,12 +553,17 @@ export const Analytics = () => {
   };
   return (
     <PageBox title="Analytics">
-      <div {...styles?.container}>
-        <div {...styles?.options?.container}>
-          <Tab.Group {...styles?.options?.timeframes?.group}>
-            <div {...styles?.options?.timeframes?.container}>
-              <div {...styles?.options?.timeframes?.list?.container}>
-                <Tab.List {...styles?.options?.timeframes?.list?.background}>
+      <div className="w-full h-full flex flex-col gap-2">
+        <div className="w-full h-full overflow-hidden  flex-[0.2] grid grid-rows-1 grid-cols-24">
+          <Tab.Group
+            defaultIndex={content?.options?.timeframes?.findIndex((x) => x.id === interval)}
+            onChange={(index: number): void => {
+              setInterval(content?.options?.timeframes?.[index]?.id);
+            }}
+          >
+            <div className="row-start-1 col-start-1 row-span-1 col-span-14  grid place-items-start items-center">
+              <div className="w-content h-content overflow-hidden  grid rounded-full">
+                <Tab.List className="w-content h-content overflow-hidden  bg-theme-light-300 flex flex-row gap-1 p-1 rounded-full">
                   {content?.options?.timeframes?.map((tab, i) => (
                     <Fragment key={i}>
                       <Tab {...styles?.options?.timeframes?.tab}>{tab?.label}</Tab>
@@ -689,8 +574,13 @@ export const Analytics = () => {
             </div>
           </Tab.Group>
 
-          <Tab.Group {...styles?.options?.actions?.group}>
-            <Tab.List {...styles?.options?.actions?.container}>
+          <Tab.Group
+            defaultIndex={content?.options?.actions?.links?.findIndex((x) => x.id === page)}
+            onChange={(index: number): void => {
+              setPage(content?.options?.actions?.links?.[index]?.id);
+            }}
+          >
+            <Tab.List className="w-full h-full overflow-hidden  row-start-1 col-start-13 row-span-1 col-span-12 flex justify-end gap-2 py-4">
               {content?.options?.actions?.links?.map((link, i) => (
                 <Fragment key={i}>
                   <Tab {...styles?.options?.actions?.tab}>{link?.label}</Tab>
@@ -701,17 +591,23 @@ export const Analytics = () => {
                 <Fragment key={i}>
                   {tab.type === 'drawer' && (
                     <>
-                      <button {...styles?.options?.actions?.button} {...tab?.props}>
+                      <Button variant="outline" onClick={() => toggleDrawer()}>
                         {tab?.label}
-                      </button>
-                      <Drawer {...tab?.drawer?.props}>
-                        <div {...styles?.drawer?.content?.container}>
-                          <div {...styles?.drawer?.content?.grid}>
-                            <div {...styles?.drawer?.content?.form?.container}>
+                      </Button>
+                      <Drawer
+                        open={isDrawerOpen}
+                        onClose={closeDrawer}
+                        title="Filter"
+                        subtitle={`Select up to ${filterLimit}`}
+                        divide={true}
+                      >
+                        <div className=" w-full h-full overflow-hidden px-12 pb-8">
+                          <div>
+                            <div className="w-full h-full flex flex-col">
                               {content?.filter?.params?.map((x, i) => (
                                 <Fragment key={i}>
-                                  <div {...styles?.drawer?.content?.form?.row}>
-                                    <div {...styles?.drawer?.content?.form?.checkbox?.container}>
+                                  <div className="w-full h-full overflow-hidden flex flex-row">
+                                    <div className="w-full h-full overflow-hidden text-gray-700 font-mono text-md">
                                       <Checkbox
                                         label={x?.label}
                                         checked={x?.props.checked}
@@ -723,7 +619,7 @@ export const Analytics = () => {
                                 </Fragment>
                               ))}
                             </div>
-                            <div {...styles?.drawer?.content?.actions?.container}>
+                            <div className="w-full h-full overflow-hidden flex flex-row gap-2 py-2">
                               <Button
                                 variant="outline"
                                 onClick={clearCheckboxes}
@@ -745,13 +641,6 @@ export const Analytics = () => {
                           </div>
                         </div>
                       </Drawer>
-                    </>
-                  )}
-                  {tab.type === 'button' && (
-                    <>
-                      <button {...styles?.options?.actions?.button} {...tab?.props}>
-                        {tab?.label}
-                      </button>
                     </>
                   )}
                 </Fragment>
