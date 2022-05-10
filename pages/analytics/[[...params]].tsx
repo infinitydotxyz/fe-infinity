@@ -396,39 +396,30 @@ export const Analytics = () => {
     options: {
       timeframes: [
         {
-          type: 'tab',
           id: 'hourly',
           url: `/analytics/${page}/hourly`,
-          label: '1 hr',
-          props: {}
+          label: '1 hr'
         },
         {
-          type: 'tab',
           id: 'daily',
           url: `/analytics/${page}/daily`,
           label: '1 day',
           props: {}
         },
         {
-          type: 'tab',
           id: 'weekly',
           url: `/analytics/${page}/weekly`,
-          label: '7 days',
-          props: {}
+          label: '7 days'
         },
         {
-          type: 'tab',
           id: 'monthly',
           url: `/analytics/${page}/monthly`,
-          label: '30 days',
-          props: {}
+          label: '30 days'
         },
         {
-          type: 'tab',
           id: 'all',
           url: `/analytics/${page}/all`,
-          label: 'All',
-          props: {}
+          label: 'All'
         }
       ],
       actions: {
@@ -447,18 +438,11 @@ export const Analytics = () => {
                   type: 'link',
                   id: 'following',
                   url: `/analytics/following/${interval}`,
-                  label: 'Following ',
+                  label: 'Following',
                   props: {}
                 }
               ]
             : [])
-        ],
-        buttons: [
-          {
-            type: 'drawer',
-            url: '',
-            label: 'Filter'
-          }
         ]
       }
     }
@@ -525,64 +509,51 @@ export const Analytics = () => {
                 </Fragment>
               ))}
 
-              {content?.options?.actions?.buttons?.map((tab, i) => (
-                <Fragment key={i}>
-                  {tab.type === 'drawer' && (
-                    <>
-                      <Button variant="outline" onClick={() => toggleDrawer()}>
-                        {tab?.label}
-                      </Button>
-                      <Drawer
-                        open={isDrawerOpen}
-                        onClose={closeDrawer}
-                        title="Filter"
-                        subtitle={`Select up to ${filterLimit}`}
-                        divide={true}
-                      >
-                        <div className=" w-full h-full overflow-hidden px-12 pb-8">
-                          <div>
-                            <div className="w-full h-full flex flex-col">
-                              {content?.filter?.params?.map((x, i) => (
-                                <Fragment key={i}>
-                                  <div className="w-full h-full overflow-hidden flex flex-row">
-                                    <div className="w-full h-full overflow-hidden text-gray-700 font-mono text-md">
-                                      <Checkbox
-                                        label={x?.label}
-                                        checked={x?.props.checked}
-                                        onChange={x?.props.onChange}
-                                        boxOnLeft={false}
-                                      />
-                                    </div>
-                                  </div>
-                                </Fragment>
-                              ))}
-                            </div>
-                            <div className="w-full h-full overflow-hidden flex flex-row gap-2 py-2">
-                              <Button
-                                variant="outline"
-                                onClick={clearCheckboxes}
-                                className="font-heading w-full h-full"
-                              >
-                                Clear all
-                              </Button>
-                              <Button
-                                disabled={
-                                  Object.keys(filterCheckboxes).filter((key) => filterCheckboxes[key]).length >
-                                  filterLimit
-                                }
-                                onClick={applyCheckboxes}
-                                className="font-heading w-full h-full"
-                              >
-                                Apply
-                              </Button>
+              <Button variant="outline" onClick={() => toggleDrawer()}>
+                'Filter'
+              </Button>
+              <Drawer
+                open={isDrawerOpen}
+                onClose={closeDrawer}
+                title="Filter"
+                subtitle={`Select up to ${filterLimit}`}
+                divide={true}
+              >
+                <div className=" w-full h-full overflow-hidden px-12 pb-8">
+                  <div>
+                    <div className="w-full h-full flex flex-col">
+                      {content?.filter?.params?.map((x, i) => (
+                        <Fragment key={i}>
+                          <div className="w-full h-full overflow-hidden flex flex-row">
+                            <div className="w-full h-full overflow-hidden text-gray-700 font-mono text-md">
+                              <Checkbox
+                                label={x?.label}
+                                checked={x?.props.checked}
+                                onChange={x?.props.onChange}
+                                boxOnLeft={false}
+                              />
                             </div>
                           </div>
-                        </div>
-                      </Drawer>
-                    </>
-                  )}
-                </Fragment>
-              ))}
+                        </Fragment>
+                      ))}
+                    </div>
+                    <div className="w-full h-full overflow-hidden flex flex-row gap-2 py-2">
+                      <Button variant="outline" onClick={clearCheckboxes} className="font-heading w-full h-full">
+                        Clear all
+                      </Button>
+                      <Button
+                        disabled={
+                          Object.keys(filterCheckboxes).filter((key) => filterCheckboxes[key]).length > filterLimit
+                        }
+                        onClick={applyCheckboxes}
+                        className="font-heading w-full h-full"
+                      >
+                        Apply
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </Drawer>
             </Tab.List>
           </Tab.Group>
         </div>
