@@ -1,6 +1,4 @@
-// import { useRouter } from 'next/router';
 import { GalleryBox } from '../gallery/gallery-box';
-// import { useAppContext } from 'src/utils/context/AppContext';
 import { UserProfileDto } from './user-profile-dto';
 
 type Props = {
@@ -8,9 +6,6 @@ type Props = {
 };
 
 export const UserPageNftsTab = ({ userInfo }: Props) => {
-  // const router = useRouter();
-  // const { user } = useAppContext();
-
   return (
     <div>
       <div className="mt-20">
