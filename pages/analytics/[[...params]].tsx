@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { Tab } from '@headlessui/react';
 import { useRouter } from 'next/router';
 import { useFetch } from 'src/utils/apiUtils';
-import { Button, Checkbox, Drawer, PageBox } from 'src/components/common';
+import { Button, Checkbox, Drawer, PageBox, Spacer } from 'src/components/common';
 import { Field } from 'src/components/analytics/field';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CollectionStats } from '@infinityxyz/lib/types/core';
@@ -428,8 +428,7 @@ export const Analytics = () => {
             type: 'link',
             id: 'trending',
             url: `/analytics/trending/${interval}`,
-            label: 'Trending',
-            props: {}
+            label: 'Trending'
           },
 
           ...(connected
@@ -438,8 +437,7 @@ export const Analytics = () => {
                   type: 'link',
                   id: 'following',
                   url: `/analytics/following/${interval}`,
-                  label: 'Following',
-                  props: {}
+                  label: 'Following'
                 }
               ]
             : [])
@@ -519,38 +517,35 @@ export const Analytics = () => {
                 subtitle={`Select up to ${filterLimit}`}
                 divide={true}
               >
-                <div className=" w-full h-full overflow-hidden px-12 pb-8">
-                  <div>
-                    <div className="w-full h-full flex flex-col">
-                      {content?.filter?.params?.map((x, i) => (
-                        <Fragment key={i}>
-                          <div className="w-full h-full overflow-hidden flex flex-row">
-                            <div className="w-full h-full overflow-hidden text-gray-700 font-mono text-md">
-                              <Checkbox
-                                label={x?.label}
-                                checked={x?.props.checked}
-                                onChange={x?.props.onChange}
-                                boxOnLeft={false}
-                              />
-                            </div>
-                          </div>
-                        </Fragment>
-                      ))}
-                    </div>
-                    <div className="w-full h-full overflow-hidden flex flex-row gap-2 py-2">
-                      <Button variant="outline" onClick={clearCheckboxes} className="font-heading w-full h-full">
-                        Clear all
-                      </Button>
-                      <Button
-                        disabled={
-                          Object.keys(filterCheckboxes).filter((key) => filterCheckboxes[key]).length > filterLimit
-                        }
-                        onClick={applyCheckboxes}
-                        className="font-heading w-full h-full"
-                      >
-                        Apply
-                      </Button>
-                    </div>
+                <div className="w-full h-full flex flex-col px-12">
+                  <div className="w-full h-full flex flex-col space-y-4">
+                    {content?.filter?.params?.map((x, i) => (
+                      <Checkbox
+                        key={i}
+                        label={x?.label}
+                        checked={x?.props.checked}
+                        onChange={x?.props.onChange}
+                        boxOnLeft={false}
+                      />
+                    ))}
+                  </div>
+
+                  <Spacer />
+
+                  <div className="w-full flex flex-row gap-4 py-2 mb-6">
+                    <Button variant="outline" onClick={clearCheckboxes} className="flex-1">
+                      Clear all
+                    </Button>
+
+                    <Button
+                      disabled={
+                        Object.keys(filterCheckboxes).filter((key) => filterCheckboxes[key]).length > filterLimit
+                      }
+                      onClick={applyCheckboxes}
+                      className="flex-1"
+                    >
+                      Apply
+                    </Button>
                   </div>
                 </div>
               </Drawer>
