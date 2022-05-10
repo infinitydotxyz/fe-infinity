@@ -23,7 +23,15 @@ export const OrderbookItem = ({ title, content, nameItem, order }: Props4): JSX.
         // multiple items from one collection
       } else {
         return (
-          <SingleCollectionCell image={nft.collectionImage} title={nft.collectionName} count={nft.tokens.length} />
+          <SingleCollectionCell
+            onClickTitle={() => {
+              // todo: once we have 'collectionSlug' from api, navigate to it onClick.
+              // console.log('nft', nft);
+            }}
+            image={nft.collectionImage}
+            title={nft.collectionName}
+            count={nft.tokens.length}
+          />
         );
       }
     }
@@ -73,9 +81,10 @@ type SingleCollectionCellProps = {
   title: string;
   token?: OBTokenInfo;
   count?: number;
+  onClickTitle?: () => void;
 };
 
-const SingleCollectionCell = ({ image, title, token, count = 0 }: SingleCollectionCellProps) => {
+const SingleCollectionCell = ({ image, title, onClickTitle, token, count = 0 }: SingleCollectionCellProps) => {
   return (
     <div className="flex gap-2 items-center">
       <div className="flex justify-center shrink-0 h-12 w-12">
@@ -90,7 +99,9 @@ const SingleCollectionCell = ({ image, title, token, count = 0 }: SingleCollecti
       </div>
 
       <div className="flex flex-col truncate">
-        <div className="truncate">{title}</div>
+        <div className="truncate" onClick={onClickTitle}>
+          {title}
+        </div>
 
         {token && (
           <NextLink href={`/collection/${token.tokenId}`} className="truncate font-bold">
