@@ -24,7 +24,7 @@ import { twMerge } from 'tailwind-merge';
 // };
 
 type NftItem = BaseToken & {
-  address?: string;
+  collectionAddress?: string;
 };
 
 interface GalleryProps {
@@ -99,8 +99,8 @@ export const GalleryBox = ({
         image: item.image.url,
         price: 0,
         chainId: item.chainId,
-        tokenAddress: item.address ?? collection?.address,
-        address: item.address ?? collection?.address,
+        tokenAddress: item.collectionAddress ?? collection?.address,
+        address: item.collectionAddress ?? collection?.address,
         tokenId: item.tokenId,
         rarityRank: item.rarityRank,
         orderSnippet: item.ordersSnippet
