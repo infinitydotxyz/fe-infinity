@@ -13,7 +13,6 @@ export const Analytics = () => {
   const router = useRouter();
   const { user } = useAppContext();
   const connected = user?.address ? true : false;
-  const [limit] = useState(ITEMS_PER_PAGE);
   const [page, setPage] = useState(router.query.params?.[0] ? router.query.params?.[0] : 'trending');
   const [interval, setInterval] = useState(router.query.params?.[1] ? router.query.params?.[1] : 'weekly');
   const [date] = useState(Date.now());
@@ -68,8 +67,8 @@ export const Analytics = () => {
   let statistics = null;
   const query =
     page === 'trending'
-      ? `/collections/rankings?orderBy=${orderBy}&orderDirection=${orderDirection}&period=${interval}&date=${date}&limit=${limit}`
-      : `/user/1:${user?.address}/watchlist?orderBy=${orderBy}&orderDirection=${orderDirection}&period=${interval}&date=${date}&limit=${limit}`;
+      ? `/collections/rankings?orderBy=${orderBy}&orderDirection=${orderDirection}&period=${interval}&date=${date}&limit=${ITEMS_PER_PAGE}`
+      : `/user/1:${user?.address}/watchlist?orderBy=${orderBy}&orderDirection=${orderDirection}&period=${interval}&date=${date}&limit=${ITEMS_PER_PAGE}`;
 
   const data = useFetch<{ data: CollectionStats[] }>(query);
 
@@ -293,7 +292,6 @@ export const Analytics = () => {
   }, [page, interval, orderBy, orderDirection]);
 
   const content = {
-    statistics: statistics,
     filter: {
       limit: 5,
       params: [
@@ -707,47 +705,45 @@ export const Analytics = () => {
                         {tab?.label}
                       </button>
                       <Drawer {...tab?.drawer?.props}>
-                        <>
-                          <div {...styles?.drawer?.content?.container}>
-                            <div {...styles?.drawer?.content?.grid}>
-                              <div {...styles?.drawer?.content?.form?.container}>
-                                {content?.filter?.params?.map((x, i) => (
-                                  <Fragment key={i}>
-                                    <div {...styles?.drawer?.content?.form?.row}>
-                                      <div {...styles?.drawer?.content?.form?.checkbox?.container}>
-                                        <Checkbox
-                                          label={x?.label}
-                                          checked={x?.props.checked}
-                                          onChange={x?.props.onChange}
-                                          boxOnLeft={false}
-                                        />
-                                      </div>
+                        <div {...styles?.drawer?.content?.container}>
+                          <div {...styles?.drawer?.content?.grid}>
+                            <div {...styles?.drawer?.content?.form?.container}>
+                              {content?.filter?.params?.map((x, i) => (
+                                <Fragment key={i}>
+                                  <div {...styles?.drawer?.content?.form?.row}>
+                                    <div {...styles?.drawer?.content?.form?.checkbox?.container}>
+                                      <Checkbox
+                                        label={x?.label}
+                                        checked={x?.props.checked}
+                                        onChange={x?.props.onChange}
+                                        boxOnLeft={false}
+                                      />
                                     </div>
-                                  </Fragment>
-                                ))}
-                              </div>
-                              <div {...styles?.drawer?.content?.actions?.container}>
-                                <Button
-                                  variant="outline"
-                                  onClick={clearCheckboxes}
-                                  className="font-heading w-full h-full"
-                                >
-                                  Clear all
-                                </Button>
-                                <Button
-                                  disabled={
-                                    Object.keys(filterCheckboxes).filter((key) => filterCheckboxes[key]).length >
-                                    filterLimit
-                                  }
-                                  onClick={applyCheckboxes}
-                                  className="font-heading w-full h-full"
-                                >
-                                  Apply
-                                </Button>
-                              </div>
+                                  </div>
+                                </Fragment>
+                              ))}
+                            </div>
+                            <div {...styles?.drawer?.content?.actions?.container}>
+                              <Button
+                                variant="outline"
+                                onClick={clearCheckboxes}
+                                className="font-heading w-full h-full"
+                              >
+                                Clear all
+                              </Button>
+                              <Button
+                                disabled={
+                                  Object.keys(filterCheckboxes).filter((key) => filterCheckboxes[key]).length >
+                                  filterLimit
+                                }
+                                onClick={applyCheckboxes}
+                                className="font-heading w-full h-full"
+                              >
+                                Apply
+                              </Button>
                             </div>
                           </div>
-                        </>
+                        </div>
                       </Drawer>
                     </>
                   )}
@@ -766,12 +762,10 @@ export const Analytics = () => {
         <div {...styles?.statistics?.container}>
           <div {...styles?.statistics?.list?.container}>
             {data.isLoading ? (
+              <LoadingAnalytics />
+            ) : data.isError || statistics?.length === 0 ? (
               <>
-                <LoadingAnalytics />
-              </>
-            ) : data.isError || content?.statistics?.length === 0 ? (
-              <>
-                {Array.from(Array(limit).keys())?.map((x, i) => (
+                {Array.from(Array(ITEMS_PER_PAGE).keys())?.map((x, i) => (
                   <Fragment key={i}>
                     <div {...styles?.statistics?.list?.error}></div>
                   </Fragment>
@@ -779,7 +773,7 @@ export const Analytics = () => {
               </>
             ) : (
               <>
-                {content?.statistics?.map((stat, i) => (
+                {statistics?.map((stat, i) => (
                   <Fragment key={i}>
                     <div {...styles?.statistics?.list?.item?.container}>
                       {stat
@@ -836,6 +830,10 @@ export const Analytics = () => {
   );
 };
 
+export default Analytics;
+
+// =======================================================================
+
 const LoadingAnalytics = () => (
   <ContentLoader
     speed={2}
@@ -857,5 +855,3 @@ const LoadingAnalytics = () => (
     <rect x="0" y="1368" rx="12" ry="12" width="100%" height="144" />
   </ContentLoader>
 );
-
-export default Analytics;
