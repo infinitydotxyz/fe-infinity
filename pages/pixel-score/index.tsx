@@ -1,6 +1,6 @@
 import { BaseCollection, CardData } from '@infinityxyz/lib/types/core';
 import { useEffect, useRef, useState } from 'react';
-import { TokensGrid } from 'src/components/astra/token-grid';
+import { CollectionTokenFetcher, TokensGrid } from 'src/components/astra/token-grid';
 import { BGImage, CenteredContent, ReadMoreText, Spacer, Toaster, toastSuccess } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 import { AstraNavbar } from 'src/components/astra/astra-navbar';
@@ -15,8 +15,19 @@ export const PixelScore = () => {
   const [chainId, setChainId] = useState<string>();
   const [showCart, setShowCart] = useState(false);
   const [numTokens, setNumTokens] = useState(0);
+  const [tokenFetcher, setTokenFetcher] = useState<CollectionTokenFetcher>();
 
   const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    ref.current?.scrollTo({ left: 0, top: 0 });
+  }, [collection]);
+
+  useEffect(() => {
+    if (collection && chainId) {
+      setTokenFetcher(new CollectionTokenFetcher(collection, chainId));
+    }
+  }, [collection, chainId]);
 
   const onCardClick = (data: CardData) => {
     const i = indexOfSelection(data);
@@ -31,7 +42,7 @@ export const PixelScore = () => {
 
   let tokensGrid;
 
-  if (collection && chainId) {
+  if (collection && chainId && tokenFetcher) {
     const avatarUrl = collection.metadata.bannerImage || BLANK_IMAGE_URL;
 
     const header = (
@@ -54,9 +65,8 @@ export const PixelScore = () => {
       <div className="flex flex-col h-full w-full">
         {header}
         <TokensGrid
+          tokenFetcher={tokenFetcher}
           className="px-8 py-6"
-          collection={collection}
-          chainId={chainId}
           onClick={onCardClick}
           isSelected={(data) => {
             const i = indexOfSelection(data);
@@ -70,10 +80,6 @@ export const PixelScore = () => {
   } else {
     tokensGrid = <CenteredContent>Select a Collection</CenteredContent>;
   }
-
-  useEffect(() => {
-    ref.current?.scrollTo({ left: 0, top: 0 });
-  }, [collection]);
 
   const indexOfSelection = (value: CardData) => {
     const i = selectedTokens.findIndex((token) => {

@@ -1,4 +1,4 @@
-import { BaseCollection, BaseToken, CardData } from '@infinityxyz/lib/types/core';
+import { BaseCollection, CardData } from '@infinityxyz/lib/types/core';
 import React, { useState, useEffect } from 'react';
 import { useResizeDetector } from 'react-resize-detector';
 import { CenteredContent, ScrollLoader, Spinner } from 'src/components/common';
@@ -8,16 +8,15 @@ import { fetchTokens, tokensToCardData } from './astra-utils';
 import { TokenCard } from './token-card';
 
 interface Props {
-  collection: BaseCollection;
-  chainId: string;
+  tokenFetcher: TokenFetcher;
   className?: string;
   onClick?: (data: CardData) => void;
   isSelected: (data: CardData) => boolean;
   onLoad: (numItems: number) => void;
 }
 
-export const TokensGrid = ({ collection, chainId, className = '', onLoad, onClick, isSelected }: Props) => {
-  const [tokens, setTokens] = useState<BaseToken[]>([]);
+export const TokensGrid = ({ tokenFetcher, className = '', onLoad, onClick, isSelected }: Props) => {
+  const [cardData, setCardData] = useState<CardData[]>([]);
   const [error, setError] = useState(false);
   const [gridWidth, setGridWidth] = useState(0);
   const [cursor, setCursor] = useState<string>('');
@@ -31,34 +30,28 @@ export const TokensGrid = ({ collection, chainId, className = '', onLoad, onClic
   }, [width]);
 
   useEffect(() => {
-    setTokens([]);
+    setCardData([]);
     setLoading(true);
     handleFetch('');
-  }, [collection]);
+  }, [tokenFetcher]);
 
   const handleFetch = async (passedCursor: string) => {
-    const response = await fetchTokens(collection.address, chainId, passedCursor);
+    const { fcursor, fhasNextPage, fcardData, ferror } = await tokenFetcher.handleFetch(passedCursor);
 
-    if (response.error) {
-      setError(response.error);
-      setTokens([]);
-      setCursor('');
-      setHasNextPage(false);
+    setCursor(fcursor);
+    setHasNextPage(fhasNextPage);
+    setError(ferror);
 
-      console.error(response.error);
-    } else {
-      const result = response.result as NFTArray;
+    if (!ferror) {
       let newList = [];
 
       if (passedCursor) {
-        newList = [...tokens, ...result.data];
+        newList = [...cardData, ...fcardData];
       } else {
-        newList = result.data;
+        newList = fcardData;
       }
 
-      setTokens(newList);
-      setCursor(result.cursor);
-      setHasNextPage(result.hasNextPage);
+      setCardData(newList);
 
       onLoad(newList.length);
     }
@@ -77,7 +70,6 @@ export const TokensGrid = ({ collection, chainId, className = '', onLoad, onClic
       gridColumns = `repeat(${cols}, minmax(0, 1fr))`;
     }
 
-    const cardData = tokensToCardData(tokens, collection);
     contents = (
       <>
         <div className={twMerge('grid gap-8')} style={{ gridTemplateColumns: gridColumns }}>
@@ -136,3 +128,48 @@ export const ErrorOrLoading = ({ error }: Props2) => {
     </div>
   );
 };
+
+// ==================================================================
+
+interface TokenFetcherResult {
+  ferror: boolean;
+  fcardData: CardData[];
+  fcursor: string;
+  fhasNextPage: boolean;
+}
+
+interface TokenFetcher {
+  handleFetch(passedCursor: string): Promise<TokenFetcherResult>;
+}
+
+export class CollectionTokenFetcher implements TokenFetcher {
+  private collection: BaseCollection;
+  private chainId: string;
+
+  constructor(collection: BaseCollection, chainId: string) {
+    this.collection = collection;
+    this.chainId = chainId;
+  }
+
+  handleFetch = async (passedCursor: string): Promise<TokenFetcherResult> => {
+    let ferror = false;
+    let fcursor = '';
+    let fhasNextPage = false;
+    let fcardData: CardData[] = [];
+
+    const response = await fetchTokens(this.collection.address, this.chainId, passedCursor);
+
+    if (response.error) {
+      ferror = response.error !== null;
+      console.error(response.error);
+    } else {
+      const result = response.result as NFTArray;
+
+      fcardData = tokensToCardData(result.data, this.collection);
+      fcursor = result.cursor;
+      fhasNextPage = result.hasNextPage;
+    }
+
+    return { fcursor, fhasNextPage, fcardData, ferror };
+  };
+}
