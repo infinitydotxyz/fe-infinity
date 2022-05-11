@@ -14,6 +14,8 @@ export interface OrderCartItem {
   collectionName: string;
   collectionAddress: string;
   collectionImage?: string;
+  collectionSlug?: string;
+  hasBlueCheck?: boolean;
   numTokens?: number;
 }
 
@@ -124,6 +126,8 @@ export const OrderContextProvider = ({ children }: Props) => {
         collectionAddress: cartItem.collectionAddress,
         collectionName: cartItem.collectionName,
         collectionImage: cartItem.collectionImage ?? '',
+        collectionSlug: cartItem?.collectionSlug ?? '',
+        hasBlueCheck: cartItem?.hasBlueCheck ?? false,
         tokens:
           cartItem.tokenId !== undefined
             ? [
