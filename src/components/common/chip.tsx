@@ -18,7 +18,7 @@ export const Chip = ({ left, content, right, iconOnly, active, onClick, classNam
     <button
       className={twMerge(
         inputBorderColor,
-        'flex justify-center items-center m-1 font-medium font-heading px-3 h-[48px] rounded-full border cursor-pointer hover:bg-gray-200',
+        'flex justify-center items-center m-1 font-medium font-heading px-3 h-[48px] rounded-full border cursor-pointer hover:border-black',
         `${iconOnly ? 'w-[50px] p-2' : ''} ${activeCx} ${className}`
       )}
       onClick={onClick}

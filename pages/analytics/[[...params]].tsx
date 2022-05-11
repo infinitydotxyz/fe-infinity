@@ -336,13 +336,7 @@ export const Analytics = () => {
             value: address,
             placement: 'end',
             props: {},
-            fraction: '2fr',
-            onClick: () => {
-              if (!checkSignedIn()) {
-                return;
-              }
-              alert('Follow');
-            }
+            fraction: '2fr'
           }
         ]
       };
@@ -630,14 +624,14 @@ export const Analytics = () => {
                                 content={
                                   isFollowing ? (
                                     <button
-                                      className={`rounded-full p-4 font-bold bg-black text-white hover:bg-gray-500`}
+                                      className={`rounded-full p-4 font-bold bg-black text-white hover:bg-theme-light-850`}
                                       onClick={() => onClickFollow(isFollowing, '1', `${field?.value}`)}
                                     >
                                       <AiOutlineMinus />
                                     </button>
                                   ) : (
                                     <button
-                                      className={`rounded-full p-4 font-bold bg-white text-black hover:bg-gray-500`}
+                                      className={`rounded-full p-4 font-bold bg-white text-black hover:bg-theme-light-300`}
                                       onClick={() => onClickFollow(isFollowing, '1', `${field?.value}`)}
                                     >
                                       <AiOutlinePlus />
