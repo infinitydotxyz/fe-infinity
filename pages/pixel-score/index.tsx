@@ -1,11 +1,12 @@
 import { BaseCollection, CardData } from '@infinityxyz/lib/types/core';
 import { useEffect, useRef, useState } from 'react';
 import { TokensGrid } from 'src/components/astra/token-grid';
-import { CenteredContent, Toaster, toastSuccess } from 'src/components/common';
+import { CenteredContent, ReadMoreText, Toaster, toastSuccess } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 import { AstraNavbar } from 'src/components/astra/astra-navbar';
 import { AstraSidebar } from 'src/components/astra/astra-sidebar';
 import { AstraCart } from 'src/components/astra/astra-cart';
+import { inputBorderColor } from 'src/utils/ui-constants';
 
 export const PixelScore = () => {
   const [collection, setCollection] = useState<BaseCollection>();
@@ -29,17 +30,25 @@ export const PixelScore = () => {
 
   if (collection && chainId) {
     tokensGrid = (
-      <TokensGrid
-        className="p-8"
-        collection={collection}
-        chainId={chainId}
-        onClick={onCardClick}
-        isSelected={(data) => {
-          const i = indexOfSelection(data);
+      <div className="flex flex-col">
+        <div className={twMerge(inputBorderColor, 'flex flex-col items-center bg-gray-100 border-b px-8 py-3')}>
+          <div className="tracking-tight font-bold text-xl text-center">{collection.metadata.name}</div>
+          <div className=" max-w-3xl">
+            <ReadMoreText text={collection.metadata.description} min={10} ideal={340} max={10000} />
+          </div>
+        </div>
+        <TokensGrid
+          className="p-8"
+          collection={collection}
+          chainId={chainId}
+          onClick={onCardClick}
+          isSelected={(data) => {
+            const i = indexOfSelection(data);
 
-          return i !== -1;
-        }}
-      />
+            return i !== -1;
+          }}
+        />
+      </div>
     );
   } else {
     tokensGrid = <CenteredContent>Select a Collection</CenteredContent>;
@@ -81,7 +90,7 @@ export const PixelScore = () => {
 
   return (
     <div>
-      <div className="h-screen w-screen grid grid-rows-[auto_1fr] grid-cols-[300px_1fr_auto]">
+      <div className="h-screen w-screen grid grid-rows-[auto_1fr] grid-cols-[auto_1fr_auto]">
         <div className="col-span-3">
           <AstraNavbar />
         </div>
@@ -106,7 +115,7 @@ export const PixelScore = () => {
         )}
 
         <div className="row-span-2 col-span-1 overflow-y-auto overflow-x-hidden">
-          <div className={twMerge(showCart ? 'w-56' : 'w-0', 'transition-width duration-500 h-full')}>
+          <div className={twMerge(showCart ? 'w-64' : 'w-0', 'transition-width duration-500 h-full')}>
             <AstraCart
               tokens={selectedTokens}
               onCheckout={handleCheckout}

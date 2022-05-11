@@ -93,27 +93,27 @@ export const ReadMoreText: React.FC<ReadMoreTextPropType> = (props) => {
   let displayText;
   if (!secondaryText) {
     displayText = (
-      <div className="leading-normal">
+      <div className="leading-5">
         <span className="text-theme-light-800">{`${primaryText} ${secondaryText}`}</span>
       </div>
     );
   } else if (displaySecondary) {
     displayText = (
-      <div className="leading-normal">
-        <span className="text-theme-light-800">{`${primaryText} ${secondaryText}`}</span>
-        <span className="ml-2 underline text-black underline-offset-2 cursor-pointer" onClick={setStatus}>
+      <div className="leading-5 text-theme-light-800">
+        <span>{`${primaryText} ${secondaryText}`}</span>
+        <span className="ml-2 underline underline-offset-2 cursor-pointer" onClick={setStatus}>
           Less
         </span>
       </div>
     );
   } else {
     displayText = (
-      <div className="leading-normal">
+      <div className="leading-5">
         <span className="text-theme-light-800">
           {primaryText}
           <span style={{ display: 'none' }}>{secondaryText}</span>
-          <span className={'ml-2 underline text-black underline-offset-2 cursor-pointer'} onClick={setStatus}>
-            Read More
+          <span className={'ml-2 underline  underline-offset-2 cursor-pointer'} onClick={setStatus}>
+            More
           </span>
         </span>
       </div>
