@@ -84,7 +84,6 @@ export const StatsChips = ({ collection, weeklyStatsData }: Props) => {
       toastError(error?.errorResponse?.message);
       return;
     }
-
     setModalOpen(false);
 
     if (result.canModify) {
