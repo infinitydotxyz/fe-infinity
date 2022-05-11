@@ -1,7 +1,7 @@
 import { BaseCollection, CardData } from '@infinityxyz/lib/types/core';
 import { useEffect, useRef, useState } from 'react';
 import { TokensGrid } from 'src/components/astra/token-grid';
-import { BGImage, CenteredContent, ReadMoreText, Toaster, toastSuccess } from 'src/components/common';
+import { BGImage, CenteredContent, ReadMoreText, Spacer, Toaster, toastSuccess } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 import { AstraNavbar } from 'src/components/astra/astra-navbar';
 import { AstraSidebar } from 'src/components/astra/astra-sidebar';
@@ -14,6 +14,7 @@ export const PixelScore = () => {
   const [selectedTokens, setSelectedTokens] = useState<CardData[]>([]);
   const [chainId, setChainId] = useState<string>();
   const [showCart, setShowCart] = useState(false);
+  const [numTokens, setNumTokens] = useState(0);
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -34,7 +35,7 @@ export const PixelScore = () => {
     const avatarUrl = collection.metadata.bannerImage || BLANK_IMAGE_URL;
 
     const header = (
-      <div className={twMerge(inputBorderColor, 'flex justify-center   bg-gray-100 border-b px-8 py-3')}>
+      <div className={twMerge(inputBorderColor, 'flex items-center bg-gray-100 border-b px-8 py-3')}>
         <BGImage src={avatarUrl} className="mr-6 h-16 w-36 rounded-xl" />
         <div className="flex flex-col items-start bg-gray-100">
           <div className="tracking-tight text-theme-light-800 font-bold text-xl text-center  ">
@@ -44,6 +45,8 @@ export const PixelScore = () => {
             <ReadMoreText text={collection.metadata.description} min={50} ideal={160} max={10000} />
           </div>
         </div>
+        <Spacer />
+        <div className="text-lg">{numTokens} items</div>
       </div>
     );
 
@@ -60,6 +63,7 @@ export const PixelScore = () => {
 
             return i !== -1;
           }}
+          onLoad={(value) => setNumTokens(value)}
         />
       </div>
     );
@@ -128,6 +132,7 @@ export const PixelScore = () => {
   };
 
   const navBar = <AstraNavbar />;
+
   const sidebar = (
     <AstraSidebar
       selectedCollection={collection}
@@ -140,6 +145,7 @@ export const PixelScore = () => {
       }}
     />
   );
+
   const cart = (
     <AstraCart
       tokens={selectedTokens}

@@ -13,9 +13,10 @@ interface Props2 {
   className?: string;
   onClick?: (data: CardData) => void;
   isSelected: (data: CardData) => boolean;
+  onLoad: (numItems: number) => void;
 }
 
-export const TokensGrid = ({ collection, chainId, className = '', onClick, isSelected }: Props2) => {
+export const TokensGrid = ({ collection, chainId, className = '', onLoad, onClick, isSelected }: Props2) => {
   const [tokens, setTokens] = useState<BaseToken[]>([]);
   const [error, setError] = useState(false);
   const [gridWidth, setGridWidth] = useState(0);
@@ -45,13 +46,19 @@ export const TokensGrid = ({ collection, chainId, className = '', onClick, isSel
       setHasNextPage(false);
     } else {
       const result = response.result as NFTArray;
+      let newList = [];
+
       if (passedCursor) {
-        setTokens([...tokens, ...result.data]);
+        newList = [...tokens, ...result.data];
       } else {
-        setTokens(result.data);
+        newList = result.data;
       }
+
+      setTokens(newList);
       setCursor(result.cursor);
       setHasNextPage(result.hasNextPage);
+
+      onLoad(newList.length);
     }
 
     setLoading(false);
