@@ -455,7 +455,6 @@ export const Analytics = () => {
             url: `/analytics/trending/${interval}`,
             label: 'Trending'
           },
-
           ...(connected
             ? [
                 {
@@ -557,7 +556,7 @@ export const Analytics = () => {
                 </Fragment>
               ))}
 
-              <Button variant="outline" onClick={() => toggleDrawer()}>
+              <Button variant="outline" className="font-heading" onClick={() => toggleDrawer()}>
                 Filter
               </Button>
             </Tab.List>
@@ -631,14 +630,14 @@ export const Analytics = () => {
                                 content={
                                   isFollowing ? (
                                     <button
-                                      className={`rounded-full p-4 font-bold bg-black text-white`}
+                                      className={`rounded-full p-4 font-bold bg-black text-white hover:bg-gray-500`}
                                       onClick={() => onClickFollow(isFollowing, '1', `${field?.value}`)}
                                     >
                                       <AiOutlineMinus />
                                     </button>
                                   ) : (
                                     <button
-                                      className={`rounded-full p-4 font-bold bg-white text-black`}
+                                      className={`rounded-full p-4 font-bold bg-white text-black hover:bg-gray-500`}
                                       onClick={() => onClickFollow(isFollowing, '1', `${field?.value}`)}
                                     >
                                       <AiOutlinePlus />
