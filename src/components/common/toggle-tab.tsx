@@ -21,10 +21,10 @@ export const useToggleTab = (options: string[], defaultOption: string) => {
 
 export const ToggleTab = ({ options, onChange, selected, className = '', equalWidths = true }: Props) => {
   return (
-    <div className={`flex font-heading ${className}`}>
+    <div className={`flex ${className}`}>
       <div className="cursor-pointer flex gap-1 rounded-full items-center p-1 bg-gray-100">
         {options.map((option: string) => {
-          const activeCx = selected === option ? 'bg-black text-white' : '';
+          const activeCx = selected === option ? 'bg-black text-white font-bold' : '';
 
           return (
             <div
