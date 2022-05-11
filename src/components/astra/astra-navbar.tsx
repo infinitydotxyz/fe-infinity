@@ -9,7 +9,7 @@ export const AstraNavbar = () => {
 
   const tabBar = (
     <div className={twMerge(inputBorderColor, 'flex justify-center')}>
-      <ToggleTab options={options} selected={selected} onChange={onChange} />
+      <ToggleTab options={options} selected={selected} onChange={onChange} altStyle={true} equalWidths={false} />
     </div>
   );
 
