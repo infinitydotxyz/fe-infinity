@@ -7,7 +7,7 @@ import { NFTArray } from '../../utils/types/collection-types';
 import { fetchTokens, tokensToCardData } from './astra-utils';
 import { TokenCard } from './token-card';
 
-interface Props2 {
+interface Props {
   collection: BaseCollection;
   chainId: string;
   className?: string;
@@ -16,7 +16,7 @@ interface Props2 {
   onLoad: (numItems: number) => void;
 }
 
-export const TokensGrid = ({ collection, chainId, className = '', onLoad, onClick, isSelected }: Props2) => {
+export const TokensGrid = ({ collection, chainId, className = '', onLoad, onClick, isSelected }: Props) => {
   const [tokens, setTokens] = useState<BaseToken[]>([]);
   const [error, setError] = useState(false);
   const [gridWidth, setGridWidth] = useState(0);
@@ -44,6 +44,8 @@ export const TokensGrid = ({ collection, chainId, className = '', onLoad, onClic
       setTokens([]);
       setCursor('');
       setHasNextPage(false);
+
+      console.error(response.error);
     } else {
       const result = response.result as NFTArray;
       let newList = [];
@@ -64,32 +66,18 @@ export const TokensGrid = ({ collection, chainId, className = '', onLoad, onClic
     setLoading(false);
   };
 
-  if (error) {
-    console.error(error);
-    return (
-      <div className={className}>
-        <div>Unable to load data.</div>
-      </div>
-    );
-  }
-
-  let gridColumns = 'grid-cols-2';
-  if (gridWidth > 0) {
-    const cols = Math.round(gridWidth / 250);
-    gridColumns = `repeat(${cols}, minmax(0, 1fr))`;
-  }
-
   let contents;
 
-  if (loading) {
-    contents = (
-      <CenteredContent>
-        <Spinner />
-      </CenteredContent>
-    );
+  if (error || loading) {
+    contents = <ErrorOrLoading error={error} />;
   } else {
-    const cardData = tokensToCardData(tokens, collection);
+    let gridColumns = 'grid-cols-2';
+    if (gridWidth > 0) {
+      const cols = Math.round(gridWidth / 250);
+      gridColumns = `repeat(${cols}, minmax(0, 1fr))`;
+    }
 
+    const cardData = tokensToCardData(tokens, collection);
     contents = (
       <>
         <div className={twMerge('grid gap-8')} style={{ gridTemplateColumns: gridColumns }}>
@@ -123,6 +111,28 @@ export const TokensGrid = ({ collection, chainId, className = '', onLoad, onClic
   return (
     <div ref={ref} className={twMerge('h-full w-full', className)}>
       {contents}
+    </div>
+  );
+};
+
+// ====================================================================
+
+interface Props2 {
+  error: boolean;
+}
+
+export const ErrorOrLoading = ({ error }: Props2) => {
+  let contents;
+
+  if (error) {
+    contents = <div>Unable to load data</div>;
+  } else {
+    contents = <Spinner />;
+  }
+
+  return (
+    <div className="h-full w-full">
+      <CenteredContent>{contents}</CenteredContent>
     </div>
   );
 };

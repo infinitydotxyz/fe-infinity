@@ -51,7 +51,7 @@ export const PixelScore = () => {
     );
 
     tokensGrid = (
-      <div className="flex flex-col">
+      <div className="flex flex-col h-full w-full">
         {header}
         <TokensGrid
           className="px-8 py-6"
