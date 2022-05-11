@@ -1,19 +1,19 @@
 import { BaseCollection, CardData } from '@infinityxyz/lib/types/core';
 import { useEffect, useRef, useState } from 'react';
 import { TokensGrid } from 'src/components/astra/token-grid';
-import { CenteredContent, ReadMoreText, Toaster, toastSuccess, ToggleTab, useToggleTab } from 'src/components/common';
+import { BGImage, CenteredContent, ReadMoreText, Toaster, toastSuccess } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 import { AstraNavbar } from 'src/components/astra/astra-navbar';
 import { AstraSidebar } from 'src/components/astra/astra-sidebar';
 import { AstraCart } from 'src/components/astra/astra-cart';
 import { inputBorderColor } from 'src/utils/ui-constants';
+import { BLANK_IMAGE_URL } from 'src/utils';
 
 export const PixelScore = () => {
   const [collection, setCollection] = useState<BaseCollection>();
   const [selectedTokens, setSelectedTokens] = useState<CardData[]>([]);
   const [chainId, setChainId] = useState<string>();
   const [showCart, setShowCart] = useState(false);
-  const { options, onChange, selected } = useToggleTab(['All', 'Top 100', 'Rare'], 'All');
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -31,16 +31,25 @@ export const PixelScore = () => {
   let tokensGrid;
 
   if (collection && chainId) {
-    tokensGrid = (
-      <div className="flex flex-col">
-        <div className={twMerge(inputBorderColor, 'flex flex-col items-center bg-slate-50 border-b px-8 py-3')}>
-          <div className="tracking-tight text-theme-light-800 font-bold text-2xl text-center">
+    const avatarUrl = collection.metadata.bannerImage || BLANK_IMAGE_URL;
+
+    const header = (
+      <div className={twMerge(inputBorderColor, 'flex justify-center   bg-gray-100 border-b px-8 py-3')}>
+        <BGImage src={avatarUrl} className="mr-6 h-16 w-36 rounded-xl" />
+        <div className="flex flex-col items-start bg-gray-100">
+          <div className="tracking-tight text-theme-light-800 font-bold text-xl text-center  ">
             {collection.metadata.name}
           </div>
           <div className="max-w-3xl">
-            <ReadMoreText text={collection.metadata.description} min={10} ideal={340} max={10000} />
+            <ReadMoreText text={collection.metadata.description} min={50} ideal={160} max={10000} />
           </div>
         </div>
+      </div>
+    );
+
+    tokensGrid = (
+      <div className="flex flex-col">
+        {header}
         <TokensGrid
           className="px-8 py-6"
           collection={collection}
@@ -94,26 +103,26 @@ export const PixelScore = () => {
 
   const gridTemplate = (
     navBar: JSX.Element,
-    tabBar: JSX.Element,
     sideBar: JSX.Element,
     grid: JSX.Element,
-    cart: JSX.Element
+    cart: JSX.Element,
+    footer: JSX.Element
   ) => {
     return (
       <div className="h-screen w-screen grid grid-rows-[auto_1fr] grid-cols-[auto_1fr_auto]">
-        <div className="col-span-3">{navBar}</div>
-
-        <div className="col-span-3">{tabBar}</div>
+        <div className="col-span-full">{navBar}</div>
 
         <div className="row-span-2 col-span-1">{sideBar}</div>
 
-        <div ref={ref} className="row-span-2 col-span-1 overflow-y-auto overflow-x-hidden">
+        <div ref={ref} className="row-span-2 col-span-1 overflow-y-scroll overflow-x-hidden">
           {grid}
         </div>
 
         <div className="row-span-2 col-span-1 overflow-y-auto overflow-x-hidden">
           <div className={twMerge(showCart ? 'w-64' : 'w-0', 'transition-width duration-500 h-full')}>{cart}</div>
         </div>
+
+        <div className="row-span-3 col-span-full">{footer}</div>
       </div>
     );
   };
@@ -141,13 +150,11 @@ export const PixelScore = () => {
     />
   );
 
-  const tabBar = (
-    <div className={twMerge(inputBorderColor, 'flex justify-center p-2 border-b bg-slate-200')}>
-      <ToggleTab options={options} selected={selected} onChange={onChange} />
-    </div>
+  const footer = (
+    <div className={twMerge(inputBorderColor, 'flex justify-center p-1 border-t bg-slate-200')}>Astra, LLC</div>
   );
 
-  const contents = gridTemplate(navBar, tabBar, sidebar, tokensGrid, cart);
+  const contents = gridTemplate(navBar, sidebar, tokensGrid, cart, footer);
 
   return (
     <div>

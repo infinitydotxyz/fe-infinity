@@ -28,7 +28,7 @@ export const AstraSidebar = ({ onClick, selectedCollection }: Props) => {
   );
 
   return (
-    <div className={twMerge('flex flex-col pt-3 h-full items-center bg-slate-100 border-r', inputBorderColor)}>
+    <div className={twMerge('flex flex-col pt-3 h-full items-center border-r', inputBorderColor)}>
       <DebouncedTextField
         className="px-4 mb-3"
         value={query}

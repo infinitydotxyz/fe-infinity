@@ -3,7 +3,7 @@ import { BGImage } from 'src/components/common';
 import { BLANK_IMAGE_URL } from 'src/utils';
 import { CollectionSearchDto } from '../../utils/types/collection-types';
 import { twMerge } from 'tailwind-merge';
-import { inputBorderColor } from 'src/utils/ui-constants';
+import { inputBorderColor, selectionOutline } from 'src/utils/ui-constants';
 
 interface Props2 {
   collection: CollectionSearchDto;
@@ -11,20 +11,8 @@ interface Props2 {
   onClick: (collection: CollectionSearchDto) => void;
 }
 
-const getAvatarUrl = (imgUrl: string) => {
-  if (!imgUrl) {
-    return null;
-  } else {
-    const index = imgUrl.indexOf('=');
-    if (index) {
-      return imgUrl.slice(0, index) + '=h100';
-    }
-    return imgUrl;
-  }
-};
-
 export const CollectionListItem = ({ collection, onClick, selected }: Props2) => {
-  const avatarUrl = getAvatarUrl(collection.bannerImage) || BLANK_IMAGE_URL;
+  const avatarUrl = collection.bannerImage || BLANK_IMAGE_URL;
 
   return (
     <div className="relative">
@@ -32,7 +20,7 @@ export const CollectionListItem = ({ collection, onClick, selected }: Props2) =>
         className={twMerge(
           'w-full cursor-pointer border bg-white rounded-lg overflow-clip h-24',
           inputBorderColor,
-          selected ? 'outline-4 outline-slate-400 outline-offset-1 outline' : ''
+          selected ? selectionOutline : ''
         )}
         onClick={() => onClick(collection)}
       >

@@ -60,7 +60,7 @@ export const ellipsisString = (inString?: string, left = 6, right = 4): string =
   if (inString) {
     // don't do anything if less than a certain length
     if (inString.length > left + right + 5) {
-      return `${inString.slice(0, left)}...${inString.slice(-right)}`;
+      return `${inString.slice(0, left)}\u{02026}${inString.slice(-right)}`;
     } else {
       return inString;
     }

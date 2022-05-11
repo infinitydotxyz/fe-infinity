@@ -1,5 +1,5 @@
 import { CardData } from '@infinityxyz/lib/types/core';
-import { inputBorderColor } from 'src/utils/ui-constants';
+import { inputBorderColor, selectionOutline } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { BGImage } from '../common';
 
@@ -19,7 +19,7 @@ export const TokenCard = ({ data, onClick, selected }: Props): JSX.Element => {
         'overflow-clip  border',
         inputBorderColor,
         'rounded-2xl w-full h-[290px] relative flex flex-col',
-        selected ? 'outline-4 outline-slate-400 outline-offset-1 outline' : ''
+        selected ? selectionOutline : ''
       )}
       onClick={() => onClick(data)}
     >
