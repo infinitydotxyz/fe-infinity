@@ -1,6 +1,7 @@
 import { OBOrder, OBOrderItem, OBTokenInfo } from '@infinityxyz/lib/types/core';
 import { ReactNode } from 'react';
 import { NextLink } from 'src/components/common';
+import { useRouter } from 'next/router';
 
 type Props4 = {
   content?: ReactNode;
@@ -11,6 +12,8 @@ type Props4 = {
 };
 
 export const OrderbookItem = ({ title, content, nameItem, order }: Props4): JSX.Element => {
+  const router = useRouter();
+
   if (nameItem) {
     // one collection
     if (order.nfts.length === 1) {
@@ -25,8 +28,7 @@ export const OrderbookItem = ({ title, content, nameItem, order }: Props4): JSX.
         return (
           <SingleCollectionCell
             onClickTitle={() => {
-              // todo: once we have 'collectionSlug' from api, navigate to it onClick.
-              // console.log('nft', nft);
+              router.push(`/collection/${nft.collectionSlug}`);
             }}
             image={nft.collectionImage}
             title={nft.collectionName}
@@ -98,7 +100,7 @@ const SingleCollectionCell = ({ image, title, onClickTitle, token, count = 0 }: 
         </span>
       </div>
 
-      <div className="flex flex-col truncate">
+      <div className={`flex flex-col truncate ${onClickTitle ? 'cursor-pointer' : ''}`}>
         <div className="truncate" onClick={onClickTitle}>
           {title}
         </div>
