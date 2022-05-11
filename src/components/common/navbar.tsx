@@ -164,10 +164,8 @@ export const Navbar = () => {
             )}
           </React.Fragment>
         ))}
-        <div className={`flex space-x-2`}>
-          <ShoppingCartButton />
-          <ConnectButton />
-        </div>
+        <ShoppingCartButton />
+        <ConnectButton />
       </div>
     </div>
   );

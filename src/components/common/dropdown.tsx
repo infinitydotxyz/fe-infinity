@@ -34,7 +34,7 @@ export const Dropdown = ({ label, items, toggler, contentClassName, className }:
                 'px-6 py-2 border rounded-3xl text-gray-900 font-heading hover:text-white flex items-center space-x-1'
               )}
             >
-              <div>{label}</div>
+              <div className="whitespace-nowrap">{label}</div>
               <BiCaretDown />
             </Menu.Button>
           </span>

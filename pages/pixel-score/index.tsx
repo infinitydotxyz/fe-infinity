@@ -116,17 +116,17 @@ export const PixelScore = () => {
       <div className="h-screen w-screen grid grid-rows-[auto_1fr] grid-cols-[auto_1fr_auto]">
         <div className="col-span-full">{navBar}</div>
 
-        <div className="row-span-2 col-span-1">{sideBar}</div>
+        <div className="row-span-3 col-span-1">{sideBar}</div>
 
-        <div ref={ref} className="row-span-2 col-span-1 overflow-y-scroll overflow-x-hidden">
+        <div ref={ref} className="col-span-1 overflow-y-scroll overflow-x-hidden">
           {grid}
         </div>
 
-        <div className="row-span-2 col-span-1 overflow-y-auto overflow-x-hidden">
+        <div className="row-span-3 col-span-1 overflow-y-auto overflow-x-hidden">
           <div className={twMerge(showCart ? 'w-64' : 'w-0', 'transition-width duration-500 h-full')}>{cart}</div>
         </div>
 
-        <div className="row-span-3 col-span-full">{footer}</div>
+        <div className="col-start-2 col-span-1">{footer}</div>
       </div>
     );
   };
@@ -157,7 +157,11 @@ export const PixelScore = () => {
   );
 
   const footer = (
-    <div className={twMerge(inputBorderColor, 'flex justify-center p-1 border-t bg-slate-200')}>Astra, LLC</div>
+    <div className={twMerge(inputBorderColor, 'px-6 py-1 flex justify-center border-t bg-slate-200')}>
+      <div className="text-lg"> {collection?.metadata.name}</div>
+      <Spacer />
+      <div className="text-lg">{numTokens} items</div>
+    </div>
   );
 
   const contents = gridTemplate(navBar, sidebar, tokensGrid, cart, footer);
