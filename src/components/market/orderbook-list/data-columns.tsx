@@ -64,7 +64,7 @@ export const defaultDataColumns = (order: OBOrder): DataColumn[] => {
       }
     },
     {
-      name: 'Expiry Date',
+      name: 'Expiry date',
       type: 'Text',
       field: 'expirationDate',
       width: '1fr'
