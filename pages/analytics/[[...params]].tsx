@@ -566,8 +566,6 @@ export const Analytics = () => {
 
         <div className="w-full h-full  flex-[1.4]  grid grid-rows-1 grid-cols-24">
           <div className="w-full h-full  row-start-1 col-start-1 row-span-1 col-span-24  ring ring-inset ring-transparent flex flex-col gap-2">
-            {data.isLoading && <LoadingAnalytics />}
-
             {/* {data.isLoading ? (
               <LoadingAnalytics />
             ) : data.isError || statistics?.length === 0 ? (
@@ -659,6 +657,8 @@ export const Analytics = () => {
             })}
             {/* </>
             )} */}
+
+            {data.isLoading && <LoadingAnalytics />}
 
             <FetchMore
               onFetchMore={() => {
