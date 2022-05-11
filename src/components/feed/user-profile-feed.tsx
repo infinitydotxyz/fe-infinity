@@ -61,9 +61,7 @@ export const UserProfileFeed = ({
         cursor: newCursor
       }
     });
-    console.log('result?.hasNextPage', result?.hasNextPage);
     if (result?.hasNextPage === true) {
-      console.log('result?.cursor', result?.cursor);
       setCursor(result?.cursor);
     }
     setHasNextPage(result?.hasNextPage);
@@ -84,7 +82,6 @@ export const UserProfileFeed = ({
     setIsFetching(false);
     if (isRefresh) {
       setData([...moreData]);
-      setCursor('');
     } else {
       setData([...data, ...moreData]);
     }
