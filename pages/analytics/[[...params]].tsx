@@ -98,7 +98,6 @@ export const Analytics = () => {
   let statistics = null;
   if (data.result) {
     statistics = data.result.data.map((d, index) => {
-      console.log('--- d', d);
       const address = d.collectionAddress;
       const name = d.name;
       const image = d.profileImage ? d.profileImage : BLANK_IMG;

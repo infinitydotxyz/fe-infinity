@@ -30,7 +30,7 @@ export const defaultDataColumns = (order: OBOrder): DataColumn[] => {
       field: 'name',
       width: '2fr',
       onClick: () => {
-        console.log('order', order);
+        // console.log('order', order);
         // const maker = order.makerUsername || order.makerAddress;
         // router.push(`/profile/${maker}`);
       }
