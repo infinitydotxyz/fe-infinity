@@ -1,17 +1,18 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Tab } from '@headlessui/react';
 import { useRouter } from 'next/router';
-import { useFetch } from 'src/utils/apiUtils';
-import { Button, Checkbox, Drawer, PageBox, Spacer, ToggleTab, useToggleTab } from 'src/components/common';
+import { useFetch, apiDelete, apiPost } from 'src/utils/apiUtils';
+import { Button, Checkbox, Drawer, PageBox, Spacer, toastError, ToggleTab, useToggleTab } from 'src/components/common';
 import { Field } from 'src/components/analytics/field';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CollectionStats } from '@infinityxyz/lib/types/core';
 import { ITEMS_PER_PAGE, BLANK_IMG } from 'src/utils/constants';
 import ContentLoader from 'react-content-loader';
+import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
 
 export const Analytics = () => {
   const router = useRouter();
-  const { user } = useAppContext();
+  const { user, checkSignedIn, userFollowingCollections, fetchFollowingCollections } = useAppContext();
   const connected = user?.address ? true : false;
   const [page, setPage] = useState(router.query.params?.[0] ? router.query.params?.[0] : 'trending');
   const [interval, setInterval] = useState(router.query.params?.[1] ? router.query.params?.[1] : 'weekly');
@@ -97,6 +98,7 @@ export const Analytics = () => {
   let statistics = null;
   if (data.result) {
     statistics = data.result.data.map((d, index) => {
+      console.log('--- d', d);
       const address = d.collectionAddress;
       const name = d.name;
       const image = d.profileImage ? d.profileImage : BLANK_IMG;
@@ -292,7 +294,13 @@ export const Analytics = () => {
           value: address,
           placement: 'end',
           props: {},
-          fraction: '2fr'
+          fraction: '2fr',
+          onClick: () => {
+            if (!checkSignedIn()) {
+              return;
+            }
+            alert('Follow');
+          }
         }
       ];
     });
@@ -419,6 +427,39 @@ export const Analytics = () => {
     }
   };
 
+  const onClickFollow = async (isFollowing: boolean, chainId: string, address: string) => {
+    if (!checkSignedIn()) {
+      return;
+    }
+    if (isFollowing) {
+      const { error } = await apiDelete(`/user/1:${user?.address}/followingCollections`, {
+        data: {
+          collectionChainId: chainId,
+          collectionAddress: address
+        }
+      });
+      if (error) {
+        toastError(error?.errorResponse?.message);
+      } else {
+        // toastSuccess('Unfollowed ' + collection?.metadata?.name);
+        fetchFollowingCollections();
+      }
+    } else {
+      const { error } = await apiPost(`/user/1:${user?.address}/followingCollections`, {
+        data: {
+          collectionChainId: chainId,
+          collectionAddress: address
+        }
+      });
+      if (error) {
+        toastError(error?.errorResponse?.message);
+      } else {
+        // toastSuccess('Followed ' + collection?.metadata?.name);
+        fetchFollowingCollections();
+      }
+    }
+  };
+
   const tabStyles = {
     className: ({ selected }: { selected: boolean }) => `
             w-content h-content
@@ -523,6 +564,7 @@ export const Analytics = () => {
                                 type={field?.type}
                                 label={field?.label}
                                 value={field?.value}
+                                onClick={field?.onClick}
                               />
                               <div className=""></div>
                             </div>
@@ -530,14 +572,39 @@ export const Analytics = () => {
                         ))}
                       {stat
                         ?.filter((s) => s.placement === 'end')
-                        .map((field, j) => (
-                          <Fragment key={j}>
-                            <div className="w-full h-full  row-span-1 col-span-1">
-                              <Field type={field?.type} label={field?.label} value={field?.value} />
-                              <div className=""></div>
-                            </div>
-                          </Fragment>
-                        ))}
+                        .map((field, j) => {
+                          const isFollowing =
+                            userFollowingCollections.findIndex((coll) => coll.collectionAddress === field?.value) >= 0;
+                          return (
+                            <Fragment key={j}>
+                              <div className="w-full h-full  row-span-1 col-span-1">
+                                <Field
+                                  type={field?.type}
+                                  label={field?.label}
+                                  value={field?.value}
+                                  content={
+                                    isFollowing ? (
+                                      <button
+                                        className={`rounded-full p-4 font-bold bg-black text-white`}
+                                        onClick={() => onClickFollow(isFollowing, '1', `${field?.value}`)}
+                                      >
+                                        <AiOutlineMinus />
+                                      </button>
+                                    ) : (
+                                      <button
+                                        className={`rounded-full p-4 font-bold bg-white text-black`}
+                                        onClick={() => onClickFollow(isFollowing, '1', `${field?.value}`)}
+                                      >
+                                        <AiOutlinePlus />
+                                      </button>
+                                    )
+                                  }
+                                />
+                                <div className=""></div>
+                              </div>
+                            </Fragment>
+                          );
+                        })}
                     </div>
                   </Fragment>
                 ))}

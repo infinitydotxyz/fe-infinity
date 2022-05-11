@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { GoTriangleUp, GoTriangleDown } from 'react-icons/go';
-import { AiOutlinePlus, AiOutlineCaretUp, AiOutlineCaretDown } from 'react-icons/ai';
+import { AiOutlineCaretUp, AiOutlineCaretDown } from 'react-icons/ai';
 
 interface Props {
   type?: string;
@@ -9,9 +9,10 @@ interface Props {
   sortable?: boolean;
   onSort?: ((direction: string) => void) | ((direction: string) => void) | null | undefined;
   onClick?: () => void;
+  content?: ReactNode;
 }
 
-export const Field = ({ onSort, sortable = false, onClick, type, label, value }: Props) => {
+export const Field = ({ onSort, sortable = false, onClick, type, label, value, content }: Props) => {
   const [sortOrder, setSortOrder] = useState('desc');
   const styles = {
     stat: {
@@ -284,13 +285,7 @@ export const Field = ({ onSort, sortable = false, onClick, type, label, value }:
               </div>
             </div>
           )}
-          {type === 'action' && (
-            <div {...styles?.action?.container}>
-              <button {...styles?.action?.button?.container}>
-                <AiOutlinePlus className="text-white font-bold" />
-              </button>
-            </div>
-          )}
+          {type === 'action' && <div {...styles?.action?.container}>{content}</div>}
         </div>
         {sortable && (
           <div {...styles?.stat?.sorting?.container}>
