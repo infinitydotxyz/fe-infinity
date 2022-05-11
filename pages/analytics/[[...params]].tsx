@@ -455,7 +455,6 @@ export const Analytics = () => {
             url: `/analytics/trending/${interval}`,
             label: 'Trending'
           },
-
           ...(connected
             ? [
                 {
@@ -557,7 +556,7 @@ export const Analytics = () => {
                 </Fragment>
               ))}
 
-              <Button variant="outline" onClick={() => toggleDrawer()}>
+              <Button variant="outline" className="font-heading" onClick={() => toggleDrawer()}>
                 Filter
               </Button>
             </Tab.List>
@@ -566,8 +565,6 @@ export const Analytics = () => {
 
         <div className="w-full h-full  flex-[1.4]  grid grid-rows-1 grid-cols-24">
           <div className="w-full h-full  row-start-1 col-start-1 row-span-1 col-span-24  ring ring-inset ring-transparent flex flex-col gap-2">
-            {data.isLoading && <LoadingAnalytics />}
-
             {/* {data.isLoading ? (
               <LoadingAnalytics />
             ) : data.isError || statistics?.length === 0 ? (
@@ -633,14 +630,14 @@ export const Analytics = () => {
                                 content={
                                   isFollowing ? (
                                     <button
-                                      className={`rounded-full p-4 font-bold bg-black text-white`}
+                                      className={`rounded-full p-4 font-bold bg-black text-white hover:bg-gray-500`}
                                       onClick={() => onClickFollow(isFollowing, '1', `${field?.value}`)}
                                     >
                                       <AiOutlineMinus />
                                     </button>
                                   ) : (
                                     <button
-                                      className={`rounded-full p-4 font-bold bg-white text-black`}
+                                      className={`rounded-full p-4 font-bold bg-white text-black hover:bg-gray-500`}
                                       onClick={() => onClickFollow(isFollowing, '1', `${field?.value}`)}
                                     >
                                       <AiOutlinePlus />
@@ -659,6 +656,8 @@ export const Analytics = () => {
             })}
             {/* </>
             )} */}
+
+            {data.isLoading && <LoadingAnalytics />}
 
             <FetchMore
               onFetchMore={() => {

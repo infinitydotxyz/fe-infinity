@@ -85,9 +85,7 @@ export const GalleryBox = ({
       }
     );
     setError(error);
-    if (result?.hasNextPage === true) {
-      setCursor(result?.cursor);
-    }
+    setCursor(result?.cursor);
 
     let moreData: CardData[] = (result?.data || []).map((item: NftItem) => {
       return {
@@ -113,7 +111,6 @@ export const GalleryBox = ({
     setIsFetching(false);
     if (isRefresh) {
       setData([...moreData]);
-      setCursor('');
     } else {
       setData([...data, ...moreData]);
     }
