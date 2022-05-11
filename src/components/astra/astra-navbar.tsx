@@ -1,4 +1,4 @@
-import { Button, ConnectButton, NextLink, Spacer, SVG } from 'src/components/common';
+import { ConnectButton, NextLink, Spacer, SVG } from 'src/components/common';
 import { inputBorderColor, largeIconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
