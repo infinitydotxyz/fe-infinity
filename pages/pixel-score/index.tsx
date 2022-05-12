@@ -67,6 +67,7 @@ export const PixelScore = () => {
     case AstraNavTab.Hot:
     case AstraNavTab.Rare:
     case AstraNavTab.Top100:
+      name = currentTab;
       emptyMessage = currentTab;
       break;
   }
@@ -165,6 +166,11 @@ export const PixelScore = () => {
   const navBar = (
     <AstraNavbar
       onTabChange={(value) => {
+        // blanks out the cards
+        setTokenFetcher(undefined);
+        setCollection(undefined);
+
+        // set tab so new cards will load
         setCurrentTab(value);
       }}
     />
@@ -195,7 +201,7 @@ export const PixelScore = () => {
 
   const footer = (
     <div className={twMerge(inputBorderColor, 'px-6 py-1 flex justify-center border-t bg-slate-200')}>
-      <div className="text-lg"> {collection?.metadata.name}</div>
+      <div className="text-lg"> {name}</div>
       <Spacer />
       <div className="text-lg">{numTokens} items</div>
     </div>
