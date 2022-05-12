@@ -64,6 +64,13 @@ export const PixelScore = () => {
       emptyMessage = 'Select a Collection';
       break;
     case AstraNavTab.MyNFTs:
+      name = currentTab;
+      emptyMessage = currentTab;
+
+      if (!user) {
+        emptyMessage = 'Click Connect to sign in';
+      }
+      break;
     case AstraNavTab.Hot:
     case AstraNavTab.Pending:
     case AstraNavTab.Top100:
