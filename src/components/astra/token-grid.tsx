@@ -37,6 +37,12 @@ export const TokensGrid = ({ tokenFetcher, className = '', onLoad, onClick, isSe
   const handleFetch = async (passedCursor: string) => {
     const { fcursor, fhasNextPage, fcardData, ferror } = await tokenFetcher.handleFetch(passedCursor);
 
+    // can't update react state after unmount
+    // if (!isMounted) {
+    //   console.log('fuckkk');
+    //   return;
+    // }
+
     setCursor(fcursor);
     setHasNextPage(fhasNextPage);
     setError(ferror);

@@ -9,14 +9,14 @@ interface Props {
 export enum AstraNavTab {
   All = 'All',
   Top100 = 'Top 100',
-  Rare = 'Rare',
+  Pending = 'Pending',
   Hot = 'Hot',
   MyNFTs = 'My NFTs'
 }
 
 export const AstraNavbar = ({ onTabChange }: Props) => {
   const { options, onChange, selected } = useToggleTab(
-    [AstraNavTab.All, AstraNavTab.Top100, AstraNavTab.Rare, AstraNavTab.Hot, AstraNavTab.MyNFTs],
+    [AstraNavTab.All, AstraNavTab.Top100, AstraNavTab.Hot, AstraNavTab.MyNFTs, AstraNavTab.Pending],
     AstraNavTab.All
   );
 

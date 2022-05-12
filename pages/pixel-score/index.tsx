@@ -65,7 +65,7 @@ export const PixelScore = () => {
       break;
     case AstraNavTab.MyNFTs:
     case AstraNavTab.Hot:
-    case AstraNavTab.Rare:
+    case AstraNavTab.Pending:
     case AstraNavTab.Top100:
       name = currentTab;
       emptyMessage = currentTab;
