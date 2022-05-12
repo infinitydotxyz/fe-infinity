@@ -19,6 +19,7 @@ import { CollectionStats } from '@infinityxyz/lib/types/core';
 import { ITEMS_PER_PAGE, BLANK_IMG } from 'src/utils/constants';
 import ContentLoader from 'react-content-loader';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
+import { truncateDecimals } from 'src/utils';
 
 type StatColType = {
   id?: string;
@@ -147,7 +148,7 @@ export const Analytics = () => {
       // const trust = d.votesFor > 0 ? `${(d.votesFor / (d.votesAgainst + d.votesFor)) * 100}%` : '0%';
       const items = d.numNfts ? d.numNfts : '-';
       const owners = d.numOwners ? d.numOwners : '-';
-      const volume = d.volume ? d.volume.toFixed(1) : '-';
+      const volume = d.volume ? d.volume : '-';
       const floorPrice = d.floorPrice ? d.floorPrice : '-';
       const volumePercentChange = d.volumePercentChange ? d.volumePercentChange.toFixed(1) : '-';
       const floorPricePercentChange = d.floorPricePercentChange ? d.floorPricePercentChange.toFixed(1) : '-';
@@ -222,7 +223,7 @@ export const Analytics = () => {
             id: 'volume',
             label: 'Volume',
             type: 'number',
-            value: `Ξ ${volume.toLocaleString()}`,
+            value: `Ξ ${truncateDecimals(volume.toLocaleString())}`,
             show: columns['volume'],
             placement: 'middle',
             sortable: true,
