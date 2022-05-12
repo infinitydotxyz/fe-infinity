@@ -1,11 +1,10 @@
-import { BaseCollection, CardData } from '@infinityxyz/lib/types/core';
+import { CardData } from '@infinityxyz/lib/types/core';
 import React, { useState, useEffect } from 'react';
 import { useResizeDetector } from 'react-resize-detector';
 import { CenteredContent, ScrollLoader, Spinner } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
-import { NFTArray } from '../../utils/types/collection-types';
-import { fetchTokens, tokensToCardData } from './astra-utils';
 import { TokenCard } from './token-card';
+import { TokenFetcher } from './token-fetcher';
 
 interface Props {
   tokenFetcher: TokenFetcher;
@@ -128,48 +127,3 @@ export const ErrorOrLoading = ({ error }: Props2) => {
     </div>
   );
 };
-
-// ==================================================================
-
-interface TokenFetcherResult {
-  ferror: boolean;
-  fcardData: CardData[];
-  fcursor: string;
-  fhasNextPage: boolean;
-}
-
-interface TokenFetcher {
-  handleFetch(passedCursor: string): Promise<TokenFetcherResult>;
-}
-
-export class CollectionTokenFetcher implements TokenFetcher {
-  private collection: BaseCollection;
-  private chainId: string;
-
-  constructor(collection: BaseCollection, chainId: string) {
-    this.collection = collection;
-    this.chainId = chainId;
-  }
-
-  handleFetch = async (passedCursor: string): Promise<TokenFetcherResult> => {
-    let ferror = false;
-    let fcursor = '';
-    let fhasNextPage = false;
-    let fcardData: CardData[] = [];
-
-    const response = await fetchTokens(this.collection.address, this.chainId, passedCursor);
-
-    if (response.error) {
-      ferror = response.error !== null;
-      console.error(response.error);
-    } else {
-      const result = response.result as NFTArray;
-
-      fcardData = tokensToCardData(result.data, this.collection);
-      fcursor = result.cursor;
-      fhasNextPage = result.hasNextPage;
-    }
-
-    return { fcursor, fhasNextPage, fcardData, ferror };
-  };
-}

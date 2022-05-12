@@ -2,14 +2,36 @@ import { ConnectButton, NextLink, Spacer, SVG, ToggleTab, useToggleTab } from 's
 import { inputBorderColor, largeIconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
-// ========================================================================================
+interface Props {
+  onTabChange: (value: AstraNavTab) => void;
+}
 
-export const AstraNavbar = () => {
-  const { options, onChange, selected } = useToggleTab(['All', 'Top 100', 'Rare', 'Hot'], 'All');
+export enum AstraNavTab {
+  All = 'All',
+  Top100 = 'Top 100',
+  Rare = 'Rare',
+  Hot = 'Hot',
+  MyNFTs = 'My NFTs'
+}
+
+export const AstraNavbar = ({ onTabChange }: Props) => {
+  const { options, onChange, selected } = useToggleTab(
+    [AstraNavTab.All, AstraNavTab.Top100, AstraNavTab.Rare, AstraNavTab.Hot, AstraNavTab.MyNFTs],
+    AstraNavTab.All
+  );
 
   const tabBar = (
     <div className={twMerge(inputBorderColor, 'flex justify-center')}>
-      <ToggleTab options={options} selected={selected} onChange={onChange} altStyle={true} equalWidths={false} />
+      <ToggleTab
+        options={options}
+        selected={selected}
+        onChange={(value) => {
+          onTabChange(value as AstraNavTab);
+          onChange(value);
+        }}
+        altStyle={true}
+        equalWidths={false}
+      />
     </div>
   );
 
