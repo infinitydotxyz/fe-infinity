@@ -83,7 +83,7 @@ export const PixelScore = () => {
           </div>
         </div>
         <Spacer />
-        <div className="text-lg">{numTokens} items</div>
+        <div className="text-lg whitespace-nowrap ml-3">{numTokens} items</div>
       </div>
     );
 
