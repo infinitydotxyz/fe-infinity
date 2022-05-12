@@ -19,7 +19,7 @@ export type Filter = {
 };
 
 const defaultFilter: Filter = {
-  listingType: '',
+  // listingType: '',
   traitTypes: [],
   traitValues: [],
   orderBy: '',
