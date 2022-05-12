@@ -85,9 +85,7 @@ export const GalleryBox = ({
       }
     );
     setError(error);
-    if (result?.hasNextPage === true) {
-      setCursor(result?.cursor);
-    }
+    setCursor(result?.cursor);
 
     let moreData: CardData[] = (result?.data || []).map((item: NftItem) => {
       return {
@@ -113,7 +111,6 @@ export const GalleryBox = ({
     setIsFetching(false);
     if (isRefresh) {
       setData([...moreData]);
-      setCursor('');
     } else {
       setData([...data, ...moreData]);
     }
@@ -141,7 +138,7 @@ export const GalleryBox = ({
         </div>
       )}
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-12 gap-y-20 mt-[-73px] pointer-events-none">
+      <div className="w-full grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-12 gap-y-20 mt-[-73px] pointer-events-none">
         {data.length > 0 && (
           <div className="sm:col-span-2 lg:col-span-3 xl:col-span-4 text-right">
             <Button

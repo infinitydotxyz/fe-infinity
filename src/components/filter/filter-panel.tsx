@@ -118,6 +118,12 @@ export const FilterPanel = ({ collection, collectionAddress, className }: Props)
           newFilter.traitValues = traitValues;
           setFilterState(newFilter);
         }}
+        onClearAll={() => {
+          const newFilter: Filter = { ...filterState };
+          newFilter.traitTypes = [];
+          newFilter.traitValues = [];
+          setFilterState(newFilter);
+        }}
       />
     </div>
   );

@@ -29,12 +29,12 @@ export const Dropdown = ({ label, items, toggler, contentClassName, className }:
             <Menu.Button
               className={twMerge(
                 inputBorderColor,
-                'transition ease-in-out duration-300 hover:bg-gray-700  active:bg-gray-900',
+                'transition ease-in-out duration-300 hover:border-black bg-white active:bg-gray-900',
                 'focus:outline-none focus-visible:ring focus:ring-black focus:ring-opacity-50',
-                'px-6 py-2 border rounded-3xl text-gray-900 font-heading hover:text-white flex items-center space-x-1'
+                'px-6 py-2 border rounded-3xl text-gray-900 font-heading flex items-center space-x-1'
               )}
             >
-              <div>{label}</div>
+              <div className="whitespace-nowrap">{label}</div>
               <BiCaretDown />
             </Menu.Button>
           </span>

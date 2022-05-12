@@ -16,7 +16,7 @@ export const ActivityItem = ({ event }: Props) => {
           <img className="w-16 max-h-[80px] rounded-[50%]" src={event.image} alt="NFT Image" />
         </NextLink>
         <div className="flex justify-between w-full mx-8">
-          <div className="">
+          <div className="w-1/6">
             <div className="text-black font-bold font-body">
               <a href={`/collection/${event.collectionSlug}`}>{event.collectionName}</a>
             </div>
@@ -33,7 +33,7 @@ export const ActivityItem = ({ event }: Props) => {
               </a>
             </div>
           </div>
-          <div>
+          <div className="w-1/6">
             <div className="text-gray-400">Event</div>
             <div className="font-bold">
               <a
@@ -45,13 +45,11 @@ export const ActivityItem = ({ event }: Props) => {
               </a>
             </div>
           </div>
-          <div className="">
+          <div className="w-1/6">
             <div className="text-gray-400">Price</div>
-            <div className="font-bold">
-              <EthPrice label={`${event.price}`} />
-            </div>
+            <div className="font-bold">{event.price ? <EthPrice label={`${event.price}`} /> : '—'}</div>
           </div>
-          <div className="">
+          <div className="w-1/6">
             <div className="text-gray-400">From</div>
             <div className="font-bold">
               <a
@@ -63,7 +61,7 @@ export const ActivityItem = ({ event }: Props) => {
               </a>
             </div>
           </div>
-          <div className="">
+          <div className="w-1/6">
             <div className="text-gray-400">To</div>
             <div className="font-bold">
               <a
@@ -75,7 +73,7 @@ export const ActivityItem = ({ event }: Props) => {
               </a>
             </div>
           </div>
-          <div className="">
+          <div className="w-1/6">
             <div className="text-gray-400">Date</div>
             <div className="font-bold">
               <a

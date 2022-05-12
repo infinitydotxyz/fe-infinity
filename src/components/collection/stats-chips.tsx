@@ -84,7 +84,6 @@ export const StatsChips = ({ collection, weeklyStatsData }: Props) => {
       toastError(error?.errorResponse?.message);
       return;
     }
-
     setModalOpen(false);
 
     if (result.canModify) {
@@ -105,7 +104,7 @@ export const StatsChips = ({ collection, weeklyStatsData }: Props) => {
       <Chip
         content={
           followingLoading ? (
-            <span className="flex justify-center w-24">
+            <span className="flex justify-center">
               <Spinner />
             </span>
           ) : (
@@ -122,6 +121,7 @@ export const StatsChips = ({ collection, weeklyStatsData }: Props) => {
         }
         onClick={onClickFollow}
         active={isFollowing}
+        className="w-32"
       />
       <Chip content="Edit" onClick={onClickEdit} />
 

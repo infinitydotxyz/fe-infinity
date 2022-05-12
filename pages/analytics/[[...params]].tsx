@@ -1,17 +1,46 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Tab } from '@headlessui/react';
 import { useRouter } from 'next/router';
-import { useFetch } from 'src/utils/apiUtils';
-import { Button, Checkbox, Drawer, PageBox, Spacer, ToggleTab, useToggleTab } from 'src/components/common';
+import { useFetch, apiDelete, apiPost } from 'src/utils/apiUtils';
+import {
+  Button,
+  Checkbox,
+  Drawer,
+  FetchMore,
+  PageBox,
+  Spacer,
+  toastError,
+  ToggleTab,
+  useToggleTab
+} from 'src/components/common';
 import { Field } from 'src/components/analytics/field';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CollectionStats } from '@infinityxyz/lib/types/core';
 import { ITEMS_PER_PAGE, BLANK_IMG } from 'src/utils/constants';
 import ContentLoader from 'react-content-loader';
+import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
+
+type StatColType = {
+  id?: string;
+  type?: string;
+  label?: string;
+  value?: string | number;
+  placement?: string;
+  sortable?: boolean;
+  fraction?: string;
+  show?: boolean;
+  onSort?: (direction: string) => void;
+  onClick?: () => void;
+};
+
+type StatType = {
+  data: CollectionStats;
+  cols: StatColType[];
+};
 
 export const Analytics = () => {
   const router = useRouter();
-  const { user } = useAppContext();
+  const { user, checkSignedIn, userFollowingCollections, fetchFollowingCollections } = useAppContext();
   const connected = user?.address ? true : false;
   const [page, setPage] = useState(router.query.params?.[0] ? router.query.params?.[0] : 'trending');
   const [interval, setInterval] = useState(router.query.params?.[1] ? router.query.params?.[1] : 'weekly');
@@ -20,6 +49,9 @@ export const Analytics = () => {
   const [filterLimit] = useState(6);
   const [orderBy, setOrderBy] = useState('volume');
   const [orderDirection, setOrderDirection] = useState('desc');
+  const [cursor, setCursor] = useState('');
+  const [items, setItems] = useState<CollectionStats[]>([]);
+  const [stats, setStats] = useState<StatType[]>([]);
 
   const [columns, setColumns] = useState<{ [key: string]: boolean }>({
     floorPrice: true,
@@ -50,6 +82,10 @@ export const Analytics = () => {
       setPage('trending');
     }
   }, [connected]);
+
+  useEffect(() => {
+    setItems([]);
+  }, [page]);
 
   useEffect(() => {
     void router.push(
@@ -89,14 +125,22 @@ export const Analytics = () => {
 
   const query =
     page === 'trending'
-      ? `/collections/rankings?orderBy=${orderBy}&orderDirection=${orderDirection}&period=${interval}&date=${date}&limit=${ITEMS_PER_PAGE}`
+      ? `/collections/rankings?orderBy=${orderBy}&orderDirection=${orderDirection}&period=${interval}&date=${date}&limit=${ITEMS_PER_PAGE}&cursor=${cursor}`
       : `/user/1:${user?.address}/watchlist?orderBy=${orderBy}&orderDirection=${orderDirection}&period=${interval}&date=${date}&limit=${ITEMS_PER_PAGE}`;
 
-  const data = useFetch<{ data: CollectionStats[] }>(query);
+  const data = useFetch<{ data: CollectionStats[]; cursor: string }>(query);
 
-  let statistics = null;
   if (data.result) {
-    statistics = data.result.data.map((d, index) => {
+    if (
+      data?.result?.data[0] &&
+      items.findIndex((obj) => obj.collectionAddress === data?.result?.data[0].collectionAddress) < 0
+    ) {
+      setItems([...items, ...data.result.data]);
+    }
+  }
+
+  useEffect(() => {
+    const statistics = items.map((d, index) => {
       const address = d.collectionAddress;
       const name = d.name;
       const image = d.profileImage ? d.profileImage : BLANK_IMG;
@@ -111,192 +155,194 @@ export const Analytics = () => {
       const twitterFollowersPercentChange = d.twitterFollowersPercentChange ? d.twitterFollowersPercentChange : '-';
       const discordFollowers = d.discordFollowers ? d.discordFollowers : '-';
       const discordFollowersPercentChange = d.discordFollowersPercentChange ? d.discordFollowersPercentChange : '-';
-      return [
-        {
-          id: 'index',
-          type: 'index',
-          value: index + 1,
-          placement: 'start',
-          sortable: false,
-          onSort: null,
-          fraction: '2fr'
-        },
-        {
-          id: 'image',
-          type: 'image',
-          value: image,
-          placement: 'start',
-          sortable: false,
-          onSort: null,
-          fraction: '2fr'
-        },
-        {
-          id: 'name',
-          type: 'string',
-          value: name,
-          placement: 'start',
-          sortable: false,
-          fraction: '4fr',
-          onSort: (direction: string) => {
-            setOrderDirection(direction);
-            setOrderBy('name');
+      return {
+        data: d,
+        cols: [
+          {
+            id: 'index',
+            type: 'index',
+            value: index + 1,
+            placement: 'start',
+            sortable: false,
+            fraction: '2fr'
           },
-          onClick: () => {
-            // eslint-disable-next-line
-            router.push(`/collection/${(d as any).slug}`); // TODO: adding slug to type
+          {
+            id: 'image',
+            type: 'image',
+            value: image,
+            placement: 'start',
+            sortable: false,
+            fraction: '2fr'
+          },
+          {
+            id: 'name',
+            type: 'string',
+            value: name,
+            placement: 'start',
+            sortable: false,
+            fraction: '4fr',
+            onSort: (direction: string) => {
+              setOrderDirection(direction);
+              setOrderBy('name');
+            },
+            onClick: () => {
+              // eslint-disable-next-line
+              router.push(`/collection/${(d as any).slug}`); // TODO: adding slug to type
+            }
+          },
+          {
+            id: 'numNfts',
+            label: 'Items',
+            type: 'number',
+            value: items.toLocaleString(),
+            show: columns['numNfts'],
+            placement: 'middle',
+            sortable: false,
+            fraction: '3fr',
+            onSort: (direction: string) => {
+              setOrderDirection(direction);
+              setOrderBy('numNfts');
+            }
+          },
+          {
+            id: 'numOwners',
+            label: 'Owners',
+            type: 'number',
+            value: owners.toLocaleString(),
+            show: columns['numOwners'],
+            placement: 'middle',
+            sortable: false,
+            fraction: '3fr',
+            onSort: (direction: string) => {
+              setOrderDirection(direction);
+              setOrderBy('numOwners');
+            }
+          },
+          {
+            id: 'volume',
+            label: 'Volume',
+            type: 'number',
+            value: `Ξ ${volume.toLocaleString()}`,
+            show: columns['volume'],
+            placement: 'middle',
+            sortable: true,
+            fraction: '3fr',
+            onSort: (direction: string) => {
+              setOrderDirection(direction);
+              setOrderBy('volume');
+            }
+          },
+          {
+            id: 'volumePercentChange',
+            label: 'Vol. change',
+            type: 'change',
+            value: volumePercentChange,
+            show: columns['volumePercentChange'],
+            placement: 'middle',
+            sortable: true,
+            fraction: '3fr',
+            onSort: (direction: string) => {
+              setOrderDirection(direction);
+              setOrderBy('volumePercentChange');
+            }
+          },
+          {
+            id: 'floorPrice',
+            label: 'Floor Price',
+            type: 'number',
+            value: `Ξ ${floorPrice.toLocaleString()}`,
+            show: columns['floorPrice'],
+            placement: 'middle',
+            sortable: true,
+            onSort: (direction: string) => {
+              setOrderDirection(direction);
+              setOrderBy('floorPrice');
+            }
+          },
+          {
+            id: 'floorPricePercentChange',
+            label: 'Fl. change',
+            type: 'change',
+            value: floorPricePercentChange,
+            show: columns['floorPricePercentChange'],
+            placement: 'middle',
+            sortable: true,
+            fraction: '3fr',
+            onSort: (direction: string) => {
+              setOrderDirection(direction);
+              setOrderBy('floorPricePercentChange');
+            }
+          },
+          {
+            id: 'discordFollowers',
+            label: 'Discord Followers',
+            type: 'number',
+            value: `${discordFollowers.toLocaleString()}`,
+            show: columns['discordFollowers'],
+            placement: 'middle',
+            sortable: true,
+            fraction: '3fr',
+            onSort: (direction: string) => {
+              setOrderDirection(direction);
+              setOrderBy('discordFollowers');
+            }
+          },
+          {
+            id: 'discordFollowersPercentChange',
+            label: 'Discord % change',
+            type: 'change',
+            value: `${discordFollowersPercentChange.toLocaleString()}`,
+            show: columns['discordFollowersPercentChange'],
+            placement: 'middle',
+            sortable: true,
+            fraction: '3fr',
+            onSort: (direction: string) => {
+              setOrderDirection(direction);
+              setOrderBy('discordFollowersPercentChange');
+            }
+          },
+          {
+            id: 'twitterFollowers',
+            label: 'Twitter Followers',
+            type: 'number',
+            value: `${twitterFollowers.toLocaleString()}`,
+            show: columns['twitterFollowers'],
+            placement: 'middle',
+            sortable: true,
+            fraction: '3fr',
+            onSort: (direction: string) => {
+              setOrderDirection(direction);
+              setOrderBy('twitterFollowers');
+            }
+          },
+          {
+            id: 'twitterFollowersPercentChange',
+            label: 'Discord % change',
+            type: 'change',
+            value: `${twitterFollowersPercentChange.toLocaleString()}`,
+            show: columns['twitterFollowersPercentChange'],
+            placement: 'middle',
+            sortable: true,
+            fraction: '3fr',
+            onSort: (direction: string) => {
+              setOrderDirection(direction);
+              setOrderBy('twitterFollowersPercentChange');
+            }
+          },
+          {
+            id: 'followCollection',
+            type: 'action',
+            label: '',
+            value: address,
+            placement: 'end',
+            props: {},
+            fraction: '2fr'
           }
-        },
-        {
-          id: 'numNfts',
-          label: 'Items',
-          type: 'number',
-          value: items.toLocaleString(),
-          show: columns['numNfts'],
-          placement: 'middle',
-          sortable: false,
-          fraction: '3fr',
-          onSort: (direction: string) => {
-            setOrderDirection(direction);
-            setOrderBy('numNfts');
-          }
-        },
-        {
-          id: 'numOwners',
-          label: 'Owners',
-          type: 'number',
-          value: owners.toLocaleString(),
-          show: columns['numOwners'],
-          placement: 'middle',
-          sortable: false,
-          fraction: '3fr',
-          onSort: (direction: string) => {
-            setOrderDirection(direction);
-            setOrderBy('numOwners');
-          }
-        },
-        {
-          id: 'volume',
-          label: 'Volume',
-          type: 'number',
-          value: `Ξ ${volume.toLocaleString()}`,
-          show: columns['volume'],
-          placement: 'middle',
-          sortable: true,
-          fraction: '3fr',
-          onSort: (direction: string) => {
-            setOrderDirection(direction);
-            setOrderBy('volume');
-          }
-        },
-        {
-          id: 'volumePercentChange',
-          label: 'Vol. change',
-          type: 'change',
-          value: volumePercentChange,
-          show: columns['volumePercentChange'],
-          placement: 'middle',
-          sortable: true,
-          fraction: '3fr',
-          onSort: (direction: string) => {
-            setOrderDirection(direction);
-            setOrderBy('volumePercentChange');
-          }
-        },
-        {
-          id: 'floorPrice',
-          label: 'Floor Price',
-          type: 'number',
-          value: `Ξ ${floorPrice.toLocaleString()}`,
-          show: columns['floorPrice'],
-          placement: 'middle',
-          sortable: true,
-          onSort: (direction: string) => {
-            setOrderDirection(direction);
-            setOrderBy('floorPrice');
-          }
-        },
-        {
-          id: 'floorPricePercentChange',
-          label: 'Fl. change',
-          type: 'change',
-          value: floorPricePercentChange,
-          show: columns['floorPricePercentChange'],
-          placement: 'middle',
-          sortable: true,
-          fraction: '3fr',
-          onSort: (direction: string) => {
-            setOrderDirection(direction);
-            setOrderBy('floorPricePercentChange');
-          }
-        },
-        {
-          id: 'discordFollowers',
-          label: 'Discord Followers',
-          type: 'number',
-          value: `${discordFollowers.toLocaleString()}`,
-          show: columns['discordFollowers'],
-          placement: 'middle',
-          sortable: true,
-          fraction: '3fr',
-          onSort: (direction: string) => {
-            setOrderDirection(direction);
-            setOrderBy('discordFollowers');
-          }
-        },
-        {
-          id: 'discordFollowersPercentChange',
-          label: 'Discord % change',
-          type: 'change',
-          value: `${discordFollowersPercentChange.toLocaleString()}`,
-          show: columns['discordFollowersPercentChange'],
-          placement: 'middle',
-          sortable: true,
-          fraction: '3fr',
-          onSort: (direction: string) => {
-            setOrderDirection(direction);
-            setOrderBy('discordFollowersPercentChange');
-          }
-        },
-        {
-          id: 'twitterFollowers',
-          label: 'Twitter Followers',
-          type: 'number',
-          value: `${twitterFollowers.toLocaleString()}`,
-          show: columns['twitterFollowers'],
-          placement: 'middle',
-          sortable: true,
-          fraction: '3fr',
-          onSort: (direction: string) => {
-            setOrderDirection(direction);
-            setOrderBy('twitterFollowers');
-          }
-        },
-        {
-          id: 'twitterFollowersPercentChange',
-          label: 'Discord % change',
-          type: 'change',
-          value: `${twitterFollowersPercentChange.toLocaleString()}`,
-          show: columns['twitterFollowersPercentChange'],
-          placement: 'middle',
-          sortable: true,
-          fraction: '3fr',
-          onSort: (direction: string) => {
-            setOrderDirection(direction);
-            setOrderBy('twitterFollowersPercentChange');
-          }
-        },
-        {
-          id: 'followCollection',
-          type: 'action',
-          label: '',
-          value: address,
-          placement: 'end',
-          props: {},
-          fraction: '2fr'
-        }
-      ];
+        ]
+      };
     });
-  }
+    setStats(statistics);
+  }, [items]);
 
   const content = {
     filter: {
@@ -403,7 +449,6 @@ export const Analytics = () => {
             url: `/analytics/trending/${interval}`,
             label: 'Trending'
           },
-
           ...(connected
             ? [
                 {
@@ -415,6 +460,39 @@ export const Analytics = () => {
               ]
             : [])
         ]
+      }
+    }
+  };
+
+  const onClickFollow = async (isFollowing: boolean, chainId: string, address: string) => {
+    if (!checkSignedIn()) {
+      return;
+    }
+    if (isFollowing) {
+      const { error } = await apiDelete(`/user/1:${user?.address}/followingCollections`, {
+        data: {
+          collectionChainId: chainId,
+          collectionAddress: address
+        }
+      });
+      if (error) {
+        toastError(error?.errorResponse?.message);
+      } else {
+        // toastSuccess('Unfollowed ' + collection?.metadata?.name);
+        fetchFollowingCollections();
+      }
+    } else {
+      const { error } = await apiPost(`/user/1:${user?.address}/followingCollections`, {
+        data: {
+          collectionChainId: chainId,
+          collectionAddress: address
+        }
+      });
+      if (error) {
+        toastError(error?.errorResponse?.message);
+      } else {
+        // toastSuccess('Followed ' + collection?.metadata?.name);
+        fetchFollowingCollections();
       }
     }
   };
@@ -472,16 +550,16 @@ export const Analytics = () => {
                 </Fragment>
               ))}
 
-              <Button variant="outline" onClick={() => toggleDrawer()}>
+              <Button variant="outline" className="font-heading" onClick={() => toggleDrawer()}>
                 Filter
               </Button>
             </Tab.List>
           </Tab.Group>
         </div>
 
-        <div className="w-full h-full  flex-[1.4]  grid grid-rows-1 grid-cols-24">
-          <div className="w-full h-full  row-start-1 col-start-1 row-span-1 col-span-24  ring ring-inset ring-transparent flex flex-col gap-2">
-            {data.isLoading ? (
+        <div className="w-full h-full flex-[1.4]  grid grid-rows-1 grid-cols-24">
+          <div className="w-full h-full row-start-1 col-start-1 row-span-1 col-span-24  ring ring-inset ring-transparent flex flex-col gap-2">
+            {/* {data.isLoading ? (
               <LoadingAnalytics />
             ) : data.isError || statistics?.length === 0 ? (
               <>
@@ -492,57 +570,96 @@ export const Analytics = () => {
                 ))}
               </>
             ) : (
-              <>
-                {statistics?.map((stat, i) => (
-                  <Fragment key={i}>
-                    <div className="w-full h-full min-h-[144px] overflow-hidden rounded-xl  bg-theme-light-300  grid grid-cols-analytics  place-items-center">
-                      {stat
-                        ?.filter((s) => s.placement === 'start')
-                        .map((field, j) => (
+              <> */}
+            {stats?.map((stat) => {
+              return (
+                <div key={stat.data.collectionAddress} className="mb-2">
+                  <div className="w-full h-full p-8 overflow-hidden rounded-3xl bg-gray-100 grid grid-cols-analytics place-items-center">
+                    {stat?.cols
+                      ?.filter((s) => s.placement === 'start')
+                      .map((field, j) => (
+                        <Fragment key={j}>
+                          <div className="w-full h-full  row-span-1 col-span-1">
+                            <Field
+                              type={field?.type}
+                              label={field?.label}
+                              value={field?.value}
+                              onClick={field?.onClick}
+                            />
+                            <div className=""></div>
+                          </div>
+                        </Fragment>
+                      ))}
+                    {stat?.cols
+                      ?.filter((s) => s.placement === 'middle' && s.show === true)
+                      .splice(0, filterLimit)
+                      .map((field, j) => (
+                        <Fragment key={j}>
+                          <div className="w-full h-full  row-span-1 col-span-1">
+                            <Field
+                              sortable={field?.sortable}
+                              onSort={field?.onSort}
+                              type={field?.type}
+                              label={field?.label}
+                              value={field?.value}
+                              onClick={field?.onClick}
+                            />
+                            <div className=""></div>
+                          </div>
+                        </Fragment>
+                      ))}
+
+                    {stat?.cols
+                      ?.filter((s) => s.placement === 'end')
+                      .map((field, j) => {
+                        const isFollowing =
+                          userFollowingCollections.findIndex((coll) => coll.collectionAddress === field?.value) >= 0;
+                        return (
                           <Fragment key={j}>
                             <div className="w-full h-full  row-span-1 col-span-1">
                               <Field
                                 type={field?.type}
                                 label={field?.label}
                                 value={field?.value}
-                                onClick={field?.onClick}
+                                content={
+                                  isFollowing ? (
+                                    <button
+                                      className={`rounded-full p-4 font-bold bg-black text-white hover:bg-theme-light-850`}
+                                      onClick={() => onClickFollow(isFollowing, '1', `${field?.value}`)}
+                                    >
+                                      <AiOutlineMinus />
+                                    </button>
+                                  ) : (
+                                    <button
+                                      className={`rounded-full p-4 font-bold bg-white text-black hover:bg-theme-light-300`}
+                                      onClick={() => onClickFollow(isFollowing, '1', `${field?.value}`)}
+                                    >
+                                      <AiOutlinePlus />
+                                    </button>
+                                  )
+                                }
                               />
                               <div className=""></div>
                             </div>
                           </Fragment>
-                        ))}
-                      {stat
-                        ?.filter((s) => s.placement === 'middle' && s.show === true)
-                        .splice(0, filterLimit)
-                        .map((field, j) => (
-                          <Fragment key={j}>
-                            <div className="w-full h-full  row-span-1 col-span-1">
-                              <Field
-                                sortable={field?.sortable}
-                                onSort={field?.onSort}
-                                type={field?.type}
-                                label={field?.label}
-                                value={field?.value}
-                              />
-                              <div className=""></div>
-                            </div>
-                          </Fragment>
-                        ))}
-                      {stat
-                        ?.filter((s) => s.placement === 'end')
-                        .map((field, j) => (
-                          <Fragment key={j}>
-                            <div className="w-full h-full  row-span-1 col-span-1">
-                              <Field type={field?.type} label={field?.label} value={field?.value} />
-                              <div className=""></div>
-                            </div>
-                          </Fragment>
-                        ))}
-                    </div>
-                  </Fragment>
-                ))}
-              </>
-            )}
+                        );
+                      })}
+                  </div>
+                </div>
+              );
+            })}
+            {/* </>
+            )} */}
+
+            {data.isLoading && <LoadingAnalytics />}
+
+            <FetchMore
+              onFetchMore={() => {
+                if (data?.result?.cursor) {
+                  setCursor(data?.result?.cursor);
+                }
+              }}
+            />
           </div>
         </div>
       </div>
@@ -595,21 +712,21 @@ export default Analytics;
 const LoadingAnalytics = () => (
   <ContentLoader
     speed={2}
-    height={650}
+    height={600}
     width={'100%'}
     backgroundColor="#f3f3f3"
     foregroundColor="#ecebeb"
     uniqueKey="loading"
   >
-    <rect x="0" y="0" rx="12" ry="12" width="100%" height="144" />
-    <rect x="0" y="152" rx="12" ry="12" width="100%" height="144" />
-    <rect x="0" y="304" rx="12" ry="12" width="100%" height="144" />
-    <rect x="0" y="456" rx="12" ry="12" width="100%" height="144" />
-    <rect x="0" y="608" rx="12" ry="12" width="100%" height="144" />
-    <rect x="0" y="760" rx="12" ry="12" width="100%" height="144" />
-    <rect x="0" y="912" rx="12" ry="12" width="100%" height="144" />
-    <rect x="0" y="1064" rx="12" ry="12" width="100%" height="144" />
-    <rect x="0" y="1216" rx="12" ry="12" width="100%" height="144" />
-    <rect x="0" y="1368" rx="12" ry="12" width="100%" height="144" />
+    <rect x="0" y="0" rx="12" ry="12" width="100%" height="130" />
+    <rect x="0" y="152" rx="12" ry="12" width="100%" height="130" />
+    <rect x="0" y="304" rx="12" ry="12" width="100%" height="130" />
+    <rect x="0" y="456" rx="12" ry="12" width="100%" height="130" />
+    <rect x="0" y="608" rx="12" ry="12" width="100%" height="130" />
+    <rect x="0" y="760" rx="12" ry="12" width="100%" height="130" />
+    <rect x="0" y="912" rx="12" ry="12" width="100%" height="130" />
+    <rect x="0" y="1064" rx="12" ry="12" width="100%" height="130" />
+    <rect x="0" y="1216" rx="12" ry="12" width="100%" height="130" />
+    <rect x="0" y="1368" rx="12" ry="12" width="100%" height="130" />
   </ContentLoader>
 );

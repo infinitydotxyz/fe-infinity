@@ -1,6 +1,7 @@
 import { OBOrder, OBOrderItem, OBTokenInfo } from '@infinityxyz/lib/types/core';
 import { ReactNode } from 'react';
 import { NextLink } from 'src/components/common';
+import { useRouter } from 'next/router';
 
 type Props4 = {
   content?: ReactNode;
@@ -11,6 +12,8 @@ type Props4 = {
 };
 
 export const OrderbookItem = ({ title, content, nameItem, order }: Props4): JSX.Element => {
+  const router = useRouter();
+
   if (nameItem) {
     // one collection
     if (order.nfts.length === 1) {
@@ -23,7 +26,14 @@ export const OrderbookItem = ({ title, content, nameItem, order }: Props4): JSX.
         // multiple items from one collection
       } else {
         return (
-          <SingleCollectionCell image={nft.collectionImage} title={nft.collectionName} count={nft.tokens.length} />
+          <SingleCollectionCell
+            onClickTitle={() => {
+              router.push(`/collection/${nft.collectionSlug}`);
+            }}
+            image={nft.collectionImage}
+            title={nft.collectionName}
+            count={nft.tokens.length}
+          />
         );
       }
     }
@@ -73,9 +83,10 @@ type SingleCollectionCellProps = {
   title: string;
   token?: OBTokenInfo;
   count?: number;
+  onClickTitle?: () => void;
 };
 
-const SingleCollectionCell = ({ image, title, token, count = 0 }: SingleCollectionCellProps) => {
+const SingleCollectionCell = ({ image, title, onClickTitle, token, count = 0 }: SingleCollectionCellProps) => {
   return (
     <div className="flex gap-2 items-center">
       <div className="flex justify-center shrink-0 h-12 w-12">
@@ -89,11 +100,13 @@ const SingleCollectionCell = ({ image, title, token, count = 0 }: SingleCollecti
         </span>
       </div>
 
-      <div className="flex flex-col truncate">
-        <div className="truncate">{title}</div>
+      <div className={`flex flex-col truncate ${onClickTitle ? 'cursor-pointer' : ''}`}>
+        <div className="whitespace-pre-wrap" onClick={onClickTitle}>
+          {title}
+        </div>
 
         {token && (
-          <NextLink href={`/collection/${token.tokenId}`} className="truncate font-bold">
+          <NextLink href={`/collection/${token.tokenId}`} className="truncate font-bold" title={token?.tokenName}>
             {token?.tokenName}
           </NextLink>
         )}

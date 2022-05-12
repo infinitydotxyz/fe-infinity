@@ -26,7 +26,7 @@ export const AstraCart = ({ tokens, onRemove, onCheckout }: Props) => {
     const first = tokenArray[0];
 
     divList.push(
-      <div className="w-full rounded-md bg-gray-100 p-2 font-bold truncate" key={`header-${first.id}`}>
+      <div className="w-full rounded-md bg-slate-100 py-2 px-4 font-bold truncate" key={`header-${first.id}`}>
         {first.collectionName}
       </div>
     );
