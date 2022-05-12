@@ -32,15 +32,15 @@ export const FilterPanel = ({ collection, collectionAddress, className }: Props)
     setFilterState(newFilter);
   };
 
-  const handleClickClear = () => {
-    const newFilter = { ...filterState };
-    newFilter.priceMin = '';
-    newFilter.priceMax = '';
-    setMinPriceVal('');
-    setMaxPriceVal('');
-    setFilterState(newFilter);
-  };
-  const showSaleAndPriceFilters = false;
+  // const handleClickClear = () => {
+  //   const newFilter = { ...filterState };
+  //   newFilter.priceMin = '';
+  //   newFilter.priceMax = '';
+  //   setMinPriceVal('');
+  //   setMaxPriceVal('');
+  //   setFilterState(newFilter);
+  // };
+  const showSaleAndPriceFilters = true;
 
   return (
     <div className={`w-80 mr-12 ${className ?? ''}`}>
@@ -75,12 +75,12 @@ export const FilterPanel = ({ collection, collectionAddress, className }: Props)
 
           <hr className="mt-8" />
 
-          <div className="text-lg mt-6">Price (ETH)</div>
+          <div className="text-lg mt-6">Price</div>
           <div className="flex mt-4 mb-6">
             <input
               type="number"
-              className="border rounded-lg p-2 w-1/2"
-              placeholder="Min Price"
+              className="border rounded-3xl py-3 px-4 w-1/2 border-gray-300"
+              placeholder="Ξ Min Price"
               value={minPriceVal}
               onChange={(ev) => {
                 setMinPriceVal(ev.target.value);
@@ -88,8 +88,8 @@ export const FilterPanel = ({ collection, collectionAddress, className }: Props)
             />
             <input
               type="number"
-              className="border rounded-lg p-2 w-1/2 ml-2"
-              placeholder="Max Price"
+              className="border rounded-3xl py-3 px-4 w-1/2 border-gray-300 ml-2"
+              placeholder="Ξ Max Price"
               value={maxPriceVal}
               onChange={(ev) => {
                 setMaxPriceVal(ev.target.value);
@@ -97,12 +97,12 @@ export const FilterPanel = ({ collection, collectionAddress, className }: Props)
             />
           </div>
 
-          <Button variant="outline" onClick={handleClickApply}>
+          <Button variant="outline" className="w-full p-3" onClick={handleClickApply}>
             Apply
           </Button>
-          <Button variant="outline" className="ml-2" onClick={handleClickClear}>
+          {/* <Button variant="outline" className="ml-2" onClick={handleClickClear}>
             Clear
-          </Button>
+          </Button> */}
         </>
       )}
 
