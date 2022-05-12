@@ -53,11 +53,7 @@ export const Card = ({ data, cardActions, dropdownActions, isLoading, className 
   return (
     <div className={twMerge(`sm:mx-0 relative flex flex-col pointer-events-auto ${className ?? ''}`)}>
       <NextLink href={`/asset/${data?.chainId}/${data?.tokenAddress ?? data?.address}/${data?.tokenId}`}>
-        {/* <img className="rounded-3xl w-[290px] flex-1 overflow-hidden" src={data?.image ?? ''} alt="card" /> */}
-        <BGImage className="rounded-3xl w-full h-full" src={data?.image ?? ''}>
-          {/* This img acts as a 'placeholder' so BGImage can stretch to this img dimension. */}
-          <img className="rounded-3xl flex-1 overflow-hidden invisible" src={data?.image ?? ''} alt="card" />
-        </BGImage>
+        <BGImage className="rounded-3xl h-[290px]" src={data?.image ?? ''} />
       </NextLink>
 
       {data?.rarityRank && (
