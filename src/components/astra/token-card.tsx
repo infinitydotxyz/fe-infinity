@@ -25,7 +25,7 @@ export const TokenCard = ({ data, onClick, selected }: Props): JSX.Element => {
     >
       <div className="h-full flex flex-col">
         <div className="flex-1  overflow-clip">
-          <BGImage src={data?.image} className="hover:scale-110  transition-transform" />
+          <BGImage src={data?.image} className="hover:scale-110 transition-all" />
         </div>
 
         {data?.rarityRank && (
