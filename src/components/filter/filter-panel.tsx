@@ -27,20 +27,23 @@ export const FilterPanel = ({ collection, collectionAddress, className }: Props)
 
   const handleClickApply = () => {
     const newFilter = { ...filterState };
-    newFilter.priceMin = minPriceVal;
-    newFilter.priceMax = maxPriceVal;
+    newFilter.minPrice = minPriceVal;
+    newFilter.maxPrice = maxPriceVal;
+    newFilter.orderBy = 'price';
     setFilterState(newFilter);
   };
 
-  // const handleClickClear = () => {
-  //   const newFilter = { ...filterState };
-  //   newFilter.priceMin = '';
-  //   newFilter.priceMax = '';
-  //   setMinPriceVal('');
-  //   setMaxPriceVal('');
-  //   setFilterState(newFilter);
-  // };
-  const showSaleAndPriceFilters = true;
+  const handleClickClear = () => {
+    const newFilter = { ...filterState };
+    newFilter.minPrice = '';
+    newFilter.maxPrice = '';
+    newFilter.orderBy = '';
+    newFilter.orderDirection = '';
+    setMinPriceVal('');
+    setMaxPriceVal('');
+    setFilterState(newFilter);
+  };
+  const showSaleAndPriceFilters = false;
 
   return (
     <div className={`w-80 mr-12 ${className ?? ''}`}>
@@ -74,37 +77,39 @@ export const FilterPanel = ({ collection, collectionAddress, className }: Props)
           </ul>
 
           <hr className="mt-8" />
-
-          <div className="text-lg mt-6">Price</div>
-          <div className="flex mt-4 mb-6">
-            <input
-              type="number"
-              className="border rounded-3xl py-3 px-4 w-1/2 border-gray-300"
-              placeholder="Ξ Min Price"
-              value={minPriceVal}
-              onChange={(ev) => {
-                setMinPriceVal(ev.target.value);
-              }}
-            />
-            <input
-              type="number"
-              className="border rounded-3xl py-3 px-4 w-1/2 border-gray-300 ml-2"
-              placeholder="Ξ Max Price"
-              value={maxPriceVal}
-              onChange={(ev) => {
-                setMaxPriceVal(ev.target.value);
-              }}
-            />
-          </div>
-
-          <Button variant="outline" className="w-full p-3" onClick={handleClickApply}>
-            Apply
-          </Button>
-          {/* <Button variant="outline" className="ml-2" onClick={handleClickClear}>
-            Clear
-          </Button> */}
         </>
       )}
+
+      <div className="text-lg mt-6">Price</div>
+      <div className="flex mt-4 mb-6">
+        <input
+          type="number"
+          className="border rounded-3xl py-3 px-4 w-1/2 border-gray-300"
+          placeholder="Ξ Min Price"
+          value={minPriceVal}
+          onChange={(ev) => {
+            setMinPriceVal(ev.target.value);
+          }}
+        />
+        <input
+          type="number"
+          className="border rounded-3xl py-3 px-4 w-1/2 border-gray-300 ml-2"
+          placeholder="Ξ Max Price"
+          value={maxPriceVal}
+          onChange={(ev) => {
+            setMaxPriceVal(ev.target.value);
+          }}
+        />
+      </div>
+
+      <div className="flex">
+        <Button variant="outline" className="p-3 w-1/2" onClick={handleClickApply}>
+          Apply
+        </Button>
+        <Button variant="outline" className="p-3 w-1/2 ml-2" onClick={handleClickClear}>
+          Clear
+        </Button>
+      </div>
 
       <hr className="mt-8" />
 

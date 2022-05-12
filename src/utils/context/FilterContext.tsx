@@ -5,8 +5,8 @@ export type Filter = {
   listingType?: ListingType | '';
   traitTypes?: string[];
   traitValues?: string[];
-  priceMin?: string;
-  priceMax?: string;
+  minPrice?: string;
+  maxPrice?: string;
   sortByPrice?: 'ASC' | 'DESC' | '';
   orderBy?: 'rarityRank' | 'price' | '';
   orderDirection?: 'asc' | 'desc' | '';
