@@ -2,6 +2,7 @@ import { CardData } from '@infinityxyz/lib/types/core';
 import React, { useState, useEffect } from 'react';
 import { useResizeDetector } from 'react-resize-detector';
 import { CenteredContent, ScrollLoader, Spinner } from 'src/components/common';
+import { useIsMounted } from 'src/hooks/useIsMounted';
 import { twMerge } from 'tailwind-merge';
 import { TokenCard } from './token-card';
 import { TokenFetcher } from './token-fetcher';
@@ -23,6 +24,7 @@ export const TokensGrid = ({ tokenFetcher, className = '', onLoad, onClick, isSe
   const [loading, setLoading] = useState(false);
 
   const { width, ref } = useResizeDetector();
+  const isMounted = useIsMounted();
 
   useEffect(() => {
     setGridWidth(ref.current ? ref.current.offsetWidth : 0);
@@ -38,10 +40,9 @@ export const TokensGrid = ({ tokenFetcher, className = '', onLoad, onClick, isSe
     const { fcursor, fhasNextPage, fcardData, ferror } = await tokenFetcher.handleFetch(passedCursor);
 
     // can't update react state after unmount
-    // if (!isMounted) {
-    //   console.log('fuckkk');
-    //   return;
-    // }
+    if (!isMounted()) {
+      return;
+    }
 
     setCursor(fcursor);
     setHasNextPage(fhasNextPage);
