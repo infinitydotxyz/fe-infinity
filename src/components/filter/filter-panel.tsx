@@ -1,4 +1,4 @@
-import { BaseCollection, ListingType } from '@infinityxyz/lib/types/core';
+import { BaseCollection } from '@infinityxyz/lib/types/core';
 import { useState } from 'react';
 import { Filter, OrderType, useFilterContext } from 'src/utils/context/FilterContext';
 import { Button, Checkbox } from 'src/components/common';
