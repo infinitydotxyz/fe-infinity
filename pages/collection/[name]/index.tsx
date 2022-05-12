@@ -144,7 +144,12 @@ const CollectionPage = () => {
             </tbody>
           </table>
 
-          <ToggleTab className="mt-12 pointer-events-auto" options={options} selected={selected} onChange={onChange} />
+          <ToggleTab
+            className="mt-12 font-heading pointer-events-auto"
+            options={options}
+            selected={selected}
+            onChange={onChange}
+          />
 
           <div className="mt-6 min-h-[1024px]">
             {selected === 'NFT' && collection && (
@@ -187,7 +192,9 @@ const CollectionPage = () => {
               />
             )}
 
-            {selected === 'Orderbook' && <OrderbookContainer collectionId={collection.address} />}
+            {selected === 'Orderbook' && (
+              <OrderbookContainer collectionId={collection.address} className="mt-[-70px] pointer-events-none" />
+            )}
 
             {/* {currentTab === 1 && <ActivityTab dailyStats={dailyStats} weeklyStats={weeklyStats} />} */}
             {selected === 'Activity' && <ActivityTab collectionAddress={collection.address ?? ''} />}

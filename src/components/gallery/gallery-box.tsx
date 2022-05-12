@@ -168,6 +168,8 @@ export const GalleryBox = ({
 
         {error ? <div className="mt-24">Unable to load data.</div> : null}
 
+        {!error && data.length === 0 ? <div className="mt-24">No results.</div> : null}
+
         {data.map((item, idx) => {
           return <Card key={idx} data={item} {...cardProps} className="mt-[-30px]" />;
         })}

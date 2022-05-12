@@ -101,12 +101,12 @@ const SingleCollectionCell = ({ image, title, onClickTitle, token, count = 0 }: 
       </div>
 
       <div className={`flex flex-col truncate ${onClickTitle ? 'cursor-pointer' : ''}`}>
-        <div className="truncate" onClick={onClickTitle}>
+        <div className="whitespace-pre-wrap" onClick={onClickTitle}>
           {title}
         </div>
 
         {token && (
-          <NextLink href={`/collection/${token.tokenId}`} className="truncate font-bold">
+          <NextLink href={`/collection/${token.tokenId}`} className="truncate font-bold" title={token?.tokenName}>
             {token?.tokenName}
           </NextLink>
         )}

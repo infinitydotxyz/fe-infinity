@@ -1,19 +1,25 @@
 import { ListingType } from '@infinityxyz/lib/types/core';
 import React, { useContext, useState } from 'react';
 
+export enum OrderType {
+  Listing = 'listing',
+  Offer = 'offer'
+}
+
 export type Filter = {
   listingType?: ListingType | '';
+  orderType?: OrderType | '';
   traitTypes?: string[];
   traitValues?: string[];
-  priceMin?: string;
-  priceMax?: string;
+  minPrice?: string;
+  maxPrice?: string;
   sortByPrice?: 'ASC' | 'DESC' | '';
   orderBy?: 'rarityRank' | 'price' | '';
   orderDirection?: 'asc' | 'desc' | '';
 };
 
 const defaultFilter: Filter = {
-  listingType: '',
+  // listingType: '',
   traitTypes: [],
   traitValues: [],
   orderBy: '',
