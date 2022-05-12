@@ -25,8 +25,8 @@ export interface CardProps {
 }
 
 export const Card = ({ data, cardActions, dropdownActions, isLoading, className }: CardProps): JSX.Element => {
-  const title = (data?.title ?? '').length > 18 ? data?.title?.slice(0, 18) + '...' : data?.title;
-  const tokenId = (data?.tokenId ?? '').length > 18 ? data?.tokenId?.slice(0, 18) + '...' : data?.tokenId;
+  const title = (data?.title ?? '').length > 30 ? data?.title?.slice(0, 30) + '...' : data?.title;
+  const tokenId = (data?.tokenId ?? '').length > 30 ? data?.tokenId?.slice(0, 30) + '...' : data?.tokenId;
 
   const buttonJsx = (
     <>
@@ -63,7 +63,7 @@ export const Card = ({ data, cardActions, dropdownActions, isLoading, className 
       )}
 
       <div className="p-1 mt-3">
-        <div className="font-bold" title={data?.title}>
+        <div className="font-bold truncate" title={data?.title}>
           {title}
         </div>
         <div className="text-secondary font-heading" title={data?.tokenId}>
