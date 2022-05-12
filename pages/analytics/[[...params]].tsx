@@ -336,13 +336,7 @@ export const Analytics = () => {
             value: address,
             placement: 'end',
             props: {},
-            fraction: '2fr',
-            onClick: () => {
-              if (!checkSignedIn()) {
-                return;
-              }
-              alert('Follow');
-            }
+            fraction: '2fr'
           }
         ]
       };
@@ -563,8 +557,8 @@ export const Analytics = () => {
           </Tab.Group>
         </div>
 
-        <div className="w-full h-full  flex-[1.4]  grid grid-rows-1 grid-cols-24">
-          <div className="w-full h-full  row-start-1 col-start-1 row-span-1 col-span-24  ring ring-inset ring-transparent flex flex-col gap-2">
+        <div className="w-full h-full flex-[1.4]  grid grid-rows-1 grid-cols-24">
+          <div className="w-full h-full row-start-1 col-start-1 row-span-1 col-span-24  ring ring-inset ring-transparent flex flex-col gap-2">
             {/* {data.isLoading ? (
               <LoadingAnalytics />
             ) : data.isError || statistics?.length === 0 ? (
@@ -579,8 +573,8 @@ export const Analytics = () => {
               <> */}
             {stats?.map((stat) => {
               return (
-                <div key={stat.data.collectionAddress}>
-                  <div className="w-full h-full min-h-[144px] overflow-hidden rounded-xl  bg-theme-light-300  grid grid-cols-analytics  place-items-center">
+                <div key={stat.data.collectionAddress} className="mb-2">
+                  <div className="w-full h-full p-8 overflow-hidden rounded-3xl bg-gray-100 grid grid-cols-analytics place-items-center">
                     {stat?.cols
                       ?.filter((s) => s.placement === 'start')
                       .map((field, j) => (
@@ -630,14 +624,14 @@ export const Analytics = () => {
                                 content={
                                   isFollowing ? (
                                     <button
-                                      className={`rounded-full p-4 font-bold bg-black text-white hover:bg-gray-500`}
+                                      className={`rounded-full p-4 font-bold bg-black text-white hover:bg-theme-light-850`}
                                       onClick={() => onClickFollow(isFollowing, '1', `${field?.value}`)}
                                     >
                                       <AiOutlineMinus />
                                     </button>
                                   ) : (
                                     <button
-                                      className={`rounded-full p-4 font-bold bg-white text-black hover:bg-gray-500`}
+                                      className={`rounded-full p-4 font-bold bg-white text-black hover:bg-theme-light-300`}
                                       onClick={() => onClickFollow(isFollowing, '1', `${field?.value}`)}
                                     >
                                       <AiOutlinePlus />
@@ -718,21 +712,21 @@ export default Analytics;
 const LoadingAnalytics = () => (
   <ContentLoader
     speed={2}
-    height={650}
+    height={600}
     width={'100%'}
     backgroundColor="#f3f3f3"
     foregroundColor="#ecebeb"
     uniqueKey="loading"
   >
-    <rect x="0" y="0" rx="12" ry="12" width="100%" height="144" />
-    <rect x="0" y="152" rx="12" ry="12" width="100%" height="144" />
-    <rect x="0" y="304" rx="12" ry="12" width="100%" height="144" />
-    <rect x="0" y="456" rx="12" ry="12" width="100%" height="144" />
-    <rect x="0" y="608" rx="12" ry="12" width="100%" height="144" />
-    <rect x="0" y="760" rx="12" ry="12" width="100%" height="144" />
-    <rect x="0" y="912" rx="12" ry="12" width="100%" height="144" />
-    <rect x="0" y="1064" rx="12" ry="12" width="100%" height="144" />
-    <rect x="0" y="1216" rx="12" ry="12" width="100%" height="144" />
-    <rect x="0" y="1368" rx="12" ry="12" width="100%" height="144" />
+    <rect x="0" y="0" rx="12" ry="12" width="100%" height="130" />
+    <rect x="0" y="152" rx="12" ry="12" width="100%" height="130" />
+    <rect x="0" y="304" rx="12" ry="12" width="100%" height="130" />
+    <rect x="0" y="456" rx="12" ry="12" width="100%" height="130" />
+    <rect x="0" y="608" rx="12" ry="12" width="100%" height="130" />
+    <rect x="0" y="760" rx="12" ry="12" width="100%" height="130" />
+    <rect x="0" y="912" rx="12" ry="12" width="100%" height="130" />
+    <rect x="0" y="1064" rx="12" ry="12" width="100%" height="130" />
+    <rect x="0" y="1216" rx="12" ry="12" width="100%" height="130" />
+    <rect x="0" y="1368" rx="12" ry="12" width="100%" height="130" />
   </ContentLoader>
 );
