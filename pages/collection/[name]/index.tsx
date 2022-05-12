@@ -187,7 +187,9 @@ const CollectionPage = () => {
               />
             )}
 
-            {selected === 'Orderbook' && <OrderbookContainer collectionId={collection.address} />}
+            {selected === 'Orderbook' && (
+              <OrderbookContainer collectionId={collection.address} className="mt-[-70px] pointer-events-none" />
+            )}
 
             {/* {currentTab === 1 && <ActivityTab dailyStats={dailyStats} weeklyStats={weeklyStats} />} */}
             {selected === 'Activity' && <ActivityTab collectionAddress={collection.address ?? ''} />}
