@@ -1,6 +1,6 @@
 import { BaseCollection, ListingType } from '@infinityxyz/lib/types/core';
 import { useState } from 'react';
-import { Filter, useFilterContext } from 'src/utils/context/FilterContext';
+import { Filter, OrderType, useFilterContext } from 'src/utils/context/FilterContext';
 import { Button, Checkbox } from 'src/components/common';
 import { TraitSelection } from './trait-selection';
 
@@ -15,13 +15,17 @@ export const FilterPanel = ({ collection, collectionAddress, className }: Props)
   const [minPriceVal, setMinPriceVal] = useState('');
   const [maxPriceVal, setMaxPriceVal] = useState('');
 
-  const handleClickListingType = (listingType: ListingType | '') => {
-    let newValue = listingType;
-    if (listingType === filterState.listingType) {
-      newValue = ''; // toggle listingType
+  const handleClickOrderType = (orderType: OrderType | '') => {
+    let newValue = orderType;
+    if (orderType === filterState.orderType) {
+      newValue = ''; // toggle orderType
     }
     const newFilter = { ...filterState };
-    newFilter.listingType = newValue;
+    if (newValue) {
+      newFilter.orderType = newValue;
+    } else {
+      delete newFilter.orderType;
+    }
     setFilterState(newFilter);
   };
 
@@ -43,44 +47,34 @@ export const FilterPanel = ({ collection, collectionAddress, className }: Props)
     setMaxPriceVal('');
     setFilterState(newFilter);
   };
-  const showSaleAndPriceFilters = false;
 
   return (
     <div className={`w-80 mr-12 ${className ?? ''}`}>
       <div className="text-2xl font-bold">Filter</div>
 
-      {showSaleAndPriceFilters && (
-        <>
-          <div className="text-lg mt-6 mb-4">Sale Type</div>
-          <ul>
-            <li>
-              <Checkbox
-                checked={filterState.listingType === ListingType.FixedPrice}
-                onChange={() => handleClickListingType(ListingType.FixedPrice)}
-                label="Fixed Price"
-              />
-            </li>
-            <li>
-              <Checkbox
-                checked={filterState.listingType === ListingType.DutchAuction}
-                onChange={() => handleClickListingType(ListingType.DutchAuction)}
-                label="Declining Price"
-              />
-            </li>
-            <li>
-              <Checkbox
-                checked={filterState.listingType === ListingType.EnglishAuction}
-                onChange={() => handleClickListingType(ListingType.EnglishAuction)}
-                label="On Auction"
-              />
-            </li>
-          </ul>
+      <div className="text-lg mt-6 mb-4 font-heading">Status</div>
+      <ul>
+        <li className="mt-8">
+          <Checkbox
+            boxOnLeft={false}
+            checked={filterState.orderType === OrderType.Listing}
+            onChange={() => handleClickOrderType(OrderType.Listing)}
+            label="Buy now"
+          />
+        </li>
+        <li className="mt-8">
+          <Checkbox
+            boxOnLeft={false}
+            checked={filterState.orderType === OrderType.Offer}
+            onChange={() => handleClickOrderType(OrderType.Offer)}
+            label="Has offers"
+          />
+        </li>
+      </ul>
 
-          <hr className="mt-8" />
-        </>
-      )}
+      <hr className="mt-8" />
 
-      <div className="text-lg mt-6">Price</div>
+      <div className="text-lg mt-6 font-heading">Price</div>
       <div className="flex mt-4 mb-6">
         <input
           type="number"
