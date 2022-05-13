@@ -7,7 +7,7 @@ import { OrderbookContainer } from 'src/components/market/orderbook-list';
 const enum TABS {
   Orders = 'Orders',
   Discover = 'Discover',
-  ListMyNFTs = 'List My NFTs'
+  ListMyNFTs = 'List NFTs'
 }
 
 const MarketplacePage = () => {
@@ -57,7 +57,7 @@ const MarketplacePage = () => {
         </div>
       )}
 
-      {selected === TABS.ListMyNFTs && <div className="mt-24">List My NFTs</div>}
+      {selected === TABS.ListMyNFTs && <div className="mt-24">List NFTs</div>}
     </>
   );
 
