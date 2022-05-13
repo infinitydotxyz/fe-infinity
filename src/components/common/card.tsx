@@ -22,9 +22,17 @@ export interface CardProps {
   dropdownActions?: DropdownItems[];
   isLoading?: boolean;
   className?: string;
+  height?: number;
 }
 
-export const Card = ({ data, cardActions, dropdownActions, isLoading, className }: CardProps): JSX.Element => {
+export const Card = ({
+  data,
+  height = 290,
+  cardActions,
+  dropdownActions,
+  isLoading,
+  className = ''
+}: CardProps): JSX.Element => {
   const title = (data?.title ?? '').length > 30 ? data?.title?.slice(0, 30) + '...' : data?.title;
   const tokenId = (data?.tokenId ?? '').length > 30 ? data?.tokenId?.slice(0, 30) + '...' : data?.tokenId;
 
@@ -50,10 +58,19 @@ export const Card = ({ data, cardActions, dropdownActions, isLoading, className 
   if (isLoading) {
     return <LoadingCard className={className} />;
   }
+
+  const heightStyle = `${height}px`;
+
   return (
-    <div className={twMerge(`sm:mx-0 relative flex flex-col pointer-events-auto ${className ?? ''}`)}>
-      <NextLink href={`/asset/${data?.chainId}/${data?.tokenAddress ?? data?.address}/${data?.tokenId}`}>
-        <BGImage className="rounded-3xl h-[290px]" src={data?.image ?? ''} />
+    <div
+      className={`sm:mx-0 w-full  relative flex flex-col pointer-events-auto ${className}`}
+      style={{ height: heightStyle }}
+    >
+      <NextLink
+        href={`/asset/${data?.chainId}/${data?.tokenAddress ?? data?.address}/${data?.tokenId}`}
+        className="h-full"
+      >
+        <BGImage src={data?.image} className="overflow-clip rounded-3xl" />
       </NextLink>
 
       {data?.rarityRank && (

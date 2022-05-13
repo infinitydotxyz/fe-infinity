@@ -7,6 +7,7 @@ import { Button, Card, CardProps, FetchMore } from 'src/components/common';
 import { FilterPanel } from '../filter/filter-panel';
 import { GallerySort } from './gallery-sort';
 import { twMerge } from 'tailwind-merge';
+import { useResizeDetector } from 'react-resize-detector';
 
 // type Asset = {
 //   address: string;
@@ -53,6 +54,14 @@ export const GalleryBox = ({
   const [cursor, setCursor] = useState('');
   const [currentPage, setCurrentPage] = useState(-1);
   const [dataLoaded, setDataLoaded] = useState(false);
+
+  const [gridWidth, setGridWidth] = useState(0);
+
+  const { width, ref } = useResizeDetector();
+
+  useEffect(() => {
+    setGridWidth(ref.current ? ref.current.offsetWidth : 0);
+  }, [width]);
 
   const fetchData = async (isRefresh = false) => {
     setIsFetching(true);
@@ -130,60 +139,77 @@ export const GalleryBox = ({
     setDataLoaded(true); // current page's data loaded & rendered.
   }, [currentPage]);
 
+  let gridColumns = 'grid-cols-2';
+  let cardHeight = 290;
+
+  if (gridWidth > 0) {
+    const cols = Math.round(gridWidth / 290);
+    gridColumns = `repeat(${cols}, minmax(0, 1fr))`;
+
+    const w = gridWidth / cols;
+    cardHeight = w * 1.2;
+  }
+
   return (
-    <div className={twMerge(className, 'flex items-start')}>
-      {filterShowed && (
-        <div className="mt-4">
-          <FilterPanel collection={collection as BaseCollection} collectionAddress={collection?.address} />
+    <div className={twMerge(className, 'flex flex-col')}>
+      {data.length > 0 && (
+        <div className="sm:col-span-2 lg:col-span-3 xl:col-span-4 text-right mt-[-73px]">
+          <Button
+            variant="outline"
+            onClick={() => {
+              setFilterShowed((flag) => !flag);
+            }}
+            className="py-2.5 mr-2 font-heading pointer-events-auto"
+          >
+            {filterShowed ? 'Hide' : 'Show'} filter
+          </Button>
+          <GallerySort />
         </div>
       )}
 
-      <div className="w-full grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-12 gap-y-20 mt-[-73px] pointer-events-none">
-        {data.length > 0 && (
-          <div className="sm:col-span-2 lg:col-span-3 xl:col-span-4 text-right">
-            <Button
-              variant="outline"
-              onClick={() => {
-                setFilterShowed((flag) => !flag);
-              }}
-              className="py-2.5 mr-2 font-heading pointer-events-auto"
-            >
-              {filterShowed ? 'Hide' : 'Show'} filter
-            </Button>
-            <GallerySort />
+      <div className={twMerge(className, 'flex items-start mt-[60px]')}>
+        {filterShowed && (
+          <div className="mt-4">
+            <FilterPanel collection={collection as BaseCollection} collectionAddress={collection?.address} />
           </div>
         )}
 
-        {isFetching && (
-          <>
-            <Card isLoading={true} className="mt-24" />
+        <div
+          ref={ref}
+          className={twMerge('w-full grid gap-12  pointer-events-none')}
+          style={{ gridTemplateColumns: gridColumns }}
+        >
+          {isFetching && (
+            <>
+              <Card height={cardHeight} isLoading={true} className="mt-24" />
 
-            <Card isLoading={true} className="mt-24" />
+              <Card height={cardHeight} isLoading={true} className="mt-24" />
 
-            <Card isLoading={true} className="mt-24" />
+              <Card height={cardHeight} isLoading={true} className="mt-24" />
 
-            <Card isLoading={true} className="mt-24" />
-          </>
-        )}
+              <Card height={cardHeight} isLoading={true} className="mt-24" />
+            </>
+          )}
 
-        {error ? <div className="mt-24">Unable to load data.</div> : null}
+          {error ? <div className="mt-24">Unable to load data.</div> : null}
 
-        {!error && data.length === 0 ? <div className="mt-24">No results.</div> : null}
+          {!error && data.length === 0 ? <div className="mt-24">No results.</div> : null}
 
-        {data.map((item, idx) => {
-          return <Card key={idx} data={item} {...cardProps} className="mt-[-30px]" />;
-        })}
+          {data.map((item, idx) => {
+            return <Card height={cardHeight} key={idx} data={item} {...cardProps} />;
+          })}
 
-        {dataLoaded && (
-          <FetchMore
-            currentPage={currentPage}
-            data={data}
-            onFetchMore={async () => {
-              // setDataLoaded(false);
-              await fetchData();
-            }}
-          />
-        )}
+          {dataLoaded && (
+            <FetchMore
+              currentPage={currentPage}
+              data={data}
+              onFetchMore={async () => {
+                // setDataLoaded(false);
+                await fetchData();
+              }}
+            />
+          )}
+        </div>
       </div>
     </div>
   );
