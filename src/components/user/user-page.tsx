@@ -4,9 +4,11 @@ import { UserProfileDto } from './user-profile-dto';
 import { UserBannerImage } from './user-banner-image';
 import { UserProfileImage } from './user-profile-image';
 import { UserProfileShare } from './user-profile-share';
-import { Chip, ToggleTab, useToggleTab } from 'src/components/common';
+import { Chip, ToggleTab, useToggleTab, ExternalLink } from 'src/components/common';
 import { UserPageNftsTab } from './user-page-nfts-tab';
 import { UserPageActivityTab } from './user-page-activity-tab';
+import { ellipsisAddress } from 'src/utils';
+import { ETHEREUM_CHAIN_SCANNER_BASE } from '@infinityxyz/lib/utils';
 
 interface UserPageProps {
   userInfo: UserProfileDto;
@@ -27,7 +29,16 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
         <h2 className="my-6 text-6xl font-body">{userInfo.displayName || 'No Display Name'}</h2>
 
         <div className="flex flex-wrap font-heading -ml-3 mb-8">
-          <p className="leading-wide mx-4 font-bold">@{userInfo.username || 'no-username'}</p>
+          <span className="leading-wide ml-4 font-bold">@{userInfo.username || 'no-username'}</span>
+          <ExternalLink
+            href={`${ETHEREUM_CHAIN_SCANNER_BASE}/address/${userInfo.address}`}
+            className="leading-wide font-bold ml-8"
+          >
+            {ellipsisAddress(userInfo.address)}
+          </ExternalLink>
+          <span className="leading-wide ml-8 text-gray-500">
+            Joined {new Date(userInfo.createdAt ?? '').toLocaleDateString()}
+          </span>
           {/* <UserWatchList userWatchList={[userInfo.address, userInfo.address]} /> */}
         </div>
         <div className="my-4 -ml-2 flex flex-wrap">
