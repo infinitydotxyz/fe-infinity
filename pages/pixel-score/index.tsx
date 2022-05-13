@@ -13,9 +13,9 @@ import { useCardSelection } from 'src/components/astra/useCardSelection';
 
 export const PixelScore = () => {
   const [collection, setCollection] = useState<BaseCollection>();
-  const [currentTab, setCurrentTab] = useState<AstraNavTab>(AstraNavTab.All);
-
   const [chainId, setChainId] = useState<string>();
+
+  const [currentTab, setCurrentTab] = useState<AstraNavTab>(AstraNavTab.All);
   const [showCart, setShowCart] = useState(false);
   const [numTokens, setNumTokens] = useState(0);
   const [tokenFetcher, setTokenFetcher] = useState<TokenFetcher>();
@@ -150,7 +150,6 @@ export const PixelScore = () => {
       onTabChange={(value) => {
         // blanks out the cards
         setTokenFetcher(undefined);
-        setCollection(undefined);
 
         // set tab so new cards will load
         setCurrentTab(value);
