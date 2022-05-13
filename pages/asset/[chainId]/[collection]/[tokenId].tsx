@@ -190,7 +190,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
           </h3>
           <div className="flex items-center sm:mb-6">
             <NextLink
-              href={`/collection/${collection.metadata.name || collection.address}`}
+              href={`/collection/${collection.slug}`}
               className="text-theme-light-800 font-heading tracking-tight mr-2"
             >
               {collection.metadata.name}

@@ -125,7 +125,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
   } else if (readyToCheckout()) {
     // ready to checkout, we have an order
     title = 'Cart';
-    tooltip = { title: '(tooltip goes here)', content: '(tooltip goes here)' };
+    tooltip = { title: '', content: '' }; // todo: (tooltip goes here)
     footer = buildFooter(async () => {
       if (await executeOrder()) {
         setShowSuccessModal(true);
