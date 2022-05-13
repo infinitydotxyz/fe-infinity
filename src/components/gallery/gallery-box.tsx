@@ -1,8 +1,8 @@
 import { BaseCollection, BaseToken, CardData } from '@infinityxyz/lib/types/core';
 import { useEffect, useState } from 'react';
-import { apiGet, ApiError } from 'src/utils/apiUtils';
 import { ITEMS_PER_PAGE } from 'src/utils/constants';
 import { useFilterContext } from 'src/utils/context/FilterContext';
+import { apiGet, ApiError } from 'src/utils/apiUtils';
 import { Button, Card, CardProps, FetchMore } from 'src/components/common';
 import { FilterPanel } from '../filter/filter-panel';
 import { GallerySort } from './gallery-sort';
@@ -25,6 +25,8 @@ import { twMerge } from 'tailwind-merge';
 
 type NftItem = BaseToken & {
   collectionAddress?: string;
+  collectionName?: string;
+  collectionSlug?: string;
 };
 
 interface GalleryProps {
@@ -91,8 +93,8 @@ export const GalleryBox = ({
       return {
         id: collection?.address + '_' + item.tokenId,
         name: item.metadata?.name,
-        collectionName: collection?.metadata?.name,
-        title: collection?.metadata?.name,
+        collectionName: item.collectionName ?? collection?.metadata?.name,
+        title: item.collectionName ?? collection?.metadata?.name,
         description: item.metadata.description,
         image: item.image.url,
         price: 0,
