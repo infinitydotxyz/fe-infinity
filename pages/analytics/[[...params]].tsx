@@ -260,7 +260,7 @@ export const Analytics = () => {
           },
           {
             id: 'floorPrice',
-            label: 'Floor Price',
+            label: 'Floor price',
             type: 'number',
             value: `Ξ ${floorPrice.toLocaleString()}`,
             show: columns['floorPrice'],
@@ -287,7 +287,7 @@ export const Analytics = () => {
           },
           {
             id: 'discordFollowers',
-            label: 'Discord Followers',
+            label: 'Discord followers',
             type: 'number',
             value: `${discordFollowers.toLocaleString()}`,
             show: columns['discordFollowers'],
@@ -315,7 +315,7 @@ export const Analytics = () => {
           },
           {
             id: 'twitterFollowers',
-            label: 'Twitter Followers',
+            label: 'Twitter followers',
             type: 'number',
             value: `${twitterFollowers.toLocaleString()}`,
             show: columns['twitterFollowers'],
@@ -367,7 +367,7 @@ export const Analytics = () => {
       params: [
         {
           id: 'floorPrice',
-          label: 'Floor Price',
+          label: 'Floor price',
           props: {
             checked: filterCheckboxes['floorPrice'],
             defaultChecked: filterCheckboxes['floorPrice'],
@@ -376,7 +376,7 @@ export const Analytics = () => {
         },
         {
           id: 'floorPricePercentChange',
-          label: 'Floor Price %',
+          label: 'Floor price %',
           props: {
             checked: filterCheckboxes['floorPricePercentChange'],
             defaultChecked: filterCheckboxes['floorPricePercentChange'],
@@ -421,7 +421,7 @@ export const Analytics = () => {
         },
         {
           id: 'twitterFollowers',
-          label: 'Twitter Followers',
+          label: 'Twitter followers',
           props: {
             checked: filterCheckboxes['twitterFollowers'],
             defaultChecked: filterCheckboxes['twitterFollowers'],
