@@ -1,3 +1,4 @@
+import { useAppContext } from 'src/utils/context/AppContext';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { GalleryBox } from '../gallery/gallery-box';
 import { UserProfileDto } from './user-profile-dto';
@@ -7,6 +8,7 @@ type Props = {
 };
 
 export const UserPageNftsTab = ({ userInfo }: Props) => {
+  const { chainId } = useAppContext();
   const { addCartItem } = useOrderContext();
 
   return (
@@ -14,12 +16,12 @@ export const UserPageNftsTab = ({ userInfo }: Props) => {
       <div className="mt-20">
         <GalleryBox
           pageId="PROFILE"
-          getEndpoint={`/user/${userInfo?.address}/nfts?chainId=1&limit=50`}
+          getEndpoint={`/user/${userInfo?.address}/nfts?chainId=${chainId}&limit=50`}
           filterShowedDefault={false}
           cardProps={{
             cardActions: [
               {
-                label: 'List NFT',
+                label: 'List',
                 onClick: (ev, data) => {
                   addCartItem({
                     collectionName: data?.collectionName ?? '(no name)',
