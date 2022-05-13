@@ -13,7 +13,7 @@ export const UserActivityItem = ({ event }: Props) => {
     <div>
       <div className="bg-gray-100 p-10 rounded-2xl flex items-center font-heading">
         <NextLink href={`/asset/${event.chainId}/${event.collectionAddress}/${event.tokenId}`}>
-          <img src={event.image} alt="NFT Image" className="w-16 max-h-[80px] rounded-[50%]" />
+          <img src={event.image} alt="NFT Image" className="w-16 h-16 max-h-[80px] rounded-[50%]" />
         </NextLink>
         <div className="flex justify-between w-full mx-8 ml-4">
           <div className="w-1/6">

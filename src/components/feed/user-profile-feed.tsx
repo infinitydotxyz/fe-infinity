@@ -7,7 +7,7 @@ import { FeedEventType } from '@infinityxyz/lib/types/core/feed';
 import { ActivityItem } from './activity-item';
 import { UserActivityItem } from './user-activity-item';
 import { apiGet } from 'src/utils';
-import { useAppContext } from 'src/utils/context/AppContext';
+// import { useAppContext } from 'src/utils/context/AppContext';
 import { FetchMore, Spinner } from '../common';
 
 type UserActivityEvent = FeedEvent & {
@@ -37,7 +37,7 @@ export const UserProfileFeed = ({
   forUserActivity,
   className
 }: UserProfileFeedProps) => {
-  const { user } = useAppContext();
+  // const { user } = useAppContext();
   const [events, setEvents] = useState<FeedEvent[]>([]);
   const [filter, setFilter] = useState<FeedFilter>({ userAddress, types });
   const [commentPanelEvent, setCommentPanelEvent] = useState<FeedEvent | null>(null);
@@ -55,7 +55,7 @@ export const UserProfileFeed = ({
       newCursor = '';
     }
 
-    const { result } = await apiGet(`/user/${user?.address}/activity`, {
+    const { result } = await apiGet(`/user/${userAddress}/activity`, {
       query: {
         limit: ITEMS_LIMIT,
         cursor: newCursor

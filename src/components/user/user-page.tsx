@@ -47,7 +47,7 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
 
         <div className="mt-6 min-h-[1024px]">
           {selected === 'Collected' && <UserPageNftsTab userInfo={userInfo} />}
-          {selected === 'Activity' && <UserPageActivityTab />}
+          {selected === 'Activity' && <UserPageActivityTab userInfo={userInfo} />}
         </div>
       </div>
     </>
