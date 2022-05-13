@@ -8,6 +8,8 @@ import { NextLink } from './next-link';
 import ContentLoader from 'react-content-loader';
 import { inputBorderColor } from 'src/utils/ui-constants';
 import { BGImage } from './bg-image';
+import { SVG } from './svg';
+import { useRouter } from 'next/router';
 
 type labelFn = (data?: CardData) => ReactNode;
 
@@ -33,8 +35,9 @@ export const Card = ({
   isLoading,
   className = ''
 }: CardProps): JSX.Element => {
-  const title = (data?.title ?? '').length > 30 ? data?.title?.slice(0, 30) + '...' : data?.title;
-  const tokenId = (data?.tokenId ?? '').length > 30 ? data?.tokenId?.slice(0, 30) + '...' : data?.tokenId;
+  const router = useRouter();
+  const title = (data?.title ?? '').length > 25 ? data?.title?.slice(0, 25) + '...' : data?.title;
+  const tokenId = (data?.tokenId ?? '').length > 25 ? data?.tokenId?.slice(0, 25) + '...' : data?.tokenId;
 
   const buttonJsx = (
     <>
@@ -80,8 +83,15 @@ export const Card = ({
       )}
 
       <div className="p-1 mt-3">
-        <div className="font-bold truncate" title={data?.title}>
+        <div
+          className="flex items-center cursor-pointer font-bold truncate"
+          title={data?.title}
+          onClick={() => {
+            router.push(`/collection/${data?.collectionSlug}`);
+          }}
+        >
           {title}
+          {data?.hasBlueCheck ? <SVG.blueCheck className="w-5 h-5 ml-1" /> : null}
         </div>
         <div className="text-secondary font-heading" title={data?.tokenId}>
           {tokenId}

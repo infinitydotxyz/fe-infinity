@@ -32,7 +32,7 @@ export const TestPage = () => {
 
             <Button
               onClick={() => {
-                void router.push('/marketplace');
+                void router.push('/market');
               }}
             >
               Market

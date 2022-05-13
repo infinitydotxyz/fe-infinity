@@ -82,7 +82,11 @@ export const OrderbookRow = ({ order }: OrderbookRowProps): JSX.Element => {
           const title = data.name;
 
           if (data.field === 'buyOrSell') {
-            return <Button onClick={onClickBuySell}>{order.isSellOrder ? 'Buy' : 'Sell'}</Button>;
+            return (
+              <Button key={`${order.id} ${data.field}`} onClick={onClickBuySell}>
+                {order.isSellOrder ? 'Buy' : 'Sell'}
+              </Button>
+            );
           }
 
           return (

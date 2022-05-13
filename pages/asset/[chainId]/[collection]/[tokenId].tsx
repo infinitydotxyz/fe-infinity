@@ -1,14 +1,5 @@
 import { useRouter } from 'next/router';
-import {
-  Button,
-  ShortAddress,
-  PageBox,
-  ReadMoreText,
-  SVG,
-  NextLink,
-  ClipboardButton,
-  Spinner
-} from 'src/components/common';
+import { Button, ShortAddress, PageBox, ReadMoreText, SVG, NextLink, Spinner } from 'src/components/common';
 import { BLANK_IMAGE_URL, useFetch } from 'src/utils';
 import { Token, Collection, Erc721Metadata } from '@infinityxyz/lib/types/core';
 import {
@@ -204,8 +195,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
             tooltip={collection.address}
           />
           <span className="text-base flex items-center">
-            Token ID: <span className="ml-4 font-heading underline">#{token.tokenId}</span>
-            <ClipboardButton textToCopy={token.tokenId} />
+            Token ID: <span className="ml-4 font-heading">#{token.tokenId}</span>
           </span>
 
           <div className="md:-ml-1.5">
