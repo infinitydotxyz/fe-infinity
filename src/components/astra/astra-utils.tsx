@@ -23,6 +23,8 @@ export const fetchTokens = async (
   return response;
 };
 
+// ======================================================
+
 export const fetchUserTokens = async (userAddress: string, cursor?: string): Promise<ApiResponse> => {
   const response = await apiGet(`/user/${userAddress}/nfts`, {
     query: {

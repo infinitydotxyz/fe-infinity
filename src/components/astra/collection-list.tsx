@@ -4,6 +4,7 @@ import { BaseCollection } from '@infinityxyz/lib/types/core';
 import { CollectionListItem } from './collection-list-item';
 import { fetchCollections } from './astra-utils';
 import { ScrollLoader } from '../common';
+import { useIsMounted } from 'src/hooks/useIsMounted';
 
 interface Props {
   query: string;
@@ -18,12 +19,19 @@ export const CollectionList = ({ query, className = '', onClick, selectedCollect
   const [cursor, setCursor] = useState<string>('');
   const [hasNextPage, setHasNextPage] = useState(false);
 
+  const isMounted = useIsMounted();
+
   useEffect(() => {
     handleFetch('');
   }, [query]);
 
   const handleFetch = async (passedCursor: string) => {
     const response = await fetchCollections(query, passedCursor);
+
+    // can't update react state after unmount
+    if (!isMounted()) {
+      return;
+    }
 
     if (response.error) {
       setError(response.error);

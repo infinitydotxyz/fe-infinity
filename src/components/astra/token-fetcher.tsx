@@ -94,6 +94,8 @@ export class CollectionTokenCache {
   }
 }
 
+// ========================================================================
+
 class CollectionTokenFetcher extends TokenFetcher {
   private collection: BaseCollection;
   private chainId: string;
@@ -147,6 +149,8 @@ export class UserTokenCache {
     return this.cachedFetcher;
   }
 }
+
+// ========================================================================
 
 class UserTokenFetcher extends TokenFetcher {
   private userAddress: string;
