@@ -6,15 +6,15 @@ import { XIcon } from '@heroicons/react/outline';
 import { ReactNode } from 'react';
 
 interface Props {
-  tokens: CardData[];
+  cardData: CardData[];
   onRemove: (token: CardData) => void;
   onCheckout: () => void;
 }
 
-export const AstraCart = ({ tokens, onRemove, onCheckout }: Props) => {
+export const AstraCart = ({ cardData, onRemove, onCheckout }: Props) => {
   const map = new Map<string, CardData[]>();
 
-  for (const token of tokens) {
+  for (const token of cardData) {
     const tkns = map.get(token.tokenAddress ?? '') ?? [];
     tkns.push(token);
     map.set(token.tokenAddress ?? '', tkns);

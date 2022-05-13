@@ -9,19 +9,26 @@ import { AstraCart } from 'src/components/astra/astra-cart';
 import { inputBorderColor } from 'src/utils/ui-constants';
 import { CollectionTokenFetcher, TokenFetcher, UserTokenFetcher } from 'src/components/astra/token-fetcher';
 import { useAppContext } from 'src/utils/context/AppContext';
+import { useCardSelection } from 'src/components/astra/useCardSelection';
 
 export const PixelScore = () => {
   const [collection, setCollection] = useState<BaseCollection>();
   const [currentTab, setCurrentTab] = useState<AstraNavTab>(AstraNavTab.All);
 
-  const [selectedTokens, setSelectedTokens] = useState<CardData[]>([]);
   const [chainId, setChainId] = useState<string>();
   const [showCart, setShowCart] = useState(false);
   const [numTokens, setNumTokens] = useState(0);
   const [tokenFetcher, setTokenFetcher] = useState<TokenFetcher>();
 
+  const { selectedCards, isSelected, toggleSelection, clearSelection, removeFromSelection, hasSelection } =
+    useCardSelection();
+
   const ref = useRef<HTMLDivElement>(null);
   const { user } = useAppContext();
+
+  useEffect(() => {
+    setShowCart(hasSelection);
+  }, [hasSelection]);
 
   useEffect(() => {
     ref.current?.scrollTo({ left: 0, top: 0 });
@@ -40,14 +47,7 @@ export const PixelScore = () => {
   }, [currentTab, user]);
 
   const onCardClick = (data: CardData) => {
-    const i = indexOfSelection(data);
-
-    if (i === -1) {
-      setSelectedTokens([...selectedTokens, data]);
-      setShowCart(true);
-    } else {
-      removeFromSelection(data);
-    }
+    toggleSelection(data);
   };
 
   let tokensGrid;
@@ -102,9 +102,7 @@ export const PixelScore = () => {
           className="px-8 py-6"
           onClick={onCardClick}
           isSelected={(data) => {
-            const i = indexOfSelection(data);
-
-            return i !== -1;
+            return isSelected(data);
           }}
           onLoad={(value) => setNumTokens(value)}
         />
@@ -114,32 +112,8 @@ export const PixelScore = () => {
     tokensGrid = <CenteredContent>{emptyMessage}</CenteredContent>;
   }
 
-  const indexOfSelection = (value: CardData) => {
-    const i = selectedTokens.findIndex((token) => {
-      return value.id === token.id;
-    });
-
-    return i;
-  };
-
-  const removeFromSelection = (value: CardData) => {
-    const i = indexOfSelection(value);
-
-    if (i !== -1) {
-      const copy = [...selectedTokens];
-      copy.splice(i, 1);
-
-      setSelectedTokens(copy);
-
-      if (copy.length === 0) {
-        setShowCart(false);
-      }
-    }
-  };
-
   const handleCheckout = () => {
-    setSelectedTokens([]);
-    setShowCart(false);
+    clearSelection();
 
     toastSuccess('Success', 'Your Pixel Scores has been calculated');
   };
@@ -198,7 +172,7 @@ export const PixelScore = () => {
 
   const cart = (
     <AstraCart
-      tokens={selectedTokens}
+      cardData={selectedCards()}
       onCheckout={handleCheckout}
       onRemove={(value) => {
         removeFromSelection(value);
