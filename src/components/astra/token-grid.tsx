@@ -56,14 +56,17 @@ export const TokensGrid = ({ tokenFetcher, className = '', onLoad, onClick, isSe
   };
 
   let contents;
+  let cardHeight = 290;
 
   if (error || loading) {
     contents = <ErrorOrLoading error={error} />;
   } else {
     let gridColumns = 'grid-cols-2';
     if (gridWidth > 0) {
-      const cols = Math.round(gridWidth / 250);
+      const cols = Math.round(gridWidth / 290);
       gridColumns = `repeat(${cols}, minmax(0, 1fr))`;
+
+      cardHeight = gridWidth / cols;
     }
 
     contents = (
@@ -72,6 +75,7 @@ export const TokensGrid = ({ tokenFetcher, className = '', onLoad, onClick, isSe
           {cardData.map((data) => {
             return (
               <TokenCard
+                height={cardHeight}
                 key={data.id}
                 data={data}
                 selected={isSelected(data)}
