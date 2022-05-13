@@ -7,7 +7,7 @@ import { AstraNavbar, AstraNavTab } from 'src/components/astra/astra-navbar';
 import { AstraSidebar } from 'src/components/astra/astra-sidebar';
 import { AstraCart } from 'src/components/astra/astra-cart';
 import { inputBorderColor } from 'src/utils/ui-constants';
-import { CollectionTokenFetcher, TokenFetcher, UserTokenFetcher } from 'src/components/astra/token-fetcher';
+import { CollectionTokenFetcher, TokenFetcher, UserTokenCache } from 'src/components/astra/token-fetcher';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { useCardSelection } from 'src/components/astra/useCardSelection';
 
@@ -42,7 +42,7 @@ export const PixelScore = () => {
 
   useEffect(() => {
     if (currentTab === AstraNavTab.MyNFTs && user) {
-      setTokenFetcher(new UserTokenFetcher(user.address));
+      setTokenFetcher(UserTokenCache.shared().fetcher(user.address));
     }
   }, [currentTab, user]);
 

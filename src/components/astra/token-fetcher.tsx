@@ -86,7 +86,37 @@ export class CollectionTokenFetcher extends TokenFetcher {
 
 // ========================================================================
 
-export class UserTokenFetcher extends TokenFetcher {
+export class UserTokenCache {
+  private static instance: UserTokenCache;
+  private cachedFetcher: UserTokenFetcher | undefined;
+  private cachedAddress: string;
+
+  public static shared() {
+    if (!this.instance) {
+      this.instance = new this();
+    }
+
+    return this.instance;
+  }
+
+  private constructor() {
+    this.cachedFetcher = undefined;
+    this.cachedAddress = '';
+  }
+
+  fetcher(userAddress: string): TokenFetcher {
+    if (userAddress === this.cachedAddress && this.cachedFetcher) {
+      return this.cachedFetcher;
+    }
+
+    this.cachedFetcher = new UserTokenFetcher(userAddress);
+    this.cachedAddress = userAddress;
+
+    return this.cachedFetcher;
+  }
+}
+
+class UserTokenFetcher extends TokenFetcher {
   private userAddress: string;
 
   constructor(userAddress: string) {
