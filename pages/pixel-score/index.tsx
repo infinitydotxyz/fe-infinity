@@ -38,7 +38,7 @@ export const PixelScore = () => {
     if (currentTab === AstraNavTab.All && collection && chainId) {
       setTokenFetcher(new CollectionTokenFetcher(collection, chainId));
     }
-  }, [collection, chainId]);
+  }, [currentTab, collection, chainId]);
 
   useEffect(() => {
     if (currentTab === AstraNavTab.MyNFTs && user) {
@@ -146,6 +146,7 @@ export const PixelScore = () => {
 
   const navBar = (
     <AstraNavbar
+      currentTab={currentTab}
       onTabChange={(value) => {
         // blanks out the cards
         setTokenFetcher(undefined);
@@ -166,6 +167,8 @@ export const PixelScore = () => {
           setCollection(value);
           setChainId(value.chainId);
         }
+
+        setCurrentTab(AstraNavTab.All);
       }}
     />
   );

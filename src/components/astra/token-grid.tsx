@@ -19,7 +19,6 @@ export const TokensGrid = ({ tokenFetcher, className = '', onLoad, onClick, isSe
   const [cardData, setCardData] = useState<CardData[]>([]);
   const [error, setError] = useState(false);
   const [gridWidth, setGridWidth] = useState(0);
-  const [cursor, setCursor] = useState<string>('');
   const [hasNextPage, setHasNextPage] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -33,33 +32,24 @@ export const TokensGrid = ({ tokenFetcher, className = '', onLoad, onClick, isSe
   useEffect(() => {
     setCardData([]);
     setLoading(true);
-    handleFetch('');
+    handleFetch(false);
   }, [tokenFetcher]);
 
-  const handleFetch = async (passedCursor: string) => {
-    const { fcursor, fhasNextPage, fcardData, ferror } = await tokenFetcher.handleFetch(passedCursor);
+  const handleFetch = async (loadMore: boolean) => {
+    const { fhasNextPage, fcardData, ferror } = await tokenFetcher.fetch(loadMore);
 
     // can't update react state after unmount
     if (!isMounted()) {
       return;
     }
 
-    setCursor(fcursor);
     setHasNextPage(fhasNextPage);
     setError(ferror);
 
     if (!ferror) {
-      let newList = [];
+      setCardData(fcardData);
 
-      if (passedCursor) {
-        newList = [...cardData, ...fcardData];
-      } else {
-        newList = fcardData;
-      }
-
-      setCardData(newList);
-
-      onLoad(newList.length);
+      onLoad(fcardData.length);
     }
 
     setLoading(false);
@@ -98,7 +88,7 @@ export const TokensGrid = ({ tokenFetcher, className = '', onLoad, onClick, isSe
         {hasNextPage && (
           <ScrollLoader
             onFetchMore={async () => {
-              handleFetch(cursor);
+              handleFetch(true);
             }}
           />
         )}

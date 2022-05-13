@@ -4,6 +4,7 @@ import { twMerge } from 'tailwind-merge';
 
 interface Props {
   onTabChange: (value: AstraNavTab) => void;
+  currentTab: AstraNavTab;
 }
 
 export enum AstraNavTab {
@@ -14,10 +15,10 @@ export enum AstraNavTab {
   MyNFTs = 'My NFTs'
 }
 
-export const AstraNavbar = ({ onTabChange }: Props) => {
+export const AstraNavbar = ({ onTabChange, currentTab }: Props) => {
   const { options, onChange, selected } = useToggleTab(
     [AstraNavTab.All, AstraNavTab.Top100, AstraNavTab.Hot, AstraNavTab.MyNFTs, AstraNavTab.Pending],
-    AstraNavTab.All
+    currentTab
   );
 
   const tabBar = (
