@@ -68,7 +68,7 @@ export const Analytics = () => {
   });
 
   const [filterCheckboxes, setFilterCheckboxes] = useState<{ [key: string]: boolean }>(columns);
-  const { options, onChange, selected } = useToggleTab(['1 hr', '1 day', '7 days', '30 days', 'All'], '1 hr');
+  const { options, onChange, selected } = useToggleTab(['1 hr', '1 day', '7 days', '30 days', 'All'], '7 days');
 
   const closeDrawer = () => {
     setIsDrawerOpen(false);
