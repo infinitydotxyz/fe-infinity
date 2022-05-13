@@ -24,7 +24,7 @@ import { useResizeDetector } from 'react-resize-detector';
 //   metadata: ListingMetadata;
 // };
 
-type NftItem = BaseToken & {
+type ApiNftData = BaseToken & {
   collectionAddress?: string;
   collectionName?: string;
   collectionSlug?: string;
@@ -98,12 +98,13 @@ export const GalleryBox = ({
     setError(error);
     setCursor(result?.cursor);
 
-    let moreData: CardData[] = (result?.data || []).map((item: NftItem) => {
+    let moreData: CardData[] = (result?.data || []).map((item: ApiNftData) => {
       return {
         id: collection?.address + '_' + item.tokenId,
         name: item.metadata?.name,
-        collectionName: item.collectionName ?? collection?.metadata?.name,
         title: item.collectionName ?? collection?.metadata?.name,
+        collectionName: item.collectionName ?? collection?.metadata?.name,
+        collectionSlug: item.collectionSlug ?? '',
         description: item.metadata.description,
         image: item.image.url,
         price: 0,
@@ -112,8 +113,9 @@ export const GalleryBox = ({
         address: item.collectionAddress ?? collection?.address,
         tokenId: item.tokenId,
         rarityRank: item.rarityRank,
-        orderSnippet: item.ordersSnippet
-      };
+        orderSnippet: item.ordersSnippet,
+        hasBlueCheck: item.hasBlueCheck ?? false
+      } as CardData;
     });
 
     // remove any without tokenAddress (seeing bad NFTs in my profile)
