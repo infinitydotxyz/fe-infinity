@@ -155,7 +155,7 @@ export const GalleryBox = ({
   return (
     <div className={twMerge(className, 'flex flex-col')}>
       {data.length > 0 && (
-        <div className="sm:col-span-2 lg:col-span-3 xl:col-span-4 text-right mt-[-73px]">
+        <div className="sm:col-span-2 lg:col-span-3 xl:col-span-4 text-right mt-[-73px] pointer-events-none">
           <Button
             variant="outline"
             onClick={() => {
