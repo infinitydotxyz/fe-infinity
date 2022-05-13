@@ -3,6 +3,9 @@ import { useRouter } from 'next/router';
 import { useCallback, useState } from 'react';
 import { ToggleTab, useToggleTab, Spacer, PageBox, CollectionGrid, TextInputBox } from 'src/components/common';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
+import { UserPageNftsTab } from 'src/components/user/user-page-nfts-tab';
+import { UserProfileDto } from 'src/components/user/user-profile-dto';
+import { useAppContext } from 'src/utils/context/AppContext';
 
 const enum TABS {
   Orders = 'Orders',
@@ -11,6 +14,7 @@ const enum TABS {
 }
 
 const MarketplacePage = () => {
+  const { user } = useAppContext();
   const router = useRouter();
 
   // Checks the url for the 'tab' query parameter. If it doesn't exist, default to Orderbook
@@ -57,7 +61,11 @@ const MarketplacePage = () => {
         </div>
       )}
 
-      {selected === TABS.ListMyNFTs && <div className="mt-24">List NFTs</div>}
+      {selected === TABS.ListMyNFTs && (
+        <div className="mt-32">
+          <UserPageNftsTab userInfo={user as UserProfileDto} />
+        </div>
+      )}
     </>
   );
 
