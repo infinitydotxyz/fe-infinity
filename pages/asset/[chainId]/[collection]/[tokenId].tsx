@@ -204,8 +204,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
             tooltip={collection.address}
           />
           <span className="text-base flex items-center">
-            Token ID: <span className="ml-4 font-heading underline">#{token.tokenId}</span>
-            <ClipboardButton textToCopy={token.tokenId} />
+            Token ID: <span className="ml-4 font-heading">#{token.tokenId}</span>
           </span>
 
           <div className="md:-ml-1.5">
