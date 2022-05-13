@@ -4,13 +4,19 @@ import { useCallback, useState } from 'react';
 import { ToggleTab, useToggleTab, Spacer, PageBox, CollectionGrid, TextInputBox } from 'src/components/common';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
 
+const enum TABS {
+  Orders = 'Orders',
+  Discover = 'Discover',
+  ListMyNFTs = 'List My NFTs'
+}
+
 const MarketplacePage = () => {
   const router = useRouter();
 
   // Checks the url for the 'tab' query parameter. If it doesn't exist, default to Orderbook
-  const tabDefault = router.query.tab && typeof router.query.tab === 'string' ? router.query.tab : 'Orderbook';
+  const tabDefault = router.query.tab && typeof router.query.tab === 'string' ? router.query.tab : TABS.Orders;
 
-  const { options, onChange, selected } = useToggleTab(['Orderbook', 'Buy', 'Sell'], tabDefault);
+  const { options, onChange, selected } = useToggleTab([TABS.Orders, TABS.Discover, TABS.ListMyNFTs], tabDefault);
 
   const [query, setQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
@@ -34,10 +40,10 @@ const MarketplacePage = () => {
         <Spacer />
       </div>
 
-      {selected === 'Orderbook' && <OrderbookContainer />}
+      {selected === TABS.Orders && <OrderbookContainer />}
 
-      {selected === 'Buy' && (
-        <div className="mt-12">
+      {selected === TABS.Discover && (
+        <div className="mt-16">
           <div className="mb-4">
             <TextInputBox
               type="text"
@@ -51,12 +57,12 @@ const MarketplacePage = () => {
         </div>
       )}
 
-      {selected === 'Sell' && <div>sale</div>}
+      {selected === TABS.ListMyNFTs && <div className="mt-24">List My NFTs</div>}
     </>
   );
 
   return (
-    <PageBox title="Marketplace">
+    <PageBox title="Market">
       {/* <OrderDrawer open={orderDrawerOpen} onClose={() => setOrderDrawerOpen(false)} /> */}
 
       <div>{contents}</div>
