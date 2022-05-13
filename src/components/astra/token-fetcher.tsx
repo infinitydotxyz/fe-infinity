@@ -35,7 +35,7 @@ export class TokenFetcher {
       } else {
         const result = response.result as NFTArray;
 
-        let newCards = tokensToCardData(result.data, this.collectionName());
+        let newCards = tokensToCardData(result.data);
         if (loadMore) {
           newCards = [...this.cardData, ...newCards];
         }
@@ -52,11 +52,6 @@ export class TokenFetcher {
   // override this
   protected doFetch = async (): Promise<ApiResponse> => {
     return { status: 0 };
-  };
-
-  // override this
-  protected collectionName = (): string => {
-    return '';
   };
 }
 
@@ -111,11 +106,6 @@ class CollectionTokenFetcher extends TokenFetcher {
   protected doFetch = async (): Promise<ApiResponse> => {
     return await fetchTokens(this.collection.address, this.chainId, this.cursor);
   };
-
-  // override
-  protected collectionName = (): string => {
-    return this.collection.metadata.name;
-  };
 }
 
 // ========================================================================
@@ -163,10 +153,5 @@ class UserTokenFetcher extends TokenFetcher {
   // override
   protected doFetch = async (): Promise<ApiResponse> => {
     return fetchUserTokens(this.userAddress, this.cursor);
-  };
-
-  // override
-  protected collectionName = (): string => {
-    return this.userAddress;
   };
 }

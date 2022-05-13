@@ -2,10 +2,9 @@ import { BaseCollection } from '@infinityxyz/lib/types/core';
 import { useState } from 'react';
 import { CollectionList } from 'src/components/astra/collection-list';
 import { DebouncedTextField } from 'src/components/common';
-import { apiGet } from 'src/utils';
-import { CollectionSearchDto } from 'src/utils/types/collection-types';
 import { inputBorderColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
+import { CollectionCache } from './collection-cache';
 
 interface Props {
   onClick: (value: BaseCollection) => void;
@@ -45,39 +44,3 @@ export const AstraSidebar = ({ onClick, selectedCollection }: Props) => {
     </div>
   );
 };
-
-// ========================================================================
-
-class CollectionCache {
-  private static instance: CollectionCache;
-
-  private cache: Map<string, BaseCollection>;
-
-  public static shared() {
-    if (!this.instance) {
-      this.instance = new this();
-    }
-
-    return this.instance;
-  }
-
-  private constructor() {
-    this.cache = new Map<string, BaseCollection>();
-  }
-
-  async collection(collection: CollectionSearchDto): Promise<BaseCollection> {
-    const key = `${collection.address}:${collection.chainId}`;
-    const cached = this.cache.get(key);
-
-    if (cached) {
-      return cached;
-    }
-
-    const { result } = await apiGet(`/collections/${collection.chainId}:${collection.address}`);
-
-    const baseCollection = result as BaseCollection;
-    this.cache.set(key, baseCollection);
-
-    return baseCollection;
-  }
-}

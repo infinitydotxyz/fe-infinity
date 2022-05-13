@@ -52,8 +52,10 @@ export const fetchCollections = async (query: string, cursor?: string): Promise<
 
 // ======================================================
 
-export const tokensToCardData = (tokens: BaseToken[], collectionName: string): CardData[] => {
+export const tokensToCardData = (tokens: BaseToken[]): CardData[] => {
   let cardData = tokens.map((token) => {
+    const collectionName = token.collectionName ?? 'Unknown';
+
     return {
       id: token.collectionAddress + '_' + token.tokenId,
       name: token.metadata?.name,
@@ -67,7 +69,7 @@ export const tokensToCardData = (tokens: BaseToken[], collectionName: string): C
       tokenId: token.tokenId,
       rarityRank: token.rarityRank,
       orderSnippet: token.ordersSnippet
-    };
+    } as CardData;
   });
 
   // remove any without tokenAddress (seeing bad NFTs in my profile)
