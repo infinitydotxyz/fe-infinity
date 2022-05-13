@@ -7,7 +7,7 @@ import { AstraNavbar, AstraNavTab } from 'src/components/astra/astra-navbar';
 import { AstraSidebar } from 'src/components/astra/astra-sidebar';
 import { AstraCart } from 'src/components/astra/astra-cart';
 import { inputBorderColor } from 'src/utils/ui-constants';
-import { CollectionTokenFetcher, TokenFetcher, UserTokenCache } from 'src/components/astra/token-fetcher';
+import { CollectionTokenCache, TokenFetcher, UserTokenCache } from 'src/components/astra/token-fetcher';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { useCardSelection } from 'src/components/astra/useCardSelection';
 
@@ -36,7 +36,7 @@ export const PixelScore = () => {
 
   useEffect(() => {
     if (currentTab === AstraNavTab.All && collection && chainId) {
-      setTokenFetcher(new CollectionTokenFetcher(collection, chainId));
+      setTokenFetcher(CollectionTokenCache.shared().fetcher(collection, chainId));
     }
   }, [currentTab, collection, chainId]);
 

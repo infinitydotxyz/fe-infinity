@@ -62,7 +62,39 @@ export class TokenFetcher {
 
 // ========================================================================
 
-export class CollectionTokenFetcher extends TokenFetcher {
+export class CollectionTokenCache {
+  private static instance: CollectionTokenCache;
+
+  private cache: Map<string, TokenFetcher>;
+
+  public static shared() {
+    if (!this.instance) {
+      this.instance = new this();
+    }
+
+    return this.instance;
+  }
+
+  private constructor() {
+    this.cache = new Map<string, TokenFetcher>();
+  }
+
+  fetcher(collection: BaseCollection, chainId: string): TokenFetcher {
+    const key = `${collection.address}:${chainId}`;
+    const cached = this.cache.get(key);
+
+    if (cached) {
+      return cached;
+    }
+
+    const result = new CollectionTokenFetcher(collection, chainId);
+    this.cache.set(key, result);
+
+    return result;
+  }
+}
+
+class CollectionTokenFetcher extends TokenFetcher {
   private collection: BaseCollection;
   private chainId: string;
 
@@ -88,7 +120,7 @@ export class CollectionTokenFetcher extends TokenFetcher {
 
 export class UserTokenCache {
   private static instance: UserTokenCache;
-  private cachedFetcher: UserTokenFetcher | undefined;
+  private cachedFetcher: TokenFetcher | undefined;
   private cachedAddress: string;
 
   public static shared() {
