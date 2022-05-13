@@ -68,7 +68,7 @@ export const Analytics = () => {
   });
 
   const [filterCheckboxes, setFilterCheckboxes] = useState<{ [key: string]: boolean }>(columns);
-  const { options, onChange, selected } = useToggleTab(['1 hr', '1 day', '7 days', '30 days', 'All'], '1 hr');
+  const { options, onChange, selected } = useToggleTab(['1 hr', '1 day', '7 days', '30 days', 'All'], '7 days');
 
   const closeDrawer = () => {
     setIsDrawerOpen(false);
@@ -116,10 +116,21 @@ export const Analytics = () => {
   };
 
   const applyCheckboxes = () => {
-    if (Object.keys(filterCheckboxes).filter((key) => filterCheckboxes[key]).length < filterLimit) {
-      setColumns(filterCheckboxes);
-      setIsDrawerOpen(false);
-    }
+    // if (Object.keys(filterCheckboxes).filter((key) => filterCheckboxes[key]).length < filterLimit) {
+    //   setColumns(filterCheckboxes);
+    //   setIsDrawerOpen(false);
+    // }
+    setColumns(filterCheckboxes);
+    setFilterCheckboxes(filterCheckboxes);
+    setIsDrawerOpen(false);
+    setCursor('');
+    void router.push(
+      {
+        pathname: `/analytics/${page}/${interval}`
+      },
+      undefined,
+      { scroll: false }
+    );
   };
 
   const checkboxToggle = (id: string) => setFilterCheckboxes({ ...filterCheckboxes, [id]: !filterCheckboxes[id] });
@@ -343,7 +354,12 @@ export const Analytics = () => {
       };
     });
     setStats(statistics);
-  }, [items]);
+  }, [items, columns]);
+
+  useEffect(() => {
+    setItems([]);
+    setCursor('');
+  }, [page, interval, orderBy, orderDirection]);
 
   const content = {
     filter: {
