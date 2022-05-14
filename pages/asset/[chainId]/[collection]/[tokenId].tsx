@@ -96,18 +96,6 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
     );
   }
 
-  // const debugLog = (obj: object) => {
-  //   console.log('############################################');
-  //   console.log(JSON.stringify(obj, null, '  '));
-  // };
-
-  // // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  // const cpy: any = Object.assign({}, collection);
-  // cpy['attributes'] = 'fuck that';
-
-  // debugLog(cpy);
-  // debugLog(token);
-
   // TODO: Joe to update Erc721Metadata type
   const tokenMetadata = token.metadata as Erc721Metadata;
 
@@ -222,6 +210,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
       </div>
 
       <TraitList traits={tokenMetadata.attributes} collectionTraits={collection.attributes} />
+
       <ActivityList chainId={collection.chainId} collectionAddress={collection.address} tokenId={token.tokenId} />
 
       {modals}

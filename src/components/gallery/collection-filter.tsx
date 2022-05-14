@@ -20,7 +20,7 @@ const CollectionFilter = ({ initialCollections, onSelect }: Props) => {
     onSelect(selectedIds);
   }, [selectedIds]);
   return (
-    <ul>
+    <ul className="max-h-[200px] overflow-y-auto">
       {initialCollections.map((item) => {
         if (!item.collectionName) {
           return null;

@@ -6,7 +6,7 @@ import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { useFetch } from 'src/utils/apiUtils';
 import { CollectionFeed } from 'src/components/feed/collection-feed';
 import { ellipsisAddress, getChainScannerBase } from 'src/utils';
-import { ActivityTab } from 'src/components/collection/activity-tab';
+import { CollectionActivityTab } from 'src/components/collection/collection-activity-tab';
 import { StatsChips } from 'src/components/collection/stats-chips';
 import { CommunityRightPanel } from 'src/components/collection/community-right-panel';
 import { AiOutlineCheck } from 'react-icons/ai';
@@ -197,7 +197,7 @@ const CollectionPage = () => {
             )}
 
             {/* {currentTab === 1 && <ActivityTab dailyStats={dailyStats} weeklyStats={weeklyStats} />} */}
-            {selected === 'Activity' && <ActivityTab collectionAddress={collection.address ?? ''} />}
+            {selected === 'Activity' && <CollectionActivityTab collectionAddress={collection.address ?? ''} />}
 
             {selected === '???' && (
               <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-16">

@@ -32,15 +32,17 @@ export const CollectionFeed = ({ collectionAddress, types, forActivity, classNam
       subscribe(COLL_FEED, filter, (type: string, data: FeedEvent) => {
         if (type === 'added') {
           if (eventsInit === false) {
-            setEvents((currentEvents) => [data, ...currentEvents]); // add initial feed events.
+            setEvents((currentEvents) => [data, ...currentEvents].sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1))); // add initial feed events.
             setTimeout(() => {
               eventsInit = true;
             }, 3000);
           } else {
-            setNewEvents((currentEvents) => [data, ...currentEvents]);
+            setNewEvents((currentEvents) =>
+              [data, ...currentEvents].sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1))
+            );
           }
         } else {
-          setEvents((currentEvents) => [...currentEvents, data]);
+          setEvents((currentEvents) => [...currentEvents, data].sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1)));
         }
       });
     } catch (err) {

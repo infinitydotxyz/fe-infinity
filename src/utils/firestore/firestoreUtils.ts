@@ -99,6 +99,7 @@ export async function subscribe(collectionPath: string, filter: FeedFilter, onCh
 
     let q;
     if (filter?.types && filter?.types.length > 0 && filter?.collectionAddress) {
+      // find events of a Collection & Filter
       q = query(
         coll,
         where('type', 'in', filter?.types),
@@ -107,6 +108,7 @@ export async function subscribe(collectionPath: string, filter: FeedFilter, onCh
         limit(EVENTS_PER_PAGE)
       );
     } else if (filter?.types && filter?.types.length > 0 && filter?.userAddress) {
+      // find events of a User & Filter
       q = query(
         coll,
         where('type', 'in', filter?.types),
@@ -115,8 +117,10 @@ export async function subscribe(collectionPath: string, filter: FeedFilter, onCh
         limit(EVENTS_PER_PAGE)
       );
     } else if (filter?.types && filter?.types.length > 0) {
+      // find Global Events & Filter
       q = query(coll, where('type', 'in', filter?.types), orderBy('timestamp', 'desc'), limit(EVENTS_PER_PAGE));
     } else if (filter?.collectionAddress) {
+      // find events of a Collection (no filters)
       q = query(
         coll,
         where('collectionAddress', '==', filter?.collectionAddress),
@@ -124,9 +128,11 @@ export async function subscribe(collectionPath: string, filter: FeedFilter, onCh
         limit(EVENTS_PER_PAGE)
       );
     } else if (filter?.userAddress) {
+      // find events of a User (no filters)
       // console.log('filter?.userAddress', filter?.userAddress);
       q = query(coll, where('buyer', '==', filter?.userAddress), orderBy('timestamp', 'desc'), limit(EVENTS_PER_PAGE));
     } else {
+      // find Global Events (no filters)
       q = query(coll, orderBy('timestamp', 'desc'), limit(EVENTS_PER_PAGE)); // query(coll, limit(3), orderBy('timestamp', 'desc'))
     }
 
