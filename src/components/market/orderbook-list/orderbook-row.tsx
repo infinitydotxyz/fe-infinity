@@ -67,10 +67,12 @@ export const OrderbookRow = ({ order }: OrderbookRowProps): JSX.Element => {
     gridTemplate += ` ${data.width}`;
   });
 
-  const onClickBuySell = () => {
+  const onClickBuySell = (order: OBOrder) => {
     if (!checkSignedIn()) {
       return;
     }
+    alert('Fulfilling this order: ' + JSON.stringify(order));
+    // todo: fullfill order
   };
 
   return (
@@ -83,7 +85,7 @@ export const OrderbookRow = ({ order }: OrderbookRowProps): JSX.Element => {
 
           if (data.field === 'buyOrSell') {
             return (
-              <Button key={`${order.id} ${data.field}`} onClick={onClickBuySell}>
+              <Button key={`${order.id} ${data.field}`} onClick={() => onClickBuySell(order)}>
                 {order.isSellOrder ? 'Buy' : 'Sell'}
               </Button>
             );
@@ -104,6 +106,7 @@ export const OrderbookRow = ({ order }: OrderbookRowProps): JSX.Element => {
           );
         })}
       </div>
+
       <div className="flex items-center w-full lg:hidden">
         <div className="flex flex-col w-full">
           <div className="mr-4">
@@ -124,6 +127,7 @@ export const OrderbookRow = ({ order }: OrderbookRowProps): JSX.Element => {
         </div>
         <div className="text-right">
           <Button>{order.isSellOrder ? 'Buy' : 'Sell'}</Button>
+
           <div>{moment(order.startTimeMs).fromNow()}</div>
           <div>Expiring: {shortDate(new Date(order.endTimeMs))}</div>
         </div>
