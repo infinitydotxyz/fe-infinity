@@ -167,3 +167,7 @@ export const PleaseConnectMsg = () => (
     to sign in.
   </>
 );
+
+export const truncateDecimals = (numStr: string) => {
+  return ((numStr ?? '') + ' ').slice(0, numStr.indexOf('.'));
+};

@@ -1,8 +1,14 @@
-import { useAppContext } from 'src/utils/context/AppContext';
 import { UserProfileFeed } from '../feed/user-profile-feed';
+import { UserProfileDto } from './user-profile-dto';
 
-export const UserPageActivityTab = () => {
-  const { user } = useAppContext();
+interface Props {
+  userInfo: UserProfileDto;
+}
 
-  return <div>{user?.address && <UserProfileFeed header="" userAddress={user?.address} forUserActivity={true} />}</div>;
+export const UserPageActivityTab = ({ userInfo }: Props) => {
+  return (
+    <div>
+      {userInfo?.address && <UserProfileFeed header="" userAddress={userInfo?.address} forUserActivity={true} />}
+    </div>
+  );
 };

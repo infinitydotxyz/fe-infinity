@@ -61,7 +61,7 @@ export const OrderBuilder = () => {
     let label = multiple ? 'Max budget' : 'Max budget';
     let tooltip = {
       title: label,
-      content: 'tooltip goes here'
+      content: '' // todo: tooltip goes here
     };
 
     if (isSellOrderCart()) {
@@ -69,7 +69,7 @@ export const OrderBuilder = () => {
 
       tooltip = {
         title: label,
-        content: 'tooltip goes here'
+        content: '' // todo: tooltip goes here
       };
     }
 

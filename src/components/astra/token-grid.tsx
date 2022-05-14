@@ -1,11 +1,11 @@
-import { BaseCollection, CardData } from '@infinityxyz/lib/types/core';
+import { CardData } from '@infinityxyz/lib/types/core';
 import React, { useState, useEffect } from 'react';
 import { useResizeDetector } from 'react-resize-detector';
 import { CenteredContent, ScrollLoader, Spinner } from 'src/components/common';
+import { useIsMounted } from 'src/hooks/useIsMounted';
 import { twMerge } from 'tailwind-merge';
-import { NFTArray } from '../../utils/types/collection-types';
-import { fetchTokens, tokensToCardData } from './astra-utils';
 import { TokenCard } from './token-card';
+import { TokenFetcher } from './token-fetcher';
 
 interface Props {
   tokenFetcher: TokenFetcher;
@@ -19,11 +19,11 @@ export const TokensGrid = ({ tokenFetcher, className = '', onLoad, onClick, isSe
   const [cardData, setCardData] = useState<CardData[]>([]);
   const [error, setError] = useState(false);
   const [gridWidth, setGridWidth] = useState(0);
-  const [cursor, setCursor] = useState<string>('');
   const [hasNextPage, setHasNextPage] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const { width, ref } = useResizeDetector();
+  const isMounted = useIsMounted();
 
   useEffect(() => {
     setGridWidth(ref.current ? ref.current.offsetWidth : 0);
@@ -32,42 +32,41 @@ export const TokensGrid = ({ tokenFetcher, className = '', onLoad, onClick, isSe
   useEffect(() => {
     setCardData([]);
     setLoading(true);
-    handleFetch('');
+    handleFetch(false);
   }, [tokenFetcher]);
 
-  const handleFetch = async (passedCursor: string) => {
-    const { fcursor, fhasNextPage, fcardData, ferror } = await tokenFetcher.handleFetch(passedCursor);
+  const handleFetch = async (loadMore: boolean) => {
+    const { fhasNextPage, fcardData, ferror } = await tokenFetcher.fetch(loadMore);
 
-    setCursor(fcursor);
+    // can't update react state after unmount
+    if (!isMounted()) {
+      return;
+    }
+
     setHasNextPage(fhasNextPage);
     setError(ferror);
 
     if (!ferror) {
-      let newList = [];
+      setCardData(fcardData);
 
-      if (passedCursor) {
-        newList = [...cardData, ...fcardData];
-      } else {
-        newList = fcardData;
-      }
-
-      setCardData(newList);
-
-      onLoad(newList.length);
+      onLoad(fcardData.length);
     }
 
     setLoading(false);
   };
 
   let contents;
+  let cardHeight = 290;
 
   if (error || loading) {
     contents = <ErrorOrLoading error={error} />;
   } else {
     let gridColumns = 'grid-cols-2';
     if (gridWidth > 0) {
-      const cols = Math.round(gridWidth / 250);
+      const cols = Math.round(gridWidth / 290);
       gridColumns = `repeat(${cols}, minmax(0, 1fr))`;
+
+      cardHeight = gridWidth / cols;
     }
 
     contents = (
@@ -76,6 +75,7 @@ export const TokensGrid = ({ tokenFetcher, className = '', onLoad, onClick, isSe
           {cardData.map((data) => {
             return (
               <TokenCard
+                height={cardHeight}
                 key={data.id}
                 data={data}
                 selected={isSelected(data)}
@@ -92,7 +92,7 @@ export const TokensGrid = ({ tokenFetcher, className = '', onLoad, onClick, isSe
         {hasNextPage && (
           <ScrollLoader
             onFetchMore={async () => {
-              handleFetch(cursor);
+              handleFetch(true);
             }}
           />
         )}
@@ -128,48 +128,3 @@ export const ErrorOrLoading = ({ error }: Props2) => {
     </div>
   );
 };
-
-// ==================================================================
-
-interface TokenFetcherResult {
-  ferror: boolean;
-  fcardData: CardData[];
-  fcursor: string;
-  fhasNextPage: boolean;
-}
-
-interface TokenFetcher {
-  handleFetch(passedCursor: string): Promise<TokenFetcherResult>;
-}
-
-export class CollectionTokenFetcher implements TokenFetcher {
-  private collection: BaseCollection;
-  private chainId: string;
-
-  constructor(collection: BaseCollection, chainId: string) {
-    this.collection = collection;
-    this.chainId = chainId;
-  }
-
-  handleFetch = async (passedCursor: string): Promise<TokenFetcherResult> => {
-    let ferror = false;
-    let fcursor = '';
-    let fhasNextPage = false;
-    let fcardData: CardData[] = [];
-
-    const response = await fetchTokens(this.collection.address, this.chainId, passedCursor);
-
-    if (response.error) {
-      ferror = response.error !== null;
-      console.error(response.error);
-    } else {
-      const result = response.result as NFTArray;
-
-      fcardData = tokensToCardData(result.data, this.collection);
-      fcursor = result.cursor;
-      fhasNextPage = result.hasNextPage;
-    }
-
-    return { fcursor, fhasNextPage, fcardData, ferror };
-  };
-}

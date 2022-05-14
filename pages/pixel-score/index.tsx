@@ -1,63 +1,96 @@
 import { BaseCollection, CardData } from '@infinityxyz/lib/types/core';
 import { useEffect, useRef, useState } from 'react';
-import { CollectionTokenFetcher, TokensGrid } from 'src/components/astra/token-grid';
+import { TokensGrid } from 'src/components/astra/token-grid';
 import { BGImage, CenteredContent, ReadMoreText, Spacer, Toaster, toastSuccess } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
-import { AstraNavbar } from 'src/components/astra/astra-navbar';
+import { AstraNavbar, AstraNavTab } from 'src/components/astra/astra-navbar';
 import { AstraSidebar } from 'src/components/astra/astra-sidebar';
 import { AstraCart } from 'src/components/astra/astra-cart';
 import { inputBorderColor } from 'src/utils/ui-constants';
-import { BLANK_IMAGE_URL } from 'src/utils';
+import { CollectionTokenCache, TokenFetcher, UserTokenCache } from 'src/components/astra/token-fetcher';
+import { useAppContext } from 'src/utils/context/AppContext';
+import { useCardSelection } from 'src/components/astra/useCardSelection';
 
 export const PixelScore = () => {
   const [collection, setCollection] = useState<BaseCollection>();
-  const [selectedTokens, setSelectedTokens] = useState<CardData[]>([]);
   const [chainId, setChainId] = useState<string>();
+
+  const [currentTab, setCurrentTab] = useState<AstraNavTab>(AstraNavTab.All);
   const [showCart, setShowCart] = useState(false);
   const [numTokens, setNumTokens] = useState(0);
-  const [tokenFetcher, setTokenFetcher] = useState<CollectionTokenFetcher>();
+  const [tokenFetcher, setTokenFetcher] = useState<TokenFetcher>();
+
+  const { selectedCards, isSelected, toggleSelection, clearSelection, removeFromSelection, hasSelection } =
+    useCardSelection();
 
   const ref = useRef<HTMLDivElement>(null);
+  const { user } = useAppContext();
+
+  useEffect(() => {
+    setShowCart(hasSelection);
+  }, [hasSelection]);
 
   useEffect(() => {
     ref.current?.scrollTo({ left: 0, top: 0 });
   }, [collection]);
 
   useEffect(() => {
-    if (collection && chainId) {
-      setTokenFetcher(new CollectionTokenFetcher(collection, chainId));
+    if (currentTab === AstraNavTab.All && collection && chainId) {
+      setTokenFetcher(CollectionTokenCache.shared().fetcher(collection, chainId));
     }
-  }, [collection, chainId]);
+  }, [currentTab, collection, chainId]);
+
+  useEffect(() => {
+    if (currentTab === AstraNavTab.MyNFTs && user) {
+      setTokenFetcher(UserTokenCache.shared().fetcher(user.address));
+    }
+  }, [currentTab, user]);
 
   const onCardClick = (data: CardData) => {
-    const i = indexOfSelection(data);
-
-    if (i === -1) {
-      setSelectedTokens([...selectedTokens, data]);
-      setShowCart(true);
-    } else {
-      removeFromSelection(data);
-    }
+    toggleSelection(data);
   };
 
   let tokensGrid;
+  let avatarUrl;
+  let name = '';
+  let description = '';
+  let emptyMessage = '';
 
-  if (collection && chainId && tokenFetcher) {
-    const avatarUrl = collection.metadata.bannerImage || BLANK_IMAGE_URL;
+  switch (currentTab) {
+    case AstraNavTab.All:
+      avatarUrl = collection?.metadata.bannerImage;
+      name = collection?.metadata.name ?? '';
+      description = collection?.metadata.description ?? '';
+      emptyMessage = 'Select a Collection';
+      break;
+    case AstraNavTab.MyNFTs:
+      name = currentTab;
+      emptyMessage = currentTab;
 
+      if (!user) {
+        emptyMessage = 'Click Connect to sign in';
+      }
+      break;
+    case AstraNavTab.Hot:
+    case AstraNavTab.Pending:
+    case AstraNavTab.Top100:
+      name = currentTab;
+      emptyMessage = currentTab;
+      break;
+  }
+
+  if (tokenFetcher) {
     const header = (
       <div className={twMerge(inputBorderColor, 'flex items-center bg-gray-100 border-b px-8 py-3')}>
         <BGImage src={avatarUrl} className="mr-6 h-16 w-36 rounded-xl" />
         <div className="flex flex-col items-start bg-gray-100">
-          <div className="tracking-tight text-theme-light-800 font-bold text-xl text-center  ">
-            {collection.metadata.name}
-          </div>
+          <div className="tracking-tight text-theme-light-800 font-bold text-xl text-center  ">{name}</div>
           <div className="max-w-3xl">
-            <ReadMoreText text={collection.metadata.description} min={50} ideal={160} max={10000} />
+            <ReadMoreText text={description} min={50} ideal={160} max={10000} />
           </div>
         </div>
         <Spacer />
-        <div className="text-lg">{numTokens} items</div>
+        <div className="text-lg whitespace-nowrap ml-3">{numTokens} items</div>
       </div>
     );
 
@@ -69,44 +102,18 @@ export const PixelScore = () => {
           className="px-8 py-6"
           onClick={onCardClick}
           isSelected={(data) => {
-            const i = indexOfSelection(data);
-
-            return i !== -1;
+            return isSelected(data);
           }}
           onLoad={(value) => setNumTokens(value)}
         />
       </div>
     );
   } else {
-    tokensGrid = <CenteredContent>Select a Collection</CenteredContent>;
+    tokensGrid = <CenteredContent>{emptyMessage}</CenteredContent>;
   }
 
-  const indexOfSelection = (value: CardData) => {
-    const i = selectedTokens.findIndex((token) => {
-      return value.id === token.id;
-    });
-
-    return i;
-  };
-
-  const removeFromSelection = (value: CardData) => {
-    const i = indexOfSelection(value);
-
-    if (i !== -1) {
-      const copy = [...selectedTokens];
-      copy.splice(i, 1);
-
-      setSelectedTokens(copy);
-
-      if (copy.length === 0) {
-        setShowCart(false);
-      }
-    }
-  };
-
   const handleCheckout = () => {
-    setSelectedTokens([]);
-    setShowCart(false);
+    clearSelection();
 
     toastSuccess('Success', 'Your Pixel Scores has been calculated');
   };
@@ -137,7 +144,18 @@ export const PixelScore = () => {
     );
   };
 
-  const navBar = <AstraNavbar />;
+  const navBar = (
+    <AstraNavbar
+      currentTab={currentTab}
+      onTabChange={(value) => {
+        // blanks out the cards
+        setTokenFetcher(undefined);
+
+        // set tab so new cards will load
+        setCurrentTab(value);
+      }}
+    />
+  );
 
   const sidebar = (
     <AstraSidebar
@@ -148,13 +166,15 @@ export const PixelScore = () => {
           setCollection(value);
           setChainId(value.chainId);
         }
+
+        setCurrentTab(AstraNavTab.All);
       }}
     />
   );
 
   const cart = (
     <AstraCart
-      tokens={selectedTokens}
+      cardData={selectedCards()}
       onCheckout={handleCheckout}
       onRemove={(value) => {
         removeFromSelection(value);
@@ -164,7 +184,7 @@ export const PixelScore = () => {
 
   const footer = (
     <div className={twMerge(inputBorderColor, 'px-6 py-1 flex justify-center border-t bg-slate-200')}>
-      <div className="text-lg"> {collection?.metadata.name}</div>
+      <div className="text-lg"> {name}</div>
       <Spacer />
       <div className="text-lg">{numTokens} items</div>
     </div>

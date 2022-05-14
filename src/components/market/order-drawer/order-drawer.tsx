@@ -40,7 +40,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
             size="large"
             onClick={() => {
               setOrderDrawerOpen(false);
-              router.push('/marketplace?tab=Buy');
+              router.push('/market?tab=Buy');
             }}
             className="font-heading w-full h-full"
           >
@@ -51,7 +51,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
             variant="outline"
             onClick={() => {
               setOrderDrawerOpen(false);
-              router.push('/marketplace?tab=Sell');
+              router.push('/market?tab=Sell');
             }}
             className="font-heading w-full h-full"
           >
@@ -125,7 +125,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
   } else if (readyToCheckout()) {
     // ready to checkout, we have an order
     title = 'Cart';
-    tooltip = { title: '(tooltip goes here)', content: '(tooltip goes here)' };
+    tooltip = { title: '', content: '' }; // todo: (tooltip goes here)
     footer = buildFooter(async () => {
       if (await executeOrder()) {
         setShowSuccessModal(true);

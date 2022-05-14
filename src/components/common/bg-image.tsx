@@ -10,20 +10,18 @@ interface Props {
 export const BGImage = ({ src, center = true, className = '' }: Props) => {
   const [loaded, setLoaded] = useState(false);
 
-  if (!src) {
-    return <></>;
-  }
-
   useEffect(() => {
     const img = new Image();
     let deleted = false;
 
-    img.onload = () => {
-      if (!deleted) {
-        setLoaded(true);
-      }
-    };
-    img.src = src;
+    if (src) {
+      img.onload = () => {
+        if (!deleted) {
+          setLoaded(true);
+        }
+      };
+      img.src = src;
+    }
 
     return () => {
       deleted = true;
@@ -32,7 +30,11 @@ export const BGImage = ({ src, center = true, className = '' }: Props) => {
       img.src = '';
       img.onload = null;
     };
-  }, []);
+  }, [src]);
+
+  if (!src) {
+    return <></>;
+  }
 
   return (
     <div className={twMerge('w-full h-full', className, 'bg-gray-100')}>

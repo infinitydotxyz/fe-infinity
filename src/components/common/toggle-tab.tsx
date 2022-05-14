@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 interface Props {
@@ -10,8 +10,12 @@ interface Props {
   altStyle?: boolean;
 }
 
-export const useToggleTab = (options: string[], defaultOption: string) => {
-  const [selected, setSelected] = useState(defaultOption);
+export const useToggleTab = (options: string[], selectedOption: string) => {
+  const [selected, setSelected] = useState(selectedOption);
+
+  useEffect(() => {
+    setSelected(selectedOption);
+  }, [selectedOption]);
 
   const onChange = (option: string) => {
     setSelected(option);

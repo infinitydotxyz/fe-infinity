@@ -1,12 +1,15 @@
 import { BaseCollection, BaseToken, CardData } from '@infinityxyz/lib/types/core';
 import { useEffect, useState } from 'react';
-import { apiGet, ApiError } from 'src/utils/apiUtils';
 import { ITEMS_PER_PAGE } from 'src/utils/constants';
 import { useFilterContext } from 'src/utils/context/FilterContext';
+import { apiGet, ApiError } from 'src/utils/apiUtils';
 import { Button, Card, CardProps, FetchMore } from 'src/components/common';
 import { FilterPanel } from '../filter/filter-panel';
 import { GallerySort } from './gallery-sort';
 import { twMerge } from 'tailwind-merge';
+import { useResizeDetector } from 'react-resize-detector';
+import { useAppContext } from 'src/utils/context/AppContext';
+import { CollectionFilterItem } from './collection-filter';
 
 // type Asset = {
 //   address: string;
@@ -23,8 +26,10 @@ import { twMerge } from 'tailwind-merge';
 //   metadata: ListingMetadata;
 // };
 
-type NftItem = BaseToken & {
+type ApiNftData = BaseToken & {
   collectionAddress?: string;
+  collectionName?: string;
+  collectionSlug?: string;
 };
 
 interface GalleryProps {
@@ -34,6 +39,7 @@ interface GalleryProps {
   className?: string;
   filterShowedDefault?: boolean;
   pageId?: 'COLLECTION' | 'PROFILE' | undefined;
+  showFilterSections?: string[];
 }
 
 export const GalleryBox = ({
@@ -42,8 +48,10 @@ export const GalleryBox = ({
   cardProps,
   getEndpoint,
   pageId,
-  filterShowedDefault
+  filterShowedDefault,
+  showFilterSections
 }: GalleryProps) => {
+  const { chainId } = useAppContext();
   const { filterState } = useFilterContext();
 
   const [filterShowed, setFilterShowed] = useState(filterShowedDefault);
@@ -53,6 +61,14 @@ export const GalleryBox = ({
   const [cursor, setCursor] = useState('');
   const [currentPage, setCurrentPage] = useState(-1);
   const [dataLoaded, setDataLoaded] = useState(false);
+
+  const [gridWidth, setGridWidth] = useState(0);
+
+  const { width, ref } = useResizeDetector();
+
+  useEffect(() => {
+    setGridWidth(ref.current ? ref.current.offsetWidth : 0);
+  }, [width]);
 
   const fetchData = async (isRefresh = false) => {
     setIsFetching(true);
@@ -77,9 +93,11 @@ export const GalleryBox = ({
       getEndpoint ?? `/collections/${collection?.chainId}:${collection?.address}/nfts`,
       {
         query: {
+          chainId,
           offset,
           limit: ITEMS_PER_PAGE,
           cursor: newCursor,
+          // collectionAddresses: ['0x24d0cbd0d5d7b50212251c5dc7cb810e7af71f6a'],
           ...filterState
         }
       }
@@ -87,12 +105,13 @@ export const GalleryBox = ({
     setError(error);
     setCursor(result?.cursor);
 
-    let moreData: CardData[] = (result?.data || []).map((item: NftItem) => {
+    let moreData: CardData[] = (result?.data || []).map((item: ApiNftData) => {
       return {
         id: collection?.address + '_' + item.tokenId,
         name: item.metadata?.name,
-        collectionName: collection?.metadata?.name,
-        title: collection?.metadata?.name,
+        title: item.collectionName ?? collection?.metadata?.name,
+        collectionName: item.collectionName ?? collection?.metadata?.name,
+        collectionSlug: item.collectionSlug ?? '',
         description: item.metadata.description,
         image: item.image.url,
         price: 0,
@@ -101,8 +120,9 @@ export const GalleryBox = ({
         address: item.collectionAddress ?? collection?.address,
         tokenId: item.tokenId,
         rarityRank: item.rarityRank,
-        orderSnippet: item.ordersSnippet
-      };
+        orderSnippet: item.ordersSnippet,
+        hasBlueCheck: item.hasBlueCheck ?? false
+      } as CardData;
     });
 
     // remove any without tokenAddress (seeing bad NFTs in my profile)
@@ -118,6 +138,7 @@ export const GalleryBox = ({
   };
 
   useEffect(() => {
+    console.log('filterState', filterState);
     setData([]);
     setCursor('');
     fetchData(true); // refetch data when filterState changed somewhere (ex: from Sort comp, etc.)
@@ -130,58 +151,91 @@ export const GalleryBox = ({
     setDataLoaded(true); // current page's data loaded & rendered.
   }, [currentPage]);
 
+  let gridColumns = 'grid-cols-2';
+  let cardHeight = 290;
+
+  if (gridWidth > 0) {
+    const cols = Math.round(gridWidth / 290);
+    gridColumns = `repeat(${cols}, minmax(0, 1fr))`;
+
+    const w = gridWidth / cols;
+    cardHeight = w * 1.2;
+  }
+
+  console.log('data', data);
+  const initialCollections: CollectionFilterItem[] = data.map((item) => {
+    return {
+      collectionAddress: item.address,
+      collectionName: item.collectionName,
+      hasBlueCheck: item.hasBlueCheck
+    };
+  });
+
   return (
-    <div className={twMerge(className, 'flex items-start')}>
-      {filterShowed && (
-        <div className="mt-4">
-          <FilterPanel collection={collection as BaseCollection} collectionAddress={collection?.address} />
+    <div className={twMerge(className, 'flex flex-col')}>
+      {data.length > 0 && (
+        <div className="sm:col-span-2 lg:col-span-3 xl:col-span-4 text-right mt-[-73px] pointer-events-none">
+          <Button
+            variant="outline"
+            onClick={() => {
+              setFilterShowed((flag) => !flag);
+            }}
+            className="py-2.5 mr-2 font-heading pointer-events-auto"
+          >
+            {filterShowed ? 'Hide' : 'Show'} filter
+          </Button>
+          <GallerySort />
         </div>
       )}
 
-      <div className="w-full grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-12 gap-y-20 mt-[-73px] pointer-events-none">
-        {data.length > 0 && (
-          <div className="sm:col-span-2 lg:col-span-3 xl:col-span-4 text-right">
-            <Button
-              variant="outline"
-              onClick={() => {
-                setFilterShowed((flag) => !flag);
-              }}
-              className="py-2.5 mr-2 font-heading pointer-events-auto"
-            >
-              {filterShowed ? 'Hide' : 'Show'} filter
-            </Button>
-            <GallerySort />
+      <div className={twMerge(className, 'flex items-start mt-[60px]')}>
+        {filterShowed && (
+          <div className="w-1/4 mt-4">
+            <FilterPanel
+              collection={collection as BaseCollection}
+              collectionAddress={collection?.address}
+              initialCollections={initialCollections}
+              showFilterSections={showFilterSections}
+            />
           </div>
         )}
 
-        {isFetching && (
-          <>
-            <Card isLoading={true} className="mt-24" />
+        <div
+          ref={ref}
+          className={twMerge('w-full grid gap-12  pointer-events-none')}
+          style={{ gridTemplateColumns: gridColumns }}
+        >
+          {isFetching && (
+            <>
+              <Card height={cardHeight} isLoading={true} className="mt-24" />
 
-            <Card isLoading={true} className="mt-24" />
+              <Card height={cardHeight} isLoading={true} className="mt-24" />
 
-            <Card isLoading={true} className="mt-24" />
+              <Card height={cardHeight} isLoading={true} className="mt-24" />
 
-            <Card isLoading={true} className="mt-24" />
-          </>
-        )}
+              <Card height={cardHeight} isLoading={true} className="mt-24" />
+            </>
+          )}
 
-        {error ? <div className="mt-24">Unable to load data.</div> : null}
+          {error ? <div className="mt-24">Unable to load data.</div> : null}
 
-        {data.map((item, idx) => {
-          return <Card key={idx} data={item} {...cardProps} className="mt-[-30px]" />;
-        })}
+          {!error && !isFetching && data.length === 0 ? <div className="mt-24">No results.</div> : null}
 
-        {dataLoaded && (
-          <FetchMore
-            currentPage={currentPage}
-            data={data}
-            onFetchMore={async () => {
-              // setDataLoaded(false);
-              await fetchData();
-            }}
-          />
-        )}
+          {data.map((item, idx) => {
+            return <Card height={cardHeight} key={idx} data={item} {...cardProps} />;
+          })}
+
+          {dataLoaded && (
+            <FetchMore
+              currentPage={currentPage}
+              data={data}
+              onFetchMore={async () => {
+                // setDataLoaded(false);
+                await fetchData();
+              }}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

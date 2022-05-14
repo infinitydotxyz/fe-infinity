@@ -144,7 +144,12 @@ const CollectionPage = () => {
             </tbody>
           </table>
 
-          <ToggleTab className="mt-12 pointer-events-auto" options={options} selected={selected} onChange={onChange} />
+          <ToggleTab
+            className="mt-12 font-heading pointer-events-auto"
+            options={options}
+            selected={selected}
+            onChange={onChange}
+          />
 
           <div className="mt-6 min-h-[1024px]">
             {selected === 'NFT' && collection && (

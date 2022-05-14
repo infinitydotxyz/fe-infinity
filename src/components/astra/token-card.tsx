@@ -5,22 +5,26 @@ import { BGImage } from '../common';
 
 interface Props {
   data: CardData;
+  height: number;
   selected: boolean;
   onClick: (data: CardData) => void;
 }
 
-export const TokenCard = ({ data, onClick, selected }: Props): JSX.Element => {
+export const TokenCard = ({ data, height, onClick, selected }: Props): JSX.Element => {
   const title = data?.title ?? '';
   const tokenId = data?.tokenId ?? '';
+
+  const heightStyle = `${height}px`;
 
   return (
     <div
       className={twMerge(
         'overflow-clip border',
         inputBorderColor,
-        'rounded-2xl w-full h-[290px] relative flex flex-col',
+        'rounded-2xl w-full relative flex flex-col',
         selected ? selectionOutline : ''
       )}
+      style={{ height: heightStyle }}
       onClick={() => onClick(data)}
     >
       <div className="h-full flex flex-col">

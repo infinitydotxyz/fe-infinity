@@ -4,9 +4,11 @@ import { UserProfileDto } from './user-profile-dto';
 import { UserBannerImage } from './user-banner-image';
 import { UserProfileImage } from './user-profile-image';
 import { UserProfileShare } from './user-profile-share';
-import { Chip, ToggleTab, useToggleTab } from 'src/components/common';
+import { Chip, ToggleTab, useToggleTab, ExternalLink } from 'src/components/common';
 import { UserPageNftsTab } from './user-page-nfts-tab';
 import { UserPageActivityTab } from './user-page-activity-tab';
+import { ellipsisAddress } from 'src/utils';
+import { ETHEREUM_CHAIN_SCANNER_BASE } from '@infinityxyz/lib/utils';
 
 interface UserPageProps {
   userInfo: UserProfileDto;
@@ -27,7 +29,16 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
         <h2 className="my-6 text-6xl font-body">{userInfo.displayName || 'No Display Name'}</h2>
 
         <div className="flex flex-wrap font-heading -ml-3 mb-8">
-          <p className="leading-wide mx-4 font-bold">@{userInfo.username || 'no-username'}</p>
+          <span className="leading-wide ml-4 font-bold">@{userInfo.username || 'no-username'}</span>
+          <ExternalLink
+            href={`${ETHEREUM_CHAIN_SCANNER_BASE}/address/${userInfo.address}`}
+            className="leading-wide font-bold ml-8"
+          >
+            {ellipsisAddress(userInfo.address)}
+          </ExternalLink>
+          <span className="leading-wide ml-8 text-gray-500">
+            Joined {new Date(userInfo.createdAt ?? '').toLocaleDateString()}
+          </span>
           {/* <UserWatchList userWatchList={[userInfo.address, userInfo.address]} /> */}
         </div>
         <div className="my-4 -ml-2 flex flex-wrap">
@@ -43,11 +54,11 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
         </div>
         {userInfo.bio && <p className="text-theme-light-800 mt-8 ml-1 max-w-md">{userInfo.bio || ''}</p>}
 
-        <ToggleTab className="mt-14 -ml-2" options={options} selected={selected} onChange={onChange} />
+        <ToggleTab className="mt-14 -ml-2 font-heading" options={options} selected={selected} onChange={onChange} />
 
         <div className="mt-6 min-h-[1024px]">
           {selected === 'Collected' && <UserPageNftsTab userInfo={userInfo} />}
-          {selected === 'Activity' && <UserPageActivityTab />}
+          {selected === 'Activity' && <UserPageActivityTab userInfo={userInfo} />}
         </div>
       </div>
     </>

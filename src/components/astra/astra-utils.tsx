@@ -1,4 +1,4 @@
-import { BaseToken, CardData, Collection } from '@infinityxyz/lib/types/core';
+import { BaseToken, CardData } from '@infinityxyz/lib/types/core';
 import { DEFAULT_LIMIT, apiGet, ApiResponse, LARGE_LIMIT } from 'src/utils';
 import { Filter } from 'src/utils/context/FilterContext';
 
@@ -25,6 +25,19 @@ export const fetchTokens = async (
 
 // ======================================================
 
+export const fetchUserTokens = async (userAddress: string, cursor?: string): Promise<ApiResponse> => {
+  const response = await apiGet(`/user/${userAddress}/nfts`, {
+    query: {
+      limit: LARGE_LIMIT,
+      cursor
+    }
+  });
+
+  return response;
+};
+
+// ======================================================
+
 export const fetchCollections = async (query: string, cursor?: string): Promise<ApiResponse> => {
   const response = await apiGet('/collections/search', {
     query: {
@@ -39,22 +52,24 @@ export const fetchCollections = async (query: string, cursor?: string): Promise<
 
 // ======================================================
 
-export const tokensToCardData = (tokens: BaseToken[], collection: Collection): CardData[] => {
+export const tokensToCardData = (tokens: BaseToken[]): CardData[] => {
   let cardData = tokens.map((token) => {
+    const collectionName = token.collectionName ?? 'Unknown';
+
     return {
-      id: collection?.address + '_' + token.tokenId,
+      id: token.collectionAddress + '_' + token.tokenId,
       name: token.metadata?.name,
-      collectionName: collection?.metadata?.name,
-      title: collection?.metadata?.name,
+      collectionName: collectionName,
+      title: collectionName,
       description: token.metadata.description,
       image: token.image.url,
       price: 0,
       chainId: token.chainId,
-      tokenAddress: collection?.address,
+      tokenAddress: token.collectionAddress,
       tokenId: token.tokenId,
       rarityRank: token.rarityRank,
       orderSnippet: token.ordersSnippet
-    };
+    } as CardData;
   });
 
   // remove any without tokenAddress (seeing bad NFTs in my profile)

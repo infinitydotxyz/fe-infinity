@@ -19,6 +19,7 @@ import { CollectionStats } from '@infinityxyz/lib/types/core';
 import { ITEMS_PER_PAGE, BLANK_IMG } from 'src/utils/constants';
 import ContentLoader from 'react-content-loader';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
+import { truncateDecimals } from 'src/utils';
 
 type StatColType = {
   id?: string;
@@ -67,7 +68,7 @@ export const Analytics = () => {
   });
 
   const [filterCheckboxes, setFilterCheckboxes] = useState<{ [key: string]: boolean }>(columns);
-  const { options, onChange, selected } = useToggleTab(['1 hr', '1 day', '7 days', '30 days', 'All'], '1 hr');
+  const { options, onChange, selected } = useToggleTab(['1 hr', '1 day', '7 days', '30 days', 'All'], '7 days');
 
   const closeDrawer = () => {
     setIsDrawerOpen(false);
@@ -115,10 +116,21 @@ export const Analytics = () => {
   };
 
   const applyCheckboxes = () => {
-    if (Object.keys(filterCheckboxes).filter((key) => filterCheckboxes[key]).length < filterLimit) {
-      setColumns(filterCheckboxes);
-      setIsDrawerOpen(false);
-    }
+    // if (Object.keys(filterCheckboxes).filter((key) => filterCheckboxes[key]).length < filterLimit) {
+    //   setColumns(filterCheckboxes);
+    //   setIsDrawerOpen(false);
+    // }
+    setColumns(filterCheckboxes);
+    setFilterCheckboxes(filterCheckboxes);
+    setIsDrawerOpen(false);
+    setCursor('');
+    void router.push(
+      {
+        pathname: `/analytics/${page}/${interval}`
+      },
+      undefined,
+      { scroll: false }
+    );
   };
 
   const checkboxToggle = (id: string) => setFilterCheckboxes({ ...filterCheckboxes, [id]: !filterCheckboxes[id] });
@@ -147,7 +159,7 @@ export const Analytics = () => {
       // const trust = d.votesFor > 0 ? `${(d.votesFor / (d.votesAgainst + d.votesFor)) * 100}%` : '0%';
       const items = d.numNfts ? d.numNfts : '-';
       const owners = d.numOwners ? d.numOwners : '-';
-      const volume = d.volume ? d.volume.toFixed(1) : '-';
+      const volume = d.volume ? d.volume : '-';
       const floorPrice = d.floorPrice ? d.floorPrice : '-';
       const volumePercentChange = d.volumePercentChange ? d.volumePercentChange.toFixed(1) : '-';
       const floorPricePercentChange = d.floorPricePercentChange ? d.floorPricePercentChange.toFixed(1) : '-';
@@ -222,7 +234,7 @@ export const Analytics = () => {
             id: 'volume',
             label: 'Volume',
             type: 'number',
-            value: `Ξ ${volume.toLocaleString()}`,
+            value: `Ξ ${truncateDecimals(volume.toLocaleString())}`,
             show: columns['volume'],
             placement: 'middle',
             sortable: true,
@@ -234,7 +246,7 @@ export const Analytics = () => {
           },
           {
             id: 'volumePercentChange',
-            label: 'Vol. change',
+            label: 'Volume %',
             type: 'change',
             value: volumePercentChange,
             show: columns['volumePercentChange'],
@@ -248,7 +260,7 @@ export const Analytics = () => {
           },
           {
             id: 'floorPrice',
-            label: 'Floor Price',
+            label: 'Floor price',
             type: 'number',
             value: `Ξ ${floorPrice.toLocaleString()}`,
             show: columns['floorPrice'],
@@ -261,7 +273,7 @@ export const Analytics = () => {
           },
           {
             id: 'floorPricePercentChange',
-            label: 'Fl. change',
+            label: 'Floor %',
             type: 'change',
             value: floorPricePercentChange,
             show: columns['floorPricePercentChange'],
@@ -275,7 +287,7 @@ export const Analytics = () => {
           },
           {
             id: 'discordFollowers',
-            label: 'Discord Followers',
+            label: 'Discord followers',
             type: 'number',
             value: `${discordFollowers.toLocaleString()}`,
             show: columns['discordFollowers'],
@@ -289,7 +301,7 @@ export const Analytics = () => {
           },
           {
             id: 'discordFollowersPercentChange',
-            label: 'Discord % change',
+            label: 'Discord %',
             type: 'change',
             value: `${discordFollowersPercentChange.toLocaleString()}`,
             show: columns['discordFollowersPercentChange'],
@@ -303,7 +315,7 @@ export const Analytics = () => {
           },
           {
             id: 'twitterFollowers',
-            label: 'Twitter Followers',
+            label: 'Twitter followers',
             type: 'number',
             value: `${twitterFollowers.toLocaleString()}`,
             show: columns['twitterFollowers'],
@@ -317,7 +329,7 @@ export const Analytics = () => {
           },
           {
             id: 'twitterFollowersPercentChange',
-            label: 'Discord % change',
+            label: 'Discord %',
             type: 'change',
             value: `${twitterFollowersPercentChange.toLocaleString()}`,
             show: columns['twitterFollowersPercentChange'],
@@ -342,7 +354,12 @@ export const Analytics = () => {
       };
     });
     setStats(statistics);
-  }, [items]);
+  }, [items, columns]);
+
+  useEffect(() => {
+    setItems([]);
+    setCursor('');
+  }, [page, interval, orderBy, orderDirection]);
 
   const content = {
     filter: {
@@ -350,7 +367,7 @@ export const Analytics = () => {
       params: [
         {
           id: 'floorPrice',
-          label: 'Floor Price',
+          label: 'Floor price',
           props: {
             checked: filterCheckboxes['floorPrice'],
             defaultChecked: filterCheckboxes['floorPrice'],
@@ -359,7 +376,7 @@ export const Analytics = () => {
         },
         {
           id: 'floorPricePercentChange',
-          label: 'Floor Price % change',
+          label: 'Floor price %',
           props: {
             checked: filterCheckboxes['floorPricePercentChange'],
             defaultChecked: filterCheckboxes['floorPricePercentChange'],
@@ -377,7 +394,7 @@ export const Analytics = () => {
         },
         {
           id: 'volumePercentChange',
-          label: 'Volume % change',
+          label: 'Volume %',
           props: {
             checked: filterCheckboxes['volumePercentChange'],
             defaultChecked: filterCheckboxes['volumePercentChange'],
@@ -404,7 +421,7 @@ export const Analytics = () => {
         },
         {
           id: 'twitterFollowers',
-          label: 'Twitter Followers',
+          label: 'Twitter followers',
           props: {
             checked: filterCheckboxes['twitterFollowers'],
             defaultChecked: filterCheckboxes['twitterFollowers'],
@@ -413,7 +430,7 @@ export const Analytics = () => {
         },
         {
           id: 'twitterFollowersPercentChange',
-          label: 'Twitter % change',
+          label: 'Twitter %',
           props: {
             checked: filterCheckboxes['twitterFollowersPercentChange'],
             defaultChecked: filterCheckboxes['twitterFollowersPercentChange'],
@@ -431,7 +448,7 @@ export const Analytics = () => {
         },
         {
           id: 'discordFollowersPercentChange',
-          label: 'Discord % change',
+          label: 'Discord %',
           props: {
             checked: filterCheckboxes['discordFollowersPercentChange'],
             defaultChecked: filterCheckboxes['discordFollowersPercentChange'],

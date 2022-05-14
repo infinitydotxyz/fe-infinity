@@ -2,9 +2,10 @@ import { BaseCollection } from '@infinityxyz/lib/types/core';
 import { useState } from 'react';
 import { CollectionList } from 'src/components/astra/collection-list';
 import { DebouncedTextField } from 'src/components/common';
-import { apiGet } from 'src/utils';
+import { CollectionSearchDto } from 'src/utils/types/collection-types';
 import { inputBorderColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
+import { CollectionCache } from './collection-cache';
 
 interface Props {
   onClick: (value: BaseCollection) => void;
@@ -14,15 +15,22 @@ interface Props {
 export const AstraSidebar = ({ onClick, selectedCollection }: Props) => {
   const [query, setQuery] = useState('');
 
+  const handleClick = async (collection: CollectionSearchDto) => {
+    const result = await CollectionCache.shared().collection(collection);
+
+    onClick(result);
+  };
+
   const collectionsList = (
     <CollectionList
       query={query}
       selectedCollection={selectedCollection}
-      onClick={async (collection) => {
-        const { result } = await apiGet(`/collections/${collection.chainId}:${collection.address}`);
-        const colt = result as BaseCollection;
-
-        onClick(colt);
+      onClick={handleClick}
+      onLoad={(collections) => {
+        // select first collection
+        if (collections.length > 0) {
+          handleClick(collections[0]);
+        }
       }}
     />
   );
