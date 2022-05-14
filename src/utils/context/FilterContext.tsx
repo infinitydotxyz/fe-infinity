@@ -7,10 +7,12 @@ export enum OrderType {
 }
 
 export type Filter = {
+  chainId?: string;
   listingType?: ListingType | '';
   orderType?: OrderType | '';
   traitTypes?: string[];
   traitValues?: string[];
+  collectionAddresses?: string[];
   minPrice?: string;
   maxPrice?: string;
   sortByPrice?: 'ASC' | 'DESC' | '';
