@@ -11,9 +11,11 @@ interface Props {
   selectedCollection?: BaseCollection;
   className?: string;
   onClick: (collection: CollectionSearchDto) => void;
+  // called on first load so the we can select the first collection to display
+  onLoad: (collections: CollectionSearchDto[]) => void;
 }
 
-export const CollectionList = ({ query, className = '', onClick, selectedCollection }: Props) => {
+export const CollectionList = ({ query, className = '', onClick, selectedCollection, onLoad }: Props) => {
   const [collections, setCollections] = useState<CollectionSearchDto[]>([]);
   const [error, setError] = useState(false);
   const [cursor, setCursor] = useState<string>('');
@@ -44,6 +46,9 @@ export const CollectionList = ({ query, className = '', onClick, selectedCollect
         setCollections([...collections, ...result.data]);
       } else {
         setCollections(result.data);
+
+        // called on first load
+        onLoad(result.data);
       }
       setCursor(result.cursor);
       setHasNextPage(result.hasNextPage);
