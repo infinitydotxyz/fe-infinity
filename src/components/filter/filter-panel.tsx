@@ -3,14 +3,23 @@ import { useState } from 'react';
 import { Filter, OrderType, useFilterContext } from 'src/utils/context/FilterContext';
 import { Button, Checkbox } from 'src/components/common';
 import { TraitSelection } from './trait-selection';
+import CollectionFilter, { CollectionFilterItem } from '../gallery/collection-filter';
 
 interface Props {
   collection?: BaseCollection;
   collectionAddress?: string;
+  initialCollections?: CollectionFilterItem[];
+  showFilterSections?: string[];
   className?: string;
 }
 
-export const FilterPanel = ({ collection, collectionAddress, className }: Props) => {
+export const FilterPanel = ({
+  collection,
+  collectionAddress,
+  initialCollections = [],
+  showFilterSections,
+  className
+}: Props) => {
   const { filterState, setFilterState } = useFilterContext();
   const [minPriceVal, setMinPriceVal] = useState('');
   const [maxPriceVal, setMaxPriceVal] = useState('');
@@ -47,6 +56,25 @@ export const FilterPanel = ({ collection, collectionAddress, className }: Props)
     setMaxPriceVal('');
     setFilterState(newFilter);
   };
+
+  const handleSelectCollections = (selectedIds: string[]) => {
+    const newFilter = { ...filterState };
+    newFilter.collectionAddresses = selectedIds;
+    setFilterState(newFilter);
+  };
+
+  if (showFilterSections && showFilterSections[0] === 'COLLECTIONS') {
+    return (
+      <div className={`w-80 mr-12 ${className ?? ''}`}>
+        <div className="text-2xl font-bold">Filter</div>
+
+        <div className="text-lg mt-6 mb-7 font-heading">Collections</div>
+        <div>
+          <CollectionFilter initialCollections={initialCollections} onSelect={handleSelectCollections} />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`w-80 mr-12 ${className ?? ''}`}>

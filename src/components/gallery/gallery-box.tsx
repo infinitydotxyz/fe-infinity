@@ -8,6 +8,8 @@ import { FilterPanel } from '../filter/filter-panel';
 import { GallerySort } from './gallery-sort';
 import { twMerge } from 'tailwind-merge';
 import { useResizeDetector } from 'react-resize-detector';
+import { useAppContext } from 'src/utils/context/AppContext';
+import { CollectionFilterItem } from './collection-filter';
 
 // type Asset = {
 //   address: string;
@@ -37,6 +39,7 @@ interface GalleryProps {
   className?: string;
   filterShowedDefault?: boolean;
   pageId?: 'COLLECTION' | 'PROFILE' | undefined;
+  showFilterSections?: string[];
 }
 
 export const GalleryBox = ({
@@ -45,8 +48,10 @@ export const GalleryBox = ({
   cardProps,
   getEndpoint,
   pageId,
-  filterShowedDefault
+  filterShowedDefault,
+  showFilterSections
 }: GalleryProps) => {
+  const { chainId } = useAppContext();
   const { filterState } = useFilterContext();
 
   const [filterShowed, setFilterShowed] = useState(filterShowedDefault);
@@ -88,9 +93,11 @@ export const GalleryBox = ({
       getEndpoint ?? `/collections/${collection?.chainId}:${collection?.address}/nfts`,
       {
         query: {
+          chainId,
           offset,
           limit: ITEMS_PER_PAGE,
           cursor: newCursor,
+          // collectionAddresses: ['0x24d0cbd0d5d7b50212251c5dc7cb810e7af71f6a'],
           ...filterState
         }
       }
@@ -131,6 +138,7 @@ export const GalleryBox = ({
   };
 
   useEffect(() => {
+    console.log('filterState', filterState);
     setData([]);
     setCursor('');
     fetchData(true); // refetch data when filterState changed somewhere (ex: from Sort comp, etc.)
@@ -154,6 +162,15 @@ export const GalleryBox = ({
     cardHeight = w * 1.2;
   }
 
+  console.log('data', data);
+  const initialCollections: CollectionFilterItem[] = data.map((item) => {
+    return {
+      collectionAddress: item.address,
+      collectionName: item.collectionName,
+      hasBlueCheck: item.hasBlueCheck
+    };
+  });
+
   return (
     <div className={twMerge(className, 'flex flex-col')}>
       {data.length > 0 && (
@@ -173,8 +190,13 @@ export const GalleryBox = ({
 
       <div className={twMerge(className, 'flex items-start mt-[60px]')}>
         {filterShowed && (
-          <div className="mt-4">
-            <FilterPanel collection={collection as BaseCollection} collectionAddress={collection?.address} />
+          <div className="w-1/4 mt-4">
+            <FilterPanel
+              collection={collection as BaseCollection}
+              collectionAddress={collection?.address}
+              initialCollections={initialCollections}
+              showFilterSections={showFilterSections}
+            />
           </div>
         )}
 
@@ -197,7 +219,7 @@ export const GalleryBox = ({
 
           {error ? <div className="mt-24">Unable to load data.</div> : null}
 
-          {!error && data.length === 0 ? <div className="mt-24">No results.</div> : null}
+          {!error && !isFetching && data.length === 0 ? <div className="mt-24">No results.</div> : null}
 
           {data.map((item, idx) => {
             return <Card height={cardHeight} key={idx} data={item} {...cardProps} />;
