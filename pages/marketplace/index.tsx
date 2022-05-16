@@ -49,13 +49,7 @@ const MarketplacePage = () => {
       {selected === TABS.Discover && (
         <div className="mt-16">
           <div className="mb-4">
-            <TextInputBox
-              type="text"
-              value={query}
-              label="Search for a Collection"
-              placeholder=""
-              onChange={(value) => handleChange(value)}
-            />
+            <TextInputBox type="text" value={query} label="" placeholder="" onChange={(value) => handleChange(value)} />
           </div>
           <CollectionGrid query={debouncedQuery} routerQuery="" />
         </div>
@@ -70,7 +64,7 @@ const MarketplacePage = () => {
   );
 
   return (
-    <PageBox title="Market">
+    <PageBox title="Marketplace">
       {/* <OrderDrawer open={orderDrawerOpen} onClose={() => setOrderDrawerOpen(false)} /> */}
 
       <div>{contents}</div>
