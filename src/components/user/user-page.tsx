@@ -26,7 +26,7 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
       <div className="flex flex-col mx-auto translate-x-1 -mt-16">
         <UserProfileImage imgSrc={userInfo.profileImage} isOwner={isOwner} />
 
-        <h2 className="my-6 text-6xl font-body">{userInfo.displayName || 'No Display Name'}</h2>
+        <h2 className="my-2 text-6xl font-body">{userInfo.displayName || 'No Display Name'}</h2>
 
         <div className="flex flex-wrap font-heading -ml-3 mb-8">
           <span className="leading-wide ml-4 font-bold">@{userInfo.username || 'no-username'}</span>
@@ -41,7 +41,7 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
           </span>
           {/* <UserWatchList userWatchList={[userInfo.address, userInfo.address]} /> */}
         </div>
-        <div className="my-4 -ml-2 flex flex-wrap">
+        <div className="my-2 -ml-2 flex flex-wrap">
           {isOwner && (
             <Chip
               content="Edit"
