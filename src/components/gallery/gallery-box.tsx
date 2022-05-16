@@ -10,6 +10,7 @@ import { twMerge } from 'tailwind-merge';
 import { useResizeDetector } from 'react-resize-detector';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CollectionFilterItem } from './collection-filter';
+import { uniqBy } from 'lodash';
 
 // type Asset = {
 //   address: string;
@@ -162,13 +163,14 @@ export const GalleryBox = ({
     cardHeight = w * 1.2;
   }
 
-  const initialCollections: CollectionFilterItem[] = data.map((item) => {
+  let initialCollections: CollectionFilterItem[] = data.map((item) => {
     return {
       collectionAddress: item.address,
       collectionName: item.collectionName,
       hasBlueCheck: item.hasBlueCheck
     };
   });
+  initialCollections = uniqBy(initialCollections, 'collectionName').filter((obj) => obj.collectionName);
 
   return (
     <div className={twMerge(className, 'flex flex-col')}>
