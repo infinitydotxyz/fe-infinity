@@ -39,8 +39,8 @@ const MarketplacePage = () => {
   );
   const contents = (
     <>
-      <div className="flex space-x-2 items-center relative max-w-xl lg:top-12 lg:-mt-12 pb-4 lg:pb-0">
-        <ToggleTab options={options} selected={selected} onChange={onChange} />
+      <div className="flex space-x-2 items-center relative max-w-xl lg:top-12 lg:-mt-14 pb-4 lg:pb-0">
+        <ToggleTab className="font-heading" options={options} selected={selected} onChange={onChange} />
         <Spacer />
       </div>
 
@@ -57,7 +57,7 @@ const MarketplacePage = () => {
               onChange={(value) => handleChange(value)}
             />
           </div>
-          <CollectionGrid query={debouncedQuery} routerQuery="tab=Orderbook&orderTypes=Listing" />
+          <CollectionGrid query={debouncedQuery} routerQuery="" />
         </div>
       )}
 
