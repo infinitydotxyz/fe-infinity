@@ -10,7 +10,7 @@ import { twMerge } from 'tailwind-merge';
 import { useResizeDetector } from 'react-resize-detector';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CollectionFilterItem } from './collection-filter';
-import { sortedUniqBy, uniq, uniqBy } from 'lodash';
+import { uniqBy } from 'lodash';
 
 // type Asset = {
 //   address: string;
