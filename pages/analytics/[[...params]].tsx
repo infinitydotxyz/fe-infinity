@@ -528,6 +528,7 @@ export const Analytics = () => {
       <div className="w-full h-full flex flex-col gap-2">
         <div className="w-full items-center flex-[0.2] grid grid-rows-1 grid-cols-24">
           <ToggleTab
+            className="font-heading"
             equalWidths={false}
             options={options}
             selected={selected}
