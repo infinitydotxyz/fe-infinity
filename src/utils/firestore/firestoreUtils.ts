@@ -28,6 +28,7 @@ const COMMENTS_PER_PAGE = 20;
 export type FeedFilter = {
   types?: FeedEventType[];
   collectionAddress?: string;
+  tokenId?: string;
   userAddress?: string;
 };
 
@@ -119,6 +120,15 @@ export async function subscribe(collectionPath: string, filter: FeedFilter, onCh
     } else if (filter?.types && filter?.types.length > 0) {
       // find Global Events & Filter
       q = query(coll, where('type', 'in', filter?.types), orderBy('timestamp', 'desc'), limit(EVENTS_PER_PAGE));
+    } else if (filter?.tokenId) {
+      // find events of a Token (no filters)
+      q = query(
+        coll,
+        where('collectionAddress', '==', filter?.collectionAddress),
+        where('tokenId', '==', filter?.tokenId),
+        orderBy('timestamp', 'desc'),
+        limit(EVENTS_PER_PAGE)
+      );
     } else if (filter?.collectionAddress) {
       // find events of a Collection (no filters)
       q = query(
