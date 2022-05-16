@@ -98,7 +98,6 @@ export const GalleryBox = ({
           offset,
           limit: ITEMS_PER_PAGE,
           cursor: newCursor,
-          // collectionAddresses: ['0x24d0cbd0d5d7b50212251c5dc7cb810e7af71f6a'],
           ...filterState
         }
       }
@@ -139,7 +138,6 @@ export const GalleryBox = ({
   };
 
   useEffect(() => {
-    console.log('filterState', filterState);
     setData([]);
     setCursor('');
     fetchData(true); // refetch data when filterState changed somewhere (ex: from Sort comp, etc.)
@@ -206,7 +204,7 @@ export const GalleryBox = ({
           className={twMerge('w-full grid gap-12  pointer-events-none')}
           style={{ gridTemplateColumns: gridColumns }}
         >
-          {isFetching && (
+          {isFetching && cursor === '' && (
             <>
               <Card height={cardHeight} isLoading={true} className="mt-24" />
 
@@ -222,8 +220,8 @@ export const GalleryBox = ({
 
           {!error && !isFetching && data.length === 0 ? <div className="mt-24">No results.</div> : null}
 
-          {data.map((item, idx) => {
-            return <Card height={cardHeight} key={idx} data={item} {...cardProps} />;
+          {data.map((item) => {
+            return <Card key={`${item.address}_${item.tokenId}`} height={cardHeight} data={item} {...cardProps} />;
           })}
 
           {dataLoaded && (
