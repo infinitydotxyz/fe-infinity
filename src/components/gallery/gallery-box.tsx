@@ -190,7 +190,7 @@ export const GalleryBox = ({
 
       <div className={twMerge(className, 'flex items-start mt-[60px]')}>
         {filterShowed && (
-          <div className="w-1/4 mt-4">
+          <div className="mt-4">
             <FilterPanel
               collection={collection as BaseCollection}
               collectionAddress={collection?.address}
