@@ -162,7 +162,6 @@ export const GalleryBox = ({
     cardHeight = w * 1.2;
   }
 
-  console.log('data', data);
   const initialCollections: CollectionFilterItem[] = data.map((item) => {
     return {
       collectionAddress: item.address,

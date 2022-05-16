@@ -10,15 +10,16 @@ let eventsInit = false;
 
 interface CollectionFeedProps {
   collectionAddress?: string;
+  tokenId?: string;
   types?: FeedEventType[];
   forActivity?: boolean;
   className?: string;
 }
 
-export const CollectionFeed = ({ collectionAddress, types, forActivity, className }: CollectionFeedProps) => {
+export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity, className }: CollectionFeedProps) => {
   const [events, setEvents] = useState<FeedEvent[]>([]);
   const [newEvents, setNewEvents] = useState<FeedEvent[]>([]); // new feed events
-  const [filter, setFilter] = useState<FeedFilter>({ collectionAddress, types });
+  const [filter, setFilter] = useState<FeedFilter>({ collectionAddress, tokenId, types });
   // const [filteredEvents, setFilteredEvents] = useState<FeedEvent[]>([]);
   const [commentPanelEvent, setCommentPanelEvent] = useState<FeedEvent | null>(null);
   const [filteringTypes, setFilteringTypes] = useState<FeedEventType[]>([]);
