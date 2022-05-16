@@ -85,7 +85,7 @@ export const OrderbookRow = ({ order }: OrderbookRowProps): JSX.Element => {
 
           if (data.field === 'buyOrSell') {
             return (
-              <Button key={`${order.id} ${data.field}`} onClick={() => onClickBuySell(order)}>
+              <Button className="font-heading" key={`${order.id} ${data.field}`} onClick={() => onClickBuySell(order)}>
                 {order.isSellOrder ? 'Buy' : 'Sell'}
               </Button>
             );
@@ -126,7 +126,7 @@ export const OrderbookRow = ({ order }: OrderbookRowProps): JSX.Element => {
           </div>
         </div>
         <div className="text-right">
-          <Button>{order.isSellOrder ? 'Buy' : 'Sell'}</Button>
+          <Button className="font-heading">{order.isSellOrder ? 'Buy' : 'Sell'}</Button>
 
           <div>{moment(order.startTimeMs).fromNow()}</div>
           <div>Expiring: {shortDate(new Date(order.endTimeMs))}</div>

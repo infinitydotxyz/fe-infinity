@@ -36,9 +36,12 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
           >
             {ellipsisAddress(userInfo.address)}
           </ExternalLink>
-          <span className="leading-wide ml-8 text-gray-500">
-            Joined {new Date(userInfo.createdAt ?? '').toLocaleDateString()}
-          </span>
+          {userInfo.createdAt && (
+            <span className="leading-wide ml-8 text-gray-500">
+              Joined {new Date(userInfo.createdAt ?? '').toLocaleDateString()}
+            </span>
+          )}
+
           {/* <UserWatchList userWatchList={[userInfo.address, userInfo.address]} /> */}
         </div>
         <div className="my-2 -ml-2 flex flex-wrap">

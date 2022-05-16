@@ -1,10 +1,10 @@
 import React from 'react';
-import { BiSearchAlt2 } from 'react-icons/bi';
 import { useFetch } from 'src/utils';
 import { BaseCollection } from '@infinityxyz/lib/types/core';
 import { useRouter } from 'next/router';
 import { Combobox } from '@headlessui/react';
 import { SVG } from './svg';
+import { FiSearch } from 'react-icons/fi';
 
 type CollectionItem = BaseCollection & {
   name: string;
@@ -156,7 +156,7 @@ export const SearchInput: React.FC<Props> = ({ expanded }) => {
   const content = {
     search: {
       label: 'Search',
-      icon: BiSearchAlt2
+      icon: FiSearch
     }
   };
   return (

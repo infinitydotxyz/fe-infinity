@@ -49,7 +49,7 @@ export const OrderbookItem = ({ title, content, nameItem, order }: Props4): JSX.
   return (
     <div className="flex flex-col min-w-0">
       <div className="text-gray-500">{title}</div>
-      {content}
+      <div className="font-heading">{content}</div>
     </div>
   );
 };
