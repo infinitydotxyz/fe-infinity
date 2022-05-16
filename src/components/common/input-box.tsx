@@ -16,14 +16,26 @@ interface Props {
   renderRightIcon?: () => ReactElement;
   icon?: ReactNode;
   labelClassname?: string;
+  className?: string;
 }
 
-export const InputBox = ({ tooltip, label, children, icon, renderRightIcon, isFullWidth, labelClassname }: Props) => {
+export const InputBox = ({
+  tooltip,
+  label,
+  children,
+  icon,
+  renderRightIcon,
+  isFullWidth,
+  labelClassname,
+  className = ''
+}: Props) => {
   const [showTooltip, setShowTooltip] = useState(false);
 
   return (
     <TooltipWrapper show={showTooltip} tooltip={tooltip} className={classNames({ 'w-full': isFullWidth })}>
-      <div className={twMerge(inputBorderColor, 'py-3 pl-6 pr-2 border rounded-3xl w-full flex items-center')}>
+      <div
+        className={twMerge(inputBorderColor, 'py-3 pl-6 pr-2 border rounded-3xl w-full flex items-center', className)}
+      >
         {icon && <span className="pr-8">{icon}</span>}
         <div className="w-full">
           {label && (
@@ -108,6 +120,7 @@ interface Props4 {
   isFullWidth?: boolean;
   autoFocus?: boolean;
   renderRightIcon?: () => ReactElement;
+  className?: string;
 }
 
 export const TextInputBox = ({
@@ -121,10 +134,18 @@ export const TextInputBox = ({
   onChange,
   isFullWidth,
   autoFocus = false,
-  renderRightIcon
+  renderRightIcon,
+  className
 }: Props4) => {
   return (
-    <InputBox label={label} tooltip={tooltip} icon={icon} isFullWidth={isFullWidth} renderRightIcon={renderRightIcon}>
+    <InputBox
+      label={label}
+      tooltip={tooltip}
+      icon={icon}
+      isFullWidth={isFullWidth}
+      renderRightIcon={renderRightIcon}
+      className={className}
+    >
       <div className="flex items-center w-full">
         {addEthSymbol && <div className="pr-2">{EthSymbol}</div>}
         <input
