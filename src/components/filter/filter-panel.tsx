@@ -68,7 +68,7 @@ export const FilterPanel = ({
       <div className={`w-80 mr-12 ${className ?? ''}`}>
         <div className="text-2xl font-bold">Filter</div>
 
-        <div className="text-lg mt-6 mb-7 font-heading">Collections</div>
+        <div className="text-lg mt-10 mb-7 font-heading">Collections</div>
         <div>
           <CollectionFilter initialCollections={initialCollections} onSelect={handleSelectCollections} />
         </div>
