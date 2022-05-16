@@ -57,7 +57,7 @@ const MarketplacePage = () => {
               onChange={(value) => handleChange(value)}
             />
           </div>
-          <CollectionGrid query={debouncedQuery} routerQuery="tab=Orderbook&orderTypes=Listing" />
+          <CollectionGrid query={debouncedQuery} routerQuery="" />
         </div>
       )}
 
