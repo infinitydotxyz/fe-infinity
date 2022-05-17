@@ -105,6 +105,7 @@ export const SearchInput: React.FC<Props> = ({ expanded }) => {
         `,
         ref: inputRef,
         onBlur: deactivate,
+        autocomplete: 'off',
         onChange: (e: React.FormEvent<HTMLInputElement>) => {
           const value = e.currentTarget.value;
           setText(value);
@@ -171,7 +172,11 @@ export const SearchInput: React.FC<Props> = ({ expanded }) => {
             {filtered.map((collection, index) => (
               <Combobox.Option key={index} value={collection} {...styles?.input?.options?.option}>
                 <div {...styles?.collection?.image?.container}>
-                  <img src={collection?.profileImage} alt={collection?.name} {...styles?.collection?.image?.element} />
+                  <img
+                    className="w-8 h-8 rounded-full overflow-hidden"
+                    src={collection?.profileImage}
+                    alt={collection?.name}
+                  />
                 </div>
                 <div {...styles?.collection?.name}>{collection?.name}</div>
                 <div {...styles?.collection?.blueCheck}>

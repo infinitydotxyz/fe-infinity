@@ -48,7 +48,7 @@ export const TestPage = () => {
 
             <Button
               onClick={() => {
-                void router.push('/analytics/trending/hourly');
+                void router.push('/analytics/trending/weekly');
               }}
             >
               Analytics

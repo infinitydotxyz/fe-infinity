@@ -17,7 +17,6 @@ import { Field } from 'src/components/analytics/field';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CollectionStats } from '@infinityxyz/lib/types/core';
 import { ITEMS_PER_PAGE, BLANK_IMG } from 'src/utils/constants';
-import ContentLoader from 'react-content-loader';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
 import { truncateDecimals } from 'src/utils';
 
@@ -89,13 +88,23 @@ export const Analytics = () => {
   }, [page]);
 
   useEffect(() => {
-    void router.push(
-      {
-        pathname: `/analytics/${page}/${interval}`
-      },
-      undefined,
-      { scroll: false }
-    );
+    if (page === 'trending') {
+      void router.push(
+        {
+          pathname: `/analytics/${page}/${interval}`
+        },
+        undefined,
+        { scroll: false }
+      );
+    } else {
+      void router.push(
+        {
+          pathname: `/analytics/${page}`
+        },
+        undefined,
+        { scroll: false }
+      );
+    }
   }, [page, interval, orderBy, orderDirection]);
 
   const clearCheckboxes = () => {
@@ -471,7 +480,7 @@ export const Analytics = () => {
                 {
                   type: 'link',
                   id: 'following',
-                  url: `/analytics/following/${interval}`,
+                  url: `/analytics/following`,
                   label: 'Following'
                 }
               ]
@@ -589,9 +598,9 @@ export const Analytics = () => {
               </>
             ) : (
               <> */}
-            {stats?.map((stat) => {
+            {stats?.map((stat, idx) => {
               return (
-                <div key={stat.data.collectionAddress} className="mb-2">
+                <div key={idx + '_' + stat.data.collectionAddress} className="mb-2">
                   <div className="w-full h-full p-8 overflow-hidden rounded-3xl bg-gray-100 grid grid-cols-analytics place-items-center">
                     {stat?.cols
                       ?.filter((s) => s.placement === 'start')
@@ -666,8 +675,6 @@ export const Analytics = () => {
                 </div>
               );
             })}
-            {/* </>
-            )} */}
 
             {data.isLoading && <LoadingAnalytics />}
 
@@ -728,23 +735,11 @@ export default Analytics;
 // =======================================================================
 
 const LoadingAnalytics = () => (
-  <ContentLoader
-    speed={2}
-    height={600}
-    width={'100%'}
-    backgroundColor="#f3f3f3"
-    foregroundColor="#ecebeb"
-    uniqueKey="loading"
-  >
-    <rect x="0" y="0" rx="12" ry="12" width="100%" height="130" />
-    <rect x="0" y="152" rx="12" ry="12" width="100%" height="130" />
-    <rect x="0" y="304" rx="12" ry="12" width="100%" height="130" />
-    <rect x="0" y="456" rx="12" ry="12" width="100%" height="130" />
-    <rect x="0" y="608" rx="12" ry="12" width="100%" height="130" />
-    <rect x="0" y="760" rx="12" ry="12" width="100%" height="130" />
-    <rect x="0" y="912" rx="12" ry="12" width="100%" height="130" />
-    <rect x="0" y="1064" rx="12" ry="12" width="100%" height="130" />
-    <rect x="0" y="1216" rx="12" ry="12" width="100%" height="130" />
-    <rect x="0" y="1368" rx="12" ry="12" width="100%" height="130" />
-  </ContentLoader>
+  <>
+    {Array.from(Array(Math.round(ITEMS_PER_PAGE / 2)).keys())?.map((x, i) => (
+      <Fragment key={i}>
+        <div className="w-full h-[130px] mt-1 bg-theme-light-200 rounded-xl animate-pulse"></div>
+      </Fragment>
+    ))}
+  </>
 );
