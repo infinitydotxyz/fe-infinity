@@ -102,7 +102,7 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
       {newEvents.length > 0 ? (
         <div
           //  w-1/3 sm:w-full
-          className="p-4 border border-gray-200 hover:bg-gray-100 mb-4 cursor-pointer"
+          className="py-4 px-8 border rounded-3xl border-gray-200 hover:bg-gray-100 mb-8 cursor-pointer"
           onClick={() => {
             setEvents((currentEvents) => [...newEvents, ...currentEvents]);
             setNewEvents([]);

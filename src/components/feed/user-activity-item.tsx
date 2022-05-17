@@ -29,13 +29,17 @@ export const UserActivityItem = ({ event }: Props) => {
           <div className="w-1/6">
             <div className="text-gray-400">Event</div>
             <div className="font-bold">
-              <a
-                href={`${getChainScannerBase(event.chainId)}/tx/${event.txHash}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {FeedEventTypeNames[event.type]}
-              </a>
+              {event.txHash ? (
+                <a
+                  href={`${getChainScannerBase(event.chainId)}/tx/${event.txHash}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {FeedEventTypeNames[event.type]}
+                </a>
+              ) : (
+                FeedEventTypeNames[event.type]
+              )}
             </div>
           </div>
           <div className="w-1/6">

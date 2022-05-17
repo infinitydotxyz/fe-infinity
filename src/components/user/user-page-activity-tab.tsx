@@ -1,4 +1,4 @@
-import { UserProfileFeed } from '../feed/user-profile-feed';
+import { UserProfileActivityList } from '../feed/user-profile-activity-list';
 import { UserProfileDto } from './user-profile-dto';
 
 interface Props {
@@ -7,8 +7,6 @@ interface Props {
 
 export const UserPageActivityTab = ({ userInfo }: Props) => {
   return (
-    <div>
-      {userInfo?.address && <UserProfileFeed header="" userAddress={userInfo?.address} forUserActivity={true} />}
-    </div>
+    <div>{userInfo?.address && <UserProfileActivityList userAddress={userInfo?.address} forUserActivity={true} />}</div>
   );
 };
