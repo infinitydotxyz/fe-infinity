@@ -63,6 +63,7 @@ export const FeedItem = ({ data, onLike, onComment }: FeedItemProps) => {
         <footer className="text-sm mt-2 text-gray-500 flex items-center">
           <Button
             variant="plain"
+            className="px-0"
             onClick={async () => {
               if (!checkSignedIn()) {
                 return;
@@ -75,21 +76,25 @@ export const FeedItem = ({ data, onLike, onComment }: FeedItemProps) => {
                 });
               }
             }}
-            className="flex items-center"
           >
-            <AiOutlineLike size={22} className="mr-2" /> {data.likes}
+            <div className="flex">
+              <AiOutlineLike size={22} className="mr-2" />
+              {data.likes}
+            </div>
           </Button>
 
           <Button
             variant="plain"
+            className="px-0 ml-12"
             onClick={() => {
               if (onComment) {
                 onComment(data);
               }
             }}
-            className="flex items-center"
           >
-            <AiOutlineComment size={22} className="mr-2" /> {data.comments}
+            <div className="flex">
+              <AiOutlineComment size={22} className="mr-2" /> {data.comments}
+            </div>
           </Button>
         </footer>
       </div>
