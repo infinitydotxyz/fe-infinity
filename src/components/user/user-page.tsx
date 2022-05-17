@@ -57,9 +57,14 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
         </div>
         {userInfo.bio && <p className="text-theme-light-800 mt-8 ml-1 max-w-md">{userInfo.bio || ''}</p>}
 
-        <ToggleTab className="mt-14 -ml-2 font-heading" options={options} selected={selected} onChange={onChange} />
+        <ToggleTab
+          className="mt-14 -ml-2 font-heading pointer-events-auto"
+          options={options}
+          selected={selected}
+          onChange={onChange}
+        />
 
-        <div className="mt-6 min-h-[1024px]">
+        <div className="mt-6 min-h-[1024px] pointer-events-none">
           {selected === 'Collected' && <UserPageNftsTab userInfo={userInfo} />}
           {selected === 'Activity' && <UserPageActivityTab userInfo={userInfo} />}
         </div>

@@ -65,7 +65,7 @@ export const FilterPanel = ({
 
   if (showFilterSections && showFilterSections[0] === 'COLLECTIONS') {
     return (
-      <div className={`w-80 mr-12 ${className ?? ''}`}>
+      <div className={`w-80 mr-12 pointer-events-auto ${className ?? ''}`}>
         <div className="text-2xl font-bold">Filter</div>
 
         <div className="text-lg mt-10 mb-7 font-heading">Collections</div>
