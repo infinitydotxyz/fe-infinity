@@ -69,7 +69,7 @@ const CollectionPage = () => {
           <AvatarImage url={collection.metadata.profileImage} className="mb-2 rounded-[50%]" />
 
           <div className="flex gap-3 items-center">
-            <div className="text-6xl  ">{collection.metadata?.name}</div>
+            <div className="text-6xl">{collection.metadata?.name}</div>
             {collection.hasBlueCheck ? <SVG.blueCheck className={iconButtonStyle} /> : null}
           </div>
         </span>
