@@ -736,7 +736,7 @@ export default Analytics;
 
 const LoadingAnalytics = () => (
   <>
-    {Array.from(Array(ITEMS_PER_PAGE / 2).keys())?.map((x, i) => (
+    {Array.from(Array(Math.round(ITEMS_PER_PAGE / 2)).keys())?.map((x, i) => (
       <Fragment key={i}>
         <div className="w-full h-[130px] mt-1 bg-theme-light-200 rounded-xl animate-pulse"></div>
       </Fragment>
