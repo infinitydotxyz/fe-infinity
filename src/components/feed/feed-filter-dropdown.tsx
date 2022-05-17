@@ -21,12 +21,12 @@ export const FeedFilterDropdown: React.FC<FeedFilterDropdownProps> = ({ options,
       value: ''
     },
     {
-      label: 'Tweets',
-      value: FeedEventType.TwitterTweet
+      label: 'Listings',
+      value: FeedEventType.NftListing
     },
     {
-      label: 'Discord',
-      value: FeedEventType.DiscordAnnouncement
+      label: 'Offers',
+      value: FeedEventType.NftOffer
     },
     {
       label: 'Sales',

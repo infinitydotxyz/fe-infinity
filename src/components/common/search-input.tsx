@@ -105,7 +105,7 @@ export const SearchInput: React.FC<Props> = ({ expanded }) => {
         `,
         ref: inputRef,
         onBlur: deactivate,
-        autocomplete: 'off',
+        autoComplete: 'off',
         onChange: (e: React.FormEvent<HTMLInputElement>) => {
           const value = e.currentTarget.value;
           setText(value);
