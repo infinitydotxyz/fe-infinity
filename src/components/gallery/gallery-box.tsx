@@ -11,6 +11,7 @@ import { useResizeDetector } from 'react-resize-detector';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CollectionFilterItem } from './collection-filter';
 import { uniqBy } from 'lodash';
+import { useRouter } from 'next/router';
 
 // type Asset = {
 //   address: string;
@@ -53,6 +54,7 @@ export const GalleryBox = ({
   showFilterSections
 }: GalleryProps) => {
   const { chainId } = useAppContext();
+  const router = useRouter();
   const { filterState } = useFilterContext();
 
   const [filterShowed, setFilterShowed] = useState(filterShowedDefault);
@@ -141,7 +143,7 @@ export const GalleryBox = ({
     setData([]);
     setCursor('');
     fetchData(true); // refetch data when filterState changed somewhere (ex: from Sort comp, etc.)
-  }, [filterState]);
+  }, [filterState, router.query]);
 
   useEffect(() => {
     if (currentPage < 0 || data.length < currentPage * ITEMS_PER_PAGE) {
