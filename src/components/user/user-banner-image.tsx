@@ -24,7 +24,9 @@ export const UserBannerImage = ({ imgSrc, isOwner = false }: UserBannerImageProp
           <BGImage src={imgSrc} />
         ) : (
           <div
-            className="w-full h-full flex flex-row items-center justify-center bg-theme-grey-100 hover:bg-theme-grey-200 cursor-pointer"
+            className={`w-full h-full flex flex-row items-center justify-center bg-theme-grey-100 ${
+              isOwner ? 'hover:bg-theme-grey-200 cursor-pointer' : ''
+            }`}
             onClick={handleClick}
           >
             {isOwner && <FaPen />}
