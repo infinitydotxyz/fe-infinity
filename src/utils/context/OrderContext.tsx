@@ -335,9 +335,12 @@ export const OrderContextProvider = ({ children }: Props) => {
       if (index === -1) {
         setCartItems([...cartItems, item]);
       }
+      if (cartItems.length < 1) {
+        setOrderDrawerOpen(true); // only show the drawer for the first cart item.
+      }
     }
 
-    setOrderDrawerOpen(true);
+    // setOrderDrawerOpen(true);
   };
 
   const removeCartItem = (item: OrderCartItem) => {
