@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { numStr } from 'src/utils';
 import { useRouter } from 'next/router';
+
 interface Props {
   open: boolean;
   onClose: () => void;
@@ -40,7 +41,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
             size="large"
             onClick={() => {
               setOrderDrawerOpen(false);
-              router.push('/marketplace?tab=Buy');
+              router.push('/marketplace?tab=Orders');
             }}
             className="font-heading w-full h-full"
           >
@@ -51,7 +52,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
             variant="outline"
             onClick={() => {
               setOrderDrawerOpen(false);
-              router.push('/marketplace?tab=Sell');
+              router.push('/marketplace?tab=List%20NFTs');
             }}
             className="font-heading w-full h-full"
           >
