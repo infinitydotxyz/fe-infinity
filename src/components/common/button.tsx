@@ -16,9 +16,9 @@ const classes = {
   variant: {
     plain: '',
     ghost: 'rounded-full', // hover fill needs to be rounded
-    primary: 'border rounded-full border-gray-100 bg-black text-white',
+    primary: 'border rounded-full border-gray-100 bg-black text-white hover:bg-theme-grey-900',
     secondary: 'border rounded-full border-gray-100 bg-black text-white',
-    outline: twMerge(inputBorderColor, 'border rounded-full text-gray-900'),
+    outline: twMerge(inputBorderColor, 'border rounded-full text-gray-900 hover:bg-theme-grey-200'),
     danger: 'bg-red-500 hover:bg-red-800 focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 text-white',
     round: 'rounded-full p-1' // use plain size
   }
@@ -47,13 +47,13 @@ export const Button = ({
     <button
       type={type}
       disabled={disabled}
-      className={twMerge(`
-        ${classes.base}
-        ${classes.size[size]}
-        ${classes.variant[variant]}
-        ${disabled ? classes.disabled : ''}
-        ${className}
-     `)}
+      className={`
+      ${classes.base}
+      ${classes.size[size]}
+      ${classes.variant[variant]}
+      ${disabled ? classes.disabled : ''}
+      ${className}
+     `}
       onClick={(e) => {
         if (type === 'button') {
           // this allows a button to be in a clickable div
