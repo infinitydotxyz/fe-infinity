@@ -19,7 +19,7 @@ export const UserProfileImage: FunctionComponent<UserProfileImageProps> = ({ img
 
   return (
     <div
-      className="overflow-hidden bg-theme-light-200 w-32 h-32"
+      className="overflow-hidden bg-theme-grey-100 hover:bg-theme-grey-200 w-32 h-32"
       style={{
         border: '3px solid rgb(251, 253, 255)',
         boxShadow: 'rgb(14 14 14 / 60%) 0px 0px 2px 0px',
