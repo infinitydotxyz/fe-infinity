@@ -43,7 +43,7 @@ const CollectionPage = () => {
   }, [selected]);
 
   const path = `/collections/${name}`;
-  const { result: collection, isLoading } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
+  const { result: collection, isLoading, error } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
   const { result: dailyStats } = useFetch<{ data: CollectionStats[] }>(
     name
       ? path + '/stats?limit=10&orderBy=volume&orderDirection=desc&minDate=0&maxDate=2648764957623&period=daily'
@@ -59,9 +59,13 @@ const CollectionPage = () => {
   const firstDailyStats = dailyStats?.data[0];
 
   if (!collection) {
-    return <></>;
+    // failed to load collection (collection not indexed?)
+    return (
+      <PageBox showTitle={false} title={'Collection'}>
+        {error ? <div className="flex flex-col mt-10">Unable to load this collection.</div> : null}
+      </PageBox>
+    );
   }
-
   return (
     <PageBox showTitle={false} title={collection.metadata?.name ?? ''}>
       <div className="flex flex-col mt-10">
