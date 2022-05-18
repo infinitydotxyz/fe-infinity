@@ -9,7 +9,7 @@ import { ellipsisAddress, getChainScannerBase } from 'src/utils';
 import { CollectionActivityTab } from 'src/components/collection/collection-activity-tab';
 import { StatsChips } from 'src/components/collection/stats-chips';
 import { CommunityRightPanel } from 'src/components/collection/community-right-panel';
-import { AiOutlineCheck } from 'react-icons/ai';
+import { BsCheck } from 'react-icons/bs';
 import { AvatarImage } from 'src/components/collection/avatar-image';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import ContentLoader from 'react-content-loader';
@@ -95,23 +95,23 @@ const CollectionPage = () => {
             <div className="text-secondary mt-12 md:w-2/3">{collection.metadata.description ?? ''}</div>
           )}
 
-          <div className="mt-7">
-            <div className="font-medium">Ownership includes</div>
-            <div className="flex space-x-8 mt-3 font-normal">
-              <div className="flex items-center text-secondary">
-                <AiOutlineCheck className="mr-2 text-black" />
-                Access
-              </div>
-              <div className="flex items-center text-secondary">
-                <AiOutlineCheck className="mr-2 text-black" />
-                Royalties
-              </div>
-              <div className="flex items-center text-secondary">
-                <AiOutlineCheck className="mr-2 text-black" />
-                IP rights
+          {collection.metadata.benefits && (
+            <div className="mt-7">
+              <div className="font-medium">Ownership includes</div>
+
+              <div className="flex space-x-8 mt-3 font-normal">
+                {collection.metadata.benefits?.slice(0, 3).map((benefit) => {
+                  const benefitStr = benefit.slice(0, 300);
+                  return (
+                    <div className="flex items-center text-secondary">
+                      <BsCheck className="text-2xl mr-2 text-black" />
+                      {benefitStr}
+                    </div>
+                  );
+                })}
               </div>
             </div>
-          </div>
+          )}
 
           <table className="mt-8 md:w-1/2">
             <thead>
