@@ -11,6 +11,7 @@ import { useResizeDetector } from 'react-resize-detector';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CollectionFilterItem } from './collection-filter';
 import { uniqBy } from 'lodash';
+import { useRouter } from 'next/router';
 
 // type Asset = {
 //   address: string;
@@ -53,6 +54,7 @@ export const GalleryBox = ({
   showFilterSections
 }: GalleryProps) => {
   const { chainId } = useAppContext();
+  const router = useRouter();
   const { filterState } = useFilterContext();
 
   const [filterShowed, setFilterShowed] = useState(filterShowedDefault);
@@ -141,7 +143,7 @@ export const GalleryBox = ({
     setData([]);
     setCursor('');
     fetchData(true); // refetch data when filterState changed somewhere (ex: from Sort comp, etc.)
-  }, [filterState]);
+  }, [filterState, router.query]);
 
   useEffect(() => {
     if (currentPage < 0 || data.length < currentPage * ITEMS_PER_PAGE) {
@@ -172,20 +174,18 @@ export const GalleryBox = ({
 
   return (
     <div className={twMerge(className, 'flex flex-col')}>
-      {data.length > 0 && (
-        <div className="sm:col-span-2 lg:col-span-3 xl:col-span-4 text-right mt-[-73px] pointer-events-none">
-          <Button
-            variant="outline"
-            onClick={() => {
-              setFilterShowed((flag) => !flag);
-            }}
-            className="py-2.5 mr-2 font-heading pointer-events-auto"
-          >
-            {filterShowed ? 'Hide' : 'Show'} filter
-          </Button>
-          <GallerySort />
-        </div>
-      )}
+      <div className="sm:col-span-2 lg:col-span-3 xl:col-span-4 text-right mt-[-73px] pointer-events-none">
+        <Button
+          variant="outline"
+          onClick={() => {
+            setFilterShowed((flag) => !flag);
+          }}
+          className="py-2.5 mr-2 font-heading pointer-events-auto"
+        >
+          {filterShowed ? 'Hide' : 'Show'} filter
+        </Button>
+        <GallerySort />
+      </div>
 
       <div className={twMerge(className, 'flex items-start mt-[60px]')}>
         {filterShowed && (
@@ -218,7 +218,7 @@ export const GalleryBox = ({
 
           {error ? <div className="mt-24">Unable to load data.</div> : null}
 
-          {!error && !isFetching && data.length === 0 ? <div className="mt-24">No results.</div> : null}
+          {!error && !isFetching && data.length === 0 ? <div>No results.</div> : null}
 
           {data.map((item) => {
             return <Card key={`${item.address}_${item.tokenId}`} height={cardHeight} data={item} {...cardProps} />;
