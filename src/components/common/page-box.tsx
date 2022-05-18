@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router';
 import React from 'react';
 import { Navbar, Spacer, Header } from 'src/components/common';
 import { useOrderContext } from 'src/utils/context/OrderContext';
@@ -57,18 +56,9 @@ type PageHeaderProps = {
 };
 
 export const PageHeader = ({ title, rightToolbar }: PageHeaderProps): JSX.Element => {
-  const router = useRouter();
-
   return (
     <div className="flex flex-row items-center">
-      <div
-        className="font-medium cursor-pointer text-6xl tracking-tight mt-4 mb-8"
-        onClick={() => {
-          router.push('/');
-        }}
-      >
-        {title}
-      </div>
+      <div className="font-medium text-6xl tracking-tight mt-4 mb-8">{title}</div>
 
       {rightToolbar && (
         <>
