@@ -6,7 +6,7 @@ import { FaCaretDown, FaCaretUp, FaDiscord, FaInstagram, FaTwitter } from 'react
 import { HiOutlineExternalLink } from 'react-icons/hi';
 import { apiDelete, apiGet, apiPost } from 'src/utils';
 import { FollowingCollection, useAppContext } from 'src/utils/context/AppContext';
-import { Button, Chip, Toaster, Spinner, toastError } from 'src/components/common';
+import { Chip, Toaster, Spinner, toastError } from 'src/components/common';
 import { VerificationModal } from './verification_modal';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 interface Props {
@@ -195,8 +195,9 @@ export const StatsChips = ({ collection, weeklyStatsData }: Props) => {
         />
       )}
 
-      <Button
-        className="h-[52px] font-heading"
+      <Chip
+        content={<>Sweep</>}
+        active={true}
         onClick={() => {
           // assumes parent view has a drawer
           addCartItem({
@@ -206,9 +207,7 @@ export const StatsChips = ({ collection, weeklyStatsData }: Props) => {
             isSellOrder: false
           });
         }}
-      >
-        Sweep
-      </Button>
+      />
 
       <Toaster />
     </div>
