@@ -121,6 +121,7 @@ interface Props4 {
   autoFocus?: boolean;
   renderRightIcon?: () => ReactElement;
   className?: string;
+  inputClassName?: string;
 }
 
 export const TextInputBox = ({
@@ -135,7 +136,8 @@ export const TextInputBox = ({
   isFullWidth,
   autoFocus = false,
   renderRightIcon,
-  className
+  className,
+  inputClassName = ''
 }: Props4) => {
   return (
     <InputBox
@@ -157,7 +159,7 @@ export const TextInputBox = ({
               onChange(e.target.value);
             }
           }}
-          className="p-0 border-none focus:ring-0 font-bold block w-full font-heading"
+          className={twMerge(`p-0 border-none focus:ring-0 font-bold block w-full font-heading ${inputClassName}`)}
           placeholder={placeholder}
         />
       </div>
