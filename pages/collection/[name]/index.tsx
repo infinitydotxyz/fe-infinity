@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { BaseCollection, CollectionStats } from '@infinityxyz/lib/types/core';
-import { ToggleTab, PageBox, useToggleTab, SVG, EthPrice } from 'src/components/common';
+import { ToggleTab, PageBox, useToggleTab, SVG, EthPrice, toastSuccess } from 'src/components/common';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { useFetch } from 'src/utils/apiUtils';
 import { CollectionFeed } from 'src/components/feed/collection-feed';
@@ -17,7 +17,7 @@ import { iconButtonStyle } from 'src/utils/ui-constants';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
 
 const CollectionPage = () => {
-  const { addCartItem } = useOrderContext();
+  const { addCartItem, setOrderDrawerOpen } = useOrderContext();
   const router = useRouter();
   const {
     query: { name }
@@ -178,7 +178,7 @@ const CollectionPage = () => {
                       onClick: (ev, data) => {
                         const price = data?.orderSnippet?.offer?.orderItem?.startPriceEth ?? '';
                         if (price) {
-                          // Buy button logic here.
+                          // todo: Buy button logic here.
                         } else {
                           addCartItem({
                             collectionName: data?.collectionName ?? '(no name)',
@@ -188,6 +188,14 @@ const CollectionPage = () => {
                             tokenId: data?.tokenId ?? '0',
                             isSellOrder: false
                           });
+                          toastSuccess(
+                            <div>
+                              Item added to the Buy order.{' '}
+                              <a className="cursor-pointer underline" onClick={() => setOrderDrawerOpen(true)}>
+                                View Order
+                              </a>
+                            </div>
+                          );
                         }
                       }
                     }
