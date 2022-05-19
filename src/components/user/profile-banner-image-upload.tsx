@@ -83,7 +83,7 @@ export const ProfileBannerImageUpload = ({ onUpload, onDelete, imgSource }: Prop
           {imgSrc ? (
             <BGImage src={imgSrc} />
           ) : (
-            <div className="w-full h-full flex flex-row items-center justify-center bg-theme-light-200 cursor-pointer">
+            <div className="w-full h-full flex flex-row items-center justify-center bg-theme-grey-100 hover:bg-theme-grey-200 cursor-pointer">
               <FaPen />
             </div>
           )}
