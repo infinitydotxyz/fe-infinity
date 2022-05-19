@@ -64,14 +64,6 @@ export const TestPage = () => {
 
             <Button
               onClick={() => {
-                void router.push('/pixel-score');
-              }}
-            >
-              Astra
-            </Button>
-
-            <Button
-              onClick={() => {
                 void router.push('/terms-of-service');
               }}
             >
