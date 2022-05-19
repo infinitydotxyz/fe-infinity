@@ -13,12 +13,12 @@ interface Props {
 }
 
 export const Chip = ({ left, content, right, iconOnly, active, onClick, className = '' }: Props) => {
-  const activeCx = active === true ? 'bg-gray-900 text-white' : '';
+  const activeCx = active === true ? 'bg-black hover:bg-gray-800 text-white' : '';
   return (
     <button
       className={twMerge(
         inputBorderColor,
-        'transition flex justify-center items-center m-1 font-medium font-heading px-3 h-[48px] rounded-full border cursor-pointer hover:border-black hover:bg-theme-grey-200',
+        'transition flex justify-center items-center m-1 font-medium font-heading px-3 h-[48px] rounded-full border cursor-pointer active:border-black hover:bg-theme-grey-200',
         `${iconOnly ? 'w-[50px] p-2' : ''} ${activeCx} ${className}`
       )}
       onClick={onClick}
