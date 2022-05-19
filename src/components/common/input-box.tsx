@@ -153,7 +153,7 @@ export const TextInputBox = ({
         <input
           autoFocus={autoFocus}
           type={type}
-          value={value}
+          defaultValue={value}
           onChange={(e) => {
             if (onChange) {
               onChange(e.target.value);
