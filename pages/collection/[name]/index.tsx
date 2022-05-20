@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { BaseCollection, CardData, CollectionStats } from '@infinityxyz/lib/types/core';
 import { ToggleTab, PageBox, useToggleTab, SVG, EthPrice } from 'src/components/common';
@@ -17,7 +17,8 @@ import { iconButtonStyle } from 'src/utils/ui-constants';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
 
 const CollectionPage = () => {
-  const { addCartItem, ordersInCart, cartItems } = useOrderContext();
+  const { addCartItem, ordersInCart, cartItems, addOrderToCart } = useOrderContext();
+  const [isBuyClicked, setIsBuyClicked] = useState(false);
   const router = useRouter();
   const {
     query: { name }
@@ -42,6 +43,13 @@ const CollectionPage = () => {
     }
   }, [selected]);
 
+  useEffect(() => {
+    if (isBuyClicked === true) {
+      setIsBuyClicked(false);
+      addOrderToCart();
+    }
+  }, [isBuyClicked]);
+
   const path = `/collections/${name}`;
   const { result: collection, isLoading, error } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
   const { result: dailyStats } = useFetch<{ data: CollectionStats[] }>(
@@ -59,6 +67,7 @@ const CollectionPage = () => {
   const firstDailyStats = dailyStats?.data[0];
 
   const ifAlreadyAdded = (data: CardData | undefined) => {
+    // check if this item was already added to cartItems or order.
     const found1 =
       cartItems.find((item) => item.collectionAddress === data?.address && item.tokenId === data.tokenId) !== undefined;
     let found2 = false;
@@ -66,7 +75,6 @@ const CollectionPage = () => {
       const foundInOrder = order.cartItems.find(
         (item) => item.collectionAddress === data?.address && item.tokenId === data.tokenId
       );
-      console.log('foundInOrder', foundInOrder);
       if (foundInOrder) {
         found2 = true;
         break;
@@ -200,17 +208,16 @@ const CollectionPage = () => {
                           return;
                         }
                         const price = data?.orderSnippet?.offer?.orderItem?.startPriceEth ?? '';
+                        addCartItem({
+                          collectionName: data?.collectionName ?? '(no name)',
+                          collectionAddress: data?.tokenAddress ?? '(no address)',
+                          tokenImage: data?.image ?? '',
+                          tokenName: data?.name ?? '(no name)',
+                          tokenId: data?.tokenId ?? '0',
+                          isSellOrder: false
+                        });
                         if (price) {
-                          // todo: Buy button logic here.
-                        } else {
-                          addCartItem({
-                            collectionName: data?.collectionName ?? '(no name)',
-                            collectionAddress: data?.tokenAddress ?? '(no address)',
-                            tokenImage: data?.image ?? '',
-                            tokenName: data?.name ?? '(no name)',
-                            tokenId: data?.tokenId ?? '0',
-                            isSellOrder: false
-                          });
+                          setIsBuyClicked(true); // to add to cart as a Buy order. (see: useEffect)
                         }
                       }
                     }
@@ -237,8 +244,6 @@ const CollectionPage = () => {
           </div>
         </main>
       </div>
-
-      {/* <OrderDrawer open={orderDrawerOpen} onClose={() => setOrderDrawerOpen(false)} /> */}
     </PageBox>
   );
 };

@@ -115,7 +115,7 @@ export const GalleryBox = ({
         collectionName: item.collectionName ?? collection?.metadata?.name,
         collectionSlug: item.collectionSlug ?? '',
         description: item.metadata.description,
-        image: item.image.url,
+        image: item?.image?.url,
         price: 0,
         chainId: item.chainId,
         tokenAddress: item.collectionAddress ?? collection?.address,
