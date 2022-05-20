@@ -17,7 +17,7 @@ import { iconButtonStyle } from 'src/utils/ui-constants';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
 
 const CollectionPage = () => {
-  const { addCartItem, setOrderDrawerOpen } = useOrderContext();
+  const { addCartItem, ordersInCart, cartItems } = useOrderContext();
   const router = useRouter();
   const {
     query: { name }
@@ -57,6 +57,23 @@ const CollectionPage = () => {
     { chainId: '1' }
   );
   const firstDailyStats = dailyStats?.data[0];
+
+  const ifAlreadyAdded = (data) => {
+    const found1 =
+      cartItems.find((item) => item.collectionAddress === data?.address && item.tokenId === data.tokenId) !== undefined;
+    let found2 = false;
+    for (const order of ordersInCart) {
+      const foundInOrder = order.cartItems.find(
+        (item) => item.collectionAddress === data?.address && item.tokenId === data.tokenId
+      );
+      console.log('foundInOrder', foundInOrder);
+      if (foundInOrder) {
+        found2 = true;
+        break;
+      }
+    }
+    return found1 || found2;
+  };
 
   if (!collection) {
     // failed to load collection (collection not indexed?)
@@ -173,9 +190,15 @@ const CollectionPage = () => {
                             </div>
                           );
                         }
+                        if (ifAlreadyAdded(data)) {
+                          return <div className="font-normal">✓ Added</div>;
+                        }
                         return <div className="font-bold">Add to order</div>;
                       },
                       onClick: (ev, data) => {
+                        if (ifAlreadyAdded(data)) {
+                          return;
+                        }
                         const price = data?.orderSnippet?.offer?.orderItem?.startPriceEth ?? '';
                         if (price) {
                           // todo: Buy button logic here.
@@ -188,14 +211,6 @@ const CollectionPage = () => {
                             tokenId: data?.tokenId ?? '0',
                             isSellOrder: false
                           });
-                          toastSuccess(
-                            <div>
-                              Item added to the Buy order.{' '}
-                              <a className="cursor-pointer underline" onClick={() => setOrderDrawerOpen(true)}>
-                                View Order
-                              </a>
-                            </div>
-                          );
                         }
                       }
                     }
