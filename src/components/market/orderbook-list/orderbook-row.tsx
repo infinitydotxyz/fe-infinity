@@ -46,7 +46,7 @@ export const OrderbookRow = ({ order }: OrderbookRowProps): JSX.Element => {
     switch (dataColumn.type) {
       case 'Text':
         return (
-          <div className="flex truncate flex-row items-center">
+          <div className="flex truncate flex-row items-center" title={value}>
             {value ? <div className="truncate font-bold">{value}</div> : <div>---</div>}
           </div>
         );
