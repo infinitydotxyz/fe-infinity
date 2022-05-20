@@ -10,6 +10,7 @@ import { inputBorderColor } from 'src/utils/ui-constants';
 import { BGImage } from './bg-image';
 import { SVG } from './svg';
 import { useRouter } from 'next/router';
+import { BLANK_IMG } from 'src/utils';
 
 type labelFn = (data?: CardData) => ReactNode;
 
@@ -71,9 +72,13 @@ export const Card = ({
     >
       <NextLink
         href={`/asset/${data?.chainId}/${data?.tokenAddress ?? data?.address}/${data?.tokenId}`}
-        className="h-full"
+        className="h-full  "
       >
-        <BGImage src={data?.image} className="overflow-clip rounded-3xl" />
+        {data?.image ? (
+          <BGImage src={data?.image} className="overflow-clip rounded-3xl" />
+        ) : (
+          <BGImage src={BLANK_IMG} className="overflow-clip rounded-3xl" />
+        )}
       </NextLink>
 
       {data?.rarityRank && (
