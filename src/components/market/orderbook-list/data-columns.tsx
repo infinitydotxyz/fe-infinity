@@ -48,7 +48,7 @@ export const defaultDataColumns = (order: OBOrder): DataColumn[] => {
       width: '1fr'
     },
     {
-      name: 'NFT amount',
+      name: '# NFTs',
       type: 'Text',
       field: 'numNFTs',
       width: '1fr'
