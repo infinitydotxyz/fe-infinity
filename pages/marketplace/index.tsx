@@ -23,7 +23,7 @@ const MarketplacePage = () => {
 
   const { options, onChange, selected } = useToggleTab([TABS.Orders, TABS.Discover, TABS.ListMyNFTs], tabDefault);
 
-  const [searchActive, setSearchActive] = useState(false);
+  // const [searchActive, setSearchActive] = useState(false);
   const [query, setQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
 

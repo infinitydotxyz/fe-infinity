@@ -197,7 +197,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
       }
     }
 
-    tooltip = { title: title, content: content };
+    // tooltip = { title: title, content: content };
 
     footer = buildFooter(() => {
       addOrderToCart();
