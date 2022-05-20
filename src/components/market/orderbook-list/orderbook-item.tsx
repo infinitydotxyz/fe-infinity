@@ -24,7 +24,12 @@ export const OrderbookItem = ({ title, content, nameItem, order }: Props4): JSX.
       if (nft.tokens.length === 1) {
         const token = nft.tokens[0];
         return (
-          <SingleCollectionCell image={token.tokenImage} title={nft.collectionName} orderNft={nft} token={token} />
+          <SingleCollectionCell
+            image={token?.tokenImage || nft.collectionImage}
+            title={nft.collectionName}
+            orderNft={nft}
+            token={token}
+          />
         );
         // multiple items from one collection
       } else {
