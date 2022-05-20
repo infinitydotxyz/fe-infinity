@@ -63,7 +63,7 @@ const MarketplacePage = () => {
                 label=""
                 placeholder=""
                 className="w-64"
-                inputClassName="font-normal"
+                inputClassName="font-normal font-body text-sm"
                 icon={<FiSearch />}
                 onChange={(value) => handleChange(value)}
               />

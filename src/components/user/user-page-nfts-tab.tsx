@@ -15,6 +15,7 @@ export const UserPageNftsTab = ({ userInfo }: Props) => {
         <GalleryBox
           pageId="PROFILE"
           getEndpoint={`/user/${userInfo?.address}/nfts`}
+          userAddress={userInfo.address}
           filterShowedDefault={false}
           showFilterSections={['COLLECTIONS']}
           cardProps={{

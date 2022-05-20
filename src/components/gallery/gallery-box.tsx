@@ -9,8 +9,6 @@ import { GallerySort } from './gallery-sort';
 import { twMerge } from 'tailwind-merge';
 import { useResizeDetector } from 'react-resize-detector';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { CollectionFilterItem } from './collection-filter';
-import { uniqBy } from 'lodash';
 import { useRouter } from 'next/router';
 
 // type Asset = {
@@ -42,6 +40,7 @@ interface GalleryProps {
   filterShowedDefault?: boolean;
   pageId?: 'COLLECTION' | 'PROFILE' | undefined;
   showFilterSections?: string[];
+  userAddress?: string; // for User's NFTs and User's Collection Filter
 }
 
 export const GalleryBox = ({
@@ -51,7 +50,8 @@ export const GalleryBox = ({
   getEndpoint,
   pageId,
   filterShowedDefault,
-  showFilterSections
+  showFilterSections,
+  userAddress = ''
 }: GalleryProps) => {
   const { chainId } = useAppContext();
   const router = useRouter();
@@ -163,15 +163,6 @@ export const GalleryBox = ({
     cardHeight = w * 1.2;
   }
 
-  let initialCollections: CollectionFilterItem[] = data.map((item) => {
-    return {
-      collectionAddress: item.address,
-      collectionName: item.collectionName,
-      hasBlueCheck: item.hasBlueCheck
-    };
-  });
-  initialCollections = uniqBy(initialCollections, 'collectionName').filter((obj) => obj.collectionName);
-
   return (
     <div className={twMerge(className, 'flex flex-col')}>
       <div className="sm:col-span-2 lg:col-span-3 xl:col-span-4 text-right mt-[-73px] pointer-events-none">
@@ -193,8 +184,8 @@ export const GalleryBox = ({
             <FilterPanel
               collection={collection as BaseCollection}
               collectionAddress={collection?.address}
-              initialCollections={initialCollections}
               showFilterSections={showFilterSections}
+              userAddress={userAddress}
             />
           </div>
         )}
@@ -206,13 +197,13 @@ export const GalleryBox = ({
         >
           {isFetching && cursor === '' && (
             <>
-              <Card height={cardHeight} isLoading={true} className="mt-24" />
+              <Card height={cardHeight} isLoading={true} />
 
-              <Card height={cardHeight} isLoading={true} className="mt-24" />
+              <Card height={cardHeight} isLoading={true} />
 
-              <Card height={cardHeight} isLoading={true} className="mt-24" />
+              <Card height={cardHeight} isLoading={true} />
 
-              <Card height={cardHeight} isLoading={true} className="mt-24" />
+              <Card height={cardHeight} isLoading={true} />
             </>
           )}
 
