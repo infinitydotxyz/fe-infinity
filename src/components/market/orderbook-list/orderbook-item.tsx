@@ -2,6 +2,7 @@ import { OBOrder, OBOrderItem, OBTokenInfo } from '@infinityxyz/lib/types/core';
 import { ReactNode } from 'react';
 import { NextLink } from 'src/components/common';
 import { useRouter } from 'next/router';
+import { BLANK_IMG } from 'src/utils';
 
 type Props4 = {
   content?: ReactNode;
@@ -101,7 +102,12 @@ const SingleCollectionCell = ({
     <div className="flex gap-2 items-center">
       <div className="flex justify-center shrink-0 h-12 w-12">
         <span className="inline-block">
-          <img className="h-12 w-12 rounded-full" src={image} alt="" />
+          {image ? (
+            <img className="h-12 w-12 rounded-full" src={image} alt="" />
+          ) : (
+            <img className="h-12 w-12 rounded-full" src={BLANK_IMG} alt="" />
+          )}
+
           {count > 1 && (
             <div className="text-xs text-center pt-1 absolute top-0 right-0 block h-6 w-6 transform -translate-y-1/2 translate-x-1/2 rounded-full bg-white">
               {count}
