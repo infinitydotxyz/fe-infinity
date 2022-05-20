@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
@@ -12,12 +13,21 @@ interface Props {
 
 export const useToggleTab = (options: string[], selectedOption: string) => {
   const [selected, setSelected] = useState(selectedOption);
+  const router = useRouter();
 
   useEffect(() => {
     setSelected(selectedOption);
   }, [selectedOption]);
 
   const onChange = (option: string) => {
+    router.push(
+      {
+        pathname: router.pathname,
+        query: { ...router.query, tab: option }
+      },
+      undefined,
+      { shallow: true }
+    );
     setSelected(option);
   };
 
