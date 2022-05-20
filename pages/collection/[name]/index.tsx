@@ -20,28 +20,29 @@ const CollectionPage = () => {
   const { addCartItem, ordersInCart, cartItems, addOrderToCart } = useOrderContext();
   const [isBuyClicked, setIsBuyClicked] = useState(false);
   const router = useRouter();
+  const { options, onChange, selected } = useToggleTab(
+    ['NFT', 'Activity', 'Orderbook'],
+    (router?.query?.tab as string) || 'NFT'
+  );
   const {
     query: { name }
   } = router;
 
-  if (!router.isReady) {
-    return null;
-  }
+  // todo: this caused console error. http://localhost:3000/collection/0mnipunks
+  // if (!router.isReady) {
+  //   return null;
+  // }
 
-  const { options, onChange, selected } = useToggleTab(
-    ['NFT', 'Activity', 'Orderbook'],
-    (router.query.tab as string) || 'NFT'
-  );
-
-  useEffect(() => {
-    if (selected === 'NFT') {
-      const updateQueryParams = { ...router.query };
-      delete updateQueryParams.tab;
-      router.replace({ pathname: router.pathname, query: { ...updateQueryParams } });
-    } else {
-      router.replace({ pathname: router.pathname, query: { ...router.query, tab: selected } });
-    }
-  }, [selected]);
+  // todo: this caused console error. http://localhost:3000/collection/0mnipunks
+  // useEffect(() => {
+  //   if (selected === 'NFT') {
+  //     const updateQueryParams = { ...router.query };
+  //     delete updateQueryParams.tab;
+  //     router.replace({ pathname: router.pathname, href: router.pathname, query: { ...updateQueryParams } });
+  //   } else {
+  //     router.replace({ pathname: router.pathname, href: router.pathname, query: { ...router.query, tab: selected } });
+  //   }
+  // }, [selected]);
 
   useEffect(() => {
     if (isBuyClicked === true) {

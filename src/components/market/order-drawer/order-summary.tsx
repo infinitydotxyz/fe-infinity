@@ -1,4 +1,4 @@
-import { EthPrice, Button, SimpleTable, SimpleTableItem, Spacer, SVG } from 'src/components/common';
+import { EthPrice, Button, SimpleTable, SimpleTableItem, Spacer, SVG, NftImage } from 'src/components/common';
 import { shortDate } from 'src/utils';
 import { OrderInCart, useOrderContext } from 'src/utils/context/OrderContext';
 import { TitleAndSubtitle } from './order-list-item';
@@ -60,14 +60,14 @@ export const OrderSummaryItem = ({ orderInCart }: Props) => {
       const item = orderInCart.cartItems[0];
       const showNum = orderInCart.cartItems.length > 1;
 
-      let image = item.collectionImage;
-      if (!image) {
-        image = item.tokenImage;
+      let imageEl = <NftImage chainId="1" collectionAddress={item.collectionAddress} />;
+      if (!showNum) {
+        imageEl = <img className={collectionIconStyle} src={item.tokenImage} alt="" />;
       }
 
       return (
         <div className="relative">
-          <img className={collectionIconStyle} src={image} alt="" />
+          {imageEl}
 
           {showNum && (
             <div className="absolute -top-1 right-0 z-50 text-center shadow-lg rounded-full h-6 w-6 bg-white">

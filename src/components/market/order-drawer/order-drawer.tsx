@@ -197,7 +197,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
       }
     }
 
-    tooltip = { title: title, content: content };
+    // tooltip = { title: title, content: content };
 
     footer = buildFooter(() => {
       addOrderToCart();
@@ -236,7 +236,13 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
         </div>
       </Modal>
 
-      <Drawer open={open} onClose={onClose} subtitle={subtitle} title={title} tooltip={tooltip}>
+      <Drawer
+        open={open}
+        onClose={onClose}
+        subtitle={subtitle}
+        title={title}
+        tooltip={tooltip?.content ? tooltip : undefined}
+      >
         {contents}
       </Drawer>
     </>
