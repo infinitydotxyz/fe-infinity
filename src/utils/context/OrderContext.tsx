@@ -71,6 +71,7 @@ export type OrderContextType = {
   cartItems: OrderCartItem[];
   addCartItem: (order: OrderCartItem) => void;
   removeCartItem: (order: OrderCartItem) => void;
+  removeOrder: (order: OrderInCart) => void;
 
   isOrderStateEmpty: () => boolean;
   readyToCheckout: () => boolean;
@@ -369,6 +370,16 @@ export const OrderContextProvider = ({ children }: Props) => {
     }
   };
 
+  const removeOrder = (order: OrderInCart) => {
+    const index = ordersInCart.findIndex((ord) => ord.id === order.id);
+
+    if (index !== -1) {
+      const copy = [...ordersInCart];
+      copy.splice(index, 1);
+      setOrdersInCart(copy);
+    }
+  };
+
   // the builder only handles all tokens or all collections
   const isCollectionsCart = () => {
     for (const x of cartItems) {
@@ -393,6 +404,7 @@ export const OrderContextProvider = ({ children }: Props) => {
     addCartItem,
     cartItems,
     removeCartItem,
+    removeOrder,
     readyToCheckout,
     isOrderBuilderEmpty,
     isOrderStateEmpty,

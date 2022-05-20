@@ -176,6 +176,7 @@ const CollectionPage = () => {
 
           <ToggleTab
             className="mt-12 font-heading pointer-events-auto"
+            tabWidth="150px"
             options={options}
             selected={selected}
             onChange={onChange}
