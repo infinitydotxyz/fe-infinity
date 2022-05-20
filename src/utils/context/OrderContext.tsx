@@ -66,6 +66,7 @@ export type OrderContextType = {
   editOrderFromCart: (id: number) => void;
   isEditingOrder: boolean;
   addOrderToCart: () => void;
+  cancelOrder: () => void;
 
   cartItems: OrderCartItem[];
   addCartItem: (order: OrderCartItem) => void;
@@ -177,6 +178,15 @@ export const OrderContextProvider = ({ children }: Props) => {
       setExpirationDate(orderInCart.orderSpec.endTimeMs);
       setNumItems(orderInCart.orderSpec.numItems);
     }
+  };
+
+  const cancelOrder = () => {
+    if (!user || !user.address) {
+      console.error('user is null');
+      return;
+    }
+    setIsEditingOrder(false);
+    setCartItems([]);
   };
 
   const addOrderToCart = () => {
@@ -378,6 +388,7 @@ export const OrderContextProvider = ({ children }: Props) => {
     isEditingOrder,
     ordersInCart,
     addOrderToCart,
+    cancelOrder,
     editOrderFromCart,
     addCartItem,
     cartItems,

@@ -19,6 +19,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
   const {
     isSellOrderCart,
     addOrderToCart,
+    cancelOrder,
     readyToCheckout,
     isOrderStateEmpty,
     isOrderBuilderEmpty,
@@ -64,7 +65,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
   );
 
   const buildFooter = (buttonClick: () => void) => {
-    let buttonTitle = 'Add order to cart';
+    let buttonTitle = 'Add to cart';
     let topWidget;
 
     if (readyToCheckout()) {
@@ -100,14 +101,29 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
         buttonTitle = 'Update order';
       }
     }
+    const showCancel = buttonTitle === 'Checkout' ? false : true;
 
     return (
       <div className="flex flex-col mb-8">
         <Divider className="mb-10" />
 
         {topWidget}
-        <div className="px-12 mb-4 w-full">
-          <Button size="large" className="w-full" onClick={buttonClick}>
+        <div className="px-12 mb-4 w-full flex space-x-2">
+          {showCancel === true ? (
+            <>
+              {isEditingOrder ? (
+                <Button variant="outline" size="large" className="w-1/2" onClick={buttonClick}>
+                  Back to cart
+                </Button>
+              ) : (
+                <Button variant="outline" size="large" className="w-1/2" onClick={() => cancelOrder()}>
+                  Cancel order
+                </Button>
+              )}
+            </>
+          ) : null}
+
+          <Button size="large" className={showCancel ? 'w-1/2' : 'w-full'} onClick={buttonClick}>
             {buttonTitle}
           </Button>
         </div>
