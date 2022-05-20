@@ -81,7 +81,7 @@ export const SearchInput: React.FC<Props> = ({ expanded }) => {
       },
       element: {
         className: `
-          flex-[1] w-5 h-5 max-h-full
+          flex-[1] w-[18px] h-[18px] max-h-full
           ${isActive ? 'justify-self-start' : 'justify-self-end'}
         `
       }
