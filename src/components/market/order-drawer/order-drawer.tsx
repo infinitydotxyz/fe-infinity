@@ -236,7 +236,13 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
         </div>
       </Modal>
 
-      <Drawer open={open} onClose={onClose} subtitle={subtitle} title={title}>
+      <Drawer
+        open={open}
+        onClose={onClose}
+        subtitle={subtitle}
+        title={title}
+        tooltip={tooltip?.content ? tooltip : undefined}
+      >
         {contents}
       </Drawer>
     </>
