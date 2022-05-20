@@ -236,7 +236,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
         </div>
       </Modal>
 
-      <Drawer open={open} onClose={onClose} subtitle={subtitle} title={title} tooltip={tooltip}>
+      <Drawer open={open} onClose={onClose} subtitle={subtitle} title={title}>
         {contents}
       </Drawer>
     </>
