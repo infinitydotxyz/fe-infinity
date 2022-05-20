@@ -3,7 +3,7 @@ import { FeedItem, FeedEvent } from './feed-item';
 import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
 import { CommentPanel } from './comment-panel';
 import { FeedEventType } from '@infinityxyz/lib/types/core/feed';
-// import { FeedFilterDropdown } from './feed-filter-dropdown';
+import { FeedFilterDropdown } from './feed-filter-dropdown';
 import { ActivityItem } from './activity-item';
 import { UserActivityItem } from './user-activity-item';
 import { apiGet } from 'src/utils';
@@ -20,8 +20,7 @@ type UserActivityEvent = FeedEvent & {
 };
 const ITEMS_LIMIT = 10;
 
-interface UserProfileFeedProps {
-  header: string;
+interface UserProfileActivityListProps {
   userAddress?: string;
   types?: FeedEventType[];
   forActivity?: boolean;
@@ -29,24 +28,22 @@ interface UserProfileFeedProps {
   className?: string;
 }
 
-export const UserProfileFeed = ({
-  header,
+export const UserProfileActivityList = ({
   userAddress,
   types,
   forActivity,
   forUserActivity,
   className
-}: UserProfileFeedProps) => {
+}: UserProfileActivityListProps) => {
   // const { user } = useAppContext();
   const [events, setEvents] = useState<FeedEvent[]>([]);
   const [filter, setFilter] = useState<FeedFilter>({ userAddress, types });
   const [commentPanelEvent, setCommentPanelEvent] = useState<FeedEvent | null>(null);
-  // const [filteringTypes, setFilteringTypes] = useState<FeedEventType[]>([]);
+  const [filteringTypes, setFilteringTypes] = useState<FeedEventType[]>([]);
   const [data, setData] = useState<FeedEvent[]>([]);
   const [isFetching, setIsFetching] = useState(false);
   const [cursor, setCursor] = useState('');
   const [hasNextPage, setHasNextPage] = useState(false);
-  console.log(setFilter);
 
   const fetchData = async (isRefresh = false) => {
     setIsFetching(true);
@@ -58,9 +55,12 @@ export const UserProfileFeed = ({
     const { result } = await apiGet(`/user/${userAddress}/activity`, {
       query: {
         limit: ITEMS_LIMIT,
-        cursor: newCursor
+        cursor: newCursor,
+        events: filteringTypes
       }
     });
+    console.log('filteringTypes', filteringTypes);
+
     if (result?.hasNextPage === true) {
       setCursor(result?.cursor);
     }
@@ -88,45 +88,64 @@ export const UserProfileFeed = ({
   };
 
   useEffect(() => {
-    setEvents([]);
-
-    fetchData();
+    setData([]);
+    fetchData(true);
   }, [filter]);
 
-  // const onChangeFilterDropdown = (checked: boolean, checkId: string) => {
-  //   const newFilter = { ...filter };
+  const onChangeFilterDropdown = (checked: boolean, checkId: string) => {
+    const newFilter = { ...filter };
 
-  //   if (checkId === '') {
-  //     setFilteringTypes([]);
-  //     delete newFilter.types;
-  //     setFilter(newFilter);
-  //     return;
-  //   }
-  //   const selectedType = checkId as FeedEventType;
-  //   if (checked) {
-  //     newFilter.types = [...filteringTypes, selectedType];
-  //     setFilter(newFilter);
-  //     setFilteringTypes(newFilter.types);
-  //   } else {
-  //     const _newTypes = [...filteringTypes];
-  //     const index = filteringTypes.indexOf(selectedType);
-  //     if (index >= 0) {
-  //       _newTypes.splice(index, 1);
-  //     }
-  //     newFilter.types = _newTypes;
-  //     setFilter(newFilter);
-  //     setFilteringTypes(_newTypes);
-  //   }
-  // };
+    if (checkId === '') {
+      setFilteringTypes([]);
+      delete newFilter.types;
+      setFilter(newFilter);
+      return;
+    }
+    const selectedType = checkId as FeedEventType;
+    if (checked) {
+      newFilter.types = [...filteringTypes, selectedType];
+      setFilter(newFilter);
+      setFilteringTypes(newFilter.types);
+    } else {
+      const _newTypes = [...filteringTypes];
+      const index = filteringTypes.indexOf(selectedType);
+      if (index >= 0) {
+        _newTypes.splice(index, 1);
+      }
+      newFilter.types = _newTypes;
+      setFilter(newFilter);
+      setFilteringTypes(_newTypes);
+    }
+  };
 
   return (
-    <div className={`min-h-[1024px] ${className}`}>
-      <div className="flex justify-between">
-        <div className="text-3xl mb-6">{header}</div>
-        {/* <FeedFilterDropdown selectedTypes={filteringTypes} onChange={onChangeFilterDropdown} /> */}
+    <div className={`min-h-[1024px] mt-[-66px] ${className}`}>
+      <div className="flex flex-row-reverse mb-8 bg-transparent">
+        <FeedFilterDropdown
+          selectedTypes={filteringTypes}
+          onChange={onChangeFilterDropdown}
+          options={[
+            {
+              label: 'All',
+              value: ''
+            },
+            {
+              label: 'Listings',
+              value: 'listing'
+            },
+            {
+              label: 'Offers',
+              value: 'offer'
+            },
+            {
+              label: 'Sales',
+              value: 'sale'
+            }
+          ]}
+        />
       </div>
 
-      <ul className="space-y-8">
+      <ul className="space-y-8 pointer-events-auto">
         {isFetching && <Spinner />}
 
         {hasNextPage === false && data?.length === 0 ? <div>No results.</div> : null}

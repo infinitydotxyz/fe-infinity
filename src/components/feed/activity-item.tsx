@@ -1,5 +1,5 @@
-import { ellipsisAddress, getChainScannerBase } from 'src/utils';
-import { EthPrice, NextLink } from 'src/components/common';
+import { BLANK_IMG, ellipsisAddress, getChainScannerBase } from 'src/utils';
+import { EthPrice, NextLink, BGImage } from 'src/components/common';
 import { FeedEvent } from './feed-item';
 import { format } from 'timeago.js';
 import { FeedEventTypeNames } from '@infinityxyz/lib/types/core/feed';
@@ -13,7 +13,11 @@ export const ActivityItem = ({ event }: Props) => {
     <div>
       <div className="bg-gray-100 p-10 rounded-2xl flex items-center font-heading">
         <NextLink href={`/asset/${event.chainId}/${event.collectionAddress}/${event.tokenId}`}>
-          <img className="w-16 max-h-[80px] rounded-[50%]" src={event.image} alt="NFT Image" />
+          {event.image ? (
+            <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={event.image} />
+          ) : (
+            <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={BLANK_IMG} />
+          )}
         </NextLink>
         <div className="flex justify-between w-full mx-8">
           <div className="w-1/6">
@@ -52,25 +56,17 @@ export const ActivityItem = ({ event }: Props) => {
           <div className="w-1/6">
             <div className="text-gray-400">From</div>
             <div className="font-bold">
-              <a
-                href={`${getChainScannerBase(event.chainId)}/address/${event.seller}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <NextLink href={`/profile/${event.seller}`}>
                 {event.sellerDisplayName ? ellipsisAddress(event.sellerDisplayName) : ellipsisAddress(event.seller)}
-              </a>
+              </NextLink>
             </div>
           </div>
           <div className="w-1/6">
             <div className="text-gray-400">To</div>
             <div className="font-bold">
-              <a
-                href={`${getChainScannerBase(event.chainId)}/address/${event.buyer}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <NextLink href={`/profile/${event.buyer}`}>
                 {event.buyerDisplayName ? ellipsisAddress(event.buyerDisplayName) : ellipsisAddress(event.buyer)}
-              </a>
+              </NextLink>
             </div>
           </div>
           <div className="w-1/6">

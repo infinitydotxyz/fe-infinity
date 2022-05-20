@@ -26,7 +26,7 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
       <div className="flex flex-col mx-auto translate-x-1 -mt-16">
         <UserProfileImage imgSrc={userInfo.profileImage} isOwner={isOwner} />
 
-        <h2 className="my-6 text-6xl font-body">{userInfo.displayName || 'No Display Name'}</h2>
+        <h2 className="my-2 text-6xl font-body">{userInfo.displayName || 'No Display Name'}</h2>
 
         <div className="flex flex-wrap font-heading -ml-3 mb-8">
           <span className="leading-wide ml-4 font-bold">@{userInfo.username || 'no-username'}</span>
@@ -36,12 +36,15 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
           >
             {ellipsisAddress(userInfo.address)}
           </ExternalLink>
-          <span className="leading-wide ml-8 text-gray-500">
-            Joined {new Date(userInfo.createdAt ?? '').toLocaleDateString()}
-          </span>
+          {userInfo.createdAt && (
+            <span className="leading-wide ml-8 text-gray-500">
+              Joined {new Date(userInfo.createdAt ?? '').toLocaleDateString()}
+            </span>
+          )}
+
           {/* <UserWatchList userWatchList={[userInfo.address, userInfo.address]} /> */}
         </div>
-        <div className="my-4 -ml-2 flex flex-wrap">
+        <div className="my-2 -ml-2 flex flex-wrap">
           {isOwner && (
             <Chip
               content="Edit"
@@ -54,9 +57,14 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
         </div>
         {userInfo.bio && <p className="text-theme-light-800 mt-8 ml-1 max-w-md">{userInfo.bio || ''}</p>}
 
-        <ToggleTab className="mt-14 -ml-2 font-heading" options={options} selected={selected} onChange={onChange} />
+        <ToggleTab
+          className="mt-14 -ml-2 font-heading pointer-events-auto"
+          options={options}
+          selected={selected}
+          onChange={onChange}
+        />
 
-        <div className="mt-6 min-h-[1024px]">
+        <div className="mt-6 min-h-[1024px] pointer-events-none">
           {selected === 'Collected' && <UserPageNftsTab userInfo={userInfo} />}
           {selected === 'Activity' && <UserPageActivityTab userInfo={userInfo} />}
         </div>

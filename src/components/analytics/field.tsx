@@ -135,8 +135,8 @@ export const Field = ({ onSort, sortable = false, onClick, type, label, value, c
     number: {
       container: {
         className: `
-          w-full h-full overflow-hidden
-          grid justify-start items-center
+          w-[100px] h-full overflow-hidden
+          grid justify-start items-center truncate
           ${sortable ? 'cursor-pointer' : ''}
         `
       },
@@ -158,7 +158,7 @@ export const Field = ({ onSort, sortable = false, onClick, type, label, value, c
     change: {
       container: {
         className: `
-          w-full h-full overflow-hidden
+          w-[100px] h-full overflow-hidden
           grid justify-center items-center
           ${sortable ? 'cursor-pointer' : ''}
         `
@@ -185,7 +185,7 @@ export const Field = ({ onSort, sortable = false, onClick, type, label, value, c
     percentage: {
       container: {
         className: `
-          w-full h-full overflow-hidden
+          w-[100px] h-full overflow-hidden
           grid justify-start items-center px-4
           ${sortable ? 'cursor-pointer' : ''}
         `

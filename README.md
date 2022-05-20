@@ -2,7 +2,7 @@
 
 Tools:
 
-- nvm, node 16.
+- nvm, node v16.
 - recommend: vscode and extensions like eslint, prettier, editor config, git lense.
 
 ## Scripts

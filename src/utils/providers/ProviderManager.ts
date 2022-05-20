@@ -40,17 +40,21 @@ export class ProviderManager implements Omit<Optional<Provider, 'type'>, 'init'>
   private authSignature?: Signature;
   private authMessage = '';
 
-  /**
-   * SINGLETON
-   */
-  private static instance: ProviderManager;
+  // SINGLETON
+  private static promise: Promise<ProviderManager>;
   public static async getInstance() {
-    if (!this.instance) {
-      this.instance = new this();
-      await this.instance.refresh();
+    if (!this.promise) {
+      const create = async (): Promise<ProviderManager> => {
+        const result = new this();
+        await result.refresh();
+
+        return result;
+      };
+
+      this.promise = Promise.resolve(create());
     }
 
-    return this.instance;
+    return this.promise;
   }
 
   private constructor() {

@@ -4,7 +4,6 @@ import { BLANK_IMAGE_URL, useFetch } from 'src/utils';
 import { Token, Collection, Erc721Metadata } from '@infinityxyz/lib/types/core';
 import {
   TraitList,
-  ActivityList,
   ListNFTModal,
   CancelModal,
   TransferNFTModal,
@@ -13,6 +12,7 @@ import {
 } from 'src/components/asset';
 import { useState } from 'react';
 import { useAppContext } from 'src/utils/context/AppContext';
+import { CollectionFeed } from 'src/components/feed/collection-feed';
 
 const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
@@ -36,7 +36,7 @@ const AssetDetailPage = () => {
 
   if (typeof query.chainId !== 'string' || typeof query.collection !== 'string' || typeof query.tokenId !== 'string') {
     return (
-      <PageBox title="Asset - Error">
+      <PageBox title="Asset">
         <div className="flex flex-col max-w-screen-2xl mt-4">
           <main>
             <p>Error: Invalid page parameters or not signed in.</p>
@@ -95,18 +95,6 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
       </PageBox>
     );
   }
-
-  // const debugLog = (obj: object) => {
-  //   console.log('############################################');
-  //   console.log(JSON.stringify(obj, null, '  '));
-  // };
-
-  // // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  // const cpy: any = Object.assign({}, collection);
-  // cpy['attributes'] = 'fuck that';
-
-  // debugLog(cpy);
-  // debugLog(token);
 
   // TODO: Joe to update Erc721Metadata type
   const tokenMetadata = token.metadata as Erc721Metadata;
@@ -222,7 +210,11 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
       </div>
 
       <TraitList traits={tokenMetadata.attributes} collectionTraits={collection.attributes} />
-      <ActivityList chainId={collection.chainId} collectionAddress={collection.address} tokenId={token.tokenId} />
+
+      {/* <ActivityList chainId={collection.chainId} collectionAddress={collection.address} tokenId={token.tokenId} /> */}
+
+      <h3 className="mt-8 mb-4 font-bold font-body">Activity</h3>
+      <CollectionFeed collectionAddress={collection.address} tokenId={token.tokenId} forActivity={true} />
 
       {modals}
     </PageBox>

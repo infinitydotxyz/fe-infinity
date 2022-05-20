@@ -2,6 +2,7 @@ import { OBOrder, OBOrderItem, OBTokenInfo } from '@infinityxyz/lib/types/core';
 import { ReactNode } from 'react';
 import { NextLink } from 'src/components/common';
 import { useRouter } from 'next/router';
+import { BLANK_IMG } from 'src/utils';
 
 type Props4 = {
   content?: ReactNode;
@@ -23,7 +24,12 @@ export const OrderbookItem = ({ title, content, nameItem, order }: Props4): JSX.
       if (nft.tokens.length === 1) {
         const token = nft.tokens[0];
         return (
-          <SingleCollectionCell image={token.tokenImage} title={nft.collectionName} orderNft={nft} token={token} />
+          <SingleCollectionCell
+            image={token?.tokenImage || nft.collectionImage}
+            title={nft.collectionName}
+            orderNft={nft}
+            token={token}
+          />
         );
         // multiple items from one collection
       } else {
@@ -49,7 +55,7 @@ export const OrderbookItem = ({ title, content, nameItem, order }: Props4): JSX.
   return (
     <div className="flex flex-col min-w-0">
       <div className="text-gray-500">{title}</div>
-      {content}
+      <div className="font-heading">{content}</div>
     </div>
   );
 };
@@ -101,7 +107,12 @@ const SingleCollectionCell = ({
     <div className="flex gap-2 items-center">
       <div className="flex justify-center shrink-0 h-12 w-12">
         <span className="inline-block">
-          <img className="h-12 w-12 rounded-full" src={image} alt="" />
+          {image ? (
+            <img className="h-12 w-12 rounded-full" src={image} alt="" />
+          ) : (
+            <img className="h-12 w-12 rounded-full" src={BLANK_IMG} alt="" />
+          )}
+
           {count > 1 && (
             <div className="text-xs text-center pt-1 absolute top-0 right-0 block h-6 w-6 transform -translate-y-1/2 translate-x-1/2 rounded-full bg-white">
               {count}

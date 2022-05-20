@@ -201,7 +201,7 @@ const SandboxPage = () => {
       </div>
 
       <SBHeader># Card - WIP</SBHeader>
-      <div className="flex flex-row space-x-4">
+      <div className="flex flex-row space-x-4 w-1/2">
         <Card
           data={cardTestData[0]}
           cardActions={[

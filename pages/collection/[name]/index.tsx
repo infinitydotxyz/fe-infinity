@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { BaseCollection, CollectionStats } from '@infinityxyz/lib/types/core';
+import { BaseCollection, CardData, CollectionStats } from '@infinityxyz/lib/types/core';
 import { ToggleTab, PageBox, useToggleTab, SVG, EthPrice } from 'src/components/common';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { useFetch } from 'src/utils/apiUtils';
 import { CollectionFeed } from 'src/components/feed/collection-feed';
 import { ellipsisAddress, getChainScannerBase } from 'src/utils';
-import { ActivityTab } from 'src/components/collection/activity-tab';
+import { CollectionActivityTab } from 'src/components/collection/collection-activity-tab';
 import { StatsChips } from 'src/components/collection/stats-chips';
 import { CommunityRightPanel } from 'src/components/collection/community-right-panel';
-import { AiOutlineCheck } from 'react-icons/ai';
+import { BsCheck } from 'react-icons/bs';
 import { AvatarImage } from 'src/components/collection/avatar-image';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import ContentLoader from 'react-content-loader';
@@ -17,7 +17,8 @@ import { iconButtonStyle } from 'src/utils/ui-constants';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
 
 const CollectionPage = () => {
-  const { addCartItem } = useOrderContext();
+  const { addCartItem, ordersInCart, cartItems, addOrderToCart } = useOrderContext();
+  const [isBuyClicked, setIsBuyClicked] = useState(false);
   const router = useRouter();
   const {
     query: { name }
@@ -42,8 +43,15 @@ const CollectionPage = () => {
     }
   }, [selected]);
 
+  useEffect(() => {
+    if (isBuyClicked === true) {
+      setIsBuyClicked(false);
+      addOrderToCart();
+    }
+  }, [isBuyClicked]);
+
   const path = `/collections/${name}`;
-  const { result: collection, isLoading } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
+  const { result: collection, isLoading, error } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
   const { result: dailyStats } = useFetch<{ data: CollectionStats[] }>(
     name
       ? path + '/stats?limit=10&orderBy=volume&orderDirection=desc&minDate=0&maxDate=2648764957623&period=daily'
@@ -58,10 +66,31 @@ const CollectionPage = () => {
   );
   const firstDailyStats = dailyStats?.data[0];
 
-  if (!collection) {
-    return <></>;
-  }
+  const ifAlreadyAdded = (data: CardData | undefined) => {
+    // check if this item was already added to cartItems or order.
+    const found1 =
+      cartItems.find((item) => item.collectionAddress === data?.address && item.tokenId === data.tokenId) !== undefined;
+    let found2 = false;
+    for (const order of ordersInCart) {
+      const foundInOrder = order.cartItems.find(
+        (item) => item.collectionAddress === data?.address && item.tokenId === data.tokenId
+      );
+      if (foundInOrder) {
+        found2 = true;
+        break;
+      }
+    }
+    return found1 || found2;
+  };
 
+  if (!collection) {
+    // failed to load collection (collection not indexed?)
+    return (
+      <PageBox showTitle={false} title={'Collection'}>
+        {error ? <div className="flex flex-col mt-10">Unable to load this collection.</div> : null}
+      </PageBox>
+    );
+  }
   return (
     <PageBox showTitle={false} title={collection.metadata?.name ?? ''}>
       <div className="flex flex-col mt-10">
@@ -69,7 +98,7 @@ const CollectionPage = () => {
           <AvatarImage url={collection.metadata.profileImage} className="mb-2 rounded-[50%]" />
 
           <div className="flex gap-3 items-center">
-            <div className="text-6xl  ">{collection.metadata?.name}</div>
+            <div className="text-6xl">{collection.metadata?.name}</div>
             {collection.hasBlueCheck ? <SVG.blueCheck className={iconButtonStyle} /> : null}
           </div>
         </span>
@@ -95,23 +124,23 @@ const CollectionPage = () => {
             <div className="text-secondary mt-12 md:w-2/3">{collection.metadata.description ?? ''}</div>
           )}
 
-          <div className="mt-7">
-            <div className="font-medium">Ownership includes</div>
-            <div className="flex space-x-8 mt-3 font-normal">
-              <div className="flex items-center text-secondary">
-                <AiOutlineCheck className="mr-2 text-black" />
-                Access
-              </div>
-              <div className="flex items-center text-secondary">
-                <AiOutlineCheck className="mr-2 text-black" />
-                Royalties
-              </div>
-              <div className="flex items-center text-secondary">
-                <AiOutlineCheck className="mr-2 text-black" />
-                IP rights
+          {collection.metadata.benefits && (
+            <div className="mt-7">
+              <div className="font-medium">Ownership includes</div>
+
+              <div className="flex space-x-8 mt-3 font-normal">
+                {collection.metadata.benefits?.slice(0, 3).map((benefit) => {
+                  const benefitStr = benefit.slice(0, 300);
+                  return (
+                    <div className="flex items-center text-secondary">
+                      <BsCheck className="text-2xl mr-2 text-black" />
+                      {benefitStr}
+                    </div>
+                  );
+                })}
               </div>
             </div>
-          </div>
+          )}
 
           <table className="mt-8 md:w-1/2">
             <thead>
@@ -169,21 +198,26 @@ const CollectionPage = () => {
                             </div>
                           );
                         }
+                        if (ifAlreadyAdded(data)) {
+                          return <div className="font-normal">✓ Added</div>;
+                        }
                         return <div className="font-bold">Add to order</div>;
                       },
                       onClick: (ev, data) => {
+                        if (ifAlreadyAdded(data)) {
+                          return;
+                        }
                         const price = data?.orderSnippet?.offer?.orderItem?.startPriceEth ?? '';
+                        addCartItem({
+                          collectionName: data?.collectionName ?? '(no name)',
+                          collectionAddress: data?.tokenAddress ?? '(no address)',
+                          tokenImage: data?.image ?? '',
+                          tokenName: data?.name ?? '(no name)',
+                          tokenId: data?.tokenId ?? '0',
+                          isSellOrder: false
+                        });
                         if (price) {
-                          // Buy button logic here.
-                        } else {
-                          addCartItem({
-                            collectionName: data?.collectionName ?? '(no name)',
-                            collectionAddress: data?.tokenAddress ?? '(no address)',
-                            tokenImage: data?.image ?? '',
-                            tokenName: data?.name ?? '(no name)',
-                            tokenId: data?.tokenId ?? '0',
-                            isSellOrder: false
-                          });
+                          setIsBuyClicked(true); // to add to cart as a Buy order. (see: useEffect)
                         }
                       }
                     }
@@ -197,7 +231,7 @@ const CollectionPage = () => {
             )}
 
             {/* {currentTab === 1 && <ActivityTab dailyStats={dailyStats} weeklyStats={weeklyStats} />} */}
-            {selected === 'Activity' && <ActivityTab collectionAddress={collection.address ?? ''} />}
+            {selected === 'Activity' && <CollectionActivityTab collectionAddress={collection.address ?? ''} />}
 
             {selected === '???' && (
               <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-16">
@@ -210,8 +244,6 @@ const CollectionPage = () => {
           </div>
         </main>
       </div>
-
-      {/* <OrderDrawer open={orderDrawerOpen} onClose={() => setOrderDrawerOpen(false)} /> */}
     </PageBox>
   );
 };

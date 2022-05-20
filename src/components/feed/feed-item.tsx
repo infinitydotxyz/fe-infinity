@@ -3,10 +3,10 @@ import { ExchangeEvent } from '@infinityxyz/lib/types/core/feed';
 import { BaseFeedEvent, FeedEventType } from '@infinityxyz/lib/types/core/feed/FeedEvent';
 import { ReactNode } from 'react';
 import { AiOutlineComment, AiOutlineLike } from 'react-icons/ai';
-import { ellipsisAddress, getChainScannerBase } from 'src/utils';
+import { BLANK_IMG, ellipsisAddress, getChainScannerBase } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { addUserLike } from 'src/utils/firestore/firestoreUtils';
-import { Button, NftImage, EthPrice, NextLink } from 'src/components/common';
+import { Button, NftImage, EthPrice, NextLink, BGImage } from 'src/components/common';
 
 export type FeedEvent = BaseFeedEvent &
   ExchangeEvent & {
@@ -63,6 +63,7 @@ export const FeedItem = ({ data, onLike, onComment }: FeedItemProps) => {
         <footer className="text-sm mt-2 text-gray-500 flex items-center">
           <Button
             variant="plain"
+            className="px-0"
             onClick={async () => {
               if (!checkSignedIn()) {
                 return;
@@ -75,21 +76,25 @@ export const FeedItem = ({ data, onLike, onComment }: FeedItemProps) => {
                 });
               }
             }}
-            className="flex items-center"
           >
-            <AiOutlineLike size={22} className="mr-2" /> {data.likes}
+            <div className="flex">
+              <AiOutlineLike size={22} className="mr-2" />
+              {data.likes}
+            </div>
           </Button>
 
           <Button
             variant="plain"
+            className="px-0 ml-12"
             onClick={() => {
               if (onComment) {
                 onComment(data);
               }
             }}
-            className="flex items-center"
           >
-            <AiOutlineComment size={22} className="mr-2" /> {data.comments}
+            <div className="flex">
+              <AiOutlineComment size={22} className="mr-2" /> {data.comments}
+            </div>
           </Button>
         </footer>
       </div>
@@ -125,7 +130,11 @@ const SaleEvent = ({ data }: FeedItemProps) => {
   return (
     <div className="mt-4 border rounded-xl p-4 flex items-center bg-gray-100 font-heading">
       <NextLink href={`/asset/${data.chainId}/${data.collectionAddress}/${data.tokenId}`}>
-        <img src={data.image} alt="NFT Image" className="w-24 rounded-xl" />
+        {data.image ? (
+          <BGImage src={data.image} className="w-24 rounded-xl" />
+        ) : (
+          <BGImage src={BLANK_IMG} className="w-24 rounded-xl" />
+        )}
       </NextLink>
       <div className="flex w-full justify-between mx-8">
         <div className="text-sm">

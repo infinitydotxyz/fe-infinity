@@ -3,21 +3,21 @@ import { useState } from 'react';
 import { Filter, OrderType, useFilterContext } from 'src/utils/context/FilterContext';
 import { Button, Checkbox } from 'src/components/common';
 import { TraitSelection } from './trait-selection';
-import CollectionFilter, { CollectionFilterItem } from '../gallery/collection-filter';
+import CollectionFilter from '../gallery/collection-filter';
 
 interface Props {
   collection?: BaseCollection;
   collectionAddress?: string;
-  initialCollections?: CollectionFilterItem[];
   showFilterSections?: string[];
+  userAddress?: string; // for User's Collection Filter
   className?: string;
 }
 
 export const FilterPanel = ({
   collection,
   collectionAddress,
-  initialCollections = [],
   showFilterSections,
+  userAddress = '',
   className
 }: Props) => {
   const { filterState, setFilterState } = useFilterContext();
@@ -65,12 +65,12 @@ export const FilterPanel = ({
 
   if (showFilterSections && showFilterSections[0] === 'COLLECTIONS') {
     return (
-      <div className={`w-80 mr-12 ${className ?? ''}`}>
+      <div className={`w-80 mr-12 pointer-events-auto ${className ?? ''}`}>
         <div className="text-2xl font-bold">Filter</div>
 
-        <div className="text-lg mt-6 mb-7 font-heading">Collections</div>
+        <div className="text-lg mt-10 mb-7 font-heading">Collections</div>
         <div>
-          <CollectionFilter initialCollections={initialCollections} onSelect={handleSelectCollections} />
+          <CollectionFilter userAddress={userAddress} onSelect={handleSelectCollections} />
         </div>
       </div>
     );

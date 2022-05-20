@@ -32,7 +32,7 @@ export const TestPage = () => {
 
             <Button
               onClick={() => {
-                void router.push('/market');
+                void router.push('/marketplace');
               }}
             >
               Market
@@ -48,7 +48,7 @@ export const TestPage = () => {
 
             <Button
               onClick={() => {
-                void router.push('/analytics/trending/hourly');
+                void router.push('/analytics/trending/weekly');
               }}
             >
               Analytics
@@ -60,14 +60,6 @@ export const TestPage = () => {
               }}
             >
               All Collections
-            </Button>
-
-            <Button
-              onClick={() => {
-                void router.push('/pixel-score');
-              }}
-            >
-              Astra
             </Button>
 
             <Button

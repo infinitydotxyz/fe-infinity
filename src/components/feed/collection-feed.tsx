@@ -10,15 +10,16 @@ let eventsInit = false;
 
 interface CollectionFeedProps {
   collectionAddress?: string;
+  tokenId?: string;
   types?: FeedEventType[];
   forActivity?: boolean;
   className?: string;
 }
 
-export const CollectionFeed = ({ collectionAddress, types, forActivity, className }: CollectionFeedProps) => {
+export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity, className }: CollectionFeedProps) => {
   const [events, setEvents] = useState<FeedEvent[]>([]);
   const [newEvents, setNewEvents] = useState<FeedEvent[]>([]); // new feed events
-  const [filter, setFilter] = useState<FeedFilter>({ collectionAddress, types });
+  const [filter, setFilter] = useState<FeedFilter>({ collectionAddress, tokenId, types });
   // const [filteredEvents, setFilteredEvents] = useState<FeedEvent[]>([]);
   const [commentPanelEvent, setCommentPanelEvent] = useState<FeedEvent | null>(null);
   const [filteringTypes, setFilteringTypes] = useState<FeedEventType[]>([]);
@@ -32,15 +33,17 @@ export const CollectionFeed = ({ collectionAddress, types, forActivity, classNam
       subscribe(COLL_FEED, filter, (type: string, data: FeedEvent) => {
         if (type === 'added') {
           if (eventsInit === false) {
-            setEvents((currentEvents) => [data, ...currentEvents]); // add initial feed events.
+            setEvents((currentEvents) => [data, ...currentEvents].sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1))); // add initial feed events.
             setTimeout(() => {
               eventsInit = true;
             }, 3000);
           } else {
-            setNewEvents((currentEvents) => [data, ...currentEvents]);
+            setNewEvents((currentEvents) =>
+              [data, ...currentEvents].sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1))
+            );
           }
         } else {
-          setEvents((currentEvents) => [...currentEvents, data]);
+          setEvents((currentEvents) => [...currentEvents, data].sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1)));
         }
       });
     } catch (err) {
@@ -99,7 +102,7 @@ export const CollectionFeed = ({ collectionAddress, types, forActivity, classNam
       {newEvents.length > 0 ? (
         <div
           //  w-1/3 sm:w-full
-          className="p-4 border border-gray-200 hover:bg-gray-100 mb-4 cursor-pointer"
+          className="py-4 px-8 border rounded-3xl border-gray-200 hover:bg-gray-100 mb-8 cursor-pointer"
           onClick={() => {
             setEvents((currentEvents) => [...newEvents, ...currentEvents]);
             setNewEvents([]);

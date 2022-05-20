@@ -78,7 +78,7 @@ export const ProfileImageUpload: FunctionComponent<ProfileImageProps> = ({ onUpl
   return (
     <div className="sm:flex items-center flex-wrap mb-5">
       <label htmlFor={FORM_LABEL}>
-        <div className="overflow-hidden bg-theme-light-200 w-28 h-28 mx-auto sm:mx-0 rounded-full">
+        <div className="overflow-hidden bg-theme-grey-100 hover:bg-theme-grey-200 w-28 h-28 mx-auto sm:mx-0 rounded-full">
           {imgSrc ? (
             <BGImage className="cursor-pointer" src={imgSrc} />
           ) : (

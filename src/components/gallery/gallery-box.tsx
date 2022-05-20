@@ -9,7 +9,7 @@ import { GallerySort } from './gallery-sort';
 import { twMerge } from 'tailwind-merge';
 import { useResizeDetector } from 'react-resize-detector';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { CollectionFilterItem } from './collection-filter';
+import { useRouter } from 'next/router';
 
 // type Asset = {
 //   address: string;
@@ -40,6 +40,7 @@ interface GalleryProps {
   filterShowedDefault?: boolean;
   pageId?: 'COLLECTION' | 'PROFILE' | undefined;
   showFilterSections?: string[];
+  userAddress?: string; // for User's NFTs and User's Collection Filter
 }
 
 export const GalleryBox = ({
@@ -49,9 +50,11 @@ export const GalleryBox = ({
   getEndpoint,
   pageId,
   filterShowedDefault,
-  showFilterSections
+  showFilterSections,
+  userAddress = ''
 }: GalleryProps) => {
   const { chainId } = useAppContext();
+  const router = useRouter();
   const { filterState } = useFilterContext();
 
   const [filterShowed, setFilterShowed] = useState(filterShowedDefault);
@@ -97,7 +100,6 @@ export const GalleryBox = ({
           offset,
           limit: ITEMS_PER_PAGE,
           cursor: newCursor,
-          // collectionAddresses: ['0x24d0cbd0d5d7b50212251c5dc7cb810e7af71f6a'],
           ...filterState
         }
       }
@@ -113,7 +115,7 @@ export const GalleryBox = ({
         collectionName: item.collectionName ?? collection?.metadata?.name,
         collectionSlug: item.collectionSlug ?? '',
         description: item.metadata.description,
-        image: item.image.url,
+        image: item?.image?.url,
         price: 0,
         chainId: item.chainId,
         tokenAddress: item.collectionAddress ?? collection?.address,
@@ -138,11 +140,10 @@ export const GalleryBox = ({
   };
 
   useEffect(() => {
-    console.log('filterState', filterState);
     setData([]);
     setCursor('');
     fetchData(true); // refetch data when filterState changed somewhere (ex: from Sort comp, etc.)
-  }, [filterState]);
+  }, [filterState, router.query]);
 
   useEffect(() => {
     if (currentPage < 0 || data.length < currentPage * ITEMS_PER_PAGE) {
@@ -162,40 +163,29 @@ export const GalleryBox = ({
     cardHeight = w * 1.2;
   }
 
-  console.log('data', data);
-  const initialCollections: CollectionFilterItem[] = data.map((item) => {
-    return {
-      collectionAddress: item.address,
-      collectionName: item.collectionName,
-      hasBlueCheck: item.hasBlueCheck
-    };
-  });
-
   return (
     <div className={twMerge(className, 'flex flex-col')}>
-      {data.length > 0 && (
-        <div className="sm:col-span-2 lg:col-span-3 xl:col-span-4 text-right mt-[-73px] pointer-events-none">
-          <Button
-            variant="outline"
-            onClick={() => {
-              setFilterShowed((flag) => !flag);
-            }}
-            className="py-2.5 mr-2 font-heading pointer-events-auto"
-          >
-            {filterShowed ? 'Hide' : 'Show'} filter
-          </Button>
-          <GallerySort />
-        </div>
-      )}
+      <div className="sm:col-span-2 lg:col-span-3 xl:col-span-4 text-right mt-[-73px] pointer-events-none">
+        <Button
+          variant="outline"
+          onClick={() => {
+            setFilterShowed((flag) => !flag);
+          }}
+          className="py-2.5 mr-2 font-heading pointer-events-auto"
+        >
+          {filterShowed ? 'Hide' : 'Show'} filter
+        </Button>
+        <GallerySort />
+      </div>
 
       <div className={twMerge(className, 'flex items-start mt-[60px]')}>
         {filterShowed && (
-          <div className="w-1/4 mt-4">
+          <div className="mt-4">
             <FilterPanel
               collection={collection as BaseCollection}
               collectionAddress={collection?.address}
-              initialCollections={initialCollections}
               showFilterSections={showFilterSections}
+              userAddress={userAddress}
             />
           </div>
         )}
@@ -205,24 +195,24 @@ export const GalleryBox = ({
           className={twMerge('w-full grid gap-12  pointer-events-none')}
           style={{ gridTemplateColumns: gridColumns }}
         >
-          {isFetching && (
+          {isFetching && cursor === '' && (
             <>
-              <Card height={cardHeight} isLoading={true} className="mt-24" />
+              <Card height={cardHeight} isLoading={true} />
 
-              <Card height={cardHeight} isLoading={true} className="mt-24" />
+              <Card height={cardHeight} isLoading={true} />
 
-              <Card height={cardHeight} isLoading={true} className="mt-24" />
+              <Card height={cardHeight} isLoading={true} />
 
-              <Card height={cardHeight} isLoading={true} className="mt-24" />
+              <Card height={cardHeight} isLoading={true} />
             </>
           )}
 
           {error ? <div className="mt-24">Unable to load data.</div> : null}
 
-          {!error && !isFetching && data.length === 0 ? <div className="mt-24">No results.</div> : null}
+          {!error && !isFetching && data.length === 0 ? <div>No results.</div> : null}
 
-          {data.map((item, idx) => {
-            return <Card height={cardHeight} key={idx} data={item} {...cardProps} />;
+          {data.map((item) => {
+            return <Card key={`${item.address}_${item.tokenId}`} height={cardHeight} data={item} {...cardProps} />;
           })}
 
           {dataLoaded && (

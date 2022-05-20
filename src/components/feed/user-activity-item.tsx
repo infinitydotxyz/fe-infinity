@@ -29,13 +29,17 @@ export const UserActivityItem = ({ event }: Props) => {
           <div className="w-1/6">
             <div className="text-gray-400">Event</div>
             <div className="font-bold">
-              <a
-                href={`${getChainScannerBase(event.chainId)}/tx/${event.txHash}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {FeedEventTypeNames[event.type]}
-              </a>
+              {event.txHash ? (
+                <a
+                  href={`${getChainScannerBase(event.chainId)}/tx/${event.txHash}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {FeedEventTypeNames[event.type]}
+                </a>
+              ) : (
+                FeedEventTypeNames[event.type]
+              )}
             </div>
           </div>
           <div className="w-1/6">
@@ -47,25 +51,17 @@ export const UserActivityItem = ({ event }: Props) => {
           <div className="w-1/6">
             <div className="text-gray-400">From</div>
             <div className="font-bold">
-              <a
-                href={`${getChainScannerBase(event.chainId)}/address/${event.seller}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <NextLink href={`/profile/${event.seller}`}>
                 {event.sellerDisplayName ? ellipsisAddress(event.sellerDisplayName) : ellipsisAddress(event.seller)}
-              </a>
+              </NextLink>
             </div>
           </div>
           <div className="w-1/6">
             <div className="text-gray-400">To</div>
             <div className="font-bold">
-              <a
-                href={`${getChainScannerBase(event.chainId)}/address/${event.buyer}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <NextLink href={`/profile/${event.buyer}`}>
                 {event.buyerDisplayName ? ellipsisAddress(event.buyerDisplayName) : ellipsisAddress(event.buyer)}
-              </a>
+              </NextLink>
             </div>
           </div>
           <div className="w-1/6">
