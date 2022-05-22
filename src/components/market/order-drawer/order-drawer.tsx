@@ -124,7 +124,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
           ) : null}
 
           <>
-            {showCancel === false ? (
+            {/* {showCancel === false ? (
               <Button
                 size="large"
                 variant="outline"
@@ -134,7 +134,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
               >
                 Continue shopping
               </Button>
-            ) : null}
+            ) : null} */}
             <Button size="large" className={showCancel ? 'w-1/2' : 'w-full'} onClick={buttonClick}>
               {buttonTitle}
             </Button>
