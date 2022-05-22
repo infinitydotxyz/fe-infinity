@@ -15,8 +15,10 @@ import { useOrderContext } from 'src/utils/context/OrderContext';
 import ContentLoader from 'react-content-loader';
 import { iconButtonStyle } from 'src/utils/ui-constants';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
+import { useAppContext } from 'src/utils/context/AppContext';
 
 const CollectionPage = () => {
+  const { checkSignedIn } = useAppContext();
   const { addCartItem, ordersInCart, cartItems, addOrderToCart } = useOrderContext();
   const [isBuyClicked, setIsBuyClicked] = useState(false);
   const router = useRouter();
@@ -67,7 +69,7 @@ const CollectionPage = () => {
   );
   const firstDailyStats = dailyStats?.data[0];
 
-  const ifAlreadyAdded = (data: CardData | undefined) => {
+  const isAlreadyAdded = (data: CardData | undefined) => {
     // check if this item was already added to cartItems or order.
     const found1 =
       cartItems.find((item) => item.collectionAddress === data?.address && item.tokenId === data.tokenId) !== undefined;
@@ -200,13 +202,13 @@ const CollectionPage = () => {
                             </div>
                           );
                         }
-                        if (ifAlreadyAdded(data)) {
+                        if (isAlreadyAdded(data)) {
                           return <div className="font-normal">✓ Added</div>;
                         }
                         return <div className="font-bold">Add to order</div>;
                       },
                       onClick: (ev, data) => {
-                        if (ifAlreadyAdded(data)) {
+                        if (!checkSignedIn() || isAlreadyAdded(data)) {
                           return;
                         }
                         const price = data?.orderSnippet?.offer?.orderItem?.startPriceEth ?? '';
