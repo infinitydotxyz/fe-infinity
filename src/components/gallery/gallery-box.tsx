@@ -209,7 +209,7 @@ export const GalleryBox = ({
 
           {error ? <div className="mt-24">Unable to load data.</div> : null}
 
-          {!error && !isFetching && data.length === 0 ? <div>No results.</div> : null}
+          {!error && !isFetching && data.length === 0 ? <div>No results found.</div> : null}
 
           {data.map((item) => {
             return <Card key={`${item.address}_${item.tokenId}`} height={cardHeight} data={item} {...cardProps} />;

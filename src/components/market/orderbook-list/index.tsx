@@ -113,7 +113,7 @@ const OrderbookListDummy = ({
             return <OrderbookRow key={`${i}-${order.id}`} order={order} />;
           })}
 
-        {orders.length === 0 && !isLoading && <div>No Results</div>}
+        {orders.length === 0 && !isLoading && <div>No results found</div>}
 
         {isLoading && (
           <div className="w-full flex justify-center align-items">
