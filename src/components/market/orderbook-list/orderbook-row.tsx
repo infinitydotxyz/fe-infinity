@@ -8,9 +8,10 @@ import { OrderbookItem } from './orderbook-item';
 
 type OrderbookRowProps = {
   order: OBOrder;
+  isFilterOpen: boolean;
 };
 
-export const OrderbookRow = ({ order }: OrderbookRowProps): JSX.Element => {
+export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.Element => {
   const { checkSignedIn } = useAppContext();
 
   const valueDiv = (dataColumn: DataColumn) => {
@@ -64,7 +65,11 @@ export const OrderbookRow = ({ order }: OrderbookRowProps): JSX.Element => {
   let gridTemplate = '';
 
   defaultDataColumns(order).forEach((data) => {
-    gridTemplate += ` ${data.width}`;
+    if (isFilterOpen === true && (data.name === 'From' || data.name === 'Date')) {
+      // isFilterOpen => don't show those columns.
+    } else {
+      gridTemplate += ` ${data.width}`;
+    }
   });
 
   const onClickBuySell = (order: OBOrder) => {
@@ -90,7 +95,9 @@ export const OrderbookRow = ({ order }: OrderbookRowProps): JSX.Element => {
               </Button>
             );
           }
-
+          if (isFilterOpen === true && (data.name === 'From' || data.name === 'Date')) {
+            return null;
+          }
           return (
             <OrderbookItem
               nameItem={data.type === 'Name'}
@@ -107,6 +114,7 @@ export const OrderbookRow = ({ order }: OrderbookRowProps): JSX.Element => {
         })}
       </div>
 
+      {/* for smaller screen - show row summary: */}
       <div className="flex items-center w-full lg:hidden">
         <div className="flex flex-col w-full">
           <div className="mr-4">

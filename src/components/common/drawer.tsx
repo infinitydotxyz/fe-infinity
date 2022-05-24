@@ -8,7 +8,7 @@ import { iconButtonStyle } from 'src/utils/ui-constants';
 interface Props {
   open: boolean;
   onClose: () => void;
-  title: string;
+  title: ReactNode;
   subtitle?: string;
   divide?: boolean;
   tooltip?: TooltipSpec;

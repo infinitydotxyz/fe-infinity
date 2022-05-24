@@ -80,7 +80,7 @@ const MarketplacePage = () => {
       )}
 
       {selected === TABS.ListMyNFTs && (
-        <div className="mt-32">
+        <div className="mt-40">
           <UserPageNftsTab userInfo={user as UserProfileDto} />
         </div>
       )}
