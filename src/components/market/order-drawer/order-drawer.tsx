@@ -1,4 +1,14 @@
-import { Spacer, Divider, TooltipSpec, EthPrice, Button, Drawer, SimpleTable, Modal } from 'src/components/common';
+import {
+  Spacer,
+  Divider,
+  TooltipSpec,
+  EthPrice,
+  Button,
+  Drawer,
+  SimpleTable,
+  Modal,
+  Dropdown
+} from 'src/components/common';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { OrderBuilder } from './order-builder';
 import { OrderSummary } from './order-summary';
@@ -14,6 +24,7 @@ interface Props {
 
 export const OrderDrawer = ({ open, onClose }: Props) => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  // const [showConfirmClear, setShowConfirmClear] = useState(false);
   const router = useRouter();
 
   const {
@@ -25,6 +36,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
     isOrderBuilderEmpty,
     executeOrder,
     ordersInCart,
+    removeAllOrders,
     isEditingOrder,
     isCollectionsCart,
     cartItems,
@@ -112,11 +124,11 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
           {showCancel === true ? (
             <>
               {isEditingOrder ? (
-                <Button variant="outline" size="large" className="w-1/2" onClick={buttonClick}>
+                <Button variant="outline" size="large" className="font-heading w-1/2" onClick={buttonClick}>
                   Back to cart
                 </Button>
               ) : (
-                <Button variant="outline" size="large" className="w-1/2" onClick={() => cancelOrder()}>
+                <Button variant="outline" size="large" className="font-heading w-1/2" onClick={() => cancelOrder()}>
                   Cancel order
                 </Button>
               )}
@@ -135,7 +147,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
                 Continue shopping
               </Button>
             ) : null} */}
-            <Button size="large" className={showCancel ? 'w-1/2' : 'w-full'} onClick={buttonClick}>
+            <Button size="large" className={`font-heading ${showCancel ? 'w-1/2' : 'w-full'}`} onClick={buttonClick}>
               {buttonTitle}
             </Button>
           </>
@@ -253,11 +265,48 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
         open={open}
         onClose={onClose}
         subtitle={subtitle}
-        title={title}
+        title={
+          <div className="flex items-center">
+            <span>{title}</span>
+            {ordersInCart.length > 0 ? (
+              <>
+                <span className="ml-2 font-normal text-sm w-8 h-8 flex items-center justify-center rounded-full bg-theme-grey-100">
+                  {ordersInCart.length}
+                </span>
+                <Dropdown
+                  label="Dropdown"
+                  toggler={<span className="ml-2 font-normal text-sm underline cursor-pointer">Clear</span>}
+                  items={[
+                    {
+                      label: 'Clear all orders',
+                      onClick: () => {
+                        removeAllOrders();
+                      }
+                    },
+                    { label: 'Cancel', onClick: console.log }
+                  ]}
+                  className="text-sm"
+                />
+              </>
+            ) : null}
+          </div>
+        }
         tooltip={tooltip?.content ? tooltip : undefined}
       >
         {contents}
       </Drawer>
+
+      {/* todo: this doesn't work (conflicted: Modal & Drawer?)
+      {showConfirmClear ? (
+        <Modal
+          isOpen={showConfirmClear}
+          onClose={() => setShowConfirmClear(false)}
+          okButton="Confirm"
+          onOKButton={() => removeAllOrders()}
+        >
+          Clear all orders?
+        </Modal>
+      ) : null} */}
     </>
   );
 };

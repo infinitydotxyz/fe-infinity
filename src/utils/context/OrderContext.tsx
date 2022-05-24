@@ -72,6 +72,7 @@ export type OrderContextType = {
   addCartItem: (order: OrderCartItem) => void;
   removeCartItem: (order: OrderCartItem) => void;
   removeOrder: (order: OrderInCart) => void;
+  removeAllOrders: () => void;
 
   isOrderStateEmpty: () => boolean;
   readyToCheckout: () => boolean;
@@ -354,6 +355,10 @@ export const OrderContextProvider = ({ children }: Props) => {
     // setOrderDrawerOpen(true);
   };
 
+  const removeAllOrders = () => {
+    _resetStateValues();
+  };
+
   const removeCartItem = (item: OrderCartItem) => {
     const index = indexOfCartItem(cartItems, item);
 
@@ -405,6 +410,7 @@ export const OrderContextProvider = ({ children }: Props) => {
     cartItems,
     removeCartItem,
     removeOrder,
+    removeAllOrders,
     readyToCheckout,
     isOrderBuilderEmpty,
     isOrderStateEmpty,
