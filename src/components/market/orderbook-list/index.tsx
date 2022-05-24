@@ -110,7 +110,7 @@ const OrderbookListDummy = ({
       <div className="flex flex-col items-start w-full">
         {orders.length > 0 &&
           orders.map((order: OBOrder, i) => {
-            return <OrderbookRow key={`${i}-${order.id}`} order={order} />;
+            return <OrderbookRow key={`${i}-${order.id}`} order={order} isFilterOpen={showFilters ?? false} />;
           })}
 
         {orders.length === 0 && !isLoading && <div>No results found</div>}
