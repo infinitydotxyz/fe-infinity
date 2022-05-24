@@ -278,7 +278,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
                   toggler={<span className="ml-2 font-normal text-sm underline cursor-pointer">Clear</span>}
                   items={[
                     {
-                      label: 'Clear all orders',
+                      label: 'Confirm',
                       onClick: () => {
                         removeAllOrders();
                       }
@@ -286,6 +286,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
                     { label: 'Cancel', onClick: console.log }
                   ]}
                   className="text-sm"
+                  itemListClassName="flex"
                 />
               </>
             ) : null}

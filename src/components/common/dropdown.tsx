@@ -15,10 +15,18 @@ interface DropdownProps {
   items: DropdownItems[];
   toggler?: ReactElement; // custom toggler element.
   contentClassName?: string; // className for the dropdown content panel.
+  itemListClassName?: string;
   className?: string;
 }
 
-export const Dropdown = ({ label, items, toggler, contentClassName, className }: DropdownProps) => {
+export const Dropdown = ({
+  label,
+  items,
+  toggler,
+  contentClassName,
+  itemListClassName = '',
+  className
+}: DropdownProps) => {
   return (
     <div className={twMerge(`relative inline-block text-left ${className ?? ''}`)}>
       <Menu>
@@ -46,7 +54,7 @@ export const Dropdown = ({ label, items, toggler, contentClassName, className }:
             border border-gray-200 bg-white shadow-2xl outline-none ${contentClassName ?? ''}`
           )}
         >
-          <div className="py-1">
+          <div className={`py-1 ${itemListClassName}`}>
             {items.map((item, idx) => {
               return (
                 <CustomMenuItem key={idx} onClick={item.onClick}>
