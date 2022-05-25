@@ -8,6 +8,7 @@ import {
   collectionIconWidthInPx,
   iconButtonStyle
 } from 'src/utils/ui-constants';
+import { useAppContext } from 'src/utils/context/AppContext';
 // import { TiDeleteOutline } from 'react-icons/ti';
 
 export const OrderSummary = () => {
@@ -29,6 +30,7 @@ interface Props {
 }
 
 export const OrderSummaryItem = ({ orderInCart }: Props) => {
+  const { chainId } = useAppContext();
   const { isSellOrderCart, editOrderFromCart } = useOrderContext();
 
   const collectionStackForOrder = () => {
@@ -61,7 +63,7 @@ export const OrderSummaryItem = ({ orderInCart }: Props) => {
       const item = orderInCart.cartItems[0];
       const showNum = orderInCart.cartItems.length > 1;
 
-      let imageEl = <NftImage chainId="1" collectionAddress={item.collectionAddress} />;
+      let imageEl = <NftImage chainId={chainId} collectionAddress={item.collectionAddress} />;
       if (!showNum) {
         imageEl = <img className={collectionIconStyle} src={item.tokenImage} alt="" />;
       }

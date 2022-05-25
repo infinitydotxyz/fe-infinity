@@ -67,6 +67,7 @@ export type OrderContextType = {
   isEditingOrder: boolean;
   addOrderToCart: () => void;
   cancelOrder: () => void;
+  updateOrders: (orderInCart: OrderInCart[]) => void;
 
   cartItems: OrderCartItem[];
   addCartItem: (order: OrderCartItem) => void;
@@ -359,6 +360,10 @@ export const OrderContextProvider = ({ children }: Props) => {
     _resetStateValues();
   };
 
+  const updateOrders = (orders: OrderInCart[]) => {
+    setOrdersInCart([...orders]);
+  };
+
   const removeCartItem = (item: OrderCartItem) => {
     const index = indexOfCartItem(cartItems, item);
 
@@ -411,6 +416,7 @@ export const OrderContextProvider = ({ children }: Props) => {
     removeCartItem,
     removeOrder,
     removeAllOrders,
+    updateOrders,
     readyToCheckout,
     isOrderBuilderEmpty,
     isOrderStateEmpty,
