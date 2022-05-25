@@ -128,7 +128,7 @@ const CollectionPage = () => {
           )}
 
           {collection.metadata.benefits && (
-            <div className="mt-7">
+            <div className="mt-7 md:w-2/3">
               <div className="font-medium">Ownership includes</div>
 
               <div className="flex space-x-8 mt-3 font-normal">
@@ -138,6 +138,28 @@ const CollectionPage = () => {
                     <div className="flex items-center text-secondary">
                       <BsCheck className="text-2xl mr-2 text-black" />
                       {benefitStr}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {collection.metadata.partnerships && (
+            <div className="mt-7 md:w-2/3">
+              <div className="font-medium">Partnerships</div>
+
+              <div className="flex space-x-12 mt-3 ml-2 font-normal">
+                {collection.metadata.partnerships?.slice(0, 3).map((partnership) => {
+                  const partnershipStr = partnership?.name.slice(0, 100);
+                  return (
+                    <div
+                      className="flex items-center text-secondary hover:text-black cursor-pointer"
+                      onClick={() => {
+                        window.open(partnership.link);
+                      }}
+                    >
+                      {partnershipStr}
                     </div>
                   );
                 })}

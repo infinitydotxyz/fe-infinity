@@ -16,6 +16,7 @@ interface DropdownProps {
   toggler?: ReactElement; // custom toggler element.
   contentClassName?: string; // className for the dropdown content panel.
   itemListClassName?: string;
+  itemClassName?: string;
   className?: string;
 }
 
@@ -25,6 +26,7 @@ export const Dropdown = ({
   toggler,
   contentClassName,
   itemListClassName = '',
+  itemClassName = '',
   className
 }: DropdownProps) => {
   return (
@@ -57,7 +59,7 @@ export const Dropdown = ({
           <div className={`py-1 ${itemListClassName}`}>
             {items.map((item, idx) => {
               return (
-                <CustomMenuItem key={idx} onClick={item.onClick}>
+                <CustomMenuItem key={idx} onClick={item.onClick} itemClassName={itemClassName}>
                   {item.label}
                 </CustomMenuItem>
               );
@@ -72,6 +74,7 @@ export const Dropdown = ({
 interface CustomMenuItemProps {
   onClick: () => void;
   children: ReactElement | string;
+  itemClassName?: string;
 }
 export const CustomMenuItem = (props: CustomMenuItemProps) => {
   return (
@@ -79,10 +82,11 @@ export const CustomMenuItem = (props: CustomMenuItemProps) => {
       {({ active, disabled }) => (
         <a
           href="#"
-          className={classNames(
+          className={twMerge(
             'flex w-full justify-between px-4 py-4 text-left leading-5 font-heading ',
             active ? 'bg-black text-white' : 'text-gray-700',
-            disabled && 'cursor-not-allowed opacity-50'
+            disabled && 'cursor-not-allowed opacity-50',
+            props.itemClassName
           )}
         >
           <span className={classNames(active && 'font-bold')}>{props.children}</span>
