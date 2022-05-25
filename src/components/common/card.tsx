@@ -72,7 +72,7 @@ export const Card = ({
     >
       <NextLink
         href={`/asset/${data?.chainId}/${data?.tokenAddress ?? data?.address}/${data?.tokenId}`}
-        className="h-full  "
+        className="h-full"
       >
         {data?.image ? (
           <BGImage src={data?.image} className="overflow-clip rounded-3xl" />
