@@ -1,4 +1,5 @@
 import { CardData } from '@infinityxyz/lib/types/core';
+import { useAppContext } from 'src/utils/context/AppContext';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { GalleryBox } from '../gallery/gallery-box';
 import { UserProfileDto } from './user-profile-dto';
@@ -8,6 +9,7 @@ type Props = {
 };
 
 export const UserPageNftsTab = ({ userInfo }: Props) => {
+  const { user } = useAppContext();
   const { addCartItem, setOrderDrawerOpen, ordersInCart, cartItems, removeCartItem, updateOrders } = useOrderContext();
 
   const isAlreadyAdded = (data: CardData | undefined) => {
@@ -41,6 +43,7 @@ export const UserPageNftsTab = ({ userInfo }: Props) => {
     updateOrders(ordersInCart.filter((order) => order.cartItems.length > 0));
   };
 
+  const isMyProfile = user?.address === userInfo.address;
   return (
     <div>
       <div className="mt-20">
@@ -50,35 +53,39 @@ export const UserPageNftsTab = ({ userInfo }: Props) => {
           userAddress={userInfo?.address}
           filterShowedDefault={false}
           showFilterSections={['COLLECTIONS']}
-          cardProps={{
-            cardActions: [
-              {
-                label: (data) => {
-                  if (isAlreadyAdded(data)) {
-                    return <div className="font-normal">✓ Added</div>;
-                  }
-                  return <div className="font-bold">List</div>;
-                },
-                onClick: (ev, data) => {
-                  if (isAlreadyAdded(data)) {
-                    findAndRemove(data);
-                    return;
-                  }
-                  addCartItem({
-                    collectionName: data?.collectionName ?? '(no name)',
-                    collectionAddress: data?.tokenAddress ?? '(no address)',
-                    tokenImage: data?.image ?? '',
-                    tokenName: data?.name ?? '(no name)',
-                    tokenId: data?.tokenId ?? '0',
-                    isSellOrder: true
-                  });
-                  if (cartItems.length < 1) {
-                    setOrderDrawerOpen(true); // only show when adding the first time.
-                  }
+          cardProps={
+            isMyProfile
+              ? {
+                  cardActions: [
+                    {
+                      label: (data) => {
+                        if (isAlreadyAdded(data)) {
+                          return <div className="font-normal">✓ Added</div>;
+                        }
+                        return <div className="font-bold">List</div>;
+                      },
+                      onClick: (ev, data) => {
+                        if (isAlreadyAdded(data)) {
+                          findAndRemove(data);
+                          return;
+                        }
+                        addCartItem({
+                          collectionName: data?.collectionName ?? '(no name)',
+                          collectionAddress: data?.tokenAddress ?? '(no address)',
+                          tokenImage: data?.image ?? '',
+                          tokenName: data?.name ?? '(no name)',
+                          tokenId: data?.tokenId ?? '0',
+                          isSellOrder: true
+                        });
+                        if (cartItems.length < 1) {
+                          setOrderDrawerOpen(true); // only show when adding the first time.
+                        }
+                      }
+                    }
+                  ]
                 }
-              }
-            ]
-          }}
+              : undefined
+          }
           className="mt-[-82px]"
         />
       </div>
