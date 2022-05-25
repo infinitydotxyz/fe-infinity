@@ -19,7 +19,7 @@ import { useAppContext } from 'src/utils/context/AppContext';
 
 const CollectionPage = () => {
   const { checkSignedIn } = useAppContext();
-  const { addCartItem, ordersInCart, cartItems, addOrderToCart } = useOrderContext();
+  const { addCartItem, removeCartItem, ordersInCart, cartItems, addOrderToCart, updateOrders } = useOrderContext();
   const [isBuyClicked, setIsBuyClicked] = useState(false);
   const router = useRouter();
   const { options, onChange, selected } = useToggleTab(
@@ -208,7 +208,21 @@ const CollectionPage = () => {
                         return <div className="font-bold">Add to order</div>;
                       },
                       onClick: (ev, data) => {
-                        if (!checkSignedIn() || isAlreadyAdded(data)) {
+                        if (!checkSignedIn()) {
+                          return;
+                        }
+                        if (isAlreadyAdded(data)) {
+                          // find & remove this item in cartItems & all orders' cartItems:
+                          const foundItemIdx = cartItems.findIndex(
+                            (item) => item.collectionAddress === data?.address && item.tokenId === data?.tokenId
+                          );
+                          removeCartItem(cartItems[foundItemIdx]);
+                          ordersInCart.forEach((order) => {
+                            order.cartItems = order.cartItems.filter(
+                              (item) => !(item.collectionAddress === data?.address && item.tokenId === data?.tokenId)
+                            );
+                          });
+                          updateOrders(ordersInCart.filter((order) => order.cartItems.length > 0));
                           return;
                         }
                         const price = data?.orderSnippet?.offer?.orderItem?.startPriceEth ?? '';
