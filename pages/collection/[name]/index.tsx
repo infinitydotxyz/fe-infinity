@@ -86,6 +86,20 @@ const CollectionPage = () => {
     return found1 || found2;
   };
 
+  // find & remove this item in cartItems & all orders' cartItems:
+  const findAndRemove = (data: CardData | undefined) => {
+    const foundItemIdx = cartItems.findIndex(
+      (item) => item.collectionAddress === data?.address && item.tokenId === data?.tokenId
+    );
+    removeCartItem(cartItems[foundItemIdx]);
+    ordersInCart.forEach((order) => {
+      order.cartItems = order.cartItems.filter(
+        (item) => !(item.collectionAddress === data?.address && item.tokenId === data?.tokenId)
+      );
+    });
+    updateOrders(ordersInCart.filter((order) => order.cartItems.length > 0));
+  };
+
   if (!collection) {
     // failed to load collection (collection not indexed?)
     return (
@@ -234,17 +248,7 @@ const CollectionPage = () => {
                           return;
                         }
                         if (isAlreadyAdded(data)) {
-                          // find & remove this item in cartItems & all orders' cartItems:
-                          const foundItemIdx = cartItems.findIndex(
-                            (item) => item.collectionAddress === data?.address && item.tokenId === data?.tokenId
-                          );
-                          removeCartItem(cartItems[foundItemIdx]);
-                          ordersInCart.forEach((order) => {
-                            order.cartItems = order.cartItems.filter(
-                              (item) => !(item.collectionAddress === data?.address && item.tokenId === data?.tokenId)
-                            );
-                          });
-                          updateOrders(ordersInCart.filter((order) => order.cartItems.length > 0));
+                          findAndRemove(data);
                           return;
                         }
                         const price = data?.orderSnippet?.offer?.orderItem?.startPriceEth ?? '';
