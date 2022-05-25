@@ -77,7 +77,7 @@ export const OrderBuilder = () => {
       <TextInputBox
         type="number"
         value={price.toString()}
-        placeholder="2.33"
+        placeholder=""
         addEthSymbol={true}
         label={label}
         onChange={(value) => setPrice(parseFloat(value))}

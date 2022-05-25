@@ -1,6 +1,7 @@
 import { OBOrder, OBOrderItem, SignedOBOrder } from '@infinityxyz/lib/types/core';
 import { getOBComplicationAddress, getTxnCurrencyAddress } from '@infinityxyz/lib/utils';
 import React, { ReactNode, useContext, useState } from 'react';
+import { toastError } from 'src/components/common';
 import { getSignedOBOrder } from '../exchange/orders';
 import { fetchMinBpsToSeller, fetchOrderNonce, postOrders } from '../marketUtils';
 import { secondsPerDay } from '../ui-constants';
@@ -305,20 +306,34 @@ export const OrderContextProvider = ({ children }: Props) => {
     setOrderDrawerOpen(false);
 
     // sign orders
+    let hasErrors = false;
     const signedOrders: SignedOBOrder[] = [];
     for (const orderInCart of ordersInCart) {
       const order = await specToOBOrder(orderInCart.orderSpec);
 
       if (order) {
-        const signedOrder = await getSignedOBOrder(user, chainId, signer, order);
-        if (signedOrder) {
-          signedOrders.push(signedOrder);
+        try {
+          const signedOrder = await getSignedOBOrder(user, chainId, signer, order);
+          if (signedOrder) {
+            signedOrders.push(signedOrder);
+          }
+        } catch (ex) {
+          toastError(ex as string);
+          hasErrors = true;
         }
       }
     }
+    if (hasErrors) {
+      return false;
+    }
 
     // post orders
-    await postOrders(user.address, signedOrders);
+    try {
+      await postOrders(user.address, signedOrders);
+    } catch (ex) {
+      toastError(ex as string);
+      return false;
+    }
 
     _resetStateValues();
 
