@@ -287,6 +287,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
                   ]}
                   className="text-sm"
                   itemListClassName="flex"
+                  itemClassName="px-0 justify-center"
                 />
               </>
             ) : null}
