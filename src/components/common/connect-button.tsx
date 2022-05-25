@@ -54,7 +54,7 @@ export const ConnectButton = () => {
 
   return (
     <>
-      {connected && <Dropdown label={`${ellipsisAddress(address)}`} items={menuItems} />}
+      {connected && <Dropdown label={`${ellipsisAddress(address, 5, 3)}`} items={menuItems} />}
       {!connected && <Button onClick={() => router.push('/connect')}>Connect</Button>}
     </>
   );
