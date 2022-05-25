@@ -128,7 +128,7 @@ export const Navbar = () => {
 
   const desktopNavbar = (
     <div className="w-full bg-white bg-opacity-70 glass font-heading">
-      <div className={`${pageStyles} flex space-x-12 items-center py-6 w-full`}>
+      <div className={`${pageStyles} flex space-x-6 items-center py-6 w-full`}>
         <NextLink href="/">
           <SVG.logo className="h-8" />
         </NextLink>
