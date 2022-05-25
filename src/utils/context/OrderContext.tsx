@@ -328,7 +328,12 @@ export const OrderContextProvider = ({ children }: Props) => {
     }
 
     // post orders
-    await postOrders(user.address, signedOrders);
+    try {
+      await postOrders(user.address, signedOrders);
+    } catch (ex) {
+      toastError(ex as string);
+      return false;
+    }
 
     _resetStateValues();
 
