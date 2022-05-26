@@ -46,3 +46,18 @@ input::-webkit-inner-spin-button {
 input[type='number'] {
   -moz-appearance: textfield;
 }
+
+input[type='range'] {
+  -webkit-appearance: none;
+  height: 4px;
+  background: #f3f3f3;
+}
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  background: #000;
+  cursor: pointer;
+  box-shadow: 0 0 2px 0 #555;
+}
