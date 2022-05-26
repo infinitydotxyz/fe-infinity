@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Button, PageBox } from 'src/components/common';
 import { StakeTokensModal } from 'src/components/rewards/stake-tokens';
+import { UnstakeTokensModal } from 'src/components/rewards/unstake-tokens';
 
 const RewardsPage = () => {
   const [showStakeTokensModal, setShowStakeTokensModal] = useState(false);
+  const [showUnstakeTokensModal, setShowUnstakeTokensModal] = useState(false);
 
   return (
     <PageBox title="Rewards" showTitle={false}>
@@ -47,7 +49,7 @@ const RewardsPage = () => {
                 </Button>
               </div>
               <div className="lg:w-1/4 sm:w-full">
-                <Button variant="outline" className="font-heading ml-3">
+                <Button variant="outline" className="font-heading ml-3" onClick={() => setShowUnstakeTokensModal(true)}>
                   Unstake
                 </Button>
               </div>
@@ -153,6 +155,7 @@ const RewardsPage = () => {
       </div>
 
       {showStakeTokensModal && <StakeTokensModal onClose={() => setShowStakeTokensModal(false)} />}
+      {showUnstakeTokensModal && <UnstakeTokensModal onClose={() => setShowUnstakeTokensModal(false)} />}
     </PageBox>
   );
 };
