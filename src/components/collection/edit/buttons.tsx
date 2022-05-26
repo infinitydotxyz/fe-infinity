@@ -6,7 +6,7 @@ export const PlusButton: React.FC<ButtonProps> = ({ children, className, ...prop
   <Button
     {...props}
     className={twMerge(
-      'w-full border rounded-3xl border-gray-100 bg-theme-grey-100 hover:bg-theme-grey-200 text-black font-heading',
+      'w-full border rounded-3xl border-gray-100 bg-theme-gray-100 hover:bg-theme-gray-200 text-black font-heading',
       className
     )}
   >

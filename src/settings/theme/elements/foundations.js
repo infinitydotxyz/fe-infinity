@@ -123,8 +123,8 @@ module.exports = {
         850: '#222222',
         900: '#000000'
       },
-      // new figma tokens (05/17/2022) - example: bg-theme-grey-200
-      grey: {
+      // new figma tokens (05/17/2022) - example: bg-theme-gray-200
+      gray: {
         50: '#FFFFFF',
         100: '#F0F0F0',
         200: '#DEDEDE',

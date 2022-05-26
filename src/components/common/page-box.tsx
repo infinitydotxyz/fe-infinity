@@ -30,7 +30,7 @@ export const PageBox = ({
   return (
     <>
       {chainId !== '1' && (
-        <div className="text-center bg-theme-grey-100 text-red-800 py-1">You are not on Ethereum network</div>
+        <div className="text-center bg-theme-gray-100 text-red-800 py-1">You are not on Ethereum network</div>
       )}
 
       <div className="transition w-[100vw] h-[100vh] overflow-y-auto overflow-x-hidden justify-items-center">
