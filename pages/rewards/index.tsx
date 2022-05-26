@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, PageBox } from 'src/components/common';
+import { StakeTokensModal } from 'src/components/rewards/stake-tokens';
 
 const RewardsPage = () => {
+  const [showStakeTokensModal, setShowStakeTokensModal] = useState(false);
+
   return (
     <PageBox title="Rewards" showTitle={false}>
       <div className="flex bg-theme-gray-100 p-10 rounded-2xl">
@@ -39,7 +42,9 @@ const RewardsPage = () => {
                 <div className="text-sm mt-1">TVL</div>
               </div>
               <div className="lg:w-1/4 sm:w-full">
-                <Button className="font-heading">Stake</Button>
+                <Button className="font-heading" onClick={() => setShowStakeTokensModal(true)}>
+                  Stake
+                </Button>
               </div>
               <div className="lg:w-1/4 sm:w-full">
                 <Button variant="outline" className="font-heading ml-3">
@@ -146,6 +151,8 @@ const RewardsPage = () => {
           </div>
         </div>
       </div>
+
+      {showStakeTokensModal && <StakeTokensModal onClose={() => setShowStakeTokensModal(false)} />}
     </PageBox>
   );
 };
