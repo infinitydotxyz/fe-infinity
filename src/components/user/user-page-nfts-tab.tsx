@@ -53,6 +53,7 @@ export const UserPageNftsTab = ({ userInfo }: Props) => {
           userAddress={userInfo?.address}
           filterShowedDefault={false}
           showFilterSections={['COLLECTIONS']}
+          showSort={false}
           cardProps={
             isMyProfile
               ? {

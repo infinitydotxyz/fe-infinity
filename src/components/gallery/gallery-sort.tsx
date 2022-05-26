@@ -33,8 +33,8 @@ export const GallerySort = () => {
           { label: RARITY_HIGH_LABEL, onClick: () => onClickSort('rarityRank', 'asc') },
           { label: RARITY_LOW_LABEL, onClick: () => onClickSort('rarityRank', 'desc') },
           // TODO: order by 'price' once it's supported by api.
-          { label: PRICE_HIGH_LABEL, onClick: () => onClickSort('rarityRank', 'asc') },
-          { label: PRICE_LOW_LABEL, onClick: () => onClickSort('rarityRank', 'desc') }
+          { label: PRICE_HIGH_LABEL, onClick: () => onClickSort('price', 'desc') },
+          { label: PRICE_LOW_LABEL, onClick: () => onClickSort('price', 'asc') }
           // { label: 'Clear', onClick: () => onClickSort('desc') }
         ]}
         contentClassName="right-0 w-64"
