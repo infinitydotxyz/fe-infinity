@@ -229,7 +229,7 @@ const CollectionPage = () => {
                   cardActions: [
                     {
                       label: (data) => {
-                        const price = data?.orderSnippet?.offer?.orderItem?.startPriceEth ?? '';
+                        const price = data?.orderSnippet?.listing?.orderItem?.startPriceEth ?? '';
                         if (price) {
                           return (
                             <div className="flex justify-center">
@@ -251,7 +251,7 @@ const CollectionPage = () => {
                           findAndRemove(data);
                           return;
                         }
-                        const price = data?.orderSnippet?.offer?.orderItem?.startPriceEth ?? '';
+                        const price = data?.orderSnippet?.listing?.orderItem?.startPriceEth ?? '';
                         addCartItem({
                           collectionName: data?.collectionName ?? '(no name)',
                           collectionAddress: data?.tokenAddress ?? '(no address)',
