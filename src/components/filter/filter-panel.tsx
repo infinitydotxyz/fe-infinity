@@ -131,10 +131,10 @@ export const FilterPanel = ({
       </div>
 
       <div className="flex">
-        <Button variant="gray" className="py-3 w-1/2 bg-theme-grey-100 font-heading" onClick={handleClickApply}>
+        <Button variant="gray" className="py-3 w-1/2 bg-theme-gray-100 font-heading" onClick={handleClickApply}>
           Apply
         </Button>
-        <Button variant="gray" className="py-3 w-1/2 bg-theme-grey-100 font-heading ml-2" onClick={handleClickClear}>
+        <Button variant="gray" className="py-3 w-1/2 bg-theme-gray-100 font-heading ml-2" onClick={handleClickClear}>
           Clear
         </Button>
       </div>

@@ -270,7 +270,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
             <span>{title}</span>
             {ordersInCart.length > 0 || cartItems.length > 0 ? (
               <>
-                <span className="ml-2 font-normal text-sm w-8 h-8 flex items-center justify-center rounded-full bg-theme-grey-100">
+                <span className="ml-2 font-normal text-sm w-8 h-8 flex items-center justify-center rounded-full bg-theme-gray-100">
                   {cartItems.length > 0 ? cartItems.length : ordersInCart.length}
                 </span>
                 <Dropdown
