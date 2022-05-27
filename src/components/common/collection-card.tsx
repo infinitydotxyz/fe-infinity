@@ -29,7 +29,7 @@ export const CollectionCard = ({ collection, onButtonClick, buttonName, routerQu
   const avatarUrl = getAvatarUrl(collection.bannerImage) || BLANK_IMAGE_URL;
 
   return (
-    <div className="w-full mx-auto sm:mx-0 bg-theme-light-100 border border-theme-light-100 shadow-md rounded-3xl overflow-hidden hover:shadow-xl cursor-pointer">
+    <div className="w-full mx-auto sm:mx-0 bg-theme-light-100 border border-theme-light-100 rounded-3xl overflow-hidden hover:shadow-xl cursor-pointer">
       <a
         href={`/collection/${collection.slug}${routerQuery ? `?${routerQuery}` : ''}`}
         className="text-theme-light-800 font-heading tracking-tight mr-2"
@@ -43,7 +43,7 @@ export const CollectionCard = ({ collection, onButtonClick, buttonName, routerQu
           />
         </div>
         <div className="pt-4">
-          <div className="font-body text-base font-bold px-5 text-black">{collection.name}</div>
+          <div className="font-body text-base font-medium px-5 text-black">{collection.name}</div>
           <div className="font-body pt-0.5 text-base px-5 text-theme-light-800">
             {shortText}
             {isTrimText && ' ...'}
