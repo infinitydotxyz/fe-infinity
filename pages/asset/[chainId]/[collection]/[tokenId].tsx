@@ -1,10 +1,9 @@
 import { useRouter } from 'next/router';
-import { Button, ShortAddress, PageBox, ReadMoreText, SVG, NextLink, ClipboardButton } from 'src/components/common';
+import { Button, ShortAddress, PageBox, ReadMoreText, SVG, NextLink, Spinner } from 'src/components/common';
 import { BLANK_IMAGE_URL, useFetch } from 'src/utils';
 import { Token, Collection, Erc721Metadata } from '@infinityxyz/lib-frontend/types/core';
 import {
   TraitList,
-  ActivityList,
   ListNFTModal,
   CancelModal,
   TransferNFTModal,
@@ -12,7 +11,8 @@ import {
   MakeOfferModal
 } from 'src/components/asset';
 import { useState } from 'react';
-import { useAppContext, User } from 'src/utils/context/AppContext';
+import { useAppContext } from 'src/utils/context/AppContext';
+import { CollectionFeed } from 'src/components/feed/collection-feed';
 
 const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
@@ -31,18 +31,12 @@ const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string)
 
 // ===========================================================
 
-const AssetDetail = () => {
+const AssetDetailPage = () => {
   const { query } = useRouter();
-  const { user } = useAppContext();
 
-  if (
-    typeof query.chainId !== 'string' ||
-    typeof query.collection !== 'string' ||
-    typeof query.tokenId !== 'string' ||
-    !user?.address
-  ) {
+  if (typeof query.chainId !== 'string' || typeof query.collection !== 'string' || typeof query.tokenId !== 'string') {
     return (
-      <PageBox title="Asset - Error">
+      <PageBox title="Asset">
         <div className="flex flex-col max-w-screen-2xl mt-4">
           <main>
             <p>Error: Invalid page parameters or not signed in.</p>
@@ -51,10 +45,7 @@ const AssetDetail = () => {
       </PageBox>
     );
   }
-
-  return (
-    <AssetDetailContent user={user} qchainId={query.chainId} qcollection={query.collection} qtokenId={query.tokenId} />
-  );
+  return <AssetDetailContent qchainId={query.chainId} qcollection={query.collection} qtokenId={query.tokenId} />;
 };
 
 // ===========================================================
@@ -72,10 +63,10 @@ interface Props {
   qchainId: string;
   qcollection: string;
   qtokenId: string;
-  user: User;
 }
 
-const AssetDetailContent = ({ user, qchainId, qcollection, qtokenId }: Props) => {
+const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
+  const { checkSignedIn } = useAppContext();
   const { isLoading, error, token, collection } = useFetchAssetInfo(qchainId, qcollection, qtokenId);
 
   const [showCancelModal, setShowCancelModal] = useState(false);
@@ -85,7 +76,11 @@ const AssetDetailContent = ({ user, qchainId, qcollection, qtokenId }: Props) =>
   const [showPlaceBidModal, setShowPlaceBidModal] = useState(false);
 
   if (isLoading) {
-    return <PageBox title="Loading..." showTitle={false}></PageBox>;
+    return (
+      <PageBox title="Loading..." showTitle={false}>
+        <Spinner />
+      </PageBox>
+    );
   }
 
   if (error || !token || !collection) {
@@ -101,20 +96,6 @@ const AssetDetailContent = ({ user, qchainId, qcollection, qtokenId }: Props) =>
     );
   }
 
-  const debugLog = (obj: object) => {
-    console.log('############################################');
-    console.log(JSON.stringify(obj, null, '  '));
-  };
-
-  debugLog(user);
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const cpy: any = Object.assign({}, collection);
-  cpy['attributes'] = 'fuck that';
-
-  debugLog(cpy);
-  debugLog(token);
-
   // TODO: Joe to update Erc721Metadata type
   const tokenMetadata = token.metadata as Erc721Metadata;
 
@@ -124,12 +105,16 @@ const AssetDetailContent = ({ user, qchainId, qcollection, qtokenId }: Props) =>
       : tokenMetadata.name || collection.metadata.name || 'No Name';
 
   const onClickButton1 = () => {
-    console.log('one');
+    if (!checkSignedIn()) {
+      return;
+    }
     setShowPlaceBidModal(true);
   };
 
   const onClickButton2 = () => {
-    console.log('two');
+    if (!checkSignedIn()) {
+      return;
+    }
     setShowMakeOfferModal(true);
   };
 
@@ -184,7 +169,7 @@ const AssetDetailContent = ({ user, qchainId, qcollection, qtokenId }: Props) =>
           </h3>
           <div className="flex items-center sm:mb-6">
             <NextLink
-              href={`/collection/${collection.metadata.name || collection.address}`}
+              href={`/collection/${collection.slug}`}
               className="text-theme-light-800 font-heading tracking-tight mr-2"
             >
               {collection.metadata.name}
@@ -198,8 +183,7 @@ const AssetDetailContent = ({ user, qchainId, qcollection, qtokenId }: Props) =>
             tooltip={collection.address}
           />
           <span className="text-base flex items-center">
-            Token ID: <span className="ml-4 font-heading underline">#{token.tokenId}</span>
-            <ClipboardButton textToCopy={token.tokenId} />
+            Token ID: <span className="ml-4 font-heading">#{token.tokenId}</span>
           </span>
 
           <div className="md:-ml-1.5">
@@ -226,11 +210,15 @@ const AssetDetailContent = ({ user, qchainId, qcollection, qtokenId }: Props) =>
       </div>
 
       <TraitList traits={tokenMetadata.attributes} collectionTraits={collection.attributes} />
-      <ActivityList chainId={collection.chainId} collectionAddress={collection.address} tokenId={token.tokenId} />
+
+      {/* <ActivityList chainId={collection.chainId} collectionAddress={collection.address} tokenId={token.tokenId} /> */}
+
+      <h3 className="mt-8 mb-4 font-bold font-body">Activity</h3>
+      <CollectionFeed collectionAddress={collection.address} tokenId={token.tokenId} forActivity={true} />
 
       {modals}
     </PageBox>
   );
 };
 
-export default AssetDetail;
+export default AssetDetailPage;

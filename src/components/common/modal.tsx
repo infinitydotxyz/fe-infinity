@@ -135,7 +135,7 @@ export const Modal = ({
                 </Dialog.Title>
 
                 {children}
-                {showActionButtons && <div className="p-4 rounded-3xl flex space-x-4 mt-8">{buttons}</div>}
+                {showActionButtons && <div className="p-4 flex space-x-4 mt-8">{buttons}</div>}
               </Dialog.Panel>
             </Transition.Child>
           </div>

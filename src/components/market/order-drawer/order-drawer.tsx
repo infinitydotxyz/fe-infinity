@@ -1,10 +1,22 @@
-import { Spacer, Divider, TooltipSpec, EthPrice, Button, Drawer, SimpleTable, Modal } from 'src/components/common';
+import {
+  Spacer,
+  Divider,
+  TooltipSpec,
+  EthPrice,
+  Button,
+  Drawer,
+  SimpleTable,
+  Modal,
+  Dropdown
+} from 'src/components/common';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { OrderBuilder } from './order-builder';
 import { OrderSummary } from './order-summary';
 import { useState } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { numStr } from 'src/utils';
+import { useRouter } from 'next/router';
+
 interface Props {
   open: boolean;
   onClose: () => void;
@@ -12,18 +24,23 @@ interface Props {
 
 export const OrderDrawer = ({ open, onClose }: Props) => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  // const [showConfirmClear, setShowConfirmClear] = useState(false);
+  const router = useRouter();
 
   const {
     isSellOrderCart,
     addOrderToCart,
+    cancelOrder,
     readyToCheckout,
     isOrderStateEmpty,
     isOrderBuilderEmpty,
     executeOrder,
     ordersInCart,
+    removeAllOrders,
     isEditingOrder,
     isCollectionsCart,
-    cartItems
+    cartItems,
+    setOrderDrawerOpen
   } = useOrderContext();
 
   const emptyCart = (
@@ -32,12 +49,35 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
         <span className="text-lg font-semibold">Cart is empty</span>
         <br />
         Add an item to the order.
+        <div className="flex flex-row gap-2 py-2 w-full h-full mt-5">
+          <Button
+            size="large"
+            onClick={() => {
+              setOrderDrawerOpen(false);
+              router.push('/marketplace?tab=Orders');
+            }}
+            className="font-heading w-full h-full"
+          >
+            Buy
+          </Button>
+          <Button
+            size="large"
+            variant="outline"
+            onClick={() => {
+              setOrderDrawerOpen(false);
+              router.push('/marketplace?tab=List%20NFTs');
+            }}
+            className="font-heading w-full h-full"
+          >
+            Sell
+          </Button>
+        </div>
       </div>
     </div>
   );
 
   const buildFooter = (buttonClick: () => void) => {
-    let buttonTitle = 'Add order to cart';
+    let buttonTitle = 'Add to cart';
     let topWidget;
 
     if (readyToCheckout()) {
@@ -73,16 +113,44 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
         buttonTitle = 'Update order';
       }
     }
+    const showCancel = buttonTitle === 'Checkout' ? false : true;
 
     return (
       <div className="flex flex-col mb-8">
         <Divider className="mb-10" />
 
         {topWidget}
-        <div className="px-12 mb-4 w-full">
-          <Button size="large" className="w-full" onClick={buttonClick}>
-            {buttonTitle}
-          </Button>
+        <div className="px-12 mb-4 w-full flex space-x-2">
+          {showCancel === true ? (
+            <>
+              {isEditingOrder ? (
+                <Button variant="outline" size="large" className="font-heading w-1/2" onClick={buttonClick}>
+                  Back to cart
+                </Button>
+              ) : (
+                <Button variant="outline" size="large" className="font-heading w-1/2" onClick={() => cancelOrder()}>
+                  Cancel order
+                </Button>
+              )}
+            </>
+          ) : null}
+
+          <>
+            {/* {showCancel === false ? (
+              <Button
+                size="large"
+                variant="outline"
+                onClick={() => {
+                  setOrderDrawerOpen(false);
+                }}
+              >
+                Continue shopping
+              </Button>
+            ) : null} */}
+            <Button size="large" className={`font-heading ${showCancel ? 'w-1/2' : 'w-full'}`} onClick={buttonClick}>
+              {buttonTitle}
+            </Button>
+          </>
         </div>
       </div>
     );
@@ -99,7 +167,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
   } else if (readyToCheckout()) {
     // ready to checkout, we have an order
     title = 'Cart';
-    tooltip = { title: '(tooltip goes here)', content: '(tooltip goes here)' };
+    tooltip = { title: '', content: '' }; // todo: (tooltip goes here)
     footer = buildFooter(async () => {
       if (await executeOrder()) {
         setShowSuccessModal(true);
@@ -154,7 +222,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
       }
     }
 
-    tooltip = { title: title, content: content };
+    // tooltip = { title: title, content: content };
 
     footer = buildFooter(() => {
       addOrderToCart();
@@ -190,13 +258,57 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
         <div className="flex flex-col">
           <div className="font-bold text-xlg">Thank you,</div>
           <div className="font-bold mb-6 text-xlg">Order Submitted</div>
-          <div>Confirmation: 234234</div>
         </div>
       </Modal>
 
-      <Drawer open={open} onClose={onClose} subtitle={subtitle} title={title} tooltip={tooltip}>
+      <Drawer
+        open={open}
+        onClose={onClose}
+        subtitle={subtitle}
+        title={
+          <div className="flex items-center">
+            <span>{title}</span>
+            {ordersInCart.length > 0 || cartItems.length > 0 ? (
+              <>
+                <span className="ml-2 font-normal text-sm w-8 h-8 flex items-center justify-center rounded-full bg-theme-gray-100">
+                  {cartItems.length > 0 ? cartItems.length : ordersInCart.length}
+                </span>
+                <Dropdown
+                  label="Dropdown"
+                  toggler={<span className="ml-2 font-normal text-sm underline cursor-pointer">Clear</span>}
+                  items={[
+                    {
+                      label: 'Confirm',
+                      onClick: () => {
+                        removeAllOrders();
+                      }
+                    },
+                    { label: 'Cancel', onClick: console.log }
+                  ]}
+                  className="text-sm"
+                  itemListClassName="flex"
+                  itemClassName="px-0 justify-center"
+                />
+              </>
+            ) : null}
+          </div>
+        }
+        tooltip={tooltip?.content ? tooltip : undefined}
+      >
         {contents}
       </Drawer>
+
+      {/* todo: this doesn't work (conflicted: Modal & Drawer?)
+      {showConfirmClear ? (
+        <Modal
+          isOpen={showConfirmClear}
+          onClose={() => setShowConfirmClear(false)}
+          okButton="Confirm"
+          onOKButton={() => removeAllOrders()}
+        >
+          Clear all orders?
+        </Modal>
+      ) : null} */}
     </>
   );
 };

@@ -4,6 +4,7 @@ import { BiCopyAlt, BiCheck } from 'react-icons/bi';
 import { Dropdown } from './dropdown';
 import { useRouter } from 'next/router';
 import { Button } from './button';
+import { ellipsisAddress } from 'src/utils';
 
 export const ConnectButton = () => {
   const { user, signOut } = useAppContext();
@@ -53,7 +54,7 @@ export const ConnectButton = () => {
 
   return (
     <>
-      {connected && <Dropdown label={connected ? `${address?.substring(0, 8)}` : 'Connect'} items={menuItems} />}
+      {connected && <Dropdown label={`${ellipsisAddress(address, 5, 3)}`} items={menuItems} />}
       {!connected && <Button onClick={() => router.push('/connect')}>Connect</Button>}
     </>
   );

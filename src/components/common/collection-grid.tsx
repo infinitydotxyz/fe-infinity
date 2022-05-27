@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FetchMore, CollectionCard } from 'src/components/common';
+import { CollectionCard, ScrollLoader } from 'src/components/common';
 import { apiGet, DEFAULT_LIMIT } from 'src/utils';
 import { CollectionSearchArrayDto, CollectionSearchDto } from '../../utils/types/collection-types';
 
@@ -21,10 +21,18 @@ interface Props {
   className?: string;
   buttonName?: string;
   listMode?: boolean;
+  routerQuery?: string;
   onButtonClick?: (collection: CollectionSearchDto) => void;
 }
 
-export const CollectionGrid = ({ listMode = false, query, className, onButtonClick, buttonName }: Props) => {
+export const CollectionGrid = ({
+  listMode = false,
+  query,
+  className,
+  onButtonClick,
+  buttonName,
+  routerQuery
+}: Props) => {
   const [collections, setCollections] = useState<CollectionSearchDto[]>([]);
   const [error, setError] = useState(false);
   const [cursor, setCursor] = useState<string>('');
@@ -72,12 +80,13 @@ export const CollectionGrid = ({ listMode = false, query, className, onButtonCli
               key={collection.slug}
               collection={collection}
               buttonName={buttonName}
+              routerQuery={routerQuery}
               onButtonClick={onButtonClick}
             />
           ))}
         </div>
 
-        {hasNextPage && <FetchMore onFetchMore={() => handleFetch(cursor)} />}
+        {hasNextPage && <ScrollLoader onFetchMore={() => handleFetch(cursor)} />}
       </div>
     );
   }
@@ -90,12 +99,13 @@ export const CollectionGrid = ({ listMode = false, query, className, onButtonCli
             key={collection.slug}
             collection={collection}
             buttonName={buttonName}
+            routerQuery={routerQuery}
             onButtonClick={onButtonClick}
           />
         ))}
       </div>
 
-      {hasNextPage && <FetchMore onFetchMore={() => handleFetch(cursor)} />}
+      {hasNextPage && <ScrollLoader onFetchMore={() => handleFetch(cursor)} />}
     </div>
   );
 };

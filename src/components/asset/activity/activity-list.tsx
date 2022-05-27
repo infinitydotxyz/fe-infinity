@@ -63,7 +63,7 @@ export const ActivityList: React.FC<ActivityListPropType> = ({
     <div className={className}>
       <div className="mt-4 md:mt-8">
         <div className="flex items-center justify-between">
-          <p className="mt-4 sm:mt-6 sm:mb-4 font-body tracking-base text-black">Activity</p>
+          <p className="mt-4 sm:mt-6 sm:mb-4 font-body tracking-base text-black font-bold">Activity</p>
           <ActivityFilter activityTypes={activityTypes} onChange={handleChange} />
         </div>
       </div>

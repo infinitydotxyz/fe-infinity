@@ -2,7 +2,7 @@ import { CollectionAttributes } from '@infinityxyz/lib-frontend/types/core';
 import React, { useEffect, useState } from 'react';
 import { useFilterContext } from 'src/utils/context/FilterContext';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
-import { Checkbox } from '../common';
+import { Button, Checkbox, TextInputBox } from '../common';
 
 type ValueMapItem = {
   [k: string]: boolean;
@@ -56,9 +56,10 @@ type Props = {
   collectionAddress?: string;
   // traitData: TraitData[];
   onChange: (traitTypes: string[], traitValues: string[]) => void;
+  onClearAll: () => void;
 };
 
-export const TraitSelection = ({ traits, onChange }: Props) => {
+export const TraitSelection = ({ traits, onChange, onClearAll }: Props) => {
   const { filterState } = useFilterContext();
   const [openState, setOpenState] = useState<OpenState>({});
   const [searchState, setSearchState] = useState<SearchState>({});
@@ -126,11 +127,13 @@ export const TraitSelection = ({ traits, onChange }: Props) => {
 
             {openState[item.name] && (
               <div>
-                <input
-                  className="border rounded-lg py-2 px-4 mt-1 font-heading w-[90%]"
+                <TextInputBox
+                  label=""
+                  type="text"
+                  className="border rounded-3xl py-2 px-4 mt-1 font-heading w-[90%]"
                   defaultValue={searchState[item.name]}
-                  onChange={(ev) => {
-                    const text = ev.target.value;
+                  onChange={(value) => {
+                    const text = value;
                     const newSearchState = { ...searchState, [item.name]: text };
                     setSearchState(newSearchState);
                   }}
@@ -174,6 +177,10 @@ export const TraitSelection = ({ traits, onChange }: Props) => {
           </React.Fragment>
         );
       })}
+
+      <Button variant="primary" className="font-heading w-full py-3" onClick={onClearAll}>
+        Clear All
+      </Button>
     </div>
   );
 };

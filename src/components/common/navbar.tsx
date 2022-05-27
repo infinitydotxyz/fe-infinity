@@ -37,9 +37,9 @@ export const Navbar = () => {
         },
         {
           type: 'link',
-          label: 'Orderbook',
+          label: 'Marketplace',
           props: {
-            href: '/market'
+            href: '/marketplace'
           }
         },
         {
@@ -87,7 +87,7 @@ export const Navbar = () => {
         </Menu.Button>
         <Menu.Items
           className={twMerge(
-            `absolute mt-2 p-4 w-72 origin-top-right divide-y divide-gray-100 rounded-3xl z-50
+            `absolute left-0 mt-2 p-4 w-72 origin-top-right divide-y divide-gray-100 rounded-3xl z-50
             border border-gray-200 bg-white shadow-2xl outline-none`
           )}
         >
@@ -127,7 +127,7 @@ export const Navbar = () => {
   );
 
   const desktopNavbar = (
-    <div className="w-full bg-white bg-opacity-70 glass">
+    <div className="w-full bg-white bg-opacity-70 glass font-heading">
       <div className={`${pageStyles} flex space-x-6 items-center py-6 w-full`}>
         <NextLink href="/">
           <SVG.logo className="h-8" />
@@ -164,10 +164,8 @@ export const Navbar = () => {
             )}
           </React.Fragment>
         ))}
-        <div className={`flex space-x-2`}>
-          <ShoppingCartButton />
-          <ConnectButton />
-        </div>
+        <ShoppingCartButton />
+        <ConnectButton />
       </div>
     </div>
   );
@@ -175,7 +173,7 @@ export const Navbar = () => {
   return (
     <>
       {/* sticky had to be set here rather than desktopNavbar to work */}
-      <div className="desktop:visible tabloid:hidden z-2 sticky top-0">{desktopNavbar}</div>
+      <div className="desktop:visible tabloid:hidden z-10 sticky top-0">{desktopNavbar}</div>
       <div className="desktop:hidden tabloid:visible">{mobileNavbar}</div>
     </>
   );

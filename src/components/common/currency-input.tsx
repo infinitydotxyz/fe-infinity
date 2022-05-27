@@ -53,7 +53,7 @@ interface Props2 {
 
 const MenuItem = ({ currency, onClick }: Props2) => {
   return (
-    <div onClick={() => onClick(currency)} className="bg-gray-200 hover:bg-gray-300 py-2 px-4 whitespace-no-wrap">
+    <div onClick={() => onClick(currency)} className="bg-gray-200 hover:bg-gray-300 py-2 px-4 whitespace-nowrap">
       {currency}
     </div>
   );

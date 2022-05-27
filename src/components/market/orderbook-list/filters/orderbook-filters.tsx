@@ -1,7 +1,7 @@
 import { debounce, uniqBy } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
-import { Button, Checkbox, InputBox, TextInputBox } from 'src/components/common';
+import { Button, Checkbox, TextInputBox } from 'src/components/common';
 import { useOrderbook } from '../../OrderbookContext';
 import { CollectionSearchItem, useCollectionCache } from '../collection-cache';
 
@@ -90,11 +90,13 @@ export const OrderbookFilters = () => {
       {!collectionId && (
         <OrderbookFilterItem key="Collection" openState={openState} setOpenState={setOpenState} item="Collection">
           <div>
-            <input
+            <TextInputBox
+              label=""
+              type="text"
               className="border rounded-full py-2 px-4 mt-1 font-heading w-full"
               defaultValue={collectionSearchState}
-              onChange={(ev) => {
-                const text = ev.target.value;
+              onChange={(value) => {
+                const text = value;
                 searchForCollections(text);
               }}
               placeholder="Search"
@@ -149,19 +151,13 @@ export const OrderbookFilters = () => {
       </OrderbookFilterItem>
       <OrderbookFilterItem key="Number of NFTs" openState={openState} setOpenState={setOpenState} item="Number of NFTs">
         <div className="flex flex-col">
-          <InputBox>
-            <div className="flex-1">
-              <label className="block text-xs font-medium text-theme-light-800">Amount of NFTs</label>
-              <div className="flex">
-                <input
-                  type="number"
-                  value={numberOfNfts}
-                  onChange={(e) => updateFilter('numberOfNfts', e.target.value)}
-                  className="p-0 border-none focus:ring-0 block w-full text-base"
-                />
-              </div>
-            </div>
-          </InputBox>
+          <TextInputBox
+            type="number"
+            value={numberOfNfts?.toString()}
+            label=""
+            placeholder=""
+            onChange={(value) => updateFilter('numberOfNfts', value)}
+          />
         </div>
       </OrderbookFilterItem>
     </div>

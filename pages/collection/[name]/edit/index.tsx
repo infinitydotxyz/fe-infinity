@@ -254,6 +254,7 @@ const EditCollectionPage = () => {
           </Heading>
           <SocialsInputGroup>
             <TextInputBox
+              inputClassName="font-normal"
               label="Twitter"
               value={metadata.links?.twitter || ''}
               type="text"
@@ -262,6 +263,7 @@ const EditCollectionPage = () => {
               isFullWidth
             />
             <TextInputBox
+              inputClassName="font-normal"
               label="Instagram"
               value={metadata.links?.instagram || ''}
               type="text"
@@ -272,6 +274,7 @@ const EditCollectionPage = () => {
           </SocialsInputGroup>
           <SocialsInputGroup>
             <TextInputBox
+              inputClassName="font-normal"
               label="Facebook"
               value={metadata.links?.facebook || ''}
               type="text"
@@ -280,6 +283,7 @@ const EditCollectionPage = () => {
               isFullWidth
             />
             <TextInputBox
+              inputClassName="font-normal"
               label="Discord"
               value={metadata.links?.discord || ''}
               type="text"
@@ -290,6 +294,7 @@ const EditCollectionPage = () => {
           </SocialsInputGroup>
           <SocialsInputGroup>
             <TextInputBox
+              inputClassName="font-normal"
               label="Medium"
               value={metadata.links?.medium || ''}
               type="text"
@@ -298,6 +303,7 @@ const EditCollectionPage = () => {
               isFullWidth
             />
             <TextInputBox
+              inputClassName="font-normal"
               label="Telegram"
               value={metadata.links?.telegram || ''}
               type="text"
@@ -308,6 +314,7 @@ const EditCollectionPage = () => {
           </SocialsInputGroup>
           <SocialsInputGroup>
             <TextInputBox
+              inputClassName="font-normal"
               label="External"
               value={metadata.links?.external || ''}
               type="text"
@@ -316,6 +323,7 @@ const EditCollectionPage = () => {
               isFullWidth
             />
             <TextInputBox
+              inputClassName="font-normal"
               label="Wiki"
               value={metadata.links?.wiki || ''}
               type="text"
@@ -332,6 +340,7 @@ const EditCollectionPage = () => {
           {metadata.benefits?.map((benefit, i) => (
             <TextInputBox
               key={i}
+              inputClassName="font-normal"
               label={`Benefit ${i + 1}`}
               value={benefit || ''}
               type="text"
@@ -356,6 +365,7 @@ const EditCollectionPage = () => {
           {metadata.partnerships?.map((partnership, i) => (
             <SocialsInputGroup key={i}>
               <TextInputBox
+                inputClassName="font-normal"
                 label="Partner name"
                 value={partnership?.name || ''}
                 type="text"
@@ -366,6 +376,7 @@ const EditCollectionPage = () => {
                 isFullWidth
               />
               <TextInputBox
+                inputClassName="font-normal"
                 label="Partnership website"
                 value={partnership?.link || ''}
                 type="text"
@@ -432,6 +443,7 @@ const EditCollectionPage = () => {
           {metadata.integrations?.discord?.channels?.map((channel, i) => (
             <TextInputBox
               key={i}
+              inputClassName="font-normal"
               label="Channel name or ID"
               value={channel || ''}
               type="text"

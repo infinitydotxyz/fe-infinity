@@ -1,10 +1,10 @@
 import React from 'react';
-import { BiSearchAlt2 } from 'react-icons/bi';
 import { useFetch } from 'src/utils';
 import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import { Combobox } from '@headlessui/react';
 import { SVG } from './svg';
+import { FiSearch } from 'react-icons/fi';
 
 type CollectionItem = BaseCollection & {
   name: string;
@@ -81,7 +81,7 @@ export const SearchInput: React.FC<Props> = ({ expanded }) => {
       },
       element: {
         className: `
-          flex-[1] w-5 h-5 max-h-full
+          flex-[1] w-[18px] h-[18px] max-h-full
           ${isActive ? 'justify-self-start' : 'justify-self-end'}
         `
       }
@@ -105,6 +105,7 @@ export const SearchInput: React.FC<Props> = ({ expanded }) => {
         `,
         ref: inputRef,
         onBlur: deactivate,
+        autoComplete: 'off',
         onChange: (e: React.FormEvent<HTMLInputElement>) => {
           const value = e.currentTarget.value;
           setText(value);
@@ -156,7 +157,7 @@ export const SearchInput: React.FC<Props> = ({ expanded }) => {
   const content = {
     search: {
       label: 'Search',
-      icon: BiSearchAlt2
+      icon: FiSearch
     }
   };
   return (
@@ -171,7 +172,11 @@ export const SearchInput: React.FC<Props> = ({ expanded }) => {
             {filtered.map((collection, index) => (
               <Combobox.Option key={index} value={collection} {...styles?.input?.options?.option}>
                 <div {...styles?.collection?.image?.container}>
-                  <img src={collection?.profileImage} alt={collection?.name} {...styles?.collection?.image?.element} />
+                  <img
+                    className="w-8 h-8 rounded-full overflow-hidden"
+                    src={collection?.profileImage}
+                    alt={collection?.name}
+                  />
                 </div>
                 <div {...styles?.collection?.name}>{collection?.name}</div>
                 <div {...styles?.collection?.blueCheck}>

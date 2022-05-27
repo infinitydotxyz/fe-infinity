@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { ellipsisString } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { addUserComments, fetchComments, fetchMoreComments } from 'src/utils/firestore/firestoreUtils';
+import { addUserComments, Comment, fetchComments, fetchMoreComments } from 'src/utils/firestore/firestoreUtils';
 import { format } from 'timeago.js';
-import { Button, Drawer, FetchMore } from 'src/components/common';
-import { Comment, FeedEvent } from './feed-item';
+import { Button, Drawer, NextLink, FetchMore } from 'src/components/common';
+import { FeedEvent } from './feed-item';
 
 interface Props {
   isOpen: boolean;
@@ -35,7 +35,12 @@ export const CommentPanel = ({ isOpen, onClose, event, contentOnly }: Props) => 
     if (!checkSignedIn()) {
       return;
     }
-    await addUserComments(event.id || '', user?.address ?? '', text);
+    await addUserComments({
+      eventId: event.id ?? '',
+      userAddress: user?.address ?? '',
+      username: user?.username ?? '',
+      comment: text
+    });
     setData([]);
     setCurrentPage(0);
     void fetchData();
@@ -71,7 +76,9 @@ export const CommentPanel = ({ isOpen, onClose, event, contentOnly }: Props) => 
                 src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
                 className="border rounded-3xl bg-gray-100 p-5"
               />
-              <div className="ml-4 font-bold">{ellipsisString(item.userAddress)}</div>
+              <NextLink href={`/profile/${item.username ?? item.userAddress}`} className="ml-4 font-bold">
+                {ellipsisString(item.username ?? item.userAddress)}
+              </NextLink>
               <div className="ml-4 text-secondary" title={new Date(item.timestamp).toLocaleString()}>
                 {format(item.timestamp)}
               </div>

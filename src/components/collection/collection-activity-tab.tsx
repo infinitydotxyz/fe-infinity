@@ -19,7 +19,7 @@ interface ActivityTabProps {
 // };
 
 // export const ActivityTab = ({ dailyStats, weeklyStats }: ActivityTabProps)=> {
-export const ActivityTab = ({ collectionAddress }: ActivityTabProps) => {
+export const CollectionActivityTab = ({ collectionAddress }: ActivityTabProps) => {
   // const [type, setType] = useState<'DAY' | 'WEEK'>('DAY');
   // const [data, setData] = useState<ChartData[] | []>([]);
 

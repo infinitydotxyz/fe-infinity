@@ -32,7 +32,9 @@ export async function getSignedOBOrder(
   const infinityExchange = new Contract(infinityExchangeAddress, infinityExchangeAbi, signer);
   const signedOrder = await prepareOBOrder(user, chainId, signer, order, infinityExchange, infinityFeeTreasuryAddress);
   if (!signedOrder) {
-    console.error('signOBSpecOrder: failed to sign order');
+    const msg = 'signOBSpecOrder: failed to sign order';
+    console.error(msg);
+    throw msg;
     return undefined;
   }
   const signedOBOrder: SignedOBOrder = { ...order, signedOrder };

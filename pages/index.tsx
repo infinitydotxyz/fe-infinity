@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 import Router from 'next/router';
+import { isLocalhost } from 'src/utils';
 
 const Home = () => {
   useEffect(() => {
     const { pathname } = Router;
     if (pathname === '/') {
-      void Router.push('/test');
+      void Router.push(isLocalhost() ? '/test' : '/analytics/trending/weekly');
     }
   });
 

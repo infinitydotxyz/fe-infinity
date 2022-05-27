@@ -7,7 +7,7 @@ export const getUserProfileSchema = ({ user }: { user: User }) =>
     bio: Yup.string().max(250, 'Max is 250 characters.'),
     displayName: Yup.string(),
     username: Yup.string()
-      .min(5, 'Must be at least 5 characters.')
+      .min(3, 'Must be at least 3 characters.')
       .max(14, 'Max is 14 characters.')
       .matches(/[a-zA-Z0-9_]+$/, 'a-z, A-Z, 0-9, _ can be used')
       .test('Unique username', 'Username already in use', (value) => {

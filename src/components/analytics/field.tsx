@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { GoTriangleUp, GoTriangleDown } from 'react-icons/go';
-import { AiOutlinePlus, AiOutlineCaretUp, AiOutlineCaretDown } from 'react-icons/ai';
+import { AiOutlineCaretUp, AiOutlineCaretDown } from 'react-icons/ai';
 
 interface Props {
   type?: string;
@@ -9,9 +9,10 @@ interface Props {
   sortable?: boolean;
   onSort?: ((direction: string) => void) | ((direction: string) => void) | null | undefined;
   onClick?: () => void;
+  content?: ReactNode;
 }
 
-export const Field = ({ onSort, sortable = false, onClick, type, label, value }: Props) => {
+export const Field = ({ onSort, sortable = false, onClick, type, label, value, content }: Props) => {
   const [sortOrder, setSortOrder] = useState('desc');
   const styles = {
     stat: {
@@ -101,11 +102,6 @@ export const Field = ({ onSort, sortable = false, onClick, type, label, value }:
             bg-black rounded-full p-2
             grid
           `
-        },
-        icon: {
-          className: `
-            text-white font-bold
-          `
         }
       }
     },
@@ -118,7 +114,7 @@ export const Field = ({ onSort, sortable = false, onClick, type, label, value }:
       },
       element: {
         className: `
-          text-theme-light-800 text-2xl 
+          text-theme-light-800 text-2xl font-heading
         `
       }
     },
@@ -139,8 +135,8 @@ export const Field = ({ onSort, sortable = false, onClick, type, label, value }:
     number: {
       container: {
         className: `
-          w-full h-full overflow-hidden
-          grid justify-start items-center
+          w-[100px] h-full overflow-hidden
+          grid justify-start items-center truncate
           ${sortable ? 'cursor-pointer' : ''}
         `
       },
@@ -162,7 +158,7 @@ export const Field = ({ onSort, sortable = false, onClick, type, label, value }:
     change: {
       container: {
         className: `
-          w-full h-full overflow-hidden
+          w-[100px] h-full overflow-hidden
           grid justify-center items-center
           ${sortable ? 'cursor-pointer' : ''}
         `
@@ -189,7 +185,7 @@ export const Field = ({ onSort, sortable = false, onClick, type, label, value }:
     percentage: {
       container: {
         className: `
-          w-full h-full overflow-hidden
+          w-[100px] h-full overflow-hidden
           grid justify-start items-center px-4
           ${sortable ? 'cursor-pointer' : ''}
         `
@@ -220,12 +216,6 @@ export const Field = ({ onSort, sortable = false, onClick, type, label, value }:
           font-mono font-normal
           text-sm z-20
         `
-      },
-      value: {
-        className: `
-          font-mono font-bold
-          text-sm z-20
-        `
       }
     }
   };
@@ -252,24 +242,24 @@ export const Field = ({ onSort, sortable = false, onClick, type, label, value }:
           )}
           {type === 'string' && (
             <div {...styles?.string?.container} onClick={onClick}>
-              <p {...styles?.string?.element}>{value}</p>
+              <div {...styles?.string?.element}>{value}</div>
             </div>
           )}
           {type === 'index' && (
             <div {...styles?.index?.container} onClick={onClick}>
-              <p {...styles?.index?.element}>{value}</p>
+              <div {...styles?.index?.element}>{value}</div>
             </div>
           )}
           {type === 'number' && (
             <div {...styles?.number?.container} onClick={handleOnClick}>
-              <p {...styles?.number?.label}>{label}</p>
-              <p {...styles?.number?.value}>{value}</p>
+              <div {...styles?.number?.label}>{label}</div>
+              <div {...styles?.number?.value}>{value}</div>
             </div>
           )}
           {type === 'change' && (
             <div {...styles?.change?.container} onClick={handleOnClick}>
-              <p {...styles?.change?.label}>{label}</p>
-              <p {...styles?.change?.value(Number(value))}>
+              <div {...styles?.change?.label}>{label}</div>
+              <div {...styles?.change?.value(Number(value))}>
                 {Number(value) > 0 ? (
                   <>
                     <GoTriangleUp /> {value?.toLocaleString()} %
@@ -281,7 +271,7 @@ export const Field = ({ onSort, sortable = false, onClick, type, label, value }:
                 ) : (
                   `-`
                 )}
-              </p>
+              </div>
             </div>
           )}
           {type === 'percentage' && (
@@ -289,19 +279,13 @@ export const Field = ({ onSort, sortable = false, onClick, type, label, value }:
               <div {...styles?.percentage?.pill}>
                 <div {...styles?.percentage?.progress}></div>
                 <div {...styles?.percentage?.grid}>
-                  <p {...styles?.percentage?.label}>{label}</p>
-                  <p {...styles?.percentage?.value}>{value}</p>
+                  <div {...styles?.percentage?.label}>{label}</div>
+                  <div className="font-mono font-bold  text-sm z-20">{value}</div>
                 </div>
               </div>
             </div>
           )}
-          {type === 'action' && (
-            <div {...styles?.action?.container}>
-              <button {...styles?.action?.button?.container}>
-                <AiOutlinePlus {...styles?.action?.button?.icon} />
-              </button>
-            </div>
-          )}
+          {type === 'action' && <div {...styles?.action?.container}>{content}</div>}
         </div>
         {sortable && (
           <div {...styles?.stat?.sorting?.container}>

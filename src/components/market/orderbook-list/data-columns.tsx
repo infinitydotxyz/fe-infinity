@@ -1,4 +1,5 @@
 import { OBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { useRouter } from 'next/router';
 
 export type DataColumnType = 'Name' | 'Text' | 'Currency' | 'Button';
 export type DataColumnField =
@@ -17,15 +18,22 @@ export interface DataColumn {
   type: DataColumnType;
   field: DataColumnField;
   width: string;
+  onClick?: () => void;
 }
 
 export const defaultDataColumns = (order: OBOrder): DataColumn[] => {
+  const router = useRouter();
   return [
     {
       name: 'Name',
       type: 'Name',
       field: 'name',
-      width: '2fr'
+      width: '2fr',
+      onClick: () => {
+        // console.log('order', order);
+        // const maker = order.makerUsername || order.makerAddress;
+        // router.push(`/profile/${maker}`);
+      }
     },
     {
       name: 'Event',
@@ -34,13 +42,13 @@ export const defaultDataColumns = (order: OBOrder): DataColumn[] => {
       width: '1fr'
     },
     {
-      name: order.isSellOrder ? 'Min sale price' : 'Max buy price',
+      name: 'Price', // order.isSellOrder ? 'Min sale price' : 'Max buy price',
       type: 'Currency',
       field: order.isSellOrder ? 'minSalePrice' : 'maxBuyPrice',
       width: '1fr'
     },
     {
-      name: 'NFT Amount',
+      name: '# NFTs',
       type: 'Text',
       field: 'numNFTs',
       width: '1fr'
@@ -49,10 +57,14 @@ export const defaultDataColumns = (order: OBOrder): DataColumn[] => {
       name: 'From',
       type: 'Text',
       field: 'makerUsername',
-      width: '1fr'
+      width: '1fr',
+      onClick: () => {
+        const maker = order.makerUsername || order.makerAddress;
+        router.push(`/profile/${maker}`);
+      }
     },
     {
-      name: 'Expiry Date',
+      name: 'Expiry',
       type: 'Text',
       field: 'expirationDate',
       width: '1fr'

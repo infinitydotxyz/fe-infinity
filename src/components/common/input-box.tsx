@@ -16,18 +16,34 @@ interface Props {
   renderRightIcon?: () => ReactElement;
   icon?: ReactNode;
   labelClassname?: string;
+  className?: string;
 }
 
-export const InputBox = ({ tooltip, label, children, icon, renderRightIcon, isFullWidth, labelClassname }: Props) => {
+export const InputBox = ({
+  tooltip,
+  label,
+  children,
+  icon,
+  renderRightIcon,
+  isFullWidth,
+  labelClassname,
+  className = ''
+}: Props) => {
   const [showTooltip, setShowTooltip] = useState(false);
 
   return (
     <TooltipWrapper show={showTooltip} tooltip={tooltip} className={classNames({ 'w-full': isFullWidth })}>
-      <div className={twMerge(inputBorderColor, 'py-3 pl-6 pr-2 border rounded-3xl w-full flex items-center')}>
+      <div
+        className={twMerge(
+          inputBorderColor,
+          'py-3 pl-6 pr-2 border rounded-3xl w-full flex items-center focus-within:border-theme-gray-700',
+          className
+        )}
+      >
         {icon && <span className="pr-8">{icon}</span>}
         <div className="w-full">
           {label && (
-            <label className={twMerge('block font-normal font-heading text-sm text-theme-light-800', labelClassname)}>
+            <label className={twMerge('block font-normal font-heading text-sm text-theme-gray-700', labelClassname)}>
               {label}
             </label>
           )}
@@ -98,6 +114,7 @@ export const ComboInputBox = <T extends ComboBoxBaseType>({ tooltip, label, opti
 
 interface Props4 {
   label: string;
+  defaultValue?: string;
   value?: string;
   type: string;
   placeholder: string;
@@ -108,10 +125,14 @@ interface Props4 {
   isFullWidth?: boolean;
   autoFocus?: boolean;
   renderRightIcon?: () => ReactElement;
+  bindValue?: boolean;
+  className?: string;
+  inputClassName?: string;
 }
 
 export const TextInputBox = ({
   tooltip,
+  defaultValue = '',
   value = '',
   label,
   icon,
@@ -121,23 +142,38 @@ export const TextInputBox = ({
   onChange,
   isFullWidth,
   autoFocus = false,
-  renderRightIcon
+  bindValue = false,
+  renderRightIcon,
+  className,
+  inputClassName = ''
 }: Props4) => {
+  const moreProps: { [key: string]: string } = {};
+  if (bindValue === true) {
+    moreProps.value = value;
+  }
   return (
-    <InputBox label={label} tooltip={tooltip} icon={icon} isFullWidth={isFullWidth} renderRightIcon={renderRightIcon}>
+    <InputBox
+      label={label}
+      tooltip={tooltip}
+      icon={icon}
+      isFullWidth={isFullWidth}
+      renderRightIcon={renderRightIcon}
+      className={className}
+    >
       <div className="flex items-center w-full">
         {addEthSymbol && <div className="pr-2">{EthSymbol}</div>}
         <input
           autoFocus={autoFocus}
           type={type}
-          value={value}
+          defaultValue={defaultValue ? defaultValue : value}
           onChange={(e) => {
             if (onChange) {
               onChange(e.target.value);
             }
           }}
-          className="p-0 border-none focus:ring-0 font-bold block w-full font-heading"
+          className={twMerge(`p-0 border-none focus:ring-0 block w-full font-heading ${inputClassName}`)}
           placeholder={placeholder}
+          {...moreProps}
         />
       </div>
     </InputBox>

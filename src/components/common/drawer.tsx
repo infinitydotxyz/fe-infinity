@@ -8,7 +8,7 @@ import { iconButtonStyle } from 'src/utils/ui-constants';
 interface Props {
   open: boolean;
   onClose: () => void;
-  title: string;
+  title: ReactNode;
   subtitle?: string;
   divide?: boolean;
   tooltip?: TooltipSpec;
@@ -50,7 +50,7 @@ export const Drawer = ({ open, tooltip, subtitle, divide, onClose, title, childr
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="z-50 fixed inset-0 overflow-hidden" onClose={onClose}>
         <div className="absolute inset-0 overflow-hidden">
-          <Dialog.Overlay className="absolute inset-0 backdrop-blur-xl" />
+          <Dialog.Overlay className="absolute inset-0" />
           <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16">
             <Transition.Child
               as={Fragment}

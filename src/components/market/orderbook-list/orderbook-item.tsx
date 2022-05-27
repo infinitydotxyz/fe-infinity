@@ -1,6 +1,8 @@
 import { OBOrder, OBOrderItem, OBTokenInfo } from '@infinityxyz/lib-frontend/types/core';
 import { ReactNode } from 'react';
 import { NextLink } from 'src/components/common';
+import { useRouter } from 'next/router';
+import { BLANK_IMG } from 'src/utils';
 
 type Props4 = {
   content?: ReactNode;
@@ -11,6 +13,8 @@ type Props4 = {
 };
 
 export const OrderbookItem = ({ title, content, nameItem, order }: Props4): JSX.Element => {
+  const router = useRouter();
+
   if (nameItem) {
     // one collection
     if (order.nfts.length === 1) {
@@ -19,11 +23,25 @@ export const OrderbookItem = ({ title, content, nameItem, order }: Props4): JSX.
       // one item from one collection
       if (nft.tokens.length === 1) {
         const token = nft.tokens[0];
-        return <SingleCollectionCell image={token.tokenImage} title={nft.collectionName} token={token} />;
+        return (
+          <SingleCollectionCell
+            image={token?.tokenImage || nft.collectionImage}
+            title={nft.collectionName}
+            orderNft={nft}
+            token={token}
+          />
+        );
         // multiple items from one collection
       } else {
         return (
-          <SingleCollectionCell image={nft.collectionImage} title={nft.collectionName} count={nft.tokens.length} />
+          <SingleCollectionCell
+            onClickTitle={() => {
+              router.push(`/collection/${nft.collectionSlug}`);
+            }}
+            image={nft.collectionImage}
+            title={nft.collectionName}
+            count={nft.tokens.length}
+          />
         );
       }
     }
@@ -37,7 +55,7 @@ export const OrderbookItem = ({ title, content, nameItem, order }: Props4): JSX.
   return (
     <div className="flex flex-col min-w-0">
       <div className="text-gray-500">{title}</div>
-      {content}
+      <div className="font-heading">{content}</div>
     </div>
   );
 };
@@ -48,7 +66,7 @@ type MultiCollectionCellProps = {
 
 const MultiCollectionCell = ({ nfts }: MultiCollectionCellProps) => {
   return (
-    <div className="flex gap-2 items-center mb-3">
+    <div className="flex gap-2 items-center">
       <div className="flex -space-x-8 overflow-hidden">
         {nfts.map((nft: OBOrderItem) => {
           return (
@@ -71,16 +89,30 @@ const MultiCollectionCell = ({ nfts }: MultiCollectionCellProps) => {
 type SingleCollectionCellProps = {
   image: string;
   title: string;
+  orderNft?: OBOrderItem;
   token?: OBTokenInfo;
   count?: number;
+  onClickTitle?: () => void;
 };
 
-const SingleCollectionCell = ({ image, title, token, count = 0 }: SingleCollectionCellProps) => {
+const SingleCollectionCell = ({
+  image,
+  title,
+  onClickTitle,
+  orderNft,
+  token,
+  count = 0
+}: SingleCollectionCellProps) => {
   return (
-    <div className="flex gap-2 items-center mb-3">
+    <div className="flex gap-2 items-center">
       <div className="flex justify-center shrink-0 h-12 w-12">
         <span className="inline-block">
-          <img className="h-12 w-12 rounded-2xl" src={image} alt="" />
+          {image ? (
+            <img className="h-12 w-12 rounded-full" src={image} alt="" />
+          ) : (
+            <img className="h-12 w-12 rounded-full" src={BLANK_IMG} alt="" />
+          )}
+
           {count > 1 && (
             <div className="text-xs text-center pt-1 absolute top-0 right-0 block h-6 w-6 transform -translate-y-1/2 translate-x-1/2 rounded-full bg-white">
               {count}
@@ -89,11 +121,28 @@ const SingleCollectionCell = ({ image, title, token, count = 0 }: SingleCollecti
         </span>
       </div>
 
-      <div className="flex flex-col truncate">
-        <div className="truncate">{title}</div>
+      <div className={`flex flex-col truncate ${onClickTitle ? 'cursor-pointer' : ''}`}>
+        {/* <div className="font-bold whitespace-pre-wrap" onClick={onClickTitle}>
+          {title}
+        </div> */}
+        {orderNft?.collectionSlug ? (
+          <NextLink
+            href={`/collection/${orderNft?.collectionSlug}`}
+            className="font-bold whitespace-pre-wrap"
+            title={title}
+          >
+            {title}
+          </NextLink>
+        ) : (
+          <div className="font-bold whitespace-pre-wrap cursor-auto">{title}</div>
+        )}
 
         {token && (
-          <NextLink href={`/collection/${token.tokenId}`} className="truncate font-bold">
+          <NextLink
+            href={`/asset/1/${orderNft?.collectionAddress}/${token.tokenId}`}
+            className="truncate"
+            title={token?.tokenName}
+          >
             {token?.tokenName}
           </NextLink>
         )}

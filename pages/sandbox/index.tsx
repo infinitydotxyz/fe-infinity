@@ -24,7 +24,8 @@ import {
   SVG,
   Checkbox,
   Modal,
-  PopoverButton
+  PopoverButton,
+  TextInputBox
 } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 
@@ -58,6 +59,7 @@ const SandboxPage = () => {
   const [currency, setCurrency] = useState<number>(12.33);
   const [checked, setChecked] = useState<boolean>(false);
   const [checked2, setChecked2] = useState<boolean>(false);
+  const [switchChecked, setSwitchChecked] = useState<boolean>(false);
   const [comboValue, setComboValue] = useState<ComboBoxBaseType>(comboValues[0]);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [activityTypes, setActivityTypes] = useState<EventType[]>([]);
@@ -200,7 +202,7 @@ const SandboxPage = () => {
       </div>
 
       <SBHeader># Card - WIP</SBHeader>
-      <div className="flex flex-row space-x-4">
+      <div className="flex flex-row space-x-4 w-1/2">
         <Card
           data={cardTestData[0]}
           cardActions={[
@@ -224,6 +226,27 @@ const SandboxPage = () => {
           ]}
         />
       </div>
+
+      <SBHeader># TextInputBox</SBHeader>
+      <TextInputBox
+        // autoFocus={true}
+        type="text"
+        value={'2.5'}
+        label=""
+        placeholder=""
+        className=""
+        onChange={(value) => console.log(value)}
+      />
+      <TextInputBox
+        // autoFocus={true}
+        renderRightIcon={() => <FaEdit />}
+        type="text"
+        value={'2.5'}
+        label="Label"
+        placeholder=""
+        className="mt-4"
+        onChange={(value) => console.log(value)}
+      />
 
       <SBHeader># CurrencyInput</SBHeader>
       <CurrencyInput
@@ -249,7 +272,14 @@ const SandboxPage = () => {
 
       <SBHeader># Switch</SBHeader>
       <div className="w-1/2">
-        <Switch title="Dark mode" />
+        <Switch
+          title="Dark mode"
+          checked={switchChecked}
+          onChange={() => {
+            console.log('switched');
+            setSwitchChecked(!switchChecked);
+          }}
+        />
       </div>
 
       <SBHeader># ComboBox</SBHeader>

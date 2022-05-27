@@ -28,11 +28,13 @@ const COMMENTS_PER_PAGE = 20;
 export type FeedFilter = {
   types?: FeedEventType[];
   collectionAddress?: string;
+  tokenId?: string;
   userAddress?: string;
 };
 
 export type Comment = {
   userAddress: string;
+  username?: string;
   comment: string;
   timestamp: number;
 };
@@ -98,6 +100,7 @@ export async function subscribe(collectionPath: string, filter: FeedFilter, onCh
 
     let q;
     if (filter?.types && filter?.types.length > 0 && filter?.collectionAddress) {
+      // find events of a Collection & Filter
       q = query(
         coll,
         where('type', 'in', filter?.types),
@@ -106,6 +109,7 @@ export async function subscribe(collectionPath: string, filter: FeedFilter, onCh
         limit(EVENTS_PER_PAGE)
       );
     } else if (filter?.types && filter?.types.length > 0 && filter?.userAddress) {
+      // find events of a User & Filter
       q = query(
         coll,
         where('type', 'in', filter?.types),
@@ -114,8 +118,19 @@ export async function subscribe(collectionPath: string, filter: FeedFilter, onCh
         limit(EVENTS_PER_PAGE)
       );
     } else if (filter?.types && filter?.types.length > 0) {
+      // find Global Events & Filter
       q = query(coll, where('type', 'in', filter?.types), orderBy('timestamp', 'desc'), limit(EVENTS_PER_PAGE));
+    } else if (filter?.tokenId) {
+      // find events of a Token (no filters)
+      q = query(
+        coll,
+        where('collectionAddress', '==', filter?.collectionAddress),
+        where('tokenId', '==', filter?.tokenId),
+        orderBy('timestamp', 'desc'),
+        limit(EVENTS_PER_PAGE)
+      );
     } else if (filter?.collectionAddress) {
+      // find events of a Collection (no filters)
       q = query(
         coll,
         where('collectionAddress', '==', filter?.collectionAddress),
@@ -123,9 +138,11 @@ export async function subscribe(collectionPath: string, filter: FeedFilter, onCh
         limit(EVENTS_PER_PAGE)
       );
     } else if (filter?.userAddress) {
+      // find events of a User (no filters)
       // console.log('filter?.userAddress', filter?.userAddress);
       q = query(coll, where('buyer', '==', filter?.userAddress), orderBy('timestamp', 'desc'), limit(EVENTS_PER_PAGE));
     } else {
+      // find Global Events (no filters)
       q = query(coll, orderBy('timestamp', 'desc'), limit(EVENTS_PER_PAGE)); // query(coll, limit(3), orderBy('timestamp', 'desc'))
     }
 
@@ -137,6 +154,7 @@ export async function subscribe(collectionPath: string, filter: FeedFilter, onCh
         if (onChange && change.type === 'added') {
           const docData = { ...change.doc.data(), id: change.doc.id };
           lastDoc = change.doc;
+          // console.log('change.doc', change.doc.data());
           onChange(change.type, docData as FeedEvent);
         }
       });
@@ -166,10 +184,20 @@ export async function addUserLike(eventId: string, userAccount: string, doneCall
   }
 }
 
-export async function addUserComments(eventId: string, userAddress: string, comment: string) {
+export async function addUserComments({
+  eventId,
+  userAddress,
+  username,
+  comment
+}: {
+  eventId: string;
+  userAddress: string;
+  username?: string;
+  comment: string;
+}) {
   const timestamp = +new Date();
   const docRef = doc(firestoreDb, 'feed', eventId, 'userComments', userAddress + '_' + timestamp);
-  await setDoc(docRef, { userAddress, comment, timestamp });
+  await setDoc(docRef, { userAddress, username, comment, timestamp });
   increaseComments(userAddress ?? '', eventId);
 }
 

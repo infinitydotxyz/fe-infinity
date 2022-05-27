@@ -1,5 +1,6 @@
 import { FaPen } from 'react-icons/fa';
 import { useRouter } from 'next/router';
+import { BGImage } from '../common';
 
 interface UserBannerImageProps {
   imgSrc?: string;
@@ -17,16 +18,15 @@ export const UserBannerImage = ({ imgSrc, isOwner = false }: UserBannerImageProp
   };
 
   return (
-    <div className="h-48 lg:h-64 xl:h-72 overflow-hidden bg-theme-light-200">
+    <div className="h-48 lg:h-64 xl:h-72 overflow-hidden bg-theme-gray-100">
       <div className="w-full h-full overflow-hidden">
         {imgSrc ? (
-          <div
-            className={`w-full h-full bg-cover bg-center bg-no-repeat`}
-            style={{ backgroundImage: `url(${imgSrc})` }}
-          />
+          <BGImage src={imgSrc} />
         ) : (
           <div
-            className="w-full h-full flex flex-row items-center justify-center bg-theme-light-200 cursor-pointer"
+            className={`w-full h-full flex flex-row items-center justify-center bg-theme-gray-100 ${
+              isOwner ? 'hover:bg-theme-gray-200 cursor-pointer' : ''
+            }`}
             onClick={handleClick}
           >
             {isOwner && <FaPen />}

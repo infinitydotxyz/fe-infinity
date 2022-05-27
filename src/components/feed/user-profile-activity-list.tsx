@@ -1,16 +1,26 @@
 import { useEffect, useState } from 'react';
 import { FeedItem, FeedEvent } from './feed-item';
-import { COLL_FEED, FeedFilter, subscribe } from 'src/utils/firestore/firestoreUtils';
+import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
 import { CommentPanel } from './comment-panel';
 import { FeedEventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { FeedFilterDropdown } from './feed-filter-dropdown';
 import { ActivityItem } from './activity-item';
 import { UserActivityItem } from './user-activity-item';
+import { apiGet } from 'src/utils';
+// import { useAppContext } from 'src/utils/context/AppContext';
+import { FetchMore, Spinner } from '../common';
 
-let eventsInit = false;
+type UserActivityEvent = FeedEvent & {
+  makerAddress?: string;
+  makerUsername?: string;
+  takerAddress?: string;
+  takerUsername?: string;
+  usersInvolved?: string[];
+  startPriceEth?: number;
+};
+const ITEMS_LIMIT = 10;
 
-interface UserProfileFeedProps {
-  header: string;
+interface UserProfileActivityListProps {
   userAddress?: string;
   types?: FeedEventType[];
   forActivity?: boolean;
@@ -18,46 +28,68 @@ interface UserProfileFeedProps {
   className?: string;
 }
 
-export const UserProfileFeed = ({
-  header,
+export const UserProfileActivityList = ({
   userAddress,
   types,
   forActivity,
   forUserActivity,
   className
-}: UserProfileFeedProps) => {
+}: UserProfileActivityListProps) => {
+  // const { user } = useAppContext();
   const [events, setEvents] = useState<FeedEvent[]>([]);
-  const [newEvents, setNewEvents] = useState<FeedEvent[]>([]); // new feed events
   const [filter, setFilter] = useState<FeedFilter>({ userAddress, types });
   const [commentPanelEvent, setCommentPanelEvent] = useState<FeedEvent | null>(null);
   const [filteringTypes, setFilteringTypes] = useState<FeedEventType[]>([]);
+  const [data, setData] = useState<FeedEvent[]>([]);
+  const [isFetching, setIsFetching] = useState(false);
+  const [cursor, setCursor] = useState('');
+  const [hasNextPage, setHasNextPage] = useState(false);
 
-  const getEvents = () => {
-    try {
-      subscribe(COLL_FEED, filter, (type: string, data: FeedEvent) => {
-        if (type === 'added') {
-          if (eventsInit === false) {
-            setEvents((currentEvents) => [data, ...currentEvents]); // add initial feed events.
-            setTimeout(() => {
-              eventsInit = true;
-            }, 3000);
-          } else {
-            setNewEvents((currentEvents) => [data, ...currentEvents]);
-          }
-        } else {
-          setEvents((currentEvents) => [...currentEvents, data]);
-        }
+  const fetchData = async (isRefresh = false) => {
+    setIsFetching(true);
+    let newCursor = cursor;
+    if (isRefresh) {
+      newCursor = '';
+    }
+
+    const { result } = await apiGet(`/user/${userAddress}/activity`, {
+      query: {
+        limit: ITEMS_LIMIT,
+        cursor: newCursor,
+        events: filteringTypes
+      }
+    });
+    console.log('filteringTypes', filteringTypes);
+
+    if (result?.hasNextPage === true) {
+      setCursor(result?.cursor);
+    }
+    setHasNextPage(result?.hasNextPage);
+
+    const moreData: FeedEvent[] = [];
+    // convert UserActivityEvent[] to FeedEvent[] for rendering.
+    result?.data?.map((activity: UserActivityEvent) => {
+      moreData.push({
+        ...activity,
+        seller: activity.makerAddress ?? '',
+        sellerDisplayName: activity.makerUsername === '_____' ? '' : activity.makerUsername ?? '',
+        buyer: activity.takerAddress ?? '',
+        buyerDisplayName: activity.takerUsername === '_____' ? '' : activity.takerUsername ?? '',
+        price: activity.startPriceEth ?? 0
       });
-    } catch (err) {
-      console.error('ERR: ', err);
+    });
+
+    setIsFetching(false);
+    if (isRefresh) {
+      setData([...moreData]);
+    } else {
+      setData([...data, ...moreData]);
     }
   };
 
   useEffect(() => {
-    eventsInit = false;
-    setEvents([]);
-    setNewEvents([]);
-    getEvents();
+    setData([]);
+    fetchData(true);
   }, [filter]);
 
   const onChangeFilterDropdown = (checked: boolean, checkId: string) => {
@@ -87,27 +119,38 @@ export const UserProfileFeed = ({
   };
 
   return (
-    <div className={`min-h-[1024px] ${className}`}>
-      <div className="flex justify-between">
-        <div className="text-3xl mb-6">{header}</div>
-        <FeedFilterDropdown selectedTypes={filteringTypes} onChange={onChangeFilterDropdown} />
+    <div className={`min-h-[1024px] mt-[-66px] ${className}`}>
+      <div className="flex flex-row-reverse mb-8 bg-transparent">
+        <FeedFilterDropdown
+          selectedTypes={filteringTypes}
+          onChange={onChangeFilterDropdown}
+          options={[
+            {
+              label: 'All',
+              value: ''
+            },
+            {
+              label: 'Listings',
+              value: 'listing'
+            },
+            {
+              label: 'Offers',
+              value: 'offer'
+            },
+            {
+              label: 'Sales',
+              value: 'sale'
+            }
+          ]}
+        />
       </div>
 
-      {newEvents.length > 0 ? (
-        <div
-          //  w-1/3 sm:w-full
-          className="p-4 border border-gray-200 hover:bg-gray-100 mb-4 cursor-pointer"
-          onClick={() => {
-            setEvents((currentEvents) => [...newEvents, ...currentEvents]);
-            setNewEvents([]);
-          }}
-        >
-          Show {newEvents.length} more event{newEvents.length === 1 ? '' : 's'}.
-        </div>
-      ) : null}
+      <ul className="space-y-8 pointer-events-auto">
+        {isFetching && <Spinner />}
 
-      <ul className="space-y-8">
-        {events.map((event, idx) => {
+        {hasNextPage === false && data?.length === 0 ? <div>No results found.</div> : null}
+
+        {data?.map((event, idx) => {
           if (forActivity) {
             return <ActivityItem key={idx} event={event} />;
           }
@@ -150,6 +193,15 @@ export const UserProfileFeed = ({
             </li>
           );
         })}
+
+        {hasNextPage === true ? (
+          <FetchMore
+            data={data}
+            onFetchMore={async () => {
+              await fetchData();
+            }}
+          />
+        ) : null}
       </ul>
     </div>
   );

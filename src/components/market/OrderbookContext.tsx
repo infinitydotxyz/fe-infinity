@@ -24,6 +24,7 @@ const getIsSellOrder = (orderTypes: OBFilters['orderTypes']) => {
   if (!orderTypes || orderTypes === []) {
     return undefined;
   } else if (orderTypes.length === 1 && orderTypes.includes('Listing')) {
+    // todo: check with backend types
     return true;
   } else if (orderTypes.length === 1 && orderTypes.includes('Offer')) {
     return false;

@@ -6,7 +6,7 @@ import { FaCaretDown, FaCaretUp, FaDiscord, FaInstagram, FaTwitter } from 'react
 import { HiOutlineExternalLink } from 'react-icons/hi';
 import { apiDelete, apiGet, apiPost } from 'src/utils';
 import { FollowingCollection, useAppContext } from 'src/utils/context/AppContext';
-import { Button, Chip, Toaster, toastError } from 'src/components/common';
+import { Chip, Toaster, Spinner, toastError } from 'src/components/common';
 import { VerificationModal } from './verification_modal';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 interface Props {
@@ -17,11 +17,12 @@ interface Props {
 export const StatsChips = ({ collection, weeklyStatsData }: Props) => {
   const { user, checkSignedIn, userFollowingCollections, fetchFollowingCollections, chainId } = useAppContext();
   const [isFollowing, setIsFollowing] = useState(false);
+  const [followingLoading, setFollowingLoading] = useState(false);
   const { push: pushRoute } = useRouter();
   // TODO(sleeyax): we should probably refactor both 'edit' and 'follow' buttons; they shouldn't be part of this 'social stats' component.
   const [modalOpen, setModalOpen] = useState(false);
   const router = useRouter();
-  const { addCartItem } = useOrderContext();
+  const { addCartItem, setOrderDrawerOpen } = useOrderContext();
 
   useEffect(() => {
     const _isFollowing = !!userFollowingCollections.find(
@@ -34,6 +35,7 @@ export const StatsChips = ({ collection, weeklyStatsData }: Props) => {
     if (!checkSignedIn()) {
       return;
     }
+    setFollowingLoading(true);
     if (isFollowing) {
       const { error } = await apiDelete(`/user/1:${user?.address}/followingCollections`, {
         data: {
@@ -63,6 +65,7 @@ export const StatsChips = ({ collection, weeklyStatsData }: Props) => {
         fetchFollowingCollections();
       }
     }
+    setFollowingLoading(false);
   };
 
   const onClickEdit = () => {
@@ -81,7 +84,6 @@ export const StatsChips = ({ collection, weeklyStatsData }: Props) => {
       toastError(error?.errorResponse?.message);
       return;
     }
-
     setModalOpen(false);
 
     if (result.canModify) {
@@ -101,20 +103,25 @@ export const StatsChips = ({ collection, weeklyStatsData }: Props) => {
 
       <Chip
         content={
-          <span className="flex items-center">
-            {isFollowing ? (
-              <>
-                <AiOutlinePlus className="mr-1" /> Following
-              </>
-            ) : (
-              <>
-                <AiOutlinePlus className="mr-1" /> Follow
-              </>
-            )}
-          </span>
+          followingLoading ? (
+            <span className="flex justify-center">
+              <Spinner />
+            </span>
+          ) : (
+            <span className="flex items-center">
+              {isFollowing ? (
+                <>Following</>
+              ) : (
+                <>
+                  <AiOutlinePlus className="mr-1" /> Follow
+                </>
+              )}
+            </span>
+          )
         }
         onClick={onClickFollow}
         active={isFollowing}
+        className="w-32"
       />
       <Chip content="Edit" onClick={onClickEdit} />
 
@@ -188,8 +195,9 @@ export const StatsChips = ({ collection, weeklyStatsData }: Props) => {
         />
       )}
 
-      <Button
-        className="h-[52px] font-heading"
+      <Chip
+        content={<>Sweep</>}
+        active={true}
         onClick={() => {
           // assumes parent view has a drawer
           addCartItem({
@@ -198,10 +206,9 @@ export const StatsChips = ({ collection, weeklyStatsData }: Props) => {
             collectionImage: collection.metadata.profileImage ?? '',
             isSellOrder: false
           });
+          setOrderDrawerOpen(true);
         }}
-      >
-        Sweep
-      </Button>
+      />
 
       <Toaster />
     </div>

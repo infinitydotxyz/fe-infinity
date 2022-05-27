@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { MdOutlineContentCopy } from 'react-icons/md';
+import { twMerge } from 'tailwind-merge';
 
 interface ClipboardButtonProps {
   textToCopy: string;
+  className?: string;
 }
 
-export const ClipboardButton: React.FC<ClipboardButtonProps> = ({ textToCopy }) => {
+export const ClipboardButton: React.FC<ClipboardButtonProps> = ({ textToCopy, className }) => {
   const [copied, setCopied] = useState(false);
 
   const copyToClipboard = () => {
@@ -28,7 +30,7 @@ export const ClipboardButton: React.FC<ClipboardButtonProps> = ({ textToCopy }) 
       {copied ? (
         <span className="pl-4 cursor-pointer">✓</span>
       ) : (
-        <button className="ml-4 pt-1cursor-pointer">
+        <button className={twMerge(`ml-4 pt-1cursor-pointer ${className ?? ''}`)}>
           <MdOutlineContentCopy width={16} height={16} onClick={copyToClipboard} />
         </button>
       )}

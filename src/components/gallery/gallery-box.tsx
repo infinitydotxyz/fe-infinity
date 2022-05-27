@@ -1,12 +1,15 @@
-import { BaseCollection, BaseToken, CardData } from '@infinityxyz/lib-frontend/types/core';
+import { BaseCollection, BaseToken, CardData, OrdersSnippet } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
-import { apiGet, ApiError } from 'src/utils/apiUtils';
 import { ITEMS_PER_PAGE } from 'src/utils/constants';
 import { useFilterContext } from 'src/utils/context/FilterContext';
+import { apiGet, ApiError } from 'src/utils/apiUtils';
 import { Button, Card, CardProps, FetchMore } from 'src/components/common';
 import { FilterPanel } from '../filter/filter-panel';
 import { GallerySort } from './gallery-sort';
 import { twMerge } from 'tailwind-merge';
+import { useResizeDetector } from 'react-resize-detector';
+import { useAppContext } from 'src/utils/context/AppContext';
+import { useRouter } from 'next/router';
 
 // type Asset = {
 //   address: string;
@@ -23,15 +26,38 @@ import { twMerge } from 'tailwind-merge';
 //   metadata: ListingMetadata;
 // };
 
+type ApiNftData = BaseToken & {
+  collectionAddress?: string;
+  collectionName?: string;
+  collectionSlug?: string;
+  orderSnippet?: OrdersSnippet;
+};
+
 interface GalleryProps {
   collection?: BaseCollection | null;
   cardProps?: CardProps;
   getEndpoint?: string;
   className?: string;
   filterShowedDefault?: boolean;
+  pageId?: 'COLLECTION' | 'PROFILE' | undefined;
+  showFilterSections?: string[];
+  showSort?: boolean;
+  userAddress?: string; // for User's NFTs and User's Collection Filter
 }
 
-export const GalleryBox = ({ collection, className, cardProps, getEndpoint, filterShowedDefault }: GalleryProps) => {
+export const GalleryBox = ({
+  collection,
+  className,
+  cardProps,
+  getEndpoint,
+  pageId,
+  filterShowedDefault,
+  showFilterSections,
+  showSort = true,
+  userAddress = ''
+}: GalleryProps) => {
+  const { chainId } = useAppContext();
+  const router = useRouter();
   const { filterState } = useFilterContext();
 
   const [filterShowed, setFilterShowed] = useState(filterShowedDefault);
@@ -41,6 +67,14 @@ export const GalleryBox = ({ collection, className, cardProps, getEndpoint, filt
   const [cursor, setCursor] = useState('');
   const [currentPage, setCurrentPage] = useState(-1);
   const [dataLoaded, setDataLoaded] = useState(false);
+
+  const [gridWidth, setGridWidth] = useState(0);
+
+  const { width, ref } = useResizeDetector();
+
+  useEffect(() => {
+    setGridWidth(ref.current ? ref.current.offsetWidth : 0);
+  }, [width]);
 
   const fetchData = async (isRefresh = false) => {
     setIsFetching(true);
@@ -52,14 +86,20 @@ export const GalleryBox = ({ collection, className, cardProps, getEndpoint, filt
     }
 
     const offset = currentPage > 0 ? currentPage * ITEMS_PER_PAGE : 0;
-    if (!filterState.orderBy) {
+    if (pageId === 'COLLECTION' && !filterState.orderBy) {
       filterState.orderBy = 'rarityRank'; // set defaults
       filterState.orderDirection = 'asc';
     }
+    if (pageId === 'PROFILE') {
+      delete filterState.orderBy;
+      delete filterState.orderDirection;
+    }
+
     const { result, error } = await apiGet(
       getEndpoint ?? `/collections/${collection?.chainId}:${collection?.address}/nfts`,
       {
         query: {
+          chainId,
           offset,
           limit: ITEMS_PER_PAGE,
           cursor: newCursor,
@@ -68,31 +108,34 @@ export const GalleryBox = ({ collection, className, cardProps, getEndpoint, filt
       }
     );
     setError(error);
-    if (result?.hasNextPage === true) {
-      setCursor(result?.cursor);
-    }
+    setCursor(result?.cursor);
 
-    const moreData: CardData[] = (result?.data || []).map((item: BaseToken) => {
+    let moreData: CardData[] = (result?.data || []).map((item: ApiNftData) => {
       return {
         id: collection?.address + '_' + item.tokenId,
         name: item.metadata?.name,
-        collectionName: collection?.metadata?.name,
-        title: collection?.metadata?.name,
+        title: item.collectionName ?? collection?.metadata?.name,
+        collectionName: item.collectionName ?? collection?.metadata?.name,
+        collectionSlug: item.collectionSlug ?? '',
         description: item.metadata.description,
-        image: item.image.url,
-        price: 0,
+        image: item?.image?.url,
+        price: item?.orderSnippet?.listing?.orderItem?.startPriceEth ?? 0,
         chainId: item.chainId,
-        tokenAddress: collection?.address,
+        tokenAddress: item.collectionAddress ?? collection?.address,
+        address: item.collectionAddress ?? collection?.address,
         tokenId: item.tokenId,
         rarityRank: item.rarityRank,
-        orderSnippet: item.ordersSnippet
-      };
+        orderSnippet: item.ordersSnippet,
+        hasBlueCheck: item.hasBlueCheck ?? false
+      } as CardData;
     });
+
+    // remove any without tokenAddress (seeing bad NFTs in my profile)
+    moreData = moreData.filter((x) => x.tokenAddress);
 
     setIsFetching(false);
     if (isRefresh) {
       setData([...moreData]);
-      setCursor('');
     } else {
       setData([...data, ...moreData]);
     }
@@ -103,7 +146,7 @@ export const GalleryBox = ({ collection, className, cardProps, getEndpoint, filt
     setData([]);
     setCursor('');
     fetchData(true); // refetch data when filterState changed somewhere (ex: from Sort comp, etc.)
-  }, [filterState]);
+  }, [filterState, router.query]);
 
   useEffect(() => {
     if (currentPage < 0 || data.length < currentPage * ITEMS_PER_PAGE) {
@@ -112,58 +155,82 @@ export const GalleryBox = ({ collection, className, cardProps, getEndpoint, filt
     setDataLoaded(true); // current page's data loaded & rendered.
   }, [currentPage]);
 
-  return (
-    <div className={twMerge(className, 'flex items-start')}>
-      {filterShowed && (
-        <div className="mt-4">
-          <FilterPanel collection={collection as BaseCollection} collectionAddress={collection?.address} />
-        </div>
-      )}
+  let gridColumns = 'grid-cols-2';
+  let cardHeight = 290;
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-12 gap-y-20 mt-[-73px] pointer-events-none">
-        {data.length > 0 && (
-          <div className="sm:col-span-2 lg:col-span-3 xl:col-span-4 text-right">
-            <Button
-              variant="outline"
-              onClick={() => {
-                setFilterShowed((flag) => !flag);
-              }}
-              className="py-2.5 mr-2 font-heading pointer-events-auto"
-            >
-              {filterShowed ? 'Hide' : 'Show'} filter
-            </Button>
-            <GallerySort />
+  if (gridWidth > 0) {
+    const cols = Math.round(gridWidth / 290);
+    gridColumns = `repeat(${cols}, minmax(0, 1fr))`;
+
+    const w = gridWidth / cols;
+    cardHeight = w * 1.2;
+  }
+
+  return (
+    <div className={twMerge(className, 'flex flex-col')}>
+      <div className="sm:col-span-2 lg:col-span-3 xl:col-span-4 text-right mt-[-73px] pointer-events-none">
+        <Button
+          variant="outline"
+          onClick={() => {
+            setFilterShowed((flag) => !flag);
+          }}
+          className="py-2.5 mr-2 font-heading pointer-events-auto"
+        >
+          {filterShowed ? 'Hide' : 'Show'} filter
+        </Button>
+        {showSort ? <GallerySort /> : null}
+      </div>
+
+      <div className={twMerge(className, 'flex items-start mt-[60px]')}>
+        {filterShowed && (
+          <div className="mt-4">
+            <FilterPanel
+              collection={collection as BaseCollection}
+              collectionAddress={collection?.address}
+              showFilterSections={showFilterSections}
+              userAddress={userAddress}
+            />
           </div>
         )}
 
-        {isFetching && (
-          <>
-            <Card isLoading={true} className="mt-24" />
+        <div
+          ref={ref}
+          className={twMerge('w-full grid gap-12  pointer-events-none')}
+          style={{ gridTemplateColumns: gridColumns }}
+        >
+          {isFetching && cursor === '' && (
+            <>
+              <Card height={cardHeight} isLoading={true} />
 
-            <Card isLoading={true} className="mt-24" />
+              <Card height={cardHeight} isLoading={true} />
 
-            <Card isLoading={true} className="mt-24" />
+              <Card height={cardHeight} isLoading={true} />
 
-            <Card isLoading={true} className="mt-24" />
-          </>
-        )}
+              <Card height={cardHeight} isLoading={true} />
+            </>
+          )}
 
-        {error ? <div className="mt-24">Unable to load data.</div> : null}
+          {error ? <div className="mt-24">Unable to load data.</div> : null}
 
-        {data.map((item, idx) => {
-          return <Card key={idx} data={item} {...cardProps} className="mt-[-30px]" />;
-        })}
+          {!error && !isFetching && data.length === 0 ? <div>No results found.</div> : null}
 
-        {dataLoaded && (
-          <FetchMore
-            currentPage={currentPage}
-            data={data}
-            onFetchMore={async () => {
-              // setDataLoaded(false);
-              await fetchData();
-            }}
-          />
-        )}
+          {data.map((item) => {
+            return <Card key={`${item.address}_${item.tokenId}`} height={cardHeight} data={item} {...cardProps} />;
+          })}
+
+          <div className="h-[10vh]">&nbsp;</div>
+
+          {dataLoaded && (
+            <FetchMore
+              currentPage={currentPage}
+              data={data}
+              onFetchMore={async () => {
+                // setDataLoaded(false);
+                await fetchData();
+              }}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

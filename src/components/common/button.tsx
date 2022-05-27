@@ -4,7 +4,7 @@ import { inputBorderColor } from '../../utils/ui-constants';
 
 const classes = {
   // focus ring appears on keyboard tab key navigation for accessibility, not on clicks
-  base: 'select-none focus:outline-none focus-visible:ring focus:ring-black focus:ring-opacity-50 transition ease-in-out duration-300 hover:bg-gray-700 hover:text-white active:bg-gray-900',
+  base: 'select-none focus:outline-none focus-visible:ring focus:ring-black focus:ring-opacity-50 transition ease-in-out duration-300 focus:border-black active:bg-gray-900',
   disabled: 'opacity-50 cursor-not-allowed',
   pill: 'rounded-full',
   size: {
@@ -16,9 +16,10 @@ const classes = {
   variant: {
     plain: '',
     ghost: 'rounded-full', // hover fill needs to be rounded
-    primary: 'border rounded-full border-gray-100 bg-black text-white',
+    primary: 'border rounded-full border-gray-100 bg-black text-white hover:bg-theme-gray-900',
     secondary: 'border rounded-full border-gray-100 bg-black text-white',
-    outline: twMerge(inputBorderColor, 'border rounded-full text-gray-900'),
+    gray: 'border-none rounded-full bg-theme-gray-100 hover:bg-theme-gray-200',
+    outline: twMerge(inputBorderColor, 'border rounded-full text-gray-900 hover:bg-theme-gray-200'),
     danger: 'bg-red-500 hover:bg-red-800 focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 text-white',
     round: 'rounded-full p-1' // use plain size
   }

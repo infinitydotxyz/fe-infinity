@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { OBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { Button, Dropdown, SVG } from 'src/components/common';
 import { OrderbookProvider, SORT_FILTERS, useOrderbook } from '../OrderbookContext';
-import { OrderbookRow } from './orderbook_row';
+import { OrderbookRow } from './orderbook-row';
 import { OrderbookFilters } from './filters/orderbook-filters';
 
 const SORT_LABELS: {
@@ -17,15 +17,20 @@ const getSortLabel = (key: string | undefined) => {
   return key ? SORT_LABELS[key] || 'Sort' : 'Sort';
 };
 
-export const OrderbookContainer = ({ collectionId }: { collectionId?: string }): JSX.Element => {
+interface OrderbookContainerProps {
+  collectionId?: string;
+  className?: string;
+}
+
+export const OrderbookContainer = ({ collectionId, className }: OrderbookContainerProps): JSX.Element => {
   return (
     <OrderbookProvider collectionId={collectionId}>
-      <OrderbookList />
+      <OrderbookList className={className} />
     </OrderbookProvider>
   );
 };
 
-export const OrderbookList = (): JSX.Element => {
+export const OrderbookList = ({ className }: { className?: string }): JSX.Element => {
   const { orders, fetchMore, isLoading, updateFilter, filters, hasMoreOrders } = useOrderbook();
   const [showFilters, setShowFilters] = useState<boolean>(false);
   const [label, setLabel] = useState<string>(getSortLabel(filters?.sort));
@@ -37,7 +42,7 @@ export const OrderbookList = (): JSX.Element => {
 
   return (
     <>
-      <div className="flex flex-col gap-1">
+      <div className={`flex flex-col gap-1 ${className}`}>
         {/* Filters & Sort */}
         <div className="text-right pb-8">
           <Button
@@ -45,7 +50,7 @@ export const OrderbookList = (): JSX.Element => {
             onClick={() => {
               setShowFilters(!showFilters);
             }}
-            className="py-2.5 mr-2 font-heading"
+            className="py-2.5 mr-2 font-heading pointer-events-auto"
           >
             {showFilters ? 'Hide' : 'Show'} filter
           </Button>
@@ -65,6 +70,7 @@ export const OrderbookList = (): JSX.Element => {
                 onClick: () => onClickSort(SORT_LABELS[SORT_FILTERS.mostRecent], SORT_FILTERS.mostRecent)
               }
             ]}
+            className="pointer-events-auto"
           />
         </div>
         <OrderbookListDummy
@@ -95,7 +101,7 @@ const OrderbookListDummy = ({
   hasMoreOrders
 }: OBListDummyProps): JSX.Element => {
   return (
-    <div className="flex justify-center align-items gap-4">
+    <div className="flex justify-center align-items gap-4 pointer-events-auto">
       {showFilters && (
         <div className="w-1/4 flex-none">
           <OrderbookFilters />
@@ -104,10 +110,10 @@ const OrderbookListDummy = ({
       <div className="flex flex-col items-start w-full">
         {orders.length > 0 &&
           orders.map((order: OBOrder, i) => {
-            return <OrderbookRow key={`${i}-${order.id}`} order={order} />;
+            return <OrderbookRow key={`${i}-${order.id}`} order={order} isFilterOpen={showFilters ?? false} />;
           })}
 
-        {orders.length === 0 && !isLoading && <div>No Results</div>}
+        {orders.length === 0 && !isLoading && <div>No results found</div>}
 
         {isLoading && (
           <div className="w-full flex justify-center align-items">

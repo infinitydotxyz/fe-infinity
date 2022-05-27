@@ -5,6 +5,7 @@ import {
   POLYGON_CHAIN_SCANNER_BASE,
   trimLowerCase
 } from '@infinityxyz/lib-frontend/utils';
+import { NextLink } from 'src/components/common';
 
 // OpenSea's EventType
 export enum EventType {
@@ -63,7 +64,7 @@ export const ellipsisString = (inString?: string, left = 6, right = 4): string =
   if (inString) {
     // don't do anything if less than a certain length
     if (inString.length > left + right + 5) {
-      return `${inString.slice(0, left)}...${inString.slice(-right)}`;
+      return `${inString.slice(0, left)}\u{02026}${inString.slice(-right)}`;
     } else {
       return inString;
     }
@@ -159,4 +160,18 @@ export const getChainScannerBase = (chainId?: string): string | null => {
     return POLYGON_CHAIN_SCANNER_BASE;
   }
   return null;
+};
+
+export const PleaseConnectMsg = () => (
+  <>
+    Please click{' '}
+    <NextLink href="/connect" className="font-bold">
+      Connect
+    </NextLink>{' '}
+    to sign in.
+  </>
+);
+
+export const truncateDecimals = (numStr: string) => {
+  return ((numStr ?? '') + ' ').slice(0, numStr.indexOf('.'));
 };
