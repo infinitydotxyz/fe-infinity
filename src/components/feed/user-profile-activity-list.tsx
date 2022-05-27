@@ -8,7 +8,7 @@ import { ActivityItem } from './activity-item';
 import { UserActivityItem } from './user-activity-item';
 import { apiGet } from 'src/utils';
 // import { useAppContext } from 'src/utils/context/AppContext';
-import { FetchMore, Spinner } from '../common';
+import { ScrollLoader, Spinner } from '../common';
 
 type UserActivityEvent = FeedEvent & {
   makerAddress?: string;
@@ -59,7 +59,6 @@ export const UserProfileActivityList = ({
         events: filteringTypes
       }
     });
-    console.log('filteringTypes', filteringTypes);
 
     if (result?.hasNextPage === true) {
       setCursor(result?.cursor);
@@ -195,8 +194,7 @@ export const UserProfileActivityList = ({
         })}
 
         {hasNextPage === true ? (
-          <FetchMore
-            data={data}
+          <ScrollLoader
             onFetchMore={async () => {
               await fetchData();
             }}

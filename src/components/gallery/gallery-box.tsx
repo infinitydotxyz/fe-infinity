@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { ITEMS_PER_PAGE } from 'src/utils/constants';
 import { useFilterContext } from 'src/utils/context/FilterContext';
 import { apiGet, ApiError } from 'src/utils/apiUtils';
-import { Button, Card, CardProps, FetchMore } from 'src/components/common';
+import { Button, Card, CardProps, ScrollLoader } from 'src/components/common';
 import { FilterPanel } from '../filter/filter-panel';
 import { GallerySort } from './gallery-sort';
 import { twMerge } from 'tailwind-merge';
@@ -218,12 +218,10 @@ export const GalleryBox = ({
             return <Card key={`${item.address}_${item.tokenId}`} height={cardHeight} data={item} {...cardProps} />;
           })}
 
-          <div className="h-[10vh]">&nbsp;</div>
+          {/* <div className="h-[10vh]">&nbsp;</div> */}
 
           {dataLoaded && (
-            <FetchMore
-              currentPage={currentPage}
-              data={data}
+            <ScrollLoader
               onFetchMore={async () => {
                 // setDataLoaded(false);
                 await fetchData();
