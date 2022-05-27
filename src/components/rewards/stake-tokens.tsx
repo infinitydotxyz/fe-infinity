@@ -41,6 +41,11 @@ export const StakeTokensModal = ({ onClose }: Props) => {
               onChange={() => console.log}
               placeholder="Enter amount to stake"
               isFullWidth
+              renderRightIcon={() => (
+                <Button variant="gray" className="rounded-md py-1">
+                  Max
+                </Button>
+              )}
             />
           </div>
           <div className="text-right mr-2 mt-1 text-theme-gray-300">Balance: 0</div>

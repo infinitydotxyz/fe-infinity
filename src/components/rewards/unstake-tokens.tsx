@@ -27,6 +27,11 @@ export const UnstakeTokensModal = ({ onClose }: Props) => {
               onChange={() => console.log}
               placeholder="Enter amount to unstake"
               isFullWidth
+              renderRightIcon={() => (
+                <Button variant="gray" className="rounded-md py-1">
+                  Max
+                </Button>
+              )}
             />
           </div>
 

@@ -24,7 +24,8 @@ import {
   SVG,
   Checkbox,
   Modal,
-  PopoverButton
+  PopoverButton,
+  TextInputBox
 } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 
@@ -225,6 +226,27 @@ const SandboxPage = () => {
           ]}
         />
       </div>
+
+      <SBHeader># TextInputBox</SBHeader>
+      <TextInputBox
+        // autoFocus={true}
+        type="text"
+        value={'2.5'}
+        label=""
+        placeholder=""
+        className=""
+        onChange={(value) => console.log(value)}
+      />
+      <TextInputBox
+        // autoFocus={true}
+        renderRightIcon={() => <FaEdit />}
+        type="text"
+        value={'2.5'}
+        label="Label"
+        placeholder=""
+        className="mt-4"
+        onChange={(value) => console.log(value)}
+      />
 
       <SBHeader># CurrencyInput</SBHeader>
       <CurrencyInput

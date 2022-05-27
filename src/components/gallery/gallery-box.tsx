@@ -218,6 +218,8 @@ export const GalleryBox = ({
             return <Card key={`${item.address}_${item.tokenId}`} height={cardHeight} data={item} {...cardProps} />;
           })}
 
+          <div className="h-[10vh]">&nbsp;</div>
+
           {dataLoaded && (
             <FetchMore
               currentPage={currentPage}
