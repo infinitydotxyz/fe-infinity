@@ -2,7 +2,7 @@ import { CollectionAttributes } from '@infinityxyz/lib/types/core';
 import React, { useEffect, useState } from 'react';
 import { useFilterContext } from 'src/utils/context/FilterContext';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
-import { Button, Checkbox } from '../common';
+import { Button, Checkbox, TextInputBox } from '../common';
 
 type ValueMapItem = {
   [k: string]: boolean;
@@ -127,11 +127,13 @@ export const TraitSelection = ({ traits, onChange, onClearAll }: Props) => {
 
             {openState[item.name] && (
               <div>
-                <input
+                <TextInputBox
+                  label=""
+                  type="text"
                   className="border rounded-3xl py-2 px-4 mt-1 font-heading w-[90%]"
                   defaultValue={searchState[item.name]}
-                  onChange={(ev) => {
-                    const text = ev.target.value;
+                  onChange={(value) => {
+                    const text = value;
                     const newSearchState = { ...searchState, [item.name]: text };
                     setSearchState(newSearchState);
                   }}

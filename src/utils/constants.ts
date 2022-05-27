@@ -4,7 +4,7 @@ export const DISCORD_BOT_INVITE_URL =
   'https://discord.com/api/oauth2/authorize?client_id=956292440778743838&permissions=1024&scope=bot%20applications.commands';
 
 // not sure why there are two of these.
-export const ITEMS_PER_PAGE = 10;
+export const ITEMS_PER_PAGE = 30;
 export const DEFAULT_LIMIT = 24;
 export const LARGE_LIMIT = 40;
 
