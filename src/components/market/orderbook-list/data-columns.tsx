@@ -1,4 +1,4 @@
-import { OBOrder } from '@infinityxyz/lib/types/core';
+import { OBOrder } from '@infinityxyz/lib-frontend/types/core';
 
 export type DataColumnType = 'Name' | 'Text' | 'Currency' | 'Button';
 export type DataColumnField =

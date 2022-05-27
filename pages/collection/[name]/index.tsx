@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { BaseCollection, CollectionStats } from '@infinityxyz/lib/types/core';
+import { BaseCollection, CollectionStats } from '@infinityxyz/lib-frontend/types/core';
 import { ToggleTab, PageBox, useToggleTab, SVG, EthPrice } from 'src/components/common';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { useFetch } from 'src/utils/apiUtils';

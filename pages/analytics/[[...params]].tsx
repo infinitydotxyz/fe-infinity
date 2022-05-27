@@ -5,7 +5,7 @@ import { useFetch } from 'src/utils/apiUtils';
 import { Button, Checkbox, Drawer, PageBox } from 'src/components/common';
 import { Field } from 'src/components/analytics/field';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { CollectionStats } from '@infinityxyz/lib/types/core';
+import { CollectionStats } from '@infinityxyz/lib-frontend/types/core';
 import { ITEMS_PER_PAGE, BLANK_IMG } from 'src/utils/constants';
 
 export const Analytics = () => {

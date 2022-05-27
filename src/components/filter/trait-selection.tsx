@@ -1,4 +1,4 @@
-import { CollectionAttributes } from '@infinityxyz/lib/types/core';
+import { CollectionAttributes } from '@infinityxyz/lib-frontend/types/core';
 import React, { useEffect, useState } from 'react';
 import { useFilterContext } from 'src/utils/context/FilterContext';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';

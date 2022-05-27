@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { Erc721Attribute } from '@infinityxyz/lib/types/core';
+import { Erc721Attribute } from '@infinityxyz/lib-frontend/types/core';
 import { twMerge } from 'tailwind-merge';
 import { inputBorderColor } from 'src/utils/ui-constants';
 

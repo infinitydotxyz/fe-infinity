@@ -1,4 +1,4 @@
-import { BaseCollection, BaseToken, CardData } from '@infinityxyz/lib/types/core';
+import { BaseCollection, BaseToken, CardData } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { apiGet, ApiError } from 'src/utils/apiUtils';
 import { ITEMS_PER_PAGE } from 'src/utils/constants';

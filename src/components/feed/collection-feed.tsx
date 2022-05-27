@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { FeedItem, FeedEvent } from './feed-item';
 import { COLL_FEED, FeedFilter, subscribe } from 'src/utils/firestore/firestoreUtils';
 import { CommentPanel } from './comment-panel';
-import { FeedEventType } from '@infinityxyz/lib/types/core/feed';
+import { FeedEventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { FeedFilterDropdown } from './feed-filter-dropdown';
 import { ActivityItem } from './activity-item';
 

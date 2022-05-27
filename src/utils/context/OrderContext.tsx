@@ -1,5 +1,5 @@
-import { OBOrder, OBOrderItem, SignedOBOrder } from '@infinityxyz/lib/types/core';
-import { getOBComplicationAddress, getTxnCurrencyAddress } from '@infinityxyz/lib/utils';
+import { OBOrder, OBOrderItem, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { getOBComplicationAddress, getTxnCurrencyAddress } from '@infinityxyz/lib-frontend/utils';
 import React, { ReactNode, useContext, useState } from 'react';
 import { getSignedOBOrder } from '../exchange/orders';
 import { fetchMinBpsToSeller, fetchOrderNonce, postOrders } from '../marketUtils';

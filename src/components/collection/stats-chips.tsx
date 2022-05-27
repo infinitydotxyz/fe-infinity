@@ -1,4 +1,4 @@
-import { BaseCollection, CollectionStats } from '@infinityxyz/lib/types/core';
+import { BaseCollection, CollectionStats } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';

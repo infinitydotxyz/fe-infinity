@@ -1,4 +1,4 @@
-import { BaseCollection, BaseToken, CardData } from '@infinityxyz/lib/types/core';
+import { BaseCollection, BaseToken, CardData } from '@infinityxyz/lib-frontend/types/core';
 import React, { useState, useEffect, useRef } from 'react';
 import { FetchMore } from 'src/components/common';
 import { apiGet, DEFAULT_LIMIT } from 'src/utils';

@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { Button, ShortAddress, PageBox, ReadMoreText, SVG, NextLink, ClipboardButton } from 'src/components/common';
 import { BLANK_IMAGE_URL, useFetch } from 'src/utils';
-import { Token, Collection, Erc721Metadata } from '@infinityxyz/lib/types/core';
+import { Token, Collection, Erc721Metadata } from '@infinityxyz/lib-frontend/types/core';
 import {
   TraitList,
   ActivityList,

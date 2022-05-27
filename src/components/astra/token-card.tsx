@@ -1,4 +1,4 @@
-import { CardData } from '@infinityxyz/lib/types/core';
+import { CardData } from '@infinityxyz/lib-frontend/types/core';
 import { twMerge } from 'tailwind-merge';
 import { BGImage } from '../common';
 

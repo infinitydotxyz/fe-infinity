@@ -1,4 +1,4 @@
-import { BaseCollection, CardData } from '@infinityxyz/lib/types/core';
+import { BaseCollection, CardData } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useRef, useState } from 'react';
 import { CollectionList } from 'src/components/astra/collection-list';
 import { TokensGrid } from 'src/components/astra/token-grid';

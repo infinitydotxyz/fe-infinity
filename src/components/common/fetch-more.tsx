@@ -1,7 +1,6 @@
 import React from 'react';
 import { InView } from 'react-intersection-observer';
 import { ITEMS_PER_PAGE } from 'src/utils/constants';
-import { CardData } from '@infinityxyz/lib/types/core';
 
 type FetchMoreElementProps = {
   inView: boolean;
