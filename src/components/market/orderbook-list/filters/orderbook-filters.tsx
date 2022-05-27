@@ -152,7 +152,7 @@ export const OrderbookFilters = () => {
           <TextInputBox
             type="number"
             value={numberOfNfts?.toString()}
-            label="Amount of NFTs"
+            label=""
             placeholder=""
             onChange={(value) => updateFilter('numberOfNfts', value)}
           />

@@ -128,7 +128,7 @@ export const TraitSelection = ({ traits, onChange, onClearAll }: Props) => {
             {openState[item.name] && (
               <div>
                 <input
-                  className="border rounded-lg py-2 px-4 mt-1 font-heading w-[90%]"
+                  className="border rounded-3xl py-2 px-4 mt-1 font-heading w-[90%]"
                   defaultValue={searchState[item.name]}
                   onChange={(ev) => {
                     const text = ev.target.value;

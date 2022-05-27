@@ -35,7 +35,7 @@ export const UserProfileShare: FunctionComponent<UserProfileShareProps> = ({ use
               <div
                 className={twMerge(
                   inputBorderColor,
-                  'flex justify-center items-center m-1 font-medium font-heading px-4 py-2.5 rounded-full border cursor-pointer hover:bg-theme-grey-200'
+                  'flex justify-center items-center m-1 font-medium font-heading px-4 py-2.5 rounded-full border cursor-pointer hover:bg-theme-gray-200'
                 )}
               >
                 <FaShareAlt className="text-md" />

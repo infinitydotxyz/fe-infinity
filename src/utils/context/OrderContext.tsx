@@ -1,6 +1,7 @@
 import { OBOrder, OBOrderItem, SignedOBOrder } from '@infinityxyz/lib/types/core';
 import { getOBComplicationAddress, getTxnCurrencyAddress } from '@infinityxyz/lib/utils';
 import React, { ReactNode, useContext, useState } from 'react';
+import { toastError } from 'src/components/common';
 import { getSignedOBOrder } from '../exchange/orders';
 import { fetchMinBpsToSeller, fetchOrderNonce, postOrders } from '../marketUtils';
 import { secondsPerDay } from '../ui-constants';
@@ -67,10 +68,13 @@ export type OrderContextType = {
   isEditingOrder: boolean;
   addOrderToCart: () => void;
   cancelOrder: () => void;
+  updateOrders: (orderInCart: OrderInCart[]) => void;
 
   cartItems: OrderCartItem[];
   addCartItem: (order: OrderCartItem) => void;
   removeCartItem: (order: OrderCartItem) => void;
+  removeOrder: (order: OrderInCart) => void;
+  removeAllOrders: () => void;
 
   isOrderStateEmpty: () => boolean;
   readyToCheckout: () => boolean;
@@ -302,20 +306,34 @@ export const OrderContextProvider = ({ children }: Props) => {
     setOrderDrawerOpen(false);
 
     // sign orders
+    let hasErrors = false;
     const signedOrders: SignedOBOrder[] = [];
     for (const orderInCart of ordersInCart) {
       const order = await specToOBOrder(orderInCart.orderSpec);
 
       if (order) {
-        const signedOrder = await getSignedOBOrder(user, chainId, signer, order);
-        if (signedOrder) {
-          signedOrders.push(signedOrder);
+        try {
+          const signedOrder = await getSignedOBOrder(user, chainId, signer, order);
+          if (signedOrder) {
+            signedOrders.push(signedOrder);
+          }
+        } catch (ex) {
+          toastError(ex as string);
+          hasErrors = true;
         }
       }
     }
+    if (hasErrors) {
+      return false;
+    }
 
     // post orders
-    await postOrders(user.address, signedOrders);
+    try {
+      await postOrders(user.address, signedOrders);
+    } catch (ex) {
+      toastError(ex as string);
+      return false;
+    }
 
     _resetStateValues();
 
@@ -353,6 +371,14 @@ export const OrderContextProvider = ({ children }: Props) => {
     // setOrderDrawerOpen(true);
   };
 
+  const removeAllOrders = () => {
+    _resetStateValues();
+  };
+
+  const updateOrders = (orders: OrderInCart[]) => {
+    setOrdersInCart([...orders]);
+  };
+
   const removeCartItem = (item: OrderCartItem) => {
     const index = indexOfCartItem(cartItems, item);
 
@@ -366,6 +392,16 @@ export const OrderContextProvider = ({ children }: Props) => {
       }
 
       setCartItems(copy);
+    }
+  };
+
+  const removeOrder = (order: OrderInCart) => {
+    const index = ordersInCart.findIndex((ord) => ord.id === order.id);
+
+    if (index !== -1) {
+      const copy = [...ordersInCart];
+      copy.splice(index, 1);
+      setOrdersInCart(copy);
     }
   };
 
@@ -393,6 +429,9 @@ export const OrderContextProvider = ({ children }: Props) => {
     addCartItem,
     cartItems,
     removeCartItem,
+    removeOrder,
+    removeAllOrders,
+    updateOrders,
     readyToCheckout,
     isOrderBuilderEmpty,
     isOrderStateEmpty,

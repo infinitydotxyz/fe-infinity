@@ -42,13 +42,13 @@ export const defaultDataColumns = (order: OBOrder): DataColumn[] => {
       width: '1fr'
     },
     {
-      name: order.isSellOrder ? 'Min sale price' : 'Max buy price',
+      name: 'Price', // order.isSellOrder ? 'Min sale price' : 'Max buy price',
       type: 'Currency',
       field: order.isSellOrder ? 'minSalePrice' : 'maxBuyPrice',
       width: '1fr'
     },
     {
-      name: 'NFT amount',
+      name: '# NFTs',
       type: 'Text',
       field: 'numNFTs',
       width: '1fr'
@@ -64,7 +64,7 @@ export const defaultDataColumns = (order: OBOrder): DataColumn[] => {
       }
     },
     {
-      name: 'Expiry date',
+      name: 'Expiry',
       type: 'Text',
       field: 'expirationDate',
       width: '1fr'

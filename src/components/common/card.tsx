@@ -47,7 +47,7 @@ export const Card = ({
           <Button
             key={idx}
             variant="outline"
-            className="flex-1 py-3 font-medium"
+            className="flex-1 py-3 font-bold"
             onClick={(ev) => {
               cardAction.onClick(ev, data);
             }}
@@ -72,7 +72,7 @@ export const Card = ({
     >
       <NextLink
         href={`/asset/${data?.chainId}/${data?.tokenAddress ?? data?.address}/${data?.tokenId}`}
-        className="h-full  "
+        className="h-full"
       >
         {data?.image ? (
           <BGImage src={data?.image} className="overflow-clip rounded-3xl" />

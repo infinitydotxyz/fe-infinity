@@ -23,7 +23,7 @@ const MarketplacePage = () => {
 
   const { options, onChange, selected } = useToggleTab([TABS.Orders, TABS.Discover, TABS.ListMyNFTs], tabDefault);
 
-  const [searchActive, setSearchActive] = useState(false);
+  // const [searchActive, setSearchActive] = useState(false);
   const [query, setQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
 
@@ -41,12 +41,14 @@ const MarketplacePage = () => {
   );
   const contents = (
     <>
-      {/* <div className="flex space-x-2 items-center relative max-w-xl lg:top-12 lg:-mt-14 pb-4 lg:pb-0">
-        <ToggleTab className="font-heading" options={options} selected={selected} onChange={onChange} />
-        <Spacer />
-      </div> */}
       <div className="flex space-x-2 items-center relative max-w-xl lg:top-12 lg:-mt-14 pb-4 lg:pb-0">
-        <ToggleTab className="font-heading" options={options} selected={selected} onChange={onChange} />
+        <ToggleTab
+          tabWidth="150px"
+          className="font-heading"
+          options={options}
+          selected={selected}
+          onChange={onChange}
+        />
         <Spacer />
       </div>
 
@@ -55,30 +57,30 @@ const MarketplacePage = () => {
       {selected === TABS.Discover && (
         <div className="">
           <div className="mb-8 w-full flex flex-row-reverse">
-            {searchActive ? (
-              <TextInputBox
-                autoFocus={true}
-                type="text"
-                value={query}
-                label=""
-                placeholder=""
-                className="w-64"
-                inputClassName="font-normal font-body text-sm"
-                icon={<FiSearch />}
-                onChange={(value) => handleChange(value)}
-              />
-            ) : (
+            {/* {searchActive ? ( */}
+            <TextInputBox
+              // autoFocus={true}
+              type="text"
+              value={query}
+              label=""
+              placeholder=""
+              className="w-64"
+              inputClassName="font-normal font-body text-sm"
+              icon={<FiSearch />}
+              onChange={(value) => handleChange(value)}
+            />
+            {/* ) : (
               <div className="border rounded-full p-4 text-black cursor-pointer" onClick={() => setSearchActive(true)}>
                 <FiSearch />
               </div>
-            )}
+            )} */}
           </div>
           <CollectionGrid query={debouncedQuery} routerQuery="" />
         </div>
       )}
 
       {selected === TABS.ListMyNFTs && (
-        <div className="mt-32">
+        <div className="mt-40">
           <UserPageNftsTab userInfo={user as UserProfileDto} />
         </div>
       )}

@@ -9,10 +9,15 @@ export const postOrders = async (user: string, orders: SignedOBOrder[]): Promise
       orders: orders
     };
 
-    const response = await apiPost(`/orders/${user}`, {
+    const { result, error } = await apiPost(`/orders/${user}`, {
       data: body
     });
-    return response.result as string;
+    if (error) {
+      const msg = error?.errorResponse?.message ?? 'postOrders failed.';
+      console.error(msg);
+      throw msg;
+    }
+    return result as string;
   } catch (err) {
     console.error(err);
     throw err;

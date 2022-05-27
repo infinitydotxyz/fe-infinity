@@ -15,33 +15,36 @@ import { useOrderContext } from 'src/utils/context/OrderContext';
 import ContentLoader from 'react-content-loader';
 import { iconButtonStyle } from 'src/utils/ui-constants';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
+import { useAppContext } from 'src/utils/context/AppContext';
 
 const CollectionPage = () => {
-  const { addCartItem, ordersInCart, cartItems, addOrderToCart } = useOrderContext();
+  const { checkSignedIn } = useAppContext();
+  const { addCartItem, removeCartItem, ordersInCart, cartItems, addOrderToCart, updateOrders } = useOrderContext();
   const [isBuyClicked, setIsBuyClicked] = useState(false);
   const router = useRouter();
+  const { options, onChange, selected } = useToggleTab(
+    ['NFT', 'Activity', 'Orderbook'],
+    (router?.query?.tab as string) || 'NFT'
+  );
   const {
     query: { name }
   } = router;
 
-  if (!router.isReady) {
-    return null;
-  }
+  // todo: this caused console error. http://localhost:3000/collection/0mnipunks
+  // if (!router.isReady) {
+  //   return null;
+  // }
 
-  const { options, onChange, selected } = useToggleTab(
-    ['NFT', 'Activity', 'Orderbook'],
-    (router.query.tab as string) || 'NFT'
-  );
-
-  useEffect(() => {
-    if (selected === 'NFT') {
-      const updateQueryParams = { ...router.query };
-      delete updateQueryParams.tab;
-      router.replace({ pathname: router.pathname, query: { ...updateQueryParams } });
-    } else {
-      router.replace({ pathname: router.pathname, query: { ...router.query, tab: selected } });
-    }
-  }, [selected]);
+  // todo: this caused console error. http://localhost:3000/collection/0mnipunks
+  // useEffect(() => {
+  //   if (selected === 'NFT') {
+  //     const updateQueryParams = { ...router.query };
+  //     delete updateQueryParams.tab;
+  //     router.replace({ pathname: router.pathname, href: router.pathname, query: { ...updateQueryParams } });
+  //   } else {
+  //     router.replace({ pathname: router.pathname, href: router.pathname, query: { ...router.query, tab: selected } });
+  //   }
+  // }, [selected]);
 
   useEffect(() => {
     if (isBuyClicked === true) {
@@ -66,7 +69,7 @@ const CollectionPage = () => {
   );
   const firstDailyStats = dailyStats?.data[0];
 
-  const ifAlreadyAdded = (data: CardData | undefined) => {
+  const isAlreadyAdded = (data: CardData | undefined) => {
     // check if this item was already added to cartItems or order.
     const found1 =
       cartItems.find((item) => item.collectionAddress === data?.address && item.tokenId === data.tokenId) !== undefined;
@@ -81,6 +84,20 @@ const CollectionPage = () => {
       }
     }
     return found1 || found2;
+  };
+
+  // find & remove this item in cartItems & all orders' cartItems:
+  const findAndRemove = (data: CardData | undefined) => {
+    const foundItemIdx = cartItems.findIndex(
+      (item) => item.collectionAddress === data?.address && item.tokenId === data?.tokenId
+    );
+    removeCartItem(cartItems[foundItemIdx]);
+    ordersInCart.forEach((order) => {
+      order.cartItems = order.cartItems.filter(
+        (item) => !(item.collectionAddress === data?.address && item.tokenId === data?.tokenId)
+      );
+    });
+    updateOrders(ordersInCart.filter((order) => order.cartItems.length > 0));
   };
 
   if (!collection) {
@@ -125,7 +142,7 @@ const CollectionPage = () => {
           )}
 
           {collection.metadata.benefits && (
-            <div className="mt-7">
+            <div className="mt-7 md:w-2/3">
               <div className="font-medium">Ownership includes</div>
 
               <div className="flex space-x-8 mt-3 font-normal">
@@ -135,6 +152,28 @@ const CollectionPage = () => {
                     <div className="flex items-center text-secondary">
                       <BsCheck className="text-2xl mr-2 text-black" />
                       {benefitStr}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {collection.metadata.partnerships && (
+            <div className="mt-7 md:w-2/3">
+              <div className="font-medium">Partnerships</div>
+
+              <div className="flex space-x-12 mt-3 ml-2 font-normal">
+                {collection.metadata.partnerships?.slice(0, 3).map((partnership) => {
+                  const partnershipStr = partnership?.name.slice(0, 100);
+                  return (
+                    <div
+                      className="flex items-center text-secondary hover:text-black cursor-pointer"
+                      onClick={() => {
+                        window.open(partnership.link);
+                      }}
+                    >
+                      {partnershipStr}
                     </div>
                   );
                 })}
@@ -175,6 +214,7 @@ const CollectionPage = () => {
 
           <ToggleTab
             className="mt-12 font-heading pointer-events-auto"
+            tabWidth="150px"
             options={options}
             selected={selected}
             onChange={onChange}
@@ -189,7 +229,7 @@ const CollectionPage = () => {
                   cardActions: [
                     {
                       label: (data) => {
-                        const price = data?.orderSnippet?.offer?.orderItem?.startPriceEth ?? '';
+                        const price = data?.orderSnippet?.listing?.orderItem?.startPriceEth ?? '';
                         if (price) {
                           return (
                             <div className="flex justify-center">
@@ -198,16 +238,20 @@ const CollectionPage = () => {
                             </div>
                           );
                         }
-                        if (ifAlreadyAdded(data)) {
+                        if (isAlreadyAdded(data)) {
                           return <div className="font-normal">✓ Added</div>;
                         }
                         return <div className="font-bold">Add to order</div>;
                       },
                       onClick: (ev, data) => {
-                        if (ifAlreadyAdded(data)) {
+                        if (!checkSignedIn()) {
                           return;
                         }
-                        const price = data?.orderSnippet?.offer?.orderItem?.startPriceEth ?? '';
+                        if (isAlreadyAdded(data)) {
+                          findAndRemove(data);
+                          return;
+                        }
+                        const price = data?.orderSnippet?.listing?.orderItem?.startPriceEth ?? '';
                         addCartItem({
                           collectionName: data?.collectionName ?? '(no name)',
                           collectionAddress: data?.tokenAddress ?? '(no address)',

@@ -1,4 +1,4 @@
-import { BaseCollection, BaseToken, CardData } from '@infinityxyz/lib/types/core';
+import { BaseCollection, BaseToken, CardData, OrdersSnippet } from '@infinityxyz/lib/types/core';
 import { useEffect, useState } from 'react';
 import { ITEMS_PER_PAGE } from 'src/utils/constants';
 import { useFilterContext } from 'src/utils/context/FilterContext';
@@ -30,6 +30,7 @@ type ApiNftData = BaseToken & {
   collectionAddress?: string;
   collectionName?: string;
   collectionSlug?: string;
+  orderSnippet?: OrdersSnippet;
 };
 
 interface GalleryProps {
@@ -40,6 +41,7 @@ interface GalleryProps {
   filterShowedDefault?: boolean;
   pageId?: 'COLLECTION' | 'PROFILE' | undefined;
   showFilterSections?: string[];
+  showSort?: boolean;
   userAddress?: string; // for User's NFTs and User's Collection Filter
 }
 
@@ -51,6 +53,7 @@ export const GalleryBox = ({
   pageId,
   filterShowedDefault,
   showFilterSections,
+  showSort = true,
   userAddress = ''
 }: GalleryProps) => {
   const { chainId } = useAppContext();
@@ -116,7 +119,7 @@ export const GalleryBox = ({
         collectionSlug: item.collectionSlug ?? '',
         description: item.metadata.description,
         image: item?.image?.url,
-        price: 0,
+        price: item?.orderSnippet?.listing?.orderItem?.startPriceEth ?? 0,
         chainId: item.chainId,
         tokenAddress: item.collectionAddress ?? collection?.address,
         address: item.collectionAddress ?? collection?.address,
@@ -175,7 +178,7 @@ export const GalleryBox = ({
         >
           {filterShowed ? 'Hide' : 'Show'} filter
         </Button>
-        <GallerySort />
+        {showSort ? <GallerySort /> : null}
       </div>
 
       <div className={twMerge(className, 'flex items-start mt-[60px]')}>
@@ -209,11 +212,13 @@ export const GalleryBox = ({
 
           {error ? <div className="mt-24">Unable to load data.</div> : null}
 
-          {!error && !isFetching && data.length === 0 ? <div>No results.</div> : null}
+          {!error && !isFetching && data.length === 0 ? <div>No results found.</div> : null}
 
           {data.map((item) => {
             return <Card key={`${item.address}_${item.tokenId}`} height={cardHeight} data={item} {...cardProps} />;
           })}
+
+          <div className="h-[10vh]">&nbsp;</div>
 
           {dataLoaded && (
             <FetchMore

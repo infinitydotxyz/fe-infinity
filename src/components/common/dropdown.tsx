@@ -15,10 +15,20 @@ interface DropdownProps {
   items: DropdownItems[];
   toggler?: ReactElement; // custom toggler element.
   contentClassName?: string; // className for the dropdown content panel.
+  itemListClassName?: string;
+  itemClassName?: string;
   className?: string;
 }
 
-export const Dropdown = ({ label, items, toggler, contentClassName, className }: DropdownProps) => {
+export const Dropdown = ({
+  label,
+  items,
+  toggler,
+  contentClassName,
+  itemListClassName = '',
+  itemClassName = '',
+  className
+}: DropdownProps) => {
   return (
     <div className={twMerge(`relative inline-block text-left ${className ?? ''}`)}>
       <Menu>
@@ -29,7 +39,7 @@ export const Dropdown = ({ label, items, toggler, contentClassName, className }:
             <Menu.Button
               className={twMerge(
                 inputBorderColor,
-                'transition ease-in-out duration-300 hover:border-black bg-white active:bg-gray-900 hover:bg-theme-grey-200',
+                'transition ease-in-out duration-300 hover:border-black bg-white active:bg-gray-900 hover:bg-theme-gray-200',
                 'focus:outline-none focus-visible:ring focus:ring-black focus:ring-opacity-50',
                 'px-6 py-2.5 border rounded-3xl text-gray-900 font-heading flex items-center space-x-1'
               )}
@@ -46,10 +56,10 @@ export const Dropdown = ({ label, items, toggler, contentClassName, className }:
             border border-gray-200 bg-white shadow-2xl outline-none ${contentClassName ?? ''}`
           )}
         >
-          <div className="py-1">
+          <div className={`py-1 ${itemListClassName}`}>
             {items.map((item, idx) => {
               return (
-                <CustomMenuItem key={idx} onClick={item.onClick}>
+                <CustomMenuItem key={idx} onClick={item.onClick} itemClassName={itemClassName}>
                   {item.label}
                 </CustomMenuItem>
               );
@@ -64,6 +74,7 @@ export const Dropdown = ({ label, items, toggler, contentClassName, className }:
 interface CustomMenuItemProps {
   onClick: () => void;
   children: ReactElement | string;
+  itemClassName?: string;
 }
 export const CustomMenuItem = (props: CustomMenuItemProps) => {
   return (
@@ -71,10 +82,11 @@ export const CustomMenuItem = (props: CustomMenuItemProps) => {
       {({ active, disabled }) => (
         <a
           href="#"
-          className={classNames(
+          className={twMerge(
             'flex w-full justify-between px-4 py-4 text-left leading-5 font-heading ',
             active ? 'bg-black text-white' : 'text-gray-700',
-            disabled && 'cursor-not-allowed opacity-50'
+            disabled && 'cursor-not-allowed opacity-50',
+            props.itemClassName
           )}
         >
           <span className={classNames(active && 'font-bold')}>{props.children}</span>

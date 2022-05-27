@@ -1,4 +1,4 @@
-import { EthPrice, Button, SimpleTable, SimpleTableItem, Spacer, SVG } from 'src/components/common';
+import { EthPrice, Button, SimpleTable, SimpleTableItem, Spacer, SVG, NftImage } from 'src/components/common';
 import { shortDate } from 'src/utils';
 import { OrderInCart, useOrderContext } from 'src/utils/context/OrderContext';
 import { TitleAndSubtitle } from './order-list-item';
@@ -8,6 +8,8 @@ import {
   collectionIconWidthInPx,
   iconButtonStyle
 } from 'src/utils/ui-constants';
+import { useAppContext } from 'src/utils/context/AppContext';
+// import { TiDeleteOutline } from 'react-icons/ti';
 
 export const OrderSummary = () => {
   const { ordersInCart } = useOrderContext();
@@ -28,6 +30,7 @@ interface Props {
 }
 
 export const OrderSummaryItem = ({ orderInCart }: Props) => {
+  const { chainId } = useAppContext();
   const { isSellOrderCart, editOrderFromCart } = useOrderContext();
 
   const collectionStackForOrder = () => {
@@ -60,20 +63,30 @@ export const OrderSummaryItem = ({ orderInCart }: Props) => {
       const item = orderInCart.cartItems[0];
       const showNum = orderInCart.cartItems.length > 1;
 
-      let image = item.collectionImage;
-      if (!image) {
-        image = item.tokenImage;
+      let imageEl = <NftImage chainId={chainId} collectionAddress={item.collectionAddress} />;
+      if (!showNum) {
+        imageEl = <img className={collectionIconStyle} src={item.tokenImage} alt="" />;
       }
 
       return (
         <div className="relative">
-          <img className={collectionIconStyle} src={image} alt="" />
+          {imageEl}
 
           {showNum && (
             <div className="absolute -top-1 right-0 z-50 text-center shadow-lg rounded-full h-6 w-6 bg-white">
               {orderInCart.cartItems.length}
             </div>
           )}
+
+          {/* <div
+            className="absolute bottom-0 right-0 z-50 text-center shadow-lg rounded-full cursor-pointer hover:bg-gray-100 bg-white"
+            title="Remove order"
+            onClick={() => {
+              removeOrder(orderInCart);
+            }}
+          >
+            <TiDeleteOutline />
+          </div> */}
         </div>
       );
     }

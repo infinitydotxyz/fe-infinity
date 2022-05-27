@@ -22,7 +22,7 @@ export const StatsChips = ({ collection, weeklyStatsData }: Props) => {
   // TODO(sleeyax): we should probably refactor both 'edit' and 'follow' buttons; they shouldn't be part of this 'social stats' component.
   const [modalOpen, setModalOpen] = useState(false);
   const router = useRouter();
-  const { addCartItem } = useOrderContext();
+  const { addCartItem, setOrderDrawerOpen } = useOrderContext();
 
   useEffect(() => {
     const _isFollowing = !!userFollowingCollections.find(
@@ -206,6 +206,7 @@ export const StatsChips = ({ collection, weeklyStatsData }: Props) => {
             collectionImage: collection.metadata.profileImage ?? '',
             isSellOrder: false
           });
+          setOrderDrawerOpen(true);
         }}
       />
 

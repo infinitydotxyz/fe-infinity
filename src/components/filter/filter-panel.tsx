@@ -1,7 +1,7 @@
 import { BaseCollection } from '@infinityxyz/lib/types/core';
 import { useState } from 'react';
 import { Filter, OrderType, useFilterContext } from 'src/utils/context/FilterContext';
-import { Button, Checkbox } from 'src/components/common';
+import { Button, Checkbox, TextInputBox } from 'src/components/common';
 import { TraitSelection } from './trait-selection';
 import CollectionFilter from '../gallery/collection-filter';
 
@@ -104,31 +104,37 @@ export const FilterPanel = ({
 
       <div className="text-lg mt-6 font-heading">Price</div>
       <div className="flex mt-4 mb-6">
-        <input
+        <TextInputBox
+          addEthSymbol={true}
           type="number"
-          className="border rounded-3xl py-3 px-4 w-1/2 border-gray-300"
-          placeholder="Ξ Min Price"
+          className="border-gray-300 font-heading"
+          label="Min"
+          placeholder=""
           value={minPriceVal}
-          onChange={(ev) => {
-            setMinPriceVal(ev.target.value);
+          bindValue={true}
+          onChange={(value) => {
+            setMinPriceVal(value);
           }}
         />
-        <input
+        <TextInputBox
+          addEthSymbol={true}
           type="number"
-          className="border rounded-3xl py-3 px-4 w-1/2 border-gray-300 ml-2"
-          placeholder="Ξ Max Price"
+          className="border-gray-300 font-heading ml-2"
+          label="Max"
+          placeholder=""
           value={maxPriceVal}
-          onChange={(ev) => {
-            setMaxPriceVal(ev.target.value);
+          bindValue={true}
+          onChange={(value) => {
+            setMaxPriceVal(value);
           }}
         />
       </div>
 
       <div className="flex">
-        <Button variant="outline" className="p-3 w-1/2" onClick={handleClickApply}>
+        <Button variant="gray" className="py-3 w-1/2 bg-theme-gray-100 font-heading" onClick={handleClickApply}>
           Apply
         </Button>
-        <Button variant="outline" className="p-3 w-1/2 ml-2" onClick={handleClickClear}>
+        <Button variant="gray" className="py-3 w-1/2 bg-theme-gray-100 font-heading ml-2" onClick={handleClickClear}>
           Clear
         </Button>
       </div>

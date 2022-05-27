@@ -1,5 +1,6 @@
 import React from 'react';
 import { Navbar, Spacer, Header } from 'src/components/common';
+import { useAppContext } from 'src/utils/context/AppContext';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { OrderDrawer } from '../market';
 
@@ -23,10 +24,15 @@ export const PageBox = ({
   className = '',
   rightToolbar
 }: Props): JSX.Element => {
+  const { chainId } = useAppContext();
   const { orderDrawerOpen, setOrderDrawerOpen } = useOrderContext();
 
   return (
     <>
+      {chainId !== '1' && (
+        <div className="text-center bg-theme-gray-100 text-red-800 py-1">You are not on Ethereum network</div>
+      )}
+
       <div className="transition w-[100vw] h-[100vh] overflow-y-auto overflow-x-hidden justify-items-center">
         <Header title={title}>
           <Navbar />

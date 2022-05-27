@@ -59,6 +59,7 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
 
         <ToggleTab
           className="mt-14 -ml-2 font-heading pointer-events-auto"
+          tabWidth="200px"
           options={options}
           selected={selected}
           onChange={onChange}
