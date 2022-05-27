@@ -6,8 +6,8 @@ import {
   Button,
   Checkbox,
   Drawer,
-  FetchMore,
   PageBox,
+  ScrollLoader,
   Spacer,
   toastError,
   ToggleTab,
@@ -677,7 +677,7 @@ export const Analytics = () => {
 
             {data.isLoading && <LoadingAnalytics />}
 
-            <FetchMore
+            <ScrollLoader
               onFetchMore={() => {
                 if (data?.result?.cursor) {
                   setCursor(data?.result?.cursor);
