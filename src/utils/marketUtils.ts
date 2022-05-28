@@ -1,4 +1,4 @@
-import { GetOrderItemsQuery, OBOrderItem, SignedOBOrder } from '@infinityxyz/lib/types/core';
+import { GetOrderItemsQuery, OBOrderItem, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { apiPost } from 'src/utils/apiUtils';
 import { apiGet } from '.';

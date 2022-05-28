@@ -8,7 +8,7 @@ import { Chip, ToggleTab, useToggleTab, ExternalLink } from 'src/components/comm
 import { UserPageNftsTab } from './user-page-nfts-tab';
 import { UserPageActivityTab } from './user-page-activity-tab';
 import { ellipsisAddress } from 'src/utils';
-import { ETHEREUM_CHAIN_SCANNER_BASE } from '@infinityxyz/lib/utils';
+import { ETHEREUM_CHAIN_SCANNER_BASE } from '@infinityxyz/lib-frontend/utils';
 
 interface UserPageProps {
   userInfo: UserProfileDto;

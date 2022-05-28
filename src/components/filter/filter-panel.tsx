@@ -1,4 +1,4 @@
-import { BaseCollection } from '@infinityxyz/lib/types/core';
+import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
 import { useState } from 'react';
 import { Filter, OrderType, useFilterContext } from 'src/utils/context/FilterContext';
 import { Button, Checkbox, TextInputBox } from 'src/components/common';

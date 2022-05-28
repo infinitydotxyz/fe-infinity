@@ -1,6 +1,6 @@
-// import { ExchangeEvent } from '@infinityxyz/lib/types/core/feed/NftEvent';
-import { ExchangeEvent } from '@infinityxyz/lib/types/core/feed';
-import { BaseFeedEvent, FeedEventType } from '@infinityxyz/lib/types/core/feed/FeedEvent';
+// import { ExchangeEvent } from '@infinityxyz/lib-frontend/types/core/feed/NftEvent';
+import { ExchangeEvent } from '@infinityxyz/lib-frontend/types/core/feed';
+import { BaseFeedEvent, FeedEventType } from '@infinityxyz/lib-frontend/types/core/feed/FeedEvent';
 import { ReactNode } from 'react';
 import { AiOutlineComment, AiOutlineLike } from 'react-icons/ai';
 import { BLANK_IMG, ellipsisAddress, getChainScannerBase } from 'src/utils';

@@ -1,5 +1,5 @@
 import isEqual from 'lodash/isEqual';
-import { GetOrderItemsQuery, OBOrder } from '@infinityxyz/lib/types/core';
+import { GetOrderItemsQuery, OBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import React, { ReactNode, useEffect, useState } from 'react';
 import { getOrders } from 'src/utils/marketUtils';

@@ -1,6 +1,10 @@
 import { ReactNode } from 'react';
 import { getAddress } from '@ethersproject/address';
-import { ETHEREUM_CHAIN_SCANNER_BASE, POLYGON_CHAIN_SCANNER_BASE, trimLowerCase } from '@infinityxyz/lib/utils';
+import {
+  ETHEREUM_CHAIN_SCANNER_BASE,
+  POLYGON_CHAIN_SCANNER_BASE,
+  trimLowerCase
+} from '@infinityxyz/lib-frontend/utils';
 import { NextLink } from 'src/components/common';
 
 // OpenSea's EventType

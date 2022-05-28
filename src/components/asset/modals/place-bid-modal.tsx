@@ -1,4 +1,4 @@
-import { Collection, Token } from '@infinityxyz/lib/types/core';
+import { Collection, Token } from '@infinityxyz/lib-frontend/types/core';
 import React, { useState } from 'react';
 import { Modal, CurrencyInput, NextLink, Checkbox } from 'src/components/common';
 

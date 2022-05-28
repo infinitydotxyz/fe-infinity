@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { FeedEventType } from '@infinityxyz/lib/types/core/feed';
+import { FeedEventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { Checkbox, PopoverButton } from '../common';
 
 type FilterOption = {

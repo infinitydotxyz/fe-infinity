@@ -1,4 +1,4 @@
-import { BaseCollection, BaseToken, CardData, OrdersSnippet } from '@infinityxyz/lib/types/core';
+import { BaseCollection, BaseToken, CardData, OrdersSnippet } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { ITEMS_PER_PAGE } from 'src/utils/constants';
 import { useFilterContext } from 'src/utils/context/FilterContext';

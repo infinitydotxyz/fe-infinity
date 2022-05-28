@@ -1,4 +1,4 @@
-import { CollectionMetadata } from '@infinityxyz/lib/types/core';
+import { CollectionMetadata } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { PageBox } from 'src/components/common';

@@ -15,7 +15,7 @@ import {
 } from 'src/components/common';
 import { Field } from 'src/components/analytics/field';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { CollectionStats } from '@infinityxyz/lib/types/core';
+import { CollectionStats } from '@infinityxyz/lib-frontend/types/core';
 import { ITEMS_PER_PAGE, BLANK_IMG } from 'src/utils/constants';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
 import { truncateDecimals } from 'src/utils';

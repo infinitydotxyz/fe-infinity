@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { Erc721Attribute, CollectionAttributes } from '@infinityxyz/lib/types/core';
+import { Erc721Attribute, CollectionAttributes } from '@infinityxyz/lib-frontend/types/core';
 import { Trait } from './trait';
 
 interface TraitListProps {

@@ -5,7 +5,7 @@ import { MaxUint256 } from '@ethersproject/constants';
 import { Contract } from '@ethersproject/contracts';
 import { JsonRpcSigner } from '@ethersproject/providers';
 import { parseEther } from '@ethersproject/units';
-import { ChainOBOrder, OBOrder, OBOrderItem, SignedOBOrder } from '@infinityxyz/lib/types/core';
+import { ChainOBOrder, OBOrder, OBOrderItem, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import {
   getCurrentOBOrderPrice,
   getExchangeAddress,
@@ -14,7 +14,7 @@ import {
   getTxnCurrencyAddress,
   NULL_ADDRESS,
   trimLowerCase
-} from '@infinityxyz/lib/utils';
+} from '@infinityxyz/lib-frontend/utils';
 import { infinityExchangeAbi } from 'src/abi/infinityExchange';
 import { erc20Abi } from '../../abi/erc20';
 import { erc721Abi } from '../../abi/erc721';

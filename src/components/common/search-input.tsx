@@ -1,6 +1,6 @@
 import React from 'react';
 import { useFetch } from 'src/utils';
-import { BaseCollection } from '@infinityxyz/lib/types/core';
+import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import { Combobox } from '@headlessui/react';
 import { SVG } from './svg';

@@ -1,4 +1,4 @@
-import { OBOrder } from '@infinityxyz/lib/types/core';
+import { OBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 
 export type DataColumnType = 'Name' | 'Text' | 'Currency' | 'Button';

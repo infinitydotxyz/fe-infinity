@@ -18,7 +18,7 @@ import {
 
 import { increaseComments, increaseLikes } from './counterUtils';
 import { firestoreConfig } from './creds';
-import { FeedEventType } from '@infinityxyz/lib/types/core/feed';
+import { FeedEventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { FeedEvent } from 'src/components/feed/feed-item';
 
 export const COLL_FEED = 'feed'; // collection: /feed - to store feed events

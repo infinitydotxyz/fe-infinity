@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { OBOrder } from '@infinityxyz/lib/types/core';
+import { OBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { Button, Dropdown, SVG } from 'src/components/common';
 import { OrderbookProvider, SORT_FILTERS, useOrderbook } from '../OrderbookContext';
 import { OrderbookRow } from './orderbook-row';

@@ -1,4 +1,4 @@
-import { OBOrder } from '@infinityxyz/lib/types/core';
+import { OBOrder } from '@infinityxyz/lib-frontend/types/core';
 import moment from 'moment';
 import { Button, EthPrice } from 'src/components/common';
 import { ellipsisAddress, numStr, shortDate } from 'src/utils';

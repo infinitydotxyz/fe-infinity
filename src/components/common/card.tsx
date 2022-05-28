@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { CardData } from '@infinityxyz/lib/types/core';
+import { CardData } from '@infinityxyz/lib-frontend/types/core';
 import { twMerge } from 'tailwind-merge';
 import { AiOutlineEye } from 'react-icons/ai';
 import { Dropdown, DropdownItems } from './dropdown';
