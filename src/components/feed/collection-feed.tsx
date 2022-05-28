@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { FeedItem, FeedEvent } from './feed-item';
-import { COLL_FEED, FeedFilter, subscribe } from 'src/utils/firestore/firestoreUtils';
+import { COLL_FEED, FeedFilter, fetchMoreEvents, subscribe } from 'src/utils/firestore/firestoreUtils';
 import { CommentPanel } from './comment-panel';
 import { FeedEventType } from '@infinityxyz/lib/types/core/feed';
 import { FeedFilterDropdown } from './feed-filter-dropdown';
 import { ActivityItem } from './activity-item';
+import { ScrollLoader } from '../common';
 
 let eventsInit = false;
 
@@ -153,6 +154,14 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
             </li>
           );
         })}
+
+        <ScrollLoader
+          onFetchMore={async () => {
+            const data: FeedEvent[] = (await fetchMoreEvents(filter)) as FeedEvent[];
+            console.log('data', data);
+            setEvents([...events, ...data]);
+          }}
+        />
       </ul>
     </div>
   );
