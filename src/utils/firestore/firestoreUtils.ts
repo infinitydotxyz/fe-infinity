@@ -22,7 +22,7 @@ import { FeedEventType } from '@infinityxyz/lib/types/core/feed';
 import { FeedEvent } from 'src/components/feed/feed-item';
 
 export const COLL_FEED = 'feed'; // collection: /feed - to store feed events
-const EVENTS_PER_PAGE = 30;
+const EVENTS_PER_PAGE = 10;
 const COMMENTS_PER_PAGE = 20;
 
 export type FeedFilter = {
@@ -64,16 +64,37 @@ export async function fetchMoreEvents(filter: FeedFilter) {
 
   if (lastDoc) {
     let q;
-    if (filter?.types) {
-      q = query(
-        coll,
-        where('type', 'in', filter?.types),
-        orderBy('timestamp', 'desc'),
-        limit(EVENTS_PER_PAGE),
-        startAfter(lastDoc)
-      ); // query(coll, limit(3), orderBy('timestamp', 'desc'))
+    if (filter?.collectionAddress) {
+      if (filter?.types) {
+        q = query(
+          coll,
+          where('type', 'in', filter?.types),
+          where('collectionAddress', '==', filter?.collectionAddress),
+          orderBy('timestamp', 'desc'),
+          limit(EVENTS_PER_PAGE),
+          startAfter(lastDoc)
+        );
+      } else {
+        q = query(
+          coll,
+          where('collectionAddress', '==', filter?.collectionAddress),
+          orderBy('timestamp', 'desc'),
+          limit(EVENTS_PER_PAGE),
+          startAfter(lastDoc)
+        );
+      }
     } else {
-      q = query(coll, orderBy('timestamp', 'desc'), limit(EVENTS_PER_PAGE), startAfter(lastDoc)); // query(coll, limit(3), orderBy('timestamp', 'desc'))
+      if (filter?.types) {
+        q = query(
+          coll,
+          where('type', 'in', filter?.types),
+          orderBy('timestamp', 'desc'),
+          limit(EVENTS_PER_PAGE),
+          startAfter(lastDoc)
+        ); // query(coll, limit(3), orderBy('timestamp', 'desc'))
+      } else {
+        q = query(coll, orderBy('timestamp', 'desc'), limit(EVENTS_PER_PAGE), startAfter(lastDoc)); // query(coll, limit(3), orderBy('timestamp', 'desc'))
+      }
     }
 
     const items = await getDocs(q);

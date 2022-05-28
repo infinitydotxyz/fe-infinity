@@ -144,7 +144,7 @@ export const UserProfileActivityList = ({
         />
       </div>
 
-      <ul className="space-y-8 pointer-events-auto">
+      <ul className="space-y-4 pointer-events-auto">
         {isFetching && <Spinner />}
 
         {hasNextPage === false && data?.length === 0 ? <div>No results found.</div> : null}

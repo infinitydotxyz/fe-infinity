@@ -1,5 +1,5 @@
 import { BLANK_IMG, ellipsisAddress, getChainScannerBase } from 'src/utils';
-import { EthPrice, NextLink } from 'src/components/common';
+import { EthPrice, NextLink, BGImage } from 'src/components/common';
 import { FeedEvent } from './feed-item';
 import { FeedEventTypeNames } from '@infinityxyz/lib/types/core/feed';
 import { format } from 'timeago.js';
@@ -11,12 +11,12 @@ interface Props {
 export const UserActivityItem = ({ event }: Props) => {
   return (
     <div>
-      <div className="bg-gray-100 p-10 rounded-2xl flex items-center font-heading">
+      <div className="bg-gray-100 px-10 py-6 rounded-3xl flex items-center font-heading">
         <NextLink href={`/asset/${event.chainId}/${event.collectionAddress}/${event.tokenId}`}>
           {event.image ? (
-            <img src={event.image} alt="NFT Image" className="w-16 h-16 max-h-[80px] rounded-[50%]" />
+            <BGImage src={event.image} className="w-16 h-16 max-h-[80px] rounded-full" />
           ) : (
-            <img src={BLANK_IMG} alt="NFT Image" className="w-16 h-16 max-h-[80px] rounded-[50%]" />
+            <BGImage src={BLANK_IMG} className="w-16 h-16 max-h-[80px] rounded-full" />
           )}
         </NextLink>
         <div className="flex justify-between w-full mx-8 ml-4">
