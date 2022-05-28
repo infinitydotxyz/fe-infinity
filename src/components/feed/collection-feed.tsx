@@ -113,7 +113,7 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
         </div>
       ) : null}
 
-      <ul className="space-y-8">
+      <ul className="space-y-4">
         {events.map((event, idx) => {
           if (forActivity) {
             return <ActivityItem key={idx} event={event} />;
