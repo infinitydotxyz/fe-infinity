@@ -67,7 +67,7 @@ export const Card = ({
 
   return (
     <div
-      className={`sm:mx-0 w-full  relative flex flex-col pointer-events-auto ${className}`}
+      className={`sm:mx-0 w-full relative flex flex-col pointer-events-auto ${className}`}
       style={{ height: heightStyle }}
     >
       <NextLink
@@ -75,9 +75,9 @@ export const Card = ({
         className="h-full"
       >
         {data?.image ? (
-          <BGImage src={data?.image} className="overflow-clip rounded-3xl" />
+          <BGImage src={data?.image} className="overflow-clip rounded-3xl border-black border-[0.5px]" />
         ) : (
-          <BGImage src={BLANK_IMG} className="overflow-clip rounded-3xl" />
+          <BGImage src={BLANK_IMG} className="overflow-clip rounded-3xl border-black border-[0.5px]" />
         )}
       </NextLink>
 

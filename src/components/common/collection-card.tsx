@@ -29,7 +29,10 @@ export const CollectionCard = ({ collection, onButtonClick, buttonName, routerQu
   const avatarUrl = getAvatarUrl(collection.bannerImage) || BLANK_IMAGE_URL;
 
   return (
-    <div className="w-full mx-auto sm:mx-0 bg-theme-light-100 border border-theme-light-100 rounded-3xl overflow-hidden hover:shadow-xl cursor-pointer">
+    <div
+      className={`w-full mx-auto sm:mx-0 bg-theme-light-100
+      border-[0.5px] border-black rounded-3xl overflow-hidden cursor-pointer`}
+    >
       <a
         href={`/collection/${collection.slug}${routerQuery ? `?${routerQuery}` : ''}`}
         className="text-theme-light-800 font-heading tracking-tight mr-2"
