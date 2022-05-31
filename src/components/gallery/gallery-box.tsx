@@ -167,7 +167,6 @@ export const GalleryBox = ({
     const w = gridWidth / cols;
     cardHeight = w * 1.2;
   }
-  console.log('error && !isFetching && data.length === 0', error, isFetching, data);
 
   return (
     <div className={twMerge(className, 'flex flex-col')}>
