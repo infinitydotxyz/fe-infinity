@@ -72,13 +72,9 @@ export const Card = ({
     >
       <NextLink
         href={`/asset/${data?.chainId}/${data?.tokenAddress ?? data?.address}/${data?.tokenId}`}
-        className="h-full"
+        className="h-full overflow-clip rounded-3xl border-black border-[0.5px]"
       >
-        {data?.image ? (
-          <BGImage src={data?.image} className="overflow-clip rounded-3xl border-black border-[0.5px]" />
-        ) : (
-          <BGImage src={BLANK_IMG} className="overflow-clip rounded-3xl border-black border-[0.5px]" />
-        )}
+        {data?.image ? <BGImage src={data?.image} className="" /> : <BGImage src={BLANK_IMG} className="" />}
       </NextLink>
 
       {data?.rarityRank && (

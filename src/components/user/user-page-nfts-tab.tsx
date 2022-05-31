@@ -43,7 +43,7 @@ export const UserPageNftsTab = ({ userInfo }: Props) => {
     updateOrders(ordersInCart.filter((order) => order.cartItems.length > 0));
   };
 
-  const isMyProfile = user?.address === userInfo.address;
+  const isMyProfile = user?.address === userInfo?.address;
   return (
     <div>
       <div className="mt-20">
