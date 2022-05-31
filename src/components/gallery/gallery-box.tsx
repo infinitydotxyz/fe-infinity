@@ -137,7 +137,9 @@ export const GalleryBox = ({
     if (isRefresh) {
       setData([...moreData]);
     } else {
-      setData([...data, ...moreData]);
+      if (result?.cursor !== cursor) {
+        setData([...data, ...moreData]);
+      }
     }
     setCurrentPage(newCurrentPage);
   };
@@ -210,7 +212,7 @@ export const GalleryBox = ({
             </>
           )}
 
-          {error ? <div className="mt-24">Unable to load data.</div> : null}
+          {!isFetching && error ? <div className="mt-24">Unable to load data.</div> : null}
 
           {!error && !isFetching && data.length === 0 ? <div>No results found.</div> : null}
 
