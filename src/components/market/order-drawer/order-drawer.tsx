@@ -81,7 +81,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
     let topWidget;
 
     if (readyToCheckout()) {
-      buttonTitle = 'Checkout';
+      buttonTitle = 'Place Orders';
 
       const items = [];
 
@@ -113,7 +113,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
         buttonTitle = 'Update order';
       }
     }
-    const showCancel = buttonTitle === 'Checkout' ? false : true;
+    const showCancel = buttonTitle === 'Place Orders' ? false : true;
 
     return (
       <div className="flex flex-col mb-8">
