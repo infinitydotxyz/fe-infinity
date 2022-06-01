@@ -9,7 +9,6 @@ import { ChainOBOrder, OBOrder, OBOrderItem, SignedOBOrder } from '@infinityxyz/
 import {
   getCurrentOBOrderPrice,
   getExchangeAddress,
-  getFeeTreasuryAddress,
   getOBComplicationAddress,
   getTxnCurrencyAddress,
   NULL_ADDRESS,
@@ -28,9 +27,8 @@ export async function getSignedOBOrder(
 ): Promise<SignedOBOrder | undefined> {
   // sign
   const infinityExchangeAddress = getExchangeAddress(chainId.toString());
-  const infinityFeeTreasuryAddress = getFeeTreasuryAddress(chainId.toString());
   const infinityExchange = new Contract(infinityExchangeAddress, infinityExchangeAbi, signer);
-  const signedOrder = await prepareOBOrder(user, chainId, signer, order, infinityExchange, infinityFeeTreasuryAddress);
+  const signedOrder = await prepareOBOrder(user, chainId, signer, order, infinityExchange);
   if (!signedOrder) {
     const msg = 'signOBSpecOrder: failed to sign order';
     console.error(msg);
@@ -47,36 +45,31 @@ export async function prepareOBOrder(
   chainId: BigNumberish,
   signer: JsonRpcSigner,
   order: OBOrder,
-  infinityExchange: Contract,
-  infinityFeeTreasuryAddress: string
+  infinityExchange: Contract
 ): Promise<ChainOBOrder | undefined> {
-  // check if order is still valid
+  // grant approvals
+  const approvals = await grantApprovals(user, order, signer, infinityExchange.address);
+  if (!approvals) {
+    return undefined;
+  }
 
-  // todo: uncomment below code when contracts are deployed; remove log
-  console.log(infinityFeeTreasuryAddress);
-  // // grant approvals
-  // const approvals = await grantApprovals(user, order, signer, infinityExchange.address, infinityFeeTreasuryAddress);
-  // if (!approvals) {
-  //   return undefined;
-  // }
-
-  // const validOrder = await isOrderValid(user, order, infinityExchange, signer);
-  // if (!validOrder) {
-  //   return undefined;
-  // }
+  const validOrder = await isOrderValid(user, order, infinityExchange, signer);
+  if (!validOrder) {
+    return undefined;
+  }
 
   // sign order
   const chainOBOrder = await signOBOrder(chainId, infinityExchange.address, order, signer);
 
   console.log('Verifying signature');
   // todo: remove this
-  // const isSigValid = await infinityExchange.verifyOrderSig(signedOBOrder);
-  // if (!isSigValid) {
-  //   console.error('Signature is invalid');
-  //   return undefined;
-  // } else {
-  //   console.log('Signature is valid');
-  // }
+  const isSigValid = await infinityExchange.verifyOrderSig(chainOBOrder);
+  if (!isSigValid) {
+    console.error('Signature is invalid');
+    return undefined;
+  } else {
+    console.log('Signature is valid');
+  }
   return chainOBOrder;
 }
 
@@ -116,21 +109,14 @@ export async function grantApprovals(
   user: User,
   order: OBOrder,
   signer: JsonRpcSigner,
-  exchange: string,
-  infinityFeeTreasuryAddress: string
+  exchange: string
 ): Promise<boolean> {
   try {
     console.log('Granting approvals');
     if (!order.isSellOrder) {
       // approve currencies
       const currentPrice = getCurrentOBOrderPrice(order);
-      await approveERC20(
-        user.address,
-        order.execParams.currencyAddress,
-        currentPrice,
-        signer,
-        infinityFeeTreasuryAddress
-      );
+      await approveERC20(user.address, order.execParams.currencyAddress, currentPrice, signer, exchange);
     } else {
       // approve collections
       await approveERC721(user.address, order.nfts, signer, exchange);
