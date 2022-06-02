@@ -1,18 +1,19 @@
-import { OBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import moment from 'moment';
 import { Button, EthPrice } from 'src/components/common';
 import { ellipsisAddress, numStr, shortDate } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
+import { takeOrder } from 'src/utils/exchange/orders';
 import { DataColumn, defaultDataColumns } from './data-columns';
 import { OrderbookItem } from './orderbook-item';
 
 type OrderbookRowProps = {
-  order: OBOrder;
+  order: SignedOBOrder;
   isFilterOpen: boolean;
 };
 
 export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.Element => {
-  const { checkSignedIn } = useAppContext();
+  const { checkSignedIn, providerManager, chainId } = useAppContext();
 
   const valueDiv = (dataColumn: DataColumn) => {
     let value = order.id;
@@ -72,12 +73,17 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
     }
   });
 
-  const onClickBuySell = (order: OBOrder) => {
+  const onClickBuySell = async (order: SignedOBOrder) => {
     if (!checkSignedIn()) {
       return;
     }
-    alert('Fulfilling this order: ' + JSON.stringify(order));
     // todo: fullfill order
+    const signer = providerManager?.getEthersProvider().getSigner();
+    if (signer) {
+      await takeOrder(signer, chainId, order.signedOrder);
+    } else {
+      console.error('signer is null');
+    }
   };
 
   return (

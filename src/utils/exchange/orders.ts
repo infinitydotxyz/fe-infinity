@@ -1,23 +1,26 @@
 import { defaultAbiCoder } from '@ethersproject/abi';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
-import { splitSignature } from '@ethersproject/bytes';
+import { BytesLike, splitSignature } from '@ethersproject/bytes';
 import { MaxUint256 } from '@ethersproject/constants';
 import { Contract } from '@ethersproject/contracts';
 import { JsonRpcSigner } from '@ethersproject/providers';
 import { parseEther } from '@ethersproject/units';
-import { ChainOBOrder, OBOrder, OBOrderItem, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { ChainNFTs, ChainOBOrder, OBOrder, OBOrderItem, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import {
   getCurrentOBOrderPrice,
   getExchangeAddress,
   getOBComplicationAddress,
   getTxnCurrencyAddress,
+  jsonString,
+  nowSeconds,
   NULL_ADDRESS,
   trimLowerCase
 } from '@infinityxyz/lib-frontend/utils';
-import { infinityExchangeAbi } from 'src/abi/infinityExchange';
+import { infinityExchangeAbi } from '../../abi/infinityExchange';
 import { erc20Abi } from '../../abi/erc20';
 import { erc721Abi } from '../../abi/erc721';
 import { User } from '../context/AppContext';
+import { keccak256, solidityKeccak256 } from 'ethers/lib/utils';
 
 export async function getSignedOBOrder(
   user: User,
@@ -260,11 +263,9 @@ export async function signOBOrder(
     });
   }
   // don't use ?? operator here
-  const complicationAddress = getOBComplicationAddress(chainId.toString());
-  const currencyAddress = getTxnCurrencyAddress(chainId.toString());
   const execParams = [
-    order.execParams.complicationAddress || complicationAddress,
-    order.execParams.currencyAddress || currencyAddress
+    order.execParams.complicationAddress || getOBComplicationAddress(chainId.toString()),
+    order.execParams.currencyAddress || getTxnCurrencyAddress(chainId.toString())
   ];
   // don't use ?? operator here
   const extraParams = defaultAbiCoder.encode(['address'], [order.extraParams.buyer || NULL_ADDRESS]);
@@ -288,4 +289,196 @@ export async function signOBOrder(
   } catch (e) {
     console.error('Error signing order', e);
   }
+}
+
+export const getCurrentChainOBOrderPrice = (order: ChainOBOrder): BigNumber => {
+  const startPrice = BigNumber.from(order.constraints[1]);
+  const endPrice = BigNumber.from(order.constraints[2]);
+  const startTime = BigNumber.from(order.constraints[3]);
+  const endTime = BigNumber.from(order.constraints[4]);
+  const duration = endTime.sub(startTime);
+  let priceDiff = BigNumber.from(0);
+  if (startPrice.gt(endPrice)) {
+    priceDiff = startPrice.sub(endPrice);
+  } else {
+    priceDiff = endPrice.sub(startPrice);
+  }
+  if (priceDiff.eq(0) || duration.eq(0)) {
+    return startPrice;
+  }
+  const elapsedTime = BigNumber.from(nowSeconds()).sub(startTime);
+  const precision = 10000;
+  const portion = elapsedTime.gt(duration) ? precision : elapsedTime.mul(precision).div(duration);
+  priceDiff = priceDiff.mul(portion).div(precision);
+  let currentPrice = BigNumber.from(0);
+  if (startPrice.gt(endPrice)) {
+    currentPrice = startPrice.sub(priceDiff);
+  } else {
+    currentPrice = startPrice.add(priceDiff);
+  }
+  return currentPrice;
+};
+
+export async function signChainOBOrder(
+  chainId: BigNumberish,
+  contractAddress: string,
+  order: ChainOBOrder,
+  signer: JsonRpcSigner
+): Promise<string> {
+  const domain = {
+    name: 'InfinityExchange',
+    version: '1',
+    chainId: chainId,
+    verifyingContract: contractAddress
+  };
+
+  const types = {
+    Order: [
+      { name: 'isSellOrder', type: 'bool' },
+      { name: 'signer', type: 'address' },
+      { name: 'constraints', type: 'uint256[]' },
+      { name: 'nfts', type: 'OrderItem[]' },
+      { name: 'execParams', type: 'address[]' },
+      { name: 'extraParams', type: 'bytes' }
+    ],
+    OrderItem: [
+      { name: 'collection', type: 'address' },
+      { name: 'tokens', type: 'TokenInfo[]' }
+    ],
+    TokenInfo: [
+      { name: 'tokenId', type: 'uint256' },
+      { name: 'numTokens', type: 'uint256' }
+    ]
+  };
+
+  // remove sig
+  const orderToSign = {
+    isSellOrder: order.isSellOrder,
+    signer: order.signer,
+    constraints: order.constraints,
+    nfts: order.nfts,
+    execParams: order.execParams,
+    extraParams: order.extraParams
+  };
+
+  // sign order
+  try {
+    const sig = await signer._signTypedData(domain, types, orderToSign);
+    const splitSig = splitSignature(sig ?? '');
+
+    const encodedSig = defaultAbiCoder.encode(['bytes32', 'bytes32', 'uint8'], [splitSig.r, splitSig.s, splitSig.v]);
+    return encodedSig;
+  } catch (e) {
+    console.error('Error signing order', e);
+  }
+  return '';
+}
+
+export async function takeOrder(signer: JsonRpcSigner, chainId: string, makerOrder: ChainOBOrder) {
+  const user = await signer.getAddress();
+  const exchangeAddress = getExchangeAddress(chainId);
+  const infinityExchange = new Contract(exchangeAddress, infinityExchangeAbi, signer);
+
+  const takerOrderSide = !makerOrder.isSellOrder;
+  const constraints = makerOrder.constraints;
+  const nfts = makerOrder.nfts;
+  const execParams = makerOrder.execParams;
+  const extraParams = makerOrder.extraParams;
+  const salePrice = getCurrentChainOBOrderPrice(makerOrder);
+
+  const takerOrder: ChainOBOrder = {
+    isSellOrder: takerOrderSide,
+    signer: user,
+    extraParams,
+    nfts,
+    constraints,
+    execParams,
+    sig: makerOrder.sig
+  };
+
+  // perform exchange
+  const options = {
+    value: salePrice,
+    gasLimit: BigNumber.from(200000)
+  };
+  const gasEstimate = await infinityExchange.estimateGas.takeOrders([makerOrder], [takerOrder], options);
+  options.gasLimit = gasEstimate;
+  console.log('gasEstimate', gasEstimate.toString());
+  console.log(jsonString(makerOrder));
+  console.log(jsonString(takerOrder));
+  const canTake = await canTakeOrders(infinityExchange, makerOrder, takerOrder);
+  if (canTake) {
+    await infinityExchange.takeOrders([makerOrder], [takerOrder], options);
+  } else {
+    console.error('Cannot take order');
+  }
+}
+
+export async function canTakeOrders(
+  infinityExchange: Contract,
+  makerOrder: ChainOBOrder,
+  takerOrder: ChainOBOrder
+): Promise<boolean> {
+  const makerOrderHash = _orderHash(makerOrder);
+  const result = await infinityExchange.verifyTakeOrders(makerOrderHash, makerOrder, takerOrder);
+  console.log('verified', result[0], 'execPrice', result[1].toString());
+  return result[0];
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function _orderHash(order: ChainOBOrder): BytesLike {
+  const fnSign =
+    'Order(bool isSellOrder,address signer,uint256[] constraints,OrderItem[] nfts,address[] execParams,bytes extraParams)OrderItem(address collection,TokenInfo[] tokens)TokenInfo(uint256 tokenId,uint256 numTokens)';
+  const orderTypeHash = solidityKeccak256(['string'], [fnSign]);
+
+  const constraints = order.constraints;
+  const execParams = order.execParams;
+  const extraParams = order.extraParams;
+
+  const constraintsHash = keccak256(
+    defaultAbiCoder.encode(['uint256', 'uint256', 'uint256', 'uint256', 'uint256', 'uint256', 'uint256'], constraints)
+  );
+
+  const nftsHash = _getNftsHash(order.nfts);
+  const execParamsHash = keccak256(defaultAbiCoder.encode(['address', 'address'], execParams));
+
+  const calcEncode = defaultAbiCoder.encode(
+    ['bytes32', 'bool', 'address', 'bytes32', 'bytes32', 'bytes32', 'bytes32'],
+    [orderTypeHash, order.isSellOrder, order.signer, constraintsHash, nftsHash, execParamsHash, keccak256(extraParams)]
+  );
+
+  return keccak256(calcEncode);
+}
+
+function _getNftsHash(nfts: ChainNFTs[]): BytesLike {
+  const fnSign = 'OrderItem(address collection,TokenInfo[] tokens)TokenInfo(uint256 tokenId,uint256 numTokens)';
+  const typeHash = solidityKeccak256(['string'], [fnSign]);
+
+  const hashes = [];
+  for (const nft of nfts) {
+    const hash = keccak256(
+      defaultAbiCoder.encode(['bytes32', 'uint256', 'bytes32'], [typeHash, nft.collection, _getTokensHash(nft.tokens)])
+    );
+    hashes.push(hash);
+  }
+  const encodeTypeArray = hashes.map(() => 'bytes32');
+  const nftsHash = keccak256(defaultAbiCoder.encode(encodeTypeArray, hashes));
+
+  return nftsHash;
+}
+
+function _getTokensHash(tokens: ChainNFTs['tokens']): BytesLike {
+  const fnSign = 'TokenInfo(uint256 tokenId,uint256 numTokens)';
+  const typeHash = solidityKeccak256(['string'], [fnSign]);
+
+  const hashes = [];
+  for (const token of tokens) {
+    const hash = keccak256(
+      defaultAbiCoder.encode(['bytes32', 'uint256', 'uint256'], [typeHash, token.tokenId, token.numTokens])
+    );
+    hashes.push(hash);
+  }
+  const encodeTypeArray = hashes.map(() => 'bytes32');
+  const tokensHash = keccak256(defaultAbiCoder.encode(encodeTypeArray, hashes));
+  return tokensHash;
 }

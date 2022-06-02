@@ -1,4 +1,4 @@
-import { OBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 
 export type DataColumnType = 'Name' | 'Text' | 'Currency' | 'Button';
@@ -21,7 +21,7 @@ export interface DataColumn {
   onClick?: () => void;
 }
 
-export const defaultDataColumns = (order: OBOrder): DataColumn[] => {
+export const defaultDataColumns = (order: SignedOBOrder): DataColumn[] => {
   const router = useRouter();
   return [
     {
