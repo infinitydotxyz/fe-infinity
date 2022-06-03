@@ -101,6 +101,17 @@ export const stringToFloat = (numStr?: string, defaultValue = 0) => {
   return num;
 };
 
+// example: formatNumber(1025.12) => '1,025'
+export const formatNumber = (floatNum: number | undefined, decimals = 0): string => {
+  if (decimals) {
+    const str = (floatNum ?? 0).toLocaleString('en-US');
+    return str.slice(0, str.indexOf('.') + decimals + 1);
+  } else {
+    const str = Math.round(floatNum ?? 0).toLocaleString('en-US');
+    return str;
+  }
+};
+
 export const getCustomExceptionMsg = (msg: ReactNode) => {
   let customMsg = msg;
   if (typeof msg === 'string' && msg.indexOf('err: insufficient funds for gas * price + value') > 0) {

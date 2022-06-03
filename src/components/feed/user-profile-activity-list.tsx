@@ -67,14 +67,14 @@ export const UserProfileActivityList = ({
 
     const moreData: FeedEvent[] = [];
     // convert UserActivityEvent[] to FeedEvent[] for rendering.
-    result?.data?.map((activity: UserActivityEvent) => {
+    result?.data?.map((act: UserActivityEvent) => {
       moreData.push({
-        ...activity,
-        seller: activity.makerAddress ?? '',
-        sellerDisplayName: activity.makerUsername === '_____' ? '' : activity.makerUsername ?? '',
-        buyer: activity.takerAddress ?? '',
-        buyerDisplayName: activity.takerUsername === '_____' ? '' : activity.takerUsername ?? '',
-        price: activity.startPriceEth ?? 0
+        ...act,
+        seller: act.seller ?? act.makerAddress ?? '',
+        sellerDisplayName: act.sellerDisplayName ?? act.makerUsername === '_____' ? '' : act.makerUsername ?? '',
+        buyer: act.buyer ?? act.takerAddress ?? '',
+        buyerDisplayName: act.buyerDisplayName ?? act.takerUsername === '_____' ? '' : act.takerUsername ?? '',
+        price: act.price ?? act.startPriceEth ?? 0
       });
     });
 

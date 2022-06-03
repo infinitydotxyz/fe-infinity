@@ -40,7 +40,7 @@ export const InputBox = ({
           className
         )}
       >
-        {icon && <span className="pr-8">{icon}</span>}
+        {icon && <span>{icon}</span>}
         <div className="w-full">
           {label && (
             <label className={twMerge('block font-normal font-heading text-sm text-theme-gray-700', labelClassname)}>
