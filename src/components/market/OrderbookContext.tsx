@@ -1,5 +1,5 @@
 import isEqual from 'lodash/isEqual';
-import { GetOrderItemsQuery, OBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { GetOrderItemsQuery, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import React, { ReactNode, useEffect, useState } from 'react';
 import { getOrders } from 'src/utils/marketUtils';
@@ -134,7 +134,7 @@ const parseRouterQueryParamsToFilters = (query: ParsedUrlQuery): OBFilters => {
 };
 
 type OBContextType = {
-  orders: OBOrder[];
+  orders: SignedOBOrder[];
   isLoading: boolean;
   fetchMore: () => Promise<void>;
   filters: OBFilters;
@@ -163,7 +163,7 @@ export const OrderbookProvider = ({ children, collectionId }: OBProvider) => {
     return null;
   }
 
-  const [orders, setOrders] = useState<OBOrder[]>([]);
+  const [orders, setOrders] = useState<SignedOBOrder[]>([]);
   const [filters, setFilters] = useState<OBFilters>(defaultFilters);
   const [isLoading, setIsLoading] = useState(false);
   const [limit, setLimit] = useState(AMOUNT_OF_ORDERS);
