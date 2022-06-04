@@ -75,6 +75,17 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const [showMakeOfferModal, setShowMakeOfferModal] = useState(false);
   const [showPlaceBidModal, setShowPlaceBidModal] = useState(false);
 
+  // todo: hack to handle changed opensea image url
+  if (token?.image) {
+    console.log(token.image);
+    token.image.url = token.image.url.replace('storage.opensea.io', 'openseauserdata.com');
+  }
+
+  // if cached url is null, try original url or the blank image
+  if (token && !token?.image.url) {
+    token.image.url = token.image.originalUrl ?? BLANK_IMAGE_URL;
+  }
+
   if (isLoading) {
     return (
       <PageBox title="Loading..." showTitle={false}>

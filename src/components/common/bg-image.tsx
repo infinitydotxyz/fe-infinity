@@ -9,7 +9,8 @@ interface Props {
 
 export const BGImage = ({ src, center = true, className = '' }: Props) => {
   const [loaded, setLoaded] = useState(false);
-
+  // todo: src.replace hack to handle changed opensea image url
+  src = src?.replace('storage.opensea.io', 'openseauserdata.com');
   useEffect(() => {
     const img = new Image();
     let deleted = false;
@@ -25,7 +26,6 @@ export const BGImage = ({ src, center = true, className = '' }: Props) => {
 
     return () => {
       deleted = true;
-
       // trying to cancel load? not sure if this works
       img.src = '';
       img.onload = null;
