@@ -224,8 +224,10 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
 
       {/* <ActivityList chainId={collection.chainId} collectionAddress={collection.address} tokenId={token.tokenId} /> */}
 
-      <h3 className="mt-8 mb-4 font-bold font-body">Activity</h3>
-      <CollectionFeed collectionAddress={collection.address} tokenId={token.tokenId} forActivity={true} />
+      <div className="mt-4">
+        <h3 className="mt-8 mb-4 font-bold font-body">Activity</h3>
+        <CollectionFeed collectionAddress={collection.address} tokenId={token.tokenId} forActivity={true} />
+      </div>
 
       {modals}
     </PageBox>

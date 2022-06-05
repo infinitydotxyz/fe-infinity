@@ -84,12 +84,12 @@ export const CustomMenuItem = (props: CustomMenuItemProps) => {
           href="#"
           className={twMerge(
             'flex w-full justify-between px-4 py-4 text-left leading-5 font-heading ',
-            active ? 'bg-black text-white' : 'text-gray-700',
+            active ? 'hover:bg-theme-light-200' : 'text-gray-700',
             disabled && 'cursor-not-allowed opacity-50',
             props.itemClassName
           )}
         >
-          <span className={classNames(active && 'font-bold')}>{props.children}</span>
+          <span className={classNames(active)}>{props.children}</span>
           {/* <kbd className={classNames('font-sans', active && 'text-indigo-50')}>⌘K</kbd> */}
         </a>
       )}
