@@ -140,7 +140,7 @@ const SingleCollectionCell = ({
         {token && (
           <NextLink
             href={`/asset/1/${orderNft?.collectionAddress}/${token.tokenId}`}
-            className="truncate"
+            className="whitespace-pre-wrap"
             title={token?.tokenName}
           >
             {token?.tokenName}
