@@ -262,7 +262,7 @@ export const OrderContextProvider = ({ children }: Props) => {
 
     try {
       const orderNonce = await fetchOrderNonce(user.address);
-      const minBpsToSeller = await fetchMinBpsToSeller(chainId, spec.nfts);
+      const minBpsToSeller = fetchMinBpsToSeller();
       // sell orders are always in ETH
       const currencyAddress = spec.isSellOrder ? NULL_ADDRESS : getTxnCurrencyAddress(chainId);
       const order: OBOrder = {

@@ -1,4 +1,5 @@
-import { GetOrderItemsQuery, OBOrderItem, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { GetOrderItemsQuery, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { PROTOCOL_FEE_BPS } from '@infinityxyz/lib-frontend/utils';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { apiPost } from 'src/utils/apiUtils';
 import { apiGet } from '.';
@@ -46,20 +47,8 @@ export const fetchOrderNonce = async (user: string): Promise<string> => {
   }
 };
 
-export const fetchMinBpsToSeller = async (chainId: string, nfts: OBOrderItem[]): Promise<number> => {
-  try {
-    const collections: string[] = [];
-    for (const nft of nfts) {
-      collections.push(nft.collectionAddress);
-    }
-    const response = await apiGet(`/orders/minbps`, {
-      query: { chainId, collections }
-    });
-    return response.result as number;
-  } catch (err) {
-    console.error('Failed fetching minbps');
-    throw err;
-  }
+export const fetchMinBpsToSeller = (): number => {
+  return 10000 - PROTOCOL_FEE_BPS;
 };
 
 export const bigNumToDate = (time: BigNumberish): Date => {
