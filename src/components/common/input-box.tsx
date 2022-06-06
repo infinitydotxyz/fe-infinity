@@ -34,9 +34,13 @@ export const InputBox = ({
   return (
     <TooltipWrapper show={showTooltip} tooltip={tooltip} className={classNames({ 'w-full': isFullWidth })}>
       <div
-        className={twMerge(inputBorderColor, 'py-3 pl-6 pr-2 border rounded-3xl w-full flex items-center', className)}
+        className={twMerge(
+          inputBorderColor,
+          'py-3 pl-6 pr-2 border rounded-3xl w-full flex items-center focus-within:border-theme-gray-700',
+          className
+        )}
       >
-        {icon && <span className="pr-8">{icon}</span>}
+        {icon && <span>{icon}</span>}
         <div className="w-full">
           {label && (
             <label className={twMerge('block font-normal font-heading text-sm text-theme-gray-700', labelClassname)}>
@@ -110,6 +114,7 @@ export const ComboInputBox = <T extends ComboBoxBaseType>({ tooltip, label, opti
 
 interface Props4 {
   label: string;
+  defaultValue?: string;
   value?: string;
   type: string;
   placeholder: string;
@@ -127,6 +132,7 @@ interface Props4 {
 
 export const TextInputBox = ({
   tooltip,
+  defaultValue = '',
   value = '',
   label,
   icon,
@@ -159,13 +165,13 @@ export const TextInputBox = ({
         <input
           autoFocus={autoFocus}
           type={type}
-          defaultValue={value}
+          defaultValue={defaultValue ? defaultValue : value}
           onChange={(e) => {
             if (onChange) {
               onChange(e.target.value);
             }
           }}
-          className={twMerge(`p-0 border-none focus:ring-0 font-bold block w-full font-heading ${inputClassName}`)}
+          className={twMerge(`p-0 border-none focus:ring-0 block w-full font-heading ${inputClassName}`)}
           placeholder={placeholder}
           {...moreProps}
         />

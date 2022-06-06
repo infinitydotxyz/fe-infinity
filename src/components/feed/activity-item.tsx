@@ -2,7 +2,7 @@ import { BLANK_IMG, ellipsisAddress, getChainScannerBase } from 'src/utils';
 import { EthPrice, NextLink, BGImage } from 'src/components/common';
 import { FeedEvent } from './feed-item';
 import { format } from 'timeago.js';
-import { FeedEventTypeNames } from '@infinityxyz/lib/types/core/feed';
+import { FeedEventTypeNames } from '@infinityxyz/lib-frontend/types/core/feed';
 
 interface Props {
   event: FeedEvent;
@@ -11,7 +11,7 @@ interface Props {
 export const ActivityItem = ({ event }: Props) => {
   return (
     <div>
-      <div className="bg-gray-100 p-10 rounded-2xl flex items-center font-heading">
+      <div className="bg-gray-100 px-10 py-6 rounded-3xl flex items-center font-heading">
         <NextLink href={`/asset/${event.chainId}/${event.collectionAddress}/${event.tokenId}`}>
           {event.image ? (
             <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={event.image} />

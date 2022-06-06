@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { OBOrder } from '@infinityxyz/lib/types/core';
+import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { Button, Dropdown, SVG } from 'src/components/common';
 import { OrderbookProvider, SORT_FILTERS, useOrderbook } from '../OrderbookContext';
 import { OrderbookRow } from './orderbook-row';
@@ -86,7 +86,7 @@ export const OrderbookList = ({ className }: { className?: string }): JSX.Elemen
 };
 
 type OBListDummyProps = {
-  orders: OBOrder[];
+  orders: SignedOBOrder[];
   isLoading: boolean;
   fetchMore: () => Promise<void>;
   showFilters?: boolean;
@@ -109,7 +109,7 @@ const OrderbookListDummy = ({
       )}
       <div className="flex flex-col items-start w-full">
         {orders.length > 0 &&
-          orders.map((order: OBOrder, i) => {
+          orders.map((order: SignedOBOrder, i) => {
             return <OrderbookRow key={`${i}-${order.id}`} order={order} isFilterOpen={showFilters ?? false} />;
           })}
 

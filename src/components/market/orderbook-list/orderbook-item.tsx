@@ -1,4 +1,4 @@
-import { OBOrder, OBOrderItem, OBTokenInfo } from '@infinityxyz/lib/types/core';
+import { OBOrder, OBOrderItem, OBTokenInfo } from '@infinityxyz/lib-frontend/types/core';
 import { ReactNode } from 'react';
 import { NextLink } from 'src/components/common';
 import { useRouter } from 'next/router';
@@ -140,7 +140,7 @@ const SingleCollectionCell = ({
         {token && (
           <NextLink
             href={`/asset/1/${orderNft?.collectionAddress}/${token.tokenId}`}
-            className="truncate"
+            className="whitespace-pre-wrap"
             title={token?.tokenName}
           >
             {token?.tokenName}

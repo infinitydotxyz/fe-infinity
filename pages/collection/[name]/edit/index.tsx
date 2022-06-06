@@ -1,4 +1,4 @@
-import { BaseCollection, CollectionMetadata } from '@infinityxyz/lib/types/core';
+import { BaseCollection, CollectionMetadata } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import React, { useEffect, useReducer } from 'react';
 import { Toaster } from 'react-hot-toast';

@@ -1,4 +1,4 @@
-import { CardData } from '@infinityxyz/lib/types/core';
+import { CardData } from '@infinityxyz/lib-frontend/types/core';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { GalleryBox } from '../gallery/gallery-box';
@@ -43,7 +43,7 @@ export const UserPageNftsTab = ({ userInfo }: Props) => {
     updateOrders(ordersInCart.filter((order) => order.cartItems.length > 0));
   };
 
-  const isMyProfile = user?.address === userInfo.address;
+  const isMyProfile = user?.address === userInfo?.address;
   return (
     <div>
       <div className="mt-20">

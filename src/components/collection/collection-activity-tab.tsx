@@ -1,4 +1,4 @@
-// import { CollectionStats } from '@infinityxyz/lib/types/core';
+// import { CollectionStats } from '@infinityxyz/lib-frontend/types/core';
 // import { useEffect, useState } from 'react';
 // import { LineChart, Line, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 import { CollectionFeed } from '../feed/collection-feed';

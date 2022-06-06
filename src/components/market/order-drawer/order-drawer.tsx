@@ -81,7 +81,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
     let topWidget;
 
     if (readyToCheckout()) {
-      buttonTitle = 'Checkout';
+      buttonTitle = 'Place Orders';
 
       const items = [];
 
@@ -96,7 +96,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
       if (isSellOrderCart()) {
         items.push({
           title: 'Min total sale price',
-          value: <EthPrice label={numStr(totalEth)} />
+          value: <EthPrice label={`${totalEth}`} />
         });
         items.push({ title: 'Max NFTs to sell', value: <div>{totalNFTs.toString()}</div> });
       } else {
@@ -113,7 +113,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
         buttonTitle = 'Update order';
       }
     }
-    const showCancel = buttonTitle === 'Checkout' ? false : true;
+    const showCancel = buttonTitle === 'Place Orders' ? false : true;
 
     return (
       <div className="flex flex-col mb-8">
@@ -250,14 +250,14 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
         cancelButton="" // hides cancel
         okButton="Done"
         title={
-          <div>
+          <div className="w-full flex justify-center">
             <AiOutlineCheckCircle className="h-12 w-12" />
           </div>
         }
       >
-        <div className="flex flex-col">
+        <div className="flex flex-col text-center">
           <div className="font-bold text-xlg">Thank you,</div>
-          <div className="font-bold mb-6 text-xlg">Order Submitted</div>
+          <div className="font-bold mb-6 text-xlg">Order submitted</div>
         </div>
       </Modal>
 

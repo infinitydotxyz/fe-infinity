@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react';
 import { FeedItem, FeedEvent } from './feed-item';
 import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
 import { CommentPanel } from './comment-panel';
-import { FeedEventType } from '@infinityxyz/lib/types/core/feed';
+import { FeedEventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { FeedFilterDropdown } from './feed-filter-dropdown';
 import { ActivityItem } from './activity-item';
 import { UserActivityItem } from './user-activity-item';
 import { apiGet } from 'src/utils';
 // import { useAppContext } from 'src/utils/context/AppContext';
-import { FetchMore, Spinner } from '../common';
+import { ScrollLoader, Spinner } from '../common';
 
 type UserActivityEvent = FeedEvent & {
   makerAddress?: string;
@@ -59,7 +59,6 @@ export const UserProfileActivityList = ({
         events: filteringTypes
       }
     });
-    console.log('filteringTypes', filteringTypes);
 
     if (result?.hasNextPage === true) {
       setCursor(result?.cursor);
@@ -68,14 +67,14 @@ export const UserProfileActivityList = ({
 
     const moreData: FeedEvent[] = [];
     // convert UserActivityEvent[] to FeedEvent[] for rendering.
-    result?.data?.map((activity: UserActivityEvent) => {
+    result?.data?.map((act: UserActivityEvent) => {
       moreData.push({
-        ...activity,
-        seller: activity.makerAddress ?? '',
-        sellerDisplayName: activity.makerUsername === '_____' ? '' : activity.makerUsername ?? '',
-        buyer: activity.takerAddress ?? '',
-        buyerDisplayName: activity.takerUsername === '_____' ? '' : activity.takerUsername ?? '',
-        price: activity.startPriceEth ?? 0
+        ...act,
+        seller: act.seller ?? act.makerAddress ?? '',
+        sellerDisplayName: act.sellerDisplayName ?? act.makerUsername === '_____' ? '' : act.makerUsername ?? '',
+        buyer: act.buyer ?? act.takerAddress ?? '',
+        buyerDisplayName: act.buyerDisplayName ?? act.takerUsername === '_____' ? '' : act.takerUsername ?? '',
+        price: act.price ?? act.startPriceEth ?? 0
       });
     });
 
@@ -145,7 +144,7 @@ export const UserProfileActivityList = ({
         />
       </div>
 
-      <ul className="space-y-8 pointer-events-auto">
+      <ul className="space-y-4 pointer-events-auto">
         {isFetching && <Spinner />}
 
         {hasNextPage === false && data?.length === 0 ? <div>No results found.</div> : null}
@@ -195,8 +194,7 @@ export const UserProfileActivityList = ({
         })}
 
         {hasNextPage === true ? (
-          <FetchMore
-            data={data}
+          <ScrollLoader
             onFetchMore={async () => {
               await fetchData();
             }}

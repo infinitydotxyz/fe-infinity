@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { Button, ShortAddress, PageBox, ReadMoreText, SVG, NextLink, Spinner } from 'src/components/common';
 import { BLANK_IMAGE_URL, useFetch } from 'src/utils';
-import { Token, Collection, Erc721Metadata } from '@infinityxyz/lib/types/core';
+import { Token, Collection, Erc721Metadata } from '@infinityxyz/lib-frontend/types/core';
 import {
   TraitList,
   ListNFTModal,
@@ -74,6 +74,17 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const [showTransferModal, setShowTransferModal] = useState(false);
   const [showMakeOfferModal, setShowMakeOfferModal] = useState(false);
   const [showPlaceBidModal, setShowPlaceBidModal] = useState(false);
+
+  // todo: hack to handle changed opensea image url
+  if (token?.image) {
+    console.log(token.image);
+    token.image.url = token.image.url.replace('storage.opensea.io', 'openseauserdata.com');
+  }
+
+  // if cached url is null, try original url or the blank image
+  if (token && !token?.image.url) {
+    token.image.url = token.image.originalUrl ?? BLANK_IMAGE_URL;
+  }
 
   if (isLoading) {
     return (
@@ -213,8 +224,10 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
 
       {/* <ActivityList chainId={collection.chainId} collectionAddress={collection.address} tokenId={token.tokenId} /> */}
 
-      <h3 className="mt-8 mb-4 font-bold font-body">Activity</h3>
-      <CollectionFeed collectionAddress={collection.address} tokenId={token.tokenId} forActivity={true} />
+      <div className="mt-4">
+        <h3 className="mt-8 mb-4 font-bold font-body">Activity</h3>
+        <CollectionFeed collectionAddress={collection.address} tokenId={token.tokenId} forActivity={true} />
+      </div>
 
       {modals}
     </PageBox>

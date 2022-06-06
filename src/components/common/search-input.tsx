@@ -1,6 +1,6 @@
 import React from 'react';
 import { useFetch } from 'src/utils';
-import { BaseCollection } from '@infinityxyz/lib/types/core';
+import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import { Combobox } from '@headlessui/react';
 import { SVG } from './svg';
@@ -123,7 +123,7 @@ export const SearchInput: React.FC<Props> = ({ expanded }) => {
         },
         option: {
           className: ({ active }: { active: boolean }) => `
-            font-body text-sm py-1 px-4
+            font-body text-sm py-1 px-4 ml-2 mr-2
             hover:bg-theme-light-200 rounded-xl
             flex gap-4 place-items-center
             hover:cursor-pointer

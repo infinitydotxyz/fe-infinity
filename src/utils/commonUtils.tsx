@@ -1,6 +1,10 @@
 import { ReactNode } from 'react';
 import { getAddress } from '@ethersproject/address';
-import { ETHEREUM_CHAIN_SCANNER_BASE, POLYGON_CHAIN_SCANNER_BASE, trimLowerCase } from '@infinityxyz/lib/utils';
+import {
+  ETHEREUM_CHAIN_SCANNER_BASE,
+  POLYGON_CHAIN_SCANNER_BASE,
+  trimLowerCase
+} from '@infinityxyz/lib-frontend/utils';
 import { NextLink } from 'src/components/common';
 
 // OpenSea's EventType
@@ -95,6 +99,17 @@ export const stringToFloat = (numStr?: string, defaultValue = 0) => {
     console.error(e);
   }
   return num;
+};
+
+// example: formatNumber(1025.12) => '1,025'
+export const formatNumber = (floatNum: number | undefined, decimals = 0): string => {
+  if (decimals) {
+    const str = (floatNum ?? 0).toLocaleString('en-US');
+    return str.slice(0, str.indexOf('.') + decimals + 1);
+  } else {
+    const str = Math.round(floatNum ?? 0).toLocaleString('en-US');
+    return str;
+  }
 };
 
 export const getCustomExceptionMsg = (msg: ReactNode) => {

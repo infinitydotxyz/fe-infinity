@@ -32,14 +32,6 @@ export const TestPage = () => {
 
             <Button
               onClick={() => {
-                void router.push('/marketplace');
-              }}
-            >
-              Market
-            </Button>
-
-            <Button
-              onClick={() => {
                 void router.push('/home');
               }}
             >
@@ -48,18 +40,18 @@ export const TestPage = () => {
 
             <Button
               onClick={() => {
-                void router.push('/analytics/trending/weekly');
-              }}
-            >
-              Analytics
-            </Button>
-
-            <Button
-              onClick={() => {
                 void router.push('/explore-collections');
               }}
             >
               All Collections
+            </Button>
+
+            <Button
+              onClick={() => {
+                void router.push('/collection-stats');
+              }}
+            >
+              Collection Stats
             </Button>
 
             <Button

@@ -6,8 +6,8 @@ import {
   Button,
   Checkbox,
   Drawer,
-  FetchMore,
   PageBox,
+  ScrollLoader,
   Spacer,
   toastError,
   ToggleTab,
@@ -15,7 +15,7 @@ import {
 } from 'src/components/common';
 import { Field } from 'src/components/analytics/field';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { CollectionStats } from '@infinityxyz/lib/types/core';
+import { CollectionStats } from '@infinityxyz/lib-frontend/types/core';
 import { ITEMS_PER_PAGE, BLANK_IMG } from 'src/utils/constants';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
 import { truncateDecimals } from 'src/utils';
@@ -677,7 +677,7 @@ export const Analytics = () => {
 
             {data.isLoading && <LoadingAnalytics />}
 
-            <FetchMore
+            <ScrollLoader
               onFetchMore={() => {
                 if (data?.result?.cursor) {
                   setCursor(data?.result?.cursor);
@@ -737,7 +737,7 @@ const LoadingAnalytics = () => (
   <>
     {Array.from(Array(Math.round(ITEMS_PER_PAGE / 2)).keys())?.map((x, i) => (
       <Fragment key={i}>
-        <div className="w-full h-[130px] mt-1 bg-theme-light-200 rounded-xl animate-pulse"></div>
+        <div className="w-full h-[110px] mt-1 bg-theme-light-200 rounded-3xl animate-pulse"></div>
       </Fragment>
     ))}
   </>

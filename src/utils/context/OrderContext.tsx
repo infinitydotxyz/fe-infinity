@@ -1,5 +1,5 @@
-import { OBOrder, OBOrderItem, SignedOBOrder } from '@infinityxyz/lib/types/core';
-import { getOBComplicationAddress, getTxnCurrencyAddress } from '@infinityxyz/lib/utils';
+import { OBOrder, OBOrderItem, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { getOBComplicationAddress, getTxnCurrencyAddress, NULL_ADDRESS } from '@infinityxyz/lib-frontend/utils';
 import React, { ReactNode, useContext, useState } from 'react';
 import { toastError } from 'src/components/common';
 import { getSignedOBOrder } from '../exchange/orders';
@@ -262,8 +262,9 @@ export const OrderContextProvider = ({ children }: Props) => {
 
     try {
       const orderNonce = await fetchOrderNonce(user.address);
-      const minBpsToSeller = await fetchMinBpsToSeller(chainId, spec.nfts);
-
+      const minBpsToSeller = fetchMinBpsToSeller();
+      // sell orders are always in ETH
+      const currencyAddress = spec.isSellOrder ? NULL_ADDRESS : getTxnCurrencyAddress(chainId);
       const order: OBOrder = {
         id: '',
         chainId: spec.chainId,
@@ -279,7 +280,7 @@ export const OrderContextProvider = ({ children }: Props) => {
         nonce: orderNonce,
         minBpsToSeller,
         execParams: {
-          currencyAddress: getTxnCurrencyAddress(chainId),
+          currencyAddress,
           complicationAddress: getOBComplicationAddress(chainId)
         },
         extraParams: {

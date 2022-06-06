@@ -1,4 +1,4 @@
-import { Collection, Token } from '@infinityxyz/lib/types/core';
+import { Collection, Token } from '@infinityxyz/lib-frontend/types/core';
 import React from 'react';
 import { Modal } from 'src/components/common';
 

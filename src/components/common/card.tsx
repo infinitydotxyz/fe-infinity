@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { CardData } from '@infinityxyz/lib/types/core';
+import { CardData } from '@infinityxyz/lib-frontend/types/core';
 import { twMerge } from 'tailwind-merge';
 import { AiOutlineEye } from 'react-icons/ai';
 import { Dropdown, DropdownItems } from './dropdown';
@@ -67,18 +67,14 @@ export const Card = ({
 
   return (
     <div
-      className={`sm:mx-0 w-full  relative flex flex-col pointer-events-auto ${className}`}
+      className={`sm:mx-0 w-full relative flex flex-col pointer-events-auto ${className}`}
       style={{ height: heightStyle }}
     >
       <NextLink
         href={`/asset/${data?.chainId}/${data?.tokenAddress ?? data?.address}/${data?.tokenId}`}
-        className="h-full"
+        className="h-full overflow-clip rounded-3xl border-black border-[0.5px]"
       >
-        {data?.image ? (
-          <BGImage src={data?.image} className="overflow-clip rounded-3xl" />
-        ) : (
-          <BGImage src={BLANK_IMG} className="overflow-clip rounded-3xl" />
-        )}
+        {data?.image ? <BGImage src={data?.image} className="" /> : <BGImage src={BLANK_IMG} className="" />}
       </NextLink>
 
       {data?.rarityRank && (

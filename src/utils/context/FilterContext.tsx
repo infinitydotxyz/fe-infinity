@@ -1,4 +1,4 @@
-import { ListingType } from '@infinityxyz/lib/types/core';
+import { ListingType } from '@infinityxyz/lib-frontend/types/core';
 import React, { useContext, useState } from 'react';
 
 export enum OrderType {

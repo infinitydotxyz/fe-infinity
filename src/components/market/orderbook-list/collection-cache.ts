@@ -1,4 +1,4 @@
-import { BaseCollection, BaseToken, CollectionStats } from '@infinityxyz/lib/types/core';
+import { BaseCollection, BaseToken, CollectionStats } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { apiGet } from 'src/utils/apiUtils';
 import mitt from 'mitt';

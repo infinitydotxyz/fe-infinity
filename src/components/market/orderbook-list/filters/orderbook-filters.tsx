@@ -90,11 +90,13 @@ export const OrderbookFilters = () => {
       {!collectionId && (
         <OrderbookFilterItem key="Collection" openState={openState} setOpenState={setOpenState} item="Collection">
           <div>
-            <input
+            <TextInputBox
+              label=""
+              type="text"
               className="border rounded-full py-2 px-4 mt-1 font-heading w-full"
               defaultValue={collectionSearchState}
-              onChange={(ev) => {
-                const text = ev.target.value;
+              onChange={(value) => {
+                const text = value;
                 searchForCollections(text);
               }}
               placeholder="Search"

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { apiGet } from 'src/utils/apiUtils';
 import { BLANK_IMG } from 'src/utils';
-import { BaseCollection } from '@infinityxyz/lib/types/core';
+import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
 
 interface Props {
   chainId: string;
