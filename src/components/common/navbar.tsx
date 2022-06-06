@@ -87,7 +87,7 @@ export const Navbar = () => {
         </Menu.Button>
         <Menu.Items
           className={twMerge(
-            `absolute left-0 mt-2 p-4 w-72 origin-top-right divide-y divide-gray-100 rounded-3xl z-50
+            `absolute left-0 mt-2 p-4 w-72 origin-top-right rounded-3xl z-50
             border border-gray-200 bg-white shadow-2xl outline-none`
           )}
         >
@@ -149,7 +149,7 @@ export const Navbar = () => {
                   </Menu.Button>
                   <Menu.Items
                     className={twMerge(
-                      `absolute mt-2 p-4 w-72 origin-top-right divide-y divide-gray-100 rounded-3xl z-50`,
+                      `absolute mt-2 p-4 w-72 origin-top-right rounded-3xl z-50`,
                       `border border-gray-200 bg-white shadow-2xl outline-none`
                     )}
                   >

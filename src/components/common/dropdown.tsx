@@ -84,7 +84,7 @@ export const CustomMenuItem = (props: CustomMenuItemProps) => {
           href="#"
           className={twMerge(
             'flex w-full justify-between px-4 py-4 text-left leading-5 font-heading ',
-            active ? 'hover:bg-theme-light-200' : 'text-gray-700',
+            active ? 'hover:bg-theme-light-200 rounded-xl' : 'text-gray-700',
             disabled && 'cursor-not-allowed opacity-50',
             props.itemClassName
           )}
