@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { Button, Dropdown, SVG } from 'src/components/common';
+import { Button, Dropdown, Spinner, SVG } from 'src/components/common';
 import { OrderbookProvider, SORT_FILTERS, useOrderbook } from '../OrderbookContext';
 import { OrderbookRow } from './orderbook-row';
 import { OrderbookFilters } from './filters/orderbook-filters';
@@ -117,7 +117,7 @@ const OrderbookListDummy = ({
 
         {isLoading && (
           <div className="w-full flex justify-center align-items">
-            <SVG.spinner className="w-12 h-12 m-3 text-gray-200 animate-spin dark:text-gray-600 fill-black" />
+            <Spinner />
           </div>
         )}
 
