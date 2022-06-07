@@ -1,4 +1,4 @@
-import { GetOrderItemsQuery, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { PROTOCOL_FEE_BPS } from '@infinityxyz/lib-frontend/utils';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { apiPost } from 'src/utils/apiUtils';
@@ -23,18 +23,6 @@ export const postOrders = async (user: string, orders: SignedOBOrder[]): Promise
     console.error(err);
     throw err;
   }
-};
-
-export const getOrders = async (filters: GetOrderItemsQuery = {}, limit = 5): Promise<SignedOBOrder[]> => {
-  const response = await apiGet(`/orders`, {
-    query: { ...filters, limit }
-  });
-
-  if (response.result) {
-    return response.result.data as SignedOBOrder[];
-  }
-
-  return [];
 };
 
 export const fetchOrderNonce = async (user: string): Promise<string> => {
