@@ -57,13 +57,15 @@ const CollectionPage = () => {
   const { result: collection, isLoading, error } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
   const { result: dailyStats } = useFetch<{ data: CollectionStats[] }>(
     name
-      ? path + '/stats?limit=10&orderBy=volume&orderDirection=desc&minDate=0&maxDate=2648764957623&period=daily'
+      ? path +
+          '/stats?offset=0&limit=10&orderBy=volume&orderDirection=desc&minDate=0&maxDate=2648764957623&period=daily'
       : '',
     { chainId: '1' }
   );
   const { result: weeklyStats } = useFetch<{ data: CollectionStats[] }>(
     name
-      ? path + '/stats?limit=10&orderBy=volume&orderDirection=desc&minDate=0&maxDate=2648764957623&period=weekly'
+      ? path +
+          '/stats?offset=0&limit=10&orderBy=volume&orderDirection=desc&minDate=0&maxDate=2648764957623&period=weekly'
       : '',
     { chainId: '1' }
   );
