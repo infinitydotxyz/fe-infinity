@@ -165,7 +165,8 @@ interface useFetchParams {
 export const useFetch = <T>(path: string | null, params: useFetchParams = {}) => {
   const queryStr = buildQueryString(params?.query);
   const options = {
-    errorRetryCount: 3,
+    errorRetryCount: 0,
+    revalidateOnFocus: false,
     ...params?.swrOptions
   };
   const { data, error } = useSWR(path ? `${path}${queryStr}` : null, swrFetch, options);
