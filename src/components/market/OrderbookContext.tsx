@@ -2,8 +2,9 @@ import isEqual from 'lodash/isEqual';
 import { GetOrderItemsQuery, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import React, { ReactNode, useEffect, useState } from 'react';
-import { getOrders } from 'src/utils/marketUtils';
 import { ParsedUrlQuery } from 'querystring';
+import { apiGet, ITEMS_PER_PAGE } from 'src/utils';
+import { debounce } from 'lodash';
 
 export type OBFilters = {
   sort?: string;
@@ -168,6 +169,7 @@ export const OrderbookProvider = ({ children, collectionId }: OBProvider) => {
   const [isLoading, setIsLoading] = useState(false);
   const [limit, setLimit] = useState(AMOUNT_OF_ORDERS);
   const [hasMoreOrders, setHasMoreOrders] = useState<boolean>(true);
+  const [cursor, setCursor] = useState<string>('');
 
   useEffect(() => {
     fetchOrders();
@@ -220,22 +222,37 @@ export const OrderbookProvider = ({ children, collectionId }: OBProvider) => {
   };
 
   // todo: make this prod ready
-  const fetchOrders = async () => {
+  const fetchOrders = debounce(async () => {
+    if (hasMoreOrders === false) {
+      return;
+    }
     try {
       setIsLoading(true);
       const parsedFilters = parseFiltersToApiQueryParams(filters);
-      const orders = await getOrders(
-        { ...parsedFilters, collections: collectionId ? [collectionId] : parsedFilters.collections },
-        limit
-      );
-      setOrders(orders);
-      setHasMoreOrders(orders.length === limit);
+      // const orders = await getOrders(
+      //   { ...parsedFilters, collections: collectionId ? [collectionId] : parsedFilters.collections },
+      //   limit
+      // );
+      const { result } = await apiGet('/orders', {
+        query: {
+          limit: ITEMS_PER_PAGE,
+          cursor,
+          ...parsedFilters,
+          collections: collectionId ? [collectionId] : parsedFilters.collections
+        }
+      });
+      if (result?.data) {
+        setOrders([...orders, ...result.data]);
+        // setHasMoreOrders(orders.length === limit);
+        setHasMoreOrders(result?.hasNextPage);
+        setCursor(result?.cursor);
+      }
     } catch (err) {
       console.error(err);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, 500);
 
   const value: OBContextType = {
     orders,

@@ -1,26 +1,15 @@
 import { useEffect, useState } from 'react';
-import { FeedItem, FeedEvent } from './feed-item';
 import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
-import { CommentPanel } from './comment-panel';
 import { FeedEventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { FeedFilterDropdown } from './feed-filter-dropdown';
-import { ActivityItem } from './activity-item';
-import { UserActivityItem } from './user-activity-item';
-import { apiGet } from 'src/utils';
-// import { useAppContext } from 'src/utils/context/AppContext';
+import { UserPageOrderListItem } from './user-page-order-list-item';
+import { apiGet, ITEMS_PER_PAGE } from 'src/utils';
 import { ScrollLoader, Spinner } from '../common';
+import { UserProfileDto } from '../user/user-profile-dto';
+import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 
-type UserActivityEvent = FeedEvent & {
-  makerAddress?: string;
-  makerUsername?: string;
-  takerAddress?: string;
-  takerUsername?: string;
-  usersInvolved?: string[];
-  startPriceEth?: number;
-};
-const ITEMS_LIMIT = 10;
-
-interface UserProfileActivityListProps {
+interface UserPageOrderListProps {
+  userInfo: UserProfileDto;
   userAddress?: string;
   types?: FeedEventType[];
   forActivity?: boolean;
@@ -28,19 +17,10 @@ interface UserProfileActivityListProps {
   className?: string;
 }
 
-export const UserProfileActivityList = ({
-  userAddress,
-  types,
-  forActivity,
-  forUserActivity,
-  className
-}: UserProfileActivityListProps) => {
-  // const { user } = useAppContext();
-  const [events, setEvents] = useState<FeedEvent[]>([]);
+export const UserPageOrderList = ({ userInfo, userAddress, types, className }: UserPageOrderListProps) => {
   const [filter, setFilter] = useState<FeedFilter>({ userAddress, types });
-  const [commentPanelEvent, setCommentPanelEvent] = useState<FeedEvent | null>(null);
   const [filteringTypes, setFilteringTypes] = useState<FeedEventType[]>([]);
-  const [data, setData] = useState<FeedEvent[]>([]);
+  const [data, setData] = useState<SignedOBOrder[]>([]);
   const [isFetching, setIsFetching] = useState(false);
   const [cursor, setCursor] = useState('');
   const [hasNextPage, setHasNextPage] = useState(false);
@@ -52,12 +32,14 @@ export const UserProfileActivityList = ({
       newCursor = '';
     }
 
-    const { result } = await apiGet(`/user/${userAddress}/activity`, {
+    const { result } = await apiGet(`/orders/${userInfo.address}`, {
       query: {
-        limit: ITEMS_LIMIT,
+        limit: ITEMS_PER_PAGE,
         cursor: newCursor,
-        events: filteringTypes
-      }
+        events: filteringTypes,
+        makerAddress: userInfo.address
+      },
+      requiresAuth: true
     });
 
     if (result?.hasNextPage === true) {
@@ -65,17 +47,9 @@ export const UserProfileActivityList = ({
     }
     setHasNextPage(result?.hasNextPage);
 
-    const moreData: FeedEvent[] = [];
-    // convert UserActivityEvent[] to FeedEvent[] for rendering.
-    result?.data?.map((act: UserActivityEvent) => {
-      moreData.push({
-        ...act,
-        seller: act.seller ?? act.makerAddress ?? '',
-        sellerDisplayName: act.sellerDisplayName ?? act.makerUsername === '_____' ? '' : act.makerUsername ?? '',
-        buyer: act.buyer ?? act.takerAddress ?? '',
-        buyerDisplayName: act.buyerDisplayName ?? act.takerUsername === '_____' ? '' : act.takerUsername ?? '',
-        price: act.price ?? act.startPriceEth ?? 0
-      });
+    const moreData: SignedOBOrder[] = [];
+    result?.data?.map((item: SignedOBOrder) => {
+      moreData.push(item);
     });
 
     setIsFetching(false);
@@ -150,47 +124,7 @@ export const UserProfileActivityList = ({
         {!isFetching && hasNextPage === false && data?.length === 0 ? <div>No results found.</div> : null}
 
         {data?.map((event, idx) => {
-          if (forActivity) {
-            return <ActivityItem key={idx} event={event} />;
-          }
-          if (forUserActivity) {
-            return <UserActivityItem key={idx} event={event} />;
-          }
-          return (
-            <li key={idx} className="">
-              <FeedItem
-                data={event}
-                onLike={(ev) => {
-                  const foundEv = events.find((e) => e.id === ev.id);
-                  if (foundEv?.likes !== undefined) {
-                    foundEv.likes = foundEv.likes + 1;
-                  }
-                  setEvents([...events]);
-                }}
-                onComment={(ev) => {
-                  if (ev.id === commentPanelEvent?.id) {
-                    setCommentPanelEvent(null);
-                  } else {
-                    setCommentPanelEvent(ev);
-                  }
-                }}
-              />
-              {commentPanelEvent && event.id === commentPanelEvent.id && (
-                <div className="ml-20 p-4 ">
-                  <CommentPanel
-                    contentOnly={true}
-                    isOpen={!!commentPanelEvent}
-                    event={commentPanelEvent}
-                    onClose={() => {
-                      setCommentPanelEvent(null);
-                    }}
-                  />
-                </div>
-              )}
-
-              <hr className="mt-6 mb-10 text-gray-100" />
-            </li>
-          );
+          return <UserPageOrderListItem key={idx} event={event} />;
         })}
 
         {hasNextPage === true ? (
