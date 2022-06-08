@@ -1,7 +1,11 @@
 import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
 import { useState } from 'react';
-import { OrderType, useFilterContext } from 'src/utils/context/FilterContext';
+import { useFilterContext } from 'src/utils/context/FilterContext';
 import { Button, Checkbox, TextInputBox } from 'src/components/common';
+
+export type UserOrderFilter = {
+  orderType: 'listings' | 'offers';
+};
 
 interface Props {
   collection?: BaseCollection;
@@ -9,25 +13,23 @@ interface Props {
   showFilterSections?: string[];
   userAddress?: string; // for User's Collection Filter
   className?: string;
+  onChange: (filter: UserOrderFilter) => void;
 }
 
-export const UserProfileOrderFilterPanel = ({ className }: Props) => {
+export const UserProfileOrderFilterPanel = ({ className, onChange }: Props) => {
   const { filterState, setFilterState } = useFilterContext();
   const [minPriceVal, setMinPriceVal] = useState('');
   const [maxPriceVal, setMaxPriceVal] = useState('');
+  const [filter, setFilter] = useState<UserOrderFilter>({
+    orderType: 'listings'
+  });
 
-  const handleClickOrderType = (orderType: OrderType | '') => {
-    let newValue = orderType;
-    if (orderType === filterState.orderType) {
-      newValue = ''; // toggle orderType
-    }
-    const newFilter = { ...filterState };
-    if (newValue) {
-      newFilter.orderType = newValue;
-    } else {
-      delete newFilter.orderType;
-    }
-    setFilterState(newFilter);
+  const onClickOrderType = (newType: 'listings' | 'offers') => {
+    setFilter((filter) => ({
+      ...filter,
+      orderType: newType
+    }));
+    onChange(filter);
   };
 
   const handleClickApply = () => {
@@ -58,16 +60,16 @@ export const UserProfileOrderFilterPanel = ({ className }: Props) => {
         <li className="mt-8">
           <Checkbox
             boxOnLeft={false}
-            checked={filterState.orderType === OrderType.Listing}
-            onChange={() => handleClickOrderType(OrderType.Listing)}
+            checked={filter.orderType === 'listings'}
+            onChange={() => onClickOrderType('listings')}
             label="Listing"
           />
         </li>
         <li className="mt-8">
           <Checkbox
             boxOnLeft={false}
-            checked={filterState.orderType === OrderType.Offer}
-            onChange={() => handleClickOrderType(OrderType.Offer)}
+            checked={filter.orderType === 'offers'}
+            onChange={() => onClickOrderType('offers')}
             label="Offers"
           />
         </li>

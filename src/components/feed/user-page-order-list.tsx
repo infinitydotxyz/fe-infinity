@@ -134,7 +134,7 @@ export const UserPageOrderList = ({ userInfo, userAddress, types, className }: U
       <div className="flex items-start">
         {filterShowed && (
           <div className="mt-4">
-            <UserProfileOrderFilterPanel />
+            <UserProfileOrderFilterPanel onChange={(filter) => console.log(filter)} />
           </div>
         )}
 
