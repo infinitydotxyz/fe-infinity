@@ -22,15 +22,12 @@ interface Props {
 }
 
 export const PasswordModal = ({ isOpen, onClose }: Props) => {
-  const [showUrl, setShowUrl] = useState(false);
   const [password, setPassword] = useState('');
 
   const onClickSubmit = () => {
     if (password === PPP) {
       localStorage.setItem(LOCAL_STORAGE_KEY, Base64.encode(password));
       window.location.reload();
-    } else {
-      setShowUrl(true);
     }
   };
 
@@ -49,12 +46,10 @@ export const PasswordModal = ({ isOpen, onClose }: Props) => {
         Submit
       </Button>
 
-      {showUrl && (
-        <div className="mt-6">
-          Request for password at{' '}
-          <a href="https://discord.com/invite/infinitydotxyz">https://discord.com/invite/infinitydotxyz</a>
-        </div>
-      )}
+      <div className="mt-6">
+        Request for password at{' '}
+        <a href="https://discord.com/invite/infinitydotxyz">https://discord.com/invite/infinitydotxyz</a>
+      </div>
     </Modal>
   );
 };
