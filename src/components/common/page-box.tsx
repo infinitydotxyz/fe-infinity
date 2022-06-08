@@ -3,6 +3,7 @@ import { Navbar, Spacer, Header } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { OrderDrawer } from '../market';
+import { PasswordModal } from './password-modal';
 
 // used in the Header
 export const pageStyles = 'mx-auto desktop:w-5/6 desktop-sm:w-[95%] tabloid:w-[95%] mobile:w-[98%]';
@@ -49,6 +50,8 @@ export const PageBox = ({
             {/* <div style={{ height: 300 }} /> */}
           </div>
         </Header>
+
+        <PasswordModal isOpen={true} onClose={() => console.log} />
       </div>
     </>
   );
