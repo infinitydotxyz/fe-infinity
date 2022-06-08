@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal } from 'src/components/common';
 import { Base64 } from 'src/utils';
 import { Button } from './button';
@@ -12,12 +12,15 @@ interface Props {
 }
 
 export const PasswordModal = ({ isOpen, onClose }: Props) => {
+  const [renderModal, setRenderModal] = useState(false);
   const [password, setPassword] = useState('');
 
-  const str = localStorage.getItem('ppp') ?? '';
-  if (Base64.decode(str) === PPP) {
-    return null;
-  }
+  useEffect(() => {
+    const str = localStorage.getItem('ppp') ?? '';
+    if (Base64.decode(str) !== PPP) {
+      setRenderModal(true);
+    }
+  }, []);
 
   const onClickSubmit = () => {
     if (password === PPP) {
@@ -25,6 +28,10 @@ export const PasswordModal = ({ isOpen, onClose }: Props) => {
       window.location.reload();
     }
   };
+
+  if (!renderModal) {
+    return null;
+  }
   return (
     <Modal
       wide={false}
