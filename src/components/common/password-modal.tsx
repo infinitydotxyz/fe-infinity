@@ -1,10 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Modal } from 'src/components/common';
 import { Base64, isLocalhost } from 'src/utils';
 import { Button } from './button';
 import { TextInputBox } from './input-box';
 
+const LOCAL_STORAGE_KEY = 'ppp';
 const PPP = 'nft888';
+
+export const isPasswordModalNeeded = () => {
+  const str = localStorage.getItem(LOCAL_STORAGE_KEY) ?? '';
+  if (!isLocalhost() && Base64.decode(str) !== PPP) {
+    // !isLocalhost() &&
+    return true;
+  }
+  return false;
+};
 
 interface Props {
   isOpen: boolean;
@@ -12,26 +22,18 @@ interface Props {
 }
 
 export const PasswordModal = ({ isOpen, onClose }: Props) => {
-  const [renderModal, setRenderModal] = useState(false);
+  const [showUrl, setShowUrl] = useState(false);
   const [password, setPassword] = useState('');
-
-  useEffect(() => {
-    const str = localStorage.getItem('ppp') ?? '';
-    if (!isLocalhost() && Base64.decode(str) !== PPP) {
-      setRenderModal(true);
-    }
-  }, []);
 
   const onClickSubmit = () => {
     if (password === PPP) {
-      localStorage.setItem('ppp', Base64.encode(password));
+      localStorage.setItem(LOCAL_STORAGE_KEY, Base64.encode(password));
       window.location.reload();
+    } else {
+      setShowUrl(true);
     }
   };
 
-  if (!renderModal) {
-    return null;
-  }
   return (
     <Modal
       wide={false}
@@ -46,6 +48,13 @@ export const PasswordModal = ({ isOpen, onClose }: Props) => {
       <Button className="mt-6 w-32" onClick={onClickSubmit}>
         Submit
       </Button>
+
+      {showUrl && (
+        <div className="mt-6">
+          Request for password at{' '}
+          <a href="https://discord.com/invite/infinitydotxyz">https://discord.com/invite/infinitydotxyz</a>
+        </div>
+      )}
     </Modal>
   );
 };
