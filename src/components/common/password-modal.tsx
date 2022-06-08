@@ -5,11 +5,11 @@ import { Button } from './button';
 import { TextInputBox } from './input-box';
 
 const LOCAL_STORAGE_KEY = 'ppp';
-const PPP = 'nft888';
+const PPP = 'bmZ0ODg4'; // nft888
 
 export const isPasswordModalNeeded = () => {
   const str = localStorage.getItem(LOCAL_STORAGE_KEY) ?? '';
-  if (!isLocalhost() && Base64.decode(str) !== PPP) {
+  if (!isLocalhost() && str !== PPP) {
     // !isLocalhost() &&
     return true;
   }
@@ -23,11 +23,15 @@ interface Props {
 
 export const PasswordModal = ({ isOpen, onClose }: Props) => {
   const [password, setPassword] = useState('');
+  const [isValidPassword, setIsValidPassword] = useState(true);
 
   const onClickSubmit = () => {
-    if (password === PPP) {
+    if (Base64.encode(password) === PPP) {
+      setIsValidPassword(true);
       localStorage.setItem(LOCAL_STORAGE_KEY, Base64.encode(password));
       window.location.reload();
+    } else {
+      setIsValidPassword(false);
     }
   };
 
@@ -40,15 +44,21 @@ export const PasswordModal = ({ isOpen, onClose }: Props) => {
       title="Please enter the password"
       showActionButtons={false}
     >
-      <TextInputBox value="" label="" type={'text'} placeholder="" onChange={(text) => setPassword(text)} />
+      <TextInputBox
+        value=""
+        label=""
+        type={'text'}
+        placeholder=""
+        className={isValidPassword ? '' : 'border-red-700'}
+        onChange={(text) => setPassword(text)}
+      />
 
       <Button className="mt-6 w-32" onClick={onClickSubmit}>
         Submit
       </Button>
 
       <div className="mt-6">
-        Request for password at{' '}
-        <a href="https://discord.com/invite/infinitydotxyz">https://discord.com/invite/infinitydotxyz</a>
+        <a href="https://www.premint.xyz/infinity-marketplace-v2-beta-allowlist/">Click here to request for password</a>
       </div>
     </Modal>
   );
