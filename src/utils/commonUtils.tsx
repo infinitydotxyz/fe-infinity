@@ -1,10 +1,10 @@
-import { ReactNode } from 'react';
 import { getAddress } from '@ethersproject/address';
 import {
   ETHEREUM_CHAIN_SCANNER_BASE,
   POLYGON_CHAIN_SCANNER_BASE,
   trimLowerCase
 } from '@infinityxyz/lib-frontend/utils';
+import { ReactNode } from 'react';
 import { NextLink } from 'src/components/common';
 
 // OpenSea's EventType
@@ -25,6 +25,10 @@ export enum EventType {
 
   ApproveCurrency = 'ApproveCurrency'
 }
+
+export const base64Encode = (data: string) => Buffer.from(data).toString('base64');
+
+export const base64Decode = (data?: string) => Buffer.from(data ?? '', 'base64').toString();
 
 export const isServer = () => typeof window === 'undefined';
 
@@ -185,4 +189,16 @@ export const PleaseConnectMsg = () => (
 
 export const truncateDecimals = (numStr: string) => {
   return ((numStr ?? '') + ' ').slice(0, numStr.indexOf('.'));
+};
+
+export const getLoginMessage = (nonce: number): string => {
+  // ignore the formatting of this multiline string
+  const msg = `Welcome to Infinity. Click "Sign" to sign in. No password needed. This request will not trigger a blockchain transaction or cost any gas fees.
+ 
+I accept the Infinity Terms of Service: https://infinity.xyz/terms
+
+Nonce: ${nonce}
+Expires in: 24 hrs`;
+
+  return msg;
 };
