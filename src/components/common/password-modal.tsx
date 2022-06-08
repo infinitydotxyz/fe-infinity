@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Modal } from 'src/components/common';
-import { Base64 } from 'src/utils';
+import { Base64, isLocalhost } from 'src/utils';
 import { Button } from './button';
 import { TextInputBox } from './input-box';
 
@@ -17,7 +17,7 @@ export const PasswordModal = ({ isOpen, onClose }: Props) => {
 
   useEffect(() => {
     const str = localStorage.getItem('ppp') ?? '';
-    if (Base64.decode(str) !== PPP) {
+    if (!isLocalhost() && Base64.decode(str) !== PPP) {
       setRenderModal(true);
     }
   }, []);
