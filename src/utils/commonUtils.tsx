@@ -241,7 +241,7 @@ export const Base64 = {
     t = Base64._utf8_decode(t);
     return t;
   },
-  _utf8_encode: function (e) {
+  _utf8_encode: function (e: string) {
     e = e.replace(/\r\n/g, '\n');
     let t = '';
     for (let n = 0; n < e.length; n++) {
