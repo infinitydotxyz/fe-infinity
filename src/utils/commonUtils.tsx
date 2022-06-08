@@ -105,7 +105,12 @@ export const stringToFloat = (numStr?: string, defaultValue = 0) => {
 export const formatNumber = (floatNum: number | undefined, decimals = 0): string => {
   if (decimals) {
     const str = (floatNum ?? 0).toLocaleString('en-US');
-    return str.slice(0, str.indexOf('.') + decimals + 1);
+    const idx = str.indexOf('.');
+    if (idx > 0) {
+      return str.slice(0, str.indexOf('.') + decimals + 1);
+    } else {
+      return str;
+    }
   } else {
     const str = Math.round(floatNum ?? 0).toLocaleString('en-US');
     return str;

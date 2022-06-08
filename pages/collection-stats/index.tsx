@@ -27,8 +27,6 @@ const CollectionStatsPage = () => {
   const [offset, setOffset] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
-  console.log('queryBy', query);
-
   useEffect(() => {
     const parsedQs = parse(window?.location?.search); // don't use useRouter-query as it's undefined initially.
     onChangeToggleTab(parsedQs.tab ? `${parsedQs.tab}` : DEFAULT_TAB);
@@ -149,6 +147,20 @@ const CollectionStatsPage = () => {
                     <EthPrice label={formatNumber(coll?.stats?.daily?.avgPrice, 2)} />
                   </div>
                 </div>
+
+                <div className="w-1/6">
+                  <div className="text-black font-bold font-body">Owners</div>
+                  <div>
+                    <EthPrice label={formatNumber(coll?.stats?.daily?.ownerCount)} />
+                  </div>
+                </div>
+
+                <div className="w-1/6">
+                  <div className="text-black font-bold font-body">Tokens</div>
+                  <div>
+                    <EthPrice label={formatNumber(coll?.stats?.daily?.tokenCount)} />
+                  </div>
+                </div>
               </div>
             </div>
           );
@@ -157,7 +169,7 @@ const CollectionStatsPage = () => {
 
       {isLoading && <LoadingCards />}
 
-      <ScrollLoader onFetchMore={() => fetchData()} />
+      {/* <ScrollLoader onFetchMore={() => fetchData()} /> */}
     </PageBox>
   );
 };
