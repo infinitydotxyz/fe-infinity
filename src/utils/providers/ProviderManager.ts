@@ -1,16 +1,18 @@
 import { Signature } from '@ethersproject/bytes';
-import { verifyMessage } from '@ethersproject/wallet';
 import { Web3Provider } from '@ethersproject/providers';
-import { LOGIN_MESSAGE } from '../constants';
+import { LOGIN_NONCE_EXPIRY_TIME, trimLowerCase } from '@infinityxyz/lib-frontend/utils';
+import { verifyMessage } from 'ethers/lib/utils';
+import EventEmitter from 'events';
+import { base64Encode, getLoginMessage } from '../commonUtils';
 import { Optional } from '../typeUtils';
 import { ProviderEvents, WalletType } from './AbstractProvider';
 import { MetaMask } from './MetaMask';
 import { JSONRPCRequestPayload, Provider } from './Provider';
-import EventEmitter from 'events';
 import { UserRejectException } from './UserRejectException';
 
 enum StorageKeys {
   CurrentUser = 'CURRENT_USER',
+  AuthNonce = 'X-AUTH-NONCE',
   AuthSignature = 'X-AUTH-SIGNATURE',
   AuthMessage = 'X-AUTH-MESSAGE',
   Wallet = 'WALLET'
@@ -37,6 +39,7 @@ export class ProviderManager implements Omit<Optional<Provider, 'type'>, 'init'>
 
   private _emitter: EventEmitter;
 
+  private authNonce = 0;
   private authSignature?: Signature;
   private authMessage = '';
 
@@ -77,18 +80,13 @@ export class ProviderManager implements Omit<Optional<Provider, 'type'>, 'init'>
     return this._provider?.type;
   }
 
-  getAuthHeaders = async (attemptSignIn = true) => {
-    if (attemptSignIn && this.account) {
+  getAuthHeaders = async (attemptLogin = true) => {
+    if (attemptLogin && !this.isLoggedInAndAuthenticated) {
       await this.signIn();
-    } else {
-      const requiresSignIn = !this.isLoggedInAndAuthenticated;
-      if (requiresSignIn) {
-        // todo: uncomment
-        // throw new Error('Please login');
-      }
     }
     return {
-      [StorageKeys.AuthMessage]: this.authMessage,
+      [StorageKeys.AuthNonce]: this.authNonce,
+      [StorageKeys.AuthMessage]: base64Encode(this.authMessage),
       [StorageKeys.AuthSignature]: JSON.stringify(this.authSignature)
     };
   };
@@ -139,6 +137,7 @@ export class ProviderManager implements Omit<Optional<Provider, 'type'>, 'init'>
       console.error(err);
     }
     this._provider = undefined;
+    this.authNonce = 0;
     this.authMessage = '';
     this.authSignature = undefined;
     this.save();
@@ -204,14 +203,14 @@ export class ProviderManager implements Omit<Optional<Provider, 'type'>, 'init'>
   }
 
   // todo: why is this reqd? this is getting called too many times
-  private get isLoggedInAndAuthenticated(): boolean {
-    const currentUser = this.account.toLowerCase();
-    if (currentUser && this.authMessage && this.authSignature) {
+  public get isLoggedInAndAuthenticated(): boolean {
+    const currentUser = trimLowerCase(this.account);
+    if (currentUser && this.authNonce && this.authMessage && this.authSignature) {
       try {
         const signer = verifyMessage(this.authMessage, this.authSignature).toLowerCase();
-        if (currentUser === signer) {
-          return true;
-        }
+        const isSigValid = signer === currentUser;
+        const isNonceValid = Date.now() - this.authNonce < LOGIN_NONCE_EXPIRY_TIME;
+        return isSigValid && isNonceValid;
       } catch (err) {
         console.log(err);
         return false;
@@ -221,16 +220,21 @@ export class ProviderManager implements Omit<Optional<Provider, 'type'>, 'init'>
   }
 
   async signIn() {
-    const requiresSignature = !this.isLoggedInAndAuthenticated;
-
-    if (!requiresSignature) {
-      return;
+    const nonce = Date.now();
+    const loginMsg = getLoginMessage(nonce);
+    const signature = await this.personalSign(loginMsg);
+    if (signature) {
+      try {
+        this.authNonce = nonce;
+        this.authSignature = signature;
+        this.authMessage = loginMsg;
+        this.save();
+      } catch (err) {
+        console.error('Error saving login info', err);
+      }
+    } else {
+      console.error('No signature');
     }
-
-    const signature = await this.personalSign(LOGIN_MESSAGE);
-    this.authSignature = signature;
-    this.authMessage = LOGIN_MESSAGE;
-    this.save();
   }
 
   /**
@@ -241,6 +245,7 @@ export class ProviderManager implements Omit<Optional<Provider, 'type'>, 'init'>
     switch (type) {
       case WalletType.MetaMask:
         return new MetaMask();
+      // todo: uncomment
       // case WalletType.WalletLink:
       //   return new WalletLink();
 
@@ -258,6 +263,7 @@ export class ProviderManager implements Omit<Optional<Provider, 'type'>, 'init'>
   private save() {
     const localStorage = window.localStorage;
     localStorage.setItem(StorageKeys.Wallet, this._provider?.type ?? '');
+    localStorage.setItem(StorageKeys.AuthNonce, this.authNonce.toString());
     localStorage.setItem(StorageKeys.AuthSignature, JSON.stringify(this.authSignature ?? {}));
     localStorage.setItem(StorageKeys.AuthMessage, this.authMessage);
   }
@@ -269,6 +275,7 @@ export class ProviderManager implements Omit<Optional<Provider, 'type'>, 'init'>
   private async refresh() {
     const localStorage = window.localStorage;
     const preferredWallet = localStorage.getItem(StorageKeys.Wallet);
+    const authNonce = localStorage.getItem(StorageKeys.AuthNonce);
     const authSignature = localStorage.getItem(StorageKeys.AuthSignature);
     const authMessage = localStorage.getItem(StorageKeys.AuthMessage);
     if (
@@ -292,6 +299,7 @@ export class ProviderManager implements Omit<Optional<Provider, 'type'>, 'init'>
         this.authSignature = parsedSignature as Signature;
       }
       this.authMessage = authMessage ?? '';
+      this.authNonce = parseInt(authNonce ?? '0');
       try {
         await this.connectWallet(preferredWallet);
       } catch (err) {

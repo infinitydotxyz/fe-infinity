@@ -197,7 +197,7 @@ export const GalleryBox = ({
 
         <div
           ref={ref}
-          className={twMerge('w-full grid gap-12  pointer-events-none')}
+          className={twMerge('w-full grid gap-12 pointer-events-none')}
           style={{ gridTemplateColumns: gridColumns }}
         >
           {isFetching && cursor === '' && (

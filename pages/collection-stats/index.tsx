@@ -1,16 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { parse } from 'query-string';
-import {
-  BGImage,
-  Button,
-  EthPrice,
-  NextLink,
-  PageBox,
-  ScrollLoader,
-  ToggleTab,
-  useToggleTab
-} from 'src/components/common';
+import { BGImage, Button, EthPrice, NextLink, PageBox, ToggleTab, useToggleTab } from 'src/components/common';
 import { apiGet, BLANK_IMG, formatNumber, ITEMS_PER_PAGE } from 'src/utils';
 import { Collection } from '@infinityxyz/lib-frontend/types/core';
 
@@ -26,8 +17,6 @@ const CollectionStatsPage = () => {
   const [period, setPeriod] = useState('daily');
   const [offset, setOffset] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-
-  console.log('queryBy', query);
 
   useEffect(() => {
     const parsedQs = parse(window?.location?.search); // don't use useRouter-query as it's undefined initially.
@@ -149,6 +138,20 @@ const CollectionStatsPage = () => {
                     <EthPrice label={formatNumber(coll?.stats?.daily?.avgPrice, 2)} />
                   </div>
                 </div>
+
+                <div className="w-1/6">
+                  <div className="text-black font-bold font-body">Owners</div>
+                  <div>
+                    <EthPrice label={formatNumber(coll?.stats?.daily?.ownerCount)} />
+                  </div>
+                </div>
+
+                <div className="w-1/6">
+                  <div className="text-black font-bold font-body">Tokens</div>
+                  <div>
+                    <EthPrice label={formatNumber(coll?.stats?.daily?.tokenCount)} />
+                  </div>
+                </div>
               </div>
             </div>
           );
@@ -157,7 +160,7 @@ const CollectionStatsPage = () => {
 
       {isLoading && <LoadingCards />}
 
-      <ScrollLoader onFetchMore={() => fetchData()} />
+      {/* <ScrollLoader onFetchMore={() => fetchData()} /> */}
     </PageBox>
   );
 };

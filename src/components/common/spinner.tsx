@@ -1,6 +1,5 @@
-import { largeIconButtonStyle } from 'src/utils/ui-constants';
+import { PuffLoader } from 'react-spinners';
 import { twMerge } from 'tailwind-merge';
-import { SVG } from './svg';
 
 interface Props {
   className?: string;
@@ -8,8 +7,8 @@ interface Props {
 
 export const Spinner = ({ className }: Props) => {
   return (
-    <SVG.spinner
-      className={twMerge(largeIconButtonStyle, ' text-gray-200 animate-spin dark:text-gray-600 fill-black', className)}
-    />
+    <span className={twMerge(`w-24 h-24 ${className}`)}>
+      <PuffLoader size={45} color="#ccc" />
+    </span>
   );
 };

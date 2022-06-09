@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint . --fix",
     "format": "prettier --write {src,pages}/**/{**,}/*.{tsx,ts}",
-    "update:lib": "npm update @infinityxyz/lib-frontend",
+    "update:lib": "npm install @infinityxyz/lib-frontend@latest",
     "analyze": "ANALYZE=true next build"
   },
   "engines": {
@@ -17,7 +17,7 @@
   "dependencies": {
     "@headlessui/react": "^1.6.0",
     "@heroicons/react": "^1.0.6",
-    "@infinityxyz/lib-frontend": "^1.75.7",
+    "@infinityxyz/lib-frontend": "^1.87.0",
     "@next/bundle-analyzer": "^12.1.5",
     "@tailwindcss/aspect-ratio": "^0.4.0",
     "@tailwindcss/typography": "^0.5.2",
@@ -45,6 +45,7 @@
     "react-intersection-observer": "^9.1.0",
     "react-resize-detector": "^7.0.0",
     "react-share": "^4.4.0",
+    "react-spinners": "^0.12.0",
     "recharts": "^2.1.9",
     "swr": "^1.3.0",
     "tailwind-merge": "^1.2.1",

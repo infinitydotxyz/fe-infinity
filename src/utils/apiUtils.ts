@@ -55,6 +55,7 @@ interface ApiParams {
   query?: unknown; // query object - will be converted to query string (?param1=value1&param2=value2...).
   data?: unknown; // data (payload) for Post, Put, Delete
   options?: AxiosRequestConfig;
+  requiresAuth?: boolean;
   doNotAttemptLogin?: boolean;
 }
 
@@ -75,7 +76,10 @@ export const apiGet = async (path: string, params?: ApiParams): Promise<ApiRespo
   try {
     const userEndpointRegex = /\/(u|user)\//;
     const publicUserEndpoint = /\/p\/u\//;
-    const requiresAuth = userEndpointRegex.test(path) && !publicUserEndpoint.test(path);
+    let requiresAuth = userEndpointRegex.test(path) && !publicUserEndpoint.test(path);
+    if (params?.requiresAuth === true) {
+      requiresAuth = true;
+    }
 
     let authHeaders = {};
     if (requiresAuth) {
@@ -165,7 +169,8 @@ interface useFetchParams {
 export const useFetch = <T>(path: string | null, params: useFetchParams = {}) => {
   const queryStr = buildQueryString(params?.query);
   const options = {
-    errorRetryCount: 3,
+    errorRetryCount: 0,
+    revalidateOnFocus: false,
     ...params?.swrOptions
   };
   const { data, error } = useSWR(path ? `${path}${queryStr}` : null, swrFetch, options);

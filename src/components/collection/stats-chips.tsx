@@ -1,21 +1,21 @@
 import { BaseCollection, CollectionStats } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { FaCaretDown, FaCaretUp, FaDiscord, FaInstagram, FaTwitter } from 'react-icons/fa';
 import { HiOutlineExternalLink } from 'react-icons/hi';
 import { apiDelete, apiGet, apiPost } from 'src/utils';
-import { FollowingCollection, useAppContext } from 'src/utils/context/AppContext';
 import { Chip, Toaster, Spinner, toastError } from 'src/components/common';
 import { VerificationModal } from './verification_modal';
 import { useOrderContext } from 'src/utils/context/OrderContext';
+import { useAppContext } from 'src/utils/context/AppContext';
 interface Props {
   collection: BaseCollection;
   weeklyStatsData: CollectionStats[];
 }
 
 export const StatsChips = ({ collection, weeklyStatsData }: Props) => {
-  const { user, checkSignedIn, userFollowingCollections, fetchFollowingCollections, chainId } = useAppContext();
+  const { user, checkSignedIn, chainId } = useAppContext();
   const [isFollowing, setIsFollowing] = useState(false);
   const [followingLoading, setFollowingLoading] = useState(false);
   const { push: pushRoute } = useRouter();
@@ -23,13 +23,6 @@ export const StatsChips = ({ collection, weeklyStatsData }: Props) => {
   const [modalOpen, setModalOpen] = useState(false);
   const router = useRouter();
   const { addCartItem, setOrderDrawerOpen } = useOrderContext();
-
-  useEffect(() => {
-    const _isFollowing = !!userFollowingCollections.find(
-      (item: FollowingCollection) => item.collectionAddress && item.collectionAddress === collection?.address
-    );
-    setIsFollowing(_isFollowing);
-  }, [userFollowingCollections]);
 
   const onClickFollow = async () => {
     if (!checkSignedIn()) {
@@ -48,7 +41,6 @@ export const StatsChips = ({ collection, weeklyStatsData }: Props) => {
       } else {
         // toastSuccess('Unfollowed ' + collection?.metadata?.name);
         setIsFollowing(false);
-        fetchFollowingCollections();
       }
     } else {
       const { error } = await apiPost(`/user/1:${user?.address}/followingCollections`, {
@@ -62,7 +54,6 @@ export const StatsChips = ({ collection, weeklyStatsData }: Props) => {
       } else {
         // toastSuccess('Followed ' + collection?.metadata?.name);
         setIsFollowing(true);
-        fetchFollowingCollections();
       }
     }
     setFollowingLoading(false);

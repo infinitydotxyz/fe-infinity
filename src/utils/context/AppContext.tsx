@@ -13,11 +13,6 @@ export type User = {
   username?: string;
 };
 
-export type FollowingCollection = {
-  collectionAddress: string;
-  collectionChainid: string;
-};
-
 export type AppContextType = {
   user: User | null;
   signOut: () => void;
@@ -30,8 +25,6 @@ export type AppContextType = {
   setHeaderPosition: (bottom: number) => void;
   connectWallet: (walletType: WalletType) => Promise<void>;
   providerManager?: ProviderManager;
-  userFollowingCollections: FollowingCollection[];
-  fetchFollowingCollections: () => void;
 };
 
 const AppContext = React.createContext<AppContextType | null>(null);
@@ -39,7 +32,6 @@ const AppContext = React.createContext<AppContextType | null>(null);
 export const AppContextProvider = (props: React.PropsWithChildren<unknown>) => {
   const [user, setUser] = React.useState<User | null>(null);
   const [userReady, setUserReady] = React.useState(false);
-  const [followingCollections, setFollowingCollections] = React.useState([]);
   const [chainId, setChainId] = React.useState('1');
   const [headerPosition, setHeaderPosition] = React.useState(0);
   const showAppError = (message: React.ReactNode) => {
@@ -49,37 +41,21 @@ export const AppContextProvider = (props: React.PropsWithChildren<unknown>) => {
 
   const showAppMessage = (message: React.ReactNode) => message;
 
-  const fetchFollowingCollections = async () => {
-    if (user?.address) {
-      const { result, error } = await apiGet(`/user/${chainId}:${user?.address}/followingCollections`);
-      if (!error) {
-        setFollowingCollections(result.data);
-      }
-    }
-  };
-
   React.useEffect(() => {
     // check & set logged in user:
     let isActive = true;
-    ProviderManager.getInstance().then((providerManagerInstance) => {
+    ProviderManager.getInstance().then(async (providerManagerInstance) => {
       if (isActive) {
         setProviderManager(providerManagerInstance);
-
-        providerManagerInstance
-          .signIn()
-          .then(async () => {
-            const address = providerManagerInstance.account;
-            setUser({ address });
-            const chainIdNew = providerManagerInstance.chainId ?? 1;
-            setChainId(`${chainIdNew}`);
-            await fetchUserInfo(address);
-          })
-          .catch((err) => {
-            console.error(err);
-          })
-          .finally(() => {
-            setUserReady(true);
-          });
+        const isLoggedIn = providerManagerInstance.isLoggedInAndAuthenticated;
+        if (isLoggedIn) {
+          const address = providerManagerInstance.account;
+          setUser({ address });
+          const chainIdNew = providerManagerInstance.chainId ?? 1;
+          setChainId(`${chainIdNew}`);
+          await fetchUserInfo(address);
+        }
+        setUserReady(true);
       }
     });
     return () => {
@@ -87,19 +63,16 @@ export const AppContextProvider = (props: React.PropsWithChildren<unknown>) => {
     };
   }, []);
 
-  React.useEffect(() => {
-    // get & keep user's following collections:
-    fetchFollowingCollections();
-  }, [userReady]);
-
   const connectWallet = async (walletType: WalletType) => {
     if (providerManager?.connectWallet) {
       try {
         await providerManager.connectWallet(walletType);
         await providerManager.signIn();
-        setUser({ address: providerManager.account ?? '' });
+        const address = providerManager.account ?? '';
+        setUser({ address });
         const chainIdNew = providerManager.chainId ?? 1;
         setChainId(`${chainIdNew}`);
+        await fetchUserInfo(address);
         setUserReady(true);
       } catch (err: Error | unknown) {
         console.error(err);
@@ -202,9 +175,7 @@ export const AppContextProvider = (props: React.PropsWithChildren<unknown>) => {
     headerPosition,
     setHeaderPosition,
     connectWallet,
-    providerManager,
-    userFollowingCollections: followingCollections,
-    fetchFollowingCollections
+    providerManager
   };
 
   return (

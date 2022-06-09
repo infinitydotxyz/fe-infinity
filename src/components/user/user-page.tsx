@@ -9,6 +9,7 @@ import { UserPageNftsTab } from './user-page-nfts-tab';
 import { UserPageActivityTab } from './user-page-activity-tab';
 import { ellipsisAddress } from 'src/utils';
 import { ETHEREUM_CHAIN_SCANNER_BASE } from '@infinityxyz/lib-frontend/utils';
+import { UserPageOrderList } from '../feed/user-page-order-list';
 
 interface UserPageProps {
   userInfo: UserProfileDto;
@@ -17,7 +18,7 @@ interface UserPageProps {
 
 export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner = false }) => {
   const router = useRouter();
-  const { options, onChange, selected } = useToggleTab(['Collected', 'Activity'], 'Collected');
+  const { options, onChange, selected } = useToggleTab(['Collected', 'Activity', 'Orders'], 'Collected');
 
   return (
     <>
@@ -59,7 +60,7 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
 
         <ToggleTab
           className="mt-14 -ml-2 font-heading pointer-events-auto"
-          tabWidth="200px"
+          tabWidth="150px"
           options={options}
           selected={selected}
           onChange={onChange}
@@ -68,6 +69,7 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
         <div className="mt-6 min-h-[1024px] pointer-events-none">
           {selected === 'Collected' && <UserPageNftsTab userInfo={userInfo} />}
           {selected === 'Activity' && <UserPageActivityTab userInfo={userInfo} />}
+          {selected === 'Orders' && <UserPageOrderList userInfo={userInfo} />}
         </div>
       </div>
     </>
