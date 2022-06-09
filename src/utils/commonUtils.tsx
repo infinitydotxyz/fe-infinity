@@ -203,7 +203,7 @@ export const getLoginMessage = (nonce: number): string => {
 I accept the Infinity Terms of Service: https://infinity.xyz/terms
 
 Nonce: ${nonce}
-Expires in: 24 hours`;
+Expires in: 24 hrs`;
 
   return msg;
 };
