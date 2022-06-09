@@ -36,7 +36,6 @@ export async function getSignedOBOrder(
     const msg = 'signOBSpecOrder: failed to sign order';
     console.error(msg);
     throw msg;
-    return undefined;
   }
   const signedOBOrder: SignedOBOrder = { ...order, signedOrder };
   return signedOBOrder;
