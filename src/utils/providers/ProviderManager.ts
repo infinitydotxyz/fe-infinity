@@ -1,9 +1,8 @@
 import { Signature } from '@ethersproject/bytes';
 import { Web3Provider } from '@ethersproject/providers';
-import { verifyMessage } from '@ethersproject/wallet';
-import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
+import { LOGIN_NONCE_EXPIRY_TIME, trimLowerCase } from '@infinityxyz/lib-frontend/utils';
+import { verifyMessage } from 'ethers/lib/utils';
 import EventEmitter from 'events';
-import { apiGet, apiPut } from '../apiUtils';
 import { base64Encode, getLoginMessage } from '../commonUtils';
 import { Optional } from '../typeUtils';
 import { ProviderEvents, WalletType } from './AbstractProvider';
@@ -81,19 +80,13 @@ export class ProviderManager implements Omit<Optional<Provider, 'type'>, 'init'>
     return this._provider?.type;
   }
 
-  getAuthHeaders = async (attemptSignIn = true) => {
-    if (attemptSignIn && this.account) {
+  getAuthHeaders = async (attemptLogin = true) => {
+    if (attemptLogin && !this.isLoggedInAndAuthenticated) {
       await this.signIn();
-    } else {
-      const requiresSignIn = !this.isLoggedInAndAuthenticated;
-      if (requiresSignIn) {
-        // todo: uncomment
-        // throw new Error('Please login');
-      }
     }
     return {
       [StorageKeys.AuthNonce]: this.authNonce,
-      [StorageKeys.AuthMessage]: this.authMessage,
+      [StorageKeys.AuthMessage]: base64Encode(this.authMessage),
       [StorageKeys.AuthSignature]: JSON.stringify(this.authSignature)
     };
   };
@@ -210,14 +203,14 @@ export class ProviderManager implements Omit<Optional<Provider, 'type'>, 'init'>
   }
 
   // todo: why is this reqd? this is getting called too many times
-  private get isLoggedInAndAuthenticated(): boolean {
+  public get isLoggedInAndAuthenticated(): boolean {
     const currentUser = trimLowerCase(this.account);
     if (currentUser && this.authNonce && this.authMessage && this.authSignature) {
       try {
         const signer = verifyMessage(this.authMessage, this.authSignature).toLowerCase();
-        if (currentUser === signer) {
-          return true;
-        }
+        const isSigValid = signer === currentUser;
+        const isNonceValid = Date.now() - this.authNonce < LOGIN_NONCE_EXPIRY_TIME;
+        return isSigValid && isNonceValid;
       } catch (err) {
         console.log(err);
         return false;
@@ -227,39 +220,20 @@ export class ProviderManager implements Omit<Optional<Provider, 'type'>, 'init'>
   }
 
   async signIn() {
-    const requiresSignature = !this.isLoggedInAndAuthenticated;
-
-    if (!requiresSignature) {
-      return;
-    }
-
-    // await this.personalSign('abcahkfhlahfakkkk');
-
-    try {
-      const { result } = await apiGet('/auth/nonce');
-      const nonce = result.nonce;
-      if (nonce) {
-        const loginMsg = getLoginMessage(nonce);
-        const signature = await this.personalSign(loginMsg);
-        if (signature) {
-          const user = trimLowerCase(this.account);
-          try {
-            await apiPut('/auth/nonce', { data: { nonce, user } });
-            this.authNonce = nonce;
-            this.authSignature = signature;
-            this.authMessage = base64Encode(loginMsg);
-            this.save();
-          } catch (err) {
-            console.error('Error saving login info', err);
-          }
-        } else {
-          console.error('No signature');
-        }
-      } else {
-        console.error('No auth nonce');
+    const nonce = Date.now();
+    const loginMsg = getLoginMessage(nonce);
+    const signature = await this.personalSign(loginMsg);
+    if (signature) {
+      try {
+        this.authNonce = nonce;
+        this.authSignature = signature;
+        this.authMessage = loginMsg;
+        this.save();
+      } catch (err) {
+        console.error('Error saving login info', err);
       }
-    } catch (err) {
-      console.error('error while signing in', err);
+    } else {
+      console.error('No signature');
     }
   }
 

@@ -61,25 +61,18 @@ export const AppContextProvider = (props: React.PropsWithChildren<unknown>) => {
   React.useEffect(() => {
     // check & set logged in user:
     let isActive = true;
-    ProviderManager.getInstance().then((providerManagerInstance) => {
+    ProviderManager.getInstance().then(async (providerManagerInstance) => {
       if (isActive) {
         setProviderManager(providerManagerInstance);
-
-        providerManagerInstance
-          .signIn()
-          .then(async () => {
-            const address = providerManagerInstance.account;
-            setUser({ address });
-            const chainIdNew = providerManagerInstance.chainId ?? 1;
-            setChainId(`${chainIdNew}`);
-            await fetchUserInfo(address);
-          })
-          .catch((err) => {
-            console.error(err);
-          })
-          .finally(() => {
-            setUserReady(true);
-          });
+        const isLoggedIn = providerManagerInstance.isLoggedInAndAuthenticated;
+        if (isLoggedIn) {
+          const address = providerManagerInstance.account;
+          setUser({ address });
+          const chainIdNew = providerManagerInstance.chainId ?? 1;
+          setChainId(`${chainIdNew}`);
+          await fetchUserInfo(address);
+        }
+        setUserReady(true);
       }
     });
     return () => {
@@ -97,9 +90,11 @@ export const AppContextProvider = (props: React.PropsWithChildren<unknown>) => {
       try {
         await providerManager.connectWallet(walletType);
         await providerManager.signIn();
-        setUser({ address: providerManager.account ?? '' });
+        const address = providerManager.account ?? '';
+        setUser({ address });
         const chainIdNew = providerManager.chainId ?? 1;
         setChainId(`${chainIdNew}`);
+        await fetchUserInfo(address);
         setUserReady(true);
       } catch (err: Error | unknown) {
         console.error(err);
