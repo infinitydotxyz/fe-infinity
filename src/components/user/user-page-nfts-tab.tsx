@@ -77,7 +77,7 @@ export const UserPageNftsTab = ({ userInfo }: Props) => {
                           collectionImage: data?.cardImage ?? data?.image ?? '',
                           collectionSlug: data?.collectionSlug ?? '',
                           tokenImage: data?.image ?? '',
-                          tokenName: data?.name ?? '(no name)',
+                          tokenName: data?.name ?? '',
                           tokenId: data?.tokenId ?? '-1',
                           isSellOrder: true,
                           attributes: data?.attributes ?? []

@@ -113,7 +113,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const assetName =
     tokenMetadata.name && collection.metadata.name
       ? `${tokenMetadata.name} - ${collection.metadata.name}`
-      : tokenMetadata.name || collection.metadata.name || 'No Name';
+      : tokenMetadata.name || collection.metadata.name || 'brrrr';
 
   const onClickButton1 = () => {
     if (!checkSignedIn()) {
