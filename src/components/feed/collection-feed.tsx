@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
-import { FeedItem, FeedEvent } from './feed-item';
-import { COLL_FEED, FeedFilter, fetchMoreEvents, subscribe } from 'src/utils/firestore/firestoreUtils';
-import { CommentPanel } from './comment-panel';
 import { FeedEventType } from '@infinityxyz/lib-frontend/types/core/feed';
-import { FeedFilterDropdown } from './feed-filter-dropdown';
-import { ActivityItem } from './activity-item';
+import { useState } from 'react';
+import { FeedFilter, fetchMoreEvents } from 'src/utils/firestore/firestoreUtils';
 import { ScrollLoader } from '../common';
+import { ActivityItem } from './activity-item';
+import { CommentPanel } from './comment-panel';
+import { FeedFilterDropdown } from './feed-filter-dropdown';
+import { FeedEvent, FeedItem } from './feed-item';
 
-let eventsInit = false;
+// let eventsInit = false;
 
 interface CollectionFeedProps {
   collectionAddress?: string;
@@ -29,35 +29,35 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
     return null; // require collectionAddress
   }
 
-  const getEvents = () => {
-    try {
-      subscribe(COLL_FEED, filter, (type: string, data: FeedEvent) => {
-        if (type === 'added') {
-          if (eventsInit === false) {
-            setEvents((currentEvents) => [data, ...currentEvents].sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1))); // add initial feed events.
-            setTimeout(() => {
-              eventsInit = true;
-            }, 3000);
-          } else {
-            setNewEvents((currentEvents) =>
-              [data, ...currentEvents].sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1))
-            );
-          }
-        } else {
-          setEvents((currentEvents) => [...currentEvents, data].sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1)));
-        }
-      });
-    } catch (err) {
-      console.error('ERR: ', err);
-    }
-  };
+  // const getEvents = () => {
+  //   try {
+  //     subscribe(COLL_FEED, filter, (type: string, data: FeedEvent) => {
+  //       if (type === 'added') {
+  //         if (eventsInit === false) {
+  //           setEvents((currentEvents) => [data, ...currentEvents].sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1))); // add initial feed events.
+  //           setTimeout(() => {
+  //             eventsInit = true;
+  //           }, 3000);
+  //         } else {
+  //           setNewEvents((currentEvents) =>
+  //             [data, ...currentEvents].sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1))
+  //           );
+  //         }
+  //       } else {
+  //         setEvents((currentEvents) => [...currentEvents, data].sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1)));
+  //       }
+  //     });
+  //   } catch (err) {
+  //     console.error('ERR: ', err);
+  //   }
+  // };
 
-  useEffect(() => {
-    eventsInit = false;
-    setEvents([]);
-    setNewEvents([]);
-    getEvents();
-  }, [filter]);
+  // useEffect(() => {
+  //   eventsInit = false;
+  //   setEvents([]);
+  //   setNewEvents([]);
+  //   getEvents();
+  // }, [filter]);
 
   // useEffect(() => {
   //   let arr = events;
