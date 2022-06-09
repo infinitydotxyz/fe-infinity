@@ -1,7 +1,8 @@
-import React, { Fragment, useEffect, useState } from 'react';
 import { Tab } from '@headlessui/react';
+import { CollectionStats } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
-import { useFetch, apiDelete, apiPost } from 'src/utils/apiUtils';
+import React, { Fragment, useEffect, useState } from 'react';
+import { Field } from 'src/components/analytics/field';
 import {
   Button,
   Checkbox,
@@ -9,16 +10,13 @@ import {
   PageBox,
   ScrollLoader,
   Spacer,
-  toastError,
   ToggleTab,
   useToggleTab
 } from 'src/components/common';
-import { Field } from 'src/components/analytics/field';
-import { useAppContext } from 'src/utils/context/AppContext';
-import { CollectionStats } from '@infinityxyz/lib-frontend/types/core';
-import { ITEMS_PER_PAGE, BLANK_IMG } from 'src/utils/constants';
-import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
 import { truncateDecimals } from 'src/utils';
+import { useFetch } from 'src/utils/apiUtils';
+import { BLANK_IMG, ITEMS_PER_PAGE } from 'src/utils/constants';
+import { useAppContext } from 'src/utils/context/AppContext';
 
 type StatColType = {
   id?: string;
@@ -40,7 +38,7 @@ type StatType = {
 
 export const Analytics = () => {
   const router = useRouter();
-  const { user, checkSignedIn, userFollowingCollections, fetchFollowingCollections } = useAppContext();
+  const { user } = useAppContext();
   const connected = user?.address ? true : false;
   const [page, setPage] = useState(router.query.params?.[0] ? router.query.params?.[0] : 'trending');
   const [interval, setInterval] = useState(router.query.params?.[1] ? router.query.params?.[1] : 'weekly');
@@ -490,39 +488,6 @@ export const Analytics = () => {
     }
   };
 
-  const onClickFollow = async (isFollowing: boolean, chainId: string, address: string) => {
-    if (!checkSignedIn()) {
-      return;
-    }
-    if (isFollowing) {
-      const { error } = await apiDelete(`/user/1:${user?.address}/followingCollections`, {
-        data: {
-          collectionChainId: chainId,
-          collectionAddress: address
-        }
-      });
-      if (error) {
-        toastError(error?.errorResponse?.message);
-      } else {
-        // toastSuccess('Unfollowed ' + collection?.metadata?.name);
-        fetchFollowingCollections();
-      }
-    } else {
-      const { error } = await apiPost(`/user/1:${user?.address}/followingCollections`, {
-        data: {
-          collectionChainId: chainId,
-          collectionAddress: address
-        }
-      });
-      if (error) {
-        toastError(error?.errorResponse?.message);
-      } else {
-        // toastSuccess('Followed ' + collection?.metadata?.name);
-        fetchFollowingCollections();
-      }
-    }
-  };
-
   const tabStyles = {
     className: ({ selected }: { selected: boolean }) => `
             w-content h-content
@@ -638,33 +603,10 @@ export const Analytics = () => {
                     {stat?.cols
                       ?.filter((s) => s.placement === 'end')
                       .map((field, j) => {
-                        const isFollowing =
-                          userFollowingCollections.findIndex((coll) => coll.collectionAddress === field?.value) >= 0;
                         return (
                           <Fragment key={j}>
                             <div className="w-full h-full  row-span-1 col-span-1">
-                              <Field
-                                type={field?.type}
-                                label={field?.label}
-                                value={field?.value}
-                                content={
-                                  isFollowing ? (
-                                    <button
-                                      className={`rounded-full p-4 font-bold bg-black text-white hover:bg-theme-light-850`}
-                                      onClick={() => onClickFollow(isFollowing, '1', `${field?.value}`)}
-                                    >
-                                      <AiOutlineMinus />
-                                    </button>
-                                  ) : (
-                                    <button
-                                      className={`rounded-full p-4 font-bold bg-white text-black hover:bg-theme-light-300`}
-                                      onClick={() => onClickFollow(isFollowing, '1', `${field?.value}`)}
-                                    >
-                                      <AiOutlinePlus />
-                                    </button>
-                                  )
-                                }
-                              />
+                              <Field type={field?.type} label={field?.label} value={field?.value} content="" />
                               <div className=""></div>
                             </div>
                           </Fragment>

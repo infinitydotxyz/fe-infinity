@@ -59,7 +59,7 @@ export const Dropdown = ({
           <div className={`py-1 ${itemListClassName}`}>
             {items.map((item, idx) => {
               return (
-                <CustomMenuItem key={idx} onClick={item.onClick} itemClassName={itemClassName}>
+                <CustomMenuItem key={idx} onClick={item.onClick} itemclassname={itemClassName}>
                   {item.label}
                 </CustomMenuItem>
               );
@@ -74,7 +74,7 @@ export const Dropdown = ({
 interface CustomMenuItemProps {
   onClick: () => void;
   children: ReactElement | string;
-  itemClassName?: string;
+  itemclassname?: string;
 }
 export const CustomMenuItem = (props: CustomMenuItemProps) => {
   return (
@@ -86,7 +86,7 @@ export const CustomMenuItem = (props: CustomMenuItemProps) => {
             'flex w-full justify-between px-4 py-4 text-left leading-5 font-heading ',
             active ? 'hover:bg-theme-light-200 rounded-xl' : 'text-gray-700',
             disabled && 'cursor-not-allowed opacity-50',
-            props.itemClassName
+            props.itemclassname
           )}
         >
           <span className={classNames(active)}>{props.children}</span>
