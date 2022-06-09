@@ -7,7 +7,14 @@ import { apiGet, ITEMS_PER_PAGE } from 'src/utils';
 import { Button, ScrollLoader, Spinner } from '../common';
 import { UserProfileDto } from '../user/user-profile-dto';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { UserProfileOrderFilterPanel } from '../filter/user-profile-order-filter-panel';
+import { UserOrderFilter, UserProfileOrderFilterPanel } from '../filter/user-profile-order-filter-panel';
+
+type Query = {
+  limit: number;
+  cursor: string;
+  makerAddress?: string;
+  takerAddress?: string;
+};
 
 interface UserPageOrderListProps {
   userInfo: UserProfileDto;
@@ -26,6 +33,7 @@ export const UserPageOrderList = ({ userInfo, userAddress, types, className }: U
   const [cursor, setCursor] = useState('');
   const [hasNextPage, setHasNextPage] = useState(false);
   const [filterShowed, setFilterShowed] = useState(false);
+  const [apiFilter, setApiFilter] = useState<UserOrderFilter>({});
 
   const fetchData = async (isRefresh = false) => {
     setIsFetching(true);
@@ -34,13 +42,17 @@ export const UserPageOrderList = ({ userInfo, userAddress, types, className }: U
       newCursor = '';
     }
 
+    const query: Query = {
+      limit: ITEMS_PER_PAGE,
+      cursor: newCursor
+    };
+    if (apiFilter.orderType === 'listings') {
+      query.makerAddress = userInfo.address;
+    } else {
+      query.takerAddress = userInfo.address;
+    }
     const { result } = await apiGet(`/orders/${userInfo.address}`, {
-      query: {
-        limit: ITEMS_PER_PAGE,
-        cursor: newCursor,
-        events: filteringTypes,
-        makerAddress: userInfo.address
-      },
+      query,
       requiresAuth: true
     });
 
@@ -65,7 +77,7 @@ export const UserPageOrderList = ({ userInfo, userAddress, types, className }: U
   useEffect(() => {
     setData([]);
     fetchData(true);
-  }, [filter]);
+  }, [apiFilter]);
 
   const onChangeFilterDropdown = (checked: boolean, checkId: string) => {
     const newFilter = { ...filter };
@@ -134,7 +146,7 @@ export const UserPageOrderList = ({ userInfo, userAddress, types, className }: U
       <div className="flex items-start">
         {filterShowed && (
           <div className="mt-4">
-            <UserProfileOrderFilterPanel onChange={(filter) => console.log(filter)} />
+            <UserProfileOrderFilterPanel onChange={(filter) => setApiFilter(filter)} />
           </div>
         )}
 
@@ -144,7 +156,7 @@ export const UserPageOrderList = ({ userInfo, userAddress, types, className }: U
           {!isFetching && hasNextPage === false && data?.length === 0 ? <div>No results found.</div> : null}
 
           {data?.map((event, idx) => {
-            return <UserPageOrderListItem key={idx} event={event} />;
+            return <UserPageOrderListItem key={idx} event={event} userInfo={userInfo} />;
           })}
 
           {hasNextPage === true ? (

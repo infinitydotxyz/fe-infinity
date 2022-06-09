@@ -4,7 +4,7 @@ import { useFilterContext } from 'src/utils/context/FilterContext';
 import { Button, Checkbox, TextInputBox } from 'src/components/common';
 
 export type UserOrderFilter = {
-  orderType: 'listings' | 'offers';
+  orderType?: 'listings' | 'offers';
 };
 
 interface Props {
@@ -25,11 +25,12 @@ export const UserProfileOrderFilterPanel = ({ className, onChange }: Props) => {
   });
 
   const onClickOrderType = (newType: 'listings' | 'offers') => {
-    setFilter((filter) => ({
+    const newFilter = {
       ...filter,
       orderType: newType
-    }));
-    onChange(filter);
+    };
+    setFilter(newFilter);
+    onChange(newFilter);
   };
 
   const handleClickApply = () => {
