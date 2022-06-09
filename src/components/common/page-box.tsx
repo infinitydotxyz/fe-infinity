@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navbar, Spacer, Header } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { OrderDrawer } from '../market';
+import { isPasswordModalNeeded, PasswordModal } from './password-modal';
 
 // used in the Header
 export const pageStyles = 'mx-auto desktop:w-5/6 desktop-sm:w-[95%] tabloid:w-[95%] mobile:w-[98%]';
@@ -26,6 +27,11 @@ export const PageBox = ({
 }: Props): JSX.Element => {
   const { chainId } = useAppContext();
   const { orderDrawerOpen, setOrderDrawerOpen } = useOrderContext();
+  const [renderPasswordModal, setRenderPasswordModal] = useState(false);
+
+  useEffect(() => {
+    setRenderPasswordModal(isPasswordModalNeeded());
+  }, []);
 
   return (
     <>
@@ -34,21 +40,25 @@ export const PageBox = ({
       )}
 
       <div className="transition w-[100vw] h-[100vh] overflow-y-auto overflow-x-hidden justify-items-center">
-        <Header title={title}>
-          <Navbar />
+        {renderPasswordModal ? (
+          <PasswordModal isOpen={true} onClose={() => console.log} />
+        ) : (
+          <Header title={title}>
+            <Navbar />
 
-          <div className={`transition ${fullWidth ? 'w-full' : pageStyles}`}>
-            {showTitle ? <PageHeader title={title} rightToolbar={rightToolbar} /> : null}
+            <div className={`transition ${fullWidth ? 'w-full' : pageStyles}`}>
+              {showTitle ? <PageHeader title={title} rightToolbar={rightToolbar} /> : null}
 
-            <div className={`w-full ${className}`}>
-              {children}
-              <OrderDrawer open={orderDrawerOpen} onClose={() => setOrderDrawerOpen(false)} />
+              <div className={`w-full ${className}`}>
+                {children}
+                <OrderDrawer open={orderDrawerOpen} onClose={() => setOrderDrawerOpen(false)} />
+              </div>
+
+              {/* allows scroll so items aren't at the bottom of the screen */}
+              {/* <div style={{ height: 300 }} /> */}
             </div>
-
-            {/* allows scroll so items aren't at the bottom of the screen */}
-            {/* <div style={{ height: 300 }} /> */}
-          </div>
-        </Header>
+          </Header>
+        )}
       </div>
     </>
   );

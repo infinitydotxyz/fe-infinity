@@ -32,7 +32,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ env.cache-name }}-
 
-      - run: npm install -y
+      - run: npm install --force -y
 
       # - run: npm run format
       # - name: Commit changes

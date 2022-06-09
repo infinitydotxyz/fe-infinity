@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
 import { FeedEventType } from '@infinityxyz/lib-frontend/types/core/feed';
-import { FeedFilterDropdown } from './feed-filter-dropdown';
+// import { FeedFilterDropdown } from './feed-filter-dropdown';
 import { UserPageOrderListItem } from './user-page-order-list-item';
 import { apiGet, ITEMS_PER_PAGE } from 'src/utils';
-import { ScrollLoader, Spinner } from '../common';
+import { Button, ScrollLoader, Spinner } from '../common';
 import { UserProfileDto } from '../user/user-profile-dto';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { UserProfileOrderFilterPanel } from '../filter/user-profile-order-filter-panel';
 
 interface UserPageOrderListProps {
   userInfo: UserProfileDto;
@@ -24,6 +25,7 @@ export const UserPageOrderList = ({ userInfo, userAddress, types, className }: U
   const [isFetching, setIsFetching] = useState(false);
   const [cursor, setCursor] = useState('');
   const [hasNextPage, setHasNextPage] = useState(false);
+  const [filterShowed, setFilterShowed] = useState(false);
 
   const fetchData = async (isRefresh = false) => {
     setIsFetching(true);
@@ -90,11 +92,12 @@ export const UserPageOrderList = ({ userInfo, userAddress, types, className }: U
       setFilteringTypes(_newTypes);
     }
   };
+  console.log('onChangeFilterDropdown', onChangeFilterDropdown);
 
   return (
     <div className={`min-h-[1024px] mt-[-66px] ${className}`}>
       <div className="flex flex-row-reverse mb-8 bg-transparent">
-        <FeedFilterDropdown
+        {/* <FeedFilterDropdown
           selectedTypes={filteringTypes}
           onChange={onChangeFilterDropdown}
           options={[
@@ -115,26 +118,44 @@ export const UserPageOrderList = ({ userInfo, userAddress, types, className }: U
               value: 'sale'
             }
           ]}
-        />
+        /> */}
+
+        <Button
+          variant="outline"
+          onClick={() => {
+            setFilterShowed((flag) => !flag);
+          }}
+          className="py-2.5 mr-2 font-heading pointer-events-auto"
+        >
+          {filterShowed ? 'Hide' : 'Show'} filter
+        </Button>
       </div>
 
-      <ul className="space-y-4 pointer-events-auto">
-        {isFetching && <Spinner />}
+      <div className="flex items-start">
+        {filterShowed && (
+          <div className="mt-4">
+            <UserProfileOrderFilterPanel onChange={(filter) => console.log(filter)} />
+          </div>
+        )}
 
-        {!isFetching && hasNextPage === false && data?.length === 0 ? <div>No results found.</div> : null}
+        <ul className="w-full space-y-4 pointer-events-auto">
+          {isFetching && <Spinner />}
 
-        {data?.map((event, idx) => {
-          return <UserPageOrderListItem key={idx} event={event} />;
-        })}
+          {!isFetching && hasNextPage === false && data?.length === 0 ? <div>No results found.</div> : null}
 
-        {hasNextPage === true ? (
-          <ScrollLoader
-            onFetchMore={async () => {
-              await fetchData();
-            }}
-          />
-        ) : null}
-      </ul>
+          {data?.map((event, idx) => {
+            return <UserPageOrderListItem key={idx} event={event} />;
+          })}
+
+          {hasNextPage === true ? (
+            <ScrollLoader
+              onFetchMore={async () => {
+                await fetchData();
+              }}
+            />
+          ) : null}
+        </ul>
+      </div>
     </div>
   );
 };
