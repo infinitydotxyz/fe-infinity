@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Modal } from 'src/components/common';
-import { Base64, isLocalhost } from 'src/utils';
+import { base64Encode, isLocalhost } from 'src/utils';
 import { Button } from './button';
 import { TextInputBox } from './input-box';
 
@@ -26,9 +26,9 @@ export const PasswordModal = ({ isOpen, onClose }: Props) => {
   const [isValidPassword, setIsValidPassword] = useState(true);
 
   const onClickSubmit = () => {
-    if (Base64.encode(password) === PPP) {
+    if (base64Encode(password) === PPP) {
       setIsValidPassword(true);
-      localStorage.setItem(LOCAL_STORAGE_KEY, Base64.encode(password));
+      localStorage.setItem(LOCAL_STORAGE_KEY, base64Encode(password));
       window.location.reload();
     } else {
       setIsValidPassword(false);

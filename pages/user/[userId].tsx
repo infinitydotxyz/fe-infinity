@@ -26,7 +26,7 @@ const UserDetailPage = () => {
     console.error(error);
     return (
       <PageBox title="Error" className="mb-12">
-        Failed Fetch User Info
+        Failed fetching user profile
       </PageBox>
     );
   }

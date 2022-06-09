@@ -16,9 +16,6 @@ export const NFT_DATA_SOURCES = {
   COVALENT: 4
 };
 
-export const LOGIN_MESSAGE =
-  'Welcome to Infinity. Click "Sign" to sign in. No password needed. This request will not trigger a blockchain transaction or cost any gas fees.';
-
 // todo: find better images
 export const BLANK_IMG = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
 export const BLANK_IMAGE_URL = 'https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png';
