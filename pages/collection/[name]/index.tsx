@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { BaseCollection, CardData, CollectionStats } from '@infinityxyz/lib-frontend/types/core';
+import { BaseCollection, ERC721CardData, CollectionStats } from '@infinityxyz/lib-frontend/types/core';
 import { ToggleTab, PageBox, useToggleTab, SVG, EthPrice } from 'src/components/common';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { useFetch } from 'src/utils/apiUtils';
@@ -71,7 +71,7 @@ const CollectionPage = () => {
   );
   const firstDailyStats = dailyStats?.data[0];
 
-  const isAlreadyAdded = (data: CardData | undefined) => {
+  const isAlreadyAdded = (data: ERC721CardData | undefined) => {
     // check if this item was already added to cartItems or order.
     const found1 =
       cartItems.find((item) => item.collectionAddress === data?.address && item.tokenId === data.tokenId) !== undefined;
@@ -89,7 +89,7 @@ const CollectionPage = () => {
   };
 
   // find & remove this item in cartItems & all orders' cartItems:
-  const findAndRemove = (data: CardData | undefined) => {
+  const findAndRemove = (data: ERC721CardData | undefined) => {
     const foundItemIdx = cartItems.findIndex(
       (item) => item.collectionAddress === data?.address && item.tokenId === data?.tokenId
     );
@@ -255,12 +255,15 @@ const CollectionPage = () => {
                         }
                         const price = data?.orderSnippet?.listing?.orderItem?.startPriceEth ?? '';
                         addCartItem({
-                          collectionName: data?.collectionName ?? '(no name)',
-                          collectionAddress: data?.tokenAddress ?? '(no address)',
+                          collectionName: data?.collectionName ?? '',
+                          collectionAddress: data?.tokenAddress ?? '',
+                          collectionImage: data?.cardImage ?? data?.image ?? '',
+                          collectionSlug: data?.collectionSlug ?? '',
                           tokenImage: data?.image ?? '',
-                          tokenName: data?.name ?? '(no name)',
-                          tokenId: data?.tokenId ?? '0',
-                          isSellOrder: false
+                          tokenName: data?.name ?? '',
+                          tokenId: data?.tokenId ?? '-1',
+                          isSellOrder: false,
+                          attributes: data?.attributes ?? []
                         });
                         if (price) {
                           setIsBuyClicked(true); // to add to cart as a Buy order. (see: useEffect)

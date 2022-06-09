@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { CardData } from '@infinityxyz/lib-frontend/types/core';
+import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { twMerge } from 'tailwind-merge';
 import { AiOutlineEye } from 'react-icons/ai';
 import { Dropdown, DropdownItems } from './dropdown';
@@ -12,15 +12,15 @@ import { SVG } from './svg';
 import { useRouter } from 'next/router';
 import { BLANK_IMG } from 'src/utils';
 
-type labelFn = (data?: CardData) => ReactNode;
+type labelFn = (data?: ERC721CardData) => ReactNode;
 
 type CardAction = {
   label: string | ReactNode | labelFn;
-  onClick: (ev: React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>, data?: CardData) => void;
+  onClick: (ev: React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>, data?: ERC721CardData) => void;
 };
 
 export interface CardProps {
-  data?: CardData;
+  data?: ERC721CardData;
   cardActions?: CardAction[];
   dropdownActions?: DropdownItems[];
   isLoading?: boolean;

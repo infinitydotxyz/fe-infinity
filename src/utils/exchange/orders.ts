@@ -421,8 +421,7 @@ export async function canTakeOrders(
 ): Promise<boolean> {
   const makerOrderHash = _orderHash(makerOrder);
   const result = await infinityExchange.verifyTakeOrders(makerOrderHash, makerOrder, takerOrder);
-  console.log('verified', result[0], 'execPrice', result[1].toString());
-  return result[0];
+  return result;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

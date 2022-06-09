@@ -1,4 +1,4 @@
-import { CardData } from '@infinityxyz/lib-frontend/types/core';
+import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { GalleryBox } from '../gallery/gallery-box';
@@ -12,7 +12,7 @@ export const UserPageNftsTab = ({ userInfo }: Props) => {
   const { user } = useAppContext();
   const { addCartItem, setOrderDrawerOpen, ordersInCart, cartItems, removeCartItem, updateOrders } = useOrderContext();
 
-  const isAlreadyAdded = (data: CardData | undefined) => {
+  const isAlreadyAdded = (data: ERC721CardData | undefined) => {
     // check if this item was already added to cartItems or order.
     const found1 =
       cartItems.find((item) => item.collectionAddress === data?.address && item.tokenId === data.tokenId) !== undefined;
@@ -30,7 +30,7 @@ export const UserPageNftsTab = ({ userInfo }: Props) => {
   };
 
   // find & remove this item in cartItems & all orders' cartItems:
-  const findAndRemove = (data: CardData | undefined) => {
+  const findAndRemove = (data: ERC721CardData | undefined) => {
     const foundItemIdx = cartItems.findIndex(
       (item) => item.collectionAddress === data?.address && item.tokenId === data?.tokenId
     );
@@ -70,13 +70,17 @@ export const UserPageNftsTab = ({ userInfo }: Props) => {
                           findAndRemove(data);
                           return;
                         }
+                        console.log('card data', data);
                         addCartItem({
-                          collectionName: data?.collectionName ?? '(no name)',
-                          collectionAddress: data?.tokenAddress ?? '(no address)',
+                          collectionName: data?.collectionName ?? '',
+                          collectionAddress: data?.tokenAddress ?? '',
+                          collectionImage: data?.cardImage ?? data?.image ?? '',
+                          collectionSlug: data?.collectionSlug ?? '',
                           tokenImage: data?.image ?? '',
                           tokenName: data?.name ?? '(no name)',
-                          tokenId: data?.tokenId ?? '0',
-                          isSellOrder: true
+                          tokenId: data?.tokenId ?? '-1',
+                          isSellOrder: true,
+                          attributes: data?.attributes ?? []
                         });
                         if (cartItems.length < 1) {
                           setOrderDrawerOpen(true); // only show when adding the first time.

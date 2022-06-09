@@ -1,4 +1,4 @@
-import { OBOrder, OBOrderItem, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { Erc721Attribute, OBOrder, OBOrderItem, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { getOBComplicationAddress, getTxnCurrencyAddress, NULL_ADDRESS } from '@infinityxyz/lib-frontend/utils';
 import React, { ReactNode, useContext, useState } from 'react';
 import { toastError } from 'src/components/common';
@@ -18,6 +18,7 @@ export interface OrderCartItem {
   collectionSlug?: string;
   hasBlueCheck?: boolean;
   numTokens?: number;
+  attributes?: Erc721Attribute[];
 }
 
 export interface OBOrderSpec {
@@ -142,7 +143,8 @@ export const OrderContextProvider = ({ children }: Props) => {
                   tokenImage: cartItem.tokenImage ?? '',
                   numTokens: cartItem.numTokens ?? 1,
                   takerAddress: '', // takerAddress and username will be filled in the backend
-                  takerUsername: ''
+                  takerUsername: '',
+                  attributes: cartItem.attributes ?? []
                 }
               ]
             : []
@@ -311,7 +313,6 @@ export const OrderContextProvider = ({ children }: Props) => {
     const signedOrders: SignedOBOrder[] = [];
     for (const orderInCart of ordersInCart) {
       const order = await specToOBOrder(orderInCart.orderSpec);
-
       if (order) {
         try {
           const signedOrder = await getSignedOBOrder(user, chainId, signer, order);

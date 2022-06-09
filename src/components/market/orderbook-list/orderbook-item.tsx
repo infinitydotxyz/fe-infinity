@@ -1,4 +1,6 @@
-import { OBOrder, OBOrderItem, OBTokenInfo } from '@infinityxyz/lib-frontend/types/core';
+import { OBOrder, OBOrderItem } from '@infinityxyz/lib-frontend/types/core';
+import { OBTokenInfoDto } from '@infinityxyz/lib-frontend/types/dto/orders';
+
 import { ReactNode } from 'react';
 import { NextLink } from 'src/components/common';
 import { useRouter } from 'next/router';
@@ -90,7 +92,7 @@ type SingleCollectionCellProps = {
   image: string;
   title: string;
   orderNft?: OBOrderItem;
-  token?: OBTokenInfo;
+  token?: OBTokenInfoDto;
   count?: number;
   onClickTitle?: () => void;
 };

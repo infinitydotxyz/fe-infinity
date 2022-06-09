@@ -1,4 +1,4 @@
-import { BaseCollection, BaseToken, CardData, OrdersSnippet } from '@infinityxyz/lib-frontend/types/core';
+import { BaseCollection, ERC721CardData, Erc721Token, OrdersSnippet } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { ITEMS_PER_PAGE } from 'src/utils/constants';
 import { useFilterContext } from 'src/utils/context/FilterContext';
@@ -11,22 +11,7 @@ import { useResizeDetector } from 'react-resize-detector';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { useRouter } from 'next/router';
 
-// type Asset = {
-//   address: string;
-//   collectionName: string;
-//   id: string;
-//   image: string;
-// };
-// type ListingMetadata = {
-//   asset: Asset;
-//   basePriceInEth: number;
-// };
-// type Listing = {
-//   id: string;
-//   metadata: ListingMetadata;
-// };
-
-type ApiNftData = BaseToken & {
+type ApiNftData = Erc721Token & {
   collectionAddress?: string;
   collectionName?: string;
   collectionSlug?: string;
@@ -62,7 +47,7 @@ export const GalleryBox = ({
 
   const [filterShowed, setFilterShowed] = useState(filterShowedDefault);
   const [isFetching, setIsFetching] = useState(false);
-  const [data, setData] = useState<CardData[]>([]);
+  const [data, setData] = useState<ERC721CardData[]>([]);
   const [error, setError] = useState<ApiError>(null);
   const [cursor, setCursor] = useState('');
   const [currentPage, setCurrentPage] = useState(-1);
@@ -110,7 +95,7 @@ export const GalleryBox = ({
     setError(error);
     setCursor(result?.cursor);
 
-    let moreData: CardData[] = (result?.data || []).map((item: ApiNftData) => {
+    let moreData: ERC721CardData[] = (result?.data || []).map((item: ApiNftData) => {
       return {
         id: collection?.address + '_' + item.tokenId,
         name: item.metadata?.name,
@@ -126,8 +111,9 @@ export const GalleryBox = ({
         tokenId: item.tokenId,
         rarityRank: item.rarityRank,
         orderSnippet: item.ordersSnippet,
-        hasBlueCheck: item.hasBlueCheck ?? false
-      } as CardData;
+        hasBlueCheck: item.hasBlueCheck ?? false,
+        attributes: item.metadata.attributes
+      } as ERC721CardData;
     });
 
     // remove any without tokenAddress (seeing bad NFTs in my profile)

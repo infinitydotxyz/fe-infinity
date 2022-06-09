@@ -192,9 +192,10 @@ export const StatsChips = ({ collection, weeklyStatsData }: Props) => {
         onClick={() => {
           // assumes parent view has a drawer
           addCartItem({
-            collectionName: collection.metadata.name ?? '(no name)',
-            collectionAddress: collection.address ?? '(no address)',
+            collectionName: collection.metadata.name ?? '',
+            collectionAddress: collection.address ?? '',
             collectionImage: collection.metadata.profileImage ?? '',
+            collectionSlug: collection?.slug ?? '',
             isSellOrder: false
           });
           setOrderDrawerOpen(true);
