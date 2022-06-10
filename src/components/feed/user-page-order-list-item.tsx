@@ -2,12 +2,14 @@ import { BLANK_IMG, getChainScannerBase } from 'src/utils';
 import { EthPrice, NextLink, BGImage } from 'src/components/common';
 import { format } from 'timeago.js';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { UserProfileDto } from '../user/user-profile-dto';
 
 interface Props {
   event: SignedOBOrder;
+  userInfo: UserProfileDto;
 }
 
-export const UserPageOrderListItem = ({ event }: Props) => {
+export const UserPageOrderListItem = ({ event, userInfo }: Props) => {
   return (
     <div>
       <div className="bg-gray-100 px-10 py-6 rounded-3xl flex items-center font-heading">
@@ -33,7 +35,7 @@ export const UserPageOrderListItem = ({ event }: Props) => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {event.isSellOrder ? 'Listing' : 'Offer'}
+                {event.isSellOrder ? 'Sale' : event.makerAddress === userInfo?.address ? 'Listing' : 'Offer'}
               </a>
             </div>
           </div>
