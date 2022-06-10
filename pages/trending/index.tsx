@@ -85,7 +85,7 @@ const CollectionStatsPage = () => {
   };
 
   return (
-    <PageBox title="Top Collections">
+    <PageBox title="Trending">
       <div className="flex justify-between">
         <ToggleTab className="font-heading" options={options} selected={selected} onChange={onChangeToggleTab} />
 
@@ -129,7 +129,9 @@ const CollectionStatsPage = () => {
 
                 <div className="w-1/6">
                   <div className="text-black font-bold font-body">Volume</div>
-                  <div>{formatNumber(coll?.stats?.daily?.salesVolume)}</div>
+                  <div>
+                    <EthPrice label={formatNumber(coll?.stats?.daily?.salesVolume)} />
+                  </div>
                 </div>
 
                 <div className="w-1/6">
@@ -141,16 +143,16 @@ const CollectionStatsPage = () => {
 
                 <div className="w-1/6">
                   <div className="text-black font-bold font-body">Owners</div>
-                  <div>
-                    <EthPrice label={formatNumber(coll?.stats?.daily?.ownerCount)} />
-                  </div>
+                  <div>{formatNumber(coll?.stats?.daily?.ownerCount)}</div>
                 </div>
 
                 <div className="w-1/6">
                   <div className="text-black font-bold font-body">Tokens</div>
-                  <div>
-                    <EthPrice label={formatNumber(coll?.stats?.daily?.tokenCount)} />
-                  </div>
+                  <div>{formatNumber(coll?.stats?.daily?.tokenCount)}</div>
+                </div>
+
+                <div className="w-1/6">
+                  <Button>Buy</Button>
                 </div>
               </div>
             </div>
