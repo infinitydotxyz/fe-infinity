@@ -1,10 +1,12 @@
 import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
 import { useState } from 'react';
-import { useFilterContext } from 'src/utils/context/FilterContext';
-import { Button, Checkbox, TextInputBox } from 'src/components/common';
+import { Checkbox, TextInputBox } from 'src/components/common';
 
 export type UserOrderFilter = {
   orderType?: 'listings' | 'offers';
+  minPrice?: string;
+  maxPrice?: string;
+  numItems?: string;
 };
 
 interface Props {
@@ -17,9 +19,9 @@ interface Props {
 }
 
 export const UserProfileOrderFilterPanel = ({ className, onChange }: Props) => {
-  const { filterState, setFilterState } = useFilterContext();
   const [minPriceVal, setMinPriceVal] = useState('');
   const [maxPriceVal, setMaxPriceVal] = useState('');
+  const [numItems, setNumItems] = useState('');
   const [filter, setFilter] = useState<UserOrderFilter>({
     orderType: 'listings'
   });
@@ -33,24 +35,23 @@ export const UserProfileOrderFilterPanel = ({ className, onChange }: Props) => {
     onChange(newFilter);
   };
 
-  const handleClickApply = () => {
-    const newFilter = { ...filterState };
-    newFilter.minPrice = minPriceVal;
-    newFilter.maxPrice = maxPriceVal;
-    newFilter.orderBy = 'price';
-    setFilterState(newFilter);
-  };
+  // const onClickApply = () => {
+  //   const newFilter = { ...filter };
+  //   newFilter.minPrice = minPriceVal;
+  //   newFilter.maxPrice = maxPriceVal;
+  //   setFilter(newFilter);
+  //   onChange(newFilter);
+  // };
 
-  const handleClickClear = () => {
-    const newFilter = { ...filterState };
-    newFilter.minPrice = '';
-    newFilter.maxPrice = '';
-    newFilter.orderBy = '';
-    newFilter.orderDirection = '';
-    setMinPriceVal('');
-    setMaxPriceVal('');
-    setFilterState(newFilter);
-  };
+  // const onClickClear = () => {
+  //   const newFilter = { ...filter };
+  //   newFilter.minPrice = '';
+  //   newFilter.maxPrice = '';
+  //   setMinPriceVal('');
+  //   setMaxPriceVal('');
+  //   setFilter(newFilter);
+  //   onChange(newFilter);
+  // };
 
   return (
     <div className={`w-80 mr-12 pointer-events-auto ${className ?? ''}`}>
@@ -90,6 +91,10 @@ export const UserProfileOrderFilterPanel = ({ className, onChange }: Props) => {
           bindValue={true}
           onChange={(value) => {
             setMinPriceVal(value);
+            const newFilter = { ...filter };
+            newFilter.minPrice = value;
+            setFilter(newFilter);
+            onChange(newFilter);
           }}
         />
         <TextInputBox
@@ -102,18 +107,42 @@ export const UserProfileOrderFilterPanel = ({ className, onChange }: Props) => {
           bindValue={true}
           onChange={(value) => {
             setMaxPriceVal(value);
+            const newFilter = { ...filter };
+            newFilter.maxPrice = value;
+            setFilter(newFilter);
+            onChange(newFilter);
           }}
         />
       </div>
 
-      <div className="flex">
-        <Button variant="gray" className="py-3 w-1/2 bg-theme-gray-100 font-heading" onClick={handleClickApply}>
+      <div className="text-lg mt-6 font-heading">Number of NFTs</div>
+      <div className="flex mt-4 mb-6">
+        <TextInputBox
+          addEthSymbol={true}
+          type="number"
+          className="border-gray-300 font-heading"
+          label="Amount of NFTs"
+          placeholder=""
+          value={numItems}
+          bindValue={true}
+          onChange={(value) => {
+            setNumItems(value);
+            const newFilter = { ...filter };
+            newFilter.numItems = value;
+            setFilter(newFilter);
+            onChange(newFilter);
+          }}
+        />
+      </div>
+
+      {/* <div className="flex">
+        <Button variant="gray" className="py-3 w-1/2 bg-theme-gray-100 font-heading" onClick={onClickApply}>
           Apply
         </Button>
-        <Button variant="gray" className="py-3 w-1/2 bg-theme-gray-100 font-heading ml-2" onClick={handleClickClear}>
+        <Button variant="gray" className="py-3 w-1/2 bg-theme-gray-100 font-heading ml-2" onClick={onClickClear}>
           Clear
         </Button>
-      </div>
+      </div> */}
 
       <hr className="mt-8" />
     </div>

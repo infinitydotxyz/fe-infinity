@@ -14,6 +14,9 @@ type Query = {
   cursor: string;
   makerAddress?: string;
   takerAddress?: string;
+  minPrice?: string;
+  maxPrice?: string;
+  numItems?: string;
 };
 
 interface UserPageOrderListProps {
@@ -44,13 +47,26 @@ export const UserPageOrderList = ({ userInfo, userAddress, types, className }: U
 
     const query: Query = {
       limit: ITEMS_PER_PAGE,
-      cursor: newCursor
+      cursor: newCursor,
+      minPrice: apiFilter.minPrice,
+      maxPrice: apiFilter.minPrice,
+      numItems: apiFilter.numItems
     };
     if (apiFilter.orderType === 'listings') {
       query.makerAddress = userInfo.address;
     } else {
       query.takerAddress = userInfo.address;
     }
+    // if (apiFilter.minPrice) {
+    //   query.minPrice = apiFilter.minPrice;
+    // }
+    // if (apiFilter.maxPrice) {
+    //   query.minPrice = apiFilter.maxPrice;
+    // }
+    // if (apiFilter.numItems) {
+    //   query.minPrice = apiFilter.numItems;
+    // }
+    // console.log('query', query);
     const { result } = await apiGet(`/orders/${userInfo.address}`, {
       query,
       requiresAuth: true
