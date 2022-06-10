@@ -1,4 +1,5 @@
 import { BaseCollection, OBOrderItem } from '@infinityxyz/lib-frontend/types/core';
+import { debounce } from 'lodash';
 import { useState, useEffect } from 'react';
 import { Checkbox, TextInputBox } from 'src/components/common';
 import { apiGet } from 'src/utils';
@@ -27,12 +28,19 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
   const [numItems, setNumItems] = useState('');
   const [collections, setCollections] = useState<OBOrderItem[]>([]);
   const [selectedCollections, setSelectedCollections] = useState<string[]>([]);
+  const [collectionSearch, setCollectionSearch] = useState('');
   const [filter, setFilter] = useState<UserOrderFilter>({
     orderType: 'listings'
   });
 
   const fetchOrderCollections = async () => {
-    const { result, error } = await apiGet(`/orders/${userInfo.address}/collections?limit=-1`, { requiresAuth: true });
+    const { result, error } = await apiGet(`/orders/${userInfo.address}/collections`, {
+      requiresAuth: true,
+      query: {
+        limit: -1,
+        name: collectionSearch
+      }
+    });
     if (!error) {
       setCollections(result?.data as OBOrderItem[]);
     }
@@ -40,7 +48,7 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
 
   useEffect(() => {
     fetchOrderCollections();
-  }, []);
+  }, [collectionSearch]);
 
   const onClickOrderType = (newType: 'listings' | 'offers') => {
     const newFilter = {
@@ -50,6 +58,10 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
     setFilter(newFilter);
     onChange(newFilter);
   };
+
+  const onChangeNameSearch = debounce((value: string) => {
+    setCollectionSearch(value);
+  }, 300);
 
   return (
     <div className={`w-80 mr-12 pointer-events-auto ${className ?? ''}`}>
@@ -77,8 +89,19 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
 
       <hr className="mt-8" />
       <div className="text-lg mt-6 font-heading">Collection</div>
-      <div className="flex mt-4 mb-6">
-        <ul className="mt-4 w-full max-h-80 overflow-y-auto space-y-4">
+      <div className="flex flex-col mt-4 mb-6">
+        <div className="w-full">
+          <TextInputBox
+            label=""
+            type="text"
+            className="border rounded-full py-2 px-4 mt-4 font-heading"
+            defaultValue={''}
+            onChange={onChangeNameSearch}
+            placeholder="Search"
+          />
+        </div>
+
+        <ul className="mt-8 w-full max-h-80 overflow-y-auto space-y-4">
           {collections.map((coll, i) => {
             return (
               <Checkbox

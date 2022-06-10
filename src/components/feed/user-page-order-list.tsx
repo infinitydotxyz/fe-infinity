@@ -37,7 +37,7 @@ export const UserPageOrderList = ({ userInfo, userAddress, types, className }: U
   const [cursor, setCursor] = useState('');
   const [hasNextPage, setHasNextPage] = useState(false);
   const [filterShowed, setFilterShowed] = useState(false);
-  const [apiFilter, setApiFilter] = useState<UserOrderFilter>({});
+  const [apiFilter, setApiFilter] = useState<UserOrderFilter>({ orderType: 'listings' });
 
   const fetchData = async (isRefresh = false) => {
     setIsFetching(true);
