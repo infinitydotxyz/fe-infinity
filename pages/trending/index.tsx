@@ -129,7 +129,9 @@ const CollectionStatsPage = () => {
 
                 <div className="w-1/6">
                   <div className="text-black font-bold font-body">Volume</div>
-                  <div>{formatNumber(coll?.stats?.daily?.salesVolume)}</div>
+                  <div>
+                    <EthPrice label={formatNumber(coll?.stats?.daily?.salesVolume)} />
+                  </div>
                 </div>
 
                 <div className="w-1/6">
@@ -141,16 +143,12 @@ const CollectionStatsPage = () => {
 
                 <div className="w-1/6">
                   <div className="text-black font-bold font-body">Owners</div>
-                  <div>
-                    <EthPrice label={formatNumber(coll?.stats?.daily?.ownerCount)} />
-                  </div>
+                  <div>{formatNumber(coll?.stats?.daily?.ownerCount)}</div>
                 </div>
 
                 <div className="w-1/6">
                   <div className="text-black font-bold font-body">Tokens</div>
-                  <div>
-                    <EthPrice label={formatNumber(coll?.stats?.daily?.tokenCount)} />
-                  </div>
+                  <div>{formatNumber(coll?.stats?.daily?.tokenCount)}</div>
                 </div>
               </div>
             </div>
