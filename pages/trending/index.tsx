@@ -85,7 +85,7 @@ const CollectionStatsPage = () => {
   };
 
   return (
-    <PageBox title="Top Collections">
+    <PageBox title="Trending">
       <div className="flex justify-between">
         <ToggleTab className="font-heading" options={options} selected={selected} onChange={onChangeToggleTab} />
 

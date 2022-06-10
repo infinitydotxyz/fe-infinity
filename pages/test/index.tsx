@@ -48,10 +48,10 @@ export const TestPage = () => {
 
             <Button
               onClick={() => {
-                void router.push('/collection-stats');
+                void router.push('/trending');
               }}
             >
-              Collection Stats
+              Trending
             </Button>
 
             <Button
