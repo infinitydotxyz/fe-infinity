@@ -17,6 +17,7 @@ type Query = {
   minPrice?: string;
   maxPrice?: string;
   numItems?: string;
+  collections?: string[];
 };
 
 interface UserPageOrderListProps {
@@ -50,23 +51,14 @@ export const UserPageOrderList = ({ userInfo, userAddress, types, className }: U
       cursor: newCursor,
       minPrice: apiFilter.minPrice,
       maxPrice: apiFilter.minPrice,
-      numItems: apiFilter.numItems
+      numItems: apiFilter.numItems,
+      collections: apiFilter.collections
     };
     if (apiFilter.orderType === 'listings') {
       query.makerAddress = userInfo.address;
     } else {
       query.takerAddress = userInfo.address;
     }
-    // if (apiFilter.minPrice) {
-    //   query.minPrice = apiFilter.minPrice;
-    // }
-    // if (apiFilter.maxPrice) {
-    //   query.minPrice = apiFilter.maxPrice;
-    // }
-    // if (apiFilter.numItems) {
-    //   query.minPrice = apiFilter.numItems;
-    // }
-    // console.log('query', query);
     const { result } = await apiGet(`/orders/${userInfo.address}`, {
       query,
       requiresAuth: true
@@ -162,7 +154,7 @@ export const UserPageOrderList = ({ userInfo, userAddress, types, className }: U
       <div className="flex items-start">
         {filterShowed && (
           <div className="mt-4">
-            <UserProfileOrderFilterPanel onChange={(filter) => setApiFilter(filter)} />
+            <UserProfileOrderFilterPanel userInfo={userInfo} onChange={(filter) => setApiFilter(filter)} />
           </div>
         )}
 
