@@ -150,6 +150,10 @@ const CollectionStatsPage = () => {
                   <div className="text-black font-bold font-body">Tokens</div>
                   <div>{formatNumber(coll?.stats?.daily?.tokenCount)}</div>
                 </div>
+
+                <div className="w-1/6">
+                  <Button>Buy</Button>
+                </div>
               </div>
             </div>
           );

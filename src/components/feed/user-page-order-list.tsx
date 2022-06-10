@@ -115,31 +115,8 @@ export const UserPageOrderList = ({ userInfo, userAddress, types, className }: U
   console.log('onChangeFilterDropdown', onChangeFilterDropdown);
 
   return (
-    <div className={`min-h-[1024px] mt-[-66px] ${className}`}>
+    <div className={`min-h-[1024px] mt-[-75px] ${className}`}>
       <div className="flex flex-row-reverse mb-8 bg-transparent">
-        {/* <FeedFilterDropdown
-          selectedTypes={filteringTypes}
-          onChange={onChangeFilterDropdown}
-          options={[
-            {
-              label: 'All',
-              value: ''
-            },
-            {
-              label: 'Listings',
-              value: 'listing'
-            },
-            {
-              label: 'Offers',
-              value: 'offer'
-            },
-            {
-              label: 'Sales',
-              value: 'sale'
-            }
-          ]}
-        /> */}
-
         <Button
           variant="outline"
           onClick={() => {
