@@ -1,7 +1,6 @@
 import Image from 'next/image';
 import React from 'react';
-import { Button, Header, Heading, pageStyles, TextInputBox } from 'src/components/common';
-import { NavBar } from 'src/components/landing/NavBar';
+import { Button, Header, Heading, NextLink, pageStyles, Spacer, SVG, TextInputBox } from 'src/components/common';
 import { ShowCase, SubTitle } from 'src/components/landing/Showcase';
 import SnipingEngineImage from 'src/images/landing/showcase_sniping_engine.png';
 import OrdersImage from 'src/images/landing/showcase_set_orders.png';
@@ -100,26 +99,55 @@ const HomePage = () => {
         </ButtonJoin>
       </section>
 
-      <footer className={`${pageStyles} p-20`}>
-        <p className="font-body w-[346px]">
-          Infinity is built by an A-team of crypto devs and operators. Join us on discord to find out more and
-          contribute. We are on our way to becoming the largest DAO in the world.
-        </p>
-        <div className="flex items-center mt-20">
-          <div className="flex space-x-4 flex-1">
-            <DiscordIconLink />
-            <MediumIconLink />
-            <TwitterIconLink />
-            <InstagramIconLink />
-          </div>
-          <div className="flex space-x-2 flex-1">
-            <TextInputBox label="" type="text" placeholder="email" isFullWidth />
-            <Button>Subscribe</Button>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };
 
 export default HomePage;
+
+/**
+ * Custom navbar to be used by the landing page only.
+ * Note: we should probably try to make the main NavBar component more composable instead though.
+ */
+const NavBar = () => {
+  return (
+    <header className="w-full bg-white bg-opacity-70 glass font-heading">
+      <nav className={`${pageStyles} flex space-x-6 items-center py-6 w-full`}>
+        <NextLink href="/">
+          <SVG.logo className="h-8 hidden sm:inline-block" />
+          <SVG.miniLogo className="h-8 inline-block sm:hidden" />
+        </NextLink>
+
+        <Spacer />
+
+        <DiscordIconLink />
+        <TwitterIconLink />
+        <ButtonJoin>Try Beta</ButtonJoin>
+      </nav>
+    </header>
+  );
+};
+
+const Footer: React.FC = () => {
+  return (
+    <footer className={`${pageStyles} p-20`}>
+      <p className="font-body w-[346px]">
+        Infinity is built by an A-team of crypto devs and operators. Join us on discord to find out more and contribute.
+        We are on our way to becoming the largest DAO in the world.
+      </p>
+      <div className="flex items-center mt-20">
+        <div className="flex space-x-4 flex-1">
+          <DiscordIconLink />
+          <MediumIconLink />
+          <TwitterIconLink />
+          <InstagramIconLink />
+        </div>
+        <div className="flex space-x-2 flex-1">
+          <TextInputBox label="" type="text" placeholder="email" isFullWidth />
+          <Button>Subscribe</Button>
+        </div>
+      </div>
+    </footer>
+  );
+};
