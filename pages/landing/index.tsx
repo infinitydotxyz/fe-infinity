@@ -131,12 +131,12 @@ const NavBar = () => {
 
 const Footer: React.FC = () => {
   return (
-    <footer className={`${pageStyles} p-20`}>
+    <footer className={`${pageStyles} p-5 md:p-20`}>
       <p className="font-body w-[346px]">
         Infinity is built by an A-team of crypto devs and operators. Join us on discord to find out more and contribute.
         We are on our way to becoming the largest DAO in the world.
       </p>
-      <div className="flex items-center mt-20">
+      <div className="flex flex-col space-y-2 md:flex-row md:items-center md:space-x-2 mt-20">
         <div className="flex space-x-4 flex-1">
           <DiscordIconLink />
           <MediumIconLink />
