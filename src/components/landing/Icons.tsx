@@ -22,7 +22,7 @@ export const MediumIconLink: React.FC = () => (
 );
 
 export const InstagramIconLink: React.FC = () => (
-  <ExternalLink href="" rel="noreferrer">
+  <ExternalLink href="https://www.instagram.com/infinitydotxyz/" rel="noreferrer">
     <SVG.instagram className={size} />
   </ExternalLink>
 );

@@ -658,8 +658,8 @@ export class SVG {
   static twitter = ({ ...props }) => (
     <svg viewBox="0 0 32 25" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
       <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
+        fillRule="evenodd"
+        clipRule="evenodd"
         d="M32 2.99864C30.823 3.4804 29.557 3.80618 28.229 3.95292C29.585 3.2026 30.626 2.01576 31.116 0.600951C29.848 1.29497 28.442 1.79887 26.947 2.07113C25.749 0.89351 24.043 0.157959 22.155 0.157959C18.529 0.157959 15.59 2.87036 15.59 6.21679C15.59 6.69116 15.648 7.15354 15.76 7.59745C10.303 7.34458 5.466 4.93212 2.228 1.26636C1.663 2.16157 1.339 3.2026 1.339 4.31285C1.339 6.4143 2.498 8.26932 4.259 9.35558C3.183 9.3242 2.171 9.05194 1.286 8.59788C1.285 8.62372 1.285 8.64863 1.285 8.67448C1.285 11.6102 3.548 14.0587 6.552 14.6152C6.001 14.7536 5.421 14.8274 4.822 14.8274C4.399 14.8274 3.988 14.7896 3.587 14.7195C4.422 17.1264 6.847 18.8781 9.72 18.927C7.473 20.5522 4.642 21.5203 1.566 21.5203C1.036 21.5203 0.514 21.4917 0 21.4363C2.905 23.1548 6.356 24.158 10.064 24.158C22.14 24.158 28.743 14.9253 28.743 6.91912C28.743 6.65609 28.737 6.39491 28.724 6.13466C30.007 5.28097 31.12 4.2141 32 2.99864Z"
         fill="#292B29"
       />
@@ -674,9 +674,9 @@ export class SVG {
       xmlnsXlink="http://www.w3.org/1999/xlink"
       {...props}
     >
-      <rect width="32" height="32" fill="url(#pattern0)" />
+      <rect width="32" height="32" fill="url(#pattern1)" />
       <defs>
-        <pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
+        <pattern id="pattern1" patternContentUnits="objectBoundingBox" width="1" height="1">
           <use xlinkHref="#image0_826_1767" transform="scale(0.00444444)" />
         </pattern>
         <image
