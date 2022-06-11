@@ -1,5 +1,4 @@
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { PROTOCOL_FEE_BPS } from '@infinityxyz/lib-frontend/utils';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { apiPost } from 'src/utils/apiUtils';
 import { apiGet } from '.';
