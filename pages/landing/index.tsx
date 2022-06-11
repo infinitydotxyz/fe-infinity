@@ -33,10 +33,10 @@ const NavBar = () => {
         <Spacer />
 
         <ExternalLink href="https://discord.gg/unwAnymWDN" rel="noreferrer">
-          <SVG.discord className="h-8" />
+          <SVG.discord className="h-6" />
         </ExternalLink>
         <ExternalLink href="https://twitter.com/infinitydotxyz" rel="noreferrer">
-          <SVG.twitter className="h-8" />
+          <SVG.twitter className="h-6" />
         </ExternalLink>
         <Button onClick={() => router.push('/')}>Try Beta</Button>
       </div>
