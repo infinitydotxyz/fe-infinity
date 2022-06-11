@@ -35,10 +35,6 @@ export const fetchOrderNonce = async (user: string): Promise<string> => {
   }
 };
 
-export const fetchMinBpsToSeller = (): number => {
-  return 10000 - PROTOCOL_FEE_BPS;
-};
-
 export const bigNumToDate = (time: BigNumberish): Date => {
   return new Date(BigNumber.from(time).toNumber() * 1000);
 };
