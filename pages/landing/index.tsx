@@ -1,6 +1,7 @@
-import { useRouter } from 'next/router';
 import React from 'react';
-import { Button, ExternalLink, Header, Heading, NextLink, pageStyles, Spacer, SVG } from 'src/components/common';
+import { Header, Heading, pageStyles } from 'src/components/common';
+import { ButtonTryBeta } from 'src/components/landing/ButtonTryBeta';
+import { NavBar } from 'src/components/landing/NavBar';
 
 const HomePage = () => {
   return (
@@ -27,35 +28,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-
-/**
- * Custom navbar to be used by the landing page only.
- * Note: we should probably try to make the main NavBar component more composable instead though.
- */
-const NavBar = () => {
-  return (
-    <header className="w-full bg-white bg-opacity-70 glass font-heading">
-      <nav className={`${pageStyles} flex space-x-6 items-center py-6 w-full`}>
-        <NextLink href="/">
-          <SVG.logo className="h-8 hidden sm:inline-block" />
-          <SVG.miniLogo className="h-8 inline-block sm:hidden" />
-        </NextLink>
-
-        <Spacer />
-
-        <ExternalLink href="https://discord.gg/unwAnymWDN" rel="noreferrer">
-          <SVG.discord className="h-6" />
-        </ExternalLink>
-        <ExternalLink href="https://twitter.com/infinitydotxyz" rel="noreferrer">
-          <SVG.twitter className="h-6" />
-        </ExternalLink>
-        <ButtonTryBeta>Try Beta</ButtonTryBeta>
-      </nav>
-    </header>
-  );
-};
-
-const ButtonTryBeta: React.FC = ({ children }) => {
-  const router = useRouter();
-  return <Button onClick={() => router.push('/')}>{children}</Button>;
-};
