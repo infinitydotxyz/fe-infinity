@@ -1,5 +1,6 @@
-import { pageStyles, NextLink, SVG, Spacer, ExternalLink } from '../common';
-import { ButtonTryBeta } from './ButtonTryBeta';
+import { pageStyles, NextLink, SVG, Spacer } from '../common';
+import { ButtonJoin } from './ButtonJoin';
+import { DiscordIconLink, TwitterIconLink } from './Icons';
 
 /**
  * Custom navbar to be used by the landing page only.
@@ -16,13 +17,9 @@ export const NavBar = () => {
 
         <Spacer />
 
-        <ExternalLink href="https://discord.gg/unwAnymWDN" rel="noreferrer">
-          <SVG.discord className="h-6" />
-        </ExternalLink>
-        <ExternalLink href="https://twitter.com/infinitydotxyz" rel="noreferrer">
-          <SVG.twitter className="h-6" />
-        </ExternalLink>
-        <ButtonTryBeta>Try Beta</ButtonTryBeta>
+        <DiscordIconLink />
+        <TwitterIconLink />
+        <ButtonJoin>Try Beta</ButtonJoin>
       </nav>
     </header>
   );
