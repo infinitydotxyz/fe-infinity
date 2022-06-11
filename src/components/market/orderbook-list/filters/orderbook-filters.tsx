@@ -96,8 +96,7 @@ export const OrderbookFilters = () => {
               className="border rounded-full py-2 px-4 mt-1 font-heading w-full"
               defaultValue={collectionSearchState}
               onChange={(value) => {
-                const text = value;
-                searchForCollections(text);
+                searchForCollections(value);
               }}
               placeholder="Search"
             />
