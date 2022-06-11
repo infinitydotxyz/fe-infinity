@@ -10,6 +10,7 @@ import TraitLevelOrdersImage from 'src/images/landing/showcase_trait_level_order
 import LimitOrdersImage from 'src/images/landing/showcase_limit_orders.png';
 import { ButtonJoin } from 'src/components/landing/ButtonJoin';
 import { DiscordIconLink, InstagramIconLink, MediumIconLink, TwitterIconLink } from 'src/components/landing/Icons';
+import { Divider } from 'src/components/landing/Divider';
 
 const HomePage = () => {
   return (
@@ -27,6 +28,8 @@ const HomePage = () => {
           <ButtonJoin>Sign up for beta</ButtonJoin>
         </section>
 
+        <Divider />
+
         <ShowCase
           title="Auto-sniping engine"
           subtitle="Fulfill orders automatically without user intervention on matching trades"
@@ -38,6 +41,8 @@ const HomePage = () => {
             alt="auto-sniping engine"
           />
         </ShowCase>
+        <Divider />
+
         <ShowCase title="Set orders" subtitle="Make an order to buy one NFT from a selection of many NFTs">
           <Image src={OrdersImage.src} width={OrdersImage.width} height={OrdersImage.height} alt="set orders" />
         </ShowCase>
@@ -52,6 +57,8 @@ const HomePage = () => {
             alt="collection-wide orders"
           />
         </ShowCase>
+        <Divider />
+
         <ShowCase
           title="Trait-level orders"
           subtitle="Set a budget to buy one NFT within a collection that has a specific trait"
@@ -63,6 +70,8 @@ const HomePage = () => {
             alt="trait-level orders"
           />
         </ShowCase>
+        <Divider />
+
         <ShowCase
           title="Limit orders"
           subtitle="Set max budgets on buy orders and min acceptance prices on sell orders with prices varying over time"
@@ -74,6 +83,8 @@ const HomePage = () => {
             alt="limit orders"
           />
         </ShowCase>
+        <Divider />
+
         <ShowCase
           title="Modular & extendable"
           subtitle="Deploy your own order execution strategies with our smart contracts"
