@@ -4,7 +4,7 @@ import { ExternalLink, SVG } from '../common';
 const size = 'h-6';
 
 export const DiscordIconLink: React.FC = () => (
-  <ExternalLink href="https://discord.gg/unwAnymWDN" rel="noreferrer">
+  <ExternalLink href="https://discord.com/invite/infinitydotxyz" rel="noreferrer">
     <SVG.discord className={size} />
   </ExternalLink>
 );
