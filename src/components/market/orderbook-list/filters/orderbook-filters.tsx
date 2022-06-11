@@ -1,4 +1,5 @@
 import { debounce, uniqBy } from 'lodash';
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
 import { Button, Checkbox, TextInputBox } from 'src/components/common';
@@ -13,6 +14,20 @@ const ORDER_TYPES = ['Listing', 'Offer'];
 
 export const OrderbookFilters = () => {
   // state
+  const { query } = useRouter();
+  const defaultOpenState: OpenFilterState = {};
+  if (query.orderTypes) {
+    defaultOpenState['Order type'] = true;
+  }
+  if (query.collections) {
+    defaultOpenState['Collection'] = true;
+  }
+  if (query.minPrice || query.maxPrice) {
+    defaultOpenState['Sale price'] = true;
+  }
+  if (query.numberOfNfts) {
+    defaultOpenState['Number of NFTs'] = true;
+  }
   const {
     filters: { orderTypes = [], collections = [], minPrice, maxPrice, numberOfNfts },
     clearFilter,
@@ -21,7 +36,7 @@ export const OrderbookFilters = () => {
     collectionId
   } = useOrderbook();
 
-  const [openState, setOpenState] = useState<OpenFilterState>({});
+  const [openState, setOpenState] = useState<OpenFilterState>(defaultOpenState);
   const [collectionSearchState, setCollectionSearchState] = useState<string>();
   const [collectionsData, setCollectionsData] = useState<CollectionSearchItem[]>([]);
   const { getTopCollections, getCollectionsByName, getCollectionsByIds } = useCollectionCache();
