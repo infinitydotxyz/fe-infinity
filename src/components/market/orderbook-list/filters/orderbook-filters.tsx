@@ -115,17 +115,18 @@ export const OrderbookFilters = () => {
               }}
               placeholder="Search"
             />
+            {collections.length > 0 && <div className="mt-8 font-heading">Selected: {collections.length}</div>}
 
-            <div className="mt-8 max-h-80 overflow-y-auto space-y-4">
+            <div className="mt-8 max-h-80 overflow-y-auto space-y-4 font-heading">
               {collectionsData.map((collection, i) => {
                 return (
                   <Checkbox
                     key={`${i}-${collection.id}`}
                     className="pb-4"
                     checked={collections.includes(`${collection.chainId}:${collection.id}`)}
-                    onChange={(checked) =>
-                      updateFilterArray('collections', collections, `${collection.chainId}:${collection.id}`, checked)
-                    }
+                    onChange={(checked) => {
+                      updateFilterArray('collections', collections, `${collection.chainId}:${collection.id}`, checked);
+                    }}
                     label={collection.name}
                   />
                 );
