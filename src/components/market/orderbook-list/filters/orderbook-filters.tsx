@@ -85,6 +85,7 @@ export const OrderbookFilters = () => {
       }
     }
   }, 300);
+  const hasCollectionSearchResults = collections.length > 0 || (collectionSearchState || '').length > 0;
 
   return (
     <div className="flex flex-col mr-12">
@@ -102,6 +103,7 @@ export const OrderbookFilters = () => {
           ))}
         </div>
       </OrderbookFilterItem>
+
       {!collectionId && (
         <OrderbookFilterItem key="Collection" openState={openState} setOpenState={setOpenState} item="Collection">
           <div>
@@ -118,24 +120,32 @@ export const OrderbookFilters = () => {
             {collections.length > 0 && <div className="mt-8 font-heading">Selected: {collections.length}</div>}
 
             <div className="mt-8 max-h-80 overflow-y-auto space-y-4 font-heading">
-              {collectionsData.map((collection, i) => {
-                return (
-                  <Checkbox
-                    key={`${i}-${collection.id}`}
-                    className="pb-4"
-                    checked={collections.includes(`${collection.chainId}:${collection.id}`)}
-                    onChange={(checked) => {
-                      updateFilterArray('collections', collections, `${collection.chainId}:${collection.id}`, checked);
-                    }}
-                    label={collection.name}
-                  />
-                );
-              })}
+              {hasCollectionSearchResults &&
+                collectionsData.map((collection, i) => {
+                  return (
+                    <Checkbox
+                      key={`${i}-${collection.id}`}
+                      className="pb-4"
+                      checked={collections.includes(`${collection.chainId}:${collection.id}`)}
+                      onChange={(checked) => {
+                        updateFilterArray(
+                          'collections',
+                          collections,
+                          `${collection.chainId}:${collection.id}`,
+                          checked
+                        );
+                      }}
+                      label={collection.name}
+                    />
+                  );
+                })}
             </div>
 
-            <Button className="mt-8 w-full" onClick={() => clearFilter('collections')}>
-              Clear
-            </Button>
+            {/* {hasCollectionSearchResults && (
+              <Button className="mt-8 w-full" onClick={() => clearFilter('collections')}>
+                Clear
+              </Button>
+            )} */}
           </div>
         </OrderbookFilterItem>
       )}
