@@ -235,7 +235,7 @@ const CollectionPage = () => {
                         if (price) {
                           return (
                             <div className="flex justify-center">
-                              <span className="mr-4 font-bold">Buy</span>
+                              <span className="mr-4 font-normal">Buy</span>
                               <EthPrice label={`${price}`} />
                             </div>
                           );
@@ -243,7 +243,7 @@ const CollectionPage = () => {
                         if (isAlreadyAdded(data)) {
                           return <div className="font-normal">✓ Added</div>;
                         }
-                        return <div className="font-bold">Add to order</div>;
+                        return <div className="font-normal">Add to order</div>;
                       },
                       onClick: (ev, data) => {
                         if (!checkSignedIn()) {

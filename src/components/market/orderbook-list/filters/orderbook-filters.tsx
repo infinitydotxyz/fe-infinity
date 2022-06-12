@@ -2,7 +2,7 @@ import { debounce, uniqBy } from 'lodash';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
-import { Button, Checkbox, TextInputBox } from 'src/components/common';
+import { Checkbox, TextInputBox } from 'src/components/common';
 import { useOrderbook } from '../../OrderbookContext';
 import { CollectionSearchItem, useCollectionCache } from '../collection-cache';
 
@@ -30,7 +30,7 @@ export const OrderbookFilters = () => {
   }
   const {
     filters: { orderTypes = [], collections = [], minPrice, maxPrice, numberOfNfts },
-    clearFilter,
+    // clearFilter,
     updateFilter,
     updateFilterArray,
     collectionId
