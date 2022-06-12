@@ -242,7 +242,6 @@ export async function signOBOrder(
     parseEther(String(order.endPriceEth)),
     Math.floor(order.startTimeMs / 1000),
     Math.floor(order.endTimeMs / 1000),
-    order.minBpsToSeller,
     order.nonce
   ];
 
@@ -407,6 +406,7 @@ export async function takeOrder(signer: JsonRpcSigner, chainId: string, makerOrd
   console.log(jsonString(takerOrder));
   const canTake = await canTakeOrders(infinityExchange, makerOrder, takerOrder);
   if (canTake) {
+    // todo: function sig changed
     await infinityExchange.takeOrders([makerOrder], [takerOrder], options);
   } else {
     console.error('Cannot take order');

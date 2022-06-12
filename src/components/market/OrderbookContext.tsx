@@ -184,7 +184,7 @@ export const OrderbookProvider = ({ children, collectionId }: OBProvider) => {
   }, [router.query]);
 
   useEffect(() => {
-    fetchOrders();
+    fetchOrders(true);
   }, [filters, limit]);
 
   const fetchMore = async () => {
@@ -222,13 +222,11 @@ export const OrderbookProvider = ({ children, collectionId }: OBProvider) => {
   };
 
   // todo: make this prod ready
-  const fetchOrders = debounce(async () => {
-    if (hasMoreOrders === false) {
-      return;
-    }
+  const fetchOrders = debounce(async (refreshData = false) => {
     try {
       setIsLoading(true);
       const parsedFilters = parseFiltersToApiQueryParams(filters);
+      console.log('fetchOrders - parsedFilters', parsedFilters);
       // const orders = await getOrders(
       //   { ...parsedFilters, collections: collectionId ? [collectionId] : parsedFilters.collections },
       //   limit
@@ -236,13 +234,18 @@ export const OrderbookProvider = ({ children, collectionId }: OBProvider) => {
       const { result } = await apiGet('/orders', {
         query: {
           limit: ITEMS_PER_PAGE,
-          cursor,
+          cursor: refreshData ? '' : cursor,
           ...parsedFilters,
           collections: collectionId ? [collectionId] : parsedFilters.collections
         }
       });
       if (result?.data) {
-        setOrders([...orders, ...result.data]);
+        if (refreshData) {
+          setOrders([...result.data]);
+        } else {
+          setOrders([...orders, ...result.data]);
+        }
+
         // setHasMoreOrders(orders.length === limit);
         setHasMoreOrders(result?.hasNextPage);
         setCursor(result?.cursor);

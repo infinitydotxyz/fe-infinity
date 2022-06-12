@@ -3,7 +3,7 @@ import { getOBComplicationAddress, getTxnCurrencyAddress, NULL_ADDRESS } from '@
 import React, { ReactNode, useContext, useState } from 'react';
 import { toastError } from 'src/components/common';
 import { getSignedOBOrder } from '../exchange/orders';
-import { fetchMinBpsToSeller, fetchOrderNonce, postOrders } from '../marketUtils';
+import { fetchOrderNonce, postOrders } from '../marketUtils';
 import { secondsPerDay } from '../ui-constants';
 import { useAppContext } from './AppContext';
 
@@ -264,7 +264,6 @@ export const OrderContextProvider = ({ children }: Props) => {
 
     try {
       const orderNonce = await fetchOrderNonce(user.address);
-      const minBpsToSeller = fetchMinBpsToSeller();
       // sell orders are always in ETH
       const currencyAddress = spec.isSellOrder ? NULL_ADDRESS : getTxnCurrencyAddress(chainId);
       const order: OBOrder = {
@@ -280,7 +279,6 @@ export const OrderContextProvider = ({ children }: Props) => {
         nfts: spec.nfts,
         makerUsername: spec.makerUsername,
         nonce: orderNonce,
-        minBpsToSeller,
         execParams: {
           currencyAddress,
           complicationAddress: getOBComplicationAddress(chainId)

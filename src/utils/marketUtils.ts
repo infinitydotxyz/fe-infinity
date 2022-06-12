@@ -1,5 +1,4 @@
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { PROTOCOL_FEE_BPS } from '@infinityxyz/lib-frontend/utils';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { apiPost } from 'src/utils/apiUtils';
 import { apiGet } from '.';
@@ -33,10 +32,6 @@ export const fetchOrderNonce = async (user: string): Promise<string> => {
     console.error('Failed fetching order nonce');
     throw err;
   }
-};
-
-export const fetchMinBpsToSeller = (): number => {
-  return 10000 - PROTOCOL_FEE_BPS;
 };
 
 export const bigNumToDate = (time: BigNumberish): Date => {
