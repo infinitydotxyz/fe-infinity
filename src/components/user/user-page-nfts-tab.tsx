@@ -63,7 +63,7 @@ export const UserPageNftsTab = ({ userInfo }: Props) => {
                         if (isAlreadyAdded(data)) {
                           return <div className="font-normal">✓ Added</div>;
                         }
-                        return <div className="font-bold">List</div>;
+                        return <div className="font-normal">List</div>;
                       },
                       onClick: (ev, data) => {
                         if (isAlreadyAdded(data)) {

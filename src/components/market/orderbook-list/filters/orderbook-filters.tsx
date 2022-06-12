@@ -2,7 +2,7 @@ import { debounce, uniqBy } from 'lodash';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
-import { Button, Checkbox, TextInputBox } from 'src/components/common';
+import { Checkbox, TextInputBox } from 'src/components/common';
 import { useOrderbook } from '../../OrderbookContext';
 import { CollectionSearchItem, useCollectionCache } from '../collection-cache';
 
@@ -30,7 +30,7 @@ export const OrderbookFilters = () => {
   }
   const {
     filters: { orderTypes = [], collections = [], minPrice, maxPrice, numberOfNfts },
-    clearFilter,
+    // clearFilter,
     updateFilter,
     updateFilterArray,
     collectionId
@@ -85,6 +85,7 @@ export const OrderbookFilters = () => {
       }
     }
   }, 300);
+  const hasCollectionSearchResults = collections.length > 0 || (collectionSearchState || '').length > 0;
 
   return (
     <div className="flex flex-col mr-12">
@@ -102,6 +103,7 @@ export const OrderbookFilters = () => {
           ))}
         </div>
       </OrderbookFilterItem>
+
       {!collectionId && (
         <OrderbookFilterItem key="Collection" openState={openState} setOpenState={setOpenState} item="Collection">
           <div>
@@ -115,26 +117,35 @@ export const OrderbookFilters = () => {
               }}
               placeholder="Search"
             />
+            {collections.length > 0 && <div className="mt-8 font-heading">Selected: {collections.length}</div>}
 
-            <div className="mt-8 max-h-80 overflow-y-auto space-y-4">
-              {collectionsData.map((collection, i) => {
-                return (
-                  <Checkbox
-                    key={`${i}-${collection.id}`}
-                    className="pb-4"
-                    checked={collections.includes(`${collection.chainId}:${collection.id}`)}
-                    onChange={(checked) =>
-                      updateFilterArray('collections', collections, `${collection.chainId}:${collection.id}`, checked)
-                    }
-                    label={collection.name}
-                  />
-                );
-              })}
+            <div className="mt-8 max-h-80 overflow-y-auto space-y-4 font-heading">
+              {hasCollectionSearchResults &&
+                collectionsData.map((collection, i) => {
+                  return (
+                    <Checkbox
+                      key={`${i}-${collection.id}`}
+                      className="pb-4"
+                      checked={collections.includes(`${collection.chainId}:${collection.id}`)}
+                      onChange={(checked) => {
+                        updateFilterArray(
+                          'collections',
+                          collections,
+                          `${collection.chainId}:${collection.id}`,
+                          checked
+                        );
+                      }}
+                      label={collection.name}
+                    />
+                  );
+                })}
             </div>
 
-            <Button className="mt-8 w-full" onClick={() => clearFilter('collections')}>
-              Clear
-            </Button>
+            {/* {hasCollectionSearchResults && (
+              <Button className="mt-8 w-full" onClick={() => clearFilter('collections')}>
+                Clear
+              </Button>
+            )} */}
           </div>
         </OrderbookFilterItem>
       )}
