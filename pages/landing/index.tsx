@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import React from 'react';
-import { Button, Header, Heading, NextLink, pageStyles, Spacer, SVG, TextInputBox } from 'src/components/common';
+import { Header, Heading, NextLink, pageStyles, Spacer, SVG } from 'src/components/common';
 import { ShowCase, SubTitle } from 'src/components/landing/Showcase';
 import SnipingEngineImage from 'src/images/landing/showcase_sniping_engine.png';
 import OrdersImage from 'src/images/landing/showcase_set_orders.png';
@@ -136,16 +136,20 @@ const Footer: React.FC = () => {
         Infinity is built by an A-team of crypto devs and operators. Join us on discord to find out more and contribute.
         We are on our way to becoming the largest DAO in the world.
       </p>
-      <div className="flex flex-col space-y-2 md:flex-row md:items-center md:space-x-2 mt-20">
-        <div className="flex space-x-4 flex-1">
+      <div className="flex flex-col justify-between space-y-2 md:flex-row md:items-center md:space-x-2 mt-20">
+        <div className="flex space-x-4">
           <DiscordIconLink />
           <MediumIconLink />
           <TwitterIconLink />
           <InstagramIconLink />
         </div>
-        <div className="flex space-x-2 flex-1">
-          <TextInputBox label="" type="text" placeholder="email" isFullWidth />
-          <Button>Subscribe</Button>
+        <div className="flex space-x-2">
+          <NextLink href="/terms-of-service" className="underline">
+            Terms of Service
+          </NextLink>
+          <NextLink href="/terms-of-service" className="underline">
+            Privacy Policy
+          </NextLink>
         </div>
       </div>
     </footer>
