@@ -4,15 +4,16 @@ import { Heading } from '../common/heading';
 export interface Props {
   title: string;
   subtitle: string;
+  className?: string;
 }
 
-export const ShowCase: React.FC<Props> = ({ subtitle, title, children }) => {
+export const ShowCase: React.FC<Props> = ({ subtitle, title, className, children }) => {
   return (
-    <article className="text-center space-y-2">
+    <article className={twMerge('text-center space-y-2', className)}>
       <Heading as="h2" className="font-body text-4xl md:text-6xl md:leading-tight font-medium">
         {title}
       </Heading>
-      <SubTitle className="!mb-20">{subtitle}</SubTitle>
+      <SubTitle className="!mb-10">{subtitle}</SubTitle>
       {children}
     </article>
   );

@@ -80,6 +80,7 @@ const HomePage = () => {
         <ShowCase
           title="Modular & extendable"
           subtitle="Deploy your own order execution strategies with our smart contracts"
+          className="my-20"
         />
       </main>
 
