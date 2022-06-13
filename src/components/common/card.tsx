@@ -70,7 +70,7 @@ export const Card = ({
       className={`
         sm:mx-0 w-full relative flex flex-col pointer-events-auto p-2 rounded-3xl
         shadow-[0_0_16px_4px_rgba(0,0,0,0.07)] hover:shadow-[0_0_16px_4px_rgba(0,0,0,0.15)]
-        transition-all duration-200 group ${className}`}
+        transition-all duration-300 group ${className}`}
       style={{ height: heightStyle }} // boxShadow: '0px 0px 16px 4px rgba(0, 0, 0, 0.07)'
     >
       <NextLink
@@ -78,7 +78,7 @@ export const Card = ({
         className="h-full overflow-clip rounded-3xl"
       >
         {data?.image ? (
-          <BGImage src={data?.image} className="group-hover:scale-110 transition-all duration-200" />
+          <BGImage src={data?.image} className="group-hover:scale-[1.15] transition-all duration-300" />
         ) : (
           <BGImage src={BLANK_IMG} className="" />
         )}
