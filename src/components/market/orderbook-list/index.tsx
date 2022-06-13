@@ -4,6 +4,7 @@ import { Button, Dropdown, ScrollLoader } from 'src/components/common';
 import { OrderbookProvider, SORT_FILTERS, useOrderbook } from '../OrderbookContext';
 import { OrderbookRow } from './orderbook-row';
 import { OrderbookFilters } from './filters/orderbook-filters';
+import { useRouter } from 'next/router';
 
 const SORT_LABELS: {
   [key: string]: string;
@@ -31,8 +32,11 @@ export const OrderbookContainer = ({ collectionId, className }: OrderbookContain
 };
 
 export const OrderbookContent = ({ className }: { className?: string }): JSX.Element => {
+  const { query } = useRouter();
   const { orders, fetchMore, isLoading, updateFilter, filters, hasMoreOrders } = useOrderbook();
-  const [showFilters, setShowFilters] = useState<boolean>(false);
+  const [showFilters, setShowFilters] = useState<boolean>(
+    query.orderTypes || query.collections || query.minPrice || query.maxPrice || query.numberOfNfts ? true : false
+  );
   const [label, setLabel] = useState<string>(getSortLabel(filters?.sort));
 
   const onClickSort = (_label: string, sortOrder: string) => {
