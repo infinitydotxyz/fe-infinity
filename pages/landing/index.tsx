@@ -30,7 +30,7 @@ const HomePage = () => {
         <Divider />
 
         <ShowCase
-          title="Auto-sniping engine"
+          title="Auto-sniping"
           subtitle="Fulfill orders automatically without user intervention on matching trades"
         >
           <Image
