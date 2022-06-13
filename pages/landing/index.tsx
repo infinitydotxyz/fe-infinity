@@ -9,7 +9,6 @@ import TraitLevelOrdersImage from 'src/images/landing/showcase_trait_level_order
 import LimitOrdersImage from 'src/images/landing/showcase_limit_orders.png';
 import { ButtonJoin } from 'src/components/landing/ButtonJoin';
 import { DiscordIconLink, InstagramIconLink, MediumIconLink, TwitterIconLink } from 'src/components/landing/Icons';
-import { Divider } from 'src/components/landing/Divider';
 
 const HomePage = () => {
   return (
@@ -19,15 +18,13 @@ const HomePage = () => {
       <NavBar />
 
       <main className={`${pageStyles} w-full`}>
-        <section className="text-center space-y-5">
+        <section className="text-center space-y-5 mb-20">
           <Heading className="font-body font-medium">
             The easiest way to <br /> trade NFTs
           </Heading>
           <SubTitle>Buy & sell with new advanced orders and flexible pricing</SubTitle>
           <ButtonJoin>Sign up for beta</ButtonJoin>
         </section>
-
-        <Divider />
 
         <ShowCase
           title="Auto-sniping"
@@ -40,7 +37,6 @@ const HomePage = () => {
             alt="auto-sniping engine"
           />
         </ShowCase>
-        <Divider />
 
         <ShowCase title="Set orders" subtitle="Make an order to buy one NFT from a selection of many NFTs">
           <Image src={OrdersImage.src} width={OrdersImage.width} height={OrdersImage.height} alt="set orders" />
@@ -56,7 +52,6 @@ const HomePage = () => {
             alt="collection-wide orders"
           />
         </ShowCase>
-        <Divider />
 
         <ShowCase
           title="Trait-level orders"
@@ -69,7 +64,6 @@ const HomePage = () => {
             alt="trait-level orders"
           />
         </ShowCase>
-        <Divider />
 
         <ShowCase
           title="Limit orders"
@@ -82,7 +76,6 @@ const HomePage = () => {
             alt="limit orders"
           />
         </ShowCase>
-        <Divider />
 
         <ShowCase
           title="Modular & extendable"
