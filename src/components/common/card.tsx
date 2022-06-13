@@ -68,7 +68,8 @@ export const Card = ({
   return (
     <div
       className={`
-        sm:mx-0 w-full relative flex flex-col pointer-events-auto p-2 rounded-3xl shadow-xl hover:shadow-2xl
+        sm:mx-0 w-full relative flex flex-col pointer-events-auto p-2 rounded-3xl
+        shadow-[0_0_16px_4px_rgba(0,0,0,0.07)] hover:shadow-[0_0_16px_4px_rgba(0,0,0,0.15)]
         transition-all duration-200 group ${className}`}
       style={{ height: heightStyle }} // boxShadow: '0px 0px 16px 4px rgba(0, 0, 0, 0.07)'
     >
