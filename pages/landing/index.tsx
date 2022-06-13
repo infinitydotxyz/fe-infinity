@@ -19,7 +19,7 @@ const HomePage = () => {
 
       <main className={`${pageStyles} w-full`}>
         <section className="text-center space-y-5 mb-20">
-          <Heading className="font-body font-medium">
+          <Heading className="font-body text-4xl md:text-6xl md:leading-tight font-medium">
             The easiest way to <br /> trade NFTs
           </Heading>
           <SubTitle>Buy & sell with new advanced orders and flexible pricing</SubTitle>
@@ -84,7 +84,7 @@ const HomePage = () => {
       </main>
 
       <section className="p-32 text-center bg-black space-y-10">
-        <Heading as="h2" className="text-white font-body font-normal">
+        <Heading as="h2" className="text-white text-4xl md:text-6xl md:leading-tight font-body font-normal">
           Start trading like <br /> the pros
         </Heading>
         <ButtonJoin variant="gray" size="large">

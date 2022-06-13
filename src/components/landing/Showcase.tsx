@@ -9,7 +9,7 @@ export interface Props {
 export const ShowCase: React.FC<Props> = ({ subtitle, title, children }) => {
   return (
     <article className="text-center space-y-2">
-      <Heading as="h2" className="font-body font-medium">
+      <Heading as="h2" className="font-body text-4xl md:text-6xl md:leading-tight font-medium">
         {title}
       </Heading>
       <SubTitle className="!mb-20">{subtitle}</SubTitle>
