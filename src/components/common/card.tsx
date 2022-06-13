@@ -67,14 +67,20 @@ export const Card = ({
 
   return (
     <div
-      className={`sm:mx-0 w-full relative flex flex-col pointer-events-auto p-2 rounded-3xl ${className}`}
-      style={{ height: heightStyle, boxShadow: '0px 0px 16px 4px rgba(0, 0, 0, 0.07)' }}
+      className={`
+        sm:mx-0 w-full relative flex flex-col pointer-events-auto p-2 rounded-3xl shadow-xl hover:shadow-2xl
+        transition-all duration-200 group ${className}`}
+      style={{ height: heightStyle }} // boxShadow: '0px 0px 16px 4px rgba(0, 0, 0, 0.07)'
     >
       <NextLink
         href={`/asset/${data?.chainId}/${data?.tokenAddress ?? data?.address}/${data?.tokenId}`}
         className="h-full overflow-clip rounded-3xl"
       >
-        {data?.image ? <BGImage src={data?.image} className="" /> : <BGImage src={BLANK_IMG} className="" />}
+        {data?.image ? (
+          <BGImage src={data?.image} className="group-hover:scale-110 transition-all duration-200" />
+        ) : (
+          <BGImage src={BLANK_IMG} className="" />
+        )}
       </NextLink>
 
       {data?.rarityRank && (
