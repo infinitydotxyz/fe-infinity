@@ -12,7 +12,7 @@ export interface Props {
 
 export const ShowCase: React.FC<Props> = ({ subtitle, title, className, children }) => {
   const rootRef = useRef();
-  const onScreen = useOnScreen(rootRef); // TODO: show animation when component is in middle of screen instead
+  const onScreen = useOnScreen(rootRef, '-30%');
   const animation = useAnimation();
 
   useEffect(() => {
@@ -22,8 +22,7 @@ export const ShowCase: React.FC<Props> = ({ subtitle, title, className, children
         opacity: 1,
         transition: {
           duration: 0.5,
-          ease: 'easeOut',
-          delay: 0.5
+          ease: 'easeOut'
         }
       });
     }
