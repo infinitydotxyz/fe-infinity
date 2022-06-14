@@ -15,17 +15,18 @@ const HomePage = () => {
     <div className="transition w-[100vw] h-[100vh] overflow-y-auto overflow-x-hidden justify-items-center">
       <Header title="Landing Page" />
 
-      <NavBar />
-
-      <main className={`${pageStyles} w-full`}>
-        <section className="text-center space-y-5 mb-20">
+      <header className="bg-gradient-to-b from-pink-200">
+        <NavBar />
+        <section className="text-center flex flex-col justify-center items-center h-screen space-y-4">
           <Heading className="font-body text-4xl md:text-6xl md:leading-tight font-medium">
             The easiest way to <br /> trade NFTs
           </Heading>
           <SubTitle>Buy & sell with new advanced orders and flexible pricing</SubTitle>
           <ButtonJoin>Sign up for beta</ButtonJoin>
         </section>
+      </header>
 
+      <main className={`${pageStyles} w-full`}>
         <ShowCase
           title="Auto-sniping"
           subtitle="Fulfill orders automatically without user intervention on matching trades"
@@ -106,20 +107,18 @@ export default HomePage;
  */
 const NavBar = () => {
   return (
-    <header className="w-full bg-white bg-opacity-70 glass font-heading">
-      <nav className={`${pageStyles} flex space-x-6 items-center py-6 w-full`}>
-        <NextLink href="/">
-          <SVG.logo className="h-8 hidden sm:inline-block" />
-          <SVG.miniLogo className="h-8 inline-block sm:hidden" />
-        </NextLink>
+    <nav className={`${pageStyles} bg-transparent font-heading flex space-x-6 items-center py-6 w-full`}>
+      <NextLink href="/">
+        <SVG.logo className="h-8 hidden sm:inline-block" />
+        <SVG.miniLogo className="h-8 inline-block sm:hidden" />
+      </NextLink>
 
-        <Spacer />
+      <Spacer />
 
-        <DiscordIconLink />
-        <TwitterIconLink />
-        <ButtonJoin>Try Beta</ButtonJoin>
-      </nav>
-    </header>
+      <DiscordIconLink />
+      <TwitterIconLink />
+      <ButtonJoin>Try Beta</ButtonJoin>
+    </nav>
   );
 };
 
