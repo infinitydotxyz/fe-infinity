@@ -26,7 +26,7 @@ const HomePage = () => {
         </section>
       </header>
 
-      <main className={`${pageStyles} w-full`}>
+      <main className={`${pageStyles} w-full space-y-20`}>
         <ShowCase
           title="Auto-sniping"
           subtitle="Fulfill orders automatically without user intervention on matching trades"
