@@ -110,7 +110,7 @@ const CollectionStatsPage = () => {
       <div className="space-y-4 mt-8">
         {data.map((coll) => {
           return (
-            <div className="bg-gray-100 px-10 h-[110px] rounded-3xl flex items-center font-heading">
+            <div key={coll.address} className="bg-gray-100 px-10 h-[110px] rounded-3xl flex items-center font-heading">
               <NextLink href={`/collection/${coll?.slug}`}>
                 {coll?.metadata?.profileImage ? (
                   <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={coll?.metadata?.profileImage} />
