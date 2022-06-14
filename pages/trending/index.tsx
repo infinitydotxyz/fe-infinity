@@ -126,7 +126,8 @@ const CollectionStatsPage = () => {
                 <div className="w-1/6">
                   <div className="flex items-center text-black font-bold font-body">
                     <a href={`/collection/${coll?.slug}`}>{coll?.metadata?.name}</a>
-                    {coll?.hasBlueCheck && <SVG.blueCheck className="h-5 w-5 ml-1.5" />}
+                    {/* using inline here (className will show the bluechecks in different sizes for smaller screen) */}
+                    {coll?.hasBlueCheck && <SVG.blueCheck className="ml-1.5" style={{ minWidth: 20, maxWidth: 20 }} />}
                   </div>
                   <div></div>
                 </div>
