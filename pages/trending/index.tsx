@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { parse } from 'query-string';
-import { BGImage, Button, EthPrice, NextLink, PageBox, ToggleTab, useToggleTab } from 'src/components/common';
+import { BGImage, Button, EthPrice, NextLink, PageBox, ToggleTab, useToggleTab, SVG } from 'src/components/common';
 import { apiGet, BLANK_IMG, formatNumber, ITEMS_PER_PAGE } from 'src/utils';
 import { Collection } from '@infinityxyz/lib-frontend/types/core';
 
@@ -124,8 +124,9 @@ const CollectionStatsPage = () => {
 
               <div className="flex justify-between w-full mx-8">
                 <div className="w-1/6">
-                  <div className="text-black font-bold font-body">
+                  <div className="flex items-center text-black font-bold font-body">
                     <a href={`/collection/${coll?.slug}`}>{coll?.metadata?.name}</a>
+                    {coll?.hasBlueCheck && <SVG.blueCheck className="h-5 w-5 ml-1.5" />}
                   </div>
                   <div></div>
                 </div>
