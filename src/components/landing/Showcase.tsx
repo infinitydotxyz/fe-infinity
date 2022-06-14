@@ -1,4 +1,4 @@
-import { motion, useAnimation } from 'framer-motion';
+import { domAnimation, LazyMotion, m, useAnimation } from 'framer-motion';
 import { useEffect, useRef } from 'react';
 import { useOnScreen } from 'src/hooks/useOnScreen';
 import { twMerge } from 'tailwind-merge';
@@ -30,19 +30,21 @@ export const ShowCase: React.FC<Props> = ({ subtitle, title, className, children
   }, [onScreen, animation]);
 
   return (
-    <motion.article
-      className={twMerge('text-center space-y-2', className)}
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ref={rootRef as any}
-      initial={{ opacity: 0, y: -50 }}
-      animate={animation}
-    >
-      <Heading as="h2" className="font-body text-4xl md:text-6xl md:leading-tight font-medium">
-        {title}
-      </Heading>
-      <SubTitle className="!mb-10">{subtitle}</SubTitle>
-      {children}
-    </motion.article>
+    <LazyMotion features={domAnimation} strict>
+      <m.article
+        className={twMerge('text-center space-y-2', className)}
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ref={rootRef as any}
+        initial={{ opacity: 0, y: -50 }}
+        animate={animation}
+      >
+        <Heading as="h2" className="font-body text-4xl md:text-6xl md:leading-tight font-medium">
+          {title}
+        </Heading>
+        <SubTitle className="!mb-10">{subtitle}</SubTitle>
+        {children}
+      </m.article>
+    </LazyMotion>
   );
 };
 
