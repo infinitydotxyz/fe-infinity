@@ -20,8 +20,12 @@ export const GallerySort = () => {
 
   useEffect(() => {
     let newLabel = label;
-    newLabel = filterState.orderDirection === 'asc' ? RARITY_HIGH_LABEL : newLabel;
-    newLabel = filterState.orderDirection === 'desc' ? RARITY_LOW_LABEL : newLabel;
+    newLabel =
+      filterState.orderBy === 'rarityRank' && filterState.orderDirection === 'asc' ? RARITY_HIGH_LABEL : newLabel;
+    newLabel =
+      filterState.orderBy === 'rarityRank' && filterState.orderDirection === 'desc' ? RARITY_LOW_LABEL : newLabel;
+    newLabel = filterState.orderBy === 'price' && filterState.orderDirection === 'desc' ? PRICE_HIGH_LABEL : newLabel;
+    newLabel = filterState.orderBy === 'price' && filterState.orderDirection === 'asc' ? PRICE_LOW_LABEL : newLabel;
     setLabel(newLabel);
   }, [filterState]);
 
