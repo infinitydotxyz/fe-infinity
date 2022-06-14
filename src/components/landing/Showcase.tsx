@@ -12,7 +12,7 @@ export interface Props {
 
 export const ShowCase: React.FC<Props> = ({ subtitle, title, className, children }) => {
   const rootRef = useRef();
-  const onScreen = useOnScreen(rootRef, '-30%');
+  const onScreen = useOnScreen(rootRef, '-40%');
   const animation = useAnimation();
 
   useEffect(() => {
@@ -31,7 +31,7 @@ export const ShowCase: React.FC<Props> = ({ subtitle, title, className, children
   return (
     <LazyMotion features={domAnimation} strict>
       <m.article
-        className={twMerge('text-center space-y-2', className)}
+        className={twMerge('text-center space-y-2 my-20', className)}
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ref={rootRef as any}
         initial={{ opacity: 0, y: -50 }}

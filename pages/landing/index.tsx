@@ -30,6 +30,7 @@ const HomePage = () => {
         <ShowCase
           title="Auto-sniping"
           subtitle="Fulfill orders automatically without user intervention on matching trades"
+          className="mt-0"
         >
           <Image
             src={SnipingEngineImage.src}
