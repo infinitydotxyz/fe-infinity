@@ -184,8 +184,12 @@ export const OrderbookProvider = ({ children, collectionId }: OBProvider) => {
   }, [router.query]);
 
   useEffect(() => {
+    fetchOrders();
+  }, [limit]);
+
+  useEffect(() => {
     fetchOrders(true);
-  }, [filters, limit]);
+  }, [filters]);
 
   const fetchMore = async () => {
     setLimit(limit + AMOUNT_OF_ORDERS);

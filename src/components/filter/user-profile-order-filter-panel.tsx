@@ -1,7 +1,7 @@
 import { BaseCollection, OBOrderItem } from '@infinityxyz/lib-frontend/types/core';
 import { debounce } from 'lodash';
 import { useState, useEffect } from 'react';
-import { Checkbox, TextInputBox } from 'src/components/common';
+import { Checkbox, TextInputBox, Spinner } from 'src/components/common';
 import { apiGet } from 'src/utils';
 import { UserProfileDto } from '../user/user-profile-dto';
 
@@ -27,13 +27,17 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
   const [maxPriceVal, setMaxPriceVal] = useState('');
   const [numItems, setNumItems] = useState('');
   const [collections, setCollections] = useState<OBOrderItem[]>([]);
-  const [selectedCollections, setSelectedCollections] = useState<string[]>([]);
+  const [selectedCollections, setSelectedCollections] = useState<OBOrderItem[]>([]);
   const [collectionSearch, setCollectionSearch] = useState('');
+  const [collectionSearchLoading, setCollectionSearchLoading] = useState(false);
   const [filter, setFilter] = useState<UserOrderFilter>({
     orderType: 'listings'
   });
 
+  // for collection search:
   const fetchOrderCollections = async () => {
+    setCollections([]);
+    setCollectionSearchLoading(true);
     const { result, error } = await apiGet(`/orders/${userInfo.address}/collections`, {
       requiresAuth: true,
       query: {
@@ -41,6 +45,7 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
         name: collectionSearch
       }
     });
+    setCollectionSearchLoading(false);
     if (!error) {
       setCollections(result?.data as OBOrderItem[]);
     }
@@ -62,6 +67,29 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
   const onChangeNameSearch = debounce((value: string) => {
     setCollectionSearch(value);
   }, 300);
+
+  const CollectionCheckbox = ({ collection }: { collection: OBOrderItem }) => (
+    <Checkbox
+      key={`${collection.collectionAddress}`}
+      boxOnLeft={false}
+      className="pb-4 w-full"
+      checked={selectedCollections.map((c) => c.collectionAddress).includes(`${collection.collectionAddress}`)}
+      onChange={(checked) => {
+        let arr: OBOrderItem[] = [];
+        if (checked) {
+          arr = [...selectedCollections, collection];
+        } else {
+          arr = selectedCollections.filter((c) => c.collectionAddress !== collection.collectionAddress);
+        }
+        setSelectedCollections(arr);
+        const newFilter = { ...filter };
+        newFilter.collections = arr.map((c) => c.collectionAddress);
+        setFilter(newFilter);
+        onChange(newFilter);
+      }}
+      label={collection.collectionName}
+    />
+  );
 
   return (
     <div className={`w-80 mr-12 pointer-events-auto ${className ?? ''}`}>
@@ -101,31 +129,23 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
           />
         </div>
 
-        <ul className="mt-8 w-full max-h-80 overflow-y-auto space-y-4">
-          {collections.map((coll, i) => {
-            return (
-              <Checkbox
-                key={`${i}-${coll.collectionAddress}`}
-                boxOnLeft={false}
-                className="pb-4 w-full"
-                checked={selectedCollections.includes(`${coll.collectionAddress}`)}
-                onChange={(checked) => {
-                  let arr: string[] = [];
-                  if (checked) {
-                    arr = [...selectedCollections, coll.collectionAddress];
-                  } else {
-                    arr = selectedCollections.filter((address) => address !== coll.collectionAddress);
-                  }
-                  setSelectedCollections(arr);
-                  const newFilter = { ...filter };
-                  newFilter.collections = arr;
-                  setFilter(newFilter);
-                  onChange(newFilter);
-                }}
-                label={coll.collectionName}
-              />
-            );
+        <ul className="mt-8 w-full min-h-[100px] max-h-80 overflow-y-auto space-y-4">
+          {selectedCollections.map((coll) => (
+            <CollectionCheckbox collection={coll} />
+          ))}
+
+          {collections.map((coll) => {
+            if (selectedCollections.map((c) => c.collectionAddress).includes(`${coll.collectionAddress}`)) {
+              return null;
+            }
+            return <CollectionCheckbox collection={coll} />;
           })}
+
+          {collectionSearchLoading && (
+            <div className="h-24">
+              <Spinner />
+            </div>
+          )}
         </ul>
       </div>
 
