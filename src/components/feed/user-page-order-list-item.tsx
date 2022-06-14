@@ -1,5 +1,5 @@
 import { BLANK_IMG, getChainScannerBase } from 'src/utils';
-import { EthPrice, NextLink, BGImage } from 'src/components/common';
+import { EthPrice, NextLink, BGImage, Button } from 'src/components/common';
 import { format } from 'timeago.js';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { UserProfileDto } from '../user/user-profile-dto';
@@ -10,6 +10,7 @@ interface Props {
 }
 
 export const UserPageOrderListItem = ({ event, userInfo }: Props) => {
+  const isListing = !event.isSellOrder && event.makerAddress === userInfo?.address;
   return (
     <div>
       <div className="bg-gray-100 px-10 py-6 rounded-3xl flex items-center font-heading">
@@ -35,7 +36,7 @@ export const UserPageOrderListItem = ({ event, userInfo }: Props) => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {event.isSellOrder ? 'Sale' : event.makerAddress === userInfo?.address ? 'Listing' : 'Offer'}
+                {event.isSellOrder ? 'Sale' : isListing ? 'Listing' : 'Offer'}
               </a>
             </div>
           </div>
@@ -53,12 +54,7 @@ export const UserPageOrderListItem = ({ event, userInfo }: Props) => {
             <div className="text-gray-400">Expiry date</div>
             <div className="font-bold">{format(event.endTimeMs)}</div>
           </div>
-          {/* <div className="w-1/6">
-            <div className="text-gray-400">Action</div>
-            <div className="font-bold">
-              Buy
-            </div>
-          </div> */}
+          <div className="w-1/6">{isListing && <Button>Cancel</Button>}</div>
         </div>
       </div>
     </div>

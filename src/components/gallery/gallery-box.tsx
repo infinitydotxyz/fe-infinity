@@ -102,7 +102,7 @@ export const GalleryBox = ({
         title: item.collectionName ?? collection?.metadata?.name,
         collectionName: item.collectionName ?? collection?.metadata?.name,
         collectionSlug: item.collectionSlug ?? '',
-        description: item.metadata.description,
+        description: item.metadata?.description ?? '',
         image: item?.image?.url,
         price: item?.orderSnippet?.listing?.orderItem?.startPriceEth ?? 0,
         chainId: item.chainId,
@@ -112,7 +112,7 @@ export const GalleryBox = ({
         rarityRank: item.rarityRank,
         orderSnippet: item.ordersSnippet,
         hasBlueCheck: item.hasBlueCheck ?? false,
-        attributes: item.metadata.attributes
+        attributes: item.metadata?.attributes ?? []
       } as ERC721CardData;
     });
 
@@ -202,8 +202,10 @@ export const GalleryBox = ({
 
           {!error && !isFetching && data.length === 0 ? <div>No results found.</div> : null}
 
-          {data.map((item) => {
-            return <Card key={`${item.address}_${item.tokenId}`} height={cardHeight} data={item} {...cardProps} />;
+          {data.map((item, idx) => {
+            return (
+              <Card key={`${item.address}_${item.tokenId}_${idx}`} height={cardHeight} data={item} {...cardProps} />
+            );
           })}
 
           {/* <div className="h-[10vh]">&nbsp;</div> */}

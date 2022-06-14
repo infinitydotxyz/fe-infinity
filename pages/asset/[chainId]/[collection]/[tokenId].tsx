@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { Button, ShortAddress, PageBox, ReadMoreText, SVG, NextLink, Spinner } from 'src/components/common';
+import { Button, ShortAddress, PageBox, ReadMoreText, SVG, NextLink, Spinner, EthPrice } from 'src/components/common';
 import { BLANK_IMAGE_URL, useFetch } from 'src/utils';
 import { Token, Collection, Erc721Metadata } from '@infinityxyz/lib-frontend/types/core';
 import {
@@ -163,6 +163,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
       />
     </>
   );
+  const buyPriceEth = `${token.ordersSnippet?.listing?.orderItem?.endPriceEth ?? ''}`;
 
   return (
     <PageBox title={assetName} showTitle={false} className="flex flex-col max-w-screen-2xl mt-4">
@@ -199,10 +200,16 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
 
           <div className="md:-ml-1.5">
             <div className="flex flex-col md:flex-row gap-4 my-4 md:my-6 lg:my-10 lg:mb-16">
-              <Button variant="primary" size="large" onClick={onClickButton1}>
-                <span className="mr-4">Buy</span>
-                <span className="font-heading">3.30 ETH</span>
-              </Button>
+              {buyPriceEth && (
+                <Button variant="primary" size="large" onClick={onClickButton1}>
+                  <div className="flex">
+                    <span className="mr-4">Buy</span>
+                    <span className="font-heading">
+                      <EthPrice label={buyPriceEth} />
+                    </span>
+                  </div>
+                </Button>
+              )}
               <Button variant="outline" size="large" onClick={onClickButton2}>
                 Make offer
               </Button>
