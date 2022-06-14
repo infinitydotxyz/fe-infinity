@@ -102,7 +102,7 @@ export const GalleryBox = ({
         title: item.collectionName ?? collection?.metadata?.name,
         collectionName: item.collectionName ?? collection?.metadata?.name,
         collectionSlug: item.collectionSlug ?? '',
-        description: item.metadata.description,
+        description: item.metadata?.description ?? '',
         image: item?.image?.url,
         price: item?.orderSnippet?.listing?.orderItem?.startPriceEth ?? 0,
         chainId: item.chainId,
