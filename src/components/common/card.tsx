@@ -128,8 +128,8 @@ export const Card = ({
 const LoadingCard = ({ className }: { className?: string }) => (
   <ContentLoader
     speed={2}
-    width={290}
-    height={290}
+    width={310}
+    height={350}
     viewBox="0 0 400 460"
     backgroundColor="#f3f3f3"
     foregroundColor="#ecebeb"
