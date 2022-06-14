@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { twMerge } from 'tailwind-merge';
 
-export type Props = React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>;
+type Props = React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>;
 
 // simplifies NextJS/Links and not confused with the react-router Link
 // Use for local routing in NextJS.
