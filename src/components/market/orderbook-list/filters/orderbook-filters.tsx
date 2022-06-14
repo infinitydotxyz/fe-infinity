@@ -6,6 +6,8 @@ import { Checkbox, TextInputBox } from 'src/components/common';
 import { useOrderbook } from '../../OrderbookContext';
 import { CollectionSearchItem, useCollectionCache } from '../collection-cache';
 
+let allCollectionsData: CollectionSearchItem[] = [];
+
 type OpenFilterState = {
   [filter: string]: boolean;
 };
@@ -52,9 +54,11 @@ export const OrderbookFilters = () => {
           if (selectedCollections?.length) {
             const _collections = uniqBy([...selectedCollections, ...initialCollections], 'id');
             setCollectionsData(_collections);
+            allCollectionsData = [...allCollectionsData, ..._collections];
           }
         } else {
           setCollectionsData(initialCollections);
+          allCollectionsData = [...allCollectionsData, ...initialCollections];
         }
       }
     };
@@ -68,6 +72,7 @@ export const OrderbookFilters = () => {
       const updatedCollections = await getCollectionsByName(searchTerm);
       if (updatedCollections?.length) {
         setCollectionsData(updatedCollections);
+        allCollectionsData = [...allCollectionsData, ...updatedCollections];
       }
     } else {
       const initialCollections = await getTopCollections();
@@ -78,13 +83,28 @@ export const OrderbookFilters = () => {
           if (selectedCollections?.length) {
             const _collections = uniqBy([...selectedCollections, ...initialCollections], 'id');
             setCollectionsData(_collections);
+            allCollectionsData = [...allCollectionsData, ..._collections];
           }
         } else {
           setCollectionsData(initialCollections);
+          allCollectionsData = [...allCollectionsData, ...initialCollections];
         }
       }
     }
   }, 300);
+
+  const CollectionCheckbox = ({ collection }: { collection: CollectionSearchItem }) => (
+    <Checkbox
+      key={`${collection.id}`}
+      boxOnLeft={false}
+      className="pb-4"
+      checked={collections.includes(`${collection.chainId}:${collection.id}`)}
+      onChange={(checked) => {
+        updateFilterArray('collections', collections, `${collection.chainId}:${collection.id}`, checked);
+      }}
+      label={collection.name}
+    />
+  );
   const hasCollectionSearchResults = collections.length > 0 || (collectionSearchState || '').length > 0;
 
   return (
@@ -117,27 +137,21 @@ export const OrderbookFilters = () => {
               }}
               placeholder="Search"
             />
-            {collections.length > 0 && <div className="mt-8 font-heading">Selected: {collections.length}</div>}
 
             <div className="mt-8 max-h-80 overflow-y-auto space-y-4 font-heading">
+              {collections.map((coll) => {
+                const collection = allCollectionsData.find((c) => `${c.chainId}:${c.id}` === coll);
+                if (!collection) {
+                  return null;
+                }
+                return <CollectionCheckbox collection={collection} />;
+              })}
               {hasCollectionSearchResults &&
-                collectionsData.map((collection, i) => {
-                  return (
-                    <Checkbox
-                      key={`${i}-${collection.id}`}
-                      className="pb-4"
-                      checked={collections.includes(`${collection.chainId}:${collection.id}`)}
-                      onChange={(checked) => {
-                        updateFilterArray(
-                          'collections',
-                          collections,
-                          `${collection.chainId}:${collection.id}`,
-                          checked
-                        );
-                      }}
-                      label={collection.name}
-                    />
-                  );
+                collectionsData.map((collection) => {
+                  if (collections.includes(`${collection.chainId}:${collection.id}`)) {
+                    return null;
+                  }
+                  return <CollectionCheckbox collection={collection} />;
                 })}
             </div>
 
