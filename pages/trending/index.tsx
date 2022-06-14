@@ -26,6 +26,9 @@ const CollectionStatsPage = () => {
 
   const fetchData = async (refresh = false) => {
     setIsLoading(true);
+    if (refresh) {
+      setData([]);
+    }
     const { result } = await apiGet('/collections/stats', {
       query: {
         offset: refresh ? 0 : offset,
@@ -110,7 +113,7 @@ const CollectionStatsPage = () => {
       <div className="space-y-4 mt-8">
         {data.map((coll) => {
           return (
-            <div className="bg-gray-100 px-10 h-[110px] rounded-3xl flex items-center font-heading">
+            <div key={coll.address} className="bg-gray-100 px-10 h-[110px] rounded-3xl flex items-center font-heading">
               <NextLink href={`/collection/${coll?.slug}`}>
                 {coll?.metadata?.profileImage ? (
                   <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={coll?.metadata?.profileImage} />
@@ -127,31 +130,31 @@ const CollectionStatsPage = () => {
                   <div></div>
                 </div>
 
-                <div className="w-1/6">
+                <div className="w-1/10">
                   <div className="text-black font-bold font-body">Volume</div>
                   <div>
                     <EthPrice label={formatNumber(coll?.stats?.daily?.salesVolume)} />
                   </div>
                 </div>
 
-                <div className="w-1/6">
+                <div className="w-1/10">
                   <div className="text-black font-bold font-body">Avg. Price</div>
                   <div>
                     <EthPrice label={formatNumber(coll?.stats?.daily?.avgPrice, 2)} />
                   </div>
                 </div>
 
-                <div className="w-1/6">
+                <div className="w-1/10">
                   <div className="text-black font-bold font-body">Owners</div>
                   <div>{formatNumber(coll?.stats?.daily?.ownerCount)}</div>
                 </div>
 
-                <div className="w-1/6">
+                <div className="w-1/10">
                   <div className="text-black font-bold font-body">Tokens</div>
                   <div>{formatNumber(coll?.stats?.daily?.tokenCount)}</div>
                 </div>
 
-                <div className="w-1/6">
+                <div className="w-[50px]">
                   <Button>Buy</Button>
                 </div>
               </div>
