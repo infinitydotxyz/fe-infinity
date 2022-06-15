@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { BLANK_IMG, getChainScannerBase } from 'src/utils';
-import { EthPrice, NextLink, BGImage, Button } from 'src/components/common';
+import { getChainScannerBase } from 'src/utils';
+import { EthPrice, Button } from 'src/components/common';
 import { format } from 'timeago.js';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { UserProfileDto } from '../user/user-profile-dto';
