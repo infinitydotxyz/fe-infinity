@@ -68,7 +68,8 @@ export const UserPageNftsTab = ({ userInfo, forTransfers }: Props) => {
                       label: (data) => {
                         // for Transfers
                         if (forTransfers === true) {
-                          return <div className="font-normal">Transfer</div>;
+                          const found = nftsForTransfer.find((o) => o.id === data?.id);
+                          return <div className="font-normal">{found ? '✓' : ''} Transfer</div>;
                         }
                         // for Listings
                         if (isAlreadyAdded(data)) {
@@ -79,8 +80,17 @@ export const UserPageNftsTab = ({ userInfo, forTransfers }: Props) => {
                       onClick: (ev, data) => {
                         // for Transfers
                         if (forTransfers === true && data) {
-                          setNftsForTransfer([...nftsForTransfer, data]);
-                          setShowTransferDrawer(true);
+                          const found = nftsForTransfer.find((o) => o.id === data.id);
+                          if (found) {
+                            const arr = nftsForTransfer.filter((o: ERC721CardData) => o.id !== data.id);
+                            setNftsForTransfer(arr);
+                            if (arr.length === 0) {
+                              setShowTransferDrawer(false);
+                            }
+                          } else {
+                            setNftsForTransfer([...nftsForTransfer, data]);
+                            setShowTransferDrawer(true);
+                          }
                           return;
                         }
                         // for Listings

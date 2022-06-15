@@ -1,5 +1,5 @@
 import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
-import { Button, Spacer, SVG } from 'src/components/common';
+import { Button, NftImage, Spacer, SVG } from 'src/components/common';
 import { iconButtonStyle } from 'src/utils/ui-constants';
 // import { iconButtonStyle } from 'src/utils/ui-constants';
 // import { format } from 'timeago.js';
@@ -28,7 +28,17 @@ export const TransferDrawer = ({ open, onClose, nftsForTransfer, onClickRemove }
               return (
                 <li className="py-3 flex">
                   <div className="w-full flex">
-                    <div className="flex-1 truncate">{cardData.tokenId}</div>
+                    <div>
+                      <NftImage
+                        chainId={cardData.chainId ?? ''}
+                        collectionAddress={cardData.address ?? ''}
+                        className="w-24 h-24"
+                      />
+                    </div>
+                    <div className="flex-1 truncate">
+                      <div className="font-bold">{cardData.collectionName}</div>
+                      <div>{cardData.tokenId}</div>
+                    </div>
                     <button onClick={() => onClickRemove(cardData)}>
                       <SVG.grayDelete className={iconButtonStyle} />
                     </button>
