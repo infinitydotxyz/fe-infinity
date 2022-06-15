@@ -16,7 +16,7 @@ const HomePage = () => {
     <div className="transition w-[100vw] h-[100vh] overflow-y-auto overflow-x-hidden justify-items-center">
       <Header title="Landing Page" />
 
-      <header className="bg-gradient-to-b from-pink-200">
+      <header>
         <Banner>
           Join our{' '}
           <ExternalLink
