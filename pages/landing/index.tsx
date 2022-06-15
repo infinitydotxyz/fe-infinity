@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import React from 'react';
-import { Header, Heading, NextLink, pageStyles, Spacer, SVG } from 'src/components/common';
+import { ExternalLink, Header, Heading, NextLink, pageStyles, Spacer, SVG } from 'src/components/common';
 import { ShowCase, SubTitle } from 'src/components/landing/Showcase';
 import SnipingEngineImage from 'src/images/landing/showcase_sniping_engine.png';
 import OrdersImage from 'src/images/landing/showcase_set_orders.png';
@@ -9,6 +9,7 @@ import TraitLevelOrdersImage from 'src/images/landing/showcase_trait_level_order
 import LimitOrdersImage from 'src/images/landing/showcase_limit_orders.png';
 import { ButtonJoin } from 'src/components/landing/ButtonJoin';
 import { DiscordIconLink, InstagramIconLink, MediumIconLink, TwitterIconLink } from 'src/components/landing/Icons';
+import { Banner } from 'src/components/landing/Banner';
 
 const HomePage = () => {
   return (
@@ -16,6 +17,16 @@ const HomePage = () => {
       <Header title="Landing Page" />
 
       <header className="bg-gradient-to-b from-pink-200">
+        <Banner>
+          Join our{' '}
+          <ExternalLink
+            href="https://code4rena.com/contests/2022-06-infinity-nft-marketplace-contest"
+            className="underline"
+          >
+            audit contest
+          </ExternalLink>{' '}
+          and earn up to $50k in prizes!
+        </Banner>
         <NavBar />
         <section className="text-center flex flex-col justify-center items-center h-screen space-y-4">
           <Heading className="font-body text-4xl md:text-6xl md:leading-tight font-medium">
