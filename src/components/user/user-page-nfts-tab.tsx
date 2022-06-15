@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { useOrderContext } from 'src/utils/context/OrderContext';
@@ -13,10 +13,27 @@ type Props = {
 
 export const UserPageNftsTab = ({ userInfo, forTransfers }: Props) => {
   const { user } = useAppContext();
-  const { addCartItem, setOrderDrawerOpen, ordersInCart, cartItems, removeCartItem, updateOrders } = useOrderContext();
+  const {
+    addCartItem,
+    setOrderDrawerOpen,
+    ordersInCart,
+    cartItems,
+    removeCartItem,
+    updateOrders,
+    orderDrawerOpen,
+    setCustomDrawerItems
+  } = useOrderContext();
 
   const [showTransferDrawer, setShowTransferDrawer] = useState(false);
   const [nftsForTransfer, setNftsForTransfer] = useState<ERC721CardData[]>([]);
+
+  useEffect(() => {
+    setShowTransferDrawer(true);
+  }, [orderDrawerOpen]);
+
+  useEffect(() => {
+    setCustomDrawerItems(nftsForTransfer.length);
+  }, [nftsForTransfer]);
 
   const isAlreadyAdded = (data: ERC721CardData | undefined) => {
     // check if this item was already added to cartItems or order.
@@ -88,8 +105,11 @@ export const UserPageNftsTab = ({ userInfo, forTransfers }: Props) => {
                               setShowTransferDrawer(false);
                             }
                           } else {
-                            setNftsForTransfer([...nftsForTransfer, data]);
-                            setShowTransferDrawer(true);
+                            const arr = [...nftsForTransfer, data];
+                            setNftsForTransfer(arr);
+                            if (arr.length === 1) {
+                              setShowTransferDrawer(true);
+                            }
                           }
                           return;
                         }
