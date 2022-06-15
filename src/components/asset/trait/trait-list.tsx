@@ -4,7 +4,7 @@ import { Trait } from './trait';
 
 interface TraitListProps {
   traits: Erc721Attribute[];
-  collectionTraits: CollectionAttributes;
+  collectionTraits?: CollectionAttributes;
 }
 
 export const TraitList: FC<TraitListProps> = ({ traits, collectionTraits }) => {

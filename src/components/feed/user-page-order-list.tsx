@@ -6,6 +6,7 @@ import { UserPageOrderListItem } from './user-page-order-list-item';
 import { apiGet, ITEMS_PER_PAGE } from 'src/utils';
 import { Button, ScrollLoader, Spinner } from '../common';
 import { UserProfileDto } from '../user/user-profile-dto';
+import { CancelDrawer } from 'src/components/market/order-drawer/cancel-drawer';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { UserOrderFilter, UserProfileOrderFilterPanel } from '../filter/user-profile-order-filter-panel';
 
@@ -38,6 +39,8 @@ export const UserPageOrderList = ({ userInfo, userAddress, types, className }: U
   const [hasNextPage, setHasNextPage] = useState(false);
   const [filterShowed, setFilterShowed] = useState(false);
   const [apiFilter, setApiFilter] = useState<UserOrderFilter>({ orderType: 'listings' });
+  const [showCancelDrawer, setShowCancelDrawer] = useState(false);
+  const [selectedOrders, setSelectedOrders] = useState<SignedOBOrder[]>([]);
 
   const fetchData = async (isRefresh = false) => {
     setIsFetching(true);
@@ -140,8 +143,26 @@ export const UserPageOrderList = ({ userInfo, userAddress, types, className }: U
 
           {!isFetching && hasNextPage === false && data?.length === 0 ? <div>No results found.</div> : null}
 
-          {data?.map((event, idx) => {
-            return <UserPageOrderListItem key={idx} event={event} userInfo={userInfo} />;
+          {data?.map((order, idx) => {
+            return (
+              <UserPageOrderListItem
+                key={idx}
+                order={order}
+                userInfo={userInfo}
+                onClickCancel={(clickedOrder, isCancelling) => {
+                  if (isCancelling) {
+                    setSelectedOrders([...selectedOrders, clickedOrder]);
+                    setShowCancelDrawer(true);
+                  } else {
+                    const arr = selectedOrders.filter((o) => o.id !== clickedOrder.id);
+                    setSelectedOrders(arr);
+                    if (arr.length === 0) {
+                      setShowCancelDrawer(false);
+                    }
+                  }
+                }}
+              />
+            );
           })}
 
           {hasNextPage === true ? (
@@ -153,6 +174,19 @@ export const UserPageOrderList = ({ userInfo, userAddress, types, className }: U
           ) : null}
         </ul>
       </div>
+
+      <CancelDrawer
+        orders={selectedOrders}
+        open={showCancelDrawer}
+        onClose={() => setShowCancelDrawer(false)}
+        onClickRemove={(removingOrder) => {
+          const arr = selectedOrders.filter((o) => o.id !== removingOrder.id);
+          setSelectedOrders(arr);
+          if (arr.length === 0) {
+            setShowCancelDrawer(false);
+          }
+        }}
+      />
     </div>
   );
 };
