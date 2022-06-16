@@ -22,6 +22,8 @@ export const TransferNFTModal = ({ isOpen, onClose, collection, token }: Props) 
         onOKButton={() => {
           console.log(collection);
           console.log(token);
+          alert('todo: transfer');
+          onClose();
         }}
       >
         <div>

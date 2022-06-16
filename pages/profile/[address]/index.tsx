@@ -17,7 +17,8 @@ const ProfilePage = () => {
   if (!address) {
     return null;
   }
-  if (address === 'me' && !user) {
+  const isMyProfile = address === 'me';
+  if (isMyProfile && !user) {
     return (
       <PageBox title="Account" className="mb-12">
         <PleaseConnectMsg />
@@ -25,9 +26,7 @@ const ProfilePage = () => {
     );
   }
 
-  return (
-    <ProfilePageContents userAddress={address === 'me' ? `${user?.address ?? ''}` : `${address ?? ''}`} user={user} />
-  );
+  return <ProfilePageContents userAddress={isMyProfile ? `${user?.address ?? ''}` : `${address ?? ''}`} user={user} />;
 };
 
 // ================================================

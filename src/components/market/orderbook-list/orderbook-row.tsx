@@ -96,7 +96,11 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
 
           if (data.field === 'buyOrSell') {
             return (
-              <Button className="font-heading" key={`${order.id} ${data.field}`} onClick={() => onClickBuySell(order)}>
+              <Button
+                className="font-heading w-24"
+                key={`${order.id} ${data.field}`}
+                onClick={() => onClickBuySell(order)}
+              >
                 {order.isSellOrder ? 'Buy' : 'Sell'}
               </Button>
             );
