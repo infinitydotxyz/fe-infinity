@@ -156,43 +156,65 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
     setShowMakeOfferModal(true);
   };
 
+  const onClickTransfer = () => {
+    if (!checkSignedIn()) {
+      return;
+    }
+    setShowTransferModal(true);
+  };
+
+  const onClickRelist = () => {
+    if (!checkSignedIn()) {
+      return;
+    }
+    setShowListNFTModal(true);
+  };
+
   const modals = (
     <>
-      <CancelModal
-        isOpen={showCancelModal}
-        onClose={() => setShowCancelModal(false)}
-        collection={collection}
-        token={token}
-      />
-      <ListNFTModal
-        isOpen={showListNFTModal}
-        onClose={() => setShowListNFTModal(false)}
-        collection={collection}
-        token={token}
-      />
-      <TransferNFTModal
-        isOpen={showTransferModal}
-        onClose={() => setShowTransferModal(false)}
-        collection={collection}
-        token={token}
-      />
-      <MakeOfferModal
-        isOpen={showMakeOfferModal}
-        onClose={() => setShowMakeOfferModal(false)}
-        collection={collection}
-        token={token}
-      />
-      <PlaceBidModal
-        isOpen={showPlaceBidModal}
-        onClose={() => setShowPlaceBidModal(false)}
-        collection={collection}
-        token={token}
-      />
+      {showCancelModal && (
+        <CancelModal
+          isOpen={showCancelModal}
+          onClose={() => setShowCancelModal(false)}
+          collection={collection}
+          token={token}
+        />
+      )}
+      {showListNFTModal && (
+        <ListNFTModal
+          isOpen={showListNFTModal}
+          onClose={() => setShowListNFTModal(false)}
+          collection={collection}
+          token={token}
+        />
+      )}
+      {showTransferModal && (
+        <TransferNFTModal
+          isOpen={showTransferModal}
+          onClose={() => setShowTransferModal(false)}
+          collection={collection}
+          token={token}
+        />
+      )}
+
+      {showMakeOfferModal && (
+        <MakeOfferModal
+          isOpen={showMakeOfferModal}
+          onClose={() => setShowMakeOfferModal(false)}
+          collection={collection}
+          token={token}
+        />
+      )}
+      {showPlaceBidModal && (
+        <PlaceBidModal
+          isOpen={showPlaceBidModal}
+          onClose={() => setShowPlaceBidModal(false)}
+          collection={collection}
+          token={token}
+        />
+      )}
     </>
   );
-  // const buyPriceEth = `${token.ordersSnippet?.listing?.orderItem?.endPriceEth ?? ''}`;
-  // const buyPriceEth = getCurrentChainOBOrderPrice(token.ordersSnippet);
-  // console.log('token', token);
 
   return (
     <PageBox title={assetName} showTitle={false} className="flex flex-col max-w-screen-2xl mt-4">
@@ -241,8 +263,11 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
                     </div>
                   </Button>
                 )}
-                <Button variant="outline" size="large" onClick={() => alert('todo: Relist')}>
+                <Button variant="outline" size="large" onClick={onClickRelist}>
                   Relist
+                </Button>
+                <Button variant="outline" size="large" onClick={onClickTransfer}>
+                  Transfer
                 </Button>
               </div>
             </div>
