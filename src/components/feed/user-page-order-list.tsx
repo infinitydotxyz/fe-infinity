@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
+// import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
 import { FeedEventType } from '@infinityxyz/lib-frontend/types/core/feed';
 // import { FeedFilterDropdown } from './feed-filter-dropdown';
 import { UserPageOrderListItem } from './user-page-order-list-item';
@@ -9,6 +9,8 @@ import { UserProfileDto } from '../user/user-profile-dto';
 import { CancelDrawer } from 'src/components/market/order-drawer/cancel-drawer';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { UserOrderFilter, UserProfileOrderFilterPanel } from '../filter/user-profile-order-filter-panel';
+import { useOrderContext } from 'src/utils/context/OrderContext';
+import { useRouter } from 'next/router';
 
 type Query = {
   limit: number;
@@ -30,9 +32,11 @@ interface UserPageOrderListProps {
   className?: string;
 }
 
-export const UserPageOrderList = ({ userInfo, userAddress, types, className }: UserPageOrderListProps) => {
-  const [filter, setFilter] = useState<FeedFilter>({ userAddress, types });
-  const [filteringTypes, setFilteringTypes] = useState<FeedEventType[]>([]);
+export const UserPageOrderList = ({ userInfo, className }: UserPageOrderListProps) => {
+  const router = useRouter();
+  const { orderDrawerOpen, setOrderDrawerOpen, setCustomDrawerItems } = useOrderContext();
+  // const [filter, setFilter] = useState<FeedFilter>({ userAddress, types });
+  // const [filteringTypes, setFilteringTypes] = useState<FeedEventType[]>([]);
   const [data, setData] = useState<SignedOBOrder[]>([]);
   const [isFetching, setIsFetching] = useState(false);
   const [cursor, setCursor] = useState('');
@@ -41,6 +45,17 @@ export const UserPageOrderList = ({ userInfo, userAddress, types, className }: U
   const [apiFilter, setApiFilter] = useState<UserOrderFilter>({ orderType: 'listings' });
   const [showCancelDrawer, setShowCancelDrawer] = useState(false);
   const [selectedOrders, setSelectedOrders] = useState<SignedOBOrder[]>([]);
+
+  useEffect(() => {
+    const hasCustomDrawer = router.asPath.indexOf('tab=Orders') >= 0;
+    if (hasCustomDrawer && orderDrawerOpen) {
+      setShowCancelDrawer(true);
+    }
+  }, [orderDrawerOpen]);
+
+  useEffect(() => {
+    setCustomDrawerItems(selectedOrders.length);
+  }, [selectedOrders]);
 
   const fetchData = async (isRefresh = false) => {
     setIsFetching(true);
@@ -90,32 +105,32 @@ export const UserPageOrderList = ({ userInfo, userAddress, types, className }: U
     fetchData(true);
   }, [apiFilter]);
 
-  const onChangeFilterDropdown = (checked: boolean, checkId: string) => {
-    const newFilter = { ...filter };
+  // const onChangeFilterDropdown = (checked: boolean, checkId: string) => {
+  //   const newFilter = { ...filter };
 
-    if (checkId === '') {
-      setFilteringTypes([]);
-      delete newFilter.types;
-      setFilter(newFilter);
-      return;
-    }
-    const selectedType = checkId as FeedEventType;
-    if (checked) {
-      newFilter.types = [...filteringTypes, selectedType];
-      setFilter(newFilter);
-      setFilteringTypes(newFilter.types);
-    } else {
-      const _newTypes = [...filteringTypes];
-      const index = filteringTypes.indexOf(selectedType);
-      if (index >= 0) {
-        _newTypes.splice(index, 1);
-      }
-      newFilter.types = _newTypes;
-      setFilter(newFilter);
-      setFilteringTypes(_newTypes);
-    }
-  };
-  console.log('onChangeFilterDropdown', onChangeFilterDropdown);
+  //   if (checkId === '') {
+  //     setFilteringTypes([]);
+  //     delete newFilter.types;
+  //     setFilter(newFilter);
+  //     return;
+  //   }
+  //   const selectedType = checkId as FeedEventType;
+  //   if (checked) {
+  //     newFilter.types = [...filteringTypes, selectedType];
+  //     setFilter(newFilter);
+  //     setFilteringTypes(newFilter.types);
+  //   } else {
+  //     const _newTypes = [...filteringTypes];
+  //     const index = filteringTypes.indexOf(selectedType);
+  //     if (index >= 0) {
+  //       _newTypes.splice(index, 1);
+  //     }
+  //     newFilter.types = _newTypes;
+  //     setFilter(newFilter);
+  //     setFilteringTypes(_newTypes);
+  //   }
+  // };
+  // console.log('onChangeFilterDropdown', onChangeFilterDropdown);
 
   return (
     <div className={`min-h-[1024px] mt-[-75px] ${className}`}>
@@ -151,13 +166,17 @@ export const UserPageOrderList = ({ userInfo, userAddress, types, className }: U
                 userInfo={userInfo}
                 onClickCancel={(clickedOrder, isCancelling) => {
                   if (isCancelling) {
-                    setSelectedOrders([...selectedOrders, clickedOrder]);
-                    setShowCancelDrawer(true);
+                    const arr = [...selectedOrders, clickedOrder];
+                    setSelectedOrders(arr);
+                    if (arr.length === 1) {
+                      setShowCancelDrawer(true);
+                    }
                   } else {
                     const arr = selectedOrders.filter((o) => o.id !== clickedOrder.id);
                     setSelectedOrders(arr);
                     if (arr.length === 0) {
                       setShowCancelDrawer(false);
+                      setOrderDrawerOpen(false);
                     }
                   }
                 }}
@@ -178,12 +197,16 @@ export const UserPageOrderList = ({ userInfo, userAddress, types, className }: U
       <CancelDrawer
         orders={selectedOrders}
         open={showCancelDrawer}
-        onClose={() => setShowCancelDrawer(false)}
+        onClose={() => {
+          setShowCancelDrawer(false);
+          setOrderDrawerOpen(false);
+        }}
         onClickRemove={(removingOrder) => {
           const arr = selectedOrders.filter((o) => o.id !== removingOrder.id);
           setSelectedOrders(arr);
           if (arr.length === 0) {
             setShowCancelDrawer(false);
+            setOrderDrawerOpen(false);
           }
         }}
       />

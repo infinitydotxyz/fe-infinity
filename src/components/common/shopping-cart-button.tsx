@@ -8,8 +8,9 @@ import { useRouter } from 'next/router';
 
 export const ShoppingCartButton: React.FC = () => {
   const { user } = useAppContext();
-  const { orderDrawerOpen, setOrderDrawerOpen, ordersInCart, cartItems } = useOrderContext();
+  const { orderDrawerOpen, setOrderDrawerOpen, ordersInCart, cartItems, customDrawerItems } = useOrderContext();
   const router = useRouter();
+  const hasOrderDrawer = router.asPath.indexOf('tab=Orders') < 0 && router.asPath.indexOf('tab=Send') < 0;
 
   const connected = user?.address ? true : false;
 
@@ -20,7 +21,10 @@ export const ShoppingCartButton: React.FC = () => {
       router.push('/connect');
     }
   };
-  const count = cartItems.length || ordersInCart.length;
+  let count = cartItems.length || ordersInCart.length;
+  if (!hasOrderDrawer) {
+    count = customDrawerItems;
+  }
 
   return (
     <Button variant="outline" onClick={handleClick} className="py-3 relative">

@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { Navbar, Spacer, Header } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
@@ -25,9 +26,12 @@ export const PageBox = ({
   className = '',
   rightToolbar
 }: Props): JSX.Element => {
+  const router = useRouter();
   const { chainId } = useAppContext();
   const { orderDrawerOpen, setOrderDrawerOpen } = useOrderContext();
   const [renderPasswordModal, setRenderPasswordModal] = useState(false);
+
+  const hasOrderDrawer = router.asPath.indexOf('tab=Orders') < 0 && router.asPath.indexOf('tab=Send') < 0;
 
   useEffect(() => {
     setRenderPasswordModal(isPasswordModalNeeded());
@@ -51,7 +55,8 @@ export const PageBox = ({
 
               <div className={`w-full ${className}`}>
                 {children}
-                <OrderDrawer open={orderDrawerOpen} onClose={() => setOrderDrawerOpen(false)} />
+
+                {hasOrderDrawer && <OrderDrawer open={orderDrawerOpen} onClose={() => setOrderDrawerOpen(false)} />}
               </div>
 
               {/* allows scroll so items aren't at the bottom of the screen */}
