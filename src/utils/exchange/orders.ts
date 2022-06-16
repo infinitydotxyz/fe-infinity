@@ -434,7 +434,7 @@ function _orderHash(order: ChainOBOrder): BytesLike {
   const extraParams = order.extraParams;
 
   const constraintsHash = keccak256(
-    defaultAbiCoder.encode(['uint256', 'uint256', 'uint256', 'uint256', 'uint256', 'uint256', 'uint256'], constraints)
+    defaultAbiCoder.encode(['uint256', 'uint256', 'uint256', 'uint256', 'uint256', 'uint256'], constraints)
   );
 
   const nftsHash = _getNftsHash(order.nfts);
