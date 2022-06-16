@@ -36,6 +36,8 @@ export const ListNFTModal = ({ isOpen, onClose, collection, token }: Props) => {
       onOKButton={() => {
         console.log(collection);
         console.log(token);
+        alert('todo: List modal');
+        onClose();
       }}
     >
       <ToggleTab options={options} selected={selected} onChange={onChange} className="mb-6" />
