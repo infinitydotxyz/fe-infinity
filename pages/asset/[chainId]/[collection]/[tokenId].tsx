@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { Button, ShortAddress, PageBox, ReadMoreText, SVG, NextLink, Spinner, EthPrice } from 'src/components/common';
-import { BLANK_IMAGE_URL, useFetch } from 'src/utils';
+import { apiGet, BLANK_IMAGE_URL, useFetch } from 'src/utils';
 import { Token, Collection, Erc721Metadata } from '@infinityxyz/lib-frontend/types/core';
 import {
   TraitList,
@@ -10,9 +10,11 @@ import {
   PlaceBidModal,
   MakeOfferModal
 } from 'src/components/asset';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CollectionFeed } from 'src/components/feed/collection-feed';
+import { getCurrentChainOBOrderPrice } from 'src/utils/exchange/orders';
+import { utils } from 'ethers';
 
 const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
@@ -66,7 +68,7 @@ interface Props {
 }
 
 const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
-  const { checkSignedIn } = useAppContext();
+  const { checkSignedIn, user } = useAppContext();
   const { isLoading, error, token, collection } = useFetchAssetInfo(qchainId, qcollection, qtokenId);
 
   const [showCancelModal, setShowCancelModal] = useState(false);
@@ -74,6 +76,31 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const [showTransferModal, setShowTransferModal] = useState(false);
   const [showMakeOfferModal, setShowMakeOfferModal] = useState(false);
   const [showPlaceBidModal, setShowPlaceBidModal] = useState(false);
+  const [buyPriceEth, setBuyPriceEth] = useState('');
+
+  const listingOwner = token?.ordersSnippet?.listing?.orderItem?.makerAddress ?? '';
+  const isListingOwner = user?.address === listingOwner;
+
+  const fetchLatestListingPrice = async () => {
+    // first, fetch for the latest Listing order from the user who listed this NFT:
+    const { result, error } = await apiGet('/orders', {
+      query: {
+        limit: 50,
+        makerAddress: listingOwner
+      }
+    });
+    if (result?.data[0].signedOrder && !error) {
+      // console.log('result', result?.data[0].signedOrder, error);
+      const buyPriceEthBN = getCurrentChainOBOrderPrice(result?.data[0].signedOrder);
+      setBuyPriceEth(utils.formatEther(buyPriceEthBN));
+    }
+  };
+
+  useEffect(() => {
+    if (token?.ordersSnippet?.listing?.orderItem) {
+      fetchLatestListingPrice();
+    }
+  }, [token]);
 
   // todo: hack to handle changed opensea image url
   if (token?.image) {
@@ -115,14 +142,14 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
       ? `${tokenMetadata.name} - ${collection.metadata.name}`
       : tokenMetadata.name || collection.metadata.name || 'brrrr';
 
-  const onClickButton1 = () => {
+  const onClickBuy = () => {
     if (!checkSignedIn()) {
       return;
     }
     setShowPlaceBidModal(true);
   };
 
-  const onClickButton2 = () => {
+  const onClickMakeOffer = () => {
     if (!checkSignedIn()) {
       return;
     }
@@ -163,7 +190,9 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
       />
     </>
   );
-  const buyPriceEth = `${token.ordersSnippet?.listing?.orderItem?.endPriceEth ?? ''}`;
+  // const buyPriceEth = `${token.ordersSnippet?.listing?.orderItem?.endPriceEth ?? ''}`;
+  // const buyPriceEth = getCurrentChainOBOrderPrice(token.ordersSnippet);
+  // console.log('token', token);
 
   return (
     <PageBox title={assetName} showTitle={false} className="flex flex-col max-w-screen-2xl mt-4">
@@ -198,24 +227,47 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
             Token ID: <span className="ml-4 font-heading">#{token.tokenId}</span>
           </span>
 
-          <div className="md:-ml-1.5">
-            <div className="flex flex-col md:flex-row gap-4 my-4 md:my-6 lg:my-10 lg:mb-16">
-              {buyPriceEth && (
-                <Button variant="primary" size="large" onClick={onClickButton1}>
-                  <div className="flex">
-                    <span className="mr-4">Buy</span>
-                    <span className="font-heading">
-                      <EthPrice label={buyPriceEth} />
-                    </span>
-                  </div>
+          {isListingOwner ? (
+            // Listing owner's action buttons
+            <div className="md:-ml-1.5">
+              <div className="flex flex-col md:flex-row gap-4 my-4 md:my-6 lg:mt-10">
+                {buyPriceEth && (
+                  <Button variant="primary" size="large" onClick={() => alert('todo: Cancel')}>
+                    <div className="flex">
+                      <span className="mr-4">Cancel</span>
+                      <span className="font-heading">
+                        <EthPrice label={buyPriceEth} />
+                      </span>
+                    </div>
+                  </Button>
+                )}
+                <Button variant="outline" size="large" onClick={() => alert('todo: Relist')}>
+                  Relist
                 </Button>
-              )}
-              <Button variant="outline" size="large" onClick={onClickButton2}>
-                Make offer
-              </Button>
+              </div>
             </div>
-          </div>
-          <p className="font-body text-black mb-1">Description</p>
+          ) : (
+            // Other users' action buttons
+            <div className="md:-ml-1.5">
+              <div className="flex flex-col md:flex-row gap-4 my-4 md:my-6 lg:mt-10">
+                {buyPriceEth && (
+                  <Button variant="primary" size="large" onClick={onClickBuy}>
+                    <div className="flex">
+                      <span className="mr-4">Buy</span>
+                      <span className="font-heading">
+                        <EthPrice label={buyPriceEth} />
+                      </span>
+                    </div>
+                  </Button>
+                )}
+                <Button variant="outline" size="large" onClick={onClickMakeOffer}>
+                  Make offer
+                </Button>
+              </div>
+            </div>
+          )}
+
+          <p className="font-body text-black mb-1 lg:mt-10">Description</p>
           <div>
             <ReadMoreText
               text={collection.metadata.description || tokenMetadata.description}
