@@ -31,7 +31,8 @@ export const CollectionCard = ({ collection, onButtonClick, buttonName, routerQu
   return (
     <div
       className={`w-full mx-auto sm:mx-0 bg-theme-light-100
-      border-[0.5px] border-black rounded-3xl overflow-hidden cursor-pointer`}
+      p-2 shadow-[0_10px_10px_4px_rgba(0,0,0,0.1)] hover:shadow-[0_10px_10px_4px_rgba(0,0,0,0.2)]
+      rounded-3xl overflow-hidden cursor-pointer`}
     >
       <a
         href={`/collection/${collection.slug}${routerQuery ? `?${routerQuery}` : ''}`}
@@ -40,7 +41,7 @@ export const CollectionCard = ({ collection, onButtonClick, buttonName, routerQu
         <div style={{ height: '200px' }}>
           <img
             src={avatarUrl}
-            className="w-full"
+            className="w-full rounded-3xl"
             alt="collection image url"
             style={{ objectFit: 'cover', transition: 'opacity 400ms ease 0s', height: '100%' }}
           />
