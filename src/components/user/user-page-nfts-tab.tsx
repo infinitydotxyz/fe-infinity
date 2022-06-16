@@ -5,6 +5,7 @@ import { useOrderContext } from 'src/utils/context/OrderContext';
 import { GalleryBox } from '../gallery/gallery-box';
 import { TransferDrawer } from '../market/order-drawer/transfer-drawer';
 import { UserProfileDto } from './user-profile-dto';
+import { useRouter } from 'next/router';
 
 type Props = {
   userInfo: UserProfileDto;
@@ -12,6 +13,7 @@ type Props = {
 };
 
 export const UserPageNftsTab = ({ userInfo, forTransfers }: Props) => {
+  const router = useRouter();
   const { user } = useAppContext();
   const {
     addCartItem,
@@ -28,7 +30,10 @@ export const UserPageNftsTab = ({ userInfo, forTransfers }: Props) => {
   const [nftsForTransfer, setNftsForTransfer] = useState<ERC721CardData[]>([]);
 
   useEffect(() => {
-    setShowTransferDrawer(true);
+    const hasCustomDrawer = router.asPath.indexOf('tab=Send') >= 0;
+    if (hasCustomDrawer && orderDrawerOpen) {
+      setShowTransferDrawer(true);
+    }
   }, [orderDrawerOpen]);
 
   useEffect(() => {
@@ -103,6 +108,7 @@ export const UserPageNftsTab = ({ userInfo, forTransfers }: Props) => {
                             setNftsForTransfer(arr);
                             if (arr.length === 0) {
                               setShowTransferDrawer(false);
+                              setOrderDrawerOpen(false);
                             }
                           } else {
                             const arr = [...nftsForTransfer, data];
@@ -145,13 +151,17 @@ export const UserPageNftsTab = ({ userInfo, forTransfers }: Props) => {
 
       <TransferDrawer
         open={showTransferDrawer}
-        onClose={() => setShowTransferDrawer(false)}
+        onClose={() => {
+          setShowTransferDrawer(false);
+          setOrderDrawerOpen(false);
+        }}
         nftsForTransfer={nftsForTransfer}
         onClickRemove={(removingItem) => {
           const arr = nftsForTransfer.filter((o: ERC721CardData) => o.id !== removingItem.id);
           setNftsForTransfer(arr);
           if (arr.length === 0) {
             setShowTransferDrawer(false);
+            setOrderDrawerOpen(false);
           }
         }}
       />

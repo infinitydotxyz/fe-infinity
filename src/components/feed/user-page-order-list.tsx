@@ -10,6 +10,7 @@ import { CancelDrawer } from 'src/components/market/order-drawer/cancel-drawer';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { UserOrderFilter, UserProfileOrderFilterPanel } from '../filter/user-profile-order-filter-panel';
 import { useOrderContext } from 'src/utils/context/OrderContext';
+import { useRouter } from 'next/router';
 
 type Query = {
   limit: number;
@@ -32,7 +33,8 @@ interface UserPageOrderListProps {
 }
 
 export const UserPageOrderList = ({ userInfo, className }: UserPageOrderListProps) => {
-  const { orderDrawerOpen, setCustomDrawerItems } = useOrderContext();
+  const router = useRouter();
+  const { orderDrawerOpen, setOrderDrawerOpen, setCustomDrawerItems } = useOrderContext();
   // const [filter, setFilter] = useState<FeedFilter>({ userAddress, types });
   // const [filteringTypes, setFilteringTypes] = useState<FeedEventType[]>([]);
   const [data, setData] = useState<SignedOBOrder[]>([]);
@@ -45,7 +47,10 @@ export const UserPageOrderList = ({ userInfo, className }: UserPageOrderListProp
   const [selectedOrders, setSelectedOrders] = useState<SignedOBOrder[]>([]);
 
   useEffect(() => {
-    setShowCancelDrawer(true);
+    const hasCustomDrawer = router.asPath.indexOf('tab=Orders') >= 0;
+    if (hasCustomDrawer && orderDrawerOpen) {
+      setShowCancelDrawer(true);
+    }
   }, [orderDrawerOpen]);
 
   useEffect(() => {
@@ -171,6 +176,7 @@ export const UserPageOrderList = ({ userInfo, className }: UserPageOrderListProp
                     setSelectedOrders(arr);
                     if (arr.length === 0) {
                       setShowCancelDrawer(false);
+                      setOrderDrawerOpen(false);
                     }
                   }
                 }}
@@ -191,12 +197,16 @@ export const UserPageOrderList = ({ userInfo, className }: UserPageOrderListProp
       <CancelDrawer
         orders={selectedOrders}
         open={showCancelDrawer}
-        onClose={() => setShowCancelDrawer(false)}
+        onClose={() => {
+          setShowCancelDrawer(false);
+          setOrderDrawerOpen(false);
+        }}
         onClickRemove={(removingOrder) => {
           const arr = selectedOrders.filter((o) => o.id !== removingOrder.id);
           setSelectedOrders(arr);
           if (arr.length === 0) {
             setShowCancelDrawer(false);
+            setOrderDrawerOpen(false);
           }
         }}
       />

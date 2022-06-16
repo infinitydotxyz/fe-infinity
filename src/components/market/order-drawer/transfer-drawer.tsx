@@ -26,7 +26,7 @@ export const TransferDrawer = ({ open, onClose, nftsForTransfer, onClickRemove }
           <ul className="overflow-y-auto content-between px-12">
             {nftsForTransfer.map((cardData: ERC721CardData) => {
               return (
-                <li className="py-3 flex">
+                <li key={cardData.id} className="py-3 flex">
                   <div className="w-full flex">
                     <div>
                       <NftImage

@@ -25,7 +25,7 @@ export const CancelDrawer = ({ open, onClose, orders, onClickRemove }: Props) =>
           <ul className="overflow-y-auto content-between px-12">
             {orders.map((order: SignedOBOrder) => {
               return (
-                <li className="py-3 flex">
+                <li key={order.id} className="py-3 flex">
                   {/* <div>
                     <NftImage
                       className="w-20 h-20 rounded-3xl"
