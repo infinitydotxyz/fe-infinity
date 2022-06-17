@@ -5,7 +5,14 @@ import { MaxUint256 } from '@ethersproject/constants';
 import { Contract } from '@ethersproject/contracts';
 import { JsonRpcSigner } from '@ethersproject/providers';
 import { parseEther } from '@ethersproject/units';
-import { ChainNFTs, ChainOBOrder, OBOrder, OBOrderItem, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import {
+  ChainNFTs,
+  ChainOBOrder,
+  FirestoreOrderItem,
+  OBOrder,
+  OBOrderItem,
+  SignedOBOrder
+} from '@infinityxyz/lib-frontend/types/core';
 import {
   getCurrentOBOrderPrice,
   getExchangeAddress,
@@ -421,6 +428,31 @@ export async function canTakeOrders(
   const makerOrderHash = _orderHash(makerOrder);
   const result = await infinityExchange.verifyTakeOrders(makerOrderHash, makerOrder, takerOrder);
   return result;
+}
+
+export function getOBOrderFromFirestoreOrderItem(firestoreOrderItem: FirestoreOrderItem | null | undefined) {
+  const ord: OBOrder = {
+    id: firestoreOrderItem?.id ?? '',
+    chainId: firestoreOrderItem?.chainId ?? '',
+    isSellOrder: firestoreOrderItem?.isSellOrder ?? false,
+    numItems: firestoreOrderItem?.numItems ?? 0,
+    makerUsername: firestoreOrderItem?.makerAddress ?? '',
+    makerAddress: firestoreOrderItem?.makerAddress ?? '',
+    startPriceEth: firestoreOrderItem?.startPriceEth ?? 0,
+    endPriceEth: firestoreOrderItem?.endPriceEth ?? 0,
+    startTimeMs: firestoreOrderItem?.startTimeMs ?? 0,
+    endTimeMs: firestoreOrderItem?.endTimeMs ?? 0,
+    nonce: '',
+    nfts: [],
+    execParams: {
+      currencyAddress: '',
+      complicationAddress: ''
+    },
+    extraParams: {
+      buyer: ''
+    }
+  };
+  return ord;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
