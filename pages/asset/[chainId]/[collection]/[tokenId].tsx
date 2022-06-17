@@ -72,7 +72,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const { checkSignedIn, user } = useAppContext();
   const { isLoading, error, token, collection } = useFetchAssetInfo(qchainId, qcollection, qtokenId);
 
-  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showCancelModal, setShowCancelModal] = useState(true);
   const [showListNFTModal, setShowListNFTModal] = useState(false);
   const [showTransferModal, setShowTransferModal] = useState(false);
   const [showMakeOfferModal, setShowMakeOfferModal] = useState(false);
@@ -142,6 +142,13 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
       return;
     }
     setShowMakeOfferModal(true);
+  };
+
+  const onClickCancel = () => {
+    if (!checkSignedIn()) {
+      return;
+    }
+    setShowCancelModal(true);
   };
 
   const onClickTransfer = () => {
@@ -242,7 +249,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
             <div className="md:-ml-1.5">
               <div className="flex flex-col md:flex-row gap-4 my-4 md:my-6 lg:mt-10">
                 {buyPriceEth && (
-                  <Button variant="primary" size="large" onClick={() => alert('todo: Cancel')}>
+                  <Button variant="primary" size="large" onClick={onClickCancel}>
                     <div className="flex">
                       <span className="mr-4">Cancel</span>
                       <span className="font-heading">

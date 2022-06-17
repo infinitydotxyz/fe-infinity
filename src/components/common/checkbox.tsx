@@ -8,13 +8,22 @@ interface Props {
   boxOnLeft?: boolean;
   onChange: (checked: boolean) => void;
   className?: string;
+  labelClassName?: string;
   disabled?: boolean;
 }
 
-export const Checkbox = ({ label, boxOnLeft = true, checked, onChange, disabled = false, className = '' }: Props) => {
+export const Checkbox = ({
+  label,
+  boxOnLeft = true,
+  checked,
+  onChange,
+  disabled = false,
+  className = '',
+  labelClassName = ''
+}: Props) => {
   const labelClass = boxOnLeft ? 'ml-4' : '';
   const checkLabel = (
-    <div className={twMerge('text-theme-light-800 font-heading select-none', labelClass)}>{label}</div>
+    <div className={twMerge('text-theme-light-800 font-heading select-none', labelClass, labelClassName)}>{label}</div>
   );
 
   return (

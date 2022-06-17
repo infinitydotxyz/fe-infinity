@@ -31,12 +31,12 @@ export const ListNFTModal = ({ isOpen, onClose, collection, token }: Props) => {
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      okButton="List"
-      title="List NFT"
+      okButton="Relist"
+      title="Relist NFT"
       onOKButton={() => {
         console.log(collection);
         console.log(token);
-        alert('todo: List modal');
+        alert('todo: Relist modal');
         onClose();
       }}
     >
