@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { Button, ShortAddress, PageBox, ReadMoreText, SVG, NextLink, Spinner, EthPrice } from 'src/components/common';
-import { apiGet, BLANK_IMAGE_URL, useFetch } from 'src/utils';
-import { Token, Collection, Erc721Metadata } from '@infinityxyz/lib-frontend/types/core';
+import { BLANK_IMAGE_URL, useFetch } from 'src/utils';
+import { Token, Collection, Erc721Metadata, OBOrder } from '@infinityxyz/lib-frontend/types/core';
 import {
   TraitList,
   ListNFTModal,
@@ -13,8 +13,9 @@ import {
 import { useEffect, useState } from 'react';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CollectionFeed } from 'src/components/feed/collection-feed';
-import { getCurrentChainOBOrderPrice } from 'src/utils/exchange/orders';
+import { getOBOrderFromFirestoreOrderItem } from 'src/utils/exchange/orders';
 import { utils } from 'ethers';
+import { getCurrentOBOrderPrice } from '@infinityxyz/lib-frontend/utils';
 
 const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
@@ -81,24 +82,11 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const listingOwner = token?.ordersSnippet?.listing?.orderItem?.makerAddress ?? '';
   const isListingOwner = user?.address === listingOwner;
 
-  const fetchLatestListingPrice = async () => {
-    // first, fetch for the latest Listing order from the user who listed this NFT:
-    const { result, error } = await apiGet('/orders', {
-      query: {
-        limit: 50,
-        makerAddress: listingOwner
-      }
-    });
-    if (result?.data[0].signedOrder && !error) {
-      // console.log('result', result?.data[0].signedOrder, error);
-      const buyPriceEthBN = getCurrentChainOBOrderPrice(result?.data[0].signedOrder);
-      setBuyPriceEth(utils.formatEther(buyPriceEthBN));
-    }
-  };
-
   useEffect(() => {
     if (token?.ordersSnippet?.listing?.orderItem) {
-      fetchLatestListingPrice();
+      const obOrder: OBOrder = getOBOrderFromFirestoreOrderItem(token?.ordersSnippet?.listing?.orderItem);
+      const price = getCurrentOBOrderPrice(obOrder);
+      setBuyPriceEth(utils.formatEther(price));
     }
   }, [token]);
 
@@ -154,6 +142,13 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
       return;
     }
     setShowMakeOfferModal(true);
+  };
+
+  const onClickCancel = () => {
+    if (!checkSignedIn()) {
+      return;
+    }
+    setShowCancelModal(true);
   };
 
   const onClickTransfer = () => {
@@ -254,7 +249,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
             <div className="md:-ml-1.5">
               <div className="flex flex-col md:flex-row gap-4 my-4 md:my-6 lg:mt-10">
                 {buyPriceEth && (
-                  <Button variant="primary" size="large" onClick={() => alert('todo: Cancel')}>
+                  <Button variant="primary" size="large" onClick={onClickCancel}>
                     <div className="flex">
                       <span className="mr-4">Cancel</span>
                       <span className="font-heading">

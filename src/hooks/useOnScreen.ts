@@ -20,7 +20,13 @@ export function useOnScreen(ref: any, rootMargin = '0px') {
       observer.observe(ref.current);
     }
     return () => {
-      observer.unobserve(ref.current);
+      try {
+        if (ref?.current) {
+          observer.unobserve(ref.current);
+        }
+      } catch (err) {
+        console.error('observer.unobserve error', err);
+      }
     };
   }, []); // Empty array ensures that effect is only run on mount and unmount
 
