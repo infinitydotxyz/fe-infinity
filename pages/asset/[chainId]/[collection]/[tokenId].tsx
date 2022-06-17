@@ -82,28 +82,10 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const listingOwner = token?.ordersSnippet?.listing?.orderItem?.makerAddress ?? '';
   const isListingOwner = user?.address === listingOwner;
 
-  // const fetchLatestListingPrice = async () => {
-  //   // first, fetch for the latest Listing order from the user who listed this NFT:
-  //   const { result, error } = await apiGet('/orders', {
-  //     query: {
-  //       limit: 50,
-  //       makerAddress: listingOwner
-  //     }
-  //   });
-  //   if (result?.data[0].signedOrder && !error) {
-  //     // console.log('result', result?.data[0].signedOrder, error);
-  //     const buyPriceEthBN = getCurrentChainOBOrderPrice(result?.data[0].signedOrder);
-  //     setBuyPriceEth(utils.formatEther(buyPriceEthBN));
-  //   }
-  // };
   useEffect(() => {
-    // if (token?.ordersSnippet?.listing?.orderItem) {
-    //   fetchLatestListingPrice();
-    // }
     if (token?.ordersSnippet?.listing?.orderItem) {
       const obOrder: OBOrder = getOBOrderFromFirestoreOrderItem(token?.ordersSnippet?.listing?.orderItem);
       const price = getCurrentOBOrderPrice(obOrder);
-      // console.log('price', utils.formatEther(price));
       setBuyPriceEth(utils.formatEther(price));
     }
   }, [token]);
