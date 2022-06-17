@@ -72,7 +72,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const { checkSignedIn, user } = useAppContext();
   const { isLoading, error, token, collection } = useFetchAssetInfo(qchainId, qcollection, qtokenId);
 
-  const [showCancelModal, setShowCancelModal] = useState(true);
+  const [showCancelModal, setShowCancelModal] = useState(false);
   const [showListNFTModal, setShowListNFTModal] = useState(false);
   const [showTransferModal, setShowTransferModal] = useState(false);
   const [showMakeOfferModal, setShowMakeOfferModal] = useState(false);
