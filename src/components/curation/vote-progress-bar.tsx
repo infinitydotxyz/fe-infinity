@@ -3,12 +3,12 @@ import { ProgressBar } from '../common/progress-bar';
 
 export type VoteProgressBarProps = {
   /**
-   * Total number of user votes.
+   * Total number of votes on the collection.
    */
   totalVotes: number;
 
   /**
-   * Total number of 'my' votes.
+   * The user's number of votes.
    */
   votes: number;
 };

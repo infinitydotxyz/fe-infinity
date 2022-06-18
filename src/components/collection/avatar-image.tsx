@@ -14,5 +14,5 @@ export interface Props {
 }
 
 export const AvatarImage = ({ url, onClick, className, alt, size = 'medium' }: Props) => {
-  return <img src={url} alt={alt} className={twMerge(sizes[size], className)} onClick={onClick} />;
+  return <img src={url} alt={alt} className={twMerge('rounded-[50%]', sizes[size], className)} onClick={onClick} />;
 };

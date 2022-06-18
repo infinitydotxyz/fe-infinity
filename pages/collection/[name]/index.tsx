@@ -18,11 +18,13 @@ import { OrderbookContainer } from 'src/components/market/orderbook-list';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { FeesAprStats, FeesAccruedStats } from 'src/components/curation/statistics';
 import { VoteProgressBar } from 'src/components/curation/vote-progress-bar';
+import { VoteModal } from 'src/components/curation/vote-modal';
 
 const CollectionPage = () => {
   const { checkSignedIn } = useAppContext();
   const { addCartItem, removeCartItem, ordersInCart, cartItems, addOrderToCart, updateOrders } = useOrderContext();
   const [isBuyClicked, setIsBuyClicked] = useState(false);
+  const [isStakeModalOpen, setIsStakeModalOpen] = useState(false);
   const router = useRouter();
   const { options, onChange, selected } = useToggleTab(
     ['NFT', 'Activity', 'Orderbook'],
@@ -116,7 +118,7 @@ const CollectionPage = () => {
     <PageBox showTitle={false} title={collection.metadata?.name ?? ''}>
       <div className="flex flex-col mt-10">
         <span>
-          <AvatarImage url={collection.metadata.profileImage} className="mb-2 rounded-[50%]" />
+          <AvatarImage url={collection.metadata.profileImage} className="mb-2" />
 
           <div className="flex gap-3 items-center">
             <div className="text-6xl">{collection.metadata?.name}</div>
@@ -226,8 +228,9 @@ const CollectionPage = () => {
 
             <div className="flex flex-row space-x-2 relative">
               <VoteProgressBar votes={80} totalVotes={100} />
-              <Button>Vote</Button>
+              <Button onClick={() => setIsStakeModalOpen(true)}>Vote</Button>
             </div>
+            <VoteModal collection={collection} isOpen={isStakeModalOpen} onClose={() => setIsStakeModalOpen(false)} />
           </section>
 
           <ToggleTab

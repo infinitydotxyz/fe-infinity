@@ -12,7 +12,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({ children, className, p
     <div className={twMerge('bg-gray-100 rounded-3xl w-full relative', className)}>
       <div
         className={clsx('bg-[#92DEFF] rounded-3xl text-sm font-normal py-6', { 'rounded-r-none': percentage < 100 })}
-        style={{ width: `${percentage}%` }}
+        style={{ maxWidth: `${percentage}%` }}
       ></div>
 
       <div className="absolute top-3 left-4 z-10">{children}</div>
