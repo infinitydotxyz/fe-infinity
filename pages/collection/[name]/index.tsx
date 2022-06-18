@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { BaseCollection, ERC721CardData, CollectionStats } from '@infinityxyz/lib-frontend/types/core';
-import { ToggleTab, PageBox, useToggleTab, SVG, EthPrice } from 'src/components/common';
+import { ToggleTab, PageBox, useToggleTab, SVG, EthPrice, Heading, Button } from 'src/components/common';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { useFetch } from 'src/utils/apiUtils';
 import { CollectionFeed } from 'src/components/feed/collection-feed';
@@ -16,6 +16,8 @@ import ContentLoader from 'react-content-loader';
 import { iconButtonStyle } from 'src/utils/ui-constants';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
 import { useAppContext } from 'src/utils/context/AppContext';
+import { FeesAprStats, FeesAccruedStats } from 'src/components/curation/statistics';
+import { VoteProgressBar } from 'src/components/curation/vote-progress-bar';
 
 const CollectionPage = () => {
   const { checkSignedIn } = useAppContext();
@@ -213,6 +215,20 @@ const CollectionPage = () => {
               </tr>
             </tbody>
           </table>
+
+          <section className="mt-8 space-y-4 md:w-1/2">
+            <Heading as="h2" className="font-body text-4xl">
+              Curate collection
+            </Heading>
+            {/* TODO: load user's voting stats from BE */}
+            <FeesAprStats value={168} className="mr-2" />
+            <FeesAccruedStats value={168} />
+
+            <div className="flex flex-row space-x-2 relative">
+              <VoteProgressBar votes={80} totalVotes={100} />
+              <Button>Vote</Button>
+            </div>
+          </section>
 
           <ToggleTab
             className="mt-12 font-heading pointer-events-auto"
