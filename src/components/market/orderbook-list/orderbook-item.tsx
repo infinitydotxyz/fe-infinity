@@ -33,8 +33,8 @@ export const OrderbookItem = ({ title, content, nameItem, order }: Props4): JSX.
             token={token}
           />
         );
-        // multiple items from one collection
       } else {
+        // multiple items from one collection
         return (
           <SingleCollectionCell
             onClickTitle={() => {
@@ -108,7 +108,7 @@ const SingleCollectionCell = ({
   return (
     <div className="flex gap-2 items-center">
       <div className="flex justify-center shrink-0 h-12 w-12">
-        <span className="inline-block">
+        <span className="inline-block relative">
           {image ? (
             <img className="h-12 w-12 rounded-full" src={image} alt="" />
           ) : (

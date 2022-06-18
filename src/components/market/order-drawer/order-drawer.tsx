@@ -247,23 +247,25 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
 
   return (
     <>
-      <Modal
-        wide={false}
-        isOpen={showSuccessModal}
-        onClose={() => setShowSuccessModal(false)}
-        cancelButton="" // hides cancel
-        okButton="Done"
-        title={
-          <div className="w-full flex justify-center">
-            <AiOutlineCheckCircle className="h-12 w-12" />
+      {showSuccessModal && (
+        <Modal
+          wide={false}
+          isOpen={showSuccessModal}
+          onClose={() => setShowSuccessModal(false)}
+          cancelButton="" // hides cancel
+          okButton="Done"
+          title={
+            <div className="w-full flex justify-center">
+              <AiOutlineCheckCircle className="h-12 w-12" />
+            </div>
+          }
+        >
+          <div className="flex flex-col text-center">
+            <div className="font-bold text-xlg">Thank you,</div>
+            <div className="font-bold mb-6 text-xlg">Order submitted</div>
           </div>
-        }
-      >
-        <div className="flex flex-col text-center">
-          <div className="font-bold text-xlg">Thank you,</div>
-          <div className="font-bold mb-6 text-xlg">Order submitted</div>
-        </div>
-      </Modal>
+        </Modal>
+      )}
 
       <Drawer
         open={open}
