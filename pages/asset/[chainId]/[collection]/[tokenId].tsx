@@ -175,6 +175,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
           onClose={() => setShowLowerPriceModal(false)}
           collection={collection}
           token={token}
+          buyPriceEth={buyPriceEth}
         />
       )}
       {showTransferModal && (
