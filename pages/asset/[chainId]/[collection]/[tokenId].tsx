@@ -2,20 +2,14 @@ import { useRouter } from 'next/router';
 import { Button, ShortAddress, PageBox, ReadMoreText, SVG, NextLink, Spinner, EthPrice } from 'src/components/common';
 import { BLANK_IMAGE_URL, useFetch } from 'src/utils';
 import { Token, Collection, Erc721Metadata, OBOrder } from '@infinityxyz/lib-frontend/types/core';
-import {
-  TraitList,
-  ListNFTModal,
-  CancelModal,
-  TransferNFTModal,
-  PlaceBidModal,
-  MakeOfferModal
-} from 'src/components/asset';
+import { TraitList, CancelModal, TransferNFTModal, PlaceBidModal, MakeOfferModal } from 'src/components/asset';
 import { useEffect, useState } from 'react';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CollectionFeed } from 'src/components/feed/collection-feed';
 import { getOBOrderFromFirestoreOrderItem } from 'src/utils/exchange/orders';
 import { utils } from 'ethers';
 import { getCurrentOBOrderPrice } from '@infinityxyz/lib-frontend/utils';
+import { LowerPriceModal } from 'src/components/asset/modals/lower-price-modal';
 
 const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
@@ -73,7 +67,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const { isLoading, error, token, collection } = useFetchAssetInfo(qchainId, qcollection, qtokenId);
 
   const [showCancelModal, setShowCancelModal] = useState(false);
-  const [showListNFTModal, setShowListNFTModal] = useState(false);
+  const [showLowerPriceModal, setShowLowerPriceModal] = useState(false);
   const [showTransferModal, setShowTransferModal] = useState(false);
   const [showMakeOfferModal, setShowMakeOfferModal] = useState(false);
   const [showPlaceBidModal, setShowPlaceBidModal] = useState(false);
@@ -158,11 +152,11 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
     setShowTransferModal(true);
   };
 
-  const onClickRelist = () => {
+  const onClickLowerPrice = () => {
     if (!checkSignedIn()) {
       return;
     }
-    setShowListNFTModal(true);
+    setShowLowerPriceModal(true);
   };
 
   const modals = (
@@ -175,10 +169,10 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
           token={token}
         />
       )}
-      {showListNFTModal && (
-        <ListNFTModal
-          isOpen={showListNFTModal}
-          onClose={() => setShowListNFTModal(false)}
+      {showLowerPriceModal && (
+        <LowerPriceModal
+          isOpen={showLowerPriceModal}
+          onClose={() => setShowLowerPriceModal(false)}
           collection={collection}
           token={token}
         />
@@ -258,8 +252,8 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
                     </div>
                   </Button>
                 )}
-                <Button variant="outline" size="large" onClick={onClickRelist}>
-                  Relist
+                <Button variant="outline" size="large" onClick={onClickLowerPrice}>
+                  Lower Price
                 </Button>
                 <Button variant="outline" size="large" onClick={onClickTransfer}>
                   Transfer

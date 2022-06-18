@@ -1,5 +1,6 @@
+import { useEffect, useState } from 'react';
 import { FeedEventType } from '@infinityxyz/lib-frontend/types/core/feed';
-import { useState } from 'react';
+import { apiGet } from 'src/utils';
 import { FeedFilter, fetchMoreEvents } from 'src/utils/firestore/firestoreUtils';
 import { ScrollLoader } from '../common';
 import { ActivityItem } from './activity-item';
@@ -28,6 +29,17 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
   if (forActivity && !collectionAddress) {
     return null; // require collectionAddress
   }
+
+  const fetchActivity = async () => {
+    const { result } = await apiGet(
+      `/collections/1:0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/nfts/8880/activity?eventType=sale&limit=50&eventType=listing&eventType=offer`
+    );
+    console.log('result', result);
+  };
+
+  useEffect(() => {
+    fetchActivity();
+  }, []);
 
   // const getEvents = () => {
   //   try {
