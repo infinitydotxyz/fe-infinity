@@ -1,6 +1,7 @@
 import { Collection, Token } from '@infinityxyz/lib-frontend/types/core';
 import React, { useState } from 'react';
 import { TextInputBox, Modal, SimpleTable, SimpleTableItem } from 'src/components/common';
+import { INFINITY_FEE_PCT, INFINITY_ROYALTY_PCT } from 'src/utils';
 
 interface Props {
   isOpen: boolean;
@@ -14,8 +15,8 @@ export const LowerPriceModal = ({ isOpen, onClose, collection, token }: Props) =
   // TODO: do something with this ending price?
 
   const tableItems: SimpleTableItem[] = [];
-  tableItems.push({ title: 'Fee', value: <div className="font-bold">2.5%</div> });
-  tableItems.push({ title: 'Royalty', value: <div className="font-bold">0%</div> });
+  tableItems.push({ title: 'Fee', value: <div className="font-bold">{INFINITY_FEE_PCT}%</div> });
+  tableItems.push({ title: 'Royalty', value: <div className="font-bold">{INFINITY_ROYALTY_PCT}%</div> });
 
   return (
     <Modal

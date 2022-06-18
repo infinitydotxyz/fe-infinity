@@ -3,6 +3,9 @@ export const SITE_HOST = 'http://localhost:3000';
 export const DISCORD_BOT_INVITE_URL =
   'https://discord.com/api/oauth2/authorize?client_id=956292440778743838&permissions=1024&scope=bot%20applications.commands';
 
+export const INFINITY_FEE_PCT = 2.5;
+export const INFINITY_ROYALTY_PCT = 0;
+
 // not sure why there are two of these.
 export const ITEMS_PER_PAGE = 30;
 export const DEFAULT_LIMIT = 24;
