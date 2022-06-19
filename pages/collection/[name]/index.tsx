@@ -19,12 +19,14 @@ import { useAppContext } from 'src/utils/context/AppContext';
 import { FeesAprStats, FeesAccruedStats } from 'src/components/curation/statistics';
 import { VoteProgressBar } from 'src/components/curation/vote-progress-bar';
 import { VoteModal } from 'src/components/curation/vote-modal';
+import { useTokenVotes } from 'src/hooks/contract/token/useTokenVotes';
 
 const CollectionPage = () => {
   const { checkSignedIn } = useAppContext();
   const { addCartItem, removeCartItem, ordersInCart, cartItems, addOrderToCart, updateOrders } = useOrderContext();
   const [isBuyClicked, setIsBuyClicked] = useState(false);
   const [isStakeModalOpen, setIsStakeModalOpen] = useState(false);
+  const { votes } = useTokenVotes();
   const router = useRouter();
   const { options, onChange, selected } = useToggleTab(
     ['NFT', 'Activity', 'Orderbook'],
@@ -227,7 +229,7 @@ const CollectionPage = () => {
             <FeesAccruedStats value={168} />
 
             <div className="flex flex-row space-x-2 relative">
-              <VoteProgressBar votes={80} totalVotes={100} />
+              <VoteProgressBar votes={votes} totalVotes={'100'} />
               <Button onClick={() => setIsStakeModalOpen(true)}>Vote</Button>
             </div>
             <VoteModal collection={collection} isOpen={isStakeModalOpen} onClose={() => setIsStakeModalOpen(false)} />

@@ -48,7 +48,7 @@ export const StakeTokensModal = ({ onClose }: Props) => {
               )}
             />
           </div>
-          <div className="text-right mr-2 mt-1 text-theme-gray-300">Balance: 0</div>
+          <div className="text-right mr-2 mt-1 text-theme-gray-300">Balance: {0}</div>
 
           <div className="text-lg mt-10 flex justify-between">
             <span>Voting power</span>
