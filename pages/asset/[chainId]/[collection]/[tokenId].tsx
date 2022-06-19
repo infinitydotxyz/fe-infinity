@@ -21,6 +21,7 @@ import { getOBOrderFromFirestoreOrderItem } from 'src/utils/exchange/orders';
 import { utils } from 'ethers';
 import { getCurrentOBOrderPrice } from '@infinityxyz/lib-frontend/utils';
 import { LowerPriceModal } from 'src/components/asset/modals/lower-price-modal';
+import { OrderbookContainer } from 'src/components/market/orderbook-list';
 
 const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
@@ -310,26 +311,28 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
 
       {/* <ActivityList chainId={collection.chainId} collectionAddress={collection.address} tokenId={token.tokenId} /> */}
 
-      <ToggleTab
-        className="mt-12 font-heading pointer-events-auto"
-        tabWidth="150px"
-        options={options}
-        selected={selected}
-        onChange={onChange}
-      />
+      <div className="relative min-h-[1024px]">
+        <ToggleTab
+          className="flex space-x-2 items-center relative max-w-xl top-[65px] pb-4 lg:pb-0"
+          tabWidth="150px"
+          options={options}
+          selected={selected}
+          onChange={onChange}
+        />
 
-      {selected === 'Activity' && (
-        <div className="mt-4">
-          <h3 className="mt-8 mb-4 font-bold font-body">Activity</h3>
-          <CollectionFeed collectionAddress={collection.address} tokenId={token.tokenId} forActivity={true} />
-        </div>
-      )}
+        {selected === 'Activity' && (
+          <div className="mt-4">
+            <h3 className="mt-8 mb-4 font-bold font-body">Activity</h3>
+            <CollectionFeed collectionAddress={collection.address} tokenId={token.tokenId} forActivity={true} />
+          </div>
+        )}
 
-      {selected === 'Orders' && (
-        <div className="mt-4">
-          <h3 className="mt-8 mb-4 font-bold font-body">Orders</h3>
-        </div>
-      )}
+        {selected === 'Orders' && (
+          <div className="mt-4">
+            <OrderbookContainer collectionId={token.collectionAddress} />
+          </div>
+        )}
+      </div>
 
       {modals}
     </PageBox>
