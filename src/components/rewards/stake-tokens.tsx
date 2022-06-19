@@ -1,4 +1,7 @@
+import { utils } from 'ethers';
 import React, { useState } from 'react';
+import { useStakerStake } from 'src/hooks/contract/staker/useStakerStake';
+import { useTokenBalance } from 'src/hooks/contract/token/useTokenBalance';
 import { Button } from '../common/button';
 import { TextInputBox } from '../common/input-box';
 import { Modal } from '../common/modal';
@@ -9,6 +12,9 @@ interface Props {
 
 export const StakeTokensModal = ({ onClose }: Props) => {
   const [sliderValue, setSliderValue] = useState(0);
+  const [value, setValue] = useState(0);
+  const { balance } = useTokenBalance();
+  const { stake } = useStakerStake();
 
   return (
     <Modal isOpen={true} onClose={onClose} showActionButtons={false} showCloseIcon={true}>
@@ -25,7 +31,7 @@ export const StakeTokensModal = ({ onClose }: Props) => {
               className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
             />
             <div className="flex justify-between mt-1">
-              <div>Lock for: 0 months</div>
+              <div>Lock for: {sliderValue} months</div>
               <div className="flex">
                 <div>Weight: </div>
                 <div className="w-8 text-right ml-1">{sliderValue / 100}</div>
@@ -36,19 +42,20 @@ export const StakeTokensModal = ({ onClose }: Props) => {
           <div className="mt-10">
             <TextInputBox
               label=""
-              value={''}
+              value={value?.toString()}
+              bindValue
               type="text"
-              onChange={() => console.log}
+              onChange={(v) => !isNaN(+v) && +v <= balance && setValue(+v)}
               placeholder="Enter amount to stake"
               isFullWidth
               renderRightIcon={() => (
-                <Button variant="gray" className="rounded-md py-1">
+                <Button variant="gray" className="rounded-md py-1" onClick={() => setValue(balance)}>
                   Max
                 </Button>
               )}
             />
           </div>
-          <div className="text-right mr-2 mt-1 text-theme-gray-300">Balance: {0}</div>
+          <div className="text-right mr-2 mt-1 text-theme-gray-300">Balance: {balance}</div>
 
           <div className="text-lg mt-10 flex justify-between">
             <span>Voting power</span>
@@ -61,7 +68,15 @@ export const StakeTokensModal = ({ onClose }: Props) => {
           </div>
         </div>
 
-        <Button className="w-full py-3 mt-12">Stake</Button>
+        <Button
+          className="w-full py-3 mt-12"
+          onClick={async () => {
+            await stake(+utils.parseEther(value.toString()).toString(), sliderValue);
+            onClose();
+          }}
+        >
+          Stake
+        </Button>
       </div>
     </Modal>
   );
