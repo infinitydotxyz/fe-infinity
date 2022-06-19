@@ -565,7 +565,7 @@ export const Analytics = () => {
             {stats?.map((stat, idx) => {
               return (
                 <div key={idx + '_' + stat.data.collectionAddress} className="mb-2">
-                  <div className="w-full h-full p-8 overflow-hidden rounded-3xl bg-gray-100 grid grid-cols-analytics place-items-center">
+                  <div className="w-full h-full p-8 overflow-hidden rounded-3xl bg-gray-100 grid grid-cols-analytics place-items-center bg-blue-500">
                     {stat?.cols
                       ?.filter((s) => s.placement === 'start')
                       .map((field, j) => (
@@ -586,7 +586,7 @@ export const Analytics = () => {
                       .splice(0, filterLimit)
                       .map((field, j) => (
                         <Fragment key={j}>
-                          <div className="w-full h-full  row-span-1 col-span-1">
+                          <div className="w-full h-full  row-span-1 col-span-1 bg-green-500">
                             <Field
                               sortable={field?.sortable}
                               onSort={field?.onSort}
@@ -605,7 +605,7 @@ export const Analytics = () => {
                       .map((field, j) => {
                         return (
                           <Fragment key={j}>
-                            <div className="w-full h-full  row-span-1 col-span-1">
+                            <div className="w-full h-full  row-span-1 col-span-1 bg-red-500">
                               <Field type={field?.type} label={field?.label} value={field?.value} content="" />
                               <div className=""></div>
                             </div>
