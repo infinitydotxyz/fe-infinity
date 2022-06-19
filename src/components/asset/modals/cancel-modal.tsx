@@ -26,9 +26,20 @@ export const CancelModal = ({ isOpen, onClose, collection, token }: Props) => {
       requiresAuth: true
     });
     if (!error) {
-      let orders: SignedOBOrder[] = result.data as SignedOBOrder[];
-      orders = uniqBy(orders, 'nonce'); // dedup orders with the same nonce (group of listed NFTs)
-      setListings(uniqBy(orders, 'nonce'));
+      const orders: SignedOBOrder[] = result.data as SignedOBOrder[];
+      // todo: this is needed until API supports filtering by both collectionId+tokenID:
+      let ordersByTokenId = [];
+      for (const order of orders) {
+        const found = !!order.signedOrder.nfts.find((nft) => {
+          const idx = nft.tokens.findIndex((tk) => tk.tokenId === token.tokenId);
+          return idx >= 0;
+        });
+        if (found) {
+          ordersByTokenId.push(order);
+        }
+      }
+      ordersByTokenId = uniqBy(ordersByTokenId, 'nonce'); // dedup orders with the same nonce (group of listed NFTs)
+      setListings(ordersByTokenId);
     }
   };
 
@@ -50,7 +61,7 @@ export const CancelModal = ({ isOpen, onClose, collection, token }: Props) => {
         onClose();
       }}
     >
-      <ul className="mt-4 p-2 flex flex-col w-full justify-between min-h-[50vh] max-h-[50vh] overflow-y-scroll">
+      <ul className="mt-4 p-2 flex flex-col w-full min-h-[50vh] max-h-[50vh] overflow-y-scroll">
         {listings.map((listing: SignedOBOrder, idx) => {
           return (
             <Checkbox

@@ -1,5 +1,16 @@
 import { useRouter } from 'next/router';
-import { Button, ShortAddress, PageBox, ReadMoreText, SVG, NextLink, Spinner, EthPrice } from 'src/components/common';
+import {
+  Button,
+  ShortAddress,
+  PageBox,
+  ReadMoreText,
+  SVG,
+  NextLink,
+  Spinner,
+  EthPrice,
+  ToggleTab,
+  useToggleTab
+} from 'src/components/common';
 import { BLANK_IMAGE_URL, useFetch } from 'src/utils';
 import { Token, Collection, Erc721Metadata, OBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { TraitList, CancelModal, TransferNFTModal, PlaceBidModal, MakeOfferModal } from 'src/components/asset';
@@ -65,6 +76,7 @@ interface Props {
 const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const { checkSignedIn, user } = useAppContext();
   const { isLoading, error, token, collection } = useFetchAssetInfo(qchainId, qcollection, qtokenId);
+  const { options, onChange, selected } = useToggleTab(['Activity', 'Orders'], 'Activity');
 
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showLowerPriceModal, setShowLowerPriceModal] = useState(false);
@@ -298,10 +310,26 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
 
       {/* <ActivityList chainId={collection.chainId} collectionAddress={collection.address} tokenId={token.tokenId} /> */}
 
-      <div className="mt-4">
-        <h3 className="mt-8 mb-4 font-bold font-body">Activity</h3>
-        <CollectionFeed collectionAddress={collection.address} tokenId={token.tokenId} forActivity={true} />
-      </div>
+      <ToggleTab
+        className="mt-12 font-heading pointer-events-auto"
+        tabWidth="150px"
+        options={options}
+        selected={selected}
+        onChange={onChange}
+      />
+
+      {selected === 'Activity' && (
+        <div className="mt-4">
+          <h3 className="mt-8 mb-4 font-bold font-body">Activity</h3>
+          <CollectionFeed collectionAddress={collection.address} tokenId={token.tokenId} forActivity={true} />
+        </div>
+      )}
+
+      {selected === 'Orders' && (
+        <div className="mt-4">
+          <h3 className="mt-8 mb-4 font-bold font-body">Orders</h3>
+        </div>
+      )}
 
       {modals}
     </PageBox>
