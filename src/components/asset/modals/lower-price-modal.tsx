@@ -1,7 +1,9 @@
-import { Collection, Token } from '@infinityxyz/lib-frontend/types/core';
+import { Collection, SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
 import React, { useEffect, useState } from 'react';
-import { TextInputBox, Modal, SimpleTable, SimpleTableItem, EthPrice } from 'src/components/common';
-import { INFINITY_FEE_PCT, INFINITY_ROYALTY_PCT } from 'src/utils';
+import { TextInputBox, Modal, SimpleTable, SimpleTableItem, EthPrice, toastError } from 'src/components/common';
+import { apiGet, BLANK_IMAGE_URL, INFINITY_FEE_PCT, INFINITY_ROYALTY_PCT } from 'src/utils';
+import { useAppContext } from 'src/utils/context/AppContext';
+import { postOrders } from 'src/utils/marketUtils';
 
 interface Props {
   isOpen: boolean;
@@ -12,29 +14,31 @@ interface Props {
 }
 
 export const LowerPriceModal = ({ isOpen, onClose, collection, token, buyPriceEth }: Props) => {
-  // const { user } = useAppContext();
+  const { user } = useAppContext();
+  const [orderDetails, setOrderDetails] = useState<SignedOBOrder | null>(null);
   const [price, setPrice] = useState(0);
   // const [lastPrice, setLastPrice] = useState(0);
   // TODO: do something with this ending price?
 
-  // const orderItem = token.ordersSnippet?.listing?.orderItem;
-  // const fetchSignedOBOrder = async () => {
-  //   const { result, error } = await apiGet(`/orders/${user?.address}`, {
-  //     requiresAuth: true,
-  //     query: {
-  //       id: orderItem?.id,
-  //       limit: 1
-  //     }
-  //   });
-  //   if (!error && result?.data && result?.data[0]) {
-  //     const signedOrder = result?.data[0].signedOrder as SignedOBOrder;
-  //     const lastPrice = await getCurrentChainOBOrderPrice(signedOrder);
-  //     console.log('signedOrder', signedOrder);
-  //   }
-  // };
+  const orderItem = token.ordersSnippet?.listing?.orderItem;
+  const fetchSignedOBOrder = async () => {
+    const { result, error } = await apiGet(`/orders/${user?.address}`, {
+      requiresAuth: true,
+      query: {
+        id: orderItem?.id,
+        limit: 1
+      }
+    });
+    if (!error && result?.data && result?.data[0]) {
+      const order = result?.data[0] as SignedOBOrder;
+      setOrderDetails(order);
+      // const lastPrice = await getCurrentChainOBOrderPrice(signedOrder);
+      // console.log('signedOrder', signedOrder);
+    }
+  };
 
   useEffect(() => {
-    // fetchSignedOBOrder();
+    fetchSignedOBOrder();
   }, []);
 
   const tableItems: SimpleTableItem[] = [];
@@ -55,10 +59,46 @@ export const LowerPriceModal = ({ isOpen, onClose, collection, token, buyPriceEt
       onClose={onClose}
       okButton="Lower Price"
       title="Lower Price"
-      onOKButton={() => {
+      onOKButton={async () => {
+        if (!orderDetails || !user) {
+          return;
+        }
         console.log(collection);
         console.log(token);
-        alert('todo: Relist modal');
+
+        // todo: remove this once BE fix validation of tokens' images (not needed):
+        for (const nft of orderDetails.nfts) {
+          for (const token of nft.tokens) {
+            token.tokenImage = token.tokenImage || BLANK_IMAGE_URL;
+          }
+        }
+
+        const signedOrders: SignedOBOrder[] = [];
+        // keep the last Order & set the New Price:
+        const order: SignedOBOrder = {
+          id: '',
+          chainId: orderDetails.chainId,
+          isSellOrder: orderDetails.isSellOrder,
+          makerAddress: orderDetails.makerAddress,
+          numItems: orderDetails.numItems,
+          startTimeMs: orderDetails.startTimeMs,
+          endTimeMs: orderDetails.endTimeMs,
+          startPriceEth: price, // set the New Price.
+          endPriceEth: price, // set the New Price.
+          nfts: orderDetails.nfts,
+          makerUsername: orderDetails.makerUsername,
+          nonce: orderDetails.nonce,
+          execParams: orderDetails.execParams,
+          extraParams: orderDetails.extraParams,
+          signedOrder: orderDetails.signedOrder
+        };
+        signedOrders.push(order);
+        try {
+          await postOrders(user.address, signedOrders);
+        } catch (ex) {
+          toastError(ex as string);
+          return false;
+        }
         onClose();
       }}
     >
