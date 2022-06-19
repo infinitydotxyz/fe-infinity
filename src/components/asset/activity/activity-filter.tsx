@@ -11,7 +11,7 @@ interface Props {
 export const ActivityFilter = ({ activityTypes, onChange }: Props) => {
   return (
     <PopoverButton title="Filter" buttonClassName="font-heading">
-      {[EventType.Sale, EventType.Transfer, EventType.Offer].map((type: EventType) => {
+      {[EventType.Sale, EventType.Listing, EventType.Offer].map((type: EventType) => {
         const label = `${type.charAt(0).toUpperCase() + type.slice(1)}s`;
 
         return (

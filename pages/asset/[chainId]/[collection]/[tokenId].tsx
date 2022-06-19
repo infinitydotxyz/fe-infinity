@@ -13,10 +13,17 @@ import {
 } from 'src/components/common';
 import { BLANK_IMAGE_URL, useFetch } from 'src/utils';
 import { Token, Collection, Erc721Metadata, OBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { TraitList, CancelModal, TransferNFTModal, PlaceBidModal, MakeOfferModal } from 'src/components/asset';
+import {
+  TraitList,
+  CancelModal,
+  TransferNFTModal,
+  PlaceBidModal,
+  MakeOfferModal,
+  ActivityList
+} from 'src/components/asset';
 import { useEffect, useState } from 'react';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { CollectionFeed } from 'src/components/feed/collection-feed';
+// import { CollectionFeed } from 'src/components/feed/collection-feed';
 import { getOBOrderFromFirestoreOrderItem } from 'src/utils/exchange/orders';
 import { utils } from 'ethers';
 import { getCurrentOBOrderPrice } from '@infinityxyz/lib-frontend/utils';
@@ -321,9 +328,11 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
         />
 
         {selected === 'Activity' && (
-          <div className="mt-4">
-            <h3 className="mt-8 mb-4 font-bold font-body">Activity</h3>
-            <CollectionFeed collectionAddress={collection.address} tokenId={token.tokenId} forActivity={true} />
+          <div className="mt-[-22px]">
+            {/* <h3 className="mt-8 mb-4 font-bold font-body">Activity</h3> */}
+            {/* <CollectionFeed collectionAddress={collection.address} tokenId={token.tokenId} forActivity={true} /> */}
+
+            <ActivityList chainId={token.chainId} collectionAddress={collection.address} tokenId={token.tokenId} />
           </div>
         )}
 
