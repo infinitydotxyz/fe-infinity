@@ -3,10 +3,11 @@ import { FeedEventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { apiGet } from 'src/utils';
 import { FeedFilter, fetchMoreEvents } from 'src/utils/firestore/firestoreUtils';
 import { ScrollLoader } from '../common';
-import { ActivityItem } from './activity-item';
+// import { ActivityItem } from './activity-item';
 import { CommentPanel } from './comment-panel';
 import { FeedFilterDropdown } from './feed-filter-dropdown';
 import { FeedEvent, FeedItem } from './feed-item';
+import { ActivityItem, NftActivity } from '../asset/activity/activity-item';
 
 // let eventsInit = false;
 
@@ -26,15 +27,21 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
   const [commentPanelEvent, setCommentPanelEvent] = useState<FeedEvent | null>(null);
   const [filteringTypes, setFilteringTypes] = useState<FeedEventType[]>([]);
 
+  const [activities, setActivities] = useState<NftActivity[]>([]);
+
   if (forActivity && !collectionAddress) {
     return null; // require collectionAddress
   }
 
   const fetchActivity = async () => {
-    const { result } = await apiGet(
-      `/collections/1:0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/nfts/8880/activity?eventType=sale&limit=50&eventType=listing&eventType=offer`
-    );
-    console.log('result', result);
+    const { result } = await apiGet(`/collections/1:${collectionAddress}/nfts/${tokenId}/activity`, {
+      // const { result } = await apiGet(`/collections/1:0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/nfts/8880/activity`, {
+      query: {
+        limit: 50,
+        eventType: ['sale', 'listing', 'offer']
+      }
+    });
+    setActivities(result?.data);
   };
 
   useEffect(() => {
@@ -126,9 +133,14 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
       ) : null}
 
       <ul className="space-y-4">
+        {forActivity &&
+          activities.map((act: NftActivity, idx) => {
+            return <ActivityItem key={idx} item={act} />;
+          })}
+
         {events.map((event, idx) => {
           if (forActivity) {
-            return <ActivityItem key={idx} event={event} />;
+            // return <ActivityItem key={idx} event={event} />;
           }
           return (
             <li key={idx} className="">

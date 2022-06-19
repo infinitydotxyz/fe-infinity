@@ -1,15 +1,34 @@
 import { useRouter } from 'next/router';
-import { Button, ShortAddress, PageBox, ReadMoreText, SVG, NextLink, Spinner, EthPrice } from 'src/components/common';
+import {
+  Button,
+  ShortAddress,
+  PageBox,
+  ReadMoreText,
+  SVG,
+  NextLink,
+  Spinner,
+  EthPrice,
+  ToggleTab,
+  useToggleTab
+} from 'src/components/common';
 import { BLANK_IMAGE_URL, useFetch } from 'src/utils';
 import { Token, Collection, Erc721Metadata, OBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { TraitList, CancelModal, TransferNFTModal, PlaceBidModal, MakeOfferModal } from 'src/components/asset';
+import {
+  TraitList,
+  CancelModal,
+  TransferNFTModal,
+  PlaceBidModal,
+  MakeOfferModal,
+  ActivityList
+} from 'src/components/asset';
 import { useEffect, useState } from 'react';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { CollectionFeed } from 'src/components/feed/collection-feed';
+// import { CollectionFeed } from 'src/components/feed/collection-feed';
 import { getOBOrderFromFirestoreOrderItem } from 'src/utils/exchange/orders';
 import { utils } from 'ethers';
 import { getCurrentOBOrderPrice } from '@infinityxyz/lib-frontend/utils';
 import { LowerPriceModal } from 'src/components/asset/modals/lower-price-modal';
+import { OrderbookContainer } from 'src/components/market/orderbook-list';
 
 const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
@@ -65,6 +84,7 @@ interface Props {
 const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const { checkSignedIn, user } = useAppContext();
   const { isLoading, error, token, collection } = useFetchAssetInfo(qchainId, qcollection, qtokenId);
+  const { options, onChange, selected } = useToggleTab(['Activity', 'Orders'], 'Activity');
 
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showLowerPriceModal, setShowLowerPriceModal] = useState(false);
@@ -298,9 +318,29 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
 
       {/* <ActivityList chainId={collection.chainId} collectionAddress={collection.address} tokenId={token.tokenId} /> */}
 
-      <div className="mt-4">
-        <h3 className="mt-8 mb-4 font-bold font-body">Activity</h3>
-        <CollectionFeed collectionAddress={collection.address} tokenId={token.tokenId} forActivity={true} />
+      <div className="relative min-h-[1024px]">
+        <ToggleTab
+          className="flex space-x-2 items-center relative max-w-xl top-[65px] pb-4 lg:pb-0"
+          tabWidth="150px"
+          options={options}
+          selected={selected}
+          onChange={onChange}
+        />
+
+        {selected === 'Activity' && (
+          <div className="mt-[-22px]">
+            {/* <h3 className="mt-8 mb-4 font-bold font-body">Activity</h3> */}
+            {/* <CollectionFeed collectionAddress={collection.address} tokenId={token.tokenId} forActivity={true} /> */}
+
+            <ActivityList chainId={token.chainId} collectionAddress={collection.address} tokenId={token.tokenId} />
+          </div>
+        )}
+
+        {selected === 'Orders' && (
+          <div className="mt-4">
+            <OrderbookContainer collectionId={token.collectionAddress} />
+          </div>
+        )}
       </div>
 
       {modals}
