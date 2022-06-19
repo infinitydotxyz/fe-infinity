@@ -229,7 +229,7 @@ const CollectionPage = () => {
             <FeesAccruedStats value={168} />
 
             <div className="flex flex-row space-x-2 relative">
-              <VoteProgressBar votes={votes} totalVotes={'100'} />
+              <VoteProgressBar votes={votes} totalVotes={100} />
               <Button onClick={() => setIsStakeModalOpen(true)}>Vote</Button>
             </div>
             <VoteModal collection={collection} isOpen={isStakeModalOpen} onClose={() => setIsStakeModalOpen(false)} />

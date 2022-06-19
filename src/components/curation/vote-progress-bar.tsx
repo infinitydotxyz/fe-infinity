@@ -1,4 +1,3 @@
-import { BigNumber } from 'ethers';
 import React, { useMemo } from 'react';
 import { ProgressBar } from '../common/progress-bar';
 
@@ -6,16 +5,16 @@ export type VoteProgressBarProps = {
   /**
    * Total number of votes on the collection.
    */
-  totalVotes: string;
+  totalVotes: number;
 
   /**
    * The user's number of votes.
    */
-  votes: string;
+  votes: number;
 };
 
 export const VoteProgressBar: React.FC<VoteProgressBarProps> = ({ votes, totalVotes }) => {
-  const percentage = useMemo(() => BigNumber.from(votes).div(totalVotes).mul(100), [votes, totalVotes]);
+  const percentage = useMemo(() => Math.floor((votes / totalVotes) * 100), [votes, totalVotes]);
 
   return (
     <ProgressBar percentage={percentage}>

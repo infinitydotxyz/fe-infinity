@@ -1,4 +1,4 @@
-import { BigNumber } from 'ethers';
+import { BigNumber, utils } from 'ethers';
 import { useEffect, useState } from 'react';
 import { useAppContext } from 'src/utils/context/AppContext';
 
@@ -11,13 +11,14 @@ import { useAppContext } from 'src/utils/context/AppContext';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function useBalance(contractMethod: any, address?: string) {
   const { user, userReady } = useAppContext();
-  const [balance, setBalance] = useState('0');
+  const [balance, setBalance] = useState(0);
 
   useEffect(() => {
     if (user?.address) {
       contractMethod(address || user.address)
         .then((balance: BigNumber) => {
-          setBalance(BigNumber.from(balance).toString());
+          const ether = utils.formatEther(balance);
+          setBalance(+ether);
         })
         .catch(console.error);
     }

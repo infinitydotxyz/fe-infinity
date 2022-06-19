@@ -4,6 +4,7 @@ import { StakeTokensModal } from 'src/components/rewards/stake-tokens';
 import { UnstakeTokensModal } from 'src/components/rewards/unstake-tokens';
 import { useStakerTotalStaked } from 'src/hooks/contract/staker/useStakerTotalStaked';
 import { useTokenBalance } from 'src/hooks/contract/token/useTokenBalance';
+import { numberFormatter } from 'src/utils/number-formatter';
 
 const RewardsPage = () => {
   const [showStakeTokensModal, setShowStakeTokensModal] = useState(false);
@@ -27,11 +28,11 @@ const RewardsPage = () => {
             <div>NFT Tokens</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
-                <div className="text-2xl font-heading font-bold">{balance}</div>
+                <div className="text-2xl font-heading font-bold">{numberFormatter.format(balance)}</div>
                 <div className="text-sm mt-1">Wallet</div>
               </div>
               <div className="lg:w-1/4 sm:w-full">
-                <div className="text-2xl font-heading font-bold">{staked}</div>
+                <div className="text-2xl font-heading font-bold">{numberFormatter.format(staked)}</div>
                 <div className="text-sm mt-1">Staked</div>
               </div>
             </div>
