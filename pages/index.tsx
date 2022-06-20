@@ -147,7 +147,7 @@ const Footer: React.FC = () => {
           </span>
           <InstagramIconLink />
         </div>
-        <div className="flex space-x-2">
+        <div className="flex space-x-4">
           <NextLink href="/terms-and-conditions" className="underline">
             Terms of Service
           </NextLink>
