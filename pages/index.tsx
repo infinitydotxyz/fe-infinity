@@ -18,14 +18,11 @@ const HomePage = () => {
 
       <header>
         <Banner>
-          Join our{' '}
-          <ExternalLink
-            href="https://code4rena.com/contests/2022-06-infinity-nft-marketplace-contest"
-            className="underline"
-          >
-            audit contest
+          Join our Audits with C4, Immunefi, and CertiK are completed! See{' '}
+          <ExternalLink href="https://www.premint.xyz/infinity-marketplace-v2-beta-allowlist/" className="underline">
+            this article
           </ExternalLink>{' '}
-          and earn up to $50k in prizes!
+          to learn about our beta
         </Banner>
         <NavBar />
         <section className="text-center flex flex-col justify-center items-center h-screen space-y-4">
