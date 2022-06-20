@@ -107,6 +107,8 @@ const OrderbookList = ({ orders, showFilters, isLoading, fetchMore, hasMoreOrder
         </div>
       )}
       <div className="flex flex-col items-start w-full">
+        {!isLoading && orders && orders.length === 0 ? <div className="font-heading">No data available.</div> : null}
+
         {orders.length > 0 &&
           orders.map((order: SignedOBOrder, i) => {
             return <OrderbookRow key={`${i}-${order.id}`} order={order} isFilterOpen={showFilters ?? false} />;

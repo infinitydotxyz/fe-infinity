@@ -27,21 +27,26 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
   const [commentPanelEvent, setCommentPanelEvent] = useState<FeedEvent | null>(null);
   const [filteringTypes, setFilteringTypes] = useState<FeedEventType[]>([]);
 
-  const [activities, setActivities] = useState<NftActivity[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [activities, setActivities] = useState<NftActivity[] | null>(null);
 
   if (forActivity && !collectionAddress) {
     return null; // require collectionAddress
   }
 
   const fetchActivity = async () => {
-    const { result } = await apiGet(`/collections/1:${collectionAddress}/nfts/${tokenId}/activity`, {
+    setIsLoading(true);
+    const { result, error } = await apiGet(`/collections/1:${collectionAddress}/nfts/${tokenId}/activity`, {
       // const { result } = await apiGet(`/collections/1:0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/nfts/8880/activity`, {
       query: {
         limit: 50,
         eventType: ['sale', 'listing', 'offer']
       }
     });
-    setActivities(result?.data);
+    setIsLoading(false);
+    if (!error) {
+      setActivities(result?.data);
+    }
   };
 
   useEffect(() => {
@@ -119,6 +124,10 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
         <FeedFilterDropdown selectedTypes={filteringTypes} onChange={onChangeFilterDropdown} />
       </div>
 
+      {!isLoading && activities && activities.length === 0 ? (
+        <div className="font-heading">No data available.</div>
+      ) : null}
+
       {newEvents.length > 0 ? (
         <div
           //  w-1/3 sm:w-full
@@ -134,7 +143,7 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
 
       <ul className="space-y-4">
         {forActivity &&
-          activities.map((act: NftActivity, idx) => {
+          (activities || []).map((act: NftActivity, idx) => {
             return <ActivityItem key={idx} item={act} />;
           })}
 
