@@ -16,7 +16,7 @@ const HomePage = () => {
   const router = useRouter();
   return (
     <div className="transition w-[100vw] h-[100vh] overflow-y-auto overflow-x-hidden justify-items-center">
-      <Header title="Landing Page" />
+      <Header title="Infinity" />
 
       <header>
         <Banner>
@@ -26,7 +26,8 @@ const HomePage = () => {
           </ExternalLink>{' '}
           to learn about our beta
         </Banner>
-        <NavBar />
+        <HomeNavBar />
+
         <section className="text-center flex flex-col justify-center items-center h-[70vh] mb-[20vh] space-y-4">
           <Heading className="font-body text-4xl md:text-6xl md:leading-tight font-medium">
             The easiest way to <br /> trade NFTs
@@ -128,7 +129,7 @@ export default HomePage;
  * Custom navbar to be used by the landing page only.
  * Note: we should probably try to make the main NavBar component more composable instead though.
  */
-const NavBar = () => {
+const HomeNavBar = () => {
   const router = useRouter();
   return (
     <nav className={`${pageStyles} bg-transparent font-heading flex space-x-6 items-center py-6 w-full`}>
@@ -172,7 +173,7 @@ const Footer: React.FC = () => {
           <NextLink href="/terms-and-conditions" className="underline">
             Terms of Service
           </NextLink>
-          <NextLink href="/terms-and-conditions" className="underline">
+          <NextLink href="/privacy-policy" className="underline">
             Privacy Policy
           </NextLink>
         </div>
