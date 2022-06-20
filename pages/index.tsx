@@ -145,7 +145,9 @@ const Footer: React.FC = () => {
         <div className="flex space-x-4">
           <DiscordIconLink />
           <MediumIconLink />
-          <TwitterIconLink />
+          <span className="mt-1">
+            <TwitterIconLink />
+          </span>
           <InstagramIconLink />
         </div>
         <div className="flex space-x-2">
