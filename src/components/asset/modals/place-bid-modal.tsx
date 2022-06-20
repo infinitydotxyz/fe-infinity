@@ -47,7 +47,7 @@ export const PlaceBidModal = ({ isOpen, onClose, collection, token }: Props) => 
             label={
               <>
                 <span className="text-theme-light-800">{"By checking this box, you agree to Infinity's"}</span>
-                <NextLink href="/terms-of-service" className="ml-2 underline">
+                <NextLink href="/terms-and-conditions" className="ml-2 underline">
                   Terms of Service
                 </NextLink>
               </>
