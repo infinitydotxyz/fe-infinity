@@ -6,7 +6,7 @@ const Home = () => {
   useEffect(() => {
     const { pathname } = Router;
     if (pathname === '/') {
-      void Router.push(isLocalhost() ? '/test' : '/analytics/trending/weekly');
+      void Router.push(isLocalhost() ? '/test' : '/trending'); // analytics/trending/weekly
     }
   });
 
