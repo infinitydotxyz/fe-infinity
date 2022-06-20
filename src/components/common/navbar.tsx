@@ -23,9 +23,9 @@ export const Navbar = () => {
       items: [
         {
           type: 'link',
-          label: 'Analytics',
+          label: 'Trending', // Analytics
           props: {
-            href: '/analytics/trending/weekly'
+            href: '/trending' // analytics/trending/weekly
           }
         },
         {
