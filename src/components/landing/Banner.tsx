@@ -9,9 +9,13 @@ export const Banner: React.FC = ({ children }) => {
   return (
     <div className={`flex flex-row justify-center p-5 bg-black ${hidden ? 'hidden' : ''}`}>
       <div className="text-center text-white font-medium">{children}</div>
-      <Button variant="ghost" className="text-white font-thin absolute top-0 right-0" onClick={hide}>
-        hide
-      </Button>
+
+      {/* todo: remove this */}
+      {hidden && (
+        <Button variant="ghost" className="text-white font-thin absolute top-0 right-0" onClick={hide}>
+          hide
+        </Button>
+      )}
     </div>
   );
 };

@@ -125,7 +125,7 @@ const CollectionStatsPage = () => {
               <div className="flex justify-between w-full mx-8">
                 <div className="w-1/6">
                   <div className="flex items-center text-black font-bold font-body">
-                    <a href={`/collection/${coll?.slug}`}>{coll?.metadata?.name}</a>
+                    <NextLink href={`/collection/${coll?.slug}`}>{coll?.metadata?.name}</NextLink>
                     {/* using inline here (className will show the bluechecks in different sizes for smaller screen) */}
                     {coll?.hasBlueCheck && <SVG.blueCheck className="ml-1.5" style={{ minWidth: 20, maxWidth: 20 }} />}
                   </div>
