@@ -6,9 +6,14 @@ import { TextInputBox } from './input-box';
 
 const LOCAL_STORAGE_KEY = 'ppp';
 const PPP = 'bmZ0ODg4'; // nft888
+const NO_PASSWORD_PAGES = ['/terms-of-service', '/privacy'];
 
 export const isPasswordModalNeeded = () => {
   const str = localStorage.getItem(LOCAL_STORAGE_KEY) ?? '';
+  if (location.pathname === '/' || NO_PASSWORD_PAGES.indexOf(location.pathname) >= 0) {
+    // don't show for Home page / and excluded pages.
+    return false;
+  }
   if (!isLocalhost() && str !== PPP) {
     // !isLocalhost() &&
     return true;
