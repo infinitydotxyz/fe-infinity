@@ -10,8 +10,10 @@ import LimitOrdersImage from 'src/images/landing/showcase_limit_orders.png';
 import { ButtonJoin } from 'src/components/landing/ButtonJoin';
 import { DiscordIconLink, InstagramIconLink, MediumIconLink, TwitterIconLink } from 'src/components/landing/Icons';
 import { Banner } from 'src/components/landing/Banner';
+import { useRouter } from 'next/router';
 
 const HomePage = () => {
+  const router = useRouter();
   return (
     <div className="transition w-[100vw] h-[100vh] overflow-y-auto overflow-x-hidden justify-items-center">
       <Header title="Landing Page" />
@@ -25,12 +27,18 @@ const HomePage = () => {
           to learn about our beta
         </Banner>
         <NavBar />
-        <section className="text-center flex flex-col justify-center items-center h-screen space-y-4">
+        <section className="text-center flex flex-col justify-center items-center h-[70vh] mb-[20vh] space-y-4">
           <Heading className="font-body text-4xl md:text-6xl md:leading-tight font-medium">
             The easiest way to <br /> trade NFTs
           </Heading>
           <SubTitle>Buy & sell with new advanced orders and flexible pricing</SubTitle>
-          <ButtonJoin>Sign up for beta</ButtonJoin>
+          <ButtonJoin
+            onClick={() => {
+              window.open('https://www.premint.xyz/infinity-marketplace-v2-beta-allowlist/');
+            }}
+          >
+            Sign up for beta
+          </ButtonJoin>
         </section>
       </header>
 
@@ -98,7 +106,13 @@ const HomePage = () => {
         <Heading as="h2" className="text-white text-4xl md:text-6xl md:leading-tight font-body font-normal">
           Start trading like <br /> the pros
         </Heading>
-        <ButtonJoin variant="gray" size="large">
+        <ButtonJoin
+          variant="gray"
+          size="large"
+          onClick={() => {
+            router.push('/trending');
+          }}
+        >
           Try beta
         </ButtonJoin>
       </section>
@@ -115,6 +129,7 @@ export default HomePage;
  * Note: we should probably try to make the main NavBar component more composable instead though.
  */
 const NavBar = () => {
+  const router = useRouter();
   return (
     <nav className={`${pageStyles} bg-transparent font-heading flex space-x-6 items-center py-6 w-full`}>
       <NextLink href="/">
@@ -126,7 +141,13 @@ const NavBar = () => {
 
       <DiscordIconLink />
       <TwitterIconLink />
-      <ButtonJoin>Try Beta</ButtonJoin>
+      <ButtonJoin
+        onClick={() => {
+          router.push('/trending');
+        }}
+      >
+        Try beta
+      </ButtonJoin>
     </nav>
   );
 };
