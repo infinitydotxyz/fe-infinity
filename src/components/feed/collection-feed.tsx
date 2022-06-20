@@ -36,7 +36,10 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
 
   const fetchActivity = async () => {
     setIsLoading(true);
-    const { result, error } = await apiGet(`/collections/1:${collectionAddress}/nfts/${tokenId}/activity`, {
+    const url = tokenId
+      ? `/collections/1:${collectionAddress}/nfts/${tokenId}/activity`
+      : `/collections/1:${collectionAddress}/activity`;
+    const { result, error } = await apiGet(url, {
       // const { result } = await apiGet(`/collections/1:0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/nfts/8880/activity`, {
       query: {
         limit: 50,
