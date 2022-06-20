@@ -31,7 +31,7 @@ const HomePage = () => {
           <Heading className="font-body text-4xl md:text-6xl md:leading-tight font-medium">
             The easiest way to <br /> trade NFTs
           </Heading>
-          <SubTitle>Buy & sell with new advanced orders and flexible pricing</SubTitle>
+          <SubTitle className="font-heading">Buy &amp; sell with new advanced orders and flexible pricing</SubTitle>
           <ButtonJoin
             onClick={() => {
               window.open('https://www.premint.xyz/infinity-marketplace-v2-beta-allowlist/');
