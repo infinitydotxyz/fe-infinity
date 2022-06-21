@@ -7,8 +7,8 @@ export const Banner: React.FC = ({ children }) => {
   const hide = () => setHidden(true);
 
   return (
-    <div className={`flex flex-row justify-center p-5 bg-black ${hidden ? 'hidden' : ''}`}>
-      <div className="text-center text-white font-medium">{children}</div>
+    <div className={`flex flex-row justify-center p-3 bg-black ${hidden ? 'hidden' : ''}`}>
+      <div className="text-center text-white font-heading">{children}</div>
 
       {/* todo: remove this */}
       {hidden && (

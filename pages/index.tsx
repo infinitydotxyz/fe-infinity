@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import React from 'react';
-import { ExternalLink, Header, Heading, NextLink, pageStyles, Spacer, SVG } from 'src/components/common';
+import { Header, Heading, NextLink, pageStyles, Spacer, SVG } from 'src/components/common';
 import { ShowCase, SubTitle } from 'src/components/landing/Showcase';
 import SnipingEngineImage from 'src/images/landing/showcase_sniping_engine.png';
 import OrdersImage from 'src/images/landing/showcase_set_orders.png';
@@ -20,11 +20,11 @@ const HomePage = () => {
 
       <header>
         <Banner>
-          Join our Audits with C4, Immunefi, and CertiK are completed! See{' '}
-          <ExternalLink href="https://www.premint.xyz/infinity-marketplace-v2-beta-allowlist/" className="underline">
+          Our contracts have undergone multiple audits including public audits on Code4Arena and Immunefi
+          {/* <ExternalLink href="https://www.premint.xyz/infinity-marketplace-v2-beta-allowlist/" className="underline">
             this article
           </ExternalLink>{' '}
-          to learn about our beta
+          to learn about our beta */}
         </Banner>
         <HomeNavBar />
 
