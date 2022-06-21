@@ -20,12 +20,12 @@ const NotFound404Page = ({ collectionSlug = '', chainId = '', collectionAddress 
 
         {collectionSlug ? (
           <>
-            <div>We haven't loaded this collection yet. Click the button to queue it up.</div>
+            <div className="mt-4 text-xl">We haven't loaded this collection yet. Click the button to queue it up.</div>
 
             <Button className="font-heading mt-10">Start queue</Button>
           </>
         ) : (
-          <div>Page not found.</div>
+          <div className="mt-4 text-3xl">This page could not be found</div>
         )}
       </div>
     </PageBox>
