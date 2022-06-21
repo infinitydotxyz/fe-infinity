@@ -123,35 +123,37 @@ const CollectionStatsPage = () => {
               </NextLink>
 
               <div className="flex justify-between w-full mx-8">
-                <div className="w-1/6">
+                <div className="w-2/6">
                   <div className="flex items-center text-black font-bold font-body">
-                    <NextLink href={`/collection/${coll?.slug}`}>{coll?.metadata?.name}</NextLink>
+                    <NextLink href={`/collection/${coll?.slug}`} className="truncate">
+                      {coll?.metadata?.name}
+                    </NextLink>
                     {/* using inline here (className will show the bluechecks in different sizes for smaller screen) */}
                     {coll?.hasBlueCheck && <SVG.blueCheck className="ml-1.5" style={{ minWidth: 20, maxWidth: 20 }} />}
                   </div>
                   <div></div>
                 </div>
 
-                <div className="w-1/10">
+                <div className="w-1/6">
                   <div className="text-black font-bold font-body">Volume</div>
                   <div>
                     <EthPrice label={formatNumber(coll?.stats?.daily?.salesVolume)} />
                   </div>
                 </div>
 
-                <div className="w-1/10">
+                <div className="w-1/6">
                   <div className="text-black font-bold font-body">Avg. Price</div>
                   <div>
                     <EthPrice label={formatNumber(coll?.stats?.daily?.avgPrice, 2)} />
                   </div>
                 </div>
 
-                <div className="w-1/10">
+                <div className="w-1/6">
                   <div className="text-black font-bold font-body">Owners</div>
                   <div>{formatNumber(coll?.stats?.daily?.ownerCount)}</div>
                 </div>
 
-                <div className="w-1/10">
+                <div className="w-1/6">
                   <div className="text-black font-bold font-body">Tokens</div>
                   <div>{formatNumber(coll?.stats?.daily?.tokenCount)}</div>
                 </div>
