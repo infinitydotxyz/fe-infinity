@@ -49,7 +49,7 @@ const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string)
 // ===========================================================
 
 const AssetDetailPage = () => {
-  const { query, push } = useRouter();
+  const { query } = useRouter();
 
   if (typeof query.chainId !== 'string' || typeof query.collection !== 'string' || typeof query.tokenId !== 'string') {
     return (
@@ -83,7 +83,6 @@ interface Props {
 }
 
 const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
-  const router = useRouter();
   const { checkSignedIn, user } = useAppContext();
   const { isLoading, error, token, collection } = useFetchAssetInfo(qchainId, qcollection, qtokenId);
   const { options, onChange, selected } = useToggleTab(['Activity', 'Orders'], 'Activity');
