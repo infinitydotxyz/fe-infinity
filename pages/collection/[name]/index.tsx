@@ -31,12 +31,12 @@ const CollectionPage = () => {
     query: { name }
   } = router;
 
-  // todo: this caused console error. http://localhost:3000/collection/0mnipunks
+  // todo: the logic below caused console error. http://localhost:3000/collection/0mnipunks
   // if (!router.isReady) {
   //   return null;
   // }
 
-  // todo: this caused console error. http://localhost:3000/collection/0mnipunks
+  // todo: the logic below caused console error. http://localhost:3000/collection/0mnipunks
   // useEffect(() => {
   //   if (selected === 'NFT') {
   //     const updateQueryParams = { ...router.query };

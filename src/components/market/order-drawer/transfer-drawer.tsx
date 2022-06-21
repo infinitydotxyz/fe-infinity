@@ -1,5 +1,7 @@
 import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
-import { Button, NftImage, Spacer, SVG } from 'src/components/common';
+import { useState } from 'react';
+import { Button, NftImage, Spacer, SVG, TextInputBox } from 'src/components/common';
+import { useAppContext } from 'src/utils/context/AppContext';
 import { iconButtonStyle } from 'src/utils/ui-constants';
 // import { iconButtonStyle } from 'src/utils/ui-constants';
 // import { format } from 'timeago.js';
@@ -14,6 +16,18 @@ interface Props {
 }
 
 export const TransferDrawer = ({ open, onClose, nftsForTransfer, onClickRemove }: Props) => {
+  const [address, setAddress] = useState('');
+  const { providerManager } = useAppContext();
+
+  const ensToAddress = async (addr: string) => {
+    let finalAddress: string | null = '';
+    if (addr.endsWith('.eth') && providerManager) {
+      const provider = providerManager.getEthersProvider();
+      finalAddress = await provider.resolveName(addr);
+    }
+    return finalAddress;
+  };
+
   return (
     <>
       <Drawer
@@ -47,10 +61,28 @@ export const TransferDrawer = ({ open, onClose, nftsForTransfer, onClickRemove }
               );
             })}
           </ul>
+          <div className="p-8">
+            <TextInputBox
+              type="text"
+              value={''}
+              placeholder=""
+              addEthSymbol={true}
+              label={'Address or ENSName'}
+              onChange={(value) => setAddress(value)}
+            />
+          </div>
           <Spacer />
 
           <footer className="w-full text-center py-4">
-            <Button size="large" onClick={() => ''}>
+            <Button
+              size="large"
+              onClick={async () => {
+                // todo: adi: Smart contract Transfer integration.
+                console.log('nftsForTransfer', nftsForTransfer);
+                const finalAddress = await ensToAddress(address);
+                console.log('finalAddress', finalAddress);
+              }}
+            >
               Transfer
             </Button>
           </footer>
