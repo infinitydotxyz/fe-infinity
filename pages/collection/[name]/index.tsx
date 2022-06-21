@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { BaseCollection, ERC721CardData, CollectionStats } from '@infinityxyz/lib-frontend/types/core';
+import { BaseCollection, ERC721CardData, CollectionStats, ChainId } from '@infinityxyz/lib-frontend/types/core';
 import { ToggleTab, PageBox, useToggleTab, SVG, EthPrice } from 'src/components/common';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { useFetch } from 'src/utils/apiUtils';
@@ -260,6 +260,7 @@ const CollectionPage = () => {
                         }
                         const price = data?.orderSnippet?.listing?.orderItem?.startPriceEth ?? '';
                         addCartItem({
+                          chainId: data?.chainId as ChainId,
                           collectionName: data?.collectionName ?? '',
                           collectionAddress: data?.tokenAddress ?? '',
                           collectionImage: data?.cardImage ?? data?.image ?? '',

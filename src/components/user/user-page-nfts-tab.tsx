@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId, ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { GalleryBox } from '../gallery/gallery-box';
@@ -126,6 +126,7 @@ export const UserPageNftsTab = ({ userInfo, forTransfers }: Props) => {
                         }
                         // console.log('card data', data);
                         addCartItem({
+                          chainId: data?.chainId as ChainId,
                           collectionName: data?.collectionName ?? '',
                           collectionAddress: data?.tokenAddress ?? '',
                           collectionImage: data?.cardImage ?? data?.image ?? '',
