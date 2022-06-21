@@ -3,6 +3,7 @@ import { BLANK_IMAGE_URL } from 'src/utils';
 import { Button } from './button';
 import { CollectionSearchDto } from '../../utils/types/collection-types';
 import { NextLink } from './next-link';
+import { SVG } from './svg';
 
 interface CollectionCardProps {
   collection: CollectionSearchDto;
@@ -48,7 +49,10 @@ export const CollectionCard = ({ collection, onButtonClick, buttonName, routerQu
           />
         </div>
         <div className="pt-4">
-          <div className="font-body text-base font-medium px-5 text-black">{collection.name}</div>
+          <div className="flex items-center font-body text-base font-medium px-5 text-black">
+            {collection.name}
+            {collection.hasBlueCheck ? <SVG.blueCheck className="w-5 h-5 ml-1" /> : null}
+          </div>
           {/* <div className="font-body pt-0.5 text-base px-5 text-theme-light-800">
             {shortText}
             {isTrimText && ' ...'}
