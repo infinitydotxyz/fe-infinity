@@ -1,6 +1,7 @@
 import { Collection, Token } from '@infinityxyz/lib-frontend/types/core';
 import React, { useState } from 'react';
 import { Modal, TextInputBox } from 'src/components/common';
+import { useAppContext } from 'src/utils/context/AppContext';
 
 interface Props {
   isOpen: boolean;
@@ -11,6 +12,16 @@ interface Props {
 
 export const TransferNFTModal = ({ isOpen, onClose, collection, token }: Props) => {
   const [address, setAddress] = useState('');
+  const { providerManager } = useAppContext();
+
+  const ensToAddress = async (addr: string) => {
+    let finalAddress: string | null = '';
+    if (addr.endsWith('.eth') && providerManager) {
+      const provider = providerManager.getEthersProvider();
+      finalAddress = await provider.resolveName(addr);
+    }
+    return finalAddress;
+  };
 
   return (
     <div>
@@ -19,10 +30,13 @@ export const TransferNFTModal = ({ isOpen, onClose, collection, token }: Props) 
         onClose={onClose}
         okButton="Transfer"
         title="Transfer NFT"
-        onOKButton={() => {
+        onOKButton={async () => {
           console.log(collection);
           console.log(token);
-          onClose();
+
+          const finalAddress = await ensToAddress(address);
+          console.log('finalAddress', finalAddress);
+          onClose(); // todo: adi: Smart contract Transfer integration.
         }}
       >
         <div>
@@ -32,7 +46,7 @@ export const TransferNFTModal = ({ isOpen, onClose, collection, token }: Props) 
             value={address}
             label="Address or ENSName"
             placeholder=""
-            onChange={(value) => {
+            onChange={async (value) => {
               setAddress(value);
             }}
           />
