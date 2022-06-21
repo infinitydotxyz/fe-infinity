@@ -10,7 +10,7 @@ const TermsPage = () => {
       </div>
 
       <div className="space-y-2">
-        <div>Last Updated: Jun10, 2022</div>
+        <div>Last Updated: Jun 10, 2022</div>
         <div className="space-y-4">
           <p dir="ltr" className="font-bold">
             <span>Introduction</span>
