@@ -25,8 +25,8 @@ const CollectionPage = () => {
   const { addCartItem, removeCartItem, ordersInCart, cartItems, addOrderToCart, updateOrders } = useOrderContext();
   const [isBuyClicked, setIsBuyClicked] = useState(false);
   const { options, onChange, selected } = useToggleTab(
-    ['NFT', 'Activity', 'Orderbook'],
-    (router?.query?.tab as string) || 'NFT'
+    ['NFTs', 'Orders', 'Activity'],
+    (router?.query?.tab as string) || 'NFTs'
   );
   const {
     query: { name }
@@ -225,7 +225,7 @@ const CollectionPage = () => {
           />
 
           <div className="mt-6 min-h-[1024px]">
-            {selected === 'NFT' && collection && (
+            {selected === 'NFTs' && collection && (
               <GalleryBox
                 pageId="COLLECTION"
                 collection={collection}
@@ -278,7 +278,7 @@ const CollectionPage = () => {
               />
             )}
 
-            {selected === 'Orderbook' && (
+            {selected === 'Orders' && (
               <OrderbookContainer collectionId={collection.address} className="mt-[-70px] pointer-events-none" />
             )}
 
