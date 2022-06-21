@@ -57,7 +57,7 @@ const CollectionPage = () => {
 
   const path = `/collections/${name}`;
   const { result: collection, isLoading, error } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
-  const { result: currentStats } = useFetch<CollectionStatsDto>(name ? `${path}/stats/current?periods=daily` : '', {
+  const { result: currentStats } = useFetch<CollectionStatsDto>(name ? `${path}/stats/current` : '', {
     chainId: '1'
   });
   const { result: dailyStats } = useFetch<{ data: CollectionStats[] }>(
