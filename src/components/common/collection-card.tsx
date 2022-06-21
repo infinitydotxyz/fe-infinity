@@ -32,7 +32,7 @@ export const CollectionCard = ({ collection, onButtonClick, buttonName, routerQu
   return (
     <div
       className={`w-full mx-auto sm:mx-0 bg-theme-light-100
-      p-2 shadow-[0_10px_10px_4px_rgba(0,0,0,0.1)] hover:shadow-[0_10px_10px_4px_rgba(0,0,0,0.2)]
+      p-2 shadow-[0_20px_20px_1px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_20px_1px_rgba(0,0,0,0.15)]
       rounded-3xl overflow-hidden cursor-pointer`}
     >
       <NextLink
