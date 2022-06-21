@@ -157,8 +157,8 @@ const Footer: React.FC = () => {
   return (
     <footer className={`${pageStyles} p-5 md:p-20`}>
       <p className="font-body w-[346px]">
-        Infinity is built by an A-team of crypto devs and operators. Join us on discord to find out more and contribute.
-        We are on our way to becoming the largest DAO in the world.
+        Infinity is building tools and infrastructure for culture exchange. Join us on discord to find out more and
+        contribute. We are on a mission to onboard 100M people to NFTs.
       </p>
       <div className="flex flex-col justify-between space-y-2 md:flex-row md:items-center md:space-x-2 mt-20">
         <div className="flex space-x-4">
