@@ -8,6 +8,7 @@ import { CommentPanel } from './comment-panel';
 import { FeedFilterDropdown } from './feed-filter-dropdown';
 import { FeedEvent, FeedItem } from './feed-item';
 import { ActivityItem, NftActivity } from '../asset/activity/activity-item';
+import { useAppContext } from 'src/utils/context/AppContext';
 
 // let eventsInit = false;
 
@@ -20,6 +21,7 @@ interface CollectionFeedProps {
 }
 
 export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity, className }: CollectionFeedProps) => {
+  const { chainId } = useAppContext();
   const [events, setEvents] = useState<FeedEvent[]>([]);
   const [newEvents, setNewEvents] = useState<FeedEvent[]>([]); // new feed events
   const [filter, setFilter] = useState<FeedFilter>({ collectionAddress, tokenId, types });
@@ -37,8 +39,8 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
   const fetchActivity = async () => {
     setIsLoading(true);
     const url = tokenId
-      ? `/collections/1:${collectionAddress}/nfts/${tokenId}/activity`
-      : `/collections/1:${collectionAddress}/activity`;
+      ? `/collections/${chainId}:${collectionAddress}/nfts/${tokenId}/activity`
+      : `/collections/${chainId}:${collectionAddress}/activity`;
     const { result, error } = await apiGet(url, {
       // const { result } = await apiGet(`/collections/1:0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/nfts/8880/activity`, {
       query: {
