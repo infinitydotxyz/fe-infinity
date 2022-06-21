@@ -46,7 +46,7 @@ export const TransferNFTModal = ({ isOpen, onClose, collection, token }: Props) 
             value={address}
             label="Address or ENSName"
             placeholder=""
-            onChange={async (value) => {
+            onChange={(value) => {
               setAddress(value);
             }}
           />
