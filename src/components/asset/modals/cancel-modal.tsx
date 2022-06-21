@@ -56,8 +56,6 @@ export const CancelModal = ({ isOpen, onClose, collection, token }: Props) => {
       title="Select listings to cancel"
       onOKButton={() => {
         console.log(collection);
-        console.log(token);
-        alert('todo: cancel selected listings');
         onClose();
       }}
     >

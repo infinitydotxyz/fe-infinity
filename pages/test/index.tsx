@@ -56,7 +56,7 @@ export const TestPage = () => {
 
             <Button
               onClick={() => {
-                void router.push('/terms-of-service');
+                void router.push('/terms-and-conditions');
               }}
             >
               Terms of Service

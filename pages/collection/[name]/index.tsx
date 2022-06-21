@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { BaseCollection, ERC721CardData, CollectionStats } from '@infinityxyz/lib-frontend/types/core';
-import { CollectionStatsDto } from '@infinityxyz/lib-frontend/types/dto/stats';
+import { BaseCollection, ERC721CardData, CollectionStats, ChainId } from '@infinityxyz/lib-frontend/types/core';
 import { ToggleTab, PageBox, useToggleTab, SVG, EthPrice } from 'src/components/common';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
+import { CollectionStatsDto } from '@infinityxyz/lib-frontend/types/dto/stats';
 import { useFetch } from 'src/utils/apiUtils';
 import { CollectionFeed } from 'src/components/feed/collection-feed';
 import { ellipsisAddress, getChainScannerBase } from 'src/utils';
@@ -17,12 +17,13 @@ import ContentLoader from 'react-content-loader';
 import { iconButtonStyle } from 'src/utils/ui-constants';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
 import { useAppContext } from 'src/utils/context/AppContext';
+import NotFound404Page from 'pages/not-found-404';
 
 const CollectionPage = () => {
+  const router = useRouter();
   const { checkSignedIn } = useAppContext();
   const { addCartItem, removeCartItem, ordersInCart, cartItems, addOrderToCart, updateOrders } = useOrderContext();
   const [isBuyClicked, setIsBuyClicked] = useState(false);
-  const router = useRouter();
   const { options, onChange, selected } = useToggleTab(
     ['NFT', 'Activity', 'Orderbook'],
     (router?.query?.tab as string) || 'NFT'
@@ -31,12 +32,12 @@ const CollectionPage = () => {
     query: { name }
   } = router;
 
-  // todo: this caused console error. http://localhost:3000/collection/0mnipunks
+  // todo: the logic below caused console error. http://localhost:3000/collection/0mnipunks
   // if (!router.isReady) {
   //   return null;
   // }
 
-  // todo: this caused console error. http://localhost:3000/collection/0mnipunks
+  // todo: the logic below caused console error. http://localhost:3000/collection/0mnipunks
   // useEffect(() => {
   //   if (selected === 'NFT') {
   //     const updateQueryParams = { ...router.query };
@@ -98,6 +99,10 @@ const CollectionPage = () => {
     });
     updateOrders(ordersInCart.filter((order) => order.cartItems.length > 0));
   };
+
+  if (error) {
+    return <NotFound404Page collectionSlug={name?.toString()} />;
+  }
 
   if (!collection) {
     // failed to load collection (collection not indexed?)
@@ -252,6 +257,7 @@ const CollectionPage = () => {
                         }
                         const price = data?.orderSnippet?.listing?.orderItem?.startPriceEth ?? '';
                         addCartItem({
+                          chainId: data?.chainId as ChainId,
                           collectionName: data?.collectionName ?? '',
                           collectionAddress: data?.tokenAddress ?? '',
                           collectionImage: data?.cardImage ?? data?.image ?? '',

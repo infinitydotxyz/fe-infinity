@@ -1,4 +1,4 @@
-import { Erc721Attribute, OBOrder, OBOrderItem, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId, Erc721Attribute, OBOrder, OBOrderItem, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { getOBComplicationAddress, getTxnCurrencyAddress, NULL_ADDRESS } from '@infinityxyz/lib-frontend/utils';
 import React, { ReactNode, useContext, useState } from 'react';
 import { toastError } from 'src/components/common';
@@ -12,6 +12,7 @@ export interface OrderCartItem {
   tokenImage?: string;
   tokenName?: string;
   tokenId?: string;
+  chainId: ChainId;
   collectionName: string;
   collectionAddress: string;
   collectionImage?: string;
@@ -132,6 +133,7 @@ export const OrderContextProvider = ({ children }: Props) => {
     const items: OBOrderItem[] = [];
     for (const cartItem of cartItems) {
       items.push({
+        chainId: cartItem.chainId,
         collectionAddress: cartItem.collectionAddress,
         collectionName: cartItem.collectionName,
         collectionImage: cartItem.collectionImage ?? '',
@@ -218,7 +220,7 @@ export const OrderContextProvider = ({ children }: Props) => {
         startPriceEth: price,
         endPriceEth: price,
         nfts,
-        makerUsername: '' // todo: put in username
+        makerUsername: '' // todo: adi put in username
       };
 
       const orderInCart: OrderInCart = {
