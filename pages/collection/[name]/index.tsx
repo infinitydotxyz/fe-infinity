@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { BaseCollection, ERC721CardData, CollectionStats, ChainId } from '@infinityxyz/lib-frontend/types/core';
 import { ToggleTab, PageBox, useToggleTab, SVG, EthPrice } from 'src/components/common';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
+import { CollectionStatsDto } from '@infinityxyz/lib-frontend/types/dto/stats';
 import { useFetch } from 'src/utils/apiUtils';
 import { CollectionFeed } from 'src/components/feed/collection-feed';
 import { ellipsisAddress, getChainScannerBase } from 'src/utils';
@@ -56,17 +57,13 @@ const CollectionPage = () => {
 
   const path = `/collections/${name}`;
   const { result: collection, isLoading, error } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
+  const { result: currentStats } = useFetch<CollectionStatsDto>(name ? `${path}/stats/current` : '', {
+    chainId: '1'
+  });
   const { result: dailyStats } = useFetch<{ data: CollectionStats[] }>(
     name
       ? path +
           '/stats?offset=0&limit=10&orderBy=volume&orderDirection=desc&minDate=0&maxDate=2648764957623&period=daily'
-      : '',
-    { chainId: '1' }
-  );
-  const { result: weeklyStats } = useFetch<{ data: CollectionStats[] }>(
-    name
-      ? path +
-          '/stats?offset=0&limit=10&orderBy=volume&orderDirection=desc&minDate=0&maxDate=2648764957623&period=weekly'
       : '',
     { chainId: '1' }
   );
@@ -138,7 +135,7 @@ const CollectionPage = () => {
             </button>
           </div>
 
-          <StatsChips collection={collection} weeklyStatsData={weeklyStats?.data ?? []} />
+          <StatsChips collection={collection} weeklyStatsData={currentStats || undefined} />
 
           {isLoading ? (
             <div className="mt-6">
