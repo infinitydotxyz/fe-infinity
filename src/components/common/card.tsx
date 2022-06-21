@@ -98,7 +98,7 @@ export const Card = ({
             router.push(`/collection/${data?.collectionSlug}`);
           }}
         >
-          {title}
+          {title ? title : <>&nbsp;</>}
           {data?.hasBlueCheck ? <SVG.blueCheck className="w-5 h-5 ml-1" /> : null}
         </div>
         <div className="text-secondary font-heading" title={data?.tokenId}>

@@ -29,6 +29,7 @@ import { utils } from 'ethers';
 import { getCurrentOBOrderPrice } from '@infinityxyz/lib-frontend/utils';
 import { LowerPriceModal } from 'src/components/asset/modals/lower-price-modal';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
+import NotFound404Page from 'pages/not-found-404';
 
 const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
@@ -125,15 +126,18 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
 
   if (error || !token || !collection) {
     console.error(error);
-    return (
-      <PageBox title="Asset - Error" className="w-full h-full grid place-items-center">
-        <div className="flex flex-col max-w-screen-2xl mt-4">
-          <main>
-            <p>Unable to load data.</p>
-          </main>
-        </div>
-      </PageBox>
-    );
+    return <NotFound404Page />;
+    // return (
+    //   <PageBox title="Asset - Error" className="w-full h-full grid place-items-center">
+    //     <div className="flex flex-col max-w-screen-2xl mt-4">
+    //       <main>
+    //         <p>Unable to load data.</p>
+    //       </main>
+    //     </div>
+    //   </PageBox>
+    // );
+    // router.push(`/not-found-404?chainId=${qchainId}&collectionAddress=${qcollection}&tokenId=${qtokenId}`);
+    // return null;
   }
 
   // TODO: Joe to update Erc721Metadata type

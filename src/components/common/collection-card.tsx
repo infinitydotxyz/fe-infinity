@@ -1,7 +1,8 @@
-import { trimText } from './read-more-text';
+// import { trimText } from './read-more-text';
 import { BLANK_IMAGE_URL } from 'src/utils';
 import { Button } from './button';
 import { CollectionSearchDto } from '../../utils/types/collection-types';
+import { NextLink } from './next-link';
 
 interface CollectionCardProps {
   collection: CollectionSearchDto;
@@ -23,8 +24,8 @@ const getAvatarUrl = (imgUrl: string) => {
 };
 
 export const CollectionCard = ({ collection, onButtonClick, buttonName, routerQuery }: CollectionCardProps) => {
-  const shortText = trimText(collection.description, 60, 80, 100)[0];
-  const isTrimText = shortText.length !== collection.description.length;
+  // const shortText = trimText(collection.description, 60, 80, 100)[0];
+  // const isTrimText = shortText.length !== collection.description.length;
 
   const avatarUrl = getAvatarUrl(collection.bannerImage) || BLANK_IMAGE_URL;
 
@@ -34,11 +35,11 @@ export const CollectionCard = ({ collection, onButtonClick, buttonName, routerQu
       p-2 shadow-[0_10px_10px_4px_rgba(0,0,0,0.1)] hover:shadow-[0_10px_10px_4px_rgba(0,0,0,0.2)]
       rounded-3xl overflow-hidden cursor-pointer`}
     >
-      <a
+      <NextLink
         href={`/collection/${collection.slug}${routerQuery ? `?${routerQuery}` : ''}`}
         className="text-theme-light-800 font-heading tracking-tight mr-2"
       >
-        <div style={{ height: '200px' }}>
+        <div style={{ height: '300px' }}>
           <img
             src={avatarUrl}
             className="w-full rounded-3xl"
@@ -48,12 +49,12 @@ export const CollectionCard = ({ collection, onButtonClick, buttonName, routerQu
         </div>
         <div className="pt-4">
           <div className="font-body text-base font-medium px-5 text-black">{collection.name}</div>
-          <div className="font-body pt-0.5 text-base px-5 text-theme-light-800">
+          {/* <div className="font-body pt-0.5 text-base px-5 text-theme-light-800">
             {shortText}
             {isTrimText && ' ...'}
-          </div>
+          </div> */}
         </div>
-      </a>
+      </NextLink>
 
       {onButtonClick && (
         <div className="flex justify-center w-full mb-4">

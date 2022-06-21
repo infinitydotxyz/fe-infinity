@@ -16,12 +16,13 @@ import ContentLoader from 'react-content-loader';
 import { iconButtonStyle } from 'src/utils/ui-constants';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
 import { useAppContext } from 'src/utils/context/AppContext';
+import NotFound404Page from 'pages/not-found-404';
 
 const CollectionPage = () => {
+  const router = useRouter();
   const { checkSignedIn } = useAppContext();
   const { addCartItem, removeCartItem, ordersInCart, cartItems, addOrderToCart, updateOrders } = useOrderContext();
   const [isBuyClicked, setIsBuyClicked] = useState(false);
-  const router = useRouter();
   const { options, onChange, selected } = useToggleTab(
     ['NFT', 'Activity', 'Orderbook'],
     (router?.query?.tab as string) || 'NFT'
@@ -101,6 +102,10 @@ const CollectionPage = () => {
     });
     updateOrders(ordersInCart.filter((order) => order.cartItems.length > 0));
   };
+
+  if (error) {
+    return <NotFound404Page collectionSlug={name?.toString()} />;
+  }
 
   if (!collection) {
     // failed to load collection (collection not indexed?)
