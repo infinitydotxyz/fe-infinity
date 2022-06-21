@@ -1,18 +1,46 @@
-import { CardData } from '@infinityxyz/lib-frontend/types/core';
+import { useEffect, useState } from 'react';
+import { ChainId, ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { GalleryBox } from '../gallery/gallery-box';
+import { TransferDrawer } from '../market/order-drawer/transfer-drawer';
 import { UserProfileDto } from './user-profile-dto';
+import { useRouter } from 'next/router';
 
 type Props = {
   userInfo: UserProfileDto;
+  forTransfers?: boolean;
 };
 
-export const UserPageNftsTab = ({ userInfo }: Props) => {
+export const UserPageNftsTab = ({ userInfo, forTransfers }: Props) => {
+  const router = useRouter();
   const { user } = useAppContext();
-  const { addCartItem, setOrderDrawerOpen, ordersInCart, cartItems, removeCartItem, updateOrders } = useOrderContext();
+  const {
+    addCartItem,
+    setOrderDrawerOpen,
+    ordersInCart,
+    cartItems,
+    removeCartItem,
+    updateOrders,
+    orderDrawerOpen,
+    setCustomDrawerItems
+  } = useOrderContext();
 
-  const isAlreadyAdded = (data: CardData | undefined) => {
+  const [showTransferDrawer, setShowTransferDrawer] = useState(false);
+  const [nftsForTransfer, setNftsForTransfer] = useState<ERC721CardData[]>([]);
+
+  useEffect(() => {
+    const hasCustomDrawer = router.asPath.indexOf('tab=Send') >= 0;
+    if (hasCustomDrawer && orderDrawerOpen) {
+      setShowTransferDrawer(true);
+    }
+  }, [orderDrawerOpen]);
+
+  useEffect(() => {
+    setCustomDrawerItems(nftsForTransfer.length);
+  }, [nftsForTransfer]);
+
+  const isAlreadyAdded = (data: ERC721CardData | undefined) => {
     // check if this item was already added to cartItems or order.
     const found1 =
       cartItems.find((item) => item.collectionAddress === data?.address && item.tokenId === data.tokenId) !== undefined;
@@ -30,7 +58,7 @@ export const UserPageNftsTab = ({ userInfo }: Props) => {
   };
 
   // find & remove this item in cartItems & all orders' cartItems:
-  const findAndRemove = (data: CardData | undefined) => {
+  const findAndRemove = (data: ERC721CardData | undefined) => {
     const foundItemIdx = cartItems.findIndex(
       (item) => item.collectionAddress === data?.address && item.tokenId === data?.tokenId
     );
@@ -60,23 +88,54 @@ export const UserPageNftsTab = ({ userInfo }: Props) => {
                   cardActions: [
                     {
                       label: (data) => {
+                        // for Transfers
+                        if (forTransfers === true) {
+                          const found = nftsForTransfer.find((o) => o.id === data?.id);
+                          return <div className="font-normal">{found ? '✓' : ''} Transfer</div>;
+                        }
+                        // for Listings
                         if (isAlreadyAdded(data)) {
                           return <div className="font-normal">✓ Added</div>;
                         }
-                        return <div className="font-bold">List</div>;
+                        return <div className="font-normal">List</div>;
                       },
                       onClick: (ev, data) => {
+                        // for Transfers
+                        if (forTransfers === true && data) {
+                          const found = nftsForTransfer.find((o) => o.id === data.id);
+                          if (found) {
+                            const arr = nftsForTransfer.filter((o: ERC721CardData) => o.id !== data.id);
+                            setNftsForTransfer(arr);
+                            if (arr.length === 0) {
+                              setShowTransferDrawer(false);
+                              setOrderDrawerOpen(false);
+                            }
+                          } else {
+                            const arr = [...nftsForTransfer, data];
+                            setNftsForTransfer(arr);
+                            if (arr.length === 1) {
+                              setShowTransferDrawer(true);
+                            }
+                          }
+                          return;
+                        }
+                        // for Listings
                         if (isAlreadyAdded(data)) {
                           findAndRemove(data);
                           return;
                         }
+                        // console.log('card data', data);
                         addCartItem({
-                          collectionName: data?.collectionName ?? '(no name)',
-                          collectionAddress: data?.tokenAddress ?? '(no address)',
+                          chainId: data?.chainId as ChainId,
+                          collectionName: data?.collectionName ?? '',
+                          collectionAddress: data?.tokenAddress ?? '',
+                          collectionImage: data?.cardImage ?? data?.image ?? '',
+                          collectionSlug: data?.collectionSlug ?? '',
                           tokenImage: data?.image ?? '',
-                          tokenName: data?.name ?? '(no name)',
-                          tokenId: data?.tokenId ?? '0',
-                          isSellOrder: true
+                          tokenName: data?.name ?? '',
+                          tokenId: data?.tokenId ?? '-1',
+                          isSellOrder: true,
+                          attributes: data?.attributes ?? []
                         });
                         if (cartItems.length < 1) {
                           setOrderDrawerOpen(true); // only show when adding the first time.
@@ -90,6 +149,23 @@ export const UserPageNftsTab = ({ userInfo }: Props) => {
           className="mt-[-82px]"
         />
       </div>
+
+      <TransferDrawer
+        open={showTransferDrawer}
+        onClose={() => {
+          setShowTransferDrawer(false);
+          setOrderDrawerOpen(false);
+        }}
+        nftsForTransfer={nftsForTransfer}
+        onClickRemove={(removingItem) => {
+          const arr = nftsForTransfer.filter((o: ERC721CardData) => o.id !== removingItem.id);
+          setNftsForTransfer(arr);
+          if (arr.length === 0) {
+            setShowTransferDrawer(false);
+            setOrderDrawerOpen(false);
+          }
+        }}
+      />
     </div>
   );
 };

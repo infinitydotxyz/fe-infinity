@@ -10,7 +10,7 @@ const RewardsPage = () => {
   return (
     <PageBox title="Rewards" showTitle={false}>
       <div className="flex bg-theme-gray-100 p-10 rounded-2xl">
-        <div className="w-2/3">
+        <div className="w-1/2">
           <div className="text-4xl">Token Balance</div>
           <div className="w-1/2 mt-5 text-theme-gray-700">
             Stake NFT tokens to gain curation power in the form of veNFT. The longer you lock, the more curation power
@@ -18,7 +18,7 @@ const RewardsPage = () => {
           </div>
         </div>
 
-        <div className="w-1/3">
+        <div className="w-1/2">
           <div className="bg-white py-6 px-6 rounded-2xl">
             <div>NFT Tokens</div>
             <div className="flex flex-wrap mt-4">
@@ -49,7 +49,11 @@ const RewardsPage = () => {
                 </Button>
               </div>
               <div className="lg:w-1/4 sm:w-full">
-                <Button variant="outline" className="font-heading ml-3" onClick={() => setShowUnstakeTokensModal(true)}>
+                <Button
+                  variant="outline"
+                  className="font-heading lg:ml-3"
+                  onClick={() => setShowUnstakeTokensModal(true)}
+                >
                   Unstake
                 </Button>
               </div>
@@ -60,7 +64,7 @@ const RewardsPage = () => {
 
       {/* --- Curation Rewards --- */}
       <div className="flex bg-theme-gray-100 p-10 rounded-2xl mt-5">
-        <div className="w-2/3">
+        <div className="w-1/2">
           <div className="text-4xl">Curation Rewards</div>
           <div className="w-1/2 mt-5 text-theme-gray-700">
             Earn curation rewards for voting on collections with your veNFT tokens. You’ll the transaction fees for each
@@ -68,7 +72,7 @@ const RewardsPage = () => {
           </div>
         </div>
 
-        <div className="w-1/3">
+        <div className="w-1/2">
           <div className="bg-white py-6 px-6 rounded-2xl">
             <div>veNFT Tokens</div>
             <div className="flex flex-wrap mt-4">
@@ -107,7 +111,7 @@ const RewardsPage = () => {
 
       {/* --- Trading Rewards --- */}
       <div className="flex bg-theme-gray-100 p-10 rounded-2xl mt-5">
-        <div className="w-2/3">
+        <div className="w-1/2">
           <div className="text-4xl">Trading Rewards</div>
           <div className="w-1/2 mt-5 text-theme-gray-700">
             Earn trading rewards for buying and selling NFTs on Infinity. We’ll distribute the rewards each [period of
@@ -115,7 +119,7 @@ const RewardsPage = () => {
           </div>
         </div>
 
-        <div className="w-1/3">
+        <div className="w-1/2">
           <div className="bg-white py-6 px-6 rounded-2xl">
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/3 sm:w-full">

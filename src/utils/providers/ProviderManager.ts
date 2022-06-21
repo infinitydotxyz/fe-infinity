@@ -202,7 +202,6 @@ export class ProviderManager implements Omit<Optional<Provider, 'type'>, 'init'>
     }
   }
 
-  // todo: why is this reqd? this is getting called too many times
   public get isLoggedInAndAuthenticated(): boolean {
     const currentUser = trimLowerCase(this.account);
     if (currentUser && this.authNonce && this.authMessage && this.authSignature) {
@@ -245,7 +244,7 @@ export class ProviderManager implements Omit<Optional<Provider, 'type'>, 'init'>
     switch (type) {
       case WalletType.MetaMask:
         return new MetaMask();
-      // todo: uncomment
+      // todo: adi uncomment
       // case WalletType.WalletLink:
       //   return new WalletLink();
 

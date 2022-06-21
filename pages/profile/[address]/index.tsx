@@ -17,7 +17,8 @@ const ProfilePage = () => {
   if (!address) {
     return null;
   }
-  if (address === 'me' && !user) {
+  const isMyProfile = address === 'me';
+  if (isMyProfile && !user) {
     return (
       <PageBox title="Account" className="mb-12">
         <PleaseConnectMsg />
@@ -25,9 +26,7 @@ const ProfilePage = () => {
     );
   }
 
-  return (
-    <ProfilePageContents userAddress={address === 'me' ? `${user?.address ?? ''}` : `${address ?? ''}`} user={user} />
-  );
+  return <ProfilePageContents userAddress={isMyProfile ? `${user?.address ?? ''}` : `${address ?? ''}`} user={user} />;
 };
 
 // ================================================
@@ -58,10 +57,11 @@ const ProfilePageContents = ({ user, userAddress }: Props) => {
   }
 
   const userInfo = result as UserProfileDto;
+  userInfo.address = userInfo.address || userAddress;
 
   return (
     <PageBox showTitle={false} title={userInfo.username || userInfo.address}>
-      <UserPage userInfo={result as UserProfileDto} isOwner={!!(user && user.address === userInfo.address)} />
+      <UserPage userInfo={userInfo} isOwner={!!(user && user.address === userInfo.address)} />
     </PageBox>
   );
 };

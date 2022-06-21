@@ -1,9 +1,9 @@
-import { OBOrder, OBOrderItem, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId, Erc721Attribute, OBOrder, OBOrderItem, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { getOBComplicationAddress, getTxnCurrencyAddress, NULL_ADDRESS } from '@infinityxyz/lib-frontend/utils';
 import React, { ReactNode, useContext, useState } from 'react';
 import { toastError } from 'src/components/common';
 import { getSignedOBOrder } from '../exchange/orders';
-import { fetchMinBpsToSeller, fetchOrderNonce, postOrders } from '../marketUtils';
+import { fetchOrderNonce, postOrders } from '../marketUtils';
 import { secondsPerDay } from '../ui-constants';
 import { useAppContext } from './AppContext';
 
@@ -12,12 +12,14 @@ export interface OrderCartItem {
   tokenImage?: string;
   tokenName?: string;
   tokenId?: string;
+  chainId: ChainId;
   collectionName: string;
   collectionAddress: string;
   collectionImage?: string;
   collectionSlug?: string;
   hasBlueCheck?: boolean;
   numTokens?: number;
+  attributes?: Erc721Attribute[];
 }
 
 export interface OBOrderSpec {
@@ -69,6 +71,8 @@ export type OrderContextType = {
   addOrderToCart: () => void;
   cancelOrder: () => void;
   updateOrders: (orderInCart: OrderInCart[]) => void;
+  customDrawerItems: number;
+  setCustomDrawerItems: (n: number) => void;
 
   cartItems: OrderCartItem[];
   addCartItem: (order: OrderCartItem) => void;
@@ -112,6 +116,7 @@ export const OrderContextProvider = ({ children }: Props) => {
   const [price, setPrice] = useState<number>(1);
   const [expirationDate, setExpirationDate] = useState<number>(Date.now() + secondsPerDay * 30 * 1000);
   const [numItems, setNumItems] = useState<number>(1);
+  const [customDrawerItems, setCustomDrawerItems] = useState<number>(0);
 
   // for executing orders
   const { showAppError, user, providerManager, chainId } = useAppContext();
@@ -128,6 +133,7 @@ export const OrderContextProvider = ({ children }: Props) => {
     const items: OBOrderItem[] = [];
     for (const cartItem of cartItems) {
       items.push({
+        chainId: cartItem.chainId,
         collectionAddress: cartItem.collectionAddress,
         collectionName: cartItem.collectionName,
         collectionImage: cartItem.collectionImage ?? '',
@@ -142,7 +148,8 @@ export const OrderContextProvider = ({ children }: Props) => {
                   tokenImage: cartItem.tokenImage ?? '',
                   numTokens: cartItem.numTokens ?? 1,
                   takerAddress: '', // takerAddress and username will be filled in the backend
-                  takerUsername: ''
+                  takerUsername: '',
+                  attributes: cartItem.attributes ?? []
                 }
               ]
             : []
@@ -213,7 +220,7 @@ export const OrderContextProvider = ({ children }: Props) => {
         startPriceEth: price,
         endPriceEth: price,
         nfts,
-        makerUsername: '' // todo: put in username
+        makerUsername: '' // todo: adi put in username
       };
 
       const orderInCart: OrderInCart = {
@@ -262,7 +269,6 @@ export const OrderContextProvider = ({ children }: Props) => {
 
     try {
       const orderNonce = await fetchOrderNonce(user.address);
-      const minBpsToSeller = fetchMinBpsToSeller();
       // sell orders are always in ETH
       const currencyAddress = spec.isSellOrder ? NULL_ADDRESS : getTxnCurrencyAddress(chainId);
       const order: OBOrder = {
@@ -278,7 +284,6 @@ export const OrderContextProvider = ({ children }: Props) => {
         nfts: spec.nfts,
         makerUsername: spec.makerUsername,
         nonce: orderNonce,
-        minBpsToSeller,
         execParams: {
           currencyAddress,
           complicationAddress: getOBComplicationAddress(chainId)
@@ -311,7 +316,6 @@ export const OrderContextProvider = ({ children }: Props) => {
     const signedOrders: SignedOBOrder[] = [];
     for (const orderInCart of ordersInCart) {
       const order = await specToOBOrder(orderInCart.orderSpec);
-
       if (order) {
         try {
           const signedOrder = await getSignedOBOrder(user, chainId, signer, order);
@@ -444,7 +448,9 @@ export const OrderContextProvider = ({ children }: Props) => {
     expirationDate,
     setExpirationDate,
     numItems,
-    setNumItems
+    setNumItems,
+    customDrawerItems,
+    setCustomDrawerItems
   };
 
   return <OrderContext.Provider value={value}>{children}</OrderContext.Provider>;

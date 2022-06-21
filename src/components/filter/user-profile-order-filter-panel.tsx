@@ -1,55 +1,95 @@
-import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
-import { useState } from 'react';
-import { useFilterContext } from 'src/utils/context/FilterContext';
-import { Button, Checkbox, TextInputBox } from 'src/components/common';
+import { BaseCollection, OBOrderItem } from '@infinityxyz/lib-frontend/types/core';
+import { debounce } from 'lodash';
+import { useState, useEffect } from 'react';
+import { Checkbox, TextInputBox, Spinner } from 'src/components/common';
+import { apiGet } from 'src/utils';
+import { UserProfileDto } from '../user/user-profile-dto';
 
 export type UserOrderFilter = {
-  orderType: 'listings' | 'offers';
+  orderType?: 'listings' | 'offers';
+  minPrice?: string;
+  maxPrice?: string;
+  numItems?: string;
+  collections?: string[];
 };
 
 interface Props {
   collection?: BaseCollection;
   collectionAddress?: string;
   showFilterSections?: string[];
-  userAddress?: string; // for User's Collection Filter
+  userInfo: UserProfileDto;
   className?: string;
   onChange: (filter: UserOrderFilter) => void;
 }
 
-export const UserProfileOrderFilterPanel = ({ className, onChange }: Props) => {
-  const { filterState, setFilterState } = useFilterContext();
+export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: Props) => {
   const [minPriceVal, setMinPriceVal] = useState('');
   const [maxPriceVal, setMaxPriceVal] = useState('');
+  const [numItems, setNumItems] = useState('');
+  const [collections, setCollections] = useState<OBOrderItem[]>([]);
+  const [selectedCollections, setSelectedCollections] = useState<OBOrderItem[]>([]);
+  const [collectionSearch, setCollectionSearch] = useState('');
+  const [collectionSearchLoading, setCollectionSearchLoading] = useState(false);
   const [filter, setFilter] = useState<UserOrderFilter>({
     orderType: 'listings'
   });
 
+  // for collection search:
+  const fetchOrderCollections = async () => {
+    setCollections([]);
+    setCollectionSearchLoading(true);
+    const { result, error } = await apiGet(`/orders/${userInfo.address}/collections`, {
+      requiresAuth: true,
+      query: {
+        limit: -1,
+        name: collectionSearch
+      }
+    });
+    setCollectionSearchLoading(false);
+    if (!error) {
+      setCollections(result?.data as OBOrderItem[]);
+    }
+  };
+
+  useEffect(() => {
+    fetchOrderCollections();
+  }, [collectionSearch]);
+
   const onClickOrderType = (newType: 'listings' | 'offers') => {
-    setFilter((filter) => ({
+    const newFilter = {
       ...filter,
       orderType: newType
-    }));
-    onChange(filter);
+    };
+    setFilter(newFilter);
+    onChange(newFilter);
   };
 
-  const handleClickApply = () => {
-    const newFilter = { ...filterState };
-    newFilter.minPrice = minPriceVal;
-    newFilter.maxPrice = maxPriceVal;
-    newFilter.orderBy = 'price';
-    setFilterState(newFilter);
-  };
+  const onChangeNameSearch = debounce((value: string) => {
+    setCollectionSearch(value);
+  }, 300);
 
-  const handleClickClear = () => {
-    const newFilter = { ...filterState };
-    newFilter.minPrice = '';
-    newFilter.maxPrice = '';
-    newFilter.orderBy = '';
-    newFilter.orderDirection = '';
-    setMinPriceVal('');
-    setMaxPriceVal('');
-    setFilterState(newFilter);
-  };
+  const CollectionCheckbox = ({ collection }: { collection: OBOrderItem }) => (
+    <Checkbox
+      key={`${collection.collectionAddress}`}
+      boxOnLeft={false}
+      className="pb-4 w-full"
+      checked={selectedCollections.map((c) => c.collectionAddress).includes(`${collection.collectionAddress}`)}
+      onChange={(checked) => {
+        let arr: OBOrderItem[] = [];
+        if (checked) {
+          arr = [...selectedCollections, collection];
+        } else {
+          arr = selectedCollections.filter((c) => c.collectionAddress !== collection.collectionAddress);
+        }
+        setSelectedCollections(arr);
+        const newFilter = { ...filter };
+        newFilter.collections = arr.map((c) => c.collectionAddress);
+        setFilter(newFilter);
+        onChange(newFilter);
+      }}
+      label={collection.collectionName}
+    />
+  );
 
   return (
     <div className={`w-80 mr-12 pointer-events-auto ${className ?? ''}`}>
@@ -76,7 +116,40 @@ export const UserProfileOrderFilterPanel = ({ className, onChange }: Props) => {
       </ul>
 
       <hr className="mt-8" />
+      <div className="text-lg mt-6 font-heading">Collection</div>
+      <div className="flex flex-col mt-4 mb-6">
+        <div className="w-full">
+          <TextInputBox
+            label=""
+            type="text"
+            className="border rounded-full py-2 px-4 mt-4 font-heading"
+            defaultValue={''}
+            onChange={onChangeNameSearch}
+            placeholder="Search"
+          />
+        </div>
 
+        <ul className="mt-8 w-full min-h-[100px] max-h-80 overflow-y-auto space-y-4">
+          {selectedCollections.map((coll) => (
+            <CollectionCheckbox collection={coll} />
+          ))}
+
+          {collections.map((coll) => {
+            if (selectedCollections.map((c) => c.collectionAddress).includes(`${coll.collectionAddress}`)) {
+              return null;
+            }
+            return <CollectionCheckbox collection={coll} />;
+          })}
+
+          {collectionSearchLoading && (
+            <div className="h-24">
+              <Spinner />
+            </div>
+          )}
+        </ul>
+      </div>
+
+      <hr className="mt-8" />
       <div className="text-lg mt-6 font-heading">Price</div>
       <div className="flex mt-4 mb-6">
         <TextInputBox
@@ -89,6 +162,10 @@ export const UserProfileOrderFilterPanel = ({ className, onChange }: Props) => {
           bindValue={true}
           onChange={(value) => {
             setMinPriceVal(value);
+            const newFilter = { ...filter };
+            newFilter.minPrice = value;
+            setFilter(newFilter);
+            onChange(newFilter);
           }}
         />
         <TextInputBox
@@ -101,18 +178,42 @@ export const UserProfileOrderFilterPanel = ({ className, onChange }: Props) => {
           bindValue={true}
           onChange={(value) => {
             setMaxPriceVal(value);
+            const newFilter = { ...filter };
+            newFilter.maxPrice = value;
+            setFilter(newFilter);
+            onChange(newFilter);
           }}
         />
       </div>
 
-      <div className="flex">
-        <Button variant="gray" className="py-3 w-1/2 bg-theme-gray-100 font-heading" onClick={handleClickApply}>
+      <div className="text-lg mt-6 font-heading">Number of NFTs</div>
+      <div className="flex mt-4 mb-6">
+        <TextInputBox
+          addEthSymbol={true}
+          type="number"
+          className="border-gray-300 font-heading"
+          label="Amount of NFTs"
+          placeholder=""
+          value={numItems}
+          bindValue={true}
+          onChange={(value) => {
+            setNumItems(value);
+            const newFilter = { ...filter };
+            newFilter.numItems = value;
+            setFilter(newFilter);
+            onChange(newFilter);
+          }}
+        />
+      </div>
+
+      {/* <div className="flex">
+        <Button variant="gray" className="py-3 w-1/2 bg-theme-gray-100 font-heading" onClick={onClickApply}>
           Apply
         </Button>
-        <Button variant="gray" className="py-3 w-1/2 bg-theme-gray-100 font-heading ml-2" onClick={handleClickClear}>
+        <Button variant="gray" className="py-3 w-1/2 bg-theme-gray-100 font-heading ml-2" onClick={onClickClear}>
           Clear
         </Button>
-      </div>
+      </div> */}
 
       <hr className="mt-8" />
     </div>

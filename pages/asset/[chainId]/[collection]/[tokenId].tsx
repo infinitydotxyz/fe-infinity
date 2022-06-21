@@ -1,18 +1,35 @@
 import { useRouter } from 'next/router';
-import { Button, ShortAddress, PageBox, ReadMoreText, SVG, NextLink, Spinner } from 'src/components/common';
+import {
+  Button,
+  ShortAddress,
+  PageBox,
+  ReadMoreText,
+  SVG,
+  NextLink,
+  Spinner,
+  EthPrice,
+  ToggleTab,
+  useToggleTab
+} from 'src/components/common';
 import { BLANK_IMAGE_URL, useFetch } from 'src/utils';
-import { Token, Collection, Erc721Metadata } from '@infinityxyz/lib-frontend/types/core';
+import { Token, Collection, Erc721Metadata, OBOrder } from '@infinityxyz/lib-frontend/types/core';
 import {
   TraitList,
-  ListNFTModal,
   CancelModal,
   TransferNFTModal,
   PlaceBidModal,
-  MakeOfferModal
+  MakeOfferModal,
+  ActivityList
 } from 'src/components/asset';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { CollectionFeed } from 'src/components/feed/collection-feed';
+// import { CollectionFeed } from 'src/components/feed/collection-feed';
+import { getOBOrderFromFirestoreOrderItem } from 'src/utils/exchange/orders';
+import { utils } from 'ethers';
+import { getCurrentOBOrderPrice } from '@infinityxyz/lib-frontend/utils';
+import { LowerPriceModal } from 'src/components/asset/modals/lower-price-modal';
+import { OrderbookContainer } from 'src/components/market/orderbook-list';
+import NotFound404Page from 'pages/not-found-404';
 
 const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
@@ -66,16 +83,28 @@ interface Props {
 }
 
 const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
-  const { checkSignedIn } = useAppContext();
+  const { checkSignedIn, user } = useAppContext();
   const { isLoading, error, token, collection } = useFetchAssetInfo(qchainId, qcollection, qtokenId);
+  const { options, onChange, selected } = useToggleTab(['Activity', 'Orders'], 'Activity');
 
   const [showCancelModal, setShowCancelModal] = useState(false);
-  const [showListNFTModal, setShowListNFTModal] = useState(false);
+  const [showLowerPriceModal, setShowLowerPriceModal] = useState(false);
   const [showTransferModal, setShowTransferModal] = useState(false);
   const [showMakeOfferModal, setShowMakeOfferModal] = useState(false);
   const [showPlaceBidModal, setShowPlaceBidModal] = useState(false);
+  const [buyPriceEth, setBuyPriceEth] = useState('');
 
-  // todo: hack to handle changed opensea image url
+  const listingOwner = token?.ordersSnippet?.listing?.orderItem?.makerAddress ?? '';
+  const isListingOwner = user?.address === listingOwner;
+
+  useEffect(() => {
+    if (token?.ordersSnippet?.listing?.orderItem) {
+      const obOrder: OBOrder = getOBOrderFromFirestoreOrderItem(token?.ordersSnippet?.listing?.orderItem);
+      const price = getCurrentOBOrderPrice(obOrder);
+      setBuyPriceEth(utils.formatEther(price));
+    }
+  }, [token]);
+
   if (token?.image) {
     console.log(token.image);
     token.image.url = token.image.url.replace('storage.opensea.io', 'openseauserdata.com');
@@ -96,71 +125,106 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
 
   if (error || !token || !collection) {
     console.error(error);
-    return (
-      <PageBox title="Asset - Error" className="w-full h-full grid place-items-center">
-        <div className="flex flex-col max-w-screen-2xl mt-4">
-          <main>
-            <p>Unable to load data.</p>
-          </main>
-        </div>
-      </PageBox>
-    );
+    return <NotFound404Page />;
+    // return (
+    //   <PageBox title="Asset - Error" className="w-full h-full grid place-items-center">
+    //     <div className="flex flex-col max-w-screen-2xl mt-4">
+    //       <main>
+    //         <p>Unable to load data.</p>
+    //       </main>
+    //     </div>
+    //   </PageBox>
+    // );
+    // router.push(`/not-found-404?chainId=${qchainId}&collectionAddress=${qcollection}&tokenId=${qtokenId}`);
+    // return null;
   }
 
-  // TODO: Joe to update Erc721Metadata type
   const tokenMetadata = token.metadata as Erc721Metadata;
 
   const assetName =
     tokenMetadata.name && collection.metadata.name
       ? `${tokenMetadata.name} - ${collection.metadata.name}`
-      : tokenMetadata.name || collection.metadata.name || 'No Name';
+      : tokenMetadata.name || collection.metadata.name || 'brrrr';
 
-  const onClickButton1 = () => {
+  const onClickBuy = () => {
     if (!checkSignedIn()) {
       return;
     }
     setShowPlaceBidModal(true);
   };
 
-  const onClickButton2 = () => {
+  const onClickMakeOffer = () => {
     if (!checkSignedIn()) {
       return;
     }
     setShowMakeOfferModal(true);
   };
 
+  const onClickCancel = () => {
+    if (!checkSignedIn()) {
+      return;
+    }
+    setShowCancelModal(true);
+  };
+
+  const onClickTransfer = () => {
+    if (!checkSignedIn()) {
+      return;
+    }
+    setShowTransferModal(true);
+  };
+
+  const onClickLowerPrice = () => {
+    if (!checkSignedIn()) {
+      return;
+    }
+    setShowLowerPriceModal(true);
+  };
+
   const modals = (
     <>
-      <CancelModal
-        isOpen={showCancelModal}
-        onClose={() => setShowCancelModal(false)}
-        collection={collection}
-        token={token}
-      />
-      <ListNFTModal
-        isOpen={showListNFTModal}
-        onClose={() => setShowListNFTModal(false)}
-        collection={collection}
-        token={token}
-      />
-      <TransferNFTModal
-        isOpen={showTransferModal}
-        onClose={() => setShowTransferModal(false)}
-        collection={collection}
-        token={token}
-      />
-      <MakeOfferModal
-        isOpen={showMakeOfferModal}
-        onClose={() => setShowMakeOfferModal(false)}
-        collection={collection}
-        token={token}
-      />
-      <PlaceBidModal
-        isOpen={showPlaceBidModal}
-        onClose={() => setShowPlaceBidModal(false)}
-        collection={collection}
-        token={token}
-      />
+      {showCancelModal && (
+        <CancelModal
+          isOpen={showCancelModal}
+          onClose={() => setShowCancelModal(false)}
+          collection={collection}
+          token={token}
+        />
+      )}
+      {showLowerPriceModal && (
+        <LowerPriceModal
+          isOpen={showLowerPriceModal}
+          onClose={() => setShowLowerPriceModal(false)}
+          collection={collection}
+          token={token}
+          buyPriceEth={buyPriceEth}
+        />
+      )}
+      {showTransferModal && (
+        <TransferNFTModal
+          isOpen={showTransferModal}
+          onClose={() => setShowTransferModal(false)}
+          collection={collection}
+          token={token}
+        />
+      )}
+
+      {showMakeOfferModal && (
+        <MakeOfferModal
+          isOpen={showMakeOfferModal}
+          onClose={() => setShowMakeOfferModal(false)}
+          collection={collection}
+          token={token}
+        />
+      )}
+      {showPlaceBidModal && (
+        <PlaceBidModal
+          isOpen={showPlaceBidModal}
+          onClose={() => setShowPlaceBidModal(false)}
+          collection={collection}
+          token={token}
+        />
+      )}
     </>
   );
 
@@ -197,18 +261,50 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
             Token ID: <span className="ml-4 font-heading">#{token.tokenId}</span>
           </span>
 
-          <div className="md:-ml-1.5">
-            <div className="flex flex-col md:flex-row gap-4 my-4 md:my-6 lg:my-10 lg:mb-16">
-              <Button variant="primary" size="large" onClick={onClickButton1}>
-                <span className="mr-4">Buy</span>
-                <span className="font-heading">3.30 ETH</span>
-              </Button>
-              <Button variant="outline" size="large" onClick={onClickButton2}>
-                Make offer
-              </Button>
+          {isListingOwner ? (
+            // Listing owner's action buttons
+            <div className="md:-ml-1.5">
+              <div className="flex flex-col md:flex-row gap-4 my-4 md:my-6 lg:mt-10">
+                {buyPriceEth && (
+                  <Button variant="primary" size="large" onClick={onClickCancel}>
+                    <div className="flex">
+                      <span className="mr-4">Cancel</span>
+                      <span className="font-heading">
+                        <EthPrice label={buyPriceEth} />
+                      </span>
+                    </div>
+                  </Button>
+                )}
+                <Button variant="outline" size="large" onClick={onClickLowerPrice}>
+                  Lower Price
+                </Button>
+                <Button variant="outline" size="large" onClick={onClickTransfer}>
+                  Transfer
+                </Button>
+              </div>
             </div>
-          </div>
-          <p className="font-body text-black mb-1">Description</p>
+          ) : (
+            // Other users' action buttons
+            <div className="md:-ml-1.5">
+              <div className="flex flex-col md:flex-row gap-4 my-4 md:my-6 lg:mt-10">
+                {buyPriceEth && (
+                  <Button variant="primary" size="large" onClick={onClickBuy}>
+                    <div className="flex">
+                      <span className="mr-4">Buy</span>
+                      <span className="font-heading">
+                        <EthPrice label={buyPriceEth} />
+                      </span>
+                    </div>
+                  </Button>
+                )}
+                <Button variant="outline" size="large" onClick={onClickMakeOffer}>
+                  Make offer
+                </Button>
+              </div>
+            </div>
+          )}
+
+          <p className="font-body text-black mb-1 lg:mt-10">Description</p>
           <div>
             <ReadMoreText
               text={collection.metadata.description || tokenMetadata.description}
@@ -224,9 +320,29 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
 
       {/* <ActivityList chainId={collection.chainId} collectionAddress={collection.address} tokenId={token.tokenId} /> */}
 
-      <div className="mt-4">
-        <h3 className="mt-8 mb-4 font-bold font-body">Activity</h3>
-        <CollectionFeed collectionAddress={collection.address} tokenId={token.tokenId} forActivity={true} />
+      <div className="relative min-h-[1024px]">
+        <ToggleTab
+          className="flex space-x-2 items-center relative max-w-xl top-[65px] pb-4 lg:pb-0"
+          tabWidth="150px"
+          options={options}
+          selected={selected}
+          onChange={onChange}
+        />
+
+        {selected === 'Activity' && (
+          <div className="mt-[-22px]">
+            {/* <h3 className="mt-8 mb-4 font-bold font-body">Activity</h3> */}
+            {/* <CollectionFeed collectionAddress={collection.address} tokenId={token.tokenId} forActivity={true} /> */}
+
+            <ActivityList chainId={token.chainId} collectionAddress={collection.address} tokenId={token.tokenId} />
+          </div>
+        )}
+
+        {selected === 'Orders' && (
+          <div className="mt-4">
+            <OrderbookContainer collectionId={token.collectionAddress} />
+          </div>
+        )}
       </div>
 
       {modals}

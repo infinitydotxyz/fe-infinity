@@ -35,8 +35,5 @@ export const NftImage = ({ chainId, collectionAddress, src, alt, ...rest }: Prop
     };
   }, []);
 
-  if (!imageUrl) {
-    return null;
-  }
-  return <img src={imageUrl} {...rest} alt={alt} />;
+  return <img src={imageUrl ? imageUrl : BLANK_IMG} {...rest} alt={alt} />;
 };

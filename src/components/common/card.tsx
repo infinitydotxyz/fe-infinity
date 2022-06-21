@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { CardData } from '@infinityxyz/lib-frontend/types/core';
+import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { twMerge } from 'tailwind-merge';
 import { AiOutlineEye } from 'react-icons/ai';
 import { Dropdown, DropdownItems } from './dropdown';
@@ -12,15 +12,15 @@ import { SVG } from './svg';
 import { useRouter } from 'next/router';
 import { BLANK_IMG } from 'src/utils';
 
-type labelFn = (data?: CardData) => ReactNode;
+type labelFn = (data?: ERC721CardData) => ReactNode;
 
 type CardAction = {
   label: string | ReactNode | labelFn;
-  onClick: (ev: React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>, data?: CardData) => void;
+  onClick: (ev: React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>, data?: ERC721CardData) => void;
 };
 
 export interface CardProps {
-  data?: CardData;
+  data?: ERC721CardData;
   cardActions?: CardAction[];
   dropdownActions?: DropdownItems[];
   isLoading?: boolean;
@@ -38,7 +38,7 @@ export const Card = ({
 }: CardProps): JSX.Element => {
   const router = useRouter();
   const title = (data?.title ?? '').length > 25 ? data?.title?.slice(0, 25) + '...' : data?.title;
-  const tokenId = (data?.tokenId ?? '').length > 25 ? data?.tokenId?.slice(0, 25) + '...' : data?.tokenId;
+  const tokenId = (data?.tokenId ?? '').length > 25 ? data?.tokenId?.slice(0, 20) + '...' : data?.tokenId;
 
   const buttonJsx = (
     <>
@@ -46,8 +46,8 @@ export const Card = ({
         return (
           <Button
             key={idx}
-            variant="outline"
-            className="flex-1 py-3 font-bold"
+            variant="primary"
+            className="flex-1 py-2.5 text-lg"
             onClick={(ev) => {
               cardAction.onClick(ev, data);
             }}
@@ -67,14 +67,21 @@ export const Card = ({
 
   return (
     <div
-      className={`sm:mx-0 w-full relative flex flex-col pointer-events-auto ${className}`}
-      style={{ height: heightStyle }}
+      className={`
+        sm:mx-0 w-full relative flex flex-col pointer-events-auto p-2 rounded-3xl
+        shadow-[0_10px_10px_4px_rgba(0,0,0,0.1)] hover:shadow-[0_10px_10px_4px_rgba(0,0,0,0.2)]
+        transition-all duration-300 group ${className}`}
+      style={{ height: heightStyle }} // boxShadow: '0px 0px 16px 4px rgba(0, 0, 0, 0.07)'
     >
       <NextLink
         href={`/asset/${data?.chainId}/${data?.tokenAddress ?? data?.address}/${data?.tokenId}`}
-        className="h-full overflow-clip rounded-3xl border-black border-[0.5px]"
+        className="h-full overflow-clip rounded-3xl"
       >
-        {data?.image ? <BGImage src={data?.image} className="" /> : <BGImage src={BLANK_IMG} className="" />}
+        {data?.image ? (
+          <BGImage src={data?.image} className="group-hover:scale-[1.15] transition-all duration-300" />
+        ) : (
+          <BGImage src={BLANK_IMG} className="" />
+        )}
       </NextLink>
 
       {data?.rarityRank && (
@@ -91,7 +98,7 @@ export const Card = ({
             router.push(`/collection/${data?.collectionSlug}`);
           }}
         >
-          {title}
+          {title ? title : <>&nbsp;</>}
           {data?.hasBlueCheck ? <SVG.blueCheck className="w-5 h-5 ml-1" /> : null}
         </div>
         <div className="text-secondary font-heading" title={data?.tokenId}>
@@ -121,8 +128,8 @@ export const Card = ({
 const LoadingCard = ({ className }: { className?: string }) => (
   <ContentLoader
     speed={2}
-    width={290}
-    height={290}
+    width={310}
+    height={350}
     viewBox="0 0 400 460"
     backgroundColor="#f3f3f3"
     foregroundColor="#ecebeb"

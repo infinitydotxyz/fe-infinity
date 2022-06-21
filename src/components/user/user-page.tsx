@@ -18,7 +18,11 @@ interface UserPageProps {
 
 export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner = false }) => {
   const router = useRouter();
-  const { options, onChange, selected } = useToggleTab(['Collected', 'Activity', 'Orders'], 'Collected');
+  const tabs = ['Collected', 'Orders', 'Activity'];
+  if (isOwner) {
+    tabs.push('Send');
+  }
+  const { options, onChange, selected } = useToggleTab(tabs, (router?.query?.tab as string) || 'Collected');
 
   return (
     <>
@@ -68,8 +72,9 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
 
         <div className="mt-6 min-h-[1024px] pointer-events-none">
           {selected === 'Collected' && <UserPageNftsTab userInfo={userInfo} />}
-          {selected === 'Activity' && <UserPageActivityTab userInfo={userInfo} />}
           {selected === 'Orders' && <UserPageOrderList userInfo={userInfo} />}
+          {selected === 'Activity' && <UserPageActivityTab userInfo={userInfo} />}
+          {selected === 'Send' && <UserPageNftsTab userInfo={userInfo} forTransfers={true} />}
         </div>
       </div>
     </>

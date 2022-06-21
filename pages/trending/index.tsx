@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { parse } from 'query-string';
-import { BGImage, Button, EthPrice, NextLink, PageBox, ToggleTab, useToggleTab } from 'src/components/common';
+import { BGImage, Button, EthPrice, NextLink, PageBox, ToggleTab, useToggleTab, SVG } from 'src/components/common';
 import { apiGet, BLANK_IMG, formatNumber, ITEMS_PER_PAGE } from 'src/utils';
 import { Collection } from '@infinityxyz/lib-frontend/types/core';
 
@@ -26,6 +26,9 @@ const CollectionStatsPage = () => {
 
   const fetchData = async (refresh = false) => {
     setIsLoading(true);
+    if (refresh) {
+      setData([]);
+    }
     const { result } = await apiGet('/collections/stats', {
       query: {
         offset: refresh ? 0 : offset,
@@ -85,7 +88,7 @@ const CollectionStatsPage = () => {
   };
 
   return (
-    <PageBox title="Top Collections">
+    <PageBox title="Trending">
       <div className="flex justify-between">
         <ToggleTab className="font-heading" options={options} selected={selected} onChange={onChangeToggleTab} />
 
@@ -110,7 +113,7 @@ const CollectionStatsPage = () => {
       <div className="space-y-4 mt-8">
         {data.map((coll) => {
           return (
-            <div className="bg-gray-100 px-10 h-[110px] rounded-3xl flex items-center font-heading">
+            <div key={coll.address} className="bg-gray-100 px-10 h-[110px] rounded-3xl flex items-center font-heading">
               <NextLink href={`/collection/${coll?.slug}`}>
                 {coll?.metadata?.profileImage ? (
                   <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={coll?.metadata?.profileImage} />
@@ -121,36 +124,40 @@ const CollectionStatsPage = () => {
 
               <div className="flex justify-between w-full mx-8">
                 <div className="w-1/6">
-                  <div className="text-black font-bold font-body">
-                    <a href={`/collection/${coll?.slug}`}>{coll?.metadata?.name}</a>
+                  <div className="flex items-center text-black font-bold font-body">
+                    <NextLink href={`/collection/${coll?.slug}`}>{coll?.metadata?.name}</NextLink>
+                    {/* using inline here (className will show the bluechecks in different sizes for smaller screen) */}
+                    {coll?.hasBlueCheck && <SVG.blueCheck className="ml-1.5" style={{ minWidth: 20, maxWidth: 20 }} />}
                   </div>
                   <div></div>
                 </div>
 
-                <div className="w-1/6">
+                <div className="w-1/10">
                   <div className="text-black font-bold font-body">Volume</div>
-                  <div>{formatNumber(coll?.stats?.daily?.salesVolume)}</div>
+                  <div>
+                    <EthPrice label={formatNumber(coll?.stats?.daily?.salesVolume)} />
+                  </div>
                 </div>
 
-                <div className="w-1/6">
+                <div className="w-1/10">
                   <div className="text-black font-bold font-body">Avg. Price</div>
                   <div>
                     <EthPrice label={formatNumber(coll?.stats?.daily?.avgPrice, 2)} />
                   </div>
                 </div>
 
-                <div className="w-1/6">
+                <div className="w-1/10">
                   <div className="text-black font-bold font-body">Owners</div>
-                  <div>
-                    <EthPrice label={formatNumber(coll?.stats?.daily?.ownerCount)} />
-                  </div>
+                  <div>{formatNumber(coll?.stats?.daily?.ownerCount)}</div>
                 </div>
 
-                <div className="w-1/6">
+                <div className="w-1/10">
                   <div className="text-black font-bold font-body">Tokens</div>
-                  <div>
-                    <EthPrice label={formatNumber(coll?.stats?.daily?.tokenCount)} />
-                  </div>
+                  <div>{formatNumber(coll?.stats?.daily?.tokenCount)}</div>
+                </div>
+
+                <div className="w-[50px]">
+                  <Button>Buy</Button>
                 </div>
               </div>
             </div>

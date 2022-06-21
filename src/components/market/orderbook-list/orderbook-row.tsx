@@ -77,7 +77,7 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
     if (!checkSignedIn()) {
       return;
     }
-    // todo: fullfill order
+    // todo: adi fullfill order
     const signer = providerManager?.getEthersProvider().getSigner();
     if (signer) {
       await takeOrder(signer, chainId, order.signedOrder);
@@ -96,7 +96,11 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
 
           if (data.field === 'buyOrSell') {
             return (
-              <Button className="font-heading" key={`${order.id} ${data.field}`} onClick={() => onClickBuySell(order)}>
+              <Button
+                className="font-heading w-24"
+                key={`${order.id} ${data.field}`}
+                onClick={() => onClickBuySell(order)}
+              >
                 {order.isSellOrder ? 'Buy' : 'Sell'}
               </Button>
             );

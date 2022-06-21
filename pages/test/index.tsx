@@ -48,15 +48,15 @@ export const TestPage = () => {
 
             <Button
               onClick={() => {
-                void router.push('/collection-stats');
+                void router.push('/trending');
               }}
             >
-              Collection Stats
+              Trending
             </Button>
 
             <Button
               onClick={() => {
-                void router.push('/terms-of-service');
+                void router.push('/terms-and-conditions');
               }}
             >
               Terms of Service

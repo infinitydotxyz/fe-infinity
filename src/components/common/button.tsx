@@ -48,13 +48,13 @@ export const Button = ({
     <button
       type={type}
       disabled={disabled}
-      className={`
-      ${classes.base}
-      ${classes.size[size]}
-      ${classes.variant[variant]}
-      ${disabled ? classes.disabled : ''}
-      ${className}
-     `}
+      className={twMerge(`
+        ${classes.base}
+        ${classes.size[size]}
+        ${classes.variant[variant]}
+        ${disabled ? classes.disabled : ''}
+        ${className}
+      `)}
       onClick={(e) => {
         if (type === 'button') {
           // this allows a button to be in a clickable div

@@ -1,4 +1,4 @@
-import { BaseCollection, CollectionStats } from '@infinityxyz/lib-frontend/types/core';
+import { BaseCollection, ChainId, CollectionStats } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
@@ -192,9 +192,11 @@ export const StatsChips = ({ collection, weeklyStatsData }: Props) => {
         onClick={() => {
           // assumes parent view has a drawer
           addCartItem({
-            collectionName: collection.metadata.name ?? '(no name)',
-            collectionAddress: collection.address ?? '(no address)',
+            chainId: collection.chainId as ChainId,
+            collectionName: collection.metadata.name ?? '',
+            collectionAddress: collection.address ?? '',
             collectionImage: collection.metadata.profileImage ?? '',
+            collectionSlug: collection?.slug ?? '',
             isSellOrder: false
           });
           setOrderDrawerOpen(true);

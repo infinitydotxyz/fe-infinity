@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { BaseCollection, CardData, CollectionStats } from '@infinityxyz/lib-frontend/types/core';
+import { BaseCollection, ERC721CardData, CollectionStats, ChainId } from '@infinityxyz/lib-frontend/types/core';
 import { ToggleTab, PageBox, useToggleTab, SVG, EthPrice } from 'src/components/common';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { useFetch } from 'src/utils/apiUtils';
@@ -16,12 +16,13 @@ import ContentLoader from 'react-content-loader';
 import { iconButtonStyle } from 'src/utils/ui-constants';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
 import { useAppContext } from 'src/utils/context/AppContext';
+import NotFound404Page from 'pages/not-found-404';
 
 const CollectionPage = () => {
+  const router = useRouter();
   const { checkSignedIn } = useAppContext();
   const { addCartItem, removeCartItem, ordersInCart, cartItems, addOrderToCart, updateOrders } = useOrderContext();
   const [isBuyClicked, setIsBuyClicked] = useState(false);
-  const router = useRouter();
   const { options, onChange, selected } = useToggleTab(
     ['NFT', 'Activity', 'Orderbook'],
     (router?.query?.tab as string) || 'NFT'
@@ -71,7 +72,7 @@ const CollectionPage = () => {
   );
   const firstDailyStats = dailyStats?.data[0];
 
-  const isAlreadyAdded = (data: CardData | undefined) => {
+  const isAlreadyAdded = (data: ERC721CardData | undefined) => {
     // check if this item was already added to cartItems or order.
     const found1 =
       cartItems.find((item) => item.collectionAddress === data?.address && item.tokenId === data.tokenId) !== undefined;
@@ -89,7 +90,7 @@ const CollectionPage = () => {
   };
 
   // find & remove this item in cartItems & all orders' cartItems:
-  const findAndRemove = (data: CardData | undefined) => {
+  const findAndRemove = (data: ERC721CardData | undefined) => {
     const foundItemIdx = cartItems.findIndex(
       (item) => item.collectionAddress === data?.address && item.tokenId === data?.tokenId
     );
@@ -101,6 +102,10 @@ const CollectionPage = () => {
     });
     updateOrders(ordersInCart.filter((order) => order.cartItems.length > 0));
   };
+
+  if (error) {
+    return <NotFound404Page collectionSlug={name?.toString()} />;
+  }
 
   if (!collection) {
     // failed to load collection (collection not indexed?)
@@ -235,7 +240,7 @@ const CollectionPage = () => {
                         if (price) {
                           return (
                             <div className="flex justify-center">
-                              <span className="mr-4 font-bold">Buy</span>
+                              <span className="mr-4 font-normal">Buy</span>
                               <EthPrice label={`${price}`} />
                             </div>
                           );
@@ -243,7 +248,7 @@ const CollectionPage = () => {
                         if (isAlreadyAdded(data)) {
                           return <div className="font-normal">✓ Added</div>;
                         }
-                        return <div className="font-bold">Add to order</div>;
+                        return <div className="font-normal">Add to order</div>;
                       },
                       onClick: (ev, data) => {
                         if (!checkSignedIn()) {
@@ -255,12 +260,16 @@ const CollectionPage = () => {
                         }
                         const price = data?.orderSnippet?.listing?.orderItem?.startPriceEth ?? '';
                         addCartItem({
-                          collectionName: data?.collectionName ?? '(no name)',
-                          collectionAddress: data?.tokenAddress ?? '(no address)',
+                          chainId: data?.chainId as ChainId,
+                          collectionName: data?.collectionName ?? '',
+                          collectionAddress: data?.tokenAddress ?? '',
+                          collectionImage: data?.cardImage ?? data?.image ?? '',
+                          collectionSlug: data?.collectionSlug ?? '',
                           tokenImage: data?.image ?? '',
-                          tokenName: data?.name ?? '(no name)',
-                          tokenId: data?.tokenId ?? '0',
-                          isSellOrder: false
+                          tokenName: data?.name ?? '',
+                          tokenId: data?.tokenId ?? '-1',
+                          isSellOrder: false,
+                          attributes: data?.attributes ?? []
                         });
                         if (price) {
                           setIsBuyClicked(true); // to add to cart as a Buy order. (see: useEffect)

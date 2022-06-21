@@ -5,7 +5,14 @@ import { MaxUint256 } from '@ethersproject/constants';
 import { Contract } from '@ethersproject/contracts';
 import { JsonRpcSigner } from '@ethersproject/providers';
 import { parseEther } from '@ethersproject/units';
-import { ChainNFTs, ChainOBOrder, OBOrder, OBOrderItem, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import {
+  ChainNFTs,
+  ChainOBOrder,
+  FirestoreOrderItem,
+  OBOrder,
+  OBOrderItem,
+  SignedOBOrder
+} from '@infinityxyz/lib-frontend/types/core';
 import {
   getCurrentOBOrderPrice,
   getExchangeAddress,
@@ -36,7 +43,6 @@ export async function getSignedOBOrder(
     const msg = 'signOBSpecOrder: failed to sign order';
     console.error(msg);
     throw msg;
-    return undefined;
   }
   const signedOBOrder: SignedOBOrder = { ...order, signedOrder };
   return signedOBOrder;
@@ -65,7 +71,7 @@ export async function prepareOBOrder(
   const chainOBOrder = await signOBOrder(chainId, infinityExchange.address, order, signer);
 
   console.log('Verifying signature');
-  // todo: remove this
+  // todo: adi remove this
   const isSigValid = await infinityExchange.verifyOrderSig(chainOBOrder);
   if (!isSigValid) {
     console.error('Signature is invalid');
@@ -194,7 +200,7 @@ export async function checkERC721Ownership(user: User, contract: Contract, token
     console.log('Checking ERC721 on chain ownership');
     const owner = trimLowerCase(await contract.ownerOf(tokenId));
     if (owner !== trimLowerCase(user.address)) {
-      // todo: should continue to check if other nfts are owned
+      // todo: adi should continue to check if other nfts are owned
       console.error('Order on chain ownership check failed');
       return false;
     }
@@ -243,7 +249,6 @@ export async function signOBOrder(
     parseEther(String(order.endPriceEth)),
     Math.floor(order.startTimeMs / 1000),
     Math.floor(order.endTimeMs / 1000),
-    order.minBpsToSeller,
     order.nonce
   ];
 
@@ -408,6 +413,7 @@ export async function takeOrder(signer: JsonRpcSigner, chainId: string, makerOrd
   console.log(jsonString(takerOrder));
   const canTake = await canTakeOrders(infinityExchange, makerOrder, takerOrder);
   if (canTake) {
+    // todo: adi function sig changed
     await infinityExchange.takeOrders([makerOrder], [takerOrder], options);
   } else {
     console.error('Cannot take order');
@@ -421,8 +427,32 @@ export async function canTakeOrders(
 ): Promise<boolean> {
   const makerOrderHash = _orderHash(makerOrder);
   const result = await infinityExchange.verifyTakeOrders(makerOrderHash, makerOrder, takerOrder);
-  console.log('verified', result[0], 'execPrice', result[1].toString());
-  return result[0];
+  return result;
+}
+
+export function getOBOrderFromFirestoreOrderItem(firestoreOrderItem: FirestoreOrderItem | null | undefined) {
+  const ord: OBOrder = {
+    id: firestoreOrderItem?.id ?? '',
+    chainId: firestoreOrderItem?.chainId ?? '',
+    isSellOrder: firestoreOrderItem?.isSellOrder ?? false,
+    numItems: firestoreOrderItem?.numItems ?? 0,
+    makerUsername: firestoreOrderItem?.makerAddress ?? '',
+    makerAddress: firestoreOrderItem?.makerAddress ?? '',
+    startPriceEth: firestoreOrderItem?.startPriceEth ?? 0,
+    endPriceEth: firestoreOrderItem?.endPriceEth ?? 0,
+    startTimeMs: firestoreOrderItem?.startTimeMs ?? 0,
+    endTimeMs: firestoreOrderItem?.endTimeMs ?? 0,
+    nonce: '',
+    nfts: [],
+    execParams: {
+      currencyAddress: '',
+      complicationAddress: ''
+    },
+    extraParams: {
+      buyer: ''
+    }
+  };
+  return ord;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -436,7 +466,7 @@ function _orderHash(order: ChainOBOrder): BytesLike {
   const extraParams = order.extraParams;
 
   const constraintsHash = keccak256(
-    defaultAbiCoder.encode(['uint256', 'uint256', 'uint256', 'uint256', 'uint256', 'uint256', 'uint256'], constraints)
+    defaultAbiCoder.encode(['uint256', 'uint256', 'uint256', 'uint256', 'uint256', 'uint256'], constraints)
   );
 
   const nftsHash = _getNftsHash(order.nfts);
