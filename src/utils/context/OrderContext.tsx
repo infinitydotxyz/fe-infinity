@@ -218,7 +218,7 @@ export const OrderContextProvider = ({ children }: Props) => {
         startPriceEth: price,
         endPriceEth: price,
         nfts,
-        makerUsername: '' // todo: put in username
+        makerUsername: '' // todo: adi put in username
       };
 
       const orderInCart: OrderInCart = {

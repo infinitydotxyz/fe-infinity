@@ -77,7 +77,7 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
     if (!checkSignedIn()) {
       return;
     }
-    // todo: fullfill order
+    // todo: adi fullfill order
     const signer = providerManager?.getEthersProvider().getSigner();
     if (signer) {
       await takeOrder(signer, chainId, order.signedOrder);

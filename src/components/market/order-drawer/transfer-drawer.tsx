@@ -50,7 +50,7 @@ export const TransferDrawer = ({ open, onClose, nftsForTransfer, onClickRemove }
           <Spacer />
 
           <footer className="w-full text-center py-4">
-            <Button size="large" onClick={() => alert('todo: transfer listings')}>
+            <Button size="large" onClick={() => ''}>
               Transfer
             </Button>
           </footer>

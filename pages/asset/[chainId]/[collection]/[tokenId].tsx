@@ -105,7 +105,6 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
     }
   }, [token]);
 
-  // todo: hack to handle changed opensea image url
   if (token?.image) {
     console.log(token.image);
     token.image.url = token.image.url.replace('storage.opensea.io', 'openseauserdata.com');
@@ -140,7 +139,6 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
     // return null;
   }
 
-  // TODO: Joe to update Erc721Metadata type
   const tokenMetadata = token.metadata as Erc721Metadata;
 
   const assetName =

@@ -71,7 +71,7 @@ export async function prepareOBOrder(
   const chainOBOrder = await signOBOrder(chainId, infinityExchange.address, order, signer);
 
   console.log('Verifying signature');
-  // todo: remove this
+  // todo: adi remove this
   const isSigValid = await infinityExchange.verifyOrderSig(chainOBOrder);
   if (!isSigValid) {
     console.error('Signature is invalid');
@@ -200,7 +200,7 @@ export async function checkERC721Ownership(user: User, contract: Contract, token
     console.log('Checking ERC721 on chain ownership');
     const owner = trimLowerCase(await contract.ownerOf(tokenId));
     if (owner !== trimLowerCase(user.address)) {
-      // todo: should continue to check if other nfts are owned
+      // todo: adi should continue to check if other nfts are owned
       console.error('Order on chain ownership check failed');
       return false;
     }
@@ -413,7 +413,7 @@ export async function takeOrder(signer: JsonRpcSigner, chainId: string, makerOrd
   console.log(jsonString(takerOrder));
   const canTake = await canTakeOrders(infinityExchange, makerOrder, takerOrder);
   if (canTake) {
-    // todo: function sig changed
+    // todo: adi function sig changed
     await infinityExchange.takeOrders([makerOrder], [takerOrder], options);
   } else {
     console.error('Cannot take order');

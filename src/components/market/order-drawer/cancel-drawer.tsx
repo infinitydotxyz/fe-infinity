@@ -53,7 +53,7 @@ export const CancelDrawer = ({ open, onClose, orders, onClickRemove }: Props) =>
           <Spacer />
 
           <footer className="w-full text-center py-4">
-            <Button size="large" onClick={() => alert('todo: cancel listings')}>
+            <Button size="large" onClick={() => ''}>
               Cancel Listings
             </Button>
           </footer>
