@@ -1,4 +1,4 @@
-export const firebaseConfig = {
+export const firestoreConfig = {
   apiKey: 'AIzaSyAv0Ls9j_R933xsdNa9TqXJkokRIGeTVCU',
   authDomain: 'nftc-infinity.firebaseapp.com',
   projectId: 'nftc-infinity',
