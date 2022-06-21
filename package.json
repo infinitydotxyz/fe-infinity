@@ -9,7 +9,9 @@
     "lint": "eslint . --fix",
     "format": "prettier --write {src,pages}/**/{**,}/*.{tsx,ts}",
     "update:lib": "npm install @infinityxyz/lib-frontend@latest",
-    "analyze": "ANALYZE=true next build"
+    "analyze": "ANALYZE=true next build",
+    "deploy:dev": "npm run build && gcloud app deploy --appyaml=./app.yaml --project=nftc-dev",
+    "deploy:prod": "npm run build && gcloud app deploy --appyaml=./app.yaml --project=nftc-infinity"
   },
   "engines": {
     "node": "16.x"
