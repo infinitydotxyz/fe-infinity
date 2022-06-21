@@ -11,7 +11,7 @@ import { useOrderContext } from 'src/utils/context/OrderContext';
 import { useAppContext } from 'src/utils/context/AppContext';
 interface Props {
   collection: BaseCollection;
-  weeklyStatsData: CollectionStats[];
+  weeklyStatsData?: CollectionStats;
 }
 
 export const StatsChips = ({ collection, weeklyStatsData }: Props) => {
@@ -84,7 +84,7 @@ export const StatsChips = ({ collection, weeklyStatsData }: Props) => {
     }
   };
 
-  const firstWeeklyStats = weeklyStatsData[0];
+  const firstWeeklyStats = weeklyStatsData;
   const twitterChangePct = `${Math.abs(firstWeeklyStats?.twitterFollowersPercentChange ?? 0)}`.slice(0, 4);
   const discordChangePct = `${Math.abs(firstWeeklyStats?.discordFollowersPercentChange ?? 0)}`.slice(0, 4);
 
