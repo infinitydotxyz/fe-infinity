@@ -15,5 +15,25 @@
       "background-image": "linear-gradient(45deg, #141414 25%, transparent 25%, transparent 75%, #141414 75%, #141414), linear-gradient(45deg, #141414 25%, transparent 25%, transparent 75%, #141414 75%, #141414)"
     }
   },
-  "svgPreview.autoOpen": true
+  "svgPreview.autoOpen": true,
+  "scss.lint.unknownAtRules": "ignore",
+  "css.lint.unknownAtRules": "ignore"
+
+  // fixes auto complete outside of jsx for class names
+  // "tailwindCSS.lint.cssConflict": "ignore",
+  // "tailwindCSS.includeLanguages": {
+  //   "html": "html",
+  //   "javascript": "javascript",
+  //   "typescript": "javascript",
+  //   "typescriptreact": "javascript",
+  //   "plaintext": "javascript",
+  //   "css": "css"
+  // },
+  // "editor.quickSuggestions": {
+  //   "other": true,
+  //   "comments": true,
+  //   "strings": true
+  // },
+  // "tailwindCSS.experimental.classRegex": ["`([^`]*)"],
+  // "tailwindCSS.emmetCompletions": true
 }
