@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { FeedEventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { apiGet } from 'src/utils';
-import { FeedFilter, fetchMoreEvents } from 'src/utils/firestore/firestoreUtils';
+import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
 import { ScrollLoader } from '../common';
 // import { ActivityItem } from './activity-item';
 import { CommentPanel } from './comment-panel';
@@ -31,12 +31,13 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
 
   const [isLoading, setIsLoading] = useState(false);
   const [activities, setActivities] = useState<NftActivity[] | null>(null);
+  const [cursor, setCursor] = useState('');
 
   if (forActivity && !collectionAddress) {
     return null; // require collectionAddress
   }
 
-  const fetchActivity = async () => {
+  const fetchActivity = async (isRefresh = false, fromCursor = '') => {
     setIsLoading(true);
     const url = tokenId
       ? `/collections/${chainId}:${collectionAddress}/nfts/${tokenId}/activity`
@@ -45,18 +46,24 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
       // const { result } = await apiGet(`/collections/1:0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/nfts/8880/activity`, {
       query: {
         limit: 50,
-        eventType: ['sale', 'listing', 'offer']
+        eventType: filter.types || ['sale', 'listing', 'offer'],
+        cursor: fromCursor
       }
     });
     setIsLoading(false);
-    if (!error) {
-      setActivities(result?.data);
+    if (!error && result) {
+      if (isRefresh) {
+        setActivities([...result.data]);
+      } else {
+        setActivities([...(activities || []), ...result.data]);
+      }
+      setCursor(result?.cursor);
     }
   };
 
   useEffect(() => {
-    fetchActivity();
-  }, []);
+    fetchActivity(true);
+  }, [filter]);
 
   // const getEvents = () => {
   //   try {
@@ -126,7 +133,28 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
     <div className={`min-h-[1024px] ${className}`}>
       <div className="flex justify-between mt-[-66px] mb-6">
         <div className="text-3xl mb-6">&nbsp;</div>
-        <FeedFilterDropdown selectedTypes={filteringTypes} onChange={onChangeFilterDropdown} />
+        <FeedFilterDropdown
+          options={[
+            {
+              label: 'All',
+              value: ''
+            },
+            {
+              label: 'Listings',
+              value: 'listing'
+            },
+            {
+              label: 'Offers',
+              value: 'offer'
+            },
+            {
+              label: 'Sales',
+              value: 'sale'
+            }
+          ]}
+          selectedTypes={filteringTypes}
+          onChange={onChangeFilterDropdown}
+        />
       </div>
 
       {!isLoading && activities && activities.length === 0 ? (
@@ -195,9 +223,10 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
 
         <ScrollLoader
           onFetchMore={async () => {
-            const data: FeedEvent[] = (await fetchMoreEvents(filter)) as FeedEvent[];
-            console.log('data', data);
-            setEvents([...events, ...data]);
+            // const data: FeedEvent[] = (await fetchMoreEvents(filter)) as FeedEvent[];
+            // // console.log('data', data);
+            // setEvents([...events, ...data]);
+            fetchActivity(false, cursor);
           }}
         />
       </ul>

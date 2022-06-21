@@ -39,8 +39,11 @@ export const ActivityItem = ({ item }: Props) => {
     <div>
       <div className="bg-gray-100 px-10 py-6 rounded-3xl flex items-center font-heading">
         <NextLink href={`/asset/${item.chainId}/${item.collectionData?.address}/${item.tokenId}`}>
-          {item.collectionData?.metadata.profileImage ? (
-            <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={item.collectionData?.metadata.profileImage} />
+          {item.collectionData?.metadata?.profileImage ? (
+            <BGImage
+              className="w-16 h-16 max-h-[80px] rounded-full"
+              src={item.collectionData?.metadata?.profileImage}
+            />
           ) : (
             <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={BLANK_IMG} />
           )}
