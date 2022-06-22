@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { parse } from 'query-string';
 import { BGImage, Button, EthPrice, NextLink, PageBox, ToggleTab, useToggleTab, SVG } from 'src/components/common';
 import { apiGet, BLANK_IMG, formatNumber, ITEMS_PER_PAGE } from 'src/utils';
-import { Collection } from '@infinityxyz/lib-frontend/types/core';
+import { Collection, CollectionPeriodStatsContent } from '@infinityxyz/lib-frontend/types/core';
 
 // - cache stats 5mins
 
@@ -112,6 +112,14 @@ const CollectionStatsPage = () => {
 
       <div className="space-y-4 mt-8">
         {data.map((coll) => {
+          let periodStat: CollectionPeriodStatsContent | undefined = undefined;
+          if (period === 'daily') {
+            periodStat = coll?.stats?.daily;
+          } else if (period === 'weekly') {
+            periodStat = coll?.stats?.weekly;
+          } else if (period === 'monthly') {
+            periodStat = coll?.stats?.monthly;
+          }
           return (
             <div key={coll.address} className="bg-gray-100 px-10 h-[110px] rounded-3xl flex items-center font-heading">
               <NextLink href={`/collection/${coll?.slug}`}>
@@ -123,37 +131,43 @@ const CollectionStatsPage = () => {
               </NextLink>
 
               <div className="flex justify-between w-full mx-8">
-                <div className="w-1/6">
+                <div className="w-2/6">
                   <div className="flex items-center text-black font-bold font-body">
-                    <NextLink href={`/collection/${coll?.slug}`}>{coll?.metadata?.name}</NextLink>
+                    <NextLink href={`/collection/${coll?.slug}`} className="truncate">
+                      {coll?.metadata?.name}
+                    </NextLink>
                     {/* using inline here (className will show the bluechecks in different sizes for smaller screen) */}
                     {coll?.hasBlueCheck && <SVG.blueCheck className="ml-1.5" style={{ minWidth: 20, maxWidth: 20 }} />}
                   </div>
                   <div></div>
                 </div>
 
-                <div className="w-1/10">
-                  <div className="text-black font-bold font-body">Volume</div>
+                <div className="w-1/6">
+                  <div className="text-black font-bold font-body">
+                    Volume {queryBy === 'by_sales_volume' ? '▼' : ''}
+                  </div>
                   <div>
-                    <EthPrice label={formatNumber(coll?.stats?.daily?.salesVolume)} />
+                    <EthPrice label={periodStat?.salesVolume ? formatNumber(periodStat?.salesVolume) : '-'} />
                   </div>
                 </div>
 
-                <div className="w-1/10">
-                  <div className="text-black font-bold font-body">Avg. Price</div>
+                <div className="w-1/6">
+                  <div className="text-black font-bold font-body">
+                    Avg. Price {queryBy === 'by_sales_volume' ? '' : '▼'}
+                  </div>
                   <div>
-                    <EthPrice label={formatNumber(coll?.stats?.daily?.avgPrice, 2)} />
+                    <EthPrice label={periodStat?.avgPrice ? formatNumber(periodStat?.avgPrice, 2) : '-'} />
                   </div>
                 </div>
 
-                <div className="w-1/10">
+                <div className="w-1/6">
                   <div className="text-black font-bold font-body">Owners</div>
-                  <div>{formatNumber(coll?.stats?.daily?.ownerCount)}</div>
+                  <div>{formatNumber(periodStat?.ownerCount)}</div>
                 </div>
 
-                <div className="w-1/10">
+                <div className="w-1/6">
                   <div className="text-black font-bold font-body">Tokens</div>
-                  <div>{formatNumber(coll?.stats?.daily?.tokenCount)}</div>
+                  <div>{formatNumber(periodStat?.tokenCount)}</div>
                 </div>
 
                 <div className="w-[50px]">

@@ -6,7 +6,7 @@ import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { CollectionStatsDto } from '@infinityxyz/lib-frontend/types/dto/stats';
 import { useFetch } from 'src/utils/apiUtils';
 import { CollectionFeed } from 'src/components/feed/collection-feed';
-import { ellipsisAddress, getChainScannerBase } from 'src/utils';
+import { ellipsisAddress, formatNumber, getChainScannerBase } from 'src/utils';
 import { CollectionActivityTab } from 'src/components/collection/collection-activity-tab';
 import { StatsChips } from 'src/components/collection/stats-chips';
 import { CommunityRightPanel } from 'src/components/collection/community-right-panel';
@@ -21,12 +21,12 @@ import NotFound404Page from 'pages/not-found-404';
 
 const CollectionPage = () => {
   const router = useRouter();
-  const { checkSignedIn } = useAppContext();
+  const { checkSignedIn, chainId } = useAppContext();
   const { addCartItem, removeCartItem, ordersInCart, cartItems, addOrderToCart, updateOrders } = useOrderContext();
   const [isBuyClicked, setIsBuyClicked] = useState(false);
   const { options, onChange, selected } = useToggleTab(
-    ['NFT', 'Activity', 'Orderbook'],
-    (router?.query?.tab as string) || 'NFT'
+    ['NFTs', 'Orders', 'Activity'],
+    (router?.query?.tab as string) || 'NFTs'
   );
   const {
     query: { name }
@@ -58,16 +58,15 @@ const CollectionPage = () => {
   const path = `/collections/${name}`;
   const { result: collection, isLoading, error } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
   const { result: currentStats } = useFetch<CollectionStatsDto>(name ? `${path}/stats/current` : '', {
-    chainId: '1'
+    chainId
   });
-  const { result: dailyStats } = useFetch<{ data: CollectionStats[] }>(
+  const { result: allTimeStats } = useFetch<{ data: CollectionStats[] }>(
     name
-      ? path +
-          '/stats?offset=0&limit=10&orderBy=volume&orderDirection=desc&minDate=0&maxDate=2648764957623&period=daily'
+      ? path + '/stats?offset=0&limit=10&orderBy=volume&orderDirection=desc&minDate=0&maxDate=2648764957623&period=all'
       : '',
-    { chainId: '1' }
+    { chainId }
   );
-  const firstDailyStats = dailyStats?.data[0];
+  const firstAllTimeStats = allTimeStats?.data[0]; // first row = latest daily stats
 
   const isAlreadyAdded = (data: ERC721CardData | undefined) => {
     // check if this item was already added to cartItems or order.
@@ -135,7 +134,7 @@ const CollectionPage = () => {
             </button>
           </div>
 
-          <StatsChips collection={collection} weeklyStatsData={currentStats || undefined} />
+          <StatsChips collection={collection} currentStatsData={currentStats || undefined} />
 
           {isLoading ? (
             <div className="mt-6">
@@ -199,15 +198,15 @@ const CollectionPage = () => {
                 <td>{collection.numNfts?.toLocaleString() ?? '—'}</td>
                 <td>{collection.numOwners?.toLocaleString() ?? '—'}</td>
                 <td>
-                  {firstDailyStats?.floorPrice ? (
-                    <EthPrice label={String(firstDailyStats?.floorPrice)} labelClassName="font-bold" />
+                  {currentStats?.floorPrice ? (
+                    <EthPrice label={String(currentStats?.floorPrice)} labelClassName="font-bold" />
                   ) : (
                     '—'
                   )}
                 </td>
                 <td>
-                  {firstDailyStats?.volume ? (
-                    <EthPrice label={String(firstDailyStats?.volume?.toLocaleString())} labelClassName="font-bold" />
+                  {currentStats?.volume ? (
+                    <EthPrice label={formatNumber(firstAllTimeStats?.volume)} labelClassName="font-bold" />
                   ) : (
                     '—'
                   )}
@@ -225,7 +224,7 @@ const CollectionPage = () => {
           />
 
           <div className="mt-6 min-h-[1024px]">
-            {selected === 'NFT' && collection && (
+            {selected === 'NFTs' && collection && (
               <GalleryBox
                 pageId="COLLECTION"
                 collection={collection}
@@ -278,7 +277,7 @@ const CollectionPage = () => {
               />
             )}
 
-            {selected === 'Orderbook' && (
+            {selected === 'Orders' && (
               <OrderbookContainer collectionId={collection.address} className="mt-[-70px] pointer-events-none" />
             )}
 

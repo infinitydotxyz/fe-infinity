@@ -1,6 +1,7 @@
 import React from 'react';
-import { Button, PageBox } from 'src/components/common';
+import { Button, PageBox, toastSuccess } from 'src/components/common';
 import notfound404 from 'src/images/notfound404.png';
+import { apiGet } from 'src/utils';
 
 interface Props {
   collectionSlug?: string;
@@ -13,6 +14,15 @@ interface Props {
 const NotFound404Page = ({ collectionSlug = '', chainId = '', collectionAddress = '', tokenId = '' }: Props) => {
   console.log('params: ', chainId, collectionAddress, tokenId);
 
+  const onClickEnqueue = async () => {
+    const { error } = await apiGet(`/collections/${collectionSlug}/enqueue`);
+    if (error) {
+      console.error(error);
+    } else {
+      toastSuccess('Collection enqueued.');
+    }
+  };
+
   return (
     <PageBox title="404 Not Found" showTitle={false}>
       <div className="h-[70vh] flex flex-col items-center justify-center">
@@ -22,7 +32,9 @@ const NotFound404Page = ({ collectionSlug = '', chainId = '', collectionAddress 
           <>
             <div className="mt-4 text-xl">We haven't loaded this collection yet. Click the button to queue it up.</div>
 
-            <Button className="font-heading mt-10">Start queue</Button>
+            <Button className="font-heading mt-10" onClick={onClickEnqueue}>
+              Start queue
+            </Button>
           </>
         ) : (
           <div className="mt-4 text-3xl">This page could not be found</div>
