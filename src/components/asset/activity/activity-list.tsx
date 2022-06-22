@@ -72,8 +72,8 @@ export const ActivityList: React.FC<ActivityListPropType> = ({
           return <ActivityItem key={item} item={item} />;
         })
       ) : (
-        <div className=" bg-theme-light-300 px-6 sm:px-6 md:px-8 lg:px-16 -mx-1 my-2 sm:my-4 py-5 md:py-4 md:pt-12 md:pb-14 rounded-3xl text-center">
-          No History
+        <div className=" bg-theme-light-300 px-6 sm:px-6 md:px-8 lg:px-16 -mx-1 my-2 sm:my-4 py-5 md:py-4 md:pt-12 md:pb-14 rounded-3xl text-center font-heading">
+          No Activity
         </div>
       )}
     </div>
