@@ -20,12 +20,13 @@ const getSortLabel = (key: string | undefined) => {
 
 interface OrderbookContainerProps {
   collectionId?: string;
+  tokenId?: string;
   className?: string;
 }
 
-export const OrderbookContainer = ({ collectionId, className }: OrderbookContainerProps): JSX.Element => {
+export const OrderbookContainer = ({ collectionId, tokenId, className }: OrderbookContainerProps): JSX.Element => {
   return (
-    <OrderbookProvider collectionId={collectionId}>
+    <OrderbookProvider collectionId={collectionId} tokenId={tokenId}>
       <OrderbookContent className={className} />
     </OrderbookProvider>
   );
