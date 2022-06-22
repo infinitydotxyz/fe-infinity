@@ -340,7 +340,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
 
         {selected === 'Orders' && (
           <div className="mt-4">
-            <OrderbookContainer collectionId={token.collectionAddress} />
+            <OrderbookContainer collectionId={token.collectionAddress} tokenId={token.tokenId} />
           </div>
         )}
       </div>

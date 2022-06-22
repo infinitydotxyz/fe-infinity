@@ -17,6 +17,7 @@ export const LowerPriceModal = ({ isOpen, onClose, collection, token, buyPriceEt
   const { user } = useAppContext();
   const [orderDetails, setOrderDetails] = useState<SignedOBOrder | null>(null);
   const [price, setPrice] = useState(0);
+  const [errorMsg, setErrorMsg] = useState('');
   // const [lastPrice, setLastPrice] = useState(0);
   // TODO: do something with this ending price?
 
@@ -62,6 +63,13 @@ export const LowerPriceModal = ({ isOpen, onClose, collection, token, buyPriceEt
       onOKButton={async () => {
         if (!orderDetails || !user) {
           return;
+        }
+        const buyPriceEthVal = parseFloat(buyPriceEth ?? '0');
+        if (price >= buyPriceEthVal) {
+          setErrorMsg('The new price must be lower than the current price.');
+          return;
+        } else {
+          setErrorMsg('');
         }
         console.log(collection);
         console.log(token);
@@ -115,6 +123,7 @@ export const LowerPriceModal = ({ isOpen, onClose, collection, token, buyPriceEt
           setPrice(Number(value));
         }}
       />
+      <div className="text-red-700 mt-4">{errorMsg}</div>
     </Modal>
   );
 };
