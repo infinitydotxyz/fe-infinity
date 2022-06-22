@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { BaseCollection, ERC721CardData, CollectionStats } from '@infinityxyz/lib-frontend/types/core';
+import {
+  BaseCollection,
+  ERC721CardData,
+  CollectionStats,
+  CuratedCollection,
+  Collection
+} from '@infinityxyz/lib-frontend/types/core';
 import { ToggleTab, PageBox, useToggleTab, SVG, EthPrice, Heading, Button } from 'src/components/common';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { useFetch } from 'src/utils/apiUtils';
@@ -19,14 +25,14 @@ import { useAppContext } from 'src/utils/context/AppContext';
 import { FeesAprStats, FeesAccruedStats } from 'src/components/curation/statistics';
 import { VoteProgressBar } from 'src/components/curation/vote-progress-bar';
 import { VoteModal } from 'src/components/curation/vote-modal';
-import { useTokenVotes } from 'src/hooks/contract/token/useTokenVotes';
+import { useSWRConfig } from 'swr';
 
 const CollectionPage = () => {
-  const { checkSignedIn } = useAppContext();
+  const { checkSignedIn, user } = useAppContext();
   const { addCartItem, removeCartItem, ordersInCart, cartItems, addOrderToCart, updateOrders } = useOrderContext();
   const [isBuyClicked, setIsBuyClicked] = useState(false);
   const [isStakeModalOpen, setIsStakeModalOpen] = useState(false);
-  const { votes } = useTokenVotes();
+  // const [userCurated, setUserCurated] = useState<CuratedCollection>();
   const router = useRouter();
   const { options, onChange, selected } = useToggleTab(
     ['NFT', 'Activity', 'Orderbook'],
@@ -35,6 +41,7 @@ const CollectionPage = () => {
   const {
     query: { name }
   } = router;
+  const { mutate } = useSWRConfig();
 
   // todo: this caused console error. http://localhost:3000/collection/0mnipunks
   // if (!router.isReady) {
@@ -52,6 +59,18 @@ const CollectionPage = () => {
   //   }
   // }, [selected]);
 
+  /* const fetchUserCurated = async () => {
+    if (!user?.address) {
+      return;
+    }
+
+    const { result } = await apiGet(`${path}/curated/${user.address}`, { requiresAuth: true });
+
+    if (result) {
+      setUserCurated(result);
+    }
+  }; */
+
   useEffect(() => {
     if (isBuyClicked === true) {
       setIsBuyClicked(false);
@@ -59,6 +78,7 @@ const CollectionPage = () => {
     }
   }, [isBuyClicked]);
 
+  // useEffect(() => void fetchUserCurated(), [userReady]);
   const path = `/collections/${name}`;
   const { result: collection, isLoading, error } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
   const { result: dailyStats } = useFetch<{ data: CollectionStats[] }>(
@@ -74,6 +94,10 @@ const CollectionPage = () => {
           '/stats?offset=0&limit=10&orderBy=volume&orderDirection=desc&minDate=0&maxDate=2648764957623&period=weekly'
       : '',
     { chainId: '1' }
+  );
+  const { result: userCurated } = useFetch<CuratedCollection>(
+    user?.address ? `${path}/curated/${user.address}` : null,
+    { apiParams: { requiresAuth: true } }
   );
   const firstDailyStats = dailyStats?.data[0];
 
@@ -116,6 +140,7 @@ const CollectionPage = () => {
       </PageBox>
     );
   }
+
   return (
     <PageBox showTitle={false} title={collection.metadata?.name ?? ''}>
       <div className="flex flex-col mt-10">
@@ -224,15 +249,29 @@ const CollectionPage = () => {
             <Heading as="h2" className="font-body text-4xl">
               Curate collection
             </Heading>
-            {/* TODO: load user's voting stats from BE */}
-            <FeesAprStats value={168} className="mr-2" />
-            <FeesAccruedStats value={168} />
+            <FeesAprStats value={userCurated?.feesAPR || 0} className="mr-2" />
+            <FeesAccruedStats value={userCurated?.fees || 0} />
 
             <div className="flex flex-row space-x-2 relative">
-              <VoteProgressBar votes={votes} totalVotes={100} />
-              <Button onClick={() => setIsStakeModalOpen(true)}>Vote</Button>
+              <VoteProgressBar votes={userCurated?.votes || 0} totalVotes={collection.numCuratorVotes || 0} />
+              <Button onClick={() => checkSignedIn() && setIsStakeModalOpen(true)}>Vote</Button>
             </div>
-            <VoteModal collection={collection} isOpen={isStakeModalOpen} onClose={() => setIsStakeModalOpen(false)} />
+            <VoteModal
+              collection={collection}
+              curated={userCurated}
+              isOpen={isStakeModalOpen}
+              onClose={() => setIsStakeModalOpen(false)}
+              onVote={(votes) => {
+                // update local collection cache with latest amount of total votes
+                mutate(path, {
+                  ...collection,
+                  numCuratorVotes: (collection.numCuratorVotes || 0) + votes
+                } as Collection);
+
+                // reload user votes and estimates from API
+                mutate(`${path}/curated/${user?.address}`);
+              }}
+            />
           </section>
 
           <ToggleTab

@@ -1,25 +1,45 @@
-import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
+import { BaseCollection, CuratedCollection } from '@infinityxyz/lib-frontend/types/core';
 import React, { useState } from 'react';
+import { apiPost } from 'src/utils';
+import { useAppContext } from 'src/utils/context/AppContext';
 import { AvatarImage } from '../collection/avatar-image';
-import { Button, Divider, Heading, Modal, TextInputBox } from '../common';
+import { Button, Divider, Heading, Modal, TextInputBox, toastError } from '../common';
 import { FeesAccruedStats, FeesAprStats, Statistics } from './statistics';
 import { VoteProgressBar } from './vote-progress-bar';
 
 export type VoteModalProps = {
   isOpen: boolean;
   onClose: () => void;
+  onVote: (votes: number) => void;
   collection: BaseCollection;
+  curated: CuratedCollection | null;
 };
 
-export const VoteModal: React.FC<VoteModalProps> = ({ collection, isOpen, onClose: close }) => {
+export const VoteModal: React.FC<VoteModalProps> = ({ collection, curated, isOpen, onClose, onVote }) => {
+  const { user } = useAppContext();
   const [votes, setVotes] = useState(0);
 
-  // TODO: set available votes and stats from collection info
-
+  // TODO: re-calculate fees & APR (via API call) when 'votes' change
+  // TODO: use available votes from contract hook
   const votesAvailable = 120_350;
 
+  const vote = async () => {
+    const { error } = await apiPost(
+      `/collections/${collection.chainId}:${collection.address}/curated/${user?.address}`,
+      { data: { votes } }
+    );
+
+    if (error) {
+      toastError(error?.errorResponse?.message);
+      return;
+    }
+
+    onVote(votes);
+    onClose();
+  };
+
   return (
-    <Modal isOpen={isOpen} onClose={close} showCloseIcon showActionButtons={false}>
+    <Modal isOpen={isOpen} onClose={onClose} showCloseIcon showActionButtons={false}>
       <div className="space-y-4">
         <AvatarImage url={collection.metadata.profileImage} alt="avatar" />
         <Heading as="h3" className="font-body">
@@ -28,12 +48,13 @@ export const VoteModal: React.FC<VoteModalProps> = ({ collection, isOpen, onClos
       </div>
 
       <div className="my-8 font-body">
-        <FeesAprStats value={168} className="flex flex-row-reverse justify-between" />
-        <FeesAccruedStats value={168} className="flex flex-row-reverse justify-between" />
+        {/* TODO: re-calculate these on change */}
+        <FeesAprStats value={curated?.feesAPR || 0} className="flex flex-row-reverse justify-between" />
+        <FeesAccruedStats value={curated?.fees || 0} className="flex flex-row-reverse justify-between" />
       </div>
 
       <div className="my-8">
-        <VoteProgressBar votes={80} totalVotes={100} />
+        <VoteProgressBar votes={(curated?.votes || 0) + votes} totalVotes={(collection.numCuratorVotes || 0) + votes} />
       </div>
 
       <Divider className="my-10" />
@@ -55,7 +76,9 @@ export const VoteModal: React.FC<VoteModalProps> = ({ collection, isOpen, onClos
                 </Button>
               )}
             />
-            <Button className="w-full">Vote</Button>
+            <Button className="w-full" onClick={vote}>
+              Vote
+            </Button>
           </>
         )}
         {votesAvailable === 0 && (

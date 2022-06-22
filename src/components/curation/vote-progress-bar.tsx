@@ -16,7 +16,17 @@ export type VoteProgressBarProps = {
 };
 
 export const VoteProgressBar: React.FC<VoteProgressBarProps> = ({ votes, totalVotes, className }) => {
-  const percentage = useMemo(() => Math.floor((votes / totalVotes) * 100), [votes, totalVotes]);
+  const percentage = useMemo(() => {
+    const p = Math.floor((votes / totalVotes) * 100);
+
+    if (isNaN(p)) {
+      return 0;
+    } else if (!isFinite(p)) {
+      return 100;
+    } else {
+      return p;
+    }
+  }, [votes, totalVotes]);
 
   return (
     <ProgressBar percentage={percentage} className={className}>

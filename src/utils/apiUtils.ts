@@ -152,8 +152,8 @@ export const apiDelete = async (path: string, params?: ApiParams): Promise<ApiRe
 };
 
 // helper fn for 'useFetch'
-export const swrFetch = async (path: string) => {
-  const { result, error } = await apiGet(path);
+export const swrFetch = async (path: string, apiParams?: ApiParams) => {
+  const { result, error } = await apiGet(path, apiParams);
   if (error) {
     throw new Error('Error completing request');
   }
@@ -164,6 +164,7 @@ export const swrFetch = async (path: string) => {
 interface useFetchParams {
   query?: unknown;
   swrOptions?: SWRConfiguration<unknown> | undefined;
+  apiParams?: ApiParams;
   [key: string]: unknown;
 }
 export const useFetch = <T>(path: string | null, params: useFetchParams = {}) => {
@@ -173,7 +174,11 @@ export const useFetch = <T>(path: string | null, params: useFetchParams = {}) =>
     revalidateOnFocus: false,
     ...params?.swrOptions
   };
-  const { data, error } = useSWR(path ? `${path}${queryStr}` : null, swrFetch, options);
+  const { data, error } = useSWR(
+    path ? `${path}${queryStr}` : null,
+    (path) => swrFetch(path, params.apiParams),
+    options
+  );
   return {
     result: error ? null : (data as T),
     isLoading: !error && !data,
