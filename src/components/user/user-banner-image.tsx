@@ -1,6 +1,7 @@
 import { FaPen } from 'react-icons/fa';
 import { useRouter } from 'next/router';
 import { BGImage } from '../common';
+import profileEditBg from 'src/images/profile/profile-edit-bg.png';
 
 interface UserBannerImageProps {
   imgSrc?: string;
@@ -29,7 +30,8 @@ export const UserBannerImage = ({ imgSrc, isOwner = false }: UserBannerImageProp
             }`}
             onClick={handleClick}
           >
-            {isOwner && <FaPen />}
+            {isOwner && <FaPen className="absolute" />}
+            <img src={profileEditBg.src} />
           </div>
         )}
       </div>
