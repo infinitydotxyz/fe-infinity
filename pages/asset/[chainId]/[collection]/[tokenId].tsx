@@ -322,7 +322,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
 
       <div className="relative min-h-[1024px]">
         <ToggleTab
-          className="flex space-x-2 items-center relative max-w-xl top-[65px] pb-4 lg:pb-0"
+          className="flex space-x-2 items-center relative max-w-xl top-[65px] pb-4 lg:pb-0 font-heading"
           tabWidth="150px"
           options={options}
           selected={selected}
