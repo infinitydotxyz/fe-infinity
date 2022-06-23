@@ -65,14 +65,18 @@ export const toastSuccess = (message: ReactNode, content?: ReactNode) => {
 
 // Toast an error message - first, include <Toaster /> in JSX.
 export const toastError = (message: ReactNode, content?: ReactNode) => {
-  toast.custom((t) => (
-    <ToasterTemplate
-      t={t}
-      icon={<MdErrorOutline className="text-red-400 text-lg" />}
-      message={message}
-      content={content}
-    />
-  ));
+  try {
+    toast.custom((t) => (
+      <ToasterTemplate
+        t={t}
+        icon={<MdErrorOutline className="text-red-400 text-lg" />}
+        message={message}
+        content={content}
+      />
+    ));
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 // Toast a warning message - first, include <Toaster /> in JSX.

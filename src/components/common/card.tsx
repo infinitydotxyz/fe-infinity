@@ -85,7 +85,7 @@ export const Card = ({
       </NextLink>
 
       {data?.rarityRank && (
-        <span className="absolute bg-gray-100 top-3 right-3 py-1 px-3 rounded-full">
+        <span className="absolute bg-gray-100 top-5 right-5 py-1 px-3 rounded-full">
           {Math.round(data?.rarityRank)}
         </span>
       )}

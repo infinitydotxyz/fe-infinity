@@ -3,8 +3,9 @@ import { useRouter } from 'next/router';
 import { parse } from 'query-string';
 import { BGImage, Button, EthPrice, NextLink, PageBox, ToggleTab, useToggleTab, SVG } from 'src/components/common';
 import { apiGet, BLANK_IMG, formatNumber, ITEMS_PER_PAGE } from 'src/utils';
-import { Collection, CollectionPeriodStatsContent } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId, Collection, CollectionPeriodStatsContent } from '@infinityxyz/lib-frontend/types/core';
 import { MdSort } from 'react-icons/md';
+import { useOrderContext } from 'src/utils/context/OrderContext';
 
 // - cache stats 5mins
 
@@ -18,6 +19,7 @@ const CollectionStatsPage = () => {
   const [period, setPeriod] = useState('daily');
   const [offset, setOffset] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const { addCartItem, setOrderDrawerOpen } = useOrderContext();
 
   useEffect(() => {
     const parsedQs = parse(window?.location?.search); // don't use useRouter-query as it's undefined initially.
@@ -86,6 +88,18 @@ const CollectionStatsPage = () => {
         setPeriod('monthly');
         break;
     }
+  };
+
+  const onClickBuy = (collection: Collection) => {
+    addCartItem({
+      chainId: collection.chainId as ChainId,
+      collectionName: collection.metadata.name ?? '',
+      collectionAddress: collection.address ?? '',
+      collectionImage: collection.metadata.profileImage ?? '',
+      collectionSlug: collection?.slug ?? '',
+      isSellOrder: false
+    });
+    setOrderDrawerOpen(true);
   };
 
   return (
@@ -172,7 +186,7 @@ const CollectionStatsPage = () => {
                 </div>
 
                 <div className="w-[50px]">
-                  <Button>Buy</Button>
+                  <Button onClick={() => onClickBuy(coll)}>Buy</Button>
                 </div>
               </div>
             </div>
