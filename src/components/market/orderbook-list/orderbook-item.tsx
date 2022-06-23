@@ -122,7 +122,6 @@ const SingleCollectionCell = ({
       }
     }
   }
-  console.log('orderNft', (orderNft?.collectionName ?? '').indexOf('Goerli Doodles') >= 0 ? orderNft : '');
   return (
     <div className="flex gap-2 items-center">
       <div className="flex justify-center shrink-0 h-12 w-12">
