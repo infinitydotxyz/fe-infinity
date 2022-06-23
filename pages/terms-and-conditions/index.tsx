@@ -188,7 +188,7 @@ const TermsPage = () => {
             <span>
               Your access and use of the Service may be interrupted from time to time for any of several reasons,
               including, without limitation, the malfunction of equipment, periodic updating, maintenance, or repair of
-              the Service or other actions that OpenSea, in its sole discretion, may elect to take.
+              the Service or other actions that Infinity, in its sole discretion, may elect to take.
             </span>
           </p>
           <p dir="ltr" className="font-bold">
@@ -286,12 +286,12 @@ const TermsPage = () => {
               our Service, you are subject to the terms and conditions (including privacy policies) of another website
               or destination. Such Third-Party Websites, Third-Party Applications, and Third-Party Materials are not
               under the control of Infinity, and may be &ldquo;open&rdquo; applications for which no recourse is
-              possible. OpenSea is not responsible or liable for any Third-Party Websites, Third-Party Applications, and
-              Third-Party Materials. Infinity provides links to these Third-Party Websites and Third-Party Applications
-              only as a convenience and does not review, approve, monitor, endorse, warrant, or make any representations
-              with respect to Third-Party Websites or Third-Party Applications, or their products or services or
-              associated Third-Party Materials. You use all links in Third-Party Websites, Third-Party Applications, and
-              Third-Party Materials at your own risk.
+              possible. Infinity is not responsible or liable for any Third-Party Websites, Third-Party Applications,
+              and Third-Party Materials. Infinity provides links to these Third-Party Websites and Third-Party
+              Applications only as a convenience and does not review, approve, monitor, endorse, warrant, or make any
+              representations with respect to Third-Party Websites or Third-Party Applications, or their products or
+              services or associated Third-Party Materials. You use all links in Third-Party Websites, Third-Party
+              Applications, and Third-Party Materials at your own risk.
             </span>
           </p>
           <p dir="ltr" className="font-bold">
