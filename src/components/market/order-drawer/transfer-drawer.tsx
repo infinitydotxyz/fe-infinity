@@ -1,6 +1,6 @@
 import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { useState } from 'react';
-import { Button, NftImage, Spacer, SVG, TextInputBox } from 'src/components/common';
+import { Button, Spacer, SVG, TextInputBox } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { iconButtonStyle } from 'src/utils/ui-constants';
 // import { iconButtonStyle } from 'src/utils/ui-constants';
