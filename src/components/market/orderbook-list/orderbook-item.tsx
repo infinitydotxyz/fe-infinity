@@ -2,7 +2,7 @@ import { OBOrder, OBOrderItem } from '@infinityxyz/lib-frontend/types/core';
 import { OBTokenInfoDto } from '@infinityxyz/lib-frontend/types/dto/orders';
 
 import { ReactNode } from 'react';
-import { NextLink } from 'src/components/common';
+import { NextLink, SVG } from 'src/components/common';
 import { useRouter } from 'next/router';
 import { BLANK_IMG } from 'src/utils';
 import ReactTooltip from 'react-tooltip';
@@ -147,13 +147,15 @@ const SingleCollectionCell = ({
         {orderNft?.collectionSlug ? (
           <NextLink
             href={`/collection/${orderNft?.collectionSlug}`}
-            className="font-bold whitespace-pre-wrap"
+            className="font-bold whitespace-pre-wrap flex items-center"
             title={title}
           >
-            {title}
+            {title} {orderNft?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1" /> : null}
           </NextLink>
         ) : (
-          <div className="font-bold whitespace-pre-wrap cursor-auto">{title}</div>
+          <div className="font-bold whitespace-pre-wrap cursor-auto flex items-center">
+            {title} {orderNft?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1" /> : null}
+          </div>
         )}
 
         {count > 1 ? (

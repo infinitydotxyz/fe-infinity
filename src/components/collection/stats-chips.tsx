@@ -24,6 +24,8 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
   const router = useRouter();
   const { addCartItem, setOrderDrawerOpen } = useOrderContext();
 
+  const showFollow = false; // todo: put this back for Social features.
+
   const onClickFollow = async () => {
     if (!checkSignedIn()) {
       return;
@@ -91,28 +93,30 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
     <div className="flex flex-row space-x-2 items-center">
       <VerificationModal isOpen={modalOpen} onSubmit={verifyOwnership} onClose={() => setModalOpen(false)} />
 
-      <Chip
-        content={
-          followingLoading ? (
-            <span className="flex justify-center">
-              <Spinner />
-            </span>
-          ) : (
-            <span className="flex items-center">
-              {isFollowing ? (
-                <>Following</>
-              ) : (
-                <>
-                  <AiOutlinePlus className="mr-1" /> Follow
-                </>
-              )}
-            </span>
-          )
-        }
-        onClick={onClickFollow}
-        active={isFollowing}
-        className="w-32"
-      />
+      {showFollow && (
+        <Chip
+          content={
+            followingLoading ? (
+              <span className="flex justify-center">
+                <Spinner />
+              </span>
+            ) : (
+              <span className="flex items-center">
+                {isFollowing ? (
+                  <>Following</>
+                ) : (
+                  <>
+                    <AiOutlinePlus className="mr-1" /> Follow
+                  </>
+                )}
+              </span>
+            )
+          }
+          onClick={onClickFollow}
+          active={isFollowing}
+          className="w-32"
+        />
+      )}
       <Chip content="Edit" onClick={onClickEdit} />
 
       {collection?.metadata?.links?.twitter && (

@@ -138,7 +138,7 @@ const CollectionStatsPage = () => {
                       {coll?.metadata?.name}
                     </NextLink>
                     {/* using inline here (className will show the bluechecks in different sizes for smaller screen) */}
-                    {coll?.hasBlueCheck && <SVG.blueCheck className="ml-1.5" style={{ minWidth: 20, maxWidth: 20 }} />}
+                    {coll?.hasBlueCheck && <SVG.blueCheck className="ml-1.5" style={{ minWidth: 16, maxWidth: 16 }} />}
                   </div>
                   <div></div>
                 </div>
