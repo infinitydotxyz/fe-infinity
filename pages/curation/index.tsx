@@ -1,10 +1,13 @@
-import { BaseCollection, CreationFlow, TokenStandard } from '@infinityxyz/lib-frontend/types/core';
-import { useState } from 'react';
+import { BaseCollection, CuratedCollection } from '@infinityxyz/lib-frontend/types/core';
+import { useEffect, useState } from 'react';
 import { Field, FieldProps } from 'src/components/analytics/field';
-import { Button, Dropdown, PageBox } from 'src/components/common';
+import { Button, Dropdown, PageBox, ScrollLoader } from 'src/components/common';
 import { FeesAccruedStats, FeesAprStats } from 'src/components/curation/statistics';
 import { VoteProgressBar } from 'src/components/curation/vote-progress-bar';
 import { useTokenVotes } from 'src/hooks/contract/token/useTokenVotes';
+import { apiGet } from 'src/utils';
+import { CuratedCollectionsOrderBy } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections-query.dto';
+import { useAppContext } from 'src/utils/context/AppContext';
 
 enum Tab {
   MyCurated = 'my_curated',
@@ -18,47 +21,60 @@ const FieldWrapper: React.FC<FieldProps> = (props) => (
 );
 
 export default function Curation() {
-  const [tab, setTab] = useState(Tab.MyCurated);
+  const { user } = useAppContext();
+  const [tab, setTab] = useState(Tab.AllCurated);
   const { votes } = useTokenVotes();
-  const curatedCollections: BaseCollection[] = [
-    {
-      address: '',
-      chainId: '1',
-      deployedAt: Date.now(),
-      deployedAtBlock: 1,
-      deployer: '',
-      hasBlueCheck: true,
-      indexInitiator: '',
-      metadata: {
-        bannerImage: '',
-        description: 'this is a description',
-        links: { timestamp: Date.now() },
-        name: 'Foo Bar',
-        profileImage:
-          'https://lh3.googleusercontent.com/lHexKRMpw-aoSyB1WdFBff5yfANLReFxHzt1DOj_sg7mS14yARpuvYcUtsyyx-Nkpk6WTcUPFoG53VnLJezYi8hAs0OxNZwlw6Y-dmI=s120',
-        symbol: 'STFU'
-      },
-      numNfts: 0,
-      numOwnersUpdatedAt: 0,
-      numTraitTypes: 0,
-      owner: '',
-      slug: '',
-      state: {
-        create: { progress: 100, step: CreationFlow.AggregateMetadata, updatedAt: Date.now() },
-        export: { done: false },
-        version: 1
-      },
-      tokenStandard: TokenStandard.ERC721
-    }
-  ];
+  const [cursor, setCursor] = useState('');
+  const [orderBy, setOrderBy] = useState(CuratedCollectionsOrderBy.Votes);
+  const [collections, setCollections] = useState<BaseCollection[]>([]);
+  const [curations, setCurations] = useState<CuratedCollection[]>([]);
+  const [error, setError] = useState<string>();
+  const [hasNextPage, setHasNextPage] = useState(false);
 
-  // TODO: we should refactor this 'field' stuff some time, it's become barely maintainable O.o (use React composition pattern and preferably an actual table instead)
+  const fetch = async () => {
+    const requiresAuth = !!user?.address;
+
+    // Query the API to get a list of the most voted collections.
+    // If the user is logged in, fetch the user's votes and estimations too.
+    const { result, error } = await apiGet(`/collections/curated/${user?.address || ''}`, {
+      query: {
+        orderBy,
+        orderDirection: 'desc',
+        limit: 10,
+        cursor
+      },
+      requiresAuth
+    });
+
+    if (error) {
+      setError(error);
+      setCollections([]);
+      setCursor('');
+      setHasNextPage(false);
+      return;
+    }
+
+    // Only update curation data when the user is authenticated.
+    if (requiresAuth) {
+      setCurations((state) => [...state, ...(result.data.curations || [])]);
+      return;
+    }
+
+    setCollections((state) => [...state, ...result.data.collections]);
+    setCursor(result.cursor);
+    setHasNextPage(result.hasNextPage);
+  };
+
+  useEffect(() => void fetch(), [user?.address]);
 
   return (
     <PageBox title="Curation">
       <div className="flex justify-between mb-8">
         <div>
-          <strong className="p-4 border border-gray-300 rounded-3xl mr-2">120,350 veNFT available</strong>
+          <span className="p-4 border border-gray-300 rounded-3xl mr-2">
+            <strong className="mr-2">120,350</strong>
+            <span>veNFT available</span>
+          </span>
           <Button>Confirm</Button>
         </div>
         <div>
@@ -82,22 +98,24 @@ export default function Curation() {
             items={[
               {
                 label: 'Most votes',
-                onClick: () => console.log('clicked item 1')
+                onClick: () => setOrderBy(CuratedCollectionsOrderBy.Votes)
               },
               {
                 label: 'APR: High to low',
-                onClick: () => console.log('clicked item 2')
+                onClick: () => setOrderBy(CuratedCollectionsOrderBy.AprHighToLow)
               },
               {
                 label: 'APR: Low to high',
-                onClick: () => console.log('clicked item 3')
+                onClick: () => setOrderBy(CuratedCollectionsOrderBy.AprLowToHigh)
               }
             ]}
           />
         </div>
       </div>
       <div>
-        {curatedCollections?.map((collection, idx) => {
+        {error ? <div className="flex flex-col mt-10">Unable to load curated collections.</div> : null}
+
+        {collections?.map((collection, idx) => {
           return (
             <div key={idx} className="mb-2">
               <div className="w-full h-full p-8 overflow-hidden rounded-3xl bg-gray-100 grid grid-cols-analytics place-items-center">
@@ -106,16 +124,13 @@ export default function Curation() {
                   <FieldWrapper value={collection.metadata.profileImage} type="image" />
                   <FieldWrapper value={collection.metadata.name} type="string" />
                   <FieldWrapper type="custom">
-                    <FeesAprStats value={'168'} />
+                    <FeesAprStats value={curations[idx]?.feesAPR || 0} />
                     <br />
-                    <FeesAccruedStats value={'168'} />
-                  </FieldWrapper>
-                  <FieldWrapper type="custom">
-                    <VoteProgressBar totalVotes={100} votes={80} />
+                    <FeesAccruedStats value={curations[idx]?.fees || 0} />
                   </FieldWrapper>
                   <VoteProgressBar
-                    totalVotes={100}
-                    votes={80}
+                    totalVotes={collection.numCuratorVotes || 0}
+                    votes={curations[idx]?.votes || 0}
                     className="w-full h-full row-span-1 col-span-1 bg-white"
                   />
                   <FieldWrapper></FieldWrapper>
@@ -128,7 +143,8 @@ export default function Curation() {
             </div>
           );
         })}
-        {curatedCollections.length === 0 && (
+
+        {tab === Tab.MyCurated && collections?.length === 0 && (
           // TODO: match design
           <div className="text-center">
             <p className="font-body font-medium">You haven't curated any collections yet</p>
@@ -136,14 +152,7 @@ export default function Curation() {
           </div>
         )}
 
-        {/*  {data.isLoading && <LoadingAnalytics />}
-
-        <ScrollLoader
-          onFetchMore={() => {
-            if (data?.result?.cursor) {
-              setCursor(data?.result?.cursor);
-            }
-          }} */}
+        {hasNextPage && <ScrollLoader onFetchMore={fetch} />}
       </div>
     </PageBox>
   );
