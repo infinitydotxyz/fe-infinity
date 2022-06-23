@@ -104,7 +104,7 @@ export const LowerPriceModal = ({ isOpen, onClose, collection, token, buyPriceEt
         try {
           await postOrders(user.address, signedOrders);
         } catch (ex) {
-          toastError(ex as string);
+          toastError(`${ex}`);
           return false;
         }
         onClose();
