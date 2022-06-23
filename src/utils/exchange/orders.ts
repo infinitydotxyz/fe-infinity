@@ -465,6 +465,7 @@ function _orderHash(order: ChainOBOrder): BytesLike {
   const execParams = order.execParams;
   const extraParams = order.extraParams;
 
+  // todo: adi constraints has new length
   const constraintsHash = keccak256(
     defaultAbiCoder.encode(['uint256', 'uint256', 'uint256', 'uint256', 'uint256', 'uint256'], constraints)
   );

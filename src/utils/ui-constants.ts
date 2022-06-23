@@ -16,7 +16,7 @@ export const pixelsPerRem = () => {
   return parseFloat(getComputedStyle(document.documentElement).fontSize) * 0.25;
 };
 
-export const iconButtonStyle = 'h-6 w-6';
+export const iconButtonStyle = 'h-6 w-6 mt-3';
 export const smallIconButtonStyle = 'h-5 w-5';
 export const largeIconButtonStyle = 'h-8 w-8';
 

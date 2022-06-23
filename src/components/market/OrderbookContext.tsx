@@ -152,11 +152,12 @@ const OrderbookContext = React.createContext<OBContextType | null>(null);
 type OBProvider = {
   children: ReactNode;
   collectionId: string | undefined;
+  tokenId?: string;
 };
 
 const AMOUNT_OF_ORDERS = 10;
 
-export const OrderbookProvider = ({ children, collectionId }: OBProvider) => {
+export const OrderbookProvider = ({ children, collectionId, tokenId }: OBProvider) => {
   const router = useRouter();
   const defaultFilters = parseRouterQueryParamsToFilters(router.query);
 
@@ -230,18 +231,23 @@ export const OrderbookProvider = ({ children, collectionId }: OBProvider) => {
     try {
       setIsLoading(true);
       const parsedFilters = parseFiltersToApiQueryParams(filters);
-      console.log('fetchOrders - parsedFilters', parsedFilters);
+      // console.log('fetchOrders - parsedFilters', parsedFilters);
       // const orders = await getOrders(
       //   { ...parsedFilters, collections: collectionId ? [collectionId] : parsedFilters.collections },
       //   limit
       // );
+      // eslint-disable-next-line
+      const query: any = {
+        limit: ITEMS_PER_PAGE,
+        cursor: refreshData ? '' : cursor,
+        ...parsedFilters,
+        collections: collectionId ? [collectionId] : parsedFilters.collections
+      };
+      if (tokenId) {
+        query.tokenId = tokenId;
+      }
       const { result } = await apiGet('/orders', {
-        query: {
-          limit: ITEMS_PER_PAGE,
-          cursor: refreshData ? '' : cursor,
-          ...parsedFilters,
-          collections: collectionId ? [collectionId] : parsedFilters.collections
-        }
+        query
       });
       if (result?.data) {
         if (refreshData) {

@@ -1,5 +1,5 @@
 import React, { ReactElement, ReactNode, useState } from 'react';
-import { DatePicker } from 'src/components/common';
+import { AppDatePicker } from 'src/components/common';
 import { ComboBox, ComboBoxBaseType } from './combo-box';
 import { CalendarIcon } from '@heroicons/react/outline';
 import { EthSymbol } from './eth-price';
@@ -86,7 +86,7 @@ export const DatePickerBox = ({ tooltip, label, value, onChange, placeholder }: 
         <div className="pr-2">
           <CalendarIcon className="h-4 w-4" />
         </div>
-        <DatePicker value={value} onChange={onChange} placeholder={placeholder} />
+        <AppDatePicker value={value} onChange={onChange} placeholder={placeholder} />
       </div>
     </InputBox>
   );

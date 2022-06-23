@@ -323,7 +323,7 @@ export const OrderContextProvider = ({ children }: Props) => {
             signedOrders.push(signedOrder);
           }
         } catch (ex) {
-          toastError(ex as string);
+          toastError(`${ex}`);
           hasErrors = true;
         }
       }
@@ -336,7 +336,7 @@ export const OrderContextProvider = ({ children }: Props) => {
     try {
       await postOrders(user.address, signedOrders);
     } catch (ex) {
-      toastError(ex as string);
+      toastError(`${ex}`);
       return false;
     }
 

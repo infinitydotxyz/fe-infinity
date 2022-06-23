@@ -3,7 +3,9 @@ import { useRouter } from 'next/router';
 import { parse } from 'query-string';
 import { BGImage, Button, EthPrice, NextLink, PageBox, ToggleTab, useToggleTab, SVG } from 'src/components/common';
 import { apiGet, BLANK_IMG, formatNumber, ITEMS_PER_PAGE } from 'src/utils';
-import { Collection, CollectionPeriodStatsContent } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId, Collection, CollectionPeriodStatsContent } from '@infinityxyz/lib-frontend/types/core';
+import { MdSort } from 'react-icons/md';
+import { useOrderContext } from 'src/utils/context/OrderContext';
 
 // - cache stats 5mins
 
@@ -17,6 +19,7 @@ const CollectionStatsPage = () => {
   const [period, setPeriod] = useState('daily');
   const [offset, setOffset] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const { addCartItem, setOrderDrawerOpen } = useOrderContext();
 
   useEffect(() => {
     const parsedQs = parse(window?.location?.search); // don't use useRouter-query as it's undefined initially.
@@ -87,6 +90,18 @@ const CollectionStatsPage = () => {
     }
   };
 
+  const onClickBuy = (collection: Collection) => {
+    addCartItem({
+      chainId: collection.chainId as ChainId,
+      collectionName: collection.metadata.name ?? '',
+      collectionAddress: collection.address ?? '',
+      collectionImage: collection.metadata.profileImage ?? '',
+      collectionSlug: collection?.slug ?? '',
+      isSellOrder: false
+    });
+    setOrderDrawerOpen(true);
+  };
+
   return (
     <PageBox title="Trending">
       <div className="flex justify-between">
@@ -137,14 +152,14 @@ const CollectionStatsPage = () => {
                       {coll?.metadata?.name}
                     </NextLink>
                     {/* using inline here (className will show the bluechecks in different sizes for smaller screen) */}
-                    {coll?.hasBlueCheck && <SVG.blueCheck className="ml-1.5" style={{ minWidth: 20, maxWidth: 20 }} />}
+                    {coll?.hasBlueCheck && <SVG.blueCheck className="ml-1.5" style={{ minWidth: 16, maxWidth: 16 }} />}
                   </div>
                   <div></div>
                 </div>
 
                 <div className="w-1/6">
-                  <div className="text-black font-bold font-body">
-                    Volume {queryBy === 'by_sales_volume' ? '▼' : ''}
+                  <div className="text-black font-bold font-body flex items-center">
+                    Volume {queryBy === 'by_sales_volume' ? <MdSort className="ml-1" /> : ''}
                   </div>
                   <div>
                     <EthPrice label={periodStat?.salesVolume ? formatNumber(periodStat?.salesVolume) : '-'} />
@@ -152,8 +167,8 @@ const CollectionStatsPage = () => {
                 </div>
 
                 <div className="w-1/6">
-                  <div className="text-black font-bold font-body">
-                    Avg. Price {queryBy === 'by_sales_volume' ? '' : '▼'}
+                  <div className="text-black font-bold font-body flex items-center">
+                    Avg. Price {queryBy === 'by_sales_volume' ? '' : <MdSort className="ml-1" />}
                   </div>
                   <div>
                     <EthPrice label={periodStat?.avgPrice ? formatNumber(periodStat?.avgPrice, 2) : '-'} />
@@ -171,7 +186,7 @@ const CollectionStatsPage = () => {
                 </div>
 
                 <div className="w-[50px]">
-                  <Button>Buy</Button>
+                  <Button onClick={() => onClickBuy(coll)}>Buy</Button>
                 </div>
               </div>
             </div>

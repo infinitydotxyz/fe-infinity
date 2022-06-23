@@ -1,6 +1,6 @@
 import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { useState } from 'react';
-import { Button, NftImage, Spacer, SVG, TextInputBox } from 'src/components/common';
+import { Button, Spacer, SVG, TextInputBox } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { iconButtonStyle } from 'src/utils/ui-constants';
 // import { iconButtonStyle } from 'src/utils/ui-constants';
@@ -33,8 +33,8 @@ export const TransferDrawer = ({ open, onClose, nftsForTransfer, onClickRemove }
       <Drawer
         open={open}
         onClose={onClose}
-        subtitle={'Selected NFTs for transferring:'}
-        title={<div className="flex items-center">Transfer</div>}
+        subtitle={'Selected NFTs for sending:'}
+        title={<div className="flex items-center">Send</div>}
       >
         <div className="flex flex-col h-full">
           <ul className="overflow-y-auto content-between px-12">
@@ -43,13 +43,9 @@ export const TransferDrawer = ({ open, onClose, nftsForTransfer, onClickRemove }
                 <li key={cardData.id} className="py-3 flex">
                   <div className="w-full flex">
                     <div>
-                      <NftImage
-                        chainId={cardData.chainId ?? ''}
-                        collectionAddress={cardData.address ?? ''}
-                        className="w-24 h-24"
-                      />
+                      <img src={cardData.image} className="w-16 h-16 rounded-2xl" />
                     </div>
-                    <div className="flex-1 truncate">
+                    <div className="flex-1 truncate m-2">
                       <div className="font-bold">{cardData.collectionName}</div>
                       <div>{cardData.tokenId}</div>
                     </div>
@@ -66,8 +62,7 @@ export const TransferDrawer = ({ open, onClose, nftsForTransfer, onClickRemove }
               type="text"
               value={''}
               placeholder=""
-              addEthSymbol={true}
-              label={'Address or ENSName'}
+              label={'Address or ENS Name'}
               onChange={(value) => setAddress(value)}
             />
           </div>
@@ -76,6 +71,7 @@ export const TransferDrawer = ({ open, onClose, nftsForTransfer, onClickRemove }
           <footer className="w-full text-center py-4">
             <Button
               size="large"
+              className="w-1/2"
               onClick={async () => {
                 // todo: adi: Smart contract Transfer integration.
                 console.log('nftsForTransfer', nftsForTransfer);
@@ -83,7 +79,7 @@ export const TransferDrawer = ({ open, onClose, nftsForTransfer, onClickRemove }
                 console.log('finalAddress', finalAddress);
               }}
             >
-              Transfer
+              Send
             </Button>
           </footer>
         </div>

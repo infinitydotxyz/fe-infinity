@@ -1,6 +1,9 @@
 import React from 'react';
 import Flatpickr from 'react-flatpickr';
 
+// import DatePicker from 'react-datepicker';
+// import 'react-datepicker/dist/react-datepicker.css';
+
 // date picker themes
 // import './theme.css';
 import 'flatpickr/dist/themes/airbnb.css';
@@ -14,7 +17,7 @@ type Props = {
   placeholder?: string;
 };
 
-export const DatePicker = ({ placeholder = 'Dec 8, 2021  12:00 PM', value, onChange }: Props) => {
+export const AppDatePicker = ({ placeholder = 'Dec 8, 2021  12:00 PM', value, onChange }: Props) => {
   return (
     <div className="flex flex-row w-full rounded-md">
       <Flatpickr
@@ -26,11 +29,21 @@ export const DatePicker = ({ placeholder = 'Dec 8, 2021  12:00 PM', value, onCha
         }}
         placeholder={placeholder}
         value={value}
-        className="flex border-none outline-none focus:ring-0 p-0 focus:outline-none  w-full"
+        className="flex border-none outline-none focus:ring-0 p-0 focus:outline-none w-full"
         onChange={(date) => {
           onChange(date[0]);
         }}
       />
+
+      {/* <DatePicker
+        selected={value}
+        showTimeSelect
+        dateFormat="MM/dd/yyyy, h:mm aa"
+        onChange={(date: Date) => {
+          onChange(date);
+        }}
+        className="border-none outline-none focus:ring-0 p-0 focus:outline-none w-full"
+      /> */}
     </div>
   );
 };

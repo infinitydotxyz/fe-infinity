@@ -92,7 +92,7 @@ export const OrderBuilder = () => {
         label="Expiration Date"
         value={new Date(parseInt(expirationDate.toString()))}
         onChange={(date) => {
-          setExpirationDate(date.getTime() / 1000);
+          setExpirationDate(date.getTime());
         }}
       />
     );

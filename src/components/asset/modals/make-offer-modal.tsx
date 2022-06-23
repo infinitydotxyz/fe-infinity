@@ -43,7 +43,7 @@ export const MakeOfferModal = ({ isOpen, onClose, collection, token }: Props) =>
             label="Expiry date"
             value={new Date(parseInt(expirationDate.toString()))}
             onChange={(date) => {
-              setExpirationDate(date.getTime() / 1000);
+              setExpirationDate(date.getTime());
             }}
           />
         </div>
