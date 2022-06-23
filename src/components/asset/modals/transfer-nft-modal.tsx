@@ -10,7 +10,7 @@ interface Props {
   onClose: () => void;
 }
 
-export const TransferNFTModal = ({ isOpen, onClose, collection, token }: Props) => {
+export const SendNFTModal = ({ isOpen, onClose, collection, token }: Props) => {
   const [address, setAddress] = useState('');
   const { providerManager } = useAppContext();
 
@@ -28,15 +28,15 @@ export const TransferNFTModal = ({ isOpen, onClose, collection, token }: Props) 
       <Modal
         isOpen={isOpen}
         onClose={onClose}
-        okButton="Transfer"
-        title="Transfer NFT"
+        okButton="Send"
+        title="Send NFT"
         onOKButton={async () => {
           console.log(collection);
           console.log(token);
 
           const finalAddress = await ensToAddress(address);
           console.log('finalAddress', finalAddress);
-          onClose(); // todo: adi: Smart contract Transfer integration.
+          onClose(); // todo: adi: Smart contract integration for Sending NFT.
         }}
       >
         <div>
@@ -44,7 +44,7 @@ export const TransferNFTModal = ({ isOpen, onClose, collection, token }: Props) 
             autoFocus={true}
             type="text"
             value={address}
-            label="Address or ENSName"
+            label="Address or ENS Name"
             placeholder=""
             onChange={(value) => {
               setAddress(value);

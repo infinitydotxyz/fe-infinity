@@ -16,7 +16,7 @@ import { Token, Collection, Erc721Metadata, OBOrder } from '@infinityxyz/lib-fro
 import {
   TraitList,
   CancelModal,
-  TransferNFTModal,
+  SendNFTModal,
   PlaceBidModal,
   MakeOfferModal,
   ActivityList
@@ -53,12 +53,8 @@ const AssetDetailPage = () => {
 
   if (typeof query.chainId !== 'string' || typeof query.collection !== 'string' || typeof query.tokenId !== 'string') {
     return (
-      <PageBox title="Asset">
-        <div className="flex flex-col max-w-screen-2xl mt-4">
-          <main>
-            <p>Error: Invalid page parameters or not signed in.</p>
-          </main>
-        </div>
+      <PageBox title="Asset" showTitle={false}>
+        <div className="flex flex-col max-w-screen-2xl mt-4"></div>
       </PageBox>
     );
   }
@@ -89,7 +85,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
 
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showLowerPriceModal, setShowLowerPriceModal] = useState(false);
-  const [showTransferModal, setShowTransferModal] = useState(false);
+  const [showSendModal, setShowSendModal] = useState(false);
   const [showMakeOfferModal, setShowMakeOfferModal] = useState(false);
   const [showPlaceBidModal, setShowPlaceBidModal] = useState(false);
   const [buyPriceEth, setBuyPriceEth] = useState('');
@@ -123,7 +119,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
     );
   }
 
-  if (error || !token || !collection) {
+  if (error) {
     console.error(error);
     return <NotFound404Page />;
     // return (
@@ -137,6 +133,9 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
     // );
     // router.push(`/not-found-404?chainId=${qchainId}&collectionAddress=${qcollection}&tokenId=${qtokenId}`);
     // return null;
+  }
+  if (!token || !collection) {
+    return null;
   }
 
   const tokenMetadata = token.metadata as Erc721Metadata;
@@ -167,11 +166,11 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
     setShowCancelModal(true);
   };
 
-  const onClickTransfer = () => {
+  const onClickSend = () => {
     if (!checkSignedIn()) {
       return;
     }
-    setShowTransferModal(true);
+    setShowSendModal(true);
   };
 
   const onClickLowerPrice = () => {
@@ -200,10 +199,10 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
           buyPriceEth={buyPriceEth}
         />
       )}
-      {showTransferModal && (
-        <TransferNFTModal
-          isOpen={showTransferModal}
-          onClose={() => setShowTransferModal(false)}
+      {showSendModal && (
+        <SendNFTModal
+          isOpen={showSendModal}
+          onClose={() => setShowSendModal(false)}
           collection={collection}
           token={token}
         />
@@ -278,8 +277,8 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
                 <Button variant="outline" size="large" onClick={onClickLowerPrice}>
                   Lower Price
                 </Button>
-                <Button variant="outline" size="large" onClick={onClickTransfer}>
-                  Transfer
+                <Button variant="outline" size="large" onClick={onClickSend}>
+                  Send
                 </Button>
               </div>
             </div>
