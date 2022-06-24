@@ -245,6 +245,7 @@ const CollectionPage = () => {
             {selected === 'NFTs' && collection && (
               <GalleryBox
                 pageId="COLLECTION"
+                getEndpoint={`/collections/${collection?.chainId}:${collection?.address}/nfts`}
                 collection={collection}
                 cardProps={{
                   cardActions: [
