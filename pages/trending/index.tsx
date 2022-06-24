@@ -158,18 +158,14 @@ const CollectionStatsPage = () => {
                 </div>
 
                 <div className="w-1/6">
-                  <div className="text-black font-bold font-body flex items-center">
-                    Volume {queryBy === 'by_sales_volume' ? <MdSort className="ml-1" /> : ''}
-                  </div>
+                  <div className="text-black font-bold font-body flex items-center">Volume</div>
                   <div>
                     <EthPrice label={periodStat?.salesVolume ? formatNumber(periodStat?.salesVolume) : '-'} />
                   </div>
                 </div>
 
                 <div className="w-1/6">
-                  <div className="text-black font-bold font-body flex items-center">
-                    Avg. Price {queryBy === 'by_sales_volume' ? '' : <MdSort className="ml-1" />}
-                  </div>
+                  <div className="text-black font-bold font-body flex items-center">Avg. Price</div>
                   <div>
                     <EthPrice label={periodStat?.avgPrice ? formatNumber(periodStat?.avgPrice, 2) : '-'} />
                   </div>
