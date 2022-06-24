@@ -4,7 +4,6 @@ import { parse } from 'query-string';
 import { BGImage, Button, EthPrice, NextLink, PageBox, ToggleTab, useToggleTab, SVG } from 'src/components/common';
 import { apiGet, BLANK_IMG, formatNumber, ITEMS_PER_PAGE } from 'src/utils';
 import { ChainId, Collection, CollectionPeriodStatsContent } from '@infinityxyz/lib-frontend/types/core';
-import { MdSort } from 'react-icons/md';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 
 // - cache stats 5mins
