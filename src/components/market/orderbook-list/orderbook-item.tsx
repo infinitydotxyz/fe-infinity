@@ -5,7 +5,7 @@ import { ReactNode } from 'react';
 import { NextLink, SVG } from 'src/components/common';
 import { useRouter } from 'next/router';
 import { BLANK_IMG } from 'src/utils';
-import ReactTooltip from 'react-tooltip';
+// import ReactTooltip from 'react-tooltip';
 
 type Props4 = {
   content?: ReactNode;
