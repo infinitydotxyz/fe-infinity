@@ -31,7 +31,7 @@ export const PageBox = ({
   const { orderDrawerOpen, setOrderDrawerOpen } = useOrderContext();
   const [renderPasswordModal, setRenderPasswordModal] = useState(false);
 
-  const hasOrderDrawer = router.asPath.indexOf('tab=Orders') < 0 && router.asPath.indexOf('tab=Send') < 0;
+  const hasOrderDrawer = router.asPath.indexOf('me?tab=Orders') < 0 && router.asPath.indexOf('me?tab=Send') < 0;
 
   useEffect(() => {
     setRenderPasswordModal(isPasswordModalNeeded());
