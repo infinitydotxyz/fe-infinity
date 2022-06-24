@@ -72,6 +72,7 @@ export const TransferDrawer = ({ open, onClose, nftsForTransfer, onClickRemove }
             <Button
               size="large"
               className="w-1/2"
+              disabled={nftsForTransfer?.length < 1}
               onClick={async () => {
                 // todo: adi: Smart contract Transfer integration.
                 console.log('nftsForTransfer', nftsForTransfer);
