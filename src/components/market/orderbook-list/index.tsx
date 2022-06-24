@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from 'react';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { Button, Dropdown, ScrollLoader } from 'src/components/common';
+import { Button, Dropdown, ScrollLoader, Spinner } from 'src/components/common';
 import { OrderbookProvider, SORT_FILTERS, useOrderbook } from '../OrderbookContext';
 import { OrderbookRow } from './orderbook-row';
 import { OrderbookFilters } from './filters/orderbook-filters';
@@ -124,7 +124,7 @@ const OrderbookList = ({ orders, showFilters, isLoading, fetchMore, hasMoreOrder
             <Spinner />
           </div>
         )} */}
-        {isLoading && <LoadingRow />}
+        {isLoading && <Spinner />}
 
         {hasMoreOrders && <ScrollLoader onFetchMore={fetchMore} />}
       </div>
