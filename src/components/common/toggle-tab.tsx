@@ -54,7 +54,11 @@ export const ToggleTab = ({ options, onChange, selected, className = '', tabWidt
                 altStyle ? 'py-1 px-6' : 'py-2.5 px-10'
               )}
               style={{ minWidth: tabWidth ?? 'auto' }}
-              onClick={() => onChange(option)}
+              onClick={() => {
+                if (option !== selected) {
+                  onChange(option);
+                }
+              }}
             >
               {option}
             </div>
