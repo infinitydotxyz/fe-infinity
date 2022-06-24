@@ -10,7 +10,7 @@ import { VerificationModal } from './verification_modal';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { useAppContext } from 'src/utils/context/AppContext';
 interface Props {
-  collection: BaseCollection;
+  collection?: BaseCollection | null;
   currentStatsData?: CollectionStats;
 }
 
@@ -195,10 +195,10 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
         onClick={() => {
           // assumes parent view has a drawer
           addCartItem({
-            chainId: collection.chainId as ChainId,
-            collectionName: collection.metadata.name ?? '',
-            collectionAddress: collection.address ?? '',
-            collectionImage: collection.metadata.profileImage ?? '',
+            chainId: collection?.chainId as ChainId,
+            collectionName: collection?.metadata.name ?? '',
+            collectionAddress: collection?.address ?? '',
+            collectionImage: collection?.metadata.profileImage ?? '',
             collectionSlug: collection?.slug ?? '',
             isSellOrder: false
           });
