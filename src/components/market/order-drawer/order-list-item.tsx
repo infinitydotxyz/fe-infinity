@@ -49,9 +49,9 @@ export const ImageAndText = ({ title, subtitle, image, buttonIcon, onClick }: Pr
 
   if (onClick && buttonIcon) {
     deleteButton = (
-      <Button variant="round" size="plain" onClick={onClick}>
-        {buttonIcon}
-      </Button>
+      <button onClick={onClick}>
+        <SVG.grayDelete className={iconButtonStyle} />
+      </button>
     );
   }
 
@@ -62,6 +62,7 @@ export const ImageAndText = ({ title, subtitle, image, buttonIcon, onClick }: Pr
 
         <TitleAndSubtitle title={title} subtitle={subtitle} />
       </div>
+
       {deleteButton}
     </div>
   );
