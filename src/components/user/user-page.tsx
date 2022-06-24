@@ -10,6 +10,7 @@ import { UserPageActivityTab } from './user-page-activity-tab';
 import { ellipsisAddress } from 'src/utils';
 import { ETHEREUM_CHAIN_SCANNER_BASE } from '@infinityxyz/lib-frontend/utils';
 import { UserPageOrderList } from '../feed/user-page-order-list';
+import { UserPageCuratedTab } from './user-page-curated-tab';
 
 interface UserPageProps {
   userInfo: UserProfileDto;
@@ -18,7 +19,7 @@ interface UserPageProps {
 
 export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner = false }) => {
   const router = useRouter();
-  const tabs = ['Collected', 'Orders', 'Activity'];
+  const tabs = ['Collected', 'Curated', 'Orders', 'Activity'];
   if (isOwner) {
     tabs.push('Send');
   }
@@ -75,6 +76,7 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
           {selected === 'Orders' && <UserPageOrderList userInfo={userInfo} />}
           {selected === 'Activity' && <UserPageActivityTab userInfo={userInfo} />}
           {selected === 'Send' && <UserPageNftsTab userInfo={userInfo} forTransfers={true} />}
+          {selected === 'Curated' && <UserPageCuratedTab />}
         </div>
       </div>
     </>

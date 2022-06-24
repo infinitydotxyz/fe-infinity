@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Button, Dropdown, PageBox, ToggleTab, useToggleTab } from 'src/components/common';
+import { Button, PageBox, ToggleTab, useToggleTab } from 'src/components/common';
 import { CuratedCollectionsOrderBy } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections-query.dto';
 import { useRouter } from 'next/router';
 import { AllCuratedCollections } from 'src/components/curation/all-curated';
 import { MyCuratedCollections } from 'src/components/curation/my-curated';
+import { Sort } from 'src/components/curation/sort';
 
 enum Tab {
   AllCurated = 'All Curated',
@@ -34,24 +35,7 @@ export default function Curation() {
             selected={selected}
             onChange={onChange}
           />
-          <Dropdown
-            label="Sort"
-            className="pointer-events-auto ml-8"
-            items={[
-              {
-                label: 'Most votes',
-                onClick: () => setOrderBy(CuratedCollectionsOrderBy.Votes)
-              },
-              {
-                label: 'APR: High to low',
-                onClick: () => setOrderBy(CuratedCollectionsOrderBy.AprHighToLow)
-              },
-              {
-                label: 'APR: Low to high',
-                onClick: () => setOrderBy(CuratedCollectionsOrderBy.AprLowToHigh)
-              }
-            ]}
-          />
+          <Sort onClick={setOrderBy} />
         </div>
       </div>
       <div>
