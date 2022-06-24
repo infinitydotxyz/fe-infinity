@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Button, SVG } from 'src/components/common';
+import { SVG } from 'src/components/common';
 import { OrderCartItem, useOrderContext } from 'src/utils/context/OrderContext';
 import { collectionIconStyle, iconButtonStyle } from 'src/utils/ui-constants';
 
@@ -49,9 +49,9 @@ export const ImageAndText = ({ title, subtitle, image, buttonIcon, onClick }: Pr
 
   if (onClick && buttonIcon) {
     deleteButton = (
-      <Button variant="round" size="plain" onClick={onClick}>
-        {buttonIcon}
-      </Button>
+      <button onClick={onClick}>
+        <SVG.grayDelete className={iconButtonStyle} />
+      </button>
     );
   }
 
@@ -62,6 +62,7 @@ export const ImageAndText = ({ title, subtitle, image, buttonIcon, onClick }: Pr
 
         <TitleAndSubtitle title={title} subtitle={subtitle} />
       </div>
+
       {deleteButton}
     </div>
   );
