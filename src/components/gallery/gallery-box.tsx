@@ -62,6 +62,9 @@ export const GalleryBox = ({
   }, [width]);
 
   const fetchData = async (isRefresh = false) => {
+    if (!getEndpoint) {
+      return;
+    }
     setIsFetching(true);
     let newCurrentPage = currentPage + 1;
     let newCursor = cursor;
@@ -80,19 +83,18 @@ export const GalleryBox = ({
       delete filterState.orderDirection;
     }
 
-    const { result, error } = await apiGet(
-      getEndpoint ?? `/collections/${collection?.chainId}:${collection?.address}/nfts`,
-      {
-        query: {
-          chainId,
-          offset,
-          limit: ITEMS_PER_PAGE,
-          cursor: newCursor,
-          ...filterState
-        }
+    const { result, error } = await apiGet(getEndpoint, {
+      query: {
+        chainId,
+        offset,
+        limit: ITEMS_PER_PAGE,
+        cursor: newCursor,
+        ...filterState
       }
-    );
-    setError(error);
+    });
+    if (error) {
+      setError(error);
+    }
     setCursor(result?.cursor);
 
     let moreData: ERC721CardData[] = (result?.data || []).map((item: ApiNftData) => {
@@ -134,7 +136,7 @@ export const GalleryBox = ({
     setData([]);
     setCursor('');
     fetchData(true); // refetch data when filterState changed somewhere (ex: from Sort comp, etc.)
-  }, [filterState, router.query]);
+  }, [getEndpoint, filterState, router.query]);
 
   useEffect(() => {
     if (currentPage < 0 || data.length < currentPage * ITEMS_PER_PAGE) {
