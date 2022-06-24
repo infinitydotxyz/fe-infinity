@@ -462,7 +462,7 @@ const PrivacyPolicyPage = () => {
           </span>
         </p>
         <p dir="ltr" className="font-bold">
-          <span>Questions; Contacting OpenSea; Reporting Violations</span>
+          <span>Questions; Contacting Infinity; Reporting Violations</span>
         </p>
         <p dir="ltr">
           <span>

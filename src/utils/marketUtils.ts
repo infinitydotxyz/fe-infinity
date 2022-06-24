@@ -27,7 +27,10 @@ export const postOrders = async (user: string, orders: SignedOBOrder[]): Promise
 export const fetchOrderNonce = async (user: string): Promise<string> => {
   try {
     const response = await apiGet(`/orders/${user}/nonce`, {});
-    return response.result as string;
+    if (typeof response.result === 'number') {
+      return response.result.toString();
+    }
+    return response.result;
   } catch (err) {
     console.error('Failed fetching order nonce');
     throw err;

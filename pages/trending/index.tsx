@@ -4,7 +4,6 @@ import { parse } from 'query-string';
 import { BGImage, Button, EthPrice, NextLink, PageBox, ToggleTab, useToggleTab, SVG } from 'src/components/common';
 import { apiGet, BLANK_IMG, formatNumber, ITEMS_PER_PAGE } from 'src/utils';
 import { ChainId, Collection, CollectionPeriodStatsContent } from '@infinityxyz/lib-frontend/types/core';
-import { MdSort } from 'react-icons/md';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 
 // - cache stats 5mins
@@ -158,18 +157,14 @@ const CollectionStatsPage = () => {
                 </div>
 
                 <div className="w-1/6">
-                  <div className="text-black font-bold font-body flex items-center">
-                    Volume {queryBy === 'by_sales_volume' ? <MdSort className="ml-1" /> : ''}
-                  </div>
+                  <div className="text-black font-bold font-body flex items-center">Volume</div>
                   <div>
                     <EthPrice label={periodStat?.salesVolume ? formatNumber(periodStat?.salesVolume) : '-'} />
                   </div>
                 </div>
 
                 <div className="w-1/6">
-                  <div className="text-black font-bold font-body flex items-center">
-                    Avg. Price {queryBy === 'by_sales_volume' ? '' : <MdSort className="ml-1" />}
-                  </div>
+                  <div className="text-black font-bold font-body flex items-center">Avg. Price</div>
                   <div>
                     <EthPrice label={periodStat?.avgPrice ? formatNumber(periodStat?.avgPrice, 2) : '-'} />
                   </div>
