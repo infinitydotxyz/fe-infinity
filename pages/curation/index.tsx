@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Field, FieldProps } from 'src/components/analytics/field';
 import { Button, Dropdown, PageBox, ToggleTab, useToggleTab } from 'src/components/common';
 import { CuratedCollectionsOrderBy } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections-query.dto';
 import { useRouter } from 'next/router';
@@ -10,12 +9,6 @@ enum Tab {
   AllCurated = 'All Curated',
   MyCurated = 'My Curated'
 }
-
-export const FieldWrapper: React.FC<FieldProps> = (props) => (
-  <div className="w-full h-full  row-span-1 col-span-1">
-    <Field {...props} />
-  </div>
-);
 
 export default function Curation() {
   const [orderBy, setOrderBy] = useState(CuratedCollectionsOrderBy.Votes);

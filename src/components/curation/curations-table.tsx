@@ -1,7 +1,8 @@
 import { Collection, CuratedCollection } from '@infinityxyz/lib-frontend/types/core';
-import { FieldWrapper } from 'pages/curation';
+import { useRouter } from 'next/router';
 import React from 'react';
 import { useTokenVotes } from 'src/hooks/contract/token/useTokenVotes';
+import { Field, FieldProps } from '../analytics/field';
 import { Button } from '../common';
 import { FeesAprStats, FeesAccruedStats } from './statistics';
 import { VoteProgressBar } from './vote-progress-bar';
@@ -11,8 +12,15 @@ export type CurationsTableProps = {
   curations: CuratedCollection[];
 };
 
+const FieldWrapper: React.FC<FieldProps> = (props) => (
+  <div className="w-full h-full  row-span-1 col-span-1">
+    <Field {...props} />
+  </div>
+);
+
 export const CurationsTable: React.FC<CurationsTableProps> = ({ collections, curations }) => {
   const { votes } = useTokenVotes();
+  const router = useRouter();
 
   return (
     <>
@@ -23,7 +31,11 @@ export const CurationsTable: React.FC<CurationsTableProps> = ({ collections, cur
               <>
                 <FieldWrapper value={idx + 1} type="index" />
                 <FieldWrapper value={collection.metadata.profileImage} type="image" />
-                <FieldWrapper value={collection.metadata.name} type="string" />
+                <FieldWrapper
+                  value={collection.metadata.name}
+                  type="string"
+                  onClick={() => router.push(`/collection/${collection.slug}`)}
+                />
                 <FieldWrapper type="custom">
                   <FeesAprStats value={curations[idx]?.feesAPR || 0} />
                   <br />
