@@ -77,7 +77,7 @@ export const UserPageNftsTab = ({ userInfo, forTransfers }: Props) => {
       <div className="mt-20">
         <GalleryBox
           pageId="PROFILE"
-          getEndpoint={`/user/${userInfo?.address}/nfts`}
+          getEndpoint={userInfo?.address ? `/user/${userInfo?.address}/nfts` : ''}
           userAddress={userInfo?.address}
           filterShowedDefault={false}
           showFilterSections={['COLLECTIONS']}

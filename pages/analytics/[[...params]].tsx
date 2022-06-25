@@ -336,7 +336,7 @@ export const Analytics = () => {
           },
           {
             id: 'twitterFollowersPercentChange',
-            label: 'Discord %',
+            label: 'Twitter %',
             type: 'change',
             value: `${twitterFollowersPercentChange.toLocaleString()}`,
             show: columns['twitterFollowersPercentChange'],

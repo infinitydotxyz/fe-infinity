@@ -13,7 +13,7 @@ interface Props {
   onClose: () => void;
 }
 
-export const LowerPriceModal = ({ isOpen, onClose, collection, token, buyPriceEth }: Props) => {
+export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) => {
   const { user } = useAppContext();
   const [orderDetails, setOrderDetails] = useState<SignedOBOrder | null>(null);
   const [price, setPrice] = useState(0);
@@ -71,8 +71,6 @@ export const LowerPriceModal = ({ isOpen, onClose, collection, token, buyPriceEt
         } else {
           setErrorMsg('');
         }
-        console.log(collection);
-        console.log(token);
 
         // todo: remove this once BE fix validation of tokens' images (not needed):
         for (const nft of orderDetails.nfts) {

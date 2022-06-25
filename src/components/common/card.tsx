@@ -5,12 +5,12 @@ import { AiOutlineEye } from 'react-icons/ai';
 import { Dropdown, DropdownItems } from './dropdown';
 import { Button } from './button';
 import { NextLink } from './next-link';
-import ContentLoader from 'react-content-loader';
+// import ContentLoader from 'react-content-loader';
 import { inputBorderColor } from 'src/utils/ui-constants';
 import { BGImage } from './bg-image';
 import { SVG } from './svg';
 import { useRouter } from 'next/router';
-import { BLANK_IMG } from 'src/utils';
+import { ImageOrMissing } from './image-or-missing';
 
 type labelFn = (data?: ERC721CardData) => ReactNode;
 
@@ -60,7 +60,8 @@ export const Card = ({
   );
 
   if (isLoading) {
-    return <LoadingCard className={className} />;
+    return <></>;
+    // return <LoadingCard className={className} />;
   }
 
   const heightStyle = `${height}px`;
@@ -80,7 +81,7 @@ export const Card = ({
         {data?.image ? (
           <BGImage src={data?.image} className="group-hover:scale-[1.15] transition-all duration-300" />
         ) : (
-          <BGImage src={BLANK_IMG} className="" />
+          <ImageOrMissing src="" />
         )}
       </NextLink>
 
@@ -125,18 +126,18 @@ export const Card = ({
   );
 };
 
-const LoadingCard = ({ className }: { className?: string }) => (
-  <ContentLoader
-    speed={2}
-    width={310}
-    height={350}
-    viewBox="0 0 400 460"
-    backgroundColor="#f3f3f3"
-    foregroundColor="#ecebeb"
-    className={className}
-  >
-    <rect x="5" y="394" rx="18" ry="18" width="390" height="28" />
-    <rect x="6" y="7" rx="45" ry="45" width="390" height="372" />
-    <rect x="5" y="431" rx="18" ry="18" width="390" height="28" />
-  </ContentLoader>
-);
+// const LoadingCard = ({ className }: { className?: string }) => (
+//   <ContentLoader
+//     speed={2}
+//     width={310}
+//     height={350}
+//     viewBox="0 0 400 460"
+//     backgroundColor="#f3f3f3"
+//     foregroundColor="#ecebeb"
+//     className={className}
+//   >
+//     <rect x="5" y="394" rx="18" ry="18" width="390" height="28" />
+//     <rect x="6" y="7" rx="45" ry="45" width="390" height="372" />
+//     <rect x="5" y="431" rx="18" ry="18" width="390" height="28" />
+//   </ContentLoader>
+// );

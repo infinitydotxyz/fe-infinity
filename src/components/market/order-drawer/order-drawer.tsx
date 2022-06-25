@@ -133,7 +133,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
                 </Button>
               ) : (
                 <Button variant="outline" size="large" className="font-heading w-1/2" onClick={() => cancelOrder()}>
-                  Cancel order
+                  Cancel
                 </Button>
               )}
             </>

@@ -5,7 +5,7 @@ import { ReactNode } from 'react';
 import { NextLink, SVG } from 'src/components/common';
 import { useRouter } from 'next/router';
 import { BLANK_IMG } from 'src/utils';
-import ReactTooltip from 'react-tooltip';
+// import ReactTooltip from 'react-tooltip';
 
 type Props4 = {
   content?: ReactNode;
@@ -144,6 +144,7 @@ const SingleCollectionCell = ({
         {/* <div className="font-bold whitespace-pre-wrap" onClick={onClickTitle}>
           {title}
         </div> */}
+
         {orderNft?.collectionSlug ? (
           <NextLink
             href={`/collection/${orderNft?.collectionSlug}`}
@@ -153,14 +154,18 @@ const SingleCollectionCell = ({
             {title} {orderNft?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1" /> : null}
           </NextLink>
         ) : (
-          <div className="font-bold whitespace-pre-wrap cursor-auto flex items-center">
+          <NextLink
+            href={`/collection/${order?.nfts[0]?.collectionSlug}`}
+            className="font-bold whitespace-pre-wrap flex items-center"
+            title={title}
+          >
             {title} {orderNft?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1" /> : null}
-          </div>
+          </NextLink>
         )}
 
         {count > 1 ? (
           <div>
-            <div data-tip data-for={`counter-${order?.id}`}>
+            {/* <div data-tip data-for={`counter-${order?.id}`}>
               {count} NFTs
             </div>
             <ReactTooltip id={`counter-${order?.id}`} effect="solid">
@@ -169,7 +174,7 @@ const SingleCollectionCell = ({
                   <div key={idx}>{name}</div>
                 ))}
               </div>
-            </ReactTooltip>
+            </ReactTooltip> */}
           </div>
         ) : (
           <>
