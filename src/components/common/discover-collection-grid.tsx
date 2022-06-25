@@ -76,7 +76,7 @@ export const DiscoverCollectionGrid = ({ className, orderBy, routerQuery }: Prop
 
   return (
     <div className={className}>
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12">
+      <div className="grid grid1:grid-cols-1 grid2:grid-cols-2 grid3:grid-cols-3 grid4:grid-cols-4 grid5:grid-cols-5 grid6:grid-cols-6 grid7:grid-cols-7 grid8:grid-cols-8 gap-x-8 gap-y-12">
         {collections.map((collection) => (
           <DiscoverCollectionCard
             key={collection.slug}
