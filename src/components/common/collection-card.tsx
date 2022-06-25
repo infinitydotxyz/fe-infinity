@@ -5,14 +5,14 @@ import { NextLink } from './next-link';
 import { SVG } from './svg';
 import { ImageOrMissing } from './image-or-missing';
 
-interface CollectionCardProps {
+interface Props {
   collection: CollectionSearchDto;
   buttonName?: string;
   routerQuery?: string;
   onButtonClick?: (collection: CollectionSearchDto) => void;
 }
 
-export const CollectionCard = ({ collection, onButtonClick, buttonName, routerQuery }: CollectionCardProps) => {
+export const CollectionCard = ({ collection, onButtonClick, buttonName, routerQuery }: Props) => {
   // const shortText = trimText(collection.description, 60, 80, 100)[0];
   // const isTrimText = shortText.length !== collection.description.length;
 
