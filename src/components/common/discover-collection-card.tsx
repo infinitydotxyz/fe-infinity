@@ -24,8 +24,30 @@ const getAvatarUrl = (imgUrl: string) => {
 };
 
 export const DiscoverCollectionCard = ({ orderBy, collection, routerQuery }: CollectionCardProps) => {
-  const avatarUrl = getAvatarUrl(collection?.collectionData?.metadata?.profileImage || '') || BLANK_IMAGE_URL;
+  const avatarUrl = getAvatarUrl(collection?.collectionData?.metadata?.profileImage || '');
   const twitterChange = formatNumber(collection.twitterFollowersPercentChange, 1);
+
+  // avatarUrl = null;
+  let imageComponent;
+  if (avatarUrl) {
+    imageComponent = (
+      <img
+        src={avatarUrl}
+        className="w-full rounded-3xl"
+        alt="collection image url"
+        style={{ objectFit: 'cover', transition: 'opacity 400ms ease 0s', height: '100%' }}
+      />
+    );
+  } else {
+    imageComponent = (
+      <img
+        src={BLANK_IMAGE_URL}
+        className="p-16 opacity-10"
+        alt="collection image url"
+        style={{ objectFit: 'contain', transition: 'opacity 400ms ease 0s', height: '100%' }}
+      />
+    );
+  }
 
   return (
     <div
@@ -37,14 +59,7 @@ export const DiscoverCollectionCard = ({ orderBy, collection, routerQuery }: Col
         href={`/collection/${collection.slug}${routerQuery ? `?${routerQuery}` : ''}`}
         className="text-theme-light-800 font-heading tracking-tight mr-2"
       >
-        <div style={{ height: '300px' }}>
-          <img
-            src={avatarUrl}
-            className="w-full rounded-3xl"
-            alt="collection image url"
-            style={{ objectFit: 'cover', transition: 'opacity 400ms ease 0s', height: '100%' }}
-          />
-        </div>
+        <div style={{ height: '300px' }}>{imageComponent}</div>
         <div className="pt-4 flex items-start">
           {/* <div className="flex flex-1 items-start font-body text-base font-medium px-5 text-black whitespace-normal">
             {collection.name}
