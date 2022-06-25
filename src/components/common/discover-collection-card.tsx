@@ -57,7 +57,7 @@ export const DiscoverCollectionCard = ({ orderBy, collection, routerQuery }: Col
 
           <div className="font-body text-base px-5 text-theme-light-800">
             <div className="flex flex-col">
-              {orderBy === 'twitterFollowersPercentChange' && collection.twitterFollowersPercentChange >= 1 ? (
+              {orderBy === 'twitterFollowersPercentChange' && collection.twitterFollowersPercentChange >= 0.1 ? (
                 <div className="flex flex-row-reverse items-center w-full">
                   <div className="text-green-600 ml-2">{twitterChange}% ↑</div>
                   <SVG.twitter className="w-4 h-4 ml-1.5" />
