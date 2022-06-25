@@ -21,7 +21,7 @@ export const Drawer = ({ open, tooltip, subtitle, divide, onClose, title, childr
   const header = (
     <div className="px-12 py-10">
       <TooltipWrapper show={showTooltip} tooltip={tooltip}>
-        <div className="flex items-start justify-between">
+        <div className="flex   justify-between items-center">
           <Dialog.Title>
             <div className="flex items-center">
               <div className="mr-2 text-2xl font-bold text-black">{title}</div>
@@ -34,12 +34,10 @@ export const Drawer = ({ open, tooltip, subtitle, divide, onClose, title, childr
             {subtitle && <div className="mt-3 text-sm text-gray-600">{subtitle}</div>}
           </Dialog.Title>
 
-          <div className="ml-3 flex h-7 items-center">
-            <Button variant="round" size="plain" onClick={onClose}>
-              <span className="sr-only">Close panel</span>
-              <XIcon className={iconButtonStyle} aria-hidden="true" />
-            </Button>
-          </div>
+          <Button className="ml-3" variant="round" size="plain" onClick={onClose}>
+            <span className="sr-only">Close panel</span>
+            <XIcon className={iconButtonStyle} aria-hidden="true" />
+          </Button>
         </div>
       </TooltipWrapper>
       {divide && <hr className="mt-4 text-gray-700" />}
