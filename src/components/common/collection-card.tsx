@@ -1,9 +1,9 @@
 // import { trimText } from './read-more-text';
-import { BLANK_IMAGE_URL } from 'src/utils';
 import { Button } from './button';
 import { CollectionSearchDto } from '../../utils/types/collection-types';
 import { NextLink } from './next-link';
 import { SVG } from './svg';
+import { ImageOrMissing } from './image-or-missing';
 
 interface CollectionCardProps {
   collection: CollectionSearchDto;
@@ -12,23 +12,9 @@ interface CollectionCardProps {
   onButtonClick?: (collection: CollectionSearchDto) => void;
 }
 
-const getAvatarUrl = (imgUrl: string) => {
-  if (!imgUrl) {
-    return null;
-  } else {
-    const index = imgUrl.indexOf('=');
-    if (index) {
-      return imgUrl.slice(0, index) + '=h200';
-    }
-    return imgUrl;
-  }
-};
-
 export const CollectionCard = ({ collection, onButtonClick, buttonName, routerQuery }: CollectionCardProps) => {
   // const shortText = trimText(collection.description, 60, 80, 100)[0];
   // const isTrimText = shortText.length !== collection.description.length;
-
-  const avatarUrl = getAvatarUrl(collection.bannerImage) || BLANK_IMAGE_URL;
 
   return (
     <div
@@ -41,12 +27,7 @@ export const CollectionCard = ({ collection, onButtonClick, buttonName, routerQu
         className="text-theme-light-800 font-heading tracking-tight mr-2"
       >
         <div style={{ height: '300px' }}>
-          <img
-            src={avatarUrl}
-            className="w-full rounded-3xl"
-            alt="collection image url"
-            style={{ objectFit: 'cover', transition: 'opacity 400ms ease 0s', height: '100%' }}
-          />
+          <ImageOrMissing src={collection.bannerImage} />
         </div>
         <div className="pt-4">
           <div className="flex items-center font-body text-base font-medium px-5 text-black">
