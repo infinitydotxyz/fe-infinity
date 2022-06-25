@@ -1,7 +1,17 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { parse } from 'query-string';
-import { BGImage, Button, EthPrice, NextLink, PageBox, ToggleTab, useToggleTab, SVG } from 'src/components/common';
+import {
+  BGImage,
+  Button,
+  EthPrice,
+  NextLink,
+  PageBox,
+  ToggleTab,
+  useToggleTab,
+  SVG,
+  Spinner
+} from 'src/components/common';
 import { apiGet, BLANK_IMG, formatNumber, ITEMS_PER_PAGE } from 'src/utils';
 import { ChainId, Collection, CollectionPeriodStatsContent } from '@infinityxyz/lib-frontend/types/core';
 import { useOrderContext } from 'src/utils/context/OrderContext';
@@ -186,7 +196,8 @@ const CollectionStatsPage = () => {
         })}
       </div>
 
-      {isLoading && <LoadingCards />}
+      {/* {isLoading && <LoadingCards />} */}
+      {isLoading && <Spinner />}
 
       {/* <ScrollLoader onFetchMore={() => fetchData()} /> */}
     </PageBox>
@@ -197,12 +208,12 @@ export default CollectionStatsPage;
 
 // =======================================================================
 
-const LoadingCards = () => (
-  <>
-    {Array.from(Array(Math.round(ITEMS_PER_PAGE / 2)).keys())?.map((x, i) => (
-      <Fragment key={i}>
-        <div className="w-full h-[110px] mt-3 bg-theme-light-200 rounded-3xl animate-pulse"></div>
-      </Fragment>
-    ))}
-  </>
-);
+// const LoadingCards = () => (
+//   <>
+//     {Array.from(Array(Math.round(ITEMS_PER_PAGE / 2)).keys())?.map((x, i) => (
+//       <Fragment key={i}>
+//         <div className="w-full h-[110px] mt-3 bg-theme-light-200 rounded-3xl animate-pulse"></div>
+//       </Fragment>
+//     ))}
+//   </>
+// );
