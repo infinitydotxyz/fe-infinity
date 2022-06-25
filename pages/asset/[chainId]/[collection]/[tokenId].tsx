@@ -101,14 +101,17 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
     }
   }, [token]);
 
-  if (token?.image) {
-    console.log(token.image);
+  if (token?.image?.url) {
     token.image.url = token.image.url.replace('storage.opensea.io', 'openseauserdata.com');
   }
 
   // if cached url is null, try original url or the blank image
   if (token && !token?.image.url) {
-    token.image.url = token.image.originalUrl ?? BLANK_IMAGE_URL;
+    token.image.url = token.image.originalUrl ?? '';
+  }
+
+  if (token && (!token?.image.url || token?.image.url.startsWith('ipfs'))) {
+    token.image.url = BLANK_IMAGE_URL;
   }
 
   if (isLoading) {
@@ -120,7 +123,6 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   }
 
   if (error) {
-    console.error(error);
     return <NotFound404Page />;
     // return (
     //   <PageBox title="Asset - Error" className="w-full h-full grid place-items-center">

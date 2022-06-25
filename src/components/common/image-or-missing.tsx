@@ -7,7 +7,7 @@ interface Props {
 export const ImageOrMissing = ({ src }: Props) => {
   let imageComponent;
 
-  if (src) {
+  if (src && !src.startsWith('ipfs')) {
     imageComponent = (
       <img
         src={src}
