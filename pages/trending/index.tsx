@@ -145,15 +145,12 @@ const CollectionStatsPage = () => {
               </NextLink>
 
               <div className="flex justify-between w-full mx-8">
-                <div className="w-2/6">
-                  <div className="flex items-center text-black font-bold font-body">
-                    <NextLink href={`/collection/${coll?.slug}`} className="truncate">
-                      {coll?.metadata?.name}
-                    </NextLink>
-                    {/* using inline here (className will show the bluechecks in different sizes for smaller screen) */}
-                    {coll?.hasBlueCheck && <SVG.blueCheck className="ml-1.5" style={{ minWidth: 16, maxWidth: 16 }} />}
-                  </div>
-                  <div></div>
+                <div className="w-2/6 flex items-center text-black font-bold font-body">
+                  <NextLink href={`/collection/${coll?.slug}`} className="truncate">
+                    {coll?.metadata?.name}
+                  </NextLink>
+                  {/* using inline here (className will show the bluechecks in different sizes for smaller screen) */}
+                  {coll?.hasBlueCheck && <SVG.blueCheck className="ml-1.5" style={{ minWidth: 16, maxWidth: 16 }} />}
                 </div>
 
                 <div className="w-1/6">
