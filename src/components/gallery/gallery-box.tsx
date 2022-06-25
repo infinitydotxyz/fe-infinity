@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { ITEMS_PER_PAGE } from 'src/utils/constants';
 import { useFilterContext } from 'src/utils/context/FilterContext';
 import { apiGet, ApiError } from 'src/utils/apiUtils';
-import { Button, Card, CardProps, ScrollLoader } from 'src/components/common';
+import { Button, Card, CardProps, ScrollLoader, Spinner } from 'src/components/common';
 import { FilterPanel } from '../filter/filter-panel';
 import { GallerySort } from './gallery-sort';
 import { twMerge } from 'tailwind-merge';
@@ -190,13 +190,14 @@ export const GalleryBox = ({
         >
           {isFetching && cursor === '' && (
             <>
-              <Card height={cardHeight} isLoading={true} />
+              <Spinner />
+              {/* <Card height={cardHeight} isLoading={true} />
 
               <Card height={cardHeight} isLoading={true} />
 
               <Card height={cardHeight} isLoading={true} />
 
-              <Card height={cardHeight} isLoading={true} />
+              <Card height={cardHeight} isLoading={true} /> */}
             </>
           )}
 

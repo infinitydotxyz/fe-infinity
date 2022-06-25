@@ -60,7 +60,8 @@ export const Card = ({
   );
 
   if (isLoading) {
-    return <LoadingCard className={className} />;
+    return <></>;
+    // return <LoadingCard className={className} />;
   }
 
   const heightStyle = `${height}px`;
