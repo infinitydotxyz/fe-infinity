@@ -18,6 +18,7 @@ import { iconButtonStyle } from 'src/utils/ui-constants';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
 import { useAppContext } from 'src/utils/context/AppContext';
 import NotFound404Page from 'pages/not-found-404';
+import { twMerge } from 'tailwind-merge';
 
 const CollectionPage = () => {
   const router = useRouter();
@@ -132,7 +133,7 @@ const CollectionPage = () => {
                 </div>
               )}
             </div>
-            {collection?.hasBlueCheck ? <SVG.blueCheck className={iconButtonStyle} /> : null}
+            {collection?.hasBlueCheck ? <SVG.blueCheck className={twMerge(iconButtonStyle, 'mt-3')} /> : null}
           </div>
         </span>
 
