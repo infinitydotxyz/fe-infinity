@@ -18,12 +18,7 @@ export const ImageOrMissing = ({ src }: Props) => {
     );
   } else {
     imageComponent = (
-      <img
-        src={BLANK_IMAGE_URL}
-        className="p-16 opacity-10"
-        alt="image url"
-        style={{ objectFit: 'contain', transition: 'opacity 400ms ease 0s', height: '100%' }}
-      />
+      <img src={BLANK_IMAGE_URL} className="p-16 opacity-10" alt="image url" style={{ objectFit: 'contain' }} />
     );
   }
 

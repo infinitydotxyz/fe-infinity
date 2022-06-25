@@ -10,7 +10,7 @@ import { inputBorderColor } from 'src/utils/ui-constants';
 import { BGImage } from './bg-image';
 import { SVG } from './svg';
 import { useRouter } from 'next/router';
-import { BLANK_IMG } from 'src/utils';
+import { ImageOrMissing } from './image-or-missing';
 
 type labelFn = (data?: ERC721CardData) => ReactNode;
 
@@ -81,7 +81,7 @@ export const Card = ({
         {data?.image ? (
           <BGImage src={data?.image} className="group-hover:scale-[1.15] transition-all duration-300" />
         ) : (
-          <BGImage src={BLANK_IMG} className="" />
+          <ImageOrMissing src="" />
         )}
       </NextLink>
 
