@@ -1,18 +1,17 @@
-import { FunctionComponent, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FaPen } from 'react-icons/fa';
 import AvatarEditor from 'react-avatar-editor';
 import { ImageUploader, Button, ImageUploaderButtonRef, Modal, BGImage } from 'src/components/common';
+import { twMerge } from 'tailwind-merge';
 
-interface ProfileImageProps {
-  imgSource?: string;
-  className?: string;
+interface Props {
+  imgSource?: string | null;
+  roundPhoto: boolean;
   onUpload: (file: File | Blob) => void;
   onDelete: () => void;
 }
 
-const FORM_LABEL = 'profile-image-upload';
-
-export const ProfileImageUpload: FunctionComponent<ProfileImageProps> = ({ onUpload, onDelete, imgSource = null }) => {
+export const ProfileImageUpload = ({ onUpload, roundPhoto, onDelete, imgSource = null }: Props) => {
   const [imgSrc, setImgSrc] = useState<string | null>(imgSource);
   const [tempImgSrc, setTempImgSrc] = useState<string | null>(imgSource);
   const [file, setFile] = useState<File | Blob | null>(null);
@@ -22,19 +21,23 @@ export const ProfileImageUpload: FunctionComponent<ProfileImageProps> = ({ onUpl
   const uploadInput = useRef<HTMLInputElement>(null);
   const editorRef = useRef<AvatarEditor>(null);
 
+  const FORM_LABEL = roundPhoto ? 'round-image-upload' : 'profile-image-upload';
+
   const handleChangeFile = (file: File) => {
-    try {
-      setIsOpen(true);
-      const imageUrl = URL.createObjectURL(file);
-      setTempImgSrc(imageUrl);
-    } catch (err) {
-      console.error(err);
+    if (file) {
+      try {
+        setIsOpen(true);
+        const imageUrl = URL.createObjectURL(file);
+        setTempImgSrc(imageUrl);
+      } catch (err) {
+        console.error(err);
+      }
     }
   };
 
   const handleImageRemove = async () => {
     setLoading(true);
-    await onDelete();
+    onDelete();
     setLoading(false);
     setImgSrc(null);
   };
@@ -66,7 +69,7 @@ export const ProfileImageUpload: FunctionComponent<ProfileImageProps> = ({ onUpl
     const uploadFile = async () => {
       if (file) {
         setLoading(true);
-        await onUpload(file);
+        onUpload(file);
         setLoading(false);
         setFile(null);
       }
@@ -75,10 +78,25 @@ export const ProfileImageUpload: FunctionComponent<ProfileImageProps> = ({ onUpl
     uploadFile().catch(console.error);
   }, [file]);
 
+  let avatarWidth = 400;
+  const avatarHeight = 250;
+  const avatarBorder = 50;
+  let avatarBorderRadius = 0;
+
+  if (roundPhoto) {
+    avatarWidth = 250;
+    avatarBorderRadius = 150;
+  }
+
   return (
     <div className="sm:flex items-center flex-wrap mb-5">
-      <label htmlFor={FORM_LABEL}>
-        <div className="overflow-hidden bg-theme-gray-100 hover:bg-theme-gray-200 w-28 h-28 mx-auto sm:mx-0 rounded-full">
+      <label htmlFor={FORM_LABEL} className={roundPhoto ? '' : 'flex-1'}>
+        <div
+          className={twMerge(
+            'overflow-hidden bg-theme-gray-100 hover:bg-theme-gray-200 mx-auto sm:mx-0',
+            roundPhoto ? 'w-28 h-28 rounded-full' : 'rounded-3xl w-full h-40'
+          )}
+        >
           {imgSrc ? (
             <BGImage className="cursor-pointer" src={imgSrc} />
           ) : (
@@ -108,23 +126,22 @@ export const ProfileImageUpload: FunctionComponent<ProfileImageProps> = ({ onUpl
           Delete
         </Button>
       </div>
-      {/* Image resizing modal */}
-      <Modal isOpen={modalIsOpen} onClose={() => setIsOpen(false)} okButton="Save" onOKButton={onClickSave}>
+
+      <Modal isOpen={modalIsOpen} onClose={() => setIsOpen(false)} okButton="Save" wide={true} onOKButton={onClickSave}>
         <AvatarEditor
           ref={editorRef}
           image={tempImgSrc || ''}
-          width={250}
-          height={250}
-          border={50}
-          borderRadius={150}
+          width={avatarWidth}
+          height={avatarHeight}
+          border={avatarBorder}
+          borderRadius={avatarBorderRadius}
           color={[255, 255, 255, 0.6]}
           scale={tempImgScale}
+          className="mx-auto"
         />
-        <div className="flex flex-row gap-2">
-          {/* <span>Zoom:</span> */}
-          <label htmlFor="zoomRange" className="form-label">
-            Zoom:
-          </label>
+
+        <div className="flex flex-row gap-4 items-center mt-4">
+          <div>Zoom:</div>
           <input
             id="zoomRange"
             name="scale"
