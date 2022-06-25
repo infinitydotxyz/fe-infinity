@@ -27,7 +27,6 @@ export const DiscoverCollectionCard = ({ orderBy, collection, routerQuery }: Col
   const avatarUrl = getAvatarUrl(collection?.collectionData?.metadata?.profileImage || '');
   const twitterChange = formatNumber(collection.twitterFollowersPercentChange, 1);
 
-  // avatarUrl = null;
   let imageComponent;
   if (avatarUrl) {
     imageComponent = (
