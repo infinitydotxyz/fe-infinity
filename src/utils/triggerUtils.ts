@@ -13,7 +13,7 @@ const statsEndpoints = [
 let statsEndpointsIdx = -1;
 
 const PAUSE_BETWEEN_CALLS = 30 * 1000;
-const PAUSE_BEFORE_REPEAT = 2 * 3600 * 1000; // repeat every 2 hours
+// const PAUSE_BEFORE_REPEAT = 2 * 3600 * 1000; // repeat every 2 hours
 
 // periodically trigger Stats endpoints silently so backend can cache them for all users.
 export function triggerStatsRequests() {
@@ -28,9 +28,9 @@ export function invokeStatsEndpoints() {
     setTimeout(invokeStatsEndpoints, PAUSE_BETWEEN_CALLS);
   } else {
     // done triggering all endpoints => pause & reset back to the beginning:
-    setTimeout(() => {
-      statsEndpointsIdx = -1;
-      setTimeout(invokeStatsEndpoints, PAUSE_BETWEEN_CALLS);
-    }, PAUSE_BEFORE_REPEAT);
+    // setTimeout(() => {
+    //   statsEndpointsIdx = -1;
+    //   setTimeout(invokeStatsEndpoints, PAUSE_BETWEEN_CALLS);
+    // }, PAUSE_BEFORE_REPEAT);
   }
 }
