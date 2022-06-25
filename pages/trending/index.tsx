@@ -188,8 +188,6 @@ const CollectionStatsPage = () => {
 
       {isLoading && <LoadingCards />}
 
-      <div className="h-[100px]">&nbsp;</div>
-
       {/* <ScrollLoader onFetchMore={() => fetchData()} /> */}
     </PageBox>
   );
