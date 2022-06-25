@@ -61,8 +61,8 @@ export const PageBox = ({
                 )}
               </div>
 
-              {/* allows scroll so items aren't at the bottom of the screen */}
-              {/* <div style={{ height: 300 }} /> */}
+              {/* allows scroll so items aren't at the bottom of the screen  */}
+              <div className="shrink-0" style={{ height: 300 }} />
             </div>
           </Header>
         )}
