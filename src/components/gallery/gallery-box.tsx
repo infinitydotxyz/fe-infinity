@@ -10,6 +10,7 @@ import { twMerge } from 'tailwind-merge';
 import { useResizeDetector } from 'react-resize-detector';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { useRouter } from 'next/router';
+import { useIsMounted } from 'src/hooks/useIsMounted';
 
 type ApiNftData = Erc721Token & {
   collectionAddress?: string;
@@ -56,6 +57,7 @@ export const GalleryBox = ({
   const [gridWidth, setGridWidth] = useState(0);
 
   const { width, ref } = useResizeDetector();
+  const isMounted = useIsMounted();
 
   useEffect(() => {
     setGridWidth(ref.current ? ref.current.offsetWidth : 0);
@@ -92,44 +94,48 @@ export const GalleryBox = ({
         ...filterState
       }
     });
-    if (error) {
-      setError(error);
-    }
-    setCursor(result?.cursor);
 
-    let moreData: ERC721CardData[] = (result?.data || []).map((item: ApiNftData) => {
-      return {
-        id: collection?.address + '_' + item.tokenId,
-        name: item.metadata?.name,
-        title: item.collectionName ?? collection?.metadata?.name,
-        collectionName: item.collectionName ?? collection?.metadata?.name,
-        collectionSlug: item.collectionSlug ?? '',
-        description: item.metadata?.description ?? '',
-        image: item?.image?.url,
-        price: item?.orderSnippet?.listing?.orderItem?.startPriceEth ?? 0,
-        chainId: item.chainId,
-        tokenAddress: item.collectionAddress ?? collection?.address,
-        address: item.collectionAddress ?? collection?.address,
-        tokenId: item.tokenId,
-        rarityRank: item.rarityRank,
-        orderSnippet: item.ordersSnippet,
-        hasBlueCheck: item.hasBlueCheck ?? false,
-        attributes: item.metadata?.attributes ?? []
-      } as ERC721CardData;
-    });
-
-    // remove any without tokenAddress (seeing bad NFTs in my profile)
-    moreData = moreData.filter((x) => x.tokenAddress);
-
-    setIsFetching(false);
-    if (isRefresh) {
-      setData([...moreData]);
-    } else {
-      if (result?.cursor !== cursor) {
-        setData([...data, ...moreData]);
+    if (isMounted()) {
+      if (error) {
+        setError(error);
       }
+      setCursor(result?.cursor);
+
+      let moreData: ERC721CardData[] = (result?.data || []).map((item: ApiNftData) => {
+        return {
+          id: collection?.address + '_' + item.tokenId,
+          name: item.metadata?.name,
+          title: item.collectionName ?? collection?.metadata?.name,
+          collectionName: item.collectionName ?? collection?.metadata?.name,
+          collectionSlug: item.collectionSlug ?? '',
+          description: item.metadata?.description ?? '',
+          image: item?.image?.url,
+          price: item?.orderSnippet?.listing?.orderItem?.startPriceEth ?? 0,
+          chainId: item.chainId,
+          tokenAddress: item.collectionAddress ?? collection?.address,
+          address: item.collectionAddress ?? collection?.address,
+          tokenId: item.tokenId,
+          rarityRank: item.rarityRank,
+          orderSnippet: item.ordersSnippet,
+          hasBlueCheck: item.hasBlueCheck ?? false,
+          attributes: item.metadata?.attributes ?? []
+        } as ERC721CardData;
+      });
+
+      // remove any without tokenAddress (seeing bad NFTs in my profile)
+      moreData = moreData.filter((x) => x.tokenAddress);
+
+      setIsFetching(false);
+      if (isRefresh) {
+        setData([...moreData]);
+      } else {
+        if (result?.cursor !== cursor) {
+          setData([...data, ...moreData]);
+        }
+      }
+
+      setCurrentPage(newCurrentPage);
     }
-    setCurrentPage(newCurrentPage);
   };
 
   useEffect(() => {

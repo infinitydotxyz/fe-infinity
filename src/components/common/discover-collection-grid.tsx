@@ -5,6 +5,7 @@ import { uniqBy } from 'lodash';
 import { DiscoverCollectionCard } from './discover-collection-card';
 import { DiscoverOrderBy } from 'pages/marketplace';
 import { CollectionStatsArrayResponseDto, CollectionStatsDto } from '@infinityxyz/lib-frontend/types/dto/stats';
+import { useIsMounted } from 'src/hooks/useIsMounted';
 
 const fetchCollectionRankings = async (cursor: undefined | string, orderBy: DiscoverOrderBy) => {
   const API_ENDPOINT = '/collections/rankings'; // ?period=weekly&date=1656023141155&orderBy=twitterFollowersPercentChange&orderDirection=desc&limit=50
@@ -35,6 +36,7 @@ export const DiscoverCollectionGrid = ({ className, orderBy, routerQuery }: Prop
   const [error, setError] = useState(false);
   const [cursor, setCursor] = useState<string>('');
   const [hasNextPage, setHasNextPage] = useState(false);
+  const isMounted = useIsMounted();
 
   useEffect(() => {
     handleFetch('');
@@ -43,30 +45,32 @@ export const DiscoverCollectionGrid = ({ className, orderBy, routerQuery }: Prop
   const handleFetch = async (passedCursor: string) => {
     setIsLoading(true);
     const { error, result } = await fetchCollectionRankings(passedCursor, orderBy);
-    setIsLoading(false);
 
-    if (error) {
-      setError(error);
-      setCollections([]);
-      setCursor('');
-      setHasNextPage(false);
-    } else {
-      const res = result as CollectionStatsArrayResponseDto;
-      if (passedCursor) {
-        let arr = [...collections, ...res.data];
-        arr = uniqBy(arr, 'collectionAddress');
-        setCollections(arr);
+    if (isMounted()) {
+      setIsLoading(false);
+
+      if (error) {
+        setError(error);
+        setCollections([]);
+        setCursor('');
+        setHasNextPage(false);
       } else {
-        const arr = uniqBy(res.data, 'collectionAddress');
-        setCollections(arr);
+        const res = result as CollectionStatsArrayResponseDto;
+        if (passedCursor) {
+          let arr = [...collections, ...res.data];
+          arr = uniqBy(arr, 'collectionAddress');
+          setCollections(arr);
+        } else {
+          const arr = uniqBy(res.data, 'collectionAddress');
+          setCollections(arr);
+        }
+        setCursor(res.cursor);
+        setHasNextPage(res.hasNextPage);
       }
-      setCursor(res.cursor);
-      setHasNextPage(res.hasNextPage);
     }
   };
 
   if (error) {
-    console.error(error);
     return (
       <div className={className}>
         <div>Unable to load data.</div>
