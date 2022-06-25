@@ -72,15 +72,17 @@ const CollectionStatsPage = () => {
   }, [queryBy, period]);
 
   const onClickQueryBy = (val: string, setTab = '') => {
-    setQueryBy(val);
-    push(
-      {
-        pathname,
-        query: { ...query, tab: (setTab ? setTab : query?.tab) || DEFAULT_TAB, queryBy: val }
-      },
-      undefined,
-      { shallow: true }
-    );
+    if (val !== queryBy) {
+      setQueryBy(val);
+      push(
+        {
+          pathname,
+          query: { ...query, tab: (setTab ? setTab : query?.tab) || DEFAULT_TAB, queryBy: val }
+        },
+        undefined,
+        { shallow: true }
+      );
+    }
   };
 
   const onChangeToggleTab = (value: string) => {
