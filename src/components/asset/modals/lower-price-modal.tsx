@@ -13,7 +13,7 @@ interface Props {
   onClose: () => void;
 }
 
-export const LowerPriceModal = ({ isOpen, onClose, collection, token, buyPriceEth }: Props) => {
+export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) => {
   const { user } = useAppContext();
   const [orderDetails, setOrderDetails] = useState<SignedOBOrder | null>(null);
   const [price, setPrice] = useState(0);
