@@ -5,7 +5,7 @@ import { TextInputBox } from './input-box';
 
 const LOCAL_STORAGE_KEY = 'ppp';
 const base64Password = 'bmZ0ODg4'; // nft888
-const NO_PASSWORD_PAGES = ['/terms-and-conditions', '/privacy'];
+const NO_PASSWORD_PAGES = ['/terms', '/privacy'];
 
 export const isPasswordModalNeeded = () => {
   const str = localStorage.getItem(LOCAL_STORAGE_KEY) ?? '';
