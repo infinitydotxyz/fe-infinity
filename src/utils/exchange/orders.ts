@@ -23,7 +23,7 @@ import {
   NULL_ADDRESS,
   trimLowerCase
 } from '@infinityxyz/lib-frontend/utils';
-import { infinityExchangeAbi } from '../../abi/infinityExchange';
+import { InfinityExchangeABI } from '../../abi/infinityExchange';
 import { erc20Abi } from '../../abi/erc20';
 import { erc721Abi } from '../../abi/erc721';
 import { User } from '../context/AppContext';
@@ -37,7 +37,7 @@ export async function getSignedOBOrder(
 ): Promise<SignedOBOrder | undefined> {
   // sign
   const infinityExchangeAddress = getExchangeAddress(chainId.toString());
-  const infinityExchange = new Contract(infinityExchangeAddress, infinityExchangeAbi, signer);
+  const infinityExchange = new Contract(infinityExchangeAddress, InfinityExchangeABI, signer);
   const signedOrder = await prepareOBOrder(user, chainId, signer, order, infinityExchange);
   if (!signedOrder) {
     const msg = 'signOBSpecOrder: failed to sign order';
@@ -382,7 +382,7 @@ export async function signChainOBOrder(
 export async function takeOrder(signer: JsonRpcSigner, chainId: string, makerOrder: ChainOBOrder) {
   const user = await signer.getAddress();
   const exchangeAddress = getExchangeAddress(chainId);
-  const infinityExchange = new Contract(exchangeAddress, infinityExchangeAbi, signer);
+  const infinityExchange = new Contract(exchangeAddress, InfinityExchangeABI, signer);
 
   const takerOrderSide = !makerOrder.isSellOrder;
   const constraints = makerOrder.constraints;
