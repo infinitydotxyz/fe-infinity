@@ -16,7 +16,7 @@ export const TraitList: FC<TraitListProps> = ({ traits, collectionTraits }) => {
           let description = 'None';
           if (trait?.trait_type && collectionTraits) {
             description = `${
-              Math.floor(collectionTraits[trait.trait_type]?.values[trait?.value].percent) || 1
+              Math.floor(collectionTraits[trait.trait_type]?.values[trait?.value]?.percent) || 1
             } % have this`;
           }
           return <Trait key={idx + '_' + trait.trait_type} trait={trait} description={description} />;

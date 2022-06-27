@@ -1,16 +1,15 @@
-import { Collection, Token } from '@infinityxyz/lib-frontend/types/core';
+import { Token } from '@infinityxyz/lib-frontend/types/core';
 import React, { useState } from 'react';
 import { Modal, TextInputBox } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
 
 interface Props {
   isOpen: boolean;
-  collection: Collection;
   token: Token;
   onClose: () => void;
 }
 
-export const SendNFTModal = ({ isOpen, onClose, collection, token }: Props) => {
+export const SendNFTModal = ({ isOpen, onClose, token }: Props) => {
   const [address, setAddress] = useState('');
   const { providerManager } = useAppContext();
 
@@ -31,7 +30,6 @@ export const SendNFTModal = ({ isOpen, onClose, collection, token }: Props) => {
         okButton="Send"
         title="Send NFT"
         onOKButton={async () => {
-          console.log(collection);
           console.log(token);
 
           const finalAddress = await ensToAddress(address);
