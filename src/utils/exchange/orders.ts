@@ -23,9 +23,7 @@ import {
   NULL_ADDRESS,
   trimLowerCase
 } from '@infinityxyz/lib-frontend/utils';
-import { InfinityExchangeABI } from '../../abi/infinityExchange';
-import { erc20Abi } from '../../abi/erc20';
-import { erc721Abi } from '../../abi/erc721';
+import { InfinityExchangeABI, ERC20ABI, ERC721ABI } from '@infinityxyz/lib-frontend/abi';
 import { User } from '../context/AppContext';
 import { keccak256, solidityKeccak256 } from 'ethers/lib/utils';
 
@@ -147,7 +145,7 @@ export async function approveERC20(
   try {
     console.log('Granting ERC20 approval');
     if (currencyAddress !== NULL_ADDRESS) {
-      const contract = new Contract(currencyAddress, erc20Abi, signer);
+      const contract = new Contract(currencyAddress, ERC20ABI, signer);
       const allowance = BigNumber.from(await contract.allowance(user, infinityFeeTreasuryAddress));
       if (allowance.lt(price)) {
         await contract.approve(infinityFeeTreasuryAddress, MaxUint256);
@@ -167,7 +165,7 @@ export async function approveERC721(user: string, items: OBOrderItem[], signer: 
     console.log('Granting ERC721 approval');
     for (const item of items) {
       const collection = item.collectionAddress;
-      const contract = new Contract(collection, erc721Abi, signer);
+      const contract = new Contract(collection, ERC721ABI, signer);
       const isApprovedForAll = await contract.isApprovedForAll(user, exchange);
       if (!isApprovedForAll) {
         await contract.setApprovalForAll(exchange, true);
@@ -187,7 +185,7 @@ export async function checkOnChainOwnership(user: User, order: OBOrder, signer: 
   let result = true;
   for (const nft of order.nfts) {
     const collection = nft.collectionAddress;
-    const contract = new Contract(collection, erc721Abi, signer);
+    const contract = new Contract(collection, ERC721ABI, signer);
     for (const token of nft.tokens) {
       result = result && (await checkERC721Ownership(user, contract, token.tokenId));
     }
