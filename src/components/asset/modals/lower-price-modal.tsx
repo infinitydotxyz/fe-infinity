@@ -1,4 +1,4 @@
-import { Collection, SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
+import { SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
 import React, { useEffect, useState } from 'react';
 import { TextInputBox, Modal, SimpleTable, SimpleTableItem, EthPrice, toastError } from 'src/components/common';
 import { apiGet, BLANK_IMAGE_URL, INFINITY_FEE_PCT, INFINITY_ROYALTY_PCT } from 'src/utils';
@@ -7,7 +7,6 @@ import { postOrders } from 'src/utils/marketUtils';
 
 interface Props {
   isOpen: boolean;
-  collection: Collection;
   token: Token;
   buyPriceEth?: string;
   onClose: () => void;

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Collection, SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
+import { SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
 import { Checkbox, EthPrice, Modal } from 'src/components/common';
 import { apiGet } from 'src/utils';
 import { uniqBy } from 'lodash';
@@ -7,12 +7,12 @@ import { OrderbookItem } from 'src/components/market/orderbook-list/orderbook-it
 
 interface Props {
   isOpen: boolean;
-  collection: Collection;
+  collectionAddress: string;
   token: Token;
   onClose: () => void;
 }
 
-export const CancelModal = ({ isOpen, onClose, collection, token }: Props) => {
+export const CancelModal = ({ isOpen, onClose, collectionAddress, token }: Props) => {
   const [selectedListings, setSelectedListings] = useState<string[]>([]);
   const [listings, setListings] = useState<SignedOBOrder[]>([]);
 
@@ -21,7 +21,7 @@ export const CancelModal = ({ isOpen, onClose, collection, token }: Props) => {
       query: {
         limit: 50,
         isSellOrder: true,
-        collection: token.collectionAddress
+        collection: collectionAddress
       },
       requiresAuth: true
     });
@@ -55,7 +55,6 @@ export const CancelModal = ({ isOpen, onClose, collection, token }: Props) => {
       okButton="Confirm"
       title="Select listings to cancel"
       onOKButton={() => {
-        console.log(collection);
         onClose();
       }}
     >

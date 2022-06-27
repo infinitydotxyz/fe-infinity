@@ -1,4 +1,4 @@
-import { Collection, Token } from '@infinityxyz/lib-frontend/types/core';
+import { Token } from '@infinityxyz/lib-frontend/types/core';
 import React, { useState } from 'react';
 import {
   Switch,
@@ -12,12 +12,11 @@ import {
 
 interface Props {
   isOpen: boolean;
-  collection: Collection;
   token: Token;
   onClose: () => void;
 }
 
-export const ListNFTModal = ({ isOpen, onClose, collection, token }: Props) => {
+export const ListNFTModal = ({ isOpen, onClose, token }: Props) => {
   const [price, setPrice] = useState(0);
   // TODO: do something with this ending price?
   const [includeEndingPrice, setIncludeEndingPrice] = useState<boolean>(false);
