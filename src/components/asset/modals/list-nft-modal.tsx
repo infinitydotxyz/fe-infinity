@@ -33,7 +33,6 @@ export const ListNFTModal = ({ isOpen, onClose, token }: Props) => {
       okButton="List"
       title="List NFT"
       onOKButton={() => {
-        console.log(collection);
         console.log(token);
         onClose();
       }}
