@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ScrollLoader, Spinner } from 'src/components/common';
-import { apiGet, DEFAULT_LIMIT, GRID_CSS } from 'src/utils';
+import { apiGet, LARGE_LIMIT, GRID_CSS } from 'src/utils';
 import { uniqBy } from 'lodash';
 import { DiscoverCollectionCard } from './discover-collection-card';
 import { DiscoverOrderBy } from 'pages/marketplace';
@@ -15,7 +15,7 @@ const fetchCollectionRankings = async (cursor: undefined | string, orderBy: Disc
       date: '1656023141155',
       orderBy,
       orderDirection: 'desc',
-      limit: DEFAULT_LIMIT,
+      limit: LARGE_LIMIT,
       cursor
     }
   });
