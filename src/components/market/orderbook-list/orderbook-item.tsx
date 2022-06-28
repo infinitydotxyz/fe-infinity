@@ -124,12 +124,12 @@ const SingleCollectionCell = ({
   }
   return (
     <div className="flex gap-2 items-center">
-      <div className="flex justify-center shrink-0 h-12 w-12">
+      <div className="flex justify-center shrink-0 h-14 w-14">
         <span className="inline-block relative">
           {image ? (
-            <img className="h-12 w-12 rounded-full" src={image} alt="" />
+            <img className="h-14 w-14 rounded-full" src={image} alt="" />
           ) : (
-            <img className="h-12 w-12 rounded-full" src={BLANK_IMG} alt="" />
+            <img className="h-14 w-14 rounded-full" src={BLANK_IMG} alt="" />
           )}
 
           {count > 1 && (

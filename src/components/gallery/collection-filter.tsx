@@ -1,7 +1,7 @@
-import { without } from 'lodash';
+import { debounce, without } from 'lodash';
 import { useEffect, useState } from 'react';
 import { apiGet } from 'src/utils';
-import { Checkbox } from '../common';
+import { Checkbox, TextInputBox } from '../common';
 
 export type CollectionInfo = {
   chainId?: string;
@@ -19,23 +19,39 @@ interface Props {
 const CollectionFilter = ({ userAddress, onSelect }: Props) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [collections, setCollections] = useState<CollectionInfo[]>([]);
+  const [collectionSearchState, setCollectionSearchState] = useState<string>();
+
+  const fetchData = async () => {
+    const { result } = await apiGet(`/user/${userAddress}/nftCollections`, {
+      query: { search: collectionSearchState }
+    });
+    if (result?.data) {
+      setCollections(result?.data ?? []);
+    }
+  };
+  const debouncedSearch = debounce((value: string) => {
+    setCollectionSearchState(value);
+  }, 200);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const { result } = await apiGet(`/user/${userAddress}/nftCollections`);
-      if (result?.data) {
-        setCollections(result?.data ?? []);
-      }
-    };
     fetchData();
-  }, []);
+  }, [collectionSearchState]);
 
   useEffect(() => {
     onSelect(selectedIds);
   }, [selectedIds]);
 
   return (
-    <ul className="max-h-[200px] overflow-y-auto">
+    <ul className="max-h-[250px] overflow-y-auto">
+      <TextInputBox
+        label=""
+        type="text"
+        className="border rounded-full py-2 px-4 mb-6 font-heading w-full"
+        defaultValue={collectionSearchState}
+        onChange={debouncedSearch}
+        placeholder="Search"
+      />
+
       {collections.map((item) => {
         // if (!item.collectionName) {
         //   return null;
@@ -53,7 +69,7 @@ const CollectionFilter = ({ userAddress, onSelect }: Props) => {
                 setSelectedIds(ids);
               }
             }}
-            className="py-2"
+            className="py-4"
           />
         );
       })}
