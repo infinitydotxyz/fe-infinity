@@ -1,6 +1,7 @@
-import { utils } from 'ethers';
 import React, { useState } from 'react';
 import { useStakerStake } from 'src/hooks/contract/staker/useStakerStake';
+import { useTokenAllowance } from 'src/hooks/contract/token/useTokenAllowance';
+import { useTokenApprove } from 'src/hooks/contract/token/useTokenApprove';
 import { useTokenBalance } from 'src/hooks/contract/token/useTokenBalance';
 import { Button } from '../common/button';
 import { TextInputBox } from '../common/input-box';
@@ -13,8 +14,29 @@ interface Props {
 export const StakeTokensModal = ({ onClose }: Props) => {
   const [sliderValue, setSliderValue] = useState(0);
   const [value, setValue] = useState(0);
+  const [isStaking, setIsStaking] = useState(false);
   const { balance } = useTokenBalance();
   const { stake } = useStakerStake();
+  const { approve } = useTokenApprove();
+  const { allowance } = useTokenAllowance();
+
+  const onStake = async () => {
+    setIsStaking(true);
+
+    try {
+      if (allowance < value) {
+        await approve(value);
+      }
+
+      await stake(value, sliderValue);
+
+      setIsStaking(false);
+      onClose(); // TODO: pass tokens staked back to prev. page and update UI so user doesn't need to reload page to see the result
+    } catch (err) {
+      console.error(err);
+      setIsStaking(false);
+    }
+  };
 
   return (
     <Modal isOpen={true} onClose={onClose} showActionButtons={false} showCloseIcon={true}>
@@ -68,13 +90,7 @@ export const StakeTokensModal = ({ onClose }: Props) => {
           </div>
         </div>
 
-        <Button
-          className="w-full py-3 mt-12"
-          onClick={async () => {
-            await stake(+utils.parseEther(value.toString()).toString(), sliderValue);
-            onClose();
-          }}
-        >
+        <Button className="w-full py-3 mt-12" onClick={onStake} disabled={isStaking}>
           Stake
         </Button>
       </div>

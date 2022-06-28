@@ -6,7 +6,7 @@ import { useStakerContract } from './useStakerContract';
  * @param address Optional address to lookup. Defaults to the address of the currently logged in user.
  */
 export function useStakerTotalStaked(address?: string) {
-  const contract = useStakerContract();
+  const { contract } = useStakerContract();
   const { balance: staked } = useBalance(contract.getUserTotalStaked, address);
   return { staked };
 }
