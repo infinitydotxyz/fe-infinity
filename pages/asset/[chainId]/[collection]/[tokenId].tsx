@@ -113,7 +113,9 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
 
   const imgUrl = token?.image?.url || token?.metadata?.image || BLANK_IMAGE_URL;
   if (token && (!imgUrl || imgUrl.startsWith('ipfs'))) {
-    token.image.url = BLANK_IMAGE_URL;
+    if (token.image) {
+      token.image.url = BLANK_IMAGE_URL;
+    }
   }
 
   if (isLoading) {
@@ -310,7 +312,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
             {/* <CollectionFeed collectionAddress={token.collectionAddress} tokenId={token.tokenId} forActivity={true} /> */}
 
             <ActivityList
-              chainId={token.chainId}
+              chainId={token.chainId ?? '1'} // default
               collectionAddress={token.collectionAddress ?? ''}
               tokenId={token.tokenId}
             />
