@@ -1,15 +1,14 @@
-import { Collection, Token } from '@infinityxyz/lib-frontend/types/core';
+import { Token } from '@infinityxyz/lib-frontend/types/core';
 import React, { useState } from 'react';
 import { Modal, CurrencyInput, DatePickerBox } from 'src/components/common';
 
 interface Props {
   isOpen: boolean;
-  collection: Collection;
   token: Token;
   onClose: () => void;
 }
 
-export const MakeOfferModal = ({ isOpen, onClose, collection, token }: Props) => {
+export const MakeOfferModal = ({ isOpen, onClose, token }: Props) => {
   const [price, setPrice] = useState(0);
   const [expirationDate, setExpirationDate] = useState(Date.now() + 1000);
 
@@ -20,7 +19,6 @@ export const MakeOfferModal = ({ isOpen, onClose, collection, token }: Props) =>
       okButton="Make offer"
       title="Make offer"
       onOKButton={() => {
-        console.log(collection);
         console.log(token);
       }}
     >
