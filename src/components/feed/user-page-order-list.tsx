@@ -4,7 +4,7 @@ import { FeedEventType } from '@infinityxyz/lib-frontend/types/core/feed';
 // import { FeedFilterDropdown } from './feed-filter-dropdown';
 import { UserPageOrderListItem } from './user-page-order-list-item';
 import { apiGet, ITEMS_PER_PAGE } from 'src/utils';
-import { Button, ScrollLoader, Spinner } from '../common';
+import { Button, CenteredContent, ScrollLoader, Spinner } from '../common';
 import { UserProfileDto } from '../user/user-profile-dto';
 import { CancelDrawer } from 'src/components/market/order-drawer/cancel-drawer';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
@@ -154,7 +154,13 @@ export const UserPageOrderList = ({ userInfo, className = '' }: UserPageOrderLis
         )}
 
         <div className="w-full space-y-4 pointer-events-auto">
-          {isFetching && <Spinner />}
+          {isFetching && (
+            <div className="mt-8">
+              <CenteredContent>
+                <Spinner />
+              </CenteredContent>
+            </div>
+          )}
 
           {!isFetching && hasNextPage === false && data?.length === 0 ? <div>No results found.</div> : null}
 
