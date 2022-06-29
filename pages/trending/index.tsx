@@ -15,6 +15,7 @@ import {
 import { apiGet, BLANK_IMG, formatNumber, ITEMS_PER_PAGE } from 'src/utils';
 import { ChainId, Collection, CollectionPeriodStatsContent } from '@infinityxyz/lib-frontend/types/core';
 import { useOrderContext } from 'src/utils/context/OrderContext';
+import { useIsMounted } from 'src/hooks/useIsMounted';
 
 // - cache stats 5mins
 
@@ -29,6 +30,7 @@ const CollectionStatsPage = () => {
   const [offset, setOffset] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const { addCartItem, setOrderDrawerOpen } = useOrderContext();
+  const isMounted = useIsMounted();
 
   useEffect(() => {
     const parsedQs = parse(window?.location?.search); // don't use useRouter-query as it's undefined initially.
@@ -52,19 +54,22 @@ const CollectionStatsPage = () => {
         queryBy: queryBy // 'by_avg_price' // 'by_sales_volume'
       }
     });
-    setIsLoading(false);
-    // console.log('result', result);
 
-    if (result?.data?.length > 0) {
-      if (refresh) {
-        const newData = [...result.data];
-        setData(newData);
-      } else {
-        const newData = [...data, ...result.data];
-        setData(newData);
+    if (isMounted()) {
+      setIsLoading(false);
+      // console.log('result', result);
+
+      if (result?.data?.length > 0) {
+        if (refresh) {
+          const newData = [...result.data];
+          setData(newData);
+        } else {
+          const newData = [...data, ...result.data];
+          setData(newData);
+        }
       }
+      setOffset(refresh ? 0 : offset + ITEMS_PER_PAGE);
     }
-    setOffset(refresh ? 0 : offset + ITEMS_PER_PAGE);
   };
 
   useEffect(() => {
