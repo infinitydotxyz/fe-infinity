@@ -153,7 +153,7 @@ export const UserPageOrderList = ({ userInfo, className = '' }: UserPageOrderLis
           </div>
         )}
 
-        <ul className="w-full space-y-4 pointer-events-auto">
+        <div className="w-full space-y-4 pointer-events-auto">
           {isFetching && <Spinner />}
 
           {!isFetching && hasNextPage === false && data?.length === 0 ? <div>No results found.</div> : null}
@@ -191,7 +191,7 @@ export const UserPageOrderList = ({ userInfo, className = '' }: UserPageOrderLis
               }}
             />
           ) : null}
-        </ul>
+        </div>
       </div>
 
       <CancelDrawer
