@@ -56,9 +56,7 @@ export const PageBox = ({
               <div className={`w-full ${className}`}>
                 {children}
 
-                {hasOrderDrawer && orderDrawerOpen === true && (
-                  <OrderDrawer open={orderDrawerOpen} onClose={() => setOrderDrawerOpen(false)} />
-                )}
+                <OrderDrawer open={hasOrderDrawer && orderDrawerOpen} onClose={() => setOrderDrawerOpen(false)} />
               </div>
 
               {/* allows scroll so items aren't at the bottom of the screen  */}
