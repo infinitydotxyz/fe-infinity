@@ -32,7 +32,7 @@ interface UserPageOrderListProps {
   className?: string;
 }
 
-export const UserPageOrderList = ({ userInfo, className }: UserPageOrderListProps) => {
+export const UserPageOrderList = ({ userInfo, className = '' }: UserPageOrderListProps) => {
   const router = useRouter();
   const { orderDrawerOpen, setOrderDrawerOpen, setCustomDrawerItems } = useOrderContext();
   // const [filter, setFilter] = useState<FeedFilter>({ userAddress, types });
