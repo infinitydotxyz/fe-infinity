@@ -95,7 +95,8 @@ export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) 
           nonce: orderDetails.nonce,
           execParams: orderDetails.execParams,
           extraParams: orderDetails.extraParams,
-          signedOrder: orderDetails.signedOrder
+          signedOrder: orderDetails.signedOrder,
+          maxGasPriceWei: orderDetails.maxGasPriceWei
         };
         signedOrders.push(order);
         try {
