@@ -33,9 +33,9 @@ export const DiscoverCollectionCard = ({ orderBy, collection, routerQuery }: Pro
             {collection.name}
             {collection.hasBlueCheck ? <SVG.blueCheck className="w-4 h-4 ml-1 mt-1" /> : null}
           </div> */}
-          <span className="flex flex-1 items-start font-body text-base font-medium pl-2 text-black truncate">
+          <span className="flex flex-1 items-start font-body text-base font-medium pl-2 text-black whitespace-pre-wrap">
             <span className="inline-block">{collection.name}</span>
-            {collection.hasBlueCheck ? <SVG.blueCheck className="w-4 h-4 ml-1 mt-1" /> : null}
+            {collection.hasBlueCheck ? <SVG.blueCheck className="w-4 h-4 mt-1" style={{ width: 24 }} /> : null}
           </span>
 
           <div className="font-body text-base px-5 text-theme-light-800">
