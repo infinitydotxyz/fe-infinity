@@ -284,6 +284,7 @@ export const OrderContextProvider = ({ children }: Props) => {
         nfts: spec.nfts,
         makerUsername: spec.makerUsername,
         nonce: orderNonce,
+        maxGasPriceWei: '1e12', // todo: adi put in maxGasPriceWei
         execParams: {
           currencyAddress,
           complicationAddress: getOBComplicationAddress(chainId)

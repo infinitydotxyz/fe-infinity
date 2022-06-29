@@ -441,6 +441,7 @@ export function getOBOrderFromFirestoreOrderItem(firestoreOrderItem: FirestoreOr
     startTimeMs: firestoreOrderItem?.startTimeMs ?? 0,
     endTimeMs: firestoreOrderItem?.endTimeMs ?? 0,
     nonce: '',
+    maxGasPriceWei: '1e12', // todo: adi get from backend
     nfts: [],
     execParams: {
       currencyAddress: '',
