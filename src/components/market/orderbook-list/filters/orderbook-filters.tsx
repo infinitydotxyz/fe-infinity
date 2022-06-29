@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
 import { Checkbox, TextInputBox } from 'src/components/common';
+import { useIsMounted } from 'src/hooks/useIsMounted';
 import { useOrderbook } from '../../OrderbookContext';
 import { CollectionSearchItem, useCollectionCache } from '../collection-cache';
 
@@ -42,23 +43,26 @@ export const OrderbookFilters = () => {
   const [collectionSearchState, setCollectionSearchState] = useState<string>();
   const [collectionsData, setCollectionsData] = useState<CollectionSearchItem[]>([]);
   const { getTopCollections, getCollectionsByName, getCollectionsByIds } = useCollectionCache();
+  const isMounted = useIsMounted();
 
   useEffect(() => {
     // loads the selected collections from query params and also provides some more options
     const fetchInitialCollections = async () => {
       const initialCollections = await getTopCollections();
       if (initialCollections?.length) {
-        // query params passed on page load
-        if (collections.length > 0) {
-          const selectedCollections = await getCollectionsByIds(collections);
-          if (selectedCollections?.length) {
-            const _collections = uniqBy([...selectedCollections, ...initialCollections], 'id');
-            setCollectionsData(_collections);
-            allCollectionsData = [...allCollectionsData, ..._collections];
+        if (isMounted()) {
+          // query params passed on page load
+          if (collections.length > 0) {
+            const selectedCollections = await getCollectionsByIds(collections);
+            if (selectedCollections?.length) {
+              const _collections = uniqBy([...selectedCollections, ...initialCollections], 'id');
+              setCollectionsData(_collections);
+              allCollectionsData = [...allCollectionsData, ..._collections];
+            }
+          } else {
+            setCollectionsData(initialCollections);
+            allCollectionsData = [...allCollectionsData, ...initialCollections];
           }
-        } else {
-          setCollectionsData(initialCollections);
-          allCollectionsData = [...allCollectionsData, ...initialCollections];
         }
       }
     };
