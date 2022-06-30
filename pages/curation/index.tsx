@@ -40,8 +40,8 @@ export default function Curation() {
       </div>
       <div>
         {/* TODO: loading screens */}
-        {selected == Tab.AllCurated && <AllCuratedCollections orderBy={orderBy} />}
-        {selected == Tab.MyCurated && <MyCuratedCollections orderBy={orderBy} />}
+        {selected === Tab.AllCurated && <AllCuratedCollections orderBy={orderBy} />}
+        {/*  {selected === Tab.MyCurated && <MyCuratedCollections orderBy={orderBy} />} */}
       </div>
     </PageBox>
   );

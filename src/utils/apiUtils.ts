@@ -197,6 +197,10 @@ interface UseFetchInfiniteParams {
 
 export const useFetchInfinite = <T>(path: string | null, params: UseFetchInfiniteParams) => {
   const getKey: SWRInfiniteKeyLoader = (pageIndex, previousPageData) => {
+    if (path === null) {
+      return null;
+    }
+
     const queryStr = buildQueryString({ ...params?.query, cursor: previousPageData?.cursor });
 
     // reached the end

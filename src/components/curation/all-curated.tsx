@@ -1,14 +1,11 @@
-import { Collection } from '@infinityxyz/lib-frontend/types/core';
 import { CuratedCollectionsOrderBy } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections-query.dto';
-import { result } from 'lodash';
-import { useRouter } from 'next/router';
-import React, { useState } from 'react';
-import { useTokenVotes } from 'src/hooks/contract/token/useTokenVotes';
-import { apiGet, useFetchInfinite } from 'src/utils';
+import React from 'react';
+import { useFetchInfinite } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { Button, ScrollLoader, Spinner } from '../common';
-import { CurationRow, CurationsTable, CurationTable } from './curations-table';
+import { CurationTable } from './curations-table';
 import { PaginatedCollectionsDto } from '@infinityxyz/lib-frontend/types/dto/collections';
+import { CuratedCollectionsDto } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections.dto';
 
 export type AllCuratedProps = { orderBy: CuratedCollectionsOrderBy };
 
@@ -18,38 +15,44 @@ export const AllCuratedCollections: React.FC<AllCuratedProps> = ({ orderBy }) =>
   const query = {
     orderBy,
     orderDirection: 'desc',
-    limit: 10
+    limit: 5
   };
 
-  const { result, error, isLoading, setSize } = useFetchInfinite<PaginatedCollectionsDto>('/collections/curated', {
+  const {
+    result: collectionsArray,
+    error: collectionsError,
+    isLoading: isLoadingCollections,
+    setSize: setCollectionsSize
+  } = useFetchInfinite<PaginatedCollectionsDto>('/collections/curated', {
     query
   });
 
-  /* 
-  const fetchUserCurated = async () => {
-    // If the user is logged in, fetch the user's curations so we can the amount of votes here as well.
-    if (user?.address) {
-      const { result, error } = await apiGet(`/user/${user.address}/curated`, {
-        query
-      });
-
-      if (error) {
-        console.error(error);
-        reset();
-        return;
-      }
-
-      setCurations((state) => [...(state || []), ...(result.data.curations || [])]);
+  const { result: curationsArray, setSize: setCurationsSize } = useFetchInfinite<CuratedCollectionsDto>(
+    user?.address ? `/user/${user.address}/curated` : null,
+    {
+      query,
+      swrOptions: { initialSize: 0 }
     }
-  }; */
+  );
+
+  // TODO: find out why cursor isn't used for user curated
+  const fetchMore = () => {
+    setCollectionsSize((size) => size + 1);
+    setCurationsSize((size) => size + 1);
+  };
 
   return (
     <div>
-      {error ? <div className="flex flex-col mt-10">Unable to load curated collections.</div> : null}
+      {collectionsError ? <div className="flex flex-col mt-10">Unable to load curated collections.</div> : null}
 
-      {result && result?.length > 0 && <CurationTable collections={result.map((result) => result.data)} />}
+      {collectionsArray && collectionsArray?.length > 0 && (
+        <CurationTable
+          collections={collectionsArray.map((result) => result.data)}
+          curations={curationsArray?.map((result) => result.data)}
+        />
+      )}
 
-      {!isLoading && result?.length === 0 && (
+      {!isLoadingCollections && collectionsArray?.length === 0 && (
         // TODO: match design
         <div className="text-center">
           <p className="font-body font-medium">
@@ -59,9 +62,9 @@ export const AllCuratedCollections: React.FC<AllCuratedProps> = ({ orderBy }) =>
         </div>
       )}
 
-      <ScrollLoader onFetchMore={() => setSize((size) => size + 1)} />
+      <ScrollLoader onFetchMore={fetchMore} />
 
-      {isLoading && <Spinner />}
+      {isLoadingCollections && <Spinner />}
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { Collection } from '@infinityxyz/lib-frontend/types/core';
+import { Collection, CuratedCollection } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useTokenVotes } from 'src/hooks/contract/token/useTokenVotes';
@@ -15,25 +15,34 @@ const FieldWrapper: React.FC<FieldProps> = (props) => (
 
 export type CurationTableProps = {
   collections: Collection[][];
+  curations?: CuratedCollection[][];
 };
 
-export const CurationTable: React.FC<CurationTableProps> = ({ collections: collectionsArray }) => {
+export const CurationTable: React.FC<CurationTableProps> = ({
+  collections: collectionsArray,
+  curations: curationsArray
+}) => {
   const router = useRouter();
   const { votes } = useTokenVotes();
 
+  const collections = collectionsArray.flat();
+  const curations = curationsArray?.flat();
+
   return (
     <>
-      {collectionsArray?.map((collections) => {
-        return collections.map((collection, i) => (
-          <CurationRow
-            key={i}
-            collection={collection}
-            index={i + 1}
-            onClick={() => router.push(`/collection/${collection.slug}`)}
-            votes={votes}
-          ></CurationRow>
-        ));
-      })}
+      {collections.map((collection, i) => (
+        <CurationRow
+          key={i}
+          collection={collection}
+          curation={curations?.find(
+            (curation) =>
+              curation.collectionAddress === collection.address && curation.collectionChainId === collection.chainId
+          )}
+          index={i + 1}
+          onClick={() => router.push(`/collection/${collection.slug}`)}
+          votes={votes}
+        />
+      ))}
     </>
   );
 };
@@ -41,11 +50,12 @@ export const CurationTable: React.FC<CurationTableProps> = ({ collections: colle
 export type CurationRowProps = {
   index: number;
   collection: Collection;
+  curation?: CuratedCollection;
   onClick: () => void;
   votes: number;
 };
 
-export const CurationRow: React.FC<CurationRowProps> = ({ collection, index, onClick, votes }) => {
+export const CurationRow: React.FC<CurationRowProps> = ({ collection, curation, index, onClick, votes }) => {
   return (
     <div className="mb-2">
       <div className="w-full h-full p-8 overflow-hidden rounded-3xl bg-gray-100 grid grid-cols-analytics place-items-center">
@@ -54,13 +64,13 @@ export const CurationRow: React.FC<CurationRowProps> = ({ collection, index, onC
           <FieldWrapper value={collection.metadata.profileImage} type="image" />
           <FieldWrapper value={collection.metadata.name} type="string" onClick={onClick} />
           <FieldWrapper type="custom">
-            <FeesAprStats value={0} />
+            <FeesAprStats value={curation?.feesAPR || 0} />
             <br />
-            <FeesAccruedStats value={0} />
+            <FeesAccruedStats value={curation?.fees || 0} />
           </FieldWrapper>
           <VoteProgressBar
             totalVotes={collection.numCuratorVotes || 0}
-            votes={0}
+            votes={curation?.votes || 0}
             className="w-full h-full row-span-1 col-span-1 bg-white"
           />
           <FieldWrapper></FieldWrapper>
