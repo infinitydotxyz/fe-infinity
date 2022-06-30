@@ -21,7 +21,14 @@ export const useToggleTab = (options: string[], selectedOption: string) => {
   }, [selectedOption]);
 
   const onChange = (option: string) => {
-    historyPushState(router.pathname, { ...router.query, tab: option });
+    router.push(
+      {
+        pathname: router.pathname,
+        query: { ...router.query, tab: option }
+      },
+      undefined,
+      { shallow: true }
+    );
     setSelected(option);
   };
 
