@@ -117,13 +117,6 @@ const OrderbookList = ({ orders, showFilters, isLoading, fetchMore, hasMoreOrder
             return <OrderbookRow key={`${i}-${order.id}`} order={order} isFilterOpen={showFilters ?? false} />;
           })}
 
-        {/* {orders.length === 0 && !isLoading && <div>No results found</div>} */}
-
-        {/* {isLoading && (
-          <div className="w-full flex justify-center align-items">
-            <Spinner />
-          </div>
-        )} */}
         {isLoading && <Spinner />}
 
         {hasMoreOrders && <ScrollLoader onFetchMore={fetchMore} />}

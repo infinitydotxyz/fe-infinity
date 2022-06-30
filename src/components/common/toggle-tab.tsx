@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
+import { historyPushState } from 'src/utils';
 
 interface Props {
   selected: string;
@@ -20,14 +21,7 @@ export const useToggleTab = (options: string[], selectedOption: string) => {
   }, [selectedOption]);
 
   const onChange = (option: string) => {
-    router.push(
-      {
-        pathname: router.pathname,
-        query: { ...router.query, tab: option }
-      },
-      undefined,
-      { shallow: true }
-    );
+    historyPushState(router.pathname, { ...router.query, tab: option });
     setSelected(option);
   };
 

@@ -9,6 +9,7 @@ import { UserPageNftsTab } from 'src/components/user/user-page-nfts-tab';
 import { UserProfileDto } from 'src/components/user/user-profile-dto';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { parse } from 'query-string';
+import { historyPushState, parseUrlQuery } from 'src/utils';
 
 const enum TABS {
   Orders = 'Orders',
@@ -21,7 +22,7 @@ export type DiscoverOrderBy = 'twitterFollowersPercentChange' | 'volumePercentCh
 
 const MarketplacePage = () => {
   const { user } = useAppContext();
-  const { pathname, query, push } = useRouter();
+  const { pathname, query } = useRouter();
 
   // Checks the url for the 'tab' query parameter. If it doesn't exist, default to Orderbook
   const defaultTab = query.tab && typeof query.tab === 'string' ? query.tab : TABS.Orders;
@@ -39,19 +40,13 @@ const MarketplacePage = () => {
   }, []);
 
   const onClickQueryBy = (val: DiscoverOrderBy, setTab = '') => {
-    const tab = (setTab ? setTab : query?.tab) || DEFAULT_TAB;
+    const urlQuery = parseUrlQuery();
+    const tab = (setTab ? setTab : urlQuery?.tab) || DEFAULT_TAB;
     if (val !== orderBy) {
       setOrderBy(val);
     }
     if (tab === TABS.Discover) {
-      push(
-        {
-          pathname,
-          query: { ...query, tab, queryBy: val }
-        },
-        undefined,
-        { shallow: true }
-      );
+      historyPushState(pathname, { ...urlQuery, tab, queryBy: val });
     }
   };
 
