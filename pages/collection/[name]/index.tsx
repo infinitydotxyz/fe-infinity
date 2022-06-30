@@ -19,6 +19,7 @@ import { OrderbookContainer } from 'src/components/market/orderbook-list';
 import { useAppContext } from 'src/utils/context/AppContext';
 import NotFound404Page from 'pages/not-found-404';
 import { twMerge } from 'tailwind-merge';
+import { first } from 'lodash';
 
 const CollectionPage = () => {
   const router = useRouter();
@@ -214,8 +215,8 @@ const CollectionPage = () => {
             </thead>
             <tbody>
               <tr className="font-bold font-heading text-2xl">
-                <td>{collection?.numNfts?.toLocaleString() ?? '—'}</td>
-                <td>{collection?.numOwners?.toLocaleString() ?? '—'}</td>
+                <td>{firstAllTimeStats?.numNfts?.toLocaleString() ?? '—'}</td>
+                <td>{firstAllTimeStats?.numOwners?.toLocaleString() ?? '—'}</td>
                 <td>
                   {firstAllTimeStats?.floorPrice ? (
                     <EthPrice label={String(firstAllTimeStats?.floorPrice)} labelClassName="font-bold" />
