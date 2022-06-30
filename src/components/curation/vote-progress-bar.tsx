@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { ProgressBar } from '../common/progress-bar';
+import { numberFormatter } from 'src/utils/number-formatter';
 
 export type VoteProgressBarProps = {
   /**
@@ -31,8 +32,9 @@ export const VoteProgressBar: React.FC<VoteProgressBarProps> = ({ votes, totalVo
   return (
     <ProgressBar percentage={percentage} className={className}>
       <span className="space-x-2 font-heading">
-        {/* TODO: format votes so 1_000_000 becomes 1 M etc. */}
-        <span className="font-black">{votes}</span>
+        <span className="font-black">
+          {numberFormatter.format(votes)} / {numberFormatter.format(totalVotes)}
+        </span>
         <span className="font-normal">votes</span>
       </span>
     </ProgressBar>
