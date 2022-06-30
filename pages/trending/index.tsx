@@ -161,7 +161,7 @@ const CollectionStatsPage = () => {
               </NextLink>
 
               <div className="flex justify-between w-full mx-8">
-                <div className="w-2/6 flex items-center text-black font-bold font-body">
+                <div className="w-44 flex items-center text-black font-bold font-body">
                   <NextLink href={`/collection/${coll?.slug}`} className="truncate">
                     {coll?.metadata?.name}
                   </NextLink>
@@ -169,26 +169,45 @@ const CollectionStatsPage = () => {
                   {coll?.hasBlueCheck && <SVG.blueCheck className="ml-1.5" style={{ minWidth: 16, maxWidth: 16 }} />}
                 </div>
 
-                <div className="w-1/6">
+                <div className="w-1/9">
+                  <div className="text-black font-bold font-body flex items-center">Sales</div>
+                  <div>{formatNumber(periodStat?.numSales)}</div>
+                </div>
+
+                <div className="w-1/9">
                   <div className="text-black font-bold font-body flex items-center">Volume</div>
                   <div>
                     <EthPrice label={periodStat?.salesVolume ? formatNumber(periodStat?.salesVolume) : '-'} />
                   </div>
                 </div>
 
-                <div className="w-1/6">
-                  <div className="text-black font-bold font-body flex items-center">Avg. Price</div>
+                <div className="w-1/9">
+                  <div className="text-black font-bold font-body flex items-center">Floor</div>
+                  <div>
+                    <EthPrice label={periodStat?.minPrice ? formatNumber(periodStat?.minPrice, 2) : '-'} />
+                  </div>
+                </div>
+
+                <div className="w-1/9">
+                  <div className="text-black font-bold font-body flex items-center">Avg Price</div>
                   <div>
                     <EthPrice label={periodStat?.avgPrice ? formatNumber(periodStat?.avgPrice, 2) : '-'} />
                   </div>
                 </div>
 
-                <div className="w-1/6">
+                <div className="w-1/9">
+                  <div className="text-black font-bold font-body flex items-center">Max Price</div>
+                  <div>
+                    <EthPrice label={periodStat?.maxPrice ? formatNumber(periodStat?.maxPrice, 2) : '-'} />
+                  </div>
+                </div>
+
+                <div className="w-1/9">
                   <div className="text-black font-bold font-body">Owners</div>
                   <div>{formatNumber(periodStat?.ownerCount)}</div>
                 </div>
 
-                <div className="w-1/6">
+                <div className="w-1/9">
                   <div className="text-black font-bold font-body">Tokens</div>
                   <div>{formatNumber(periodStat?.tokenCount)}</div>
                 </div>
