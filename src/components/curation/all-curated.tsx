@@ -15,7 +15,7 @@ export const AllCuratedCollections: React.FC<AllCuratedProps> = ({ orderBy }) =>
   const query = {
     orderBy,
     orderDirection: 'desc',
-    limit: 5
+    limit: 10
   };
 
   const {
@@ -30,12 +30,10 @@ export const AllCuratedCollections: React.FC<AllCuratedProps> = ({ orderBy }) =>
   const { result: curationsArray, setSize: setCurationsSize } = useFetchInfinite<CuratedCollectionsDto>(
     user?.address ? `/user/${user.address}/curated` : null,
     {
-      query,
-      swrOptions: { initialSize: 0 }
+      query
     }
   );
 
-  // TODO: find out why cursor isn't used for user curated
   const fetchMore = () => {
     setCollectionsSize((size) => size + 1);
     setCurationsSize((size) => size + 1);

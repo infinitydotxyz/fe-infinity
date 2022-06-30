@@ -3,7 +3,6 @@ import { Button, PageBox, ToggleTab, useToggleTab } from 'src/components/common'
 import { CuratedCollectionsOrderBy } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections-query.dto';
 import { useRouter } from 'next/router';
 import { AllCuratedCollections } from 'src/components/curation/all-curated';
-import { MyCuratedCollections } from 'src/components/curation/my-curated';
 import { Sort } from 'src/components/curation/sort';
 
 enum Tab {
