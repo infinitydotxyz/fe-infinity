@@ -36,7 +36,7 @@ const App: FunctionComponent<AppProps> = (props) => {
 
   return (
     <StrictMode>
-      <NextNProgress />
+      <NextNProgress options={{ showSpinner: false }} />
       <AppContextProvider>
         <FilterContextProvider>
           <OrderContextProvider>
