@@ -1,48 +1,60 @@
 // import { debounce } from 'lodash';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // import { FiSearch } from 'react-icons/fi';
-import { ToggleTab, useToggleTab, Spacer, PageBox, Button } from 'src/components/common';
+import { ToggleTab, useToggleTab, Spacer, PageBox, Button, Dropdown } from 'src/components/common';
 import { DiscoverCollectionGrid } from 'src/components/common/discover-collection-grid';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
 import { UserPageNftsTab } from 'src/components/user/user-page-nfts-tab';
 import { UserProfileDto } from 'src/components/user/user-profile-dto';
 import { useAppContext } from 'src/utils/context/AppContext';
+import { parse } from 'query-string';
 
 const enum TABS {
   Orders = 'Orders',
   Discover = 'Discover',
   ListMyNFTs = 'List NFTs'
 }
+const DEFAULT_TAB = TABS.Orders;
 
 export type DiscoverOrderBy = 'twitterFollowersPercentChange' | 'volumePercentChange' | 'avgPricePercentChange';
 
 const MarketplacePage = () => {
   const { user } = useAppContext();
-  const router = useRouter();
+  const { pathname, query, push } = useRouter();
 
   // Checks the url for the 'tab' query parameter. If it doesn't exist, default to Orderbook
-  const tabDefault = router.query.tab && typeof router.query.tab === 'string' ? router.query.tab : TABS.Orders;
+  const defaultTab = query.tab && typeof query.tab === 'string' ? query.tab : TABS.Orders;
 
-  const { options, onChange, selected } = useToggleTab([TABS.Orders, TABS.Discover, TABS.ListMyNFTs], tabDefault);
+  const { options, onChange, selected } = useToggleTab([TABS.Orders, TABS.Discover, TABS.ListMyNFTs], defaultTab);
   const [orderBy, setOrderBy] = useState<DiscoverOrderBy>('twitterFollowersPercentChange');
 
-  // const [searchActive, setSearchActive] = useState(false);
-  // const [query, setQuery] = useState('');
-  // const [debouncedQuery, setDebouncedQuery] = useState('');
+  useEffect(() => {
+    const parsedQs = parse(window?.location?.search);
+    onChange(parsedQs.tab ? `${parsedQs.tab}` : DEFAULT_TAB);
+    onClickQueryBy(
+      (parsedQs.queryBy ? `${parsedQs.queryBy}` : 'twitterFollowersPercentChange') as DiscoverOrderBy,
+      `${parsedQs.tab ?? ''}`
+    );
+  }, []);
 
-  // const handleChange = async (value: string) => {
-  //   setQuery(value);
-  //   setQueryDebounced(value);
-  // };
+  const onClickQueryBy = (val: DiscoverOrderBy, setTab = '') => {
+    const tab = (setTab ? setTab : query?.tab) || DEFAULT_TAB;
+    if (val !== orderBy) {
+      setOrderBy(val);
+    }
+    if (tab === TABS.Discover) {
+      push(
+        {
+          pathname,
+          query: { ...query, tab, queryBy: val }
+        },
+        undefined,
+        { shallow: true }
+      );
+    }
+  };
 
-  // must use useCallback or it doesn't work
-  // const setQueryDebounced = useCallback(
-  //   debounce((value: string) => {
-  //     setDebouncedQuery(value);
-  //   }, 300),
-  //   []
-  // );
   const contents = (
     <>
       <div className="flex space-x-2 items-center relative max-w-xl lg:top-12 lg:-mt-14 pb-4 lg:pb-0">
@@ -80,20 +92,24 @@ const MarketplacePage = () => {
               >
                 By Volume
               </Button> */}
-              <Button
-                variant={orderBy === 'avgPricePercentChange' ? 'primary' : 'outline'}
-                className="font-heading"
-                onClick={() => setOrderBy('avgPricePercentChange')}
-              >
-                By Avg. Price
-              </Button>
-              <Button
-                variant={orderBy === 'twitterFollowersPercentChange' ? 'primary' : 'outline'}
-                className="font-heading"
-                onClick={() => setOrderBy('twitterFollowersPercentChange')}
-              >
-                By Social Stats
-              </Button>
+
+              <Dropdown
+                label={orderBy === 'avgPricePercentChange' ? 'Sort by Avg. Price' : 'Sort by Social Stats'}
+                items={[
+                  {
+                    label: 'Avg. Price',
+                    onClick: () => {
+                      onClickQueryBy('avgPricePercentChange');
+                    }
+                  },
+                  {
+                    label: 'Social Stats',
+                    onClick: () => {
+                      onClickQueryBy('twitterFollowersPercentChange');
+                    }
+                  }
+                ]}
+              />
             </div>
           </div>
 
@@ -111,8 +127,6 @@ const MarketplacePage = () => {
 
   return (
     <PageBox title="Marketplace">
-      {/* <OrderDrawer open={orderDrawerOpen} onClose={() => setOrderDrawerOpen(false)} /> */}
-
       <div>{contents}</div>
     </PageBox>
   );
