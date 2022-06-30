@@ -139,16 +139,24 @@ const CollectionPage = () => {
 
         <main>
           <div className="text-secondary mt-6 mb-6 font-heading">
-            <span>Created by </span>
-            {collection && (
+            {collection ? (
               <>
-                <button onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection?.owner)}>
-                  {ellipsisAddress(collection?.owner ?? '')}
-                </button>
+                {collection?.owner && (
+                  <>
+                    <span>Created by </span>
+                    <button onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection?.owner)}>
+                      {ellipsisAddress(collection?.owner ?? '')}
+                    </button>
+                  </>
+                )}
                 <span className="ml-12 font-heading">Collection address </span>
                 <button onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection?.address)}>
                   {ellipsisAddress(collection?.address ?? '')}
                 </button>
+              </>
+            ) : (
+              <>
+                <span>&nbsp;</span>
               </>
             )}
           </div>
