@@ -46,11 +46,11 @@ export const AllCuratedCollections: React.FC<AllCuratedProps> = ({ orderBy }) =>
       {collectionsArray && collectionsArray?.length > 0 && (
         <CurationTable
           collections={collectionsArray.map((result) => result.data)}
-          curations={curationsArray?.map((result) => result.data)}
+          curations={curationsArray?.map((result) => result.data.curations)}
         />
       )}
 
-      {!isLoadingCollections && collectionsArray?.length === 0 && (
+      {collectionsArray && collectionsArray?.length === 0 && (
         // TODO: match design
         <div className="text-center">
           <p className="font-body font-medium">

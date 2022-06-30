@@ -4,6 +4,7 @@ import { CuratedCollectionsOrderBy } from '@infinityxyz/lib-frontend/types/dto/c
 import { useRouter } from 'next/router';
 import { AllCuratedCollections } from 'src/components/curation/all-curated';
 import { Sort } from 'src/components/curation/sort';
+import { MyCuratedCollections } from 'src/components/curation/my-curated';
 
 enum Tab {
   AllCurated = 'All Curated',
@@ -40,7 +41,7 @@ export default function Curation() {
       <div>
         {/* TODO: loading screens */}
         {selected === Tab.AllCurated && <AllCuratedCollections orderBy={orderBy} />}
-        {/*  {selected === Tab.MyCurated && <MyCuratedCollections orderBy={orderBy} />} */}
+        {selected === Tab.MyCurated && <MyCuratedCollections orderBy={orderBy} />}
       </div>
     </PageBox>
   );
