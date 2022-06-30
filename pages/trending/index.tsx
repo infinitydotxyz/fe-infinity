@@ -182,7 +182,7 @@ const CollectionStatsPage = () => {
                 </div>
 
                 <div className="w-1/9">
-                  <div className="text-black font-bold font-body flex items-center">Floor</div>
+                  <div className="text-black font-bold font-body flex items-center">Min Price</div>
                   <div>
                     <EthPrice label={periodStat?.minPrice ? formatNumber(periodStat?.minPrice, 2) : '-'} />
                   </div>
