@@ -10,11 +10,13 @@ import {
   ToggleTab,
   useToggleTab,
   SVG,
-  Spinner
+  Spinner,
+  Dropdown
 } from 'src/components/common';
 import { apiGet, BLANK_IMG, formatNumber, ITEMS_PER_PAGE } from 'src/utils';
 import { ChainId, Collection, CollectionPeriodStatsContent } from '@infinityxyz/lib-frontend/types/core';
 import { useOrderContext } from 'src/utils/context/OrderContext';
+import { useIsMounted } from 'src/hooks/useIsMounted';
 
 // - cache stats 5mins
 
@@ -29,6 +31,7 @@ const CollectionStatsPage = () => {
   const [offset, setOffset] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const { addCartItem, setOrderDrawerOpen } = useOrderContext();
+  const isMounted = useIsMounted();
 
   useEffect(() => {
     const parsedQs = parse(window?.location?.search); // don't use useRouter-query as it's undefined initially.
@@ -43,28 +46,26 @@ const CollectionStatsPage = () => {
     }
     const { result } = await apiGet('/collections/stats', {
       query: {
-        offset: refresh ? 0 : offset,
-        limit: 20,
         period,
-        orderDirection: 'desc',
-        minDate: 0,
-        maxDate: Number.MAX_SAFE_INTEGER,
         queryBy: queryBy // 'by_avg_price' // 'by_sales_volume'
       }
     });
-    setIsLoading(false);
-    // console.log('result', result);
 
-    if (result?.data?.length > 0) {
-      if (refresh) {
-        const newData = [...result.data];
-        setData(newData);
-      } else {
-        const newData = [...data, ...result.data];
-        setData(newData);
+    if (isMounted()) {
+      setIsLoading(false);
+      // console.log('result', result);
+
+      if (result?.data?.length > 0) {
+        if (refresh) {
+          const newData = [...result.data];
+          setData(newData);
+        } else {
+          const newData = [...data, ...result.data];
+          setData(newData);
+        }
       }
+      setOffset(refresh ? 0 : offset + ITEMS_PER_PAGE);
     }
-    setOffset(refresh ? 0 : offset + ITEMS_PER_PAGE);
   };
 
   useEffect(() => {
@@ -119,20 +120,23 @@ const CollectionStatsPage = () => {
         <ToggleTab className="font-heading" options={options} selected={selected} onChange={onChangeToggleTab} />
 
         <div className="space-x-2">
-          <Button
-            variant={queryBy === 'by_sales_volume' ? 'primary' : 'outline'}
-            className="font-heading"
-            onClick={() => onClickQueryBy('by_sales_volume')}
-          >
-            By Volume
-          </Button>
-          <Button
-            variant={queryBy === 'by_avg_price' ? 'primary' : 'outline'}
-            className="font-heading"
-            onClick={() => onClickQueryBy('by_avg_price')}
-          >
-            By Avg. Price
-          </Button>
+          <Dropdown
+            label={queryBy === 'by_sales_volume' ? 'Sort by Volume' : 'Sort by Avg. Price'}
+            items={[
+              {
+                label: 'Volume',
+                onClick: () => {
+                  onClickQueryBy('by_sales_volume');
+                }
+              },
+              {
+                label: 'Avg. Price',
+                onClick: () => {
+                  onClickQueryBy('by_avg_price');
+                }
+              }
+            ]}
+          />
         </div>
       </div>
 
@@ -157,7 +161,7 @@ const CollectionStatsPage = () => {
               </NextLink>
 
               <div className="flex justify-between w-full mx-8">
-                <div className="w-2/6 flex items-center text-black font-bold font-body">
+                <div className="w-44 flex items-center text-black font-bold font-body">
                   <NextLink href={`/collection/${coll?.slug}`} className="truncate">
                     {coll?.metadata?.name}
                   </NextLink>
@@ -165,26 +169,45 @@ const CollectionStatsPage = () => {
                   {coll?.hasBlueCheck && <SVG.blueCheck className="ml-1.5" style={{ minWidth: 16, maxWidth: 16 }} />}
                 </div>
 
-                <div className="w-1/6">
+                <div className="w-1/9">
+                  <div className="text-black font-bold font-body flex items-center">Sales</div>
+                  <div>{formatNumber(periodStat?.numSales)}</div>
+                </div>
+
+                <div className="w-1/9">
                   <div className="text-black font-bold font-body flex items-center">Volume</div>
                   <div>
                     <EthPrice label={periodStat?.salesVolume ? formatNumber(periodStat?.salesVolume) : '-'} />
                   </div>
                 </div>
 
-                <div className="w-1/6">
-                  <div className="text-black font-bold font-body flex items-center">Avg. Price</div>
+                <div className="w-1/9">
+                  <div className="text-black font-bold font-body flex items-center">Floor</div>
+                  <div>
+                    <EthPrice label={periodStat?.minPrice ? formatNumber(periodStat?.minPrice, 2) : '-'} />
+                  </div>
+                </div>
+
+                <div className="w-1/9">
+                  <div className="text-black font-bold font-body flex items-center">Avg Price</div>
                   <div>
                     <EthPrice label={periodStat?.avgPrice ? formatNumber(periodStat?.avgPrice, 2) : '-'} />
                   </div>
                 </div>
 
-                <div className="w-1/6">
+                <div className="w-1/9">
+                  <div className="text-black font-bold font-body flex items-center">Max Price</div>
+                  <div>
+                    <EthPrice label={periodStat?.maxPrice ? formatNumber(periodStat?.maxPrice, 2) : '-'} />
+                  </div>
+                </div>
+
+                <div className="w-1/9">
                   <div className="text-black font-bold font-body">Owners</div>
                   <div>{formatNumber(periodStat?.ownerCount)}</div>
                 </div>
 
-                <div className="w-1/6">
+                <div className="w-1/9">
                   <div className="text-black font-bold font-body">Tokens</div>
                   <div>{formatNumber(periodStat?.tokenCount)}</div>
                 </div>

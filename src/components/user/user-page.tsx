@@ -28,7 +28,7 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
     <>
       <UserBannerImage imgSrc={userInfo.bannerImage} isOwner={isOwner} />
 
-      <div className="flex flex-col mx-auto translate-x-1 -mt-16">
+      <div className="relative flex flex-col mx-1 -mt-16">
         <UserProfileImage imgSrc={userInfo.profileImage} isOwner={isOwner} />
 
         <h2 className="my-2 text-6xl font-body">{userInfo.displayName || 'No Display Name'}</h2>

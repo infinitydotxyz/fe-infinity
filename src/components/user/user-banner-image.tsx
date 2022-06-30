@@ -30,8 +30,8 @@ export const UserBannerImage = ({ imgSrc, isOwner = false }: UserBannerImageProp
             }`}
             onClick={handleClick}
           >
+            <BGImage src={profileEditBg.src} />
             {isOwner && <FaPen className="absolute" />}
-            <img src={profileEditBg.src} />
           </div>
         )}
       </div>

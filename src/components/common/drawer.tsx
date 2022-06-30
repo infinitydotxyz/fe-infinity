@@ -3,6 +3,7 @@ import { XIcon } from '@heroicons/react/outline';
 import { Button } from 'src/components/common';
 import { Tooltip, TooltipIcon, TooltipSpec, TooltipWrapper } from './tool-tip';
 import { iconButtonStyle } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
 
 interface Props {
   open: boolean;
@@ -44,31 +45,30 @@ export const Drawer = ({ open, tooltip, subtitle, divide, onClose, title, childr
   );
 
   return (
-    <main
-      className={
-        ' fixed overflow-hidden z-10 bg-gray-900 bg-opacity-25 inset-0 transform ease-in-out ' +
-        (open
-          ? ' transition-opacity opacity-100 duration-500 translate-x-0  '
-          : ' transition-all delay-500 opacity-0 translate-x-full  ')
-      }
-    >
-      <section
-        className={
-          ' w-screen max-w-lg right-0 absolute bg-white h-full shadow-xl delay-400 duration-500 ease-in-out transition-all transform  ' +
-          (open ? ' translate-x-0 ' : ' translate-x-full ')
-        }
-      >
-        <article className="relative w-screen max-w-lg pb-10 flex flex-col space-y-6 overflow-y-scroll h-full">
-          {header}
-          <div className="flex h-full flex-col">{children}</div>{' '}
-        </article>
-      </section>
-      <section
-        className=" w-screen h-full cursor-pointer "
+    <>
+      <div
+        className={twMerge(
+          'pointer-events-none fixed inset-0 duration-500 z-10 bg-gray-800 bg-opacity-25',
+          open ? 'pointer-events-auto transition-opacity opacity-100' : 'transition-opacity opacity-0'
+        )}
         onClick={() => {
           onClose();
         }}
-      ></section>
-    </main>
+      />
+
+      <div className="fixed pointer-events-none z-20 inset-0">
+        <div
+          className={
+            'pointer-events-auto w-screen max-w-lg right-0 absolute bg-white h-full shadow-xl duration-500 ease-in-out transition-all transform  ' +
+            (open ? 'translate-x-0' : 'translate-x-full')
+          }
+        >
+          <div className="relative w-screen max-w-lg pb-10 flex flex-col space-y-6 overflow-y-scroll h-full">
+            {header}
+            <div className="flex h-full flex-col">{children}</div>{' '}
+          </div>
+        </div>
+      </div>
+    </>
   );
 };

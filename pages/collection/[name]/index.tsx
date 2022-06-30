@@ -217,14 +217,14 @@ const CollectionPage = () => {
                 <td>{collection?.numNfts?.toLocaleString() ?? '—'}</td>
                 <td>{collection?.numOwners?.toLocaleString() ?? '—'}</td>
                 <td>
-                  {currentStats?.floorPrice ? (
-                    <EthPrice label={String(currentStats?.floorPrice)} labelClassName="font-bold" />
+                  {firstAllTimeStats?.floorPrice ? (
+                    <EthPrice label={String(firstAllTimeStats?.floorPrice)} labelClassName="font-bold" />
                   ) : (
                     '—'
                   )}
                 </td>
                 <td>
-                  {currentStats?.volume ? (
+                  {firstAllTimeStats?.volume ? (
                     <EthPrice label={formatNumber(firstAllTimeStats?.volume)} labelClassName="font-bold" />
                   ) : (
                     '—'

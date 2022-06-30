@@ -404,6 +404,16 @@ export async function takeOrder(signer: JsonRpcSigner, chainId: string, makerOrd
     value: salePrice,
     gasLimit: BigNumber.from(200000)
   };
+
+  // Error: invalid value for array (argument="value", value={"isSellOrder":true,"signer":"0x24c24F9DDCe175039136bae9B3943b5B051A1514",
+  // "extraParams":"0x0000000000000000000000000000000000000000000000000000000000000000","nfts":[{"collection":"0x142c5b3a5689ba0871903c53dacf235a28cb21f0",
+  // "tokens":[{"tokenId":"529","numTokens":1},{"numTokens":1,"tokenId":"530"},{"numTokens":1,"tokenId":"531"}]}],"constraints":
+  // [3,{"hex":"0x470de4df820000","type":"BigNumber"},{"type":"BigNumber","hex":"0x470de4df820000"},1656452854,1657057654,"279","100000000000000000"],
+  // "execParams":["0x6deb5e1a056975e0f2024f3d89b6d2465bde22af","0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6"],
+  // "sig":"0xe40fefdd61f36b731379f0f83916c91e4f1ff315b925edf27aab4eb605d502106b4d41b6759e97d01576271e05c7800a4a0b2444085c0d73aab
+  // 35eb23f8c7f24000000000000000000000000000000000000000000000000000000000000001c"}, code=INVALID_ARGUMENT, version=contracts/5.6.2)
+
+  // TODO(Adi): crashed here, market page click sell
   const gasEstimate = await infinityExchange.estimateGas.takeOrders([makerOrder], [takerOrder], options);
   options.gasLimit = gasEstimate;
   console.log('gasEstimate', gasEstimate.toString());

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { ITEMS_PER_PAGE } from 'src/utils/constants';
 import { useFilterContext } from 'src/utils/context/FilterContext';
 import { apiGet, ApiError } from 'src/utils/apiUtils';
-import { Button, Card, CardProps, ScrollLoader, Spinner } from 'src/components/common';
+import { Button, Card, CardProps, CenteredContent, ScrollLoader, Spinner } from 'src/components/common';
 import { FilterPanel } from '../filter/filter-panel';
 import { GallerySort } from './gallery-sort';
 import { twMerge } from 'tailwind-merge';
@@ -48,6 +48,7 @@ export const GalleryBox = ({
 
   const [filterShowed, setFilterShowed] = useState(filterShowedDefault);
   const [isFetching, setIsFetching] = useState(false);
+  const [gotData, setGotData] = useState(false);
   const [data, setData] = useState<ERC721CardData[]>([]);
   const [error, setError] = useState<ApiError>(null);
   const [cursor, setCursor] = useState('');
@@ -67,7 +68,13 @@ export const GalleryBox = ({
     if (!getEndpoint) {
       return;
     }
-    setIsFetching(true);
+
+    let fetching = false;
+    if (!gotData) {
+      fetching = true;
+      setIsFetching(true);
+    }
+
     let newCurrentPage = currentPage + 1;
     let newCursor = cursor;
     if (isRefresh) {
@@ -125,7 +132,12 @@ export const GalleryBox = ({
       // remove any without tokenAddress (seeing bad NFTs in my profile)
       moreData = moreData.filter((x) => x.tokenAddress);
 
-      setIsFetching(false);
+      if (fetching) {
+        setIsFetching(false);
+      }
+
+      setGotData(true);
+
       if (isRefresh) {
         setData([...moreData]);
       } else {
@@ -141,6 +153,7 @@ export const GalleryBox = ({
   useEffect(() => {
     setData([]);
     setCursor('');
+    setGotData(false);
     fetchData(true); // refetch data when filterState changed somewhere (ex: from Sort comp, etc.)
   }, [getEndpoint, filterState, router.query]);
 
@@ -189,45 +202,40 @@ export const GalleryBox = ({
           </div>
         )}
 
-        <div
-          ref={ref}
-          className={twMerge('w-full grid gap-12 pointer-events-none')}
-          style={{ gridTemplateColumns: gridColumns }}
-        >
-          {isFetching && cursor === '' && (
-            <>
-              <Spinner />
-              {/* <Card height={cardHeight} isLoading={true} />
+        {isFetching && cursor === '' && (
+          <CenteredContent>
+            <Spinner />
+          </CenteredContent>
+        )}
 
-              <Card height={cardHeight} isLoading={true} />
+        {!isFetching && (
+          <div
+            ref={ref}
+            className={twMerge('w-full grid gap-12 pointer-events-none')}
+            style={{ gridTemplateColumns: gridColumns }}
+          >
+            {error ? <div className="mt-24">Unable to load data.</div> : null}
 
-              <Card height={cardHeight} isLoading={true} />
+            {!error && data.length === 0 ? <div>No results found.</div> : null}
 
-              <Card height={cardHeight} isLoading={true} /> */}
-            </>
-          )}
+            {data.map((item, idx) => {
+              return (
+                <Card key={`${item.address}_${item.tokenId}_${idx}`} height={cardHeight} data={item} {...cardProps} />
+              );
+            })}
 
-          {!isFetching && error ? <div className="mt-24">Unable to load data.</div> : null}
+            {/* <div className="h-[10vh]">&nbsp;</div> */}
 
-          {!error && !isFetching && data.length === 0 ? <div>No results found.</div> : null}
-
-          {data.map((item, idx) => {
-            return (
-              <Card key={`${item.address}_${item.tokenId}_${idx}`} height={cardHeight} data={item} {...cardProps} />
-            );
-          })}
-
-          {/* <div className="h-[10vh]">&nbsp;</div> */}
-
-          {dataLoaded && (
-            <ScrollLoader
-              onFetchMore={async () => {
-                // setDataLoaded(false);
-                await fetchData();
-              }}
-            />
-          )}
-        </div>
+            {dataLoaded && (
+              <ScrollLoader
+                onFetchMore={async () => {
+                  // setDataLoaded(false);
+                  await fetchData();
+                }}
+              />
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

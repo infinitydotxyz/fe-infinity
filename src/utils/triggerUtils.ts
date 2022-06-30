@@ -1,14 +1,15 @@
 import { apiGet } from './apiUtils';
 
-const STATS_BASE_URL = '/collections/stats?limit=20&maxDate=9007199254740991&minDate=0&offset=0&orderDirection=desc';
+// todo: remove this file once the social-listener repo deployed & running.
 
+const STATS_BASE_URL = '/collections/stats';
 const statsEndpoints = [
-  `${STATS_BASE_URL}&period=daily&queryBy=by_sales_volume`,
-  `${STATS_BASE_URL}&period=weekly&queryBy=by_sales_volume`,
-  `${STATS_BASE_URL}&period=monthly&queryBy=by_sales_volume`,
-  `${STATS_BASE_URL}&period=daily&queryBy=by_avg_price`,
-  `${STATS_BASE_URL}&period=weekly&queryBy=by_avg_price`,
-  `${STATS_BASE_URL}&period=monthly&queryBy=by_avg_price`
+  `${STATS_BASE_URL}?period=daily&queryBy=by_sales_volume`,
+  `${STATS_BASE_URL}?period=weekly&queryBy=by_sales_volume`,
+  `${STATS_BASE_URL}?period=monthly&queryBy=by_sales_volume`,
+  `${STATS_BASE_URL}?period=daily&queryBy=by_avg_price`,
+  `${STATS_BASE_URL}?period=weekly&queryBy=by_avg_price`,
+  `${STATS_BASE_URL}?period=monthly&queryBy=by_avg_price`
 ];
 let statsEndpointsIdx = -1;
 

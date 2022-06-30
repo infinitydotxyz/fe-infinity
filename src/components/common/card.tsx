@@ -70,7 +70,7 @@ export const Card = ({
     <div
       className={`
         sm:mx-0 w-full relative flex flex-col pointer-events-auto p-2 rounded-3xl
-        shadow-[0_20px_20px_1px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_20px_1px_rgba(0,0,0,0.15)]
+        shadow-[0_20px_20px_1px_rgba(0,0,0,0.1),0_-4px_20px_1px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_20px_1px_rgba(0,0,0,0.15),0_-4px_20px_1px_rgba(0,0,0,0.05)]
         transition-all duration-300 group ${className}`}
       style={{ height: heightStyle }} // boxShadow: '0px 0px 16px 4px rgba(0, 0, 0, 0.07)'
     >
