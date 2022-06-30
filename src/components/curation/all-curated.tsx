@@ -25,26 +25,38 @@ export const AllCuratedCollections: React.FC<AllCuratedProps> = ({ orderBy }) =>
   };
 
   const fetch = async () => {
-    // Query the API to get a list of the most voted OR user curated collections.
-    // If the user is logged in, fetch the user's votes and estimations too.
-    const { result, error } = await apiGet(`/collections/curated/${user?.address || ''}`, {
-      query: {
-        orderBy,
-        orderDirection: 'desc',
-        limit: 10,
-        cursor
-      },
-      requiresAuth: true
-    });
+    const query = {
+      orderBy,
+      orderDirection: 'desc',
+      limit: 10,
+      cursor
+    };
 
-    // If there's any kind of error, reset the page and rewrite the error to state.
+    // Query the API to get a list of the most voted.
+    const { result, error } = await apiGet(`/collections/curated`, { query });
+
+    // If there's any kind of error, reset the page and put the error in the state.
     if (error) {
       console.error(error);
       reset();
       return;
     }
 
-    setCurations((state) => [...(state || []), ...(result.data.curations || [])]);
+    // If the user is logged in, fetch the user's curations so we can the amount of votes here as well.
+    if (user?.address) {
+      const { result, error } = await apiGet(`/user/${user.address}/curated`, {
+        query
+      });
+
+      if (error) {
+        console.error(error);
+        reset();
+        return;
+      }
+
+      setCurations((state) => [...(state || []), ...(result.data.curations || [])]);
+    }
+
     setCollections((state) => [...(state || []), ...(result.data.collections || [])]);
     setCursor(result.cursor);
     setHasNextPage(result.hasNextPage);
