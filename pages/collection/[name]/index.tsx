@@ -214,8 +214,8 @@ const CollectionPage = () => {
             </thead>
             <tbody>
               <tr className="font-bold font-heading text-2xl">
-                <td>{collection?.numNfts?.toLocaleString() ?? '—'}</td>
-                <td>{collection?.numOwners?.toLocaleString() ?? '—'}</td>
+                <td>{firstAllTimeStats?.numNfts?.toLocaleString() ?? '—'}</td>
+                <td>{firstAllTimeStats?.numOwners?.toLocaleString() ?? '—'}</td>
                 <td>
                   {firstAllTimeStats?.floorPrice ? (
                     <EthPrice label={String(firstAllTimeStats?.floorPrice)} labelClassName="font-bold" />
