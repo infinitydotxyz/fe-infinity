@@ -19,7 +19,6 @@ import { OrderbookContainer } from 'src/components/market/orderbook-list';
 import { useAppContext } from 'src/utils/context/AppContext';
 import NotFound404Page from 'pages/not-found-404';
 import { twMerge } from 'tailwind-merge';
-import { first } from 'lodash';
 
 const CollectionPage = () => {
   const router = useRouter();
