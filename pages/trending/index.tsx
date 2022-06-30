@@ -10,7 +10,8 @@ import {
   ToggleTab,
   useToggleTab,
   SVG,
-  Spinner
+  Spinner,
+  Dropdown
 } from 'src/components/common';
 import { apiGet, BLANK_IMG, formatNumber, ITEMS_PER_PAGE } from 'src/utils';
 import { ChainId, Collection, CollectionPeriodStatsContent } from '@infinityxyz/lib-frontend/types/core';
@@ -45,12 +46,7 @@ const CollectionStatsPage = () => {
     }
     const { result } = await apiGet('/collections/stats', {
       query: {
-        offset: refresh ? 0 : offset,
-        limit: 20,
         period,
-        orderDirection: 'desc',
-        minDate: 0,
-        maxDate: Number.MAX_SAFE_INTEGER,
         queryBy: queryBy // 'by_avg_price' // 'by_sales_volume'
       }
     });
@@ -124,20 +120,23 @@ const CollectionStatsPage = () => {
         <ToggleTab className="font-heading" options={options} selected={selected} onChange={onChangeToggleTab} />
 
         <div className="space-x-2">
-          <Button
-            variant={queryBy === 'by_sales_volume' ? 'primary' : 'outline'}
-            className="font-heading"
-            onClick={() => onClickQueryBy('by_sales_volume')}
-          >
-            By Volume
-          </Button>
-          <Button
-            variant={queryBy === 'by_avg_price' ? 'primary' : 'outline'}
-            className="font-heading"
-            onClick={() => onClickQueryBy('by_avg_price')}
-          >
-            By Avg. Price
-          </Button>
+          <Dropdown
+            label={queryBy === 'by_sales_volume' ? 'Sort by Volume' : 'Sort by Avg. Price'}
+            items={[
+              {
+                label: 'Volume',
+                onClick: () => {
+                  onClickQueryBy('by_sales_volume');
+                }
+              },
+              {
+                label: 'Avg. Price',
+                onClick: () => {
+                  onClickQueryBy('by_avg_price');
+                }
+              }
+            ]}
+          />
         </div>
       </div>
 
