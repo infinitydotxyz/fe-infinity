@@ -16,12 +16,13 @@ import { apiGet, BLANK_IMG, formatNumber, ITEMS_PER_PAGE } from 'src/utils';
 import { ChainId, Collection, CollectionPeriodStatsContent } from '@infinityxyz/lib-frontend/types/core';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { useIsMounted } from 'src/hooks/useIsMounted';
+import useScreenSize from 'src/hooks/useScreenSize';
 
 // - cache stats 5mins
 
 const DEFAULT_TAB = '1 day';
 
-const CollectionStatsPage = () => {
+const TrendingPage = () => {
   const { pathname, query, push } = useRouter();
   const [queryBy, setQueryBy] = useState('by_sales_volume');
   const [data, setData] = useState<Collection[]>([]);
@@ -31,6 +32,8 @@ const CollectionStatsPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { addCartItem, setOrderDrawerOpen } = useOrderContext();
   const isMounted = useIsMounted();
+
+  const { isDesktop, isMobile } = useScreenSize();
 
   useEffect(() => {
     const parsedQs = parse(window?.location?.search); // don't use useRouter-query as it's undefined initially.
@@ -168,10 +171,14 @@ const CollectionStatsPage = () => {
                   {coll?.hasBlueCheck && <SVG.blueCheck className="ml-1.5" style={{ minWidth: 16, maxWidth: 16 }} />}
                 </div>
 
-                <div className="w-1/9">
-                  <div className="text-black font-bold font-body flex items-center">Sales</div>
-                  <div>{formatNumber(periodStat?.numSales)}</div>
-                </div>
+                {isDesktop ? (
+                  <>
+                    <div className="w-1/9">
+                      <div className="text-black font-bold font-body flex items-center">Sales</div>
+                      <div>{formatNumber(periodStat?.numSales)}</div>
+                    </div>
+                  </>
+                ) : null}
 
                 <div className="w-1/9">
                   <div className="text-black font-bold font-body flex items-center">Volume</div>
@@ -180,12 +187,16 @@ const CollectionStatsPage = () => {
                   </div>
                 </div>
 
-                <div className="w-1/9">
-                  <div className="text-black font-bold font-body flex items-center">Min Price</div>
-                  <div>
-                    <EthPrice label={periodStat?.minPrice ? formatNumber(periodStat?.minPrice, 2) : '-'} />
-                  </div>
-                </div>
+                {isMobile ? null : (
+                  <>
+                    <div className="w-1/9">
+                      <div className="text-black font-bold font-body flex items-center">Min Price</div>
+                      <div>
+                        <EthPrice label={periodStat?.minPrice ? formatNumber(periodStat?.minPrice, 2) : '-'} />
+                      </div>
+                    </div>
+                  </>
+                )}
 
                 <div className="w-1/9">
                   <div className="text-black font-bold font-body flex items-center">Avg Price</div>
@@ -194,22 +205,30 @@ const CollectionStatsPage = () => {
                   </div>
                 </div>
 
-                <div className="w-1/9">
-                  <div className="text-black font-bold font-body flex items-center">Max Price</div>
-                  <div>
-                    <EthPrice label={periodStat?.maxPrice ? formatNumber(periodStat?.maxPrice, 2) : '-'} />
-                  </div>
-                </div>
+                {isMobile ? null : (
+                  <>
+                    <div className="w-1/9">
+                      <div className="text-black font-bold font-body flex items-center">Max Price</div>
+                      <div>
+                        <EthPrice label={periodStat?.maxPrice ? formatNumber(periodStat?.maxPrice, 2) : '-'} />
+                      </div>
+                    </div>
+                  </>
+                )}
 
-                <div className="w-1/9">
-                  <div className="text-black font-bold font-body">Owners</div>
-                  <div>{formatNumber(periodStat?.ownerCount)}</div>
-                </div>
+                {isDesktop ? (
+                  <>
+                    <div className="w-1/9">
+                      <div className="text-black font-bold font-body">Owners</div>
+                      <div>{formatNumber(periodStat?.ownerCount)}</div>
+                    </div>
 
-                <div className="w-1/9">
-                  <div className="text-black font-bold font-body">Tokens</div>
-                  <div>{formatNumber(periodStat?.tokenCount)}</div>
-                </div>
+                    <div className="w-1/9">
+                      <div className="text-black font-bold font-body">Tokens</div>
+                      <div>{formatNumber(periodStat?.tokenCount)}</div>
+                    </div>
+                  </>
+                ) : null}
 
                 <div className="w-[50px]">
                   <Button onClick={() => onClickBuy(coll)}>Buy</Button>
@@ -227,7 +246,7 @@ const CollectionStatsPage = () => {
   );
 };
 
-export default CollectionStatsPage;
+export default TrendingPage;
 
 // =======================================================================
 
