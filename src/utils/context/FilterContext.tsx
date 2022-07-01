@@ -16,16 +16,16 @@ export type Filter = {
   minPrice?: string;
   maxPrice?: string;
   sortByPrice?: 'ASC' | 'DESC' | '';
-  orderBy?: 'rarityRank' | 'price' | '';
-  orderDirection?: 'asc' | 'desc' | '';
+  orderBy?: 'rarityRank' | 'price' | 'tokenId';
+  orderDirection?: 'asc' | 'desc';
 };
 
 const defaultFilter: Filter = {
   // listingType: '',
   traitTypes: [],
   traitValues: [],
-  orderBy: '',
-  orderDirection: ''
+  orderBy: 'tokenId',
+  orderDirection: 'asc'
 };
 
 export type FilterContextType = {
