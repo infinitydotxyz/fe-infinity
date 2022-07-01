@@ -33,22 +33,6 @@ const CollectionPage = () => {
     query: { name }
   } = router;
 
-  // todo: the logic below caused console error. http://localhost:3000/collection/0mnipunks
-  // if (!router.isReady) {
-  //   return null;
-  // }
-
-  // todo: the logic below caused console error. http://localhost:3000/collection/0mnipunks
-  // useEffect(() => {
-  //   if (selected === 'NFT') {
-  //     const updateQueryParams = { ...router.query };
-  //     delete updateQueryParams.tab;
-  //     router.replace({ pathname: router.pathname, href: router.pathname, query: { ...updateQueryParams } });
-  //   } else {
-  //     router.replace({ pathname: router.pathname, href: router.pathname, query: { ...router.query, tab: selected } });
-  //   }
-  // }, [selected]);
-
   useEffect(() => {
     if (isBuyClicked === true) {
       setIsBuyClicked(false);
