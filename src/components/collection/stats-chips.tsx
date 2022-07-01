@@ -205,8 +205,6 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
           setOrderDrawerOpen(true);
         }}
       />
-
-      <Toaster />
     </div>
   );
 };
