@@ -148,14 +148,14 @@ export const OrderbookFilters = () => {
                 if (!collection) {
                   return null;
                 }
-                return <CollectionCheckbox collection={collection} />;
+                return <CollectionCheckbox key={collection.id} collection={collection} />;
               })}
               {hasCollectionSearchResults &&
                 collectionsData.map((collection) => {
                   if (collections.includes(`${collection.chainId}:${collection.id}`)) {
                     return null;
                   }
-                  return <CollectionCheckbox collection={collection} />;
+                  return <CollectionCheckbox key={collection.id} collection={collection} />;
                 })}
             </div>
 
