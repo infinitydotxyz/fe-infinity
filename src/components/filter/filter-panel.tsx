@@ -50,8 +50,8 @@ export const FilterPanel = ({
     const newFilter = { ...filterState };
     newFilter.minPrice = '';
     newFilter.maxPrice = '';
-    newFilter.orderBy = '';
-    newFilter.orderDirection = '';
+    newFilter.orderBy = 'tokenId';
+    newFilter.orderDirection = 'asc';
     setMinPriceVal('');
     setMaxPriceVal('');
     setFilterState(newFilter);
