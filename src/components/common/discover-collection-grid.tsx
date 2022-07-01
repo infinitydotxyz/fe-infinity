@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollLoader, Spinner } from 'src/components/common';
+import { CenteredContent, ScrollLoader, Spinner } from 'src/components/common';
 import { apiGet, LARGE_LIMIT, GRID_CSS } from 'src/utils';
 import { uniqBy } from 'lodash';
 import { DiscoverCollectionCard } from './discover-collection-card';
@@ -39,12 +39,16 @@ export const DiscoverCollectionGrid = ({ className, orderBy, routerQuery }: Prop
   const isMounted = useIsMounted();
 
   useEffect(() => {
+    setIsLoading(true);
+
     handleFetch('');
   }, [orderBy]);
 
   const handleFetch = async (passedCursor: string) => {
-    setIsLoading(true);
     const { error, result } = await fetchCollectionRankings(passedCursor, orderBy);
+
+    // to test spinner
+    // await sleep(2222);
 
     if (isMounted()) {
       setIsLoading(false);
@@ -80,17 +84,25 @@ export const DiscoverCollectionGrid = ({ className, orderBy, routerQuery }: Prop
 
   return (
     <div className={className}>
-      <div className={GRID_CSS}>
-        {collections.map((collection) => (
-          <DiscoverCollectionCard
-            key={collection.slug}
-            orderBy={orderBy}
-            collection={collection}
-            routerQuery={routerQuery}
-          />
-        ))}
-        {isLoading && <Spinner />}
-      </div>
+      {isLoading && (
+        <CenteredContent>
+          <Spinner />
+        </CenteredContent>
+      )}
+
+      {!isLoading && (
+        <div className={GRID_CSS}>
+          {collections.map((collection) => (
+            <DiscoverCollectionCard
+              key={collection.slug}
+              orderBy={orderBy}
+              collection={collection}
+              routerQuery={routerQuery}
+            />
+          ))}
+        </div>
+      )}
+
       {hasNextPage && <ScrollLoader onFetchMore={() => handleFetch(cursor)} />}
     </div>
   );

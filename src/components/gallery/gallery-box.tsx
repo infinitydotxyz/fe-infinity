@@ -82,6 +82,9 @@ export const GalleryBox = ({
     if (tokenFetcher) {
       const { hasNextPage: hasNp, cardData: cd, error: err } = await tokenFetcher.fetch(loadMore);
 
+      // to test spinner
+      // await sleep(2222);
+
       // can't update react state after unmount
       if (!isMounted()) {
         return;
