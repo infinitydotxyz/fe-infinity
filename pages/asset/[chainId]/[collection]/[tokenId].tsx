@@ -286,10 +286,14 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
             </div>
           )}
 
-          <p className="font-body text-black mb-1 lg:mt-10">Description</p>
-          <div>
-            <ReadMoreText text={tokenMetadata.description ?? ''} min={100} ideal={120} max={200} />
-          </div>
+          {tokenMetadata.description ? (
+            <>
+              <p className="font-body text-black mb-1 lg:mt-10">Description</p>
+              <div>
+                <ReadMoreText text={tokenMetadata.description ?? ''} min={100} ideal={150} max={300} />
+              </div>
+            </>
+          ) : null}
         </div>
       </div>
 

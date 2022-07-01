@@ -33,17 +33,15 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
   const [activities, setActivities] = useState<NftActivity[] | null>(null);
   const [cursor, setCursor] = useState('');
 
-  if (forActivity && !collectionAddress) {
-    return null; // require collectionAddress
-  }
-
   const fetchActivity = async (isRefresh = false, fromCursor = '') => {
+    if (!collectionAddress) {
+      return;
+    }
     setIsLoading(true);
     const url = tokenId
       ? `/collections/${chainId}:${collectionAddress}/nfts/${tokenId}/activity`
       : `/collections/${chainId}:${collectionAddress}/activity`;
     const { result, error } = await apiGet(url, {
-      // const { result } = await apiGet(`/collections/1:0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/nfts/8880/activity`, {
       query: {
         limit: 50,
         eventType: filter.types || ['sale', 'listing', 'offer'],
@@ -64,44 +62,6 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
   useEffect(() => {
     fetchActivity(true);
   }, [filter]);
-
-  // const getEvents = () => {
-  //   try {
-  //     subscribe(COLL_FEED, filter, (type: string, data: FeedEvent) => {
-  //       if (type === 'added') {
-  //         if (eventsInit === false) {
-  //           setEvents((currentEvents) => [data, ...currentEvents].sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1))); // add initial feed events.
-  //           setTimeout(() => {
-  //             eventsInit = true;
-  //           }, 3000);
-  //         } else {
-  //           setNewEvents((currentEvents) =>
-  //             [data, ...currentEvents].sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1))
-  //           );
-  //         }
-  //       } else {
-  //         setEvents((currentEvents) => [...currentEvents, data].sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1)));
-  //       }
-  //     });
-  //   } catch (err) {
-  //     console.error('ERR: ', err);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   eventsInit = false;
-  //   setEvents([]);
-  //   setNewEvents([]);
-  //   getEvents();
-  // }, [filter]);
-
-  // useEffect(() => {
-  //   let arr = events;
-  //   if (filter.types) {
-  //     arr = events.filter((event) => (filter.types ?? []).indexOf(event?.type as FeedEventType) >= 0);
-  //   }
-  //   setFilteredEvents(arr);
-  // }, [events]);
 
   const onChangeFilterDropdown = (checked: boolean, checkId: string) => {
     const newFilter = { ...filter };
@@ -128,6 +88,10 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
       setFilteringTypes(_newTypes);
     }
   };
+
+  if (forActivity && !collectionAddress) {
+    return null; // require collectionAddress
+  }
 
   return (
     <div className={`min-h-[1024px] ${className}`}>
@@ -223,9 +187,6 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
 
         <ScrollLoader
           onFetchMore={async () => {
-            // const data: FeedEvent[] = (await fetchMoreEvents(filter)) as FeedEvent[];
-            // // console.log('data', data);
-            // setEvents([...events, ...data]);
             fetchActivity(false, cursor);
           }}
         />
