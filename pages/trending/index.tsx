@@ -12,7 +12,7 @@ import {
   SVG,
   Dropdown
 } from 'src/components/common';
-import { apiGet, BLANK_IMG, formatNumber, historyPushState, ITEMS_PER_PAGE, parseUrlQuery } from 'src/utils';
+import { apiGet, BLANK_IMG, formatNumber, ITEMS_PER_PAGE } from 'src/utils';
 import { ChainId, Collection, CollectionPeriodStatsContent } from '@infinityxyz/lib-frontend/types/core';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { useIsMounted } from 'src/hooks/useIsMounted';
@@ -22,7 +22,7 @@ import { useIsMounted } from 'src/hooks/useIsMounted';
 const DEFAULT_TAB = '1 day';
 
 const CollectionStatsPage = () => {
-  const { pathname } = useRouter();
+  const { pathname, query, push } = useRouter();
   const [queryBy, setQueryBy] = useState('by_sales_volume');
   const [data, setData] = useState<Collection[]>([]);
   const { options, onChange, selected } = useToggleTab(['1 day', '7 days', '30 days'], DEFAULT_TAB);
@@ -74,12 +74,14 @@ const CollectionStatsPage = () => {
   const onClickQueryBy = (val: string, setTab = '') => {
     if (val !== queryBy) {
       setQueryBy(val);
-      const urlQuery = parseUrlQuery();
-      historyPushState(pathname, {
-        ...urlQuery,
-        tab: `${setTab ? setTab : urlQuery?.tab}` || DEFAULT_TAB,
-        queryBy: val
-      });
+      push(
+        {
+          pathname,
+          query: { ...query, tab: (setTab ? setTab : query?.tab) || DEFAULT_TAB, queryBy: val }
+        },
+        undefined,
+        { shallow: true }
+      );
     }
   };
 
