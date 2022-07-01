@@ -47,7 +47,7 @@ export const OrderbookContent = ({ className }: { className?: string }): JSX.Ele
 
   return (
     <>
-      <div className={`flex flex-col gap-1 ${className}`}>
+      <div className={`flex flex-col gap-1 min-h-[1024px] ${className}`}>
         {/* Filters & Sort */}
         <div className="text-right pb-8">
           <Button

@@ -71,7 +71,7 @@ const MarketplacePage = () => {
       {selected === TABS.Orders && <OrderbookContainer />}
 
       {selected === TABS.Discover && (
-        <div className="">
+        <div className="min-h-[1024px]">
           <div className="mb-8 w-full flex flex-row-reverse">
             {/* <TextInputBox
               type="text"
@@ -119,7 +119,7 @@ const MarketplacePage = () => {
 
       {selected === TABS.ListMyNFTs && (
         <div className="mt-40">
-          <UserPageNftsTab userInfo={user as UserProfileDto} />
+          <UserPageNftsTab userInfo={user as UserProfileDto} listClassName="mt-[-87px]" />
         </div>
       )}
     </>

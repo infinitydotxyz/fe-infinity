@@ -6,13 +6,16 @@ import { GalleryBox } from '../gallery/gallery-box';
 import { TransferDrawer } from '../market/order-drawer/transfer-drawer';
 import { UserProfileDto } from './user-profile-dto';
 import { useRouter } from 'next/router';
+import { twMerge } from 'tailwind-merge';
 
 type Props = {
   userInfo: UserProfileDto;
   forTransfers?: boolean;
+  className?: string;
+  listClassName?: string;
 };
 
-export const UserPageNftsTab = ({ userInfo, forTransfers }: Props) => {
+export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listClassName = '' }: Props) => {
   const router = useRouter();
   const { user } = useAppContext();
   const {
@@ -74,7 +77,7 @@ export const UserPageNftsTab = ({ userInfo, forTransfers }: Props) => {
   const isMyProfile = user?.address === userInfo?.address;
   return (
     <div>
-      <div className="mt-20">
+      <div className={twMerge(`mt-20 ${className}`)}>
         <GalleryBox
           pageId="PROFILE"
           getEndpoint={userInfo?.address ? `/user/${userInfo?.address}/nfts` : ''}
@@ -146,7 +149,7 @@ export const UserPageNftsTab = ({ userInfo, forTransfers }: Props) => {
                 }
               : undefined
           }
-          className="mt-[-82px]"
+          className={twMerge(`mt-[-82px] ${listClassName}`)}
         />
       </div>
 
