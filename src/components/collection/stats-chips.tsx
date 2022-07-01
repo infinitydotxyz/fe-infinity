@@ -5,7 +5,7 @@ import { AiOutlinePlus } from 'react-icons/ai';
 import { FaCaretDown, FaCaretUp, FaDiscord, FaInstagram, FaTwitter } from 'react-icons/fa';
 import { HiOutlineExternalLink } from 'react-icons/hi';
 import { apiDelete, apiGet, apiPost } from 'src/utils';
-import { Chip, Toaster, Spinner, toastError } from 'src/components/common';
+import { Chip, Spinner, toastError } from 'src/components/common';
 import { VerificationModal } from './verification_modal';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { useAppContext } from 'src/utils/context/AppContext';
@@ -205,8 +205,6 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
           setOrderDrawerOpen(true);
         }}
       />
-
-      <Toaster />
     </div>
   );
 };
