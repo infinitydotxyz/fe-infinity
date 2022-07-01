@@ -33,11 +33,10 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
   const [activities, setActivities] = useState<NftActivity[] | null>(null);
   const [cursor, setCursor] = useState('');
 
-  if (forActivity && !collectionAddress) {
-    return null; // require collectionAddress
-  }
-
   const fetchActivity = async (isRefresh = false, fromCursor = '') => {
+    if (!collectionAddress) {
+      return;
+    }
     setIsLoading(true);
     const url = tokenId
       ? `/collections/${chainId}:${collectionAddress}/nfts/${tokenId}/activity`
@@ -89,6 +88,10 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
       setFilteringTypes(_newTypes);
     }
   };
+
+  if (forActivity && !collectionAddress) {
+    return null; // require collectionAddress
+  }
 
   return (
     <div className={`min-h-[1024px] ${className}`}>
