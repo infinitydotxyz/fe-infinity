@@ -1,14 +1,17 @@
 import React, { useState, useCallback } from 'react';
 import debounce from 'lodash/debounce';
+import { TextInputBox } from './input-box';
 
 interface Props {
   value: string;
   onChange: (query: string) => void;
   placeholder: string;
+  label: string;
+  type: string;
   className?: string;
 }
 
-export const DebouncedTextField = ({ value, placeholder, onChange, className = '' }: Props) => {
+export const DebouncedTextInputBox = ({ value, label, type, placeholder, onChange, className = '' }: Props) => {
   const [query, setQuery] = useState(value);
 
   const handleChange = async (value: string) => {
@@ -25,12 +28,14 @@ export const DebouncedTextField = ({ value, placeholder, onChange, className = '
   );
 
   return (
-    <div className={className}>
-      <input
+    <div>
+      <TextInputBox
+        label={label}
+        type={type}
+        className={className}
         value={query}
+        onChange={(value) => handleChange(value)}
         placeholder={placeholder}
-        className="w-full outline-none dark:bg-dark-card bg-gray-100 dark:text-dark-body text-light-body rounded-full focus-visible:ring focus:ring-0 py-2 px-4 text-lg lg:text-md leading-5"
-        onChange={(event) => handleChange(event.target.value)}
       />
     </div>
   );

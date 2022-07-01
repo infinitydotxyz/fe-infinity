@@ -1,7 +1,6 @@
 import { BaseCollection, OBOrderItem } from '@infinityxyz/lib-frontend/types/core';
-import { debounce } from 'lodash';
 import { useState, useEffect } from 'react';
-import { Checkbox, TextInputBox, Spinner } from 'src/components/common';
+import { Checkbox, TextInputBox, Spinner, DebouncedTextInputBox } from 'src/components/common';
 import { apiGet } from 'src/utils';
 import { UserProfileDto } from '../user/user-profile-dto';
 
@@ -64,10 +63,6 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
     onChange(newFilter);
   };
 
-  const onChangeNameSearch = debounce((value: string) => {
-    setCollectionSearch(value);
-  }, 300);
-
   const CollectionCheckbox = ({ collection }: { collection: OBOrderItem }) => (
     <Checkbox
       key={`${collection.collectionAddress}`}
@@ -119,13 +114,12 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
       <div className="text-lg mt-6 font-heading">Collection</div>
       <div className="flex flex-col mt-4 mb-6">
         <div className="w-full">
-          <TextInputBox
+          <DebouncedTextInputBox
             label=""
             type="text"
             className="border rounded-full py-2 px-4 mt-4 font-heading"
-            // TODO(SNG): fix the debounce
             value={collectionSearch}
-            onChange={onChangeNameSearch}
+            onChange={(value) => setCollectionSearch(value)}
             placeholder="Search"
           />
         </div>

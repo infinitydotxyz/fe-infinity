@@ -1,8 +1,8 @@
-import { debounce, uniqBy } from 'lodash';
+import { uniqBy } from 'lodash';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
-import { Checkbox, TextInputBox } from 'src/components/common';
+import { Checkbox, DebouncedTextInputBox, TextInputBox } from 'src/components/common';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { useOrderbook } from '../../OrderbookContext';
 import { CollectionSearchItem, useCollectionCache } from '../collection-cache';
@@ -69,7 +69,7 @@ export const OrderbookFilters = () => {
     fetchInitialCollections().catch(console.error);
   }, []);
 
-  const searchForCollections = debounce(async (searchTerm: string) => {
+  const searchForCollections = async (searchTerm: string) => {
     setCollectionSearchState(searchTerm);
 
     if (searchTerm) {
@@ -95,7 +95,7 @@ export const OrderbookFilters = () => {
         }
       }
     }
-  }, 300);
+  };
 
   const CollectionCheckbox = ({ collection }: { collection: CollectionSearchItem }) => (
     <Checkbox
@@ -131,11 +131,10 @@ export const OrderbookFilters = () => {
       {!collectionId && (
         <OrderbookFilterItem key="Collection" openState={openState} setOpenState={setOpenState} item="Collection">
           <div>
-            <TextInputBox
+            <DebouncedTextInputBox
               label=""
               type="text"
               className="border rounded-full py-2 px-4 mt-1 font-heading w-full"
-              // TODO(SNG): fix debounce
               value={collectionSearchState}
               onChange={(value) => {
                 searchForCollections(value);

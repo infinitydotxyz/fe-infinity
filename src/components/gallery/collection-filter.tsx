@@ -1,7 +1,7 @@
-import { debounce, without } from 'lodash';
+import { without } from 'lodash';
 import { useEffect, useState } from 'react';
 import { apiGet } from 'src/utils';
-import { Checkbox, TextInputBox } from '../common';
+import { Checkbox, DebouncedTextInputBox } from '../common';
 
 export type CollectionInfo = {
   chainId?: string;
@@ -29,9 +29,6 @@ const CollectionFilter = ({ userAddress, onSelect }: Props) => {
       setCollections(result?.data ?? []);
     }
   };
-  const debouncedSearch = debounce((value: string) => {
-    setCollectionSearchState(value);
-  }, 200);
 
   useEffect(() => {
     fetchData();
@@ -43,13 +40,12 @@ const CollectionFilter = ({ userAddress, onSelect }: Props) => {
 
   return (
     <ul className="max-h-[250px] overflow-y-auto">
-      <TextInputBox
+      <DebouncedTextInputBox
         label=""
         type="text"
         className="border rounded-full py-2 px-4 mb-6 font-heading w-full"
-        // TODO(SNG): fix debounce
         value={collectionSearchState}
-        onChange={debouncedSearch}
+        onChange={(value) => setCollectionSearchState(value)}
         placeholder="Search"
       />
 
