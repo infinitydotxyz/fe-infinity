@@ -33,22 +33,6 @@ const CollectionPage = () => {
     query: { name }
   } = router;
 
-  // todo: the logic below caused console error. http://localhost:3000/collection/0mnipunks
-  // if (!router.isReady) {
-  //   return null;
-  // }
-
-  // todo: the logic below caused console error. http://localhost:3000/collection/0mnipunks
-  // useEffect(() => {
-  //   if (selected === 'NFT') {
-  //     const updateQueryParams = { ...router.query };
-  //     delete updateQueryParams.tab;
-  //     router.replace({ pathname: router.pathname, href: router.pathname, query: { ...updateQueryParams } });
-  //   } else {
-  //     router.replace({ pathname: router.pathname, href: router.pathname, query: { ...router.query, tab: selected } });
-  //   }
-  // }, [selected]);
-
   useEffect(() => {
     if (isBuyClicked === true) {
       setIsBuyClicked(false);
@@ -139,16 +123,24 @@ const CollectionPage = () => {
 
         <main>
           <div className="text-secondary mt-6 mb-6 font-heading">
-            <span>Created by </span>
-            {collection && (
+            {collection ? (
               <>
-                <button onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection?.owner)}>
-                  {ellipsisAddress(collection?.owner ?? '')}
-                </button>
+                {collection?.owner && (
+                  <>
+                    <span>Created by </span>
+                    <button onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection?.owner)}>
+                      {ellipsisAddress(collection?.owner ?? '')}
+                    </button>
+                  </>
+                )}
                 <span className="ml-12 font-heading">Collection address </span>
                 <button onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection?.address)}>
                   {ellipsisAddress(collection?.address ?? '')}
                 </button>
+              </>
+            ) : (
+              <>
+                <span>&nbsp;</span>
               </>
             )}
           </div>

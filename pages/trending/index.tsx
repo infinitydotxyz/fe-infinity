@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import { useRouter } from 'next/router';
 import { parse } from 'query-string';
 import {
@@ -10,19 +10,19 @@ import {
   ToggleTab,
   useToggleTab,
   SVG,
-  Spinner,
   Dropdown
 } from 'src/components/common';
-import { apiGet, BLANK_IMG, formatNumber, ITEMS_PER_PAGE } from 'src/utils';
+import { apiGet, BLANK_IMG, formatNumber, ITEMS_PER_PAGE, nFormatter } from 'src/utils';
 import { ChainId, Collection, CollectionPeriodStatsContent } from '@infinityxyz/lib-frontend/types/core';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { useIsMounted } from 'src/hooks/useIsMounted';
+import useScreenSize from 'src/hooks/useScreenSize';
 
 // - cache stats 5mins
 
 const DEFAULT_TAB = '1 day';
 
-const CollectionStatsPage = () => {
+const TrendingPage = () => {
   const { pathname, query, push } = useRouter();
   const [queryBy, setQueryBy] = useState('by_sales_volume');
   const [data, setData] = useState<Collection[]>([]);
@@ -32,6 +32,8 @@ const CollectionStatsPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { addCartItem, setOrderDrawerOpen } = useOrderContext();
   const isMounted = useIsMounted();
+
+  const { isDesktop, isMobile } = useScreenSize();
 
   useEffect(() => {
     const parsedQs = parse(window?.location?.search); // don't use useRouter-query as it's undefined initially.
@@ -169,48 +171,64 @@ const CollectionStatsPage = () => {
                   {coll?.hasBlueCheck && <SVG.blueCheck className="ml-1.5" style={{ minWidth: 16, maxWidth: 16 }} />}
                 </div>
 
-                <div className="w-1/9">
-                  <div className="text-black font-bold font-body flex items-center">Sales</div>
-                  <div>{formatNumber(periodStat?.numSales)}</div>
-                </div>
+                {isDesktop ? (
+                  <>
+                    <div className="w-1/9 max-w-[70px] min-w-[70px]">
+                      <div className="text-black font-bold font-body flex items-center">Sales</div>
+                      <div>{formatNumber(periodStat?.numSales)}</div>
+                    </div>
+                  </>
+                ) : null}
 
-                <div className="w-1/9">
+                <div className="w-1/9 max-w-[70px] min-w-[70px]">
                   <div className="text-black font-bold font-body flex items-center">Volume</div>
                   <div>
-                    <EthPrice label={periodStat?.salesVolume ? formatNumber(periodStat?.salesVolume) : '-'} />
+                    <EthPrice label={periodStat?.salesVolume ? nFormatter(periodStat?.salesVolume) : '-'} />
                   </div>
                 </div>
 
-                <div className="w-1/9">
-                  <div className="text-black font-bold font-body flex items-center">Floor</div>
-                  <div>
-                    <EthPrice label={periodStat?.minPrice ? formatNumber(periodStat?.minPrice, 2) : '-'} />
-                  </div>
-                </div>
+                {isMobile ? null : (
+                  <>
+                    <div className="w-1/9 max-w-[70px] min-w-[70px]">
+                      <div className="text-black font-bold font-body flex items-center">Min Price</div>
+                      <div>
+                        <EthPrice label={periodStat?.minPrice ? formatNumber(periodStat?.minPrice, 2) : '-'} />
+                      </div>
+                    </div>
+                  </>
+                )}
 
-                <div className="w-1/9">
+                <div className="w-1/9 max-w-[70px] min-w-[70px]">
                   <div className="text-black font-bold font-body flex items-center">Avg Price</div>
                   <div>
                     <EthPrice label={periodStat?.avgPrice ? formatNumber(periodStat?.avgPrice, 2) : '-'} />
                   </div>
                 </div>
 
-                <div className="w-1/9">
-                  <div className="text-black font-bold font-body flex items-center">Max Price</div>
-                  <div>
-                    <EthPrice label={periodStat?.maxPrice ? formatNumber(periodStat?.maxPrice, 2) : '-'} />
-                  </div>
-                </div>
+                {isMobile ? null : (
+                  <>
+                    <div className="w-1/9 max-w-[70px] min-w-[70px]">
+                      <div className="text-black font-bold font-body flex items-center">Max Price</div>
+                      <div>
+                        <EthPrice label={periodStat?.maxPrice ? formatNumber(periodStat?.maxPrice, 2) : '-'} />
+                      </div>
+                    </div>
+                  </>
+                )}
 
-                <div className="w-1/9">
-                  <div className="text-black font-bold font-body">Owners</div>
-                  <div>{formatNumber(periodStat?.ownerCount)}</div>
-                </div>
+                {isDesktop ? (
+                  <>
+                    <div className="w-1/9 max-w-[70px] min-w-[70px]">
+                      <div className="text-black font-bold font-body">Owners</div>
+                      <div>{nFormatter(periodStat?.ownerCount ?? 0)}</div>
+                    </div>
 
-                <div className="w-1/9">
-                  <div className="text-black font-bold font-body">Tokens</div>
-                  <div>{formatNumber(periodStat?.tokenCount)}</div>
-                </div>
+                    <div className="w-1/9 max-w-[70px] min-w-[70px]">
+                      <div className="text-black font-bold font-body">Tokens</div>
+                      <div>{nFormatter(periodStat?.tokenCount ?? 0)}</div>
+                    </div>
+                  </>
+                ) : null}
 
                 <div className="w-[50px]">
                   <Button onClick={() => onClickBuy(coll)}>Buy</Button>
@@ -221,24 +239,23 @@ const CollectionStatsPage = () => {
         })}
       </div>
 
-      {/* {isLoading && <LoadingCards />} */}
-      {isLoading && <Spinner />}
+      {isLoading && <LoadingCards />}
 
       {/* <ScrollLoader onFetchMore={() => fetchData()} /> */}
     </PageBox>
   );
 };
 
-export default CollectionStatsPage;
+export default TrendingPage;
 
 // =======================================================================
 
-// const LoadingCards = () => (
-//   <>
-//     {Array.from(Array(Math.round(ITEMS_PER_PAGE / 2)).keys())?.map((x, i) => (
-//       <Fragment key={i}>
-//         <div className="w-full h-[110px] mt-3 bg-theme-light-200 rounded-3xl animate-pulse"></div>
-//       </Fragment>
-//     ))}
-//   </>
-// );
+const LoadingCards = () => (
+  <>
+    {Array.from(Array(Math.round(ITEMS_PER_PAGE / 2)).keys())?.map((x, i) => (
+      <Fragment key={i}>
+        <div className="w-full h-[110px] mt-4 bg-theme-light-200 rounded-3xl animate-pulse"></div>
+      </Fragment>
+    ))}
+  </>
+);
