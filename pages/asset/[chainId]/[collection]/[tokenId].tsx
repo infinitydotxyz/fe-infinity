@@ -293,7 +293,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
         </div>
       </div>
 
-      <TraitList traits={tokenMetadata.attributes} collectionTraits={collection?.attributes} />
+      <TraitList traits={tokenMetadata.attributes ?? []} collectionTraits={collection?.attributes} />
 
       {/* <ActivityList chainId={collection.chainId} collectionAddress={token.collectionAddress} tokenId={token.tokenId} /> */}
 
