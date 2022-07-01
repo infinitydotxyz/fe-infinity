@@ -6,7 +6,6 @@ import {
 } from '@infinityxyz/lib-frontend/utils';
 import { ReactNode } from 'react';
 import { NextLink } from 'src/components/common';
-import { parse, stringify } from 'querystring';
 
 // OpenSea's EventType
 export enum EventType {
@@ -207,15 +206,4 @@ Nonce: ${nonce}
 Expires in: 24 hrs`;
 
   return msg;
-};
-
-export const historyPushState = (pathname: string, query: { [key: string]: string }) => {
-  // 'next/router push shallow=true' still reloads the page => use history.pushState instead:
-  const newUrl = `${pathname}?${stringify(query)}`;
-  window.history.pushState({ ...query, as: newUrl, url: newUrl }, '', newUrl);
-};
-
-export const parseUrlQuery = () => {
-  const urlParams = (window.location.search || '').slice(1); // exclude leading '?'
-  return parse(urlParams);
 };
