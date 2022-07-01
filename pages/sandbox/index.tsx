@@ -14,7 +14,6 @@ import {
   useToggleTab,
   PageBox,
   Card,
-  Toaster,
   toastError,
   toastSuccess,
   toastWarning,
@@ -292,11 +291,9 @@ const SandboxPage = () => {
 
       <SBHeader># Toaster</SBHeader>
       <div className="w-1/2">
-        <Button onClick={() => toastSuccess('Success', 'Content (optional)')}>Success</Button>
-        <Button onClick={() => toastError('Error', 'Content (optional)')}>Error</Button>
-        <Button onClick={() => toastWarning('Warning', 'Content (optional)')}>Warning</Button>
-
-        <Toaster />
+        <Button onClick={() => toastSuccess('Success')}>Success</Button>
+        <Button onClick={() => toastError('Error')}>Error</Button>
+        <Button onClick={() => toastWarning('Warning')}>Warning</Button>
       </div>
 
       <SBHeader># Modal</SBHeader>
