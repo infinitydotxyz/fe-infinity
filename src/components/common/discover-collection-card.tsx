@@ -66,7 +66,7 @@ export const DiscoverCollectionCard = ({ orderBy, collection, routerQuery }: Pro
                 </div>
               ) : null}
 
-              {orderBy === 'avgPricePercentChange' && collection.avgPrice > 0.01 ? (
+              {orderBy === 'avgPricePercentChange' && collection.avgPrice > 0.00001 ? (
                 <div className="flex">
                   <span className="ml-1 ">Avg Price</span>
                   <EthPrice label={formatNumber(collection.avgPrice, 2)} className="ml-2" />
