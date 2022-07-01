@@ -26,7 +26,7 @@ export const DiscoverCollectionCard = ({ orderBy, collection, routerQuery }: Pro
         className="text-theme-light-800 font-heading tracking-tight mr-2"
       >
         <div style={{ height: '300px' }}>
-          <ImageOrMissing src={collection?.collectionData?.metadata?.profileImage} />
+          <ImageOrMissing src={collection?.collectionData?.metadata?.bannerImage} />
         </div>
         <div className="pt-4 flex items-start">
           {/* <div className="flex flex-1 items-start font-body text-base font-medium px-5 text-black whitespace-normal">
