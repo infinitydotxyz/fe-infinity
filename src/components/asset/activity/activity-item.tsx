@@ -62,11 +62,7 @@ export const ActivityItem = ({ item }: Props) => {
           <div className="w-1/6">
             <div className="text-gray-400">Event</div>
             <div className="font-bold">
-              <a
-                href={`${getChainScannerBase(item.chainId)}/tx/${item.externalUrl}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href={`${item.externalUrl}`} target="_blank" rel="noopener noreferrer">
                 {ActivityTypeName[item.type as ActivityType]}
               </a>
             </div>
