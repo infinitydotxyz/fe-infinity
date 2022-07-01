@@ -57,7 +57,7 @@ const MarketplacePage = () => {
 
   const contents = (
     <>
-      <div className="flex space-x-2 items-center relative max-w-xl lg:top-12 lg:-mt-14 pb-4 lg:pb-0">
+      <div className="flex space-x-2 items-center relative max-w-xl lg:top-14 lg:-mt-14 pb-4 lg:pb-0">
         <ToggleTab
           tabWidth="150px"
           className="font-heading"
@@ -71,7 +71,7 @@ const MarketplacePage = () => {
       {selected === TABS.Orders && <OrderbookContainer />}
 
       {selected === TABS.Discover && (
-        <div className="">
+        <div className="min-h-[1024px]">
           <div className="mb-8 w-full flex flex-row-reverse">
             {/* <TextInputBox
               type="text"
@@ -119,7 +119,7 @@ const MarketplacePage = () => {
 
       {selected === TABS.ListMyNFTs && (
         <div className="mt-40">
-          <UserPageNftsTab userInfo={user as UserProfileDto} />
+          <UserPageNftsTab userInfo={user as UserProfileDto} listClassName="mt-[-87px]" />
         </div>
       )}
     </>

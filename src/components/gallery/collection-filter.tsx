@@ -20,6 +20,7 @@ const CollectionFilter = ({ userAddress, onSelect }: Props) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [collections, setCollections] = useState<CollectionInfo[]>([]);
   const [collectionSearchState, setCollectionSearchState] = useState<string>('');
+  const [isInteracted, setIsInteracted] = useState(false);
 
   const fetchData = async () => {
     const { result } = await apiGet(`/user/${userAddress}/nftCollections`, {
@@ -35,7 +36,9 @@ const CollectionFilter = ({ userAddress, onSelect }: Props) => {
   }, [collectionSearchState]);
 
   useEffect(() => {
-    onSelect(selectedIds);
+    if (isInteracted) {
+      onSelect(selectedIds);
+    }
   }, [selectedIds]);
 
   return (
@@ -59,6 +62,7 @@ const CollectionFilter = ({ userAddress, onSelect }: Props) => {
             checked={selectedIds.indexOf(item.collectionAddress ?? '') >= 0}
             label={item.collectionName}
             onChange={(checked) => {
+              setIsInteracted(true);
               if (checked) {
                 setSelectedIds((ids) => [...ids, item.collectionAddress ?? '']);
               } else {
