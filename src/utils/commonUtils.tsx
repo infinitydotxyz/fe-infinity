@@ -6,7 +6,6 @@ import {
 } from '@infinityxyz/lib-frontend/utils';
 import { ReactNode } from 'react';
 import { NextLink } from 'src/components/common';
-import { parse, stringify } from 'querystring';
 
 // OpenSea's EventType
 export enum EventType {
