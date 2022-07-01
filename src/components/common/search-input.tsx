@@ -133,15 +133,15 @@ export const SearchInput: React.FC<Props> = ({ expanded }) => {
             className="absolute z-60 -mx-8
             w-content h-content max-h-content
             py-2 ring-1 ring-inset ring-theme-light-200 rounded-xl
-            flex flex-col bg-theme-light-50 shadow-lg"
+            flex flex-col bg-gray-50 shadow-lg"
           >
             {filtered.map((collection, index) => (
               <Combobox.Option key={index} value={collection}>
                 {({ active }) => (
                   <div
                     className={`${
-                      active ? 'bg-theme-light-300' : 'bg-theme-light-50'
-                    }   font-body text-sm py-1 px-4 ml-2 mr-2 hover:bg-theme-light-200 rounded-xl
+                      active ? 'bg-gray-200' : 'bg-transparent'
+                    }   font-body text-sm py-1 px-4 ml-2 mr-2 hover:bg-gray-200 rounded-xl
                         flex gap-4 place-items-center
                         hover:cursor-pointer
                         `}
