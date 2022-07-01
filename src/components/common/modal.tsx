@@ -3,6 +3,7 @@ import { Fragment, ReactNode } from 'react';
 import { Spacer, Button } from 'src/components/common';
 import { XIcon } from '@heroicons/react/outline';
 import { iconButtonStyle } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
 
 interface Props {
   isOpen: boolean;
@@ -46,26 +47,6 @@ export const Modal = ({
   const buttons = [];
 
   // pass in '' to hide button
-  if (okButton) {
-    buttons.push(
-      <Button
-        key={Math.random()}
-        className="flex-1"
-        disabled={disableOK}
-        onClick={() => {
-          if (onOKButton) {
-            onOKButton();
-          } else {
-            onClose();
-          }
-        }}
-      >
-        {okButton}
-      </Button>
-    );
-  }
-
-  // pass in '' to hide button
   if (cancelButton) {
     buttons.push(
       <Button
@@ -82,6 +63,26 @@ export const Modal = ({
         }}
       >
         {cancelButton}
+      </Button>
+    );
+  }
+
+  // pass in '' to hide button
+  if (okButton) {
+    buttons.push(
+      <Button
+        key={Math.random()}
+        className="flex-1"
+        disabled={disableOK}
+        onClick={() => {
+          if (onOKButton) {
+            onOKButton();
+          } else {
+            onClose();
+          }
+        }}
+      >
+        {okButton}
       </Button>
     );
   }
@@ -113,9 +114,11 @@ export const Modal = ({
               leaveTo="opacity-0 scale-95"
             >
               <Dialog.Panel
-                className={`w-full ${
-                  wide ? 'max-w-lg' : 'max-w-md'
-                } transform overflow-hidden rounded-2xl bg-white py-8 px-9 text-left align-middle shadow-xl transition-all`}
+                className={twMerge(
+                  'w-full',
+                  wide ? 'max-w-xl' : 'max-w-md',
+                  'transform overflow-hidden rounded-2xl bg-white py-8 px-9 text-left align-middle shadow-xl transition-all'
+                )}
               >
                 <Dialog.Title
                   as="h3"

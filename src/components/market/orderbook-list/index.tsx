@@ -1,6 +1,6 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { Button, Dropdown, ScrollLoader } from 'src/components/common';
+import { Button, Dropdown, ScrollLoader, Spinner } from 'src/components/common';
 import { OrderbookProvider, SORT_FILTERS, useOrderbook } from '../OrderbookContext';
 import { OrderbookRow } from './orderbook-row';
 import { OrderbookFilters } from './filters/orderbook-filters';
@@ -20,12 +20,13 @@ const getSortLabel = (key: string | undefined) => {
 
 interface OrderbookContainerProps {
   collectionId?: string;
+  tokenId?: string;
   className?: string;
 }
 
-export const OrderbookContainer = ({ collectionId, className }: OrderbookContainerProps): JSX.Element => {
+export const OrderbookContainer = ({ collectionId, tokenId, className }: OrderbookContainerProps): JSX.Element => {
   return (
-    <OrderbookProvider collectionId={collectionId}>
+    <OrderbookProvider collectionId={collectionId} tokenId={tokenId}>
       <OrderbookContent className={className} />
     </OrderbookProvider>
   );
@@ -116,14 +117,7 @@ const OrderbookList = ({ orders, showFilters, isLoading, fetchMore, hasMoreOrder
             return <OrderbookRow key={`${i}-${order.id}`} order={order} isFilterOpen={showFilters ?? false} />;
           })}
 
-        {/* {orders.length === 0 && !isLoading && <div>No results found</div>} */}
-
-        {/* {isLoading && (
-          <div className="w-full flex justify-center align-items">
-            <Spinner />
-          </div>
-        )} */}
-        {isLoading && <LoadingRow />}
+        {isLoading && <Spinner />}
 
         {hasMoreOrders && <ScrollLoader onFetchMore={fetchMore} />}
       </div>
@@ -133,12 +127,12 @@ const OrderbookList = ({ orders, showFilters, isLoading, fetchMore, hasMoreOrder
 
 // =======================================================================
 
-const LoadingRow = () => (
-  <>
-    {Array.from(Array(4).keys())?.map((x, i) => (
-      <Fragment key={i}>
-        <div className="w-full h-[110px] mb-3 bg-theme-light-200 rounded-3xl animate-pulse"></div>
-      </Fragment>
-    ))}
-  </>
-);
+// const LoadingRow = () => (
+//   <>
+//     {Array.from(Array(4).keys())?.map((x, i) => (
+//       <Fragment key={i}>
+//         <div className="w-full h-[110px] mb-3 bg-theme-light-200 rounded-3xl animate-pulse"></div>
+//       </Fragment>
+//     ))}
+//   </>
+// );

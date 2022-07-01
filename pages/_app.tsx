@@ -8,8 +8,7 @@ import { AppContextProvider } from 'src/utils/context/AppContext';
 import { OrderContextProvider } from 'src/utils/context/OrderContext';
 import { FilterContextProvider } from 'src/utils/context/FilterContext';
 import React, { FunctionComponent, memo, StrictMode, useEffect } from 'react';
-import NextNProgress from 'nextjs-progressbar';
-import { triggerStatsRequests } from 'src/utils/triggerUtils';
+import AppNProgress from 'src/components/common/AppNProgress';
 
 const Page: FunctionComponent<AppProps> = ({ Component, pageProps }) => <Component {...pageProps} />;
 const Memoized = memo(Page, (p, n) => p.Component === n.Component && p.pageProps === n.pageProps);
@@ -25,10 +24,6 @@ const App: FunctionComponent<AppProps> = (props) => {
   const router = useRouter();
 
   useEffect(() => {
-    triggerStatsRequests();
-  }, []);
-
-  useEffect(() => {
     const handleRouteChange = (url: URL) => (isProduction ? gtag.pageview(url) : null);
     router.events.on('routeChangeComplete', handleRouteChange);
     return () => router.events.off('routeChangeComplete', handleRouteChange);
@@ -36,7 +31,7 @@ const App: FunctionComponent<AppProps> = (props) => {
 
   return (
     <StrictMode>
-      <NextNProgress />
+      <AppNProgress options={{ showSpinner: false }} showOnShallow={false} />
       <AppContextProvider>
         <FilterContextProvider>
           <OrderContextProvider>

@@ -23,9 +23,7 @@ import {
   NULL_ADDRESS,
   trimLowerCase
 } from '@infinityxyz/lib-frontend/utils';
-import { infinityExchangeAbi } from '../../abi/infinityExchange';
-import { erc20Abi } from '../../abi/erc20';
-import { erc721Abi } from '../../abi/erc721';
+import { InfinityExchangeABI, ERC20ABI, ERC721ABI } from '@infinityxyz/lib-frontend/abi';
 import { User } from '../context/AppContext';
 import { keccak256, solidityKeccak256 } from 'ethers/lib/utils';
 
@@ -37,7 +35,7 @@ export async function getSignedOBOrder(
 ): Promise<SignedOBOrder | undefined> {
   // sign
   const infinityExchangeAddress = getExchangeAddress(chainId.toString());
-  const infinityExchange = new Contract(infinityExchangeAddress, infinityExchangeAbi, signer);
+  const infinityExchange = new Contract(infinityExchangeAddress, InfinityExchangeABI, signer);
   const signedOrder = await prepareOBOrder(user, chainId, signer, order, infinityExchange);
   if (!signedOrder) {
     const msg = 'signOBSpecOrder: failed to sign order';
@@ -147,7 +145,7 @@ export async function approveERC20(
   try {
     console.log('Granting ERC20 approval');
     if (currencyAddress !== NULL_ADDRESS) {
-      const contract = new Contract(currencyAddress, erc20Abi, signer);
+      const contract = new Contract(currencyAddress, ERC20ABI, signer);
       const allowance = BigNumber.from(await contract.allowance(user, infinityFeeTreasuryAddress));
       if (allowance.lt(price)) {
         await contract.approve(infinityFeeTreasuryAddress, MaxUint256);
@@ -167,7 +165,7 @@ export async function approveERC721(user: string, items: OBOrderItem[], signer: 
     console.log('Granting ERC721 approval');
     for (const item of items) {
       const collection = item.collectionAddress;
-      const contract = new Contract(collection, erc721Abi, signer);
+      const contract = new Contract(collection, ERC721ABI, signer);
       const isApprovedForAll = await contract.isApprovedForAll(user, exchange);
       if (!isApprovedForAll) {
         await contract.setApprovalForAll(exchange, true);
@@ -187,7 +185,7 @@ export async function checkOnChainOwnership(user: User, order: OBOrder, signer: 
   let result = true;
   for (const nft of order.nfts) {
     const collection = nft.collectionAddress;
-    const contract = new Contract(collection, erc721Abi, signer);
+    const contract = new Contract(collection, ERC721ABI, signer);
     for (const token of nft.tokens) {
       result = result && (await checkERC721Ownership(user, contract, token.tokenId));
     }
@@ -382,7 +380,7 @@ export async function signChainOBOrder(
 export async function takeOrder(signer: JsonRpcSigner, chainId: string, makerOrder: ChainOBOrder) {
   const user = await signer.getAddress();
   const exchangeAddress = getExchangeAddress(chainId);
-  const infinityExchange = new Contract(exchangeAddress, infinityExchangeAbi, signer);
+  const infinityExchange = new Contract(exchangeAddress, InfinityExchangeABI, signer);
 
   const takerOrderSide = !makerOrder.isSellOrder;
   const constraints = makerOrder.constraints;
@@ -406,6 +404,16 @@ export async function takeOrder(signer: JsonRpcSigner, chainId: string, makerOrd
     value: salePrice,
     gasLimit: BigNumber.from(200000)
   };
+
+  // Error: invalid value for array (argument="value", value={"isSellOrder":true,"signer":"0x24c24F9DDCe175039136bae9B3943b5B051A1514",
+  // "extraParams":"0x0000000000000000000000000000000000000000000000000000000000000000","nfts":[{"collection":"0x142c5b3a5689ba0871903c53dacf235a28cb21f0",
+  // "tokens":[{"tokenId":"529","numTokens":1},{"numTokens":1,"tokenId":"530"},{"numTokens":1,"tokenId":"531"}]}],"constraints":
+  // [3,{"hex":"0x470de4df820000","type":"BigNumber"},{"type":"BigNumber","hex":"0x470de4df820000"},1656452854,1657057654,"279","100000000000000000"],
+  // "execParams":["0x6deb5e1a056975e0f2024f3d89b6d2465bde22af","0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6"],
+  // "sig":"0xe40fefdd61f36b731379f0f83916c91e4f1ff315b925edf27aab4eb605d502106b4d41b6759e97d01576271e05c7800a4a0b2444085c0d73aab
+  // 35eb23f8c7f24000000000000000000000000000000000000000000000000000000000000001c"}, code=INVALID_ARGUMENT, version=contracts/5.6.2)
+
+  // TODO(Adi): crashed here, market page click sell
   const gasEstimate = await infinityExchange.estimateGas.takeOrders([makerOrder], [takerOrder], options);
   options.gasLimit = gasEstimate;
   console.log('gasEstimate', gasEstimate.toString());
@@ -443,6 +451,7 @@ export function getOBOrderFromFirestoreOrderItem(firestoreOrderItem: FirestoreOr
     startTimeMs: firestoreOrderItem?.startTimeMs ?? 0,
     endTimeMs: firestoreOrderItem?.endTimeMs ?? 0,
     nonce: '',
+    maxGasPriceWei: '1e12', // todo: adi get from backend
     nfts: [],
     execParams: {
       currencyAddress: '',
@@ -465,6 +474,7 @@ function _orderHash(order: ChainOBOrder): BytesLike {
   const execParams = order.execParams;
   const extraParams = order.extraParams;
 
+  // todo: adi constraints has new length
   const constraintsHash = keccak256(
     defaultAbiCoder.encode(['uint256', 'uint256', 'uint256', 'uint256', 'uint256', 'uint256'], constraints)
   );

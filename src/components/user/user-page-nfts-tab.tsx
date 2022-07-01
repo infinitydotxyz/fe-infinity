@@ -77,7 +77,7 @@ export const UserPageNftsTab = ({ userInfo, forTransfers }: Props) => {
       <div className="mt-20">
         <GalleryBox
           pageId="PROFILE"
-          getEndpoint={`/user/${userInfo?.address}/nfts`}
+          getEndpoint={userInfo?.address ? `/user/${userInfo?.address}/nfts` : ''}
           userAddress={userInfo?.address}
           filterShowedDefault={false}
           showFilterSections={['COLLECTIONS']}
@@ -88,10 +88,10 @@ export const UserPageNftsTab = ({ userInfo, forTransfers }: Props) => {
                   cardActions: [
                     {
                       label: (data) => {
-                        // for Transfers
+                        // for Sending
                         if (forTransfers === true) {
                           const found = nftsForTransfer.find((o) => o.id === data?.id);
-                          return <div className="font-normal">{found ? '✓' : ''} Transfer</div>;
+                          return <div className="font-normal">{found ? '✓' : ''} Send</div>;
                         }
                         // for Listings
                         if (isAlreadyAdded(data)) {
@@ -100,7 +100,7 @@ export const UserPageNftsTab = ({ userInfo, forTransfers }: Props) => {
                         return <div className="font-normal">List</div>;
                       },
                       onClick: (ev, data) => {
-                        // for Transfers
+                        // for Sending
                         if (forTransfers === true && data) {
                           const found = nftsForTransfer.find((o) => o.id === data.id);
                           if (found) {

@@ -2,10 +2,10 @@ import { OBOrder, OBOrderItem } from '@infinityxyz/lib-frontend/types/core';
 import { OBTokenInfoDto } from '@infinityxyz/lib-frontend/types/dto/orders';
 
 import { ReactNode } from 'react';
-import { NextLink } from 'src/components/common';
+import { NextLink, SVG } from 'src/components/common';
 import { useRouter } from 'next/router';
 import { BLANK_IMG } from 'src/utils';
-import ReactTooltip from 'react-tooltip';
+// import ReactTooltip from 'react-tooltip';
 
 type Props4 = {
   content?: ReactNode;
@@ -124,12 +124,12 @@ const SingleCollectionCell = ({
   }
   return (
     <div className="flex gap-2 items-center">
-      <div className="flex justify-center shrink-0 h-12 w-12">
+      <div className="flex justify-center shrink-0 h-14 w-14">
         <span className="inline-block relative">
           {image ? (
-            <img className="h-12 w-12 rounded-full" src={image} alt="" />
+            <img className="h-14 w-14 rounded-full" src={image} alt="" />
           ) : (
-            <img className="h-12 w-12 rounded-full" src={BLANK_IMG} alt="" />
+            <img className="h-14 w-14 rounded-full" src={BLANK_IMG} alt="" />
           )}
 
           {count > 1 && (
@@ -144,21 +144,28 @@ const SingleCollectionCell = ({
         {/* <div className="font-bold whitespace-pre-wrap" onClick={onClickTitle}>
           {title}
         </div> */}
+
         {orderNft?.collectionSlug ? (
           <NextLink
             href={`/collection/${orderNft?.collectionSlug}`}
-            className="font-bold whitespace-pre-wrap"
+            className="font-bold whitespace-pre-wrap flex items-center"
             title={title}
           >
-            {title}
+            {title} {orderNft?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1" /> : null}
           </NextLink>
         ) : (
-          <div className="font-bold whitespace-pre-wrap cursor-auto">{title}</div>
+          <NextLink
+            href={`/collection/${order?.nfts[0]?.collectionSlug}`}
+            className="font-bold whitespace-pre-wrap flex items-center"
+            title={title}
+          >
+            {title} {orderNft?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1" /> : null}
+          </NextLink>
         )}
 
         {count > 1 ? (
           <div>
-            <div data-tip data-for={`counter-${order?.id}`}>
+            {/* <div data-tip data-for={`counter-${order?.id}`}>
               {count} NFTs
             </div>
             <ReactTooltip id={`counter-${order?.id}`} effect="solid">
@@ -167,7 +174,7 @@ const SingleCollectionCell = ({
                   <div key={idx}>{name}</div>
                 ))}
               </div>
-            </ReactTooltip>
+            </ReactTooltip> */}
           </div>
         ) : (
           <>

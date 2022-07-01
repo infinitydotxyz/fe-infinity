@@ -220,6 +220,7 @@ const EditCollectionPage = () => {
             Edit collection
           </Heading>
           <ProfileImageUpload
+            roundPhoto={true}
             onUpload={uploadProfileImage}
             onDelete={deleteProfileImage}
             imgSource={metadata.profileImage}

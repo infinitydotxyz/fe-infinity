@@ -1,8 +1,9 @@
-import { debounce, uniqBy } from 'lodash';
+import { uniqBy } from 'lodash';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
-import { Checkbox, TextInputBox } from 'src/components/common';
+import { Checkbox, DebouncedTextInputBox, TextInputBox } from 'src/components/common';
+import { useIsMounted } from 'src/hooks/useIsMounted';
 import { useOrderbook } from '../../OrderbookContext';
 import { CollectionSearchItem, useCollectionCache } from '../collection-cache';
 
@@ -39,33 +40,36 @@ export const OrderbookFilters = () => {
   } = useOrderbook();
 
   const [openState, setOpenState] = useState<OpenFilterState>(defaultOpenState);
-  const [collectionSearchState, setCollectionSearchState] = useState<string>();
+  const [collectionSearchState, setCollectionSearchState] = useState<string>('');
   const [collectionsData, setCollectionsData] = useState<CollectionSearchItem[]>([]);
   const { getTopCollections, getCollectionsByName, getCollectionsByIds } = useCollectionCache();
+  const isMounted = useIsMounted();
 
   useEffect(() => {
     // loads the selected collections from query params and also provides some more options
     const fetchInitialCollections = async () => {
       const initialCollections = await getTopCollections();
       if (initialCollections?.length) {
-        // query params passed on page load
-        if (collections.length > 0) {
-          const selectedCollections = await getCollectionsByIds(collections);
-          if (selectedCollections?.length) {
-            const _collections = uniqBy([...selectedCollections, ...initialCollections], 'id');
-            setCollectionsData(_collections);
-            allCollectionsData = [...allCollectionsData, ..._collections];
+        if (isMounted()) {
+          // query params passed on page load
+          if (collections.length > 0) {
+            const selectedCollections = await getCollectionsByIds(collections);
+            if (selectedCollections?.length) {
+              const _collections = uniqBy([...selectedCollections, ...initialCollections], 'id');
+              setCollectionsData(_collections);
+              allCollectionsData = [...allCollectionsData, ..._collections];
+            }
+          } else {
+            setCollectionsData(initialCollections);
+            allCollectionsData = [...allCollectionsData, ...initialCollections];
           }
-        } else {
-          setCollectionsData(initialCollections);
-          allCollectionsData = [...allCollectionsData, ...initialCollections];
         }
       }
     };
     fetchInitialCollections().catch(console.error);
   }, []);
 
-  const searchForCollections = debounce(async (searchTerm: string) => {
+  const searchForCollections = async (searchTerm: string) => {
     setCollectionSearchState(searchTerm);
 
     if (searchTerm) {
@@ -91,7 +95,7 @@ export const OrderbookFilters = () => {
         }
       }
     }
-  }, 300);
+  };
 
   const CollectionCheckbox = ({ collection }: { collection: CollectionSearchItem }) => (
     <Checkbox
@@ -127,11 +131,11 @@ export const OrderbookFilters = () => {
       {!collectionId && (
         <OrderbookFilterItem key="Collection" openState={openState} setOpenState={setOpenState} item="Collection">
           <div>
-            <TextInputBox
+            <DebouncedTextInputBox
               label=""
               type="text"
               className="border rounded-full py-2 px-4 mt-1 font-heading w-full"
-              defaultValue={collectionSearchState}
+              value={collectionSearchState}
               onChange={(value) => {
                 searchForCollections(value);
               }}
@@ -144,14 +148,14 @@ export const OrderbookFilters = () => {
                 if (!collection) {
                   return null;
                 }
-                return <CollectionCheckbox collection={collection} />;
+                return <CollectionCheckbox key={collection.id} collection={collection} />;
               })}
               {hasCollectionSearchResults &&
                 collectionsData.map((collection) => {
                   if (collections.includes(`${collection.chainId}:${collection.id}`)) {
                     return null;
                   }
-                  return <CollectionCheckbox collection={collection} />;
+                  return <CollectionCheckbox key={collection.id} collection={collection} />;
                 })}
             </div>
 
@@ -168,7 +172,7 @@ export const OrderbookFilters = () => {
           <TextInputBox
             addEthSymbol={true}
             type="number"
-            value={minPrice?.toString()}
+            value={minPrice?.toString() ?? ''}
             label="Min"
             placeholder=""
             onChange={(value) => {
@@ -179,7 +183,7 @@ export const OrderbookFilters = () => {
           <TextInputBox
             addEthSymbol={true}
             type="number"
-            value={maxPrice?.toString()}
+            value={maxPrice?.toString() ?? ''}
             label="Max"
             placeholder=""
             onChange={(value) => {
@@ -192,7 +196,7 @@ export const OrderbookFilters = () => {
         <div className="flex flex-col">
           <TextInputBox
             type="number"
-            value={numberOfNfts?.toString()}
+            value={numberOfNfts?.toString() ?? ''}
             label=""
             placeholder=""
             onChange={(value) => updateFilter('numberOfNfts', value)}

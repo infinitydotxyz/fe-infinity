@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { BaseCollection, ERC721CardData, CollectionStats, ChainId } from '@infinityxyz/lib-frontend/types/core';
-import { ToggleTab, PageBox, useToggleTab, SVG, EthPrice } from 'src/components/common';
+import { ToggleTab, PageBox, useToggleTab, SVG, EthPrice, Spinner } from 'src/components/common';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
+import { CollectionStatsDto } from '@infinityxyz/lib-frontend/types/dto/stats';
 import { useFetch } from 'src/utils/apiUtils';
 import { CollectionFeed } from 'src/components/feed/collection-feed';
-import { ellipsisAddress, getChainScannerBase } from 'src/utils';
+import { BLANK_IMG, ellipsisAddress, formatNumber, getChainScannerBase } from 'src/utils';
 import { CollectionActivityTab } from 'src/components/collection/collection-activity-tab';
 import { StatsChips } from 'src/components/collection/stats-chips';
 import { CommunityRightPanel } from 'src/components/collection/community-right-panel';
@@ -17,35 +18,20 @@ import { iconButtonStyle } from 'src/utils/ui-constants';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
 import { useAppContext } from 'src/utils/context/AppContext';
 import NotFound404Page from 'pages/not-found-404';
+import { twMerge } from 'tailwind-merge';
 
 const CollectionPage = () => {
   const router = useRouter();
-  const { checkSignedIn } = useAppContext();
+  const { checkSignedIn, chainId } = useAppContext();
   const { addCartItem, removeCartItem, ordersInCart, cartItems, addOrderToCart, updateOrders } = useOrderContext();
   const [isBuyClicked, setIsBuyClicked] = useState(false);
   const { options, onChange, selected } = useToggleTab(
-    ['NFT', 'Activity', 'Orderbook'],
-    (router?.query?.tab as string) || 'NFT'
+    ['NFTs', 'Orders', 'Activity'],
+    (router?.query?.tab as string) || 'NFTs'
   );
   const {
     query: { name }
   } = router;
-
-  // todo: this caused console error. http://localhost:3000/collection/0mnipunks
-  // if (!router.isReady) {
-  //   return null;
-  // }
-
-  // todo: this caused console error. http://localhost:3000/collection/0mnipunks
-  // useEffect(() => {
-  //   if (selected === 'NFT') {
-  //     const updateQueryParams = { ...router.query };
-  //     delete updateQueryParams.tab;
-  //     router.replace({ pathname: router.pathname, href: router.pathname, query: { ...updateQueryParams } });
-  //   } else {
-  //     router.replace({ pathname: router.pathname, href: router.pathname, query: { ...router.query, tab: selected } });
-  //   }
-  // }, [selected]);
 
   useEffect(() => {
     if (isBuyClicked === true) {
@@ -56,21 +42,16 @@ const CollectionPage = () => {
 
   const path = `/collections/${name}`;
   const { result: collection, isLoading, error } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
-  const { result: dailyStats } = useFetch<{ data: CollectionStats[] }>(
+  const { result: currentStats } = useFetch<CollectionStatsDto>(name ? `${path}/stats/current` : '', {
+    chainId
+  });
+  const { result: allTimeStats } = useFetch<{ data: CollectionStats[] }>(
     name
-      ? path +
-          '/stats?offset=0&limit=10&orderBy=volume&orderDirection=desc&minDate=0&maxDate=2648764957623&period=daily'
+      ? path + '/stats?offset=0&limit=10&orderBy=volume&orderDirection=desc&minDate=0&maxDate=2648764957623&period=all'
       : '',
-    { chainId: '1' }
+    { chainId }
   );
-  const { result: weeklyStats } = useFetch<{ data: CollectionStats[] }>(
-    name
-      ? path +
-          '/stats?offset=0&limit=10&orderBy=volume&orderDirection=desc&minDate=0&maxDate=2648764957623&period=weekly'
-      : '',
-    { chainId: '1' }
-  );
-  const firstDailyStats = dailyStats?.data[0];
+  const firstAllTimeStats = allTimeStats?.data[0]; // first row = latest daily stats
 
   const isAlreadyAdded = (data: ERC721CardData | undefined) => {
     // check if this item was already added to cartItems or order.
@@ -104,56 +85,82 @@ const CollectionPage = () => {
   };
 
   if (error) {
+    // failed to load collection (collection not indexed?)
     return <NotFound404Page collectionSlug={name?.toString()} />;
   }
 
-  if (!collection) {
-    // failed to load collection (collection not indexed?)
-    return (
-      <PageBox showTitle={false} title={'Collection'}>
-        {error ? <div className="flex flex-col mt-10">Unable to load this collection.</div> : null}
-      </PageBox>
-    );
-  }
+  // if (!collection) {
+  //   return (
+  //     <PageBox showTitle={false} title={'Collection'}>
+  //       {error ? <div className="flex flex-col mt-10">Unable to load this collection?.</div> : null}
+  //     </PageBox>
+  //   );
+  // }
   return (
-    <PageBox showTitle={false} title={collection.metadata?.name ?? ''}>
+    <PageBox showTitle={false} title={collection?.metadata?.name ?? ''}>
       <div className="flex flex-col mt-10">
         <span>
-          <AvatarImage url={collection.metadata.profileImage} className="mb-2 rounded-[50%]" />
+          {collection ? (
+            <AvatarImage url={collection?.metadata.profileImage} className="mb-2 rounded-[50%]" />
+          ) : (
+            <AvatarImage url={BLANK_IMG} className="mb-2 border-gray-200 border-2 rounded-[50%]" />
+          )}
 
           <div className="flex gap-3 items-center">
-            <div className="text-6xl">{collection.metadata?.name}</div>
-            {collection.hasBlueCheck ? <SVG.blueCheck className={iconButtonStyle} /> : null}
+            <div className="text-6xl">
+              {collection?.metadata?.name ? (
+                collection?.metadata?.name
+              ) : (
+                <div className="relative">
+                  &nbsp;
+                  <Spinner className="absolute top-10" />
+                </div>
+              )}
+            </div>
+            {collection?.hasBlueCheck ? <SVG.blueCheck className={twMerge(iconButtonStyle, 'mt-3')} /> : null}
           </div>
         </span>
+
         <main>
           <div className="text-secondary mt-6 mb-6 font-heading">
-            <span>Created by </span>
-            <button onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection.owner)}>
-              {ellipsisAddress(collection.owner ?? '')}
-            </button>
-            <span className="ml-12 font-heading">Collection address </span>
-            <button onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection.address)}>
-              {ellipsisAddress(collection.address ?? '')}
-            </button>
+            {collection ? (
+              <>
+                {collection?.owner && (
+                  <>
+                    <span>Created by </span>
+                    <button onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection?.owner)}>
+                      {ellipsisAddress(collection?.owner ?? '')}
+                    </button>
+                  </>
+                )}
+                <span className="ml-12 font-heading">Collection address </span>
+                <button onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection?.address)}>
+                  {ellipsisAddress(collection?.address ?? '')}
+                </button>
+              </>
+            ) : (
+              <>
+                <span>&nbsp;</span>
+              </>
+            )}
           </div>
 
-          <StatsChips collection={collection} weeklyStatsData={weeklyStats?.data ?? []} />
+          <StatsChips collection={collection} currentStatsData={currentStats || undefined} />
 
           {isLoading ? (
             <div className="mt-6">
               <LoadingDescription />
             </div>
           ) : (
-            <div className="text-secondary mt-12 md:w-2/3">{collection.metadata.description ?? ''}</div>
+            <div className="text-secondary mt-12 md:w-2/3">{collection?.metadata.description ?? ''}</div>
           )}
 
-          {collection.metadata.benefits && (
+          {collection?.metadata.benefits && (
             <div className="mt-7 md:w-2/3">
               <div className="font-medium">Ownership includes</div>
 
               <div className="flex space-x-8 mt-3 font-normal">
-                {collection.metadata.benefits?.slice(0, 3).map((benefit) => {
+                {collection?.metadata.benefits?.slice(0, 3).map((benefit) => {
                   const benefitStr = benefit.slice(0, 300);
                   return (
                     <div className="flex items-center text-secondary">
@@ -166,12 +173,12 @@ const CollectionPage = () => {
             </div>
           )}
 
-          {collection.metadata.partnerships && (
+          {collection?.metadata.partnerships && (
             <div className="mt-7 md:w-2/3">
               <div className="font-medium">Partnerships</div>
 
               <div className="flex space-x-12 mt-3 ml-2 font-normal">
-                {collection.metadata.partnerships?.slice(0, 3).map((partnership) => {
+                {collection?.metadata.partnerships?.slice(0, 3).map((partnership) => {
                   const partnershipStr = partnership?.name.slice(0, 100);
                   return (
                     <div
@@ -199,18 +206,18 @@ const CollectionPage = () => {
             </thead>
             <tbody>
               <tr className="font-bold font-heading text-2xl">
-                <td>{collection.numNfts?.toLocaleString() ?? '—'}</td>
-                <td>{collection.numOwners?.toLocaleString() ?? '—'}</td>
+                <td>{firstAllTimeStats?.numNfts?.toLocaleString() ?? '—'}</td>
+                <td>{firstAllTimeStats?.numOwners?.toLocaleString() ?? '—'}</td>
                 <td>
-                  {firstDailyStats?.floorPrice ? (
-                    <EthPrice label={String(firstDailyStats?.floorPrice)} labelClassName="font-bold" />
+                  {firstAllTimeStats?.floorPrice ? (
+                    <EthPrice label={String(firstAllTimeStats?.floorPrice)} labelClassName="font-bold" />
                   ) : (
                     '—'
                   )}
                 </td>
                 <td>
-                  {firstDailyStats?.volume ? (
-                    <EthPrice label={String(firstDailyStats?.volume?.toLocaleString())} labelClassName="font-bold" />
+                  {firstAllTimeStats?.volume ? (
+                    <EthPrice label={formatNumber(firstAllTimeStats?.volume)} labelClassName="font-bold" />
                   ) : (
                     '—'
                   )}
@@ -228,9 +235,10 @@ const CollectionPage = () => {
           />
 
           <div className="mt-6 min-h-[1024px]">
-            {selected === 'NFT' && collection && (
+            {selected === 'NFTs' && collection && (
               <GalleryBox
                 pageId="COLLECTION"
+                getEndpoint={`/collections/${collection?.chainId}:${collection?.address}/nfts`}
                 collection={collection}
                 cardProps={{
                   cardActions: [
@@ -281,17 +289,17 @@ const CollectionPage = () => {
               />
             )}
 
-            {selected === 'Orderbook' && (
-              <OrderbookContainer collectionId={collection.address} className="mt-[-70px] pointer-events-none" />
+            {selected === 'Orders' && (
+              <OrderbookContainer collectionId={collection?.address} className="mt-[-70px] pointer-events-none" />
             )}
 
             {/* {currentTab === 1 && <ActivityTab dailyStats={dailyStats} weeklyStats={weeklyStats} />} */}
-            {selected === 'Activity' && <CollectionActivityTab collectionAddress={collection.address ?? ''} />}
+            {selected === 'Activity' && <CollectionActivityTab collectionAddress={collection?.address ?? ''} />}
 
             {selected === '???' && (
               <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-16">
                 <div className="lg:col-span-1 xl:col-span-2">
-                  <CollectionFeed collectionAddress={collection.address ?? ''} />
+                  <CollectionFeed collectionAddress={collection?.address ?? ''} />
                 </div>
                 <div className="col-span-1">{collection && <CommunityRightPanel collection={collection} />}</div>
               </div>

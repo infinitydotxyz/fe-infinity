@@ -16,7 +16,7 @@ import { Token, Collection, Erc721Metadata, OBOrder } from '@infinityxyz/lib-fro
 import {
   TraitList,
   CancelModal,
-  TransferNFTModal,
+  SendNFTModal,
   PlaceBidModal,
   MakeOfferModal,
   ActivityList
@@ -39,8 +39,8 @@ const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string)
   const collectionResponse = useFetch<Collection>(COL_API_ENDPOINT);
 
   return {
-    isLoading: tokenResponse.isLoading || collectionResponse.isLoading,
-    error: tokenResponse.error || collectionResponse.error,
+    isLoading: tokenResponse.isLoading,
+    error: tokenResponse.error,
     token: tokenResponse.result,
     collection: collectionResponse.result
   };
@@ -53,12 +53,8 @@ const AssetDetailPage = () => {
 
   if (typeof query.chainId !== 'string' || typeof query.collection !== 'string' || typeof query.tokenId !== 'string') {
     return (
-      <PageBox title="Asset">
-        <div className="flex flex-col max-w-screen-2xl mt-4">
-          <main>
-            <p>Error: Invalid page parameters or not signed in.</p>
-          </main>
-        </div>
+      <PageBox title="Asset" showTitle={false}>
+        <div className="flex flex-col max-w-screen-2xl mt-4"></div>
       </PageBox>
     );
   }
@@ -89,7 +85,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
 
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showLowerPriceModal, setShowLowerPriceModal] = useState(false);
-  const [showTransferModal, setShowTransferModal] = useState(false);
+  const [showSendModal, setShowSendModal] = useState(false);
   const [showMakeOfferModal, setShowMakeOfferModal] = useState(false);
   const [showPlaceBidModal, setShowPlaceBidModal] = useState(false);
   const [buyPriceEth, setBuyPriceEth] = useState('');
@@ -105,14 +101,21 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
     }
   }, [token]);
 
-  if (token?.image) {
-    console.log(token.image);
+  if (token?.image?.url) {
     token.image.url = token.image.url.replace('storage.opensea.io', 'openseauserdata.com');
   }
 
   // if cached url is null, try original url or the blank image
-  if (token && !token?.image.url) {
-    token.image.url = token.image.originalUrl ?? BLANK_IMAGE_URL;
+  if (token && !token?.image?.url) {
+    token.image = token.image || {};
+    token.image.url = token.image?.originalUrl ?? '';
+  }
+
+  const imgUrl = token?.image?.url || token?.metadata?.image || BLANK_IMAGE_URL;
+  if (token && (!imgUrl || imgUrl.startsWith('ipfs'))) {
+    if (token.image) {
+      token.image.url = BLANK_IMAGE_URL;
+    }
   }
 
   if (isLoading) {
@@ -123,8 +126,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
     );
   }
 
-  if (error || !token || !collection) {
-    console.error(error);
+  if (error) {
     return <NotFound404Page />;
     // return (
     //   <PageBox title="Asset - Error" className="w-full h-full grid place-items-center">
@@ -138,13 +140,15 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
     // router.push(`/not-found-404?chainId=${qchainId}&collectionAddress=${qcollection}&tokenId=${qtokenId}`);
     // return null;
   }
+  if (!token) {
+    return null;
+  }
 
   const tokenMetadata = token.metadata as Erc721Metadata;
 
-  const assetName =
-    tokenMetadata.name && collection.metadata.name
-      ? `${tokenMetadata.name} - ${collection.metadata.name}`
-      : tokenMetadata.name || collection.metadata.name || 'brrrr';
+  const assetName = tokenMetadata.name
+    ? `${tokenMetadata.name} - ${token.collectionName}`
+    : tokenMetadata.name || token.collectionName || 'brrrr';
 
   const onClickBuy = () => {
     if (!checkSignedIn()) {
@@ -167,11 +171,11 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
     setShowCancelModal(true);
   };
 
-  const onClickTransfer = () => {
+  const onClickSend = () => {
     if (!checkSignedIn()) {
       return;
     }
-    setShowTransferModal(true);
+    setShowSendModal(true);
   };
 
   const onClickLowerPrice = () => {
@@ -187,7 +191,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
         <CancelModal
           isOpen={showCancelModal}
           onClose={() => setShowCancelModal(false)}
-          collection={collection}
+          collectionAddress={token.collectionAddress ?? ''}
           token={token}
         />
       )}
@@ -195,35 +199,17 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
         <LowerPriceModal
           isOpen={showLowerPriceModal}
           onClose={() => setShowLowerPriceModal(false)}
-          collection={collection}
           token={token}
           buyPriceEth={buyPriceEth}
         />
       )}
-      {showTransferModal && (
-        <TransferNFTModal
-          isOpen={showTransferModal}
-          onClose={() => setShowTransferModal(false)}
-          collection={collection}
-          token={token}
-        />
-      )}
+      {showSendModal && <SendNFTModal isOpen={showSendModal} onClose={() => setShowSendModal(false)} token={token} />}
 
       {showMakeOfferModal && (
-        <MakeOfferModal
-          isOpen={showMakeOfferModal}
-          onClose={() => setShowMakeOfferModal(false)}
-          collection={collection}
-          token={token}
-        />
+        <MakeOfferModal isOpen={showMakeOfferModal} onClose={() => setShowMakeOfferModal(false)} token={token} />
       )}
       {showPlaceBidModal && (
-        <PlaceBidModal
-          isOpen={showPlaceBidModal}
-          onClose={() => setShowPlaceBidModal(false)}
-          collection={collection}
-          token={token}
-        />
+        <PlaceBidModal isOpen={showPlaceBidModal} onClose={() => setShowPlaceBidModal(false)} token={token} />
       )}
     </>
   );
@@ -232,30 +218,26 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
     <PageBox title={assetName} showTitle={false} className="flex flex-col max-w-screen-2xl mt-4">
       <div className="sm:flex">
         <div className="min-h-12 w-80 mx-auto sm:w-96 md:w-96 lg:w-144 sm:mr-6 md:mr-8 lg:mr-12 mb-4">
-          <img
-            className="rounded-3xl w-80 mx-auto sm:w-96 md:w-96 lg:w-144"
-            src={token.image.url || BLANK_IMAGE_URL}
-            alt={assetName}
-          />
+          <img className="rounded-3xl w-80 mx-auto sm:w-96 md:w-96 lg:w-144" src={imgUrl} alt={assetName} />
         </div>
         <div className="flex-1">
           <h3 className="text-black font-body text-2xl font-bold leading-normal tracking-wide pb-1">
-            {tokenMetadata.name ? tokenMetadata.name : `${collection.metadata.name} #${token.tokenId}`}
+            {tokenMetadata.name ? tokenMetadata.name : `${token.collectionName} #${token.tokenId}`}
           </h3>
           <div className="flex items-center sm:mb-6">
             <NextLink
-              href={`/collection/${collection.slug}`}
+              href={`/collection/${token.collectionSlug}`}
               className="text-theme-light-800 font-heading tracking-tight mr-2"
             >
-              {collection.metadata.name}
+              {token.collectionName}
             </NextLink>
-            {collection.hasBlueCheck && <SVG.blueCheck className="h-5 w-5" />}
+            {token.hasBlueCheck && <SVG.blueCheck className="h-5 w-5" />}
           </div>
           <ShortAddress
             label="Contract address:"
-            address={collection.address}
-            href={`https://etherscan.io/address/${collection.address}`}
-            tooltip={collection.address}
+            address={token.collectionAddress ?? ''}
+            href={`https://etherscan.io/address/${token.collectionAddress}`}
+            tooltip={token.collectionAddress ?? ''}
           />
           <span className="text-base flex items-center">
             Token ID: <span className="ml-4 font-heading">#{token.tokenId}</span>
@@ -278,8 +260,8 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
                 <Button variant="outline" size="large" onClick={onClickLowerPrice}>
                   Lower Price
                 </Button>
-                <Button variant="outline" size="large" onClick={onClickTransfer}>
-                  Transfer
+                <Button variant="outline" size="large" onClick={onClickSend}>
+                  Send
                 </Button>
               </div>
             </div>
@@ -306,23 +288,18 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
 
           <p className="font-body text-black mb-1 lg:mt-10">Description</p>
           <div>
-            <ReadMoreText
-              text={collection.metadata.description || tokenMetadata.description}
-              min={100}
-              ideal={120}
-              max={200}
-            />
+            <ReadMoreText text={tokenMetadata.description ?? ''} min={100} ideal={120} max={200} />
           </div>
         </div>
       </div>
 
-      <TraitList traits={tokenMetadata.attributes} collectionTraits={collection.attributes} />
+      <TraitList traits={tokenMetadata.attributes} collectionTraits={collection?.attributes} />
 
-      {/* <ActivityList chainId={collection.chainId} collectionAddress={collection.address} tokenId={token.tokenId} /> */}
+      {/* <ActivityList chainId={collection.chainId} collectionAddress={token.collectionAddress} tokenId={token.tokenId} /> */}
 
       <div className="relative min-h-[1024px]">
         <ToggleTab
-          className="flex space-x-2 items-center relative max-w-xl top-[65px] pb-4 lg:pb-0"
+          className="flex space-x-2 items-center relative max-w-xl top-[65px] pb-4 lg:pb-0 font-heading"
           tabWidth="150px"
           options={options}
           selected={selected}
@@ -332,15 +309,19 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
         {selected === 'Activity' && (
           <div className="mt-[-22px]">
             {/* <h3 className="mt-8 mb-4 font-bold font-body">Activity</h3> */}
-            {/* <CollectionFeed collectionAddress={collection.address} tokenId={token.tokenId} forActivity={true} /> */}
+            {/* <CollectionFeed collectionAddress={token.collectionAddress} tokenId={token.tokenId} forActivity={true} /> */}
 
-            <ActivityList chainId={token.chainId} collectionAddress={collection.address} tokenId={token.tokenId} />
+            <ActivityList
+              chainId={token.chainId ?? '1'} // default
+              collectionAddress={token.collectionAddress ?? ''}
+              tokenId={token.tokenId}
+            />
           </div>
         )}
 
         {selected === 'Orders' && (
           <div className="mt-4">
-            <OrderbookContainer collectionId={token.collectionAddress} />
+            <OrderbookContainer collectionId={token.collectionAddress} tokenId={token.tokenId} />
           </div>
         )}
       </div>

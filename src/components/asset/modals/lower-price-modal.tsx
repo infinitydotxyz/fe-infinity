@@ -1,4 +1,4 @@
-import { Collection, SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
+import { SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
 import React, { useEffect, useState } from 'react';
 import { TextInputBox, Modal, SimpleTable, SimpleTableItem, EthPrice, toastError } from 'src/components/common';
 import { apiGet, BLANK_IMAGE_URL, INFINITY_FEE_PCT, INFINITY_ROYALTY_PCT } from 'src/utils';
@@ -7,16 +7,16 @@ import { postOrders } from 'src/utils/marketUtils';
 
 interface Props {
   isOpen: boolean;
-  collection: Collection;
   token: Token;
   buyPriceEth?: string;
   onClose: () => void;
 }
 
-export const LowerPriceModal = ({ isOpen, onClose, collection, token, buyPriceEth }: Props) => {
+export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) => {
   const { user } = useAppContext();
   const [orderDetails, setOrderDetails] = useState<SignedOBOrder | null>(null);
   const [price, setPrice] = useState(0);
+  const [errorMsg, setErrorMsg] = useState('');
   // const [lastPrice, setLastPrice] = useState(0);
   // TODO: do something with this ending price?
 
@@ -63,8 +63,13 @@ export const LowerPriceModal = ({ isOpen, onClose, collection, token, buyPriceEt
         if (!orderDetails || !user) {
           return;
         }
-        console.log(collection);
-        console.log(token);
+        const buyPriceEthVal = parseFloat(buyPriceEth ?? '0');
+        if (price >= buyPriceEthVal) {
+          setErrorMsg('The new price must be lower than the current price.');
+          return;
+        } else {
+          setErrorMsg('');
+        }
 
         // todo: remove this once BE fix validation of tokens' images (not needed):
         for (const nft of orderDetails.nfts) {
@@ -90,13 +95,14 @@ export const LowerPriceModal = ({ isOpen, onClose, collection, token, buyPriceEt
           nonce: orderDetails.nonce,
           execParams: orderDetails.execParams,
           extraParams: orderDetails.extraParams,
-          signedOrder: orderDetails.signedOrder
+          signedOrder: orderDetails.signedOrder,
+          maxGasPriceWei: orderDetails.maxGasPriceWei
         };
         signedOrders.push(order);
         try {
           await postOrders(user.address, signedOrders);
         } catch (ex) {
-          toastError(ex as string);
+          toastError(`${ex}`);
           return false;
         }
         onClose();
@@ -115,6 +121,7 @@ export const LowerPriceModal = ({ isOpen, onClose, collection, token, buyPriceEt
           setPrice(Number(value));
         }}
       />
+      <div className="text-red-700 mt-4">{errorMsg}</div>
     </Modal>
   );
 };

@@ -284,6 +284,7 @@ export const OrderContextProvider = ({ children }: Props) => {
         nfts: spec.nfts,
         makerUsername: spec.makerUsername,
         nonce: orderNonce,
+        maxGasPriceWei: '1e12', // todo: adi put in maxGasPriceWei
         execParams: {
           currencyAddress,
           complicationAddress: getOBComplicationAddress(chainId)
@@ -323,7 +324,7 @@ export const OrderContextProvider = ({ children }: Props) => {
             signedOrders.push(signedOrder);
           }
         } catch (ex) {
-          toastError(ex as string);
+          toastError(`${ex}`);
           hasErrors = true;
         }
       }
@@ -336,7 +337,7 @@ export const OrderContextProvider = ({ children }: Props) => {
     try {
       await postOrders(user.address, signedOrders);
     } catch (ex) {
-      toastError(ex as string);
+      toastError(`${ex}`);
       return false;
     }
 
