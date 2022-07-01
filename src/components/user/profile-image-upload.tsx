@@ -140,7 +140,7 @@ export const ProfileImageUpload = ({ onUpload, roundPhoto, onDelete, imgSource =
           className="mx-auto"
         />
 
-        <div className="flex flex-row gap-4 items-center mt-4">
+        <div className="flex flex-row gap-4 items-center mt-4 focus:outline-none focus-visible:ring">
           <div>Zoom:</div>
           <input
             id="zoomRange"
@@ -150,7 +150,7 @@ export const ProfileImageUpload = ({ onUpload, roundPhoto, onDelete, imgSource =
             min="1"
             max="2"
             step="0.01"
-            defaultValue="1"
+            value={tempImgScale}
           />
         </div>
       </Modal>

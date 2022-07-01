@@ -114,8 +114,7 @@ export const ComboInputBox = <T extends ComboBoxBaseType>({ tooltip, label, opti
 
 interface Props4 {
   label: string;
-  defaultValue?: string;
-  value?: string;
+  value: string;
   type: string;
   placeholder: string;
   addEthSymbol?: boolean;
@@ -132,8 +131,7 @@ interface Props4 {
 
 export const TextInputBox = ({
   tooltip,
-  defaultValue = '',
-  value = '',
+  value,
   label,
   icon,
   addEthSymbol = false,
@@ -165,7 +163,7 @@ export const TextInputBox = ({
         <input
           autoFocus={autoFocus}
           type={type}
-          defaultValue={defaultValue ? defaultValue : value}
+          value={value}
           onChange={(e) => {
             if (onChange) {
               onChange(e.target.value);

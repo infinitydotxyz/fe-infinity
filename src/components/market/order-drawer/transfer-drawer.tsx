@@ -60,7 +60,7 @@ export const TransferDrawer = ({ open, onClose, nftsForTransfer, onClickRemove }
           <div className="p-8">
             <TextInputBox
               type="text"
-              value={''}
+              value={address}
               placeholder=""
               label={'Address or ENS Name'}
               onChange={(value) => setAddress(value)}

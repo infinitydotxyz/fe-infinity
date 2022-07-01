@@ -19,7 +19,7 @@ interface Props {
 const CollectionFilter = ({ userAddress, onSelect }: Props) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [collections, setCollections] = useState<CollectionInfo[]>([]);
-  const [collectionSearchState, setCollectionSearchState] = useState<string>();
+  const [collectionSearchState, setCollectionSearchState] = useState<string>('');
 
   const fetchData = async () => {
     const { result } = await apiGet(`/user/${userAddress}/nftCollections`, {
@@ -47,7 +47,8 @@ const CollectionFilter = ({ userAddress, onSelect }: Props) => {
         label=""
         type="text"
         className="border rounded-full py-2 px-4 mb-6 font-heading w-full"
-        defaultValue={collectionSearchState}
+        // TODO(SNG): fix debounce
+        value={collectionSearchState}
         onChange={debouncedSearch}
         placeholder="Search"
       />

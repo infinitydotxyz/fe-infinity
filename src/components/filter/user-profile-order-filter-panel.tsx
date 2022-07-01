@@ -123,7 +123,8 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
             label=""
             type="text"
             className="border rounded-full py-2 px-4 mt-4 font-heading"
-            defaultValue={''}
+            // TODO(SNG): fix the debounce
+            value={collectionSearch}
             onChange={onChangeNameSearch}
             placeholder="Search"
           />

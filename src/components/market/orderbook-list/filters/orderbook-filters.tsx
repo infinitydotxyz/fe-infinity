@@ -40,7 +40,7 @@ export const OrderbookFilters = () => {
   } = useOrderbook();
 
   const [openState, setOpenState] = useState<OpenFilterState>(defaultOpenState);
-  const [collectionSearchState, setCollectionSearchState] = useState<string>();
+  const [collectionSearchState, setCollectionSearchState] = useState<string>('');
   const [collectionsData, setCollectionsData] = useState<CollectionSearchItem[]>([]);
   const { getTopCollections, getCollectionsByName, getCollectionsByIds } = useCollectionCache();
   const isMounted = useIsMounted();
@@ -135,7 +135,8 @@ export const OrderbookFilters = () => {
               label=""
               type="text"
               className="border rounded-full py-2 px-4 mt-1 font-heading w-full"
-              defaultValue={collectionSearchState}
+              // TODO(SNG): fix debounce
+              value={collectionSearchState}
               onChange={(value) => {
                 searchForCollections(value);
               }}
@@ -172,7 +173,7 @@ export const OrderbookFilters = () => {
           <TextInputBox
             addEthSymbol={true}
             type="number"
-            value={minPrice?.toString()}
+            value={minPrice?.toString() ?? ''}
             label="Min"
             placeholder=""
             onChange={(value) => {
@@ -183,7 +184,7 @@ export const OrderbookFilters = () => {
           <TextInputBox
             addEthSymbol={true}
             type="number"
-            value={maxPrice?.toString()}
+            value={maxPrice?.toString() ?? ''}
             label="Max"
             placeholder=""
             onChange={(value) => {
@@ -196,7 +197,7 @@ export const OrderbookFilters = () => {
         <div className="flex flex-col">
           <TextInputBox
             type="number"
-            value={numberOfNfts?.toString()}
+            value={numberOfNfts?.toString() ?? ''}
             label=""
             placeholder=""
             onChange={(value) => updateFilter('numberOfNfts', value)}
