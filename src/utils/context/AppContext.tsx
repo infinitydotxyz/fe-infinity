@@ -3,10 +3,13 @@ import { getCustomExceptionMsg } from 'src/utils/commonUtils';
 import { ProviderEvents, WalletType } from 'src/utils/providers/AbstractProvider';
 import { UserRejectException } from 'src/utils/providers/UserRejectException';
 import { ProviderManager } from 'src/utils/providers/ProviderManager';
-import { Toaster, toastWarning } from 'src/components/common';
+import { toastWarning } from 'src/components/common';
 import { apiGet } from '../apiUtils';
 import { UserProfileDto } from 'src/components/user/user-profile-dto';
 import { PleaseConnectMsg } from '..';
+
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export type User = {
   address: string;
@@ -182,7 +185,18 @@ export const AppContextProvider = (props: React.PropsWithChildren<unknown>) => {
     <AppContext.Provider value={value} {...props}>
       {props.children}
 
-      <Toaster />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        progressClassName="toastify-custom-progress-bar"
+      />
     </AppContext.Provider>
   );
 };
