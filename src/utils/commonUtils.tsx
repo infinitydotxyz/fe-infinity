@@ -122,7 +122,10 @@ export const formatNumber = (floatNum: number | undefined, decimals = 0): string
 };
 
 // example: nFormatter(1234, 1) = > 1.2K
-export function nFormatter(num: number, digits = 2) {
+export function nFormatter(num: number | undefined, digits = 2) {
+  if (!num) {
+    return num;
+  }
   const lookup = [
     { value: 1, symbol: '' },
     { value: 1e3, symbol: 'K' },
