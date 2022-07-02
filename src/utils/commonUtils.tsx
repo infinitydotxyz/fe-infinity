@@ -122,7 +122,10 @@ export const formatNumber = (floatNum: number | undefined, decimals = 0): string
 };
 
 // example: nFormatter(1234, 1) = > 1.2K
-export function nFormatter(num: number, digits = 2) {
+export function nFormatter(num: number | undefined, digits = 2) {
+  if (!num) {
+    return num;
+  }
   const lookup = [
     { value: 1, symbol: '' },
     { value: 1e3, symbol: 'K' },
@@ -227,4 +230,17 @@ Nonce: ${nonce}
 Expires in: 24 hrs`;
 
   return msg;
+};
+
+// optimize googleusercontent banner image to have smaller resolution for faster loading.
+// src example: https://lh3.googleusercontent.com/o7jTd9uDpVGbHOCgpHvId3c-O6clNo-DnvrJ0fSaZOH9fs4Wj2W1WZL6_RlfGk0a8gRb0GXgiMuwdUZVB0cn3zIM_1NPC9thgdGXJA=s2500
+export const getOptimizedCloudImage = (src: string | undefined, resolution = 'h300') => {
+  if (src && src.indexOf('googleusercontent.com/') > 0) {
+    // replace '=s2500' at the end with resolution (ex: =h300)
+    const arr = src.split('=');
+    arr[1] = resolution;
+    return arr.join('=');
+  } else {
+    return src;
+  }
 };

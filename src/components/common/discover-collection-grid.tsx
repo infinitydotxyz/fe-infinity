@@ -60,12 +60,13 @@ export const DiscoverCollectionGrid = ({ className, orderBy, routerQuery }: Prop
         setHasNextPage(false);
       } else {
         const res = result as CollectionStatsArrayResponseDto;
+        const resData = (res.data ?? []).filter((item) => item.name !== 'Unknown');
         if (passedCursor) {
-          let arr = [...collections, ...res.data];
+          let arr = [...collections, ...resData];
           arr = uniqBy(arr, 'collectionAddress');
           setCollections(arr);
         } else {
-          const arr = uniqBy(res.data, 'collectionAddress');
+          const arr = uniqBy(resData, 'collectionAddress');
           setCollections(arr);
         }
         setCursor(res.cursor);

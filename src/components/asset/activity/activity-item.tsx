@@ -1,5 +1,5 @@
 import React from 'react';
-import { BLANK_IMG, ellipsisAddress, getChainScannerBase } from 'src/utils';
+import { BLANK_IMG, ellipsisAddress } from 'src/utils';
 import { BGImage, EthPrice, NextLink } from 'src/components/common';
 import { format } from 'timeago.js';
 import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
@@ -62,11 +62,7 @@ export const ActivityItem = ({ item }: Props) => {
           <div className="w-1/6">
             <div className="text-gray-400">Event</div>
             <div className="font-bold">
-              <a
-                href={`${getChainScannerBase(item.chainId)}/tx/${item.externalUrl}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href={`${item.externalUrl}`} target="_blank" rel="noopener noreferrer">
                 {ActivityTypeName[item.type as ActivityType]}
               </a>
             </div>

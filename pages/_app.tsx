@@ -8,7 +8,6 @@ import { AppContextProvider } from 'src/utils/context/AppContext';
 import { OrderContextProvider } from 'src/utils/context/OrderContext';
 import { FilterContextProvider } from 'src/utils/context/FilterContext';
 import React, { FunctionComponent, memo, StrictMode, useEffect } from 'react';
-// import AppNProgress from 'src/components/common/AppNProgress';
 
 const Page: FunctionComponent<AppProps> = ({ Component, pageProps }) => <Component {...pageProps} />;
 const Memoized = memo(Page, (p, n) => p.Component === n.Component && p.pageProps === n.pageProps);
@@ -31,7 +30,6 @@ const App: FunctionComponent<AppProps> = (props) => {
 
   return (
     <StrictMode>
-      {/* <AppNProgress options={{ showSpinner: false }} showOnShallow={false} /> */}
       <AppContextProvider>
         <FilterContextProvider>
           <OrderContextProvider>

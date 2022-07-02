@@ -6,7 +6,7 @@ import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { CollectionStatsDto } from '@infinityxyz/lib-frontend/types/dto/stats';
 import { useFetch } from 'src/utils/apiUtils';
 import { CollectionFeed } from 'src/components/feed/collection-feed';
-import { BLANK_IMG, ellipsisAddress, formatNumber, getChainScannerBase } from 'src/utils';
+import { BLANK_IMG, ellipsisAddress, getChainScannerBase, nFormatter } from 'src/utils';
 import { CollectionActivityTab } from 'src/components/collection/collection-activity-tab';
 import { StatsChips } from 'src/components/collection/stats-chips';
 import { CommunityRightPanel } from 'src/components/collection/community-right-panel';
@@ -209,18 +209,18 @@ const CollectionPage = () => {
             </thead>
             <tbody>
               <tr className="font-bold font-heading text-2xl">
-                <td>{firstAllTimeStats?.numNfts?.toLocaleString() ?? '—'}</td>
-                <td>{firstAllTimeStats?.numOwners?.toLocaleString() ?? '—'}</td>
+                <td>{nFormatter(firstAllTimeStats?.numNfts) ?? '—'}</td>
+                <td>{nFormatter(firstAllTimeStats?.numOwners) ?? '—'}</td>
                 <td>
                   {firstAllTimeStats?.floorPrice ? (
-                    <EthPrice label={String(firstAllTimeStats?.floorPrice)} labelClassName="font-bold" />
+                    <EthPrice label={`${nFormatter(firstAllTimeStats?.floorPrice)}`} labelClassName="font-bold" />
                   ) : (
                     '—'
                   )}
                 </td>
                 <td>
                   {firstAllTimeStats?.volume ? (
-                    <EthPrice label={formatNumber(firstAllTimeStats?.volume)} labelClassName="font-bold" />
+                    <EthPrice label={`${nFormatter(firstAllTimeStats?.volume)}`} labelClassName="font-bold" />
                   ) : (
                     '—'
                   )}

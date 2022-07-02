@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { FaCaretDown, FaCaretUp, FaDiscord, FaInstagram, FaTwitter } from 'react-icons/fa';
 import { HiOutlineExternalLink } from 'react-icons/hi';
-import { apiDelete, apiGet, apiPost } from 'src/utils';
+import { apiDelete, apiGet, apiPost, nFormatter } from 'src/utils';
 import { Chip, Spinner, toastError } from 'src/components/common';
 import { VerificationModal } from './verification_modal';
 import { useOrderContext } from 'src/utils/context/OrderContext';
@@ -125,7 +125,7 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
           onClick={() => window.open(collection?.metadata?.links?.twitter)}
           content={
             <span className="flex items-center">
-              {currentStatsData?.twitterFollowers?.toLocaleString() ?? '—'}
+              {nFormatter(currentStatsData?.twitterFollowers) ?? '—'}
               {currentStatsData?.twitterFollowersPercentChange && twitterChangePct !== '0.00' ? (
                 <>
                   {(currentStatsData?.twitterFollowersPercentChange ?? 0) < 0 ? (
@@ -152,7 +152,7 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
           onClick={() => window.open(collection?.metadata?.links?.discord)}
           content={
             <span className="flex items-center">
-              {currentStatsData?.discordFollowers?.toLocaleString() ?? '—'}
+              {nFormatter(currentStatsData?.discordFollowers) ?? '—'}
               {currentStatsData?.discordFollowersPercentChange && discordChangePct !== '0.00' ? (
                 <>
                   {(currentStatsData?.discordFollowersPercentChange ?? 0) < 0 ? (
