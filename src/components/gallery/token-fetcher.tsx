@@ -184,7 +184,7 @@ export const nftsToCardData = (
   collectionAddress: string,
   collectionName: string
 ): ERC721CardData[] => {
-  const result: ERC721CardData[] = (tokens || []).map((item: ApiNftData) => {
+  let result: ERC721CardData[] = (tokens || []).map((item: ApiNftData) => {
     return {
       id: collectionAddress + '_' + item.tokenId,
       name: item.metadata?.name,
@@ -203,6 +203,11 @@ export const nftsToCardData = (
       hasBlueCheck: item.hasBlueCheck ?? false,
       attributes: item.metadata?.attributes ?? []
     } as ERC721CardData;
+  });
+
+  // remove any with blank images
+  result = result.filter((x) => {
+    return x.image && x.image.length > 0;
   });
 
   return result;
