@@ -67,12 +67,15 @@ export const ActivityList: React.FC<ActivityListPropType> = ({
           <ActivityFilter activityTypes={activityTypes} onChange={handleChange} />
         </div>
       </div>
+
       {activityList.length > 0 ? (
-        activityList.map((item) => {
-          return <ActivityItem key={item} item={item} />;
-        })
+        <div className="mt-6">
+          {activityList.map((item) => {
+            return <ActivityItem key={item} item={item} />;
+          })}
+        </div>
       ) : (
-        <div className=" bg-theme-light-300 px-6 sm:px-6 md:px-8 lg:px-16 -mx-1 my-2 sm:my-4 py-5 md:py-4 md:pt-12 md:pb-14 rounded-3xl text-center font-heading">
+        <div className="bg-gray-100 px-6 sm:px-6 md:px-8 lg:px-16 mt-6 md:pt-11 md:pb-11 rounded-3xl text-center font-heading">
           No Activity
         </div>
       )}
