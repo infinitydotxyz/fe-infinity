@@ -18,7 +18,7 @@ export const PopoverButton = ({ title, children, buttonClassName }: Props) => {
             className={twMerge(`
                 ${inputBorderColor}
                 transition ease-in-out duration-300 hover:border-black  active:bg-gray-900
-                focus:outline-none focus-visible:ring focus:ring-black focus:ring-opacity-50
+                focus:outline-none
                 px-6 py-2
                 border rounded-full text-gray-900
                 flex items-center space-x-1 ${buttonClassName ?? ''}`)}
@@ -34,9 +34,9 @@ export const PopoverButton = ({ title, children, buttonClassName }: Props) => {
             leaveFrom="opacity-100 translate-y-0"
             leaveTo="opacity-0 translate-y-1"
           >
-            <Popover.Panel className="absolute z-10  max-w-sm px-4 mt-3 right-0 transform sm:px-0 ">
-              <div className="overflow-hidden rounded-lg  shadow-lg ring-1 ring-black ring-opacity-5">
-                <div className="p-5 bg-theme-light-50 w-80 space-y-4">{children}</div>
+            <Popover.Panel className="absolute z-10 max-w-sm px-4 mt-3 right-0 transform sm:px-0 ">
+              <div className="overflow-hidden rounded-3xl p-6 bg-theme-light-50 ring-1 ring-black ring-opacity-5">
+                <div className="p-6 bg-theme-light-50 w-80 space-y-8">{children}</div>
               </div>
             </Popover.Panel>
           </Transition>
