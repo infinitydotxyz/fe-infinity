@@ -34,8 +34,8 @@ export const PopoverButton = ({ title, children, buttonClassName }: Props) => {
             leaveFrom="opacity-100 translate-y-0"
             leaveTo="opacity-0 translate-y-1"
           >
-            <Popover.Panel className="absolute z-10 max-w-sm px-4 mt-3 right-0 transform sm:px-0 ">
-              <div className="overflow-hidden rounded-3xl p-6 bg-theme-light-50 ring-1 ring-black ring-opacity-5">
+            <Popover.Panel className="absolute z-10 max-w-sm px-4 mt-3 right-0 transform sm:px-0">
+              <div className="overflow-hidden rounded-3xl shadow-[0_20px_10px_-10px_rgba(0,0,0,0.07),0_0px_10px_-2px_rgba(0,0,0,0.08)] p-6 bg-theme-light-50">
                 <div className="p-6 bg-theme-light-50 w-80 space-y-8">{children}</div>
               </div>
             </Popover.Panel>
