@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { PageBox, Spinner } from 'src/components/common';
+import { CenteredContent, PageBox, Spinner } from 'src/components/common';
 import { UserPage } from 'src/components/user/user-page';
 import { useAppContext, User } from 'src/utils/context/AppContext';
 import { PleaseConnectMsg, useFetch } from 'src/utils';
@@ -42,7 +42,9 @@ const ProfilePageContents = ({ user, userAddress }: Props) => {
   if (isLoading) {
     return (
       <PageBox title="Loading..." showTitle={false}>
-        <Spinner />
+        <CenteredContent>
+          <Spinner />
+        </CenteredContent>
       </PageBox>
     );
   }

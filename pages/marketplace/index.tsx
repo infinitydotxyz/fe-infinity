@@ -1,7 +1,5 @@
-// import { debounce } from 'lodash';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-// import { FiSearch } from 'react-icons/fi';
 import { ToggleTab, useToggleTab, Spacer, PageBox, Dropdown } from 'src/components/common';
 import { DiscoverCollectionGrid } from 'src/components/common/discover-collection-grid';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
