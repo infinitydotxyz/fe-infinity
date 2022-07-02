@@ -173,23 +173,23 @@ const TrendingPage = () => {
 
                 {isDesktop ? (
                   <>
-                    <div className="w-1/9 max-w-[70px] min-w-[70px]">
+                    <div className="w-1/9 max-w-[80px] min-w-[80px]">
                       <div className="text-black font-bold font-body flex items-center">Sales</div>
                       <div>{formatNumber(periodStat?.numSales)}</div>
                     </div>
                   </>
                 ) : null}
 
-                <div className="w-1/9 max-w-[70px] min-w-[70px]">
+                <div className="w-1/9 max-w-[80px] min-w-[80px]">
                   <div className="text-black font-bold font-body flex items-center">Volume</div>
                   <div>
-                    <EthPrice label={periodStat?.salesVolume ? nFormatter(periodStat?.salesVolume) : '-'} />
+                    <EthPrice label={`${periodStat?.salesVolume ? nFormatter(periodStat?.salesVolume) : '-'}`} />
                   </div>
                 </div>
 
                 {isMobile ? null : (
                   <>
-                    <div className="w-1/9 max-w-[70px] min-w-[70px]">
+                    <div className="w-1/9 max-w-[80px] min-w-[80px]">
                       <div className="text-black font-bold font-body flex items-center">Min Price</div>
                       <div>
                         <EthPrice label={periodStat?.minPrice ? formatNumber(periodStat?.minPrice, 2) : '-'} />
@@ -198,7 +198,7 @@ const TrendingPage = () => {
                   </>
                 )}
 
-                <div className="w-1/9 max-w-[70px] min-w-[70px]">
+                <div className="w-1/9 max-w-[80px] min-w-[80px]">
                   <div className="text-black font-bold font-body flex items-center">Avg Price</div>
                   <div>
                     <EthPrice label={periodStat?.avgPrice ? formatNumber(periodStat?.avgPrice, 2) : '-'} />
@@ -207,7 +207,7 @@ const TrendingPage = () => {
 
                 {isMobile ? null : (
                   <>
-                    <div className="w-1/9 max-w-[70px] min-w-[70px]">
+                    <div className="w-1/9 max-w-[80px] min-w-[80px]">
                       <div className="text-black font-bold font-body flex items-center">Max Price</div>
                       <div>
                         <EthPrice label={periodStat?.maxPrice ? formatNumber(periodStat?.maxPrice, 2) : '-'} />
@@ -218,12 +218,12 @@ const TrendingPage = () => {
 
                 {isDesktop ? (
                   <>
-                    <div className="w-1/9 max-w-[70px] min-w-[70px]">
+                    <div className="w-1/9 max-w-[80px] min-w-[80px]">
                       <div className="text-black font-bold font-body">Owners</div>
                       <div>{nFormatter(periodStat?.ownerCount ?? 0)}</div>
                     </div>
 
-                    <div className="w-1/9 max-w-[70px] min-w-[70px]">
+                    <div className="w-1/9 max-w-[80px] min-w-[80px]">
                       <div className="text-black font-bold font-body">Tokens</div>
                       <div>{nFormatter(periodStat?.tokenCount ?? 0)}</div>
                     </div>

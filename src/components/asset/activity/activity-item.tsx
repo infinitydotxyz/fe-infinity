@@ -1,5 +1,5 @@
 import React from 'react';
-import { BLANK_IMG, ellipsisAddress, getChainScannerBase } from 'src/utils';
+import { BLANK_IMG, ellipsisAddress } from 'src/utils';
 import { BGImage, EthPrice, NextLink } from 'src/components/common';
 import { format } from 'timeago.js';
 import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
