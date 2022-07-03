@@ -135,14 +135,14 @@ export function nFormatter(num: number | undefined, digits = 2) {
     { value: 1e15, symbol: 'P' },
     { value: 1e18, symbol: 'E' }
   ];
-  const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
+  const regex = /\.0+$|(\.[0-9]*[1-9])0+$/;
   const item = lookup
     .slice()
     .reverse()
     .find(function (item) {
       return num >= item.value;
     });
-  return item ? (num / item.value).toFixed(digits).replace(rx, '$1') + item.symbol : '0';
+  return item ? (num / item.value).toFixed(digits).replace(regex, '$1') + item.symbol : num.toFixed(digits + 1);
 }
 
 export const getCustomExceptionMsg = (msg: ReactNode) => {

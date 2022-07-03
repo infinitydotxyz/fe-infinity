@@ -21,7 +21,7 @@ export const ErrorOrLoading = ({ error, noData, message = 'Nothing found' }: Pro
   }
 
   return (
-    <div className="h-full w-full dark:text-dark-body text-light-body">
+    <div className="h-full w-full dark:text-dark-body text-light-body text-xl">
       <CenteredContent>{contents}</CenteredContent>
     </div>
   );

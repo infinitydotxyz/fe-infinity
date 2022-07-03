@@ -1,7 +1,5 @@
-// import { debounce } from 'lodash';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-// import { FiSearch } from 'react-icons/fi';
 import { ToggleTab, useToggleTab, Spacer, PageBox, Dropdown } from 'src/components/common';
 import { DiscoverCollectionGrid } from 'src/components/common/discover-collection-grid';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
@@ -26,7 +24,7 @@ const MarketplacePage = () => {
   // Checks the url for the 'tab' query parameter. If it doesn't exist, default to Orderbook
   const defaultTab = query.tab && typeof query.tab === 'string' ? query.tab : TABS.Orders;
 
-  const { options, onChange, selected } = useToggleTab([TABS.Orders, TABS.Discover, TABS.ListMyNFTs], defaultTab);
+  const { options, onChange, selected } = useToggleTab([TABS.Orders, TABS.ListMyNFTs], defaultTab);
   const [orderBy, setOrderBy] = useState<DiscoverOrderBy>('twitterFollowersPercentChange');
 
   useEffect(() => {

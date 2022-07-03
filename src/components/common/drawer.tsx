@@ -22,23 +22,21 @@ export const Drawer = ({ open, tooltip, subtitle, divide, onClose, title, childr
     <div className="px-12 py-10">
       <TooltipWrapper show={showTooltip} tooltip={tooltip}>
         <div className="flex   justify-between items-center">
-          <>
-            <div className="flex items-center">
-              <div className="mr-2 text-2xl font-bold text-black">{title}</div>
-              {tooltip && (
-                <Tooltip setShow={setShowTooltip}>
-                  <TooltipIcon />
-                </Tooltip>
-              )}
-            </div>
-            {subtitle && <div className="mt-3 text-sm text-gray-600">{subtitle}</div>}
-          </>
+          <div className="flex items-center">
+            <div className="mr-2 text-2xl font-bold text-black">{title}</div>
+            {tooltip && (
+              <Tooltip setShow={setShowTooltip}>
+                <TooltipIcon />
+              </Tooltip>
+            )}
+          </div>
 
           <Button className="ml-3" variant="round" size="plain" onClick={onClose}>
             <span className="sr-only">Close panel</span>
             <XIcon className={iconButtonStyle} aria-hidden="true" />
           </Button>
         </div>
+        {subtitle && <div className="mt-3 text-sm text-gray-600">{subtitle}</div>}
       </TooltipWrapper>
       {divide && <hr className="mt-4 text-gray-700" />}
     </div>

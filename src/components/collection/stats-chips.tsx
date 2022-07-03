@@ -125,7 +125,7 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
           onClick={() => window.open(collection?.metadata?.links?.twitter)}
           content={
             <span className="flex items-center">
-              {nFormatter(currentStatsData?.twitterFollowers) ?? '—'}
+              {nFormatter(currentStatsData?.twitterFollowers) ?? ''}
               {currentStatsData?.twitterFollowersPercentChange && twitterChangePct !== '0.00' ? (
                 <>
                   {(currentStatsData?.twitterFollowersPercentChange ?? 0) < 0 ? (
@@ -152,7 +152,7 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
           onClick={() => window.open(collection?.metadata?.links?.discord)}
           content={
             <span className="flex items-center">
-              {nFormatter(currentStatsData?.discordFollowers) ?? '—'}
+              {nFormatter(currentStatsData?.discordFollowers) ?? ''}
               {currentStatsData?.discordFollowersPercentChange && discordChangePct !== '0.00' ? (
                 <>
                   {(currentStatsData?.discordFollowersPercentChange ?? 0) < 0 ? (
