@@ -86,8 +86,8 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
     }
   };
 
-  const twitterChangePct = `${Math.abs(currentStatsData?.twitterFollowersPercentChange ?? 0)}`.slice(0, 4);
-  const discordChangePct = `${Math.abs(currentStatsData?.discordFollowersPercentChange ?? 0)}`.slice(0, 4);
+  const twitterChangePct = `${Math.abs(currentStatsData?.twitterFollowersPercentChange ?? 0)}`.slice(0, 5);
+  const discordChangePct = `${Math.abs(currentStatsData?.discordFollowersPercentChange ?? 0)}`.slice(0, 5);
 
   return (
     <div className="flex flex-row space-x-2 items-center">
@@ -126,7 +126,7 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
           content={
             <span className="flex items-center">
               {nFormatter(currentStatsData?.twitterFollowers) ?? ''}
-              {currentStatsData?.twitterFollowersPercentChange && twitterChangePct !== '0.00' ? (
+              {currentStatsData?.twitterFollowersPercentChange && parseFloat(twitterChangePct) ? (
                 <>
                   {(currentStatsData?.twitterFollowersPercentChange ?? 0) < 0 ? (
                     <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
@@ -153,7 +153,7 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
           content={
             <span className="flex items-center">
               {nFormatter(currentStatsData?.discordFollowers) ?? ''}
-              {currentStatsData?.discordFollowersPercentChange && discordChangePct !== '0.00' ? (
+              {currentStatsData?.discordFollowersPercentChange && parseFloat(discordChangePct) ? (
                 <>
                   {(currentStatsData?.discordFollowersPercentChange ?? 0) < 0 ? (
                     <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">

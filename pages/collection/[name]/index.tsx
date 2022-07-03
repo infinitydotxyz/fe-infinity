@@ -148,7 +148,7 @@ const CollectionPage = () => {
             )}
           </div>
 
-          <StatsChips collection={collection} currentStatsData={currentStats || undefined} />
+          <StatsChips collection={collection} currentStatsData={currentStats || firstAllTimeStats} />
 
           {isLoading ? (
             <div className="mt-6">
@@ -213,7 +213,10 @@ const CollectionPage = () => {
                 <td>{nFormatter(firstAllTimeStats?.numOwners) ?? '—'}</td>
                 <td>
                   {firstAllTimeStats?.floorPrice ? (
-                    <EthPrice label={`${nFormatter(firstAllTimeStats?.floorPrice)}`} labelClassName="font-bold" />
+                    <EthPrice
+                      label={`${nFormatter(currentStats?.floorPrice ?? firstAllTimeStats?.floorPrice)}`}
+                      labelClassName="font-bold"
+                    />
                   ) : (
                     '—'
                   )}
