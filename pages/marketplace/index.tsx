@@ -24,7 +24,7 @@ const MarketplacePage = () => {
   // Checks the url for the 'tab' query parameter. If it doesn't exist, default to Orderbook
   const defaultTab = query.tab && typeof query.tab === 'string' ? query.tab : TABS.Orders;
 
-  const { options, onChange, selected } = useToggleTab([TABS.Orders, TABS.Discover, TABS.ListMyNFTs], defaultTab);
+  const { options, onChange, selected } = useToggleTab([TABS.Orders, TABS.ListMyNFTs], defaultTab);
   const [orderBy, setOrderBy] = useState<DiscoverOrderBy>('twitterFollowersPercentChange');
 
   useEffect(() => {
