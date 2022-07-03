@@ -208,11 +208,11 @@ export const getChainScannerBase = (chainId?: string): string | null => {
 
 export const PleaseConnectMsg = () => (
   <>
-    Please click{' '}
+    Please{' '}
     <NextLink href="/connect" className="font-bold">
       Connect
     </NextLink>{' '}
-    to sign in.
+    your wallet.
   </>
 );
 
