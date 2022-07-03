@@ -2,6 +2,7 @@ import { ChainId, Erc721Attribute, OBOrder, OBOrderItem, SignedOBOrder } from '@
 import { getOBComplicationAddress, getTxnCurrencyAddress, NULL_ADDRESS } from '@infinityxyz/lib-frontend/utils';
 import React, { ReactNode, useContext, useState } from 'react';
 import { toastError } from 'src/components/common';
+import { DEFAULT_MAX_GAS_PRICE_WEI } from '../constants';
 import { getSignedOBOrder } from '../exchange/orders';
 import { fetchOrderNonce, postOrders } from '../marketUtils';
 import { secondsPerDay } from '../ui-constants';
@@ -284,7 +285,7 @@ export const OrderContextProvider = ({ children }: Props) => {
         nfts: spec.nfts,
         makerUsername: spec.makerUsername,
         nonce: orderNonce,
-        maxGasPriceWei: '1e12', // todo: adi put in maxGasPriceWei
+        maxGasPriceWei: DEFAULT_MAX_GAS_PRICE_WEI,
         execParams: {
           currencyAddress,
           complicationAddress: getOBComplicationAddress(chainId)
