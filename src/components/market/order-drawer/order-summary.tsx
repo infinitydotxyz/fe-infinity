@@ -42,15 +42,16 @@ export const OrderSummaryItem = ({ orderInCart }: Props) => {
 
       leftOffset = iconLeft + 4;
 
-      let image = item.tokenImage;
-      if (!image) {
-        image = item.collectionImage;
+      let imageSrc = item.tokenImage;
+      if (!imageSrc) {
+        imageSrc = item.collectionImage;
       }
 
       return (
         <div key={item.collectionAddress + '-icons'}>
-          <div className={`absolute ${collectionIconStyle} bg-white`} style={{ left: whiteBoxLeft }} />
-          <img className={`absolute ${collectionIconStyle}`} src={image} alt="" style={{ left: iconLeft }} />
+          ...
+          <div className={`absolute  ${collectionIconStyle} bg-white`} style={{ left: whiteBoxLeft }} />
+          <img className={`absolute ${collectionIconStyle}`} src={imageSrc} alt="" style={{ left: iconLeft }} />
         </div>
       );
     });
@@ -63,7 +64,7 @@ export const OrderSummaryItem = ({ orderInCart }: Props) => {
       const item = orderInCart.cartItems[0];
       const showNum = orderInCart.cartItems.length > 1;
 
-      let imageEl = <NftImage chainId={chainId} collectionAddress={item.collectionAddress} />;
+      let imageEl = <NftImage chainId={chainId} collectionAddress={item.collectionAddress} className="rounded-2xl" />;
       if (!showNum) {
         imageEl = <img className={collectionIconStyle} src={item.tokenImage} alt="" />;
       }
@@ -73,7 +74,7 @@ export const OrderSummaryItem = ({ orderInCart }: Props) => {
           {imageEl}
 
           {showNum && (
-            <div className="absolute -top-1 right-0 z-50 text-center shadow-lg rounded-full h-6 w-6 bg-white">
+            <div className="absolute top-0 right-0 z-50 text-center shadow-lg rounded-full h-6 w-6 bg-white">
               {orderInCart.cartItems.length}
             </div>
           )}
