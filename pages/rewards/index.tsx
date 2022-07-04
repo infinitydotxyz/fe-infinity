@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { Button, PageBox } from 'src/components/common';
 import { StakeTokensModal } from 'src/components/rewards/stake-tokens';
 import { UnstakeTokensModal } from 'src/components/rewards/unstake-tokens';
+import { useStakePower } from 'src/hooks/contract/staker/useStakerGetStakePower';
 import { useStakerTotalStaked } from 'src/hooks/contract/staker/useStakerTotalStaked';
 import { useTokenBalance } from 'src/hooks/contract/token/useTokenBalance';
+import { useTokenVotes } from 'src/hooks/contract/token/useTokenVotes';
 import { numberFormatter } from 'src/utils/number-formatter';
 
 const RewardsPage = () => {
@@ -11,6 +13,8 @@ const RewardsPage = () => {
   const [showUnstakeTokensModal, setShowUnstakeTokensModal] = useState(false);
   const { balance } = useTokenBalance();
   const { staked } = useStakerTotalStaked();
+  const { stakePower } = useStakePower(); // TODO: not sure if this is the correct contract method to call
+  const { votes } = useTokenVotes();
 
   return (
     <PageBox title="Rewards" showTitle={false}>
@@ -68,8 +72,8 @@ const RewardsPage = () => {
         <div className="w-2/3">
           <div className="text-4xl">Curation Rewards</div>
           <div className="w-1/2 mt-5 text-theme-gray-700">
-            Earn curation rewards for voting on collections with your veNFT tokens. You’ll the transaction fees for each
-            collection you curate.
+            Earn curation rewards for voting on collections with your veNFT tokens. You'll gain a portion of the
+            transaction fees for each collection you curate.
           </div>
         </div>
 
@@ -78,7 +82,7 @@ const RewardsPage = () => {
             <div>veNFT Tokens</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
-                <div className="text-2xl font-heading font-bold">1,000</div>
+                <div className="text-2xl font-heading font-bold">{stakePower}</div>
                 <div className="text-sm mt-1">Voting Power</div>
               </div>
               <div className="lg:w-1/4 sm:w-full">
@@ -86,7 +90,7 @@ const RewardsPage = () => {
                 <div className="text-sm mt-1">Voted</div>
               </div>
               <div className="lg:w-1/4 sm:w-full">
-                <div className="text-2xl font-heading font-bold">1,000</div>
+                <div className="text-2xl font-heading font-bold">{votes}</div>
                 <div className="text-sm mt-1">Remaining Votes</div>
               </div>
             </div>
