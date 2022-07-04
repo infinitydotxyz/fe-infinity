@@ -117,10 +117,10 @@ const parseRouterQueryParamsToFilters = (query: ParsedUrlQuery): OBFilters => {
   }
 
   if (minPrice) {
-    newFilters.minPrice = parseInt(minPrice as string);
+    newFilters.minPrice = parseFloat(minPrice as string);
   }
   if (maxPrice) {
-    newFilters.maxPrice = parseInt(maxPrice as string);
+    newFilters.maxPrice = parseFloat(maxPrice as string);
   }
 
   if (numberOfNfts) {
