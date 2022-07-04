@@ -40,3 +40,7 @@ export const fetchOrderNonce = async (user: string): Promise<number> => {
 export const bigNumToDate = (time: BigNumberish): Date => {
   return new Date(BigNumber.from(time).toNumber() * 1000);
 };
+
+export const getOrderType = (order: SignedOBOrder): 'Sale' | 'Listing' | 'Offer' => {
+  return order.isSellOrder ? (order.extraParams.buyer ? 'Sale' : 'Listing') : 'Offer';
+};
