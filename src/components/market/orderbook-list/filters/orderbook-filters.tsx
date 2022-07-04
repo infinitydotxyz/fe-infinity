@@ -19,6 +19,7 @@ export const OrderbookFilters = () => {
   // state
   const { query } = useRouter();
   const defaultOpenState: OpenFilterState = {};
+
   if (query.orderTypes) {
     defaultOpenState['Order type'] = true;
   }
