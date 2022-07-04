@@ -24,11 +24,11 @@ export const postOrders = async (user: string, orders: SignedOBOrder[]): Promise
   }
 };
 
-export const fetchOrderNonce = async (user: string): Promise<string> => {
+export const fetchOrderNonce = async (user: string): Promise<number> => {
   try {
     const response = await apiGet(`/orders/${user}/nonce`, {});
     if (typeof response.result === 'number') {
-      return response.result.toString();
+      return response.result;
     }
     return response.result;
   } catch (err) {

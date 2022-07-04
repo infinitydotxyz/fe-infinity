@@ -402,7 +402,7 @@ export function getOBOrderFromFirestoreOrderItem(firestoreOrderItem: FirestoreOr
     endPriceEth: firestoreOrderItem?.endPriceEth ?? 0,
     startTimeMs: firestoreOrderItem?.startTimeMs ?? 0,
     endTimeMs: firestoreOrderItem?.endTimeMs ?? 0,
-    nonce: '',
+    nonce: 0,
     maxGasPriceWei: DEFAULT_MAX_GAS_PRICE_WEI,
     nfts: [],
     execParams: {
