@@ -16,7 +16,7 @@ interface Props {
 export const UserPageOrderListItem = ({ order, onClickCancel }: Props) => {
   const [isCancelling, setIsCancelling] = useState(false);
 
-  const isListing = order.isSellOrder && order?.extraParams.buyer;
+  const isListing = getOrderType(order) === 'Listing';
   return (
     <div>
       <div className="bg-gray-100 px-10 py-6 rounded-3xl flex items-center font-heading">
