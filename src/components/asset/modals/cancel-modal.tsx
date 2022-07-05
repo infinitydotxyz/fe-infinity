@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
-import { Checkbox, EthPrice, Modal } from 'src/components/common';
+import { Checkbox, EthPrice, Modal, Spinner } from 'src/components/common';
 import { apiGet } from 'src/utils';
 import { uniqBy } from 'lodash';
 import { OrderbookItem } from 'src/components/market/orderbook-list/orderbook-item';
+import { useAppContext } from 'src/utils/context/AppContext';
 
 interface Props {
   isOpen: boolean;
@@ -13,19 +14,27 @@ interface Props {
 }
 
 export const CancelModal = ({ isOpen, onClose, collectionAddress, token }: Props) => {
+  const { user } = useAppContext();
   const [selectedListings, setSelectedListings] = useState<string[]>([]);
   const [listings, setListings] = useState<SignedOBOrder[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const fetchListings = async () => {
-    const { result, error } = await apiGet(`/orders/0x006fa88c8b4c9d60393498fd1b2acf6abe254d72`, {
+    setIsLoading(true);
+    const { result, error } = await apiGet(`/orders/${user?.address}`, {
       query: {
         limit: 50,
         isSellOrder: true,
-        collection: collectionAddress
+        collection: collectionAddress,
+        tokenId: token.tokenId
       },
       requiresAuth: true
     });
-    if (!error) {
+    setIsLoading(false);
+    if (error) {
+      setError(error?.message);
+    } else {
       const orders: SignedOBOrder[] = result.data as SignedOBOrder[];
       // todo: this is needed until API supports filtering by both collectionId+tokenID:
       let ordersByTokenId = [];
@@ -47,6 +56,7 @@ export const CancelModal = ({ isOpen, onClose, collectionAddress, token }: Props
     fetchListings();
   }, []);
 
+  const hasNoData = !error && !isLoading && listings && listings.length === 0;
   return (
     <Modal
       wide={true}
@@ -58,7 +68,13 @@ export const CancelModal = ({ isOpen, onClose, collectionAddress, token }: Props
         onClose();
       }}
     >
-      <ul className="mt-4 p-2 flex flex-col w-full min-h-[50vh] max-h-[50vh] overflow-y-scroll">
+      <ul className={`mt-4 p-2 flex flex-col w-full overflow-y-auto min-h-[35vh] max-h-[35vh]`}>
+        {isLoading && <Spinner />}
+
+        {!isLoading && error ? <div className="font-heading">{error}</div> : null}
+
+        {hasNoData ? <div className="font-heading">No listings found.</div> : null}
+
         {listings.map((listing: SignedOBOrder, idx) => {
           return (
             <Checkbox
