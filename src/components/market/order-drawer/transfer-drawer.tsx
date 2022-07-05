@@ -1,7 +1,10 @@
-import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
+import { getAddress } from '@ethersproject/address';
+import { ChainNFTs, ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
+import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { useState } from 'react';
 import { Button, Spacer, SVG, TextInputBox } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
+import { sendMultipleNfts } from 'src/utils/exchange/orders';
 import { iconButtonStyle } from 'src/utils/ui-constants';
 // import { iconButtonStyle } from 'src/utils/ui-constants';
 // import { format } from 'timeago.js';
@@ -17,15 +20,17 @@ interface Props {
 
 export const TransferDrawer = ({ open, onClose, nftsForTransfer, onClickRemove }: Props) => {
   const [address, setAddress] = useState('');
-  const { providerManager } = useAppContext();
+  const { providerManager, chainId } = useAppContext();
 
-  const ensToAddress = async (addr: string) => {
-    let finalAddress: string | null = '';
+  const getFinalToAddress = async (addr: string) => {
+    let finalAddress: string | null = addr;
     if (addr.endsWith('.eth') && providerManager) {
       const provider = providerManager.getEthersProvider();
       finalAddress = await provider.resolveName(addr);
     }
-    return finalAddress;
+    if (finalAddress) {
+      return getAddress(finalAddress);
+    }
   };
 
   return (
@@ -74,10 +79,42 @@ export const TransferDrawer = ({ open, onClose, nftsForTransfer, onClickRemove }
               className="w-1/2"
               disabled={nftsForTransfer?.length < 1}
               onClick={async () => {
-                // todo: adi: Smart contract Transfer integration.
-                console.log('nftsForTransfer', nftsForTransfer);
-                const finalAddress = await ensToAddress(address);
-                console.log('finalAddress', finalAddress);
+                const orderItems: ChainNFTs[] = [];
+                const collectionToTokenMap: { [collection: string]: { tokenId: string; numTokens: number }[] } = {};
+
+                // group tokens by collections
+                for (const nftToTransfer of nftsForTransfer) {
+                  const collection = trimLowerCase(nftToTransfer.address);
+                  const tokenId = nftToTransfer.tokenId;
+                  if (!collection || !tokenId) {
+                    continue;
+                  }
+                  const numTokens = 1;
+                  const tokens = collectionToTokenMap[collection] ?? [];
+                  tokens.push({ tokenId, numTokens });
+                  collectionToTokenMap[collection] = tokens;
+                }
+
+                // add to orderItems
+                for (const item in collectionToTokenMap) {
+                  const tokens = collectionToTokenMap[item];
+                  orderItems.push({
+                    collection: item,
+                    tokens
+                  });
+                }
+
+                const toAddress = await getFinalToAddress(address);
+                if (toAddress) {
+                  const signer = providerManager?.getEthersProvider().getSigner();
+                  if (signer) {
+                    await sendMultipleNfts(signer, chainId, orderItems, toAddress);
+                  } else {
+                    console.error('signer is null');
+                  }
+                } else {
+                  console.error('toAddress is null');
+                }
               }}
             >
               Send

@@ -51,7 +51,7 @@ export const Modal = ({
     buttons.push(
       <Button
         key={Math.random()}
-        className="flex-1"
+        className="flex-1 px-8 py-3"
         disabled={disableCancel}
         variant="outline"
         onClick={() => {
@@ -72,7 +72,7 @@ export const Modal = ({
     buttons.push(
       <Button
         key={Math.random()}
-        className="flex-1"
+        className="flex-1 px-8 py-3"
         disabled={disableOK}
         onClick={() => {
           if (onOKButton) {

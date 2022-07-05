@@ -366,6 +366,31 @@ export async function signChainOBOrder(
   return '';
 }
 
+export async function sendSingleNft(
+  signer: JsonRpcSigner,
+  chainId: string,
+  collectionAddress: string,
+  tokenId: string,
+  toAddress: string
+) {
+  const erc721 = new Contract(collectionAddress, ERC721ABI, signer);
+  // perform send
+  const from = await signer.getAddress();
+  await erc721['safeTransferFrom(address,address,uint256)'](from, toAddress, tokenId);
+}
+
+export async function sendMultipleNfts(
+  signer: JsonRpcSigner,
+  chainId: string,
+  orderItems: ChainNFTs[],
+  toAddress: string
+) {
+  const exchangeAddress = getExchangeAddress(chainId);
+  const infinityExchange = new Contract(exchangeAddress, InfinityExchangeABI, signer);
+  // perform send
+  await infinityExchange.transferMultipleNFTs(toAddress, orderItems);
+}
+
 export async function takeMultiplOneOrders(signer: JsonRpcSigner, chainId: string, makerOrder: ChainOBOrder) {
   const exchangeAddress = getExchangeAddress(chainId);
   const infinityExchange = new Contract(exchangeAddress, InfinityExchangeABI, signer);
@@ -426,9 +451,8 @@ function _orderHash(order: ChainOBOrder): BytesLike {
   const execParams = order.execParams;
   const extraParams = order.extraParams;
 
-  // todo: adi constraints has new length
   const constraintsHash = keccak256(
-    defaultAbiCoder.encode(['uint256', 'uint256', 'uint256', 'uint256', 'uint256', 'uint256'], constraints)
+    defaultAbiCoder.encode(['uint256', 'uint256', 'uint256', 'uint256', 'uint256', 'uint256', 'uint256'], constraints)
   );
 
   const nftsHash = _getNftsHash(order.nfts);

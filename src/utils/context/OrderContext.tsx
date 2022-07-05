@@ -223,7 +223,7 @@ export const OrderContextProvider = ({ children }: Props) => {
         startPriceEth: parseFloat(price),
         endPriceEth: parseFloat(price),
         nfts,
-        makerUsername: '' // todo: adi put in username
+        makerUsername: '' // filled in the backend
       };
 
       const orderInCart: OrderInCart = {
