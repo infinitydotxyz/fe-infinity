@@ -366,6 +366,19 @@ export async function signChainOBOrder(
   return '';
 }
 
+export async function sendSingleNft(
+  signer: JsonRpcSigner,
+  chainId: string,
+  collectionAddress: string,
+  tokenId: string,
+  toAddress: string
+) {
+  const erc721 = new Contract(collectionAddress, ERC721ABI, signer);
+  // perform send
+  const from = await signer.getAddress();
+  await erc721['safeTransferFrom(address,address,uint256)'](from, toAddress, tokenId);
+}
+
 export async function sendMultipleNfts(
   signer: JsonRpcSigner,
   chainId: string,

@@ -1,7 +1,9 @@
+import { getAddress } from '@ethersproject/address';
 import { Token } from '@infinityxyz/lib-frontend/types/core';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Modal, TextInputBox } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
+import { sendSingleNft } from 'src/utils/exchange/orders';
 
 interface Props {
   isOpen: boolean;
@@ -11,15 +13,17 @@ interface Props {
 
 export const SendNFTModal = ({ isOpen, onClose, token }: Props) => {
   const [address, setAddress] = useState('');
-  const { providerManager } = useAppContext();
+  const { providerManager, chainId } = useAppContext();
 
-  const ensToAddress = async (addr: string) => {
-    let finalAddress: string | null = '';
+  const getFinalToAddress = async (addr: string) => {
+    let finalAddress: string | null = addr;
     if (addr.endsWith('.eth') && providerManager) {
       const provider = providerManager.getEthersProvider();
       finalAddress = await provider.resolveName(addr);
     }
-    return finalAddress;
+    if (finalAddress) {
+      return getAddress(finalAddress);
+    }
   };
 
   return (
@@ -30,10 +34,17 @@ export const SendNFTModal = ({ isOpen, onClose, token }: Props) => {
         okButton="Send"
         title="Send NFT"
         onOKButton={async () => {
-          console.log(token);
-
-          const finalAddress = await ensToAddress(address);
-          console.log('finalAddress', finalAddress);
+          const toAddress = await getFinalToAddress(address);
+          if (toAddress && token.collectionAddress && token.tokenId) {
+            const signer = providerManager?.getEthersProvider().getSigner();
+            if (signer) {
+              await sendSingleNft(signer, chainId, token.collectionAddress, token.tokenId, toAddress);
+            } else {
+              console.error('signer is null');
+            }
+          } else {
+            console.error('required data for send is missing');
+          }
           onClose(); // todo: adi: Smart contract integration for Sending NFT.
         }}
       >
