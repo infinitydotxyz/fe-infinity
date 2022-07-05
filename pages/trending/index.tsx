@@ -187,7 +187,7 @@ const TrendingPage = () => {
                   </div>
                 </div>
 
-                {isMobile ? null : (
+                {/* {isMobile ? null : (
                   <>
                     <div className="w-1/9 max-w-[80px] min-w-[80px]">
                       <div className="text-black font-bold font-body flex items-center">Min Price</div>
@@ -196,7 +196,7 @@ const TrendingPage = () => {
                       </div>
                     </div>
                   </>
-                )}
+                )} */}
 
                 <div className="w-1/9 max-w-[80px] min-w-[80px]">
                   <div className="text-black font-bold font-body flex items-center">Avg Price</div>
