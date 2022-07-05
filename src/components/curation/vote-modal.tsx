@@ -20,7 +20,7 @@ export const VoteModal: React.FC<VoteModalProps> = ({ collection, curated, isOpe
   const { user } = useAppContext();
   // TODO: re-calculate fees & APR (via API call) when 'votes' change
   const [votes, setVotes] = useState(0);
-  const { result: quota, isLoading } = useCurationQuota(user?.address);
+  const { result: quota, isLoading, mutate } = useCurationQuota(user?.address);
 
   const votesAvailable = quota?.availableVotes || 0;
 
@@ -36,6 +36,10 @@ export const VoteModal: React.FC<VoteModalProps> = ({ collection, curated, isOpe
     }
 
     onVote(votes);
+    mutate(() => ({
+      availableVotes: votesAvailable - votes
+    }));
+    setVotes(0);
     onClose();
   };
 

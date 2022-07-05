@@ -175,7 +175,7 @@ export const useFetch = <T>(path: string | null, params: useFetchParams = {}) =>
     revalidateOnFocus: false,
     ...params?.swrOptions
   };
-  const { data, error } = useSWR(
+  const { data, error, mutate } = useSWR(
     path ? `${path}${queryStr}` : null,
     (path) => swrFetch(path, params.apiParams),
     options
@@ -184,6 +184,7 @@ export const useFetch = <T>(path: string | null, params: useFetchParams = {}) =>
     result: error ? null : (data as T),
     isLoading: !error && !data,
     isError: !!error,
+    mutate,
     error
   };
 };
