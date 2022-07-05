@@ -2,10 +2,12 @@ import { CuratedCollectionsOrderBy } from '@infinityxyz/lib-frontend/types/dto/c
 import React from 'react';
 import { useFetchInfinite } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { Button, ScrollLoader, Spinner } from '../common';
+import { ScrollLoader, Spinner } from '../common';
 import { CurationTable } from './curations-table';
 import { PaginatedCollectionsDto } from '@infinityxyz/lib-frontend/types/dto/collections';
 import { CuratedCollectionsDto } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections.dto';
+import { NoResultsBox } from './no-results-box';
+import { CuratedTab } from './types';
 
 export type AllCuratedProps = { orderBy: CuratedCollectionsOrderBy };
 
@@ -50,15 +52,7 @@ export const AllCuratedCollections: React.FC<AllCuratedProps> = ({ orderBy }) =>
         />
       )}
 
-      {collectionsArray && collectionsArray?.length === 0 && (
-        // TODO: match design
-        <div className="text-center">
-          <p className="font-body font-medium">
-            <span>No collections have been curated yet</span>
-          </p>
-          <Button className="mt-2">Curate now</Button>
-        </div>
-      )}
+      {collectionsArray && collectionsArray?.length === 0 && <NoResultsBox tab={CuratedTab.AllCurated} />}
 
       <ScrollLoader onFetchMore={fetchMore} />
 

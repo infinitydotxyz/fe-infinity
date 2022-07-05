@@ -5,15 +5,11 @@ import { useRouter } from 'next/router';
 import { AllCuratedCollections } from 'src/components/curation/all-curated';
 import { Sort } from 'src/components/curation/sort';
 import { MyCuratedCollections } from 'src/components/curation/my-curated';
-
-enum Tab {
-  AllCurated = 'All Curated',
-  MyCurated = 'My Curated'
-}
+import { CuratedTab } from 'src/components/curation/types';
 
 export default function Curation() {
   const [orderBy, setOrderBy] = useState(CuratedCollectionsOrderBy.Votes);
-  const tabs = [Tab.AllCurated, Tab.MyCurated];
+  const tabs = [CuratedTab.AllCurated, CuratedTab.MyCurated];
   const router = useRouter();
   const { options, onChange, selected } = useToggleTab(tabs, (router?.query?.tab as string) || 'My Curated');
 
@@ -40,8 +36,8 @@ export default function Curation() {
       </div>
       <div>
         {/* TODO: loading screens */}
-        {selected === Tab.AllCurated && <AllCuratedCollections orderBy={orderBy} />}
-        {selected === Tab.MyCurated && <MyCuratedCollections orderBy={orderBy} />}
+        {selected === CuratedTab.AllCurated && <AllCuratedCollections orderBy={orderBy} />}
+        {selected === CuratedTab.MyCurated && <MyCuratedCollections orderBy={orderBy} />}
       </div>
     </PageBox>
   );

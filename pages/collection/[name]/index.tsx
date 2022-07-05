@@ -261,15 +261,15 @@ const CollectionPage = () => {
               curated={userCurated}
               isOpen={isStakeModalOpen}
               onClose={() => setIsStakeModalOpen(false)}
-              onVote={(votes) => {
+              onVote={async (votes) => {
                 // update local collection cache with latest amount of total votes
-                mutate(path, {
+                await mutate(path, {
                   ...collection,
                   numCuratorVotes: (collection.numCuratorVotes || 0) + votes
                 } as Collection);
 
                 // reload user votes and estimates from API
-                mutate(`${path}/curated/${user?.address}`);
+                await mutate(`${path}/curated/${user?.address}`);
               }}
             />
           </section>

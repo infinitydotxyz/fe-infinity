@@ -11,20 +11,23 @@ import { VoteProgressBar } from './vote-progress-bar';
 export type VoteModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  onVote: (votes: number) => void;
+  onVote: (votes: number) => Promise<void>;
   collection: BaseCollection;
-  curated: CuratedCollection | null;
+  curated: CuratedCollection | null | undefined;
 };
 
 export const VoteModal: React.FC<VoteModalProps> = ({ collection, curated, isOpen, onClose, onVote }) => {
   const { user } = useAppContext();
   // TODO: re-calculate fees & APR (via API call) when 'votes' change
   const [votes, setVotes] = useState(0);
-  const { result: quota, isLoading, mutate } = useCurationQuota(user?.address);
+  const { result: quota, isLoading: isLoadingQuota, mutate } = useCurationQuota();
+  const [isVoting, setIsVoting] = useState(false);
 
   const votesAvailable = quota?.availableVotes || 0;
 
   const vote = async () => {
+    setIsVoting(true);
+
     const { error } = await apiPost(
       `/collections/${collection.chainId}:${collection.address}/curated/${user?.address}`,
       { data: { votes } }
@@ -35,12 +38,13 @@ export const VoteModal: React.FC<VoteModalProps> = ({ collection, curated, isOpe
       return;
     }
 
-    onVote(votes);
-    mutate(() => ({
+    await onVote(votes);
+    await mutate(() => ({
       availableVotes: votesAvailable - votes
     }));
     setVotes(0);
     onClose();
+    setIsVoting(false);
   };
 
   return (
@@ -52,9 +56,9 @@ export const VoteModal: React.FC<VoteModalProps> = ({ collection, curated, isOpe
         </Heading>
       </div>
 
-      {isLoading && <Spinner />}
+      {isLoadingQuota && <Spinner />}
 
-      {!isLoading && (
+      {!isLoadingQuota && (
         <>
           <div className="my-8 font-body">
             {/* TODO: re-calculate these on change */}
@@ -89,7 +93,7 @@ export const VoteModal: React.FC<VoteModalProps> = ({ collection, curated, isOpe
                     </Button>
                   )}
                 />
-                <Button className="w-full" onClick={vote} disabled={isLoading}>
+                <Button className="w-full" onClick={vote} disabled={isLoadingQuota || isVoting}>
                   Vote
                 </Button>
               </>
