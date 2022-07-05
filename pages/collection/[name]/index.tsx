@@ -198,7 +198,7 @@ const CollectionPage = () => {
             </div>
           )}
 
-          <table className="mt-8 md:w-1/2">
+          <table className="mt-8">
             <thead>
               <tr className="text-gray-400">
                 <th className="text-left font-medium font-heading">Items</th>
@@ -209,9 +209,9 @@ const CollectionPage = () => {
             </thead>
             <tbody>
               <tr className="font-bold font-heading text-2xl">
-                <td>{nFormatter(firstAllTimeStats?.numNfts) ?? '—'}</td>
-                <td>{nFormatter(firstAllTimeStats?.numOwners) ?? '—'}</td>
-                <td>
+                <td className="pr-20">{nFormatter(firstAllTimeStats?.numNfts) ?? '—'}</td>
+                <td className="pr-20">{nFormatter(firstAllTimeStats?.numOwners) ?? '—'}</td>
+                <td className="pr-20">
                   {firstAllTimeStats?.floorPrice ? (
                     <EthPrice
                       label={`${nFormatter(currentStats?.floorPrice ?? firstAllTimeStats?.floorPrice)}`}
@@ -221,7 +221,7 @@ const CollectionPage = () => {
                     '—'
                   )}
                 </td>
-                <td>
+                <td className="pr-20">
                   {firstAllTimeStats?.volume ? (
                     <EthPrice label={`${nFormatter(firstAllTimeStats?.volume)}`} labelClassName="font-bold" />
                   ) : (
