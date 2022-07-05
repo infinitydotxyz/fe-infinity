@@ -9,7 +9,8 @@ import {
   Spinner,
   EthPrice,
   ToggleTab,
-  useToggleTab
+  useToggleTab,
+  CenteredContent
 } from 'src/components/common';
 import { BLANK_IMAGE_URL, useFetch } from 'src/utils';
 import { Token, Collection, Erc721Metadata, OBOrder } from '@infinityxyz/lib-frontend/types/core';
@@ -121,7 +122,9 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   if (isLoading) {
     return (
       <PageBox title="Loading..." showTitle={false}>
-        <Spinner />
+        <CenteredContent>
+          <Spinner />
+        </CenteredContent>
       </PageBox>
     );
   }
