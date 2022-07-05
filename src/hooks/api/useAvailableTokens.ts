@@ -1,5 +1,6 @@
 import { useFetch } from 'src/utils';
 import { CurationQuotaDto } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curation-quota.dto';
+import { useAppContext } from 'src/utils/context/AppContext';
 
 export const getCurationQuotaKey = (userId: string) => `/user/${userId}/curated/quota`;
 
@@ -8,5 +9,7 @@ export const getCurationQuotaKey = (userId: string) => `/user/${userId}/curated/
  * The value is calculated from the balance read from the contract and existing database records.
  */
 export function useCurationQuota(userId?: string) {
-  return useFetch<CurationQuotaDto>(userId ? getCurationQuotaKey(userId) : null);
+  const { user } = useAppContext();
+  const id = userId || user?.address;
+  return useFetch<CurationQuotaDto>(id ? getCurationQuotaKey(id) : null);
 }
