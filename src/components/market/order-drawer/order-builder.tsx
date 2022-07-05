@@ -76,11 +76,11 @@ export const OrderBuilder = () => {
     return (
       <TextInputBox
         type="number"
-        value={price.toString()}
+        value={price}
         placeholder=""
         addEthSymbol={true}
         label={label}
-        onChange={(value) => setPrice(parseFloat(value))}
+        onChange={(value) => setPrice(value)}
         tooltip={tooltip}
       />
     );

@@ -91,8 +91,9 @@ export type OrderContextType = {
   executeOrder: () => Promise<boolean>;
 
   // drawer form
-  price: number;
-  setPrice: (price: number) => void;
+  // price must be string to handle typing floats. 0.0 will convert to 0 while typing
+  price: string;
+  setPrice: (price: string) => void;
   expirationDate: number;
   setExpirationDate: (time: number) => void;
   numItems: number;
@@ -114,7 +115,8 @@ export const OrderContextProvider = ({ children }: Props) => {
   const [cartItems, setCartItems] = useState<OrderCartItem[]>([]);
 
   // drawer form
-  const [price, setPrice] = useState<number>(1);
+  // price must be string to handle typing floats. 0.0 will convert to 0 while typing
+  const [price, setPrice] = useState<string>('1');
   const [expirationDate, setExpirationDate] = useState<number>(Date.now() + secondsPerDay * 30 * 1000);
   const [numItems, setNumItems] = useState<number>(1);
   const [customDrawerItems, setCustomDrawerItems] = useState<number>(0);
@@ -186,7 +188,7 @@ export const OrderContextProvider = ({ children }: Props) => {
       }
 
       setCartItems(orderInCart.cartItems);
-      setPrice(orderInCart.orderSpec.startPriceEth);
+      setPrice(orderInCart.orderSpec.startPriceEth.toString());
       setExpirationDate(orderInCart.orderSpec.endTimeMs);
       setNumItems(orderInCart.orderSpec.numItems);
     }
@@ -218,8 +220,8 @@ export const OrderContextProvider = ({ children }: Props) => {
         numItems,
         startTimeMs: Date.now(),
         endTimeMs: expirationDate,
-        startPriceEth: price,
-        endPriceEth: price,
+        startPriceEth: parseFloat(price),
+        endPriceEth: parseFloat(price),
         nfts,
         makerUsername: '' // todo: adi put in username
       };
@@ -350,7 +352,7 @@ export const OrderContextProvider = ({ children }: Props) => {
   const _resetStateValues = () => {
     setOrdersInCart([]);
     setCartItems([]);
-    setPrice(1);
+    setPrice('1');
     setExpirationDate(Date.now() + secondsPerDay * 30 * 1000);
     setNumItems(1);
     setIsEditingOrder(false);
