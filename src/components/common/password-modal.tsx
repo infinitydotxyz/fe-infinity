@@ -14,7 +14,6 @@ export const isPasswordModalNeeded = () => {
     return false;
   }
   if (!isLocalhost() && str !== base64Password) {
-    // !isLocalhost() &&
     return true;
   }
   return false;
@@ -42,7 +41,7 @@ export const PasswordModal = ({ isOpen, onClose }: Props) => {
   return (
     <Modal wide={false} isOpen={isOpen} onClose={onClose} okButton="Confirm" title="Password" showActionButtons={false}>
       <TextInputBox
-        value=""
+        value={password}
         label=""
         type={'text'}
         placeholder=""
