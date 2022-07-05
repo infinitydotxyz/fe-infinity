@@ -366,6 +366,18 @@ export async function signChainOBOrder(
   return '';
 }
 
+export async function sendMultipleNfts(
+  signer: JsonRpcSigner,
+  chainId: string,
+  orderItems: ChainNFTs[],
+  toAddress: string
+) {
+  const exchangeAddress = getExchangeAddress(chainId);
+  const infinityExchange = new Contract(exchangeAddress, InfinityExchangeABI, signer);
+  // perform send
+  await infinityExchange.transferMultipleNFTs(toAddress, orderItems);
+}
+
 export async function takeMultiplOneOrders(signer: JsonRpcSigner, chainId: string, makerOrder: ChainOBOrder) {
   const exchangeAddress = getExchangeAddress(chainId);
   const infinityExchange = new Contract(exchangeAddress, InfinityExchangeABI, signer);
