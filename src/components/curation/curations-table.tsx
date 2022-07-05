@@ -1,7 +1,7 @@
 import { Collection, CuratedCollection } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
-import { useCurationQuota } from 'src/hooks/api/useAvailableTokens';
+import { useCurationQuota } from 'src/hooks/api/useCurationQuota';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { mutate } from 'swr';
 import { Field, FieldProps } from '../analytics/field';

@@ -1,6 +1,6 @@
 import { BaseCollection, CuratedCollection } from '@infinityxyz/lib-frontend/types/core';
 import React, { useState } from 'react';
-import { useCurationQuota } from 'src/hooks/api/useAvailableTokens';
+import { useCurationQuota } from 'src/hooks/api/useCurationQuota';
 import { apiPost } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { AvatarImage } from '../collection/avatar-image';

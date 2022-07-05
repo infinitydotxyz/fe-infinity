@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, PageBox } from 'src/components/common';
 import { StakeTokensModal } from 'src/components/rewards/stake-tokens';
 import { UnstakeTokensModal } from 'src/components/rewards/unstake-tokens';
-import { useCurationQuota } from 'src/hooks/api/useAvailableTokens';
+import { useCurationQuota } from 'src/hooks/api/useCurationQuota';
 import { useStakePower } from 'src/hooks/contract/staker/useStakerGetStakePower';
 import { useStakerTotalStaked } from 'src/hooks/contract/staker/useStakerTotalStaked';
 import { useTokenBalance } from 'src/hooks/contract/token/useTokenBalance';
