@@ -3,7 +3,8 @@ import moment from 'moment';
 import { Button, EthPrice } from 'src/components/common';
 import { ellipsisAddress, numStr, shortDate } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { takeOrder } from 'src/utils/exchange/orders';
+import { takeMultiplOneOrders } from 'src/utils/exchange/orders';
+import { getOrderType } from 'src/utils/marketUtils';
 import { DataColumn, defaultDataColumns } from './data-columns';
 import { OrderbookItem } from './orderbook-item';
 
@@ -23,7 +24,7 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
       case 'buyOrSell':
         break;
       case 'type':
-        value = order.isSellOrder ? 'Listing' : 'Offer';
+        value = getOrderType(order);
         break;
       case 'makerUsername':
         value = order.makerUsername || ellipsisAddress(order.makerAddress);
@@ -80,7 +81,7 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
     // todo: adi fullfill order
     const signer = providerManager?.getEthersProvider().getSigner();
     if (signer) {
-      await takeOrder(signer, chainId, order.signedOrder);
+      await takeMultiplOneOrders(signer, chainId, order.signedOrder);
     } else {
       console.error('signer is null');
     }

@@ -14,7 +14,7 @@ export const ErrorOrLoading = ({ error, noData, message = 'Nothing found' }: Pro
     contents = <div>Unable to load data</div>;
   } else {
     if (noData) {
-      contents = <div>{message}</div>;
+      contents = <div className="font-heading">{message}</div>;
     } else {
       contents = <Spinner />;
     }

@@ -21,6 +21,8 @@ export const NFT_DATA_SOURCES = {
   COVALENT: 4
 };
 
+export const DEFAULT_MAX_GAS_PRICE_WEI = '100000000000';
+
 // todo: find better images
 export const BLANK_IMG = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
 export const BLANK_IMAGE_URL = missing.src;

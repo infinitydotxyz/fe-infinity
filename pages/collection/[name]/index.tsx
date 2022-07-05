@@ -53,6 +53,8 @@ const CollectionPage = () => {
   );
   const firstAllTimeStats = allTimeStats?.data[0]; // first row = latest daily stats
 
+  const createdBy = collection?.deployer ?? collection?.owner ?? '';
+
   const isAlreadyAdded = (data: ERC721CardData | undefined) => {
     // check if this item was already added to cartItems or order.
     const found1 =
@@ -125,14 +127,14 @@ const CollectionPage = () => {
           <div className="text-secondary mt-6 mb-6 font-heading">
             {collection ? (
               <>
-                {collection?.owner && (
+                {createdBy && (
                   <>
                     <span>Created by </span>
                     <button
                       onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection?.owner)}
                       className="mr-12"
                     >
-                      {ellipsisAddress(collection?.owner ?? '')}
+                      {ellipsisAddress(createdBy)}
                     </button>
                   </>
                 )}
@@ -148,7 +150,7 @@ const CollectionPage = () => {
             )}
           </div>
 
-          <StatsChips collection={collection} currentStatsData={currentStats || undefined} />
+          <StatsChips collection={collection} currentStatsData={currentStats || firstAllTimeStats} />
 
           {isLoading ? (
             <div className="mt-6">
@@ -198,7 +200,7 @@ const CollectionPage = () => {
             </div>
           )}
 
-          <table className="mt-8 md:w-1/2">
+          <table className="mt-8">
             <thead>
               <tr className="text-gray-400">
                 <th className="text-left font-medium font-heading">Items</th>
@@ -209,16 +211,19 @@ const CollectionPage = () => {
             </thead>
             <tbody>
               <tr className="font-bold font-heading text-2xl">
-                <td>{nFormatter(firstAllTimeStats?.numNfts) ?? '—'}</td>
-                <td>{nFormatter(firstAllTimeStats?.numOwners) ?? '—'}</td>
-                <td>
+                <td className="pr-20">{nFormatter(firstAllTimeStats?.numNfts) ?? '—'}</td>
+                <td className="pr-20">{nFormatter(firstAllTimeStats?.numOwners) ?? '—'}</td>
+                <td className="pr-20">
                   {firstAllTimeStats?.floorPrice ? (
-                    <EthPrice label={`${nFormatter(firstAllTimeStats?.floorPrice)}`} labelClassName="font-bold" />
+                    <EthPrice
+                      label={`${nFormatter(currentStats?.floorPrice ?? firstAllTimeStats?.floorPrice)}`}
+                      labelClassName="font-bold"
+                    />
                   ) : (
                     '—'
                   )}
                 </td>
-                <td>
+                <td className="pr-20">
                   {firstAllTimeStats?.volume ? (
                     <EthPrice label={`${nFormatter(firstAllTimeStats?.volume)}`} labelClassName="font-bold" />
                   ) : (

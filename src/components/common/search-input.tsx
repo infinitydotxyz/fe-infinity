@@ -132,7 +132,7 @@ export const SearchInput: React.FC<Props> = ({ expanded }) => {
           <Combobox.Options
             className="absolute z-60 -mx-8
             w-content h-content max-h-content
-            py-2 ring-1 ring-inset ring-theme-light-200 rounded-1xl
+            py-2 ring-1 ring-inset ring-theme-light-200 rounded-2xl
             flex flex-col bg-gray-50 shadow-lg"
           >
             {filtered.map((collection, index) => (

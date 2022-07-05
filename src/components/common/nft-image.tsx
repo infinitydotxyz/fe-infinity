@@ -9,10 +9,11 @@ interface Props {
   tokenId?: string;
   src?: string;
   alt?: string;
+  className?: string;
   [key: string]: string | number | undefined;
 }
 
-export const NftImage = ({ chainId, collectionAddress, src, alt, ...rest }: Props) => {
+export const NftImage = ({ chainId, collectionAddress, src, alt, className = '', ...rest }: Props) => {
   const [unmounted, setUnmounted] = useState(false);
   const [imageUrl, setImageUrl] = useState(src || '');
 
@@ -35,5 +36,5 @@ export const NftImage = ({ chainId, collectionAddress, src, alt, ...rest }: Prop
     };
   }, []);
 
-  return <img src={imageUrl ? imageUrl : BLANK_IMG} {...rest} alt={alt} />;
+  return <img src={imageUrl ? imageUrl : BLANK_IMG} {...rest} alt={alt} className={className} />;
 };
