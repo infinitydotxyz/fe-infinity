@@ -53,6 +53,8 @@ const CollectionPage = () => {
   );
   const firstAllTimeStats = allTimeStats?.data[0]; // first row = latest daily stats
 
+  const createdBy = collection?.deployer ?? collection?.owner ?? '';
+
   const isAlreadyAdded = (data: ERC721CardData | undefined) => {
     // check if this item was already added to cartItems or order.
     const found1 =
@@ -125,14 +127,14 @@ const CollectionPage = () => {
           <div className="text-secondary mt-6 mb-6 font-heading">
             {collection ? (
               <>
-                {collection?.owner && (
+                {createdBy && (
                   <>
                     <span>Created by </span>
                     <button
                       onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection?.owner)}
                       className="mr-12"
                     >
-                      {ellipsisAddress(collection?.owner ?? '')}
+                      {ellipsisAddress(createdBy)}
                     </button>
                   </>
                 )}
