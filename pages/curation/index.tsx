@@ -6,19 +6,21 @@ import { AllCuratedCollections } from 'src/components/curation/all-curated';
 import { Sort } from 'src/components/curation/sort';
 import { MyCuratedCollections } from 'src/components/curation/my-curated';
 import { CuratedTab } from 'src/components/curation/types';
+import { useCurationQuota } from 'src/hooks/api/useCurationQuota';
 
 export default function Curation() {
   const [orderBy, setOrderBy] = useState(CuratedCollectionsOrderBy.Votes);
   const tabs = [CuratedTab.AllCurated, CuratedTab.MyCurated];
   const router = useRouter();
   const { options, onChange, selected } = useToggleTab(tabs, (router?.query?.tab as string) || 'My Curated');
+  const { result: quota } = useCurationQuota();
 
   return (
     <PageBox title="Curation">
       <div className="flex justify-between mb-8">
         <div>
           <span className="p-4 border border-gray-300 rounded-3xl mr-2">
-            <strong className="mr-2">120,350</strong>
+            <strong className="mr-2">{quota?.availableVotes || 0}</strong>
             <span>veNFT available</span>
           </span>
           <Button>Confirm</Button>
@@ -35,7 +37,6 @@ export default function Curation() {
         </div>
       </div>
       <div>
-        {/* TODO: loading screens */}
         {selected === CuratedTab.AllCurated && <AllCuratedCollections orderBy={orderBy} />}
         {selected === CuratedTab.MyCurated && <MyCuratedCollections orderBy={orderBy} />}
       </div>
