@@ -45,7 +45,7 @@ export const SendNFTModal = ({ isOpen, onClose, token }: Props) => {
           } else {
             console.error('required data for send is missing');
           }
-          onClose(); // todo: adi: Smart contract integration for Sending NFT.
+          onClose();
         }}
       >
         <div>
