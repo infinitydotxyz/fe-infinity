@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
-import { Checkbox, EthPrice, Modal } from 'src/components/common';
+import { Checkbox, EthPrice, Modal, Spinner } from 'src/components/common';
 import { apiGet } from 'src/utils';
 import { uniqBy } from 'lodash';
 import { OrderbookItem } from 'src/components/market/orderbook-list/orderbook-item';
@@ -15,8 +15,10 @@ interface Props {
 export const CancelModal = ({ isOpen, onClose, collectionAddress, token }: Props) => {
   const [selectedListings, setSelectedListings] = useState<string[]>([]);
   const [listings, setListings] = useState<SignedOBOrder[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchListings = async () => {
+    setIsLoading(true);
     const { result, error } = await apiGet(`/orders/0x006fa88c8b4c9d60393498fd1b2acf6abe254d72`, {
       query: {
         limit: 50,
@@ -25,6 +27,7 @@ export const CancelModal = ({ isOpen, onClose, collectionAddress, token }: Props
       },
       requiresAuth: true
     });
+    setIsLoading(false);
     if (!error) {
       const orders: SignedOBOrder[] = result.data as SignedOBOrder[];
       // todo: this is needed until API supports filtering by both collectionId+tokenID:
@@ -47,6 +50,7 @@ export const CancelModal = ({ isOpen, onClose, collectionAddress, token }: Props
     fetchListings();
   }, []);
 
+  const hasNoData = !isLoading && listings && listings.length === 0;
   return (
     <Modal
       wide={true}
@@ -58,7 +62,11 @@ export const CancelModal = ({ isOpen, onClose, collectionAddress, token }: Props
         onClose();
       }}
     >
-      <ul className="mt-4 p-2 flex flex-col w-full min-h-[50vh] max-h-[50vh] overflow-y-scroll">
+      <ul className={`mt-4 p-2 flex flex-col w-full overflow-y-auto min-h-[35vh] max-h-[35vh]`}>
+        {isLoading && <Spinner />}
+
+        {hasNoData ? <div className="font-heading">No listings found.</div> : null}
+
         {listings.map((listing: SignedOBOrder, idx) => {
           return (
             <Checkbox
