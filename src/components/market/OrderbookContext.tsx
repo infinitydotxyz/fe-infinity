@@ -68,12 +68,12 @@ const parseFiltersToApiQueryParams = (filters: OBFilters): GetOrderItemsQuery =>
         break;
       case 'minPrice':
         if (filters?.minPrice) {
-          parsedFilters.minPrice = filters?.minPrice;
+          parsedFilters.minPrice = parseFloat(filters?.minPrice);
         }
         break;
       case 'maxPrice':
         if (filters?.maxPrice) {
-          parsedFilters.maxPrice = filters?.maxPrice;
+          parsedFilters.maxPrice = parseFloat(filters?.maxPrice);
         }
         break;
       case 'numberOfNfts':
