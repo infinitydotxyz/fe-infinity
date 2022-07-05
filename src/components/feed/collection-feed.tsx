@@ -30,32 +30,39 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
   const [filteringTypes, setFilteringTypes] = useState<FeedEventType[]>([]);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [activities, setActivities] = useState<NftActivity[] | null>(null);
+  const [activities, setActivities] = useState<NftActivity[]>([]);
   const [cursor, setCursor] = useState('');
 
   const fetchActivity = async (isRefresh = false, fromCursor = '') => {
     if (!collectionAddress) {
       return;
     }
-    setIsLoading(true);
-    const url = tokenId
-      ? `/collections/${chainId}:${collectionAddress}/nfts/${tokenId}/activity`
-      : `/collections/${chainId}:${collectionAddress}/activity`;
-    const { result, error } = await apiGet(url, {
-      query: {
-        limit: 50,
-        eventType: filter.types || ['sale', 'listing', 'offer'],
-        cursor: fromCursor
+
+    try {
+      setIsLoading(true);
+      const url = tokenId
+        ? `/collections/${chainId}:${collectionAddress}/nfts/${tokenId}/activity`
+        : `/collections/${chainId}:${collectionAddress}/activity`;
+      const { result, error } = await apiGet(url, {
+        query: {
+          limit: 50,
+          eventType: filter.types || ['sale', 'listing', 'offer'],
+          cursor: fromCursor
+        }
+      });
+
+      if (!error && result) {
+        if (isRefresh) {
+          setActivities([...result.data]);
+        } else {
+          setActivities([...activities, ...result.data]);
+        }
+        setCursor(result?.cursor);
       }
-    });
-    setIsLoading(false);
-    if (!error && result) {
-      if (isRefresh) {
-        setActivities([...result.data]);
-      } else {
-        setActivities([...(activities || []), ...result.data]);
-      }
-      setCursor(result?.cursor);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -121,9 +128,7 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
         />
       </div>
 
-      {!isLoading && activities && activities.length === 0 ? (
-        <div className="font-heading">No data available.</div>
-      ) : null}
+      {!isLoading && activities.length === 0 ? <div className="font-heading">No data available.</div> : null}
 
       {newEvents.length > 0 ? (
         <div
@@ -140,7 +145,7 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
 
       <ul className="space-y-4">
         {forActivity &&
-          (activities || []).map((act: NftActivity, idx) => {
+          activities.map((act: NftActivity, idx) => {
             return <ActivityItem key={idx} item={act} />;
           })}
 

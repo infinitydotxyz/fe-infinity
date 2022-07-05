@@ -35,7 +35,7 @@ const HomePage = () => {
               className="md:w-2/3 sm:w-full"
               forActivity={true}
               types={[
-                FeedEventType.NftSale,
+                // FeedEventType.NftSale,
                 FeedEventType.CoinMarketCapNews,
                 FeedEventType.DiscordAnnouncement
                 // FeedEventType.NftListing,
