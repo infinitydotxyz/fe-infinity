@@ -154,7 +154,6 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
           label="Min"
           placeholder=""
           value={minPriceVal}
-          bindValue={true}
           onChange={(value) => {
             setMinPriceVal(value);
             const newFilter = { ...filter };
@@ -170,7 +169,6 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
           label="Max"
           placeholder=""
           value={maxPriceVal}
-          bindValue={true}
           onChange={(value) => {
             setMaxPriceVal(value);
             const newFilter = { ...filter };
@@ -190,7 +188,6 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
           label="Amount of NFTs"
           placeholder=""
           value={numItems}
-          bindValue={true}
           onChange={(value) => {
             setNumItems(value);
             const newFilter = { ...filter };

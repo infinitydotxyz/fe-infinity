@@ -124,7 +124,6 @@ interface Props4 {
   isFullWidth?: boolean;
   autoFocus?: boolean;
   renderRightIcon?: () => ReactElement;
-  bindValue?: boolean;
   className?: string;
   inputClassName?: string;
 }
@@ -140,15 +139,10 @@ export const TextInputBox = ({
   onChange,
   isFullWidth,
   autoFocus = false,
-  bindValue = false,
   renderRightIcon,
   className,
   inputClassName = ''
 }: Props4) => {
-  const moreProps: { [key: string]: string } = {};
-  if (bindValue === true) {
-    moreProps.value = value;
-  }
   return (
     <InputBox
       label={label}
@@ -171,7 +165,6 @@ export const TextInputBox = ({
           }}
           className={twMerge(`p-0 border-none focus:ring-0 block w-full font-heading ${inputClassName}`)}
           placeholder={placeholder}
-          {...moreProps}
         />
       </div>
     </InputBox>

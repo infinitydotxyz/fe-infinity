@@ -10,8 +10,8 @@ export type OBFilters = {
   sort?: string;
   orderTypes?: string[];
   collections?: string[];
-  minPrice?: number;
-  maxPrice?: number;
+  minPrice?: string;
+  maxPrice?: string;
   numberOfNfts?: number;
 };
 
@@ -117,10 +117,10 @@ const parseRouterQueryParamsToFilters = (query: ParsedUrlQuery): OBFilters => {
   }
 
   if (minPrice) {
-    newFilters.minPrice = parseFloat(minPrice as string);
+    newFilters.minPrice = minPrice as string;
   }
   if (maxPrice) {
-    newFilters.maxPrice = parseFloat(maxPrice as string);
+    newFilters.maxPrice = maxPrice as string;
   }
 
   if (numberOfNfts) {

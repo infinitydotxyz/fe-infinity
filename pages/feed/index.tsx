@@ -10,17 +10,16 @@ import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
 import { CommunityRightPanel } from 'src/components/collection/community-right-panel';
 import { FeedEventType } from '@infinityxyz/lib-frontend/types/core/feed';
 
-const HomePage = () => {
+const FeedPage = () => {
   const { chainId } = useAppContext();
-  const path = `/collections/goerli-doodles`;
-  const { result: collection, isLoading } = useFetch<BaseCollection>(path, { chainId });
+  const { result: collection, isLoading } = useFetch<BaseCollection>('/collections/goerli-doodles', { chainId });
 
   const {
     query: { name }
   } = useRouter();
 
   // name not used lint error fix
-  console.log(name, chainId);
+  console.log(name);
 
   let content;
   if (isLoading) {
@@ -35,13 +34,13 @@ const HomePage = () => {
               className="md:w-2/3 sm:w-full"
               forActivity={true}
               types={[
-                // FeedEventType.NftSale,
+                FeedEventType.NftSale,
                 FeedEventType.CoinMarketCapNews,
-                FeedEventType.DiscordAnnouncement
-                // FeedEventType.NftListing,
-                // FeedEventType.NftOffer,
-                // FeedEventType.NftTransfer,
-                // FeedEventType.TwitterTweet
+                FeedEventType.DiscordAnnouncement,
+                FeedEventType.NftListing,
+                FeedEventType.NftOffer,
+                FeedEventType.NftTransfer,
+                FeedEventType.TwitterTweet
               ]}
               collectionAddress={collection?.address ?? ''}
             />{' '}
@@ -75,4 +74,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default FeedPage;

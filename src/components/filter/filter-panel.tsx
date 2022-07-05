@@ -105,7 +105,6 @@ export const FilterPanel = ({ collection, collectionAddress, showFilterSections,
           label="Min"
           placeholder=""
           value={minPriceVal}
-          bindValue={true}
           onChange={(value) => {
             setMinPriceVal(value);
           }}
@@ -117,7 +116,6 @@ export const FilterPanel = ({ collection, collectionAddress, showFilterSections,
           label="Max"
           placeholder=""
           value={maxPriceVal}
-          bindValue={true}
           onChange={(value) => {
             setMaxPriceVal(value);
           }}
