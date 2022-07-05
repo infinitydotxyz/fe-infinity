@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { Button, PageBox } from 'src/components/common';
 import { StakeTokensModal } from 'src/components/rewards/stake-tokens';
 import { UnstakeTokensModal } from 'src/components/rewards/unstake-tokens';
+import { useCurationQuota } from 'src/hooks/api/useAvailableTokens';
 import { useStakePower } from 'src/hooks/contract/staker/useStakerGetStakePower';
 import { useStakerTotalStaked } from 'src/hooks/contract/staker/useStakerTotalStaked';
 import { useTokenBalance } from 'src/hooks/contract/token/useTokenBalance';
-import { useTokenVotes } from 'src/hooks/contract/token/useTokenVotes';
 import { numberFormatter } from 'src/utils/number-formatter';
 
 const RewardsPage = () => {
@@ -14,7 +14,7 @@ const RewardsPage = () => {
   const { balance } = useTokenBalance();
   const { staked } = useStakerTotalStaked();
   const { stakePower } = useStakePower(); // TODO: not sure if this is the correct contract method to call
-  const { votes } = useTokenVotes();
+  const { result: quota } = useCurationQuota();
 
   return (
     <PageBox title="Rewards" showTitle={false}>
@@ -90,7 +90,7 @@ const RewardsPage = () => {
                 <div className="text-sm mt-1">Voted</div>
               </div>
               <div className="lg:w-1/4 sm:w-full">
-                <div className="text-2xl font-heading font-bold">{votes}</div>
+                <div className="text-2xl font-heading font-bold">{quota?.availableVotes || 0}</div>
                 <div className="text-sm mt-1">Remaining Votes</div>
               </div>
             </div>

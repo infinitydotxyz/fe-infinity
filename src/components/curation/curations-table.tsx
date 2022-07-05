@@ -1,7 +1,7 @@
 import { Collection, CuratedCollection } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { useTokenVotes } from 'src/hooks/contract/token/useTokenVotes';
+import { useCurationQuota } from 'src/hooks/api/useAvailableTokens';
 import { Field, FieldProps } from '../analytics/field';
 import { Button } from '../common';
 import { FeesAprStats, FeesAccruedStats } from './statistics';
@@ -23,7 +23,7 @@ export const CurationTable: React.FC<CurationTableProps> = ({
   curations: curationsArray
 }) => {
   const router = useRouter();
-  const { votes } = useTokenVotes();
+  const { result: quota } = useCurationQuota();
 
   const collections = collectionsArray.flat();
   const curations = curationsArray?.flat();
@@ -40,7 +40,7 @@ export const CurationTable: React.FC<CurationTableProps> = ({
           )}
           index={i + 1}
           onClick={() => router.push(`/collection/${collection.slug}`)}
-          votes={votes}
+          votes={quota?.availableVotes || 0}
         />
       ))}
     </>
