@@ -12,7 +12,7 @@ import {
   useToggleTab,
   CenteredContent
 } from 'src/components/common';
-import { BLANK_IMAGE_URL, getOwnerAddress, useFetch } from 'src/utils';
+import { MISSING_IMAGE_URL, getOwnerAddress, useFetch } from 'src/utils';
 import { Token, Collection, Erc721Metadata, OBOrder } from '@infinityxyz/lib-frontend/types/core';
 import {
   TraitList,
@@ -113,10 +113,10 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
     token.image.url = token.image?.originalUrl ?? '';
   }
 
-  const imgUrl = token?.image?.url || token?.metadata?.image || BLANK_IMAGE_URL;
+  const imgUrl = token?.image?.url || token?.metadata?.image || MISSING_IMAGE_URL;
   if (token && (!imgUrl || imgUrl.startsWith('ipfs'))) {
     if (token.image) {
-      token.image.url = BLANK_IMAGE_URL;
+      token.image.url = MISSING_IMAGE_URL;
     }
   }
 
