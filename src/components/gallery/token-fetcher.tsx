@@ -4,9 +4,6 @@ import { Filter } from 'src/utils/context/FilterContext';
 import { ApiResponse, apiGet } from 'src/utils/apiUtils';
 
 type ApiNftData = Erc721Token & {
-  collectionAddress?: string;
-  collectionName?: string;
-  collectionSlug?: string;
   orderSnippet?: OrdersSnippet;
 };
 
@@ -187,7 +184,7 @@ export const nftsToCardData = (
   let result: ERC721CardData[] = (tokens || []).map((item: ApiNftData) => {
     return {
       id: collectionAddress + '_' + item.tokenId,
-      name: item.metadata?.name,
+      name: item.metadata?.name ?? item.metadata?.title,
       title: item.collectionName ?? collectionName,
       collectionName: item.collectionName ?? collectionName,
       collectionSlug: item.collectionSlug ?? '',

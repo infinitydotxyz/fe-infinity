@@ -11,6 +11,8 @@ import { BGImage } from './bg-image';
 import { SVG } from './svg';
 import { useRouter } from 'next/router';
 import { ImageOrMissing } from './image-or-missing';
+import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
+import { ENS_ADDRESS } from 'src/utils';
 
 type labelFn = (data?: ERC721CardData) => ReactNode;
 
@@ -37,8 +39,17 @@ export const Card = ({
   className = ''
 }: CardProps): JSX.Element => {
   const router = useRouter();
-  const title = (data?.title ?? '').length > 25 ? data?.title?.slice(0, 25) + '...' : data?.title;
-  const tokenId = (data?.tokenId ?? '').length > 25 ? data?.tokenId?.slice(0, 20) + '...' : data?.tokenId;
+  let collectionName = data?.title ?? data?.collectionName ?? '';
+  collectionName = collectionName.length > 25 ? collectionName.slice(0, 25) + '...' : collectionName;
+
+  let tokenId = data?.tokenId ?? '';
+  // special case for ENS
+  const collectionAddress = trimLowerCase(data?.address ?? data?.tokenAddress);
+  if (collectionAddress === ENS_ADDRESS && data?.name) {
+    tokenId = data.name;
+  }
+
+  tokenId = tokenId.length > 25 ? tokenId.slice(0, 20) + '...' : tokenId;
 
   const buttonJsx = (
     <>
@@ -99,7 +110,7 @@ export const Card = ({
             router.push(`/collection/${data?.collectionSlug}`);
           }}
         >
-          {title ? title : <>&nbsp;</>}
+          {collectionName ? collectionName : <>&nbsp;</>}
           {data?.hasBlueCheck ? <SVG.blueCheck className="w-5 h-5 ml-1" /> : null}
         </div>
         <div className="text-secondary font-heading" title={data?.tokenId}>
