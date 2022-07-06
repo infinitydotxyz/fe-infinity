@@ -26,9 +26,9 @@ export const NFT_DATA_SOURCES = {
 
 export const DEFAULT_MAX_GAS_PRICE_WEI = '100000000000';
 
-// export const BLANK_IMAGE_URL_MINI = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
-export const BLANK_IMAGE_URL = image404.src;
-export const BLANK_IMAGE_URL_MINI = image404Mini.src;
+export const PLACEHOLDER_IMAGE = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
+export const MISSING_IMAGE_URL = image404.src;
+export const MISSING_IMAGE_URL_MINI = image404Mini.src;
 
 export const GRID_CSS =
   'grid grid1:grid-cols-1 grid2:grid-cols-2 grid3:grid-cols-3 grid4:grid-cols-4 grid5:grid-cols-5 grid6:grid-cols-6 grid7:grid-cols-7 grid8:grid-cols-8 gap-x-8 gap-y-12';

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { apiGet } from 'src/utils/apiUtils';
-import { BLANK_IMAGE_URL_MINI } from 'src/utils';
+import { MISSING_IMAGE_URL_MINI } from 'src/utils';
 import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
 
 interface Props {
@@ -24,7 +24,7 @@ export const NftImage = ({ chainId, collectionAddress, src, alt, className = '',
     const { result } = await apiGet(`/collections/${chainId}:${collectionAddress}`);
     const collection = result as BaseCollection;
 
-    setImageUrl(collection?.metadata.profileImage ?? BLANK_IMAGE_URL_MINI);
+    setImageUrl(collection?.metadata.profileImage ?? MISSING_IMAGE_URL_MINI);
   };
 
   useEffect(() => {
@@ -36,5 +36,5 @@ export const NftImage = ({ chainId, collectionAddress, src, alt, className = '',
     };
   }, []);
 
-  return <img src={imageUrl ? imageUrl : BLANK_IMAGE_URL_MINI} {...rest} alt={alt} className={className} />;
+  return <img src={imageUrl ? imageUrl : MISSING_IMAGE_URL_MINI} {...rest} alt={alt} className={className} />;
 };

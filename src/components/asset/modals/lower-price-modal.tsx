@@ -1,7 +1,7 @@
 import { SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
 import React, { useEffect, useState } from 'react';
 import { TextInputBox, Modal, SimpleTable, SimpleTableItem, EthPrice, toastError } from 'src/components/common';
-import { apiGet, BLANK_IMAGE_URL, INFINITY_FEE_PCT, INFINITY_ROYALTY_PCT } from 'src/utils';
+import { apiGet, MISSING_IMAGE_URL, INFINITY_FEE_PCT, INFINITY_ROYALTY_PCT } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { postOrders } from 'src/utils/marketUtils';
 
@@ -74,7 +74,7 @@ export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) 
         // todo: remove this once BE fix validation of tokens' images (not needed):
         for (const nft of orderDetails.nfts) {
           for (const token of nft.tokens) {
-            token.tokenImage = token.tokenImage || BLANK_IMAGE_URL;
+            token.tokenImage = token.tokenImage || MISSING_IMAGE_URL;
           }
         }
 

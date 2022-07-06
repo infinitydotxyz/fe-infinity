@@ -1,4 +1,4 @@
-import { BLANK_IMAGE_URL_MINI, ellipsisAddress, getChainScannerBase } from 'src/utils';
+import { MISSING_IMAGE_URL_MINI, ellipsisAddress, getChainScannerBase } from 'src/utils';
 import { EthPrice, NextLink, BGImage } from 'src/components/common';
 import { FeedEvent } from './feed-item';
 import { format } from 'timeago.js';
@@ -16,7 +16,7 @@ export const ActivityItem = ({ event }: Props) => {
           {event.image ? (
             <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={event.image} />
           ) : (
-            <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={BLANK_IMAGE_URL_MINI} />
+            <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={MISSING_IMAGE_URL_MINI} />
           )}
         </NextLink>
         <div className="flex justify-between w-full mx-8">

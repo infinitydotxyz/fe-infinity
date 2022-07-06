@@ -3,7 +3,7 @@ import { ExchangeEvent } from '@infinityxyz/lib-frontend/types/core/feed';
 import { BaseFeedEvent, EventType } from '@infinityxyz/lib-frontend/types/core/feed/FeedEvent';
 import { ReactNode } from 'react';
 import { AiOutlineComment, AiOutlineLike } from 'react-icons/ai';
-import { BLANK_IMAGE_URL_MINI, ellipsisAddress, getChainScannerBase } from 'src/utils';
+import { MISSING_IMAGE_URL_MINI, ellipsisAddress, getChainScannerBase } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { addUserLike } from 'src/utils/firestore/firestoreUtils';
 import { Button, NftImage, EthPrice, NextLink, BGImage } from 'src/components/common';
@@ -131,7 +131,7 @@ const SaleEvent = ({ data }: FeedItemProps) => {
         {data.image ? (
           <BGImage src={data.image} className="w-24 rounded-xl" />
         ) : (
-          <BGImage src={BLANK_IMAGE_URL_MINI} className="w-24 rounded-xl" />
+          <BGImage src={MISSING_IMAGE_URL_MINI} className="w-24 rounded-xl" />
         )}
       </NextLink>
       <div className="flex w-full justify-between mx-8">
