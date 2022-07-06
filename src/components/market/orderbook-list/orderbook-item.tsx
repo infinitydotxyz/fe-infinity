@@ -182,9 +182,9 @@ const SingleCollectionCell = ({
               <NextLink
                 href={`/asset/1/${orderNft?.collectionAddress}/${token.tokenId}`}
                 className="whitespace-pre-wrap"
-                title={token?.tokenName}
+                title={token?.tokenId}
               >
-                {token?.tokenName}
+                {token?.tokenId}
               </NextLink>
             )}
           </>
