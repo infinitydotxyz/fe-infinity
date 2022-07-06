@@ -242,7 +242,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
             href={`https://etherscan.io/address/${token.collectionAddress}`}
             tooltip={token.collectionAddress ?? ''}
           />
-          <span className="text-base flex items-center">
+          <span className="text-base flex items-center mt-2">
             Token ID: <span className="ml-4 font-heading">#{token.tokenId}</span>
           </span>
 
