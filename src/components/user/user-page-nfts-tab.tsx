@@ -7,6 +7,7 @@ import { TransferDrawer } from '../market/order-drawer/transfer-drawer';
 import { UserProfileDto } from './user-profile-dto';
 import { useRouter } from 'next/router';
 import { twMerge } from 'tailwind-merge';
+import { EthPrice } from '../common';
 
 type Props = {
   userInfo: UserProfileDto;
@@ -99,6 +100,17 @@ export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listCl
                         // for Listings
                         if (isAlreadyAdded(data)) {
                           return <div className="font-normal">✓ Added</div>;
+                        }
+                        if (data?.orderSnippet?.listing?.orderItem?.startPriceEth) {
+                          return (
+                            <div className="font-normal flex justify-center">
+                              <EthPrice
+                                label={`${data?.orderSnippet?.listing?.orderItem?.startPriceEth}`}
+                                className="mr-2"
+                              />
+                              Lower price
+                            </div>
+                          );
                         }
                         return <div className="font-normal">List</div>;
                       },
