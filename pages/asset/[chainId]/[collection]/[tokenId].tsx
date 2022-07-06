@@ -12,7 +12,7 @@ import {
   useToggleTab,
   CenteredContent
 } from 'src/components/common';
-import { BLANK_IMAGE_URL, useFetch } from 'src/utils';
+import { BLANK_IMAGE_URL, getOwnerAddress, useFetch } from 'src/utils';
 import { Token, Collection, Erc721Metadata, OBOrder } from '@infinityxyz/lib-frontend/types/core';
 import {
   TraitList,
@@ -91,6 +91,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const [showPlaceBidModal, setShowPlaceBidModal] = useState(false);
   const [buyPriceEth, setBuyPriceEth] = useState('');
 
+  const isNftOwner = token ? user?.address === getOwnerAddress(token) : false;
   const listingOwner = token?.ordersSnippet?.listing?.orderItem?.makerAddress ?? '';
   const isListingOwner = user?.address === listingOwner;
 
@@ -268,7 +269,9 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
                 </Button>
               </div>
             </div>
-          ) : (
+          ) : null}
+
+          {isNftOwner ? null : (
             // Other users' action buttons
             <div className="md:-ml-1.5">
               <div className="flex flex-col md:flex-row gap-4 my-4 md:my-6 lg:mt-10">
