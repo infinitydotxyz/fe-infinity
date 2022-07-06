@@ -14,6 +14,7 @@ type OrderbookRowProps = {
 };
 
 export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.Element => {
+  const { user } = useAppContext();
   const { checkSignedIn, providerManager, chainId } = useAppContext();
 
   const valueDiv = (dataColumn: DataColumn) => {
@@ -85,6 +86,7 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
       console.error('signer is null');
     }
   };
+  const isOwner = order.makerAddress === user?.address;
 
   return (
     <div className="rounded-3xl mb-3 p-8 w-full bg-gray-100">
@@ -95,6 +97,9 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
           const title = data.name;
 
           if (data.field === 'buyOrSell') {
+            if (isOwner) {
+              return null;
+            }
             return (
               <Button
                 className="font-heading w-24"
