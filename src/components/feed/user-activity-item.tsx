@@ -9,6 +9,7 @@ interface Props {
 }
 
 export const UserActivityItem = ({ event }: Props) => {
+  const buyer = event.buyerDisplayName ? ellipsisAddress(event.buyerDisplayName) : ellipsisAddress(event.buyer);
   return (
     <div>
       <div className="bg-gray-100 px-10 py-6 rounded-3xl flex items-center font-heading">
@@ -53,6 +54,12 @@ export const UserActivityItem = ({ event }: Props) => {
             </div>
           </div>
           <div className="w-1/6">
+            <div className="text-gray-400">Date</div>
+            <div className="font-bold" title={new Date(event.timestamp).toLocaleString()}>
+              {format(event.timestamp)}
+            </div>
+          </div>
+          <div className="w-1/6">
             <div className="text-gray-400">From</div>
             <div className="font-bold">
               <NextLink href={`/profile/${event.seller}`}>
@@ -61,17 +68,9 @@ export const UserActivityItem = ({ event }: Props) => {
             </div>
           </div>
           <div className="w-1/6">
-            <div className="text-gray-400">To</div>
+            <div className="text-gray-400">{buyer ? 'To' : ''}</div>
             <div className="font-bold">
-              <NextLink href={`/profile/${event.buyer}`}>
-                {event.buyerDisplayName ? ellipsisAddress(event.buyerDisplayName) : ellipsisAddress(event.buyer)}
-              </NextLink>
-            </div>
-          </div>
-          <div className="w-1/6">
-            <div className="text-gray-400">Date</div>
-            <div className="font-bold" title={new Date(event.timestamp).toLocaleString()}>
-              {format(event.timestamp)}
+              <NextLink href={`/profile/${event.buyer}`}>{buyer}</NextLink>
             </div>
           </div>
         </div>
