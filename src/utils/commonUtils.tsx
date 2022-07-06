@@ -1,4 +1,5 @@
 import { getAddress } from '@ethersproject/address';
+import { BaseToken, OwnerInfo } from '@infinityxyz/lib-frontend/types/core';
 import {
   ETHEREUM_CHAIN_SCANNER_BASE,
   POLYGON_CHAIN_SCANNER_BASE,
@@ -224,4 +225,16 @@ export const getOptimizedCloudImage = (src: string | undefined, resolution = 'h3
   } else {
     return src;
   }
+};
+
+export const getOwnerAddress = (token: BaseToken | null | undefined) => {
+  let ownerAddress = '';
+  if (token) {
+    if (typeof token.owner === 'string') {
+      ownerAddress = token.owner;
+    } else {
+      ownerAddress = (token.owner as OwnerInfo)?.address ?? '';
+    }
+  }
+  return ownerAddress;
 };
