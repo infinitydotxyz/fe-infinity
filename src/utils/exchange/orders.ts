@@ -150,6 +150,31 @@ export async function approveERC20(
   }
 }
 
+export async function approveERC721ForChainNFTs(
+  user: string,
+  items: ChainNFTs[],
+  signer: JsonRpcSigner,
+  exchange: string
+) {
+  try {
+    console.log('Granting ERC721 approval');
+    for (const item of items) {
+      const collection = item.collection;
+      const contract = new Contract(collection, ERC721ABI, signer);
+      const isApprovedForAll = await contract.isApprovedForAll(user, exchange);
+      if (!isApprovedForAll) {
+        await contract.setApprovalForAll(exchange, true);
+      } else {
+        console.log('Already approved for all');
+      }
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (e: any) {
+    console.error('failed granting erc721 approvals');
+    throw new Error(e);
+  }
+}
+
 export async function approveERC721(user: string, items: OBOrderItem[], signer: JsonRpcSigner, exchange: string) {
   try {
     console.log('Granting ERC721 approval');
@@ -389,7 +414,7 @@ export async function sendMultipleNfts(
   const infinityExchange = new Contract(exchangeAddress, InfinityExchangeABI, signer);
   const from = await signer.getAddress();
   // grant approvals
-  await approveERC721(from, orderItems, signer, exchangeAddress);
+  await approveERC721ForChainNFTs(from, orderItems, signer, exchangeAddress);
   // perform send
   await infinityExchange.transferMultipleNFTs(toAddress, orderItems);
 }
