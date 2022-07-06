@@ -1,5 +1,5 @@
 import { EventTypeNames } from '@infinityxyz/lib-frontend/types/core/feed';
-import { BGImage, EthPrice, NextLink } from 'src/components/common';
+import { BGImage, EthPrice, NextLink, SVG } from 'src/components/common';
 import { ellipsisAddress, getChainScannerBase, PLACEHOLDER_IMAGE } from 'src/utils';
 import { format } from 'timeago.js';
 import { FeedEvent } from './feed-item';
@@ -21,9 +21,17 @@ export const UserActivityItem = ({ event }: Props) => {
           )}
         </NextLink>
         <div className="flex justify-between w-full mx-8 ml-4">
-          <div className="w-1/6">
+          <div className="w-1/3">
             <div className="text-black font-bold mr-2">
-              <a href={`/collection/${event.collectionSlug}`}>{event.collectionName}</a>
+              {/* <a href={`/collection/${event.collectionSlug}`}>{event.collectionName}</a> */}
+              <NextLink
+                href={`/collection/${event.collectionSlug}`}
+                className="font-bold whitespace-pre-wrap flex items-center"
+                title={event.collectionSlug}
+              >
+                {event.collectionName}
+                {event?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1" style={{ width: 24 }} /> : null}
+              </NextLink>
             </div>
             <div className="text-gray-400">
               <a href={`/asset/${event.chainId}/${event.collectionAddress}/${event.tokenId}`}>

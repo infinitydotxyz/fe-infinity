@@ -151,7 +151,7 @@ const SingleCollectionCell = ({
             className="font-bold whitespace-pre-wrap flex items-center"
             title={title}
           >
-            {title}{' '}
+            {title}
             {orderNft?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1" style={{ width: 24 }} /> : null}
           </NextLink>
         ) : (
@@ -160,7 +160,7 @@ const SingleCollectionCell = ({
             className="font-bold whitespace-pre-wrap flex items-center"
             title={title}
           >
-            {title}{' '}
+            {title}
             {orderNft?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1" style={{ width: 24 }} /> : null}
           </NextLink>
         )}
@@ -183,7 +183,7 @@ const SingleCollectionCell = ({
             {token && (
               <NextLink
                 href={`/asset/1/${orderNft?.collectionAddress}/${token.tokenId}`}
-                className="whitespace-pre-wrap"
+                className="whitespace-pre-wrap text-gray-400"
                 title={token?.tokenId}
               >
                 {token?.tokenId}
