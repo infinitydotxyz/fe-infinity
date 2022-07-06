@@ -153,7 +153,7 @@ export const OrderSummaryItem = ({ orderInCart }: Props) => {
 
     if (isSellOrderCart()) {
       items.push({
-        title: 'Min price',
+        title: 'Min list price',
         value: <EthPrice label={orderInCart.orderSpec.endPriceEth.toString()} />
       });
       items.push({

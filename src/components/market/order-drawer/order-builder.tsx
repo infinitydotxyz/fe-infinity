@@ -65,7 +65,7 @@ export const OrderBuilder = () => {
     };
 
     if (isSellOrderCart()) {
-      label = multiple ? 'Min combined price' : 'Min price';
+      label = multiple ? 'Min combined price' : 'Min list price';
 
       tooltip = {
         title: label,
