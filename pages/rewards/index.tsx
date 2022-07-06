@@ -86,7 +86,7 @@ const RewardsPage = () => {
                 <div className="text-sm mt-1">Voting Power</div>
               </div>
               <div className="lg:w-1/4 sm:w-full">
-                <div className="text-2xl font-heading font-bold">4,000</div>
+                <div className="text-2xl font-heading font-bold">0</div>
                 <div className="text-sm mt-1">Voted</div>
               </div>
               <div className="lg:w-1/4 sm:w-full">
