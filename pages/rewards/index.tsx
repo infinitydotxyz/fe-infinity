@@ -2,19 +2,24 @@ import React, { useState } from 'react';
 import { Button, PageBox } from 'src/components/common';
 import { StakeTokensModal } from 'src/components/rewards/stake-tokens';
 import { UnstakeTokensModal } from 'src/components/rewards/unstake-tokens';
+import { UserProfileDto } from 'src/components/user/user-profile-dto';
 import { useCurationQuota } from 'src/hooks/api/useCurationQuota';
 import { useStakePower } from 'src/hooks/contract/staker/useStakerGetStakePower';
 import { useStakerTotalStaked } from 'src/hooks/contract/staker/useStakerTotalStaked';
 import { useTokenBalance } from 'src/hooks/contract/token/useTokenBalance';
+import { useFetch } from 'src/utils';
+import { useAppContext } from 'src/utils/context/AppContext';
 import { numberFormatter } from 'src/utils/number-formatter';
 
 const RewardsPage = () => {
+  const { user } = useAppContext();
   const [showStakeTokensModal, setShowStakeTokensModal] = useState(false);
   const [showUnstakeTokensModal, setShowUnstakeTokensModal] = useState(false);
   const { balance } = useTokenBalance();
   const { staked } = useStakerTotalStaked();
   const { stakePower } = useStakePower(); // TODO: not sure if this is the correct contract method to call
   const { result: quota } = useCurationQuota();
+  const { result: profile } = useFetch<UserProfileDto>(user?.address ? `/user/${user.address}` : null);
 
   return (
     <PageBox title="Rewards" showTitle={false}>
@@ -86,7 +91,7 @@ const RewardsPage = () => {
                 <div className="text-sm mt-1">Voting Power</div>
               </div>
               <div className="lg:w-1/4 sm:w-full">
-                <div className="text-2xl font-heading font-bold">0</div>
+                <div className="text-2xl font-heading font-bold">{profile?.totalCurated || 0}</div>
                 <div className="text-sm mt-1">Voted</div>
               </div>
               <div className="lg:w-1/4 sm:w-full">

@@ -8,7 +8,6 @@ import { useCurationQuota } from 'src/hooks/api/useCurationQuota';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { useFetch } from 'src/utils';
 import { UserProfileDto } from './user-profile-dto';
-import { useTokenVotes } from 'src/hooks/contract/token/useTokenVotes';
 
 const InfoBox: React.FC<{ title: string; subtitle: string | number }> = ({ title, subtitle }) => {
   return (
