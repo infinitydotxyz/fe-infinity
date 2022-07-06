@@ -15,7 +15,7 @@ import {
 } from 'src/components/common';
 import { truncateDecimals } from 'src/utils';
 import { useFetch } from 'src/utils/apiUtils';
-import { BLANK_IMG, ITEMS_PER_PAGE } from 'src/utils/constants';
+import { BLANK_IMAGE_URL_MINI, ITEMS_PER_PAGE } from 'src/utils/constants';
 import { useAppContext } from 'src/utils/context/AppContext';
 
 type StatColType = {
@@ -162,7 +162,7 @@ export const Analytics = () => {
     const statistics = items.map((d, index) => {
       const address = d.collectionAddress;
       const name = d.name;
-      const image = d.profileImage ? d.profileImage : BLANK_IMG;
+      const image = d.profileImage ? d.profileImage : BLANK_IMAGE_URL_MINI;
       // const trust = d.votesFor > 0 ? `${(d.votesFor / (d.votesAgainst + d.votesFor)) * 100}%` : '0%';
       const items = d.numNfts ? d.numNfts : '-';
       const owners = d.numOwners ? d.numOwners : '-';

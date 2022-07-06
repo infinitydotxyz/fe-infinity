@@ -1,5 +1,5 @@
 import React from 'react';
-import { BLANK_IMG, ellipsisAddress } from 'src/utils';
+import { BLANK_IMAGE_URL_MINI, ellipsisAddress } from 'src/utils';
 import { BGImage, EthPrice, NextLink } from 'src/components/common';
 import { format } from 'timeago.js';
 import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
@@ -37,7 +37,7 @@ export const ActivityItem = ({ item }: Props) => {
               src={item.collectionData?.metadata?.profileImage}
             />
           ) : (
-            <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={BLANK_IMG} />
+            <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={BLANK_IMAGE_URL_MINI} />
           )}
         </NextLink>
         <div className="flex justify-between w-full mx-8">
