@@ -1,6 +1,5 @@
+import { EventType, EventTypeNames } from '@infinityxyz/lib-frontend/types/core/feed';
 import React from 'react';
-
-import { EventType } from './activity-list';
 import { Checkbox, PopoverButton } from 'src/components/common';
 
 interface Props {
@@ -11,8 +10,9 @@ interface Props {
 export const ActivityFilter = ({ activityTypes, onChange }: Props) => {
   return (
     <PopoverButton title="Filter" buttonClassName="font-heading">
-      {[EventType.Sale, EventType.Listing, EventType.Offer].map((type: EventType) => {
-        const label = `${type.charAt(0).toUpperCase() + type.slice(1)}s`;
+      {[EventType.NftSale, EventType.NftListing, EventType.NftOffer].map((type: EventType) => {
+        const typeName = EventTypeNames[type];
+        const label = `${typeName.charAt(0).toUpperCase() + typeName.slice(1)}s`;
 
         return (
           <Checkbox

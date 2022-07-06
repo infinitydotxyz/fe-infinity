@@ -3,6 +3,7 @@ import { BLANK_IMG, ellipsisAddress } from 'src/utils';
 import { BGImage, EthPrice, NextLink } from 'src/components/common';
 import { format } from 'timeago.js';
 import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
+import { EventType, EventTypeNames } from '@infinityxyz/lib-frontend/types/core/feed';
 
 export interface NftActivity {
   address: string;
@@ -23,15 +24,6 @@ export interface NftActivity {
 
 interface Props {
   item: NftActivity;
-}
-
-// const ETHERSCAN_URL = 'https://etherscan.io/tx/';
-
-type ActivityType = 'sale' | 'listing' | 'offer';
-enum ActivityTypeName {
-  sale = 'Sale',
-  listing = 'Listing',
-  offer = 'Offer'
 }
 
 export const ActivityItem = ({ item }: Props) => {
@@ -63,7 +55,7 @@ export const ActivityItem = ({ item }: Props) => {
             <div className="text-gray-400">Event</div>
             <div className="font-bold">
               <a href={`${item.externalUrl}`} target="_blank" rel="noopener noreferrer">
-                {ActivityTypeName[item.type as ActivityType]}
+                {EventTypeNames[item.type as EventType]}
               </a>
             </div>
           </div>
