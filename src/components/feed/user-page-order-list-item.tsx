@@ -55,7 +55,7 @@ export const UserPageOrderListItem = ({ order, onClickCancel }: Props) => {
             </div>
           </div>
           <div className="w-1/8">
-            <div className="text-gray-400">NFT Qty</div>
+            <div className="text-gray-400"># NFTs</div>
             <div className="font-bold">{order.nfts.length}</div>
           </div>
           <div className="w-1/8">
