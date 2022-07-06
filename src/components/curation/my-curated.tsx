@@ -7,6 +7,7 @@ import { CurationTable } from 'src/components/curation/curations-table';
 import { CuratedCollectionsDto } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections.dto';
 import { NoResultsBox } from './no-results-box';
 import { CuratedTab } from './types';
+import { useRouter } from 'next/router';
 
 export const MyCuratedCollections: React.FC<{ orderBy: CuratedCollectionsOrderBy }> = ({ orderBy }) => {
   const { user } = useAppContext();
@@ -20,6 +21,7 @@ export const MyCuratedCollections: React.FC<{ orderBy: CuratedCollectionsOrderBy
       }
     }
   );
+  const router = useRouter();
 
   const fetchMore = () => setSize((size) => size + 1);
 
@@ -27,14 +29,19 @@ export const MyCuratedCollections: React.FC<{ orderBy: CuratedCollectionsOrderBy
     <div>
       {error ? <div className="flex flex-col mt-10">Unable to load curated collections.</div> : null}
 
-      {result && result?.length > 0 && (
+      {result && result[0].data.curations?.length > 0 && (
         <CurationTable
           collections={result?.map((result) => result.data.collections)}
           curations={result?.map((result) => result.data.curations)}
         />
       )}
 
-      {result && result?.length === 0 && <NoResultsBox tab={CuratedTab.MyCurated} />}
+      {result && result[0].data.curations?.length === 0 && (
+        <NoResultsBox
+          tab={CuratedTab.MyCurated}
+          onClick={() => router.replace(`curation?tab=${CuratedTab.AllCurated}`)}
+        />
+      )}
 
       <ScrollLoader onFetchMore={fetchMore} />
 

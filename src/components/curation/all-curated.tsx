@@ -8,11 +8,13 @@ import { PaginatedCollectionsDto } from '@infinityxyz/lib-frontend/types/dto/col
 import { CuratedCollectionsDto } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections.dto';
 import { NoResultsBox } from './no-results-box';
 import { CuratedTab } from './types';
+import { useRouter } from 'next/router';
 
 export type AllCuratedProps = { orderBy: CuratedCollectionsOrderBy };
 
 export const AllCuratedCollections: React.FC<AllCuratedProps> = ({ orderBy }) => {
   const { user } = useAppContext();
+  const router = useRouter();
 
   const query = {
     orderBy,
@@ -45,14 +47,16 @@ export const AllCuratedCollections: React.FC<AllCuratedProps> = ({ orderBy }) =>
     <div>
       {collectionsError ? <div className="flex flex-col mt-10">Unable to load curated collections.</div> : null}
 
-      {collectionsArray && collectionsArray?.length > 0 && (
+      {collectionsArray && collectionsArray[0].data?.length > 0 && (
         <CurationTable
           collections={collectionsArray.map((result) => result.data)}
           curations={curationsArray?.map((result) => result.data.curations)}
         />
       )}
 
-      {collectionsArray && collectionsArray?.length === 0 && <NoResultsBox tab={CuratedTab.AllCurated} />}
+      {collectionsArray && collectionsArray[0].data?.length === 0 && (
+        <NoResultsBox tab={CuratedTab.AllCurated} onClick={() => router.push('marketplace')} />
+      )}
 
       <ScrollLoader onFetchMore={fetchMore} />
 
