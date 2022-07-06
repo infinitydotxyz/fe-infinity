@@ -387,6 +387,9 @@ export async function sendMultipleNfts(
 ) {
   const exchangeAddress = getExchangeAddress(chainId);
   const infinityExchange = new Contract(exchangeAddress, InfinityExchangeABI, signer);
+  const from = await signer.getAddress();
+  // grant approvals
+  await approveERC721(from, orderItems, signer, exchangeAddress);
   // perform send
   await infinityExchange.transferMultipleNFTs(toAddress, orderItems);
 }
