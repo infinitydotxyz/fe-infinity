@@ -19,9 +19,9 @@ interface UserPageProps {
 
 export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner = false }) => {
   const router = useRouter();
-  const tabs = ['Collected', 'Curated', 'Orders', 'Activity'];
+  let tabs = ['Collected', 'Curated', 'Orders', 'Activity'];
   if (isOwner) {
-    tabs.push('Send');
+    tabs = ['Collected', 'Curated', 'Orders', 'Activity', 'Send'];
   }
   const { options, onChange, selected } = useToggleTab(tabs, (router?.query?.tab as string) || 'Collected');
 
@@ -29,7 +29,7 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
     <>
       <UserBannerImage imgSrc={userInfo.bannerImage} isOwner={isOwner} />
 
-      <div className="flex flex-col mx-auto translate-x-1 -mt-16">
+      <div className="relative flex flex-col mx-1 -mt-16">
         <UserProfileImage imgSrc={userInfo.profileImage} isOwner={isOwner} />
 
         <h2 className="my-2 text-6xl font-body">{userInfo.displayName || 'No Display Name'}</h2>

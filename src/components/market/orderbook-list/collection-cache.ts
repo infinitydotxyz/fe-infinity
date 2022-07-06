@@ -207,9 +207,9 @@ export const useCollectionCache = () => {
 
     if (token && tokenMetadata) {
       if ('title' in tokenMetadata) {
-        return tokenMetadata.title ?? tokenMetadata.name;
+        return tokenMetadata.title ?? tokenMetadata.name ?? '';
       }
-      return tokenMetadata.name;
+      return tokenMetadata.name ?? '';
     }
 
     return tokenId;

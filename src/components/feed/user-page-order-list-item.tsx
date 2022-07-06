@@ -5,6 +5,7 @@ import { format } from 'timeago.js';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { UserProfileDto } from '../user/user-profile-dto';
 import { OrderbookItem } from '../market/orderbook-list/orderbook-item';
+import { getOrderType } from 'src/utils/marketUtils';
 
 interface Props {
   order: SignedOBOrder;
@@ -12,10 +13,10 @@ interface Props {
   onClickCancel: (order: SignedOBOrder, checked: boolean) => void;
 }
 
-export const UserPageOrderListItem = ({ order, userInfo, onClickCancel }: Props) => {
+export const UserPageOrderListItem = ({ order, onClickCancel }: Props) => {
   const [isCancelling, setIsCancelling] = useState(false);
 
-  const isListing = !order.isSellOrder && order.makerAddress === userInfo?.address;
+  const isListing = getOrderType(order) === 'Listing';
   return (
     <div>
       <div className="bg-gray-100 px-10 py-6 rounded-3xl flex items-center font-heading">
@@ -43,7 +44,7 @@ export const UserPageOrderListItem = ({ order, userInfo, onClickCancel }: Props)
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {order.isSellOrder ? 'Sale' : isListing ? 'Listing' : 'Offer'}
+                {getOrderType(order)}
               </a>
             </div>
           </div>
@@ -54,7 +55,7 @@ export const UserPageOrderListItem = ({ order, userInfo, onClickCancel }: Props)
             </div>
           </div>
           <div className="w-1/8">
-            <div className="text-gray-400">NFT amount</div>
+            <div className="text-gray-400"># NFTs</div>
             <div className="font-bold">{order.nfts.length}</div>
           </div>
           <div className="w-1/8">

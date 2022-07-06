@@ -31,7 +31,7 @@ export const PageBox = ({
   const { orderDrawerOpen, setOrderDrawerOpen } = useOrderContext();
   const [renderPasswordModal, setRenderPasswordModal] = useState(false);
 
-  const hasOrderDrawer = router.asPath.indexOf('tab=Orders') < 0 && router.asPath.indexOf('tab=Send') < 0;
+  const hasOrderDrawer = router.asPath.indexOf('me?tab=Orders') < 0 && router.asPath.indexOf('me?tab=Send') < 0;
 
   useEffect(() => {
     setRenderPasswordModal(isPasswordModalNeeded());
@@ -39,15 +39,15 @@ export const PageBox = ({
 
   return (
     <>
-      {chainId !== '1' && chainId !== '5' && (
-        <div className="text-center bg-theme-gray-100 text-red-800 py-1">You are not on Ethereum network</div>
-      )}
-
       <div className="transition w-[100vw] h-[100vh] overflow-y-auto overflow-x-hidden justify-items-center">
         {renderPasswordModal ? (
           <PasswordModal isOpen={true} onClose={() => console.log} />
         ) : (
           <Header title={title}>
+            {chainId !== '1' && (
+              <div className="text-center bg-theme-gray-100 text-red-800 py-1">You are not on Ethereum network</div>
+            )}
+
             <Navbar />
 
             <div className={`transition ${fullWidth ? 'w-full' : pageStyles}`}>
@@ -59,8 +59,8 @@ export const PageBox = ({
                 {hasOrderDrawer && <OrderDrawer open={orderDrawerOpen} onClose={() => setOrderDrawerOpen(false)} />}
               </div>
 
-              {/* allows scroll so items aren't at the bottom of the screen */}
-              {/* <div style={{ height: 300 }} /> */}
+              {/* allows scroll so items aren't at the bottom of the screen  */}
+              <div className="shrink-0" style={{ height: 300 }} />
             </div>
           </Header>
         )}

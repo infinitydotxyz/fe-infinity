@@ -61,7 +61,7 @@ export const OrderBuilder = () => {
     let label = multiple ? 'Max budget' : 'Max budget';
     let tooltip = {
       title: label,
-      content: '' // todo: tooltip goes here
+      content: 'The max amount you want to spend for the NFT(s)' // todo: tooltip goes here
     };
 
     if (isSellOrderCart()) {
@@ -76,11 +76,11 @@ export const OrderBuilder = () => {
     return (
       <TextInputBox
         type="number"
-        value={price.toString()}
+        value={price}
         placeholder=""
         addEthSymbol={true}
         label={label}
-        onChange={(value) => setPrice(parseFloat(value))}
+        onChange={(value) => setPrice(value)}
         tooltip={tooltip}
       />
     );
@@ -92,7 +92,7 @@ export const OrderBuilder = () => {
         label="Expiration Date"
         value={new Date(parseInt(expirationDate.toString()))}
         onChange={(date) => {
-          setExpirationDate(date.getTime() / 1000);
+          setExpirationDate(date.getTime());
         }}
       />
     );

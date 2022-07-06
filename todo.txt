@@ -1,0 +1,13 @@
+feed notes:
+
+collection/collection-activity-tab 
+ community-right-panel
+
+top-holder-list
+
+voted-status
+
+CollectionFeed
+
+http://localhost:3000/asset/1/0x142c5b3a5689ba0871903c53dacf235a28cb21f0/22
+asset page has spinner non-centered

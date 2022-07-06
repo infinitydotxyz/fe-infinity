@@ -2,16 +2,12 @@ import { FunctionComponent, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Button } from 'src/components/common';
 import { Formik, Form } from 'formik';
-
 import { User } from 'src/utils/context/AppContext';
 import { apiPut } from 'src/utils';
-
 import { ProfileImageUpload } from './profile-image-upload';
 import { UserProfileDto } from './user-profile-dto';
-import { ProfileBannerImageUpload } from './profile-banner-image-upload';
 import { UserProfileForm } from './user-profile-form';
 import { getUserProfileSchema } from './schemas/user-profile-schema';
-// import { UserWalletForm } from './user-wallet-form';
 
 interface AccountSettingsProps {
   user: User;
@@ -124,6 +120,7 @@ export const AccountSettingsPage: FunctionComponent<AccountSettingsProps> = (pro
           <div className="flex flex-col bg-white max-w-3xl mx-auto px-4 sm:px-12 rounded-3xl">
             <div className="mt-12">
               <ProfileImageUpload
+                roundPhoto={true}
                 onUpload={handleProfileImageUpload}
                 onDelete={handleProfileImageRemove}
                 imgSource={userInfo.profileImage}
@@ -132,9 +129,11 @@ export const AccountSettingsPage: FunctionComponent<AccountSettingsProps> = (pro
             {/* <h2 className="font-body text-4xl mt-20 mb-4 font-bold">Edit Profile</h2> */}
 
             <UserProfileForm />
-            <div className="mt-4 mb-12">
-              <h3 className="font-body text-2xl mt-10 mb-10 font-bold">Header photo</h3>
-              <ProfileBannerImageUpload
+            <div>
+              <div className="font-body text-2xl mt-10 mb-10 font-bold">Header photo</div>
+
+              <ProfileImageUpload
+                roundPhoto={false}
                 onUpload={handleBannerImageUpload}
                 onDelete={handleBannerImageRemove}
                 imgSource={userInfo.bannerImage}

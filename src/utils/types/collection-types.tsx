@@ -1,7 +1,5 @@
 import { BaseToken } from '@infinityxyz/lib-frontend/types/core';
 
-// SNG why type not in the lib?
-
 // CollectionSearchDto
 export interface CollectionSearchDto {
   description: string;

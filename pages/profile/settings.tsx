@@ -1,5 +1,5 @@
 import { AccountSettingsPage } from 'src/components/user/profile-settings';
-import { PageBox, Spinner } from 'src/components/common';
+import { CenteredContent, PageBox, Spinner } from 'src/components/common';
 import { useAppContext, User } from 'src/utils/context/AppContext';
 import { UserProfileDto } from 'src/components/user/user-profile-dto';
 import { useFetch } from 'src/utils';
@@ -29,7 +29,9 @@ const AccountSettingsContent = ({ user, chainId }: Props) => {
   if (isLoading) {
     return (
       <PageBox title="Loading..." showTitle={false}>
-        <Spinner />
+        <CenteredContent>
+          <Spinner />
+        </CenteredContent>
       </PageBox>
     );
   }

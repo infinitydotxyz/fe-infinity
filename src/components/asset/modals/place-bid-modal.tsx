@@ -1,15 +1,14 @@
-import { Collection, Token } from '@infinityxyz/lib-frontend/types/core';
+import { Token } from '@infinityxyz/lib-frontend/types/core';
 import React, { useState } from 'react';
 import { Modal, CurrencyInput, NextLink, Checkbox } from 'src/components/common';
 
 interface Props {
   isOpen: boolean;
-  collection: Collection;
   token: Token;
   onClose: () => void;
 }
 
-export const PlaceBidModal = ({ isOpen, onClose, collection, token }: Props) => {
+export const PlaceBidModal = ({ isOpen, onClose, token }: Props) => {
   const [price, setPrice] = useState(0);
   const [termsChecked, setTermsChecked] = useState(false);
 
@@ -24,7 +23,6 @@ export const PlaceBidModal = ({ isOpen, onClose, collection, token }: Props) => 
       onOKButton={() => {
         console.log('Place bid');
 
-        console.log(collection);
         console.log(token);
       }}
       onCancelButton={() => console.log('Convert ETH')}
@@ -47,7 +45,7 @@ export const PlaceBidModal = ({ isOpen, onClose, collection, token }: Props) => 
             label={
               <>
                 <span className="text-theme-light-800">{"By checking this box, you agree to Infinity's"}</span>
-                <NextLink href="/terms-of-service" className="ml-2 underline">
+                <NextLink href="/terms" className="ml-2 underline">
                   Terms of Service
                 </NextLink>
               </>

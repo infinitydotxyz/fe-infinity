@@ -1,11 +1,14 @@
+import { useEffect, useState } from 'react';
 import { FeedEventType } from '@infinityxyz/lib-frontend/types/core/feed';
-import { useState } from 'react';
-import { FeedFilter, fetchMoreEvents } from 'src/utils/firestore/firestoreUtils';
+import { apiGet } from 'src/utils';
+import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
 import { ScrollLoader } from '../common';
-import { ActivityItem } from './activity-item';
+// import { ActivityItem } from './activity-item';
 import { CommentPanel } from './comment-panel';
 import { FeedFilterDropdown } from './feed-filter-dropdown';
 import { FeedEvent, FeedItem } from './feed-item';
+import { ActivityItem, NftActivity } from '../asset/activity/activity-item';
+import { useAppContext } from 'src/utils/context/AppContext';
 
 // let eventsInit = false;
 
@@ -18,6 +21,7 @@ interface CollectionFeedProps {
 }
 
 export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity, className }: CollectionFeedProps) => {
+  const { chainId } = useAppContext();
   const [events, setEvents] = useState<FeedEvent[]>([]);
   const [newEvents, setNewEvents] = useState<FeedEvent[]>([]); // new feed events
   const [filter, setFilter] = useState<FeedFilter>({ collectionAddress, tokenId, types });
@@ -25,47 +29,46 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
   const [commentPanelEvent, setCommentPanelEvent] = useState<FeedEvent | null>(null);
   const [filteringTypes, setFilteringTypes] = useState<FeedEventType[]>([]);
 
-  if (forActivity && !collectionAddress) {
-    return null; // require collectionAddress
-  }
+  const [isLoading, setIsLoading] = useState(false);
+  const [activities, setActivities] = useState<NftActivity[]>([]);
+  const [cursor, setCursor] = useState('');
 
-  // const getEvents = () => {
-  //   try {
-  //     subscribe(COLL_FEED, filter, (type: string, data: FeedEvent) => {
-  //       if (type === 'added') {
-  //         if (eventsInit === false) {
-  //           setEvents((currentEvents) => [data, ...currentEvents].sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1))); // add initial feed events.
-  //           setTimeout(() => {
-  //             eventsInit = true;
-  //           }, 3000);
-  //         } else {
-  //           setNewEvents((currentEvents) =>
-  //             [data, ...currentEvents].sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1))
-  //           );
-  //         }
-  //       } else {
-  //         setEvents((currentEvents) => [...currentEvents, data].sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1)));
-  //       }
-  //     });
-  //   } catch (err) {
-  //     console.error('ERR: ', err);
-  //   }
-  // };
+  const fetchActivity = async (isRefresh = false, fromCursor = '') => {
+    if (!collectionAddress) {
+      return;
+    }
 
-  // useEffect(() => {
-  //   eventsInit = false;
-  //   setEvents([]);
-  //   setNewEvents([]);
-  //   getEvents();
-  // }, [filter]);
+    try {
+      setIsLoading(true);
+      const url = tokenId
+        ? `/collections/${chainId}:${collectionAddress}/nfts/${tokenId}/activity`
+        : `/collections/${chainId}:${collectionAddress}/activity`;
+      const { result, error } = await apiGet(url, {
+        query: {
+          limit: 50,
+          eventType: filter.types || ['sale', 'listing', 'offer'],
+          cursor: fromCursor
+        }
+      });
 
-  // useEffect(() => {
-  //   let arr = events;
-  //   if (filter.types) {
-  //     arr = events.filter((event) => (filter.types ?? []).indexOf(event?.type as FeedEventType) >= 0);
-  //   }
-  //   setFilteredEvents(arr);
-  // }, [events]);
+      if (!error && result) {
+        if (isRefresh) {
+          setActivities([...result.data]);
+        } else {
+          setActivities([...activities, ...result.data]);
+        }
+        setCursor(result?.cursor);
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchActivity(true);
+  }, [filter]);
 
   const onChangeFilterDropdown = (checked: boolean, checkId: string) => {
     const newFilter = { ...filter };
@@ -93,12 +96,39 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
     }
   };
 
+  if (forActivity && !collectionAddress) {
+    return null; // require collectionAddress
+  }
+
   return (
     <div className={`min-h-[1024px] ${className}`}>
       <div className="flex justify-between mt-[-66px] mb-6">
         <div className="text-3xl mb-6">&nbsp;</div>
-        <FeedFilterDropdown selectedTypes={filteringTypes} onChange={onChangeFilterDropdown} />
+        <FeedFilterDropdown
+          options={[
+            {
+              label: 'All',
+              value: ''
+            },
+            {
+              label: 'Listings',
+              value: 'listing'
+            },
+            {
+              label: 'Offers',
+              value: 'offer'
+            },
+            {
+              label: 'Sales',
+              value: 'sale'
+            }
+          ]}
+          selectedTypes={filteringTypes}
+          onChange={onChangeFilterDropdown}
+        />
       </div>
+
+      {!isLoading && activities.length === 0 ? <div className="font-heading">No data available.</div> : null}
 
       {newEvents.length > 0 ? (
         <div
@@ -114,9 +144,14 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
       ) : null}
 
       <ul className="space-y-4">
+        {forActivity &&
+          activities.map((act: NftActivity, idx) => {
+            return <ActivityItem key={idx} item={act} />;
+          })}
+
         {events.map((event, idx) => {
           if (forActivity) {
-            return <ActivityItem key={idx} event={event} />;
+            // return <ActivityItem key={idx} event={event} />;
           }
           return (
             <li key={idx} className="">
@@ -157,9 +192,7 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
 
         <ScrollLoader
           onFetchMore={async () => {
-            const data: FeedEvent[] = (await fetchMoreEvents(filter)) as FeedEvent[];
-            console.log('data', data);
-            setEvents([...events, ...data]);
+            fetchActivity(false, cursor);
           }}
         />
       </ul>

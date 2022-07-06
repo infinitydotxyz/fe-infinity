@@ -46,6 +46,31 @@ module.exports = {
     },
     'desktop-8k': {
       min: '2561px'
+    },
+    // for grids with cards
+    grid1: {
+      max: '640px'
+    },
+    grid2: {
+      min: '640px'
+    },
+    grid3: {
+      min: '1058px'
+    },
+    grid4: {
+      min: '1380px'
+    },
+    grid5: {
+      min: '1850px'
+    },
+    grid6: {
+      min: '2250px'
+    },
+    grid7: {
+      min: '2600px'
+    },
+    grid8: {
+      min: '3000px'
     }
   },
   filter: {
@@ -96,6 +121,16 @@ module.exports = {
     current: 'currentColor',
     primary: '#000',
     secondary: '#666',
+    red: {
+      500: '#d63c3c',
+      300: '#e8adad'
+    },
+    blue: {
+      300: '#92deff'
+    },
+    green: {
+      500: '#15a456'
+    },
     theme: {
       dark: {
         50: '#FFFFFF',

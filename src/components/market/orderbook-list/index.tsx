@@ -1,6 +1,6 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { Button, Dropdown, ScrollLoader } from 'src/components/common';
+import { Button, CenteredContent, Dropdown, ScrollLoader, Spinner } from 'src/components/common';
 import { OrderbookProvider, SORT_FILTERS, useOrderbook } from '../OrderbookContext';
 import { OrderbookRow } from './orderbook-row';
 import { OrderbookFilters } from './filters/orderbook-filters';
@@ -18,14 +18,15 @@ const getSortLabel = (key: string | undefined) => {
   return key ? SORT_LABELS[key] || 'Sort' : 'Sort';
 };
 
-interface OrderbookContainerProps {
+interface Props {
   collectionId?: string;
+  tokenId?: string;
   className?: string;
 }
 
-export const OrderbookContainer = ({ collectionId, className }: OrderbookContainerProps): JSX.Element => {
+export const OrderbookContainer = ({ collectionId, tokenId, className }: Props): JSX.Element => {
   return (
-    <OrderbookProvider collectionId={collectionId}>
+    <OrderbookProvider collectionId={collectionId} tokenId={tokenId}>
       <OrderbookContent className={className} />
     </OrderbookProvider>
   );
@@ -33,7 +34,7 @@ export const OrderbookContainer = ({ collectionId, className }: OrderbookContain
 
 export const OrderbookContent = ({ className }: { className?: string }): JSX.Element => {
   const { query } = useRouter();
-  const { orders, fetchMore, isLoading, updateFilter, filters, hasMoreOrders } = useOrderbook();
+  const { orders, fetchMore, isLoading, updateFilter, filters, hasMoreOrders, hasNoData } = useOrderbook();
   const [showFilters, setShowFilters] = useState<boolean>(
     query.orderTypes || query.collections || query.minPrice || query.maxPrice || query.numberOfNfts ? true : false
   );
@@ -46,8 +47,7 @@ export const OrderbookContent = ({ className }: { className?: string }): JSX.Ele
 
   return (
     <>
-      <div className={`flex flex-col gap-1 ${className}`}>
-        {/* Filters & Sort */}
+      <div className={`flex flex-col gap-1 min-h-[1024px] ${className}`}>
         <div className="text-right pb-8">
           <Button
             variant="outline"
@@ -84,21 +84,30 @@ export const OrderbookContent = ({ className }: { className?: string }): JSX.Ele
           isLoading={isLoading}
           fetchMore={fetchMore}
           hasMoreOrders={hasMoreOrders}
+          hasNoData={hasNoData}
         />
       </div>
     </>
   );
 };
 
-type OBListDummyProps = {
+interface Props2 {
   orders: SignedOBOrder[];
   isLoading: boolean;
   fetchMore: () => Promise<void>;
   showFilters?: boolean;
   hasMoreOrders?: boolean;
-};
+  hasNoData?: boolean;
+}
 
-const OrderbookList = ({ orders, showFilters, isLoading, fetchMore, hasMoreOrders }: OBListDummyProps): JSX.Element => {
+const OrderbookList = ({
+  orders,
+  showFilters,
+  isLoading,
+  fetchMore,
+  hasMoreOrders,
+  hasNoData
+}: Props2): JSX.Element => {
   return (
     <div className="flex justify-center align-items gap-4 pointer-events-auto">
       {showFilters && (
@@ -107,34 +116,21 @@ const OrderbookList = ({ orders, showFilters, isLoading, fetchMore, hasMoreOrder
         </div>
       )}
       <div className="flex flex-col items-start w-full">
+        {hasNoData && <div className="font-heading">No data available.</div>}
+
         {orders.length > 0 &&
           orders.map((order: SignedOBOrder, i) => {
             return <OrderbookRow key={`${i}-${order.id}`} order={order} isFilterOpen={showFilters ?? false} />;
           })}
 
-        {/* {orders.length === 0 && !isLoading && <div>No results found</div>} */}
-
-        {/* {isLoading && (
-          <div className="w-full flex justify-center align-items">
+        {isLoading && (
+          <CenteredContent>
             <Spinner />
-          </div>
-        )} */}
-        {isLoading && <LoadingRow />}
+          </CenteredContent>
+        )}
 
         {hasMoreOrders && <ScrollLoader onFetchMore={fetchMore} />}
       </div>
     </div>
   );
 };
-
-// =======================================================================
-
-const LoadingRow = () => (
-  <>
-    {Array.from(Array(4).keys())?.map((x, i) => (
-      <Fragment key={i}>
-        <div className="w-full h-[110px] mb-3 bg-theme-light-200 rounded-3xl animate-pulse"></div>
-      </Fragment>
-    ))}
-  </>
-);

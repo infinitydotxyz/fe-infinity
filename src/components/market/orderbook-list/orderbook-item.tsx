@@ -2,9 +2,10 @@ import { OBOrder, OBOrderItem } from '@infinityxyz/lib-frontend/types/core';
 import { OBTokenInfoDto } from '@infinityxyz/lib-frontend/types/dto/orders';
 
 import { ReactNode } from 'react';
-import { NextLink } from 'src/components/common';
+import { NextLink, SVG } from 'src/components/common';
 import { useRouter } from 'next/router';
 import { BLANK_IMG } from 'src/utils';
+// import ReactTooltip from 'react-tooltip';
 
 type Props4 = {
   content?: ReactNode;
@@ -33,10 +34,12 @@ export const OrderbookItem = ({ title, content, nameItem, order }: Props4): JSX.
             token={token}
           />
         );
-        // multiple items from one collection
       } else {
+        // multiple items from one collection
         return (
           <SingleCollectionCell
+            order={order}
+            nfts={order.nfts}
             onClickTitle={() => {
               router.push(`/collection/${nft.collectionSlug}`);
             }}
@@ -89,30 +92,44 @@ const MultiCollectionCell = ({ nfts }: MultiCollectionCellProps) => {
 };
 
 type SingleCollectionCellProps = {
+  order?: OBOrder;
   image: string;
   title: string;
   orderNft?: OBOrderItem;
   token?: OBTokenInfoDto;
   count?: number;
   onClickTitle?: () => void;
+  nfts?: OBOrderItem[];
 };
 
 const SingleCollectionCell = ({
+  order,
   image,
   title,
   onClickTitle,
   orderNft,
   token,
-  count = 0
+  count = 0,
+  nfts
 }: SingleCollectionCellProps) => {
+  const tokenNames: string[] = [];
+  // console.log('nfts', nfts);
+  if (nfts && nfts.length && nfts[0].tokens) {
+    for (const nft of nfts) {
+      for (const token of nft.tokens) {
+        // console.log('token', token);
+        tokenNames.push(`Token: ${token.tokenId}`);
+      }
+    }
+  }
   return (
     <div className="flex gap-2 items-center">
-      <div className="flex justify-center shrink-0 h-12 w-12">
-        <span className="inline-block">
+      <div className="flex justify-center shrink-0 h-14 w-14">
+        <span className="inline-block relative">
           {image ? (
-            <img className="h-12 w-12 rounded-full" src={image} alt="" />
+            <img className="h-14 w-14 rounded-full" src={image} alt="" />
           ) : (
-            <img className="h-12 w-12 rounded-full" src={BLANK_IMG} alt="" />
+            <img className="h-14 w-14 rounded-full" src={BLANK_IMG} alt="" />
           )}
 
           {count > 1 && (
@@ -127,26 +144,50 @@ const SingleCollectionCell = ({
         {/* <div className="font-bold whitespace-pre-wrap" onClick={onClickTitle}>
           {title}
         </div> */}
+
         {orderNft?.collectionSlug ? (
           <NextLink
             href={`/collection/${orderNft?.collectionSlug}`}
-            className="font-bold whitespace-pre-wrap"
+            className="font-bold whitespace-pre-wrap flex items-center"
             title={title}
           >
-            {title}
+            {title} {orderNft?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1" /> : null}
           </NextLink>
         ) : (
-          <div className="font-bold whitespace-pre-wrap cursor-auto">{title}</div>
+          <NextLink
+            href={`/collection/${order?.nfts[0]?.collectionSlug}`}
+            className="font-bold whitespace-pre-wrap flex items-center"
+            title={title}
+          >
+            {title} {orderNft?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1" /> : null}
+          </NextLink>
         )}
 
-        {token && (
-          <NextLink
-            href={`/asset/1/${orderNft?.collectionAddress}/${token.tokenId}`}
-            className="whitespace-pre-wrap"
-            title={token?.tokenName}
-          >
-            {token?.tokenName}
-          </NextLink>
+        {count > 1 ? (
+          <div>
+            {/* <div data-tip data-for={`counter-${order?.id}`}>
+              {count} NFTs
+            </div>
+            <ReactTooltip id={`counter-${order?.id}`} effect="solid">
+              <div className="space-y-2">
+                {tokenNames.map((name, idx) => (
+                  <div key={idx}>{name}</div>
+                ))}
+              </div>
+            </ReactTooltip> */}
+          </div>
+        ) : (
+          <>
+            {token && (
+              <NextLink
+                href={`/asset/1/${orderNft?.collectionAddress}/${token.tokenId}`}
+                className="whitespace-pre-wrap"
+                title={token?.tokenName}
+              >
+                {token?.tokenName}
+              </NextLink>
+            )}
+          </>
         )}
       </div>
     </div>

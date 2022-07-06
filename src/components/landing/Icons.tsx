@@ -9,9 +9,10 @@ export const DiscordIconLink: React.FC = () => (
   </ExternalLink>
 );
 
+// todo: fix className once we have smaller size icon.
 export const TwitterIconLink: React.FC = () => (
   <ExternalLink href="https://twitter.com/infinitydotxyz" rel="noreferrer">
-    <SVG.twitter className={size} />
+    <SVG.twitter className={'h-4'} />
   </ExternalLink>
 );
 
@@ -21,8 +22,9 @@ export const MediumIconLink: React.FC = () => (
   </ExternalLink>
 );
 
+// todo: fix className once we have smaller size icon.
 export const InstagramIconLink: React.FC = () => (
   <ExternalLink href="https://www.instagram.com/infinitydotxyz/" rel="noreferrer">
-    <SVG.instagram className={size} />
+    <SVG.instagram className={'h-5 mt-0.5'} />
   </ExternalLink>
 );

@@ -131,7 +131,7 @@ export const TraitSelection = ({ traits, onChange, onClearAll }: Props) => {
                   label=""
                   type="text"
                   className="border rounded-3xl py-2 px-4 mt-1 font-heading w-[90%]"
-                  defaultValue={searchState[item.name]}
+                  value={searchState[item.name]}
                   onChange={(value) => {
                     const text = value;
                     const newSearchState = { ...searchState, [item.name]: text };

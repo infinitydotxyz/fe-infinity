@@ -8,7 +8,7 @@ import { ActivityItem } from './activity-item';
 import { UserActivityItem } from './user-activity-item';
 import { apiGet } from 'src/utils';
 // import { useAppContext } from 'src/utils/context/AppContext';
-import { ScrollLoader, Spinner } from '../common';
+import { CenteredContent, ScrollLoader, Spinner } from '../common';
 
 type UserActivityEvent = FeedEvent & {
   makerAddress?: string;
@@ -118,7 +118,7 @@ export const UserProfileActivityList = ({
   };
 
   return (
-    <div className={`min-h-[1024px] mt-[-66px] ${className}`}>
+    <div className={`min-h-[1024px] mt-[-74px] ${className}`}>
       <div className="flex flex-row-reverse mb-8 bg-transparent">
         <FeedFilterDropdown
           selectedTypes={filteringTypes}
@@ -145,53 +145,62 @@ export const UserProfileActivityList = ({
       </div>
 
       <ul className="space-y-4 pointer-events-auto">
-        {isFetching && <Spinner />}
+        {isFetching && (
+          <div className="mt-8">
+            <CenteredContent>
+              <Spinner />
+            </CenteredContent>
+          </div>
+        )}
 
-        {!isFetching && hasNextPage === false && data?.length === 0 ? <div>No results found.</div> : null}
+        {!isFetching && hasNextPage === false && data?.length === 0 ? (
+          <div className="font-heading">No results found</div>
+        ) : null}
 
-        {data?.map((event, idx) => {
-          if (forActivity) {
-            return <ActivityItem key={idx} event={event} />;
-          }
-          if (forUserActivity) {
-            return <UserActivityItem key={idx} event={event} />;
-          }
-          return (
-            <li key={idx} className="">
-              <FeedItem
-                data={event}
-                onLike={(ev) => {
-                  const foundEv = events.find((e) => e.id === ev.id);
-                  if (foundEv?.likes !== undefined) {
-                    foundEv.likes = foundEv.likes + 1;
-                  }
-                  setEvents([...events]);
-                }}
-                onComment={(ev) => {
-                  if (ev.id === commentPanelEvent?.id) {
-                    setCommentPanelEvent(null);
-                  } else {
-                    setCommentPanelEvent(ev);
-                  }
-                }}
-              />
-              {commentPanelEvent && event.id === commentPanelEvent.id && (
-                <div className="ml-20 p-4 ">
-                  <CommentPanel
-                    contentOnly={true}
-                    isOpen={!!commentPanelEvent}
-                    event={commentPanelEvent}
-                    onClose={() => {
+        {!isFetching &&
+          data?.map((event, idx) => {
+            if (forActivity) {
+              return <ActivityItem key={idx} event={event} />;
+            }
+            if (forUserActivity) {
+              return <UserActivityItem key={idx} event={event} />;
+            }
+            return (
+              <li key={idx} className="">
+                <FeedItem
+                  data={event}
+                  onLike={(ev) => {
+                    const foundEv = events.find((e) => e.id === ev.id);
+                    if (foundEv?.likes !== undefined) {
+                      foundEv.likes = foundEv.likes + 1;
+                    }
+                    setEvents([...events]);
+                  }}
+                  onComment={(ev) => {
+                    if (ev.id === commentPanelEvent?.id) {
                       setCommentPanelEvent(null);
-                    }}
-                  />
-                </div>
-              )}
+                    } else {
+                      setCommentPanelEvent(ev);
+                    }
+                  }}
+                />
+                {commentPanelEvent && event.id === commentPanelEvent.id && (
+                  <div className="ml-20 p-4 ">
+                    <CommentPanel
+                      contentOnly={true}
+                      isOpen={!!commentPanelEvent}
+                      event={commentPanelEvent}
+                      onClose={() => {
+                        setCommentPanelEvent(null);
+                      }}
+                    />
+                  </div>
+                )}
 
-              <hr className="mt-6 mb-10 text-gray-100" />
-            </li>
-          );
-        })}
+                <hr className="mt-6 mb-10 text-gray-100" />
+              </li>
+            );
+          })}
 
         {hasNextPage === true ? (
           <ScrollLoader

@@ -1,20 +1,20 @@
-import { BaseCollection, CollectionStats } from '@infinityxyz/lib-frontend/types/core';
+import { BaseCollection, ChainId, CollectionStats } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { FaCaretDown, FaCaretUp, FaDiscord, FaInstagram, FaTwitter } from 'react-icons/fa';
 import { HiOutlineExternalLink } from 'react-icons/hi';
-import { apiDelete, apiGet, apiPost } from 'src/utils';
-import { Chip, Toaster, Spinner, toastError } from 'src/components/common';
+import { apiDelete, apiGet, apiPost, nFormatter } from 'src/utils';
+import { Chip, Spinner, toastError } from 'src/components/common';
 import { VerificationModal } from './verification_modal';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { useAppContext } from 'src/utils/context/AppContext';
 interface Props {
-  collection: BaseCollection;
-  weeklyStatsData: CollectionStats[];
+  collection?: BaseCollection | null;
+  currentStatsData?: CollectionStats;
 }
 
-export const StatsChips = ({ collection, weeklyStatsData }: Props) => {
+export const StatsChips = ({ collection, currentStatsData }: Props) => {
   const { user, checkSignedIn, chainId } = useAppContext();
   const [isFollowing, setIsFollowing] = useState(false);
   const [followingLoading, setFollowingLoading] = useState(false);
@@ -23,6 +23,8 @@ export const StatsChips = ({ collection, weeklyStatsData }: Props) => {
   const [modalOpen, setModalOpen] = useState(false);
   const router = useRouter();
   const { addCartItem, setOrderDrawerOpen } = useOrderContext();
+
+  const showFollow = false; // todo: put this back for Social features.
 
   const onClickFollow = async () => {
     if (!checkSignedIn()) {
@@ -84,36 +86,37 @@ export const StatsChips = ({ collection, weeklyStatsData }: Props) => {
     }
   };
 
-  const firstWeeklyStats = weeklyStatsData[0];
-  const twitterChangePct = `${Math.abs(firstWeeklyStats?.twitterFollowersPercentChange ?? 0)}`.slice(0, 4);
-  const discordChangePct = `${Math.abs(firstWeeklyStats?.discordFollowersPercentChange ?? 0)}`.slice(0, 4);
+  const twitterChangePct = `${Math.abs(currentStatsData?.twitterFollowersPercentChange ?? 0)}`.slice(0, 5);
+  const discordChangePct = `${Math.abs(currentStatsData?.discordFollowersPercentChange ?? 0)}`.slice(0, 5);
 
   return (
     <div className="flex flex-row space-x-2 items-center">
       <VerificationModal isOpen={modalOpen} onSubmit={verifyOwnership} onClose={() => setModalOpen(false)} />
 
-      <Chip
-        content={
-          followingLoading ? (
-            <span className="flex justify-center">
-              <Spinner />
-            </span>
-          ) : (
-            <span className="flex items-center">
-              {isFollowing ? (
-                <>Following</>
-              ) : (
-                <>
-                  <AiOutlinePlus className="mr-1" /> Follow
-                </>
-              )}
-            </span>
-          )
-        }
-        onClick={onClickFollow}
-        active={isFollowing}
-        className="w-32"
-      />
+      {showFollow && (
+        <Chip
+          content={
+            followingLoading ? (
+              <span className="flex justify-center">
+                <Spinner />
+              </span>
+            ) : (
+              <span className="flex items-center">
+                {isFollowing ? (
+                  <>Following</>
+                ) : (
+                  <>
+                    <AiOutlinePlus className="mr-1" /> Follow
+                  </>
+                )}
+              </span>
+            )
+          }
+          onClick={onClickFollow}
+          active={isFollowing}
+          className="w-32"
+        />
+      )}
       <Chip content="Edit" onClick={onClickEdit} />
 
       {collection?.metadata?.links?.twitter && (
@@ -122,10 +125,10 @@ export const StatsChips = ({ collection, weeklyStatsData }: Props) => {
           onClick={() => window.open(collection?.metadata?.links?.twitter)}
           content={
             <span className="flex items-center">
-              {firstWeeklyStats?.twitterFollowers?.toLocaleString() ?? '—'}
-              {firstWeeklyStats?.twitterFollowersPercentChange && twitterChangePct !== '0.00' ? (
+              {nFormatter(currentStatsData?.twitterFollowers) ?? ''}
+              {currentStatsData?.twitterFollowersPercentChange && parseFloat(twitterChangePct) ? (
                 <>
-                  {(firstWeeklyStats?.twitterFollowersPercentChange ?? 0) < 0 ? (
+                  {(currentStatsData?.twitterFollowersPercentChange ?? 0) < 0 ? (
                     <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
                       <FaCaretDown className="mr-1" /> {twitterChangePct}%
                     </span>
@@ -149,10 +152,10 @@ export const StatsChips = ({ collection, weeklyStatsData }: Props) => {
           onClick={() => window.open(collection?.metadata?.links?.discord)}
           content={
             <span className="flex items-center">
-              {firstWeeklyStats?.discordFollowers?.toLocaleString() ?? '—'}
-              {firstWeeklyStats?.discordFollowersPercentChange && discordChangePct !== '0.00' ? (
+              {nFormatter(currentStatsData?.discordFollowers) ?? ''}
+              {currentStatsData?.discordFollowersPercentChange && parseFloat(discordChangePct) ? (
                 <>
-                  {(firstWeeklyStats?.discordFollowersPercentChange ?? 0) < 0 ? (
+                  {(currentStatsData?.discordFollowersPercentChange ?? 0) < 0 ? (
                     <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
                       <FaCaretDown className="mr-1" /> {discordChangePct}%
                     </span>
@@ -192,17 +195,16 @@ export const StatsChips = ({ collection, weeklyStatsData }: Props) => {
         onClick={() => {
           // assumes parent view has a drawer
           addCartItem({
-            collectionName: collection.metadata.name ?? '',
-            collectionAddress: collection.address ?? '',
-            collectionImage: collection.metadata.profileImage ?? '',
+            chainId: collection?.chainId as ChainId,
+            collectionName: collection?.metadata.name ?? '',
+            collectionAddress: collection?.address ?? '',
+            collectionImage: collection?.metadata.profileImage ?? '',
             collectionSlug: collection?.slug ?? '',
             isSellOrder: false
           });
           setOrderDrawerOpen(true);
         }}
       />
-
-      <Toaster />
     </div>
   );
 };

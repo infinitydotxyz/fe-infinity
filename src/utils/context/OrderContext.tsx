@@ -1,7 +1,8 @@
-import { Erc721Attribute, OBOrder, OBOrderItem, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId, Erc721Attribute, OBOrder, OBOrderItem, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { getOBComplicationAddress, getTxnCurrencyAddress, NULL_ADDRESS } from '@infinityxyz/lib-frontend/utils';
 import React, { ReactNode, useContext, useState } from 'react';
 import { toastError } from 'src/components/common';
+import { DEFAULT_MAX_GAS_PRICE_WEI } from '../constants';
 import { getSignedOBOrder } from '../exchange/orders';
 import { fetchOrderNonce, postOrders } from '../marketUtils';
 import { secondsPerDay } from '../ui-constants';
@@ -12,6 +13,7 @@ export interface OrderCartItem {
   tokenImage?: string;
   tokenName?: string;
   tokenId?: string;
+  chainId: ChainId;
   collectionName: string;
   collectionAddress: string;
   collectionImage?: string;
@@ -89,8 +91,9 @@ export type OrderContextType = {
   executeOrder: () => Promise<boolean>;
 
   // drawer form
-  price: number;
-  setPrice: (price: number) => void;
+  // price must be string to handle typing floats. 0.0 will convert to 0 while typing
+  price: string;
+  setPrice: (price: string) => void;
   expirationDate: number;
   setExpirationDate: (time: number) => void;
   numItems: number;
@@ -112,7 +115,8 @@ export const OrderContextProvider = ({ children }: Props) => {
   const [cartItems, setCartItems] = useState<OrderCartItem[]>([]);
 
   // drawer form
-  const [price, setPrice] = useState<number>(1);
+  // price must be string to handle typing floats. 0.0 will convert to 0 while typing
+  const [price, setPrice] = useState<string>('1');
   const [expirationDate, setExpirationDate] = useState<number>(Date.now() + secondsPerDay * 30 * 1000);
   const [numItems, setNumItems] = useState<number>(1);
   const [customDrawerItems, setCustomDrawerItems] = useState<number>(0);
@@ -132,6 +136,7 @@ export const OrderContextProvider = ({ children }: Props) => {
     const items: OBOrderItem[] = [];
     for (const cartItem of cartItems) {
       items.push({
+        chainId: cartItem.chainId,
         collectionAddress: cartItem.collectionAddress,
         collectionName: cartItem.collectionName,
         collectionImage: cartItem.collectionImage ?? '',
@@ -183,7 +188,7 @@ export const OrderContextProvider = ({ children }: Props) => {
       }
 
       setCartItems(orderInCart.cartItems);
-      setPrice(orderInCart.orderSpec.startPriceEth);
+      setPrice(orderInCart.orderSpec.startPriceEth.toString());
       setExpirationDate(orderInCart.orderSpec.endTimeMs);
       setNumItems(orderInCart.orderSpec.numItems);
     }
@@ -215,10 +220,10 @@ export const OrderContextProvider = ({ children }: Props) => {
         numItems,
         startTimeMs: Date.now(),
         endTimeMs: expirationDate,
-        startPriceEth: price,
-        endPriceEth: price,
+        startPriceEth: parseFloat(price),
+        endPriceEth: parseFloat(price),
         nfts,
-        makerUsername: '' // todo: put in username
+        makerUsername: '' // filled in the backend
       };
 
       const orderInCart: OrderInCart = {
@@ -282,6 +287,7 @@ export const OrderContextProvider = ({ children }: Props) => {
         nfts: spec.nfts,
         makerUsername: spec.makerUsername,
         nonce: orderNonce,
+        maxGasPriceWei: DEFAULT_MAX_GAS_PRICE_WEI,
         execParams: {
           currencyAddress,
           complicationAddress: getOBComplicationAddress(chainId)
@@ -321,7 +327,7 @@ export const OrderContextProvider = ({ children }: Props) => {
             signedOrders.push(signedOrder);
           }
         } catch (ex) {
-          toastError(ex as string);
+          toastError(`${ex}`);
           hasErrors = true;
         }
       }
@@ -334,7 +340,7 @@ export const OrderContextProvider = ({ children }: Props) => {
     try {
       await postOrders(user.address, signedOrders);
     } catch (ex) {
-      toastError(ex as string);
+      toastError(`${ex}`);
       return false;
     }
 
@@ -346,7 +352,7 @@ export const OrderContextProvider = ({ children }: Props) => {
   const _resetStateValues = () => {
     setOrdersInCart([]);
     setCartItems([]);
-    setPrice(1);
+    setPrice('1');
     setExpirationDate(Date.now() + secondsPerDay * 30 * 1000);
     setNumItems(1);
     setIsEditingOrder(false);

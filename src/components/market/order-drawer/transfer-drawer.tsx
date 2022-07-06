@@ -1,5 +1,10 @@
-import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
-import { Button, NftImage, Spacer, SVG } from 'src/components/common';
+import { getAddress } from '@ethersproject/address';
+import { ChainNFTs, ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
+import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
+import { useState } from 'react';
+import { Button, Spacer, SVG, TextInputBox } from 'src/components/common';
+import { useAppContext } from 'src/utils/context/AppContext';
+import { sendMultipleNfts } from 'src/utils/exchange/orders';
 import { iconButtonStyle } from 'src/utils/ui-constants';
 // import { iconButtonStyle } from 'src/utils/ui-constants';
 // import { format } from 'timeago.js';
@@ -14,13 +19,27 @@ interface Props {
 }
 
 export const TransferDrawer = ({ open, onClose, nftsForTransfer, onClickRemove }: Props) => {
+  const [address, setAddress] = useState('');
+  const { providerManager, chainId } = useAppContext();
+
+  const getFinalToAddress = async (addr: string) => {
+    let finalAddress: string | null = addr;
+    if (addr.endsWith('.eth') && providerManager) {
+      const provider = providerManager.getEthersProvider();
+      finalAddress = await provider.resolveName(addr);
+    }
+    if (finalAddress) {
+      return getAddress(finalAddress);
+    }
+  };
+
   return (
     <>
       <Drawer
         open={open}
         onClose={onClose}
-        subtitle={'Selected NFTs for transferring:'}
-        title={<div className="flex items-center">Transfer</div>}
+        subtitle={'Selected NFTs for sending:'}
+        title={<div className="flex items-center">Send</div>}
       >
         <div className="flex flex-col h-full">
           <ul className="overflow-y-auto content-between px-12">
@@ -29,13 +48,9 @@ export const TransferDrawer = ({ open, onClose, nftsForTransfer, onClickRemove }
                 <li key={cardData.id} className="py-3 flex">
                   <div className="w-full flex">
                     <div>
-                      <NftImage
-                        chainId={cardData.chainId ?? ''}
-                        collectionAddress={cardData.address ?? ''}
-                        className="w-24 h-24"
-                      />
+                      <img src={cardData.image} className="w-16 h-16 rounded-2xl" />
                     </div>
-                    <div className="flex-1 truncate">
+                    <div className="flex-1 truncate m-2">
                       <div className="font-bold">{cardData.collectionName}</div>
                       <div>{cardData.tokenId}</div>
                     </div>
@@ -47,11 +62,62 @@ export const TransferDrawer = ({ open, onClose, nftsForTransfer, onClickRemove }
               );
             })}
           </ul>
+          <div className="p-8">
+            <TextInputBox
+              type="text"
+              value={address}
+              placeholder=""
+              label={'Address or ENS Name'}
+              onChange={(value) => setAddress(value)}
+            />
+          </div>
           <Spacer />
 
           <footer className="w-full text-center py-4">
-            <Button size="large" onClick={() => alert('todo: transfer listings')}>
-              Transfer
+            <Button
+              size="large"
+              className="w-1/2"
+              disabled={nftsForTransfer?.length < 1}
+              onClick={async () => {
+                const orderItems: ChainNFTs[] = [];
+                const collectionToTokenMap: { [collection: string]: { tokenId: string; numTokens: number }[] } = {};
+
+                // group tokens by collections
+                for (const nftToTransfer of nftsForTransfer) {
+                  const collection = trimLowerCase(nftToTransfer.address);
+                  const tokenId = nftToTransfer.tokenId;
+                  if (!collection || !tokenId) {
+                    continue;
+                  }
+                  const numTokens = 1;
+                  const tokens = collectionToTokenMap[collection] ?? [];
+                  tokens.push({ tokenId, numTokens });
+                  collectionToTokenMap[collection] = tokens;
+                }
+
+                // add to orderItems
+                for (const item in collectionToTokenMap) {
+                  const tokens = collectionToTokenMap[item];
+                  orderItems.push({
+                    collection: item,
+                    tokens
+                  });
+                }
+
+                const toAddress = await getFinalToAddress(address);
+                if (toAddress) {
+                  const signer = providerManager?.getEthersProvider().getSigner();
+                  if (signer) {
+                    await sendMultipleNfts(signer, chainId, orderItems, toAddress);
+                  } else {
+                    console.error('signer is null');
+                  }
+                } else {
+                  console.error('toAddress is null');
+                }
+              }}
+            >
+              Send
             </Button>
           </footer>
         </div>

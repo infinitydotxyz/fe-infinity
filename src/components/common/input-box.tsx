@@ -1,5 +1,5 @@
 import React, { ReactElement, ReactNode, useState } from 'react';
-import { DatePicker } from 'src/components/common';
+import { AppDatePicker } from 'src/components/common';
 import { ComboBox, ComboBoxBaseType } from './combo-box';
 import { CalendarIcon } from '@heroicons/react/outline';
 import { EthSymbol } from './eth-price';
@@ -86,7 +86,7 @@ export const DatePickerBox = ({ tooltip, label, value, onChange, placeholder }: 
         <div className="pr-2">
           <CalendarIcon className="h-4 w-4" />
         </div>
-        <DatePicker value={value} onChange={onChange} placeholder={placeholder} />
+        <AppDatePicker value={value} onChange={onChange} placeholder={placeholder} />
       </div>
     </InputBox>
   );
@@ -114,8 +114,7 @@ export const ComboInputBox = <T extends ComboBoxBaseType>({ tooltip, label, opti
 
 interface Props4 {
   label: string;
-  defaultValue?: string;
-  value?: string;
+  value: string;
   type: string;
   placeholder: string;
   addEthSymbol?: boolean;
@@ -125,15 +124,13 @@ interface Props4 {
   isFullWidth?: boolean;
   autoFocus?: boolean;
   renderRightIcon?: () => ReactElement;
-  bindValue?: boolean;
   className?: string;
   inputClassName?: string;
 }
 
 export const TextInputBox = ({
   tooltip,
-  defaultValue = '',
-  value = '',
+  value,
   label,
   icon,
   addEthSymbol = false,
@@ -142,15 +139,10 @@ export const TextInputBox = ({
   onChange,
   isFullWidth,
   autoFocus = false,
-  bindValue = false,
   renderRightIcon,
   className,
   inputClassName = ''
 }: Props4) => {
-  const moreProps: { [key: string]: string } = {};
-  if (bindValue === true) {
-    moreProps.value = value;
-  }
   return (
     <InputBox
       label={label}
@@ -165,7 +157,7 @@ export const TextInputBox = ({
         <input
           autoFocus={autoFocus}
           type={type}
-          defaultValue={defaultValue ? defaultValue : value}
+          value={value}
           onChange={(e) => {
             if (onChange) {
               onChange(e.target.value);
@@ -173,7 +165,6 @@ export const TextInputBox = ({
           }}
           className={twMerge(`p-0 border-none focus:ring-0 block w-full font-heading ${inputClassName}`)}
           placeholder={placeholder}
-          {...moreProps}
         />
       </div>
     </InputBox>

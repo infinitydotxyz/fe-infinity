@@ -5,10 +5,10 @@ interface Props {
   className?: string;
 }
 
-export const Spinner = ({ className }: Props) => {
+export const Spinner = ({ className = '' }: Props) => {
   return (
-    <span className={twMerge(`w-24 h-24 ${className}`)}>
+    <div className={twMerge(`w-[45px] h-[45px] ${className}`)}>
       <PuffLoader size={45} color="#ccc" />
-    </span>
+    </div>
   );
 };

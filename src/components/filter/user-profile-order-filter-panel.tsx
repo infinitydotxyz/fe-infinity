@@ -1,7 +1,6 @@
 import { BaseCollection, OBOrderItem } from '@infinityxyz/lib-frontend/types/core';
-import { debounce } from 'lodash';
 import { useState, useEffect } from 'react';
-import { Checkbox, TextInputBox, Spinner } from 'src/components/common';
+import { Checkbox, TextInputBox, Spinner, DebouncedTextInputBox } from 'src/components/common';
 import { apiGet } from 'src/utils';
 import { UserProfileDto } from '../user/user-profile-dto';
 
@@ -64,13 +63,9 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
     onChange(newFilter);
   };
 
-  const onChangeNameSearch = debounce((value: string) => {
-    setCollectionSearch(value);
-  }, 300);
-
-  const CollectionCheckbox = ({ collection }: { collection: OBOrderItem }) => (
+  const CollectionCheckbox = ({ collection, key }: { collection: OBOrderItem; key: string }) => (
     <Checkbox
-      key={`${collection.collectionAddress}`}
+      key={`${collection.collectionAddress}_${key}`}
       boxOnLeft={false}
       className="pb-4 w-full"
       checked={selectedCollections.map((c) => c.collectionAddress).includes(`${collection.collectionAddress}`)}
@@ -119,26 +114,26 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
       <div className="text-lg mt-6 font-heading">Collection</div>
       <div className="flex flex-col mt-4 mb-6">
         <div className="w-full">
-          <TextInputBox
+          <DebouncedTextInputBox
             label=""
             type="text"
             className="border rounded-full py-2 px-4 mt-4 font-heading"
-            defaultValue={''}
-            onChange={onChangeNameSearch}
+            value={collectionSearch}
+            onChange={(value) => setCollectionSearch(value)}
             placeholder="Search"
           />
         </div>
 
         <ul className="mt-8 w-full min-h-[100px] max-h-80 overflow-y-auto space-y-4">
-          {selectedCollections.map((coll) => (
-            <CollectionCheckbox collection={coll} />
+          {selectedCollections.map((coll, idx) => (
+            <CollectionCheckbox key={`${idx}`} collection={coll} />
           ))}
 
-          {collections.map((coll) => {
+          {collections.map((coll, idx) => {
             if (selectedCollections.map((c) => c.collectionAddress).includes(`${coll.collectionAddress}`)) {
               return null;
             }
-            return <CollectionCheckbox collection={coll} />;
+            return <CollectionCheckbox key={`${idx}`} collection={coll} />;
           })}
 
           {collectionSearchLoading && (
@@ -159,7 +154,6 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
           label="Min"
           placeholder=""
           value={minPriceVal}
-          bindValue={true}
           onChange={(value) => {
             setMinPriceVal(value);
             const newFilter = { ...filter };
@@ -175,7 +169,6 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
           label="Max"
           placeholder=""
           value={maxPriceVal}
-          bindValue={true}
           onChange={(value) => {
             setMaxPriceVal(value);
             const newFilter = { ...filter };
@@ -195,7 +188,6 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
           label="Amount of NFTs"
           placeholder=""
           value={numItems}
-          bindValue={true}
           onChange={(value) => {
             setNumItems(value);
             const newFilter = { ...filter };

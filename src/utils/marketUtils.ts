@@ -24,10 +24,13 @@ export const postOrders = async (user: string, orders: SignedOBOrder[]): Promise
   }
 };
 
-export const fetchOrderNonce = async (user: string): Promise<string> => {
+export const fetchOrderNonce = async (user: string): Promise<number> => {
   try {
     const response = await apiGet(`/orders/${user}/nonce`, {});
-    return response.result as string;
+    if (typeof response.result === 'number') {
+      return response.result;
+    }
+    return response.result;
   } catch (err) {
     console.error('Failed fetching order nonce');
     throw err;
@@ -36,4 +39,8 @@ export const fetchOrderNonce = async (user: string): Promise<string> => {
 
 export const bigNumToDate = (time: BigNumberish): Date => {
   return new Date(BigNumber.from(time).toNumber() * 1000);
+};
+
+export const getOrderType = (order: SignedOBOrder): 'Sale' | 'Listing' | 'Offer' => {
+  return order.isSellOrder ? (order.extraParams.buyer ? 'Sale' : 'Listing') : 'Offer';
 };

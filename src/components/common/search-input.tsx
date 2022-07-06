@@ -111,45 +111,6 @@ export const SearchInput: React.FC<Props> = ({ expanded }) => {
           setText(value);
         },
         displayValue: (collection: CollectionItem) => collection?.name
-      },
-      options: {
-        container: {
-          className: `
-            absolute z-60 -mx-8
-            w-content h-content max-h-content
-            py-2 ring-1 ring-inset ring-theme-light-200 rounded-xl
-            flex flex-col bg-theme-light-50
-          `
-        },
-        option: {
-          className: ({ active }: { active: boolean }) => `
-            font-body text-sm py-1 px-4 ml-2 mr-2
-            hover:bg-theme-light-200 rounded-xl
-            flex gap-4 place-items-center
-            hover:cursor-pointer
-            ${active && 'bg-theme-light-300'}
-          `
-        }
-      }
-    },
-    collection: {
-      name: {
-        className: `
-          font-body text-xs leading-6 tracking-wide
-        `
-      },
-      image: {
-        container: {
-          className: `
-            w-8 rounded-full overflow-hidden
-        `
-        },
-        element: {
-          className: ``
-        }
-      },
-      blueCheck: {
-        className: `grid`
       }
     }
   };
@@ -168,20 +129,34 @@ export const SearchInput: React.FC<Props> = ({ expanded }) => {
         </div>
         <Combobox as="div" {...styles?.input?.container} value={selected} onChange={setSelected}>
           <Combobox.Input {...styles?.input?.element} />
-          <Combobox.Options {...styles?.input?.options?.container}>
+          <Combobox.Options
+            className="absolute z-60 -mx-8
+            w-content h-content max-h-content
+            py-2 ring-1 ring-inset ring-theme-light-200 rounded-2xl
+            flex flex-col bg-gray-50 shadow-lg"
+          >
             {filtered.map((collection, index) => (
-              <Combobox.Option key={index} value={collection} {...styles?.input?.options?.option}>
-                <div {...styles?.collection?.image?.container}>
-                  <img
-                    className="w-8 h-8 rounded-full overflow-hidden"
-                    src={collection?.profileImage}
-                    alt={collection?.name}
-                  />
-                </div>
-                <div {...styles?.collection?.name}>{collection?.name}</div>
-                <div {...styles?.collection?.blueCheck}>
-                  {collection?.hasBlueCheck ? <SVG.blueCheck className="h-5 w-5" /> : <></>}
-                </div>
+              <Combobox.Option key={index} value={collection}>
+                {({ active }) => (
+                  <div
+                    className={`${
+                      active ? 'bg-slate-200' : 'bg-transparent'
+                    }   font-body text-sm py-1 px-4 ml-2 mr-2 hover:bg-slate-200 rounded-md transition-all duration-200
+                        flex gap-4 place-items-center
+                        hover:cursor-pointer
+                        `}
+                  >
+                    <div className=" w-8 rounded-full overflow-hidden">
+                      <img
+                        className="w-8 h-8 rounded-full overflow-hidden"
+                        src={collection?.profileImage}
+                        alt={collection?.name}
+                      />
+                    </div>
+                    <div className=" flex-1  font-body text-xs leading-6 tracking-wide  ">{collection?.name}</div>
+                    {collection?.hasBlueCheck ? <SVG.blueCheck className="h-5 w-5 opacity-60" /> : <></>}
+                  </div>
+                )}
               </Combobox.Option>
             ))}
           </Combobox.Options>

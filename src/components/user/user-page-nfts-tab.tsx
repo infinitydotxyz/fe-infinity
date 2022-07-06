@@ -1,18 +1,21 @@
 import { useEffect, useState } from 'react';
-import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId, ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { GalleryBox } from '../gallery/gallery-box';
 import { TransferDrawer } from '../market/order-drawer/transfer-drawer';
 import { UserProfileDto } from './user-profile-dto';
 import { useRouter } from 'next/router';
+import { twMerge } from 'tailwind-merge';
 
 type Props = {
   userInfo: UserProfileDto;
   forTransfers?: boolean;
+  className?: string;
+  listClassName?: string;
 };
 
-export const UserPageNftsTab = ({ userInfo, forTransfers }: Props) => {
+export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listClassName = '' }: Props) => {
   const router = useRouter();
   const { user } = useAppContext();
   const {
@@ -74,10 +77,10 @@ export const UserPageNftsTab = ({ userInfo, forTransfers }: Props) => {
   const isMyProfile = user?.address === userInfo?.address;
   return (
     <div>
-      <div className="mt-20">
+      <div className={twMerge(`mt-20 ${className}`)}>
         <GalleryBox
           pageId="PROFILE"
-          getEndpoint={`/user/${userInfo?.address}/nfts`}
+          getEndpoint={userInfo?.address ? `/user/${userInfo?.address}/nfts` : ''}
           userAddress={userInfo?.address}
           filterShowedDefault={false}
           showFilterSections={['COLLECTIONS']}
@@ -88,10 +91,10 @@ export const UserPageNftsTab = ({ userInfo, forTransfers }: Props) => {
                   cardActions: [
                     {
                       label: (data) => {
-                        // for Transfers
+                        // for Sending
                         if (forTransfers === true) {
                           const found = nftsForTransfer.find((o) => o.id === data?.id);
-                          return <div className="font-normal">{found ? '✓' : ''} Transfer</div>;
+                          return <div className="font-normal">{found ? '✓' : ''} Send</div>;
                         }
                         // for Listings
                         if (isAlreadyAdded(data)) {
@@ -100,7 +103,7 @@ export const UserPageNftsTab = ({ userInfo, forTransfers }: Props) => {
                         return <div className="font-normal">List</div>;
                       },
                       onClick: (ev, data) => {
-                        // for Transfers
+                        // for Sending
                         if (forTransfers === true && data) {
                           const found = nftsForTransfer.find((o) => o.id === data.id);
                           if (found) {
@@ -126,6 +129,7 @@ export const UserPageNftsTab = ({ userInfo, forTransfers }: Props) => {
                         }
                         // console.log('card data', data);
                         addCartItem({
+                          chainId: data?.chainId as ChainId,
                           collectionName: data?.collectionName ?? '',
                           collectionAddress: data?.tokenAddress ?? '',
                           collectionImage: data?.cardImage ?? data?.image ?? '',
@@ -145,7 +149,7 @@ export const UserPageNftsTab = ({ userInfo, forTransfers }: Props) => {
                 }
               : undefined
           }
-          className="mt-[-82px]"
+          className={twMerge(`mt-[-82px] ${listClassName}`)}
         />
       </div>
 

@@ -13,13 +13,7 @@ interface Props {
   className?: string;
 }
 
-export const FilterPanel = ({
-  collection,
-  collectionAddress,
-  showFilterSections,
-  userAddress = '',
-  className
-}: Props) => {
+export const FilterPanel = ({ collection, collectionAddress, showFilterSections, className }: Props) => {
   const { filterState, setFilterState } = useFilterContext();
   const [minPriceVal, setMinPriceVal] = useState('');
   const [maxPriceVal, setMaxPriceVal] = useState('');
@@ -50,14 +44,14 @@ export const FilterPanel = ({
     const newFilter = { ...filterState };
     newFilter.minPrice = '';
     newFilter.maxPrice = '';
-    newFilter.orderBy = '';
-    newFilter.orderDirection = '';
+    newFilter.orderBy = 'tokenId';
+    newFilter.orderDirection = 'asc';
     setMinPriceVal('');
     setMaxPriceVal('');
     setFilterState(newFilter);
   };
 
-  const handleSelectCollections = (selectedIds: string[]) => {
+  const handleSearchedCollections = (selectedIds: string[]) => {
     const newFilter = { ...filterState };
     newFilter.collectionAddresses = selectedIds;
     setFilterState(newFilter);
@@ -70,7 +64,7 @@ export const FilterPanel = ({
 
         <div className="text-lg mt-10 mb-7 font-heading">Collections</div>
         <div>
-          <CollectionFilter userAddress={userAddress} onSelect={handleSelectCollections} />
+          <CollectionFilter onSearch={handleSearchedCollections} />
         </div>
       </div>
     );
@@ -111,7 +105,6 @@ export const FilterPanel = ({
           label="Min"
           placeholder=""
           value={minPriceVal}
-          bindValue={true}
           onChange={(value) => {
             setMinPriceVal(value);
           }}
@@ -123,7 +116,6 @@ export const FilterPanel = ({
           label="Max"
           placeholder=""
           value={maxPriceVal}
-          bindValue={true}
           onChange={(value) => {
             setMaxPriceVal(value);
           }}
@@ -141,23 +133,27 @@ export const FilterPanel = ({
 
       <hr className="mt-8" />
 
-      <div className="text-lg mt-6 mb-7 font-heading">Properties</div>
-      <TraitSelection
-        traits={collection?.attributes}
-        collectionAddress={collectionAddress}
-        onChange={(traitTypes, traitValues) => {
-          const newFilter: Filter = { ...filterState };
-          newFilter.traitTypes = traitTypes;
-          newFilter.traitValues = traitValues;
-          setFilterState(newFilter);
-        }}
-        onClearAll={() => {
-          const newFilter: Filter = { ...filterState };
-          newFilter.traitTypes = [];
-          newFilter.traitValues = [];
-          setFilterState(newFilter);
-        }}
-      />
+      {collection?.attributes && Object.keys(collection?.attributes).length > 0 ? (
+        <>
+          <div className="text-lg mt-6 mb-7 font-heading">Properties</div>
+          <TraitSelection
+            traits={collection?.attributes}
+            collectionAddress={collectionAddress}
+            onChange={(traitTypes, traitValues) => {
+              const newFilter: Filter = { ...filterState };
+              newFilter.traitTypes = traitTypes;
+              newFilter.traitValues = traitValues;
+              setFilterState(newFilter);
+            }}
+            onClearAll={() => {
+              const newFilter: Filter = { ...filterState };
+              newFilter.traitTypes = [];
+              newFilter.traitValues = [];
+              setFilterState(newFilter);
+            }}
+          />
+        </>
+      ) : null}
     </div>
   );
 };

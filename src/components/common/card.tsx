@@ -5,12 +5,14 @@ import { AiOutlineEye } from 'react-icons/ai';
 import { Dropdown, DropdownItems } from './dropdown';
 import { Button } from './button';
 import { NextLink } from './next-link';
-import ContentLoader from 'react-content-loader';
+// import ContentLoader from 'react-content-loader';
 import { inputBorderColor } from 'src/utils/ui-constants';
 import { BGImage } from './bg-image';
 import { SVG } from './svg';
 import { useRouter } from 'next/router';
-import { BLANK_IMG } from 'src/utils';
+import { ImageOrMissing } from './image-or-missing';
+import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
+import { ENS_ADDRESS } from 'src/utils';
 
 type labelFn = (data?: ERC721CardData) => ReactNode;
 
@@ -37,8 +39,17 @@ export const Card = ({
   className = ''
 }: CardProps): JSX.Element => {
   const router = useRouter();
-  const title = (data?.title ?? '').length > 25 ? data?.title?.slice(0, 25) + '...' : data?.title;
-  const tokenId = (data?.tokenId ?? '').length > 25 ? data?.tokenId?.slice(0, 20) + '...' : data?.tokenId;
+  let collectionName = data?.title ?? data?.collectionName ?? '';
+  collectionName = collectionName.length > 25 ? collectionName.slice(0, 25) + '...' : collectionName;
+
+  let tokenId = data?.tokenId ?? '';
+  // special case for ENS
+  const collectionAddress = trimLowerCase(data?.address ?? data?.tokenAddress);
+  if (collectionAddress === ENS_ADDRESS && data?.name) {
+    tokenId = data.name;
+  }
+
+  tokenId = tokenId.length > 25 ? tokenId.slice(0, 20) + '...' : tokenId;
 
   const buttonJsx = (
     <>
@@ -60,7 +71,8 @@ export const Card = ({
   );
 
   if (isLoading) {
-    return <LoadingCard className={className} />;
+    return <></>;
+    // return <LoadingCard className={className} />;
   }
 
   const heightStyle = `${height}px`;
@@ -69,7 +81,7 @@ export const Card = ({
     <div
       className={`
         sm:mx-0 w-full relative flex flex-col pointer-events-auto p-2 rounded-3xl
-        shadow-[0_10px_10px_4px_rgba(0,0,0,0.1)] hover:shadow-[0_10px_10px_4px_rgba(0,0,0,0.2)]
+        shadow-[0_20px_20px_1px_rgba(0,0,0,0.1),0_-4px_20px_1px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_20px_1px_rgba(0,0,0,0.15),0_-4px_20px_1px_rgba(0,0,0,0.05)]
         transition-all duration-300 group ${className}`}
       style={{ height: heightStyle }} // boxShadow: '0px 0px 16px 4px rgba(0, 0, 0, 0.07)'
     >
@@ -80,12 +92,12 @@ export const Card = ({
         {data?.image ? (
           <BGImage src={data?.image} className="group-hover:scale-[1.15] transition-all duration-300" />
         ) : (
-          <BGImage src={BLANK_IMG} className="" />
+          <ImageOrMissing src="" />
         )}
       </NextLink>
 
       {data?.rarityRank && (
-        <span className="absolute bg-gray-100 top-3 right-3 py-1 px-3 rounded-full">
+        <span className="absolute bg-gray-100 top-5 right-5 py-1 px-3 rounded-full">
           {Math.round(data?.rarityRank)}
         </span>
       )}
@@ -98,7 +110,7 @@ export const Card = ({
             router.push(`/collection/${data?.collectionSlug}`);
           }}
         >
-          {title}
+          {collectionName ? collectionName : <>&nbsp;</>}
           {data?.hasBlueCheck ? <SVG.blueCheck className="w-5 h-5 ml-1" /> : null}
         </div>
         <div className="text-secondary font-heading" title={data?.tokenId}>
@@ -125,18 +137,18 @@ export const Card = ({
   );
 };
 
-const LoadingCard = ({ className }: { className?: string }) => (
-  <ContentLoader
-    speed={2}
-    width={310}
-    height={350}
-    viewBox="0 0 400 460"
-    backgroundColor="#f3f3f3"
-    foregroundColor="#ecebeb"
-    className={className}
-  >
-    <rect x="5" y="394" rx="18" ry="18" width="390" height="28" />
-    <rect x="6" y="7" rx="45" ry="45" width="390" height="372" />
-    <rect x="5" y="431" rx="18" ry="18" width="390" height="28" />
-  </ContentLoader>
-);
+// const LoadingCard = ({ className }: { className?: string }) => (
+//   <ContentLoader
+//     speed={2}
+//     width={310}
+//     height={350}
+//     viewBox="0 0 400 460"
+//     backgroundColor="#f3f3f3"
+//     foregroundColor="#ecebeb"
+//     className={className}
+//   >
+//     <rect x="5" y="394" rx="18" ry="18" width="390" height="28" />
+//     <rect x="6" y="7" rx="45" ry="45" width="390" height="372" />
+//     <rect x="5" y="431" rx="18" ry="18" width="390" height="28" />
+//   </ContentLoader>
+// );
