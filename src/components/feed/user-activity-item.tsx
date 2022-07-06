@@ -1,7 +1,7 @@
 import { BLANK_IMG, ellipsisAddress, getChainScannerBase } from 'src/utils';
 import { EthPrice, NextLink, BGImage } from 'src/components/common';
 import { FeedEvent } from './feed-item';
-import { FeedEventTypeNames } from '@infinityxyz/lib-frontend/types/core/feed';
+import { EventTypeNames } from '@infinityxyz/lib-frontend/types/core/feed';
 import { format } from 'timeago.js';
 
 interface Props {
@@ -39,10 +39,10 @@ export const UserActivityItem = ({ event }: Props) => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {FeedEventTypeNames[event.type]}
+                  {EventTypeNames[event.type]}
                 </a>
               ) : (
-                FeedEventTypeNames[event.type]
+                EventTypeNames[event.type]
               )}
             </div>
           </div>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { FeedEventType } from '@infinityxyz/lib-frontend/types/core/feed';
+import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { apiGet } from 'src/utils';
 import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
 import { ScrollLoader } from '../common';
@@ -15,7 +15,7 @@ import { useAppContext } from 'src/utils/context/AppContext';
 interface CollectionFeedProps {
   collectionAddress?: string;
   tokenId?: string;
-  types?: FeedEventType[];
+  types?: EventType[];
   forActivity?: boolean;
   className?: string;
 }
@@ -27,7 +27,7 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
   const [filter, setFilter] = useState<FeedFilter>({ collectionAddress, tokenId, types });
   // const [filteredEvents, setFilteredEvents] = useState<FeedEvent[]>([]);
   const [commentPanelEvent, setCommentPanelEvent] = useState<FeedEvent | null>(null);
-  const [filteringTypes, setFilteringTypes] = useState<FeedEventType[]>([]);
+  const [filteringTypes, setFilteringTypes] = useState<EventType[]>([]);
 
   const [isLoading, setIsLoading] = useState(false);
   const [activities, setActivities] = useState<NftActivity[]>([]);
@@ -79,7 +79,7 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
       setFilter(newFilter);
       return;
     }
-    const selectedType = checkId as FeedEventType;
+    const selectedType = checkId as EventType;
     if (checked) {
       newFilter.types = [...filteringTypes, selectedType];
       setFilter(newFilter);

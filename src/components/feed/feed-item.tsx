@@ -1,6 +1,6 @@
 // import { ExchangeEvent } from '@infinityxyz/lib-frontend/types/core/feed/NftEvent';
 import { ExchangeEvent } from '@infinityxyz/lib-frontend/types/core/feed';
-import { BaseFeedEvent, FeedEventType } from '@infinityxyz/lib-frontend/types/core/feed/FeedEvent';
+import { BaseFeedEvent, EventType } from '@infinityxyz/lib-frontend/types/core/feed/FeedEvent';
 import { ReactNode } from 'react';
 import { AiOutlineComment, AiOutlineLike } from 'react-icons/ai';
 import { BLANK_IMG, ellipsisAddress, getChainScannerBase } from 'src/utils';
@@ -11,20 +11,18 @@ import { Button, NftImage, EthPrice, NextLink, BGImage } from 'src/components/co
 export type FeedEvent = BaseFeedEvent &
   ExchangeEvent & {
     id?: string;
-    type?: FeedEventType;
+    type?: EventType;
     title?: string;
     text?: string;
     userDisplayName?: string;
   };
 
 const TypeName: { [key: string]: ReactNode } = {
-  [FeedEventType.TwitterTweet]: (
-    <span className="rounded-xl bg-blue-400 text-white py-0.5 px-2 text-sm pb-1">Tweet</span>
-  ),
-  [FeedEventType.DiscordAnnouncement]: (
+  [EventType.TwitterTweet]: <span className="rounded-xl bg-blue-400 text-white py-0.5 px-2 text-sm pb-1">Tweet</span>,
+  [EventType.DiscordAnnouncement]: (
     <span className="rounded-xl bg-blue-600 text-white py-0.5 px-2 text-sm pb-1">Discord</span>
   ),
-  [FeedEventType.NftSale]: <span className="rounded-xl bg-blue-700 text-white py-0.5 px-2 text-sm pb-1">Sale</span>
+  [EventType.NftSale]: <span className="rounded-xl bg-blue-700 text-white py-0.5 px-2 text-sm pb-1">Sale</span>
 };
 
 interface FeedItemProps {
@@ -56,9 +54,9 @@ export const FeedItem = ({ data, onLike, onComment }: FeedItemProps) => {
         </div>
       </header>
       <div className="ml-12">
-        {data.type === FeedEventType.TwitterTweet && <TweetEvent data={data} />}
-        {data.type === FeedEventType.DiscordAnnouncement && <Discord data={data} />}
-        {data.type === FeedEventType.NftSale && <SaleEvent data={data} />}
+        {data.type === EventType.TwitterTweet && <TweetEvent data={data} />}
+        {data.type === EventType.DiscordAnnouncement && <Discord data={data} />}
+        {data.type === EventType.NftSale && <SaleEvent data={data} />}
 
         <footer className="text-sm mt-2 text-gray-500 flex items-center">
           <Button

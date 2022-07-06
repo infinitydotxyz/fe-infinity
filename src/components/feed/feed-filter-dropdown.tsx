@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { FeedEventType } from '@infinityxyz/lib-frontend/types/core/feed';
+import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { Checkbox, PopoverButton } from '../common';
 
 type FilterOption = {
@@ -9,7 +9,7 @@ type FilterOption = {
 };
 
 interface FeedFilterDropdownProps {
-  selectedTypes: Array<FeedEventType>;
+  selectedTypes: Array<EventType>;
   onChange: (checked: boolean, checkId: string) => void;
   options?: FilterOption[];
 }
@@ -22,21 +22,21 @@ export const FeedFilterDropdown: React.FC<FeedFilterDropdownProps> = ({ options,
     },
     {
       label: 'Listings',
-      value: FeedEventType.NftListing
+      value: EventType.NftListing
     },
     {
       label: 'Offers',
-      value: FeedEventType.NftOffer
+      value: EventType.NftOffer
     },
     {
       label: 'Sales',
-      value: FeedEventType.NftSale
+      value: EventType.NftSale
     }
   ];
   return (
     <PopoverButton title="Filter" buttonClassName="font-heading pointer-events-auto py-2.5">
       {filterOptions.map((item, idx) => {
-        let isChecked = selectedTypes.indexOf(item.value as FeedEventType) >= 0;
+        let isChecked = selectedTypes.indexOf(item.value as EventType) >= 0;
         if (item.value === '' && selectedTypes.length === 0) {
           isChecked = true; // 'All' option selected.
         }
