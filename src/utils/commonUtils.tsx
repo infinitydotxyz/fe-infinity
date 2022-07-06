@@ -192,7 +192,7 @@ export const PleaseConnectMsg = () => (
   <>
     Please{' '}
     <NextLink href="/connect" className="font-bold">
-      Connect
+      connect
     </NextLink>{' '}
     your wallet.
   </>
