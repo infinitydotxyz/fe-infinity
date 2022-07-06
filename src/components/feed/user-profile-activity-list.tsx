@@ -130,15 +130,15 @@ export const UserProfileActivityList = ({
             },
             {
               label: 'Listings',
-              value: 'listing'
+              value: EventType.NftListing
             },
             {
               label: 'Offers',
-              value: 'offer'
+              value: EventType.NftOffer
             },
             {
               label: 'Sales',
-              value: 'sale'
+              value: EventType.NftSale
             }
           ]}
         />

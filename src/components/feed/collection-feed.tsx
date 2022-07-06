@@ -46,7 +46,7 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
       const { result, error } = await apiGet(url, {
         query: {
           limit: 50,
-          eventType: filter.types || ['sale', 'listing', 'offer'],
+          eventType: filter.types || [EventType.NftSale, EventType.NftListing, EventType.NftOffer],
           cursor: fromCursor
         }
       });
@@ -112,15 +112,15 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
             },
             {
               label: 'Listings',
-              value: 'listing'
+              value: EventType.NftListing
             },
             {
               label: 'Offers',
-              value: 'offer'
+              value: EventType.NftOffer
             },
             {
               label: 'Sales',
-              value: 'sale'
+              value: EventType.NftSale
             }
           ]}
           selectedTypes={filteringTypes}
