@@ -65,7 +65,6 @@ export const StakeTokensModal = ({ onClose }: Props) => {
             <TextInputBox
               label=""
               value={value?.toString()}
-              bindValue
               type="text"
               onChange={(v) => !isNaN(+v) && +v <= balance && setValue(+v)}
               placeholder="Enter amount to stake"

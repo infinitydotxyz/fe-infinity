@@ -85,7 +85,6 @@ export const VoteModal: React.FC<VoteModalProps> = ({ collection, curated, isOpe
                   type="text"
                   placeholder="0.00"
                   value={votes.toString()}
-                  bindValue
                   onChange={(v) => !isNaN(parseInt(v)) && setVotes(parseInt(v))}
                   renderRightIcon={() => (
                     <Button variant="gray" size="small" onClick={() => setVotes(votesAvailable)}>
