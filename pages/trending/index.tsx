@@ -1,22 +1,22 @@
-import React, { useEffect, useState, Fragment } from 'react';
+import { ChainId, Collection, CollectionPeriodStatsContent } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import { parse } from 'query-string';
+import { Fragment, useEffect, useState } from 'react';
 import {
   BGImage,
   Button,
+  Dropdown,
   EthPrice,
   NextLink,
   PageBox,
-  ToggleTab,
-  useToggleTab,
   SVG,
-  Dropdown
+  ToggleTab,
+  useToggleTab
 } from 'src/components/common';
-import { apiGet, MISSING_IMAGE_URL_MINI, formatNumber, ITEMS_PER_PAGE, nFormatter } from 'src/utils';
-import { ChainId, Collection, CollectionPeriodStatsContent } from '@infinityxyz/lib-frontend/types/core';
-import { useOrderContext } from 'src/utils/context/OrderContext';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import useScreenSize from 'src/hooks/useScreenSize';
+import { apiGet, formatNumber, ITEMS_PER_PAGE, nFormatter, PLACEHOLDER_IMAGE } from 'src/utils';
+import { useOrderContext } from 'src/utils/context/OrderContext';
 
 // - cache stats 5mins
 
@@ -158,7 +158,7 @@ const TrendingPage = () => {
                 {coll?.metadata?.profileImage ? (
                   <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={coll?.metadata?.profileImage} />
                 ) : (
-                  <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={MISSING_IMAGE_URL_MINI} />
+                  <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={PLACEHOLDER_IMAGE} />
                 )}
               </NextLink>
 

@@ -1,23 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import { BaseCollection, ERC721CardData, CollectionStats, ChainId } from '@infinityxyz/lib-frontend/types/core';
-import { ToggleTab, PageBox, useToggleTab, SVG, EthPrice, Spinner } from 'src/components/common';
-import { GalleryBox } from 'src/components/gallery/gallery-box';
+import { BaseCollection, ChainId, CollectionStats, ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { CollectionStatsDto } from '@infinityxyz/lib-frontend/types/dto/stats';
-import { useFetch } from 'src/utils/apiUtils';
-import { CollectionFeed } from 'src/components/feed/collection-feed';
-import { MISSING_IMAGE_URL_MINI, ellipsisAddress, getChainScannerBase, nFormatter } from 'src/utils';
-import { CollectionActivityTab } from 'src/components/collection/collection-activity-tab';
-import { StatsChips } from 'src/components/collection/stats-chips';
-import { CommunityRightPanel } from 'src/components/collection/community-right-panel';
+import { useRouter } from 'next/router';
+import NotFound404Page from 'pages/not-found-404';
+import { useEffect, useState } from 'react';
+import ContentLoader from 'react-content-loader';
 import { BsCheck } from 'react-icons/bs';
 import { AvatarImage } from 'src/components/collection/avatar-image';
-import { useOrderContext } from 'src/utils/context/OrderContext';
-import ContentLoader from 'react-content-loader';
-import { iconButtonStyle } from 'src/utils/ui-constants';
+import { CollectionActivityTab } from 'src/components/collection/collection-activity-tab';
+import { CommunityRightPanel } from 'src/components/collection/community-right-panel';
+import { StatsChips } from 'src/components/collection/stats-chips';
+import { EthPrice, PageBox, Spinner, SVG, ToggleTab, useToggleTab } from 'src/components/common';
+import { CollectionFeed } from 'src/components/feed/collection-feed';
+import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
+import { ellipsisAddress, getChainScannerBase, nFormatter, PLACEHOLDER_IMAGE } from 'src/utils';
+import { useFetch } from 'src/utils/apiUtils';
 import { useAppContext } from 'src/utils/context/AppContext';
-import NotFound404Page from 'pages/not-found-404';
+import { useOrderContext } from 'src/utils/context/OrderContext';
+import { iconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 const CollectionPage = () => {
@@ -105,7 +105,7 @@ const CollectionPage = () => {
           {collection ? (
             <AvatarImage url={collection?.metadata.profileImage} className="mb-2 rounded-[50%]" />
           ) : (
-            <AvatarImage url={MISSING_IMAGE_URL_MINI} className="mb-2 border-gray-200 border-2 rounded-[50%]" />
+            <AvatarImage url={PLACEHOLDER_IMAGE} className="mb-2 border-gray-200 border-2 rounded-[50%]" />
           )}
 
           <div className="flex gap-3 items-center">
