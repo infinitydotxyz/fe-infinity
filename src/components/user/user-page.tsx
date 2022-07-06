@@ -19,9 +19,9 @@ interface UserPageProps {
 
 export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner = false }) => {
   const router = useRouter();
-  let tabs = ['Collected', 'Curated', 'Orders', 'Activity'];
+  const tabs = ['Collected', 'Curated', 'Orders', 'Activity'];
   if (isOwner) {
-    tabs = ['Collected', 'Curated', 'Orders', 'Activity', 'Send'];
+    tabs.push('Send');
   }
   const { options, onChange, selected } = useToggleTab(tabs, (router?.query?.tab as string) || 'Collected');
 
