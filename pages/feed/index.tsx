@@ -8,7 +8,7 @@ import { useAppContext } from 'src/utils/context/AppContext';
 import { useFetch } from 'src/utils';
 import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
 import { CommunityRightPanel } from 'src/components/collection/community-right-panel';
-import { FeedEventType } from '@infinityxyz/lib-frontend/types/core/feed';
+import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 
 const FeedPage = () => {
   const { chainId } = useAppContext();
@@ -34,13 +34,13 @@ const FeedPage = () => {
               className="md:w-2/3 sm:w-full"
               forActivity={true}
               types={[
-                FeedEventType.NftSale,
-                FeedEventType.CoinMarketCapNews,
-                FeedEventType.DiscordAnnouncement,
-                FeedEventType.NftListing,
-                FeedEventType.NftOffer,
-                FeedEventType.NftTransfer,
-                FeedEventType.TwitterTweet
+                EventType.NftSale,
+                EventType.CoinMarketCapNews,
+                EventType.DiscordAnnouncement,
+                EventType.NftListing,
+                EventType.NftOffer,
+                EventType.NftTransfer,
+                EventType.TwitterTweet
               ]}
               collectionAddress={collection?.address ?? ''}
             />{' '}

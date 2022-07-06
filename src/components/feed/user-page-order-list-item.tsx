@@ -24,7 +24,7 @@ export const UserPageOrderListItem = ({ order, onClickCancel }: Props) => {
           {order.nfts[0].collectionImage ? (
             <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={order.nfts[0].collectionImage} />
           ) : (
-            <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={BLANK_IMG} />
+            <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={BLANK_IMAGE_URL_MINI} />
           )}
         </NextLink> */}
         <div className="flex justify-between w-full mx-8">
@@ -55,7 +55,7 @@ export const UserPageOrderListItem = ({ order, onClickCancel }: Props) => {
             </div>
           </div>
           <div className="w-1/8">
-            <div className="text-gray-400">Num NFTs</div>
+            <div className="text-gray-400"># NFTs</div>
             <div className="font-bold">{order.nfts.length}</div>
           </div>
           <div className="w-1/8">

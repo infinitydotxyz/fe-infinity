@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 // import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
-import { FeedEventType } from '@infinityxyz/lib-frontend/types/core/feed';
+import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 // import { FeedFilterDropdown } from './feed-filter-dropdown';
 import { UserPageOrderListItem } from './user-page-order-list-item';
 import { apiGet, ITEMS_PER_PAGE } from 'src/utils';
@@ -26,7 +26,7 @@ type Query = {
 interface UserPageOrderListProps {
   userInfo: UserProfileDto;
   userAddress?: string;
-  types?: FeedEventType[];
+  types?: EventType[];
   forActivity?: boolean;
   forUserActivity?: boolean;
   className?: string;
@@ -36,7 +36,7 @@ export const UserPageOrderList = ({ userInfo, className = '' }: UserPageOrderLis
   const router = useRouter();
   const { orderDrawerOpen, setOrderDrawerOpen, setCustomDrawerItems } = useOrderContext();
   // const [filter, setFilter] = useState<FeedFilter>({ userAddress, types });
-  // const [filteringTypes, setFilteringTypes] = useState<FeedEventType[]>([]);
+  // const [filteringTypes, setFilteringTypes] = useState<EventType[]>([]);
   const [data, setData] = useState<SignedOBOrder[]>([]);
   const [isFetching, setIsFetching] = useState(false);
   const [cursor, setCursor] = useState('');
@@ -114,7 +114,7 @@ export const UserPageOrderList = ({ userInfo, className = '' }: UserPageOrderLis
   //     setFilter(newFilter);
   //     return;
   //   }
-  //   const selectedType = checkId as FeedEventType;
+  //   const selectedType = checkId as EventType;
   //   if (checked) {
   //     newFilter.types = [...filteringTypes, selectedType];
   //     setFilter(newFilter);

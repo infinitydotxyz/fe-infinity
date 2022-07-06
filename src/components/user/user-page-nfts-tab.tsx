@@ -153,6 +153,8 @@ export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listCl
         />
       </div>
 
+      {!user && <div>Please connect your wallet.</div>}
+
       <TransferDrawer
         open={showTransferDrawer}
         onClose={() => {

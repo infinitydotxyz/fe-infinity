@@ -1,4 +1,5 @@
 import { getAddress } from '@ethersproject/address';
+import { BaseToken, OwnerInfo } from '@infinityxyz/lib-frontend/types/core';
 import {
   ETHEREUM_CHAIN_SCANNER_BASE,
   POLYGON_CHAIN_SCANNER_BASE,
@@ -6,25 +7,6 @@ import {
 } from '@infinityxyz/lib-frontend/utils';
 import { ReactNode } from 'react';
 import { NextLink } from 'src/components/common';
-
-// OpenSea's EventType
-export enum EventType {
-  // Transactions and signature requests
-  TransactionCreated = 'TransactionCreated',
-  TransactionConfirmed = 'TransactionConfirmed',
-  TransactionDenied = 'TransactionDenied',
-  TransactionFailed = 'TransactionFailed',
-
-  // Basic actions: matching orders, creating orders, and cancelling orders
-  MatchOrders = 'MatchOrders',
-  CancelOrder = 'CancelOrder',
-  ApproveOrder = 'ApproveOrder',
-  CreateOrder = 'CreateOrder',
-  // When the signature request for an order is denied
-  OrderDenied = 'OrderDenied',
-
-  ApproveCurrency = 'ApproveCurrency'
-}
 
 export const base64Encode = (data: string) => Buffer.from(data).toString('base64');
 
@@ -210,7 +192,7 @@ export const PleaseConnectMsg = () => (
   <>
     Please{' '}
     <NextLink href="/connect" className="font-bold">
-      Connect
+      connect
     </NextLink>{' '}
     your wallet.
   </>
@@ -243,4 +225,16 @@ export const getOptimizedCloudImage = (src: string | undefined, resolution = 'h3
   } else {
     return src;
   }
+};
+
+export const getOwnerAddress = (token: BaseToken | null | undefined) => {
+  let ownerAddress = '';
+  if (token) {
+    if (typeof token.owner === 'string') {
+      ownerAddress = token.owner;
+    } else {
+      ownerAddress = (token.owner as OwnerInfo)?.address ?? '';
+    }
+  }
+  return ownerAddress;
 };

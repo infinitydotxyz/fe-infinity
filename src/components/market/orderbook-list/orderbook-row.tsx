@@ -1,6 +1,6 @@
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import moment from 'moment';
-import { Button, EthPrice } from 'src/components/common';
+import { Button, EthPrice, toastError, toastSuccess } from 'src/components/common';
 import { ellipsisAddress, numStr, shortDate } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { takeMultiplOneOrders } from 'src/utils/exchange/orders';
@@ -14,6 +14,7 @@ type OrderbookRowProps = {
 };
 
 export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.Element => {
+  const { user } = useAppContext();
   const { checkSignedIn, providerManager, chainId } = useAppContext();
 
   const valueDiv = (dataColumn: DataColumn) => {
@@ -78,13 +79,19 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
     if (!checkSignedIn()) {
       return;
     }
-    const signer = providerManager?.getEthersProvider().getSigner();
-    if (signer) {
-      await takeMultiplOneOrders(signer, chainId, order.signedOrder);
-    } else {
-      console.error('signer is null');
+    try {
+      const signer = providerManager?.getEthersProvider().getSigner();
+      if (signer) {
+        await takeMultiplOneOrders(signer, chainId, order.signedOrder);
+        toastSuccess('Order executed.');
+      } else {
+        throw 'Signer is null.';
+      }
+    } catch (err) {
+      toastError((err as Error).message);
     }
   };
+  const isOwner = order.makerAddress === user?.address;
 
   return (
     <div className="rounded-3xl mb-3 p-8 w-full bg-gray-100">
@@ -95,6 +102,9 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
           const title = data.name;
 
           if (data.field === 'buyOrSell') {
+            if (isOwner) {
+              return null;
+            }
             return (
               <Button
                 className="font-heading w-24"

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { FeedItem, FeedEvent } from './feed-item';
 import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
 import { CommentPanel } from './comment-panel';
-import { FeedEventType } from '@infinityxyz/lib-frontend/types/core/feed';
+import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { FeedFilterDropdown } from './feed-filter-dropdown';
 import { ActivityItem } from './activity-item';
 import { UserActivityItem } from './user-activity-item';
@@ -22,7 +22,7 @@ const ITEMS_LIMIT = 10;
 
 interface UserProfileActivityListProps {
   userAddress?: string;
-  types?: FeedEventType[];
+  types?: EventType[];
   forActivity?: boolean;
   forUserActivity?: boolean;
   className?: string;
@@ -39,7 +39,7 @@ export const UserProfileActivityList = ({
   const [events, setEvents] = useState<FeedEvent[]>([]);
   const [filter, setFilter] = useState<FeedFilter>({ userAddress, types });
   const [commentPanelEvent, setCommentPanelEvent] = useState<FeedEvent | null>(null);
-  const [filteringTypes, setFilteringTypes] = useState<FeedEventType[]>([]);
+  const [filteringTypes, setFilteringTypes] = useState<EventType[]>([]);
   const [data, setData] = useState<FeedEvent[]>([]);
   const [isFetching, setIsFetching] = useState(false);
   const [cursor, setCursor] = useState('');
@@ -100,7 +100,7 @@ export const UserProfileActivityList = ({
       setFilter(newFilter);
       return;
     }
-    const selectedType = checkId as FeedEventType;
+    const selectedType = checkId as EventType;
     if (checked) {
       newFilter.types = [...filteringTypes, selectedType];
       setFilter(newFilter);
@@ -130,15 +130,15 @@ export const UserProfileActivityList = ({
             },
             {
               label: 'Listings',
-              value: 'listing'
+              value: EventType.NftListing
             },
             {
               label: 'Offers',
-              value: 'offer'
+              value: EventType.NftOffer
             },
             {
               label: 'Sales',
-              value: 'sale'
+              value: EventType.NftSale
             }
           ]}
         />

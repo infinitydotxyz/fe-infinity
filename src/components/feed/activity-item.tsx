@@ -1,8 +1,8 @@
-import { BLANK_IMG, ellipsisAddress, getChainScannerBase } from 'src/utils';
+import { BLANK_IMAGE_URL_MINI, ellipsisAddress, getChainScannerBase } from 'src/utils';
 import { EthPrice, NextLink, BGImage } from 'src/components/common';
 import { FeedEvent } from './feed-item';
 import { format } from 'timeago.js';
-import { FeedEventTypeNames } from '@infinityxyz/lib-frontend/types/core/feed';
+import { EventTypeNames } from '@infinityxyz/lib-frontend/types/core/feed';
 
 interface Props {
   event: FeedEvent;
@@ -16,7 +16,7 @@ export const ActivityItem = ({ event }: Props) => {
           {event.image ? (
             <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={event.image} />
           ) : (
-            <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={BLANK_IMG} />
+            <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={BLANK_IMAGE_URL_MINI} />
           )}
         </NextLink>
         <div className="flex justify-between w-full mx-8">
@@ -45,7 +45,7 @@ export const ActivityItem = ({ event }: Props) => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {FeedEventTypeNames[event.type]}
+                {EventTypeNames[event.type]}
               </a>
             </div>
           </div>

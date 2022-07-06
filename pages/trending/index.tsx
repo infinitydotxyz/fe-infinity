@@ -12,7 +12,7 @@ import {
   SVG,
   Dropdown
 } from 'src/components/common';
-import { apiGet, BLANK_IMG, formatNumber, ITEMS_PER_PAGE, nFormatter } from 'src/utils';
+import { apiGet, BLANK_IMAGE_URL_MINI, formatNumber, ITEMS_PER_PAGE, nFormatter } from 'src/utils';
 import { ChainId, Collection, CollectionPeriodStatsContent } from '@infinityxyz/lib-frontend/types/core';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { useIsMounted } from 'src/hooks/useIsMounted';
@@ -158,7 +158,7 @@ const TrendingPage = () => {
                 {coll?.metadata?.profileImage ? (
                   <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={coll?.metadata?.profileImage} />
                 ) : (
-                  <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={BLANK_IMG} />
+                  <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={BLANK_IMAGE_URL_MINI} />
                 )}
               </NextLink>
 

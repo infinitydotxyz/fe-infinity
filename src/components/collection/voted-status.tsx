@@ -100,7 +100,7 @@ const VotedStatus: FunctionComponent<VotedStatusProps> = ({ chainId, collectionA
       <div className="text-3xl mb-8">
         {!user ? 'VOTED STATUS' : userVote === VOTE_ACTION.NO_VOTES ? 'Not Voted Yet' : 'You Voted'}
       </div>
-      {!user && <p className="px-2 py-1 text-theme-light-800">*Please connect your wallet</p>}
+      {!user && <p className="px-2 py-1 text-theme-light-800">Please connect your wallet.</p>}
       <div className="grid grid-cols-2 gap-10 mb-4">
         <Button
           variant={userVote === VOTE_ACTION.VOTES_FOR ? 'primary' : 'outline'}

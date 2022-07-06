@@ -18,7 +18,7 @@ import {
 
 import { increaseComments, increaseLikes } from './counterUtils';
 import { firestoreConfig } from './creds';
-import { FeedEventType } from '@infinityxyz/lib-frontend/types/core/feed';
+import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { FeedEvent } from 'src/components/feed/feed-item';
 
 export const COLL_FEED = 'feed'; // collection: /feed - to store feed events
@@ -26,7 +26,7 @@ const EVENTS_PER_PAGE = 10;
 const COMMENTS_PER_PAGE = 20;
 
 export type FeedFilter = {
-  types?: FeedEventType[];
+  types?: EventType[];
   collectionAddress?: string;
   tokenId?: string;
   userAddress?: string;

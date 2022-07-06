@@ -1,8 +1,9 @@
 import React from 'react';
-import { BLANK_IMG, ellipsisAddress } from 'src/utils';
+import { BLANK_IMAGE_URL_MINI, ellipsisAddress } from 'src/utils';
 import { BGImage, EthPrice, NextLink } from 'src/components/common';
 import { format } from 'timeago.js';
 import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
+import { EventType, EventTypeNames } from '@infinityxyz/lib-frontend/types/core/feed';
 
 export interface NftActivity {
   address: string;
@@ -25,15 +26,6 @@ interface Props {
   item: NftActivity;
 }
 
-// const ETHERSCAN_URL = 'https://etherscan.io/tx/';
-
-type ActivityType = 'sale' | 'listing' | 'offer';
-enum ActivityTypeName {
-  sale = 'Sale',
-  listing = 'Listing',
-  offer = 'Offer'
-}
-
 export const ActivityItem = ({ item }: Props) => {
   return (
     <div>
@@ -45,7 +37,7 @@ export const ActivityItem = ({ item }: Props) => {
               src={item.collectionData?.metadata?.profileImage}
             />
           ) : (
-            <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={BLANK_IMG} />
+            <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={BLANK_IMAGE_URL_MINI} />
           )}
         </NextLink>
         <div className="flex justify-between w-full mx-8">
@@ -63,7 +55,7 @@ export const ActivityItem = ({ item }: Props) => {
             <div className="text-gray-400">Event</div>
             <div className="font-bold">
               <a href={`${item.externalUrl}`} target="_blank" rel="noopener noreferrer">
-                {ActivityTypeName[item.type as ActivityType]}
+                {EventTypeNames[item.type as EventType]}
               </a>
             </div>
           </div>

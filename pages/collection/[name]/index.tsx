@@ -6,7 +6,7 @@ import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { CollectionStatsDto } from '@infinityxyz/lib-frontend/types/dto/stats';
 import { useFetch } from 'src/utils/apiUtils';
 import { CollectionFeed } from 'src/components/feed/collection-feed';
-import { BLANK_IMG, ellipsisAddress, getChainScannerBase, nFormatter } from 'src/utils';
+import { BLANK_IMAGE_URL_MINI, ellipsisAddress, getChainScannerBase, nFormatter } from 'src/utils';
 import { CollectionActivityTab } from 'src/components/collection/collection-activity-tab';
 import { StatsChips } from 'src/components/collection/stats-chips';
 import { CommunityRightPanel } from 'src/components/collection/community-right-panel';
@@ -105,7 +105,7 @@ const CollectionPage = () => {
           {collection ? (
             <AvatarImage url={collection?.metadata.profileImage} className="mb-2 rounded-[50%]" />
           ) : (
-            <AvatarImage url={BLANK_IMG} className="mb-2 border-gray-200 border-2 rounded-[50%]" />
+            <AvatarImage url={BLANK_IMAGE_URL_MINI} className="mb-2 border-gray-200 border-2 rounded-[50%]" />
           )}
 
           <div className="flex gap-3 items-center">
