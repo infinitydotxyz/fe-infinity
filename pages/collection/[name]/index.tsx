@@ -112,13 +112,14 @@ const CollectionPage = () => {
     return <NotFound404Page collectionSlug={name?.toString()} />;
   }
 
-  // if (!collection) {
-  //   return (
-  //     <PageBox showTitle={false} title={'Collection'}>
-  //       {error ? <div className="flex flex-col mt-10">Unable to load this collection?.</div> : null}
-  //     </PageBox>
-  //   );
-  // }
+  if (!collection) {
+    return (
+      <PageBox showTitle={false} title={'Collection'}>
+        {error ? <div className="flex flex-col mt-10">Unable to load this collection.</div> : null}
+      </PageBox>
+    );
+  }
+
   return (
     <PageBox showTitle={false} title={collection?.metadata?.name ?? ''}>
       <div className="flex flex-col mt-10">
