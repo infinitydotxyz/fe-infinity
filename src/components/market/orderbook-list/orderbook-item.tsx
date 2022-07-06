@@ -1,10 +1,10 @@
 import { OBOrder, OBOrderItem } from '@infinityxyz/lib-frontend/types/core';
 import { OBTokenInfoDto } from '@infinityxyz/lib-frontend/types/dto/orders';
 
+import { useRouter } from 'next/router';
 import { ReactNode } from 'react';
 import { NextLink, SVG } from 'src/components/common';
-import { useRouter } from 'next/router';
-import { MISSING_IMAGE_URL_MINI } from 'src/utils';
+import { PLACEHOLDER_IMAGE } from 'src/utils';
 // import ReactTooltip from 'react-tooltip';
 
 type Props4 = {
@@ -129,7 +129,7 @@ const SingleCollectionCell = ({
           {image ? (
             <img className="h-14 w-14 rounded-full" src={image} alt="" />
           ) : (
-            <img className="h-14 w-14 rounded-full" src={MISSING_IMAGE_URL_MINI} alt="" />
+            <img className="h-14 w-14 rounded-full" src={PLACEHOLDER_IMAGE} alt="" />
           )}
 
           {count > 1 && (

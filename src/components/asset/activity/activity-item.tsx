@@ -1,9 +1,8 @@
-import React from 'react';
-import { MISSING_IMAGE_URL_MINI, ellipsisAddress } from 'src/utils';
-import { BGImage, EthPrice, NextLink } from 'src/components/common';
-import { format } from 'timeago.js';
 import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
 import { EventType, EventTypeNames } from '@infinityxyz/lib-frontend/types/core/feed';
+import { BGImage, EthPrice, NextLink } from 'src/components/common';
+import { ellipsisAddress, PLACEHOLDER_IMAGE } from 'src/utils';
+import { format } from 'timeago.js';
 
 export interface NftActivity {
   address: string;
@@ -37,7 +36,7 @@ export const ActivityItem = ({ item }: Props) => {
               src={item.collectionData?.metadata?.profileImage}
             />
           ) : (
-            <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={MISSING_IMAGE_URL_MINI} />
+            <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={PLACEHOLDER_IMAGE} />
           )}
         </NextLink>
         <div className="flex justify-between w-full mx-8">
