@@ -24,7 +24,6 @@ import {
 } from 'src/components/asset';
 import { useEffect, useState } from 'react';
 import { useAppContext } from 'src/utils/context/AppContext';
-// import { CollectionFeed } from 'src/components/feed/collection-feed';
 import { getOBOrderFromFirestoreOrderItem } from 'src/utils/exchange/orders';
 import { utils } from 'ethers';
 import { getCurrentOBOrderPrice } from '@infinityxyz/lib-frontend/utils';
@@ -318,9 +317,6 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
 
         {selected === 'Activity' && (
           <div className="mt-[-22px]">
-            {/* <h3 className="mt-8 mb-4 font-bold font-body">Activity</h3> */}
-            {/* <CollectionFeed collectionAddress={token.collectionAddress} tokenId={token.tokenId} forActivity={true} /> */}
-
             <ActivityList
               chainId={token.chainId ?? '1'} // default
               collectionAddress={token.collectionAddress ?? ''}

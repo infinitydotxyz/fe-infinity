@@ -1,8 +1,6 @@
 import React from 'react';
 import { CollectionFeed } from 'src/components/feed/collection-feed';
 import { PageBox } from 'src/components/common';
-import { TwitterSupporterList } from 'src/components/collection/twitter-supporter-list';
-import { TopHolderList } from 'src/components/collection/top-holder-list';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { useFetch } from 'src/utils';
 import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
@@ -11,7 +9,7 @@ import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 
 const FeedPage = () => {
   const { chainId } = useAppContext();
-  const { result: collection, isLoading } = useFetch<BaseCollection>('/collections/goerli-doodles', { chainId });
+  const { result: collection, isLoading } = useFetch<BaseCollection>('/collections/boredapeyachtclub', { chainId });
 
   let content;
   if (isLoading) {
@@ -26,12 +24,12 @@ const FeedPage = () => {
               className="md:w-2/3 sm:w-full"
               forActivity={true}
               types={[
-                EventType.NftSale
-                // EventType.CoinMarketCapNews,
-                // EventType.DiscordAnnouncement,
-                // EventType.NftListing,
-                // EventType.NftOffer,
-                // EventType.NftTransfer,
+                EventType.NftSale,
+                EventType.NftOffer
+                // EventType.CoinMarketCapNews
+                // EventType.DiscordAnnouncement
+                // EventType.NftListing
+                // EventType.NftTransfer
                 // EventType.TwitterTweet
               ]}
               collectionAddress={collection?.address ?? ''}
@@ -55,11 +53,6 @@ const FeedPage = () => {
           <div>Trending Component</div>
         </div>
       </div>
-
-      <div>**** TwitterSupporterList</div>
-      <TwitterSupporterList />
-      <div>**** TopHolderList</div>
-      <TopHolderList />
 
       {content}
     </PageBox>
