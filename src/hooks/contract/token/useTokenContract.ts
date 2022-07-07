@@ -1,9 +1,9 @@
-import { infinityTokenAbi } from 'src/abi/infinityContract';
+import { ERC20ABI } from '@infinityxyz/lib-frontend/abi/erc20';
 import { useContract } from '../useContract';
 
 export function useTokenContract() {
   const address = '0x2BDB98086d47e38e3A40B42463Af005F5CF72146'; // TODO: prod address
-  const contract = useContract(address, infinityTokenAbi);
+  const contract = useContract(address, ERC20ABI);
 
   return { address, contract };
 }

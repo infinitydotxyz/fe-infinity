@@ -1,9 +1,10 @@
-import { infinityStakerAbi } from 'src/abi/infinityStaker';
+import { InfinityStakerABI } from '@infinityxyz/lib-frontend/abi/infinityStaker';
+import { GOERLI_STAKER_CONTRACT_ADDRESS } from '@infinityxyz/lib-frontend/utils/constants';
 import { useContract } from '../useContract';
 
 export function useStakerContract() {
-  const address = '0x031D5A5F12916380ae26c174AF3526f816505CaF'; // TODO: prod address
-  const contract = useContract(address, infinityStakerAbi);
+  const address = GOERLI_STAKER_CONTRACT_ADDRESS;
+  const contract = useContract(address, InfinityStakerABI);
 
   return { contract, address };
 }

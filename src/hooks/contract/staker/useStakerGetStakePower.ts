@@ -4,7 +4,7 @@ import { useAppContext } from 'src/utils/context/AppContext';
 import { useStakerContract } from './useStakerContract';
 
 /**
- * Returns the total number of staking power.
+ * Returns the total number of staking power (a.k.a votes).
  * @param address The user wallet address.
  */
 export function useStakePower(address?: string) {
