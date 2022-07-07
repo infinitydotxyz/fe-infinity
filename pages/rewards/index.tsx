@@ -17,7 +17,7 @@ const RewardsPage = () => {
   const [showUnstakeTokensModal, setShowUnstakeTokensModal] = useState(false);
   const { balance } = useTokenBalance();
   const { staked } = useStakerTotalStaked();
-  const { stakePower } = useStakePower(); // TODO: not sure if this is the correct contract method to call
+  const { stakePower } = useStakePower();
   const { result: quota } = useCurationQuota();
   const { result: profile } = useFetch<UserProfileDto>(user?.address ? `/user/${user.address}` : null);
 
