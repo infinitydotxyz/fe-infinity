@@ -5,7 +5,6 @@ import { CalendarIcon } from '@heroicons/react/outline';
 import { EthSymbol } from './eth-price';
 import { Tooltip, TooltipIcon, TooltipSpec, TooltipWrapper } from './tool-tip';
 import { twMerge } from 'tailwind-merge';
-import classNames from 'classnames';
 import { inputBorderColor } from '../../utils/ui-constants';
 
 interface Props {
@@ -32,7 +31,7 @@ export const InputBox = ({
   const [showTooltip, setShowTooltip] = useState(false);
 
   return (
-    <TooltipWrapper show={showTooltip} tooltip={tooltip} className={classNames({ 'w-full': isFullWidth })}>
+    <TooltipWrapper show={showTooltip} tooltip={tooltip} className={isFullWidth ? 'w-full' : ''}>
       <div
         className={twMerge(
           inputBorderColor,

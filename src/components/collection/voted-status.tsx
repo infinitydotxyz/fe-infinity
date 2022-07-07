@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { apiPost, useFetch } from 'src/utils';
 import { Button } from 'src/components/common';
-import clsx from 'classnames';
 import { useAppContext } from 'src/utils/context/AppContext';
 
 interface Props {
@@ -125,7 +124,7 @@ export const VotedStatus = ({ chainId, collectionAddress }: Props) => {
         {total === 0 || IsOnlyVoted || IsOnlyAgainst ? (
           <div
             style={{ width: '100%', background: `${IsOnlyVoted ? '#92DEFF' : '#F6F6F6'}` }}
-            className={clsx('border rounded-3xl py-3 pl-5 font-heading tracking-tight text-center')}
+            className="border rounded-3xl py-3 pl-5 font-heading tracking-tight text-center"
           >
             {total === 0 ? 'No Votes Yet' : IsOnlyVoted ? '100% Good' : '100% Bad'}
           </div>
@@ -133,7 +132,7 @@ export const VotedStatus = ({ chainId, collectionAddress }: Props) => {
           <>
             <div
               style={{ width: `${percentage}%`, background: '#92DEFF' }}
-              className={clsx('border-l border-t border-b rounded-l-3xl py-3 pl-5 font-heading tracking-tight')}
+              className="border-l border-t border-b rounded-l-3xl py-3 pl-5 font-heading tracking-tight"
             >
               <b>{percentage}%</b> Good
             </div>

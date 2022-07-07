@@ -1,5 +1,4 @@
 import { Menu } from '@headlessui/react';
-import classNames from 'classnames';
 import { ReactElement } from 'react';
 import { BiCaretDown } from 'react-icons/bi';
 import { twMerge } from 'tailwind-merge';
@@ -89,8 +88,7 @@ export const CustomMenuItem = (props: CustomMenuItemProps) => {
             props.itemclassname
           )}
         >
-          <span className={classNames(active)}>{props.children}</span>
-          {/* <kbd className={classNames('font-sans', active && 'text-indigo-50')}>⌘K</kbd> */}
+          <span>{props.children}</span>
         </a>
       )}
     </Menu.Item>
