@@ -1,5 +1,4 @@
 import React from 'react';
-import { useRouter } from 'next/router';
 import { CollectionFeed } from 'src/components/feed/collection-feed';
 import { PageBox } from 'src/components/common';
 import { TwitterSupporterList } from 'src/components/collection/twitter-supporter-list';
@@ -13,13 +12,6 @@ import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 const FeedPage = () => {
   const { chainId } = useAppContext();
   const { result: collection, isLoading } = useFetch<BaseCollection>('/collections/goerli-doodles', { chainId });
-
-  const {
-    query: { name }
-  } = useRouter();
-
-  // name not used lint error fix
-  console.log(name);
 
   let content;
   if (isLoading) {
