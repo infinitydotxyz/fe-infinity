@@ -19,7 +19,6 @@ const FeedPage = () => {
       content = (
         <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-16">
           <div className="lg:col-span-1 xl:col-span-2">
-            <div>**** FeedList</div>
             <FeedList
               types={[
                 EventType.NftSale,
@@ -35,7 +34,6 @@ const FeedPage = () => {
           </div>
 
           <div>
-            <div>**** CommunityRightPanel</div>
             <div className="col-span-1">{collection && <CommunityRightPanel collection={collection} />}</div>
           </div>
         </div>
@@ -45,12 +43,7 @@ const FeedPage = () => {
 
   return (
     <PageBox title="Home">
-      <div className="flex">
-        <div className="ml-4 md:w-1/3 sm:w-full">
-          <div className="text-3xl mb-6">Trending</div>
-          <div>Trending Component</div>
-        </div>
-      </div>
+      <div className="text-4xl font-bold mb-6">Feed</div>
 
       {content}
     </PageBox>

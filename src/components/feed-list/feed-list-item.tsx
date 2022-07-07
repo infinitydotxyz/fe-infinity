@@ -1,10 +1,12 @@
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
-import { AiOutlineComment, AiOutlineLike } from 'react-icons/ai';
+import { BsChatRight } from 'react-icons/bs';
 import { Button, EZImage, SVG } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { NftActivity } from '../asset/activity/activity-item';
 // import { addUserLike } from 'src/utils/firestore/firestoreUtils';
 import { FeedEvent } from '../feed/feed-item';
+import { AiOutlineLike } from 'react-icons/ai';
+import { FeedListActivityItem } from './feed-list-activity-item';
 
 interface Props {
   activity: NftActivity;
@@ -22,8 +24,68 @@ export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
   const likes = 23;
   const comments = 443;
 
+  const typeName = (type: string) => {
+    switch (type) {
+      case EventType.TwitterTweet:
+        return <div className="rounded-xl bg-amber-600 text-white py-0.5 px-2 text-sm pb-1">Tweet</div>;
+
+      case EventType.DiscordAnnouncement:
+        return <div className="rounded-xl bg-blue-600 text-white py-0.5 px-2 text-sm pb-1">Discord</div>;
+
+      case EventType.NftSale:
+        return <div className="rounded-xl bg-purple-700 text-white py-0.5 px-2 text-sm pb-1">Sale</div>;
+
+      case EventType.NftOffer:
+        return <div className="rounded-xl bg-cyan-700 text-white py-0.5 px-2 text-sm pb-1">Offer</div>;
+
+      case EventType.NftListing:
+        return <div className="rounded-xl bg-orange-700 text-white py-0.5 px-2 text-sm pb-1">Offer</div>;
+
+      case EventType.NftTransfer:
+        return <div className="rounded-xl bg-yello-700 text-white py-0.5 px-2 text-sm pb-1">Offer</div>;
+
+      case EventType.CoinMarketCapNews:
+        return <div className="rounded-xl bg-green-700 text-white py-0.5 px-2 text-sm pb-1">Offer</div>;
+
+      default:
+        return <div className="rounded-xl bg-orange-700 text-white py-0.5 px-2 text-sm pb-1">{type}</div>;
+    }
+
+    return <></>;
+  };
+
+  const typeContent = (type: string) => {
+    switch (type) {
+      case EventType.TwitterTweet:
+        return <div className="rounded-xl bg-amber-600 text-white py-0.5 px-2 text-sm pb-1">Tweet</div>;
+
+      case EventType.DiscordAnnouncement:
+        return <div className="rounded-xl bg-blue-600 text-white py-0.5 px-2 text-sm pb-1">Discord</div>;
+
+      case EventType.NftSale:
+        return <FeedListActivityItem activity={activity} />;
+
+      case EventType.NftOffer:
+        return <div className="rounded-xl bg-cyan-700 text-white py-0.5 px-2 text-sm pb-1">Offer</div>;
+
+      case EventType.NftListing:
+        return <div className="rounded-xl bg-orange-700 text-white py-0.5 px-2 text-sm pb-1">Offer</div>;
+
+      case EventType.NftTransfer:
+        return <div className="rounded-xl bg-yello-700 text-white py-0.5 px-2 text-sm pb-1">Offer</div>;
+
+      case EventType.CoinMarketCapNews:
+        return <div className="rounded-xl bg-green-700 text-white py-0.5 px-2 text-sm pb-1">Offer</div>;
+
+      default:
+        return <div className="rounded-xl bg-orange-700 text-white py-0.5 px-2 text-sm pb-1">{type}</div>;
+    }
+
+    return <></>;
+  };
+
   const bottomBar = (
-    <footer className="text-sm mt-2 text-gray-500 flex items-center">
+    <div className="text-sm mt-2 text-gray-500 flex items-center">
       <Button
         variant="plain"
         className="px-0"
@@ -53,23 +115,23 @@ export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
         }}
       >
         <div className="flex">
-          <AiOutlineComment size={22} className="mr-2" /> {comments}
+          <BsChatRight size={18} className="mr-2" /> {comments}
         </div>
       </Button>
-    </footer>
+    </div>
   );
 
-  const content = <div className="p-12">hello</div>;
+  const content = typeContent(activity.type);
 
   return (
     <div>
-      <div className="flex   items-start">
+      <div className="flex items-start">
         <EZImage
           src={activity.collectionData?.metadata.bannerImage}
-          className="border border-red-300 rounded-full overflow-clip w-10 h-10 bg-gray-100"
+          className="border border-red-300 rounded-full overflow-clip shrink-0 w-10 h-10 bg-gray-100"
         />
 
-        <div className="ml-2">
+        <div className="ml-2 flex flex-col items-start">
           <div className="flex items-center">
             <div className="font-bold">
               <a href={`/collection/${activity.collectionData?.slug}`}>{activity.collectionData?.metadata.name}</a>
@@ -78,41 +140,11 @@ export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
           </div>
           <div className="text-gray-500 text-sm mt-1">{typeName(activity.type)}</div>
 
-          {content}
+          <div className="py-8">{content}</div>
 
           {bottomBar}
         </div>
       </div>
     </div>
   );
-};
-
-const typeName = (type: string) => {
-  switch (type) {
-    case EventType.TwitterTweet:
-      return <span className="rounded-xl bg-amber-600 text-white py-0.5 px-2 text-sm pb-1">Tweet</span>;
-
-    case EventType.DiscordAnnouncement:
-      return <span className="rounded-xl bg-blue-600 text-white py-0.5 px-2 text-sm pb-1">Discord</span>;
-
-    case EventType.NftSale:
-      return <span className="rounded-xl bg-purple-700 text-white py-0.5 px-2 text-sm pb-1">Sale</span>;
-
-    case EventType.NftOffer:
-      return <span className="rounded-xl bg-cyan-700 text-white py-0.5 px-2 text-sm pb-1">Offer</span>;
-
-    case EventType.NftListing:
-      return <span className="rounded-xl bg-orange-700 text-white py-0.5 px-2 text-sm pb-1">Offer</span>;
-
-    case EventType.NftTransfer:
-      return <span className="rounded-xl bg-yello-700 text-white py-0.5 px-2 text-sm pb-1">Offer</span>;
-
-    case EventType.CoinMarketCapNews:
-      return <span className="rounded-xl bg-green-700 text-white py-0.5 px-2 text-sm pb-1">Offer</span>;
-
-    default:
-      return <span className="rounded-xl bg-orange-700 text-white py-0.5 px-2 text-sm pb-1">{type}</span>;
-  }
-
-  return <></>;
 };

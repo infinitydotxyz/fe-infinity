@@ -28,7 +28,7 @@ interface Props {
 export const ActivityItem = ({ item }: Props) => {
   return (
     <div>
-      <div className="bg-gray-100 px-10 py-6 rounded-3xl flex items-center font-heading">
+      <div className="bg-gray-100 px-10 py-6 rounded-3xl flex items-center font-heading mt-4">
         <NextLink href={`/asset/${item.chainId}/${item.collectionData?.address}/${item.tokenId}`}>
           {item.collectionData?.metadata?.profileImage ? (
             <BGImage

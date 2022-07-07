@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
+import { PLACEHOLDER_IMAGE } from 'src/utils';
 
 interface Props {
   src?: string;
@@ -10,6 +11,11 @@ interface Props {
 
 export const EZImage = ({ src, center = true, cover = true, className = 'w-full h-full' }: Props) => {
   const [loaded, setLoaded] = useState(false);
+
+  if (!src) {
+    src = PLACEHOLDER_IMAGE;
+  }
+
   src = src?.replace('storage.opensea.io', 'openseauserdata.com');
 
   useEffect(() => {
