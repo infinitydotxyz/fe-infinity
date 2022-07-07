@@ -65,6 +65,7 @@ export const CancelModal = ({ isOpen, onClose, collectionAddress, token }: Props
       okButton="Confirm"
       title="Select listings to cancel"
       onOKButton={() => {
+        // todo: adi: cancel 'selectedListings'
         onClose();
       }}
     >
