@@ -1,6 +1,7 @@
 import { Token } from '@infinityxyz/lib-frontend/types/core';
 import React, { useState } from 'react';
 import { Modal, CurrencyInput, DatePickerBox } from 'src/components/common';
+import { secondsPerDay } from 'src/utils/ui-constants';
 
 interface Props {
   isOpen: boolean;
@@ -10,7 +11,7 @@ interface Props {
 
 export const MakeOfferModal = ({ isOpen, onClose, token }: Props) => {
   const [price, setPrice] = useState(0);
-  const [expirationDate, setExpirationDate] = useState(Date.now() + 1000);
+  const [expirationDate, setExpirationDate] = useState(Date.now() + secondsPerDay * 30 * 1000);
 
   return (
     <Modal
