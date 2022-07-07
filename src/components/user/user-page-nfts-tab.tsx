@@ -3,7 +3,7 @@ import { ChainId, ERC721CardData, Token } from '@infinityxyz/lib-frontend/types/
 import { useAppContext } from 'src/utils/context/AppContext';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { GalleryBox } from '../gallery/gallery-box';
-import { TransferDrawer } from '../market/order-drawer/transfer-drawer';
+import { SendNFTsDrawer } from '../market/order-drawer/send-nfts-drawer';
 import { UserProfileDto } from './user-profile-dto';
 import { useRouter } from 'next/router';
 import { twMerge } from 'tailwind-merge';
@@ -11,6 +11,7 @@ import { CardAction, EthPrice } from '../common';
 import { CancelModal } from '../asset';
 import { apiGet } from 'src/utils';
 import { LowerPriceModal } from '../asset/modals/lower-price-modal';
+import { SendNFTsStatusModal } from '../market/order-drawer/send-nfts-status-modal';
 
 type Props = {
   userInfo: UserProfileDto;
@@ -45,6 +46,7 @@ export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listCl
   const [cancellingToken, setCancellingToken] = useState<Token | null>(null);
   const [loweringPriceToken, setLoweringPriceToken] = useState<Token | null>(null);
   const [currentPrice, setCurrentPrice] = useState('');
+  const [sendTxHash, setSendTxHash] = useState('');
 
   useEffect(() => {
     const hasCustomDrawer = router.asPath.indexOf('tab=Send') >= 0;
@@ -213,7 +215,7 @@ export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listCl
 
       {!user && <div>Please connect your wallet.</div>}
 
-      <TransferDrawer
+      <SendNFTsDrawer
         open={showTransferDrawer}
         onClose={() => {
           setShowTransferDrawer(false);
@@ -227,6 +229,9 @@ export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listCl
             setShowTransferDrawer(false);
             setOrderDrawerOpen(false);
           }
+        }}
+        onSubmit={(hash) => {
+          setSendTxHash(hash);
         }}
       />
 
@@ -247,6 +252,8 @@ export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listCl
           token={cancellingToken}
         />
       )}
+
+      {sendTxHash && <SendNFTsStatusModal txHash={sendTxHash} onClose={() => setSendTxHash('')} />}
     </div>
   );
 };
