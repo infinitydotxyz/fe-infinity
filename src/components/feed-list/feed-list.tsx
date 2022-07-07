@@ -3,15 +3,15 @@ import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { apiGet } from 'src/utils';
 import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
 import { ScrollLoader } from '../common';
-import { CommentPanel } from '../feed/comment-panel';
+// import { CommentPanel } from '../feed/comment-panel';
 import { FeedFilterDropdown } from '../feed/feed-filter-dropdown';
 import { FeedEvent } from '../feed/feed-item';
-import { ActivityItem, NftActivity } from '../asset/activity/activity-item';
+import { NftActivity } from '../asset/activity/activity-item';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { FeedListItem } from './feed-list-item';
 
 interface Props {
-  collectionAddress?: string;
+  collectionAddress: string;
   tokenId?: string;
   types?: EventType[];
   className?: string;
@@ -19,8 +19,6 @@ interface Props {
 
 export const FeedList = ({ collectionAddress, tokenId, types, className = '' }: Props) => {
   const { chainId } = useAppContext();
-  const [events, setEvents] = useState<FeedEvent[]>([]);
-  const [newEvents, setNewEvents] = useState<FeedEvent[]>([]); // new feed events
   const [filter, setFilter] = useState<FeedFilter>({ collectionAddress, tokenId, types });
   const [commentPanelEvent, setCommentPanelEvent] = useState<FeedEvent | null>(null);
   const [filteringTypes, setFilteringTypes] = useState<EventType[]>([]);
@@ -127,35 +125,14 @@ export const FeedList = ({ collectionAddress, tokenId, types, className = '' }: 
 
       {!isLoading && activities.length === 0 ? <div className="font-heading">No data available.</div> : null}
 
-      {newEvents.length > 0 ? (
-        <div
-          //  w-1/3 sm:w-full
-          className="py-4 px-8 border rounded-3xl border-gray-200 hover:bg-gray-100 mb-8 cursor-pointer"
-          onClick={() => {
-            setEvents((currentEvents) => [...newEvents, ...currentEvents]);
-            setNewEvents([]);
-          }}
-        >
-          Show {newEvents.length} more event{newEvents.length === 1 ? '' : 's'}.
-        </div>
-      ) : null}
-
       <ul className="space-y-4">
-        {activities.map((act: NftActivity, idx) => {
-          return <ActivityItem key={idx} item={act} />;
-        })}
-
-        {events.map((event, idx) => {
+        {activities.map((activity, idx) => {
           return (
-            <li key={idx} className="">
+            <div key={idx}>
               <FeedListItem
-                data={event}
+                activity={activity}
                 onLike={(ev) => {
-                  const foundEv = events.find((e) => e.id === ev.id);
-                  if (foundEv?.likes !== undefined) {
-                    foundEv.likes = foundEv.likes + 1;
-                  }
-                  setEvents([...events]);
+                  console.log(ev);
                 }}
                 onComment={(ev) => {
                   if (ev.id === commentPanelEvent?.id) {
@@ -165,21 +142,9 @@ export const FeedList = ({ collectionAddress, tokenId, types, className = '' }: 
                   }
                 }}
               />
-              {commentPanelEvent && event.id === commentPanelEvent.id && (
-                <div className="ml-20 p-4 ">
-                  <CommentPanel
-                    contentOnly={true}
-                    isOpen={!!commentPanelEvent}
-                    event={commentPanelEvent}
-                    onClose={() => {
-                      setCommentPanelEvent(null);
-                    }}
-                  />
-                </div>
-              )}
 
               <hr className="mt-6 mb-10 text-gray-100" />
-            </li>
+            </div>
           );
         })}
 
