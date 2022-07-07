@@ -26,6 +26,7 @@ interface Props {
 }
 
 export const ActivityItem = ({ item }: Props) => {
+  const toValue = item.toDisplayName ? ellipsisAddress(item.toDisplayName) : ellipsisAddress(item.to);
   return (
     <div>
       <div className="bg-gray-100 px-10 py-6 rounded-3xl flex items-center font-heading mt-4">
@@ -63,6 +64,14 @@ export const ActivityItem = ({ item }: Props) => {
             <div className="font-bold">{item.price ? <EthPrice label={`${item.price}`} /> : '—'}</div>
           </div>
           <div className="w-1/6">
+            <div className="text-gray-400">Date</div>
+            <div className="font-bold">
+              <a href={item.externalUrl} target="_blank" rel="noopener noreferrer">
+                {format(item.timestamp)}
+              </a>
+            </div>
+          </div>
+          <div className="w-1/6">
             <div className="text-gray-400">From</div>
             <div className="font-bold">
               <NextLink href={`/profile/${item.from}`}>
@@ -71,19 +80,9 @@ export const ActivityItem = ({ item }: Props) => {
             </div>
           </div>
           <div className="w-1/6">
-            <div className="text-gray-400">To</div>
+            <div className="text-gray-400">{toValue ? 'To' : ''}</div>
             <div className="font-bold">
-              <NextLink href={`/profile/${item.to}`}>
-                {item.toDisplayName ? ellipsisAddress(item.toDisplayName) : ellipsisAddress(item.to)}
-              </NextLink>
-            </div>
-          </div>
-          <div className="w-1/6">
-            <div className="text-gray-400">Date</div>
-            <div className="font-bold">
-              <a href={item.externalUrl} target="_blank" rel="noopener noreferrer">
-                {format(item.timestamp)}
-              </a>
+              <NextLink href={`/profile/${item.to}`}>{toValue}</NextLink>
             </div>
           </div>
         </div>

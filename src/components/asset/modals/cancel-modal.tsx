@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
 import { Checkbox, EthPrice, Modal, Spinner } from 'src/components/common';
 import { apiGet } from 'src/utils';
-import { uniqBy } from 'lodash';
 import { OrderbookItem } from 'src/components/market/orderbook-list/orderbook-item';
 import { useAppContext } from 'src/utils/context/AppContext';
 
@@ -37,7 +36,7 @@ export const CancelModal = ({ isOpen, onClose, collectionAddress, token }: Props
     } else {
       const orders: SignedOBOrder[] = result.data as SignedOBOrder[];
       // todo: this is needed until API supports filtering by both collectionId+tokenID:
-      let ordersByTokenId = [];
+      const ordersByTokenId = [];
       for (const order of orders) {
         const found = !!order.signedOrder.nfts.find((nft) => {
           const idx = nft.tokens.findIndex((tk) => tk.tokenId === token.tokenId);
@@ -47,7 +46,7 @@ export const CancelModal = ({ isOpen, onClose, collectionAddress, token }: Props
           ordersByTokenId.push(order);
         }
       }
-      ordersByTokenId = uniqBy(ordersByTokenId, 'nonce'); // dedup orders with the same nonce (group of listed NFTs)
+      // ordersByTokenId = uniqBy(ordersByTokenId, 'nonce'); // dedup orders with the same nonce (group of listed NFTs)
       setListings(ordersByTokenId);
     }
   };
