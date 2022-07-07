@@ -1,12 +1,7 @@
 import { useEffect, useState } from 'react';
 import { apiPost, useFetch } from 'src/utils';
-import { Button } from 'src/components/common';
-import { useAppContext } from 'src/utils/context/AppContext';
-
-interface Props {
-  chainId: string;
-  collectionAddress: string;
-}
+import { Button, CenteredContent } from 'src/components/common';
+import { useAppContext, User } from 'src/utils/context/AppContext';
 
 interface CollectionVotesDto {
   collectionAddress: string;
@@ -25,12 +20,35 @@ enum VOTE_ACTION {
   NO_VOTES = 'NO_VOTES'
 }
 
+interface Props {
+  chainId: string;
+  collectionAddress: string;
+}
+
 export const VotedStatus = ({ chainId, collectionAddress }: Props) => {
   const { user } = useAppContext();
 
+  if (user) {
+    return <VotedStatusContent user={user} chainId={chainId} collectionAddress={collectionAddress} />;
+  }
+
+  return (
+    <CenteredContent>
+      <div className="text-theme-light-800">Please connect your wallet.</div>
+    </CenteredContent>
+  );
+};
+
+interface Props2 {
+  user: User;
+  chainId: string;
+  collectionAddress: string;
+}
+
+export const VotedStatusContent = ({ user, chainId, collectionAddress }: Props2) => {
   const { result } = useFetch<CollectionVotesDto>(`/collections/${chainId}:${collectionAddress}/votes`);
 
-  const API_USER_COLLECTION_ADDR = `/user/${chainId}:${user?.address}/collectionVotes/${chainId}:${collectionAddress}`;
+  const API_USER_COLLECTION_ADDR = `/user/${chainId}:${user.address}/collectionVotes/${chainId}:${collectionAddress}`;
 
   const { result: userCollectionVote, error: userCollectionVoteError } = useFetch<UserVote>(API_USER_COLLECTION_ADDR);
   const [userVote, setUserVote] = useState<VOTE_ACTION>(VOTE_ACTION.NO_VOTES);
@@ -96,10 +114,7 @@ export const VotedStatus = ({ chainId, collectionAddress }: Props) => {
 
   return (
     <>
-      <div className="text-3xl mb-8">
-        {!user ? 'VOTED STATUS' : userVote === VOTE_ACTION.NO_VOTES ? 'Not Voted Yet' : 'You Voted'}
-      </div>
-      {!user && <p className="px-2 py-1 text-theme-light-800">Please connect your wallet.</p>}
+      <div className="text-3xl mb-8">{userVote === VOTE_ACTION.NO_VOTES ? 'Not Voted Yet' : 'You Voted'}</div>
       <div className="grid grid-cols-2 gap-10 mb-4">
         <Button
           variant={userVote === VOTE_ACTION.VOTES_FOR ? 'primary' : 'outline'}
@@ -114,7 +129,6 @@ export const VotedStatus = ({ chainId, collectionAddress }: Props) => {
           variant={userVote === VOTE_ACTION.VOTES_AGAINST ? 'primary' : 'outline'}
           size="plain"
           className="p-2.5 text-base border rounded-3xl w-full"
-          disabled={!user}
           onClick={handleVoteAgainst}
         >
           Bad <span className="w-1 inline-block">{userVote === VOTE_ACTION.VOTES_AGAINST && '✓'}</span>

@@ -26,13 +26,13 @@ const FeedPage = () => {
               className="md:w-2/3 sm:w-full"
               forActivity={true}
               types={[
-                EventType.NftSale,
-                EventType.CoinMarketCapNews,
-                EventType.DiscordAnnouncement,
-                EventType.NftListing,
-                EventType.NftOffer,
-                EventType.NftTransfer,
-                EventType.TwitterTweet
+                EventType.NftSale
+                // EventType.CoinMarketCapNews,
+                // EventType.DiscordAnnouncement,
+                // EventType.NftListing,
+                // EventType.NftOffer,
+                // EventType.NftTransfer,
+                // EventType.TwitterTweet
               ]}
               collectionAddress={collection?.address ?? ''}
             />{' '}
