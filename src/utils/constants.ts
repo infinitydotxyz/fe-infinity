@@ -2,11 +2,13 @@ import image404 from 'src/images/notfound404.png';
 import image404Mini from 'src/images/notfound404-mini.png';
 
 export const API_BASE = 'http://localhost:9090';
-// export const API_BASE = 'https://sv.infinity.xyz/';
+// export const API_BASE = 'https://sv.infinity.xyz';
 
 export const SITE_HOST = 'http://localhost:3000';
 export const DISCORD_BOT_INVITE_URL =
   'https://discord.com/api/oauth2/authorize?client_id=956292440778743838&permissions=1024&scope=bot%20applications.commands';
+
+export const ETHERSCAN_BASE_URL = 'https://etherscan.io';
 
 export const INFINITY_FEE_PCT = 2.5;
 export const INFINITY_ROYALTY_PCT = 0;
