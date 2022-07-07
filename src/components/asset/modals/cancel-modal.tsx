@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
 import { Checkbox, EthPrice, Modal, Spinner } from 'src/components/common';
 import { apiGet } from 'src/utils';
-import { uniqBy } from 'lodash';
 import { OrderbookItem } from 'src/components/market/orderbook-list/orderbook-item';
 import { useAppContext } from 'src/utils/context/AppContext';
 
