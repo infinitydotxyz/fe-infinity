@@ -23,7 +23,8 @@ import { twMerge } from 'tailwind-merge';
 const CollectionPage = () => {
   const router = useRouter();
   const { checkSignedIn, chainId } = useAppContext();
-  const { addCartItem, removeCartItem, ordersInCart, cartItems, addOrderToCart, updateOrders } = useOrderContext();
+  const { addCartItem, removeCartItem, ordersInCart, cartItems, addOrderToCart, updateOrders, setPrice } =
+    useOrderContext();
   const [isBuyClicked, setIsBuyClicked] = useState(false);
   const { options, onChange, selected } = useToggleTab(
     ['NFTs', 'Orders', 'Activity'],
@@ -274,7 +275,8 @@ const CollectionPage = () => {
                           findAndRemove(data);
                           return;
                         }
-                        const price = data?.orderSnippet?.listing?.orderItem?.startPriceEth ?? '';
+                        const price = data?.orderSnippet?.listing?.orderItem?.startPriceEth ?? 0;
+                        setPrice(`${price}`);
                         addCartItem({
                           chainId: data?.chainId as ChainId,
                           collectionName: data?.collectionName ?? '',
