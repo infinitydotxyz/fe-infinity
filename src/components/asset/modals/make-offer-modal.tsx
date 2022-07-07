@@ -19,6 +19,7 @@ export const MakeOfferModal = ({ isOpen, onClose, token }: Props) => {
       okButton="Make offer"
       title="Make offer"
       onOKButton={() => {
+        // todo: adi: Mkae Offer
         console.log(token);
       }}
     >
