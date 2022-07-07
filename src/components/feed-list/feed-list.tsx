@@ -3,32 +3,27 @@ import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { apiGet } from 'src/utils';
 import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
 import { ScrollLoader } from '../common';
-// import { ActivityItem } from './activity-item';
-import { CommentPanel } from './comment-panel';
-import { FeedFilterDropdown } from './feed-filter-dropdown';
-import { FeedEvent, FeedItem } from './feed-item';
+import { CommentPanel } from '../feed/comment-panel';
+import { FeedFilterDropdown } from '../feed/feed-filter-dropdown';
+import { FeedEvent } from '../feed/feed-item';
 import { ActivityItem, NftActivity } from '../asset/activity/activity-item';
 import { useAppContext } from 'src/utils/context/AppContext';
-
-// let eventsInit = false;
+import { FeedListItem } from './feed-list-item';
 
 interface Props {
   collectionAddress?: string;
   tokenId?: string;
   types?: EventType[];
-  forActivity?: boolean;
   className?: string;
 }
 
-export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity, className }: Props) => {
+export const FeedList = ({ collectionAddress, tokenId, types, className = '' }: Props) => {
   const { chainId } = useAppContext();
   const [events, setEvents] = useState<FeedEvent[]>([]);
   const [newEvents, setNewEvents] = useState<FeedEvent[]>([]); // new feed events
   const [filter, setFilter] = useState<FeedFilter>({ collectionAddress, tokenId, types });
-  // const [filteredEvents, setFilteredEvents] = useState<FeedEvent[]>([]);
   const [commentPanelEvent, setCommentPanelEvent] = useState<FeedEvent | null>(null);
   const [filteringTypes, setFilteringTypes] = useState<EventType[]>([]);
-
   const [isLoading, setIsLoading] = useState(false);
   const [activities, setActivities] = useState<NftActivity[]>([]);
   const [cursor, setCursor] = useState('');
@@ -43,6 +38,7 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
       const url = tokenId
         ? `/collections/${chainId}:${collectionAddress}/nfts/${tokenId}/activity`
         : `/collections/${chainId}:${collectionAddress}/activity`;
+
       const { result, error } = await apiGet(url, {
         query: {
           limit: 50,
@@ -79,6 +75,7 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
       setFilter(newFilter);
       return;
     }
+
     const selectedType = checkId as EventType;
     if (checked) {
       newFilter.types = [...filteringTypes, selectedType];
@@ -96,8 +93,8 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
     }
   };
 
-  if (forActivity && !collectionAddress) {
-    return null; // require collectionAddress
+  if (!collectionAddress) {
+    return null;
   }
 
   return (
@@ -144,18 +141,14 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
       ) : null}
 
       <ul className="space-y-4">
-        {forActivity &&
-          activities.map((act: NftActivity, idx) => {
-            return <ActivityItem key={idx} item={act} />;
-          })}
+        {activities.map((act: NftActivity, idx) => {
+          return <ActivityItem key={idx} item={act} />;
+        })}
 
         {events.map((event, idx) => {
-          if (forActivity) {
-            // return <ActivityItem key={idx} event={event} />;
-          }
           return (
             <li key={idx} className="">
-              <FeedItem
+              <FeedListItem
                 data={event}
                 onLike={(ev) => {
                   const foundEv = events.find((e) => e.id === ev.id);

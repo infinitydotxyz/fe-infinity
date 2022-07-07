@@ -1,11 +1,11 @@
 import React from 'react';
-import { CollectionFeed } from 'src/components/feed/collection-feed';
 import { PageBox } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { useFetch } from 'src/utils';
 import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
 import { CommunityRightPanel } from 'src/components/collection/community-right-panel';
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
+import { FeedList } from 'src/components/feed-list/feed-list';
 
 const FeedPage = () => {
   const { chainId } = useAppContext();
@@ -19,10 +19,8 @@ const FeedPage = () => {
       content = (
         <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-16">
           <div className="lg:col-span-1 xl:col-span-2">
-            <div>**** CollectionFeed</div>
-            <CollectionFeed
-              className="md:w-2/3 sm:w-full"
-              forActivity={true}
+            <div>**** FeedList</div>
+            <FeedList
               types={[
                 EventType.NftSale,
                 EventType.NftOffer

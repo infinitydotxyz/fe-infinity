@@ -1,29 +1,11 @@
-// import { ExchangeEvent } from '@infinityxyz/lib-frontend/types/core/feed/NftEvent';
-import { ExchangeEvent } from '@infinityxyz/lib-frontend/types/core/feed';
-import { BaseFeedEvent, EventType } from '@infinityxyz/lib-frontend/types/core/feed/FeedEvent';
+import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { ReactNode } from 'react';
 import { AiOutlineComment, AiOutlineLike } from 'react-icons/ai';
 import { BGImage, Button, EthPrice, NextLink, NftImage } from 'src/components/common';
 import { ellipsisAddress, getChainScannerBase, PLACEHOLDER_IMAGE } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { addUserLike } from 'src/utils/firestore/firestoreUtils';
-
-export type FeedEvent = BaseFeedEvent &
-  ExchangeEvent & {
-    id?: string;
-    type?: EventType;
-    title?: string;
-    text?: string;
-    userDisplayName?: string;
-  };
-
-const TypeName: { [key: string]: ReactNode } = {
-  [EventType.TwitterTweet]: <span className="rounded-xl bg-blue-400 text-white py-0.5 px-2 text-sm pb-1">Tweet</span>,
-  [EventType.DiscordAnnouncement]: (
-    <span className="rounded-xl bg-blue-600 text-white py-0.5 px-2 text-sm pb-1">Discord</span>
-  ),
-  [EventType.NftSale]: <span className="rounded-xl bg-blue-700 text-white py-0.5 px-2 text-sm pb-1">Sale</span>
-};
+import { FeedEvent } from '../feed/feed-item';
 
 interface Props {
   data: FeedEvent;
@@ -31,7 +13,7 @@ interface Props {
   onComment?: (event: FeedEvent) => void;
 }
 
-export const FeedItem = ({ data, onLike, onComment }: Props) => {
+export const FeedListItem = ({ data, onLike, onComment }: Props) => {
   const { user, checkSignedIn } = useAppContext();
 
   const timestampStr = data.timestamp > 0 ? new Date(data.timestamp).toLocaleString() : '';
@@ -50,7 +32,7 @@ export const FeedItem = ({ data, onLike, onComment }: Props) => {
             </span>{' '}
             <span className="ml-4 text-secondary">{timestampStr}</span>
           </div>
-          <div className="text-gray-500 text-sm mt-1">{TypeName[data.type] ?? ''}</div>
+          <div className="text-gray-500 text-sm mt-1">{typeName(data.type)}</div>
         </div>
       </header>
       <div className="ml-12">
@@ -168,4 +150,19 @@ const SaleEvent = ({ data }: Props) => {
       </div>
     </div>
   );
+};
+
+const typeName = (type: string): ReactNode => {
+  switch (type) {
+    case EventType.TwitterTweet:
+      return <span className="rounded-xl bg-blue-400 text-white py-0.5 px-2 text-sm pb-1">Tweet</span>;
+
+    case EventType.DiscordAnnouncement:
+      return <span className="rounded-xl bg-blue-600 text-white py-0.5 px-2 text-sm pb-1">Discord</span>;
+
+    case EventType.NftSale:
+      return <span className="rounded-xl bg-blue-700 text-white py-0.5 px-2 text-sm pb-1">Sale</span>;
+  }
+
+  return <></>;
 };
