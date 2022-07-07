@@ -102,7 +102,7 @@ export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listCl
         if (isAlreadyAdded(data)) {
           return <div className="font-normal">✓ Added</div>;
         }
-        if (data?.orderSnippet?.listing?.orderItem?.startPriceEth) {
+        if (typeof data?.orderSnippet?.listing?.orderItem?.startPriceEth !== 'undefined') {
           return (
             <div className="font-normal flex justify-center">
               <EthPrice label={`${data?.orderSnippet?.listing?.orderItem?.startPriceEth}`} className="mr-2" />
@@ -172,7 +172,7 @@ export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listCl
               ? {
                   cardActions,
                   getDropdownActions: (data) => {
-                    if (data?.orderSnippet?.listing?.orderItem?.startPriceEth) {
+                    if (typeof data?.orderSnippet?.listing?.orderItem?.startPriceEth !== 'undefined') {
                       return [
                         {
                           label: 'Lower price',

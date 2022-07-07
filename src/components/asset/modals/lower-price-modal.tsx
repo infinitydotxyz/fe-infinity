@@ -118,13 +118,13 @@ export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) 
       }}
     >
       <SimpleTable className="my-3" items={tableItems} />
-      <p className="mb-4">New Price</p>
+
       <TextInputBox
         autoFocus={true}
         addEthSymbol={true}
         type="number"
         value={price.toString()}
-        label="Price"
+        label="New Price"
         placeholder=""
         onChange={(value) => {
           setPrice(Number(value));
