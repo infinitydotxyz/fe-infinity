@@ -1,7 +1,6 @@
 import { ReactNode } from 'react';
 import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { twMerge } from 'tailwind-merge';
-import { AiOutlineEye } from 'react-icons/ai';
 import { Dropdown, DropdownItems } from './dropdown';
 import { Button } from './button';
 import { NextLink } from './next-link';
@@ -13,6 +12,7 @@ import { useRouter } from 'next/router';
 import { ImageOrMissing } from './image-or-missing';
 import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { ENS_ADDRESS } from 'src/utils';
+import { MdMoreVert } from 'react-icons/md';
 
 type labelFn = (data?: ERC721CardData) => ReactNode;
 
@@ -129,7 +129,7 @@ export const Card = ({
             className="ml-2"
             toggler={
               <div className={twMerge(inputBorderColor, 'border rounded-full w-12 h-12 flex flex-col justify-center')}>
-                <AiOutlineEye className="w-full text-lg" />
+                <MdMoreVert className="w-full text-lg" />
               </div>
             }
             items={getDropdownActions(data) ?? []}

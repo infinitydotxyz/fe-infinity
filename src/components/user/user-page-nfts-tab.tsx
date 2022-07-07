@@ -172,6 +172,9 @@ export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listCl
               ? {
                   cardActions,
                   getDropdownActions: (data) => {
+                    if (forTransfers === true) {
+                      return null;
+                    }
                     if (typeof data?.orderSnippet?.listing?.orderItem?.startPriceEth !== 'undefined') {
                       return [
                         {
