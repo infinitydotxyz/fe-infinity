@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
-// import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
-import { FeedEventType } from '@infinityxyz/lib-frontend/types/core/feed';
-// import { FeedFilterDropdown } from './feed-filter-dropdown';
+import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { UserPageOrderListItem } from './user-page-order-list-item';
 import { apiGet, ITEMS_PER_PAGE } from 'src/utils';
 import { Button, CenteredContent, ScrollLoader, Spinner } from '../common';
@@ -26,7 +24,7 @@ type Query = {
 interface UserPageOrderListProps {
   userInfo: UserProfileDto;
   userAddress?: string;
-  types?: FeedEventType[];
+  types?: EventType[];
   forActivity?: boolean;
   forUserActivity?: boolean;
   className?: string;
@@ -35,8 +33,6 @@ interface UserPageOrderListProps {
 export const UserPageOrderList = ({ userInfo, className = '' }: UserPageOrderListProps) => {
   const router = useRouter();
   const { orderDrawerOpen, setOrderDrawerOpen, setCustomDrawerItems } = useOrderContext();
-  // const [filter, setFilter] = useState<FeedFilter>({ userAddress, types });
-  // const [filteringTypes, setFilteringTypes] = useState<FeedEventType[]>([]);
   const [data, setData] = useState<SignedOBOrder[]>([]);
   const [isFetching, setIsFetching] = useState(false);
   const [cursor, setCursor] = useState('');
@@ -104,33 +100,6 @@ export const UserPageOrderList = ({ userInfo, className = '' }: UserPageOrderLis
     setData([]);
     fetchData(true);
   }, [apiFilter]);
-
-  // const onChangeFilterDropdown = (checked: boolean, checkId: string) => {
-  //   const newFilter = { ...filter };
-
-  //   if (checkId === '') {
-  //     setFilteringTypes([]);
-  //     delete newFilter.types;
-  //     setFilter(newFilter);
-  //     return;
-  //   }
-  //   const selectedType = checkId as FeedEventType;
-  //   if (checked) {
-  //     newFilter.types = [...filteringTypes, selectedType];
-  //     setFilter(newFilter);
-  //     setFilteringTypes(newFilter.types);
-  //   } else {
-  //     const _newTypes = [...filteringTypes];
-  //     const index = filteringTypes.indexOf(selectedType);
-  //     if (index >= 0) {
-  //       _newTypes.splice(index, 1);
-  //     }
-  //     newFilter.types = _newTypes;
-  //     setFilter(newFilter);
-  //     setFilteringTypes(_newTypes);
-  //   }
-  // };
-  // console.log('onChangeFilterDropdown', onChangeFilterDropdown);
 
   return (
     <div className={`min-h-[1024px] mt-[-75px] ${className}`}>

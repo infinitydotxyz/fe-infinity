@@ -1,39 +1,37 @@
 // import { ExchangeEvent } from '@infinityxyz/lib-frontend/types/core/feed/NftEvent';
 import { ExchangeEvent } from '@infinityxyz/lib-frontend/types/core/feed';
-import { BaseFeedEvent, FeedEventType } from '@infinityxyz/lib-frontend/types/core/feed/FeedEvent';
+import { BaseFeedEvent, EventType } from '@infinityxyz/lib-frontend/types/core/feed/FeedEvent';
 import { ReactNode } from 'react';
 import { AiOutlineComment, AiOutlineLike } from 'react-icons/ai';
-import { BLANK_IMG, ellipsisAddress, getChainScannerBase } from 'src/utils';
+import { BGImage, Button, EthPrice, NextLink, NftImage } from 'src/components/common';
+import { ellipsisAddress, getChainScannerBase, PLACEHOLDER_IMAGE } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { addUserLike } from 'src/utils/firestore/firestoreUtils';
-import { Button, NftImage, EthPrice, NextLink, BGImage } from 'src/components/common';
 
 export type FeedEvent = BaseFeedEvent &
   ExchangeEvent & {
     id?: string;
-    type?: FeedEventType;
+    type?: EventType;
     title?: string;
     text?: string;
     userDisplayName?: string;
   };
 
 const TypeName: { [key: string]: ReactNode } = {
-  [FeedEventType.TwitterTweet]: (
-    <span className="rounded-xl bg-blue-400 text-white py-0.5 px-2 text-sm pb-1">Tweet</span>
-  ),
-  [FeedEventType.DiscordAnnouncement]: (
+  [EventType.TwitterTweet]: <span className="rounded-xl bg-blue-400 text-white py-0.5 px-2 text-sm pb-1">Tweet</span>,
+  [EventType.DiscordAnnouncement]: (
     <span className="rounded-xl bg-blue-600 text-white py-0.5 px-2 text-sm pb-1">Discord</span>
   ),
-  [FeedEventType.NftSale]: <span className="rounded-xl bg-blue-700 text-white py-0.5 px-2 text-sm pb-1">Sale</span>
+  [EventType.NftSale]: <span className="rounded-xl bg-blue-700 text-white py-0.5 px-2 text-sm pb-1">Sale</span>
 };
 
-interface FeedItemProps {
+interface Props {
   data: FeedEvent;
   onLike?: (event: FeedEvent) => void;
   onComment?: (event: FeedEvent) => void;
 }
 
-export const FeedItem = ({ data, onLike, onComment }: FeedItemProps) => {
+export const FeedItem = ({ data, onLike, onComment }: Props) => {
   const { user, checkSignedIn } = useAppContext();
 
   const timestampStr = data.timestamp > 0 ? new Date(data.timestamp).toLocaleString() : '';
@@ -56,9 +54,9 @@ export const FeedItem = ({ data, onLike, onComment }: FeedItemProps) => {
         </div>
       </header>
       <div className="ml-12">
-        {data.type === FeedEventType.TwitterTweet && <TweetEvent data={data} />}
-        {data.type === FeedEventType.DiscordAnnouncement && <Discord data={data} />}
-        {data.type === FeedEventType.NftSale && <SaleEvent data={data} />}
+        {data.type === EventType.TwitterTweet && <TweetEvent data={data} />}
+        {data.type === EventType.DiscordAnnouncement && <Discord data={data} />}
+        {data.type === EventType.NftSale && <SaleEvent data={data} />}
 
         <footer className="text-sm mt-2 text-gray-500 flex items-center">
           <Button
@@ -118,22 +116,22 @@ const renderTextWithLinks = (txt: string | undefined) => {
     });
 };
 
-const TweetEvent = ({ data }: FeedItemProps) => {
+const TweetEvent = ({ data }: Props) => {
   return <div className="mt-4">{renderTextWithLinks(data.text ?? data.title)}</div>;
 };
 
-const Discord = ({ data }: FeedItemProps) => {
+const Discord = ({ data }: Props) => {
   return <div className="mt-4">{renderTextWithLinks(data.title)}</div>;
 };
 
-const SaleEvent = ({ data }: FeedItemProps) => {
+const SaleEvent = ({ data }: Props) => {
   return (
     <div className="mt-4 border rounded-xl p-4 flex items-center bg-gray-100 font-heading">
       <NextLink href={`/asset/${data.chainId}/${data.collectionAddress}/${data.tokenId}`}>
         {data.image ? (
           <BGImage src={data.image} className="w-24 rounded-xl" />
         ) : (
-          <BGImage src={BLANK_IMG} className="w-24 rounded-xl" />
+          <BGImage src={PLACEHOLDER_IMAGE} className="w-24 rounded-xl" />
         )}
       </NextLink>
       <div className="flex w-full justify-between mx-8">

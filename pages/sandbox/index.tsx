@@ -1,6 +1,6 @@
+import { EventType, EventTypeNames } from '@infinityxyz/lib-frontend/types/core/feed';
 import { ReactNode, useState } from 'react';
 import { FaTwitter, FaFacebook, FaEdit } from 'react-icons/fa';
-import { EventType } from 'src/components/asset/activity/activity-list';
 import { RemoveIcon } from 'src/components/collection/edit/remove-icon';
 import {
   Button,
@@ -124,8 +124,9 @@ const SandboxPage = () => {
 
       <SBHeader># PopoverButton</SBHeader>
       <PopoverButton title="Filter" buttonClassName="font-heading">
-        {[EventType.Sale, EventType.Listing, EventType.Offer].map((type: EventType) => {
-          const label = `${type.charAt(0).toUpperCase() + type.slice(1)}s`;
+        {[EventType.NftSale, EventType.NftListing, EventType.NftOffer].map((type: EventType) => {
+          const typeName = EventTypeNames[type];
+          const label = `${typeName.charAt(0).toUpperCase() + typeName.slice(1)}s`;
 
           return (
             <Checkbox
@@ -210,10 +211,12 @@ const SandboxPage = () => {
               onClick: console.log
             }
           ]}
-          dropdownActions={[
-            { label: 'Dropdown Action 1', onClick: console.log },
-            { label: 'Dropdown Action 2', onClick: console.log }
-          ]}
+          getDropdownActions={() => {
+            return [
+              { label: 'Dropdown Action 1', onClick: console.log },
+              { label: 'Dropdown Action 2', onClick: console.log }
+            ];
+          }}
         />
         <Card
           data={cardTestData[1]}

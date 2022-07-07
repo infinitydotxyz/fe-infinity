@@ -1,20 +1,22 @@
 import { useEffect, useState } from 'react';
-import { MISSING_IMAGE_URL_MINI } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
+import { PLACEHOLDER_IMAGE } from 'src/utils';
 
 interface Props {
   src?: string;
   center?: boolean; // false for bg-top
+  cover?: boolean;
   className?: string;
 }
 
-export const BGImage = ({ src, center = true, className = '' }: Props) => {
+export const EZImage = ({ src, center = true, cover = true, className = 'w-full h-full' }: Props) => {
   const [loaded, setLoaded] = useState(false);
-  src = src?.replace('storage.opensea.io', 'openseauserdata.com');
 
-  if (src === MISSING_IMAGE_URL_MINI) {
-    className = twMerge(className, 'bg-contain group-hover:scale-[1]');
+  if (!src) {
+    src = PLACEHOLDER_IMAGE;
   }
+
+  src = src?.replace('storage.opensea.io', 'openseauserdata.com');
 
   useEffect(() => {
     const img = new Image();
@@ -42,13 +44,13 @@ export const BGImage = ({ src, center = true, className = '' }: Props) => {
   }
 
   return (
-    <div className={twMerge(`w-full h-full`)}>
+    <div className={className}>
       <div
         className={twMerge(
+          cover ? 'bg-cover' : 'bg-cntain',
           center ? 'bg-center' : 'bg-top',
           loaded ? 'opacity-100' : 'opacity-0',
-          'transition-opacity duration-500 w-full h-full bg-cover bg-no-repeat',
-          className
+          'transition-opacity duration-500 w-full h-full bg-no-repeat'
         )}
         style={{ backgroundImage: `url(${src})` }}
       />

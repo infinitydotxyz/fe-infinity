@@ -1,8 +1,6 @@
 import { FunctionComponent } from 'react';
 import { useRouter } from 'next/router';
 import { UserProfileDto } from './user-profile-dto';
-import { UserBannerImage } from './user-banner-image';
-import { UserProfileImage } from './user-profile-image';
 import { UserProfileShare } from './user-profile-share';
 import { Chip, ToggleTab, useToggleTab, ExternalLink } from 'src/components/common';
 import { UserPageNftsTab } from './user-page-nfts-tab';
@@ -10,6 +8,8 @@ import { UserPageActivityTab } from './user-page-activity-tab';
 import { ellipsisAddress } from 'src/utils';
 import { ETHEREUM_CHAIN_SCANNER_BASE } from '@infinityxyz/lib-frontend/utils';
 import { UserPageOrderList } from '../feed/user-page-order-list';
+import { UserBannerImage } from './user-banner-image';
+import { UserProfileImage } from './user-profile-image';
 import { UserPageCuratedTab } from './user-page-curated-tab';
 
 interface UserPageProps {
@@ -27,11 +27,9 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
 
   return (
     <>
-      <UserBannerImage imgSrc={userInfo.bannerImage} isOwner={isOwner} />
+      <ProfilePageHeader userInfo={userInfo} isOwner={isOwner} />
 
-      <div className="relative flex flex-col mx-1 -mt-16">
-        <UserProfileImage imgSrc={userInfo.profileImage} isOwner={isOwner} />
-
+      <div className="relative flex flex-col">
         <h2 className="my-2 text-6xl font-body">{userInfo.displayName || 'No Display Name'}</h2>
 
         <div className="flex flex-wrap font-heading -ml-3 mb-8">
@@ -80,5 +78,24 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
         </div>
       </div>
     </>
+  );
+};
+
+// ================================================================
+
+interface Props2 {
+  userInfo: UserProfileDto;
+  isOwner: boolean;
+}
+
+export const ProfilePageHeader = ({ userInfo, isOwner }: Props2) => {
+  return (
+    <div className="relative w-screen mb-20" style={{ marginLeft: 'calc(-1 * ((100vw - 100%) / 2))' }}>
+      <UserBannerImage imgSrc={userInfo.bannerImage} isOwner={isOwner} />
+
+      <div className="absolute -bottom-16 left-10 w-full">
+        <UserProfileImage imgSrc={userInfo.profileImage} isOwner={isOwner} />
+      </div>
+    </div>
   );
 };

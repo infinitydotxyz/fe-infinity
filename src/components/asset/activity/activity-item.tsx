@@ -1,8 +1,8 @@
-import React from 'react';
-import { BLANK_IMG, ellipsisAddress } from 'src/utils';
-import { BGImage, EthPrice, NextLink } from 'src/components/common';
-import { format } from 'timeago.js';
 import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
+import { EventType, EventTypeNames } from '@infinityxyz/lib-frontend/types/core/feed';
+import { BGImage, EthPrice, NextLink } from 'src/components/common';
+import { ellipsisAddress, PLACEHOLDER_IMAGE } from 'src/utils';
+import { format } from 'timeago.js';
 
 export interface NftActivity {
   address: string;
@@ -25,19 +25,11 @@ interface Props {
   item: NftActivity;
 }
 
-// const ETHERSCAN_URL = 'https://etherscan.io/tx/';
-
-type ActivityType = 'sale' | 'listing' | 'offer';
-enum ActivityTypeName {
-  sale = 'Sale',
-  listing = 'Listing',
-  offer = 'Offer'
-}
-
 export const ActivityItem = ({ item }: Props) => {
+  const toValue = item.toDisplayName ? ellipsisAddress(item.toDisplayName) : ellipsisAddress(item.to);
   return (
     <div>
-      <div className="bg-gray-100 px-10 py-6 rounded-3xl flex items-center font-heading">
+      <div className="bg-gray-100 px-10 py-6 rounded-3xl flex items-center font-heading mt-4">
         <NextLink href={`/asset/${item.chainId}/${item.collectionData?.address}/${item.tokenId}`}>
           {item.collectionData?.metadata?.profileImage ? (
             <BGImage
@@ -45,7 +37,7 @@ export const ActivityItem = ({ item }: Props) => {
               src={item.collectionData?.metadata?.profileImage}
             />
           ) : (
-            <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={BLANK_IMG} />
+            <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={PLACEHOLDER_IMAGE} />
           )}
         </NextLink>
         <div className="flex justify-between w-full mx-8">
@@ -63,13 +55,21 @@ export const ActivityItem = ({ item }: Props) => {
             <div className="text-gray-400">Event</div>
             <div className="font-bold">
               <a href={`${item.externalUrl}`} target="_blank" rel="noopener noreferrer">
-                {ActivityTypeName[item.type as ActivityType]}
+                {EventTypeNames[item.type as EventType]}
               </a>
             </div>
           </div>
           <div className="w-1/6">
             <div className="text-gray-400">Price</div>
             <div className="font-bold">{item.price ? <EthPrice label={`${item.price}`} /> : '—'}</div>
+          </div>
+          <div className="w-1/6">
+            <div className="text-gray-400">Date</div>
+            <div className="font-bold">
+              <a href={item.externalUrl} target="_blank" rel="noopener noreferrer">
+                {format(item.timestamp)}
+              </a>
+            </div>
           </div>
           <div className="w-1/6">
             <div className="text-gray-400">From</div>
@@ -80,19 +80,9 @@ export const ActivityItem = ({ item }: Props) => {
             </div>
           </div>
           <div className="w-1/6">
-            <div className="text-gray-400">To</div>
+            <div className="text-gray-400">{toValue ? 'To' : ''}</div>
             <div className="font-bold">
-              <NextLink href={`/profile/${item.to}`}>
-                {item.toDisplayName ? ellipsisAddress(item.toDisplayName) : ellipsisAddress(item.to)}
-              </NextLink>
-            </div>
-          </div>
-          <div className="w-1/6">
-            <div className="text-gray-400">Date</div>
-            <div className="font-bold">
-              <a href={item.externalUrl} target="_blank" rel="noopener noreferrer">
-                {format(item.timestamp)}
-              </a>
+              <NextLink href={`/profile/${item.to}`}>{toValue}</NextLink>
             </div>
           </div>
         </div>

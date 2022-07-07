@@ -3,6 +3,7 @@ import { apiGet } from 'src/utils';
 import { ActivityItem } from './activity-item';
 import { ActivityFilter } from 'src/components/asset';
 import { CenteredContent, Spinner } from 'src/components/common';
+import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 
 interface ActivityListPropType {
   className?: string;
@@ -11,19 +12,13 @@ interface ActivityListPropType {
   tokenId: string;
 }
 
-export enum EventType {
-  Sale = 'sale',
-  Listing = 'listing',
-  Offer = 'offer'
-}
-
 export const ActivityList: React.FC<ActivityListPropType> = ({
   className = '',
   chainId,
   collectionAddress,
   tokenId
 }: ActivityListPropType) => {
-  const [activityTypes, setActivityTypes] = useState<EventType[]>([EventType.Sale]);
+  const [activityTypes, setActivityTypes] = useState<EventType[]>([EventType.NftSale]);
   const [activityList, setActivityList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasNoData, setHasNoData] = useState(false);
@@ -85,8 +80,8 @@ export const ActivityList: React.FC<ActivityListPropType> = ({
 
       {activityList.length > 0 ? (
         <div className="mt-6">
-          {activityList.map((item) => {
-            return <ActivityItem key={item} item={item} />;
+          {activityList.map((item, idx) => {
+            return <ActivityItem key={item + '_' + idx} item={item} />;
           })}
         </div>
       ) : null}

@@ -97,7 +97,7 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
             boxOnLeft={false}
             checked={filter.orderType === 'listings'}
             onChange={() => onClickOrderType('listings')}
-            label="Listing"
+            label="Listings"
           />
         </li>
         <li className="mt-8">

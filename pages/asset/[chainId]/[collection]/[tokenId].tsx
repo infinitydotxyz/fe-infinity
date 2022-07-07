@@ -12,7 +12,7 @@ import {
   useToggleTab,
   CenteredContent
 } from 'src/components/common';
-import { BLANK_IMAGE_URL, getOwnerAddress, useFetch } from 'src/utils';
+import { MISSING_IMAGE_URL, getOwnerAddress, useFetch } from 'src/utils';
 import { Token, Collection, Erc721Metadata, OBOrder } from '@infinityxyz/lib-frontend/types/core';
 import {
   TraitList,
@@ -24,7 +24,6 @@ import {
 } from 'src/components/asset';
 import { useEffect, useState } from 'react';
 import { useAppContext } from 'src/utils/context/AppContext';
-// import { CollectionFeed } from 'src/components/feed/collection-feed';
 import { getOBOrderFromFirestoreOrderItem } from 'src/utils/exchange/orders';
 import { utils } from 'ethers';
 import { getCurrentOBOrderPrice } from '@infinityxyz/lib-frontend/utils';
@@ -113,10 +112,10 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
     token.image.url = token.image?.originalUrl ?? '';
   }
 
-  const imgUrl = token?.image?.url || token?.metadata?.image || BLANK_IMAGE_URL;
+  const imgUrl = token?.image?.url || token?.metadata?.image || MISSING_IMAGE_URL;
   if (token && (!imgUrl || imgUrl.startsWith('ipfs'))) {
     if (token.image) {
-      token.image.url = BLANK_IMAGE_URL;
+      token.image.url = MISSING_IMAGE_URL;
     }
   }
 
@@ -256,7 +255,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
                     <div className="flex">
                       <span className="mr-4">Cancel</span>
                       <span className="font-heading">
-                        <EthPrice label={buyPriceEth} />
+                        <EthPrice label={buyPriceEth} rowClassName="pt-[1px]" />
                       </span>
                     </div>
                   </Button>
@@ -280,7 +279,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
                     <div className="flex">
                       <span className="mr-4">Buy</span>
                       <span className="font-heading">
-                        <EthPrice label={buyPriceEth} />
+                        <EthPrice label={buyPriceEth} rowClassName="pt-[1px]" />
                       </span>
                     </div>
                   </Button>
@@ -318,9 +317,6 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
 
         {selected === 'Activity' && (
           <div className="mt-[-22px]">
-            {/* <h3 className="mt-8 mb-4 font-bold font-body">Activity</h3> */}
-            {/* <CollectionFeed collectionAddress={token.collectionAddress} tokenId={token.tokenId} forActivity={true} /> */}
-
             <ActivityList
               chainId={token.chainId ?? '1'} // default
               collectionAddress={token.collectionAddress ?? ''}

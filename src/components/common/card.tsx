@@ -1,7 +1,6 @@
 import { ReactNode } from 'react';
 import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { twMerge } from 'tailwind-merge';
-import { AiOutlineEye } from 'react-icons/ai';
 import { Dropdown, DropdownItems } from './dropdown';
 import { Button } from './button';
 import { NextLink } from './next-link';
@@ -13,10 +12,11 @@ import { useRouter } from 'next/router';
 import { ImageOrMissing } from './image-or-missing';
 import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { ENS_ADDRESS } from 'src/utils';
+import { MdMoreVert } from 'react-icons/md';
 
 type labelFn = (data?: ERC721CardData) => ReactNode;
 
-type CardAction = {
+export type CardAction = {
   label: string | ReactNode | labelFn;
   onClick: (ev: React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>, data?: ERC721CardData) => void;
 };
@@ -24,7 +24,7 @@ type CardAction = {
 export interface CardProps {
   data?: ERC721CardData;
   cardActions?: CardAction[];
-  dropdownActions?: DropdownItems[];
+  getDropdownActions?: (data: ERC721CardData | undefined) => DropdownItems[] | null;
   isLoading?: boolean;
   className?: string;
   height?: number;
@@ -34,7 +34,7 @@ export const Card = ({
   data,
   height = 290,
   cardActions,
-  dropdownActions,
+  getDropdownActions,
   isLoading,
   className = ''
 }: CardProps): JSX.Element => {
@@ -52,8 +52,11 @@ export const Card = ({
   tokenId = tokenId.length > 25 ? tokenId.slice(0, 20) + '...' : tokenId;
 
   const buttonJsx = (
-    <>
+    <div className="flex w-[100%]">
       {(cardActions ?? []).map((cardAction, idx) => {
+        if (!cardAction?.label) {
+          return null;
+        }
         return (
           <Button
             key={idx}
@@ -67,7 +70,7 @@ export const Card = ({
           </Button>
         );
       })}
-    </>
+    </div>
   );
 
   if (isLoading) {
@@ -121,15 +124,15 @@ export const Card = ({
       <footer className="text-sm flex items-center justify-between mt-3">
         {buttonJsx}
 
-        {(dropdownActions ?? []).length > 0 ? (
+        {getDropdownActions && getDropdownActions(data) !== null ? (
           <Dropdown
             className="ml-2"
             toggler={
-              <div className={twMerge(inputBorderColor, 'border rounded-full w-10 h-10 flex flex-col justify-center')}>
-                <AiOutlineEye className="w-full text-lg" />
+              <div className={twMerge(inputBorderColor, 'border rounded-full w-12 h-12 flex flex-col justify-center')}>
+                <MdMoreVert className="w-full text-lg" />
               </div>
             }
-            items={dropdownActions ?? []}
+            items={getDropdownActions(data) ?? []}
           />
         ) : null}
       </footer>

@@ -1,35 +1,34 @@
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 import {
   BaseCollection,
-  ERC721CardData,
+  ChainId,
+  Collection,
   CollectionStats,
   CuratedCollection,
-  Collection,
-  ChainId
+  ERC721CardData
 } from '@infinityxyz/lib-frontend/types/core';
-import { Heading, Button, useToggleTab, EthPrice, PageBox, Spinner, SVG, ToggleTab } from 'src/components/common';
-import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { CollectionStatsDto } from '@infinityxyz/lib-frontend/types/dto/stats';
-import { useFetch } from 'src/utils/apiUtils';
-import { CollectionFeed } from 'src/components/feed/collection-feed';
-import { BLANK_IMG, ellipsisAddress, getChainScannerBase } from 'src/utils';
-import { nFormatter } from 'src/utils/commonUtils';
-import { CollectionActivityTab } from 'src/components/collection/collection-activity-tab';
-import { StatsChips } from 'src/components/collection/stats-chips';
-import { CommunityRightPanel } from 'src/components/collection/community-right-panel';
+import { useRouter } from 'next/router';
+import NotFound404Page from 'pages/not-found-404';
+import { useEffect, useState } from 'react';
+import ContentLoader from 'react-content-loader';
 import { BsCheck } from 'react-icons/bs';
 import { AvatarImage } from 'src/components/collection/avatar-image';
-import { useOrderContext } from 'src/utils/context/OrderContext';
-import ContentLoader from 'react-content-loader';
-import { iconButtonStyle } from 'src/utils/ui-constants';
-import { OrderbookContainer } from 'src/components/market/orderbook-list';
-import { useAppContext } from 'src/utils/context/AppContext';
+import { CollectionActivityTab } from 'src/components/collection/collection-activity-tab';
+import { CommunityRightPanel } from 'src/components/collection/community-right-panel';
+import { StatsChips } from 'src/components/collection/stats-chips';
+import { Button, EthPrice, Heading, PageBox, Spinner, SVG, ToggleTab, useToggleTab } from 'src/components/common';
 import { FeesAprStats, FeesAccruedStats } from 'src/components/curation/statistics';
-import { VoteProgressBar } from 'src/components/curation/vote-progress-bar';
 import { VoteModal } from 'src/components/curation/vote-modal';
+import { VoteProgressBar } from 'src/components/curation/vote-progress-bar';
+import { CollectionFeed } from 'src/components/feed/collection-feed';
+import { GalleryBox } from 'src/components/gallery/gallery-box';
+import { OrderbookContainer } from 'src/components/market/orderbook-list';
+import { ellipsisAddress, getChainScannerBase, nFormatter, PLACEHOLDER_IMAGE } from 'src/utils';
+import { useFetch } from 'src/utils/apiUtils';
+import { useAppContext } from 'src/utils/context/AppContext';
+import { useOrderContext } from 'src/utils/context/OrderContext';
+import { iconButtonStyle } from 'src/utils/ui-constants';
 import { useSWRConfig } from 'swr';
-import NotFound404Page from 'pages/not-found-404';
 import { twMerge } from 'tailwind-merge';
 
 const CollectionPage = () => {
@@ -127,7 +126,7 @@ const CollectionPage = () => {
           {collection ? (
             <AvatarImage url={collection?.metadata.profileImage} className="mb-2 rounded-[50%]" />
           ) : (
-            <AvatarImage url={BLANK_IMG} className="mb-2 border-gray-200 border-2 rounded-[50%]" />
+            <AvatarImage url={PLACEHOLDER_IMAGE} className="mb-2 border-gray-200 border-2 rounded-[50%]" />
           )}
 
           <div className="flex gap-3 items-center">

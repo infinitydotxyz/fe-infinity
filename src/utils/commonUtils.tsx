@@ -8,25 +8,6 @@ import {
 import { ReactNode } from 'react';
 import { NextLink } from 'src/components/common';
 
-// OpenSea's EventType
-export enum EventType {
-  // Transactions and signature requests
-  TransactionCreated = 'TransactionCreated',
-  TransactionConfirmed = 'TransactionConfirmed',
-  TransactionDenied = 'TransactionDenied',
-  TransactionFailed = 'TransactionFailed',
-
-  // Basic actions: matching orders, creating orders, and cancelling orders
-  MatchOrders = 'MatchOrders',
-  CancelOrder = 'CancelOrder',
-  ApproveOrder = 'ApproveOrder',
-  CreateOrder = 'CreateOrder',
-  // When the signature request for an order is denied
-  OrderDenied = 'OrderDenied',
-
-  ApproveCurrency = 'ApproveCurrency'
-}
-
 export const base64Encode = (data: string) => Buffer.from(data).toString('base64');
 
 export const base64Decode = (data?: string) => Buffer.from(data ?? '', 'base64').toString();
@@ -211,7 +192,7 @@ export const PleaseConnectMsg = () => (
   <>
     Please{' '}
     <NextLink href="/connect" className="font-bold">
-      Connect
+      connect
     </NextLink>{' '}
     your wallet.
   </>

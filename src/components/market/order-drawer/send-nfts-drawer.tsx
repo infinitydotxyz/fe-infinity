@@ -16,9 +16,10 @@ interface Props {
   onClose: () => void;
   nftsForTransfer: ERC721CardData[];
   onClickRemove: (item: ERC721CardData) => void;
+  onSubmit: (txHash: string) => void;
 }
 
-export const TransferDrawer = ({ open, onClose, nftsForTransfer, onClickRemove }: Props) => {
+export const SendNFTsDrawer = ({ open, onClose, nftsForTransfer, onClickRemove, onSubmit }: Props) => {
   const [address, setAddress] = useState('');
   const { providerManager, chainId } = useAppContext();
 
@@ -108,7 +109,8 @@ export const TransferDrawer = ({ open, onClose, nftsForTransfer, onClickRemove }
                 if (toAddress) {
                   const signer = providerManager?.getEthersProvider().getSigner();
                   if (signer) {
-                    await sendMultipleNfts(signer, chainId, orderItems, toAddress);
+                    const result = await sendMultipleNfts(signer, chainId, orderItems, toAddress);
+                    onSubmit(result.hash);
                   } else {
                     console.error('signer is null');
                   }
