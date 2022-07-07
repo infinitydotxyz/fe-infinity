@@ -1,10 +1,10 @@
-import { FunctionComponent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { apiPost, useFetch } from 'src/utils';
 import { Button } from 'src/components/common';
 import clsx from 'classnames';
 import { useAppContext } from 'src/utils/context/AppContext';
 
-interface VotedStatusProps {
+interface Props {
   chainId: string;
   collectionAddress: string;
 }
@@ -26,7 +26,7 @@ enum VOTE_ACTION {
   NO_VOTES = 'NO_VOTES'
 }
 
-const VotedStatus: FunctionComponent<VotedStatusProps> = ({ chainId, collectionAddress }) => {
+export const VotedStatus = ({ chainId, collectionAddress }: Props) => {
   const { user } = useAppContext();
 
   const { result } = useFetch<CollectionVotesDto>(`/collections/${chainId}:${collectionAddress}/votes`);
@@ -149,5 +149,3 @@ const VotedStatus: FunctionComponent<VotedStatusProps> = ({ chainId, collectionA
     </>
   );
 };
-
-export { VotedStatus };
