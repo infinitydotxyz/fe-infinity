@@ -39,7 +39,7 @@ export const FeedList = ({ collectionAddress, tokenId, types, className = '' }: 
 
       const { result, error } = await apiGet(url, {
         query: {
-          limit: 50,
+          limit: 10,
           eventType: filter.types || [EventType.NftSale, EventType.NftListing, EventType.NftOffer],
           cursor: fromCursor
         }
