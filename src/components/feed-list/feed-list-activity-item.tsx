@@ -67,7 +67,7 @@ const TableItem = ({ label, children }: Props2) => {
   return (
     <div className="w-auto mr-4">
       <div className="text-gray-400">{label}</div>
-      <div className="font-bold">{children}</div>
+      <div className="font-medium">{children}</div>
     </div>
   );
 };
