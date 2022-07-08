@@ -238,3 +238,17 @@ export const getOwnerAddress = (token: BaseToken | null | undefined) => {
   }
   return ownerAddress;
 };
+
+// extract error message
+export const extractErrorMsg = (err: unknown) => {
+  console.error(err);
+  let msg = `${err}`;
+  if (msg.indexOf('reason=') > 0) {
+    const arr = msg.split('reason=');
+    const msgArr = arr[1].split('"');
+    msg = msgArr[1];
+  } else if (msg.indexOf('invalid address') > 0) {
+    msg = 'Invalid wallet address.';
+  }
+  return msg;
+};
