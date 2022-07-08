@@ -143,28 +143,27 @@ export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
   const timeString = '14h';
 
   return (
-    <div>
-      <div className="flex items-start">
-        <EZImage
-          src={activity.collectionData?.metadata.bannerImage}
-          className="border border-red-300 rounded-full overflow-clip shrink-0 w-10 h-10 bg-gray-100"
-        />
+    <div className="w-full flex items-start">
+      <EZImage
+        src={activity.collectionData?.metadata.bannerImage}
+        className="border border-red-300 rounded-full overflow-clip shrink-0 w-10 h-10 bg-gray-100"
+      />
 
-        <div className="ml-2 flex flex-col items-start">
-          <div className="flex items-center">
-            <div className="font-bold">
-              <a href={`/collection/${activity.collectionData?.slug}`}>{activity.collectionData?.metadata.name}</a>
-            </div>
-            {activity.collectionData?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1" /> : null}
-
-            <div className="ml-2 text-sm">{timeString}</div>
+      <div className="ml-2 flex-1 flex-col items-start">
+        <div className="flex items-center">
+          <div className="font-bold">
+            <a href={`/collection/${activity.collectionData?.slug}`}>{activity.collectionData?.metadata.name}</a>
           </div>
-          <div className="text-gray-500 text-sm mt-1">{typeName(activity.type)}</div>
+          {activity.collectionData?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1" /> : null}
 
-          <div className="py-8">{content}</div>
-
-          {bottomBar}
+          <div className="ml-2 text-sm">{timeString}</div>
         </div>
+
+        <div className="text-gray-500 flex text-sm mt-1">{typeName(activity.type)}</div>
+
+        <div className="py-2">{content}</div>
+
+        {bottomBar}
       </div>
     </div>
   );
