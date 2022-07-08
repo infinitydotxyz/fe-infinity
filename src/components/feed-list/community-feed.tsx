@@ -40,13 +40,9 @@ export const CommunityFeed = () => {
   }
 
   return (
-    <>
-      <div className="text-4xl font-bold mb-6">Feed</div>
-
-      <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-16">
-        <div className="lg:col-span-1 xl:col-span-2">{content}</div>
-        <div className="col-span-1">{collection && <CommunityRightPanel collection={collection} />}</div>
-      </div>
-    </>
+    <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-16">
+      <div className="lg:col-span-1 xl:col-span-2">{content}</div>
+      <div className="col-span-1">{collection && <CommunityRightPanel collection={collection} />}</div>
+    </div>
   );
 };

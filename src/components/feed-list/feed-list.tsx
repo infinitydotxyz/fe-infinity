@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react';
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { apiGet } from 'src/utils';
 import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
-import { ScrollLoader } from '../common';
+import { Button, ScrollLoader, Spacer } from '../common';
 // import { CommentPanel } from '../feed/comment-panel';
-import { FeedFilterDropdown } from '../feed/feed-filter-dropdown';
 import { FeedEvent } from '../feed/feed-item';
 import { NftActivity } from '../asset/activity/activity-item';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { FeedListItem } from './feed-list-item';
+import { FilterButton } from './filter-button';
 
 interface Props {
   collectionAddress: string;
@@ -21,7 +21,6 @@ export const FeedList = ({ collectionAddress, tokenId, types, className = '' }: 
   const { chainId } = useAppContext();
   const [filter, setFilter] = useState<FeedFilter>({ collectionAddress, tokenId, types });
   const [commentPanelEvent, setCommentPanelEvent] = useState<FeedEvent | null>(null);
-  const [filteringTypes, setFilteringTypes] = useState<EventType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [activities, setActivities] = useState<NftActivity[]>([]);
   const [cursor, setCursor] = useState('');
@@ -64,63 +63,20 @@ export const FeedList = ({ collectionAddress, tokenId, types, className = '' }: 
     fetchActivity(true);
   }, [filter]);
 
-  const onChangeFilterDropdown = (checked: boolean, checkId: string) => {
-    const newFilter = { ...filter };
-
-    if (checkId === '') {
-      setFilteringTypes([]);
-      delete newFilter.types;
-      setFilter(newFilter);
-      return;
-    }
-
-    const selectedType = checkId as EventType;
-    if (checked) {
-      newFilter.types = [...filteringTypes, selectedType];
-      setFilter(newFilter);
-      setFilteringTypes(newFilter.types);
-    } else {
-      const _newTypes = [...filteringTypes];
-      const index = filteringTypes.indexOf(selectedType);
-      if (index >= 0) {
-        _newTypes.splice(index, 1);
-      }
-      newFilter.types = _newTypes;
-      setFilter(newFilter);
-      setFilteringTypes(_newTypes);
-    }
-  };
-
   if (!collectionAddress) {
     return null;
   }
 
   return (
-    <div className={`min-h-[1024px] ${className}`}>
-      <div className="flex justify-between mt-[-66px] mb-6">
-        <div className="text-3xl mb-6">&nbsp;</div>
-        <FeedFilterDropdown
-          options={[
-            {
-              label: 'All',
-              value: ''
-            },
-            {
-              label: 'Listings',
-              value: EventType.NftListing
-            },
-            {
-              label: 'Offers',
-              value: EventType.NftOffer
-            },
-            {
-              label: 'Sales',
-              value: EventType.NftSale
-            }
-          ]}
-          selectedTypes={filteringTypes}
-          onChange={onChangeFilterDropdown}
-        />
+    <div className={`${className}`}>
+      <div className="flex items-center mb-8">
+        <div className="text-4xl font-bold">Feed</div>
+
+        <Spacer />
+        <Button className="mr-2" variant="outline" onClick={() => console.log('sdf')}>
+          Refresh
+        </Button>
+        <FilterButton filter={filter} onChange={(f) => setFilter(f)} />
       </div>
 
       {!isLoading && activities.length === 0 ? <div className="font-heading">No data available.</div> : null}
