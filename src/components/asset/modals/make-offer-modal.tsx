@@ -4,13 +4,14 @@ import { Modal, CurrencyInput, DatePickerBox } from 'src/components/common';
 import { secondsPerDay } from 'src/utils/ui-constants';
 
 interface Props {
+  buyPriceEth: string;
   isOpen: boolean;
   token: Token;
   onClose: () => void;
 }
 
-export const MakeOfferModal = ({ isOpen, onClose, token }: Props) => {
-  const [price, setPrice] = useState(0);
+export const MakeOfferModal = ({ isOpen, onClose, token, buyPriceEth }: Props) => {
+  const [price, setPrice] = useState<string>(buyPriceEth || '1');
   const [expirationDate, setExpirationDate] = useState(Date.now() + secondsPerDay * 30 * 1000);
 
   return (

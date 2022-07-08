@@ -8,6 +8,8 @@ interface Props {
   onClose: () => void;
 }
 
+// this Modal is deprecated? we have 'make-offer-modal'
+
 export const PlaceBidModal = ({ isOpen, onClose, token }: Props) => {
   const [price, setPrice] = useState(0);
   const [termsChecked, setTermsChecked] = useState(false);
@@ -21,9 +23,7 @@ export const PlaceBidModal = ({ isOpen, onClose, token }: Props) => {
       disableCancel={!termsChecked}
       cancelButton="Convert ETH"
       onOKButton={() => {
-        // todo: adi: Place bid
         console.log('Place bid');
-
         console.log(token);
       }}
       onCancelButton={() => console.log('Convert ETH')}

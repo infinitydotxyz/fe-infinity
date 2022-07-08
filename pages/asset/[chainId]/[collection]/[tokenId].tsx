@@ -14,14 +14,7 @@ import {
 } from 'src/components/common';
 import { MISSING_IMAGE_URL, getOwnerAddress, useFetch } from 'src/utils';
 import { Token, Collection, Erc721Metadata, OBOrder } from '@infinityxyz/lib-frontend/types/core';
-import {
-  TraitList,
-  CancelModal,
-  SendNFTModal,
-  PlaceBidModal,
-  MakeOfferModal,
-  ActivityList
-} from 'src/components/asset';
+import { TraitList, CancelModal, SendNFTModal, MakeOfferModal, ActivityList } from 'src/components/asset';
 import { useEffect, useState } from 'react';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { getOBOrderFromFirestoreOrderItem } from 'src/utils/exchange/orders';
@@ -88,7 +81,6 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const [showLowerPriceModal, setShowLowerPriceModal] = useState(false);
   const [showSendModal, setShowSendModal] = useState(false);
   const [showMakeOfferModal, setShowMakeOfferModal] = useState(false);
-  const [showPlaceBidModal, setShowPlaceBidModal] = useState(false);
   const [buyPriceEth, setBuyPriceEth] = useState('');
   const [sendTxHash, setSendTxHash] = useState('');
 
@@ -155,13 +147,6 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
     ? `${tokenMetadata.name} - ${token.collectionName}`
     : tokenMetadata.name || token.collectionName || 'brrrr';
 
-  const onClickBuy = () => {
-    if (!checkSignedIn()) {
-      return;
-    }
-    setShowPlaceBidModal(true);
-  };
-
   const onClickMakeOffer = () => {
     if (!checkSignedIn()) {
       return;
@@ -219,10 +204,12 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
       {sendTxHash && <SendNFTsStatusModal txHash={sendTxHash} onClose={() => setSendTxHash('')} />}
 
       {showMakeOfferModal && (
-        <MakeOfferModal isOpen={showMakeOfferModal} onClose={() => setShowMakeOfferModal(false)} token={token} />
-      )}
-      {showPlaceBidModal && (
-        <PlaceBidModal isOpen={showPlaceBidModal} onClose={() => setShowPlaceBidModal(false)} token={token} />
+        <MakeOfferModal
+          isOpen={showMakeOfferModal}
+          onClose={() => setShowMakeOfferModal(false)}
+          token={token}
+          buyPriceEth={buyPriceEth}
+        />
       )}
     </>
   );
@@ -290,7 +277,14 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
             <div className="md:-ml-1.5">
               <div className="flex flex-col md:flex-row gap-4 my-4 md:my-6 lg:mt-10">
                 {buyPriceEth && (
-                  <Button variant="primary" size="large" onClick={onClickBuy}>
+                  <Button
+                    variant="primary"
+                    size="large"
+                    onClick={() => {
+                      // todo: adi: user clicked Buy to buy a listed nft.
+                      console.log('buy', token.ordersSnippet);
+                    }}
+                  >
                     <div className="flex">
                       <span className="mr-4">Buy</span>
                       <span className="font-heading">
