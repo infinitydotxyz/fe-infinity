@@ -257,9 +257,11 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
                     </div>
                   </Button>
                 )}
-                <Button variant="outline" size="large" onClick={onClickLowerPrice}>
-                  Lower Price
-                </Button>
+                {isNftOwner ? (
+                  <Button variant="outline" size="large" onClick={onClickLowerPrice}>
+                    Lower Price
+                  </Button>
+                ) : null}
               </div>
             </div>
           ) : null}
