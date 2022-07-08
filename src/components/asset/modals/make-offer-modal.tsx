@@ -34,7 +34,7 @@ export const MakeOfferModal = ({ isOpen, onClose, token, buyPriceEth }: Props) =
             label="Enter offer"
             placeholder=""
             onChange={(value) => {
-              setPrice(parseFloat(value));
+              setPrice(value);
             }}
           />
         </div>
