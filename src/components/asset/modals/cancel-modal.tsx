@@ -4,6 +4,7 @@ import { Checkbox, EthPrice, Modal, Spinner } from 'src/components/common';
 import { apiGet } from 'src/utils';
 import { OrderbookItem } from 'src/components/market/orderbook-list/orderbook-item';
 import { useAppContext } from 'src/utils/context/AppContext';
+import { cancelMultipleOrders } from 'src/utils/exchange/orders';
 
 interface Props {
   isOpen: boolean;
@@ -13,8 +14,8 @@ interface Props {
 }
 
 export const CancelModal = ({ isOpen, onClose, collectionAddress, token }: Props) => {
-  const { user } = useAppContext();
-  const [selectedListings, setSelectedListings] = useState<string[]>([]);
+  const { user, providerManager, chainId } = useAppContext();
+  const [selectedListings, setSelectedListings] = useState<number[]>([]);
   const [listings, setListings] = useState<SignedOBOrder[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -63,8 +64,13 @@ export const CancelModal = ({ isOpen, onClose, collectionAddress, token }: Props
       onClose={onClose}
       okButton="Confirm"
       title="Select listings to cancel"
-      onOKButton={() => {
-        // todo: adi: cancel 'selectedListings'
+      onOKButton={async () => {
+        const signer = providerManager?.getEthersProvider().getSigner();
+        if (signer) {
+          await cancelMultipleOrders(signer, chainId, selectedListings);
+        } else {
+          console.error('signer is null');
+        }
         onClose();
       }}
     >
@@ -81,7 +87,7 @@ export const CancelModal = ({ isOpen, onClose, collectionAddress, token }: Props
               key={`${listing.id}_${idx}`}
               className="w-full mb-4"
               boxOnLeft={false}
-              checked={selectedListings.includes(listing.id)}
+              checked={selectedListings.includes(listing.nonce)}
               labelClassName="w-full"
               label={
                 <div className="w-full flex items-center justify-between pr-4">
@@ -98,9 +104,9 @@ export const CancelModal = ({ isOpen, onClose, collectionAddress, token }: Props
               }
               onChange={(checked) => {
                 if (checked) {
-                  setSelectedListings([...selectedListings, listing.id]);
+                  setSelectedListings([...selectedListings, listing.nonce]);
                 } else {
-                  const arr = selectedListings.filter((id) => id !== listing.id);
+                  const arr = selectedListings.filter((nonce) => nonce !== listing.nonce);
                   setSelectedListings(arr);
                 }
               }}
