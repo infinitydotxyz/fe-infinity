@@ -83,9 +83,9 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
       const signer = providerManager?.getEthersProvider().getSigner();
       if (signer) {
         await takeMultiplOneOrders(signer, chainId, order.signedOrder);
-        toastSuccess('Order executed.');
+        toastSuccess('Order sent for execution');
       } else {
-        throw 'Signer is null.';
+        throw 'Signer is null';
       }
     } catch (err) {
       toastError((err as Error).message);
