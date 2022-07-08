@@ -419,13 +419,31 @@ export async function sendMultipleNfts(
   const infinityExchange = new Contract(exchangeAddress, InfinityExchangeABI, signer);
   const from = await signer.getAddress();
   // grant approvals
-  const approvalResult = await approveERC721ForChainNFTs(from, orderItems, signer, exchangeAddress);
-  console.log('approvalResult', approvalResult);
+  await approveERC721ForChainNFTs(from, orderItems, signer, exchangeAddress);
   // perform send
   const transferResult = await infinityExchange.transferMultipleNFTs(toAddress, orderItems);
-  console.log('transferResult', transferResult);
   return {
     hash: transferResult?.hash ?? ''
+  };
+}
+
+export async function cancelAllOrders(signer: JsonRpcSigner, chainId: string, minOrderNonce: number) {
+  const exchangeAddress = getExchangeAddress(chainId);
+  const infinityExchange = new Contract(exchangeAddress, InfinityExchangeABI, signer);
+  // perform cancel
+  const cancelResult = await infinityExchange.cancelAllOrders(minOrderNonce);
+  return {
+    hash: cancelResult?.hash ?? ''
+  };
+}
+
+export async function cancelMultipleOrders(signer: JsonRpcSigner, chainId: string, nonces: number[]) {
+  const exchangeAddress = getExchangeAddress(chainId);
+  const infinityExchange = new Contract(exchangeAddress, InfinityExchangeABI, signer);
+  // perform cancel
+  const cancelResult = await infinityExchange.cancelMultipleOrders(nonces);
+  return {
+    hash: cancelResult?.hash ?? ''
   };
 }
 

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { FeedItem, FeedEvent } from './feed-item';
 import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
-import { CommentPanel } from './comment-panel';
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { FeedFilterDropdown } from './feed-filter-dropdown';
 import { ActivityItem } from './activity-item';
@@ -186,14 +185,15 @@ export const UserProfileActivityList = ({
                 />
                 {commentPanelEvent && event.id === commentPanelEvent.id && (
                   <div className="ml-20 p-4 ">
-                    <CommentPanel
+                    {/* TODO(SNG): fix
+                      <CommentPanel
                       contentOnly={true}
                       isOpen={!!commentPanelEvent}
                       event={commentPanelEvent}
                       onClose={() => {
                         setCommentPanelEvent(null);
                       }}
-                    />
+                    /> */}
                   </div>
                 )}
 

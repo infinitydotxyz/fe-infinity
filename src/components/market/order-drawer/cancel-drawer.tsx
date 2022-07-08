@@ -1,5 +1,7 @@
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { Button, SVG, Spacer } from 'src/components/common';
+import { useAppContext } from 'src/utils/context/AppContext';
+import { cancelMultipleOrders } from 'src/utils/exchange/orders';
 import { iconButtonStyle } from 'src/utils/ui-constants';
 // import { format } from 'timeago.js';
 import { Drawer } from '../../common/drawer';
@@ -13,12 +15,14 @@ interface Props {
 }
 
 export const CancelDrawer = ({ open, onClose, orders, onClickRemove }: Props) => {
+  const { providerManager, chainId } = useAppContext();
+
   return (
     <>
       <Drawer
         open={open}
         onClose={onClose}
-        subtitle={'Selected listings:'}
+        subtitle={'Cancel these listings in one transaction :)'}
         title={<div className="flex items-center">Cancel Listings</div>}
       >
         <div className="flex flex-col h-full">
@@ -55,8 +59,14 @@ export const CancelDrawer = ({ open, onClose, orders, onClickRemove }: Props) =>
           <footer className="w-full text-center py-4">
             <Button
               size="large"
-              onClick={() => {
-                // todo: adi: cancel 'orders'
+              onClick={async () => {
+                const signer = providerManager?.getEthersProvider().getSigner();
+                if (signer) {
+                  const nonces = orders.map((order) => order.nonce);
+                  await cancelMultipleOrders(signer, chainId, nonces);
+                } else {
+                  console.error('signer is null');
+                }
               }}
             >
               Cancel Listings
