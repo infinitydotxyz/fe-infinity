@@ -1,29 +1,29 @@
+import { Collection, Erc721Metadata, OBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
+import { getCurrentOBOrderPrice } from '@infinityxyz/lib-frontend/utils';
+import { utils } from 'ethers';
 import { useRouter } from 'next/router';
+import NotFound404Page from 'pages/not-found-404';
+import { useEffect, useState } from 'react';
+import { ActivityList, CancelModal, MakeOfferModal, SendNFTModal, TraitList } from 'src/components/asset';
+import { LowerPriceModal } from 'src/components/asset/modals/lower-price-modal';
 import {
   Button,
-  ShortAddress,
+  CenteredContent,
+  EthPrice,
+  NextLink,
   PageBox,
   ReadMoreText,
-  SVG,
-  NextLink,
+  ShortAddress,
   Spinner,
-  EthPrice,
+  SVG,
   ToggleTab,
-  useToggleTab,
-  CenteredContent
+  useToggleTab
 } from 'src/components/common';
-import { MISSING_IMAGE_URL, getOwnerAddress, useFetch } from 'src/utils';
-import { Token, Collection, Erc721Metadata, OBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { TraitList, CancelModal, SendNFTModal, MakeOfferModal, ActivityList } from 'src/components/asset';
-import { useEffect, useState } from 'react';
+import { SendNFTsStatusModal } from 'src/components/market/order-drawer/send-nfts-status-modal';
+import { OrderbookContainer } from 'src/components/market/orderbook-list';
+import { getOwnerAddress, MISSING_IMAGE_URL, useFetch } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { getOBOrderFromFirestoreOrderItem } from 'src/utils/exchange/orders';
-import { utils } from 'ethers';
-import { getCurrentOBOrderPrice } from '@infinityxyz/lib-frontend/utils';
-import { LowerPriceModal } from 'src/components/asset/modals/lower-price-modal';
-import { OrderbookContainer } from 'src/components/market/orderbook-list';
-import NotFound404Page from 'pages/not-found-404';
-import { SendNFTsStatusModal } from 'src/components/market/order-drawer/send-nfts-status-modal';
 
 const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
@@ -73,7 +73,7 @@ interface Props {
 }
 
 const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
-  const { checkSignedIn, user } = useAppContext();
+  const { checkSignedIn, user, providerManager, chainId } = useAppContext();
   const { isLoading, error, token, collection } = useFetchAssetInfo(qchainId, qcollection, qtokenId);
   const { options, onChange, selected } = useToggleTab(['Activity', 'Orders'], 'Activity');
 
@@ -280,9 +280,16 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
                   <Button
                     variant="primary"
                     size="large"
-                    onClick={() => {
+                    onClick={async () => {
                       // todo: adi: user clicked Buy to buy a listed nft.
-                      console.log('buy', token.ordersSnippet);
+                      const signer = providerManager?.getEthersProvider().getSigner();
+                      if (signer) {
+                        // todo: adi
+                        // await takeMultiplOneOrders(signer, chainId, order.signedOrder);
+                      } else {
+                        throw 'Signer is null';
+                      }
+                      console.log('buy', chainId, token.ordersSnippet);
                     }}
                   >
                     <div className="flex">
