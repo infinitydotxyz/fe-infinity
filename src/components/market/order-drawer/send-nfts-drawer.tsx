@@ -112,7 +112,9 @@ export const SendNFTsDrawer = ({ open, onClose, nftsForTransfer, onClickRemove, 
                     const signer = providerManager?.getEthersProvider().getSigner();
                     if (signer) {
                       const result = await sendMultipleNfts(signer, chainId, orderItems, toAddress);
-                      onSubmit(result.hash);
+                      if (result.hash) {
+                        onSubmit(result.hash);
+                      }
                     } else {
                       console.error('signer is null');
                     }

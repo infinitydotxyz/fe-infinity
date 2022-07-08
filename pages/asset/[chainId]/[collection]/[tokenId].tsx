@@ -30,6 +30,7 @@ import { getCurrentOBOrderPrice } from '@infinityxyz/lib-frontend/utils';
 import { LowerPriceModal } from 'src/components/asset/modals/lower-price-modal';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
 import NotFound404Page from 'pages/not-found-404';
+import { SendNFTsStatusModal } from 'src/components/market/order-drawer/send-nfts-status-modal';
 
 const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
@@ -89,6 +90,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const [showMakeOfferModal, setShowMakeOfferModal] = useState(false);
   const [showPlaceBidModal, setShowPlaceBidModal] = useState(false);
   const [buyPriceEth, setBuyPriceEth] = useState('');
+  const [sendTxHash, setSendTxHash] = useState('');
 
   const isNftOwner = token ? user?.address === getOwnerAddress(token) : false;
   const listingOwner = token?.ordersSnippet?.listing?.orderItem?.makerAddress ?? '';
@@ -206,7 +208,15 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
           buyPriceEth={buyPriceEth}
         />
       )}
-      {showSendModal && <SendNFTModal isOpen={showSendModal} onClose={() => setShowSendModal(false)} token={token} />}
+      {showSendModal && (
+        <SendNFTModal
+          isOpen={showSendModal}
+          onClose={() => setShowSendModal(false)}
+          token={token}
+          onSubmit={(hash) => setSendTxHash(hash)}
+        />
+      )}
+      {sendTxHash && <SendNFTsStatusModal txHash={sendTxHash} onClose={() => setSendTxHash('')} />}
 
       {showMakeOfferModal && (
         <MakeOfferModal isOpen={showMakeOfferModal} onClose={() => setShowMakeOfferModal(false)} token={token} />
