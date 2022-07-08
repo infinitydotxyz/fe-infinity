@@ -2,7 +2,7 @@ import { Token } from '@infinityxyz/lib-frontend/types/core';
 import React, { useEffect, useState } from 'react';
 import { Modal, CurrencyInput, DatePickerBox } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { fetchSignedOBOrder } from 'src/utils/marketUtils';
+import { fetchUserSignedOBOrder } from 'src/utils/marketUtils';
 import { secondsPerDay } from 'src/utils/ui-constants';
 
 interface Props {
@@ -18,7 +18,7 @@ export const MakeOfferModal = ({ isOpen, onClose, token, buyPriceEth }: Props) =
   const [expirationDate, setExpirationDate] = useState(Date.now() + secondsPerDay * 30 * 1000);
 
   const fetchOrder = async () => {
-    const order = await fetchSignedOBOrder(user?.address, token?.ordersSnippet?.listing?.orderItem?.id);
+    const order = await fetchUserSignedOBOrder(user?.address, token?.ordersSnippet?.listing?.orderItem?.id);
     console.log('order', order);
   };
 

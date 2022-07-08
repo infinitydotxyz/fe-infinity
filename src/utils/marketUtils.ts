@@ -62,7 +62,7 @@ export const checkOffersToUser = (order: SignedOBOrder, currentUser: User | null
   return result;
 };
 
-export const fetchSignedOBOrder = async (userAddress: string | undefined, orderId: string | undefined) => {
+export const fetchUserSignedOBOrder = async (userAddress: string | undefined, orderId: string | undefined) => {
   if (!userAddress || !orderId) {
     return null;
   }
