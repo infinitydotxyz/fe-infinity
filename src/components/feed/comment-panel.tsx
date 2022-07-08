@@ -3,7 +3,7 @@ import { ellipsisString } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { addUserComments, Comment, fetchComments, fetchMoreComments } from 'src/utils/firestore/firestoreUtils';
 import { format } from 'timeago.js';
-import { Button, Drawer, NextLink, FetchMore } from 'src/components/common';
+import { Button, Drawer, NextLink, ScrollLoader } from 'src/components/common';
 import { NftEventRec } from '../asset/activity/activity-item';
 
 interface Props {
@@ -15,22 +15,19 @@ interface Props {
 
 export const CommentPanel = ({ isOpen, onClose, event, contentOnly }: Props) => {
   const { user, checkSignedIn } = useAppContext();
-  const [currentPage, setCurrentPage] = useState(0);
   const [text, setText] = useState('');
   const [data, setData] = useState<Comment[]>([]);
   const [isFetched, setIsFetched] = useState(false);
 
-  const fetchData = async () => {
-    const commentsArr = await fetchComments(event.id);
+  const fetchData = async (more: boolean) => {
+    const commentsArr = more ? fetchMoreComments(event.id) : await fetchComments(event.id);
     setData(commentsArr as Comment[]);
 
-    // TODO(SNG): fix?
-    // event.comments = commentsArr.length;
     setIsFetched(true);
   };
 
   useEffect(() => {
-    fetchData();
+    fetchData(false);
   }, []);
 
   const onClickReply = async () => {
@@ -43,9 +40,7 @@ export const CommentPanel = ({ isOpen, onClose, event, contentOnly }: Props) => 
       username: user?.username ?? '',
       comment: text
     });
-    setData([]);
-    setCurrentPage(0);
-    void fetchData();
+    fetchData(false);
     setText('');
   };
 
@@ -106,12 +101,9 @@ export const CommentPanel = ({ isOpen, onClose, event, contentOnly }: Props) => 
 
         {content}
 
-        <FetchMore
-          currentPage={currentPage}
+        <ScrollLoader
           onFetchMore={async () => {
-            setCurrentPage(currentPage + 1);
-            const arr = (await fetchMoreComments(event.id)) as Comment[];
-            setData((currentComments) => [...currentComments, ...arr]);
+            fetchData(true);
           }}
         />
       </div>
