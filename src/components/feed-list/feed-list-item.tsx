@@ -1,6 +1,7 @@
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { BsChatRight } from 'react-icons/bs';
-import { Button, EZImage, SVG } from 'src/components/common';
+import { TbArrowBarUp } from 'react-icons/tb';
+import { Button, EZImage, Spacer, SVG } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { NftActivity } from '../asset/activity/activity-item';
 // import { addUserLike } from 'src/utils/firestore/firestoreUtils';
@@ -85,7 +86,7 @@ export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
   };
 
   const bottomBar = (
-    <div className="text-sm mt-2 text-gray-500 flex items-center">
+    <div className="text-sm mt-2 w-full text-gray-500 flex items-center">
       <Button
         variant="plain"
         className="px-0"
@@ -99,7 +100,7 @@ export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
           }
         }}
       >
-        <div className="flex">
+        <div className="flex items-center">
           <AiOutlineLike size={22} className="mr-2" />
           {likes}
         </div>
@@ -114,8 +115,25 @@ export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
           // }
         }}
       >
+        <div className="flex items-center">
+          <BsChatRight size={18} className="mr-2" />
+          {comments}
+        </div>
+      </Button>
+
+      <Spacer />
+
+      <Button
+        variant="plain"
+        className="px-0 ml-12"
+        onClick={() => {
+          // if (onComment) {
+          //   onComment(data);
+          // }
+        }}
+      >
         <div className="flex">
-          <BsChatRight size={18} className="mr-2" /> {comments}
+          <TbArrowBarUp size={18} className="" />
         </div>
       </Button>
     </div>
