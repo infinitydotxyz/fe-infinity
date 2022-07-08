@@ -79,7 +79,7 @@ export const defaultDataColumns = (order: SignedOBOrder): DataColumn[] => {
       name: 'Button',
       type: 'Button',
       field: 'buyOrSell',
-      width: '.5fr'
+      width: '1fr'
     }
   ];
 };
