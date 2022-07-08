@@ -61,3 +61,19 @@ export const checkOffersToUser = (order: SignedOBOrder, currentUser: User | null
   }
   return result;
 };
+
+export const fetchSignedOBOrder = async (userAddress: string | undefined, orderId: string | undefined) => {
+  if (!userAddress || !orderId) {
+    return null;
+  }
+  const { result, error } = await apiGet(`/orders/${orderId}/fromUser/${userAddress}`, {
+    query: {
+      limit: 1
+    }
+  });
+  if (!error && result) {
+    const order = result as SignedOBOrder;
+    return order;
+  }
+  return null;
+};

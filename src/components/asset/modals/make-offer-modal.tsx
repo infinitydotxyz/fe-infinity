@@ -1,6 +1,8 @@
 import { Token } from '@infinityxyz/lib-frontend/types/core';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal, CurrencyInput, DatePickerBox } from 'src/components/common';
+import { useAppContext } from 'src/utils/context/AppContext';
+import { fetchSignedOBOrder } from 'src/utils/marketUtils';
 import { secondsPerDay } from 'src/utils/ui-constants';
 
 interface Props {
@@ -11,8 +13,18 @@ interface Props {
 }
 
 export const MakeOfferModal = ({ isOpen, onClose, token, buyPriceEth }: Props) => {
+  const { user } = useAppContext();
   const [price, setPrice] = useState<string>(buyPriceEth || '1');
   const [expirationDate, setExpirationDate] = useState(Date.now() + secondsPerDay * 30 * 1000);
+
+  const fetchOrder = async () => {
+    const order = await fetchSignedOBOrder(user?.address, token?.ordersSnippet?.listing?.orderItem?.id);
+    console.log('order', order);
+  };
+
+  useEffect(() => {
+    fetchOrder();
+  }, []);
 
   return (
     <Modal
@@ -23,6 +35,38 @@ export const MakeOfferModal = ({ isOpen, onClose, token, buyPriceEth }: Props) =
       onOKButton={() => {
         // todo: adi: Mkae Offer
         console.log(token);
+        const priceVal = parseFloat(price);
+        console.log('priceVal', priceVal);
+
+        // const signedOrders: SignedOBOrder[] = [];
+        // // keep the last Order & set the New Price:
+        // const order: SignedOBOrder = {
+        //   id: '',
+        //   chainId: token.chainId ?? ChainId.Mainnet,
+        //   isSellOrder: false,
+        //   makerAddress: user?.address ?? '',
+        //   makerUsername: user?.username ?? '',
+        //   numItems: 1,
+        //   startTimeMs: token.startTimeMs,
+        //   endTimeMs: token.endTimeMs,
+        //   startPriceEth: priceVal, // set the New priceVal.
+        //   endPriceEth: priceVal, // set the New Price.
+        //   nfts: [],
+        //   nonce: token.nonce,
+        //   execParams: token.execParams,
+        //   extraParams: token.extraParams,
+        //   signedOrder: token.signedOrder,
+        //   maxGasPriceWei: token.maxGasPriceWei
+        // };
+        // signedOrders.push(order);
+        // try {
+        //   await postOrders(user.address, signedOrders);
+        //   toastSuccess('Lower price successfully.');
+        // } catch (ex) {
+        //   toastError(`${ex}`);
+        //   return false;
+        // }
+        onClose();
       }}
     >
       <div>
