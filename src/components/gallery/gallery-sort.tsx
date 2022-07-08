@@ -12,7 +12,7 @@ export const GallerySort = () => {
   const { filterState, setFilterState } = useFilterContext();
   const [label, setLabel] = useState('Sort');
 
-  const onClickSort = (orderBy: 'rarityRank' | 'price' | 'tokenId', orderDirection: 'asc' | 'desc') => {
+  const onClickSort = (orderBy: 'rarityRank' | 'price' | 'tokenIdNumeric', orderDirection: 'asc' | 'desc') => {
     const newFilter = { ...filterState };
     newFilter.orderBy = orderBy;
     newFilter.orderDirection = orderDirection;
@@ -21,7 +21,7 @@ export const GallerySort = () => {
 
   useEffect(() => {
     let newLabel = label;
-    newLabel = filterState.orderBy === 'tokenId' ? SORT_BY_TOKEN_ID : newLabel;
+    newLabel = filterState.orderBy === 'tokenIdNumeric' ? SORT_BY_TOKEN_ID : newLabel;
     newLabel =
       filterState.orderBy === 'rarityRank' && filterState.orderDirection === 'asc'
         ? SORT_BY_RARITY_HIGH_LABEL
@@ -42,7 +42,7 @@ export const GallerySort = () => {
       <Dropdown
         label={label}
         items={[
-          { label: SORT_BY_TOKEN_ID, onClick: () => onClickSort('tokenId', 'asc') },
+          { label: SORT_BY_TOKEN_ID, onClick: () => onClickSort('tokenIdNumeric', 'asc') },
           { label: SORT_BY_RARITY_HIGH_LABEL, onClick: () => onClickSort('rarityRank', 'asc') },
           { label: SORT_BY_RARITY_LOW_LABEL, onClick: () => onClickSort('rarityRank', 'desc') },
           { label: SORT_BY_PRICE_HIGH_LABEL, onClick: () => onClickSort('price', 'desc') },
