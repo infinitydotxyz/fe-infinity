@@ -1,8 +1,8 @@
-import { Token } from '@infinityxyz/lib-frontend/types/core';
+import { SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
 import React, { useEffect, useState } from 'react';
-import { Modal, CurrencyInput, DatePickerBox } from 'src/components/common';
+import { Modal, CurrencyInput, DatePickerBox, toastSuccess, toastError } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { fetchUserSignedOBOrder } from 'src/utils/marketUtils';
+import { fetchOrderNonce, fetchUserSignedOBOrder, postOrders } from 'src/utils/marketUtils';
 import { secondsPerDay } from 'src/utils/ui-constants';
 
 interface Props {
@@ -14,12 +14,14 @@ interface Props {
 
 export const MakeOfferModal = ({ isOpen, onClose, token, buyPriceEth }: Props) => {
   const { user } = useAppContext();
+  const [orderDetails, setOrderDetails] = useState<SignedOBOrder | null>(null);
   const [price, setPrice] = useState<string>(buyPriceEth || '1');
   const [expirationDate, setExpirationDate] = useState(Date.now() + secondsPerDay * 30 * 1000);
 
   const fetchOrder = async () => {
     const order = await fetchUserSignedOBOrder(user?.address, token?.ordersSnippet?.listing?.orderItem?.id);
     console.log('order', order);
+    setOrderDetails(order);
   };
 
   useEffect(() => {
@@ -32,40 +34,43 @@ export const MakeOfferModal = ({ isOpen, onClose, token, buyPriceEth }: Props) =
       onClose={onClose}
       okButton="Make offer"
       title="Make offer"
-      onOKButton={() => {
-        // todo: adi: Mkae Offer
-        console.log(token);
+      onOKButton={async () => {
+        if (!orderDetails || !user) {
+          return;
+        }
         const priceVal = parseFloat(price);
-        console.log('priceVal', priceVal);
 
-        // const signedOrders: SignedOBOrder[] = [];
-        // // keep the last Order & set the New Price:
-        // const order: SignedOBOrder = {
-        //   id: '',
-        //   chainId: token.chainId ?? ChainId.Mainnet,
-        //   isSellOrder: false,
-        //   makerAddress: user?.address ?? '',
-        //   makerUsername: user?.username ?? '',
-        //   numItems: 1,
-        //   startTimeMs: token.startTimeMs,
-        //   endTimeMs: token.endTimeMs,
-        //   startPriceEth: priceVal, // set the New priceVal.
-        //   endPriceEth: priceVal, // set the New Price.
-        //   nfts: [],
-        //   nonce: token.nonce,
-        //   execParams: token.execParams,
-        //   extraParams: token.extraParams,
-        //   signedOrder: token.signedOrder,
-        //   maxGasPriceWei: token.maxGasPriceWei
-        // };
-        // signedOrders.push(order);
-        // try {
-        //   await postOrders(user.address, signedOrders);
-        //   toastSuccess('Lower price successfully.');
-        // } catch (ex) {
-        //   toastError(`${ex}`);
-        //   return false;
-        // }
+        const orderNonce = await fetchOrderNonce(user.address);
+
+        const signedOrders: SignedOBOrder[] = [];
+        // keep the last Order & set the New Price:
+        const order: SignedOBOrder = {
+          id: '',
+          chainId: orderDetails.chainId,
+          isSellOrder: false,
+          makerAddress: user.address,
+          makerUsername: user.username ?? '',
+          numItems: orderDetails.numItems,
+          startTimeMs: Date.now(),
+          endTimeMs: expirationDate,
+          startPriceEth: priceVal, // set the Offer Price.
+          endPriceEth: priceVal, // set the Offer Price.
+          nfts: orderDetails.nfts,
+          nonce: orderNonce,
+          execParams: orderDetails.execParams,
+          extraParams: orderDetails.extraParams,
+          signedOrder: orderDetails.signedOrder,
+          maxGasPriceWei: orderDetails.maxGasPriceWei
+        };
+        console.log('order', order);
+        signedOrders.push(order);
+        try {
+          await postOrders(user.address, signedOrders);
+          toastSuccess('Offer sent successfully.');
+        } catch (ex) {
+          toastError(`${ex}`);
+          return false;
+        }
         onClose();
       }}
     >
