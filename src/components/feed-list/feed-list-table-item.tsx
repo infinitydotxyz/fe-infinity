@@ -9,7 +9,7 @@ interface Props {
   activity: NftActivity;
 }
 
-export const FeedListActivityItem = ({ activity }: Props) => {
+export const FeedListTableItem = ({ activity }: Props) => {
   return (
     <div>
       <div className={twMerge(standardCard, 'flex items-center font-heading')}>

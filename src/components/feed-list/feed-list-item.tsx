@@ -7,7 +7,7 @@ import { NftActivity } from '../asset/activity/activity-item';
 // import { addUserLike } from 'src/utils/firestore/firestoreUtils';
 import { FeedEvent } from '../feed/feed-item';
 import { AiOutlineLike } from 'react-icons/ai';
-import { FeedListActivityItem } from './feed-list-activity-item';
+import { FeedListTableItem } from './feed-list-table-item';
 
 interface Props {
   activity: NftActivity;
@@ -64,7 +64,7 @@ export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
         return <div className="rounded-xl bg-blue-600 text-white py-0.5 px-2 text-sm pb-1">Discord</div>;
 
       case EventType.NftSale:
-        return <FeedListActivityItem activity={activity} />;
+        return <FeedListTableItem activity={activity} />;
 
       case EventType.NftOffer:
         return <div className="rounded-xl bg-cyan-700 text-white py-0.5 px-2 text-sm pb-1">Offer</div>;
