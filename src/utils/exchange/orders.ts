@@ -402,7 +402,11 @@ export async function sendSingleNft(
   const erc721 = new Contract(collectionAddress, ERC721ABI, signer);
   // perform send
   const from = await signer.getAddress();
-  await erc721['safeTransferFrom(address,address,uint256)'](from, toAddress, tokenId);
+  const transferResult = await erc721['safeTransferFrom(address,address,uint256)'](from, toAddress, tokenId);
+  console.log('transferResult', transferResult);
+  return {
+    hash: transferResult?.hash ?? ''
+  };
 }
 
 export async function sendMultipleNfts(

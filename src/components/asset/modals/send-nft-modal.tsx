@@ -10,9 +10,10 @@ interface Props {
   isOpen: boolean;
   token: Token;
   onClose: () => void;
+  onSubmit: (hash: string) => void;
 }
 
-export const SendNFTModal = ({ isOpen, onClose, token }: Props) => {
+export const SendNFTModal = ({ isOpen, onClose, onSubmit, token }: Props) => {
   const [address, setAddress] = useState('');
   const { providerManager, chainId } = useAppContext();
 
@@ -40,7 +41,10 @@ export const SendNFTModal = ({ isOpen, onClose, token }: Props) => {
             if (toAddress && token.collectionAddress && token.tokenId) {
               const signer = providerManager?.getEthersProvider().getSigner();
               if (signer) {
-                await sendSingleNft(signer, chainId, token.collectionAddress, token.tokenId, toAddress);
+                const result = await sendSingleNft(signer, chainId, token.collectionAddress, token.tokenId, toAddress);
+                if (result.hash) {
+                  onSubmit(result.hash);
+                }
               } else {
                 console.error('signer is null');
               }
