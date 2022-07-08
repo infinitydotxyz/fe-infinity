@@ -3,16 +3,15 @@ import { BsChatRight } from 'react-icons/bs';
 import { TbArrowBarUp } from 'react-icons/tb';
 import { Button, EZImage, Spacer, SVG } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { NftActivity } from '../asset/activity/activity-item';
-// import { addUserLike } from 'src/utils/firestore/firestoreUtils';
-import { FeedEvent } from '../feed/feed-item';
+import { NftEventRec } from '../asset/activity/activity-item';
+import { addUserLike } from 'src/utils/firestore/firestoreUtils';
 import { AiOutlineLike } from 'react-icons/ai';
 import { FeedListTableItem } from './feed-list-table-item';
 
 interface Props {
-  activity: NftActivity;
-  onLike?: (event: FeedEvent) => void;
-  onComment?: (event: FeedEvent) => void;
+  activity: NftEventRec;
+  onLike?: (event: NftEventRec) => void;
+  onComment?: (event: NftEventRec) => void;
 }
 
 export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
@@ -21,9 +20,6 @@ export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
   if (onLike && onComment) {
     // sdf
   }
-
-  const likes = 23;
-  const comments = 443;
 
   const typeName = (type: string) => {
     switch (type) {
@@ -58,28 +54,28 @@ export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
   const typeContent = (type: string) => {
     switch (type) {
       case EventType.TwitterTweet:
-        return <div className="rounded-xl bg-amber-600 text-white py-0.5 px-2 text-sm pb-1">Tweet</div>;
+        return <div>Under construction</div>;
 
       case EventType.DiscordAnnouncement:
-        return <div className="rounded-xl bg-blue-600 text-white py-0.5 px-2 text-sm pb-1">Discord</div>;
+        return <div>Under construction</div>;
 
       case EventType.NftSale:
         return <FeedListTableItem activity={activity} />;
 
       case EventType.NftOffer:
-        return <div className="rounded-xl bg-cyan-700 text-white py-0.5 px-2 text-sm pb-1">Offer</div>;
+        return <div>Under construction</div>;
 
       case EventType.NftListing:
-        return <div className="rounded-xl bg-orange-700 text-white py-0.5 px-2 text-sm pb-1">Offer</div>;
+        return <div>Under construction</div>;
 
       case EventType.NftTransfer:
-        return <div className="rounded-xl bg-yello-700 text-white py-0.5 px-2 text-sm pb-1">Offer</div>;
+        return <div>Under construction</div>;
 
       case EventType.CoinMarketCapNews:
-        return <div className="rounded-xl bg-green-700 text-white py-0.5 px-2 text-sm pb-1">Offer</div>;
+        return <div>Under construction</div>;
 
       default:
-        return <div className="rounded-xl bg-orange-700 text-white py-0.5 px-2 text-sm pb-1">{type}</div>;
+        return <div>Not handled: {type}</div>;
     }
 
     return <></>;
@@ -92,17 +88,17 @@ export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
         className="px-0"
         onClick={async () => {
           if (user && user?.address) {
-            // await addUserLike(data.id || '', user?.address, () => {
-            //   if (onLike) {
-            //     onLike(data);
-            //   }
-            // });
+            await addUserLike(activity.id || '', user?.address, () => {
+              if (onLike) {
+                onLike(activity);
+              }
+            });
           }
         }}
       >
         <div className="flex items-center">
           <AiOutlineLike size={22} className="mr-2" />
-          {likes}
+          {activity.likes}
         </div>
       </Button>
 
@@ -110,14 +106,14 @@ export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
         variant="plain"
         className="px-0 ml-12"
         onClick={() => {
-          // if (onComment) {
-          //   onComment(data);
-          // }
+          if (onComment) {
+            onComment(activity);
+          }
         }}
       >
         <div className="flex items-center">
           <BsChatRight size={18} className="mr-2" />
-          {comments}
+          {activity.comments}
         </div>
       </Button>
 
