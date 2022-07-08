@@ -18,7 +18,6 @@ export const FeedListActivityItem = ({ activity }: Props) => {
           src={activity.collectionData?.metadata?.profileImage}
         />
 
-        {/* <NextLink href={`/asset/${activity.chainId}/${activity.collectionData?.address}/${activity.tokenId}`}>Link</NextLink> */}
         <div className="flex w-full ml-8">
           <TableItem label="Link">
             <a href={`/asset/${activity.chainId}/${activity.collectionData?.address}/${activity.tokenId}`}>

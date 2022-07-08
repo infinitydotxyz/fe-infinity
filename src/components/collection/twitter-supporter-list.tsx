@@ -6,7 +6,7 @@ const imgUrl =
   'https://lh3.googleusercontent.com/y_hVyUtNEgy2dAewTXkSAKlipHn3oehM3Pt7zV9M117zayWvwOcqOTxkcldQz_ibAZxF5R_pmUAol4oSenz2H-zPCJGsZQwce-H-=w600';
 const TwitterSupporter = () => {
   return (
-    <div className={twMerge(standardCard, 'flex justify-between my-3 flex-wrap')}>
+    <div className={twMerge(standardCard, 'flex justify-between flex-wrap')}>
       <div className="flex mr-2 items-center">
         <img src={imgUrl} className="w-12 h-12 rounded-full" />
         <div className="ml-5">
