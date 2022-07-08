@@ -3,10 +3,10 @@ import { EthPrice, EZImage, NextLink } from 'src/components/common';
 import { ellipsisAddress, standardCard } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
-import { NftActivity } from '../asset/activity/activity-item';
+import { NftEventRec } from '../asset/activity/activity-item';
 
 interface Props {
-  activity: NftActivity;
+  activity: NftEventRec;
 }
 
 export const FeedListTableItem = ({ activity }: Props) => {

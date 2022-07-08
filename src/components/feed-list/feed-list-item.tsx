@@ -3,16 +3,15 @@ import { BsChatRight } from 'react-icons/bs';
 import { TbArrowBarUp } from 'react-icons/tb';
 import { Button, EZImage, Spacer, SVG } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { NftActivity } from '../asset/activity/activity-item';
-// import { addUserLike } from 'src/utils/firestore/firestoreUtils';
-import { FeedEvent } from '../feed/feed-item';
+import { NftEventRec } from '../asset/activity/activity-item';
+import { addUserLike } from 'src/utils/firestore/firestoreUtils';
 import { AiOutlineLike } from 'react-icons/ai';
 import { FeedListTableItem } from './feed-list-table-item';
 
 interface Props {
-  activity: NftActivity;
-  onLike?: (event: FeedEvent) => void;
-  onComment?: (event: FeedEvent) => void;
+  activity: NftEventRec;
+  onLike?: (event: NftEventRec) => void;
+  onComment?: (event: NftEventRec) => void;
 }
 
 export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
@@ -92,11 +91,11 @@ export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
         className="px-0"
         onClick={async () => {
           if (user && user?.address) {
-            // await addUserLike(data.id || '', user?.address, () => {
-            //   if (onLike) {
-            //     onLike(data);
-            //   }
-            // });
+            await addUserLike(activity.id || '', user?.address, () => {
+              if (onLike) {
+                onLike(activity);
+              }
+            });
           }
         }}
       >
@@ -110,9 +109,9 @@ export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
         variant="plain"
         className="px-0 ml-12"
         onClick={() => {
-          // if (onComment) {
-          //   onComment(data);
-          // }
+          if (onComment) {
+            onComment(activity);
+          }
         }}
       >
         <div className="flex items-center">

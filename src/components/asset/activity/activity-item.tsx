@@ -1,28 +1,17 @@
-import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
 import { EventType, EventTypeNames } from '@infinityxyz/lib-frontend/types/core/feed';
 import { BGImage, EthPrice, NextLink } from 'src/components/common';
 import { ellipsisAddress, PLACEHOLDER_IMAGE } from 'src/utils';
 import { format } from 'timeago.js';
+import { NftActivity } from '@infinityxyz/lib-frontend/types/dto/collections/nfts';
+import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
 
-export interface NftActivity {
-  address: string;
-  tokenId: string;
-  chainId: string;
-  type: string;
-  from: string;
-  fromDisplayName?: string;
-  to?: string;
-  toDisplayName?: string;
-  price?: number;
-  paymentToken: string;
-  internalUrl?: string;
-  externalUrl?: string;
-  timestamp: number;
+// the backend adds teh collectionData to the NFtActivity
+export interface NftEventRec extends NftActivity {
   collectionData?: BaseCollection;
 }
 
 interface Props {
-  item: NftActivity;
+  item: NftEventRec;
 }
 
 export const ActivityItem = ({ item }: Props) => {

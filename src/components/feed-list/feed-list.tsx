@@ -4,11 +4,11 @@ import { apiGet } from 'src/utils';
 import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
 import { Button, ScrollLoader, Spacer } from '../common';
 // import { CommentPanel } from '../feed/comment-panel';
-import { FeedEvent } from '../feed/feed-item';
-import { NftActivity } from '../asset/activity/activity-item';
+import { NftEventRec } from '../asset/activity/activity-item';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { FeedListItem } from './feed-list-item';
 import { FilterButton } from './filter-button';
+import { CommentPanel } from '../feed/comment-panel';
 
 interface Props {
   collectionAddress: string;
@@ -20,9 +20,9 @@ interface Props {
 export const FeedList = ({ collectionAddress, tokenId, types, className = '' }: Props) => {
   const { chainId } = useAppContext();
   const [filter, setFilter] = useState<FeedFilter>({ collectionAddress, tokenId, types });
-  const [commentPanelEvent, setCommentPanelEvent] = useState<FeedEvent | null>(null);
+  const [commentPanelEvent, setCommentPanelEvent] = useState<NftEventRec | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [activities, setActivities] = useState<NftActivity[]>([]);
+  const [activities, setActivities] = useState<NftEventRec[]>([]);
   const [cursor, setCursor] = useState('');
 
   const allTypes = [
@@ -91,7 +91,7 @@ export const FeedList = ({ collectionAddress, tokenId, types, className = '' }: 
 
       {!isLoading && activities.length === 0 ? <div className="font-heading">No data available.</div> : null}
 
-      <ul className="space-y-4">
+      <div className="space-y-4">
         {activities.map((activity, idx) => {
           return (
             <div key={idx}>
@@ -109,6 +109,19 @@ export const FeedList = ({ collectionAddress, tokenId, types, className = '' }: 
                 }}
               />
 
+              {commentPanelEvent && commentPanelEvent.id === activity.id && (
+                <div className="ml-20 p-4 ">
+                  <CommentPanel
+                    contentOnly={true}
+                    isOpen={!!commentPanelEvent}
+                    event={commentPanelEvent}
+                    onClose={() => {
+                      setCommentPanelEvent(null);
+                    }}
+                  />
+                </div>
+              )}
+
               <hr className="mt-6 mb-10 text-gray-100" />
             </div>
           );
@@ -119,7 +132,7 @@ export const FeedList = ({ collectionAddress, tokenId, types, className = '' }: 
             fetchActivity(false, cursor);
           }}
         />
-      </ul>
+      </div>
     </div>
   );
 };

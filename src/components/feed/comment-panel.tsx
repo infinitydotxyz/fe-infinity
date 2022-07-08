@@ -4,12 +4,12 @@ import { useAppContext } from 'src/utils/context/AppContext';
 import { addUserComments, Comment, fetchComments, fetchMoreComments } from 'src/utils/firestore/firestoreUtils';
 import { format } from 'timeago.js';
 import { Button, Drawer, NextLink, FetchMore } from 'src/components/common';
-import { FeedEvent } from './feed-item';
+import { NftEventRec } from '../asset/activity/activity-item';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  event: FeedEvent;
+  event: NftEventRec;
   contentOnly?: boolean;
 }
 
@@ -23,7 +23,9 @@ export const CommentPanel = ({ isOpen, onClose, event, contentOnly }: Props) => 
   const fetchData = async () => {
     const commentsArr = await fetchComments(event.id);
     setData(commentsArr as Comment[]);
-    event.comments = commentsArr.length;
+
+    // TODO(SNG): fix?
+    // event.comments = commentsArr.length;
     setIsFetched(true);
   };
 
