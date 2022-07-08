@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { EthPrice, EZImage, NextLink } from 'src/components/common';
-import { ellipsisAddress } from 'src/utils';
+import { ellipsisAddress, standardCard } from 'src/utils';
+import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
 import { NftActivity } from '../asset/activity/activity-item';
 
@@ -11,7 +12,7 @@ interface Props {
 export const FeedListActivityItem = ({ activity }: Props) => {
   return (
     <div>
-      <div className="bg-gray-100 px-10 py-6 rounded-3xl flex items-center font-heading">
+      <div className={twMerge(standardCard, 'flex items-center font-heading')}>
         <EZImage
           className="w-16 h-16 max-h-[80px] rounded-full"
           src={activity.collectionData?.metadata?.profileImage}

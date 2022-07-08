@@ -1,5 +1,5 @@
 import React from 'react';
-import { PageBox } from 'src/components/common';
+import { CenteredContent, PageBox, Spinner } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { useFetch } from 'src/utils';
 import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
@@ -13,7 +13,11 @@ const FeedPage = () => {
 
   let content;
   if (isLoading) {
-    content = <div>loading</div>;
+    content = (
+      <CenteredContent>
+        <Spinner />
+      </CenteredContent>
+    );
   } else {
     if (collection) {
       content = (
@@ -30,7 +34,7 @@ const FeedPage = () => {
                 // EventType.TwitterTweet
               ]}
               collectionAddress={collection?.address ?? ''}
-            />{' '}
+            />
           </div>
 
           <div>

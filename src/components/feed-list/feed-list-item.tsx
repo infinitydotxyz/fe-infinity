@@ -140,6 +140,7 @@ export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
   );
 
   const content = typeContent(activity.type);
+  const timeString = '14h';
 
   return (
     <div>
@@ -155,6 +156,8 @@ export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
               <a href={`/collection/${activity.collectionData?.slug}`}>{activity.collectionData?.metadata.name}</a>
             </div>
             {activity.collectionData?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1" /> : null}
+
+            <div className="ml-2 text-sm">{timeString}</div>
           </div>
           <div className="text-gray-500 text-sm mt-1">{typeName(activity.type)}</div>
 
