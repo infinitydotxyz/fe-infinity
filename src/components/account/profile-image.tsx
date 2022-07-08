@@ -1,7 +1,7 @@
 import { FunctionComponent, useState } from 'react';
 import { FaPen } from 'react-icons/fa';
 import { ImageUploader, Button } from 'src/components/common';
-import clsx from 'classnames';
+import { twMerge } from 'tailwind-merge';
 
 interface ProfileImageProps {
   className?: string;
@@ -35,7 +35,7 @@ export const ProfileImage: FunctionComponent<ProfileImageProps> = ({ className, 
     <div className="flex items-center flex-wrap ">
       <label htmlFor={FORM_LABEL}>
         <div
-          className={clsx('overflow-hidden bg-theme-light-200 w-32 h-32', className)}
+          className={twMerge('overflow-hidden bg-theme-light-200 w-32 h-32', className)}
           style={{
             border: '3px solid rgb(251, 253, 255)',
             boxShadow: 'rgb(14 14 14 / 60%) 0px 0px 2px 0px',

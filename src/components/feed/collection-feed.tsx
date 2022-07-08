@@ -12,7 +12,7 @@ import { useAppContext } from 'src/utils/context/AppContext';
 
 // let eventsInit = false;
 
-interface CollectionFeedProps {
+interface Props {
   collectionAddress?: string;
   tokenId?: string;
   types?: EventType[];
@@ -20,7 +20,7 @@ interface CollectionFeedProps {
   className?: string;
 }
 
-export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity, className }: CollectionFeedProps) => {
+export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity, className }: Props) => {
   const { chainId } = useAppContext();
   const [events, setEvents] = useState<FeedEvent[]>([]);
   const [newEvents, setNewEvents] = useState<FeedEvent[]>([]); // new feed events

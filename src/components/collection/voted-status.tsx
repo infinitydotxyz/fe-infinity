@@ -1,13 +1,7 @@
-import { FunctionComponent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { apiPost, useFetch } from 'src/utils';
-import { Button } from 'src/components/common';
-import clsx from 'classnames';
-import { useAppContext } from 'src/utils/context/AppContext';
-
-interface VotedStatusProps {
-  chainId: string;
-  collectionAddress: string;
-}
+import { Button, CenteredContent } from 'src/components/common';
+import { useAppContext, User } from 'src/utils/context/AppContext';
 
 interface CollectionVotesDto {
   collectionAddress: string;
@@ -26,12 +20,35 @@ enum VOTE_ACTION {
   NO_VOTES = 'NO_VOTES'
 }
 
-const VotedStatus: FunctionComponent<VotedStatusProps> = ({ chainId, collectionAddress }) => {
+interface Props {
+  chainId: string;
+  collectionAddress: string;
+}
+
+export const VotedStatus = ({ chainId, collectionAddress }: Props) => {
   const { user } = useAppContext();
 
+  if (user) {
+    return <VotedStatusContent user={user} chainId={chainId} collectionAddress={collectionAddress} />;
+  }
+
+  return (
+    <CenteredContent>
+      <div className="text-theme-light-800">Please connect your wallet.</div>
+    </CenteredContent>
+  );
+};
+
+interface Props2 {
+  user: User;
+  chainId: string;
+  collectionAddress: string;
+}
+
+export const VotedStatusContent = ({ user, chainId, collectionAddress }: Props2) => {
   const { result } = useFetch<CollectionVotesDto>(`/collections/${chainId}:${collectionAddress}/votes`);
 
-  const API_USER_COLLECTION_ADDR = `/user/${chainId}:${user?.address}/collectionVotes/${chainId}:${collectionAddress}`;
+  const API_USER_COLLECTION_ADDR = `/user/${chainId}:${user.address}/collectionVotes/${chainId}:${collectionAddress}`;
 
   const { result: userCollectionVote, error: userCollectionVoteError } = useFetch<UserVote>(API_USER_COLLECTION_ADDR);
   const [userVote, setUserVote] = useState<VOTE_ACTION>(VOTE_ACTION.NO_VOTES);
@@ -97,10 +114,7 @@ const VotedStatus: FunctionComponent<VotedStatusProps> = ({ chainId, collectionA
 
   return (
     <>
-      <div className="text-3xl mb-8">
-        {!user ? 'VOTED STATUS' : userVote === VOTE_ACTION.NO_VOTES ? 'Not Voted Yet' : 'You Voted'}
-      </div>
-      {!user && <p className="px-2 py-1 text-theme-light-800">Please connect your wallet.</p>}
+      <div className="text-3xl mb-8">{userVote === VOTE_ACTION.NO_VOTES ? 'Not Voted Yet' : 'You Voted'}</div>
       <div className="grid grid-cols-2 gap-10 mb-4">
         <Button
           variant={userVote === VOTE_ACTION.VOTES_FOR ? 'primary' : 'outline'}
@@ -115,7 +129,6 @@ const VotedStatus: FunctionComponent<VotedStatusProps> = ({ chainId, collectionA
           variant={userVote === VOTE_ACTION.VOTES_AGAINST ? 'primary' : 'outline'}
           size="plain"
           className="p-2.5 text-base border rounded-3xl w-full"
-          disabled={!user}
           onClick={handleVoteAgainst}
         >
           Bad <span className="w-1 inline-block">{userVote === VOTE_ACTION.VOTES_AGAINST && '✓'}</span>
@@ -125,7 +138,7 @@ const VotedStatus: FunctionComponent<VotedStatusProps> = ({ chainId, collectionA
         {total === 0 || IsOnlyVoted || IsOnlyAgainst ? (
           <div
             style={{ width: '100%', background: `${IsOnlyVoted ? '#92DEFF' : '#F6F6F6'}` }}
-            className={clsx('border rounded-3xl py-3 pl-5 font-heading tracking-tight text-center')}
+            className="border rounded-3xl py-3 pl-5 font-heading tracking-tight text-center"
           >
             {total === 0 ? 'No Votes Yet' : IsOnlyVoted ? '100% Good' : '100% Bad'}
           </div>
@@ -133,7 +146,7 @@ const VotedStatus: FunctionComponent<VotedStatusProps> = ({ chainId, collectionA
           <>
             <div
               style={{ width: `${percentage}%`, background: '#92DEFF' }}
-              className={clsx('border-l border-t border-b rounded-l-3xl py-3 pl-5 font-heading tracking-tight')}
+              className="border-l border-t border-b rounded-l-3xl py-3 pl-5 font-heading tracking-tight"
             >
               <b>{percentage}%</b> Good
             </div>
@@ -149,5 +162,3 @@ const VotedStatus: FunctionComponent<VotedStatusProps> = ({ chainId, collectionA
     </>
   );
 };
-
-export { VotedStatus };

@@ -28,7 +28,7 @@ export const UserPageOrderListItem = ({ order, onClickCancel }: Props) => {
           )}
         </NextLink> */}
         <div className="flex justify-between w-full mx-8">
-          <div className="w-1/6">
+          <div className="w-1/4">
             {/* <div className="text-black font-bold font-body">
               <a href={`/collection/${order.nfts[0].collectionSlug}`}>{order.nfts[0].collectionName}</a>
             </div>

@@ -24,13 +24,13 @@ import {
 } from 'src/components/asset';
 import { useEffect, useState } from 'react';
 import { useAppContext } from 'src/utils/context/AppContext';
-// import { CollectionFeed } from 'src/components/feed/collection-feed';
 import { getOBOrderFromFirestoreOrderItem } from 'src/utils/exchange/orders';
 import { utils } from 'ethers';
 import { getCurrentOBOrderPrice } from '@infinityxyz/lib-frontend/utils';
 import { LowerPriceModal } from 'src/components/asset/modals/lower-price-modal';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
 import NotFound404Page from 'pages/not-found-404';
+import { SendNFTsStatusModal } from 'src/components/market/order-drawer/send-nfts-status-modal';
 
 const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
@@ -90,6 +90,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const [showMakeOfferModal, setShowMakeOfferModal] = useState(false);
   const [showPlaceBidModal, setShowPlaceBidModal] = useState(false);
   const [buyPriceEth, setBuyPriceEth] = useState('');
+  const [sendTxHash, setSendTxHash] = useState('');
 
   const isNftOwner = token ? user?.address === getOwnerAddress(token) : false;
   const listingOwner = token?.ordersSnippet?.listing?.orderItem?.makerAddress ?? '';
@@ -207,7 +208,15 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
           buyPriceEth={buyPriceEth}
         />
       )}
-      {showSendModal && <SendNFTModal isOpen={showSendModal} onClose={() => setShowSendModal(false)} token={token} />}
+      {showSendModal && (
+        <SendNFTModal
+          isOpen={showSendModal}
+          onClose={() => setShowSendModal(false)}
+          token={token}
+          onSubmit={(hash) => setSendTxHash(hash)}
+        />
+      )}
+      {sendTxHash && <SendNFTsStatusModal txHash={sendTxHash} onClose={() => setSendTxHash('')} />}
 
       {showMakeOfferModal && (
         <MakeOfferModal isOpen={showMakeOfferModal} onClose={() => setShowMakeOfferModal(false)} token={token} />
@@ -256,7 +265,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
                     <div className="flex">
                       <span className="mr-4">Cancel</span>
                       <span className="font-heading">
-                        <EthPrice label={buyPriceEth} />
+                        <EthPrice label={buyPriceEth} rowClassName="pt-[1px]" />
                       </span>
                     </div>
                   </Button>
@@ -264,14 +273,19 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
                 <Button variant="outline" size="large" onClick={onClickLowerPrice}>
                   Lower Price
                 </Button>
+              </div>
+            </div>
+          ) : null}
+
+          {isNftOwner ? (
+            <div className="md:-ml-1.5">
+              <div className="flex flex-col md:flex-row gap-4 my-4 md:my-6 lg:mt-10">
                 <Button variant="outline" size="large" onClick={onClickSend}>
                   Send
                 </Button>
               </div>
             </div>
-          ) : null}
-
-          {isNftOwner ? null : (
+          ) : (
             // Other users' action buttons
             <div className="md:-ml-1.5">
               <div className="flex flex-col md:flex-row gap-4 my-4 md:my-6 lg:mt-10">
@@ -280,7 +294,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
                     <div className="flex">
                       <span className="mr-4">Buy</span>
                       <span className="font-heading">
-                        <EthPrice label={buyPriceEth} />
+                        <EthPrice label={buyPriceEth} rowClassName="pt-[1px]" />
                       </span>
                     </div>
                   </Button>
@@ -318,9 +332,6 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
 
         {selected === 'Activity' && (
           <div className="mt-[-22px]">
-            {/* <h3 className="mt-8 mb-4 font-bold font-body">Activity</h3> */}
-            {/* <CollectionFeed collectionAddress={token.collectionAddress} tokenId={token.tokenId} forActivity={true} /> */}
-
             <ActivityList
               chainId={token.chainId ?? '1'} // default
               collectionAddress={token.collectionAddress ?? ''}

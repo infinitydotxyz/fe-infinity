@@ -1,6 +1,9 @@
+import { standardCard } from 'src/utils';
+import { twMerge } from 'tailwind-merge';
+
 const TopHolder = ({ index }: { index: number }) => {
   return (
-    <div className="rounded-xl border px-5 py-5 bg-theme-light-200 flex my-3  items-center">
+    <div className={twMerge(standardCard, 'flex items-center')}>
       <div className="w-12 rounded-full max-w-18 h-12 p-3 bg-white px-5 font-bold"> {index}</div>
       <div className="flex flex-wrap justify-between flex-1">
         <div className="ml-5 py-1">

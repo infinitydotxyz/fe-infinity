@@ -19,7 +19,7 @@ export const UserBannerImage = ({ imgSrc, isOwner = false }: UserBannerImageProp
   };
 
   return (
-    <div className="h-48 lg:h-64 xl:h-72 rounded-3xl overflow-hidden bg-theme-gray-100">
+    <div className="h-48 sm:h-60 lg:h-70 xl:h-80 bg-theme-gray-100">
       <div className="w-full h-full overflow-hidden">
         {imgSrc ? (
           <BGImage src={imgSrc} />

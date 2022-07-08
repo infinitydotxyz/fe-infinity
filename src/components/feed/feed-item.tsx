@@ -25,13 +25,13 @@ const TypeName: { [key: string]: ReactNode } = {
   [EventType.NftSale]: <span className="rounded-xl bg-blue-700 text-white py-0.5 px-2 text-sm pb-1">Sale</span>
 };
 
-interface FeedItemProps {
+interface Props {
   data: FeedEvent;
   onLike?: (event: FeedEvent) => void;
   onComment?: (event: FeedEvent) => void;
 }
 
-export const FeedItem = ({ data, onLike, onComment }: FeedItemProps) => {
+export const FeedItem = ({ data, onLike, onComment }: Props) => {
   const { user, checkSignedIn } = useAppContext();
 
   const timestampStr = data.timestamp > 0 ? new Date(data.timestamp).toLocaleString() : '';
@@ -116,15 +116,15 @@ const renderTextWithLinks = (txt: string | undefined) => {
     });
 };
 
-const TweetEvent = ({ data }: FeedItemProps) => {
+const TweetEvent = ({ data }: Props) => {
   return <div className="mt-4">{renderTextWithLinks(data.text ?? data.title)}</div>;
 };
 
-const Discord = ({ data }: FeedItemProps) => {
+const Discord = ({ data }: Props) => {
   return <div className="mt-4">{renderTextWithLinks(data.title)}</div>;
 };
 
-const SaleEvent = ({ data }: FeedItemProps) => {
+const SaleEvent = ({ data }: Props) => {
   return (
     <div className="mt-4 border rounded-xl p-4 flex items-center bg-gray-100 font-heading">
       <NextLink href={`/asset/${data.chainId}/${data.collectionAddress}/${data.tokenId}`}>

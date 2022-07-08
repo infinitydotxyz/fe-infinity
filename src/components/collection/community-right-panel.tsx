@@ -1,14 +1,13 @@
-import { FunctionComponent } from 'react';
 import { VotedStatus } from './voted-status';
 import { TwitterSupporterList } from './twitter-supporter-list';
 import { TopHolderList } from './top-holder-list';
 import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
 
-interface CommunityRightPanelProps {
+interface Props {
   collection: BaseCollection;
 }
 
-const CommunityRightPanel: FunctionComponent<CommunityRightPanelProps> = ({ collection }) => {
+export const CommunityRightPanel = ({ collection }: Props) => {
   return (
     <div>
       <VotedStatus chainId={collection.chainId} collectionAddress={collection.address} />
@@ -17,5 +16,3 @@ const CommunityRightPanel: FunctionComponent<CommunityRightPanelProps> = ({ coll
     </div>
   );
 };
-
-export { CommunityRightPanel };

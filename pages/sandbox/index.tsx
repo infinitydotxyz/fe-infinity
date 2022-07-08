@@ -211,10 +211,12 @@ const SandboxPage = () => {
               onClick: console.log
             }
           ]}
-          dropdownActions={[
-            { label: 'Dropdown Action 1', onClick: console.log },
-            { label: 'Dropdown Action 2', onClick: console.log }
-          ]}
+          getDropdownActions={() => {
+            return [
+              { label: 'Dropdown Action 1', onClick: console.log },
+              { label: 'Dropdown Action 2', onClick: console.log }
+            ];
+          }}
         />
         <Card
           data={cardTestData[1]}

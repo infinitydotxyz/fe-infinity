@@ -2,6 +2,7 @@ import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { apiPost } from 'src/utils/apiUtils';
 import { apiGet } from '.';
+import { User } from './context/AppContext';
 
 export const postOrders = async (user: string, orders: SignedOBOrder[]): Promise<string> => {
   try {
@@ -43,4 +44,20 @@ export const bigNumToDate = (time: BigNumberish): Date => {
 
 export const getOrderType = (order: SignedOBOrder): 'Sale' | 'Listing' | 'Offer' => {
   return order.isSellOrder ? (order.extraParams.buyer ? 'Sale' : 'Listing') : 'Offer';
+};
+
+// check if an offer made to current user
+export const checkOffersToUser = (order: SignedOBOrder, currentUser: User | null) => {
+  if (!currentUser) {
+    return false;
+  }
+  let result = false;
+  for (const nft of order.nfts) {
+    for (const token of nft.tokens) {
+      if (token.takerAddress === currentUser.address) {
+        result = true;
+      }
+    }
+  }
+  return result;
 };

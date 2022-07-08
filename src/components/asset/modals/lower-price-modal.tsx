@@ -1,6 +1,14 @@
 import { SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
 import React, { useEffect, useState } from 'react';
-import { TextInputBox, Modal, SimpleTable, SimpleTableItem, EthPrice, toastError } from 'src/components/common';
+import {
+  TextInputBox,
+  Modal,
+  SimpleTable,
+  SimpleTableItem,
+  EthPrice,
+  toastError,
+  toastSuccess
+} from 'src/components/common';
 import { apiGet, MISSING_IMAGE_URL, INFINITY_FEE_PCT, INFINITY_ROYALTY_PCT } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { postOrders } from 'src/utils/marketUtils';
@@ -101,6 +109,7 @@ export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) 
         signedOrders.push(order);
         try {
           await postOrders(user.address, signedOrders);
+          toastSuccess('Lower price successfully.');
         } catch (ex) {
           toastError(`${ex}`);
           return false;
@@ -109,13 +118,13 @@ export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) 
       }}
     >
       <SimpleTable className="my-3" items={tableItems} />
-      <p className="mb-4">New Price</p>
+
       <TextInputBox
         autoFocus={true}
         addEthSymbol={true}
         type="number"
         value={price.toString()}
-        label="Price"
+        label="New Price"
         placeholder=""
         onChange={(value) => {
           setPrice(Number(value));

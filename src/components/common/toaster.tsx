@@ -66,7 +66,7 @@ export const toastSuccess = (message: ReactNode) => {
 };
 
 // Toast an error message - first, include <Toaster /> in JSX.
-export const toastError = (message: ReactNode) => {
+export const toastError = (message: ReactNode, onClick?: (message: ReactNode) => void) => {
   try {
     // toast.custom((t) => (
     //   <ToasterTemplate
@@ -76,7 +76,17 @@ export const toastError = (message: ReactNode) => {
     //     content={content}
     //   />
     // ));
-    reactToast(message, { type: 'error' });
+
+    if (onClick) {
+      reactToast(message, {
+        type: 'error',
+        onClick: () => onClick(message)
+      });
+    } else {
+      reactToast(message, {
+        type: 'error'
+      });
+    }
   } catch (err) {
     console.error(err);
   }

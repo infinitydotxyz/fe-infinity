@@ -80,8 +80,8 @@ export const ActivityList: React.FC<ActivityListPropType> = ({
 
       {activityList.length > 0 ? (
         <div className="mt-6">
-          {activityList.map((item) => {
-            return <ActivityItem key={item} item={item} />;
+          {activityList.map((item, idx) => {
+            return <ActivityItem key={item + '_' + idx} item={item} />;
           })}
         </div>
       ) : null}

@@ -163,7 +163,8 @@ export async function approveERC721ForChainNFTs(
       const contract = new Contract(collection, ERC721ABI, signer);
       const isApprovedForAll = await contract.isApprovedForAll(user, exchange);
       if (!isApprovedForAll) {
-        await contract.setApprovalForAll(exchange, true);
+        const result = await contract.setApprovalForAll(exchange, true);
+        return result;
       } else {
         console.log('Already approved for all');
       }
@@ -401,7 +402,11 @@ export async function sendSingleNft(
   const erc721 = new Contract(collectionAddress, ERC721ABI, signer);
   // perform send
   const from = await signer.getAddress();
-  await erc721['safeTransferFrom(address,address,uint256)'](from, toAddress, tokenId);
+  const transferResult = await erc721['safeTransferFrom(address,address,uint256)'](from, toAddress, tokenId);
+  console.log('transferResult', transferResult);
+  return {
+    hash: transferResult?.hash ?? ''
+  };
 }
 
 export async function sendMultipleNfts(
@@ -414,9 +419,14 @@ export async function sendMultipleNfts(
   const infinityExchange = new Contract(exchangeAddress, InfinityExchangeABI, signer);
   const from = await signer.getAddress();
   // grant approvals
-  await approveERC721ForChainNFTs(from, orderItems, signer, exchangeAddress);
+  const approvalResult = await approveERC721ForChainNFTs(from, orderItems, signer, exchangeAddress);
+  console.log('approvalResult', approvalResult);
   // perform send
-  await infinityExchange.transferMultipleNFTs(toAddress, orderItems);
+  const transferResult = await infinityExchange.transferMultipleNFTs(toAddress, orderItems);
+  console.log('transferResult', transferResult);
+  return {
+    hash: transferResult?.hash ?? ''
+  };
 }
 
 export async function takeMultiplOneOrders(signer: JsonRpcSigner, chainId: string, makerOrder: ChainOBOrder) {

@@ -1,5 +1,5 @@
 import { EventTypeNames } from '@infinityxyz/lib-frontend/types/core/feed';
-import { BGImage, EthPrice, NextLink } from 'src/components/common';
+import { BGImage, EthPrice, NextLink, SVG } from 'src/components/common';
 import { ellipsisAddress, getChainScannerBase, PLACEHOLDER_IMAGE } from 'src/utils';
 import { format } from 'timeago.js';
 import { FeedEvent } from './feed-item';
@@ -9,6 +9,7 @@ interface Props {
 }
 
 export const UserActivityItem = ({ event }: Props) => {
+  const buyer = event.buyerDisplayName ? ellipsisAddress(event.buyerDisplayName) : ellipsisAddress(event.buyer);
   return (
     <div>
       <div className="bg-gray-100 px-10 py-6 rounded-3xl flex items-center font-heading">
@@ -20,9 +21,17 @@ export const UserActivityItem = ({ event }: Props) => {
           )}
         </NextLink>
         <div className="flex justify-between w-full mx-8 ml-4">
-          <div className="w-1/6">
+          <div className="w-1/3">
             <div className="text-black font-bold mr-2">
-              <a href={`/collection/${event.collectionSlug}`}>{event.collectionName}</a>
+              {/* <a href={`/collection/${event.collectionSlug}`}>{event.collectionName}</a> */}
+              <NextLink
+                href={`/collection/${event.collectionSlug}`}
+                className="font-bold whitespace-pre-wrap flex items-center"
+                title={event.collectionSlug}
+              >
+                {event.collectionName}
+                {event?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1" style={{ width: 24 }} /> : null}
+              </NextLink>
             </div>
             <div className="text-gray-400">
               <a href={`/asset/${event.chainId}/${event.collectionAddress}/${event.tokenId}`}>
@@ -53,6 +62,12 @@ export const UserActivityItem = ({ event }: Props) => {
             </div>
           </div>
           <div className="w-1/6">
+            <div className="text-gray-400">Date</div>
+            <div className="font-bold" title={new Date(event.timestamp).toLocaleString()}>
+              {format(event.timestamp)}
+            </div>
+          </div>
+          <div className="w-1/6">
             <div className="text-gray-400">From</div>
             <div className="font-bold">
               <NextLink href={`/profile/${event.seller}`}>
@@ -61,17 +76,9 @@ export const UserActivityItem = ({ event }: Props) => {
             </div>
           </div>
           <div className="w-1/6">
-            <div className="text-gray-400">To</div>
+            <div className="text-gray-400">{buyer ? 'To' : ''}</div>
             <div className="font-bold">
-              <NextLink href={`/profile/${event.buyer}`}>
-                {event.buyerDisplayName ? ellipsisAddress(event.buyerDisplayName) : ellipsisAddress(event.buyer)}
-              </NextLink>
-            </div>
-          </div>
-          <div className="w-1/6">
-            <div className="text-gray-400">Date</div>
-            <div className="font-bold" title={new Date(event.timestamp).toLocaleString()}>
-              {format(event.timestamp)}
+              <NextLink href={`/profile/${event.buyer}`}>{buyer}</NextLink>
             </div>
           </div>
         </div>

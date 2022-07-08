@@ -21,6 +21,7 @@ export const PlaceBidModal = ({ isOpen, onClose, token }: Props) => {
       disableCancel={!termsChecked}
       cancelButton="Convert ETH"
       onOKButton={() => {
+        // todo: adi: Place bid
         console.log('Place bid');
 
         console.log(token);
