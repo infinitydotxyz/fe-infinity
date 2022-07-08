@@ -25,6 +25,16 @@ export const FeedList = ({ collectionAddress, tokenId, types, className = '' }: 
   const [activities, setActivities] = useState<NftActivity[]>([]);
   const [cursor, setCursor] = useState('');
 
+  const allTypes = [
+    EventType.NftSale,
+    EventType.NftListing,
+    EventType.CoinMarketCapNews,
+    EventType.DiscordAnnouncement,
+    EventType.NftTransfer,
+    EventType.TwitterTweet,
+    EventType.NftOffer
+  ];
+
   const fetchActivity = async (isRefresh = false, fromCursor = '') => {
     if (!collectionAddress) {
       return;
@@ -39,7 +49,7 @@ export const FeedList = ({ collectionAddress, tokenId, types, className = '' }: 
       const { result, error } = await apiGet(url, {
         query: {
           limit: 10,
-          eventType: filter.types || [EventType.NftSale, EventType.NftListing, EventType.NftOffer],
+          eventType: filter.types || allTypes,
           cursor: fromCursor
         }
       });
@@ -73,7 +83,7 @@ export const FeedList = ({ collectionAddress, tokenId, types, className = '' }: 
         <div className="text-4xl font-bold">Feed</div>
 
         <Spacer />
-        <Button className="mr-2" variant="outline" onClick={() => console.log('sdf')}>
+        <Button className="mr-2" variant="outline" onClick={() => fetchActivity(true)}>
           Refresh
         </Button>
         <FilterButton filter={filter} onChange={(f) => setFilter(f)} />
