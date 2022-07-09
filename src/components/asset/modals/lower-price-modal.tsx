@@ -73,7 +73,7 @@ export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) 
         }
         const buyPriceEthVal = parseFloat(buyPriceEth ?? '0');
         if (price >= buyPriceEthVal) {
-          setErrorMsg('The new price must be lower than the current price.');
+          setErrorMsg('New price must be lower than the current price');
           return;
         } else {
           setErrorMsg('');
@@ -109,7 +109,7 @@ export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) 
         signedOrders.push(order);
         try {
           await postOrders(user.address, signedOrders);
-          toastSuccess('Lower price successfully.');
+          toastSuccess('Lowered price successfully');
         } catch (ex) {
           toastError(`${ex}`);
           return false;
