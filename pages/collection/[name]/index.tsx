@@ -3,9 +3,9 @@ import {
   ChainId,
   Collection,
   CollectionStats,
-  CuratedCollection,
   ERC721CardData
 } from '@infinityxyz/lib-frontend/types/core';
+import { CuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections.dto';
 import { CollectionStatsDto } from '@infinityxyz/lib-frontend/types/dto/stats';
 import { useRouter } from 'next/router';
 import NotFound404Page from 'pages/not-found-404';
@@ -70,7 +70,7 @@ const CollectionPage = () => {
 
   const createdBy = collection?.deployer ?? collection?.owner ?? '';
 
-  const { result: userCurated } = useFetch<CuratedCollection>(
+  const { result: userCurated } = useFetch<CuratedCollectionDto>(
     user?.address ? `${path}/curated/${user.address}` : null,
     { apiParams: { requiresAuth: true } }
   );
@@ -267,8 +267,19 @@ const CollectionPage = () => {
               <Button onClick={() => checkSignedIn() && setIsStakeModalOpen(true)}>Vote</Button>
             </div>
             <VoteModal
-              collection={collection}
-              curated={userCurated}
+              collection={{
+                ...collection,
+                ...collection.metadata,
+                ...(userCurated || {
+                  votes: 0,
+                  fees: 0,
+                  feesAPR: 0,
+                  timestamp: 0,
+                  numCuratorVotes: 0,
+                  userAddress: '',
+                  userChainId: '' as ChainId
+                })
+              }}
               isOpen={isStakeModalOpen}
               onClose={() => setIsStakeModalOpen(false)}
               onVote={async (votes) => {

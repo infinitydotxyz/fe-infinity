@@ -1,4 +1,4 @@
-import { BaseCollection, CuratedCollection } from '@infinityxyz/lib-frontend/types/core';
+import { CuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections.dto';
 import React, { useState } from 'react';
 import { useCurationQuota } from 'src/hooks/api/useCurationQuota';
 import { apiPost } from 'src/utils';
@@ -12,11 +12,10 @@ export type VoteModalProps = {
   isOpen: boolean;
   onClose: () => void;
   onVote: (votes: number) => Promise<void>;
-  collection: BaseCollection;
-  curated: CuratedCollection | null | undefined;
+  collection: CuratedCollectionDto;
 };
 
-export const VoteModal: React.FC<VoteModalProps> = ({ collection, curated, isOpen, onClose, onVote }) => {
+export const VoteModal: React.FC<VoteModalProps> = ({ collection, isOpen, onClose, onVote }) => {
   const { user } = useAppContext();
   // TODO: re-calculate fees & APR (via API call) when 'votes' change
   const [votes, setVotes] = useState(0);
@@ -50,9 +49,9 @@ export const VoteModal: React.FC<VoteModalProps> = ({ collection, curated, isOpe
   return (
     <Modal isOpen={isOpen} onClose={onClose} showCloseIcon showActionButtons={false}>
       <div className="space-y-4">
-        <AvatarImage url={collection.metadata.profileImage} alt="avatar" />
+        <AvatarImage url={collection.profileImage} alt="avatar" />
         <Heading as="h3" className="font-body">
-          {collection.metadata?.name}
+          {collection.name}
         </Heading>
       </div>
 
@@ -62,12 +61,12 @@ export const VoteModal: React.FC<VoteModalProps> = ({ collection, curated, isOpe
         <>
           <div className="my-8 font-body">
             {/* TODO: re-calculate these on change */}
-            <FeesAprStats value={curated?.feesAPR || 0} className="flex flex-row-reverse justify-between" />
-            <FeesAccruedStats value={curated?.fees || 0} className="flex flex-row-reverse justify-between" />
+            <FeesAprStats value={collection.feesAPR || 0} className="flex flex-row-reverse justify-between" />
+            <FeesAccruedStats value={collection.fees || 0} className="flex flex-row-reverse justify-between" />
           </div>
           <div className="my-8">
             <VoteProgressBar
-              votes={(curated?.votes || 0) + votes}
+              votes={(collection.votes || 0) + votes}
               totalVotes={(collection.numCuratorVotes || 0) + votes}
             />
           </div>

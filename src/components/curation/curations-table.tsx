@@ -1,4 +1,4 @@
-import { Collection, CuratedCollection } from '@infinityxyz/lib-frontend/types/core';
+import { CuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections.dto';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { useCurationQuota } from 'src/hooks/api/useCurationQuota';
@@ -17,32 +17,23 @@ const FieldWrapper: React.FC<FieldProps> = (props) => (
 );
 
 export type CurationTableProps = {
-  collections: Collection[][];
-  curations?: CuratedCollection[][];
+  curatedCollections: CuratedCollectionDto[][];
 };
 
-export const CurationTable: React.FC<CurationTableProps> = ({
-  collections: collectionsArray,
-  curations: curationsArray
-}) => {
+export const CurationTable: React.FC<CurationTableProps> = ({ curatedCollections: curatedCollectionsArray }) => {
   const router = useRouter();
   const { result: quota } = useCurationQuota();
 
-  const collections = collectionsArray.flat();
-  const curations = curationsArray?.flat();
+  const curatedCollections = curatedCollectionsArray?.flat();
 
   return (
     <>
-      {collections.map((collection, i) => (
+      {curatedCollections.map((curatedCollection, i) => (
         <CurationRow
           key={i}
-          collection={collection}
-          curation={curations?.find(
-            (curation) =>
-              curation.collectionAddress === collection.address && curation.collectionChainId === collection.chainId
-          )}
+          collection={curatedCollection}
           index={i + 1}
-          onClick={() => router.push(`/collection/${collection.slug}`)}
+          onClick={() => router.push(`/collection/${curatedCollection.slug}`)}
           votes={quota?.availableVotes || 0}
         />
       ))}
@@ -52,13 +43,12 @@ export const CurationTable: React.FC<CurationTableProps> = ({
 
 export type CurationRowProps = {
   index: number;
-  collection: Collection;
-  curation?: CuratedCollection;
+  collection: CuratedCollectionDto;
   onClick: () => void;
   votes: number;
 };
 
-export const CurationRow: React.FC<CurationRowProps> = ({ collection, curation, index, onClick, votes }) => {
+export const CurationRow: React.FC<CurationRowProps> = ({ collection, index, onClick, votes }) => {
   const [isStakeModalOpen, setIsStakeModalOpen] = useState(false);
   const { user } = useAppContext();
 
@@ -68,7 +58,6 @@ export const CurationRow: React.FC<CurationRowProps> = ({ collection, curation, 
     <div className="mb-2">
       <VoteModal
         collection={collection}
-        curated={curation}
         isOpen={isStakeModalOpen}
         onClose={() => setIsStakeModalOpen(false)}
         onVote={async (votes) => {
@@ -80,7 +69,7 @@ export const CurationRow: React.FC<CurationRowProps> = ({ collection, curation, 
           await mutate(path, {
             ...collection,
             numCuratorVotes: (collection.numCuratorVotes || 0) + votes
-          } as Collection);
+          } as CuratedCollectionDto);
 
           // reload user votes and estimates from API
           await mutate(`${path}/curated/${user?.address}`);
@@ -89,16 +78,16 @@ export const CurationRow: React.FC<CurationRowProps> = ({ collection, curation, 
       <div className="w-full h-full p-8 overflow-hidden rounded-3xl bg-gray-100 grid grid-cols-analytics place-items-center">
         <>
           <FieldWrapper value={index} type="index" />
-          <FieldWrapper value={collection.metadata.profileImage} type="image" />
-          <FieldWrapper value={collection.metadata.name} type="string" onClick={onClick} />
+          <FieldWrapper value={collection.profileImage} type="image" />
+          <FieldWrapper value={collection.name} type="string" onClick={onClick} />
           <FieldWrapper type="custom">
-            <FeesAprStats value={curation?.feesAPR || 0} />
+            <FeesAprStats value={collection.feesAPR || 0} />
             <br />
-            <FeesAccruedStats value={curation?.fees || 0} />
+            <FeesAccruedStats value={collection.fees || 0} />
           </FieldWrapper>
           <VoteProgressBar
             totalVotes={collection.numCuratorVotes || 0}
-            votes={curation?.votes || 0}
+            votes={collection.votes || 0}
             className="w-full h-full row-span-1 col-span-1 bg-white"
           />
           <FieldWrapper></FieldWrapper>

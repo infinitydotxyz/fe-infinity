@@ -18,7 +18,8 @@ export const MyCuratedCollections: React.FC<{ orderBy: CuratedCollectionsOrderBy
         orderBy,
         orderDirection: 'desc',
         limit: 10
-      }
+      },
+      apiParams: { requiresAuth: true }
     }
   );
   const router = useRouter();
@@ -29,14 +30,11 @@ export const MyCuratedCollections: React.FC<{ orderBy: CuratedCollectionsOrderBy
     <div>
       {error ? <div className="flex flex-col mt-10">Unable to load curated collections.</div> : null}
 
-      {result && result[0].data.curations?.length > 0 && (
-        <CurationTable
-          collections={result?.map((result) => result.data.collections)}
-          curations={result?.map((result) => result.data.curations)}
-        />
+      {result && result[0].data?.length > 0 && (
+        <CurationTable curatedCollections={result?.map((result) => result.data)} />
       )}
 
-      {result && result[0].data.curations?.length === 0 && (
+      {result && result[0].data?.length === 0 && (
         <NoResultsBox
           tab={CuratedTab.MyCurated}
           onClick={() => router.replace(`curation?tab=${CuratedTab.AllCurated}`)}
