@@ -20,7 +20,7 @@ export const MakeOfferModal = ({ isOpen, onClose, token, buyPriceEth }: Props) =
 
   const fetchOrder = async () => {
     const order = await fetchUserSignedOBOrder(user?.address, token?.ordersSnippet?.listing?.orderItem?.id);
-    console.log('order', order);
+    console.log('existing order', order);
     setOrderDetails(order);
   };
 
@@ -61,7 +61,7 @@ export const MakeOfferModal = ({ isOpen, onClose, token, buyPriceEth }: Props) =
           nonce: orderNonce,
           execParams: orderDetails.execParams,
           extraParams: orderDetails.extraParams,
-          signedOrder: orderDetails.signedOrder,
+          signedOrder: orderDetails.signedOrder, // set 'signedOrder' as the listing's signedOrder
           maxGasPriceWei: orderDetails.maxGasPriceWei
         };
         console.log('order', order);
