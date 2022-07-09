@@ -106,7 +106,10 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
     token.image.url = token.image?.originalUrl ?? '';
   }
 
-  const imgUrl = token?.image?.url || token?.metadata?.image || MISSING_IMAGE_URL;
+  const images = [token?.image?.url, token?.metadata?.image, token?.alchemyCachedImage, MISSING_IMAGE_URL].filter(
+    (url) => !!url && !url.startsWith('ipfs')
+  );
+  const imgUrl = images[0];
   if (token && (!imgUrl || imgUrl.startsWith('ipfs'))) {
     if (token.image) {
       token.image.url = MISSING_IMAGE_URL;
@@ -257,9 +260,11 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
                     </div>
                   </Button>
                 )}
-                <Button variant="outline" size="large" onClick={onClickLowerPrice}>
-                  Lower Price
-                </Button>
+                {isNftOwner ? (
+                  <Button variant="outline" size="large" onClick={onClickLowerPrice}>
+                    Lower Price
+                  </Button>
+                ) : null}
               </div>
             </div>
           ) : null}

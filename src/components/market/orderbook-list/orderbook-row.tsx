@@ -1,7 +1,7 @@
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import moment from 'moment';
 import { Button, EthPrice, toastError, toastSuccess } from 'src/components/common';
-import { ellipsisAddress, numStr, shortDate } from 'src/utils';
+import { ellipsisAddress, extractErrorMsg, numStr, shortDate } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { takeMultiplOneOrders } from 'src/utils/exchange/orders';
 import { checkOffersToUser, getOrderType } from 'src/utils/marketUtils';
@@ -88,7 +88,8 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
         throw 'Signer is null';
       }
     } catch (err) {
-      toastError((err as Error).message);
+      const errMsg = extractErrorMsg(err);
+      toastError(errMsg);
     }
   };
   const isOwner = order.makerAddress === user?.address;

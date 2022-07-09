@@ -93,13 +93,13 @@ export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) 
           chainId: orderDetails.chainId,
           isSellOrder: orderDetails.isSellOrder,
           makerAddress: orderDetails.makerAddress,
+          makerUsername: orderDetails.makerUsername,
           numItems: orderDetails.numItems,
           startTimeMs: orderDetails.startTimeMs,
           endTimeMs: orderDetails.endTimeMs,
           startPriceEth: price, // set the New Price.
           endPriceEth: price, // set the New Price.
           nfts: orderDetails.nfts,
-          makerUsername: orderDetails.makerUsername,
           nonce: orderDetails.nonce,
           execParams: orderDetails.execParams,
           extraParams: orderDetails.extraParams,
