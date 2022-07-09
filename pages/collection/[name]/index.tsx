@@ -275,7 +275,7 @@ const CollectionPage = () => {
                   fees: 0,
                   feesAPR: 0,
                   timestamp: 0,
-                  numCuratorVotes: 0,
+                  numCuratorVotes: collection.numCuratorVotes || 0,
                   userAddress: '',
                   userChainId: '' as ChainId
                 })
