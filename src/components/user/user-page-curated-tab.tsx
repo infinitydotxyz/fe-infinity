@@ -1,13 +1,16 @@
 import { CuratedCollectionsOrderBy } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections-query.dto';
 import React, { useState } from 'react';
 import { Sort } from '../curation/sort';
-import { MyCuratedCollections } from '../curation/my-curated';
-import { Divider } from '../common';
+import { Divider, ScrollLoader, Spinner } from '../common';
 import { useStakerTotalStaked } from 'src/hooks/contract/staker/useStakerTotalStaked';
 import { useCurationQuota } from 'src/hooks/api/useCurationQuota';
-import { useAppContext } from 'src/utils/context/AppContext';
-import { useFetch } from 'src/utils';
 import { UserProfileDto } from './user-profile-dto';
+import { CuratedCollectionsDto } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections.dto';
+import { useRouter } from 'next/router';
+import { useFetchInfinite } from 'src/utils';
+import { CurationTable } from '../curation/curations-table';
+import { NoResultsBox } from '../curation/no-results-box';
+import { CuratedTab } from '../curation/types';
 
 const InfoBox: React.FC<{ title: string; subtitle: string | number }> = ({ title, subtitle }) => {
   return (
@@ -18,12 +21,25 @@ const InfoBox: React.FC<{ title: string; subtitle: string | number }> = ({ title
   );
 };
 
-export const UserPageCuratedTab: React.FC = () => {
+export const UserPageCuratedTab: React.FC<{ userInfo: UserProfileDto }> = ({ userInfo }) => {
   const [orderBy, setOrderBy] = useState(CuratedCollectionsOrderBy.Votes);
   const { staked } = useStakerTotalStaked();
-  const { result: quota } = useCurationQuota();
-  const { user } = useAppContext();
-  const { result: profile } = useFetch<UserProfileDto>(user?.address ? `/user/${user.address}` : null);
+  const { result: quota } = useCurationQuota(userInfo.address);
+
+  const { result, setSize, error, isLoading } = useFetchInfinite<CuratedCollectionsDto>(
+    `/user/${userInfo.address}/curated`,
+    {
+      query: {
+        orderBy,
+        orderDirection: 'desc',
+        limit: 10
+      },
+      apiParams: { requiresAuth: true }
+    }
+  );
+  const router = useRouter();
+
+  const fetchMore = () => setSize((size) => size + 1);
 
   return (
     <div className="min-h-[1024px] mt-[-66px]">
@@ -38,14 +54,30 @@ export const UserPageCuratedTab: React.FC = () => {
           subtitle={`${
             (quota?.availableVotes || 0) === 0
               ? 100
-              : ((profile?.totalCuratedVotes || 0) / (quota?.availableVotes || 0)) * 100
+              : ((userInfo?.totalCuratedVotes || 0) / (quota?.availableVotes || 0)) * 100
           }%`}
         />
-        <InfoBox title="Curated" subtitle={profile?.totalCurated || 0} />
+        <InfoBox title="Curated" subtitle={userInfo?.totalCurated || 0} />
         {/* TODO: implement blended APR */}
         <InfoBox title="Blended APR" subtitle="0%" />
       </div>
-      <MyCuratedCollections orderBy={orderBy} />
+      <div>
+        {error ? <div className="flex flex-col mt-10">Unable to load this users' curated collections.</div> : null}
+
+        {result && result[0].data?.length > 0 && (
+          <CurationTable curatedCollections={result?.map((result) => result.data)} />
+        )}
+
+        {result && result[0].data?.length === 0 && (
+          <NoResultsBox onClick={() => router.replace(`curation?tab=${CuratedTab.AllCurated}`)}>
+            This user hasn't curated any collections yet
+          </NoResultsBox>
+        )}
+
+        <ScrollLoader onFetchMore={fetchMore} />
+
+        {isLoading && <Spinner />}
+      </div>
     </div>
   );
 };

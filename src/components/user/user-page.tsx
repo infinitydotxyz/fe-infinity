@@ -74,7 +74,7 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
           {selected === 'Orders' && <UserPageOrderList userInfo={userInfo} />}
           {selected === 'Activity' && <UserPageActivityTab userInfo={userInfo} />}
           {selected === 'Send' && <UserPageNftsTab userInfo={userInfo} forTransfers={true} />}
-          {selected === 'Curated' && <UserPageCuratedTab />}
+          {selected === 'Curated' && <UserPageCuratedTab userInfo={userInfo} />}
         </div>
       </div>
     </>
