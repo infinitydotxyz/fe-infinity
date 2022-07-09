@@ -105,7 +105,7 @@ export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) 
             signedOrders.push(signedOrder);
             try {
               await postOrders(user.address, signedOrders);
-              toastSuccess('Lowered-price order sent successfully');
+              toastSuccess('Lowered price successfully');
             } catch (ex) {
               toastError(`${ex}`);
               return false;
