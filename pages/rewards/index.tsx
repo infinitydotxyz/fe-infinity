@@ -4,8 +4,6 @@ import { StakeTokensModal } from 'src/components/rewards/stake-tokens';
 import { UnstakeTokensModal } from 'src/components/rewards/unstake-tokens';
 import { UserProfileDto } from 'src/components/user/user-profile-dto';
 import { useCurationQuota } from 'src/hooks/api/useCurationQuota';
-import { useStakePower } from 'src/hooks/contract/staker/useStakerGetStakePower';
-import { useStakerTotalStaked } from 'src/hooks/contract/staker/useStakerTotalStaked';
 import { useTokenBalance } from 'src/hooks/contract/token/useTokenBalance';
 import { useFetch } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
@@ -16,8 +14,6 @@ const RewardsPage = () => {
   const [showStakeTokensModal, setShowStakeTokensModal] = useState(false);
   const [showUnstakeTokensModal, setShowUnstakeTokensModal] = useState(false);
   const { balance } = useTokenBalance();
-  const { staked } = useStakerTotalStaked();
-  const { stakePower } = useStakePower();
   const { result: quota } = useCurationQuota();
   const { result: profile } = useFetch<UserProfileDto>(user?.address ? `/user/${user.address}` : null);
 
@@ -41,7 +37,7 @@ const RewardsPage = () => {
                 <div className="text-sm mt-1">Wallet</div>
               </div>
               <div className="lg:w-1/4 sm:w-full">
-                <div className="text-2xl font-heading font-bold">{numberFormatter.format(staked)}</div>
+                <div className="text-2xl font-heading font-bold">{numberFormatter.format(quota?.totalStaked || 0)}</div>
                 <div className="text-sm mt-1">Staked</div>
               </div>
             </div>
@@ -91,7 +87,7 @@ const RewardsPage = () => {
             <div>veNFT Tokens</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
-                <div className="text-2xl font-heading font-bold">{stakePower}</div>
+                <div className="text-2xl font-heading font-bold">{quota?.availableVotes || 0}</div>
                 <div className="text-sm mt-1">Voting Power</div>
               </div>
               <div className="lg:w-1/4 sm:w-full">

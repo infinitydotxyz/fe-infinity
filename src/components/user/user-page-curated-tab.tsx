@@ -2,7 +2,6 @@ import { CuratedCollectionsOrderBy } from '@infinityxyz/lib-frontend/types/dto/c
 import React, { useState } from 'react';
 import { Sort } from '../curation/sort';
 import { Divider, ScrollLoader, Spinner } from '../common';
-import { useStakerTotalStaked } from 'src/hooks/contract/staker/useStakerTotalStaked';
 import { useCurationQuota } from 'src/hooks/api/useCurationQuota';
 import { UserProfileDto } from './user-profile-dto';
 import { CuratedCollectionsDto } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections.dto';
@@ -23,7 +22,6 @@ const InfoBox: React.FC<{ title: string; subtitle: string | number }> = ({ title
 
 export const UserPageCuratedTab: React.FC<{ userInfo: UserProfileDto }> = ({ userInfo }) => {
   const [orderBy, setOrderBy] = useState(CuratedCollectionsOrderBy.Votes);
-  const { staked } = useStakerTotalStaked();
   const { result: quota } = useCurationQuota(userInfo.address);
 
   const { result, setSize, error, isLoading } = useFetchInfinite<CuratedCollectionsDto>(
@@ -48,7 +46,7 @@ export const UserPageCuratedTab: React.FC<{ userInfo: UserProfileDto }> = ({ use
       </div>
       <Divider />
       <div className="flex flex-row justify-between my-4">
-        <InfoBox title="Staked tokens" subtitle={staked} />
+        <InfoBox title="Staked tokens" subtitle={quota?.totalStaked || 0} />
         <InfoBox
           title="Votes allocated"
           subtitle={`${
