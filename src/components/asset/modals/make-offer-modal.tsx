@@ -44,6 +44,8 @@ export const MakeOfferModal = ({ isOpen, onClose, token, buyPriceEth }: Props) =
 
         const signedOrders: SignedOBOrder[] = [];
         // keep the last Order & set the New Price:
+        orderDetails.signedOrder.isSellOrder = false;
+
         const order: SignedOBOrder = {
           id: '',
           chainId: orderDetails.chainId,
