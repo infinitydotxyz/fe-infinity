@@ -44,7 +44,7 @@ export const FilterPanel = ({ collection, collectionAddress, showFilterSections,
     const newFilter = { ...filterState };
     newFilter.minPrice = '';
     newFilter.maxPrice = '';
-    newFilter.orderBy = 'tokenId';
+    newFilter.orderBy = 'tokenIdNumeric';
     newFilter.orderDirection = 'asc';
     setMinPriceVal('');
     setMaxPriceVal('');

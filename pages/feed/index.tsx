@@ -1,51 +1,11 @@
 import React from 'react';
 import { PageBox } from 'src/components/common';
-import { useAppContext } from 'src/utils/context/AppContext';
-import { useFetch } from 'src/utils';
-import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
-import { CommunityRightPanel } from 'src/components/collection/community-right-panel';
-import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
-import { FeedList } from 'src/components/feed-list/feed-list';
+import { CommunityFeed } from 'src/components/feed-list/community-feed';
 
 const FeedPage = () => {
-  const { chainId } = useAppContext();
-  const { result: collection, isLoading } = useFetch<BaseCollection>('/collections/boredapeyachtclub', { chainId });
-
-  let content;
-  if (isLoading) {
-    content = <div>loading</div>;
-  } else {
-    if (collection) {
-      content = (
-        <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-16">
-          <div className="lg:col-span-1 xl:col-span-2">
-            <FeedList
-              types={[
-                EventType.NftSale,
-                EventType.NftOffer
-                // EventType.CoinMarketCapNews
-                // EventType.DiscordAnnouncement
-                // EventType.NftListing
-                // EventType.NftTransfer
-                // EventType.TwitterTweet
-              ]}
-              collectionAddress={collection?.address ?? ''}
-            />{' '}
-          </div>
-
-          <div>
-            <div className="col-span-1">{collection && <CommunityRightPanel collection={collection} />}</div>
-          </div>
-        </div>
-      );
-    }
-  }
-
   return (
     <PageBox title="Home">
-      <div className="text-4xl font-bold mb-6">Feed</div>
-
-      {content}
+      <CommunityFeed />
     </PageBox>
   );
 };

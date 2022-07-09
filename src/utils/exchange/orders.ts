@@ -5,7 +5,7 @@ import { MaxUint256 } from '@ethersproject/constants';
 import { Contract } from '@ethersproject/contracts';
 import { JsonRpcSigner } from '@ethersproject/providers';
 import { parseEther } from '@ethersproject/units';
-import { ERC20ABI, ERC721ABI, InfinityExchangeABI, InfinityOBComplicationABI } from '@infinityxyz/lib-frontend/abi';
+import { ERC20ABI, ERC721ABI, InfinityExchangeABI } from '@infinityxyz/lib-frontend/abi';
 import {
   ChainNFTs,
   ChainOBOrder,
@@ -402,7 +402,11 @@ export async function sendSingleNft(
   const erc721 = new Contract(collectionAddress, ERC721ABI, signer);
   // perform send
   const from = await signer.getAddress();
-  await erc721['safeTransferFrom(address,address,uint256)'](from, toAddress, tokenId);
+  const transferResult = await erc721['safeTransferFrom(address,address,uint256)'](from, toAddress, tokenId);
+  console.log('transferResult', transferResult);
+  return {
+    hash: transferResult?.hash ?? ''
+  };
 }
 
 export async function sendMultipleNfts(
@@ -415,38 +419,43 @@ export async function sendMultipleNfts(
   const infinityExchange = new Contract(exchangeAddress, InfinityExchangeABI, signer);
   const from = await signer.getAddress();
   // grant approvals
-  const approvalResult = await approveERC721ForChainNFTs(from, orderItems, signer, exchangeAddress);
-  console.log('approvalResult', approvalResult);
+  await approveERC721ForChainNFTs(from, orderItems, signer, exchangeAddress);
   // perform send
   const transferResult = await infinityExchange.transferMultipleNFTs(toAddress, orderItems);
-  console.log('transferResult', transferResult);
   return {
     hash: transferResult?.hash ?? ''
+  };
+}
+
+export async function cancelAllOrders(signer: JsonRpcSigner, chainId: string, minOrderNonce: number) {
+  const exchangeAddress = getExchangeAddress(chainId);
+  const infinityExchange = new Contract(exchangeAddress, InfinityExchangeABI, signer);
+  // perform cancel
+  const cancelResult = await infinityExchange.cancelAllOrders(minOrderNonce);
+  return {
+    hash: cancelResult?.hash ?? ''
+  };
+}
+
+export async function cancelMultipleOrders(signer: JsonRpcSigner, chainId: string, nonces: number[]) {
+  const exchangeAddress = getExchangeAddress(chainId);
+  const infinityExchange = new Contract(exchangeAddress, InfinityExchangeABI, signer);
+  // perform cancel
+  const cancelResult = await infinityExchange.cancelMultipleOrders(nonces);
+  return {
+    hash: cancelResult?.hash ?? ''
   };
 }
 
 export async function takeMultiplOneOrders(signer: JsonRpcSigner, chainId: string, makerOrder: ChainOBOrder) {
   const exchangeAddress = getExchangeAddress(chainId);
   const infinityExchange = new Contract(exchangeAddress, InfinityExchangeABI, signer);
-  const obComplication = new Contract(makerOrder.execParams[0], InfinityOBComplicationABI, signer);
-
   const salePrice = getCurrentChainOBOrderPrice(makerOrder);
-
   // perform exchange
   const options = {
     value: salePrice
   };
-  const canTake = await canTakeMultipleOneOrders(obComplication, makerOrder);
-  if (canTake) {
-    await infinityExchange.takeMultipleOneOrders([makerOrder], options);
-  } else {
-    console.error('Cannot take multiple one orders order');
-  }
-}
-
-export async function canTakeMultipleOneOrders(obComplication: Contract, makerOrder: ChainOBOrder): Promise<boolean> {
-  const result = await obComplication.canExecTakeOneOrder(makerOrder);
-  return result[0];
+  await infinityExchange.takeMultipleOneOrders([makerOrder], options);
 }
 
 export function getOBOrderFromFirestoreOrderItem(firestoreOrderItem: FirestoreOrderItem | null | undefined) {

@@ -14,13 +14,12 @@ import ContentLoader from 'react-content-loader';
 import { BsCheck } from 'react-icons/bs';
 import { AvatarImage } from 'src/components/collection/avatar-image';
 import { CollectionActivityTab } from 'src/components/collection/collection-activity-tab';
-import { CommunityRightPanel } from 'src/components/collection/community-right-panel';
 import { StatsChips } from 'src/components/collection/stats-chips';
 import { Button, EthPrice, Heading, PageBox, Spinner, SVG, ToggleTab, useToggleTab } from 'src/components/common';
 import { FeesAprStats, FeesAccruedStats } from 'src/components/curation/statistics';
 import { VoteModal } from 'src/components/curation/vote-modal';
 import { VoteProgressBar } from 'src/components/curation/vote-progress-bar';
-import { CollectionFeed } from 'src/components/feed/collection-feed';
+import { CommunityFeed } from 'src/components/feed-list/community-feed';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
 import { ellipsisAddress, getChainScannerBase, nFormatter, PLACEHOLDER_IMAGE } from 'src/utils';
@@ -35,10 +34,12 @@ const CollectionPage = () => {
   const { user } = useAppContext();
   const router = useRouter();
   const { checkSignedIn, chainId } = useAppContext();
-  const { addCartItem, removeCartItem, ordersInCart, cartItems, addOrderToCart, updateOrders } = useOrderContext();
+  const { addCartItem, removeCartItem, ordersInCart, cartItems, addOrderToCart, updateOrders, setPrice } =
+    useOrderContext();
   const [isBuyClicked, setIsBuyClicked] = useState(false);
   const { options, onChange, selected } = useToggleTab(
     ['NFTs', 'Orders', 'Activity'],
+    // ['NFTs', 'Orders', 'Activity', 'Community'],
     (router?.query?.tab as string) || 'NFTs'
   );
   const {
@@ -335,7 +336,8 @@ const CollectionPage = () => {
                           findAndRemove(data);
                           return;
                         }
-                        const price = data?.orderSnippet?.listing?.orderItem?.startPriceEth ?? '';
+                        const price = data?.orderSnippet?.listing?.orderItem?.startPriceEth ?? 0;
+                        setPrice(`${price}`);
                         addCartItem({
                           chainId: data?.chainId as ChainId,
                           collectionName: data?.collectionName ?? '',
@@ -365,14 +367,7 @@ const CollectionPage = () => {
             {/* {currentTab === 1 && <ActivityTab dailyStats={dailyStats} weeklyStats={weeklyStats} />} */}
             {selected === 'Activity' && <CollectionActivityTab collectionAddress={collection?.address ?? ''} />}
 
-            {selected === '???' && (
-              <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-16">
-                <div className="lg:col-span-1 xl:col-span-2">
-                  <CollectionFeed collectionAddress={collection?.address ?? ''} />
-                </div>
-                <div className="col-span-1">{collection && <CommunityRightPanel collection={collection} />}</div>
-              </div>
-            )}
+            {selected === 'Community' && <CommunityFeed />}
           </div>
         </main>
       </div>

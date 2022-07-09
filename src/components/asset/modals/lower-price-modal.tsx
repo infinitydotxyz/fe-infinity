@@ -1,4 +1,4 @@
-import { SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
+import { OBOrder, SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
 import React, { useEffect, useState } from 'react';
 import {
   TextInputBox,
@@ -9,9 +9,10 @@ import {
   toastError,
   toastSuccess
 } from 'src/components/common';
-import { apiGet, MISSING_IMAGE_URL, INFINITY_FEE_PCT, INFINITY_ROYALTY_PCT } from 'src/utils';
+import { MISSING_IMAGE_URL, INFINITY_FEE_PCT, INFINITY_ROYALTY_PCT, DEFAULT_MAX_GAS_PRICE_WEI } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { postOrders } from 'src/utils/marketUtils';
+import { getSignedOBOrder } from 'src/utils/exchange/orders';
+import { fetchOrderNonce, fetchUserSignedOBOrder, postOrders } from 'src/utils/marketUtils';
 
 interface Props {
   isOpen: boolean;
@@ -21,7 +22,7 @@ interface Props {
 }
 
 export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) => {
-  const { user } = useAppContext();
+  const { user, chainId, providerManager } = useAppContext();
   const [orderDetails, setOrderDetails] = useState<SignedOBOrder | null>(null);
   const [price, setPrice] = useState(0);
   const [errorMsg, setErrorMsg] = useState('');
@@ -30,19 +31,9 @@ export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) 
 
   const orderItem = token.ordersSnippet?.listing?.orderItem;
   const fetchSignedOBOrder = async () => {
-    const { result, error } = await apiGet(`/orders/${user?.address}`, {
-      requiresAuth: true,
-      query: {
-        id: orderItem?.id,
-        limit: 1
-      }
-    });
-    if (!error && result?.data && result?.data[0]) {
-      const order = result?.data[0] as SignedOBOrder;
-      setOrderDetails(order);
-      // const lastPrice = await getCurrentChainOBOrderPrice(signedOrder);
-      // console.log('signedOrder', signedOrder);
-    }
+    const order = await fetchUserSignedOBOrder(user?.address, orderItem?.id);
+    console.log('existing order', order);
+    setOrderDetails(order);
   };
 
   useEffect(() => {
@@ -68,12 +59,12 @@ export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) 
       okButton="Lower Price"
       title="Lower Price"
       onOKButton={async () => {
-        if (!orderDetails || !user) {
+        if (!orderDetails || !user || price <= 0) {
           return;
         }
         const buyPriceEthVal = parseFloat(buyPriceEth ?? '0');
         if (price >= buyPriceEthVal) {
-          setErrorMsg('The new price must be lower than the current price.');
+          setErrorMsg('New price must be lower than the current price');
           return;
         } else {
           setErrorMsg('');
@@ -87,32 +78,39 @@ export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) 
         }
 
         const signedOrders: SignedOBOrder[] = [];
-        // keep the last Order & set the New Price:
-        const order: SignedOBOrder = {
-          id: '',
-          chainId: orderDetails.chainId,
-          isSellOrder: orderDetails.isSellOrder,
-          makerAddress: orderDetails.makerAddress,
-          numItems: orderDetails.numItems,
-          startTimeMs: orderDetails.startTimeMs,
-          endTimeMs: orderDetails.endTimeMs,
-          startPriceEth: price, // set the New Price.
-          endPriceEth: price, // set the New Price.
-          nfts: orderDetails.nfts,
-          makerUsername: orderDetails.makerUsername,
-          nonce: orderDetails.nonce,
-          execParams: orderDetails.execParams,
-          extraParams: orderDetails.extraParams,
-          signedOrder: orderDetails.signedOrder,
-          maxGasPriceWei: orderDetails.maxGasPriceWei
-        };
-        signedOrders.push(order);
-        try {
-          await postOrders(user.address, signedOrders);
-          toastSuccess('Lower price successfully.');
-        } catch (ex) {
-          toastError(`${ex}`);
-          return false;
+        const signer = providerManager?.getEthersProvider().getSigner();
+        if (signer) {
+          const orderNonce = await fetchOrderNonce(user.address);
+          // keep the last Order & set the New Price:
+          const order: OBOrder = {
+            id: '',
+            chainId,
+            isSellOrder: orderDetails.isSellOrder,
+            makerAddress: orderDetails.makerAddress,
+            makerUsername: orderDetails.makerUsername,
+            numItems: orderDetails.numItems,
+            startTimeMs: orderDetails.startTimeMs,
+            endTimeMs: orderDetails.endTimeMs,
+            startPriceEth: price, // set the New Price.
+            endPriceEth: price, // set the New Price.
+            nfts: orderDetails.nfts,
+            nonce: orderNonce,
+            execParams: orderDetails.execParams,
+            extraParams: orderDetails.extraParams,
+            maxGasPriceWei: DEFAULT_MAX_GAS_PRICE_WEI
+          };
+
+          const signedOrder = await getSignedOBOrder(user, chainId, signer, order);
+          if (signedOrder) {
+            signedOrders.push(signedOrder);
+            try {
+              await postOrders(user.address, signedOrders);
+              toastSuccess('Lowered price successfully');
+            } catch (ex) {
+              toastError(`${ex}`);
+              return false;
+            }
+          }
         }
         onClose();
       }}

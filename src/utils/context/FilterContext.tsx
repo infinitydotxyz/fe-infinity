@@ -16,7 +16,7 @@ export type Filter = {
   minPrice?: string;
   maxPrice?: string;
   sortByPrice?: 'ASC' | 'DESC' | '';
-  orderBy?: 'rarityRank' | 'price' | 'tokenId';
+  orderBy?: 'rarityRank' | 'price' | 'tokenIdNumeric';
   orderDirection?: 'asc' | 'desc';
 };
 
@@ -24,7 +24,7 @@ const defaultFilter: Filter = {
   // listingType: '',
   traitTypes: [],
   traitValues: [],
-  orderBy: 'tokenId',
+  orderBy: 'tokenIdNumeric',
   orderDirection: 'asc'
 };
 

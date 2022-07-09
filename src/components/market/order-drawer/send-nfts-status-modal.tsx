@@ -1,6 +1,6 @@
 import { TransactionReceipt } from '@ethersproject/abstract-provider';
 import { useEffect, useState } from 'react';
-import { Button, Modal } from 'src/components/common';
+import { Button, Modal, Spinner } from 'src/components/common';
 import { ellipsisAddress, ETHERSCAN_BASE_URL } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 
@@ -42,7 +42,12 @@ export const SendNFTsStatusModal = ({ txHash, onClose }: Props) => {
         {transactionReceipt ? (
           <div className="py-6 text-center">Transaction confirmed.</div>
         ) : (
-          <div className="py-6 text-center">Waiting for blockchain confirmation...</div>
+          <>
+            <div className="py-6 text-center">Waiting for blockchain confirmation...</div>
+            <div className="flex justify-center">
+              <Spinner />
+            </div>
+          </>
         )}
 
         <div className="py-6 text-center">

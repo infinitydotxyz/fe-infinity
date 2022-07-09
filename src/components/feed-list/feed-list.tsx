@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react';
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { apiGet } from 'src/utils';
 import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
-import { ScrollLoader } from '../common';
+import { Button, ScrollLoader, Spacer } from '../common';
 // import { CommentPanel } from '../feed/comment-panel';
-import { FeedFilterDropdown } from '../feed/feed-filter-dropdown';
-import { FeedEvent } from '../feed/feed-item';
-import { NftActivity } from '../asset/activity/activity-item';
+import { NftEventRec } from '../asset/activity/activity-item';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { FeedListItem } from './feed-list-item';
+import { FilterButton } from './filter-button';
+import { CommentPanel } from '../feed/comment-panel';
 
 interface Props {
   collectionAddress: string;
@@ -20,11 +20,20 @@ interface Props {
 export const FeedList = ({ collectionAddress, tokenId, types, className = '' }: Props) => {
   const { chainId } = useAppContext();
   const [filter, setFilter] = useState<FeedFilter>({ collectionAddress, tokenId, types });
-  const [commentPanelEvent, setCommentPanelEvent] = useState<FeedEvent | null>(null);
-  const [filteringTypes, setFilteringTypes] = useState<EventType[]>([]);
+  const [commentPanelEvent, setCommentPanelEvent] = useState<NftEventRec | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [activities, setActivities] = useState<NftActivity[]>([]);
+  const [activities, setActivities] = useState<NftEventRec[]>([]);
   const [cursor, setCursor] = useState('');
+
+  const allTypes = [
+    EventType.NftSale,
+    EventType.NftListing,
+    EventType.CoinMarketCapNews,
+    EventType.DiscordAnnouncement,
+    EventType.NftTransfer,
+    EventType.TwitterTweet,
+    EventType.NftOffer
+  ];
 
   const fetchActivity = async (isRefresh = false, fromCursor = '') => {
     if (!collectionAddress) {
@@ -40,7 +49,7 @@ export const FeedList = ({ collectionAddress, tokenId, types, className = '' }: 
       const { result, error } = await apiGet(url, {
         query: {
           limit: 10,
-          eventType: filter.types || [EventType.NftSale, EventType.NftListing, EventType.NftOffer],
+          eventType: filter.types || allTypes,
           cursor: fromCursor
         }
       });
@@ -64,68 +73,25 @@ export const FeedList = ({ collectionAddress, tokenId, types, className = '' }: 
     fetchActivity(true);
   }, [filter]);
 
-  const onChangeFilterDropdown = (checked: boolean, checkId: string) => {
-    const newFilter = { ...filter };
-
-    if (checkId === '') {
-      setFilteringTypes([]);
-      delete newFilter.types;
-      setFilter(newFilter);
-      return;
-    }
-
-    const selectedType = checkId as EventType;
-    if (checked) {
-      newFilter.types = [...filteringTypes, selectedType];
-      setFilter(newFilter);
-      setFilteringTypes(newFilter.types);
-    } else {
-      const _newTypes = [...filteringTypes];
-      const index = filteringTypes.indexOf(selectedType);
-      if (index >= 0) {
-        _newTypes.splice(index, 1);
-      }
-      newFilter.types = _newTypes;
-      setFilter(newFilter);
-      setFilteringTypes(_newTypes);
-    }
-  };
-
   if (!collectionAddress) {
     return null;
   }
 
   return (
-    <div className={`min-h-[1024px] ${className}`}>
-      <div className="flex justify-between mt-[-66px] mb-6">
-        <div className="text-3xl mb-6">&nbsp;</div>
-        <FeedFilterDropdown
-          options={[
-            {
-              label: 'All',
-              value: ''
-            },
-            {
-              label: 'Listings',
-              value: EventType.NftListing
-            },
-            {
-              label: 'Offers',
-              value: EventType.NftOffer
-            },
-            {
-              label: 'Sales',
-              value: EventType.NftSale
-            }
-          ]}
-          selectedTypes={filteringTypes}
-          onChange={onChangeFilterDropdown}
-        />
+    <div className={`${className}`}>
+      <div className="flex items-center mb-8">
+        <div className="text-4xl font-bold">Feed</div>
+
+        <Spacer />
+        <Button className="mr-2" variant="outline" onClick={() => fetchActivity(true)}>
+          Refresh
+        </Button>
+        <FilterButton filter={filter} onChange={(f) => setFilter(f)} />
       </div>
 
       {!isLoading && activities.length === 0 ? <div className="font-heading">No data available.</div> : null}
 
-      <ul className="space-y-4">
+      <div className="space-y-4">
         {activities.map((activity, idx) => {
           return (
             <div key={idx}>
@@ -143,6 +109,19 @@ export const FeedList = ({ collectionAddress, tokenId, types, className = '' }: 
                 }}
               />
 
+              {commentPanelEvent && commentPanelEvent.id === activity.id && (
+                <div className="ml-20 p-4 ">
+                  <CommentPanel
+                    contentOnly={true}
+                    isOpen={!!commentPanelEvent}
+                    event={commentPanelEvent}
+                    onClose={() => {
+                      setCommentPanelEvent(null);
+                    }}
+                  />
+                </div>
+              )}
+
               <hr className="mt-6 mb-10 text-gray-100" />
             </div>
           );
@@ -153,7 +132,7 @@ export const FeedList = ({ collectionAddress, tokenId, types, className = '' }: 
             fetchActivity(false, cursor);
           }}
         />
-      </ul>
+      </div>
     </div>
   );
 };

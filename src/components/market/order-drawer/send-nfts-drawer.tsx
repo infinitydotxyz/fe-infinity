@@ -2,7 +2,8 @@ import { getAddress } from '@ethersproject/address';
 import { ChainNFTs, ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { useState } from 'react';
-import { Button, Spacer, SVG, TextInputBox } from 'src/components/common';
+import { Button, Spacer, SVG, TextInputBox, toastError } from 'src/components/common';
+import { extractErrorMsg } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { sendMultipleNfts } from 'src/utils/exchange/orders';
 import { iconButtonStyle } from 'src/utils/ui-constants';
@@ -105,17 +106,25 @@ export const SendNFTsDrawer = ({ open, onClose, nftsForTransfer, onClickRemove, 
                   });
                 }
 
-                const toAddress = await getFinalToAddress(address);
-                if (toAddress) {
-                  const signer = providerManager?.getEthersProvider().getSigner();
-                  if (signer) {
-                    const result = await sendMultipleNfts(signer, chainId, orderItems, toAddress);
-                    onSubmit(result.hash);
+                try {
+                  const toAddress = await getFinalToAddress(address);
+                  if (toAddress) {
+                    const signer = providerManager?.getEthersProvider().getSigner();
+                    if (signer) {
+                      const result = await sendMultipleNfts(signer, chainId, orderItems, toAddress);
+                      if (result.hash) {
+                        onSubmit(result.hash);
+                      }
+                    } else {
+                      console.error('signer is null');
+                    }
                   } else {
-                    console.error('signer is null');
+                    console.error('toAddress is null');
                   }
-                } else {
-                  console.error('toAddress is null');
+                } catch (err) {
+                  toastError(extractErrorMsg(err), () => {
+                    alert(err);
+                  });
                 }
               }}
             >

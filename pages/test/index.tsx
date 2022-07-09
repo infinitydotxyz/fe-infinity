@@ -32,10 +32,10 @@ export const TestPage = () => {
 
             <Button
               onClick={() => {
-                void router.push('/home');
+                void router.push('/feed');
               }}
             >
-              Homepage Feed
+              Feed
             </Button>
 
             <Button

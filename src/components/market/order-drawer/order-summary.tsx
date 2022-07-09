@@ -49,7 +49,6 @@ export const OrderSummaryItem = ({ orderInCart }: Props) => {
 
       return (
         <div key={item.collectionAddress + '-icons'}>
-          ...
           <div className={`absolute  ${collectionIconStyle} bg-white`} style={{ left: whiteBoxLeft }} />
           <img className={`absolute ${collectionIconStyle}`} src={imageSrc} alt="" style={{ left: iconLeft }} />
         </div>

@@ -7,7 +7,7 @@ import { ScrollLoader } from '../common';
 import { CommentPanel } from './comment-panel';
 import { FeedFilterDropdown } from './feed-filter-dropdown';
 import { FeedEvent, FeedItem } from './feed-item';
-import { ActivityItem, NftActivity } from '../asset/activity/activity-item';
+import { ActivityItem, NftEventRec } from '../asset/activity/activity-item';
 import { useAppContext } from 'src/utils/context/AppContext';
 
 // let eventsInit = false;
@@ -26,11 +26,11 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
   const [newEvents, setNewEvents] = useState<FeedEvent[]>([]); // new feed events
   const [filter, setFilter] = useState<FeedFilter>({ collectionAddress, tokenId, types });
   // const [filteredEvents, setFilteredEvents] = useState<FeedEvent[]>([]);
-  const [commentPanelEvent, setCommentPanelEvent] = useState<FeedEvent | null>(null);
+  const [commentPanelEvent, setCommentPanelEvent] = useState<NftEventRec | null>(null);
   const [filteringTypes, setFilteringTypes] = useState<EventType[]>([]);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [activities, setActivities] = useState<NftActivity[]>([]);
+  const [activities, setActivities] = useState<NftEventRec[]>([]);
   const [cursor, setCursor] = useState('');
 
   const fetchActivity = async (isRefresh = false, fromCursor = '') => {
@@ -145,7 +145,7 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
 
       <ul className="space-y-4">
         {forActivity &&
-          activities.map((act: NftActivity, idx) => {
+          activities.map((act: NftEventRec, idx) => {
             return <ActivityItem key={idx} item={act} />;
           })}
 
@@ -165,11 +165,13 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
                   setEvents([...events]);
                 }}
                 onComment={(ev) => {
-                  if (ev.id === commentPanelEvent?.id) {
-                    setCommentPanelEvent(null);
-                  } else {
-                    setCommentPanelEvent(ev);
-                  }
+                  console.log(ev);
+                  // TODO(SNG): fix?
+                  // if (ev.id === commentPanelEvent?.id) {
+                  //   setCommentPanelEvent(null);
+                  // } else {
+                  //   setCommentPanelEvent(ev);
+                  // }
                 }}
               />
               {commentPanelEvent && event.id === commentPanelEvent.id && (

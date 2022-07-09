@@ -1,10 +1,10 @@
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import moment from 'moment';
 import { Button, EthPrice, toastError, toastSuccess } from 'src/components/common';
-import { ellipsisAddress, numStr, shortDate } from 'src/utils';
+import { ellipsisAddress, extractErrorMsg, numStr, shortDate } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { takeMultiplOneOrders } from 'src/utils/exchange/orders';
-import { getOrderType } from 'src/utils/marketUtils';
+import { checkOffersToUser, getOrderType } from 'src/utils/marketUtils';
 import { DataColumn, defaultDataColumns } from './data-columns';
 import { OrderbookItem } from './orderbook-item';
 
@@ -83,12 +83,13 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
       const signer = providerManager?.getEthersProvider().getSigner();
       if (signer) {
         await takeMultiplOneOrders(signer, chainId, order.signedOrder);
-        toastSuccess('Order executed.');
+        toastSuccess('Order sent for execution');
       } else {
-        throw 'Signer is null.';
+        throw 'Signer is null';
       }
     } catch (err) {
-      toastError((err as Error).message);
+      const errMsg = extractErrorMsg(err);
+      toastError(errMsg);
     }
   };
   const isOwner = order.makerAddress === user?.address;
@@ -105,15 +106,32 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
             if (isOwner) {
               return null;
             }
-            return (
-              <Button
-                className="font-heading w-24"
-                key={`${order.id} ${data.field}`}
-                onClick={() => onClickBuySell(order)}
-              >
-                {order.isSellOrder ? 'Buy' : 'Sell'}
-              </Button>
-            );
+            const isOfferToUser = checkOffersToUser(order, user);
+            if (order.isSellOrder) {
+              // Sell Order (Listing)
+              return (
+                <Button
+                  className="font-heading w-24"
+                  key={`${order.id} ${data.field}`}
+                  onClick={() => onClickBuySell(order)}
+                >
+                  Buy
+                </Button>
+              );
+            } else if (isOfferToUser === true) {
+              // Buy Order (Offer) => show Sell button (if offer made to current user)
+              return (
+                <Button
+                  className="font-heading w-24"
+                  key={`${order.id} ${data.field}`}
+                  onClick={() => onClickBuySell(order)}
+                >
+                  Sell
+                </Button>
+              );
+            } else {
+              return null;
+            }
           }
           if (isFilterOpen === true && (data.name === 'From' || data.name === 'Date')) {
             return null;

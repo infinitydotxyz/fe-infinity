@@ -1,7 +1,8 @@
 import { getAddress } from '@ethersproject/address';
 import { Token } from '@infinityxyz/lib-frontend/types/core';
 import { useState } from 'react';
-import { Modal, TextInputBox } from 'src/components/common';
+import { Modal, TextInputBox, toastError } from 'src/components/common';
+import { extractErrorMsg } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { sendSingleNft } from 'src/utils/exchange/orders';
 
@@ -9,9 +10,10 @@ interface Props {
   isOpen: boolean;
   token: Token;
   onClose: () => void;
+  onSubmit: (hash: string) => void;
 }
 
-export const SendNFTModal = ({ isOpen, onClose, token }: Props) => {
+export const SendNFTModal = ({ isOpen, onClose, onSubmit, token }: Props) => {
   const [address, setAddress] = useState('');
   const { providerManager, chainId } = useAppContext();
 
@@ -34,18 +36,27 @@ export const SendNFTModal = ({ isOpen, onClose, token }: Props) => {
         okButton="Send"
         title="Send NFT"
         onOKButton={async () => {
-          const toAddress = await getFinalToAddress(address);
-          if (toAddress && token.collectionAddress && token.tokenId) {
-            const signer = providerManager?.getEthersProvider().getSigner();
-            if (signer) {
-              await sendSingleNft(signer, chainId, token.collectionAddress, token.tokenId, toAddress);
+          try {
+            const toAddress = await getFinalToAddress(address);
+            if (toAddress && token.collectionAddress && token.tokenId) {
+              const signer = providerManager?.getEthersProvider().getSigner();
+              if (signer) {
+                const result = await sendSingleNft(signer, chainId, token.collectionAddress, token.tokenId, toAddress);
+                if (result.hash) {
+                  onSubmit(result.hash);
+                }
+              } else {
+                console.error('signer is null');
+              }
             } else {
-              console.error('signer is null');
+              console.error('required data for send is missing');
             }
-          } else {
-            console.error('required data for send is missing');
+            onClose();
+          } catch (err) {
+            toastError(extractErrorMsg(err), () => {
+              alert(err);
+            });
           }
-          onClose();
         }}
       >
         <div>
