@@ -15,8 +15,17 @@ interface Props {
   onClose: () => void;
 }
 
+const multipliers = {
+  [StakeDuration.X0]: 1,
+  [StakeDuration.X3]: 2,
+  [StakeDuration.X6]: 6,
+  [StakeDuration.X12]: 12
+};
+
+const getMultiplier = (duration: StakeDuration) => `Multiplier: ${multipliers[duration]}x`;
+
 export const StakeTokensModal = ({ onClose }: Props) => {
-  const [stakeDuration, setStakeDuration] = useState(0);
+  const [stakeDuration, setStakeDuration] = useState<StakeDuration>(StakeDuration.X0);
   const [value, setValue] = useState(0);
   const [isStaking, setIsStaking] = useState(false);
   const { balance } = useTokenBalance();
@@ -56,10 +65,26 @@ export const StakeTokensModal = ({ onClose }: Props) => {
           <div>
             <RadioGroup value={stakeDuration} onChange={setStakeDuration} className="space-y-2">
               <RadioGroup.Label>Lock for:</RadioGroup.Label>
-              <RadioButtonCard value={StakeDuration.X0} label="No commitment" description="Multiplier: 1x" />
-              <RadioButtonCard value={StakeDuration.X3} label="3 months" description="Multiplier: 2x" />
-              <RadioButtonCard value={StakeDuration.X6} label="6 months" description="Multiplier: 3x" />
-              <RadioButtonCard value={StakeDuration.X12} label="12 months" description="Multiplier: 4x" />
+              <RadioButtonCard
+                value={StakeDuration.X0}
+                label="No commitment"
+                description={getMultiplier(StakeDuration.X0)}
+              />
+              <RadioButtonCard
+                value={StakeDuration.X3}
+                label="3 months"
+                description={getMultiplier(StakeDuration.X3)}
+              />
+              <RadioButtonCard
+                value={StakeDuration.X6}
+                label="6 months"
+                description={getMultiplier(StakeDuration.X6)}
+              />
+              <RadioButtonCard
+                value={StakeDuration.X12}
+                label="12 months"
+                description={getMultiplier(StakeDuration.X12)}
+              />
             </RadioGroup>
           </div>
 
@@ -82,7 +107,7 @@ export const StakeTokensModal = ({ onClose }: Props) => {
 
           <div className="text-lg mt-10 flex justify-between">
             <span>Voting power</span>
-            <span>4,000</span>
+            <span>{value * multipliers[stakeDuration]}</span>
           </div>
           <hr className="my-3" />
           <div className="text-lg font-medium flex justify-between">
