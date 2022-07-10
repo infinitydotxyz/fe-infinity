@@ -16,7 +16,7 @@ interface Props {
   onClose: () => void;
 }
 
-export const ListNFTModal = ({ isOpen, onClose, token }: Props) => {
+export const ListNFTModal = ({ isOpen, onClose }: Props) => {
   const [price, setPrice] = useState(0);
   // TODO: do something with this ending price?
   const [includeEndingPrice, setIncludeEndingPrice] = useState<boolean>(false);
@@ -33,7 +33,6 @@ export const ListNFTModal = ({ isOpen, onClose, token }: Props) => {
       okButton="List"
       title="List NFT"
       onOKButton={() => {
-        console.log(token);
         onClose();
       }}
     >
