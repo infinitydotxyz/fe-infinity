@@ -9,6 +9,9 @@ import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { UserOrderFilter, UserProfileOrderFilterPanel } from '../filter/user-profile-order-filter-panel';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { useRouter } from 'next/router';
+import { cancelAllOrders } from 'src/utils/exchange/orders';
+import { useAppContext } from 'src/utils/context/AppContext';
+import { fetchOrderNonce } from 'src/utils/marketUtils';
 
 type Query = {
   limit: number;
@@ -32,6 +35,7 @@ interface UserPageOrderListProps {
 
 export const UserPageOrderList = ({ userInfo, className = '' }: UserPageOrderListProps) => {
   const router = useRouter();
+  const { providerManager, chainId, user } = useAppContext();
   const { orderDrawerOpen, setOrderDrawerOpen, setCustomDrawerItems } = useOrderContext();
   const [data, setData] = useState<SignedOBOrder[]>([]);
   const [isFetching, setIsFetching] = useState(false);
@@ -112,6 +116,21 @@ export const UserPageOrderList = ({ userInfo, className = '' }: UserPageOrderLis
           className="py-2.5 mr-2 font-heading pointer-events-auto"
         >
           {filterShowed ? 'Hide' : 'Show'} filter
+        </Button>
+        <Button
+          variant="outline"
+          className="py-2.5 mr-2 font-heading pointer-events-auto"
+          onClick={async () => {
+            const signer = providerManager?.getEthersProvider().getSigner();
+            if (signer && user) {
+              const minOrderNonce = await fetchOrderNonce(user.address);
+              await cancelAllOrders(signer, chainId, minOrderNonce);
+            } else {
+              throw 'User is null';
+            }
+          }}
+        >
+          Cancel all
         </Button>
       </div>
 

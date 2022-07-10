@@ -1,18 +1,18 @@
 import { OBOrder, SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
-  TextInputBox,
+  EthPrice,
   Modal,
   SimpleTable,
   SimpleTableItem,
-  EthPrice,
+  TextInputBox,
   toastError,
   toastSuccess
 } from 'src/components/common';
-import { MISSING_IMAGE_URL, INFINITY_FEE_PCT, INFINITY_ROYALTY_PCT, DEFAULT_MAX_GAS_PRICE_WEI } from 'src/utils';
+import { DEFAULT_MAX_GAS_PRICE_WEI, INFINITY_FEE_PCT, INFINITY_ROYALTY_PCT, MISSING_IMAGE_URL } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { getSignedOBOrder } from 'src/utils/exchange/orders';
-import { fetchOrderNonce, fetchUserSignedOBOrder, postOrders } from 'src/utils/marketUtils';
+import { fetchUserSignedOBOrder, postOrders } from 'src/utils/marketUtils';
 
 interface Props {
   isOpen: boolean;
@@ -24,16 +24,19 @@ interface Props {
 export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) => {
   const { user, chainId, providerManager } = useAppContext();
   const [orderDetails, setOrderDetails] = useState<SignedOBOrder | null>(null);
-  const [price, setPrice] = useState(0);
+  const [price, setPrice] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   // const [lastPrice, setLastPrice] = useState(0);
   // TODO: do something with this ending price?
 
   const orderItem = token.ordersSnippet?.listing?.orderItem;
   const fetchSignedOBOrder = async () => {
-    const order = await fetchUserSignedOBOrder(user?.address, orderItem?.id);
-    console.log('existing order', order);
-    setOrderDetails(order);
+    try {
+      const order = await fetchUserSignedOBOrder(orderItem?.id);
+      setOrderDetails(order);
+    } catch (err) {
+      toastError(`Failed to fetch order`);
+    }
   };
 
   useEffect(() => {
@@ -59,11 +62,12 @@ export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) 
       okButton="Lower Price"
       title="Lower Price"
       onOKButton={async () => {
-        if (!orderDetails || !user || price <= 0) {
+        const priceVal = parseFloat(price);
+        if (!orderDetails || !user || priceVal <= 0) {
           return;
         }
         const buyPriceEthVal = parseFloat(buyPriceEth ?? '0');
-        if (price >= buyPriceEthVal) {
+        if (priceVal >= buyPriceEthVal) {
           setErrorMsg('New price must be lower than the current price');
           return;
         } else {
@@ -80,7 +84,6 @@ export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) 
         const signedOrders: SignedOBOrder[] = [];
         const signer = providerManager?.getEthersProvider().getSigner();
         if (signer) {
-          const orderNonce = await fetchOrderNonce(user.address);
           // keep the last Order & set the New Price:
           const order: OBOrder = {
             id: '',
@@ -91,10 +94,10 @@ export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) 
             numItems: orderDetails.numItems,
             startTimeMs: orderDetails.startTimeMs,
             endTimeMs: orderDetails.endTimeMs,
-            startPriceEth: price, // set the New Price.
-            endPriceEth: price, // set the New Price.
+            startPriceEth: priceVal, // set the New Price.
+            endPriceEth: priceVal, // set the New Price.
             nfts: orderDetails.nfts,
-            nonce: orderNonce,
+            nonce: orderDetails.nonce,
             execParams: orderDetails.execParams,
             extraParams: orderDetails.extraParams,
             maxGasPriceWei: DEFAULT_MAX_GAS_PRICE_WEI
@@ -121,11 +124,11 @@ export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) 
         autoFocus={true}
         addEthSymbol={true}
         type="number"
-        value={price.toString()}
+        value={price}
         label="New Price"
         placeholder=""
         onChange={(value) => {
-          setPrice(Number(value));
+          setPrice(value);
         }}
       />
       <div className="text-red-700 mt-4">{errorMsg}</div>

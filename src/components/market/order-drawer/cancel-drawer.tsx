@@ -22,8 +22,8 @@ export const CancelDrawer = ({ open, onClose, orders, onClickRemove }: Props) =>
       <Drawer
         open={open}
         onClose={onClose}
-        subtitle={'Cancel these listings in one transaction :)'}
-        title={<div className="flex items-center">Cancel Listings</div>}
+        subtitle={'Cancel these orders in one transaction :)'}
+        title={<div className="flex items-center">Cancel Orders</div>}
       >
         <div className="flex flex-col h-full">
           <ul className="overflow-y-auto content-between px-12">
@@ -65,7 +65,7 @@ export const CancelDrawer = ({ open, onClose, orders, onClickRemove }: Props) =>
                   const nonces = orders.map((order) => order.nonce);
                   await cancelMultipleOrders(signer, chainId, nonces);
                 } else {
-                  console.error('signer is null');
+                  throw 'Signer is null';
                 }
               }}
             >
