@@ -31,8 +31,7 @@ export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) 
 
   const orderItem = token.ordersSnippet?.listing?.orderItem;
   const fetchSignedOBOrder = async () => {
-    const order = await fetchUserSignedOBOrder(user?.address, orderItem?.id);
-    console.log('existing order', order);
+    const order = await fetchUserSignedOBOrder(orderItem?.id);
     setOrderDetails(order);
   };
 
