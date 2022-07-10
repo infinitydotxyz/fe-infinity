@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, PageBox } from 'src/components/common';
-import { StakeTokensModal } from 'src/components/rewards/stake-tokens';
+import { StakeTokensModal } from 'src/components/rewards/stake-tokens-modal';
 import { UnstakeTokensModal } from 'src/components/rewards/unstake-tokens';
 import { UserProfileDto } from 'src/components/user/user-profile-dto';
 import { useCurationQuota } from 'src/hooks/api/useCurationQuota';
