@@ -113,6 +113,15 @@ export const UserPageOrderList = ({ userInfo, className = '' }: UserPageOrderLis
         >
           {filterShowed ? 'Hide' : 'Show'} filter
         </Button>
+        <Button
+          variant="outline"
+          onClick={() => {
+            // todo: adi: cancel all orders
+          }}
+          className="py-2.5 mr-2 font-heading pointer-events-auto"
+        >
+          Cancel all
+        </Button>
       </div>
 
       <div className="flex items-start">
