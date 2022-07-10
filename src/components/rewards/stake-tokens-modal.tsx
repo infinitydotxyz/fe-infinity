@@ -6,6 +6,7 @@ import { useTokenAllowance } from 'src/hooks/contract/token/useTokenAllowance';
 import { useTokenApprove } from 'src/hooks/contract/token/useTokenApprove';
 import { useTokenBalance } from 'src/hooks/contract/token/useTokenBalance';
 import { twMerge } from 'tailwind-merge';
+import { Heading } from '../common';
 import { Button } from '../common/button';
 import { TextInputBox } from '../common/input-box';
 import { Modal } from '../common/modal';
@@ -42,9 +43,9 @@ export const StakeTokensModal = ({ onClose }: Props) => {
   };
 
   return (
-    <Modal isOpen={true} onClose={onClose} showActionButtons={false} showCloseIcon={true}>
+    <Modal isOpen={true} onClose={onClose} showActionButtons={false} showCloseIcon={true} wide={false}>
       <div>
-        <div className="text-3xl font-medium">Stake tokens</div>
+        <Heading className="text-3xl font-medium font-body">Stake tokens</Heading>
 
         <div className="mt-12">
           <div>
