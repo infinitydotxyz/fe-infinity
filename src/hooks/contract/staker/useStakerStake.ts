@@ -10,7 +10,7 @@ export function useStakerStake() {
     address = address || user?.address;
 
     if (address) {
-      const tx = await contract.stake(address, utils.parseEther(amount.toString()).toString(), duration);
+      const tx = await contract.stake(utils.parseEther(amount.toString()).toString(), duration);
       await tx.wait();
     }
   };
