@@ -49,6 +49,7 @@ export const VoteModal: React.FC<VoteModalProps> = ({ collection, isOpen, onClos
       return;
     }
 
+    // TODO: improve these reflective changes to UI (this looks glitchy atm)
     await onVote(votes);
     await mutateQuota(
       (data: CurationQuotaDto) =>
