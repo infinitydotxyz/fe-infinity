@@ -6,7 +6,7 @@ import { useTokenAllowance } from 'src/hooks/contract/token/useTokenAllowance';
 import { useTokenApprove } from 'src/hooks/contract/token/useTokenApprove';
 import { useTokenBalance } from 'src/hooks/contract/token/useTokenBalance';
 import { twMerge } from 'tailwind-merge';
-import { Heading } from '../common';
+import { Heading, toastError } from '../common';
 import { Button } from '../common/button';
 import { TextInputBox } from '../common/input-box';
 import { Modal } from '../common/modal';
@@ -25,6 +25,11 @@ export const StakeTokensModal = ({ onClose }: Props) => {
   const { allowance } = useTokenAllowance();
 
   const onStake = async () => {
+    if (value === 0) {
+      toastError('Please enter a stake amount');
+      return;
+    }
+
     setIsStaking(true);
 
     try {
@@ -125,7 +130,7 @@ const RadioButtonCard: React.FC<{ value: string | number; label: string; descrip
                 </RadioGroup.Description>
               )}
             </div>
-            <input type="radio" checked={checked} className="text-black" />
+            <input type="radio" checked={checked} className="text-black" readOnly />
           </>
         )}
       </RadioGroup.Option>
