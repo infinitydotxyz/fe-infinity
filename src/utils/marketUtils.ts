@@ -71,6 +71,9 @@ export const fetchUserSignedOBOrder = async (orderId: string | undefined) => {
       limit: 1
     }
   });
+  if (error) {
+    throw error;
+  }
   if (!error && result) {
     const order = result as SignedOBOrder;
     return order;
