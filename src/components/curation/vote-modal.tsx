@@ -1,4 +1,5 @@
 import { CuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections.dto';
+import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { useCurationQuota } from 'src/hooks/api/useCurationQuota';
 import { apiPost } from 'src/utils';
@@ -13,6 +14,16 @@ export type VoteModalProps = {
   onClose: () => void;
   onVote: (votes: number) => Promise<void>;
   collection: CuratedCollectionDto;
+};
+
+export const StakeTokensButton: React.FC = () => {
+  const router = useRouter();
+
+  return (
+    <Button className="w-full" onClick={() => router.push('/rewards')}>
+      Stake tokens to get votes
+    </Button>
+  );
 };
 
 export const VoteModal: React.FC<VoteModalProps> = ({ collection, isOpen, onClose, onVote }) => {
@@ -99,7 +110,7 @@ export const VoteModal: React.FC<VoteModalProps> = ({ collection, isOpen, onClos
             {votesAvailable === 0 && (
               <>
                 <Button className="w-full">Buy tokens on Uniswap</Button>
-                <Button className="w-full">Stake tokens to get votes</Button>
+                <StakeTokensButton />
               </>
             )}
           </div>

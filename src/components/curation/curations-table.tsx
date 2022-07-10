@@ -7,7 +7,7 @@ import { mutate } from 'swr';
 import { Field, FieldProps } from '../analytics/field';
 import { Button } from '../common';
 import { FeesAprStats, FeesAccruedStats } from './statistics';
-import { VoteModal } from './vote-modal';
+import { StakeTokensButton, VoteModal } from './vote-modal';
 import { VoteProgressBar } from './vote-progress-bar';
 
 const FieldWrapper: React.FC<FieldProps> = (props) => (
@@ -93,7 +93,7 @@ export const CurationRow: React.FC<CurationRowProps> = ({ collection, index, onC
           <FieldWrapper></FieldWrapper>
           <FieldWrapper type="custom">
             {votes > 0 && <Button onClick={() => setIsStakeModalOpen(true)}>Vote</Button>}
-            {votes === 0 && <Button>Stake tokens to get votes</Button>}
+            {votes === 0 && <StakeTokensButton />}
           </FieldWrapper>
         </>
       </div>
