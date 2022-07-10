@@ -24,15 +24,19 @@ interface Props {
 export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) => {
   const { user, chainId, providerManager } = useAppContext();
   const [orderDetails, setOrderDetails] = useState<SignedOBOrder | null>(null);
-  const [price, setPrice] = useState(0);
+  const [price, setPrice] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   // const [lastPrice, setLastPrice] = useState(0);
   // TODO: do something with this ending price?
 
   const orderItem = token.ordersSnippet?.listing?.orderItem;
   const fetchSignedOBOrder = async () => {
-    const order = await fetchUserSignedOBOrder(orderItem?.id);
-    setOrderDetails(order);
+    try {
+      const order = await fetchUserSignedOBOrder(orderItem?.id);
+      setOrderDetails(order);
+    } catch (err) {
+      toastError(`Failed to fetch order`);
+    }
   };
 
   useEffect(() => {
@@ -58,11 +62,12 @@ export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) 
       okButton="Lower Price"
       title="Lower Price"
       onOKButton={async () => {
-        if (!orderDetails || !user || price <= 0) {
+        const priceVal = parseFloat(price);
+        if (!orderDetails || !user || priceVal <= 0) {
           return;
         }
         const buyPriceEthVal = parseFloat(buyPriceEth ?? '0');
-        if (price >= buyPriceEthVal) {
+        if (priceVal >= buyPriceEthVal) {
           setErrorMsg('New price must be lower than the current price');
           return;
         } else {
@@ -89,8 +94,8 @@ export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) 
             numItems: orderDetails.numItems,
             startTimeMs: orderDetails.startTimeMs,
             endTimeMs: orderDetails.endTimeMs,
-            startPriceEth: price, // set the New Price.
-            endPriceEth: price, // set the New Price.
+            startPriceEth: priceVal, // set the New Price.
+            endPriceEth: priceVal, // set the New Price.
             nfts: orderDetails.nfts,
             nonce: orderDetails.nonce,
             execParams: orderDetails.execParams,
@@ -119,11 +124,11 @@ export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) 
         autoFocus={true}
         addEthSymbol={true}
         type="number"
-        value={price.toString()}
+        value={price}
         label="New Price"
         placeholder=""
         onChange={(value) => {
-          setPrice(Number(value));
+          setPrice(value);
         }}
       />
       <div className="text-red-700 mt-4">{errorMsg}</div>
