@@ -54,7 +54,7 @@ export const StakeTokensModal = ({ onClose }: Props) => {
 
         <div className="mt-12">
           <div>
-            <RadioGroup value={stakeDuration} onChange={setStakeDuration}>
+            <RadioGroup value={stakeDuration} onChange={setStakeDuration} className="space-y-2">
               <RadioGroup.Label>Stake for:</RadioGroup.Label>
               <RadioButtonCard value={StakeDuration.X0} label="No commitment" description="Multiplier: 1x" />
               <RadioButtonCard value={StakeDuration.X3} label="3 months" description="Multiplier: 2x" />
@@ -109,12 +109,12 @@ const RadioButtonCard: React.FC<{ value: string | number; label: string; descrip
   description
 }) => {
   return (
-    <div className="rounded-md bg-white cursor-pointer">
+    <div className="bg-white cursor-pointer">
       <RadioGroup.Option
         value={value}
         className={({ checked }) => `
             ${checked ? 'border-theme-gray-200 bg-theme-gray-100' : 'border-gray-200'}
-            relative flex flex-row justify-between items-center border p-4
+            relative flex flex-row justify-between items-center border rounded-md p-4
           `}
       >
         {({ checked }) => (
