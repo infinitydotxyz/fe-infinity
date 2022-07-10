@@ -1,36 +1,31 @@
+import { Collection, Erc721Metadata, OBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
+import { getCurrentOBOrderPrice } from '@infinityxyz/lib-frontend/utils';
+import { utils } from 'ethers';
 import { useRouter } from 'next/router';
+import NotFound404Page from 'pages/not-found-404';
+import { useEffect, useState } from 'react';
+import { ActivityList, CancelModal, MakeOfferModal, SendNFTModal, TraitList } from 'src/components/asset';
+import { LowerPriceModal } from 'src/components/asset/modals/lower-price-modal';
 import {
   Button,
-  ShortAddress,
+  CenteredContent,
+  EthPrice,
+  NextLink,
   PageBox,
   ReadMoreText,
-  SVG,
-  NextLink,
+  ShortAddress,
   Spinner,
-  EthPrice,
+  SVG,
+  toastSuccess,
   ToggleTab,
-  useToggleTab,
-  CenteredContent
+  useToggleTab
 } from 'src/components/common';
-import { MISSING_IMAGE_URL, getOwnerAddress, useFetch } from 'src/utils';
-import { Token, Collection, Erc721Metadata, OBOrder } from '@infinityxyz/lib-frontend/types/core';
-import {
-  TraitList,
-  CancelModal,
-  SendNFTModal,
-  PlaceBidModal,
-  MakeOfferModal,
-  ActivityList
-} from 'src/components/asset';
-import { useEffect, useState } from 'react';
-import { useAppContext } from 'src/utils/context/AppContext';
-import { getOBOrderFromFirestoreOrderItem } from 'src/utils/exchange/orders';
-import { utils } from 'ethers';
-import { getCurrentOBOrderPrice } from '@infinityxyz/lib-frontend/utils';
-import { LowerPriceModal } from 'src/components/asset/modals/lower-price-modal';
-import { OrderbookContainer } from 'src/components/market/orderbook-list';
-import NotFound404Page from 'pages/not-found-404';
 import { SendNFTsStatusModal } from 'src/components/market/order-drawer/send-nfts-status-modal';
+import { OrderbookContainer } from 'src/components/market/orderbook-list';
+import { getOwnerAddress, MISSING_IMAGE_URL, useFetch } from 'src/utils';
+import { useAppContext } from 'src/utils/context/AppContext';
+import { getOBOrderFromFirestoreOrderItem, takeMultiplOneOrders } from 'src/utils/exchange/orders';
+import { fetchUserSignedOBOrder } from 'src/utils/marketUtils';
 
 const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
@@ -80,7 +75,7 @@ interface Props {
 }
 
 const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
-  const { checkSignedIn, user } = useAppContext();
+  const { checkSignedIn, user, providerManager, chainId } = useAppContext();
   const { isLoading, error, token, collection } = useFetchAssetInfo(qchainId, qcollection, qtokenId);
   const { options, onChange, selected } = useToggleTab(['Activity', 'Orders'], 'Activity');
 
@@ -88,7 +83,6 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const [showLowerPriceModal, setShowLowerPriceModal] = useState(false);
   const [showSendModal, setShowSendModal] = useState(false);
   const [showMakeOfferModal, setShowMakeOfferModal] = useState(false);
-  const [showPlaceBidModal, setShowPlaceBidModal] = useState(false);
   const [buyPriceEth, setBuyPriceEth] = useState('');
   const [sendTxHash, setSendTxHash] = useState('');
 
@@ -114,7 +108,10 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
     token.image.url = token.image?.originalUrl ?? '';
   }
 
-  const imgUrl = token?.image?.url || token?.metadata?.image || MISSING_IMAGE_URL;
+  const images = [token?.image?.url, token?.metadata?.image, token?.alchemyCachedImage, MISSING_IMAGE_URL].filter(
+    (url) => !!url && !url.startsWith('ipfs')
+  );
+  const imgUrl = images[0];
   if (token && (!imgUrl || imgUrl.startsWith('ipfs'))) {
     if (token.image) {
       token.image.url = MISSING_IMAGE_URL;
@@ -154,13 +151,6 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const assetName = tokenMetadata.name
     ? `${tokenMetadata.name} - ${token.collectionName}`
     : tokenMetadata.name || token.collectionName || 'brrrr';
-
-  const onClickBuy = () => {
-    if (!checkSignedIn()) {
-      return;
-    }
-    setShowPlaceBidModal(true);
-  };
 
   const onClickMakeOffer = () => {
     if (!checkSignedIn()) {
@@ -219,10 +209,12 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
       {sendTxHash && <SendNFTsStatusModal txHash={sendTxHash} onClose={() => setSendTxHash('')} />}
 
       {showMakeOfferModal && (
-        <MakeOfferModal isOpen={showMakeOfferModal} onClose={() => setShowMakeOfferModal(false)} token={token} />
-      )}
-      {showPlaceBidModal && (
-        <PlaceBidModal isOpen={showPlaceBidModal} onClose={() => setShowPlaceBidModal(false)} token={token} />
+        <MakeOfferModal
+          isOpen={showMakeOfferModal}
+          onClose={() => setShowMakeOfferModal(false)}
+          token={token}
+          buyPriceEth={buyPriceEth}
+        />
       )}
     </>
   );
@@ -270,9 +262,11 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
                     </div>
                   </Button>
                 )}
-                <Button variant="outline" size="large" onClick={onClickLowerPrice}>
-                  Lower Price
-                </Button>
+                {isNftOwner ? (
+                  <Button variant="outline" size="large" onClick={onClickLowerPrice}>
+                    Lower Price
+                  </Button>
+                ) : null}
               </div>
             </div>
           ) : null}
@@ -290,7 +284,22 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
             <div className="md:-ml-1.5">
               <div className="flex flex-col md:flex-row gap-4 my-4 md:my-6 lg:mt-10">
                 {buyPriceEth && (
-                  <Button variant="primary" size="large" onClick={onClickBuy}>
+                  <Button
+                    variant="primary"
+                    size="large"
+                    onClick={async () => {
+                      const signer = providerManager?.getEthersProvider().getSigner();
+                      if (signer) {
+                        const order = await fetchUserSignedOBOrder(token?.ordersSnippet?.listing?.orderItem?.id);
+                        if (order) {
+                          await takeMultiplOneOrders(signer, chainId, order.signedOrder);
+                          toastSuccess('Sent txn successfully');
+                        }
+                      } else {
+                        throw 'Signer is null';
+                      }
+                    }}
+                  >
                     <div className="flex">
                       <span className="mr-4">Buy</span>
                       <span className="font-heading">
