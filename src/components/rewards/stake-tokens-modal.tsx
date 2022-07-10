@@ -55,7 +55,7 @@ export const StakeTokensModal = ({ onClose }: Props) => {
         <div className="mt-12">
           <div>
             <RadioGroup value={stakeDuration} onChange={setStakeDuration} className="space-y-2">
-              <RadioGroup.Label>Stake for:</RadioGroup.Label>
+              <RadioGroup.Label>Lock for:</RadioGroup.Label>
               <RadioButtonCard value={StakeDuration.X0} label="No commitment" description="Multiplier: 1x" />
               <RadioButtonCard value={StakeDuration.X3} label="3 months" description="Multiplier: 2x" />
               <RadioButtonCard value={StakeDuration.X6} label="6 months" description="Multiplier: 3x" />
