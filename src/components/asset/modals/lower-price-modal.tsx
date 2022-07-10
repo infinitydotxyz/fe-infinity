@@ -1,18 +1,18 @@
 import { OBOrder, SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
-  TextInputBox,
+  EthPrice,
   Modal,
   SimpleTable,
   SimpleTableItem,
-  EthPrice,
+  TextInputBox,
   toastError,
   toastSuccess
 } from 'src/components/common';
-import { MISSING_IMAGE_URL, INFINITY_FEE_PCT, INFINITY_ROYALTY_PCT, DEFAULT_MAX_GAS_PRICE_WEI } from 'src/utils';
+import { DEFAULT_MAX_GAS_PRICE_WEI, INFINITY_FEE_PCT, INFINITY_ROYALTY_PCT, MISSING_IMAGE_URL } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { getSignedOBOrder } from 'src/utils/exchange/orders';
-import { fetchOrderNonce, fetchUserSignedOBOrder, postOrders } from 'src/utils/marketUtils';
+import { fetchUserSignedOBOrder, postOrders } from 'src/utils/marketUtils';
 
 interface Props {
   isOpen: boolean;
@@ -80,7 +80,6 @@ export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) 
         const signedOrders: SignedOBOrder[] = [];
         const signer = providerManager?.getEthersProvider().getSigner();
         if (signer) {
-          const orderNonce = await fetchOrderNonce(user.address);
           // keep the last Order & set the New Price:
           const order: OBOrder = {
             id: '',
@@ -94,7 +93,7 @@ export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) 
             startPriceEth: price, // set the New Price.
             endPriceEth: price, // set the New Price.
             nfts: orderDetails.nfts,
-            nonce: orderNonce,
+            nonce: orderDetails.nonce,
             execParams: orderDetails.execParams,
             extraParams: orderDetails.extraParams,
             maxGasPriceWei: DEFAULT_MAX_GAS_PRICE_WEI
