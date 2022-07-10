@@ -16,7 +16,7 @@ interface Props {
 export const UserPageOrderListItem = ({ order, onClickCancel }: Props) => {
   const [isCancelling, setIsCancelling] = useState(false);
 
-  const isListing = getOrderType(order) === 'Listing';
+  const orderType = getOrderType(order);
   return (
     <div>
       <div className="bg-gray-100 px-10 py-6 rounded-3xl flex items-center font-heading">
@@ -63,7 +63,7 @@ export const UserPageOrderListItem = ({ order, onClickCancel }: Props) => {
             <div className="font-bold">{format(order.endTimeMs)}</div>
           </div>
           <div className="w-24">
-            {isListing && (
+            {(orderType === 'Listing' || orderType === 'Offer') && (
               <Button
                 onClick={() => {
                   const newState = !isCancelling;
