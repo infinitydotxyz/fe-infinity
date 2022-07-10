@@ -31,9 +31,8 @@ import { useSWRConfig } from 'swr';
 import { twMerge } from 'tailwind-merge';
 
 const CollectionPage = () => {
-  const { user } = useAppContext();
+  const { user, chainId, checkSignedIn } = useAppContext();
   const router = useRouter();
-  const { checkSignedIn, chainId } = useAppContext();
   const { addCartItem, removeCartItem, ordersInCart, cartItems, addOrderToCart, updateOrders, setPrice } =
     useOrderContext();
   const [isBuyClicked, setIsBuyClicked] = useState(false);
@@ -57,7 +56,12 @@ const CollectionPage = () => {
 
   // useEffect(() => void fetchUserCurated(), [userReady]);
   const path = `/collections/${name}`;
-  const { result: collection, isLoading, error } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
+  const {
+    result: collection,
+    isLoading,
+    error,
+    mutate: mutateCollection
+  } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
   const { result: currentStats } = useFetch<CollectionStatsDto>(name ? `${path}/stats/current` : '', {
     chainId
   });
@@ -72,7 +76,7 @@ const CollectionPage = () => {
   const createdBy = collection?.deployer ?? collection?.owner ?? '';
 
   const { result: userCurated } = useFetch<CuratedCollectionDto>(
-    user?.address ? `${path}/curated/${user.address}` : null,
+    user?.address ? `${path}/curated/${chainId}:${user.address}` : null,
     { apiParams: { requiresAuth: true } }
   );
 
@@ -285,13 +289,16 @@ const CollectionPage = () => {
               onClose={() => setIsStakeModalOpen(false)}
               onVote={async (votes) => {
                 // update local collection cache with latest amount of total votes
-                await mutate(path, {
-                  ...collection,
-                  numCuratorVotes: (collection.numCuratorVotes || 0) + votes
-                } as Collection);
+                await mutateCollection(
+                  (data: Collection) =>
+                    ({
+                      ...collection,
+                      numCuratorVotes: (data.numCuratorVotes || 0) + votes
+                    } as Collection)
+                );
 
                 // reload user votes and estimates from API
-                await mutate(`${path}/curated/${user?.address}`);
+                await mutate(`${path}/curated/${chainId}:${user?.address}`);
               }}
             />
           </section>

@@ -18,8 +18,8 @@ interface Props {
 const multipliers = {
   [StakeDuration.X0]: 1,
   [StakeDuration.X3]: 2,
-  [StakeDuration.X6]: 6,
-  [StakeDuration.X12]: 12
+  [StakeDuration.X6]: 3,
+  [StakeDuration.X12]: 4
 };
 
 const getMultiplier = (duration: StakeDuration) => `Multiplier: ${multipliers[duration]}x`;
@@ -49,7 +49,7 @@ export const StakeTokensModal = ({ onClose }: Props) => {
       await stake(value, stakeDuration);
 
       setIsStaking(false);
-      onClose(); // TODO: pass tokens staked back to prev. page and update UI so user doesn't need to reload page to see the result
+      onClose();
     } catch (err) {
       console.error(err);
       setIsStaking(false);

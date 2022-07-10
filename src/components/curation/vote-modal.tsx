@@ -1,7 +1,8 @@
 import { CuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections.dto';
+import { CurationQuotaDto } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curation-quota.dto';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
-import { useCurationQuota } from 'src/hooks/api/useCurationQuota';
+import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
 import { apiPost } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { AvatarImage } from '../collection/avatar-image';
@@ -27,10 +28,10 @@ export const StakeTokensButton: React.FC = () => {
 };
 
 export const VoteModal: React.FC<VoteModalProps> = ({ collection, isOpen, onClose, onVote }) => {
-  const { user } = useAppContext();
+  const { user, chainId } = useAppContext();
   // TODO: re-calculate fees & APR (via API call) when 'votes' change
   const [votes, setVotes] = useState(0);
-  const { result: quota, isLoading: isLoadingQuota, mutate } = useCurationQuota();
+  const { result: quota, isLoading: isLoadingQuota, mutate: mutateQuota } = useUserCurationQuota();
   const [isVoting, setIsVoting] = useState(false);
 
   const votesAvailable = quota?.availableVotes || 0;
@@ -39,7 +40,7 @@ export const VoteModal: React.FC<VoteModalProps> = ({ collection, isOpen, onClos
     setIsVoting(true);
 
     const { error } = await apiPost(
-      `/collections/${collection.chainId}:${collection.address}/curated/${user?.address}`,
+      `/collections/${collection.chainId}:${collection.address}/curated/${chainId}:${user?.address}`,
       { data: { votes } }
     );
 
@@ -49,9 +50,12 @@ export const VoteModal: React.FC<VoteModalProps> = ({ collection, isOpen, onClos
     }
 
     await onVote(votes);
-    await mutate(() => ({
-      availableVotes: votesAvailable - votes
-    }));
+    await mutateQuota(
+      (data: CurationQuotaDto) =>
+        ({
+          availableVotes: data.availableVotes - votes
+        } as CurationQuotaDto)
+    );
     setVotes(0);
     onClose();
     setIsVoting(false);

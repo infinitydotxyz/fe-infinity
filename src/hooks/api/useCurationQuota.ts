@@ -8,8 +8,15 @@ export const getCurationQuotaKey = (userId: string) => `/user/${userId}/curated/
  * Custom hook to fetch the total 'actual' amount of available votes from the API.
  * The value is calculated from the balance read from the contract and existing database records.
  */
-export function useCurationQuota(userId?: string) {
-  const { user } = useAppContext();
-  const id = userId || user?.address;
-  return useFetch<CurationQuotaDto>(id ? getCurationQuotaKey(id) : null);
+export function useCurationQuota(userId: string | null) {
+  return useFetch<CurationQuotaDto>(userId ? getCurationQuotaKey(userId) : null);
+}
+
+/**
+ * Custom hook to fetch the total 'actual' amount of available votes for the current user from the API.
+ * See {@link useCurationQuota}.
+ */
+export function useUserCurationQuota() {
+  const { user, chainId } = useAppContext();
+  return useCurationQuota(user?.address ? `${chainId}:${user.address}` : null);
 }

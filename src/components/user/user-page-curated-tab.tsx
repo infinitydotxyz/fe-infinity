@@ -10,6 +10,7 @@ import { useFetchInfinite } from 'src/utils';
 import { CurationTable } from '../curation/curations-table';
 import { NoResultsBox } from '../curation/no-results-box';
 import { CuratedTab } from '../curation/types';
+import { useAppContext } from 'src/utils/context/AppContext';
 
 const InfoBox: React.FC<{ title: string; subtitle: string | number }> = ({ title, subtitle }) => {
   return (
@@ -21,8 +22,9 @@ const InfoBox: React.FC<{ title: string; subtitle: string | number }> = ({ title
 };
 
 export const UserPageCuratedTab: React.FC<{ userInfo: UserProfileDto }> = ({ userInfo }) => {
+  const { chainId } = useAppContext();
   const [orderBy, setOrderBy] = useState(CuratedCollectionsOrderBy.Votes);
-  const { result: quota } = useCurationQuota(userInfo.address);
+  const { result: quota } = useCurationQuota(`${chainId}:${userInfo.address}`);
 
   const { result, setSize, error, isLoading } = useFetchInfinite<CuratedCollectionsDto>(
     `/user/${userInfo.address}/curated`,
@@ -49,11 +51,11 @@ export const UserPageCuratedTab: React.FC<{ userInfo: UserProfileDto }> = ({ use
         <InfoBox title="Staked tokens" subtitle={quota?.totalStaked || 0} />
         <InfoBox
           title="Votes allocated"
-          subtitle={`${
+          subtitle={`${Math.round(
             (quota?.availableVotes || 0) === 0
               ? 100
               : ((userInfo?.totalCuratedVotes || 0) / (quota?.availableVotes || 0)) * 100
-          }%`}
+          )}%`}
         />
         <InfoBox title="Curated" subtitle={userInfo?.totalCurated || 0} />
         {/* TODO: implement blended APR */}

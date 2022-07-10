@@ -1,7 +1,7 @@
 import { CuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections.dto';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
-import { useCurationQuota } from 'src/hooks/api/useCurationQuota';
+import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { mutate } from 'swr';
 import { Field, FieldProps } from '../analytics/field';
@@ -22,7 +22,7 @@ export type CurationTableProps = {
 
 export const CurationTable: React.FC<CurationTableProps> = ({ curatedCollections: curatedCollectionsArray }) => {
   const router = useRouter();
-  const { result: quota } = useCurationQuota();
+  const { result: quota } = useUserCurationQuota();
 
   const curatedCollections = curatedCollectionsArray?.flat();
 
@@ -50,7 +50,7 @@ export type CurationRowProps = {
 
 export const CurationRow: React.FC<CurationRowProps> = ({ collection, index, onClick, votes }) => {
   const [isStakeModalOpen, setIsStakeModalOpen] = useState(false);
-  const { user } = useAppContext();
+  const { user, chainId } = useAppContext();
 
   // TODO: move vote modal to table component (row should be representational component only)
 
@@ -72,7 +72,7 @@ export const CurationRow: React.FC<CurationRowProps> = ({ collection, index, onC
           } as CuratedCollectionDto);
 
           // reload user votes and estimates from API
-          await mutate(`${path}/curated/${user?.address}`);
+          await mutate(`${path}/curated/${chainId}:${user?.address}`);
         }}
       />
       <div className="w-full h-full p-8 overflow-hidden rounded-3xl bg-gray-100 grid grid-cols-analytics place-items-center">

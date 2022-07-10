@@ -10,9 +10,9 @@ import { CuratedTab } from './types';
 import { useRouter } from 'next/router';
 
 export const MyCuratedCollections: React.FC<{ orderBy: CuratedCollectionsOrderBy }> = ({ orderBy }) => {
-  const { user } = useAppContext();
+  const { user, chainId } = useAppContext();
   const { result, setSize, error, isLoading } = useFetchInfinite<CuratedCollectionsDto>(
-    user?.address ? `/user/${user.address}/curated` : null,
+    user?.address ? `/user/${chainId}:${user.address}/curated` : null,
     {
       query: {
         orderBy,

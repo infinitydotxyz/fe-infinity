@@ -12,7 +12,7 @@ import { useRouter } from 'next/router';
 export type AllCuratedProps = { orderBy: CuratedCollectionsOrderBy };
 
 export const AllCuratedCollections: React.FC<AllCuratedProps> = ({ orderBy }) => {
-  const { user } = useAppContext();
+  const { user, chainId } = useAppContext();
   const router = useRouter();
 
   const query = {
@@ -22,7 +22,7 @@ export const AllCuratedCollections: React.FC<AllCuratedProps> = ({ orderBy }) =>
   };
 
   const { result, error, isLoading, setSize } = useFetchInfinite<CuratedCollectionsDto>(
-    `/collections/curated/${user ? user.address : ''}`,
+    `/collections/curated/${user?.address ? `${chainId}:${user.address}` : ''}`,
     {
       query,
       apiParams: { requiresAuth: true }
