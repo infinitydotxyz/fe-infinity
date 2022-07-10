@@ -16,6 +16,7 @@ import {
   ShortAddress,
   Spinner,
   SVG,
+  toastSuccess,
   ToggleTab,
   useToggleTab
 } from 'src/components/common';
@@ -23,7 +24,8 @@ import { SendNFTsStatusModal } from 'src/components/market/order-drawer/send-nft
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
 import { getOwnerAddress, MISSING_IMAGE_URL, useFetch } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { getOBOrderFromFirestoreOrderItem } from 'src/utils/exchange/orders';
+import { getOBOrderFromFirestoreOrderItem, takeMultiplOneOrders } from 'src/utils/exchange/orders';
+import { fetchUserSignedOBOrder } from 'src/utils/marketUtils';
 
 const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
@@ -286,15 +288,16 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
                     variant="primary"
                     size="large"
                     onClick={async () => {
-                      // todo: adi: user clicked Buy to buy a listed nft.
                       const signer = providerManager?.getEthersProvider().getSigner();
                       if (signer) {
-                        // todo: adi
-                        // await takeMultiplOneOrders(signer, chainId, order.signedOrder);
+                        const order = await fetchUserSignedOBOrder(token?.ordersSnippet?.listing?.orderItem?.id);
+                        if (order) {
+                          await takeMultiplOneOrders(signer, chainId, order.signedOrder);
+                          toastSuccess('Sent txn successfully');
+                        }
                       } else {
                         throw 'Signer is null';
                       }
-                      console.log('buy', chainId, token.ordersSnippet);
                     }}
                   >
                     <div className="flex">

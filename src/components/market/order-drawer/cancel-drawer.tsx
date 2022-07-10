@@ -65,7 +65,7 @@ export const CancelDrawer = ({ open, onClose, orders, onClickRemove }: Props) =>
                   const nonces = orders.map((order) => order.nonce);
                   await cancelMultipleOrders(signer, chainId, nonces);
                 } else {
-                  console.error('signer is null');
+                  throw 'Signer is null';
                 }
               }}
             >
