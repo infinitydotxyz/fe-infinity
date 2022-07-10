@@ -1,8 +1,11 @@
+import { RadioGroup } from '@headlessui/react';
+import { StakeDuration } from '@infinityxyz/lib-frontend/types/core';
 import React, { useState } from 'react';
 import { useStakerStake } from 'src/hooks/contract/staker/useStakerStake';
 import { useTokenAllowance } from 'src/hooks/contract/token/useTokenAllowance';
 import { useTokenApprove } from 'src/hooks/contract/token/useTokenApprove';
 import { useTokenBalance } from 'src/hooks/contract/token/useTokenBalance';
+import { twMerge } from 'tailwind-merge';
 import { Button } from '../common/button';
 import { TextInputBox } from '../common/input-box';
 import { Modal } from '../common/modal';
@@ -12,7 +15,7 @@ interface Props {
 }
 
 export const StakeTokensModal = ({ onClose }: Props) => {
-  const [sliderValue, setSliderValue] = useState(0);
+  const [stakeDuration, setStakeDuration] = useState(0);
   const [value, setValue] = useState(0);
   const [isStaking, setIsStaking] = useState(false);
   const { balance } = useTokenBalance();
@@ -28,7 +31,7 @@ export const StakeTokensModal = ({ onClose }: Props) => {
         await approve(value);
       }
 
-      await stake(value, sliderValue);
+      await stake(value, stakeDuration);
 
       setIsStaking(false);
       onClose(); // TODO: pass tokens staked back to prev. page and update UI so user doesn't need to reload page to see the result
@@ -45,20 +48,13 @@ export const StakeTokensModal = ({ onClose }: Props) => {
 
         <div className="mt-12">
           <div>
-            <input
-              id="default-range"
-              type="range"
-              value={sliderValue}
-              onChange={(ev) => setSliderValue(parseInt(ev.target.value))}
-              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
-            />
-            <div className="flex justify-between mt-1">
-              <div>Lock for: {sliderValue} months</div>
-              <div className="flex">
-                <div>Weight: </div>
-                <div className="w-8 text-right ml-1">{sliderValue / 100}</div>
-              </div>
-            </div>
+            <RadioGroup value={stakeDuration} onChange={setStakeDuration}>
+              <RadioGroup.Label>Stake for:</RadioGroup.Label>
+              <RadioButtonCard value={StakeDuration.X0} label="No commitment" description="Multiplier: 1x" />
+              <RadioButtonCard value={StakeDuration.X3} label="3 months" description="Multiplier: 2x" />
+              <RadioButtonCard value={StakeDuration.X6} label="6 months" description="Multiplier: 3x" />
+              <RadioButtonCard value={StakeDuration.X12} label="12 months" description="Multiplier: 4x" />
+            </RadioGroup>
           </div>
 
           <div className="mt-10">
@@ -94,5 +90,44 @@ export const StakeTokensModal = ({ onClose }: Props) => {
         </Button>
       </div>
     </Modal>
+  );
+};
+
+/**
+ * Radio button componentn that's rendered on screen like a small card.
+ * To be used within `RadioGroup`.
+ */
+const RadioButtonCard: React.FC<{ value: string | number; label: string; description?: string }> = ({
+  value,
+  label,
+  description
+}) => {
+  return (
+    <div className="rounded-md bg-white cursor-pointer">
+      <RadioGroup.Option
+        value={value}
+        className={({ checked }) => `
+            ${checked ? 'border-theme-gray-200 bg-theme-gray-100' : 'border-gray-200'}
+            relative flex flex-row justify-between items-center border p-4
+          `}
+      >
+        {({ checked }) => (
+          <>
+            <div className="flex flex-col">
+              <RadioGroup.Label as="span" className={twMerge('block text-sm font-medium')}>
+                {label}
+              </RadioGroup.Label>
+
+              {description && (
+                <RadioGroup.Description as="span" className={twMerge('text-gray-500', 'block text-sm')}>
+                  {description}
+                </RadioGroup.Description>
+              )}
+            </div>
+            <input type="radio" checked={checked} className="text-black" />
+          </>
+        )}
+      </RadioGroup.Option>
+    </div>
   );
 };
