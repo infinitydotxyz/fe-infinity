@@ -9,7 +9,13 @@ import {
   toastError,
   toastSuccess
 } from 'src/components/common';
-import { DEFAULT_MAX_GAS_PRICE_WEI, INFINITY_FEE_PCT, INFINITY_ROYALTY_PCT, MISSING_IMAGE_URL } from 'src/utils';
+import {
+  DEFAULT_MAX_GAS_PRICE_WEI,
+  getEstimatedGasPrice,
+  INFINITY_FEE_PCT,
+  INFINITY_ROYALTY_PCT,
+  MISSING_IMAGE_URL
+} from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { getSignedOBOrder } from 'src/utils/exchange/orders';
 import { fetchUserSignedOBOrder, postOrders } from 'src/utils/marketUtils';
@@ -100,7 +106,8 @@ export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) 
             nonce: orderDetails.nonce,
             execParams: orderDetails.execParams,
             extraParams: orderDetails.extraParams,
-            maxGasPriceWei: DEFAULT_MAX_GAS_PRICE_WEI
+            maxGasPriceWei:
+              (await getEstimatedGasPrice(providerManager?.getEthersProvider())) ?? DEFAULT_MAX_GAS_PRICE_WEI
           };
 
           const signedOrder = await getSignedOBOrder(user, chainId, signer, order);

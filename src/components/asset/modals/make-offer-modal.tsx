@@ -2,7 +2,7 @@ import { ChainId, OBOrder, SignedOBOrder, Token } from '@infinityxyz/lib-fronten
 import { ETHEREUM_WETH_ADDRESS, getOBComplicationAddress, NULL_ADDRESS } from '@infinityxyz/lib-frontend/utils';
 import { useState } from 'react';
 import { CurrencyInput, DatePickerBox, Modal, toastError, toastSuccess } from 'src/components/common';
-import { DEFAULT_MAX_GAS_PRICE_WEI, getOwnerAddress } from 'src/utils';
+import { DEFAULT_MAX_GAS_PRICE_WEI, getEstimatedGasPrice, getOwnerAddress } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { getSignedOBOrder } from 'src/utils/exchange/orders';
 import { fetchOrderNonce, postOrders } from 'src/utils/marketUtils';
@@ -75,7 +75,7 @@ export const MakeOfferModal = ({ isOpen, onClose, buyPriceEth, token }: Props) =
         extraParams: {
           buyer: NULL_ADDRESS
         },
-        maxGasPriceWei: DEFAULT_MAX_GAS_PRICE_WEI
+        maxGasPriceWei: (await getEstimatedGasPrice(providerManager?.getEthersProvider())) ?? DEFAULT_MAX_GAS_PRICE_WEI
       };
 
       const signedOrder = await getSignedOBOrder(user, chainId, signer, order);
