@@ -1,22 +1,21 @@
 import { useState } from 'react';
-import { getChainScannerBase } from 'src/utils';
 import { EthPrice, Button } from 'src/components/common';
 import { format } from 'timeago.js';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { UserProfileDto } from '../user/user-profile-dto';
 import { OrderbookItem } from '../market/orderbook-list/orderbook-item';
-import { getOrderType } from 'src/utils/marketUtils';
+import { UserOrderFilter } from '../filter/user-profile-order-filter-panel';
 
 interface Props {
   order: SignedOBOrder;
+  orderType: UserOrderFilter['orderType'];
   userInfo: UserProfileDto;
   onClickCancel: (order: SignedOBOrder, checked: boolean) => void;
 }
 
-export const UserPageOrderListItem = ({ order, onClickCancel }: Props) => {
+export const UserPageOrderListItem = ({ order, orderType, onClickCancel }: Props) => {
   const [isCancelling, setIsCancelling] = useState(false);
 
-  const orderType = getOrderType(order);
   return (
     <div>
       <div className="bg-gray-100 px-10 py-6 rounded-3xl flex items-center font-heading">
@@ -37,19 +36,7 @@ export const UserPageOrderListItem = ({ order, onClickCancel }: Props) => {
           </div>
 
           <div className="w-1/8">
-            <div className="text-gray-400">Event</div>
-            <div className="font-bold">
-              <a
-                href={`${getChainScannerBase(order.chainId)}/tx/${order.id}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {getOrderType(order)}
-              </a>
-            </div>
-          </div>
-          <div className="w-1/8">
-            <div className="text-gray-400">Min Price</div>
+            <div className="text-gray-400">Price</div>
             <div className="font-bold">
               <EthPrice label={`${order.startPriceEth}`} />
             </div>
@@ -63,7 +50,7 @@ export const UserPageOrderListItem = ({ order, onClickCancel }: Props) => {
             <div className="font-bold">{format(order.endTimeMs)}</div>
           </div>
           <div className="w-24">
-            {(orderType === 'Listing' || orderType === 'Offer') && (
+            {orderType === 'listings' || orderType === 'offers-made' ? (
               <Button
                 onClick={() => {
                   const newState = !isCancelling;
@@ -72,6 +59,16 @@ export const UserPageOrderListItem = ({ order, onClickCancel }: Props) => {
                 }}
               >
                 {isCancelling ? '✓' : ''} Cancel
+              </Button>
+            ) : (
+              <Button
+                onClick={() => {
+                  const newState = !isCancelling; // todo: Dylan - not canceling here but batch selling - so cart drawer should be changed accordingly
+                  setIsCancelling(newState);
+                  onClickCancel(order, newState);
+                }}
+              >
+                {isCancelling ? '✓' : ''} Sell
               </Button>
             )}
           </div>

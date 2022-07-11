@@ -16,6 +16,7 @@ import { fetchOrderNonce } from 'src/utils/marketUtils';
 type Query = {
   limit: number;
   cursor: string;
+  isSellOrder?: boolean;
   makerAddress?: string;
   takerAddress?: string;
   minPrice?: string;
@@ -74,9 +75,15 @@ export const UserPageOrderList = ({ userInfo, className = '' }: UserPageOrderLis
     };
     if (apiFilter.orderType === 'listings') {
       query.makerAddress = userInfo.address;
+      query.isSellOrder = true;
+    } else if (apiFilter.orderType === 'offers-made') {
+      query.makerAddress = userInfo.address;
+      query.isSellOrder = false;
     } else {
       query.takerAddress = userInfo.address;
+      query.isSellOrder = false;
     }
+
     const { result } = await apiGet(`/orders/${userInfo.address}`, {
       query,
       requiresAuth: true
@@ -159,6 +166,7 @@ export const UserPageOrderList = ({ userInfo, className = '' }: UserPageOrderLis
               <UserPageOrderListItem
                 key={idx}
                 order={order}
+                orderType={apiFilter.orderType}
                 userInfo={userInfo}
                 onClickCancel={(clickedOrder, isCancelling) => {
                   if (isCancelling) {
