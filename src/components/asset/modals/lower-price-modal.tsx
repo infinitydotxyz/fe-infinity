@@ -89,6 +89,7 @@ export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) 
 
         const signedOrders: SignedOBOrder[] = [];
         const signer = providerManager?.getEthersProvider().getSigner();
+        const gasPrice = await getEstimatedGasPrice(providerManager?.getEthersProvider());
         if (signer) {
           // keep the last Order & set the New Price:
           const order: OBOrder = {
@@ -106,8 +107,7 @@ export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) 
             nonce: orderDetails.nonce,
             execParams: orderDetails.execParams,
             extraParams: orderDetails.extraParams,
-            maxGasPriceWei:
-              (await getEstimatedGasPrice(providerManager?.getEthersProvider())) ?? DEFAULT_MAX_GAS_PRICE_WEI
+            maxGasPriceWei: gasPrice ?? DEFAULT_MAX_GAS_PRICE_WEI
           };
 
           const signedOrder = await getSignedOBOrder(user, chainId, signer, order);

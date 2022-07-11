@@ -275,6 +275,7 @@ export const OrderContextProvider = ({ children }: Props) => {
       const orderNonce = await fetchOrderNonce(user.address);
       // sell orders are always in ETH
       const currencyAddress = spec.isSellOrder ? NULL_ADDRESS : getTxnCurrencyAddress(chainId);
+      const gasPrice = await getEstimatedGasPrice(providerManager?.getEthersProvider());
       const order: OBOrder = {
         id: '',
         chainId: spec.chainId,
@@ -288,7 +289,7 @@ export const OrderContextProvider = ({ children }: Props) => {
         nfts: spec.nfts,
         makerUsername: spec.makerUsername,
         nonce: orderNonce,
-        maxGasPriceWei: (await getEstimatedGasPrice(providerManager?.getEthersProvider())) ?? DEFAULT_MAX_GAS_PRICE_WEI,
+        maxGasPriceWei: gasPrice ?? DEFAULT_MAX_GAS_PRICE_WEI,
         execParams: {
           currencyAddress,
           complicationAddress: getOBComplicationAddress(chainId)

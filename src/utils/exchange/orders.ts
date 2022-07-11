@@ -23,7 +23,6 @@ import {
   NULL_ADDRESS,
   trimLowerCase
 } from '@infinityxyz/lib-frontend/utils';
-import { getEstimatedGasPrice } from '../commonUtils';
 import { DEFAULT_MAX_GAS_PRICE_WEI } from '../constants';
 import { User } from '../context/AppContext';
 
@@ -263,7 +262,7 @@ export async function signOBOrder(
     Math.floor(order.startTimeMs / 1000),
     Math.floor(order.endTimeMs / 1000),
     order.nonce,
-    (await getEstimatedGasPrice(signer.provider)) ?? DEFAULT_MAX_GAS_PRICE_WEI
+    order.maxGasPriceWei
   ];
 
   const nfts = [];

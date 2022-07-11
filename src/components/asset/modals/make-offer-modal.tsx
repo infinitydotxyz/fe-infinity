@@ -55,6 +55,7 @@ export const MakeOfferModal = ({ isOpen, onClose, buyPriceEth, token }: Props) =
         tokens: [tokenInfo]
       };
 
+      const gasPrice = await getEstimatedGasPrice(providerManager?.getEthersProvider());
       const order: OBOrder = {
         id: '',
         chainId,
@@ -75,7 +76,7 @@ export const MakeOfferModal = ({ isOpen, onClose, buyPriceEth, token }: Props) =
         extraParams: {
           buyer: NULL_ADDRESS
         },
-        maxGasPriceWei: (await getEstimatedGasPrice(providerManager?.getEthersProvider())) ?? DEFAULT_MAX_GAS_PRICE_WEI
+        maxGasPriceWei: gasPrice ?? DEFAULT_MAX_GAS_PRICE_WEI
       };
 
       const signedOrder = await getSignedOBOrder(user, chainId, signer, order);
