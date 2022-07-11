@@ -10,6 +10,7 @@ import { ETHEREUM_CHAIN_SCANNER_BASE } from '@infinityxyz/lib-frontend/utils';
 import { UserPageOrderList } from '../feed/user-page-order-list';
 import { UserBannerImage } from './user-banner-image';
 import { UserProfileImage } from './user-profile-image';
+import { UserPageCuratedTab } from './user-page-curated-tab';
 
 interface UserPageProps {
   userInfo: UserProfileDto;
@@ -18,9 +19,9 @@ interface UserPageProps {
 
 export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner = false }) => {
   const router = useRouter();
-  let tabs = ['Collected', 'Activity'];
+  const tabs = ['Collected', 'Curated', 'Orders', 'Activity'];
   if (isOwner) {
-    tabs = ['Collected', 'Orders', 'Activity', 'Send'];
+    tabs.push('Send');
   }
   const { options, onChange, selected } = useToggleTab(tabs, (router?.query?.tab as string) || 'Collected');
 
@@ -73,6 +74,7 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
           {selected === 'Orders' && <UserPageOrderList userInfo={userInfo} />}
           {selected === 'Activity' && <UserPageActivityTab userInfo={userInfo} />}
           {selected === 'Send' && <UserPageNftsTab userInfo={userInfo} forTransfers={true} />}
+          {selected === 'Curated' && <UserPageCuratedTab userInfo={userInfo} />}
         </div>
       </div>
     </>

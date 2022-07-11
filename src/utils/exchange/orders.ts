@@ -1,6 +1,6 @@
 import { defaultAbiCoder } from '@ethersproject/abi';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
-import { BytesLike, splitSignature } from '@ethersproject/bytes';
+import { splitSignature } from '@ethersproject/bytes';
 import { MaxUint256 } from '@ethersproject/constants';
 import { Contract } from '@ethersproject/contracts';
 import { JsonRpcSigner } from '@ethersproject/providers';
@@ -23,7 +23,6 @@ import {
   NULL_ADDRESS,
   trimLowerCase
 } from '@infinityxyz/lib-frontend/utils';
-import { keccak256, solidityKeccak256 } from 'ethers/lib/utils';
 import { DEFAULT_MAX_GAS_PRICE_WEI } from '../constants';
 import { User } from '../context/AppContext';
 
@@ -482,62 +481,4 @@ export function getOBOrderFromFirestoreOrderItem(firestoreOrderItem: FirestoreOr
     }
   };
   return ord;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function _orderHash(order: ChainOBOrder): BytesLike {
-  const fnSign =
-    'Order(bool isSellOrder,address signer,uint256[] constraints,OrderItem[] nfts,address[] execParams,bytes extraParams)OrderItem(address collection,TokenInfo[] tokens)TokenInfo(uint256 tokenId,uint256 numTokens)';
-  const orderTypeHash = solidityKeccak256(['string'], [fnSign]);
-
-  const constraints = order.constraints;
-  const execParams = order.execParams;
-  const extraParams = order.extraParams;
-
-  const constraintsHash = keccak256(
-    defaultAbiCoder.encode(['uint256', 'uint256', 'uint256', 'uint256', 'uint256', 'uint256', 'uint256'], constraints)
-  );
-
-  const nftsHash = _getNftsHash(order.nfts);
-  const execParamsHash = keccak256(defaultAbiCoder.encode(['address', 'address'], execParams));
-
-  const calcEncode = defaultAbiCoder.encode(
-    ['bytes32', 'bool', 'address', 'bytes32', 'bytes32', 'bytes32', 'bytes32'],
-    [orderTypeHash, order.isSellOrder, order.signer, constraintsHash, nftsHash, execParamsHash, keccak256(extraParams)]
-  );
-
-  return keccak256(calcEncode);
-}
-
-function _getNftsHash(nfts: ChainNFTs[]): BytesLike {
-  const fnSign = 'OrderItem(address collection,TokenInfo[] tokens)TokenInfo(uint256 tokenId,uint256 numTokens)';
-  const typeHash = solidityKeccak256(['string'], [fnSign]);
-
-  const hashes = [];
-  for (const nft of nfts) {
-    const hash = keccak256(
-      defaultAbiCoder.encode(['bytes32', 'uint256', 'bytes32'], [typeHash, nft.collection, _getTokensHash(nft.tokens)])
-    );
-    hashes.push(hash);
-  }
-  const encodeTypeArray = hashes.map(() => 'bytes32');
-  const nftsHash = keccak256(defaultAbiCoder.encode(encodeTypeArray, hashes));
-
-  return nftsHash;
-}
-
-function _getTokensHash(tokens: ChainNFTs['tokens']): BytesLike {
-  const fnSign = 'TokenInfo(uint256 tokenId,uint256 numTokens)';
-  const typeHash = solidityKeccak256(['string'], [fnSign]);
-
-  const hashes = [];
-  for (const token of tokens) {
-    const hash = keccak256(
-      defaultAbiCoder.encode(['bytes32', 'uint256', 'uint256'], [typeHash, token.tokenId, token.numTokens])
-    );
-    hashes.push(hash);
-  }
-  const encodeTypeArray = hashes.map(() => 'bytes32');
-  const tokensHash = keccak256(defaultAbiCoder.encode(encodeTypeArray, hashes));
-  return tokensHash;
 }

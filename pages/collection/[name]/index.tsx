@@ -1,4 +1,11 @@
-import { BaseCollection, ChainId, CollectionStats, ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
+import {
+  BaseCollection,
+  ChainId,
+  Collection,
+  CollectionStats,
+  ERC721CardData
+} from '@infinityxyz/lib-frontend/types/core';
+import { CuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections.dto';
 import { CollectionStatsDto } from '@infinityxyz/lib-frontend/types/dto/stats';
 import { useRouter } from 'next/router';
 import NotFound404Page from 'pages/not-found-404';
@@ -8,7 +15,10 @@ import { BsCheck } from 'react-icons/bs';
 import { AvatarImage } from 'src/components/collection/avatar-image';
 import { CollectionActivityTab } from 'src/components/collection/collection-activity-tab';
 import { StatsChips } from 'src/components/collection/stats-chips';
-import { EthPrice, PageBox, Spinner, SVG, ToggleTab, useToggleTab } from 'src/components/common';
+import { Button, EthPrice, Heading, PageBox, Spinner, SVG, ToggleTab, useToggleTab } from 'src/components/common';
+import { FeesAprStats, FeesAccruedStats } from 'src/components/curation/statistics';
+import { VoteModal } from 'src/components/curation/vote-modal';
+import { VoteProgressBar } from 'src/components/curation/vote-progress-bar';
 import { CommunityFeed } from 'src/components/feed-list/community-feed';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
@@ -17,11 +27,12 @@ import { useFetch } from 'src/utils/apiUtils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { iconButtonStyle } from 'src/utils/ui-constants';
+import { useSWRConfig } from 'swr';
 import { twMerge } from 'tailwind-merge';
 
 const CollectionPage = () => {
+  const { user, chainId, checkSignedIn } = useAppContext();
   const router = useRouter();
-  const { checkSignedIn, chainId } = useAppContext();
   const { addCartItem, removeCartItem, ordersInCart, cartItems, addOrderToCart, updateOrders, setPrice } =
     useOrderContext();
   const [isBuyClicked, setIsBuyClicked] = useState(false);
@@ -33,6 +44,8 @@ const CollectionPage = () => {
   const {
     query: { name }
   } = router;
+  const { mutate } = useSWRConfig();
+  const [isStakeModalOpen, setIsStakeModalOpen] = useState(false);
 
   useEffect(() => {
     if (isBuyClicked === true) {
@@ -41,8 +54,14 @@ const CollectionPage = () => {
     }
   }, [isBuyClicked]);
 
+  // useEffect(() => void fetchUserCurated(), [userReady]);
   const path = `/collections/${name}`;
-  const { result: collection, isLoading, error } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
+  const {
+    result: collection,
+    isLoading,
+    error,
+    mutate: mutateCollection
+  } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
   const { result: currentStats } = useFetch<CollectionStatsDto>(name ? `${path}/stats/current` : '', {
     chainId
   });
@@ -55,6 +74,11 @@ const CollectionPage = () => {
   const firstAllTimeStats = allTimeStats?.data[0]; // first row = latest daily stats
 
   const createdBy = collection?.deployer ?? collection?.owner ?? '';
+
+  const { result: userCurated } = useFetch<CuratedCollectionDto>(
+    user?.address ? `${path}/curated/${chainId}:${user.address}` : null,
+    { apiParams: { requiresAuth: true } }
+  );
 
   const isAlreadyAdded = (data: ERC721CardData | undefined) => {
     // check if this item was already added to cartItems or order.
@@ -92,13 +116,14 @@ const CollectionPage = () => {
     return <NotFound404Page collectionSlug={name?.toString()} />;
   }
 
-  // if (!collection) {
-  //   return (
-  //     <PageBox showTitle={false} title={'Collection'}>
-  //       {error ? <div className="flex flex-col mt-10">Unable to load this collection?.</div> : null}
-  //     </PageBox>
-  //   );
-  // }
+  if (!collection) {
+    return (
+      <PageBox showTitle={false} title={'Collection'}>
+        {error ? <div className="flex flex-col mt-10">Unable to load this collection.</div> : null}
+      </PageBox>
+    );
+  }
+
   return (
     <PageBox showTitle={false} title={collection?.metadata?.name ?? ''}>
       <div className="flex flex-col mt-10">
@@ -234,6 +259,49 @@ const CollectionPage = () => {
               </tr>
             </tbody>
           </table>
+
+          <section className="mt-8 space-y-4 md:w-1/2">
+            <Heading as="h2" className="font-body text-4xl">
+              Curate collection
+            </Heading>
+            <FeesAprStats value={userCurated?.feesAPR || 0} className="mr-2" />
+            <FeesAccruedStats value={userCurated?.fees || 0} />
+
+            <div className="flex flex-row space-x-2 relative">
+              <VoteProgressBar votes={userCurated?.votes || 0} totalVotes={collection.numCuratorVotes || 0} />
+              <Button onClick={() => checkSignedIn() && setIsStakeModalOpen(true)}>Vote</Button>
+            </div>
+            <VoteModal
+              collection={{
+                ...collection,
+                ...collection.metadata,
+                ...(userCurated || {
+                  votes: 0,
+                  fees: 0,
+                  feesAPR: 0,
+                  timestamp: 0,
+                  numCuratorVotes: collection.numCuratorVotes || 0,
+                  userAddress: '',
+                  userChainId: '' as ChainId
+                })
+              }}
+              isOpen={isStakeModalOpen}
+              onClose={() => setIsStakeModalOpen(false)}
+              onVote={async (votes) => {
+                // update local collection cache with latest amount of total votes
+                await mutateCollection(
+                  (data: Collection) =>
+                    ({
+                      ...collection,
+                      numCuratorVotes: (data.numCuratorVotes || 0) + votes
+                    } as Collection)
+                );
+
+                // reload user votes and estimates from API
+                await mutate(`${path}/curated/${chainId}:${user?.address}`);
+              }}
+            />
+          </section>
 
           <ToggleTab
             className="mt-12 font-heading pointer-events-auto"

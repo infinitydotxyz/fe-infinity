@@ -1,11 +1,19 @@
 import React, { useState } from 'react';
 import { Button, PageBox } from 'src/components/common';
-import { StakeTokensModal } from 'src/components/rewards/stake-tokens';
+import { StakeTokensModal } from 'src/components/rewards/stake-tokens-modal';
 import { UnstakeTokensModal } from 'src/components/rewards/unstake-tokens';
+import { UserProfileDto } from 'src/components/user/user-profile-dto';
+import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
+import { useFetch } from 'src/utils';
+import { useAppContext } from 'src/utils/context/AppContext';
+import { numberFormatter } from 'src/utils/number-formatter';
 
 const RewardsPage = () => {
+  const { user } = useAppContext();
   const [showStakeTokensModal, setShowStakeTokensModal] = useState(false);
   const [showUnstakeTokensModal, setShowUnstakeTokensModal] = useState(false);
+  const { result: quota, mutate: mutateQuota } = useUserCurationQuota();
+  const { result: profile } = useFetch<UserProfileDto>(user?.address ? `/user/${user.address}` : null);
 
   return (
     <PageBox title="Rewards" showTitle={false}>
@@ -23,11 +31,13 @@ const RewardsPage = () => {
             <div>NFT Tokens</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
-                <div className="text-2xl font-heading font-bold">5,000</div>
-                <div className="text-sm mt-1">Wallets</div>
+                <div className="text-2xl font-heading font-bold">
+                  {numberFormatter.format(quota?.tokenBalance || 0)}
+                </div>
+                <div className="text-sm mt-1">Wallet</div>
               </div>
               <div className="lg:w-1/4 sm:w-full">
-                <div className="text-2xl font-heading font-bold">1,000</div>
+                <div className="text-2xl font-heading font-bold">{numberFormatter.format(quota?.totalStaked || 0)}</div>
                 <div className="text-sm mt-1">Staked</div>
               </div>
             </div>
@@ -67,8 +77,8 @@ const RewardsPage = () => {
         <div className="w-1/2">
           <div className="text-4xl">Curation Rewards</div>
           <div className="w-1/2 mt-5 text-theme-gray-700">
-            Earn curation rewards for voting on collections with your veNFT tokens. You’ll the transaction fees for each
-            collection you curate.
+            Earn curation rewards for voting on collections with your veNFT tokens. You'll gain a portion of the
+            transaction fees for each collection you curate.
           </div>
         </div>
 
@@ -77,15 +87,15 @@ const RewardsPage = () => {
             <div>veNFT Tokens</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
-                <div className="text-2xl font-heading font-bold">1,000</div>
+                <div className="text-2xl font-heading font-bold">{quota?.availableVotes || 0}</div>
                 <div className="text-sm mt-1">Voting Power</div>
               </div>
               <div className="lg:w-1/4 sm:w-full">
-                <div className="text-2xl font-heading font-bold">4,000</div>
+                <div className="text-2xl font-heading font-bold">{profile?.totalCurated || 0}</div>
                 <div className="text-sm mt-1">Voted</div>
               </div>
               <div className="lg:w-1/4 sm:w-full">
-                <div className="text-2xl font-heading font-bold">1,000</div>
+                <div className="text-2xl font-heading font-bold">{quota?.availableVotes || 0}</div>
                 <div className="text-sm mt-1">Remaining Votes</div>
               </div>
             </div>
@@ -158,7 +168,14 @@ const RewardsPage = () => {
         </div>
       </div>
 
-      {showStakeTokensModal && <StakeTokensModal onClose={() => setShowStakeTokensModal(false)} />}
+      {showStakeTokensModal && (
+        <StakeTokensModal
+          onClose={() => {
+            setShowStakeTokensModal(false);
+            mutateQuota();
+          }}
+        />
+      )}
       {showUnstakeTokensModal && <UnstakeTokensModal onClose={() => setShowUnstakeTokensModal(false)} />}
     </PageBox>
   );
