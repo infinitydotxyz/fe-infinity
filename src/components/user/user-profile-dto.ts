@@ -11,4 +11,6 @@ export interface UserProfileDto {
   facebookUsername?: string;
   createdAt?: number;
   updatedAt?: number;
+  totalCurated?: number;
+  totalCuratedVotes?: number;
 }

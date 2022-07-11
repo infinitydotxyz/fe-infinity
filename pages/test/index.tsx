@@ -61,6 +61,22 @@ export const TestPage = () => {
             >
               Terms of Service
             </Button>
+
+            <Button
+              onClick={() => {
+                void router.push('/curation');
+              }}
+            >
+              Curation
+            </Button>
+
+            <Button
+              onClick={() => {
+                void router.push('/rewards');
+              }}
+            >
+              Rewards
+            </Button>
           </div>
 
           <div className=" flex-wrap w-3/5 flex gap-4 items-center mt-4">
