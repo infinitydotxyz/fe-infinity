@@ -22,7 +22,7 @@ import { VoteProgressBar } from 'src/components/curation/vote-progress-bar';
 import { CommunityFeed } from 'src/components/feed-list/community-feed';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
-import { ellipsisAddress, getChainScannerBase, nFormatter, PLACEHOLDER_IMAGE } from 'src/utils';
+import { ellipsisAddress, getChainScannerBase, isProd, nFormatter, PLACEHOLDER_IMAGE } from 'src/utils'; // todo: adi remove isProd once curation is ready
 import { useFetch } from 'src/utils/apiUtils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { useOrderContext } from 'src/utils/context/OrderContext';
@@ -260,48 +260,50 @@ const CollectionPage = () => {
             </tbody>
           </table>
 
-          <section className="mt-8 space-y-4 md:w-1/2">
-            <Heading as="h2" className="font-body text-4xl">
-              Curate collection
-            </Heading>
-            <FeesAprStats value={userCurated?.feesAPR || 0} className="mr-2" />
-            <FeesAccruedStats value={userCurated?.fees || 0} />
+          {!isProd() && (
+            <section className="mt-8 space-y-4 md:w-1/2">
+              <Heading as="h2" className="font-body text-4xl">
+                Curate collection
+              </Heading>
+              <FeesAprStats value={userCurated?.feesAPR || 0} className="mr-2" />
+              <FeesAccruedStats value={userCurated?.fees || 0} />
 
-            <div className="flex flex-row space-x-2 relative">
-              <VoteProgressBar votes={userCurated?.votes || 0} totalVotes={collection.numCuratorVotes || 0} />
-              <Button onClick={() => checkSignedIn() && setIsStakeModalOpen(true)}>Vote</Button>
-            </div>
-            <VoteModal
-              collection={{
-                ...collection,
-                ...collection.metadata,
-                ...(userCurated || {
-                  votes: 0,
-                  fees: 0,
-                  feesAPR: 0,
-                  timestamp: 0,
-                  numCuratorVotes: collection.numCuratorVotes || 0,
-                  userAddress: '',
-                  userChainId: '' as ChainId
-                })
-              }}
-              isOpen={isStakeModalOpen}
-              onClose={() => setIsStakeModalOpen(false)}
-              onVote={async (votes) => {
-                // update local collection cache with latest amount of total votes
-                await mutateCollection(
-                  (data: Collection) =>
-                    ({
-                      ...collection,
-                      numCuratorVotes: (data.numCuratorVotes || 0) + votes
-                    } as Collection)
-                );
+              <div className="flex flex-row space-x-2 relative">
+                <VoteProgressBar votes={userCurated?.votes || 0} totalVotes={collection.numCuratorVotes || 0} />
+                <Button onClick={() => checkSignedIn() && setIsStakeModalOpen(true)}>Vote</Button>
+              </div>
+              <VoteModal
+                collection={{
+                  ...collection,
+                  ...collection.metadata,
+                  ...(userCurated || {
+                    votes: 0,
+                    fees: 0,
+                    feesAPR: 0,
+                    timestamp: 0,
+                    numCuratorVotes: collection.numCuratorVotes || 0,
+                    userAddress: '',
+                    userChainId: '' as ChainId
+                  })
+                }}
+                isOpen={isStakeModalOpen}
+                onClose={() => setIsStakeModalOpen(false)}
+                onVote={async (votes) => {
+                  // update local collection cache with latest amount of total votes
+                  await mutateCollection(
+                    (data: Collection) =>
+                      ({
+                        ...collection,
+                        numCuratorVotes: (data.numCuratorVotes || 0) + votes
+                      } as Collection)
+                  );
 
-                // reload user votes and estimates from API
-                await mutate(`${path}/curated/${chainId}:${user?.address}`);
-              }}
-            />
-          </section>
+                  // reload user votes and estimates from API
+                  await mutate(`${path}/curated/${chainId}:${user?.address}`);
+                }}
+              />
+            </section>
+          )}
 
           <ToggleTab
             className="mt-12 font-heading pointer-events-auto"
