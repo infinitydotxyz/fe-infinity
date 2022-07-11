@@ -2,7 +2,7 @@ import React, { ReactNode, useState } from 'react';
 import { GoTriangleUp, GoTriangleDown } from 'react-icons/go';
 import { AiOutlineCaretUp, AiOutlineCaretDown } from 'react-icons/ai';
 
-interface Props {
+export interface FieldProps {
   type?: string;
   value?: string | number;
   label?: string | React.ReactNode;
@@ -10,9 +10,10 @@ interface Props {
   onSort?: ((direction: string) => void) | ((direction: string) => void) | null | undefined;
   onClick?: () => void;
   content?: ReactNode;
+  children?: React.ReactNode;
 }
 
-export const Field = ({ onSort, sortable = false, onClick, type, label, value, content }: Props) => {
+export const Field = ({ onSort, sortable = false, onClick, type, label, value, content, children }: FieldProps) => {
   const [sortOrder, setSortOrder] = useState('desc');
   const styles = {
     stat: {
@@ -132,6 +133,18 @@ export const Field = ({ onSort, sortable = false, onClick, type, label, value, c
         `
       }
     },
+    custom: {
+      container: {
+        className: `
+          w-full h-full overflow-hidden
+          grid justify-start items-center
+          cursor-pointer
+        `
+      },
+      element: {
+        className: ``
+      }
+    },
     number: {
       container: {
         className: `
@@ -243,6 +256,11 @@ export const Field = ({ onSort, sortable = false, onClick, type, label, value, c
           {type === 'string' && (
             <div {...styles?.string?.container} onClick={onClick}>
               <div {...styles?.string?.element}>{value}</div>
+            </div>
+          )}
+          {type === 'custom' && (
+            <div {...styles?.custom?.container} onClick={onClick}>
+              <div {...styles?.custom?.element}>{children}</div>
             </div>
           )}
           {type === 'index' && (

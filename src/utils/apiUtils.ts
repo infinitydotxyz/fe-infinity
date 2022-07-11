@@ -3,6 +3,7 @@ import useSWR, { SWRConfiguration } from 'swr';
 import { stringify } from 'query-string';
 import { API_BASE } from './constants';
 import { ProviderManager } from './providers/ProviderManager';
+import useSWRInfinite, { SWRInfiniteConfiguration, SWRInfiniteKeyLoader } from 'swr/infinite';
 
 const HTTP_UNAUTHORIZED = 401;
 const HTTP_TOO_MANY_REQUESTS = 429;
@@ -152,8 +153,8 @@ export const apiDelete = async (path: string, params?: ApiParams): Promise<ApiRe
 };
 
 // helper fn for 'useFetch'
-export const swrFetch = async (path: string) => {
-  const { result, error } = await apiGet(path);
+export const swrFetch = async (path: string, apiParams?: ApiParams) => {
+  const { result, error } = await apiGet(path, apiParams);
   if (error) {
     throw new Error('Error completing request');
   }
@@ -164,6 +165,7 @@ export const swrFetch = async (path: string) => {
 interface useFetchParams {
   query?: unknown;
   swrOptions?: SWRConfiguration<unknown> | undefined;
+  apiParams?: ApiParams;
   [key: string]: unknown;
 }
 export const useFetch = <T>(path: string | null, params: useFetchParams = {}) => {
@@ -173,11 +175,59 @@ export const useFetch = <T>(path: string | null, params: useFetchParams = {}) =>
     revalidateOnFocus: false,
     ...params?.swrOptions
   };
-  const { data, error } = useSWR(path ? `${path}${queryStr}` : null, swrFetch, options);
+  const { data, error, mutate } = useSWR(
+    path ? `${path}${queryStr}` : null,
+    (path) => swrFetch(path, params.apiParams),
+    options
+  );
   return {
     result: error ? null : (data as T),
     isLoading: !error && !data,
     isError: !!error,
+    mutate,
     error
+  };
+};
+
+interface UseFetchInfiniteParams {
+  query?: object;
+  swrOptions?: SWRInfiniteConfiguration;
+  apiParams?: ApiParams;
+  [key: string]: unknown;
+}
+
+export const useFetchInfinite = <T>(path: string | null, params: UseFetchInfiniteParams) => {
+  const getKey: SWRInfiniteKeyLoader = (pageIndex, previousPageData) => {
+    if (path === null) {
+      return null;
+    }
+
+    const queryStr = buildQueryString({ ...params?.query, cursor: previousPageData?.cursor });
+
+    // reached the end
+    if (previousPageData && !previousPageData.hasNextPage) {
+      return null;
+    }
+
+    return `${path}${queryStr}`;
+  };
+  const options: SWRInfiniteConfiguration = {
+    errorRetryCount: 0,
+    revalidateOnFocus: false,
+    revalidateFirstPage: false,
+    ...params?.swrOptions
+  };
+  const { data, error, ...props } = useSWRInfinite<T>(
+    getKey,
+    (path) => swrFetch(path as string, params.apiParams),
+    options
+  );
+  return {
+    result: error ? null : (data as T[]),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    isLoading: (!error && !data) || (data?.[data.length - 1] as any)?.hasNextPage,
+    isError: !!error,
+    error,
+    ...props
   };
 };
