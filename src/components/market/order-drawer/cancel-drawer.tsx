@@ -1,5 +1,7 @@
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { Button, SVG, Spacer } from 'src/components/common';
+import { useAppContext } from 'src/utils/context/AppContext';
+import { cancelMultipleOrders } from 'src/utils/exchange/orders';
 import { iconButtonStyle } from 'src/utils/ui-constants';
 // import { format } from 'timeago.js';
 import { Drawer } from '../../common/drawer';
@@ -13,19 +15,21 @@ interface Props {
 }
 
 export const CancelDrawer = ({ open, onClose, orders, onClickRemove }: Props) => {
+  const { providerManager, chainId } = useAppContext();
+
   return (
     <>
       <Drawer
         open={open}
         onClose={onClose}
-        subtitle={'Selected listings:'}
-        title={<div className="flex items-center">Cancel Listings</div>}
+        subtitle={'Cancel these orders in one transaction :)'}
+        title={<div className="flex items-center">Cancel Orders</div>}
       >
         <div className="flex flex-col h-full">
           <ul className="overflow-y-auto content-between px-12">
-            {orders.map((order: SignedOBOrder) => {
+            {orders.map((order: SignedOBOrder, idx) => {
               return (
-                <li key={order.id} className="py-3 flex">
+                <li key={order.id + '_' + idx} className="py-3 flex">
                   {/* <div>
                     <NftImage
                       className="w-20 h-20 rounded-3xl"
@@ -53,7 +57,18 @@ export const CancelDrawer = ({ open, onClose, orders, onClickRemove }: Props) =>
           <Spacer />
 
           <footer className="w-full text-center py-4">
-            <Button size="large" onClick={() => ''}>
+            <Button
+              size="large"
+              onClick={async () => {
+                const signer = providerManager?.getEthersProvider().getSigner();
+                if (signer) {
+                  const nonces = orders.map((order) => order.nonce);
+                  await cancelMultipleOrders(signer, chainId, nonces);
+                } else {
+                  throw 'Signer is null';
+                }
+              }}
+            >
               Cancel Listings
             </Button>
           </footer>

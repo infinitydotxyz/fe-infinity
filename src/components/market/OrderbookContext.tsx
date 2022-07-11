@@ -4,15 +4,14 @@ import { useRouter } from 'next/router';
 import React, { ReactNode, useEffect, useState } from 'react';
 import { ParsedUrlQuery } from 'querystring';
 import { apiGet, ITEMS_PER_PAGE } from 'src/utils';
-import { debounce } from 'lodash';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 
 export type OBFilters = {
   sort?: string;
   orderTypes?: string[];
   collections?: string[];
-  minPrice?: number;
-  maxPrice?: number;
+  minPrice?: string;
+  maxPrice?: string;
   numberOfNfts?: number;
 };
 
@@ -69,12 +68,12 @@ const parseFiltersToApiQueryParams = (filters: OBFilters): GetOrderItemsQuery =>
         break;
       case 'minPrice':
         if (filters?.minPrice) {
-          parsedFilters.minPrice = filters?.minPrice;
+          parsedFilters.minPrice = parseFloat(filters?.minPrice);
         }
         break;
       case 'maxPrice':
         if (filters?.maxPrice) {
-          parsedFilters.maxPrice = filters?.maxPrice;
+          parsedFilters.maxPrice = parseFloat(filters?.maxPrice);
         }
         break;
       case 'numberOfNfts':
@@ -118,10 +117,10 @@ const parseRouterQueryParamsToFilters = (query: ParsedUrlQuery): OBFilters => {
   }
 
   if (minPrice) {
-    newFilters.minPrice = parseInt(minPrice as string);
+    newFilters.minPrice = minPrice as string;
   }
   if (maxPrice) {
-    newFilters.maxPrice = parseInt(maxPrice as string);
+    newFilters.maxPrice = maxPrice as string;
   }
 
   if (numberOfNfts) {
@@ -146,6 +145,7 @@ type OBContextType = {
   updateFilter: (name: string, value: string) => void;
   collectionId: string | undefined;
   hasMoreOrders: boolean;
+  hasNoData: boolean;
 };
 
 const OrderbookContext = React.createContext<OBContextType | null>(null);
@@ -156,22 +156,21 @@ type OBProvider = {
   tokenId?: string;
 };
 
-const AMOUNT_OF_ORDERS = 10;
-
 export const OrderbookProvider = ({ children, collectionId, tokenId }: OBProvider) => {
   const router = useRouter();
   const defaultFilters = parseRouterQueryParamsToFilters(router.query);
   const [orders, setOrders] = useState<SignedOBOrder[]>([]);
   const [filters, setFilters] = useState<OBFilters>(defaultFilters);
   const [isLoading, setIsLoading] = useState(false);
-  const [limit, setLimit] = useState(AMOUNT_OF_ORDERS);
-  const [hasMoreOrders, setHasMoreOrders] = useState<boolean>(true);
+  const [hasMoreOrders, setHasMoreOrders] = useState<boolean>(false);
+  const [hasNoData, setHasNoData] = useState<boolean>(false);
   const [cursor, setCursor] = useState<string>('');
   const isMounted = useIsMounted();
 
   useEffect(() => {
-    fetchOrders();
-  }, [collectionId]);
+    setIsLoading(true);
+    fetchOrders(true);
+  }, [collectionId, filters]);
 
   useEffect(() => {
     const newFilters = parseRouterQueryParamsToFilters(router.query);
@@ -181,16 +180,8 @@ export const OrderbookProvider = ({ children, collectionId, tokenId }: OBProvide
     }
   }, [router.query]);
 
-  useEffect(() => {
-    fetchOrders();
-  }, [limit]);
-
-  useEffect(() => {
-    fetchOrders(true);
-  }, [filters]);
-
   const fetchMore = async () => {
-    setLimit(limit + AMOUNT_OF_ORDERS);
+    fetchOrders();
   };
 
   // filters helper functions
@@ -224,52 +215,51 @@ export const OrderbookProvider = ({ children, collectionId, tokenId }: OBProvide
   };
 
   // todo: make this prod ready
-  const fetchOrders = debounce(async (refreshData = false) => {
-    if (isMounted()) {
-      try {
-        setIsLoading(true);
-        const parsedFilters = parseFiltersToApiQueryParams(filters);
-        // console.log('fetchOrders - parsedFilters', parsedFilters);
-        // const orders = await getOrders(
-        //   { ...parsedFilters, collections: collectionId ? [collectionId] : parsedFilters.collections },
-        //   limit
-        // );
-        // eslint-disable-next-line
-        const query: any = {
-          limit: ITEMS_PER_PAGE,
-          cursor: refreshData ? '' : cursor,
-          ...parsedFilters,
-          collections: collectionId ? [collectionId] : parsedFilters.collections
-        };
-        if (tokenId) {
-          query.tokenId = tokenId;
-        }
-        const { result } = await apiGet('/orders', {
-          query
-        });
+  const fetchOrders = async (refreshData = false) => {
+    try {
+      const parsedFilters = parseFiltersToApiQueryParams(filters);
 
-        if (isMounted()) {
-          if (result?.data) {
-            if (refreshData) {
-              setOrders([...result.data]);
-            } else {
-              setOrders([...orders, ...result.data]);
-            }
+      // eslint-disable-next-line
+      const query: any = {
+        limit: ITEMS_PER_PAGE,
+        cursor: refreshData ? '' : cursor,
+        ...parsedFilters,
+        collections: collectionId ? [collectionId] : parsedFilters.collections
+      };
 
-            // setHasMoreOrders(orders.length === limit);
-            setHasMoreOrders(result?.hasNextPage);
-            setCursor(result?.cursor);
+      if (tokenId) {
+        query.tokenId = tokenId;
+      }
+
+      const { result } = await apiGet('/orders', {
+        query
+      });
+
+      if (isMounted()) {
+        if (result?.data) {
+          let newData;
+
+          if (refreshData) {
+            newData = [...result.data];
+          } else {
+            newData = [...orders, ...result.data];
           }
-        }
-      } catch (err) {
-        console.error(err);
-      } finally {
-        if (isMounted()) {
-          setIsLoading(false);
+
+          setOrders(newData);
+          setHasNoData(newData.length === 0);
+
+          setHasMoreOrders(result?.hasNextPage);
+          setCursor(result?.cursor);
         }
       }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      if (isMounted()) {
+        setIsLoading(false);
+      }
     }
-  }, 500);
+  };
 
   const value: OBContextType = {
     orders,
@@ -281,7 +271,8 @@ export const OrderbookProvider = ({ children, collectionId, tokenId }: OBProvide
     updateFilterArray,
     updateFilter,
     collectionId,
-    hasMoreOrders
+    hasMoreOrders,
+    hasNoData
   };
 
   return <OrderbookContext.Provider value={value}>{children}</OrderbookContext.Provider>;

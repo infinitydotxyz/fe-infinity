@@ -4,9 +4,6 @@ import { Filter } from 'src/utils/context/FilterContext';
 import { ApiResponse, apiGet } from 'src/utils/apiUtils';
 
 type ApiNftData = Erc721Token & {
-  collectionAddress?: string;
-  collectionName?: string;
-  collectionSlug?: string;
   orderSnippet?: OrdersSnippet;
 };
 
@@ -92,7 +89,7 @@ export class TokenFetcher {
 
   doFetch = async (): Promise<ApiResponse> => {
     if (this.pageId === 'COLLECTION' && !this.filter.orderBy) {
-      this.filter.orderBy = 'rarityRank'; // set defaults
+      this.filter.orderBy = 'tokenIdNumeric'; // set defaults
       this.filter.orderDirection = 'asc';
     }
     if (this.pageId === 'PROFILE') {
@@ -184,10 +181,10 @@ export const nftsToCardData = (
   collectionAddress: string,
   collectionName: string
 ): ERC721CardData[] => {
-  const result: ERC721CardData[] = (tokens || []).map((item: ApiNftData) => {
+  let result: ERC721CardData[] = (tokens || []).map((item: ApiNftData) => {
     return {
       id: collectionAddress + '_' + item.tokenId,
-      name: item.metadata?.name,
+      name: item.metadata?.name ?? item.metadata?.title,
       title: item.collectionName ?? collectionName,
       collectionName: item.collectionName ?? collectionName,
       collectionSlug: item.collectionSlug ?? '',
@@ -203,6 +200,11 @@ export const nftsToCardData = (
       hasBlueCheck: item.hasBlueCheck ?? false,
       attributes: item.metadata?.attributes ?? []
     } as ERC721CardData;
+  });
+
+  // remove any with blank images
+  result = result.filter((x) => {
+    return x.image && x.image.length > 0;
   });
 
   return result;

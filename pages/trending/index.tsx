@@ -1,22 +1,22 @@
-import React, { useEffect, useState, Fragment } from 'react';
+import { ChainId, Collection, CollectionPeriodStatsContent } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import { parse } from 'query-string';
+import { Fragment, useEffect, useState } from 'react';
 import {
   BGImage,
   Button,
+  Dropdown,
   EthPrice,
   NextLink,
   PageBox,
-  ToggleTab,
-  useToggleTab,
   SVG,
-  Dropdown
+  ToggleTab,
+  useToggleTab
 } from 'src/components/common';
-import { apiGet, BLANK_IMG, formatNumber, ITEMS_PER_PAGE } from 'src/utils';
-import { ChainId, Collection, CollectionPeriodStatsContent } from '@infinityxyz/lib-frontend/types/core';
-import { useOrderContext } from 'src/utils/context/OrderContext';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import useScreenSize from 'src/hooks/useScreenSize';
+import { apiGet, formatNumber, ITEMS_PER_PAGE, nFormatter, PLACEHOLDER_IMAGE } from 'src/utils';
+import { useOrderContext } from 'src/utils/context/OrderContext';
 
 // - cache stats 5mins
 
@@ -158,7 +158,7 @@ const TrendingPage = () => {
                 {coll?.metadata?.profileImage ? (
                   <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={coll?.metadata?.profileImage} />
                 ) : (
-                  <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={BLANK_IMG} />
+                  <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={PLACEHOLDER_IMAGE} />
                 )}
               </NextLink>
 
@@ -173,32 +173,32 @@ const TrendingPage = () => {
 
                 {isDesktop ? (
                   <>
-                    <div className="w-1/9">
+                    <div className="w-1/9 max-w-[80px] min-w-[80px]">
                       <div className="text-black font-bold font-body flex items-center">Sales</div>
                       <div>{formatNumber(periodStat?.numSales)}</div>
                     </div>
                   </>
                 ) : null}
 
-                <div className="w-1/9">
+                <div className="w-1/9 max-w-[80px] min-w-[80px]">
                   <div className="text-black font-bold font-body flex items-center">Volume</div>
                   <div>
-                    <EthPrice label={periodStat?.salesVolume ? formatNumber(periodStat?.salesVolume) : '-'} />
+                    <EthPrice label={`${periodStat?.salesVolume ? nFormatter(periodStat?.salesVolume) : '-'}`} />
                   </div>
                 </div>
 
-                {isMobile ? null : (
+                {/* {isMobile ? null : (
                   <>
-                    <div className="w-1/9">
+                    <div className="w-1/9 max-w-[80px] min-w-[80px]">
                       <div className="text-black font-bold font-body flex items-center">Min Price</div>
                       <div>
                         <EthPrice label={periodStat?.minPrice ? formatNumber(periodStat?.minPrice, 2) : '-'} />
                       </div>
                     </div>
                   </>
-                )}
+                )} */}
 
-                <div className="w-1/9">
+                <div className="w-1/9 max-w-[80px] min-w-[80px]">
                   <div className="text-black font-bold font-body flex items-center">Avg Price</div>
                   <div>
                     <EthPrice label={periodStat?.avgPrice ? formatNumber(periodStat?.avgPrice, 2) : '-'} />
@@ -207,7 +207,7 @@ const TrendingPage = () => {
 
                 {isMobile ? null : (
                   <>
-                    <div className="w-1/9">
+                    <div className="w-1/9 max-w-[80px] min-w-[80px]">
                       <div className="text-black font-bold font-body flex items-center">Max Price</div>
                       <div>
                         <EthPrice label={periodStat?.maxPrice ? formatNumber(periodStat?.maxPrice, 2) : '-'} />
@@ -218,14 +218,14 @@ const TrendingPage = () => {
 
                 {isDesktop ? (
                   <>
-                    <div className="w-1/9">
+                    <div className="w-1/9 max-w-[80px] min-w-[80px]">
                       <div className="text-black font-bold font-body">Owners</div>
-                      <div>{formatNumber(periodStat?.ownerCount)}</div>
+                      <div>{nFormatter(periodStat?.ownerCount ?? 0)}</div>
                     </div>
 
-                    <div className="w-1/9">
+                    <div className="w-1/9 max-w-[80px] min-w-[80px]">
                       <div className="text-black font-bold font-body">Tokens</div>
-                      <div>{formatNumber(periodStat?.tokenCount)}</div>
+                      <div>{nFormatter(periodStat?.tokenCount ?? 0)}</div>
                     </div>
                   </>
                 ) : null}

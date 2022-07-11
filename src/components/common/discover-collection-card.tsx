@@ -1,4 +1,4 @@
-import { formatNumber } from 'src/utils';
+import { formatNumber, getOptimizedCloudImage } from 'src/utils';
 import { NextLink } from './next-link';
 import { SVG } from './svg';
 import { EthPrice } from './eth-price';
@@ -26,13 +26,13 @@ export const DiscoverCollectionCard = ({ orderBy, collection, routerQuery }: Pro
         className="text-theme-light-800 font-heading tracking-tight mr-2"
       >
         <div style={{ height: '300px' }}>
-          <ImageOrMissing src={collection?.collectionData?.metadata?.profileImage} />
+          <ImageOrMissing
+            src={getOptimizedCloudImage(
+              collection?.collectionData?.metadata?.bannerImage || collection?.collectionData?.metadata?.profileImage
+            )}
+          />
         </div>
         <div className="pt-4 flex items-start">
-          {/* <div className="flex flex-1 items-start font-body text-base font-medium px-5 text-black whitespace-normal">
-            {collection.name}
-            {collection.hasBlueCheck ? <SVG.blueCheck className="w-4 h-4 ml-1 mt-1" /> : null}
-          </div> */}
           <span className="flex flex-1 items-start font-body text-base font-medium pl-2 text-black whitespace-pre-wrap">
             <span className="inline-block">{collection.name}</span>
             {collection.hasBlueCheck ? <SVG.blueCheck className="w-4 h-4 mt-1" style={{ width: 24 }} /> : null}
@@ -66,7 +66,7 @@ export const DiscoverCollectionCard = ({ orderBy, collection, routerQuery }: Pro
                 </div>
               ) : null}
 
-              {orderBy === 'avgPricePercentChange' && collection.avgPrice > 0.01 ? (
+              {orderBy === 'avgPricePercentChange' && collection.avgPrice > 0.00001 ? (
                 <div className="flex">
                   <span className="ml-1 ">Avg Price</span>
                   <EthPrice label={formatNumber(collection.avgPrice, 2)} className="ml-2" />

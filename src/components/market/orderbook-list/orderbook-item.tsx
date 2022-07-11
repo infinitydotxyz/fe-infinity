@@ -1,10 +1,10 @@
 import { OBOrder, OBOrderItem } from '@infinityxyz/lib-frontend/types/core';
 import { OBTokenInfoDto } from '@infinityxyz/lib-frontend/types/dto/orders';
 
+import { useRouter } from 'next/router';
 import { ReactNode } from 'react';
 import { NextLink, SVG } from 'src/components/common';
-import { useRouter } from 'next/router';
-import { BLANK_IMG } from 'src/utils';
+import { PLACEHOLDER_IMAGE } from 'src/utils';
 // import ReactTooltip from 'react-tooltip';
 
 type Props4 = {
@@ -129,7 +129,7 @@ const SingleCollectionCell = ({
           {image ? (
             <img className="h-14 w-14 rounded-full" src={image} alt="" />
           ) : (
-            <img className="h-14 w-14 rounded-full" src={BLANK_IMG} alt="" />
+            <img className="h-14 w-14 rounded-full" src={PLACEHOLDER_IMAGE} alt="" />
           )}
 
           {count > 1 && (
@@ -151,7 +151,8 @@ const SingleCollectionCell = ({
             className="font-bold whitespace-pre-wrap flex items-center"
             title={title}
           >
-            {title} {orderNft?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1" /> : null}
+            {title}
+            {orderNft?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1" style={{ width: 24 }} /> : null}
           </NextLink>
         ) : (
           <NextLink
@@ -159,7 +160,8 @@ const SingleCollectionCell = ({
             className="font-bold whitespace-pre-wrap flex items-center"
             title={title}
           >
-            {title} {orderNft?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1" /> : null}
+            {title}
+            {orderNft?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1" style={{ width: 24 }} /> : null}
           </NextLink>
         )}
 
@@ -181,10 +183,10 @@ const SingleCollectionCell = ({
             {token && (
               <NextLink
                 href={`/asset/1/${orderNft?.collectionAddress}/${token.tokenId}`}
-                className="whitespace-pre-wrap"
-                title={token?.tokenName}
+                className="whitespace-pre-wrap text-gray-400"
+                title={token?.tokenId}
               >
-                {token?.tokenName}
+                {token?.tokenId}
               </NextLink>
             )}
           </>

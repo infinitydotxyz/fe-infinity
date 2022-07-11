@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { FaCaretDown, FaCaretUp, FaDiscord, FaInstagram, FaTwitter } from 'react-icons/fa';
 import { HiOutlineExternalLink } from 'react-icons/hi';
-import { apiDelete, apiGet, apiPost } from 'src/utils';
-import { Chip, Toaster, Spinner, toastError } from 'src/components/common';
+import { apiDelete, apiGet, apiPost, nFormatter } from 'src/utils';
+import { Chip, Spinner, toastError } from 'src/components/common';
 import { VerificationModal } from './verification_modal';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { useAppContext } from 'src/utils/context/AppContext';
@@ -86,8 +86,8 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
     }
   };
 
-  const twitterChangePct = `${Math.abs(currentStatsData?.twitterFollowersPercentChange ?? 0)}`.slice(0, 4);
-  const discordChangePct = `${Math.abs(currentStatsData?.discordFollowersPercentChange ?? 0)}`.slice(0, 4);
+  const twitterChangePct = `${Math.abs(currentStatsData?.twitterFollowersPercentChange ?? 0)}`.slice(0, 5);
+  const discordChangePct = `${Math.abs(currentStatsData?.discordFollowersPercentChange ?? 0)}`.slice(0, 5);
 
   return (
     <div className="flex flex-row space-x-2 items-center">
@@ -125,8 +125,8 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
           onClick={() => window.open(collection?.metadata?.links?.twitter)}
           content={
             <span className="flex items-center">
-              {currentStatsData?.twitterFollowers?.toLocaleString() ?? '—'}
-              {currentStatsData?.twitterFollowersPercentChange && twitterChangePct !== '0.00' ? (
+              {nFormatter(currentStatsData?.twitterFollowers) ?? ''}
+              {currentStatsData?.twitterFollowersPercentChange && parseFloat(twitterChangePct) ? (
                 <>
                   {(currentStatsData?.twitterFollowersPercentChange ?? 0) < 0 ? (
                     <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
@@ -152,8 +152,8 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
           onClick={() => window.open(collection?.metadata?.links?.discord)}
           content={
             <span className="flex items-center">
-              {currentStatsData?.discordFollowers?.toLocaleString() ?? '—'}
-              {currentStatsData?.discordFollowersPercentChange && discordChangePct !== '0.00' ? (
+              {nFormatter(currentStatsData?.discordFollowers) ?? ''}
+              {currentStatsData?.discordFollowersPercentChange && parseFloat(discordChangePct) ? (
                 <>
                   {(currentStatsData?.discordFollowersPercentChange ?? 0) < 0 ? (
                     <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
@@ -205,8 +205,6 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
           setOrderDrawerOpen(true);
         }}
       />
-
-      <Toaster />
     </div>
   );
 };

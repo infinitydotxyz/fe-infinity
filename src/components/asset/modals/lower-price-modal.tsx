@@ -1,9 +1,18 @@
-import { SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
-import React, { useEffect, useState } from 'react';
-import { TextInputBox, Modal, SimpleTable, SimpleTableItem, EthPrice, toastError } from 'src/components/common';
-import { apiGet, BLANK_IMAGE_URL, INFINITY_FEE_PCT, INFINITY_ROYALTY_PCT } from 'src/utils';
+import { OBOrder, SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
+import { useEffect, useState } from 'react';
+import {
+  EthPrice,
+  Modal,
+  SimpleTable,
+  SimpleTableItem,
+  TextInputBox,
+  toastError,
+  toastSuccess
+} from 'src/components/common';
+import { DEFAULT_MAX_GAS_PRICE_WEI, INFINITY_FEE_PCT, INFINITY_ROYALTY_PCT, MISSING_IMAGE_URL } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { postOrders } from 'src/utils/marketUtils';
+import { getSignedOBOrder } from 'src/utils/exchange/orders';
+import { fetchUserSignedOBOrder, postOrders } from 'src/utils/marketUtils';
 
 interface Props {
   isOpen: boolean;
@@ -13,27 +22,20 @@ interface Props {
 }
 
 export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) => {
-  const { user } = useAppContext();
+  const { user, chainId, providerManager } = useAppContext();
   const [orderDetails, setOrderDetails] = useState<SignedOBOrder | null>(null);
-  const [price, setPrice] = useState(0);
+  const [price, setPrice] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   // const [lastPrice, setLastPrice] = useState(0);
   // TODO: do something with this ending price?
 
   const orderItem = token.ordersSnippet?.listing?.orderItem;
   const fetchSignedOBOrder = async () => {
-    const { result, error } = await apiGet(`/orders/${user?.address}`, {
-      requiresAuth: true,
-      query: {
-        id: orderItem?.id,
-        limit: 1
-      }
-    });
-    if (!error && result?.data && result?.data[0]) {
-      const order = result?.data[0] as SignedOBOrder;
+    try {
+      const order = await fetchUserSignedOBOrder(orderItem?.id);
       setOrderDetails(order);
-      // const lastPrice = await getCurrentChainOBOrderPrice(signedOrder);
-      // console.log('signedOrder', signedOrder);
+    } catch (err) {
+      toastError(`Failed to fetch order`);
     }
   };
 
@@ -60,12 +62,13 @@ export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) 
       okButton="Lower Price"
       title="Lower Price"
       onOKButton={async () => {
-        if (!orderDetails || !user) {
+        const priceVal = parseFloat(price);
+        if (!orderDetails || !user || priceVal <= 0) {
           return;
         }
         const buyPriceEthVal = parseFloat(buyPriceEth ?? '0');
-        if (price >= buyPriceEthVal) {
-          setErrorMsg('The new price must be lower than the current price.');
+        if (priceVal >= buyPriceEthVal) {
+          setErrorMsg('New price must be lower than the current price');
           return;
         } else {
           setErrorMsg('');
@@ -74,51 +77,58 @@ export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) 
         // todo: remove this once BE fix validation of tokens' images (not needed):
         for (const nft of orderDetails.nfts) {
           for (const token of nft.tokens) {
-            token.tokenImage = token.tokenImage || BLANK_IMAGE_URL;
+            token.tokenImage = token.tokenImage || MISSING_IMAGE_URL;
           }
         }
 
         const signedOrders: SignedOBOrder[] = [];
-        // keep the last Order & set the New Price:
-        const order: SignedOBOrder = {
-          id: '',
-          chainId: orderDetails.chainId,
-          isSellOrder: orderDetails.isSellOrder,
-          makerAddress: orderDetails.makerAddress,
-          numItems: orderDetails.numItems,
-          startTimeMs: orderDetails.startTimeMs,
-          endTimeMs: orderDetails.endTimeMs,
-          startPriceEth: price, // set the New Price.
-          endPriceEth: price, // set the New Price.
-          nfts: orderDetails.nfts,
-          makerUsername: orderDetails.makerUsername,
-          nonce: orderDetails.nonce,
-          execParams: orderDetails.execParams,
-          extraParams: orderDetails.extraParams,
-          signedOrder: orderDetails.signedOrder,
-          maxGasPriceWei: orderDetails.maxGasPriceWei
-        };
-        signedOrders.push(order);
-        try {
-          await postOrders(user.address, signedOrders);
-        } catch (ex) {
-          toastError(`${ex}`);
-          return false;
+        const signer = providerManager?.getEthersProvider().getSigner();
+        if (signer) {
+          // keep the last Order & set the New Price:
+          const order: OBOrder = {
+            id: '',
+            chainId,
+            isSellOrder: orderDetails.isSellOrder,
+            makerAddress: orderDetails.makerAddress,
+            makerUsername: orderDetails.makerUsername,
+            numItems: orderDetails.numItems,
+            startTimeMs: orderDetails.startTimeMs,
+            endTimeMs: orderDetails.endTimeMs,
+            startPriceEth: priceVal, // set the New Price.
+            endPriceEth: priceVal, // set the New Price.
+            nfts: orderDetails.nfts,
+            nonce: orderDetails.nonce,
+            execParams: orderDetails.execParams,
+            extraParams: orderDetails.extraParams,
+            maxGasPriceWei: DEFAULT_MAX_GAS_PRICE_WEI
+          };
+
+          const signedOrder = await getSignedOBOrder(user, chainId, signer, order);
+          if (signedOrder) {
+            signedOrders.push(signedOrder);
+            try {
+              await postOrders(user.address, signedOrders);
+              toastSuccess('Lowered price successfully');
+            } catch (ex) {
+              toastError(`${ex}`);
+              return false;
+            }
+          }
         }
         onClose();
       }}
     >
       <SimpleTable className="my-3" items={tableItems} />
-      <p className="mb-4">New Price</p>
+
       <TextInputBox
         autoFocus={true}
         addEthSymbol={true}
         type="number"
-        value={price.toString()}
-        label="Price"
+        value={price}
+        label="New Price"
         placeholder=""
         onChange={(value) => {
-          setPrice(Number(value));
+          setPrice(value);
         }}
       />
       <div className="text-red-700 mt-4">{errorMsg}</div>

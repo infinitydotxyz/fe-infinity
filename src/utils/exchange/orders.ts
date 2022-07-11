@@ -1,10 +1,11 @@
 import { defaultAbiCoder } from '@ethersproject/abi';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
-import { BytesLike, splitSignature } from '@ethersproject/bytes';
+import { splitSignature } from '@ethersproject/bytes';
 import { MaxUint256 } from '@ethersproject/constants';
 import { Contract } from '@ethersproject/contracts';
 import { JsonRpcSigner } from '@ethersproject/providers';
 import { parseEther } from '@ethersproject/units';
+import { ERC20ABI, ERC721ABI, InfinityExchangeABI } from '@infinityxyz/lib-frontend/abi';
 import {
   ChainNFTs,
   ChainOBOrder,
@@ -18,14 +19,12 @@ import {
   getExchangeAddress,
   getOBComplicationAddress,
   getTxnCurrencyAddress,
-  jsonString,
   nowSeconds,
   NULL_ADDRESS,
   trimLowerCase
 } from '@infinityxyz/lib-frontend/utils';
-import { InfinityExchangeABI, ERC20ABI, ERC721ABI } from '@infinityxyz/lib-frontend/abi';
+import { DEFAULT_MAX_GAS_PRICE_WEI } from '../constants';
 import { User } from '../context/AppContext';
-import { keccak256, solidityKeccak256 } from 'ethers/lib/utils';
 
 export async function getSignedOBOrder(
   user: User,
@@ -38,7 +37,7 @@ export async function getSignedOBOrder(
   const infinityExchange = new Contract(infinityExchangeAddress, InfinityExchangeABI, signer);
   const signedOrder = await prepareOBOrder(user, chainId, signer, order, infinityExchange);
   if (!signedOrder) {
-    const msg = 'signOBSpecOrder: failed to sign order';
+    const msg = 'Failed to sign order';
     console.error(msg);
     throw msg;
   }
@@ -66,17 +65,7 @@ export async function prepareOBOrder(
   }
 
   // sign order
-  const chainOBOrder = await signOBOrder(chainId, infinityExchange.address, order, signer);
-
-  console.log('Verifying signature');
-  // todo: adi remove this
-  const isSigValid = await infinityExchange.verifyOrderSig(chainOBOrder);
-  if (!isSigValid) {
-    console.error('Signature is invalid');
-    return undefined;
-  } else {
-    console.log('Signature is valid');
-  }
+  const chainOBOrder = await signOBOrder(chainId, order, signer);
   return chainOBOrder;
 }
 
@@ -160,6 +149,32 @@ export async function approveERC20(
   }
 }
 
+export async function approveERC721ForChainNFTs(
+  user: string,
+  items: ChainNFTs[],
+  signer: JsonRpcSigner,
+  exchange: string
+) {
+  try {
+    console.log('Granting ERC721 approval');
+    for (const item of items) {
+      const collection = item.collection;
+      const contract = new Contract(collection, ERC721ABI, signer);
+      const isApprovedForAll = await contract.isApprovedForAll(user, exchange);
+      if (!isApprovedForAll) {
+        const result = await contract.setApprovalForAll(exchange, true);
+        return result;
+      } else {
+        console.log('Already approved for all');
+      }
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (e: any) {
+    console.error('failed granting erc721 approvals');
+    throw new Error(e);
+  }
+}
+
 export async function approveERC721(user: string, items: OBOrderItem[], signer: JsonRpcSigner, exchange: string) {
   try {
     console.log('Granting ERC721 approval');
@@ -211,15 +226,14 @@ export async function checkERC721Ownership(user: User, contract: Contract, token
 
 export async function signOBOrder(
   chainId: BigNumberish,
-  contractAddress: string,
   order: OBOrder,
   signer: JsonRpcSigner
 ): Promise<ChainOBOrder | undefined> {
   const domain = {
-    name: 'InfinityExchange',
+    name: 'InfinityComplication',
     version: '1',
     chainId: chainId,
-    verifyingContract: contractAddress
+    verifyingContract: order.execParams.complicationAddress || getOBComplicationAddress(chainId.toString())
   };
 
   const types = {
@@ -247,7 +261,8 @@ export async function signOBOrder(
     parseEther(String(order.endPriceEth)),
     Math.floor(order.startTimeMs / 1000),
     Math.floor(order.endTimeMs / 1000),
-    order.nonce
+    order.nonce,
+    DEFAULT_MAX_GAS_PRICE_WEI
   ];
 
   const nfts = [];
@@ -368,7 +383,6 @@ export async function signChainOBOrder(
   try {
     const sig = await signer._signTypedData(domain, types, orderToSign);
     const splitSig = splitSignature(sig ?? '');
-
     const encodedSig = defaultAbiCoder.encode(['bytes32', 'bytes32', 'uint8'], [splitSig.r, splitSig.s, splitSig.v]);
     return encodedSig;
   } catch (e) {
@@ -377,65 +391,70 @@ export async function signChainOBOrder(
   return '';
 }
 
-export async function takeOrder(signer: JsonRpcSigner, chainId: string, makerOrder: ChainOBOrder) {
-  const user = await signer.getAddress();
-  const exchangeAddress = getExchangeAddress(chainId);
-  const infinityExchange = new Contract(exchangeAddress, InfinityExchangeABI, signer);
-
-  const takerOrderSide = !makerOrder.isSellOrder;
-  const constraints = makerOrder.constraints;
-  const nfts = makerOrder.nfts;
-  const execParams = makerOrder.execParams;
-  const extraParams = makerOrder.extraParams;
-  const salePrice = getCurrentChainOBOrderPrice(makerOrder);
-
-  const takerOrder: ChainOBOrder = {
-    isSellOrder: takerOrderSide,
-    signer: user,
-    extraParams,
-    nfts,
-    constraints,
-    execParams,
-    sig: makerOrder.sig
+export async function sendSingleNft(
+  signer: JsonRpcSigner,
+  chainId: string,
+  collectionAddress: string,
+  tokenId: string,
+  toAddress: string
+) {
+  const erc721 = new Contract(collectionAddress, ERC721ABI, signer);
+  // perform send
+  const from = await signer.getAddress();
+  const transferResult = await erc721['safeTransferFrom(address,address,uint256)'](from, toAddress, tokenId);
+  console.log('transferResult', transferResult);
+  return {
+    hash: transferResult?.hash ?? ''
   };
-
-  // perform exchange
-  const options = {
-    value: salePrice,
-    gasLimit: BigNumber.from(200000)
-  };
-
-  // Error: invalid value for array (argument="value", value={"isSellOrder":true,"signer":"0x24c24F9DDCe175039136bae9B3943b5B051A1514",
-  // "extraParams":"0x0000000000000000000000000000000000000000000000000000000000000000","nfts":[{"collection":"0x142c5b3a5689ba0871903c53dacf235a28cb21f0",
-  // "tokens":[{"tokenId":"529","numTokens":1},{"numTokens":1,"tokenId":"530"},{"numTokens":1,"tokenId":"531"}]}],"constraints":
-  // [3,{"hex":"0x470de4df820000","type":"BigNumber"},{"type":"BigNumber","hex":"0x470de4df820000"},1656452854,1657057654,"279","100000000000000000"],
-  // "execParams":["0x6deb5e1a056975e0f2024f3d89b6d2465bde22af","0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6"],
-  // "sig":"0xe40fefdd61f36b731379f0f83916c91e4f1ff315b925edf27aab4eb605d502106b4d41b6759e97d01576271e05c7800a4a0b2444085c0d73aab
-  // 35eb23f8c7f24000000000000000000000000000000000000000000000000000000000000001c"}, code=INVALID_ARGUMENT, version=contracts/5.6.2)
-
-  // TODO(Adi): crashed here, market page click sell
-  const gasEstimate = await infinityExchange.estimateGas.takeOrders([makerOrder], [takerOrder], options);
-  options.gasLimit = gasEstimate;
-  console.log('gasEstimate', gasEstimate.toString());
-  console.log(jsonString(makerOrder));
-  console.log(jsonString(takerOrder));
-  const canTake = await canTakeOrders(infinityExchange, makerOrder, takerOrder);
-  if (canTake) {
-    // todo: adi function sig changed
-    await infinityExchange.takeOrders([makerOrder], [takerOrder], options);
-  } else {
-    console.error('Cannot take order');
-  }
 }
 
-export async function canTakeOrders(
-  infinityExchange: Contract,
-  makerOrder: ChainOBOrder,
-  takerOrder: ChainOBOrder
-): Promise<boolean> {
-  const makerOrderHash = _orderHash(makerOrder);
-  const result = await infinityExchange.verifyTakeOrders(makerOrderHash, makerOrder, takerOrder);
-  return result;
+export async function sendMultipleNfts(
+  signer: JsonRpcSigner,
+  chainId: string,
+  orderItems: ChainNFTs[],
+  toAddress: string
+) {
+  const exchangeAddress = getExchangeAddress(chainId);
+  const infinityExchange = new Contract(exchangeAddress, InfinityExchangeABI, signer);
+  const from = await signer.getAddress();
+  // grant approvals
+  await approveERC721ForChainNFTs(from, orderItems, signer, exchangeAddress);
+  // perform send
+  const transferResult = await infinityExchange.transferMultipleNFTs(toAddress, orderItems);
+  return {
+    hash: transferResult?.hash ?? ''
+  };
+}
+
+export async function cancelAllOrders(signer: JsonRpcSigner, chainId: string, minOrderNonce: number) {
+  const exchangeAddress = getExchangeAddress(chainId);
+  const infinityExchange = new Contract(exchangeAddress, InfinityExchangeABI, signer);
+  // perform cancel
+  const cancelResult = await infinityExchange.cancelAllOrders(minOrderNonce);
+  return {
+    hash: cancelResult?.hash ?? ''
+  };
+}
+
+export async function cancelMultipleOrders(signer: JsonRpcSigner, chainId: string, nonces: number[]) {
+  const exchangeAddress = getExchangeAddress(chainId);
+  const infinityExchange = new Contract(exchangeAddress, InfinityExchangeABI, signer);
+  // perform cancel
+  const cancelResult = await infinityExchange.cancelMultipleOrders(nonces);
+  return {
+    hash: cancelResult?.hash ?? ''
+  };
+}
+
+export async function takeMultiplOneOrders(signer: JsonRpcSigner, chainId: string, makerOrder: ChainOBOrder) {
+  const exchangeAddress = getExchangeAddress(chainId);
+  const infinityExchange = new Contract(exchangeAddress, InfinityExchangeABI, signer);
+  const salePrice = getCurrentChainOBOrderPrice(makerOrder);
+  // perform exchange
+  const options = {
+    value: salePrice
+  };
+  await infinityExchange.takeMultipleOneOrders([makerOrder], options);
 }
 
 export function getOBOrderFromFirestoreOrderItem(firestoreOrderItem: FirestoreOrderItem | null | undefined) {
@@ -450,8 +469,8 @@ export function getOBOrderFromFirestoreOrderItem(firestoreOrderItem: FirestoreOr
     endPriceEth: firestoreOrderItem?.endPriceEth ?? 0,
     startTimeMs: firestoreOrderItem?.startTimeMs ?? 0,
     endTimeMs: firestoreOrderItem?.endTimeMs ?? 0,
-    nonce: '',
-    maxGasPriceWei: '1e12', // todo: adi get from backend
+    nonce: 0,
+    maxGasPriceWei: DEFAULT_MAX_GAS_PRICE_WEI,
     nfts: [],
     execParams: {
       currencyAddress: '',
@@ -462,63 +481,4 @@ export function getOBOrderFromFirestoreOrderItem(firestoreOrderItem: FirestoreOr
     }
   };
   return ord;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function _orderHash(order: ChainOBOrder): BytesLike {
-  const fnSign =
-    'Order(bool isSellOrder,address signer,uint256[] constraints,OrderItem[] nfts,address[] execParams,bytes extraParams)OrderItem(address collection,TokenInfo[] tokens)TokenInfo(uint256 tokenId,uint256 numTokens)';
-  const orderTypeHash = solidityKeccak256(['string'], [fnSign]);
-
-  const constraints = order.constraints;
-  const execParams = order.execParams;
-  const extraParams = order.extraParams;
-
-  // todo: adi constraints has new length
-  const constraintsHash = keccak256(
-    defaultAbiCoder.encode(['uint256', 'uint256', 'uint256', 'uint256', 'uint256', 'uint256'], constraints)
-  );
-
-  const nftsHash = _getNftsHash(order.nfts);
-  const execParamsHash = keccak256(defaultAbiCoder.encode(['address', 'address'], execParams));
-
-  const calcEncode = defaultAbiCoder.encode(
-    ['bytes32', 'bool', 'address', 'bytes32', 'bytes32', 'bytes32', 'bytes32'],
-    [orderTypeHash, order.isSellOrder, order.signer, constraintsHash, nftsHash, execParamsHash, keccak256(extraParams)]
-  );
-
-  return keccak256(calcEncode);
-}
-
-function _getNftsHash(nfts: ChainNFTs[]): BytesLike {
-  const fnSign = 'OrderItem(address collection,TokenInfo[] tokens)TokenInfo(uint256 tokenId,uint256 numTokens)';
-  const typeHash = solidityKeccak256(['string'], [fnSign]);
-
-  const hashes = [];
-  for (const nft of nfts) {
-    const hash = keccak256(
-      defaultAbiCoder.encode(['bytes32', 'uint256', 'bytes32'], [typeHash, nft.collection, _getTokensHash(nft.tokens)])
-    );
-    hashes.push(hash);
-  }
-  const encodeTypeArray = hashes.map(() => 'bytes32');
-  const nftsHash = keccak256(defaultAbiCoder.encode(encodeTypeArray, hashes));
-
-  return nftsHash;
-}
-
-function _getTokensHash(tokens: ChainNFTs['tokens']): BytesLike {
-  const fnSign = 'TokenInfo(uint256 tokenId,uint256 numTokens)';
-  const typeHash = solidityKeccak256(['string'], [fnSign]);
-
-  const hashes = [];
-  for (const token of tokens) {
-    const hash = keccak256(
-      defaultAbiCoder.encode(['bytes32', 'uint256', 'uint256'], [typeHash, token.tokenId, token.numTokens])
-    );
-    hashes.push(hash);
-  }
-  const encodeTypeArray = hashes.map(() => 'bytes32');
-  const tokensHash = keccak256(defaultAbiCoder.encode(encodeTypeArray, hashes));
-  return tokensHash;
 }

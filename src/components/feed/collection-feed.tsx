@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { FeedEventType } from '@infinityxyz/lib-frontend/types/core/feed';
+import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { apiGet } from 'src/utils';
 import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
 import { ScrollLoader } from '../common';
@@ -7,101 +7,68 @@ import { ScrollLoader } from '../common';
 import { CommentPanel } from './comment-panel';
 import { FeedFilterDropdown } from './feed-filter-dropdown';
 import { FeedEvent, FeedItem } from './feed-item';
-import { ActivityItem, NftActivity } from '../asset/activity/activity-item';
+import { ActivityItem, NftEventRec } from '../asset/activity/activity-item';
 import { useAppContext } from 'src/utils/context/AppContext';
 
 // let eventsInit = false;
 
-interface CollectionFeedProps {
+interface Props {
   collectionAddress?: string;
   tokenId?: string;
-  types?: FeedEventType[];
+  types?: EventType[];
   forActivity?: boolean;
   className?: string;
 }
 
-export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity, className }: CollectionFeedProps) => {
+export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity, className }: Props) => {
   const { chainId } = useAppContext();
   const [events, setEvents] = useState<FeedEvent[]>([]);
   const [newEvents, setNewEvents] = useState<FeedEvent[]>([]); // new feed events
   const [filter, setFilter] = useState<FeedFilter>({ collectionAddress, tokenId, types });
   // const [filteredEvents, setFilteredEvents] = useState<FeedEvent[]>([]);
-  const [commentPanelEvent, setCommentPanelEvent] = useState<FeedEvent | null>(null);
-  const [filteringTypes, setFilteringTypes] = useState<FeedEventType[]>([]);
+  const [commentPanelEvent, setCommentPanelEvent] = useState<NftEventRec | null>(null);
+  const [filteringTypes, setFilteringTypes] = useState<EventType[]>([]);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [activities, setActivities] = useState<NftActivity[] | null>(null);
+  const [activities, setActivities] = useState<NftEventRec[]>([]);
   const [cursor, setCursor] = useState('');
 
-  if (forActivity && !collectionAddress) {
-    return null; // require collectionAddress
-  }
-
   const fetchActivity = async (isRefresh = false, fromCursor = '') => {
-    setIsLoading(true);
-    const url = tokenId
-      ? `/collections/${chainId}:${collectionAddress}/nfts/${tokenId}/activity`
-      : `/collections/${chainId}:${collectionAddress}/activity`;
-    const { result, error } = await apiGet(url, {
-      // const { result } = await apiGet(`/collections/1:0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/nfts/8880/activity`, {
-      query: {
-        limit: 50,
-        eventType: filter.types || ['sale', 'listing', 'offer'],
-        cursor: fromCursor
+    if (!collectionAddress) {
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const url = tokenId
+        ? `/collections/${chainId}:${collectionAddress}/nfts/${tokenId}/activity`
+        : `/collections/${chainId}:${collectionAddress}/activity`;
+      const { result, error } = await apiGet(url, {
+        query: {
+          limit: 50,
+          eventType: filter.types || [EventType.NftSale, EventType.NftListing, EventType.NftOffer],
+          cursor: fromCursor
+        }
+      });
+
+      if (!error && result) {
+        if (isRefresh) {
+          setActivities([...result.data]);
+        } else {
+          setActivities([...activities, ...result.data]);
+        }
+        setCursor(result?.cursor);
       }
-    });
-    setIsLoading(false);
-    if (!error && result) {
-      if (isRefresh) {
-        setActivities([...result.data]);
-      } else {
-        setActivities([...(activities || []), ...result.data]);
-      }
-      setCursor(result?.cursor);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
     fetchActivity(true);
   }, [filter]);
-
-  // const getEvents = () => {
-  //   try {
-  //     subscribe(COLL_FEED, filter, (type: string, data: FeedEvent) => {
-  //       if (type === 'added') {
-  //         if (eventsInit === false) {
-  //           setEvents((currentEvents) => [data, ...currentEvents].sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1))); // add initial feed events.
-  //           setTimeout(() => {
-  //             eventsInit = true;
-  //           }, 3000);
-  //         } else {
-  //           setNewEvents((currentEvents) =>
-  //             [data, ...currentEvents].sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1))
-  //           );
-  //         }
-  //       } else {
-  //         setEvents((currentEvents) => [...currentEvents, data].sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1)));
-  //       }
-  //     });
-  //   } catch (err) {
-  //     console.error('ERR: ', err);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   eventsInit = false;
-  //   setEvents([]);
-  //   setNewEvents([]);
-  //   getEvents();
-  // }, [filter]);
-
-  // useEffect(() => {
-  //   let arr = events;
-  //   if (filter.types) {
-  //     arr = events.filter((event) => (filter.types ?? []).indexOf(event?.type as FeedEventType) >= 0);
-  //   }
-  //   setFilteredEvents(arr);
-  // }, [events]);
 
   const onChangeFilterDropdown = (checked: boolean, checkId: string) => {
     const newFilter = { ...filter };
@@ -112,7 +79,7 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
       setFilter(newFilter);
       return;
     }
-    const selectedType = checkId as FeedEventType;
+    const selectedType = checkId as EventType;
     if (checked) {
       newFilter.types = [...filteringTypes, selectedType];
       setFilter(newFilter);
@@ -129,6 +96,10 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
     }
   };
 
+  if (forActivity && !collectionAddress) {
+    return null; // require collectionAddress
+  }
+
   return (
     <div className={`min-h-[1024px] ${className}`}>
       <div className="flex justify-between mt-[-66px] mb-6">
@@ -141,15 +112,15 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
             },
             {
               label: 'Listings',
-              value: 'listing'
+              value: EventType.NftListing
             },
             {
               label: 'Offers',
-              value: 'offer'
+              value: EventType.NftOffer
             },
             {
               label: 'Sales',
-              value: 'sale'
+              value: EventType.NftSale
             }
           ]}
           selectedTypes={filteringTypes}
@@ -157,9 +128,7 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
         />
       </div>
 
-      {!isLoading && activities && activities.length === 0 ? (
-        <div className="font-heading">No data available.</div>
-      ) : null}
+      {!isLoading && activities.length === 0 ? <div className="font-heading">No data available.</div> : null}
 
       {newEvents.length > 0 ? (
         <div
@@ -176,7 +145,7 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
 
       <ul className="space-y-4">
         {forActivity &&
-          (activities || []).map((act: NftActivity, idx) => {
+          activities.map((act: NftEventRec, idx) => {
             return <ActivityItem key={idx} item={act} />;
           })}
 
@@ -196,11 +165,13 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
                   setEvents([...events]);
                 }}
                 onComment={(ev) => {
-                  if (ev.id === commentPanelEvent?.id) {
-                    setCommentPanelEvent(null);
-                  } else {
-                    setCommentPanelEvent(ev);
-                  }
+                  console.log(ev);
+                  // TODO(SNG): fix?
+                  // if (ev.id === commentPanelEvent?.id) {
+                  //   setCommentPanelEvent(null);
+                  // } else {
+                  //   setCommentPanelEvent(ev);
+                  // }
                 }}
               />
               {commentPanelEvent && event.id === commentPanelEvent.id && (
@@ -223,9 +194,6 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
 
         <ScrollLoader
           onFetchMore={async () => {
-            // const data: FeedEvent[] = (await fetchMoreEvents(filter)) as FeedEvent[];
-            // // console.log('data', data);
-            // setEvents([...events, ...data]);
             fetchActivity(false, cursor);
           }}
         />

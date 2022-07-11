@@ -1,21 +1,21 @@
 import { useState } from 'react';
-import { getChainScannerBase } from 'src/utils';
 import { EthPrice, Button } from 'src/components/common';
 import { format } from 'timeago.js';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { UserProfileDto } from '../user/user-profile-dto';
 import { OrderbookItem } from '../market/orderbook-list/orderbook-item';
+import { UserOrderFilter } from '../filter/user-profile-order-filter-panel';
 
 interface Props {
   order: SignedOBOrder;
+  orderType: UserOrderFilter['orderType'];
   userInfo: UserProfileDto;
   onClickCancel: (order: SignedOBOrder, checked: boolean) => void;
 }
 
-export const UserPageOrderListItem = ({ order, userInfo, onClickCancel }: Props) => {
+export const UserPageOrderListItem = ({ order, orderType, onClickCancel }: Props) => {
   const [isCancelling, setIsCancelling] = useState(false);
 
-  const isListing = !order.isSellOrder && order.makerAddress === userInfo?.address;
   return (
     <div>
       <div className="bg-gray-100 px-10 py-6 rounded-3xl flex items-center font-heading">
@@ -23,11 +23,11 @@ export const UserPageOrderListItem = ({ order, userInfo, onClickCancel }: Props)
           {order.nfts[0].collectionImage ? (
             <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={order.nfts[0].collectionImage} />
           ) : (
-            <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={BLANK_IMG} />
+            <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={BLANK_IMAGE_URL_MINI} />
           )}
         </NextLink> */}
         <div className="flex justify-between w-full mx-8">
-          <div className="w-1/6">
+          <div className="w-1/4">
             {/* <div className="text-black font-bold font-body">
               <a href={`/collection/${order.nfts[0].collectionSlug}`}>{order.nfts[0].collectionName}</a>
             </div>
@@ -36,25 +36,13 @@ export const UserPageOrderListItem = ({ order, userInfo, onClickCancel }: Props)
           </div>
 
           <div className="w-1/8">
-            <div className="text-gray-400">Event</div>
-            <div className="font-bold">
-              <a
-                href={`${getChainScannerBase(order.chainId)}/tx/${order.id}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {order.isSellOrder ? 'Sale' : isListing ? 'Listing' : 'Offer'}
-              </a>
-            </div>
-          </div>
-          <div className="w-1/8">
-            <div className="text-gray-400">Min Price</div>
+            <div className="text-gray-400">Price</div>
             <div className="font-bold">
               <EthPrice label={`${order.startPriceEth}`} />
             </div>
           </div>
           <div className="w-1/8">
-            <div className="text-gray-400">NFT amount</div>
+            <div className="text-gray-400"># NFTs</div>
             <div className="font-bold">{order.nfts.length}</div>
           </div>
           <div className="w-1/8">
@@ -62,7 +50,7 @@ export const UserPageOrderListItem = ({ order, userInfo, onClickCancel }: Props)
             <div className="font-bold">{format(order.endTimeMs)}</div>
           </div>
           <div className="w-24">
-            {isListing && (
+            {orderType === 'listings' || orderType === 'offers-made' ? (
               <Button
                 onClick={() => {
                   const newState = !isCancelling;
@@ -71,6 +59,16 @@ export const UserPageOrderListItem = ({ order, userInfo, onClickCancel }: Props)
                 }}
               >
                 {isCancelling ? '✓' : ''} Cancel
+              </Button>
+            ) : (
+              <Button
+                onClick={() => {
+                  const newState = !isCancelling; // todo: Dylan - not canceling here but batch selling - so cart drawer should be changed accordingly
+                  setIsCancelling(newState);
+                  onClickCancel(order, newState);
+                }}
+              >
+                {isCancelling ? '✓' : ''} Sell
               </Button>
             )}
           </div>

@@ -1,37 +1,51 @@
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import { BaseCollection, ERC721CardData, CollectionStats, ChainId } from '@infinityxyz/lib-frontend/types/core';
-import { ToggleTab, PageBox, useToggleTab, SVG, EthPrice, Spinner } from 'src/components/common';
-import { GalleryBox } from 'src/components/gallery/gallery-box';
+import {
+  BaseCollection,
+  ChainId,
+  Collection,
+  CollectionStats,
+  ERC721CardData
+} from '@infinityxyz/lib-frontend/types/core';
+import { CuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections.dto';
 import { CollectionStatsDto } from '@infinityxyz/lib-frontend/types/dto/stats';
-import { useFetch } from 'src/utils/apiUtils';
-import { CollectionFeed } from 'src/components/feed/collection-feed';
-import { BLANK_IMG, ellipsisAddress, formatNumber, getChainScannerBase } from 'src/utils';
-import { CollectionActivityTab } from 'src/components/collection/collection-activity-tab';
-import { StatsChips } from 'src/components/collection/stats-chips';
-import { CommunityRightPanel } from 'src/components/collection/community-right-panel';
+import { useRouter } from 'next/router';
+import NotFound404Page from 'pages/not-found-404';
+import { useEffect, useState } from 'react';
+import ContentLoader from 'react-content-loader';
 import { BsCheck } from 'react-icons/bs';
 import { AvatarImage } from 'src/components/collection/avatar-image';
-import { useOrderContext } from 'src/utils/context/OrderContext';
-import ContentLoader from 'react-content-loader';
-import { iconButtonStyle } from 'src/utils/ui-constants';
+import { CollectionActivityTab } from 'src/components/collection/collection-activity-tab';
+import { StatsChips } from 'src/components/collection/stats-chips';
+import { Button, EthPrice, Heading, PageBox, Spinner, SVG, ToggleTab, useToggleTab } from 'src/components/common';
+import { FeesAprStats, FeesAccruedStats } from 'src/components/curation/statistics';
+import { VoteModal } from 'src/components/curation/vote-modal';
+import { VoteProgressBar } from 'src/components/curation/vote-progress-bar';
+import { CommunityFeed } from 'src/components/feed-list/community-feed';
+import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
+import { ellipsisAddress, getChainScannerBase, isProd, nFormatter, PLACEHOLDER_IMAGE } from 'src/utils'; // todo: adi remove isProd once curation is ready
+import { useFetch } from 'src/utils/apiUtils';
 import { useAppContext } from 'src/utils/context/AppContext';
-import NotFound404Page from 'pages/not-found-404';
+import { useOrderContext } from 'src/utils/context/OrderContext';
+import { iconButtonStyle } from 'src/utils/ui-constants';
+import { useSWRConfig } from 'swr';
 import { twMerge } from 'tailwind-merge';
 
 const CollectionPage = () => {
+  const { user, chainId, checkSignedIn } = useAppContext();
   const router = useRouter();
-  const { checkSignedIn, chainId } = useAppContext();
-  const { addCartItem, removeCartItem, ordersInCart, cartItems, addOrderToCart, updateOrders } = useOrderContext();
+  const { addCartItem, removeCartItem, ordersInCart, cartItems, addOrderToCart, updateOrders, setPrice } =
+    useOrderContext();
   const [isBuyClicked, setIsBuyClicked] = useState(false);
   const { options, onChange, selected } = useToggleTab(
     ['NFTs', 'Orders', 'Activity'],
+    // ['NFTs', 'Orders', 'Activity', 'Community'],
     (router?.query?.tab as string) || 'NFTs'
   );
   const {
     query: { name }
   } = router;
+  const { mutate } = useSWRConfig();
+  const [isStakeModalOpen, setIsStakeModalOpen] = useState(false);
 
   useEffect(() => {
     if (isBuyClicked === true) {
@@ -40,8 +54,14 @@ const CollectionPage = () => {
     }
   }, [isBuyClicked]);
 
+  // useEffect(() => void fetchUserCurated(), [userReady]);
   const path = `/collections/${name}`;
-  const { result: collection, isLoading, error } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
+  const {
+    result: collection,
+    isLoading,
+    error,
+    mutate: mutateCollection
+  } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
   const { result: currentStats } = useFetch<CollectionStatsDto>(name ? `${path}/stats/current` : '', {
     chainId
   });
@@ -52,6 +72,13 @@ const CollectionPage = () => {
     { chainId }
   );
   const firstAllTimeStats = allTimeStats?.data[0]; // first row = latest daily stats
+
+  const createdBy = collection?.deployer ?? collection?.owner ?? '';
+
+  const { result: userCurated } = useFetch<CuratedCollectionDto>(
+    user?.address ? `${path}/curated/${chainId}:${user.address}` : null,
+    { apiParams: { requiresAuth: true } }
+  );
 
   const isAlreadyAdded = (data: ERC721CardData | undefined) => {
     // check if this item was already added to cartItems or order.
@@ -89,13 +116,14 @@ const CollectionPage = () => {
     return <NotFound404Page collectionSlug={name?.toString()} />;
   }
 
-  // if (!collection) {
-  //   return (
-  //     <PageBox showTitle={false} title={'Collection'}>
-  //       {error ? <div className="flex flex-col mt-10">Unable to load this collection?.</div> : null}
-  //     </PageBox>
-  //   );
-  // }
+  if (!collection) {
+    return (
+      <PageBox showTitle={false} title={'Collection'}>
+        {error ? <div className="flex flex-col mt-10">Unable to load this collection.</div> : null}
+      </PageBox>
+    );
+  }
+
   return (
     <PageBox showTitle={false} title={collection?.metadata?.name ?? ''}>
       <div className="flex flex-col mt-10">
@@ -103,7 +131,7 @@ const CollectionPage = () => {
           {collection ? (
             <AvatarImage url={collection?.metadata.profileImage} className="mb-2 rounded-[50%]" />
           ) : (
-            <AvatarImage url={BLANK_IMG} className="mb-2 border-gray-200 border-2 rounded-[50%]" />
+            <AvatarImage url={PLACEHOLDER_IMAGE} className="mb-2 border-gray-200 border-2 rounded-[50%]" />
           )}
 
           <div className="flex gap-3 items-center">
@@ -125,15 +153,18 @@ const CollectionPage = () => {
           <div className="text-secondary mt-6 mb-6 font-heading">
             {collection ? (
               <>
-                {collection?.owner && (
+                {createdBy && (
                   <>
                     <span>Created by </span>
-                    <button onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection?.owner)}>
-                      {ellipsisAddress(collection?.owner ?? '')}
+                    <button
+                      onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection?.owner)}
+                      className="mr-12"
+                    >
+                      {ellipsisAddress(createdBy)}
                     </button>
                   </>
                 )}
-                <span className="ml-12 font-heading">Collection address </span>
+                <span className="font-heading">Collection address </span>
                 <button onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection?.address)}>
                   {ellipsisAddress(collection?.address ?? '')}
                 </button>
@@ -145,7 +176,7 @@ const CollectionPage = () => {
             )}
           </div>
 
-          <StatsChips collection={collection} currentStatsData={currentStats || undefined} />
+          <StatsChips collection={collection} currentStatsData={currentStats || firstAllTimeStats} />
 
           {isLoading ? (
             <div className="mt-6">
@@ -195,7 +226,7 @@ const CollectionPage = () => {
             </div>
           )}
 
-          <table className="mt-8 md:w-1/2">
+          <table className="mt-8">
             <thead>
               <tr className="text-gray-400">
                 <th className="text-left font-medium font-heading">Items</th>
@@ -206,18 +237,21 @@ const CollectionPage = () => {
             </thead>
             <tbody>
               <tr className="font-bold font-heading text-2xl">
-                <td>{firstAllTimeStats?.numNfts?.toLocaleString() ?? '—'}</td>
-                <td>{firstAllTimeStats?.numOwners?.toLocaleString() ?? '—'}</td>
-                <td>
+                <td className="pr-20">{nFormatter(firstAllTimeStats?.numNfts) ?? '—'}</td>
+                <td className="pr-20">{nFormatter(firstAllTimeStats?.numOwners) ?? '—'}</td>
+                <td className="pr-20">
                   {firstAllTimeStats?.floorPrice ? (
-                    <EthPrice label={String(firstAllTimeStats?.floorPrice)} labelClassName="font-bold" />
+                    <EthPrice
+                      label={`${nFormatter(currentStats?.floorPrice ?? firstAllTimeStats?.floorPrice)}`}
+                      labelClassName="font-bold"
+                    />
                   ) : (
                     '—'
                   )}
                 </td>
-                <td>
+                <td className="pr-20">
                   {firstAllTimeStats?.volume ? (
-                    <EthPrice label={formatNumber(firstAllTimeStats?.volume)} labelClassName="font-bold" />
+                    <EthPrice label={`${nFormatter(firstAllTimeStats?.volume)}`} labelClassName="font-bold" />
                   ) : (
                     '—'
                   )}
@@ -225,6 +259,51 @@ const CollectionPage = () => {
               </tr>
             </tbody>
           </table>
+
+          {!isProd() && (
+            <section className="mt-8 space-y-4 md:w-1/2">
+              <Heading as="h2" className="font-body text-4xl">
+                Curate collection
+              </Heading>
+              <FeesAprStats value={userCurated?.feesAPR || 0} className="mr-2" />
+              <FeesAccruedStats value={userCurated?.fees || 0} />
+
+              <div className="flex flex-row space-x-2 relative">
+                <VoteProgressBar votes={userCurated?.votes || 0} totalVotes={collection.numCuratorVotes || 0} />
+                <Button onClick={() => checkSignedIn() && setIsStakeModalOpen(true)}>Vote</Button>
+              </div>
+              <VoteModal
+                collection={{
+                  ...collection,
+                  ...collection.metadata,
+                  ...(userCurated || {
+                    votes: 0,
+                    fees: 0,
+                    feesAPR: 0,
+                    timestamp: 0,
+                    numCuratorVotes: collection.numCuratorVotes || 0,
+                    userAddress: '',
+                    userChainId: '' as ChainId
+                  })
+                }}
+                isOpen={isStakeModalOpen}
+                onClose={() => setIsStakeModalOpen(false)}
+                onVote={async (votes) => {
+                  // update local collection cache with latest amount of total votes
+                  await mutateCollection(
+                    (data: Collection) =>
+                      ({
+                        ...collection,
+                        numCuratorVotes: (data.numCuratorVotes || 0) + votes
+                      } as Collection)
+                  );
+
+                  // reload user votes and estimates from API
+                  await mutate(`${path}/curated/${chainId}:${user?.address}`);
+                }}
+              />
+            </section>
+          )}
 
           <ToggleTab
             className="mt-12 font-heading pointer-events-auto"
@@ -266,7 +345,8 @@ const CollectionPage = () => {
                           findAndRemove(data);
                           return;
                         }
-                        const price = data?.orderSnippet?.listing?.orderItem?.startPriceEth ?? '';
+                        const price = data?.orderSnippet?.listing?.orderItem?.startPriceEth ?? 0;
+                        setPrice(`${price}`);
                         addCartItem({
                           chainId: data?.chainId as ChainId,
                           collectionName: data?.collectionName ?? '',
@@ -296,14 +376,7 @@ const CollectionPage = () => {
             {/* {currentTab === 1 && <ActivityTab dailyStats={dailyStats} weeklyStats={weeklyStats} />} */}
             {selected === 'Activity' && <CollectionActivityTab collectionAddress={collection?.address ?? ''} />}
 
-            {selected === '???' && (
-              <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-16">
-                <div className="lg:col-span-1 xl:col-span-2">
-                  <CollectionFeed collectionAddress={collection?.address ?? ''} />
-                </div>
-                <div className="col-span-1">{collection && <CommunityRightPanel collection={collection} />}</div>
-              </div>
-            )}
+            {selected === 'Community' && <CommunityFeed />}
           </div>
         </main>
       </div>

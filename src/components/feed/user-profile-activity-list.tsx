@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { FeedItem, FeedEvent } from './feed-item';
 import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
-import { CommentPanel } from './comment-panel';
-import { FeedEventType } from '@infinityxyz/lib-frontend/types/core/feed';
+import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { FeedFilterDropdown } from './feed-filter-dropdown';
 import { ActivityItem } from './activity-item';
 import { UserActivityItem } from './user-activity-item';
@@ -22,7 +21,7 @@ const ITEMS_LIMIT = 10;
 
 interface UserProfileActivityListProps {
   userAddress?: string;
-  types?: FeedEventType[];
+  types?: EventType[];
   forActivity?: boolean;
   forUserActivity?: boolean;
   className?: string;
@@ -39,7 +38,7 @@ export const UserProfileActivityList = ({
   const [events, setEvents] = useState<FeedEvent[]>([]);
   const [filter, setFilter] = useState<FeedFilter>({ userAddress, types });
   const [commentPanelEvent, setCommentPanelEvent] = useState<FeedEvent | null>(null);
-  const [filteringTypes, setFilteringTypes] = useState<FeedEventType[]>([]);
+  const [filteringTypes, setFilteringTypes] = useState<EventType[]>([]);
   const [data, setData] = useState<FeedEvent[]>([]);
   const [isFetching, setIsFetching] = useState(false);
   const [cursor, setCursor] = useState('');
@@ -100,7 +99,7 @@ export const UserProfileActivityList = ({
       setFilter(newFilter);
       return;
     }
-    const selectedType = checkId as FeedEventType;
+    const selectedType = checkId as EventType;
     if (checked) {
       newFilter.types = [...filteringTypes, selectedType];
       setFilter(newFilter);
@@ -118,7 +117,7 @@ export const UserProfileActivityList = ({
   };
 
   return (
-    <div className={`min-h-[1024px] mt-[-66px] ${className}`}>
+    <div className={`min-h-[1024px] mt-[-74px] ${className}`}>
       <div className="flex flex-row-reverse mb-8 bg-transparent">
         <FeedFilterDropdown
           selectedTypes={filteringTypes}
@@ -130,15 +129,15 @@ export const UserProfileActivityList = ({
             },
             {
               label: 'Listings',
-              value: 'listing'
+              value: EventType.NftListing
             },
             {
               label: 'Offers',
-              value: 'offer'
+              value: EventType.NftOffer
             },
             {
               label: 'Sales',
-              value: 'sale'
+              value: EventType.NftSale
             }
           ]}
         />
@@ -153,7 +152,9 @@ export const UserProfileActivityList = ({
           </div>
         )}
 
-        {!isFetching && hasNextPage === false && data?.length === 0 ? <div>No results found</div> : null}
+        {!isFetching && hasNextPage === false && data?.length === 0 ? (
+          <div className="font-heading">No results found</div>
+        ) : null}
 
         {!isFetching &&
           data?.map((event, idx) => {
@@ -184,14 +185,15 @@ export const UserProfileActivityList = ({
                 />
                 {commentPanelEvent && event.id === commentPanelEvent.id && (
                   <div className="ml-20 p-4 ">
-                    <CommentPanel
+                    {/* TODO(SNG): fix
+                      <CommentPanel
                       contentOnly={true}
                       isOpen={!!commentPanelEvent}
                       event={commentPanelEvent}
                       onClose={() => {
                         setCommentPanelEvent(null);
                       }}
-                    />
+                    /> */}
                   </div>
                 )}
 

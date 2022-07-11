@@ -49,7 +49,7 @@ export const Navbar = () => {
             {
               label: 'Docs',
               onClick: () => {
-                router.push('/docs');
+                window.open('https://docs.infinity.xyz');
               }
             },
             {

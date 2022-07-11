@@ -1,9 +1,10 @@
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import moment from 'moment';
-import { Button, EthPrice } from 'src/components/common';
-import { ellipsisAddress, numStr, shortDate } from 'src/utils';
+import { Button, EthPrice, toastError, toastSuccess } from 'src/components/common';
+import { ellipsisAddress, extractErrorMsg, numStr, shortDate } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { takeOrder } from 'src/utils/exchange/orders';
+import { takeMultiplOneOrders } from 'src/utils/exchange/orders';
+import { checkOffersToUser, getOrderType } from 'src/utils/marketUtils';
 import { DataColumn, defaultDataColumns } from './data-columns';
 import { OrderbookItem } from './orderbook-item';
 
@@ -13,6 +14,7 @@ type OrderbookRowProps = {
 };
 
 export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.Element => {
+  const { user } = useAppContext();
   const { checkSignedIn, providerManager, chainId } = useAppContext();
 
   const valueDiv = (dataColumn: DataColumn) => {
@@ -23,7 +25,7 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
       case 'buyOrSell':
         break;
       case 'type':
-        value = order.isSellOrder ? 'Listing' : 'Offer';
+        value = getOrderType(order);
         break;
       case 'makerUsername':
         value = order.makerUsername || ellipsisAddress(order.makerAddress);
@@ -77,14 +79,20 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
     if (!checkSignedIn()) {
       return;
     }
-    // todo: adi fullfill order
-    const signer = providerManager?.getEthersProvider().getSigner();
-    if (signer) {
-      await takeOrder(signer, chainId, order.signedOrder);
-    } else {
-      console.error('signer is null');
+    try {
+      const signer = providerManager?.getEthersProvider().getSigner();
+      if (signer) {
+        await takeMultiplOneOrders(signer, chainId, order.signedOrder);
+        toastSuccess('Order sent for execution');
+      } else {
+        throw 'Signer is null';
+      }
+    } catch (err) {
+      const errMsg = extractErrorMsg(err);
+      toastError(errMsg);
     }
   };
+  const isOwner = order.makerAddress === user?.address;
 
   return (
     <div className="rounded-3xl mb-3 p-8 w-full bg-gray-100">
@@ -95,15 +103,35 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
           const title = data.name;
 
           if (data.field === 'buyOrSell') {
-            return (
-              <Button
-                className="font-heading w-24"
-                key={`${order.id} ${data.field}`}
-                onClick={() => onClickBuySell(order)}
-              >
-                {order.isSellOrder ? 'Buy' : 'Sell'}
-              </Button>
-            );
+            if (isOwner) {
+              return null;
+            }
+            const isOfferToUser = checkOffersToUser(order, user);
+            if (order.isSellOrder) {
+              // Sell Order (Listing)
+              return (
+                <Button
+                  className="font-heading w-24"
+                  key={`${order.id} ${data.field}`}
+                  onClick={() => onClickBuySell(order)}
+                >
+                  Buy
+                </Button>
+              );
+            } else if (isOfferToUser === true) {
+              // Buy Order (Offer) => show Sell button (if offer made to current user)
+              return (
+                <Button
+                  className="font-heading w-24"
+                  key={`${order.id} ${data.field}`}
+                  onClick={() => onClickBuySell(order)}
+                >
+                  Sell
+                </Button>
+              );
+            } else {
+              return null;
+            }
           }
           if (isFilterOpen === true && (data.name === 'From' || data.name === 'Date')) {
             return null;

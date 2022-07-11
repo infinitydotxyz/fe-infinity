@@ -5,7 +5,6 @@ import { CalendarIcon } from '@heroicons/react/outline';
 import { EthSymbol } from './eth-price';
 import { Tooltip, TooltipIcon, TooltipSpec, TooltipWrapper } from './tool-tip';
 import { twMerge } from 'tailwind-merge';
-import classNames from 'classnames';
 import { inputBorderColor } from '../../utils/ui-constants';
 
 interface Props {
@@ -32,7 +31,7 @@ export const InputBox = ({
   const [showTooltip, setShowTooltip] = useState(false);
 
   return (
-    <TooltipWrapper show={showTooltip} tooltip={tooltip} className={classNames({ 'w-full': isFullWidth })}>
+    <TooltipWrapper show={showTooltip} tooltip={tooltip} className={isFullWidth ? 'w-full' : ''}>
       <div
         className={twMerge(
           inputBorderColor,
@@ -124,7 +123,6 @@ interface Props4 {
   isFullWidth?: boolean;
   autoFocus?: boolean;
   renderRightIcon?: () => ReactElement;
-  bindValue?: boolean;
   className?: string;
   inputClassName?: string;
 }
@@ -140,15 +138,10 @@ export const TextInputBox = ({
   onChange,
   isFullWidth,
   autoFocus = false,
-  bindValue = false,
   renderRightIcon,
   className,
   inputClassName = ''
 }: Props4) => {
-  const moreProps: { [key: string]: string } = {};
-  if (bindValue === true) {
-    moreProps.value = value;
-  }
   return (
     <InputBox
       label={label}
@@ -171,7 +164,6 @@ export const TextInputBox = ({
           }}
           className={twMerge(`p-0 border-none focus:ring-0 block w-full font-heading ${inputClassName}`)}
           placeholder={placeholder}
-          {...moreProps}
         />
       </div>
     </InputBox>

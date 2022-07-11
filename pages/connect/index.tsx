@@ -16,17 +16,17 @@ const ConnectWallet = () => {
     }
   }, [userReady, user]);
 
-  const connectCoinbase = async () => {
-    await connectWallet?.(WalletType.WalletLink);
-  };
+  // const connectCoinbase = async () => {
+  //   await connectWallet?.(WalletType.WalletLink);
+  // };
 
   const connectMetaMask = async () => {
     await connectWallet?.(WalletType.MetaMask);
   };
 
-  const connectWalletConnect = async () => {
-    await connectWallet?.(WalletType.WalletConnect);
-  };
+  // const connectWalletConnect = async () => {
+  //   await connectWallet?.(WalletType.WalletConnect);
+  // };
 
   return (
     <div className="w-[100vw] h-[100vh] overflow-hidden grid place-content-center">
@@ -46,7 +46,7 @@ const ConnectWallet = () => {
             subtitle="Connect using browser wallet"
           />
 
-          <ConnectItem
+          {/* <ConnectItem
             onClick={connectWalletConnect}
             icon={<SVG.walletconnect className="h-16" />}
             title="WalletConnect"
@@ -57,7 +57,7 @@ const ConnectWallet = () => {
             icon={<SVG.coinbasewallet className="h-16" />}
             title="Coinbase"
             subtitle="Connect using Coinbase wallet"
-          />
+          /> */}
         </div>
       </div>
     </div>

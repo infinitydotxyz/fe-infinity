@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
-// import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
-import { FeedEventType } from '@infinityxyz/lib-frontend/types/core/feed';
-// import { FeedFilterDropdown } from './feed-filter-dropdown';
+import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { UserPageOrderListItem } from './user-page-order-list-item';
 import { apiGet, ITEMS_PER_PAGE } from 'src/utils';
 import { Button, CenteredContent, ScrollLoader, Spinner } from '../common';
@@ -11,10 +9,14 @@ import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { UserOrderFilter, UserProfileOrderFilterPanel } from '../filter/user-profile-order-filter-panel';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { useRouter } from 'next/router';
+import { cancelAllOrders } from 'src/utils/exchange/orders';
+import { useAppContext } from 'src/utils/context/AppContext';
+import { fetchOrderNonce } from 'src/utils/marketUtils';
 
 type Query = {
   limit: number;
   cursor: string;
+  isSellOrder?: boolean;
   makerAddress?: string;
   takerAddress?: string;
   minPrice?: string;
@@ -26,7 +28,7 @@ type Query = {
 interface UserPageOrderListProps {
   userInfo: UserProfileDto;
   userAddress?: string;
-  types?: FeedEventType[];
+  types?: EventType[];
   forActivity?: boolean;
   forUserActivity?: boolean;
   className?: string;
@@ -34,9 +36,8 @@ interface UserPageOrderListProps {
 
 export const UserPageOrderList = ({ userInfo, className = '' }: UserPageOrderListProps) => {
   const router = useRouter();
+  const { providerManager, chainId, user } = useAppContext();
   const { orderDrawerOpen, setOrderDrawerOpen, setCustomDrawerItems } = useOrderContext();
-  // const [filter, setFilter] = useState<FeedFilter>({ userAddress, types });
-  // const [filteringTypes, setFilteringTypes] = useState<FeedEventType[]>([]);
   const [data, setData] = useState<SignedOBOrder[]>([]);
   const [isFetching, setIsFetching] = useState(false);
   const [cursor, setCursor] = useState('');
@@ -74,9 +75,15 @@ export const UserPageOrderList = ({ userInfo, className = '' }: UserPageOrderLis
     };
     if (apiFilter.orderType === 'listings') {
       query.makerAddress = userInfo.address;
+      query.isSellOrder = true;
+    } else if (apiFilter.orderType === 'offers-made') {
+      query.makerAddress = userInfo.address;
+      query.isSellOrder = false;
     } else {
       query.takerAddress = userInfo.address;
+      query.isSellOrder = false;
     }
+
     const { result } = await apiGet(`/orders/${userInfo.address}`, {
       query,
       requiresAuth: true
@@ -105,33 +112,6 @@ export const UserPageOrderList = ({ userInfo, className = '' }: UserPageOrderLis
     fetchData(true);
   }, [apiFilter]);
 
-  // const onChangeFilterDropdown = (checked: boolean, checkId: string) => {
-  //   const newFilter = { ...filter };
-
-  //   if (checkId === '') {
-  //     setFilteringTypes([]);
-  //     delete newFilter.types;
-  //     setFilter(newFilter);
-  //     return;
-  //   }
-  //   const selectedType = checkId as FeedEventType;
-  //   if (checked) {
-  //     newFilter.types = [...filteringTypes, selectedType];
-  //     setFilter(newFilter);
-  //     setFilteringTypes(newFilter.types);
-  //   } else {
-  //     const _newTypes = [...filteringTypes];
-  //     const index = filteringTypes.indexOf(selectedType);
-  //     if (index >= 0) {
-  //       _newTypes.splice(index, 1);
-  //     }
-  //     newFilter.types = _newTypes;
-  //     setFilter(newFilter);
-  //     setFilteringTypes(_newTypes);
-  //   }
-  // };
-  // console.log('onChangeFilterDropdown', onChangeFilterDropdown);
-
   return (
     <div className={`min-h-[1024px] mt-[-75px] ${className}`}>
       <div className="flex flex-row-reverse mb-8 bg-transparent">
@@ -143,6 +123,21 @@ export const UserPageOrderList = ({ userInfo, className = '' }: UserPageOrderLis
           className="py-2.5 mr-2 font-heading pointer-events-auto"
         >
           {filterShowed ? 'Hide' : 'Show'} filter
+        </Button>
+        <Button
+          variant="outline"
+          className="py-2.5 mr-2 font-heading pointer-events-auto"
+          onClick={async () => {
+            const signer = providerManager?.getEthersProvider().getSigner();
+            if (signer && user) {
+              const minOrderNonce = await fetchOrderNonce(user.address);
+              await cancelAllOrders(signer, chainId, minOrderNonce);
+            } else {
+              throw 'User is null';
+            }
+          }}
+        >
+          Cancel all
         </Button>
       </div>
 
@@ -162,13 +157,16 @@ export const UserPageOrderList = ({ userInfo, className = '' }: UserPageOrderLis
             </div>
           )}
 
-          {!isFetching && hasNextPage === false && data?.length === 0 ? <div>No results found.</div> : null}
+          {!isFetching && hasNextPage === false && data?.length === 0 ? (
+            <div className="font-heading">No results found.</div>
+          ) : null}
 
           {data?.map((order, idx) => {
             return (
               <UserPageOrderListItem
                 key={idx}
                 order={order}
+                orderType={apiFilter.orderType}
                 userInfo={userInfo}
                 onClickCancel={(clickedOrder, isCancelling) => {
                   if (isCancelling) {

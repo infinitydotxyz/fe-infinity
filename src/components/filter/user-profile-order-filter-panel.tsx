@@ -5,7 +5,7 @@ import { apiGet } from 'src/utils';
 import { UserProfileDto } from '../user/user-profile-dto';
 
 export type UserOrderFilter = {
-  orderType?: 'listings' | 'offers';
+  orderType?: 'listings' | 'offers-made' | 'offers-received';
   minPrice?: string;
   maxPrice?: string;
   numItems?: string;
@@ -40,8 +40,8 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
     const { result, error } = await apiGet(`/orders/${userInfo.address}/collections`, {
       requiresAuth: true,
       query: {
-        limit: -1,
-        name: collectionSearch
+        limit: 50,
+        collectionName: collectionSearch
       }
     });
     setCollectionSearchLoading(false);
@@ -54,7 +54,7 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
     fetchOrderCollections();
   }, [collectionSearch]);
 
-  const onClickOrderType = (newType: 'listings' | 'offers') => {
+  const onClickOrderType = (newType: 'listings' | 'offers-made' | 'offers-received') => {
     const newFilter = {
       ...filter,
       orderType: newType
@@ -63,9 +63,9 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
     onChange(newFilter);
   };
 
-  const CollectionCheckbox = ({ collection }: { collection: OBOrderItem }) => (
+  const CollectionCheckbox = ({ collection, key }: { collection: OBOrderItem; key: string }) => (
     <Checkbox
-      key={`${collection.collectionAddress}`}
+      key={`${collection.collectionAddress}_${key}`}
       boxOnLeft={false}
       className="pb-4 w-full"
       checked={selectedCollections.map((c) => c.collectionAddress).includes(`${collection.collectionAddress}`)}
@@ -97,15 +97,23 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
             boxOnLeft={false}
             checked={filter.orderType === 'listings'}
             onChange={() => onClickOrderType('listings')}
-            label="Listing"
+            label="Listings"
           />
         </li>
         <li className="mt-8">
           <Checkbox
             boxOnLeft={false}
-            checked={filter.orderType === 'offers'}
-            onChange={() => onClickOrderType('offers')}
-            label="Offers"
+            checked={filter.orderType === 'offers-made'}
+            onChange={() => onClickOrderType('offers-made')}
+            label="Offers made"
+          />
+        </li>
+        <li className="mt-8">
+          <Checkbox
+            boxOnLeft={false}
+            checked={filter.orderType === 'offers-received'}
+            onChange={() => onClickOrderType('offers-received')}
+            label="Offers received"
           />
         </li>
       </ul>
@@ -125,15 +133,15 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
         </div>
 
         <ul className="mt-8 w-full min-h-[100px] max-h-80 overflow-y-auto space-y-4">
-          {selectedCollections.map((coll) => (
-            <CollectionCheckbox collection={coll} />
+          {selectedCollections.map((coll, idx) => (
+            <CollectionCheckbox key={`${idx}`} collection={coll} />
           ))}
 
-          {collections.map((coll) => {
+          {collections.map((coll, idx) => {
             if (selectedCollections.map((c) => c.collectionAddress).includes(`${coll.collectionAddress}`)) {
               return null;
             }
-            return <CollectionCheckbox collection={coll} />;
+            return <CollectionCheckbox key={`${idx}`} collection={coll} />;
           })}
 
           {collectionSearchLoading && (
@@ -154,7 +162,6 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
           label="Min"
           placeholder=""
           value={minPriceVal}
-          bindValue={true}
           onChange={(value) => {
             setMinPriceVal(value);
             const newFilter = { ...filter };
@@ -170,7 +177,6 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
           label="Max"
           placeholder=""
           value={maxPriceVal}
-          bindValue={true}
           onChange={(value) => {
             setMaxPriceVal(value);
             const newFilter = { ...filter };
@@ -190,7 +196,6 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
           label="Amount of NFTs"
           placeholder=""
           value={numItems}
-          bindValue={true}
           onChange={(value) => {
             setNumItems(value);
             const newFilter = { ...filter };

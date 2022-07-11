@@ -32,10 +32,10 @@ export const TestPage = () => {
 
             <Button
               onClick={() => {
-                void router.push('/home');
+                void router.push('/feed');
               }}
             >
-              Homepage Feed
+              Feed
             </Button>
 
             <Button
@@ -60,6 +60,22 @@ export const TestPage = () => {
               }}
             >
               Terms of Service
+            </Button>
+
+            <Button
+              onClick={() => {
+                void router.push('/curation');
+              }}
+            >
+              Curation
+            </Button>
+
+            <Button
+              onClick={() => {
+                void router.push('/rewards');
+              }}
+            >
+              Rewards
             </Button>
           </div>
 

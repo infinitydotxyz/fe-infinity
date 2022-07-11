@@ -1,42 +1,37 @@
-import { without } from 'lodash';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { apiGet } from 'src/utils';
-import { Checkbox, DebouncedTextInputBox } from '../common';
+import { DebouncedTextInputBox } from '../common';
 
 export type CollectionInfo = {
-  chainId?: string;
-  collectionAddress?: string;
-  collectionName?: string;
-  collectionSlug?: string;
+  chainId: string;
+  address: string;
+  name: string;
+  slug: string;
+  profileImage: string;
+  bannerImage?: string;
   hasBlueCheck?: boolean;
 };
 
 interface Props {
-  userAddress: string;
-  onSelect: (selectedIds: string[]) => void;
+  onSearch: (filteredAddresses: string[]) => void;
 }
 
-const CollectionFilter = ({ userAddress, onSelect }: Props) => {
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+const CollectionFilter = ({ onSearch }: Props) => {
   const [collections, setCollections] = useState<CollectionInfo[]>([]);
-  const [collectionSearchState, setCollectionSearchState] = useState<string>('');
 
-  const fetchData = async () => {
-    const { result } = await apiGet(`/user/${userAddress}/nftCollections`, {
-      query: { search: collectionSearchState }
-    });
-    if (result?.data) {
-      setCollections(result?.data ?? []);
+  const fetchData = async (value: string) => {
+    if (value) {
+      const { result } = await apiGet(`/collections/search`, {
+        query: { query: value, limit: 20 } // max limit 20
+      });
+      const data = (result?.data ?? []) as CollectionInfo[];
+      setCollections(data);
+      onSearch(data.map((item) => item.address));
+    } else {
+      setCollections([]);
+      onSearch([]);
     }
   };
-
-  useEffect(() => {
-    fetchData();
-  }, [collectionSearchState]);
-
-  useEffect(() => {
-    onSelect(selectedIds);
-  }, [selectedIds]);
 
   return (
     <ul className="max-h-[250px] overflow-y-auto">
@@ -44,30 +39,20 @@ const CollectionFilter = ({ userAddress, onSelect }: Props) => {
         label=""
         type="text"
         className="border rounded-full py-2 px-4 mb-6 font-heading w-full"
-        value={collectionSearchState}
-        onChange={(value) => setCollectionSearchState(value)}
+        value=""
+        onChange={(value) => fetchData(value)}
         placeholder="Search"
       />
 
       {collections.map((item) => {
-        // if (!item.collectionName) {
-        //   return null;
-        // }
+        if (!item.name || !item.address || !item.profileImage) {
+          return null;
+        }
         return (
-          <Checkbox
-            key={item.collectionAddress}
-            checked={selectedIds.indexOf(item.collectionAddress ?? '') >= 0}
-            label={item.collectionName}
-            onChange={(checked) => {
-              if (checked) {
-                setSelectedIds((ids) => [...ids, item.collectionAddress ?? '']);
-              } else {
-                const ids = without(selectedIds, item.collectionAddress ?? '');
-                setSelectedIds(ids);
-              }
-            }}
-            className="py-4"
-          />
+          <div key={item.address} className="flex items-center space-x-4 mt-4">
+            <img className="h-9 w-9 rounded-full" src={item.profileImage}></img>
+            <div>{item.name}</div>
+          </div>
         );
       })}
     </ul>

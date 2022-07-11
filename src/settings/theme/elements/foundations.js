@@ -121,6 +121,16 @@ module.exports = {
     current: 'currentColor',
     primary: '#000',
     secondary: '#666',
+    red: {
+      500: '#d63c3c',
+      300: '#e8adad'
+    },
+    blue: {
+      300: '#92deff'
+    },
+    green: {
+      500: '#15a456'
+    },
     theme: {
       dark: {
         50: '#FFFFFF',

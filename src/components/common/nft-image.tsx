@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { apiGet } from 'src/utils/apiUtils';
-import { BLANK_IMG } from 'src/utils';
+import { MISSING_IMAGE_URL_MINI } from 'src/utils';
 import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
 
 interface Props {
@@ -9,10 +9,11 @@ interface Props {
   tokenId?: string;
   src?: string;
   alt?: string;
+  className?: string;
   [key: string]: string | number | undefined;
 }
 
-export const NftImage = ({ chainId, collectionAddress, src, alt, ...rest }: Props) => {
+export const NftImage = ({ chainId, collectionAddress, src, alt, className = '', ...rest }: Props) => {
   const [unmounted, setUnmounted] = useState(false);
   const [imageUrl, setImageUrl] = useState(src || '');
 
@@ -23,7 +24,7 @@ export const NftImage = ({ chainId, collectionAddress, src, alt, ...rest }: Prop
     const { result } = await apiGet(`/collections/${chainId}:${collectionAddress}`);
     const collection = result as BaseCollection;
 
-    setImageUrl(collection?.metadata.profileImage ?? BLANK_IMG);
+    setImageUrl(collection?.metadata.profileImage ?? MISSING_IMAGE_URL_MINI);
   };
 
   useEffect(() => {
@@ -35,5 +36,5 @@ export const NftImage = ({ chainId, collectionAddress, src, alt, ...rest }: Prop
     };
   }, []);
 
-  return <img src={imageUrl ? imageUrl : BLANK_IMG} {...rest} alt={alt} />;
+  return <img src={imageUrl ? imageUrl : MISSING_IMAGE_URL_MINI} {...rest} alt={alt} className={className} />;
 };
