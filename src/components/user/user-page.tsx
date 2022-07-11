@@ -5,7 +5,7 @@ import { UserProfileShare } from './user-profile-share';
 import { Chip, ToggleTab, useToggleTab, ExternalLink } from 'src/components/common';
 import { UserPageNftsTab } from './user-page-nfts-tab';
 import { UserPageActivityTab } from './user-page-activity-tab';
-import { ellipsisAddress } from 'src/utils';
+import { ellipsisAddress, isProd } from 'src/utils';
 import { ETHEREUM_CHAIN_SCANNER_BASE } from '@infinityxyz/lib-frontend/utils';
 import { UserPageOrderList } from '../feed/user-page-order-list';
 import { UserBannerImage } from './user-banner-image';
@@ -19,7 +19,12 @@ interface UserPageProps {
 
 export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner = false }) => {
   const router = useRouter();
-  const tabs = ['Collected', 'Curated', 'Orders', 'Activity'];
+  let tabs = [];
+  if (!isProd()) {
+    tabs = ['Collected', 'Curated', 'Orders', 'Activity'];
+  } else {
+    tabs = ['Collected', 'Orders', 'Activity'];
+  }
   if (isOwner) {
     tabs.push('Send');
   }
@@ -74,7 +79,7 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
           {selected === 'Orders' && <UserPageOrderList userInfo={userInfo} />}
           {selected === 'Activity' && <UserPageActivityTab userInfo={userInfo} />}
           {selected === 'Send' && <UserPageNftsTab userInfo={userInfo} forTransfers={true} />}
-          {selected === 'Curated' && <UserPageCuratedTab userInfo={userInfo} />}
+          {!isProd() && selected === 'Curated' && <UserPageCuratedTab userInfo={userInfo} />}
         </div>
       </div>
     </>

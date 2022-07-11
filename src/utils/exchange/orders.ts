@@ -129,15 +129,15 @@ export async function approveERC20(
   currencyAddress: string,
   price: BigNumberish,
   signer: JsonRpcSigner,
-  infinityFeeTreasuryAddress: string
+  infinityExchangeAddress: string
 ) {
   try {
     console.log('Granting ERC20 approval');
     if (currencyAddress !== NULL_ADDRESS) {
       const contract = new Contract(currencyAddress, ERC20ABI, signer);
-      const allowance = BigNumber.from(await contract.allowance(user, infinityFeeTreasuryAddress));
+      const allowance = BigNumber.from(await contract.allowance(user, infinityExchangeAddress));
       if (allowance.lt(price)) {
-        await contract.approve(infinityFeeTreasuryAddress, MaxUint256);
+        await contract.approve(infinityExchangeAddress, MaxUint256);
       } else {
         console.log('ERC20 approval already granted');
       }
@@ -451,10 +451,20 @@ export async function takeMultiplOneOrders(signer: JsonRpcSigner, chainId: strin
   const infinityExchange = new Contract(exchangeAddress, InfinityExchangeABI, signer);
   const salePrice = getCurrentChainOBOrderPrice(makerOrder);
   // perform exchange
-  const options = {
-    value: salePrice
-  };
-  await infinityExchange.takeMultipleOneOrders([makerOrder], options);
+  // if fulfilling a sell order, send ETH
+  if (makerOrder.isSellOrder) {
+    const options = {
+      value: salePrice
+    };
+    await infinityExchange.takeMultipleOneOrders([makerOrder], options);
+  } else {
+    // if accepting offer, no need to send any ETH but need to approve ERC20/WETH
+    const currency = makerOrder.execParams[1];
+    const user = await signer.getAddress();
+    await approveERC20(user, currency, salePrice, signer, exchangeAddress);
+    // todo: dylan need to wait for WETH approval txn to succeed
+    await infinityExchange.takeMultipleOneOrders([makerOrder]);
+  }
 }
 
 export function getOBOrderFromFirestoreOrderItem(firestoreOrderItem: FirestoreOrderItem | null | undefined) {

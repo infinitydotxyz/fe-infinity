@@ -143,12 +143,17 @@ export const FilterPanel = ({ collection, collectionAddress, showFilterSections,
               const newFilter: Filter = { ...filterState };
               newFilter.traitTypes = traitTypes;
               newFilter.traitValues = traitValues;
+              newFilter.orderBy = 'tokenId';
+              if (traitTypes.length === 0 && traitValues.length === 0) {
+                newFilter.orderBy = 'tokenIdNumeric';
+              }
               setFilterState(newFilter);
             }}
             onClearAll={() => {
               const newFilter: Filter = { ...filterState };
               newFilter.traitTypes = [];
               newFilter.traitValues = [];
+              newFilter.orderBy = 'tokenIdNumeric';
               setFilterState(newFilter);
             }}
           />
