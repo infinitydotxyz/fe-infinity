@@ -26,7 +26,7 @@ export const NFT_DATA_SOURCES = {
   COVALENT: 4
 };
 
-export const DEFAULT_MAX_GAS_PRICE_WEI = '100000000000';
+export const DEFAULT_MAX_GAS_PRICE_WEI = '100000000000'; // todo: adi fetch from api or current gas price
 
 export const PLACEHOLDER_IMAGE = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
 export const MISSING_IMAGE_URL = image404.src;

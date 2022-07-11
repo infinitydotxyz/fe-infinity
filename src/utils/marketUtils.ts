@@ -10,7 +10,7 @@ export const postOrders = async (user: string, orders: SignedOBOrder[]): Promise
       orders: orders
     };
 
-    const { result, error } = await apiPost(`/orders/${user}`, {
+    const { result, error } = await apiPost(`/orders`, {
       data: body
     });
     if (error) {
@@ -27,7 +27,7 @@ export const postOrders = async (user: string, orders: SignedOBOrder[]): Promise
 
 export const fetchOrderNonce = async (user: string): Promise<number> => {
   try {
-    const response = await apiGet(`/orders/${user}/nonce`, {});
+    const response = await apiGet(`/orders/${user}/nonce`, { requiresAuth: true });
     if (typeof response.result === 'number') {
       return response.result;
     }
