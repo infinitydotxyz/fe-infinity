@@ -261,6 +261,6 @@ export const getEstimatedGasPrice = async (provider: Web3Provider | undefined): 
     return undefined;
   }
   const price = await provider.getGasPrice();
-  const priceEstimate = price.mul(1.2);
+  const priceEstimate = price.mul(12).div(10);
   return priceEstimate.toString();
 };
