@@ -89,7 +89,7 @@ export class TokenFetcher {
 
   doFetch = async (): Promise<ApiResponse> => {
     if (this.pageId === 'COLLECTION' && !this.filter.orderBy) {
-      this.filter.orderBy = 'rarityRank'; // set defaults
+      this.filter.orderBy = 'tokenIdNumeric'; // set defaults
       this.filter.orderDirection = 'asc';
     }
     if (this.pageId === 'PROFILE') {
