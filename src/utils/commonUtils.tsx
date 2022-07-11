@@ -7,6 +7,7 @@ import {
 } from '@infinityxyz/lib-frontend/utils';
 import { ReactNode } from 'react';
 import { NextLink } from 'src/components/common';
+import { Web3Provider } from './providers/AbstractProvider';
 
 export const base64Encode = (data: string) => Buffer.from(data).toString('base64');
 
@@ -253,4 +254,13 @@ export const extractErrorMsg = (err: unknown) => {
     msg = 'Invalid wallet address.';
   }
   return msg;
+};
+
+export const getEstimatedGasPrice = async (provider: Web3Provider | undefined): Promise<string | undefined> => {
+  if (!provider) {
+    return undefined;
+  }
+  const price = await provider.getGasPrice();
+  const priceEstimate = price.mul(1.2);
+  return priceEstimate.toString();
 };
