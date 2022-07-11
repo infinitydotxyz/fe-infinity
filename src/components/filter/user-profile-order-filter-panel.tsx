@@ -5,7 +5,7 @@ import { apiGet } from 'src/utils';
 import { UserProfileDto } from '../user/user-profile-dto';
 
 export type UserOrderFilter = {
-  orderType?: 'listings' | 'offers';
+  orderType?: 'listings' | 'offers-made' | 'offers-received';
   minPrice?: string;
   maxPrice?: string;
   numItems?: string;
@@ -54,7 +54,7 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
     fetchOrderCollections();
   }, [collectionSearch]);
 
-  const onClickOrderType = (newType: 'listings' | 'offers') => {
+  const onClickOrderType = (newType: 'listings' | 'offers-made' | 'offers-received') => {
     const newFilter = {
       ...filter,
       orderType: newType
@@ -103,9 +103,17 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
         <li className="mt-8">
           <Checkbox
             boxOnLeft={false}
-            checked={filter.orderType === 'offers'}
-            onChange={() => onClickOrderType('offers')}
-            label="Offers"
+            checked={filter.orderType === 'offers-made'}
+            onChange={() => onClickOrderType('offers-made')}
+            label="Offers made"
+          />
+        </li>
+        <li className="mt-8">
+          <Checkbox
+            boxOnLeft={false}
+            checked={filter.orderType === 'offers-received'}
+            onChange={() => onClickOrderType('offers-received')}
+            label="Offers received"
           />
         </li>
       </ul>

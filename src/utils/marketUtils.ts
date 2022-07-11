@@ -42,8 +42,8 @@ export const bigNumToDate = (time: BigNumberish): Date => {
   return new Date(BigNumber.from(time).toNumber() * 1000);
 };
 
-export const getOrderType = (order: SignedOBOrder): 'Sale' | 'Listing' | 'Offer' => {
-  return order.isSellOrder ? (order.extraParams.buyer ? 'Sale' : 'Listing') : 'Offer';
+export const getOrderType = (order: SignedOBOrder): 'Listing' | 'Offer' => {
+  return order.isSellOrder ? 'Listing' : 'Offer';
 };
 
 // check if an offer made to current user

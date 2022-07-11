@@ -95,11 +95,9 @@ export const GalleryBox = ({
 
       if (!err) {
         setCardData(cd);
-
         setNoData(cd.length === 0);
       }
     }
-
     setLoading(false);
   };
 
