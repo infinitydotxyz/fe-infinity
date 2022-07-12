@@ -108,7 +108,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
     token.image.url = token.image?.originalUrl ?? '';
   }
 
-  const images = [token?.image?.url, token?.metadata?.image, token?.alchemyCachedImage, MISSING_IMAGE_URL].filter(
+  const images = [token?.image?.url, token?.alchemyCachedImage, token?.metadata?.image, MISSING_IMAGE_URL].filter(
     (url) => !!url && !url.startsWith('ipfs')
   );
   const imgUrl = images[0];

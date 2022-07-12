@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, PageBox, toastSuccess } from 'src/components/common';
-import notfound404 from 'src/images/notfound404.png';
+import image404 from 'src/images/404.png';
 import { apiGet } from 'src/utils';
 
 interface Props {
@@ -11,9 +11,7 @@ interface Props {
   tokenId?: string;
 }
 
-const NotFound404Page = ({ collectionSlug = '', chainId = '', collectionAddress = '', tokenId = '' }: Props) => {
-  console.log('params: ', chainId, collectionAddress, tokenId);
-
+const NotFound404Page = ({ collectionSlug = '' }: Props) => {
   const onClickEnqueue = async () => {
     const { error } = await apiGet(`/collections/${collectionSlug}/enqueue`);
     if (error) {
@@ -26,7 +24,7 @@ const NotFound404Page = ({ collectionSlug = '', chainId = '', collectionAddress 
   return (
     <PageBox title="404 Not Found" showTitle={false}>
       <div className="h-[70vh] flex flex-col items-center justify-center">
-        <img src={notfound404.src} width={(notfound404.width * 2) / 3} height={(notfound404.height * 2) / 3} />
+        <img src={image404.src} width={(image404.width * 2) / 3} height={(image404.height * 2) / 3} />
 
         {collectionSlug ? (
           <>

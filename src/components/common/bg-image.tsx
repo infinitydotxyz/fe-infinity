@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { MISSING_IMAGE_URL_MINI } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
 
 interface Props {
@@ -11,10 +10,6 @@ interface Props {
 export const BGImage = ({ src, center = true, className = '' }: Props) => {
   const [loaded, setLoaded] = useState(false);
   src = src?.replace('storage.opensea.io', 'openseauserdata.com');
-
-  if (src === MISSING_IMAGE_URL_MINI) {
-    className = twMerge(className, 'bg-contain group-hover:scale-[1]');
-  }
 
   useEffect(() => {
     const img = new Image();
