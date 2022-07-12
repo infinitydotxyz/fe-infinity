@@ -14,25 +14,27 @@ interface FeedFilterDropdownProps {
   options?: FilterOption[];
 }
 
+const DEFAULT_OPTIONS = [
+  {
+    label: 'All',
+    value: ''
+  },
+  {
+    label: 'Listings',
+    value: EventType.NftListing
+  },
+  {
+    label: 'Offers',
+    value: EventType.NftOffer
+  },
+  {
+    label: 'Sales',
+    value: EventType.NftSale
+  }
+];
+
 export const FeedFilterDropdown: React.FC<FeedFilterDropdownProps> = ({ options, selectedTypes, onChange }) => {
-  const filterOptions = options ?? [
-    {
-      label: 'All',
-      value: ''
-    },
-    {
-      label: 'Listings',
-      value: EventType.NftListing
-    },
-    {
-      label: 'Offers',
-      value: EventType.NftOffer
-    },
-    {
-      label: 'Sales',
-      value: EventType.NftSale
-    }
-  ];
+  const filterOptions = options ?? DEFAULT_OPTIONS;
   return (
     <PopoverButton title="Filter" buttonClassName="font-heading pointer-events-auto py-2.5">
       {filterOptions.map((item, idx) => {
