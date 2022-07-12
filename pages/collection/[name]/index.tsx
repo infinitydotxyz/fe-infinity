@@ -113,7 +113,13 @@ const CollectionPage = () => {
 
   if (error) {
     // failed to load collection (collection not indexed?)
-    return <NotFound404Page collectionSlug={name?.toString()} />;
+    return (
+      <NotFound404Page
+        collectionSlug={name?.toString()}
+        collectionAddress={collection?.address}
+        chainId={collection?.chainId}
+      />
+    );
   }
 
   if (!collection) {
