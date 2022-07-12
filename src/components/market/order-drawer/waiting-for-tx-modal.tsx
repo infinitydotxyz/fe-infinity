@@ -5,11 +5,12 @@ import { ellipsisAddress, ETHERSCAN_BASE_URL } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 
 interface Props {
+  title: string;
   txHash: string;
   onClose: () => void;
 }
 
-export const SendNFTsStatusModal = ({ txHash, onClose }: Props) => {
+export const WaitingForTxModal = ({ title, txHash, onClose }: Props) => {
   const { providerManager } = useAppContext();
   const [transactionReceipt, setTransactionReceipt] = useState<TransactionReceipt | undefined>(undefined);
 
@@ -36,7 +37,7 @@ export const SendNFTsStatusModal = ({ txHash, onClose }: Props) => {
       onClose={() => onClose()}
       cancelButton="" // hides cancel
       okButton="Done"
-      title={<div className="w-full flex justify-center">Sending NFTs</div>}
+      title={<div className="w-full flex justify-center">{title}</div>}
     >
       <div>
         {transactionReceipt ? (

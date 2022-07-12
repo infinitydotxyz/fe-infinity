@@ -20,7 +20,7 @@ import {
   ToggleTab,
   useToggleTab
 } from 'src/components/common';
-import { SendNFTsStatusModal } from 'src/components/market/order-drawer/send-nfts-status-modal';
+import { WaitingForTxModal } from 'src/components/market/order-drawer/waiting-for-tx-modal';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
 import { getOwnerAddress, MISSING_IMAGE_URL, useFetch } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
@@ -206,7 +206,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
           onSubmit={(hash) => setSendTxHash(hash)}
         />
       )}
-      {sendTxHash && <SendNFTsStatusModal txHash={sendTxHash} onClose={() => setSendTxHash('')} />}
+      {sendTxHash && <WaitingForTxModal title={'Sending NFTs'} txHash={sendTxHash} onClose={() => setSendTxHash('')} />}
 
       {showMakeOfferModal && (
         <MakeOfferModal
