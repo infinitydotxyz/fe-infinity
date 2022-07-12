@@ -189,7 +189,7 @@ export const nftsToCardData = (
       collectionName: item.collectionName ?? collectionName,
       collectionSlug: item.collectionSlug ?? '',
       description: item.metadata?.description ?? '',
-      image: item?.image?.url,
+      image: item?.image?.url || item?.alchemyCachedImage || item?.image?.originalUrl || '',
       price: item?.orderSnippet?.listing?.orderItem?.startPriceEth ?? 0,
       chainId: item.chainId,
       tokenAddress: item.collectionAddress ?? collectionAddress,

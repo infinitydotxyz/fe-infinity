@@ -40,7 +40,7 @@ export const MakeOfferModal = ({ isOpen, onClose, buyPriceEth, token }: Props) =
           tokenId: token.tokenId,
           tokenAddress: token.collectionAddress ?? '',
           tokenName: token.slug ?? '',
-          tokenImage: token.image?.url ?? token.image?.originalUrl ?? '',
+          tokenImage: token.image?.url || token?.alchemyCachedImage || token.image?.originalUrl || '',
           takerAddress,
           takerUsername: '',
           attributes: [],
