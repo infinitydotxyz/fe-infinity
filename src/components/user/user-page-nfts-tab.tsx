@@ -11,7 +11,7 @@ import { CardAction, EthPrice } from '../common';
 import { CancelModal } from '../asset';
 import { apiGet } from 'src/utils';
 import { LowerPriceModal } from '../asset/modals/lower-price-modal';
-import { SendNFTsStatusModal } from '../market/order-drawer/send-nfts-status-modal';
+import { WaitingForTxModal } from '../market/order-drawer/waiting-for-tx-modal';
 
 type Props = {
   userInfo: UserProfileDto;
@@ -253,7 +253,7 @@ export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listCl
         />
       )}
 
-      {sendTxHash && <SendNFTsStatusModal txHash={sendTxHash} onClose={() => setSendTxHash('')} />}
+      {sendTxHash && <WaitingForTxModal title={'Sending NFTs'} txHash={sendTxHash} onClose={() => setSendTxHash('')} />}
     </div>
   );
 };

@@ -61,3 +61,14 @@ input[type='range']::-webkit-slider-thumb {
   cursor: pointer;
   box-shadow: 0 0 2px 0 #555;
 }
+
+// .Toastify__toast - https://fkhadra.github.io/react-toastify/how-to-style/
+.Toastify__toast {
+  background-color: #f0f0f0 !important;
+  border-radius: 10px !important;
+  color: #000 !important;
+  font-family: F37 Bolton !important;
+}
+.Toastify__toast-body {
+  padding: 15px !important;
+}

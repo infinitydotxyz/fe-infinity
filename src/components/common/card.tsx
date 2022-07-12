@@ -1,18 +1,17 @@
-import { ReactNode } from 'react';
 import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
+import { ReactNode } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { Dropdown, DropdownItems } from './dropdown';
 import { Button } from './button';
+import { Dropdown, DropdownItems } from './dropdown';
 import { NextLink } from './next-link';
 // import ContentLoader from 'react-content-loader';
+import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
+import { useRouter } from 'next/router';
+import { MdMoreVert } from 'react-icons/md';
+import { ENS_ADDRESS, MISSING_IMAGE_URL } from 'src/utils';
 import { inputBorderColor } from 'src/utils/ui-constants';
 import { BGImage } from './bg-image';
 import { SVG } from './svg';
-import { useRouter } from 'next/router';
-import { ImageOrMissing } from './image-or-missing';
-import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
-import { ENS_ADDRESS } from 'src/utils';
-import { MdMoreVert } from 'react-icons/md';
 
 type labelFn = (data?: ERC721CardData) => ReactNode;
 
@@ -93,9 +92,9 @@ export const Card = ({
         className="h-full overflow-clip rounded-3xl"
       >
         {data?.image ? (
-          <BGImage src={data?.image} className="group-hover:scale-[1.15] transition-all duration-300" />
+          <BGImage src={data.image} className="group-hover:scale-[1.15] transition-all duration-300" />
         ) : (
-          <ImageOrMissing src="" />
+          <BGImage src={MISSING_IMAGE_URL} className="group-hover:scale-[1] transition-none" />
         )}
       </NextLink>
 
