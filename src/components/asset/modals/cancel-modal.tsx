@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
-import { Checkbox, EthPrice, Modal, Spinner } from 'src/components/common';
-import { apiGet } from 'src/utils';
+import { Checkbox, EthPrice, Modal, Spinner, toastError } from 'src/components/common';
+import { apiGet, extractErrorMsg } from 'src/utils';
 import { OrderbookItem } from 'src/components/market/orderbook-list/orderbook-item';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { cancelMultipleOrders } from 'src/utils/exchange/orders';
@@ -27,7 +27,8 @@ export const CancelModal = ({ isOpen, onClose, collectionAddress, token }: Props
         limit: 50,
         isSellOrder: true,
         collection: collectionAddress,
-        tokenId: token.tokenId
+        tokenId: token.tokenId,
+        makerAddress: user?.address
       },
       requiresAuth: true
     });
@@ -57,6 +58,20 @@ export const CancelModal = ({ isOpen, onClose, collectionAddress, token }: Props
   }, []);
 
   const hasNoData = !error && !isLoading && listings && listings.length === 0;
+
+  const onOKButton = async () => {
+    try {
+      const signer = providerManager?.getEthersProvider().getSigner();
+      if (signer) {
+        await cancelMultipleOrders(signer, chainId, selectedListings);
+      } else {
+        console.error('signer is null');
+      }
+    } catch (err) {
+      toastError(extractErrorMsg(err));
+    }
+    onClose();
+  };
   return (
     <Modal
       wide={true}
@@ -64,15 +79,7 @@ export const CancelModal = ({ isOpen, onClose, collectionAddress, token }: Props
       onClose={onClose}
       okButton="Confirm"
       title="Select listings to cancel"
-      onOKButton={async () => {
-        const signer = providerManager?.getEthersProvider().getSigner();
-        if (signer) {
-          await cancelMultipleOrders(signer, chainId, selectedListings);
-        } else {
-          console.error('signer is null');
-        }
-        onClose();
-      }}
+      onOKButton={onOKButton}
     >
       <ul className={`mt-4 p-2 flex flex-col w-full overflow-y-auto min-h-[35vh] max-h-[35vh]`}>
         {isLoading && <Spinner />}
