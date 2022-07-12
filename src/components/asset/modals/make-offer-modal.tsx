@@ -24,72 +24,77 @@ export const MakeOfferModal = ({ isOpen, onClose, buyPriceEth, token }: Props) =
     if (!user) {
       return;
     }
-    const priceVal = parseFloat(price);
-    const orderNonce = await fetchOrderNonce(user.address);
-    const signedOrders: SignedOBOrder[] = [];
+    try {
+      const priceVal = parseFloat(price);
+      const orderNonce = await fetchOrderNonce(user.address);
+      const signedOrders: SignedOBOrder[] = [];
 
-    const signer = providerManager?.getEthersProvider().getSigner();
-    if (signer) {
-      const takerAddress = getOwnerAddress(token);
-      if (!takerAddress) {
-        toastError('There is no owner address');
-        return false;
-      }
-      const tokenInfo = {
-        tokenId: token.tokenId,
-        tokenAddress: token.collectionAddress ?? '',
-        tokenName: token.slug ?? '',
-        tokenImage: token.image?.url ?? token.image?.originalUrl ?? '',
-        takerAddress,
-        takerUsername: '',
-        attributes: [],
-        numTokens: 1
-      };
-      const orderItem = {
-        chainId: chainId as ChainId,
-        collectionAddress: token.collectionAddress ?? '',
-        collectionName: token.collectionName ?? '',
-        collectionSlug: token.collectionSlug ?? '',
-        collectionImage: 'BLANK', // todo: not necessary but BE throws error on ''
-        hasBlueCheck: token.hasBlueCheck ?? false,
-        tokens: [tokenInfo]
-      };
-
-      const gasPrice = await getEstimatedGasPrice(providerManager?.getEthersProvider());
-      const order: OBOrder = {
-        id: '',
-        chainId,
-        isSellOrder: false,
-        makerAddress: user.address,
-        makerUsername: user.username ?? '',
-        numItems: 1,
-        startTimeMs: Date.now(),
-        endTimeMs: expirationDate,
-        startPriceEth: priceVal, // set the Offer Price.
-        endPriceEth: priceVal, // set the Offer Price.
-        nfts: [orderItem],
-        nonce: orderNonce,
-        execParams: {
-          complicationAddress: getOBComplicationAddress(chainId),
-          currencyAddress: ETHEREUM_WETH_ADDRESS
-        },
-        extraParams: {
-          buyer: NULL_ADDRESS
-        },
-        maxGasPriceWei: gasPrice ?? DEFAULT_MAX_GAS_PRICE_WEI
-      };
-
-      const signedOrder = await getSignedOBOrder(user, chainId, signer, order);
-      if (signedOrder) {
-        signedOrders.push(signedOrder);
-        try {
-          await postOrders(user.address, signedOrders);
-          toastSuccess('Offer sent successfully');
-        } catch (ex) {
-          toastError(`${ex}`);
+      const signer = providerManager?.getEthersProvider().getSigner();
+      if (signer) {
+        const takerAddress = getOwnerAddress(token);
+        if (!takerAddress) {
+          toastError('There is no owner address');
           return false;
         }
+        const tokenInfo = {
+          tokenId: token.tokenId,
+          tokenAddress: token.collectionAddress ?? '',
+          tokenName: token.slug ?? '',
+          tokenImage: token.image?.url ?? token.image?.originalUrl ?? '',
+          takerAddress,
+          takerUsername: '',
+          attributes: [],
+          numTokens: 1
+        };
+        const orderItem = {
+          chainId: chainId as ChainId,
+          collectionAddress: token.collectionAddress ?? '',
+          collectionName: token.collectionName ?? '',
+          collectionSlug: token.collectionSlug ?? '',
+          collectionImage: 'BLANK', // todo: not necessary but BE throws error on ''
+          hasBlueCheck: token.hasBlueCheck ?? false,
+          tokens: [tokenInfo]
+        };
+
+        const gasPrice = await getEstimatedGasPrice(providerManager?.getEthersProvider());
+        const order: OBOrder = {
+          id: '',
+          chainId,
+          isSellOrder: false,
+          makerAddress: user.address,
+          makerUsername: user.username ?? '',
+          numItems: 1,
+          startTimeMs: Date.now(),
+          endTimeMs: expirationDate,
+          startPriceEth: priceVal, // set the Offer Price.
+          endPriceEth: priceVal, // set the Offer Price.
+          nfts: [orderItem],
+          nonce: orderNonce,
+          execParams: {
+            complicationAddress: getOBComplicationAddress(chainId),
+            currencyAddress: ETHEREUM_WETH_ADDRESS
+          },
+          extraParams: {
+            buyer: NULL_ADDRESS
+          },
+          maxGasPriceWei: gasPrice ?? DEFAULT_MAX_GAS_PRICE_WEI
+        };
+
+        const signedOrder = await getSignedOBOrder(user, chainId, signer, order);
+        console.log('signedOrder', signedOrder);
+        if (signedOrder) {
+          signedOrders.push(signedOrder);
+          try {
+            await postOrders(user.address, signedOrders);
+            toastSuccess('Offer sent successfully');
+          } catch (ex) {
+            toastError(`${ex}`);
+            return false;
+          }
+        }
       }
+    } catch (err) {
+      toastError(`${err}`);
     }
     onClose();
   };
