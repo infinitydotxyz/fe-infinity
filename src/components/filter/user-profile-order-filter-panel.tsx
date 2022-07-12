@@ -63,9 +63,9 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
     onChange(newFilter);
   };
 
-  const CollectionCheckbox = ({ collection, key }: { collection: OBOrderItem; key: string }) => (
+  const CollectionCheckbox = ({ collection, reactKey }: { collection: OBOrderItem; reactKey: string }) => (
     <Checkbox
-      key={`${collection.collectionAddress}_${key}`}
+      key={`${collection.collectionAddress}_${reactKey}`}
       boxOnLeft={false}
       className="pb-4 w-full"
       checked={selectedCollections.map((c) => c.collectionAddress).includes(`${collection.collectionAddress}`)}
@@ -134,14 +134,14 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
 
         <ul className="mt-8 w-full min-h-[100px] max-h-80 overflow-y-auto space-y-4">
           {selectedCollections.map((coll, idx) => (
-            <CollectionCheckbox key={`${idx}`} collection={coll} />
+            <CollectionCheckbox reactKey={`${idx}`} collection={coll} />
           ))}
 
           {collections.map((coll, idx) => {
             if (selectedCollections.map((c) => c.collectionAddress).includes(`${coll.collectionAddress}`)) {
               return null;
             }
-            return <CollectionCheckbox key={`${idx}`} collection={coll} />;
+            return <CollectionCheckbox reactKey={`${idx}`} collection={coll} />;
           })}
 
           {collectionSearchLoading && (

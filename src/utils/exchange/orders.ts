@@ -463,7 +463,9 @@ export async function takeMultiplOneOrders(signer: JsonRpcSigner, chainId: strin
     const user = await signer.getAddress();
     await approveERC20(user, currency, salePrice, signer, exchangeAddress);
     // todo: dylan need to wait for WETH approval txn to succeed
-    await infinityExchange.takeMultipleOneOrders([makerOrder]);
+    const result = await infinityExchange.takeMultipleOneOrders([makerOrder]);
+    console.log('takeMultipleOneOrders: result:', result);
+    return result;
   }
 }
 
