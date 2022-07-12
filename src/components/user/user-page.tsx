@@ -20,13 +20,16 @@ interface UserPageProps {
 export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner = false }) => {
   const router = useRouter();
   let tabs = [];
-  if (!isProd()) {
-    tabs = ['Collected', 'Curated', 'Orders', 'Activity'];
-  } else {
-    tabs = ['Collected', 'Orders', 'Activity'];
-  }
+
   if (isOwner) {
-    tabs.push('Send');
+    tabs = ['Collected', 'Orders', 'Activity', 'Send'];
+  } else {
+    tabs = ['Collected', 'Activity'];
+  }
+
+  if (!isProd()) {
+    // todo: adi: remove this condition when Curation ready for prod.
+    tabs.push('Curated');
   }
   const { options, onChange, selected } = useToggleTab(tabs, (router?.query?.tab as string) || 'Collected');
 
