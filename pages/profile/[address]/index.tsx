@@ -1,9 +1,10 @@
 import { useRouter } from 'next/router';
-import { CenteredContent, PageBox, Spinner } from 'src/components/common';
+import { CenteredContent, PageBox, Spinner, toastSuccess } from 'src/components/common';
 import { UserPage } from 'src/components/user/user-page';
 import { useAppContext, User } from 'src/utils/context/AppContext';
 import { PleaseConnectMsg, useFetch } from 'src/utils';
 import { UserProfileDto } from 'src/components/user/user-profile-dto';
+import { useEffect } from 'react';
 
 const USER_API_END_POINT = '/user';
 
@@ -13,6 +14,10 @@ const ProfilePage = () => {
     query: { address }
   } = router;
   const { user } = useAppContext();
+
+  useEffect(() => {
+    toastSuccess('Some message goes here...');
+  });
 
   if (!address) {
     return null;

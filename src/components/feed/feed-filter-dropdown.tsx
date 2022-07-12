@@ -8,10 +8,13 @@ type FilterOption = {
   value: string;
 };
 
+export type EventTypeOption = EventType | '';
+
 interface FeedFilterDropdownProps {
-  selectedTypes: Array<EventType>;
+  selectedTypes: Array<EventTypeOption>;
   onChange: (checked: boolean, checkId: string) => void;
   options?: FilterOption[];
+  autoCheckAll?: boolean;
 }
 
 const DEFAULT_OPTIONS = [
@@ -33,13 +36,19 @@ const DEFAULT_OPTIONS = [
   }
 ];
 
-export const FeedFilterDropdown: React.FC<FeedFilterDropdownProps> = ({ options, selectedTypes, onChange }) => {
+export const FeedFilterDropdown: React.FC<FeedFilterDropdownProps> = ({
+  options,
+  selectedTypes,
+  onChange,
+  autoCheckAll = true
+}) => {
   const filterOptions = options ?? DEFAULT_OPTIONS;
   return (
     <PopoverButton title="Filter" buttonClassName="font-heading pointer-events-auto py-2.5">
       {filterOptions.map((item, idx) => {
         let isChecked = selectedTypes.indexOf(item.value as EventType) >= 0;
-        if (item.value === '' && selectedTypes.length === 0) {
+
+        if (autoCheckAll === true && item.value === '' && selectedTypes.length === 0) {
           isChecked = true; // 'All' option selected.
         }
         return (
