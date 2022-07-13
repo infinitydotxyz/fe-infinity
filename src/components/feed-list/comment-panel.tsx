@@ -5,7 +5,7 @@ import { addUserComments, Comment, fetchComments, fetchMoreComments } from 'src/
 import { format } from 'timeago.js';
 import { Button, Drawer, EZImage, NextLink, ScrollLoader } from 'src/components/common';
 import { NftEventRec } from '../asset/activity/activity-item';
-import { getUserInfoSync } from './user-info-cache';
+import { UserInfoCache } from './user-info-cache';
 
 interface Props {
   isOpen: boolean;
@@ -19,6 +19,8 @@ export const CommentPanel = ({ isOpen, onClose, event, contentOnly }: Props) => 
   const [text, setText] = useState('');
   const [data, setData] = useState<Comment[]>([]);
   const [isFetched, setIsFetched] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [trigger, setTrigger] = useState<number>(0);
 
   const fetchData = async (more: boolean) => {
     const commentsArr = more ? fetchMoreComments(event.id) : await fetchComments(event.id);
@@ -29,6 +31,19 @@ export const CommentPanel = ({ isOpen, onClose, event, contentOnly }: Props) => 
 
   useEffect(() => {
     fetchData(false);
+  }, []);
+
+  const onCacheUpdate = () => {
+    const t = Math.random();
+    setTrigger(t);
+  };
+
+  useEffect(() => {
+    UserInfoCache.emitter.on('updated', onCacheUpdate);
+
+    return () => {
+      UserInfoCache.emitter.off('updated', onCacheUpdate);
+    };
   }, []);
 
   const onClickReply = async () => {
@@ -66,7 +81,7 @@ export const CommentPanel = ({ isOpen, onClose, event, contentOnly }: Props) => 
       {isFetched && data.length === 0 && <div>There are no comments.</div>}
 
       {data.map((item, idx: number) => {
-        const userInfo = getUserInfoSync(item.userAddress);
+        const userInfo = UserInfoCache.getUserInfoSync(item.userAddress);
 
         return (
           <div key={idx}>
