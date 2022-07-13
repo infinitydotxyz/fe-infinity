@@ -36,6 +36,12 @@ export const UserPageOrderListItem = ({ order, orderType, onClickCancel }: Props
           </div>
 
           <div className="w-1/8">
+            <div className="text-gray-400">Order type</div>
+            <div className="font-bold">
+              {orderType === 'listings' ? 'Listing' : orderType === 'offers-made' ? 'Offer made' : 'Offer received'}
+            </div>
+          </div>
+          <div className="w-1/8">
             <div className="text-gray-400">Price</div>
             <div className="font-bold">
               <EthPrice label={`${order.startPriceEth}`} />
@@ -46,7 +52,7 @@ export const UserPageOrderListItem = ({ order, orderType, onClickCancel }: Props
             <div className="font-bold">{order.nfts.length}</div>
           </div>
           <div className="w-1/8">
-            <div className="text-gray-400">Expiry date</div>
+            <div className="text-gray-400">Expiry</div>
             <div className="font-bold">{format(order.endTimeMs)}</div>
           </div>
           <div className="w-24">

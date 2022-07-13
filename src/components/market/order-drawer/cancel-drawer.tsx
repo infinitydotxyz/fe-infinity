@@ -1,5 +1,6 @@
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { Button, SVG, Spacer } from 'src/components/common';
+import { Button, SVG, Spacer, toastSuccess, toastError } from 'src/components/common';
+import { ellipsisAddress, extractErrorMsg } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { cancelMultipleOrders } from 'src/utils/exchange/orders';
 import { iconButtonStyle } from 'src/utils/ui-constants';
@@ -15,14 +16,14 @@ interface Props {
 }
 
 export const CancelDrawer = ({ open, onClose, orders, onClickRemove }: Props) => {
-  const { providerManager, chainId } = useAppContext();
+  const { providerManager, chainId, waitForTransaction } = useAppContext();
 
   return (
     <>
       <Drawer
         open={open}
         onClose={onClose}
-        subtitle={'Cancel these orders in one transaction :)'}
+        subtitle={'Cancel these orders in one transaction'}
         title={<div className="flex items-center">Cancel Orders</div>}
       >
         <div className="flex flex-col h-full">
@@ -60,12 +61,20 @@ export const CancelDrawer = ({ open, onClose, orders, onClickRemove }: Props) =>
             <Button
               size="large"
               onClick={async () => {
-                const signer = providerManager?.getEthersProvider().getSigner();
-                if (signer) {
-                  const nonces = orders.map((order) => order.nonce);
-                  await cancelMultipleOrders(signer, chainId, nonces);
-                } else {
-                  throw 'Signer is null';
+                try {
+                  const signer = providerManager?.getEthersProvider().getSigner();
+                  if (signer) {
+                    const nonces = orders.map((order) => order.nonce);
+                    const { hash } = await cancelMultipleOrders(signer, chainId, nonces);
+                    toastSuccess('Transaction sent to chain');
+                    waitForTransaction(hash, () => {
+                      toastSuccess(`Transaction confirmed ${ellipsisAddress(hash)}`);
+                    });
+                  } else {
+                    throw 'Signer is null';
+                  }
+                } catch (err) {
+                  toastError(extractErrorMsg(err));
                 }
               }}
             >
