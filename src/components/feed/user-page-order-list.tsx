@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { UserPageOrderListItem } from './user-page-order-list-item';
-import { apiGet, extractErrorMsg, ITEMS_PER_PAGE } from 'src/utils';
+import { apiGet, extractErrorMsg, ITEMS_PER_PAGE, ellipsisAddress } from 'src/utils';
 import { Button, CenteredContent, ScrollLoader, Spinner, toastError, toastSuccess } from '../common';
 import { UserProfileDto } from '../user/user-profile-dto';
 import { CancelDrawer } from 'src/components/market/order-drawer/cancel-drawer';
@@ -12,7 +12,6 @@ import { useRouter } from 'next/router';
 import { cancelAllOrders } from 'src/utils/exchange/orders';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { fetchOrderNonce } from 'src/utils/marketUtils';
-import { ellipsisAddress } from 'src/utils';
 
 type Query = {
   limit: number;
