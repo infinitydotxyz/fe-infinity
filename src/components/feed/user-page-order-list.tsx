@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { UserPageOrderListItem } from './user-page-order-list-item';
-import { apiGet, ITEMS_PER_PAGE } from 'src/utils';
-import { Button, CenteredContent, ScrollLoader, Spinner, toastSuccess } from '../common';
+import { apiGet, extractErrorMsg, ITEMS_PER_PAGE } from 'src/utils';
+import { Button, CenteredContent, ScrollLoader, Spinner, toastError, toastSuccess } from '../common';
 import { UserProfileDto } from '../user/user-profile-dto';
 import { CancelDrawer } from 'src/components/market/order-drawer/cancel-drawer';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
@@ -12,6 +12,7 @@ import { useRouter } from 'next/router';
 import { cancelAllOrders } from 'src/utils/exchange/orders';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { fetchOrderNonce } from 'src/utils/marketUtils';
+import { ellipsisAddress } from 'src/utils';
 
 type Query = {
   limit: number;
@@ -36,7 +37,7 @@ interface UserPageOrderListProps {
 
 export const UserPageOrderList = ({ userInfo, className = '' }: UserPageOrderListProps) => {
   const router = useRouter();
-  const { providerManager, chainId, user } = useAppContext();
+  const { providerManager, chainId, user, waitForTransaction } = useAppContext();
   const { orderDrawerOpen, setOrderDrawerOpen, setCustomDrawerItems } = useOrderContext();
   const [data, setData] = useState<SignedOBOrder[]>([]);
   const [isFetching, setIsFetching] = useState(false);
@@ -128,13 +129,20 @@ export const UserPageOrderList = ({ userInfo, className = '' }: UserPageOrderLis
           variant="outline"
           className="py-2.5 mr-2 font-heading pointer-events-auto"
           onClick={async () => {
-            const signer = providerManager?.getEthersProvider().getSigner();
-            if (signer && user) {
-              const minOrderNonce = await fetchOrderNonce(user.address);
-              await cancelAllOrders(signer, chainId, minOrderNonce);
-              toastSuccess('Transaction sent to chain');
-            } else {
-              throw 'User is null';
+            try {
+              const signer = providerManager?.getEthersProvider().getSigner();
+              if (signer && user) {
+                const minOrderNonce = await fetchOrderNonce(user.address);
+                const { hash } = await cancelAllOrders(signer, chainId, minOrderNonce);
+                toastSuccess('Transaction sent to chain');
+                waitForTransaction(hash, () => {
+                  toastSuccess(`Transaction confirmed ${ellipsisAddress(hash)}`);
+                });
+              } else {
+                throw 'User is null';
+              }
+            } catch (err) {
+              toastError(extractErrorMsg(err));
             }
           }}
         >
