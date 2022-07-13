@@ -39,7 +39,6 @@ export type Comment = {
   timestamp: number;
 };
 
-// const app = initializeApp(firestoreConfig);
 initializeApp(firestoreConfig);
 
 export const firestoreDb = getFirestore();
