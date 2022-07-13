@@ -74,7 +74,7 @@ interface Props {
 }
 
 const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
-  const { checkSignedIn, user, providerManager, chainId } = useAppContext();
+  const { checkSignedIn, user } = useAppContext();
   const { addCartItem, setPrice } = useOrderContext();
   const { isLoading, error, token, collection } = useFetchAssetInfo(qchainId, qcollection, qtokenId);
   const { options, onChange, selected } = useToggleTab(['Activity', 'Orders'], 'Activity');
