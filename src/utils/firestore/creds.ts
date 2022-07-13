@@ -1,3 +1,4 @@
+// todo: adi change in prod?
 export const firestoreConfig = {
   apiKey: 'AIzaSyAGKBT_tFV1F1tVePXpzbWZmJCdfPbj9t0',
   authDomain: 'nftc-dev.firebaseapp.com',
