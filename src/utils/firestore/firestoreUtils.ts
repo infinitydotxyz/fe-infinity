@@ -14,7 +14,7 @@ import {
   updateDoc,
   startAfter,
   Unsubscribe
-} from 'firebase/firestore'; // access firestore database service
+} from 'firebase/firestore';
 
 import { increaseComments, increaseLikes } from './counterUtils';
 import { firestoreConfig } from './creds';
