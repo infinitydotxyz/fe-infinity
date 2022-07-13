@@ -167,7 +167,7 @@ export const UserPageOrderList = ({ userInfo, className = '' }: UserPageOrderLis
           )}
 
           {!isFetching && hasNextPage === false && data?.length === 0 ? (
-            <div className="font-heading">No results found.</div>
+            <div className="font-heading">No results found</div>
           ) : null}
 
           {data?.map((order, idx) => {
