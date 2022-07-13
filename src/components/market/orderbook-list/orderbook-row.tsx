@@ -1,9 +1,9 @@
-import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import moment from 'moment';
 import { Button, EthPrice, toastError, toastSuccess } from 'src/components/common';
 import { ellipsisAddress, extractErrorMsg, numStr, shortDate } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { takeMultiplOneOrders } from 'src/utils/exchange/orders';
+import { useOrderContext } from 'src/utils/context/OrderContext';
 import { checkOffersToUser, getOrderType } from 'src/utils/marketUtils';
 import { DataColumn, defaultDataColumns } from './data-columns';
 import { OrderbookItem } from './orderbook-item';
@@ -16,6 +16,7 @@ type OrderbookRowProps = {
 export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.Element => {
   const { user } = useAppContext();
   const { checkSignedIn, providerManager, chainId } = useAppContext();
+  const { setPrice, addCartItem } = useOrderContext();
 
   const valueDiv = (dataColumn: DataColumn) => {
     let value = order.id;
@@ -75,23 +76,38 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
     }
   });
 
-  const onClickBuySell = async (order: SignedOBOrder) => {
+  const onClickBuySell = async (order: SignedOBOrder, isSellOrder: boolean) => {
     if (!checkSignedIn()) {
       return;
     }
-    try {
-      const signer = providerManager?.getEthersProvider().getSigner();
-      if (signer) {
-        await takeMultiplOneOrders(signer, chainId, order.signedOrder);
-        toastSuccess('Order sent for execution');
-      } else {
-        throw 'Signer is null';
-      }
-    } catch (err) {
-      const errMsg = extractErrorMsg(err);
-      toastError(errMsg);
-    }
+    // - direct Buy/Sell:
+    // try {
+    //   const signer = providerManager?.getEthersProvider().getSigner();
+    //   if (signer) {
+    //     await takeMultiplOneOrders(signer, chainId, order.signedOrder);
+    //     toastSuccess('Order sent for execution');
+    //   } else {
+    //     throw 'Signer is null';
+    //   }
+    // } catch (err) {
+    //   const errMsg = extractErrorMsg(err);
+    //   toastError(errMsg);
+    // }
+    setPrice(`${order.startPriceEth}`);
+    addCartItem({
+      chainId: order?.chainId as ChainId,
+      collectionName: order?.nfts[0].collectionName ?? '',
+      collectionAddress: order?.nfts[0].collectionAddress ?? '',
+      collectionImage: order?.nfts[0].collectionImage ?? '',
+      collectionSlug: order?.nfts[0].collectionSlug ?? '',
+      tokenImage: order?.nfts[0].tokens[0].tokenImage ?? '',
+      tokenName: order?.nfts[0].tokens[0].tokenName ?? '',
+      tokenId: order?.nfts[0].tokens[0].tokenId ?? '-1',
+      isSellOrder,
+      attributes: []
+    });
   };
+
   const isOwner = order.makerAddress === user?.address;
 
   return (
@@ -113,7 +129,7 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
                 <Button
                   className="font-heading w-24"
                   key={`${order.id} ${data.field}`}
-                  onClick={() => onClickBuySell(order)}
+                  onClick={() => onClickBuySell(order, false)}
                 >
                   Buy
                 </Button>
@@ -124,7 +140,7 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
                 <Button
                   className="font-heading w-24"
                   key={`${order.id} ${data.field}`}
-                  onClick={() => onClickBuySell(order)}
+                  onClick={() => onClickBuySell(order, true)}
                 >
                   Sell
                 </Button>
