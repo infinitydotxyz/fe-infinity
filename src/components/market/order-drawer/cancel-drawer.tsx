@@ -22,7 +22,7 @@ export const CancelDrawer = ({ open, onClose, orders, onClickRemove }: Props) =>
       <Drawer
         open={open}
         onClose={onClose}
-        subtitle={'Cancel these orders in one transaction :)'}
+        subtitle={'Cancel these orders in one transaction'}
         title={<div className="flex items-center">Cancel Orders</div>}
       >
         <div className="flex flex-col h-full">
