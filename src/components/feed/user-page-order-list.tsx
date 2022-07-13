@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { UserPageOrderListItem } from './user-page-order-list-item';
 import { apiGet, ITEMS_PER_PAGE } from 'src/utils';
-import { Button, CenteredContent, ScrollLoader, Spinner } from '../common';
+import { Button, CenteredContent, ScrollLoader, Spinner, toastSuccess } from '../common';
 import { UserProfileDto } from '../user/user-profile-dto';
 import { CancelDrawer } from 'src/components/market/order-drawer/cancel-drawer';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
@@ -132,6 +132,7 @@ export const UserPageOrderList = ({ userInfo, className = '' }: UserPageOrderLis
             if (signer && user) {
               const minOrderNonce = await fetchOrderNonce(user.address);
               await cancelAllOrders(signer, chainId, minOrderNonce);
+              toastSuccess('Transaction sent to chain');
             } else {
               throw 'User is null';
             }

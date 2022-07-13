@@ -1,5 +1,5 @@
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { Button, SVG, Spacer } from 'src/components/common';
+import { Button, SVG, Spacer, toastSuccess } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { cancelMultipleOrders } from 'src/utils/exchange/orders';
 import { iconButtonStyle } from 'src/utils/ui-constants';
@@ -64,6 +64,7 @@ export const CancelDrawer = ({ open, onClose, orders, onClickRemove }: Props) =>
                 if (signer) {
                   const nonces = orders.map((order) => order.nonce);
                   await cancelMultipleOrders(signer, chainId, nonces);
+                  toastSuccess('Transaction sent to chain');
                 } else {
                   throw 'Signer is null';
                 }
