@@ -36,10 +36,13 @@ const CollectionPage = () => {
   const { addCartItem, removeCartItem, ordersInCart, cartItems, addOrderToCart, updateOrders, setPrice } =
     useOrderContext();
   const [isBuyClicked, setIsBuyClicked] = useState(false);
-  const { options, onChange, selected } = useToggleTab(
-    ['NFTs', 'Orders', 'Activity', 'Community'],
-    (router?.query?.tab as string) || 'NFTs'
-  );
+  let toggleOptions = [];
+  if (!isProd()) {
+    toggleOptions = ['NFTs', 'Orders', 'Activity', 'Community'];
+  } else {
+    toggleOptions = ['NFTs', 'Orders', 'Activity'];
+  }
+  const { options, onChange, selected } = useToggleTab(toggleOptions, (router?.query?.tab as string) || 'NFTs');
   const {
     query: { name }
   } = router;
@@ -381,7 +384,7 @@ const CollectionPage = () => {
             {/* {currentTab === 1 && <ActivityTab dailyStats={dailyStats} weeklyStats={weeklyStats} />} */}
             {selected === 'Activity' && <CollectionActivityTab collectionAddress={collection?.address ?? ''} />}
 
-            {selected === 'Community' && <CommunityFeed />}
+            {selected === 'Community' && !isProd() && <CommunityFeed />}
           </div>
         </main>
       </div>
