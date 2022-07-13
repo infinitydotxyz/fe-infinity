@@ -128,7 +128,7 @@ export const CollectionFeed = ({ collectionAddress, tokenId, types, forActivity,
         />
       </div>
 
-      {!isLoading && activities.length === 0 ? <div className="font-heading">No data available.</div> : null}
+      {!isLoading && activities.length === 0 ? <div className="font-heading">No results found</div> : null}
 
       {newEvents.length > 0 ? (
         <div

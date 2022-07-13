@@ -116,7 +116,7 @@ const OrderbookList = ({
         </div>
       )}
       <div className="flex flex-col items-start w-full">
-        {hasNoData && <div className="font-heading">No data available.</div>}
+        {hasNoData && <div className="font-heading">No results found</div>}
 
         {orders.length > 0 &&
           orders.map((order: SignedOBOrder, i) => {

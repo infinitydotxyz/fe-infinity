@@ -1,27 +1,24 @@
 import { initializeApp } from 'firebase/app';
 import {
-  getFirestore,
   collection,
-  getDocs,
   doc,
-  setDoc,
   getDoc,
-  onSnapshot,
-  query,
+  getDocs,
+  getFirestore,
   limit,
   orderBy,
-  where,
-  updateDoc,
+  query,
+  setDoc,
   startAfter,
-  Unsubscribe
+  updateDoc,
+  where
 } from 'firebase/firestore';
 
+import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
+import { firestoreConstants } from '@infinityxyz/lib-frontend/utils';
 import { increaseComments, increaseLikes } from './counterUtils';
 import { firestoreConfig } from './creds';
-import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
-import { FeedEvent } from 'src/components/feed/feed-item';
 
-export const COLL_FEED = 'feed'; // collection: /feed - to store feed events
 const EVENTS_PER_PAGE = 10;
 const COMMENTS_PER_PAGE = 20;
 
@@ -59,7 +56,7 @@ let lastDoc: unknown = null;
 let lastCommentDoc: unknown = null;
 
 export async function fetchMoreEvents(filter: FeedFilter) {
-  const coll = collection(firestoreDb, COLL_FEED);
+  const coll = collection(firestoreDb, firestoreConstants.FEED_COLL);
 
   if (lastDoc) {
     let q;
@@ -109,81 +106,6 @@ export async function fetchMoreEvents(filter: FeedFilter) {
     }
   }
   return [];
-}
-
-type onChangeHandler = (type: string, docData: FeedEvent) => void;
-
-let unsubscribe: Unsubscribe;
-export async function subscribe(collectionPath: string, filter: FeedFilter, onChange: onChangeHandler) {
-  try {
-    const coll = collection(firestoreDb, collectionPath);
-
-    let q;
-    if (filter?.types && filter?.types.length > 0 && filter?.collectionAddress) {
-      // find events of a Collection & Filter
-      q = query(
-        coll,
-        where('type', 'in', filter?.types),
-        where('collectionAddress', '==', filter?.collectionAddress),
-        orderBy('timestamp', 'desc'),
-        limit(EVENTS_PER_PAGE)
-      );
-    } else if (filter?.types && filter?.types.length > 0 && filter?.userAddress) {
-      // find events of a User & Filter
-      q = query(
-        coll,
-        where('type', 'in', filter?.types),
-        where('buyer', '==', filter?.userAddress),
-        orderBy('timestamp', 'desc'),
-        limit(EVENTS_PER_PAGE)
-      );
-    } else if (filter?.types && filter?.types.length > 0) {
-      // find Global Events & Filter
-      q = query(coll, where('type', 'in', filter?.types), orderBy('timestamp', 'desc'), limit(EVENTS_PER_PAGE));
-    } else if (filter?.tokenId) {
-      // find events of a Token (no filters)
-      q = query(
-        coll,
-        where('collectionAddress', '==', filter?.collectionAddress),
-        where('tokenId', '==', filter?.tokenId),
-        orderBy('timestamp', 'desc'),
-        limit(EVENTS_PER_PAGE)
-      );
-    } else if (filter?.collectionAddress) {
-      // find events of a Collection (no filters)
-      q = query(
-        coll,
-        where('collectionAddress', '==', filter?.collectionAddress),
-        orderBy('timestamp', 'desc'),
-        limit(EVENTS_PER_PAGE)
-      );
-    } else if (filter?.userAddress) {
-      // find events of a User (no filters)
-      // console.log('filter?.userAddress', filter?.userAddress);
-      q = query(coll, where('buyer', '==', filter?.userAddress), orderBy('timestamp', 'desc'), limit(EVENTS_PER_PAGE));
-    } else {
-      // find Global Events (no filters)
-      q = query(coll, orderBy('timestamp', 'desc'), limit(EVENTS_PER_PAGE)); // query(coll, limit(3), orderBy('timestamp', 'desc'))
-    }
-
-    if (unsubscribe) {
-      unsubscribe();
-    }
-    unsubscribe = onSnapshot(q, (snapshot) => {
-      snapshot.docChanges().forEach((change) => {
-        if (onChange && change.type === 'added') {
-          const docData = { ...change.doc.data(), id: change.doc.id };
-          lastDoc = change.doc;
-          // console.log('change.doc', change.doc.data());
-          onChange(change.type, docData as FeedEvent);
-        }
-      });
-    });
-    return unsubscribe;
-  } catch (err) {
-    console.error(err);
-    throw new Error(`${err}`);
-  }
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
