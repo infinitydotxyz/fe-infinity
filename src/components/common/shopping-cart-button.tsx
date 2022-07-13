@@ -30,7 +30,7 @@ export const ShoppingCartButton = () => {
     <Button variant="outline" onClick={handleClick} className="relative">
       <FaShoppingCart className={iconButtonStyle} />
       {count > 0 ? (
-        <span className="px-1 absolute top-1 right-2 bg-red-600 text-white rounded-full text-xs">{count}</span>
+        <span className="px-1 absolute top-1 right-2 bg-blue-500 text-white rounded-full text-xs">{count}</span>
       ) : null}
     </Button>
   );

@@ -89,7 +89,7 @@ export const FeedList = ({ collectionAddress, tokenId, types, className = '' }: 
         <FilterButton filter={filter} onChange={(f) => setFilter(f)} />
       </div>
 
-      {!isLoading && activities.length === 0 ? <div className="font-heading">No data available.</div> : null}
+      {!isLoading && activities.length === 0 ? <div className="font-heading">No results found</div> : null}
 
       <div className="space-y-4">
         {activities.map((activity, idx) => {
