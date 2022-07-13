@@ -8,7 +8,7 @@ import { NftEventRec } from '../asset/activity/activity-item';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { FeedListItem } from './feed-list-item';
 import { FilterButton } from './filter-button';
-import { CommentPanel } from '../feed/comment-panel';
+import { CommentPanel } from './comment-panel';
 
 interface Props {
   collectionAddress: string;

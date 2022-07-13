@@ -37,8 +37,7 @@ const CollectionPage = () => {
     useOrderContext();
   const [isBuyClicked, setIsBuyClicked] = useState(false);
   const { options, onChange, selected } = useToggleTab(
-    ['NFTs', 'Orders', 'Activity'],
-    // ['NFTs', 'Orders', 'Activity', 'Community'],
+    ['NFTs', 'Orders', 'Activity', 'Community'],
     (router?.query?.tab as string) || 'NFTs'
   );
   const {
