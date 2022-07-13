@@ -4,7 +4,7 @@ import { apiGet } from 'src/utils';
 import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
 import { ScrollLoader } from '../common';
 // import { ActivityItem } from './activity-item';
-import { CommentPanel } from './comment-panel';
+import { CommentPanel } from '../feed-list/comment-panel';
 import { FeedFilterDropdown } from './feed-filter-dropdown';
 import { FeedEvent, FeedItem } from './feed-item';
 import { ActivityItem, NftEventRec } from '../asset/activity/activity-item';

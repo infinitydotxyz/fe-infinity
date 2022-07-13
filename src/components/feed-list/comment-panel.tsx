@@ -3,8 +3,9 @@ import { ellipsisString } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { addUserComments, Comment, fetchComments, fetchMoreComments } from 'src/utils/firestore/firestoreUtils';
 import { format } from 'timeago.js';
-import { Button, Drawer, NextLink, ScrollLoader } from 'src/components/common';
+import { Button, Drawer, EZImage, NextLink, ScrollLoader } from 'src/components/common';
 import { NftEventRec } from '../asset/activity/activity-item';
+import { getUserInfoSync } from './user-info-cache';
 
 interface Props {
   isOpen: boolean;
@@ -47,11 +48,13 @@ export const CommentPanel = ({ isOpen, onClose, event, contentOnly }: Props) => 
   const replyBox = (
     <div className="flex ">
       <textarea
+        rows={3}
         value={text}
-        placeholder="Reply here"
         onChange={(ev) => setText(ev.target.value)}
-        className="mb-6 w-full text-xl  border-none"
+        className="p-0 border-none focus:ring-0 block w-full text-base"
+        placeholder="Reply here"
       />
+
       <Button variant="outline" onClick={onClickReply} className="h-10 ml-2 font-heading text-secondary">
         Reply
       </Button>
@@ -63,15 +66,18 @@ export const CommentPanel = ({ isOpen, onClose, event, contentOnly }: Props) => 
       {isFetched && data.length === 0 && <div>There are no comments.</div>}
 
       {data.map((item, idx: number) => {
+        const userInfo = getUserInfoSync(item.userAddress);
+
         return (
           <div key={idx}>
-            <hr className="mb-8 text-gray-100" />
+            <hr className="mb-4 text-gray-100" />
 
             <div className="flex items-center">
-              <img
-                alt="profile image"
-                src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-                className="border rounded-3xl bg-gray-100 p-5"
+              <EZImage
+                src={
+                  userInfo?.profileImage ?? 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+                }
+                className="border rounded-full overflow-clip shrink-0 bg-gray-100 w-12 h-12"
               />
               <NextLink href={`/profile/${item.username ?? item.userAddress}`} className="ml-4 font-bold">
                 {ellipsisString(item.username ?? item.userAddress)}
@@ -80,7 +86,7 @@ export const CommentPanel = ({ isOpen, onClose, event, contentOnly }: Props) => 
                 {format(item.timestamp)}
               </div>
             </div>
-            <pre className="ml-14 mt-4 mb-8 font-body">{item.comment}</pre>
+            <div className="ml-16 mt-1 mb-4">{item.comment}</div>
           </div>
         );
       })}
