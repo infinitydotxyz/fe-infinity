@@ -4,7 +4,6 @@ import { UserPage } from 'src/components/user/user-page';
 import { useAppContext, User } from 'src/utils/context/AppContext';
 import { PleaseConnectMsg, useFetch } from 'src/utils';
 import { UserProfileDto } from 'src/components/user/user-profile-dto';
-import { useEffect } from 'react';
 
 const USER_API_END_POINT = '/user';
 
