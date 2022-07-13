@@ -265,21 +265,23 @@ export async function signOBOrder(
     order.maxGasPriceWei
   ];
 
-  const nfts = [];
-  for (const nft of order.nfts) {
-    const collection = nft.collectionAddress;
-    const tokens = [];
-    for (const token of nft.tokens) {
-      tokens.push({
+  const nfts: ChainNFTs[] = order.nfts.reduce((acc: ChainNFTs[], { collectionAddress, tokens }) => {
+    let nft = acc.find(({ collection }) => collection === collectionAddress);
+    if (!nft) {
+      nft = { collection: collectionAddress, tokens: [] };
+      acc.push(nft);
+    }
+    const chainTokens = [];
+    for (const token of tokens) {
+      chainTokens.push({
         tokenId: token.tokenId,
         numTokens: token.numTokens
       });
     }
-    nfts.push({
-      collection,
-      tokens
-    });
-  }
+    nft.tokens.push(...chainTokens);
+    return acc;
+  }, [] as ChainNFTs[]);
+
   // don't use ?? operator here
   const execParams = [
     order.execParams.complicationAddress || getOBComplicationAddress(chainId.toString()),
