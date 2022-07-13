@@ -44,6 +44,8 @@ class _UserInfoCache {
 
       this.cache.set(userAddress, userInfo);
       this.emitter.emit('updated');
+
+      // only removes on success, so this should stop any failures
       this.fetching.delete(userAddress);
 
       return userInfo;

@@ -14,6 +14,7 @@ import { useRouter } from 'next/router';
 
 const HomePage = () => {
   const router = useRouter();
+
   return (
     <div className="transition w-[100vw] h-[100vh] overflow-y-auto overflow-x-hidden justify-items-center">
       <Header title="Infinity" />

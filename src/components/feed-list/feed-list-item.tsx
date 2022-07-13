@@ -10,16 +10,12 @@ import { FeedListTableItem } from './feed-list-table-item';
 
 interface Props {
   activity: NftEventRec;
-  onLike?: (event: NftEventRec) => void;
-  onComment?: (event: NftEventRec) => void;
+  onLike: (event: NftEventRec) => void;
+  onComment: (event: NftEventRec) => void;
 }
 
 export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
   const { user } = useAppContext();
-
-  if (onLike && onComment) {
-    // sdf
-  }
 
   const typeName = (type: string) => {
     switch (type) {
@@ -89,9 +85,7 @@ export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
         onClick={async () => {
           if (user && user?.address) {
             await addUserLike(activity.id || '', user?.address, () => {
-              if (onLike) {
-                onLike(activity);
-              }
+              onLike(activity);
             });
           }
         }}
@@ -106,9 +100,7 @@ export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
         variant="plain"
         className="px-0 ml-12"
         onClick={() => {
-          if (onComment) {
-            onComment(activity);
-          }
+          onComment(activity);
         }}
       >
         <div className="flex items-center">
