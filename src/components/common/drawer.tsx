@@ -19,7 +19,7 @@ export const Drawer = ({ open, tooltip, subtitle, divide, onClose, title, childr
   const [showTooltip, setShowTooltip] = useState(false);
 
   const header = (
-    <div className="px-12 pt-10 pb-2">
+    <div className="px-12 pt-10 pb-1">
       <TooltipWrapper show={showTooltip} tooltip={tooltip}>
         <div className="flex  justify-between items-center">
           <div className="flex items-center">

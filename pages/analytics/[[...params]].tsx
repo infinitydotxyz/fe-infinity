@@ -38,7 +38,7 @@ type StatType = {
 
 export const Analytics = () => {
   const router = useRouter();
-  const { user } = useAppContext();
+  const { user, chainId } = useAppContext();
   const connected = user?.address ? true : false;
   const [page, setPage] = useState(router.query.params?.[0] ? router.query.params?.[0] : 'trending');
   const [interval, setInterval] = useState(router.query.params?.[1] ? router.query.params?.[1] : 'weekly');
@@ -145,7 +145,7 @@ export const Analytics = () => {
   const query =
     page === 'trending'
       ? `/collections/rankings?orderBy=${orderBy}&orderDirection=${orderDirection}&period=${interval}&date=${date}&limit=${ITEMS_PER_PAGE}&cursor=${cursor}`
-      : `/user/1:${user?.address}/watchlist?orderBy=${orderBy}&orderDirection=${orderDirection}&period=${interval}&date=${date}&limit=${ITEMS_PER_PAGE}`;
+      : `/user/${chainId}:${user?.address}/watchlist?orderBy=${orderBy}&orderDirection=${orderDirection}&period=${interval}&date=${date}&limit=${ITEMS_PER_PAGE}`;
 
   const data = useFetch<{ data: CollectionStats[]; cursor: string }>(query);
 

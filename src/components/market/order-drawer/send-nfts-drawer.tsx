@@ -40,7 +40,7 @@ export const SendNFTsDrawer = ({ open, onClose, nftsForTransfer, onClickRemove, 
       <Drawer
         open={open}
         onClose={onClose}
-        subtitle={'Selected NFTs for sending:'}
+        subtitle={'Batch send NFTs'}
         title={<div className="flex items-center">Send</div>}
       >
         <div className="flex flex-col h-full">

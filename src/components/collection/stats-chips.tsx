@@ -32,7 +32,7 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
     }
     setFollowingLoading(true);
     if (isFollowing) {
-      const { error } = await apiDelete(`/user/1:${user?.address}/followingCollections`, {
+      const { error } = await apiDelete(`/user/${chainId}:${user?.address}/followingCollections`, {
         data: {
           collectionChainId: collection?.chainId,
           collectionAddress: collection?.address
@@ -45,7 +45,7 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
         setIsFollowing(false);
       }
     } else {
-      const { error } = await apiPost(`/user/1:${user?.address}/followingCollections`, {
+      const { error } = await apiPost(`/user/${chainId}:${user?.address}/followingCollections`, {
         data: {
           collectionChainId: collection?.chainId,
           collectionAddress: collection?.address

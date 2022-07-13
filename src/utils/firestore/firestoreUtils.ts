@@ -14,7 +14,7 @@ import {
   updateDoc,
   startAfter,
   Unsubscribe
-} from 'firebase/firestore'; // access firestore database service
+} from 'firebase/firestore';
 
 import { increaseComments, increaseLikes } from './counterUtils';
 import { firestoreConfig } from './creds';
@@ -39,7 +39,6 @@ export type Comment = {
   timestamp: number;
 };
 
-// const app = initializeApp(firestoreConfig);
 initializeApp(firestoreConfig);
 
 export const firestoreDb = getFirestore();

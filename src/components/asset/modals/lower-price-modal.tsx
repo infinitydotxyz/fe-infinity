@@ -11,6 +11,7 @@ import {
 } from 'src/components/common';
 import {
   DEFAULT_MAX_GAS_PRICE_WEI,
+  extractErrorMsg,
   getEstimatedGasPrice,
   INFINITY_FEE_PCT,
   INFINITY_ROYALTY_PCT,
@@ -87,40 +88,44 @@ export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) 
           }
         }
 
-        const signedOrders: SignedOBOrder[] = [];
-        const signer = providerManager?.getEthersProvider().getSigner();
-        const gasPrice = await getEstimatedGasPrice(providerManager?.getEthersProvider());
-        if (signer) {
-          // keep the last Order & set the New Price:
-          const order: OBOrder = {
-            id: '',
-            chainId,
-            isSellOrder: orderDetails.isSellOrder,
-            makerAddress: orderDetails.makerAddress,
-            makerUsername: orderDetails.makerUsername,
-            numItems: orderDetails.numItems,
-            startTimeMs: orderDetails.startTimeMs,
-            endTimeMs: orderDetails.endTimeMs,
-            startPriceEth: priceVal, // set the New Price.
-            endPriceEth: priceVal, // set the New Price.
-            nfts: orderDetails.nfts,
-            nonce: orderDetails.nonce,
-            execParams: orderDetails.execParams,
-            extraParams: orderDetails.extraParams,
-            maxGasPriceWei: gasPrice ?? DEFAULT_MAX_GAS_PRICE_WEI
-          };
+        try {
+          const signedOrders: SignedOBOrder[] = [];
+          const signer = providerManager?.getEthersProvider().getSigner();
+          const gasPrice = await getEstimatedGasPrice(providerManager?.getEthersProvider());
+          if (signer) {
+            // keep the last Order & set the New Price:
+            const order: OBOrder = {
+              id: '',
+              chainId,
+              isSellOrder: orderDetails.isSellOrder,
+              makerAddress: orderDetails.makerAddress,
+              makerUsername: orderDetails.makerUsername,
+              numItems: orderDetails.numItems,
+              startTimeMs: orderDetails.startTimeMs,
+              endTimeMs: orderDetails.endTimeMs,
+              startPriceEth: priceVal, // set the New Price.
+              endPriceEth: priceVal, // set the New Price.
+              nfts: orderDetails.nfts,
+              nonce: orderDetails.nonce,
+              execParams: orderDetails.execParams,
+              extraParams: orderDetails.extraParams,
+              maxGasPriceWei: gasPrice ?? DEFAULT_MAX_GAS_PRICE_WEI
+            };
 
-          const signedOrder = await getSignedOBOrder(user, chainId, signer, order);
-          if (signedOrder) {
-            signedOrders.push(signedOrder);
-            try {
-              await postOrders(user.address, signedOrders);
-              toastSuccess('Lowered price successfully');
-            } catch (ex) {
-              toastError(`${ex}`);
-              return false;
+            const signedOrder = await getSignedOBOrder(user, chainId, signer, order);
+            if (signedOrder) {
+              signedOrders.push(signedOrder);
+              try {
+                await postOrders(user.address, signedOrders);
+                toastSuccess('Lowered price successfully');
+              } catch (ex) {
+                toastError(`${ex}`);
+                return false;
+              }
             }
           }
+        } catch (err) {
+          toastError(extractErrorMsg(err));
         }
         onClose();
       }}
