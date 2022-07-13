@@ -27,7 +27,7 @@ const fetchTokenData = async (chainId: string, collection: string, tokenId: stri
 
 export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listClassName = '' }: Props) => {
   const router = useRouter();
-  const { user } = useAppContext();
+  const { user, chainId } = useAppContext();
   const {
     addCartItem,
     setOrderDrawerOpen,
@@ -182,11 +182,7 @@ export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listCl
                         {
                           label: 'Lower price',
                           onClick: async () => {
-                            const { result } = await fetchTokenData(
-                              ChainId.Mainnet,
-                              data.address ?? '',
-                              data.tokenId ?? ''
-                            );
+                            const { result } = await fetchTokenData(chainId, data.address ?? '', data.tokenId ?? '');
                             setLoweringPriceToken(result);
                             setCurrentPrice(`${data?.orderSnippet?.listing?.orderItem?.startPriceEth}`);
                           }
@@ -194,11 +190,7 @@ export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listCl
                         {
                           label: 'Cancel listing',
                           onClick: async () => {
-                            const { result } = await fetchTokenData(
-                              ChainId.Mainnet,
-                              data.address ?? '',
-                              data.tokenId ?? ''
-                            );
+                            const { result } = await fetchTokenData(chainId, data.address ?? '', data.tokenId ?? '');
                             setCancellingToken(result);
                           }
                         }
