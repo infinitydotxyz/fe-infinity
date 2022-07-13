@@ -1,7 +1,7 @@
 import { ChainId, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import moment from 'moment';
-import { Button, EthPrice, toastError, toastSuccess } from 'src/components/common';
-import { ellipsisAddress, extractErrorMsg, numStr, shortDate } from 'src/utils';
+import { Button, EthPrice } from 'src/components/common';
+import { ellipsisAddress, numStr, shortDate } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { checkOffersToUser, getOrderType } from 'src/utils/marketUtils';
@@ -15,7 +15,7 @@ type OrderbookRowProps = {
 
 export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.Element => {
   const { user } = useAppContext();
-  const { checkSignedIn, providerManager, chainId } = useAppContext();
+  const { checkSignedIn } = useAppContext();
   const { setPrice, addCartItem } = useOrderContext();
 
   const valueDiv = (dataColumn: DataColumn) => {
@@ -184,14 +184,14 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
                 labelClassName="font-bold"
               />
             </div>
-            <div>NFT amount: {numStr(order.numItems.toString())}</div>
+            <div># NFTs: {numStr(order.numItems.toString())}</div>
           </div>
         </div>
         <div className="text-right">
           <Button className="font-heading">{order.isSellOrder ? 'Buy' : 'Sell'}</Button>
 
           <div>{moment(order.startTimeMs).fromNow()}</div>
-          <div>Expiring: {shortDate(new Date(order.endTimeMs))}</div>
+          <div>Expiry: {shortDate(new Date(order.endTimeMs))}</div>
         </div>
       </div>
     </div>
