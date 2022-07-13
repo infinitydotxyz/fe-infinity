@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { apiGet } from 'src/utils';
 import { ActivityItem } from './activity-item';
-import { ActivityFilter } from 'src/components/asset';
 import { CenteredContent, Spinner } from 'src/components/common';
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
+import { FeedFilterDropdown } from 'src/components/feed/feed-filter-dropdown';
 
 interface ActivityListPropType {
   className?: string;
@@ -11,6 +11,7 @@ interface ActivityListPropType {
   collectionAddress: string;
   tokenId: string;
 }
+type EventTypeOptions = EventType | '';
 
 export const ActivityList: React.FC<ActivityListPropType> = ({
   className = '',
@@ -18,7 +19,7 @@ export const ActivityList: React.FC<ActivityListPropType> = ({
   collectionAddress,
   tokenId
 }: ActivityListPropType) => {
-  const [activityTypes, setActivityTypes] = useState<EventType[]>([EventType.NftSale]);
+  const [activityTypes, setActivityTypes] = useState<EventTypeOptions[]>([EventType.NftSale]);
   const [activityList, setActivityList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasNoData, setHasNoData] = useState(false);
@@ -29,8 +30,9 @@ export const ActivityList: React.FC<ActivityListPropType> = ({
     setIsLoading(true);
     setHasNoData(false);
     const ACTIVITY_ENDPOINT = `/collections/${chainId}:${collectionAddress}/nfts/${tokenId}/activity`;
+    const queryTypes = activityTypes.filter((item) => item !== '');
     const { result, error } = await apiGet(ACTIVITY_ENDPOINT, {
-      query: { eventType: activityTypes, limit: 50 }
+      query: { eventType: queryTypes, limit: 50 }
     });
     setIsLoading(false);
     if (!error) {
@@ -51,16 +53,26 @@ export const ActivityList: React.FC<ActivityListPropType> = ({
 
   const handleChange = (checked: boolean, checkId: string) => {
     const curType = checkId as EventType;
+    if (checkId === '') {
+      if (checked === true) {
+        setActivityTypes(['', EventType.NftSale, EventType.NftOffer, EventType.NftListing]);
+      } else {
+        setActivityTypes([]);
+      }
+      return;
+    }
+    let newTypes = [];
     if (checked) {
-      setActivityTypes([...activityTypes, curType]);
+      newTypes = [...activityTypes, curType];
     } else {
       const _activityTypes = [...activityTypes];
       const index = activityTypes.indexOf(curType);
       if (index > -1) {
         _activityTypes.splice(index, 1);
       }
-      setActivityTypes(_activityTypes);
+      newTypes = _activityTypes;
     }
+    setActivityTypes(newTypes);
   };
 
   return (
@@ -68,7 +80,7 @@ export const ActivityList: React.FC<ActivityListPropType> = ({
       <div className="mt-4 md:mt-8">
         <div className="flex items-center justify-between">
           <p className="mt-4 sm:mt-6 sm:mb-4 font-body tracking-base text-black font-bold">&nbsp;</p>
-          <ActivityFilter activityTypes={activityTypes} onChange={handleChange} />
+          <FeedFilterDropdown selectedTypes={activityTypes} onChange={handleChange} autoCheckAll={false} />
         </div>
       </div>
 

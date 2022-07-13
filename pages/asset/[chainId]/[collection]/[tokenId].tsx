@@ -1,4 +1,4 @@
-import { Collection, Erc721Metadata, OBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId, Collection, Erc721Metadata, OBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
 import { getCurrentOBOrderPrice } from '@infinityxyz/lib-frontend/utils';
 import { utils } from 'ethers';
 import { useRouter } from 'next/router';
@@ -16,7 +16,6 @@ import {
   ShortAddress,
   Spinner,
   SVG,
-  toastSuccess,
   ToggleTab,
   useToggleTab
 } from 'src/components/common';
@@ -24,8 +23,8 @@ import { WaitingForTxModal } from 'src/components/market/order-drawer/waiting-fo
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
 import { getOwnerAddress, MISSING_IMAGE_URL, useFetch } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { getOBOrderFromFirestoreOrderItem, takeMultiplOneOrders } from 'src/utils/exchange/orders';
-import { fetchUserSignedOBOrder } from 'src/utils/marketUtils';
+import { useOrderContext } from 'src/utils/context/OrderContext';
+import { getOBOrderFromFirestoreOrderItem } from 'src/utils/exchange/orders';
 
 const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
@@ -75,7 +74,8 @@ interface Props {
 }
 
 const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
-  const { checkSignedIn, user, providerManager, chainId } = useAppContext();
+  const { checkSignedIn, user } = useAppContext();
+  const { addCartItem, setPrice } = useOrderContext();
   const { isLoading, error, token, collection } = useFetchAssetInfo(qchainId, qcollection, qtokenId);
   const { options, onChange, selected } = useToggleTab(['Activity', 'Orders'], 'Activity');
 
@@ -219,6 +219,33 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
     </>
   );
 
+  const onClickBuy = async () => {
+    // - direct buy:
+    // const signer = providerManager?.getEthersProvider().getSigner();
+    // if (signer) {
+    //   const order = await fetchUserSignedOBOrder(token?.ordersSnippet?.listing?.orderItem?.id);
+    //   if (order) {
+    //     await takeMultiplOneOrders(signer, chainId, order.signedOrder);
+    //     toastSuccess('Sent txn successfully');
+    //   }
+    // } else {
+    //   throw 'Signer is null';
+    // }
+    setPrice(`${buyPriceEth}`);
+    addCartItem({
+      chainId: token?.chainId as ChainId,
+      collectionName: token?.collectionName ?? '',
+      collectionAddress: token?.collectionAddress ?? '',
+      collectionImage: token?.image?.url ?? '',
+      collectionSlug: token?.collectionSlug ?? '',
+      tokenImage: token?.image?.url ?? '',
+      tokenName: token?.tokenId ?? '',
+      tokenId: token?.tokenId ?? '-1',
+      isSellOrder: false,
+      attributes: []
+    });
+  };
+
   return (
     <PageBox title={assetName} showTitle={false} className="flex flex-col max-w-screen-2xl mt-4">
       <div className="sm:flex">
@@ -284,22 +311,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
             <div className="md:-ml-1.5">
               <div className="flex flex-col md:flex-row gap-4 my-4 md:my-6 lg:mt-10">
                 {buyPriceEth && (
-                  <Button
-                    variant="primary"
-                    size="large"
-                    onClick={async () => {
-                      const signer = providerManager?.getEthersProvider().getSigner();
-                      if (signer) {
-                        const order = await fetchUserSignedOBOrder(token?.ordersSnippet?.listing?.orderItem?.id);
-                        if (order) {
-                          await takeMultiplOneOrders(signer, chainId, order.signedOrder);
-                          toastSuccess('Sent txn successfully');
-                        }
-                      } else {
-                        throw 'Signer is null';
-                      }
-                    }}
-                  >
+                  <Button variant="primary" size="large" onClick={onClickBuy}>
                     <div className="flex">
                       <span className="mr-4">Buy</span>
                       <span className="font-heading">
@@ -327,8 +339,6 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
       </div>
 
       <TraitList traits={tokenMetadata.attributes ?? []} collectionTraits={collection?.attributes} />
-
-      {/* <ActivityList chainId={collection.chainId} collectionAddress={token.collectionAddress} tokenId={token.tokenId} /> */}
 
       <div className="relative min-h-[1024px]">
         <ToggleTab

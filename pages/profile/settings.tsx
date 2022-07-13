@@ -2,9 +2,7 @@ import { AccountSettingsPage } from 'src/components/user/profile-settings';
 import { CenteredContent, PageBox, Spinner } from 'src/components/common';
 import { useAppContext, User } from 'src/utils/context/AppContext';
 import { UserProfileDto } from 'src/components/user/user-profile-dto';
-import { useFetch } from 'src/utils';
-
-const USER_API_END_POINT = '/user';
+import { useFetch, USER_API_END_POINT } from 'src/utils';
 
 const AccountSettings = () => {
   const { user, chainId } = useAppContext();

@@ -193,14 +193,15 @@ export async function updateCollectionDoc(path: string, docId: string, data: any
   await updateDoc(docRef, data);
 }
 
-export async function addUserLike(eventId: string, userAccount: string, doneCallback: () => void) {
-  const docRef = doc(firestoreDb, 'feed', eventId, 'userLikes', userAccount);
+export async function addUserLike(eventId: string, userAddress: string, doneCallback: () => void) {
+  const docRef = doc(firestoreDb, 'feed', eventId, 'userLikes', userAddress);
   const existingDocRef = await getDoc(docRef);
   const existingDocData = existingDocRef?.data();
+
   if (!existingDocData) {
     // user has not liked this eventId before => setDoc to userLikes & call increaseLikes:
-    await setDoc(docRef, { timestamp: +new Date() });
-    increaseLikes(userAccount ?? '', eventId);
+    await setDoc(docRef, { timestamp: Date.now() });
+    increaseLikes(userAddress, eventId);
     doneCallback();
   }
 }
@@ -216,7 +217,7 @@ export async function addUserComments({
   username?: string;
   comment: string;
 }) {
-  const timestamp = +new Date();
+  const timestamp = Date.now();
   const docRef = doc(firestoreDb, 'feed', eventId, 'userComments', userAddress + '_' + timestamp);
   await setDoc(docRef, { userAddress, username, comment, timestamp });
   increaseComments(userAddress ?? '', eventId);

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { TransactionReceipt } from '@ethersproject/abstract-provider';
 import { getCustomExceptionMsg } from 'src/utils/commonUtils';
 import { ProviderEvents, WalletType } from 'src/utils/providers/AbstractProvider';
 import { UserRejectException } from 'src/utils/providers/UserRejectException';
@@ -28,6 +29,7 @@ export type AppContextType = {
   setHeaderPosition: (bottom: number) => void;
   connectWallet: (walletType: WalletType) => Promise<void>;
   providerManager?: ProviderManager;
+  waitForTransaction: (txHash: string, callback: (receipt: TransactionReceipt | undefined) => void) => void;
 };
 
 const AppContext = React.createContext<AppContextType | null>(null);
@@ -41,6 +43,7 @@ export const AppContextProvider = (props: React.PropsWithChildren<unknown>) => {
     getCustomExceptionMsg(message);
   };
   const [providerManager, setProviderManager] = React.useState<ProviderManager | undefined>();
+  const provider = providerManager?.getEthersProvider();
 
   const showAppMessage = (message: React.ReactNode) => message;
 
@@ -167,6 +170,11 @@ export const AppContextProvider = (props: React.PropsWithChildren<unknown>) => {
     return true;
   };
 
+  const waitForTransaction = async (txHash: string, callback: (receipt: TransactionReceipt | undefined) => void) => {
+    const receipt = await provider?.waitForTransaction(txHash);
+    callback(receipt);
+  };
+
   const value: AppContextType = {
     user,
     signOut,
@@ -178,7 +186,8 @@ export const AppContextProvider = (props: React.PropsWithChildren<unknown>) => {
     headerPosition,
     setHeaderPosition,
     connectWallet,
-    providerManager
+    providerManager,
+    waitForTransaction
   };
 
   return (

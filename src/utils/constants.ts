@@ -34,3 +34,5 @@ export const GRID_CSS =
 export const ENS_ADDRESS = '0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85'.toLowerCase();
 
 export const standardCard = 'rounded-xl border p-5 bg-theme-light-200 my-3';
+
+export const USER_API_END_POINT = '/user';
