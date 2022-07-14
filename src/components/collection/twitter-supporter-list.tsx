@@ -24,7 +24,7 @@ const TwitterSupporter = () => {
 const TwitterSupporterList = () => {
   return (
     <>
-      <div className="text-3xl mb-6 mt-16">Top Twitter supporters</div>
+      <div className="text-3xl mb-6">Top Twitter supporters</div>
       <TwitterSupporter />
       <TwitterSupporter />
       <TwitterSupporter />
