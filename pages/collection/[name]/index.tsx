@@ -265,8 +265,8 @@ const CollectionPage = () => {
           </table>
 
           {!isProd() && (
-            <section className="mt-8 space-y-4 md:w-1/2">
-              <Heading as="h2" className="font-body text-4xl">
+            <section className="mt-16 space-y-4 md:w-1/2">
+              <Heading as="h2" className="font-body text-3xl">
                 Curate collection
               </Heading>
               <FeesAprStats value={userCurated?.feesAPR || 0} className="mr-2" />
@@ -274,7 +274,9 @@ const CollectionPage = () => {
 
               <div className="flex flex-row space-x-2 relative">
                 <VoteProgressBar votes={userCurated?.votes || 0} totalVotes={collection.numCuratorVotes || 0} />
-                <Button onClick={() => checkSignedIn() && setIsStakeModalOpen(true)}>Vote</Button>
+                <Button onClick={() => checkSignedIn() && setIsStakeModalOpen(true)} className="font-heading">
+                  Vote
+                </Button>
               </div>
               <VoteModal
                 collection={{
@@ -310,7 +312,7 @@ const CollectionPage = () => {
           )}
 
           <ToggleTab
-            className="mt-12 font-heading pointer-events-auto"
+            className="mt-32 font-heading pointer-events-auto"
             tabWidth="150px"
             options={options}
             selected={selected}
@@ -380,7 +382,7 @@ const CollectionPage = () => {
             {/* {currentTab === 1 && <ActivityTab dailyStats={dailyStats} weeklyStats={weeklyStats} />} */}
             {selected === 'Activity' && <CollectionActivityTab collectionAddress={collection.address} />}
 
-            {selected === 'Community' && !isProd() && <CommunityFeed collection={collection} />}
+            {selected === 'Community' && !isProd() && <CommunityFeed collection={collection} className="mt-32" />}
           </div>
         </main>
       </div>

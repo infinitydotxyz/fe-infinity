@@ -80,7 +80,7 @@ export const FeedList = ({ collectionAddress, tokenId, types, className = '' }: 
   return (
     <div className={`${className}`}>
       <div className="flex items-center mb-8">
-        <div className="text-4xl font-bold">Feed</div>
+        <div className="text-4xl">Feed</div>
 
         <Spacer />
         <Button className="mr-2" variant="outline" onClick={() => fetchActivity(true)}>
