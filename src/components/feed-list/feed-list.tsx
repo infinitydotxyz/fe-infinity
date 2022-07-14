@@ -97,8 +97,9 @@ export const FeedList = ({ collectionAddress, tokenId, types, className = '' }: 
             <div key={idx}>
               <FeedListItem
                 activity={activity}
-                onLike={(ev) => {
-                  console.log(ev);
+                onLike={(amount) => {
+                  activity.likes += amount;
+                  setActivities([...activities]);
                 }}
                 onComment={(ev) => {
                   if (!ev) {

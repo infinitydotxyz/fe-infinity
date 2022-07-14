@@ -20,7 +20,7 @@ export const FeedListTableItem = ({ activity }: Props) => {
             src={activity.collectionData?.metadata?.profileImage}
           />
 
-          <div className="flex w-full ml-8">
+          <div className="flex w-full justify-around ml-8">
             <TableItem label="Link">
               <a href={`/asset/${activity.chainId}/${activity.collectionData?.address}/${activity.tokenId}`}>
                 {ellipsisAddress(activity.tokenId)}
@@ -67,8 +67,8 @@ export const FeedListTableItem = ({ activity }: Props) => {
     case EventType.DiscordAnnouncement:
     case EventType.CoinMarketCapNews:
     case EventType.NftTransfer:
-      console.log(activity.type);
-      console.log(JSON.stringify(activity, null, 2));
+      // console.log(activity.type);
+      // console.log(JSON.stringify(activity, null, 2));
       break;
   }
   return <div>Under construction</div>;

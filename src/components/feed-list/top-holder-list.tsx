@@ -2,7 +2,7 @@ import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
 import { twMerge } from 'tailwind-merge';
 
 import { useEffect, useState } from 'react';
-import { ErrorOrLoading, NextLink } from 'src/components/common';
+import { NextLink } from 'src/components/common';
 import { apiGet, ellipsisAddress, standardCard } from 'src/utils';
 import { TopOwnersArrayResponseDto, TopOwnerDto } from '@infinityxyz/lib-frontend/types/dto/collections';
 
@@ -78,7 +78,8 @@ export const TopHolderList = ({ collection }: Props) => {
   }, [collection]);
 
   if (hasError || isLoading || hasNoData) {
-    return <ErrorOrLoading error={hasError} noData={hasNoData} />;
+    // return <ErrorOrLoading error={hasError} noData={hasNoData} />;
+    return <></>;
   }
 
   return (

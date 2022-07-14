@@ -10,7 +10,7 @@ import { FeedListTableItem } from './feed-list-table-item';
 
 interface Props {
   activity: NftEventRec;
-  onLike: (event: NftEventRec) => void;
+  onLike: (amount: number) => void;
   onComment: (event?: NftEventRec) => void;
 }
 
@@ -54,9 +54,9 @@ export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
         variant="round"
         onClick={async () => {
           if (user && user?.address) {
-            await addUserLike(activity.id || '', user?.address, () => {
-              onLike(activity);
-            });
+            await addUserLike(true, activity.id, user.address);
+
+            onLike(1);
           }
         }}
       >
@@ -72,9 +72,9 @@ export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
         size="plain"
         onClick={async () => {
           if (user && user?.address) {
-            await addUserLike(activity.id || '', user?.address, () => {
-              onLike(activity);
-            });
+            await addUserLike(false, activity.id, user.address);
+
+            onLike(-1);
           }
         }}
       >

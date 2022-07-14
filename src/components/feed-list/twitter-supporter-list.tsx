@@ -1,6 +1,6 @@
 import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
-import { Button, ErrorOrLoading, EZImage } from 'src/components/common';
+import { Button, EZImage } from 'src/components/common';
 import { apiGet, nFormatter, standardCard } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
 import { TweetArrayDto, TweetDto } from '@infinityxyz/lib-frontend/types/dto/twitter';
@@ -80,7 +80,8 @@ export const TwitterSupporterList = ({ collection }: Props) => {
   }, [collection]);
 
   if (hasError || isLoading || hasNoData) {
-    return <ErrorOrLoading error={hasError} noData={hasNoData} />;
+    // return <ErrorOrLoading error={hasError} noData={hasNoData} />;
+    return <></>;
   }
 
   return (
