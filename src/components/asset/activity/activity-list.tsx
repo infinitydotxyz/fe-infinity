@@ -19,7 +19,12 @@ export const ActivityList: React.FC<ActivityListPropType> = ({
   collectionAddress,
   tokenId
 }: ActivityListPropType) => {
-  const [activityTypes, setActivityTypes] = useState<EventTypeOptions[]>([EventType.NftSale]);
+  const [activityTypes, setActivityTypes] = useState<EventTypeOptions[]>([
+    '',
+    EventType.NftSale,
+    EventType.NftOffer,
+    EventType.NftListing
+  ]);
   const [activityList, setActivityList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasNoData, setHasNoData] = useState(false);
