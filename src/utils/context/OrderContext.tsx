@@ -2,6 +2,7 @@ import { ChainId, Erc721Attribute, OBOrder, OBOrderItem, SignedOBOrder } from '@
 import { getOBComplicationAddress, getTxnCurrencyAddress, NULL_ADDRESS } from '@infinityxyz/lib-frontend/utils';
 import React, { ReactNode, useContext, useState } from 'react';
 import { toastError } from 'src/components/common';
+import { OrderDetailModal } from 'src/components/market/OrderDetailModal';
 import { getEstimatedGasPrice } from '../commonUtils';
 import { DEFAULT_MAX_GAS_PRICE_WEI } from '../constants';
 import { getSignedOBOrder } from '../exchange/orders';

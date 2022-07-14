@@ -13,9 +13,10 @@ type Props4 = {
   order: OBOrder;
   nameItem?: boolean;
   sortClick?: () => void;
+  onClick?: () => void;
 };
 
-export const OrderbookItem = ({ title, content, nameItem, order }: Props4): JSX.Element => {
+export const OrderbookItem = ({ title, content, nameItem, order, onClick }: Props4): JSX.Element => {
   const router = useRouter();
 
   if (nameItem) {
@@ -32,10 +33,12 @@ export const OrderbookItem = ({ title, content, nameItem, order }: Props4): JSX.
             title={nft.collectionName}
             orderNft={nft}
             token={token}
+            onClick={onClick}
           />
         );
       } else {
         // multiple items from one collection
+
         return (
           <SingleCollectionCell
             order={order}
@@ -46,6 +49,7 @@ export const OrderbookItem = ({ title, content, nameItem, order }: Props4): JSX.
             image={nft.collectionImage}
             title={nft.collectionName}
             count={nft.tokens.length}
+            onClick={onClick}
           />
         );
       }
@@ -67,15 +71,17 @@ export const OrderbookItem = ({ title, content, nameItem, order }: Props4): JSX.
 
 type MultiCollectionCellProps = {
   nfts: OBOrderItem[];
+  onClick?: () => void;
 };
 
-const MultiCollectionCell = ({ nfts }: MultiCollectionCellProps) => {
+const MultiCollectionCell = ({ nfts, onClick }: MultiCollectionCellProps) => {
   return (
-    <div className="flex gap-2 items-center">
+    <div className="flex gap-2 items-center" onClick={onClick}>
       <div className="flex -space-x-8 overflow-hidden">
         {nfts.map((nft: OBOrderItem) => {
           return (
             <img
+              key={nft.collectionAddress}
               className="inline-block h-12 w-12 rounded-2xl ring-2 ring-white bg-white"
               src={nft.collectionImage}
               alt=""
@@ -100,6 +106,7 @@ type SingleCollectionCellProps = {
   count?: number;
   onClickTitle?: () => void;
   nfts?: OBOrderItem[];
+  onClick?: () => void;
 };
 
 const SingleCollectionCell = ({
@@ -110,7 +117,8 @@ const SingleCollectionCell = ({
   orderNft,
   token,
   count = 0,
-  nfts
+  nfts,
+  onClick
 }: SingleCollectionCellProps) => {
   const tokenNames: string[] = [];
   // console.log('nfts', nfts);
@@ -127,9 +135,16 @@ const SingleCollectionCell = ({
       <div className="flex justify-center shrink-0 h-14 w-14">
         <span className="inline-block relative">
           {image ? (
-            <img className="h-14 w-14 rounded-full" src={image} alt="" />
+            <img
+              className="h-14 w-14 rounded-full"
+              src={image}
+              alt=""
+              onClick={() => {
+                onClick && onClick();
+              }}
+            />
           ) : (
-            <img className="h-14 w-14 rounded-full" src={PLACEHOLDER_IMAGE} alt="" />
+            <img className="h-14 w-14 rounded-full" src={PLACEHOLDER_IMAGE} alt="" onClick={alert} />
           )}
 
           {count > 1 && (

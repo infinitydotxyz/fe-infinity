@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { ChainId, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import moment from 'moment';
 import { Button, EthPrice } from 'src/components/common';
@@ -7,6 +8,7 @@ import { useOrderContext } from 'src/utils/context/OrderContext';
 import { checkOffersToUser, getOrderType } from 'src/utils/marketUtils';
 import { DataColumn, defaultDataColumns } from './data-columns';
 import { OrderbookItem } from './orderbook-item';
+import { OrderDetailModal } from '../OrderDetailModal';
 
 type OrderbookRowProps = {
   order: SignedOBOrder;
@@ -17,6 +19,7 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
   const { user } = useAppContext();
   const { checkSignedIn } = useAppContext();
   const { setPrice, addCartItem } = useOrderContext();
+  const [selectedOrder, setSelectedOrder] = useState<SignedOBOrder | null>(null);
 
   const valueDiv = (dataColumn: DataColumn) => {
     let value = order.id;
@@ -163,6 +166,7 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
                   {content}
                 </span>
               }
+              onClick={() => setSelectedOrder(order)}
             />
           );
         })}
@@ -194,6 +198,16 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
           <div>Expiry: {shortDate(new Date(order.endTimeMs))}</div>
         </div>
       </div>
+
+      {selectedOrder !== null ? (
+        <OrderDetailModal
+          order={selectedOrder}
+          isOpen={true}
+          onClose={() => {
+            setSelectedOrder(null);
+          }}
+        />
+      ) : null}
     </div>
   );
 };
