@@ -8,6 +8,7 @@ import { addUserLike } from 'src/utils/firestore/firestoreUtils';
 import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io';
 import { FeedListTableItem } from './feed-list-table-item';
 import { useState } from 'react';
+import { timeAgo } from 'src/utils';
 
 interface Props {
   activity: NftEventRec;
@@ -138,8 +139,7 @@ export const FeedListItem = ({ activity, onComment }: Props) => {
     </div>
   );
 
-  // TODO(SNG): fix
-  const timeString = '14h';
+  const timeString = timeAgo(new Date(activity.timestamp));
 
   return (
     <div className="w-full flex items-start">
@@ -155,7 +155,7 @@ export const FeedListItem = ({ activity, onComment }: Props) => {
           </div>
           {activity.collectionData?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1" /> : null}
 
-          <div className="ml-2 text-sm">{timeString}</div>
+          <div className="ml-3 text-gray-600">{timeString}</div>
         </div>
 
         <div className="text-gray-500 flex text-sm mt-1">{typeName(activity.type)}</div>

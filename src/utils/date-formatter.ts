@@ -72,3 +72,24 @@ export const dateToString = (date: Date, components: object[], separator: string
 
   return s;
 };
+
+export const timeAgo = (date: Date) => {
+  const diff = Date.now() - date.getTime();
+
+  const secs = diff / 1000;
+  const mins = secs / 60;
+
+  if (mins > 60) {
+    const hours = mins / 60;
+
+    if (hours > 24) {
+      const days = hours / 24;
+
+      return `${Math.round(days)}d`;
+    }
+
+    return `${Math.round(hours)}h`;
+  }
+
+  return `${Math.round(mins)}m`;
+};
