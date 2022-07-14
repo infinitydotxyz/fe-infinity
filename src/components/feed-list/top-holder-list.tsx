@@ -2,7 +2,7 @@ import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
 import { twMerge } from 'tailwind-merge';
 
 import { useEffect, useState } from 'react';
-import { ErrorOrLoading } from 'src/components/common';
+import { ErrorOrLoading, NextLink } from 'src/components/common';
 import { apiGet, ellipsisAddress, standardCard } from 'src/utils';
 import { TopOwnersArrayResponseDto, TopOwnerDto } from '@infinityxyz/lib-frontend/types/dto/collections';
 
@@ -18,7 +18,11 @@ const TopHolder = ({ topOwner, index }: Props2) => {
       <div className="flex justify-between flex-1">
         <div className="ml-5 py-1">
           <div className="text-theme-light-800 text-sm">Address</div>
-          <div className="font-heading mt-1">{ellipsisAddress(topOwner.ownerAddress, 8, 0)}</div>
+          <div className="font-heading mt-1">
+            <NextLink href={'/profile/' + topOwner.ownerAddress}>
+              {ellipsisAddress(topOwner.ownerAddress, 8, 0)}
+            </NextLink>
+          </div>
         </div>
 
         <div className="ml-5 py-1">
