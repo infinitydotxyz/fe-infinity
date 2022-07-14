@@ -101,10 +101,15 @@ export const FeedList = ({ collectionAddress, tokenId, types, className = '' }: 
                   console.log(ev);
                 }}
                 onComment={(ev) => {
-                  if (ev.id === commentPanelEvent?.id) {
+                  if (!ev) {
+                    // using the up arrow thing to close the chat?  not sure what it's for
                     setCommentPanelEvent(null);
                   } else {
-                    setCommentPanelEvent(ev);
+                    if (ev.id === commentPanelEvent?.id) {
+                      setCommentPanelEvent(null);
+                    } else {
+                      setCommentPanelEvent(ev);
+                    }
                   }
                 }}
               />

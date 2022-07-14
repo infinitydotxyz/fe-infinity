@@ -11,7 +11,7 @@ import { FeedListTableItem } from './feed-list-table-item';
 interface Props {
   activity: NftEventRec;
   onLike: (event: NftEventRec) => void;
-  onComment: (event: NftEventRec) => void;
+  onComment: (event?: NftEventRec) => void;
 }
 
 export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
@@ -85,9 +85,7 @@ export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
         variant="plain"
         className="px-0 ml-12"
         onClick={() => {
-          // if (onComment) {
-          //   onComment(data);
-          // }
+          onComment(); // this just closes the chat
         }}
       >
         <div className="flex">

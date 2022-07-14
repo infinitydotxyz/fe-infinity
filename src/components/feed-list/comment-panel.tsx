@@ -50,6 +50,11 @@ export const CommentPanel = ({ isOpen, onClose, event, contentOnly }: Props) => 
     if (!checkSignedIn()) {
       return;
     }
+
+    // this is async, so text is still valid below
+    // look faster and better if the text clears immediately as the call below will take time
+    setText('');
+
     await addUserComments({
       eventId: event.id ?? '',
       userAddress: user?.address ?? '',
@@ -57,12 +62,12 @@ export const CommentPanel = ({ isOpen, onClose, event, contentOnly }: Props) => 
       comment: text
     });
     fetchData(false);
-    setText('');
   };
 
   const replyBox = (
     <div className="flex">
       <textarea
+        autoFocus={true}
         rows={3}
         value={text}
         onChange={(ev) => setText(ev.target.value)}
