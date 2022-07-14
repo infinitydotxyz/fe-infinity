@@ -32,6 +32,7 @@ export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) 
   const { user, chainId, providerManager } = useAppContext();
   const [orderDetails, setOrderDetails] = useState<SignedOBOrder | null>(null);
   const [price, setPrice] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   // const [lastPrice, setLastPrice] = useState(0);
   // TODO: do something with this ending price?
@@ -68,9 +69,10 @@ export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) 
       onClose={onClose}
       okButton="Lower Price"
       title="Lower Price"
+      disableOK={isLoading}
       onOKButton={async () => {
         const priceVal = parseFloat(price);
-        if (!orderDetails || !user || priceVal <= 0) {
+        if (!orderDetails || !user || !price || priceVal <= 0) {
           return;
         }
         const buyPriceEthVal = parseFloat(buyPriceEth ?? '0');
@@ -91,6 +93,7 @@ export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) 
         try {
           const signedOrders: SignedOBOrder[] = [];
           const signer = providerManager?.getEthersProvider().getSigner();
+          setIsLoading(true);
           const gasPrice = await getEstimatedGasPrice(providerManager?.getEthersProvider());
           if (signer) {
             // keep the last Order & set the New Price:
@@ -117,6 +120,7 @@ export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) 
               signedOrders.push(signedOrder);
               try {
                 await postOrders(user.address, signedOrders);
+                setIsLoading(false);
                 toastSuccess('Lowered price successfully');
               } catch (ex) {
                 toastError(`${ex}`);
