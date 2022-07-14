@@ -97,10 +97,6 @@ export const FeedList = ({ collectionAddress, tokenId, types, className = '' }: 
             <div key={idx}>
               <FeedListItem
                 activity={activity}
-                onLike={(amount) => {
-                  activity.likes += amount;
-                  setActivities([...activities]);
-                }}
                 onComment={(ev) => {
                   if (!ev) {
                     // using the up arrow thing to close the chat?  not sure what it's for

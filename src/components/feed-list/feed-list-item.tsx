@@ -7,15 +7,16 @@ import { NftEventRec } from '../asset/activity/activity-item';
 import { addUserLike } from 'src/utils/firestore/firestoreUtils';
 import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io';
 import { FeedListTableItem } from './feed-list-table-item';
+import { useState } from 'react';
 
 interface Props {
   activity: NftEventRec;
-  onLike: (amount: number) => void;
   onComment: (event?: NftEventRec) => void;
 }
 
-export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
+export const FeedListItem = ({ activity, onComment }: Props) => {
   const { user } = useAppContext();
+  const [likedCache, setLikedCache] = useState<Map<string, boolean>>(new Map());
 
   const typeName = (type: string) => {
     switch (type) {
@@ -47,47 +48,67 @@ export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
     return <></>;
   };
 
-  const likeButtons = (
-    <div className="flex items-center">
-      <Button
-        size="plain"
-        variant="round"
-        onClick={async () => {
-          if (user && user?.address) {
-            await addUserLike(true, activity.id, user.address);
+  const onLike = (liked: boolean) => {
+    likedCache.set(activity.id, liked);
 
-            onLike(1);
-          }
-        }}
-      >
-        <div className="flex items-center">
-          <IoMdArrowDropup size={22} />
-        </div>
-      </Button>
+    setLikedCache(new Map(likedCache));
+  };
 
-      <div className="mx-2">{activity.likes}</div>
+  const likeButtons = () => {
+    let likes = activity.likes;
 
-      <Button
-        variant="round"
-        size="plain"
-        onClick={async () => {
-          if (user && user?.address) {
-            await addUserLike(false, activity.id, user.address);
+    if (likedCache.has(activity.id)) {
+      const likedInCache = likedCache.get(activity.id);
 
-            onLike(-1);
-          }
-        }}
-      >
-        <div className="flex items-center">
-          <IoMdArrowDropdown size={22} />
-        </div>
-      </Button>
-    </div>
-  );
+      if (likedInCache) {
+        likes += 1;
+      } else {
+        likes -= 1;
+      }
+    }
+
+    return (
+      <div className="flex items-center">
+        <Button
+          size="plain"
+          variant="round"
+          onClick={async () => {
+            if (user && user?.address) {
+              await addUserLike(true, activity.id, user.address);
+
+              onLike(true);
+            }
+          }}
+        >
+          <div className="flex items-center">
+            <IoMdArrowDropup size={22} />
+          </div>
+        </Button>
+
+        <div className="mx-2">{likes}</div>
+
+        <Button
+          variant="round"
+          size="plain"
+          onClick={async () => {
+            if (user && user?.address) {
+              await addUserLike(false, activity.id, user.address);
+
+              onLike(false);
+            }
+          }}
+        >
+          <div className="flex items-center">
+            <IoMdArrowDropdown size={22} />
+          </div>
+        </Button>
+      </div>
+    );
+  };
 
   const bottomBar = (
     <div className="text-sm   w-full text-gray-500 flex items-center">
-      {likeButtons}
+      {likeButtons()}
       <Button
         variant="plain"
         className="px-0 ml-12"
@@ -117,6 +138,7 @@ export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
     </div>
   );
 
+  // TODO(SNG): fix
   const timeString = '14h';
 
   return (
