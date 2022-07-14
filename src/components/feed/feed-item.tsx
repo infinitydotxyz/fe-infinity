@@ -6,7 +6,6 @@ import { AiOutlineComment, AiOutlineLike } from 'react-icons/ai';
 import { BGImage, Button, EthPrice, NextLink, NftImage } from 'src/components/common';
 import { ellipsisAddress, getChainScannerBase, PLACEHOLDER_IMAGE } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { addUserLike } from 'src/utils/firestore/firestoreUtils';
 
 export type FeedEvent = BaseFeedEvent &
   ExchangeEvent & {
@@ -31,7 +30,7 @@ interface Props {
   onComment?: (event: FeedEvent) => void;
 }
 
-export const FeedItem = ({ data, onLike, onComment }: Props) => {
+export const FeedItem = ({ data, onComment }: Props) => {
   const { user, checkSignedIn } = useAppContext();
 
   const timestampStr = data.timestamp > 0 ? new Date(data.timestamp).toLocaleString() : '';
@@ -67,11 +66,12 @@ export const FeedItem = ({ data, onLike, onComment }: Props) => {
                 return;
               }
               if (user && user?.address) {
-                await addUserLike(data.id || '', user?.address, () => {
-                  if (onLike) {
-                    onLike(data);
-                  }
-                });
+                // todo: steve check and remove is this is not being used
+                // await addUserLike(data.id || '', user?.address, () => {
+                //   if (onLike) {
+                //     onLike(data);
+                //   }
+                // });
               }
             }}
           >
