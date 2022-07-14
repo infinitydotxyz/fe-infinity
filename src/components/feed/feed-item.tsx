@@ -66,7 +66,6 @@ export const FeedItem = ({ data, onComment }: Props) => {
                 return;
               }
               if (user && user?.address) {
-                // todo: steve check and remove is this is not being used
                 // await addUserLike(data.id || '', user?.address, () => {
                 //   if (onLike) {
                 //     onLike(data);
