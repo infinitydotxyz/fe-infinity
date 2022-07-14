@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
-import { Checkbox, EthPrice, Modal, Spinner, toastError } from 'src/components/common';
-import { apiGet, extractErrorMsg } from 'src/utils';
+import { Checkbox, EthPrice, Modal, Spinner, toastError, toastSuccess } from 'src/components/common';
+import { apiGet, ellipsisAddress, extractErrorMsg } from 'src/utils';
 import { OrderbookItem } from 'src/components/market/orderbook-list/orderbook-item';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { cancelMultipleOrders } from 'src/utils/exchange/orders';
@@ -14,10 +14,11 @@ interface Props {
 }
 
 export const CancelModal = ({ isOpen, onClose, collectionAddress, token }: Props) => {
-  const { user, providerManager, chainId } = useAppContext();
+  const { user, providerManager, chainId, waitForTransaction } = useAppContext();
   const [selectedListings, setSelectedListings] = useState<number[]>([]);
   const [listings, setListings] = useState<SignedOBOrder[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
   const fetchListings = async () => {
@@ -63,7 +64,13 @@ export const CancelModal = ({ isOpen, onClose, collectionAddress, token }: Props
     try {
       const signer = providerManager?.getEthersProvider().getSigner();
       if (signer) {
-        await cancelMultipleOrders(signer, chainId, selectedListings);
+        setIsSubmitting(true);
+        const { hash } = await cancelMultipleOrders(signer, chainId, selectedListings);
+        setIsSubmitting(false);
+        toastSuccess('Transaction sent to chain');
+        waitForTransaction(hash, () => {
+          toastSuccess(`Transaction confirmed ${ellipsisAddress(hash)}`);
+        });
       } else {
         console.error('signer is null');
       }
@@ -79,6 +86,7 @@ export const CancelModal = ({ isOpen, onClose, collectionAddress, token }: Props
       onClose={onClose}
       okButton="Confirm"
       title="Select listings to cancel"
+      disableOK={isSubmitting}
       onOKButton={onOKButton}
     >
       <ul className={`mt-4 p-2 flex flex-col w-full overflow-y-auto min-h-[35vh] max-h-[35vh]`}>

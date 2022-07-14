@@ -246,7 +246,9 @@ export const getOwnerAddress = (token: BaseToken | null | undefined) => {
 export const extractErrorMsg = (err: unknown) => {
   console.error(err);
   let msg = `${err}`;
-  if (msg.indexOf('reason=') > 0) {
+  if (typeof err === 'object' && (err as object).hasOwnProperty('message')) {
+    msg = (err as Error).message;
+  } else if (msg.indexOf('reason=') > 0) {
     const arr = msg.split('reason=');
     const msgArr = arr[1].split('"');
     msg = msgArr[1];
