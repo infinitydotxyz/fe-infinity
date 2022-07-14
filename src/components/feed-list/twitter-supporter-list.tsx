@@ -14,23 +14,22 @@ interface Props2 {
 
 const TwitterSupporter = ({ tweet }: Props2) => {
   return (
-    <div className={twMerge(standardCard, 'flex justify-between flex-wrap')}>
-      <div className="flex mr-2 items-center">
+    <div className={twMerge(standardCard, 'flex justify-between items-center flex-wrap')}>
+      <div className="flex mr-2 mb-3 items-center">
         <EZImage src={tweet.author.profileImageUrl} className="w-12 h-12  overflow-clip rounded-full" />
         <div className="ml-5">
-          <p className="font-bold font-heading">{tweet.author.name}</p>
-          <p className="text-theme-light-800 font-body text-sm mt-1">{`${nFormatter(
+          <div className="font-bold font-heading">{tweet.author.name}</div>
+          <div className="text-theme-light-800 font-body text-sm">{`${nFormatter(
             tweet.author.followersCount
-          )} Followers`}</p>
+          )} Followers`}</div>
         </div>
       </div>
       <Button
+        className="bg-white"
         variant="outline"
-        size="plain"
         onClick={() => {
           window.open(`https://twitter.com/${tweet.author.username}`);
         }}
-        className="px-6 py-1.5 my-3 float-right  border rounded-3xl bg-white"
       >
         View Profile
       </Button>
@@ -89,7 +88,7 @@ export const TwitterSupporterList = ({ collection }: Props) => {
       <div className="text-3xl mb-6 mt-16">Top Twitter supporters</div>
 
       {tweetList.map((e) => {
-        return <TwitterSupporter tweet={e} />;
+        return <TwitterSupporter tweet={e} key={e.tweetId} />;
       })}
     </>
   );
