@@ -36,7 +36,8 @@ export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listCl
     removeCartItem,
     updateOrders,
     orderDrawerOpen,
-    setCustomDrawerItems
+    setCustomDrawerItems,
+    setPrice
   } = useOrderContext();
 
   const [showTransferDrawer, setShowTransferDrawer] = useState(false);
@@ -59,6 +60,20 @@ export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listCl
     setCustomDrawerItems(nftsForTransfer.length);
   }, [nftsForTransfer]);
 
+  // find & remove this item in cartItems & all orders' cartItems:
+  const findAndRemove = (data: ERC721CardData | undefined) => {
+    const foundItemIdx = cartItems.findIndex(
+      (item) => item.collectionAddress === data?.address && item.tokenId === data?.tokenId
+    );
+    removeCartItem(cartItems[foundItemIdx]);
+    ordersInCart.forEach((order) => {
+      order.cartItems = order.cartItems.filter(
+        (item) => !(item.collectionAddress === data?.address && item.tokenId === data?.tokenId)
+      );
+    });
+    updateOrders(ordersInCart.filter((order) => order.cartItems.length > 0));
+  };
+
   const isAlreadyAdded = (data: ERC721CardData | undefined) => {
     // check if this item was already added to cartItems or order.
     const found1 =
@@ -76,45 +91,83 @@ export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listCl
     return found1 || found2;
   };
 
-  // find & remove this item in cartItems & all orders' cartItems:
-  const findAndRemove = (data: ERC721CardData | undefined) => {
-    const foundItemIdx = cartItems.findIndex(
-      (item) => item.collectionAddress === data?.address && item.tokenId === data?.tokenId
-    );
-    removeCartItem(cartItems[foundItemIdx]);
-    ordersInCart.forEach((order) => {
-      order.cartItems = order.cartItems.filter(
-        (item) => !(item.collectionAddress === data?.address && item.tokenId === data?.tokenId)
-      );
+  const isMyProfile = user?.address === userInfo?.address;
+
+  const onClickAddToOrder = (data: ERC721CardData | undefined) => {
+    if (isAlreadyAdded(data)) {
+      findAndRemove(data);
+      return;
+    }
+    const price = data?.orderSnippet?.listing?.orderItem?.startPriceEth ?? 0;
+    setPrice(`${price}`);
+    addCartItem({
+      chainId: data?.chainId as ChainId,
+      collectionName: data?.collectionName ?? '',
+      collectionAddress: data?.tokenAddress ?? '',
+      collectionImage: data?.cardImage ?? data?.image ?? '',
+      collectionSlug: data?.collectionSlug ?? '',
+      tokenImage: data?.image ?? '',
+      tokenName: data?.name ?? '',
+      tokenId: data?.tokenId ?? '-1',
+      isSellOrder: false,
+      attributes: data?.attributes ?? []
     });
-    updateOrders(ordersInCart.filter((order) => order.cartItems.length > 0));
   };
 
-  const isMyProfile = user?.address === userInfo?.address;
+  const onClickListing = (data: ERC721CardData | undefined) => {
+    // for Listings
+    if (isAlreadyAdded(data)) {
+      findAndRemove(data);
+      return;
+    }
+    addCartItem({
+      chainId: data?.chainId as ChainId,
+      collectionName: data?.collectionName ?? '',
+      collectionAddress: data?.tokenAddress ?? '',
+      collectionImage: data?.cardImage ?? data?.image ?? '',
+      collectionSlug: data?.collectionSlug ?? '',
+      tokenImage: data?.image ?? '',
+      tokenName: data?.name ?? '',
+      tokenId: data?.tokenId ?? '-1',
+      isSellOrder: true,
+      attributes: data?.attributes ?? []
+    });
+    if (cartItems.length < 1) {
+      setOrderDrawerOpen(true); // only show when adding the first time.
+    }
+  };
 
   const cardActions: CardAction[] = [
     {
       label: (data) => {
-        // for Sending
-        if (forTransfers === true) {
-          const found = nftsForTransfer.find((o) => o.id === data?.id);
-          return <div className="font-normal">{found ? '✓' : ''} Send</div>;
-        }
-        // for Listings
         if (isAlreadyAdded(data)) {
           return <div className="font-normal">✓ Added</div>;
         }
-        if (typeof data?.orderSnippet?.listing?.orderItem?.startPriceEth !== 'undefined') {
-          return (
-            <div className="font-normal flex justify-center">
-              <EthPrice label={`${data?.orderSnippet?.listing?.orderItem?.startPriceEth}`} className="mr-2" />
-              Relist
-            </div>
-          );
+        if (!isMyProfile) {
+          return <div className="font-normal">Add to order</div>;
+        } else {
+          // for Sending
+          if (forTransfers === true) {
+            const found = nftsForTransfer.find((o) => o.id === data?.id);
+            return <div className="font-normal">{found ? '✓' : ''} Send</div>;
+          }
+          // for Listings
+          if (typeof data?.orderSnippet?.listing?.orderItem?.startPriceEth !== 'undefined') {
+            return (
+              <div className="font-normal flex justify-center">
+                <EthPrice label={`${data?.orderSnippet?.listing?.orderItem?.startPriceEth}`} className="mr-2" />
+                Relist
+              </div>
+            );
+          }
+          return <div className="font-normal">List</div>;
         }
-        return <div className="font-normal">List</div>;
       },
       onClick: (ev, data) => {
+        if (!isMyProfile) {
+          onClickAddToOrder(data);
+          return;
+        }
         // for Sending
         if (forTransfers === true && data) {
           const found = nftsForTransfer.find((o) => o.id === data.id);
@@ -134,27 +187,7 @@ export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listCl
           }
           return;
         }
-        // for Listings
-        if (isAlreadyAdded(data)) {
-          findAndRemove(data);
-          return;
-        }
-        // console.log('card data', data);
-        addCartItem({
-          chainId: data?.chainId as ChainId,
-          collectionName: data?.collectionName ?? '',
-          collectionAddress: data?.tokenAddress ?? '',
-          collectionImage: data?.cardImage ?? data?.image ?? '',
-          collectionSlug: data?.collectionSlug ?? '',
-          tokenImage: data?.image ?? '',
-          tokenName: data?.name ?? '',
-          tokenId: data?.tokenId ?? '-1',
-          isSellOrder: true,
-          attributes: data?.attributes ?? []
-        });
-        if (cartItems.length < 1) {
-          setOrderDrawerOpen(true); // only show when adding the first time.
-        }
+        onClickListing(data);
       }
     }
   ];
@@ -169,38 +202,37 @@ export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listCl
           filterShowedDefault={false}
           showFilterSections={['COLLECTIONS']}
           showSort={false}
-          cardProps={
-            isMyProfile
-              ? {
-                  cardActions,
-                  getDropdownActions: (data) => {
-                    if (forTransfers === true) {
-                      return null;
+          cardProps={{
+            cardActions,
+            getDropdownActions: (data) => {
+              if (!isMyProfile) {
+                return null;
+              }
+              if (forTransfers === true) {
+                return null;
+              }
+              if (typeof data?.orderSnippet?.listing?.orderItem?.startPriceEth !== 'undefined') {
+                return [
+                  {
+                    label: 'Lower price',
+                    onClick: async () => {
+                      const { result } = await fetchTokenData(chainId, data.address ?? '', data.tokenId ?? '');
+                      setLoweringPriceToken(result);
+                      setCurrentPrice(`${data?.orderSnippet?.listing?.orderItem?.startPriceEth}`);
                     }
-                    if (typeof data?.orderSnippet?.listing?.orderItem?.startPriceEth !== 'undefined') {
-                      return [
-                        {
-                          label: 'Lower price',
-                          onClick: async () => {
-                            const { result } = await fetchTokenData(chainId, data.address ?? '', data.tokenId ?? '');
-                            setLoweringPriceToken(result);
-                            setCurrentPrice(`${data?.orderSnippet?.listing?.orderItem?.startPriceEth}`);
-                          }
-                        },
-                        {
-                          label: 'Cancel listing',
-                          onClick: async () => {
-                            const { result } = await fetchTokenData(chainId, data.address ?? '', data.tokenId ?? '');
-                            setCancellingToken(result);
-                          }
-                        }
-                      ];
+                  },
+                  {
+                    label: 'Cancel listing',
+                    onClick: async () => {
+                      const { result } = await fetchTokenData(chainId, data.address ?? '', data.tokenId ?? '');
+                      setCancellingToken(result);
                     }
-                    return null;
                   }
-                }
-              : undefined
-          }
+                ];
+              }
+              return null;
+            }
+          }}
           className={twMerge(`mt-[-82px] ${listClassName}`)}
         />
       </div>

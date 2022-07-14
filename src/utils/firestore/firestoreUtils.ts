@@ -2,7 +2,6 @@ import { initializeApp } from 'firebase/app';
 import {
   collection,
   doc,
-  getDoc,
   getDocs,
   getFirestore,
   limit,
@@ -16,8 +15,15 @@ import {
 
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { firestoreConstants } from '@infinityxyz/lib-frontend/utils';
-import { increaseComments, increaseLikes } from './counterUtils';
+import { increaseComments } from './counterUtils';
 import { firestoreConfig } from './creds';
+import { apiPost } from '../apiUtils';
+
+interface IncrementQuery {
+  liked: boolean;
+  eventId: string;
+  userAddress: string;
+}
 
 const EVENTS_PER_PAGE = 10;
 const COMMENTS_PER_PAGE = 20;
@@ -114,16 +120,18 @@ export async function updateCollectionDoc(path: string, docId: string, data: any
   await updateDoc(docRef, data);
 }
 
-export async function addUserLike(eventId: string, userAddress: string, doneCallback: () => void) {
-  const docRef = doc(firestoreDb, 'feed', eventId, 'userLikes', userAddress);
-  const existingDocRef = await getDoc(docRef);
-  const existingDocData = existingDocRef?.data();
+export async function addUserLike(liked: boolean, eventId: string, userAddress: string) {
+  const { error } = await apiPost(`/feed/${userAddress}/like`, {
+    requiresAuth: true,
+    data: {
+      eventId: eventId,
+      liked: liked,
+      userAddress: userAddress
+    } as IncrementQuery
+  });
 
-  if (!existingDocData) {
-    // user has not liked this eventId before => setDoc to userLikes & call increaseLikes:
-    await setDoc(docRef, { timestamp: Date.now() });
-    increaseLikes(userAddress, eventId);
-    doneCallback();
+  if (error) {
+    console.log('error in addUserLike');
   }
 }
 

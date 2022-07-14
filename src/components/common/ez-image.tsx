@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { PLACEHOLDER_IMAGE } from 'src/utils';
+import { MISSING_IMAGE_URL, PLACEHOLDER_IMAGE } from 'src/utils';
 
 interface Props {
   src?: string;
@@ -11,6 +11,7 @@ interface Props {
 
 export const EZImage = ({ src, center = true, cover = true, className = 'w-full h-full' }: Props) => {
   const [loaded, setLoaded] = useState(false);
+  const [error, setError] = useState(false);
 
   if (!src) {
     src = PLACEHOLDER_IMAGE;
@@ -28,6 +29,14 @@ export const EZImage = ({ src, center = true, cover = true, className = 'w-full 
           setLoaded(true);
         }
       };
+
+      img.onerror = () => {
+        if (!deleted) {
+          setError(true);
+          setLoaded(true);
+        }
+      };
+
       img.src = src;
     }
 
@@ -43,6 +52,11 @@ export const EZImage = ({ src, center = true, cover = true, className = 'w-full 
     return <></>;
   }
 
+  let imgUrl = src;
+  if (error) {
+    imgUrl = MISSING_IMAGE_URL;
+  }
+
   return (
     <div className={className}>
       <div
@@ -52,7 +66,7 @@ export const EZImage = ({ src, center = true, cover = true, className = 'w-full 
           loaded ? 'opacity-100' : 'opacity-0',
           'transition-opacity duration-500 w-full h-full bg-no-repeat'
         )}
-        style={{ backgroundImage: `url(${src})` }}
+        style={{ backgroundImage: `url(${imgUrl})` }}
       />
     </div>
   );

@@ -53,7 +53,7 @@ export const ellipsisString = (inString?: string, left = 6, right = 4): string =
   if (inString) {
     // don't do anything if less than a certain length
     if (inString.length > left + right + 5) {
-      return `${inString.slice(0, left)}\u{02026}${inString.slice(-right)}`;
+      return `${inString.slice(0, left)}\u{02026}${right < 1 ? '' : inString.slice(-right)}`;
     } else {
       return inString;
     }
@@ -246,7 +246,9 @@ export const getOwnerAddress = (token: BaseToken | null | undefined) => {
 export const extractErrorMsg = (err: unknown) => {
   console.error(err);
   let msg = `${err}`;
-  if (msg.indexOf('reason=') > 0) {
+  if (typeof err === 'object' && (err as Error)?.message) {
+    msg = (err as Error).message;
+  } else if (msg.indexOf('reason=') > 0) {
     const arr = msg.split('reason=');
     const msgArr = arr[1].split('"');
     msg = msgArr[1];

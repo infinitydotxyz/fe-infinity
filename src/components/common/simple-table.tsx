@@ -14,19 +14,20 @@ import { twMerge } from 'tailwind-merge';
 // );
 
 export interface SimpleTableItem {
-  title: string;
+  title: string | JSX.Element;
   value: JSX.Element;
 }
 
 interface Props {
   items: SimpleTableItem[];
   className?: string;
+  rowClassName?: string;
 }
 
-export const SimpleTable = ({ items, className = '' }: Props) => {
+export const SimpleTable = ({ items, className = '', rowClassName = '' }: Props) => {
   const table = items.map((item) => {
     return (
-      <div key={Math.random()} className="flex w-full">
+      <div key={Math.random()} className={twMerge(`flex w-full ${rowClassName}`)}>
         <div>{item.title}</div>
         <Spacer />
         <div className="font-bold">{item.value}</div>

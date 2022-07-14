@@ -80,7 +80,7 @@ export const FeedList = ({ collectionAddress, tokenId, types, className = '' }: 
   return (
     <div className={`${className}`}>
       <div className="flex items-center mb-8">
-        <div className="text-4xl font-bold">Feed</div>
+        <div className="text-4xl">Feed</div>
 
         <Spacer />
         <Button className="mr-2" variant="outline" onClick={() => fetchActivity(true)}>
@@ -97,14 +97,16 @@ export const FeedList = ({ collectionAddress, tokenId, types, className = '' }: 
             <div key={idx}>
               <FeedListItem
                 activity={activity}
-                onLike={(ev) => {
-                  console.log(ev);
-                }}
                 onComment={(ev) => {
-                  if (ev.id === commentPanelEvent?.id) {
+                  if (!ev) {
+                    // using the up arrow thing to close the chat?  not sure what it's for
                     setCommentPanelEvent(null);
                   } else {
-                    setCommentPanelEvent(ev);
+                    if (ev.id === commentPanelEvent?.id) {
+                      setCommentPanelEvent(null);
+                    } else {
+                      setCommentPanelEvent(ev);
+                    }
                   }
                 }}
               />

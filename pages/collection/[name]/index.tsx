@@ -22,7 +22,7 @@ import { VoteProgressBar } from 'src/components/curation/vote-progress-bar';
 import { CommunityFeed } from 'src/components/feed-list/community-feed';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
-import { ellipsisAddress, getChainScannerBase, isProd, nFormatter, PLACEHOLDER_IMAGE } from 'src/utils'; // todo: adi remove isProd once curation is ready
+import { ellipsisAddress, getChainScannerBase, isProd, nFormatter } from 'src/utils'; // todo: adi remove isProd once curation is ready
 import { useFetch } from 'src/utils/apiUtils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { useOrderContext } from 'src/utils/context/OrderContext';
@@ -133,19 +133,15 @@ const CollectionPage = () => {
   }
 
   return (
-    <PageBox showTitle={false} title={collection?.metadata?.name ?? ''}>
+    <PageBox showTitle={false} title={collection.metadata?.name ?? ''}>
       <div className="flex flex-col mt-10">
         <span>
-          {collection ? (
-            <AvatarImage url={collection?.metadata.profileImage} className="mb-2 rounded-[50%]" />
-          ) : (
-            <AvatarImage url={PLACEHOLDER_IMAGE} className="mb-2 border-gray-200 border-2 rounded-[50%]" />
-          )}
+          <AvatarImage url={collection.metadata.profileImage} className="mb-2 rounded-[50%]" />
 
           <div className="flex gap-3 items-center">
             <div className="text-6xl">
-              {collection?.metadata?.name ? (
-                collection?.metadata?.name
+              {collection.metadata?.name ? (
+                collection.metadata?.name
               ) : (
                 <div className="relative">
                   &nbsp;
@@ -153,7 +149,7 @@ const CollectionPage = () => {
                 </div>
               )}
             </div>
-            {collection?.hasBlueCheck ? <SVG.blueCheck className={twMerge(iconButtonStyle, 'mt-3')} /> : null}
+            {collection.hasBlueCheck ? <SVG.blueCheck className={twMerge(iconButtonStyle, 'mt-3')} /> : null}
           </div>
         </span>
 
@@ -165,7 +161,7 @@ const CollectionPage = () => {
                   <>
                     <span>Created by </span>
                     <button
-                      onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection?.owner)}
+                      onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection.owner)}
                       className="mr-12"
                     >
                       {ellipsisAddress(createdBy)}
@@ -173,8 +169,8 @@ const CollectionPage = () => {
                   </>
                 )}
                 <span className="font-heading">Collection address </span>
-                <button onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection?.address)}>
-                  {ellipsisAddress(collection?.address ?? '')}
+                <button onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection.address)}>
+                  {ellipsisAddress(collection.address ?? '')}
                 </button>
               </>
             ) : (
@@ -191,15 +187,15 @@ const CollectionPage = () => {
               <LoadingDescription />
             </div>
           ) : (
-            <div className="text-secondary mt-12 md:w-2/3">{collection?.metadata.description ?? ''}</div>
+            <div className="text-secondary mt-12 md:w-2/3">{collection.metadata.description ?? ''}</div>
           )}
 
-          {collection?.metadata.benefits && (
+          {collection.metadata.benefits && (
             <div className="mt-7 md:w-2/3">
               <div className="font-medium">Ownership includes</div>
 
               <div className="flex space-x-8 mt-3 font-normal">
-                {collection?.metadata.benefits?.slice(0, 3).map((benefit) => {
+                {collection.metadata.benefits?.slice(0, 3).map((benefit) => {
                   const benefitStr = benefit.slice(0, 300);
                   return (
                     <div className="flex items-center text-secondary">
@@ -212,12 +208,12 @@ const CollectionPage = () => {
             </div>
           )}
 
-          {collection?.metadata.partnerships && (
+          {collection.metadata.partnerships && (
             <div className="mt-7 md:w-2/3">
               <div className="font-medium">Partnerships</div>
 
               <div className="flex space-x-12 mt-3 ml-2 font-normal">
-                {collection?.metadata.partnerships?.slice(0, 3).map((partnership) => {
+                {collection.metadata.partnerships?.slice(0, 3).map((partnership) => {
                   const partnershipStr = partnership?.name.slice(0, 100);
                   return (
                     <div
@@ -269,8 +265,8 @@ const CollectionPage = () => {
           </table>
 
           {!isProd() && (
-            <section className="mt-8 space-y-4 md:w-1/2">
-              <Heading as="h2" className="font-body text-4xl">
+            <section className="mt-16 space-y-4 md:w-1/2">
+              <Heading as="h2" className="font-body text-3xl">
                 Curate collection
               </Heading>
               <FeesAprStats value={userCurated?.feesAPR || 0} className="mr-2" />
@@ -278,7 +274,9 @@ const CollectionPage = () => {
 
               <div className="flex flex-row space-x-2 relative">
                 <VoteProgressBar votes={userCurated?.votes || 0} totalVotes={collection.numCuratorVotes || 0} />
-                <Button onClick={() => checkSignedIn() && setIsStakeModalOpen(true)}>Vote</Button>
+                <Button onClick={() => checkSignedIn() && setIsStakeModalOpen(true)} className="font-heading">
+                  Vote
+                </Button>
               </div>
               <VoteModal
                 collection={{
@@ -314,7 +312,7 @@ const CollectionPage = () => {
           )}
 
           <ToggleTab
-            className="mt-12 font-heading pointer-events-auto"
+            className="mt-32 font-heading pointer-events-auto"
             tabWidth="150px"
             options={options}
             selected={selected}
@@ -325,7 +323,7 @@ const CollectionPage = () => {
             {selected === 'NFTs' && collection && (
               <GalleryBox
                 pageId="COLLECTION"
-                getEndpoint={`/collections/${collection?.chainId}:${collection?.address}/nfts`}
+                getEndpoint={`/collections/${collection.chainId}:${collection.address}/nfts`}
                 collection={collection}
                 cardProps={{
                   cardActions: [
@@ -378,13 +376,13 @@ const CollectionPage = () => {
             )}
 
             {selected === 'Orders' && (
-              <OrderbookContainer collectionId={collection?.address} className="mt-[-70px] pointer-events-none" />
+              <OrderbookContainer collectionId={collection.address} className="mt-[-70px] pointer-events-none" />
             )}
 
             {/* {currentTab === 1 && <ActivityTab dailyStats={dailyStats} weeklyStats={weeklyStats} />} */}
-            {selected === 'Activity' && <CollectionActivityTab collectionAddress={collection?.address ?? ''} />}
+            {selected === 'Activity' && <CollectionActivityTab collectionAddress={collection.address} />}
 
-            {selected === 'Community' && !isProd() && <CommunityFeed />}
+            {selected === 'Community' && !isProd() && <CommunityFeed collection={collection} className="mt-32" />}
           </div>
         </main>
       </div>

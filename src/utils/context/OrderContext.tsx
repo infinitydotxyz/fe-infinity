@@ -45,11 +45,11 @@ export interface OrderInCart {
 
 const isCartItemEqual = (a: OrderCartItem, b: OrderCartItem): boolean => {
   return (
-    a.tokenName === b.tokenName &&
-    a.collectionName === b.collectionName &&
-    a.collectionAddress === b.collectionAddress &&
-    a.isSellOrder === b.isSellOrder &&
-    a.tokenImage === b.tokenImage
+    a?.tokenName === b?.tokenName &&
+    a?.collectionName === b?.collectionName &&
+    a?.collectionAddress === b?.collectionAddress &&
+    a?.isSellOrder === b?.isSellOrder &&
+    a?.tokenImage === b?.tokenImage
   );
 };
 

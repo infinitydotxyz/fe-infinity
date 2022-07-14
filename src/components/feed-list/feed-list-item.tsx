@@ -5,17 +5,19 @@ import { Button, EZImage, Spacer, SVG } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { NftEventRec } from '../asset/activity/activity-item';
 import { addUserLike } from 'src/utils/firestore/firestoreUtils';
-import { AiOutlineLike } from 'react-icons/ai';
+import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io';
 import { FeedListTableItem } from './feed-list-table-item';
+import { useState } from 'react';
+import { timeAgo } from 'src/utils';
 
 interface Props {
   activity: NftEventRec;
-  onLike: (event: NftEventRec) => void;
-  onComment: (event: NftEventRec) => void;
+  onComment: (event?: NftEventRec) => void;
 }
 
-export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
+export const FeedListItem = ({ activity, onComment }: Props) => {
   const { user } = useAppContext();
+  const [likedCache, setLikedCache] = useState<Map<string, boolean>>(new Map());
 
   const typeName = (type: string) => {
     switch (type) {
@@ -47,55 +49,67 @@ export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
     return <></>;
   };
 
-  const typeContent = (type: string) => {
-    switch (type) {
-      case EventType.TwitterTweet:
-        return <div>Under construction</div>;
+  const onLike = (liked: boolean) => {
+    likedCache.set(activity.id, liked);
 
-      case EventType.DiscordAnnouncement:
-        return <div>Under construction</div>;
+    setLikedCache(new Map(likedCache));
+  };
 
-      case EventType.NftSale:
-        return <FeedListTableItem activity={activity} />;
+  const likeButtons = () => {
+    let likes = activity.likes;
 
-      case EventType.NftOffer:
-        return <div>Under construction</div>;
+    if (likedCache.has(activity.id)) {
+      const likedInCache = likedCache.get(activity.id);
 
-      case EventType.NftListing:
-        return <div>Under construction</div>;
-
-      case EventType.NftTransfer:
-        return <div>Under construction</div>;
-
-      case EventType.CoinMarketCapNews:
-        return <div>Under construction</div>;
-
-      default:
-        return <div>Not handled: {type}</div>;
+      if (likedInCache) {
+        likes += 1;
+      } else {
+        likes -= 1;
+      }
     }
 
-    return <></>;
+    return (
+      <div className="flex items-center">
+        <Button
+          size="plain"
+          variant="round"
+          onClick={async () => {
+            if (user && user?.address) {
+              await addUserLike(true, activity.id, user.address);
+
+              onLike(true);
+            }
+          }}
+        >
+          <div className="flex items-center">
+            <IoMdArrowDropup size={22} />
+          </div>
+        </Button>
+
+        <div className="mx-2">{likes}</div>
+
+        <Button
+          variant="round"
+          size="plain"
+          onClick={async () => {
+            if (user && user?.address) {
+              await addUserLike(false, activity.id, user.address);
+
+              onLike(false);
+            }
+          }}
+        >
+          <div className="flex items-center">
+            <IoMdArrowDropdown size={22} />
+          </div>
+        </Button>
+      </div>
+    );
   };
 
   const bottomBar = (
-    <div className="text-sm mt-2 w-full text-gray-500 flex items-center">
-      <Button
-        variant="plain"
-        className="px-0"
-        onClick={async () => {
-          if (user && user?.address) {
-            await addUserLike(activity.id || '', user?.address, () => {
-              onLike(activity);
-            });
-          }
-        }}
-      >
-        <div className="flex items-center">
-          <AiOutlineLike size={22} className="mr-2" />
-          {activity.likes}
-        </div>
-      </Button>
-
+    <div className="text-sm   w-full text-gray-500 flex items-center">
+      {likeButtons()}
       <Button
         variant="plain"
         className="px-0 ml-12"
@@ -115,9 +129,7 @@ export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
         variant="plain"
         className="px-0 ml-12"
         onClick={() => {
-          // if (onComment) {
-          //   onComment(data);
-          // }
+          onComment(); // this just closes the chat
         }}
       >
         <div className="flex">
@@ -127,8 +139,7 @@ export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
     </div>
   );
 
-  const content = typeContent(activity.type);
-  const timeString = '14h';
+  const timeString = timeAgo(new Date(activity.timestamp));
 
   return (
     <div className="w-full flex items-start">
@@ -144,12 +155,14 @@ export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
           </div>
           {activity.collectionData?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1" /> : null}
 
-          <div className="ml-2 text-sm">{timeString}</div>
+          <div className="ml-3 text-gray-600">{timeString}</div>
         </div>
 
         <div className="text-gray-500 flex text-sm mt-1">{typeName(activity.type)}</div>
 
-        <div className="py-2">{content}</div>
+        <div className="mt-4">
+          <FeedListTableItem activity={activity} />
+        </div>
 
         {bottomBar}
       </div>
