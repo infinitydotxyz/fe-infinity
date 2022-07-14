@@ -242,7 +242,7 @@ export const getOwnerAddress = (token: BaseToken | null | undefined) => {
   return ownerAddress;
 };
 
-// extract error message
+// extract error message from generic Error, Metamask error, infinityExchangeCustomError:
 export const extractErrorMsg = (err: unknown) => {
   console.error(err);
   let msg = `${err}`;
@@ -255,7 +255,7 @@ export const extractErrorMsg = (err: unknown) => {
   } else if (msg.indexOf('invalid address') > 0) {
     msg = 'Invalid wallet address';
   }
-  return msg;
+  return infinityExchangeCustomError(msg);
 };
 
 export const infinityExchangeCustomError = (err: string) => {
@@ -299,7 +299,7 @@ export const infinityExchangeCustomError = (err: string) => {
     case 'tokenIds dont intersect':
       return 'The order is invalid. Token Ids do not match.';
     default:
-      return 'What did you do?';
+      return err;
   }
 };
 
