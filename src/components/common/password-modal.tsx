@@ -4,7 +4,7 @@ import { base64Encode, isLocalhost } from 'src/utils';
 import { TextInputBox } from './input-box';
 
 const LOCAL_STORAGE_KEY = 'ppp';
-const base64Password = 'bmZ0ODg4'; // nft888
+const base64Password = 'bmZ0ODg4'; // nft888 - can you find this easter egg?
 const NO_PASSWORD_PAGES = ['/terms', '/privacy'];
 
 export const isPasswordModalNeeded = () => {
