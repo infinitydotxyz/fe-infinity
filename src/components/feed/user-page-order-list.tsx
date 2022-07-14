@@ -43,6 +43,7 @@ export const UserPageOrderList = ({ userInfo, className = '' }: UserPageOrderLis
   const [cursor, setCursor] = useState('');
   const [hasNextPage, setHasNextPage] = useState(false);
   const [filterShowed, setFilterShowed] = useState(false);
+  const [isCancellingAll, setIsCancellingAll] = useState(false);
   const [apiFilter, setApiFilter] = useState<UserOrderFilter>({ orderType: '' });
   const [showCancelDrawer, setShowCancelDrawer] = useState(false);
   const [selectedOrders, setSelectedOrders] = useState<SignedOBOrder[]>([]);
@@ -127,12 +128,15 @@ export const UserPageOrderList = ({ userInfo, className = '' }: UserPageOrderLis
         <Button
           variant="outline"
           className="py-2.5 mr-2 font-heading pointer-events-auto"
+          disabled={isCancellingAll}
           onClick={async () => {
             try {
               const signer = providerManager?.getEthersProvider().getSigner();
               if (signer && user) {
+                setIsCancellingAll(true);
                 const minOrderNonce = await fetchOrderNonce(user.address);
                 const { hash } = await cancelAllOrders(signer, chainId, minOrderNonce);
+                setIsCancellingAll(false);
                 toastSuccess('Transaction sent to chain');
                 waitForTransaction(hash, () => {
                   toastSuccess(`Transaction confirmed ${ellipsisAddress(hash)}`);
