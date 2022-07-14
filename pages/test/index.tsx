@@ -32,14 +32,6 @@ export const TestPage = () => {
 
             <Button
               onClick={() => {
-                void router.push('/feed');
-              }}
-            >
-              Feed
-            </Button>
-
-            <Button
-              onClick={() => {
                 void router.push('/explore-collections');
               }}
             >

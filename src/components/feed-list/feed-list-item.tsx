@@ -47,36 +47,6 @@ export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
     return <></>;
   };
 
-  const typeContent = (type: string) => {
-    switch (type) {
-      case EventType.TwitterTweet:
-        return <div>Under construction</div>;
-
-      case EventType.DiscordAnnouncement:
-        return <div>Under construction</div>;
-
-      case EventType.NftSale:
-        return <FeedListTableItem activity={activity} />;
-
-      case EventType.NftOffer:
-        return <div>Under construction</div>;
-
-      case EventType.NftListing:
-        return <div>Under construction</div>;
-
-      case EventType.NftTransfer:
-        return <div>Under construction</div>;
-
-      case EventType.CoinMarketCapNews:
-        return <div>Under construction</div>;
-
-      default:
-        return <div>Not handled: {type}</div>;
-    }
-
-    return <></>;
-  };
-
   const bottomBar = (
     <div className="text-sm mt-2 w-full text-gray-500 flex items-center">
       <Button
@@ -127,7 +97,6 @@ export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
     </div>
   );
 
-  const content = typeContent(activity.type);
   const timeString = '14h';
 
   return (
@@ -149,7 +118,9 @@ export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
 
         <div className="text-gray-500 flex text-sm mt-1">{typeName(activity.type)}</div>
 
-        <div className="py-2">{content}</div>
+        <div className="py-2">
+          <FeedListTableItem activity={activity} />
+        </div>
 
         {bottomBar}
       </div>

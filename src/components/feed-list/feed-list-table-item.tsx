@@ -1,3 +1,4 @@
+import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { ReactNode } from 'react';
 import { EthPrice, EZImage, NextLink } from 'src/components/common';
 import { ellipsisAddress, standardCard } from 'src/utils';
@@ -10,50 +11,67 @@ interface Props {
 }
 
 export const FeedListTableItem = ({ activity }: Props) => {
-  return (
-    <div>
-      <div className={twMerge(standardCard, 'flex items-center font-heading')}>
-        <EZImage
-          className="w-16 h-16 max-h-[80px] rounded-full"
-          src={activity.collectionData?.metadata?.profileImage}
-        />
+  const sale = () => {
+    return (
+      <div>
+        <div className={twMerge(standardCard, 'flex items-center font-heading')}>
+          <EZImage
+            className="w-16 h-16 max-h-[80px] rounded-full"
+            src={activity.collectionData?.metadata?.profileImage}
+          />
 
-        <div className="flex w-full ml-8">
-          <TableItem label="Link">
-            <a href={`/asset/${activity.chainId}/${activity.collectionData?.address}/${activity.tokenId}`}>
-              {ellipsisAddress(activity.tokenId)}
-            </a>
-          </TableItem>
+          <div className="flex w-full ml-8">
+            <TableItem label="Link">
+              <a href={`/asset/${activity.chainId}/${activity.collectionData?.address}/${activity.tokenId}`}>
+                {ellipsisAddress(activity.tokenId)}
+              </a>
+            </TableItem>
 
-          {/* <TableItem label="Event">
+            {/* <TableItem label="Event">
             <a href={`${activity.externalUrl}`} target="_blank" rel="noopener noreferrer">
               {EventTypeNames[activity.type as EventType]}
             </a>
           </TableItem> */}
 
-          <TableItem label="Price">{activity.price ? <EthPrice label={`${activity.price}`} /> : '—'}</TableItem>
+            <TableItem label="Price">{activity.price ? <EthPrice label={`${activity.price}`} /> : '—'}</TableItem>
 
-          <TableItem label="Buyer">
-            <NextLink href={`/profile/${activity.to}`}>
-              {activity.toDisplayName ? ellipsisAddress(activity.toDisplayName) : ellipsisAddress(activity.to)}
-            </NextLink>
-          </TableItem>
+            <TableItem label="Buyer">
+              <NextLink href={`/profile/${activity.to}`}>
+                {activity.toDisplayName ? ellipsisAddress(activity.toDisplayName) : ellipsisAddress(activity.to)}
+              </NextLink>
+            </TableItem>
 
-          <TableItem label="Seller">
-            <NextLink href={`/profile/${activity.from}`}>
-              {activity.fromDisplayName ? ellipsisAddress(activity.fromDisplayName) : ellipsisAddress(activity.from)}
-            </NextLink>
-          </TableItem>
+            <TableItem label="Seller">
+              <NextLink href={`/profile/${activity.from}`}>
+                {activity.fromDisplayName ? ellipsisAddress(activity.fromDisplayName) : ellipsisAddress(activity.from)}
+              </NextLink>
+            </TableItem>
 
-          <TableItem label="Date">
-            <a href={activity.externalUrl} target="_blank" rel="noopener noreferrer">
-              {format(activity.timestamp)}
-            </a>
-          </TableItem>
+            <TableItem label="Date">
+              <a href={activity.externalUrl} target="_blank" rel="noopener noreferrer">
+                {format(activity.timestamp)}
+              </a>
+            </TableItem>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
+
+  switch (activity.type) {
+    case EventType.NftSale:
+    case EventType.NftOffer:
+      return sale();
+    case EventType.NftListing:
+    case EventType.TwitterTweet:
+    case EventType.DiscordAnnouncement:
+    case EventType.CoinMarketCapNews:
+    case EventType.NftTransfer:
+      console.log(activity.type);
+      console.log(JSON.stringify(activity, null, 2));
+      break;
+  }
+  return <div>Under construction</div>;
 };
 
 // ======================================================
