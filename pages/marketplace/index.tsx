@@ -71,26 +71,7 @@ const MarketplacePage = () => {
       {selected === TABS.Discover && (
         <div className="min-h-[1024px]">
           <div className="mb-8 w-full flex flex-row-reverse">
-            {/* <TextInputBox
-              type="text"
-              value={query}
-              label=""
-              placeholder=""
-              className="w-64 pl-4"
-              inputClassName="font-normal font-body text-sm"
-              icon={<FiSearch className="mr-2" />}
-              onChange={(value) => handleChange(value)}
-            /> */}
             <div className="space-x-2">
-              {/* todo: volumePercentChange is mising in many collections */}
-              {/* <Button
-                variant={orderBy === 'volumePercentChange' ? 'primary' : 'outline'}
-                className="font-heading"
-                onClick={() => setOrderBy('volumePercentChange')}
-              >
-                By Volume
-              </Button> */}
-
               <Dropdown
                 label={orderBy === 'avgPricePercentChange' ? 'Sort by Avg. Price' : 'Sort by Social Stats'}
                 items={[
