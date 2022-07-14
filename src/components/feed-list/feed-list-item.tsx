@@ -5,7 +5,7 @@ import { Button, EZImage, Spacer, SVG } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { NftEventRec } from '../asset/activity/activity-item';
 import { addUserLike } from 'src/utils/firestore/firestoreUtils';
-import { AiOutlineLike } from 'react-icons/ai';
+import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io';
 import { FeedListTableItem } from './feed-list-table-item';
 
 interface Props {
@@ -47,11 +47,11 @@ export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
     return <></>;
   };
 
-  const bottomBar = (
-    <div className="text-sm mt-2 w-full text-gray-500 flex items-center">
+  const likeButtons = (
+    <div className="flex items-center">
       <Button
-        variant="plain"
-        className="px-0"
+        size="plain"
+        variant="round"
         onClick={async () => {
           if (user && user?.address) {
             await addUserLike(activity.id || '', user?.address, () => {
@@ -61,11 +61,33 @@ export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
         }}
       >
         <div className="flex items-center">
-          <AiOutlineLike size={22} className="mr-2" />
-          {activity.likes}
+          <IoMdArrowDropup size={22} />
         </div>
       </Button>
 
+      <div className="mx-2">{activity.likes}</div>
+
+      <Button
+        variant="round"
+        size="plain"
+        onClick={async () => {
+          if (user && user?.address) {
+            await addUserLike(activity.id || '', user?.address, () => {
+              onLike(activity);
+            });
+          }
+        }}
+      >
+        <div className="flex items-center">
+          <IoMdArrowDropdown size={22} />
+        </div>
+      </Button>
+    </div>
+  );
+
+  const bottomBar = (
+    <div className="text-sm   w-full text-gray-500 flex items-center">
+      {likeButtons}
       <Button
         variant="plain"
         className="px-0 ml-12"
@@ -116,7 +138,7 @@ export const FeedListItem = ({ activity, onLike, onComment }: Props) => {
 
         <div className="text-gray-500 flex text-sm mt-1">{typeName(activity.type)}</div>
 
-        <div className="py-2">
+        <div className="mt-4">
           <FeedListTableItem activity={activity} />
         </div>
 
