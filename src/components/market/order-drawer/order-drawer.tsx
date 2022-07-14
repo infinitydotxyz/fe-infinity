@@ -210,7 +210,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
         }
       }
     } else {
-      title = 'Buy order';
+      title = isCollectionsCart() ? 'Collection Offer' : 'Buy order';
 
       if (isCollectionsCart()) {
         content =
