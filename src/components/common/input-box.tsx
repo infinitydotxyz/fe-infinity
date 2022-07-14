@@ -187,7 +187,7 @@ export const TextAreaBox = ({ value, label, placeholder, tooltip, onChange, rows
           rows={rows}
           value={value}
           onChange={(e) => onChange && onChange(e.target.value)}
-          className="p-0 border-none focus:ring-0 block w-full text-base"
+          className="p-0 border-none focus:ring-0 block w-full text-base resize-none"
           placeholder={placeholder}
         />
       </div>
@@ -225,7 +225,7 @@ export const TextAreaInputBox = ({
           value={value}
           rows={rows}
           onChange={(e) => onChange(e.target.value)}
-          className="p-0 border-none focus:ring-0 block w-full text-base font-heading"
+          className="p-0 border-none focus:ring-0 block w-full text-base font-heading resize-none"
           placeholder={placeholder}
         />
       </div>

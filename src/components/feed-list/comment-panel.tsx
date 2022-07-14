@@ -61,13 +61,20 @@ export const CommentPanel = ({ isOpen, onClose, event, contentOnly }: Props) => 
   };
 
   const replyBox = (
-    <div className="flex ">
+    <div className="flex">
       <textarea
-        rows={3}
+        rows={2}
         value={text}
         onChange={(ev) => setText(ev.target.value)}
-        className="p-0 border-none focus:ring-0 block w-full text-base"
-        placeholder="Reply here"
+        className="resize-none placeholder-gray-400 border-none text-lg focus:ring-0 block w-full bg-theme-light-200  rounded-2xl mb-2"
+        placeholder="Enter Reply"
+        onKeyDown={(event) => {
+          if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            event.stopPropagation();
+            onClickReply();
+          }
+        }}
       />
 
       <Button variant="outline" onClick={onClickReply} className="h-10 ml-2 font-heading text-secondary">
