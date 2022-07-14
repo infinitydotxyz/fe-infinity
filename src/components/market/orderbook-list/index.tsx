@@ -5,7 +5,6 @@ import { OrderbookProvider, SORT_FILTERS, useOrderbook } from '../OrderbookConte
 import { OrderbookRow } from './orderbook-row';
 import { OrderbookFilters } from './filters/orderbook-filters';
 import { useRouter } from 'next/router';
-import { OrderDetailModal } from '../OrderDetailModal';
 
 const SORT_LABELS: {
   [key: string]: string;

@@ -1,7 +1,6 @@
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import React from 'react';
 import { Button, Modal, SimpleTable, SimpleTableItem } from 'src/components/common';
-import { format } from 'timeago.js';
 
 interface Props {
   order: SignedOBOrder;
