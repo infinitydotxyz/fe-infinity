@@ -133,16 +133,14 @@ const SingleCollectionCell = ({
   return (
     <div className="flex gap-2 items-center">
       <div className="flex justify-center shrink-0 h-14 w-14">
-        <span className="inline-block relative">
+        <span
+          className="inline-block relative cursor-pointer"
+          onClick={() => {
+            onClick && onClick();
+          }}
+        >
           {image ? (
-            <img
-              className="h-14 w-14 rounded-full"
-              src={image}
-              alt=""
-              onClick={() => {
-                onClick && onClick();
-              }}
-            />
+            <img className="h-14 w-14 rounded-full" src={image} alt="" />
           ) : (
             <img className="h-14 w-14 rounded-full" src={PLACEHOLDER_IMAGE} alt="" onClick={alert} />
           )}

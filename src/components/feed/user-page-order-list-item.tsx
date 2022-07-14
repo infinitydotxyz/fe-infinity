@@ -5,6 +5,7 @@ import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { UserProfileDto } from '../user/user-profile-dto';
 import { OrderbookItem } from '../market/orderbook-list/orderbook-item';
 import { UserOrderFilter } from '../filter/user-profile-order-filter-panel';
+import { OrderDetailModal } from '../market/OrderDetailModal';
 
 interface Props {
   order: SignedOBOrder;
@@ -15,6 +16,7 @@ interface Props {
 
 export const UserPageOrderListItem = ({ order, orderType, onClickCancel }: Props) => {
   const [isCancelling, setIsCancelling] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState<SignedOBOrder | null>(null);
 
   return (
     <div>
@@ -32,7 +34,12 @@ export const UserPageOrderListItem = ({ order, orderType, onClickCancel }: Props
               <a href={`/collection/${order.nfts[0].collectionSlug}`}>{order.nfts[0].collectionName}</a>
             </div>
             <div></div> */}
-            <OrderbookItem nameItem={true} key={`${order.id} ${order.chainId}`} order={order} />
+            <OrderbookItem
+              nameItem={true}
+              key={`${order.id} ${order.chainId}`}
+              order={order}
+              onClick={() => setSelectedOrder(order)}
+            />
           </div>
 
           <div className="w-1/8">
@@ -80,6 +87,16 @@ export const UserPageOrderListItem = ({ order, orderType, onClickCancel }: Props
           </div>
         </div>
       </div>
+
+      {selectedOrder !== null ? (
+        <OrderDetailModal
+          order={selectedOrder}
+          isOpen={true}
+          onClose={() => {
+            setSelectedOrder(null);
+          }}
+        />
+      ) : null}
     </div>
   );
 };
