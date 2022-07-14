@@ -43,7 +43,7 @@ export const UserPageOrderList = ({ userInfo, className = '' }: UserPageOrderLis
   const [cursor, setCursor] = useState('');
   const [hasNextPage, setHasNextPage] = useState(false);
   const [filterShowed, setFilterShowed] = useState(false);
-  const [apiFilter, setApiFilter] = useState<UserOrderFilter>({ orderType: 'listings' });
+  const [apiFilter, setApiFilter] = useState<UserOrderFilter>({ orderType: '' });
   const [showCancelDrawer, setShowCancelDrawer] = useState(false);
   const [selectedOrders, setSelectedOrders] = useState<SignedOBOrder[]>([]);
 
@@ -79,7 +79,7 @@ export const UserPageOrderList = ({ userInfo, className = '' }: UserPageOrderLis
     } else if (apiFilter.orderType === 'offers-made') {
       query.makerAddress = userInfo.address;
       query.isSellOrder = false;
-    } else {
+    } else if (apiFilter.orderType === 'offers-received') {
       query.takerAddress = userInfo.address;
       query.isSellOrder = false;
     }
