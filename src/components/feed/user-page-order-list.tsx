@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { UserPageOrderListItem } from './user-page-order-list-item';
 import { apiGet, extractErrorMsg, ITEMS_PER_PAGE, ellipsisAddress } from 'src/utils';
 import { Button, CenteredContent, ScrollLoader, Spinner, toastError, toastSuccess } from '../common';
@@ -25,16 +24,12 @@ type Query = {
   collections?: string[];
 };
 
-interface UserPageOrderListProps {
+interface Props {
   userInfo: UserProfileDto;
-  userAddress?: string;
-  types?: EventType[];
-  forActivity?: boolean;
-  forUserActivity?: boolean;
   className?: string;
 }
 
-export const UserPageOrderList = ({ userInfo, className = '' }: UserPageOrderListProps) => {
+export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
   const router = useRouter();
   const { providerManager, chainId, user, waitForTransaction } = useAppContext();
   const { orderDrawerOpen, setOrderDrawerOpen, setCustomDrawerItems } = useOrderContext();
@@ -74,6 +69,7 @@ export const UserPageOrderList = ({ userInfo, className = '' }: UserPageOrderLis
       numItems: apiFilter.numItems,
       collections: apiFilter.collections
     };
+
     if (apiFilter.orderType === 'listings') {
       query.makerAddress = userInfo.address;
       query.isSellOrder = true;
@@ -83,6 +79,9 @@ export const UserPageOrderList = ({ userInfo, className = '' }: UserPageOrderLis
     } else if (apiFilter.orderType === 'offers-received') {
       query.takerAddress = userInfo.address;
       query.isSellOrder = false;
+    } else {
+      query.takerAddress = userInfo.address;
+      query.makerAddress = userInfo.address;
     }
 
     const { result } = await apiGet(`/orders/${userInfo.address}`, {
@@ -93,6 +92,7 @@ export const UserPageOrderList = ({ userInfo, className = '' }: UserPageOrderLis
     if (result?.hasNextPage === true) {
       setCursor(result?.cursor);
     }
+
     setHasNextPage(result?.hasNextPage);
 
     const moreData: SignedOBOrder[] = [];
@@ -132,6 +132,7 @@ export const UserPageOrderList = ({ userInfo, className = '' }: UserPageOrderLis
           onClick={async () => {
             try {
               const signer = providerManager?.getEthersProvider().getSigner();
+
               if (signer && user) {
                 setIsCancellingAll(true);
                 const minOrderNonce = await fetchOrderNonce(user.address);
