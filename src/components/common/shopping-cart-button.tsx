@@ -5,11 +5,12 @@ import { useOrderContext } from 'src/utils/context/OrderContext';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { useRouter } from 'next/router';
 import { iconButtonStyle } from 'src/utils/ui-constants';
-import { hasOrderDrawer } from 'src/utils';
+import { useDrawerContext } from 'src/utils/context/DrawerContext';
 
 export const ShoppingCartButton = () => {
   const { user } = useAppContext();
-  const { orderDrawerOpen, setOrderDrawerOpen, ordersInCart, cartItems, customDrawerItems } = useOrderContext();
+  const { orderDrawerOpen, setOrderDrawerOpen } = useOrderContext();
+  const { cartItemCount } = useDrawerContext();
   const router = useRouter();
 
   const connected = user?.address ? true : false;
@@ -21,16 +22,12 @@ export const ShoppingCartButton = () => {
       router.push('/connect');
     }
   };
-  let count = cartItems.length || ordersInCart.length;
-  if (!hasOrderDrawer(router.asPath)) {
-    count = customDrawerItems;
-  }
 
   return (
     <Button variant="outline" onClick={handleClick} className="relative">
       <FaShoppingCart className={iconButtonStyle} />
-      {count > 0 ? (
-        <span className="px-1 absolute top-1 right-2 bg-blue-500 text-white rounded-full text-xs">{count}</span>
+      {cartItemCount > 0 ? (
+        <span className="px-1 absolute top-1 right-2 bg-blue-500 text-white rounded-full text-xs">{cartItemCount}</span>
       ) : null}
     </Button>
   );

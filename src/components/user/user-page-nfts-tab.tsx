@@ -5,13 +5,13 @@ import { useOrderContext } from 'src/utils/context/OrderContext';
 import { GalleryBox } from '../gallery/gallery-box';
 import { SendNFTsDrawer } from '../market/order-drawer/send-nfts-drawer';
 import { UserProfileDto } from './user-profile-dto';
-import { useRouter } from 'next/router';
 import { twMerge } from 'tailwind-merge';
 import { CardAction, EthPrice } from '../common';
 import { CancelModal } from '../asset';
 import { apiGet } from 'src/utils';
 import { LowerPriceModal } from '../asset/modals/lower-price-modal';
 import { WaitingForTxModal } from '../market/order-drawer/waiting-for-tx-modal';
+import { useDrawerContext } from 'src/utils/context/DrawerContext';
 
 type Props = {
   userInfo: UserProfileDto;
@@ -26,8 +26,8 @@ const fetchTokenData = async (chainId: string, collection: string, tokenId: stri
 };
 
 export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listClassName = '' }: Props) => {
-  const router = useRouter();
   const { user, chainId } = useAppContext();
+  const { hasOrderDrawer, setCartItemCount } = useDrawerContext();
   const {
     addCartItem,
     setOrderDrawerOpen,
@@ -36,7 +36,6 @@ export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listCl
     removeCartItem,
     updateOrders,
     orderDrawerOpen,
-    setCustomDrawerItems,
     setPrice
   } = useOrderContext();
 
@@ -50,14 +49,15 @@ export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listCl
   const [sendTxHash, setSendTxHash] = useState('');
 
   useEffect(() => {
-    const hasCustomDrawer = router.asPath.indexOf('tab=Send') !== -1;
-    if (hasCustomDrawer && orderDrawerOpen) {
+    if (!hasOrderDrawer() && orderDrawerOpen) {
       setShowTransferDrawer(true);
     }
   }, [orderDrawerOpen]);
 
   useEffect(() => {
-    setCustomDrawerItems(nftsForTransfer.length);
+    if (!hasOrderDrawer()) {
+      setCartItemCount(nftsForTransfer.length);
+    }
   }, [nftsForTransfer]);
 
   // find & remove this item in cartItems & all orders' cartItems:

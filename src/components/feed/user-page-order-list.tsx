@@ -11,10 +11,10 @@ import {
   UserProfileOrderFilterPanel
 } from '../filter/user-profile-order-filter-panel';
 import { useOrderContext } from 'src/utils/context/OrderContext';
-import { useRouter } from 'next/router';
 import { cancelAllOrders } from 'src/utils/exchange/orders';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { fetchOrderNonce } from 'src/utils/marketUtils';
+import { useDrawerContext } from 'src/utils/context/DrawerContext';
 
 type Query = {
   limit: number;
@@ -34,9 +34,9 @@ interface Props {
 }
 
 export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
-  const router = useRouter();
   const { providerManager, chainId, user, waitForTransaction } = useAppContext();
-  const { orderDrawerOpen, setOrderDrawerOpen, setCustomDrawerItems } = useOrderContext();
+  const { orderDrawerOpen, setOrderDrawerOpen } = useOrderContext();
+  const { hasOrderDrawer, setCartItemCount } = useDrawerContext();
   const [data, setData] = useState<SignedOBOrder[]>([]);
   const [isFetching, setIsFetching] = useState(false);
   const [cursor, setCursor] = useState('');
@@ -48,14 +48,15 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
   const [selectedOrders, setSelectedOrders] = useState<SignedOBOrder[]>([]);
 
   useEffect(() => {
-    const hasCustomDrawer = router.asPath.indexOf('tab=Orders') !== -1;
-    if (hasCustomDrawer && orderDrawerOpen) {
+    if (!hasOrderDrawer() && orderDrawerOpen) {
       setShowCancelDrawer(true);
     }
   }, [orderDrawerOpen]);
 
   useEffect(() => {
-    setCustomDrawerItems(selectedOrders.length);
+    if (!hasOrderDrawer()) {
+      setCartItemCount(selectedOrders.length);
+    }
   }, [selectedOrders]);
 
   const fetchData = async (isRefresh = false) => {
