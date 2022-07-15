@@ -468,6 +468,15 @@ export async function takeMultiplOneOrders(signer: JsonRpcSigner, chainId: strin
     };
     await infinityExchange.takeMultipleOneOrders(makerOrders, options);
   } else {
+    // approve ERC721
+    const user = await signer.getAddress();
+    const approvalPromises = [];
+    for (const makerOrder of makerOrders) {
+      const { approvalHash } = await approveERC721ForChainNFTs(user, makerOrder.nfts, signer, exchangeAddress);
+      const promise = signer.provider?.waitForTransaction(approvalHash);
+      approvalPromises.push(promise);
+    }
+    await Promise.all(approvalPromises);
     const result = await infinityExchange.takeMultipleOneOrders(makerOrders, { gasLimit });
     return result;
   }
