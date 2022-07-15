@@ -3,8 +3,8 @@ import { ExchangeEvent } from '@infinityxyz/lib-frontend/types/core/feed';
 import { BaseFeedEvent, EventType } from '@infinityxyz/lib-frontend/types/core/feed/FeedEvent';
 import { ReactNode } from 'react';
 import { AiOutlineComment, AiOutlineLike } from 'react-icons/ai';
-import { BGImage, Button, EthPrice, NextLink, NftImage } from 'src/components/common';
-import { ellipsisAddress, getChainScannerBase, PLACEHOLDER_IMAGE } from 'src/utils';
+import { Button, EthPrice, EZImage, NextLink, NftImage } from 'src/components/common';
+import { ellipsisAddress, getChainScannerBase } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 
 export type FeedEvent = BaseFeedEvent &
@@ -127,11 +127,7 @@ const SaleEvent = ({ data }: Props) => {
   return (
     <div className="mt-4 border rounded-xl p-4 flex items-center bg-gray-100 font-heading">
       <NextLink href={`/asset/${data.chainId}/${data.collectionAddress}/${data.tokenId}`}>
-        {data.image ? (
-          <BGImage src={data.image} className="w-24 rounded-xl" />
-        ) : (
-          <BGImage src={PLACEHOLDER_IMAGE} className="w-24 rounded-xl" />
-        )}
+        <EZImage src={data.image} className="w-24 h-24 rounded-xl overflow-clip" />
       </NextLink>
       <div className="flex w-full justify-between mx-8">
         <div className="text-sm">
