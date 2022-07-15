@@ -48,7 +48,7 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
   const [selectedOrders, setSelectedOrders] = useState<SignedOBOrder[]>([]);
 
   useEffect(() => {
-    const hasCustomDrawer = router.asPath.indexOf('tab=Orders') >= 0;
+    const hasCustomDrawer = router.asPath.indexOf('tab=Orders') !== -1;
     if (hasCustomDrawer && orderDrawerOpen) {
       setShowCancelDrawer(true);
     }

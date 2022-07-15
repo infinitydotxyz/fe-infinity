@@ -313,5 +313,5 @@ export const getEstimatedGasPrice = async (provider: Web3Provider | undefined): 
 };
 
 export const hasOrderDrawer = (routerPath: string) => {
-  return routerPath.indexOf('me?tab=Orders') < 0 && routerPath.indexOf('me?tab=Send') < 0;
+  return routerPath.indexOf('me?tab=Orders') === -1 && routerPath.indexOf('me?tab=Send') === -1;
 };

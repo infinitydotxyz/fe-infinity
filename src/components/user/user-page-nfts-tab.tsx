@@ -50,7 +50,7 @@ export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listCl
   const [sendTxHash, setSendTxHash] = useState('');
 
   useEffect(() => {
-    const hasCustomDrawer = router.asPath.indexOf('tab=Send') >= 0;
+    const hasCustomDrawer = router.asPath.indexOf('tab=Send') !== -1;
     if (hasCustomDrawer && orderDrawerOpen) {
       setShowTransferDrawer(true);
     }
