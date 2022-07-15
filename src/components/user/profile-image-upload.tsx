@@ -114,7 +114,7 @@ export const ProfileImageUpload = ({ onUpload, roundPhoto, onDelete, imgSource =
           onClick={onUploadButtonClick}
           disabled={isLoading}
         >
-          Upload
+          Select
         </Button>
         <ImageUploaderButtonRef buttonRef={uploadInput} onChangeFile={handleChangeFile} />
         <Button
