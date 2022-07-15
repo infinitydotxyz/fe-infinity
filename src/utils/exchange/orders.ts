@@ -460,13 +460,7 @@ export async function takeMultiplOneOrders(signer: JsonRpcSigner, chainId: strin
     };
     await infinityExchange.takeMultipleOneOrders([makerOrder], options);
   } else {
-    // if accepting offer, no need to send any ETH but need to approve ERC20/WETH
-    const currency = makerOrder.execParams[1];
-    const user = await signer.getAddress();
-    await approveERC20(user, currency, salePrice, signer, exchangeAddress);
-    // todo: dylan need to wait for WETH approval txn to succeed
     const result = await infinityExchange.takeMultipleOneOrders([makerOrder]);
-    console.log('takeMultipleOneOrders: result:', result);
     return result;
   }
 }
