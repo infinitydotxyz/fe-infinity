@@ -21,12 +21,8 @@ export const AcceptOfferDrawer = ({ open, onClose, orders, onClickRemove }: Prop
     try {
       const signer = providerManager?.getEthersProvider().getSigner();
       if (signer) {
-        // TODO(ADI):  fix this
-        // const nonces = orders.map((order) => order.nonce);
-
-        // broken, fix
-        const { hash } = await takeMultiplOneOrders(signer, chainId, orders[0].signedOrder);
-
+        const chainOrders = orders.map((order) => order.signedOrder);
+        const { hash } = await takeMultiplOneOrders(signer, chainId, chainOrders);
         toastSuccess('Transaction sent to chain');
         waitForTransaction(hash, () => {
           toastSuccess(`Transaction confirmed ${ellipsisAddress(hash)}`);
