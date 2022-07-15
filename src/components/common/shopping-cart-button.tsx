@@ -5,12 +5,12 @@ import { useOrderContext } from 'src/utils/context/OrderContext';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { useRouter } from 'next/router';
 import { iconButtonStyle } from 'src/utils/ui-constants';
+import { hasOrderDrawer } from 'src/utils';
 
 export const ShoppingCartButton = () => {
   const { user } = useAppContext();
   const { orderDrawerOpen, setOrderDrawerOpen, ordersInCart, cartItems, customDrawerItems } = useOrderContext();
   const router = useRouter();
-  const hasOrderDrawer = router.asPath.indexOf('tab=Orders') < 0 && router.asPath.indexOf('tab=Send') < 0;
 
   const connected = user?.address ? true : false;
 
@@ -22,7 +22,7 @@ export const ShoppingCartButton = () => {
     }
   };
   let count = cartItems.length || ordersInCart.length;
-  if (!hasOrderDrawer) {
+  if (!hasOrderDrawer(router.asPath)) {
     count = customDrawerItems;
   }
 

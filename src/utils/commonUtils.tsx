@@ -311,3 +311,7 @@ export const getEstimatedGasPrice = async (provider: Web3Provider | undefined): 
   const priceEstimate = price.mul(2);
   return priceEstimate.toString();
 };
+
+export const hasOrderDrawer = (routerPath: string) => {
+  return routerPath.indexOf('me?tab=Orders') < 0 && routerPath.indexOf('me?tab=Send') < 0;
+};

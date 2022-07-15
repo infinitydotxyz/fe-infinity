@@ -82,7 +82,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
 
     if (readyToCheckout()) {
       if (isSellOrderCart()) {
-        buttonTitle = 'Complete listing';
+        buttonTitle = 'Complete order';
       } else {
         buttonTitle = 'Place Orders';
       }
@@ -117,7 +117,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
         buttonTitle = 'Update order';
       }
     }
-    const showCancel = buttonTitle === 'Complete listing' || buttonTitle === 'Place Orders' ? false : true;
+    const showCancel = buttonTitle === 'Complete order' || buttonTitle === 'Place Orders' ? false : true;
 
     return (
       <div className="flex flex-col mb-8">
