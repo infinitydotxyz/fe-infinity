@@ -1,4 +1,5 @@
 import { twMerge } from 'tailwind-merge';
+import { EZImage } from '../common';
 
 const sizes = {
   medium: 'w-28 h-28',
@@ -10,9 +11,10 @@ export interface Props {
   onClick?: () => void;
   size?: keyof typeof sizes;
   className?: string;
-  alt?: string;
 }
 
-export const AvatarImage = ({ url, onClick, className, alt, size = 'medium' }: Props) => {
-  return <img src={url} alt={alt} className={twMerge('rounded-[50%]', sizes[size], className)} onClick={onClick} />;
+export const AvatarImage = ({ url, onClick, className, size = 'medium' }: Props) => {
+  return (
+    <EZImage src={url} className={twMerge('rounded-[50%] overflow-clip', sizes[size], className)} onClick={onClick} />
+  );
 };

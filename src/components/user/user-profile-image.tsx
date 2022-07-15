@@ -1,6 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import { FaPen } from 'react-icons/fa';
 import { useRouter } from 'next/router';
+import { EZImage } from '../common';
 
 interface UserProfileImageProps {
   imgSrc?: string;
@@ -27,7 +28,7 @@ export const UserProfileImage: FunctionComponent<UserProfileImageProps> = ({ img
       }}
     >
       {imgSrc ? (
-        <img className="object-cover" src={imgSrc} />
+        <EZImage src={imgSrc} />
       ) : (
         <div
           className={`w-full h-full flex flex-row items-center justify-center ${

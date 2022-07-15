@@ -20,7 +20,7 @@ export const useToggleTab = (options: string[], selectedOption: string) => {
   }, [selectedOption]);
 
   const onChange = (option: string) => {
-    router.push(
+    router.replace(
       {
         pathname: router.pathname,
         query: { ...router.query, tab: option }

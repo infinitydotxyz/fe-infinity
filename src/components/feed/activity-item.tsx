@@ -2,7 +2,7 @@ import { EventTypeNames } from '@infinityxyz/lib-frontend/types/core/feed';
 import { BGImage, EthPrice, NextLink } from 'src/components/common';
 import { ellipsisAddress, getChainScannerBase, PLACEHOLDER_IMAGE } from 'src/utils';
 import { format } from 'timeago.js';
-import { FeedEvent } from './feed-item';
+import { FeedEvent } from './user-profile-activity-list';
 
 interface Props {
   event: FeedEvent;

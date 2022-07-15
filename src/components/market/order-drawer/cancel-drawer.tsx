@@ -4,7 +4,6 @@ import { ellipsisAddress, extractErrorMsg } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { cancelMultipleOrders } from 'src/utils/exchange/orders';
 import { iconButtonStyle } from 'src/utils/ui-constants';
-// import { format } from 'timeago.js';
 import { Drawer } from '../../common/drawer';
 import { OrderbookItem } from '../orderbook-list/orderbook-item';
 
@@ -31,18 +30,6 @@ export const CancelDrawer = ({ open, onClose, orders, onClickRemove }: Props) =>
             {orders.map((order: SignedOBOrder, idx) => {
               return (
                 <li key={order.id + '_' + idx} className="py-3 flex">
-                  {/* <div>
-                    <NftImage
-                      className="w-20 h-20 rounded-3xl"
-                      chainId={order.chainId}
-                      collectionAddress={order.nfts[0]?.collectionAddress}
-                    />
-                  </div>
-                  <div className="pl-4">
-                    <div>Min price: {order.endPriceEth}</div>
-                    <div># NFTs: {order.numItems}</div>
-                    <div>Expiry date: {format(order.endTimeMs)}</div>
-                  </div> */}
                   <div className="w-full flex justify-between">
                     <div className="flex-1">
                       <OrderbookItem nameItem={true} key={`${order.id} ${order.chainId}`} order={order} />
