@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { apiGet } from 'src/utils';
-import { DebouncedTextInputBox } from '../common';
+import { DebouncedTextInputBox, EZImage } from '../common';
 
 export type CollectionInfo = {
   chainId: string;
@@ -34,7 +34,7 @@ const CollectionFilter = ({ onSearch }: Props) => {
   };
 
   return (
-    <ul className="max-h-[250px] overflow-y-auto">
+    <div className="">
       <DebouncedTextInputBox
         label=""
         type="text"
@@ -44,18 +44,20 @@ const CollectionFilter = ({ onSearch }: Props) => {
         placeholder="Search"
       />
 
-      {collections.map((item) => {
-        if (!item.name || !item.address || !item.profileImage) {
-          return null;
-        }
-        return (
-          <div key={item.address} className="flex items-center space-x-4 mt-4">
-            <img className="h-9 w-9 rounded-full" src={item.profileImage}></img>
-            <div>{item.name}</div>
-          </div>
-        );
-      })}
-    </ul>
+      <div className="max-h-[250px] overflow-y-auto space-y-2">
+        {collections.map((item) => {
+          if (!item.name || !item.address || !item.profileImage) {
+            return null;
+          }
+          return (
+            <div key={item.address} className="flex items-center space-x-4">
+              <EZImage className="h-9 w-9 rounded-full overflow-clip" src={item.profileImage} />
+              <div>{item.name}</div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 };
 
