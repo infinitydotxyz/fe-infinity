@@ -2,7 +2,7 @@ import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { Button, SVG, Spacer, toastSuccess, toastError, Divider } from 'src/components/common';
 import { ellipsisAddress, extractErrorMsg } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { cancelMultipleOrders } from 'src/utils/exchange/orders';
+import { takeMultiplOneOrders } from 'src/utils/exchange/orders';
 import { iconButtonStyle } from 'src/utils/ui-constants';
 import { Drawer } from '../../common/drawer';
 import { OrderbookItem } from '../orderbook-list/orderbook-item';
@@ -14,15 +14,19 @@ interface Props {
   onClickRemove: (order: SignedOBOrder) => void;
 }
 
-export const CancelDrawer = ({ open, onClose, orders, onClickRemove }: Props) => {
+export const AcceptOfferDrawer = ({ open, onClose, orders, onClickRemove }: Props) => {
   const { providerManager, chainId, waitForTransaction } = useAppContext();
 
-  const doCancel = async () => {
+  const doAccept = async () => {
     try {
       const signer = providerManager?.getEthersProvider().getSigner();
       if (signer) {
-        const nonces = orders.map((order) => order.nonce);
-        const { hash } = await cancelMultipleOrders(signer, chainId, nonces);
+        // TODO(ADI):  fix this
+        // const nonces = orders.map((order) => order.nonce);
+
+        // broken, fix
+        const { hash } = await takeMultiplOneOrders(signer, chainId, orders[0].signedOrder);
+
         toastSuccess('Transaction sent to chain');
         waitForTransaction(hash, () => {
           toastSuccess(`Transaction confirmed ${ellipsisAddress(hash)}`);
@@ -40,8 +44,8 @@ export const CancelDrawer = ({ open, onClose, orders, onClickRemove }: Props) =>
       <Drawer
         open={open}
         onClose={onClose}
-        subtitle={'Cancel these orders in one transaction'}
-        title={<div className="flex items-center">Cancel Orders</div>}
+        subtitle={'Accept these offers in one transaction'}
+        title={<div className="flex items-center">Accept Offers</div>}
       >
         <div className="flex flex-col h-full">
           <ul className="overflow-y-auto content-between px-12">
@@ -65,8 +69,8 @@ export const CancelDrawer = ({ open, onClose, orders, onClickRemove }: Props) =>
           <footer className="w-full text-center py-4">
             <Divider className="mb-10" />
 
-            <Button size="large" onClick={doCancel}>
-              Cancel Orders
+            <Button size="large" onClick={doAccept}>
+              Accept Offers
             </Button>
           </footer>
         </div>

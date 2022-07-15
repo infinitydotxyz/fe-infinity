@@ -11,11 +11,11 @@ interface Props {
   order: SignedOBOrder;
   orderType: UserOrderFilter['orderType'];
   userInfo: UserProfileDto;
-  onClickCancel: (order: SignedOBOrder, checked: boolean) => void;
+  onClickActionBtn: (order: SignedOBOrder, checked: boolean) => void;
 }
 
-export const UserPageOrderListItem = ({ order, orderType, onClickCancel }: Props) => {
-  const [isCancelling, setIsCancelling] = useState(false);
+export const UserPageOrderListItem = ({ order, orderType, onClickActionBtn: onClickActionBtn }: Props) => {
+  const [isTakingAction, setIsTakingAction] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<SignedOBOrder | null>(null);
 
   return (
@@ -54,22 +54,22 @@ export const UserPageOrderListItem = ({ order, orderType, onClickCancel }: Props
           {orderType === 'listings' || orderType === 'offers-made' ? (
             <Button
               onClick={() => {
-                const newState = !isCancelling;
-                setIsCancelling(newState);
-                onClickCancel(order, newState);
+                const newState = !isTakingAction;
+                setIsTakingAction(newState);
+                onClickActionBtn(order, newState);
               }}
             >
-              {isCancelling ? '✓' : ''} Cancel
+              {isTakingAction ? '✓' : ''} Cancel
             </Button>
           ) : (
             <Button
               onClick={() => {
-                const newState = !isCancelling; // todo: Dylan - not canceling here but batch selling - so cart drawer should be changed accordingly
-                setIsCancelling(newState);
-                onClickCancel(order, newState);
+                const newState = !isTakingAction;
+                setIsTakingAction(newState);
+                onClickActionBtn(order, newState);
               }}
             >
-              {isCancelling ? '✓' : ''} Sell
+              {isTakingAction ? '✓' : ''} Accept
             </Button>
           )}
         </div>
