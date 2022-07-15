@@ -1,11 +1,19 @@
 import { useEffect, useState } from 'react';
-import { FeedEvent } from './feed-item';
 import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
-import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
+import { BaseFeedEvent, EventType, ExchangeEvent } from '@infinityxyz/lib-frontend/types/core/feed';
 import { FeedFilterDropdown } from './feed-filter-dropdown';
 import { UserActivityItem } from './user-activity-item';
 import { apiGet } from 'src/utils';
 import { CenteredContent, ScrollLoader, Spinner } from '../common';
+
+export type FeedEvent = BaseFeedEvent &
+  ExchangeEvent & {
+    id?: string;
+    type?: EventType;
+    title?: string;
+    text?: string;
+    userDisplayName?: string;
+  };
 
 type UserActivityEvent = FeedEvent & {
   makerAddress?: string;
