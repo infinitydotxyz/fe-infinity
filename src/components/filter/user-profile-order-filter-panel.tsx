@@ -4,6 +4,8 @@ import { Checkbox, TextInputBox, Spinner, DebouncedTextInputBox } from 'src/comp
 import { apiGet } from 'src/utils';
 import { UserProfileDto } from '../user/user-profile-dto';
 
+export const DEFAULT_ORDER_TYPE_FILTER = 'listings';
+
 export type UserOrderFilter = {
   orderType?: 'listings' | 'offers-made' | 'offers-received' | '';
   minPrice?: string;
@@ -30,7 +32,7 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
   const [collectionSearch, setCollectionSearch] = useState('');
   const [collectionSearchLoading, setCollectionSearchLoading] = useState(false);
   const [filter, setFilter] = useState<UserOrderFilter>({
-    orderType: ''
+    orderType: DEFAULT_ORDER_TYPE_FILTER
   });
 
   // for collection search:
@@ -92,6 +94,7 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
 
       <div className="text-lg mt-6 mb-4 font-heading">Order Type</div>
       <ul>
+        {/* - todo: need proper BE query and response:
         <li className="mt-8">
           <Checkbox
             boxOnLeft={false}
@@ -100,6 +103,7 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
             label="All"
           />
         </li>
+        */}
         <li className="mt-8">
           <Checkbox
             boxOnLeft={false}

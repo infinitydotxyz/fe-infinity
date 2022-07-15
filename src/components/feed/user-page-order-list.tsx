@@ -6,7 +6,11 @@ import { Button, CenteredContent, ScrollLoader, Spinner, toastError, toastSucces
 import { UserProfileDto } from '../user/user-profile-dto';
 import { CancelDrawer } from 'src/components/market/order-drawer/cancel-drawer';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { UserOrderFilter, UserProfileOrderFilterPanel } from '../filter/user-profile-order-filter-panel';
+import {
+  DEFAULT_ORDER_TYPE_FILTER,
+  UserOrderFilter,
+  UserProfileOrderFilterPanel
+} from '../filter/user-profile-order-filter-panel';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { useRouter } from 'next/router';
 import { cancelAllOrders } from 'src/utils/exchange/orders';
@@ -44,7 +48,7 @@ export const UserPageOrderList = ({ userInfo, className = '' }: UserPageOrderLis
   const [hasNextPage, setHasNextPage] = useState(false);
   const [filterShowed, setFilterShowed] = useState(false);
   const [isCancellingAll, setIsCancellingAll] = useState(false);
-  const [apiFilter, setApiFilter] = useState<UserOrderFilter>({ orderType: '' });
+  const [apiFilter, setApiFilter] = useState<UserOrderFilter>({ orderType: DEFAULT_ORDER_TYPE_FILTER });
   const [showCancelDrawer, setShowCancelDrawer] = useState(false);
   const [selectedOrders, setSelectedOrders] = useState<SignedOBOrder[]>([]);
 
