@@ -17,16 +17,10 @@ const HomePage = () => {
 
   return (
     <div className="transition w-[100vw] h-[100vh] overflow-y-auto overflow-x-hidden justify-items-center">
-      <Header title="Infinity" />
+      <Header title="" />
 
       <header>
-        <Banner>
-          Our contracts have undergone multiple audits including public audits on Code4Arena and Immunefi
-          {/* <ExternalLink href="https://www.premint.xyz/infinity-marketplace-v2-beta-allowlist/" className="underline">
-            this article
-          </ExternalLink>{' '}
-          to learn about our beta */}
-        </Banner>
+        <Banner>Our contracts have undergone multiple audits including public audits on Code4Arena and Immunefi</Banner>
         <HomeNavBar />
 
         <section className="text-center flex flex-col justify-center items-center h-[70vh] mb-[20vh] space-y-4">

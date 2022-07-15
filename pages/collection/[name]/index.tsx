@@ -136,7 +136,7 @@ const CollectionPage = () => {
     <PageBox showTitle={false} title={collection.metadata?.name ?? ''}>
       <div className="flex flex-col mt-10">
         <span>
-          <AvatarImage url={collection.metadata.profileImage} className="mb-2 rounded-[50%]" />
+          <AvatarImage url={collection.metadata.profileImage} className="mb-2" />
 
           <div className="flex gap-3 items-center">
             <div className="text-6xl">
@@ -312,8 +312,7 @@ const CollectionPage = () => {
           )}
 
           <ToggleTab
-            className="mt-32 font-heading pointer-events-auto"
-            tabWidth="150px"
+            className="mt-20 font-heading pointer-events-auto"
             options={options}
             selected={selected}
             onChange={onChange}

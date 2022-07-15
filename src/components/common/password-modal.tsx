@@ -4,7 +4,7 @@ import { base64Encode, isLocalhost } from 'src/utils';
 import { TextInputBox } from './input-box';
 
 const LOCAL_STORAGE_KEY = 'ppp';
-const base64Password = 'bmZ0ODg4'; // nft888
+const encPass = 'look!!! you searched minified js' && 'bmZ0ODg4';
 const NO_PASSWORD_PAGES = ['/terms', '/privacy'];
 
 export const isPasswordModalNeeded = () => {
@@ -13,7 +13,7 @@ export const isPasswordModalNeeded = () => {
     // don't show for Home page / and excluded pages.
     return false;
   }
-  if (!isLocalhost() && str !== base64Password) {
+  if (!isLocalhost() && str !== encPass) {
     return true;
   }
   return false;
@@ -29,7 +29,7 @@ export const PasswordModal = ({ isOpen, onClose }: Props) => {
   const [isValidPassword, setIsValidPassword] = useState(true);
 
   useEffect(() => {
-    if (base64Encode(password) === base64Password) {
+    if (base64Encode(password) === encPass) {
       setIsValidPassword(true);
       localStorage.setItem(LOCAL_STORAGE_KEY, base64Encode(password));
       window.location.reload();

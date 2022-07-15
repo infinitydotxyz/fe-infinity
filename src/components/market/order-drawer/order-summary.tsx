@@ -1,4 +1,4 @@
-import { EthPrice, Button, SimpleTable, SimpleTableItem, Spacer, SVG, NftImage } from 'src/components/common';
+import { EthPrice, Button, SimpleTable, SimpleTableItem, Spacer, SVG, EZImage } from 'src/components/common';
 import { shortDate } from 'src/utils';
 import { OrderInCart, useOrderContext } from 'src/utils/context/OrderContext';
 import { TitleAndSubtitle } from './order-list-item';
@@ -8,8 +8,6 @@ import {
   collectionIconWidthInPx,
   iconButtonStyle
 } from 'src/utils/ui-constants';
-import { useAppContext } from 'src/utils/context/AppContext';
-// import { TiDeleteOutline } from 'react-icons/ti';
 
 export const OrderSummary = () => {
   const { ordersInCart } = useOrderContext();
@@ -30,7 +28,6 @@ interface Props {
 }
 
 export const OrderSummaryItem = ({ orderInCart }: Props) => {
-  const { chainId } = useAppContext();
   const { isSellOrderCart, editOrderFromCart } = useOrderContext();
 
   const collectionStackForOrder = () => {
@@ -63,9 +60,9 @@ export const OrderSummaryItem = ({ orderInCart }: Props) => {
       const item = orderInCart.cartItems[0];
       const showNum = orderInCart.cartItems.length > 1;
 
-      let imageEl = <NftImage chainId={chainId} collectionAddress={item.collectionAddress} className="rounded-2xl" />;
+      let imageEl = <EZImage className={collectionIconStyle} src={item.collectionImage} />;
       if (!showNum) {
-        imageEl = <img className={collectionIconStyle} src={item.tokenImage} alt="" />;
+        imageEl = <EZImage className={collectionIconStyle} src={item.tokenImage || item.collectionImage} />;
       }
 
       return (
@@ -77,16 +74,6 @@ export const OrderSummaryItem = ({ orderInCart }: Props) => {
               {orderInCart.cartItems.length}
             </div>
           )}
-
-          {/* <div
-            className="absolute bottom-0 right-0 z-50 text-center shadow-lg rounded-full cursor-pointer hover:bg-gray-100 bg-white"
-            title="Remove order"
-            onClick={() => {
-              removeOrder(orderInCart);
-            }}
-          >
-            <TiDeleteOutline />
-          </div> */}
         </div>
       );
     }
@@ -164,9 +151,9 @@ export const OrderSummaryItem = ({ orderInCart }: Props) => {
         title: 'Max budget',
         value: <EthPrice label={orderInCart.orderSpec.endPriceEth.toString()} />
       });
-      if (isCollectionsOrder()) {
-        items.push({ title: 'Min NFTs to buy', value: <div>{orderInCart.orderSpec.numItems.toString()}</div> });
-      }
+      // if (isCollectionsOrder()) {
+      //   items.push({ title: 'Min NFTs to buy', value: <div>{orderInCart.orderSpec.numItems.toString()}</div> });
+      // }
       items.push({
         title: 'Expiration date',
         value: <div>{shortDate(new Date(orderInCart.orderSpec.endTimeMs ?? 0))}</div>

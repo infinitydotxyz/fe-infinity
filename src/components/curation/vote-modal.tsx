@@ -65,7 +65,7 @@ export const VoteModal: React.FC<VoteModalProps> = ({ collection, isOpen, onClos
   return (
     <Modal isOpen={isOpen} onClose={onClose} showCloseIcon showActionButtons={false}>
       <div className="space-y-4">
-        <AvatarImage url={collection.profileImage} alt="avatar" />
+        <AvatarImage url={collection.profileImage} />
         <Heading as="h3" className="font-body">
           {collection.name}
         </Heading>

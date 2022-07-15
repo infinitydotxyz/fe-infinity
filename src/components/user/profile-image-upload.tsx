@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { FaPen } from 'react-icons/fa';
 import AvatarEditor from 'react-avatar-editor';
-import { ImageUploader, Button, ImageUploaderButtonRef, Modal, BGImage } from 'src/components/common';
+import { ImageUploader, Button, ImageUploaderButtonRef, Modal, EZImage } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 
 interface Props {
@@ -98,7 +98,7 @@ export const ProfileImageUpload = ({ onUpload, roundPhoto, onDelete, imgSource =
           )}
         >
           {imgSrc ? (
-            <BGImage className="cursor-pointer" src={imgSrc} />
+            <EZImage className="cursor-pointer" src={imgSrc} />
           ) : (
             <div className="w-full h-full flex flex-row items-center justify-center cursor-pointer">
               <FaPen className=" -mt-0.5" />
@@ -114,7 +114,7 @@ export const ProfileImageUpload = ({ onUpload, roundPhoto, onDelete, imgSource =
           onClick={onUploadButtonClick}
           disabled={isLoading}
         >
-          Upload
+          Select
         </Button>
         <ImageUploaderButtonRef buttonRef={uploadInput} onChangeFile={handleChangeFile} />
         <Button
@@ -135,7 +135,7 @@ export const ProfileImageUpload = ({ onUpload, roundPhoto, onDelete, imgSource =
           height={avatarHeight}
           border={avatarBorder}
           borderRadius={avatarBorderRadius}
-          color={[255, 255, 255, 0.6]}
+          color={[235, 235, 245, 0.7]}
           scale={tempImgScale}
           className="mx-auto"
         />

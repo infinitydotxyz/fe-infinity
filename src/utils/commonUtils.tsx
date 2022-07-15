@@ -242,7 +242,7 @@ export const getOwnerAddress = (token: BaseToken | null | undefined) => {
   return ownerAddress;
 };
 
-// extract error message
+// extract error message from generic Error, Metamask error, infinityExchangeCustomError:
 export const extractErrorMsg = (err: unknown) => {
   console.error(err);
   let msg = `${err}`;
@@ -253,9 +253,54 @@ export const extractErrorMsg = (err: unknown) => {
     const msgArr = arr[1].split('"');
     msg = msgArr[1];
   } else if (msg.indexOf('invalid address') > 0) {
-    msg = 'Invalid wallet address.';
+    msg = 'Invalid wallet address';
   }
-  return msg;
+  return infinityExchangeCustomError(msg);
+};
+
+export const infinityExchangeCustomError = (err: string) => {
+  switch (err) {
+    case 'msg has value':
+      return 'Must not send ETH while fulfilling non ETH orders';
+    case 'offers only in ERC20':
+      return 'Offers can only be placed in approved ERC20 tokens like WETH';
+    case 'cannot mix currencies':
+      return 'All orders should be in the same currency';
+    case 'cannot mix order sides':
+      return 'Orders should be all buy or all sell';
+    case 'no dogfooding':
+      return 'Cannot buy your own NFTs!!';
+    case 'order expired':
+      return 'Order was already executed or cancelled';
+    case 'cannot execute':
+      return 'Order cannot be executed as it has invalid constraints/signature';
+    case 'insufficient total price':
+      return 'Insufficient ETH sent to fulfill order';
+    case 'failed returning excess ETH':
+      return 'Failed returning excess ETH sent with order';
+    case 'mismatched lengths':
+      return 'Batch orders must be of the same length';
+    case 'invalid address':
+      return 'Cannot send NFTs to invalid address';
+    case 'nonce too low':
+      return 'Nonce is too low';
+    case 'too many':
+      return 'Too many orders to cancel all. Try canceling multiple orders instead.';
+    case 'cannot be empty':
+      return 'Order nonces to cancel cannot be empty';
+    case 'nonce already exec or cancelled':
+      return 'One of the orders was already executed or cancelled';
+    case 'only erc721':
+      return 'We only support ERC721s';
+    case 'failed to send ether to seller':
+      return 'Failed to send ether to seller';
+    case 'invalid maker order':
+      return 'The order is invalid. It has either a wrong signature or invalid constraints';
+    case 'tokenIds dont intersect':
+      return 'The order is invalid. Token Ids do not match.';
+    default:
+      return err;
+  }
 };
 
 export const getEstimatedGasPrice = async (provider: Web3Provider | undefined): Promise<string | undefined> => {

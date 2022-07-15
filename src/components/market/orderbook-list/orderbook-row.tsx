@@ -18,7 +18,7 @@ type OrderbookRowProps = {
 export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.Element => {
   const { user } = useAppContext();
   const { checkSignedIn } = useAppContext();
-  const { setPrice, addCartItem } = useOrderContext();
+  const { setPrice, addCartItem, setOrderDrawerOpen } = useOrderContext();
   const [selectedOrder, setSelectedOrder] = useState<SignedOBOrder | null>(null);
 
   const valueDiv = (dataColumn: DataColumn) => {
@@ -79,6 +79,23 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
     }
   });
 
+  const onClickBidHigher = (order: SignedOBOrder) => {
+    // add to Cart as a New Buy Order:
+    addCartItem({
+      chainId: order?.chainId as ChainId,
+      collectionName: order?.nfts[0].collectionName ?? '',
+      collectionAddress: order?.nfts[0].collectionAddress ?? '',
+      collectionImage: order?.nfts[0].collectionImage ?? '',
+      collectionSlug: order?.nfts[0].collectionSlug ?? '',
+      tokenImage: order?.nfts[0].tokens[0].tokenImage ?? '',
+      tokenName: order?.nfts[0].tokens[0].tokenName ?? '',
+      tokenId: order?.nfts[0].tokens[0].tokenId ?? '-1',
+      isSellOrder: false,
+      attributes: []
+    });
+    setOrderDrawerOpen(true);
+  };
+
   const onClickBuySell = async (order: SignedOBOrder, isSellOrder: boolean) => {
     if (!checkSignedIn()) {
       return;
@@ -129,23 +146,21 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
             if (order.isSellOrder) {
               // Sell Order (Listing)
               return (
-                <Button
-                  className="font-heading w-24"
-                  key={`${order.id} ${data.field}`}
-                  onClick={() => onClickBuySell(order, false)}
-                >
+                <Button className="w-32" key={`${order.id} ${data.field}`} onClick={() => onClickBuySell(order, false)}>
                   Buy
                 </Button>
               );
             } else if (isOfferToUser === true) {
               // Buy Order (Offer) => show Sell button (if offer made to current user)
               return (
-                <Button
-                  className="font-heading w-24"
-                  key={`${order.id} ${data.field}`}
-                  onClick={() => onClickBuySell(order, true)}
-                >
+                <Button className="w-32" key={`${order.id} ${data.field}`} onClick={() => onClickBuySell(order, true)}>
                   Sell
+                </Button>
+              );
+            } else if (isOfferToUser === false) {
+              return (
+                <Button className="w-32" key={`${order.id} ${data.field}`} onClick={() => onClickBidHigher(order)}>
+                  Bid higher
                 </Button>
               );
             } else {
@@ -192,7 +207,7 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
           </div>
         </div>
         <div className="text-right">
-          <Button className="font-heading">{order.isSellOrder ? 'Buy' : 'Sell'}</Button>
+          <Button>{order.isSellOrder ? 'Buy' : 'Sell'}</Button>
 
           <div>{moment(order.startTimeMs).fromNow()}</div>
           <div>Expiry: {shortDate(new Date(order.endTimeMs))}</div>

@@ -1,20 +1,29 @@
 import { useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { MISSING_IMAGE_URL, PLACEHOLDER_IMAGE } from 'src/utils';
+import { MISSING_IMAGE_URL } from 'src/utils';
 
 interface Props {
   src?: string;
   center?: boolean; // false for bg-top
   cover?: boolean;
   className?: string;
+  onClick?: () => void;
 }
 
-export const EZImage = ({ src, center = true, cover = true, className = 'w-full h-full' }: Props) => {
+export const EZImage = ({ src, center = true, cover = true, onClick, className = '' }: Props) => {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
 
+  // avoid the console errors
+  if (src && src.startsWith('ipfs')) {
+    src = '';
+  }
+
   if (!src) {
-    src = PLACEHOLDER_IMAGE;
+    // this image is just transparent? why would we want that?
+    // src = PLACEHOLDER_IMAGE;
+
+    src = MISSING_IMAGE_URL;
   }
 
   src = src?.replace('storage.opensea.io', 'openseauserdata.com');
@@ -48,17 +57,13 @@ export const EZImage = ({ src, center = true, cover = true, className = 'w-full 
     };
   }, [src]);
 
-  if (!src) {
-    return <></>;
-  }
-
   let imgUrl = src;
   if (error) {
     imgUrl = MISSING_IMAGE_URL;
   }
 
   return (
-    <div className={className}>
+    <div className={twMerge('w-full h-full', className)} onClick={onClick}>
       <div
         className={twMerge(
           cover ? 'bg-cover' : 'bg-cntain',

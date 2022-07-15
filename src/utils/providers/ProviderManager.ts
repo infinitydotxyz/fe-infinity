@@ -219,6 +219,14 @@ export class ProviderManager implements Omit<Optional<Provider, 'type'>, 'init'>
   }
 
   async signIn() {
+    /**
+     * check to see if the user has signed a message in another browser window
+     */
+    this.loadCreds();
+    if (this.isLoggedInAndAuthenticated) {
+      return;
+    }
+
     const nonce = Date.now();
     const loginMsg = getLoginMessage(nonce);
     const signature = await this.personalSign(loginMsg);
@@ -272,11 +280,25 @@ export class ProviderManager implements Omit<Optional<Provider, 'type'>, 'init'>
    * initialize a wallet
    */
   private async refresh() {
+    const preferredWallet = this.loadCreds();
+    if (preferredWallet) {
+      try {
+        await this.connectWallet(preferredWallet);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    return;
+  }
+
+  private loadCreds(): WalletType | null {
     const localStorage = window.localStorage;
     const preferredWallet = localStorage.getItem(StorageKeys.Wallet);
     const authNonce = localStorage.getItem(StorageKeys.AuthNonce);
     const authSignature = localStorage.getItem(StorageKeys.AuthSignature);
     const authMessage = localStorage.getItem(StorageKeys.AuthMessage);
+
     if (
       preferredWallet === WalletType.MetaMask ||
       preferredWallet === WalletType.WalletLink ||
@@ -299,13 +321,7 @@ export class ProviderManager implements Omit<Optional<Provider, 'type'>, 'init'>
       }
       this.authMessage = authMessage ?? '';
       this.authNonce = parseInt(authNonce ?? '0');
-      try {
-        await this.connectWallet(preferredWallet);
-      } catch (err) {
-        console.error(err);
-      }
     }
-
-    return;
+    return preferredWallet as WalletType | null;
   }
 }

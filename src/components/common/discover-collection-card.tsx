@@ -2,9 +2,9 @@ import { formatNumber, getOptimizedCloudImage } from 'src/utils';
 import { NextLink } from './next-link';
 import { SVG } from './svg';
 import { EthPrice } from './eth-price';
-import { DiscoverOrderBy } from 'pages/marketplace';
+import { DiscoverOrderBy } from 'pages/market';
 import { CollectionStatsDto } from '@infinityxyz/lib-frontend/types/dto/stats';
-import { ImageOrMissing } from './image-or-missing';
+import { EZImage } from './ez-image';
 
 interface Props {
   orderBy: DiscoverOrderBy;
@@ -26,10 +26,11 @@ export const DiscoverCollectionCard = ({ orderBy, collection, routerQuery }: Pro
         className="text-theme-light-800 font-heading tracking-tight mr-2"
       >
         <div style={{ height: '300px' }}>
-          <ImageOrMissing
+          <EZImage
             src={getOptimizedCloudImage(
               collection?.collectionData?.metadata?.bannerImage || collection?.collectionData?.metadata?.profileImage
             )}
+            className="rounded-3xl overflow-clip"
           />
         </div>
         <div className="pt-4 flex items-start">

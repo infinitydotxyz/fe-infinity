@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { TextInputBox, Spacer, DatePickerBox } from 'src/components/common';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { OrderListItem } from './order-list-item';
@@ -27,33 +28,33 @@ export const OrderBuilder = () => {
     </div>
   );
 
-  const numItemsField = () => {
-    let label = 'Min NFTs to buy';
-    let tooltip = {
-      title: label,
-      content: 'The min number you want to buy from the collections listed in the order'
-    };
+  // const numItemsField = () => {
+  //   let label = 'Min NFTs to buy';
+  //   let tooltip = {
+  //     title: label,
+  //     content: 'The min number you want to buy from the collections listed in the order'
+  //   };
 
-    if (isSellOrderCart()) {
-      label = 'Max NFTs to sell';
+  //   if (isSellOrderCart()) {
+  //     label = 'Max NFTs to sell';
 
-      tooltip = {
-        title: label,
-        content: 'The max number you want to sell from the collections listed in the order'
-      };
-    }
+  //     tooltip = {
+  //       title: label,
+  //       content: 'The max number you want to sell from the collections listed in the order'
+  //     };
+  //   }
 
-    return (
-      <TextInputBox
-        type="number"
-        placeholder="4"
-        label={label}
-        value={numItems.toString()}
-        onChange={(value) => setNumItems(parseInt(value))}
-        tooltip={tooltip}
-      />
-    );
-  };
+  //   return (
+  //     <TextInputBox
+  //       type="number"
+  //       placeholder="4"
+  //       label={label}
+  //       value={numItems.toString()}
+  //       onChange={(value) => setNumItems(parseInt(value))}
+  //       tooltip={tooltip}
+  //     />
+  //   );
+  // };
 
   const priceField = () => {
     const multiple = cartItems.length > 1;
@@ -121,7 +122,7 @@ export const OrderBuilder = () => {
         {list}
         <div className="flex flex-col space-y-3">
           {priceField()}
-          {isCollectionsCart() && numItemsField()}
+          {/* {isCollectionsCart() && numItemsField()} */}
           {expirationDateField()}
         </div>
 

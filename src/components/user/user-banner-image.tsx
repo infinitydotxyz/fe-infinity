@@ -1,6 +1,6 @@
 import { FaPen } from 'react-icons/fa';
 import { useRouter } from 'next/router';
-import { BGImage } from '../common';
+import { EZImage } from '../common';
 import profileEditBg from 'src/images/profile/profile-edit-bg.png';
 
 interface UserBannerImageProps {
@@ -22,7 +22,7 @@ export const UserBannerImage = ({ imgSrc, isOwner = false }: UserBannerImageProp
     <div className="h-48 sm:h-60 lg:h-70 xl:h-80 bg-theme-gray-100">
       <div className="w-full h-full overflow-hidden">
         {imgSrc ? (
-          <BGImage src={imgSrc} />
+          <EZImage src={imgSrc} />
         ) : (
           <div
             className={`relative w-full h-full flex flex-row items-center justify-center bg-theme-gray-100 ${
@@ -30,7 +30,7 @@ export const UserBannerImage = ({ imgSrc, isOwner = false }: UserBannerImageProp
             }`}
             onClick={handleClick}
           >
-            <BGImage src={profileEditBg.src} />
+            <EZImage src={profileEditBg.src} />
             {isOwner && <FaPen className="absolute" />}
           </div>
         )}

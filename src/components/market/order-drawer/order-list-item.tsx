@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { SVG } from 'src/components/common';
+import { EZImage, SVG } from 'src/components/common';
 import { OrderCartItem, useOrderContext } from 'src/utils/context/OrderContext';
 import { collectionIconStyle, iconButtonStyle } from 'src/utils/ui-constants';
 
@@ -24,7 +24,7 @@ export const OrderListItem = ({ cartItem, allowDelete }: Props) => {
   return (
     <div>
       <ImageAndText
-        image={<img className={`${collectionIconStyle}`} src={image} alt="" />}
+        image={<EZImage className={collectionIconStyle} src={image} />}
         title={cartItem.collectionName}
         subtitle={cartItem.tokenId}
         onClick={onDelete}

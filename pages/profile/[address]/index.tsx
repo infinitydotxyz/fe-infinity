@@ -62,7 +62,7 @@ const ProfilePageContents = ({ user, userAddress }: Props) => {
   const isOwner = user?.address === userInfo.address;
 
   return (
-    <PageBox showTitle={false} title={userInfo.username || userInfo.address}>
+    <PageBox showTitle={false} title={'Profile'}>
       <UserPage userInfo={userInfo} isOwner={isOwner} />
     </PageBox>
   );

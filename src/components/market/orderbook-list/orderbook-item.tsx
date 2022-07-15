@@ -3,8 +3,7 @@ import { OBTokenInfoDto } from '@infinityxyz/lib-frontend/types/dto/orders';
 
 import { useRouter } from 'next/router';
 import { ReactNode } from 'react';
-import { NextLink, SVG } from 'src/components/common';
-import { PLACEHOLDER_IMAGE } from 'src/utils';
+import { EZImage, NextLink, SVG } from 'src/components/common';
 // import ReactTooltip from 'react-tooltip';
 
 type Props4 = {
@@ -80,11 +79,10 @@ const MultiCollectionCell = ({ nfts, onClick }: MultiCollectionCellProps) => {
       <div className="flex -space-x-8 overflow-hidden">
         {nfts.map((nft: OBOrderItem) => {
           return (
-            <img
+            <EZImage
               key={nft.collectionAddress}
-              className="inline-block h-12 w-12 rounded-2xl ring-2 ring-white bg-white"
+              className="inline-block h-12 w-12 rounded-2xl overflow-clip ring-2 ring-white bg-white"
               src={nft.collectionImage}
-              alt=""
             />
           );
         })}
@@ -121,31 +119,25 @@ const SingleCollectionCell = ({
   onClick
 }: SingleCollectionCellProps) => {
   const tokenNames: string[] = [];
-  // console.log('nfts', nfts);
+
   if (nfts && nfts.length && nfts[0].tokens) {
     for (const nft of nfts) {
       for (const token of nft.tokens) {
-        // console.log('token', token);
         tokenNames.push(`Token: ${token.tokenId}`);
       }
     }
   }
+
   return (
     <div className="flex gap-2 items-center">
       <div className="flex justify-center shrink-0 h-14 w-14">
-        <span className="inline-block relative">
-          {image ? (
-            <img
-              className="h-14 w-14 rounded-full"
-              src={image}
-              alt=""
-              onClick={() => {
-                onClick && onClick();
-              }}
-            />
-          ) : (
-            <img className="h-14 w-14 rounded-full" src={PLACEHOLDER_IMAGE} alt="" onClick={alert} />
-          )}
+        <span
+          className="inline-block relative cursor-pointer"
+          onClick={() => {
+            onClick && onClick();
+          }}
+        >
+          <EZImage className="h-14 w-14 rounded-full overflow-clip" src={image} />
 
           {count > 1 && (
             <div className="text-xs text-center pt-1 absolute top-0 right-0 block h-6 w-6 transform -translate-y-1/2 translate-x-1/2 rounded-full bg-white">
@@ -156,10 +148,6 @@ const SingleCollectionCell = ({
       </div>
 
       <div className={`flex flex-col truncate ${onClickTitle ? 'cursor-pointer' : ''}`}>
-        {/* <div className="font-bold whitespace-pre-wrap" onClick={onClickTitle}>
-          {title}
-        </div> */}
-
         {orderNft?.collectionSlug ? (
           <NextLink
             href={`/collection/${orderNft?.collectionSlug}`}

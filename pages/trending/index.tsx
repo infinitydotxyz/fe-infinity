@@ -3,10 +3,10 @@ import { useRouter } from 'next/router';
 import { parse } from 'query-string';
 import { Fragment, useEffect, useState } from 'react';
 import {
-  BGImage,
   Button,
   Dropdown,
   EthPrice,
+  EZImage,
   NextLink,
   PageBox,
   SVG,
@@ -15,7 +15,7 @@ import {
 } from 'src/components/common';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import useScreenSize from 'src/hooks/useScreenSize';
-import { apiGet, formatNumber, ITEMS_PER_PAGE, nFormatter, PLACEHOLDER_IMAGE } from 'src/utils';
+import { apiGet, formatNumber, ITEMS_PER_PAGE, nFormatter } from 'src/utils';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 
 // - cache stats 5mins
@@ -119,7 +119,13 @@ const TrendingPage = () => {
   return (
     <PageBox title="Trending">
       <div className="flex justify-between">
-        <ToggleTab className="font-heading" options={options} selected={selected} onChange={onChangeToggleTab} />
+        <ToggleTab
+          small={true}
+          className="font-heading"
+          options={options}
+          selected={selected}
+          onChange={onChangeToggleTab}
+        />
 
         <div className="space-x-2">
           <Dropdown
@@ -155,14 +161,10 @@ const TrendingPage = () => {
           return (
             <div key={coll.address} className="bg-gray-100 px-10 h-[110px] rounded-3xl flex items-center font-heading">
               <NextLink href={`/collection/${coll?.slug}`}>
-                {coll?.metadata?.profileImage ? (
-                  <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={coll?.metadata?.profileImage} />
-                ) : (
-                  <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={PLACEHOLDER_IMAGE} />
-                )}
+                <EZImage className="w-16 h-16 rounded-full overflow-clip" src={coll?.metadata?.profileImage} />
               </NextLink>
 
-              <div className="flex justify-between w-full mx-8">
+              <div className="flex justify-between items-center w-full ml-6">
                 <div className="w-44 flex items-center text-black font-bold font-body">
                   <NextLink href={`/collection/${coll?.slug}`} className="truncate">
                     {coll?.metadata?.name}
@@ -230,9 +232,7 @@ const TrendingPage = () => {
                   </>
                 ) : null}
 
-                <div className="w-[50px]">
-                  <Button onClick={() => onClickBuy(coll)}>Buy</Button>
-                </div>
+                <Button onClick={() => onClickBuy(coll)}>Buy</Button>
               </div>
             </div>
           );

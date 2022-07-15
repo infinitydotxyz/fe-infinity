@@ -448,25 +448,25 @@ export async function cancelMultipleOrders(signer: JsonRpcSigner, chainId: strin
   };
 }
 
-export async function takeMultiplOneOrders(signer: JsonRpcSigner, chainId: string, makerOrder: ChainOBOrder) {
+export async function takeMultiplOneOrders(signer: JsonRpcSigner, chainId: string, makerOrders: ChainOBOrder[]) {
   const exchangeAddress = getExchangeAddress(chainId);
   const infinityExchange = new Contract(exchangeAddress, InfinityExchangeABI, signer);
-  const salePrice = getCurrentChainOBOrderPrice(makerOrder);
+  const totalPrice = makerOrders
+    .map((order) => getCurrentChainOBOrderPrice(order))
+    .reduce((acc, curr) => acc.add(curr), BigNumber.from(0));
+
+  // it is assumed that all orders have these value same, so no need to check. Contract throws if this is not the case.
+  const isSellOrder = makerOrders[0].isSellOrder;
+
   // perform exchange
   // if fulfilling a sell order, send ETH
-  if (makerOrder.isSellOrder) {
+  if (isSellOrder) {
     const options = {
-      value: salePrice
+      value: totalPrice
     };
-    await infinityExchange.takeMultipleOneOrders([makerOrder], options);
+    await infinityExchange.takeMultipleOneOrders(makerOrders, options);
   } else {
-    // if accepting offer, no need to send any ETH but need to approve ERC20/WETH
-    const currency = makerOrder.execParams[1];
-    const user = await signer.getAddress();
-    await approveERC20(user, currency, salePrice, signer, exchangeAddress);
-    // todo: dylan need to wait for WETH approval txn to succeed
-    const result = await infinityExchange.takeMultipleOneOrders([makerOrder]);
-    console.log('takeMultipleOneOrders: result:', result);
+    const result = await infinityExchange.takeMultipleOneOrders(makerOrders);
     return result;
   }
 }

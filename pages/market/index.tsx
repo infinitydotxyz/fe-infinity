@@ -17,7 +17,7 @@ const DEFAULT_TAB = TABS.Orders;
 
 export type DiscoverOrderBy = 'twitterFollowersPercentChange' | 'volumePercentChange' | 'avgPricePercentChange';
 
-const MarketplacePage = () => {
+const MarketPage = () => {
   const { user } = useAppContext();
   const { pathname, query, push } = useRouter();
 
@@ -56,13 +56,7 @@ const MarketplacePage = () => {
   const contents = (
     <>
       <div className="flex space-x-2 items-center relative max-w-xl lg:top-14 lg:-mt-14 pb-4 lg:pb-0">
-        <ToggleTab
-          tabWidth="150px"
-          className="font-heading"
-          options={options}
-          selected={selected}
-          onChange={onChange}
-        />
+        <ToggleTab className="font-heading" options={options} selected={selected} onChange={onChange} />
         <Spacer />
       </div>
 
@@ -71,26 +65,7 @@ const MarketplacePage = () => {
       {selected === TABS.Discover && (
         <div className="min-h-[1024px]">
           <div className="mb-8 w-full flex flex-row-reverse">
-            {/* <TextInputBox
-              type="text"
-              value={query}
-              label=""
-              placeholder=""
-              className="w-64 pl-4"
-              inputClassName="font-normal font-body text-sm"
-              icon={<FiSearch className="mr-2" />}
-              onChange={(value) => handleChange(value)}
-            /> */}
             <div className="space-x-2">
-              {/* todo: volumePercentChange is mising in many collections */}
-              {/* <Button
-                variant={orderBy === 'volumePercentChange' ? 'primary' : 'outline'}
-                className="font-heading"
-                onClick={() => setOrderBy('volumePercentChange')}
-              >
-                By Volume
-              </Button> */}
-
               <Dropdown
                 label={orderBy === 'avgPricePercentChange' ? 'Sort by Avg. Price' : 'Sort by Social Stats'}
                 items={[
@@ -124,10 +99,10 @@ const MarketplacePage = () => {
   );
 
   return (
-    <PageBox title="Marketplace">
+    <PageBox title="Market">
       <div>{contents}</div>
     </PageBox>
   );
 };
 
-export default MarketplacePage;
+export default MarketPage;

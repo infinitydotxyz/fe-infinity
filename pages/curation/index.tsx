@@ -28,7 +28,6 @@ export default function Curation() {
         <div className="flex flex-row">
           <ToggleTab
             className="font-heading pointer-events-auto"
-            tabWidth="150px"
             options={options}
             selected={selected}
             onChange={onChange}

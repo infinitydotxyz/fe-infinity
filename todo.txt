@@ -1,7 +1,10 @@
-feed notes:
+ 
+marketplace
+add buy
+close drawer
+add buy -> no drawer
 
-comments
+remove from cart on cancel drawer
 
-likes
-
-same like mutlipe
+ 
+use timeago.js?   <div>Expiry date: {format(order.endTimeMs)}</div>

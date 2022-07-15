@@ -1,7 +1,7 @@
-import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { Navbar, Spacer, Header } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
+import { useDrawerContext } from 'src/utils/context/DrawerContext';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { OrderDrawer } from '../market';
 import { isPasswordModalNeeded, PasswordModal } from './password-modal';
@@ -26,46 +26,42 @@ export const PageBox = ({
   className = '',
   rightToolbar
 }: Props): JSX.Element => {
-  const router = useRouter();
   const { chainId } = useAppContext();
   const { orderDrawerOpen, setOrderDrawerOpen } = useOrderContext();
+  const { hasOrderDrawer } = useDrawerContext();
   const [renderPasswordModal, setRenderPasswordModal] = useState(false);
-
-  const hasOrderDrawer = router.asPath.indexOf('me?tab=Orders') < 0 && router.asPath.indexOf('me?tab=Send') < 0;
 
   useEffect(() => {
     setRenderPasswordModal(isPasswordModalNeeded());
   }, []);
 
   return (
-    <>
-      <div className="transition w-[100vw] h-[100vh] overflow-y-auto overflow-x-hidden justify-items-center">
-        {renderPasswordModal ? (
-          <PasswordModal isOpen={true} onClose={() => console.log} />
-        ) : (
-          <Header title={title}>
-            {chainId !== '1' && (
-              <div className="text-center bg-theme-gray-100 text-red-800 py-1">You are not on Ethereum network</div>
-            )}
+    <div className="transition w-[100vw] h-[100vh] overflow-y-auto overflow-x-hidden justify-items-center">
+      {renderPasswordModal ? (
+        <PasswordModal isOpen={true} onClose={() => console.log} />
+      ) : (
+        <Header title={title}>
+          {chainId !== '1' && (
+            <div className="text-center bg-theme-gray-100 text-red-800 py-1">You are not on Ethereum network</div>
+          )}
 
-            <Navbar />
+          <Navbar />
 
-            <div className={`transition ${fullWidth ? 'w-full' : pageStyles}`}>
-              {showTitle ? <PageHeader title={title} rightToolbar={rightToolbar} /> : null}
+          <div className={`transition ${fullWidth ? 'w-full' : pageStyles}`}>
+            {showTitle ? <PageHeader title={title} rightToolbar={rightToolbar} /> : null}
 
-              <div className={`w-full ${className}`}>
-                {children}
+            <div className={`w-full ${className}`}>
+              {children}
 
-                {hasOrderDrawer && <OrderDrawer open={orderDrawerOpen} onClose={() => setOrderDrawerOpen(false)} />}
-              </div>
-
-              {/* allows scroll so items aren't at the bottom of the screen  */}
-              <div className="shrink-0" style={{ height: 300 }} />
+              {<OrderDrawer open={orderDrawerOpen && hasOrderDrawer()} onClose={() => setOrderDrawerOpen(false)} />}
             </div>
-          </Header>
-        )}
-      </div>
-    </>
+
+            {/* allows scroll so items aren't at the bottom of the screen  */}
+            <div className="shrink-0" style={{ height: 300 }} />
+          </div>
+        </Header>
+      )}
+    </div>
   );
 };
 

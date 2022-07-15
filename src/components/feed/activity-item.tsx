@@ -1,8 +1,8 @@
 import { EventTypeNames } from '@infinityxyz/lib-frontend/types/core/feed';
-import { BGImage, EthPrice, NextLink } from 'src/components/common';
-import { ellipsisAddress, getChainScannerBase, PLACEHOLDER_IMAGE } from 'src/utils';
+import { EthPrice, EZImage, NextLink } from 'src/components/common';
+import { ellipsisAddress, getChainScannerBase } from 'src/utils';
 import { format } from 'timeago.js';
-import { FeedEvent } from './feed-item';
+import { FeedEvent } from './user-profile-activity-list';
 
 interface Props {
   event: FeedEvent;
@@ -13,11 +13,7 @@ export const ActivityItem = ({ event }: Props) => {
     <div>
       <div className="bg-gray-100 px-10 py-6 rounded-3xl flex items-center font-heading">
         <NextLink href={`/asset/${event.chainId}/${event.collectionAddress}/${event.tokenId}`}>
-          {event.image ? (
-            <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={event.image} />
-          ) : (
-            <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={PLACEHOLDER_IMAGE} />
-          )}
+          <EZImage className="w-16 h-16 max-h-[80px] rounded-full" src={event.image} />
         </NextLink>
         <div className="flex justify-between w-full mx-8">
           <div className="w-1/6">

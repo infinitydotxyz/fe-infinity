@@ -37,7 +37,7 @@ const UserDetailPage = () => {
 
   const userInfo = result as UserProfileDto;
   return (
-    <PageBox title={userInfo.username || userInfo.address} className="pb-8">
+    <PageBox title={userInfo.username || userInfo.address} showTitle={false} className="pb-8">
       <UserPage userInfo={result as UserProfileDto} isOwner={!!(user && user.address === userInfo.address)} />
     </PageBox>
   );

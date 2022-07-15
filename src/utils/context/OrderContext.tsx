@@ -73,8 +73,6 @@ export type OrderContextType = {
   addOrderToCart: () => void;
   cancelOrder: () => void;
   updateOrders: (orderInCart: OrderInCart[]) => void;
-  customDrawerItems: number;
-  setCustomDrawerItems: (n: number) => void;
 
   cartItems: OrderCartItem[];
   addCartItem: (order: OrderCartItem) => void;
@@ -120,7 +118,6 @@ export const OrderContextProvider = ({ children }: Props) => {
   const [price, setPrice] = useState<string>('1');
   const [expirationDate, setExpirationDate] = useState<number>(Date.now() + secondsPerDay * 30 * 1000);
   const [numItems, setNumItems] = useState<number>(1);
-  const [customDrawerItems, setCustomDrawerItems] = useState<number>(0);
 
   // for executing orders
   const { showAppError, user, providerManager, chainId } = useAppContext();
@@ -374,12 +371,11 @@ export const OrderContextProvider = ({ children }: Props) => {
       if (index === -1) {
         setCartItems([...cartItems, item]);
       }
-      if (cartItems.length < 1) {
-        setOrderDrawerOpen(true); // only show the drawer for the first cart item.
-      }
     }
 
-    // setOrderDrawerOpen(true);
+    if (cartItems.length < 1) {
+      setOrderDrawerOpen(true); // only show the drawer for the first cart item.
+    }
   };
 
   const removeAllOrders = () => {
@@ -454,9 +450,7 @@ export const OrderContextProvider = ({ children }: Props) => {
     expirationDate,
     setExpirationDate,
     numItems,
-    setNumItems,
-    customDrawerItems,
-    setCustomDrawerItems
+    setNumItems
   };
 
   return <OrderContext.Provider value={value}>{children}</OrderContext.Provider>;

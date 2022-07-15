@@ -4,14 +4,13 @@ import { twMerge } from 'tailwind-merge';
 import { Button } from './button';
 import { Dropdown, DropdownItems } from './dropdown';
 import { NextLink } from './next-link';
-// import ContentLoader from 'react-content-loader';
 import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { useRouter } from 'next/router';
 import { MdMoreVert } from 'react-icons/md';
-import { ENS_ADDRESS, MISSING_IMAGE_URL } from 'src/utils';
+import { ENS_ADDRESS } from 'src/utils';
 import { inputBorderColor } from 'src/utils/ui-constants';
-import { BGImage } from './bg-image';
 import { SVG } from './svg';
+import { EZImage } from './ez-image';
 
 type labelFn = (data?: ERC721CardData) => ReactNode;
 
@@ -91,11 +90,7 @@ export const Card = ({
         href={`/asset/${data?.chainId}/${data?.tokenAddress ?? data?.address}/${data?.tokenId}`}
         className="h-full overflow-clip rounded-3xl"
       >
-        {data?.image ? (
-          <BGImage src={data.image} className="group-hover:scale-[1.15] transition-all duration-300" />
-        ) : (
-          <BGImage src={MISSING_IMAGE_URL} className="group-hover:scale-[1] transition-none" />
-        )}
+        <EZImage src={data?.image} className="group-hover:scale-[1.15] transition-all duration-300" />
       </NextLink>
 
       {data?.rarityRank && (
