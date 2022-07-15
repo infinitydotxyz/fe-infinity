@@ -259,7 +259,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
     // if (signer) {
     //   const order = await fetchUserSignedOBOrder(token?.ordersSnippet?.listing?.orderItem?.id);
     //   if (order) {
-    //     await takeMultiplOneOrders(signer, chainId, order.signedOrder);
+    //     await takeMultipleOneOrders(signer, chainId, [order.signedOrder]);
     //     toastSuccess('Sent txn successfully');
     //   }
     // } else {
