@@ -21,7 +21,7 @@ import {
 } from 'src/components/common';
 import { WaitingForTxModal } from 'src/components/market/order-drawer/waiting-for-tx-modal';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
-import { getOwnerAddress, MISSING_IMAGE_URL, useFetch } from 'src/utils';
+import { ellipsisAddress, getOwnerAddress, MISSING_IMAGE_URL, useFetch } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { getOBOrderFromFirestoreOrderItem } from 'src/utils/exchange/orders';
@@ -258,10 +258,10 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
           </h3>
           <div className="flex items-center sm:mb-6">
             <NextLink
-              href={`/collection/${token.collectionSlug}`}
+              href={`/collection/${token.collectionSlug || `${token.chainId}:${token.collectionAddress}`}`}
               className="text-theme-light-800 font-heading tracking-tight mr-2"
             >
-              {token.collectionName}
+              {token.collectionName || ellipsisAddress(token.collectionAddress) || 'Collection'}
             </NextLink>
             {token.hasBlueCheck && <SVG.blueCheck className="h-5 w-5" />}
           </div>
