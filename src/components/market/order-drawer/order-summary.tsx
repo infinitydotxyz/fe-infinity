@@ -1,4 +1,4 @@
-import { EthPrice, Button, SimpleTable, SimpleTableItem, Spacer, SVG, NftImage } from 'src/components/common';
+import { EthPrice, Button, SimpleTable, SimpleTableItem, Spacer, SVG, NftImage, EZImage } from 'src/components/common';
 import { shortDate } from 'src/utils';
 import { OrderInCart, useOrderContext } from 'src/utils/context/OrderContext';
 import { TitleAndSubtitle } from './order-list-item';
@@ -65,7 +65,7 @@ export const OrderSummaryItem = ({ orderInCart }: Props) => {
 
       let imageEl = <NftImage chainId={chainId} collectionAddress={item.collectionAddress} className="rounded-2xl" />;
       if (!showNum) {
-        imageEl = <img className={collectionIconStyle} src={item.tokenImage} alt="" />;
+        imageEl = <EZImage className={collectionIconStyle} src={item.tokenImage} />;
       }
 
       return (

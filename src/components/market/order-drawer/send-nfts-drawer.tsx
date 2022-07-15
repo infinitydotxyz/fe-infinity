@@ -2,7 +2,7 @@ import { getAddress } from '@ethersproject/address';
 import { ChainNFTs, ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { useState } from 'react';
-import { Button, Spacer, SVG, TextInputBox, toastError } from 'src/components/common';
+import { Button, EZImage, Spacer, SVG, TextInputBox, toastError } from 'src/components/common';
 import { extractErrorMsg } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { sendMultipleNfts } from 'src/utils/exchange/orders';
@@ -50,7 +50,7 @@ export const SendNFTsDrawer = ({ open, onClose, nftsForTransfer, onClickRemove, 
                 <li key={cardData.id} className="py-3 flex">
                   <div className="w-full flex">
                     <div>
-                      <img src={cardData.image} className="w-16 h-16 rounded-2xl" />
+                      <EZImage src={cardData.image} className="w-16 h-16 rounded-2xl overflow-clip" />
                     </div>
                     <div className="flex-1 truncate m-2">
                       <div className="font-bold">{cardData.collectionName}</div>

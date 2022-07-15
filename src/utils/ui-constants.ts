@@ -6,7 +6,7 @@ export const purgeCSSHack = 'h-14 w-14';
 
 export const collectionIconHeight = `h-${collectionIconRem}`;
 export const collectionIconWidth = `w-${collectionIconRem}`;
-export const collectionIconStyle = `${collectionIconHeight} ${collectionIconWidth} rounded-2xl`;
+export const collectionIconStyle = `${collectionIconHeight} ${collectionIconWidth} rounded-2xl overflow-clip`;
 
 export const collectionIconWidthInPx = (): number => {
   return pixelsPerRem() * collectionIconRem;
