@@ -14,11 +14,16 @@ export const EZImage = ({ src, center = true, cover = true, onClick, className =
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
 
-  if (!src) {
-    src = MISSING_IMAGE_URL;
+  // avoid the console errors
+  if (src && src.startsWith('ipfs')) {
+    src = '';
+  }
 
+  if (!src) {
     // this image is just transparent? why would we want that?
     // src = PLACEHOLDER_IMAGE;
+
+    src = MISSING_IMAGE_URL;
   }
 
   src = src?.replace('storage.opensea.io', 'openseauserdata.com');
