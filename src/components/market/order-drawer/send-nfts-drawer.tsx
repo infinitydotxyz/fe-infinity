@@ -35,54 +35,52 @@ export const SendNFTsDrawer = ({ open, onClose, nftsForTransfer, onClickRemove, 
     }
   };
 
-  const sendNft = () => {
-    async () => {
-      const orderItems: ChainNFTs[] = [];
-      const collectionToTokenMap: { [collection: string]: { tokenId: string; numTokens: number }[] } = {};
+  const sendNft = async () => {
+    const orderItems: ChainNFTs[] = [];
+    const collectionToTokenMap: { [collection: string]: { tokenId: string; numTokens: number }[] } = {};
 
-      // group tokens by collections
-      for (const nftToTransfer of nftsForTransfer) {
-        const collection = trimLowerCase(nftToTransfer.address);
-        const tokenId = nftToTransfer.tokenId;
-        if (!collection || !tokenId) {
-          continue;
-        }
-        const numTokens = 1;
-        const tokens = collectionToTokenMap[collection] ?? [];
-        tokens.push({ tokenId, numTokens });
-        collectionToTokenMap[collection] = tokens;
+    // group tokens by collections
+    for (const nftToTransfer of nftsForTransfer) {
+      const collection = trimLowerCase(nftToTransfer.address);
+      const tokenId = nftToTransfer.tokenId;
+      if (!collection || !tokenId) {
+        continue;
       }
+      const numTokens = 1;
+      const tokens = collectionToTokenMap[collection] ?? [];
+      tokens.push({ tokenId, numTokens });
+      collectionToTokenMap[collection] = tokens;
+    }
 
-      // add to orderItems
-      for (const item in collectionToTokenMap) {
-        const tokens = collectionToTokenMap[item];
-        orderItems.push({
-          collection: item,
-          tokens
-        });
-      }
+    // add to orderItems
+    for (const item in collectionToTokenMap) {
+      const tokens = collectionToTokenMap[item];
+      orderItems.push({
+        collection: item,
+        tokens
+      });
+    }
 
-      try {
-        const toAddress = await getFinalToAddress(address);
-        if (toAddress) {
-          const signer = providerManager?.getEthersProvider().getSigner();
-          if (signer) {
-            const result = await sendMultipleNfts(signer, chainId, orderItems, toAddress);
-            if (result.hash) {
-              onSubmit(result.hash);
-            }
-          } else {
-            console.error('signer is null');
+    try {
+      const toAddress = await getFinalToAddress(address);
+      if (toAddress) {
+        const signer = providerManager?.getEthersProvider().getSigner();
+        if (signer) {
+          const result = await sendMultipleNfts(signer, chainId, orderItems, toAddress);
+          if (result.hash) {
+            onSubmit(result.hash);
           }
         } else {
-          toastWarning('Destination address is blank');
+          console.error('signer is null');
         }
-      } catch (err) {
-        toastError(extractErrorMsg(err), () => {
-          alert(err);
-        });
+      } else {
+        toastWarning('Destination address is blank');
       }
-    };
+    } catch (err) {
+      toastError(extractErrorMsg(err), () => {
+        alert(err);
+      });
+    }
   };
 
   return (
