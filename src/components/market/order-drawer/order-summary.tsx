@@ -1,4 +1,4 @@
-import { EthPrice, Button, SimpleTable, SimpleTableItem, Spacer, SVG, NftImage, EZImage } from 'src/components/common';
+import { EthPrice, Button, SimpleTable, SimpleTableItem, Spacer, SVG, EZImage } from 'src/components/common';
 import { shortDate } from 'src/utils';
 import { OrderInCart, useOrderContext } from 'src/utils/context/OrderContext';
 import { TitleAndSubtitle } from './order-list-item';
@@ -8,7 +8,6 @@ import {
   collectionIconWidthInPx,
   iconButtonStyle
 } from 'src/utils/ui-constants';
-import { useAppContext } from 'src/utils/context/AppContext';
 
 export const OrderSummary = () => {
   const { ordersInCart } = useOrderContext();
@@ -29,7 +28,6 @@ interface Props {
 }
 
 export const OrderSummaryItem = ({ orderInCart }: Props) => {
-  const { chainId } = useAppContext();
   const { isSellOrderCart, editOrderFromCart } = useOrderContext();
 
   const collectionStackForOrder = () => {
@@ -62,9 +60,9 @@ export const OrderSummaryItem = ({ orderInCart }: Props) => {
       const item = orderInCart.cartItems[0];
       const showNum = orderInCart.cartItems.length > 1;
 
-      let imageEl = <NftImage chainId={chainId} collectionAddress={item.collectionAddress} className="rounded-2xl" />;
+      let imageEl = <EZImage className={collectionIconStyle} src={item.collectionImage} />;
       if (!showNum) {
-        imageEl = <EZImage className={collectionIconStyle} src={item.tokenImage} />;
+        imageEl = <EZImage className={collectionIconStyle} src={item.tokenImage || item.collectionImage} />;
       }
 
       return (

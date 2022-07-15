@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react';
-import { FeedItem, FeedEvent } from './feed-item';
+import { FeedEvent } from './feed-item';
 import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { FeedFilterDropdown } from './feed-filter-dropdown';
-import { ActivityItem } from './activity-item';
 import { UserActivityItem } from './user-activity-item';
 import { apiGet } from 'src/utils';
-// import { useAppContext } from 'src/utils/context/AppContext';
 import { CenteredContent, ScrollLoader, Spinner } from '../common';
 
 type UserActivityEvent = FeedEvent & {
@@ -27,17 +25,8 @@ interface UserProfileActivityListProps {
   className?: string;
 }
 
-export const UserProfileActivityList = ({
-  userAddress,
-  types,
-  forActivity,
-  forUserActivity,
-  className
-}: UserProfileActivityListProps) => {
-  // const { user } = useAppContext();
-  const [events, setEvents] = useState<FeedEvent[]>([]);
+export const UserProfileActivityList = ({ userAddress, types, className }: UserProfileActivityListProps) => {
   const [filter, setFilter] = useState<FeedFilter>({ userAddress, types });
-  const [commentPanelEvent, setCommentPanelEvent] = useState<FeedEvent | null>(null);
   const [filteringTypes, setFilteringTypes] = useState<EventType[]>([]);
   const [data, setData] = useState<FeedEvent[]>([]);
   const [isFetching, setIsFetching] = useState(false);
@@ -158,48 +147,7 @@ export const UserProfileActivityList = ({
 
         {!isFetching &&
           data?.map((event, idx) => {
-            if (forActivity) {
-              return <ActivityItem key={idx} event={event} />;
-            }
-            if (forUserActivity) {
-              return <UserActivityItem key={idx} event={event} />;
-            }
-            return (
-              <li key={idx} className="">
-                <FeedItem
-                  data={event}
-                  onLike={(ev) => {
-                    const foundEv = events.find((e) => e.id === ev.id);
-                    if (foundEv?.likes !== undefined) {
-                      foundEv.likes = foundEv.likes + 1;
-                    }
-                    setEvents([...events]);
-                  }}
-                  onComment={(ev) => {
-                    if (ev.id === commentPanelEvent?.id) {
-                      setCommentPanelEvent(null);
-                    } else {
-                      setCommentPanelEvent(ev);
-                    }
-                  }}
-                />
-                {commentPanelEvent && event.id === commentPanelEvent.id && (
-                  <div className="ml-20 p-4 ">
-                    {/* TODO(SNG): fix
-                      <CommentPanel
-                      contentOnly={true}
-                      isOpen={!!commentPanelEvent}
-                      event={commentPanelEvent}
-                      onClose={() => {
-                        setCommentPanelEvent(null);
-                      }}
-                    /> */}
-                  </div>
-                )}
-
-                <hr className="mt-6 mb-10 text-gray-100" />
-              </li>
-            );
+            return <UserActivityItem key={idx} event={event} />;
           })}
 
         {hasNextPage === true ? (
