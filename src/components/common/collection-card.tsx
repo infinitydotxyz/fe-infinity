@@ -3,7 +3,7 @@ import { Button } from './button';
 import { CollectionSearchDto } from '../../utils/types/collection-types';
 import { NextLink } from './next-link';
 import { SVG } from './svg';
-import { ImageOrMissing } from './image-or-missing';
+import { EZImage } from './ez-image';
 
 interface Props {
   collection: CollectionSearchDto;
@@ -27,7 +27,7 @@ export const CollectionCard = ({ collection, onButtonClick, buttonName, routerQu
         className="text-theme-light-800 font-heading tracking-tight mr-2"
       >
         <div style={{ height: '300px' }}>
-          <ImageOrMissing src={collection.bannerImage} />
+          <EZImage src={collection.bannerImage} className="rounded-3xl overflow-clip" />
         </div>
         <div className="pt-4">
           <div className="flex items-center font-body text-base font-medium px-5 text-black">
