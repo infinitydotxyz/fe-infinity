@@ -135,7 +135,7 @@ export const ProfileImageUpload = ({ onUpload, roundPhoto, onDelete, imgSource =
           height={avatarHeight}
           border={avatarBorder}
           borderRadius={avatarBorderRadius}
-          color={[255, 255, 255, 0.6]}
+          color={[235, 235, 245, 0.7]}
           scale={tempImgScale}
           className="mx-auto"
         />
