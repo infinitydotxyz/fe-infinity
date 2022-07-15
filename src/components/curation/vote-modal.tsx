@@ -21,7 +21,7 @@ export const StakeTokensButton: React.FC = () => {
   const router = useRouter();
 
   return (
-    <Button className="w-full" onClick={() => router.push('/rewards')}>
+    <Button variant="white" className="w-full font-black" onClick={() => router.push('/rewards')}>
       Stake tokens to get votes
     </Button>
   );
@@ -63,10 +63,10 @@ export const VoteModal: React.FC<VoteModalProps> = ({ collection, isOpen, onClos
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} showCloseIcon showActionButtons={false}>
+    <Modal isOpen={isOpen} onClose={onClose} showCloseIcon showActionButtons={false} wide={false}>
       <div className="space-y-4">
         <AvatarImage url={collection.profileImage} />
-        <Heading as="h3" className="font-body">
+        <Heading as="h3" className="font-body text-3xl font-medium">
           {collection.name}
         </Heading>
       </div>
@@ -75,7 +75,7 @@ export const VoteModal: React.FC<VoteModalProps> = ({ collection, isOpen, onClos
 
       {!isLoadingQuota && (
         <>
-          <div className="my-8 font-body">
+          <div className="my-8 space-y-2 font-body">
             {/* TODO: re-calculate these on change */}
             <FeesAprStats value={collection.feesAPR || 0} className="flex flex-row-reverse justify-between" />
             <FeesAccruedStats value={collection.fees || 0} className="flex flex-row-reverse justify-between" />
@@ -87,7 +87,7 @@ export const VoteModal: React.FC<VoteModalProps> = ({ collection, isOpen, onClos
             />
           </div>
           <Divider className="my-10" />
-          <div className="space-y-4">
+          <div className="space-y-8">
             <Statistics
               value={votesAvailable}
               className="flex flex-row-reverse justify-between"
@@ -102,7 +102,12 @@ export const VoteModal: React.FC<VoteModalProps> = ({ collection, isOpen, onClos
                   value={votes.toString()}
                   onChange={(v) => !isNaN(parseInt(v)) && setVotes(parseInt(v))}
                   renderRightIcon={() => (
-                    <Button variant="gray" size="small" onClick={() => setVotes(votesAvailable)}>
+                    <Button
+                      variant="gray"
+                      size="small"
+                      className="rounded-full py-3 px-2"
+                      onClick={() => setVotes(votesAvailable)}
+                    >
                       Max
                     </Button>
                   )}

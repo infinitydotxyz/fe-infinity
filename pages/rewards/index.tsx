@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, PageBox } from 'src/components/common';
+import { Button, Heading, PageBox } from 'src/components/common';
 import { StakeTokensModal } from 'src/components/rewards/stake-tokens-modal';
 import { UnstakeTokensModal } from 'src/components/rewards/unstake-tokens';
 import { UserProfileDto } from 'src/components/user/user-profile-dto';
@@ -20,7 +20,9 @@ const RewardsPage = () => {
       <PageBox title="Rewards" showTitle={false}>
         <div className="flex bg-theme-gray-100 p-10 rounded-2xl">
           <div className="w-1/2">
-            <div className="text-4xl">Token Balance</div>
+            <Heading as="h2" className="text-4xl font-body font-medium">
+              Token Balance
+            </Heading>
             <div className="w-1/2 mt-5 text-theme-gray-700">
               Stake NFT tokens to gain curation power in the form of veNFT. The longer you lock, the more curation power
               you’ll earn.
@@ -56,12 +58,10 @@ const RewardsPage = () => {
                   <div className="text-2xl font-heading font-bold">$60M</div>
                   <div className="text-sm mt-1">TVL</div>
                 </div>
-                <div className="lg:w-1/4 sm:w-full">
+                <div className="lg:w-2/4 sm:w-full">
                   <Button className="font-heading" onClick={() => setShowStakeTokensModal(true)}>
                     Stake
                   </Button>
-                </div>
-                <div className="lg:w-1/4 sm:w-full">
                   <Button
                     variant="outline"
                     className="font-heading lg:ml-3"
@@ -78,7 +78,9 @@ const RewardsPage = () => {
         {/* --- Curation Rewards --- */}
         <div className="flex bg-theme-gray-100 p-10 rounded-2xl mt-5">
           <div className="w-1/2">
-            <div className="text-4xl">Curation Rewards</div>
+            <Heading as="h2" className="text-4xl font-body font-medium">
+              Curation Rewards
+            </Heading>
             <div className="w-1/2 mt-5 text-theme-gray-700">
               Earn curation rewards for voting on collections with your veNFT tokens. You'll gain a portion of the
               transaction fees for each collection you curate.
@@ -125,7 +127,9 @@ const RewardsPage = () => {
         {/* --- Trading Rewards --- */}
         <div className="flex bg-theme-gray-100 p-10 rounded-2xl mt-5">
           <div className="w-1/2">
-            <div className="text-4xl">Trading Rewards</div>
+            <Heading as="h2" className="text-4xl font-body font-medium">
+              Trading Rewards
+            </Heading>
             <div className="w-1/2 mt-5 text-theme-gray-700">
               Earn trading rewards for buying and selling NFTs on Infinity. We’ll distribute the rewards each [period of
               time].

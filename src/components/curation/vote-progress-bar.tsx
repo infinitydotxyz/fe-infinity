@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
-import { ProgressBar } from '../common/progress-bar';
 import { numberFormatter } from 'src/utils/number-formatter';
+import { twMerge } from 'tailwind-merge';
 
 export type VoteProgressBarProps = {
   /**
@@ -30,13 +30,24 @@ export const VoteProgressBar: React.FC<VoteProgressBarProps> = ({ votes, totalVo
   }, [votes, totalVotes]);
 
   return (
-    <ProgressBar percentage={percentage} className={className}>
-      <span className="space-x-2 font-heading">
-        <span className="font-black">
-          {numberFormatter.format(votes)} / {numberFormatter.format(totalVotes)}
+    <div className={twMerge('bg-gray-100 rounded-3xl w-full relative', className)}>
+      <div
+        className={twMerge(
+          'bg-[#92DEFF] rounded-3xl text-sm font-normal py-6',
+          percentage < 100 ? 'rounded-r-none' : ''
+        )}
+        style={{ maxWidth: `${percentage}%` }}
+      ></div>
+
+      <div className="absolute top-3 left-4 z-10">
+        <span className="space-x-2 font-heading">
+          <span className="font-black">
+            {numberFormatter.format(votes)} / {numberFormatter.format(totalVotes)}
+          </span>
+          <span className="font-normal">votes</span>
         </span>
-        <span className="font-normal">votes</span>
-      </span>
-    </ProgressBar>
+      </div>
+      <span className="absolute top-3 right-4 z-10 font-black">{percentage}%</span>
+    </div>
   );
 };

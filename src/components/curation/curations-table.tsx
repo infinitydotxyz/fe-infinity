@@ -4,23 +4,28 @@ import React, { useState } from 'react';
 import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { mutate } from 'swr';
+import { twMerge } from 'tailwind-merge';
 import { Field, FieldProps } from '../analytics/field';
 import { Button } from '../common';
 import { FeesAprStats, FeesAccruedStats } from './statistics';
 import { StakeTokensButton, VoteModal } from './vote-modal';
 import { VoteProgressBar } from './vote-progress-bar';
 
-const FieldWrapper: React.FC<FieldProps> = (props) => (
-  <div className="w-full h-full  row-span-1 col-span-1">
+const FieldWrapper: React.FC<FieldProps & { className?: string }> = ({ className, ...props }) => (
+  <div className={twMerge('w-full h-full row-span-1 col-span-1', className)}>
     <Field {...props} />
   </div>
 );
 
 export type CurationTableProps = {
   curatedCollections: CuratedCollectionDto[][];
+  isReadOnly?: boolean;
 };
 
-export const CurationTable: React.FC<CurationTableProps> = ({ curatedCollections: curatedCollectionsArray }) => {
+export const CurationTable: React.FC<CurationTableProps> = ({
+  curatedCollections: curatedCollectionsArray,
+  isReadOnly = false
+}) => {
   const router = useRouter();
   const { result: quota } = useUserCurationQuota();
 
@@ -35,6 +40,7 @@ export const CurationTable: React.FC<CurationTableProps> = ({ curatedCollections
           index={i + 1}
           onClick={() => router.push(`/collection/${curatedCollection.slug}`)}
           votes={quota?.availableVotes || 0}
+          isReadOnly={isReadOnly}
         />
       ))}
     </>
@@ -46,9 +52,10 @@ export type CurationRowProps = {
   collection: CuratedCollectionDto;
   onClick: () => void;
   votes: number;
+  isReadOnly?: boolean;
 };
 
-export const CurationRow: React.FC<CurationRowProps> = ({ collection, index, onClick, votes }) => {
+export const CurationRow: React.FC<CurationRowProps> = ({ collection, index, onClick, votes, isReadOnly = false }) => {
   const [isStakeModalOpen, setIsStakeModalOpen] = useState(false);
   const { user, chainId } = useAppContext();
 
@@ -90,11 +97,15 @@ export const CurationRow: React.FC<CurationRowProps> = ({ collection, index, onC
             votes={collection.votes || 0}
             className="w-full h-full row-span-1 col-span-1 bg-white"
           />
-          <FieldWrapper></FieldWrapper>
-          <FieldWrapper type="custom">
-            {votes > 0 && <Button onClick={() => setIsStakeModalOpen(true)}>Vote</Button>}
-            {votes === 0 && <StakeTokensButton />}
-          </FieldWrapper>
+          {!isReadOnly && (
+            <>
+              <FieldWrapper></FieldWrapper>
+              <FieldWrapper type="custom">
+                {votes > 0 && <Button onClick={() => setIsStakeModalOpen(true)}>Vote</Button>}
+                {votes === 0 && <StakeTokensButton />}
+              </FieldWrapper>
+            </>
+          )}
         </>
       </div>
     </div>

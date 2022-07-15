@@ -266,14 +266,18 @@ const CollectionPage = () => {
 
           {!isProd() && (
             <section className="mt-16 space-y-4 md:w-1/2">
-              <Heading as="h2" className="font-body text-3xl">
+              <Heading as="h2" className="font-body text-3xl font-medium">
                 Curate collection
               </Heading>
               <FeesAprStats value={userCurated?.feesAPR || 0} className="mr-2" />
               <FeesAccruedStats value={userCurated?.fees || 0} />
 
               <div className="flex flex-row space-x-2 relative">
-                <VoteProgressBar votes={userCurated?.votes || 0} totalVotes={collection.numCuratorVotes || 0} />
+                <VoteProgressBar
+                  votes={userCurated?.votes || 0}
+                  totalVotes={collection.numCuratorVotes || 0}
+                  className="max-w-xs"
+                />
                 <Button onClick={() => checkSignedIn() && setIsStakeModalOpen(true)} className="font-heading">
                   Vote
                 </Button>
