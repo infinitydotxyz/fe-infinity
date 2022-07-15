@@ -30,7 +30,7 @@ export const OrderbookFilters = () => {
     defaultOpenState['Sale price'] = true;
   }
   if (query.numberOfNfts) {
-    defaultOpenState['Number of NFTs'] = true;
+    defaultOpenState['# NFTs'] = true;
   }
   const {
     filters: { orderTypes = [], collections = [], minPrice, maxPrice, numberOfNfts },
@@ -193,7 +193,7 @@ export const OrderbookFilters = () => {
           />
         </div>
       </OrderbookFilterItem>
-      <OrderbookFilterItem key="Number of NFTs" openState={openState} setOpenState={setOpenState} item="Number of NFTs">
+      <OrderbookFilterItem key="# NFTs" openState={openState} setOpenState={setOpenState} item="# NFTs">
         <div className="flex flex-col">
           <TextInputBox
             type="number"

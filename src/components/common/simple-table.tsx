@@ -6,7 +6,7 @@ import { twMerge } from 'tailwind-merge';
 //
 // const items: SimpleTableItem[] = [];
 // items.push({ title: 'Max budget',  value: <div>{order.maxBudget}</div> });
-// items.push({ title: 'Number of NFTs', value: <div>{order.numItems}</div> });
+// items.push({ title: '# NFTs', value: <div>{order.numItems}</div> });
 //
 // return (<div className="w-full">
 //     <SimpleTable items={items} />

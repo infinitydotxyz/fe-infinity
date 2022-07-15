@@ -19,7 +19,7 @@ export const OrderDetailModal = ({ order, isOpen, onClose }: Props) => {
       value: <div className="text-black font-heading">{order.startPriceEth}</div>
     },
     {
-      title: <div className="">Number of NFT</div>,
+      title: <div className=""># NFTs</div>,
       value: <div className="text-black font-heading">{order.numItems}</div>
     },
     {
