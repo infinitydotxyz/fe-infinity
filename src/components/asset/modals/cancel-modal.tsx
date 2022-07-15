@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
-import { Checkbox, EthPrice, Modal, Spinner, toastError, toastSuccess } from 'src/components/common';
+import { Checkbox, EthPrice, Modal, Spinner, toastError, toastInfo, toastSuccess } from 'src/components/common';
 import { apiGet, ellipsisAddress, extractErrorMsg } from 'src/utils';
 import { OrderbookItem } from 'src/components/market/orderbook-list/orderbook-item';
 import { useAppContext } from 'src/utils/context/AppContext';
@@ -69,7 +69,7 @@ export const CancelModal = ({ isOpen, onClose, collectionAddress, token }: Props
         setIsSubmitting(false);
         toastSuccess('Transaction sent to chain');
         waitForTransaction(hash, () => {
-          toastSuccess(`Transaction confirmed ${ellipsisAddress(hash)}`);
+          toastInfo(`Transaction confirmed ${ellipsisAddress(hash)}`);
         });
       } else {
         console.error('signer is null');

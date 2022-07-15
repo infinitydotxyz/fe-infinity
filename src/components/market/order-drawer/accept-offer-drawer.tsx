@@ -1,5 +1,5 @@
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { Button, SVG, Spacer, toastSuccess, toastError, Divider } from 'src/components/common';
+import { Button, SVG, Spacer, toastSuccess, toastError, Divider, toastInfo } from 'src/components/common';
 import { ellipsisAddress, extractErrorMsg } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { takeMultipleOneOrders } from 'src/utils/exchange/orders';
@@ -25,7 +25,7 @@ export const AcceptOfferDrawer = ({ open, onClose, orders, onClickRemove }: Prop
         const { hash } = await takeMultipleOneOrders(signer, chainId, chainOrders);
         toastSuccess('Transaction sent to chain');
         waitForTransaction(hash, () => {
-          toastSuccess(`Transaction confirmed ${ellipsisAddress(hash)}`);
+          toastInfo(`Transaction confirmed ${ellipsisAddress(hash)}`);
         });
       } else {
         throw 'Signer is null';
