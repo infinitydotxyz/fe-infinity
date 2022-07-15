@@ -458,15 +458,17 @@ export async function takeMultiplOneOrders(signer: JsonRpcSigner, chainId: strin
   // it is assumed that all orders have these value same, so no need to check. Contract throws if this is not the case.
   const isSellOrder = makerOrders[0].isSellOrder;
 
+  const gasLimit = 200_000 * makerOrders.length;
   // perform exchange
   // if fulfilling a sell order, send ETH
   if (isSellOrder) {
     const options = {
-      value: totalPrice
+      value: totalPrice,
+      gasLimit
     };
     await infinityExchange.takeMultipleOneOrders(makerOrders, options);
   } else {
-    const result = await infinityExchange.takeMultipleOneOrders(makerOrders);
+    const result = await infinityExchange.takeMultipleOneOrders(makerOrders, { gasLimit });
     return result;
   }
 }
