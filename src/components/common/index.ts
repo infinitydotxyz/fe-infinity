@@ -22,7 +22,6 @@ export * from 'src/components/common/ez-image';
 export * from 'src/components/common/tool-tip';
 export * from 'src/components/common/centered-content';
 export * from 'src/components/common/scroll-loader';
-export * from 'src/components/common/bg-image';
 export * from 'src/components/common/divider';
 export * from 'src/components/common/drawer';
 export * from 'src/components/common/eth-price';

@@ -56,13 +56,7 @@ const MarketplacePage = () => {
   const contents = (
     <>
       <div className="flex space-x-2 items-center relative max-w-xl lg:top-14 lg:-mt-14 pb-4 lg:pb-0">
-        <ToggleTab
-          tabWidth="150px"
-          className="font-heading"
-          options={options}
-          selected={selected}
-          onChange={onChange}
-        />
+        <ToggleTab className="font-heading" options={options} selected={selected} onChange={onChange} />
         <Spacer />
       </div>
 

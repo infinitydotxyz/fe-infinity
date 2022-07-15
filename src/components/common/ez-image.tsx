@@ -10,7 +10,7 @@ interface Props {
   onClick?: () => void;
 }
 
-export const EZImage = ({ src, center = true, cover = true, onClick, className = 'w-full h-full' }: Props) => {
+export const EZImage = ({ src, center = true, cover = true, onClick, className = '' }: Props) => {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
 
@@ -63,7 +63,7 @@ export const EZImage = ({ src, center = true, cover = true, onClick, className =
   }
 
   return (
-    <div className={className} onClick={onClick}>
+    <div className={twMerge('w-full h-full', className)} onClick={onClick}>
       <div
         className={twMerge(
           cover ? 'bg-cover' : 'bg-cntain',

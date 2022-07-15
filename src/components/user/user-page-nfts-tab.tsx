@@ -27,7 +27,7 @@ const fetchTokenData = async (chainId: string, collection: string, tokenId: stri
 
 export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listClassName = '' }: Props) => {
   const { user, chainId } = useAppContext();
-  const { hasOrderDrawer, setCartItemCount } = useDrawerContext();
+  const { setCartItemCount, hasOrderDrawer } = useDrawerContext();
   const {
     addCartItem,
     setOrderDrawerOpen,
@@ -49,15 +49,13 @@ export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listCl
   const [sendTxHash, setSendTxHash] = useState('');
 
   useEffect(() => {
-    if (!hasOrderDrawer() && orderDrawerOpen) {
+    if (orderDrawerOpen && !hasOrderDrawer()) {
       setShowTransferDrawer(true);
     }
   }, [orderDrawerOpen]);
 
   useEffect(() => {
-    if (!hasOrderDrawer()) {
-      setCartItemCount(nftsForTransfer.length);
-    }
+    setCartItemCount(nftsForTransfer.length);
   }, [nftsForTransfer]);
 
   // find & remove this item in cartItems & all orders' cartItems:

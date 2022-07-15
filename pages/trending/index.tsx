@@ -119,7 +119,13 @@ const TrendingPage = () => {
   return (
     <PageBox title="Trending">
       <div className="flex justify-between">
-        <ToggleTab className="font-heading" options={options} selected={selected} onChange={onChangeToggleTab} />
+        <ToggleTab
+          small={true}
+          className="font-heading"
+          options={options}
+          selected={selected}
+          onChange={onChangeToggleTab}
+        />
 
         <div className="space-x-2">
           <Dropdown

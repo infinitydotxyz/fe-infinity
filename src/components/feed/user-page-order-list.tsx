@@ -36,7 +36,7 @@ interface Props {
 export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
   const { providerManager, chainId, user, waitForTransaction } = useAppContext();
   const { orderDrawerOpen, setOrderDrawerOpen } = useOrderContext();
-  const { hasOrderDrawer, setCartItemCount } = useDrawerContext();
+  const { setCartItemCount, hasOrderDrawer } = useDrawerContext();
   const [data, setData] = useState<SignedOBOrder[]>([]);
   const [isFetching, setIsFetching] = useState(false);
   const [cursor, setCursor] = useState('');
@@ -48,15 +48,13 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
   const [selectedOrders, setSelectedOrders] = useState<SignedOBOrder[]>([]);
 
   useEffect(() => {
-    if (!hasOrderDrawer() && orderDrawerOpen) {
+    if (orderDrawerOpen && !hasOrderDrawer()) {
       setShowCancelDrawer(true);
     }
   }, [orderDrawerOpen]);
 
   useEffect(() => {
-    if (!hasOrderDrawer()) {
-      setCartItemCount(selectedOrders.length);
-    }
+    setCartItemCount(selectedOrders.length);
   }, [selectedOrders]);
 
   const fetchData = async (isRefresh = false) => {
@@ -228,6 +226,7 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
         onClickRemove={(removingOrder) => {
           const arr = selectedOrders.filter((o) => o.id !== removingOrder.id);
           setSelectedOrders(arr);
+
           if (arr.length === 0) {
             setShowCancelDrawer(false);
             setOrderDrawerOpen(false);

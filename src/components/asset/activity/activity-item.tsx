@@ -1,6 +1,6 @@
 import { EventType, EventTypeNames } from '@infinityxyz/lib-frontend/types/core/feed';
-import { BGImage, EthPrice, NextLink } from 'src/components/common';
-import { ellipsisAddress, PLACEHOLDER_IMAGE } from 'src/utils';
+import { EthPrice, EZImage, NextLink } from 'src/components/common';
+import { ellipsisAddress } from 'src/utils';
 import { format } from 'timeago.js';
 import { NftActivity } from '@infinityxyz/lib-frontend/types/dto/collections/nfts';
 import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
@@ -20,14 +20,7 @@ export const ActivityItem = ({ item }: Props) => {
     <div>
       <div className="bg-gray-100 px-10 py-6 rounded-3xl flex items-center font-heading mt-4">
         <NextLink href={`/asset/${item.chainId}/${item.collectionData?.address}/${item.tokenId}`}>
-          {item.collectionData?.metadata?.profileImage ? (
-            <BGImage
-              className="w-16 h-16 max-h-[80px] rounded-full"
-              src={item.collectionData?.metadata?.profileImage}
-            />
-          ) : (
-            <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={PLACEHOLDER_IMAGE} />
-          )}
+          <EZImage className="w-16 h-16 max-h-[80px] rounded-full" src={item.collectionData?.metadata?.profileImage} />
         </NextLink>
         <div className="flex justify-between w-full mx-8">
           {/* <div className="w-1/6">

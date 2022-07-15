@@ -36,7 +36,7 @@ export const DrawerContextProvider = ({ children }: Props) => {
   const hasOrderDrawer = () => {
     const path = router.asPath;
 
-    const result = path.indexOf('tab=Orders') === -1 && path.indexOf('tab=Send') === -1;
+    const result = path.indexOf('me?tab=Orders') === -1 && path.indexOf('me?tab=Send') === -1;
 
     return result;
   };

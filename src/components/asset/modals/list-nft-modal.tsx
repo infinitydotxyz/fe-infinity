@@ -36,7 +36,7 @@ export const ListNFTModal = ({ isOpen, onClose }: Props) => {
         onClose();
       }}
     >
-      <ToggleTab options={options} selected={selected} onChange={onChange} className="mb-6" />
+      <ToggleTab small={true} options={options} selected={selected} onChange={onChange} className="mb-6" />
 
       {selected === 'Set Price' && (
         <>
