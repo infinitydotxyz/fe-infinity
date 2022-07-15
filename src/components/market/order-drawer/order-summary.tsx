@@ -151,9 +151,9 @@ export const OrderSummaryItem = ({ orderInCart }: Props) => {
         title: 'Max budget',
         value: <EthPrice label={orderInCart.orderSpec.endPriceEth.toString()} />
       });
-      if (isCollectionsOrder()) {
-        items.push({ title: 'Min NFTs to buy', value: <div>{orderInCart.orderSpec.numItems.toString()}</div> });
-      }
+      // if (isCollectionsOrder()) {
+      //   items.push({ title: 'Min NFTs to buy', value: <div>{orderInCart.orderSpec.numItems.toString()}</div> });
+      // }
       items.push({
         title: 'Expiration date',
         value: <div>{shortDate(new Date(orderInCart.orderSpec.endTimeMs ?? 0))}</div>
