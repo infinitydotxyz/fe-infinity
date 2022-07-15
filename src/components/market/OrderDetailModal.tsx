@@ -12,7 +12,7 @@ export const OrderDetailModal = ({ order, isOpen, onClose }: Props) => {
   const tableItems: SimpleTableItem[] = [
     {
       title: <div className="">Type</div>,
-      value: <div className="text-black font-heading">{order.isSellOrder ? 'Listing' : 'Order'}</div>
+      value: <div className="text-black font-heading">{order.isSellOrder ? 'Listing' : 'Offer'}</div>
     },
     {
       title: <div className="">Price</div>,
