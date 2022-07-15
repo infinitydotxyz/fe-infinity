@@ -13,7 +13,7 @@ export const Header = ({ children, title = 'Home' }: Props) => {
         <link rel="shortcut icon" href="/favicon.ico" />
         <meta name="description" content="Infinity NFT marketplace" />
 
-        <title>{title} | Infinity</title>
+        <title>{title ? `${title} | Infinity` : 'Infinity'}</title>
       </Head>
       {children}
     </>
