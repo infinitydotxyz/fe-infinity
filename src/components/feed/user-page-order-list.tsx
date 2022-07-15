@@ -232,7 +232,7 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
                 order={order}
                 orderType={apiFilter.orderType}
                 userInfo={userInfo}
-                onClickCancel={listItemButtonClick}
+                onClickActionBtn={listItemButtonClick}
               />
             );
           })}

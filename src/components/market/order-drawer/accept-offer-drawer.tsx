@@ -44,7 +44,7 @@ export const AcceptOfferDrawer = ({ open, onClose, orders, onClickRemove }: Prop
       <Drawer
         open={open}
         onClose={onClose}
-        subtitle={'Accept these orders in one transaction'}
+        subtitle={'Accept these offers in one transaction'}
         title={<div className="flex items-center">Accept Offers</div>}
       >
         <div className="flex flex-col h-full">
