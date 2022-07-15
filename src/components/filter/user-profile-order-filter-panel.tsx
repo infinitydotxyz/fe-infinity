@@ -30,7 +30,7 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
   const [collectionSearch, setCollectionSearch] = useState('');
   const [collectionSearchLoading, setCollectionSearchLoading] = useState(false);
   const [filter, setFilter] = useState<UserOrderFilter>({
-    orderType: 'listings'
+    orderType: ''
   });
 
   // for collection search:
