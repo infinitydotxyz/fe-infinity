@@ -14,6 +14,8 @@ add buy
 close drawer
 add buy -> no drawer
 
+remove from cart on cancel drawer
+
 order summary no images?  token Images getting set?
 
 use timeago.js?

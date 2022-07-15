@@ -1,5 +1,5 @@
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { Button, SVG, Spacer, toastSuccess, toastError } from 'src/components/common';
+import { Button, SVG, Spacer, toastSuccess, toastError, Divider } from 'src/components/common';
 import { ellipsisAddress, extractErrorMsg } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { cancelMultipleOrders } from 'src/utils/exchange/orders';
@@ -16,6 +16,24 @@ interface Props {
 
 export const CancelDrawer = ({ open, onClose, orders, onClickRemove }: Props) => {
   const { providerManager, chainId, waitForTransaction } = useAppContext();
+
+  const doCancel = async () => {
+    try {
+      const signer = providerManager?.getEthersProvider().getSigner();
+      if (signer) {
+        const nonces = orders.map((order) => order.nonce);
+        const { hash } = await cancelMultipleOrders(signer, chainId, nonces);
+        toastSuccess('Transaction sent to chain');
+        waitForTransaction(hash, () => {
+          toastSuccess(`Transaction confirmed ${ellipsisAddress(hash)}`);
+        });
+      } else {
+        throw 'Signer is null';
+      }
+    } catch (err) {
+      toastError(extractErrorMsg(err));
+    }
+  };
 
   return (
     <>
@@ -45,26 +63,9 @@ export const CancelDrawer = ({ open, onClose, orders, onClickRemove }: Props) =>
           <Spacer />
 
           <footer className="w-full text-center py-4">
-            <Button
-              size="large"
-              onClick={async () => {
-                try {
-                  const signer = providerManager?.getEthersProvider().getSigner();
-                  if (signer) {
-                    const nonces = orders.map((order) => order.nonce);
-                    const { hash } = await cancelMultipleOrders(signer, chainId, nonces);
-                    toastSuccess('Transaction sent to chain');
-                    waitForTransaction(hash, () => {
-                      toastSuccess(`Transaction confirmed ${ellipsisAddress(hash)}`);
-                    });
-                  } else {
-                    throw 'Signer is null';
-                  }
-                } catch (err) {
-                  toastError(extractErrorMsg(err));
-                }
-              }}
-            >
+            <Divider className="mb-10" />
+
+            <Button size="large" onClick={doCancel}>
               Cancel Listings
             </Button>
           </footer>

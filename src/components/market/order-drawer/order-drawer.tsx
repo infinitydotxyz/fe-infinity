@@ -120,11 +120,11 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
     const showCancel = buttonTitle === 'Complete order' || buttonTitle === 'Place Orders' ? false : true;
 
     return (
-      <div className="flex flex-col mb-8">
+      <div className="flex flex-col mb-6">
         <Divider className="mb-10" />
 
         {topWidget}
-        <div className="px-12 mb-4 w-full flex space-x-2">
+        <div className="px-12 w-full flex space-x-4">
           {showCancel === true ? (
             <>
               {isEditingOrder ? (
@@ -140,17 +140,6 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
           ) : null}
 
           <>
-            {/* {showCancel === false ? (
-              <Button
-                size="large"
-                variant="outline"
-                onClick={() => {
-                  setOrderDrawerOpen(false);
-                }}
-              >
-                Continue shopping
-              </Button>
-            ) : null} */}
             <Button size="large" className={`font-heading ${showCancel ? 'w-1/2' : 'w-full'}`} onClick={buttonClick}>
               {buttonTitle}
             </Button>
@@ -303,18 +292,6 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
       >
         {contents}
       </Drawer>
-
-      {/* todo: this doesn't work (conflicted: Modal & Drawer?)
-      {showConfirmClear ? (
-        <Modal
-          isOpen={showConfirmClear}
-          onClose={() => setShowConfirmClear(false)}
-          okButton="Confirm"
-          onOKButton={() => removeAllOrders()}
-        >
-          Clear all orders?
-        </Modal>
-      ) : null} */}
     </>
   );
 };
