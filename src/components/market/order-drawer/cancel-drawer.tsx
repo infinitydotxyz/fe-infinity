@@ -66,7 +66,7 @@ export const CancelDrawer = ({ open, onClose, orders, onClickRemove }: Props) =>
             <Divider className="mb-10" />
 
             <Button size="large" onClick={doCancel}>
-              Cancel Listings
+              Cancel Orders
             </Button>
           </footer>
         </div>
