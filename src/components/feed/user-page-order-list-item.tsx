@@ -21,7 +21,7 @@ export const UserPageOrderListItem = ({ order, orderType, onClickCancel }: Props
   return (
     <div>
       <div className="bg-gray-100 px-10 py-6 rounded-3xl flex font-heading">
-        <div className="flex justify-between items-center w-full mx-8">
+        <div className="flex justify-between items-center w-full">
           <div className="w-1/4">
             <OrderbookItem
               nameItem={true}
