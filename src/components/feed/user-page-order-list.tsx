@@ -4,7 +4,7 @@ import { apiGet, extractErrorMsg, ITEMS_PER_PAGE, ellipsisAddress } from 'src/ut
 import { Button, CenteredContent, ScrollLoader, Spinner, toastError, toastSuccess } from '../common';
 import { UserProfileDto } from '../user/user-profile-dto';
 import { CancelDrawer } from 'src/components/market/order-drawer/cancel-drawer';
-import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import {
   DEFAULT_ORDER_TYPE_FILTER,
   UserOrderFilter,
@@ -35,21 +35,23 @@ interface Props {
 
 export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
   const { providerManager, chainId, user, waitForTransaction } = useAppContext();
-  const { orderDrawerOpen, setOrderDrawerOpen } = useOrderContext();
-  const { setCartItemCount, hasOrderDrawer } = useDrawerContext();
+  const { orderDrawerOpen, setOrderDrawerOpen, addCartItem, setPrice } = useOrderContext();
+  const { setCartItemCount, hasOrderDrawer, setAllowOrderDrawer } = useDrawerContext();
   const [data, setData] = useState<SignedOBOrder[]>([]);
   const [isFetching, setIsFetching] = useState(false);
   const [cursor, setCursor] = useState('');
   const [hasNextPage, setHasNextPage] = useState(false);
-  const [filterShowed, setFilterShowed] = useState(false);
+  const [filterShowed, setFilterShowed] = useState(true);
   const [isCancellingAll, setIsCancellingAll] = useState(false);
   const [apiFilter, setApiFilter] = useState<UserOrderFilter>({ orderType: DEFAULT_ORDER_TYPE_FILTER });
   const [showCancelDrawer, setShowCancelDrawer] = useState(false);
   const [selectedOrders, setSelectedOrders] = useState<SignedOBOrder[]>([]);
 
   useEffect(() => {
-    if (orderDrawerOpen && !hasOrderDrawer()) {
-      setShowCancelDrawer(true);
+    if (apiFilter.orderType !== 'offers-received') {
+      if (orderDrawerOpen && !hasOrderDrawer()) {
+        setShowCancelDrawer(true);
+      }
     }
   }, [orderDrawerOpen]);
 
@@ -114,7 +116,51 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
   useEffect(() => {
     setData([]);
     fetchData(true);
+
+    setAllowOrderDrawer(apiFilter.orderType === 'offers-received');
   }, [apiFilter]);
+
+  const onClickSell = (order: SignedOBOrder) => {
+    setPrice(`${order.startPriceEth}`);
+    addCartItem({
+      chainId: order?.chainId as ChainId,
+      collectionName: order?.nfts[0].collectionName ?? '',
+      collectionAddress: order?.nfts[0].collectionAddress ?? '',
+      collectionImage: order?.nfts[0].collectionImage ?? '',
+      collectionSlug: order?.nfts[0].collectionSlug ?? '',
+      tokenImage: order?.nfts[0].tokens[0].tokenImage ?? '',
+      tokenName: order?.nfts[0].tokens[0].tokenName ?? '',
+      tokenId: order?.nfts[0].tokens[0].tokenId ?? '-1',
+      isSellOrder: !order.isSellOrder, // sell to this buy order
+
+      attributes: []
+    });
+
+    setOrderDrawerOpen(true);
+  };
+
+  const listItemButtonClick = (order: SignedOBOrder, checked: boolean) => {
+    if (apiFilter.orderType === 'offers-received') {
+      onClickSell(order);
+    } else {
+      if (checked) {
+        const arr = [...selectedOrders, order];
+        setSelectedOrders(arr);
+
+        if (arr.length === 1) {
+          setShowCancelDrawer(true);
+        }
+      } else {
+        const arr = selectedOrders.filter((o) => o.id !== order.id);
+        setSelectedOrders(arr);
+
+        if (arr.length === 0) {
+          setShowCancelDrawer(false);
+          setOrderDrawerOpen(false);
+        }
+      }
+    }
+  };
 
   return (
     <div className={`min-h-[1024px] mt-[-75px] ${className}`}>
@@ -184,24 +230,7 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
                 order={order}
                 orderType={apiFilter.orderType}
                 userInfo={userInfo}
-                onClickCancel={(clickedOrder, isCancelling) => {
-                  if (isCancelling) {
-                    const arr = [...selectedOrders, clickedOrder];
-                    setSelectedOrders(arr);
-
-                    if (arr.length === 1) {
-                      setShowCancelDrawer(true);
-                    }
-                  } else {
-                    const arr = selectedOrders.filter((o) => o.id !== clickedOrder.id);
-                    setSelectedOrders(arr);
-
-                    if (arr.length === 0) {
-                      setShowCancelDrawer(false);
-                      setOrderDrawerOpen(false);
-                    }
-                  }
-                }}
+                onClickCancel={listItemButtonClick}
               />
             );
           })}

@@ -65,9 +65,8 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
     onChange(newFilter);
   };
 
-  const CollectionCheckbox = ({ collection, reactKey }: { collection: OBOrderItem; reactKey: string }) => (
+  const CollectionCheckbox = ({ collection }: { collection: OBOrderItem }) => (
     <Checkbox
-      key={`${collection.collectionAddress}_${reactKey}`}
       boxOnLeft={false}
       className="pb-4 w-full"
       checked={selectedCollections.map((c) => c.collectionAddress).includes(`${collection.collectionAddress}`)}
@@ -146,14 +145,14 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
 
         <ul className="mt-8 w-full min-h-[100px] max-h-80 overflow-y-auto space-y-4">
           {selectedCollections.map((coll, idx) => (
-            <CollectionCheckbox reactKey={`${idx}`} collection={coll} />
+            <CollectionCheckbox key={`${idx} ${coll.collectionAddress}`} collection={coll} />
           ))}
 
           {collections.map((coll, idx) => {
             if (selectedCollections.map((c) => c.collectionAddress).includes(`${coll.collectionAddress}`)) {
               return null;
             }
-            return <CollectionCheckbox reactKey={`${idx}`} collection={coll} />;
+            return <CollectionCheckbox key={`${coll.collectionAddress} ${idx}`} collection={coll} />;
           })}
 
           {collectionSearchLoading && (
@@ -199,13 +198,13 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
         />
       </div>
 
-      <div className="text-lg mt-6 font-heading">Number of NFTs</div>
+      <div className="text-lg mt-6 font-heading"># NFTs</div>
       <div className="flex mt-4 mb-6">
         <TextInputBox
-          addEthSymbol={true}
+          addEthSymbol={false}
           type="number"
           className="border-gray-300 font-heading"
-          label="Amount of NFTs"
+          label=""
           placeholder=""
           value={numItems}
           onChange={(value) => {
@@ -217,15 +216,6 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
           }}
         />
       </div>
-
-      {/* <div className="flex">
-        <Button variant="gray" className="py-3 w-1/2 bg-theme-gray-100 font-heading" onClick={onClickApply}>
-          Apply
-        </Button>
-        <Button variant="gray" className="py-3 w-1/2 bg-theme-gray-100 font-heading ml-2" onClick={onClickClear}>
-          Clear
-        </Button>
-      </div> */}
 
       <hr className="mt-8" />
     </div>
