@@ -7,7 +7,7 @@ import { NextLink } from './next-link';
 import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { useRouter } from 'next/router';
 import { MdMoreVert } from 'react-icons/md';
-import { ENS_ADDRESS } from 'src/utils';
+import { ellipsisAddress, ENS_ADDRESS } from 'src/utils';
 import { inputBorderColor } from 'src/utils/ui-constants';
 import { SVG } from './svg';
 import { EZImage } from './ez-image';
@@ -37,7 +37,7 @@ export const Card = ({
   className = ''
 }: CardProps): JSX.Element => {
   const router = useRouter();
-  let collectionName = data?.title || data?.collectionName || '';
+  let collectionName = data?.title || data?.collectionName || ellipsisAddress(data?.address) || 'Collection';
   collectionName = collectionName.length > 25 ? collectionName.slice(0, 25) + '...' : collectionName;
 
   let tokenId = data?.tokenId ?? '';
