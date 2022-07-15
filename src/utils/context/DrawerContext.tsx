@@ -34,7 +34,11 @@ export const DrawerContextProvider = ({ children }: Props) => {
   const router = useRouter();
 
   const hasOrderDrawer = () => {
-    return router.asPath.indexOf('tab=Orders') === -1 && router.asPath.indexOf('tab=Send') === -1;
+    const path = router.asPath;
+
+    const result = path.indexOf('tab=Orders') === -1 && path.indexOf('tab=Send') === -1;
+
+    return result;
   };
 
   // =========================================================
@@ -45,7 +49,7 @@ export const DrawerContextProvider = ({ children }: Props) => {
     if (hasOrderDrawer()) {
       setCartItemCount(cartItems.length || ordersInCart.length);
     }
-  }, [ordersInCart, cartItems]);
+  }, [ordersInCart, cartItems, router]);
 
   // =========================================================
 
