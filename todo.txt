@@ -7,15 +7,14 @@ likes
 same like mutlipe
 
 
-replace route on tab switch
-
+ 
 
 marketplace
 add buy
 close drawer
 add buy -> no drawer
 
-order summary no images?
+order summary no images?  token Images getting set?
 
 use timeago.js?
                     <div>Expiry date: {format(order.endTimeMs)}</div>
