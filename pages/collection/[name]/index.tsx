@@ -312,7 +312,7 @@ const CollectionPage = () => {
           )}
 
           <ToggleTab
-            className="mt-32 font-heading pointer-events-auto"
+            className="mt-20 font-heading pointer-events-auto"
             tabWidth="150px"
             options={options}
             selected={selected}
