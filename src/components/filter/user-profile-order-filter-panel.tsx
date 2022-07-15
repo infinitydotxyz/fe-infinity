@@ -198,13 +198,13 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
         />
       </div>
 
-      <div className="text-lg mt-6 font-heading">Number of NFTs</div>
+      <div className="text-lg mt-6 font-heading"># NFTs</div>
       <div className="flex mt-4 mb-6">
         <TextInputBox
           addEthSymbol={true}
           type="number"
           className="border-gray-300 font-heading"
-          label="Amount of NFTs"
+          label=""
           placeholder=""
           value={numItems}
           onChange={(value) => {
