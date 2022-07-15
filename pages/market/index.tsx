@@ -17,7 +17,7 @@ const DEFAULT_TAB = TABS.Orders;
 
 export type DiscoverOrderBy = 'twitterFollowersPercentChange' | 'volumePercentChange' | 'avgPricePercentChange';
 
-const MarketplacePage = () => {
+const MarketPage = () => {
   const { user } = useAppContext();
   const { pathname, query, push } = useRouter();
 
@@ -99,10 +99,10 @@ const MarketplacePage = () => {
   );
 
   return (
-    <PageBox title="Marketplace">
+    <PageBox title="Market">
       <div>{contents}</div>
     </PageBox>
   );
 };
 
-export default MarketplacePage;
+export default MarketPage;

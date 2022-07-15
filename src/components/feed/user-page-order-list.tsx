@@ -36,7 +36,7 @@ interface Props {
 export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
   const { providerManager, chainId, user, waitForTransaction } = useAppContext();
   const { orderDrawerOpen, setOrderDrawerOpen, addCartItem, setPrice } = useOrderContext();
-  const { setCartItemCount, hasOrderDrawer, setAllowOrderDrawer } = useDrawerContext();
+  const { setCartItemCount, hasOrderDrawer } = useDrawerContext();
   const [data, setData] = useState<SignedOBOrder[]>([]);
   const [isFetching, setIsFetching] = useState(false);
   const [cursor, setCursor] = useState('');
@@ -116,8 +116,6 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
   useEffect(() => {
     setData([]);
     fetchData(true);
-
-    setAllowOrderDrawer(apiFilter.orderType === 'offers-received');
   }, [apiFilter]);
 
   const onClickSell = (order: SignedOBOrder) => {
