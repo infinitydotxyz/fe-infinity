@@ -1,4 +1,4 @@
-import { ChainId, Collection, Erc721Metadata, OBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
+import { Collection, Erc721Metadata, OBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
 import { getCurrentOBOrderPrice } from '@infinityxyz/lib-frontend/utils';
 import { utils } from 'ethers';
 import { useRouter } from 'next/router';
@@ -16,6 +16,7 @@ import {
   ShortAddress,
   Spinner,
   SVG,
+  toastSuccess,
   ToggleTab,
   useToggleTab
 } from 'src/components/common';
@@ -23,8 +24,8 @@ import { WaitingForTxModal } from 'src/components/market/order-drawer/waiting-fo
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
 import { ellipsisAddress, getOwnerAddress, MISSING_IMAGE_URL, useFetch } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { useOrderContext } from 'src/utils/context/OrderContext';
-import { getOBOrderFromFirestoreOrderItem } from 'src/utils/exchange/orders';
+import { getOBOrderFromFirestoreOrderItem, takeMultipleOneOrders } from 'src/utils/exchange/orders';
+import { fetchUserSignedOBOrder } from 'src/utils/marketUtils';
 
 const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
@@ -74,8 +75,7 @@ interface Props {
 }
 
 const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
-  const { checkSignedIn, user } = useAppContext();
-  const { addCartItem, setPrice } = useOrderContext();
+  const { checkSignedIn, user, providerManager, chainId } = useAppContext();
   const { isLoading, error, token, collection } = useFetchAssetInfo(qchainId, qcollection, qtokenId);
   const { options, onChange, selected } = useToggleTab(['Activity', 'Orders'], 'Activity');
 
@@ -221,29 +221,29 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
 
   const onClickBuy = async () => {
     // - direct buy:
-    // const signer = providerManager?.getEthersProvider().getSigner();
-    // if (signer) {
-    //   const order = await fetchUserSignedOBOrder(token?.ordersSnippet?.listing?.orderItem?.id);
-    //   if (order) {
-    //     await takeMultiplOneOrders(signer, chainId, order.signedOrder);
-    //     toastSuccess('Sent txn successfully');
-    //   }
-    // } else {
-    //   throw 'Signer is null';
-    // }
-    setPrice(`${buyPriceEth}`);
-    addCartItem({
-      chainId: token?.chainId as ChainId,
-      collectionName: token?.collectionName ?? '',
-      collectionAddress: token?.collectionAddress ?? '',
-      collectionImage: token?.image?.url ?? '',
-      collectionSlug: token?.collectionSlug ?? '',
-      tokenImage: token?.image?.url ?? '',
-      tokenName: token?.tokenId ?? '',
-      tokenId: token?.tokenId ?? '-1',
-      isSellOrder: false,
-      attributes: []
-    });
+    const signer = providerManager?.getEthersProvider().getSigner();
+    if (signer) {
+      const order = await fetchUserSignedOBOrder(token?.ordersSnippet?.listing?.orderItem?.id);
+      if (order) {
+        await takeMultipleOneOrders(signer, chainId, [order.signedOrder]);
+        toastSuccess('Sent txn successfully');
+      }
+    } else {
+      throw 'Signer is null';
+    }
+    // setPrice(`${buyPriceEth}`);
+    // addCartItem({
+    //   chainId: token?.chainId as ChainId,
+    //   collectionName: token?.collectionName ?? '',
+    //   collectionAddress: token?.collectionAddress ?? '',
+    //   collectionImage: token?.image?.url ?? '',
+    //   collectionSlug: token?.collectionSlug ?? '',
+    //   tokenImage: token?.image?.url ?? '',
+    //   tokenName: token?.tokenId ?? '',
+    //   tokenId: token?.tokenId ?? '-1',
+    //   isSellOrder: false,
+    //   attributes: []
+    // });
   };
 
   return (

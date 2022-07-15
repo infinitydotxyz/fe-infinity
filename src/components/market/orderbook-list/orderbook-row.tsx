@@ -1,14 +1,15 @@
 import { useState } from 'react';
 import { ChainId, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import moment from 'moment';
-import { Button, EthPrice } from 'src/components/common';
-import { ellipsisAddress, numStr, shortDate } from 'src/utils';
+import { Button, EthPrice, toastError, toastSuccess } from 'src/components/common';
+import { ellipsisAddress, extractErrorMsg, numStr, shortDate } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { checkOffersToUser, getOrderType } from 'src/utils/marketUtils';
 import { DataColumn, defaultDataColumns } from './data-columns';
 import { OrderbookItem } from './orderbook-item';
 import { OrderDetailModal } from '../OrderDetailModal';
+import { takeMultipleOneOrders } from 'src/utils/exchange/orders';
 
 type OrderbookRowProps = {
   order: SignedOBOrder;
@@ -16,9 +17,8 @@ type OrderbookRowProps = {
 };
 
 export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.Element => {
-  const { user } = useAppContext();
-  const { checkSignedIn } = useAppContext();
-  const { setPrice, addCartItem, setOrderDrawerOpen } = useOrderContext();
+  const { user, providerManager, checkSignedIn, chainId } = useAppContext();
+  const { addCartItem, setOrderDrawerOpen } = useOrderContext();
   const [selectedOrder, setSelectedOrder] = useState<SignedOBOrder | null>(null);
 
   const valueDiv = (dataColumn: DataColumn) => {
@@ -96,36 +96,36 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
     setOrderDrawerOpen(true);
   };
 
-  const onClickBuySell = async (order: SignedOBOrder, isSellOrder: boolean) => {
+  const onClickBuySell = async (order: SignedOBOrder) => {
     if (!checkSignedIn()) {
       return;
     }
     // - direct Buy/Sell:
-    // try {
-    //   const signer = providerManager?.getEthersProvider().getSigner();
-    //   if (signer) {
-    //     await takeMultiplOneOrders(signer, chainId, order.signedOrder);
-    //     toastSuccess('Order sent for execution');
-    //   } else {
-    //     throw 'Signer is null';
-    //   }
-    // } catch (err) {
-    //   const errMsg = extractErrorMsg(err);
-    //   toastError(errMsg);
-    // }
-    setPrice(`${order.startPriceEth}`);
-    addCartItem({
-      chainId: order?.chainId as ChainId,
-      collectionName: order?.nfts[0].collectionName ?? '',
-      collectionAddress: order?.nfts[0].collectionAddress ?? '',
-      collectionImage: order?.nfts[0].collectionImage ?? '',
-      collectionSlug: order?.nfts[0].collectionSlug ?? '',
-      tokenImage: order?.nfts[0].tokens[0].tokenImage ?? '',
-      tokenName: order?.nfts[0].tokens[0].tokenName ?? '',
-      tokenId: order?.nfts[0].tokens[0].tokenId ?? '-1',
-      isSellOrder,
-      attributes: []
-    });
+    try {
+      const signer = providerManager?.getEthersProvider().getSigner();
+      if (signer) {
+        await takeMultipleOneOrders(signer, chainId, [order.signedOrder]);
+        toastSuccess('Order sent for execution');
+      } else {
+        throw 'Signer is null';
+      }
+    } catch (err) {
+      const errMsg = extractErrorMsg(err);
+      toastError(errMsg);
+    }
+    // setPrice(`${order.startPriceEth}`);
+    // addCartItem({
+    //   chainId: order?.chainId as ChainId,
+    //   collectionName: order?.nfts[0].collectionName ?? '',
+    //   collectionAddress: order?.nfts[0].collectionAddress ?? '',
+    //   collectionImage: order?.nfts[0].collectionImage ?? '',
+    //   collectionSlug: order?.nfts[0].collectionSlug ?? '',
+    //   tokenImage: order?.nfts[0].tokens[0].tokenImage ?? '',
+    //   tokenName: order?.nfts[0].tokens[0].tokenName ?? '',
+    //   tokenId: order?.nfts[0].tokens[0].tokenId ?? '-1',
+    //   isSellOrder,
+    //   attributes: []
+    // });
   };
 
   const isOwner = order.makerAddress === user?.address;
@@ -146,14 +146,14 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
             if (order.isSellOrder) {
               // Sell Order (Listing)
               return (
-                <Button className="w-32" key={`${order.id} ${data.field}`} onClick={() => onClickBuySell(order, false)}>
+                <Button className="w-32" key={`${order.id} ${data.field}`} onClick={() => onClickBuySell(order)}>
                   Buy
                 </Button>
               );
             } else if (isOfferToUser === true) {
               // Buy Order (Offer) => show Sell button (if offer made to current user)
               return (
-                <Button className="w-32" key={`${order.id} ${data.field}`} onClick={() => onClickBuySell(order, true)}>
+                <Button className="w-32" key={`${order.id} ${data.field}`} onClick={() => onClickBuySell(order)}>
                   Sell
                 </Button>
               );
