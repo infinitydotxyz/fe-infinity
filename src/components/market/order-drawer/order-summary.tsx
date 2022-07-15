@@ -9,7 +9,6 @@ import {
   iconButtonStyle
 } from 'src/utils/ui-constants';
 import { useAppContext } from 'src/utils/context/AppContext';
-// import { TiDeleteOutline } from 'react-icons/ti';
 
 export const OrderSummary = () => {
   const { ordersInCart } = useOrderContext();
@@ -77,16 +76,6 @@ export const OrderSummaryItem = ({ orderInCart }: Props) => {
               {orderInCart.cartItems.length}
             </div>
           )}
-
-          {/* <div
-            className="absolute bottom-0 right-0 z-50 text-center shadow-lg rounded-full cursor-pointer hover:bg-gray-100 bg-white"
-            title="Remove order"
-            onClick={() => {
-              removeOrder(orderInCart);
-            }}
-          >
-            <TiDeleteOutline />
-          </div> */}
         </div>
       );
     }
