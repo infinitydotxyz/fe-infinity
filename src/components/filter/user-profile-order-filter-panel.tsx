@@ -201,7 +201,7 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
       <div className="text-lg mt-6 font-heading"># NFTs</div>
       <div className="flex mt-4 mb-6">
         <TextInputBox
-          addEthSymbol={true}
+          addEthSymbol={false}
           type="number"
           className="border-gray-300 font-heading"
           label=""
