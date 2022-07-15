@@ -13,3 +13,6 @@ close drawer
 add buy -> no drawer
 
 order summary no images?
+
+use timeago.js?
+                    <div>Expiry date: {format(order.endTimeMs)}</div>
