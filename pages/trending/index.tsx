@@ -164,7 +164,7 @@ const TrendingPage = () => {
                 <EZImage className="w-16 h-16 rounded-full overflow-clip" src={coll?.metadata?.profileImage} />
               </NextLink>
 
-              <div className="flex justify-between w-full mx-8">
+              <div className="flex justify-between items-center w-full ml-6">
                 <div className="w-44 flex items-center text-black font-bold font-body">
                   <NextLink href={`/collection/${coll?.slug}`} className="truncate">
                     {coll?.metadata?.name}
@@ -232,9 +232,7 @@ const TrendingPage = () => {
                   </>
                 ) : null}
 
-                <div className="w-[50px]">
-                  <Button onClick={() => onClickBuy(coll)}>Buy</Button>
-                </div>
+                <Button onClick={() => onClickBuy(coll)}>Buy</Button>
               </div>
             </div>
           );

@@ -20,8 +20,8 @@ export const UserPageOrderListItem = ({ order, orderType, onClickCancel }: Props
 
   return (
     <div>
-      <div className="bg-gray-100 px-10 py-6 rounded-3xl flex items-center font-heading">
-        <div className="flex justify-between w-full mx-8">
+      <div className="bg-gray-100 px-10 py-6 rounded-3xl flex font-heading">
+        <div className="flex justify-between items-center w-full mx-8">
           <div className="w-1/4">
             <OrderbookItem
               nameItem={true}
@@ -51,29 +51,27 @@ export const UserPageOrderListItem = ({ order, orderType, onClickCancel }: Props
             <div className="text-gray-400">Expiry</div>
             <div className="font-bold">{format(order.endTimeMs)}</div>
           </div>
-          <div className="w-24">
-            {orderType === 'listings' || orderType === 'offers-made' ? (
-              <Button
-                onClick={() => {
-                  const newState = !isCancelling;
-                  setIsCancelling(newState);
-                  onClickCancel(order, newState);
-                }}
-              >
-                {isCancelling ? '✓' : ''} Cancel
-              </Button>
-            ) : (
-              <Button
-                onClick={() => {
-                  const newState = !isCancelling; // todo: Dylan - not canceling here but batch selling - so cart drawer should be changed accordingly
-                  setIsCancelling(newState);
-                  onClickCancel(order, newState);
-                }}
-              >
-                {isCancelling ? '✓' : ''} Sell
-              </Button>
-            )}
-          </div>
+          {orderType === 'listings' || orderType === 'offers-made' ? (
+            <Button
+              onClick={() => {
+                const newState = !isCancelling;
+                setIsCancelling(newState);
+                onClickCancel(order, newState);
+              }}
+            >
+              {isCancelling ? '✓' : ''} Cancel
+            </Button>
+          ) : (
+            <Button
+              onClick={() => {
+                const newState = !isCancelling; // todo: Dylan - not canceling here but batch selling - so cart drawer should be changed accordingly
+                setIsCancelling(newState);
+                onClickCancel(order, newState);
+              }}
+            >
+              {isCancelling ? '✓' : ''} Sell
+            </Button>
+          )}
         </div>
       </div>
 
