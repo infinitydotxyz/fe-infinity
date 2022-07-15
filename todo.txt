@@ -1,14 +1,4 @@
-feed notes:
-
-comments
-
-likes
-
-same like mutlipe
-
-UserPageOrderList keys
- UserProfileOrderFilterPanel keys
-
+ 
 marketplace
 add buy
 close drawer
@@ -16,7 +6,5 @@ add buy -> no drawer
 
 remove from cart on cancel drawer
 
-order summary no images?  token Images getting set?
-
-use timeago.js?
-                    <div>Expiry date: {format(order.endTimeMs)}</div>
+ 
+use timeago.js?   <div>Expiry date: {format(order.endTimeMs)}</div>

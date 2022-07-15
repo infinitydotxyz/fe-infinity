@@ -100,7 +100,6 @@ export const OrderbookFilters = () => {
 
   const CollectionCheckbox = ({ collection }: { collection: CollectionSearchItem }) => (
     <Checkbox
-      key={`${collection.id}`}
       boxOnLeft={false}
       className="pb-4"
       checked={collections.includes(`${collection.chainId}:${collection.id}`)}
@@ -151,6 +150,7 @@ export const OrderbookFilters = () => {
                 }
                 return <CollectionCheckbox key={collection.id} collection={collection} />;
               })}
+
               {hasCollectionSearchResults &&
                 collectionsData.map((collection) => {
                   if (collections.includes(`${collection.chainId}:${collection.id}`)) {

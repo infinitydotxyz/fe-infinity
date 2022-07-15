@@ -141,7 +141,6 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
 
   const listItemButtonClick = (order: SignedOBOrder, checked: boolean) => {
     if (apiFilter.orderType === 'offers-received') {
-      console.log(JSON.stringify(order, null, 2));
       onClickSell(order);
     } else {
       if (checked) {
