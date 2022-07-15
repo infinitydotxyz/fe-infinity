@@ -70,7 +70,7 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
       limit: ITEMS_PER_PAGE,
       cursor: newCursor,
       minPrice: apiFilter.minPrice,
-      maxPrice: apiFilter.minPrice,
+      maxPrice: apiFilter.maxPrice,
       numItems: apiFilter.numItems,
       collections: apiFilter.collections
     };
