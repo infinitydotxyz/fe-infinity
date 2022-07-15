@@ -11,20 +11,20 @@ interface Props {
 export const OrderDetailModal = ({ order, isOpen, onClose }: Props) => {
   const tableItems: SimpleTableItem[] = [
     {
-      title: <div className="mt-4">Type</div>,
-      value: <div className="text-black font-heading mt-4">{order.isSellOrder ? 'Listing' : 'Order'}</div>
+      title: <div className="">Type</div>,
+      value: <div className="text-black font-heading">{order.isSellOrder ? 'Listing' : 'Order'}</div>
     },
     {
-      title: <div className="mt-4">Price</div>,
-      value: <div className="text-black font-heading mt-4">{order.startPriceEth}</div>
+      title: <div className="">Price</div>,
+      value: <div className="text-black font-heading">{order.startPriceEth}</div>
     },
     {
-      title: <div className="mt-4"># NFTs</div>,
-      value: <div className="text-black font-heading mt-4">{order.numItems}</div>
+      title: <div className=""># NFTs</div>,
+      value: <div className="text-black font-heading">{order.numItems}</div>
     },
     {
-      title: <div className="mt-4">Expiry date</div>,
-      value: <div className="text-black font-heading mt-4">{new Date(order.endTimeMs).toLocaleString()}</div>
+      title: <div className="">Expiry date</div>,
+      value: <div className="text-black font-heading">{new Date(order.endTimeMs).toLocaleString()}</div>
     }
   ];
 
@@ -32,13 +32,13 @@ export const OrderDetailModal = ({ order, isOpen, onClose }: Props) => {
     <Modal wide={false} isOpen={isOpen} onClose={onClose} title="Order details" showActionButtons={false}>
       <div className="text-gray-500">You can purchase any one of these NFTs for the min sale price</div>
 
-      <div className="my-10">
+      <div className="my-8">
         {(order?.nfts || []).map((nft, idx) => {
           return (
-            <div key={`${nft.collectionAddress}_${idx}`}>
+            <div key={`${nft.collectionAddress}_${idx}`} className=" space-y-4">
               {nft.tokens.map((token) => {
                 return (
-                  <div key={nft.collectionAddress + '_' + token.tokenId} className="flex items-center mt-8">
+                  <div key={nft.collectionAddress + '_' + token.tokenId} className="flex items-center">
                     <EZImage src={nft.collectionImage} className="w-16 h-16 overflow-clip rounded-3xl" />
                     <div className="ml-4">
                       <div>Collection: {nft.collectionName}</div>
@@ -52,7 +52,7 @@ export const OrderDetailModal = ({ order, isOpen, onClose }: Props) => {
         })}
       </div>
 
-      <SimpleTable className="my-3 text-gray-500" items={tableItems} />
+      <SimpleTable className="text-gray-500" items={tableItems} />
 
       <div className="mt-10">
         <Button variant="primary" className="w-full font-heading" onClick={onClose}>
