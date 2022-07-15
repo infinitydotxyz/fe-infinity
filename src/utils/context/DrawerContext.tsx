@@ -17,6 +17,7 @@ export type DrawerContextType = {
   setCartItemCount: (n: number) => void;
 
   hasOrderDrawer: () => boolean;
+  setAllowOrderDrawer: (flag: boolean) => void;
 };
 
 const DrawerContext = React.createContext<DrawerContextType | null>(null);
@@ -31,12 +32,14 @@ export const DrawerContextProvider = ({ children }: Props) => {
   const [sendDrawerOpen, setSendDrawerOpen] = useState<boolean>(false);
   const [cartItemCount, setCartItemCount] = useState<number>(0);
 
+  const [allowOrderDrawer, setAllowOrderDrawer] = useState<boolean>(false);
+
   const router = useRouter();
 
   const hasOrderDrawer = () => {
     const path = router.asPath;
 
-    const result = path.indexOf('me?tab=Orders') === -1 && path.indexOf('me?tab=Send') === -1;
+    const result = allowOrderDrawer || (path.indexOf('me?tab=Orders') === -1 && path.indexOf('me?tab=Send') === -1);
 
     return result;
   };
@@ -66,7 +69,8 @@ export const DrawerContextProvider = ({ children }: Props) => {
     cartItemCount,
     setCartItemCount,
 
-    hasOrderDrawer
+    hasOrderDrawer,
+    setAllowOrderDrawer
   };
 
   return <DrawerContext.Provider value={providerValue}>{children}</DrawerContext.Provider>;
