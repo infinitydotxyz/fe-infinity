@@ -184,12 +184,14 @@ export const UserPageOrderList = ({ userInfo, className = '' }: UserPageOrderLis
                   if (isCancelling) {
                     const arr = [...selectedOrders, clickedOrder];
                     setSelectedOrders(arr);
+
                     if (arr.length === 1) {
                       setShowCancelDrawer(true);
                     }
                   } else {
                     const arr = selectedOrders.filter((o) => o.id !== clickedOrder.id);
                     setSelectedOrders(arr);
+
                     if (arr.length === 0) {
                       setShowCancelDrawer(false);
                       setOrderDrawerOpen(false);

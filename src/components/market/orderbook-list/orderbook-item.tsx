@@ -3,7 +3,7 @@ import { OBTokenInfoDto } from '@infinityxyz/lib-frontend/types/dto/orders';
 
 import { useRouter } from 'next/router';
 import { ReactNode } from 'react';
-import { NextLink, SVG } from 'src/components/common';
+import { EZImage, NextLink, SVG } from 'src/components/common';
 import { PLACEHOLDER_IMAGE } from 'src/utils';
 // import ReactTooltip from 'react-tooltip';
 
@@ -80,11 +80,10 @@ const MultiCollectionCell = ({ nfts, onClick }: MultiCollectionCellProps) => {
       <div className="flex -space-x-8 overflow-hidden">
         {nfts.map((nft: OBOrderItem) => {
           return (
-            <img
+            <EZImage
               key={nft.collectionAddress}
-              className="inline-block h-12 w-12 rounded-2xl ring-2 ring-white bg-white"
+              className="inline-block h-12 w-12 rounded-2xl overflow-clip ring-2 ring-white bg-white"
               src={nft.collectionImage}
-              alt=""
             />
           );
         })}

@@ -21,19 +21,8 @@ export const UserPageOrderListItem = ({ order, orderType, onClickCancel }: Props
   return (
     <div>
       <div className="bg-gray-100 px-10 py-6 rounded-3xl flex items-center font-heading">
-        {/* <NextLink href={`/collection/${order.nfts[0].collectionSlug}}`}>
-          {order.nfts[0].collectionImage ? (
-            <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={order.nfts[0].collectionImage} />
-          ) : (
-            <BGImage className="w-16 h-16 max-h-[80px] rounded-full" src={BLANK_IMAGE_URL_MINI} />
-          )}
-        </NextLink> */}
         <div className="flex justify-between w-full mx-8">
           <div className="w-1/4">
-            {/* <div className="text-black font-bold font-body">
-              <a href={`/collection/${order.nfts[0].collectionSlug}`}>{order.nfts[0].collectionName}</a>
-            </div>
-            <div></div> */}
             <OrderbookItem
               nameItem={true}
               key={`${order.id} ${order.chainId}`}

@@ -1,6 +1,6 @@
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import React from 'react';
-import { Button, Modal, SimpleTable, SimpleTableItem } from 'src/components/common';
+import { Button, EZImage, Modal, SimpleTable, SimpleTableItem } from 'src/components/common';
 
 interface Props {
   order: SignedOBOrder;
@@ -39,7 +39,7 @@ export const OrderDetailModal = ({ order, isOpen, onClose }: Props) => {
               {nft.tokens.map((token) => {
                 return (
                   <div key={nft.collectionAddress + '_' + token.tokenId} className="flex items-center mt-8">
-                    <img src={nft.collectionImage} className="w-[64px] h-[64px] rounded-3xl" />
+                    <EZImage src={nft.collectionImage} className="w-16 h-16 overflow-clip rounded-3xl" />
                     <div className="ml-4">
                       <div>Collection: {nft.collectionName}</div>
                       <div className="flex text-gray-500">{token.tokenName}</div>
