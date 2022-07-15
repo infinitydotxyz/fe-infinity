@@ -2,7 +2,7 @@ import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { Button, SVG, Spacer, toastSuccess, toastError, Divider } from 'src/components/common';
 import { ellipsisAddress, extractErrorMsg } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { takeMultiplOneOrders } from 'src/utils/exchange/orders';
+import { takeMultipleOneOrders } from 'src/utils/exchange/orders';
 import { iconButtonStyle } from 'src/utils/ui-constants';
 import { Drawer } from '../../common/drawer';
 import { OrderbookItem } from '../orderbook-list/orderbook-item';
@@ -22,7 +22,7 @@ export const AcceptOfferDrawer = ({ open, onClose, orders, onClickRemove }: Prop
       const signer = providerManager?.getEthersProvider().getSigner();
       if (signer) {
         const chainOrders = orders.map((order) => order.signedOrder);
-        const { hash } = await takeMultiplOneOrders(signer, chainId, chainOrders);
+        const { hash } = await takeMultipleOneOrders(signer, chainId, chainOrders);
         toastSuccess('Transaction sent to chain');
         waitForTransaction(hash, () => {
           toastSuccess(`Transaction confirmed ${ellipsisAddress(hash)}`);

@@ -45,7 +45,7 @@ export async function getSignedOBOrder(
   return signedOBOrder;
 }
 
-// Orderbook orders
+// Order book orders
 export async function prepareOBOrder(
   user: User,
   chainId: BigNumberish,
@@ -157,17 +157,23 @@ export async function approveERC721ForChainNFTs(
 ) {
   try {
     console.log('Granting ERC721 approval');
+    const collectionsChecked = new Set<string>();
+    const results: unknown[] = [];
     for (const item of items) {
       const collection = item.collection;
-      const contract = new Contract(collection, ERC721ABI, signer);
-      const isApprovedForAll = await contract.isApprovedForAll(user, exchange);
-      if (!isApprovedForAll) {
-        const result = await contract.setApprovalForAll(exchange, true);
-        return result;
-      } else {
-        console.log('Already approved for all');
+      if (!collectionsChecked.has(collection)) {
+        const contract = new Contract(collection, ERC721ABI, signer);
+        const isApprovedForAll = await contract.isApprovedForAll(user, exchange);
+        if (!isApprovedForAll) {
+          const result = await contract.setApprovalForAll(exchange, true);
+          results.push(result);
+        } else {
+          console.log('Already approved for all');
+        }
+        collectionsChecked.add(collection);
       }
     }
+    return results;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
     console.error('failed granting erc721 approvals');
@@ -448,7 +454,7 @@ export async function cancelMultipleOrders(signer: JsonRpcSigner, chainId: strin
   };
 }
 
-export async function takeMultiplOneOrders(signer: JsonRpcSigner, chainId: string, makerOrders: ChainOBOrder[]) {
+export async function takeMultipleOneOrders(signer: JsonRpcSigner, chainId: string, makerOrders: ChainOBOrder[]) {
   const exchangeAddress = getExchangeAddress(chainId);
   const infinityExchange = new Contract(exchangeAddress, InfinityExchangeABI, signer);
   const totalPrice = makerOrders
@@ -468,6 +474,18 @@ export async function takeMultiplOneOrders(signer: JsonRpcSigner, chainId: strin
     };
     await infinityExchange.takeMultipleOneOrders(makerOrders, options);
   } else {
+    // approve ERC721
+    const user = await signer.getAddress();
+    const nfts = makerOrders.flatMap((order) => order.nfts);
+    const approvalResults = await approveERC721ForChainNFTs(user, nfts, signer, exchangeAddress);
+
+    for (const approval of approvalResults) {
+      /**
+       * wait one at a time in case there are a lot of approvals
+       */
+      const { hash } = approval as { hash: string };
+      await signer.provider?.waitForTransaction(hash);
+    }
     const result = await infinityExchange.takeMultipleOneOrders(makerOrders, { gasLimit });
     return result;
   }
