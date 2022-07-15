@@ -217,15 +217,6 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
         />
       </div>
 
-      {/* <div className="flex">
-        <Button variant="gray" className="py-3 w-1/2 bg-theme-gray-100 font-heading" onClick={onClickApply}>
-          Apply
-        </Button>
-        <Button variant="gray" className="py-3 w-1/2 bg-theme-gray-100 font-heading ml-2" onClick={onClickClear}>
-          Clear
-        </Button>
-      </div> */}
-
       <hr className="mt-8" />
     </div>
   );

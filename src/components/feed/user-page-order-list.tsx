@@ -41,7 +41,7 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
   const [isFetching, setIsFetching] = useState(false);
   const [cursor, setCursor] = useState('');
   const [hasNextPage, setHasNextPage] = useState(false);
-  const [filterShowed, setFilterShowed] = useState(false);
+  const [filterShowed, setFilterShowed] = useState(true);
   const [isCancellingAll, setIsCancellingAll] = useState(false);
   const [apiFilter, setApiFilter] = useState<UserOrderFilter>({ orderType: DEFAULT_ORDER_TYPE_FILTER });
   const [showCancelDrawer, setShowCancelDrawer] = useState(false);
