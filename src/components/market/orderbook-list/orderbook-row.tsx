@@ -146,32 +146,20 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
             if (order.isSellOrder) {
               // Sell Order (Listing)
               return (
-                <Button
-                  className="font-heading w-36"
-                  key={`${order.id} ${data.field}`}
-                  onClick={() => onClickBuySell(order, false)}
-                >
+                <Button className="w-32" key={`${order.id} ${data.field}`} onClick={() => onClickBuySell(order, false)}>
                   Buy
                 </Button>
               );
             } else if (isOfferToUser === true) {
               // Buy Order (Offer) => show Sell button (if offer made to current user)
               return (
-                <Button
-                  className="font-heading w-36"
-                  key={`${order.id} ${data.field}`}
-                  onClick={() => onClickBuySell(order, true)}
-                >
+                <Button className="w-32" key={`${order.id} ${data.field}`} onClick={() => onClickBuySell(order, true)}>
                   Sell
                 </Button>
               );
             } else if (isOfferToUser === false) {
               return (
-                <Button
-                  className="font-heading w-36"
-                  key={`${order.id} ${data.field}`}
-                  onClick={() => onClickBidHigher(order)}
-                >
+                <Button className="w-32" key={`${order.id} ${data.field}`} onClick={() => onClickBidHigher(order)}>
                   Bid higher
                 </Button>
               );
@@ -219,7 +207,7 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
           </div>
         </div>
         <div className="text-right">
-          <Button className="font-heading">{order.isSellOrder ? 'Buy' : 'Sell'}</Button>
+          <Button>{order.isSellOrder ? 'Buy' : 'Sell'}</Button>
 
           <div>{moment(order.startTimeMs).fromNow()}</div>
           <div>Expiry: {shortDate(new Date(order.endTimeMs))}</div>
