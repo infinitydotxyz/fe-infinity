@@ -2,7 +2,7 @@ import { getAddress } from '@ethersproject/address';
 import { ChainNFTs, ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { useState } from 'react';
-import { Button, EZImage, Spacer, SVG, TextInputBox, toastError } from 'src/components/common';
+import { Button, EZImage, Spacer, SVG, TextInputBox, toastError, toastWarning } from 'src/components/common';
 import { extractErrorMsg } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { sendMultipleNfts } from 'src/utils/exchange/orders';
@@ -119,7 +119,7 @@ export const SendNFTsDrawer = ({ open, onClose, nftsForTransfer, onClickRemove, 
                       console.error('signer is null');
                     }
                   } else {
-                    console.error('toAddress is null');
+                    toastWarning('Destination address is blank');
                   }
                 } catch (err) {
                   toastError(extractErrorMsg(err), () => {
