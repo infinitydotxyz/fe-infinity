@@ -4,7 +4,7 @@ import { apiGet, extractErrorMsg, ITEMS_PER_PAGE, ellipsisAddress } from 'src/ut
 import { Button, CenteredContent, ScrollLoader, Spinner, toastError, toastSuccess } from '../common';
 import { UserProfileDto } from '../user/user-profile-dto';
 import { CancelDrawer } from 'src/components/market/order-drawer/cancel-drawer';
-import { ChainId, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import {
   DEFAULT_ORDER_TYPE_FILTER,
   UserOrderFilter,
@@ -15,6 +15,7 @@ import { cancelAllOrders } from 'src/utils/exchange/orders';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { fetchOrderNonce } from 'src/utils/marketUtils';
 import { useDrawerContext } from 'src/utils/context/DrawerContext';
+import { AcceptOfferDrawer } from '../market/order-drawer/accept-offer-drawer';
 
 type Query = {
   limit: number;
@@ -35,7 +36,7 @@ interface Props {
 
 export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
   const { providerManager, chainId, user, waitForTransaction } = useAppContext();
-  const { orderDrawerOpen, setOrderDrawerOpen, addCartItem, setPrice } = useOrderContext();
+  const { orderDrawerOpen, setOrderDrawerOpen } = useOrderContext();
   const { setCartItemCount, hasOrderDrawer } = useDrawerContext();
   const [data, setData] = useState<SignedOBOrder[]>([]);
   const [isFetching, setIsFetching] = useState(false);
@@ -44,20 +45,29 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
   const [filterShowed, setFilterShowed] = useState(true);
   const [isCancellingAll, setIsCancellingAll] = useState(false);
   const [apiFilter, setApiFilter] = useState<UserOrderFilter>({ orderType: DEFAULT_ORDER_TYPE_FILTER });
+  const [showAcceptOfferDrawer, setShowAcceptOfferDrawer] = useState(false);
   const [showCancelDrawer, setShowCancelDrawer] = useState(false);
+
   const [selectedOrders, setSelectedOrders] = useState<SignedOBOrder[]>([]);
+  const [selectedOffers, setSelectedOffers] = useState<SignedOBOrder[]>([]);
 
   useEffect(() => {
-    if (apiFilter.orderType !== 'offers-received') {
-      if (orderDrawerOpen && !hasOrderDrawer()) {
+    if (orderDrawerOpen && !hasOrderDrawer()) {
+      if (apiFilter.orderType === 'offers-received') {
+        setShowAcceptOfferDrawer(true);
+      } else {
         setShowCancelDrawer(true);
       }
     }
   }, [orderDrawerOpen]);
 
   useEffect(() => {
-    setCartItemCount(selectedOrders.length);
-  }, [selectedOrders]);
+    if (apiFilter.orderType === 'offers-received') {
+      setCartItemCount(selectedOffers.length);
+    } else {
+      setCartItemCount(selectedOrders.length);
+    }
+  }, [apiFilter, selectedOrders, selectedOffers]);
 
   const fetchData = async (isRefresh = false) => {
     setIsFetching(true);
@@ -118,28 +128,23 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
     fetchData(true);
   }, [apiFilter]);
 
-  const onClickSell = (order: SignedOBOrder) => {
-    setPrice(`${order.startPriceEth}`);
-    addCartItem({
-      chainId: order?.chainId as ChainId,
-      collectionName: order?.nfts[0].collectionName ?? '',
-      collectionAddress: order?.nfts[0].collectionAddress ?? '',
-      collectionImage: order?.nfts[0].collectionImage ?? '',
-      collectionSlug: order?.nfts[0].collectionSlug ?? '',
-      tokenImage: order?.nfts[0].tokens[0].tokenImage ?? '',
-      tokenName: order?.nfts[0].tokens[0].tokenName ?? '',
-      tokenId: order?.nfts[0].tokens[0].tokenId ?? '-1',
-      isSellOrder: !order.isSellOrder, // sell to this buy order
-
-      attributes: []
-    });
-
-    setOrderDrawerOpen(true);
-  };
-
   const listItemButtonClick = (order: SignedOBOrder, checked: boolean) => {
     if (apiFilter.orderType === 'offers-received') {
-      onClickSell(order);
+      if (checked) {
+        const arr = [...selectedOffers, order];
+        setSelectedOffers(arr);
+
+        if (arr.length === 1) {
+          setShowAcceptOfferDrawer(true);
+        }
+      } else {
+        const arr = selectedOffers.filter((o) => o.id !== order.id);
+        setSelectedOffers(arr);
+
+        if (arr.length === 0) {
+          setShowAcceptOfferDrawer(false);
+        }
+      }
     } else {
       if (checked) {
         const arr = [...selectedOrders, order];
@@ -154,7 +159,6 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
 
         if (arr.length === 0) {
           setShowCancelDrawer(false);
-          setOrderDrawerOpen(false);
         }
       }
     }
@@ -242,6 +246,24 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
           ) : null}
         </div>
       </div>
+
+      <AcceptOfferDrawer
+        orders={selectedOffers}
+        open={showAcceptOfferDrawer}
+        onClose={() => {
+          setShowAcceptOfferDrawer(false);
+          setOrderDrawerOpen(false);
+        }}
+        onClickRemove={(removingOrder) => {
+          const arr = selectedOffers.filter((o) => o.id !== removingOrder.id);
+          setSelectedOffers(arr);
+
+          if (arr.length === 0) {
+            setShowAcceptOfferDrawer(false);
+            setOrderDrawerOpen(false);
+          }
+        }}
+      />
 
       <CancelDrawer
         orders={selectedOrders}
