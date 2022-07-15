@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Heading, PageBox } from 'src/components/common';
 import { StakeTokensModal } from 'src/components/rewards/stake-tokens-modal';
-import { UnstakeTokensModal } from 'src/components/rewards/unstake-tokens';
+import { UnstakeTokensModal } from 'src/components/rewards/unstake-tokens-modal';
 import { UserProfileDto } from 'src/components/user/user-profile-dto';
 import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
 import { isProd, useFetch } from 'src/utils'; // todo: adi remove isProd once curation is ready
