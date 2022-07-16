@@ -21,7 +21,10 @@ import { VoteModal } from 'src/components/curation/vote-modal';
 import { VoteProgressBar } from 'src/components/curation/vote-progress-bar';
 import { CommunityFeed } from 'src/components/feed-list/community-feed';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
+import { BuyNFTDrawer } from 'src/components/market/order-drawer/buy-nft-drawer';
+import { WaitingForTxModal } from 'src/components/market/order-drawer/waiting-for-tx-modal';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
+import { useFetchSignedOBOrder } from 'src/hooks/api/useFetchSignedOBOrder';
 import { ellipsisAddress, getChainScannerBase, isProd, nFormatter } from 'src/utils'; // todo: adi remove isProd once curation is ready
 import { useFetch } from 'src/utils/apiUtils';
 import { useAppContext } from 'src/utils/context/AppContext';
@@ -32,8 +35,9 @@ import { twMerge } from 'tailwind-merge';
 
 const CollectionPage = () => {
   const { user, chainId, checkSignedIn } = useAppContext();
+  const { signedOBOrder, setSignedOBOrder, fetchSignedOBOrder } = useFetchSignedOBOrder();
   const router = useRouter();
-  const { addCartItem, removeCartItem, ordersInCart, cartItems, addOrderToCart, updateOrders, setPrice } =
+  const { addCartItem, removeCartItem, ordersInCart, cartItems, addOrderToCart, updateOrders, setOrderDrawerOpen } =
     useOrderContext();
   const [isBuyClicked, setIsBuyClicked] = useState(false);
   let toggleOptions = [];
@@ -48,6 +52,8 @@ const CollectionPage = () => {
   } = router;
   const { mutate } = useSWRConfig();
   const [isStakeModalOpen, setIsStakeModalOpen] = useState(false);
+  const [showCompleteOrderDrawer, setShowCompleteOrderDrawer] = useState(false);
+  const [completeOrderTxHash, setCompleteOrderTxHash] = useState('');
 
   useEffect(() => {
     if (isBuyClicked === true) {
@@ -342,7 +348,7 @@ const CollectionPage = () => {
                         }
                         return <div className="font-normal">Add to order</div>;
                       },
-                      onClick: (ev, data) => {
+                      onClick: async (ev, data) => {
                         if (!checkSignedIn()) {
                           return;
                         }
@@ -351,21 +357,32 @@ const CollectionPage = () => {
                           return;
                         }
                         const price = data?.orderSnippet?.listing?.orderItem?.startPriceEth ?? 0;
-                        setPrice(`${price}`);
-                        addCartItem({
-                          chainId: data?.chainId as ChainId,
-                          collectionName: data?.collectionName ?? '',
-                          collectionAddress: data?.tokenAddress ?? '',
-                          collectionImage: data?.cardImage ?? data?.image ?? '',
-                          collectionSlug: data?.collectionSlug ?? '',
-                          tokenImage: data?.image ?? '',
-                          tokenName: data?.name ?? '',
-                          tokenId: data?.tokenId ?? '-1',
-                          isSellOrder: false,
-                          attributes: data?.attributes ?? []
-                        });
+                        // setPrice(`${price}`);
+                        // addCartItem...
+
                         if (price) {
-                          setIsBuyClicked(true); // to add to cart as a Buy order. (see: useEffect)
+                          // Buy a listing
+                          // setIsBuyClicked(true); // to add to cart as a Buy order. (see: useEffect)
+                          const signedOBOrder = await fetchSignedOBOrder(
+                            data?.orderSnippet?.listing?.orderItem?.id ?? ''
+                          );
+                          if (signedOBOrder) {
+                            setShowCompleteOrderDrawer(true);
+                          }
+                        } else {
+                          // Add a Buy order to cart (Make offer)
+                          addCartItem({
+                            chainId: data?.chainId as ChainId,
+                            collectionName: data?.collectionName ?? '',
+                            collectionAddress: data?.tokenAddress ?? '',
+                            collectionImage: data?.cardImage ?? data?.image ?? '',
+                            collectionSlug: data?.collectionSlug ?? '',
+                            tokenImage: data?.image ?? '',
+                            tokenName: data?.name ?? '',
+                            tokenId: data?.tokenId ?? '-1',
+                            isSellOrder: false,
+                            attributes: data?.attributes ?? []
+                          });
                         }
                       }
                     }
@@ -384,6 +401,32 @@ const CollectionPage = () => {
             {selected === 'Community' && !isProd() && <CommunityFeed collection={collection} className="mt-32" />}
           </div>
         </main>
+
+        {signedOBOrder && (
+          <BuyNFTDrawer
+            title={'Buy NFT'}
+            submitTitle={'Buy'}
+            orders={[signedOBOrder]}
+            open={showCompleteOrderDrawer}
+            onClose={() => {
+              setShowCompleteOrderDrawer(false);
+              setOrderDrawerOpen(false);
+              setSignedOBOrder(null);
+            }}
+            onSubmitDone={(hash: string) => {
+              setShowCompleteOrderDrawer(false);
+              setOrderDrawerOpen(false);
+              setCompleteOrderTxHash(hash);
+            }}
+          />
+        )}
+        {completeOrderTxHash && (
+          <WaitingForTxModal
+            title={'Buying NFT'}
+            txHash={completeOrderTxHash}
+            onClose={() => setCompleteOrderTxHash('')}
+          />
+        )}
       </div>
     </PageBox>
   );
