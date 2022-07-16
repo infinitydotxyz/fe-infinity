@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useRemainingLockTime } from 'src/hooks/contract/staker/useRemainingLockTime';
 import { useTotalStaked } from 'src/hooks/contract/staker/useTotalStaked';
 import { useUnstake } from 'src/hooks/contract/staker/useUnstake';
-import { toastError } from '../common';
+import { toastError, toastSuccess } from '../common';
 import { Button } from '../common/button';
 import { TextInputBox } from '../common/input-box';
 import { Modal } from '../common/modal';
@@ -30,6 +30,7 @@ export const UnstakeTokensModal = ({ onClose }: Props) => {
       await unstake(value);
       setIsUnstaking(false);
       onClose();
+      toastSuccess('Unstake successfull, change in tokens will reflect shortly.');
     } catch (err) {
       console.error(err);
       setIsUnstaking(false);

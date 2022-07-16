@@ -6,7 +6,7 @@ import { useTokenAllowance } from 'src/hooks/contract/token/useTokenAllowance';
 import { useTokenApprove } from 'src/hooks/contract/token/useTokenApprove';
 import { useTokenBalance } from 'src/hooks/contract/token/useTokenBalance';
 import { twMerge } from 'tailwind-merge';
-import { Heading, toastError } from '../common';
+import { Heading, toastError, toastSuccess } from '../common';
 import { Button } from '../common/button';
 import { TextInputBox } from '../common/input-box';
 import { Modal } from '../common/modal';
@@ -50,6 +50,7 @@ export const StakeTokensModal = ({ onClose }: Props) => {
 
       setIsStaking(false);
       onClose();
+      toastSuccess('Stake successfull, change in tokens will reflect shortly.');
     } catch (err) {
       console.error(err);
       setIsStaking(false);
