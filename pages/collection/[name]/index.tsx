@@ -276,7 +276,7 @@ const CollectionPage = () => {
                 <VoteProgressBar
                   votes={userCurated?.votes || 0}
                   totalVotes={collection.numCuratorVotes || 0}
-                  className="max-w-xs"
+                  className="max-w-[15rem]"
                 />
                 <Button onClick={() => checkSignedIn() && setIsStakeModalOpen(true)} className="font-heading">
                   Vote
