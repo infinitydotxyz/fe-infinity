@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useRemainingLockTime } from 'src/hooks/contract/staker/useRemainingLockTime';
 import { useTotalStaked } from 'src/hooks/contract/staker/useTotalStaked';
+import { useUnstake } from 'src/hooks/contract/staker/useUnstake';
 import { toastError } from '../common';
 import { Button } from '../common/button';
 import { TextInputBox } from '../common/input-box';
@@ -15,8 +16,9 @@ export const UnstakeTokensModal = ({ onClose }: Props) => {
   const [value, setValue] = useState(0);
   const [isUnstaking, setIsUnstaking] = useState(false);
   const { weeks } = useRemainingLockTime();
+  const { unstake } = useUnstake();
 
-  const onUnstake = () => {
+  const onUnstake = async () => {
     if (value === 0) {
       toastError('Please enter a valid unstake amount');
       return;
@@ -24,7 +26,14 @@ export const UnstakeTokensModal = ({ onClose }: Props) => {
 
     setIsUnstaking(true);
 
-    // TODO: unstake
+    try {
+      await unstake(value);
+      setIsUnstaking(false);
+      onClose();
+    } catch (err) {
+      console.error(err);
+      setIsUnstaking(false);
+    }
   };
 
   return (
