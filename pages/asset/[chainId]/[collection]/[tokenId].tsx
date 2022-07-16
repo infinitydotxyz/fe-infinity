@@ -225,6 +225,8 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
 
       {signedOBOrder && (
         <BuyNFTDrawer
+          title="Buy NFT"
+          submitTitle="Buy"
           orders={[signedOBOrder]}
           open={showBuyDrawer}
           onClose={() => {
