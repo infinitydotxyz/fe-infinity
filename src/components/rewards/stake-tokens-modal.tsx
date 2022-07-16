@@ -1,7 +1,7 @@
 import { RadioGroup } from '@headlessui/react';
 import { StakeDuration } from '@infinityxyz/lib-frontend/types/core';
 import React, { useState } from 'react';
-import { useStakerStake } from 'src/hooks/contract/staker/useStakerStake';
+import { useStake } from 'src/hooks/contract/staker/useStake';
 import { useTokenAllowance } from 'src/hooks/contract/token/useTokenAllowance';
 import { useTokenApprove } from 'src/hooks/contract/token/useTokenApprove';
 import { useTokenBalance } from 'src/hooks/contract/token/useTokenBalance';
@@ -29,7 +29,7 @@ export const StakeTokensModal = ({ onClose }: Props) => {
   const [value, setValue] = useState(0);
   const [isStaking, setIsStaking] = useState(false);
   const { balance } = useTokenBalance();
-  const { stake } = useStakerStake();
+  const { stake } = useStake();
   const { approve } = useTokenApprove();
   const { allowance } = useTokenAllowance();
 
