@@ -1,4 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useRemainingLockTime } from 'src/hooks/contract/staker/useRemainingLockTime';
+import { useTotalStaked } from 'src/hooks/contract/staker/useTotalStaked';
+import { toastError } from '../common';
 import { Button } from '../common/button';
 import { TextInputBox } from '../common/input-box';
 import { Modal } from '../common/modal';
@@ -8,37 +11,55 @@ interface Props {
 }
 
 export const UnstakeTokensModal = ({ onClose }: Props) => {
+  const { balance } = useTotalStaked();
+  const [value, setValue] = useState(0);
+  const [isUnstaking, setIsUnstaking] = useState(false);
+  const { weeks } = useRemainingLockTime();
+
+  const onUnstake = () => {
+    if (value === 0) {
+      toastError('Please enter a valid unstake amount');
+      return;
+    }
+
+    setIsUnstaking(true);
+
+    // TODO: unstake
+  };
+
   return (
-    <Modal isOpen={true} onClose={onClose} showActionButtons={false} showCloseIcon={true}>
+    <Modal isOpen={true} onClose={onClose} showActionButtons={false} showCloseIcon={true} wide={false}>
       <div>
         <div className="text-3xl font-medium">Unstake tokens</div>
 
         <div className="mt-12">
           <div className="text-lg mt-10 flex justify-between">
-            <span>Balance</span>
-            <span className="font-heading">4,000</span>
+            <span>Total staked</span>
+            <span className="font-heading">{balance || 0}</span>
           </div>
 
           <div className="mt-10">
             <TextInputBox
               label=""
-              value={''}
+              value={value?.toString()}
               type="text"
-              onChange={() => console.log}
+              onChange={(v) => !isNaN(+v) && +v <= balance && setValue(+v)}
               placeholder="Enter amount to unstake"
               isFullWidth
               renderRightIcon={() => (
-                <Button variant="gray" className="rounded-md py-1">
+                <Button variant="gray" className="rounded-full py-2 px-3" onClick={() => setValue(balance)}>
                   Max
                 </Button>
               )}
             />
           </div>
 
-          <div className="mt-4">Lock time remaining: 19 weeks</div>
+          <div className="mt-4">Lock time remaining: {weeks} weeks</div>
         </div>
 
-        <Button className="w-full py-3 mt-12">Unstake</Button>
+        <Button disabled={isUnstaking} className="w-full py-3 mt-12" onClick={onUnstake}>
+          Unstake
+        </Button>
       </div>
     </Modal>
   );
