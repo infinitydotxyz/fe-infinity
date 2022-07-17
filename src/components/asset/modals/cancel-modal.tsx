@@ -67,7 +67,7 @@ export const CancelModal = ({ isOpen, onClose, collectionAddress, token }: Props
         setIsSubmitting(true);
         const { hash } = await cancelMultipleOrders(signer, chainId, selectedListings);
         setIsSubmitting(false);
-        toastSuccess('Transaction sent to chain');
+        toastSuccess('Sent txn to chain for execution');
         waitForTransaction(hash, () => {
           toastInfo(`Transaction confirmed ${ellipsisAddress(hash)}`);
         });

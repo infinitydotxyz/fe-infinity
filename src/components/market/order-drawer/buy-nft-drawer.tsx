@@ -23,7 +23,7 @@ export const BuyNFTDrawer = ({ open, onClose, orders, onSubmitDone, title, submi
       const signer = providerManager?.getEthersProvider().getSigner();
       if (signer) {
         const { hash } = await takeMultipleOneOrders(signer, chainId, [orders[0].signedOrder]);
-        toastSuccess('Sent txn successfully');
+        toastSuccess('Sent txn to chain for execution');
         waitForTransaction(hash, () => {
           toastInfo(`Transaction confirmed ${ellipsisAddress(hash)}`);
         });

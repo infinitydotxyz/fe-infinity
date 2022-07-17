@@ -23,7 +23,7 @@ export const AcceptOfferDrawer = ({ open, onClose, orders, onClickRemove }: Prop
       if (signer) {
         const chainOrders = orders.map((order) => order.signedOrder);
         const { hash } = await takeMultipleOneOrders(signer, chainId, chainOrders);
-        toastSuccess('Transaction sent to chain');
+        toastSuccess('Sent txn to chain for execution');
         waitForTransaction(hash, () => {
           toastInfo(`Transaction confirmed ${ellipsisAddress(hash)}`);
         });
