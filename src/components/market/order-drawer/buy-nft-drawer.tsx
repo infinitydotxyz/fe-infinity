@@ -48,7 +48,12 @@ export const BuyNFTDrawer = ({ open, onClose, orders, onSubmitDone, title, submi
 
   return (
     <>
-      <Drawer open={open} onClose={onClose} subtitle={''} title={<div className="flex items-center">{title}</div>}>
+      <Drawer
+        open={open}
+        onClose={onClose}
+        subtitle={'Batch buy these NFTs in one transaction'}
+        title={<div className="flex items-center">{title}</div>}
+      >
         <div className="flex flex-col h-full">
           <ul className="overflow-y-auto content-between px-12">
             {orders.map((order: SignedOBOrder, idx) => {
