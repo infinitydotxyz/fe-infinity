@@ -189,7 +189,7 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
                 const minOrderNonce = await fetchOrderNonce(user.address);
                 const { hash } = await cancelAllOrders(signer, chainId, minOrderNonce);
                 setIsCancellingAll(false);
-                toastSuccess('Transaction sent to chain');
+                toastSuccess('Sent txn to chain for execution');
                 waitForTransaction(hash, () => {
                   toastInfo(`Transaction confirmed ${ellipsisAddress(hash)}`);
                 });

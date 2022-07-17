@@ -41,10 +41,14 @@ export const WaitingForTxModal = ({ title, txHash, onClose }: Props) => {
     >
       <div>
         {transactionReceipt ? (
-          <div className="py-6 text-center">Transaction confirmed.</div>
+          transactionReceipt.status === 1 ? (
+            <div className="py-6 text-center">Transaction confirmed</div>
+          ) : (
+            <div className="py-6 text-center">Transaction failed</div>
+          )
         ) : (
           <>
-            <div className="py-6 text-center">Waiting for blockchain confirmation...</div>
+            <div className="py-6 text-center font-heading">Waiting for txn confirmation</div>
             <div className="flex justify-center">
               <Spinner />
             </div>

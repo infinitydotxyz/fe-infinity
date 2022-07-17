@@ -30,7 +30,10 @@ export const OrderDetailModal = ({ order, isOpen, onClose }: Props) => {
 
   return (
     <Modal wide={false} isOpen={isOpen} onClose={onClose} title="Order details" showActionButtons={false}>
-      <div className="text-gray-500">You can buy/sell any ${order.numItems} for the price</div>
+      <div className="text-gray-500">
+        You can {order.isSellOrder ? 'buy' : 'sell'} any {order.numItems} {order.numItems > 1 ? 'items' : 'item'} for
+        the price shown
+      </div>
 
       <div className="my-8">
         {(order?.nfts || []).map((nft, idx) => {
@@ -44,7 +47,7 @@ export const OrderDetailModal = ({ order, isOpen, onClose }: Props) => {
                       className="w-16 h-16 overflow-clip rounded-3xl"
                     />
                     <div className="ml-4">
-                      <div>Collection: {nft.collectionName}</div>
+                      <div>{nft.collectionName}</div>
                       <div className="flex text-gray-500">
                         {token.tokenName || token.tokenId ? `#${token.tokenId}` : ''}
                       </div>

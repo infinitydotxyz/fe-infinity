@@ -20,7 +20,7 @@ type OrderbookRowProps = {
 
 export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.Element => {
   const { user, checkSignedIn } = useAppContext();
-  const { signedOBOrder, setSignedOBOrder, fetchSignedOBOrder } = useFetchSignedOBOrder();
+  const { signedOBOrder, setSignedOBOrder } = useFetchSignedOBOrder();
   const { addCartItem, setOrderDrawerOpen } = useOrderContext();
   const [selectedOrder, setSelectedOrder] = useState<SignedOBOrder | null>(null);
   const [showCompleteOrderDrawer, setShowCompleteOrderDrawer] = useState(false);
@@ -118,7 +118,7 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
     //   const errMsg = extractErrorMsg(err);
     //   toastError(errMsg);
     // }
-    const signedOBOrder = await fetchSignedOBOrder(order.id);
+    const signedOBOrder = order.signedOrder;
     if (signedOBOrder) {
       setShowCompleteOrderDrawer(true);
     }

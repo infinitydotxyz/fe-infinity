@@ -5,7 +5,7 @@ import { MaxUint256 } from '@ethersproject/constants';
 import { Contract } from '@ethersproject/contracts';
 import { JsonRpcSigner } from '@ethersproject/providers';
 import { parseEther } from '@ethersproject/units';
-import { ERC20ABI, ERC721ABI, InfinityExchangeABI } from '@infinityxyz/lib-frontend/abi';
+import { ERC20ABI, ERC721ABI, InfinityExchangeABI, InfinityOBComplicationABI } from '@infinityxyz/lib-frontend/abi';
 import {
   ChainNFTs,
   ChainOBOrder,
@@ -452,6 +452,44 @@ export async function cancelMultipleOrders(signer: JsonRpcSigner, chainId: strin
   return {
     hash: cancelResult?.hash ?? ''
   };
+}
+
+export async function canTakeMultipleOneOrders(
+  signer: JsonRpcSigner,
+  chainId: string,
+  makerOrders: ChainOBOrder[]
+): Promise<'staleOwner' | 'cannotExecute' | 'yes' | 'no'> {
+  try {
+    // check if maker orders are valid and can be executed
+    for (const makerOrder of makerOrders) {
+      const complicationAddress = makerOrder.execParams[0];
+      // todo: adi other complications in future
+      const complication = new Contract(complicationAddress, InfinityOBComplicationABI, signer);
+      const canExec = await complication.canExecTakeOneOrder(makerOrder);
+      if (!canExec) {
+        return 'cannotExecute';
+      }
+
+      // check ownership of nfts while taking sell orders
+      if (makerOrder.isSellOrder) {
+        for (const nft of makerOrder.nfts) {
+          const collectionAddress = nft.collection;
+          for (const token of nft.tokens) {
+            const tokenId = token.tokenId;
+            const erc721 = new Contract(collectionAddress, ERC721ABI, signer);
+            const owner = trimLowerCase(await erc721.ownerOf(tokenId));
+            if (owner !== trimLowerCase(makerOrder.signer)) {
+              return 'staleOwner';
+            }
+          }
+        }
+      }
+    }
+    return 'yes';
+  } catch (e) {
+    console.error('Error checking if can take multiple orders', e);
+    return 'no';
+  }
 }
 
 export async function takeMultipleOneOrders(signer: JsonRpcSigner, chainId: string, makerOrders: ChainOBOrder[]) {

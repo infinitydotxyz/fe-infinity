@@ -2,7 +2,7 @@ import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { Button, Spacer, toastSuccess, toastError, Divider, toastInfo } from 'src/components/common';
 import { ellipsisAddress, extractErrorMsg } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { takeMultipleOneOrders } from 'src/utils/exchange/orders';
+import { canTakeMultipleOneOrders, takeMultipleOneOrders } from 'src/utils/exchange/orders';
 import { Drawer } from '../../common/drawer';
 import { OrderbookItem } from '../orderbook-list/orderbook-item';
 
@@ -22,12 +22,22 @@ export const BuyNFTDrawer = ({ open, onClose, orders, onSubmitDone, title, submi
     try {
       const signer = providerManager?.getEthersProvider().getSigner();
       if (signer) {
-        const { hash } = await takeMultipleOneOrders(signer, chainId, [orders[0].signedOrder]);
-        toastSuccess('Sent txn successfully');
-        waitForTransaction(hash, () => {
-          toastInfo(`Transaction confirmed ${ellipsisAddress(hash)}`);
-        });
-        onSubmitDone(hash);
+        const chainOrders = orders.map((order) => order.signedOrder);
+        const canTakeOrders = await canTakeMultipleOneOrders(signer, chainId, chainOrders);
+        if (canTakeOrders === 'yes') {
+          const { hash } = await takeMultipleOneOrders(signer, chainId, [orders[0].signedOrder]);
+          toastSuccess('Sent txn to chain for execution');
+          waitForTransaction(hash, () => {
+            toastInfo(`Transaction confirmed ${ellipsisAddress(hash)}`);
+          });
+          onSubmitDone(hash);
+        } else if (canTakeOrders === 'staleOwner') {
+          toastError('One or more of these orders have NFTs with stale owner');
+        } else if (canTakeOrders === 'cannotExecute') {
+          toastError('One or more of these orders are invalid/expired');
+        } else {
+          toastError('One or more of these orders cannot be fulfilled');
+        }
       } else {
         throw 'Signer is null';
       }

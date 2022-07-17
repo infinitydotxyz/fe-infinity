@@ -23,7 +23,7 @@ export const CancelDrawer = ({ open, onClose, orders, onClickRemove }: Props) =>
       if (signer) {
         const nonces = orders.map((order) => order.nonce);
         const { hash } = await cancelMultipleOrders(signer, chainId, nonces);
-        toastSuccess('Transaction sent to chain');
+        toastSuccess('Sent txn to chain for execution');
         waitForTransaction(hash, () => {
           toastInfo(`Transaction confirmed ${ellipsisAddress(hash)}`);
         });

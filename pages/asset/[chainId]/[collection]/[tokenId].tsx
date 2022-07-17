@@ -92,7 +92,8 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const [sendTxHash, setSendTxHash] = useState('');
   const [signedOBOrder, setSignedOBOrder] = useState<SignedOBOrder | null>(null);
 
-  const isNftOwner = token ? user?.address === getOwnerAddress(token) : false;
+  const tokenOwner = getOwnerAddress(token);
+  const isNftOwner = token ? user?.address === tokenOwner : false;
   const listingOwner = token?.ordersSnippet?.listing?.orderItem?.makerAddress ?? '';
   const isListingOwner = user?.address === listingOwner;
 
@@ -293,7 +294,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
             {token.hasBlueCheck && <SVG.blueCheck className="h-5 w-5" />}
           </div>
           <ShortAddress
-            label="Contract address:"
+            label="Collection address:"
             address={token.collectionAddress ?? ''}
             href={`https://etherscan.io/address/${token.collectionAddress}`}
             tooltip={token.collectionAddress ?? ''}
@@ -301,6 +302,13 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
           <span className="text-base flex items-center mt-2">
             Token ID: <span className="ml-4 font-heading">#{token.tokenId}</span>
           </span>
+          <ShortAddress
+            className="mt-2"
+            label="Owned by:"
+            address={tokenOwner}
+            href={`https://etherscan.io/address/${tokenOwner}`}
+            tooltip={tokenOwner}
+          />
 
           {isListingOwner ? (
             // Listing owner's action buttons
