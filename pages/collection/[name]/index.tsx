@@ -247,8 +247,8 @@ const CollectionPage = () => {
             </thead>
             <tbody>
               <tr className="font-bold font-heading text-2xl">
-                <td className="pr-20">{nFormatter(firstAllTimeStats?.numNfts) ?? '—'}</td>
-                <td className="pr-20">{nFormatter(firstAllTimeStats?.numOwners) ?? '—'}</td>
+                <td className="pr-20">{nFormatter(firstAllTimeStats?.numNfts ?? currentStats?.numNfts) ?? '—'}</td>
+                <td className="pr-20">{nFormatter(firstAllTimeStats?.numOwners ?? currentStats?.numOwners) ?? '—'}</td>
                 <td className="pr-20">
                   {firstAllTimeStats?.floorPrice ? (
                     <EthPrice
@@ -261,7 +261,10 @@ const CollectionPage = () => {
                 </td>
                 <td className="pr-20">
                   {firstAllTimeStats?.volume ? (
-                    <EthPrice label={`${nFormatter(firstAllTimeStats?.volume)}`} labelClassName="font-bold" />
+                    <EthPrice
+                      label={`${nFormatter(firstAllTimeStats?.volume ?? currentStats?.volume)}`}
+                      labelClassName="font-bold"
+                    />
                   ) : (
                     '—'
                   )}
