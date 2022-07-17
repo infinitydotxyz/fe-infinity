@@ -27,10 +27,8 @@ const DAYS_PER_MONTH = 30;
 export function useRemainingLockTime(address?: string) {
   const { info: stakingInfo = [] } = useGetStakingInfo(address);
   const result = useMemo(() => {
-    const result = {
-      days: 0,
-      weeks: 0
-    };
+    const days = [];
+    const weeks = [];
 
     // Each 'duration' represents a StakeDuration.
     // For example, when i == 0 then i == StakeDuration.X0, when i == 1 then i == StakeDuration.X3, etc.
@@ -47,11 +45,18 @@ export function useRemainingLockTime(address?: string) {
       const diffWeeks = isBefore(now, endDate) ? differenceInWeeks(endDate, now) : 0;
       // console.log({ duration, diffDays, diffWeeks });
 
-      result.days += diffDays;
-      result.weeks += diffWeeks;
+      days.push(diffDays);
+      weeks.push(diffWeeks);
     }
 
-    return result;
+    // We only care about the longest time we still need to wait.
+    // For example, if 11 months ago a user staked for a duration of 12 months
+    // and staked for 3 months yesterday, that means he still needs to wait 3 more more months
+    // and thus the fact that he staked for a big amount of time of 12 months isn't relevant anymore.
+    return {
+      days: Math.max(...days),
+      weeks: Math.max(...weeks)
+    };
   }, [stakingInfo]);
 
   return result;
