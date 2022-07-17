@@ -219,7 +219,7 @@ export const useCollectionCache = () => {
     const collection = CollectionCache.getCollection(chainId, collectionAddress);
 
     if (collection) {
-      return collection.metadata.name;
+      return collection.metadata?.name;
     }
 
     return collectionAddress;
