@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ChainId, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import moment from 'moment';
-import { Button, EthPrice } from 'src/components/common';
+import { Button, EthPrice, toastError } from 'src/components/common';
 import { ellipsisAddress, numStr, shortDate } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { useOrderContext } from 'src/utils/context/OrderContext';
@@ -10,7 +10,6 @@ import { DataColumn, defaultDataColumns } from './data-columns';
 import { OrderbookItem } from './orderbook-item';
 import { OrderDetailModal } from '../OrderDetailModal';
 import { BuyNFTDrawer } from '../order-drawer/buy-nft-drawer';
-import { useFetchSignedOBOrder } from 'src/hooks/api/useFetchSignedOBOrder';
 import { WaitingForTxModal } from '../order-drawer/waiting-for-tx-modal';
 
 type OrderbookRowProps = {
@@ -20,7 +19,6 @@ type OrderbookRowProps = {
 
 export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.Element => {
   const { user, checkSignedIn } = useAppContext();
-  const { signedOBOrder, setSignedOBOrder } = useFetchSignedOBOrder();
   const { addCartItem, setOrderDrawerOpen } = useOrderContext();
   const [selectedOrder, setSelectedOrder] = useState<SignedOBOrder | null>(null);
   const [showCompleteOrderDrawer, setShowCompleteOrderDrawer] = useState(false);
@@ -118,9 +116,11 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
     //   const errMsg = extractErrorMsg(err);
     //   toastError(errMsg);
     // }
-    const signedOBOrder = order.signedOrder;
-    if (signedOBOrder) {
+    const signedOrder = order.signedOrder;
+    if (signedOrder) {
       setShowCompleteOrderDrawer(true);
+    } else {
+      toastError('Order is not signed');
     }
   };
 
@@ -220,16 +220,15 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
         />
       ) : null}
 
-      {signedOBOrder && (
+      {order && (
         <BuyNFTDrawer
           title={order.isSellOrder ? 'Buy Order' : 'Sell Order'}
           submitTitle={order.isSellOrder ? 'Buy' : 'Sell'}
-          orders={[signedOBOrder]}
+          orders={[order]}
           open={showCompleteOrderDrawer}
           onClose={() => {
             setShowCompleteOrderDrawer(false);
             setOrderDrawerOpen(false);
-            setSignedOBOrder(null);
           }}
           onSubmitDone={(hash: string) => {
             setShowCompleteOrderDrawer(false);
