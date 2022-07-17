@@ -1,6 +1,7 @@
 import React from 'react';
 import { ClipboardButton } from 'src/components/common';
 import { ellipsisAddress } from 'src/utils';
+import { twMerge } from 'tailwind-merge';
 
 interface Props {
   address: string;
@@ -8,11 +9,12 @@ interface Props {
   label: string;
   tooltip: string;
   target?: string;
+  className?: string;
 }
 
-export const ShortAddress = ({ address, href, label, tooltip }: Props) => {
+export const ShortAddress = ({ address, href, label, tooltip, className }: Props) => {
   return (
-    <div className="flex items-center">
+    <div className={twMerge('flex items-center', className)}>
       <div>{label}</div>
 
       {/* do we need: target="_self" */}
