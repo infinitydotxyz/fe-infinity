@@ -196,9 +196,9 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
           // assumes parent view has a drawer
           addCartItem({
             chainId: collection?.chainId as ChainId,
-            collectionName: collection?.metadata.name ?? '',
+            collectionName: collection?.metadata?.name ?? '',
             collectionAddress: collection?.address ?? '',
-            collectionImage: collection?.metadata.profileImage ?? '',
+            collectionImage: collection?.metadata?.profileImage ?? '',
             collectionSlug: collection?.slug ?? '',
             isSellOrder: false
           });

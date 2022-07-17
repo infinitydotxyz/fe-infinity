@@ -60,7 +60,7 @@ export const GalleryBox = ({
           chainId,
           getEndpoint ?? '',
           collection?.address ?? '',
-          collection?.metadata.name ?? ''
+          collection?.metadata?.name ?? ''
         )
       );
     }

@@ -151,7 +151,7 @@ export const FeedListItem = ({ activity, onComment }: Props) => {
       <div className="ml-2 flex-1 flex-col items-start">
         <div className="flex items-center">
           <div className="font-bold">
-            <a href={`/collection/${activity.collectionData?.slug}`}>{activity.collectionData?.metadata.name}</a>
+            <a href={`/collection/${activity.collectionData?.slug}`}>{activity.collectionData?.metadata?.name}</a>
           </div>
           {activity.collectionData?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1" /> : null}
 
