@@ -7,13 +7,15 @@ import { Drawer } from '../../common/drawer';
 import { OrderbookItem } from '../orderbook-list/orderbook-item';
 
 interface Props {
+  title: string;
+  submitTitle: string;
   open: boolean;
   onClose: () => void;
   orders: SignedOBOrder[];
   onSubmitDone: (hash: string) => void;
 }
 
-export const BuyNFTDrawer = ({ open, onClose, orders, onSubmitDone }: Props) => {
+export const BuyNFTDrawer = ({ open, onClose, orders, onSubmitDone, title, submitTitle }: Props) => {
   const { providerManager, chainId, waitForTransaction } = useAppContext();
 
   const onClickBuy = async () => {
@@ -36,7 +38,7 @@ export const BuyNFTDrawer = ({ open, onClose, orders, onSubmitDone }: Props) => 
 
   return (
     <>
-      <Drawer open={open} onClose={onClose} subtitle={''} title={<div className="flex items-center">Buy NFT</div>}>
+      <Drawer open={open} onClose={onClose} subtitle={''} title={<div className="flex items-center">{title}</div>}>
         <div className="flex flex-col h-full">
           <ul className="overflow-y-auto content-between px-12">
             {orders.map((order: SignedOBOrder, idx) => {
@@ -57,7 +59,7 @@ export const BuyNFTDrawer = ({ open, onClose, orders, onSubmitDone }: Props) => 
             <Divider className="mb-10" />
 
             <Button size="large" onClick={onClickBuy}>
-              Buy
+              {submitTitle}
             </Button>
           </footer>
         </div>

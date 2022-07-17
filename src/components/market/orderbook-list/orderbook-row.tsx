@@ -1,15 +1,17 @@
 import { useState } from 'react';
 import { ChainId, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import moment from 'moment';
-import { Button, EthPrice, toastError, toastSuccess } from 'src/components/common';
-import { ellipsisAddress, extractErrorMsg, numStr, shortDate } from 'src/utils';
+import { Button, EthPrice } from 'src/components/common';
+import { ellipsisAddress, numStr, shortDate } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { checkOffersToUser, getOrderType } from 'src/utils/marketUtils';
 import { DataColumn, defaultDataColumns } from './data-columns';
 import { OrderbookItem } from './orderbook-item';
 import { OrderDetailModal } from '../OrderDetailModal';
-import { takeMultipleOneOrders } from 'src/utils/exchange/orders';
+import { BuyNFTDrawer } from '../order-drawer/buy-nft-drawer';
+import { useFetchSignedOBOrder } from 'src/hooks/api/useFetchSignedOBOrder';
+import { WaitingForTxModal } from '../order-drawer/waiting-for-tx-modal';
 
 type OrderbookRowProps = {
   order: SignedOBOrder;
@@ -17,9 +19,12 @@ type OrderbookRowProps = {
 };
 
 export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.Element => {
-  const { user, providerManager, checkSignedIn, chainId } = useAppContext();
+  const { user, checkSignedIn } = useAppContext();
+  const { signedOBOrder, setSignedOBOrder, fetchSignedOBOrder } = useFetchSignedOBOrder();
   const { addCartItem, setOrderDrawerOpen } = useOrderContext();
   const [selectedOrder, setSelectedOrder] = useState<SignedOBOrder | null>(null);
+  const [showCompleteOrderDrawer, setShowCompleteOrderDrawer] = useState(false);
+  const [completeOrderTxHash, setCompleteOrderTxHash] = useState('');
 
   const valueDiv = (dataColumn: DataColumn) => {
     let value = order.id;
@@ -101,31 +106,22 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
       return;
     }
     // - direct Buy/Sell:
-    try {
-      const signer = providerManager?.getEthersProvider().getSigner();
-      if (signer) {
-        await takeMultipleOneOrders(signer, chainId, [order.signedOrder]);
-        toastSuccess('Order sent for execution');
-      } else {
-        throw 'Signer is null';
-      }
-    } catch (err) {
-      const errMsg = extractErrorMsg(err);
-      toastError(errMsg);
+    // try {
+    //   const signer = providerManager?.getEthersProvider().getSigner();
+    //   if (signer) {
+    //     await takeMultipleOneOrders(signer, chainId, [order.signedOrder]);
+    //     toastSuccess('Order sent for execution');
+    //   } else {
+    //     throw 'Signer is null';
+    //   }
+    // } catch (err) {
+    //   const errMsg = extractErrorMsg(err);
+    //   toastError(errMsg);
+    // }
+    const signedOBOrder = await fetchSignedOBOrder(order.id);
+    if (signedOBOrder) {
+      setShowCompleteOrderDrawer(true);
     }
-    // setPrice(`${order.startPriceEth}`);
-    // addCartItem({
-    //   chainId: order?.chainId as ChainId,
-    //   collectionName: order?.nfts[0].collectionName ?? '',
-    //   collectionAddress: order?.nfts[0].collectionAddress ?? '',
-    //   collectionImage: order?.nfts[0].collectionImage ?? '',
-    //   collectionSlug: order?.nfts[0].collectionSlug ?? '',
-    //   tokenImage: order?.nfts[0].tokens[0].tokenImage ?? '',
-    //   tokenName: order?.nfts[0].tokens[0].tokenName ?? '',
-    //   tokenId: order?.nfts[0].tokens[0].tokenId ?? '-1',
-    //   isSellOrder,
-    //   attributes: []
-    // });
   };
 
   const isOwner = order.makerAddress === user?.address;
@@ -223,6 +219,32 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
           }}
         />
       ) : null}
+
+      {signedOBOrder && (
+        <BuyNFTDrawer
+          title={order.isSellOrder ? 'Buy Order' : 'Sell Order'}
+          submitTitle={order.isSellOrder ? 'Buy' : 'Sell'}
+          orders={[signedOBOrder]}
+          open={showCompleteOrderDrawer}
+          onClose={() => {
+            setShowCompleteOrderDrawer(false);
+            setOrderDrawerOpen(false);
+            setSignedOBOrder(null);
+          }}
+          onSubmitDone={(hash: string) => {
+            setShowCompleteOrderDrawer(false);
+            setOrderDrawerOpen(false);
+            setCompleteOrderTxHash(hash);
+          }}
+        />
+      )}
+      {completeOrderTxHash && (
+        <WaitingForTxModal
+          title={'Complete Order'}
+          txHash={completeOrderTxHash}
+          onClose={() => setCompleteOrderTxHash('')}
+        />
+      )}
     </div>
   );
 };
