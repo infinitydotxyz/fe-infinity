@@ -142,7 +142,7 @@ const CollectionPage = () => {
     <PageBox showTitle={false} title={collection.metadata?.name ?? ''}>
       <div className="flex flex-col mt-10">
         <span>
-          <AvatarImage url={collection.metadata.profileImage} className="mb-2" />
+          <AvatarImage url={collection.metadata?.profileImage} className="mb-2" />
 
           <div className="flex gap-3 items-center">
             <div className="text-6xl">
@@ -193,15 +193,15 @@ const CollectionPage = () => {
               <LoadingDescription />
             </div>
           ) : (
-            <div className="text-secondary mt-12 md:w-2/3">{collection.metadata.description ?? ''}</div>
+            <div className="text-secondary mt-12 md:w-2/3">{collection.metadata?.description ?? ''}</div>
           )}
 
-          {collection.metadata.benefits && (
+          {collection.metadata?.benefits && (
             <div className="mt-7 md:w-2/3">
               <div className="font-medium">Ownership includes</div>
 
               <div className="flex space-x-8 mt-3 font-normal">
-                {collection.metadata.benefits?.slice(0, 3).map((benefit) => {
+                {collection.metadata?.benefits?.slice(0, 3).map((benefit) => {
                   const benefitStr = benefit.slice(0, 300);
                   return (
                     <div className="flex items-center text-secondary">
@@ -214,12 +214,12 @@ const CollectionPage = () => {
             </div>
           )}
 
-          {collection.metadata.partnerships && (
+          {collection.metadata?.partnerships && (
             <div className="mt-7 md:w-2/3">
               <div className="font-medium">Partnerships</div>
 
               <div className="flex space-x-12 mt-3 ml-2 font-normal">
-                {collection.metadata.partnerships?.slice(0, 3).map((partnership) => {
+                {collection.metadata?.partnerships?.slice(0, 3).map((partnership) => {
                   const partnershipStr = partnership?.name.slice(0, 100);
                   return (
                     <div
