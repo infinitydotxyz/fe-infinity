@@ -1,7 +1,6 @@
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { useState } from 'react';
 import { toastError } from 'src/components/common';
-import { AppErrors } from 'src/utils/context/AppContext';
 import { fetchUserSignedOBOrder } from 'src/utils/marketUtils';
 
 export const useFetchSignedOBOrder = () => {
@@ -13,7 +12,7 @@ export const useFetchSignedOBOrder = () => {
       setSignedOBOrder(signedOBOrder);
       return signedOBOrder;
     } catch (err) {
-      toastError(AppErrors.APP_ERR_FETCH_OB_ORDER);
+      toastError('Failed to fetch signed order');
     }
   };
   return { signedOBOrder, setSignedOBOrder, fetchSignedOBOrder };
