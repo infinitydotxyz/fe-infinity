@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { UserPageOrderListItem } from './user-page-order-list-item';
 import { apiGet, extractErrorMsg, ITEMS_PER_PAGE, ellipsisAddress } from 'src/utils';
-import { Button, CenteredContent, ScrollLoader, Spinner, toastError, toastSuccess } from '../common';
+import { Button, CenteredContent, ScrollLoader, Spinner, toastError, toastInfo, toastSuccess } from '../common';
 import { UserProfileDto } from '../user/user-profile-dto';
 import { CancelDrawer } from 'src/components/market/order-drawer/cancel-drawer';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
@@ -191,7 +191,7 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
                 setIsCancellingAll(false);
                 toastSuccess('Transaction sent to chain');
                 waitForTransaction(hash, () => {
-                  toastSuccess(`Transaction confirmed ${ellipsisAddress(hash)}`);
+                  toastInfo(`Transaction confirmed ${ellipsisAddress(hash)}`);
                 });
               } else {
                 throw 'User is null';

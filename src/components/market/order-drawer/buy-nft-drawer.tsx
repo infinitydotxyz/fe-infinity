@@ -1,32 +1,33 @@
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { Button, SVG, Spacer, toastSuccess, toastError, Divider, toastInfo } from 'src/components/common';
+import { Button, Spacer, toastSuccess, toastError, Divider, toastInfo } from 'src/components/common';
 import { ellipsisAddress, extractErrorMsg } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { cancelMultipleOrders } from 'src/utils/exchange/orders';
-import { iconButtonStyle } from 'src/utils/ui-constants';
+import { takeMultipleOneOrders } from 'src/utils/exchange/orders';
 import { Drawer } from '../../common/drawer';
 import { OrderbookItem } from '../orderbook-list/orderbook-item';
 
 interface Props {
+  title: string;
+  submitTitle: string;
   open: boolean;
   onClose: () => void;
   orders: SignedOBOrder[];
-  onClickRemove: (order: SignedOBOrder) => void;
+  onSubmitDone: (hash: string) => void;
 }
 
-export const CancelDrawer = ({ open, onClose, orders, onClickRemove }: Props) => {
+export const BuyNFTDrawer = ({ open, onClose, orders, onSubmitDone, title, submitTitle }: Props) => {
   const { providerManager, chainId, waitForTransaction } = useAppContext();
 
-  const doCancel = async () => {
+  const onClickBuy = async () => {
     try {
       const signer = providerManager?.getEthersProvider().getSigner();
       if (signer) {
-        const nonces = orders.map((order) => order.nonce);
-        const { hash } = await cancelMultipleOrders(signer, chainId, nonces);
-        toastSuccess('Transaction sent to chain');
+        const { hash } = await takeMultipleOneOrders(signer, chainId, [orders[0].signedOrder]);
+        toastSuccess('Sent txn successfully');
         waitForTransaction(hash, () => {
           toastInfo(`Transaction confirmed ${ellipsisAddress(hash)}`);
         });
+        onSubmitDone(hash);
       } else {
         throw 'Signer is null';
       }
@@ -37,12 +38,7 @@ export const CancelDrawer = ({ open, onClose, orders, onClickRemove }: Props) =>
 
   return (
     <>
-      <Drawer
-        open={open}
-        onClose={onClose}
-        subtitle={'Cancel these orders in one transaction'}
-        title={<div className="flex items-center">Cancel Orders</div>}
-      >
+      <Drawer open={open} onClose={onClose} subtitle={''} title={<div className="flex items-center">{title}</div>}>
         <div className="flex flex-col h-full">
           <ul className="overflow-y-auto content-between px-12">
             {orders.map((order: SignedOBOrder, idx) => {
@@ -52,9 +48,6 @@ export const CancelDrawer = ({ open, onClose, orders, onClickRemove }: Props) =>
                     <div className="flex-1">
                       <OrderbookItem nameItem={true} key={`${order.id} ${order.chainId}`} order={order} />
                     </div>
-                    <button onClick={() => onClickRemove(order)}>
-                      <SVG.grayDelete className={iconButtonStyle} />
-                    </button>
                   </div>
                 </li>
               );
@@ -65,8 +58,8 @@ export const CancelDrawer = ({ open, onClose, orders, onClickRemove }: Props) =>
           <footer className="w-full text-center py-4">
             <Divider className="mb-10" />
 
-            <Button size="large" onClick={doCancel}>
-              Cancel Orders
+            <Button size="large" onClick={onClickBuy}>
+              {submitTitle}
             </Button>
           </footer>
         </div>

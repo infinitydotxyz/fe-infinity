@@ -52,6 +52,10 @@ import { toast as reactToast } from 'react-toastify';
 //   </div>
 // );
 
+export const toastInfo = (message: ReactNode) => {
+  reactToast(message, { type: 'info' });
+};
+
 // Toast a success message - first, include <Toaster /> in JSX.
 export const toastSuccess = (message: ReactNode) => {
   // toast.custom((t) => (

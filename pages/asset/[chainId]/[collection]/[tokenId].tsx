@@ -1,4 +1,4 @@
-import { Collection, Erc721Metadata, OBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
+import { Collection, Erc721Metadata, OBOrder, SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
 import { getCurrentOBOrderPrice } from '@infinityxyz/lib-frontend/utils';
 import { utils } from 'ethers';
 import { useRouter } from 'next/router';
@@ -16,15 +16,17 @@ import {
   ShortAddress,
   Spinner,
   SVG,
-  toastSuccess,
+  toastError,
   ToggleTab,
   useToggleTab
 } from 'src/components/common';
+import { BuyNFTDrawer } from 'src/components/market/order-drawer/buy-nft-drawer';
 import { WaitingForTxModal } from 'src/components/market/order-drawer/waiting-for-tx-modal';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
 import { ellipsisAddress, getOwnerAddress, MISSING_IMAGE_URL, useFetch } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { getOBOrderFromFirestoreOrderItem, takeMultipleOneOrders } from 'src/utils/exchange/orders';
+import { getOBOrderFromFirestoreOrderItem } from 'src/utils/exchange/orders';
+import { useOrderContext } from 'src/utils/context/OrderContext';
 import { fetchUserSignedOBOrder } from 'src/utils/marketUtils';
 
 const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
@@ -75,7 +77,8 @@ interface Props {
 }
 
 const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
-  const { checkSignedIn, user, providerManager, chainId } = useAppContext();
+  const { checkSignedIn, user } = useAppContext();
+  const { setOrderDrawerOpen } = useOrderContext();
   const { isLoading, error, token, collection } = useFetchAssetInfo(qchainId, qcollection, qtokenId);
   const { options, onChange, selected } = useToggleTab(['Activity', 'Orders'], 'Activity');
 
@@ -83,8 +86,11 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const [showLowerPriceModal, setShowLowerPriceModal] = useState(false);
   const [showSendModal, setShowSendModal] = useState(false);
   const [showMakeOfferModal, setShowMakeOfferModal] = useState(false);
+  const [showBuyDrawer, setShowBuyDrawer] = useState(false);
+  const [buyTxHash, setBuyTxHash] = useState('');
   const [buyPriceEth, setBuyPriceEth] = useState('');
   const [sendTxHash, setSendTxHash] = useState('');
+  const [signedOBOrder, setSignedOBOrder] = useState<SignedOBOrder | null>(null);
 
   const isNftOwner = token ? user?.address === getOwnerAddress(token) : false;
   const listingOwner = token?.ordersSnippet?.listing?.orderItem?.makerAddress ?? '';
@@ -216,34 +222,55 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
           buyPriceEth={buyPriceEth}
         />
       )}
+
+      {signedOBOrder && (
+        <BuyNFTDrawer
+          title="Buy NFT"
+          submitTitle="Buy"
+          orders={[signedOBOrder]}
+          open={showBuyDrawer}
+          onClose={() => {
+            setShowBuyDrawer(false);
+            setOrderDrawerOpen(false);
+          }}
+          onSubmitDone={(hash: string) => {
+            setShowBuyDrawer(false);
+            setOrderDrawerOpen(false);
+            setBuyTxHash(hash);
+          }}
+        />
+      )}
+
+      {buyTxHash && <WaitingForTxModal title={'Buying NFT'} txHash={buyTxHash} onClose={() => setBuyTxHash('')} />}
     </>
   );
 
+  const fetchSignedOBOrder = async () => {
+    try {
+      const signedOBOrder = await fetchUserSignedOBOrder(token?.ordersSnippet?.listing?.orderItem?.id);
+      setSignedOBOrder(signedOBOrder);
+      return signedOBOrder;
+    } catch (err) {
+      toastError(`Failed to fetch order`);
+    }
+  };
+
   const onClickBuy = async () => {
     // - direct buy:
-    const signer = providerManager?.getEthersProvider().getSigner();
-    if (signer) {
-      const order = await fetchUserSignedOBOrder(token?.ordersSnippet?.listing?.orderItem?.id);
-      if (order) {
-        await takeMultipleOneOrders(signer, chainId, [order.signedOrder]);
-        toastSuccess('Sent txn successfully');
-      }
-    } else {
-      throw 'Signer is null';
+    // const signer = providerManager?.getEthersProvider().getSigner();
+    // if (signer) {
+    //   const order = await fetchUserSignedOBOrder(token?.ordersSnippet?.listing?.orderItem?.id);
+    //   if (order) {
+    //     await takeMultipleOneOrders(signer, chainId, [order.signedOrder]);
+    //     toastSuccess('Sent txn successfully');
+    //   }
+    // } else {
+    //   throw 'Signer is null';
+    // }
+    const signedOBOrder = await fetchSignedOBOrder();
+    if (signedOBOrder) {
+      setShowBuyDrawer(true);
     }
-    // setPrice(`${buyPriceEth}`);
-    // addCartItem({
-    //   chainId: token?.chainId as ChainId,
-    //   collectionName: token?.collectionName ?? '',
-    //   collectionAddress: token?.collectionAddress ?? '',
-    //   collectionImage: token?.image?.url ?? '',
-    //   collectionSlug: token?.collectionSlug ?? '',
-    //   tokenImage: token?.image?.url ?? '',
-    //   tokenName: token?.tokenId ?? '',
-    //   tokenId: token?.tokenId ?? '-1',
-    //   isSellOrder: false,
-    //   attributes: []
-    // });
   };
 
   return (

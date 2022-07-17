@@ -472,7 +472,10 @@ export async function takeMultipleOneOrders(signer: JsonRpcSigner, chainId: stri
       value: totalPrice,
       gasLimit
     };
-    await infinityExchange.takeMultipleOneOrders(makerOrders, options);
+    const result = await infinityExchange.takeMultipleOneOrders(makerOrders, options);
+    return {
+      hash: result?.hash ?? ''
+    };
   } else {
     // approve ERC721
     const user = await signer.getAddress();
@@ -487,7 +490,9 @@ export async function takeMultipleOneOrders(signer: JsonRpcSigner, chainId: stri
       await signer.provider?.waitForTransaction(hash);
     }
     const result = await infinityExchange.takeMultipleOneOrders(makerOrders, { gasLimit });
-    return result;
+    return {
+      hash: result?.hash ?? ''
+    };
   }
 }
 
