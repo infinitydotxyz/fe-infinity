@@ -37,6 +37,9 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
 
   // for collection search:
   const fetchOrderCollections = async () => {
+    if (!collectionSearch) {
+      return;
+    }
     setCollections([]);
     setCollectionSearchLoading(true);
     const { result, error } = await apiGet(`/orders/${userInfo.address}/collections`, {
@@ -143,7 +146,7 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
           />
         </div>
 
-        <ul className="mt-8 w-full min-h-[100px] max-h-80 overflow-y-auto space-y-4">
+        <ul className="mt-8 w-full max-h-80 overflow-y-auto space-y-4">
           {selectedCollections.map((coll, idx) => (
             <CollectionCheckbox key={`${idx} ${coll.collectionAddress}`} collection={coll} />
           ))}
@@ -163,7 +166,7 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
         </ul>
       </div>
 
-      <hr className="mt-8" />
+      <hr />
       <div className="text-lg mt-6 font-heading">Price</div>
       <div className="flex mt-4 mb-6">
         <TextInputBox
