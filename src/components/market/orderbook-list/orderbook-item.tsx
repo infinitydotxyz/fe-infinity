@@ -80,7 +80,7 @@ const MultiCollectionCell = ({ nfts, onClick }: MultiCollectionCellProps) => {
           return (
             <EZImage
               key={nft.collectionAddress}
-              className="inline-block h-12 w-12 rounded-2xl overflow-clip"
+              className="inline-block h-12 w-12 rounded-2xl overflow-clip ring-2 ring-white bg-white"
               src={nft.collectionImage}
             />
           );
