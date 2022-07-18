@@ -13,7 +13,7 @@ export const ActivityItem = ({ event }: Props) => {
     <div>
       <div className="bg-gray-100 px-10 py-6 rounded-3xl flex items-center font-heading">
         <NextLink href={`/asset/${event.chainId}/${event.collectionAddress}/${event.tokenId}`}>
-          <EZImage className="w-16 h-16 max-h-[80px] rounded-full" src={event.image} />
+          <EZImage className="w-16 h-16 max-h-[80px] rounded-2xl" src={event.image} />
         </NextLink>
         <div className="flex justify-between w-full mx-8">
           <div className="w-1/6">

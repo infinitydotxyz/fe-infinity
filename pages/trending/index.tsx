@@ -161,7 +161,7 @@ const TrendingPage = () => {
           return (
             <div key={coll.address} className="bg-gray-100 px-10 h-[110px] rounded-3xl flex items-center font-heading">
               <NextLink href={`/collection/${coll?.slug}`}>
-                <EZImage className="w-16 h-16 rounded-full overflow-clip" src={coll?.metadata?.profileImage} />
+                <EZImage className="w-16 h-16 rounded-2xl overflow-clip" src={coll?.metadata?.profileImage} />
               </NextLink>
 
               <div className="flex justify-between items-center w-full ml-6">

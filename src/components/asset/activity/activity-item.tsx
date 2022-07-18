@@ -20,7 +20,7 @@ export const ActivityItem = ({ item }: Props) => {
     <div>
       <div className="bg-gray-100 px-10 py-6 rounded-3xl flex items-center font-heading mt-4">
         <NextLink href={`/asset/${item.chainId}/${item.collectionData?.address}/${item.tokenId}`}>
-          <EZImage className="w-16 h-16 max-h-[80px] rounded-full" src={item.collectionData?.metadata?.profileImage} />
+          <EZImage className="w-16 h-16 max-h-[80px] rounded-2xl" src={item.collectionData?.metadata?.profileImage} />
         </NextLink>
         <div className="flex justify-between w-full mx-8">
           {/* <div className="w-1/6">
