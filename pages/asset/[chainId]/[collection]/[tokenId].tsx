@@ -306,7 +306,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
             className="mt-2"
             label="Owned by:"
             address={tokenOwner}
-            href={`https://etherscan.io/address/${tokenOwner}`}
+            href={`https://infinity.xyz/profile/${tokenOwner}`}
             tooltip={tokenOwner}
           />
 
