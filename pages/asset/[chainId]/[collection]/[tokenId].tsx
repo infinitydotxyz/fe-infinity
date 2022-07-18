@@ -92,22 +92,18 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const [buyPriceEth, setBuyPriceEth] = useState('');
   const [sendTxHash, setSendTxHash] = useState('');
   const [signedOBOrder, setSignedOBOrder] = useState<SignedOBOrder | null>(null);
-  const [offers, setOffers] = useState<SignedOBOrder[]>([]);
+  const [offer, setOffer] = useState<SignedOBOrder | null>(null);
   const [showAcceptOfferDrawer, setShowAcceptOfferDrawer] = useState(false);
 
   const tokenOwner = getOwnerAddress(token);
   const isNftOwner = token ? user?.address === tokenOwner : false;
   const listingOwner = token?.ordersSnippet?.listing?.orderItem?.makerAddress ?? '';
   const isListingOwner = user?.address === listingOwner;
+  const offerPrice = token?.ordersSnippet?.offer?.orderItem?.startPriceEth ?? '';
 
-  // fetch offers made to this NFT owner
-  const useFetchOffersMadeToOwner = async (collection: string, tokenId: string, owner: string) => {
-    if (!owner) {
-      return;
-    }
-    const NFT_OFFERS_ENDPOINT = `/orders/${owner}?limit=1&minPrice=0.000001&orderByDirection=desc&takerAddress=${owner}&collectionAddress=${collection}&tokenId=${tokenId}&isSellOrder=false`;
-    const { result } = await apiGet(NFT_OFFERS_ENDPOINT);
-    setOffers(result?.data ?? []);
+  const fetchSignedOfferOrder = async () => {
+    const signedOfferOrder = await fetchUserSignedOBOrder(token?.ordersSnippet?.offer?.orderItem?.id);
+    setOffer(signedOfferOrder);
   };
 
   useEffect(() => {
@@ -116,7 +112,9 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
       const price = getCurrentOBOrderPrice(obOrder);
       setBuyPriceEth(utils.formatEther(price));
     }
-    useFetchOffersMadeToOwner(qcollection, qtokenId, tokenOwner);
+    if (token?.ordersSnippet?.offer?.orderItem) {
+      fetchSignedOfferOrder();
+    }
   }, [token]);
 
   if (token?.image?.url) {
@@ -257,9 +255,9 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
       )}
       {buyTxHash && <WaitingForTxModal title={'Buying NFT'} txHash={buyTxHash} onClose={() => setBuyTxHash('')} />}
 
-      {offers.length > 0 ? (
+      {offer ? (
         <AcceptOfferDrawer
-          orders={[offers[0]]}
+          orders={[offer]}
           open={showAcceptOfferDrawer}
           onClose={() => {
             setShowAcceptOfferDrawer(false);
@@ -354,7 +352,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
                     <Button variant="outline" size="large" onClick={onClickLowerPrice}>
                       Lower Price
                     </Button>
-                    {offers.length > 0 ? (
+                    {offer ? (
                       <Button
                         variant="outline"
                         size="large"
@@ -362,8 +360,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
                         onClick={() => setShowAcceptOfferDrawer(true)}
                       >
                         <div className="flex">
-                          Accept Offer{' '}
-                          <EthPrice label={`${offers[0].startPriceEth}`} className="ml-2" rowClassName="" />
+                          Accept Offer <EthPrice label={`${offerPrice}`} className="ml-2" rowClassName="" />
                         </div>
                       </Button>
                     ) : null}
