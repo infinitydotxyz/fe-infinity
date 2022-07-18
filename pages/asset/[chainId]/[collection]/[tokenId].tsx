@@ -23,28 +23,25 @@ import {
 import { BuyNFTDrawer } from 'src/components/market/order-drawer/buy-nft-drawer';
 import { WaitingForTxModal } from 'src/components/market/order-drawer/waiting-for-tx-modal';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
-import { ellipsisAddress, getOwnerAddress, MISSING_IMAGE_URL, useFetch } from 'src/utils';
+import { apiGet, ellipsisAddress, getOwnerAddress, MISSING_IMAGE_URL, useFetch } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { getOBOrderFromFirestoreOrderItem } from 'src/utils/exchange/orders';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { fetchUserSignedOBOrder } from 'src/utils/marketUtils';
 import { AcceptOfferDrawer } from 'src/components/market/order-drawer/accept-offer-drawer';
 
-const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string, userAddress: string) => {
+const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
   const COL_API_ENDPOINT = `/collections/${chainId}:${collection}`;
-  const NFT_OFFERS_ENDPOINT = `/orders/${userAddress}?limit=1&minPrice=0.000001&orderByDirection=desc&takerAddress=${userAddress}&collectionAddress=${collection}&tokenId=${tokenId}&isSellOrder=false`;
 
   const tokenResponse = useFetch<Token>(NFT_API_ENDPOINT);
   const collectionResponse = useFetch<Collection>(COL_API_ENDPOINT);
-  const offersResponse = useFetch<{ data: SignedOBOrder[] }>(NFT_OFFERS_ENDPOINT);
 
   return {
     isLoading: tokenResponse.isLoading,
     error: tokenResponse.error,
     token: tokenResponse.result,
-    collection: collectionResponse.result,
-    offers: offersResponse.result?.data ?? []
+    collection: collectionResponse.result
   };
 };
 
@@ -83,12 +80,7 @@ interface Props {
 const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const { checkSignedIn, user } = useAppContext();
   const { setOrderDrawerOpen } = useOrderContext();
-  const { isLoading, error, token, collection, offers } = useFetchAssetInfo(
-    qchainId,
-    qcollection,
-    qtokenId,
-    user?.address ?? ''
-  );
+  const { isLoading, error, token, collection } = useFetchAssetInfo(qchainId, qcollection, qtokenId);
   const { options, onChange, selected } = useToggleTab(['Activity', 'Orders'], 'Activity');
 
   const [showCancelModal, setShowCancelModal] = useState(false);
@@ -100,6 +92,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const [buyPriceEth, setBuyPriceEth] = useState('');
   const [sendTxHash, setSendTxHash] = useState('');
   const [signedOBOrder, setSignedOBOrder] = useState<SignedOBOrder | null>(null);
+  const [offers, setOffers] = useState<SignedOBOrder[]>([]);
   const [showAcceptOfferDrawer, setShowAcceptOfferDrawer] = useState(false);
 
   const tokenOwner = getOwnerAddress(token);
@@ -107,12 +100,23 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const listingOwner = token?.ordersSnippet?.listing?.orderItem?.makerAddress ?? '';
   const isListingOwner = user?.address === listingOwner;
 
+  // fetch offers made to this NFT owner
+  const useFetchOffersMadeToOwner = async (collection: string, tokenId: string, owner: string) => {
+    if (!owner) {
+      return;
+    }
+    const NFT_OFFERS_ENDPOINT = `/orders/${owner}?limit=1&minPrice=0.000001&orderByDirection=desc&takerAddress=${owner}&collectionAddress=${collection}&tokenId=${tokenId}&isSellOrder=false`;
+    const { result } = await apiGet(NFT_OFFERS_ENDPOINT);
+    setOffers(result?.data ?? []);
+  };
+
   useEffect(() => {
     if (token?.ordersSnippet?.listing?.orderItem) {
       const obOrder: OBOrder = getOBOrderFromFirestoreOrderItem(token?.ordersSnippet?.listing?.orderItem);
       const price = getCurrentOBOrderPrice(obOrder);
       setBuyPriceEth(utils.formatEther(price));
     }
+    useFetchOffersMadeToOwner(qcollection, qtokenId, tokenOwner);
   }, [token]);
 
   if (token?.image?.url) {
@@ -253,7 +257,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
       )}
       {buyTxHash && <WaitingForTxModal title={'Buying NFT'} txHash={buyTxHash} onClose={() => setBuyTxHash('')} />}
 
-      {offers && offers.length > 0 ? (
+      {offers.length > 0 ? (
         <AcceptOfferDrawer
           orders={[offers[0]]}
           open={showAcceptOfferDrawer}
@@ -350,7 +354,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
                     <Button variant="outline" size="large" onClick={onClickLowerPrice}>
                       Lower Price
                     </Button>
-                    {offers && offers.length > 0 ? (
+                    {offers.length > 0 ? (
                       <Button
                         variant="outline"
                         size="large"
