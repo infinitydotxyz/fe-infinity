@@ -31,8 +31,8 @@ export const OrderDetailModal = ({ order, isOpen, onClose }: Props) => {
   return (
     <Modal wide={false} isOpen={isOpen} onClose={onClose} title="Order details" showActionButtons={false}>
       <div className="text-gray-500">
-        You can {order.isSellOrder ? 'buy' : 'sell (if you own enough)'} any {order.numItems}{' '}
-        {order.numItems > 1 ? 'items' : 'item'} for the price shown
+        Any {order.numItems} {order.numItems > 1 ? 'items' : 'item'} can be{' '}
+        {order.isSellOrder ? 'bought' : 'sold (if you own enough)'} for the given price.
       </div>
 
       <div className="my-8">
