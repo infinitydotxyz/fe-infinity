@@ -1,4 +1,10 @@
-import { Collection, Erc721Metadata, OBOrder, SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
+import {
+  CollectionAttributes,
+  Erc721Metadata,
+  OBOrder,
+  SignedOBOrder,
+  Token
+} from '@infinityxyz/lib-frontend/types/core';
 import { getCurrentOBOrderPrice } from '@infinityxyz/lib-frontend/utils';
 import { utils } from 'ethers';
 import { useRouter } from 'next/router';
@@ -31,16 +37,15 @@ import { fetchUserSignedOBOrder } from 'src/utils/marketUtils';
 
 const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
-  const COL_API_ENDPOINT = `/collections/${chainId}:${collection}`;
-
+  const COLLECTION_ATTRIBUTES_API_ENDPOINT = `/collections/${chainId}:${collection}/attributes`;
   const tokenResponse = useFetch<Token>(NFT_API_ENDPOINT);
-  const collectionResponse = useFetch<Collection>(COL_API_ENDPOINT);
+  const collectionAttributes = useFetch<CollectionAttributes>(COLLECTION_ATTRIBUTES_API_ENDPOINT);
 
   return {
     isLoading: tokenResponse.isLoading,
     error: tokenResponse.error,
     token: tokenResponse.result,
-    collection: collectionResponse.result
+    collectionAttributes: collectionAttributes.result
   };
 };
 
@@ -79,7 +84,7 @@ interface Props {
 const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const { checkSignedIn, user } = useAppContext();
   const { setOrderDrawerOpen } = useOrderContext();
-  const { isLoading, error, token, collection } = useFetchAssetInfo(qchainId, qcollection, qtokenId);
+  const { isLoading, error, token, collectionAttributes } = useFetchAssetInfo(qchainId, qcollection, qtokenId);
   const { options, onChange, selected } = useToggleTab(['Activity', 'Orders'], 'Activity');
 
   const [showCancelModal, setShowCancelModal] = useState(false);
@@ -372,9 +377,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
           ) : null}
         </div>
       </div>
-
-      <TraitList traits={tokenMetadata.attributes ?? []} collectionTraits={collection?.attributes} />
-
+      <TraitList traits={tokenMetadata.attributes ?? []} collectionTraits={collectionAttributes ?? {}} />
       <div className="relative min-h-[1024px]">
         <ToggleTab
           className="flex space-x-2 items-center relative max-w-xl top-[65px] pb-4 lg:pb-0 font-heading"
@@ -399,7 +402,6 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
           </div>
         )}
       </div>
-
       {modals}
     </PageBox>
   );

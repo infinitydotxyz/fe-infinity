@@ -1,4 +1,4 @@
-import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
+import { CollectionAttributes } from '@infinityxyz/lib-frontend/types/core';
 import { useState } from 'react';
 import { Filter, OrderType, useFilterContext } from 'src/utils/context/FilterContext';
 import { Button, Checkbox, TextInputBox } from 'src/components/common';
@@ -6,14 +6,14 @@ import { TraitSelection } from './trait-selection';
 import CollectionFilter from '../gallery/collection-filter';
 
 interface Props {
-  collection?: BaseCollection;
   collectionAddress?: string;
   showFilterSections?: string[];
   userAddress?: string; // for User's Collection Filter
   className?: string;
+  collectionAttributes?: CollectionAttributes;
 }
 
-export const FilterPanel = ({ collection, collectionAddress, showFilterSections, className }: Props) => {
+export const FilterPanel = ({ collectionAddress, showFilterSections, className, collectionAttributes }: Props) => {
   const { filterState, setFilterState } = useFilterContext();
   const [minPriceVal, setMinPriceVal] = useState('');
   const [maxPriceVal, setMaxPriceVal] = useState('');
@@ -133,11 +133,11 @@ export const FilterPanel = ({ collection, collectionAddress, showFilterSections,
 
       <hr className="mt-8" />
 
-      {collection?.attributes && Object.keys(collection?.attributes).length > 0 ? (
+      {collectionAttributes && Object.keys(collectionAttributes).length > 0 ? (
         <>
           <div className="text-lg mt-6 mb-7 font-heading">Properties</div>
           <TraitSelection
-            traits={collection?.attributes}
+            traits={collectionAttributes}
             collectionAddress={collectionAddress}
             onChange={(traitTypes, traitValues) => {
               const newFilter: Filter = { ...filterState };
