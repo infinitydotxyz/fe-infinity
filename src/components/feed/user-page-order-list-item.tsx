@@ -45,7 +45,7 @@ export const UserPageOrderListItem = ({ order, orderType, onClickActionBtn: onCl
           </div>
           <div className="w-1/8">
             <div className="text-gray-400"># NFTs</div>
-            <div className="font-bold">{order.nfts.length}</div>
+            <div className="font-bold">{order.numItems}</div>
           </div>
           <div className="w-1/8">
             <div className="text-gray-400">Expiry</div>
