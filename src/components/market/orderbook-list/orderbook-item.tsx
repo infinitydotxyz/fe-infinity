@@ -37,7 +37,6 @@ export const OrderbookItem = ({ title, content, nameItem, order, onClick }: Prop
         );
       } else {
         // multiple items from one collection
-
         return (
           <SingleCollectionCell
             order={order}
@@ -56,7 +55,7 @@ export const OrderbookItem = ({ title, content, nameItem, order, onClick }: Prop
 
     // multiple collections
     if (order.nfts.length > 1) {
-      return <MultiCollectionCell nfts={order.nfts} />;
+      return <MultiCollectionCell nfts={order.nfts} onClick={onClick} />;
     }
   }
 
@@ -75,13 +74,13 @@ type MultiCollectionCellProps = {
 
 const MultiCollectionCell = ({ nfts, onClick }: MultiCollectionCellProps) => {
   return (
-    <div className="flex gap-2 items-center" onClick={onClick}>
+    <div className="flex gap-2 items-center hover:cursor-pointer" onClick={onClick}>
       <div className="flex -space-x-8 overflow-hidden">
         {nfts.map((nft: OBOrderItem) => {
           return (
             <EZImage
               key={nft.collectionAddress}
-              className="inline-block h-12 w-12 rounded-2xl overflow-clip ring-2 ring-white bg-white"
+              className="inline-block h-12 w-12 rounded-2xl overflow-clip"
               src={nft.collectionImage}
             />
           );

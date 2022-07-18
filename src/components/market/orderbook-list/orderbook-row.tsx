@@ -4,7 +4,7 @@ import moment from 'moment';
 import { Button, EthPrice, toastError } from 'src/components/common';
 import { ellipsisAddress, numStr, shortDate } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { useOrderContext } from 'src/utils/context/OrderContext';
+import { OrderCartItem, useOrderContext } from 'src/utils/context/OrderContext';
 import { checkOffersToUser, getOrderType } from 'src/utils/marketUtils';
 import { DataColumn, defaultDataColumns } from './data-columns';
 import { OrderbookItem } from './orderbook-item';
@@ -82,19 +82,61 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
     }
   });
 
+  const getCartItem = (order: SignedOBOrder): OrderCartItem => {
+    const cartItem: OrderCartItem = {
+      chainId: order?.chainId as ChainId,
+      isSellOrder: order?.isSellOrder ?? false
+    };
+
+    // one collection
+    if (order.nfts.length === 1) {
+      const nft = order.nfts[0];
+      // one item from one collection
+      if (nft.tokens.length === 1) {
+        const token = nft.tokens[0];
+        cartItem.tokenId = token.tokenId;
+        cartItem.tokenName = token.tokenName;
+        cartItem.tokenImage = token.tokenImage;
+        cartItem.collectionName = nft.collectionName;
+        cartItem.collectionAddress = nft.collectionAddress;
+        cartItem.collectionImage = nft.collectionImage;
+        cartItem.collectionSlug = nft.collectionSlug;
+        cartItem.attributes = token.attributes;
+        cartItem.hasBlueCheck = nft.hasBlueCheck;
+      } else {
+        // multiple items from one collection
+        cartItem.collectionName = nft.collectionName;
+        cartItem.collectionAddress = nft.collectionAddress;
+        cartItem.collectionImage = nft.collectionImage;
+        cartItem.collectionSlug = nft.collectionSlug;
+        cartItem.hasBlueCheck = nft.hasBlueCheck;
+      }
+    }
+
+    // multiple collections
+    if (order.nfts.length > 1) {
+      // todo: steve handle this better
+      const nft = order.nfts[0];
+      cartItem.collectionName = `${order.nfts.length} Collections`;
+      cartItem.collectionImage = nft.collectionImage;
+    }
+
+    return cartItem;
+  };
+
+  const onClickEdit = (order: SignedOBOrder) => {
+    addCartItem(getCartItem(order));
+    setOrderDrawerOpen(true);
+  };
+
   const onClickBidHigher = (order: SignedOBOrder) => {
     // add to Cart as a New Buy Order:
+    // todo: steve - addCartItem needs to know whether order is a single collection single nft order
+    // or single collection multi nft order  or a multi-collection order for proper image display
+    const cartItem = getCartItem(order);
     addCartItem({
-      chainId: order?.chainId as ChainId,
-      collectionName: order?.nfts[0].collectionName ?? '',
-      collectionAddress: order?.nfts[0].collectionAddress ?? '',
-      collectionImage: order?.nfts[0].collectionImage ?? '',
-      collectionSlug: order?.nfts[0].collectionSlug ?? '',
-      tokenImage: order?.nfts[0].tokens[0].tokenImage ?? '',
-      tokenName: order?.nfts[0].tokens[0].tokenName ?? '',
-      tokenId: order?.nfts[0].tokens[0].tokenId ?? '-1',
-      isSellOrder: false,
-      attributes: []
+      ...cartItem,
+      isSellOrder: false
     });
     setOrderDrawerOpen(true);
   };
@@ -136,7 +178,11 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
 
           if (data.field === 'buyOrSell') {
             if (isOwner) {
-              return null;
+              return (
+                <Button className="w-32" key={`${order.id} ${data.field}`} onClick={() => onClickEdit(order)}>
+                  Edit
+                </Button>
+              );
             }
             const isOfferToUser = checkOffersToUser(order, user);
             if (order.isSellOrder) {
@@ -187,7 +233,12 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
       <div className="flex items-center w-full lg:hidden">
         <div className="flex flex-col w-full">
           <div className="mr-4">
-            <OrderbookItem nameItem={true} key={`${order.id} ${order.chainId}`} order={order} />
+            <OrderbookItem
+              nameItem={true}
+              key={`${order.id} ${order.chainId}`}
+              order={order}
+              onClick={() => setSelectedOrder(order)}
+            />
           </div>
           <div className="flex flex-col">
             <div>{order.isSellOrder ? 'Listing' : 'Offer'}</div>
