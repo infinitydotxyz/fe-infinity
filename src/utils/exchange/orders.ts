@@ -458,7 +458,7 @@ export async function canTakeMultipleOneOrders(
   signer: JsonRpcSigner,
   chainId: string,
   makerOrders: ChainOBOrder[]
-): Promise<'staleOwner' | 'cannotExecute' | 'yes' | 'no'> {
+): Promise<'staleOwner' | 'cannotExecute' | 'yes' | 'no' | 'notOwner'> {
   try {
     // check if maker orders are valid and can be executed
     for (const makerOrder of makerOrders) {
@@ -471,6 +471,7 @@ export async function canTakeMultipleOneOrders(
       }
 
       // check ownership of nfts while taking sell orders
+      const currentUser = trimLowerCase(await signer.getAddress());
       if (makerOrder.isSellOrder) {
         for (const nft of makerOrder.nfts) {
           const collectionAddress = nft.collection;
@@ -478,8 +479,11 @@ export async function canTakeMultipleOneOrders(
             const tokenId = token.tokenId;
             const erc721 = new Contract(collectionAddress, ERC721ABI, signer);
             const owner = trimLowerCase(await erc721.ownerOf(tokenId));
-            if (owner !== trimLowerCase(makerOrder.signer)) {
+            if (makerOrder.isSellOrder && owner !== trimLowerCase(makerOrder.signer)) {
               return 'staleOwner';
+            }
+            if (!makerOrder.isSellOrder && owner !== currentUser) {
+              return 'notOwner';
             }
           }
         }
