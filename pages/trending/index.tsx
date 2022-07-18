@@ -2,17 +2,7 @@ import { ChainId, Collection, CollectionPeriodStatsContent } from '@infinityxyz/
 import { useRouter } from 'next/router';
 import { parse } from 'query-string';
 import { Fragment, useEffect, useState } from 'react';
-import {
-  Button,
-  Dropdown,
-  EthPrice,
-  EZImage,
-  NextLink,
-  PageBox,
-  SVG,
-  ToggleTab,
-  useToggleTab
-} from 'src/components/common';
+import { Button, EthPrice, EZImage, NextLink, PageBox, SVG, ToggleTab, useToggleTab } from 'src/components/common';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import useScreenSize from 'src/hooks/useScreenSize';
 import { apiGet, formatNumber, ITEMS_PER_PAGE, nFormatter } from 'src/utils';
@@ -126,26 +116,6 @@ const TrendingPage = () => {
           selected={selected}
           onChange={onChangeToggleTab}
         />
-
-        <div className="space-x-2">
-          <Dropdown
-            label={queryBy === 'by_sales_volume' ? 'Sort by Volume' : 'Sort by Avg. Price'}
-            items={[
-              {
-                label: 'Volume',
-                onClick: () => {
-                  onClickQueryBy('by_sales_volume');
-                }
-              },
-              {
-                label: 'Avg. Price',
-                onClick: () => {
-                  onClickQueryBy('by_avg_price');
-                }
-              }
-            ]}
-          />
-        </div>
       </div>
 
       <div className="space-y-4 mt-8">
