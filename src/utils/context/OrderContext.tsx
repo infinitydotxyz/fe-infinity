@@ -14,9 +14,9 @@ export interface OrderCartItem {
   tokenImage?: string;
   tokenName?: string;
   tokenId?: string;
-  chainId: ChainId;
-  collectionName: string;
-  collectionAddress: string;
+  chainId?: ChainId;
+  collectionName?: string;
+  collectionAddress?: string;
   collectionImage?: string;
   collectionSlug?: string;
   hasBlueCheck?: boolean;
@@ -134,9 +134,9 @@ export const OrderContextProvider = ({ children }: Props) => {
     const items: OBOrderItem[] = [];
     for (const cartItem of cartItems) {
       items.push({
-        chainId: cartItem.chainId,
-        collectionAddress: cartItem.collectionAddress,
-        collectionName: cartItem.collectionName,
+        chainId: cartItem.chainId ?? ChainId.Mainnet,
+        collectionAddress: cartItem.collectionAddress ?? '',
+        collectionName: cartItem.collectionName ?? '',
         collectionImage: cartItem.collectionImage ?? '',
         collectionSlug: cartItem?.collectionSlug ?? '',
         hasBlueCheck: cartItem?.hasBlueCheck ?? false,

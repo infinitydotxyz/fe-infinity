@@ -38,13 +38,13 @@ export const OrderDetailModal = ({ order, isOpen, onClose }: Props) => {
       <div className="my-8">
         {(order?.nfts || []).map((nft, idx) => {
           return (
-            <div key={`${nft.collectionAddress}_${idx}`} className=" space-y-4">
+            <div key={`${nft.collectionAddress}_${idx}`} className="space-y-4 mt-4">
               {nft.tokens.map((token) => {
                 return (
                   <div key={nft.collectionAddress + '_' + token.tokenId} className="flex items-center">
                     <EZImage
                       src={token.tokenImage || nft.collectionImage}
-                      className="w-16 h-16 overflow-clip rounded-3xl"
+                      className="w-16 h-16 overflow-clip rounded-2xl"
                     />
                     <div className="ml-4">
                       <div>{nft.collectionName}</div>
