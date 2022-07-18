@@ -471,16 +471,14 @@ export async function canTakeMultipleOneOrders(
       }
 
       // check ownership of nfts while taking sell orders
-      if (makerOrder.isSellOrder) {
-        for (const nft of makerOrder.nfts) {
-          const collectionAddress = nft.collection;
-          for (const token of nft.tokens) {
-            const tokenId = token.tokenId;
-            const erc721 = new Contract(collectionAddress, ERC721ABI, signer);
-            const owner = trimLowerCase(await erc721.ownerOf(tokenId));
-            if (owner !== trimLowerCase(makerOrder.signer)) {
-              return 'staleOwner';
-            }
+      for (const nft of makerOrder.nfts) {
+        const collectionAddress = nft.collection;
+        for (const token of nft.tokens) {
+          const tokenId = token.tokenId;
+          const erc721 = new Contract(collectionAddress, ERC721ABI, signer);
+          const owner = trimLowerCase(await erc721.ownerOf(tokenId));
+          if (owner !== trimLowerCase(makerOrder.signer)) {
+            return 'staleOwner';
           }
         }
       }
