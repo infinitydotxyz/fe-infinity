@@ -89,7 +89,6 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
     qtokenId,
     user?.address ?? ''
   );
-  console.log('offers', offers);
   const { options, onChange, selected } = useToggleTab(['Activity', 'Orders'], 'Activity');
 
   const [showCancelModal, setShowCancelModal] = useState(false);
