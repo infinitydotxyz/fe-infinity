@@ -262,7 +262,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
             setShowAcceptOfferDrawer(false);
             setOrderDrawerOpen(false);
           }}
-          onClickRemove={() => {}}
+          onClickRemove={() => console.log}
         />
       ) : null}
     </>
