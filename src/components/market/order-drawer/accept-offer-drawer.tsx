@@ -33,6 +33,8 @@ export const AcceptOfferDrawer = ({ open, onClose, orders, onClickRemove }: Prop
           toastError('One or more of these orders have NFTs with stale owner');
         } else if (canTakeOrders === 'cannotExecute') {
           toastError('One or more of these orders are invalid/expired');
+        } else if (canTakeOrders === 'notOwner') {
+          toastError('One or more of these orders are not owned by you');
         } else {
           toastError('One or more of these orders cannot be fulfilled');
         }
