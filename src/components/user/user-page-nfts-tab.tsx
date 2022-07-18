@@ -75,11 +75,12 @@ export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listCl
   const isAlreadyAdded = (data: ERC721CardData | undefined) => {
     // check if this item was already added to cartItems or order.
     const found1 =
-      cartItems.find((item) => item.collectionAddress === data?.address && item.tokenId === data.tokenId) !== undefined;
+      cartItems.find((item) => item.collectionAddress === data?.address && item.tokenId === data?.tokenId) !==
+      undefined;
     let found2 = false;
     for (const order of ordersInCart) {
       const foundInOrder = order.cartItems.find(
-        (item) => item.collectionAddress === data?.address && item.tokenId === data.tokenId
+        (item) => item.collectionAddress === data?.address && item.tokenId === data?.tokenId
       );
       if (foundInOrder) {
         found2 = true;
