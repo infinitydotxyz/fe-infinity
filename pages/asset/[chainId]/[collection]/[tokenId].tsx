@@ -28,19 +28,23 @@ import { useAppContext } from 'src/utils/context/AppContext';
 import { getOBOrderFromFirestoreOrderItem } from 'src/utils/exchange/orders';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { fetchUserSignedOBOrder } from 'src/utils/marketUtils';
+import { AcceptOfferDrawer } from 'src/components/market/order-drawer/accept-offer-drawer';
 
-const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
+const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string, userAddress: string) => {
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
   const COL_API_ENDPOINT = `/collections/${chainId}:${collection}`;
+  const NFT_OFFERS_ENDPOINT = `/orders/${userAddress}?limit=1&minPrice=0.000001&orderByDirection=desc&takerAddress=${userAddress}&collectionAddress=${collection}&tokenId=${tokenId}&isSellOrder=false`;
 
   const tokenResponse = useFetch<Token>(NFT_API_ENDPOINT);
   const collectionResponse = useFetch<Collection>(COL_API_ENDPOINT);
+  const offersResponse = useFetch<{ data: SignedOBOrder[] }>(NFT_OFFERS_ENDPOINT);
 
   return {
     isLoading: tokenResponse.isLoading,
     error: tokenResponse.error,
     token: tokenResponse.result,
-    collection: collectionResponse.result
+    collection: collectionResponse.result,
+    offers: offersResponse.result?.data ?? []
   };
 };
 
@@ -79,7 +83,13 @@ interface Props {
 const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const { checkSignedIn, user } = useAppContext();
   const { setOrderDrawerOpen } = useOrderContext();
-  const { isLoading, error, token, collection } = useFetchAssetInfo(qchainId, qcollection, qtokenId);
+  const { isLoading, error, token, collection, offers } = useFetchAssetInfo(
+    qchainId,
+    qcollection,
+    qtokenId,
+    user?.address ?? ''
+  );
+  console.log('offers', offers);
   const { options, onChange, selected } = useToggleTab(['Activity', 'Orders'], 'Activity');
 
   const [showCancelModal, setShowCancelModal] = useState(false);
@@ -91,6 +101,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const [buyPriceEth, setBuyPriceEth] = useState('');
   const [sendTxHash, setSendTxHash] = useState('');
   const [signedOBOrder, setSignedOBOrder] = useState<SignedOBOrder | null>(null);
+  const [showAcceptOfferDrawer, setShowAcceptOfferDrawer] = useState(false);
 
   const tokenOwner = getOwnerAddress(token);
   const isNftOwner = token ? user?.address === tokenOwner : false;
@@ -241,8 +252,19 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
           }}
         />
       )}
-
       {buyTxHash && <WaitingForTxModal title={'Buying NFT'} txHash={buyTxHash} onClose={() => setBuyTxHash('')} />}
+
+      {offers && offers.length > 0 ? (
+        <AcceptOfferDrawer
+          orders={[offers[0]]}
+          open={showAcceptOfferDrawer}
+          onClose={() => {
+            setShowAcceptOfferDrawer(false);
+            setOrderDrawerOpen(false);
+          }}
+          onClickRemove={() => {}}
+        />
+      ) : null}
     </>
   );
 
@@ -315,7 +337,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
             <div className="md:-ml-1.5">
               <div className="flex flex-col md:flex-row gap-4 my-4 md:my-6 lg:mt-10">
                 {buyPriceEth && (
-                  <Button variant="primary" size="large" onClick={onClickCancel}>
+                  <Button variant="outline" size="large" onClick={onClickCancel}>
                     <div className="flex">
                       <span className="mr-4">Cancel</span>
                       <span className="font-heading">
@@ -325,9 +347,24 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
                   </Button>
                 )}
                 {isNftOwner ? (
-                  <Button variant="outline" size="large" onClick={onClickLowerPrice}>
-                    Lower Price
-                  </Button>
+                  <>
+                    <Button variant="outline" size="large" onClick={onClickLowerPrice}>
+                      Lower Price
+                    </Button>
+                    {offers && offers.length > 0 ? (
+                      <Button
+                        variant="outline"
+                        size="large"
+                        className=""
+                        onClick={() => setShowAcceptOfferDrawer(true)}
+                      >
+                        <div className="flex">
+                          Accept Offer{' '}
+                          <EthPrice label={`${offers[0].startPriceEth}`} className="ml-2" rowClassName="" />
+                        </div>
+                      </Button>
+                    ) : null}
+                  </>
                 ) : null}
               </div>
             </div>
