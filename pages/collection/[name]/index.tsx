@@ -2,6 +2,7 @@ import {
   BaseCollection,
   ChainId,
   Collection,
+  CollectionAttributes,
   CollectionStats,
   ERC721CardData
 } from '@infinityxyz/lib-frontend/types/core';
@@ -70,6 +71,13 @@ const CollectionPage = () => {
     error,
     mutate: mutateCollection
   } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
+  const { result: collectionAttributes } = useFetch<CollectionAttributes>(
+    name ? `/collections/${name}/attributes` : '',
+    {
+      chainId: '1'
+    }
+  );
+
   const { result: currentStats } = useFetch<CollectionStatsDto>(name ? `${path}/stats/current` : '', {
     chainId
   });
@@ -334,6 +342,7 @@ const CollectionPage = () => {
                 pageId="COLLECTION"
                 getEndpoint={`/collections/${collection.chainId}:${collection.address}/nfts`}
                 collection={collection}
+                collectionAttributes={collectionAttributes || undefined}
                 cardProps={{
                   cardActions: [
                     {

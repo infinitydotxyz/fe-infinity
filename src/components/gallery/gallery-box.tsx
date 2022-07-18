@@ -1,4 +1,4 @@
-import { BaseCollection, ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
+import { BaseCollection, CollectionAttributes, ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { useFilterContext } from 'src/utils/context/FilterContext';
 import { Button, Card, CardProps, ErrorOrLoading, ScrollLoader } from 'src/components/common';
@@ -13,6 +13,7 @@ import { TokenFetcher, TokenFetcherCache } from './token-fetcher';
 
 interface GalleryProps {
   collection?: BaseCollection | null;
+  collectionAttributes?: CollectionAttributes;
   cardProps?: CardProps;
   getEndpoint?: string;
   className?: string;
@@ -25,6 +26,7 @@ interface GalleryProps {
 
 export const GalleryBox = ({
   collection,
+  collectionAttributes,
   className,
   cardProps,
   getEndpoint,
@@ -159,7 +161,7 @@ export const GalleryBox = ({
         {filterShowed && (
           <div className="mt-4">
             <FilterPanel
-              collection={collection as BaseCollection}
+              collectionAttributes={collectionAttributes}
               collectionAddress={collection?.address}
               showFilterSections={showFilterSections}
               userAddress={userAddress}
