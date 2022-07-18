@@ -190,7 +190,7 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
       )}
 
       <Chip
-        content={<>Sweep</>}
+        content={<>Collection Offer</>}
         active={true}
         onClick={() => {
           // assumes parent view has a drawer
