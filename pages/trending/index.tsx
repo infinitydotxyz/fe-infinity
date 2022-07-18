@@ -126,26 +126,6 @@ const TrendingPage = () => {
           selected={selected}
           onChange={onChangeToggleTab}
         />
-
-        <div className="space-x-2">
-          <Dropdown
-            label={queryBy === 'by_sales_volume' ? 'Sort by Volume' : 'Sort by Avg. Price'}
-            items={[
-              {
-                label: 'Volume',
-                onClick: () => {
-                  onClickQueryBy('by_sales_volume');
-                }
-              },
-              {
-                label: 'Avg. Price',
-                onClick: () => {
-                  onClickQueryBy('by_avg_price');
-                }
-              }
-            ]}
-          />
-        </div>
       </div>
 
       <div className="space-y-4 mt-8">
