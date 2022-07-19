@@ -153,7 +153,6 @@ export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listCl
             transferDrawerParams.setNfts(arr);
             if (arr.length === 0) {
               transferDrawerParams.setShowDrawer(false);
-              setOrderDrawerOpen(false);
             }
           } else {
             const arr = [...transferDrawerParams.nfts, data];

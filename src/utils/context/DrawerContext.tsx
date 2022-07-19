@@ -21,8 +21,6 @@ export type DrawerContextType = {
   transferDrawerParams: DrawerHandlerParams;
 
   drawerButtonClick: () => void;
-  hasOrderDrawer: () => boolean;
-  setAllowOrderDrawer: (flag: boolean) => void;
 };
 
 const DrawerContext = React.createContext<DrawerContextType | null>(null);
@@ -34,22 +32,8 @@ interface Props {
 export const DrawerContextProvider = ({ children }: Props) => {
   const [cartItemCount, setCartItemCount] = useState<number>(0);
 
-  const [allowOrderDrawer, setAllowOrderDrawer] = useState<boolean>(false);
-
   const router = useRouter();
   const { orderDrawerOpen, setOrderDrawerOpen, ordersInCart, cartItems } = useOrderContext();
-
-  const hasOrderDrawer = () => {
-    const path = router.asPath;
-
-    const result =
-      allowOrderDrawer ||
-      (path.indexOf('me?tab=Orders') === -1 &&
-        // path.indexOf('?tab=Orders') === -1 &&
-        path.indexOf('me?tab=Send') === -1);
-
-    return result;
-  };
 
   const drawerButtonClick = () => {
     if (cartItems.length > 0 || ordersInCart.length > 0) {
@@ -77,11 +61,9 @@ export const DrawerContextProvider = ({ children }: Props) => {
   useEffect(() => {
     let done = false;
 
-    if (hasOrderDrawer()) {
-      if (cartItems.length > 0 || ordersInCart.length > 0) {
-        setCartItemCount(cartItems.length || ordersInCart.length);
-        done = true;
-      }
+    if (cartItems.length > 0 || ordersInCart.length > 0) {
+      setCartItemCount(cartItems.length || ordersInCart.length);
+      done = true;
     }
 
     if (!done) {
@@ -118,9 +100,6 @@ export const DrawerContextProvider = ({ children }: Props) => {
     cartItemCount,
     setCartItemCount,
 
-    hasOrderDrawer,
-    setAllowOrderDrawer,
-
     drawerParams,
     cancelDrawerParams,
     transferDrawerParams,
@@ -155,7 +134,6 @@ export const DrawerContextProvider = ({ children }: Props) => {
           open={transferDrawerParams.showDrawer}
           onClose={() => {
             transferDrawerParams.setShowDrawer(false);
-            setOrderDrawerOpen(false);
           }}
           nftsForTransfer={transferDrawerParams.nfts}
           onClickRemove={(removingItem) => {
