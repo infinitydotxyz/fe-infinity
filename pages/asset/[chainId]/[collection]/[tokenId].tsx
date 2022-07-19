@@ -29,11 +29,12 @@ import {
 import { BuyNFTDrawer } from 'src/components/market/order-drawer/buy-nft-drawer';
 import { WaitingForTxModal } from 'src/components/market/order-drawer/waiting-for-tx-modal';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
-import { ellipsisAddress, getOwnerAddress, MISSING_IMAGE_URL, useFetch } from 'src/utils';
+import { apiGet, ellipsisAddress, getOwnerAddress, MISSING_IMAGE_URL, useFetch } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { getOBOrderFromFirestoreOrderItem } from 'src/utils/exchange/orders';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { fetchUserSignedOBOrder } from 'src/utils/marketUtils';
+import { AcceptOfferDrawer } from 'src/components/market/order-drawer/accept-offer-drawer';
 
 const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
@@ -96,17 +97,28 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const [buyPriceEth, setBuyPriceEth] = useState('');
   const [sendTxHash, setSendTxHash] = useState('');
   const [signedOBOrder, setSignedOBOrder] = useState<SignedOBOrder | null>(null);
+  const [offer, setOffer] = useState<SignedOBOrder | null>(null);
+  const [showAcceptOfferDrawer, setShowAcceptOfferDrawer] = useState(false);
 
   const tokenOwner = getOwnerAddress(token);
   const isNftOwner = token ? user?.address === tokenOwner : false;
   const listingOwner = token?.ordersSnippet?.listing?.orderItem?.makerAddress ?? '';
   const isListingOwner = user?.address === listingOwner;
+  const offerPrice = token?.ordersSnippet?.offer?.orderItem?.startPriceEth ?? '';
+
+  const fetchSignedOfferOrder = async () => {
+    const signedOfferOrder = await fetchUserSignedOBOrder(token?.ordersSnippet?.offer?.orderItem?.id);
+    setOffer(signedOfferOrder);
+  };
 
   useEffect(() => {
     if (token?.ordersSnippet?.listing?.orderItem) {
       const obOrder: OBOrder = getOBOrderFromFirestoreOrderItem(token?.ordersSnippet?.listing?.orderItem);
       const price = getCurrentOBOrderPrice(obOrder);
       setBuyPriceEth(utils.formatEther(price));
+    }
+    if (token?.ordersSnippet?.offer?.orderItem) {
+      fetchSignedOfferOrder();
     }
   }, [token]);
 
@@ -246,8 +258,19 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
           }}
         />
       )}
-
       {buyTxHash && <WaitingForTxModal title={'Buying NFT'} txHash={buyTxHash} onClose={() => setBuyTxHash('')} />}
+
+      {offer ? (
+        <AcceptOfferDrawer
+          orders={[offer]}
+          open={showAcceptOfferDrawer}
+          onClose={() => {
+            setShowAcceptOfferDrawer(false);
+            setOrderDrawerOpen(false);
+          }}
+          onClickRemove={() => console.log}
+        />
+      ) : null}
     </>
   );
 
@@ -320,7 +343,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
             <div className="md:-ml-1.5">
               <div className="flex flex-col md:flex-row gap-4 my-4 md:my-6 lg:mt-10">
                 {buyPriceEth && (
-                  <Button variant="primary" size="large" onClick={onClickCancel}>
+                  <Button variant="outline" size="large" onClick={onClickCancel}>
                     <div className="flex">
                       <span className="mr-4">Cancel</span>
                       <span className="font-heading">
@@ -330,9 +353,23 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
                   </Button>
                 )}
                 {isNftOwner ? (
-                  <Button variant="outline" size="large" onClick={onClickLowerPrice}>
-                    Lower Price
-                  </Button>
+                  <>
+                    <Button variant="outline" size="large" onClick={onClickLowerPrice}>
+                      Lower Price
+                    </Button>
+                    {offer ? (
+                      <Button
+                        variant="outline"
+                        size="large"
+                        className=""
+                        onClick={() => setShowAcceptOfferDrawer(true)}
+                      >
+                        <div className="flex">
+                          Accept Offer <EthPrice label={`${offerPrice}`} className="ml-2" rowClassName="" />
+                        </div>
+                      </Button>
+                    ) : null}
+                  </>
                 ) : null}
               </div>
             </div>
