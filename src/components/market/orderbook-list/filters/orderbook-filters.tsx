@@ -225,7 +225,7 @@ const OrderbookFilterItem = ({ openState, setOpenState, item, children }: Orderb
           setOpenState(newOpenState);
         }}
       >
-        <div className="flex-1">{item}</div>
+        <div className="flex-1 select-none">{item}</div>
         {openState[item] ? <AiOutlineMinus className="text-lg" /> : <AiOutlinePlus className="text-lg" />}
       </div>
 
