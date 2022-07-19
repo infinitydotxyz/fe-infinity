@@ -60,6 +60,11 @@ export const DrawerContextProvider = ({ children }: Props) => {
       cancelDrawerParams.setShowDrawer(true);
     } else if (transferDrawerParams.nfts.length > 0) {
       transferDrawerParams.setShowDrawer(true);
+    } else {
+      // open order drawer if nothing else
+      if (!orderDrawerOpen) {
+        setOrderDrawerOpen(!orderDrawerOpen);
+      }
     }
   };
 
@@ -98,6 +103,12 @@ export const DrawerContextProvider = ({ children }: Props) => {
         setCartItemCount(transferDrawerParams.nfts.length);
         done = true;
       }
+    }
+
+    // set to zero, all drawers are empty
+    if (!done) {
+      setCartItemCount(0);
+      done = true;
     }
   }, [ordersInCart, cartItems, router, drawerParams.orders, cancelDrawerParams.orders, transferDrawerParams.nfts]);
 
