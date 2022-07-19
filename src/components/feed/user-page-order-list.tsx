@@ -131,11 +131,14 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
   const listItemButtonClick = (order: SignedOBOrder, checked: boolean) => {
     if (apiFilter.orderType === 'offers-received') {
       if (checked) {
-        const arr = [...selectedOffers, order];
-        setSelectedOffers(arr);
+        const exists = selectedOffers.findIndex((o) => o.id === order.id) !== -1;
+        if (!exists) {
+          const arr = [...selectedOffers, order];
+          setSelectedOffers(arr);
 
-        if (arr.length === 1) {
-          setShowAcceptOfferDrawer(true);
+          if (arr.length === 1) {
+            setShowAcceptOfferDrawer(true);
+          }
         }
       } else {
         const arr = selectedOffers.filter((o) => o.id !== order.id);
