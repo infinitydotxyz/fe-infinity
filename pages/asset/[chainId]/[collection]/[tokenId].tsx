@@ -1,10 +1,4 @@
-import {
-  CollectionAttributes,
-  Erc721Metadata,
-  OBOrder,
-  SignedOBOrder,
-  Token
-} from '@infinityxyz/lib-frontend/types/core';
+import { CollectionAttributes, Erc721Metadata, OBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
 import { getCurrentOBOrderPrice } from '@infinityxyz/lib-frontend/utils';
 import { utils } from 'ethers';
 import { useRouter } from 'next/router';
@@ -26,15 +20,13 @@ import {
   ToggleTab,
   useToggleTab
 } from 'src/components/common';
-import { BuyNFTDrawer } from 'src/components/market/order-drawer/buy-nft-drawer';
 import { WaitingForTxModal } from 'src/components/market/order-drawer/waiting-for-tx-modal';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
 import { ellipsisAddress, getOwnerAddress, MISSING_IMAGE_URL, useFetch } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
+import { useDrawerContext } from 'src/utils/context/DrawerContext';
 import { getOBOrderFromFirestoreOrderItem } from 'src/utils/exchange/orders';
-import { useOrderContext } from 'src/utils/context/OrderContext';
 import { fetchUserSignedOBOrder } from 'src/utils/marketUtils';
-import { AcceptOfferDrawer } from 'src/components/market/order-drawer/accept-offer-drawer';
 
 const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
@@ -75,22 +67,16 @@ interface Props {
 
 const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const { checkSignedIn, user } = useAppContext();
-  const { setOrderDrawerOpen } = useOrderContext();
   const { isLoading, error, token, collectionAttributes } = useFetchAssetInfo(qchainId, qcollection, qtokenId);
   const { options, onChange, selected } = useToggleTab(['Activity', 'Orders'], 'Activity');
-
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showLowerPriceModal, setShowLowerPriceModal] = useState(false);
   const [showSendModal, setShowSendModal] = useState(false);
   const [showMakeOfferModal, setShowMakeOfferModal] = useState(false);
-  const [showBuyDrawer, setShowBuyDrawer] = useState(false);
-  const [buyTxHash, setBuyTxHash] = useState('');
   const [buyPriceEth, setBuyPriceEth] = useState('');
   const [sellPriceEth, setSellPriceEth] = useState('');
   const [sendTxHash, setSendTxHash] = useState('');
-  const [signedListing, setSignedListing] = useState<SignedOBOrder | null>(null);
-  const [signedOffer, setSignedOffer] = useState<SignedOBOrder | null>(null);
-  const [showAcceptOfferDrawer, setShowAcceptOfferDrawer] = useState(false);
+  const { drawerParams } = useDrawerContext();
 
   const tokenOwner = getOwnerAddress(token);
   const isNftOwner = token ? user?.address === tokenOwner : false;
@@ -157,8 +143,10 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const onClickBuy = async () => {
     try {
       const signedListing = await fetchUserSignedOBOrder(token?.ordersSnippet?.listing?.orderItem?.id);
-      setSignedListing(signedListing);
-      setShowBuyDrawer(true);
+      if (signedListing) {
+        drawerParams.addOrder(signedListing);
+        drawerParams.setShowDrawer(true);
+      }
     } catch (err) {
       toastError(`Failed to fetch signed listing`);
     }
@@ -167,8 +155,10 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const onClickAcceptOffer = async () => {
     try {
       const signedOffer = await fetchUserSignedOBOrder(token?.ordersSnippet?.offer?.orderItem?.id);
-      setSignedOffer(signedOffer);
-      setShowAcceptOfferDrawer(true);
+      if (signedOffer) {
+        drawerParams.addOrder(signedOffer);
+        drawerParams.setShowDrawer(true);
+      }
     } catch (err) {
       toastError(`Failed to fetch signed offer`);
     }
@@ -236,40 +226,6 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
           onClose={() => setShowMakeOfferModal(false)}
           token={token}
           buyPriceEth={buyPriceEth}
-        />
-      )}
-
-      {signedListing && (
-        <BuyNFTDrawer
-          onClickRemove={() => {
-            // TODO steve
-          }}
-          title="Buy NFT"
-          submitTitle="Buy"
-          orders={[signedListing]}
-          open={showBuyDrawer}
-          onClose={() => {
-            setShowBuyDrawer(false);
-            setOrderDrawerOpen(false);
-          }}
-          onSubmitDone={(hash: string) => {
-            setShowBuyDrawer(false);
-            setOrderDrawerOpen(false);
-            setBuyTxHash(hash);
-          }}
-        />
-      )}
-      {buyTxHash && <WaitingForTxModal title={'Buying NFT'} txHash={buyTxHash} onClose={() => setBuyTxHash('')} />}
-
-      {signedOffer && (
-        <AcceptOfferDrawer
-          orders={[signedOffer]}
-          open={showAcceptOfferDrawer}
-          onClose={() => {
-            setShowAcceptOfferDrawer(false);
-            setOrderDrawerOpen(false);
-          }}
-          onClickRemove={() => console.log}
         />
       )}
     </>

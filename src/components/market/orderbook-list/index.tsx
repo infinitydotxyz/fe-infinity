@@ -1,14 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { Button, CenteredContent, Dropdown, ScrollLoader, Spinner } from 'src/components/common';
 import { OrderbookProvider, SORT_FILTERS, useOrderbook } from '../OrderbookContext';
 import { OrderbookRow } from './orderbook-row';
 import { OrderbookFilters } from './filters/orderbook-filters';
 import { useRouter } from 'next/router';
-import { BuyNFTDrawer } from '../order-drawer/buy-nft-drawer';
-import { useOrderContext } from 'src/utils/context/OrderContext';
 import { useDrawerContext } from 'src/utils/context/DrawerContext';
-import { WaitingForTxModal } from '../order-drawer/waiting-for-tx-modal';
 
 const SORT_LABELS: {
   [key: string]: string;
@@ -83,7 +80,7 @@ export const OrderbookContent = ({ className }: { className?: string }): JSX.Ele
         </div>
 
         <OrderbookList
-          orders={orders}
+          orderList={orders}
           showFilters={showFilters}
           isLoading={isLoading}
           fetchMore={fetchMore}
@@ -96,7 +93,7 @@ export const OrderbookContent = ({ className }: { className?: string }): JSX.Ele
 };
 
 interface Props2 {
-  orders: SignedOBOrder[];
+  orderList: SignedOBOrder[];
   isLoading: boolean;
   fetchMore: () => Promise<void>;
   showFilters?: boolean;
@@ -105,26 +102,14 @@ interface Props2 {
 }
 
 const OrderbookList = ({
-  orders,
+  orderList,
   showFilters,
   isLoading,
   fetchMore,
   hasMoreOrders,
   hasNoData
 }: Props2): JSX.Element => {
-  const [clickedOrders, setClickedOrders] = useState<SignedOBOrder[]>([]);
-  const [showDrawer, setShowDrawer] = useState(false);
-  const [completeOrderTxHash, setCompleteOrderTxHash] = useState('');
-  const { orderDrawerOpen, setOrderDrawerOpen } = useOrderContext();
-  const { hasOrderDrawer } = useDrawerContext();
-
-  useEffect(() => {
-    if (orderDrawerOpen && !hasOrderDrawer()) {
-      setShowDrawer(true);
-    }
-  }, [orderDrawerOpen]);
-
-  const first = clickedOrders.length > 0 ? clickedOrders[0] : undefined;
+  const { drawerParams } = useDrawerContext();
 
   return (
     <div className="flex justify-center align-items gap-4 pointer-events-auto">
@@ -136,20 +121,11 @@ const OrderbookList = ({
       <div className="flex flex-col items-start w-full">
         {hasNoData && <div className="font-heading">No results found</div>}
 
-        {orders.length > 0 &&
-          orders.map((order: SignedOBOrder, i) => {
+        {orderList.length > 0 &&
+          orderList.map((order: SignedOBOrder, i: number) => {
             return (
               <OrderbookRow
-                onClickActionBtn={(order) => {
-                  const exists = clickedOrders.findIndex((o) => o.id === order.id) !== -1;
-                  if (!exists) {
-                    const arr = [...clickedOrders, order];
-
-                    setClickedOrders(arr);
-                  }
-
-                  setShowDrawer(true);
-                }}
+                onClickActionBtn={drawerParams.addOrder}
                 key={`${i}-${order.id}`}
                 order={order}
                 isFilterOpen={showFilters ?? false}
@@ -165,39 +141,6 @@ const OrderbookList = ({
 
         {hasMoreOrders && <ScrollLoader onFetchMore={fetchMore} />}
       </div>
-
-      <BuyNFTDrawer
-        onClickRemove={(removingOrder) => {
-          const arr = clickedOrders.filter((o) => o.id !== removingOrder.id);
-          setClickedOrders(arr);
-
-          if (arr.length === 0) {
-            setShowDrawer(false);
-            setOrderDrawerOpen(false);
-          }
-        }}
-        title={first?.isSellOrder ? 'Buy Order' : 'Sell Order'}
-        submitTitle={first?.isSellOrder ? 'Buy' : 'Sell'}
-        orders={clickedOrders}
-        open={showDrawer}
-        onClose={() => {
-          setShowDrawer(false);
-          setOrderDrawerOpen(false);
-        }}
-        onSubmitDone={(hash: string) => {
-          setShowDrawer(false);
-          setOrderDrawerOpen(false);
-          setCompleteOrderTxHash(hash);
-        }}
-      />
-
-      {completeOrderTxHash && (
-        <WaitingForTxModal
-          title={'Complete Order'}
-          txHash={completeOrderTxHash}
-          onClose={() => setCompleteOrderTxHash('')}
-        />
-      )}
     </div>
   );
 };

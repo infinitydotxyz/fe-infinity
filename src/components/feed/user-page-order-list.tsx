@@ -15,7 +15,6 @@ import { cancelAllOrders } from 'src/utils/exchange/orders';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { fetchOrderNonce } from 'src/utils/marketUtils';
 import { useDrawerContext } from 'src/utils/context/DrawerContext';
-import { AcceptOfferDrawer } from '../market/order-drawer/accept-offer-drawer';
 
 type Query = {
   limit: number;
@@ -36,8 +35,8 @@ interface Props {
 
 export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
   const { providerManager, chainId, user, waitForTransaction } = useAppContext();
-  const { orderDrawerOpen, setOrderDrawerOpen } = useOrderContext();
-  const { setCartItemCount, hasOrderDrawer } = useDrawerContext();
+  const { setOrderDrawerOpen } = useOrderContext();
+  const { setCartItemCount } = useDrawerContext();
   const [data, setData] = useState<SignedOBOrder[]>([]);
   const [isFetching, setIsFetching] = useState(false);
   const [cursor, setCursor] = useState('');
@@ -45,29 +44,14 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
   const [filterShowed, setFilterShowed] = useState(true);
   const [isCancellingAll, setIsCancellingAll] = useState(false);
   const [apiFilter, setApiFilter] = useState<UserOrderFilter>({ orderType: DEFAULT_ORDER_TYPE_FILTER });
-  const [showAcceptOfferDrawer, setShowAcceptOfferDrawer] = useState(false);
   const [showCancelDrawer, setShowCancelDrawer] = useState(false);
+  const { drawerParams } = useDrawerContext();
 
   const [selectedOrders, setSelectedOrders] = useState<SignedOBOrder[]>([]);
-  const [selectedOffers, setSelectedOffers] = useState<SignedOBOrder[]>([]);
 
   useEffect(() => {
-    if (orderDrawerOpen && !hasOrderDrawer()) {
-      if (apiFilter.orderType === 'offers-received') {
-        setShowAcceptOfferDrawer(true);
-      } else {
-        setShowCancelDrawer(true);
-      }
-    }
-  }, [orderDrawerOpen]);
-
-  useEffect(() => {
-    if (apiFilter.orderType === 'offers-received') {
-      setCartItemCount(selectedOffers.length);
-    } else {
-      setCartItemCount(selectedOrders.length);
-    }
-  }, [apiFilter, selectedOrders, selectedOffers]);
+    setCartItemCount(selectedOrders.length);
+  }, [apiFilter, selectedOrders]);
 
   const fetchData = async (isRefresh = false) => {
     setIsFetching(true);
@@ -131,22 +115,11 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
   const listItemButtonClick = (order: SignedOBOrder, checked: boolean) => {
     if (apiFilter.orderType === 'offers-received') {
       if (checked) {
-        const exists = selectedOffers.findIndex((o) => o.id === order.id) !== -1;
-        if (!exists) {
-          const arr = [...selectedOffers, order];
-          setSelectedOffers(arr);
-
-          if (arr.length === 1) {
-            setShowAcceptOfferDrawer(true);
-          }
-        }
+        drawerParams.addOrder(order);
+        drawerParams.setShowDrawer(true);
       } else {
-        const arr = selectedOffers.filter((o) => o.id !== order.id);
-        setSelectedOffers(arr);
-
-        if (arr.length === 0) {
-          setShowAcceptOfferDrawer(false);
-        }
+        drawerParams.removeOrder(order);
+        // setShowDrawer(true);
       }
     } else {
       if (checked) {
@@ -249,24 +222,6 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
           ) : null}
         </div>
       </div>
-
-      <AcceptOfferDrawer
-        orders={selectedOffers}
-        open={showAcceptOfferDrawer}
-        onClose={() => {
-          setShowAcceptOfferDrawer(false);
-          setOrderDrawerOpen(false);
-        }}
-        onClickRemove={(removingOrder) => {
-          const arr = selectedOffers.filter((o) => o.id !== removingOrder.id);
-          setSelectedOffers(arr);
-
-          if (arr.length === 0) {
-            setShowAcceptOfferDrawer(false);
-            setOrderDrawerOpen(false);
-          }
-        }}
-      />
 
       <CancelDrawer
         orders={selectedOrders}

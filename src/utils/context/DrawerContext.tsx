@@ -1,12 +1,14 @@
 import { useRouter } from 'next/router';
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
+import {
+  BuyNFTDrawerHandler,
+  DrawerHandlerParams,
+  useBuyDrawerHandler
+} from 'src/components/market/order-drawer/buy-nft-drawer';
 
 import { useOrderContext } from './OrderContext';
 
 export type DrawerContextType = {
-  orderDrawerOpen: boolean;
-  setOrderDrawerOpen: (flag: boolean) => void;
-
   cancelDrawerOpen: boolean;
   setCancelDrawerOpen: (flag: boolean) => void;
 
@@ -16,6 +18,9 @@ export type DrawerContextType = {
   cartItemCount: number;
   setCartItemCount: (n: number) => void;
 
+  drawerParams: DrawerHandlerParams;
+
+  drawerButtonClick: () => void;
   hasOrderDrawer: () => boolean;
   setAllowOrderDrawer: (flag: boolean) => void;
 };
@@ -27,7 +32,6 @@ interface Props {
 }
 
 export const DrawerContextProvider = ({ children }: Props) => {
-  const [orderDrawerOpen, setOrderDrawerOpen] = useState<boolean>(false);
   const [cancelDrawerOpen, setCancelDrawerOpen] = useState<boolean>(false);
   const [sendDrawerOpen, setSendDrawerOpen] = useState<boolean>(false);
   const [cartItemCount, setCartItemCount] = useState<number>(0);
@@ -35,6 +39,7 @@ export const DrawerContextProvider = ({ children }: Props) => {
   const [allowOrderDrawer, setAllowOrderDrawer] = useState<boolean>(false);
 
   const router = useRouter();
+  const { orderDrawerOpen, setOrderDrawerOpen, ordersInCart, cartItems } = useOrderContext();
 
   const hasOrderDrawer = () => {
     const path = router.asPath;
@@ -42,28 +47,46 @@ export const DrawerContextProvider = ({ children }: Props) => {
     const result =
       allowOrderDrawer ||
       (path.indexOf('me?tab=Orders') === -1 &&
-        path.indexOf('?tab=Orders') === -1 &&
+        // path.indexOf('?tab=Orders') === -1 &&
         path.indexOf('me?tab=Send') === -1);
 
     return result;
   };
 
+  const drawerButtonClick = () => {
+    if (cartItems.length > 0 || ordersInCart.length > 0) {
+      setOrderDrawerOpen(!orderDrawerOpen);
+    } else if (drawerParams.orders.length > 0) {
+      drawerParams.setShowDrawer(true);
+    } else {
+      // cancel drawer?
+    }
+  };
+
   // =========================================================
 
-  const { ordersInCart, cartItems } = useOrderContext();
+  const drawerParams: DrawerHandlerParams = useBuyDrawerHandler();
 
   useEffect(() => {
+    let done = false;
+
     if (hasOrderDrawer()) {
-      setCartItemCount(cartItems.length || ordersInCart.length);
+      if (cartItems.length > 0 || ordersInCart.length > 0) {
+        setCartItemCount(cartItems.length || ordersInCart.length);
+        done = true;
+      }
     }
-  }, [ordersInCart, cartItems, router]);
+
+    if (!done) {
+      if (drawerParams.orders.length > 0) {
+        setCartItemCount(drawerParams.orders.length);
+      }
+    }
+  }, [ordersInCart, cartItems, router, drawerParams.orders]);
 
   // =========================================================
 
   const providerValue: DrawerContextType = {
-    orderDrawerOpen,
-    setOrderDrawerOpen,
-
     cancelDrawerOpen,
     setCancelDrawerOpen,
 
@@ -74,10 +97,27 @@ export const DrawerContextProvider = ({ children }: Props) => {
     setCartItemCount,
 
     hasOrderDrawer,
-    setAllowOrderDrawer
+    setAllowOrderDrawer,
+
+    drawerParams,
+    drawerButtonClick
   };
 
-  return <DrawerContext.Provider value={providerValue}>{children}</DrawerContext.Provider>;
+  return (
+    <DrawerContext.Provider value={providerValue}>
+      <>
+        {children}
+
+        <BuyNFTDrawerHandler
+          setShowDrawer={drawerParams.setShowDrawer}
+          showDrawer={drawerParams.showDrawer}
+          orders={drawerParams.orders}
+          setOrders={drawerParams.setOrders}
+          removeOrder={drawerParams.removeOrder}
+        />
+      </>
+    </DrawerContext.Provider>
+  );
 };
 
 export const useDrawerContext = (): DrawerContextType => {

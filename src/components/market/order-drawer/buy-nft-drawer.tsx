@@ -6,6 +6,10 @@ import { canTakeMultipleOneOrders, takeMultipleOneOrders } from 'src/utils/excha
 import { iconButtonStyle } from 'src/utils/ui-constants';
 import { Drawer } from '../../common/drawer';
 import { OrderbookItem } from '../orderbook-list/orderbook-item';
+import { WaitingForTxModal } from '../order-drawer/waiting-for-tx-modal';
+import { useEffect, useState } from 'react';
+import { useOrderContext } from 'src/utils/context/OrderContext';
+import { useDrawerContext } from 'src/utils/context/DrawerContext';
 
 interface Props {
   title: string;
@@ -17,7 +21,7 @@ interface Props {
   onClickRemove: (order: SignedOBOrder) => void;
 }
 
-export const BuyNFTDrawer = ({ open, onClose, orders, onClickRemove, onSubmitDone, title, submitTitle }: Props) => {
+const BuyNFTDrawer = ({ open, onClose, orders, onClickRemove, onSubmitDone, title, submitTitle }: Props) => {
   const { providerManager, chainId, waitForTransaction } = useAppContext();
 
   const onClickBuy = async () => {
@@ -88,5 +92,98 @@ export const BuyNFTDrawer = ({ open, onClose, orders, onClickRemove, onSubmitDon
         </div>
       </Drawer>
     </>
+  );
+};
+
+// ===============================================================
+
+export interface DrawerHandlerParams {
+  orders: SignedOBOrder[];
+  setOrders: (orders: SignedOBOrder[]) => void;
+  removeOrder: (order: SignedOBOrder) => void;
+  addOrder: (order: SignedOBOrder) => void;
+  showDrawer: boolean;
+  setShowDrawer: (flag: boolean) => void;
+}
+
+export const useBuyDrawerHandler = (): DrawerHandlerParams => {
+  const [orders, setOrders] = useState<SignedOBOrder[]>([]);
+  const [showDrawer, setShowDrawer] = useState(false);
+  const { setOrderDrawerOpen } = useOrderContext();
+
+  const removeOrder = (order: SignedOBOrder) => {
+    const arr = orders.filter((o) => o.id !== order.id);
+    setOrders(arr);
+
+    if (arr.length === 0) {
+      setShowDrawer(false);
+      setOrderDrawerOpen(false);
+    }
+  };
+
+  const addOrder = (order: SignedOBOrder) => {
+    const exists = orders.findIndex((o) => o.id === order.id) !== -1;
+    if (!exists) {
+      const arr = [...orders, order];
+
+      setOrders(arr);
+    }
+
+    setShowDrawer(true);
+  };
+
+  return { orders, setOrders, removeOrder, addOrder, showDrawer, setShowDrawer };
+};
+
+// ===================================================
+
+interface Props2 {
+  setShowDrawer: (flag: boolean) => void;
+  showDrawer: boolean;
+  orders: SignedOBOrder[];
+  setOrders: (orders: SignedOBOrder[]) => void;
+  removeOrder: (order: SignedOBOrder) => void;
+}
+
+export const BuyNFTDrawerHandler = ({ removeOrder, showDrawer, orders, setShowDrawer }: Props2) => {
+  const [completeOrderTxHash, setCompleteOrderTxHash] = useState('');
+  const { setOrderDrawerOpen, orderDrawerOpen } = useOrderContext();
+  const { hasOrderDrawer } = useDrawerContext();
+
+  useEffect(() => {
+    if (orderDrawerOpen && !hasOrderDrawer()) {
+      setShowDrawer(true);
+    }
+  }, [orderDrawerOpen]);
+
+  const first = orders.length > 0 ? orders[0] : undefined;
+
+  return (
+    <div>
+      <BuyNFTDrawer
+        onClickRemove={removeOrder}
+        title={first?.isSellOrder ? 'Buy Order' : 'Sell Order'}
+        submitTitle={first?.isSellOrder ? 'Buy' : 'Sell'}
+        orders={orders}
+        open={showDrawer}
+        onClose={() => {
+          setShowDrawer(false);
+          setOrderDrawerOpen(false);
+        }}
+        onSubmitDone={(hash: string) => {
+          setShowDrawer(false);
+          setOrderDrawerOpen(false);
+          setCompleteOrderTxHash(hash);
+        }}
+      />
+
+      {completeOrderTxHash && (
+        <WaitingForTxModal
+          title={'Complete Order'}
+          txHash={completeOrderTxHash}
+          onClose={() => setCompleteOrderTxHash('')}
+        />
+      )}
+    </div>
   );
 };
