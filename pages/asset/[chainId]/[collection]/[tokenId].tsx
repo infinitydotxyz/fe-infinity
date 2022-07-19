@@ -29,7 +29,7 @@ import {
 import { BuyNFTDrawer } from 'src/components/market/order-drawer/buy-nft-drawer';
 import { WaitingForTxModal } from 'src/components/market/order-drawer/waiting-for-tx-modal';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
-import { apiGet, ellipsisAddress, getOwnerAddress, MISSING_IMAGE_URL, useFetch } from 'src/utils';
+import { ellipsisAddress, getOwnerAddress, MISSING_IMAGE_URL, useFetch } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { getOBOrderFromFirestoreOrderItem } from 'src/utils/exchange/orders';
 import { useOrderContext } from 'src/utils/context/OrderContext';
