@@ -1,7 +1,7 @@
 import { ChainId, Erc721Attribute, OBOrder, OBOrderItem, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { getOBComplicationAddress, getTxnCurrencyAddress, NULL_ADDRESS } from '@infinityxyz/lib-frontend/utils';
 import React, { ReactNode, useContext, useState } from 'react';
-import { toastError } from 'src/components/common';
+import { toastError, toastWarning } from 'src/components/common';
 import { getEstimatedGasPrice } from '../commonUtils';
 import { DEFAULT_MAX_GAS_PRICE_WEI } from '../constants';
 import { getSignedOBOrder } from '../exchange/orders';
@@ -194,7 +194,7 @@ export const OrderContextProvider = ({ children }: Props) => {
 
   const cancelOrder = () => {
     if (!user || !user.address) {
-      console.error('user is null');
+      toastWarning('Please connect your wallet.');
       return;
     }
     setIsEditingOrder(false);
@@ -204,7 +204,7 @@ export const OrderContextProvider = ({ children }: Props) => {
   const addOrderToCart = () => {
     setIsEditingOrder(false);
     if (!user || !user.address) {
-      console.error('user is null');
+      toastWarning('Please connect your wallet.');
       return;
     }
 
@@ -264,7 +264,7 @@ export const OrderContextProvider = ({ children }: Props) => {
 
   const specToOBOrder = async (spec: OBOrderSpec): Promise<OBOrder | undefined> => {
     if (!user || !user.address) {
-      console.error('user is null');
+      toastWarning('Please connect your wallet.');
       return;
     }
 
