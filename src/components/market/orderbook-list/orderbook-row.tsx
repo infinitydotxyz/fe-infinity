@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ChainId, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import moment from 'moment';
-import { Button, EthPrice, toastError } from 'src/components/common';
+import { Button, EthPrice } from 'src/components/common';
 import { ellipsisAddress, numStr, shortDate } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { OrderCartItem, useOrderContext } from 'src/utils/context/OrderContext';
@@ -9,20 +9,17 @@ import { checkOffersToUser, getOrderType } from 'src/utils/marketUtils';
 import { DataColumn, defaultDataColumns } from './data-columns';
 import { OrderbookItem } from './orderbook-item';
 import { OrderDetailModal } from '../OrderDetailModal';
-import { BuyNFTDrawer } from '../order-drawer/buy-nft-drawer';
-import { WaitingForTxModal } from '../order-drawer/waiting-for-tx-modal';
 
-type OrderbookRowProps = {
+type Props = {
   order: SignedOBOrder;
   isFilterOpen: boolean;
+  onClickActionBtn: (order: SignedOBOrder, checked: boolean) => void;
 };
 
-export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.Element => {
+export const OrderbookRow = ({ order, onClickActionBtn, isFilterOpen }: Props) => {
   const { user, checkSignedIn } = useAppContext();
   const { addCartItem, setOrderDrawerOpen } = useOrderContext();
   const [selectedOrder, setSelectedOrder] = useState<SignedOBOrder | null>(null);
-  const [showCompleteOrderDrawer, setShowCompleteOrderDrawer] = useState(false);
-  const [completeOrderTxHash, setCompleteOrderTxHash] = useState('');
 
   const valueDiv = (dataColumn: DataColumn) => {
     let value = order.id;
@@ -145,25 +142,8 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
     if (!checkSignedIn()) {
       return;
     }
-    // - direct Buy/Sell:
-    // try {
-    //   const signer = providerManager?.getEthersProvider().getSigner();
-    //   if (signer) {
-    //     await takeMultipleOneOrders(signer, chainId, [order.signedOrder]);
-    //     toastSuccess('Order sent for execution');
-    //   } else {
-    //     throw 'Signer is null';
-    //   }
-    // } catch (err) {
-    //   const errMsg = extractErrorMsg(err);
-    //   toastError(errMsg);
-    // }
-    const signedOrder = order.signedOrder;
-    if (signedOrder) {
-      setShowCompleteOrderDrawer(true);
-    } else {
-      toastError('Order is not signed');
-    }
+
+    onClickActionBtn(order, true);
   };
 
   const isOwner = order.makerAddress === user?.address;
@@ -270,31 +250,6 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
           }}
         />
       ) : null}
-
-      {order && (
-        <BuyNFTDrawer
-          title={order.isSellOrder ? 'Buy Order' : 'Sell Order'}
-          submitTitle={order.isSellOrder ? 'Buy' : 'Sell'}
-          orders={[order]}
-          open={showCompleteOrderDrawer}
-          onClose={() => {
-            setShowCompleteOrderDrawer(false);
-            setOrderDrawerOpen(false);
-          }}
-          onSubmitDone={(hash: string) => {
-            setShowCompleteOrderDrawer(false);
-            setOrderDrawerOpen(false);
-            setCompleteOrderTxHash(hash);
-          }}
-        />
-      )}
-      {completeOrderTxHash && (
-        <WaitingForTxModal
-          title={'Complete Order'}
-          txHash={completeOrderTxHash}
-          onClose={() => setCompleteOrderTxHash('')}
-        />
-      )}
     </div>
   );
 };

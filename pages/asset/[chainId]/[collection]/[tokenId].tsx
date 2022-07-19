@@ -231,6 +231,9 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
 
       {signedOBOrder && (
         <BuyNFTDrawer
+          onClickRemove={() => {
+            // TODO steve
+          }}
           title="Buy NFT"
           submitTitle="Buy"
           orders={[signedOBOrder]}

@@ -417,6 +417,9 @@ const CollectionPage = () => {
 
         {signedOBOrder && (
           <BuyNFTDrawer
+            onClickRemove={() => {
+              // TODO steve
+            }}
             title={'Buy NFT'}
             submitTitle={'Buy'}
             orders={[signedOBOrder]}
