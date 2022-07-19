@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Navbar, Spacer, Header } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { useDrawerContext } from 'src/utils/context/DrawerContext';
-import { useOrderContext } from 'src/utils/context/OrderContext';
-import { OrderDrawer } from '../market';
 import { isPasswordModalNeeded, PasswordModal } from './password-modal';
 
 // used in the Header
@@ -27,8 +24,6 @@ export const PageBox = ({
   rightToolbar
 }: Props): JSX.Element => {
   const { chainId } = useAppContext();
-  const { orderDrawerOpen, setOrderDrawerOpen } = useOrderContext();
-  const { hasOrderDrawer } = useDrawerContext();
   const [renderPasswordModal, setRenderPasswordModal] = useState(false);
 
   useEffect(() => {
@@ -50,11 +45,7 @@ export const PageBox = ({
           <div className={`transition ${fullWidth ? 'w-full' : pageStyles}`}>
             {showTitle ? <PageHeader title={title} rightToolbar={rightToolbar} /> : null}
 
-            <div className={`w-full ${className}`}>
-              {children}
-
-              {<OrderDrawer open={orderDrawerOpen && hasOrderDrawer()} onClose={() => setOrderDrawerOpen(false)} />}
-            </div>
+            <div className={`w-full ${className}`}>{children}</div>
 
             {/* allows scroll so items aren't at the bottom of the screen  */}
             <div className="shrink-0" style={{ height: 300 }} />

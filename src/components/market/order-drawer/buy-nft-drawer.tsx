@@ -1,4 +1,4 @@
-import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { ERC721CardData, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { Button, Spacer, toastSuccess, toastError, Divider, toastInfo, SVG } from 'src/components/common';
 import { ellipsisAddress, extractErrorMsg } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
@@ -7,9 +7,7 @@ import { iconButtonStyle } from 'src/utils/ui-constants';
 import { Drawer } from '../../common/drawer';
 import { OrderbookItem } from '../orderbook-list/orderbook-item';
 import { WaitingForTxModal } from '../order-drawer/waiting-for-tx-modal';
-import { useEffect, useState } from 'react';
-import { useOrderContext } from 'src/utils/context/OrderContext';
-import { useDrawerContext } from 'src/utils/context/DrawerContext';
+import { useState } from 'react';
 
 interface Props {
   title: string;
@@ -104,12 +102,18 @@ export interface DrawerHandlerParams {
   addOrder: (order: SignedOBOrder) => void;
   showDrawer: boolean;
   setShowDrawer: (flag: boolean) => void;
+
+  // for transfer drawer
+  nfts: ERC721CardData[];
+  setNfts: (orders: ERC721CardData[]) => void;
+  removeNft: (order: ERC721CardData) => void;
+  addNft: (order: ERC721CardData) => void;
 }
 
-export const useBuyDrawerHandler = (): DrawerHandlerParams => {
+export const useDrawerHandler = (): DrawerHandlerParams => {
   const [orders, setOrders] = useState<SignedOBOrder[]>([]);
+  const [nfts, setNfts] = useState<ERC721CardData[]>([]);
   const [showDrawer, setShowDrawer] = useState(false);
-  const { setOrderDrawerOpen } = useOrderContext();
 
   const removeOrder = (order: SignedOBOrder) => {
     const arr = orders.filter((o) => o.id !== order.id);
@@ -117,7 +121,6 @@ export const useBuyDrawerHandler = (): DrawerHandlerParams => {
 
     if (arr.length === 0) {
       setShowDrawer(false);
-      setOrderDrawerOpen(false);
     }
   };
 
@@ -132,7 +135,27 @@ export const useBuyDrawerHandler = (): DrawerHandlerParams => {
     setShowDrawer(true);
   };
 
-  return { orders, setOrders, removeOrder, addOrder, showDrawer, setShowDrawer };
+  const removeNft = (nft: ERC721CardData) => {
+    const arr = nfts.filter((o) => o.id !== nft.id);
+    setNfts(arr);
+
+    if (arr.length === 0) {
+      setShowDrawer(false);
+    }
+  };
+
+  const addNft = (nft: ERC721CardData) => {
+    const exists = nfts.findIndex((o) => o.id === nft.id) !== -1;
+    if (!exists) {
+      const arr = [...nfts, nft];
+
+      setNfts(arr);
+    }
+
+    setShowDrawer(true);
+  };
+
+  return { orders, setOrders, removeOrder, addOrder, showDrawer, setShowDrawer, nfts, setNfts, removeNft, addNft };
 };
 
 // ===================================================
@@ -147,14 +170,6 @@ interface Props2 {
 
 export const BuyNFTDrawerHandler = ({ removeOrder, showDrawer, orders, setShowDrawer }: Props2) => {
   const [completeOrderTxHash, setCompleteOrderTxHash] = useState('');
-  const { setOrderDrawerOpen, orderDrawerOpen } = useOrderContext();
-  const { hasOrderDrawer } = useDrawerContext();
-
-  useEffect(() => {
-    if (orderDrawerOpen && !hasOrderDrawer()) {
-      setShowDrawer(true);
-    }
-  }, [orderDrawerOpen]);
 
   const first = orders.length > 0 ? orders[0] : undefined;
 
@@ -168,11 +183,9 @@ export const BuyNFTDrawerHandler = ({ removeOrder, showDrawer, orders, setShowDr
         open={showDrawer}
         onClose={() => {
           setShowDrawer(false);
-          setOrderDrawerOpen(false);
         }}
         onSubmitDone={(hash: string) => {
           setShowDrawer(false);
-          setOrderDrawerOpen(false);
           setCompleteOrderTxHash(hash);
         }}
       />

@@ -3,14 +3,12 @@ import { UserPageOrderListItem } from './user-page-order-list-item';
 import { apiGet, extractErrorMsg, ITEMS_PER_PAGE, ellipsisAddress } from 'src/utils';
 import { Button, CenteredContent, ScrollLoader, Spinner, toastError, toastInfo, toastSuccess } from '../common';
 import { UserProfileDto } from '../user/user-profile-dto';
-import { CancelDrawer } from 'src/components/market/order-drawer/cancel-drawer';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import {
   DEFAULT_ORDER_TYPE_FILTER,
   UserOrderFilter,
   UserProfileOrderFilterPanel
 } from '../filter/user-profile-order-filter-panel';
-import { useOrderContext } from 'src/utils/context/OrderContext';
 import { cancelAllOrders } from 'src/utils/exchange/orders';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { fetchOrderNonce } from 'src/utils/marketUtils';
@@ -35,8 +33,7 @@ interface Props {
 
 export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
   const { providerManager, chainId, user, waitForTransaction } = useAppContext();
-  const { setOrderDrawerOpen } = useOrderContext();
-  const { setCartItemCount } = useDrawerContext();
+  const { drawerParams, cancelDrawerParams } = useDrawerContext();
   const [data, setData] = useState<SignedOBOrder[]>([]);
   const [isFetching, setIsFetching] = useState(false);
   const [cursor, setCursor] = useState('');
@@ -44,14 +41,6 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
   const [filterShowed, setFilterShowed] = useState(true);
   const [isCancellingAll, setIsCancellingAll] = useState(false);
   const [apiFilter, setApiFilter] = useState<UserOrderFilter>({ orderType: DEFAULT_ORDER_TYPE_FILTER });
-  const [showCancelDrawer, setShowCancelDrawer] = useState(false);
-  const { drawerParams } = useDrawerContext();
-
-  const [selectedOrders, setSelectedOrders] = useState<SignedOBOrder[]>([]);
-
-  useEffect(() => {
-    setCartItemCount(selectedOrders.length);
-  }, [apiFilter, selectedOrders]);
 
   const fetchData = async (isRefresh = false) => {
     setIsFetching(true);
@@ -123,18 +112,18 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
       }
     } else {
       if (checked) {
-        const arr = [...selectedOrders, order];
-        setSelectedOrders(arr);
+        const arr = [...cancelDrawerParams.orders, order];
+        cancelDrawerParams.setOrders(arr);
 
         if (arr.length === 1) {
-          setShowCancelDrawer(true);
+          cancelDrawerParams.setShowDrawer(true);
         }
       } else {
-        const arr = selectedOrders.filter((o) => o.id !== order.id);
-        setSelectedOrders(arr);
+        const arr = cancelDrawerParams.orders.filter((o) => o.id !== order.id);
+        cancelDrawerParams.setOrders(arr);
 
         if (arr.length === 0) {
-          setShowCancelDrawer(false);
+          cancelDrawerParams.setShowDrawer(false);
         }
       }
     }
@@ -222,24 +211,6 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
           ) : null}
         </div>
       </div>
-
-      <CancelDrawer
-        orders={selectedOrders}
-        open={showCancelDrawer}
-        onClose={() => {
-          setShowCancelDrawer(false);
-          setOrderDrawerOpen(false);
-        }}
-        onClickRemove={(removingOrder) => {
-          const arr = selectedOrders.filter((o) => o.id !== removingOrder.id);
-          setSelectedOrders(arr);
-
-          if (arr.length === 0) {
-            setShowCancelDrawer(false);
-            setOrderDrawerOpen(false);
-          }
-        }}
-      />
     </div>
   );
 };
