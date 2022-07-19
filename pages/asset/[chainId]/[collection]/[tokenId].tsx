@@ -34,6 +34,7 @@ import { useAppContext } from 'src/utils/context/AppContext';
 import { getOBOrderFromFirestoreOrderItem } from 'src/utils/exchange/orders';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { fetchUserSignedOBOrder } from 'src/utils/marketUtils';
+import { AcceptOfferDrawer } from 'src/components/market/order-drawer/accept-offer-drawer';
 
 const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
@@ -66,15 +67,6 @@ const AssetDetailPage = () => {
 
 // ===========================================================
 
-/* notes
-
-  asset page has drawer for purchase?  Placebid, makeOffer, how different
-
-  owner === asset owner
-
-
-*/
-
 interface Props {
   qchainId: string;
   qcollection: string;
@@ -94,11 +86,15 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const [showBuyDrawer, setShowBuyDrawer] = useState(false);
   const [buyTxHash, setBuyTxHash] = useState('');
   const [buyPriceEth, setBuyPriceEth] = useState('');
+  const [sellPriceEth, setSellPriceEth] = useState('');
   const [sendTxHash, setSendTxHash] = useState('');
-  const [signedOBOrder, setSignedOBOrder] = useState<SignedOBOrder | null>(null);
+  const [signedListing, setSignedListing] = useState<SignedOBOrder | null>(null);
+  const [signedOffer, setSignedOffer] = useState<SignedOBOrder | null>(null);
+  const [showAcceptOfferDrawer, setShowAcceptOfferDrawer] = useState(false);
 
   const tokenOwner = getOwnerAddress(token);
   const isNftOwner = token ? user?.address === tokenOwner : false;
+
   const listingOwner = token?.ordersSnippet?.listing?.orderItem?.makerAddress ?? '';
   const isListingOwner = user?.address === listingOwner;
 
@@ -107,6 +103,11 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
       const obOrder: OBOrder = getOBOrderFromFirestoreOrderItem(token?.ordersSnippet?.listing?.orderItem);
       const price = getCurrentOBOrderPrice(obOrder);
       setBuyPriceEth(utils.formatEther(price));
+    }
+    if (token?.ordersSnippet?.offer?.orderItem) {
+      const obOrder: OBOrder = getOBOrderFromFirestoreOrderItem(token?.ordersSnippet?.offer?.orderItem);
+      const price = getCurrentOBOrderPrice(obOrder);
+      setSellPriceEth(utils.formatEther(price));
     }
   }, [token]);
 
@@ -117,7 +118,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   // if cached url is null, try original url or the blank image
   if (token && !token?.image?.url) {
     token.image = token.image || {};
-    token.image.url = token.image?.originalUrl ?? '';
+    token.image.url = token.alchemyCachedImage ?? token.image?.originalUrl ?? '';
   }
 
   const images = [token?.image?.url, token?.alchemyCachedImage, token?.metadata?.image, MISSING_IMAGE_URL].filter(
@@ -142,17 +143,6 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
 
   if (error) {
     return <NotFound404Page />;
-    // return (
-    //   <PageBox title="Asset - Error" className="w-full h-full grid place-items-center">
-    //     <div className="flex flex-col max-w-screen-2xl mt-4">
-    //       <main>
-    //         <p>Unable to load data.</p>
-    //       </main>
-    //     </div>
-    //   </PageBox>
-    // );
-    // router.push(`/not-found-404?chainId=${qchainId}&collectionAddress=${qcollection}&tokenId=${qtokenId}`);
-    // return null;
   }
   if (!token) {
     return null;
@@ -163,6 +153,26 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const assetName = tokenMetadata.name
     ? `${tokenMetadata.name} - ${token.collectionName}`
     : tokenMetadata.name || token.collectionName || 'brrrr';
+
+  const onClickBuy = async () => {
+    try {
+      const signedListing = await fetchUserSignedOBOrder(token?.ordersSnippet?.listing?.orderItem?.id);
+      setSignedListing(signedListing);
+      setShowBuyDrawer(true);
+    } catch (err) {
+      toastError(`Failed to fetch signed listing`);
+    }
+  };
+
+  const onClickAcceptOffer = async () => {
+    try {
+      const signedOffer = await fetchUserSignedOBOrder(token?.ordersSnippet?.offer?.orderItem?.id);
+      setSignedOffer(signedOffer);
+      setShowAcceptOfferDrawer(true);
+    } catch (err) {
+      toastError(`Failed to fetch signed offer`);
+    }
+  };
 
   const onClickMakeOffer = () => {
     if (!checkSignedIn()) {
@@ -229,14 +239,14 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
         />
       )}
 
-      {signedOBOrder && (
+      {signedListing && (
         <BuyNFTDrawer
           onClickRemove={() => {
             // TODO steve
           }}
           title="Buy NFT"
           submitTitle="Buy"
-          orders={[signedOBOrder]}
+          orders={[signedListing]}
           open={showBuyDrawer}
           onClose={() => {
             setShowBuyDrawer(false);
@@ -249,38 +259,21 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
           }}
         />
       )}
-
       {buyTxHash && <WaitingForTxModal title={'Buying NFT'} txHash={buyTxHash} onClose={() => setBuyTxHash('')} />}
+
+      {signedOffer && (
+        <AcceptOfferDrawer
+          orders={[signedOffer]}
+          open={showAcceptOfferDrawer}
+          onClose={() => {
+            setShowAcceptOfferDrawer(false);
+            setOrderDrawerOpen(false);
+          }}
+          onClickRemove={() => console.log}
+        />
+      )}
     </>
   );
-
-  const fetchSignedOBOrder = async () => {
-    try {
-      const signedOBOrder = await fetchUserSignedOBOrder(token?.ordersSnippet?.listing?.orderItem?.id);
-      setSignedOBOrder(signedOBOrder);
-      return signedOBOrder;
-    } catch (err) {
-      toastError(`Failed to fetch order`);
-    }
-  };
-
-  const onClickBuy = async () => {
-    // - direct buy:
-    // const signer = providerManager?.getEthersProvider().getSigner();
-    // if (signer) {
-    //   const order = await fetchUserSignedOBOrder(token?.ordersSnippet?.listing?.orderItem?.id);
-    //   if (order) {
-    //     await takeMultipleOneOrders(signer, chainId, [order.signedOrder]);
-    //     toastSuccess('Sent txn successfully');
-    //   }
-    // } else {
-    //   throw 'Signer is null';
-    // }
-    const signedOBOrder = await fetchSignedOBOrder();
-    if (signedOBOrder) {
-      setShowBuyDrawer(true);
-    }
-  };
 
   return (
     <PageBox title={assetName} showTitle={false} className="flex flex-col max-w-screen-2xl mt-4">
@@ -318,28 +311,28 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
             tooltip={tokenOwner}
           />
 
-          {isListingOwner ? (
+          {isListingOwner && (
             // Listing owner's action buttons
             <div className="md:-ml-1.5">
               <div className="flex flex-col md:flex-row gap-4 my-4 md:my-6 lg:mt-10">
                 {buyPriceEth && (
-                  <Button variant="primary" size="large" onClick={onClickCancel}>
-                    <div className="flex">
-                      <span className="mr-4">Cancel</span>
-                      <span className="font-heading">
-                        <EthPrice label={buyPriceEth} rowClassName="pt-[1px]" />
-                      </span>
-                    </div>
-                  </Button>
+                  <>
+                    <Button variant="outline" size="large" onClick={onClickCancel}>
+                      <div className="flex">
+                        <span className="mr-4">Cancel</span>
+                        <span className="font-heading">
+                          <EthPrice label={buyPriceEth} rowClassName="pt-[1px]" />
+                        </span>
+                      </div>
+                    </Button>
+                    <Button variant="outline" size="large" onClick={onClickLowerPrice}>
+                      Lower Price
+                    </Button>
+                  </>
                 )}
-                {isNftOwner ? (
-                  <Button variant="outline" size="large" onClick={onClickLowerPrice}>
-                    Lower Price
-                  </Button>
-                ) : null}
               </div>
             </div>
-          ) : null}
+          )}
 
           {isNftOwner ? (
             <div className="md:-ml-1.5">
@@ -347,6 +340,13 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
                 <Button variant="outline" size="large" onClick={onClickSend}>
                   Send
                 </Button>
+                {sellPriceEth && (
+                  <Button variant="outline" size="large" className="" onClick={onClickAcceptOffer}>
+                    <div className="flex">
+                      Accept Offer <EthPrice label={`${sellPriceEth}`} className="ml-2" rowClassName="" />
+                    </div>
+                  </Button>
+                )}
               </div>
             </div>
           ) : (
