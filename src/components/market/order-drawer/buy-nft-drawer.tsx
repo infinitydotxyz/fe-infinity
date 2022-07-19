@@ -59,7 +59,7 @@ const BuyNFTDrawer = ({ open, onClose, orders, onClickRemove, onSubmitDone, titl
       <Drawer
         open={open}
         onClose={onClose}
-        subtitle={'Batch buy these NFTs in one transaction'}
+        subtitle={'Batch buy/sell these NFTs in one transaction'}
         title={<div className="flex items-center">{title}</div>}
       >
         <div className="flex flex-col h-full">
