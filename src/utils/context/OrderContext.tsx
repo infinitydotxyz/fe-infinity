@@ -408,6 +408,8 @@ export const OrderContextProvider = ({ children }: Props) => {
       // we have cleared out the items, so the next item added will be an add, not an update
       if (copy.length === 0) {
         setIsEditingOrder(false);
+
+        setOrderDrawerOpen(false);
       }
 
       setCartItems(copy);
