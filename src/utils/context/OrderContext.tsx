@@ -230,7 +230,19 @@ export const OrderContextProvider = ({ children }: Props) => {
         cartItems: cartItems
       };
 
-      setOrdersInCart([...ordersInCart, orderInCart]);
+      // is this already in the cart?
+      let exists = false;
+      for (const inCart of ordersInCart) {
+        for (const item of cartItems) {
+          if (indexOfCartItem(inCart.cartItems, item) !== -1) {
+            exists = true;
+          }
+        }
+      }
+
+      if (!exists) {
+        setOrdersInCart([...ordersInCart, orderInCart]);
+      }
 
       setCartItems([]);
     } catch (err) {
