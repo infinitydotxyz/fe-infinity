@@ -5,7 +5,7 @@ import { useAppContext } from 'src/utils/context/AppContext';
 import { canTakeMultipleOneOrders, takeMultipleOneOrders } from 'src/utils/exchange/orders';
 import { iconButtonStyle } from 'src/utils/ui-constants';
 import { Drawer } from '../../common/drawer';
-import { OrderbookItem } from '../orderbook-list/orderbook-item';
+import { NFTPicker, OrderbookItem } from '../orderbook-list/orderbook-item';
 import { WaitingForTxModal } from '../order-drawer/waiting-for-tx-modal';
 import { useState } from 'react';
 
@@ -21,6 +21,7 @@ interface Props {
 
 const BuyNFTDrawer = ({ open, onClose, orders, onClickRemove, onSubmitDone, title, submitTitle }: Props) => {
   const { providerManager, chainId, waitForTransaction } = useAppContext();
+  const [selection, setSelection] = useState(new Map<string, boolean>());
 
   const onClickBuy = async () => {
     try {
@@ -68,6 +69,21 @@ const BuyNFTDrawer = ({ open, onClose, orders, onClickRemove, onSubmitDone, titl
                   <div className="w-full flex justify-between">
                     <div className="flex-1">
                       <OrderbookItem nameItem={true} key={`${order.id} ${order.chainId}`} order={order} />
+
+                      {/* TODO - adi 
+                        not sure how this works. there are nfts and tokens inside nfts? 
+                        do we always pick one? or could numItems be 2 or 3? */}
+
+                      {order.nfts.length > 1 && (
+                        <NFTPicker
+                          className="mt-3"
+                          nfts={order.nfts}
+                          selection={selection}
+                          onChange={(selection) => {
+                            setSelection(selection);
+                          }}
+                        />
+                      )}
                     </div>
                   </div>
 
