@@ -33,7 +33,7 @@ interface Props {
 
 export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
   const { providerManager, chainId, user, waitForTransaction } = useAppContext();
-  const { drawerParams, cancelDrawerParams } = useDrawerContext();
+  const { fulfillDrawerParams, cancelDrawerParams } = useDrawerContext();
   const [data, setData] = useState<SignedOBOrder[]>([]);
   const [isFetching, setIsFetching] = useState(false);
   const [cursor, setCursor] = useState('');
@@ -104,10 +104,10 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
   const listItemButtonClick = (order: SignedOBOrder, checked: boolean) => {
     if (apiFilter.orderType === 'offers-received') {
       if (checked) {
-        drawerParams.addOrder(order);
-        drawerParams.setShowDrawer(true);
+        fulfillDrawerParams.addOrder(order);
+        fulfillDrawerParams.setShowDrawer(true);
       } else {
-        drawerParams.removeOrder(order);
+        fulfillDrawerParams.removeOrder(order);
         // setShowDrawer(true);
       }
     } else {

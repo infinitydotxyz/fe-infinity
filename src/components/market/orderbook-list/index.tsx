@@ -109,7 +109,7 @@ const OrderbookList = ({
   hasMoreOrders,
   hasNoData
 }: Props2): JSX.Element => {
-  const { drawerParams } = useDrawerContext();
+  const { fulfillDrawerParams } = useDrawerContext();
 
   return (
     <div className="flex justify-center align-items gap-4 pointer-events-auto">
@@ -125,7 +125,7 @@ const OrderbookList = ({
           orderList.map((order: SignedOBOrder, i: number) => {
             return (
               <OrderbookRow
-                onClickActionBtn={drawerParams.addOrder}
+                onClickActionBtn={fulfillDrawerParams.addOrder}
                 key={`${i}-${order.id}`}
                 order={order}
                 isFilterOpen={showFilters ?? false}

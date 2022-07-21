@@ -16,7 +16,7 @@ export type DrawerContextType = {
   cartItemCount: number;
   setCartItemCount: (n: number) => void;
 
-  drawerParams: DrawerHandlerParams;
+  fulfillDrawerParams: DrawerHandlerParams;
   cancelDrawerParams: DrawerHandlerParams;
   transferDrawerParams: DrawerHandlerParams;
 
@@ -38,8 +38,8 @@ export const DrawerContextProvider = ({ children }: Props) => {
   const drawerButtonClick = () => {
     if (cartItems.length > 0 || ordersInCart.length > 0) {
       setOrderDrawerOpen(!orderDrawerOpen);
-    } else if (drawerParams.orders.length > 0) {
-      drawerParams.setShowDrawer(true);
+    } else if (fulfillDrawerParams.orders.length > 0) {
+      fulfillDrawerParams.setShowDrawer(true);
     } else if (cancelDrawerParams.orders.length > 0) {
       cancelDrawerParams.setShowDrawer(true);
     } else if (transferDrawerParams.nfts.length > 0) {
@@ -54,7 +54,7 @@ export const DrawerContextProvider = ({ children }: Props) => {
 
   // =========================================================
 
-  const drawerParams: DrawerHandlerParams = useDrawerHandler();
+  const fulfillDrawerParams: DrawerHandlerParams = useDrawerHandler();
   const cancelDrawerParams: DrawerHandlerParams = useDrawerHandler();
   const transferDrawerParams: DrawerHandlerParams = useDrawerHandler();
 
@@ -67,8 +67,8 @@ export const DrawerContextProvider = ({ children }: Props) => {
     }
 
     if (!done) {
-      if (drawerParams.orders.length > 0) {
-        setCartItemCount(drawerParams.orders.length);
+      if (fulfillDrawerParams.orders.length > 0) {
+        setCartItemCount(fulfillDrawerParams.orders.length);
         done = true;
       }
     }
@@ -92,7 +92,14 @@ export const DrawerContextProvider = ({ children }: Props) => {
       setCartItemCount(0);
       done = true;
     }
-  }, [ordersInCart, cartItems, router, drawerParams.orders, cancelDrawerParams.orders, transferDrawerParams.nfts]);
+  }, [
+    ordersInCart,
+    cartItems,
+    router,
+    fulfillDrawerParams.orders,
+    cancelDrawerParams.orders,
+    transferDrawerParams.nfts
+  ]);
 
   // =========================================================
 
@@ -100,7 +107,7 @@ export const DrawerContextProvider = ({ children }: Props) => {
     cartItemCount,
     setCartItemCount,
 
-    drawerParams,
+    fulfillDrawerParams,
     cancelDrawerParams,
     transferDrawerParams,
 
@@ -152,11 +159,11 @@ export const DrawerContextProvider = ({ children }: Props) => {
         />
 
         <FulfillOrderDrawerHandler
-          setShowDrawer={drawerParams.setShowDrawer}
-          showDrawer={drawerParams.showDrawer}
-          orders={drawerParams.orders}
-          setOrders={drawerParams.setOrders}
-          removeOrder={drawerParams.removeOrder}
+          setShowDrawer={fulfillDrawerParams.setShowDrawer}
+          showDrawer={fulfillDrawerParams.showDrawer}
+          orders={fulfillDrawerParams.orders}
+          setOrders={fulfillDrawerParams.setOrders}
+          removeOrder={fulfillDrawerParams.removeOrder}
         />
       </>
     </DrawerContext.Provider>

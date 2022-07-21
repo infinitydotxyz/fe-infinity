@@ -76,7 +76,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const [buyPriceEth, setBuyPriceEth] = useState('');
   const [sellPriceEth, setSellPriceEth] = useState('');
   const [sendTxHash, setSendTxHash] = useState('');
-  const { drawerParams } = useDrawerContext();
+  const { fulfillDrawerParams } = useDrawerContext();
 
   const tokenOwner = getOwnerAddress(token);
   const isNftOwner = token ? user?.address === tokenOwner : false;
@@ -144,8 +144,8 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
     try {
       const signedListing = await fetchUserSignedOBOrder(token?.ordersSnippet?.listing?.orderItem?.id);
       if (signedListing) {
-        drawerParams.addOrder(signedListing);
-        drawerParams.setShowDrawer(true);
+        fulfillDrawerParams.addOrder(signedListing);
+        fulfillDrawerParams.setShowDrawer(true);
       }
     } catch (err) {
       toastError(`Failed to fetch signed listing`);
@@ -156,8 +156,8 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
     try {
       const signedOffer = await fetchUserSignedOBOrder(token?.ordersSnippet?.offer?.orderItem?.id);
       if (signedOffer) {
-        drawerParams.addOrder(signedOffer);
-        drawerParams.setShowDrawer(true);
+        fulfillDrawerParams.addOrder(signedOffer);
+        fulfillDrawerParams.setShowDrawer(true);
       }
     } catch (err) {
       toastError(`Failed to fetch signed offer`);

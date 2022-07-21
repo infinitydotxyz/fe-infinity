@@ -51,7 +51,7 @@ const CollectionPage = () => {
   } = router;
   const { mutate } = useSWRConfig();
   const [isStakeModalOpen, setIsStakeModalOpen] = useState(false);
-  const { drawerParams } = useDrawerContext();
+  const { fulfillDrawerParams } = useDrawerContext();
 
   useEffect(() => {
     if (isBuyClicked === true) {
@@ -377,8 +377,8 @@ const CollectionPage = () => {
                             data?.orderSnippet?.listing?.orderItem?.id ?? ''
                           );
                           if (signedOBOrder) {
-                            drawerParams.addOrder(signedOBOrder);
-                            drawerParams.setShowDrawer(true);
+                            fulfillDrawerParams.addOrder(signedOBOrder);
+                            fulfillDrawerParams.setShowDrawer(true);
                           }
                         } else {
                           // Add a Buy order to cart (Make offer)
