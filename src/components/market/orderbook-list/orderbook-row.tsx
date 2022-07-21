@@ -192,7 +192,7 @@ export const OrderbookRow = ({ order, onClickActionBtn, isFilterOpen }: Props) =
           const title = data.name;
 
           if (data.field === 'buyOrSell') {
-            return actionButton();
+            return <div key={`${order.id} ${data.field}`}>{actionButton()}</div>;
           }
 
           if (isFilterOpen === true && (data.name === 'From' || data.name === 'Date')) {
