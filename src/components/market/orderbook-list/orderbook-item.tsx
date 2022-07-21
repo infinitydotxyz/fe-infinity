@@ -204,7 +204,7 @@ const SingleCollectionCell = ({
 };
 
 // ==================================================================
-// ==================================================================
+// not used, but keeping for possible future
 
 type Props4 = {
   nfts: OBOrderItem[];
