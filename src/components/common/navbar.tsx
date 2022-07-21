@@ -14,9 +14,12 @@ import {
 } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 import { useRouter } from 'next/router';
+import { useAppContext } from 'src/utils/context/AppContext';
 
 export const Navbar = () => {
   const router = useRouter();
+  const { user, signOut } = useAppContext();
+  const connected = user?.address ? true : false;
 
   const content = {
     buttons: {
@@ -79,6 +82,86 @@ export const Navbar = () => {
     }
   };
 
+  interface MenuItm {
+    label: string;
+    onClick: () => void;
+  }
+
+  const mobileMenuContent = () => {
+    const result: MenuItm[] = [];
+
+    result.push({
+      label: 'Trending',
+      onClick: () => {
+        router.push('/trending');
+      }
+    });
+
+    result.push({
+      label: 'My profile',
+      onClick: () => {
+        router.push('/profile/me');
+      }
+    });
+
+    result.push({
+      label: 'Market',
+      onClick: () => {
+        router.push('/market');
+      }
+    });
+
+    if (!connected) {
+      result.push({
+        label: 'Connect',
+        onClick: () => {
+          router.push('/connect');
+        }
+      });
+    } else {
+      result.push({
+        label: 'Sign out',
+        onClick: () => {
+          signOut();
+        }
+      });
+    }
+
+    result.push({
+      label: '-',
+      onClick: () => {
+        // divider
+      }
+    });
+
+    result.push({
+      label: 'Docs',
+      onClick: () => {
+        window.open('https://docs.infinity.xyz');
+      }
+    });
+    result.push({
+      label: 'Twitter',
+      onClick: () => {
+        window.open('https://twitter.com/infinitydotxyz');
+      }
+    });
+    result.push({
+      label: 'Discord',
+      onClick: () => {
+        window.open('http://discord.gg/4VFcGY3W7H');
+      }
+    });
+    result.push({
+      label: 'Medium',
+      onClick: () => {
+        window.open('https://medium.com/@infinitydotxyz');
+      }
+    });
+
+    return result;
+  };
+
   const mobileMenu = (
     <div className="relative flex justify-center">
       <Menu>
@@ -91,25 +174,15 @@ export const Navbar = () => {
             border border-gray-200 bg-white shadow-2xl outline-none`
           )}
         >
-          {content?.buttons?.items?.map((item, i) => (
-            <React.Fragment key={i}>
-              {item.type === 'link' && (
-                <CustomMenuItem key={i} onClick={() => router.push(item.props?.href ?? '')}>
-                  {item?.label}
-                </CustomMenuItem>
-              )}
-              {item.type === 'dropdown' && (
-                <>
-                  <hr className="my-1" />
-                  {item?.menu?.map((x, j) => (
-                    <CustomMenuItem key={j} onClick={x.onClick}>
-                      {x?.label}
-                    </CustomMenuItem>
-                  ))}
-                </>
-              )}
-            </React.Fragment>
-          ))}
+          {mobileMenuContent().map((item, i) =>
+            item.label === '-' ? (
+              <hr key={i} className="my-1" />
+            ) : (
+              <CustomMenuItem key={i} onClick={item.onClick}>
+                {item.label}
+              </CustomMenuItem>
+            )
+          )}
         </Menu.Items>
       </Menu>
     </div>
@@ -123,6 +196,7 @@ export const Navbar = () => {
       </NextLink>
 
       <SearchInput expanded={true} />
+      <ShoppingCartButton />
     </div>
   );
 
