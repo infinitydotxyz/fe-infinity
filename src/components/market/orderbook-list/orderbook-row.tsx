@@ -148,8 +148,43 @@ export const OrderbookRow = ({ order, onClickActionBtn, isFilterOpen }: Props) =
 
   const isOwner = order.makerAddress === user?.address;
 
+  const actionButton = () => {
+    if (isOwner) {
+      return (
+        <Button className="w-32" onClick={() => onClickEdit(order)}>
+          Edit
+        </Button>
+      );
+    }
+    const isOfferToUser = checkOffersToUser(order, user);
+    if (order.isSellOrder) {
+      // Sell Order (Listing)
+      return (
+        <Button className="w-32" onClick={() => onClickBuySell(order)}>
+          Buy
+        </Button>
+      );
+    } else if (isOfferToUser === true) {
+      // Buy Order (Offer) => show Sell button (if offer made to current user)
+      return (
+        <Button className="w-32" onClick={() => onClickBuySell(order)}>
+          Sell
+        </Button>
+      );
+    } else if (isOfferToUser === false) {
+      return (
+        <Button className="w-32" onClick={() => onClickBidHigher(order)}>
+          Bid higher
+        </Button>
+      );
+    } else {
+      return null;
+    }
+  };
+
   return (
     <div className="rounded-3xl mb-3 p-8 w-full bg-gray-100">
+      {/* for larger screen - show row summary: */}
       <div className="items-center w-full hidden lg:grid" style={{ gridTemplateColumns: gridTemplate }}>
         {defaultDataColumns(order).map((data) => {
           const content = valueDiv(data);
@@ -157,41 +192,13 @@ export const OrderbookRow = ({ order, onClickActionBtn, isFilterOpen }: Props) =
           const title = data.name;
 
           if (data.field === 'buyOrSell') {
-            if (isOwner) {
-              return (
-                <Button className="w-32" key={`${order.id} ${data.field}`} onClick={() => onClickEdit(order)}>
-                  Edit
-                </Button>
-              );
-            }
-            const isOfferToUser = checkOffersToUser(order, user);
-            if (order.isSellOrder) {
-              // Sell Order (Listing)
-              return (
-                <Button className="w-32" key={`${order.id} ${data.field}`} onClick={() => onClickBuySell(order)}>
-                  Buy
-                </Button>
-              );
-            } else if (isOfferToUser === true) {
-              // Buy Order (Offer) => show Sell button (if offer made to current user)
-              return (
-                <Button className="w-32" key={`${order.id} ${data.field}`} onClick={() => onClickBuySell(order)}>
-                  Sell
-                </Button>
-              );
-            } else if (isOfferToUser === false) {
-              return (
-                <Button className="w-32" key={`${order.id} ${data.field}`} onClick={() => onClickBidHigher(order)}>
-                  Bid higher
-                </Button>
-              );
-            } else {
-              return null;
-            }
+            return actionButton();
           }
+
           if (isFilterOpen === true && (data.name === 'From' || data.name === 'Date')) {
             return null;
           }
+
           return (
             <OrderbookItem
               nameItem={data.type === 'Name'}
@@ -234,7 +241,7 @@ export const OrderbookRow = ({ order, onClickActionBtn, isFilterOpen }: Props) =
           </div>
         </div>
         <div className="text-right">
-          <Button>{order.isSellOrder ? 'Buy' : 'Sell'}</Button>
+          {actionButton()}
 
           <div>{moment(order.startTimeMs).fromNow()}</div>
           <div>Expiry: {shortDate(new Date(order.endTimeMs))}</div>
