@@ -1,4 +1,4 @@
-import { ERC721CardData, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { ERC721CardData, OBOrderItem, OBTokenInfo, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { Button, Spacer, toastSuccess, toastError, Divider, toastInfo, SVG } from 'src/components/common';
 import { ellipsisAddress, extractErrorMsg } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
@@ -8,7 +8,7 @@ import { Drawer } from '../../common/drawer';
 import { OrderbookItem } from '../orderbook-list/orderbook-item';
 import { WaitingForTxModal } from './waiting-for-tx-modal';
 import { useEffect, useState } from 'react';
-import { OrderDetailPicker } from '../order-detail-picker';
+import { orderDetailKey, OrderDetailPicker } from '../order-detail-picker';
 
 interface Props {
   title: string;
@@ -20,23 +20,13 @@ interface Props {
   onClickRemove: (order: SignedOBOrder) => void;
 }
 
-interface ReadyOrder {
-  order: SignedOBOrder;
-  selection: Set<string>;
-  valid: boolean;
-}
-
 const FulfillOrderDrawer = ({ open, onClose, orders, onClickRemove, onSubmitDone, title, submitTitle }: Props) => {
   const { providerManager, chainId, waitForTransaction } = useAppContext();
-  const [readyOrders, setReadyOrders] = useState<ReadyOrder[]>([]);
+  const [readyOrders, setReadyOrders] = useState<ReadyOrders>(new ReadyOrders([]));
 
   useEffect(() => {
     const rOrders = orders.map((e) => {
-      return {
-        order: e,
-        selection: new Set<string>(),
-        valid: false
-      };
+      return new ReadyOrder(e, new Set<string>(), false);
     });
 
     updateValidFlags(rOrders);
@@ -44,34 +34,10 @@ const FulfillOrderDrawer = ({ open, onClose, orders, onClickRemove, onSubmitDone
 
   const updateValidFlags = (rOrders: ReadyOrder[]) => {
     for (const rOrder of rOrders) {
-      rOrder.valid = orderIsValid(rOrder);
+      rOrder.updateIsValid();
     }
 
-    setReadyOrders(rOrders);
-  };
-
-  const orderIsValid = (rOrder: ReadyOrder) => {
-    let numTokensToChoose = 0;
-
-    for (const nft of rOrder.order.nfts) {
-      numTokensToChoose += nft.tokens.length;
-    }
-
-    if (numTokensToChoose > rOrder.order.numItems) {
-      return rOrder.selection.size === rOrder.order.numItems;
-    }
-
-    return true;
-  };
-
-  const allOrdersValid = () => {
-    for (const rOrder of readyOrders) {
-      if (!rOrder.valid) {
-        return false;
-      }
-    }
-
-    return true;
+    setReadyOrders(new ReadyOrders(rOrders));
   };
 
   const onClickBuy = async () => {
@@ -105,7 +71,7 @@ const FulfillOrderDrawer = ({ open, onClose, orders, onClickRemove, onSubmitDone
   };
 
   const content = () => {
-    return readyOrders.map((rOrder, idx) => {
+    return readyOrders.orders.map((rOrder, idx) => {
       if (!rOrder.valid) {
         return (
           <div className="bg-theme-light-200 rounded-2xl p-4">
@@ -115,7 +81,7 @@ const FulfillOrderDrawer = ({ open, onClose, orders, onClickRemove, onSubmitDone
               onChange={(newSelection) => {
                 rOrder.selection = newSelection;
 
-                setReadyOrders([...readyOrders]);
+                setReadyOrders(new ReadyOrders(readyOrders.orders));
               }}
             />
 
@@ -130,7 +96,7 @@ const FulfillOrderDrawer = ({ open, onClose, orders, onClickRemove, onSubmitDone
               </Button>
               <Button
                 onClick={() => {
-                  updateValidFlags([...readyOrders]);
+                  updateValidFlags(readyOrders.orders);
                 }}
               >
                 Add to Cart
@@ -146,7 +112,7 @@ const FulfillOrderDrawer = ({ open, onClose, orders, onClickRemove, onSubmitDone
                 <OrderbookItem
                   nameItem={true}
                   key={`${rOrder.order.id} ${rOrder.order.chainId}`}
-                  order={rOrder.order}
+                  order={rOrder.modifiedOrder()}
                 />
               </div>
             </div>
@@ -175,7 +141,7 @@ const FulfillOrderDrawer = ({ open, onClose, orders, onClickRemove, onSubmitDone
           <footer className="w-full text-center py-4">
             <Divider className="mb-10" />
 
-            <Button size="large" onClick={onClickBuy} disabled={!allOrdersValid()}>
+            <Button size="large" onClick={onClickBuy} disabled={!readyOrders.allOrdersValid()}>
               {submitTitle}
             </Button>
           </footer>
@@ -292,3 +258,79 @@ export const FulfillOrderDrawerHandler = ({ removeOrder, showDrawer, orders, set
     </div>
   );
 };
+
+// ===============================================
+
+class ReadyOrders {
+  constructor(orders: ReadyOrder[]) {
+    this.orders = orders;
+  }
+  orders: ReadyOrder[];
+
+  allOrdersValid() {
+    for (const rOrder of this.orders) {
+      if (!rOrder.valid) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+}
+
+class ReadyOrder {
+  constructor(order: SignedOBOrder, selection: Set<string>, valid: boolean) {
+    this.order = order;
+    this.selection = selection;
+    this.valid = valid;
+  }
+  order: SignedOBOrder;
+  selection: Set<string>;
+  valid: boolean;
+
+  modifiedOrder(): SignedOBOrder {
+    if (this.selection.size > 0) {
+      const newOrder = JSON.parse(JSON.stringify(this.order)) as SignedOBOrder;
+      const newNfts: OBOrderItem[] = [];
+
+      // only add the tokens we selected so it will draw correctly
+      for (const nft of newOrder.nfts) {
+        const newTokens: OBTokenInfo[] = [];
+
+        for (const token of nft.tokens) {
+          const key = orderDetailKey(nft.collectionAddress, token.tokenId);
+
+          if (this.selection.has(key)) {
+            newTokens.push(token);
+          }
+        }
+
+        nft.tokens = newTokens;
+
+        if (nft.tokens.length > 0) {
+          newNfts.push(nft);
+        }
+      }
+
+      newOrder.nfts = newNfts;
+
+      return newOrder;
+    }
+
+    return this.order;
+  }
+
+  updateIsValid() {
+    let numTokensToChoose = 0;
+
+    for (const nft of this.order.nfts) {
+      numTokensToChoose += nft.tokens.length;
+    }
+
+    if (numTokensToChoose > this.order.numItems) {
+      this.valid = this.selection.size === this.order.numItems;
+    } else {
+      this.valid = true;
+    }
+  }
+}

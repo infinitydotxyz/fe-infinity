@@ -2,7 +2,7 @@ import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import React from 'react';
 import { EZImage, Spacer } from 'src/components/common';
 
-const selectionKey = (collectionAddress: string, tokenId: string): string => {
+export const orderDetailKey = (collectionAddress: string, tokenId: string): string => {
   return `${collectionAddress}:${tokenId}`;
 };
 
@@ -22,12 +22,18 @@ export const OrderDetailPicker = ({ selection, onChange, order }: Props2) => {
         {order.isSellOrder ? 'bought' : 'sold (if you own enough)'} for the given price.
       </div>
 
+      {showCheckbox && (
+        <div className="text-gray-500 mt-1">
+          Select {order.numItems} {order.numItems > 1 ? 'items' : 'item'} and click Add to Cart.
+        </div>
+      )}
+
       <div className="my-8">
         {(order?.nfts || []).map((nft, idx) => {
           return (
             <div key={`${nft.collectionAddress}_${idx}`} className="space-y-4 mt-4">
               {nft.tokens.map((token) => {
-                const key = selectionKey(nft.collectionAddress, token.tokenId);
+                const key = orderDetailKey(nft.collectionAddress, token.tokenId);
 
                 return (
                   <div
