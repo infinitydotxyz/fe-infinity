@@ -3,10 +3,10 @@ import { useRouter } from 'next/router';
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import { OrderDrawer } from 'src/components/market';
 import {
-  BuyNFTDrawerHandler,
+  FulfillOrderDrawerHandler,
   DrawerHandlerParams,
   useDrawerHandler
-} from 'src/components/market/order-drawer/buy-nft-drawer';
+} from 'src/components/market/order-drawer/fulfill-order-drawer';
 import { CancelDrawer } from 'src/components/market/order-drawer/cancel-drawer';
 import { SendNFTsDrawer } from 'src/components/market/order-drawer/send-nfts-drawer';
 
@@ -151,7 +151,7 @@ export const DrawerContextProvider = ({ children }: Props) => {
           }}
         />
 
-        <BuyNFTDrawerHandler
+        <FulfillOrderDrawerHandler
           setShowDrawer={drawerParams.setShowDrawer}
           showDrawer={drawerParams.showDrawer}
           orders={drawerParams.orders}
