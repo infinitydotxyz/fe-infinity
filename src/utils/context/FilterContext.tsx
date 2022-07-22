@@ -20,7 +20,7 @@ export type Filter = {
   orderDirection?: 'asc' | 'desc';
 };
 
-const defaultFilter: Filter = {
+export const defaultFilter: Filter = {
   // listingType: '',
   traitTypes: [],
   traitValues: [],
