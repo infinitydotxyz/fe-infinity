@@ -32,7 +32,7 @@ export const ListNFTModal = ({ isOpen, onClose, token }: Props) => {
   // TODO: do something with this ending price?
   // const [includeEndingPrice, setIncludeEndingPrice] = useState<boolean>(false);
   // const { options, onChange, selected } = useToggleTab(['Set Price', 'Highest Bid'], 'Set Price');
-  const { options, onChange, selected } = useToggleTab(['Set Price'], 'Set Price');
+  // const { options, onChange, selected } = useToggleTab(['Set Price'], 'Set Price');
 
   const tableItems: SimpleTableItem[] = [];
   tableItems.push({ title: 'Fee', value: <div className="font-bold">{INFINITY_FEE_PCT}%</div> });
@@ -122,43 +122,39 @@ export const ListNFTModal = ({ isOpen, onClose, token }: Props) => {
         onClose();
       }}
     >
-      <ToggleTab small={true} options={options} selected={selected} onChange={onChange} className="mb-6" />
+      {/* <ToggleTab small={true} options={options} selected={selected} onChange={onChange} className="mb-6" /> */}
 
-      {selected === 'Set Price' && (
-        <>
-          <p className="mb-4">Sell at a fixed price.</p>
-          <TextInputBox
-            autoFocus={true}
-            addEthSymbol={true}
-            type="number"
-            value={price}
-            label="Price"
-            placeholder=""
-            onChange={(value) => {
-              setPrice(value);
-            }}
-          />
+      <p className="mb-4">Sell at a fixed price.</p>
+      <TextInputBox
+        autoFocus={true}
+        addEthSymbol={true}
+        type="number"
+        value={price}
+        label="Price"
+        placeholder=""
+        onChange={(value) => {
+          setPrice(value);
+        }}
+      />
 
-          <div className="mt-4">
-            <DatePickerBox
-              placeholder="Expiry date"
-              label="Expiry date"
-              value={new Date(parseInt(expirationDate.toString()))}
-              onChange={(date) => {
-                setExpirationDate(date.getTime());
-              }}
-            />
-          </div>
+      <div className="mt-4">
+        <DatePickerBox
+          placeholder="Expiry date"
+          label="Expiry date"
+          value={new Date(parseInt(expirationDate.toString()))}
+          onChange={(date) => {
+            setExpirationDate(date.getTime());
+          }}
+        />
+      </div>
 
-          <SimpleTable className="my-6" items={tableItems} />
+      <SimpleTable className="my-6" items={tableItems} />
 
-          {/* <Switch
+      {/* <Switch
             title="Include ending price"
             checked={includeEndingPrice}
             onChange={() => setIncludeEndingPrice(!includeEndingPrice)}
           /> */}
-        </>
-      )}
     </Modal>
   );
 };
