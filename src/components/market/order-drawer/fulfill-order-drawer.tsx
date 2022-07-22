@@ -25,8 +25,18 @@ const FulfillOrderDrawer = ({ open, onClose, orders, onClickRemove, onSubmitDone
   const [readyOrders, setReadyOrders] = useState<ReadyOrders>(new ReadyOrders([]));
 
   useEffect(() => {
+    const oldROrders = readyOrders.orders;
+
     const rOrders = orders.map((e) => {
-      return new ReadyOrder(e, new Set<string>(), false);
+      let foundOrder;
+
+      for (const oldOrder of oldROrders) {
+        if (e.id === oldOrder.order.id) {
+          foundOrder = oldOrder;
+        }
+      }
+
+      return foundOrder ?? new ReadyOrder(e, new Set<string>(), false);
     });
 
     updateValidFlags(rOrders);
