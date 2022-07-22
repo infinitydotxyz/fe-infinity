@@ -26,14 +26,17 @@ export const CommunityFeed = ({ collection, className }: Props) => {
         <FeedList
           types={[
             EventType.NftSale,
-            EventType.NftOffer
-            // EventType.CoinMarketCapNews
-            // EventType.DiscordAnnouncement
-            // EventType.NftListing
-            // EventType.NftTransfer
-            // EventType.TwitterTweet
+            EventType.NftOffer,
+            EventType.CoinMarketCapNews,
+            EventType.DiscordAnnouncement,
+            EventType.NftListing,
+            EventType.NftTransfer,
+            EventType.TwitterTweet
           ]}
           collectionAddress={collection?.address ?? ''}
+          collectionName={collection?.metadata.name ?? ''}
+          collectionSlug={collection?.slug ?? ''}
+          collectionProfileImage={collection?.metadata.profileImage ?? ''}
         />
       </div>
     );

@@ -15,9 +15,20 @@ interface Props {
   tokenId?: string;
   types?: EventType[];
   className?: string;
+  collectionName?: string;
+  collectionSlug?: string;
+  collectionProfileImage?: string;
 }
 
-export const FeedList = ({ collectionAddress, tokenId, types, className = '' }: Props) => {
+export const FeedList = ({
+  collectionAddress,
+  tokenId,
+  types,
+  collectionName,
+  collectionSlug,
+  collectionProfileImage,
+  className = ''
+}: Props) => {
   const { chainId } = useAppContext();
   const [filter, setFilter] = useState<FeedFilter>({ collectionAddress, tokenId, types });
   const [commentPanelEvent, setCommentPanelEvent] = useState<NftEventRec | null>(null);
@@ -96,6 +107,9 @@ export const FeedList = ({ collectionAddress, tokenId, types, className = '' }: 
           return (
             <div key={idx}>
               <FeedListItem
+                collectionName={collectionName}
+                collectionSlug={collectionSlug}
+                collectionProfileImage={collectionProfileImage}
                 activity={activity}
                 onComment={(ev) => {
                   if (!ev) {

@@ -13,9 +13,18 @@ import { timeAgo } from 'src/utils';
 interface Props {
   activity: NftEventRec;
   onComment: (event?: NftEventRec) => void;
+  collectionName?: string;
+  collectionSlug?: string;
+  collectionProfileImage?: string;
 }
 
-export const FeedListItem = ({ activity, onComment }: Props) => {
+export const FeedListItem = ({
+  activity,
+  onComment,
+  collectionName,
+  collectionSlug,
+  collectionProfileImage
+}: Props) => {
   const { user } = useAppContext();
   const [likedCache, setLikedCache] = useState<Map<string, boolean>>(new Map());
 
@@ -34,13 +43,13 @@ export const FeedListItem = ({ activity, onComment }: Props) => {
         return <div className="rounded-xl bg-cyan-700 text-white py-0.5 px-2 text-sm pb-1">Offer</div>;
 
       case EventType.NftListing:
-        return <div className="rounded-xl bg-orange-700 text-white py-0.5 px-2 text-sm pb-1">Offer</div>;
+        return <div className="rounded-xl bg-orange-700 text-white py-0.5 px-2 text-sm pb-1">Listing</div>;
 
       case EventType.NftTransfer:
-        return <div className="rounded-xl bg-yello-700 text-white py-0.5 px-2 text-sm pb-1">Offer</div>;
+        return <div className="rounded-xl bg-yello-700 text-white py-0.5 px-2 text-sm pb-1">Transfer</div>;
 
       case EventType.CoinMarketCapNews:
-        return <div className="rounded-xl bg-green-700 text-white py-0.5 px-2 text-sm pb-1">Offer</div>;
+        return <div className="rounded-xl bg-green-700 text-white py-0.5 px-2 text-sm pb-1">News</div>;
 
       default:
         return <div className="rounded-xl bg-orange-700 text-white py-0.5 px-2 text-sm pb-1">{type}</div>;
@@ -144,18 +153,16 @@ export const FeedListItem = ({ activity, onComment }: Props) => {
   return (
     <div className="w-full flex items-start">
       <EZImage
-        src={activity.collectionData?.metadata.bannerImage}
+        src={activity?.image || collectionProfileImage}
         className="border border-red-300 rounded-full overflow-clip shrink-0 w-10 h-10 bg-gray-100"
       />
 
       <div className="ml-2 flex-1 flex-col items-start">
         <div className="flex items-center">
           <div className="font-bold">
-            <NextLink href={`/collection/${activity.collectionData?.slug}`}>
-              {activity.collectionData?.metadata?.name}
-            </NextLink>
+            <NextLink href={`/collection/${collectionSlug}`}>{collectionName}</NextLink>
           </div>
-          {activity.collectionData?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1" /> : null}
+          {activity?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1" /> : null}
 
           <div className="ml-3 text-gray-600">{timeString}</div>
         </div>
