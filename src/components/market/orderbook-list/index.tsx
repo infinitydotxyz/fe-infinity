@@ -48,7 +48,7 @@ export const OrderbookContent = ({ className }: { className?: string }): JSX.Ele
 
   return (
     <>
-      <div className={`flex flex-col gap-1 ${className}`}>
+      <div className={`flex flex-col gap-1 min-h-[50vh] ${className}`}>
         <div className="text-right pb-8">
           <Button
             variant="outline"

@@ -337,7 +337,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
         </div>
       </div>
       <TraitList traits={tokenMetadata.attributes ?? []} collectionTraits={collectionAttributes ?? {}} />
-      <div className="relative min-h-[1024px]">
+      <div className="relative min-h-[50vh]">
         <ToggleTab
           className="flex space-x-2 items-center relative max-w-xl top-[65px] pb-4 lg:pb-0 font-heading"
           options={options}

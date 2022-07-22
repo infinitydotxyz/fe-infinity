@@ -48,7 +48,7 @@ export const CommunityFeed = ({ collection, className }: Props) => {
   );
 
   return (
-    <div className={twMerge('grid lg:grid-cols-2 xl:grid-cols-3 gap-16', className)}>
+    <div className={twMerge('grid lg:grid-cols-2 xl:grid-cols-3 gap-16 min-h-[50vh]', className)}>
       <div className="lg:col-span-1 xl:col-span-2">{content}</div>
       <div className="col-span-1">{collection && rightSide}</div>
     </div>

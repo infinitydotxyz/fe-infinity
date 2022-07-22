@@ -130,7 +130,7 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
   };
 
   return (
-    <div className={`min-h-[1024px] mt-[-75px] ${className}`}>
+    <div className={`min-h-[50vh] mt-[-75px] ${className}`}>
       <div className="flex flex-row-reverse mb-8 bg-transparent">
         <Button
           variant="outline"

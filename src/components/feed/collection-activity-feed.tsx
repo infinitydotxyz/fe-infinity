@@ -14,7 +14,7 @@ interface Props {
   className?: string;
 }
 
-export const CollectionActivityFeed = ({ collectionAddress, tokenId, types, className }: Props) => {
+export const CollectionActivityFeed = ({ collectionAddress, tokenId, types, className = '' }: Props) => {
   const { chainId } = useAppContext();
   const [filter, setFilter] = useState<FeedFilter>({ collectionAddress, tokenId, types });
   const [filteringTypes, setFilteringTypes] = useState<EventType[]>([]);
@@ -91,7 +91,7 @@ export const CollectionActivityFeed = ({ collectionAddress, tokenId, types, clas
   }
 
   return (
-    <div className={`min-h-[1024px] ${className}`}>
+    <div className={`min-h-[50vh] ${className}`}>
       <div className="flex justify-between mt-[-66px] mb-6">
         <div className="text-3xl mb-6">&nbsp;</div>
         <FeedFilterDropdown

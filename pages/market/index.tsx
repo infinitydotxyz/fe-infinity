@@ -60,7 +60,7 @@ const MarketPage = () => {
       {selected === TABS.Orders && <OrderbookContainer />}
 
       {/* {selected === TABS.Discover && (
-        <div className="min-h-[1024px]">
+        <div className="min-h-[50vh]">
           <div className="mb-8 w-full flex flex-row-reverse">
             <div className="space-x-2">
               <Dropdown
