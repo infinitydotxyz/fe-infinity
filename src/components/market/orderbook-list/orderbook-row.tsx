@@ -101,7 +101,7 @@ export const OrderbookRow = ({ order, onClickActionBtn, isFilterOpen }: Props) =
         cartItem.attributes = token.attributes;
         cartItem.hasBlueCheck = nft.hasBlueCheck;
       } else {
-        // multiple items from one collection
+        // multiple items from one collection or no tokens specified
         cartItem.collectionName = nft.collectionName;
         cartItem.collectionAddress = nft.collectionAddress;
         cartItem.collectionImage = nft.collectionImage;
