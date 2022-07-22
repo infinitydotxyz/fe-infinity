@@ -333,7 +333,7 @@ const CollectionPage = () => {
             onChange={onChange}
           />
 
-          <div className="mt-6 min-h-[1024px]">
+          <div className="mt-6">
             {selected === 'NFTs' && collection && (
               <GalleryBox
                 pageId="COLLECTION"
