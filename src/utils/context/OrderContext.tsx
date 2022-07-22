@@ -5,7 +5,7 @@ import { toastError, toastWarning } from 'src/components/common';
 import { getEstimatedGasPrice } from '../commonUtils';
 import { DEFAULT_MAX_GAS_PRICE_WEI } from '../constants';
 import { getSignedOBOrder } from '../exchange/orders';
-import { fetchOrderNonce, postOrders } from '../marketUtils';
+import { fetchOrderNonce, postOrders } from '../orderbookUtils';
 import { secondsPerDay } from '../ui-constants';
 import { useAppContext } from './AppContext';
 

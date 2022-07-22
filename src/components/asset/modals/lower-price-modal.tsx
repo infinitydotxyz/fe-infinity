@@ -19,7 +19,7 @@ import {
 } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { getSignedOBOrder } from 'src/utils/exchange/orders';
-import { fetchUserSignedOBOrder, postOrders } from 'src/utils/marketUtils';
+import { fetchUserSignedOBOrder, postOrders } from 'src/utils/orderbookUtils';
 
 interface Props {
   isOpen: boolean;

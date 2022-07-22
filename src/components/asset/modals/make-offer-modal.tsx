@@ -5,7 +5,7 @@ import { CurrencyInput, DatePickerBox, Modal, toastError, toastSuccess } from 's
 import { DEFAULT_MAX_GAS_PRICE_WEI, extractErrorMsg, getEstimatedGasPrice, getOwnerAddress } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { getSignedOBOrder } from 'src/utils/exchange/orders';
-import { fetchOrderNonce, postOrders } from 'src/utils/marketUtils';
+import { fetchOrderNonce, postOrders } from 'src/utils/orderbookUtils';
 import { secondsPerDay } from 'src/utils/ui-constants';
 
 interface Props {

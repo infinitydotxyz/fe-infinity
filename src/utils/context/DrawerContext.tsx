@@ -1,14 +1,14 @@
 import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
-import { OrderDrawer } from 'src/components/market';
+import { OrderDrawer } from 'src/components/orderbook';
 import {
   FulfillOrderDrawerHandler,
   DrawerHandlerParams,
   useDrawerHandler
-} from 'src/components/market/order-drawer/fulfill-order-drawer';
-import { CancelDrawer } from 'src/components/market/order-drawer/cancel-drawer';
-import { SendNFTsDrawer } from 'src/components/market/order-drawer/send-nfts-drawer';
+} from 'src/components/orderbook/order-drawer/fulfill-order-drawer';
+import { CancelDrawer } from 'src/components/orderbook/order-drawer/cancel-drawer';
+import { SendNFTsDrawer } from 'src/components/orderbook/order-drawer/send-nfts-drawer';
 
 import { useOrderContext } from './OrderContext';
 

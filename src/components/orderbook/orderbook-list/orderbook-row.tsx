@@ -5,7 +5,7 @@ import { Button, EthPrice } from 'src/components/common';
 import { ellipsisAddress, numStr, shortDate } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { OrderCartItem, useOrderContext } from 'src/utils/context/OrderContext';
-import { checkOffersToUser, getOrderType } from 'src/utils/marketUtils';
+import { checkOffersToUser, getOrderType } from 'src/utils/orderbookUtils';
 import { DataColumn, defaultDataColumns } from './data-columns';
 import { OrderbookItem } from './orderbook-item';
 import { OrderDetailModal } from '../OrderDetailModal';

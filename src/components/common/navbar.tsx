@@ -42,7 +42,7 @@ export const Navbar = () => {
           type: 'link',
           label: 'Orderbook',
           props: {
-            href: '/market'
+            href: '/orderbook'
           }
         },
         {
@@ -107,7 +107,7 @@ export const Navbar = () => {
     result.push({
       label: 'Orderbook',
       onClick: () => {
-        router.push('/market');
+        router.push('/orderbook');
       }
     });
 

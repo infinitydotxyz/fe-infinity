@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
 import { Checkbox, EthPrice, Modal, Spinner, toastError, toastInfo, toastSuccess } from 'src/components/common';
 import { apiGet, ellipsisAddress, extractErrorMsg } from 'src/utils';
-import { OrderbookItem } from 'src/components/market/orderbook-list/orderbook-item';
+import { OrderbookItem } from 'src/components/orderbook/orderbook-list/orderbook-item';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { cancelMultipleOrders } from 'src/utils/exchange/orders';
 

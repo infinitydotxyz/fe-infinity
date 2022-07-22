@@ -9,7 +9,7 @@ import { CardAction, EthPrice } from '../common';
 import { CancelModal } from '../asset';
 import { apiGet } from 'src/utils';
 import { LowerPriceModal } from '../asset/modals/lower-price-modal';
-import { WaitingForTxModal } from '../market/order-drawer/waiting-for-tx-modal';
+import { WaitingForTxModal } from '../orderbook/order-drawer/waiting-for-tx-modal';
 import { useDrawerContext } from 'src/utils/context/DrawerContext';
 
 type Props = {

@@ -20,13 +20,13 @@ import {
   ToggleTab,
   useToggleTab
 } from 'src/components/common';
-import { WaitingForTxModal } from 'src/components/market/order-drawer/waiting-for-tx-modal';
-import { OrderbookContainer } from 'src/components/market/orderbook-list';
+import { WaitingForTxModal } from 'src/components/orderbook/order-drawer/waiting-for-tx-modal';
+import { OrderbookContainer } from 'src/components/orderbook/orderbook-list';
 import { ellipsisAddress, getOwnerAddress, MISSING_IMAGE_URL, useFetch } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { useDrawerContext } from 'src/utils/context/DrawerContext';
 import { getOBOrderFromFirestoreOrderItem } from 'src/utils/exchange/orders';
-import { fetchUserSignedOBOrder } from 'src/utils/marketUtils';
+import { fetchUserSignedOBOrder } from 'src/utils/orderbookUtils';
 
 const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;

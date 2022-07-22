@@ -2,7 +2,7 @@ import { formatNumber, getOptimizedCloudImage } from 'src/utils';
 import { NextLink } from './next-link';
 import { SVG } from './svg';
 import { EthPrice } from './eth-price';
-import { DiscoverOrderBy } from 'pages/market';
+import { DiscoverOrderBy } from 'pages/orderbook';
 import { CollectionStatsDto } from '@infinityxyz/lib-frontend/types/dto/stats';
 import { EZImage } from './ez-image';
 
