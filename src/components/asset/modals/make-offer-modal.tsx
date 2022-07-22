@@ -1,4 +1,4 @@
-import { ChainId, OBOrder, SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId, Erc721Token, OBOrder, SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
 import { ETHEREUM_WETH_ADDRESS, getOBComplicationAddress, NULL_ADDRESS } from '@infinityxyz/lib-frontend/utils';
 import { useState } from 'react';
 import { CurrencyInput, DatePickerBox, Modal, toastError, toastSuccess } from 'src/components/common';
@@ -43,7 +43,7 @@ export const MakeOfferModal = ({ isOpen, onClose, buyPriceEth, token }: Props) =
           tokenImage: token.image?.url || token?.alchemyCachedImage || token.image?.originalUrl || '',
           takerAddress,
           takerUsername: '',
-          attributes: [],
+          attributes: (token as Erc721Token).metadata?.attributes ?? [],
           numTokens: 1
         };
         const orderItem = {

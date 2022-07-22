@@ -4,7 +4,7 @@ import { utils } from 'ethers';
 import { useRouter } from 'next/router';
 import NotFound404Page from 'pages/not-found-404';
 import { useEffect, useState } from 'react';
-import { ActivityList, CancelModal, MakeOfferModal, SendNFTModal, TraitList } from 'src/components/asset';
+import { ActivityList, CancelModal, ListNFTModal, MakeOfferModal, SendNFTModal, TraitList } from 'src/components/asset';
 import { LowerPriceModal } from 'src/components/asset/modals/lower-price-modal';
 import {
   Button,
@@ -69,6 +69,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const { checkSignedIn, user } = useAppContext();
   const { isLoading, error, token, collectionAttributes } = useFetchAssetInfo(qchainId, qcollection, qtokenId);
   const { options, onChange, selected } = useToggleTab(['Activity', 'Orders'], 'Activity');
+  const [showListModal, setShowListModal] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showLowerPriceModal, setShowLowerPriceModal] = useState(false);
   const [showSendModal, setShowSendModal] = useState(false);
@@ -192,8 +193,16 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
     setShowLowerPriceModal(true);
   };
 
+  const onClickList = () => {
+    if (!checkSignedIn()) {
+      return;
+    }
+    setShowListModal(true);
+  };
+
   const modals = (
     <>
+      {showListModal && <ListNFTModal isOpen={showListModal} onClose={() => setShowListModal(false)} token={token} />}
       {showCancelModal && (
         <CancelModal
           isOpen={showCancelModal}
@@ -295,6 +304,9 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
               <div className="flex flex-col md:flex-row gap-4 my-4 md:my-6 lg:mt-10">
                 <Button variant="outline" size="large" onClick={onClickSend}>
                   Send
+                </Button>
+                <Button variant="outline" size="large" onClick={onClickList}>
+                  List
                 </Button>
                 {sellPriceEth && (
                   <Button variant="outline" size="large" className="" onClick={onClickAcceptOffer}>
