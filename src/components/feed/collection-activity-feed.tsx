@@ -14,10 +14,15 @@ interface Props {
   className?: string;
 }
 
-export const CollectionActivityFeed = ({ collectionAddress, tokenId, types, className = '' }: Props) => {
+export const CollectionActivityFeed = ({
+  collectionAddress,
+  tokenId,
+  types = [EventType.NftSale],
+  className = ''
+}: Props) => {
   const { chainId } = useAppContext();
   const [filter, setFilter] = useState<FeedFilter>({ collectionAddress, tokenId, types });
-  const [filteringTypes, setFilteringTypes] = useState<EventType[]>([]);
+  const [filteringTypes, setFilteringTypes] = useState<EventType[]>(types);
 
   const [isLoading, setIsLoading] = useState(false);
   const [activities, setActivities] = useState<NftEventRec[]>([]);
