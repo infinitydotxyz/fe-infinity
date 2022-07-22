@@ -4,6 +4,6 @@ interface ActivityTabProps {
   collectionAddress?: string;
 }
 
-export const CollectionActivityTab = ({ collectionAddress }: ActivityTabProps) => {
+export const CollectionSalesTab = ({ collectionAddress }: ActivityTabProps) => {
   return <CollectionActivityFeed collectionAddress={collectionAddress ?? ''} />;
 };

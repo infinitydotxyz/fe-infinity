@@ -14,7 +14,7 @@ import { useEffect, useState } from 'react';
 import ContentLoader from 'react-content-loader';
 import { BsCheck } from 'react-icons/bs';
 import { AvatarImage } from 'src/components/collection/avatar-image';
-import { CollectionActivityTab } from 'src/components/collection/collection-activity-tab';
+import { CollectionSalesTab } from 'src/components/collection/collection-activity-tab';
 import { StatsChips } from 'src/components/collection/stats-chips';
 import { Button, EthPrice, Heading, PageBox, Spinner, SVG, ToggleTab, useToggleTab } from 'src/components/common';
 import { FeesAprStats, FeesAccruedStats } from 'src/components/curation/statistics';
@@ -41,9 +41,9 @@ const CollectionPage = () => {
   const [isBuyClicked, setIsBuyClicked] = useState(false);
   let toggleOptions = [];
   if (!isProd()) {
-    toggleOptions = ['NFTs', 'Orders', 'Activity', 'Community'];
+    toggleOptions = ['NFTs', 'Orders', 'Sales', 'Community'];
   } else {
-    toggleOptions = ['NFTs', 'Orders', 'Activity'];
+    toggleOptions = ['NFTs', 'Orders', 'Sales'];
   }
   const { options, onChange, selected } = useToggleTab(toggleOptions, (router?.query?.tab as string) || 'NFTs');
   const {
@@ -407,7 +407,7 @@ const CollectionPage = () => {
             )}
 
             {/* {currentTab === 1 && <ActivityTab dailyStats={dailyStats} weeklyStats={weeklyStats} />} */}
-            {selected === 'Activity' && <CollectionActivityTab collectionAddress={collection.address} />}
+            {selected === 'Sales' && <CollectionSalesTab collectionAddress={collection.address} />}
 
             {selected === 'Community' && !isProd() && <CommunityFeed collection={collection} className="mt-16" />}
           </div>

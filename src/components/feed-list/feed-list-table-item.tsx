@@ -15,13 +15,10 @@ export const FeedListTableItem = ({ activity }: Props) => {
     return (
       <div>
         <div className={twMerge(standardCard, 'flex items-center font-heading')}>
-          <EZImage
-            className="w-16 h-16 max-h-[80px] rounded-full"
-            src={activity.collectionData?.metadata?.profileImage}
-          />
+          <EZImage className="w-16 h-16 max-h-[80px] rounded-full" src={activity?.image} />
 
           <div className="flex w-full justify-around ml-8">
-            <TableItem label="Link">
+            <TableItem label="Token">
               <NextLink href={`/asset/${activity.chainId}/${activity.collectionData?.address}/${activity.tokenId}`}>
                 {ellipsisAddress(activity.tokenId)}
               </NextLink>
