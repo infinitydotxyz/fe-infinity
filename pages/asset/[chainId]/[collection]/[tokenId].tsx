@@ -27,8 +27,10 @@ import { useAppContext } from 'src/utils/context/AppContext';
 import { useDrawerContext } from 'src/utils/context/DrawerContext';
 import { getOBOrderFromFirestoreOrderItem } from 'src/utils/exchange/orders';
 import { fetchUserSignedOBOrder } from 'src/utils/orderbookUtils';
+import { useSWRConfig } from 'swr';
 
 const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
+  const { mutate } = useSWRConfig();
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
   const COLLECTION_ATTRIBUTES_API_ENDPOINT = `/collections/${chainId}:${collection}/attributes`;
   const tokenResponse = useFetch<Token>(NFT_API_ENDPOINT);
@@ -38,7 +40,11 @@ const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string)
     isLoading: tokenResponse.isLoading,
     error: tokenResponse.error,
     token: tokenResponse.result,
-    collectionAttributes: collectionAttributes.result
+    collectionAttributes: collectionAttributes.result,
+    refreshAssetInfo: () => {
+      mutate(NFT_API_ENDPOINT);
+      mutate(COLLECTION_ATTRIBUTES_API_ENDPOINT);
+    }
   };
 };
 
@@ -67,7 +73,11 @@ interface Props {
 
 const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const { checkSignedIn, user } = useAppContext();
-  const { isLoading, error, token, collectionAttributes } = useFetchAssetInfo(qchainId, qcollection, qtokenId);
+  const { isLoading, error, token, collectionAttributes, refreshAssetInfo } = useFetchAssetInfo(
+    qchainId,
+    qcollection,
+    qtokenId
+  );
   const { options, onChange, selected } = useToggleTab(['Activity', 'Orders'], 'Activity');
   const [showListModal, setShowListModal] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
@@ -217,6 +227,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
           onClose={() => setShowLowerPriceModal(false)}
           token={token}
           buyPriceEth={buyPriceEth}
+          onDone={() => refreshAssetInfo()}
         />
       )}
       {showSendModal && (
