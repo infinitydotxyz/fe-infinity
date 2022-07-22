@@ -69,7 +69,8 @@ export const EZImage = ({ src, center = true, cover = true, onClick, className =
           cover ? 'bg-cover' : 'bg-contain',
           center ? 'bg-center' : 'bg-top',
           loaded ? 'opacity-100' : 'opacity-0',
-          'transition-opacity duration-500 w-full h-full bg-no-repeat'
+          'transition-opacity duration-500 w-full h-full bg-no-repeat',
+          className
         )}
         style={{ backgroundImage: `url(${imgUrl})` }}
       />
