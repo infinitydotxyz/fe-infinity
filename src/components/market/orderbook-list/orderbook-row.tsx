@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ChainId, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import moment from 'moment';
-import { Button, EthPrice, toastError } from 'src/components/common';
+import { Button, EthPrice } from 'src/components/common';
 import { ellipsisAddress, numStr, shortDate } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { OrderCartItem, useOrderContext } from 'src/utils/context/OrderContext';
@@ -9,20 +9,17 @@ import { checkOffersToUser, getOrderType } from 'src/utils/marketUtils';
 import { DataColumn, defaultDataColumns } from './data-columns';
 import { OrderbookItem } from './orderbook-item';
 import { OrderDetailModal } from '../OrderDetailModal';
-import { BuyNFTDrawer } from '../order-drawer/buy-nft-drawer';
-import { WaitingForTxModal } from '../order-drawer/waiting-for-tx-modal';
 
-type OrderbookRowProps = {
+type Props = {
   order: SignedOBOrder;
   isFilterOpen: boolean;
+  onClickActionBtn: (order: SignedOBOrder, checked: boolean) => void;
 };
 
-export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.Element => {
+export const OrderbookRow = ({ order, onClickActionBtn, isFilterOpen }: Props) => {
   const { user, checkSignedIn } = useAppContext();
   const { addCartItem, setOrderDrawerOpen } = useOrderContext();
   const [selectedOrder, setSelectedOrder] = useState<SignedOBOrder | null>(null);
-  const [showCompleteOrderDrawer, setShowCompleteOrderDrawer] = useState(false);
-  const [completeOrderTxHash, setCompleteOrderTxHash] = useState('');
 
   const valueDiv = (dataColumn: DataColumn) => {
     let value = order.id;
@@ -104,7 +101,7 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
         cartItem.attributes = token.attributes;
         cartItem.hasBlueCheck = nft.hasBlueCheck;
       } else {
-        // multiple items from one collection
+        // multiple items from one collection or no tokens specified
         cartItem.collectionName = nft.collectionName;
         cartItem.collectionAddress = nft.collectionAddress;
         cartItem.collectionImage = nft.collectionImage;
@@ -145,31 +142,49 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
     if (!checkSignedIn()) {
       return;
     }
-    // - direct Buy/Sell:
-    // try {
-    //   const signer = providerManager?.getEthersProvider().getSigner();
-    //   if (signer) {
-    //     await takeMultipleOneOrders(signer, chainId, [order.signedOrder]);
-    //     toastSuccess('Order sent for execution');
-    //   } else {
-    //     throw 'Signer is null';
-    //   }
-    // } catch (err) {
-    //   const errMsg = extractErrorMsg(err);
-    //   toastError(errMsg);
-    // }
-    const signedOrder = order.signedOrder;
-    if (signedOrder) {
-      setShowCompleteOrderDrawer(true);
-    } else {
-      toastError('Order is not signed');
-    }
+
+    onClickActionBtn(order, true);
   };
 
   const isOwner = order.makerAddress === user?.address;
 
+  const actionButton = () => {
+    if (isOwner) {
+      return (
+        <Button className="w-32" onClick={() => onClickEdit(order)}>
+          Edit
+        </Button>
+      );
+    }
+    const isOfferToUser = checkOffersToUser(order, user);
+    if (order.isSellOrder) {
+      // Sell Order (Listing)
+      return (
+        <Button className="w-32" onClick={() => onClickBuySell(order)}>
+          Buy
+        </Button>
+      );
+    } else if (isOfferToUser === true) {
+      // Buy Order (Offer) => show Sell button (if offer made to current user)
+      return (
+        <Button className="w-32" onClick={() => onClickBuySell(order)}>
+          Sell
+        </Button>
+      );
+    } else if (isOfferToUser === false) {
+      return (
+        <Button className="w-32" onClick={() => onClickBidHigher(order)}>
+          Bid higher
+        </Button>
+      );
+    } else {
+      return null;
+    }
+  };
+
   return (
     <div className="rounded-3xl mb-3 p-8 w-full bg-gray-100">
+      {/* for larger screen - show row summary: */}
       <div className="items-center w-full hidden lg:grid" style={{ gridTemplateColumns: gridTemplate }}>
         {defaultDataColumns(order).map((data) => {
           const content = valueDiv(data);
@@ -177,41 +192,13 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
           const title = data.name;
 
           if (data.field === 'buyOrSell') {
-            if (isOwner) {
-              return (
-                <Button className="w-32" key={`${order.id} ${data.field}`} onClick={() => onClickEdit(order)}>
-                  Edit
-                </Button>
-              );
-            }
-            const isOfferToUser = checkOffersToUser(order, user);
-            if (order.isSellOrder) {
-              // Sell Order (Listing)
-              return (
-                <Button className="w-32" key={`${order.id} ${data.field}`} onClick={() => onClickBuySell(order)}>
-                  Buy
-                </Button>
-              );
-            } else if (isOfferToUser === true) {
-              // Buy Order (Offer) => show Sell button (if offer made to current user)
-              return (
-                <Button className="w-32" key={`${order.id} ${data.field}`} onClick={() => onClickBuySell(order)}>
-                  Sell
-                </Button>
-              );
-            } else if (isOfferToUser === false) {
-              return (
-                <Button className="w-32" key={`${order.id} ${data.field}`} onClick={() => onClickBidHigher(order)}>
-                  Bid higher
-                </Button>
-              );
-            } else {
-              return null;
-            }
+            return <div key={`${order.id} ${data.field}`}>{actionButton()}</div>;
           }
+
           if (isFilterOpen === true && (data.name === 'From' || data.name === 'Date')) {
             return null;
           }
+
           return (
             <OrderbookItem
               nameItem={data.type === 'Name'}
@@ -254,7 +241,7 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
           </div>
         </div>
         <div className="text-right">
-          <Button>{order.isSellOrder ? 'Buy' : 'Sell'}</Button>
+          {actionButton()}
 
           <div>{moment(order.startTimeMs).fromNow()}</div>
           <div>Expiry: {shortDate(new Date(order.endTimeMs))}</div>
@@ -270,31 +257,6 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
           }}
         />
       ) : null}
-
-      {order && (
-        <BuyNFTDrawer
-          title={order.isSellOrder ? 'Buy Order' : 'Sell Order'}
-          submitTitle={order.isSellOrder ? 'Buy' : 'Sell'}
-          orders={[order]}
-          open={showCompleteOrderDrawer}
-          onClose={() => {
-            setShowCompleteOrderDrawer(false);
-            setOrderDrawerOpen(false);
-          }}
-          onSubmitDone={(hash: string) => {
-            setShowCompleteOrderDrawer(false);
-            setOrderDrawerOpen(false);
-            setCompleteOrderTxHash(hash);
-          }}
-        />
-      )}
-      {completeOrderTxHash && (
-        <WaitingForTxModal
-          title={'Complete Order'}
-          txHash={completeOrderTxHash}
-          onClose={() => setCompleteOrderTxHash('')}
-        />
-      )}
     </div>
   );
 };

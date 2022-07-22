@@ -4,9 +4,10 @@ import { OBTokenInfoDto } from '@infinityxyz/lib-frontend/types/dto/orders';
 import { useRouter } from 'next/router';
 import { ReactNode } from 'react';
 import { EZImage, NextLink, SVG } from 'src/components/common';
+import { twMerge } from 'tailwind-merge';
 // import ReactTooltip from 'react-tooltip';
 
-type Props4 = {
+type Props1 = {
   content?: ReactNode;
   title?: string;
   order: OBOrder;
@@ -15,7 +16,7 @@ type Props4 = {
   onClick?: () => void;
 };
 
-export const OrderbookItem = ({ title, content, nameItem, order, onClick }: Props4): JSX.Element => {
+export const OrderbookItem = ({ title, content, nameItem, order, onClick }: Props1): JSX.Element => {
   const router = useRouter();
 
   if (nameItem) {
@@ -67,12 +68,14 @@ export const OrderbookItem = ({ title, content, nameItem, order, onClick }: Prop
   );
 };
 
-type MultiCollectionCellProps = {
+// ==================================================================
+
+type Props2 = {
   nfts: OBOrderItem[];
   onClick?: () => void;
 };
 
-const MultiCollectionCell = ({ nfts, onClick }: MultiCollectionCellProps) => {
+const MultiCollectionCell = ({ nfts, onClick }: Props2) => {
   return (
     <div className="flex gap-2 items-center hover:cursor-pointer" onClick={onClick}>
       <div className="flex -space-x-8 overflow-hidden">
@@ -94,7 +97,9 @@ const MultiCollectionCell = ({ nfts, onClick }: MultiCollectionCellProps) => {
   );
 };
 
-type SingleCollectionCellProps = {
+// ==================================================================
+
+type Props3 = {
   order?: OBOrder;
   image: string;
   title: string;
@@ -116,7 +121,7 @@ const SingleCollectionCell = ({
   count = 0,
   nfts,
   onClick
-}: SingleCollectionCellProps) => {
+}: Props3) => {
   const tokenNames: string[] = [];
 
   if (nfts && nfts.length && nfts[0].tokens) {
@@ -194,6 +199,82 @@ const SingleCollectionCell = ({
           </>
         )}
       </div>
+    </div>
+  );
+};
+
+// ==================================================================
+// not used, but keeping for possible future
+
+type Props4 = {
+  nfts: OBOrderItem[];
+  selection: Map<string, boolean>;
+  onChange: (selection: Map<string, boolean>) => void;
+  className?: string;
+};
+
+export const NFTPicker = ({ nfts, selection, onChange, className = '' }: Props4) => {
+  let firstItem = '';
+
+  return (
+    <div className={twMerge('flex flex-wrap space-y-8', className)}>
+      <div>Pick one: </div>
+      {nfts.map((nft) => {
+        return nft.tokens.map((token) => {
+          const key = `${nft.collectionAddress}:${token.tokenId}`;
+
+          if (!firstItem) {
+            firstItem = key;
+          }
+
+          const checked = selection.get(key) ?? false;
+
+          return (
+            <SelectableImage
+              key={key}
+              name={token.tokenId}
+              imageUrl={token.tokenImage}
+              checked={checked}
+              onChange={(checked) => {
+                const sel = new Map<string, boolean>();
+
+                if (checked) {
+                  sel.set(key, true);
+                } else {
+                  // select first one?
+                  sel.set(firstItem, true);
+                }
+
+                onChange(sel);
+              }}
+            />
+          );
+        });
+      })}
+    </div>
+  );
+};
+
+// ====================================================================
+
+interface Props5 {
+  checked: boolean;
+  imageUrl: string;
+  name: string;
+  onChange: (checked: boolean) => void;
+}
+
+const SelectableImage = ({ name, checked, imageUrl, onChange }: Props5) => {
+  return (
+    <div onClick={() => onChange(!checked)} className="flex flex-col items-center">
+      <EZImage
+        className={twMerge(
+          'h-14 w-14 rounded-2xl overflow-clip border-4',
+          checked ? ' border-blue-500' : 'border-transparent'
+        )}
+        src={imageUrl}
+      />
+      <div className={twMerge('mt-1 px-2', checked ? 'bg-blue-500 rounded-2xl text-white' : '')}>{name}</div>
     </div>
   );
 };

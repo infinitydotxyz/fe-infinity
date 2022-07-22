@@ -1,7 +1,7 @@
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { BsChatRight } from 'react-icons/bs';
 import { TbArrowBarUp } from 'react-icons/tb';
-import { Button, EZImage, Spacer, SVG } from 'src/components/common';
+import { Button, EZImage, NextLink, Spacer, SVG } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { NftEventRec } from '../asset/activity/activity-item';
 import { addUserLike } from 'src/utils/firestore/firestoreUtils';
@@ -151,7 +151,9 @@ export const FeedListItem = ({ activity, onComment }: Props) => {
       <div className="ml-2 flex-1 flex-col items-start">
         <div className="flex items-center">
           <div className="font-bold">
-            <a href={`/collection/${activity.collectionData?.slug}`}>{activity.collectionData?.metadata?.name}</a>
+            <NextLink href={`/collection/${activity.collectionData?.slug}`}>
+              {activity.collectionData?.metadata?.name}
+            </NextLink>
           </div>
           {activity.collectionData?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1" /> : null}
 

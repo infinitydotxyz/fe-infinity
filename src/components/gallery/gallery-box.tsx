@@ -1,6 +1,6 @@
 import { BaseCollection, CollectionAttributes, ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
-import { useFilterContext } from 'src/utils/context/FilterContext';
+import { defaultFilter, useFilterContext } from 'src/utils/context/FilterContext';
 import { Button, Card, CardProps, ErrorOrLoading, ScrollLoader } from 'src/components/common';
 import { FilterPanel } from '../filter/filter-panel';
 import { GallerySort } from './gallery-sort';
@@ -43,7 +43,7 @@ export const GalleryBox = ({
   const [noData, setNoData] = useState(false);
   const { chainId } = useAppContext();
   const router = useRouter();
-  const { filterState } = useFilterContext();
+  const { filterState, setFilterState } = useFilterContext();
   const [filterShowed, setFilterShowed] = useState(filterShowedDefault);
   const [tokenFetcher, setTokenFetcher] = useState<TokenFetcher>();
 
@@ -51,6 +51,10 @@ export const GalleryBox = ({
 
   const { width, ref } = useResizeDetector();
   const isMounted = useIsMounted();
+
+  useEffect(() => {
+    setFilterState(defaultFilter);
+  }, [router.query]);
 
   useEffect(() => {
     if (getEndpoint) {

@@ -5,6 +5,7 @@ import { OrderbookProvider, SORT_FILTERS, useOrderbook } from '../OrderbookConte
 import { OrderbookRow } from './orderbook-row';
 import { OrderbookFilters } from './filters/orderbook-filters';
 import { useRouter } from 'next/router';
+import { useDrawerContext } from 'src/utils/context/DrawerContext';
 
 const SORT_LABELS: {
   [key: string]: string;
@@ -47,7 +48,7 @@ export const OrderbookContent = ({ className }: { className?: string }): JSX.Ele
 
   return (
     <>
-      <div className={`flex flex-col gap-1 min-h-[1024px] ${className}`}>
+      <div className={`flex flex-col gap-1 min-h-[50vh] ${className}`}>
         <div className="text-right pb-8">
           <Button
             variant="outline"
@@ -79,7 +80,7 @@ export const OrderbookContent = ({ className }: { className?: string }): JSX.Ele
         </div>
 
         <OrderbookList
-          orders={orders}
+          orderList={orders}
           showFilters={showFilters}
           isLoading={isLoading}
           fetchMore={fetchMore}
@@ -92,7 +93,7 @@ export const OrderbookContent = ({ className }: { className?: string }): JSX.Ele
 };
 
 interface Props2 {
-  orders: SignedOBOrder[];
+  orderList: SignedOBOrder[];
   isLoading: boolean;
   fetchMore: () => Promise<void>;
   showFilters?: boolean;
@@ -101,13 +102,15 @@ interface Props2 {
 }
 
 const OrderbookList = ({
-  orders,
+  orderList,
   showFilters,
   isLoading,
   fetchMore,
   hasMoreOrders,
   hasNoData
 }: Props2): JSX.Element => {
+  const { fulfillDrawerParams } = useDrawerContext();
+
   return (
     <div className="flex justify-center align-items gap-4 pointer-events-auto">
       {showFilters && (
@@ -118,9 +121,16 @@ const OrderbookList = ({
       <div className="flex flex-col items-start w-full">
         {hasNoData && <div className="font-heading">No results found</div>}
 
-        {orders.length > 0 &&
-          orders.map((order: SignedOBOrder, i) => {
-            return <OrderbookRow key={`${i}-${order.id}`} order={order} isFilterOpen={showFilters ?? false} />;
+        {orderList.length > 0 &&
+          orderList.map((order: SignedOBOrder, i: number) => {
+            return (
+              <OrderbookRow
+                onClickActionBtn={fulfillDrawerParams.addOrder}
+                key={`${i}-${order.id}`}
+                order={order}
+                isFilterOpen={showFilters ?? false}
+              />
+            );
           })}
 
         {isLoading && (

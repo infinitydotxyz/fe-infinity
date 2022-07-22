@@ -22,9 +22,9 @@ export const FeedListTableItem = ({ activity }: Props) => {
 
           <div className="flex w-full justify-around ml-8">
             <TableItem label="Link">
-              <a href={`/asset/${activity.chainId}/${activity.collectionData?.address}/${activity.tokenId}`}>
+              <NextLink href={`/asset/${activity.chainId}/${activity.collectionData?.address}/${activity.tokenId}`}>
                 {ellipsisAddress(activity.tokenId)}
-              </a>
+              </NextLink>
             </TableItem>
 
             {/* <TableItem label="Event">

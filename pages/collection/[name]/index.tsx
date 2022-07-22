@@ -22,13 +22,12 @@ import { VoteModal } from 'src/components/curation/vote-modal';
 import { VoteProgressBar } from 'src/components/curation/vote-progress-bar';
 import { CommunityFeed } from 'src/components/feed-list/community-feed';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
-import { BuyNFTDrawer } from 'src/components/market/order-drawer/buy-nft-drawer';
-import { WaitingForTxModal } from 'src/components/market/order-drawer/waiting-for-tx-modal';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
 import { useFetchSignedOBOrder } from 'src/hooks/api/useFetchSignedOBOrder';
 import { ellipsisAddress, getChainScannerBase, isProd, nFormatter } from 'src/utils'; // todo: adi remove isProd once curation is ready
 import { useFetch } from 'src/utils/apiUtils';
 import { useAppContext } from 'src/utils/context/AppContext';
+import { useDrawerContext } from 'src/utils/context/DrawerContext';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { iconButtonStyle } from 'src/utils/ui-constants';
 import { useSWRConfig } from 'swr';
@@ -36,10 +35,9 @@ import { twMerge } from 'tailwind-merge';
 
 const CollectionPage = () => {
   const { user, chainId, checkSignedIn } = useAppContext();
-  const { signedOBOrder, setSignedOBOrder, fetchSignedOBOrder } = useFetchSignedOBOrder();
+  const { fetchSignedOBOrder } = useFetchSignedOBOrder();
   const router = useRouter();
-  const { addCartItem, removeCartItem, ordersInCart, cartItems, addOrderToCart, updateOrders, setOrderDrawerOpen } =
-    useOrderContext();
+  const { addCartItem, removeCartItem, ordersInCart, cartItems, addOrderToCart, updateOrders } = useOrderContext();
   const [isBuyClicked, setIsBuyClicked] = useState(false);
   let toggleOptions = [];
   if (!isProd()) {
@@ -53,8 +51,7 @@ const CollectionPage = () => {
   } = router;
   const { mutate } = useSWRConfig();
   const [isStakeModalOpen, setIsStakeModalOpen] = useState(false);
-  const [showCompleteOrderDrawer, setShowCompleteOrderDrawer] = useState(false);
-  const [completeOrderTxHash, setCompleteOrderTxHash] = useState('');
+  const { fulfillDrawerParams } = useDrawerContext();
 
   useEffect(() => {
     if (isBuyClicked === true) {
@@ -336,7 +333,7 @@ const CollectionPage = () => {
             onChange={onChange}
           />
 
-          <div className="mt-6 min-h-[1024px]">
+          <div className="mt-6">
             {selected === 'NFTs' && collection && (
               <GalleryBox
                 pageId="COLLECTION"
@@ -380,7 +377,8 @@ const CollectionPage = () => {
                             data?.orderSnippet?.listing?.orderItem?.id ?? ''
                           );
                           if (signedOBOrder) {
-                            setShowCompleteOrderDrawer(true);
+                            fulfillDrawerParams.addOrder(signedOBOrder);
+                            fulfillDrawerParams.setShowDrawer(true);
                           }
                         } else {
                           // Add a Buy order to cart (Make offer)
@@ -411,35 +409,9 @@ const CollectionPage = () => {
             {/* {currentTab === 1 && <ActivityTab dailyStats={dailyStats} weeklyStats={weeklyStats} />} */}
             {selected === 'Activity' && <CollectionActivityTab collectionAddress={collection.address} />}
 
-            {selected === 'Community' && !isProd() && <CommunityFeed collection={collection} className="mt-32" />}
+            {selected === 'Community' && !isProd() && <CommunityFeed collection={collection} className="mt-16" />}
           </div>
         </main>
-
-        {signedOBOrder && (
-          <BuyNFTDrawer
-            title={'Buy NFT'}
-            submitTitle={'Buy'}
-            orders={[signedOBOrder]}
-            open={showCompleteOrderDrawer}
-            onClose={() => {
-              setShowCompleteOrderDrawer(false);
-              setOrderDrawerOpen(false);
-              setSignedOBOrder(null);
-            }}
-            onSubmitDone={(hash: string) => {
-              setShowCompleteOrderDrawer(false);
-              setOrderDrawerOpen(false);
-              setCompleteOrderTxHash(hash);
-            }}
-          />
-        )}
-        {completeOrderTxHash && (
-          <WaitingForTxModal
-            title={'Buying NFT'}
-            txHash={completeOrderTxHash}
-            onClose={() => setCompleteOrderTxHash('')}
-          />
-        )}
       </div>
     </PageBox>
   );

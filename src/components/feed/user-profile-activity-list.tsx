@@ -114,7 +114,7 @@ export const UserProfileActivityList = ({ userAddress, types, className }: UserP
   };
 
   return (
-    <div className={`min-h-[1024px] mt-[-74px] ${className}`}>
+    <div className={`min-h-[50vh] mt-[-74px] ${className}`}>
       <div className="flex flex-row-reverse mb-8 bg-transparent">
         <FeedFilterDropdown
           selectedTypes={filteringTypes}

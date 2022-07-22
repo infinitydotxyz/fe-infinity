@@ -42,7 +42,7 @@ export const UserPageCuratedTab: React.FC<{ userInfo: UserProfileDto }> = ({ use
   const fetchMore = () => setSize((size) => size + 1);
 
   return (
-    <div className="min-h-[1024px] mt-[-66px]">
+    <div className="min-h-[50vh] mt-[-66px]">
       <div className="flex flex-row-reverse mb-8 bg-transparent">
         <Sort onClick={setOrderBy} />
       </div>

@@ -76,7 +76,7 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
           onChange={onChange}
         />
 
-        <div className="mt-6 min-h-[1024px] pointer-events-none">
+        <div className="mt-6 min-h-[50vh] pointer-events-none">
           {selected === 'Collected' && <UserPageNftsTab userInfo={userInfo} />}
           {selected === 'Orders' && <UserPageOrderList userInfo={userInfo} />}
           {selected === 'Activity' && <UserPageActivityTab userInfo={userInfo} />}

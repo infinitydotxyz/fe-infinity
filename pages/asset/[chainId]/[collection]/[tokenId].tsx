@@ -1,16 +1,10 @@
-import {
-  CollectionAttributes,
-  Erc721Metadata,
-  OBOrder,
-  SignedOBOrder,
-  Token
-} from '@infinityxyz/lib-frontend/types/core';
+import { CollectionAttributes, Erc721Metadata, OBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
 import { getCurrentOBOrderPrice } from '@infinityxyz/lib-frontend/utils';
 import { utils } from 'ethers';
 import { useRouter } from 'next/router';
 import NotFound404Page from 'pages/not-found-404';
 import { useEffect, useState } from 'react';
-import { ActivityList, CancelModal, MakeOfferModal, SendNFTModal, TraitList } from 'src/components/asset';
+import { ActivityList, CancelModal, ListNFTModal, MakeOfferModal, SendNFTModal, TraitList } from 'src/components/asset';
 import { LowerPriceModal } from 'src/components/asset/modals/lower-price-modal';
 import {
   Button,
@@ -26,13 +20,12 @@ import {
   ToggleTab,
   useToggleTab
 } from 'src/components/common';
-import { BuyNFTDrawer } from 'src/components/market/order-drawer/buy-nft-drawer';
 import { WaitingForTxModal } from 'src/components/market/order-drawer/waiting-for-tx-modal';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
 import { ellipsisAddress, getOwnerAddress, MISSING_IMAGE_URL, useFetch } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
+import { useDrawerContext } from 'src/utils/context/DrawerContext';
 import { getOBOrderFromFirestoreOrderItem } from 'src/utils/exchange/orders';
-import { useOrderContext } from 'src/utils/context/OrderContext';
 import { fetchUserSignedOBOrder } from 'src/utils/marketUtils';
 
 const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
@@ -66,15 +59,6 @@ const AssetDetailPage = () => {
 
 // ===========================================================
 
-/* notes
-
-  asset page has drawer for purchase?  Placebid, makeOffer, how different
-
-  owner === asset owner
-
-
-*/
-
 interface Props {
   qchainId: string;
   qcollection: string;
@@ -83,22 +67,21 @@ interface Props {
 
 const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const { checkSignedIn, user } = useAppContext();
-  const { setOrderDrawerOpen } = useOrderContext();
   const { isLoading, error, token, collectionAttributes } = useFetchAssetInfo(qchainId, qcollection, qtokenId);
   const { options, onChange, selected } = useToggleTab(['Activity', 'Orders'], 'Activity');
-
+  const [showListModal, setShowListModal] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showLowerPriceModal, setShowLowerPriceModal] = useState(false);
   const [showSendModal, setShowSendModal] = useState(false);
   const [showMakeOfferModal, setShowMakeOfferModal] = useState(false);
-  const [showBuyDrawer, setShowBuyDrawer] = useState(false);
-  const [buyTxHash, setBuyTxHash] = useState('');
   const [buyPriceEth, setBuyPriceEth] = useState('');
+  const [sellPriceEth, setSellPriceEth] = useState('');
   const [sendTxHash, setSendTxHash] = useState('');
-  const [signedOBOrder, setSignedOBOrder] = useState<SignedOBOrder | null>(null);
+  const { fulfillDrawerParams } = useDrawerContext();
 
   const tokenOwner = getOwnerAddress(token);
   const isNftOwner = token ? user?.address === tokenOwner : false;
+
   const listingOwner = token?.ordersSnippet?.listing?.orderItem?.makerAddress ?? '';
   const isListingOwner = user?.address === listingOwner;
 
@@ -107,6 +90,11 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
       const obOrder: OBOrder = getOBOrderFromFirestoreOrderItem(token?.ordersSnippet?.listing?.orderItem);
       const price = getCurrentOBOrderPrice(obOrder);
       setBuyPriceEth(utils.formatEther(price));
+    }
+    if (token?.ordersSnippet?.offer?.orderItem) {
+      const obOrder: OBOrder = getOBOrderFromFirestoreOrderItem(token?.ordersSnippet?.offer?.orderItem);
+      const price = getCurrentOBOrderPrice(obOrder);
+      setSellPriceEth(utils.formatEther(price));
     }
   }, [token]);
 
@@ -117,7 +105,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   // if cached url is null, try original url or the blank image
   if (token && !token?.image?.url) {
     token.image = token.image || {};
-    token.image.url = token.image?.originalUrl ?? '';
+    token.image.url = token.alchemyCachedImage ?? token.image?.originalUrl ?? '';
   }
 
   const images = [token?.image?.url, token?.alchemyCachedImage, token?.metadata?.image, MISSING_IMAGE_URL].filter(
@@ -142,17 +130,6 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
 
   if (error) {
     return <NotFound404Page />;
-    // return (
-    //   <PageBox title="Asset - Error" className="w-full h-full grid place-items-center">
-    //     <div className="flex flex-col max-w-screen-2xl mt-4">
-    //       <main>
-    //         <p>Unable to load data.</p>
-    //       </main>
-    //     </div>
-    //   </PageBox>
-    // );
-    // router.push(`/not-found-404?chainId=${qchainId}&collectionAddress=${qcollection}&tokenId=${qtokenId}`);
-    // return null;
   }
   if (!token) {
     return null;
@@ -163,6 +140,30 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const assetName = tokenMetadata.name
     ? `${tokenMetadata.name} - ${token.collectionName}`
     : tokenMetadata.name || token.collectionName || 'brrrr';
+
+  const onClickBuy = async () => {
+    try {
+      const signedListing = await fetchUserSignedOBOrder(token?.ordersSnippet?.listing?.orderItem?.id);
+      if (signedListing) {
+        fulfillDrawerParams.addOrder(signedListing);
+        fulfillDrawerParams.setShowDrawer(true);
+      }
+    } catch (err) {
+      toastError(`Failed to fetch signed listing`);
+    }
+  };
+
+  const onClickAcceptOffer = async () => {
+    try {
+      const signedOffer = await fetchUserSignedOBOrder(token?.ordersSnippet?.offer?.orderItem?.id);
+      if (signedOffer) {
+        fulfillDrawerParams.addOrder(signedOffer);
+        fulfillDrawerParams.setShowDrawer(true);
+      }
+    } catch (err) {
+      toastError(`Failed to fetch signed offer`);
+    }
+  };
 
   const onClickMakeOffer = () => {
     if (!checkSignedIn()) {
@@ -192,8 +193,16 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
     setShowLowerPriceModal(true);
   };
 
+  const onClickList = () => {
+    if (!checkSignedIn()) {
+      return;
+    }
+    setShowListModal(true);
+  };
+
   const modals = (
     <>
+      {showListModal && <ListNFTModal isOpen={showListModal} onClose={() => setShowListModal(false)} token={token} />}
       {showCancelModal && (
         <CancelModal
           isOpen={showCancelModal}
@@ -228,56 +237,8 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
           buyPriceEth={buyPriceEth}
         />
       )}
-
-      {signedOBOrder && (
-        <BuyNFTDrawer
-          title="Buy NFT"
-          submitTitle="Buy"
-          orders={[signedOBOrder]}
-          open={showBuyDrawer}
-          onClose={() => {
-            setShowBuyDrawer(false);
-            setOrderDrawerOpen(false);
-          }}
-          onSubmitDone={(hash: string) => {
-            setShowBuyDrawer(false);
-            setOrderDrawerOpen(false);
-            setBuyTxHash(hash);
-          }}
-        />
-      )}
-
-      {buyTxHash && <WaitingForTxModal title={'Buying NFT'} txHash={buyTxHash} onClose={() => setBuyTxHash('')} />}
     </>
   );
-
-  const fetchSignedOBOrder = async () => {
-    try {
-      const signedOBOrder = await fetchUserSignedOBOrder(token?.ordersSnippet?.listing?.orderItem?.id);
-      setSignedOBOrder(signedOBOrder);
-      return signedOBOrder;
-    } catch (err) {
-      toastError(`Failed to fetch order`);
-    }
-  };
-
-  const onClickBuy = async () => {
-    // - direct buy:
-    // const signer = providerManager?.getEthersProvider().getSigner();
-    // if (signer) {
-    //   const order = await fetchUserSignedOBOrder(token?.ordersSnippet?.listing?.orderItem?.id);
-    //   if (order) {
-    //     await takeMultipleOneOrders(signer, chainId, [order.signedOrder]);
-    //     toastSuccess('Sent txn successfully');
-    //   }
-    // } else {
-    //   throw 'Signer is null';
-    // }
-    const signedOBOrder = await fetchSignedOBOrder();
-    if (signedOBOrder) {
-      setShowBuyDrawer(true);
-    }
-  };
 
   return (
     <PageBox title={assetName} showTitle={false} className="flex flex-col max-w-screen-2xl mt-4">
@@ -315,28 +276,28 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
             tooltip={tokenOwner}
           />
 
-          {isListingOwner ? (
+          {isListingOwner && (
             // Listing owner's action buttons
             <div className="md:-ml-1.5">
               <div className="flex flex-col md:flex-row gap-4 my-4 md:my-6 lg:mt-10">
                 {buyPriceEth && (
-                  <Button variant="primary" size="large" onClick={onClickCancel}>
-                    <div className="flex">
-                      <span className="mr-4">Cancel</span>
-                      <span className="font-heading">
-                        <EthPrice label={buyPriceEth} rowClassName="pt-[1px]" />
-                      </span>
-                    </div>
-                  </Button>
+                  <>
+                    <Button variant="outline" size="large" onClick={onClickCancel}>
+                      <div className="flex">
+                        <span className="mr-4">Cancel</span>
+                        <span className="font-heading">
+                          <EthPrice label={buyPriceEth} rowClassName="pt-[1px]" />
+                        </span>
+                      </div>
+                    </Button>
+                    <Button variant="outline" size="large" onClick={onClickLowerPrice}>
+                      Lower Price
+                    </Button>
+                  </>
                 )}
-                {isNftOwner ? (
-                  <Button variant="outline" size="large" onClick={onClickLowerPrice}>
-                    Lower Price
-                  </Button>
-                ) : null}
               </div>
             </div>
-          ) : null}
+          )}
 
           {isNftOwner ? (
             <div className="md:-ml-1.5">
@@ -344,6 +305,16 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
                 <Button variant="outline" size="large" onClick={onClickSend}>
                   Send
                 </Button>
+                <Button variant="outline" size="large" onClick={onClickList}>
+                  List
+                </Button>
+                {sellPriceEth && (
+                  <Button variant="outline" size="large" className="" onClick={onClickAcceptOffer}>
+                    <div className="flex">
+                      Accept Offer <EthPrice label={`${sellPriceEth}`} className="ml-2" rowClassName="" />
+                    </div>
+                  </Button>
+                )}
               </div>
             </div>
           ) : (
@@ -378,7 +349,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
         </div>
       </div>
       <TraitList traits={tokenMetadata.attributes ?? []} collectionTraits={collectionAttributes ?? {}} />
-      <div className="relative min-h-[1024px]">
+      <div className="relative min-h-[50vh]">
         <ToggleTab
           className="flex space-x-2 items-center relative max-w-xl top-[65px] pb-4 lg:pb-0 font-heading"
           options={options}
