@@ -212,7 +212,14 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
 
   const modals = (
     <>
-      {showListModal && <ListNFTModal isOpen={showListModal} onClose={() => setShowListModal(false)} token={token} />}
+      {showListModal && (
+        <ListNFTModal
+          isOpen={showListModal}
+          onClose={() => setShowListModal(false)}
+          token={token}
+          onDone={() => refreshAssetInfo()}
+        />
+      )}
       {showCancelModal && (
         <CancelModal
           isOpen={showCancelModal}
@@ -247,6 +254,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
           onClose={() => setShowMakeOfferModal(false)}
           token={token}
           buyPriceEth={buyPriceEth}
+          onDone={() => refreshAssetInfo()}
         />
       )}
     </>

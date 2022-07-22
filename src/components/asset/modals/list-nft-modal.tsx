@@ -22,9 +22,10 @@ interface Props {
   isOpen: boolean;
   token: Token;
   onClose: () => void;
+  onDone: () => void;
 }
 
-export const ListNFTModal = ({ isOpen, onClose, token }: Props) => {
+export const ListNFTModal = ({ isOpen, onClose, onDone, token }: Props) => {
   const { user, chainId, providerManager } = useAppContext();
   const [price, setPrice] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -110,6 +111,7 @@ export const ListNFTModal = ({ isOpen, onClose, token }: Props) => {
               try {
                 await postOrders(user.address, signedOrders);
                 toastSuccess('Listed successfully');
+                onDone();
               } catch (ex) {
                 toastError(`${ex}`);
                 return false;
