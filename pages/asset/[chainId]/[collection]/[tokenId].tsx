@@ -219,6 +219,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
           onClose={() => setShowCancelModal(false)}
           collectionAddress={token.collectionAddress ?? ''}
           token={token}
+          onDone={() => refreshAssetInfo()}
         />
       )}
       {showLowerPriceModal && (

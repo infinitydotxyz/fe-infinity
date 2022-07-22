@@ -11,9 +11,10 @@ interface Props {
   collectionAddress: string;
   token: Token;
   onClose: () => void;
+  onDone: () => void;
 }
 
-export const CancelModal = ({ isOpen, onClose, collectionAddress, token }: Props) => {
+export const CancelModal = ({ isOpen, onClose, onDone, collectionAddress, token }: Props) => {
   const { user, providerManager, chainId, waitForTransaction } = useAppContext();
   const [selectedListings, setSelectedListings] = useState<number[]>([]);
   const [listings, setListings] = useState<SignedOBOrder[]>([]);
@@ -70,6 +71,7 @@ export const CancelModal = ({ isOpen, onClose, collectionAddress, token }: Props
         toastSuccess('Sent txn to chain for execution');
         waitForTransaction(hash, () => {
           toastInfo(`Transaction confirmed ${ellipsisAddress(hash)}`);
+          onDone();
         });
       } else {
         console.error('signer is null');
