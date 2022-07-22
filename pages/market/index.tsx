@@ -1,11 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { ToggleTab, useToggleTab, Spacer, PageBox, Dropdown } from 'src/components/common';
-import { DiscoverCollectionGrid } from 'src/components/common/discover-collection-grid';
+import { PageBox } from 'src/components/common';
 import { OrderbookContainer } from 'src/components/market/orderbook-list';
-import { UserPageNftsTab } from 'src/components/user/user-page-nfts-tab';
-import { UserProfileDto } from 'src/components/user/user-profile-dto';
-import { useAppContext } from 'src/utils/context/AppContext';
 import { parse } from 'query-string';
 
 const enum TABS {
@@ -18,18 +14,19 @@ const DEFAULT_TAB = TABS.Orders;
 export type DiscoverOrderBy = 'twitterFollowersPercentChange' | 'volumePercentChange' | 'avgPricePercentChange';
 
 const MarketPage = () => {
-  const { user } = useAppContext();
   const { pathname, query, push } = useRouter();
 
   // Checks the url for the 'tab' query parameter. If it doesn't exist, default to Orderbook
-  const defaultTab = query.tab && typeof query.tab === 'string' ? query.tab : TABS.Orders;
+  // const defaultTab = query.tab && typeof query.tab === 'string' ? query.tab : TABS.Orders;
 
-  const { options, onChange, selected } = useToggleTab([TABS.Orders, TABS.ListMyNFTs], defaultTab);
+  // const { options, onChange, selected } = useToggleTab([TABS.Orders, TABS.ListMyNFTs], defaultTab);
   const [orderBy, setOrderBy] = useState<DiscoverOrderBy>('twitterFollowersPercentChange');
+
+  const selected = TABS.Orders;
 
   useEffect(() => {
     const parsedQs = parse(window?.location?.search);
-    onChange(parsedQs.tab ? `${parsedQs.tab}` : DEFAULT_TAB);
+    // onChange(parsedQs.tab ? `${parsedQs.tab}` : DEFAULT_TAB);
     onClickQueryBy(
       (parsedQs.queryBy ? `${parsedQs.queryBy}` : 'twitterFollowersPercentChange') as DiscoverOrderBy,
       `${parsedQs.tab ?? ''}`
@@ -55,14 +52,14 @@ const MarketPage = () => {
 
   const contents = (
     <>
-      <div className="flex space-x-2 items-center relative max-w-xl lg:top-14 lg:-mt-14 pb-4 lg:pb-0">
+      {/* <div className="flex space-x-2 items-center relative max-w-xl lg:top-14 lg:-mt-14 pb-4 lg:pb-0">
         <ToggleTab className="font-heading" options={options} selected={selected} onChange={onChange} />
         <Spacer />
-      </div>
+      </div> */}
 
       {selected === TABS.Orders && <OrderbookContainer />}
 
-      {selected === TABS.Discover && (
+      {/* {selected === TABS.Discover && (
         <div className="min-h-[1024px]">
           <div className="mb-8 w-full flex flex-row-reverse">
             <div className="space-x-2">
@@ -88,18 +85,18 @@ const MarketPage = () => {
 
           <DiscoverCollectionGrid orderBy={orderBy} routerQuery="" />
         </div>
-      )}
+      )} */}
 
-      {selected === TABS.ListMyNFTs && (
+      {/* {selected === TABS.ListMyNFTs && (
         <div className="mt-40">
           <UserPageNftsTab userInfo={user as UserProfileDto} listClassName="mt-[-87px]" />
         </div>
-      )}
+      )} */}
     </>
   );
 
   return (
-    <PageBox title="Market">
+    <PageBox title="Orderbook">
       <div>{contents}</div>
     </PageBox>
   );
