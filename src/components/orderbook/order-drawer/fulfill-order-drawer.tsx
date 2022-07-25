@@ -51,7 +51,7 @@ const FulfillOrderDrawer = ({ open, onClose, orders, onClickRemove, onSubmitDone
   };
 
   const onClickBuy = async () => {
-    // TODO - adi make this work
+    // TODO adi make this work
     try {
       const signer = providerManager?.getEthersProvider().getSigner();
       if (signer) {
