@@ -81,7 +81,7 @@ interface Props2 {
 export const DatePickerBox = ({ tooltip, label, value, onChange, placeholder }: Props2) => {
   return (
     <InputBox label={label} tooltip={tooltip}>
-      <div className="flex items-center">
+      <div className="flex items-center w-full">
         <div className="pr-2">
           <CalendarIcon className="h-4 w-4" />
         </div>
