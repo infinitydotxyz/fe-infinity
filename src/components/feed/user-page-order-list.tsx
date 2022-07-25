@@ -11,7 +11,7 @@ import {
 } from '../filter/user-profile-order-filter-panel';
 import { cancelAllOrders } from 'src/utils/exchange/orders';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { fetchOrderNonce } from 'src/utils/marketUtils';
+import { fetchOrderNonce } from 'src/utils/orderbookUtils';
 import { useDrawerContext } from 'src/utils/context/DrawerContext';
 
 type Query = {

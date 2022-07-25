@@ -20,15 +20,17 @@ import {
   ToggleTab,
   useToggleTab
 } from 'src/components/common';
-import { WaitingForTxModal } from 'src/components/market/order-drawer/waiting-for-tx-modal';
-import { OrderbookContainer } from 'src/components/market/orderbook-list';
+import { WaitingForTxModal } from 'src/components/orderbook/order-drawer/waiting-for-tx-modal';
+import { OrderbookContainer } from 'src/components/orderbook/orderbook-list';
 import { ellipsisAddress, getOwnerAddress, MISSING_IMAGE_URL, useFetch } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { useDrawerContext } from 'src/utils/context/DrawerContext';
 import { getOBOrderFromFirestoreOrderItem } from 'src/utils/exchange/orders';
-import { fetchUserSignedOBOrder } from 'src/utils/marketUtils';
+import { fetchUserSignedOBOrder } from 'src/utils/orderbookUtils';
+import { useSWRConfig } from 'swr';
 
 const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
+  const { mutate } = useSWRConfig();
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
   const COLLECTION_ATTRIBUTES_API_ENDPOINT = `/collections/${chainId}:${collection}/attributes`;
   const tokenResponse = useFetch<Token>(NFT_API_ENDPOINT);
@@ -38,7 +40,11 @@ const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string)
     isLoading: tokenResponse.isLoading,
     error: tokenResponse.error,
     token: tokenResponse.result,
-    collectionAttributes: collectionAttributes.result
+    collectionAttributes: collectionAttributes.result,
+    refreshAssetInfo: () => {
+      mutate(NFT_API_ENDPOINT);
+      mutate(COLLECTION_ATTRIBUTES_API_ENDPOINT);
+    }
   };
 };
 
@@ -67,7 +73,11 @@ interface Props {
 
 const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const { checkSignedIn, user } = useAppContext();
-  const { isLoading, error, token, collectionAttributes } = useFetchAssetInfo(qchainId, qcollection, qtokenId);
+  const { isLoading, error, token, collectionAttributes, refreshAssetInfo } = useFetchAssetInfo(
+    qchainId,
+    qcollection,
+    qtokenId
+  );
   const { options, onChange, selected } = useToggleTab(['Activity', 'Orders'], 'Activity');
   const [showListModal, setShowListModal] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
@@ -202,13 +212,21 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
 
   const modals = (
     <>
-      {showListModal && <ListNFTModal isOpen={showListModal} onClose={() => setShowListModal(false)} token={token} />}
+      {showListModal && (
+        <ListNFTModal
+          isOpen={showListModal}
+          onClose={() => setShowListModal(false)}
+          token={token}
+          onDone={() => refreshAssetInfo()}
+        />
+      )}
       {showCancelModal && (
         <CancelModal
           isOpen={showCancelModal}
           onClose={() => setShowCancelModal(false)}
           collectionAddress={token.collectionAddress ?? ''}
           token={token}
+          onDone={() => refreshAssetInfo()}
         />
       )}
       {showLowerPriceModal && (
@@ -217,6 +235,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
           onClose={() => setShowLowerPriceModal(false)}
           token={token}
           buyPriceEth={buyPriceEth}
+          onDone={() => refreshAssetInfo()}
         />
       )}
       {showSendModal && (
@@ -235,6 +254,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
           onClose={() => setShowMakeOfferModal(false)}
           token={token}
           buyPriceEth={buyPriceEth}
+          onDone={() => refreshAssetInfo()}
         />
       )}
     </>

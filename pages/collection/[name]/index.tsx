@@ -22,7 +22,7 @@ import { VoteModal } from 'src/components/curation/vote-modal';
 import { VoteProgressBar } from 'src/components/curation/vote-progress-bar';
 import { CommunityFeed } from 'src/components/feed-list/community-feed';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
-import { OrderbookContainer } from 'src/components/market/orderbook-list';
+import { OrderbookContainer } from 'src/components/orderbook/orderbook-list';
 import { useFetchSignedOBOrder } from 'src/hooks/api/useFetchSignedOBOrder';
 import { ellipsisAddress, getChainScannerBase, isProd, nFormatter } from 'src/utils'; // todo: adi remove isProd once curation is ready
 import { useFetch } from 'src/utils/apiUtils';

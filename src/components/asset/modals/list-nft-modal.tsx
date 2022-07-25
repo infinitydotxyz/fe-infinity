@@ -8,23 +8,22 @@ import {
   SimpleTableItem,
   TextInputBox,
   toastError,
-  toastSuccess,
-  ToggleTab,
-  useToggleTab
+  toastSuccess
 } from 'src/components/common';
 import { DEFAULT_MAX_GAS_PRICE_WEI, extractErrorMsg, getEstimatedGasPrice, INFINITY_FEE_PCT } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { getSignedOBOrder } from 'src/utils/exchange/orders';
-import { fetchOrderNonce, postOrders } from 'src/utils/marketUtils';
+import { fetchOrderNonce, postOrders } from 'src/utils/orderbookUtils';
 import { secondsPerDay } from 'src/utils/ui-constants';
 
 interface Props {
   isOpen: boolean;
   token: Token;
   onClose: () => void;
+  onDone: () => void;
 }
 
-export const ListNFTModal = ({ isOpen, onClose, token }: Props) => {
+export const ListNFTModal = ({ isOpen, onClose, onDone, token }: Props) => {
   const { user, chainId, providerManager } = useAppContext();
   const [price, setPrice] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -32,7 +31,7 @@ export const ListNFTModal = ({ isOpen, onClose, token }: Props) => {
   // TODO: do something with this ending price?
   // const [includeEndingPrice, setIncludeEndingPrice] = useState<boolean>(false);
   // const { options, onChange, selected } = useToggleTab(['Set Price', 'Highest Bid'], 'Set Price');
-  const { options, onChange, selected } = useToggleTab(['Set Price'], 'Set Price');
+  // const { options, onChange, selected } = useToggleTab(['Set Price'], 'Set Price');
 
   const tableItems: SimpleTableItem[] = [];
   tableItems.push({ title: 'Fee', value: <div className="font-bold">{INFINITY_FEE_PCT}%</div> });
@@ -110,6 +109,7 @@ export const ListNFTModal = ({ isOpen, onClose, token }: Props) => {
               try {
                 await postOrders(user.address, signedOrders);
                 toastSuccess('Listed successfully');
+                onDone();
               } catch (ex) {
                 toastError(`${ex}`);
                 return false;
@@ -122,43 +122,39 @@ export const ListNFTModal = ({ isOpen, onClose, token }: Props) => {
         onClose();
       }}
     >
-      <ToggleTab small={true} options={options} selected={selected} onChange={onChange} className="mb-6" />
+      {/* <ToggleTab small={true} options={options} selected={selected} onChange={onChange} className="mb-6" /> */}
 
-      {selected === 'Set Price' && (
-        <>
-          <p className="mb-4">Sell at a fixed price.</p>
-          <TextInputBox
-            autoFocus={true}
-            addEthSymbol={true}
-            type="number"
-            value={price}
-            label="Price"
-            placeholder=""
-            onChange={(value) => {
-              setPrice(value);
-            }}
-          />
+      <p className="mb-4">Sell at a fixed price.</p>
+      <TextInputBox
+        autoFocus={true}
+        addEthSymbol={true}
+        type="number"
+        value={price}
+        label="Price"
+        placeholder=""
+        onChange={(value) => {
+          setPrice(value);
+        }}
+      />
 
-          <div className="mt-4">
-            <DatePickerBox
-              placeholder="Expiry date"
-              label="Expiry date"
-              value={new Date(parseInt(expirationDate.toString()))}
-              onChange={(date) => {
-                setExpirationDate(date.getTime());
-              }}
-            />
-          </div>
+      <div className="mt-4">
+        <DatePickerBox
+          placeholder="Expiry date"
+          label="Expiry date"
+          value={new Date(parseInt(expirationDate.toString()))}
+          onChange={(date) => {
+            setExpirationDate(date.getTime());
+          }}
+        />
+      </div>
 
-          <SimpleTable className="my-6" items={tableItems} />
+      <SimpleTable className="my-6" items={tableItems} />
 
-          {/* <Switch
+      {/* <Switch
             title="Include ending price"
             checked={includeEndingPrice}
             onChange={() => setIncludeEndingPrice(!includeEndingPrice)}
           /> */}
-        </>
-      )}
     </Modal>
   );
 };

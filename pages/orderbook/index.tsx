@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { PageBox } from 'src/components/common';
-import { OrderbookContainer } from 'src/components/market/orderbook-list';
+import { OrderbookContainer } from 'src/components/orderbook/orderbook-list';
 import { parse } from 'query-string';
 
 const enum TABS {
@@ -13,7 +13,7 @@ const DEFAULT_TAB = TABS.Orders;
 
 export type DiscoverOrderBy = 'twitterFollowersPercentChange' | 'volumePercentChange' | 'avgPricePercentChange';
 
-const MarketPage = () => {
+const OrderbookPage = () => {
   const { pathname, query, push } = useRouter();
 
   // Checks the url for the 'tab' query parameter. If it doesn't exist, default to Orderbook
@@ -102,4 +102,4 @@ const MarketPage = () => {
   );
 };
 
-export default MarketPage;
+export default OrderbookPage;

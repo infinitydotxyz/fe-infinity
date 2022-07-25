@@ -19,16 +19,17 @@ import {
 } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { getSignedOBOrder } from 'src/utils/exchange/orders';
-import { fetchUserSignedOBOrder, postOrders } from 'src/utils/marketUtils';
+import { fetchUserSignedOBOrder, postOrders } from 'src/utils/orderbookUtils';
 
 interface Props {
   isOpen: boolean;
   token: Token;
   buyPriceEth?: string;
   onClose: () => void;
+  onDone: () => void;
 }
 
-export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) => {
+export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth, onDone }: Props) => {
   const { user, chainId, providerManager } = useAppContext();
   const [orderDetails, setOrderDetails] = useState<SignedOBOrder | null>(null);
   const [price, setPrice] = useState('');
@@ -122,6 +123,7 @@ export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) 
                 await postOrders(user.address, signedOrders);
                 setIsSubmitting(false);
                 toastSuccess('Lowered price successfully');
+                onDone();
               } catch (ex) {
                 toastError(`${ex}`);
                 return false;

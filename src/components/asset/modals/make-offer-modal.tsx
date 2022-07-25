@@ -5,7 +5,7 @@ import { CurrencyInput, DatePickerBox, Modal, toastError, toastSuccess } from 's
 import { DEFAULT_MAX_GAS_PRICE_WEI, extractErrorMsg, getEstimatedGasPrice, getOwnerAddress } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { getSignedOBOrder } from 'src/utils/exchange/orders';
-import { fetchOrderNonce, postOrders } from 'src/utils/marketUtils';
+import { fetchOrderNonce, postOrders } from 'src/utils/orderbookUtils';
 import { secondsPerDay } from 'src/utils/ui-constants';
 
 interface Props {
@@ -13,9 +13,10 @@ interface Props {
   isOpen: boolean;
   token: Token;
   onClose: () => void;
+  onDone: () => void;
 }
 
-export const MakeOfferModal = ({ isOpen, onClose, buyPriceEth, token }: Props) => {
+export const MakeOfferModal = ({ isOpen, onClose, onDone, buyPriceEth, token }: Props) => {
   const { user, chainId, providerManager } = useAppContext();
   const [price, setPrice] = useState<string>(buyPriceEth || '1');
   const [expirationDate, setExpirationDate] = useState(Date.now() + secondsPerDay * 30 * 1000);
@@ -87,6 +88,7 @@ export const MakeOfferModal = ({ isOpen, onClose, buyPriceEth, token }: Props) =
           try {
             await postOrders(user.address, signedOrders);
             toastSuccess('Offer sent successfully');
+            onDone();
           } catch (ex) {
             toastError(`${ex}`);
             return false;

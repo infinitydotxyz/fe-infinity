@@ -54,7 +54,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
             size="large"
             onClick={() => {
               setOrderDrawerOpen(false);
-              router.push('/market?tab=Orders');
+              router.push('/orderbook');
             }}
             className="font-heading w-full h-full"
           >
@@ -65,7 +65,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
             variant="outline"
             onClick={() => {
               setOrderDrawerOpen(false);
-              router.push('/market?tab=List%20NFTs');
+              router.push('/profile/me?tab=Collected');
             }}
             className="font-heading w-full h-full"
           >

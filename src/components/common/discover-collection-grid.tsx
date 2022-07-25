@@ -3,7 +3,7 @@ import { CenteredContent, ScrollLoader, Spinner } from 'src/components/common';
 import { apiGet, LARGE_LIMIT, GRID_CSS } from 'src/utils';
 import { uniqBy } from 'lodash';
 import { DiscoverCollectionCard } from './discover-collection-card';
-import { DiscoverOrderBy } from 'pages/market';
+import { DiscoverOrderBy } from 'pages/orderbook';
 import { CollectionStatsArrayResponseDto, CollectionStatsDto } from '@infinityxyz/lib-frontend/types/dto/stats';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 
