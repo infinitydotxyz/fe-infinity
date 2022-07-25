@@ -248,15 +248,15 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
       )}
       {sendTxHash && <WaitingForTxModal title={'Sending NFTs'} txHash={sendTxHash} onClose={() => setSendTxHash('')} />}
 
-      {showMakeOfferModal && (
-        <MakeOfferModal
-          isOpen={showMakeOfferModal}
-          onClose={() => setShowMakeOfferModal(false)}
-          token={token}
-          buyPriceEth={buyPriceEth}
-          onDone={() => refreshAssetInfo()}
-        />
-      )}
+      <MakeOfferModal
+        isOpen={showMakeOfferModal}
+        onClose={() => {
+          return setShowMakeOfferModal(false);
+        }}
+        token={token}
+        buyPriceEth={buyPriceEth}
+        onDone={() => refreshAssetInfo()}
+      />
     </>
   );
 
