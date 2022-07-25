@@ -217,6 +217,7 @@ export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listCl
 
       {loweringPriceToken && (
         <LowerPriceModal
+          onDone={() => console.log('onDone')}
           isOpen={true}
           onClose={() => setLoweringPriceToken(null)}
           token={loweringPriceToken}
@@ -226,6 +227,7 @@ export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listCl
 
       {cancellingToken && (
         <CancelModal
+          onDone={() => console.log('onDone')}
           isOpen={true}
           onClose={() => setCancellingToken(null)}
           collectionAddress={cancellingToken.collectionAddress ?? ''}

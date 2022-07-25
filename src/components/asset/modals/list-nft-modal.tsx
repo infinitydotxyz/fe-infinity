@@ -8,9 +8,7 @@ import {
   SimpleTableItem,
   TextInputBox,
   toastError,
-  toastSuccess,
-  ToggleTab,
-  useToggleTab
+  toastSuccess
 } from 'src/components/common';
 import { DEFAULT_MAX_GAS_PRICE_WEI, extractErrorMsg, getEstimatedGasPrice, INFINITY_FEE_PCT } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
