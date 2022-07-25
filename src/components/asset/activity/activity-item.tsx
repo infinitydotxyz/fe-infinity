@@ -21,7 +21,7 @@ export const ActivityItem = ({ item }: Props) => {
       <div className="bg-gray-100 px-10 py-6 rounded-3xl flex items-center font-heading mt-4">
         <NextLink href={`/asset/${item.chainId}/${item.address}/${item.tokenId}`}>
           <EZImage
-            className="w-16 h-16 max-h-[80px] rounded-2xl"
+            className="w-16 h-16 max-h-[80px] rounded-2xl overflow-clip"
             src={item.image || item.collectionData?.metadata?.profileImage}
           />
         </NextLink>
