@@ -48,7 +48,7 @@ export const ToggleTab = ({ options, onChange, selected, className = '', small =
             <div
               key={option}
               className={twMerge(
-                small ? 'min-w-[120px]' : 'min-w-[140px]',
+                small ? 'min-w-[110px]' : 'min-w-[140px]',
                 'select-none flex text-md items-center justify-center  text-center whitespace-nowrap font-medium rounded-full text-secondary',
                 selected === option ? 'bg-black text-white font-bold' : '',
                 altStyle ? 'py-1 px-6' : 'py-2.5 px-10'
