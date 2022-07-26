@@ -325,9 +325,11 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
                 <Button variant="outline" size="large" onClick={onClickSend}>
                   Send
                 </Button>
-                <Button variant="outline" size="large" onClick={onClickList}>
-                  List
-                </Button>
+                {!isListingOwner && (
+                  <Button variant="outline" size="large" onClick={onClickList}>
+                    List
+                  </Button>
+                )}
                 {sellPriceEth && (
                   <Button variant="outline" size="large" className="" onClick={onClickAcceptOffer}>
                     <div className="flex">
