@@ -70,6 +70,7 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
         {userInfo.bio && <p className="text-theme-light-800 mt-8 ml-1 max-w-md">{userInfo.bio || ''}</p>}
 
         <ToggleTab
+          small
           className="mt-14 -ml-2 font-heading pointer-events-auto"
           options={options}
           selected={selected}
