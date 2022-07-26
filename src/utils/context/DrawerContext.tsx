@@ -11,6 +11,7 @@ import { CancelDrawer } from 'src/components/orderbook/order-drawer/cancel-drawe
 import { SendNFTsDrawer } from 'src/components/orderbook/order-drawer/send-nfts-drawer';
 
 import { useOrderContext } from './OrderContext';
+import { WaitingForTxModal } from 'src/components/orderbook/order-drawer/waiting-for-tx-modal';
 
 export type DrawerContextType = {
   cartItemCount: number;
@@ -31,6 +32,7 @@ interface Props {
 
 export const DrawerContextProvider = ({ children }: Props) => {
   const [cartItemCount, setCartItemCount] = useState<number>(0);
+  const [sendTxHash, setSendTxHash] = useState('');
 
   const router = useRouter();
   const { orderDrawerOpen, setOrderDrawerOpen, ordersInCart, cartItems } = useOrderContext();
@@ -151,12 +153,13 @@ export const DrawerContextProvider = ({ children }: Props) => {
             }
           }}
           onSubmit={(hash) => {
-            console.log(hash);
-            // TODO - steve
-            // setSendTxHash(hash);
-            // {sendTxHash && <WaitingForTxModal title={'Sending NFTs'} txHash={sendTxHash} onClose={() => setSendTxHash('')} />}
+            setSendTxHash(hash);
           }}
         />
+
+        {sendTxHash && (
+          <WaitingForTxModal title={'Sending NFTs'} txHash={sendTxHash} onClose={() => setSendTxHash('')} />
+        )}
 
         <FulfillOrderDrawerHandler
           setShowDrawer={fulfillDrawerParams.setShowDrawer}
