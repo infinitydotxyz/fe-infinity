@@ -82,10 +82,10 @@ const FulfillOrderDrawer = ({ open, onClose, orders, onClickRemove, onSubmitDone
   };
 
   const content = () => {
-    return readyOrders.orders.map((rOrder, idx) => {
+    return readyOrders.orders.map((rOrder) => {
       if (!rOrder.valid) {
         return (
-          <div className="bg-theme-light-200 rounded-2xl p-4">
+          <div className="bg-theme-light-200 rounded-2xl p-4" key={rOrder.order.id}>
             <OrderDetailPicker
               order={rOrder.order}
               selection={rOrder.selection}
@@ -117,7 +117,7 @@ const FulfillOrderDrawer = ({ open, onClose, orders, onClickRemove, onSubmitDone
         );
       } else {
         return (
-          <div key={rOrder.order.id + '_' + idx} className="py-3 flex">
+          <div key={rOrder.order.id} className="py-3 flex">
             <div className="w-full flex justify-between">
               <div className="flex-1">
                 <OrderbookItem
