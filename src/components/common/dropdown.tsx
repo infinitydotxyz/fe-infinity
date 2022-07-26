@@ -38,7 +38,7 @@ export const Dropdown = ({
             <Menu.Button
               className={twMerge(
                 inputBorderColor,
-                'transition ease-in-out duration-300 hover:border-black bg-white active:bg-gray-900 hover:bg-theme-gray-200',
+                'transition ease-in-out duration-300 bg-white active:bg-gray-900 hover:bg-theme-gray-200',
                 'focus:outline-none focus-visible:ring focus:ring-black focus:ring-opacity-50',
                 'px-6 py-2.5 border rounded-3xl text-gray-900 font-heading flex items-center space-x-1'
               )}
