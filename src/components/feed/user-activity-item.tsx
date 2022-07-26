@@ -26,7 +26,7 @@ export const UserActivityItem = ({ event }: Props) => {
                 title={event.collectionSlug}
               >
                 {event.collectionName}
-                {event?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1" style={{ width: 24 }} /> : null}
+                {event?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1 shrink-0" /> : null}
               </NextLink>
             </div>
             <div className="text-gray-400">

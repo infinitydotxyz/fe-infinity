@@ -159,7 +159,7 @@ const SingleCollectionCell = ({
             title={title}
           >
             {title}
-            {orderNft?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1" style={{ width: 24 }} /> : null}
+            {orderNft?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 mx-1 shrink-0" /> : null}
           </NextLink>
         ) : (
           <NextLink
@@ -168,7 +168,7 @@ const SingleCollectionCell = ({
             title={title}
           >
             {title}
-            {orderNft?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1" style={{ width: 24 }} /> : null}
+            {orderNft?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 mx-1 shrink-0" /> : null}
           </NextLink>
         )}
 
