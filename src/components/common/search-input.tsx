@@ -153,8 +153,8 @@ export const SearchInput: React.FC<Props> = ({ expanded }) => {
                         alt={collection?.name}
                       />
                     </div>
-                    <div className=" flex-1  font-body text-xs leading-6 tracking-wide  ">{collection?.name}</div>
-                    {collection?.hasBlueCheck ? <SVG.blueCheck className="h-5 w-5 opacity-60" /> : <></>}
+                    <div className=" flex-1  font-body text-xs leading-6 tracking-wide">{collection?.name}</div>
+                    {collection?.hasBlueCheck ? <SVG.blueCheck className="h-5 w-5 opacity-60 shrink-0" /> : <></>}
                   </div>
                 )}
               </Combobox.Option>

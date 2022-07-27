@@ -275,7 +275,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
               href={`/collection/${token.collectionSlug || `${token.chainId}:${token.collectionAddress}`}`}
               className="text-theme-light-800 font-heading tracking-tight mr-2"
             >
-              {token.collectionName || ellipsisAddress(token.collectionAddress) || 'Collection'}
+              <div>{token.collectionName || ellipsisAddress(token.collectionAddress) || 'Collection'}</div>
             </NextLink>
             {token.hasBlueCheck && <SVG.blueCheck className="h-5 w-5" />}
           </div>
