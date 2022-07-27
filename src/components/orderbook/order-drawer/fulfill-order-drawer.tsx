@@ -331,6 +331,26 @@ class ReadyOrder {
     return this.order;
   }
 
+  selectedOBOrderItems(): OBOrderItem[] {
+    if (this.selection.size > 0) {
+      const result: OBOrderItem[] = [];
+
+      for (const nft of this.order.nfts) {
+        for (const token of nft.tokens) {
+          const key = orderDetailKey(nft.collectionAddress, token.tokenId);
+
+          if (this.selection.has(key)) {
+            result.push(nft);
+          }
+        }
+      }
+
+      return result;
+    }
+
+    return this.order.nfts;
+  }
+
   updateIsValid() {
     let numTokensToChoose = 0;
 
