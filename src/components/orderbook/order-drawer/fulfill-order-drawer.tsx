@@ -346,8 +346,9 @@ class ReadyOrder {
           }
         }
 
-        orderItem.tokens = tokens;
-        result.push(orderItem);
+        const newItem = JSON.parse(JSON.stringify(orderItem)) as OBOrderItem;
+        newItem.tokens = tokens;
+        result.push(newItem);
       }
 
       return result;
