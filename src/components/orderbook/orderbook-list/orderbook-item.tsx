@@ -1,9 +1,11 @@
 import { OBOrder, OBOrderItem } from '@infinityxyz/lib-frontend/types/core';
 import { OBTokenInfoDto } from '@infinityxyz/lib-frontend/types/dto/orders';
+import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 
 import { useRouter } from 'next/router';
 import { ReactNode } from 'react';
 import { EZImage, NextLink, SVG } from 'src/components/common';
+import { ENS_ADDRESS } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
 // import ReactTooltip from 'react-tooltip';
 
@@ -132,6 +134,13 @@ const SingleCollectionCell = ({
     }
   }
 
+  let tokenId = token?.tokenId ?? '';
+  // special case for ENS
+  const collectionAddress = trimLowerCase(orderNft?.collectionAddress ?? '');
+  if (collectionAddress === ENS_ADDRESS && token?.tokenName) {
+    tokenId = token?.tokenName;
+  }
+
   return (
     <div className="flex gap-2 items-center">
       <div className="flex justify-center shrink-0 h-14 w-14">
@@ -187,13 +196,13 @@ const SingleCollectionCell = ({
           </div>
         ) : (
           <>
-            {token && (
+            {tokenId && (
               <NextLink
-                href={`/asset/1/${orderNft?.collectionAddress}/${token.tokenId}`}
+                href={`/asset/1/${orderNft?.collectionAddress}/${token?.tokenId}`}
                 className="whitespace-pre-wrap text-gray-400"
                 title={token?.tokenId}
               >
-                {token?.tokenId}
+                {tokenId}
               </NextLink>
             )}
           </>

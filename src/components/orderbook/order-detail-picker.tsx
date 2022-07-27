@@ -1,6 +1,8 @@
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import React from 'react';
 import { EZImage, Spacer } from 'src/components/common';
+import { ENS_ADDRESS } from 'src/utils';
 
 export const orderDetailKey = (collectionAddress: string, tokenId: string): string => {
   return `${collectionAddress}:${tokenId}`;
@@ -35,6 +37,13 @@ export const OrderDetailPicker = ({ selection, onChange, order }: Props2) => {
               {nft.tokens.map((token) => {
                 const key = orderDetailKey(nft.collectionAddress, token.tokenId);
 
+                let tokenId = token.tokenName || token.tokenId ? `#${token.tokenId}` : '';
+                // special case for ENS
+                const collectionAddress = trimLowerCase(nft.collectionAddress ?? '');
+                if (collectionAddress === ENS_ADDRESS && token?.tokenName) {
+                  tokenId = token?.tokenName;
+                }
+
                 return (
                   <div
                     key={key}
@@ -67,13 +76,11 @@ export const OrderDetailPicker = ({ selection, onChange, order }: Props2) => {
                   >
                     <EZImage
                       src={token.tokenImage || nft.collectionImage}
-                      className="w-16 h-16 overflow-clip rounded-2xl"
+                      className="w-16 h-16 shrink-0 overflow-clip rounded-2xl"
                     />
                     <div className="ml-4">
                       <div className="select-none">{nft.collectionName}</div>
-                      <div className="select-none flex text-gray-500">
-                        {token.tokenName || token.tokenId ? `#${token.tokenId}` : ''}
-                      </div>
+                      <div className="select-none flex text-gray-500">{tokenId}</div>
                     </div>
 
                     {showCheckbox && (
