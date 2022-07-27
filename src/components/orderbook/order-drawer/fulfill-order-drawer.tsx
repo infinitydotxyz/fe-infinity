@@ -335,14 +335,19 @@ class ReadyOrder {
     if (this.selection.size > 0) {
       const result: OBOrderItem[] = [];
 
-      for (const nft of this.order.nfts) {
-        for (const token of nft.tokens) {
-          const key = orderDetailKey(nft.collectionAddress, token.tokenId);
+      for (const orderItem of this.order.nfts) {
+        const tokens: OBTokenInfo[] = [];
+
+        for (const token of orderItem.tokens) {
+          const key = orderDetailKey(orderItem.collectionAddress, token.tokenId);
 
           if (this.selection.has(key)) {
-            result.push(nft);
+            tokens.push(token);
           }
         }
+
+        orderItem.tokens = tokens;
+        result.push(orderItem);
       }
 
       return result;
