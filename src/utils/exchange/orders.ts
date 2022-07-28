@@ -15,6 +15,7 @@ import {
   SignedOBOrder
 } from '@infinityxyz/lib-frontend/types/core';
 import {
+  ETHEREUM_WETH_ADDRESS,
   getCurrentOBOrderPrice,
   getExchangeAddress,
   getOBComplicationAddress,
@@ -107,20 +108,38 @@ export async function grantApprovals(
   signer: JsonRpcSigner,
   exchange: string
 ): Promise<boolean> {
-  try {
-    console.log('Granting approvals');
-    if (!order.isSellOrder) {
-      // approve currencies
-      const currentPrice = getCurrentOBOrderPrice(order);
-      await approveERC20(user.address, order.execParams.currencyAddress, currentPrice, signer, exchange);
-    } else {
-      // approve collections
-      await approveERC721(user.address, order.nfts, signer, exchange);
+  console.log('Granting approvals');
+  if (!order.isSellOrder) {
+    // approve currencies
+    const currentPrice = getCurrentOBOrderPrice(order);
+    await approveERC20(user.address, order.execParams.currencyAddress, currentPrice, signer, exchange);
+
+    // check if user has enough balance to fulfill this order
+    await checkERC20Balance(user.address, order.execParams.currencyAddress, currentPrice, signer);
+  } else {
+    // approve collections
+    await approveERC721(user.address, order.nfts, signer, exchange);
+  }
+  return true;
+}
+
+export async function checkERC20Balance(
+  user: string,
+  currencyAddress: string,
+  price: BigNumberish,
+  signer: JsonRpcSigner
+) {
+  console.log('Checking ERC20 balance for currency', currencyAddress);
+  if (currencyAddress !== NULL_ADDRESS) {
+    const contract = new Contract(currencyAddress, ERC20ABI, signer);
+    const balance = BigNumber.from(await contract.balanceOf(user));
+    if (balance.lt(price)) {
+      let msg = `Insufficient ERC20 balance to place order`;
+      if (currencyAddress === ETHEREUM_WETH_ADDRESS) {
+        msg = `Insufficient WETH balance to place order`;
+      }
+      throw new Error(msg);
     }
-    return true;
-  } catch (e) {
-    console.error(e);
-    return false;
   }
 }
 
@@ -132,7 +151,7 @@ export async function approveERC20(
   infinityExchangeAddress: string
 ) {
   try {
-    console.log('Granting ERC20 approval');
+    console.log('Granting ERC20 approval for currency', currencyAddress);
     if (currencyAddress !== NULL_ADDRESS) {
       const contract = new Contract(currencyAddress, ERC20ABI, signer);
       const allowance = BigNumber.from(await contract.allowance(user, infinityExchangeAddress));
