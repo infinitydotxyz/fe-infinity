@@ -85,7 +85,6 @@ const FulfillOrderDrawer = ({ open, onClose, orders, onClickRemove, onSubmitDone
             chainNFTs.push(nfts);
           }
         }
-        console.log(chainNFTs);
         if (isAdvancedOrder) {
           const { hash } = await takeOrders(signer, chainId, chainOrders, chainNFTs);
           toastSuccess('Sent txn to chain for execution');
