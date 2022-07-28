@@ -82,7 +82,7 @@ export const ListNFTModal = ({ isOpen, onClose, onDone, token }: Props) => {
             const order: OBOrder = {
               id: '',
               chainId,
-              isSellOrder: false,
+              isSellOrder: true,
               makerAddress: user.address,
               makerUsername: user.username ?? '',
               numItems: 1,
@@ -103,7 +103,6 @@ export const ListNFTModal = ({ isOpen, onClose, onDone, token }: Props) => {
             };
 
             const signedOrder = await getSignedOBOrder(user, chainId, signer, order);
-            console.log('signedOrder', signedOrder);
             if (signedOrder) {
               signedOrders.push(signedOrder);
               try {

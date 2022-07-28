@@ -248,15 +248,15 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
       )}
       {sendTxHash && <WaitingForTxModal title={'Sending NFTs'} txHash={sendTxHash} onClose={() => setSendTxHash('')} />}
 
-      {showMakeOfferModal && (
-        <MakeOfferModal
-          isOpen={showMakeOfferModal}
-          onClose={() => setShowMakeOfferModal(false)}
-          token={token}
-          buyPriceEth={buyPriceEth}
-          onDone={() => refreshAssetInfo()}
-        />
-      )}
+      <MakeOfferModal
+        isOpen={showMakeOfferModal}
+        onClose={() => {
+          return setShowMakeOfferModal(false);
+        }}
+        token={token}
+        buyPriceEth={buyPriceEth}
+        onDone={() => refreshAssetInfo()}
+      />
     </>
   );
 
@@ -275,7 +275,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
               href={`/collection/${token.collectionSlug || `${token.chainId}:${token.collectionAddress}`}`}
               className="text-theme-light-800 font-heading tracking-tight mr-2"
             >
-              {token.collectionName || ellipsisAddress(token.collectionAddress) || 'Collection'}
+              <div>{token.collectionName || ellipsisAddress(token.collectionAddress) || 'Collection'}</div>
             </NextLink>
             {token.hasBlueCheck && <SVG.blueCheck className="h-5 w-5" />}
           </div>
@@ -325,9 +325,11 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
                 <Button variant="outline" size="large" onClick={onClickSend}>
                   Send
                 </Button>
-                <Button variant="outline" size="large" onClick={onClickList}>
-                  List
-                </Button>
+                {!isListingOwner && (
+                  <Button variant="outline" size="large" onClick={onClickList}>
+                    List
+                  </Button>
+                )}
                 {sellPriceEth && (
                   <Button variant="outline" size="large" className="" onClick={onClickAcceptOffer}>
                     <div className="flex">

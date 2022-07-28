@@ -1,5 +1,5 @@
 import React, { ReactElement, ReactNode, useState } from 'react';
-import { AppDatePicker } from 'src/components/common';
+import { DatePicker } from 'src/components/common';
 import { ComboBox, ComboBoxBaseType } from './combo-box';
 import { CalendarIcon } from '@heroicons/react/outline';
 import { EthSymbol } from './eth-price';
@@ -81,11 +81,11 @@ interface Props2 {
 export const DatePickerBox = ({ tooltip, label, value, onChange, placeholder }: Props2) => {
   return (
     <InputBox label={label} tooltip={tooltip}>
-      <div className="flex items-center">
+      <div className="flex items-center w-full">
         <div className="pr-2">
           <CalendarIcon className="h-4 w-4" />
         </div>
-        <AppDatePicker value={value} onChange={onChange} placeholder={placeholder} />
+        <DatePicker value={value} onChange={onChange} placeholder={placeholder} />
       </div>
     </InputBox>
   );

@@ -139,8 +139,7 @@ const TrendingPage = () => {
                   <NextLink href={`/collection/${coll?.slug}`} className="truncate">
                     {coll?.metadata?.name}
                   </NextLink>
-                  {/* using inline here (className will show the bluechecks in different sizes for smaller screen) */}
-                  {coll?.hasBlueCheck && <SVG.blueCheck className="ml-1.5" style={{ minWidth: 16, maxWidth: 16 }} />}
+                  {coll?.hasBlueCheck && <SVG.blueCheck className="ml-1.5 shrink-0 w-4 h-4" />}
                 </div>
 
                 {isDesktop ? (

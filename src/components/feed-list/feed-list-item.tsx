@@ -162,7 +162,7 @@ export const FeedListItem = ({
           <div className="font-bold">
             <NextLink href={`/collection/${collectionSlug}`}>{collectionName}</NextLink>
           </div>
-          {activity?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1" /> : null}
+          {activity?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1 shrink-0" /> : null}
 
           <div className="ml-3 text-gray-600">{timeString}</div>
         </div>

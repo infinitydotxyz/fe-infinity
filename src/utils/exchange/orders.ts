@@ -15,6 +15,7 @@ import {
   SignedOBOrder
 } from '@infinityxyz/lib-frontend/types/core';
 import {
+  ETHEREUM_WETH_ADDRESS,
   getCurrentOBOrderPrice,
   getExchangeAddress,
   getOBComplicationAddress,
@@ -107,20 +108,38 @@ export async function grantApprovals(
   signer: JsonRpcSigner,
   exchange: string
 ): Promise<boolean> {
-  try {
-    console.log('Granting approvals');
-    if (!order.isSellOrder) {
-      // approve currencies
-      const currentPrice = getCurrentOBOrderPrice(order);
-      await approveERC20(user.address, order.execParams.currencyAddress, currentPrice, signer, exchange);
-    } else {
-      // approve collections
-      await approveERC721(user.address, order.nfts, signer, exchange);
+  console.log('Granting approvals');
+  if (!order.isSellOrder) {
+    // approve currencies
+    const currentPrice = getCurrentOBOrderPrice(order);
+    await approveERC20(user.address, order.execParams.currencyAddress, currentPrice, signer, exchange);
+
+    // check if user has enough balance to fulfill this order
+    await checkERC20Balance(user.address, order.execParams.currencyAddress, currentPrice, signer);
+  } else {
+    // approve collections
+    await approveERC721(user.address, order.nfts, signer, exchange);
+  }
+  return true;
+}
+
+export async function checkERC20Balance(
+  user: string,
+  currencyAddress: string,
+  price: BigNumberish,
+  signer: JsonRpcSigner
+) {
+  console.log('Checking ERC20 balance for currency', currencyAddress);
+  if (currencyAddress !== NULL_ADDRESS) {
+    const contract = new Contract(currencyAddress, ERC20ABI, signer);
+    const balance = BigNumber.from(await contract.balanceOf(user));
+    if (balance.lt(price)) {
+      let msg = `Insufficient ERC20 balance to place order`;
+      if (currencyAddress === ETHEREUM_WETH_ADDRESS) {
+        msg = `Insufficient WETH balance to place order`;
+      }
+      throw new Error(msg);
     }
-    return true;
-  } catch (e) {
-    console.error(e);
-    return false;
   }
 }
 
@@ -132,7 +151,7 @@ export async function approveERC20(
   infinityExchangeAddress: string
 ) {
   try {
-    console.log('Granting ERC20 approval');
+    console.log('Granting ERC20 approval for currency', currencyAddress);
     if (currencyAddress !== NULL_ADDRESS) {
       const contract = new Contract(currencyAddress, ERC20ABI, signer);
       const allowance = BigNumber.from(await contract.allowance(user, infinityExchangeAddress));
@@ -493,6 +512,53 @@ export async function canTakeMultipleOneOrders(
   } catch (e) {
     console.error('Error checking if can take multiple orders', e);
     return 'no';
+  }
+}
+
+export async function takeOrders(
+  signer: JsonRpcSigner,
+  chainId: string,
+  makerOrders: ChainOBOrder[],
+  takerItems: ChainNFTs[][]
+) {
+  const exchangeAddress = getExchangeAddress(chainId);
+  const infinityExchange = new Contract(exchangeAddress, InfinityExchangeABI, signer);
+  const totalPrice = makerOrders
+    .map((order) => getCurrentChainOBOrderPrice(order))
+    .reduce((acc, curr) => acc.add(curr), BigNumber.from(0));
+
+  // it is assumed that all orders have these value same, so no need to check. Contract throws if this is not the case.
+  const isSellOrder = makerOrders[0].isSellOrder;
+
+  const gasLimit = 250_000 * makerOrders.length;
+  // perform exchange
+  // if fulfilling a sell order, send ETH
+  if (isSellOrder) {
+    const options = {
+      value: totalPrice,
+      gasLimit
+    };
+    const result = await infinityExchange.takeOrders(makerOrders, takerItems, options);
+    return {
+      hash: result?.hash ?? ''
+    };
+  } else {
+    // approve ERC721
+    const user = await signer.getAddress();
+    const nfts = takerItems.flatMap((takerItem) => takerItem);
+    const approvalResults = await approveERC721ForChainNFTs(user, nfts, signer, exchangeAddress);
+
+    for (const approval of approvalResults) {
+      /**
+       * wait one at a time in case there are a lot of approvals
+       */
+      const { hash } = approval as { hash: string };
+      await signer.provider?.waitForTransaction(hash);
+    }
+    const result = await infinityExchange.takeOrders(makerOrders, takerItems, { gasLimit });
+    return {
+      hash: result?.hash ?? ''
+    };
   }
 }
 

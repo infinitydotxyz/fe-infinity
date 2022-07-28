@@ -4,7 +4,7 @@ import { inputBorderColor } from '../../utils/ui-constants';
 
 const classes = {
   // focus ring appears on keyboard tab key navigation for accessibility, not on clicks
-  base: 'select-none focus:outline-none focus-visible:ring focus:ring-black focus:ring-opacity-50 transition ease-in-out duration-300 focus:border-black active:bg-gray-900 active:text-white',
+  base: 'select-none focus:outline-none focus-visible:ring focus:ring-black focus:ring-opacity-50 transition ease-in-out duration-300 active:bg-gray-900 active:text-white',
   disabled: 'opacity-50 cursor-not-allowed',
   pill: 'rounded-full',
   size: {
@@ -47,13 +47,13 @@ export const Button = ({
     <button
       type={type}
       disabled={disabled}
-      className={twMerge(`
-        ${classes.base}
-        ${classes.size[size]}
-        ${classes.variant[variant]}
-        ${disabled ? classes.disabled : ''}
-        ${className}
-      `)}
+      className={twMerge(
+        classes.base,
+        classes.size[size],
+        classes.variant[variant],
+        disabled ? classes.disabled : '',
+        className
+      )}
       onClick={(e) => {
         if (type === 'button') {
           // this allows a button to be in a clickable div

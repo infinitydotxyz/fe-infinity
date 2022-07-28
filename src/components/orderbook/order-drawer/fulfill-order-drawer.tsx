@@ -1,8 +1,15 @@
-import { ERC721CardData, OBOrderItem, OBTokenInfo, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import {
+  ChainNFTs,
+  ChainOBOrder,
+  ERC721CardData,
+  OBOrderItem,
+  OBTokenInfo,
+  SignedOBOrder
+} from '@infinityxyz/lib-frontend/types/core';
 import { Button, Spacer, toastSuccess, toastError, Divider, toastInfo, SVG } from 'src/components/common';
 import { ellipsisAddress, extractErrorMsg } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { canTakeMultipleOneOrders, takeMultipleOneOrders } from 'src/utils/exchange/orders';
+import { canTakeMultipleOneOrders, takeMultipleOneOrders, takeOrders } from 'src/utils/exchange/orders';
 import { iconButtonStyle } from 'src/utils/ui-constants';
 import { Drawer } from '../../common/drawer';
 import { OrderbookItem } from '../orderbook-list/orderbook-item';
@@ -50,28 +57,59 @@ const FulfillOrderDrawer = ({ open, onClose, orders, onClickRemove, onSubmitDone
     setReadyOrders(new ReadyOrders(rOrders));
   };
 
-  const onClickBuy = async () => {
-    // TODO adi make this work
+  const onClickFulfill = async () => {
     try {
       const signer = providerManager?.getEthersProvider().getSigner();
       if (signer) {
-        const chainOrders = orders.map((order) => order.signedOrder);
-        const canTakeOrders = await canTakeMultipleOneOrders(signer, chainId, chainOrders);
-        if (canTakeOrders === 'yes') {
-          const { hash } = await takeMultipleOneOrders(signer, chainId, chainOrders);
+        const chainOrders: ChainOBOrder[] = [];
+        const chainNFTs: ChainNFTs[][] = [];
+        let isAdvancedOrder = false;
+        for (const readyOrder of readyOrders.orders) {
+          if (readyOrder.valid) {
+            const order = readyOrder.order.signedOrder;
+            chainOrders.push(order);
+
+            let selectedOBOrderItems = readyOrder.order.nfts;
+            if (readyOrder.selection.size > 0) {
+              isAdvancedOrder = true;
+              selectedOBOrderItems = readyOrder.selectedOBOrderItems();
+            }
+            const nfts = selectedOBOrderItems.map((obOrderItem) => {
+              return {
+                collection: obOrderItem.collectionAddress,
+                tokens: obOrderItem.tokens.map((token) => {
+                  return { tokenId: token.tokenId, numTokens: token.numTokens };
+                })
+              };
+            });
+            chainNFTs.push(nfts);
+          }
+        }
+        if (isAdvancedOrder) {
+          const { hash } = await takeOrders(signer, chainId, chainOrders, chainNFTs);
           toastSuccess('Sent txn to chain for execution');
           waitForTransaction(hash, () => {
             toastInfo(`Transaction confirmed ${ellipsisAddress(hash)}`);
           });
           onSubmitDone(hash);
-        } else if (canTakeOrders === 'staleOwner') {
-          toastError('One or more of these orders have NFTs with stale owner');
-        } else if (canTakeOrders === 'cannotExecute') {
-          toastError('One or more of these orders are invalid/expired');
-        } else if (canTakeOrders === 'notOwner') {
-          toastError('One or more of these orders are not owned by you');
         } else {
-          toastError('One or more of these orders cannot be fulfilled');
+          const canTakeOrders = await canTakeMultipleOneOrders(signer, chainId, chainOrders);
+          if (canTakeOrders === 'yes') {
+            const { hash } = await takeMultipleOneOrders(signer, chainId, chainOrders);
+            toastSuccess('Sent txn to chain for execution');
+            waitForTransaction(hash, () => {
+              toastInfo(`Transaction confirmed ${ellipsisAddress(hash)}`);
+            });
+            onSubmitDone(hash);
+          } else if (canTakeOrders === 'staleOwner') {
+            toastError('One or more of these orders have NFTs with stale owner');
+          } else if (canTakeOrders === 'cannotExecute') {
+            toastError('One or more of these orders are invalid/expired');
+          } else if (canTakeOrders === 'notOwner') {
+            toastError('One or more of these orders are not owned by you');
+          } else {
+            toastError('One or more of these orders cannot be fulfilled');
+          }
         }
       } else {
         throw 'Signer is null';
@@ -82,10 +120,10 @@ const FulfillOrderDrawer = ({ open, onClose, orders, onClickRemove, onSubmitDone
   };
 
   const content = () => {
-    return readyOrders.orders.map((rOrder, idx) => {
+    return readyOrders.orders.map((rOrder) => {
       if (!rOrder.valid) {
         return (
-          <div className="bg-theme-light-200 rounded-2xl p-4">
+          <div className="bg-theme-light-200 rounded-2xl p-4" key={rOrder.order.id}>
             <OrderDetailPicker
               order={rOrder.order}
               selection={rOrder.selection}
@@ -117,7 +155,7 @@ const FulfillOrderDrawer = ({ open, onClose, orders, onClickRemove, onSubmitDone
         );
       } else {
         return (
-          <div key={rOrder.order.id + '_' + idx} className="py-3 flex">
+          <div key={rOrder.order.id} className="py-3 flex">
             <div className="w-full flex justify-between">
               <div className="flex-1">
                 <OrderbookItem
@@ -152,7 +190,7 @@ const FulfillOrderDrawer = ({ open, onClose, orders, onClickRemove, onSubmitDone
           <footer className="w-full text-center py-4">
             <Divider className="mb-10" />
 
-            <Button size="large" onClick={onClickBuy} disabled={!readyOrders.allOrdersValid()}>
+            <Button size="large" onClick={onClickFulfill} disabled={!readyOrders.allOrdersValid()}>
               {submitTitle}
             </Button>
           </footer>
@@ -329,6 +367,33 @@ class ReadyOrder {
     }
 
     return this.order;
+  }
+
+  selectedOBOrderItems(): OBOrderItem[] {
+    if (this.selection.size > 0) {
+      const result: OBOrderItem[] = [];
+
+      for (const orderItem of this.order.nfts) {
+        const tokens: OBTokenInfo[] = [];
+
+        for (const token of orderItem.tokens) {
+          const key = orderDetailKey(orderItem.collectionAddress, token.tokenId);
+
+          if (this.selection.has(key)) {
+            tokens.push(token);
+          }
+        }
+        if (tokens.length > 0) {
+          const newItem = JSON.parse(JSON.stringify(orderItem)) as OBOrderItem;
+          newItem.tokens = tokens;
+          result.push(newItem);
+        }
+      }
+
+      return result;
+    }
+
+    return [];
   }
 
   updateIsValid() {
