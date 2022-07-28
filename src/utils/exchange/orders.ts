@@ -496,6 +496,53 @@ export async function canTakeMultipleOneOrders(
   }
 }
 
+export async function takeOrders(
+  signer: JsonRpcSigner,
+  chainId: string,
+  makerOrders: ChainOBOrder[],
+  takerItems: ChainNFTs[][]
+) {
+  const exchangeAddress = getExchangeAddress(chainId);
+  const infinityExchange = new Contract(exchangeAddress, InfinityExchangeABI, signer);
+  const totalPrice = makerOrders
+    .map((order) => getCurrentChainOBOrderPrice(order))
+    .reduce((acc, curr) => acc.add(curr), BigNumber.from(0));
+
+  // it is assumed that all orders have these value same, so no need to check. Contract throws if this is not the case.
+  const isSellOrder = makerOrders[0].isSellOrder;
+
+  const gasLimit = 250_000 * makerOrders.length;
+  // perform exchange
+  // if fulfilling a sell order, send ETH
+  if (isSellOrder) {
+    const options = {
+      value: totalPrice,
+      gasLimit
+    };
+    const result = await infinityExchange.takeOrders(makerOrders, takerItems, options);
+    return {
+      hash: result?.hash ?? ''
+    };
+  } else {
+    // approve ERC721
+    const user = await signer.getAddress();
+    const nfts = takerItems.flatMap((takerItem) => takerItem);
+    const approvalResults = await approveERC721ForChainNFTs(user, nfts, signer, exchangeAddress);
+
+    for (const approval of approvalResults) {
+      /**
+       * wait one at a time in case there are a lot of approvals
+       */
+      const { hash } = approval as { hash: string };
+      await signer.provider?.waitForTransaction(hash);
+    }
+    const result = await infinityExchange.takeOrders(makerOrders, takerItems, { gasLimit });
+    return {
+      hash: result?.hash ?? ''
+    };
+  }
+}
+
 export async function takeMultipleOneOrders(signer: JsonRpcSigner, chainId: string, makerOrders: ChainOBOrder[]) {
   const exchangeAddress = getExchangeAddress(chainId);
   const infinityExchange = new Contract(exchangeAddress, InfinityExchangeABI, signer);
