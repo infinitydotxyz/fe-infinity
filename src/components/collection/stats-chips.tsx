@@ -8,6 +8,8 @@ import { apiDelete, apiGet, apiPost, nFormatter } from 'src/utils';
 import { Chip, Spinner, toastError } from 'src/components/common';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { useAppContext } from 'src/utils/context/AppContext';
+import { indexCollection } from 'src/utils/orderbookUtils';
+
 interface Props {
   collection?: BaseCollection | null;
   currentStatsData?: CollectionStats;
@@ -184,6 +186,11 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
           iconOnly={true}
         />
       )}
+
+      <Chip
+        content={<>Reindex</>}
+        onClick={async () => indexCollection(true, chainId, collection?.address ?? '', collection?.slug ?? '')}
+      />
 
       <Chip
         content={<>Collection Offer</>}
