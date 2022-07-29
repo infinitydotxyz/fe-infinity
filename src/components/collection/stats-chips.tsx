@@ -175,7 +175,7 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
 
       {collection?.metadata?.links?.instagram && (
         <Chip
-          content={<FaInstagram className="text-lg" />}
+          content={<FaInstagram className="text-xl" />}
           onClick={() => window.open(collection?.metadata?.links?.instagram)}
           iconOnly={true}
         />
@@ -183,7 +183,7 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
 
       {collection?.metadata?.links?.external && (
         <Chip
-          content={<HiOutlineExternalLink className="text-lg" />}
+          content={<HiOutlineExternalLink className="text-xl" />}
           onClick={() => window.open(collection?.metadata?.links?.external)}
           iconOnly={true}
         />
