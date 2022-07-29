@@ -97,7 +97,7 @@ export const SendNFTsDrawer = ({ open, onClose, nftsForTransfer, onClickRemove, 
             {nftsForTransfer.map((cardData: ERC721CardData) => {
               return (
                 <li key={cardData.id} className="py-3 flex">
-                  <div className="w-full flex">
+                  <div className="w-full flex items-center">
                     <div>
                       <EZImage src={cardData.image} className="w-16 h-16 rounded-2xl overflow-clip" />
                     </div>
