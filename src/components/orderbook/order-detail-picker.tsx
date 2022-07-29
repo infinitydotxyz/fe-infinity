@@ -42,8 +42,12 @@ export const OrderDetailPicker = ({ selection, onChange, order, scroll = false }
                 let tokenId = token.tokenName || token.tokenId ? `#${token.tokenId}` : '';
                 // special case for ENS
                 const collectionAddress = trimLowerCase(nft.collectionAddress ?? '');
-                if (collectionAddress === ENS_ADDRESS && token?.tokenName) {
-                  tokenId = token?.tokenName;
+                if (
+                  collectionAddress === ENS_ADDRESS &&
+                  token?.tokenName &&
+                  !trimLowerCase(token.tokenName).includes('unknown ens name')
+                ) {
+                  tokenId = token.tokenName;
                 }
 
                 return (
