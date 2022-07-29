@@ -6,6 +6,8 @@ import { Combobox } from '@headlessui/react';
 import { SVG } from './svg';
 import { FiSearch } from 'react-icons/fi';
 import { debounce } from 'lodash';
+import { EZImage } from './ez-image';
+import { twMerge } from 'tailwind-merge';
 
 type CollectionItem = BaseCollection & {
   name: string;
@@ -151,21 +153,15 @@ export const SearchInput = ({ expanded }: Props) => {
               <Combobox.Option key={collection.address} value={collection}>
                 {({ active }) => (
                   <div
-                    className={`${
-                      active ? 'bg-slate-200' : 'bg-transparent'
-                    }   font-body text-sm py-1 px-4 ml-2 mr-2 hover:bg-slate-200 rounded-md transition-all duration-200
-                        flex gap-4 place-items-center
-                        hover:cursor-pointer
-                        `}
+                    className={twMerge(
+                      active ? 'bg-slate-200' : 'bg-transparent',
+                      'font-body text-sm py-1 px-4 ml-2 mr-2 hover:bg-slate-200 rounded-md transition-all duration-200',
+                      'flex gap-4 place-items-center',
+                      'hover:cursor-pointer w-80'
+                    )}
                   >
-                    <div className=" w-8 rounded-full overflow-hidden">
-                      <img
-                        className="w-8 h-8 rounded-full overflow-hidden"
-                        src={collection?.profileImage}
-                        alt={collection?.name}
-                      />
-                    </div>
-                    <div className=" flex-1  font-body text-xs leading-6 tracking-wide">{collection?.name}</div>
+                    <EZImage className="w-8 h-8 rounded-full overflow-hidden" src={collection?.profileImage} />
+                    <div className=" flex-1 truncate font-body text-xs leading-6 tracking-wide">{collection?.name}</div>
                     {collection?.hasBlueCheck ? <SVG.blueCheck className="h-5 w-5 opacity-60 shrink-0" /> : <></>}
                   </div>
                 )}
