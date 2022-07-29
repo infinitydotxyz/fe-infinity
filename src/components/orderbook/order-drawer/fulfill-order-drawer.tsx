@@ -10,12 +10,13 @@ import { Button, Spacer, toastSuccess, toastError, Divider, toastInfo, SVG } fro
 import { ellipsisAddress, extractErrorMsg } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { canTakeMultipleOneOrders, takeMultipleOneOrders, takeOrders } from 'src/utils/exchange/orders';
-import { iconButtonStyle } from 'src/utils/ui-constants';
+import { drawerPx, iconButtonStyle } from 'src/utils/ui-constants';
 import { Drawer } from '../../common/drawer';
 import { OrderbookItem } from '../orderbook-list/orderbook-item';
 import { WaitingForTxModal } from './waiting-for-tx-modal';
 import { useEffect, useState } from 'react';
 import { orderDetailKey, OrderDetailPicker } from '../order-detail-picker';
+import { twMerge } from 'tailwind-merge';
 
 interface Props {
   title: string;
@@ -184,7 +185,7 @@ const FulfillOrderDrawer = ({ open, onClose, orders, onClickRemove, onSubmitDone
         title={<div className="flex items-center">{title}</div>}
       >
         <div className="flex flex-col h-full">
-          <div className="overflow-y-auto content-between px-12">{content()}</div>
+          <div className={twMerge(drawerPx, 'overflow-y-auto content-between')}>{content()}</div>
           <Spacer />
 
           <footer className="w-full text-center py-4">

@@ -3,6 +3,7 @@ import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import React from 'react';
 import { EZImage, Spacer } from 'src/components/common';
 import { ENS_ADDRESS } from 'src/utils';
+import { twMerge } from 'tailwind-merge';
 
 export const orderDetailKey = (collectionAddress: string, tokenId: string): string => {
   return `${collectionAddress}:${tokenId}`;
@@ -12,9 +13,10 @@ interface Props2 {
   order: SignedOBOrder;
   selection?: Set<string>;
   onChange?: (selection: Set<string>) => void;
+  scroll?: boolean;
 }
 
-export const OrderDetailPicker = ({ selection, onChange, order }: Props2) => {
+export const OrderDetailPicker = ({ selection, onChange, order, scroll = false }: Props2) => {
   const showCheckbox = onChange !== undefined && selection !== undefined;
 
   return (
@@ -30,10 +32,10 @@ export const OrderDetailPicker = ({ selection, onChange, order }: Props2) => {
         </div>
       )}
 
-      <div className="my-8">
+      <div className={twMerge('my-6', scroll ? 'max-h-64 overflow-y-auto' : '')}>
         {(order?.nfts || []).map((nft, idx) => {
           return (
-            <div key={`${nft.collectionAddress}_${idx}`} className="space-y-4 mt-4">
+            <div key={`${nft.collectionAddress}_${idx}`} className="space-y-4">
               {nft.tokens.map((token) => {
                 const key = orderDetailKey(nft.collectionAddress, token.tokenId);
 

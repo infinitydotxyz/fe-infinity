@@ -114,7 +114,8 @@ module.exports = {
   },
   boxShadow: {
     // used for tooltip shadow
-    ttip: '0 2px 18px rgba(0, 0, 0, 0.12)'
+    ttip: '0 2px 18px rgba(0, 0, 0, 0.12)',
+    drawer: '0 0 68px rgba(0, 0, 0, 0.3)'
   },
   colors: {
     background: 'transparent',

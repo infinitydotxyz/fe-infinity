@@ -2,7 +2,7 @@ import { ReactNode, useState } from 'react';
 import { XIcon } from '@heroicons/react/outline';
 import { Button } from 'src/components/common';
 import { Tooltip, TooltipIcon, TooltipSpec, TooltipWrapper } from './tool-tip';
-import { iconButtonStyle } from 'src/utils/ui-constants';
+import { drawerPx, iconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 interface Props {
@@ -19,7 +19,7 @@ export const Drawer = ({ open, tooltip, subtitle, divide, onClose, title, childr
   const [showTooltip, setShowTooltip] = useState(false);
 
   const header = (
-    <div className="px-12 pt-10 pb-1">
+    <div className={twMerge(drawerPx, 'pt-6 pb-1')}>
       <TooltipWrapper show={showTooltip} tooltip={tooltip}>
         <div className="flex  justify-between items-center">
           <div className="flex items-center">
@@ -57,11 +57,11 @@ export const Drawer = ({ open, tooltip, subtitle, divide, onClose, title, childr
       <div className="fixed pointer-events-none z-20 inset-0">
         <div
           className={
-            'pointer-events-auto w-screen max-w-lg right-0 absolute bg-white h-full shadow-xl duration-500 ease-in-out transition-all transform  ' +
-            (open ? 'translate-x-0' : 'translate-x-full')
+            'pointer-events-auto w-screen max-w-md right-0 absolute bg-white h-full rounded-tl-2xl rounded-bl-2xl duration-500 ease-in-out transition-all transform  ' +
+            (open ? 'translate-x-0 shadow-drawer' : 'translate-x-full')
           }
         >
-          <div className="relative w-screen max-w-lg pb-10 flex flex-col space-y-6 overflow-y-scroll h-full">
+          <div className="relative w-screen max-w-md pb-10 flex flex-col space-y-6 overflow-y-scroll h-full">
             {header}
             <div className="flex h-full flex-col">{children}</div>
           </div>
