@@ -1,12 +1,11 @@
 import { BaseCollection, ChainId, CollectionStats } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { FaCaretDown, FaCaretUp, FaDiscord, FaInstagram, FaTwitter } from 'react-icons/fa';
 import { HiOutlineExternalLink } from 'react-icons/hi';
 import { apiDelete, apiGet, apiPost, nFormatter } from 'src/utils';
 import { Chip, Spinner, toastError } from 'src/components/common';
-import { VerificationModal } from './verification_modal';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { useAppContext } from 'src/utils/context/AppContext';
 interface Props {
@@ -17,14 +16,20 @@ interface Props {
 export const StatsChips = ({ collection, currentStatsData }: Props) => {
   const { user, checkSignedIn, chainId } = useAppContext();
   const [isFollowing, setIsFollowing] = useState(false);
+  const [editDisabled, setEditDisabled] = useState(true);
   const [followingLoading, setFollowingLoading] = useState(false);
   const { push: pushRoute } = useRouter();
   // TODO(sleeyax): we should probably refactor both 'edit' and 'follow' buttons; they shouldn't be part of this 'social stats' component.
-  const [modalOpen, setModalOpen] = useState(false);
   const router = useRouter();
   const { addCartItem, setOrderDrawerOpen } = useOrderContext();
 
   const showFollow = false; // todo: put this back for Social features.
+
+  useEffect(() => {
+    if (user) {
+      verifyOwnership();
+    }
+  }, [user]);
 
   const onClickFollow = async () => {
     if (!checkSignedIn()) {
@@ -65,7 +70,8 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
     if (!checkSignedIn()) {
       return;
     }
-    setModalOpen(true);
+
+    pushRoute(`/collection/${collection?.slug}/edit`);
   };
 
   const verifyOwnership = async () => {
@@ -73,16 +79,8 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
       `/user/${chainId}:${user?.address}/collections/${router.query.name}/permissions`
     );
 
-    if (error) {
-      toastError(error?.errorResponse?.message);
-      return;
-    }
-    setModalOpen(false);
-
-    if (result.canModify) {
-      pushRoute(`/collection/${collection?.slug}/edit`);
-    } else {
-      toastError('Unauthorized. Please try a different wallet.');
+    if (!error) {
+      setEditDisabled(!result.canModify);
     }
   };
 
@@ -91,8 +89,6 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
 
   return (
     <div className="flex flex-row space-x-2 items-center">
-      <VerificationModal isOpen={modalOpen} onSubmit={verifyOwnership} onClose={() => setModalOpen(false)} />
-
       {showFollow && (
         <Chip
           content={
@@ -117,7 +113,7 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
           className="w-32"
         />
       )}
-      <Chip content="Edit" onClick={onClickEdit} />
+      <Chip content="Edit" onClick={onClickEdit} disabled={editDisabled} />
 
       {collection?.metadata?.links?.twitter && (
         <Chip
