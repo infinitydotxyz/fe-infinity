@@ -12,12 +12,15 @@ interface Props {
 }
 
 const NotFound404Page = ({ collectionAddress = '', chainId = '', collectionSlug = '' }: Props) => {
-  const onClickEnqueue = async () => {
+  const onClickEnqueue = async (reset: boolean) => {
     let id = `${chainId}:${collectionAddress}`;
     if (!id) {
       id = collectionSlug;
     }
-    const { error } = await apiPut(`/collections/${id}/enqueue`);
+    const body = {
+      reset
+    };
+    const { error } = await apiPut(`/collections/${id}/enqueue`, { data: body });
     if (error) {
       console.error(error);
     } else {
@@ -34,7 +37,7 @@ const NotFound404Page = ({ collectionAddress = '', chainId = '', collectionSlug 
           <>
             <div className="mt-4 text-xl">We haven't indexed this collection yet. Click index to queue it up.</div>
 
-            <Button className="font-heading mt-10" onClick={onClickEnqueue}>
+            <Button className="font-heading mt-10" onClick={() => onClickEnqueue(false)}>
               Index collection
             </Button>
           </>
