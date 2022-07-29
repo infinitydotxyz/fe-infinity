@@ -61,7 +61,7 @@ export const Drawer = ({ open, tooltip, subtitle, divide, onClose, title, childr
             (open ? 'translate-x-0 shadow-drawer' : 'translate-x-full')
           }
         >
-          <div className="relative w-screen max-w-md pb-10 flex flex-col space-y-6 overflow-y-scroll h-full">
+          <div className="relative w-screen max-w-md pb-7 flex flex-col space-y-6 overflow-y-scroll h-full">
             {header}
             <div className="flex h-full flex-col">{children}</div>
           </div>
