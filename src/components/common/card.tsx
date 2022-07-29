@@ -43,11 +43,11 @@ export const Card = ({
   let tokenId = data?.tokenId ?? '';
   // special case for ENS
   const collectionAddress = trimLowerCase(data?.address ?? data?.tokenAddress);
-  if (collectionAddress === ENS_ADDRESS && data?.name) {
+  if (collectionAddress === ENS_ADDRESS && data?.name && !trimLowerCase(data.name).includes('unknown ens name')) {
     tokenId = data.name;
   }
 
-  tokenId = tokenId.length > 25 ? tokenId.slice(0, 20) + '...' : tokenId;
+  tokenId = tokenId.length > 15 ? tokenId.slice(0, 10) + '...' : tokenId;
 
   const buttonJsx = (
     <div className="flex w-[100%]">

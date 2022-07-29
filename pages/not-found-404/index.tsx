@@ -1,7 +1,7 @@
 import React from 'react';
-import { Button, PageBox, toastSuccess } from 'src/components/common';
+import { Button, PageBox } from 'src/components/common';
 import image404 from 'src/images/404.png';
-import { apiPut } from 'src/utils';
+import { indexCollection } from 'src/utils/orderbookUtils';
 
 interface Props {
   collectionSlug?: string;
@@ -12,19 +12,6 @@ interface Props {
 }
 
 const NotFound404Page = ({ collectionAddress = '', chainId = '', collectionSlug = '' }: Props) => {
-  const onClickEnqueue = async () => {
-    let id = `${chainId}:${collectionAddress}`;
-    if (!id) {
-      id = collectionSlug;
-    }
-    const { error } = await apiPut(`/collections/${id}/enqueue`);
-    if (error) {
-      console.error(error);
-    } else {
-      toastSuccess('Collection queued for indexing');
-    }
-  };
-
   return (
     <PageBox title="404 Not Found" showTitle={false}>
       <div className="h-[70vh] flex flex-col items-center justify-center">
@@ -34,7 +21,10 @@ const NotFound404Page = ({ collectionAddress = '', chainId = '', collectionSlug 
           <>
             <div className="mt-4 text-xl">We haven't indexed this collection yet. Click index to queue it up.</div>
 
-            <Button className="font-heading mt-10" onClick={onClickEnqueue}>
+            <Button
+              className="font-heading mt-10"
+              onClick={() => indexCollection(false, chainId, collectionAddress, collectionSlug)}
+            >
               Index collection
             </Button>
           </>

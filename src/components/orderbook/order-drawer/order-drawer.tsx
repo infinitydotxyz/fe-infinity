@@ -16,6 +16,8 @@ import { useState } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { numStr } from 'src/utils';
 import { useRouter } from 'next/router';
+import { twMerge } from 'tailwind-merge';
+import { drawerPx } from 'src/utils/ui-constants';
 
 interface Props {
   open: boolean;
@@ -111,7 +113,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
         items.push({ title: 'Min NFTs to buy', value: <div>{totalNFTs.toString()}</div> });
       }
 
-      topWidget = <SimpleTable items={items} className="mb-6  px-12" />;
+      topWidget = <SimpleTable items={items} className={twMerge(drawerPx, 'mb-6')} />;
     } else {
       if (isEditingOrder) {
         buttonTitle = 'Update order';
@@ -124,7 +126,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
         <Divider className="mb-10" />
 
         {topWidget}
-        <div className="px-12 w-full flex space-x-4">
+        <div className={twMerge(drawerPx, 'w-full flex space-x-4')}>
           {showCancel === true ? (
             <>
               {isEditingOrder ? (
@@ -169,7 +171,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
 
     contents = (
       <>
-        <div className="flex flex-col px-12 space-y-2">
+        <div className={twMerge(drawerPx, 'flex flex-col space-y-2')}>
           <OrderSummary />
         </div>
 
@@ -223,7 +225,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
 
     contents = (
       <>
-        <div className="flex flex-col px-12 space-y-2">
+        <div className={twMerge(drawerPx, 'flex flex-col   space-y-2')}>
           <OrderBuilder />
         </div>
 

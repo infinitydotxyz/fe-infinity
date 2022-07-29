@@ -101,6 +101,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
       const price = getCurrentOBOrderPrice(obOrder);
       setBuyPriceEth(utils.formatEther(price));
     }
+
     if (token?.ordersSnippet?.offer?.orderItem) {
       const obOrder: OBOrder = getOBOrderFromFirestoreOrderItem(token?.ordersSnippet?.offer?.orderItem);
       const price = getCurrentOBOrderPrice(obOrder);
@@ -141,6 +142,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   if (error) {
     return <NotFound404Page />;
   }
+
   if (!token) {
     return null;
   }

@@ -6,7 +6,8 @@ import { Button, Divider, EZImage, Spacer, SVG, TextInputBox, toastError, toastW
 import { extractErrorMsg } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { sendMultipleNfts } from 'src/utils/exchange/orders';
-import { iconButtonStyle } from 'src/utils/ui-constants';
+import { drawerPx, iconButtonStyle } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
 // import { iconButtonStyle } from 'src/utils/ui-constants';
 // import { format } from 'timeago.js';
 import { Drawer } from '../../common/drawer';
@@ -92,11 +93,11 @@ export const SendNFTsDrawer = ({ open, onClose, nftsForTransfer, onClickRemove, 
         title={<div className="flex items-center">Send</div>}
       >
         <div className="flex flex-col h-full">
-          <ul className="overflow-y-auto content-between px-12">
+          <ul className={twMerge(drawerPx, 'overflow-y-auto content-between')}>
             {nftsForTransfer.map((cardData: ERC721CardData) => {
               return (
                 <li key={cardData.id} className="py-3 flex">
-                  <div className="w-full flex">
+                  <div className="w-full flex items-center">
                     <div>
                       <EZImage src={cardData.image} className="w-16 h-16 rounded-2xl overflow-clip" />
                     </div>

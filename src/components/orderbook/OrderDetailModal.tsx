@@ -31,7 +31,7 @@ export const OrderDetailModal = ({ order, isOpen, onClose }: Props) => {
 
   return (
     <Modal wide={false} isOpen={isOpen} onClose={onClose} title="Order details" showActionButtons={false}>
-      <OrderDetailPicker order={order} />
+      <OrderDetailPicker order={order} scroll={true} />
 
       <SimpleTable className="text-gray-500" items={tableItems} />
 

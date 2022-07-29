@@ -3,7 +3,8 @@ import { Button, SVG, Spacer, toastSuccess, toastError, Divider, toastInfo } fro
 import { ellipsisAddress, extractErrorMsg } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { cancelMultipleOrders } from 'src/utils/exchange/orders';
-import { iconButtonStyle } from 'src/utils/ui-constants';
+import { drawerPx, iconButtonStyle } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
 import { Drawer } from '../../common/drawer';
 import { OrderbookItem } from '../orderbook-list/orderbook-item';
 
@@ -44,10 +45,10 @@ export const CancelDrawer = ({ open, onClose, orders, onClickRemove }: Props) =>
         title={<div className="flex items-center">Cancel Orders</div>}
       >
         <div className="flex flex-col h-full">
-          <ul className="overflow-y-auto content-between px-12">
-            {orders.map((order: SignedOBOrder, idx) => {
+          <div className={twMerge(drawerPx, 'overflow-y-auto content-between')}>
+            {orders.map((order: SignedOBOrder) => {
               return (
-                <li key={order.id + '_' + idx} className="py-3 flex">
+                <div key={order.id} className="py-3 flex">
                   <div className="w-full flex justify-between">
                     <div className="flex-1">
                       <OrderbookItem nameItem={true} key={`${order.id} ${order.chainId}`} order={order} />
@@ -56,10 +57,10 @@ export const CancelDrawer = ({ open, onClose, orders, onClickRemove }: Props) =>
                       <SVG.grayDelete className={iconButtonStyle} />
                     </button>
                   </div>
-                </li>
+                </div>
               );
             })}
-          </ul>
+          </div>
           <Spacer />
 
           <footer className="w-full text-center py-4">
