@@ -22,7 +22,7 @@ import {
 } from 'src/components/common';
 import { WaitingForTxModal } from 'src/components/orderbook/order-drawer/waiting-for-tx-modal';
 import { OrderbookContainer } from 'src/components/orderbook/orderbook-list';
-import { ellipsisAddress, getOwnerAddress, MISSING_IMAGE_URL, useFetch } from 'src/utils';
+import { apiGet, ellipsisAddress, getOwnerAddress, MISSING_IMAGE_URL, useFetch } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { useDrawerContext } from 'src/utils/context/DrawerContext';
 import { getOBOrderFromFirestoreOrderItem } from 'src/utils/exchange/orders';
@@ -300,67 +300,80 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
 
           {isListingOwner && (
             // Listing owner's action buttons
-            <div className="md:-ml-1.5">
-              <div className="flex flex-col md:flex-row gap-4 my-4 md:my-6 lg:mt-10">
-                {buyPriceEth && (
-                  <>
-                    <Button variant="outline" size="large" onClick={onClickCancel}>
-                      <div className="flex">
-                        <span className="mr-4">Cancel</span>
-                        <span className="font-heading">
-                          <EthPrice label={buyPriceEth} rowClassName="pt-[1px]" />
-                        </span>
-                      </div>
-                    </Button>
-                    <Button variant="outline" size="large" onClick={onClickLowerPrice}>
-                      Lower Price
-                    </Button>
-                  </>
-                )}
-              </div>
-            </div>
-          )}
-
-          {isNftOwner ? (
-            <div className="md:-ml-1.5">
-              <div className="flex flex-col md:flex-row gap-4 my-4 md:my-6 lg:mt-10">
-                <Button variant="outline" size="large" onClick={onClickSend}>
-                  Send
-                </Button>
-                {!isListingOwner && (
-                  <Button variant="outline" size="large" onClick={onClickList}>
-                    List
-                  </Button>
-                )}
-                {sellPriceEth && (
-                  <Button variant="outline" size="large" className="" onClick={onClickAcceptOffer}>
+            <div className="flex flex-col md:flex-row gap-4 my-4 md:my-6 lg:mt-10">
+              {buyPriceEth && (
+                <>
+                  <Button variant="outline" size="large" onClick={onClickCancel}>
                     <div className="flex">
-                      Accept Offer <EthPrice label={`${sellPriceEth}`} className="ml-2" rowClassName="" />
-                    </div>
-                  </Button>
-                )}
-              </div>
-            </div>
-          ) : (
-            // Other users' action buttons
-            <div className="md:-ml-1.5">
-              <div className="flex flex-col md:flex-row gap-4 my-4 md:my-6 lg:mt-10">
-                {buyPriceEth && (
-                  <Button variant="primary" size="large" onClick={onClickBuy}>
-                    <div className="flex">
-                      <span className="mr-4">Buy</span>
+                      <span className="mr-4">Cancel</span>
                       <span className="font-heading">
                         <EthPrice label={buyPriceEth} rowClassName="pt-[1px]" />
                       </span>
                     </div>
                   </Button>
-                )}
-                <Button variant="outline" size="large" onClick={onClickMakeOffer}>
-                  Make offer
-                </Button>
-              </div>
+                  <Button variant="outline" size="large" onClick={onClickLowerPrice}>
+                    Lower Price
+                  </Button>
+                </>
+              )}
             </div>
           )}
+
+          {isNftOwner ? (
+            <div className="flex flex-col md:flex-row gap-4 my-4 md:my-6 lg:mt-10">
+              <Button variant="outline" size="large" onClick={onClickSend}>
+                Send
+              </Button>
+              {!isListingOwner && (
+                <Button variant="outline" size="large" onClick={onClickList}>
+                  List
+                </Button>
+              )}
+              {sellPriceEth && (
+                <Button variant="outline" size="large" className="" onClick={onClickAcceptOffer}>
+                  <div className="flex">
+                    Accept Offer <EthPrice label={`${sellPriceEth}`} className="ml-2" rowClassName="" />
+                  </div>
+                </Button>
+              )}
+            </div>
+          ) : (
+            // Other users' action buttons
+            <div className="flex flex-col md:flex-row gap-4 my-4 md:my-6 lg:mt-10">
+              {buyPriceEth && (
+                <Button variant="primary" size="large" onClick={onClickBuy}>
+                  <div className="flex">
+                    <span className="mr-4">Buy</span>
+                    <span className="font-heading">
+                      <EthPrice label={buyPriceEth} rowClassName="pt-[1px]" />
+                    </span>
+                  </div>
+                </Button>
+              )}
+              <Button variant="outline" size="large" onClick={onClickMakeOffer}>
+                Make offer
+              </Button>
+            </div>
+          )}
+
+          <div className="flex flex-col md:flex-row">
+            <Button
+              variant="outline"
+              size="large"
+              onClick={async () => {
+                const { result, error } = await apiGet(
+                  `/collections/${token.chainId}:${token.collectionAddress}/nfts/${token.tokenId}/refresh-metadata`
+                );
+
+                if (!error) {
+                  // TODO steve
+                  console.log(result);
+                }
+              }}
+            >
+              Refresh metadata
+            </Button>
+          </div>
 
           {tokenMetadata.description ? (
             <>
