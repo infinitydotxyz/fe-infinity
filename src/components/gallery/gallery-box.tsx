@@ -11,7 +11,7 @@ import { useRouter } from 'next/router';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { TokenFetcher, TokenFetcherCache } from './token-fetcher';
 
-interface GalleryProps {
+interface Props {
   collection?: BaseCollection | null;
   collectionAttributes?: CollectionAttributes;
   cardProps?: CardProps;
@@ -35,7 +35,7 @@ export const GalleryBox = ({
   showFilterSections,
   showSort = true,
   userAddress = ''
-}: GalleryProps) => {
+}: Props) => {
   const [cardData, setCardData] = useState<ERC721CardData[]>([]);
   const [error, setError] = useState(false);
   const [hasNextPage, setHasNextPage] = useState(false);
