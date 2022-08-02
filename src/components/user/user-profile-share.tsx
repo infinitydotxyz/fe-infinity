@@ -29,7 +29,8 @@ export const UserProfileShare: FunctionComponent<UserProfileShareProps> = ({ use
       <Menu>
         {({ open }) => (
           <>
-            <Menu.Button>
+            {/* without as="div", you get a button within button error */}
+            <Menu.Button as="div">
               <Chip disableClick={true} content="Share" left={<FaShareAlt className="text-md" />} />
             </Menu.Button>
 

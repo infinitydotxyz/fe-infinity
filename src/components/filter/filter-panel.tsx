@@ -19,32 +19,39 @@ export const FilterPanel = ({ collectionAddress, showFilterSections, className =
 
   const handleClickOrderType = (orderType: OrderType | '') => {
     let newValue = orderType;
+
     if (orderType === filterState.orderType) {
       newValue = ''; // toggle orderType
     }
+
     const newFilter = { ...filterState };
     if (newValue) {
       newFilter.orderType = newValue;
     } else {
       delete newFilter.orderType;
     }
+
     setFilterState(newFilter);
   };
 
   const handleClickApply = () => {
     const newFilter = { ...filterState };
+
     newFilter.minPrice = minPriceVal;
     newFilter.maxPrice = maxPriceVal;
     newFilter.orderBy = 'price';
+
     setFilterState(newFilter);
   };
 
   const handleClickClear = () => {
     const newFilter = { ...filterState };
+
     newFilter.minPrice = '';
     newFilter.maxPrice = '';
     newFilter.orderBy = 'tokenIdNumeric';
     newFilter.orderDirection = 'asc';
+
     setMinPriceVal('');
     setMaxPriceVal('');
     setFilterState(newFilter);
@@ -52,6 +59,7 @@ export const FilterPanel = ({ collectionAddress, showFilterSections, className =
 
   const handleSearchedCollections = (selectedIds: string[]) => {
     const newFilter = { ...filterState };
+
     newFilter.collectionAddresses = selectedIds;
     setFilterState(newFilter);
   };
