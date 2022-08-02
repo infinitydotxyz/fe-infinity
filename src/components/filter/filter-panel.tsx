@@ -62,13 +62,6 @@ export const FilterPanel = ({
     setFilterState(newFilter);
   };
 
-  const handleSearchedCollections = (selectedIds: string[]) => {
-    const newFilter = { ...filterState };
-
-    newFilter.collectionAddresses = selectedIds;
-    setFilterState(newFilter);
-  };
-
   if (showCollectionsFilter) {
     return (
       <div className={`w-80 mr-12 pointer-events-auto ${className ?? ''}`}>
@@ -76,7 +69,7 @@ export const FilterPanel = ({
 
         <div className="text-lg mt-10 mb-7 font-heading">Collections</div>
         <div>
-          <CollectionFilter onSearch={handleSearchedCollections} />
+          <CollectionFilter />
         </div>
       </div>
     );
