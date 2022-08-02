@@ -25,7 +25,7 @@ interface Props {
   className?: string;
 }
 
-export const OrderbookContainer = ({ collectionId, tokenId, className }: Props): JSX.Element => {
+export const OrderbookContainer = ({ collectionId, tokenId, className = '' }: Props): JSX.Element => {
   return (
     <OrderbookProvider collectionId={collectionId} tokenId={tokenId}>
       <OrderbookContent className={className} />

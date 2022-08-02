@@ -3,68 +3,73 @@ import { useState } from 'react';
 import { Filter, OrderType, useFilterContext } from 'src/utils/context/FilterContext';
 import { Button, Checkbox, TextInputBox } from 'src/components/common';
 import { TraitSelection } from './trait-selection';
-import CollectionFilter from '../gallery/collection-filter';
+import { CollectionFilter } from '../gallery/collection-filter';
 
 interface Props {
   collectionAddress?: string;
-  showFilterSections?: string[];
-  userAddress?: string; // for User's Collection Filter
+  showCollectionsFilter?: boolean;
   className?: string;
   collectionAttributes?: CollectionAttributes;
 }
 
-export const FilterPanel = ({ collectionAddress, showFilterSections, className, collectionAttributes }: Props) => {
+export const FilterPanel = ({
+  collectionAddress,
+  showCollectionsFilter,
+  className = '',
+  collectionAttributes
+}: Props) => {
   const { filterState, setFilterState } = useFilterContext();
   const [minPriceVal, setMinPriceVal] = useState('');
   const [maxPriceVal, setMaxPriceVal] = useState('');
 
   const handleClickOrderType = (orderType: OrderType | '') => {
     let newValue = orderType;
+
     if (orderType === filterState.orderType) {
       newValue = ''; // toggle orderType
     }
+
     const newFilter = { ...filterState };
     if (newValue) {
       newFilter.orderType = newValue;
     } else {
       delete newFilter.orderType;
     }
+
     setFilterState(newFilter);
   };
 
   const handleClickApply = () => {
     const newFilter = { ...filterState };
+
     newFilter.minPrice = minPriceVal;
     newFilter.maxPrice = maxPriceVal;
     newFilter.orderBy = 'price';
+
     setFilterState(newFilter);
   };
 
   const handleClickClear = () => {
     const newFilter = { ...filterState };
+
     newFilter.minPrice = '';
     newFilter.maxPrice = '';
     newFilter.orderBy = 'tokenIdNumeric';
     newFilter.orderDirection = 'asc';
+
     setMinPriceVal('');
     setMaxPriceVal('');
     setFilterState(newFilter);
   };
 
-  const handleSearchedCollections = (selectedIds: string[]) => {
-    const newFilter = { ...filterState };
-    newFilter.collectionAddresses = selectedIds;
-    setFilterState(newFilter);
-  };
-
-  if (showFilterSections && showFilterSections[0] === 'COLLECTIONS') {
+  if (showCollectionsFilter) {
     return (
-      <div className={`w-80 mr-12 pointer-events-auto ${className ?? ''}`}>
+      <div className={`w-80 mr-12 pointer-events-auto ${className}`}>
         <div className="text-2xl font-bold">Filter</div>
 
         <div className="text-lg mt-10 mb-7 font-heading">Collections</div>
         <div>
-          <CollectionFilter onSearch={handleSearchedCollections} />
+          <CollectionFilter />
         </div>
       </div>
     );

@@ -42,7 +42,12 @@ export const InputBox = ({
         {icon && <span>{icon}</span>}
         <div className="w-full">
           {label && (
-            <label className={twMerge('block font-normal font-heading text-sm text-theme-gray-700', labelClassname)}>
+            <label
+              className={twMerge(
+                'block font-normal font-heading text-sm text-theme-gray-700 select-none',
+                labelClassname
+              )}
+            >
               {label}
             </label>
           )}
@@ -58,9 +63,7 @@ export const InputBox = ({
               </Tooltip>
             )}
 
-            {renderRightIcon && (
-              <div className="absolute top-0 bottom-0 right-4 flex flex-col justify-center">{renderRightIcon()}</div>
-            )}
+            {renderRightIcon && <div className="pl-2 flex flex-col justify-center">{renderRightIcon()}</div>}
           </div>
         </div>
       </div>
@@ -152,7 +155,7 @@ export const TextInputBox = ({
       className={className}
     >
       <div className="flex items-center w-full">
-        {addEthSymbol && <div className="pr-2">{EthSymbol}</div>}
+        {addEthSymbol && <div className="pr-2 select-none">{EthSymbol}</div>}
         <input
           autoFocus={autoFocus}
           type={type}

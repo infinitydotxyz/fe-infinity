@@ -8,6 +8,7 @@ import { FiSearch } from 'react-icons/fi';
 import { debounce } from 'lodash';
 import { EZImage } from './ez-image';
 import { twMerge } from 'tailwind-merge';
+import { useIsMounted } from 'src/hooks/useIsMounted';
 
 type CollectionItem = BaseCollection & {
   name: string;
@@ -24,6 +25,7 @@ export const SearchInput = ({ expanded }: Props) => {
   const [selected, setSelected] = useState<CollectionItem | null>(null);
   const [data, setData] = useState<CollectionItem[]>([]);
   const [text, setText] = useState('');
+  const isMounted = useIsMounted();
 
   const inputRef: React.RefObject<HTMLInputElement> = useRef(null);
 
@@ -40,9 +42,13 @@ export const SearchInput = ({ expanded }: Props) => {
           throw new Error('Error completing request');
         }
 
-        setData(result?.data ?? []);
+        if (isMounted()) {
+          setData(result?.data ?? []);
+        }
       } else {
-        setData([]);
+        if (isMounted()) {
+          setData([]);
+        }
       }
     }, 300),
     []
@@ -52,8 +58,16 @@ export const SearchInput = ({ expanded }: Props) => {
     doSearch(text);
   }, [text]);
 
-  const activate = () => setIsActive(true);
-  const deactivate = () => (text.length === 0 && !expanded ? setIsActive(false) : null);
+  const activate = () => {
+    if (isMounted()) {
+      setIsActive(true);
+    }
+  };
+  const deactivate = () => {
+    if (isMounted()) {
+      text.length === 0 && !expanded ? setIsActive(false) : null;
+    }
+  };
 
   useEffect(() => {
     if (selected?.slug) {

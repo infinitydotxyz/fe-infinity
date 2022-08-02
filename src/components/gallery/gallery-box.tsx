@@ -11,15 +11,15 @@ import { useRouter } from 'next/router';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { TokenFetcher, TokenFetcherCache } from './token-fetcher';
 
-interface GalleryProps {
+interface Props {
   collection?: BaseCollection | null;
   collectionAttributes?: CollectionAttributes;
   cardProps?: CardProps;
   getEndpoint?: string;
   className?: string;
   filterShowedDefault?: boolean;
-  pageId?: 'COLLECTION' | 'PROFILE' | undefined;
-  showFilterSections?: string[];
+  pageId?: 'COLLECTION' | 'PROFILE';
+  showCollectionsFilter?: boolean;
   showSort?: boolean;
   userAddress?: string; // for User's NFTs and User's Collection Filter
 }
@@ -27,15 +27,15 @@ interface GalleryProps {
 export const GalleryBox = ({
   collection,
   collectionAttributes,
-  className,
+  className = '',
   cardProps,
   getEndpoint,
   pageId,
-  filterShowedDefault,
-  showFilterSections,
+  filterShowedDefault = false,
+  showCollectionsFilter = false,
   showSort = true,
   userAddress = ''
-}: GalleryProps) => {
+}: Props) => {
   const [cardData, setCardData] = useState<ERC721CardData[]>([]);
   const [error, setError] = useState(false);
   const [hasNextPage, setHasNextPage] = useState(false);
@@ -88,9 +88,6 @@ export const GalleryBox = ({
     if (tokenFetcher) {
       const { hasNextPage: hasNp, cardData: cd, error: err } = await tokenFetcher.fetch(loadMore);
 
-      // to test spinner
-      // await sleep(2222);
-
       // can't update react state after unmount
       if (!isMounted()) {
         return;
@@ -130,7 +127,10 @@ export const GalleryBox = ({
     }
 
     contents = (
-      <div className={twMerge('w-full grid gap-12 pointer-events-none')} style={{ gridTemplateColumns: gridColumns }}>
+      <div
+        className={twMerge('w-full flex-1 grid gap-12 pointer-events-none')}
+        style={{ gridTemplateColumns: gridColumns }}
+      >
         {cardData.map((item, idx) => {
           return <Card key={`${item.address}_${item.tokenId}_${idx}`} height={cardHeight} data={item} {...cardProps} />;
         })}
@@ -163,14 +163,11 @@ export const GalleryBox = ({
 
       <div className={twMerge(className, 'flex items-start mt-[60px]')}>
         {filterShowed && (
-          <div className="mt-4">
-            <FilterPanel
-              collectionAttributes={collectionAttributes}
-              collectionAddress={collection?.address}
-              showFilterSections={showFilterSections}
-              userAddress={userAddress}
-            />
-          </div>
+          <FilterPanel
+            collectionAttributes={collectionAttributes}
+            collectionAddress={collection?.address}
+            showCollectionsFilter={showCollectionsFilter}
+          />
         )}
 
         {contents}

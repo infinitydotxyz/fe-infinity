@@ -1,13 +1,12 @@
+import { CollectionSearchDto } from '@infinityxyz/lib-frontend/types/dto/collections';
 import { uniqBy } from 'lodash';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
-import { Checkbox, DebouncedTextInputBox, TextInputBox } from 'src/components/common';
+import { Button, Checkbox, DebouncedTextInputBox, EZImage, TextInputBox } from 'src/components/common';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { useOrderbook } from '../../OrderbookContext';
-import { CollectionSearchItem, useCollectionCache } from '../collection-cache';
-
-let allCollectionsData: CollectionSearchItem[] = [];
+import { useCollectionCache } from '../collection-cache';
 
 type OpenFilterState = {
   [filter: string]: boolean;
@@ -16,100 +15,106 @@ type OpenFilterState = {
 const ORDER_TYPES = ['Listing', 'Offer'];
 
 export const OrderbookFilters = () => {
-  // state
-  const { query } = useRouter();
-  const defaultOpenState: OpenFilterState = {};
+  const router = useRouter();
 
-  if (query.orderTypes) {
-    defaultOpenState['Order type'] = true;
-  }
-  if (query.collections) {
-    defaultOpenState['Collection'] = true;
-  }
-  if (query.minPrice || query.maxPrice) {
-    defaultOpenState['Sale price'] = true;
-  }
-  if (query.numberOfNfts) {
-    defaultOpenState['# NFTs'] = true;
-  }
-  const {
-    filters: { orderTypes = [], collections = [], minPrice, maxPrice, numberOfNfts },
-    // clearFilter,
-    updateFilter,
-    updateFilterArray,
-    collectionId
-  } = useOrderbook();
-
-  const [openState, setOpenState] = useState<OpenFilterState>(defaultOpenState);
-  const [collectionSearchState, setCollectionSearchState] = useState<string>('');
-  const [collectionsData, setCollectionsData] = useState<CollectionSearchItem[]>([]);
+  const { filters, updateFilter, updateFilterArray, collectionId, clearFilter } = useOrderbook();
+  const [openState, setOpenState] = useState<OpenFilterState>({});
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [collectionsData, setCollectionsData] = useState<CollectionSearchDto[]>([]);
   const { getTopCollections, getCollectionsByName, getCollectionsByIds } = useCollectionCache();
+  const [allCollectionsData, setAllCollectionsData] = useState<CollectionSearchDto[]>([]);
   const isMounted = useIsMounted();
 
+  const { orderTypes = [], collections = [], minPrice, maxPrice, numberOfNfts } = filters;
+  const hasCollectionSearchResults = collections.length > 0 || searchQuery.length > 0;
+
   useEffect(() => {
-    // loads the selected collections from query params and also provides some more options
-    const fetchInitialCollections = async () => {
-      const initialCollections = await getTopCollections();
-      if (initialCollections?.length) {
-        if (isMounted()) {
-          // query params passed on page load
-          if (collections.length > 0) {
-            const selectedCollections = await getCollectionsByIds(collections);
-            if (selectedCollections?.length) {
-              const _collections = uniqBy([...selectedCollections, ...initialCollections], 'id');
-              setCollectionsData(_collections);
-              allCollectionsData = [...allCollectionsData, ..._collections];
-            }
-          } else {
-            setCollectionsData(initialCollections);
-            allCollectionsData = [...allCollectionsData, ...initialCollections];
-          }
+    if (router.isReady) {
+      // only set this at first load when isReady
+      if (Object.keys(openState).length === 0) {
+        const defaultOpenState: OpenFilterState = {};
+
+        if (router.query.orderTypes) {
+          defaultOpenState['Order type'] = true;
         }
+
+        if (router.query.collections) {
+          defaultOpenState['Collection'] = true;
+        }
+
+        if (router.query.minPrice || router.query.maxPrice) {
+          defaultOpenState['Sale price'] = true;
+        }
+
+        if (router.query.numberOfNfts) {
+          defaultOpenState['# NFTs'] = true;
+        }
+
+        setOpenState(defaultOpenState);
       }
-    };
-    fetchInitialCollections().catch(console.error);
-  }, []);
+    }
+  }, [router.query]);
 
-  const searchForCollections = async (searchTerm: string) => {
-    setCollectionSearchState(searchTerm);
+  // loads the selected collections from query params and also provides some more options
+  const setupDefaultCollections = async () => {
+    const initialCollections = await getTopCollections();
 
-    if (searchTerm) {
-      const updatedCollections = await getCollectionsByName(searchTerm);
-      if (updatedCollections?.length) {
-        setCollectionsData(updatedCollections);
-        allCollectionsData = [...allCollectionsData, ...updatedCollections];
+    // query params passed on page load
+    if (collections.length > 0) {
+      const selectedCollections = await getCollectionsByIds(collections);
+      const newData = uniqBy([...selectedCollections, ...initialCollections], 'address');
+
+      if (isMounted()) {
+        setCollectionsData(newData);
+        setAllCollectionsData(uniqBy([...allCollectionsData, ...newData], 'address'));
       }
     } else {
-      const initialCollections = await getTopCollections();
-      if (initialCollections?.length) {
-        // query params
-        if (collections.length > 0) {
-          const selectedCollections = await getCollectionsByIds(collections);
-          if (selectedCollections?.length) {
-            const _collections = uniqBy([...selectedCollections, ...initialCollections], 'id');
-            setCollectionsData(_collections);
-            allCollectionsData = [...allCollectionsData, ..._collections];
-          }
-        } else {
-          setCollectionsData(initialCollections);
-          allCollectionsData = [...allCollectionsData, ...initialCollections];
-        }
+      if (isMounted()) {
+        setCollectionsData(initialCollections);
+        setAllCollectionsData(uniqBy([...allCollectionsData, ...initialCollections], 'address'));
       }
     }
   };
 
-  const CollectionCheckbox = ({ collection }: { collection: CollectionSearchItem }) => (
-    <Checkbox
-      boxOnLeft={false}
-      className="pb-4"
-      checked={collections.includes(`${collection.chainId}:${collection.id}`)}
-      onChange={(checked) => {
-        updateFilterArray('collections', collections, `${collection.chainId}:${collection.id}`, checked);
-      }}
-      label={collection.name}
-    />
-  );
-  const hasCollectionSearchResults = collections.length > 0 || (collectionSearchState || '').length > 0;
+  useEffect(() => {
+    if (collectionsData.length === 0) {
+      setupDefaultCollections().catch(console.error);
+    }
+  }, [filters]);
+
+  const searchForCollections = async (searchTerm: string) => {
+    setSearchQuery(searchTerm);
+
+    if (searchTerm) {
+      const updatedCollections = await getCollectionsByName(searchTerm);
+
+      if (updatedCollections?.length) {
+        setCollectionsData(updatedCollections);
+        setAllCollectionsData(uniqBy([...allCollectionsData, ...updatedCollections], 'address'));
+      }
+    } else {
+      setupDefaultCollections();
+    }
+  };
+
+  const collectionCheckboxes = () => {
+    const checks = [];
+
+    for (const coll of collections) {
+      const collection = allCollectionsData.find((c) => `${c.chainId}:${c.address}` === coll);
+      if (collection) {
+        checks.push(<CollectionCheckbox key={collection.address} collection={collection} />);
+      }
+    }
+
+    for (const collection of collectionsData) {
+      if (!collections.includes(`${collection.chainId}:${collection.address}`)) {
+        checks.push(<CollectionCheckbox key={collection.address} collection={collection} />);
+      }
+    }
+
+    return checks;
+  };
 
   return (
     <div className="flex flex-col mr-12">
@@ -119,7 +124,6 @@ export const OrderbookFilters = () => {
           {ORDER_TYPES.map((orderType) => (
             <Checkbox
               key={orderType}
-              className="pb-4"
               checked={orderTypes.includes(orderType)}
               onChange={(checked) => updateFilterArray('orderTypes', orderTypes, orderType, checked)}
               label={orderType}
@@ -133,38 +137,33 @@ export const OrderbookFilters = () => {
           <div>
             <DebouncedTextInputBox
               label=""
-              type="text"
               className="border rounded-full py-2 px-4 mt-1 font-heading w-full"
-              value={collectionSearchState}
+              value={searchQuery}
               onChange={(value) => {
                 searchForCollections(value);
               }}
               placeholder="Search"
             />
 
-            <div className="mt-8 max-h-80 overflow-y-auto space-y-4 font-heading">
-              {collections.map((coll) => {
-                const collection = allCollectionsData.find((c) => `${c.chainId}:${c.id}` === coll);
-                if (!collection) {
-                  return null;
-                }
-                return <CollectionCheckbox key={collection.id} collection={collection} />;
-              })}
+            {hasCollectionSearchResults && (
+              <>
+                <div className="my-4 pr-2 max-h-80 w-full overflow-y-auto overflow-x-hidden space-y-2">
+                  {collectionCheckboxes()}
+                </div>
 
-              {hasCollectionSearchResults &&
-                collectionsData.map((collection) => {
-                  if (collections.includes(`${collection.chainId}:${collection.id}`)) {
-                    return null;
-                  }
-                  return <CollectionCheckbox key={collection.id} collection={collection} />;
-                })}
-            </div>
-
-            {/* {hasCollectionSearchResults && (
-              <Button className="mt-8 w-full" onClick={() => clearFilter('collections')}>
-                Clear
-              </Button>
-            )} */}
+                <div className="w-full flex justify-end">
+                  <Button
+                    variant="outline"
+                    size="small"
+                    onClick={() => {
+                      clearFilter('collections');
+                    }}
+                  >
+                    Clear
+                  </Button>
+                </div>
+              </>
+            )}
           </div>
         </OrderbookFilterItem>
       )}
@@ -229,7 +228,31 @@ const OrderbookFilterItem = ({ openState, setOpenState, item, children }: Orderb
         {openState[item] ? <AiOutlineMinus className="text-lg" /> : <AiOutlinePlus className="text-lg" />}
       </div>
 
-      {openState[item] && <div className="mb-6 pb-8 border-b border-gray-300">{children}</div>}
+      {openState[item] && <div className="mb-2">{children}</div>}
     </React.Fragment>
+  );
+};
+
+// =========================================================
+
+const CollectionCheckbox = ({ collection }: { collection: CollectionSearchDto }) => {
+  const { filters, updateFilterArray } = useOrderbook();
+
+  const collections = filters.collections ?? [];
+
+  return (
+    <div className="flex items-center space-x-2">
+      <EZImage className="h-9 w-9 rounded-full shrink-0 overflow-clip" src={collection.profileImage} />
+
+      <Checkbox
+        boxOnLeft={false}
+        className="w-full"
+        checked={collections.includes(`${collection.chainId}:${collection.address}`)}
+        onChange={(checked) => {
+          updateFilterArray('collections', collections, `${collection.chainId}:${collection.address}`, checked);
+        }}
+        label={collection.name}
+      />
+    </div>
   );
 };

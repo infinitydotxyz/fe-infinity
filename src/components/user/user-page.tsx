@@ -56,7 +56,7 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
 
           {/* <UserWatchList userWatchList={[userInfo.address, userInfo.address]} /> */}
         </div>
-        <div className="my-2 flex flex-wrap items-center">
+        <div className="my-2 flex flex-wrap items-center space-x-2">
           {isOwner && (
             <Chip
               content="Edit"

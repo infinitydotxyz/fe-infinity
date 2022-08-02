@@ -1,6 +1,6 @@
 // import { trimText } from './read-more-text';
 import { Button } from './button';
-import { CollectionSearchDto } from '../../utils/types/collection-types';
+import { CollectionSearchDto } from '@infinityxyz/lib-frontend/types/dto/collections';
 import { NextLink } from './next-link';
 import { SVG } from './svg';
 import { EZImage } from './ez-image';

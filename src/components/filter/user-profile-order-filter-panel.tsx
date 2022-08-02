@@ -138,7 +138,6 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
         <div className="w-full">
           <DebouncedTextInputBox
             label=""
-            type="text"
             className="border rounded-full py-2 px-4 mt-4 font-heading"
             value={collectionSearch}
             onChange={(value) => setCollectionSearch(value)}
