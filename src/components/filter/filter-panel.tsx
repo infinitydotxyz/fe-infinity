@@ -8,12 +8,11 @@ import CollectionFilter from '../gallery/collection-filter';
 interface Props {
   collectionAddress?: string;
   showFilterSections?: string[];
-  userAddress?: string; // for User's Collection Filter
   className?: string;
   collectionAttributes?: CollectionAttributes;
 }
 
-export const FilterPanel = ({ collectionAddress, showFilterSections, className, collectionAttributes }: Props) => {
+export const FilterPanel = ({ collectionAddress, showFilterSections, className = '', collectionAttributes }: Props) => {
   const { filterState, setFilterState } = useFilterContext();
   const [minPriceVal, setMinPriceVal] = useState('');
   const [maxPriceVal, setMaxPriceVal] = useState('');

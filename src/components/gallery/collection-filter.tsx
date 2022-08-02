@@ -22,7 +22,7 @@ const CollectionFilter = ({ onSearch }: Props) => {
   const fetchData = async (value: string) => {
     if (value) {
       const { result } = await apiGet(`/collections/search`, {
-        query: { query: value, limit: 20 } // max limit 20
+        query: { query: value, limit: 20 }
       });
       const data = (result?.data ?? []) as CollectionInfo[];
       setCollections(data);

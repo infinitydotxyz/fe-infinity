@@ -18,7 +18,7 @@ interface Props {
   getEndpoint?: string;
   className?: string;
   filterShowedDefault?: boolean;
-  pageId?: 'COLLECTION' | 'PROFILE' | undefined;
+  pageId?: 'COLLECTION' | 'PROFILE';
   showFilterSections?: string[];
   showSort?: boolean;
   userAddress?: string; // for User's NFTs and User's Collection Filter
@@ -87,9 +87,6 @@ export const GalleryBox = ({
   const handleFetch = async (loadMore: boolean) => {
     if (tokenFetcher) {
       const { hasNextPage: hasNp, cardData: cd, error: err } = await tokenFetcher.fetch(loadMore);
-
-      // to test spinner
-      // await sleep(2222);
 
       // can't update react state after unmount
       if (!isMounted()) {
@@ -163,14 +160,11 @@ export const GalleryBox = ({
 
       <div className={twMerge(className, 'flex items-start mt-[60px]')}>
         {filterShowed && (
-          <div className="mt-4">
-            <FilterPanel
-              collectionAttributes={collectionAttributes}
-              collectionAddress={collection?.address}
-              showFilterSections={showFilterSections}
-              userAddress={userAddress}
-            />
-          </div>
+          <FilterPanel
+            collectionAttributes={collectionAttributes}
+            collectionAddress={collection?.address}
+            showFilterSections={showFilterSections}
+          />
         )}
 
         {contents}
