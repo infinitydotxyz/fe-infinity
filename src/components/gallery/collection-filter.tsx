@@ -30,7 +30,6 @@ export const CollectionFilter = ({ onSearch }: Props) => {
     <div className="">
       <DebouncedTextInputBox
         label=""
-        type="text"
         className="border rounded-full py-2 px-4 mb-6 font-heading w-full"
         value=""
         onChange={(value) => fetchData(value)}

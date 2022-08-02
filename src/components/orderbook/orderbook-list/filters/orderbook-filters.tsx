@@ -137,7 +137,6 @@ export const OrderbookFilters = () => {
           <div>
             <DebouncedTextInputBox
               label=""
-              type="text"
               className="border rounded-full py-2 px-4 mt-1 font-heading w-full"
               value={searchQuery}
               onChange={(value) => {

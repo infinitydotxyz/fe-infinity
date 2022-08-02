@@ -9,11 +9,18 @@ interface Props {
   onChange: (query: string) => void;
   placeholder: string;
   label: string;
-  type: string;
+  type?: string;
   className?: string;
 }
 
-export const DebouncedTextInputBox = ({ value, label, type, placeholder, onChange, className = '' }: Props) => {
+export const DebouncedTextInputBox = ({
+  value,
+  label,
+  type = 'text',
+  placeholder,
+  onChange,
+  className = ''
+}: Props) => {
   const [query, setQuery] = useState(value);
 
   const handleChange = async (value: string) => {
