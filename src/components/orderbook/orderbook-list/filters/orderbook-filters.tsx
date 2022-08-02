@@ -121,7 +121,6 @@ export const OrderbookFilters = () => {
           {ORDER_TYPES.map((orderType) => (
             <Checkbox
               key={orderType}
-              className="pb-4"
               checked={orderTypes.includes(orderType)}
               onChange={(checked) => updateFilterArray('orderTypes', orderTypes, orderType, checked)}
               label={orderType}
@@ -144,30 +143,31 @@ export const OrderbookFilters = () => {
               placeholder="Search"
             />
 
-            <div className="my-8 pr-2 max-h-80 w-full overflow-y-auto overflow-x-hidden space-y-1 justify-items-start">
-              {collections.map((coll) => {
-                const collection = allCollectionsData.find((c) => `${c.chainId}:${c.address}` === coll);
-                if (!collection) {
-                  return null;
-                }
-                return <CollectionCheckbox key={collection.address} collection={collection} />;
-              })}
-
-              {hasCollectionSearchResults &&
-                collectionsData.map((collection) => {
-                  if (collections.includes(`${collection.chainId}:${collection.address}`)) {
-                    return null;
-                  }
-                  return <CollectionCheckbox key={collection.address} collection={collection} />;
-                })}
-            </div>
-
             {hasCollectionSearchResults && (
-              <div className="w-full flex justify-end">
-                <Button variant="outline" size="small" className="" onClick={() => clearFilter('collections')}>
-                  Clear
-                </Button>
-              </div>
+              <>
+                <div className="my-4 pr-2 max-h-80 w-full overflow-y-auto overflow-x-hidden space-y-1 justify-items-start">
+                  {collections.map((coll) => {
+                    const collection = allCollectionsData.find((c) => `${c.chainId}:${c.address}` === coll);
+                    if (!collection) {
+                      return null;
+                    }
+                    return <CollectionCheckbox key={collection.address} collection={collection} />;
+                  })}
+
+                  {collectionsData.map((collection) => {
+                    if (collections.includes(`${collection.chainId}:${collection.address}`)) {
+                      return null;
+                    }
+                    return <CollectionCheckbox key={collection.address} collection={collection} />;
+                  })}
+                </div>
+
+                <div className="w-full flex justify-end">
+                  <Button variant="outline" size="small" className="" onClick={() => clearFilter('collections')}>
+                    Clear
+                  </Button>
+                </div>
+              </>
             )}
           </div>
         </OrderbookFilterItem>
@@ -233,7 +233,7 @@ const OrderbookFilterItem = ({ openState, setOpenState, item, children }: Orderb
         {openState[item] ? <AiOutlineMinus className="text-lg" /> : <AiOutlinePlus className="text-lg" />}
       </div>
 
-      {openState[item] && <div className="mb-6 pb-8 border-b border-gray-300">{children}</div>}
+      {openState[item] && <div className="mb-2">{children}</div>}
     </React.Fragment>
   );
 };
