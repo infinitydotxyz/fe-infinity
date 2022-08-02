@@ -97,22 +97,6 @@ export const OrderbookFilters = () => {
     }
   };
 
-  const CollectionCheckbox = ({ collection }: { collection: CollectionSearchDto }) => (
-    <div className="flex items-center space-x-2">
-      <EZImage className="h-9 w-9 rounded-full shrink-0 overflow-clip" src={collection.profileImage} />
-
-      <Checkbox
-        boxOnLeft={false}
-        className="w-full"
-        checked={collections.includes(`${collection.chainId}:${collection.address}`)}
-        onChange={(checked) => {
-          updateFilterArray('collections', collections, `${collection.chainId}:${collection.address}`, checked);
-        }}
-        label={collection.name}
-      />
-    </div>
-  );
-
   const collectionCheckboxes = () => {
     const checks = [];
 
@@ -247,5 +231,29 @@ const OrderbookFilterItem = ({ openState, setOpenState, item, children }: Orderb
 
       {openState[item] && <div className="mb-2">{children}</div>}
     </React.Fragment>
+  );
+};
+
+// =========================================================
+
+const CollectionCheckbox = ({ collection }: { collection: CollectionSearchDto }) => {
+  const { filters, updateFilterArray } = useOrderbook();
+
+  const collections = filters.collections ?? [];
+
+  return (
+    <div className="flex items-center space-x-2">
+      <EZImage className="h-9 w-9 rounded-full shrink-0 overflow-clip" src={collection.profileImage} />
+
+      <Checkbox
+        boxOnLeft={false}
+        className="w-full"
+        checked={collections.includes(`${collection.chainId}:${collection.address}`)}
+        onChange={(checked) => {
+          updateFilterArray('collections', collections, `${collection.chainId}:${collection.address}`, checked);
+        }}
+        label={collection.name}
+      />
+    </div>
   );
 };
