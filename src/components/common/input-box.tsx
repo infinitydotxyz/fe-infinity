@@ -58,7 +58,7 @@ export const InputBox = ({
               </Tooltip>
             )}
 
-            {renderRightIcon && <div className="pl-2 pr-1 flex flex-col justify-center">{renderRightIcon()}</div>}
+            {renderRightIcon && <div className="pl-2 flex flex-col justify-center">{renderRightIcon()}</div>}
           </div>
         </div>
       </div>
