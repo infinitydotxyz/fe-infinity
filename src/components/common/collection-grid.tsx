@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { CollectionCard, ScrollLoader } from 'src/components/common';
 import { apiGet, DEFAULT_LIMIT } from 'src/utils';
-import { CollectionSearchArrayDto, CollectionSearchDto } from '../../utils/types/collection-types';
+import { CollectionSearchDto, CollectionSearchArrayDto } from '@infinityxyz/lib-frontend/types/dto/collections';
 
 const fetchCollections = async (query: string, cursor: undefined | string) => {
   const API_ENDPOINT = '/collections/search';

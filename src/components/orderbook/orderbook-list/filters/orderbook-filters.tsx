@@ -1,13 +1,12 @@
+import { CollectionSearchDto } from '@infinityxyz/lib-frontend/types/dto/collections';
 import { uniqBy } from 'lodash';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
-import { Button, Checkbox, DebouncedTextInputBox, TextInputBox } from 'src/components/common';
+import { Button, Checkbox, DebouncedTextInputBox, EZImage, TextInputBox } from 'src/components/common';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { useOrderbook } from '../../OrderbookContext';
-import { CollectionSearchItem, useCollectionCache } from '../collection-cache';
-
-let allCollectionsData: CollectionSearchItem[] = [];
+import { useCollectionCache } from '../collection-cache';
 
 type OpenFilterState = {
   [filter: string]: boolean;
@@ -16,101 +15,95 @@ type OpenFilterState = {
 const ORDER_TYPES = ['Listing', 'Offer'];
 
 export const OrderbookFilters = () => {
-  // state
   const { query } = useRouter();
   const defaultOpenState: OpenFilterState = {};
 
   if (query.orderTypes) {
     defaultOpenState['Order type'] = true;
   }
+
   if (query.collections) {
     defaultOpenState['Collection'] = true;
   }
+
   if (query.minPrice || query.maxPrice) {
     defaultOpenState['Sale price'] = true;
   }
+
   if (query.numberOfNfts) {
     defaultOpenState['# NFTs'] = true;
   }
-  const {
-    filters: { orderTypes = [], collections = [], minPrice, maxPrice, numberOfNfts },
-    // clearFilter,
-    updateFilter,
-    updateFilterArray,
-    collectionId,
-    clearFilter
-  } = useOrderbook();
+
+  const { filters, updateFilter, updateFilterArray, collectionId, clearFilter } = useOrderbook();
 
   const [openState, setOpenState] = useState<OpenFilterState>(defaultOpenState);
-  const [collectionSearchState, setCollectionSearchState] = useState<string>('');
-  const [collectionsData, setCollectionsData] = useState<CollectionSearchItem[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [collectionsData, setCollectionsData] = useState<CollectionSearchDto[]>([]);
   const { getTopCollections, getCollectionsByName, getCollectionsByIds } = useCollectionCache();
+  const [allCollectionsData, setAllCollectionsData] = useState<CollectionSearchDto[]>([]);
   const isMounted = useIsMounted();
 
-  useEffect(() => {
-    // loads the selected collections from query params and also provides some more options
-    const fetchInitialCollections = async () => {
-      const initialCollections = await getTopCollections();
-      if (initialCollections?.length) {
-        if (isMounted()) {
-          // query params passed on page load
-          if (collections.length > 0) {
-            const selectedCollections = await getCollectionsByIds(collections);
-            if (selectedCollections?.length) {
-              const _collections = uniqBy([...selectedCollections, ...initialCollections], 'id');
-              setCollectionsData(_collections);
-              allCollectionsData = [...allCollectionsData, ..._collections];
-            }
-          } else {
-            setCollectionsData(initialCollections);
-            allCollectionsData = [...allCollectionsData, ...initialCollections];
-          }
-        }
-      }
-    };
-    fetchInitialCollections().catch(console.error);
-  }, []);
+  const { orderTypes = [], collections = [], minPrice, maxPrice, numberOfNfts } = filters;
 
-  const searchForCollections = async (searchTerm: string) => {
-    setCollectionSearchState(searchTerm);
+  // loads the selected collections from query params and also provides some more options
+  const setupDefaultCollections = async () => {
+    const initialCollections = await getTopCollections();
 
-    if (searchTerm) {
-      const updatedCollections = await getCollectionsByName(searchTerm);
-      if (updatedCollections?.length) {
-        setCollectionsData(updatedCollections);
-        allCollectionsData = [...allCollectionsData, ...updatedCollections];
+    // query params passed on page load
+    if (collections.length > 0) {
+      const selectedCollections = await getCollectionsByIds(collections);
+      const newData = uniqBy([...selectedCollections, ...initialCollections], 'address');
+
+      if (isMounted()) {
+        setCollectionsData(newData);
+        setAllCollectionsData(uniqBy([...allCollectionsData, ...newData], 'address'));
       }
     } else {
-      const initialCollections = await getTopCollections();
-      if (initialCollections?.length) {
-        // query params
-        if (collections.length > 0) {
-          const selectedCollections = await getCollectionsByIds(collections);
-          if (selectedCollections?.length) {
-            const _collections = uniqBy([...selectedCollections, ...initialCollections], 'id');
-            setCollectionsData(_collections);
-            allCollectionsData = [...allCollectionsData, ..._collections];
-          }
-        } else {
-          setCollectionsData(initialCollections);
-          allCollectionsData = [...allCollectionsData, ...initialCollections];
-        }
+      if (isMounted()) {
+        setCollectionsData(initialCollections);
+        setAllCollectionsData(uniqBy([...allCollectionsData, ...initialCollections], 'address'));
       }
     }
   };
 
-  const CollectionCheckbox = ({ collection }: { collection: CollectionSearchItem }) => (
-    <Checkbox
-      boxOnLeft={false}
-      className="pb-4"
-      checked={collections.includes(`${collection.chainId}:${collection.id}`)}
-      onChange={(checked) => {
-        updateFilterArray('collections', collections, `${collection.chainId}:${collection.id}`, checked);
-      }}
-      label={collection.name}
-    />
+  useEffect(() => {
+    if (collectionsData.length === 0) {
+      setupDefaultCollections().catch(console.error);
+    }
+  }, [filters]);
+
+  const searchForCollections = async (searchTerm: string) => {
+    setSearchQuery(searchTerm);
+
+    if (searchTerm) {
+      const updatedCollections = await getCollectionsByName(searchTerm);
+
+      if (updatedCollections?.length) {
+        setCollectionsData(updatedCollections);
+        setAllCollectionsData(uniqBy([...allCollectionsData, ...updatedCollections], 'address'));
+      }
+    } else {
+      setupDefaultCollections();
+    }
+  };
+
+  const CollectionCheckbox = ({ collection }: { collection: CollectionSearchDto }) => (
+    <div className="flex items-center space-x-2">
+      <EZImage className="h-9 w-9 rounded-full shrink-0 overflow-clip" src={collection.profileImage} />
+
+      <Checkbox
+        boxOnLeft={false}
+        className="w-full"
+        checked={collections.includes(`${collection.chainId}:${collection.address}`)}
+        onChange={(checked) => {
+          updateFilterArray('collections', collections, `${collection.chainId}:${collection.address}`, checked);
+        }}
+        label={collection.name}
+      />
+    </div>
   );
-  const hasCollectionSearchResults = collections.length > 0 || (collectionSearchState || '').length > 0;
+
+  const hasCollectionSearchResults = collections.length > 0 || searchQuery.length > 0;
 
   return (
     <div className="flex flex-col mr-12">
@@ -136,28 +129,28 @@ export const OrderbookFilters = () => {
               label=""
               type="text"
               className="border rounded-full py-2 px-4 mt-1 font-heading w-full"
-              value={collectionSearchState}
+              value={searchQuery}
               onChange={(value) => {
                 searchForCollections(value);
               }}
               placeholder="Search"
             />
 
-            <div className="my-8 pr-2 max-h-80 overflow-y-auto space-y-1 font-heading">
+            <div className="my-8 pr-2 max-h-80 w-full overflow-y-auto overflow-x-hidden space-y-1 justify-items-start">
               {collections.map((coll) => {
-                const collection = allCollectionsData.find((c) => `${c.chainId}:${c.id}` === coll);
+                const collection = allCollectionsData.find((c) => `${c.chainId}:${c.address}` === coll);
                 if (!collection) {
                   return null;
                 }
-                return <CollectionCheckbox key={collection.id} collection={collection} />;
+                return <CollectionCheckbox key={collection.address} collection={collection} />;
               })}
 
               {hasCollectionSearchResults &&
                 collectionsData.map((collection) => {
-                  if (collections.includes(`${collection.chainId}:${collection.id}`)) {
+                  if (collections.includes(`${collection.chainId}:${collection.address}`)) {
                     return null;
                   }
-                  return <CollectionCheckbox key={collection.id} collection={collection} />;
+                  return <CollectionCheckbox key={collection.address} collection={collection} />;
                 })}
             </div>
 

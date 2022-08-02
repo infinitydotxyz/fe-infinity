@@ -1,30 +1,23 @@
+import { CollectionSearchDto } from '@infinityxyz/lib-frontend/types/dto/collections';
 import { useState } from 'react';
 import { apiGet } from 'src/utils';
 import { DebouncedTextInputBox, EZImage } from '../common';
-
-export type CollectionInfo = {
-  chainId: string;
-  address: string;
-  name: string;
-  slug: string;
-  profileImage: string;
-  bannerImage?: string;
-  hasBlueCheck?: boolean;
-};
 
 interface Props {
   onSearch: (filteredAddresses: string[]) => void;
 }
 
 export const CollectionFilter = ({ onSearch }: Props) => {
-  const [collections, setCollections] = useState<CollectionInfo[]>([]);
+  const [collections, setCollections] = useState<CollectionSearchDto[]>([]);
 
   const fetchData = async (value: string) => {
     if (value) {
       const { result } = await apiGet(`/collections/search`, {
         query: { query: value, limit: 20 }
       });
-      const data = (result?.data ?? []) as CollectionInfo[];
+
+      const data = (result?.data ?? []) as CollectionSearchDto[];
+
       setCollections(data);
       onSearch(data.map((item) => item.address));
     } else {

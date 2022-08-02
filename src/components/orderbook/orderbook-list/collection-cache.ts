@@ -3,13 +3,8 @@ import { useEffect, useState } from 'react';
 import { apiGet } from 'src/utils/apiUtils';
 import mitt from 'mitt';
 import { DEFAULT_LIMIT } from 'src/utils';
-import { CollectionSearchArrayDto } from 'src/utils/types/collection-types';
+import { CollectionSearchArrayDto, CollectionSearchDto } from '@infinityxyz/lib-frontend/types/dto/collections';
 
-export type CollectionSearchItem = {
-  name: string;
-  id: string;
-  chainId: string;
-};
 class _CollectionCache {
   cCache = new Map<string, BaseCollection>();
   tCache = new Map<string, BaseToken>();
@@ -17,7 +12,7 @@ class _CollectionCache {
   emitter = mitt();
 
   // TODO hookup to cache
-  getTopCollections = async (): Promise<CollectionSearchItem[] | undefined> => {
+  getTopCollections = async (): Promise<CollectionSearchDto[]> => {
     const response = await apiGet(
       `/collections/rankings?period=monthly&date=${Date.now()}&orderBy=floorPrice&orderDirection=desc&limit=${DEFAULT_LIMIT}`
     );
@@ -25,42 +20,58 @@ class _CollectionCache {
     if (response.error) {
       console.log(response.error);
     } else {
-      return response.result.data.map(({ name, collectionAddress, chainId }: CollectionStats) => ({
-        name,
-        chainId,
-        id: collectionAddress
-      }));
+      // result is CollectionStats
+      const collections = response.result.data as CollectionStats[];
+
+      collections.map((stats) => {
+        return {
+          name: stats.name,
+          chainId: stats.chainId,
+          address: stats.collectionAddress,
+          profileImage: stats.profileImage,
+          hasBlueCheck: stats.hasBlueCheck
+          // bannerImage: stats.bannerImage
+          // slug: stats.slug,
+          // description: stats.description,
+        } as CollectionSearchDto;
+      });
     }
+
+    return [];
   };
 
   // TODO hookup to cache
-  getCollectionsByIds = async (ids: string[]): Promise<CollectionSearchItem[] | undefined> => {
+  getCollectionsByIds = async (ids: string[]): Promise<CollectionSearchDto[]> => {
     const apiCalls = ids.map((id) => {
       return apiGet(`/collections/${id}`);
     });
     const responses = await Promise.all(apiCalls);
 
-    const data = responses.map((response) => {
+    const result = responses.map((response) => {
       if (response.error) {
         console.log(response.error);
+        return {} as CollectionSearchDto;
       } else {
-        const {
-          metadata: { name },
-          address,
-          chainId
-        } = response.result;
+        const data: BaseCollection = response.result;
+
         return {
-          name,
-          id: address,
-          chainId
-        };
+          name: data.metadata.name,
+          chainId: data.chainId,
+          address: data.address,
+          profileImage: data.metadata.profileImage,
+          hasBlueCheck: data.hasBlueCheck,
+          bannerImage: data.metadata.bannerImage,
+          slug: data.slug,
+          description: data.metadata.description
+        } as CollectionSearchDto;
       }
     });
-    return data as CollectionSearchItem[];
+
+    return result;
   };
 
   // TODO hookup to cache
-  getCollectionsByName = async (query: string): Promise<CollectionSearchItem[] | undefined> => {
+  getCollectionsByName = async (query: string): Promise<CollectionSearchDto[]> => {
     const API_ENDPOINT = '/collections/search';
     const response = await apiGet(API_ENDPOINT, {
       query: {
@@ -72,14 +83,12 @@ class _CollectionCache {
     if (response.error) {
       console.log(response.error);
     } else {
-      return response.result.data.map(
-        ({ name, address, chainId }: { name: string; address: string; chainId: string }) => ({
-          name,
-          id: address,
-          chainId
-        })
-      );
+      const data = (response.result?.data ?? []) as CollectionSearchDto[];
+
+      return data;
     }
+
+    return [];
   };
 
   oneCollection = async (query: string): Promise<BaseCollection | undefined> => {
@@ -225,15 +234,15 @@ export const useCollectionCache = () => {
     return collectionAddress;
   };
 
-  const getTopCollections = () => {
+  const getTopCollections = async (): Promise<CollectionSearchDto[]> => {
     return CollectionCache.getTopCollections();
   };
 
-  const getCollectionsByName = (query: string) => {
+  const getCollectionsByName = async (query: string): Promise<CollectionSearchDto[]> => {
     return CollectionCache.getCollectionsByName(query);
   };
 
-  const getCollectionsByIds = (ids: string[]) => {
+  const getCollectionsByIds = async (ids: string[]): Promise<CollectionSearchDto[]> => {
     return CollectionCache.getCollectionsByIds(ids);
   };
 

@@ -96,6 +96,7 @@ const parseRouterQueryParamsToFilters = (query: ParsedUrlQuery): OBFilters => {
   if (typeof _collections === 'string') {
     collections = [_collections];
   }
+
   if (typeof _collections === 'object') {
     collections = [..._collections];
   }
@@ -104,6 +105,7 @@ const parseRouterQueryParamsToFilters = (query: ParsedUrlQuery): OBFilters => {
   if (typeof _orderTypes === 'string') {
     orderTypes = [_orderTypes];
   }
+
   if (typeof _orderTypes === 'object') {
     orderTypes = [..._orderTypes];
   }
@@ -119,6 +121,7 @@ const parseRouterQueryParamsToFilters = (query: ParsedUrlQuery): OBFilters => {
   if (minPrice) {
     newFilters.minPrice = minPrice as string;
   }
+
   if (maxPrice) {
     newFilters.maxPrice = maxPrice as string;
   }
@@ -146,21 +149,23 @@ type OBContextType = {
   collectionId: string | undefined;
   hasMoreOrders: boolean;
   hasNoData: boolean;
+  isReady: boolean;
 };
 
 const OrderbookContext = React.createContext<OBContextType | null>(null);
 
-type OBProvider = {
+interface Props {
   children: ReactNode;
   collectionId: string | undefined;
   tokenId?: string;
-};
+}
 
-export const OrderbookProvider = ({ children, collectionId, tokenId }: OBProvider) => {
+export const OrderbookProvider = ({ children, collectionId, tokenId }: Props) => {
   const router = useRouter();
-  const defaultFilters = parseRouterQueryParamsToFilters(router.query);
+
+  const [isReady, setIsReady] = useState(false);
   const [orders, setOrders] = useState<SignedOBOrder[]>([]);
-  const [filters, setFilters] = useState<OBFilters>(defaultFilters);
+  const [filters, setFilters] = useState<OBFilters>({});
   const [isLoading, setIsLoading] = useState(false);
   const [hasMoreOrders, setHasMoreOrders] = useState<boolean>(false);
   const [hasNoData, setHasNoData] = useState<boolean>(false);
@@ -168,15 +173,21 @@ export const OrderbookProvider = ({ children, collectionId, tokenId }: OBProvide
   const isMounted = useIsMounted();
 
   useEffect(() => {
-    setIsLoading(true);
-    fetchOrders(true);
-  }, [collectionId, filters]);
+    if (isReady) {
+      setIsLoading(true);
+      fetchOrders(true);
+    }
+  }, [collectionId, filters, isReady]);
 
   useEffect(() => {
-    const newFilters = parseRouterQueryParamsToFilters(router.query);
+    if (router.isReady) {
+      setIsReady(true);
 
-    if (!isEqual(newFilters, filters)) {
-      setFilters(newFilters);
+      const newFilters = parseRouterQueryParamsToFilters(router.query);
+
+      if (!isEqual(newFilters, filters)) {
+        setFilters(newFilters);
+      }
     }
   }, [router.query]);
 
@@ -272,7 +283,8 @@ export const OrderbookProvider = ({ children, collectionId, tokenId }: OBProvide
     updateFilter,
     collectionId,
     hasMoreOrders,
-    hasNoData
+    hasNoData,
+    isReady
   };
 
   return <OrderbookContext.Provider value={value}>{children}</OrderbookContext.Provider>;
