@@ -11,11 +11,23 @@ interface Props {
   onClick?: () => void;
   className?: string;
   disabled?: boolean;
+  disableClick?: boolean; // for menu.button, we want to let the click fall though
 }
 
-export const Chip = ({ left, content, right, iconOnly, active, onClick, className = '', disabled = false }: Props) => {
+export const Chip = ({
+  left,
+  content,
+  right,
+  iconOnly,
+  active,
+  onClick,
+  className = '',
+  disabled = false,
+  disableClick = false
+}: Props) => {
   return (
     <Button
+      type={disableClick ? 'submit' : 'button'}
       variant={active ? 'primary' : 'outline'}
       onClick={onClick}
       size={iconOnly ? 'round' : 'medium'}
