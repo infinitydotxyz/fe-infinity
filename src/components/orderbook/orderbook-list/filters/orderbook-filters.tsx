@@ -113,6 +113,25 @@ export const OrderbookFilters = () => {
     </div>
   );
 
+  const collectionCheckboxes = () => {
+    const checks = [];
+
+    for (const coll of collections) {
+      const collection = allCollectionsData.find((c) => `${c.chainId}:${c.address}` === coll);
+      if (collection) {
+        checks.push(<CollectionCheckbox key={collection.address} collection={collection} />);
+      }
+    }
+
+    for (const collection of collectionsData) {
+      if (!collections.includes(`${collection.chainId}:${collection.address}`)) {
+        checks.push(<CollectionCheckbox key={collection.address} collection={collection} />);
+      }
+    }
+
+    return checks;
+  };
+
   return (
     <div className="flex flex-col mr-12">
       <div className="text-2xl font-bold">Filter</div>
@@ -145,25 +164,18 @@ export const OrderbookFilters = () => {
 
             {hasCollectionSearchResults && (
               <>
-                <div className="my-4 pr-2 max-h-80 w-full overflow-y-auto overflow-x-hidden space-y-1 justify-items-start">
-                  {collections.map((coll) => {
-                    const collection = allCollectionsData.find((c) => `${c.chainId}:${c.address}` === coll);
-                    if (!collection) {
-                      return null;
-                    }
-                    return <CollectionCheckbox key={collection.address} collection={collection} />;
-                  })}
-
-                  {collectionsData.map((collection) => {
-                    if (collections.includes(`${collection.chainId}:${collection.address}`)) {
-                      return null;
-                    }
-                    return <CollectionCheckbox key={collection.address} collection={collection} />;
-                  })}
+                <div className="my-4 pr-2 max-h-80 w-full overflow-y-auto overflow-x-hidden space-y-2">
+                  {collectionCheckboxes()}
                 </div>
 
                 <div className="w-full flex justify-end">
-                  <Button variant="outline" size="small" className="" onClick={() => clearFilter('collections')}>
+                  <Button
+                    variant="outline"
+                    size="small"
+                    onClick={() => {
+                      clearFilter('collections');
+                    }}
+                  >
                     Clear
                   </Button>
                 </div>
