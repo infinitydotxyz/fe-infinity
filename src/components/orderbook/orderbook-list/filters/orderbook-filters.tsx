@@ -2,7 +2,7 @@ import { uniqBy } from 'lodash';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
-import { Checkbox, DebouncedTextInputBox, TextInputBox } from 'src/components/common';
+import { Button, Checkbox, DebouncedTextInputBox, TextInputBox } from 'src/components/common';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { useOrderbook } from '../../OrderbookContext';
 import { CollectionSearchItem, useCollectionCache } from '../collection-cache';
@@ -37,7 +37,8 @@ export const OrderbookFilters = () => {
     // clearFilter,
     updateFilter,
     updateFilterArray,
-    collectionId
+    collectionId,
+    clearFilter
   } = useOrderbook();
 
   const [openState, setOpenState] = useState<OpenFilterState>(defaultOpenState);
@@ -142,7 +143,7 @@ export const OrderbookFilters = () => {
               placeholder="Search"
             />
 
-            <div className="mt-8 max-h-80 overflow-y-auto space-y-4 font-heading">
+            <div className="my-8 max-h-80 overflow-y-auto space-y-1 font-heading">
               {collections.map((coll) => {
                 const collection = allCollectionsData.find((c) => `${c.chainId}:${c.id}` === coll);
                 if (!collection) {
@@ -160,11 +161,13 @@ export const OrderbookFilters = () => {
                 })}
             </div>
 
-            {/* {hasCollectionSearchResults && (
-              <Button className="mt-8 w-full" onClick={() => clearFilter('collections')}>
-                Clear
-              </Button>
-            )} */}
+            {hasCollectionSearchResults && (
+              <div className="w-full flex justify-end">
+                <Button variant="outline" size="small" className="" onClick={() => clearFilter('collections')}>
+                  Clear
+                </Button>
+              </div>
+            )}
           </div>
         </OrderbookFilterItem>
       )}

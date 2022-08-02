@@ -1,6 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import debounce from 'lodash/debounce';
 import { TextInputBox } from './input-box';
+import { XIcon } from '@heroicons/react/outline';
+import { Button } from './button';
 
 interface Props {
   value: string;
@@ -34,8 +36,25 @@ export const DebouncedTextInputBox = ({ value, label, type, placeholder, onChang
         type={type}
         className={className}
         value={query}
-        onChange={(value) => handleChange(value)}
+        onChange={handleChange}
         placeholder={placeholder}
+        renderRightIcon={() => {
+          if (query) {
+            return (
+              <Button
+                variant="round"
+                onClick={() => {
+                  onChange('');
+                  setQuery('');
+                }}
+              >
+                <XIcon className="h-4 w-4" />
+              </Button>
+            );
+          }
+
+          return <></>;
+        }}
       />
     </div>
   );
