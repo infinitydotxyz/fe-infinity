@@ -143,7 +143,7 @@ export const OrderbookFilters = () => {
               placeholder="Search"
             />
 
-            <div className="my-8 max-h-80 overflow-y-auto space-y-1 font-heading">
+            <div className="my-8 pr-2 max-h-80 overflow-y-auto space-y-1 font-heading">
               {collections.map((coll) => {
                 const collection = allCollectionsData.find((c) => `${c.chainId}:${c.id}` === coll);
                 if (!collection) {
