@@ -29,7 +29,7 @@ export const Checkbox = ({
   );
 
   return (
-    <label className={twMerge('flex items-center', className)}>
+    <label className={twMerge('flex items-center overflow-hidden', className)}>
       {!boxOnLeft && (
         <>
           {checkLabel}
