@@ -15,28 +15,10 @@ type OpenFilterState = {
 const ORDER_TYPES = ['Listing', 'Offer'];
 
 export const OrderbookFilters = () => {
-  const { query } = useRouter();
-  const defaultOpenState: OpenFilterState = {};
-
-  if (query.orderTypes) {
-    defaultOpenState['Order type'] = true;
-  }
-
-  if (query.collections) {
-    defaultOpenState['Collection'] = true;
-  }
-
-  if (query.minPrice || query.maxPrice) {
-    defaultOpenState['Sale price'] = true;
-  }
-
-  if (query.numberOfNfts) {
-    defaultOpenState['# NFTs'] = true;
-  }
+  const router = useRouter();
 
   const { filters, updateFilter, updateFilterArray, collectionId, clearFilter } = useOrderbook();
-
-  const [openState, setOpenState] = useState<OpenFilterState>(defaultOpenState);
+  const [openState, setOpenState] = useState<OpenFilterState>({});
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [collectionsData, setCollectionsData] = useState<CollectionSearchDto[]>([]);
   const { getTopCollections, getCollectionsByName, getCollectionsByIds } = useCollectionCache();
@@ -44,6 +26,34 @@ export const OrderbookFilters = () => {
   const isMounted = useIsMounted();
 
   const { orderTypes = [], collections = [], minPrice, maxPrice, numberOfNfts } = filters;
+  const hasCollectionSearchResults = collections.length > 0 || searchQuery.length > 0;
+
+  useEffect(() => {
+    if (router.isReady) {
+      // only set this at first load when isReady
+      if (Object.keys(openState).length === 0) {
+        const defaultOpenState: OpenFilterState = {};
+
+        if (router.query.orderTypes) {
+          defaultOpenState['Order type'] = true;
+        }
+
+        if (router.query.collections) {
+          defaultOpenState['Collection'] = true;
+        }
+
+        if (router.query.minPrice || router.query.maxPrice) {
+          defaultOpenState['Sale price'] = true;
+        }
+
+        if (router.query.numberOfNfts) {
+          defaultOpenState['# NFTs'] = true;
+        }
+
+        setOpenState(defaultOpenState);
+      }
+    }
+  }, [router.query]);
 
   // loads the selected collections from query params and also provides some more options
   const setupDefaultCollections = async () => {
@@ -102,8 +112,6 @@ export const OrderbookFilters = () => {
       />
     </div>
   );
-
-  const hasCollectionSearchResults = collections.length > 0 || searchQuery.length > 0;
 
   return (
     <div className="flex flex-col mr-12">
