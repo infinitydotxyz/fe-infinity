@@ -4,7 +4,7 @@ import React, { useEffect, useReducer } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { PlusButton } from 'src/components/collection/edit/buttons';
 import { RemoveIcon } from 'src/components/collection/edit/remove-icon';
-import SocialsInputGroup from 'src/components/collection/socials-input-group';
+import { SocialsInputGroup } from 'src/components/collection/socials-input-group';
 import { Button, PageBox, TextAreaInputBox, TextInputBox } from 'src/components/common';
 import { Heading } from 'src/components/common/heading';
 import { toastError, toastSuccess } from 'src/components/common/toaster';

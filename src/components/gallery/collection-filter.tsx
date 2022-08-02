@@ -16,7 +16,7 @@ interface Props {
   onSearch: (filteredAddresses: string[]) => void;
 }
 
-const CollectionFilter = ({ onSearch }: Props) => {
+export const CollectionFilter = ({ onSearch }: Props) => {
   const [collections, setCollections] = useState<CollectionInfo[]>([]);
 
   const fetchData = async (value: string) => {
@@ -60,5 +60,3 @@ const CollectionFilter = ({ onSearch }: Props) => {
     </div>
   );
 };
-
-export default CollectionFilter;

@@ -3,16 +3,21 @@ import { useState } from 'react';
 import { Filter, OrderType, useFilterContext } from 'src/utils/context/FilterContext';
 import { Button, Checkbox, TextInputBox } from 'src/components/common';
 import { TraitSelection } from './trait-selection';
-import CollectionFilter from '../gallery/collection-filter';
+import { CollectionFilter } from '../gallery/collection-filter';
 
 interface Props {
   collectionAddress?: string;
-  showFilterSections?: string[];
+  showCollectionsFilter?: boolean;
   className?: string;
   collectionAttributes?: CollectionAttributes;
 }
 
-export const FilterPanel = ({ collectionAddress, showFilterSections, className = '', collectionAttributes }: Props) => {
+export const FilterPanel = ({
+  collectionAddress,
+  showCollectionsFilter,
+  className = '',
+  collectionAttributes
+}: Props) => {
   const { filterState, setFilterState } = useFilterContext();
   const [minPriceVal, setMinPriceVal] = useState('');
   const [maxPriceVal, setMaxPriceVal] = useState('');
@@ -64,7 +69,7 @@ export const FilterPanel = ({ collectionAddress, showFilterSections, className =
     setFilterState(newFilter);
   };
 
-  if (showFilterSections && showFilterSections[0] === 'COLLECTIONS') {
+  if (showCollectionsFilter) {
     return (
       <div className={`w-80 mr-12 pointer-events-auto ${className ?? ''}`}>
         <div className="text-2xl font-bold">Filter</div>

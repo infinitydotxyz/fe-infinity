@@ -175,8 +175,7 @@ export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listCl
           pageId="PROFILE"
           getEndpoint={userInfo?.address ? `/user/${userInfo?.address}/nfts` : ''}
           userAddress={userInfo?.address}
-          filterShowedDefault={false}
-          showFilterSections={['COLLECTIONS']}
+          showCollectionsFilter={true}
           showSort={false}
           cardProps={{
             cardActions,

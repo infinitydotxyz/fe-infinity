@@ -19,7 +19,7 @@ interface Props {
   className?: string;
   filterShowedDefault?: boolean;
   pageId?: 'COLLECTION' | 'PROFILE';
-  showFilterSections?: string[];
+  showCollectionsFilter?: boolean;
   showSort?: boolean;
   userAddress?: string; // for User's NFTs and User's Collection Filter
 }
@@ -27,12 +27,12 @@ interface Props {
 export const GalleryBox = ({
   collection,
   collectionAttributes,
-  className,
+  className = '',
   cardProps,
   getEndpoint,
   pageId,
-  filterShowedDefault,
-  showFilterSections,
+  filterShowedDefault = false,
+  showCollectionsFilter = false,
   showSort = true,
   userAddress = ''
 }: Props) => {
@@ -163,7 +163,7 @@ export const GalleryBox = ({
           <FilterPanel
             collectionAttributes={collectionAttributes}
             collectionAddress={collection?.address}
-            showFilterSections={showFilterSections}
+            showCollectionsFilter={showCollectionsFilter}
           />
         )}
 
