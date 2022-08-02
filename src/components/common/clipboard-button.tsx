@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { MdOutlineContentCopy } from 'react-icons/md';
+import { useIsMounted } from 'src/hooks/useIsMounted';
 import { twMerge } from 'tailwind-merge';
 
 interface ClipboardButtonProps {
@@ -9,6 +10,7 @@ interface ClipboardButtonProps {
 
 export const ClipboardButton: React.FC<ClipboardButtonProps> = ({ textToCopy, className }) => {
   const [copied, setCopied] = useState(false);
+  const isMounted = useIsMounted();
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(textToCopy).then(
@@ -16,7 +18,9 @@ export const ClipboardButton: React.FC<ClipboardButtonProps> = ({ textToCopy, cl
         setCopied(true);
         // changing back to default state after 2 seconds.
         setTimeout(() => {
-          setCopied(false);
+          if (isMounted()) {
+            setCopied(false);
+          }
         }, 2000);
       },
       (err) => {
