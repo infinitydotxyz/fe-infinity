@@ -127,7 +127,10 @@ export const GalleryBox = ({
     }
 
     contents = (
-      <div className={twMerge('w-full grid gap-12 pointer-events-none')} style={{ gridTemplateColumns: gridColumns }}>
+      <div
+        className={twMerge('w-full flex-1 grid gap-12 pointer-events-none')}
+        style={{ gridTemplateColumns: gridColumns }}
+      >
         {cardData.map((item, idx) => {
           return <Card key={`${item.address}_${item.tokenId}_${idx}`} height={cardHeight} data={item} {...cardProps} />;
         })}
