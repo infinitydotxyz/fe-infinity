@@ -206,12 +206,12 @@ export const OrderbookProvider = ({ children, collectionId, tokenId }: Props) =>
     removeQueryParam(name);
   };
 
-  const updateFilterArray = (filterName: string, currentFitlers: string[], selectionName: string, checked: boolean) => {
+  const updateFilterArray = (filterName: string, currentFilters: string[], selectionName: string, checked: boolean) => {
     let updatedSelections = [];
     if (checked) {
-      updatedSelections = [...currentFitlers, selectionName];
+      updatedSelections = [...currentFilters, selectionName];
     } else {
-      updatedSelections = currentFitlers.filter((currentFilter) => currentFilter !== selectionName);
+      updatedSelections = currentFilters.filter((currentFilter) => currentFilter !== selectionName);
     }
 
     router.replace({ pathname: router.pathname, query: { ...router.query, [filterName]: updatedSelections } });
