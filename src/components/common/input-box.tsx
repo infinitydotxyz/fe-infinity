@@ -13,6 +13,7 @@ interface Props {
   tooltip?: TooltipSpec;
   isFullWidth?: boolean;
   renderRightIcon?: () => ReactElement;
+  renderLeftIcon?: () => ReactElement;
   icon?: ReactNode;
   labelClassname?: string;
   className?: string;
@@ -24,6 +25,7 @@ export const InputBox = ({
   children,
   icon,
   renderRightIcon,
+  renderLeftIcon,
   isFullWidth,
   labelClassname,
   className = ''
@@ -47,7 +49,12 @@ export const InputBox = ({
             </label>
           )}
           <div className="flex items-center w-full">
-            <div className="flex items-center w-full">{children}</div>
+            {renderLeftIcon && (
+              <div className="absolute top-0 bottom-0 left-4 flex flex-col justify-center">{renderLeftIcon()}</div>
+            )}
+
+            {/* NOTE: this centered positioning of the input field using % is kind of a hack, we should look into a better approach when more than one component needs to render a left icon */}
+            <div className={twMerge('flex items-center w-full', renderLeftIcon ? 'ml-[40%]' : '')}>{children}</div>
 
             {tooltip && (
               <Tooltip
@@ -123,6 +130,7 @@ interface Props4 {
   isFullWidth?: boolean;
   autoFocus?: boolean;
   renderRightIcon?: () => ReactElement;
+  renderLeftIcon?: () => ReactElement;
   className?: string;
   inputClassName?: string;
 }
@@ -139,6 +147,7 @@ export const TextInputBox = ({
   isFullWidth,
   autoFocus = false,
   renderRightIcon,
+  renderLeftIcon,
   className,
   inputClassName = ''
 }: Props4) => {
@@ -149,6 +158,7 @@ export const TextInputBox = ({
       icon={icon}
       isFullWidth={isFullWidth}
       renderRightIcon={renderRightIcon}
+      renderLeftIcon={renderLeftIcon}
       className={className}
     >
       <div className="flex items-center w-full">
