@@ -84,12 +84,12 @@ export const setupOnboard = () => {
     },
     accountCenter: {
       desktop: {
-        position: 'topRight',
+        position: 'bottomRight',
         enabled: true,
         minimal: false
       },
       mobile: {
-        position: 'topRight',
+        position: 'bottomRight',
         enabled: true,
         minimal: false
       }

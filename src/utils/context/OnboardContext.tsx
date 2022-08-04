@@ -1,9 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { WalletState } from '@web3-onboard/core';
-import { useConnectWallet, useSetChain, useWallets } from '@web3-onboard/react';
-import { ethers } from 'ethers';
+import { useConnectWallet, useSetChain, useWallets, web3Onboard } from '@web3-onboard/react';
+import { ethers, Signature } from 'ethers';
 import * as React from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { UserProfileDto } from 'src/components/user/user-profile-dto';
+import { apiGet } from '../apiUtils';
+import { ProviderEvents } from '../providers/AbstractProvider';
+import { JSONRPCRequestPayload, JSONRPCResponsePayload } from '../providers/Provider';
 import { setupOnboard } from '../web3-onboard';
+import { User } from './AppContext';
+import { Emitter, OnboardAuthProvider, WalletSigner } from './OnboardAuthProvider';
 
 setupOnboard();
 
@@ -15,6 +22,12 @@ export type OnboardContextType = {
   wallet: WalletState | null;
   chainId: string | null;
   setChainId: (chainId: string) => void;
+  user: User | null;
+  signMessage: (message: string) => Promise<Signature | undefined>;
+  isLoggedInAndAuthenticated: () => boolean;
+  getSigner: () => ethers.providers.JsonRpcSigner | undefined;
+  request: (request: JSONRPCRequestPayload) => Promise<JSONRPCResponsePayload | undefined>;
+  getAuthHeaders: (attemptLogin?: boolean) => void;
 };
 
 const OnboardContext = React.createContext<OnboardContextType | null>(null);
@@ -23,6 +36,7 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet();
   const connectedWallets = useWallets();
 
+  const [user, setUser] = useState<User | null>(null);
   const [
     {
       // chains, // the list of chains that web3-onboard was initialized with
@@ -33,25 +47,100 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
   ] = useSetChain();
 
   useEffect(() => {
+    if (user?.address) {
+      emit(ProviderEvents.AccountsChanged);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (wallet) {
+      emit(ProviderEvents.Connect);
+    } else {
+      emit(ProviderEvents.Disconnect);
+    }
+  }, [wallet]);
+
+  useEffect(() => {
+    if (connectedChain) {
+      emit(ProviderEvents.ChainChanged);
+    }
+  }, [connectedChain]);
+
+  useEffect(() => {
     if (!connectedWallets.length) {
       return;
     }
 
     const connectedWalletsLabelArray = connectedWallets.map(({ label }) => label);
     window.localStorage.setItem('connectedWallets', JSON.stringify(connectedWalletsLabelArray));
-  }, [connectedWallets, wallet]);
+  }, [connectedWallets]);
+
+  const handleNetworkChange = () => {
+    // ddd
+  };
+
+  const handleAccountChange = async () => {
+    // ddd
+  };
+
+  const onConnect = () => {
+    // ddd
+  };
+
+  const onDisconnect = () => {
+    // ddd
+  };
 
   useEffect(() => {
-    const previouslyConnectedWallets = JSON.parse(window.localStorage.getItem('connectedWallets') ?? '{}');
+    Emitter.on(ProviderEvents.AccountsChanged, handleAccountChange);
+    Emitter.on(ProviderEvents.ChainChanged, handleNetworkChange);
+    Emitter.on(ProviderEvents.Connect, onConnect);
+    Emitter.on(ProviderEvents.Disconnect, onDisconnect);
 
-    if (previouslyConnectedWallets?.length) {
-      const setWalletFromLocalStorage = async () => {
-        await connect({ autoSelect: { label: previouslyConnectedWallets[0], disableModals: true } });
-      };
+    return () => {
+      Emitter.removeListener?.(ProviderEvents.AccountsChanged, handleAccountChange);
+      Emitter.removeListener?.(ProviderEvents.ChainChanged, handleNetworkChange);
+      Emitter.removeListener?.(ProviderEvents.Connect, onConnect);
+      Emitter.removeListener?.(ProviderEvents.Disconnect, onDisconnect);
+    };
+  }, []);
 
-      setWalletFromLocalStorage();
+  useEffect(() => {
+    if (wallet && wallet.accounts?.length > 0) {
+      updateUserInfo(wallet.accounts[0].address);
+    } else {
+      setUser(null);
+
+      // if had a user, then assume the user disconnected
+      // clear out the auth cache
+      if (user) {
+        OnboardAuthProvider.clear();
+      }
     }
-  }, [connect]);
+  }, [wallet]);
+
+  useEffect(() => {
+    if (wallet && user) {
+      // TODO steve not sure where this goes, or if needed
+      const walletSigner = new WalletSigner(wallet, user?.address);
+
+      OnboardAuthProvider.authenticate(walletSigner);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (web3Onboard) {
+      const savedConnectedWallets = JSON.parse(window.localStorage.getItem('connectedWallets') ?? '[]');
+
+      if (savedConnectedWallets?.length) {
+        const setWalletFromLocalStorage = async () => {
+          await connect({ autoSelect: { label: savedConnectedWallets[0], disableModals: true } });
+        };
+
+        setWalletFromLocalStorage();
+      }
+    }
+  }, [web3Onboard]);
 
   const chainId = connectedChain?.id ?? '1';
   const isConnecting = connecting;
@@ -64,6 +153,14 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
     connect();
   };
 
+  const getAuthHeaders = async (attemptLogin = true): Promise<object> => {
+    if (attemptLogin && !isLoggedInAndAuthenticated()) {
+      await signIn();
+    }
+
+    return OnboardAuthProvider.getAuthHeaders();
+  };
+
   const signOut = async () => {
     if (wallet) {
       disconnect(wallet);
@@ -72,21 +169,68 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
   };
 
   const sendTransaction = async () => {
-    let ethersProvider;
+    try {
+      const signer = getSigner();
+      if (signer) {
+        const txn = await signer.sendTransaction({
+          to: '0x',
+          value: 100000000000000
+        });
 
+        const receipt = await txn.wait();
+        console.log(receipt);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getSigner = (): ethers.providers.JsonRpcSigner | undefined => {
+    if (wallet && user) {
+      const walletSigner = new WalletSigner(wallet, user?.address);
+
+      return walletSigner.getSigner();
+    }
+  };
+
+  const signMessage = async (message: string): Promise<Signature | undefined> => {
+    if (wallet && user) {
+      const walletSigner = new WalletSigner(wallet, user?.address);
+
+      return walletSigner.signMessage(message);
+    }
+  };
+
+  const isLoggedInAndAuthenticated = (): boolean => {
+    if (wallet && user) {
+      const walletSigner = new WalletSigner(wallet, user?.address);
+
+      return OnboardAuthProvider.isLoggedInAndAuthenticated(walletSigner);
+    }
+
+    return false;
+  };
+
+  const emit = (event: ProviderEvents, ...args: any) => {
+    Emitter.emit(event, args);
+  };
+
+  const request = async (request: JSONRPCRequestPayload): Promise<JSONRPCResponsePayload | undefined> => {
     if (wallet) {
-      ethersProvider = new ethers.providers.Web3Provider(wallet.provider, 'any');
+      const ethersProvider = new ethers.providers.Web3Provider(wallet.provider, 'any');
 
-      const signer = ethersProvider.getSigner();
+      const response = ethersProvider.send(request.method, request.params);
 
-      // send a transaction with the ethers provider
-      const txn = await signer.sendTransaction({
-        to: '0x',
-        value: 100000000000000
-      });
+      return { result: response, id: request?.id ?? '', jsonrpc: request?.jsonrpc ?? '' };
+    }
+  };
 
-      const receipt = await txn.wait();
-      console.log(receipt);
+  const updateUserInfo = async (address: string) => {
+    const { result, error } = await apiGet(`/user/${address}`);
+
+    if (!error) {
+      const userInfo = result as UserProfileDto;
+      setUser({ address: address, username: userInfo.username });
     }
   };
 
@@ -97,7 +241,13 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
     isConnecting,
     wallet,
     chainId,
-    setChainId
+    setChainId,
+    user,
+    signMessage,
+    isLoggedInAndAuthenticated,
+    getSigner,
+    request,
+    getAuthHeaders
   };
 
   return (
