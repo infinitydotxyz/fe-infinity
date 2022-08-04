@@ -7,6 +7,7 @@ import { apiPost } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { AvatarImage } from '../collection/avatar-image';
 import { Button, Divider, Heading, Modal, Spinner, TextInputBox, toastError } from '../common';
+import { MaxButton } from './max-button';
 import { FeesAccruedStats, FeesAprStats, Statistics } from './statistics';
 import { VoteProgressBar } from './vote-progress-bar';
 
@@ -102,14 +103,7 @@ export const VoteModal: React.FC<VoteModalProps> = ({ collection, isOpen, onClos
                   value={votes.toString()}
                   onChange={(v) => !isNaN(parseInt(v)) && setVotes(parseInt(v))}
                   renderRightIcon={() => (
-                    <Button
-                      variant="gray"
-                      size="small"
-                      className="rounded-full py-3 px-2"
-                      onClick={() => setVotes(votesAvailable)}
-                    >
-                      Max
-                    </Button>
+                    <MaxButton variant="gray" onClick={() => setVotes(votesAvailable)}></MaxButton>
                   )}
                 />
                 <Button className="w-full" onClick={vote} disabled={isLoadingQuota || isVoting}>
