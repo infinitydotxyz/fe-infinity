@@ -13,17 +13,18 @@ export default function Curation() {
   const tabs = [CuratedTab.AllCurated, CuratedTab.MyCurated];
   const router = useRouter();
   const { options, onChange, selected } = useToggleTab(tabs, (router?.query?.tab as string) || 'My Curated');
-  const { votes: availableVotes } = useCurationBulkVoteContext();
+  const { votesQuota, votes } = useCurationBulkVoteContext();
 
   return (
     <PageBox title="Curation">
       <div className="flex justify-between mb-8">
         <div>
           <span className="p-4 border border-gray-300 rounded-3xl mr-2">
-            <strong className="mr-2">{availableVotes}</strong>
+            <strong className="mr-2">{votesQuota}</strong>
             <span>veNFT available</span>
           </span>
-          <Button>Confirm</Button>
+          {/* TODO: show confirmation & submit bulk votes */}
+          <Button onClick={() => console.log(votes)}>Confirm</Button>
         </div>
         <div className="flex flex-row">
           <ToggleTab

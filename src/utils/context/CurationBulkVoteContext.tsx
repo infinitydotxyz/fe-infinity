@@ -10,39 +10,58 @@ import {
 } from 'react';
 import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
 
+type VotesMap = { [collectionId: string]: number };
+
 type CurationBulkVoteType = {
   /**
-   * The remaining amount of votes left.
+   * Total amount of votes available to spend.
    */
-  votes: number;
+  votesQuota: number;
 
   /**
-   * Set the amount of votes.
+   * Set the total amount of votes available to spend.
    */
-  setVotes: Dispatch<SetStateAction<number>>;
+  setVotesQuota: Dispatch<SetStateAction<number>>;
 
   /**
-   * Increase the amount of votes by the specified value.
+   * Spent votes for each collection.
    */
-  increaseVotes: (value: number) => void;
+  votes: VotesMap;
 
   /**
-   * Decrease the amount of votes by the specified value.
+   * Set the spent votes for each collection.
    */
-  decreaseVotes: (value: number) => void;
+  setVotes: Dispatch<SetStateAction<VotesMap>>;
+
+  /**
+   * Increase the spent votes for the collection by the specified value.
+   */
+  increaseVotes: (collectionId: string, value: number) => void;
+
+  /**
+   * Decrease the spent votes for the collection by the specified value.
+   */
+  decreaseVotes: (collectionId: string, value: number) => void;
 };
 
 const CurationBulkVoteContext = createContext<CurationBulkVoteType | undefined>(undefined);
 
 export const CurationBulkVoteContextProvider = ({ children }: { children: ReactNode }) => {
   const { result: quota } = useUserCurationQuota();
-  const [votes, setVotes] = useState(0); // TODO: store dict of collection id -> amount of votes and calculate total remaining votes based on that instead
-  const increaseVotes = useCallback((value: number) => setVotes((state) => state + value), []);
-  const decreaseVotes = useCallback((value: number) => setVotes((state) => state - value), []);
+  const [votes, setVotes] = useState<VotesMap>({});
+  const [votesQuota, setVotesQuota] = useState<number>(0);
+  const increaseVotes = useCallback((collectionId: string, value: number) => {
+    setVotes((state) => ({ ...state, [collectionId]: (state[collectionId] || 0) - value }));
+    setVotesQuota((state) => state + value);
+  }, []);
+  const decreaseVotes = useCallback((collectionId: string, value: number) => {
+    setVotes((state) => ({ ...state, [collectionId]: (state[collectionId] || 0) + value }));
+    setVotesQuota((state) => state - value);
+  }, []);
 
   useEffect(() => {
     if (quota?.availableVotes) {
-      setVotes(quota.availableVotes);
+      setVotesQuota(quota.availableVotes);
     }
   }, [quota?.availableVotes]);
 
@@ -52,7 +71,9 @@ export const CurationBulkVoteContextProvider = ({ children }: { children: ReactN
         votes,
         setVotes,
         increaseVotes,
-        decreaseVotes
+        decreaseVotes,
+        setVotesQuota,
+        votesQuota
       }}
     >
       {children}
