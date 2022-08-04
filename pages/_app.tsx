@@ -9,6 +9,7 @@ import { OrderContextProvider } from 'src/utils/context/OrderContext';
 import { FilterContextProvider } from 'src/utils/context/FilterContext';
 import React, { FunctionComponent, memo, StrictMode, useEffect } from 'react';
 import { DrawerContextProvider } from 'src/utils/context/DrawerContext';
+import { OnboardContextProvider } from 'src/utils/context/OnboardContext';
 
 const Page: FunctionComponent<AppProps> = ({ Component, pageProps }) => <Component {...pageProps} />;
 const Memoized = memo(Page, (p, n) => p.Component === n.Component && p.pageProps === n.pageProps);
@@ -32,13 +33,15 @@ const App: FunctionComponent<AppProps> = (props) => {
   return (
     <StrictMode>
       <AppContextProvider>
-        <FilterContextProvider>
-          <OrderContextProvider>
-            <DrawerContextProvider>
-              <Memoized {...props} />
-            </DrawerContextProvider>
-          </OrderContextProvider>
-        </FilterContextProvider>
+        <OnboardContextProvider>
+          <FilterContextProvider>
+            <OrderContextProvider>
+              <DrawerContextProvider>
+                <Memoized {...props} />
+              </DrawerContextProvider>
+            </OrderContextProvider>
+          </FilterContextProvider>
+        </OnboardContextProvider>
       </AppContextProvider>
     </StrictMode>
   );
