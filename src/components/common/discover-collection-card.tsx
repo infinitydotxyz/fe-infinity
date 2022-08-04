@@ -27,9 +27,7 @@ export const DiscoverCollectionCard = ({ orderBy, collection, routerQuery }: Pro
       >
         <div style={{ height: '300px' }}>
           <EZImage
-            src={getOptimizedCloudImage(
-              collection?.collectionData?.metadata?.bannerImage || collection?.collectionData?.metadata?.profileImage
-            )}
+            src={getOptimizedCloudImage(collection?.bannerImage || collection?.profileImage)}
             className="rounded-3xl overflow-clip"
           />
         </div>
