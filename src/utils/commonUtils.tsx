@@ -91,7 +91,7 @@ export const stringToFloat = (numStr?: string, defaultValue = 0) => {
 };
 
 // example: formatNumber(1025.12) => '1,025'
-export const formatNumber = (floatNum: number | undefined, decimals = 0): string => {
+export const formatNumber = (floatNum: number | undefined | null, decimals = 0): string => {
   if (decimals) {
     const str = (floatNum ?? 0).toLocaleString('en-US');
     const idx = str.indexOf('.');
