@@ -1,4 +1,4 @@
-import { EventType, EventTypeNames } from '@infinityxyz/lib-frontend/types/core/feed';
+import { EventTypeNames } from '@infinityxyz/lib-frontend/types/core/feed';
 import { EthPrice, EZImage, NextLink } from 'src/components/common';
 import { ellipsisAddress } from 'src/utils';
 import { format } from 'timeago.js';
@@ -39,7 +39,7 @@ export const ActivityItem = ({ item }: Props) => {
             <div className="text-gray-400">Event</div>
             <div className="font-bold">
               <a href={`${item.externalUrl}`} target="_blank" rel="noopener noreferrer">
-                {EventTypeNames[item.type as EventType]}
+                {EventTypeNames[item.type]}
               </a>
             </div>
           </div>

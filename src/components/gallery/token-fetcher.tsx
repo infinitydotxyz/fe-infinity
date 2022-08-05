@@ -110,8 +110,7 @@ export class TokenFetcher {
   };
 
   toCardData = (data: ApiNftData[]): ERC721CardData[] => {
-    const result = data as ApiNftData[];
-    return nftsToCardData(result, this.collectionAddress, this.collectionName);
+    return nftsToCardData(data, this.collectionAddress, this.collectionName);
   };
 }
 
