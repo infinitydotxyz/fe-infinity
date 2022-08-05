@@ -44,12 +44,24 @@ type CurationBulkVoteType = {
   decreaseVotes: (collectionId: string, value: number) => void;
 };
 
+function deleteZeroValues(obj: VotesMap) {
+  Object.keys(obj).forEach((key) => {
+    if (obj[key] === 0) {
+      delete obj[key];
+    }
+  });
+  return obj;
+}
+
 const CurationBulkVoteContext = createContext<CurationBulkVoteType | undefined>(undefined);
 
 export const CurationBulkVoteContextProvider = ({ children }: { children: ReactNode }) => {
   const { result: quota } = useUserCurationQuota();
-  const [votes, setVotes] = useState<VotesMap>({});
+  const [votes, _setVotes] = useState<VotesMap>({});
   const [votesQuota, setVotesQuota] = useState<number>(0);
+  const setVotes = useCallback((action: SetStateAction<VotesMap>) => {
+    return _setVotes((state) => (typeof action === 'function' ? deleteZeroValues(action(state)) : action));
+  }, []);
   const increaseVotes = useCallback((collectionId: string, value: number) => {
     setVotes((state) => ({ ...state, [collectionId]: (state[collectionId] || 0) - value }));
     setVotesQuota((state) => state + value);
