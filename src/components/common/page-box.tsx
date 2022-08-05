@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Navbar, Spacer, Header } from 'src/components/common';
-import { useAppContext } from 'src/utils/context/AppContext';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { isPasswordModalNeeded, PasswordModal } from './password-modal';
 
 // used in the Header
@@ -23,7 +23,7 @@ export const PageBox = ({
   className = '',
   rightToolbar
 }: Props): JSX.Element => {
-  const { chainId } = useAppContext();
+  const { chainId } = useOnboardContext();
   const [renderPasswordModal, setRenderPasswordModal] = useState(false);
 
   useEffect(() => {

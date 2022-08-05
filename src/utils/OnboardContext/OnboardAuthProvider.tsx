@@ -38,8 +38,6 @@ class _OnboardAuthProvider {
   }
 
   getAuthHeaders = async (): Promise<AxiosRequestHeaders> => {
-    console.log('getAuthHeaders');
-
     if (!this.isLoggedInAndAuthenticated()) {
       await this.authenticate();
     }
@@ -62,7 +60,6 @@ class _OnboardAuthProvider {
           const isNonceValid = Date.now() - this.authNonce < LOGIN_NONCE_EXPIRY_TIME;
 
           const result = isSigValid && isNonceValid;
-          console.log(`isLoggedInAndAuthenticated ${result}`);
 
           return result;
         } catch (err) {
@@ -72,8 +69,6 @@ class _OnboardAuthProvider {
       }
     }
 
-    console.log('isLoggedInAndAuthenticated false');
-
     return false;
   }
 
@@ -82,8 +77,6 @@ class _OnboardAuthProvider {
     const authNonce = localStorage.getItem(StorageKeys.AuthNonce);
     const authSignature = localStorage.getItem(StorageKeys.AuthSignature);
     const authMessage = localStorage.getItem(StorageKeys.AuthMessage);
-
-    console.log('loadCreds');
 
     let parsedSignature;
     try {
@@ -108,15 +101,12 @@ class _OnboardAuthProvider {
   saveAuthSignature = () => {
     const localStorage = window.localStorage;
 
-    console.log('saveAuthSignature');
-
     localStorage.setItem(StorageKeys.AuthNonce, this.authNonce.toString());
     localStorage.setItem(StorageKeys.AuthSignature, JSON.stringify(this.authSignature ?? {}));
     localStorage.setItem(StorageKeys.AuthMessage, this.authMessage);
   };
 
   authenticate = async () => {
-    console.log('authenticate');
     if (this.walletSigner) {
       this.loadCreds();
 

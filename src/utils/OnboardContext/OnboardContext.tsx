@@ -15,24 +15,24 @@ import { WalletSigner } from './WalletSigner';
 import { OnboardEmitter } from './OnboardEmitter';
 import { toastWarning } from 'src/components/common';
 import { PleaseConnectMsg } from '../commonUtils';
-import { TransactionReceipt, TransactionResponse } from '@ethersproject/abstract-provider';
+import { TransactionReceipt } from '@ethersproject/abstract-provider';
 
 setupOnboard();
 
 export type OnboardContextType = {
-  sendTransaction: () => void;
   signIn: () => void;
   signOut: () => void;
   isConnecting: boolean;
   wallet: WalletState | null;
-  chainId: string | null;
+  chainId: string;
   setChainId: (chainId: string) => void;
   user: User | null;
   signMessage: (message: string) => Promise<Signature | undefined>;
   getSigner: () => ethers.providers.JsonRpcSigner | undefined;
   request: (request: JSONRPCRequestPayload) => Promise<JSONRPCResponsePayload | undefined>;
-  checkSignedIn: () => void;
+  checkSignedIn: () => boolean;
   waitForTransaction: (txHash: string, callback: (receipt: TransactionReceipt | undefined) => void) => void;
+  getEthersProvider: () => ethers.providers.Web3Provider | undefined;
 };
 
 const OnboardContext = React.createContext<OnboardContextType | null>(null);
@@ -125,7 +125,14 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
     return '';
   };
 
-  const chainId = connectedChain?.id ?? '1';
+  // connectedChain.id is stored 0x1
+  const convertHexToDecString = (hex: string) => {
+    const dec = parseInt(hex, 16);
+
+    return dec.toString();
+  };
+
+  const chainId = convertHexToDecString(connectedChain?.id ?? '0x1');
   const isConnecting = connecting;
 
   const setChainId = (chainId: string) => {
@@ -144,28 +151,11 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
   };
 
   const checkSignedIn = () => {
-    if (userAddress()) {
+    if (!userAddress()) {
       toastWarning(<PleaseConnectMsg />);
       return false;
     }
     return true;
-  };
-
-  const sendTransaction = async () => {
-    try {
-      const signer = getSigner();
-      if (signer) {
-        const txn: TransactionResponse = await signer.sendTransaction({
-          to: '0x',
-          value: 100000000000000
-        });
-
-        const receipt = await txn.wait();
-        console.log(receipt);
-      }
-    } catch (err) {
-      console.log(err);
-    }
   };
 
   const getSigner = (): ethers.providers.JsonRpcSigner | undefined => {
@@ -173,6 +163,14 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
       const walletSigner = new WalletSigner(wallet, userAddress());
 
       return walletSigner.getSigner();
+    }
+  };
+
+  const getEthersProvider = (): ethers.providers.Web3Provider | undefined => {
+    if (wallet) {
+      const walletSigner = new WalletSigner(wallet, userAddress());
+
+      return walletSigner.getEthersProvider();
     }
   };
 
@@ -206,8 +204,6 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
   };
 
   const updateUserInfo = async (address: string) => {
-    console.log('updateUserInfo');
-
     const { result, error } = await apiGet(`/user/${address}`);
     if (!error) {
       const userInfo = result as UserProfileDto;
@@ -219,11 +215,11 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
   // event handlers
 
   const handleChainChange = () => {
-    window.location.reload();
+    // window.location.reload();
   };
 
   const handleAccountChange = async () => {
-    window.location.reload();
+    // window.location.reload();
   };
 
   const onConnect = () => {
@@ -232,14 +228,11 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
 
   const onDisconnect = () => {
     OnboardAuthProvider.clear();
-
-    window.location.reload();
   };
 
   // ===========================================================
 
   const value: OnboardContextType = {
-    sendTransaction,
     signOut,
     signIn,
     isConnecting,
@@ -251,7 +244,8 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
     getSigner,
     request,
     checkSignedIn,
-    waitForTransaction
+    waitForTransaction,
+    getEthersProvider
   };
 
   return (

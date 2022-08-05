@@ -2,7 +2,6 @@ import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosRequestHeade
 import useSWR, { SWRConfiguration } from 'swr';
 import { stringify } from 'query-string';
 import { API_BASE } from './constants';
-// import { ProviderManager } from './providers/ProviderManager';
 import useSWRInfinite, { SWRInfiniteConfiguration, SWRInfiniteKeyLoader } from 'swr/infinite';
 import { OnboardAuthProvider } from './OnboardContext/OnboardAuthProvider';
 
@@ -49,11 +48,6 @@ const catchError = (err: any) => {
 
 export const getAuthHeaders = async (): Promise<AxiosRequestHeaders> => {
   return OnboardAuthProvider.getAuthHeaders();
-
-  // RRRR
-  // const providerManager = await ProviderManager.getInstance();
-  // const authHeaders = await providerManager.getAuthHeaders();
-  // return authHeaders;
 };
 
 interface ApiParams {

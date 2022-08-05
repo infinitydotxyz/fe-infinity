@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { ChainId, ERC721CardData, Token } from '@infinityxyz/lib-frontend/types/core';
-import { useAppContext } from 'src/utils/context/AppContext';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { GalleryBox } from '../gallery/gallery-box';
 import { UserProfileDto } from './user-profile-dto';
@@ -11,6 +10,7 @@ import { apiGet } from 'src/utils';
 import { LowerPriceModal } from '../asset/modals/lower-price-modal';
 import { WaitingForTxModal } from '../orderbook/order-drawer/waiting-for-tx-modal';
 import { useDrawerContext } from 'src/utils/context/DrawerContext';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 type Props = {
   userInfo: UserProfileDto;
@@ -25,7 +25,8 @@ const fetchTokenData = async (chainId: string, collection: string, tokenId: stri
 };
 
 export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listClassName = '' }: Props) => {
-  const { user, chainId } = useAppContext();
+  const { user, chainId } = useOnboardContext();
+
   const { transferDrawerParams } = useDrawerContext();
   const { addCartItem, setOrderDrawerOpen, ordersInCart, cartItems, removeCartItem, updateOrders, setPrice } =
     useOrderContext();

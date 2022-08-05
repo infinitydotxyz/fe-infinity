@@ -3,12 +3,12 @@ import { ChainId, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import moment from 'moment';
 import { Button, EthPrice } from 'src/components/common';
 import { ellipsisAddress, numStr, shortDate } from 'src/utils';
-import { useAppContext } from 'src/utils/context/AppContext';
 import { OrderCartItem, useOrderContext } from 'src/utils/context/OrderContext';
 import { checkOffersToUser, getOrderType } from 'src/utils/orderbookUtils';
 import { DataColumn, defaultDataColumns } from './data-columns';
 import { OrderbookItem } from './orderbook-item';
 import { OrderDetailModal } from '../OrderDetailModal';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 type Props = {
   order: SignedOBOrder;
@@ -17,7 +17,8 @@ type Props = {
 };
 
 export const OrderbookRow = ({ order, onClickActionBtn, isFilterOpen }: Props) => {
-  const { user, checkSignedIn } = useAppContext();
+  const { user, checkSignedIn } = useOnboardContext();
+
   const { addCartItem, setOrderDrawerOpen } = useOrderContext();
   const [selectedOrder, setSelectedOrder] = useState<SignedOBOrder | null>(null);
 

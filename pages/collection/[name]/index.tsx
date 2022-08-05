@@ -26,15 +26,16 @@ import { OrderbookContainer } from 'src/components/orderbook/orderbook-list';
 import { useFetchSignedOBOrder } from 'src/hooks/api/useFetchSignedOBOrder';
 import { ellipsisAddress, getChainScannerBase, isProd, nFormatter } from 'src/utils'; // todo: adi remove isProd once curation is ready
 import { useFetch } from 'src/utils/apiUtils';
-import { useAppContext } from 'src/utils/context/AppContext';
 import { useDrawerContext } from 'src/utils/context/DrawerContext';
 import { useOrderContext } from 'src/utils/context/OrderContext';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { iconButtonStyle } from 'src/utils/ui-constants';
 import { useSWRConfig } from 'swr';
 import { twMerge } from 'tailwind-merge';
 
 const CollectionPage = () => {
-  const { user, chainId, checkSignedIn } = useAppContext();
+  const { user, chainId, checkSignedIn } = useOnboardContext();
+
   const { fetchSignedOBOrder } = useFetchSignedOBOrder();
   const router = useRouter();
   const { addCartItem, removeCartItem, ordersInCart, cartItems, addOrderToCart, updateOrders } = useOrderContext();

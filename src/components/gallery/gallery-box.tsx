@@ -6,10 +6,10 @@ import { FilterPanel } from '../filter/filter-panel';
 import { GallerySort } from './gallery-sort';
 import { twMerge } from 'tailwind-merge';
 import { useResizeDetector } from 'react-resize-detector';
-import { useAppContext } from 'src/utils/context/AppContext';
 import { useRouter } from 'next/router';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { TokenFetcher, TokenFetcherCache } from './token-fetcher';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 interface Props {
   collection?: BaseCollection | null;
@@ -41,7 +41,7 @@ export const GalleryBox = ({
   const [hasNextPage, setHasNextPage] = useState(false);
   const [loading, setLoading] = useState(false);
   const [noData, setNoData] = useState(false);
-  const { chainId } = useAppContext();
+  const { chainId } = useOnboardContext();
   const router = useRouter();
   const { filterState, setFilterState } = useFilterContext();
   const [filterShowed, setFilterShowed] = useState(filterShowedDefault);

@@ -1,11 +1,12 @@
 import { AccountSettingsPage } from 'src/components/user/profile-settings';
 import { CenteredContent, PageBox, Spinner } from 'src/components/common';
-import { useAppContext, User } from 'src/utils/context/AppContext';
+import { User } from 'src/utils/context/AppContext';
 import { UserProfileDto } from 'src/components/user/user-profile-dto';
 import { useFetch, USER_API_END_POINT } from 'src/utils';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 const AccountSettings = () => {
-  const { user, chainId } = useAppContext();
+  const { user, chainId } = useOnboardContext();
 
   if (!user) {
     return <PageBox title="Account Settings"></PageBox>;

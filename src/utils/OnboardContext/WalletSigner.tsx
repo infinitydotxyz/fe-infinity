@@ -14,10 +14,12 @@ export class WalletSigner {
     this.userAddress = userAddress;
   }
 
-  getSigner(): ethers.providers.JsonRpcSigner | undefined {
-    const ethersProvider = new ethers.providers.Web3Provider(this.wallet.provider, 'any');
+  getEthersProvider(): ethers.providers.Web3Provider {
+    return new ethers.providers.Web3Provider(this.wallet.provider, 'any');
+  }
 
-    return ethersProvider.getSigner();
+  getSigner(): ethers.providers.JsonRpcSigner | undefined {
+    return this.getEthersProvider().getSigner();
   }
 
   async signMessage(message: string): Promise<Signature | undefined> {

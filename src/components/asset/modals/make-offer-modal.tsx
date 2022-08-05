@@ -3,8 +3,8 @@ import { ETHEREUM_WETH_ADDRESS, getOBComplicationAddress, NULL_ADDRESS } from '@
 import { useState } from 'react';
 import { CurrencyInput, DatePickerBox, Modal, toastError, toastSuccess } from 'src/components/common';
 import { DEFAULT_MAX_GAS_PRICE_WEI, extractErrorMsg, getEstimatedGasPrice, getOwnerAddress } from 'src/utils';
-import { useAppContext } from 'src/utils/context/AppContext';
 import { getSignedOBOrder } from 'src/utils/exchange/orders';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { fetchOrderNonce, postOrders } from 'src/utils/orderbookUtils';
 import { secondsPerDay } from 'src/utils/ui-constants';
 
@@ -17,7 +17,8 @@ interface Props {
 }
 
 export const MakeOfferModal = ({ isOpen, onClose, onDone, buyPriceEth, token }: Props) => {
-  const { user, chainId, providerManager } = useAppContext();
+  const { user, chainId, getEthersProvider, getSigner } = useOnboardContext();
+
   const [price, setPrice] = useState<string>(buyPriceEth || '1');
   const [expirationDate, setExpirationDate] = useState(Date.now() + secondsPerDay * 30 * 1000);
 
@@ -30,7 +31,7 @@ export const MakeOfferModal = ({ isOpen, onClose, onDone, buyPriceEth, token }: 
       const orderNonce = await fetchOrderNonce(user.address);
       const signedOrders: SignedOBOrder[] = [];
 
-      const signer = providerManager?.getEthersProvider().getSigner();
+      const signer = getSigner();
       if (signer) {
         const takerAddress = getOwnerAddress(token);
         if (!takerAddress) {
@@ -57,7 +58,7 @@ export const MakeOfferModal = ({ isOpen, onClose, onDone, buyPriceEth, token }: 
           tokens: [tokenInfo]
         };
 
-        const gasPrice = await getEstimatedGasPrice(providerManager?.getEthersProvider());
+        const gasPrice = await getEstimatedGasPrice(getEthersProvider());
         const order: OBOrder = {
           id: '',
           chainId,

@@ -23,9 +23,9 @@ import {
 import { WaitingForTxModal } from 'src/components/orderbook/order-drawer/waiting-for-tx-modal';
 import { OrderbookContainer } from 'src/components/orderbook/orderbook-list';
 import { apiGet, ellipsisAddress, getOwnerAddress, MISSING_IMAGE_URL, useFetch } from 'src/utils';
-import { useAppContext } from 'src/utils/context/AppContext';
 import { useDrawerContext } from 'src/utils/context/DrawerContext';
 import { getOBOrderFromFirestoreOrderItem } from 'src/utils/exchange/orders';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { fetchUserSignedOBOrder } from 'src/utils/orderbookUtils';
 import { useSWRConfig } from 'swr';
 
@@ -72,7 +72,8 @@ interface Props {
 }
 
 const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
-  const { checkSignedIn, user } = useAppContext();
+  const { checkSignedIn, user } = useOnboardContext();
+
   const { isLoading, error, token, collectionAttributes, refreshAssetInfo } = useFetchAssetInfo(
     qchainId,
     qcollection,
