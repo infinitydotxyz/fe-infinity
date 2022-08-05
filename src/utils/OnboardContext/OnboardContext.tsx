@@ -58,20 +58,24 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
   // useEffect
 
   useEffect(() => {
-    OnboardEmitter.updateUserAddress(userAddress());
+    const updateAsync = async () => {
+      // keep OnboardAuthProvider in sync
+      if (wallet) {
+        const walletSigner = new WalletSigner(wallet, userAddress());
+        await OnboardAuthProvider.updateWalletSigner(walletSigner);
 
-    // keep OnboardAuthProvider in sync
-    if (wallet) {
-      const walletSigner = new WalletSigner(wallet, userAddress());
-      OnboardAuthProvider.updateWalletSigner(walletSigner);
+        setUser({ address: userAddress() });
 
-      setUser({ address: userAddress() });
+        await updateUserInfo(userAddress());
+      } else {
+        await OnboardAuthProvider.updateWalletSigner(null);
+        setUser(null);
+      }
 
-      updateUserInfo(userAddress());
-    } else {
-      OnboardAuthProvider.updateWalletSigner(undefined);
-      setUser(null);
-    }
+      OnboardEmitter.updateUserAddress(userAddress());
+    };
+
+    updateAsync();
   }, [wallet]);
 
   useEffect(() => {

@@ -18,10 +18,10 @@ class _OnboardAuthProvider {
   private authNonce = 0;
   private authSignature?: Signature;
   private authMessage = '';
-  private walletSigner: WalletSigner | undefined;
+  private walletSigner: WalletSigner | null = null;
 
   clear() {
-    this.walletSigner = undefined;
+    this.walletSigner = null;
     this.authNonce = 0;
     this.authSignature = undefined;
     this.authMessage = '';
@@ -29,24 +29,37 @@ class _OnboardAuthProvider {
   }
 
   // OnboardContext updates this
-  updateWalletSigner(walletSigner: WalletSigner | undefined) {
-    this.walletSigner = walletSigner;
+  async updateWalletSigner(walletSigner: WalletSigner | null) {
+    let update = true;
 
-    if (this.walletSigner) {
-      this.authenticate();
+    if (this.walletSigner !== null && walletSigner !== null) {
+      update = !this.walletSigner.isEqual(walletSigner);
+    } else {
+      // check if both are null
+      update = this.walletSigner !== walletSigner;
+    }
+
+    if (update) {
+      this.walletSigner = walletSigner;
+
+      if (this.walletSigner) {
+        await this.authenticate();
+      }
     }
   }
 
   getAuthHeaders = async (): Promise<AxiosRequestHeaders> => {
-    if (!this.isLoggedInAndAuthenticated()) {
-      await this.authenticate();
+    if (this.isLoggedInAndAuthenticated()) {
+      return {
+        [StorageKeys.AuthNonce]: this.authNonce,
+        [StorageKeys.AuthMessage]: base64Encode(this.authMessage),
+        [StorageKeys.AuthSignature]: JSON.stringify(this.authSignature)
+      };
     }
 
-    return {
-      [StorageKeys.AuthNonce]: this.authNonce,
-      [StorageKeys.AuthMessage]: base64Encode(this.authMessage),
-      [StorageKeys.AuthSignature]: JSON.stringify(this.authSignature)
-    };
+    console.log('### getAuthHeaders called when not authenticated');
+
+    return {};
   };
 
   isLoggedInAndAuthenticated(): boolean {

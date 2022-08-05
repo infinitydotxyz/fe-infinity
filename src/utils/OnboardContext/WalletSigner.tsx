@@ -14,6 +14,34 @@ export class WalletSigner {
     this.userAddress = userAddress;
   }
 
+  isEqual(other: WalletSigner): boolean {
+    return other.address() === this.address() && other.chainId() === this.chainId();
+  }
+
+  static addressForWallet(wallet: WalletState): string {
+    if (wallet.accounts.length > 0) {
+      return wallet.accounts[0].address;
+    }
+
+    return '';
+  }
+
+  static chainIdForWallet(wallet: WalletState): string {
+    if (wallet.chains.length > 0) {
+      return wallet.chains[0].id;
+    }
+
+    return '';
+  }
+
+  address(): string {
+    return WalletSigner.addressForWallet(this.wallet);
+  }
+
+  chainId(): string {
+    return WalletSigner.chainIdForWallet(this.wallet);
+  }
+
   getEthersProvider(): ethers.providers.Web3Provider {
     return new ethers.providers.Web3Provider(this.wallet.provider, 'any');
   }
