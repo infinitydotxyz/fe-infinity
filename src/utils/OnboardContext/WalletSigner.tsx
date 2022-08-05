@@ -2,8 +2,7 @@
 import { WalletState } from '@web3-onboard/core';
 import { ethers, Signature } from 'ethers';
 import { splitSignature } from 'ethers/lib/utils';
-import mitt from 'mitt';
-import { ProviderEvents, WalletType } from '../providers/AbstractProvider';
+import { WalletType } from '../providers/AbstractProvider';
 import { UserRejectException } from '../providers/UserRejectException';
 
 export class WalletSigner {
@@ -37,23 +36,3 @@ export class WalletSigner {
     }
   }
 }
-
-// ==========================================================================
-
-class _Emitter {
-  emitter = mitt();
-
-  emit(event: ProviderEvents, ...args: any) {
-    this.emitter.emit(event, args);
-  }
-
-  on(event: ProviderEvents, listener: (data: any) => void): void {
-    this.emitter.on(event, listener);
-  }
-
-  removeListener(event: ProviderEvents, listener: (data: any) => void): void {
-    this.emitter.off(event, listener);
-  }
-}
-
-export const Emitter = new _Emitter();

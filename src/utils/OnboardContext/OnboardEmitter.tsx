@@ -18,4 +18,5 @@ class _Emitter {
   }
 }
 
+// Singleton
 export const OnboardEmitter = new _Emitter();

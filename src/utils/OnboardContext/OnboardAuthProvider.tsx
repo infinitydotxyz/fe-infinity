@@ -111,4 +111,5 @@ class _OnboardAuthProvider {
   };
 }
 
+// Singleton
 export const OnboardAuthProvider = new _OnboardAuthProvider();
