@@ -1,12 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { LOGIN_NONCE_EXPIRY_TIME, trimLowerCase } from '@infinityxyz/lib-frontend/utils';
-import { WalletState } from '@web3-onboard/core';
-import { ethers, Signature } from 'ethers';
-import { splitSignature, verifyMessage } from 'ethers/lib/utils';
-import mitt from 'mitt';
+import { Signature } from 'ethers';
+import { verifyMessage } from 'ethers/lib/utils';
 import { base64Encode, getLoginMessage } from '../commonUtils';
-import { ProviderEvents, WalletType } from '../providers/AbstractProvider';
-import { UserRejectException } from '../providers/UserRejectException';
+import { WalletSigner } from './WalletSigner';
 
 enum StorageKeys {
   CurrentUser = 'CURRENT_USER',
@@ -115,57 +112,3 @@ class _OnboardAuthProvider {
 }
 
 export const OnboardAuthProvider = new _OnboardAuthProvider();
-
-// ===================================================================
-
-export class WalletSigner {
-  public wallet;
-  public userAddress;
-
-  constructor(wallet: WalletState, userAddress: string) {
-    this.wallet = wallet;
-    this.userAddress = userAddress;
-  }
-
-  getSigner(): ethers.providers.JsonRpcSigner | undefined {
-    const ethersProvider = new ethers.providers.Web3Provider(this.wallet.provider, 'any');
-
-    return ethersProvider.getSigner();
-  }
-
-  async signMessage(message: string): Promise<Signature | undefined> {
-    try {
-      const signer = this.getSigner();
-      if (signer) {
-        const result = await signer.signMessage(message);
-
-        return splitSignature(result);
-      }
-    } catch (err: any) {
-      if (err?.code === 4001) {
-        throw new UserRejectException(WalletType.MetaMask);
-      }
-      throw err;
-    }
-  }
-}
-
-// ==========================================================================
-
-class _Emitter {
-  emitter = mitt();
-
-  emit(event: ProviderEvents, ...args: any) {
-    this.emitter.emit(event, args);
-  }
-
-  on(event: ProviderEvents, listener: (data: any) => void): void {
-    this.emitter.on(event, listener);
-  }
-
-  removeListener(event: ProviderEvents, listener: (data: any) => void): void {
-    this.emitter.off(event, listener);
-  }
-}
-
-export const Emitter = new _Emitter();

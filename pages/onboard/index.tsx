@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from 'src/components/common';
-import { useOnboardContext } from 'src/utils/context/OnboardContext';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 const OnboardPage = () => {
   const { signIn, signOut, wallet, isConnecting, user, signMessage } = useOnboardContext();

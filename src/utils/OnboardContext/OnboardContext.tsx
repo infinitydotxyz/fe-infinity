@@ -9,8 +9,10 @@ import { apiGet } from '../apiUtils';
 import { ProviderEvents } from '../providers/AbstractProvider';
 import { JSONRPCRequestPayload, JSONRPCResponsePayload } from '../providers/Provider';
 import { setupOnboard } from '../web3-onboard';
-import { User } from './AppContext';
-import { Emitter, OnboardAuthProvider, WalletSigner } from './OnboardAuthProvider';
+import { User } from '../context/AppContext';
+import { OnboardAuthProvider } from './OnboardAuthProvider';
+import { WalletSigner } from './WalletSigner';
+import { OnboardEmitter } from './OnboardEmitter';
 
 setupOnboard();
 
@@ -48,21 +50,21 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
 
   useEffect(() => {
     if (user?.address) {
-      emit(ProviderEvents.AccountsChanged);
+      OnboardEmitter.emit(ProviderEvents.AccountsChanged);
     }
   }, [user]);
 
   useEffect(() => {
     if (wallet) {
-      emit(ProviderEvents.Connect);
+      OnboardEmitter.emit(ProviderEvents.Connect);
     } else {
-      emit(ProviderEvents.Disconnect);
+      OnboardEmitter.emit(ProviderEvents.Disconnect);
     }
   }, [wallet]);
 
   useEffect(() => {
     if (connectedChain) {
-      emit(ProviderEvents.ChainChanged);
+      OnboardEmitter.emit(ProviderEvents.ChainChanged);
     }
   }, [connectedChain]);
 
@@ -92,16 +94,16 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
   };
 
   useEffect(() => {
-    Emitter.on(ProviderEvents.AccountsChanged, handleAccountChange);
-    Emitter.on(ProviderEvents.ChainChanged, handleNetworkChange);
-    Emitter.on(ProviderEvents.Connect, onConnect);
-    Emitter.on(ProviderEvents.Disconnect, onDisconnect);
+    OnboardEmitter.on(ProviderEvents.AccountsChanged, handleAccountChange);
+    OnboardEmitter.on(ProviderEvents.ChainChanged, handleNetworkChange);
+    OnboardEmitter.on(ProviderEvents.Connect, onConnect);
+    OnboardEmitter.on(ProviderEvents.Disconnect, onDisconnect);
 
     return () => {
-      Emitter.removeListener?.(ProviderEvents.AccountsChanged, handleAccountChange);
-      Emitter.removeListener?.(ProviderEvents.ChainChanged, handleNetworkChange);
-      Emitter.removeListener?.(ProviderEvents.Connect, onConnect);
-      Emitter.removeListener?.(ProviderEvents.Disconnect, onDisconnect);
+      OnboardEmitter.removeListener?.(ProviderEvents.AccountsChanged, handleAccountChange);
+      OnboardEmitter.removeListener?.(ProviderEvents.ChainChanged, handleNetworkChange);
+      OnboardEmitter.removeListener?.(ProviderEvents.Connect, onConnect);
+      OnboardEmitter.removeListener?.(ProviderEvents.Disconnect, onDisconnect);
     };
   }, []);
 
@@ -209,10 +211,6 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
     }
 
     return false;
-  };
-
-  const emit = (event: ProviderEvents, ...args: any) => {
-    Emitter.emit(event, args);
   };
 
   const request = async (request: JSONRPCRequestPayload): Promise<JSONRPCResponsePayload | undefined> => {
