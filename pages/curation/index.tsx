@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, PageBox, ToggleTab, useToggleTab } from 'src/components/common';
+import { Button, Modal, PageBox, toastError, toastSuccess, ToggleTab, useToggleTab } from 'src/components/common';
 import { CuratedCollectionsOrderBy } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections-query.dto';
 import { useRouter } from 'next/router';
 import { AllCuratedCollections } from 'src/components/curation/all-curated';
@@ -7,24 +7,63 @@ import { Sort } from 'src/components/curation/sort';
 import { MyCuratedCollections } from 'src/components/curation/my-curated';
 import { CuratedTab } from 'src/components/curation/types';
 import { useCurationBulkVoteContext } from 'src/utils/context/CurationBulkVoteContext';
+import { apiPost } from 'src/utils';
+import { useAppContext } from 'src/utils/context/AppContext';
 
 export default function Curation() {
+  const { chainId, user } = useAppContext();
   const [orderBy, setOrderBy] = useState(CuratedCollectionsOrderBy.Votes);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [isVoting, setIsVoting] = useState(false);
   const tabs = [CuratedTab.AllCurated, CuratedTab.MyCurated];
   const router = useRouter();
   const { options, onChange, selected } = useToggleTab(tabs, (router?.query?.tab as string) || 'My Curated');
   const { votesQuota, votes } = useCurationBulkVoteContext();
 
+  const closeModal = () => setModalOpen(false);
+  const showModal = () => setModalOpen(Object.keys(votes).length > 0);
+  const submit = async () => {
+    setIsVoting(true);
+
+    const { error } = await apiPost(`/collections/curated/${chainId}:${user?.address}`, {
+      data: Object.keys(votes).map((collection) => ({
+        collection,
+        votes: votes[collection]
+      }))
+    });
+
+    if (error) {
+      toastError(error?.errorResponse?.message);
+    } else {
+      toastSuccess('Votes registered successfully!');
+      // TODO: refresh SWR cache
+    }
+
+    setIsVoting(false);
+    closeModal();
+  };
+
   return (
     <PageBox title="Curation">
+      <Modal
+        isOpen={modalOpen}
+        onClose={closeModal}
+        onOKButton={submit}
+        disableOK={isVoting}
+        onCancelButton={closeModal}
+        title="Submit votes in bulk"
+      >
+        <span>Are you sure you want to spend a total of</span>{' '}
+        <strong>{Object.values(votes).reduce((x, y) => x + y, 0)}</strong> <span>votes on</span>{' '}
+        <strong>{Object.keys(votes).length}</strong> <span>collections?</span>
+      </Modal>
       <div className="flex justify-between mb-8">
         <div>
           <span className="p-4 border border-gray-300 rounded-3xl mr-2">
             <strong className="mr-2">{votesQuota}</strong>
             <span>veNFT available</span>
           </span>
-          {/* TODO: show confirmation & submit bulk votes */}
-          <Button onClick={() => console.log(votes)}>Confirm</Button>
+          <Button onClick={showModal}>Confirm</Button>
         </div>
         <div className="flex flex-row">
           <ToggleTab
