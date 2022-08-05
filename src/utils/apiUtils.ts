@@ -1,9 +1,10 @@
-import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios';
+import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosRequestHeaders } from 'axios';
 import useSWR, { SWRConfiguration } from 'swr';
 import { stringify } from 'query-string';
 import { API_BASE } from './constants';
-import { ProviderManager } from './providers/ProviderManager';
+// import { ProviderManager } from './providers/ProviderManager';
 import useSWRInfinite, { SWRInfiniteConfiguration, SWRInfiniteKeyLoader } from 'swr/infinite';
+import { OnboardAuthProvider } from './OnboardContext/OnboardAuthProvider';
 
 const HTTP_UNAUTHORIZED = 401;
 const HTTP_TOO_MANY_REQUESTS = 429;
@@ -46,10 +47,13 @@ const catchError = (err: any) => {
   return { error: errorData, status: err?.response?.status };
 };
 
-export const getAuthHeaders = async () => {
-  const providerManager = await ProviderManager.getInstance();
-  const authHeaders = await providerManager.getAuthHeaders();
-  return authHeaders;
+export const getAuthHeaders = async (): Promise<AxiosRequestHeaders> => {
+  return OnboardAuthProvider.getAuthHeaders();
+
+  // RRRR
+  // const providerManager = await ProviderManager.getInstance();
+  // const authHeaders = await providerManager.getAuthHeaders();
+  // return authHeaders;
 };
 
 interface ApiParams {

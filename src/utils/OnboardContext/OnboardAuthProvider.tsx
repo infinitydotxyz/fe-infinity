@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { LOGIN_NONCE_EXPIRY_TIME, trimLowerCase } from '@infinityxyz/lib-frontend/utils';
+import { AxiosRequestHeaders } from 'axios';
 import { Signature } from 'ethers';
 import { verifyMessage } from 'ethers/lib/utils';
 import { base64Encode, getLoginMessage } from '../commonUtils';
@@ -30,9 +31,15 @@ class _OnboardAuthProvider {
   // OnboardContext updates this
   updateWalletSigner(walletSigner: WalletSigner | undefined) {
     this.walletSigner = walletSigner;
+
+    if (this.walletSigner) {
+      this.authenticate();
+    }
   }
 
-  getAuthHeaders = async (): Promise<object> => {
+  getAuthHeaders = async (): Promise<AxiosRequestHeaders> => {
+    console.log('getAuthHeaders');
+
     if (!this.isLoggedInAndAuthenticated()) {
       await this.authenticate();
     }
@@ -76,6 +83,8 @@ class _OnboardAuthProvider {
     const authSignature = localStorage.getItem(StorageKeys.AuthSignature);
     const authMessage = localStorage.getItem(StorageKeys.AuthMessage);
 
+    console.log('loadCreds');
+
     let parsedSignature;
     try {
       parsedSignature = JSON.parse(authSignature || '');
@@ -107,6 +116,7 @@ class _OnboardAuthProvider {
   };
 
   authenticate = async () => {
+    console.log('authenticate');
     if (this.walletSigner) {
       this.loadCreds();
 

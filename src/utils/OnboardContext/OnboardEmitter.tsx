@@ -37,7 +37,7 @@ class _Emitter {
 
   updateChainId(chainId: string) {
     if (this.chainId !== chainId) {
-      const notify = this.userAddress.length > 0;
+      const notify = this.chainId.length > 0;
 
       this.chainId = chainId;
 

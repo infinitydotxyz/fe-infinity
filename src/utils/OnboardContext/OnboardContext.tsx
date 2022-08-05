@@ -58,19 +58,21 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
   // useEffect
 
   useEffect(() => {
-    OnboardEmitter.updateUserAddress(user?.address ?? '');
+    OnboardEmitter.updateUserAddress(userAddress());
 
     // keep OnboardAuthProvider in sync
-    if (user && wallet) {
-      const walletSigner = new WalletSigner(wallet, user?.address);
+    if (wallet) {
+      const walletSigner = new WalletSigner(wallet, userAddress());
       OnboardAuthProvider.updateWalletSigner(walletSigner);
+
+      setUser({ address: userAddress() });
+
+      updateUserInfo(userAddress());
     } else {
       OnboardAuthProvider.updateWalletSigner(undefined);
+      setUser(null);
     }
-
-    // TODO steve not sure where this goes, or if needed
-    OnboardAuthProvider.authenticate();
-  }, [user]);
+  }, [wallet]);
 
   useEffect(() => {
     OnboardEmitter.updateChainId(connectedChain?.id ?? '');
@@ -100,20 +102,6 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
     };
   }, []);
 
-  useEffect(() => {
-    if (wallet && wallet.accounts?.length > 0) {
-      updateUserInfo(wallet.accounts[0].address);
-    } else {
-      setUser(null);
-
-      // if had a user previously, then assume the user disconnected
-      // clear out the auth cache
-      if (user) {
-        OnboardAuthProvider.clear();
-      }
-    }
-  }, [wallet]);
-
   // auto connect to the first wallet saved in localStorage
   useEffect(() => {
     const savedConnectedWallets = JSON.parse(window.localStorage.getItem('connectedWallets') ?? '[]');
@@ -128,6 +116,14 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
   }, []);
 
   // ===========================================================
+
+  const userAddress = (): string => {
+    if (wallet && wallet?.accounts.length > 0) {
+      return wallet?.accounts[0].address;
+    }
+
+    return '';
+  };
 
   const chainId = connectedChain?.id ?? '1';
   const isConnecting = connecting;
@@ -148,7 +144,7 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
   };
 
   const checkSignedIn = () => {
-    if (!user?.address) {
+    if (userAddress()) {
       toastWarning(<PleaseConnectMsg />);
       return false;
     }
@@ -173,16 +169,16 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
   };
 
   const getSigner = (): ethers.providers.JsonRpcSigner | undefined => {
-    if (wallet && user) {
-      const walletSigner = new WalletSigner(wallet, user?.address);
+    if (wallet) {
+      const walletSigner = new WalletSigner(wallet, userAddress());
 
       return walletSigner.getSigner();
     }
   };
 
   const signMessage = async (message: string): Promise<Signature | undefined> => {
-    if (wallet && user) {
-      const walletSigner = new WalletSigner(wallet, user?.address);
+    if (wallet) {
+      const walletSigner = new WalletSigner(wallet, userAddress());
 
       return walletSigner.signMessage(message);
     }
@@ -210,8 +206,9 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
   };
 
   const updateUserInfo = async (address: string) => {
-    const { result, error } = await apiGet(`/user/${address}`);
+    console.log('updateUserInfo');
 
+    const { result, error } = await apiGet(`/user/${address}`);
     if (!error) {
       const userInfo = result as UserProfileDto;
       setUser({ address: address, username: userInfo.username });
@@ -234,6 +231,8 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
   };
 
   const onDisconnect = () => {
+    OnboardAuthProvider.clear();
+
     window.location.reload();
   };
 
