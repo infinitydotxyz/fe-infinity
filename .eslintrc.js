@@ -32,6 +32,7 @@ module.exports = {
     'require-await': 1,
     'no-return-await': 1,
     // '@typescript-eslint/no-floating-promises': 1,
+    // '@typescript-eslint/no-misused-promises': 1,
 
     // https://nextjs.org/docs/messages/next-image-unconfigured-host
     // Image is bullshit, turn off this lint error in NextJS
