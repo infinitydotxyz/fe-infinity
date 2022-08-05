@@ -184,9 +184,9 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
 
   const request = async (request: JSONRPCRequestPayload): Promise<JSONRPCResponsePayload | undefined> => {
     if (wallet) {
-      const ethersProvider = new ethers.providers.Web3Provider(wallet.provider, 'any');
+      const walletSigner = new WalletSigner(wallet, userAddress());
 
-      const response = ethersProvider.send(request.method, request.params);
+      const response = walletSigner.getEthersProvider().send(request.method, request.params);
 
       return { result: response, id: request?.id ?? '', jsonrpc: request?.jsonrpc ?? '' };
     }
