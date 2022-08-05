@@ -140,7 +140,7 @@ const parseRouterQueryParamsToFilters = (query: ParsedUrlQuery): OBFilters => {
 type OBContextType = {
   orders: SignedOBOrder[];
   isLoading: boolean;
-  fetchMore: () => Promise<void>;
+  fetchMore: () => void;
   filters: OBFilters;
   setFilters: React.Dispatch<React.SetStateAction<OBFilters>>;
   clearFilter: (name: string) => void;
@@ -191,7 +191,7 @@ export const OrderbookProvider = ({ children, collectionId, tokenId }: Props) =>
     }
   }, [router.query]);
 
-  const fetchMore = async () => {
+  const fetchMore = () => {
     fetchOrders();
   };
 

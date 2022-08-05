@@ -234,15 +234,15 @@ export const useCollectionCache = () => {
     return collectionAddress;
   };
 
-  const getTopCollections = async (): Promise<CollectionSearchDto[]> => {
+  const getTopCollections = (): Promise<CollectionSearchDto[]> => {
     return CollectionCache.getTopCollections();
   };
 
-  const getCollectionsByName = async (query: string): Promise<CollectionSearchDto[]> => {
+  const getCollectionsByName = (query: string): Promise<CollectionSearchDto[]> => {
     return CollectionCache.getCollectionsByName(query);
   };
 
-  const getCollectionsByIds = async (ids: string[]): Promise<CollectionSearchDto[]> => {
+  const getCollectionsByIds = (ids: string[]): Promise<CollectionSearchDto[]> => {
     return CollectionCache.getCollectionsByIds(ids);
   };
 

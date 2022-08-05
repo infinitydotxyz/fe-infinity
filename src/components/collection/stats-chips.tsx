@@ -190,7 +190,7 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
 
       <Chip
         content={<>Reindex</>}
-        onClick={async () => indexCollection(true, chainId, collection?.address ?? '', collection?.slug ?? '')}
+        onClick={() => indexCollection(true, chainId, collection?.address ?? '', collection?.slug ?? '')}
       />
 
       <Chip

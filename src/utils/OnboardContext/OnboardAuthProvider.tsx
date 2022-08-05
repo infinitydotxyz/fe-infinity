@@ -48,7 +48,7 @@ class _OnboardAuthProvider {
     }
   }
 
-  getAuthHeaders = async (): Promise<AxiosRequestHeaders> => {
+  getAuthHeaders(): AxiosRequestHeaders {
     if (this.isLoggedInAndAuthenticated()) {
       return {
         [StorageKeys.AuthNonce]: this.authNonce,
@@ -60,7 +60,7 @@ class _OnboardAuthProvider {
     console.log('### getAuthHeaders called when not authenticated');
 
     return {};
-  };
+  }
 
   isLoggedInAndAuthenticated(): boolean {
     if (this.walletSigner) {

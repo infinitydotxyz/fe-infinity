@@ -29,6 +29,8 @@ module.exports = {
     '@typescript-eslint/switch-exhaustiveness-check': 'warn',
     curly: 1,
     eqeqeq: 1,
+    'require-await': 1,
+    'no-return-await': 1,
 
     // https://nextjs.org/docs/messages/next-image-unconfigured-host
     // Image is bullshit, turn off this lint error in NextJS

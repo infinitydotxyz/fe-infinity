@@ -144,7 +144,7 @@ export const FeedList = ({
         })}
 
         <ScrollLoader
-          onFetchMore={async () => {
+          onFetchMore={() => {
             fetchActivity(false, cursor);
           }}
         />

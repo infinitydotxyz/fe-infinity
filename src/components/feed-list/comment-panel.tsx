@@ -136,7 +136,7 @@ export const CommentPanel = ({ isOpen, onClose, event, contentOnly }: Props) => 
         {content}
 
         <ScrollLoader
-          onFetchMore={async () => {
+          onFetchMore={() => {
             fetchData(true);
           }}
         />

@@ -139,7 +139,7 @@ export const OrderbookRow = ({ order, onClickActionBtn, isFilterOpen }: Props) =
     setOrderDrawerOpen(true);
   };
 
-  const onClickBuySell = async (order: SignedOBOrder) => {
+  const onClickBuySell = (order: SignedOBOrder) => {
     if (!checkSignedIn()) {
       return;
     }

@@ -6,7 +6,7 @@ import { UserProfileDto } from './user-profile-dto';
 import { twMerge } from 'tailwind-merge';
 import { CardAction, EthPrice } from '../common';
 import { CancelModal } from '../asset';
-import { apiGet } from 'src/utils';
+import { apiGet, ApiResponse } from 'src/utils';
 import { LowerPriceModal } from '../asset/modals/lower-price-modal';
 import { WaitingForTxModal } from '../orderbook/order-drawer/waiting-for-tx-modal';
 import { useDrawerContext } from 'src/utils/context/DrawerContext';
@@ -19,7 +19,7 @@ type Props = {
   listClassName?: string;
 };
 
-const fetchTokenData = async (chainId: string, collection: string, tokenId: string) => {
+const fetchTokenData = (chainId: string, collection: string, tokenId: string): Promise<ApiResponse> => {
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
   return apiGet(NFT_API_ENDPOINT);
 };

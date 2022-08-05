@@ -143,11 +143,11 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
     setChain({ chainId });
   };
 
-  const signIn = async () => {
+  const signIn = () => {
     connect();
   };
 
-  const signOut = async () => {
+  const signOut = () => {
     if (wallet) {
       disconnect(wallet);
       window.localStorage.removeItem('connectedWallets');
@@ -178,19 +178,21 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
     }
   };
 
-  const signMessage = async (message: string): Promise<Signature | undefined> => {
+  const signMessage = (message: string): Promise<Signature | undefined> => {
     if (wallet) {
       const walletSigner = new WalletSigner(wallet, userAddress());
 
       return walletSigner.signMessage(message);
     }
+
+    return Promise.resolve(undefined);
   };
 
   const request = async (request: JSONRPCRequestPayload): Promise<JSONRPCResponsePayload | undefined> => {
     if (wallet) {
       const walletSigner = new WalletSigner(wallet, userAddress());
 
-      const response = walletSigner.getEthersProvider().send(request.method, request.params);
+      const response = await walletSigner.getEthersProvider().send(request.method, request.params);
 
       return { result: response, id: request?.id ?? '', jsonrpc: request?.jsonrpc ?? '' };
     }

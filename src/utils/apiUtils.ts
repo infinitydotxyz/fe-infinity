@@ -46,7 +46,7 @@ const catchError = (err: any) => {
   return { error: errorData, status: err?.response?.status };
 };
 
-export const getAuthHeaders = async (): Promise<AxiosRequestHeaders> => {
+export const getAuthHeaders = (): AxiosRequestHeaders => {
   return OnboardAuthProvider.getAuthHeaders();
 };
 
@@ -81,7 +81,7 @@ export const apiGet = async (path: string, params?: ApiParams): Promise<ApiRespo
 
     let authHeaders = {};
     if (requiresAuth) {
-      authHeaders = await getAuthHeaders();
+      authHeaders = getAuthHeaders();
     }
 
     const { data, status } = await axiosApi({
@@ -104,7 +104,7 @@ export const apiGet = async (path: string, params?: ApiParams): Promise<ApiRespo
 // example: const { result, error, status } = await apiPost(`/api/path`, { data: { somekey: 'somevalue' } });
 export const apiPost = async (path: string, params?: ApiParams): Promise<ApiResponse> => {
   const queryStr = buildQueryString(params?.query);
-  const headers = await getAuthHeaders();
+  const headers = getAuthHeaders();
   try {
     const { data, status } = await axiosApi({
       url: `${API_BASE}${path}${queryStr}`,
@@ -132,7 +132,7 @@ export const apiPut = (path: string, params?: ApiParams) => {
 
 export const apiDelete = async (path: string, params?: ApiParams): Promise<ApiResponse> => {
   const queryStr = buildQueryString(params?.query);
-  const headers = await getAuthHeaders();
+  const headers = getAuthHeaders();
   try {
     const { data, status } = await axiosApi({
       url: `${API_BASE}${path}${queryStr}`,

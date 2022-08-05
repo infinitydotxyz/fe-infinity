@@ -130,7 +130,7 @@ export const CollectionActivityFeed = ({
         })}
 
         <ScrollLoader
-          onFetchMore={async () => {
+          onFetchMore={() => {
             fetchActivity(false, cursor);
           }}
         />
