@@ -80,8 +80,8 @@ export class ProviderManager implements Omit<Optional<Provider, 'type'>, 'init'>
     return this._provider?.type;
   }
 
-  getAuthHeaders = async (attemptLogin = true) => {
-    if (attemptLogin && !this.isLoggedInAndAuthenticated) {
+  getAuthHeaders = async () => {
+    if (!this.isLoggedInAndAuthenticated) {
       await this.signIn();
     }
     return {

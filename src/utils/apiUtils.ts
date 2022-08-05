@@ -46,9 +46,9 @@ const catchError = (err: any) => {
   return { error: errorData, status: err?.response?.status };
 };
 
-export const getAuthHeaders = async (attemptLogin = true) => {
+export const getAuthHeaders = async () => {
   const providerManager = await ProviderManager.getInstance();
-  const authHeaders = await providerManager.getAuthHeaders(attemptLogin);
+  const authHeaders = await providerManager.getAuthHeaders();
   return authHeaders;
 };
 
@@ -57,7 +57,6 @@ interface ApiParams {
   data?: unknown; // data (payload) for Post, Put, Delete
   options?: AxiosRequestConfig;
   requiresAuth?: boolean;
-  doNotAttemptLogin?: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -84,8 +83,7 @@ export const apiGet = async (path: string, params?: ApiParams): Promise<ApiRespo
 
     let authHeaders = {};
     if (requiresAuth) {
-      const attemptLogin = !params?.doNotAttemptLogin;
-      authHeaders = await getAuthHeaders(attemptLogin);
+      authHeaders = await getAuthHeaders();
     }
 
     const { data, status } = await axiosApi({

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { WalletState } from '@web3-onboard/core';
-import { useConnectWallet, useSetChain, useWallets, web3Onboard } from '@web3-onboard/react';
+import { useConnectWallet, useSetChain, useWallets } from '@web3-onboard/react';
 import { ethers, Signature } from 'ethers';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
@@ -13,6 +13,9 @@ import { User } from '../context/AppContext';
 import { OnboardAuthProvider } from './OnboardAuthProvider';
 import { WalletSigner } from './WalletSigner';
 import { OnboardEmitter } from './OnboardEmitter';
+import { toastWarning } from 'src/components/common';
+import { PleaseConnectMsg } from '../commonUtils';
+import { TransactionReceipt, TransactionResponse } from '@ethersproject/abstract-provider';
 
 setupOnboard();
 
@@ -26,19 +29,22 @@ export type OnboardContextType = {
   setChainId: (chainId: string) => void;
   user: User | null;
   signMessage: (message: string) => Promise<Signature | undefined>;
-  isLoggedInAndAuthenticated: () => boolean;
   getSigner: () => ethers.providers.JsonRpcSigner | undefined;
   request: (request: JSONRPCRequestPayload) => Promise<JSONRPCResponsePayload | undefined>;
-  getAuthHeaders: (attemptLogin?: boolean) => void;
+  checkSignedIn: () => void;
+  waitForTransaction: (txHash: string, callback: (receipt: TransactionReceipt | undefined) => void) => void;
 };
 
 const OnboardContext = React.createContext<OnboardContextType | null>(null);
 
 export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) => {
+  const [user, setUser] = useState<User | null>(null);
+
+  // ===========================================================
+  // hooks
+
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet();
   const connectedWallets = useWallets();
-
-  const [user, setUser] = useState<User | null>(null);
   const [
     {
       // chains, // the list of chains that web3-onboard was initialized with
@@ -48,26 +54,29 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
     setChain // function to call to initiate user to switch chains in their wallet
   ] = useSetChain();
 
+  // ===========================================================
+  // useEffect
+
   useEffect(() => {
-    if (user?.address) {
-      OnboardEmitter.emit(ProviderEvents.AccountsChanged);
+    OnboardEmitter.updateUserAddress(user?.address ?? '');
+
+    // keep OnboardAuthProvider in sync
+    if (user && wallet) {
+      const walletSigner = new WalletSigner(wallet, user?.address);
+      OnboardAuthProvider.updateWalletSigner(walletSigner);
+    } else {
+      OnboardAuthProvider.updateWalletSigner(undefined);
     }
+
+    // TODO steve not sure where this goes, or if needed
+    OnboardAuthProvider.authenticate();
   }, [user]);
 
   useEffect(() => {
-    if (wallet) {
-      OnboardEmitter.emit(ProviderEvents.Connect);
-    } else {
-      OnboardEmitter.emit(ProviderEvents.Disconnect);
-    }
-  }, [wallet]);
-
-  useEffect(() => {
-    if (connectedChain) {
-      OnboardEmitter.emit(ProviderEvents.ChainChanged);
-    }
+    OnboardEmitter.updateChainId(connectedChain?.id ?? '');
   }, [connectedChain]);
 
+  // save connected wallets to local storage
   useEffect(() => {
     if (!connectedWallets.length) {
       return;
@@ -77,31 +86,15 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
     window.localStorage.setItem('connectedWallets', JSON.stringify(connectedWalletsLabelArray));
   }, [connectedWallets]);
 
-  const handleNetworkChange = () => {
-    // ddd
-  };
-
-  const handleAccountChange = async () => {
-    // ddd
-  };
-
-  const onConnect = () => {
-    // ddd
-  };
-
-  const onDisconnect = () => {
-    // ddd
-  };
-
   useEffect(() => {
     OnboardEmitter.on(ProviderEvents.AccountsChanged, handleAccountChange);
-    OnboardEmitter.on(ProviderEvents.ChainChanged, handleNetworkChange);
+    OnboardEmitter.on(ProviderEvents.ChainChanged, handleChainChange);
     OnboardEmitter.on(ProviderEvents.Connect, onConnect);
     OnboardEmitter.on(ProviderEvents.Disconnect, onDisconnect);
 
     return () => {
       OnboardEmitter.removeListener?.(ProviderEvents.AccountsChanged, handleAccountChange);
-      OnboardEmitter.removeListener?.(ProviderEvents.ChainChanged, handleNetworkChange);
+      OnboardEmitter.removeListener?.(ProviderEvents.ChainChanged, handleChainChange);
       OnboardEmitter.removeListener?.(ProviderEvents.Connect, onConnect);
       OnboardEmitter.removeListener?.(ProviderEvents.Disconnect, onDisconnect);
     };
@@ -113,7 +106,7 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
     } else {
       setUser(null);
 
-      // if had a user, then assume the user disconnected
+      // if had a user previously, then assume the user disconnected
       // clear out the auth cache
       if (user) {
         OnboardAuthProvider.clear();
@@ -121,28 +114,20 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
     }
   }, [wallet]);
 
+  // auto connect to the first wallet saved in localStorage
   useEffect(() => {
-    if (wallet && user) {
-      // TODO steve not sure where this goes, or if needed
-      const walletSigner = new WalletSigner(wallet, user?.address);
+    const savedConnectedWallets = JSON.parse(window.localStorage.getItem('connectedWallets') ?? '[]');
 
-      OnboardAuthProvider.authenticate(walletSigner);
+    if (savedConnectedWallets?.length) {
+      const setWalletFromLocalStorage = async () => {
+        await connect({ autoSelect: { label: savedConnectedWallets[0], disableModals: true } });
+      };
+
+      setWalletFromLocalStorage();
     }
-  }, [user]);
+  }, []);
 
-  useEffect(() => {
-    if (web3Onboard) {
-      const savedConnectedWallets = JSON.parse(window.localStorage.getItem('connectedWallets') ?? '[]');
-
-      if (savedConnectedWallets?.length) {
-        const setWalletFromLocalStorage = async () => {
-          await connect({ autoSelect: { label: savedConnectedWallets[0], disableModals: true } });
-        };
-
-        setWalletFromLocalStorage();
-      }
-    }
-  }, [web3Onboard]);
+  // ===========================================================
 
   const chainId = connectedChain?.id ?? '1';
   const isConnecting = connecting;
@@ -155,14 +140,6 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
     connect();
   };
 
-  const getAuthHeaders = async (attemptLogin = true): Promise<object> => {
-    if (attemptLogin && !isLoggedInAndAuthenticated()) {
-      await signIn();
-    }
-
-    return OnboardAuthProvider.getAuthHeaders();
-  };
-
   const signOut = async () => {
     if (wallet) {
       disconnect(wallet);
@@ -170,11 +147,19 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
     }
   };
 
+  const checkSignedIn = () => {
+    if (!user?.address) {
+      toastWarning(<PleaseConnectMsg />);
+      return false;
+    }
+    return true;
+  };
+
   const sendTransaction = async () => {
     try {
       const signer = getSigner();
       if (signer) {
-        const txn = await signer.sendTransaction({
+        const txn: TransactionResponse = await signer.sendTransaction({
           to: '0x',
           value: 100000000000000
         });
@@ -203,16 +188,6 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
     }
   };
 
-  const isLoggedInAndAuthenticated = (): boolean => {
-    if (wallet && user) {
-      const walletSigner = new WalletSigner(wallet, user?.address);
-
-      return OnboardAuthProvider.isLoggedInAndAuthenticated(walletSigner);
-    }
-
-    return false;
-  };
-
   const request = async (request: JSONRPCRequestPayload): Promise<JSONRPCResponsePayload | undefined> => {
     if (wallet) {
       const ethersProvider = new ethers.providers.Web3Provider(wallet.provider, 'any');
@@ -221,6 +196,17 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
 
       return { result: response, id: request?.id ?? '', jsonrpc: request?.jsonrpc ?? '' };
     }
+  };
+
+  const waitForTransaction = async (txHash: string, callback: (receipt: TransactionReceipt | undefined) => void) => {
+    if (wallet) {
+      const ethersProvider = new ethers.providers.Web3Provider(wallet.provider, 'any');
+
+      const receipt = await ethersProvider.waitForTransaction(txHash);
+      callback(receipt);
+    }
+
+    callback(undefined);
   };
 
   const updateUserInfo = async (address: string) => {
@@ -232,6 +218,27 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
     }
   };
 
+  // ===========================================================
+  // event handlers
+
+  const handleChainChange = () => {
+    window.location.reload();
+  };
+
+  const handleAccountChange = async () => {
+    window.location.reload();
+  };
+
+  const onConnect = () => {
+    // nothing
+  };
+
+  const onDisconnect = () => {
+    window.location.reload();
+  };
+
+  // ===========================================================
+
   const value: OnboardContextType = {
     sendTransaction,
     signOut,
@@ -242,10 +249,10 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
     setChainId,
     user,
     signMessage,
-    isLoggedInAndAuthenticated,
     getSigner,
     request,
-    getAuthHeaders
+    checkSignedIn,
+    waitForTransaction
   };
 
   return (

@@ -17,15 +17,26 @@ class _OnboardAuthProvider {
   private authNonce = 0;
   private authSignature?: Signature;
   private authMessage = '';
+  private walletSigner: WalletSigner | undefined;
 
   clear() {
+    this.walletSigner = undefined;
     this.authNonce = 0;
     this.authSignature = undefined;
     this.authMessage = '';
     this.saveAuthSignature();
   }
 
-  getAuthHeaders = (): object => {
+  // OnboardContext updates this
+  updateWalletSigner(walletSigner: WalletSigner | undefined) {
+    this.walletSigner = walletSigner;
+  }
+
+  getAuthHeaders = async (): Promise<object> => {
+    if (!this.isLoggedInAndAuthenticated()) {
+      await this.authenticate();
+    }
+
     return {
       [StorageKeys.AuthNonce]: this.authNonce,
       [StorageKeys.AuthMessage]: base64Encode(this.authMessage),
@@ -33,21 +44,28 @@ class _OnboardAuthProvider {
     };
   };
 
-  isLoggedInAndAuthenticated(walletSigner: WalletSigner): boolean {
-    const currentUser = trimLowerCase(walletSigner.userAddress);
+  isLoggedInAndAuthenticated(): boolean {
+    if (this.walletSigner) {
+      const currentUser = trimLowerCase(this.walletSigner.userAddress);
 
-    if (currentUser && this.authNonce && this.authMessage && this.authSignature) {
-      try {
-        const signer = verifyMessage(this.authMessage, this.authSignature).toLowerCase();
-        const isSigValid = signer === currentUser;
-        const isNonceValid = Date.now() - this.authNonce < LOGIN_NONCE_EXPIRY_TIME;
+      if (currentUser && this.authNonce && this.authMessage && this.authSignature) {
+        try {
+          const signer = verifyMessage(this.authMessage, this.authSignature).toLowerCase();
+          const isSigValid = signer === currentUser;
+          const isNonceValid = Date.now() - this.authNonce < LOGIN_NONCE_EXPIRY_TIME;
 
-        return isSigValid && isNonceValid;
-      } catch (err) {
-        console.log(err);
-        return false;
+          const result = isSigValid && isNonceValid;
+          console.log(`isLoggedInAndAuthenticated ${result}`);
+
+          return result;
+        } catch (err) {
+          console.log(err);
+          return false;
+        }
       }
     }
+
+    console.log('isLoggedInAndAuthenticated false');
 
     return false;
   }
@@ -81,32 +99,36 @@ class _OnboardAuthProvider {
   saveAuthSignature = () => {
     const localStorage = window.localStorage;
 
+    console.log('saveAuthSignature');
+
     localStorage.setItem(StorageKeys.AuthNonce, this.authNonce.toString());
     localStorage.setItem(StorageKeys.AuthSignature, JSON.stringify(this.authSignature ?? {}));
     localStorage.setItem(StorageKeys.AuthMessage, this.authMessage);
   };
 
-  authenticate = async (walletSigner: WalletSigner) => {
-    this.loadCreds();
+  authenticate = async () => {
+    if (this.walletSigner) {
+      this.loadCreds();
 
-    if (this.isLoggedInAndAuthenticated(walletSigner)) {
-      return;
-    }
-
-    const nonce = Date.now();
-    const loginMsg = getLoginMessage(nonce);
-    const signature = await walletSigner.signMessage(loginMsg);
-    if (signature) {
-      try {
-        this.authNonce = nonce;
-        this.authSignature = signature;
-        this.authMessage = loginMsg;
-        this.saveAuthSignature();
-      } catch (err) {
-        console.error('Error saving login info', err);
+      if (this.isLoggedInAndAuthenticated()) {
+        return;
       }
-    } else {
-      console.error('No signature');
+
+      const nonce = Date.now();
+      const loginMsg = getLoginMessage(nonce);
+      const signature = await this.walletSigner.signMessage(loginMsg);
+      if (signature) {
+        try {
+          this.authNonce = nonce;
+          this.authSignature = signature;
+          this.authMessage = loginMsg;
+          this.saveAuthSignature();
+        } catch (err) {
+          console.error('Error saving login info', err);
+        }
+      } else {
+        console.error('No signature');
+      }
     }
   };
 }
