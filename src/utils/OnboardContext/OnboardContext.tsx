@@ -8,7 +8,7 @@ import { UserProfileDto } from 'src/components/user/user-profile-dto';
 import { apiGet } from '../apiUtils';
 import { ProviderEvents } from '../providers/AbstractProvider';
 import { JSONRPCRequestPayload, JSONRPCResponsePayload } from '../providers/Provider';
-import { setupOnboard } from '../web3-onboard';
+import { setupOnboard } from './setup-onboard';
 import { User } from '../context/AppContext';
 import { OnboardAuthProvider } from './OnboardAuthProvider';
 import { WalletSigner } from './WalletSigner';
