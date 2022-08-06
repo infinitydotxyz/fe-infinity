@@ -6,7 +6,6 @@ import {
   trimLowerCase
 } from '@infinityxyz/lib-frontend/utils';
 import { ReactNode } from 'react';
-import { NextLink } from 'src/components/common';
 import { Web3Provider } from './providers/AbstractProvider';
 
 export const base64Encode = (data: string) => Buffer.from(data).toString('base64');
@@ -191,15 +190,7 @@ export const getChainScannerBase = (chainId?: string): string | null => {
   return null;
 };
 
-export const PleaseConnectMsg = () => (
-  <>
-    Please{' '}
-    <NextLink href="/connect" className="font-bold">
-      connect
-    </NextLink>{' '}
-    your wallet.
-  </>
-);
+export const PleaseConnectMsg = () => <>Please connect your wallet.</>;
 
 export const truncateDecimals = (numStr: string) => {
   return ((numStr ?? '') + ' ').slice(0, numStr.indexOf('.'));
