@@ -4,7 +4,7 @@ import { apiGet } from 'src/utils';
 import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
 import { ScrollLoader } from '../common';
 import { ActivityItem, NftEventRec } from '../asset/activity/activity-item';
-import { useAppContext } from 'src/utils/context/AppContext';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 interface Props {
   collectionAddress?: string;
@@ -19,7 +19,7 @@ export const CollectionActivityFeed = ({
   types = [EventType.NftSale],
   className = ''
 }: Props) => {
-  const { chainId } = useAppContext();
+  const { chainId } = useOnboardContext();
   const [filter] = useState<FeedFilter>({ collectionAddress, tokenId, types });
   // const [filteringTypes, setFilteringTypes] = useState<EventType[]>(types);
 
@@ -130,7 +130,7 @@ export const CollectionActivityFeed = ({
         })}
 
         <ScrollLoader
-          onFetchMore={async () => {
+          onFetchMore={() => {
             fetchActivity(false, cursor);
           }}
         />

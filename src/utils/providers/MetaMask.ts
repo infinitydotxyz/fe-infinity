@@ -54,11 +54,11 @@ export class MetaMask extends AbstractProvider {
     }
   }
 
-  async getAccounts() {
-    return await this._provider.request({ method: 'eth_requestAccounts' });
+  getAccounts(): Promise<any> {
+    return this._provider.request({ method: 'eth_requestAccounts' });
   }
 
-  async getChainId() {
+  async getChainId(): Promise<number> {
     const hexChainId = await this._provider.request({ method: 'eth_chainId' });
     const chainId = parseInt(hexChainId, 16);
     return chainId;

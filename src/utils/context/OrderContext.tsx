@@ -5,6 +5,7 @@ import { toastError, toastWarning } from 'src/components/common';
 import { getEstimatedGasPrice } from '../commonUtils';
 import { DEFAULT_MAX_GAS_PRICE_WEI } from '../constants';
 import { getSignedOBOrder } from '../exchange/orders';
+import { useOnboardContext } from '../OnboardContext/OnboardContext';
 import { fetchOrderNonce, postOrders } from '../orderbookUtils';
 import { secondsPerDay } from '../ui-constants';
 import { useAppContext } from './AppContext';
@@ -120,7 +121,8 @@ export const OrderContextProvider = ({ children }: Props) => {
   const [numItems, setNumItems] = useState<number>(1);
 
   // for executing orders
-  const { showAppError, user, providerManager, chainId } = useAppContext();
+  const { showAppError } = useAppContext();
+  const { getSigner, getEthersProvider, user, chainId } = useOnboardContext();
 
   const isOrderBuilderEmpty = (): boolean => {
     return cartItems.length === 0;
@@ -284,7 +286,7 @@ export const OrderContextProvider = ({ children }: Props) => {
       const orderNonce = await fetchOrderNonce(user.address);
       // sell orders are always in ETH
       const currencyAddress = spec.isSellOrder ? NULL_ADDRESS : getTxnCurrencyAddress(chainId);
-      const gasPrice = await getEstimatedGasPrice(providerManager?.getEthersProvider());
+      const gasPrice = await getEstimatedGasPrice(getEthersProvider());
       const order: OBOrder = {
         id: '',
         chainId: spec.chainId,
@@ -319,11 +321,11 @@ export const OrderContextProvider = ({ children }: Props) => {
       showAppError('You must be logged in to execute an order');
       return false;
     }
-    if (!providerManager) {
-      showAppError('Provider manager not found');
+    const signer = getSigner();
+    if (!signer) {
+      showAppError('signer not found');
       return false;
     }
-    const signer = providerManager.getEthersProvider().getSigner();
     setOrderDrawerOpen(false);
 
     // sign orders

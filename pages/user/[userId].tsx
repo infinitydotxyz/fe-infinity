@@ -3,10 +3,10 @@ import { CenteredContent, PageBox, Spinner } from 'src/components/common';
 import { useFetch, USER_API_END_POINT } from 'src/utils';
 import { UserPage } from 'src/components/user/user-page';
 import { UserProfileDto } from 'src/components/user/user-profile-dto';
-import { useAppContext } from 'src/utils/context/AppContext';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 const UserDetailPage = () => {
-  const { user } = useAppContext();
+  const { user } = useOnboardContext();
   const router = useRouter();
   const { query } = router;
 

@@ -16,11 +16,11 @@ class _UserInfoCache {
     this.getUserInfoAsync(userAddress);
   };
 
-  getUserInfo = async (userAddress: string): Promise<UserProfileDto | undefined> => {
+  getUserInfo = (userAddress: string): Promise<UserProfileDto | undefined> => {
     const userInfo = this.getUserInfoSync(userAddress);
 
     if (userInfo) {
-      return this.cache.get(userAddress);
+      return Promise.resolve(this.cache.get(userAddress));
     }
 
     return this.getUserInfoAsync(userAddress);

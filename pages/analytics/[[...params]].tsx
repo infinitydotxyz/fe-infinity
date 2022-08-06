@@ -16,7 +16,7 @@ import {
 import { truncateDecimals } from 'src/utils';
 import { useFetch } from 'src/utils/apiUtils';
 import { MISSING_IMAGE_URL, ITEMS_PER_PAGE } from 'src/utils/constants';
-import { useAppContext } from 'src/utils/context/AppContext';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { drawerPx } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
@@ -40,7 +40,7 @@ type StatType = {
 
 export const Analytics = () => {
   const router = useRouter();
-  const { user, chainId } = useAppContext();
+  const { user, chainId } = useOnboardContext();
   const connected = user?.address ? true : false;
   const [page, setPage] = useState(router.query.params?.[0] ? router.query.params?.[0] : 'trending');
   const [interval, setInterval] = useState(router.query.params?.[1] ? router.query.params?.[1] : 'weekly');

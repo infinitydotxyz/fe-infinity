@@ -10,9 +10,9 @@ import {
   UserProfileOrderFilterPanel
 } from '../filter/user-profile-order-filter-panel';
 import { cancelAllOrders } from 'src/utils/exchange/orders';
-import { useAppContext } from 'src/utils/context/AppContext';
 import { fetchOrderNonce } from 'src/utils/orderbookUtils';
 import { useDrawerContext } from 'src/utils/context/DrawerContext';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 type Query = {
   limit: number;
@@ -32,7 +32,8 @@ interface Props {
 }
 
 export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
-  const { providerManager, chainId, user, waitForTransaction } = useAppContext();
+  const { user, chainId, waitForTransaction, getSigner } = useOnboardContext();
+
   const { fulfillDrawerParams, cancelDrawerParams } = useDrawerContext();
   const [data, setData] = useState<SignedOBOrder[]>([]);
   const [isFetching, setIsFetching] = useState(false);
@@ -147,7 +148,7 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
           disabled={isCancellingAll}
           onClick={async () => {
             try {
-              const signer = providerManager?.getEthersProvider().getSigner();
+              const signer = getSigner();
 
               if (signer && user) {
                 setIsCancellingAll(true);

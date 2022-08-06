@@ -14,11 +14,13 @@ import {
 } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 import { useRouter } from 'next/router';
-import { useAppContext } from 'src/utils/context/AppContext';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 export const Navbar = () => {
   const router = useRouter();
-  const { user, signOut } = useAppContext();
+
+  const { signOut, user } = useOnboardContext();
+
   const connected = user?.address ? true : false;
 
   const content = {

@@ -95,7 +95,7 @@ export const OrderbookContent = ({ className }: { className?: string }): JSX.Ele
 interface Props2 {
   orderList: SignedOBOrder[];
   isLoading: boolean;
-  fetchMore: () => Promise<void>;
+  fetchMore: () => void;
   showFilters?: boolean;
   hasMoreOrders?: boolean;
   hasNoData?: boolean;

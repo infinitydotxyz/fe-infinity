@@ -5,11 +5,11 @@ import { UnstakeTokensModal } from 'src/components/rewards/unstake-tokens';
 import { UserProfileDto } from 'src/components/user/user-profile-dto';
 import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
 import { isProd, useFetch } from 'src/utils'; // todo: adi remove isProd once curation is ready
-import { useAppContext } from 'src/utils/context/AppContext';
 import { numberFormatter } from 'src/utils/number-formatter';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 const RewardsPage = () => {
-  const { user } = useAppContext();
+  const { user } = useOnboardContext();
   const [showStakeTokensModal, setShowStakeTokensModal] = useState(false);
   const [showUnstakeTokensModal, setShowUnstakeTokensModal] = useState(false);
   const { result: quota, mutate: mutateQuota } = useUserCurationQuota();

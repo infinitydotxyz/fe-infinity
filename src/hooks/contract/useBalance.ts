@@ -1,6 +1,6 @@
 import { BigNumber, utils } from 'ethers';
 import { useEffect, useState } from 'react';
-import { useAppContext } from 'src/utils/context/AppContext';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 /**
  * Utility hook to call any contract method with a signature like `balanceOf(address?: string): BigNumber`.
@@ -10,7 +10,8 @@ import { useAppContext } from 'src/utils/context/AppContext';
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function useBalance(contractMethod: any, address?: string) {
-  const { user, userReady } = useAppContext();
+  const { user } = useOnboardContext();
+
   const [balance, setBalance] = useState(0);
 
   useEffect(() => {
@@ -22,7 +23,7 @@ export function useBalance(contractMethod: any, address?: string) {
         })
         .catch(console.error);
     }
-  }, [userReady]);
+  }, [user]);
 
   return { balance };
 }

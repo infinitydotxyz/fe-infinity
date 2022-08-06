@@ -7,8 +7,8 @@ import { HiOutlineExternalLink } from 'react-icons/hi';
 import { apiDelete, apiGet, apiPost, nFormatter } from 'src/utils';
 import { Chip, Spinner, toastError } from 'src/components/common';
 import { useOrderContext } from 'src/utils/context/OrderContext';
-import { useAppContext } from 'src/utils/context/AppContext';
 import { indexCollection } from 'src/utils/orderbookUtils';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 interface Props {
   collection?: BaseCollection | null;
@@ -16,7 +16,8 @@ interface Props {
 }
 
 export const StatsChips = ({ collection, currentStatsData }: Props) => {
-  const { user, checkSignedIn, chainId } = useAppContext();
+  const { user, chainId, checkSignedIn } = useOnboardContext();
+
   const [isFollowing, setIsFollowing] = useState(false);
   const [editDisabled, setEditDisabled] = useState(true);
   const [followingLoading, setFollowingLoading] = useState(false);
@@ -189,7 +190,7 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
 
       <Chip
         content={<>Reindex</>}
-        onClick={async () => indexCollection(true, chainId, collection?.address ?? '', collection?.slug ?? '')}
+        onClick={() => indexCollection(true, chainId, collection?.address ?? '', collection?.slug ?? '')}
       />
 
       <Chip

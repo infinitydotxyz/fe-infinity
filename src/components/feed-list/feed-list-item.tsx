@@ -2,13 +2,13 @@ import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { BsChatRight } from 'react-icons/bs';
 import { TbArrowBarUp } from 'react-icons/tb';
 import { Button, EZImage, NextLink, Spacer, SVG } from 'src/components/common';
-import { useAppContext } from 'src/utils/context/AppContext';
 import { NftEventRec } from '../asset/activity/activity-item';
 import { addUserLike } from 'src/utils/firestore/firestoreUtils';
 import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io';
 import { FeedListTableItem } from './feed-list-table-item';
 import { useState } from 'react';
 import { timeAgo } from 'src/utils';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 interface Props {
   activity: NftEventRec;
@@ -25,7 +25,7 @@ export const FeedListItem = ({
   collectionSlug,
   collectionProfileImage
 }: Props) => {
-  const { user } = useAppContext();
+  const { user } = useOnboardContext();
   const [likedCache, setLikedCache] = useState<Map<string, boolean>>(new Map());
 
   const typeName = (type: string) => {

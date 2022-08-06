@@ -23,7 +23,7 @@ export const DebouncedTextInputBox = ({
 }: Props) => {
   const [query, setQuery] = useState(value);
 
-  const handleChange = async (value: string) => {
+  const handleChange = (value: string) => {
     setQuery(value);
     setQueryDebounced(value);
   };

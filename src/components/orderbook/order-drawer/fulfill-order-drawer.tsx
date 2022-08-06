@@ -8,7 +8,6 @@ import {
 } from '@infinityxyz/lib-frontend/types/core';
 import { Button, Spacer, toastSuccess, toastError, Divider, toastInfo, SVG } from 'src/components/common';
 import { ellipsisAddress, extractErrorMsg } from 'src/utils';
-import { useAppContext } from 'src/utils/context/AppContext';
 import { canTakeMultipleOneOrders, takeMultipleOneOrders, takeOrders } from 'src/utils/exchange/orders';
 import { drawerPx, iconButtonStyle } from 'src/utils/ui-constants';
 import { Drawer } from '../../common/drawer';
@@ -17,6 +16,7 @@ import { WaitingForTxModal } from './waiting-for-tx-modal';
 import { useEffect, useState } from 'react';
 import { orderDetailKey, OrderDetailPicker } from '../order-detail-picker';
 import { twMerge } from 'tailwind-merge';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 interface Props {
   title: string;
@@ -29,7 +29,8 @@ interface Props {
 }
 
 const FulfillOrderDrawer = ({ open, onClose, orders, onClickRemove, onSubmitDone, title, submitTitle }: Props) => {
-  const { providerManager, chainId, waitForTransaction } = useAppContext();
+  const { getSigner, chainId, waitForTransaction } = useOnboardContext();
+
   const [readyOrders, setReadyOrders] = useState<ReadyOrders>(new ReadyOrders([]));
 
   useEffect(() => {
@@ -60,7 +61,7 @@ const FulfillOrderDrawer = ({ open, onClose, orders, onClickRemove, onSubmitDone
 
   const onClickFulfill = async () => {
     try {
-      const signer = providerManager?.getEthersProvider().getSigner();
+      const signer = getSigner();
       if (signer) {
         const chainOrders: ChainOBOrder[] = [];
         const chainNFTs: ChainNFTs[][] = [];

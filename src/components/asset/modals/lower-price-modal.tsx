@@ -17,8 +17,8 @@ import {
   INFINITY_ROYALTY_PCT,
   MISSING_IMAGE_URL
 } from 'src/utils';
-import { useAppContext } from 'src/utils/context/AppContext';
 import { getSignedOBOrder } from 'src/utils/exchange/orders';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { fetchUserSignedOBOrder, postOrders } from 'src/utils/orderbookUtils';
 
 interface Props {
@@ -30,7 +30,7 @@ interface Props {
 }
 
 export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth, onDone }: Props) => {
-  const { user, chainId, providerManager } = useAppContext();
+  const { user, chainId, getEthersProvider, getSigner } = useOnboardContext();
   const [orderDetails, setOrderDetails] = useState<SignedOBOrder | null>(null);
   const [price, setPrice] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -93,9 +93,9 @@ export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth, onDone }:
 
         try {
           const signedOrders: SignedOBOrder[] = [];
-          const signer = providerManager?.getEthersProvider().getSigner();
+          const signer = getSigner();
           setIsSubmitting(true);
-          const gasPrice = await getEstimatedGasPrice(providerManager?.getEthersProvider());
+          const gasPrice = await getEstimatedGasPrice(getEthersProvider());
           if (signer) {
             // keep the last Order & set the New Price:
             const order: OBOrder = {

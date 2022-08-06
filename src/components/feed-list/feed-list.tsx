@@ -5,10 +5,10 @@ import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
 import { Button, ScrollLoader, Spacer } from '../common';
 // import { CommentPanel } from '../feed/comment-panel';
 import { NftEventRec } from '../asset/activity/activity-item';
-import { useAppContext } from 'src/utils/context/AppContext';
 import { FeedListItem } from './feed-list-item';
 import { FilterButton } from './filter-button';
 import { CommentPanel } from './comment-panel';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 interface Props {
   collectionAddress: string;
@@ -29,7 +29,7 @@ export const FeedList = ({
   collectionProfileImage,
   className = ''
 }: Props) => {
-  const { chainId } = useAppContext();
+  const { chainId } = useOnboardContext();
   const [filter, setFilter] = useState<FeedFilter>({ collectionAddress, tokenId, types });
   const [commentPanelEvent, setCommentPanelEvent] = useState<NftEventRec | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -144,7 +144,7 @@ export const FeedList = ({
         })}
 
         <ScrollLoader
-          onFetchMore={async () => {
+          onFetchMore={() => {
             fetchActivity(false, cursor);
           }}
         />

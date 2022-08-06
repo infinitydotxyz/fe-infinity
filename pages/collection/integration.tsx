@@ -3,11 +3,12 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { PageBox } from 'src/components/common';
 import { apiPut } from 'src/utils';
-import { useAppContext } from 'src/utils/context/AppContext';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 const DiscordIntegration = () => {
   const { query } = useRouter();
-  const { user, chainId } = useAppContext();
+  const { user, chainId } = useOnboardContext();
+
   const [status, setStatus] = useState('Loading');
 
   const integrationType = query.type as string;

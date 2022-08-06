@@ -2,7 +2,7 @@ import { CuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto/collec
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
-import { useAppContext } from 'src/utils/context/AppContext';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { mutate } from 'swr';
 import { Field, FieldProps } from '../analytics/field';
 import { Button } from '../common';
@@ -50,7 +50,7 @@ export type CurationRowProps = {
 
 export const CurationRow: React.FC<CurationRowProps> = ({ collection, index, onClick, votes }) => {
   const [isStakeModalOpen, setIsStakeModalOpen] = useState(false);
-  const { user, chainId } = useAppContext();
+  const { user, chainId } = useOnboardContext();
 
   // TODO: move vote modal to table component (row should be representational component only)
 

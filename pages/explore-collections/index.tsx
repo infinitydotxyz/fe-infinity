@@ -6,7 +6,7 @@ const ExplorePage = () => {
   const [query, setQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
 
-  const handleChange = async (value: string) => {
+  const handleChange = (value: string) => {
     setQuery(value);
     setQueryDebounced(value);
   };

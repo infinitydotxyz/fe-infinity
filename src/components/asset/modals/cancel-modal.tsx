@@ -3,8 +3,8 @@ import { SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
 import { Checkbox, EthPrice, Modal, Spinner, toastError, toastInfo, toastSuccess } from 'src/components/common';
 import { apiGet, ellipsisAddress, extractErrorMsg } from 'src/utils';
 import { OrderbookItem } from 'src/components/orderbook/orderbook-list/orderbook-item';
-import { useAppContext } from 'src/utils/context/AppContext';
 import { cancelMultipleOrders } from 'src/utils/exchange/orders';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 interface Props {
   isOpen: boolean;
@@ -15,7 +15,8 @@ interface Props {
 }
 
 export const CancelModal = ({ isOpen, onClose, onDone, collectionAddress, token }: Props) => {
-  const { user, providerManager, chainId, waitForTransaction } = useAppContext();
+  const { getSigner, user, chainId, waitForTransaction } = useOnboardContext();
+
   const [selectedListings, setSelectedListings] = useState<number[]>([]);
   const [listings, setListings] = useState<SignedOBOrder[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -63,7 +64,7 @@ export const CancelModal = ({ isOpen, onClose, onDone, collectionAddress, token 
 
   const onOKButton = async () => {
     try {
-      const signer = providerManager?.getEthersProvider().getSigner();
+      const signer = getSigner();
       if (signer) {
         setIsSubmitting(true);
         const { hash } = await cancelMultipleOrders(signer, chainId, selectedListings);

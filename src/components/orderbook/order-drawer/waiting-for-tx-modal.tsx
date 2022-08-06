@@ -2,7 +2,7 @@ import { TransactionReceipt } from '@ethersproject/abstract-provider';
 import { useEffect, useState } from 'react';
 import { Button, Modal, Spinner } from 'src/components/common';
 import { ellipsisAddress, ETHERSCAN_BASE_URL } from 'src/utils';
-import { useAppContext } from 'src/utils/context/AppContext';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 interface Props {
   title: string;
@@ -11,13 +11,14 @@ interface Props {
 }
 
 export const WaitingForTxModal = ({ title, txHash, onClose }: Props) => {
-  const { providerManager } = useAppContext();
+  const { getEthersProvider } = useOnboardContext();
+
   const [transactionReceipt, setTransactionReceipt] = useState<TransactionReceipt | undefined>(undefined);
 
   const waitForTransaction = async () => {
     console.log('waitForTransaction', txHash);
     if (txHash) {
-      const provider = providerManager?.getEthersProvider();
+      const provider = getEthersProvider();
       const receipt = await provider?.waitForTransaction(txHash);
       console.log('waitForTransaction result', receipt);
       setTransactionReceipt(receipt);

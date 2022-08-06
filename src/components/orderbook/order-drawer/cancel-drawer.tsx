@@ -1,8 +1,8 @@
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { Button, SVG, Spacer, toastSuccess, toastError, Divider, toastInfo } from 'src/components/common';
 import { ellipsisAddress, extractErrorMsg } from 'src/utils';
-import { useAppContext } from 'src/utils/context/AppContext';
 import { cancelMultipleOrders } from 'src/utils/exchange/orders';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { drawerPx, iconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { Drawer } from '../../common/drawer';
@@ -16,11 +16,11 @@ interface Props {
 }
 
 export const CancelDrawer = ({ open, onClose, orders, onClickRemove }: Props) => {
-  const { providerManager, chainId, waitForTransaction } = useAppContext();
+  const { getSigner, chainId, waitForTransaction } = useOnboardContext();
 
   const doCancel = async () => {
     try {
-      const signer = providerManager?.getEthersProvider().getSigner();
+      const signer = getSigner();
       if (signer) {
         const nonces = orders.map((order) => order.nonce);
         const { hash } = await cancelMultipleOrders(signer, chainId, nonces);

@@ -4,8 +4,8 @@ import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { useState } from 'react';
 import { Button, Divider, EZImage, Spacer, SVG, TextInputBox, toastError, toastWarning } from 'src/components/common';
 import { extractErrorMsg } from 'src/utils';
-import { useAppContext } from 'src/utils/context/AppContext';
 import { sendMultipleNfts } from 'src/utils/exchange/orders';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { drawerPx, iconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 // import { iconButtonStyle } from 'src/utils/ui-constants';
@@ -23,13 +23,13 @@ interface Props {
 
 export const SendNFTsDrawer = ({ open, onClose, nftsForTransfer, onClickRemove, onSubmit }: Props) => {
   const [address, setAddress] = useState('');
-  const { providerManager, chainId } = useAppContext();
+  const { chainId, getEthersProvider, getSigner } = useOnboardContext();
 
   const getFinalToAddress = async (addr: string) => {
     let finalAddress: string | null = addr;
-    if (addr.endsWith('.eth') && providerManager) {
-      const provider = providerManager.getEthersProvider();
-      finalAddress = await provider.resolveName(addr);
+    if (addr.endsWith('.eth')) {
+      const provider = getEthersProvider();
+      finalAddress = (await provider?.resolveName(addr)) ?? '';
     }
     if (finalAddress) {
       return getAddress(finalAddress);
@@ -65,7 +65,7 @@ export const SendNFTsDrawer = ({ open, onClose, nftsForTransfer, onClickRemove, 
     try {
       const toAddress = await getFinalToAddress(address);
       if (toAddress) {
-        const signer = providerManager?.getEthersProvider().getSigner();
+        const signer = getSigner();
         if (signer) {
           const result = await sendMultipleNfts(signer, chainId, orderItems, toAddress);
           if (result.hash) {
