@@ -1,12 +1,15 @@
 import { OBOrder, OBOrderItem } from '@infinityxyz/lib-frontend/types/core';
 import { OBTokenInfoDto } from '@infinityxyz/lib-frontend/types/dto/orders';
+import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 
 import { useRouter } from 'next/router';
 import { ReactNode } from 'react';
 import { EZImage, NextLink, SVG } from 'src/components/common';
+import { ENS_ADDRESS } from 'src/utils';
+import { twMerge } from 'tailwind-merge';
 // import ReactTooltip from 'react-tooltip';
 
-type Props4 = {
+type Props1 = {
   content?: ReactNode;
   title?: string;
   order: OBOrder;
@@ -15,7 +18,7 @@ type Props4 = {
   onClick?: () => void;
 };
 
-export const OrderbookItem = ({ title, content, nameItem, order, onClick }: Props4): JSX.Element => {
+export const OrderbookItem = ({ title, content, nameItem, order, onClick }: Props1): JSX.Element => {
   const router = useRouter();
 
   if (nameItem) {
@@ -37,7 +40,6 @@ export const OrderbookItem = ({ title, content, nameItem, order, onClick }: Prop
         );
       } else {
         // multiple items from one collection
-
         return (
           <SingleCollectionCell
             order={order}
@@ -56,7 +58,7 @@ export const OrderbookItem = ({ title, content, nameItem, order, onClick }: Prop
 
     // multiple collections
     if (order.nfts.length > 1) {
-      return <MultiCollectionCell nfts={order.nfts} />;
+      return <MultiCollectionCell nfts={order.nfts} onClick={onClick} />;
     }
   }
 
@@ -68,14 +70,16 @@ export const OrderbookItem = ({ title, content, nameItem, order, onClick }: Prop
   );
 };
 
-type MultiCollectionCellProps = {
+// ==================================================================
+
+type Props2 = {
   nfts: OBOrderItem[];
   onClick?: () => void;
 };
 
-const MultiCollectionCell = ({ nfts, onClick }: MultiCollectionCellProps) => {
+const MultiCollectionCell = ({ nfts, onClick }: Props2) => {
   return (
-    <div className="flex gap-2 items-center" onClick={onClick}>
+    <div className="flex gap-2 items-center hover:cursor-pointer" onClick={onClick}>
       <div className="flex -space-x-8 overflow-hidden">
         {nfts.map((nft: OBOrderItem) => {
           return (
@@ -95,7 +99,9 @@ const MultiCollectionCell = ({ nfts, onClick }: MultiCollectionCellProps) => {
   );
 };
 
-type SingleCollectionCellProps = {
+// ==================================================================
+
+type Props3 = {
   order?: OBOrder;
   image: string;
   title: string;
@@ -117,7 +123,7 @@ const SingleCollectionCell = ({
   count = 0,
   nfts,
   onClick
-}: SingleCollectionCellProps) => {
+}: Props3) => {
   const tokenNames: string[] = [];
 
   if (nfts && nfts.length && nfts[0].tokens) {
@@ -126,6 +132,13 @@ const SingleCollectionCell = ({
         tokenNames.push(`Token: ${token.tokenId}`);
       }
     }
+  }
+
+  let tokenId = token?.tokenId ?? '';
+  // special case for ENS
+  const collectionAddress = trimLowerCase(orderNft?.collectionAddress ?? '');
+  if (collectionAddress === ENS_ADDRESS && token?.tokenName) {
+    tokenId = token?.tokenName;
   }
 
   return (
@@ -137,7 +150,7 @@ const SingleCollectionCell = ({
             onClick && onClick();
           }}
         >
-          <EZImage className="h-14 w-14 rounded-full overflow-clip" src={image} />
+          <EZImage className="h-14 w-14 rounded-2xl overflow-clip" src={image} />
 
           {count > 1 && (
             <div className="text-xs text-center pt-1 absolute top-0 right-0 block h-6 w-6 transform -translate-y-1/2 translate-x-1/2 rounded-full bg-white">
@@ -154,8 +167,8 @@ const SingleCollectionCell = ({
             className="font-bold whitespace-pre-wrap flex items-center"
             title={title}
           >
-            {title}
-            {orderNft?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1" style={{ width: 24 }} /> : null}
+            <div>{title}</div>
+            {orderNft?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 mx-1 shrink-0" /> : null}
           </NextLink>
         ) : (
           <NextLink
@@ -163,8 +176,8 @@ const SingleCollectionCell = ({
             className="font-bold whitespace-pre-wrap flex items-center"
             title={title}
           >
-            {title}
-            {orderNft?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1" style={{ width: 24 }} /> : null}
+            <div>{title}</div>
+            {orderNft?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 mx-1 shrink-0" /> : null}
           </NextLink>
         )}
 
@@ -183,18 +196,94 @@ const SingleCollectionCell = ({
           </div>
         ) : (
           <>
-            {token && (
+            {tokenId && (
               <NextLink
-                href={`/asset/1/${orderNft?.collectionAddress}/${token.tokenId}`}
+                href={`/asset/1/${orderNft?.collectionAddress}/${token?.tokenId}`}
                 className="whitespace-pre-wrap text-gray-400"
                 title={token?.tokenId}
               >
-                {token?.tokenId}
+                {tokenId}
               </NextLink>
             )}
           </>
         )}
       </div>
+    </div>
+  );
+};
+
+// ==================================================================
+// not used, but keeping for possible future
+
+type Props4 = {
+  nfts: OBOrderItem[];
+  selection: Map<string, boolean>;
+  onChange: (selection: Map<string, boolean>) => void;
+  className?: string;
+};
+
+export const NFTPicker = ({ nfts, selection, onChange, className = '' }: Props4) => {
+  let firstItem = '';
+
+  return (
+    <div className={twMerge('flex flex-wrap space-y-8', className)}>
+      <div>Pick one: </div>
+      {nfts.map((nft) => {
+        return nft.tokens.map((token) => {
+          const key = `${nft.collectionAddress}:${token.tokenId}`;
+
+          if (!firstItem) {
+            firstItem = key;
+          }
+
+          const checked = selection.get(key) ?? false;
+
+          return (
+            <SelectableImage
+              key={key}
+              name={token.tokenId}
+              imageUrl={token.tokenImage}
+              checked={checked}
+              onChange={(checked) => {
+                const sel = new Map<string, boolean>();
+
+                if (checked) {
+                  sel.set(key, true);
+                } else {
+                  // select first one?
+                  sel.set(firstItem, true);
+                }
+
+                onChange(sel);
+              }}
+            />
+          );
+        });
+      })}
+    </div>
+  );
+};
+
+// ====================================================================
+
+interface Props5 {
+  checked: boolean;
+  imageUrl: string;
+  name: string;
+  onChange: (checked: boolean) => void;
+}
+
+const SelectableImage = ({ name, checked, imageUrl, onChange }: Props5) => {
+  return (
+    <div onClick={() => onChange(!checked)} className="flex flex-col items-center">
+      <EZImage
+        className={twMerge(
+          'h-14 w-14 rounded-2xl overflow-clip border-4',
+          checked ? ' border-blue-500' : 'border-transparent'
+        )}
+        src={imageUrl}
+      />
+      <div className={twMerge('mt-1 px-2', checked ? 'bg-blue-500 rounded-2xl text-white' : '')}>{name}</div>
     </div>
   );
 };

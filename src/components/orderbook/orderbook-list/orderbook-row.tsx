@@ -3,22 +3,23 @@ import { ChainId, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import moment from 'moment';
 import { Button, EthPrice } from 'src/components/common';
 import { ellipsisAddress, numStr, shortDate } from 'src/utils';
-import { useAppContext } from 'src/utils/context/AppContext';
-import { useOrderContext } from 'src/utils/context/OrderContext';
-import { checkOffersToUser, getOrderType } from 'src/utils/marketUtils';
+import { OrderCartItem, useOrderContext } from 'src/utils/context/OrderContext';
+import { checkOffersToUser, getOrderType } from 'src/utils/orderbookUtils';
 import { DataColumn, defaultDataColumns } from './data-columns';
 import { OrderbookItem } from './orderbook-item';
 import { OrderDetailModal } from '../OrderDetailModal';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
-type OrderbookRowProps = {
+type Props = {
   order: SignedOBOrder;
   isFilterOpen: boolean;
+  onClickActionBtn: (order: SignedOBOrder, checked: boolean) => void;
 };
 
-export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.Element => {
-  const { user } = useAppContext();
-  const { checkSignedIn } = useAppContext();
-  const { setPrice, addCartItem, setOrderDrawerOpen } = useOrderContext();
+export const OrderbookRow = ({ order, onClickActionBtn, isFilterOpen }: Props) => {
+  const { user, checkSignedIn } = useOnboardContext();
+
+  const { addCartItem, setOrderDrawerOpen } = useOrderContext();
   const [selectedOrder, setSelectedOrder] = useState<SignedOBOrder | null>(null);
 
   const valueDiv = (dataColumn: DataColumn) => {
@@ -79,59 +80,112 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
     }
   });
 
+  const getCartItem = (order: SignedOBOrder): OrderCartItem => {
+    const cartItem: OrderCartItem = {
+      chainId: order?.chainId as ChainId,
+      isSellOrder: order?.isSellOrder ?? false
+    };
+
+    // one collection
+    if (order.nfts.length === 1) {
+      const nft = order.nfts[0];
+      // one item from one collection
+      if (nft.tokens.length === 1) {
+        const token = nft.tokens[0];
+        cartItem.tokenId = token.tokenId;
+        cartItem.tokenName = token.tokenName;
+        cartItem.tokenImage = token.tokenImage;
+        cartItem.collectionName = nft.collectionName;
+        cartItem.collectionAddress = nft.collectionAddress;
+        cartItem.collectionImage = nft.collectionImage;
+        cartItem.collectionSlug = nft.collectionSlug;
+        cartItem.attributes = token.attributes;
+        cartItem.hasBlueCheck = nft.hasBlueCheck;
+      } else {
+        // multiple items from one collection or no tokens specified
+        cartItem.collectionName = nft.collectionName;
+        cartItem.collectionAddress = nft.collectionAddress;
+        cartItem.collectionImage = nft.collectionImage;
+        cartItem.collectionSlug = nft.collectionSlug;
+        cartItem.hasBlueCheck = nft.hasBlueCheck;
+      }
+    }
+
+    // multiple collections
+    if (order.nfts.length > 1) {
+      // todo: steve handle this better
+      const nft = order.nfts[0];
+      cartItem.collectionName = `${order.nfts.length} Collections`;
+      cartItem.collectionImage = nft.collectionImage;
+    }
+
+    return cartItem;
+  };
+
+  const onClickEdit = (order: SignedOBOrder) => {
+    addCartItem(getCartItem(order));
+    setOrderDrawerOpen(true);
+  };
+
   const onClickBidHigher = (order: SignedOBOrder) => {
     // add to Cart as a New Buy Order:
+    // todo: steve - addCartItem needs to know whether order is a single collection single nft order
+    // or single collection multi nft order  or a multi-collection order for proper image display
+    const cartItem = getCartItem(order);
     addCartItem({
-      chainId: order?.chainId as ChainId,
-      collectionName: order?.nfts[0].collectionName ?? '',
-      collectionAddress: order?.nfts[0].collectionAddress ?? '',
-      collectionImage: order?.nfts[0].collectionImage ?? '',
-      collectionSlug: order?.nfts[0].collectionSlug ?? '',
-      tokenImage: order?.nfts[0].tokens[0].tokenImage ?? '',
-      tokenName: order?.nfts[0].tokens[0].tokenName ?? '',
-      tokenId: order?.nfts[0].tokens[0].tokenId ?? '-1',
-      isSellOrder: false,
-      attributes: []
+      ...cartItem,
+      isSellOrder: false
     });
     setOrderDrawerOpen(true);
   };
 
-  const onClickBuySell = async (order: SignedOBOrder, isSellOrder: boolean) => {
+  const onClickBuySell = (order: SignedOBOrder) => {
     if (!checkSignedIn()) {
       return;
     }
-    // - direct Buy/Sell:
-    // try {
-    //   const signer = providerManager?.getEthersProvider().getSigner();
-    //   if (signer) {
-    //     await takeMultiplOneOrders(signer, chainId, order.signedOrder);
-    //     toastSuccess('Order sent for execution');
-    //   } else {
-    //     throw 'Signer is null';
-    //   }
-    // } catch (err) {
-    //   const errMsg = extractErrorMsg(err);
-    //   toastError(errMsg);
-    // }
-    setPrice(`${order.startPriceEth}`);
-    addCartItem({
-      chainId: order?.chainId as ChainId,
-      collectionName: order?.nfts[0].collectionName ?? '',
-      collectionAddress: order?.nfts[0].collectionAddress ?? '',
-      collectionImage: order?.nfts[0].collectionImage ?? '',
-      collectionSlug: order?.nfts[0].collectionSlug ?? '',
-      tokenImage: order?.nfts[0].tokens[0].tokenImage ?? '',
-      tokenName: order?.nfts[0].tokens[0].tokenName ?? '',
-      tokenId: order?.nfts[0].tokens[0].tokenId ?? '-1',
-      isSellOrder,
-      attributes: []
-    });
+
+    onClickActionBtn(order, true);
   };
 
   const isOwner = order.makerAddress === user?.address;
 
+  const actionButton = () => {
+    if (isOwner) {
+      return (
+        <Button className="w-32" onClick={() => onClickEdit(order)}>
+          Edit
+        </Button>
+      );
+    }
+    const isOfferToUser = checkOffersToUser(order, user);
+    if (order.isSellOrder) {
+      // Sell Order (Listing)
+      return (
+        <Button className="w-32" onClick={() => onClickBuySell(order)}>
+          Buy
+        </Button>
+      );
+    } else if (isOfferToUser === true) {
+      // Buy Order (Offer) => show Sell button (if offer made to current user)
+      return (
+        <Button className="w-32" onClick={() => onClickBuySell(order)}>
+          Sell
+        </Button>
+      );
+    } else if (isOfferToUser === false) {
+      return (
+        <Button className="w-32" onClick={() => onClickBidHigher(order)}>
+          Bid higher
+        </Button>
+      );
+    } else {
+      return null;
+    }
+  };
+
   return (
     <div className="rounded-3xl mb-3 p-8 w-full bg-gray-100">
+      {/* for larger screen - show row summary: */}
       <div className="items-center w-full hidden lg:grid" style={{ gridTemplateColumns: gridTemplate }}>
         {defaultDataColumns(order).map((data) => {
           const content = valueDiv(data);
@@ -139,37 +193,13 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
           const title = data.name;
 
           if (data.field === 'buyOrSell') {
-            if (isOwner) {
-              return null;
-            }
-            const isOfferToUser = checkOffersToUser(order, user);
-            if (order.isSellOrder) {
-              // Sell Order (Listing)
-              return (
-                <Button className="w-32" key={`${order.id} ${data.field}`} onClick={() => onClickBuySell(order, false)}>
-                  Buy
-                </Button>
-              );
-            } else if (isOfferToUser === true) {
-              // Buy Order (Offer) => show Sell button (if offer made to current user)
-              return (
-                <Button className="w-32" key={`${order.id} ${data.field}`} onClick={() => onClickBuySell(order, true)}>
-                  Sell
-                </Button>
-              );
-            } else if (isOfferToUser === false) {
-              return (
-                <Button className="w-32" key={`${order.id} ${data.field}`} onClick={() => onClickBidHigher(order)}>
-                  Bid higher
-                </Button>
-              );
-            } else {
-              return null;
-            }
+            return <div key={`${order.id} ${data.field}`}>{actionButton()}</div>;
           }
+
           if (isFilterOpen === true && (data.name === 'From' || data.name === 'Date')) {
             return null;
           }
+
           return (
             <OrderbookItem
               nameItem={data.type === 'Name'}
@@ -191,7 +221,12 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
       <div className="flex items-center w-full lg:hidden">
         <div className="flex flex-col w-full">
           <div className="mr-4">
-            <OrderbookItem nameItem={true} key={`${order.id} ${order.chainId}`} order={order} />
+            <OrderbookItem
+              nameItem={true}
+              key={`${order.id} ${order.chainId}`}
+              order={order}
+              onClick={() => setSelectedOrder(order)}
+            />
           </div>
           <div className="flex flex-col">
             <div>{order.isSellOrder ? 'Listing' : 'Offer'}</div>
@@ -207,7 +242,7 @@ export const OrderbookRow = ({ order, isFilterOpen }: OrderbookRowProps): JSX.El
           </div>
         </div>
         <div className="text-right">
-          <Button>{order.isSellOrder ? 'Buy' : 'Sell'}</Button>
+          {actionButton()}
 
           <div>{moment(order.startTimeMs).fromNow()}</div>
           <div>Expiry: {shortDate(new Date(order.endTimeMs))}</div>

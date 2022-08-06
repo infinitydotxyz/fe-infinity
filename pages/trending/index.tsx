@@ -2,17 +2,7 @@ import { ChainId, Collection, CollectionPeriodStatsContent } from '@infinityxyz/
 import { useRouter } from 'next/router';
 import { parse } from 'query-string';
 import { Fragment, useEffect, useState } from 'react';
-import {
-  Button,
-  Dropdown,
-  EthPrice,
-  EZImage,
-  NextLink,
-  PageBox,
-  SVG,
-  ToggleTab,
-  useToggleTab
-} from 'src/components/common';
+import { Button, EthPrice, EZImage, NextLink, PageBox, SVG, ToggleTab, useToggleTab } from 'src/components/common';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import useScreenSize from 'src/hooks/useScreenSize';
 import { apiGet, formatNumber, ITEMS_PER_PAGE, nFormatter } from 'src/utils';
@@ -107,9 +97,9 @@ const TrendingPage = () => {
   const onClickBuy = (collection: Collection) => {
     addCartItem({
       chainId: collection.chainId as ChainId,
-      collectionName: collection.metadata.name ?? '',
+      collectionName: collection.metadata?.name ?? '',
       collectionAddress: collection.address ?? '',
-      collectionImage: collection.metadata.profileImage ?? '',
+      collectionImage: collection.metadata?.profileImage ?? '',
       collectionSlug: collection?.slug ?? '',
       isSellOrder: false
     });
@@ -126,26 +116,6 @@ const TrendingPage = () => {
           selected={selected}
           onChange={onChangeToggleTab}
         />
-
-        <div className="space-x-2">
-          <Dropdown
-            label={queryBy === 'by_sales_volume' ? 'Sort by Volume' : 'Sort by Avg. Price'}
-            items={[
-              {
-                label: 'Volume',
-                onClick: () => {
-                  onClickQueryBy('by_sales_volume');
-                }
-              },
-              {
-                label: 'Avg. Price',
-                onClick: () => {
-                  onClickQueryBy('by_avg_price');
-                }
-              }
-            ]}
-          />
-        </div>
       </div>
 
       <div className="space-y-4 mt-8">
@@ -161,7 +131,7 @@ const TrendingPage = () => {
           return (
             <div key={coll.address} className="bg-gray-100 px-10 h-[110px] rounded-3xl flex items-center font-heading">
               <NextLink href={`/collection/${coll?.slug}`}>
-                <EZImage className="w-16 h-16 rounded-full overflow-clip" src={coll?.metadata?.profileImage} />
+                <EZImage className="w-16 h-16 rounded-2xl overflow-clip" src={coll?.metadata?.profileImage} />
               </NextLink>
 
               <div className="flex justify-between items-center w-full ml-6">
@@ -169,8 +139,7 @@ const TrendingPage = () => {
                   <NextLink href={`/collection/${coll?.slug}`} className="truncate">
                     {coll?.metadata?.name}
                   </NextLink>
-                  {/* using inline here (className will show the bluechecks in different sizes for smaller screen) */}
-                  {coll?.hasBlueCheck && <SVG.blueCheck className="ml-1.5" style={{ minWidth: 16, maxWidth: 16 }} />}
+                  {coll?.hasBlueCheck && <SVG.blueCheck className="ml-1.5 shrink-0 w-4 h-4" />}
                 </div>
 
                 {isDesktop ? (

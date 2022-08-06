@@ -1,9 +1,10 @@
 import { utils } from 'ethers';
-import { useAppContext } from 'src/utils/context/AppContext';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { useStakerContract } from './useStakerContract';
 
-export function useStake() {
-  const { user } = useAppContext();
+export function useStakerStake() {
+  const { user } = useOnboardContext();
+
   const { contract } = useStakerContract();
 
   const stake = async (amount: number, duration: number, address?: string) => {

@@ -1,20 +1,22 @@
 import { useEffect, useState } from 'react';
 import { SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
-import { Checkbox, EthPrice, Modal, Spinner, toastError, toastSuccess } from 'src/components/common';
+import { Checkbox, EthPrice, Modal, Spinner, toastError, toastInfo, toastSuccess } from 'src/components/common';
 import { apiGet, ellipsisAddress, extractErrorMsg } from 'src/utils';
-import { OrderbookItem } from 'src/components/market/orderbook-list/orderbook-item';
-import { useAppContext } from 'src/utils/context/AppContext';
+import { OrderbookItem } from 'src/components/orderbook/orderbook-list/orderbook-item';
 import { cancelMultipleOrders } from 'src/utils/exchange/orders';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 interface Props {
   isOpen: boolean;
   collectionAddress: string;
   token: Token;
   onClose: () => void;
+  onDone: () => void;
 }
 
-export const CancelModal = ({ isOpen, onClose, collectionAddress, token }: Props) => {
-  const { user, providerManager, chainId, waitForTransaction } = useAppContext();
+export const CancelModal = ({ isOpen, onClose, onDone, collectionAddress, token }: Props) => {
+  const { getSigner, user, chainId, waitForTransaction } = useOnboardContext();
+
   const [selectedListings, setSelectedListings] = useState<number[]>([]);
   const [listings, setListings] = useState<SignedOBOrder[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -62,14 +64,15 @@ export const CancelModal = ({ isOpen, onClose, collectionAddress, token }: Props
 
   const onOKButton = async () => {
     try {
-      const signer = providerManager?.getEthersProvider().getSigner();
+      const signer = getSigner();
       if (signer) {
         setIsSubmitting(true);
         const { hash } = await cancelMultipleOrders(signer, chainId, selectedListings);
         setIsSubmitting(false);
-        toastSuccess('Transaction sent to chain');
+        toastSuccess('Sent txn to chain for execution');
         waitForTransaction(hash, () => {
-          toastSuccess(`Transaction confirmed ${ellipsisAddress(hash)}`);
+          toastInfo(`Transaction confirmed ${ellipsisAddress(hash)}`);
+          onDone();
         });
       } else {
         console.error('signer is null');

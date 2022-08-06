@@ -35,7 +35,7 @@ export const ProfileImageUpload = ({ onUpload, roundPhoto, onDelete, imgSource =
     }
   };
 
-  const handleImageRemove = async () => {
+  const handleImageRemove = () => {
     setLoading(true);
     onDelete();
     setLoading(false);
@@ -66,16 +66,12 @@ export const ProfileImageUpload = ({ onUpload, roundPhoto, onDelete, imgSource =
   };
 
   useEffect(() => {
-    const uploadFile = async () => {
-      if (file) {
-        setLoading(true);
-        onUpload(file);
-        setLoading(false);
-        setFile(null);
-      }
-    };
-
-    uploadFile().catch(console.error);
+    if (file) {
+      setLoading(true);
+      onUpload(file);
+      setLoading(false);
+      setFile(null);
+    }
   }, [file]);
 
   let avatarWidth = 400;

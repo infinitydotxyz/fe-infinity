@@ -1,6 +1,6 @@
 import { BigNumber, utils } from 'ethers';
 import { useEffect, useState } from 'react';
-import { useAppContext } from 'src/utils/context/AppContext';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { useStakerContract } from '../staker/useStakerContract';
 import { useTokenContract } from './useTokenContract';
 
@@ -12,7 +12,7 @@ import { useTokenContract } from './useTokenContract';
  * @param spender Address of the contract. Defaults to the InfinityStaker contract address.
  */
 export function useTokenAllowance(owner?: string, spender?: string) {
-  const { user } = useAppContext();
+  const { user } = useOnboardContext();
   const { contract } = useTokenContract();
   const { address: stakerAddress } = useStakerContract();
   const [allowance, setAllowance] = useState(0);

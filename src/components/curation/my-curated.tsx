@@ -2,15 +2,16 @@ import React from 'react';
 import { ScrollLoader, Spinner } from 'src/components/common';
 import { useFetchInfinite } from 'src/utils';
 import { CuratedCollectionsOrderBy } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections-query.dto';
-import { useAppContext } from 'src/utils/context/AppContext';
 import { CurationTable } from 'src/components/curation/curations-table';
 import { CuratedCollectionsDto } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections.dto';
 import { NoResultsBox } from './no-results-box';
 import { CuratedTab } from './types';
 import { useRouter } from 'next/router';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 export const MyCuratedCollections: React.FC<{ orderBy: CuratedCollectionsOrderBy }> = ({ orderBy }) => {
-  const { user, chainId } = useAppContext();
+  const { user, chainId } = useOnboardContext();
+
   const { result, setSize, error, isLoading } = useFetchInfinite<CuratedCollectionsDto>(
     user?.address ? `/user/${chainId}:${user.address}/curated` : null,
     {

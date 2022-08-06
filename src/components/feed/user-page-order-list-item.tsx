@@ -3,19 +3,19 @@ import { EthPrice, Button } from 'src/components/common';
 import { format } from 'timeago.js';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { UserProfileDto } from '../user/user-profile-dto';
-import { OrderbookItem } from '../market/orderbook-list/orderbook-item';
+import { OrderbookItem } from '../orderbook/orderbook-list/orderbook-item';
 import { UserOrderFilter } from '../filter/user-profile-order-filter-panel';
-import { OrderDetailModal } from '../market/OrderDetailModal';
+import { OrderDetailModal } from '../orderbook/OrderDetailModal';
 
 interface Props {
   order: SignedOBOrder;
   orderType: UserOrderFilter['orderType'];
   userInfo: UserProfileDto;
-  onClickCancel: (order: SignedOBOrder, checked: boolean) => void;
+  onClickActionBtn: (order: SignedOBOrder, checked: boolean) => void;
 }
 
-export const UserPageOrderListItem = ({ order, orderType, onClickCancel }: Props) => {
-  const [isCancelling, setIsCancelling] = useState(false);
+export const UserPageOrderListItem = ({ order, orderType, onClickActionBtn: onClickActionBtn }: Props) => {
+  const [isTakingAction, setIsTakingAction] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<SignedOBOrder | null>(null);
 
   return (
@@ -45,7 +45,7 @@ export const UserPageOrderListItem = ({ order, orderType, onClickCancel }: Props
           </div>
           <div className="w-1/8">
             <div className="text-gray-400"># NFTs</div>
-            <div className="font-bold">{order.nfts.length}</div>
+            <div className="font-bold">{order.numItems}</div>
           </div>
           <div className="w-1/8">
             <div className="text-gray-400">Expiry</div>
@@ -54,22 +54,22 @@ export const UserPageOrderListItem = ({ order, orderType, onClickCancel }: Props
           {orderType === 'listings' || orderType === 'offers-made' ? (
             <Button
               onClick={() => {
-                const newState = !isCancelling;
-                setIsCancelling(newState);
-                onClickCancel(order, newState);
+                const newState = !isTakingAction;
+                setIsTakingAction(newState);
+                onClickActionBtn(order, newState);
               }}
             >
-              {isCancelling ? '✓' : ''} Cancel
+              {isTakingAction ? '✓' : ''} Cancel
             </Button>
           ) : (
             <Button
               onClick={() => {
-                const newState = !isCancelling; // todo: Dylan - not canceling here but batch selling - so cart drawer should be changed accordingly
-                setIsCancelling(newState);
-                onClickCancel(order, newState);
+                const newState = !isTakingAction;
+                setIsTakingAction(newState);
+                onClickActionBtn(order, newState);
               }}
             >
-              {isCancelling ? '✓' : ''} Sell
+              {isTakingAction ? '✓' : ''} Accept
             </Button>
           )}
         </div>

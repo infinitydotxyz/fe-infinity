@@ -1,9 +1,10 @@
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { Button, SVG, Spacer, toastSuccess, toastError, Divider } from 'src/components/common';
+import { Button, SVG, Spacer, toastSuccess, toastError, Divider, toastInfo } from 'src/components/common';
 import { ellipsisAddress, extractErrorMsg } from 'src/utils';
-import { useAppContext } from 'src/utils/context/AppContext';
-import { takeMultiplOneOrders } from 'src/utils/exchange/orders';
-import { iconButtonStyle } from 'src/utils/ui-constants';
+import { cancelMultipleOrders } from 'src/utils/exchange/orders';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { drawerPx, iconButtonStyle } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
 import { Drawer } from '../../common/drawer';
 import { OrderbookItem } from '../orderbook-list/orderbook-item';
 
@@ -14,22 +15,18 @@ interface Props {
   onClickRemove: (order: SignedOBOrder) => void;
 }
 
-export const AcceptOfferDrawer = ({ open, onClose, orders, onClickRemove }: Props) => {
-  const { providerManager, chainId, waitForTransaction } = useAppContext();
+export const CancelDrawer = ({ open, onClose, orders, onClickRemove }: Props) => {
+  const { getSigner, chainId, waitForTransaction } = useOnboardContext();
 
-  const doAccept = async () => {
+  const doCancel = async () => {
     try {
-      const signer = providerManager?.getEthersProvider().getSigner();
+      const signer = getSigner();
       if (signer) {
-        // TODO(ADI):  fix this
-        // const nonces = orders.map((order) => order.nonce);
-
-        // broken, fix
-        const { hash } = await takeMultiplOneOrders(signer, chainId, orders[0].signedOrder);
-
-        toastSuccess('Transaction sent to chain');
+        const nonces = orders.map((order) => order.nonce);
+        const { hash } = await cancelMultipleOrders(signer, chainId, nonces);
+        toastSuccess('Sent txn to chain for execution');
         waitForTransaction(hash, () => {
-          toastSuccess(`Transaction confirmed ${ellipsisAddress(hash)}`);
+          toastInfo(`Transaction confirmed ${ellipsisAddress(hash)}`);
         });
       } else {
         throw 'Signer is null';
@@ -44,14 +41,14 @@ export const AcceptOfferDrawer = ({ open, onClose, orders, onClickRemove }: Prop
       <Drawer
         open={open}
         onClose={onClose}
-        subtitle={'Accept these orders in one transaction'}
-        title={<div className="flex items-center">Accept Offers</div>}
+        subtitle={'Cancel these orders in one transaction'}
+        title={<div className="flex items-center">Cancel Orders</div>}
       >
         <div className="flex flex-col h-full">
-          <ul className="overflow-y-auto content-between px-12">
-            {orders.map((order: SignedOBOrder, idx) => {
+          <div className={twMerge(drawerPx, 'overflow-y-auto content-between')}>
+            {orders.map((order: SignedOBOrder) => {
               return (
-                <li key={order.id + '_' + idx} className="py-3 flex">
+                <div key={order.id} className="py-3 flex">
                   <div className="w-full flex justify-between">
                     <div className="flex-1">
                       <OrderbookItem nameItem={true} key={`${order.id} ${order.chainId}`} order={order} />
@@ -60,17 +57,17 @@ export const AcceptOfferDrawer = ({ open, onClose, orders, onClickRemove }: Prop
                       <SVG.grayDelete className={iconButtonStyle} />
                     </button>
                   </div>
-                </li>
+                </div>
               );
             })}
-          </ul>
+          </div>
           <Spacer />
 
           <footer className="w-full text-center py-4">
             <Divider className="mb-10" />
 
-            <Button size="large" onClick={doAccept}>
-              Accept Offers
+            <Button size="large" onClick={doCancel}>
+              Cancel Orders
             </Button>
           </footer>
         </div>

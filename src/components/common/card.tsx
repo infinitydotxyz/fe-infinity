@@ -7,7 +7,7 @@ import { NextLink } from './next-link';
 import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { useRouter } from 'next/router';
 import { MdMoreVert } from 'react-icons/md';
-import { ENS_ADDRESS } from 'src/utils';
+import { ellipsisAddress, ENS_ADDRESS } from 'src/utils';
 import { inputBorderColor } from 'src/utils/ui-constants';
 import { SVG } from './svg';
 import { EZImage } from './ez-image';
@@ -37,17 +37,17 @@ export const Card = ({
   className = ''
 }: CardProps): JSX.Element => {
   const router = useRouter();
-  let collectionName = data?.title ?? data?.collectionName ?? '';
+  let collectionName = data?.title || data?.collectionName || ellipsisAddress(data?.address) || 'Collection';
   collectionName = collectionName.length > 25 ? collectionName.slice(0, 25) + '...' : collectionName;
 
   let tokenId = data?.tokenId ?? '';
   // special case for ENS
   const collectionAddress = trimLowerCase(data?.address ?? data?.tokenAddress);
-  if (collectionAddress === ENS_ADDRESS && data?.name) {
+  if (collectionAddress === ENS_ADDRESS && data?.name && !trimLowerCase(data.name).includes('unknown ens name')) {
     tokenId = data.name;
   }
 
-  tokenId = tokenId.length > 25 ? tokenId.slice(0, 20) + '...' : tokenId;
+  tokenId = tokenId.length > 15 ? tokenId.slice(0, 10) + '...' : tokenId;
 
   const buttonJsx = (
     <div className="flex w-[100%]">
@@ -77,7 +77,6 @@ export const Card = ({
   }
 
   const heightStyle = `${height}px`;
-
   return (
     <div
       className={`
@@ -104,11 +103,11 @@ export const Card = ({
           className="flex items-center cursor-pointer font-bold truncate"
           title={data?.title}
           onClick={() => {
-            router.push(`/collection/${data?.collectionSlug}`);
+            router.push(`/collection/${data?.collectionSlug || `${data?.chainId}:${data?.address}`}`);
           }}
         >
-          {collectionName ? collectionName : <>&nbsp;</>}
-          {data?.hasBlueCheck ? <SVG.blueCheck className="w-5 h-5 ml-1" /> : null}
+          <div>{collectionName ? collectionName : <>&nbsp;</>}</div>
+          {data?.hasBlueCheck ? <SVG.blueCheck className="w-5 h-5 ml-1 shrink-0" /> : null}
         </div>
         <div className="text-secondary font-heading" title={data?.tokenId}>
           {tokenId}

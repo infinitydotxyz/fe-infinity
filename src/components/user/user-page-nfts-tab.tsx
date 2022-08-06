@@ -1,17 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ChainId, ERC721CardData, Token } from '@infinityxyz/lib-frontend/types/core';
-import { useAppContext } from 'src/utils/context/AppContext';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { GalleryBox } from '../gallery/gallery-box';
-import { SendNFTsDrawer } from '../market/order-drawer/send-nfts-drawer';
 import { UserProfileDto } from './user-profile-dto';
 import { twMerge } from 'tailwind-merge';
 import { CardAction, EthPrice } from '../common';
 import { CancelModal } from '../asset';
-import { apiGet } from 'src/utils';
+import { apiGet, ApiResponse } from 'src/utils';
 import { LowerPriceModal } from '../asset/modals/lower-price-modal';
-import { WaitingForTxModal } from '../market/order-drawer/waiting-for-tx-modal';
+import { WaitingForTxModal } from '../orderbook/order-drawer/waiting-for-tx-modal';
 import { useDrawerContext } from 'src/utils/context/DrawerContext';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 type Props = {
   userInfo: UserProfileDto;
@@ -20,43 +19,23 @@ type Props = {
   listClassName?: string;
 };
 
-const fetchTokenData = async (chainId: string, collection: string, tokenId: string) => {
+const fetchTokenData = (chainId: string, collection: string, tokenId: string): Promise<ApiResponse> => {
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
   return apiGet(NFT_API_ENDPOINT);
 };
 
 export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listClassName = '' }: Props) => {
-  const { user, chainId } = useAppContext();
-  const { setCartItemCount, hasOrderDrawer } = useDrawerContext();
-  const {
-    addCartItem,
-    setOrderDrawerOpen,
-    ordersInCart,
-    cartItems,
-    removeCartItem,
-    updateOrders,
-    orderDrawerOpen,
-    setPrice
-  } = useOrderContext();
+  const { user, chainId } = useOnboardContext();
 
-  const [showTransferDrawer, setShowTransferDrawer] = useState(false);
-  const [nftsForTransfer, setNftsForTransfer] = useState<ERC721CardData[]>([]);
+  const { transferDrawerParams } = useDrawerContext();
+  const { addCartItem, setOrderDrawerOpen, ordersInCart, cartItems, removeCartItem, updateOrders, setPrice } =
+    useOrderContext();
   // const [showCancelModal, setShowCancelModal] = useState(false);
 
   const [cancellingToken, setCancellingToken] = useState<Token | null>(null);
   const [loweringPriceToken, setLoweringPriceToken] = useState<Token | null>(null);
   const [currentPrice, setCurrentPrice] = useState('');
   const [sendTxHash, setSendTxHash] = useState('');
-
-  useEffect(() => {
-    if (orderDrawerOpen && !hasOrderDrawer()) {
-      setShowTransferDrawer(true);
-    }
-  }, [orderDrawerOpen]);
-
-  useEffect(() => {
-    setCartItemCount(nftsForTransfer.length);
-  }, [nftsForTransfer]);
 
   // find & remove this item in cartItems & all orders' cartItems:
   const findAndRemove = (data: ERC721CardData | undefined) => {
@@ -75,11 +54,12 @@ export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listCl
   const isAlreadyAdded = (data: ERC721CardData | undefined) => {
     // check if this item was already added to cartItems or order.
     const found1 =
-      cartItems.find((item) => item.collectionAddress === data?.address && item.tokenId === data.tokenId) !== undefined;
+      cartItems.find((item) => item.collectionAddress === data?.address && item.tokenId === data?.tokenId) !==
+      undefined;
     let found2 = false;
     for (const order of ordersInCart) {
       const foundInOrder = order.cartItems.find(
-        (item) => item.collectionAddress === data?.address && item.tokenId === data.tokenId
+        (item) => item.collectionAddress === data?.address && item.tokenId === data?.tokenId
       );
       if (foundInOrder) {
         found2 = true;
@@ -146,7 +126,7 @@ export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listCl
         } else {
           // for Sending
           if (forTransfers === true) {
-            const found = nftsForTransfer.find((o) => o.id === data?.id);
+            const found = transferDrawerParams.nfts.find((o) => o.id === data?.id);
             return <div className="font-normal">{found ? '✓' : ''} Send</div>;
           }
           // for Listings
@@ -168,19 +148,18 @@ export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listCl
         }
         // for Sending
         if (forTransfers === true && data) {
-          const found = nftsForTransfer.find((o) => o.id === data.id);
+          const found = transferDrawerParams.nfts.find((o) => o.id === data.id);
           if (found) {
-            const arr = nftsForTransfer.filter((o: ERC721CardData) => o.id !== data.id);
-            setNftsForTransfer(arr);
+            const arr = transferDrawerParams.nfts.filter((o: ERC721CardData) => o.id !== data.id);
+            transferDrawerParams.setNfts(arr);
             if (arr.length === 0) {
-              setShowTransferDrawer(false);
-              setOrderDrawerOpen(false);
+              transferDrawerParams.setShowDrawer(false);
             }
           } else {
-            const arr = [...nftsForTransfer, data];
-            setNftsForTransfer(arr);
+            const arr = [...transferDrawerParams.nfts, data];
+            transferDrawerParams.setNfts(arr);
             if (arr.length === 1) {
-              setShowTransferDrawer(true);
+              transferDrawerParams.setShowDrawer(true);
             }
           }
           return;
@@ -197,8 +176,7 @@ export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listCl
           pageId="PROFILE"
           getEndpoint={userInfo?.address ? `/user/${userInfo?.address}/nfts` : ''}
           userAddress={userInfo?.address}
-          filterShowedDefault={false}
-          showFilterSections={['COLLECTIONS']}
+          showCollectionsFilter={true}
           showSort={false}
           cardProps={{
             cardActions,
@@ -237,28 +215,9 @@ export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listCl
 
       {!user && <div>Please connect your wallet.</div>}
 
-      <SendNFTsDrawer
-        open={showTransferDrawer}
-        onClose={() => {
-          setShowTransferDrawer(false);
-          setOrderDrawerOpen(false);
-        }}
-        nftsForTransfer={nftsForTransfer}
-        onClickRemove={(removingItem) => {
-          const arr = nftsForTransfer.filter((o: ERC721CardData) => o.id !== removingItem.id);
-          setNftsForTransfer(arr);
-          if (arr.length === 0) {
-            setShowTransferDrawer(false);
-            setOrderDrawerOpen(false);
-          }
-        }}
-        onSubmit={(hash) => {
-          setSendTxHash(hash);
-        }}
-      />
-
       {loweringPriceToken && (
         <LowerPriceModal
+          onDone={() => console.log('onDone')}
           isOpen={true}
           onClose={() => setLoweringPriceToken(null)}
           token={loweringPriceToken}
@@ -268,6 +227,7 @@ export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listCl
 
       {cancellingToken && (
         <CancelModal
+          onDone={() => console.log('onDone')}
           isOpen={true}
           onClose={() => setCancellingToken(null)}
           collectionAddress={cancellingToken.collectionAddress ?? ''}

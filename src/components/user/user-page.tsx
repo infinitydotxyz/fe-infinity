@@ -56,7 +56,7 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
 
           {/* <UserWatchList userWatchList={[userInfo.address, userInfo.address]} /> */}
         </div>
-        <div className="my-2 flex flex-wrap items-center">
+        <div className="my-2 flex flex-wrap items-center space-x-2">
           {isOwner && (
             <Chip
               content="Edit"
@@ -70,13 +70,14 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
         {userInfo.bio && <p className="text-theme-light-800 mt-8 ml-1 max-w-md">{userInfo.bio || ''}</p>}
 
         <ToggleTab
+          small
           className="mt-14 -ml-2 font-heading pointer-events-auto"
           options={options}
           selected={selected}
           onChange={onChange}
         />
 
-        <div className="mt-6 min-h-[1024px] pointer-events-none">
+        <div className="mt-6 min-h-[50vh] pointer-events-none">
           {selected === 'Collected' && <UserPageNftsTab userInfo={userInfo} />}
           {selected === 'Orders' && <UserPageOrderList userInfo={userInfo} />}
           {selected === 'Activity' && <UserPageActivityTab userInfo={userInfo} />}

@@ -55,7 +55,7 @@ export const TopHolderList = ({ collection }: Props) => {
 
     const ep = `/collections/${collection.chainId}:${collection.address}/topOwners`;
     const { result, error } = await apiGet(ep, {
-      query: { limit: 6 }
+      query: { limit: 10 }
     });
 
     setIsLoading(false);

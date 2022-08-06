@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import type { AppProps } from 'next/app';
 import 'src/settings/theme/globals.scss';
 import { isLocalhost } from 'src/utils/commonUtils';
-import { AppContextProvider } from 'src/utils/context/AppContext';
+import { OnboardContextProvider } from 'src/utils/OnboardContext/OnboardContext';
 import { OrderContextProvider } from 'src/utils/context/OrderContext';
 import { FilterContextProvider } from 'src/utils/context/FilterContext';
 import React, { FunctionComponent, memo, StrictMode, useEffect } from 'react';
@@ -32,7 +32,7 @@ const App: FunctionComponent<AppProps> = (props) => {
 
   return (
     <StrictMode>
-      <AppContextProvider>
+      <OnboardContextProvider>
         <FilterContextProvider>
           <OrderContextProvider>
             <DrawerContextProvider>
@@ -42,7 +42,7 @@ const App: FunctionComponent<AppProps> = (props) => {
             </DrawerContextProvider>
           </OrderContextProvider>
         </FilterContextProvider>
-      </AppContextProvider>
+      </OnboardContextProvider>
     </StrictMode>
   );
 };

@@ -5,20 +5,31 @@ import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
 import { Button, ScrollLoader, Spacer } from '../common';
 // import { CommentPanel } from '../feed/comment-panel';
 import { NftEventRec } from '../asset/activity/activity-item';
-import { useAppContext } from 'src/utils/context/AppContext';
 import { FeedListItem } from './feed-list-item';
 import { FilterButton } from './filter-button';
 import { CommentPanel } from './comment-panel';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 interface Props {
   collectionAddress: string;
   tokenId?: string;
   types?: EventType[];
   className?: string;
+  collectionName?: string;
+  collectionSlug?: string;
+  collectionProfileImage?: string;
 }
 
-export const FeedList = ({ collectionAddress, tokenId, types, className = '' }: Props) => {
-  const { chainId } = useAppContext();
+export const FeedList = ({
+  collectionAddress,
+  tokenId,
+  types,
+  collectionName,
+  collectionSlug,
+  collectionProfileImage,
+  className = ''
+}: Props) => {
+  const { chainId } = useOnboardContext();
   const [filter, setFilter] = useState<FeedFilter>({ collectionAddress, tokenId, types });
   const [commentPanelEvent, setCommentPanelEvent] = useState<NftEventRec | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -96,6 +107,9 @@ export const FeedList = ({ collectionAddress, tokenId, types, className = '' }: 
           return (
             <div key={idx}>
               <FeedListItem
+                collectionName={collectionName}
+                collectionSlug={collectionSlug}
+                collectionProfileImage={collectionProfileImage}
                 activity={activity}
                 onComment={(ev) => {
                   if (!ev) {
@@ -130,7 +144,7 @@ export const FeedList = ({ collectionAddress, tokenId, types, className = '' }: 
         })}
 
         <ScrollLoader
-          onFetchMore={async () => {
+          onFetchMore={() => {
             fetchActivity(false, cursor);
           }}
         />

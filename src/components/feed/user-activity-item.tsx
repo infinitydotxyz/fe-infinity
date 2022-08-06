@@ -14,7 +14,7 @@ export const UserActivityItem = ({ event }: Props) => {
     <div>
       <div className="bg-gray-100 px-10 py-6 rounded-3xl flex items-center font-heading">
         <NextLink href={`/asset/${event.chainId}/${event.collectionAddress}/${event.tokenId}`}>
-          <EZImage src={event.image} className="w-16 h-16 rounded-full overflow-clip" />
+          <EZImage src={event.image} className="w-16 h-16 rounded-2xl overflow-clip" />
         </NextLink>
         <div className="flex justify-between w-full mx-8 ml-4">
           <div className="w-1/3">
@@ -25,8 +25,8 @@ export const UserActivityItem = ({ event }: Props) => {
                 className="font-bold whitespace-pre-wrap flex items-center"
                 title={event.collectionSlug}
               >
-                {event.collectionName}
-                {event?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1" style={{ width: 24 }} /> : null}
+                <div>{event.collectionName}</div>
+                {event?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1 shrink-0" /> : null}
               </NextLink>
             </div>
             <div className="text-gray-400">

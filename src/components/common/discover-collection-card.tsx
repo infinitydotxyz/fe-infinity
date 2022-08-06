@@ -2,9 +2,9 @@ import { formatNumber, getOptimizedCloudImage } from 'src/utils';
 import { NextLink } from './next-link';
 import { SVG } from './svg';
 import { EthPrice } from './eth-price';
-import { DiscoverOrderBy } from 'pages/market';
 import { CollectionStatsDto } from '@infinityxyz/lib-frontend/types/dto/stats';
 import { EZImage } from './ez-image';
+import { DiscoverOrderBy } from './discover-collection-grid';
 
 interface Props {
   orderBy: DiscoverOrderBy;
@@ -27,21 +27,21 @@ export const DiscoverCollectionCard = ({ orderBy, collection, routerQuery }: Pro
       >
         <div style={{ height: '300px' }}>
           <EZImage
-            src={getOptimizedCloudImage(
-              collection?.collectionData?.metadata?.bannerImage || collection?.collectionData?.metadata?.profileImage
-            )}
+            src={getOptimizedCloudImage(collection?.bannerImage || collection?.profileImage)}
             className="rounded-3xl overflow-clip"
           />
         </div>
         <div className="pt-4 flex items-start">
           <span className="flex flex-1 items-start font-body text-base font-medium pl-2 text-black whitespace-pre-wrap">
             <span className="inline-block">{collection.name}</span>
-            {collection.hasBlueCheck ? <SVG.blueCheck className="w-4 h-4 mt-1" style={{ width: 24 }} /> : null}
+            {collection.hasBlueCheck ? <SVG.blueCheck className="w-4 h-4 mt-1 shrink-0" /> : null}
           </span>
 
           <div className="font-body text-base px-5 text-theme-light-800">
             <div className="flex flex-col">
-              {orderBy === 'twitterFollowersPercentChange' && collection.twitterFollowersPercentChange >= 0.1 ? (
+              {orderBy === 'twitterFollowersPercentChange' &&
+              collection.twitterFollowersPercentChange !== null &&
+              collection.twitterFollowersPercentChange >= 0.1 ? (
                 <div className="flex flex-row-reverse items-center w-full">
                   <div className="text-green-600 ml-2">{twitterChange}% ↑</div>
                   <SVG.twitter className="w-4 h-4 ml-1.5" />

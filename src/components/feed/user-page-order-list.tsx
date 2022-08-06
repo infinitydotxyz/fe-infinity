@@ -1,21 +1,18 @@
 import { useEffect, useState } from 'react';
 import { UserPageOrderListItem } from './user-page-order-list-item';
 import { apiGet, extractErrorMsg, ITEMS_PER_PAGE, ellipsisAddress } from 'src/utils';
-import { Button, CenteredContent, ScrollLoader, Spinner, toastError, toastSuccess } from '../common';
+import { Button, CenteredContent, ScrollLoader, Spinner, toastError, toastInfo, toastSuccess } from '../common';
 import { UserProfileDto } from '../user/user-profile-dto';
-import { CancelDrawer } from 'src/components/market/order-drawer/cancel-drawer';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import {
   DEFAULT_ORDER_TYPE_FILTER,
   UserOrderFilter,
   UserProfileOrderFilterPanel
 } from '../filter/user-profile-order-filter-panel';
-import { useOrderContext } from 'src/utils/context/OrderContext';
 import { cancelAllOrders } from 'src/utils/exchange/orders';
-import { useAppContext } from 'src/utils/context/AppContext';
-import { fetchOrderNonce } from 'src/utils/marketUtils';
+import { fetchOrderNonce } from 'src/utils/orderbookUtils';
 import { useDrawerContext } from 'src/utils/context/DrawerContext';
-import { AcceptOfferDrawer } from '../market/order-drawer/accept-offer-drawer';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 type Query = {
   limit: number;
@@ -35,9 +32,9 @@ interface Props {
 }
 
 export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
-  const { providerManager, chainId, user, waitForTransaction } = useAppContext();
-  const { orderDrawerOpen, setOrderDrawerOpen } = useOrderContext();
-  const { setCartItemCount, hasOrderDrawer } = useDrawerContext();
+  const { user, chainId, waitForTransaction, getSigner } = useOnboardContext();
+
+  const { fulfillDrawerParams, cancelDrawerParams } = useDrawerContext();
   const [data, setData] = useState<SignedOBOrder[]>([]);
   const [isFetching, setIsFetching] = useState(false);
   const [cursor, setCursor] = useState('');
@@ -45,29 +42,6 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
   const [filterShowed, setFilterShowed] = useState(true);
   const [isCancellingAll, setIsCancellingAll] = useState(false);
   const [apiFilter, setApiFilter] = useState<UserOrderFilter>({ orderType: DEFAULT_ORDER_TYPE_FILTER });
-  const [showAcceptOfferDrawer, setShowAcceptOfferDrawer] = useState(false);
-  const [showCancelDrawer, setShowCancelDrawer] = useState(false);
-
-  const [selectedOrders, setSelectedOrders] = useState<SignedOBOrder[]>([]);
-  const [selectedOffers, setSelectedOffers] = useState<SignedOBOrder[]>([]);
-
-  useEffect(() => {
-    if (orderDrawerOpen && !hasOrderDrawer()) {
-      if (apiFilter.orderType === 'offers-received') {
-        setShowAcceptOfferDrawer(true);
-      } else {
-        setShowCancelDrawer(true);
-      }
-    }
-  }, [orderDrawerOpen]);
-
-  useEffect(() => {
-    if (apiFilter.orderType === 'offers-received') {
-      setCartItemCount(selectedOffers.length);
-    } else {
-      setCartItemCount(selectedOrders.length);
-    }
-  }, [apiFilter, selectedOrders, selectedOffers]);
 
   const fetchData = async (isRefresh = false) => {
     setIsFetching(true);
@@ -131,41 +105,33 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
   const listItemButtonClick = (order: SignedOBOrder, checked: boolean) => {
     if (apiFilter.orderType === 'offers-received') {
       if (checked) {
-        const arr = [...selectedOffers, order];
-        setSelectedOffers(arr);
-
-        if (arr.length === 1) {
-          setShowAcceptOfferDrawer(true);
-        }
+        fulfillDrawerParams.addOrder(order);
+        fulfillDrawerParams.setShowDrawer(true);
       } else {
-        const arr = selectedOffers.filter((o) => o.id !== order.id);
-        setSelectedOffers(arr);
-
-        if (arr.length === 0) {
-          setShowAcceptOfferDrawer(false);
-        }
+        fulfillDrawerParams.removeOrder(order);
+        // setShowDrawer(true);
       }
     } else {
       if (checked) {
-        const arr = [...selectedOrders, order];
-        setSelectedOrders(arr);
+        const arr = [...cancelDrawerParams.orders, order];
+        cancelDrawerParams.setOrders(arr);
 
         if (arr.length === 1) {
-          setShowCancelDrawer(true);
+          cancelDrawerParams.setShowDrawer(true);
         }
       } else {
-        const arr = selectedOrders.filter((o) => o.id !== order.id);
-        setSelectedOrders(arr);
+        const arr = cancelDrawerParams.orders.filter((o) => o.id !== order.id);
+        cancelDrawerParams.setOrders(arr);
 
         if (arr.length === 0) {
-          setShowCancelDrawer(false);
+          cancelDrawerParams.setShowDrawer(false);
         }
       }
     }
   };
 
   return (
-    <div className={`min-h-[1024px] mt-[-75px] ${className}`}>
+    <div className={`min-h-[50vh] mt-[-75px] ${className}`}>
       <div className="flex flex-row-reverse mb-8 bg-transparent">
         <Button
           variant="outline"
@@ -182,16 +148,16 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
           disabled={isCancellingAll}
           onClick={async () => {
             try {
-              const signer = providerManager?.getEthersProvider().getSigner();
+              const signer = getSigner();
 
               if (signer && user) {
                 setIsCancellingAll(true);
                 const minOrderNonce = await fetchOrderNonce(user.address);
                 const { hash } = await cancelAllOrders(signer, chainId, minOrderNonce);
                 setIsCancellingAll(false);
-                toastSuccess('Transaction sent to chain');
+                toastSuccess('Sent txn to chain for execution');
                 waitForTransaction(hash, () => {
-                  toastSuccess(`Transaction confirmed ${ellipsisAddress(hash)}`);
+                  toastInfo(`Transaction confirmed ${ellipsisAddress(hash)}`);
                 });
               } else {
                 throw 'User is null';
@@ -232,7 +198,7 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
                 order={order}
                 orderType={apiFilter.orderType}
                 userInfo={userInfo}
-                onClickCancel={listItemButtonClick}
+                onClickActionBtn={listItemButtonClick}
               />
             );
           })}
@@ -246,42 +212,6 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
           ) : null}
         </div>
       </div>
-
-      <AcceptOfferDrawer
-        orders={selectedOffers}
-        open={showAcceptOfferDrawer}
-        onClose={() => {
-          setShowAcceptOfferDrawer(false);
-          setOrderDrawerOpen(false);
-        }}
-        onClickRemove={(removingOrder) => {
-          const arr = selectedOffers.filter((o) => o.id !== removingOrder.id);
-          setSelectedOffers(arr);
-
-          if (arr.length === 0) {
-            setShowAcceptOfferDrawer(false);
-            setOrderDrawerOpen(false);
-          }
-        }}
-      />
-
-      <CancelDrawer
-        orders={selectedOrders}
-        open={showCancelDrawer}
-        onClose={() => {
-          setShowCancelDrawer(false);
-          setOrderDrawerOpen(false);
-        }}
-        onClickRemove={(removingOrder) => {
-          const arr = selectedOrders.filter((o) => o.id !== removingOrder.id);
-          setSelectedOrders(arr);
-
-          if (arr.length === 0) {
-            setShowCancelDrawer(false);
-            setOrderDrawerOpen(false);
-          }
-        }}
-      />
     </div>
   );
 };

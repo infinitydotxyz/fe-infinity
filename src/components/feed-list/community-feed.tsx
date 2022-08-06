@@ -26,14 +26,17 @@ export const CommunityFeed = ({ collection, className }: Props) => {
         <FeedList
           types={[
             EventType.NftSale,
-            EventType.NftOffer
-            // EventType.CoinMarketCapNews
-            // EventType.DiscordAnnouncement
-            // EventType.NftListing
-            // EventType.NftTransfer
-            // EventType.TwitterTweet
+            EventType.NftOffer,
+            EventType.CoinMarketCapNews,
+            EventType.DiscordAnnouncement,
+            EventType.NftListing,
+            EventType.NftTransfer,
+            EventType.TwitterTweet
           ]}
           collectionAddress={collection?.address ?? ''}
+          collectionName={collection?.metadata.name ?? ''}
+          collectionSlug={collection?.slug ?? ''}
+          collectionProfileImage={collection?.metadata.profileImage ?? ''}
         />
       </div>
     );
@@ -48,7 +51,7 @@ export const CommunityFeed = ({ collection, className }: Props) => {
   );
 
   return (
-    <div className={twMerge('grid lg:grid-cols-2 xl:grid-cols-3 gap-16', className)}>
+    <div className={twMerge('grid lg:grid-cols-2 xl:grid-cols-3 gap-16 min-h-[50vh]', className)}>
       <div className="lg:col-span-1 xl:col-span-2">{content}</div>
       <div className="col-span-1">{collection && rightSide}</div>
     </div>

@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { ellipsisString } from 'src/utils';
-import { useAppContext } from 'src/utils/context/AppContext';
 import { addUserComments, Comment, fetchComments, fetchMoreComments } from 'src/utils/firestore/firestoreUtils';
 import { format } from 'timeago.js';
 import { Button, Drawer, EZImage, NextLink, ScrollLoader } from 'src/components/common';
 import { NftEventRec } from '../asset/activity/activity-item';
 import { UserInfoCache } from './user-info-cache';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 interface Props {
   isOpen: boolean;
@@ -15,7 +15,8 @@ interface Props {
 }
 
 export const CommentPanel = ({ isOpen, onClose, event, contentOnly }: Props) => {
-  const { user, checkSignedIn } = useAppContext();
+  const { user, checkSignedIn } = useOnboardContext();
+
   const [text, setText] = useState('');
   const [data, setData] = useState<Comment[]>([]);
   const [isFetched, setIsFetched] = useState(false);
@@ -135,7 +136,7 @@ export const CommentPanel = ({ isOpen, onClose, event, contentOnly }: Props) => 
         {content}
 
         <ScrollLoader
-          onFetchMore={async () => {
+          onFetchMore={() => {
             fetchData(true);
           }}
         />

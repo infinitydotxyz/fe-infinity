@@ -17,19 +17,20 @@ import {
   INFINITY_ROYALTY_PCT,
   MISSING_IMAGE_URL
 } from 'src/utils';
-import { useAppContext } from 'src/utils/context/AppContext';
 import { getSignedOBOrder } from 'src/utils/exchange/orders';
-import { fetchUserSignedOBOrder, postOrders } from 'src/utils/marketUtils';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { fetchUserSignedOBOrder, postOrders } from 'src/utils/orderbookUtils';
 
 interface Props {
   isOpen: boolean;
   token: Token;
   buyPriceEth?: string;
   onClose: () => void;
+  onDone: () => void;
 }
 
-export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) => {
-  const { user, chainId, providerManager } = useAppContext();
+export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth, onDone }: Props) => {
+  const { user, chainId, getEthersProvider, getSigner } = useOnboardContext();
   const [orderDetails, setOrderDetails] = useState<SignedOBOrder | null>(null);
   const [price, setPrice] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -92,9 +93,9 @@ export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) 
 
         try {
           const signedOrders: SignedOBOrder[] = [];
-          const signer = providerManager?.getEthersProvider().getSigner();
+          const signer = getSigner();
           setIsSubmitting(true);
-          const gasPrice = await getEstimatedGasPrice(providerManager?.getEthersProvider());
+          const gasPrice = await getEstimatedGasPrice(getEthersProvider());
           if (signer) {
             // keep the last Order & set the New Price:
             const order: OBOrder = {
@@ -122,6 +123,7 @@ export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth }: Props) 
                 await postOrders(user.address, signedOrders);
                 setIsSubmitting(false);
                 toastSuccess('Lowered price successfully');
+                onDone();
               } catch (ex) {
                 toastError(`${ex}`);
                 return false;

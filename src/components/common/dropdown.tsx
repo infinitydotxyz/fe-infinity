@@ -38,9 +38,9 @@ export const Dropdown = ({
             <Menu.Button
               className={twMerge(
                 inputBorderColor,
-                'transition ease-in-out duration-300 hover:border-black bg-white active:bg-gray-900 hover:bg-theme-gray-200',
+                'transition ease-in-out duration-300 bg-white active:bg-gray-900 hover:bg-theme-gray-200',
                 'focus:outline-none focus-visible:ring focus:ring-black focus:ring-opacity-50',
-                'px-6 py-2.5 border rounded-3xl text-gray-900 font-heading flex items-center space-x-1'
+                'px-6 py-2.5 border rounded-full text-gray-900 font-heading flex items-center space-x-1'
               )}
             >
               <div className="whitespace-nowrap">{label}</div>
@@ -51,7 +51,7 @@ export const Dropdown = ({
 
         <Menu.Items
           className={twMerge(
-            `absolute mt-2 p-4 w-56 origin-top-right divide-y divide-gray-100 rounded-3xl z-50
+            `absolute mt-2 p-4 w-56 origin-top-right divide-y divide-gray-100 rounded-xl z-50
             border border-gray-200 bg-white shadow-2xl outline-none ${contentClassName ?? ''}`
           )}
         >

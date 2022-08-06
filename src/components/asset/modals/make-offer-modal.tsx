@@ -1,11 +1,11 @@
-import { ChainId, OBOrder, SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId, Erc721Token, OBOrder, SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
 import { ETHEREUM_WETH_ADDRESS, getOBComplicationAddress, NULL_ADDRESS } from '@infinityxyz/lib-frontend/utils';
 import { useState } from 'react';
 import { CurrencyInput, DatePickerBox, Modal, toastError, toastSuccess } from 'src/components/common';
 import { DEFAULT_MAX_GAS_PRICE_WEI, extractErrorMsg, getEstimatedGasPrice, getOwnerAddress } from 'src/utils';
-import { useAppContext } from 'src/utils/context/AppContext';
 import { getSignedOBOrder } from 'src/utils/exchange/orders';
-import { fetchOrderNonce, postOrders } from 'src/utils/marketUtils';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { fetchOrderNonce, postOrders } from 'src/utils/orderbookUtils';
 import { secondsPerDay } from 'src/utils/ui-constants';
 
 interface Props {
@@ -13,10 +13,12 @@ interface Props {
   isOpen: boolean;
   token: Token;
   onClose: () => void;
+  onDone: () => void;
 }
 
-export const MakeOfferModal = ({ isOpen, onClose, buyPriceEth, token }: Props) => {
-  const { user, chainId, providerManager } = useAppContext();
+export const MakeOfferModal = ({ isOpen, onClose, onDone, buyPriceEth, token }: Props) => {
+  const { user, chainId, getEthersProvider, getSigner } = useOnboardContext();
+
   const [price, setPrice] = useState<string>(buyPriceEth || '1');
   const [expirationDate, setExpirationDate] = useState(Date.now() + secondsPerDay * 30 * 1000);
 
@@ -29,7 +31,7 @@ export const MakeOfferModal = ({ isOpen, onClose, buyPriceEth, token }: Props) =
       const orderNonce = await fetchOrderNonce(user.address);
       const signedOrders: SignedOBOrder[] = [];
 
-      const signer = providerManager?.getEthersProvider().getSigner();
+      const signer = getSigner();
       if (signer) {
         const takerAddress = getOwnerAddress(token);
         if (!takerAddress) {
@@ -43,7 +45,7 @@ export const MakeOfferModal = ({ isOpen, onClose, buyPriceEth, token }: Props) =
           tokenImage: token.image?.url || token?.alchemyCachedImage || token.image?.originalUrl || '',
           takerAddress,
           takerUsername: '',
-          attributes: [],
+          attributes: (token as Erc721Token).metadata?.attributes ?? [],
           numTokens: 1
         };
         const orderItem = {
@@ -56,7 +58,7 @@ export const MakeOfferModal = ({ isOpen, onClose, buyPriceEth, token }: Props) =
           tokens: [tokenInfo]
         };
 
-        const gasPrice = await getEstimatedGasPrice(providerManager?.getEthersProvider());
+        const gasPrice = await getEstimatedGasPrice(getEthersProvider());
         const order: OBOrder = {
           id: '',
           chainId,
@@ -87,6 +89,7 @@ export const MakeOfferModal = ({ isOpen, onClose, buyPriceEth, token }: Props) =
           try {
             await postOrders(user.address, signedOrders);
             toastSuccess('Offer sent successfully');
+            onDone();
           } catch (ex) {
             toastError(`${ex}`);
             return false;

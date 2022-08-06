@@ -1,30 +1,42 @@
-import { Token } from '@infinityxyz/lib-frontend/types/core';
-import React, { useState } from 'react';
+import { ChainId, Erc721Token, OBOrder, SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
+import { ETHEREUM_WETH_ADDRESS, getOBComplicationAddress, NULL_ADDRESS } from '@infinityxyz/lib-frontend/utils';
+import { useState } from 'react';
 import {
-  Switch,
-  TextInputBox,
+  DatePickerBox,
   Modal,
-  useToggleTab,
-  ToggleTab,
   SimpleTable,
-  SimpleTableItem
+  SimpleTableItem,
+  TextInputBox,
+  toastError,
+  toastSuccess
 } from 'src/components/common';
+import { DEFAULT_MAX_GAS_PRICE_WEI, extractErrorMsg, getEstimatedGasPrice, INFINITY_FEE_PCT } from 'src/utils';
+import { getSignedOBOrder } from 'src/utils/exchange/orders';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { fetchOrderNonce, postOrders } from 'src/utils/orderbookUtils';
+import { secondsPerDay } from 'src/utils/ui-constants';
 
 interface Props {
   isOpen: boolean;
   token: Token;
   onClose: () => void;
+  onDone: () => void;
 }
 
-export const ListNFTModal = ({ isOpen, onClose }: Props) => {
-  const [price, setPrice] = useState(0);
+export const ListNFTModal = ({ isOpen, onClose, onDone, token }: Props) => {
+  const { getSigner, user, chainId, getEthersProvider } = useOnboardContext();
+
+  const [price, setPrice] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [expirationDate, setExpirationDate] = useState(Date.now() + secondsPerDay * 30 * 1000);
   // TODO: do something with this ending price?
-  const [includeEndingPrice, setIncludeEndingPrice] = useState<boolean>(false);
-  const { options, onChange, selected } = useToggleTab(['Set Price', 'Highest bid'], 'Set Price');
+  // const [includeEndingPrice, setIncludeEndingPrice] = useState<boolean>(false);
+  // const { options, onChange, selected } = useToggleTab(['Set Price', 'Highest Bid'], 'Set Price');
+  // const { options, onChange, selected } = useToggleTab(['Set Price'], 'Set Price');
 
   const tableItems: SimpleTableItem[] = [];
-  tableItems.push({ title: 'Fee', value: <div className="font-bold">2%</div> });
-  tableItems.push({ title: 'Royalty', value: <div className="font-bold">5%</div> });
+  tableItems.push({ title: 'Fee', value: <div className="font-bold">{INFINITY_FEE_PCT}%</div> });
+  tableItems.push({ title: 'Royalty', value: <div className="font-bold">0%</div> });
 
   return (
     <Modal
@@ -32,35 +44,117 @@ export const ListNFTModal = ({ isOpen, onClose }: Props) => {
       onClose={onClose}
       okButton="List"
       title="List NFT"
-      onOKButton={() => {
+      disableOK={isSubmitting}
+      onOKButton={async () => {
+        const priceVal = parseFloat(price);
+        if (!user || !price || priceVal <= 0) {
+          return;
+        }
+
+        try {
+          setIsSubmitting(true);
+          const priceVal = parseFloat(price);
+          const orderNonce = await fetchOrderNonce(user.address);
+          const signedOrders: SignedOBOrder[] = [];
+
+          const signer = getSigner();
+          if (signer) {
+            const tokenInfo = {
+              tokenId: token.tokenId,
+              tokenAddress: token.collectionAddress ?? '',
+              tokenName: token.slug ?? '',
+              tokenImage: token.image?.url || token?.alchemyCachedImage || token.image?.originalUrl || '',
+              attributes: (token as Erc721Token).metadata?.attributes ?? [],
+              numTokens: 1,
+              takerAddress: '',
+              takerUsername: ''
+            };
+            const orderItem = {
+              chainId: chainId as ChainId,
+              collectionAddress: token.collectionAddress ?? '',
+              collectionName: token.collectionName ?? '',
+              collectionSlug: token.collectionSlug ?? '',
+              collectionImage: 'BLANK', // todo: not necessary but BE throws error on ''
+              hasBlueCheck: token.hasBlueCheck ?? false,
+              tokens: [tokenInfo]
+            };
+
+            const gasPrice = await getEstimatedGasPrice(getEthersProvider());
+            const order: OBOrder = {
+              id: '',
+              chainId,
+              isSellOrder: true,
+              makerAddress: user.address,
+              makerUsername: user.username ?? '',
+              numItems: 1,
+              startTimeMs: Date.now(),
+              endTimeMs: expirationDate,
+              startPriceEth: priceVal, // set the Offer Price.
+              endPriceEth: priceVal, // set the Offer Price.
+              nfts: [orderItem],
+              nonce: orderNonce,
+              execParams: {
+                complicationAddress: getOBComplicationAddress(chainId),
+                currencyAddress: ETHEREUM_WETH_ADDRESS
+              },
+              extraParams: {
+                buyer: NULL_ADDRESS
+              },
+              maxGasPriceWei: gasPrice ?? DEFAULT_MAX_GAS_PRICE_WEI
+            };
+
+            const signedOrder = await getSignedOBOrder(user, chainId, signer, order);
+            if (signedOrder) {
+              signedOrders.push(signedOrder);
+              try {
+                await postOrders(user.address, signedOrders);
+                toastSuccess('Listed successfully');
+                onDone();
+              } catch (ex) {
+                toastError(`${ex}`);
+                return false;
+              }
+            }
+          }
+        } catch (err) {
+          toastError(extractErrorMsg(err));
+        }
         onClose();
       }}
     >
-      <ToggleTab small={true} options={options} selected={selected} onChange={onChange} className="mb-6" />
+      {/* <ToggleTab small={true} options={options} selected={selected} onChange={onChange} className="mb-6" /> */}
 
-      {selected === 'Set Price' && (
-        <>
-          <p className="mb-4">Sell at a fixed or declining price.</p>
-          <TextInputBox
-            autoFocus={true}
-            addEthSymbol={true}
-            type="number"
-            value={price.toString()}
-            label="Price"
-            placeholder=""
-            onChange={(value) => {
-              setPrice(Number(value));
-            }}
-          />
-          <SimpleTable className="my-6" items={tableItems} />
+      <p className="mb-4">Sell at a fixed price.</p>
+      <TextInputBox
+        autoFocus={true}
+        addEthSymbol={true}
+        type="number"
+        value={price}
+        label="Price"
+        placeholder=""
+        onChange={(value) => {
+          setPrice(value);
+        }}
+      />
 
-          <Switch
+      <div className="mt-4">
+        <DatePickerBox
+          placeholder="Expiry date"
+          label="Expiry date"
+          value={new Date(parseInt(expirationDate.toString()))}
+          onChange={(date) => {
+            setExpirationDate(date.getTime());
+          }}
+        />
+      </div>
+
+      <SimpleTable className="my-6" items={tableItems} />
+
+      {/* <Switch
             title="Include ending price"
             checked={includeEndingPrice}
             onChange={() => setIncludeEndingPrice(!includeEndingPrice)}
-          />
-        </>
-      )}
+          /> */}
     </Modal>
   );
 };

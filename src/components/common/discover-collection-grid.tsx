@@ -3,9 +3,10 @@ import { CenteredContent, ScrollLoader, Spinner } from 'src/components/common';
 import { apiGet, LARGE_LIMIT, GRID_CSS } from 'src/utils';
 import { uniqBy } from 'lodash';
 import { DiscoverCollectionCard } from './discover-collection-card';
-import { DiscoverOrderBy } from 'pages/market';
 import { CollectionStatsArrayResponseDto, CollectionStatsDto } from '@infinityxyz/lib-frontend/types/dto/stats';
 import { useIsMounted } from 'src/hooks/useIsMounted';
+
+export type DiscoverOrderBy = 'twitterFollowersPercentChange' | 'volumePercentChange' | 'avgPricePercentChange';
 
 const fetchCollectionRankings = async (cursor: undefined | string, orderBy: DiscoverOrderBy) => {
   const API_ENDPOINT = '/collections/rankings'; // ?period=weekly&date=1656023141155&orderBy=twitterFollowersPercentChange&orderDirection=desc&limit=50

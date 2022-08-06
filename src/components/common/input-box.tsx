@@ -1,5 +1,5 @@
 import React, { ReactElement, ReactNode, useState } from 'react';
-import { AppDatePicker } from 'src/components/common';
+import { DatePicker } from 'src/components/common';
 import { ComboBox, ComboBoxBaseType } from './combo-box';
 import { CalendarIcon } from '@heroicons/react/outline';
 import { EthSymbol } from './eth-price';
@@ -44,7 +44,12 @@ export const InputBox = ({
         {icon && <span>{icon}</span>}
         <div className="w-full">
           {label && (
-            <label className={twMerge('block font-normal font-heading text-sm text-theme-gray-700', labelClassname)}>
+            <label
+              className={twMerge(
+                'block font-normal font-heading text-sm text-theme-gray-700 select-none',
+                labelClassname
+              )}
+            >
               {label}
             </label>
           )}
@@ -65,9 +70,7 @@ export const InputBox = ({
               </Tooltip>
             )}
 
-            {renderRightIcon && (
-              <div className="absolute top-0 bottom-0 right-4 flex flex-col justify-center">{renderRightIcon()}</div>
-            )}
+            {renderRightIcon && <div className="pl-2 flex flex-col justify-center">{renderRightIcon()}</div>}
           </div>
         </div>
       </div>
@@ -88,11 +91,11 @@ interface Props2 {
 export const DatePickerBox = ({ tooltip, label, value, onChange, placeholder }: Props2) => {
   return (
     <InputBox label={label} tooltip={tooltip}>
-      <div className="flex items-center">
+      <div className="flex items-center w-full">
         <div className="pr-2">
           <CalendarIcon className="h-4 w-4" />
         </div>
-        <AppDatePicker value={value} onChange={onChange} placeholder={placeholder} />
+        <DatePicker value={value} onChange={onChange} placeholder={placeholder} />
       </div>
     </InputBox>
   );
@@ -162,7 +165,7 @@ export const TextInputBox = ({
       className={className}
     >
       <div className="flex items-center w-full">
-        {addEthSymbol && <div className="pr-2">{EthSymbol}</div>}
+        {addEthSymbol && <div className="pr-2 select-none">{EthSymbol}</div>}
         <input
           autoFocus={autoFocus}
           type={type}

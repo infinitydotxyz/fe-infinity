@@ -2,6 +2,7 @@ import {
   BaseCollection,
   ChainId,
   Collection,
+  CollectionAttributes,
   CollectionStats,
   ERC721CardData
 } from '@infinityxyz/lib-frontend/types/core';
@@ -13,7 +14,7 @@ import { useEffect, useState } from 'react';
 import ContentLoader from 'react-content-loader';
 import { BsCheck } from 'react-icons/bs';
 import { AvatarImage } from 'src/components/collection/avatar-image';
-import { CollectionActivityTab } from 'src/components/collection/collection-activity-tab';
+import { CollectionSalesTab } from 'src/components/collection/collection-activity-tab';
 import { StatsChips } from 'src/components/collection/stats-chips';
 import { Button, EthPrice, Heading, PageBox, Spinner, SVG, ToggleTab, useToggleTab } from 'src/components/common';
 import { FeesAprStats, FeesAccruedStats } from 'src/components/curation/statistics';
@@ -21,26 +22,29 @@ import { VoteModal } from 'src/components/curation/vote-modal';
 import { VoteProgressBar } from 'src/components/curation/vote-progress-bar';
 import { CommunityFeed } from 'src/components/feed-list/community-feed';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
-import { OrderbookContainer } from 'src/components/market/orderbook-list';
+import { OrderbookContainer } from 'src/components/orderbook/orderbook-list';
+import { useFetchSignedOBOrder } from 'src/hooks/api/useFetchSignedOBOrder';
 import { ellipsisAddress, getChainScannerBase, isProd, nFormatter } from 'src/utils'; // todo: adi remove isProd once curation is ready
 import { useFetch } from 'src/utils/apiUtils';
-import { useAppContext } from 'src/utils/context/AppContext';
+import { useDrawerContext } from 'src/utils/context/DrawerContext';
 import { useOrderContext } from 'src/utils/context/OrderContext';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { iconButtonStyle } from 'src/utils/ui-constants';
 import { useSWRConfig } from 'swr';
 import { twMerge } from 'tailwind-merge';
 
 const CollectionPage = () => {
-  const { user, chainId, checkSignedIn } = useAppContext();
+  const { user, chainId, checkSignedIn } = useOnboardContext();
+
+  const { fetchSignedOBOrder } = useFetchSignedOBOrder();
   const router = useRouter();
-  const { addCartItem, removeCartItem, ordersInCart, cartItems, addOrderToCart, updateOrders, setPrice } =
-    useOrderContext();
+  const { addCartItem, removeCartItem, ordersInCart, cartItems, addOrderToCart, updateOrders } = useOrderContext();
   const [isBuyClicked, setIsBuyClicked] = useState(false);
   let toggleOptions = [];
   if (!isProd()) {
-    toggleOptions = ['NFTs', 'Orders', 'Activity', 'Community'];
+    toggleOptions = ['NFTs', 'Orders', 'Sales', 'Community'];
   } else {
-    toggleOptions = ['NFTs', 'Orders', 'Activity'];
+    toggleOptions = ['NFTs', 'Orders', 'Sales'];
   }
   const { options, onChange, selected } = useToggleTab(toggleOptions, (router?.query?.tab as string) || 'NFTs');
   const {
@@ -48,6 +52,7 @@ const CollectionPage = () => {
   } = router;
   const { mutate } = useSWRConfig();
   const [isStakeModalOpen, setIsStakeModalOpen] = useState(false);
+  const { fulfillDrawerParams } = useDrawerContext();
 
   useEffect(() => {
     if (isBuyClicked === true) {
@@ -64,6 +69,13 @@ const CollectionPage = () => {
     error,
     mutate: mutateCollection
   } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
+  const { result: collectionAttributes } = useFetch<CollectionAttributes>(
+    name ? `/collections/${name}/attributes` : '',
+    {
+      chainId: '1'
+    }
+  );
+
   const { result: currentStats } = useFetch<CollectionStatsDto>(name ? `${path}/stats/current` : '', {
     chainId
   });
@@ -85,11 +97,12 @@ const CollectionPage = () => {
   const isAlreadyAdded = (data: ERC721CardData | undefined) => {
     // check if this item was already added to cartItems or order.
     const found1 =
-      cartItems.find((item) => item.collectionAddress === data?.address && item.tokenId === data.tokenId) !== undefined;
+      cartItems.find((item) => item.collectionAddress === data?.address && item.tokenId === data?.tokenId) !==
+      undefined;
     let found2 = false;
     for (const order of ordersInCart) {
       const foundInOrder = order.cartItems.find(
-        (item) => item.collectionAddress === data?.address && item.tokenId === data.tokenId
+        (item) => item.collectionAddress === data?.address && item.tokenId === data?.tokenId
       );
       if (foundInOrder) {
         found2 = true;
@@ -136,7 +149,7 @@ const CollectionPage = () => {
     <PageBox showTitle={false} title={collection.metadata?.name ?? ''}>
       <div className="flex flex-col mt-10">
         <span>
-          <AvatarImage url={collection.metadata.profileImage} className="mb-2" />
+          <AvatarImage url={collection.metadata?.profileImage} className="mb-2" />
 
           <div className="flex gap-3 items-center">
             <div className="text-6xl">
@@ -187,15 +200,15 @@ const CollectionPage = () => {
               <LoadingDescription />
             </div>
           ) : (
-            <div className="text-secondary mt-12 md:w-2/3">{collection.metadata.description ?? ''}</div>
+            <div className="text-secondary mt-12 md:w-2/3">{collection.metadata?.description ?? ''}</div>
           )}
 
-          {collection.metadata.benefits && (
+          {collection.metadata?.benefits && (
             <div className="mt-7 md:w-2/3">
               <div className="font-medium">Ownership includes</div>
 
               <div className="flex space-x-8 mt-3 font-normal">
-                {collection.metadata.benefits?.slice(0, 3).map((benefit) => {
+                {collection.metadata?.benefits?.slice(0, 3).map((benefit) => {
                   const benefitStr = benefit.slice(0, 300);
                   return (
                     <div className="flex items-center text-secondary">
@@ -208,12 +221,12 @@ const CollectionPage = () => {
             </div>
           )}
 
-          {collection.metadata.partnerships && (
+          {collection.metadata?.partnerships && (
             <div className="mt-7 md:w-2/3">
               <div className="font-medium">Partnerships</div>
 
               <div className="flex space-x-12 mt-3 ml-2 font-normal">
-                {collection.metadata.partnerships?.slice(0, 3).map((partnership) => {
+                {collection.metadata?.partnerships?.slice(0, 3).map((partnership) => {
                   const partnershipStr = partnership?.name.slice(0, 100);
                   return (
                     <div
@@ -241,8 +254,8 @@ const CollectionPage = () => {
             </thead>
             <tbody>
               <tr className="font-bold font-heading text-2xl">
-                <td className="pr-20">{nFormatter(firstAllTimeStats?.numNfts) ?? '—'}</td>
-                <td className="pr-20">{nFormatter(firstAllTimeStats?.numOwners) ?? '—'}</td>
+                <td className="pr-20">{nFormatter(firstAllTimeStats?.numNfts ?? currentStats?.numNfts) ?? '—'}</td>
+                <td className="pr-20">{nFormatter(firstAllTimeStats?.numOwners ?? currentStats?.numOwners) ?? '—'}</td>
                 <td className="pr-20">
                   {firstAllTimeStats?.floorPrice ? (
                     <EthPrice
@@ -255,7 +268,10 @@ const CollectionPage = () => {
                 </td>
                 <td className="pr-20">
                   {firstAllTimeStats?.volume ? (
-                    <EthPrice label={`${nFormatter(firstAllTimeStats?.volume)}`} labelClassName="font-bold" />
+                    <EthPrice
+                      label={`${nFormatter(firstAllTimeStats?.volume ?? currentStats?.volume)}`}
+                      labelClassName="font-bold"
+                    />
                   ) : (
                     '—'
                   )}
@@ -322,12 +338,13 @@ const CollectionPage = () => {
             onChange={onChange}
           />
 
-          <div className="mt-6 min-h-[1024px]">
+          <div className="mt-6">
             {selected === 'NFTs' && collection && (
               <GalleryBox
                 pageId="COLLECTION"
                 getEndpoint={`/collections/${collection.chainId}:${collection.address}/nfts`}
                 collection={collection}
+                collectionAttributes={collectionAttributes || undefined}
                 cardProps={{
                   cardActions: [
                     {
@@ -346,7 +363,7 @@ const CollectionPage = () => {
                         }
                         return <div className="font-normal">Add to order</div>;
                       },
-                      onClick: (ev, data) => {
+                      onClick: async (ev, data) => {
                         if (!checkSignedIn()) {
                           return;
                         }
@@ -355,21 +372,33 @@ const CollectionPage = () => {
                           return;
                         }
                         const price = data?.orderSnippet?.listing?.orderItem?.startPriceEth ?? 0;
-                        setPrice(`${price}`);
-                        addCartItem({
-                          chainId: data?.chainId as ChainId,
-                          collectionName: data?.collectionName ?? '',
-                          collectionAddress: data?.tokenAddress ?? '',
-                          collectionImage: data?.cardImage ?? data?.image ?? '',
-                          collectionSlug: data?.collectionSlug ?? '',
-                          tokenImage: data?.image ?? '',
-                          tokenName: data?.name ?? '',
-                          tokenId: data?.tokenId ?? '-1',
-                          isSellOrder: false,
-                          attributes: data?.attributes ?? []
-                        });
+                        // setPrice(`${price}`);
+                        // addCartItem...
+
                         if (price) {
-                          setIsBuyClicked(true); // to add to cart as a Buy order. (see: useEffect)
+                          // Buy a listing
+                          // setIsBuyClicked(true); // to add to cart as a Buy order. (see: useEffect)
+                          const signedOBOrder = await fetchSignedOBOrder(
+                            data?.orderSnippet?.listing?.orderItem?.id ?? ''
+                          );
+                          if (signedOBOrder) {
+                            fulfillDrawerParams.addOrder(signedOBOrder);
+                            fulfillDrawerParams.setShowDrawer(true);
+                          }
+                        } else {
+                          // Add a Buy order to cart (Make offer)
+                          addCartItem({
+                            chainId: data?.chainId as ChainId,
+                            collectionName: data?.collectionName ?? '',
+                            collectionAddress: data?.tokenAddress ?? '',
+                            collectionImage: data?.cardImage ?? data?.image ?? '',
+                            collectionSlug: data?.collectionSlug ?? '',
+                            tokenImage: data?.image ?? '',
+                            tokenName: data?.name ?? '',
+                            tokenId: data?.tokenId ?? '-1',
+                            isSellOrder: false,
+                            attributes: data?.attributes ?? []
+                          });
                         }
                       }
                     }
@@ -383,9 +412,9 @@ const CollectionPage = () => {
             )}
 
             {/* {currentTab === 1 && <ActivityTab dailyStats={dailyStats} weeklyStats={weeklyStats} />} */}
-            {selected === 'Activity' && <CollectionActivityTab collectionAddress={collection.address} />}
+            {selected === 'Sales' && <CollectionSalesTab collectionAddress={collection.address} />}
 
-            {selected === 'Community' && !isProd() && <CommunityFeed collection={collection} className="mt-32" />}
+            {selected === 'Community' && !isProd() && <CommunityFeed collection={collection} className="mt-16" />}
           </div>
         </main>
       </div>

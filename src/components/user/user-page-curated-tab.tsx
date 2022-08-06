@@ -10,7 +10,7 @@ import { useFetchInfinite } from 'src/utils';
 import { CurationTable } from '../curation/curations-table';
 import { NoResultsBox } from '../curation/no-results-box';
 import { CuratedTab } from '../curation/types';
-import { useAppContext } from 'src/utils/context/AppContext';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 const InfoBox: React.FC<{ title: string; subtitle: string | number }> = ({ title, subtitle }) => {
   return (
@@ -22,7 +22,8 @@ const InfoBox: React.FC<{ title: string; subtitle: string | number }> = ({ title
 };
 
 export const UserPageCuratedTab: React.FC<{ userInfo: UserProfileDto }> = ({ userInfo }) => {
-  const { chainId } = useAppContext();
+  const { chainId } = useOnboardContext();
+
   const [orderBy, setOrderBy] = useState(CuratedCollectionsOrderBy.Votes);
   const { result: quota } = useCurationQuota(`${chainId}:${userInfo.address}`);
 
@@ -42,7 +43,7 @@ export const UserPageCuratedTab: React.FC<{ userInfo: UserProfileDto }> = ({ use
   const fetchMore = () => setSize((size) => size + 1);
 
   return (
-    <div className="min-h-[1024px] mt-[-66px]">
+    <div className="min-h-[50vh] mt-[-66px]">
       <div className="flex flex-row-reverse mb-8 bg-transparent">
         <Sort onClick={setOrderBy} />
       </div>

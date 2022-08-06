@@ -3,8 +3,8 @@ import { Token } from '@infinityxyz/lib-frontend/types/core';
 import { useState } from 'react';
 import { Modal, TextInputBox, toastError } from 'src/components/common';
 import { extractErrorMsg } from 'src/utils';
-import { useAppContext } from 'src/utils/context/AppContext';
 import { sendSingleNft } from 'src/utils/exchange/orders';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 interface Props {
   isOpen: boolean;
@@ -15,13 +15,13 @@ interface Props {
 
 export const SendNFTModal = ({ isOpen, onClose, onSubmit, token }: Props) => {
   const [address, setAddress] = useState('');
-  const { providerManager, chainId } = useAppContext();
+  const { getSigner, chainId, getEthersProvider } = useOnboardContext();
 
   const getFinalToAddress = async (addr: string) => {
     let finalAddress: string | null = addr;
-    if (addr.endsWith('.eth') && providerManager) {
-      const provider = providerManager.getEthersProvider();
-      finalAddress = await provider.resolveName(addr);
+    if (addr.endsWith('.eth')) {
+      const provider = getEthersProvider();
+      finalAddress = (await provider?.resolveName(addr)) ?? '';
     }
     if (finalAddress) {
       return getAddress(finalAddress);
@@ -39,7 +39,7 @@ export const SendNFTModal = ({ isOpen, onClose, onSubmit, token }: Props) => {
           try {
             const toAddress = await getFinalToAddress(address);
             if (toAddress && token.collectionAddress && token.tokenId) {
-              const signer = providerManager?.getEthersProvider().getSigner();
+              const signer = getSigner();
               if (signer) {
                 const result = await sendSingleNft(signer, chainId, token.collectionAddress, token.tokenId, toAddress);
                 if (result.hash) {

@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
 import { apiPost } from 'src/utils';
-import { useAppContext } from 'src/utils/context/AppContext';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { AvatarImage } from '../collection/avatar-image';
 import { Button, Divider, Heading, Modal, Spinner, TextInputBox, toastError } from '../common';
 import { MaxButton } from './max-button';
@@ -29,7 +29,8 @@ export const StakeTokensButton: React.FC = () => {
 };
 
 export const VoteModal: React.FC<VoteModalProps> = ({ collection, isOpen, onClose, onVote }) => {
-  const { user, chainId } = useAppContext();
+  const { user, chainId } = useOnboardContext();
+
   // TODO: re-calculate fees & APR (via API call) when 'votes' change
   const [votes, setVotes] = useState(0);
   const { result: quota, isLoading: isLoadingQuota, mutate: mutateQuota } = useUserCurationQuota();

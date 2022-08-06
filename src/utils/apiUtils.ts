@@ -1,9 +1,9 @@
-import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios';
+import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosRequestHeaders } from 'axios';
 import useSWR, { SWRConfiguration } from 'swr';
 import { stringify } from 'query-string';
 import { API_BASE } from './constants';
-import { ProviderManager } from './providers/ProviderManager';
 import useSWRInfinite, { SWRInfiniteConfiguration, SWRInfiniteKeyLoader } from 'swr/infinite';
+import { OnboardAuthProvider } from './OnboardContext/OnboardAuthProvider';
 
 const HTTP_UNAUTHORIZED = 401;
 const HTTP_TOO_MANY_REQUESTS = 429;
@@ -46,10 +46,8 @@ const catchError = (err: any) => {
   return { error: errorData, status: err?.response?.status };
 };
 
-export const getAuthHeaders = async (attemptLogin = true) => {
-  const providerManager = await ProviderManager.getInstance();
-  const authHeaders = await providerManager.getAuthHeaders(attemptLogin);
-  return authHeaders;
+export const getAuthHeaders = (): AxiosRequestHeaders => {
+  return OnboardAuthProvider.getAuthHeaders();
 };
 
 interface ApiParams {
@@ -57,7 +55,6 @@ interface ApiParams {
   data?: unknown; // data (payload) for Post, Put, Delete
   options?: AxiosRequestConfig;
   requiresAuth?: boolean;
-  doNotAttemptLogin?: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -84,8 +81,7 @@ export const apiGet = async (path: string, params?: ApiParams): Promise<ApiRespo
 
     let authHeaders = {};
     if (requiresAuth) {
-      const attemptLogin = !params?.doNotAttemptLogin;
-      authHeaders = await getAuthHeaders(attemptLogin);
+      authHeaders = getAuthHeaders();
     }
 
     const { data, status } = await axiosApi({
@@ -108,7 +104,7 @@ export const apiGet = async (path: string, params?: ApiParams): Promise<ApiRespo
 // example: const { result, error, status } = await apiPost(`/api/path`, { data: { somekey: 'somevalue' } });
 export const apiPost = async (path: string, params?: ApiParams): Promise<ApiResponse> => {
   const queryStr = buildQueryString(params?.query);
-  const headers = await getAuthHeaders();
+  const headers = getAuthHeaders();
   try {
     const { data, status } = await axiosApi({
       url: `${API_BASE}${path}${queryStr}`,
@@ -136,7 +132,7 @@ export const apiPut = (path: string, params?: ApiParams) => {
 
 export const apiDelete = async (path: string, params?: ApiParams): Promise<ApiResponse> => {
   const queryStr = buildQueryString(params?.query);
-  const headers = await getAuthHeaders();
+  const headers = getAuthHeaders();
   try {
     const { data, status } = await axiosApi({
       url: `${API_BASE}${path}${queryStr}`,

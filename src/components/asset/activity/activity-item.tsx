@@ -1,4 +1,4 @@
-import { EventType, EventTypeNames } from '@infinityxyz/lib-frontend/types/core/feed';
+import { EventTypeNames } from '@infinityxyz/lib-frontend/types/core/feed';
 import { EthPrice, EZImage, NextLink } from 'src/components/common';
 import { ellipsisAddress } from 'src/utils';
 import { format } from 'timeago.js';
@@ -19,31 +19,33 @@ export const ActivityItem = ({ item }: Props) => {
   return (
     <div>
       <div className="bg-gray-100 px-10 py-6 rounded-3xl flex items-center font-heading mt-4">
-        <NextLink href={`/asset/${item.chainId}/${item.collectionData?.address}/${item.tokenId}`}>
-          <EZImage className="w-16 h-16 max-h-[80px] rounded-full" src={item.collectionData?.metadata?.profileImage} />
+        <NextLink href={`/asset/${item.chainId}/${item.address}/${item.tokenId}`}>
+          <EZImage
+            className="w-16 h-16 max-h-[80px] rounded-2xl overflow-clip"
+            src={item.image || item.collectionData?.metadata?.profileImage}
+          />
         </NextLink>
         <div className="flex justify-between w-full mx-8">
-          {/* <div className="w-1/6">
-            <div className="text-black font-bold font-body">
+          <div className="w-1/6">
+            {/* <div className="text-black font-bold font-body">
               <a href={`/collection/${item.collectionSlug}`}>{item.collectionName}</a>
-            </div>
+            </div> */}
+            <div className="text-gray-400">Token</div>
             <div>
-              <a href={`/asset/${item.chainId}/${item.collectionAddress}/${item.tokenId}`}>
-                {ellipsisAddress(item.tokenId)}
-              </a>
+              <a href={`/asset/${item.chainId}/${item.address}/${item.tokenId}`}>{ellipsisAddress(item.tokenId)}</a>
             </div>
-          </div> */}
+          </div>
           <div className="w-1/6">
             <div className="text-gray-400">Event</div>
             <div className="font-bold">
               <a href={`${item.externalUrl}`} target="_blank" rel="noopener noreferrer">
-                {EventTypeNames[item.type as EventType]}
+                {EventTypeNames[item.type]}
               </a>
             </div>
           </div>
           <div className="w-1/6">
             <div className="text-gray-400">Price</div>
-            <div className="font-bold">{item.price ? <EthPrice label={`${item.price}`} /> : '—'}</div>
+            <div className="font-bold overflow-hidden">{item.price ? <EthPrice label={`${item.price}`} /> : '—'}</div>
           </div>
           <div className="w-1/6">
             <div className="text-gray-400">Date</div>

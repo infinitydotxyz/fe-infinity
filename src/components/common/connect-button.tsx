@@ -1,16 +1,15 @@
 import React from 'react';
-import { useAppContext } from 'src/utils/context/AppContext';
 import { BiCopyAlt, BiCheck } from 'react-icons/bi';
 import { Dropdown } from './dropdown';
-import { useRouter } from 'next/router';
 import { Button } from './button';
 import { ellipsisAddress } from 'src/utils';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 export const ConnectButton = () => {
-  const { user, signOut } = useAppContext();
+  const { signIn, signOut, user } = useOnboardContext();
+
   const connected = user?.address ? true : false;
   const address = user?.address;
-  const router = useRouter();
 
   const [copied, setCopied] = React.useState(false);
 
@@ -55,7 +54,7 @@ export const ConnectButton = () => {
   return (
     <>
       {connected && <Dropdown label={`${ellipsisAddress(address, 5, 3)}`} items={menuItems} />}
-      {!connected && <Button onClick={() => router.push('/connect')}>Connect</Button>}
+      {!connected && <Button onClick={() => signIn()}>Connect</Button>}
     </>
   );
 };

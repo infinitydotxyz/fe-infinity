@@ -4,9 +4,10 @@ import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { useState } from 'react';
 import { Button, Divider, EZImage, Spacer, SVG, TextInputBox, toastError, toastWarning } from 'src/components/common';
 import { extractErrorMsg } from 'src/utils';
-import { useAppContext } from 'src/utils/context/AppContext';
 import { sendMultipleNfts } from 'src/utils/exchange/orders';
-import { iconButtonStyle } from 'src/utils/ui-constants';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { drawerPx, iconButtonStyle } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
 // import { iconButtonStyle } from 'src/utils/ui-constants';
 // import { format } from 'timeago.js';
 import { Drawer } from '../../common/drawer';
@@ -22,67 +23,65 @@ interface Props {
 
 export const SendNFTsDrawer = ({ open, onClose, nftsForTransfer, onClickRemove, onSubmit }: Props) => {
   const [address, setAddress] = useState('');
-  const { providerManager, chainId } = useAppContext();
+  const { chainId, getEthersProvider, getSigner } = useOnboardContext();
 
   const getFinalToAddress = async (addr: string) => {
     let finalAddress: string | null = addr;
-    if (addr.endsWith('.eth') && providerManager) {
-      const provider = providerManager.getEthersProvider();
-      finalAddress = await provider.resolveName(addr);
+    if (addr.endsWith('.eth')) {
+      const provider = getEthersProvider();
+      finalAddress = (await provider?.resolveName(addr)) ?? '';
     }
     if (finalAddress) {
       return getAddress(finalAddress);
     }
   };
 
-  const sendNft = () => {
-    async () => {
-      const orderItems: ChainNFTs[] = [];
-      const collectionToTokenMap: { [collection: string]: { tokenId: string; numTokens: number }[] } = {};
+  const sendNft = async () => {
+    const orderItems: ChainNFTs[] = [];
+    const collectionToTokenMap: { [collection: string]: { tokenId: string; numTokens: number }[] } = {};
 
-      // group tokens by collections
-      for (const nftToTransfer of nftsForTransfer) {
-        const collection = trimLowerCase(nftToTransfer.address);
-        const tokenId = nftToTransfer.tokenId;
-        if (!collection || !tokenId) {
-          continue;
-        }
-        const numTokens = 1;
-        const tokens = collectionToTokenMap[collection] ?? [];
-        tokens.push({ tokenId, numTokens });
-        collectionToTokenMap[collection] = tokens;
+    // group tokens by collections
+    for (const nftToTransfer of nftsForTransfer) {
+      const collection = trimLowerCase(nftToTransfer.address);
+      const tokenId = nftToTransfer.tokenId;
+      if (!collection || !tokenId) {
+        continue;
       }
+      const numTokens = 1;
+      const tokens = collectionToTokenMap[collection] ?? [];
+      tokens.push({ tokenId, numTokens });
+      collectionToTokenMap[collection] = tokens;
+    }
 
-      // add to orderItems
-      for (const item in collectionToTokenMap) {
-        const tokens = collectionToTokenMap[item];
-        orderItems.push({
-          collection: item,
-          tokens
-        });
-      }
+    // add to orderItems
+    for (const item in collectionToTokenMap) {
+      const tokens = collectionToTokenMap[item];
+      orderItems.push({
+        collection: item,
+        tokens
+      });
+    }
 
-      try {
-        const toAddress = await getFinalToAddress(address);
-        if (toAddress) {
-          const signer = providerManager?.getEthersProvider().getSigner();
-          if (signer) {
-            const result = await sendMultipleNfts(signer, chainId, orderItems, toAddress);
-            if (result.hash) {
-              onSubmit(result.hash);
-            }
-          } else {
-            console.error('signer is null');
+    try {
+      const toAddress = await getFinalToAddress(address);
+      if (toAddress) {
+        const signer = getSigner();
+        if (signer) {
+          const result = await sendMultipleNfts(signer, chainId, orderItems, toAddress);
+          if (result.hash) {
+            onSubmit(result.hash);
           }
         } else {
-          toastWarning('Destination address is blank');
+          console.error('signer is null');
         }
-      } catch (err) {
-        toastError(extractErrorMsg(err), () => {
-          alert(err);
-        });
+      } else {
+        toastWarning('Destination address is blank');
       }
-    };
+    } catch (err) {
+      toastError(extractErrorMsg(err), () => {
+        alert(err);
+      });
+    }
   };
 
   return (
@@ -94,11 +93,11 @@ export const SendNFTsDrawer = ({ open, onClose, nftsForTransfer, onClickRemove, 
         title={<div className="flex items-center">Send</div>}
       >
         <div className="flex flex-col h-full">
-          <ul className="overflow-y-auto content-between px-12">
+          <ul className={twMerge(drawerPx, 'overflow-y-auto content-between')}>
             {nftsForTransfer.map((cardData: ERC721CardData) => {
               return (
                 <li key={cardData.id} className="py-3 flex">
-                  <div className="w-full flex">
+                  <div className="w-full flex items-center">
                     <div>
                       <EZImage src={cardData.image} className="w-16 h-16 rounded-2xl overflow-clip" />
                     </div>

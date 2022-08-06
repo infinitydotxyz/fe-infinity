@@ -1,18 +1,18 @@
 import { CuratedCollectionsOrderBy } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections-query.dto';
 import React from 'react';
 import { useFetchInfinite } from 'src/utils';
-import { useAppContext } from 'src/utils/context/AppContext';
 import { ScrollLoader, Spinner } from '../common';
 import { CurationTable } from './curations-table';
 import { CuratedCollectionsDto } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections.dto';
 import { NoResultsBox } from './no-results-box';
 import { CuratedTab } from './types';
 import { useRouter } from 'next/router';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 export type AllCuratedProps = { orderBy: CuratedCollectionsOrderBy };
 
 export const AllCuratedCollections: React.FC<AllCuratedProps> = ({ orderBy }) => {
-  const { user, chainId } = useAppContext();
+  const { user, chainId } = useOnboardContext();
   const router = useRouter();
 
   const query = {
@@ -44,7 +44,7 @@ export const AllCuratedCollections: React.FC<AllCuratedProps> = ({ orderBy }) =>
       )}
 
       {result && result[0].data?.length === 0 && (
-        <NoResultsBox tab={CuratedTab.AllCurated} onClick={() => router.push('market')} />
+        <NoResultsBox tab={CuratedTab.AllCurated} onClick={() => router.push('orderbook')} />
       )}
 
       <ScrollLoader onFetchMore={fetchMore} />

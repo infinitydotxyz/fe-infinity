@@ -1,11 +1,12 @@
 import { ChainId, Erc721Attribute, OBOrder, OBOrderItem, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { getOBComplicationAddress, getTxnCurrencyAddress, NULL_ADDRESS } from '@infinityxyz/lib-frontend/utils';
 import React, { ReactNode, useContext, useState } from 'react';
-import { toastError } from 'src/components/common';
+import { toastError, toastWarning } from 'src/components/common';
 import { getEstimatedGasPrice } from '../commonUtils';
 import { DEFAULT_MAX_GAS_PRICE_WEI } from '../constants';
 import { getSignedOBOrder } from '../exchange/orders';
-import { fetchOrderNonce, postOrders } from '../marketUtils';
+import { useOnboardContext } from '../OnboardContext/OnboardContext';
+import { fetchOrderNonce, postOrders } from '../orderbookUtils';
 import { secondsPerDay } from '../ui-constants';
 import { useAppContext } from './AppContext';
 
@@ -14,9 +15,9 @@ export interface OrderCartItem {
   tokenImage?: string;
   tokenName?: string;
   tokenId?: string;
-  chainId: ChainId;
-  collectionName: string;
-  collectionAddress: string;
+  chainId?: ChainId;
+  collectionName?: string;
+  collectionAddress?: string;
   collectionImage?: string;
   collectionSlug?: string;
   hasBlueCheck?: boolean;
@@ -120,7 +121,8 @@ export const OrderContextProvider = ({ children }: Props) => {
   const [numItems, setNumItems] = useState<number>(1);
 
   // for executing orders
-  const { showAppError, user, providerManager, chainId } = useAppContext();
+  const { showAppError } = useAppContext();
+  const { getSigner, getEthersProvider, user, chainId } = useOnboardContext();
 
   const isOrderBuilderEmpty = (): boolean => {
     return cartItems.length === 0;
@@ -134,9 +136,9 @@ export const OrderContextProvider = ({ children }: Props) => {
     const items: OBOrderItem[] = [];
     for (const cartItem of cartItems) {
       items.push({
-        chainId: cartItem.chainId,
-        collectionAddress: cartItem.collectionAddress,
-        collectionName: cartItem.collectionName,
+        chainId: cartItem.chainId ?? ChainId.Mainnet,
+        collectionAddress: cartItem.collectionAddress ?? '',
+        collectionName: cartItem.collectionName ?? '',
         collectionImage: cartItem.collectionImage ?? '',
         collectionSlug: cartItem?.collectionSlug ?? '',
         hasBlueCheck: cartItem?.hasBlueCheck ?? false,
@@ -194,7 +196,7 @@ export const OrderContextProvider = ({ children }: Props) => {
 
   const cancelOrder = () => {
     if (!user || !user.address) {
-      console.error('user is null');
+      toastWarning('Please connect your wallet.');
       return;
     }
     setIsEditingOrder(false);
@@ -204,7 +206,7 @@ export const OrderContextProvider = ({ children }: Props) => {
   const addOrderToCart = () => {
     setIsEditingOrder(false);
     if (!user || !user.address) {
-      console.error('user is null');
+      toastWarning('Please connect your wallet.');
       return;
     }
 
@@ -230,7 +232,19 @@ export const OrderContextProvider = ({ children }: Props) => {
         cartItems: cartItems
       };
 
-      setOrdersInCart([...ordersInCart, orderInCart]);
+      // is this already in the cart?
+      let exists = false;
+      for (const inCart of ordersInCart) {
+        for (const item of cartItems) {
+          if (indexOfCartItem(inCart.cartItems, item) !== -1) {
+            exists = true;
+          }
+        }
+      }
+
+      if (!exists) {
+        setOrdersInCart([...ordersInCart, orderInCart]);
+      }
 
       setCartItems([]);
     } catch (err) {
@@ -264,7 +278,7 @@ export const OrderContextProvider = ({ children }: Props) => {
 
   const specToOBOrder = async (spec: OBOrderSpec): Promise<OBOrder | undefined> => {
     if (!user || !user.address) {
-      console.error('user is null');
+      toastWarning('Please connect your wallet.');
       return;
     }
 
@@ -272,7 +286,7 @@ export const OrderContextProvider = ({ children }: Props) => {
       const orderNonce = await fetchOrderNonce(user.address);
       // sell orders are always in ETH
       const currencyAddress = spec.isSellOrder ? NULL_ADDRESS : getTxnCurrencyAddress(chainId);
-      const gasPrice = await getEstimatedGasPrice(providerManager?.getEthersProvider());
+      const gasPrice = await getEstimatedGasPrice(getEthersProvider());
       const order: OBOrder = {
         id: '',
         chainId: spec.chainId,
@@ -307,11 +321,11 @@ export const OrderContextProvider = ({ children }: Props) => {
       showAppError('You must be logged in to execute an order');
       return false;
     }
-    if (!providerManager) {
-      showAppError('Provider manager not found');
+    const signer = getSigner();
+    if (!signer) {
+      showAppError('signer not found');
       return false;
     }
-    const signer = providerManager.getEthersProvider().getSigner();
     setOrderDrawerOpen(false);
 
     // sign orders
@@ -396,6 +410,8 @@ export const OrderContextProvider = ({ children }: Props) => {
       // we have cleared out the items, so the next item added will be an add, not an update
       if (copy.length === 0) {
         setIsEditingOrder(false);
+
+        setOrderDrawerOpen(false);
       }
 
       setCartItems(copy);

@@ -5,7 +5,7 @@ import { MaxUint256 } from '@ethersproject/constants';
 import { Contract } from '@ethersproject/contracts';
 import { JsonRpcSigner } from '@ethersproject/providers';
 import { parseEther } from '@ethersproject/units';
-import { ERC20ABI, ERC721ABI, InfinityExchangeABI } from '@infinityxyz/lib-frontend/abi';
+import { ERC20ABI, ERC721ABI, InfinityExchangeABI, InfinityOBComplicationABI } from '@infinityxyz/lib-frontend/abi';
 import {
   ChainNFTs,
   ChainOBOrder,
@@ -15,6 +15,7 @@ import {
   SignedOBOrder
 } from '@infinityxyz/lib-frontend/types/core';
 import {
+  ETHEREUM_WETH_ADDRESS,
   getCurrentOBOrderPrice,
   getExchangeAddress,
   getOBComplicationAddress,
@@ -45,7 +46,7 @@ export async function getSignedOBOrder(
   return signedOBOrder;
 }
 
-// Orderbook orders
+// Order book orders
 export async function prepareOBOrder(
   user: User,
   chainId: BigNumberish,
@@ -107,20 +108,38 @@ export async function grantApprovals(
   signer: JsonRpcSigner,
   exchange: string
 ): Promise<boolean> {
-  try {
-    console.log('Granting approvals');
-    if (!order.isSellOrder) {
-      // approve currencies
-      const currentPrice = getCurrentOBOrderPrice(order);
-      await approveERC20(user.address, order.execParams.currencyAddress, currentPrice, signer, exchange);
-    } else {
-      // approve collections
-      await approveERC721(user.address, order.nfts, signer, exchange);
+  console.log('Granting approvals');
+  if (!order.isSellOrder) {
+    // approve currencies
+    const currentPrice = getCurrentOBOrderPrice(order);
+    await approveERC20(user.address, order.execParams.currencyAddress, currentPrice, signer, exchange);
+
+    // check if user has enough balance to fulfill this order
+    await checkERC20Balance(user.address, order.execParams.currencyAddress, currentPrice, signer);
+  } else {
+    // approve collections
+    await approveERC721(user.address, order.nfts, signer, exchange);
+  }
+  return true;
+}
+
+export async function checkERC20Balance(
+  user: string,
+  currencyAddress: string,
+  price: BigNumberish,
+  signer: JsonRpcSigner
+) {
+  console.log('Checking ERC20 balance for currency', currencyAddress);
+  if (currencyAddress !== NULL_ADDRESS) {
+    const contract = new Contract(currencyAddress, ERC20ABI, signer);
+    const balance = BigNumber.from(await contract.balanceOf(user));
+    if (balance.lt(price)) {
+      let msg = `Insufficient ERC20 balance to place order`;
+      if (currencyAddress === ETHEREUM_WETH_ADDRESS) {
+        msg = `Insufficient WETH balance to place order`;
+      }
+      throw new Error(msg);
     }
-    return true;
-  } catch (e) {
-    console.error(e);
-    return false;
   }
 }
 
@@ -132,7 +151,7 @@ export async function approveERC20(
   infinityExchangeAddress: string
 ) {
   try {
-    console.log('Granting ERC20 approval');
+    console.log('Granting ERC20 approval for currency', currencyAddress);
     if (currencyAddress !== NULL_ADDRESS) {
       const contract = new Contract(currencyAddress, ERC20ABI, signer);
       const allowance = BigNumber.from(await contract.allowance(user, infinityExchangeAddress));
@@ -157,17 +176,23 @@ export async function approveERC721ForChainNFTs(
 ) {
   try {
     console.log('Granting ERC721 approval');
+    const collectionsChecked = new Set<string>();
+    const results: unknown[] = [];
     for (const item of items) {
       const collection = item.collection;
-      const contract = new Contract(collection, ERC721ABI, signer);
-      const isApprovedForAll = await contract.isApprovedForAll(user, exchange);
-      if (!isApprovedForAll) {
-        const result = await contract.setApprovalForAll(exchange, true);
-        return result;
-      } else {
-        console.log('Already approved for all');
+      if (!collectionsChecked.has(collection)) {
+        const contract = new Contract(collection, ERC721ABI, signer);
+        const isApprovedForAll = await contract.isApprovedForAll(user, exchange);
+        if (!isApprovedForAll) {
+          const result = await contract.setApprovalForAll(exchange, true);
+          results.push(result);
+        } else {
+          console.log('Already approved for all');
+        }
+        collectionsChecked.add(collection);
       }
     }
+    return results;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
     console.error('failed granting erc721 approvals');
@@ -448,26 +473,134 @@ export async function cancelMultipleOrders(signer: JsonRpcSigner, chainId: strin
   };
 }
 
-export async function takeMultiplOneOrders(signer: JsonRpcSigner, chainId: string, makerOrder: ChainOBOrder) {
+export async function canTakeMultipleOneOrders(
+  signer: JsonRpcSigner,
+  chainId: string,
+  makerOrders: ChainOBOrder[]
+): Promise<'staleOwner' | 'cannotExecute' | 'yes' | 'no' | 'notOwner'> {
+  try {
+    // check if maker orders are valid and can be executed
+    for (const makerOrder of makerOrders) {
+      const complicationAddress = makerOrder.execParams[0];
+      // todo: adi other complications in future
+      const complication = new Contract(complicationAddress, InfinityOBComplicationABI, signer);
+      const canExec = await complication.canExecTakeOneOrder(makerOrder);
+      if (!canExec) {
+        return 'cannotExecute';
+      }
+
+      // check ownership of nfts while taking sell orders
+      const currentUser = trimLowerCase(await signer.getAddress());
+      if (makerOrder.isSellOrder) {
+        for (const nft of makerOrder.nfts) {
+          const collectionAddress = nft.collection;
+          for (const token of nft.tokens) {
+            const tokenId = token.tokenId;
+            const erc721 = new Contract(collectionAddress, ERC721ABI, signer);
+            const owner = trimLowerCase(await erc721.ownerOf(tokenId));
+            if (makerOrder.isSellOrder && owner !== trimLowerCase(makerOrder.signer)) {
+              return 'staleOwner';
+            }
+            if (!makerOrder.isSellOrder && owner !== currentUser) {
+              return 'notOwner';
+            }
+          }
+        }
+      }
+    }
+    return 'yes';
+  } catch (e) {
+    console.error('Error checking if can take multiple orders', e);
+    return 'no';
+  }
+}
+
+export async function takeOrders(
+  signer: JsonRpcSigner,
+  chainId: string,
+  makerOrders: ChainOBOrder[],
+  takerItems: ChainNFTs[][]
+) {
   const exchangeAddress = getExchangeAddress(chainId);
   const infinityExchange = new Contract(exchangeAddress, InfinityExchangeABI, signer);
-  const salePrice = getCurrentChainOBOrderPrice(makerOrder);
+  const totalPrice = makerOrders
+    .map((order) => getCurrentChainOBOrderPrice(order))
+    .reduce((acc, curr) => acc.add(curr), BigNumber.from(0));
+
+  // it is assumed that all orders have these value same, so no need to check. Contract throws if this is not the case.
+  const isSellOrder = makerOrders[0].isSellOrder;
+
+  const gasLimit = 250_000 * makerOrders.length;
   // perform exchange
   // if fulfilling a sell order, send ETH
-  if (makerOrder.isSellOrder) {
+  if (isSellOrder) {
     const options = {
-      value: salePrice
+      value: totalPrice,
+      gasLimit
     };
-    await infinityExchange.takeMultipleOneOrders([makerOrder], options);
+    const result = await infinityExchange.takeOrders(makerOrders, takerItems, options);
+    return {
+      hash: result?.hash ?? ''
+    };
   } else {
-    // if accepting offer, no need to send any ETH but need to approve ERC20/WETH
-    const currency = makerOrder.execParams[1];
+    // approve ERC721
     const user = await signer.getAddress();
-    await approveERC20(user, currency, salePrice, signer, exchangeAddress);
-    // todo: dylan need to wait for WETH approval txn to succeed
-    const result = await infinityExchange.takeMultipleOneOrders([makerOrder]);
-    console.log('takeMultipleOneOrders: result:', result);
-    return result;
+    const nfts = takerItems.flatMap((takerItem) => takerItem);
+    const approvalResults = await approveERC721ForChainNFTs(user, nfts, signer, exchangeAddress);
+
+    for (const approval of approvalResults) {
+      /**
+       * wait one at a time in case there are a lot of approvals
+       */
+      const { hash } = approval as { hash: string };
+      await signer.provider?.waitForTransaction(hash);
+    }
+    const result = await infinityExchange.takeOrders(makerOrders, takerItems, { gasLimit });
+    return {
+      hash: result?.hash ?? ''
+    };
+  }
+}
+
+export async function takeMultipleOneOrders(signer: JsonRpcSigner, chainId: string, makerOrders: ChainOBOrder[]) {
+  const exchangeAddress = getExchangeAddress(chainId);
+  const infinityExchange = new Contract(exchangeAddress, InfinityExchangeABI, signer);
+  const totalPrice = makerOrders
+    .map((order) => getCurrentChainOBOrderPrice(order))
+    .reduce((acc, curr) => acc.add(curr), BigNumber.from(0));
+
+  // it is assumed that all orders have these value same, so no need to check. Contract throws if this is not the case.
+  const isSellOrder = makerOrders[0].isSellOrder;
+
+  const gasLimit = 200_000 * makerOrders.length;
+  // perform exchange
+  // if fulfilling a sell order, send ETH
+  if (isSellOrder) {
+    const options = {
+      value: totalPrice,
+      gasLimit
+    };
+    const result = await infinityExchange.takeMultipleOneOrders(makerOrders, options);
+    return {
+      hash: result?.hash ?? ''
+    };
+  } else {
+    // approve ERC721
+    const user = await signer.getAddress();
+    const nfts = makerOrders.flatMap((order) => order.nfts);
+    const approvalResults = await approveERC721ForChainNFTs(user, nfts, signer, exchangeAddress);
+
+    for (const approval of approvalResults) {
+      /**
+       * wait one at a time in case there are a lot of approvals
+       */
+      const { hash } = approval as { hash: string };
+      await signer.provider?.waitForTransaction(hash);
+    }
+    const result = await infinityExchange.takeMultipleOneOrders(makerOrders, { gasLimit });
+    return {
+      hash: result?.hash ?? ''
+    };
   }
 }
 

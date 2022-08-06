@@ -117,7 +117,7 @@ export const Modal = ({
                 className={twMerge(
                   'w-full',
                   wide ? 'max-w-xl' : 'max-w-md',
-                  'transform overflow-hidden rounded-2xl bg-white py-8 px-9 text-left align-middle shadow-xl transition-all'
+                  'transform rounded-2xl bg-white py-8 px-9 text-left align-middle shadow-xl transition-all'
                 )}
               >
                 <Dialog.Title

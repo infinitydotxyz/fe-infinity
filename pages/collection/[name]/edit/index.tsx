@@ -4,13 +4,13 @@ import React, { useEffect, useReducer } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { PlusButton } from 'src/components/collection/edit/buttons';
 import { RemoveIcon } from 'src/components/collection/edit/remove-icon';
-import SocialsInputGroup from 'src/components/collection/socials-input-group';
+import { SocialsInputGroup } from 'src/components/collection/socials-input-group';
 import { Button, PageBox, TextAreaInputBox, TextInputBox } from 'src/components/common';
 import { Heading } from 'src/components/common/heading';
 import { toastError, toastSuccess } from 'src/components/common/toaster';
 import { ProfileImageUpload } from 'src/components/user/profile-image-upload';
 import { apiPut, DISCORD_BOT_INVITE_URL, useFetch } from 'src/utils';
-import { useAppContext } from 'src/utils/context/AppContext';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { DeepPartial } from 'src/utils/typeUtils';
 import { useSWRConfig } from 'swr';
 
@@ -123,7 +123,8 @@ const reducer = (
 const EditCollectionPage = () => {
   const router = useRouter();
   const [metadata, dispatchMetadata] = useReducer(reducer, {});
-  const { user, chainId, checkSignedIn } = useAppContext();
+  const { user, chainId, checkSignedIn } = useOnboardContext();
+
   const path = router.query.name ? `/collections/${router.query.name}` : '';
   // TODO: maybe we can fetch this data on the server side too?
   const { result: collection, isLoading } = useFetch<BaseCollection>(path, { chainId });

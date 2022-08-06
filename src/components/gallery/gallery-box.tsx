@@ -1,47 +1,49 @@
-import { BaseCollection, ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
+import { BaseCollection, CollectionAttributes, ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
-import { useFilterContext } from 'src/utils/context/FilterContext';
+import { defaultFilter, useFilterContext } from 'src/utils/context/FilterContext';
 import { Button, Card, CardProps, ErrorOrLoading, ScrollLoader } from 'src/components/common';
 import { FilterPanel } from '../filter/filter-panel';
 import { GallerySort } from './gallery-sort';
 import { twMerge } from 'tailwind-merge';
 import { useResizeDetector } from 'react-resize-detector';
-import { useAppContext } from 'src/utils/context/AppContext';
 import { useRouter } from 'next/router';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { TokenFetcher, TokenFetcherCache } from './token-fetcher';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
-interface GalleryProps {
+interface Props {
   collection?: BaseCollection | null;
+  collectionAttributes?: CollectionAttributes;
   cardProps?: CardProps;
   getEndpoint?: string;
   className?: string;
   filterShowedDefault?: boolean;
-  pageId?: 'COLLECTION' | 'PROFILE' | undefined;
-  showFilterSections?: string[];
+  pageId?: 'COLLECTION' | 'PROFILE';
+  showCollectionsFilter?: boolean;
   showSort?: boolean;
   userAddress?: string; // for User's NFTs and User's Collection Filter
 }
 
 export const GalleryBox = ({
   collection,
-  className,
+  collectionAttributes,
+  className = '',
   cardProps,
   getEndpoint,
   pageId,
-  filterShowedDefault,
-  showFilterSections,
+  filterShowedDefault = false,
+  showCollectionsFilter = false,
   showSort = true,
   userAddress = ''
-}: GalleryProps) => {
+}: Props) => {
   const [cardData, setCardData] = useState<ERC721CardData[]>([]);
   const [error, setError] = useState(false);
   const [hasNextPage, setHasNextPage] = useState(false);
   const [loading, setLoading] = useState(false);
   const [noData, setNoData] = useState(false);
-  const { chainId } = useAppContext();
+  const { chainId } = useOnboardContext();
   const router = useRouter();
-  const { filterState } = useFilterContext();
+  const { filterState, setFilterState } = useFilterContext();
   const [filterShowed, setFilterShowed] = useState(filterShowedDefault);
   const [tokenFetcher, setTokenFetcher] = useState<TokenFetcher>();
 
@@ -49,6 +51,10 @@ export const GalleryBox = ({
 
   const { width, ref } = useResizeDetector();
   const isMounted = useIsMounted();
+
+  useEffect(() => {
+    setFilterState(defaultFilter);
+  }, [router.query]);
 
   useEffect(() => {
     if (getEndpoint) {
@@ -60,7 +66,7 @@ export const GalleryBox = ({
           chainId,
           getEndpoint ?? '',
           collection?.address ?? '',
-          collection?.metadata.name ?? ''
+          collection?.metadata?.name ?? ''
         )
       );
     }
@@ -81,9 +87,6 @@ export const GalleryBox = ({
   const handleFetch = async (loadMore: boolean) => {
     if (tokenFetcher) {
       const { hasNextPage: hasNp, cardData: cd, error: err } = await tokenFetcher.fetch(loadMore);
-
-      // to test spinner
-      // await sleep(2222);
 
       // can't update react state after unmount
       if (!isMounted()) {
@@ -124,7 +127,10 @@ export const GalleryBox = ({
     }
 
     contents = (
-      <div className={twMerge('w-full grid gap-12 pointer-events-none')} style={{ gridTemplateColumns: gridColumns }}>
+      <div
+        className={twMerge('w-full flex-1 grid gap-12 pointer-events-none')}
+        style={{ gridTemplateColumns: gridColumns }}
+      >
         {cardData.map((item, idx) => {
           return <Card key={`${item.address}_${item.tokenId}_${idx}`} height={cardHeight} data={item} {...cardProps} />;
         })}
@@ -157,14 +163,11 @@ export const GalleryBox = ({
 
       <div className={twMerge(className, 'flex items-start mt-[60px]')}>
         {filterShowed && (
-          <div className="mt-4">
-            <FilterPanel
-              collection={collection as BaseCollection}
-              collectionAddress={collection?.address}
-              showFilterSections={showFilterSections}
-              userAddress={userAddress}
-            />
-          </div>
+          <FilterPanel
+            collectionAttributes={collectionAttributes}
+            collectionAddress={collection?.address}
+            showCollectionsFilter={showCollectionsFilter}
+          />
         )}
 
         {contents}
