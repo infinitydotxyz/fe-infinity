@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useAppContext } from 'src/utils/context/AppContext';
 import { useStakerContract } from './useStakerContract';
 import { BigNumber } from 'ethers';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 type StakingInfo = Array<{ 0: BigNumber; 1: BigNumber; amount: BigNumber; timestamp: BigNumber }>;
 
@@ -11,7 +11,7 @@ type StakingInfo = Array<{ 0: BigNumber; 1: BigNumber; amount: BigNumber; timest
  */
 export function useGetStakingInfo(address?: string) {
   const { contract } = useStakerContract();
-  const { user, userReady } = useAppContext();
+  const { user } = useOnboardContext();
   const [info, setInfo] = useState<StakingInfo>();
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export function useGetStakingInfo(address?: string) {
         })
         .catch(console.error);
     }
-  }, [userReady]);
+  }, [user?.address]);
 
   return { info };
 }

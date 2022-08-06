@@ -2,7 +2,7 @@ import { utils } from 'ethers';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { useStakerContract } from './useStakerContract';
 
-export function useStakerStake() {
+export function useStake() {
   const { user } = useOnboardContext();
 
   const { contract } = useStakerContract();
