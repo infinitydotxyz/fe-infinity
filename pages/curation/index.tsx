@@ -8,10 +8,10 @@ import { MyCuratedCollections } from 'src/components/curation/my-curated';
 import { CuratedTab } from 'src/components/curation/types';
 import { useCurationBulkVoteContext } from 'src/utils/context/CurationBulkVoteContext';
 import { apiPost } from 'src/utils';
-import { useAppContext } from 'src/utils/context/AppContext';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 export default function Curation() {
-  const { chainId, user } = useAppContext();
+  const { chainId, user } = useOnboardContext();
   const [orderBy, setOrderBy] = useState(CuratedCollectionsOrderBy.Votes);
   const [modalOpen, setModalOpen] = useState(false);
   const [isVoting, setIsVoting] = useState(false);

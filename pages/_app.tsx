@@ -10,6 +10,7 @@ import { FilterContextProvider } from 'src/utils/context/FilterContext';
 import React, { FunctionComponent, memo, StrictMode, useEffect } from 'react';
 import { DrawerContextProvider } from 'src/utils/context/DrawerContext';
 import { CurationBulkVoteContextProvider } from 'src/utils/context/CurationBulkVoteContext';
+import { AppContextProvider } from 'src/utils/context/AppContext';
 
 const Page: FunctionComponent<AppProps> = ({ Component, pageProps }) => <Component {...pageProps} />;
 const Memoized = memo(Page, (p, n) => p.Component === n.Component && p.pageProps === n.pageProps);
@@ -32,17 +33,19 @@ const App: FunctionComponent<AppProps> = (props) => {
 
   return (
     <StrictMode>
-      <OnboardContextProvider>
-        <FilterContextProvider>
-          <OrderContextProvider>
-            <DrawerContextProvider>
-              <CurationBulkVoteContextProvider>
-                <Memoized {...props} />
-              </CurationBulkVoteContextProvider>
-            </DrawerContextProvider>
-          </OrderContextProvider>
-        </FilterContextProvider>
-      </OnboardContextProvider>
+      <AppContextProvider>
+        <OnboardContextProvider>
+          <FilterContextProvider>
+            <OrderContextProvider>
+              <DrawerContextProvider>
+                <CurationBulkVoteContextProvider>
+                  <Memoized {...props} />
+                </CurationBulkVoteContextProvider>
+              </DrawerContextProvider>
+            </OrderContextProvider>
+          </FilterContextProvider>
+        </OnboardContextProvider>
+      </AppContextProvider>
     </StrictMode>
   );
 };
