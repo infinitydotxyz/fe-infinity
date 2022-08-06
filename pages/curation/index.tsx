@@ -63,7 +63,7 @@ export default function Curation() {
             <strong className="mr-2">{votesQuota}</strong>
             <span>veNFT available</span>
           </span>
-          <Button onClick={showModal}>Confirm</Button>
+          {votesQuota > 0 && <Button onClick={showModal}>Confirm</Button>}
         </div>
         <div className="flex flex-row">
           <ToggleTab
