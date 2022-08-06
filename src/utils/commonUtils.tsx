@@ -191,15 +191,7 @@ export const getChainScannerBase = (chainId?: string): string | null => {
   return null;
 };
 
-export const PleaseConnectMsg = () => (
-  <>
-    Please{' '}
-    <NextLink href="/connect" className="font-bold">
-      connect
-    </NextLink>{' '}
-    your wallet.
-  </>
-);
+export const PleaseConnectMsg = () => <>Please connect your wallet.</>;
 
 export const truncateDecimals = (numStr: string) => {
   return ((numStr ?? '') + ' ').slice(0, numStr.indexOf('.'));

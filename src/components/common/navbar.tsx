@@ -117,7 +117,7 @@ export const Navbar = () => {
       result.push({
         label: 'Connect',
         onClick: () => {
-          router.push('/connect');
+          router.push('/connect'); // todo: steve - this should be the new connect modal
         }
       });
     } else {
