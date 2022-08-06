@@ -6,7 +6,6 @@ import {
   trimLowerCase
 } from '@infinityxyz/lib-frontend/utils';
 import { ReactNode } from 'react';
-import { NextLink } from 'src/components/common';
 import { Web3Provider } from './providers/AbstractProvider';
 
 export const base64Encode = (data: string) => Buffer.from(data).toString('base64');
