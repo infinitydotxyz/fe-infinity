@@ -18,7 +18,7 @@ export default function Curation() {
   const tabs = [CuratedTab.AllCurated, CuratedTab.MyCurated];
   const router = useRouter();
   const { options, onChange, selected } = useToggleTab(tabs, (router?.query?.tab as string) || 'My Curated');
-  const { votesQuota, votes } = useCurationBulkVoteContext();
+  const { votesQuota, votes, reset } = useCurationBulkVoteContext();
 
   const closeModal = () => setModalOpen(false);
   const showModal = () => setModalOpen(Object.keys(votes).length > 0);
@@ -36,7 +36,7 @@ export default function Curation() {
       toastError(error?.errorResponse?.message);
     } else {
       toastSuccess('Votes registered successfully!');
-      // TODO: refresh SWR cache
+      reset();
     }
 
     setIsVoting(false);

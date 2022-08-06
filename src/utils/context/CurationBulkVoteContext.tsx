@@ -42,6 +42,11 @@ type CurationBulkVoteType = {
    * Decrease the spent votes for the collection by the specified value.
    */
   decreaseVotes: (collectionId: string, value: number) => void;
+
+  /**
+   * R esets state and revalidates relevant SWR cache.
+   */
+  reset: () => void;
 };
 
 function deleteZeroValues(obj: VotesMap) {
@@ -56,7 +61,7 @@ function deleteZeroValues(obj: VotesMap) {
 const CurationBulkVoteContext = createContext<CurationBulkVoteType | undefined>(undefined);
 
 export const CurationBulkVoteContextProvider = ({ children }: { children: ReactNode }) => {
-  const { result: quota } = useUserCurationQuota();
+  const { result: quota, mutate: mutateUserQuota } = useUserCurationQuota();
   const [votes, _setVotes] = useState<VotesMap>({});
   const [votesQuota, setVotesQuota] = useState<number>(0);
   const setVotes = useCallback((action: SetStateAction<VotesMap>) => {
@@ -69,6 +74,10 @@ export const CurationBulkVoteContextProvider = ({ children }: { children: ReactN
   const decreaseVotes = useCallback((collectionId: string, value: number) => {
     setVotes((state) => ({ ...state, [collectionId]: (state[collectionId] || 0) + value }));
     setVotesQuota((state) => state - value);
+  }, []);
+  const reset = useCallback(() => {
+    mutateUserQuota();
+    setVotes({});
   }, []);
 
   useEffect(() => {
@@ -85,7 +94,8 @@ export const CurationBulkVoteContextProvider = ({ children }: { children: ReactN
         increaseVotes,
         decreaseVotes,
         setVotesQuota,
-        votesQuota
+        votesQuota,
+        reset
       }}
     >
       {children}
