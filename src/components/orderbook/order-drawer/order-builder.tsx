@@ -17,7 +17,7 @@ export const OrderBuilder = () => {
   } = useOrderContext();
 
   const list = (
-    <div className="overflow-y-auto flex flex-col space-y-3 mb-8">
+    <div className="overflow-y-auto overflow-x-clip flex flex-col space-y-3 mb-8">
       {cartItems.map((item) => (
         <OrderListItem
           key={`${item.tokenName} ${item.collectionAddress} ${item.tokenId}`}

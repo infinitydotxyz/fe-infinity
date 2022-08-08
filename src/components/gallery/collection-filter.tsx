@@ -89,7 +89,7 @@ export const CollectionFilter = () => {
         placeholder="Search"
       />
 
-      <div className="max-h-[250px] overflow-y-auto space-y-2 pr-2">{collectionCheckboxes()};</div>
+      <div className="max-h-[250px] overflow-y-auto overflow-x-clip space-y-2 pr-2">{collectionCheckboxes()};</div>
     </div>
   );
 };

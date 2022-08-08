@@ -45,7 +45,7 @@ export const CancelDrawer = ({ open, onClose, orders, onClickRemove }: Props) =>
         title={<div className="flex items-center">Cancel Orders</div>}
       >
         <div className="flex flex-col h-full">
-          <div className={twMerge(drawerPx, 'overflow-y-auto content-between')}>
+          <div className={twMerge(drawerPx, 'overflow-y-auto overflow-x-clip content-between')}>
             {orders.map((order: SignedOBOrder) => {
               return (
                 <div key={order.id} className="py-3 flex">

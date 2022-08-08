@@ -16,7 +16,7 @@ const HomePage = () => {
   const router = useRouter();
 
   return (
-    <div className="transition w-[100vw] h-[100vh] overflow-y-auto overflow-x-hidden justify-items-center">
+    <div className="transition w-[100vw] h-[100vh] overflow-y-auto overflow-x-clip justify-items-center">
       <Header title="" />
 
       <header>

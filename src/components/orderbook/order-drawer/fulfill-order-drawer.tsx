@@ -186,7 +186,7 @@ const FulfillOrderDrawer = ({ open, onClose, orders, onClickRemove, onSubmitDone
         title={<div className="flex items-center">{title}</div>}
       >
         <div className="flex flex-col h-full">
-          <div className={twMerge(drawerPx, 'overflow-y-auto content-between')}>{content()}</div>
+          <div className={twMerge(drawerPx, 'overflow-y-auto overflow-x-clip content-between')}>{content()}</div>
           <Spacer />
 
           <footer className="w-full text-center py-4">

@@ -145,7 +145,7 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
           />
         </div>
 
-        <ul className="mt-8 w-full max-h-80 overflow-y-auto space-y-4">
+        <ul className="mt-8 w-full max-h-80 overflow-y-auto overflow-x-clip space-y-4">
           {selectedCollections.map((coll, idx) => (
             <CollectionCheckbox key={`${idx} ${coll.collectionAddress}`} collection={coll} />
           ))}
