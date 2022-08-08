@@ -150,6 +150,9 @@ export const FeedListItem = ({
 
   const timeString = timeAgo(new Date(activity.timestamp));
 
+  // disable the bottomBar for now
+  const likesEnabled = false;
+
   return (
     <div className="w-full flex items-start">
       <EZImage
@@ -173,7 +176,7 @@ export const FeedListItem = ({
           <FeedListTableItem activity={activity} />
         </div>
 
-        {bottomBar}
+        {likesEnabled && bottomBar}
       </div>
     </div>
   );
