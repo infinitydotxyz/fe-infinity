@@ -410,7 +410,7 @@ const CollectionPage = () => {
             {/* {currentTab === 1 && <ActivityTab dailyStats={dailyStats} weeklyStats={weeklyStats} />} */}
             {selected === 'Sales' && <CollectionSalesTab collectionAddress={collection.address} />}
 
-            {selected === 'Community' && !isProd() && <CommunityFeed collection={collection} className="mt-16" />}
+            {selected === 'Community' && <CommunityFeed collection={collection} className="mt-16" />}
           </div>
         </main>
       </div>

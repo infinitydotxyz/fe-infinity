@@ -138,7 +138,7 @@ export const FeedList = ({
                 </div>
               )}
 
-              <hr className="mt-6 mb-10 text-gray-100" />
+              {/* <hr className="mt-6 mb-10 text-gray-100" /> */}
             </div>
           );
         })}
