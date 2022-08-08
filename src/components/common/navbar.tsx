@@ -19,7 +19,7 @@ import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 export const Navbar = () => {
   const router = useRouter();
 
-  const { signOut, user } = useOnboardContext();
+  const { signIn, signOut, user } = useOnboardContext();
 
   const connected = user?.address ? true : false;
 
@@ -116,9 +116,7 @@ export const Navbar = () => {
     if (!connected) {
       result.push({
         label: 'Connect',
-        onClick: () => {
-          router.push('/connect'); // todo: steve - this should be the new connect modal
-        }
+        onClick: signIn
       });
     } else {
       result.push({
