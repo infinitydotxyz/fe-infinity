@@ -98,13 +98,13 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const isListingOwner = user?.address === listingOwner;
 
   useEffect(() => {
-    if (token?.ordersSnippet?.listing?.orderItem) {
+    if (token?.ordersSnippet?.listing?.hasOrder) {
       const obOrder: OBOrder = getOBOrderFromFirestoreOrderItem(token?.ordersSnippet?.listing?.orderItem);
       const price = getCurrentOBOrderPrice(obOrder);
       setBuyPriceEth(utils.formatEther(price));
     }
 
-    if (token?.ordersSnippet?.offer?.orderItem) {
+    if (token?.ordersSnippet?.offer?.hasOrder) {
       const obOrder: OBOrder = getOBOrderFromFirestoreOrderItem(token?.ordersSnippet?.offer?.orderItem);
       const price = getCurrentOBOrderPrice(obOrder);
       setSellPriceEth(utils.formatEther(price));
