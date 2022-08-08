@@ -2,8 +2,7 @@
 import { WalletState } from '@web3-onboard/core';
 import { ethers, Signature } from 'ethers';
 import { splitSignature } from 'ethers/lib/utils';
-import { WalletType } from '../providers/AbstractProvider';
-import { UserRejectException } from '../providers/UserRejectException';
+import { UserRejectException, WalletType } from './UserRejectException';
 
 export class WalletSigner {
   public wallet;

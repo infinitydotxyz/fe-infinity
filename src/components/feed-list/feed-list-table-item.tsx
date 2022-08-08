@@ -1,7 +1,7 @@
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { ReactNode } from 'react';
 import { EthPrice, EZImage, NextLink } from 'src/components/common';
-import { ellipsisAddress, standardCard } from 'src/utils';
+import { ellipsisAddress, isProd, standardCard } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
 import { NftEventRec } from '../asset/activity/activity-item';
@@ -68,7 +68,12 @@ export const FeedListTableItem = ({ activity }: Props) => {
       // console.log(JSON.stringify(activity, null, 2));
       break;
   }
-  return <div>Under construction</div>;
+
+  if (!isProd()) {
+    return <div className="bg-red-800">{activity.type}: Not implemented</div>;
+  }
+
+  return <></>;
 };
 
 // ======================================================

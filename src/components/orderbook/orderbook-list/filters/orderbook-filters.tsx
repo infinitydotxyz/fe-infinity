@@ -120,7 +120,7 @@ export const OrderbookFilters = () => {
     <div className="flex flex-col mr-12">
       <div className="text-2xl font-bold">Filter</div>
       <OrderbookFilterItem key="Order type" openState={openState} setOpenState={setOpenState} item="Order type">
-        <div className="max-h-80 overflow-y-auto space-y-4">
+        <div className="max-h-80 overflow-y-auto overflow-x-clip space-y-4">
           {ORDER_TYPES.map((orderType) => (
             <Checkbox
               key={orderType}
@@ -147,7 +147,7 @@ export const OrderbookFilters = () => {
 
             {hasCollectionSearchResults && (
               <>
-                <div className="my-4 pr-2 max-h-80 w-full overflow-y-auto overflow-x-hidden space-y-2">
+                <div className="my-4 pr-2 max-h-80 w-full overflow-y-auto overflow-x-clip space-y-2">
                   {collectionCheckboxes()}
                 </div>
 

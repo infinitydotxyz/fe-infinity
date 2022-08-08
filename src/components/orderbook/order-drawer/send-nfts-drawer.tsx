@@ -93,7 +93,7 @@ export const SendNFTsDrawer = ({ open, onClose, nftsForTransfer, onClickRemove, 
         title={<div className="flex items-center">Send</div>}
       >
         <div className="flex flex-col h-full">
-          <ul className={twMerge(drawerPx, 'overflow-y-auto content-between')}>
+          <ul className={twMerge(drawerPx, 'overflow-y-auto overflow-x-clip content-between')}>
             {nftsForTransfer.map((cardData: ERC721CardData) => {
               return (
                 <li key={cardData.id} className="py-3 flex">

@@ -6,8 +6,6 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { UserProfileDto } from 'src/components/user/user-profile-dto';
 import { apiGet } from '../apiUtils';
-import { ProviderEvents } from '../providers/AbstractProvider';
-import { JSONRPCRequestPayload, JSONRPCResponsePayload } from '../providers/Provider';
 import { setupOnboard } from './setup-onboard';
 import { User } from '../context/AppContext';
 import { OnboardAuthProvider } from './OnboardAuthProvider';
@@ -16,6 +14,7 @@ import { OnboardEmitter } from './OnboardEmitter';
 import { toastWarning } from 'src/components/common';
 import { PleaseConnectMsg } from '../commonUtils';
 import { TransactionReceipt } from '@ethersproject/abstract-provider';
+import { JSONRPCRequestPayload, JSONRPCResponsePayload, ProviderEvents } from './UserRejectException';
 
 setupOnboard();
 
