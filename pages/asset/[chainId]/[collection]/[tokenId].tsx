@@ -17,6 +17,7 @@ import {
   Spinner,
   SVG,
   toastError,
+  toastSuccess,
   ToggleTab,
   useToggleTab
 } from 'src/components/common';
@@ -362,13 +363,16 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
               variant="outline"
               size="large"
               onClick={async () => {
-                const { result, error } = await apiGet(
+                const { error } = await apiGet(
                   `/collections/${token.chainId}:${token.collectionAddress}/nfts/${token.tokenId}/refresh-metadata`
                 );
 
                 if (!error) {
-                  // TODO steve
-                  console.log(result);
+                  toastSuccess('Refresh metadata successful');
+
+                  refreshAssetInfo();
+                } else {
+                  toastError('Refresh metadata failed');
                 }
               }}
             >
