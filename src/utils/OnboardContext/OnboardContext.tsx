@@ -60,9 +60,6 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
     const updateAsync = async () => {
       // keep OnboardAuthProvider in sync
       if (wallet) {
-        console.log('document.hasFocus()');
-        console.log(document.hasFocus());
-
         const walletSigner = new WalletSigner(wallet);
         await OnboardAuthProvider.updateWalletSigner(walletSigner);
 
