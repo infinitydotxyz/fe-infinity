@@ -1,40 +1,37 @@
 import { useEffect, useState } from 'react';
-import { Button, EZImage } from 'src/components/common';
+import { EZImage } from 'src/components/common';
 import { apiGet, nFormatter, standardCard } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
-import { TweetArrayDto, TweetDto } from '@infinityxyz/lib-frontend/types/dto/twitter';
+import { Collection } from '@infinityxyz/lib-frontend/types/core';
 
 interface Props2 {
-  tweet: TweetDto;
+  collection: Collection;
 }
 
-const TrendingItem = ({ tweet }: Props2) => {
+const TrendingItem = ({ collection }: Props2) => {
   return (
-    <div className={twMerge(standardCard, 'flex justify-between items-center flex-wrap')}>
-      <div className="flex mr-2 mb-3 items-center">
-        <EZImage src={tweet.author.profileImageUrl} className="w-12 h-12  overflow-clip rounded-full" />
+    <div className={twMerge(standardCard, 'flex justify-between items-center')}>
+      <div className="flex items-center overflow-clip">
+        <EZImage
+          src={collection.metadata.bannerImage || collection.metadata.profileImage}
+          className="w-12 h-12 overflow-clip shrink-0 rounded-full"
+        />
         <div className="ml-5">
-          <div className="font-bold font-heading">{tweet.author.name}</div>
-          <div className="text-theme-light-800 font-body text-sm">{`${nFormatter(
-            tweet.author.followersCount
-          )} Followers`}</div>
+          <div className="font-bold truncate font-heading">{collection.metadata.name}</div>
+          <div className="text-theme-light-800 font-body text-sm">{`Volume ${nFormatter(
+            collection.stats?.weekly?.salesVolume
+          )}`}</div>
         </div>
       </div>
-      <Button
-        className="bg-white"
-        variant="outline"
-        onClick={() => {
-          window.open(`https://twitter.com/${tweet.author.username}`);
-        }}
-      >
-        View Profile
-      </Button>
+      <div className="bg-white px-3 font-bold py-1 rounded-full mx-3">{`${nFormatter(
+        collection.stats?.weekly?.numSales
+      )}`}</div>
     </div>
   );
 };
 
 export const TrendingSidebar = () => {
-  const [tweetList, setTweetList] = useState<TweetDto[]>([]);
+  const [data, setData] = useState<Collection[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasNoData, setHasNoData] = useState(false);
   const [hasError, setHasError] = useState(false);
@@ -47,9 +44,11 @@ export const TrendingSidebar = () => {
     setIsLoading(true);
     setHasNoData(false);
 
-    const ep = `/???/`;
-    const { result, error } = await apiGet(ep, {
-      query: { limit: 3 }
+    const { result, error } = await apiGet('/collections/stats', {
+      query: {
+        period: 'weekly',
+        queryBy: 'by_sales_volume' // 'by_avg_price' // 'by_sales_volume'
+      }
     });
 
     setIsLoading(false);
@@ -59,9 +58,13 @@ export const TrendingSidebar = () => {
         setHasNoData(true);
       }
 
-      const duh = result as TweetArrayDto;
+      let tData = (result.data as Collection[]) ?? [];
 
-      setTweetList(duh.data || []);
+      if (tData.length > 10) {
+        tData = tData.splice(0, 10);
+      }
+
+      setData(tData);
     } else {
       setHasError(true);
     }
@@ -80,8 +83,8 @@ export const TrendingSidebar = () => {
     <>
       <div className="text-3xl mb-6 mt-16">Trending 7 day vol</div>
 
-      {tweetList.map((e) => {
-        return <TrendingItem tweet={e} key={e.tweetId} />;
+      {data.map((e) => {
+        return <TrendingItem collection={e} key={`${e.address}:${e.chainId}:${e.slug}`} />;
       })}
     </>
   );
