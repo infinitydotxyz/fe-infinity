@@ -304,7 +304,7 @@ export const UserChangedModel = ({ userAddress, isOpen, onClose }: Props) => {
       onClose={onClose}
       okButton="Continue"
       cancelButton=""
-      title="You switched accounts"
+      title="You switched account to"
       onOKButton={onOKButton}
     >
       <div className={`mt-4 p-2 flex flex-col w-full overflow-y-auto overflow-x-clip`}>{userAddress}</div>
