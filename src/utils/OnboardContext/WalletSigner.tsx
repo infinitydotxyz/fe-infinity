@@ -15,11 +15,12 @@ export class WalletSigner {
     return other.address() === this.address() && other.chainId() === this.chainId();
   }
 
-  static addressForWallet(wallet: WalletState): string {
-    if (wallet.accounts.length > 0) {
-      return wallet.accounts[0].address;
+  static addressForWallet(wallet: WalletState | null): string {
+    if (wallet) {
+      if (wallet.accounts.length > 0) {
+        return wallet.accounts[0].address;
+      }
     }
-
     return '';
   }
 
