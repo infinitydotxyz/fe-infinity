@@ -11,7 +11,7 @@ import { User } from '../context/AppContext';
 import { OnboardAuthProvider } from './OnboardAuthProvider';
 import { WalletSigner } from './WalletSigner';
 import { OnboardEmitter } from './OnboardEmitter';
-import { toastWarning } from 'src/components/common';
+import { Modal, toastWarning } from 'src/components/common';
 import { PleaseConnectMsg } from '../commonUtils';
 import { TransactionReceipt } from '@ethersproject/abstract-provider';
 import { JSONRPCRequestPayload, JSONRPCResponsePayload, ProviderEvents } from './UserRejectException';
@@ -38,6 +38,7 @@ const OnboardContext = React.createContext<OnboardContextType | null>(null);
 
 export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) => {
   const [user, setUser] = useState<User | null>(null);
+  const [showUserUpdatedDialog, setShowUserUpdatedDialog] = useState(false);
 
   // ===========================================================
   // hooks
@@ -57,24 +58,7 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
   // useEffect
 
   useEffect(() => {
-    const updateAsync = async () => {
-      // keep OnboardAuthProvider in sync
-      if (wallet) {
-        const walletSigner = new WalletSigner(wallet, userAddress());
-        await OnboardAuthProvider.updateWalletSigner(walletSigner);
-
-        setUser({ address: userAddress() });
-
-        await updateUserInfo(userAddress());
-      } else {
-        await OnboardAuthProvider.updateWalletSigner(null);
-        setUser(null);
-      }
-
-      OnboardEmitter.updateUserAddress(userAddress());
-    };
-
-    updateAsync();
+    updateWallet();
   }, [wallet]);
 
   useEffect(() => {
@@ -120,6 +104,33 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
 
   // ===========================================================
 
+  const updateWallet = async () => {
+    if (OnboardEmitter.isUserAddressChanging(userAddress())) {
+      if (wallet) {
+        if (!document.hasFocus()) {
+          setShowUserUpdatedDialog(true);
+
+          return;
+        }
+      }
+    }
+
+    // keep OnboardAuthProvider in sync
+    if (wallet) {
+      const walletSigner = new WalletSigner(wallet);
+      await OnboardAuthProvider.updateWalletSigner(walletSigner);
+
+      setUser({ address: userAddress() });
+
+      await updateUserInfo(userAddress());
+    } else {
+      await OnboardAuthProvider.updateWalletSigner(null);
+      setUser(null);
+    }
+
+    OnboardEmitter.updateUserAddress(userAddress());
+  };
+
   const userAddress = (): string => {
     if (wallet && wallet?.accounts.length > 0) {
       return wallet?.accounts[0].address;
@@ -163,7 +174,7 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
 
   const getSigner = (): ethers.providers.JsonRpcSigner | undefined => {
     if (wallet) {
-      const walletSigner = new WalletSigner(wallet, userAddress());
+      const walletSigner = new WalletSigner(wallet);
 
       return walletSigner.getSigner();
     }
@@ -171,7 +182,7 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
 
   const getEthersProvider = (): ethers.providers.Web3Provider | undefined => {
     if (wallet) {
-      const walletSigner = new WalletSigner(wallet, userAddress());
+      const walletSigner = new WalletSigner(wallet);
 
       return walletSigner.getEthersProvider();
     }
@@ -179,7 +190,7 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
 
   const signMessage = (message: string): Promise<Signature | undefined> => {
     if (wallet) {
-      const walletSigner = new WalletSigner(wallet, userAddress());
+      const walletSigner = new WalletSigner(wallet);
 
       return walletSigner.signMessage(message);
     }
@@ -189,7 +200,7 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
 
   const request = async (request: JSONRPCRequestPayload): Promise<JSONRPCResponsePayload | undefined> => {
     if (wallet) {
-      const walletSigner = new WalletSigner(wallet, userAddress());
+      const walletSigner = new WalletSigner(wallet);
 
       const response = await walletSigner.getEthersProvider().send(request.method, request.params);
 
@@ -256,10 +267,47 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
   return (
     <OnboardContext.Provider value={value} {...props}>
       {props.children}
+
+      <UserChangedModel
+        isOpen={showUserUpdatedDialog}
+        onClose={() => {
+          setShowUserUpdatedDialog(false);
+
+          return updateWallet();
+        }}
+        userAddress={WalletSigner.addressForWallet(wallet)}
+      />
     </OnboardContext.Provider>
   );
 };
 
 export const useOnboardContext = (): OnboardContextType => {
   return React.useContext(OnboardContext) as OnboardContextType;
+};
+
+// ===================================================================================
+
+interface Props {
+  isOpen: boolean;
+  userAddress: string;
+  onClose: () => void;
+}
+
+export const UserChangedModel = ({ userAddress, isOpen, onClose }: Props) => {
+  const onOKButton = () => {
+    onClose();
+  };
+
+  return (
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      okButton="Continue"
+      cancelButton=""
+      title="You switched account to"
+      onOKButton={onOKButton}
+    >
+      <div className={`mt-4 p-2 flex flex-col w-full overflow-y-auto overflow-x-clip`}>{userAddress}</div>
+    </Modal>
+  );
 };

@@ -23,6 +23,14 @@ class _Emitter {
     }
   }
 
+  isUserAddressChanging(address: string): boolean {
+    if (this.userAddress !== address) {
+      return this.userAddress.length > 0;
+    }
+
+    return false;
+  }
+
   updateConnected(connected: boolean) {
     if (this.connected !== connected) {
       this.connected = connected;

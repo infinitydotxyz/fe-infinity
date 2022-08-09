@@ -52,6 +52,8 @@ export const GalleryBox = ({
   const { width, ref } = useResizeDetector();
   const isMounted = useIsMounted();
 
+  const paddedImages = collection?.metadata.displayType === 'padded';
+
   useEffect(() => {
     setFilterState(defaultFilter);
   }, [router.query]);
@@ -132,7 +134,15 @@ export const GalleryBox = ({
         style={{ gridTemplateColumns: gridColumns }}
       >
         {cardData.map((item, idx) => {
-          return <Card key={`${item.address}_${item.tokenId}_${idx}`} height={cardHeight} data={item} {...cardProps} />;
+          return (
+            <Card
+              key={`${item.address}_${item.tokenId}_${idx}`}
+              height={cardHeight}
+              data={item}
+              {...cardProps}
+              paddedImages={paddedImages}
+            />
+          );
         })}
 
         {hasNextPage && (
