@@ -4,6 +4,8 @@ import { AxiosRequestHeaders } from 'axios';
 import { Signature } from 'ethers';
 import { verifyMessage } from 'ethers/lib/utils';
 import { base64Encode, getLoginMessage } from '../commonUtils';
+import { OnboardEmitter } from './OnboardEmitter';
+import { ProviderEvents, UserRejectException } from './UserRejectException';
 import { WalletSigner } from './WalletSigner';
 
 enum StorageKeys {
@@ -19,6 +21,34 @@ class _OnboardAuthProvider {
   private authSignature?: Signature;
   private authMessage = '';
   private walletSigner: WalletSigner | null = null;
+  private updateAccountOnFocus = false;
+
+  updateUserOnWindowFocus() {
+    this.setupWindowFocusHandler();
+  }
+
+  setupWindowFocusHandler() {
+    window.onfocus = () => {
+      if (this.updateAccountOnFocus) {
+        setTimeout(() => {
+          this.updateAccountOnFocus = false;
+          try {
+            console.log('OnboardEmitter.emit(ProviderEvents.AccountsChanged)');
+            OnboardEmitter.emit(ProviderEvents.AccountsChanged);
+          } catch (err) {
+            if (err instanceof UserRejectException) {
+              console.log(err.message);
+              return;
+            }
+            console.error(err);
+          }
+          // window.location.reload();
+        }, 500);
+      }
+
+      window.onfocus = null;
+    };
+  }
 
   clear() {
     this.walletSigner = null;
@@ -64,7 +94,7 @@ class _OnboardAuthProvider {
 
   isLoggedInAndAuthenticated(): boolean {
     if (this.walletSigner) {
-      const currentUser = trimLowerCase(this.walletSigner.userAddress);
+      const currentUser = trimLowerCase(this.walletSigner.address());
 
       if (currentUser && this.authNonce && this.authMessage && this.authSignature) {
         try {

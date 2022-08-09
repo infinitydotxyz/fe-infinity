@@ -6,11 +6,9 @@ import { UserRejectException, WalletType } from './UserRejectException';
 
 export class WalletSigner {
   public wallet;
-  public userAddress;
 
-  constructor(wallet: WalletState, userAddress: string) {
+  constructor(wallet: WalletState) {
     this.wallet = wallet;
-    this.userAddress = userAddress;
   }
 
   isEqual(other: WalletSigner): boolean {

@@ -60,7 +60,10 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
     const updateAsync = async () => {
       // keep OnboardAuthProvider in sync
       if (wallet) {
-        const walletSigner = new WalletSigner(wallet, userAddress());
+        console.log('document.hasFocus()');
+        console.log(document.hasFocus());
+
+        const walletSigner = new WalletSigner(wallet);
         await OnboardAuthProvider.updateWalletSigner(walletSigner);
 
         setUser({ address: userAddress() });
@@ -163,7 +166,7 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
 
   const getSigner = (): ethers.providers.JsonRpcSigner | undefined => {
     if (wallet) {
-      const walletSigner = new WalletSigner(wallet, userAddress());
+      const walletSigner = new WalletSigner(wallet);
 
       return walletSigner.getSigner();
     }
@@ -171,7 +174,7 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
 
   const getEthersProvider = (): ethers.providers.Web3Provider | undefined => {
     if (wallet) {
-      const walletSigner = new WalletSigner(wallet, userAddress());
+      const walletSigner = new WalletSigner(wallet);
 
       return walletSigner.getEthersProvider();
     }
@@ -179,7 +182,7 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
 
   const signMessage = (message: string): Promise<Signature | undefined> => {
     if (wallet) {
-      const walletSigner = new WalletSigner(wallet, userAddress());
+      const walletSigner = new WalletSigner(wallet);
 
       return walletSigner.signMessage(message);
     }
@@ -189,7 +192,7 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
 
   const request = async (request: JSONRPCRequestPayload): Promise<JSONRPCResponsePayload | undefined> => {
     if (wallet) {
-      const walletSigner = new WalletSigner(wallet, userAddress());
+      const walletSigner = new WalletSigner(wallet);
 
       const response = await walletSigner.getEthersProvider().send(request.method, request.params);
 
