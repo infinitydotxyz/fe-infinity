@@ -11,7 +11,7 @@ interface Props {
 }
 
 export const FeedListTableItem = ({ activity }: Props) => {
-  const sale = () => {
+  const feedItem = (buyer = true) => {
     return (
       <div>
         <div className={twMerge(standardCard, 'flex items-center font-heading')}>
@@ -19,7 +19,7 @@ export const FeedListTableItem = ({ activity }: Props) => {
 
           <div className="flex w-full justify-around ml-8">
             <TableItem label="Token">
-              <NextLink href={`/asset/${activity.chainId}/${activity.collectionData?.address}/${activity.tokenId}`}>
+              <NextLink href={`/asset/${activity.chainId}/${activity.address}/${activity.tokenId}`}>
                 {ellipsisAddress(activity.tokenId)}
               </NextLink>
             </TableItem>
@@ -32,11 +32,13 @@ export const FeedListTableItem = ({ activity }: Props) => {
 
             <TableItem label="Price">{activity.price ? <EthPrice label={`${activity.price}`} /> : '—'}</TableItem>
 
-            <TableItem label="Buyer">
-              <NextLink href={`/profile/${activity.to}`}>
-                {activity.toDisplayName ? ellipsisAddress(activity.toDisplayName) : ellipsisAddress(activity.to)}
-              </NextLink>
-            </TableItem>
+            {buyer && (
+              <TableItem label="Buyer">
+                <NextLink href={`/profile/${activity.to}`}>
+                  {activity.toDisplayName ? ellipsisAddress(activity.toDisplayName) : ellipsisAddress(activity.to)}
+                </NextLink>
+              </TableItem>
+            )}
 
             <TableItem label="Seller">
               <NextLink href={`/profile/${activity.from}`}>
@@ -58,8 +60,10 @@ export const FeedListTableItem = ({ activity }: Props) => {
   switch (activity.type) {
     case EventType.NftSale:
     case EventType.NftOffer:
-      return sale();
+      return feedItem();
+
     case EventType.NftListing:
+      return feedItem(false);
     case EventType.TwitterTweet:
     case EventType.DiscordAnnouncement:
     case EventType.CoinMarketCapNews:

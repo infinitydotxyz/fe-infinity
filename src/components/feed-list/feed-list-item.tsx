@@ -54,8 +54,6 @@ export const FeedListItem = ({
       default:
         return <div className="rounded-xl bg-orange-700 text-white py-0.5 px-2 text-sm pb-1">{type}</div>;
     }
-
-    return <></>;
   };
 
   const onLike = (liked: boolean) => {
