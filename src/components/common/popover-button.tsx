@@ -1,30 +1,23 @@
 import React, { Fragment, ReactNode } from 'react';
 import { Popover, Transition } from '@headlessui/react';
-import { inputBorderColor } from '../../utils/ui-constants';
-import { twMerge } from 'tailwind-merge';
+import { Chip } from './chip';
 
 interface Props {
   title: string;
   children: ReactNode;
-  buttonClassName?: string;
 }
 
-export const PopoverButton = ({ title, children, buttonClassName }: Props) => {
+export const PopoverButton = ({ title, children }: Props) => {
   return (
-    <Popover className="relative">
+    // this is bullshit. pointer-events-auto, why are we turning off pointer events? fix at somepoint
+    <Popover className="relative pointer-events-auto">
       {() => (
         <>
-          <Popover.Button
-            className={twMerge(`
-                ${inputBorderColor}
-                transition ease-in-out duration-300 hover:border-black  active:bg-gray-900
-                focus:outline-none
-                px-6 py-2
-                border rounded-full text-gray-900
-                flex items-center space-x-1 ${buttonClassName ?? ''}`)}
-          >
-            {title}
+          {/* without as="div", you get a button within button error */}
+          <Popover.Button as="div">
+            <Chip disableClick={true} content={title} />
           </Popover.Button>
+
           <Transition
             as={Fragment}
             enter="transition ease-out duration-200"

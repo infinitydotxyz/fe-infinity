@@ -35,6 +35,13 @@ export const Navbar = () => {
         },
         {
           type: 'link',
+          label: 'Feed',
+          props: {
+            href: '/feed'
+          }
+        },
+        {
+          type: 'link',
           label: 'My profile',
           props: {
             href: '/profile/me'
@@ -96,6 +103,13 @@ export const Navbar = () => {
       label: 'Trending',
       onClick: () => {
         router.push('/trending');
+      }
+    });
+
+    result.push({
+      label: 'Feed',
+      onClick: () => {
+        router.push('/feed');
       }
     });
 
