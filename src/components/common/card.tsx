@@ -26,6 +26,7 @@ export interface CardProps {
   isLoading?: boolean;
   className?: string;
   height?: number;
+  paddedImages?: boolean;
 }
 
 export const Card = ({
@@ -34,6 +35,7 @@ export const Card = ({
   cardActions,
   getDropdownActions,
   isLoading,
+  paddedImages = false,
   className = ''
 }: CardProps): JSX.Element => {
   const router = useRouter();
@@ -89,7 +91,11 @@ export const Card = ({
         href={`/asset/${data?.chainId}/${data?.tokenAddress ?? data?.address}/${data?.tokenId}`}
         className="h-full overflow-clip rounded-3xl"
       >
-        <EZImage src={data?.image} className="group-hover:scale-[1.15] transition-all duration-300" />
+        <EZImage
+          src={data?.image}
+          className="group-hover:scale-[1.15] transition-all duration-300"
+          cover={!paddedImages}
+        />
       </NextLink>
 
       {data?.rarityRank && (
