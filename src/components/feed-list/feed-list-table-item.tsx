@@ -11,7 +11,9 @@ interface Props {
 }
 
 export const FeedListTableItem = ({ activity }: Props) => {
-  const feedItem = (buyer = true) => {
+  const feedItem = (showBuyer = true) => {
+    const buyer = activity.toDisplayName ? ellipsisAddress(activity.toDisplayName) : ellipsisAddress(activity.to);
+
     return (
       <div>
         <div className={twMerge(standardCard, 'flex items-center font-heading')}>
@@ -32,11 +34,10 @@ export const FeedListTableItem = ({ activity }: Props) => {
 
             <TableItem label="Price">{activity.price ? <EthPrice label={`${activity.price}`} /> : '—'}</TableItem>
 
-            {buyer && (
+            {showBuyer && (
               <TableItem label="Buyer">
-                <NextLink href={`/profile/${activity.to}`}>
-                  {activity.toDisplayName ? ellipsisAddress(activity.toDisplayName) : ellipsisAddress(activity.to)}
-                </NextLink>
+                {buyer && <NextLink href={`/profile/${activity.to}`}>{buyer}</NextLink>}
+                {!buyer && <div>None</div>}
               </TableItem>
             )}
 
