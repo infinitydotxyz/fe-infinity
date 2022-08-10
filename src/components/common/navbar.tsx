@@ -42,18 +42,19 @@ export const Navbar = () => {
         },
         {
           type: 'link',
-          label: 'My profile',
-          props: {
-            href: '/profile/me'
-          }
-        },
-        {
-          type: 'link',
           label: 'Orderbook',
           props: {
             href: '/orderbook'
           }
         },
+        {
+          type: 'link',
+          label: 'Profile',
+          props: {
+            href: '/profile/me'
+          }
+        },
+
         {
           type: 'dropdown',
           label: 'Community',
@@ -114,16 +115,16 @@ export const Navbar = () => {
     });
 
     result.push({
-      label: 'My profile',
+      label: 'Orderbook',
       onClick: () => {
-        router.push('/profile/me');
+        router.push('/orderbook');
       }
     });
 
     result.push({
-      label: 'Orderbook',
+      label: 'Profile',
       onClick: () => {
-        router.push('/orderbook');
+        router.push('/profile/me');
       }
     });
 

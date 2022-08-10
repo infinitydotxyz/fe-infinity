@@ -9,7 +9,7 @@ export type ProgressBarProps = {
 
 export const ProgressBar: React.FC<ProgressBarProps> = ({ children, className = '', percentage }) => {
   return (
-    <div className={twMerge('bg-gray-100 overflow-clip relative rounded-3xl w-full', className)}>
+    <div className={twMerge('bg-theme-light-200 overflow-clip relative rounded-3xl w-full', className)}>
       <div className="flex items-center w-full px-4 absolute top-0 bottom-0 left-0 right-0">
         <div className="">{children}</div>
         <Spacer />

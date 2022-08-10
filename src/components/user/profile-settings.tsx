@@ -118,7 +118,8 @@ export const AccountSettingsPage: FunctionComponent<AccountSettingsProps> = (pro
             </Button>
           </div>
           <div className="flex flex-col bg-white max-w-3xl mx-auto px-4 sm:px-12 rounded-3xl">
-            <div className="mt-12">
+            <div className="font-body text-2xl mb-8 font-bold">Profile photo</div>
+            <div className="">
               <ProfileImageUpload
                 roundPhoto={true}
                 onUpload={handleProfileImageUpload}
@@ -130,7 +131,7 @@ export const AccountSettingsPage: FunctionComponent<AccountSettingsProps> = (pro
 
             <UserProfileForm />
             <div>
-              <div className="font-body text-2xl mt-10 mb-10 font-bold">Header photo</div>
+              <div className="font-body text-2xl mt-10 mb-8 font-bold">Header photo</div>
 
               <ProfileImageUpload
                 roundPhoto={false}

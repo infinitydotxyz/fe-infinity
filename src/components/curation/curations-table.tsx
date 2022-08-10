@@ -75,7 +75,7 @@ export const CurationRow: React.FC<CurationRowProps> = ({ collection, index, onC
           await mutate(`${path}/curated/${chainId}:${user?.address}`);
         }}
       />
-      <div className="w-full h-full p-8 overflow-hidden rounded-3xl bg-gray-100 grid grid-cols-analytics place-items-center">
+      <div className="w-full h-full p-8 overflow-hidden rounded-3xl bg-theme-light-200 grid grid-cols-analytics place-items-center">
         <>
           <FieldWrapper value={index} type="index" />
           <FieldWrapper value={collection.profileImage} type="image" />

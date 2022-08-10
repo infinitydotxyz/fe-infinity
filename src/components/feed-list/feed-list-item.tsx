@@ -219,7 +219,7 @@ export const FeedListItem = ({
     <div className="w-full flex items-start">
       <EZImage
         src={activity?.image || collectionProfileImage}
-        className="border rounded-full overflow-clip shrink-0 w-10 h-10 bg-gray-100"
+        className="border rounded-full overflow-clip shrink-0 w-10 h-10 bg-theme-light-200"
       />
 
       <div className="ml-2 flex-1 flex-col items-start">

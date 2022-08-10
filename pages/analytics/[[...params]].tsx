@@ -568,7 +568,7 @@ export const Analytics = () => {
             {stats?.map((stat, idx) => {
               return (
                 <div key={idx + '_' + stat.data.collectionAddress} className="mb-2">
-                  <div className="w-full h-full p-8 overflow-hidden rounded-3xl bg-gray-100 grid grid-cols-analytics place-items-center">
+                  <div className="w-full h-full p-8 overflow-hidden rounded-3xl bg-theme-light-200 grid grid-cols-analytics place-items-center">
                     {stat?.cols
                       ?.filter((s) => s.placement === 'start')
                       .map((field, j) => (
