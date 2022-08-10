@@ -162,6 +162,59 @@ export const FeedListItem = ({
   // disable the bottomBar for now
   const likesEnabled = false;
 
+  const header = () => {
+    switch (activity.type) {
+      case EventType.NftSale:
+      case EventType.NftOffer:
+      case EventType.NftTransfer:
+      case EventType.NftListing:
+        return (
+          <div className="flex items-center">
+            <div className="font-bold">
+              <NextLink href={`/collection/${collectionSlug}`}>{collectionName}</NextLink>
+            </div>
+
+            {activity?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1 shrink-0" /> : null}
+
+            <div className="ml-3 text-gray-600">{timeString}</div>
+          </div>
+        );
+      case EventType.TwitterTweet:
+        return (
+          <div className="flex items-center">
+            {collectionName && (
+              <div className="font-bold">
+                <NextLink href={`/collection/${collectionSlug}`}>{collectionName}</NextLink>
+              </div>
+            )}
+
+            {!collectionName && <div className="font-bold">{activity.fromDisplayName}</div>}
+
+            <div className="ml-3 text-gray-600">{timeString}</div>
+          </div>
+        );
+      case EventType.CoinMarketCapNews:
+        return (
+          <div className="flex items-center">
+            {collectionName && <div className="font-bold">{activity.fromDisplayName}</div>}
+
+            {!collectionName && <div className="font-bold">{activity.fromDisplayName}</div>}
+
+            <div className="ml-3 text-gray-600">{timeString}</div>
+          </div>
+        );
+      case EventType.DiscordAnnouncement:
+        return (
+          <div className="flex items-center">
+            <div className="font-bold">{activity.paymentToken}</div>
+
+            <div className="ml-3 text-gray-600">{timeString}</div>
+          </div>
+        );
+        break;
+    }
+  };
+
   return (
     <div className="w-full flex items-start">
       <EZImage
@@ -170,19 +223,7 @@ export const FeedListItem = ({
       />
 
       <div className="ml-2 flex-1 flex-col items-start">
-        <div className="flex items-center">
-          {collectionName && (
-            <div className="font-bold">
-              <NextLink href={`/collection/${collectionSlug}`}>{collectionName}</NextLink>
-            </div>
-          )}
-
-          {!collectionName && <div>Fix me</div>}
-
-          {activity?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1 shrink-0" /> : null}
-
-          <div className="ml-3 text-gray-600">{timeString}</div>
-        </div>
+        {header()}
 
         <div className="text-gray-500 flex text-sm mt-1">{typeName(activity.type)}</div>
 
