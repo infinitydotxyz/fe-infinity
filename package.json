@@ -37,6 +37,7 @@
     "cross-env": "^7.0.3",
     "ethers": "5.6.9",
     "firebase": "^9.9.2",
+    "flowbite": "^1.5.2",
     "flowbite-react": "^0.1.5",
     "formik": "^2.2.9",
     "framer-motion": "^6.5.1",
