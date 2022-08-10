@@ -1,28 +1,31 @@
 import { useEffect, useState } from 'react';
-import { EZImage, HelpTip } from 'src/components/common';
+import { EZImage, HelpTip, Spacer } from 'src/components/common';
 import { apiGet, nFormatter, standardCard } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
 import { Collection } from '@infinityxyz/lib-frontend/types/core';
 
 interface Props2 {
   collection: Collection;
+  index: number;
 }
 
-const TrendingItem = ({ collection }: Props2) => {
+const TrendingItem = ({ collection, index }: Props2) => {
   return (
-    <div className={twMerge(standardCard, 'flex justify-between items-center')}>
+    <div className={twMerge(standardCard, 'flex items-center')}>
+      <div className="mr-4 text-theme-light-800">{index}</div>
       <div className="flex items-center overflow-clip">
         <EZImage
           src={collection.metadata.bannerImage || collection.metadata.profileImage}
           className="w-12 h-12 overflow-clip shrink-0 rounded-full"
         />
-        <div className="ml-5">
+        <div className="ml-4">
           <div className="font-bold truncate font-heading">{collection.metadata.name}</div>
           <div className="text-theme-light-800 font-body text-sm">{`Volume ${nFormatter(
             collection.stats?.weekly?.salesVolume
           )}`}</div>
         </div>
       </div>
+      <Spacer />
       <HelpTip
         content={
           <div className="flex flex-col items-center">
@@ -92,8 +95,8 @@ export const TrendingSidebar = () => {
     <>
       <div className="text-3xl mb-6 mt-16">Trending 7 day vol</div>
 
-      {data.map((e) => {
-        return <TrendingItem collection={e} key={`${e.address}:${e.chainId}:${e.slug}`} />;
+      {data.map((e, index) => {
+        return <TrendingItem index={index} collection={e} key={`${e.address}:${e.chainId}:${e.slug}`} />;
       })}
     </>
   );
