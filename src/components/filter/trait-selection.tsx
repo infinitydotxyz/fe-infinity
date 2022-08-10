@@ -144,7 +144,7 @@ export const TraitSelection = ({ traits, onChange, onClearAll }: Props) => {
                   placeholder="Filter"
                 />
 
-                <div className="max-h-80 overflow-y-auto my-8 space-y-8">
+                <div className="max-h-80 overflow-y-auto overflow-x-clip my-8 space-y-8">
                   {valuesArr.map((value) => {
                     const searchText = (searchState[item.name] || '').toLowerCase();
                     if (searchText && value.name.toLowerCase().indexOf(searchText) < 0) {

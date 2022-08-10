@@ -105,7 +105,7 @@ export const CommentPanel = ({ isOpen, onClose, event, contentOnly }: Props) => 
                 src={
                   userInfo?.profileImage ?? 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
                 }
-                className="border rounded-full overflow-clip shrink-0 bg-gray-100 w-12 h-12"
+                className="border rounded-full overflow-clip shrink-0 bg-theme-light-200 w-12 h-12"
               />
               <NextLink href={`/profile/${item.username ?? item.userAddress}`} className="ml-4 font-bold">
                 {ellipsisString(item.username ?? item.userAddress)}

@@ -37,7 +37,7 @@ export const InputBox = ({
       <div
         className={twMerge(
           inputBorderColor,
-          'py-3 pl-6 pr-2 border rounded-3xl w-full flex items-center focus-within:border-theme-gray-700',
+          'py-3 pl-6 pr-2 border rounded-2xl w-full flex items-center focus-within:border-theme-gray-700',
           className
         )}
       >

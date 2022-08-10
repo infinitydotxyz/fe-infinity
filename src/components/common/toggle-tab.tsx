@@ -40,7 +40,7 @@ export const ToggleTab = ({ options, onChange, selected, className = '', small =
       <div
         className={twMerge(
           'cursor-pointer flex gap-1 rounded-full items-center p-1',
-          altStyle ? 'bg-white' : 'bg-gray-100'
+          altStyle ? 'bg-white' : 'bg-theme-light-200'
         )}
       >
         {options.map((option: string) => {

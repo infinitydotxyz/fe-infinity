@@ -64,7 +64,7 @@ class _OnboardAuthProvider {
 
   isLoggedInAndAuthenticated(): boolean {
     if (this.walletSigner) {
-      const currentUser = trimLowerCase(this.walletSigner.userAddress);
+      const currentUser = trimLowerCase(this.walletSigner.address());
 
       if (currentUser && this.authNonce && this.authMessage && this.authSignature) {
         try {

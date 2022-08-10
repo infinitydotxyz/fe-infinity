@@ -17,6 +17,7 @@ import {
   Spinner,
   SVG,
   toastError,
+  toastSuccess,
   ToggleTab,
   useToggleTab
 } from 'src/components/common';
@@ -97,13 +98,13 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
   const isListingOwner = user?.address === listingOwner;
 
   useEffect(() => {
-    if (token?.ordersSnippet?.listing?.orderItem) {
+    if (token?.ordersSnippet?.listing?.hasOrder) {
       const obOrder: OBOrder = getOBOrderFromFirestoreOrderItem(token?.ordersSnippet?.listing?.orderItem);
       const price = getCurrentOBOrderPrice(obOrder);
       setBuyPriceEth(utils.formatEther(price));
     }
 
-    if (token?.ordersSnippet?.offer?.orderItem) {
+    if (token?.ordersSnippet?.offer?.hasOrder) {
       const obOrder: OBOrder = getOBOrderFromFirestoreOrderItem(token?.ordersSnippet?.offer?.orderItem);
       const price = getCurrentOBOrderPrice(obOrder);
       setSellPriceEth(utils.formatEther(price));
@@ -362,13 +363,16 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
               variant="outline"
               size="large"
               onClick={async () => {
-                const { result, error } = await apiGet(
+                const { error } = await apiGet(
                   `/collections/${token.chainId}:${token.collectionAddress}/nfts/${token.tokenId}/refresh-metadata`
                 );
 
                 if (!error) {
-                  // TODO steve
-                  console.log(result);
+                  toastSuccess('Refresh metadata successful');
+
+                  refreshAssetInfo();
+                } else {
+                  toastError('Refresh metadata failed');
                 }
               }}
             >

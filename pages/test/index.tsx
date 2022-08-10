@@ -24,14 +24,6 @@ export const TestPage = () => {
           <div className=" flex-wrap w-3/5 flex gap-4  items-center">
             <Button
               onClick={() => {
-                void router.push('/connect');
-              }}
-            >
-              Connect
-            </Button>
-
-            <Button
-              onClick={() => {
                 void router.push('/explore-collections');
               }}
             >
@@ -95,7 +87,7 @@ export const TestPage = () => {
                 void router.push('/profile/me');
               }}
             >
-              My Profile
+              Profile
             </Button>
 
             <Button

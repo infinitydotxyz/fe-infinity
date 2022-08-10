@@ -2,35 +2,19 @@ import { useEffect, useState } from 'react';
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { apiGet } from 'src/utils';
 import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
-import { Button, ScrollLoader, Spacer } from '../common';
-// import { CommentPanel } from '../feed/comment-panel';
+import { Chip, ScrollLoader, Spacer } from '../common';
 import { NftEventRec } from '../asset/activity/activity-item';
-import { FeedListItem } from './feed-list-item';
 import { FilterButton } from './filter-button';
 import { CommentPanel } from './comment-panel';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { FeedListItem } from './feed-list-item';
 
 interface Props {
-  collectionAddress: string;
-  tokenId?: string;
   types?: EventType[];
   className?: string;
-  collectionName?: string;
-  collectionSlug?: string;
-  collectionProfileImage?: string;
 }
 
-export const FeedList = ({
-  collectionAddress,
-  tokenId,
-  types,
-  collectionName,
-  collectionSlug,
-  collectionProfileImage,
-  className = ''
-}: Props) => {
-  const { chainId } = useOnboardContext();
-  const [filter, setFilter] = useState<FeedFilter>({ collectionAddress, tokenId, types });
+export const GlobalFeedList = ({ types, className = '' }: Props) => {
+  const [filter, setFilter] = useState<FeedFilter>({ types });
   const [commentPanelEvent, setCommentPanelEvent] = useState<NftEventRec | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [activities, setActivities] = useState<NftEventRec[]>([]);
@@ -47,15 +31,9 @@ export const FeedList = ({
   ];
 
   const fetchActivity = async (isRefresh = false, fromCursor = '') => {
-    if (!collectionAddress) {
-      return;
-    }
-
     try {
       setIsLoading(true);
-      const url = tokenId
-        ? `/collections/${chainId}:${collectionAddress}/nfts/${tokenId}/activity`
-        : `/collections/${chainId}:${collectionAddress}/activity`;
+      const url = '/feed/activity';
 
       const { result, error } = await apiGet(url, {
         query: {
@@ -84,32 +62,26 @@ export const FeedList = ({
     fetchActivity(true);
   }, [filter]);
 
-  if (!collectionAddress) {
-    return null;
-  }
-
   return (
     <div className={`${className}`}>
       <div className="flex items-center mb-8">
-        <div className="text-4xl">Feed</div>
-
         <Spacer />
-        <Button className="mr-2" variant="outline" onClick={() => fetchActivity(true)}>
-          Refresh
-        </Button>
-        <FilterButton filter={filter} onChange={(f) => setFilter(f)} />
+        <Chip content={'Refresh'} onClick={() => fetchActivity(true)} />
+
+        <FilterButton className="ml-2" filter={filter} onChange={(f) => setFilter(f)} />
       </div>
 
       {!isLoading && activities.length === 0 ? <div className="font-heading">No results found</div> : null}
 
       <div className="space-y-4">
         {activities.map((activity, idx) => {
+          // console.log(JSON.stringify(activity, null, 2));
           return (
             <div key={idx}>
               <FeedListItem
-                collectionName={collectionName}
-                collectionSlug={collectionSlug}
-                collectionProfileImage={collectionProfileImage}
+                collectionName={activity.collectionName}
+                collectionSlug={activity.collectionSlug}
+                collectionProfileImage={activity.image}
                 activity={activity}
                 onComment={(ev) => {
                   if (!ev) {

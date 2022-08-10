@@ -2,27 +2,24 @@
 import { WalletState } from '@web3-onboard/core';
 import { ethers, Signature } from 'ethers';
 import { splitSignature } from 'ethers/lib/utils';
-import { WalletType } from '../providers/AbstractProvider';
-import { UserRejectException } from '../providers/UserRejectException';
 
 export class WalletSigner {
   public wallet;
-  public userAddress;
 
-  constructor(wallet: WalletState, userAddress: string) {
+  constructor(wallet: WalletState) {
     this.wallet = wallet;
-    this.userAddress = userAddress;
   }
 
   isEqual(other: WalletSigner): boolean {
     return other.address() === this.address() && other.chainId() === this.chainId();
   }
 
-  static addressForWallet(wallet: WalletState): string {
-    if (wallet.accounts.length > 0) {
-      return wallet.accounts[0].address;
+  static addressForWallet(wallet: WalletState | null): string {
+    if (wallet) {
+      if (wallet.accounts.length > 0) {
+        return wallet.accounts[0].address;
+      }
     }
-
     return '';
   }
 
@@ -59,9 +56,10 @@ export class WalletSigner {
         return splitSignature(result);
       }
     } catch (err: any) {
-      if (err?.code === 4001) {
-        throw new UserRejectException(WalletType.MetaMask);
-      }
+      console.log(err);
+      // if (err?.code === 4001) {
+      //   throw new UserRejectException(WalletType.MetaMask);
+      // }
       throw err;
     }
   }

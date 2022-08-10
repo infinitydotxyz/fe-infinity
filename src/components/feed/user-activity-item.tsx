@@ -12,7 +12,7 @@ export const UserActivityItem = ({ event }: Props) => {
   const buyer = event.buyerDisplayName ? ellipsisAddress(event.buyerDisplayName) : ellipsisAddress(event.buyer);
   return (
     <div>
-      <div className="bg-gray-100 px-10 py-6 rounded-3xl flex items-center font-heading">
+      <div className="bg-theme-light-200 px-10 py-6 rounded-3xl flex items-center font-heading">
         <NextLink href={`/asset/${event.chainId}/${event.collectionAddress}/${event.tokenId}`}>
           <EZImage src={event.image} className="w-16 h-16 rounded-2xl overflow-clip" />
         </NextLink>

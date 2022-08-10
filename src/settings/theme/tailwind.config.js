@@ -6,7 +6,9 @@ module.exports = {
     './pages/**/*.{js,ts,jsx,tsx}',
     './public/**/*.html',
     './src/**/*.{js,jsx,ts,tsx,css,scss}',
-    './src/**/**/*.{js,jsx,ts,tsx,css,scss}'
+    './src/**/**/*.{js,jsx,ts,tsx,css,scss}',
+    './node_modules/flowbite/**/*.js',
+    './node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}'
   ],
   darkMode: 'class',
   theme: {
@@ -22,6 +24,7 @@ module.exports = {
     require('postcss-import'),
     require('tailwindcss/nesting'),
     require('@tailwindcss/typography'),
-    require('@tailwindcss/forms')
+    require('@tailwindcss/forms'),
+    require('flowbite/plugin')
   ]
 };

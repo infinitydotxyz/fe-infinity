@@ -19,7 +19,7 @@ import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 export const Navbar = () => {
   const router = useRouter();
 
-  const { signOut, user } = useOnboardContext();
+  const { signIn, signOut, user } = useOnboardContext();
 
   const connected = user?.address ? true : false;
 
@@ -35,9 +35,9 @@ export const Navbar = () => {
         },
         {
           type: 'link',
-          label: 'My profile',
+          label: 'Feed',
           props: {
-            href: '/profile/me'
+            href: '/feed'
           }
         },
         {
@@ -47,6 +47,14 @@ export const Navbar = () => {
             href: '/orderbook'
           }
         },
+        {
+          type: 'link',
+          label: 'Profile',
+          props: {
+            href: '/profile/me'
+          }
+        },
+
         {
           type: 'dropdown',
           label: 'Community',
@@ -100,9 +108,9 @@ export const Navbar = () => {
     });
 
     result.push({
-      label: 'My profile',
+      label: 'Feed',
       onClick: () => {
-        router.push('/profile/me');
+        router.push('/feed');
       }
     });
 
@@ -113,12 +121,17 @@ export const Navbar = () => {
       }
     });
 
+    result.push({
+      label: 'Profile',
+      onClick: () => {
+        router.push('/profile/me');
+      }
+    });
+
     if (!connected) {
       result.push({
         label: 'Connect',
-        onClick: () => {
-          router.push('/connect'); // todo: steve - this should be the new connect modal
-        }
+        onClick: signIn
       });
     } else {
       result.push({

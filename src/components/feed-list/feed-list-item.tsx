@@ -9,6 +9,7 @@ import { FeedListTableItem } from './feed-list-table-item';
 import { useState } from 'react';
 import { timeAgo } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { twMerge } from 'tailwind-merge';
 
 interface Props {
   activity: NftEventRec;
@@ -29,33 +30,41 @@ export const FeedListItem = ({
   const [likedCache, setLikedCache] = useState<Map<string, boolean>>(new Map());
 
   const typeName = (type: string) => {
+    const classes = 'rounded-full text-white py-1 px-3 text-sm';
+
+    const component = (color: string, label: string) => {
+      return (
+        <div onClick={() => console.log(JSON.stringify(activity, null, 2))} className={twMerge(classes, color)}>
+          {label}
+        </div>
+      );
+    };
+
     switch (type) {
       case EventType.TwitterTweet:
-        return <div className="rounded-xl bg-amber-600 text-white py-0.5 px-2 text-sm pb-1">Tweet</div>;
+        return component('bg-amber-600', 'Tweet');
 
       case EventType.DiscordAnnouncement:
-        return <div className="rounded-xl bg-blue-600 text-white py-0.5 px-2 text-sm pb-1">Discord</div>;
+        return component('bg-blue-600', 'Discord');
 
       case EventType.NftSale:
-        return <div className="rounded-xl bg-purple-700 text-white py-0.5 px-2 text-sm pb-1">Sale</div>;
+        return component('bg-purple-700', 'Sale');
 
       case EventType.NftOffer:
-        return <div className="rounded-xl bg-cyan-700 text-white py-0.5 px-2 text-sm pb-1">Offer</div>;
+        return component('bg-cyan-700', 'Offer');
 
       case EventType.NftListing:
-        return <div className="rounded-xl bg-orange-700 text-white py-0.5 px-2 text-sm pb-1">Listing</div>;
+        return component('bg-orange-700', 'Listing');
 
       case EventType.NftTransfer:
-        return <div className="rounded-xl bg-yello-700 text-white py-0.5 px-2 text-sm pb-1">Transfer</div>;
+        return component('bg-yellow-600', 'Transfer');
 
       case EventType.CoinMarketCapNews:
-        return <div className="rounded-xl bg-green-700 text-white py-0.5 px-2 text-sm pb-1">News</div>;
+        return component('bg-black', 'News');
 
       default:
-        return <div className="rounded-xl bg-orange-700 text-white py-0.5 px-2 text-sm pb-1">{type}</div>;
+        return component('bg-red-700', type);
     }
-
-    return <></>;
   };
 
   const onLike = (liked: boolean) => {
@@ -150,22 +159,71 @@ export const FeedListItem = ({
 
   const timeString = timeAgo(new Date(activity.timestamp));
 
+  // disable the bottomBar for now
+  const likesEnabled = false;
+
+  const header = () => {
+    switch (activity.type) {
+      case EventType.NftSale:
+      case EventType.NftOffer:
+      case EventType.NftTransfer:
+      case EventType.NftListing:
+        return (
+          <div className="flex items-center">
+            <div className="font-bold">
+              <NextLink href={`/collection/${collectionSlug}`}>{collectionName}</NextLink>
+            </div>
+
+            {activity?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1 shrink-0" /> : null}
+
+            <div className="ml-3 text-gray-600">{timeString}</div>
+          </div>
+        );
+      case EventType.TwitterTweet:
+        return (
+          <div className="flex items-center">
+            {collectionName && (
+              <div className="font-bold">
+                <NextLink href={`/collection/${collectionSlug}`}>{collectionName}</NextLink>
+              </div>
+            )}
+
+            {!collectionName && <div className="font-bold">{activity.fromDisplayName}</div>}
+
+            <div className="ml-3 text-gray-600">{timeString}</div>
+          </div>
+        );
+      case EventType.CoinMarketCapNews:
+        return (
+          <div className="flex items-center">
+            {collectionName && <div className="font-bold">{activity.fromDisplayName}</div>}
+
+            {!collectionName && <div className="font-bold">{activity.fromDisplayName}</div>}
+
+            <div className="ml-3 text-gray-600">{timeString}</div>
+          </div>
+        );
+      case EventType.DiscordAnnouncement:
+        return (
+          <div className="flex items-center">
+            <div className="font-bold">{activity.paymentToken}</div>
+
+            <div className="ml-3 text-gray-600">{timeString}</div>
+          </div>
+        );
+        break;
+    }
+  };
+
   return (
     <div className="w-full flex items-start">
       <EZImage
         src={activity?.image || collectionProfileImage}
-        className="border border-red-300 rounded-full overflow-clip shrink-0 w-10 h-10 bg-gray-100"
+        className="border rounded-full overflow-clip shrink-0 w-10 h-10 bg-theme-light-200"
       />
 
       <div className="ml-2 flex-1 flex-col items-start">
-        <div className="flex items-center">
-          <div className="font-bold">
-            <NextLink href={`/collection/${collectionSlug}`}>{collectionName}</NextLink>
-          </div>
-          {activity?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1 shrink-0" /> : null}
-
-          <div className="ml-3 text-gray-600">{timeString}</div>
-        </div>
+        {header()}
 
         <div className="text-gray-500 flex text-sm mt-1">{typeName(activity.type)}</div>
 
@@ -173,7 +231,7 @@ export const FeedListItem = ({
           <FeedListTableItem activity={activity} />
         </div>
 
-        {bottomBar}
+        {likesEnabled && bottomBar}
       </div>
     </div>
   );

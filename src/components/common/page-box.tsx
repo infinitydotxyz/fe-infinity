@@ -31,7 +31,7 @@ export const PageBox = ({
   }, []);
 
   return (
-    <div className="transition w-[100vw] h-[100vh] overflow-y-auto overflow-x-hidden justify-items-center">
+    <div className="transition w-[100vw] h-[100vh] overflow-y-auto overflow-x-clip justify-items-center">
       {renderPasswordModal ? (
         <PasswordModal isOpen={true} onClose={() => console.log} />
       ) : (
@@ -66,7 +66,7 @@ type PageHeaderProps = {
 export const PageHeader = ({ title, rightToolbar }: PageHeaderProps): JSX.Element => {
   return (
     <div className="flex flex-row items-center">
-      <div className="font-medium text-6xl tracking-tight mt-4 mb-8">{title}</div>
+      <div className="font-medium text-6xl tracking-tight my-4">{title}</div>
 
       {rightToolbar && (
         <>

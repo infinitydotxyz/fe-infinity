@@ -6,7 +6,7 @@ import {
   trimLowerCase
 } from '@infinityxyz/lib-frontend/utils';
 import { ReactNode } from 'react';
-import { Web3Provider } from './providers/AbstractProvider';
+import ethers from 'ethers';
 
 export const base64Encode = (data: string) => Buffer.from(data).toString('base64');
 
@@ -294,7 +294,9 @@ export const infinityExchangeCustomError = (err: string) => {
   }
 };
 
-export const getEstimatedGasPrice = async (provider: Web3Provider | undefined): Promise<string | undefined> => {
+export const getEstimatedGasPrice = async (
+  provider: ethers.providers.Web3Provider | undefined
+): Promise<string | undefined> => {
   if (!provider) {
     return undefined;
   }

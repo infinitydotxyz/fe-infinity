@@ -431,7 +431,7 @@ const EditCollectionPage = () => {
                   Type the following command to complete the integration. Make sure you are the server owner or have a
                   role with the 'Use Application Commands' permission!
                   <p>
-                    <code className="bg-gray-100">
+                    <code className="bg-theme-light-200">
                       /infinity verify {`${collection?.chainId || ''}:${collection?.address || ''}`}
                     </code>
                   </p>

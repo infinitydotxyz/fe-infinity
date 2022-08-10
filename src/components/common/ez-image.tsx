@@ -63,7 +63,17 @@ export const EZImage = ({ src, center = true, cover = true, onClick, className =
   }
 
   return (
-    <div className={twMerge('w-full h-full', className)} onClick={onClick}>
+    <div
+      className={twMerge('w-full h-full shrink-0', className)}
+      onClick={(e) => {
+        if (onClick) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          onClick();
+        }
+      }}
+    >
       <div
         className={twMerge(
           cover ? 'bg-cover' : 'bg-contain',

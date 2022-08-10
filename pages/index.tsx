@@ -11,19 +11,20 @@ import { ButtonJoin } from 'src/components/landing/ButtonJoin';
 import { DiscordIconLink, InstagramIconLink, MediumIconLink, TwitterIconLink } from 'src/components/landing/Icons';
 import { Banner } from 'src/components/landing/Banner';
 import { useRouter } from 'next/router';
+import { CgMouse } from 'react-icons/cg';
 
 const HomePage = () => {
   const router = useRouter();
 
   return (
-    <div className="transition w-[100vw] h-[100vh] overflow-y-auto overflow-x-hidden justify-items-center">
+    <div className="transition w-[100vw] h-[100vh] overflow-y-auto overflow-x-clip justify-items-center">
       <Header title="" />
 
-      <header>
+      <header className="relative h-screen">
         <Banner>Our contracts have undergone multiple audits including public audits on Code4Arena and Immunefi</Banner>
         <HomeNavBar />
 
-        <section className="text-center flex flex-col justify-center items-center h-[70vh] mb-[20vh] space-y-4">
+        <section className="text-center flex flex-col justify-center items-center h-4/6 space-y-4">
           <Heading className="font-body text-4xl md:text-6xl md:leading-tight font-medium">
             The easiest way to <br /> trade NFTs
           </Heading>
@@ -36,6 +37,8 @@ const HomePage = () => {
             Sign up for beta
           </ButtonJoin>
         </section>
+
+        <CgMouse className="text-gray-600  mx-auto absolute bottom-10 right-0 left-0 w-8 h-8" />
       </header>
 
       <main className={`${pageStyles} w-full space-y-20`}>

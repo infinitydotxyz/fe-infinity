@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import mitt from 'mitt';
-import { ProviderEvents } from '../providers/AbstractProvider';
+import { ProviderEvents } from './UserRejectException';
 
 class _Emitter {
   // cache
@@ -21,6 +21,14 @@ class _Emitter {
         this.updateConnected(!!address && address.length > 0);
       }
     }
+  }
+
+  isUserAddressChanging(address: string): boolean {
+    if (this.userAddress !== address) {
+      return this.userAddress.length > 0;
+    }
+
+    return false;
   }
 
   updateConnected(connected: boolean) {

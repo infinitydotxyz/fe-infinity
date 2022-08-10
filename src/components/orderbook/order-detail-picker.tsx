@@ -32,10 +32,10 @@ export const OrderDetailPicker = ({ selection, onChange, order, scroll = false }
         </div>
       )}
 
-      <div className={twMerge('my-6', scroll ? 'max-h-64 overflow-y-auto' : '')}>
+      <div className={twMerge('my-6 space-y-4', scroll ? 'max-h-64 overflow-y-auto overflow-x-clip' : '')}>
         {(order?.nfts || []).map((nft, idx) => {
           return (
-            <div key={`${nft.collectionAddress}_${idx}`} className="space-y-4">
+            <div key={`${nft.collectionAddress}_${idx}`}>
               {nft.tokens.map((token) => {
                 const key = orderDetailKey(nft.collectionAddress, token.tokenId);
 
@@ -86,7 +86,7 @@ export const OrderDetailPicker = ({ selection, onChange, order, scroll = false }
                     />
                     <div className="ml-4">
                       <div className="select-none">{nft.collectionName}</div>
-                      <div className="select-none flex text-gray-500">{tokenId}</div>
+                      <div className="select-none flex text-gray-500 truncate">{tokenId}</div>
                     </div>
 
                     {showCheckbox && (
