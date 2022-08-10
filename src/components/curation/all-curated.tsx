@@ -22,10 +22,10 @@ export const AllCuratedCollections: React.FC<AllCuratedProps> = ({ orderBy }) =>
   };
 
   const { result, error, isLoading, setSize } = useFetchInfinite<CuratedCollectionsDto>(
-    `/collections/curated/${user?.address ? `${chainId}:${user.address}` : ''}`,
+    '/collections/curated/' + (user?.address ? `${chainId}:${user?.address}` : ''),
     {
       query,
-      apiParams: { requiresAuth: true }
+      apiParams: { requiresAuth: !!user?.address }
     }
   );
 

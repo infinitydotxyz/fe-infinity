@@ -20,16 +20,20 @@ export const MyCuratedCollections: React.FC<{ orderBy: CuratedCollectionsOrderBy
         orderDirection: 'desc',
         limit: 10
       },
-      apiParams: { requiresAuth: true }
+      apiParams: { requiresAuth: !!user?.address }
     }
   );
   const router = useRouter();
 
   const fetchMore = () => setSize((size) => size + 1);
 
+  const isSignedIn = !!user?.address;
+
   return (
     <div>
-      {error ? <div className="flex flex-col mt-10">Unable to load curated collections.</div> : null}
+      {!isSignedIn && <div className="flex flex-col mt-10">Please connect your wallet.</div>}
+
+      {error && <div className="flex flex-col mt-10">Unable to load curated collections.</div>}
 
       {result && result[0].data?.length > 0 && (
         <CurationTable curatedCollections={result?.map((result) => result.data)} />
@@ -44,7 +48,7 @@ export const MyCuratedCollections: React.FC<{ orderBy: CuratedCollectionsOrderBy
 
       <ScrollLoader onFetchMore={fetchMore} />
 
-      {isLoading && <Spinner />}
+      {isSignedIn && isLoading && <Spinner />}
     </div>
   );
 };
