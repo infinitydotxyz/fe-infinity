@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import React from 'react';
+import React, { useState } from 'react';
 import { Header, Heading, NextLink, pageStyles, Spacer, SVG } from 'src/components/common';
 import { ShowCase, SubTitle } from 'src/components/landing/Showcase';
 import SnipingEngineImage from 'src/images/landing/showcase_sniping_engine.png';
@@ -15,9 +15,17 @@ import { CgMouse } from 'react-icons/cg';
 
 const HomePage = () => {
   const router = useRouter();
+  const [onTop, setOnTop] = useState(true);
+
+  const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
+    setOnTop(event.currentTarget.scrollTop === 0);
+  };
 
   return (
-    <div className="transition w-[100vw] h-[100vh] overflow-y-auto overflow-x-clip justify-items-center">
+    <div
+      className="transition w-[100vw] h-[100vh] overflow-y-auto overflow-x-clip justify-items-center"
+      onScroll={handleScroll}
+    >
       <Header title="" />
 
       <header className="relative h-screen">
@@ -38,7 +46,7 @@ const HomePage = () => {
           </ButtonJoin>
         </section>
 
-        <CgMouse className="text-gray-600  mx-auto absolute bottom-10 right-0 left-0 w-8 h-8" />
+        {onTop && <CgMouse className="text-gray-600  mx-auto absolute bottom-10 right-0 left-0 w-10 h-10" />}
       </header>
 
       <main className={`${pageStyles} w-full space-y-20`}>
