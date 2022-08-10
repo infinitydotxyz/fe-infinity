@@ -26,3 +26,5 @@ Then make a feed page which will be basically the community tab on its own page 
 basically this is left: twitter, news, nft transfer and discord events showing up on feed
 
 then start on the reservoir kit
+
+animated gif craziness?

@@ -1,7 +1,7 @@
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { ReactNode } from 'react';
 import { EthPrice, EZImage, NextLink } from 'src/components/common';
-import { ellipsisAddress, isProd, standardBorderCard } from 'src/utils';
+import { ellipsisAddress, isProd, NEWS_IMAGE_URL, standardBorderCard } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
 import { NftEventRec } from '../asset/activity/activity-item';
@@ -63,8 +63,8 @@ export const FeedListTableItem = ({ activity }: Props) => {
   const newsItem = () => {
     return (
       <a href={activity.externalUrl} className=" " target="_blank">
-        <div className={twMerge(standardBorderCard, 'flex items-center font-heading')}>
-          <EZImage className="w-16 h-16 overflow-clip rounded-2xl" src={activity?.image} />
+        <div className={twMerge(standardBorderCard, 'flex items-stretch font-heading')}>
+          <NewsImage className="w-28 h-auto overflow-clip rounded-2xl" src={activity?.image} />
 
           <div className="flex flex-col font-body w-full justify-around ml-8">
             <div className="font-bold">{activity.paymentToken}</div>
@@ -161,4 +161,19 @@ const TableItem = ({ label, children }: Props2) => {
       <div className="font-medium">{children}</div>
     </div>
   );
+};
+
+// ===================================================================
+
+interface Props3 {
+  src?: string;
+  className?: string;
+}
+
+export const NewsImage = ({ src, className = '' }: Props3) => {
+  if (!src) {
+    return <EZImage cover={false} className={twMerge(className, 'border p-1')} src={NEWS_IMAGE_URL} />;
+  }
+
+  return <EZImage className={className} src={src} />;
 };

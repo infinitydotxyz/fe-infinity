@@ -5,7 +5,7 @@ import { Button, EZImage, NextLink, Spacer, SVG } from 'src/components/common';
 import { NftEventRec } from '../asset/activity/activity-item';
 import { addUserLike } from 'src/utils/firestore/firestoreUtils';
 import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io';
-import { FeedListTableItem } from './feed-list-table-item';
+import { FeedListTableItem, NewsImage } from './feed-list-table-item';
 import { useState } from 'react';
 import { timeAgo } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
@@ -215,12 +215,36 @@ export const FeedListItem = ({
     }
   };
 
+  const image = () => {
+    switch (activity.type) {
+      case EventType.NftSale:
+      case EventType.NftOffer:
+      case EventType.NftTransfer:
+      case EventType.NftListing:
+      case EventType.TwitterTweet:
+      case EventType.DiscordAnnouncement:
+        return (
+          <EZImage
+            src={activity?.image || collectionProfileImage}
+            className="border rounded-full overflow-clip shrink-0 w-10 h-10 bg-theme-light-200"
+          />
+        );
+
+      case EventType.CoinMarketCapNews:
+        return (
+          <NewsImage
+            src={activity?.image || collectionProfileImage}
+            className="border rounded-full overflow-clip shrink-0 w-10 h-10 bg-theme-light-200"
+          />
+        );
+
+        break;
+    }
+  };
+
   return (
     <div className="w-full flex items-start">
-      <EZImage
-        src={activity?.image || collectionProfileImage}
-        className="border rounded-full overflow-clip shrink-0 w-10 h-10 bg-theme-light-200"
-      />
+      {image()}
 
       <div className="ml-2 flex-1 flex-col items-start">
         {header()}
