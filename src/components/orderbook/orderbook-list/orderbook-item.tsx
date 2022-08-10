@@ -7,7 +7,6 @@ import { ReactNode } from 'react';
 import { EZImage, NextLink, SVG } from 'src/components/common';
 import { ENS_ADDRESS } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
-// import ReactTooltip from 'react-tooltip';
 
 type Props1 = {
   content?: ReactNode;

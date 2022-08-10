@@ -29,6 +29,7 @@ export * from 'src/components/common/search-input';
 export * from 'src/components/common/navbar';
 export * from 'src/components/common/connect-button';
 export * from 'src/components/common/collection-grid';
+export * from 'src/components/common/help-tip';
 export * from 'src/components/common/toggle-tab';
 export * from 'src/components/common/error-or-loading';
 export * from 'src/components/common/combo-box';

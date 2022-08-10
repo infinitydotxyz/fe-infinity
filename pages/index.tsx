@@ -3,6 +3,7 @@ import React from 'react';
 import { Header, Heading, NextLink, pageStyles, Spacer, SVG } from 'src/components/common';
 import { ShowCase, SubTitle } from 'src/components/landing/Showcase';
 import SnipingEngineImage from 'src/images/landing/showcase_sniping_engine.png';
+import 'flowbite';
 import OrdersImage from 'src/images/landing/showcase_set_orders.png';
 import CollectionWideOrdersImage from 'src/images/landing/showcase_collection_wide_orders.png';
 import TraitLevelOrdersImage from 'src/images/landing/showcase_trait_level_orders.png';

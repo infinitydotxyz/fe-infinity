@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { EZImage } from 'src/components/common';
+import { EZImage, HelpTip } from 'src/components/common';
 import { apiGet, nFormatter, standardCard } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
 import { Collection } from '@infinityxyz/lib-frontend/types/core';
@@ -23,9 +23,18 @@ const TrendingItem = ({ collection }: Props2) => {
           )}`}</div>
         </div>
       </div>
-      <div className="bg-white px-3 font-bold py-1 rounded-full mx-3">{`${nFormatter(
-        collection.stats?.weekly?.numSales
-      )}`}</div>
+      <HelpTip
+        content={
+          <div className="flex flex-col items-center">
+            <div>Number of sales</div>
+            <div>last 7 days</div>
+          </div>
+        }
+      >
+        <div className="bg-white px-3 font-bold py-1 rounded-full mx-3">{`${nFormatter(
+          collection.stats?.weekly?.numSales
+        )}`}</div>
+      </HelpTip>
     </div>
   );
 };
