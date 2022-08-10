@@ -2,19 +2,18 @@ import { utils } from 'ethers';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { useStakerContract } from './useStakerContract';
 
-export function useStakerStake() {
+export function useUnstake() {
   const { user } = useOnboardContext();
-
   const { contract } = useStakerContract();
 
-  const stake = async (amount: number, duration: number, address?: string) => {
+  const unstake = async (amount: number, address?: string) => {
     address = address || user?.address;
 
     if (address) {
-      const tx = await contract.stake(utils.parseEther(amount.toString()).toString(), duration);
+      const tx = await contract.unstake(utils.parseEther(amount.toString()).toString());
       await tx.wait();
     }
   };
 
-  return { stake };
+  return { unstake };
 }

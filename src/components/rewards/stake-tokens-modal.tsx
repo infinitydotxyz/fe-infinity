@@ -1,12 +1,12 @@
 import { RadioGroup } from '@headlessui/react';
 import { StakeDuration } from '@infinityxyz/lib-frontend/types/core';
 import React, { useState } from 'react';
-import { useStakerStake } from 'src/hooks/contract/staker/useStakerStake';
+import { useStake } from 'src/hooks/contract/staker/useStake';
 import { useTokenAllowance } from 'src/hooks/contract/token/useTokenAllowance';
 import { useTokenApprove } from 'src/hooks/contract/token/useTokenApprove';
 import { useTokenBalance } from 'src/hooks/contract/token/useTokenBalance';
 import { twMerge } from 'tailwind-merge';
-import { Heading, toastError } from '../common';
+import { Heading, toastError, toastSuccess } from '../common';
 import { Button } from '../common/button';
 import { TextInputBox } from '../common/input-box';
 import { Modal } from '../common/modal';
@@ -29,7 +29,7 @@ export const StakeTokensModal = ({ onClose }: Props) => {
   const [value, setValue] = useState(0);
   const [isStaking, setIsStaking] = useState(false);
   const { balance } = useTokenBalance();
-  const { stake } = useStakerStake();
+  const { stake } = useStake();
   const { approve } = useTokenApprove();
   const { allowance } = useTokenAllowance();
 
@@ -50,6 +50,7 @@ export const StakeTokensModal = ({ onClose }: Props) => {
 
       setIsStaking(false);
       onClose();
+      toastSuccess('Stake successfull, change in tokens will reflect shortly.');
     } catch (err) {
       console.error(err);
       setIsStaking(false);
