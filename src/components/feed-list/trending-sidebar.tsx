@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { EZImage, HelpTip, Spacer } from 'src/components/common';
+import { EZImage, HelpTip, NextLink, Spacer } from 'src/components/common';
 import { apiGet, nFormatter, standardCard } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
 import { Collection } from '@infinityxyz/lib-frontend/types/core';
@@ -14,10 +14,13 @@ const TrendingItem = ({ collection, index }: Props2) => {
     <div className={twMerge(standardCard, 'flex items-center')}>
       <div className="mr-4 text-theme-light-800">{index}</div>
       <div className="flex items-center overflow-clip">
-        <EZImage
-          src={collection.metadata.bannerImage || collection.metadata.profileImage}
-          className="w-12 h-12 overflow-clip shrink-0 rounded-full"
-        />
+        <NextLink href={`/collection/${collection.slug}`}>
+          <EZImage
+            src={collection.metadata.bannerImage || collection.metadata.profileImage}
+            className="w-12 h-12 overflow-clip shrink-0 rounded-full"
+          />
+        </NextLink>
+
         <div className="ml-4">
           <div className="font-bold truncate font-heading">{collection.metadata.name}</div>
           <div className="text-theme-light-800 font-body text-sm">{`Volume ${nFormatter(
