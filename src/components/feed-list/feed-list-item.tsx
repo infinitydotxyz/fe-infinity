@@ -217,11 +217,18 @@ export const FeedListItem = ({
 
   const image = () => {
     switch (activity.type) {
+      case EventType.TwitterTweet:
+        return (
+          <EZImage
+            src={activity?.paymentToken || activity?.image}
+            className="border rounded-full overflow-clip shrink-0 w-10 h-10 bg-theme-light-200"
+          />
+        );
+
       case EventType.NftSale:
       case EventType.NftOffer:
       case EventType.NftTransfer:
       case EventType.NftListing:
-      case EventType.TwitterTweet:
       case EventType.DiscordAnnouncement:
         return (
           <EZImage
