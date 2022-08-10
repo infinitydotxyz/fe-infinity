@@ -1,6 +1,6 @@
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { ReactNode } from 'react';
-import { EthPrice, ExternalLink, EZImage, NextLink } from 'src/components/common';
+import { EthPrice, EZImage, NextLink } from 'src/components/common';
 import { ellipsisAddress, isProd, standardBorderCard } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
@@ -60,13 +60,13 @@ export const FeedListTableItem = ({ activity }: Props) => {
 
   const newsItem = () => {
     return (
-      <ExternalLink href={activity.externalUrl}>
+      <a href={activity.externalUrl} className=" " target="_blank">
         <div className={twMerge(standardBorderCard, 'flex items-center font-heading')}>
           <EZImage className="w-16 h-16 overflow-clip rounded-2xl" src={activity?.image} />
 
           <div className="flex flex-col font-body w-full justify-around ml-8">
-            <div className="font-bold">{activity.collectionName}</div>
-            <div>{activity.collectionSlug}</div>
+            <div className="font-bold">{activity.paymentToken}</div>
+            <div>{activity.internalUrl}</div>
 
             <div className="flex item-center mt-2">
               <div className="font-bold">{activity.fromDisplayName}</div>
@@ -74,7 +74,7 @@ export const FeedListTableItem = ({ activity }: Props) => {
             </div>
           </div>
         </div>
-      </ExternalLink>
+      </a>
     );
   };
 

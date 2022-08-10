@@ -171,9 +171,14 @@ export const FeedListItem = ({
 
       <div className="ml-2 flex-1 flex-col items-start">
         <div className="flex items-center">
-          <div className="font-bold">
-            <NextLink href={`/collection/${collectionSlug}`}>{collectionName}</NextLink>
-          </div>
+          {collectionName && (
+            <div className="font-bold">
+              <NextLink href={`/collection/${collectionSlug}`}>{collectionName}</NextLink>
+            </div>
+          )}
+
+          {!collectionName && <div>Fix me</div>}
+
           {activity?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1 shrink-0" /> : null}
 
           <div className="ml-3 text-gray-600">{timeString}</div>
