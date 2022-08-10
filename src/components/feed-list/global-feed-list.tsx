@@ -65,8 +65,6 @@ export const GlobalFeedList = ({ types, className = '' }: Props) => {
   return (
     <div className={`${className}`}>
       <div className="flex items-center mb-8">
-        <div className="text-4xl font-bold">Feed</div>
-
         <Spacer />
         <Chip content={'Refresh'} onClick={() => fetchActivity(true)} />
 

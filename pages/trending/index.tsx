@@ -108,7 +108,7 @@ const TrendingPage = () => {
 
   return (
     <PageBox title="Trending">
-      <div className="flex justify-between">
+      <div className="mt-4 flex justify-between">
         <ToggleTab
           small={true}
           className="font-heading"

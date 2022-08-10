@@ -66,7 +66,7 @@ type PageHeaderProps = {
 export const PageHeader = ({ title, rightToolbar }: PageHeaderProps): JSX.Element => {
   return (
     <div className="flex flex-row items-center">
-      <div className="font-medium text-6xl tracking-tight mt-4 mb-8">{title}</div>
+      <div className="font-medium text-6xl tracking-tight my-4">{title}</div>
 
       {rightToolbar && (
         <>
