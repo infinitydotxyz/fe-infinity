@@ -1,6 +1,6 @@
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { ReactNode } from 'react';
-import { EthPrice, EZImage, NextLink } from 'src/components/common';
+import { EthPrice, ExternalLink, EZImage, NextLink } from 'src/components/common';
 import { ellipsisAddress, isProd, standardBorderCard } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
@@ -58,6 +58,32 @@ export const FeedListTableItem = ({ activity }: Props) => {
     );
   };
 
+  const newsItem = () => {
+    return (
+      <ExternalLink href={activity.to}>
+        <div onClick={() => console.log(JSON.stringify(activity, null, 2))}>
+          <div className={twMerge(standardBorderCard, 'flex items-center font-heading')}>
+            <EZImage
+              onClick={() => console.log(JSON.stringify(activity, null, 2))}
+              className="w-16 h-16 max-h-[80px] overflow-clip rounded-2xl"
+              src={activity?.image}
+            />
+
+            <div className="flex flex-col font-body w-full justify-around ml-8">
+              <div className=" font-bold">{activity.collectionName}</div>
+              <div>{activity.collectionSlug}</div>
+
+              <div className="flex item-center mt-2">
+                <div className="font-bold">{activity.fromDisplayName}</div>
+                <div className="ml-4">{format(activity.timestamp)}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ExternalLink>
+    );
+  };
+
   switch (activity.type) {
     case EventType.NftSale:
     case EventType.NftOffer:
@@ -65,9 +91,11 @@ export const FeedListTableItem = ({ activity }: Props) => {
 
     case EventType.NftListing:
       return feedItem(false);
+    case EventType.CoinMarketCapNews:
+      return newsItem();
+
     case EventType.TwitterTweet:
     case EventType.DiscordAnnouncement:
-    case EventType.CoinMarketCapNews:
     case EventType.NftTransfer:
       // console.log(activity.type);
       // console.log(JSON.stringify(activity, null, 2));

@@ -9,6 +9,7 @@ import { FeedListTableItem } from './feed-list-table-item';
 import { useState } from 'react';
 import { timeAgo } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { twMerge } from 'tailwind-merge';
 
 interface Props {
   activity: NftEventRec;
@@ -29,30 +30,32 @@ export const FeedListItem = ({
   const [likedCache, setLikedCache] = useState<Map<string, boolean>>(new Map());
 
   const typeName = (type: string) => {
+    const classes = 'rounded-full text-white py-1 px-3 text-sm';
+
     switch (type) {
       case EventType.TwitterTweet:
-        return <div className="rounded-xl bg-amber-600 text-white py-0.5 px-2 text-sm pb-1">Tweet</div>;
+        return <div className={twMerge(classes, 'bg-amber-600')}>Tweet</div>;
 
       case EventType.DiscordAnnouncement:
-        return <div className="rounded-xl bg-blue-600 text-white py-0.5 px-2 text-sm pb-1">Discord</div>;
+        return <div className={twMerge(classes, 'bg-blue-600')}>Discord</div>;
 
       case EventType.NftSale:
-        return <div className="rounded-xl bg-purple-700 text-white py-0.5 px-2 text-sm pb-1">Sale</div>;
+        return <div className={twMerge(classes, 'bg-purple-700')}>Sale</div>;
 
       case EventType.NftOffer:
-        return <div className="rounded-xl bg-cyan-700 text-white py-0.5 px-2 text-sm pb-1">Offer</div>;
+        return <div className={twMerge(classes, 'bg-cyan-700')}>Offer</div>;
 
       case EventType.NftListing:
-        return <div className="rounded-xl bg-orange-700 text-white py-0.5 px-2 text-sm pb-1">Listing</div>;
+        return <div className={twMerge(classes, 'bg-orange-700')}>Listing</div>;
 
       case EventType.NftTransfer:
-        return <div className="rounded-xl bg-yello-700 text-white py-0.5 px-2 text-sm pb-1">Transfer</div>;
+        return <div className={twMerge(classes, 'bg-yellow-700')}>Transfer</div>;
 
       case EventType.CoinMarketCapNews:
-        return <div className="rounded-xl bg-green-700 text-white py-0.5 px-2 text-sm pb-1">News</div>;
+        return <div className={twMerge(classes, 'bg-black')}>News</div>;
 
       default:
-        return <div className="rounded-xl bg-orange-700 text-white py-0.5 px-2 text-sm pb-1">{type}</div>;
+        return <div className={twMerge(classes, 'bg-red-700')}>{type}</div>;
     }
   };
 
