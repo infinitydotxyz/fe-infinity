@@ -1,7 +1,7 @@
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { ReactNode } from 'react';
 import { EthPrice, EZImage, NextLink } from 'src/components/common';
-import { ellipsisAddress, isProd, standardCard } from 'src/utils';
+import { ellipsisAddress, isProd, standardBorderCard } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
 import { NftEventRec } from '../asset/activity/activity-item';
@@ -16,7 +16,7 @@ export const FeedListTableItem = ({ activity }: Props) => {
 
     return (
       <div>
-        <div className={twMerge(standardCard, 'flex items-center font-heading')}>
+        <div className={twMerge(standardBorderCard, 'flex items-center font-heading')}>
           <EZImage className="w-16 h-16 max-h-[80px] overflow-clip rounded-2xl" src={activity?.image} />
 
           <div className="flex w-full justify-around ml-8">
