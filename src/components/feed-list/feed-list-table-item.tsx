@@ -17,7 +17,7 @@ export const FeedListTableItem = ({ activity }: Props) => {
     return (
       <div>
         <div className={twMerge(standardBorderCard, 'flex items-center font-heading')}>
-          <EZImage className="w-16 h-16 max-h-[80px] overflow-clip rounded-2xl" src={activity?.image} />
+          <EZImage className="w-16 h-16 overflow-clip rounded-2xl" src={activity?.image} />
 
           <div className="flex w-full justify-around ml-8">
             <TableItem label="Token">
@@ -60,27 +60,41 @@ export const FeedListTableItem = ({ activity }: Props) => {
 
   const newsItem = () => {
     return (
-      <ExternalLink href={activity.to}>
-        <div onClick={() => console.log(JSON.stringify(activity, null, 2))}>
-          <div className={twMerge(standardBorderCard, 'flex items-center font-heading')}>
-            <EZImage
-              onClick={() => console.log(JSON.stringify(activity, null, 2))}
-              className="w-16 h-16 max-h-[80px] overflow-clip rounded-2xl"
-              src={activity?.image}
-            />
+      <ExternalLink href={activity.externalUrl}>
+        <div className={twMerge(standardBorderCard, 'flex items-center font-heading')}>
+          <EZImage className="w-16 h-16 overflow-clip rounded-2xl" src={activity?.image} />
 
-            <div className="flex flex-col font-body w-full justify-around ml-8">
-              <div className=" font-bold">{activity.collectionName}</div>
-              <div>{activity.collectionSlug}</div>
+          <div className="flex flex-col font-body w-full justify-around ml-8">
+            <div className="font-bold">{activity.collectionName}</div>
+            <div>{activity.collectionSlug}</div>
 
-              <div className="flex item-center mt-2">
-                <div className="font-bold">{activity.fromDisplayName}</div>
-                <div className="ml-4">{format(activity.timestamp)}</div>
-              </div>
+            <div className="flex item-center mt-2">
+              <div className="font-bold">{activity.fromDisplayName}</div>
+              <div className="ml-4">{format(activity.timestamp)}</div>
             </div>
           </div>
         </div>
       </ExternalLink>
+    );
+  };
+
+  const tweetItem = () => {
+    return (
+      <a href={activity.externalUrl} className=" " target="_blank">
+        <div className={twMerge(standardBorderCard, 'flex items-center font-heading')}>
+          <EZImage className="w-16 h-16 overflow-clip rounded-2xl" src={activity?.image} />
+
+          <div className="flex flex-col font-body w-full justify-around ml-8">
+            <div className=" font-bold">{activity.collectionName}</div>
+            <div>{activity.to}</div>
+
+            <div className="flex item-center mt-2">
+              <div className="font-bold">{activity.toDisplayName}</div>
+              <div className="ml-4">{format(activity.timestamp)}</div>
+            </div>
+          </div>
+        </div>
+      </a>
     );
   };
 
@@ -95,8 +109,12 @@ export const FeedListTableItem = ({ activity }: Props) => {
       return newsItem();
 
     case EventType.TwitterTweet:
-    case EventType.DiscordAnnouncement:
+      return tweetItem();
+
     case EventType.NftTransfer:
+      return feedItem(false);
+
+    case EventType.DiscordAnnouncement:
       // console.log(activity.type);
       // console.log(JSON.stringify(activity, null, 2));
       break;

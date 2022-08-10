@@ -32,30 +32,38 @@ export const FeedListItem = ({
   const typeName = (type: string) => {
     const classes = 'rounded-full text-white py-1 px-3 text-sm';
 
+    const component = (color: string, label: string) => {
+      return (
+        <div onClick={() => console.log(JSON.stringify(activity, null, 2))} className={twMerge(classes, color)}>
+          {label}
+        </div>
+      );
+    };
+
     switch (type) {
       case EventType.TwitterTweet:
-        return <div className={twMerge(classes, 'bg-amber-600')}>Tweet</div>;
+        return component('bg-amber-600', 'Tweet');
 
       case EventType.DiscordAnnouncement:
-        return <div className={twMerge(classes, 'bg-blue-600')}>Discord</div>;
+        return component('bg-blue-600', 'Discord');
 
       case EventType.NftSale:
-        return <div className={twMerge(classes, 'bg-purple-700')}>Sale</div>;
+        return component('bg-purple-700', 'Sale');
 
       case EventType.NftOffer:
-        return <div className={twMerge(classes, 'bg-cyan-700')}>Offer</div>;
+        return component('bg-cyan-700', 'Offer');
 
       case EventType.NftListing:
-        return <div className={twMerge(classes, 'bg-orange-700')}>Listing</div>;
+        return component('bg-orange-700', 'Listing');
 
       case EventType.NftTransfer:
-        return <div className={twMerge(classes, 'bg-yellow-700')}>Transfer</div>;
+        return component('bg-yellow-600', 'Transfer');
 
       case EventType.CoinMarketCapNews:
-        return <div className={twMerge(classes, 'bg-black')}>News</div>;
+        return component('bg-black', 'News');
 
       default:
-        return <div className={twMerge(classes, 'bg-red-700')}>{type}</div>;
+        return component('bg-red-700', type);
     }
   };
 
