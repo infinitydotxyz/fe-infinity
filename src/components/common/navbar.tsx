@@ -57,7 +57,7 @@ export const Navbar = () => {
           label: 'Community',
           menu: [
             {
-              label: 'Docs',
+              label: 'Read docs',
               icon: <SiReadthedocs className=" h-5 w-5 text-gray-500" />,
               onClick: () => {
                 window.open('https://docs.infinity.xyz');

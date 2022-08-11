@@ -29,6 +29,10 @@ export const ConnectButton = () => {
       }
     },
     {
+      label: '-',
+      onClick: () => console.log('separator')
+    },
+    {
       label: 'My Profile',
       icon: <BsFillPersonFill className=" h-5 w-5 text-gray-500" />,
       onClick: () => router.push('/profile/me')
