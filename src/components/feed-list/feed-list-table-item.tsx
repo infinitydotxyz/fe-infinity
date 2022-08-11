@@ -207,21 +207,19 @@ export const FeedListTableItem = ({ activity }: Props) => {
 
   const discordItem = () => {
     return (
-      <a href={activity.externalUrl} className=" " target="_blank">
-        <div className={twMerge(standardBorderCard, 'flex items-center font-heading')}>
-          <EZImage className="w-16 h-16 overflow-clip rounded-2xl" src={activity?.image} />
+      <div className={twMerge(standardBorderCard, 'flex items-center font-heading')}>
+        <EZImage className="w-16 h-16 overflow-clip rounded-2xl" src={activity?.image} />
 
-          <div className="flex flex-col font-body w-full justify-around ml-8">
-            <div className=" font-bold">{activity.paymentToken}</div>
-            <div>{activity.internalUrl}</div>
+        <div className="flex flex-col font-body w-full justify-around ml-8">
+          <div className=" font-bold">{activity.paymentToken}</div>
+          <div>{activity.internalUrl}</div>
 
-            <div className="flex item-center mt-2">
-              <div className="font-bold">{activity.fromDisplayName}</div>
-              <div className="ml-4">{format(activity.timestamp)}</div>
-            </div>
+          <div className="flex item-center mt-2">
+            <div className="font-bold">{activity.fromDisplayName}</div>
+            <div className="ml-4">{format(activity.timestamp)}</div>
           </div>
         </div>
-      </a>
+      </div>
     );
   };
 
