@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { UserPageOrderListItem } from './user-page-order-list-item';
 import { apiGet, extractErrorMsg, ITEMS_PER_PAGE, ellipsisAddress } from 'src/utils';
 import { Button, CenteredContent, ScrollLoader, Spinner, toastError, toastInfo, toastSuccess } from '../common';
-import { UserProfileDto } from '../user/user-profile-dto';
+import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import {
   DEFAULT_ORDER_TYPE_FILTER,

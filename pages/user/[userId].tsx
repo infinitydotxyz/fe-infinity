@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import { CenteredContent, PageBox, Spinner } from 'src/components/common';
 import { useFetch, USER_API_END_POINT } from 'src/utils';
 import { UserPage } from 'src/components/user/user-page';
-import { UserProfileDto } from 'src/components/user/user-profile-dto';
+import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 const UserDetailPage = () => {

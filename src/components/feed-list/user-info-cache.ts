@@ -1,6 +1,6 @@
 import mitt from 'mitt';
 import { apiGet, USER_API_END_POINT } from 'src/utils';
-import { UserProfileDto } from '../user/user-profile-dto';
+import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user';
 
 class _UserInfoCache {
   cache = new Map<string, UserProfileDto>();

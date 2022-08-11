@@ -5,7 +5,7 @@ import { Formik, Form } from 'formik';
 import { User } from 'src/utils/context/AppContext';
 import { apiPut } from 'src/utils';
 import { ProfileImageUpload } from './profile-image-upload';
-import { UserProfileDto } from './user-profile-dto';
+import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user';
 import { UserProfileForm } from './user-profile-form';
 import { getUserProfileSchema } from './schemas/user-profile-schema';
 

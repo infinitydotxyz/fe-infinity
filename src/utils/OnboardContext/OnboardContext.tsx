@@ -4,7 +4,7 @@ import { useConnectWallet, useSetChain, useWallets } from '@web3-onboard/react';
 import { ethers, Signature } from 'ethers';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { UserProfileDto } from 'src/components/user/user-profile-dto';
+import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user';
 import { apiGet } from '../apiUtils';
 import { setupOnboard } from './setup-onboard';
 import { User } from '../context/AppContext';

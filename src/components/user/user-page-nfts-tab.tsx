@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { ChainId, ERC721CardData, Token } from '@infinityxyz/lib-frontend/types/core';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { GalleryBox } from '../gallery/gallery-box';
-import { UserProfileDto } from './user-profile-dto';
+import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user';
 import { twMerge } from 'tailwind-merge';
 import { CardAction, EthPrice } from '../common';
 import { CancelModal } from '../asset';
