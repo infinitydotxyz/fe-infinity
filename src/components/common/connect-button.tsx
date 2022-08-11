@@ -50,6 +50,10 @@ export const ConnectButton = () => {
       onClick: () => window.open(`https://etherscan.io/address/${address}`)
     },
     {
+      label: '-',
+      onClick: () => console.log('separator')
+    },
+    {
       label: 'Sign Out',
       onClick: () => {
         signOut();

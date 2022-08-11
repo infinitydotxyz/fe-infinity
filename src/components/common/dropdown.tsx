@@ -3,6 +3,7 @@ import { ReactElement } from 'react';
 import { BiCaretDown } from 'react-icons/bi';
 import { twMerge } from 'tailwind-merge';
 import { inputBorderColor } from '../../utils/ui-constants';
+import { Divider } from './divider';
 
 export type DropdownItems = {
   label: string | ReactElement;
@@ -57,6 +58,10 @@ export const Dropdown = ({
         >
           <div className={`py-1 ${itemListClassName}`}>
             {items.map((item, idx) => {
+              if (item.label === '-') {
+                return <Divider key={idx} />;
+              }
+
               return (
                 <CustomMenuItem key={idx} onClick={item.onClick} itemclassname={itemClassName}>
                   {item.label}
