@@ -23,7 +23,7 @@ const HomePage = () => {
 
   return (
     <div
-      className="transition w-[100vw] h-[100vh] overflow-y-auto overflow-x-clip justify-items-center"
+      className="transition w-screen h-screen overflow-y-auto overflow-x-clip justify-items-center"
       onScroll={handleScroll}
     >
       <Header title="" />
