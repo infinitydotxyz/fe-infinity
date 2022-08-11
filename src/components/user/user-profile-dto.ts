@@ -1,16 +1,3 @@
-export interface UserProfileDto {
-  address: string;
-  displayName?: string;
-  username?: string;
-  bio?: string;
-  profileImage?: string;
-  bannerImage?: string;
-  discordUsername?: string;
-  twitterUsername?: string;
-  instagramUsername?: string;
-  facebookUsername?: string;
-  createdAt?: number;
-  updatedAt?: number;
-  totalCurated?: number;
-  totalCuratedVotes?: number;
-}
+import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user';
+
+export { UserProfileDto };

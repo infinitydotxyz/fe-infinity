@@ -309,7 +309,9 @@ const CollectionPage = () => {
                     timestamp: 0,
                     numCuratorVotes: collection.numCuratorVotes || 0,
                     userAddress: '',
-                    userChainId: '' as ChainId
+                    userChainId: '' as ChainId,
+                    stakerContractAddress: '',
+                    stakerContractChainId: '' as ChainId
                   })
                 }}
                 isOpen={isStakeModalOpen}
