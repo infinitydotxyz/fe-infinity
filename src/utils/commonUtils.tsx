@@ -7,6 +7,8 @@ import {
 } from '@infinityxyz/lib-frontend/utils';
 import { ReactNode } from 'react';
 import ethers from 'ethers';
+import { FeedFilter } from './firestore/firestoreUtils';
+import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 
 export const base64Encode = (data: string) => Buffer.from(data).toString('base64');
 
@@ -303,4 +305,22 @@ export const getEstimatedGasPrice = async (
   const price = await provider.getGasPrice();
   const priceEstimate = price.mul(2);
   return priceEstimate.toString();
+};
+
+export const getTypesForFilter = (f: FeedFilter) => {
+  const types = f.types ?? [];
+
+  if (types.length === 0) {
+    return [
+      EventType.NftSale,
+      EventType.NftListing,
+      EventType.CoinMarketCapNews,
+      EventType.DiscordAnnouncement,
+      EventType.NftTransfer,
+      EventType.TwitterTweet,
+      EventType.NftOffer
+    ];
+  }
+
+  return types;
 };

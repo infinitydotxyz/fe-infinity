@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
-import { apiGet } from 'src/utils';
+import { apiGet, getTypesForFilter } from 'src/utils';
 import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
 import { Button, ScrollLoader, Spacer } from '../common';
 // import { CommentPanel } from '../feed/comment-panel';
@@ -36,16 +36,6 @@ export const FeedList = ({
   const [activities, setActivities] = useState<NftEventRec[]>([]);
   const [cursor, setCursor] = useState('');
 
-  const allTypes = [
-    EventType.NftSale,
-    EventType.NftListing,
-    EventType.CoinMarketCapNews,
-    EventType.DiscordAnnouncement,
-    EventType.NftTransfer,
-    EventType.TwitterTweet,
-    EventType.NftOffer
-  ];
-
   const fetchActivity = async (isRefresh = false, fromCursor = '') => {
     if (!collectionAddress) {
       return;
@@ -60,7 +50,7 @@ export const FeedList = ({
       const { result, error } = await apiGet(url, {
         query: {
           limit: 10,
-          eventType: filter.types || allTypes,
+          eventType: getTypesForFilter(filter),
           cursor: fromCursor
         }
       });

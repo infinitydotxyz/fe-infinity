@@ -16,9 +16,8 @@ export const FilterButton = ({ onChange, filter, className = '' }: Props) => {
     const newFilter = { ...filter };
 
     if (checkId === '') {
-      setFilteringTypes([]);
-
-      delete newFilter.types;
+      newFilter.types = [];
+      setFilteringTypes(newFilter.types);
     } else {
       const selectedType = checkId as EventType;
 

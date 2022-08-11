@@ -1,5 +1,4 @@
 import React from 'react';
-import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { twMerge } from 'tailwind-merge';
 import { GlobalFeedList } from './global-feed-list';
 import { TrendingSidebar } from './trending-sidebar';
@@ -18,17 +17,7 @@ export const GlobalFeed = ({ className }: Props) => {
   // } else {
   const content = (
     <div className="lg:col-span-1 xl:col-span-2">
-      <GlobalFeedList
-        types={[
-          EventType.NftSale,
-          EventType.NftOffer,
-          EventType.CoinMarketCapNews,
-          EventType.DiscordAnnouncement,
-          EventType.NftListing,
-          EventType.NftTransfer,
-          EventType.TwitterTweet
-        ]}
-      />
+      <GlobalFeedList types={[]} />
     </div>
   );
   // }

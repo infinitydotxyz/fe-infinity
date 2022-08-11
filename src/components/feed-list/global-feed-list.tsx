@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
-import { apiGet } from 'src/utils';
+import { apiGet, getTypesForFilter } from 'src/utils';
 import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
 import { Chip, ScrollLoader, Spacer } from '../common';
 import { NftEventRec } from '../asset/activity/activity-item';
@@ -20,16 +20,6 @@ export const GlobalFeedList = ({ types, className = '' }: Props) => {
   const [activities, setActivities] = useState<NftEventRec[]>([]);
   const [cursor, setCursor] = useState('');
 
-  const allTypes = [
-    EventType.NftSale,
-    EventType.NftListing,
-    EventType.CoinMarketCapNews,
-    EventType.DiscordAnnouncement,
-    EventType.NftTransfer,
-    EventType.TwitterTweet,
-    EventType.NftOffer
-  ];
-
   const fetchActivity = async (isRefresh = false, fromCursor = '') => {
     try {
       setIsLoading(true);
@@ -38,7 +28,7 @@ export const GlobalFeedList = ({ types, className = '' }: Props) => {
       const { result, error } = await apiGet(url, {
         query: {
           limit: 10,
-          eventType: filter.types || allTypes,
+          eventType: getTypesForFilter(filter),
           cursor: fromCursor
         }
       });

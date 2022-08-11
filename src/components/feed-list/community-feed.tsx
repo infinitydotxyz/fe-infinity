@@ -1,6 +1,5 @@
 import React from 'react';
 import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
-import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { FeedList } from 'src/components/feed-list/feed-list';
 import { TwitterSupporterList } from './twitter-supporter-list';
 import { TopHolderList } from './top-holder-list';
@@ -24,15 +23,7 @@ export const CommunityFeed = ({ collection, className }: Props) => {
     content = (
       <div className="lg:col-span-1 xl:col-span-2">
         <FeedList
-          types={[
-            EventType.NftSale,
-            EventType.NftOffer,
-            EventType.CoinMarketCapNews,
-            EventType.DiscordAnnouncement,
-            EventType.NftListing,
-            EventType.NftTransfer,
-            EventType.TwitterTweet
-          ]}
+          types={[]}
           collectionAddress={collection?.address ?? ''}
           collectionName={collection?.metadata.name ?? ''}
           collectionSlug={collection?.slug ?? ''}
