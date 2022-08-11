@@ -48,14 +48,6 @@ export const Navbar = () => {
           }
         },
         {
-          type: 'link',
-          label: 'Profile',
-          props: {
-            href: '/profile/me'
-          }
-        },
-
-        {
           type: 'dropdown',
           label: 'Community',
           menu: [

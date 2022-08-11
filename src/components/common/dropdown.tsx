@@ -79,8 +79,7 @@ export const CustomMenuItem = (props: CustomMenuItemProps) => {
   return (
     <Menu.Item {...props}>
       {({ active, disabled }) => (
-        <a
-          href="#"
+        <div
           className={twMerge(
             'flex w-full justify-between px-4 py-4 text-left leading-5 font-heading ',
             active ? 'hover:bg-theme-light-200 rounded-xl' : 'text-gray-700',
@@ -89,7 +88,7 @@ export const CustomMenuItem = (props: CustomMenuItemProps) => {
           )}
         >
           <span>{props.children}</span>
-        </a>
+        </div>
       )}
     </Menu.Item>
   );

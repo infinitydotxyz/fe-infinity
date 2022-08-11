@@ -4,12 +4,14 @@ import { Dropdown } from './dropdown';
 import { Button } from './button';
 import { ellipsisAddress } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { useRouter } from 'next/router';
 
 export const ConnectButton = () => {
   const { signIn, signOut, user } = useOnboardContext();
 
   const connected = user?.address ? true : false;
   const address = user?.address;
+  const router = useRouter();
 
   const [copied, setCopied] = React.useState(false);
 
@@ -38,6 +40,10 @@ export const ConnectButton = () => {
       onClick: () => {
         address ? copyToClipboard(address) : null;
       }
+    },
+    {
+      label: 'My Profile',
+      onClick: () => router.push('/profile/me')
     },
     {
       label: 'Etherscan',
