@@ -2,7 +2,7 @@ import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { ReactNode } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { Button } from './button';
-import { Dropdown, DropdownItems } from './dropdown';
+import { Dropdown, DropdownItem } from './dropdown';
 import { NextLink } from './next-link';
 import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { useRouter } from 'next/router';
@@ -22,7 +22,7 @@ export type CardAction = {
 export interface CardProps {
   data?: ERC721CardData;
   cardActions?: CardAction[];
-  getDropdownActions?: (data: ERC721CardData | undefined) => DropdownItems[] | null;
+  getDropdownActions?: (data: ERC721CardData | undefined) => DropdownItem[] | null;
   isLoading?: boolean;
   className?: string;
   height?: number;
