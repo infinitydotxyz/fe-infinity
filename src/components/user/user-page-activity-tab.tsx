@@ -1,5 +1,5 @@
 import { UserProfileActivityList } from '../feed/user-profile-activity-list';
-import { UserProfileDto } from './user-profile-dto';
+import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user';
 
 interface Props {
   userInfo: UserProfileDto;

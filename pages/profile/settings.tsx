@@ -1,7 +1,7 @@
 import { AccountSettingsPage } from 'src/components/user/profile-settings';
 import { CenteredContent, PageBox, Spinner } from 'src/components/common';
 import { User } from 'src/utils/context/AppContext';
-import { UserProfileDto } from 'src/components/user/user-profile-dto';
+import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user';
 import { useFetch, USER_API_END_POINT } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 

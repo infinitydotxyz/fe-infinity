@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { EthPrice, Button } from 'src/components/common';
 import { format } from 'timeago.js';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { UserProfileDto } from '../user/user-profile-dto';
 import { OrderbookItem } from '../orderbook/orderbook-list/orderbook-item';
 import { UserOrderFilter } from '../filter/user-profile-order-filter-panel';
 import { OrderDetailModal } from '../orderbook/OrderDetailModal';
+import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user';
 
 interface Props {
   order: SignedOBOrder;

@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { Sort } from '../curation/sort';
 import { Divider, ScrollLoader, Spinner } from '../common';
 import { useCurationQuota } from 'src/hooks/api/useCurationQuota';
-import { UserProfileDto } from './user-profile-dto';
 import { CuratedCollectionsDto } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections.dto';
 import { useRouter } from 'next/router';
 import { useFetchInfinite } from 'src/utils';
@@ -11,6 +10,7 @@ import { CurationTable } from '../curation/curations-table';
 import { NoResultsBox } from '../curation/no-results-box';
 import { CuratedTab } from '../curation/types';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user/user-profile.dto';
 
 const InfoBox: React.FC<{ title: string; subtitle: string | number }> = ({ title, subtitle }) => {
   return (
@@ -55,10 +55,10 @@ export const UserPageCuratedTab: React.FC<{ userInfo: UserProfileDto }> = ({ use
           subtitle={`${Math.round(
             (quota?.availableVotes || 0) === 0
               ? 100
-              : ((userInfo?.totalCuratedVotes || 0) / (quota?.availableVotes || 0)) * 100
+              : ((quota?.stake?.totalCuratedVotes || 0) / (quota?.availableVotes || 0)) * 100
           )}%`}
         />
-        <InfoBox title="Curated" subtitle={userInfo?.totalCurated || 0} />
+        <InfoBox title="Curated" subtitle={quota?.stake?.totalCurated || 0} />
         {/* TODO: implement blended APR */}
         <InfoBox title="Blended APR" subtitle="0%" />
       </div>

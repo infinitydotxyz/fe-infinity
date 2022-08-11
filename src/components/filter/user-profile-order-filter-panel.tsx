@@ -2,7 +2,7 @@ import { BaseCollection, OBOrderItem } from '@infinityxyz/lib-frontend/types/cor
 import { useState, useEffect } from 'react';
 import { Checkbox, TextInputBox, Spinner, DebouncedTextInputBox } from 'src/components/common';
 import { apiGet } from 'src/utils';
-import { UserProfileDto } from '../user/user-profile-dto';
+import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user';
 
 export const DEFAULT_ORDER_TYPE_FILTER = 'listings';
 

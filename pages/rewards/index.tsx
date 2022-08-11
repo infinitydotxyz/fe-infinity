@@ -2,18 +2,14 @@ import React, { useState } from 'react';
 import { Button, Heading, PageBox } from 'src/components/common';
 import { StakeTokensModal } from 'src/components/rewards/stake-tokens-modal';
 import { UnstakeTokensModal } from 'src/components/rewards/unstake-tokens-modal';
-import { UserProfileDto } from 'src/components/user/user-profile-dto';
 import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
-import { isProd, useFetch } from 'src/utils'; // todo: adi remove isProd once curation is ready
+import { isProd } from 'src/utils'; // todo: adi remove isProd once curation is ready
 import { numberFormatter } from 'src/utils/number-formatter';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 const RewardsPage = () => {
-  const { user } = useOnboardContext();
   const [showStakeTokensModal, setShowStakeTokensModal] = useState(false);
   const [showUnstakeTokensModal, setShowUnstakeTokensModal] = useState(false);
   const { result: quota, mutate: mutateQuota } = useUserCurationQuota();
-  const { result: profile } = useFetch<UserProfileDto>(user?.address ? `/user/${user.address}` : null);
 
   return (
     !isProd() && (
@@ -96,7 +92,7 @@ const RewardsPage = () => {
                   <div className="text-sm mt-1">Voting Power</div>
                 </div>
                 <div className="lg:w-1/4 sm:w-full">
-                  <div className="text-2xl font-heading font-bold">{profile?.totalCurated || 0}</div>
+                  <div className="text-2xl font-heading font-bold">{quota?.stake.totalCurated || 0}</div>
                   <div className="text-sm mt-1">Voted</div>
                 </div>
                 <div className="lg:w-1/4 sm:w-full">

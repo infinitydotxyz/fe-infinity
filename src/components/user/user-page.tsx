@@ -1,6 +1,5 @@
 import { FunctionComponent } from 'react';
 import { useRouter } from 'next/router';
-import { UserProfileDto } from './user-profile-dto';
 import { UserProfileShare } from './user-profile-share';
 import { Chip, ToggleTab, useToggleTab, ExternalLink } from 'src/components/common';
 import { UserPageNftsTab } from './user-page-nfts-tab';
@@ -11,6 +10,7 @@ import { UserPageOrderList } from '../feed/user-page-order-list';
 import { UserBannerImage } from './user-banner-image';
 import { UserProfileImage } from './user-profile-image';
 import { UserPageCuratedTab } from './user-page-curated-tab';
+import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user/user-profile.dto';
 
 interface UserPageProps {
   userInfo: UserProfileDto;
