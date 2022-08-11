@@ -11,7 +11,7 @@ interface Props {
 }
 
 export const FeedListTableItem = ({ activity }: Props) => {
-  const feedItem = (showBuyer = true) => {
+  const saleItem = () => {
     const buyer = activity.toDisplayName ? ellipsisAddress(activity.toDisplayName) : ellipsisAddress(activity.to);
 
     return (
@@ -28,24 +28,129 @@ export const FeedListTableItem = ({ activity }: Props) => {
               </NextLink>
             </TableItem>
 
-            {/* <TableItem label="Event">
-            <a href={`${activity.externalUrl}`} target="_blank" rel="noopener noreferrer">
-              {EventTypeNames[activity.type as EventType]}
-            </a>
-          </TableItem> */}
-
             <TableItem label="Price">{activity.price ? <EthPrice label={`${activity.price}`} /> : '—'}</TableItem>
 
-            {showBuyer && (
-              <TableItem label="Buyer">
-                {buyer && <NextLink href={`/profile/${activity.to}`}>{buyer}</NextLink>}
-                {!buyer && <div>None</div>}
-              </TableItem>
-            )}
+            <TableItem label="Buyer">
+              {buyer && <NextLink href={`/profile/${activity.to}`}>{buyer}</NextLink>}
+              {!buyer && <div>None</div>}
+            </TableItem>
 
             <TableItem label="Seller">
               <NextLink href={`/profile/${activity.from}`}>
                 {activity.fromDisplayName ? ellipsisAddress(activity.fromDisplayName) : ellipsisAddress(activity.from)}
+              </NextLink>
+            </TableItem>
+
+            <TableItem label="Date">
+              <a href={activity.externalUrl} target="_blank" rel="noopener noreferrer">
+                {format(activity.timestamp)}
+              </a>
+            </TableItem>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const offerItem = () => {
+    const buyer = activity.toDisplayName ? ellipsisAddress(activity.toDisplayName) : ellipsisAddress(activity.to);
+
+    return (
+      <div>
+        <div className={twMerge(standardBorderCard, 'flex items-center font-heading')}>
+          <NextLink href={`/collection/${activity.collectionSlug}`}>
+            <EZImage className="w-16 h-16 overflow-clip rounded-2xl" src={activity?.image} />
+          </NextLink>
+
+          <div className="flex w-full justify-around ml-8">
+            <TableItem label="Token">
+              <NextLink href={`/asset/${activity.chainId}/${activity.address}/${activity.tokenId}`}>
+                {ellipsisAddress(activity.tokenId)}
+              </NextLink>
+            </TableItem>
+
+            <TableItem label="Price">{activity.price ? <EthPrice label={`${activity.price}`} /> : '—'}</TableItem>
+
+            <TableItem label="Buyer">
+              {buyer && <NextLink href={`/profile/${activity.to}`}>{buyer}</NextLink>}
+              {!buyer && <div>None</div>}
+            </TableItem>
+
+            <TableItem label="Maker">
+              <NextLink href={`/profile/${activity.from}`}>
+                {activity.fromDisplayName ? ellipsisAddress(activity.fromDisplayName) : ellipsisAddress(activity.from)}
+              </NextLink>
+            </TableItem>
+
+            <TableItem label="Date">
+              <a href={activity.externalUrl} target="_blank" rel="noopener noreferrer">
+                {format(activity.timestamp)}
+              </a>
+            </TableItem>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const listingItem = () => {
+    return (
+      <div>
+        <div className={twMerge(standardBorderCard, 'flex items-center font-heading')}>
+          <NextLink href={`/collection/${activity.collectionSlug}`}>
+            <EZImage className="w-16 h-16 overflow-clip rounded-2xl" src={activity?.image} />
+          </NextLink>
+
+          <div className="flex w-full justify-around ml-8">
+            <TableItem label="Token">
+              <NextLink href={`/asset/${activity.chainId}/${activity.address}/${activity.tokenId}`}>
+                {ellipsisAddress(activity.tokenId)}
+              </NextLink>
+            </TableItem>
+
+            <TableItem label="Price">{activity.price ? <EthPrice label={`${activity.price}`} /> : '—'}</TableItem>
+
+            <TableItem label="Maker">
+              <NextLink href={`/profile/${activity.from}`}>
+                {activity.fromDisplayName ? ellipsisAddress(activity.fromDisplayName) : ellipsisAddress(activity.from)}
+              </NextLink>
+            </TableItem>
+
+            <TableItem label="Date">
+              <a href={activity.externalUrl} target="_blank" rel="noopener noreferrer">
+                {format(activity.timestamp)}
+              </a>
+            </TableItem>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const transferItem = () => {
+    return (
+      <div>
+        <div className={twMerge(standardBorderCard, 'flex items-center font-heading')}>
+          <NextLink href={`/collection/${activity.collectionSlug}`}>
+            <EZImage className="w-16 h-16 overflow-clip rounded-2xl" src={activity?.image} />
+          </NextLink>
+
+          <div className="flex w-full justify-around ml-8">
+            <TableItem label="Token">
+              <NextLink href={`/asset/${activity.chainId}/${activity.address}/${activity.tokenId}`}>
+                {ellipsisAddress(activity.tokenId)}
+              </NextLink>
+            </TableItem>
+
+            <TableItem label="From">
+              <NextLink href={`/profile/${activity.from}`}>
+                {activity.fromDisplayName ? ellipsisAddress(activity.fromDisplayName) : ellipsisAddress(activity.from)}
+              </NextLink>
+            </TableItem>
+
+            <TableItem label="To">
+              <NextLink href={`/profile/${activity.to}`}>
+                {activity.toDisplayName ? ellipsisAddress(activity.toDisplayName) : ellipsisAddress(activity.to)}
               </NextLink>
             </TableItem>
 
@@ -122,11 +227,13 @@ export const FeedListTableItem = ({ activity }: Props) => {
 
   switch (activity.type) {
     case EventType.NftSale:
+      return saleItem();
+
     case EventType.NftOffer:
-      return feedItem();
+      return offerItem();
 
     case EventType.NftListing:
-      return feedItem(false);
+      return listingItem();
     case EventType.CoinMarketCapNews:
       return newsItem();
 
@@ -134,7 +241,7 @@ export const FeedListTableItem = ({ activity }: Props) => {
       return tweetItem();
 
     case EventType.NftTransfer:
-      return feedItem(false);
+      return transferItem();
 
     case EventType.DiscordAnnouncement:
       return discordItem();
