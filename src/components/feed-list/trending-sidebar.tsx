@@ -13,15 +13,16 @@ const TrendingItem = ({ collection, index }: Props2) => {
   return (
     <div className={twMerge(standardCard, 'flex items-center')}>
       <div className="mr-4 text-theme-light-800">{index}</div>
-      <div className="flex items-center overflow-clip">
+      {/* NOTE min-w-0 is the secret to getting truncate working in flexboxes */}
+      <div className="flex items-center min-w-0">
         <NextLink href={`/collection/${collection.slug}`}>
           <EZImage
             src={collection.metadata.bannerImage || collection.metadata.profileImage}
-            className="w-12 h-12 overflow-clip shrink-0 rounded-full"
+            className="w-12 h-12 overflow-clip rounded-full"
           />
         </NextLink>
 
-        <div className="ml-4">
+        <div className="flex flex-col ml-4 overflow-clip">
           <div className="font-bold truncate font-heading">{collection.metadata.name}</div>
           <div className="text-theme-light-800 font-body text-sm">{`Volume ${nFormatter(
             collection.stats?.weekly?.salesVolume
@@ -99,7 +100,7 @@ export const TrendingSidebar = () => {
       <div className="text-3xl mb-6 mt-16">Trending 7 day vol</div>
 
       {data.map((e, index) => {
-        return <TrendingItem index={index} collection={e} key={`${e.address}:${e.chainId}:${e.slug}`} />;
+        return <TrendingItem index={index + 1} collection={e} key={`${e.address}:${e.chainId}:${e.slug}`} />;
       })}
     </>
   );
