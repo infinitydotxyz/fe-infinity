@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { Button, CenteredContent, Dropdown, ScrollLoader, Spinner } from 'src/components/common';
 import { OrderbookProvider, SORT_FILTERS, useOrderbook } from '../OrderbookContext';
@@ -23,17 +23,23 @@ interface Props {
   collectionId?: string;
   tokenId?: string;
   className?: string;
+  onData?: (data: SignedOBOrder[]) => void;
 }
 
-export const OrderbookContainer = ({ collectionId, tokenId, className = '' }: Props): JSX.Element => {
+export const OrderbookContainer = ({ collectionId, tokenId, className = '', onData }: Props): JSX.Element => {
   return (
     <OrderbookProvider collectionId={collectionId} tokenId={tokenId}>
-      <OrderbookContent className={className} />
+      <OrderbookContent className={className} onData={onData} />
     </OrderbookProvider>
   );
 };
 
-export const OrderbookContent = ({ className }: { className?: string }): JSX.Element => {
+interface Props4 {
+  className?: string;
+  onData?: (data: SignedOBOrder[]) => void;
+}
+
+export const OrderbookContent = ({ className, onData }: Props4) => {
   const { query } = useRouter();
   const { orders, fetchMore, isLoading, updateFilter, filters, hasMoreOrders, hasNoData } = useOrderbook();
   const [showFilters, setShowFilters] = useState<boolean>(
@@ -45,6 +51,12 @@ export const OrderbookContent = ({ className }: { className?: string }): JSX.Ele
     setLabel(_label);
     updateFilter('sort', sortOrder);
   };
+
+  useEffect(() => {
+    if (onData) {
+      onData(orders);
+    }
+  }, [orders]);
 
   return (
     <>

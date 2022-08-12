@@ -5,29 +5,15 @@ import * as d3 from 'd3';
 
 const BubbleChart = (
   data,
+  width,
+  onClick,
   {
-    label = (d) =>
-      [
-        ...d.id
-          .split('.')
-          .pop()
-          .split(/(?=[A-Z][a-z])/g),
-        d.value.toLocaleString('en')
-      ].join('\n'),
+    label = (d) => [d.label, d.value.toLocaleString('en')].join('\n'),
     value = (d) => d.value,
-    group = (d) => d.id.split('.')[1],
-    title = (d) => `${d.id}\n${d.value.toLocaleString('en')}`,
-    link = (d) => `https://github.com/prefuse/Flare/blob/master/flare/src/${d.id.replace(/\./g, '/')}.as`,
-    width = 1152,
+    group = (d) => d.group,
 
-    linkTarget = '_blank', // the target attribute for links, if any
-    height = width, // outer height, in pixels
+    height = 400, // outer height, in pixels
     padding = 3, // padding between circles
-    margin = 1, // default margins
-    marginTop = margin, // top margin, in pixels
-    marginRight = margin, // right margin, in pixels
-    marginBottom = margin, // bottom margin, in pixels
-    marginLeft = margin, // left margin, in pixels
     groups, // array of group names (the domain of the color scale)
     colors = d3.schemeTableau10, // an array of colors (for groups)
     fill = '#ccc', // a static fill color, if no group channel is specified
@@ -38,7 +24,6 @@ const BubbleChart = (
   } = {}
 ) => {
   // Compute the values.
-  const D = d3.map(data, (d) => d);
   const V = d3.map(data, value);
   const G = group === null ? null : d3.map(data, group);
   const I = d3.range(V.length).filter((i) => V[i] > 0);
@@ -54,19 +39,15 @@ const BubbleChart = (
 
   // Compute labels and titles.
   const L = label === null ? null : d3.map(data, label);
-  const T = title === undefined ? L : title === null ? null : d3.map(data, title);
 
   // Compute layout: create a 1-deep hierarchy, and pack it.
-  const root = d3
-    .pack()
-    .size([width - marginLeft - marginRight, height - marginTop - marginBottom])
-    .padding(padding)(d3.hierarchy({ children: I }).sum((i) => V[i]));
+  const root = d3.pack().size([width, height]).padding(padding)(d3.hierarchy({ children: I }).sum((i) => V[i]));
 
   const svg = d3
     .create('svg')
     .attr('width', width)
     .attr('height', height)
-    .attr('viewBox', [-marginLeft, -marginTop, width, height])
+    .attr('viewBox', [0, 0, width, height])
     .attr('style', 'max-width: 100%; height: auto; height: intrinsic;')
     .attr('fill', 'currentColor')
     .attr('font-size', 10)
@@ -77,8 +58,20 @@ const BubbleChart = (
     .selectAll('a')
     .data(root.leaves())
     .join('a')
-    .attr('xlink:href', link === null ? null : (d, i) => link(D[d.data], i, data))
-    .attr('target', link === null ? null : linkTarget)
+
+    .on('mouseover', function () {
+      d3.select(this).attr('stroke', '#f00');
+    })
+    .on('mouseout', function () {
+      d3.select(this).attr('stroke', null);
+    })
+    .on('click', (event, d) => {
+      if (focus !== d) {
+        onClick(d.data);
+      }
+      event.stopPropagation();
+    })
+
     .attr('transform', (d) => `translate(${d.x},${d.y})`);
 
   leaf
@@ -89,10 +82,6 @@ const BubbleChart = (
     .attr('fill', G ? (d) => color(G[d.data]) : fill === null ? 'none' : fill)
     .attr('fill-opacity', fillOpacity)
     .attr('r', (d) => d.r);
-
-  if (T) {
-    leaf.append('title').text((d) => T[d.data]);
-  }
 
   if (L) {
     // A unique identifier for clip paths (to avoid conflicts).
