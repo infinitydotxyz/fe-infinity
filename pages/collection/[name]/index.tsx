@@ -294,7 +294,11 @@ const CollectionPage = () => {
                   totalVotes={collection.numCuratorVotes || 0}
                   className="max-w-[15rem]"
                 />
-                <Button onClick={() => checkSignedIn() && setIsStakeModalOpen(true)} className="font-heading">
+                <Button
+                  size="large"
+                  onClick={() => checkSignedIn() && setIsStakeModalOpen(true)}
+                  className="font-heading"
+                >
                   Vote
                 </Button>
               </div>

@@ -117,7 +117,7 @@ export const StakeTokensModal = ({ onClose }: Props) => {
           </div>
         </div>
 
-        <Button className="w-full py-3 mt-12" onClick={onStake} disabled={isStaking}>
+        <Button size="large" className="w-full py-3 mt-12" onClick={onStake} disabled={isStaking}>
           Stake
         </Button>
       </div>

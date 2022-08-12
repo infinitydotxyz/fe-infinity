@@ -22,7 +22,7 @@ export const StakeTokensButton: React.FC<Pick<ButtonProps, 'variant'>> = ({ vari
   const router = useRouter();
 
   return (
-    <Button variant={variant} className="w-full font-black" onClick={() => router.push('/rewards')}>
+    <Button variant={variant} size="large" className="w-full font-black" onClick={() => router.push('/rewards')}>
       Stake tokens to get votes
     </Button>
   );
@@ -107,14 +107,16 @@ export const VoteModal: React.FC<VoteModalProps> = ({ collection, isOpen, onClos
                     <MaxButton variant="gray" onClick={() => setVotes(votesAvailable)}></MaxButton>
                   )}
                 />
-                <Button className="w-full" onClick={vote} disabled={isLoadingQuota || isVoting}>
+                <Button size="large" className="w-full" onClick={vote} disabled={isLoadingQuota || isVoting}>
                   Vote
                 </Button>
               </>
             )}
             {votesAvailable === 0 && (
               <>
-                <Button className="w-full">Buy tokens on Uniswap</Button>
+                <Button size="large" className="w-full">
+                  Buy tokens on Uniswap
+                </Button>
                 <StakeTokensButton />
               </>
             )}

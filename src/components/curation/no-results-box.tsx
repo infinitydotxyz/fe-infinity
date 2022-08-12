@@ -17,7 +17,7 @@ export const NoResultsBox: React.FC<NoResultsBoxProps> = ({ tab, onClick, childr
         {tab === CuratedTab.MyCurated && <span>You haven't curated any collections yet</span>}
         {!tab && children}
       </Heading>
-      <Button className="mt-4" onClick={onClick}>
+      <Button size="large" className="mt-4" onClick={onClick}>
         Curate now
       </Button>
     </div>

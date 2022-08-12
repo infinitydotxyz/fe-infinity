@@ -55,10 +55,11 @@ const RewardsPage = () => {
                   <div className="text-sm mt-1">TVL</div>
                 </div>
                 <div className="lg:w-2/4 sm:w-full">
-                  <Button className="font-heading" onClick={() => setShowStakeTokensModal(true)}>
+                  <Button size="large" className="font-heading" onClick={() => setShowStakeTokensModal(true)}>
                     Stake
                   </Button>
                   <Button
+                    size="large"
                     variant="outline"
                     className="font-heading lg:ml-3"
                     onClick={() => setShowUnstakeTokensModal(true)}
@@ -113,7 +114,9 @@ const RewardsPage = () => {
                   <div className="text-sm mt-1">Earned APR</div>
                 </div>
                 <div className="lg:w-1/4 sm:w-full">
-                  <Button className="font-heading">Claim Rewards</Button>
+                  <Button size="large" className="font-heading">
+                    Claim Rewards
+                  </Button>
                 </div>
               </div>
             </div>
@@ -164,7 +167,9 @@ const RewardsPage = () => {
                   <div className="text-sm mt-1"></div>
                 </div>
                 <div className="lg:w-1/4 sm:w-full">
-                  <Button className="font-heading">Claim Rewards</Button>
+                  <Button size="large" className="font-heading">
+                    Claim Rewards
+                  </Button>
                 </div>
               </div>
             </div>

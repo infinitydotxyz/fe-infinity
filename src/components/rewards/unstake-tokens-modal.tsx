@@ -67,7 +67,7 @@ export const UnstakeTokensModal = ({ onClose }: Props) => {
           <div className="mt-4">Lock time remaining: {weeks} weeks</div>
         </div>
 
-        <Button disabled={isUnstaking} className="w-full py-3 mt-12" onClick={onUnstake}>
+        <Button size="large" disabled={isUnstaking} className="w-full py-3 mt-12" onClick={onUnstake}>
           Unstake
         </Button>
       </div>
