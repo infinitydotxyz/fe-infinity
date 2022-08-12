@@ -76,7 +76,7 @@ export const CurationRow: React.FC<CurationRowProps> = ({ collection, index, onC
               <FieldWrapper></FieldWrapper>
               <FieldWrapper type="custom">
                 {votes > 0 && <NumericVoteInputBox collectionId={`${collection.chainId}:${collection.address}`} />}
-                {votes === 0 && <StakeTokensButton />}
+                {votes === 0 && <StakeTokensButton variant="white" />}
               </FieldWrapper>
             </>
           )}

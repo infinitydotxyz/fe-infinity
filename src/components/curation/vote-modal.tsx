@@ -6,7 +6,7 @@ import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
 import { apiPost } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { AvatarImage } from '../collection/avatar-image';
-import { Button, Divider, Heading, Modal, Spinner, TextInputBox, toastError } from '../common';
+import { Button, Props as ButtonProps, Divider, Heading, Modal, Spinner, TextInputBox, toastError } from '../common';
 import { MaxButton } from './max-button';
 import { FeesAccruedStats, FeesAprStats, Statistics } from './statistics';
 import { VoteProgressBar } from './vote-progress-bar';
@@ -18,11 +18,11 @@ export type VoteModalProps = {
   collection: CuratedCollectionDto;
 };
 
-export const StakeTokensButton: React.FC = () => {
+export const StakeTokensButton: React.FC<Pick<ButtonProps, 'variant'>> = ({ variant }) => {
   const router = useRouter();
 
   return (
-    <Button variant="white" className="w-full font-black" onClick={() => router.push('/rewards')}>
+    <Button variant={variant} size="large" className="w-full font-black" onClick={() => router.push('/rewards')}>
       Stake tokens to get votes
     </Button>
   );
@@ -107,14 +107,16 @@ export const VoteModal: React.FC<VoteModalProps> = ({ collection, isOpen, onClos
                     <MaxButton variant="gray" onClick={() => setVotes(votesAvailable)}></MaxButton>
                   )}
                 />
-                <Button className="w-full" onClick={vote} disabled={isLoadingQuota || isVoting}>
+                <Button size="large" className="w-full" onClick={vote} disabled={isLoadingQuota || isVoting}>
                   Vote
                 </Button>
               </>
             )}
             {votesAvailable === 0 && (
               <>
-                <Button className="w-full">Buy tokens on Uniswap</Button>
+                <Button size="large" className="w-full">
+                  Buy tokens on Uniswap
+                </Button>
                 <StakeTokensButton />
               </>
             )}
