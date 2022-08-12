@@ -1,6 +1,8 @@
 import { useRouter } from 'next/router';
 import { SBHeader } from 'pages/sandbox';
 import { Button, PageBox } from 'src/components/common';
+import { Bubbols } from 'src/components/d3/git-bubbles';
+import { Starburst } from 'src/components/d3/starburst';
 
 export const TestPage = () => {
   const router = useRouter();
@@ -18,6 +20,9 @@ export const TestPage = () => {
             Sandbox
           </Button>
         </div>
+
+        <Starburst />
+        <Bubbols />
 
         <div className="flex flex-col">
           <SBHeader>Pages</SBHeader>
