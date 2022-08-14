@@ -19,7 +19,7 @@
   "dependencies": {
     "@headlessui/react": "^1.6.6",
     "@heroicons/react": "^1.0.6",
-    "@infinityxyz/lib-frontend": "^1.162.0",
+    "@infinityxyz/lib-frontend": "^1.162.1",
     "@next/bundle-analyzer": "^12.2.4",
     "@observablehq/plot": "^0.5.2",
     "@tailwindcss/aspect-ratio": "^0.4.0",
