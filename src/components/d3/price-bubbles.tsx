@@ -5,6 +5,7 @@ import { useWindowSize } from 'src/hooks/useWindowSize';
 
 export type BubbleData = {
   id: string;
+  isSellOrder: boolean;
   value: number;
   label: string;
   group: string;
