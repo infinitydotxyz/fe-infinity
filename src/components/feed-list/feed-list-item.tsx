@@ -62,6 +62,11 @@ export const FeedListItem = ({
       case EventType.CoinMarketCapNews:
         return component('bg-black', 'News');
 
+      case EventType.TokensStaked:
+      case EventType.TokensUnStaked:
+      case EventType.UserVote:
+      case EventType.UserVoteRemoved:
+      case EventType.TokensRageQuit:
       default:
         return component('bg-red-700', type);
     }
@@ -212,6 +217,14 @@ export const FeedListItem = ({
           </div>
         );
         break;
+
+      case EventType.TokensStaked:
+      case EventType.TokensUnStaked:
+      case EventType.UserVote:
+      case EventType.UserVoteRemoved:
+      case EventType.TokensRageQuit:
+      default:
+        return <div></div>;
     }
   };
 
@@ -246,6 +259,14 @@ export const FeedListItem = ({
         );
 
         break;
+
+      case EventType.TokensStaked:
+      case EventType.TokensUnStaked:
+      case EventType.UserVote:
+      case EventType.UserVoteRemoved:
+      case EventType.TokensRageQuit:
+      default:
+        return <div></div>;
     }
   };
 

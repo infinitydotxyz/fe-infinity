@@ -243,6 +243,13 @@ export const FeedListTableItem = ({ activity }: Props) => {
 
     case EventType.DiscordAnnouncement:
       return discordItem();
+
+    case EventType.TokensStaked:
+    case EventType.TokensUnStaked:
+    case EventType.UserVote:
+    case EventType.UserVoteRemoved:
+    case EventType.TokensRageQuit:
+      return <div></div>;
   }
 
   if (!isProd()) {
