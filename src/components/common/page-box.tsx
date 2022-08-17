@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Navbar, Spacer, Header } from 'src/components/common';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { twMerge } from 'tailwind-merge';
 import { isPasswordModalNeeded, PasswordModal } from './password-modal';
 
 // used in the Header
@@ -13,6 +14,7 @@ interface Props {
   className?: string;
   fullWidth?: boolean;
   rightToolbar?: JSX.Element;
+  scroll?: boolean;
 }
 
 export const PageBox = ({
@@ -21,7 +23,8 @@ export const PageBox = ({
   showTitle = true,
   fullWidth = false,
   className = '',
-  rightToolbar
+  rightToolbar,
+  scroll = true
 }: Props): JSX.Element => {
   const { chainId } = useOnboardContext();
   const [renderPasswordModal, setRenderPasswordModal] = useState(false);
@@ -31,7 +34,12 @@ export const PageBox = ({
   }, []);
 
   return (
-    <div className="transition w-screen h-screen overflow-y-auto overflow-x-clip justify-items-center">
+    <div
+      className={twMerge(
+        'transition w-screen h-screen justify-items-center overflow-x-clip',
+        scroll ? 'overflow-y-auto' : 'overflow-y-clip'
+      )}
+    >
       {renderPasswordModal ? (
         <PasswordModal isOpen={true} onClose={() => console.log} />
       ) : (

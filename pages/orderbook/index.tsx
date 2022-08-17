@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { PageBox } from 'src/components/common';
-import { BubbleData, PriceBubbles } from 'src/components/d3/price-bubbles';
-import ThesholdExample from 'src/components/d3/visGrid';
+import { PriceBarGraph, BubbleData } from 'src/components/airbnb-svg/price-bar-graph';
 import { OrderbookContainer } from 'src/components/orderbook/orderbook-list';
 import { isProd } from 'src/utils';
 
@@ -12,27 +11,24 @@ const OrderbookPage = () => {
     <PageBox title="Orderbook">
       {!isProd() && (
         <div className="w-full h-full">
-          <PriceBubbles
-            dataArray={data}
-            onClick={(d) => {
-              console.log(data[d]);
-            }}
-          />
-
-          <ThesholdExample />
+          <PriceBarGraph data={data} />
         </div>
       )}
 
       <OrderbookContainer
+        className=""
         onData={(data) => {
           const bubbleData = data.map((x) => {
-            return {
+            const result: BubbleData = {
               value: x.endPriceEth,
               id: '',
               label: '3 eth',
               group: 'eth',
-              isSellOrder: x.isSellOrder
-            } as BubbleData;
+              isSellOrder: x.isSellOrder,
+              color: Math.floor(Math.random() * 16777215).toString(16),
+              tooltip: x.endPriceEth.toString()
+            };
+            return result;
           });
 
           return setData(bubbleData);
