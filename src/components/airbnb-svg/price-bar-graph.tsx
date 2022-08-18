@@ -201,7 +201,25 @@ function _PriceBarGraph({ graphData, title, flip, width: outerWidth, height: out
 
         <rect width={margin.left} y={flip ? 0 : gap} height={outerHeight - gap} fill={barColorBG} rx={6} />
 
-        <text fill="rgba(255,255,255,.6)" dominant-baseline="central" font-size="22" x={32} y={outerHeight / 2}>
+        <text
+          fill="rgba(255,255,255,.7)"
+          dominant-baseline="central"
+          font-size="26"
+          textAnchor="middle"
+          x={margin.left / 2}
+          y={outerHeight / 3}
+        >
+          {graphData.length.toString()}
+        </text>
+
+        <text
+          fill="rgba(255,255,255,.5)"
+          textAnchor="middle"
+          dominant-baseline="central"
+          font-size="22"
+          x={margin.left / 2}
+          y={outerHeight / 1.6}
+        >
           {title}
         </text>
 
