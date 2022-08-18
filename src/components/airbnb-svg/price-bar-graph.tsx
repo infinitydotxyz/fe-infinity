@@ -220,7 +220,6 @@ function _PriceBarGraph({ data, title, width: outerWidth, height: outerHeight }:
                     tooltipData: d.tooltip
                   });
                 }}
-                //   onMouseMove={(event: React.MouseEvent) => console.log(event)}
                 onMouseLeave={() => {
                   hideTooltip();
                 }}
