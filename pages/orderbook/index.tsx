@@ -1,16 +1,16 @@
 import { useState } from 'react';
 import { PageBox } from 'src/components/common';
-import { PriceBarGraph, BubbleData } from 'src/components/airbnb-svg/price-bar-graph';
+import { PriceBarGraph, GraphData } from 'src/components/airbnb-svg/price-bar-graph';
 import { OrderbookContainer } from 'src/components/orderbook/orderbook-list';
 import { isProd } from 'src/utils';
 
 const OrderbookPage = () => {
-  const [data, setData] = useState<BubbleData[]>([]);
+  const [data, setData] = useState<GraphData[]>([]);
 
   return (
     <PageBox title="Orderbook">
       {!isProd() && (
-        <div className="w-full h-full">
+        <div className="w-full h-full mb-6">
           <PriceBarGraph data={data} />
         </div>
       )}
@@ -18,20 +18,15 @@ const OrderbookPage = () => {
       <OrderbookContainer
         className=""
         onData={(data) => {
-          const bubbleData = data.map((x) => {
-            const result: BubbleData = {
-              value: x.endPriceEth,
-              id: '',
-              label: '3 eth',
-              group: 'eth',
-              isSellOrder: x.isSellOrder,
-              color: Math.floor(Math.random() * 16777215).toString(16),
-              tooltip: x.endPriceEth.toString()
+          const GraphData = data.map((x) => {
+            const result: GraphData = {
+              price: x.endPriceEth,
+              isSellOrder: x.isSellOrder
             };
             return result;
           });
 
-          return setData(bubbleData);
+          return setData(GraphData);
         }}
       />
     </PageBox>

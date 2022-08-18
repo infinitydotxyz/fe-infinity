@@ -2,33 +2,51 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Bar } from '@visx/shape';
 import { Group } from '@visx/group';
 import { GradientTealBlue } from '@visx/gradient';
-import { scaleBand, scaleLinear, coerceNumber } from '@visx/scale';
+import { scaleBand, scaleLinear } from '@visx/scale';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { Orientation } from '@visx/axis';
 import { TextProps } from '@visx/text';
 import { AnimatedAxis } from '@visx/react-spring';
 import { Tooltip, useTooltip, defaultStyles } from '@visx/tooltip';
+import { numStr } from 'src/utils';
 
-export type BubbleData = {
-  id: string;
+export type GraphData = {
   isSellOrder: boolean;
-  value: number;
-  label: string;
-  group: string;
-  color: string;
-  tooltip: string;
+  price: number;
 };
+
+type BarGraphData = {
+  count: number;
+  axisLabel: string;
+  tooltip: TooltipData;
+  start: number;
+  end: number;
+};
+
+class TooltipData {
+  lineOne: string;
+  lineTwo: string;
+
+  constructor(lineOne: string, lineTwo: string) {
+    this.lineOne = lineOne;
+    this.lineTwo = lineTwo;
+  }
+
+  content = () => {
+    return (
+      <>
+        <div className="mb-2">{this.lineOne}</div>
+        <div>{this.lineTwo}</div>
+      </>
+    );
+  };
+}
 
 const margin = {
   top: 40,
   right: 40,
   bottom: 60,
   left: 40
-};
-
-const getMinMax = (vals: (number | { valueOf(): number })[]) => {
-  const numericVals = vals.map(coerceNumber);
-  return [Math.min(...numericVals), Math.max(...numericVals)];
 };
 
 const tooltipStyles = {
@@ -57,28 +75,50 @@ const labelProps: Partial<TextProps> = {
 };
 
 // accessors
-// const getValueString = (d: BubbleData) => d.value.toString();
-const getValue = (d: BubbleData) => d.value;
+const getPriceValue = (d: GraphData) => d.price;
+const getCountValue = (d: BarGraphData) => d.count;
 
 type Props = {
-  data: BubbleData[];
+  data: GraphData[];
 };
 
 export function PriceBarGraph({ data }: Props) {
-  const [graphData, setGraphData] = useState<BubbleData[]>([]);
+  const [barGraphData, setBarGraphData] = useState<BarGraphData[]>([]);
 
   useEffect(() => {
-    const newData = [];
+    const newData: BarGraphData[] = [];
+    const columns = 12;
+    const values = data.map(getPriceValue);
+    const minPrice = Math.min(...values);
+    const maxPrice = Math.max(...values) + 0.05;
+    const range = (maxPrice - minPrice) / columns;
 
-    for (const item of data) {
-      newData.push(item);
+    for (let i = 0; i < columns; i++) {
+      newData.push({
+        count: 0,
+        axisLabel: numStr(minPrice + i * range),
+        tooltip: new TooltipData('', ''),
+        start: minPrice + i * range,
+        end: minPrice + (i + 1) * range
+      });
     }
 
-    setGraphData(newData);
+    for (const item of data) {
+      const i = Math.floor((item.price - minPrice) / range);
+
+      newData[i].count = newData[i].count + 1;
+    }
+
+    // set tooltip using count
+    for (const item of newData) {
+      item.tooltip = new TooltipData(`${item.count} items`, `${numStr(item.start)} / ${numStr(item.end)}`);
+    }
+
+    setBarGraphData(newData);
   }, [data]);
 
-  if (graphData.length > 0) {
-    return <ParentSize>{({ width }) => <_Barrz data={graphData} width={width} height={400} />}</ParentSize>;
+  if (barGraphData.length > 0) {
+    return <ParentSize>{({ width }) => <_PriceBarGraph data={barGraphData} width={width} height={200} />}</ParentSize>;
   }
 
   return <></>;
@@ -87,28 +127,22 @@ export function PriceBarGraph({ data }: Props) {
 // =====================================================================
 
 type Props2 = {
-  data: BubbleData[];
+  data: BarGraphData[];
   width: number;
   height: number;
 };
 
-function _Barrz({ data, width: outerWidth, height: outerHeight }: Props2) {
+function _PriceBarGraph({ data, width: outerWidth, height: outerHeight }: Props2) {
   const width = outerWidth - margin.left - margin.right;
   const height = outerHeight - margin.top - margin.bottom;
 
   const { tooltipData, tooltipLeft, tooltipTop, tooltipOpen, showTooltip, hideTooltip } = useTooltip();
 
-  let cnt = 0;
-  const priceValues = data.map(() => {
-    const result = cnt;
-    cnt += 2;
-
-    return result;
-  });
+  const priceValues = data.map((d) => d.axisLabel);
 
   const xScale = useMemo(
     () =>
-      scaleBand<number>({
+      scaleBand<string>({
         range: [0, width],
         round: true,
         domain: priceValues,
@@ -122,7 +156,7 @@ function _Barrz({ data, width: outerWidth, height: outerHeight }: Props2) {
       scaleLinear<number>({
         range: [height, 0],
         round: true,
-        domain: [0, Math.max(...data.map(getValue))]
+        domain: [0, Math.max(...data.map(getCountValue))]
       }),
     [height, data]
   );
@@ -151,8 +185,8 @@ function _Barrz({ data, width: outerWidth, height: outerHeight }: Props2) {
           />
 
           {data.map((d, index) => {
-            let barHeight = height - (yScale(getValue(d)) ?? 0);
-            barHeight = barHeight < 4 ? 4 : barHeight;
+            let barHeight = height - (yScale(getCountValue(d)) ?? 0);
+            barHeight = barHeight < 2 ? 2 : barHeight;
 
             const barWidth = xScale.bandwidth();
             const barX = xScale(priceValues[index]);
@@ -188,7 +222,7 @@ function _Barrz({ data, width: outerWidth, height: outerHeight }: Props2) {
 
       {tooltipOpen && (
         <Tooltip key={Math.random()} top={tooltipTop} left={tooltipLeft} style={tooltipStyles}>
-          <strong>{tooltipData}</strong>
+          <strong>{(tooltipData as TooltipData).content()}</strong>
         </Tooltip>
       )}
     </>
