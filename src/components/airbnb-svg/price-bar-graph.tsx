@@ -101,14 +101,17 @@ type Props = {
   data: GraphData[];
   title: string;
   flip: boolean;
+  onClick: (minPrice: string, maxPrice: string) => void;
 };
 
-export function PriceBarGraph({ data, title, flip }: Props) {
+export function PriceBarGraph({ data, title, flip, onClick }: Props) {
   if (data.length > 0) {
     return (
       <ParentSize>
         {({ width }) => {
-          return <_PriceBarGraph graphData={data} title={title} flip={flip} width={width} height={120} />;
+          return (
+            <_PriceBarGraph graphData={data} title={title} flip={flip} width={width} height={120} onClick={onClick} />
+          );
         }}
       </ParentSize>
     );
@@ -125,9 +128,10 @@ type Props2 = {
   width: number;
   height: number;
   flip: boolean;
+  onClick: (minPrice: string, maxPrice: string) => void;
 };
 
-function _PriceBarGraph({ graphData, title, flip, width: outerWidth, height: outerHeight }: Props2) {
+function _PriceBarGraph({ graphData, title, flip, width: outerWidth, height: outerHeight, onClick }: Props2) {
   const gap = 4;
   const margin = {
     top: flip ? 30 : gap,
@@ -197,23 +201,21 @@ function _PriceBarGraph({ graphData, title, flip, width: outerWidth, height: out
     <>
       <svg width={outerWidth} height={outerHeight}>
         <rect width={margin.left} y={flip ? 0 : gap} height={outerHeight - gap} fill={barColorBG} rx={6} />
-
         <text
           fill={barColor}
-          dominant-baseline="central"
-          font-size="26"
+          dominantBaseline="central"
+          fontSize="26"
           textAnchor="middle"
           x={margin.left / 2}
           y={outerHeight / 3}
         >
           {graphData.length.toString()}
         </text>
-
         <text
           fill={barColorLight}
           textAnchor="middle"
-          dominant-baseline="central"
-          font-size="22"
+          dominantBaseline="central"
+          fontSize="22"
           x={margin.left / 2}
           y={outerHeight / 1.6}
         >
@@ -244,7 +246,7 @@ function _PriceBarGraph({ graphData, title, flip, width: outerWidth, height: out
 
             let bColor = barColor;
             if (barHeight === 0) {
-              barHeight = gap;
+              barHeight = 2;
               bColor = barColorLight;
             }
 
@@ -262,7 +264,7 @@ function _PriceBarGraph({ graphData, title, flip, width: outerWidth, height: out
                 height={barHeight}
                 fill={bColor}
                 onClick={() => {
-                  console.log(`clicked: ${JSON.stringify(Object.values(d), null, 2)}`);
+                  onClick(d.start.toString(), d.end.toString());
                 }}
                 onMouseEnter={(event: React.MouseEvent) => {
                   showTooltip({

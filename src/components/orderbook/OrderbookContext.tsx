@@ -146,6 +146,7 @@ type OBContextType = {
   clearFilter: (name: string) => void;
   updateFilterArray: (filterName: string, currentFitlers: string[], selectionName: string, checked: boolean) => void;
   updateFilter: (name: string, value: string) => void;
+  updateFilters: (params: { name: string; value: string }[]) => void;
   collectionId: string | undefined;
   hasMoreOrders: boolean;
   hasNoData: boolean;
@@ -156,7 +157,7 @@ const OrderbookContext = React.createContext<OBContextType | null>(null);
 
 interface Props {
   children: ReactNode;
-  collectionId: string | undefined;
+  collectionId?: string;
   tokenId?: string;
 }
 
@@ -225,6 +226,22 @@ export const OrderbookProvider = ({ children, collectionId, tokenId }: Props) =>
     }
   };
 
+  const updateFilters = (params: { name: string; value: string }[]) => {
+    let query = { ...router.query };
+
+    for (const param of params) {
+      const val = param['value'];
+
+      if (val) {
+        query = { ...query, [param['name']]: param['value'] };
+      } else {
+        delete query[param['name']];
+      }
+    }
+
+    router.replace({ pathname: router.pathname, query: { ...query } });
+  };
+
   // todo: make this prod ready
   const fetchOrders = async (refreshData = false) => {
     try {
@@ -281,6 +298,7 @@ export const OrderbookProvider = ({ children, collectionId, tokenId }: Props) =>
     clearFilter,
     updateFilterArray,
     updateFilter,
+    updateFilters,
     collectionId,
     hasMoreOrders,
     hasNoData,
