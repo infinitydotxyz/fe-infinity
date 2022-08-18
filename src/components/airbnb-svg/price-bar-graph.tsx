@@ -130,9 +130,9 @@ type Props2 = {
 function _PriceBarGraph({ graphData, title, flip, width: outerWidth, height: outerHeight }: Props2) {
   const gap = 4;
   const margin = {
-    top: flip ? 40 : gap,
+    top: flip ? 30 : gap,
     right: 40,
-    bottom: flip ? gap : 40,
+    bottom: flip ? gap : 30,
     left: 140
   };
 
