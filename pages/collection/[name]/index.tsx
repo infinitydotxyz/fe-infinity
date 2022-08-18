@@ -315,7 +315,9 @@ const CollectionPage = () => {
                     userAddress: '',
                     userChainId: '' as ChainId,
                     stakerContractAddress: '',
-                    stakerContractChainId: '' as ChainId
+                    stakerContractChainId: '' as ChainId,
+                    tokenContractAddress: '',
+                    tokenContractChainId: '' as ChainId
                   })
                 }}
                 isOpen={isStakeModalOpen}
