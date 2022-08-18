@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Bar } from '@visx/shape';
 import { Group } from '@visx/group';
 import { GradientTealBlue } from '@visx/gradient';
@@ -65,7 +65,23 @@ type Props = {
 };
 
 export function PriceBarGraph({ data }: Props) {
-  return <ParentSize>{({ width }) => <_Barrz data={data} width={width} height={400} />}</ParentSize>;
+  const [graphData, setGraphData] = useState<BubbleData[]>([]);
+
+  useEffect(() => {
+    const newData = [];
+
+    for (const item of data) {
+      newData.push(item);
+    }
+
+    setGraphData(newData);
+  }, [data]);
+
+  if (graphData.length > 0) {
+    return <ParentSize>{({ width }) => <_Barrz data={graphData} width={width} height={400} />}</ParentSize>;
+  }
+
+  return <></>;
 }
 
 // =====================================================================
@@ -95,9 +111,8 @@ function _Barrz({ data, width: outerWidth, height: outerHeight }: Props2) {
       scaleBand<number>({
         range: [0, width],
         round: true,
-        paddingInner: 0.3,
         domain: priceValues,
-        padding: 0.4
+        padding: 0.2
       }),
     [width, data]
   );
@@ -123,10 +138,7 @@ function _Barrz({ data, width: outerWidth, height: outerHeight }: Props2) {
             key={`axis-center`}
             orientation={Orientation.bottom}
             top={height + 8}
-            scale={scaleLinear({
-              domain: getMinMax(priceValues),
-              range: [0, width]
-            })}
+            scale={xScale}
             tickFormat={(v) => `${v}`}
             stroke={barColorDark}
             tickStroke={barColorDark}
@@ -134,7 +146,7 @@ function _Barrz({ data, width: outerWidth, height: outerHeight }: Props2) {
             tickValues={priceValues}
             label="Price in ETH"
             labelProps={labelProps}
-            labelOffset={-2}
+            labelOffset={2}
             animationTrajectory="center"
           />
 
