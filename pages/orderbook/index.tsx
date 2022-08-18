@@ -10,7 +10,7 @@ const OrderbookPage = () => {
 
   return (
     <PageBox title="Orderbook">
-      {!isProd() && (
+      {!isProd() && (listings.length > 0 || offers.length > 0) && (
         <div className="w-full h-full p-4 flex flex-col mb-6 overflow-clip bg-black rounded-2xl">
           <PriceBarGraph title="Listings" data={listings} flip={true} />
           <PriceBarGraph title="Offers" data={offers} flip={false} />
