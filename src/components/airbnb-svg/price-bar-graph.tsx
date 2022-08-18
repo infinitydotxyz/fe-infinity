@@ -34,7 +34,9 @@ class TooltipData {
   content = () => {
     return (
       <>
-        <div className="mb-2">{this.lineOne}</div>
+        <div className="mb-2">
+          <strong>{this.lineOne}</strong>
+        </div>
         <div>{this.lineTwo}</div>
       </>
     );
@@ -44,8 +46,9 @@ class TooltipData {
 const tooltipStyles = {
   ...defaultStyles,
   minWidth: 60,
-  backgroundColor: 'rgba(0,0,0,0.9)',
-  color: 'white'
+  backgroundColor: 'rgba(255,255,255,.9)',
+
+  color: 'black'
 };
 
 // accessors
@@ -53,8 +56,16 @@ const getPriceValue = (d: GraphData) => d.price;
 const getCountValue = (d: BarGraphData) => d.count;
 
 const barData = (data: GraphData[], width: number): BarGraphData[] => {
+  const columnWidth = 80;
+
+  if (width < columnWidth || data.length === 0) {
+    return [];
+  }
+
+  const type = data[0].isSellOrder ? 'listings' : 'offers';
+
   const newData: BarGraphData[] = [];
-  const columns = width / 80;
+  const columns = Math.ceil(width / columnWidth);
   const values = data.map(getPriceValue);
   const minPrice = Math.min(...values);
   const maxPrice = Math.max(...values) + 0.05;
@@ -78,7 +89,7 @@ const barData = (data: GraphData[], width: number): BarGraphData[] => {
 
   // set tooltip using count
   for (const item of newData) {
-    item.tooltip = new TooltipData(`${item.count} items`, `${numStr(item.start)} / ${numStr(item.end)}`);
+    item.tooltip = new TooltipData(`${item.count} ${type}`, `${numStr(item.start)}  to  ${numStr(item.end)}`);
   }
 
   return newData;
@@ -117,10 +128,11 @@ type Props2 = {
 };
 
 function _PriceBarGraph({ graphData, title, flip, width: outerWidth, height: outerHeight }: Props2) {
+  const gap = 4;
   const margin = {
-    top: flip ? 40 : 4,
-    right: 80,
-    bottom: flip ? 4 : 40,
+    top: flip ? 40 : gap,
+    right: 40,
+    bottom: flip ? gap : 40,
     left: 140
   };
 
@@ -133,20 +145,24 @@ function _PriceBarGraph({ graphData, title, flip, width: outerWidth, height: out
     setData(barData(graphData, width));
   }, [graphData, outerWidth]);
 
-  const barColor = flip ? 'rgba(123, 233, 17, .5)' : 'rgba(23, 233, 217, .5)';
-  const barColorDark = flip ? 'rgba(123, 233, 17, .6)' : 'rgba(23, 233, 217, .6)';
-  const barColorLight = flip ? 'rgba(123, 233, 17, .2)' : 'rgba(23, 233, 217, .2)';
+  // const offerColor = '255, 113, 243';
+  const listingColor = '23, 203, 255';
+  const offerColor = '23, 203, 255';
+  const barColor = flip ? `rgba(${listingColor}, .9)` : `rgba(${offerColor}, .9)`;
+  const textColor = flip ? `rgba(${listingColor}, .6)` : `rgba(${offerColor}, .6)`;
+  const barColorLight = flip ? `rgba(${listingColor}, .5)` : `rgba(${offerColor}, .5)`;
+  const barColorBG = flip ? `rgba(${listingColor}, .1)` : `rgba(${offerColor}, .1)`;
 
   const tickLabelProps = () =>
     ({
-      fill: barColorDark,
+      fill: textColor,
       fontSize: 14,
       fontFamily: 'sans-serif',
       textAnchor: 'middle'
     } as const);
 
   const labelProps: Partial<TextProps> = {
-    fill: barColorDark,
+    fill: textColor,
     fontSize: 14,
     fontFamily: 'sans-serif',
     textAnchor: 'middle'
@@ -183,7 +199,9 @@ function _PriceBarGraph({ graphData, title, flip, width: outerWidth, height: out
         {/* <LinearGradient id="teal" from="#134" to="#035" toOpacity={0.9} />
         <rect width={outerWidth} height={outerHeight} fill="url(#teal)" rx={14} /> */}
 
-        <text fill={barColor} dominant-baseline="central" font-size="24" x={32} y={outerHeight / 2}>
+        <rect width={margin.left} y={flip ? 0 : gap} height={outerHeight - gap} fill={barColorBG} rx={6} />
+
+        <text fill="rgba(255,255,255,.6)" dominant-baseline="central" font-size="22" x={32} y={outerHeight / 2}>
           {title}
         </text>
 
@@ -194,8 +212,8 @@ function _PriceBarGraph({ graphData, title, flip, width: outerWidth, height: out
             top={flip ? -6 : height + 4}
             scale={xScale}
             tickFormat={(v) => `${v}`}
-            stroke={barColorDark}
-            tickStroke={barColorDark}
+            stroke={textColor}
+            tickStroke={textColor}
             tickLineProps={{ strokeWidth: 1, opacity: 0.6, transform: flip ? 'translate(0,2)' : 'translate(0,0)' }}
             hideAxisLine={true}
             tickLabelProps={tickLabelProps}
@@ -224,7 +242,7 @@ function _PriceBarGraph({ graphData, title, flip, width: outerWidth, height: out
                 key={`bar-${index}`}
                 x={barX}
                 y={barY}
-                rx={4}
+                rx={2}
                 width={barWidth}
                 height={barHeight}
                 fill={bColor}
@@ -249,7 +267,7 @@ function _PriceBarGraph({ graphData, title, flip, width: outerWidth, height: out
 
       {tooltipOpen && (
         <Tooltip key={Math.random()} top={tooltipTop} left={tooltipLeft} style={tooltipStyles}>
-          <strong>{(tooltipData as TooltipData).content()}</strong>
+          <div>{(tooltipData as TooltipData).content()}</div>
         </Tooltip>
       )}
     </>
