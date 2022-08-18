@@ -11,12 +11,9 @@ const OrderbookPage = () => {
   return (
     <PageBox title="Orderbook">
       {!isProd() && (
-        <div className="w-full h-full flex flex-col mb-6">
-          <PriceBarGraph title="Listings" data={listings} />
-
-          <div className="h-2"></div>
-
-          <PriceBarGraph title="Offers" data={offers} />
+        <div className="w-full h-full flex flex-col mb-6 bg-black rounded-3xl">
+          <PriceBarGraph title="Listings" data={listings} flip={true} />
+          <PriceBarGraph title="Offers" data={offers} flip={false} />
         </div>
       )}
 
