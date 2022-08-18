@@ -5,20 +5,25 @@ import { OrderbookContainer } from 'src/components/orderbook/orderbook-list';
 import { isProd } from 'src/utils';
 
 const OrderbookPage = () => {
-  const [data, setData] = useState<GraphData[]>([]);
+  const [listings, setListings] = useState<GraphData[]>([]);
+  const [offers, setOffers] = useState<GraphData[]>([]);
 
   return (
     <PageBox title="Orderbook">
       {!isProd() && (
-        <div className="w-full h-full mb-6">
-          <PriceBarGraph data={data} />
+        <div className="w-full h-full flex flex-col mb-6">
+          <PriceBarGraph title="Listings" data={listings} />
+
+          <div className="h-2"></div>
+
+          <PriceBarGraph title="Offers" data={offers} />
         </div>
       )}
 
       <OrderbookContainer
         className=""
         onData={(data) => {
-          const GraphData = data.map((x) => {
+          const graphData = data.map((x) => {
             const result: GraphData = {
               price: x.endPriceEth,
               isSellOrder: x.isSellOrder
@@ -26,7 +31,8 @@ const OrderbookPage = () => {
             return result;
           });
 
-          return setData(GraphData);
+          setListings(graphData.filter((i) => i.isSellOrder));
+          setOffers(graphData.filter((i) => !i.isSellOrder));
         }}
       />
     </PageBox>

@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Bar } from '@visx/shape';
 import { Group } from '@visx/group';
-import { GradientTealBlue } from '@visx/gradient';
+import { LinearGradient } from '@visx/gradient';
 import { scaleBand, scaleLinear } from '@visx/scale';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { Orientation } from '@visx/axis';
@@ -44,9 +44,9 @@ class TooltipData {
 
 const margin = {
   top: 40,
-  right: 40,
+  right: 80,
   bottom: 60,
-  left: 40
+  left: 140
 };
 
 const tooltipStyles = {
@@ -80,9 +80,10 @@ const getCountValue = (d: BarGraphData) => d.count;
 
 type Props = {
   data: GraphData[];
+  title: string;
 };
 
-export function PriceBarGraph({ data }: Props) {
+export function PriceBarGraph({ data, title }: Props) {
   const [barGraphData, setBarGraphData] = useState<BarGraphData[]>([]);
 
   useEffect(() => {
@@ -118,7 +119,11 @@ export function PriceBarGraph({ data }: Props) {
   }, [data]);
 
   if (barGraphData.length > 0) {
-    return <ParentSize>{({ width }) => <_PriceBarGraph data={barGraphData} width={width} height={200} />}</ParentSize>;
+    return (
+      <ParentSize>
+        {({ width }) => <_PriceBarGraph data={barGraphData} title={title} width={width} height={180} />}
+      </ParentSize>
+    );
   }
 
   return <></>;
@@ -128,11 +133,12 @@ export function PriceBarGraph({ data }: Props) {
 
 type Props2 = {
   data: BarGraphData[];
+  title: string;
   width: number;
   height: number;
 };
 
-function _PriceBarGraph({ data, width: outerWidth, height: outerHeight }: Props2) {
+function _PriceBarGraph({ data, title, width: outerWidth, height: outerHeight }: Props2) {
   const width = outerWidth - margin.left - margin.right;
   const height = outerHeight - margin.top - margin.bottom;
 
@@ -164,14 +170,18 @@ function _PriceBarGraph({ data, width: outerWidth, height: outerHeight }: Props2
   return width < 10 ? null : (
     <>
       <svg width={outerWidth} height={outerHeight}>
-        <GradientTealBlue id="teal" />
+        <LinearGradient id="teal" from="#134" to="#035" toOpacity={0.9} />
         <rect width={outerWidth} height={outerHeight} fill="url(#teal)" rx={14} />
+
+        <text fill={barColor} dominant-baseline="central" font-size="24" x={32} y={outerHeight / 2}>
+          {title}
+        </text>
 
         <Group transform={`translate(${margin.left},${margin.top})`}>
           <AnimatedAxis
             key={`axis-center`}
             orientation={Orientation.bottom}
-            top={height + 8}
+            top={height + 4}
             scale={xScale}
             tickFormat={(v) => `${v}`}
             stroke={barColorDark}
@@ -180,7 +190,7 @@ function _PriceBarGraph({ data, width: outerWidth, height: outerHeight }: Props2
             tickValues={priceValues}
             label="Price in ETH"
             labelProps={labelProps}
-            labelOffset={2}
+            labelOffset={6}
             animationTrajectory="center"
           />
 
