@@ -26,8 +26,6 @@ const margin = {
   left: 40
 };
 
-const linearValues = [0, 2, 4, 6, 8, 10];
-
 const getMinMax = (vals: (number | { valueOf(): number })[]) => {
   const numericVals = vals.map(coerceNumber);
   return [Math.min(...numericVals), Math.max(...numericVals)];
@@ -59,7 +57,7 @@ const labelProps: Partial<TextProps> = {
 };
 
 // accessors
-const getValueString = (d: BubbleData) => d.value.toString();
+// const getValueString = (d: BubbleData) => d.value.toString();
 const getValue = (d: BubbleData) => d.value;
 
 type Props = {
@@ -84,12 +82,21 @@ function _Barrz({ data, width: outerWidth, height: outerHeight }: Props2) {
 
   const { tooltipData, tooltipLeft, tooltipTop, tooltipOpen, showTooltip, hideTooltip } = useTooltip();
 
+  let cnt = 0;
+  const priceValues = data.map(() => {
+    const result = cnt;
+    cnt += 2;
+
+    return result;
+  });
+
   const xScale = useMemo(
     () =>
-      scaleBand<string>({
+      scaleBand<number>({
         range: [0, width],
         round: true,
-        domain: data.map(getValueString),
+        paddingInner: 0.3,
+        domain: priceValues,
         padding: 0.4
       }),
     [width, data]
@@ -117,34 +124,31 @@ function _Barrz({ data, width: outerWidth, height: outerHeight }: Props2) {
             orientation={Orientation.bottom}
             top={height + 8}
             scale={scaleLinear({
-              domain: getMinMax(linearValues),
+              domain: getMinMax(priceValues),
               range: [0, width]
             })}
             tickFormat={(v) => `${v}`}
             stroke={barColorDark}
             tickStroke={barColorDark}
             tickLabelProps={tickLabelProps}
-            tickValues={linearValues}
+            tickValues={priceValues}
             label="Price in ETH"
             labelProps={labelProps}
             labelOffset={-2}
             animationTrajectory="center"
           />
-        </Group>
 
-        <Group transform={`translate(${margin.left},${margin.top})`}>
           {data.map((d, index) => {
             let barHeight = height - (yScale(getValue(d)) ?? 0);
             barHeight = barHeight < 4 ? 4 : barHeight;
 
-            const letter = getValueString(d);
             const barWidth = xScale.bandwidth();
-            const barX = xScale(letter);
+            const barX = xScale(priceValues[index]);
             const barY = height - barHeight;
 
             return (
               <Bar
-                key={`bar-${letter}:${index}`}
+                key={`bar-${index}`}
                 x={barX}
                 y={barY}
                 width={barWidth}
