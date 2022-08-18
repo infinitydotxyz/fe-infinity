@@ -196,13 +196,10 @@ function _PriceBarGraph({ graphData, title, flip, width: outerWidth, height: out
   return width < 10 ? null : (
     <>
       <svg width={outerWidth} height={outerHeight}>
-        {/* <LinearGradient id="teal" from="#134" to="#035" toOpacity={0.9} />
-        <rect width={outerWidth} height={outerHeight} fill="url(#teal)" rx={14} /> */}
-
         <rect width={margin.left} y={flip ? 0 : gap} height={outerHeight - gap} fill={barColorBG} rx={6} />
 
         <text
-          fill="rgba(255,255,255,.7)"
+          fill={barColor}
           dominant-baseline="central"
           font-size="26"
           textAnchor="middle"
@@ -213,7 +210,7 @@ function _PriceBarGraph({ graphData, title, flip, width: outerWidth, height: out
         </text>
 
         <text
-          fill="rgba(255,255,255,.5)"
+          fill={barColorLight}
           textAnchor="middle"
           dominant-baseline="central"
           font-size="22"
@@ -247,7 +244,7 @@ function _PriceBarGraph({ graphData, title, flip, width: outerWidth, height: out
 
             let bColor = barColor;
             if (barHeight === 0) {
-              barHeight = 2;
+              barHeight = gap;
               bColor = barColorLight;
             }
 
