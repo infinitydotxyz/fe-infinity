@@ -268,8 +268,8 @@ function _PriceBarGraph({ graphData, title, flip, width: outerWidth, height: out
                 }}
                 onMouseEnter={(event: React.MouseEvent) => {
                   showTooltip({
-                    tooltipLeft: event.pageX,
-                    tooltipTop: event.pageY,
+                    tooltipLeft: event.clientX,
+                    tooltipTop: event.clientY,
                     tooltipData: d.tooltip
                   });
                 }}
