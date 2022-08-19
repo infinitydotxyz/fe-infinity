@@ -1,12 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Bar } from '@visx/shape';
 import { Group } from '@visx/group';
+import { LinearGradient } from '@visx/gradient';
 import { scaleBand, scaleLinear } from '@visx/scale';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { Orientation } from '@visx/axis';
 import { TextProps } from '@visx/text';
 import { AnimatedAxis } from '@visx/react-spring';
-import { Tooltip, useTooltip, defaultStyles } from '@visx/tooltip';
+import { useTooltip, defaultStyles, useTooltipInPortal } from '@visx/tooltip';
 import { numStr } from 'src/utils';
 
 export type GraphData = {
@@ -152,6 +152,7 @@ function _PriceBarGraph({ graphData, title, flip, width: outerWidth, height: out
   // const offerColor = '255, 113, 243';
   const listingColor = '23, 203, 255';
   const offerColor = '23, 203, 255';
+  const barColorSolid = flip ? `rgba(${listingColor}, 1)` : `rgba(${offerColor}, 1)`;
   const barColor = flip ? `rgba(${listingColor}, .9)` : `rgba(${offerColor}, .9)`;
   const textColor = flip ? `rgba(${listingColor}, .6)` : `rgba(${offerColor}, .6)`;
   const barColorLight = flip ? `rgba(${listingColor}, .5)` : `rgba(${offerColor}, .5)`;
@@ -173,6 +174,10 @@ function _PriceBarGraph({ graphData, title, flip, width: outerWidth, height: out
   };
 
   const { tooltipData, tooltipLeft, tooltipTop, tooltipOpen, showTooltip, hideTooltip } = useTooltip();
+  const { containerRef, containerBounds, TooltipInPortal } = useTooltipInPortal({
+    scroll: true,
+    detectBounds: false
+  });
 
   const axisLabels = data.map((d) => d.axisLabel);
 
@@ -199,7 +204,16 @@ function _PriceBarGraph({ graphData, title, flip, width: outerWidth, height: out
 
   return width < 10 ? null : (
     <>
-      <svg width={outerWidth} height={outerHeight}>
+      <svg ref={containerRef} width={outerWidth} height={outerHeight}>
+        <LinearGradient
+          from={barColorSolid}
+          to={barColorSolid}
+          toOpacity={1}
+          fromOpacity={0.8}
+          id="bar-gradient-flipped"
+        />
+        <LinearGradient from={barColorSolid} to={barColorSolid} toOpacity={0.8} fromOpacity={1} id="bar-gradient" />
+
         <rect width={margin.left} y={flip ? 0 : gap} height={outerHeight - gap} fill={barColorBG} rx={6} />
         <text
           fill={barColor}
@@ -244,9 +258,11 @@ function _PriceBarGraph({ graphData, title, flip, width: outerWidth, height: out
           {data.map((d, index) => {
             let barHeight = height - (yScale(getCountValue(d)) ?? 0);
 
-            let bColor = barColor;
+            let bColor = flip ? 'url(#bar-gradient-flipped)' : 'url(#bar-gradient)';
+            let barRadius = 12;
             if (barHeight === 0) {
               barHeight = 2;
+              barRadius = 0;
               bColor = barColorLight;
             }
 
@@ -255,21 +271,27 @@ function _PriceBarGraph({ graphData, title, flip, width: outerWidth, height: out
             const barY = flip ? 0 : height - barHeight;
 
             return (
-              <Bar
+              <RoundRect
                 key={`bar-${index}`}
                 x={barX}
                 y={barY}
-                rx={2}
                 width={barWidth}
                 height={barHeight}
+                tl={flip ? 0 : barRadius}
+                tr={flip ? 0 : barRadius}
+                br={flip ? barRadius : 0}
+                bl={flip ? barRadius : 0}
                 fill={bColor}
                 onClick={() => {
                   onClick(d.start.toString(), d.end.toString());
                 }}
                 onMouseEnter={(event: React.MouseEvent) => {
+                  const containerX = ('clientX' in event ? event.clientX : 0) - containerBounds.left;
+                  const containerY = ('clientY' in event ? event.clientY : 0) - containerBounds.top;
+
                   showTooltip({
-                    tooltipLeft: event.clientX,
-                    tooltipTop: event.clientY,
+                    tooltipLeft: containerX,
+                    tooltipTop: containerY,
                     tooltipData: d.tooltip
                   });
                 }}
@@ -283,10 +305,73 @@ function _PriceBarGraph({ graphData, title, flip, width: outerWidth, height: out
       </svg>
 
       {tooltipOpen && (
-        <Tooltip key={Math.random()} top={tooltipTop} left={tooltipLeft} style={tooltipStyles}>
+        <TooltipInPortal key={Math.random()} top={tooltipTop} left={tooltipLeft} style={tooltipStyles}>
           <div>{(tooltipData as TooltipData).content()}</div>
-        </Tooltip>
+        </TooltipInPortal>
       )}
     </>
   );
 }
+
+// =======================================================================
+
+interface RectProps {
+  width: number;
+  height: number;
+  tl?: number;
+  tr?: number;
+  br?: number;
+  bl?: number;
+
+  x?: number;
+  y?: number;
+  fill?: string;
+  onClick?: () => void;
+
+  onMouseEnter?: (event: React.MouseEvent) => void;
+  onMouseLeave?: (event: React.MouseEvent) => void;
+}
+
+export const RoundRect = ({
+  x,
+  y,
+  width,
+  height,
+  tl = 0,
+  tr = 0,
+  br = 0,
+  bl = 0,
+  onMouseEnter,
+  onMouseLeave,
+  onClick,
+  fill
+}: RectProps) => {
+  const d =
+    'M' +
+    x +
+    ',' +
+    y +
+    `m 0 ${tl}` +
+    `q 0 -${tl} ${tl} -${tl}` +
+    `l ${width - tl - tr} 0` +
+    `q ${tr} 0 ${tr} ${tr}` +
+    `l 0 ${height - tr - br}` +
+    `q 0 ${br} -${br} ${br}` +
+    `l -${width - br - bl} 0` +
+    `q -${bl} 0 -${bl} -${bl}` +
+    `z`;
+
+  return (
+    <path
+      d={d}
+      fill={fill}
+      width={width}
+      height={height}
+      x={x}
+      y={y}
+      onClick={onClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    />
+  );
+};
