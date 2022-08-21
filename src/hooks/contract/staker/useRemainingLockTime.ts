@@ -10,10 +10,10 @@ import { useMemo } from 'react';
  * Maps a `StakeDuration` enum to the actual amount of months it represents.
  */
 const mapDurationToMonths = {
-  [StakeDuration.X0]: 0,
-  [StakeDuration.X3]: 3,
-  [StakeDuration.X6]: 6,
-  [StakeDuration.X12]: 12
+  [StakeDuration.None]: 0,
+  [StakeDuration.ThreeMonths]: 3,
+  [StakeDuration.SixMonths]: 6,
+  [StakeDuration.TwelveMonths]: 12
 };
 
 // Days per month according to the contract.
@@ -31,7 +31,7 @@ export function useRemainingLockTime(address?: string) {
     const weeks = [];
 
     // Each 'duration' represents a StakeDuration.
-    // For example, when i == 0 then i == StakeDuration.X0, when i == 1 then i == StakeDuration.X3, etc.
+    // For example, when i == 0 then i == StakeDuration.None, when i == 1 then i == StakeDuration.ThreeMonths, etc.
     for (let duration = 0; duration < stakingInfo.length; duration++) {
       const info = stakingInfo[duration];
 

@@ -16,16 +16,16 @@ interface Props {
 }
 
 const multipliers = {
-  [StakeDuration.X0]: 1,
-  [StakeDuration.X3]: 2,
-  [StakeDuration.X6]: 3,
-  [StakeDuration.X12]: 4
+  [StakeDuration.None]: 1,
+  [StakeDuration.ThreeMonths]: 2,
+  [StakeDuration.SixMonths]: 3,
+  [StakeDuration.TwelveMonths]: 4
 };
 
 const getMultiplier = (duration: StakeDuration) => `Multiplier: ${multipliers[duration]}x`;
 
 export const StakeTokensModal = ({ onClose }: Props) => {
-  const [stakeDuration, setStakeDuration] = useState<StakeDuration>(StakeDuration.X0);
+  const [stakeDuration, setStakeDuration] = useState<StakeDuration>(StakeDuration.None);
   const [value, setValue] = useState(0);
   const [isStaking, setIsStaking] = useState(false);
   const { balance } = useTokenBalance();
@@ -67,24 +67,24 @@ export const StakeTokensModal = ({ onClose }: Props) => {
             <RadioGroup value={stakeDuration} onChange={setStakeDuration} className="space-y-2">
               <RadioGroup.Label>Lock for:</RadioGroup.Label>
               <RadioButtonCard
-                value={StakeDuration.X0}
+                value={StakeDuration.None}
                 label="No commitment"
-                description={getMultiplier(StakeDuration.X0)}
+                description={getMultiplier(StakeDuration.None)}
               />
               <RadioButtonCard
-                value={StakeDuration.X3}
+                value={StakeDuration.ThreeMonths}
                 label="3 months"
-                description={getMultiplier(StakeDuration.X3)}
+                description={getMultiplier(StakeDuration.ThreeMonths)}
               />
               <RadioButtonCard
-                value={StakeDuration.X6}
+                value={StakeDuration.SixMonths}
                 label="6 months"
-                description={getMultiplier(StakeDuration.X6)}
+                description={getMultiplier(StakeDuration.SixMonths)}
               />
               <RadioButtonCard
-                value={StakeDuration.X12}
+                value={StakeDuration.TwelveMonths}
                 label="12 months"
-                description={getMultiplier(StakeDuration.X12)}
+                description={getMultiplier(StakeDuration.TwelveMonths)}
               />
             </RadioGroup>
           </div>
