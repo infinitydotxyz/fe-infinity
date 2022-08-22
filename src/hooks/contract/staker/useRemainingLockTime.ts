@@ -10,10 +10,10 @@ import { useMemo } from 'react';
  * Maps a `StakeDuration` enum to the actual amount of months it represents.
  */
 const mapDurationToMonths = {
-  [StakeDuration.X0]: 0,
-  [StakeDuration.X3]: 3,
-  [StakeDuration.X6]: 6,
-  [StakeDuration.X12]: 12
+  [StakeDuration.None]: 0,
+  [StakeDuration.ThreeMonths]: 3,
+  [StakeDuration.SixMonths]: 6,
+  [StakeDuration.TwelveMonths]: 12
 };
 
 // Days per month according to the contract.
