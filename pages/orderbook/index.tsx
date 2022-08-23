@@ -3,7 +3,7 @@ import { OrderbookContent } from 'src/components/orderbook/orderbook-list';
 import { isProd } from 'src/utils';
 import { OrderbookProvider } from 'src/components/orderbook/OrderbookContext';
 import { useRouter } from 'next/router';
-import { OrderbookGraph } from 'src/components/airbnb-svg/orderbook-graph';
+import { OrderbookGraph } from 'src/components/orderbook/graph/orderbook-graph';
 
 const OrderbookPage = () => {
   return (

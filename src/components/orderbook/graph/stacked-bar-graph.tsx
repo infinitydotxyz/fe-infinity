@@ -10,8 +10,8 @@ import { numStr } from 'src/utils';
 import { GraphData } from './price-bar-graph';
 import { RoundRectBar } from './round-rect-bar';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { Button, SimpleTable, SimpleTableItem } from '../common';
-import { OrderDetailPicker } from '../orderbook/order-detail-picker';
+import { Button, SimpleTable, SimpleTableItem } from '../../common';
+import { OrderDetailPicker } from '../order-detail-picker';
 
 type BarGraphData = {
   listings: GraphData[];
