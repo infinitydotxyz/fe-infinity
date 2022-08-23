@@ -159,9 +159,10 @@ interface Props {
   children: ReactNode;
   collectionId?: string;
   tokenId?: string;
+  limit?: number;
 }
 
-export const OrderbookProvider = ({ children, collectionId, tokenId }: Props) => {
+export const OrderbookProvider = ({ children, collectionId, tokenId, limit = ITEMS_PER_PAGE }: Props) => {
   const router = useRouter();
 
   const [isReady, setIsReady] = useState(false);
@@ -249,7 +250,7 @@ export const OrderbookProvider = ({ children, collectionId, tokenId }: Props) =>
 
       // eslint-disable-next-line
       const query: any = {
-        limit: ITEMS_PER_PAGE,
+        limit: limit,
         cursor: refreshData ? '' : cursor,
         ...parsedFilters,
         collections: collectionId ? [collectionId] : parsedFilters.collections

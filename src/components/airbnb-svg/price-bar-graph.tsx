@@ -8,10 +8,13 @@ import { TextProps } from '@visx/text';
 import { AnimatedAxis } from '@visx/react-spring';
 import { useTooltip, defaultStyles, useTooltipInPortal } from '@visx/tooltip';
 import { numStr } from 'src/utils';
+import { RoundRectBar } from './round-rect-bar';
+import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 
 export type GraphData = {
   isSellOrder: boolean;
   price: number;
+  order: SignedOBOrder;
 };
 
 type BarGraphData = {
@@ -271,7 +274,7 @@ function _PriceBarGraph({ graphData, title, flip, width: outerWidth, height: out
             const barY = flip ? 0 : height - barHeight;
 
             return (
-              <RoundRect
+              <RoundRectBar
                 key={`bar-${index}`}
                 x={barX}
                 y={barY}
@@ -312,66 +315,3 @@ function _PriceBarGraph({ graphData, title, flip, width: outerWidth, height: out
     </>
   );
 }
-
-// =======================================================================
-
-interface RectProps {
-  width: number;
-  height: number;
-  tl?: number;
-  tr?: number;
-  br?: number;
-  bl?: number;
-
-  x?: number;
-  y?: number;
-  fill?: string;
-  onClick?: () => void;
-
-  onMouseEnter?: (event: React.MouseEvent) => void;
-  onMouseLeave?: (event: React.MouseEvent) => void;
-}
-
-export const RoundRect = ({
-  x,
-  y,
-  width,
-  height,
-  tl = 0,
-  tr = 0,
-  br = 0,
-  bl = 0,
-  onMouseEnter,
-  onMouseLeave,
-  onClick,
-  fill
-}: RectProps) => {
-  const d =
-    'M' +
-    x +
-    ',' +
-    y +
-    `m 0 ${tl}` +
-    `q 0 -${tl} ${tl} -${tl}` +
-    `l ${width - tl - tr} 0` +
-    `q ${tr} 0 ${tr} ${tr}` +
-    `l 0 ${height - tr - br}` +
-    `q 0 ${br} -${br} ${br}` +
-    `l -${width - br - bl} 0` +
-    `q -${bl} 0 -${bl} -${bl}` +
-    `z`;
-
-  return (
-    <path
-      d={d}
-      fill={fill}
-      width={width}
-      height={height}
-      x={x}
-      y={y}
-      onClick={onClick}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-    />
-  );
-};

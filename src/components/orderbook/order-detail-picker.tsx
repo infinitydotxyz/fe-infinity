@@ -14,20 +14,27 @@ interface Props2 {
   selection?: Set<string>;
   onChange?: (selection: Set<string>) => void;
   scroll?: boolean;
+  className?: string;
 }
 
-export const OrderDetailPicker = ({ selection, onChange, order, scroll = false }: Props2) => {
+export const OrderDetailPicker = ({
+  selection,
+  onChange,
+  order,
+  scroll = false,
+  className = 'text-gray-500'
+}: Props2) => {
   const showCheckbox = onChange !== undefined && selection !== undefined;
 
   return (
-    <div>
-      <div className="text-gray-500">
+    <div className={className}>
+      <div>
         Any {order.numItems} {order.numItems > 1 ? 'items' : 'item'} can be{' '}
         {order.isSellOrder ? 'bought' : 'sold (if you own enough)'} for the given price.
       </div>
 
       {showCheckbox && (
-        <div className="text-gray-500 mt-1">
+        <div className="mt-1">
           Select {order.numItems} {order.numItems > 1 ? 'items' : 'item'} and click Add to Cart.
         </div>
       )}
@@ -86,7 +93,7 @@ export const OrderDetailPicker = ({ selection, onChange, order, scroll = false }
                     />
                     <div className="ml-4">
                       <div className="select-none">{nft.collectionName}</div>
-                      <div className="select-none flex text-gray-500 truncate">{tokenId}</div>
+                      <div className="select-none flex  truncate">{tokenId}</div>
                     </div>
 
                     {showCheckbox && (
