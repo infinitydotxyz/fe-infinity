@@ -7,11 +7,10 @@ import { Orientation } from '@visx/axis';
 import { AnimatedAxis } from '@visx/react-spring';
 import { useTooltip, defaultStyles, useTooltipInPortal } from '@visx/tooltip';
 import { numStr } from 'src/utils';
-import { GraphData } from './price-bar-graph';
 import { RoundRectBar } from './round-rect-bar';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { Button, SimpleTable, SimpleTableItem } from '../../common';
-import { OrderDetailPicker } from '../order-detail-picker';
+import { GraphOrderDetails } from './graph-order-details';
+import { barColorLight, barColorSolid, GraphData, textColor } from './graph-utils';
 
 type BarGraphData = {
   listings: GraphData[];
@@ -49,7 +48,7 @@ const tooltipStyles = {
 
   minWidth: 60,
   backgroundColor: 'rgba(255,255,255,.9)',
-  fontSize: '30px',
+  fontSize: '20px',
 
   color: 'black'
 };
@@ -124,20 +123,24 @@ export function StackedBarGraph({ data, onClick }: Props) {
   if (data.length > 0) {
     return (
       <div className="flex">
-        <ParentSize>
-          {({ width }) => {
-            return (
-              <_StackedBarGraph
-                graphData={data}
-                width={width}
-                height={620}
-                onClick={onClick}
-                onHover={(orders) => setSelectedOrders(orders)}
-              />
-            );
-          }}
-        </ParentSize>
-        <OrderDetails orders={selectedOrders} />
+        <div className="flex-1 min-w-0">
+          <ParentSize debounceTime={10}>
+            {({ width }) => {
+              return (
+                <_StackedBarGraph
+                  graphData={data}
+                  width={width}
+                  height={720}
+                  onClick={onClick}
+                  onHover={(orders) => setSelectedOrders(orders)}
+                />
+              );
+            }}
+          </ParentSize>
+        </div>
+        <div className="w-96">
+          <GraphOrderDetails orders={selectedOrders} />
+        </div>
       </div>
     );
   }
@@ -158,7 +161,7 @@ type Props2 = {
 function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, onClick, onHover }: Props2) {
   const margin = {
     top: 80,
-    right: 80,
+    right: 40,
     bottom: 80,
     left: 80
   };
@@ -171,13 +174,6 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
   useEffect(() => {
     setData(barData(graphData, width));
   }, [graphData, outerWidth]);
-
-  // const offerColor = '255, 113, 243';
-  // const listingColor = '23, 203, 255';
-  const offerColor = '23, 203, 255';
-  const barColorSolid = `rgba(${offerColor}, 1)`;
-  const textColor = `rgba(${offerColor}, .6)`;
-  const barColorLight = `rgba(${offerColor}, .5)`;
 
   const tickLabelProps = () =>
     ({
@@ -445,55 +441,3 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
     </>
   );
 }
-
-// ===================================================================
-
-interface Props9 {
-  orders: SignedOBOrder[];
-}
-
-const OrderDetails = ({ orders }: Props9) => {
-  if (orders.length > 0) {
-    const order = orders[0];
-
-    const tableItems: SimpleTableItem[] = [
-      {
-        title: <div className="">Type</div>,
-        value: <div className=" selection: font-heading">{order.isSellOrder ? 'Listing' : 'Offer'}</div>
-      },
-      {
-        title: <div className="">Price</div>,
-        value: <div className="  font-heading">{order.startPriceEth}</div>
-      },
-      {
-        title: <div className=""># NFTs</div>,
-        value: <div className=" selection: font-heading">{order.numItems}</div>
-      },
-      {
-        title: <div className="">Expiry date</div>,
-        value: <div className="  font-heading">{new Date(order.endTimeMs).toLocaleString()}</div>
-      }
-    ];
-
-    return (
-      <div className="flex flex-col w-1/4 bg-white bg-opacity-10 rounded-2xl p-6">
-        <div className="text-gray-300 mb-2 text-lg font-bold">Order Details</div>
-        <OrderDetailPicker order={order} scroll={true} className="text-gray-300" />
-
-        <SimpleTable className="text-gray-300" items={tableItems} />
-
-        <div className="mt-10">
-          <Button variant="white" className="w-full font-heading">
-            Buy
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex flex-col w-1/4 items-center justify-center  bg-white bg-opacity-10 rounded-2xl text-white">
-      <div>Nothing selected</div>
-    </div>
-  );
-};

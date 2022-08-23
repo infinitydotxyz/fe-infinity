@@ -9,13 +9,7 @@ import { AnimatedAxis } from '@visx/react-spring';
 import { useTooltip, defaultStyles, useTooltipInPortal } from '@visx/tooltip';
 import { numStr } from 'src/utils';
 import { RoundRectBar } from './round-rect-bar';
-import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-
-export type GraphData = {
-  isSellOrder: boolean;
-  price: number;
-  order: SignedOBOrder;
-};
+import { GraphData } from './graph-utils';
 
 type BarGraphData = {
   count: number;
