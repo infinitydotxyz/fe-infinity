@@ -2,12 +2,16 @@ import { useOrderbook } from '../OrderbookContext';
 import { StackedBarGraph } from './stacked-bar-graph';
 import { BiReset } from 'react-icons/bi';
 import { useEffect, useState } from 'react';
-import { GraphData } from './graph-utils';
+import { blueColor, GraphData, orangeColor } from './graph-utils';
 import { Spinner } from 'src/components/common';
+import { twMerge } from 'tailwind-merge';
+import { GraphOrderDetails } from './graph-order-details';
+import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 
 export const OrderbookGraph = () => {
   const { orders, updateFilters, isLoading } = useOrderbook();
   const [graphData, setGraphData] = useState<GraphData[]>([]);
+  const [selectedOrders, setSelectedOrders] = useState<SignedOBOrder[]>([]);
 
   const handleOnClick = (minPrice: string, maxPrice: string) => {
     updateFilters([
@@ -42,22 +46,61 @@ export const OrderbookGraph = () => {
     );
   } else if (graphData.length > 0) {
     content = (
-      <>
-        <StackedBarGraph data={graphData} onClick={handleOnClick} />
+      <div className="flex flex-col">
+        <div className="flex">
+          <div className="flex-1 min-w-0">
+            <OrderbookGraphInfo className=" " graphData={graphData} onReset={() => handleOnClick('', '')} />
 
-        <BiReset
-          onClick={() => handleOnClick('', '')}
-          className="text-white opacity-75 h-8 w-8 absolute top-3 left-4"
-        />
-      </>
+            <StackedBarGraph
+              data={graphData}
+              onClick={handleOnClick}
+              onSelection={(orders) => setSelectedOrders(orders)}
+            />
+          </div>
+          <div className="w-96">
+            <GraphOrderDetails orders={selectedOrders} />
+          </div>
+        </div>
+      </div>
     );
   } else {
     content = <div className={textStyle}>No data</div>;
   }
 
   return (
-    <div className="w-full h-full relative p-4 flex flex-col mb-6 overflow-clip bg-black bg-opacity-90 rounded-xl">
-      {content}
+    <div className="w-full h-full relative p-6  flex flex-col overflow-clip bg-black   rounded-3xl">{content}</div>
+  );
+};
+
+// ===============================================================
+
+interface Props2 {
+  graphData: GraphData[];
+  className?: string;
+  onReset: () => void;
+}
+
+export const OrderbookGraphInfo = ({ graphData, className, onReset }: Props2) => {
+  const listings = () => graphData.filter((x) => x.isSellOrder);
+  const offers = () => graphData.filter((x) => !x.isSellOrder);
+
+  return (
+    <div className={twMerge('w-full text-white flex   mb-4 ', className)}>
+      <BiReset onClick={() => onReset()} className="text-white opacity-75 h-8 w-8" />
+
+      <div className={twMerge('w-full flex flex-col  ml-10  text-white text-opacity-70 text-lg', className)}>
+        <div className="flex items-center ">
+          <div className="h-4 w-4 mr-3" style={{ backgroundColor: orangeColor }} />
+          <div className="font-bold mr-2">{offers().length.toString()}</div>
+          <div>Offers</div>
+        </div>
+
+        <div className="flex items-center">
+          <div className="h-4 w-4 mr-3" style={{ backgroundColor: blueColor }} />
+          <div className="font-bold mr-2">{listings().length.toString()}</div>
+          <div>Listings</div>
+        </div>
+      </div>
     </div>
   );
 };

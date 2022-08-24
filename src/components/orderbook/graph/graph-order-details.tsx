@@ -12,6 +12,7 @@ interface Props9 {
 export const GraphOrderDetails = ({ orders }: Props9) => {
   const [index, setIndex] = useState(0);
   const textColor = 'text-[#60ccfe]';
+  const contentStyle = 'flex flex-col h-full bg-white bg-opacity-10 rounded-xl p-8';
 
   if (orders.length > 0) {
     const order = orders[index];
@@ -40,7 +41,7 @@ export const GraphOrderDetails = ({ orders }: Props9) => {
     };
 
     return (
-      <div className={twMerge(textColor, 'flex flex-col h-full bg-white bg-opacity-10 rounded-2xl p-8')}>
+      <div className={twMerge(textColor, contentStyle)}>
         <NextPrevArrows
           numItems={orders.length}
           index={index}
@@ -78,12 +79,7 @@ export const GraphOrderDetails = ({ orders }: Props9) => {
   }
 
   return (
-    <div
-      className={twMerge(
-        textColor,
-        'flex flex-col w-full h-full items-center justify-center  bg-white bg-opacity-10 rounded-2xl  '
-      )}
-    >
+    <div className={twMerge(textColor, contentStyle, 'items-center justify-center')}>
       <div>Nothing selected</div>
     </div>
   );
@@ -99,7 +95,8 @@ interface Props4 {
 }
 
 export const NextPrevArrows = ({ index, numItems, onNext, onPrev }: Props4) => {
-  const content = numItems > 1 ? `${index + 1} / ${numItems} orders` : '1 order';
+  const progress = numItems > 1 ? `${index + 1} / ${numItems}` : '1';
+  const content = numItems > 1 ? 'Orders' : 'Order';
 
   return (
     <div className="flex w-full items-center rounded-lg mb-6">
@@ -108,7 +105,10 @@ export const NextPrevArrows = ({ index, numItems, onNext, onPrev }: Props4) => {
       </Button>
 
       <Spacer />
-      <div className="  select-none text-md">{content}</div>
+      <div className="flex select-none text-md">
+        <div className="mr-3 font-bold">{progress}</div>
+        <div className=" ">{content}</div>
+      </div>
       <Spacer />
 
       <Button disabled={numItems < 2} variant="round" className=" " onClick={onNext}>

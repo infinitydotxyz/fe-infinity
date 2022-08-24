@@ -10,8 +10,15 @@ import { useTooltip, defaultStyles, useTooltipInPortal } from '@visx/tooltip';
 import { numStr } from 'src/utils';
 import { RoundRectBar } from './round-rect-bar';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { GraphOrderDetails } from './graph-order-details';
-import { axisLineColor, barColorLight, barColorSolid, GraphData, textColor } from './graph-utils';
+import {
+  axisLineColor,
+  barColorLight,
+  barColorSolid,
+  GraphData,
+  orangeColor,
+  orangeTextColor,
+  textColor
+} from './graph-utils';
 
 type BarGraphData = {
   listings: GraphData[];
@@ -116,33 +123,25 @@ const barData = (data: GraphData[], width: number): BarGraphData[] => {
 type Props = {
   data: GraphData[];
   onClick: (minPrice: string, maxPrice: string) => void;
+  onSelection: (orders: SignedOBOrder[]) => void;
 };
 
-export function StackedBarGraph({ data, onClick }: Props) {
-  const [selectedOrders, setSelectedOrders] = useState<SignedOBOrder[]>([]);
-
+export function StackedBarGraph({ data, onClick, onSelection }: Props) {
   if (data.length > 0) {
     return (
-      <div className="flex">
-        <div className="flex-1 min-w-0">
-          <ParentSize debounceTime={10}>
-            {({ width }) => {
-              return (
-                <_StackedBarGraph
-                  graphData={data}
-                  width={width}
-                  height={720}
-                  onClick={onClick}
-                  onHover={(orders) => setSelectedOrders(orders)}
-                />
-              );
-            }}
-          </ParentSize>
-        </div>
-        <div className="w-96">
-          <GraphOrderDetails orders={selectedOrders} />
-        </div>
-      </div>
+      <ParentSize debounceTime={10}>
+        {({ width }) => {
+          return (
+            <_StackedBarGraph
+              graphData={data}
+              width={width}
+              height={720}
+              onClick={onClick}
+              onHover={(orders) => onSelection(orders)}
+            />
+          );
+        }}
+      </ParentSize>
     );
   }
 
@@ -161,7 +160,7 @@ type Props2 = {
 
 function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, onClick, onHover }: Props2) {
   const margin = {
-    top: 80,
+    top: 20,
     right: 40,
     bottom: 80,
     left: 80
@@ -196,7 +195,7 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
     } as const);
 
   const labelProps: Partial<TextProps> = {
-    fill: '#a71',
+    fill: orangeTextColor,
     fontSize: 20,
     fontFamily: 'sans-serif',
     textAnchor: 'middle'
@@ -329,63 +328,17 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
     );
   };
 
-  // const sideBar = () => {
-  //   const barColorBG = `rgba(${offerColor}, .1)`;
-  //   const barColor = `rgba(${offerColor}, .9)`;
-  //   const listings = () => graphData.filter((x) => x.isSellOrder);
-  //   const offers = () => graphData.filter((x) => !x.isSellOrder);
-  //   return (
-  //     <>
-  //       <text
-  //         fill={barColor}
-  //         dominantBaseline="central"
-  //         fontSize="26"
-  //         textAnchor="middle"
-  //         x={margin.left / 2}
-  //         y={outerHeight / 6}
-  //       >
-  //         {listings().length.toString()}
-  //       </text>
-  //       <text
-  //         fill={barColorLight}
-  //         textAnchor="middle"
-  //         dominantBaseline="central"
-  //         fontSize="22"
-  //         x={margin.left / 2}
-  //         y={outerHeight / 3.6}
-  //       >
-  //         Listings
-  //       </text>
-
-  //       <text
-  //         fill={barColor}
-  //         dominantBaseline="central"
-  //         fontSize="26"
-  //         textAnchor="middle"
-  //         x={margin.left / 2}
-  //         y={outerHeight / 2}
-  //       >
-  //         {offers().length.toString()}
-  //       </text>
-  //       <text
-  //         fill={barColorLight}
-  //         textAnchor="middle"
-  //         dominantBaseline="central"
-  //         fontSize="22"
-  //         x={margin.left / 2}
-  //         y={outerHeight / 1.6}
-  //       >
-  //         Offers
-  //       </text>
-  //     </>
-  //   );
-  // };
-
   return width < 10 ? null : (
     <>
       <svg ref={containerRef} width={outerWidth} height={outerHeight}>
         <LinearGradient from={barColorSolid} to={barColorSolid} toOpacity={0.3} fromOpacity={0.7} id="bar-gradient" />
-        <LinearGradient from={'#F70'} to={'#F70'} toOpacity={0.3} fromOpacity={0.7} id="offers-bar-gradient" />
+        <LinearGradient
+          from={orangeColor}
+          to={orangeColor}
+          toOpacity={0.3}
+          fromOpacity={0.7}
+          id="offers-bar-gradient"
+        />
 
         <Group transform={`translate(${margin.left},${margin.top})`}>
           <AnimatedAxis

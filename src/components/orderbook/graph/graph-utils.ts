@@ -6,10 +6,12 @@ export type GraphData = {
   order: SignedOBOrder;
 };
 
-// const offerColor = '255, 113, 243';
-// const listingColor = '23, 203, 255';
-export const offerColor = '23, 203, 255';
-export const barColorSolid = `rgba(${offerColor}, 1)`;
-export const textColor = `rgba(${offerColor}, .6)`;
-export const barColorLight = `rgba(${offerColor}, .5)`;
-export const axisLineColor = `rgba(${offerColor}, .2)`;
+export const blueBase = '23, 203, 255';
+export const barColorSolid = `rgba(${blueBase}, 1)`;
+export const textColor = `rgba(${blueBase}, .6)`;
+export const barColorLight = `rgba(${blueBase}, .5)`;
+export const axisLineColor = `rgba(${blueBase}, .2)`;
+export const orangeTextColor = '#a70';
+
+export const blueColor = '#6af';
+export const orangeColor = '#F70';
