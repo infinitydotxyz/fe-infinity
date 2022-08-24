@@ -69,7 +69,7 @@ export const OrderbookGraph = () => {
   }
 
   return (
-    <div className="w-full h-full relative pb-6 p-6  flex flex-col overflow-clip bg-black   rounded-3xl">
+    <div className="w-full h-full relative p-8  flex flex-col overflow-clip bg-black   rounded-3xl">
       <div className={twMerge(textStyle, 'text-xl absolute top-3 w-full')}>
         <div className="mr-3 font-bold">{orders.length}</div>
         <div>Orders</div>
