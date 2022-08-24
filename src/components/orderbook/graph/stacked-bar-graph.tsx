@@ -179,9 +179,10 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
   const tickLabelProps = () =>
     ({
       fill: textColor,
-      fontSize: 14,
+      fontSize: 16,
       fontFamily: 'sans-serif',
-      textAnchor: 'middle'
+      textAnchor: 'middle',
+      dy: 6
     } as const);
 
   const vertTickLabelProps = () =>
@@ -195,7 +196,7 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
     } as const);
 
   const labelProps: Partial<TextProps> = {
-    fill: textColor,
+    fill: '#a71',
     fontSize: 20,
     fontFamily: 'sans-serif',
     textAnchor: 'middle'
@@ -383,8 +384,8 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
   return width < 10 ? null : (
     <>
       <svg ref={containerRef} width={outerWidth} height={outerHeight}>
-        <LinearGradient from={barColorSolid} to={barColorSolid} toOpacity={0.8} fromOpacity={1} id="bar-gradient" />
-        <LinearGradient from={'#F0F'} to={'#F0F'} toOpacity={0.8} fromOpacity={1} id="offers-bar-gradient" />
+        <LinearGradient from={barColorSolid} to={barColorSolid} toOpacity={0.3} fromOpacity={0.7} id="bar-gradient" />
+        <LinearGradient from={'#F70'} to={'#F70'} toOpacity={0.3} fromOpacity={0.7} id="offers-bar-gradient" />
 
         <Group transform={`translate(${margin.left},${margin.top})`}>
           <AnimatedAxis

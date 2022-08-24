@@ -56,6 +56,8 @@ export const OrderbookGraph = () => {
   }
 
   return (
-    <div className="w-full h-full relative p-4 flex flex-col mb-6 overflow-clip bg-black rounded-2xl">{content}</div>
+    <div className="w-full h-full relative p-4 flex flex-col mb-6 overflow-clip bg-black bg-opacity-90 rounded-xl">
+      {content}
+    </div>
   );
 };
