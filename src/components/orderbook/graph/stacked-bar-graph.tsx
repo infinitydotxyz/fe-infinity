@@ -4,13 +4,14 @@ import { LinearGradient } from '@visx/gradient';
 import { scaleBand, scaleLinear } from '@visx/scale';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { Orientation } from '@visx/axis';
+import { TextProps } from '@visx/text';
 import { AnimatedAxis } from '@visx/react-spring';
 import { useTooltip, defaultStyles, useTooltipInPortal } from '@visx/tooltip';
 import { numStr } from 'src/utils';
 import { RoundRectBar } from './round-rect-bar';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { GraphOrderDetails } from './graph-order-details';
-import { barColorLight, barColorSolid, GraphData, textColor } from './graph-utils';
+import { axisLineColor, barColorLight, barColorSolid, GraphData, textColor } from './graph-utils';
 
 type BarGraphData = {
   listings: GraphData[];
@@ -193,12 +194,12 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
       verticalAnchor: 'middle'
     } as const);
 
-  // const labelProps: Partial<TextProps> = {
-  //   fill: textColor,
-  //   fontSize: 14,
-  //   fontFamily: 'sans-serif',
-  //   textAnchor: 'middle'
-  // };
+  const labelProps: Partial<TextProps> = {
+    fill: textColor,
+    fontSize: 20,
+    fontFamily: 'sans-serif',
+    textAnchor: 'middle'
+  };
 
   const { tooltipData, tooltipLeft, tooltipTop, tooltipOpen, showTooltip, hideTooltip } = useTooltip();
   const { containerRef, containerBounds, TooltipInPortal } = useTooltipInPortal({
@@ -392,15 +393,15 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
             top={height + 2}
             scale={xScale}
             tickFormat={(v) => `${v}`}
-            stroke={barColorLight}
+            stroke={axisLineColor}
             tickStroke={textColor}
             tickLineProps={{ strokeWidth: 1, opacity: 0.6, transform: 'translate(0,0)' }}
-            // hideAxisLine={true}
+            hideAxisLine={true}
             tickLabelProps={tickLabelProps}
             tickValues={axisLabels}
-            // label="Price in ETH"
-            // labelProps={labelProps}
-            // labelOffset={6}
+            label="Price in ETH"
+            labelProps={labelProps}
+            labelOffset={20}
             animationTrajectory="center"
           />
 
@@ -414,16 +415,15 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
             top={4}
             scale={yScale}
             tickFormat={(v) => `${v}`}
-            stroke={barColorLight}
+            stroke={axisLineColor}
             tickStroke={textColor}
             tickLineProps={{ strokeWidth: 1, opacity: 1, transform: 'translate(0,0)' }}
             // hideAxisLine={true}
-
             tickLabelProps={vertTickLabelProps}
             tickValues={countAxisLabels}
-            // label="Price in ETH"
-            // labelProps={labelProps}
-            // labelOffset={6}
+            label="Number of orders"
+            labelProps={labelProps}
+            labelOffset={36}
             animationTrajectory="center"
           />
 

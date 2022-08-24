@@ -11,6 +11,7 @@ interface Props9 {
 
 export const GraphOrderDetails = ({ orders }: Props9) => {
   const [index, setIndex] = useState(0);
+  const textColor = 'text-[#60ccfe]';
 
   if (orders.length > 0) {
     const order = orders[index];
@@ -39,7 +40,7 @@ export const GraphOrderDetails = ({ orders }: Props9) => {
     };
 
     return (
-      <div className={twMerge(`text-[#60ccfe]`, 'flex flex-col h-full bg-white bg-opacity-10 rounded-2xl p-8')}>
+      <div className={twMerge(textColor, 'flex flex-col h-full bg-white bg-opacity-10 rounded-2xl p-8')}>
         <NextPrevArrows
           numItems={orders.length}
           index={index}
@@ -77,7 +78,12 @@ export const GraphOrderDetails = ({ orders }: Props9) => {
   }
 
   return (
-    <div className="flex flex-col w-full h-full items-center justify-center  bg-white bg-opacity-10 rounded-2xl text-white">
+    <div
+      className={twMerge(
+        textColor,
+        'flex flex-col w-full h-full items-center justify-center  bg-white bg-opacity-10 rounded-2xl  '
+      )}
+    >
       <div>Nothing selected</div>
     </div>
   );
@@ -93,19 +99,19 @@ interface Props4 {
 }
 
 export const NextPrevArrows = ({ index, numItems, onNext, onPrev }: Props4) => {
+  const content = numItems > 1 ? `${index + 1} / ${numItems} orders` : '1 order';
+
   return (
     <div className="flex w-full items-center rounded-lg mb-6">
-      <Button disabled={numItems === 0} variant="round" className="transform rotate-180" onClick={onPrev}>
+      <Button disabled={numItems < 2} variant="round" className="transform rotate-180" onClick={onPrev}>
         <FaPlay className="h-6 w-6" />
       </Button>
 
       <Spacer />
-      <div className="  select-none text-md">
-        {index + 1} / {numItems} orders
-      </div>
+      <div className="  select-none text-md">{content}</div>
       <Spacer />
 
-      <Button disabled={numItems === 0} variant="round" className=" " onClick={onNext}>
+      <Button disabled={numItems < 2} variant="round" className=" " onClick={onNext}>
         <FaPlay className="h-6 w-6" />
       </Button>
     </div>

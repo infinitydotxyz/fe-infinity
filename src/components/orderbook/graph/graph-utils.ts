@@ -12,3 +12,4 @@ export const offerColor = '23, 203, 255';
 export const barColorSolid = `rgba(${offerColor}, 1)`;
 export const textColor = `rgba(${offerColor}, .6)`;
 export const barColorLight = `rgba(${offerColor}, .5)`;
+export const axisLineColor = `rgba(${offerColor}, .2)`;
