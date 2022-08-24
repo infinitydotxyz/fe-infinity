@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { blueColor } from './graph-utils';
+import React, { useRef, useState } from 'react';
+import { blueColor, clamp } from './graph-utils';
 
 interface Props {
   width: number;
@@ -16,7 +16,7 @@ interface Props {
 
   onMouseEnter: (event: React.MouseEvent) => void;
   onMouseLeave: (event: React.MouseEvent) => void;
-  onMouseMove: (event: React.MouseEvent) => void;
+  onMouseMove: (event: React.MouseEvent, yRatio: number) => void;
 }
 
 export const RoundRectBar = ({
@@ -35,6 +35,7 @@ export const RoundRectBar = ({
   fill
 }: Props) => {
   const [mouseOver, setMouseOver] = useState(false);
+  const ref = useRef<SVGPathElement>(null);
 
   const d =
     'M' +
@@ -53,6 +54,7 @@ export const RoundRectBar = ({
 
   return (
     <path
+      ref={ref}
       d={d}
       fill={fill}
       width={width}
@@ -63,7 +65,14 @@ export const RoundRectBar = ({
       y={y}
       onClick={onClick}
       onMouseMove={(e) => {
-        onMouseMove(e);
+        const boundingRect = ref.current?.getBoundingClientRect();
+
+        if (boundingRect) {
+          let localY = e.clientY - boundingRect.top;
+          localY = clamp(localY, 1, boundingRect.height);
+
+          onMouseMove(e, localY / boundingRect.height);
+        }
       }}
       onMouseEnter={(e) => {
         setMouseOver(true);

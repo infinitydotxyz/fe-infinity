@@ -6,6 +6,10 @@ export type GraphData = {
   order: SignedOBOrder;
 };
 
+export const clamp = (num: number, min: number, max: number): number => {
+  return Math.max(min, Math.min(num, max));
+};
+
 export const blueBase = '23, 203, 255';
 export const barColorSolid = `rgba(${blueBase}, 1)`;
 export const textColor = `rgba(${blueBase}, .6)`;

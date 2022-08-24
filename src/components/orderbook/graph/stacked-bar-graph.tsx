@@ -263,6 +263,23 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
     const offerOrders = data.offers.map((x) => x.order);
     const listingOrders = data.listings.map((x) => x.order);
 
+    const handleMouseEnter = (event: React.MouseEvent, tooltip: TooltipData) => {
+      const containerX = ('clientX' in event ? event.clientX : 0) - containerBounds.left;
+      const containerY = ('clientY' in event ? event.clientY : 0) - containerBounds.top;
+
+      showTooltip({
+        tooltipLeft: containerX,
+        tooltipTop: containerY,
+        tooltipData: tooltip
+      });
+    };
+
+    const handleMouseMove = (event: React.MouseEvent, orders: SignedOBOrder[], yRatio: number) => {
+      const index = Math.ceil(orders.length * yRatio);
+
+      onSelection(orders, index - 1);
+    };
+
     return (
       <Fragment key={index}>
         <RoundRectBar
@@ -279,23 +296,11 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
           onClick={() => {
             onClick(data.start.toString(), data.end.toString());
           }}
-          onMouseMove={(event: React.MouseEvent) => {
-            const containerY = ('clientY' in event ? event.clientY : 0) - containerBounds.top;
-
-            console.log('----------------------------------');
-            console.log('containerY');
-            console.log(containerY);
+          onMouseMove={(event: React.MouseEvent, yRatio: number) => {
+            handleMouseMove(event, offerOrders, yRatio);
           }}
           onMouseEnter={(event: React.MouseEvent) => {
-            const containerX = ('clientX' in event ? event.clientX : 0) - containerBounds.left;
-            const containerY = ('clientY' in event ? event.clientY : 0) - containerBounds.top;
-
-            onSelection(offerOrders, offerOrders.length - 1);
-            showTooltip({
-              tooltipLeft: containerX,
-              tooltipTop: containerY,
-              tooltipData: data.offersTooltip
-            });
+            handleMouseEnter(event, data.offersTooltip);
           }}
           onMouseLeave={() => {
             hideTooltip();
@@ -317,24 +322,11 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
             onClick={() => {
               onClick(data.start.toString(), data.end.toString());
             }}
-            onMouseMove={(event: React.MouseEvent) => {
-              const containerY = ('clientY' in event ? event.clientY : 0) - containerBounds.top;
-
-              console.log('----------------------------------');
-              console.log('containerY');
-              console.log(containerY);
+            onMouseMove={(event: React.MouseEvent, yRatio) => {
+              handleMouseMove(event, listingOrders, yRatio);
             }}
             onMouseEnter={(event: React.MouseEvent) => {
-              const containerX = ('clientX' in event ? event.clientX : 0) - containerBounds.left;
-              const containerY = ('clientY' in event ? event.clientY : 0) - containerBounds.top;
-
-              onSelection(listingOrders, listingOrders.length - 1);
-
-              showTooltip({
-                tooltipLeft: containerX,
-                tooltipTop: containerY,
-                tooltipData: data.listingsTooltip
-              });
+              handleMouseEnter(event, data.listingsTooltip);
             }}
             onMouseLeave={() => {
               hideTooltip();

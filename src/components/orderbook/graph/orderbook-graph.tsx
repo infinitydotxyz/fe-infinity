@@ -63,7 +63,7 @@ export const OrderbookGraph = () => {
             />
           </div>
           <div className="w-96">
-            <GraphOrderDetails orders={selectedOrders} startIndex={selectedIndex} />
+            <GraphOrderDetails orders={selectedOrders} index={selectedIndex} setIndex={setSelectedIndex} />
           </div>
         </div>
       </div>

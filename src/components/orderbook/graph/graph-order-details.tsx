@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { Button, SimpleTable, SimpleTableItem, Spacer } from '../../common';
 import { OrderDetailPicker } from '../order-detail-picker';
 import { FaPlay } from 'react-icons/fa';
 import { twMerge } from 'tailwind-merge';
 import { OrderbookRowButton } from '../orderbook-list/orderbook-row-button';
-import { blueColorText } from './graph-utils';
+import { blueColorText, clamp } from './graph-utils';
 
 const backgroundStyle = 'flex flex-col h-full bg-white bg-opacity-10 border border-[#333] rounded-xl px-8  ';
 const contentStyle = backgroundStyle + 'py-6';
@@ -13,23 +13,15 @@ const nothingStyle = contentStyle + 'items-center justify-center bg-opacity-5';
 
 interface Props9 {
   orders: SignedOBOrder[];
-  startIndex?: number;
+  index: number;
+  setIndex: (index: number) => void;
 }
 
-export const GraphOrderDetails = ({ orders, startIndex = 0 }: Props9) => {
-  const [index, setIndex] = useState(startIndex);
+export const GraphOrderDetails = ({ orders, index, setIndex }: Props9) => {
   const textColor = blueColorText;
 
-  useEffect(() => {
-    setIndex(0);
-  }, [orders]);
-
-  useEffect(() => {
-    setIndex(startIndex);
-  }, [startIndex]);
-
   if (orders.length > 0) {
-    const order = orders[Math.max(0, Math.min(index, orders.length - 1))];
+    const order = orders[clamp(index, 0, orders.length - 1)];
 
     const tableItems: SimpleTableItem[] = [
       {
