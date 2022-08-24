@@ -5,6 +5,7 @@ import { OrderDetailPicker } from '../order-detail-picker';
 import { FaPlay } from 'react-icons/fa';
 import { twMerge } from 'tailwind-merge';
 import { OrderbookRowButton } from '../orderbook-list/orderbook-row-button';
+import { blueColorText } from './graph-utils';
 
 const backgroundStyle = 'flex flex-col h-full bg-white bg-opacity-10 border border-[#333] rounded-xl px-8  ';
 const contentStyle = backgroundStyle + 'py-6';
@@ -16,7 +17,7 @@ interface Props9 {
 
 export const GraphOrderDetails = ({ orders }: Props9) => {
   const [index, setIndex] = useState(0);
-  const textColor = 'text-[#60ccfe]';
+  const textColor = blueColorText;
 
   useEffect(() => {
     setIndex(0);

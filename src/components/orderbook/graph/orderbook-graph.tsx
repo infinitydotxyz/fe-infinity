@@ -33,11 +33,12 @@ export const OrderbookGraph = () => {
   }, [orders]);
 
   let content = <></>;
-  const textStyle = 'flex items-center justify-center text-white opacity-50 h-80';
+  const textStyle = 'flex items-center justify-center text-white opacity-60';
+  const centeredText = twMerge(textStyle, 'h-80');
 
   if (isLoading) {
     content = (
-      <div className={textStyle}>
+      <div className={centeredText}>
         <div className="flex flex-col items-center justify-center">
           <Spinner />
           <div className="mt-4">Loading...</div>
@@ -64,11 +65,17 @@ export const OrderbookGraph = () => {
       </div>
     );
   } else {
-    content = <div className={textStyle}>No data</div>;
+    content = <div className={centeredText}>No data</div>;
   }
 
   return (
-    <div className="w-full h-full relative p-6  flex flex-col overflow-clip bg-black   rounded-3xl">{content}</div>
+    <div className="w-full h-full relative pb-6 p-6  flex flex-col overflow-clip bg-black   rounded-3xl">
+      <div className={twMerge(textStyle, 'text-xl absolute top-3 w-full')}>
+        <div className="mr-3 font-bold">{orders.length}</div>
+        <div>Orders</div>
+      </div>
+      {content}
+    </div>
   );
 };
 
@@ -85,10 +92,10 @@ export const OrderbookGraphInfo = ({ graphData, className, onReset }: Props2) =>
   const offers = () => graphData.filter((x) => !x.isSellOrder);
 
   return (
-    <div className={twMerge('w-full text-white flex   mb-4 ', className)}>
-      <BiReset onClick={() => onReset()} className="text-white opacity-75 h-8 w-8" />
+    <div className={twMerge('w-full text-white text-opacity-70 flex   mb-4 ', className)}>
+      <BiReset onClick={() => onReset()} className="   h-8 w-8" />
 
-      <div className={twMerge('w-full flex flex-col  ml-10  text-white text-opacity-70 text-lg', className)}>
+      <div className={twMerge('w-full flex flex-col  ml-10 text-lg', className)}>
         <div className="flex items-center ">
           <div className="h-5 w-5 mr-3 rounded-full" style={{ backgroundColor: orangeColor }} />
           <div className="font-bold mr-2">{offers().length.toString()}</div>

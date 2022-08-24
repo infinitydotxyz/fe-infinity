@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { blueColor } from './graph-utils';
 
 interface Props {
   width: number;
@@ -13,8 +14,8 @@ interface Props {
   fill?: string;
   onClick?: () => void;
 
-  onMouseEnter?: (event: React.MouseEvent) => void;
-  onMouseLeave?: (event: React.MouseEvent) => void;
+  onMouseEnter: (event: React.MouseEvent) => void;
+  onMouseLeave: (event: React.MouseEvent) => void;
 }
 
 export const RoundRectBar = ({
@@ -31,6 +32,8 @@ export const RoundRectBar = ({
   onClick,
   fill
 }: Props) => {
+  const [mouseOver, setMouseOver] = useState(false);
+
   const d =
     'M' +
     x +
@@ -52,11 +55,19 @@ export const RoundRectBar = ({
       fill={fill}
       width={width}
       height={height}
+      stroke={mouseOver ? blueColor : 'transparent'}
+      strokeWidth={4}
       x={x}
       y={y}
       onClick={onClick}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
+      onMouseEnter={(e) => {
+        setMouseOver(true);
+        onMouseEnter(e);
+      }}
+      onMouseLeave={(e) => {
+        setMouseOver(false);
+        onMouseLeave(e);
+      }}
     />
   );
 };
