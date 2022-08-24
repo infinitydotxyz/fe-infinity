@@ -20,3 +20,4 @@ export const orangeTextColor = '#a70';
 export const blueColor = '#6af';
 export const blueColorText = 'text-[#6af]';
 export const orangeColor = '#F70';
+export const orangeColorText = 'text-[#F70]';
