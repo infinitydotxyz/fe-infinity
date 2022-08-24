@@ -16,6 +16,7 @@ interface Props {
 
   onMouseEnter: (event: React.MouseEvent) => void;
   onMouseLeave: (event: React.MouseEvent) => void;
+  onMouseMove: (event: React.MouseEvent) => void;
 }
 
 export const RoundRectBar = ({
@@ -29,6 +30,7 @@ export const RoundRectBar = ({
   bl = 0,
   onMouseEnter,
   onMouseLeave,
+  onMouseMove,
   onClick,
   fill
 }: Props) => {
@@ -60,6 +62,9 @@ export const RoundRectBar = ({
       x={x}
       y={y}
       onClick={onClick}
+      onMouseMove={(e) => {
+        onMouseMove(e);
+      }}
       onMouseEnter={(e) => {
         setMouseOver(true);
         onMouseEnter(e);

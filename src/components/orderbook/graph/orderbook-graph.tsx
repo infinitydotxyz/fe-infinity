@@ -12,6 +12,7 @@ export const OrderbookGraph = () => {
   const { orders, updateFilters, isLoading } = useOrderbook();
   const [graphData, setGraphData] = useState<GraphData[]>([]);
   const [selectedOrders, setSelectedOrders] = useState<SignedOBOrder[]>([]);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   const handleOnClick = (minPrice: string, maxPrice: string) => {
     updateFilters([
@@ -55,11 +56,14 @@ export const OrderbookGraph = () => {
             <StackedBarGraph
               data={graphData}
               onClick={handleOnClick}
-              onSelection={(orders) => setSelectedOrders(orders)}
+              onSelection={(orders, index) => {
+                setSelectedIndex(index);
+                setSelectedOrders(orders);
+              }}
             />
           </div>
           <div className="w-96">
-            <GraphOrderDetails orders={selectedOrders} />
+            <GraphOrderDetails orders={selectedOrders} startIndex={selectedIndex} />
           </div>
         </div>
       </div>
@@ -70,8 +74,8 @@ export const OrderbookGraph = () => {
 
   return (
     <div className="w-full h-full relative p-8  flex flex-col overflow-clip bg-black   rounded-3xl">
-      <div className={twMerge(textStyle, 'text-xl absolute top-3 w-full')}>
-        <div className="mr-3 font-bold">{orders.length}</div>
+      <div className={twMerge(textStyle, 'font-bold text-lg absolute top-3 w-full')}>
+        <div className="mr-3">{orders.length}</div>
         <div>Orders</div>
       </div>
       {content}

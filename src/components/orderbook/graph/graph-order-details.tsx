@@ -13,18 +13,23 @@ const nothingStyle = contentStyle + 'items-center justify-center bg-opacity-5';
 
 interface Props9 {
   orders: SignedOBOrder[];
+  startIndex?: number;
 }
 
-export const GraphOrderDetails = ({ orders }: Props9) => {
-  const [index, setIndex] = useState(0);
+export const GraphOrderDetails = ({ orders, startIndex = 0 }: Props9) => {
+  const [index, setIndex] = useState(startIndex);
   const textColor = blueColorText;
 
   useEffect(() => {
     setIndex(0);
   }, [orders]);
 
+  useEffect(() => {
+    setIndex(startIndex);
+  }, [startIndex]);
+
   if (orders.length > 0) {
-    const order = orders[Math.min(index, orders.length - 1)];
+    const order = orders[Math.max(0, Math.min(index, orders.length - 1))];
 
     const tableItems: SimpleTableItem[] = [
       {
