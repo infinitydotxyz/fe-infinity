@@ -135,7 +135,7 @@ export function StackedBarGraph({ data, onClick, onSelection }: Props) {
             <_StackedBarGraph
               graphData={data}
               width={width}
-              height={720}
+              height={620}
               onClick={onClick}
               onHover={(orders) => onSelection(orders)}
             />

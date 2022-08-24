@@ -13,7 +13,7 @@ interface Props9 {
 export const GraphOrderDetails = ({ orders }: Props9) => {
   const [index, setIndex] = useState(0);
   const textColor = 'text-[#60ccfe]';
-  const contentStyle = 'flex flex-col h-full bg-white bg-opacity-10 rounded-xl p-8';
+  const contentStyle = 'flex flex-col h-full bg-white bg-opacity-10 border border-[#333] rounded-xl px-8 py-6';
 
   useEffect(() => {
     setIndex(0);
@@ -65,12 +65,12 @@ export const GraphOrderDetails = ({ orders }: Props9) => {
             setIndex(x);
           }}
         />
-        <div className="text-gray-300 mb-2 text-lg font-bold">Order Details</div>
+        <div className="mb-2 text-lg font-bold">Order Details</div>
         <OrderDetailPicker order={order} scroll={true} className="text-gray-300" />
 
         <SimpleTable className="text-gray-300" items={tableItems} />
 
-        <div className="mt-10">
+        <div className="mt-10 flex justify-center">
           <OrderbookRowButton order={order} />
         </div>
       </div>
