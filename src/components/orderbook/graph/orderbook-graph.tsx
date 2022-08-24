@@ -90,13 +90,13 @@ export const OrderbookGraphInfo = ({ graphData, className, onReset }: Props2) =>
 
       <div className={twMerge('w-full flex flex-col  ml-10  text-white text-opacity-70 text-lg', className)}>
         <div className="flex items-center ">
-          <div className="h-4 w-4 mr-3" style={{ backgroundColor: orangeColor }} />
+          <div className="h-5 w-5 mr-3 rounded-full" style={{ backgroundColor: orangeColor }} />
           <div className="font-bold mr-2">{offers().length.toString()}</div>
           <div>Offers</div>
         </div>
 
         <div className="flex items-center">
-          <div className="h-4 w-4 mr-3" style={{ backgroundColor: blueColor }} />
+          <div className="h-5 w-5 mr-3 rounded-full" style={{ backgroundColor: blueColor }} />
           <div className="font-bold mr-2">{listings().length.toString()}</div>
           <div>Listings</div>
         </div>
