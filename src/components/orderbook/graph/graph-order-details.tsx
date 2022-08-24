@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { Button, SimpleTable, SimpleTableItem, Spacer } from '../../common';
 import { OrderDetailPicker } from '../order-detail-picker';
 import { FaPlay } from 'react-icons/fa';
 import { twMerge } from 'tailwind-merge';
+import { OrderbookRowButton } from '../orderbook-list/orderbook-row-button';
 
 interface Props9 {
   orders: SignedOBOrder[];
@@ -14,8 +15,12 @@ export const GraphOrderDetails = ({ orders }: Props9) => {
   const textColor = 'text-[#60ccfe]';
   const contentStyle = 'flex flex-col h-full bg-white bg-opacity-10 rounded-xl p-8';
 
+  useEffect(() => {
+    setIndex(0);
+  }, [orders]);
+
   if (orders.length > 0) {
-    const order = orders[index];
+    const order = orders[Math.min(index, orders.length - 1)];
 
     const tableItems: SimpleTableItem[] = [
       {
@@ -35,10 +40,6 @@ export const GraphOrderDetails = ({ orders }: Props9) => {
         value: <div className="  font-heading">{new Date(order.endTimeMs).toLocaleString()}</div>
       }
     ];
-
-    const onButtonClick = () => {
-      // sdf
-    };
 
     return (
       <div className={twMerge(textColor, contentStyle)}>
@@ -70,9 +71,7 @@ export const GraphOrderDetails = ({ orders }: Props9) => {
         <SimpleTable className="text-gray-300" items={tableItems} />
 
         <div className="mt-10">
-          <Button variant="white" className="w-full font-heading" onClick={onButtonClick}>
-            Buy
-          </Button>
+          <OrderbookRowButton order={order} />
         </div>
       </div>
     );

@@ -5,7 +5,6 @@ import { OrderbookProvider, SORT_FILTERS, useOrderbook } from '../OrderbookConte
 import { OrderbookRow } from './orderbook-row';
 import { OrderbookFilters } from './filters/orderbook-filters';
 import { useRouter } from 'next/router';
-import { useDrawerContext } from 'src/utils/context/DrawerContext';
 
 const SORT_LABELS: {
   [key: string]: string;
@@ -113,8 +112,6 @@ const OrderbookList = ({
   hasMoreOrders,
   hasNoData
 }: Props2): JSX.Element => {
-  const { fulfillDrawerParams } = useDrawerContext();
-
   return (
     <div className="flex justify-center align-items gap-4 pointer-events-auto">
       {showFilters && (
@@ -127,14 +124,7 @@ const OrderbookList = ({
 
         {orderList.length > 0 &&
           orderList.map((order: SignedOBOrder, i: number) => {
-            return (
-              <OrderbookRow
-                onClickActionBtn={fulfillDrawerParams.addOrder}
-                key={`${i}-${order.id}`}
-                order={order}
-                isFilterOpen={showFilters ?? false}
-              />
-            );
+            return <OrderbookRow key={`${i}-${order.id}`} order={order} isFilterOpen={showFilters ?? false} />;
           })}
 
         {isLoading && (
