@@ -73,8 +73,18 @@ export const OrderbookGraph = () => {
           height={graphHeight}
           onClick={handleOnClick}
           onSelection={(orders, index) => {
-            setSelectedIndex(index);
-            setSelectedOrders(orders);
+            if (index !== selectedIndex) {
+              setSelectedIndex(index);
+            }
+
+            let arrayEquals = false;
+            if (orders.length === selectedOrders.length) {
+              arrayEquals = orders.every((v, i) => v.id === selectedOrders[i].id);
+            }
+
+            if (!arrayEquals) {
+              setSelectedOrders(orders);
+            }
           }}
         />
       );

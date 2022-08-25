@@ -24,7 +24,7 @@ export const GraphOrderFilters = () => {
   return (
     <div className={twMerge(textColor, backgroundStyle, 'py-5')}>
       <div className="flex flex-col">
-        <div className="w-full text-center">Filter</div>
+        <div className="w-full font-bold mb-2 text-lg">Price filter</div>
         <SimpleTable className="text-gray-300" items={tableItems} />
       </div>
     </div>
@@ -53,12 +53,12 @@ const FilterInput = ({ modeMinPrice }: Props) => {
         className={twMerge('px-3 border-none focus:ring-0 block bg-transparent text-right font-heading')}
         placeholder="0.00"
       />
-      <div className="pl-2 select-none">{EthSymbol}</div>
+      <div className="  select-none">{EthSymbol}</div>
 
       <Button
         variant="round"
         size="plain"
-        className="bg-black ml-4"
+        className="bg-black ml-5"
         onClick={() => {
           updateFilter(modeMinPrice ? 'minPrice' : 'maxPrice', '');
         }}
