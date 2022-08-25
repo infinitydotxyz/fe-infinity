@@ -161,8 +161,8 @@ type Props2 = {
 
 function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, onClick, onSelection }: Props2) {
   const margin = {
-    top: 20,
-    right: 40,
+    top: 30,
+    right: 20,
     bottom: 80,
     left: 80
   };
@@ -281,32 +281,52 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
       onSelection(orders, index - 1);
     };
 
+    const numberOnTop = () => {
+      const num = offerOrders.length + listingOrders.length;
+
+      if (barX && barY && lbarY && num > 0) {
+        const numY = lbarY - barHeight;
+
+        return (
+          <text fill="#777" dy={-12} textAnchor="middle" x={barX + barWidth / 2} y={numY}>
+            {num}
+          </text>
+        );
+      }
+
+      return '';
+    };
+
+    const drawOffersBar = (lbarHeight === 0 && barHeight === 0) || barHeight > 0;
+
     return (
       <Fragment key={index}>
-        <RoundRectBar
-          key={`bar-${index}`}
-          x={barX}
-          y={barY}
-          width={barWidth}
-          height={Math.max(barHeight, 2)}
-          tl={lbarHeight > 0 ? 0 : barRadius}
-          tr={lbarHeight > 0 ? 0 : barRadius}
-          br={0}
-          bl={0}
-          fill={bColor}
-          onClick={() => {
-            onClick(data.start.toString(), data.end.toString());
-          }}
-          onMouseMove={(event: React.MouseEvent, yRatio: number) => {
-            handleMouseMove(event, offerOrders, yRatio);
-          }}
-          onMouseEnter={(event: React.MouseEvent) => {
-            handleMouseEnter(event, data.offersTooltip);
-          }}
-          onMouseLeave={() => {
-            hideTooltip();
-          }}
-        />
+        {drawOffersBar && (
+          <RoundRectBar
+            key={`bar-${index}`}
+            x={barX}
+            y={barY}
+            width={barWidth}
+            height={Math.max(barHeight, 2)}
+            tl={lbarHeight > 0 ? 0 : barRadius}
+            tr={lbarHeight > 0 ? 0 : barRadius}
+            br={0}
+            bl={0}
+            fill={bColor}
+            onClick={() => {
+              onClick(data.start.toString(), data.end.toString());
+            }}
+            onMouseMove={(event: React.MouseEvent, yRatio: number) => {
+              handleMouseMove(event, offerOrders, yRatio);
+            }}
+            onMouseEnter={(event: React.MouseEvent) => {
+              handleMouseEnter(event, data.offersTooltip);
+            }}
+            onMouseLeave={() => {
+              hideTooltip();
+            }}
+          />
+        )}
 
         {lbarHeight > 0 && (
           <RoundRectBar
@@ -334,6 +354,8 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
             }}
           />
         )}
+
+        {numberOnTop()}
       </Fragment>
     );
   };

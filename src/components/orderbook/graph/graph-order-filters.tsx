@@ -32,7 +32,7 @@ export const GraphOrderFilters = () => {
             { name: 'maxPrice', value: '' }
           ]);
         }}
-        className=" absolute top-3 right-3  h-5 w-5"
+        className=" absolute top-4 right-4  h-5 w-5"
       />
 
       <div className="flex flex-col">
