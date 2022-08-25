@@ -95,7 +95,7 @@ export const OrderbookGraph = () => {
     <div className="flex flex-col">
       <div className="flex">
         <div className="flex-1 min-w-0">
-          <OrderbookGraphInfo className=" " graphData={graphData} onReset={() => handleOnClick('', '')} />
+          <OrderbookGraphInfo className=" " graphData={graphData} />
 
           {graph}
         </div>
@@ -123,18 +123,15 @@ export const OrderbookGraph = () => {
 interface Props2 {
   graphData: GraphData[];
   className?: string;
-  onReset: () => void;
 }
 
-export const OrderbookGraphInfo = ({ graphData, className, onReset }: Props2) => {
+export const OrderbookGraphInfo = ({ graphData, className }: Props2) => {
   const listings = () => graphData.filter((x) => x.isSellOrder);
   const offers = () => graphData.filter((x) => !x.isSellOrder);
 
   return (
     <div className={twMerge('w-full text-white text-opacity-70 flex   mb-4 ', className)}>
-      <BiReset onClick={() => onReset()} className="   h-8 w-8" />
-
-      <div className={twMerge('w-full flex flex-col  ml-10 text-lg', className)}>
+      <div className={twMerge('w-full flex flex-col  ml-6 text-lg', className)}>
         <div className="flex items-center ">
           <div className="h-5 w-5 mr-3 rounded-full" style={{ backgroundColor: orangeColor }} />
           <div className="font-bold mr-2">{offers().length.toString()}</div>

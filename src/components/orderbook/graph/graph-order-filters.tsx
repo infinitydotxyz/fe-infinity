@@ -4,11 +4,13 @@ import { twMerge } from 'tailwind-merge';
 import { useOrderbook } from '../OrderbookContext';
 import { blueColorText } from './graph-utils';
 import { MdClear } from 'react-icons/md';
+import { BiReset } from 'react-icons/bi';
 
 const backgroundStyle = 'flex flex-col bg-white bg-opacity-5 border border-[#333] rounded-xl px-8  ';
 
 export const GraphOrderFilters = () => {
   const textColor = blueColorText;
+  const { updateFilters } = useOrderbook();
 
   const tableItems: SimpleTableItem[] = [
     {
@@ -22,7 +24,17 @@ export const GraphOrderFilters = () => {
   ];
 
   return (
-    <div className={twMerge(textColor, backgroundStyle, 'py-5')}>
+    <div className={twMerge(textColor, backgroundStyle, 'relative py-5')}>
+      <BiReset
+        onClick={() => {
+          updateFilters([
+            { name: 'minPrice', value: '' },
+            { name: 'maxPrice', value: '' }
+          ]);
+        }}
+        className=" absolute top-3 right-3  h-5 w-5"
+      />
+
       <div className="flex flex-col">
         <div className="w-full font-bold mb-2 text-lg">Price filter</div>
         <SimpleTable className="text-gray-300" items={tableItems} />
@@ -53,7 +65,7 @@ const FilterInput = ({ modeMinPrice }: Props) => {
         className={twMerge('px-3 border-none focus:ring-0 block bg-transparent text-right font-heading')}
         placeholder="0.00"
       />
-      <div className="  select-none">{EthSymbol}</div>
+      <div className="select-none">{EthSymbol}</div>
 
       <Button
         variant="round"

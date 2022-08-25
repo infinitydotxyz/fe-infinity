@@ -6,10 +6,7 @@ import { FaPlay } from 'react-icons/fa';
 import { twMerge } from 'tailwind-merge';
 import { OrderbookRowButton } from '../orderbook-list/orderbook-row-button';
 import { blueColorText, clamp } from './graph-utils';
-
-const backgroundStyle = 'flex flex-col bg-white bg-opacity-5 border border-[#333] rounded-xl px-8  ';
-const contentStyle = twMerge(backgroundStyle, 'py-6');
-const nothingStyle = twMerge(contentStyle, 'h-full items-center justify-center');
+import { GraphBox } from './graph-box';
 
 interface Props9 {
   orders: SignedOBOrder[];
@@ -44,7 +41,7 @@ export const GraphOrderDetails = ({ orders, index, setIndex }: Props9) => {
 
     return (
       <div className={twMerge(textColor)}>
-        <div className={twMerge(backgroundStyle, 'mb-4 py-3')}>
+        <GraphBox className="mb-4 py-3">
           <NextPrevArrows
             numItems={orders.length}
             index={index}
@@ -67,9 +64,9 @@ export const GraphOrderDetails = ({ orders, index, setIndex }: Props9) => {
               setIndex(x);
             }}
           />
-        </div>
+        </GraphBox>
 
-        <div className={twMerge(contentStyle)}>
+        <GraphBox className="py-6">
           <div className="mb-2 text-lg font-bold">Order Details</div>
           <OrderDetailPicker order={order} scroll={true} className="text-gray-300" />
 
@@ -78,15 +75,15 @@ export const GraphOrderDetails = ({ orders, index, setIndex }: Props9) => {
           <div className="mt-10 flex justify-center">
             <OrderbookRowButton order={order} />
           </div>
-        </div>
+        </GraphBox>
       </div>
     );
   }
 
   return (
-    <div className={twMerge(textColor, nothingStyle)}>
+    <GraphBox className={twMerge(textColor, 'h-full items-center justify-center')}>
       <div className="text-center">Nothing selected</div>
-    </div>
+    </GraphBox>
   );
 };
 
