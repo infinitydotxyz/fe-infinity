@@ -2,14 +2,7 @@ import { useOrderbook } from '../OrderbookContext';
 import { StackedBarGraph } from './stacked-bar-graph';
 import { BiReset } from 'react-icons/bi';
 import { useEffect, useState } from 'react';
-import {
-  blueColorText,
-  GraphData,
-  graphHeight,
-  orangeColorText,
-  orangeColorTextLight,
-  orangeTextColor
-} from './graph-utils';
+import { blueColorText, GraphData, graphHeight } from './graph-utils';
 import { Button, Spinner } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 import { GraphOrderDetails } from './graph-order-details';
