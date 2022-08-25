@@ -5,8 +5,7 @@ import { useOrderbook } from '../OrderbookContext';
 import { blueColorText } from './graph-utils';
 import { MdClear } from 'react-icons/md';
 import { BiReset } from 'react-icons/bi';
-
-const backgroundStyle = 'flex flex-col bg-white bg-opacity-5 border border-[#333] rounded-xl px-8  ';
+import { GraphBox } from './graph-box';
 
 export const GraphOrderFilters = () => {
   const textColor = blueColorText;
@@ -24,7 +23,7 @@ export const GraphOrderFilters = () => {
   ];
 
   return (
-    <div className={twMerge(textColor, backgroundStyle, 'relative py-5')}>
+    <GraphBox className={twMerge(textColor, 'px-8 relative py-5')}>
       <BiReset
         onClick={() => {
           updateFilters([
@@ -39,7 +38,7 @@ export const GraphOrderFilters = () => {
         <div className="w-full font-bold mb-2 text-lg">Price filter</div>
         <SimpleTable className="text-gray-300" items={tableItems} />
       </div>
-    </div>
+    </GraphBox>
   );
 };
 

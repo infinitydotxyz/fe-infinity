@@ -11,7 +11,7 @@ export const OrderbookGraphInfo = ({ graphData, className }: Props) => {
   const offers = () => graphData.filter((x) => !x.isSellOrder);
 
   return (
-    <div className={twMerge('w-full text-white text-opacity-70 flex   mb-4 ', className)}>
+    <div className={twMerge('w-full text-white text-opacity-70 flex', className)}>
       <div className={twMerge('w-full flex flex-col  ml-6 text-lg', className)}>
         <div className="flex items-center ">
           <div className="h-5 w-5 mr-3 rounded-full" style={{ backgroundColor: orangeColor }} />
