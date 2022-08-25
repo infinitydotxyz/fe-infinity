@@ -8,7 +8,7 @@ interface Props {
 
 export const GraphBox = ({ children, className = '' }: Props) => {
   return (
-    <div className={twMerge('flex flex-col bg-white bg-opacity-5 border border-[#222] rounded-xl px-8', className)}>
+    <div className={twMerge('flex flex-col bg-white bg-opacity-5 border border-[#034] rounded-xl px-8', className)}>
       {children}
     </div>
   );
