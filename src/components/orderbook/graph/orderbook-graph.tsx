@@ -2,7 +2,7 @@ import { useOrderbook } from '../OrderbookContext';
 import { StackedBarGraph } from './stacked-bar-graph';
 import { BiReset } from 'react-icons/bi';
 import { useEffect, useState } from 'react';
-import { blueColorText, GraphData, graphHeight, orangeColorText, orangeColorTextLight } from './graph-utils';
+import { GraphData, graphHeight, orangeColorTextLight } from './graph-utils';
 import { Button, Spinner } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 import { GraphOrderDetails } from './graph-order-details';
@@ -101,7 +101,7 @@ export const OrderbookGraph = () => {
           <OrderbookGraphInfo className="mb-5" graphData={graphData} />
           {graph}
         </div>
-        <div className="w-96 flex flex-col mt-2 space-y-4">
+        <div className="w-96 flex flex-col space-y-4">
           <NextPrevArrows orders={selectedOrders} index={selectedIndex} setIndex={setSelectedIndex} />
           <GraphOrderDetails orders={selectedOrders} index={selectedIndex} valueClassName={orangeColorTextLight} />
           <GraphOrderFilters />
@@ -114,10 +114,10 @@ export const OrderbookGraph = () => {
     <div
       className={twMerge(
         'bg-gradient-to-b from-[#111] via-[#000] to-[#111]',
-        'w-full h-full relative p-8  flex flex-col overflow-clip   rounded-3xl'
+        'w-full h-full relative p-10 pt-12  flex flex-col shadow-2xl     rounded-3xl'
       )}
     >
-      <div className={twMerge(textStyle, 'text-xl absolute top-3 w-full')}>
+      <div className={twMerge(textStyle, '  absolute top-3 w-full')}>
         <div className="mr-3">{orders.length}</div>
         <div>Orders</div>
       </div>
