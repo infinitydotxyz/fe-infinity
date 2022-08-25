@@ -7,9 +7,9 @@ import { twMerge } from 'tailwind-merge';
 import { OrderbookRowButton } from '../orderbook-list/orderbook-row-button';
 import { blueColorText, clamp } from './graph-utils';
 
-const backgroundStyle = 'flex flex-col h-full bg-white bg-opacity-10 border border-[#333] rounded-xl px-8  ';
-const contentStyle = backgroundStyle + 'py-6';
-const nothingStyle = contentStyle + 'items-center justify-center bg-opacity-5';
+const backgroundStyle = 'flex flex-col bg-white bg-opacity-5 border border-[#333] rounded-xl px-8  ';
+const contentStyle = twMerge(backgroundStyle, 'py-6');
+const nothingStyle = twMerge(contentStyle, 'h-full items-center justify-center');
 
 interface Props9 {
   orders: SignedOBOrder[];

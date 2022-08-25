@@ -282,6 +282,9 @@ function _PriceBarGraph({ graphData, title, flip, width: outerWidth, height: out
                 onClick={() => {
                   onClick(d.start.toString(), d.end.toString());
                 }}
+                onMouseMove={() => {
+                  // nothing
+                }}
                 onMouseEnter={(event: React.MouseEvent) => {
                   const containerX = ('clientX' in event ? event.clientX : 0) - containerBounds.left;
                   const containerY = ('clientY' in event ? event.clientY : 0) - containerBounds.top;

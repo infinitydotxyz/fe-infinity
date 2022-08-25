@@ -122,20 +122,21 @@ const barData = (data: GraphData[], width: number): BarGraphData[] => {
 
 type Props = {
   data: GraphData[];
+  height: number;
   onClick: (minPrice: string, maxPrice: string) => void;
   onSelection: (orders: SignedOBOrder[], index: number) => void;
 };
 
-export function StackedBarGraph({ data, onClick, onSelection }: Props) {
+export function StackedBarGraph({ data, height, onClick, onSelection }: Props) {
   if (data.length > 0) {
     return (
-      <ParentSize debounceTime={10}>
+      <ParentSize debounceTime={10} style={{ height: height }}>
         {({ width }) => {
           return (
             <_StackedBarGraph
               graphData={data}
               width={width}
-              height={620}
+              height={height}
               onClick={onClick}
               onSelection={(orders, index) => onSelection(orders, index)}
             />

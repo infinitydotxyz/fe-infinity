@@ -6,6 +6,8 @@ export type GraphData = {
   order: SignedOBOrder;
 };
 
+export const graphHeight = 720;
+
 export const clamp = (num: number, min: number, max: number): number => {
   return Math.max(min, Math.min(num, max));
 };

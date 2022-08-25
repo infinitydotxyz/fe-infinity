@@ -2,11 +2,12 @@ import { useOrderbook } from '../OrderbookContext';
 import { StackedBarGraph } from './stacked-bar-graph';
 import { BiReset } from 'react-icons/bi';
 import { useEffect, useState } from 'react';
-import { blueColor, GraphData, orangeColor } from './graph-utils';
-import { Spinner } from 'src/components/common';
+import { blueColor, GraphData, graphHeight, orangeColor } from './graph-utils';
+import { Button, Spinner } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 import { GraphOrderDetails } from './graph-order-details';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { GraphOrderFilters } from './graph-order-filters';
 
 export const OrderbookGraph = () => {
   const { orders, updateFilters, isLoading } = useOrderbook();
@@ -35,42 +36,66 @@ export const OrderbookGraph = () => {
 
   let content = <></>;
   const textStyle = 'flex items-center justify-center text-white opacity-60';
-  const centeredText = twMerge(textStyle, 'h-80');
 
+  let graph;
   if (isLoading) {
-    content = (
-      <div className={centeredText}>
+    graph = (
+      <div className={textStyle} style={{ height: graphHeight }}>
         <div className="flex flex-col items-center justify-center">
           <Spinner />
           <div className="mt-4">Loading...</div>
         </div>
       </div>
     );
-  } else if (graphData.length > 0) {
-    content = (
-      <div className="flex flex-col">
-        <div className="flex">
-          <div className="flex-1 min-w-0">
-            <OrderbookGraphInfo className=" " graphData={graphData} onReset={() => handleOnClick('', '')} />
-
-            <StackedBarGraph
-              data={graphData}
-              onClick={handleOnClick}
-              onSelection={(orders, index) => {
-                setSelectedIndex(index);
-                setSelectedOrders(orders);
+  } else {
+    if (graphData.length === 0) {
+      graph = (
+        <div className={textStyle} style={{ height: graphHeight }}>
+          <div className="flex flex-col items-center justify-center">
+            <div className="mt-4">No data</div>
+            <Button
+              variant="round"
+              size="plain"
+              className="bg-black ml-4"
+              onClick={() => {
+                handleOnClick('', '');
               }}
-            />
-          </div>
-          <div className="w-96">
-            <GraphOrderDetails orders={selectedOrders} index={selectedIndex} setIndex={setSelectedIndex} />
+            >
+              <BiReset className="h-8 w-8" />
+            </Button>
           </div>
         </div>
-      </div>
-    );
-  } else {
-    content = <div className={centeredText}>No data</div>;
+      );
+    } else {
+      graph = (
+        <StackedBarGraph
+          data={graphData}
+          height={graphHeight}
+          onClick={handleOnClick}
+          onSelection={(orders, index) => {
+            setSelectedIndex(index);
+            setSelectedOrders(orders);
+          }}
+        />
+      );
+    }
   }
+
+  content = (
+    <div className="flex flex-col">
+      <div className="flex">
+        <div className="flex-1 min-w-0">
+          <OrderbookGraphInfo className=" " graphData={graphData} onReset={() => handleOnClick('', '')} />
+
+          {graph}
+        </div>
+        <div className="w-96 flex flex-col space-y-4">
+          <GraphOrderDetails orders={selectedOrders} index={selectedIndex} setIndex={setSelectedIndex} />
+          <GraphOrderFilters />
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div className="w-full h-full relative p-8  flex flex-col overflow-clip bg-black   rounded-3xl">
