@@ -102,7 +102,7 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
     <div className={twMerge('flex flex-col  ', className)}>
       <div className="flex">
         <div className="flex-1 min-w-0   ">
-          <div className="flex mb-10 ml-10">
+          <div className="flex mb-10 ml-14">
             <GraphOrderFilters />
             <Spacer />
             <OrderbookGraphInfo className="" graphData={graphData} />
