@@ -2,7 +2,7 @@ import { useOrderbook } from '../OrderbookContext';
 import { StackedBarGraph } from './stacked-bar-graph';
 import { BiReset } from 'react-icons/bi';
 import { useEffect, useState } from 'react';
-import { GraphData, graphHeight, orangeColorTextLight } from './graph-utils';
+import { GraphData, graphHeight, textAltColorTW } from './graph-utils';
 import { Button, Spinner } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 import { GraphOrderDetails } from './graph-order-details';
@@ -11,7 +11,11 @@ import { GraphOrderFilters } from './graph-order-filters';
 import { OrderbookGraphInfo } from './orderbook-graph-info';
 import { NextPrevArrows } from './next-prev-arrows';
 
-export const OrderbookGraph = () => {
+interface Props {
+  className?: string;
+}
+
+export const OrderbookGraph = ({ className = '' }: Props) => {
   const { orders, updateFilters, isLoading } = useOrderbook();
   const [graphData, setGraphData] = useState<GraphData[]>([]);
   const [selectedOrders, setSelectedOrders] = useState<SignedOBOrder[]>([]);
@@ -37,7 +41,7 @@ export const OrderbookGraph = () => {
   }, [orders]);
 
   let content = <></>;
-  const textStyle = 'flex items-center justify-center text-white opacity-60 font-bold text-lg';
+  const textStyle = 'flex items-center justify-center text-black opacity-40 font-bold text-lg';
 
   let graph;
   if (isLoading) {
@@ -95,33 +99,20 @@ export const OrderbookGraph = () => {
   }
 
   content = (
-    <div className="flex flex-col">
+    <div className={twMerge('flex flex-col', className)}>
       <div className="flex">
         <div className="flex-1 min-w-0 mb-5">
           <OrderbookGraphInfo className="mb-5" graphData={graphData} />
           {graph}
         </div>
-        <div className="w-96 flex flex-col space-y-4">
+        <div className="w-96 flex flex-col space-y-2">
           <NextPrevArrows orders={selectedOrders} index={selectedIndex} setIndex={setSelectedIndex} />
-          <GraphOrderDetails orders={selectedOrders} index={selectedIndex} valueClassName={orangeColorTextLight} />
+          <GraphOrderDetails orders={selectedOrders} index={selectedIndex} valueClassName={textAltColorTW} />
           <GraphOrderFilters />
         </div>
       </div>
     </div>
   );
 
-  return (
-    <div
-      className={twMerge(
-        'bg-gradient-to-b from-[#111] via-[#000] to-[#111]',
-        'w-full h-full relative p-10 pt-12  flex flex-col shadow-2xl     rounded-3xl'
-      )}
-    >
-      <div className={twMerge(textStyle, '  absolute top-3 w-full')}>
-        <div className="mr-3">{orders.length}</div>
-        <div>Orders</div>
-      </div>
-      {content}
-    </div>
-  );
+  return <div className={twMerge('w-full h-full relative flex flex-col       rounded-3xl')}>{content}</div>;
 };

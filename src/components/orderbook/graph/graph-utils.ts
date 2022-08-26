@@ -12,15 +12,19 @@ export const clamp = (num: number, min: number, max: number): number => {
   return Math.max(min, Math.min(num, max));
 };
 
-export const blueBase = '23, 203, 255';
-export const barColorSolid = `rgba(${blueBase}, 1)`;
-export const textColor = `rgba(${blueBase}, .6)`;
-export const barColorLight = `rgba(${blueBase}, .5)`;
-export const axisLineColor = `rgba(${blueBase}, .2)`;
-export const orangeTextColor = '#a70';
+export const textColor = '#222';
+export const textColorTW = 'text-[#222]';
 
-export const blueColor = '#6af';
-export const blueColorText = 'text-[#6af]';
-export const orangeColor = '#F70';
-export const orangeColorText = 'text-[#F70]';
-export const orangeColorTextLight = 'text-[#a70]';
+export const textAltColor = '#47b';
+export const textAltColorTW = 'text-[#47b]';
+
+export const accentColor = '#92deff';
+export const accentColorTW = 'text-[#92deff]';
+
+export const accentAltColor = '#e8adad';
+export const accentAltColorTW = 'text-[#e8adad]';
+
+export const axisLineColor = `${accentColor}77`;
+export const borderColor = `border-[#00000011]`;
+
+export const gradientTW = 'bg-gradient-to-b from-[#f6f6f6] via-[#fcfcfc] to-[#f7f7f7]';

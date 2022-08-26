@@ -2,13 +2,12 @@ import React from 'react';
 import { Button, EthSymbol, SimpleTable, SimpleTableItem } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 import { useOrderbook } from '../OrderbookContext';
-import { blueColorText } from './graph-utils';
+import { textAltColorTW, textColorTW } from './graph-utils';
 import { MdClear } from 'react-icons/md';
 import { BiReset } from 'react-icons/bi';
 import { GraphBox } from './graph-box';
 
 export const GraphOrderFilters = () => {
-  const textColor = blueColorText;
   const { updateFilters } = useOrderbook();
 
   const tableItems: SimpleTableItem[] = [
@@ -23,7 +22,7 @@ export const GraphOrderFilters = () => {
   ];
 
   return (
-    <GraphBox className={twMerge(textColor, 'px-8 relative py-5')}>
+    <GraphBox className={twMerge(textAltColorTW, 'px-8 relative py-5')}>
       <BiReset
         onClick={() => {
           updateFilters([
@@ -36,7 +35,7 @@ export const GraphOrderFilters = () => {
 
       <div className="flex flex-col">
         <div className="w-full font-bold mb-2 text-lg">Price filter</div>
-        <SimpleTable className="text-gray-300" items={tableItems} />
+        <SimpleTable className={twMerge('space-y-0', textColorTW)} items={tableItems} />
       </div>
     </GraphBox>
   );

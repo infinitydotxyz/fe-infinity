@@ -3,7 +3,7 @@ import { Button, Spacer } from '../../common';
 import { FaPlay } from 'react-icons/fa';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { twMerge } from 'tailwind-merge';
-import { blueColorText } from './graph-utils';
+import { textAltColorTW } from './graph-utils';
 import { GraphBox } from './graph-box';
 
 interface Props {
@@ -13,10 +13,8 @@ interface Props {
 }
 
 export const NextPrevArrows = ({ orders, index, setIndex }: Props) => {
-  const textColor = blueColorText;
-
   return (
-    <div className={twMerge(textColor)}>
+    <div className={twMerge(textAltColorTW)}>
       <GraphBox className="py-3">
         <NextPrev
           numItems={orders.length}

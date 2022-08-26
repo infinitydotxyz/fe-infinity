@@ -4,7 +4,6 @@ import { Button, CenteredContent, Dropdown, ScrollLoader, Spinner } from 'src/co
 import { OrderbookProvider, SORT_FILTERS, useOrderbook } from '../OrderbookContext';
 import { OrderbookRow } from './orderbook-row';
 import { OrderbookFilters } from './filters/orderbook-filters';
-import { useRouter } from 'next/router';
 
 const SORT_LABELS: {
   [key: string]: string;
@@ -37,10 +36,11 @@ interface Props4 {
 }
 
 export const OrderbookContent = ({ className }: Props4) => {
-  const { query } = useRouter();
+  // const { query } = useRouter();
   const { orders, fetchMore, isLoading, updateFilter, filters, hasMoreOrders, hasNoData } = useOrderbook();
   const [showFilters, setShowFilters] = useState<boolean>(
-    query.orderTypes || query.collections || query.minPrice || query.maxPrice || query.numberOfNfts ? true : false
+    true
+    // query.orderTypes || query.collections || query.minPrice || query.maxPrice || query.numberOfNfts ? true : false
   );
   const [label, setLabel] = useState<string>(getSortLabel(filters?.sort));
 
@@ -113,9 +113,9 @@ const OrderbookList = ({
   hasNoData
 }: Props2): JSX.Element => {
   return (
-    <div className="flex justify-center align-items gap-4 pointer-events-auto">
+    <div className="flex gap-4 pointer-events-auto">
       {showFilters && (
-        <div className="w-1/4 flex-none">
+        <div className="w-1/5 shrink-0">
           <OrderbookFilters />
         </div>
       )}

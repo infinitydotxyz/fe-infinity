@@ -10,15 +10,7 @@ import { useTooltip, defaultStyles, useTooltipInPortal } from '@visx/tooltip';
 import { numStr } from 'src/utils';
 import { RoundRectBar } from './round-rect-bar';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import {
-  axisLineColor,
-  barColorLight,
-  barColorSolid,
-  GraphData,
-  orangeColor,
-  orangeTextColor,
-  textColor
-} from './graph-utils';
+import { accentColor, axisLineColor, GraphData, accentAltColor, textColor } from './graph-utils';
 
 type BarGraphData = {
   listings: GraphData[];
@@ -196,7 +188,7 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
     } as const);
 
   const labelProps: Partial<TextProps> = {
-    fill: orangeTextColor,
+    fill: accentAltColor,
     fontSize: 20,
     fontFamily: 'sans-serif',
     textAnchor: 'middle'
@@ -239,7 +231,7 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
     let barRadius = 10;
     if (barHeight === 0) {
       barRadius = 0;
-      bColor = barColorLight;
+      bColor = accentColor;
     }
 
     const barWidth = xScale.bandwidth();
@@ -363,10 +355,10 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
   return width < 10 ? null : (
     <>
       <svg ref={containerRef} width={outerWidth} height={outerHeight}>
-        <LinearGradient from={barColorSolid} to={barColorSolid} toOpacity={0.3} fromOpacity={0.7} id="bar-gradient" />
+        <LinearGradient from={accentColor} to={accentColor} toOpacity={0.9} fromOpacity={0.7} id="bar-gradient" />
         <LinearGradient
-          from={orangeColor}
-          to={orangeColor}
+          from={accentAltColor}
+          to={accentAltColor}
           toOpacity={0.3}
           fromOpacity={0.7}
           id="offers-bar-gradient"
