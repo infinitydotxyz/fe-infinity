@@ -4,7 +4,11 @@ import { PageBox, ToggleTab, useToggleTab } from 'src/components/common';
 import { isProd } from 'src/utils'; // todo: adi remove isProd once curation is ready
 import GlobalRewards from './global-rewards';
 import MyRewardsPage from './my-rewards';
-import { RewardTabs } from './types';
+
+enum RewardTabs {
+  MyRewards = 'My Rewards',
+  GlobalRewards = 'Global Rewards'
+}
 
 const tabs = [RewardTabs.MyRewards, RewardTabs.GlobalRewards];
 
