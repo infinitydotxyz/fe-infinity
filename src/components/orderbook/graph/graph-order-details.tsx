@@ -38,7 +38,7 @@ export const GraphOrderDetails = ({ orders, index, valueClassName = '' }: Props9
 
     return (
       <div className={twMerge(textColorTW)}>
-        <GraphBox className="py-6 h-[600px] ">
+        <GraphBox className="py-5 h-[600px] ">
           <div className={twMerge(textAltColorTW, 'mb-2 text-lg font-bold')}>Order Details</div>
           <OrderDetailPicker order={order} scroll={true} className=" " />
 

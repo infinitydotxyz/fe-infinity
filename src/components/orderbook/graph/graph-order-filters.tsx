@@ -22,16 +22,20 @@ export const GraphOrderFilters = () => {
   ];
 
   return (
-    <GraphBox className={twMerge(textAltColorTW, 'px-8 relative py-5')}>
-      <BiReset
+    <GraphBox className={twMerge(textAltColorTW, 'relative py-5')}>
+      <Button
+        variant="round"
+        size="plain"
+        className="absolute top-4 right-4  "
         onClick={() => {
           updateFilters([
             { name: 'minPrice', value: '' },
             { name: 'maxPrice', value: '' }
           ]);
         }}
-        className=" absolute top-4 right-4  h-5 w-5"
-      />
+      >
+        <BiReset className="  h-5 w-5" />{' '}
+      </Button>
 
       <div className="flex flex-col">
         <div className="w-full font-bold mb-2 text-lg">Price filter</div>
@@ -68,7 +72,7 @@ const FilterInput = ({ modeMinPrice }: Props) => {
       <Button
         variant="round"
         size="plain"
-        className="bg-black ml-5"
+        className="bg-gray-200 text-black ml-5"
         onClick={() => {
           updateFilter(modeMinPrice ? 'minPrice' : 'maxPrice', '');
         }}
