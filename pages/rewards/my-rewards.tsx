@@ -12,6 +12,7 @@ const MyRewardsPage: React.FC = () => {
 
   return (
     <>
+      {/* Token Balance */}
       <div className="flex bg-theme-gray-100 p-10 rounded-2xl">
         <div className="w-1/2">
           <Heading as="h2" className="text-4xl font-body font-medium">
