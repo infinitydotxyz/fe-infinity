@@ -37,7 +37,7 @@ export const GraphOrderFilters = () => {
         <BiReset className="h-8 w-8" />
       </Button>
 
-      <div className="ml-4 flex flex-col ">
+      <div className="ml-6 flex flex-col ">
         {/* <div className="w-full font-bold mb-2 text-lg">Price filter</div> */}
         <SimpleTable className={twMerge('space-y-0', textColorTW)} items={tableItems} />
       </div>
