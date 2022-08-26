@@ -42,12 +42,12 @@ InfoBox.Stats = function Stats({ title, description, children }: InfoBoxPhasePro
 
 export type InfoBoxStatProps = {
   label: string;
-  value: string;
+  value: React.ReactNode;
 };
 
 InfoBox.Stat = function Stat({ label, value }: InfoBoxStatProps) {
   return (
-    <div className="lg:w-1/4 sm:w-full">
+    <div className="lg:w-1/4 sm:w-full p-2">
       <div className="text-2xl font-heading font-bold">{value}</div>
       <div className="text-sm mt-1">{label}</div>
     </div>

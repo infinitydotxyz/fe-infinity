@@ -1,6 +1,7 @@
 import React from 'react';
 import { Heading } from 'src/components/common';
 import { InfoBox } from 'src/components/rewards/info-box';
+import { RewardsProgressBar } from 'src/components/rewards/progressbar';
 
 const GlobalRewards: React.FC = () => {
   return (
@@ -42,7 +43,7 @@ const GlobalRewards: React.FC = () => {
               </>
             }
           >
-            <InfoBox.Stat label="Progress" value="0%" />
+            <InfoBox.Stat label="Progress" value={<RewardsProgressBar amount={69} max={100} />} />
             <InfoBox.Stat label="Trading Rewards" value="2%" />
             <InfoBox.Stat label="$ / $NFT ratio" value="1 / 50" />
             <InfoBox.Stat label="Free Infinity NFT Mint" value="+3 ETH" />
@@ -60,7 +61,7 @@ const GlobalRewards: React.FC = () => {
               </>
             }
           >
-            <InfoBox.Stat label="Progress" value="0%" />
+            <InfoBox.Stat label="Progress" value={<RewardsProgressBar amount={69} max={100} />} />
             <InfoBox.Stat label="Trading Rewards" value="3%" />
             <InfoBox.Stat label="$ / $NFT ratio" value="1 / 33" />
             <InfoBox.Stat label="Free Infinity NFT Mint" value="+5 ETH" />
@@ -78,7 +79,7 @@ const GlobalRewards: React.FC = () => {
               </>
             }
           >
-            <InfoBox.Stat label="Progress" value="0%" />
+            <InfoBox.Stat label="Progress" value={<RewardsProgressBar amount={69} max={100} />} />
             <InfoBox.Stat label="Trading Rewards" value="4%" />
             <InfoBox.Stat label="$ / $NFT ratio" value="1 / 25" />
             <InfoBox.Stat label="Free Infinity NFT Mint" value="+10 ETH" />
@@ -96,7 +97,7 @@ const GlobalRewards: React.FC = () => {
               </>
             }
           >
-            <InfoBox.Stat label="Progress" value="0%" />
+            <InfoBox.Stat label="Progress" value={<RewardsProgressBar amount={69} max={100} />} />
             <InfoBox.Stat label="Trading Rewards" value="5%" />
             <InfoBox.Stat label="$ / $NFT ratio" value="1 / 20" />
             <InfoBox.Stat label="Free Infinity NFT Mint" value="+20 ETH" />
@@ -135,7 +136,7 @@ const GlobalRewards: React.FC = () => {
               </>
             }
           >
-            <InfoBox.Stat label="Progress" value="0%" />
+            <InfoBox.Stat label="Progress" value={<RewardsProgressBar amount={69} max={100} />} />
             <InfoBox.Stat label="Trading Rewards" value="7%" />
             <InfoBox.Stat label="$ / $NFT ratio" value="1 / 10" />
           </InfoBox.Stats>
@@ -165,7 +166,7 @@ const GlobalRewards: React.FC = () => {
       >
         <InfoBox.SideInfo>
           <InfoBox.Stats title="Phase" description="Token emissions go to zero. Curators still earn ETH rewards.">
-            <InfoBox.Stat label="Progress" value="0%" />
+            <InfoBox.Stat label="Progress" value={<RewardsProgressBar amount={69} max={100} />} />
           </InfoBox.Stats>
         </InfoBox.SideInfo>
       </InfoBox>
