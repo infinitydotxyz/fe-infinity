@@ -36,5 +36,5 @@ export const SimpleTable = ({ items, className = '', rowClassName = '', valueCla
     );
   });
 
-  return <div className={twMerge('space-y-2', className)}>{table}</div>;
+  return <div className={twMerge('', className)}>{table}</div>;
 };

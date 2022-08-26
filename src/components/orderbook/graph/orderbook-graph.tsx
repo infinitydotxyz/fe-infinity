@@ -3,7 +3,7 @@ import { StackedBarGraph } from './stacked-bar-graph';
 import { BiReset } from 'react-icons/bi';
 import { useEffect, useState } from 'react';
 import { GraphData, graphHeight, textAltColorTW } from './graph-utils';
-import { Button, Spinner } from 'src/components/common';
+import { Button, Spacer, Spinner } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 import { GraphOrderDetails } from './graph-order-details';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
@@ -99,16 +99,20 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
   }
 
   content = (
-    <div className={twMerge('flex flex-col', className)}>
+    <div className={twMerge('flex flex-col  ', className)}>
       <div className="flex">
-        <div className="flex-1 min-w-0 mb-5">
-          <OrderbookGraphInfo className="mb-5" graphData={graphData} />
-          {graph}
+        <div className="flex-1 min-w-0   ">
+          <div className="flex mb-10 ml-10">
+            <GraphOrderFilters />
+            <Spacer />
+            <OrderbookGraphInfo className="" graphData={graphData} />
+          </div>
+
+          <div className="">{graph}</div>
         </div>
-        <div className="w-96 flex flex-col space-y-2">
+        <div className="w-96 flex flex-col space-y-2 ml-6">
           <NextPrevArrows orders={selectedOrders} index={selectedIndex} setIndex={setSelectedIndex} />
           <GraphOrderDetails orders={selectedOrders} index={selectedIndex} valueClassName={textAltColorTW} />
-          <GraphOrderFilters />
         </div>
       </div>
     </div>

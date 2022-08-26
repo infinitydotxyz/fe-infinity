@@ -1,4 +1,4 @@
-import { accentColor, GraphData, accentAltColor } from './graph-utils';
+import { accentColor, GraphData, accentAltColor, bgAltColorTW, textColorTW } from './graph-utils';
 import { twMerge } from 'tailwind-merge';
 
 interface Props {
@@ -11,8 +11,16 @@ export const OrderbookGraphInfo = ({ graphData, className }: Props) => {
   const offers = () => graphData.filter((x) => !x.isSellOrder);
 
   return (
-    <div className={twMerge('w-full flex', className)}>
-      <div className={twMerge('w-full flex flex-col  ml-6 text-lg', className)}>
+    <div className={twMerge('  flex items-center', textColorTW, className)}>
+      <div
+        className={twMerge(
+          bgAltColorTW,
+          'text-[20px] w-12 font-bold flex justify-center text-white text-opacity-85 items-center rounded-lg   aspect-1'
+        )}
+      >
+        <div>{graphData.length}</div>
+      </div>
+      <div className={twMerge('w-full flex flex-col  ml-2')}>
         <div className="flex items-center ">
           <div className="h-5 w-5 mr-3 rounded-full" style={{ backgroundColor: accentAltColor }} />
           <div className="font-bold mr-2">{offers().length.toString()}</div>

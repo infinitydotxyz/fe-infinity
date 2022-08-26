@@ -154,9 +154,9 @@ type Props2 = {
 function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, onClick, onSelection }: Props2) {
   const margin = {
     top: 30,
-    right: 20,
-    bottom: 80,
-    left: 80
+    right: 0,
+    bottom: 74,
+    left: 70
   };
 
   const width = outerWidth - margin.left - margin.right;

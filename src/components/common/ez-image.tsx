@@ -7,7 +7,7 @@ interface Props {
   center?: boolean; // false for bg-top
   cover?: boolean;
   className?: string;
-  fade: boolean;
+  fade?: boolean;
   onClick?: () => void;
 }
 
