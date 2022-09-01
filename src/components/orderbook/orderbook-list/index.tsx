@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { Button, CenteredContent, Dropdown, ScrollLoader, Spinner } from 'src/components/common';
 import { OrderbookProvider, SORT_FILTERS, useOrderbook } from '../OrderbookContext';
 import { OrderbookRow } from './orderbook-row';
 import { OrderbookFilters } from './filters/orderbook-filters';
-import { useRouter } from 'next/router';
-import { useDrawerContext } from 'src/utils/context/DrawerContext';
 
 const SORT_LABELS: {
   [key: string]: string;
@@ -23,27 +21,26 @@ interface Props {
   collectionId?: string;
   tokenId?: string;
   className?: string;
-  onData?: (data: SignedOBOrder[]) => void;
 }
 
-export const OrderbookContainer = ({ collectionId, tokenId, className = '', onData }: Props): JSX.Element => {
+export const OrderbookContainer = ({ collectionId, tokenId, className = '' }: Props): JSX.Element => {
   return (
     <OrderbookProvider collectionId={collectionId} tokenId={tokenId}>
-      <OrderbookContent className={className} onData={onData} />
+      <OrderbookContent className={className} />
     </OrderbookProvider>
   );
 };
 
 interface Props4 {
   className?: string;
-  onData?: (data: SignedOBOrder[]) => void;
 }
 
-export const OrderbookContent = ({ className, onData }: Props4) => {
-  const { query } = useRouter();
+export const OrderbookContent = ({ className }: Props4) => {
+  // const { query } = useRouter();
   const { orders, fetchMore, isLoading, updateFilter, filters, hasMoreOrders, hasNoData } = useOrderbook();
   const [showFilters, setShowFilters] = useState<boolean>(
-    query.orderTypes || query.collections || query.minPrice || query.maxPrice || query.numberOfNfts ? true : false
+    true
+    // query.orderTypes || query.collections || query.minPrice || query.maxPrice || query.numberOfNfts ? true : false
   );
   const [label, setLabel] = useState<string>(getSortLabel(filters?.sort));
 
@@ -51,12 +48,6 @@ export const OrderbookContent = ({ className, onData }: Props4) => {
     setLabel(_label);
     updateFilter('sort', sortOrder);
   };
-
-  useEffect(() => {
-    if (onData) {
-      onData(orders);
-    }
-  }, [orders]);
 
   return (
     <>
@@ -121,12 +112,10 @@ const OrderbookList = ({
   hasMoreOrders,
   hasNoData
 }: Props2): JSX.Element => {
-  const { fulfillDrawerParams } = useDrawerContext();
-
   return (
-    <div className="flex justify-center align-items gap-4 pointer-events-auto">
+    <div className="flex gap-4 pointer-events-auto">
       {showFilters && (
-        <div className="w-1/4 flex-none">
+        <div className="w-1/5 shrink-0">
           <OrderbookFilters />
         </div>
       )}
@@ -135,14 +124,7 @@ const OrderbookList = ({
 
         {orderList.length > 0 &&
           orderList.map((order: SignedOBOrder, i: number) => {
-            return (
-              <OrderbookRow
-                onClickActionBtn={fulfillDrawerParams.addOrder}
-                key={`${i}-${order.id}`}
-                order={order}
-                isFilterOpen={showFilters ?? false}
-              />
-            );
+            return <OrderbookRow key={`${i}-${order.id}`} order={order} isFilterOpen={showFilters ?? false} />;
           })}
 
         {isLoading && (

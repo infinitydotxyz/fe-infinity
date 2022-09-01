@@ -14,20 +14,27 @@ interface Props2 {
   selection?: Set<string>;
   onChange?: (selection: Set<string>) => void;
   scroll?: boolean;
+  className?: string;
 }
 
-export const OrderDetailPicker = ({ selection, onChange, order, scroll = false }: Props2) => {
+export const OrderDetailPicker = ({
+  selection,
+  onChange,
+  order,
+  scroll = false,
+  className = 'text-gray-500'
+}: Props2) => {
   const showCheckbox = onChange !== undefined && selection !== undefined;
 
   return (
-    <div>
-      <div className="text-gray-500">
+    <div className={className}>
+      <div>
         Any {order.numItems} {order.numItems > 1 ? 'items' : 'item'} can be{' '}
         {order.isSellOrder ? 'bought' : 'sold (if you own enough)'} for the given price.
       </div>
 
       {showCheckbox && (
-        <div className="text-gray-500 mt-1">
+        <div className="mt-1">
           Select {order.numItems} {order.numItems > 1 ? 'items' : 'item'} and click Add to Cart.
         </div>
       )}
@@ -35,7 +42,7 @@ export const OrderDetailPicker = ({ selection, onChange, order, scroll = false }
       <div className={twMerge('my-6 space-y-4', scroll ? 'max-h-64 overflow-y-auto overflow-x-clip' : '')}>
         {(order?.nfts || []).map((nft, idx) => {
           return (
-            <div key={`${nft.collectionAddress}_${idx}`}>
+            <div className="space-y-4" key={`${nft.collectionAddress}_${idx}`}>
               {nft.tokens.map((token) => {
                 const key = orderDetailKey(nft.collectionAddress, token.tokenId);
 
@@ -81,12 +88,13 @@ export const OrderDetailPicker = ({ selection, onChange, order, scroll = false }
                     }}
                   >
                     <EZImage
+                      fade={false}
                       src={token.tokenImage || nft.collectionImage}
                       className="w-16 h-16 shrink-0 overflow-clip rounded-2xl"
                     />
                     <div className="ml-4">
                       <div className="select-none">{nft.collectionName}</div>
-                      <div className="select-none flex text-gray-500 truncate">{tokenId}</div>
+                      <div className="select-none flex  truncate">{tokenId}</div>
                     </div>
 
                     {showCheckbox && (
