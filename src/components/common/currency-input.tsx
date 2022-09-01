@@ -1,5 +1,4 @@
 import { InputBox } from './input-box';
-import { useState } from 'react';
 import { EthSymbol } from './eth-price';
 
 interface Props {
@@ -7,12 +6,11 @@ interface Props {
   value: string | number;
   placeholder: string;
   autoFocus?: boolean;
+  currency?: string;
   onChange: (value: string) => void;
 }
 
-export const CurrencyInput = ({ value, label, placeholder, onChange, autoFocus = false }: Props) => {
-  const [currency] = useState('WETH');
-
+export const CurrencyInput = ({ value, label, placeholder, onChange, autoFocus = false, currency = 'WETH' }: Props) => {
   return (
     <InputBox>
       <div className="flex-1">
