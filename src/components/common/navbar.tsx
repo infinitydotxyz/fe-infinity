@@ -74,7 +74,7 @@ export const Navbar = () => {
               label: 'Discord',
               icon: <SiDiscord className=" h-5 w-5 text-gray-500" />,
               onClick: () => {
-                window.open('http://discord.gg/4VFcGY3W7H');
+                window.open('https://discord.com/invite/infinitydotxyz');
               }
             } as DropdownItem,
             {
@@ -160,7 +160,7 @@ export const Navbar = () => {
     result.push({
       label: 'Discord',
       onClick: () => {
-        window.open('http://discord.gg/4VFcGY3W7H');
+        window.open('https://discord.com/invite/infinitydotxyz');
       }
     });
     result.push({
