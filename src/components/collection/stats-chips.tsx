@@ -9,6 +9,7 @@ import { Chip, Spinner, toastError } from 'src/components/common';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { indexCollection } from 'src/utils/orderbookUtils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { TipModal } from './tip-modal';
 
 interface Props {
   collection?: BaseCollection | null;
@@ -21,6 +22,7 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
   const [isFollowing, setIsFollowing] = useState(false);
   const [editDisabled, setEditDisabled] = useState(true);
   const [followingLoading, setFollowingLoading] = useState(false);
+  const [showTipModal, setShowTipModal] = useState(false);
   const { push: pushRoute } = useRouter();
   // TODO(sleeyax): we should probably refactor both 'edit' and 'follow' buttons; they shouldn't be part of this 'social stats' component.
   const router = useRouter();
@@ -77,6 +79,14 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
     pushRoute(`/collection/${collection?.slug}/edit`);
   };
 
+  const onClickTip = () => {
+    if (!checkSignedIn()) {
+      return;
+    }
+
+    setShowTipModal(true);
+  };
+
   const verifyOwnership = async () => {
     const { error, result } = await apiGet(
       `/user/${chainId}:${user?.address}/collections/${router.query.name}/permissions`
@@ -92,6 +102,14 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
 
   return (
     <div className="flex flex-row space-x-2 items-center">
+      {collection?.metadata?.tipAddress && (
+        <TipModal
+          isOpen={showTipModal}
+          onClose={() => setShowTipModal(false)}
+          address={collection.metadata.tipAddress}
+        />
+      )}
+
       {showFollow && (
         <Chip
           content={
@@ -191,6 +209,17 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
       <Chip
         content={<>Reindex</>}
         onClick={() => indexCollection(true, chainId, collection?.address ?? '', collection?.slug ?? '')}
+      />
+
+      <Chip
+        content={<>Tip</>}
+        onClick={onClickTip}
+        disabled={!collection?.metadata.tipAddress}
+        title={
+          !collection?.metadata.tipAddress
+            ? "The collection owner hasn't setup tipping yet"
+            : 'Tip ETH to provide extra support towards this project'
+        }
       />
 
       <Chip

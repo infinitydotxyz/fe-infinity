@@ -35,6 +35,7 @@ export interface Props {
   disabled?: boolean;
   className?: string;
   type?: 'submit' | 'button';
+  title?: string;
 }
 
 export const Button = ({
@@ -44,6 +45,7 @@ export const Button = ({
   disabled = false,
   children,
   className = '',
+  title,
   onClick
 }: Props): JSX.Element => {
   return (
@@ -68,6 +70,7 @@ export const Button = ({
           }
         }
       }}
+      title={title}
     >
       <div className="whitespace-nowrap">{children}</div>
     </button>

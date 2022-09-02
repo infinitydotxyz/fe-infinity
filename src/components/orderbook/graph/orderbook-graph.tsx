@@ -10,6 +10,7 @@ import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { GraphOrderFilters } from './graph-order-filters';
 import { OrderbookGraphInfo } from './orderbook-graph-info';
 import { NextPrevArrows } from './next-prev-arrows';
+import { GraphBox } from './graph-box';
 
 interface Props {
   className?: string;
@@ -73,7 +74,7 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
       );
     } else {
       graph = (
-        <div className="">
+        <GraphBox dark={true}>
           <StackedBarGraph
             data={graphData}
             height={graphHeight}
@@ -93,7 +94,7 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
               }
             }}
           />
-        </div>
+        </GraphBox>
       );
     }
   }
@@ -102,13 +103,13 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
     <div className={twMerge('flex flex-col  ', className)}>
       <div className="flex">
         <div className="flex-1 min-w-0   ">
-          <div className="flex mb-10 ml-14">
+          <div className="">{graph}</div>
+
+          <div className="flex px-8 mt-4">
             <GraphOrderFilters />
             <Spacer />
             <OrderbookGraphInfo className="" graphData={graphData} />
           </div>
-
-          <div className="">{graph}</div>
         </div>
         <div className="w-96 flex flex-col space-y-2 ml-6">
           <NextPrevArrows orders={selectedOrders} index={selectedIndex} setIndex={setSelectedIndex} />
