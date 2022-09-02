@@ -1,6 +1,6 @@
 import React from 'react';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { SimpleTable, SimpleTableItem } from '../../common';
+import { SimpleTable, SimpleTableItem, Spacer } from '../../common';
 import { OrderDetailPicker } from '../order-detail-picker';
 import { twMerge } from 'tailwind-merge';
 import { OrderbookRowButton } from '../orderbook-list/orderbook-row-button';
@@ -40,6 +40,8 @@ export const GraphOrderDetails = ({ orders, index, valueClassName = '' }: Props9
       <GraphBox className={twMerge(textColorTW, 'py-5  flex-1   ')}>
         <div className={twMerge(textAltColorTW, 'mb-2 text-lg font-bold')}>Order Details</div>
         <OrderDetailPicker order={order} scroll={true} className=" " />
+
+        <Spacer />
 
         <SimpleTable className="" items={tableItems} valueClassName={valueClassName} />
 
