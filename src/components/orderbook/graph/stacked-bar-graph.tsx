@@ -10,7 +10,7 @@ import { useTooltip, defaultStyles, useTooltipInPortal } from '@visx/tooltip';
 import { numStr } from 'src/utils';
 import { RoundRectBar } from './round-rect-bar';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { accentColor, axisLineColor, GraphData, accentAltColor, textColor } from './graph-utils';
+import { accentColor, axisLineColor, GraphData, accentAltColor, textColor, borderColor } from './graph-utils';
 
 type BarGraphData = {
   listings: GraphData[];
@@ -231,7 +231,7 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
     let barRadius = 10;
     if (barHeight === 0) {
       barRadius = 0;
-      bColor = accentColor;
+      bColor = textColor;
     }
 
     const barWidth = xScale.bandwidth();
@@ -299,7 +299,7 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
             x={barX}
             y={barY}
             width={barWidth}
-            height={Math.max(barHeight, 2)}
+            height={Math.max(barHeight, 1)}
             tl={lbarHeight > 0 ? 0 : barRadius}
             tr={lbarHeight > 0 ? 0 : barRadius}
             br={0}
