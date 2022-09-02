@@ -31,3 +31,5 @@ export const borderColor = 'border-gray-200';
 export const gradientTW = 'bg-gradient-to-b from-[#f6f6f6] via-[#fcfcfc] to-[#f6f6f6]';
 // export const darkGradientTW = 'bg-gradient-to-b from-[#666699] via-[#666688] to-[#666699]';
 export const darkGradientTW = ' ';
+
+export const hoverStrokeColor = '#62aeff';

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { accentColor, clamp } from './graph-utils';
+import { clamp, hoverStrokeColor } from './graph-utils';
 
 interface Props {
   width: number;
@@ -59,7 +59,7 @@ export const RoundRectBar = ({
       fill={fill}
       width={width}
       height={height}
-      stroke={mouseOver ? accentColor : 'transparent'}
+      stroke={mouseOver ? hoverStrokeColor : 'transparent'}
       strokeWidth={4}
       x={x}
       y={y}
