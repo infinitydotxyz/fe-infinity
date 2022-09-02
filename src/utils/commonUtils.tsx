@@ -303,7 +303,7 @@ export const getEstimatedGasPrice = async (
     return undefined;
   }
   const price = await provider.getGasPrice();
-  const priceEstimate = price.mul(2);
+  const priceEstimate = price.mul(3);
   return priceEstimate.toString();
 };
 
