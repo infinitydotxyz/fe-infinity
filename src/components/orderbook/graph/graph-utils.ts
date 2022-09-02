@@ -29,3 +29,5 @@ export const axisLineColor = `${accentColor}77`;
 export const borderColor = `border-[#00000011]`;
 
 export const gradientTW = 'bg-gradient-to-b from-[#f6f6f6] via-[#fcfcfc] to-[#f6f6f6]';
+// export const darkGradientTW = 'bg-gradient-to-b from-[#666699] via-[#666688] to-[#666699]';
+export const darkGradientTW = ' ';

@@ -37,23 +37,21 @@ export const GraphOrderDetails = ({ orders, index, valueClassName = '' }: Props9
     ];
 
     return (
-      <div className={twMerge(textColorTW)}>
-        <GraphBox className="py-5 h-[600px] ">
-          <div className={twMerge(textAltColorTW, 'mb-2 text-lg font-bold')}>Order Details</div>
-          <OrderDetailPicker order={order} scroll={true} className=" " />
+      <GraphBox className={twMerge(textColorTW, 'py-5  flex-1   ')}>
+        <div className={twMerge(textAltColorTW, 'mb-2 text-lg font-bold')}>Order Details</div>
+        <OrderDetailPicker order={order} scroll={true} className=" " />
 
-          <SimpleTable className="" items={tableItems} valueClassName={valueClassName} />
+        <SimpleTable className="" items={tableItems} valueClassName={valueClassName} />
 
-          <div className="mt-10 flex justify-center">
-            <OrderbookRowButton order={order} />
-          </div>
-        </GraphBox>
-      </div>
+        <div className="mt-10 flex justify-center">
+          <OrderbookRowButton order={order} />
+        </div>
+      </GraphBox>
     );
   }
 
   return (
-    <GraphBox className={twMerge(textColorTW, 'h-full items-center justify-center')}>
+    <GraphBox className={twMerge(textColorTW, 'flex-1 items-center justify-center')}>
       <div className="text-center">Nothing selected</div>
     </GraphBox>
   );
