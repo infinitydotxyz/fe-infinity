@@ -107,7 +107,7 @@ const MyRewardsPage: React.FC = () => {
                 <div className="text-sm mt-1">Voting Power</div>
               </div>
               <div className="lg:w-1/4 sm:w-full">
-                <div className="text-2xl font-heading font-bold">{quota?.stake.totalCurated || 0}</div>
+                <div className="text-2xl font-heading font-bold">{quota?.stake.totalCuratedVotes || 0}</div>
                 <div className="text-sm mt-1">Voted</div>
               </div>
               <div className="lg:w-1/4 sm:w-full">
@@ -173,7 +173,9 @@ const MyRewardsPage: React.FC = () => {
             <div>Token rewards</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
-                <div className="text-2xl font-heading font-bold">3,569</div>
+                <div className="text-2xl font-heading font-bold">
+                  {Math.floor(userRewards?.totals.userRewards ?? 0)}
+                </div>
                 <div className="text-sm mt-1">Earned rewards</div>
               </div>
               <div className="lg:w-1/4 sm:w-full">
