@@ -3,12 +3,14 @@ import { Button, Heading } from 'src/components/common';
 import { StakeTokensModal } from 'src/components/rewards/stake-tokens-modal';
 import { UnstakeTokensModal } from 'src/components/rewards/unstake-tokens-modal';
 import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
+import { useUserRewards } from 'src/hooks/api/useUserRewards';
 import { numberFormatter } from 'src/utils/number-formatter';
 
 const MyRewardsPage: React.FC = () => {
   const [showStakeTokensModal, setShowStakeTokensModal] = useState(false);
   const [showUnstakeTokensModal, setShowUnstakeTokensModal] = useState(false);
   const { result: quota, mutate: mutateQuota } = useUserCurationQuota();
+  const { result: userRewards } = useUserRewards();
 
   return (
     <>
@@ -39,8 +41,21 @@ const MyRewardsPage: React.FC = () => {
                 <div className="text-sm mt-1">Staked</div>
               </div>
             </div>
+            <div className="lg:w-2/4 sm:w-full flex mt-4">
+              <Button size="large" className="font-heading" onClick={() => setShowStakeTokensModal(true)}>
+                Stake
+              </Button>
+              <Button
+                size="large"
+                variant="outline"
+                className="font-heading lg:ml-3"
+                onClick={() => setShowUnstakeTokensModal(true)}
+              >
+                Unstake
+              </Button>
+            </div>
           </div>
-          <div className="bg-white py-4 pl-6 pr-12 rounded-2xl mt-4">
+          {/* <div className="bg-white py-4 pl-6 pr-12 rounded-2xl mt-4">
             <div>Token staking</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
@@ -48,10 +63,12 @@ const MyRewardsPage: React.FC = () => {
                 <div className="text-sm mt-1">Fee APR</div>
               </div>
               <div className="lg:w-1/4 sm:w-full">
-                <div className="text-2xl font-heading font-bold">$60M</div>
+                <div className="text-2xl font-heading font-bold">{`${numberFormatter.format(
+                  quota?.totalStaked || 0
+                )} $NFT`}</div>
                 <div className="text-sm mt-1">TVL</div>
               </div>
-              <div className="lg:w-2/4 sm:w-full">
+              <div className="lg:w-2/4 sm:w-full flex">
                 <Button size="large" className="font-heading" onClick={() => setShowStakeTokensModal(true)}>
                   Stake
                 </Button>
@@ -65,7 +82,7 @@ const MyRewardsPage: React.FC = () => {
                 </Button>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
 
@@ -106,10 +123,10 @@ const MyRewardsPage: React.FC = () => {
                 <div className="text-2xl font-heading font-bold">3,569</div>
                 <div className="text-sm mt-1">Earned rewards</div>
               </div>
-              <div className="lg:w-1/4 sm:w-full">
+              {/* <div className="lg:w-1/4 sm:w-full">
                 <div className="text-2xl font-heading font-bold">10%</div>
                 <div className="text-sm mt-1">Earned APR</div>
-              </div>
+              </div> */}
               <div className="lg:w-1/4 sm:w-full">
                 <Button size="large" className="font-heading">
                   Claim Rewards
@@ -137,17 +154,17 @@ const MyRewardsPage: React.FC = () => {
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/3 sm:w-full">
                 <div className="mb-4">Volume Traded</div>
-                <div className="text-2xl font-heading font-bold">5,000</div>
+                <div className="text-2xl font-heading font-bold">{userRewards?.totals.userVolume ?? 0}</div>
                 <div className="text-sm mt-1">ETH</div>
               </div>
               <div className="lg:w-1/3 sm:w-full">
                 <div className="mb-4">Buys</div>
-                <div className="text-2xl font-heading font-bold">4</div>
+                <div className="text-2xl font-heading font-bold">{userRewards?.totals.userBuys ?? 0}</div>
                 <div className="text-sm mt-1">NFTs</div>
               </div>
               <div className="lg:w-1/3 sm:w-full">
                 <div className="mb-4">Sells</div>
-                <div className="text-2xl font-heading font-bold">6</div>
+                <div className="text-2xl font-heading font-bold">{userRewards?.totals.userSells ?? 0}</div>
                 <div className="text-sm mt-1">NFTs</div>
               </div>
             </div>
