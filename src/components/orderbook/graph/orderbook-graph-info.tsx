@@ -22,7 +22,7 @@ export const OrderbookGraphInfo = ({ graphData, className }: Props) => {
         >
           <div>{graphData.length}</div>
         </div>
-        <div className={twMerge('w-full flex flex-col  ml-2')}>
+        <div className={twMerge('w-full flex flex-col  ml-4')}>
           <div className="flex items-center ">
             <div className="h-5 w-5 mr-3 rounded-full" style={{ backgroundColor: accentAltColor }} />
             <div className="font-bold mr-2">{offers().length.toString()}</div>

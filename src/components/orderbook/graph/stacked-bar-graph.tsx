@@ -383,14 +383,9 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
             animationTrajectory="center"
           />
 
-          {data.map((d, index) => {
-            return stackedBar(d, index);
-          })}
-
           <AnimatedAxis
             key={`axis-vert`}
             orientation={Orientation.left}
-            top={4}
             scale={yScale}
             tickFormat={(v) => `${v}`}
             stroke={axisLineColor}
