@@ -249,6 +249,14 @@ const EditCollectionPage = () => {
             labelClassname="mt-4"
             className="py-3"
           />
+          <TextInputBox
+            label="Tip address"
+            value={metadata?.tipAddress || ''}
+            type="text"
+            onChange={(tipAddress) => dispatchMetadata({ type: 'updateMetadata', metadata: { tipAddress } })}
+            placeholder="0x0000000000000000000000000000000000000000"
+            isFullWidth
+          />
         </article>
         <article className={spaces.article}>
           <Heading as="h6" className="font-medium mb-8 font-body">

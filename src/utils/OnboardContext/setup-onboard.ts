@@ -1,4 +1,4 @@
-import { init, web3Onboard } from '@web3-onboard/react';
+import { init } from '@web3-onboard/react';
 import injectedModule from '@web3-onboard/injected-wallets';
 import trezorModule from '@web3-onboard/trezor';
 import ledgerModule from '@web3-onboard/ledger';
@@ -30,13 +30,6 @@ const trezorOptions = {
 const trezor = trezorModule(trezorOptions);
 
 export const setupOnboard = () => {
-  // TODO remove when works. hack for hot reload
-  const existing = web3Onboard?.state.get();
-  if (existing && existing?.chains?.length > 0) {
-    console.log('hotreload fix, setupOnboard bypassed');
-    return;
-  }
-
   init({
     wallets: [injected, ledger, coinbase, trezor, walletConnect, gnosis, keepkey, torus],
     chains: [
