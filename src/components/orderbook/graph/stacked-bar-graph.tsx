@@ -10,7 +10,7 @@ import { useTooltip, defaultStyles, useTooltipInPortal } from '@visx/tooltip';
 import { numStr } from 'src/utils';
 import { RoundRectBar } from './round-rect-bar';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { accentColor, axisLineColor, GraphData, accentAltColor, textColor, borderColor } from './graph-utils';
+import { accentColor, axisLineColor, GraphData, accentAltColor, textColor } from './graph-utils';
 
 type BarGraphData = {
   listings: GraphData[];
