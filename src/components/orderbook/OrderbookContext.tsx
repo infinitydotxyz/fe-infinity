@@ -22,7 +22,7 @@ export const SORT_FILTERS = {
 };
 
 const getIsSellOrder = (orderTypes: OBFilters['orderTypes']) => {
-  if (!orderTypes || orderTypes === []) {
+  if (!orderTypes || orderTypes.length === 0) {
     return undefined;
   } else if (orderTypes.length === 1 && orderTypes.includes('Listing')) {
     // todo: check with backend types

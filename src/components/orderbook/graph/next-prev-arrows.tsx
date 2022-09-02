@@ -53,8 +53,12 @@ interface Props4 {
 }
 
 const NextPrev = ({ index, numItems, onNext, onPrev }: Props4) => {
-  const progress = numItems > 1 ? `${index + 1} / ${numItems}` : '1';
-  const content = numItems > 1 ? 'Orders' : 'Order';
+  let progress = '0';
+  const content = numItems === 1 ? 'Order' : 'Orders';
+
+  if (numItems > 0) {
+    progress = numItems > 1 ? `${index + 1} / ${numItems}` : '1';
+  }
 
   return (
     <div className="flex w-full items-center rounded-lg">
