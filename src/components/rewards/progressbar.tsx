@@ -33,7 +33,7 @@ export const RewardsProgressBar: React.FC<RewardsProgressBarProps> = ({ amount, 
 
       <div className="absolute top-0 left-2 z-10">
         <span className="space-x-2 font-heading">
-          <span className="font-black">{round(percentage, 4)}%</span>
+          <span className="font-black">{round(percentage, 2)}%</span>
         </span>
       </div>
     </div>
