@@ -1,8 +1,8 @@
 import missingImage from 'src/images/missing-image.png';
 import newsImage from 'src/images/news.png';
 
-// export const API_BASE = 'http://localhost:9090';
-export const API_BASE = 'https://sv.infinity.xyz';
+export const API_BASE = 'http://localhost:9090';
+// export const API_BASE = 'https://sv.infinity.xyz';
 
 export const SITE_HOST = 'http://localhost:3000';
 export const DISCORD_BOT_INVITE_URL =
