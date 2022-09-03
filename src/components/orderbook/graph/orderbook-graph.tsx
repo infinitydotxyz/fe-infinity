@@ -74,27 +74,25 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
       );
     } else {
       graph = (
-        <GraphBox dark={true}>
-          <StackedBarGraph
-            data={graphData}
-            height={graphHeight}
-            onClick={handleOnClick}
-            onSelection={(orders, index) => {
-              if (index !== selectedIndex) {
-                setSelectedIndex(index);
-              }
+        <StackedBarGraph
+          data={graphData}
+          height={graphHeight}
+          onClick={handleOnClick}
+          onSelection={(orders, index) => {
+            if (index !== selectedIndex) {
+              setSelectedIndex(index);
+            }
 
-              let arrayEquals = false;
-              if (orders.length === selectedOrders.length) {
-                arrayEquals = orders.every((v, i) => v.id === selectedOrders[i].id);
-              }
+            let arrayEquals = false;
+            if (orders.length === selectedOrders.length) {
+              arrayEquals = orders.every((v, i) => v.id === selectedOrders[i].id);
+            }
 
-              if (!arrayEquals) {
-                setSelectedOrders(orders);
-              }
-            }}
-          />
-        </GraphBox>
+            if (!arrayEquals) {
+              setSelectedOrders(orders);
+            }
+          }}
+        />
       );
     }
   }
@@ -103,7 +101,7 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
     <div className={twMerge('flex flex-col  ', className)}>
       <div className="flex">
         <div className="flex-1 min-w-0   ">
-          <div className="">{graph}</div>
+          <div className="">{<GraphBox dark={true}>{graph}</GraphBox>}</div>
 
           <div className="flex px-8 mt-4">
             <GraphOrderFilters />

@@ -396,7 +396,7 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
             // tickValues={countAxisLabels}
             label="Number of orders"
             labelProps={labelProps}
-            labelOffset={36}
+            labelOffset={48}
             animationTrajectory="center"
           />
 
