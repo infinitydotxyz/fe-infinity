@@ -21,9 +21,6 @@ const getEpochDescription = (epoch: Epoch) => {
           <p className="my-2">Holders of the Infinity NFT are MVPs with benefits including (but not limited to):</p>
           <ul className="ml-4 list-disc">
             <li>Early access to all future Infinity products</li>
-            <li>
-              Fee distribution from non-curated collections until then end of 2023 (see token utility section below)
-            </li>
             <li>Partner offers, raffles, allowlists</li>
           </ul>
         </>
@@ -34,8 +31,7 @@ const getEpochDescription = (epoch: Epoch) => {
         <>
           <p className="my-2">
             In this epoch, in addition to token rewards for trading, curators of collections start earning curation
-            rewards in ETH (see token utility section). The free Infinity NFT mint is no longer available starting this
-            epoch.
+            rewards in ETH. The free Infinity NFT mint is no longer available starting this epoch.
           </p>
           <Heading as="h3" className="text-3xl !font-body !font-medium !text-black">
             Benefits
@@ -59,9 +55,7 @@ const getEpochDescription = (epoch: Epoch) => {
               only possible curators are the traders/collectors from epochs 1 and 2.
             </li>
           </ul>
-          <p className="my-2">
-            Trading rewards are distributed weekly or at the end of each phase/epoch, whichever comes first.
-          </p>
+          <p className="my-2">Curation rewards are distributed weekly.</p>
         </>
       );
   }
