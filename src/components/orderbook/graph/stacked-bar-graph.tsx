@@ -1,11 +1,11 @@
 import React, { Fragment, useEffect, useMemo, useState } from 'react';
 import { Group } from '@visx/group';
 import { LinearGradient } from '@visx/gradient';
+import { AxisBottom, AxisLeft } from '@visx/axis';
 import { scaleBand, scaleLinear } from '@visx/scale';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
-import { Orientation } from '@visx/axis';
 import { TextProps } from '@visx/text';
-import { AnimatedAxis } from '@visx/react-spring';
+// import { AnimatedAxis } from '@visx/react-spring';
 import { useTooltip, defaultStyles, useTooltipInPortal } from '@visx/tooltip';
 import { numStr } from 'src/utils';
 import { RoundRectBar } from './round-rect-bar';
@@ -365,9 +365,9 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
         />
 
         <Group transform={`translate(${margin.left},${margin.top})`}>
-          <AnimatedAxis
+          <AxisBottom
             key={`axis-center`}
-            orientation={Orientation.bottom}
+            // orientation={Orientation.bottom}
             top={height + 2}
             scale={xScale}
             tickFormat={(v) => `${v}`}
@@ -380,12 +380,12 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
             label="Price in ETH"
             labelProps={labelProps}
             labelOffset={20}
-            animationTrajectory="center"
+            // animationTrajectory="center"
           />
 
-          <AnimatedAxis
+          <AxisLeft
             key={`axis-vert`}
-            orientation={Orientation.left}
+            // orientation={Orientation.left}
             scale={yScale}
             tickFormat={(v) => `${v}`}
             stroke={axisLineColor}
@@ -397,7 +397,7 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
             label="Number of orders"
             labelProps={labelProps}
             labelOffset={48}
-            animationTrajectory="center"
+            // animationTrajectory="center"
           />
 
           {data.map((d, index) => {
