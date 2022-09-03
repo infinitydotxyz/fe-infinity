@@ -88,7 +88,6 @@ export const OrderDetailPicker = ({
                     }}
                   >
                     <EZImage
-                      fade={false}
                       src={token.tokenImage || nft.collectionImage}
                       className="w-16 h-16 shrink-0 overflow-clip rounded-2xl"
                     />

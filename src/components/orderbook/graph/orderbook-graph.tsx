@@ -123,7 +123,7 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
             }
           </div>
 
-          <div className="flex px-4 mt-4">
+          <div className="flex px-8 mt-4">
             <GraphOrderFilters />
             <Spacer />
             <OrderbookGraphInfo className="" graphData={graphData} />
