@@ -276,7 +276,7 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
     const numberOnTop = () => {
       const num = offerOrders.length + listingOrders.length;
 
-      if (barX && barY && lbarY && num > 0) {
+      if (barX && num > 0) {
         const numY = lbarY - barHeight;
 
         return (
