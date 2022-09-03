@@ -17,16 +17,35 @@ interface Props {
 }
 
 export const OrderbookGraph = ({ className = '' }: Props) => {
-  const { orders, updateFilters, isLoading } = useOrderbook();
+  const { orders, updateFilters, isLoading, filters } = useOrderbook();
   const [graphData, setGraphData] = useState<GraphData[]>([]);
   const [selectedOrders, setSelectedOrders] = useState<SignedOBOrder[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const { minPrice, maxPrice } = filters;
 
   const handleOnClick = (minPrice: string, maxPrice: string) => {
     updateFilters([
       { name: 'minPrice', value: minPrice },
       { name: 'maxPrice', value: maxPrice }
     ]);
+  };
+
+  const resetButton = (large: boolean, className?: string) => {
+    return (
+      <div className={twMerge('text-black opacity-60', className)}>
+        <Button
+          disabled={!minPrice && !maxPrice}
+          variant="round"
+          size="plain"
+          onClick={() => {
+            handleOnClick('', '');
+          }}
+        >
+          <BiReset className={large ? 'h-10 w-10' : 'h-8 w-8'} />
+        </Button>
+      </div>
+    );
   };
 
   useEffect(() => {
@@ -42,8 +61,9 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
   }, [orders]);
 
   let content = <></>;
-  const textStyle = 'flex items-center justify-center text-black opacity-40 font-bold text-lg';
+  const textStyle = 'flex items-center justify-center text-black opacity-60 font-bold text-lg';
 
+  let showReset = false;
   let graph;
   if (isLoading) {
     graph = (
@@ -60,19 +80,12 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
         <div className={textStyle} style={{ height: graphHeight }}>
           <div className="flex flex-col items-center justify-center">
             <div className="mb-3">No data</div>
-            <Button
-              variant="round"
-              size="plain"
-              onClick={() => {
-                handleOnClick('', '');
-              }}
-            >
-              <BiReset className="h-10 w-10" />
-            </Button>
+            {resetButton(true)}
           </div>
         </div>
       );
     } else {
+      showReset = true;
       graph = (
         <StackedBarGraph
           data={graphData}
@@ -101,7 +114,14 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
     <div className={twMerge('flex flex-col  ', className)}>
       <div className="flex">
         <div className="flex-1 min-w-0   ">
-          <div className="">{<GraphBox dark={true}>{graph}</GraphBox>}</div>
+          <div className="">
+            {
+              <GraphBox dark={true}>
+                {showReset && resetButton(false, 'absolute right-2 top-2')}
+                {graph}
+              </GraphBox>
+            }
+          </div>
 
           <div className="flex px-4 mt-4">
             <GraphOrderFilters />
