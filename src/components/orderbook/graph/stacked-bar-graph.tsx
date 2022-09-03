@@ -70,7 +70,7 @@ const barData = (data: GraphData[], width: number): BarGraphData[] => {
   const columns = Math.ceil(width / columnWidth);
   const values = data.map(getPriceValue);
   const minPrice = Math.min(...values);
-  const maxPrice = Math.max(...values) + 0.05;
+  const maxPrice = Math.max(...values) + 0.01;
   const range = (maxPrice - minPrice) / columns;
 
   for (let i = 0; i < columns; i++) {
