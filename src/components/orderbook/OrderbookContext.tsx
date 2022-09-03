@@ -5,6 +5,7 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import { ParsedUrlQuery } from 'querystring';
 import { apiGet, ITEMS_PER_PAGE } from 'src/utils';
 import { useIsMounted } from 'src/hooks/useIsMounted';
+import { OrderCache } from './order-cache';
 
 export type OBFilters = {
   sort?: string;
@@ -155,6 +156,8 @@ type OBContextType = {
 
 const OrderbookContext = React.createContext<OBContextType | null>(null);
 
+const orderCache = new OrderCache();
+
 interface Props {
   children: ReactNode;
   collectionId?: string;
@@ -260,25 +263,36 @@ export const OrderbookProvider = ({ children, collectionId, tokenId, limit = ITE
         query.tokenId = tokenId;
       }
 
-      const { result } = await apiGet('/orders', {
-        query
-      });
+      // use cached value if exists
+      const cacheKey = JSON.stringify(query);
+      let response = orderCache.get(cacheKey);
+
+      if (!response) {
+        const getRes = await apiGet('/orders', {
+          query
+        });
+
+        response = getRes;
+
+        // save in cache
+        orderCache.set(cacheKey, response);
+      }
 
       if (isMounted()) {
-        if (result?.data) {
+        if (response && response.result.data) {
           let newData;
 
           if (refreshData) {
-            newData = [...result.data];
+            newData = [...response.result.data];
           } else {
-            newData = [...orders, ...result.data];
+            newData = [...orders, ...response.result.data];
           }
 
           setOrders(newData);
           setHasNoData(newData.length === 0);
 
-          setHasMoreOrders(result?.hasNextPage);
-          setCursor(result?.cursor);
+          setHasMoreOrders(response.result.hasNextPage);
+          setCursor(response.result.cursor);
         }
       }
     } catch (err) {
