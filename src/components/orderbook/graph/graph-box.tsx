@@ -15,7 +15,7 @@ export const GraphBox = ({ children, className = '', dark = false }: Props) => {
         'flex flex-col border rounded-xl px-8',
         borderColor,
         dark ? darkGradientTW : gradientTW,
-        dark ? 'rounded-3xl p-6' : '',
+        dark ? twMerge('rounded-3xl p-6') : '',
         className
       )}
     >
