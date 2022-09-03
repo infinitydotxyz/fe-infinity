@@ -231,7 +231,7 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
     let barRadius = 10;
     if (barHeight === 0) {
       barRadius = 0;
-      bColor = textColor;
+      bColor = axisLineColor;
     }
 
     const barWidth = xScale.bandwidth();
@@ -398,6 +398,11 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
             labelProps={labelProps}
             labelOffset={36}
             animationTrajectory="center"
+            hideZero={true}
+            // numTicks={20}
+            // rangePadding={3}
+            // tickLength={6}
+            // children={() => <div>xxxx</div>}
           />
 
           {data.map((d, index) => {
