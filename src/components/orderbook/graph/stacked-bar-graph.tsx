@@ -201,7 +201,7 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
   });
 
   const axisLabels = data.map((d) => d.axisLabel);
-  const countAxisLabels = data.map((d) => getCountValue(d));
+  // const countAxisLabels = data.map((d) => getCountValue(d));
 
   const xScale = useMemo(
     () =>
@@ -391,18 +391,13 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
             stroke={axisLineColor}
             tickStroke={textColor}
             tickLineProps={{ strokeWidth: 1, opacity: 1, transform: 'translate(0,0)' }}
-            // hideAxisLine={true}
             tickLabelProps={vertTickLabelProps}
-            tickValues={countAxisLabels}
+            // looks better if we do the default tickValues
+            // tickValues={countAxisLabels}
             label="Number of orders"
             labelProps={labelProps}
             labelOffset={36}
             animationTrajectory="center"
-            hideZero={true}
-            // numTicks={20}
-            // rangePadding={3}
-            // tickLength={6}
-            // children={() => <div>xxxx</div>}
           />
 
           {data.map((d, index) => {
