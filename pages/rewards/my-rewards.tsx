@@ -1,3 +1,4 @@
+import { round } from '@infinityxyz/lib-frontend/utils';
 import React, { useState } from 'react';
 import { Button, Heading } from 'src/components/common';
 import { StakeTokensModal } from 'src/components/rewards/stake-tokens-modal';
@@ -120,7 +121,9 @@ const MyRewardsPage: React.FC = () => {
             <div>Token staking</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
-                <div className="text-2xl font-heading font-bold">3,569</div>
+                <div className="text-2xl font-heading font-bold">
+                  {round(userRewards?.totals.userCurationRewardsEth ?? 0, 4)} ETH
+                </div>
                 <div className="text-sm mt-1">Earned rewards</div>
               </div>
               {/* <div className="lg:w-1/4 sm:w-full">
@@ -174,7 +177,7 @@ const MyRewardsPage: React.FC = () => {
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
                 <div className="text-2xl font-heading font-bold">
-                  {Math.floor(userRewards?.totals.userRewards ?? 0)}
+                  {Math.floor(userRewards?.totals.userRewards ?? 0)} NFT
                 </div>
                 <div className="text-sm mt-1">Earned rewards</div>
               </div>
