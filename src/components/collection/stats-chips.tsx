@@ -20,7 +20,7 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
   const { user, chainId, checkSignedIn } = useOnboardContext();
 
   const [isFollowing, setIsFollowing] = useState(false);
-  const [editDisabled, setEditDisabled] = useState(true);
+  const [editVisible, setEditVisible] = useState(true);
   const [followingLoading, setFollowingLoading] = useState(false);
   const [showTipModal, setShowTipModal] = useState(false);
   const { push: pushRoute } = useRouter();
@@ -93,7 +93,7 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
     );
 
     if (!error) {
-      setEditDisabled(!result.canModify);
+      setEditVisible(result.canModify);
     }
   };
 
@@ -134,7 +134,8 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
           className="w-32"
         />
       )}
-      <Chip content="Edit" onClick={onClickEdit} disabled={editDisabled} />
+
+      {editVisible && <Chip content="Edit" onClick={onClickEdit} />}
 
       {collection?.metadata?.links?.twitter && (
         <Chip
