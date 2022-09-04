@@ -537,7 +537,7 @@ export async function takeOrders(
     return { hash: '' };
   }
 
-  const gasLimit = 250_000 * makerOrders.length;
+  const gasLimit = 300_000 * makerOrders.length;
   // perform exchange
   // if fulfilling a sell order, send ETH
   if (isSellOrder) {
@@ -584,7 +584,7 @@ export async function takeMultipleOneOrders(signer: JsonRpcSigner, chainId: stri
     return { hash: '' };
   }
 
-  const gasLimit = 250_000 * makerOrders.length;
+  const gasLimit = 300_000 * makerOrders.length;
   // perform exchange
   // if fulfilling a sell order, send ETH
   if (isSellOrder) {
