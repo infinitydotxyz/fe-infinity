@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { FaCaretDown, FaCaretUp, FaDiscord, FaInstagram, FaTwitter } from 'react-icons/fa';
-import { HiOutlineExternalLink } from 'react-icons/hi';
 import { apiDelete, apiGet, apiPost, nFormatter } from 'src/utils';
 import { Chip, Spinner, toastError } from 'src/components/common';
 import { useOrderContext } from 'src/utils/context/OrderContext';
@@ -195,14 +194,6 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
         <Chip
           content={<FaInstagram className="text-xl" />}
           onClick={() => window.open(collection?.metadata?.links?.instagram)}
-          iconOnly={true}
-        />
-      )}
-
-      {collection?.metadata?.links?.external && (
-        <Chip
-          content={<HiOutlineExternalLink className="text-xl" />}
-          onClick={() => window.open(collection?.metadata?.links?.external)}
           iconOnly={true}
         />
       )}

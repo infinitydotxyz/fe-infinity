@@ -13,10 +13,11 @@ import NotFound404Page from 'pages/not-found-404';
 import { useEffect, useState } from 'react';
 import ContentLoader from 'react-content-loader';
 import { BsCheck } from 'react-icons/bs';
+import { HiOutlineExternalLink } from 'react-icons/hi';
 import { AvatarImage } from 'src/components/collection/avatar-image';
 import { CollectionSalesTab } from 'src/components/collection/collection-activity-tab';
 import { StatsChips } from 'src/components/collection/stats-chips';
-import { Button, EthPrice, Heading, PageBox, Spinner, SVG, ToggleTab, useToggleTab } from 'src/components/common';
+import { Button, Chip, EthPrice, Heading, PageBox, Spinner, SVG, ToggleTab, useToggleTab } from 'src/components/common';
 import { FeesAprStats, FeesAccruedStats } from 'src/components/curation/statistics';
 import { VoteModal } from 'src/components/curation/vote-modal';
 import { VoteProgressBar } from 'src/components/curation/vote-progress-bar';
@@ -181,10 +182,22 @@ const CollectionPage = () => {
                     </button>
                   </>
                 )}
+
                 <span className="font-heading">Collection address </span>
-                <button onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection.address)}>
+                <button
+                  onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection.address)}
+                  className="mr-8"
+                >
                   {ellipsisAddress(collection.address ?? '')}
                 </button>
+
+                {collection?.metadata?.links?.external && (
+                  <Chip
+                    content={<HiOutlineExternalLink className="text-md" />}
+                    onClick={() => window.open(collection?.metadata?.links?.external)}
+                    iconOnly={true}
+                  />
+                )}
               </>
             ) : (
               <>
