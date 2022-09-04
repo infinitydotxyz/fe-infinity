@@ -25,7 +25,7 @@ const RewardsPage = () => {
           selected={selected}
           onChange={onChange}
         />
-        <div className="mt-2">
+        <div className="mt-4">
           {selected === RewardTabs.MyRewards && <MyRewardsPage />}
           {selected === RewardTabs.GlobalRewards && <GlobalRewards />}
         </div>
