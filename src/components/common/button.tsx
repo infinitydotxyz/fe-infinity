@@ -12,7 +12,7 @@ const classes = {
     round: 'p-3',
     small: 'px-3 py-1 text-xs',
     normal: 'px-6 py-2',
-    medium: 'px-6 py-3',
+    medium: 'px-6 py-3 text-md',
     large: 'px-8 py-3 text-lg'
   },
   variant: {

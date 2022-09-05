@@ -1,6 +1,5 @@
 import { useOrderbook } from '../OrderbookContext';
 import { StackedBarGraph } from './stacked-bar-graph';
-import { BiReset } from 'react-icons/bi';
 import { useEffect, useState } from 'react';
 import { GraphData, graphHeight, textAltColorTW } from './graph-utils';
 import { Button, Spacer, Spinner } from 'src/components/common';
@@ -33,16 +32,16 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
 
   const resetButton = (large: boolean, className?: string) => {
     return (
-      <div className={twMerge('text-black opacity-60', className)}>
+      <div className={twMerge(className)}>
         <Button
           disabled={!minPrice && !maxPrice}
-          variant="round"
-          size="plain"
+          variant="outline"
+          size={large ? 'normal' : 'small'}
           onClick={() => {
             handleOnClick('', '');
           }}
         >
-          <BiReset className={large ? 'h-10 w-10' : 'h-8 w-8'} />
+          Reset
         </Button>
       </div>
     );
@@ -117,7 +116,7 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
           <div className="">
             {
               <GraphBox dark={true}>
-                {showReset && resetButton(false, 'absolute right-2 top-2')}
+                {showReset && resetButton(false, 'absolute right-4 top-4')}
                 {graph}
               </GraphBox>
             }
