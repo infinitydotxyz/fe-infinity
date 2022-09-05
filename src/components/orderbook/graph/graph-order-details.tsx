@@ -40,21 +40,19 @@ export const GraphOrderDetails = ({ orders, index, setIndex, valueClassName = ''
 
     return (
       <GraphBox className={twMerge(textColorTW, 'pt-4 pb-5  flex-1   ')}>
-        <div className={twMerge(textAltColorTW, 'mb-3 flex items-center')}>
+        <div className={twMerge(textAltColorTW, 'mb-5 flex items-center')}>
           <div className={twMerge(textAltColorTW, 'flex-[2] text-lg font-bold')}>Order Details</div>
           <Spacer />
           <NextPrevArrows orders={orders} index={index} setIndex={setIndex} className="flex-[2]" />
         </div>
 
-        <OrderDetailPicker order={order} scroll={true} className=" " />
-
-        <Spacer />
-
         <SimpleTable className="" items={tableItems} valueClassName={valueClassName} />
 
-        <div className="mt-10 flex justify-center">
+        <div className="my-5 flex justify-center">
           <OrderbookRowButton order={order} />
         </div>
+
+        <OrderDetailPicker order={order} scroll={true} className=" " />
       </GraphBox>
     );
   }
