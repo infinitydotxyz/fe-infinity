@@ -10,7 +10,7 @@ import { useTooltip, defaultStyles, useTooltipInPortal } from '@visx/tooltip';
 import { numStr } from 'src/utils';
 import { RoundRectBar } from './round-rect-bar';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { accentColor, axisLineColor, GraphData, accentAltColor, textColor } from './graph-utils';
+import { accentColor, axisLineColor, GraphData, accentAltColor, textColor, textLight } from './graph-utils';
 
 type BarGraphData = {
   listings: GraphData[];
@@ -172,7 +172,6 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
     ({
       fill: textColor,
       fontSize: 16,
-      fontFamily: 'sans-serif',
       textAnchor: 'middle',
       dy: 6
     } as const);
@@ -182,15 +181,13 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
       fill: textColor,
       fontSize: 16,
       dx: -10,
-      fontFamily: 'sans-serif',
       textAnchor: 'end',
       verticalAnchor: 'middle'
     } as const);
 
   const labelProps: Partial<TextProps> = {
-    fill: accentAltColor,
-    fontSize: 20,
-    fontFamily: 'sans-serif',
+    fill: textLight,
+    fontSize: 16,
     textAnchor: 'middle'
   };
 
