@@ -8,7 +8,6 @@ import { GraphOrderDetails } from './graph-order-details';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { GraphOrderFilters } from './graph-order-filters';
 import { OrderbookGraphInfo } from './orderbook-graph-info';
-import { NextPrevArrows } from './next-prev-arrows';
 import { GraphBox } from './graph-box';
 
 interface Props {
@@ -129,8 +128,12 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
           </div>
         </div>
         <div className="w-96 flex flex-col space-y-2 ml-6">
-          <NextPrevArrows orders={selectedOrders} index={selectedIndex} setIndex={setSelectedIndex} />
-          <GraphOrderDetails orders={selectedOrders} index={selectedIndex} valueClassName={textAltColorTW} />
+          <GraphOrderDetails
+            orders={selectedOrders}
+            index={selectedIndex}
+            valueClassName={textAltColorTW}
+            setIndex={setSelectedIndex}
+          />
         </div>
       </div>
     </div>
