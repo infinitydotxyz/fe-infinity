@@ -11,6 +11,7 @@ import { numStr } from 'src/utils';
 import { RoundRectBar } from './round-rect-bar';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { accentColor, axisLineColor, GraphData, accentAltColor, textColor, textLight } from './graph-utils';
+import { EthSymbol, SimpleTable, SimpleTableItem } from 'src/components/common';
 
 type BarGraphData = {
   listings: GraphData[];
@@ -25,19 +26,27 @@ type BarGraphData = {
 class TooltipData {
   lineOne: string;
   lineTwo: string;
+  lineThree: string;
 
-  constructor(lineOne: string, lineTwo: string) {
+  constructor(lineOne: string, lineTwo: string, lineThree: string) {
     this.lineOne = lineOne;
     this.lineTwo = lineTwo;
+    this.lineThree = lineThree;
   }
 
   content = () => {
+    const items: SimpleTableItem[] = [];
+    items.push({ title: 'from:', value: <div>{this.lineTwo}</div> });
+    items.push({ title: 'to:', value: <div>{this.lineThree}</div> });
+
     return (
       <>
-        <div className="mb-2">
+        <div className="mb-3">
           <strong>{this.lineOne}</strong>
         </div>
-        <div>{this.lineTwo}</div>
+        <div className="w-full">
+          <SimpleTable items={items} valueClassName="font-bold" />
+        </div>
       </>
     );
   };
@@ -45,12 +54,11 @@ class TooltipData {
 
 const tooltipStyles = {
   ...defaultStyles,
-
-  minWidth: 60,
+  minWidth: 160,
+  padding: '10px 15px',
   backgroundColor: 'rgba(255,255,255,.9)',
-  fontSize: '20px',
-
-  color: 'black'
+  fontSize: '16px',
+  color: '#555'
 };
 
 // accessors
@@ -78,8 +86,8 @@ const barData = (data: GraphData[], width: number): BarGraphData[] => {
       offers: [],
       listings: [],
       axisLabel: numStr(minPrice + i * range),
-      offersTooltip: new TooltipData('', ''),
-      listingsTooltip: new TooltipData('', ''),
+      offersTooltip: new TooltipData('', '', ''),
+      listingsTooltip: new TooltipData('', '', ''),
       start: minPrice + i * range,
       end: minPrice + (i + 1) * range
     });
@@ -99,11 +107,13 @@ const barData = (data: GraphData[], width: number): BarGraphData[] => {
   for (const item of newData) {
     item.listingsTooltip = new TooltipData(
       `${item.listings.length} listings`,
-      `${numStr(item.start)}  to  ${numStr(item.end)}`
+      `${numStr(item.start)} ${EthSymbol}`,
+      `${numStr(item.end)} ${EthSymbol}`
     );
     item.offersTooltip = new TooltipData(
       `${item.offers.length} offers`,
-      `${numStr(item.start)}  to  ${numStr(item.end)}`
+      `${numStr(item.start)} ${EthSymbol}`,
+      `${numStr(item.end)} ${EthSymbol}`
     );
   }
 
