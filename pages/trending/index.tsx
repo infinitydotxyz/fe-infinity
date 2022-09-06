@@ -204,7 +204,10 @@ const TrendingPage = () => {
                   </>
                 ) : null}
 
-                <Button onClick={() => onClickBuy(coll)}>Buy</Button>
+                <div className="flex flex-row gap-2 flex-wrap">
+                  <Button onClick={() => onClickBuy(coll)}>Buy</Button>
+                  <Button onClick={() => push(`/collection/${coll?.slug}`)}>Curate</Button>
+                </div>
               </div>
             </div>
           );

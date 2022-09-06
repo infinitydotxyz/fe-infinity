@@ -53,6 +53,20 @@ export const Navbar = () => {
           }
         },
         {
+          type: 'link',
+          label: 'Curation',
+          props: {
+            href: '/curation'
+          }
+        },
+        {
+          type: 'link',
+          label: 'Rewards',
+          props: {
+            href: '/rewards'
+          }
+        },
+        {
           type: 'dropdown',
           label: 'Community',
           menu: [

@@ -47,11 +47,11 @@ const MyRewardsPage: React.FC = () => {
                 <div className="text-2xl font-heading font-bold">10%</div>
                 <div className="text-sm mt-1">Fee APR</div>
               </div>
-              <div className="lg:w-1/4 sm:w-full">
+              <div className="lg:w-1/4 sm:w-full mb-2">
                 <div className="text-2xl font-heading font-bold">$60M</div>
                 <div className="text-sm mt-1">TVL</div>
               </div>
-              <div className="lg:w-2/4 sm:w-full">
+              <div className="-ml-2">
                 <Button size="large" className="font-heading" onClick={() => setShowStakeTokensModal(true)}>
                   Stake
                 </Button>
