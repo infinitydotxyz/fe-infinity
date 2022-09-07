@@ -12,7 +12,7 @@ const classes = {
     round: 'p-3',
     small: 'px-3 py-1 text-xs',
     normal: 'px-6 py-2',
-    medium: 'px-6 py-3 text-md',
+    medium: 'px-5 py-2 text-sm',
     large: 'px-8 py-3 text-lg'
   },
   variant: {
@@ -21,13 +21,16 @@ const classes = {
     primary: 'rounded-full border-gray-100 bg-black text-white hover:bg-theme-gray-900',
     gray: 'border-none rounded-full bg-theme-gray-100 hover:bg-theme-gray-200',
     outline: twMerge(inputBorderColor, 'border rounded-full text-gray-900 hover:bg-theme-gray-200'),
+    outlineWhite: twMerge(inputBorderColor, 'border bg-white rounded-full text-gray-900 hover:bg-theme-gray-200'),
     danger: 'bg-red-500 hover:bg-red-800 focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 text-white',
     round: 'rounded-full p-1', // use plain size
     white: 'border rounded-full border-gray-100 bg-white text-black hover:bg-theme-gray-200'
   }
 };
 
-export interface Props {
+// const buttonProps = { size: 'medium', variant: 'outlineWhite', className: 'w-32' };
+
+export interface ButtonProps {
   onClick?: (ev: React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => void;
   children: ReactNode;
   variant?: keyof typeof classes.variant;
@@ -47,7 +50,7 @@ export const Button = ({
   className = '',
   title,
   onClick
-}: Props): JSX.Element => {
+}: ButtonProps): JSX.Element => {
   return (
     <button
       type={type}

@@ -112,7 +112,7 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
       <div className="flex" style={{ height: graphHeight }}>
         <div className="flex-1 min-w-0   ">
           <GraphBox dark={true} className="h-full">
-            {showReset && resetButton(false, 'absolute right-4 top-4')}
+            {showReset && resetButton(false, 'absolute right-4 top-3')}
             {graph}
           </GraphBox>
 

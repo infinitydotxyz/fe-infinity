@@ -1,4 +1,4 @@
-import { Button, Props as ButtonProps } from '../common';
+import { Button, ButtonProps } from '../common';
 
 export const ButtonJoin: React.FC<ButtonProps> = ({ children, ...props }) => {
   return (

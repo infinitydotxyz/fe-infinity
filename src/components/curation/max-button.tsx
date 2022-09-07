@@ -1,6 +1,6 @@
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
-import { Button, Props as ButtonProps } from '../common';
+import { Button, ButtonProps } from '../common';
 
 export type MaxButtonProps = Omit<ButtonProps, 'children'>;
 
