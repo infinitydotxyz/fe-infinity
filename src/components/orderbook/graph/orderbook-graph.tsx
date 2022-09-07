@@ -59,13 +59,13 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
   }, [orders]);
 
   let content = <></>;
-  const textStyle = 'flex items-center justify-center text-black opacity-60 font-bold text-lg';
+  const infoBoxStyle = 'flex items-center justify-center text-black opacity-60 font-bold text-lg h-full';
 
   let showReset = false;
   let graph;
-  if (isLoading) {
+  if (!isLoading) {
     graph = (
-      <div className={textStyle}>
+      <div className={infoBoxStyle}>
         <div className="flex flex-col items-center justify-center">
           <Spinner />
           <div className="mt-4">Loading...</div>
@@ -75,7 +75,7 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
   } else {
     if (graphData.length === 0) {
       graph = (
-        <div className={textStyle}>
+        <div className={infoBoxStyle}>
           <div className="flex flex-col items-center justify-center">
             <div className="mb-3">No data</div>
             {resetButton(true)}
