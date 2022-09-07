@@ -34,7 +34,12 @@ export const GraphOrderDetails = ({ orders, index, setIndex, valueClassName = ''
       },
       {
         title: <div className="">Expiry date</div>,
-        value: <div className="  font-heading">{new Date(order.endTimeMs).toLocaleString()}</div>
+        value: (
+          <div className="font-heading flex flex-col items-end leading-5">
+            <div>{new Date(order.endTimeMs).toLocaleDateString()}</div>
+            <div>{new Date(order.endTimeMs).toLocaleTimeString()}</div>
+          </div>
+        )
       }
     ];
 

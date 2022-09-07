@@ -122,7 +122,7 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
             <OrderbookGraphInfo className="" graphData={graphData} />
           </div>
         </div>
-        <div className="w-96 flex flex-col space-y-2 ml-6">
+        <div className="w-[360px] flex flex-col space-y-2 ml-6">
           <GraphOrderDetails
             orders={selectedOrders}
             index={selectedIndex}
