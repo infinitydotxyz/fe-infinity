@@ -17,7 +17,7 @@ const ORDER_TYPES = ['Listing', 'Offer'];
 export const OrderbookFilters = () => {
   const router = useRouter();
 
-  const { filters, updateFilter, updateFilterArray, collectionId, clearFilter } = useOrderbook();
+  const { filters, updateFilter, updateFilterArray, collectionId, clearFilters } = useOrderbook();
   const [openState, setOpenState] = useState<OpenFilterState>({});
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [collectionsData, setCollectionsData] = useState<CollectionSearchDto[]>([]);
@@ -156,7 +156,7 @@ export const OrderbookFilters = () => {
                     variant="outline"
                     size="small"
                     onClick={() => {
-                      clearFilter('collections');
+                      clearFilters(['collections']);
                     }}
                   >
                     Clear

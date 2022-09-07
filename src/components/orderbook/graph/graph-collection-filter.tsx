@@ -7,7 +7,7 @@ import { useCollectionCache } from '../orderbook-list/collection-cache';
 import { useOrderbook } from '../OrderbookContext';
 
 export const GraphCollectionFilter = () => {
-  const { filters, collectionId, clearFilter } = useOrderbook();
+  const { filters, collectionId, clearFilters } = useOrderbook();
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [collectionsData, setCollectionsData] = useState<CollectionSearchDto[]>([]);
   const { getTopCollections, getCollectionsByName, getCollectionsByIds } = useCollectionCache();
@@ -105,7 +105,7 @@ export const GraphCollectionFilter = () => {
                   variant="outline"
                   size="small"
                   onClick={() => {
-                    clearFilter('collections');
+                    clearFilters(['collections']);
                   }}
                 >
                   Clear

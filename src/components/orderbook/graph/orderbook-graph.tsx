@@ -16,7 +16,7 @@ interface Props {
 }
 
 export const OrderbookGraph = ({ className = '' }: Props) => {
-  const { orders, updateFilters, isLoading, clearFilter, filters } = useOrderbook();
+  const { orders, updateFilters, isLoading, clearFilters, filters } = useOrderbook();
   const [graphData, setGraphData] = useState<GraphData[]>([]);
   const [selectedOrders, setSelectedOrders] = useState<SignedOBOrder[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -39,9 +39,7 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
           variant="outline"
           size={large ? 'normal' : 'small'}
           onClick={async () => {
-            await handleOnClick('', '');
-
-            await clearFilter('collections');
+            await clearFilters(['collections', 'minPrice', 'maxPrice']);
           }}
         >
           Reset

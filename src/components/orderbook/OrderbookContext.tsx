@@ -144,7 +144,7 @@ type OBContextType = {
   fetchMore: () => void;
   filters: OBFilters;
   setFilters: React.Dispatch<React.SetStateAction<OBFilters>>;
-  clearFilter: (name: string) => Promise<boolean>;
+  clearFilters: (names: string[]) => Promise<boolean>;
   updateFilterArray: (
     filterName: string,
     currentFitlers: string[],
@@ -206,14 +206,14 @@ export const OrderbookProvider = ({ children, collectionId, tokenId, limit = ITE
   };
 
   // filters helper functions
-  const removeQueryParam = (value: string): Promise<boolean> => {
-    const updateQueryParams = { ...router.query };
-    delete updateQueryParams[value];
-    return router.replace({ pathname: router.pathname, query: { ...updateQueryParams } });
-  };
+  const clearFilters = (names: string[]): Promise<boolean> => {
+    const newQueryParams = { ...router.query };
 
-  const clearFilter = (name: string): Promise<boolean> => {
-    return removeQueryParam(name);
+    for (const name of names) {
+      delete newQueryParams[name];
+    }
+
+    return router.replace({ pathname: router.pathname, query: { ...newQueryParams } });
   };
 
   const updateFilterArray = (
@@ -234,7 +234,7 @@ export const OrderbookProvider = ({ children, collectionId, tokenId, limit = ITE
 
   const updateFilter = (name: string, value: string): Promise<boolean> => {
     if (!value) {
-      return removeQueryParam(name);
+      return clearFilters([name]);
     } else {
       return router.replace({ pathname: router.pathname, query: { ...router.query, [name]: value } });
     }
@@ -320,7 +320,7 @@ export const OrderbookProvider = ({ children, collectionId, tokenId, limit = ITE
     fetchMore,
     filters,
     setFilters,
-    clearFilter,
+    clearFilters,
     updateFilterArray,
     updateFilter,
     updateFilters,
