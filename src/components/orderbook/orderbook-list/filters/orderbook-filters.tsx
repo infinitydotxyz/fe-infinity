@@ -242,7 +242,7 @@ const CollectionCheckbox = ({ collection }: { collection: CollectionSearchDto })
 
   return (
     <div className="flex items-center space-x-2">
-      <EZImage className="h-9 w-9 rounded-full shrink-0 overflow-clip" src={collection.profileImage} />
+      <EZImage className="h-7 w-7 rounded-full shrink-0 overflow-clip" src={collection.profileImage} />
 
       <Checkbox
         boxOnLeft={false}
