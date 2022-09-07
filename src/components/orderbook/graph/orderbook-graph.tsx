@@ -63,7 +63,7 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
 
   let showReset = false;
   let graph;
-  if (!isLoading) {
+  if (isLoading) {
     graph = (
       <div className={infoBoxStyle}>
         <div className="flex flex-col items-center justify-center">
