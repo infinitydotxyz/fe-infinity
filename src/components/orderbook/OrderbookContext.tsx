@@ -144,10 +144,15 @@ type OBContextType = {
   fetchMore: () => void;
   filters: OBFilters;
   setFilters: React.Dispatch<React.SetStateAction<OBFilters>>;
-  clearFilter: (name: string) => void;
-  updateFilterArray: (filterName: string, currentFitlers: string[], selectionName: string, checked: boolean) => void;
-  updateFilter: (name: string, value: string) => void;
-  updateFilters: (params: { name: string; value: string }[]) => void;
+  clearFilter: (name: string) => Promise<boolean>;
+  updateFilterArray: (
+    filterName: string,
+    currentFitlers: string[],
+    selectionName: string,
+    checked: boolean
+  ) => Promise<boolean>;
+  updateFilter: (name: string, value: string) => Promise<boolean>;
+  updateFilters: (params: { name: string; value: string }[]) => Promise<boolean>;
   collectionId: string | undefined;
   hasMoreOrders: boolean;
   hasNoData: boolean;
@@ -201,17 +206,22 @@ export const OrderbookProvider = ({ children, collectionId, tokenId, limit = ITE
   };
 
   // filters helper functions
-  const removeQueryParam = (value: string) => {
+  const removeQueryParam = (value: string): Promise<boolean> => {
     const updateQueryParams = { ...router.query };
     delete updateQueryParams[value];
-    router.replace({ pathname: router.pathname, query: { ...updateQueryParams } });
+    return router.replace({ pathname: router.pathname, query: { ...updateQueryParams } });
   };
 
-  const clearFilter = (name: string) => {
-    removeQueryParam(name);
+  const clearFilter = (name: string): Promise<boolean> => {
+    return removeQueryParam(name);
   };
 
-  const updateFilterArray = (filterName: string, currentFilters: string[], selectionName: string, checked: boolean) => {
+  const updateFilterArray = (
+    filterName: string,
+    currentFilters: string[],
+    selectionName: string,
+    checked: boolean
+  ): Promise<boolean> => {
     let updatedSelections = [];
     if (checked) {
       updatedSelections = [...currentFilters, selectionName];
@@ -219,18 +229,18 @@ export const OrderbookProvider = ({ children, collectionId, tokenId, limit = ITE
       updatedSelections = currentFilters.filter((currentFilter) => currentFilter !== selectionName);
     }
 
-    router.replace({ pathname: router.pathname, query: { ...router.query, [filterName]: updatedSelections } });
+    return router.replace({ pathname: router.pathname, query: { ...router.query, [filterName]: updatedSelections } });
   };
 
-  const updateFilter = (name: string, value: string) => {
+  const updateFilter = (name: string, value: string): Promise<boolean> => {
     if (!value) {
-      removeQueryParam(name);
+      return removeQueryParam(name);
     } else {
-      router.replace({ pathname: router.pathname, query: { ...router.query, [name]: value } });
+      return router.replace({ pathname: router.pathname, query: { ...router.query, [name]: value } });
     }
   };
 
-  const updateFilters = (params: { name: string; value: string }[]) => {
+  const updateFilters = (params: { name: string; value: string }[]): Promise<boolean> => {
     let query = { ...router.query };
 
     for (const param of params) {
@@ -243,7 +253,7 @@ export const OrderbookProvider = ({ children, collectionId, tokenId, limit = ITE
       }
     }
 
-    router.replace({ pathname: router.pathname, query: { ...query } });
+    return router.replace({ pathname: router.pathname, query: { ...query } });
   };
 
   // todo: make this prod ready
