@@ -28,8 +28,6 @@ const classes = {
   }
 };
 
-// const buttonProps = { size: 'medium', variant: 'outlineWhite', className: 'w-32' };
-
 export interface ButtonProps {
   onClick?: (ev: React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => void;
   children: ReactNode;

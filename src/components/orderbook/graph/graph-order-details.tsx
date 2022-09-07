@@ -54,7 +54,7 @@ export const GraphOrderDetails = ({ orders, index, setIndex, valueClassName = ''
         <SimpleTable className="" items={tableItems} valueClassName={valueClassName} />
 
         <div className="my-5 flex justify-center">
-          <OrderbookRowButton order={order} />
+          <OrderbookRowButton order={order} outlineButtons={true} />
         </div>
 
         <OrderDetailPicker order={order} scroll={true} />
