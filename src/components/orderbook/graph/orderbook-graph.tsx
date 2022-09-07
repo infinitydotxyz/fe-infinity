@@ -65,7 +65,7 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
   let graph;
   if (isLoading) {
     graph = (
-      <div className={textStyle} style={{ height: graphHeight }}>
+      <div className={textStyle}>
         <div className="flex flex-col items-center justify-center">
           <Spinner />
           <div className="mt-4">Loading...</div>
@@ -75,7 +75,7 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
   } else {
     if (graphData.length === 0) {
       graph = (
-        <div className={textStyle} style={{ height: graphHeight }}>
+        <div className={textStyle}>
           <div className="flex flex-col items-center justify-center">
             <div className="mb-3">No data</div>
             {resetButton(true)}
@@ -87,7 +87,6 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
       graph = (
         <StackedBarGraph
           data={graphData}
-          height={graphHeight}
           onClick={handleOnClick}
           onSelection={(orders, index) => {
             if (index !== selectedIndex) {
@@ -110,16 +109,12 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
 
   content = (
     <div className={twMerge('flex flex-col  ', className)}>
-      <div className="flex">
+      <div className="flex" style={{ height: graphHeight }}>
         <div className="flex-1 min-w-0   ">
-          <div className="">
-            {
-              <GraphBox dark={true}>
-                {showReset && resetButton(false, 'absolute right-4 top-4')}
-                {graph}
-              </GraphBox>
-            }
-          </div>
+          <GraphBox dark={true} className="h-full">
+            {showReset && resetButton(false, 'absolute right-4 top-4')}
+            {graph}
+          </GraphBox>
 
           <div className="flex px-8 mt-4">
             <GraphOrderFilters />

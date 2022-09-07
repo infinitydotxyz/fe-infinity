@@ -124,16 +124,15 @@ const barData = (data: GraphData[], width: number): BarGraphData[] => {
 
 type Props = {
   data: GraphData[];
-  height: number;
   onClick: (minPrice: string, maxPrice: string) => void;
   onSelection: (orders: SignedOBOrder[], index: number) => void;
 };
 
-export function StackedBarGraph({ data, height, onClick, onSelection }: Props) {
+export function StackedBarGraph({ data, onClick, onSelection }: Props) {
   if (data.length > 0) {
     return (
-      <ParentSize debounceTime={10} style={{ height: height }}>
-        {({ width }) => {
+      <ParentSize debounceTime={10} className="h-full">
+        {({ width, height }) => {
           return (
             <_StackedBarGraph
               graphData={data}

@@ -27,7 +27,7 @@ export const OrderDetailPicker = ({
   const showCheckbox = onChange !== undefined && selection !== undefined;
 
   return (
-    <div className={className}>
+    <div className={twMerge('', className)}>
       <div>
         Any {order.numItems} {order.numItems > 1 ? 'items' : 'item'} can be{' '}
         {order.isSellOrder ? 'bought' : 'sold (if you own enough)'} for the given price.
@@ -39,7 +39,7 @@ export const OrderDetailPicker = ({
         </div>
       )}
 
-      <div className={twMerge('my-6 space-y-4', scroll ? 'max-h-64 overflow-y-auto overflow-x-clip' : '')}>
+      <div className={twMerge('my-6 space-y-4', scroll ? 'overflow-y-auto overflow-x-clip' : '')}>
         {(order?.nfts || []).map((nft, idx) => {
           return (
             <div className="space-y-4" key={`${nft.collectionAddress}_${idx}`}>
