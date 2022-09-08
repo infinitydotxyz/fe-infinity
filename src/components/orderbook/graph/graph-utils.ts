@@ -18,7 +18,7 @@ export const textColorTW = 'text-[#333333]';
 export const textAltColor = '#555';
 export const textLight = '#777';
 export const textAltColorTW = 'text-[#555]';
-export const bgAltColorTW = 'bg-[#555]';
+export const bgAltColorTW = 'bg-[#777]';
 
 export const accentColor = '#92deff';
 export const accentColorTW = 'text-[#92deff]';
