@@ -2,14 +2,14 @@ import { useOrderbook } from '../OrderbookContext';
 import { StackedBarGraph } from './stacked-bar-graph';
 import { useEffect, useState } from 'react';
 import { GraphData, graphHeight, textAltColorTW } from './graph-utils';
-import { Button, Modal, Spacer, Spinner } from 'src/components/common';
+import { Button, Spacer, Spinner } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 import { GraphOrderDetails } from './graph-order-details';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { GraphOrderFilters } from './graph-order-filters';
 import { OrderbookGraphInfo } from './orderbook-graph-info';
 import { GraphBox } from './graph-box';
-import { GraphCollectionFilter } from './graph-collection-filter';
+import { CollectionFilterModal } from './graph-collection-filter';
 
 interface Props {
   className?: string;
@@ -141,25 +141,4 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
   );
 
   return <div className={twMerge('w-full h-full relative flex flex-col       rounded-3xl')}>{content}</div>;
-};
-
-// ===========================================================================
-
-interface Props2 {
-  modalIsOpen: boolean;
-  setIsOpen: (open: boolean) => void;
-}
-
-export const CollectionFilterModal = ({ modalIsOpen, setIsOpen }: Props2) => {
-  return (
-    <div className="flex flex-col">
-      <Button size="medium" variant="outlineWhite" onClick={() => setIsOpen(true)}>
-        Select Collections
-      </Button>
-
-      <Modal isOpen={modalIsOpen} onClose={() => setIsOpen(false)} okButton="" cancelButton="Close">
-        <GraphCollectionFilter />
-      </Modal>
-    </div>
-  );
 };

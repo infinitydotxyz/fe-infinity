@@ -1,13 +1,14 @@
 import { CollectionSearchDto } from '@infinityxyz/lib-frontend/types/dto/collections';
 import { uniqBy } from 'lodash';
 import React, { useEffect, useState } from 'react';
-import { Button, Checkbox, DebouncedTextInputBox, EZImage } from 'src/components/common';
+import { Button, Checkbox, DebouncedTextInputBox, EZImage, Modal } from 'src/components/common';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { useCollectionCache } from '../orderbook-list/collection-cache';
 import { useOrderbook } from '../OrderbookContext';
+import { GraphBox } from './graph-box';
 
 export const GraphCollectionFilter = () => {
-  const { filters, collectionId, clearFilters } = useOrderbook();
+  const { filters } = useOrderbook();
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [collectionsData, setCollectionsData] = useState<CollectionSearchDto[]>([]);
   const { getTopCollections, getCollectionsByName, getCollectionsByIds } = useCollectionCache();
@@ -15,7 +16,6 @@ export const GraphCollectionFilter = () => {
   const isMounted = useIsMounted();
 
   const { collections = [] } = filters;
-  const hasCollectionSearchResults = collections.length > 0 || searchQuery.length > 0;
 
   // loads the selected collections from query params and also provides some more options
   const setupDefaultCollections = async () => {
@@ -78,43 +78,25 @@ export const GraphCollectionFilter = () => {
     return checks;
   };
 
+  const checkboxes = collectionCheckboxes();
+
   return (
-    <div className="flex flex-col mr-12">
-      <div className="text-2xl font-bold">Filter</div>
+    <div className="flex flex-col">
+      <div>
+        <DebouncedTextInputBox
+          label=""
+          className="border rounded-full py-2 px-4 mt-1 font-heading w-full"
+          value={searchQuery}
+          onChange={(value) => {
+            searchForCollections(value);
+          }}
+          placeholder="Search"
+        />
 
-      {!collectionId && (
-        <div>
-          <DebouncedTextInputBox
-            label=""
-            className="border rounded-full py-2 px-4 mt-1 font-heading w-full"
-            value={searchQuery}
-            onChange={(value) => {
-              searchForCollections(value);
-            }}
-            placeholder="Search"
-          />
-
-          {hasCollectionSearchResults && (
-            <>
-              <div className="my-4 pr-2 max-h-80 w-full overflow-y-auto overflow-x-clip space-y-2">
-                {collectionCheckboxes()}
-              </div>
-
-              <div className="w-full flex justify-end">
-                <Button
-                  variant="outline"
-                  size="small"
-                  onClick={() => {
-                    clearFilters(['collections']);
-                  }}
-                >
-                  Clear
-                </Button>
-              </div>
-            </>
-          )}
-        </div>
-      )}
+        <>
+          <div className="my-4 pr-2 h-80 w-full overflow-y-auto overflow-x-clip space-y-2">{checkboxes}</div>
+        </>
+      </div>
     </div>
   );
 };
@@ -139,6 +121,57 @@ const CollectionCheckbox = ({ collection }: { collection: CollectionSearchDto })
         }}
         label={collection.name}
       />
+    </div>
+  );
+};
+
+// ===========================================================================
+
+interface Props2 {
+  modalIsOpen: boolean;
+  setIsOpen: (open: boolean) => void;
+}
+
+export const CollectionFilterModal = ({ modalIsOpen, setIsOpen }: Props2) => {
+  const { clearFilters, filters } = useOrderbook();
+
+  const { collections = [] } = filters;
+
+  let buttonName = 'Select Collection';
+
+  if (collections.length > 0) {
+    buttonName = `${collections.length} selected}`;
+  }
+
+  return (
+    <div className="flex flex-col">
+      <GraphBox className="py-2 px-6 w-full flex justify-end">
+        <div className="mb-4">Filter by collection</div>
+        <Button
+          variant="outlineWhite"
+          size="small"
+          onClick={() => {
+            setIsOpen(true);
+          }}
+        >
+          {buttonName}
+        </Button>
+      </GraphBox>
+
+      <Modal
+        isOpen={modalIsOpen}
+        title="Filter by collection"
+        onClose={() => setIsOpen(false)}
+        onCancelButton={() => {
+          clearFilters(['collections']);
+
+          setIsOpen(false);
+        }}
+        okButton="Close"
+        cancelButton="Clear Filter"
+      >
+        <GraphCollectionFilter />
+      </Modal>
     </div>
   );
 };
