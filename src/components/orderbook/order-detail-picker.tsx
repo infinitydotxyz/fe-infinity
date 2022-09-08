@@ -39,10 +39,10 @@ export const OrderDetailPicker = ({
         </div>
       )}
 
-      <div className={twMerge('my-6 space-y-4 flex-1', scroll ? 'overflow-y-auto overflow-x-clip' : '')}>
+      <div className={twMerge('mt-4 space-y-3 flex-1', scroll ? 'overflow-y-auto overflow-x-clip' : '')}>
         {(order?.nfts || []).map((nft, idx) => {
           return (
-            <div className="space-y-4" key={`${nft.collectionAddress}_${idx}`}>
+            <div className="space-y-3" key={`${nft.collectionAddress}_${idx}`}>
               {nft.tokens.map((token) => {
                 const key = orderDetailKey(nft.collectionAddress, token.tokenId);
 

@@ -76,7 +76,7 @@ export const OrderbookRow = ({ order, isFilterOpen }: Props) => {
   });
 
   return (
-    <div className="rounded-3xl mb-3 p-8 w-full bg-theme-light-200">
+    <div className="rounded-3xl mb-3 px-8 py-6 w-full bg-theme-light-200">
       {/* for larger screen - show row summary: */}
       <div className="items-center w-full hidden lg:grid" style={{ gridTemplateColumns: gridTemplate }}>
         {defaultDataColumns(order).map((data) => {

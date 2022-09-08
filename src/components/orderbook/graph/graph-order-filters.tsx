@@ -5,9 +5,12 @@ import { useOrderbook } from '../OrderbookContext';
 import { textAltColorTW, textColorTW } from './graph-utils';
 import { MdClear } from 'react-icons/md';
 import { numStr } from 'src/utils';
-import { GraphBox } from './graph-box';
 
-export const GraphOrderFilters = () => {
+interface Props3 {
+  className?: string;
+}
+
+export const GraphOrderFilters = ({ className = '' }: Props3) => {
   const tableItems: SimpleTableItem[] = [
     {
       title: <div className="">Min:</div>,
@@ -20,13 +23,9 @@ export const GraphOrderFilters = () => {
   ];
 
   return (
-    <GraphBox className="py-3">
-      <div className={twMerge(textAltColorTW, 'flex items-center')}>
-        <div className="flex flex-col ">
-          <SimpleTable className={twMerge('space-y-0', textColorTW)} items={tableItems} />
-        </div>
-      </div>
-    </GraphBox>
+    <div className={twMerge(textAltColorTW, 'flex items-center', className)}>
+      <SimpleTable className={twMerge('w-full space-y-0', textColorTW)} items={tableItems} />
+    </div>
   );
 };
 
@@ -59,7 +58,7 @@ const FilterInput = ({ modeMinPrice }: Props) => {
       <Button
         variant="round"
         size="plain"
-        className="bg-gray-200 text-black ml-5"
+        className="bg-gray-200 text-black ml-3"
         onClick={() => {
           updateFilter(modeMinPrice ? 'minPrice' : 'maxPrice', '');
         }}

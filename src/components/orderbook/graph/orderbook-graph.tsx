@@ -2,7 +2,7 @@ import { useOrderbook } from '../OrderbookContext';
 import { StackedBarGraph } from './stacked-bar-graph';
 import { useEffect, useState } from 'react';
 import { GraphData, graphHeight, textAltColorTW } from './graph-utils';
-import { Button, Spacer, Spinner } from 'src/components/common';
+import { Button, Spinner } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 import { GraphOrderDetails } from './graph-order-details';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
@@ -117,28 +117,29 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
             {showReset && resetButton(false, 'absolute right-4 top-3')}
             {graph}
           </GraphBox>
-
-          <div className="flex px-8 mt-4">
-            <GraphOrderFilters />
-            <Spacer />
-            <CollectionFilterModal
-              modalIsOpen={collectionFilterShown}
-              setIsOpen={(open) => setCollectionFilterShown(open)}
-            />
-            <OrderbookGraphInfo className="" graphData={graphData} />
-          </div>
         </div>
         <div className="w-[360px] flex flex-col space-y-2 ml-6">
+          <GraphBox>
+            <OrderbookGraphInfo className=" py-3  " graphData={graphData} />
+          </GraphBox>
           <GraphOrderDetails
             orders={selectedOrders}
             index={selectedIndex}
             valueClassName={textAltColorTW}
             setIndex={setSelectedIndex}
           />
+
+          <GraphBox className="py-3 mt-4">
+            <GraphOrderFilters className="mb-3" />
+            <CollectionFilterModal
+              modalIsOpen={collectionFilterShown}
+              setIsOpen={(open) => setCollectionFilterShown(open)}
+            />
+          </GraphBox>
         </div>
       </div>
     </div>
   );
 
-  return <div className={twMerge('w-full h-full relative flex flex-col       rounded-3xl')}>{content}</div>;
+  return <div className={twMerge('w-full h-full relative flex flex-col')}>{content}</div>;
 };

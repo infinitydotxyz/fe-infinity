@@ -44,8 +44,8 @@ export const GraphOrderDetails = ({ orders, index, setIndex, valueClassName = ''
     ];
 
     return (
-      <GraphBox className={twMerge(textColorTW, 'pt-4 pb-5 flex-1')}>
-        <div className={twMerge(textAltColorTW, 'mb-5 flex items-center')}>
+      <GraphBox className={twMerge(textColorTW, 'pt-3 pb-5 flex-1')}>
+        <div className={twMerge(textAltColorTW, 'mb-3 flex items-center')}>
           <div className={twMerge(textAltColorTW, 'flex-[2] text-lg font-bold')}>Order Details</div>
           <Spacer />
           <NextPrevArrows orders={orders} index={index} setIndex={setIndex} className="flex-[2]" />
@@ -53,7 +53,7 @@ export const GraphOrderDetails = ({ orders, index, setIndex, valueClassName = ''
 
         <SimpleTable className="" items={tableItems} valueClassName={valueClassName} />
 
-        <div className="my-5 flex justify-center">
+        <div className="my-2 flex justify-center">
           <OrderbookRowButton order={order} outlineButtons={true} />
         </div>
 

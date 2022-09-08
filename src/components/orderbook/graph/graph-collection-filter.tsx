@@ -1,11 +1,10 @@
 import { CollectionSearchDto } from '@infinityxyz/lib-frontend/types/dto/collections';
 import { uniqBy } from 'lodash';
 import React, { useEffect, useState } from 'react';
-import { Button, Checkbox, DebouncedTextInputBox, EZImage, Modal } from 'src/components/common';
+import { Button, Checkbox, DebouncedTextInputBox, EZImage, Modal, Spacer } from 'src/components/common';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { useCollectionCache } from '../orderbook-list/collection-cache';
 import { useOrderbook } from '../OrderbookContext';
-import { GraphBox } from './graph-box';
 
 export const GraphCollectionFilter = () => {
   const { filters } = useOrderbook();
@@ -137,26 +136,25 @@ export const CollectionFilterModal = ({ modalIsOpen, setIsOpen }: Props2) => {
 
   const { collections = [] } = filters;
 
-  let buttonName = 'Select Collection';
+  let buttonName = 'Select';
 
   if (collections.length > 0) {
-    buttonName = `${collections.length} selected}`;
+    buttonName = `${collections.length} selected`;
   }
 
   return (
-    <div className="flex flex-col">
-      <GraphBox className="py-2 px-6 w-full flex justify-end">
-        <div className="mb-4">Filter by collection</div>
-        <Button
-          variant="outlineWhite"
-          size="small"
-          onClick={() => {
-            setIsOpen(true);
-          }}
-        >
-          {buttonName}
-        </Button>
-      </GraphBox>
+    <div className="flex items-center">
+      <div className="text-gray-500 font-bold ">Select collections:</div>
+      <Spacer />
+      <Button
+        variant="outlineWhite"
+        size="small"
+        onClick={() => {
+          setIsOpen(true);
+        }}
+      >
+        {buttonName}
+      </Button>
 
       <Modal
         wide={false}
