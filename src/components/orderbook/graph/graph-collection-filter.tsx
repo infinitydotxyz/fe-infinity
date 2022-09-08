@@ -94,7 +94,7 @@ export const GraphCollectionFilter = () => {
         />
 
         <>
-          <div className="my-4 pr-2 h-80 w-full overflow-y-auto overflow-x-clip space-y-2">{checkboxes}</div>
+          <div className="my-4 pr-2 h-64 w-full overflow-y-auto overflow-x-clip space-y-2">{checkboxes}</div>
         </>
       </div>
     </div>
@@ -159,6 +159,7 @@ export const CollectionFilterModal = ({ modalIsOpen, setIsOpen }: Props2) => {
       </GraphBox>
 
       <Modal
+        wide={false}
         isOpen={modalIsOpen}
         title="Filter by collection"
         onClose={() => setIsOpen(false)}
@@ -167,7 +168,7 @@ export const CollectionFilterModal = ({ modalIsOpen, setIsOpen }: Props2) => {
 
           setIsOpen(false);
         }}
-        okButton="Close"
+        okButton="Done"
         cancelButton="Clear Filter"
       >
         <GraphCollectionFilter />
