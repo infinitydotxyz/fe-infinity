@@ -36,7 +36,7 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
       <div className={twMerge(className)}>
         <Button
           disabled={!minPrice && !maxPrice && !(collections && collections.length > 0)}
-          variant="outline"
+          variant="outlineWhite"
           size={large ? 'normal' : 'small'}
           onClick={async () => {
             await clearFilters(['collections', 'minPrice', 'maxPrice']);
