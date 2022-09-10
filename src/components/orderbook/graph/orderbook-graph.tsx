@@ -73,63 +73,70 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
 
   let showReset = false;
   let graph;
-  if (isLoading) {
+
+  if (graphData.length === 0 && !isLoading) {
     graph = (
-      <div className={infoBoxStyle}>
+      <div className={twMerge(infoBoxStyle)}>
+        <div className="flex flex-col items-center justify-center">
+          <div className="mb-3">No data</div>
+          {resetButton(true)}
+        </div>
+      </div>
+    );
+  } else {
+    showReset = true;
+    graph = (
+      <StackedBarGraph
+        data={graphData}
+        onClick={handleOnClick}
+        onSelection={(orders, index) => {
+          if (index !== selectedIndex) {
+            setSelectedIndex(index);
+          }
+
+          let arrayEquals = false;
+          if (orders.length === selectedOrders.length) {
+            arrayEquals = orders.every((v, i) => v.id === selectedOrders[i].id);
+          }
+
+          if (!arrayEquals) {
+            setSelectedOrders(orders);
+          }
+        }}
+      />
+    );
+  }
+
+  let loader;
+  if (isLoading) {
+    loader = (
+      <div className={twMerge(infoBoxStyle, 'absolute top-0 left-0 right-0 bottom-0 pointer-events-none')}>
         <div className="flex flex-col items-center justify-center">
           <Spinner />
           <div className="mt-4">Loading...</div>
         </div>
       </div>
     );
-  } else {
-    if (graphData.length === 0) {
-      graph = (
-        <div className={infoBoxStyle}>
-          <div className="flex flex-col items-center justify-center">
-            <div className="mb-3">No data</div>
-            {resetButton(true)}
-          </div>
-        </div>
-      );
-    } else {
-      showReset = true;
-      graph = (
-        <StackedBarGraph
-          data={graphData}
-          onClick={handleOnClick}
-          onSelection={(orders, index) => {
-            if (index !== selectedIndex) {
-              setSelectedIndex(index);
-            }
-
-            let arrayEquals = false;
-            if (orders.length === selectedOrders.length) {
-              arrayEquals = orders.every((v, i) => v.id === selectedOrders[i].id);
-            }
-
-            if (!arrayEquals) {
-              setSelectedOrders(orders);
-            }
-          }}
-        />
-      );
-    }
   }
 
   content = (
     <div className={twMerge('flex flex-col  ', className)}>
       <div className="flex" style={{ height: graphHeight }}>
-        <div className="flex-1 min-w-0   ">
+        <div className="relative flex-1 min-w-0   ">
           <GraphBox dark={true} className="h-full">
             {showReset && (
               <div className="">
                 {resetButton(false, 'absolute right-4 top-3')}
                 {graphInfo('absolute right-14 bottom-4')}
+
+                <div className="absolute top-3 left-0 right-0 pointer-events-none">
+                  <GraphOrderFilters className="mx-auto max-w-[200px] pointer-events-auto" />
+                </div>
               </div>
             )}
             {graph}
           </GraphBox>
+          {loader}
         </div>
         <div className="w-[360px] flex flex-col space-y-2 ml-6">
           {/* <GraphBox>
@@ -147,10 +154,6 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
             valueClassName={textAltColorTW}
             setIndex={setSelectedIndex}
           />
-
-          <GraphBox className="py-3 mt-4">
-            <GraphOrderFilters className="mb-3" />
-          </GraphBox>
         </div>
       </div>
     </div>

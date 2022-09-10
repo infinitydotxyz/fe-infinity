@@ -13,11 +13,14 @@ interface Props3 {
 export const GraphOrderFilters = ({ className = '' }: Props3) => {
   const tableItems: SimpleTableItem[] = [
     {
-      title: <div className="">Min:</div>,
+      title: <div className="text-sm">Min:</div>,
       value: <FilterInput modeMinPrice={true} />
-    },
+    }
+  ];
+
+  const tableItems2: SimpleTableItem[] = [
     {
-      title: <div className="">Max:</div>,
+      title: <div className="text-sm">Max:</div>,
       value: <FilterInput modeMinPrice={false} />
     }
   ];
@@ -25,6 +28,7 @@ export const GraphOrderFilters = ({ className = '' }: Props3) => {
   return (
     <div className={twMerge(textAltColorTW, 'flex items-center', className)}>
       <SimpleTable className={twMerge('w-full space-y-0', textColorTW)} items={tableItems} />
+      <SimpleTable className={twMerge('w-full space-y-0 ml-5', textColorTW)} items={tableItems2} />
     </div>
   );
 };
@@ -49,7 +53,7 @@ const FilterInput = ({ modeMinPrice }: Props) => {
           updateFilter(modeMinPrice ? 'minPrice' : 'maxPrice', e.target.value);
         }}
         className={twMerge(
-          'px-2 placeholder-gray-300 max-w-[100px] py-0 border-none bg-black focus:ring-0 block bg-transparent text-right font-heading'
+          'px-2 placeholder-gray-300 max-w-[70px] py-0 border-none bg-black focus:ring-0 block bg-transparent text-right font-heading'
         )}
         placeholder="0.00"
       />
