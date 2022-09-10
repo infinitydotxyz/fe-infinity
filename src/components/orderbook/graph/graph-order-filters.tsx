@@ -13,14 +13,14 @@ interface Props3 {
 export const GraphOrderFilters = ({ className = '' }: Props3) => {
   const tableItems: SimpleTableItem[] = [
     {
-      title: <div className="text-sm">Min:</div>,
+      title: <div className="text-black font-normal text-sm">Min:</div>,
       value: <FilterInput modeMinPrice={true} />
     }
   ];
 
   const tableItems2: SimpleTableItem[] = [
     {
-      title: <div className="text-sm">Max:</div>,
+      title: <div className="text-black font-normal text-sm">Max:</div>,
       value: <FilterInput modeMinPrice={false} />
     }
   ];
@@ -57,7 +57,7 @@ const FilterInput = ({ modeMinPrice }: Props) => {
         )}
         placeholder="0.00"
       />
-      <div className="select-none">{EthSymbol}</div>
+      <div className="select-none text-sm">{EthSymbol}</div>
 
       <Button
         variant="round"

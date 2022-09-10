@@ -37,7 +37,7 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
       <div className={twMerge(className)}>
         <Button
           disabled={!minPrice && !maxPrice && !(collections && collections.length > 0)}
-          variant="outlineWhite"
+          variant="primary"
           size={large ? 'normal' : 'small'}
           onClick={async () => {
             await clearFilters(['collections', 'minPrice', 'maxPrice']);
@@ -132,35 +132,30 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
   content = (
     <div className={twMerge('flex flex-col  ', className)}>
       <div className="flex" style={{ height: graphHeight }}>
-        <div className="relative flex-1 min-w-0   ">
-          <GraphBox dark={true} className="h-full">
-            {showReset && (
-              <div className="">
-                {resetButton(false, 'absolute right-4 top-3')}
-                {graphInfo('absolute right-14 bottom-4')}
-
-                <div className="absolute top-3 left-0 right-0 pointer-events-none">
-                  <GraphOrderFilters className="mx-auto max-w-[200px] pointer-events-auto" />
-                </div>
-              </div>
-            )}
-            {graph}
-          </GraphBox>
-          {loader}
-        </div>
-        <div className="w-[360px] flex flex-col space-y-2 ml-6">
-          {/* <GraphBox>
-            <OrderbookGraphInfo className=" py-3  " graphData={graphData} />
-          </GraphBox> */}
-
-          <div className="mb-1 px-3">
+        <div className="relative flex-1 min-w-0">
+          <div className="flex mb-5 justify-between items-center">
             <CollectionFilterModal
               modalIsOpen={collectionFilterShown}
               setIsOpen={(open) => setCollectionFilterShown(open)}
               defaultCollections={defaultCollections}
             />
+            {showReset && (
+              <div>
+                <GraphOrderFilters className="pointer-events-auto" />
+              </div>
+            )}
+            {showReset && <div className="">{graphInfo('')}</div>}
+            {showReset && resetButton(false, '')}
           </div>
 
+          <GraphBox dark={true} className="h-full">
+            {graph}
+          </GraphBox>
+
+          {loader}
+        </div>
+
+        <div className="w-[360px] flex flex-col space-y-2 ml-6 mt-11 h-full">
           <GraphOrderDetails
             orders={selectedOrders}
             index={selectedIndex}
