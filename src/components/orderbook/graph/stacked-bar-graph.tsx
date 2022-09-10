@@ -385,7 +385,7 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
             tickValues={axisLabels}
             label="Price in ETH"
             labelProps={labelProps}
-            labelOffset={20}
+            labelOffset={30}
             // animationTrajectory="center"
           />
 

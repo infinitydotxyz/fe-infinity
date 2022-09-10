@@ -1,7 +1,7 @@
 import { CollectionSearchDto } from '@infinityxyz/lib-frontend/types/dto/collections';
 import { uniqBy } from 'lodash';
 import React, { useEffect, useState } from 'react';
-import { Button, Checkbox, DebouncedTextInputBox, EZImage, Modal, Spacer } from 'src/components/common';
+import { Button, Checkbox, DebouncedTextInputBox, EZImage, Modal } from 'src/components/common';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { useCollectionCache } from '../orderbook-list/collection-cache';
 import { useOrderbook } from '../OrderbookContext';
@@ -153,10 +153,9 @@ export const CollectionFilterModal = ({ modalIsOpen, setIsOpen, defaultCollectio
 
   return (
     <div className="flex items-center">
-      <div className="text-gray-600 font-bold ">Select collections:</div>
-      <Spacer />
+      <div className="mr-2 text-sm">Filter by collections:</div>
       <Button
-        variant="outlineWhite"
+        variant="primary"
         size="small"
         onClick={() => {
           setIsOpen(true);
