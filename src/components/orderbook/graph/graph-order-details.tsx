@@ -31,30 +31,21 @@ export const GraphOrderDetails = ({ orders, index, setIndex, valueClassName = ''
       {
         title: <div className=""># NFTs</div>,
         value: <div className=" selection: font-heading">{order.numItems}</div>
-      },
-      {
-        title: <div className="">Expiry date</div>,
-        value: (
-          <div className="font-heading flex flex-col items-end leading-5">
-            <div>{new Date(order.endTimeMs).toLocaleDateString()}</div>
-            <div>{new Date(order.endTimeMs).toLocaleTimeString()}</div>
-          </div>
-        )
       }
     ];
 
     return (
       <GraphBox className={twMerge(textColorTW, 'pt-3 pb-5 flex-1')}>
         <div className={twMerge(textAltColorTW, 'mb-3 flex items-center')}>
-          <div className={twMerge(textAltColorTW, 'flex-[2] text-lg font-bold')}>Order details</div>
+          <div className={twMerge(textAltColorTW, 'flex-[2] text-lg')}>Order details</div>
           <Spacer />
           <NextPrevArrows orders={orders} index={index} setIndex={setIndex} className="flex-[2]" />
         </div>
 
-        <SimpleTable className="" items={tableItems} valueClassName={valueClassName} />
+        <SimpleTable className="space-y-1" items={tableItems} valueClassName={valueClassName} rowClassName="text-md" />
 
         <div className="my-2 flex justify-center">
-          <OrderbookRowButton order={order} outlineButtons={true} />
+          <OrderbookRowButton order={order} outlineButtons={false} />
         </div>
 
         <OrderDetailPicker order={order} scroll={true} />
