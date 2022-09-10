@@ -28,7 +28,7 @@ export const GraphOrderFilters = ({ className = '' }: Props3) => {
   return (
     <div className={twMerge(textAltColorTW, 'flex items-center', className)}>
       <SimpleTable className={twMerge('w-full space-y-0', textColorTW)} items={tableItems} />
-      <SimpleTable className={twMerge('w-full space-y-0 ml-5', textColorTW)} items={tableItems2} />
+      <SimpleTable className={twMerge('w-full space-y-0 ml-7', textColorTW)} items={tableItems2} />
     </div>
   );
 };
@@ -62,7 +62,7 @@ const FilterInput = ({ modeMinPrice }: Props) => {
       <Button
         variant="round"
         size="plain"
-        className="bg-gray-200 text-black ml-3"
+        className="bg-gray-100 text-gray-500 ml-3"
         onClick={() => {
           updateFilter(modeMinPrice ? 'minPrice' : 'maxPrice', '');
         }}
