@@ -361,12 +361,12 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
   return width < 10 ? null : (
     <>
       <svg ref={containerRef} width={outerWidth} height={outerHeight}>
-        <LinearGradient from={accentColor} to={accentColor} toOpacity={0.9} fromOpacity={0.7} id="bar-gradient" />
+        <LinearGradient from={accentColor} to={accentColor} toOpacity={1} fromOpacity={0.8} id="bar-gradient" />
         <LinearGradient
           from={accentAltColor}
           to={accentAltColor}
-          toOpacity={0.3}
-          fromOpacity={0.7}
+          toOpacity={1}
+          fromOpacity={0.8}
           id="offers-bar-gradient"
         />
 

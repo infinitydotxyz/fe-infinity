@@ -48,6 +48,14 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
     );
   };
 
+  const graphInfo = (className?: string) => {
+    return (
+      <div className={twMerge(className)}>
+        <OrderbookGraphInfo className=" " graphData={graphData} />
+      </div>
+    );
+  };
+
   useEffect(() => {
     const gdata = orders.map((x) => {
       const result: GraphData = {
@@ -114,14 +122,25 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
       <div className="flex" style={{ height: graphHeight }}>
         <div className="flex-1 min-w-0   ">
           <GraphBox dark={true} className="h-full">
-            {showReset && resetButton(false, 'absolute right-4 top-3')}
+            {showReset && (
+              <div className="">
+                {resetButton(false, 'absolute right-4 top-3')}
+                {graphInfo('absolute right-14 bottom-4')}
+              </div>
+            )}
             {graph}
           </GraphBox>
         </div>
         <div className="w-[360px] flex flex-col space-y-2 ml-6">
-          <GraphBox>
+          {/* <GraphBox>
             <OrderbookGraphInfo className=" py-3  " graphData={graphData} />
-          </GraphBox>
+          </GraphBox> */}
+
+          <CollectionFilterModal
+            modalIsOpen={collectionFilterShown}
+            setIsOpen={(open) => setCollectionFilterShown(open)}
+          />
+
           <GraphOrderDetails
             orders={selectedOrders}
             index={selectedIndex}
@@ -131,10 +150,6 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
 
           <GraphBox className="py-3 mt-4">
             <GraphOrderFilters className="mb-3" />
-            <CollectionFilterModal
-              modalIsOpen={collectionFilterShown}
-              setIsOpen={(open) => setCollectionFilterShown(open)}
-            />
           </GraphBox>
         </div>
       </div>
