@@ -6,7 +6,11 @@ import { useIsMounted } from 'src/hooks/useIsMounted';
 import { useCollectionCache } from '../orderbook-list/collection-cache';
 import { useOrderbook } from '../OrderbookContext';
 
-export const GraphCollectionFilter = () => {
+interface Props {
+  defaultCollections: string[];
+}
+
+export const GraphCollectionFilter = ({ defaultCollections }: Props) => {
   const { filters } = useOrderbook();
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [collectionsData, setCollectionsData] = useState<CollectionSearchDto[]>([]);
@@ -20,10 +24,12 @@ export const GraphCollectionFilter = () => {
   const setupDefaultCollections = async () => {
     const initialCollections = await getTopCollections();
 
+    const defaultCollectionsDTOs = await getCollectionsByIds(defaultCollections);
+
     // query params passed on page load
     if (collections.length > 0) {
       const selectedCollections = await getCollectionsByIds(collections);
-      const newData = uniqBy([...selectedCollections, ...initialCollections], 'address');
+      const newData = uniqBy([...selectedCollections, ...initialCollections, ...defaultCollectionsDTOs], 'address');
 
       if (isMounted()) {
         setCollectionsData(newData);
@@ -31,8 +37,10 @@ export const GraphCollectionFilter = () => {
       }
     } else {
       if (isMounted()) {
-        setCollectionsData(initialCollections);
-        setAllCollectionsData(uniqBy([...allCollectionsData, ...initialCollections], 'address'));
+        setCollectionsData([...defaultCollectionsDTOs, ...initialCollections]);
+        setAllCollectionsData(
+          uniqBy([...defaultCollectionsDTOs, ...allCollectionsData, ...initialCollections], 'address')
+        );
       }
     }
   };
@@ -129,9 +137,10 @@ const CollectionCheckbox = ({ collection }: { collection: CollectionSearchDto })
 interface Props2 {
   modalIsOpen: boolean;
   setIsOpen: (open: boolean) => void;
+  defaultCollections: string[];
 }
 
-export const CollectionFilterModal = ({ modalIsOpen, setIsOpen }: Props2) => {
+export const CollectionFilterModal = ({ modalIsOpen, setIsOpen, defaultCollections }: Props2) => {
   const { clearFilters, filters } = useOrderbook();
 
   const { collections = [] } = filters;
@@ -169,7 +178,7 @@ export const CollectionFilterModal = ({ modalIsOpen, setIsOpen }: Props2) => {
         okButton="Done"
         cancelButton="Clear Filter"
       >
-        <GraphCollectionFilter />
+        <GraphCollectionFilter defaultCollections={defaultCollections} />
       </Modal>
     </div>
   );

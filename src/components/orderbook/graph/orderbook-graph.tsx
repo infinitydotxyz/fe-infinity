@@ -21,6 +21,7 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
   const [selectedOrders, setSelectedOrders] = useState<SignedOBOrder[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [collectionFilterShown, setCollectionFilterShown] = useState(false);
+  const [defaultCollections, setDefaultCollections] = useState<string[]>([]);
 
   const { minPrice, maxPrice, collections } = filters;
 
@@ -66,6 +67,15 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
       return result;
     });
     setGraphData(gdata);
+
+    // set defaultCollections
+    const dcs: Set<string> = new Set<string>(defaultCollections);
+    for (const gd of gdata) {
+      for (const nft of gd.order.nfts) {
+        dcs.add(`${nft.chainId}:${nft.collectionAddress}`);
+      }
+    }
+    setDefaultCollections(Array.from(dcs));
   }, [orders]);
 
   let content = <></>;
@@ -146,6 +156,7 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
           <CollectionFilterModal
             modalIsOpen={collectionFilterShown}
             setIsOpen={(open) => setCollectionFilterShown(open)}
+            defaultCollections={defaultCollections}
           />
 
           <GraphOrderDetails
