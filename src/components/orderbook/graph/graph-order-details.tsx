@@ -46,7 +46,7 @@ export const GraphOrderDetails = ({ orders, index, setIndex, valueClassName = ''
     return (
       <GraphBox className={twMerge(textColorTW, 'pt-3 pb-5 flex-1')}>
         <div className={twMerge(textAltColorTW, 'mb-3 flex items-center')}>
-          <div className={twMerge(textAltColorTW, 'flex-[2] text-lg font-bold')}>Order Details</div>
+          <div className={twMerge(textAltColorTW, 'flex-[2] text-lg font-bold')}>Order details</div>
           <Spacer />
           <NextPrevArrows orders={orders} index={index} setIndex={setIndex} className="flex-[2]" />
         </div>

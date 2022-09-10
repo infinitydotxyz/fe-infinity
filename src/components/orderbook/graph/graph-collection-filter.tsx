@@ -153,7 +153,7 @@ export const CollectionFilterModal = ({ modalIsOpen, setIsOpen, defaultCollectio
 
   return (
     <div className="flex items-center">
-      <div className="text-gray-500 font-bold ">Select collections:</div>
+      <div className="text-gray-600 font-bold ">Select collections:</div>
       <Spacer />
       <Button
         variant="outlineWhite"

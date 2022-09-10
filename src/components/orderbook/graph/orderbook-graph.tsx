@@ -153,11 +153,13 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
             <OrderbookGraphInfo className=" py-3  " graphData={graphData} />
           </GraphBox> */}
 
-          <CollectionFilterModal
-            modalIsOpen={collectionFilterShown}
-            setIsOpen={(open) => setCollectionFilterShown(open)}
-            defaultCollections={defaultCollections}
-          />
+          <div className="mb-1 px-3">
+            <CollectionFilterModal
+              modalIsOpen={collectionFilterShown}
+              setIsOpen={(open) => setCollectionFilterShown(open)}
+              defaultCollections={defaultCollections}
+            />
+          </div>
 
           <GraphOrderDetails
             orders={selectedOrders}
