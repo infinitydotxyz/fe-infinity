@@ -33,30 +33,9 @@ export const Navbar = () => {
       items: [
         {
           type: 'link',
-          label: 'Trending', // Analytics
-          props: {
-            href: '/trending' // analytics/trending/weekly
-          }
-        },
-        {
-          type: 'link',
-          label: 'Feed',
-          props: {
-            href: '/feed'
-          }
-        },
-        {
-          type: 'link',
           label: 'Orderbook',
           props: {
             href: '/orderbook'
-          }
-        },
-        {
-          type: 'link',
-          label: 'Curated',
-          props: {
-            href: '/curated'
           }
         },
         {
@@ -65,6 +44,24 @@ export const Navbar = () => {
           props: {
             href: '/rewards'
           }
+        },
+        {
+          type: 'dropdown',
+          label: 'Discover',
+          menu: [
+            {
+              label: 'Trending',
+              onClick: () => router.push('trending')
+            },
+            {
+              label: 'Feed',
+              onClick: () => router.push('feed')
+            },
+            {
+              label: 'Curated',
+              onClick: () => router.push('curated')
+            }
+          ]
         },
         {
           type: 'dropdown',
