@@ -18,8 +18,6 @@ export const isServer = () => typeof window === 'undefined';
 
 export const isLocalhost = () => !isServer() && (window?.location?.host || '').indexOf('localhost') >= 0;
 
-export const isProd = () => !isServer() && (window?.location?.host || '').indexOf('infinity') >= 0;
-
 export const toChecksumAddress = (address?: string): string => {
   if (address) {
     let result = address;
@@ -152,12 +150,12 @@ export const numStr = (value: string | number): string => {
     if (value.includes('.')) {
       const f = parseFloat(value);
       if (f) {
-        short = f.toFixed(4);
+        short = f.toFixed(3);
       }
     }
     short = value;
   } else {
-    short = value.toFixed(4);
+    short = value.toFixed(3);
   }
 
   // remove .0000
@@ -177,7 +175,7 @@ export const numStr = (value: string | number): string => {
   const p = parseFloat(short);
   if (!isNaN(p)) {
     // this adds commas
-    short = p.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 4 });
+    short = p.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 3 });
   }
 
   return short;

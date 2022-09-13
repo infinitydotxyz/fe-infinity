@@ -1,6 +1,5 @@
 import { PageBox, ToggleTab, useToggleTab } from 'src/components/common';
 import { OrderbookContent } from 'src/components/orderbook/orderbook-list';
-import { isProd } from 'src/utils';
 import { OrderbookProvider } from 'src/components/orderbook/OrderbookContext';
 import { useRouter } from 'next/router';
 import { OrderbookGraph } from 'src/components/orderbook/graph/orderbook-graph';
@@ -29,17 +28,15 @@ const _OrderbookPage = () => {
 
   return (
     <>
-      {!isProd() && (
-        <>
-          <ToggleTab className="mt-4" options={options} selected={selected} onChange={onChange} />
+      <>
+        <ToggleTab className="mt-4" options={options} selected={selected} onChange={onChange} />
 
-          {selected === 'Graph view' && <OrderbookGraph className="mt-10" />}
+        {selected === 'Graph view' && <OrderbookGraph className="mt-10" />}
 
-          {selected === 'List view' && <OrderbookContent className="" />}
-        </>
-      )}
+        {selected === 'List view' && <OrderbookContent className="" />}
+      </>
 
-      {isProd() && <OrderbookContent className="" />}
+      <OrderbookContent className="" />
     </>
   );
 };

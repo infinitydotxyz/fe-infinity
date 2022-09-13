@@ -5,6 +5,7 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import { ParsedUrlQuery } from 'querystring';
 import { apiGet, ITEMS_PER_PAGE } from 'src/utils';
 import { useIsMounted } from 'src/hooks/useIsMounted';
+import { OrderCache } from './order-cache';
 
 export type OBFilters = {
   sort?: string;
@@ -143,10 +144,15 @@ type OBContextType = {
   fetchMore: () => void;
   filters: OBFilters;
   setFilters: React.Dispatch<React.SetStateAction<OBFilters>>;
-  clearFilter: (name: string) => void;
-  updateFilterArray: (filterName: string, currentFitlers: string[], selectionName: string, checked: boolean) => void;
-  updateFilter: (name: string, value: string) => void;
-  updateFilters: (params: { name: string; value: string }[]) => void;
+  clearFilters: (names: string[]) => Promise<boolean>;
+  updateFilterArray: (
+    filterName: string,
+    currentFitlers: string[],
+    selectionName: string,
+    checked: boolean
+  ) => Promise<boolean>;
+  updateFilter: (name: string, value: string) => Promise<boolean>;
+  updateFilters: (params: { name: string; value: string }[]) => Promise<boolean>;
   collectionId: string | undefined;
   hasMoreOrders: boolean;
   hasNoData: boolean;
@@ -154,6 +160,8 @@ type OBContextType = {
 };
 
 const OrderbookContext = React.createContext<OBContextType | null>(null);
+
+const orderCache = new OrderCache();
 
 interface Props {
   children: ReactNode;
@@ -198,17 +206,22 @@ export const OrderbookProvider = ({ children, collectionId, tokenId, limit = ITE
   };
 
   // filters helper functions
-  const removeQueryParam = (value: string) => {
-    const updateQueryParams = { ...router.query };
-    delete updateQueryParams[value];
-    router.replace({ pathname: router.pathname, query: { ...updateQueryParams } });
+  const clearFilters = (names: string[]): Promise<boolean> => {
+    const newQueryParams = { ...router.query };
+
+    for (const name of names) {
+      delete newQueryParams[name];
+    }
+
+    return router.replace({ pathname: router.pathname, query: { ...newQueryParams } });
   };
 
-  const clearFilter = (name: string) => {
-    removeQueryParam(name);
-  };
-
-  const updateFilterArray = (filterName: string, currentFilters: string[], selectionName: string, checked: boolean) => {
+  const updateFilterArray = (
+    filterName: string,
+    currentFilters: string[],
+    selectionName: string,
+    checked: boolean
+  ): Promise<boolean> => {
     let updatedSelections = [];
     if (checked) {
       updatedSelections = [...currentFilters, selectionName];
@@ -216,18 +229,18 @@ export const OrderbookProvider = ({ children, collectionId, tokenId, limit = ITE
       updatedSelections = currentFilters.filter((currentFilter) => currentFilter !== selectionName);
     }
 
-    router.replace({ pathname: router.pathname, query: { ...router.query, [filterName]: updatedSelections } });
+    return router.replace({ pathname: router.pathname, query: { ...router.query, [filterName]: updatedSelections } });
   };
 
-  const updateFilter = (name: string, value: string) => {
+  const updateFilter = (name: string, value: string): Promise<boolean> => {
     if (!value) {
-      removeQueryParam(name);
+      return clearFilters([name]);
     } else {
-      router.replace({ pathname: router.pathname, query: { ...router.query, [name]: value } });
+      return router.replace({ pathname: router.pathname, query: { ...router.query, [name]: value } });
     }
   };
 
-  const updateFilters = (params: { name: string; value: string }[]) => {
+  const updateFilters = (params: { name: string; value: string }[]): Promise<boolean> => {
     let query = { ...router.query };
 
     for (const param of params) {
@@ -240,7 +253,7 @@ export const OrderbookProvider = ({ children, collectionId, tokenId, limit = ITE
       }
     }
 
-    router.replace({ pathname: router.pathname, query: { ...query } });
+    return router.replace({ pathname: router.pathname, query: { ...query } });
   };
 
   // todo: make this prod ready
@@ -260,25 +273,36 @@ export const OrderbookProvider = ({ children, collectionId, tokenId, limit = ITE
         query.tokenId = tokenId;
       }
 
-      const { result } = await apiGet('/orders', {
-        query
-      });
+      // use cached value if exists
+      const cacheKey = JSON.stringify(query);
+      let response = orderCache.get(cacheKey);
+
+      if (!response) {
+        const getRes = await apiGet('/orders', {
+          query
+        });
+
+        response = getRes;
+
+        // save in cache
+        orderCache.set(cacheKey, response);
+      }
 
       if (isMounted()) {
-        if (result?.data) {
+        if (response && response.result.data) {
           let newData;
 
           if (refreshData) {
-            newData = [...result.data];
+            newData = [...response.result.data];
           } else {
-            newData = [...orders, ...result.data];
+            newData = [...orders, ...response.result.data];
           }
 
           setOrders(newData);
           setHasNoData(newData.length === 0);
 
-          setHasMoreOrders(result?.hasNextPage);
-          setCursor(result?.cursor);
+          setHasMoreOrders(response.result.hasNextPage);
+          setCursor(response.result.cursor);
         }
       }
     } catch (err) {
@@ -296,7 +320,7 @@ export const OrderbookProvider = ({ children, collectionId, tokenId, limit = ITE
     fetchMore,
     filters,
     setFilters,
-    clearFilter,
+    clearFilters,
     updateFilterArray,
     updateFilter,
     updateFilters,

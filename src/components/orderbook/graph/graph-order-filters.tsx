@@ -4,47 +4,32 @@ import { twMerge } from 'tailwind-merge';
 import { useOrderbook } from '../OrderbookContext';
 import { textAltColorTW, textColorTW } from './graph-utils';
 import { MdClear } from 'react-icons/md';
-import { BiReset } from 'react-icons/bi';
 import { numStr } from 'src/utils';
-import { GraphBox } from './graph-box';
 
-export const GraphOrderFilters = () => {
-  const { updateFilters } = useOrderbook();
+interface Props3 {
+  className?: string;
+}
 
+export const GraphOrderFilters = ({ className = '' }: Props3) => {
   const tableItems: SimpleTableItem[] = [
     {
-      title: <div className="">Min:</div>,
+      title: <div className="text-black font-normal text-sm">Min:</div>,
       value: <FilterInput modeMinPrice={true} />
-    },
+    }
+  ];
+
+  const tableItems2: SimpleTableItem[] = [
     {
-      title: <div className="">Max:</div>,
+      title: <div className="text-black font-normal text-sm">Max:</div>,
       value: <FilterInput modeMinPrice={false} />
     }
   ];
 
   return (
-    <GraphBox className="py-3">
-      <div className={twMerge(textAltColorTW, 'flex items-center')}>
-        <Button
-          variant="round"
-          size="plain"
-          // className={twMerge(bgAltColorTW, 'text-white')}
-          onClick={() => {
-            updateFilters([
-              { name: 'minPrice', value: '' },
-              { name: 'maxPrice', value: '' }
-            ]);
-          }}
-        >
-          <BiReset className="h-8 w-8" />
-        </Button>
-
-        <div className="ml-6 flex flex-col ">
-          {/* <div className="w-full font-bold mb-2 text-lg">Price filter</div> */}
-          <SimpleTable className={twMerge('space-y-0', textColorTW)} items={tableItems} />
-        </div>
-      </div>
-    </GraphBox>
+    <div className={twMerge(textAltColorTW, 'flex items-center', className)}>
+      <SimpleTable className={twMerge('w-full space-y-0', textColorTW)} items={tableItems} />
+      <SimpleTable className={twMerge('w-full space-y-0 ml-7', textColorTW)} items={tableItems2} />
+    </div>
   );
 };
 
@@ -68,16 +53,16 @@ const FilterInput = ({ modeMinPrice }: Props) => {
           updateFilter(modeMinPrice ? 'minPrice' : 'maxPrice', e.target.value);
         }}
         className={twMerge(
-          'px-2 placeholder-gray-300 max-w-[100px] py-0 border-none bg-black focus:ring-0 block bg-transparent text-right font-heading'
+          'px-2 placeholder-gray-300 max-w-[70px] py-0 border-none bg-black focus:ring-0 block bg-transparent text-right font-heading'
         )}
         placeholder="0.00"
       />
-      <div className="select-none">{EthSymbol}</div>
+      <div className="select-none text-sm">{EthSymbol}</div>
 
       <Button
         variant="round"
         size="plain"
-        className="bg-gray-200 text-black ml-5"
+        className="bg-gray-100 text-gray-500 ml-3"
         onClick={() => {
           updateFilter(modeMinPrice ? 'minPrice' : 'maxPrice', '');
         }}

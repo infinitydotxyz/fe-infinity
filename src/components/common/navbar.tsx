@@ -53,33 +53,47 @@ export const Navbar = () => {
           }
         },
         {
+          type: 'link',
+          label: 'Curation',
+          props: {
+            href: '/curation'
+          }
+        },
+        {
+          type: 'link',
+          label: 'Rewards',
+          props: {
+            href: '/rewards'
+          }
+        },
+        {
           type: 'dropdown',
           label: 'Community',
           menu: [
             {
               label: 'Read docs',
-              icon: <SiReadthedocs className=" h-5 w-5 text-gray-500" />,
+              icon: <SiReadthedocs className=" h-5 w-5 text-black" />,
               onClick: () => {
                 window.open('https://docs.infinity.xyz');
               }
             } as DropdownItem,
             {
               label: 'Twitter',
-              icon: <BsTwitter className=" h-5 w-5 text-gray-500" />,
+              icon: <BsTwitter className=" h-5 w-5 text-black" />,
               onClick: () => {
                 window.open('https://twitter.com/infinitydotxyz');
               }
             } as DropdownItem,
             {
               label: 'Discord',
-              icon: <SiDiscord className=" h-5 w-5 text-gray-500" />,
+              icon: <SiDiscord className=" h-5 w-5 text-black" />,
               onClick: () => {
                 window.open('https://discord.com/invite/infinitydotxyz');
               }
             } as DropdownItem,
             {
               label: 'Medium',
-              icon: <RiMediumFill className=" h-5 w-5 text-gray-500" />,
+              icon: <RiMediumFill className=" h-5 w-5 text-black" />,
               onClick: () => {
                 window.open('https://medium.com/@infinitydotxyz');
               }

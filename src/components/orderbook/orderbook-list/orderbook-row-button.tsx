@@ -1,15 +1,18 @@
 import { ChainId, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { Button } from 'src/components/common';
+import { Button, ButtonProps } from 'src/components/common';
 import { OrderCartItem, useOrderContext } from 'src/utils/context/OrderContext';
 import { checkOffersToUser } from 'src/utils/orderbookUtils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { useDrawerContext } from 'src/utils/context/DrawerContext';
 
+type OrderButtonProps = Omit<ButtonProps, 'children'>;
+
 type Props = {
   order: SignedOBOrder;
+  outlineButtons?: boolean;
 };
 
-export const OrderbookRowButton = ({ order }: Props) => {
+export const OrderbookRowButton = ({ order, outlineButtons = false }: Props) => {
   const { user, checkSignedIn } = useOnboardContext();
   const { fulfillDrawerParams } = useDrawerContext();
 
@@ -84,10 +87,16 @@ export const OrderbookRowButton = ({ order }: Props) => {
 
   const isOwner = order.makerAddress === user?.address;
 
+  let buttonProps: OrderButtonProps = { className: 'w-32' };
+
+  if (outlineButtons) {
+    buttonProps = { size: 'medium', variant: 'outlineWhite', className: 'w-28' };
+  }
+
   const actionButton = () => {
     if (isOwner) {
       return (
-        <Button className="w-32" onClick={() => onClickEdit(order)}>
+        <Button {...buttonProps} onClick={() => onClickEdit(order)}>
           Edit
         </Button>
       );
@@ -96,20 +105,20 @@ export const OrderbookRowButton = ({ order }: Props) => {
     if (order.isSellOrder) {
       // Sell Order (Listing)
       return (
-        <Button className="w-32" onClick={() => onClickBuySell(order)}>
+        <Button {...buttonProps} onClick={() => onClickBuySell(order)}>
           Buy
         </Button>
       );
     } else if (isOfferToUser === true) {
       // Buy Order (Offer) => show Sell button (if offer made to current user)
       return (
-        <Button className="w-32" onClick={() => onClickBuySell(order)}>
+        <Button {...buttonProps} onClick={() => onClickBuySell(order)}>
           Sell
         </Button>
       );
     } else if (isOfferToUser === false) {
       return (
-        <Button className="w-32" onClick={() => onClickBidHigher(order)}>
+        <Button {...buttonProps} onClick={() => onClickBidHigher(order)}>
           Bid higher
         </Button>
       );

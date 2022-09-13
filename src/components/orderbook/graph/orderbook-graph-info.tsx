@@ -1,6 +1,5 @@
-import { accentColor, GraphData, accentAltColor, bgAltColorTW, textColorTW } from './graph-utils';
+import { accentColor, GraphData, accentAltColor, textColorTW, borderColor } from './graph-utils';
 import { twMerge } from 'tailwind-merge';
-import { GraphBox } from './graph-box';
 
 interface Props {
   graphData: GraphData[];
@@ -12,30 +11,26 @@ export const OrderbookGraphInfo = ({ graphData, className }: Props) => {
   const offers = () => graphData.filter((x) => !x.isSellOrder);
 
   return (
-    <GraphBox className="py-3">
-      <div className={twMerge('  flex items-center', textColorTW, className)}>
-        <div
-          className={twMerge(
-            bgAltColorTW,
-            'text-[20px] w-12 font-bold flex justify-center text-white text-opacity-85 items-center rounded-lg   aspect-1'
-          )}
-        >
-          <div>{graphData.length}</div>
+    <div className={twMerge(borderColor, ' text-sm rounded-lg flex items-center', textColorTW, className)}>
+      <div className={twMerge('flex items-stretch')}>
+        <div className="flex items-center">
+          <div
+            className="h-4 w-4 mr-2 rounded-full border border-white"
+            style={{ backgroundColor: `${accentAltColor}aa` }}
+          />
+          <div className=" text-gray-500  ">Offers:</div>
+          <div className="font-bold ml-2 text-gray-600">{offers().length.toString()}</div>
         </div>
-        <div className={twMerge('w-full flex flex-col  ml-4')}>
-          <div className="flex items-center ">
-            <div className="h-5 w-5 mr-3 rounded-full" style={{ backgroundColor: accentAltColor }} />
-            <div className="font-bold mr-2">{offers().length.toString()}</div>
-            <div>Offers</div>
-          </div>
 
-          <div className="flex items-center">
-            <div className="h-5 w-5 mr-3 rounded-full" style={{ backgroundColor: accentColor }} />
-            <div className="font-bold mr-2">{listings().length.toString()}</div>
-            <div>Listings</div>
-          </div>
+        <div className="flex items-center ml-4">
+          <div
+            className="h-4 w-4 mr-2 rounded-full border border-white"
+            style={{ backgroundColor: `${accentColor}aa` }}
+          />
+          <div className="  text-gray-500 ">Listings:</div>
+          <div className="font-bold ml-2 text-gray-600">{listings().length.toString()}</div>
         </div>
       </div>
-    </GraphBox>
+    </div>
   );
 };

@@ -49,13 +49,16 @@ export function useRemainingLockTime(address?: string) {
       weeks.push(diffWeeks);
     }
 
+    const maxDays = days.length > 0 ? Math.max(...days) : 0;
+    const maxWeeks = weeks.length > 0 ? Math.max(...weeks) : 0;
+
     // We only care about the longest time we still need to wait.
     // For example, if 11 months ago a user staked for a duration of 12 months
     // and staked for 3 months yesterday, that means he still needs to wait 3 more more months
     // and thus the fact that he staked for a big amount of time of 12 months isn't relevant anymore.
     return {
-      days: Math.max(...days),
-      weeks: Math.max(...weeks)
+      days: maxDays,
+      weeks: maxWeeks
     };
   }, [stakingInfo]);
 

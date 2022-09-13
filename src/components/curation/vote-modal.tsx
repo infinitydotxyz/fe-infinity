@@ -6,7 +6,7 @@ import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
 import { apiPost } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { AvatarImage } from '../collection/avatar-image';
-import { Button, Props as ButtonProps, Divider, Heading, Modal, Spinner, TextInputBox, toastError } from '../common';
+import { Button, ButtonProps, Divider, Heading, Modal, Spinner, TextInputBox, toastError } from '../common';
 import { MaxButton } from './max-button';
 import { FeesAccruedStats, FeesAprStats, Statistics } from './statistics';
 import { VoteProgressBar } from './vote-progress-bar';
@@ -22,7 +22,7 @@ export const StakeTokensButton: React.FC<Pick<ButtonProps, 'variant'>> = ({ vari
   const router = useRouter();
 
   return (
-    <Button variant={variant} size="large" className="w-full font-black" onClick={() => router.push('/rewards')}>
+    <Button variant={variant} size="large" className="w-full" onClick={() => router.push('/rewards')}>
       Stake tokens to get votes
     </Button>
   );

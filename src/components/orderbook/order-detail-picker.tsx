@@ -27,7 +27,7 @@ export const OrderDetailPicker = ({
   const showCheckbox = onChange !== undefined && selection !== undefined;
 
   return (
-    <div className={className}>
+    <div className={twMerge('flex flex-col min-h-0', className)}>
       <div>
         Any {order.numItems} {order.numItems > 1 ? 'items' : 'item'} can be{' '}
         {order.isSellOrder ? 'bought' : 'sold (if you own enough)'} for the given price.
@@ -39,10 +39,10 @@ export const OrderDetailPicker = ({
         </div>
       )}
 
-      <div className={twMerge('my-6 space-y-4', scroll ? 'max-h-64 overflow-y-auto overflow-x-clip' : '')}>
+      <div className={twMerge('mt-4 space-y-3 flex-1', scroll ? 'overflow-y-auto overflow-x-clip' : '')}>
         {(order?.nfts || []).map((nft, idx) => {
           return (
-            <div className="space-y-4" key={`${nft.collectionAddress}_${idx}`}>
+            <div className="space-y-3" key={`${nft.collectionAddress}_${idx}`}>
               {nft.tokens.map((token) => {
                 const key = orderDetailKey(nft.collectionAddress, token.tokenId);
 
@@ -88,7 +88,6 @@ export const OrderDetailPicker = ({
                     }}
                   >
                     <EZImage
-                      fade={false}
                       src={token.tokenImage || nft.collectionImage}
                       className="w-16 h-16 shrink-0 overflow-clip rounded-2xl"
                     />

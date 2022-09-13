@@ -51,7 +51,7 @@ export const ToggleTab = ({ options, onChange, selected, className = '', small =
                 small ? 'min-w-[110px]' : 'min-w-[140px]',
                 'select-none flex text-md items-center justify-center  text-center whitespace-nowrap font-medium rounded-full text-secondary',
                 selected === option ? 'bg-black text-white font-bold' : '',
-                altStyle ? 'py-1 px-6' : 'py-2.5 px-10'
+                altStyle ? 'py-1 px-6' : 'py-2  px-8'
               )}
               onClick={() => {
                 if (option !== selected) {

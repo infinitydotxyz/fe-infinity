@@ -24,6 +24,7 @@ import {
   NULL_ADDRESS,
   trimLowerCase
 } from '@infinityxyz/lib-frontend/utils';
+import { toastError } from 'src/components/common';
 import { DEFAULT_MAX_GAS_PRICE_WEI } from '../constants';
 import { User } from '../context/AppContext';
 
@@ -529,8 +530,14 @@ export async function takeOrders(
 
   // it is assumed that all orders have these value same, so no need to check. Contract throws if this is not the case.
   const isSellOrder = makerOrders[0].isSellOrder;
+  const isCurrencyETH = makerOrders[0].execParams[1] === NULL_ADDRESS;
 
-  const gasLimit = 250_000 * makerOrders.length;
+  if (isSellOrder && !isCurrencyETH) {
+    toastError('Listing currency is not ETH. Cannot execute');
+    return { hash: '' };
+  }
+
+  const gasLimit = 300_000 * makerOrders.length;
   // perform exchange
   // if fulfilling a sell order, send ETH
   if (isSellOrder) {
@@ -571,8 +578,13 @@ export async function takeMultipleOneOrders(signer: JsonRpcSigner, chainId: stri
 
   // it is assumed that all orders have these value same, so no need to check. Contract throws if this is not the case.
   const isSellOrder = makerOrders[0].isSellOrder;
+  const isCurrencyETH = makerOrders[0].execParams[1] === NULL_ADDRESS;
+  if (isSellOrder && !isCurrencyETH) {
+    toastError('Listing currency is not ETH. Cannot execute');
+    return { hash: '' };
+  }
 
-  const gasLimit = 200_000 * makerOrders.length;
+  const gasLimit = 300_000 * makerOrders.length;
   // perform exchange
   // if fulfilling a sell order, send ETH
   if (isSellOrder) {

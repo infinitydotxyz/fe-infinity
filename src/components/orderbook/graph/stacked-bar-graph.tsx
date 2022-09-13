@@ -1,16 +1,17 @@
 import React, { Fragment, useEffect, useMemo, useState } from 'react';
 import { Group } from '@visx/group';
 import { LinearGradient } from '@visx/gradient';
+import { AxisBottom, AxisLeft } from '@visx/axis';
 import { scaleBand, scaleLinear } from '@visx/scale';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
-import { Orientation } from '@visx/axis';
 import { TextProps } from '@visx/text';
-import { AnimatedAxis } from '@visx/react-spring';
+// import { AnimatedAxis } from '@visx/react-spring';
 import { useTooltip, defaultStyles, useTooltipInPortal } from '@visx/tooltip';
 import { numStr } from 'src/utils';
 import { RoundRectBar } from './round-rect-bar';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { accentColor, axisLineColor, GraphData, accentAltColor, textColor } from './graph-utils';
+import { accentColor, axisLineColor, GraphData, accentAltColor, textColor, textLight } from './graph-utils';
+import { EthSymbol, SimpleTable, SimpleTableItem } from 'src/components/common';
 
 type BarGraphData = {
   listings: GraphData[];
@@ -25,19 +26,27 @@ type BarGraphData = {
 class TooltipData {
   lineOne: string;
   lineTwo: string;
+  lineThree: string;
 
-  constructor(lineOne: string, lineTwo: string) {
+  constructor(lineOne: string, lineTwo: string, lineThree: string) {
     this.lineOne = lineOne;
     this.lineTwo = lineTwo;
+    this.lineThree = lineThree;
   }
 
   content = () => {
+    const items: SimpleTableItem[] = [];
+    items.push({ title: 'from:', value: <div>{this.lineTwo}</div> });
+    items.push({ title: 'to:', value: <div>{this.lineThree}</div> });
+
     return (
       <>
-        <div className="mb-2">
+        <div className="mb-3">
           <strong>{this.lineOne}</strong>
         </div>
-        <div>{this.lineTwo}</div>
+        <div className="w-full">
+          <SimpleTable items={items} valueClassName="font-bold" />
+        </div>
       </>
     );
   };
@@ -45,12 +54,11 @@ class TooltipData {
 
 const tooltipStyles = {
   ...defaultStyles,
-
-  minWidth: 60,
+  minWidth: 160,
+  padding: '10px 15px',
   backgroundColor: 'rgba(255,255,255,.9)',
-  fontSize: '20px',
-
-  color: 'black'
+  fontSize: '16px',
+  color: '#555'
 };
 
 // accessors
@@ -70,7 +78,7 @@ const barData = (data: GraphData[], width: number): BarGraphData[] => {
   const columns = Math.ceil(width / columnWidth);
   const values = data.map(getPriceValue);
   const minPrice = Math.min(...values);
-  const maxPrice = Math.max(...values) + 0.05;
+  const maxPrice = Math.max(...values) + 0.01;
   const range = (maxPrice - minPrice) / columns;
 
   for (let i = 0; i < columns; i++) {
@@ -78,8 +86,8 @@ const barData = (data: GraphData[], width: number): BarGraphData[] => {
       offers: [],
       listings: [],
       axisLabel: numStr(minPrice + i * range),
-      offersTooltip: new TooltipData('', ''),
-      listingsTooltip: new TooltipData('', ''),
+      offersTooltip: new TooltipData('', '', ''),
+      listingsTooltip: new TooltipData('', '', ''),
       start: minPrice + i * range,
       end: minPrice + (i + 1) * range
     });
@@ -99,11 +107,13 @@ const barData = (data: GraphData[], width: number): BarGraphData[] => {
   for (const item of newData) {
     item.listingsTooltip = new TooltipData(
       `${item.listings.length} listings`,
-      `${numStr(item.start)}  to  ${numStr(item.end)}`
+      `${numStr(item.start)} ${EthSymbol}`,
+      `${numStr(item.end)} ${EthSymbol}`
     );
     item.offersTooltip = new TooltipData(
       `${item.offers.length} offers`,
-      `${numStr(item.start)}  to  ${numStr(item.end)}`
+      `${numStr(item.start)} ${EthSymbol}`,
+      `${numStr(item.end)} ${EthSymbol}`
     );
   }
 
@@ -114,16 +124,15 @@ const barData = (data: GraphData[], width: number): BarGraphData[] => {
 
 type Props = {
   data: GraphData[];
-  height: number;
   onClick: (minPrice: string, maxPrice: string) => void;
   onSelection: (orders: SignedOBOrder[], index: number) => void;
 };
 
-export function StackedBarGraph({ data, height, onClick, onSelection }: Props) {
+export function StackedBarGraph({ data, onClick, onSelection }: Props) {
   if (data.length > 0) {
     return (
-      <ParentSize debounceTime={10} style={{ height: height }}>
-        {({ width }) => {
+      <ParentSize debounceTime={10} className="h-full">
+        {({ width, height }) => {
           return (
             <_StackedBarGraph
               graphData={data}
@@ -172,7 +181,6 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
     ({
       fill: textColor,
       fontSize: 16,
-      fontFamily: 'sans-serif',
       textAnchor: 'middle',
       dy: 6
     } as const);
@@ -182,15 +190,13 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
       fill: textColor,
       fontSize: 16,
       dx: -10,
-      fontFamily: 'sans-serif',
       textAnchor: 'end',
       verticalAnchor: 'middle'
     } as const);
 
   const labelProps: Partial<TextProps> = {
-    fill: accentAltColor,
-    fontSize: 20,
-    fontFamily: 'sans-serif',
+    fill: textLight,
+    fontSize: 16,
     textAnchor: 'middle'
   };
 
@@ -201,7 +207,7 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
   });
 
   const axisLabels = data.map((d) => d.axisLabel);
-  const countAxisLabels = data.map((d) => getCountValue(d));
+  // const countAxisLabels = data.map((d) => getCountValue(d));
 
   const xScale = useMemo(
     () =>
@@ -231,7 +237,7 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
     let barRadius = 10;
     if (barHeight === 0) {
       barRadius = 0;
-      bColor = textColor;
+      bColor = axisLineColor;
     }
 
     const barWidth = xScale.bandwidth();
@@ -276,7 +282,7 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
     const numberOnTop = () => {
       const num = offerOrders.length + listingOrders.length;
 
-      if (barX && barY && lbarY && num > 0) {
+      if (barX && num > 0) {
         const numY = lbarY - barHeight;
 
         return (
@@ -355,19 +361,19 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
   return width < 10 ? null : (
     <>
       <svg ref={containerRef} width={outerWidth} height={outerHeight}>
-        <LinearGradient from={accentColor} to={accentColor} toOpacity={0.9} fromOpacity={0.7} id="bar-gradient" />
+        <LinearGradient from={accentColor} to={accentColor} toOpacity={1} fromOpacity={0.8} id="bar-gradient" />
         <LinearGradient
           from={accentAltColor}
           to={accentAltColor}
-          toOpacity={0.3}
-          fromOpacity={0.7}
+          toOpacity={1}
+          fromOpacity={0.8}
           id="offers-bar-gradient"
         />
 
         <Group transform={`translate(${margin.left},${margin.top})`}>
-          <AnimatedAxis
+          <AxisBottom
             key={`axis-center`}
-            orientation={Orientation.bottom}
+            // orientation={Orientation.bottom}
             top={height + 2}
             scale={xScale}
             tickFormat={(v) => `${v}`}
@@ -379,25 +385,25 @@ function _StackedBarGraph({ graphData, width: outerWidth, height: outerHeight, o
             tickValues={axisLabels}
             label="Price in ETH"
             labelProps={labelProps}
-            labelOffset={20}
-            animationTrajectory="center"
+            labelOffset={30}
+            // animationTrajectory="center"
           />
 
-          <AnimatedAxis
+          <AxisLeft
             key={`axis-vert`}
-            orientation={Orientation.left}
+            // orientation={Orientation.left}
             scale={yScale}
             tickFormat={(v) => `${v}`}
             stroke={axisLineColor}
             tickStroke={textColor}
             tickLineProps={{ strokeWidth: 1, opacity: 1, transform: 'translate(0,0)' }}
-            // hideAxisLine={true}
             tickLabelProps={vertTickLabelProps}
-            tickValues={countAxisLabels}
+            // looks better if we do the default tickValues
+            // tickValues={countAxisLabels}
             label="Number of orders"
             labelProps={labelProps}
-            labelOffset={36}
-            animationTrajectory="center"
+            labelOffset={48}
+            // animationTrajectory="center"
           />
 
           {data.map((d, index) => {

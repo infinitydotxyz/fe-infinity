@@ -12,10 +12,10 @@ export const GraphBox = ({ children, className = '', dark = false }: Props) => {
   return (
     <div
       className={twMerge(
-        'flex flex-col border rounded-xl px-8',
-        borderColor,
+        'relative flex flex-col border rounded-xl px-8 overflow-clip',
+        dark ? 'border-gray-200' : borderColor,
         dark ? darkGradientTW : gradientTW,
-        dark ? 'rounded-3xl p-6' : '',
+        dark ? twMerge('rounded-xl p-6') : '',
         className
       )}
     >

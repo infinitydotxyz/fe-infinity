@@ -1,6 +1,6 @@
 import React from 'react';
 import { IoIosCopy } from 'react-icons/io';
-import { RiLogoutBoxRFill } from 'react-icons/ri';
+import { RiLogoutBoxRLine } from 'react-icons/ri';
 import { FaEthereum } from 'react-icons/fa';
 import { BsFillPersonFill } from 'react-icons/bs';
 import { Dropdown, DropdownItem } from './dropdown';
@@ -23,7 +23,7 @@ export const ConnectButton = () => {
   const menuItems: DropdownItem[] = [
     {
       label: 'Copy Address',
-      icon: <IoIosCopy className=" h-5 w-5 text-gray-500" />,
+      icon: <IoIosCopy className=" h-5 w-5 text-black" />,
       onClick: () => {
         address ? copyToClipboard(address) : null;
       }
@@ -34,12 +34,12 @@ export const ConnectButton = () => {
     },
     {
       label: 'My Profile',
-      icon: <BsFillPersonFill className=" h-5 w-5 text-gray-500" />,
+      icon: <BsFillPersonFill className=" h-5 w-5 text-black" />,
       onClick: () => router.push('/profile/me')
     },
     {
       label: 'Etherscan',
-      icon: <FaEthereum className=" h-5 w-5 text-gray-500" />,
+      icon: <FaEthereum className=" h-5 w-5 text-black" />,
       onClick: () => window.open(`https://etherscan.io/address/${address}`)
     },
     {
@@ -48,7 +48,7 @@ export const ConnectButton = () => {
     },
     {
       label: 'Sign Out',
-      icon: <RiLogoutBoxRFill className=" h-5 w-5 text-gray-500" />,
+      icon: <RiLogoutBoxRLine className=" h-5 w-5 text-black" />,
       onClick: () => {
         signOut();
       }
