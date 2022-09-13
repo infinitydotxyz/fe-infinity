@@ -30,13 +30,9 @@ const _OrderbookPage = () => {
     <>
       <>
         <ToggleTab className="mt-4" options={options} selected={selected} onChange={onChange} />
-
         {selected === 'Graph view' && <OrderbookGraph className="mt-10" />}
-
         {selected === 'List view' && <OrderbookContent className="" />}
       </>
-
-      <OrderbookContent className="" />
     </>
   );
 };
