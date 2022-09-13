@@ -54,9 +54,9 @@ export const Navbar = () => {
         },
         {
           type: 'link',
-          label: 'Curation',
+          label: 'Curated',
           props: {
-            href: '/curation'
+            href: '/curated'
           }
         },
         {

@@ -44,7 +44,7 @@ export default function Curation() {
   };
 
   return (
-    <PageBox title="Curation">
+    <PageBox title="Curated">
       <Modal
         isOpen={modalOpen}
         onClose={closeModal}
