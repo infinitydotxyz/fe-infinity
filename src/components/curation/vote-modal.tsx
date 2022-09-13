@@ -22,7 +22,7 @@ export const StakeTokensButton: React.FC<Pick<ButtonProps, 'variant'>> = ({ vari
   const router = useRouter();
 
   return (
-    <Button variant={variant} size="large" className="w-full font-black" onClick={() => router.push('/rewards')}>
+    <Button variant={variant} size="large" className="w-full" onClick={() => router.push('/rewards')}>
       Stake tokens to get votes
     </Button>
   );

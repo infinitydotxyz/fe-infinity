@@ -25,7 +25,7 @@ import { CommunityFeed } from 'src/components/feed-list/community-feed';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { OrderbookContainer } from 'src/components/orderbook/orderbook-list';
 import { useFetchSignedOBOrder } from 'src/hooks/api/useFetchSignedOBOrder';
-import { ellipsisAddress, getChainScannerBase, isProd, nFormatter } from 'src/utils'; // todo: adi remove isProd once curation is ready
+import { ellipsisAddress, getChainScannerBase, isProd, nFormatter, standardCard } from 'src/utils'; // todo: adi remove isProd once curation is ready
 import { useFetch } from 'src/utils/apiUtils';
 import { useDrawerContext } from 'src/utils/context/DrawerContext';
 import { useOrderContext } from 'src/utils/context/OrderContext';
@@ -289,18 +289,20 @@ const CollectionPage = () => {
               </table>
             </section>
             {!isProd() && (
-              <section className="mt-16 space-y-4 md:w-1/2">
-                <Heading as="h2" className="font-body text-3xl font-medium">
-                  Curate collection
-                </Heading>
-                <FeesAprStats value={userCurated?.feesAPR || 0} className="mr-2" />
-                <FeesAccruedStats value={userCurated?.fees || 0} />
-                <div className="flex flex-row space-x-2 relative">
-                  <VoteProgressBar
-                    votes={userCurated?.votes || 0}
-                    totalVotes={collection.numCuratorVotes || 0}
-                    className="max-w-[15rem]"
-                  />
+              <section className="mt-16 md:w-1/2">
+                <div className={twMerge(standardCard, 'items-center space-y-8')}>
+                  <Heading as="h2" className="font-body text-3xl font-medium">
+                    Curate this collection
+                  </Heading>
+                  <FeesAprStats value={userCurated?.feesAPR || 0} className="mr-8" />
+                  <FeesAccruedStats value={userCurated?.fees || 0} />
+                  <div className="flex flex-row space-x-2 relative">
+                    <VoteProgressBar
+                      votes={userCurated?.votes || 0}
+                      totalVotes={collection.numCuratorVotes || 0}
+                      className="max-w-[15rem] bg-white"
+                    />
+                  </div>
                   <Button
                     size="large"
                     onClick={() => checkSignedIn() && setIsStakeModalOpen(true)}
