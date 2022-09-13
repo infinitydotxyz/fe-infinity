@@ -14,7 +14,7 @@ import { VoteProgressBar } from './vote-progress-bar';
 export type VoteModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  onVote: (votes: number) => Promise<void>;
+  onVote: (votes: number) => Promise<void> | void;
   collection: CuratedCollectionDto;
 };
 
