@@ -148,8 +148,7 @@ const MyRewardsPage: React.FC = () => {
             Trading Rewards
           </Heading>
           <div className="w-1/2 mt-5 text-theme-gray-700">
-            Earn trading rewards for buying and selling NFTs on Infinity. We’ll distribute the rewards each [period of
-            time].
+            Earn trading rewards for buying and selling NFTs on Infinity. Rewards are distributed once per week.
           </div>
         </div>
 
@@ -178,7 +177,7 @@ const MyRewardsPage: React.FC = () => {
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
                 <div className="text-2xl font-heading font-bold">
-                  {Math.floor(userRewards?.totals.userRewards ?? 0)} NFT
+                  {Math.floor(userRewards?.totals.userRewards ?? 0)} $NFT
                 </div>
                 <div className="text-sm mt-1">Earned rewards</div>
               </div>
