@@ -18,8 +18,6 @@ export const isServer = () => typeof window === 'undefined';
 
 export const isLocalhost = () => !isServer() && (window?.location?.host || '').indexOf('localhost') >= 0;
 
-export const isProd = () => !isServer() && (window?.location?.host || '').indexOf('infinity') >= 0;
-
 export const toChecksumAddress = (address?: string): string => {
   if (address) {
     let result = address;
