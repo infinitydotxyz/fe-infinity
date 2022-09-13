@@ -10,7 +10,7 @@ import gnosisModule from '@web3-onboard/gnosis';
 import blocknativeLogo from 'src/images/blocknative-logo';
 import blocknativeIcon from 'src/images/blocknative-icon';
 
-const alchemyJsonRpcEthMainnet = 'https://eth-mainnet.alchemyapi.io/v2/3mIyUchls4JVljIH_3YbC7es9U3BI3_s';
+const alchemyJsonRpcEthMainnet = 'https://eth-mainnet.alchemyapi.io/v2/1kQ5oCC7TqDhhOWw1aOHA1Rmt7aXMvcW';
 const alchemyJsonRpcPolygonMainnet = 'https://polygon-mainnet.g.alchemy.com/v2/LxNovF6VKKnd82eTr-sExIgwj-p-lIcm';
 const alchemyJsonRpcEthGoerli = 'https://eth-goerli.alchemyapi.io/v2/60__39or1njWwm-Bu4sdO4X6H2PMuLOt';
 
@@ -23,7 +23,7 @@ const keepkey = keepkeyModule();
 const gnosis = gnosisModule();
 
 const trezorOptions = {
-  email: 'test@test.com',
+  email: 'hi@infinity.xyz',
   appUrl: 'https://infinity.xyz'
 };
 
@@ -69,14 +69,14 @@ export const setupOnboard = () => {
       name: 'Infinity XYZ',
       icon: blocknativeIcon,
       logo: blocknativeLogo,
-      description: 'A place to trade NFTs',
+      description: 'Infinity NFT exchange',
       recommendedInjectedWallets: [
         { name: 'Coinbase', url: 'https://wallet.coinbase.com/' },
         { name: 'MetaMask', url: 'https://metamask.io' }
       ],
       agreement: {
         version: '1.0.0',
-        termsUrl: 'https://infinity.xyz/terms-conditions',
+        termsUrl: 'https://infinity.xyz/terms',
         privacyUrl: 'https://www.infinity.xyz/privacy-policy'
       }
       // gettingStartedGuide: 'https://infinity.xyz',
