@@ -22,14 +22,13 @@ const MyRewardsPage: React.FC = () => {
             Token Balance
           </Heading>
           <div className="w-1/2 mt-5 text-theme-gray-700">
-            Stake NFT tokens to gain curation power in the form of veNFT. The longer you lock, the more curation power
-            you’ll earn.
+            Stake $NFT tokens to gain curation power. The longer you lock, the more curation power you’ll earn.
           </div>
         </div>
 
         <div className="w-1/2">
           <div className="bg-white py-6 px-6 rounded-2xl">
-            <div>NFT Tokens</div>
+            <div>$NFT Tokens</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
                 <div className="text-2xl font-heading font-bold">
@@ -94,25 +93,27 @@ const MyRewardsPage: React.FC = () => {
             Curation Rewards
           </Heading>
           <div className="w-1/2 mt-5 text-theme-gray-700">
-            Earn curation rewards for voting on collections with your veNFT tokens. You'll gain a portion of the
-            transaction fees for each collection you curate.
+            Earn curation rewards for voting on collections with your votes. You'll gain a portion of the transaction
+            fees for each collection you curate.
           </div>
         </div>
 
         <div className="w-1/2">
           <div className="bg-white py-6 px-6 rounded-2xl">
-            <div>veNFT Tokens</div>
+            <div>Voting power</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
                 <div className="text-2xl font-heading font-bold">{quota?.availableVotes || 0}</div>
-                <div className="text-sm mt-1">Voting Power</div>
+                <div className="text-sm mt-1"># Votes</div>
               </div>
               <div className="lg:w-1/4 sm:w-full">
                 <div className="text-2xl font-heading font-bold">{quota?.stake.totalCuratedVotes || 0}</div>
                 <div className="text-sm mt-1">Voted</div>
               </div>
               <div className="lg:w-1/4 sm:w-full">
-                <div className="text-2xl font-heading font-bold">{quota?.availableVotes || 0}</div>
+                <div className="text-2xl font-heading font-bold">
+                  {(quota?.availableVotes ?? 0) - (quota?.stake?.totalCuratedVotes ?? 0) || 0}
+                </div>
                 <div className="text-sm mt-1">Remaining Votes</div>
               </div>
             </div>

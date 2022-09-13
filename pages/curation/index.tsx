@@ -61,7 +61,7 @@ export default function Curation() {
         <div>
           <span className="p-4 border border-gray-300 rounded-3xl mr-2">
             <strong className="mr-2">{votesQuota}</strong>
-            <span>veNFT available</span>
+            <span># votes available</span>
           </span>
           {votesQuota > 0 && <Button onClick={showModal}>Confirm</Button>}
         </div>
