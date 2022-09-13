@@ -254,7 +254,7 @@ export const Navbar = () => {
                   >
                     {item?.menu?.map((x, j) => (
                       <CustomMenuItem key={j} onClick={x.onClick}>
-                        <div className="flex items-center">
+                        <div className="flex items-center cursor-pointer">
                           {x.icon && <div className="mr-4">{x.icon}</div>}
                           {x.label}
                         </div>

@@ -65,7 +65,7 @@ export const Dropdown = ({
 
               return (
                 <CustomMenuItem key={idx} onClick={item.onClick} itemclassname={itemClassName}>
-                  <div className="flex items-center">
+                  <div className="flex items-center cursor-pointer">
                     {item.icon && <div className="mr-4">{item.icon}</div>}
                     {item.label}
                   </div>

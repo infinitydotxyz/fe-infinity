@@ -9,7 +9,7 @@ export type SortProps = {
 export const Sort: React.FC<SortProps> = ({ onClick }) => (
   <Dropdown
     label="Sort"
-    className="pointer-events-auto ml-8"
+    className="pointer-events-auto ml-8 cursor-pointer"
     items={[
       {
         label: 'Most votes',

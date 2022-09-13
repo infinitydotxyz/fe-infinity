@@ -58,7 +58,7 @@ export default function Curation() {
         <strong>{Object.keys(votes).length}</strong> <span>collections?</span>
       </Modal>
       <div className="flex justify-between mb-8">
-        <div className="mt-3">
+        <div className="mt-4">
           <span className="p-4 border border-gray-300 rounded-3xl mr-2">
             <strong className="mr-2">{votesQuota}</strong>
             <span>votes available</span>
