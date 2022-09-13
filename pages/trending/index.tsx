@@ -108,7 +108,7 @@ const TrendingPage = () => {
 
   return (
     <PageBox title="Trending">
-      <div className="flex justify-between">
+      <div className="mt-4 flex justify-between">
         <ToggleTab
           small={true}
           className="font-heading"
@@ -129,7 +129,10 @@ const TrendingPage = () => {
             periodStat = coll?.stats?.monthly;
           }
           return (
-            <div key={coll.address} className="bg-gray-100 px-10 h-[110px] rounded-3xl flex items-center font-heading">
+            <div
+              key={coll.address}
+              className="bg-theme-light-200 px-10 h-[110px] rounded-3xl flex items-center font-heading"
+            >
               <NextLink href={`/collection/${coll?.slug}`}>
                 <EZImage className="w-16 h-16 rounded-2xl overflow-clip" src={coll?.metadata?.profileImage} />
               </NextLink>
@@ -201,7 +204,10 @@ const TrendingPage = () => {
                   </>
                 ) : null}
 
-                <Button onClick={() => onClickBuy(coll)}>Buy</Button>
+                <div className="flex flex-row gap-2 flex-wrap">
+                  <Button onClick={() => onClickBuy(coll)}>Buy</Button>
+                  <Button onClick={() => push(`/collection/${coll?.slug}`)}>Curate</Button>
+                </div>
               </div>
             </div>
           );

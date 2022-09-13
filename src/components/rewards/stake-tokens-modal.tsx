@@ -1,12 +1,12 @@
 import { RadioGroup } from '@headlessui/react';
 import { StakeDuration } from '@infinityxyz/lib-frontend/types/core';
 import React, { useState } from 'react';
-import { useStakerStake } from 'src/hooks/contract/staker/useStakerStake';
+import { useStake } from 'src/hooks/contract/staker/useStake';
 import { useTokenAllowance } from 'src/hooks/contract/token/useTokenAllowance';
 import { useTokenApprove } from 'src/hooks/contract/token/useTokenApprove';
 import { useTokenBalance } from 'src/hooks/contract/token/useTokenBalance';
 import { twMerge } from 'tailwind-merge';
-import { Heading, toastError } from '../common';
+import { Heading, toastError, toastSuccess } from '../common';
 import { Button } from '../common/button';
 import { TextInputBox } from '../common/input-box';
 import { Modal } from '../common/modal';
@@ -16,20 +16,20 @@ interface Props {
 }
 
 const multipliers = {
-  [StakeDuration.X0]: 1,
-  [StakeDuration.X3]: 2,
-  [StakeDuration.X6]: 3,
-  [StakeDuration.X12]: 4
+  [StakeDuration.None]: 1,
+  [StakeDuration.ThreeMonths]: 2,
+  [StakeDuration.SixMonths]: 3,
+  [StakeDuration.TwelveMonths]: 4
 };
 
 const getMultiplier = (duration: StakeDuration) => `Multiplier: ${multipliers[duration]}x`;
 
 export const StakeTokensModal = ({ onClose }: Props) => {
-  const [stakeDuration, setStakeDuration] = useState<StakeDuration>(StakeDuration.X0);
+  const [stakeDuration, setStakeDuration] = useState<StakeDuration>(StakeDuration.None);
   const [value, setValue] = useState(0);
   const [isStaking, setIsStaking] = useState(false);
   const { balance } = useTokenBalance();
-  const { stake } = useStakerStake();
+  const { stake } = useStake();
   const { approve } = useTokenApprove();
   const { allowance } = useTokenAllowance();
 
@@ -50,6 +50,7 @@ export const StakeTokensModal = ({ onClose }: Props) => {
 
       setIsStaking(false);
       onClose();
+      toastSuccess('Stake successfull, change in tokens will reflect shortly.');
     } catch (err) {
       console.error(err);
       setIsStaking(false);
@@ -59,36 +60,36 @@ export const StakeTokensModal = ({ onClose }: Props) => {
   return (
     <Modal isOpen={true} onClose={onClose} showActionButtons={false} showCloseIcon={true} wide={false}>
       <div>
-        <Heading className="text-3xl font-medium font-body">Stake tokens</Heading>
+        <Heading className="text-3xl -mt-8 font-medium font-body">Stake tokens</Heading>
 
-        <div className="mt-12">
+        <div className="mt-2">
           <div>
             <RadioGroup value={stakeDuration} onChange={setStakeDuration} className="space-y-2">
               <RadioGroup.Label>Lock for:</RadioGroup.Label>
               <RadioButtonCard
-                value={StakeDuration.X0}
+                value={StakeDuration.None}
                 label="No commitment"
-                description={getMultiplier(StakeDuration.X0)}
+                description={getMultiplier(StakeDuration.None)}
               />
               <RadioButtonCard
-                value={StakeDuration.X3}
+                value={StakeDuration.ThreeMonths}
                 label="3 months"
-                description={getMultiplier(StakeDuration.X3)}
+                description={getMultiplier(StakeDuration.ThreeMonths)}
               />
               <RadioButtonCard
-                value={StakeDuration.X6}
+                value={StakeDuration.SixMonths}
                 label="6 months"
-                description={getMultiplier(StakeDuration.X6)}
+                description={getMultiplier(StakeDuration.SixMonths)}
               />
               <RadioButtonCard
-                value={StakeDuration.X12}
+                value={StakeDuration.TwelveMonths}
                 label="12 months"
-                description={getMultiplier(StakeDuration.X12)}
+                description={getMultiplier(StakeDuration.TwelveMonths)}
               />
             </RadioGroup>
           </div>
 
-          <div className="mt-10">
+          <div className="mt-8">
             <TextInputBox
               label=""
               value={value?.toString()}
@@ -105,7 +106,7 @@ export const StakeTokensModal = ({ onClose }: Props) => {
           </div>
           <div className="text-right mr-2 mt-1 text-theme-gray-300">Balance: {balance}</div>
 
-          <div className="text-lg mt-10 flex justify-between">
+          <div className="text-lg mt-8 flex justify-between">
             <span>Voting power</span>
             <span>{value * multipliers[stakeDuration]}</span>
           </div>
@@ -116,7 +117,7 @@ export const StakeTokensModal = ({ onClose }: Props) => {
           </div>
         </div>
 
-        <Button className="w-full py-3 mt-12" onClick={onStake} disabled={isStaking}>
+        <Button size="large" className="w-full py-3 mt-8" onClick={onStake} disabled={isStaking}>
           Stake
         </Button>
       </div>

@@ -2,7 +2,7 @@ import { useFetch } from 'src/utils';
 import { CurationQuotaDto } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curation-quota.dto';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
-export const getCurationQuotaKey = (userId: string) => `/user/${userId}/curated/quota`;
+export const getCurationQuotaKey = (userId: string) => `/user/${userId}/curatedQuota`;
 
 /**
  * Custom hook to fetch the total 'actual' amount of available votes from the API.

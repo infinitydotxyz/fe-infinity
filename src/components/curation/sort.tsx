@@ -17,11 +17,11 @@ export const Sort: React.FC<SortProps> = ({ onClick }) => (
       },
       {
         label: 'APR: High to low',
-        onClick: () => onClick(CuratedCollectionsOrderBy.AprHighToLow)
+        onClick: () => onClick(CuratedCollectionsOrderBy.Apr)
       },
       {
         label: 'APR: Low to high',
-        onClick: () => onClick(CuratedCollectionsOrderBy.AprLowToHigh)
+        onClick: () => onClick(CuratedCollectionsOrderBy.Apr)
       }
     ]}
   />

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Navbar, Spacer, Header } from 'src/components/common';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { twMerge } from 'tailwind-merge';
 import { isPasswordModalNeeded, PasswordModal } from './password-modal';
 
 // used in the Header
@@ -13,6 +14,7 @@ interface Props {
   className?: string;
   fullWidth?: boolean;
   rightToolbar?: JSX.Element;
+  scroll?: boolean;
 }
 
 export const PageBox = ({
@@ -21,7 +23,8 @@ export const PageBox = ({
   showTitle = true,
   fullWidth = false,
   className = '',
-  rightToolbar
+  rightToolbar,
+  scroll = true
 }: Props): JSX.Element => {
   const { chainId } = useOnboardContext();
   const [renderPasswordModal, setRenderPasswordModal] = useState(false);
@@ -31,7 +34,12 @@ export const PageBox = ({
   }, []);
 
   return (
-    <div className="transition w-[100vw] h-[100vh] overflow-y-auto overflow-x-clip justify-items-center">
+    <div
+      className={twMerge(
+        'transition w-screen h-screen justify-items-center overflow-x-clip',
+        scroll ? 'overflow-y-auto' : 'overflow-y-clip'
+      )}
+    >
       {renderPasswordModal ? (
         <PasswordModal isOpen={true} onClose={() => console.log} />
       ) : (
@@ -66,7 +74,7 @@ type PageHeaderProps = {
 export const PageHeader = ({ title, rightToolbar }: PageHeaderProps): JSX.Element => {
   return (
     <div className="flex flex-row items-center">
-      <div className="font-medium text-6xl tracking-tight mt-4 mb-8">{title}</div>
+      <div className="font-medium text-5xl tracking-tight my-4">{title}</div>
 
       {rightToolbar && (
         <>

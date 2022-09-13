@@ -104,7 +104,7 @@ export const ActivityList: React.FC<ActivityListPropType> = ({
       ) : null}
 
       {hasNoData ? (
-        <div className="bg-gray-100 px-6 sm:px-6 md:px-8 lg:px-16 mt-6 md:pt-11 md:pb-11 rounded-3xl text-center font-heading">
+        <div className="bg-theme-light-200 px-6 sm:px-6 md:px-8 lg:px-16 mt-6 md:pt-11 md:pb-11 rounded-3xl text-center font-heading">
           No Activity
         </div>
       ) : null}

@@ -12,21 +12,23 @@ const classes = {
     round: 'p-3',
     small: 'px-3 py-1 text-xs',
     normal: 'px-6 py-2',
-    medium: 'px-6 py-3',
+    medium: 'px-5 py-2 text-sm',
     large: 'px-8 py-3 text-lg'
   },
   variant: {
     plain: '',
     ghost: 'rounded-full', // hover fill needs to be rounded
-    primary: 'border rounded-full border-gray-100 bg-black text-white hover:bg-theme-gray-900',
+    primary: 'rounded-full border-gray-100 bg-gradient-to-b from-[#333] to-[#000] text-white hover:bg-theme-gray-900',
     gray: 'border-none rounded-full bg-theme-gray-100 hover:bg-theme-gray-200',
     outline: twMerge(inputBorderColor, 'border rounded-full text-gray-900 hover:bg-theme-gray-200'),
+    outlineWhite: twMerge(inputBorderColor, 'border bg-white rounded-full text-gray-900 hover:bg-theme-gray-200'),
     danger: 'bg-red-500 hover:bg-red-800 focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 text-white',
-    round: 'rounded-full p-1' // use plain size
+    round: 'rounded-full p-1', // use plain size
+    white: 'border rounded-full border-gray-100 bg-white text-black hover:bg-theme-gray-200'
   }
 };
 
-export interface Props {
+export interface ButtonProps {
   onClick?: (ev: React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => void;
   children: ReactNode;
   variant?: keyof typeof classes.variant;
@@ -34,6 +36,7 @@ export interface Props {
   disabled?: boolean;
   className?: string;
   type?: 'submit' | 'button';
+  title?: string;
 }
 
 export const Button = ({
@@ -43,8 +46,9 @@ export const Button = ({
   disabled = false,
   children,
   className = '',
+  title,
   onClick
-}: Props): JSX.Element => {
+}: ButtonProps): JSX.Element => {
   return (
     <button
       type={type}
@@ -67,6 +71,7 @@ export const Button = ({
           }
         }
       }}
+      title={title}
     >
       <div className="whitespace-nowrap">{children}</div>
     </button>

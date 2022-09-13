@@ -1,6 +1,10 @@
 import React from 'react';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { IoMdArrowDropdown } from 'react-icons/io';
+import { SiReadthedocs, SiDiscord } from 'react-icons/si';
+import { BsTwitter } from 'react-icons/bs';
+import { RiMediumFill } from 'react-icons/ri';
+
 import { Menu } from '@headlessui/react';
 import {
   SVG,
@@ -10,7 +14,8 @@ import {
   CustomMenuItem,
   pageStyles,
   NextLink,
-  ShoppingCartButton
+  ShoppingCartButton,
+  DropdownItem
 } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 import { useRouter } from 'next/router';
@@ -35,9 +40,9 @@ export const Navbar = () => {
         },
         {
           type: 'link',
-          label: 'My profile',
+          label: 'Feed',
           props: {
-            href: '/profile/me'
+            href: '/feed'
           }
         },
         {
@@ -48,33 +53,51 @@ export const Navbar = () => {
           }
         },
         {
+          type: 'link',
+          label: 'Curation',
+          props: {
+            href: '/curation'
+          }
+        },
+        {
+          type: 'link',
+          label: 'Rewards',
+          props: {
+            href: '/rewards'
+          }
+        },
+        {
           type: 'dropdown',
           label: 'Community',
           menu: [
             {
-              label: 'Docs',
+              label: 'Read docs',
+              icon: <SiReadthedocs className=" h-5 w-5 text-black" />,
               onClick: () => {
                 window.open('https://docs.infinity.xyz');
               }
-            },
+            } as DropdownItem,
             {
               label: 'Twitter',
+              icon: <BsTwitter className=" h-5 w-5 text-black" />,
               onClick: () => {
                 window.open('https://twitter.com/infinitydotxyz');
               }
-            },
+            } as DropdownItem,
             {
               label: 'Discord',
+              icon: <SiDiscord className=" h-5 w-5 text-black" />,
               onClick: () => {
-                window.open('http://discord.gg/4VFcGY3W7H');
+                window.open('https://discord.com/invite/infinitydotxyz');
               }
-            },
+            } as DropdownItem,
             {
               label: 'Medium',
+              icon: <RiMediumFill className=" h-5 w-5 text-black" />,
               onClick: () => {
                 window.open('https://medium.com/@infinitydotxyz');
               }
-            }
+            } as DropdownItem
           ]
         }
       ],
@@ -84,13 +107,8 @@ export const Navbar = () => {
     }
   };
 
-  interface MenuItm {
-    label: string;
-    onClick: () => void;
-  }
-
   const mobileMenuContent = () => {
-    const result: MenuItm[] = [];
+    const result: DropdownItem[] = [];
 
     result.push({
       label: 'Trending',
@@ -100,9 +118,9 @@ export const Navbar = () => {
     });
 
     result.push({
-      label: 'My profile',
+      label: 'Feed',
       onClick: () => {
-        router.push('/profile/me');
+        router.push('/feed');
       }
     });
 
@@ -110,6 +128,13 @@ export const Navbar = () => {
       label: 'Orderbook',
       onClick: () => {
         router.push('/orderbook');
+      }
+    });
+
+    result.push({
+      label: 'Profile',
+      onClick: () => {
+        router.push('/profile/me');
       }
     });
 
@@ -149,7 +174,7 @@ export const Navbar = () => {
     result.push({
       label: 'Discord',
       onClick: () => {
-        window.open('http://discord.gg/4VFcGY3W7H');
+        window.open('https://discord.com/invite/infinitydotxyz');
       }
     });
     result.push({
@@ -229,7 +254,10 @@ export const Navbar = () => {
                   >
                     {item?.menu?.map((x, j) => (
                       <CustomMenuItem key={j} onClick={x.onClick}>
-                        {x?.label}
+                        <div className="flex items-center">
+                          {x.icon && <div className="mr-4">{x.icon}</div>}
+                          {x.label}
+                        </div>
                       </CustomMenuItem>
                     ))}
                   </Menu.Items>

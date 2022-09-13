@@ -7,10 +7,11 @@ interface Props {
   center?: boolean; // false for bg-top
   cover?: boolean;
   className?: string;
+  fade?: boolean;
   onClick?: () => void;
 }
 
-export const EZImage = ({ src, center = true, cover = true, onClick, className = '' }: Props) => {
+export const EZImage = ({ src, center = true, cover = true, fade = true, onClick, className = '' }: Props) => {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
 
@@ -63,13 +64,24 @@ export const EZImage = ({ src, center = true, cover = true, onClick, className =
   }
 
   return (
-    <div className={twMerge('w-full h-full', className)} onClick={onClick}>
+    <div
+      className={twMerge('w-full h-full shrink-0', className)}
+      onClick={(e) => {
+        if (onClick) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          onClick();
+        }
+      }}
+    >
       <div
         className={twMerge(
           cover ? 'bg-cover' : 'bg-contain',
           center ? 'bg-center' : 'bg-top',
           loaded ? 'opacity-100' : 'opacity-0',
-          'transition-opacity duration-500 w-full h-full bg-no-repeat'
+          fade ? 'transition-opacity duration-500' : '',
+          ' w-full h-full bg-no-repeat'
         )}
         style={{ backgroundImage: `url(${imgUrl})` }}
       />

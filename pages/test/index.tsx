@@ -87,7 +87,7 @@ export const TestPage = () => {
                 void router.push('/profile/me');
               }}
             >
-              My Profile
+              Profile
             </Button>
 
             <Button

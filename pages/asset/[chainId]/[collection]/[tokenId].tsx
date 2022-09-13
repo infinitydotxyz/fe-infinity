@@ -334,7 +334,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
               {sellPriceEth && (
                 <Button variant="outline" size="large" className="" onClick={onClickAcceptOffer}>
                   <div className="flex">
-                    Accept Offer <EthPrice label={`${sellPriceEth}`} className="ml-2" rowClassName="" />
+                    Accept Offer <EthPrice label={`${sellPriceEth}`} className="ml-2" />
                   </div>
                 </Button>
               )}

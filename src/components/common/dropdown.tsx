@@ -1,17 +1,19 @@
 import { Menu } from '@headlessui/react';
-import { ReactElement } from 'react';
+import { ReactElement, ReactNode } from 'react';
 import { BiCaretDown } from 'react-icons/bi';
 import { twMerge } from 'tailwind-merge';
 import { inputBorderColor } from '../../utils/ui-constants';
+import { Divider } from './divider';
 
-export type DropdownItems = {
+export type DropdownItem = {
   label: string | ReactElement;
+  icon?: ReactNode;
   onClick: () => void;
 };
 
 interface DropdownProps {
   label?: string | ReactElement;
-  items: DropdownItems[];
+  items: DropdownItem[];
   toggler?: ReactElement; // custom toggler element.
   contentClassName?: string; // className for the dropdown content panel.
   itemListClassName?: string;
@@ -57,9 +59,16 @@ export const Dropdown = ({
         >
           <div className={`py-1 ${itemListClassName}`}>
             {items.map((item, idx) => {
+              if (item.label === '-') {
+                return <Divider key={idx} />;
+              }
+
               return (
                 <CustomMenuItem key={idx} onClick={item.onClick} itemclassname={itemClassName}>
-                  {item.label}
+                  <div className="flex items-center">
+                    {item.icon && <div className="mr-4">{item.icon}</div>}
+                    {item.label}
+                  </div>
                 </CustomMenuItem>
               );
             })}
@@ -79,8 +88,7 @@ export const CustomMenuItem = (props: CustomMenuItemProps) => {
   return (
     <Menu.Item {...props}>
       {({ active, disabled }) => (
-        <a
-          href="#"
+        <div
           className={twMerge(
             'flex w-full justify-between px-4 py-4 text-left leading-5 font-heading ',
             active ? 'hover:bg-theme-light-200 rounded-xl' : 'text-gray-700',
@@ -89,7 +97,7 @@ export const CustomMenuItem = (props: CustomMenuItemProps) => {
           )}
         >
           <span>{props.children}</span>
-        </a>
+        </div>
       )}
     </Menu.Item>
   );

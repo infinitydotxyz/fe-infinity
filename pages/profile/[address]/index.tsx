@@ -3,7 +3,7 @@ import { CenteredContent, PageBox, Spinner } from 'src/components/common';
 import { UserPage } from 'src/components/user/user-page';
 import { User } from 'src/utils/context/AppContext';
 import { PleaseConnectMsg, useFetch, USER_API_END_POINT } from 'src/utils';
-import { UserProfileDto } from 'src/components/user/user-profile-dto';
+import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 const ProfilePage = () => {

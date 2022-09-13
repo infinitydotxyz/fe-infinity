@@ -4,7 +4,7 @@ import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import { Combobox } from '@headlessui/react';
 import { SVG } from './svg';
-import { FiSearch } from 'react-icons/fi';
+import { AiOutlineSearch } from 'react-icons/ai';
 import { debounce } from 'lodash';
 import { EZImage } from './ez-image';
 import { twMerge } from 'tailwind-merge';
@@ -146,7 +146,7 @@ export const SearchInput = ({ expanded }: Props) => {
   const content = {
     search: {
       label: 'Search',
-      icon: FiSearch
+      icon: AiOutlineSearch
     }
   };
   return (

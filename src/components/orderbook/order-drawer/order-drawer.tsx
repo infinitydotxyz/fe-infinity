@@ -7,7 +7,8 @@ import {
   Drawer,
   SimpleTable,
   Modal,
-  Dropdown
+  Dropdown,
+  HelpTip
 } from 'src/components/common';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { OrderBuilder } from './order-builder';
@@ -48,7 +49,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
   const emptyCart = (
     <div className="flex h-full justify-center content-center items-center text-sm">
       <div className="text-center">
-        <span className="text-lg font-semibold">Cart is empty</span>
+        <div className="text-lg font-semibold">Cart is empty</div>
         <br />
         Add an item to the order.
         <div className="flex flex-row gap-2 py-2 w-full h-full mt-5">
@@ -264,15 +265,18 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
         subtitle={subtitle}
         title={
           <div className="flex items-center">
-            <span>{title}</span>
+            <div className="mr-3">{title}</div>
             {ordersInCart.length > 0 || cartItems.length > 0 ? (
               <>
-                <span className="ml-2 font-normal text-sm w-8 h-8 flex items-center justify-center rounded-full bg-theme-gray-100">
-                  {cartItems.length > 0 ? cartItems.length : ordersInCart.length}
-                </span>
                 <Dropdown
                   label="Dropdown"
-                  toggler={<span className="ml-2 font-normal text-sm underline cursor-pointer">Clear</span>}
+                  toggler={
+                    <HelpTip content={<div className="whitespace-nowrap">Remove all</div>}>
+                      <div className="font-normal text-sm w-8 h-8 flex items-center justify-center rounded-full bg-theme-gray-100">
+                        {cartItems.length > 0 ? cartItems.length : ordersInCart.length}
+                      </div>
+                    </HelpTip>
+                  }
                   items={[
                     {
                       label: 'Confirm',

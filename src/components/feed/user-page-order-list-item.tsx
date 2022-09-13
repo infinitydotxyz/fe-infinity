@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { EthPrice, Button } from 'src/components/common';
 import { format } from 'timeago.js';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { UserProfileDto } from '../user/user-profile-dto';
 import { OrderbookItem } from '../orderbook/orderbook-list/orderbook-item';
 import { UserOrderFilter } from '../filter/user-profile-order-filter-panel';
 import { OrderDetailModal } from '../orderbook/OrderDetailModal';
+import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user';
 
 interface Props {
   order: SignedOBOrder;
@@ -20,7 +20,7 @@ export const UserPageOrderListItem = ({ order, orderType, onClickActionBtn: onCl
 
   return (
     <div>
-      <div className="bg-gray-100 px-10 py-6 rounded-3xl flex font-heading">
+      <div className="bg-theme-light-200 px-10 py-6 rounded-3xl flex font-heading">
         <div className="flex justify-between items-center w-full">
           <div className="w-1/4">
             <OrderbookItem

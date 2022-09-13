@@ -11,7 +11,7 @@ interface Props {
 export const ActivityItem = ({ event }: Props) => {
   return (
     <div>
-      <div className="bg-gray-100 px-10 py-6 rounded-3xl flex items-center font-heading">
+      <div className="bg-theme-light-200 px-10 py-6 rounded-3xl flex items-center font-heading">
         <NextLink href={`/asset/${event.chainId}/${event.collectionAddress}/${event.tokenId}`}>
           <EZImage className="w-16 h-16 max-h-[80px] rounded-2xl" src={event.image} />
         </NextLink>

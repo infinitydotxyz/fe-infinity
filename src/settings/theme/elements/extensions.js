@@ -51,7 +51,6 @@ module.exports = {
     29: 'repeat(29, minmax(0, 1fr))',
     30: 'repeat(30, minmax(0, 1fr))',
     analytics: '5em 4em 12em repeat(auto-fit,minmax(1px, auto))'
-
   },
   gridRow: {
     'span-7': 'span 7 / span 7',

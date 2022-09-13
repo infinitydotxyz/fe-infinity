@@ -9,7 +9,7 @@ interface Props {
 
 export const ActivityFilter = ({ activityTypes, onChange }: Props) => {
   return (
-    <PopoverButton title="Filter" buttonClassName="font-heading">
+    <PopoverButton title="Filter">
       {[EventType.NftSale, EventType.NftListing, EventType.NftOffer].map((type: EventType) => {
         const typeName = EventTypeNames[type];
         const label = `${typeName.charAt(0).toUpperCase() + typeName.slice(1)}s`;

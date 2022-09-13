@@ -4,12 +4,13 @@ import { useRouter } from 'next/router';
 import type { AppProps } from 'next/app';
 import 'src/settings/theme/globals.scss';
 import { isLocalhost } from 'src/utils/commonUtils';
-import { AppContextProvider } from 'src/utils/context/AppContext';
+import { OnboardContextProvider } from 'src/utils/OnboardContext/OnboardContext';
 import { OrderContextProvider } from 'src/utils/context/OrderContext';
 import { FilterContextProvider } from 'src/utils/context/FilterContext';
 import React, { FunctionComponent, memo, StrictMode, useEffect } from 'react';
 import { DrawerContextProvider } from 'src/utils/context/DrawerContext';
-import { OnboardContextProvider } from 'src/utils/OnboardContext/OnboardContext';
+import { CurationBulkVoteContextProvider } from 'src/utils/context/CurationBulkVoteContext';
+import { AppContextProvider } from 'src/utils/context/AppContext';
 
 const Page: FunctionComponent<AppProps> = ({ Component, pageProps }) => <Component {...pageProps} />;
 const Memoized = memo(Page, (p, n) => p.Component === n.Component && p.pageProps === n.pageProps);
@@ -37,7 +38,9 @@ const App: FunctionComponent<AppProps> = (props) => {
           <FilterContextProvider>
             <OrderContextProvider>
               <DrawerContextProvider>
-                <Memoized {...props} />
+                <CurationBulkVoteContextProvider>
+                  <Memoized {...props} />
+                </CurationBulkVoteContextProvider>
               </DrawerContextProvider>
             </OrderContextProvider>
           </FilterContextProvider>

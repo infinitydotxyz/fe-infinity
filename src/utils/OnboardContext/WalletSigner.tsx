@@ -2,7 +2,6 @@
 import { WalletState } from '@web3-onboard/core';
 import { ethers, Signature } from 'ethers';
 import { splitSignature } from 'ethers/lib/utils';
-import { UserRejectException, WalletType } from './UserRejectException';
 
 export class WalletSigner {
   public wallet;
@@ -57,9 +56,10 @@ export class WalletSigner {
         return splitSignature(result);
       }
     } catch (err: any) {
-      if (err?.code === 4001) {
-        throw new UserRejectException(WalletType.MetaMask);
-      }
+      console.log(err);
+      // if (err?.code === 4001) {
+      //   throw new UserRejectException(WalletType.MetaMask);
+      // }
       throw err;
     }
   }

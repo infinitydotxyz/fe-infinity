@@ -22,10 +22,10 @@ export const AllCuratedCollections: React.FC<AllCuratedProps> = ({ orderBy }) =>
   };
 
   const { result, error, isLoading, setSize } = useFetchInfinite<CuratedCollectionsDto>(
-    `/collections/curated/${user?.address ? `${chainId}:${user.address}` : ''}`,
+    '/collections/curated/' + (user?.address ? `${chainId}:${user?.address}` : ''),
     {
       query,
-      apiParams: { requiresAuth: true }
+      apiParams: { requiresAuth: !!user?.address }
     }
   );
 
@@ -44,7 +44,7 @@ export const AllCuratedCollections: React.FC<AllCuratedProps> = ({ orderBy }) =>
       )}
 
       {result && result[0].data?.length === 0 && (
-        <NoResultsBox tab={CuratedTab.AllCurated} onClick={() => router.push('orderbook')} />
+        <NoResultsBox tab={CuratedTab.AllCurated} onClick={() => router.push('trending')} />
       )}
 
       <ScrollLoader onFetchMore={fetchMore} />

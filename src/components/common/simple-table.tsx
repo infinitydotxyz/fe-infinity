@@ -22,18 +22,19 @@ interface Props {
   items: SimpleTableItem[];
   className?: string;
   rowClassName?: string;
+  valueClassName?: string;
 }
 
-export const SimpleTable = ({ items, className = '', rowClassName = '' }: Props) => {
+export const SimpleTable = ({ items, className = '', rowClassName = '', valueClassName = '' }: Props) => {
   const table = items.map((item) => {
     return (
-      <div key={Math.random()} className={twMerge(`flex w-full ${rowClassName}`)}>
-        <div>{item.title}</div>
+      <div key={Math.random()} className={twMerge(`  flex w-full items-start ${rowClassName}`)}>
+        <div className="text-gray-500 font-bold">{item.title}</div>
         <Spacer />
-        <div className="font-bold">{item.value}</div>
+        <div className={twMerge('', valueClassName)}>{item.value}</div>
       </div>
     );
   });
 
-  return <div className={twMerge(className, 'space-y-2')}>{table}</div>;
+  return <div className={twMerge('', className)}>{table}</div>;
 };

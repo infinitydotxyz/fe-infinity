@@ -44,7 +44,7 @@ export const FeedFilterDropdown: React.FC<FeedFilterDropdownProps> = ({
 }) => {
   const filterOptions = options ?? DEFAULT_OPTIONS;
   return (
-    <PopoverButton title="Filter" buttonClassName="font-heading pointer-events-auto py-2.5">
+    <PopoverButton title="Filter">
       {filterOptions.map((item, idx) => {
         let isChecked = selectedTypes.indexOf(item.value as EventType) >= 0;
 

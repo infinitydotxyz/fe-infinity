@@ -12,6 +12,7 @@ interface Props {
   className?: string;
   disabled?: boolean;
   disableClick?: boolean; // for menu.button, we want to let the click fall though
+  title?: string;
 }
 
 export const Chip = ({
@@ -21,6 +22,7 @@ export const Chip = ({
   iconOnly,
   active,
   onClick,
+  title,
   className = '',
   disabled = false,
   disableClick = false
@@ -30,8 +32,9 @@ export const Chip = ({
       type={disableClick ? 'submit' : 'button'}
       variant={active ? 'primary' : 'outline'}
       onClick={onClick}
-      size={iconOnly ? 'round' : 'medium'}
+      size={iconOnly ? 'round' : 'normal'}
       disabled={disabled}
+      title={title}
     >
       <div className={twMerge(iconOnly ? ' flex justify-center' : 'flex items-center', className)}>
         {left && <div className="pr-2">{left}</div>}

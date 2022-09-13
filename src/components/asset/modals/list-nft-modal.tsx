@@ -1,5 +1,5 @@
 import { ChainId, Erc721Token, OBOrder, SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
-import { ETHEREUM_WETH_ADDRESS, getOBComplicationAddress, NULL_ADDRESS } from '@infinityxyz/lib-frontend/utils';
+import { getOBComplicationAddress, NULL_ADDRESS } from '@infinityxyz/lib-frontend/utils';
 import { useState } from 'react';
 import {
   DatePickerBox,
@@ -95,7 +95,7 @@ export const ListNFTModal = ({ isOpen, onClose, onDone, token }: Props) => {
               nonce: orderNonce,
               execParams: {
                 complicationAddress: getOBComplicationAddress(chainId),
-                currencyAddress: ETHEREUM_WETH_ADDRESS
+                currencyAddress: NULL_ADDRESS
               },
               extraParams: {
                 buyer: NULL_ADDRESS

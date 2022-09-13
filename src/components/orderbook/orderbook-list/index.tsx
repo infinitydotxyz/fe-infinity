@@ -4,8 +4,6 @@ import { Button, CenteredContent, Dropdown, ScrollLoader, Spinner } from 'src/co
 import { OrderbookProvider, SORT_FILTERS, useOrderbook } from '../OrderbookContext';
 import { OrderbookRow } from './orderbook-row';
 import { OrderbookFilters } from './filters/orderbook-filters';
-import { useRouter } from 'next/router';
-import { useDrawerContext } from 'src/utils/context/DrawerContext';
 
 const SORT_LABELS: {
   [key: string]: string;
@@ -33,11 +31,16 @@ export const OrderbookContainer = ({ collectionId, tokenId, className = '' }: Pr
   );
 };
 
-export const OrderbookContent = ({ className }: { className?: string }): JSX.Element => {
-  const { query } = useRouter();
+interface Props4 {
+  className?: string;
+}
+
+export const OrderbookContent = ({ className }: Props4) => {
+  // const { query } = useRouter();
   const { orders, fetchMore, isLoading, updateFilter, filters, hasMoreOrders, hasNoData } = useOrderbook();
   const [showFilters, setShowFilters] = useState<boolean>(
-    query.orderTypes || query.collections || query.minPrice || query.maxPrice || query.numberOfNfts ? true : false
+    true
+    // query.orderTypes || query.collections || query.minPrice || query.maxPrice || query.numberOfNfts ? true : false
   );
   const [label, setLabel] = useState<string>(getSortLabel(filters?.sort));
 
@@ -109,12 +112,10 @@ const OrderbookList = ({
   hasMoreOrders,
   hasNoData
 }: Props2): JSX.Element => {
-  const { fulfillDrawerParams } = useDrawerContext();
-
   return (
-    <div className="flex justify-center align-items gap-4 pointer-events-auto">
+    <div className="flex gap-4 pointer-events-auto">
       {showFilters && (
-        <div className="w-1/4 flex-none">
+        <div className="w-1/5 shrink-0">
           <OrderbookFilters />
         </div>
       )}
@@ -123,14 +124,7 @@ const OrderbookList = ({
 
         {orderList.length > 0 &&
           orderList.map((order: SignedOBOrder, i: number) => {
-            return (
-              <OrderbookRow
-                onClickActionBtn={fulfillDrawerParams.addOrder}
-                key={`${i}-${order.id}`}
-                order={order}
-                isFilterOpen={showFilters ?? false}
-              />
-            );
+            return <OrderbookRow key={`${i}-${order.id}`} order={order} isFilterOpen={showFilters ?? false} />;
           })}
 
         {isLoading && (

@@ -2,7 +2,7 @@ import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { ReactNode } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { Button } from './button';
-import { Dropdown, DropdownItems } from './dropdown';
+import { Dropdown, DropdownItem } from './dropdown';
 import { NextLink } from './next-link';
 import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { useRouter } from 'next/router';
@@ -22,7 +22,7 @@ export type CardAction = {
 export interface CardProps {
   data?: ERC721CardData;
   cardActions?: CardAction[];
-  getDropdownActions?: (data: ERC721CardData | undefined) => DropdownItems[] | null;
+  getDropdownActions?: (data: ERC721CardData | undefined) => DropdownItem[] | null;
   isLoading?: boolean;
   className?: string;
   height?: number;
@@ -99,7 +99,7 @@ export const Card = ({
       </NextLink>
 
       {data?.rarityRank && (
-        <span className="absolute bg-gray-100 top-5 right-5 py-1 px-3 rounded-full">
+        <span className="absolute bg-theme-light-200 top-5 right-5 py-1 px-3 rounded-full">
           {Math.round(data?.rarityRank)}
         </span>
       )}
