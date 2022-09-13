@@ -28,6 +28,8 @@ export const NFT_DATA_SOURCES = {
 
 export const DEFAULT_MAX_GAS_PRICE_WEI = '500000000000'; // 500 gwei
 
+export const NFT_TOTAL_SUPPLY = 2_000_000_000;
+
 export const PLACEHOLDER_IMAGE = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
 export const MISSING_IMAGE_URL = missingImage.src;
 export const NEWS_IMAGE_URL = newsImage.src;

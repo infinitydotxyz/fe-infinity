@@ -31,7 +31,7 @@ export function useRemainingLockTime(address?: string) {
     const weeks = [];
 
     // Each 'duration' represents a StakeDuration.
-    // For example, when i == 0 then i == StakeDuration.X0, when i == 1 then i == StakeDuration.X3, etc.
+    // For example, when i == 0 then i == StakeDuration.None, when i == 1 then i == StakeDuration.ThreeMonths, etc.
     for (let duration = 0; duration < stakingInfo.length; duration++) {
       const info = stakingInfo[duration];
 
