@@ -17,7 +17,7 @@ interface FeedFilterDropdownProps {
   autoCheckAll?: boolean;
 }
 
-const DEFAULT_OPTIONS = [
+export const DEFAULT_OPTIONS = [
   {
     label: 'All',
     value: ''
@@ -33,6 +33,18 @@ const DEFAULT_OPTIONS = [
   {
     label: 'Sales',
     value: EventType.NftSale
+  },
+  {
+    label: 'Tokens Staked',
+    value: EventType.TokensStaked
+  },
+  {
+    label: 'Vote',
+    value: EventType.UserVote
+  },
+  {
+    label: 'Transfer',
+    value: EventType.NftTransfer
   }
 ];
 

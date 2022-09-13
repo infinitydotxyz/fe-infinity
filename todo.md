@@ -1,38 +1,17 @@
-marketplace
-add buy
-close drawer
-add buy -> no drawer
+hey can you make sure NFT_TRANSFER, 'TOKENS_STAKED', 'USER_VOTE' events show up in the UI and user can filter them (edited)
 
-remove from cart on cancel drawer
+check FeedEvent.ts file in lib repo
+lmk once these are done
+next big item we want is a 'product' home page (edited)
 
-use timeago.js? <div>Expiry date: {format(order.endTimeMs)}</div>
+nneverlander — Today at 12:36 PM
+if you are going to use firestore IN query, keep in mind it only supports upto 10 values
+check this piece of code
+const events = query.events && query?.events.length > 0 ? query.events : Object.values(EventType).slice(10); // slice because firestore 'IN' query can only support 10 items
 
-home page feed,
+    let userEventsQuery = this.firebaseService.firestore
+      .collection(firestoreConstants.FEED_COLL)
+      .where('type', 'in', events)
+      .where('usersInvolved', 'array-contains', user.userAddress);
 
-twitter and discord events showing up on feed
-
-twitter bot to broadcast buy orders,
-
-mobile friendliness and FE to be delightful in general
-
-there are other types also
-afaik cover, contain, padded are the types
-
-Check the feed collection in firestore
-For discord announcements see the readme for social-data-listener repo
-
-Then make a feed page which will be basically the community tab on its own page but data is not specific to the collection instead will be global. So you need to create new endpoints and queries if they don’t already exist
-
-basically this is left: twitter, news, nft transfer and discord events showing up on feed
-
-then start on the reservoir kit
-
-animated gif craziness?
-
-0. You can divide the x-axis into a fixed number (say 10) equal intervals between a min and max. Default is 0 and 10000 (?) ETH
-1.
-2. In each interval show listings and offers in that interval as bubbles
-3. Bubbles represent the number of listings and offers. Greater the number, bigger the bubble. Basically numListings = radius of the listings bubble, numOffers = radius of the offers bubble. You obviously need to normalize (scale) these values to a fixed range so that large values don't draw very large bubbles and small values don't draw bubbles that are too tiny
-4. Hovering on each bubble opens a tool tip that shows the list of listings (or offers if it's an offer bubble). Each item in the list is a tuple (image, collection name, token id, price) (edited)
-   [7:01 PM]
-5. User can use a slider to control the min and max prices(which is equivalent to zooming in and out), that makes a new query and fetches new data (edited)
+in getActivity method in user.service.ts

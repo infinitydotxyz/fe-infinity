@@ -223,6 +223,42 @@ export const FeedListTableItem = ({ activity }: Props) => {
     );
   };
 
+  const tokensStakedItem = () => {
+    return (
+      <div className={twMerge(standardBorderCard, 'flex items-center font-heading')}>
+        <EZImage className="w-16 h-16 overflow-clip rounded-2xl" src={activity?.image} />
+
+        <div className="flex flex-col font-body w-full justify-around ml-8">
+          <div className=" font-bold">{activity.paymentToken}</div>
+          <div>{activity.internalUrl}</div>
+
+          <div className="flex item-center mt-2">
+            <div className="font-bold">{activity.fromDisplayName}</div>
+            <div className="ml-4">{format(activity.timestamp)}</div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const voteItem = () => {
+    return (
+      <div className={twMerge(standardBorderCard, 'flex items-center font-heading')}>
+        <EZImage className="w-16 h-16 overflow-clip rounded-2xl" src={activity?.image} />
+
+        <div className="flex flex-col font-body w-full justify-around ml-8">
+          <div className=" font-bold">{activity.paymentToken}</div>
+          <div>{activity.internalUrl}</div>
+
+          <div className="flex item-center mt-2">
+            <div className="font-bold">{activity.fromDisplayName}</div>
+            <div className="ml-4">{format(activity.timestamp)}</div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   switch (activity.type) {
     case EventType.NftSale:
       return saleItem();
@@ -244,9 +280,15 @@ export const FeedListTableItem = ({ activity }: Props) => {
     case EventType.DiscordAnnouncement:
       return discordItem();
 
+    // TODO(SNG) test this
     case EventType.TokensStaked:
-    case EventType.TokensUnStaked:
+      return tokensStakedItem();
+
+    // TODO(SNG) test this
     case EventType.UserVote:
+      return voteItem();
+
+    case EventType.TokensUnStaked:
     case EventType.UserVoteRemoved:
     case EventType.TokensRageQuit:
       return <div></div>;

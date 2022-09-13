@@ -13,18 +13,23 @@ interface ActivityListPropType {
 }
 type EventTypeOptions = EventType | '';
 
+const defaultActivities: EventTypeOptions[] = [
+  '',
+  EventType.NftSale,
+  EventType.NftOffer,
+  EventType.NftListing,
+  EventType.TokensStaked,
+  EventType.UserVote,
+  EventType.NftTransfer
+];
+
 export const ActivityList: React.FC<ActivityListPropType> = ({
   className = '',
   chainId,
   collectionAddress,
   tokenId
 }: ActivityListPropType) => {
-  const [activityTypes, setActivityTypes] = useState<EventTypeOptions[]>([
-    '',
-    EventType.NftSale,
-    EventType.NftOffer,
-    EventType.NftListing
-  ]);
+  const [activityTypes, setActivityTypes] = useState<EventTypeOptions[]>(defaultActivities);
   const [activityList, setActivityList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasNoData, setHasNoData] = useState(false);
@@ -60,7 +65,7 @@ export const ActivityList: React.FC<ActivityListPropType> = ({
     const curType = checkId as EventType;
     if (checkId === '') {
       if (checked === true) {
-        setActivityTypes(['', EventType.NftSale, EventType.NftOffer, EventType.NftListing]);
+        setActivityTypes(defaultActivities);
       } else {
         setActivityTypes([]);
       }

@@ -43,28 +43,24 @@ export const FeedListItem = ({
     switch (type) {
       case EventType.TwitterTweet:
         return component('bg-amber-600', 'Tweet');
-
       case EventType.DiscordAnnouncement:
         return component('bg-blue-600', 'Discord');
-
       case EventType.NftSale:
         return component('bg-purple-700', 'Sale');
-
       case EventType.NftOffer:
         return component('bg-cyan-700', 'Offer');
-
       case EventType.NftListing:
         return component('bg-orange-700', 'Listing');
-
       case EventType.NftTransfer:
         return component('bg-yellow-600', 'Transfer');
-
       case EventType.CoinMarketCapNews:
         return component('bg-black', 'News');
-
       case EventType.TokensStaked:
-      case EventType.TokensUnStaked:
+        return component('bg-green-600', 'Tokens staked');
       case EventType.UserVote:
+        return component('bg-teal-600', 'Vote');
+
+      case EventType.TokensUnStaked:
       case EventType.UserVoteRemoved:
       case EventType.TokensRageQuit:
       default:
@@ -216,11 +212,26 @@ export const FeedListItem = ({
             <div className="ml-3 text-gray-600">{timeString}</div>
           </div>
         );
-        break;
-
+      // TODO(SNG) test this
       case EventType.TokensStaked:
-      case EventType.TokensUnStaked:
+        return (
+          <div className="flex items-center">
+            <div className="font-bold">{activity.paymentToken}</div>
+
+            <div className="ml-3 text-gray-600">{timeString}</div>
+          </div>
+        );
+      // TODO(SNG) test this
       case EventType.UserVote:
+        return (
+          <div className="flex items-center">
+            <div className="font-bold">{activity.paymentToken}</div>
+
+            <div className="ml-3 text-gray-600">{timeString}</div>
+          </div>
+        );
+
+      case EventType.TokensUnStaked:
       case EventType.UserVoteRemoved:
       case EventType.TokensRageQuit:
       default:
@@ -258,11 +269,25 @@ export const FeedListItem = ({
           />
         );
 
-        break;
-
+      // TODO(SNG) test this
       case EventType.TokensStaked:
-      case EventType.TokensUnStaked:
+        return (
+          <EZImage
+            src={activity?.image || collectionProfileImage}
+            className="border rounded-full overflow-clip shrink-0 w-10 h-10 bg-theme-light-200"
+          />
+        );
+
+      // TODO(SNG) test this
       case EventType.UserVote:
+        return (
+          <EZImage
+            src={activity?.image || collectionProfileImage}
+            className="border rounded-full overflow-clip shrink-0 w-10 h-10 bg-theme-light-200"
+          />
+        );
+
+      case EventType.TokensUnStaked:
       case EventType.UserVoteRemoved:
       case EventType.TokensRageQuit:
       default:
