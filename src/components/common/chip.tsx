@@ -32,7 +32,7 @@ export const Chip = ({
       type={disableClick ? 'submit' : 'button'}
       variant={active ? 'primary' : 'outline'}
       onClick={onClick}
-      size={iconOnly ? 'round' : 'medium'}
+      size={iconOnly ? 'round' : 'normal'}
       disabled={disabled}
       title={title}
     >
