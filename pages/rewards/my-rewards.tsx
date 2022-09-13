@@ -131,6 +131,7 @@ const MyRewardsPage: React.FC = () => {
                 <div className="text-2xl font-heading font-bold">10%</div>
                 <div className="text-sm mt-1">Earned APR</div>
               </div> */}
+              <div className="lg:w-1/4 sm:w-full"></div>
               <div className="lg:w-1/4 sm:w-full">
                 <Button size="large" className="font-heading">
                   Claim Rewards

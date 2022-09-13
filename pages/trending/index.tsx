@@ -1,18 +1,32 @@
 import { ChainId, Collection, CollectionPeriodStatsContent } from '@infinityxyz/lib-frontend/types/core';
+import { CuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto/collections';
 import { useRouter } from 'next/router';
 import { parse } from 'query-string';
 import { Fragment, useEffect, useState } from 'react';
-import { Button, EthPrice, EZImage, NextLink, PageBox, SVG, ToggleTab, useToggleTab } from 'src/components/common';
+import {
+  Button,
+  EthPrice,
+  EZImage,
+  NextLink,
+  PageBox,
+  SVG,
+  toastSuccess,
+  ToggleTab,
+  useToggleTab
+} from 'src/components/common';
+import { VoteModal } from 'src/components/curation/vote-modal';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import useScreenSize from 'src/hooks/useScreenSize';
-import { apiGet, formatNumber, ITEMS_PER_PAGE, nFormatter } from 'src/utils';
+import { apiGet, formatNumber, ITEMS_PER_PAGE, nFormatter, useFetch } from 'src/utils';
 import { useOrderContext } from 'src/utils/context/OrderContext';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 // - cache stats 5mins
 
 const DEFAULT_TAB = '1 day';
 
 const TrendingPage = () => {
+  const { checkSignedIn } = useOnboardContext();
   const { pathname, query, push } = useRouter();
   const [queryBy, setQueryBy] = useState('by_sales_volume');
   const [data, setData] = useState<Collection[]>([]);
@@ -20,6 +34,7 @@ const TrendingPage = () => {
   const [period, setPeriod] = useState('daily');
   const [offset, setOffset] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedCollection, setSelectedCollection] = useState<Collection>();
   const { addCartItem, setOrderDrawerOpen } = useOrderContext();
   const isMounted = useIsMounted();
 
@@ -206,8 +221,13 @@ const TrendingPage = () => {
 
                 <div className="flex flex-row gap-2 flex-wrap">
                   <Button onClick={() => onClickBuy(coll)}>Buy</Button>
-                  <Button onClick={() => push(`/collection/${coll?.slug}`)}>Curate</Button>
+                  <Button onClick={() => checkSignedIn() && setSelectedCollection(coll)}>Curate</Button>
                 </div>
+                <VoteModalWrapper
+                  coll={coll}
+                  isOpen={selectedCollection === coll}
+                  onClose={() => setSelectedCollection(undefined)}
+                />
               </div>
             </div>
           );
@@ -234,3 +254,44 @@ const LoadingCards = () => (
     ))}
   </>
 );
+
+const VoteModalWrapper: React.FC<{ coll: Collection; isOpen: boolean; onClose: () => void }> = ({
+  coll,
+  isOpen,
+  onClose
+}) => {
+  const { user, chainId } = useOnboardContext();
+  const { result: userCurated } = useFetch<CuratedCollectionDto>(
+    user?.address && coll.metadata.name && isOpen
+      ? `/collections/${coll.slug}/curated/${chainId}:${user.address}`
+      : null,
+    { apiParams: { requiresAuth: true } }
+  );
+
+  return (
+    <VoteModal
+      collection={{
+        ...coll,
+        ...coll.metadata,
+        ...(userCurated || {
+          votes: 0,
+          fees: 0,
+          feesAPR: 0,
+          timestamp: 0,
+          numCuratorVotes: coll.numCuratorVotes || 0,
+          userAddress: '',
+          userChainId: '' as ChainId,
+          stakerContractAddress: '',
+          stakerContractChainId: '' as ChainId,
+          tokenContractAddress: '',
+          tokenContractChainId: '' as ChainId
+        })
+      }}
+      isOpen={isOpen}
+      onClose={onClose}
+      onVote={() => {
+        toastSuccess('Votes registered successfully. Your balance will reflect shortly.');
+      }}
+    />
+  );
+};
