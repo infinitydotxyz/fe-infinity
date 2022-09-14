@@ -169,6 +169,7 @@ export const FeedListItem = ({
       case EventType.NftOffer:
       case EventType.NftTransfer:
       case EventType.NftListing:
+      case EventType.UserVote:
         return (
           <div className="flex items-center">
             <div className="font-bold">
@@ -216,16 +217,7 @@ export const FeedListItem = ({
       case EventType.TokensStaked:
         return (
           <div className="flex items-center">
-            <div className="font-bold">{activity.paymentToken}</div>
-
-            <div className="ml-3 text-gray-600">{timeString}</div>
-          </div>
-        );
-      // TODO(SNG) test this
-      case EventType.UserVote:
-        return (
-          <div className="flex items-center">
-            <div className="font-bold">{activity.paymentToken}</div>
+            <div className="font-bold">{activity.from}</div>
 
             <div className="ml-3 text-gray-600">{timeString}</div>
           </div>

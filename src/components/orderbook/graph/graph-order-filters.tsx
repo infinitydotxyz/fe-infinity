@@ -26,9 +26,9 @@ export const GraphOrderFilters = ({ className = '' }: Props3) => {
   ];
 
   return (
-    <div className={twMerge(textAltColorTW, 'flex items-center', className)}>
+    <div className={twMerge(textAltColorTW, 'flex flex-col items-start', className)}>
       <SimpleTable className={twMerge('w-full space-y-0', textColorTW)} items={tableItems} />
-      <SimpleTable className={twMerge('w-full space-y-0 ml-7', textColorTW)} items={tableItems2} />
+      <SimpleTable className={twMerge('w-full space-y-0  ', textColorTW)} items={tableItems2} />
     </div>
   );
 };

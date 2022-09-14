@@ -133,7 +133,7 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
     <div className={twMerge('flex flex-col  ', className)}>
       <div className="flex" style={{ height: graphHeight }}>
         <div className="relative flex-1 min-w-0">
-          <div className="flex mb-5 justify-between items-center">
+          <div className="flex mb-4 justify-between items-center">
             <CollectionFilterModal
               modalIsOpen={collectionFilterShown}
               setIsOpen={(open) => setCollectionFilterShown(open)}
