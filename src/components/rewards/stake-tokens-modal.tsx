@@ -112,11 +112,11 @@ export const StakeTokensModal = ({ onClose }: Props) => {
             <span>Voting power</span>
             <span>{value * multipliers[stakeDuration]}</span>
           </div>
-          <hr className="my-3" />
+          {/* <hr className="my-3" />
           <div className="text-lg font-medium flex justify-between">
             <span>Estimated APR</span>
             <span>20%</span>
-          </div>
+          </div> */}
         </div>
 
         <Button size="large" className="w-full py-3 mt-8" onClick={onStake} disabled={isStaking}>
