@@ -296,29 +296,20 @@ export const FeedListTableItem = ({ activity }: Props) => {
   switch (activity.type) {
     case EventType.NftSale:
       return saleItem();
-
     case EventType.NftOffer:
       return offerItem();
-
     case EventType.NftListing:
       return listingItem();
     case EventType.CoinMarketCapNews:
       return newsItem();
-
     case EventType.TwitterTweet:
       return tweetItem();
-
     case EventType.NftTransfer:
       return transferItem();
-
     case EventType.DiscordAnnouncement:
       return discordItem();
-
-    // TODO(SNG) test this
     case EventType.TokensStaked:
       return tokensStakedItem();
-
-    // TODO(SNG) test this
     case EventType.UserVote:
       return voteItem();
 

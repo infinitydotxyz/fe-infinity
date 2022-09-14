@@ -213,7 +213,6 @@ export const FeedListItem = ({
             <div className="ml-3 text-gray-600">{timeString}</div>
           </div>
         );
-      // TODO(SNG) test this
       case EventType.TokensStaked:
         return (
           <div className="flex items-center">
@@ -261,7 +260,6 @@ export const FeedListItem = ({
           />
         );
 
-      // TODO(SNG) test this
       case EventType.TokensStaked:
         return (
           <EZImage
@@ -270,7 +268,6 @@ export const FeedListItem = ({
           />
         );
 
-      // TODO(SNG) test this
       case EventType.UserVote:
         return (
           <EZImage
