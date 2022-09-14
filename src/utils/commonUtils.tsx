@@ -316,7 +316,9 @@ export const getTypesForFilter = (f: FeedFilter) => {
       EventType.DiscordAnnouncement,
       EventType.NftTransfer,
       EventType.TwitterTweet,
-      EventType.NftOffer
+      EventType.NftOffer,
+      EventType.TokensStaked,
+      EventType.UserVote
     ];
   }
 

@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import React from 'react';
 import { PageBox, ToggleTab, useToggleTab } from 'src/components/common';
-import GlobalRewards from './global-rewards';
+// import GlobalRewards from './global-rewards';
 import MyRewardsPage from './my-rewards';
 
 enum RewardTabs {
@@ -9,7 +9,8 @@ enum RewardTabs {
   GlobalRewards = 'Global Rewards'
 }
 
-const tabs = [RewardTabs.MyRewards, RewardTabs.GlobalRewards];
+// const tabs = [RewardTabs.MyRewards, RewardTabs.GlobalRewards];
+const tabs = [RewardTabs.MyRewards];
 
 const RewardsPage = () => {
   const router = useRouter();
@@ -25,7 +26,7 @@ const RewardsPage = () => {
       />
       <div className="mt-4">
         {selected === RewardTabs.MyRewards && <MyRewardsPage />}
-        {selected === RewardTabs.GlobalRewards && <GlobalRewards />}
+        {/* {selected === RewardTabs.GlobalRewards && <GlobalRewards />} */}
       </div>
     </PageBox>
   );

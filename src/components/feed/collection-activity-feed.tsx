@@ -40,7 +40,14 @@ export const CollectionActivityFeed = ({
       const { result, error } = await apiGet(url, {
         query: {
           limit: 50,
-          eventType: filter.types || [EventType.NftSale, EventType.NftListing, EventType.NftOffer],
+          eventType: filter.types || [
+            EventType.NftSale,
+            EventType.NftListing,
+            EventType.NftOffer,
+            EventType.TokensStaked,
+            EventType.UserVote,
+            EventType.NftTransfer
+          ],
           cursor: fromCursor
         }
       });

@@ -131,23 +131,26 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
 
   content = (
     <div className={twMerge('flex flex-col  ', className)}>
+      <div className="  flex  w-full">
+        <div className="flex flex-1 mb-4 justify-between items-center">
+          <CollectionFilterModal
+            modalIsOpen={collectionFilterShown}
+            setIsOpen={(open) => setCollectionFilterShown(open)}
+            defaultCollections={defaultCollections}
+          />
+          {showReset && (
+            <div>
+              <GraphOrderFilters className="pointer-events-auto" />
+            </div>
+          )}
+          {showReset && <div className="">{graphInfo('')}</div>}
+          {showReset && resetButton(false, '')}
+        </div>
+
+        <div className="w-[360px] flex ml-6 h-full"></div>
+      </div>
       <div className="flex" style={{ height: graphHeight }}>
         <div className="relative flex-1 min-w-0">
-          <div className="flex mb-5 justify-between items-center">
-            <CollectionFilterModal
-              modalIsOpen={collectionFilterShown}
-              setIsOpen={(open) => setCollectionFilterShown(open)}
-              defaultCollections={defaultCollections}
-            />
-            {showReset && (
-              <div>
-                <GraphOrderFilters className="pointer-events-auto" />
-              </div>
-            )}
-            {showReset && <div className="">{graphInfo('')}</div>}
-            {showReset && resetButton(false, '')}
-          </div>
-
           <GraphBox dark={true} className="h-full">
             {graph}
           </GraphBox>
@@ -155,7 +158,7 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
           {loader}
         </div>
 
-        <div className="w-[360px] flex flex-col space-y-2 ml-6 mt-11 h-full">
+        <div className="w-[360px] flex flex-col space-y-2 ml-6 h-full">
           <GraphOrderDetails
             orders={selectedOrders}
             index={selectedIndex}

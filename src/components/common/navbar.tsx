@@ -33,30 +33,9 @@ export const Navbar = () => {
       items: [
         {
           type: 'link',
-          label: 'Trending', // Analytics
-          props: {
-            href: '/trending' // analytics/trending/weekly
-          }
-        },
-        {
-          type: 'link',
-          label: 'Feed',
-          props: {
-            href: '/feed'
-          }
-        },
-        {
-          type: 'link',
           label: 'Orderbook',
           props: {
             href: '/orderbook'
-          }
-        },
-        {
-          type: 'link',
-          label: 'Curation',
-          props: {
-            href: '/curation'
           }
         },
         {
@@ -65,6 +44,24 @@ export const Navbar = () => {
           props: {
             href: '/rewards'
           }
+        },
+        {
+          type: 'dropdown',
+          label: 'Discover',
+          menu: [
+            {
+              label: 'Trending',
+              onClick: () => router.push('trending')
+            },
+            {
+              label: 'Feed',
+              onClick: () => router.push('feed')
+            },
+            {
+              label: 'Curated',
+              onClick: () => router.push('curated')
+            }
+          ]
         },
         {
           type: 'dropdown',
@@ -254,7 +251,7 @@ export const Navbar = () => {
                   >
                     {item?.menu?.map((x, j) => (
                       <CustomMenuItem key={j} onClick={x.onClick}>
-                        <div className="flex items-center">
+                        <div className="flex items-center cursor-pointer">
                           {x.icon && <div className="mr-4">{x.icon}</div>}
                           {x.label}
                         </div>

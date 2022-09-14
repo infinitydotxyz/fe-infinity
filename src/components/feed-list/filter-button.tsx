@@ -75,6 +75,14 @@ export const FilterButton = ({ onChange, filter, className = '' }: Props) => {
           {
             label: 'Tweets',
             value: EventType.TwitterTweet
+          },
+          {
+            label: 'Tokens Staked',
+            value: EventType.TokensStaked
+          },
+          {
+            label: 'Vote',
+            value: EventType.UserVote
           }
         ]}
         selectedTypes={filteringTypes}

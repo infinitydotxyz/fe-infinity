@@ -152,10 +152,10 @@ export const CollectionFilterModal = ({ modalIsOpen, setIsOpen, defaultCollectio
   }
 
   return (
-    <div className="flex items-center">
-      <div className="mr-2 text-sm">Filter by collections:</div>
+    <div className="flex flex-col ">
+      <div className="mr-2 text-sm mb-1">Filter by collections:</div>
       <Button
-        variant="primary"
+        variant="outlineWhite"
         size="small"
         onClick={() => {
           setIsOpen(true);

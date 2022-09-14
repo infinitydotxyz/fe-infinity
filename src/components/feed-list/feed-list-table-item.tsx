@@ -1,7 +1,7 @@
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { ReactNode } from 'react';
 import { EthPrice, EZImage, NextLink } from 'src/components/common';
-import { ellipsisAddress, NEWS_IMAGE_URL, standardBorderCard } from 'src/utils';
+import { ellipsisAddress, ellipsisString, NEWS_IMAGE_URL, standardBorderCard } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
 import { NftEventRec } from '../asset/activity/activity-item';
@@ -41,11 +41,7 @@ export const FeedListTableItem = ({ activity }: Props) => {
               </NextLink>
             </TableItem>
 
-            <TableItem label="Date">
-              <a href={activity.externalUrl} target="_blank" rel="noopener noreferrer">
-                {format(activity.timestamp)}
-              </a>
-            </TableItem>
+            <TableItem label="Date">{format(activity.timestamp)}</TableItem>
           </div>
         </div>
       </div>
@@ -82,11 +78,7 @@ export const FeedListTableItem = ({ activity }: Props) => {
               </NextLink>
             </TableItem>
 
-            <TableItem label="Date">
-              <a href={activity.externalUrl} target="_blank" rel="noopener noreferrer">
-                {format(activity.timestamp)}
-              </a>
-            </TableItem>
+            <TableItem label="Date">{format(activity.timestamp)}</TableItem>
           </div>
         </div>
       </div>
@@ -116,11 +108,7 @@ export const FeedListTableItem = ({ activity }: Props) => {
               </NextLink>
             </TableItem>
 
-            <TableItem label="Date">
-              <a href={activity.externalUrl} target="_blank" rel="noopener noreferrer">
-                {format(activity.timestamp)}
-              </a>
-            </TableItem>
+            <TableItem label="Date">{format(activity.timestamp)}</TableItem>
           </div>
         </div>
       </div>
@@ -154,11 +142,7 @@ export const FeedListTableItem = ({ activity }: Props) => {
               </NextLink>
             </TableItem>
 
-            <TableItem label="Date">
-              <a href={activity.externalUrl} target="_blank" rel="noopener noreferrer">
-                {format(activity.timestamp)}
-              </a>
-            </TableItem>
+            <TableItem label="Date">{format(activity.timestamp)}</TableItem>
           </div>
         </div>
       </div>
@@ -223,30 +207,79 @@ export const FeedListTableItem = ({ activity }: Props) => {
     );
   };
 
+  const tokensStakedItem = () => {
+    return (
+      <div>
+        <div className={twMerge(standardBorderCard, 'flex items-center font-heading')}>
+          <NextLink href={`/collection/${activity.collectionSlug}`}>
+            <EZImage className="w-16 h-16 overflow-clip rounded-2xl" src={activity?.image} />
+          </NextLink>
+
+          <div className="flex w-full justify-around ml-8">
+            <TableItem label="User">
+              <NextLink href={`/profile/${activity.from}`}>
+                {activity.fromDisplayName ? ellipsisAddress(activity.fromDisplayName) : ellipsisAddress(activity.from)}
+              </NextLink>
+            </TableItem>
+
+            <TableItem label="Amount">{activity.paymentToken ? ellipsisString(activity.paymentToken) : '—'}</TableItem>
+            <TableItem label="Duration">{activity.price ? <div>{activity.price}</div> : '—'}</TableItem>
+            <TableItem label="Power">{activity.externalUrl ? <div>{activity.externalUrl}</div> : '—'}</TableItem>
+
+            <TableItem label="Date">{format(activity.timestamp)}</TableItem>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const voteItem = () => {
+    return (
+      <div>
+        <div className={twMerge(standardBorderCard, 'flex items-center font-heading')}>
+          <NextLink href={`/collection/${activity.collectionSlug}`}>
+            <EZImage className="w-16 h-16 overflow-clip rounded-2xl" src={activity?.image} />
+          </NextLink>
+
+          <div className="flex w-full justify-around ml-8">
+            <TableItem label="User">
+              <NextLink href={`/profile/${activity.from}`}>
+                {activity.fromDisplayName ? ellipsisAddress(activity.fromDisplayName) : ellipsisAddress(activity.from)}
+              </NextLink>
+            </TableItem>
+
+            <TableItem label="Votes">{activity.price ? <div>{activity.price}</div> : '—'}</TableItem>
+
+            <TableItem label="# Users">{activity.toDisplayName}</TableItem>
+
+            <TableItem label="Date">{format(activity.timestamp)}</TableItem>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   switch (activity.type) {
     case EventType.NftSale:
       return saleItem();
-
     case EventType.NftOffer:
       return offerItem();
-
     case EventType.NftListing:
       return listingItem();
     case EventType.CoinMarketCapNews:
       return newsItem();
-
     case EventType.TwitterTweet:
       return tweetItem();
-
     case EventType.NftTransfer:
       return transferItem();
-
     case EventType.DiscordAnnouncement:
       return discordItem();
-
     case EventType.TokensStaked:
-    case EventType.TokensUnStaked:
+      return tokensStakedItem();
     case EventType.UserVote:
+      return voteItem();
+
+    case EventType.TokensUnStaked:
     case EventType.UserVoteRemoved:
     case EventType.TokensRageQuit:
       return <div></div>;
@@ -267,8 +300,8 @@ interface Props2 {
 const TableItem = ({ label, children }: Props2) => {
   return (
     <div className="w-auto mr-4">
-      <div className="text-gray-400">{label}</div>
-      <div className="font-medium">{children}</div>
+      <div className="text-gray-400 whitespace-nowrap">{label}</div>
+      <div className="font-medium whitespace-nowrap">{children}</div>
     </div>
   );
 };
