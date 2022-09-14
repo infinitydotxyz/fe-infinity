@@ -216,7 +216,9 @@ export const FeedListItem = ({
       case EventType.TokensStaked:
         return (
           <div className="flex items-center">
-            <div className="font-bold">{activity.from}</div>
+            <NextLink className="font-bold" href={`/profile/${activity.from}`}>
+              {activity.fromDisplayName}
+            </NextLink>
 
             <div className="ml-3 text-gray-600">{timeString}</div>
           </div>

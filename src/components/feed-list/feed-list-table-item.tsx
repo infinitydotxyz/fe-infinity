@@ -41,11 +41,7 @@ export const FeedListTableItem = ({ activity }: Props) => {
               </NextLink>
             </TableItem>
 
-            <TableItem label="Date">
-              <a href={activity.externalUrl} target="_blank" rel="noopener noreferrer">
-                {format(activity.timestamp)}
-              </a>
-            </TableItem>
+            <TableItem label="Date">{format(activity.timestamp)}</TableItem>
           </div>
         </div>
       </div>
@@ -82,11 +78,7 @@ export const FeedListTableItem = ({ activity }: Props) => {
               </NextLink>
             </TableItem>
 
-            <TableItem label="Date">
-              <a href={activity.externalUrl} target="_blank" rel="noopener noreferrer">
-                {format(activity.timestamp)}
-              </a>
-            </TableItem>
+            <TableItem label="Date">{format(activity.timestamp)}</TableItem>
           </div>
         </div>
       </div>
@@ -116,11 +108,7 @@ export const FeedListTableItem = ({ activity }: Props) => {
               </NextLink>
             </TableItem>
 
-            <TableItem label="Date">
-              <a href={activity.externalUrl} target="_blank" rel="noopener noreferrer">
-                {format(activity.timestamp)}
-              </a>
-            </TableItem>
+            <TableItem label="Date">{format(activity.timestamp)}</TableItem>
           </div>
         </div>
       </div>
@@ -154,11 +142,7 @@ export const FeedListTableItem = ({ activity }: Props) => {
               </NextLink>
             </TableItem>
 
-            <TableItem label="Date">
-              <a href={activity.externalUrl} target="_blank" rel="noopener noreferrer">
-                {format(activity.timestamp)}
-              </a>
-            </TableItem>
+            <TableItem label="Date">{format(activity.timestamp)}</TableItem>
           </div>
         </div>
       </div>
@@ -242,11 +226,7 @@ export const FeedListTableItem = ({ activity }: Props) => {
             <TableItem label="Duration">{activity.price ? <div>{activity.price}</div> : '—'}</TableItem>
             <TableItem label="Power">{activity.externalUrl ? <div>{activity.externalUrl}</div> : '—'}</TableItem>
 
-            <TableItem label="Date">
-              <a href={activity.externalUrl} target="_blank" rel="noopener noreferrer">
-                {format(activity.timestamp)}
-              </a>
-            </TableItem>
+            <TableItem label="Date">{format(activity.timestamp)}</TableItem>
           </div>
         </div>
       </div>
@@ -270,23 +250,9 @@ export const FeedListTableItem = ({ activity }: Props) => {
 
             <TableItem label="Votes">{activity.price ? <div>{activity.price}</div> : '—'}</TableItem>
 
-            {/* TODO(SNG): fix link? */}
-            <TableItem label="Token">
-              <NextLink href={`/asset/${activity.chainId}/${activity.address}`}>
-                {ellipsisAddress(activity.externalUrl)}
-              </NextLink>
-            </TableItem>
+            <TableItem label="# Users">{activity.toDisplayName}</TableItem>
 
-            {/* TODO(SNG): fix link? */}
-            <TableItem label="Staker">
-              <NextLink href={`/profile/${activity.to}`}>{ellipsisAddress(activity.toDisplayName)}</NextLink>
-            </TableItem>
-
-            <TableItem label="Date">
-              <a href={activity.externalUrl} target="_blank" rel="noopener noreferrer">
-                {format(activity.timestamp)}
-              </a>
-            </TableItem>
+            <TableItem label="Date">{format(activity.timestamp)}</TableItem>
           </div>
         </div>
       </div>
