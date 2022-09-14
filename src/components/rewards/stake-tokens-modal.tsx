@@ -1,10 +1,10 @@
 import { RadioGroup } from '@headlessui/react';
 import { StakeDuration } from '@infinityxyz/lib-frontend/types/core';
 import React, { useState } from 'react';
+import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
 import { useStake } from 'src/hooks/contract/staker/useStake';
 import { useTokenAllowance } from 'src/hooks/contract/token/useTokenAllowance';
 import { useTokenApprove } from 'src/hooks/contract/token/useTokenApprove';
-import { useTokenBalance } from 'src/hooks/contract/token/useTokenBalance';
 import { twMerge } from 'tailwind-merge';
 import { Heading, toastError, toastSuccess } from '../common';
 import { Button } from '../common/button';
@@ -28,10 +28,12 @@ export const StakeTokensModal = ({ onClose }: Props) => {
   const [stakeDuration, setStakeDuration] = useState<StakeDuration>(StakeDuration.None);
   const [value, setValue] = useState(0);
   const [isStaking, setIsStaking] = useState(false);
-  const { balance } = useTokenBalance();
+  const { result: quota } = useUserCurationQuota();
   const { stake } = useStake();
   const { approve } = useTokenApprove();
   const { allowance } = useTokenAllowance();
+
+  const tokenBalance = quota?.tokenBalance || 0;
 
   const onStake = async () => {
     if (value === 0) {
@@ -94,17 +96,17 @@ export const StakeTokensModal = ({ onClose }: Props) => {
               label=""
               value={value?.toString()}
               type="text"
-              onChange={(v) => !isNaN(+v) && +v <= balance && setValue(+v)}
+              onChange={(v) => !isNaN(+v) && +v <= tokenBalance && setValue(+v)}
               placeholder="Enter amount to stake"
               isFullWidth
               renderRightIcon={() => (
-                <Button variant="gray" className="rounded-full py-2 px-3" onClick={() => setValue(balance)}>
+                <Button variant="gray" className="rounded-full py-2 px-3" onClick={() => setValue(tokenBalance)}>
                   Max
                 </Button>
               )}
             />
           </div>
-          <div className="text-right mr-2 mt-1 text-theme-gray-300">Balance: {balance}</div>
+          <div className="text-right mr-2 mt-1 text-theme-gray-300">Balance: {tokenBalance}</div>
 
           <div className="text-lg mt-8 flex justify-between">
             <span>Voting power</span>
