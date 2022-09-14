@@ -289,7 +289,7 @@ export const OrderbookProvider = ({ children, collectionId, tokenId, limit = ITE
       }
 
       if (isMounted()) {
-        if (response && response.result.data) {
+        if (response && response.result?.data) {
           let newData;
 
           if (refreshData) {

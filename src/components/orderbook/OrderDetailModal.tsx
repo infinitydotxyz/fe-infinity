@@ -33,7 +33,7 @@ export const OrderDetailModal = ({ order, isOpen, onClose }: Props) => {
     <Modal wide={false} isOpen={isOpen} onClose={onClose} title="Order details" showActionButtons={false}>
       <OrderDetailPicker order={order} scroll={true} />
 
-      <SimpleTable className="text-gray-500 mt-4" items={tableItems} />
+      <SimpleTable className="text-gray-500 mt-3" items={tableItems} />
 
       <div className="mt-10">
         <Button variant="primary" className="w-full font-heading" onClick={onClose}>
