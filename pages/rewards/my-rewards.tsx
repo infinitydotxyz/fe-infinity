@@ -155,7 +155,7 @@ const MyRewardsPage: React.FC = () => {
 
         <div className="w-1/2">
           <div className="bg-white py-6 px-6 rounded-2xl">
-            <div className="flex flex-wrap mt-4">
+            <div className="flex flex-wrap">
               <div className="lg:w-1/3 sm:w-full">
                 <div className="mb-4">Volume Traded</div>
                 <div className="text-2xl font-heading font-bold">{userRewards?.totals.userVolume ?? 0}</div>
