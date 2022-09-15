@@ -24,7 +24,7 @@ const LeaderboardPage = () => {
                     <EZImage className="w-16 h-16 rounded-2xl overflow-clip" src={raffle.user.profileImage} />
                   </NextLink>
 
-                  <NextLink href={`/user/${raffle.userAddress}`} className="truncate">
+                  <NextLink href={`/user/${raffle.userAddress}`} className="truncate hidden md:inline-block">
                     {raffle.user.displayName || raffle.user.address || raffle.userAddress}
                   </NextLink>
 
