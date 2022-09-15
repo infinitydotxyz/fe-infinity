@@ -14,7 +14,7 @@ interface Props2 {
 
 const TwitterSupporter = ({ tweet }: Props2) => {
   return (
-    <div className={twMerge(standardCard, 'flex justify-between items-center flex-wrap')}>
+    <div className={twMerge(standardCard, 'flex justify-between items-center overflow-clip')}>
       <div className="flex mr-2 mb-3 items-center">
         <EZImage src={tweet.author.profileImageUrl} className="w-12 h-12  overflow-clip rounded-full" />
         <div className="ml-5">
