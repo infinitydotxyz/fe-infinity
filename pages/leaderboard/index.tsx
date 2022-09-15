@@ -29,28 +29,23 @@ const LeaderboardPage = () => {
                   </NextLink>
 
                   <div className="w-1/9 max-w-[80px] min-w-[80px]">
-                    <div className="text-black font-bold font-body flex items-center">Tickets</div>
-                    <div>{formatNumber(raffle.numTickets)}</div>
-                  </div>
-
-                  <div className="w-1/9 max-w-[80px] min-w-[80px]">
-                    <div className="text-black font-bold font-body flex items-center">Volume</div>
-                    <div>{`${raffle.volumeUSDC ? nFormatter(raffle.volumeUSDC) : '-'}`} USDC</div>
-                  </div>
-
-                  <div className="w-1/9 max-w-[80px] min-w-[80px]">
                     <div className="text-black font-bold font-body flex items-center">Rank</div>
                     <div>{raffle.rank}</div>
                   </div>
 
                   <div className="w-1/9 max-w-[80px] min-w-[80px]">
-                    <div className="text-black font-bold font-body flex items-center">Luckiness</div>
-                    <div>{raffle.chanceOfWinning}%</div>
+                    <div className="text-black font-bold font-body flex items-center">Tickets</div>
+                    <div>{formatNumber(raffle.numTickets)}</div>
+                  </div>
+
+                  <div className="w-1/9 max-w-[100px] min-w-[80px]">
+                    <div className="text-black font-bold font-body flex items-center">Volume</div>
+                    <div>{`${raffle.volumeUSDC ? nFormatter(raffle.volumeUSDC) : '-'}`} USDC</div>
                   </div>
 
                   <div className="w-1/9 max-w-[80px] min-w-[80px]">
-                    <div className="text-black font-bold font-body flex items-center">Tickets</div>
-                    <div>{formatNumber(raffle.numTickets)}</div>
+                    <div className="text-black font-bold font-body flex items-center">Luckiness</div>
+                    <div>{formatNumber(raffle.chanceOfWinning)}%</div>
                   </div>
                 </div>
               </div>
