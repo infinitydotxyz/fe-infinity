@@ -6,7 +6,7 @@ import { useStake } from 'src/hooks/contract/staker/useStake';
 import { useTokenAllowance } from 'src/hooks/contract/token/useTokenAllowance';
 import { useTokenApprove } from 'src/hooks/contract/token/useTokenApprove';
 import { twMerge } from 'tailwind-merge';
-import { Heading, toastError, toastSuccess } from '../common';
+import { Heading, Spinner, toastError, toastSuccess } from '../common';
 import { Button } from '../common/button';
 import { TextInputBox } from '../common/input-box';
 import { Modal } from '../common/modal';
@@ -122,6 +122,13 @@ export const StakeTokensModal = ({ onClose }: Props) => {
         <Button size="large" className="w-full py-3 mt-8" onClick={onStake} disabled={isStaking}>
           Stake
         </Button>
+
+        {isStaking && (
+          <div className="mt-2 flex justify-between">
+            <Spinner />
+            <span>Waiting for transaction to complete...</span>
+          </div>
+        )}
       </div>
     </Modal>
   );
