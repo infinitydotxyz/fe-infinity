@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { ChainId } from '@infinityxyz/lib-frontend/types/core';
 import { chainConstants, CURRENT_VERSION } from '@infinityxyz/lib-frontend/utils';
 import { Theme, TokenInfo, SwapWidget } from '@uniswap/widgets';
 import '@uniswap/widgets/fonts.css';
@@ -18,13 +19,6 @@ import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
  * <DynamicUniswapWidget />
  */
 
-const chain = chainConstants[1].prod[CURRENT_VERSION];
-const token: TokenInfo = {
-  ...chain.infinityContracts.token,
-  chainId: parseInt(chain.infinityContracts.token.chainId as string, 10),
-  logoURI: 'https://infinity.xyz/favicon.ico'
-};
-
 const theme: Theme = {
   borderRadius: 1,
   fontFamily: 'F37 Bolton',
@@ -38,14 +32,21 @@ const theme: Theme = {
 const NATIVE = 'NATIVE';
 
 export default function UniswapWidget() {
-  const { wallet } = useOnboardContext();
+  const { wallet, chainId } = useOnboardContext();
+
+  const chain = chainConstants[chainId as ChainId].prod[CURRENT_VERSION];
+  const token: TokenInfo = {
+    ...chain.infinityContracts.token,
+    chainId: parseInt(chain.infinityContracts.token.chainId as string, 10),
+    logoURI: 'https://infinity.xyz/favicon.ico'
+  };
 
   return (
     <div className="Uniswap">
       <SwapWidget
         provider={wallet?.provider as any}
         theme={theme}
-        tokenList={[token]} // TODO improve token list
+        tokenList={[token]}
         defaultInputTokenAddress={NATIVE}
         defaultOutputTokenAddress={token.address}
       />
