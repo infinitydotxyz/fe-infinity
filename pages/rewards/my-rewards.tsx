@@ -1,6 +1,7 @@
 import { round } from '@infinityxyz/lib-frontend/utils';
 import React, { useState } from 'react';
 import { Button, Heading } from 'src/components/common';
+import { UniswapModal } from 'src/components/common/uniswap-modal';
 import { StakeTokensModal } from 'src/components/rewards/stake-tokens-modal';
 import { UnstakeTokensModal } from 'src/components/rewards/unstake-tokens-modal';
 import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
@@ -9,6 +10,7 @@ import { numberFormatter } from 'src/utils/number-formatter';
 
 const MyRewardsPage: React.FC = () => {
   const [showStakeTokensModal, setShowStakeTokensModal] = useState(false);
+  const [showBuyTokensModal, setShowBuyTokensModal] = useState(false);
   const [showUnstakeTokensModal, setShowUnstakeTokensModal] = useState(false);
   const { result: quota, mutate: mutateQuota } = useUserCurationQuota();
   const { result: userRewards } = useUserRewards();
@@ -52,6 +54,15 @@ const MyRewardsPage: React.FC = () => {
                 onClick={() => setShowUnstakeTokensModal(true)}
               >
                 Unstake
+              </Button>
+
+              <Button
+                size="large"
+                variant="primary"
+                className="font-heading lg:ml-3"
+                onClick={() => setShowBuyTokensModal(true)}
+              >
+                Buy
               </Button>
             </div>
           </div>
@@ -205,6 +216,8 @@ const MyRewardsPage: React.FC = () => {
         />
       )}
       {showUnstakeTokensModal && <UnstakeTokensModal onClose={() => setShowUnstakeTokensModal(false)} />}
+
+      {showBuyTokensModal && <UniswapModal onClose={() => setShowBuyTokensModal(false)} />}
     </>
   );
 };
