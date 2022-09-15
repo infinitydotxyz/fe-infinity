@@ -15,12 +15,12 @@ export const useRaffleLeaderboard = (
   const query: RaffleLeaderboardQueryDto = {
     cursor: '',
     chainId: (chainId || ChainId.Mainnet) as ChainId,
-    orderDirection: OrderDirection.Descending,
+    orderDirection: OrderDirection.Ascending,
     limit: 50
   };
 
   const { result, error, isLoading, setSize } = useFetchInfinite<RaffleLeaderboardArrayDto>(
-    `raffle/${phase}/leaderboard`,
+    `/raffle/${phase}/leaderboard`,
     {
       query
     }
