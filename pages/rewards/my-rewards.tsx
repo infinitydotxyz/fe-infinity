@@ -55,14 +55,10 @@ const MyRewardsPage: React.FC = () => {
               >
                 Unstake
               </Button>
-
-              <Button
-                size="large"
-                variant="primary"
-                className="font-heading lg:ml-3"
-                onClick={() => setShowBuyTokensModal(true)}
-              >
-                Buy
+            </div>
+            <div className="lg:w-2/4 sm:w-full flex mt-4">
+              <Button size="large" className="font-heading" onClick={() => setShowBuyTokensModal(true)}>
+                Buy $NFT
               </Button>
             </div>
           </div>
