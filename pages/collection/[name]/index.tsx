@@ -283,7 +283,7 @@ const CollectionPage = () => {
                 </tbody>
               </table>
             </section>
-            <section className="mt-16 md:w-1/2">
+            <section className="mt-20 md:w-1/2">
               <div className={twMerge(standardCard, 'items-center space-y-8')}>
                 <Heading as="h2" className="font-body text-3xl font-medium">
                   Curate this collection

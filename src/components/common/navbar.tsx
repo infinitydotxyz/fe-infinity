@@ -51,15 +51,15 @@ export const Navbar = () => {
           menu: [
             {
               label: 'Trending',
-              onClick: () => router.push('trending')
+              onClick: () => router.push('/trending')
             },
             {
               label: 'Feed',
-              onClick: () => router.push('feed')
+              onClick: () => router.push('/feed')
             },
             {
               label: 'Curated',
-              onClick: () => router.push('curated')
+              onClick: () => router.push('/curated')
             }
           ]
         },

@@ -44,7 +44,7 @@ export const AllCuratedCollections: React.FC<AllCuratedProps> = ({ orderBy }) =>
       )}
 
       {result && result[0].data?.length === 0 && (
-        <NoResultsBox tab={CuratedTab.AllCurated} onClick={() => router.push('trending')} />
+        <NoResultsBox tab={CuratedTab.AllCurated} onClick={() => router.push('/trending')} />
       )}
 
       <ScrollLoader onFetchMore={fetchMore} />
