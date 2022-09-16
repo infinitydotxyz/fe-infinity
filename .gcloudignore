@@ -30,6 +30,7 @@ yarn-error.log
 # Next.js default build
 .next
 out
+build/cache
 
 ci
 src
