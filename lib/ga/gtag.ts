@@ -1,9 +1,4 @@
-export const GA_TRACKING_ID: string =
-  process.env.APP_ENV === 'prod'
-    ? process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID_PROD ?? ''
-    : process.env.APP_ENV === 'dev'
-    ? process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID_DEV ?? ''
-    : '';
+export const GA_TRACKING_ID: string = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID_PROD ?? '';
 
 // https://developers.google.com/analytics/devguides/collection/gtagjs/pages
 export const pageview = (url: URL): void => {
