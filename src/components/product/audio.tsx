@@ -73,8 +73,8 @@ export const AudioWave = () => {
             gradientUnits="userSpaceOnUse"
             id="SvgjsLinearGradient1004"
           >
-            <stop stop-color="#3a7cc3" offset="0"></stop>
-            <stop stop-color="#dd1133" offset="1"></stop>
+            <stop stopColor="#3a7cc3" offset="0"></stop>
+            <stop stopColor="#dd1133" offset="1"></stop>
           </linearGradient>
         </defs>
       </svg>

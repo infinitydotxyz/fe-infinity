@@ -11,8 +11,18 @@ const ProductPage = () => {
     <div className="">
       <HomeNavBar />
 
-      <Clouds />
-      <div className="h-96">
+      <div className="  relative ">
+        <Clouds />
+
+        <div
+          className=" absolute top-14 right-0 left-0 bottom-0 text-center font-bold   text-white  "
+          style={{ fontSize: '14vw', textShadow: '5px 10px 33px #00227766' }}
+        >
+          Infinity
+        </div>
+      </div>
+
+      <div className=" ">
         <WhatIs />
       </div>
       <AudioWave />

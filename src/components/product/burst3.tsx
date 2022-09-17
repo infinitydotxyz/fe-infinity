@@ -3,8 +3,8 @@ export const Burst3 = () => {
     <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 800 800" height="600px">
       <defs>
         <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="ccchaos-grad">
-          <stop stop-color="hsl(206, 75%, 49%)" stop-opacity="1" offset="0%"></stop>
-          <stop stop-color="hsl(331, 90%, 56%)" stop-opacity="1" offset="100%"></stop>
+          <stop stopColor="hsl(206, 75%, 49%)" stopOpacity="1" offset="0%"></stop>
+          <stop stopColor="hsl(331, 90%, 56%)" stopOpacity="1" offset="100%"></stop>
         </linearGradient>
       </defs>
       <g strokeWidth="10" stroke="url(#ccchaos-grad)" fill="none" strokeLinecap="round">

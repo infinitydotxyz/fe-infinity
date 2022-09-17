@@ -3,8 +3,8 @@ export const Burst2 = () => {
     <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 800 800" height="600px">
       <defs>
         <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="ggglitch-grad">
-          <stop stop-color="hsl(184, 74%, 44%)" stop-opacity="1" offset="45%"></stop>
-          <stop stop-color="hsl(332, 87%, 70%)" stop-opacity="1" offset="100%"></stop>
+          <stop stopColor="hsl(184, 74%, 44%)" stopOpacity="1" offset="45%"></stop>
+          <stop stopColor="hsl(332, 87%, 70%)" stopOpacity="1" offset="100%"></stop>
         </linearGradient>
         <clipPath id="SvgjsClipPath1014">
           <rect width="66.66666666666667" height="800" x="0" y="0"></rect>
@@ -37,14 +37,14 @@ export const Burst2 = () => {
         </clipPath>
       </defs>
       <g strokeWidth="45" stroke="url(#ggglitch-grad)" fill="none">
-        <circle r="365" cx="400" cy="400" fill="none" opacity="0.25" clip-path='url("#SvgjsClipPath1014")'></circle>
-        <circle r="265" cx="400" cy="400" fill="none" opacity="0.25" clip-path='url("#SvgjsClipPath1014")'></circle>
-        <circle r="165" cx="400" cy="400" fill="none" opacity="0.25" clip-path='url("#SvgjsClipPath1014")'></circle>
-        <circle r="65" cx="400" cy="400" fill="none" opacity="0.25" clip-path='url("#SvgjsClipPath1014")'></circle>
-        <circle r="377.5" cx="400" cy="400" fill="none" clip-path='url("#SvgjsClipPath1015")'></circle>
-        <circle r="277.5" cx="400" cy="400" fill="none" clip-path='url("#SvgjsClipPath1015")'></circle>
-        <circle r="177.5" cx="400" cy="400" fill="none" clip-path='url("#SvgjsClipPath1015")'></circle>
-        <circle r="77.5" cx="400" cy="400" fill="none" clip-path='url("#SvgjsClipPath1015")'></circle>
+        <circle r="365" cx="400" cy="400" fill="none" opacity="0.25" clipPath='url("#SvgjsClipPath1014")'></circle>
+        <circle r="265" cx="400" cy="400" fill="none" opacity="0.25" clipPath='url("#SvgjsClipPath1014")'></circle>
+        <circle r="165" cx="400" cy="400" fill="none" opacity="0.25" clipPath='url("#SvgjsClipPath1014")'></circle>
+        <circle r="65" cx="400" cy="400" fill="none" opacity="0.25" clipPath='url("#SvgjsClipPath1014")'></circle>
+        <circle r="377.5" cx="400" cy="400" fill="none" clipPath='url("#SvgjsClipPath1015")'></circle>
+        <circle r="277.5" cx="400" cy="400" fill="none" clipPath='url("#SvgjsClipPath1015")'></circle>
+        <circle r="177.5" cx="400" cy="400" fill="none" clipPath='url("#SvgjsClipPath1015")'></circle>
+        <circle r="77.5" cx="400" cy="400" fill="none" clipPath='url("#SvgjsClipPath1015")'></circle>
       </g>
     </svg>
   );

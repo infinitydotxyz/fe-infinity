@@ -1,8 +1,8 @@
 export const Clouds = () => {
   return (
-    <div>
-      <svg version="1.1" width="100%" height="360" preserveAspectRatio="none" viewBox="0 0 1440 560">
-        <g mask='url("#SvgjsMask1108")' fill="none">
+    <div className="-mt-16">
+      <svg version="1.1" width="100%" height="auto" preserveAspectRatio="meet" viewBox="0 0 1440 560">
+        <g fill="none">
           <path
             d="M1560 560L0 560 L0 311.38Q10.93 250.31, 72 261.23Q86.3 203.53, 144 217.83Q193.18 147.01, 264 196.19Q371.55 183.74, 384 291.29Q429.94 217.23, 504 263.17Q563.91 251.09, 576 311Q634.9 297.9, 648 356.8Q655.03 291.83, 720 298.86Q724.37 231.23, 792 235.59Q837.1 160.69, 912 205.79Q953.79 175.58, 984 217.37Q1066.29 227.66, 1056 309.95Q1115.11 297.06, 1128 356.16Q1151.91 308.08, 1200 331.99Q1233.66 245.65, 1320 279.31Q1341.11 180.42, 1440 201.52Q1510.92 152.44, 1560 223.37z"
             fill="rgba(37, 70, 125, 1)"
@@ -16,11 +16,6 @@ export const Clouds = () => {
             fill="rgba(255, 255, 255, 1)"
           ></path>
         </g>
-        <defs>
-          <mask id="SvgjsMask1108">
-            <rect width="1440" height="560" fill="#ffffff"></rect>
-          </mask>
-        </defs>
       </svg>
     </div>
   );
