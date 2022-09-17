@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import { NextLink, pageStyles, Spacer, SVG } from 'src/components/common';
 import { ButtonJoin } from 'src/components/landing/ButtonJoin';
+import { WhatIs } from 'src/components/product/whatis';
 import { DiscordIconLink, TwitterIconLink } from 'src/components/landing/Icons';
 
 const ProductPage = () => {
@@ -9,7 +10,9 @@ const ProductPage = () => {
       <HomeNavBar />
 
       <Clouds />
-      <div className="h-96"></div>
+      <div className="h-96">
+        <WhatIs />
+      </div>
       <AudioWave />
       <div className="h-96"></div>
 
