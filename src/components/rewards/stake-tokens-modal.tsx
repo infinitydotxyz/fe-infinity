@@ -124,7 +124,7 @@ export const StakeTokensModal = ({ onClose }: Props) => {
         </Button>
 
         {isStaking && (
-          <div className="mt-2 flex justify-between">
+          <div className="mt-2 flex flex-row gap-2 items-center">
             <Spinner />
             <span>Waiting for transaction to complete...</span>
           </div>
