@@ -10,6 +10,7 @@ import { Heading, Spinner, toastError, toastSuccess } from '../common';
 import { Button } from '../common/button';
 import { TextInputBox } from '../common/input-box';
 import { Modal } from '../common/modal';
+import { MaxUint256 } from '@ethersproject/constants';
 
 interface Props {
   onClose: () => void;
@@ -45,7 +46,7 @@ export const StakeTokensModal = ({ onClose }: Props) => {
 
     try {
       if (allowance < value) {
-        await approve(value);
+        await approve(MaxUint256);
       }
 
       await stake(value, stakeDuration);
