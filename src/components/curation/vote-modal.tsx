@@ -41,27 +41,34 @@ export const VoteModal: React.FC<VoteModalProps> = ({ collection, isOpen, onClos
   const vote = async () => {
     setIsVoting(true);
 
-    const { error } = await apiPost(
-      `/collections/${collection.chainId}:${collection.address}/curated/${chainId}:${user?.address}`,
-      { data: { votes } }
-    );
+    try {
+      const { error } = await apiPost(
+        `/collections/${collection.chainId}:${collection.address}/curated/${chainId}:${user?.address}`,
+        { data: { votes } }
+      );
 
-    if (error) {
-      toastError(error?.errorResponse?.message);
-      return;
+      if (error) {
+        toastError(error?.errorResponse?.message);
+        return;
+      }
+
+      await mutateQuota(
+        (data: CurationQuotaDto) =>
+          ({
+            availableVotes: data.availableVotes - votes
+          } as CurationQuotaDto),
+        { revalidate: false }
+      );
+
+      await onVote(votes);
+    } catch (err) {
+      console.error(err);
+      toastError('Something went wrong. Please try again later.');
     }
 
-    // TODO: improve these reflective changes to UI (this looks glitchy atm)
-    await onVote(votes);
-    await mutateQuota(
-      (data: CurationQuotaDto) =>
-        ({
-          availableVotes: data.availableVotes - votes
-        } as CurationQuotaDto)
-    );
+    setIsVoting(false);
     setVotes(0);
     onClose();
-    setIsVoting(false);
   };
 
   return (
