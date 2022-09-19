@@ -6,6 +6,7 @@ import { Burst1 } from 'src/components/product/burst1';
 import { Burst2 } from 'src/components/product/burst2';
 import { Burst3 } from 'src/components/product/burst3';
 import { InfinitySvg } from 'src/components/product/infinity';
+import { ExpandingBox } from 'src/components/product/expanding-box';
 
 const ProductPage = () => {
   return (
@@ -20,16 +21,17 @@ const ProductPage = () => {
           <div style={{ fontSize: '14vw', textShadow: '5px 10px 33px #00227766' }}>Infinity</div>
           <div
             className="  relative  -top-2    font-bold   text-white  "
-            style={{ fontSize: '3vw', textShadow: '5px 10px 33px #002277aa' }}
+            style={{ fontSize: '3vw', textShadow: '5px 10px 33px #002277ee' }}
           >
             Exchange
           </div>
         </div>
       </div>
 
-      <div className=" ">
+      <ExpandingBox>
         <WhatIs />
-      </div>
+      </ExpandingBox>
+
       <AudioWave />
       <div className="h-96"></div>
 
