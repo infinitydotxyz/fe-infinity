@@ -1,5 +1,4 @@
 import { ReactNode, useState } from 'react';
-import { Button } from '../common';
 import { FullScreenModal } from '../common/full-screen-modal';
 
 interface Props {
