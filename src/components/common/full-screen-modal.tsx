@@ -45,22 +45,23 @@ export const FullScreenModal = ({
           >
             <Dialog.Panel
               className={twMerge(
-                'w-full h-full max-h-full',
-                'transform rounded-2xl bg-white py-8 px-9 text-left align-middle shadow-xl transition-all'
+                'w-full h-full max-h-full transform rounded-2xl bg-white py-8 px-9 text-left align-middle shadow-xl transition-all'
               )}
             >
-              <Dialog.Title
-                as="h3"
-                className="flex items-center tracking-tight text-xl font-bold leading-6 text-gray-900 mb-6"
-              >
-                <Spacer />
+              <div className=" flex flex-col  h-full  max-h-full    ">
+                <Dialog.Title
+                  as="h3"
+                  className="flex items-center tracking-tight text-xl font-bold leading-6 text-gray-900 mb-6"
+                >
+                  <Spacer />
 
-                <Button size="plain" variant="round" onClick={onClose}>
-                  <XIcon className={iconButtonStyle} />
-                </Button>
-              </Dialog.Title>
+                  <Button size="plain" variant="round" onClick={onClose}>
+                    <XIcon className={iconButtonStyle} />
+                  </Button>
+                </Dialog.Title>
 
-              <div className="  h-full  max-h-full   overflow-scroll">{children}</div>
+                <div className="   flex-1  overflow-scroll">{children}</div>
+              </div>
             </Dialog.Panel>
           </Transition.Child>
         </div>
