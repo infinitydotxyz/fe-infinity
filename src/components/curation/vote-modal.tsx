@@ -32,7 +32,7 @@ export const VoteModal: React.FC<VoteModalProps> = ({ collection, isOpen, onClos
   const { user, chainId } = useOnboardContext();
 
   // TODO: re-calculate fees & APR (via API call) when 'votes' change
-  const [votes, setVotes] = useState(0);
+  const [votes, setVotes] = useState<number>(0);
   const { result: quota, isLoading: isLoadingQuota, mutate: mutateQuota } = useUserCurationQuota();
   const [isVoting, setIsVoting] = useState(false);
 
@@ -102,7 +102,15 @@ export const VoteModal: React.FC<VoteModalProps> = ({ collection, isOpen, onClos
                   type="text"
                   placeholder="0.00"
                   value={votes.toString()}
-                  onChange={(v) => !isNaN(parseInt(v)) && setVotes(parseInt(v))}
+                  onChange={(v) => {
+                    const parsedNumber = v !== '' ? parseInt(v) : 0;
+
+                    if (isNaN(parsedNumber) || parsedNumber > votesAvailable) {
+                      return;
+                    }
+
+                    setVotes(parsedNumber);
+                  }}
                   renderRightIcon={() => (
                     <MaxButton variant="gray" onClick={() => setVotes(votesAvailable)}></MaxButton>
                   )}
