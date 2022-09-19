@@ -10,7 +10,7 @@ import { StakeTokensButton } from './vote-modal';
 import { VoteProgressBar } from './vote-progress-bar';
 
 const FieldWrapper: React.FC<FieldProps & { className?: string }> = ({ className, ...props }) => (
-  <div className={twMerge('w-full h-full row-span-1 col-span-1', className)}>
+  <div className={twMerge('w-full h-full', className)}>
     <Field {...props} />
   </div>
 );
@@ -56,10 +56,10 @@ export type CurationRowProps = {
 export const CurationRow: React.FC<CurationRowProps> = ({ collection, index, onClick, votes, isReadOnly = false }) => {
   return (
     <div className="mb-2">
-      <div className="w-full h-full p-8 overflow-hidden rounded-3xl bg-gray-100 grid grid-cols-analytics place-items-center">
+      <div className="w-full h-full p-8 overflow-hidden rounded-3xl bg-gray-100 flex items-center">
         <>
-          <FieldWrapper value={index} type="index" />
-          <FieldWrapper value={collection.profileImage} type="image" />
+          <FieldWrapper value={index} type="index" className="w-1/2" />
+          <FieldWrapper value={collection.profileImage} className="w-fit 2xl:w-full" type="image" />
           <FieldWrapper value={collection.name} type="string" onClick={onClick} />
           <FieldWrapper type="custom">
             <FeesAprStats value={collection.feesAPR || 0} />
@@ -69,12 +69,11 @@ export const CurationRow: React.FC<CurationRowProps> = ({ collection, index, onC
           <VoteProgressBar
             totalVotes={collection.numCuratorVotes || 0}
             votes={collection.votes || 0}
-            className="w-full h-full row-span-1 col-span-1 bg-white"
+            className="mr-5"
           />
           {!isReadOnly && (
             <>
-              <FieldWrapper></FieldWrapper>
-              <FieldWrapper type="custom">
+              <FieldWrapper type="custom" className="">
                 {votes > 0 && <NumericVoteInputBox collectionId={`${collection.chainId}:${collection.address}`} />}
                 {votes === 0 && <StakeTokensButton variant="white" />}
               </FieldWrapper>
