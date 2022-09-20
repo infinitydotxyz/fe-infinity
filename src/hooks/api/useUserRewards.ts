@@ -5,5 +5,5 @@ import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 export function useUserRewards() {
   const { user, chainId } = useOnboardContext();
 
-  return useFetch<UserRewardsDto>(user?.address ? `${chainId}:${user.address}` : null);
+  return useFetch<UserRewardsDto>(user?.address ? `/user/${chainId}:${user.address}/rewards` : null);
 }
