@@ -39,7 +39,7 @@ export const VoteProgressBar: React.FC<VoteProgressBarProps> = ({ votes, totalVo
         style={{ maxWidth: `${percentage}%` }}
       ></div>
 
-      <div className="absolute top-3 left-4 z-10">
+      <div className="absolute top-3 left-4 z-5">
         <span className="space-x-2 font-heading">
           <span className="font-black">
             {numberFormatter.format(votes)} / {numberFormatter.format(totalVotes)}
@@ -47,7 +47,7 @@ export const VoteProgressBar: React.FC<VoteProgressBarProps> = ({ votes, totalVo
           <span className="font-normal">votes</span>
         </span>
       </div>
-      <span className="absolute top-3 right-4 z-10 font-black">{percentage}%</span>
+      <span className="absolute top-3 right-4 z-5 font-black">{percentage}%</span>
     </div>
   );
 };
