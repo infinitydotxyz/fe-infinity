@@ -1,13 +1,13 @@
 import {
   BaseCollection,
   ChainId,
-  Collection,
   CollectionAttributes,
   CollectionStats,
   ERC721CardData
 } from '@infinityxyz/lib-frontend/types/core';
 import { CuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections.dto';
 import { CollectionStatsDto } from '@infinityxyz/lib-frontend/types/dto/stats';
+import { NULL_ADDRESS } from '@infinityxyz/lib-frontend/utils';
 import { useRouter } from 'next/router';
 import NotFound404Page from 'pages/not-found-404';
 import { useEffect, useState } from 'react';
@@ -57,14 +57,8 @@ const CollectionPage = () => {
     }
   }, [isBuyClicked]);
 
-  // useEffect(() => void fetchUserCurated(), [userReady]);
   const path = `/collections/${name}`;
-  const {
-    result: collection,
-    isLoading,
-    error,
-    mutate: mutateCollection
-  } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
+  const { result: collection, isLoading, error } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
   const { result: collectionAttributes } = useFetch<CollectionAttributes>(
     name ? `/collections/${name}/attributes` : '',
     {
@@ -86,8 +80,7 @@ const CollectionPage = () => {
   const createdBy = collection?.deployer ?? collection?.owner ?? '';
 
   const { result: userCurated } = useFetch<CuratedCollectionDto>(
-    user?.address ? `${path}/curated/${chainId}:${user.address}` : null,
-    { apiParams: { requiresAuth: true } }
+    `${path}/curated/${chainId}:${user?.address ?? NULL_ADDRESS}`
   );
 
   const isAlreadyAdded = (data: ERC721CardData | undefined) => {
@@ -293,7 +286,7 @@ const CollectionPage = () => {
                 <div className="flex flex-row space-x-2 relative">
                   <VoteProgressBar
                     votes={userCurated?.votes || 0}
-                    totalVotes={collection.numCuratorVotes || 0}
+                    totalVotes={userCurated?.numCuratorVotes || 0}
                     className="max-w-[15rem] bg-white"
                   />
                 </div>
@@ -314,7 +307,7 @@ const CollectionPage = () => {
                     fees: 0,
                     feesAPR: 0,
                     timestamp: 0,
-                    numCuratorVotes: collection.numCuratorVotes || 0,
+                    numCuratorVotes: 0,
                     userAddress: '',
                     userChainId: '' as ChainId,
                     stakerContractAddress: '',
@@ -325,15 +318,15 @@ const CollectionPage = () => {
                 }}
                 isOpen={isStakeModalOpen}
                 onClose={() => setIsStakeModalOpen(false)}
-                onVote={async (votes) => {
+                onVote={async () => {
                   // update local collection cache with latest amount of total votes
-                  await mutateCollection(
-                    (data: Collection) =>
-                      ({
-                        ...collection,
-                        numCuratorVotes: (data.numCuratorVotes || 0) + votes
-                      } as Collection)
-                  );
+                  // await mutateCollection(
+                  //   (data: Collection) =>
+                  //     ({
+                  //       ...data
+                  //       // numCuratorVotes: (userCurated?.numCuratorVotes || 0) + votes
+                  //     } as Collection)
+                  // ); // TODO
                   // reload user votes and estimates from API
                   await mutate(`${path}/curated/${chainId}:${user?.address}`);
                 }}
