@@ -1,5 +1,6 @@
 import { ChainId, Collection, CollectionPeriodStatsContent } from '@infinityxyz/lib-frontend/types/core';
 import { CuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto/collections';
+import { NULL_ADDRESS } from '@infinityxyz/lib-frontend/utils';
 import { useRouter } from 'next/router';
 import { parse } from 'query-string';
 import { Fragment, useEffect, useState } from 'react';
@@ -262,10 +263,9 @@ const VoteModalWrapper: React.FC<{ coll: Collection; isOpen: boolean; onClose: (
 }) => {
   const { user, chainId } = useOnboardContext();
   const { result: userCurated } = useFetch<CuratedCollectionDto>(
-    user?.address && coll.metadata.name && isOpen
-      ? `/collections/${coll.slug}/curated/${chainId}:${user.address}`
-      : null,
-    { apiParams: { requiresAuth: true } }
+    coll.metadata.name && isOpen
+      ? `/collections/${coll.slug}/curated/${chainId}:${user?.address ?? NULL_ADDRESS}`
+      : null
   );
 
   return (
@@ -278,7 +278,7 @@ const VoteModalWrapper: React.FC<{ coll: Collection; isOpen: boolean; onClose: (
           fees: 0,
           feesAPR: 0,
           timestamp: 0,
-          numCuratorVotes: coll.numCuratorVotes || 0,
+          numCuratorVotes: 0,
           userAddress: '',
           userChainId: '' as ChainId,
           stakerContractAddress: '',

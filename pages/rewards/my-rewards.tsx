@@ -1,6 +1,7 @@
 import { round } from '@infinityxyz/lib-frontend/utils';
 import React, { useState } from 'react';
 import { Button, Heading } from 'src/components/common';
+import { UniswapModal } from 'src/components/common/uniswap-modal';
 import { StakeTokensModal } from 'src/components/rewards/stake-tokens-modal';
 import { UnstakeTokensModal } from 'src/components/rewards/unstake-tokens-modal';
 import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
@@ -9,6 +10,7 @@ import { numberFormatter } from 'src/utils/number-formatter';
 
 const MyRewardsPage: React.FC = () => {
   const [showStakeTokensModal, setShowStakeTokensModal] = useState(false);
+  const [showBuyTokensModal, setShowBuyTokensModal] = useState(false);
   const [showUnstakeTokensModal, setShowUnstakeTokensModal] = useState(false);
   const { result: quota, mutate: mutateQuota } = useUserCurationQuota();
   const { result: userRewards } = useUserRewards();
@@ -52,6 +54,11 @@ const MyRewardsPage: React.FC = () => {
                 onClick={() => setShowUnstakeTokensModal(true)}
               >
                 Unstake
+              </Button>
+            </div>
+            <div className="lg:w-2/4 sm:w-full flex mt-4">
+              <Button size="large" className="font-heading" onClick={() => setShowBuyTokensModal(true)}>
+                Buy $NFT
               </Button>
             </div>
           </div>
@@ -158,7 +165,7 @@ const MyRewardsPage: React.FC = () => {
             <div className="flex flex-wrap">
               <div className="lg:w-1/3 sm:w-full">
                 <div className="mb-4">Volume Traded</div>
-                <div className="text-2xl font-heading font-bold">{userRewards?.totals.userVolume ?? 0}</div>
+                <div className="text-2xl font-heading font-bold">{round(userRewards?.totals.userVolume ?? 0, 4)}</div>
                 <div className="text-sm mt-1">ETH</div>
               </div>
               <div className="lg:w-1/3 sm:w-full">
@@ -205,6 +212,8 @@ const MyRewardsPage: React.FC = () => {
         />
       )}
       {showUnstakeTokensModal && <UnstakeTokensModal onClose={() => setShowUnstakeTokensModal(false)} />}
+
+      {showBuyTokensModal && <UniswapModal onClose={() => setShowBuyTokensModal(false)} />}
     </>
   );
 };

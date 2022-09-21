@@ -70,7 +70,7 @@ const TooltipContent = ({ tooltip }: Props3) => {
 interface Props4 {
   show: boolean;
   tooltip?: TooltipSpec;
-  children: ReactNode;
+  children?: ReactNode;
   className?: string;
 }
 
