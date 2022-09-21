@@ -4,7 +4,8 @@ import { EventType, UserFeedEvent } from '@infinityxyz/lib-frontend/types/core/f
 import { DEFAULT_OPTIONS, FeedFilterDropdown } from './feed-filter-dropdown';
 import { CenteredContent, ScrollLoader, Spinner } from '../common';
 import { useUserActivity } from 'src/hooks/api/useUserActivity';
-import { NftListing } from './user-feed-events/nft-listing';
+import { NftOrder } from './user-feed-events/nft-order';
+import { NftSale } from './user-feed-events/nft-sale';
 
 interface UserProfileActivityListProps {
   userAddress?: string;
@@ -67,9 +68,10 @@ export const UserProfileActivityList = ({ userAddress, types, className }: UserP
           activities?.map((event) => {
             switch (event.type) {
               case EventType.NftListing:
-                return <NftListing key={`${event.type}-${event.timestamp}`} event={event} />;
               case EventType.NftOffer:
+                return <NftOrder key={`${event.type}-${event.timestamp}`} event={event} />;
               case EventType.NftSale:
+                return <NftSale key={`${event.type}-${event.timestamp}`} event={event} />;
               case EventType.TokensStaked:
               case EventType.TokensUnStaked:
               case EventType.TokensRageQuit:

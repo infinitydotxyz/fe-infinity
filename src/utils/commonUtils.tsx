@@ -324,3 +324,18 @@ export const getTypesForFilter = (f: FeedFilter) => {
 
   return types;
 };
+
+export const getUserToDisplay = (
+  user: { address: string; username?: string; displayName?: string },
+  currentUserAddress: string
+): { value: string; link: string; address: string } => {
+  if (currentUserAddress === user.address) {
+    return { value: 'You', link: '/profile/me', address: currentUserAddress };
+  }
+
+  return {
+    value: ellipsisString(user.displayName || user.username || ellipsisAddress(user.address)),
+    address: user.address,
+    link: `/profile/${user.address}`
+  };
+};
