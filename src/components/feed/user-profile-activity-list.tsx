@@ -6,6 +6,7 @@ import { CenteredContent, ScrollLoader, Spinner } from '../common';
 import { useUserActivity } from 'src/hooks/api/useUserActivity';
 import { NftOrder } from './user-feed-events/nft-order';
 import { NftSale } from './user-feed-events/nft-sale';
+import { TokenStake } from './user-feed-events/token-stake';
 
 interface UserProfileActivityListProps {
   userAddress?: string;
@@ -75,6 +76,7 @@ export const UserProfileActivityList = ({ userAddress, types, className }: UserP
               case EventType.TokensStaked:
               case EventType.TokensUnStaked:
               case EventType.TokensRageQuit:
+                return <TokenStake key={`${event.type}-${event.timestamp}`} event={event} />;
               case EventType.UserVote:
               case EventType.UserVoteRemoved:
               case EventType.NftTransfer:

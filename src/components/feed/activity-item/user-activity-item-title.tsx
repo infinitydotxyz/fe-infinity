@@ -10,7 +10,7 @@ interface TitleFieldProps {
 
 export const UserActivityItemTitle = (props: TitleFieldProps) => {
   return (
-    <div className="w-1/3">
+    <>
       <div className="text-black font-bold mr-2">
         {props.titleRelativeLink ? (
           <NextLink
@@ -44,6 +44,6 @@ export const UserActivityItemTitle = (props: TitleFieldProps) => {
           )}
         </div>
       )}
-    </div>
+    </>
   );
 };
