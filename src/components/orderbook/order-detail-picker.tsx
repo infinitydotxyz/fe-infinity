@@ -1,7 +1,7 @@
 import { OBOrderItem, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import React from 'react';
-import { EZImage, Spacer } from 'src/components/common';
+import { EZImage, NextLink, Spacer, SVG } from 'src/components/common';
 import { ENS_ADDRESS } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
 
@@ -32,9 +32,17 @@ export const OrderDetailPicker = ({
       return (
         <div className="flex items-center">
           <EZImage src={nft.collectionImage} className="w-16 h-16 shrink-0 overflow-clip rounded-2xl" />
-          <div className="ml-4">
+
+          <div className="ml-4 flex-col">
             <div className="select-none">Collection</div>
-            <div className="select-none">{nft.collectionName}</div>
+            <div className="flex flex-row">
+              <div className="w-44 flex items-center text-black font-body">
+                <NextLink href={`/collection/${nft?.collectionSlug}`} className="truncate">
+                  {nft.collectionName}
+                </NextLink>
+                {nft?.hasBlueCheck && <SVG.blueCheck className="ml-1.5 shrink-0 w-4 h-4" />}
+              </div>
+            </div>
           </div>
         </div>
       );
