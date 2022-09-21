@@ -5,6 +5,7 @@ import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
 import { useStake } from 'src/hooks/contract/staker/useStake';
 import { useTokenAllowance } from 'src/hooks/contract/token/useTokenAllowance';
 import { useTokenApprove } from 'src/hooks/contract/token/useTokenApprove';
+import { nFormatter } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
 import { Heading, Spinner, toastError, toastSuccess } from '../common';
 import { Button } from '../common/button';
@@ -107,7 +108,7 @@ export const StakeTokensModal = ({ onClose }: Props) => {
               )}
             />
           </div>
-          <div className="text-right mr-2 mt-1 text-theme-gray-300">Balance: {tokenBalance}</div>
+          <div className="text-right mr-2 mt-1 text-theme-gray-300">Balance: {nFormatter(tokenBalance)}</div>
 
           <div className="text-lg mt-8 flex justify-between">
             <span>Voting power</span>
@@ -136,7 +137,7 @@ export const StakeTokensModal = ({ onClose }: Props) => {
 };
 
 /**
- * Radio button componentn that's rendered on screen like a small card.
+ * Radio button component that's rendered on screen like a small card.
  * To be used within `RadioGroup`.
  */
 const RadioButtonCard: React.FC<{ value: string | number; label: string; description?: string }> = ({

@@ -22,7 +22,9 @@ const classes = {
     gray: 'border-none rounded-full bg-theme-gray-100 hover:bg-theme-gray-200',
     outline: twMerge(inputBorderColor, 'border rounded-full text-gray-900 hover:bg-theme-gray-200'),
     outlineWhite: twMerge(inputBorderColor, 'border bg-white rounded-full text-gray-900 hover:bg-theme-gray-200'),
-    danger: 'bg-red-500 hover:bg-red-800 focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 text-white',
+    danger: 'rounded-full bg-red-500 hover:bg-red-800 focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 text-white',
+    outlineDanger:
+      'rounded-full border rounded-full text-gray-900 bg-theme-gray-100 hover:bg-theme-gray-200 border-red-500 hover:border-red-800 focus:ring-2 focus:ring-red-500 focus:ring-opacity-50',
     round: 'rounded-full p-1', // use plain size
     white: 'border rounded-full border-gray-100 bg-white text-black hover:bg-theme-gray-200'
   }

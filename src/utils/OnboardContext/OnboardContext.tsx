@@ -214,9 +214,9 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
 
       const receipt = await ethersProvider.waitForTransaction(txHash);
       callback(receipt);
+    } else {
+      callback(undefined);
     }
-
-    callback(undefined);
   };
 
   const updateUserInfo = async (address: string) => {

@@ -1,13 +1,13 @@
 import {
   BaseCollection,
   ChainId,
-  Collection,
   CollectionAttributes,
   CollectionStats,
   ERC721CardData
 } from '@infinityxyz/lib-frontend/types/core';
 import { CuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections.dto';
 import { CollectionStatsDto } from '@infinityxyz/lib-frontend/types/dto/stats';
+import { NULL_ADDRESS } from '@infinityxyz/lib-frontend/utils';
 import { useRouter } from 'next/router';
 import NotFound404Page from 'pages/not-found-404';
 import { useEffect, useState } from 'react';
@@ -43,6 +43,7 @@ import { useOrderContext } from 'src/utils/context/OrderContext';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { iconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
+import ReactMarkdown from 'react-markdown';
 
 const CollectionPage = () => {
   const { user, chainId, checkSignedIn } = useOnboardContext();
@@ -66,14 +67,8 @@ const CollectionPage = () => {
     }
   }, [isBuyClicked]);
 
-  // useEffect(() => void fetchUserCurated(), [userReady]);
   const path = `/collections/${name}`;
-  const {
-    result: collection,
-    isLoading,
-    error,
-    mutate: mutateCollection
-  } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
+  const { result: collection, isLoading, error } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
   const { result: collectionAttributes } = useFetch<CollectionAttributes>(
     name ? `/collections/${name}/attributes` : '',
     {
@@ -93,10 +88,9 @@ const CollectionPage = () => {
   const firstAllTimeStats = allTimeStats?.data[0]; // first row = latest daily stats
 
   const createdBy = collection?.deployer ?? collection?.owner ?? '';
-
-  const { result: userCurated, mutate: mutateUserCurated } = useFetch<CuratedCollectionDto>(
-    user?.address ? `${path}/curated/${chainId}:${user.address}` : null,
-    { apiParams: { requiresAuth: true } }
+  
+  const { result: userCurated, mutate: mutateUserCurated  } = useFetch<CuratedCollectionDto>(
+    `${path}/curated/${chainId}:${user?.address ?? NULL_ADDRESS}`
   );
 
   const isAlreadyAdded = (data: ERC721CardData | undefined) => {
@@ -215,7 +209,16 @@ const CollectionPage = () => {
                   <LoadingDescription />
                 </div>
               ) : (
-                <div className="text-secondary mt-12 md:w-2/3">{collection.metadata?.description ?? ''}</div>
+                <div className="text-secondary mt-12 md:w-2/3">
+                  <ReactMarkdown
+                    components={{
+                      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                      a: ({ node, ...props }) => <i style={{ fontStyle: 'normal', color: 'blue' }} {...props} />
+                    }}
+                  >
+                    {collection.metadata?.description ?? ''}
+                  </ReactMarkdown>
+                </div>
               )}
               {collection.metadata?.benefits && (
                 <div className="mt-7 md:w-2/3">
@@ -302,7 +305,7 @@ const CollectionPage = () => {
                 <div className="flex flex-row space-x-2 relative">
                   <VoteProgressBar
                     votes={userCurated?.votes || 0}
-                    totalVotes={collection.numCuratorVotes || 0}
+                    totalVotes={userCurated?.numCuratorVotes || 0}
                     className="max-w-[15rem] bg-white"
                   />
                 </div>
@@ -323,7 +326,7 @@ const CollectionPage = () => {
                     fees: 0,
                     feesAPR: 0,
                     timestamp: 0,
-                    numCuratorVotes: collection.numCuratorVotes || 0,
+                    numCuratorVotes: 0,
                     userAddress: '',
                     userChainId: '' as ChainId,
                     stakerContractAddress: '',
