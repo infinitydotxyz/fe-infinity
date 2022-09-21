@@ -110,7 +110,7 @@ const MyRewardsPage: React.FC = () => {
             <div>Voting power</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
-                <div className="text-2xl font-heading font-bold">{quota?.availableVotes || 0}</div>
+                <div className="text-2xl font-heading font-bold">{quota?.stake?.stakePower || 0}</div>
                 <div className="text-sm mt-1"># Votes</div>
               </div>
               <div className="lg:w-1/4 sm:w-full">
@@ -118,9 +118,7 @@ const MyRewardsPage: React.FC = () => {
                 <div className="text-sm mt-1">Voted</div>
               </div>
               <div className="lg:w-1/4 sm:w-full">
-                <div className="text-2xl font-heading font-bold">
-                  {(quota?.availableVotes ?? 0) - (quota?.stake?.totalCuratedVotes ?? 0) || 0}
-                </div>
+                <div className="text-2xl font-heading font-bold">{quota?.availableVotes ?? 0}</div>
                 <div className="text-sm mt-1">Remaining Votes</div>
               </div>
             </div>
