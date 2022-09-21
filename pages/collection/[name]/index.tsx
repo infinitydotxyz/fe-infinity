@@ -88,8 +88,8 @@ const CollectionPage = () => {
   const firstAllTimeStats = allTimeStats?.data[0]; // first row = latest daily stats
 
   const createdBy = collection?.deployer ?? collection?.owner ?? '';
-  
-  const { result: userCurated, mutate: mutateUserCurated  } = useFetch<CuratedCollectionDto>(
+
+  const { result: userCurated } = useFetch<CuratedCollectionDto>(
     `${path}/curated/${chainId}:${user?.address ?? NULL_ADDRESS}`
   );
 
@@ -337,22 +337,8 @@ const CollectionPage = () => {
                 }}
                 isOpen={isStakeModalOpen}
                 onClose={() => setIsStakeModalOpen(false)}
-                onVote={async (votes) => {
-                  // mutate local collection cache with latest amount of total votes
-                  await mutateCollection(
-                    (data: Collection) =>
-                      ({
-                        ...collection,
-                        numCuratorVotes: (data.numCuratorVotes || 0) + votes
-                      } as Collection),
-                    { revalidate: false }
-                  );
-                  // mutate user votes on this collection
-                  await mutateUserCurated(
-                    (data: CuratedCollectionDto) => ({ votes: data.votes + votes } as CuratedCollectionDto),
-                    { revalidate: false }
-                  );
-                  toastSuccess('Votes registered successfully. Your balance will reflect shortly.');
+                onVote={() => {
+                  toastSuccess('Votes registered successfully. Changes will reflect shortly.');
                 }}
               />
             </section>
