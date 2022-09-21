@@ -97,7 +97,7 @@ export const UnstakeTokensModal = ({ onClose }: Props) => {
           </div>
 
           <div className="text-m mt-2 flex justify-between">
-            <span>Available for unstaking</span>
+            <span>Total unlocked</span>
             <span className="font-heading">{nFormatter(unlockedAmount || 0)}</span>
           </div>
 
