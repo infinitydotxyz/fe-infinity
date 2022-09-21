@@ -135,7 +135,7 @@ export const StakeTokensModal = ({ onClose }: Props) => {
 };
 
 /**
- * Radio button componentn that's rendered on screen like a small card.
+ * Radio button component that's rendered on screen like a small card.
  * To be used within `RadioGroup`.
  */
 const RadioButtonCard: React.FC<{ value: string | number; label: string; description?: string }> = ({

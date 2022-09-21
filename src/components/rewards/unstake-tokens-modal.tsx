@@ -1,8 +1,18 @@
+import { formatEth } from '@infinityxyz/lib-frontend/utils';
 import React, { useState } from 'react';
-import { useRemainingLockTime } from 'src/hooks/contract/staker/useRemainingLockTime';
-import { useTotalStaked } from 'src/hooks/contract/staker/useTotalStaked';
+import { AiOutlineQuestionCircle } from 'react-icons/ai';
+import { useCurationQuota } from 'src/hooks/api/useCurationQuota';
+import { useRageQuit } from 'src/hooks/contract/staker/useRageQuit';
+import {
+  getLockRemainingDescription,
+  mapDurationToMonths,
+  useRemainingLockTime
+} from 'src/hooks/contract/staker/useRemainingLockTime';
 import { useUnstake } from 'src/hooks/contract/staker/useUnstake';
-import { toastError, toastSuccess } from '../common';
+import { useHover } from 'src/hooks/useHover';
+import { nFormatter } from 'src/utils';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { Divider, Heading, toastError, toastSuccess, TooltipWrapper } from '../common';
 import { Button } from '../common/button';
 import { TextInputBox } from '../common/input-box';
 import { Modal } from '../common/modal';
@@ -12,14 +22,18 @@ interface Props {
 }
 
 export const UnstakeTokensModal = ({ onClose }: Props) => {
-  const { balance } = useTotalStaked();
+  const [hoverRef, isHovered] = useHover<HTMLDivElement>();
+  const { user } = useOnboardContext();
+  const { result: curationQuota } = useCurationQuota(user?.address ?? null);
   const [value, setValue] = useState(0);
   const [isUnstaking, setIsUnstaking] = useState(false);
-  const { weeks } = useRemainingLockTime();
+  const [isRageQuitting, setIsRageQuitting] = useState(false);
+  const { stakeAmounts, unlockedAmount } = useRemainingLockTime(curationQuota?.stake?.stakeInfo ?? null);
   const { unstake } = useUnstake();
+  const { userAmount: rageQuitYield, penalty: rageQuitPenalty, rageQuit } = useRageQuit();
 
   const onUnstake = async () => {
-    if (value === 0) {
+    if (value <= 0) {
       toastError('Please enter a valid unstake amount');
       return;
     }
@@ -30,45 +44,128 @@ export const UnstakeTokensModal = ({ onClose }: Props) => {
       await unstake(value);
       setIsUnstaking(false);
       onClose();
-      toastSuccess('Unstake successfull, change in tokens will reflect shortly.');
+      toastSuccess('Unstake successful, change in tokens will reflect shortly.');
     } catch (err) {
       console.error(err);
       setIsUnstaking(false);
     }
   };
 
+  const onRageQuit = async () => {
+    setIsRageQuitting(true);
+
+    try {
+      await rageQuit();
+      toastSuccess('Unstake successful, change in tokens will reflect shortly.');
+      setIsRageQuitting(false);
+    } catch (err) {
+      console.error(err);
+      setIsRageQuitting(false);
+    }
+  };
+
   return (
     <Modal isOpen={true} onClose={onClose} showActionButtons={false} showCloseIcon={true} wide={false}>
       <div>
-        <div className="text-3xl font-medium">Unstake tokens</div>
+        <Heading className="text-3xl -mt-8 font-medium font-body">Unstake tokens</Heading>
+        <div className="mt-4">
+          {stakeAmounts.length > 0 && (
+            <div className="text-md flex flex-col justify-between">
+              <table>
+                <thead>
+                  <tr className="text-gray-400">
+                    <th className="text-left font-medium font-heading">Stake duration</th>
+                    <th className="text-left font-medium font-heading">Amount</th>
+                    <th className="text-left font-medium font-heading">Lock remaining</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {stakeAmounts.map((item) => {
+                    return (
+                      <tr className="font-heading text-m" key={item.stakeDuration}>
+                        <td>{mapDurationToMonths[item.stakeDuration]} Months</td>
+                        <td>{nFormatter(formatEth(item.amount))}</td>
+                        <td>{getLockRemainingDescription(item)}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
 
-        <div className="mt-12">
-          <div className="text-lg mt-10 flex justify-between">
+          <div className="text-m mt-4 flex justify-between">
             <span>Total staked</span>
-            <span className="font-heading">{balance || 0}</span>
+            <span className="font-heading">{nFormatter(curationQuota?.totalStaked || 0)}</span>
           </div>
 
-          <div className="mt-10">
+          <div className="text-m mt-2 flex justify-between">
+            <span>Available for unstaking</span>
+            <span className="font-heading">{nFormatter(unlockedAmount || 0)}</span>
+          </div>
+
+          <div className="mt-2">
             <TextInputBox
               label=""
               value={value?.toString()}
               type="text"
-              onChange={(v) => !isNaN(+v) && +v <= balance && setValue(+v)}
+              onChange={(v) => !isNaN(+v) && +v <= (unlockedAmount ?? 0) && setValue(+v)}
               placeholder="Enter amount to unstake"
               isFullWidth
               renderRightIcon={() => (
-                <Button variant="gray" className="rounded-full py-2 px-3" onClick={() => setValue(balance)}>
+                <Button
+                  variant="gray"
+                  className="rounded-full py-2 px-3"
+                  size="small"
+                  onClick={() => setValue(unlockedAmount ?? 0)}
+                >
                   Max
                 </Button>
               )}
             />
           </div>
-
-          <div className="mt-4">Lock time remaining: {weeks} weeks</div>
         </div>
 
-        <Button size="large" disabled={isUnstaking} className="w-full py-3 mt-12" onClick={onUnstake}>
+        <Button size="large" className="w-full py-3 mt-4" onClick={onUnstake} disabled={isUnstaking || isRageQuitting}>
           Unstake
+        </Button>
+
+        <Divider className="my-10" />
+
+        <TooltipWrapper
+          show={isHovered}
+          tooltip={{
+            title: 'Rage Quit',
+            content:
+              'Rage quitting allows you to unstake locked tokens for a penalty proportional to how long the tokens were originally staked for.'
+          }}
+        >
+          <div className="text-lg mt-8 flex justify-start">
+            <p>Rage Quit</p>
+            <span className="relative inset-1" ref={hoverRef}>
+              <AiOutlineQuestionCircle fontSize="1.25rem" />
+            </span>
+          </div>
+        </TooltipWrapper>
+
+        <div className="text-m mt-2 flex justify-between">
+          <span>Yield</span>
+          <span className="font-heading">{nFormatter(formatEth(rageQuitYield))}</span>
+        </div>
+
+        <div className="text-m mt-2 flex justify-between">
+          <span>Penalty</span>
+          <span className="font-heading">{nFormatter(formatEth(rageQuitPenalty))}</span>
+        </div>
+
+        <Button
+          size="large"
+          variant="danger"
+          disabled={isUnstaking || isRageQuitting}
+          className="w-full py-3 mt-4"
+          onClick={onRageQuit}
+        >
+          Rage quit
         </Button>
       </div>
     </Modal>

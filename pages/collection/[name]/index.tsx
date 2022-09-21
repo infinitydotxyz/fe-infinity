@@ -17,7 +17,18 @@ import { HiOutlineExternalLink } from 'react-icons/hi';
 import { AvatarImage } from 'src/components/collection/avatar-image';
 import { CollectionSalesTab } from 'src/components/collection/collection-activity-tab';
 import { StatsChips } from 'src/components/collection/stats-chips';
-import { Button, Chip, EthPrice, Heading, PageBox, Spinner, SVG, ToggleTab, useToggleTab } from 'src/components/common';
+import {
+  Button,
+  Chip,
+  EthPrice,
+  Heading,
+  PageBox,
+  Spinner,
+  SVG,
+  toastSuccess,
+  ToggleTab,
+  useToggleTab
+} from 'src/components/common';
 import { FeesAprStats, FeesAccruedStats } from 'src/components/curation/statistics';
 import { VoteModal } from 'src/components/curation/vote-modal';
 import { VoteProgressBar } from 'src/components/curation/vote-progress-bar';
@@ -31,7 +42,6 @@ import { useDrawerContext } from 'src/utils/context/DrawerContext';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { iconButtonStyle } from 'src/utils/ui-constants';
-import { useSWRConfig } from 'swr';
 import { twMerge } from 'tailwind-merge';
 
 const CollectionPage = () => {
@@ -46,7 +56,6 @@ const CollectionPage = () => {
   const {
     query: { name }
   } = router;
-  const { mutate } = useSWRConfig();
   const [isStakeModalOpen, setIsStakeModalOpen] = useState(false);
   const { fulfillDrawerParams } = useDrawerContext();
 
@@ -318,17 +327,8 @@ const CollectionPage = () => {
                 }}
                 isOpen={isStakeModalOpen}
                 onClose={() => setIsStakeModalOpen(false)}
-                onVote={async () => {
-                  // update local collection cache with latest amount of total votes
-                  // await mutateCollection(
-                  //   (data: Collection) =>
-                  //     ({
-                  //       ...data
-                  //       // numCuratorVotes: (userCurated?.numCuratorVotes || 0) + votes
-                  //     } as Collection)
-                  // ); // TODO
-                  // reload user votes and estimates from API
-                  await mutate(`${path}/curated/${chainId}:${user?.address}`);
+                onVote={() => {
+                  toastSuccess('Votes registered successfully. Changes will reflect shortly.');
                 }}
               />
             </section>
