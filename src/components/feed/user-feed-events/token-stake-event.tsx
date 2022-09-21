@@ -67,6 +67,7 @@ export const TokenStakeEvent = ({ event }: Props) => {
         {event.type === EventType.TokensStaked && (
           <UserActivityItemTextField title={'Duration'} content={`${mapDurationToMonths[event.duration]} Months`} />
         )}
+
         <UserActivityItemTextField title={'Votes'} content={`${nFormatter(event.stakePower) ?? ''}`} />
         <UserActivityItemTextField title={'Date'}>{format(event.timestamp)}</UserActivityItemTextField>
       </>

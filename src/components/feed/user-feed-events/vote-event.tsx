@@ -46,17 +46,19 @@ export const VoteEvent = ({ event }: Props) => {
     )
   });
 
+  const votes =
+    'votesAdded' in event
+      ? { name: 'Votes Added', value: event.votesAdded }
+      : { name: 'Votes Removed', value: event.votesRemoved };
+
   const avatar = UserActivityItemImage({ src: event.collectionProfileImage, relativeLink: collectionLink });
   return (
     <UserActivityItem avatar={avatar} title={title}>
       <>
         <UserActivityItemTextField title={'Event'} content={voteEventNameByType[event.type]} link={collectionLink} />
-        <UserActivityItemTextField
-          title={'Amount'}
-          content={`${nFormatter('votesAdded' in event ? event.votesAdded : event.votesRemoved) ?? ''}`}
-        />
-        <UserActivityItemTextField title={'Date'}>{format(event.timestamp)}</UserActivityItemTextField>
+        <UserActivityItemTextField title={votes.name} content={`${nFormatter(votes.value) ?? ''}`} />
         <UserActivityItemTextField title={'User'} content={user.value} link={user.link} />
+        <UserActivityItemTextField title={'Date'}>{format(event.timestamp)}</UserActivityItemTextField>
       </>
     </UserActivityItem>
   );
