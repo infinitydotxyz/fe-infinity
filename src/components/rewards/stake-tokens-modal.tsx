@@ -11,6 +11,7 @@ import { Heading, Spinner, toastError, toastSuccess } from '../common';
 import { Button } from '../common/button';
 import { TextInputBox } from '../common/input-box';
 import { Modal } from '../common/modal';
+import { MaxUint256 } from '@ethersproject/constants';
 
 interface Props {
   onClose: () => void;
@@ -46,7 +47,7 @@ export const StakeTokensModal = ({ onClose }: Props) => {
 
     try {
       if (allowance < value) {
-        await approve(value);
+        await approve(MaxUint256);
       }
 
       await stake(value, stakeDuration);
@@ -125,7 +126,7 @@ export const StakeTokensModal = ({ onClose }: Props) => {
         </Button>
 
         {isStaking && (
-          <div className="mt-2 flex justify-between">
+          <div className="mt-2 flex flex-row gap-2 items-center">
             <Spinner />
             <span>Waiting for transaction to complete...</span>
           </div>

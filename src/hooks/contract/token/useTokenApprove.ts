@@ -1,4 +1,4 @@
-import { utils } from 'ethers';
+import { BigNumber } from 'ethers';
 import { useStakerContract } from '../staker/useStakerContract';
 import { useTokenContract } from './useTokenContract';
 
@@ -9,8 +9,8 @@ export function useTokenApprove() {
   const { contract } = useTokenContract();
   const { address: stakerAddress } = useStakerContract();
 
-  const approve = async (amount: number, spenderAddress?: string) => {
-    const tx = await contract.approve(spenderAddress || stakerAddress, utils.parseEther(amount.toString()).toString());
+  const approve = async (amount: BigNumber, spenderAddress?: string) => {
+    const tx = await contract.approve(spenderAddress || stakerAddress, amount.toString());
     await tx.wait();
   };
 

@@ -70,7 +70,7 @@ export const UserPageCuratedTab: React.FC<{ userInfo: UserProfileDto }> = ({ use
         )}
 
         {result && result[0].data?.length === 0 && (
-          <NoResultsBox onClick={() => router.replace(`curation?tab=${CuratedTab.AllCurated}`)}>
+          <NoResultsBox onClick={() => router.replace(`curated?tab=${CuratedTab.AllCurated}`)}>
             This user hasn't curated any collections yet
           </NoResultsBox>
         )}
