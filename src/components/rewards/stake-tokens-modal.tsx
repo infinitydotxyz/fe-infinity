@@ -1,6 +1,5 @@
 import { RadioGroup } from '@headlessui/react';
 import { StakeDuration } from '@infinityxyz/lib-frontend/types/core';
-import { round } from '@infinityxyz/lib-frontend/utils';
 import React, { useState } from 'react';
 import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
 import { useStake } from 'src/hooks/contract/staker/useStake';
