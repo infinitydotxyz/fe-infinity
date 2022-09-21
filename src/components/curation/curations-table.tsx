@@ -59,7 +59,7 @@ export const CurationRow: React.FC<CurationRowProps> = ({ collection, index, onC
       <div className="w-full h-full p-8 overflow-hidden rounded-3xl bg-gray-100 flex items-center">
         <>
           <FieldWrapper value={index} type="index" className="w-1/2" />
-          <FieldWrapper value={collection.profileImage} className="w-fit 2xl:w-full" type="image" />
+          <FieldWrapper value={collection.profileImage} className="w-1/2 2xl:w-full" type="image" />
           <FieldWrapper value={collection.name} type="string" onClick={onClick} />
           <FieldWrapper type="custom">
             <FeesAprStats value={collection.feesAPR || 0} />
