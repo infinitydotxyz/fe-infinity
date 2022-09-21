@@ -5,7 +5,7 @@ import { format } from 'timeago.js';
 import { UserActivityItemTitle } from '../activity-item/user-activity-item-title';
 import { UserActivityItemTextField } from '../activity-item/user-activity-item-text-field';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import { getUserToDisplay } from 'src/utils';
+import { getUserToDisplay, nFormatter } from 'src/utils';
 import { ChainId, EtherscanLinkType, NftSaleEvent as NftSaleFeedEvent } from '@infinityxyz/lib-frontend/types/core';
 import { getEtherscanLink } from '@infinityxyz/lib-frontend/utils';
 
@@ -51,7 +51,7 @@ export const NftSaleEvent = ({ event }: Props) => {
           )}
         />
         <UserActivityItemTextField title={'Price'}>
-          <EthPrice label={`${event.price}`} />
+          <EthPrice label={`${nFormatter(event.price)}`} />
         </UserActivityItemTextField>
         <UserActivityItemTextField title={'Buyer'} content={buyer.value} link={buyer.link} />
         <UserActivityItemTextField title={'Seller'} content={seller.value} link={seller.link} />

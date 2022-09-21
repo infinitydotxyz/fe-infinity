@@ -6,7 +6,7 @@ import { format } from 'timeago.js';
 import { UserActivityItemTitle } from '../activity-item/user-activity-item-title';
 import { UserActivityItemTextField } from '../activity-item/user-activity-item-text-field';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import { getUserToDisplay } from 'src/utils';
+import { getUserToDisplay, nFormatter } from 'src/utils';
 import { EventType } from '@infinityxyz/lib-frontend/types/core';
 
 interface Props {
@@ -41,7 +41,7 @@ export const NftOrderEvent = ({ event }: Props) => {
       <>
         <UserActivityItemTextField title={'Event'} content={eventType} />
         <UserActivityItemTextField title={'Price'}>
-          <EthPrice label={`${event.startPriceEth}`} />
+          <EthPrice label={`${nFormatter(event.startPriceEth)}`} />
         </UserActivityItemTextField>
         <UserActivityItemTextField title={'Date'}>{format(event.startTimeMs)}</UserActivityItemTextField>
         <UserActivityItemTextField title={'Maker'} content={maker.value} link={maker.link} />
