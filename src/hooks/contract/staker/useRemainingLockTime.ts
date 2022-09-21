@@ -149,11 +149,9 @@ export function useRemainingLockTime(stakingInfo: StakeInfo | null): {
 
     const lockedAmount = formatEth(lockedAmountBigInt.toString());
 
-    console.log(`UnlockedAmount: ${unlockedAmount}`);
-
     return {
       maxLockTime,
-      stakeAmounts: stakeAmounts,
+      stakeAmounts,
       unlockedAmount,
       lockedAmount
     };
