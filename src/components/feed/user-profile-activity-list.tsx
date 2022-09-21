@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
 import { EventType, UserFeedEvent } from '@infinityxyz/lib-frontend/types/core/feed';
 import { DEFAULT_OPTIONS, FeedFilterDropdown } from './feed-filter-dropdown';
@@ -8,6 +8,7 @@ import { NftOrderEvent } from './user-feed-events/nft-order-event';
 import { NftSaleEvent } from './user-feed-events/nft-sale-event';
 import { TokenStakeEvent } from './user-feed-events/token-stake-event';
 import { VoteEvent } from './user-feed-events/vote-event';
+import { NftTransferEvent } from './user-feed-events/nft-transfer-event';
 
 interface UserProfileActivityListProps {
   userAddress?: string;
@@ -21,11 +22,7 @@ export const UserProfileActivityList = ({ userAddress, types, className }: UserP
   const [filter, setFilter] = useState<FeedFilter>({ userAddress, types });
   const [filteringTypes, setFilteringTypes] = useState<UserFeedEvent['type'][]>([]);
 
-  const { result: activities, error, isLoading, fetchMore } = useUserActivity(filteringTypes, userAddress);
-
-  useEffect(() => {
-    console.error(error);
-  }, [error]);
+  const { result: activities, isLoading, fetchMore } = useUserActivity(filteringTypes, userAddress);
 
   const onChangeFilterDropdown = (checked: boolean, checkId: string) => {
     const newFilter = { ...filter };
@@ -71,19 +68,23 @@ export const UserProfileActivityList = ({ userAddress, types, className }: UserP
             switch (event.type) {
               case EventType.NftListing:
               case EventType.NftOffer:
-                return <NftOrderEvent key={`${event.type}-${event.timestamp}`} event={event} />;
+                return <NftOrderEvent key={`${event.orderItemId}`} event={event} />;
               case EventType.NftSale:
-                return <NftSaleEvent key={`${event.type}-${event.timestamp}`} event={event} />;
+                return (
+                  <NftSaleEvent
+                    key={`${event.txHash}-${event.collectionAddress}-${event.tokenId}-${event.type}`}
+                    event={event}
+                  />
+                );
               case EventType.TokensStaked:
               case EventType.TokensUnStaked:
               case EventType.TokensRageQuit:
-                return <TokenStakeEvent key={`${event.type}-${event.timestamp}`} event={event} />;
+                return <TokenStakeEvent key={`${event.txHash}-${event.type}`} event={event} />;
               case EventType.UserVote:
               case EventType.UserVoteRemoved:
-                return <VoteEvent key={`${event.type}-${event.timestamp}`} event={event} />;
+                return <VoteEvent key={`${event.collectionAddress}-${event.timestamp}-${event.type}`} event={event} />;
               case EventType.NftTransfer:
-                // return <UserActivityItem key={`${event.type}-${event.timestamp}`} event={event} />;
-                return <></>;
+                return <NftTransferEvent key={`${event.txHash}-${event.type}`} event={event} />;
               default:
                 console.error(`Unhandled user event type: ${JSON.stringify(event, null, 2)}`);
                 return <></>;
@@ -100,7 +101,6 @@ export const UserProfileActivityList = ({ userAddress, types, className }: UserP
 
         <ScrollLoader
           onFetchMore={() => {
-            console.log('Fetching more');
             fetchMore();
           }}
         />

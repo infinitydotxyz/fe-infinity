@@ -5,14 +5,18 @@ import { UserActivityItemTitle } from '../activity-item/user-activity-item-title
 import { UserActivityItemTextField } from '../activity-item/user-activity-item-text-field';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { getUserToDisplay } from 'src/utils';
-import { ChainId, EtherscanLinkType, NftTransferEvent } from '@infinityxyz/lib-frontend/types/core';
+import {
+  ChainId,
+  EtherscanLinkType,
+  NftTransferEvent as NftTransferEventFeed
+} from '@infinityxyz/lib-frontend/types/core';
 import { getEtherscanLink } from '@infinityxyz/lib-frontend/utils';
 
 interface Props {
-  event: NftTransferEvent;
+  event: NftTransferEventFeed;
 }
 
-export const NftSaleEvent = ({ event }: Props) => {
+export const NftTransferEvent = ({ event }: Props) => {
   const { user: currentUser } = useOnboardContext();
 
   const from = getUserToDisplay(
