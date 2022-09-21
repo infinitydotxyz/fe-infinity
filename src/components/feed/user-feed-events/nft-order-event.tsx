@@ -47,8 +47,8 @@ export const NftOrderEvent = ({ event }: Props) => {
         <UserActivityItemTextField title={'Price'}>
           <EthPrice label={`${nFormatter(event.startPriceEth)}`} />
         </UserActivityItemTextField>
-        <UserActivityItemTextField title={'Date'}>{format(event.startTimeMs)}</UserActivityItemTextField>
         <UserActivityItemTextField title={'Maker'} content={maker.value} link={maker.link} />
+        <UserActivityItemTextField title={'Date'}>{format(event.startTimeMs)}</UserActivityItemTextField>
       </>
     </UserActivityItem>
   );

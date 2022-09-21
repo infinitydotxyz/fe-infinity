@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
 import { EventType, UserFeedEvent } from '@infinityxyz/lib-frontend/types/core/feed';
-import { DEFAULT_OPTIONS, FeedFilterDropdown } from './feed-filter-dropdown';
+import { FEED_FILTER_DEFAULT_OPTIONS, FeedFilterDropdown } from './feed-filter-dropdown';
 import { CenteredContent, ScrollLoader, Spinner } from '../common';
 import { useUserActivity } from 'src/hooks/api/useUserActivity';
 import { NftOrderEvent } from './user-feed-events/nft-order-event';
@@ -39,11 +39,7 @@ export const UserProfileActivityList = ({ userAddress, types, className }: UserP
       setFilter(newFilter);
       setFilteringTypes(newFilter.types as UserFeedEvent['type'][]);
     } else {
-      const _newTypes = [...filteringTypes];
-      const index = filteringTypes.indexOf(selectedType as UserFeedEvent['type']);
-      if (index >= 0) {
-        _newTypes.splice(index, 1);
-      }
+      const _newTypes = [...filteringTypes].filter((item) => item !== selectedType);
       newFilter.types = _newTypes;
       setFilter(newFilter);
       setFilteringTypes(_newTypes as UserFeedEvent['type'][]);
@@ -56,7 +52,7 @@ export const UserProfileActivityList = ({ userAddress, types, className }: UserP
         <FeedFilterDropdown
           selectedTypes={filteringTypes}
           onChange={onChangeFilterDropdown}
-          options={DEFAULT_OPTIONS}
+          options={FEED_FILTER_DEFAULT_OPTIONS}
         />
       </div>
 

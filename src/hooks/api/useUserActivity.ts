@@ -1,6 +1,9 @@
 import { useFetchInfinite } from 'src/utils';
 import { UserFeedEvent } from '@infinityxyz/lib-frontend/types/core';
 import { UserActivityArrayDto, UserActivityQueryDto } from '@infinityxyz/lib-frontend/types/dto/user';
+import { FEED_FILTER_DEFAULT_OPTIONS } from 'src/components/feed/feed-filter-dropdown';
+
+export type UserFeedEventTypes = UserFeedEvent['type'][];
 
 export function useUserActivity(
   events: UserFeedEvent['type'][],
@@ -20,6 +23,12 @@ export function useUserActivity(
         return;
       }
     };
+  }
+
+  if (events.length === 0) {
+    events = FEED_FILTER_DEFAULT_OPTIONS.map((option) => option.value).filter(
+      (item) => item !== ''
+    ) as UserFeedEvent['type'][];
   }
 
   const query: UserActivityQueryDto = {

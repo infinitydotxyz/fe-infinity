@@ -17,7 +17,7 @@ interface FeedFilterDropdownProps {
   autoCheckAll?: boolean;
 }
 
-export const DEFAULT_OPTIONS = [
+export const FEED_FILTER_DEFAULT_OPTIONS = [
   {
     label: 'All',
     value: ''
@@ -66,7 +66,7 @@ export const FeedFilterDropdown: React.FC<FeedFilterDropdownProps> = ({
   onChange,
   autoCheckAll = true
 }) => {
-  const filterOptions = options ?? DEFAULT_OPTIONS;
+  const filterOptions = options ?? FEED_FILTER_DEFAULT_OPTIONS;
   return (
     <PopoverButton title="Filter">
       {filterOptions.map((item, idx) => {
