@@ -1,11 +1,12 @@
 import {
+  ChainId,
   EtherscanLinkType,
   EventType,
   UserVoteEvent,
   UserVoteRemovedEvent
 } from '@infinityxyz/lib-frontend/types/core';
 import { getEtherscanLink } from '@infinityxyz/lib-frontend/utils';
-import { ellipsisAddress, getUserToDisplay, nFormatter } from 'src/utils/commonUtils';
+import { ellipsisAddress, getCollectionLink, getUserToDisplay, nFormatter } from 'src/utils/commonUtils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { format } from 'timeago.js';
 import { UserActivityItem } from '../activity-item/user-activity-item';
@@ -33,8 +34,12 @@ export const VoteEvent = ({ event }: Props) => {
     },
     currentUser?.address || ''
   );
+  const collectionLink = getCollectionLink({
+    slug: event.collectionSlug,
+    address: event.collectionAddress,
+    chainId: event.chainId as ChainId
+  });
 
-  const collectionLink = `/collection/${event.collectionSlug || event.chainId + event.collectionAddress}`;
   const title = UserActivityItemTitle({
     title: event.collectionName,
     hasBlueCheck: event.hasBlueCheck,

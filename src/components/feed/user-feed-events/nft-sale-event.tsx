@@ -5,7 +5,7 @@ import { format } from 'timeago.js';
 import { UserActivityItemTitle } from '../activity-item/user-activity-item-title';
 import { UserActivityItemTextField } from '../activity-item/user-activity-item-text-field';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import { getUserToDisplay, nFormatter } from 'src/utils';
+import { getCollectionLink, getTokenLink, getUserToDisplay, nFormatter } from 'src/utils';
 import { ChainId, EtherscanLinkType, NftSaleEvent as NftSaleFeedEvent } from '@infinityxyz/lib-frontend/types/core';
 import { getEtherscanLink } from '@infinityxyz/lib-frontend/utils';
 
@@ -26,10 +26,14 @@ export const NftSaleEvent = ({ event }: Props) => {
     currentUser?.address || ''
   );
 
-  const collectionLink = `/collection/${event.collectionSlug || event.chainId + event.collectionAddress}`;
+  const collectionLink = getCollectionLink({
+    slug: event.collectionSlug,
+    address: event.collectionAddress,
+    chainId: event.chainId as ChainId
+  });
   const link = event.tokenId
-    ? `/asset/${event.chainId}/${event.collectionAddress}/${event.tokenId}`
-    : `/collection/${event.collectionSlug || event.chainId + event.collectionAddress}`;
+    ? getTokenLink({ chainId: event.chainId as ChainId, address: event.collectionAddress, tokenId: event.tokenId })
+    : collectionLink;
   const avatar = UserActivityItemImage({ src: event.image || event.collectionProfileImage, relativeLink: link });
   const title = UserActivityItemTitle({
     title: event.collectionName,
