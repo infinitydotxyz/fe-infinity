@@ -33,6 +33,7 @@ import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { iconButtonStyle } from 'src/utils/ui-constants';
 import { useSWRConfig } from 'swr';
 import { twMerge } from 'tailwind-merge';
+import ReactMarkdown from 'react-markdown';
 
 const CollectionPage = () => {
   const { user, chainId, checkSignedIn } = useOnboardContext();
@@ -199,7 +200,16 @@ const CollectionPage = () => {
                   <LoadingDescription />
                 </div>
               ) : (
-                <div className="text-secondary mt-12 md:w-2/3">{collection.metadata?.description ?? ''}</div>
+                <div className="text-secondary mt-12 md:w-2/3">
+                  <ReactMarkdown
+                    components={{
+                      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                      a: ({ node, ...props }) => <i style={{ fontStyle: 'normal', color: 'blue' }} {...props} />
+                    }}
+                  >
+                    {collection.metadata?.description ?? ''}
+                  </ReactMarkdown>
+                </div>
               )}
               {collection.metadata?.benefits && (
                 <div className="mt-7 md:w-2/3">
