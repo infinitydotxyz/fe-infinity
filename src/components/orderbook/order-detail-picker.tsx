@@ -37,10 +37,10 @@ export const OrderDetailPicker = ({
             <div className="select-none">Collection</div>
             <div className="flex flex-row">
               <div className="w-44 flex items-center text-black font-body">
-                <NextLink href={`/collection/${nft?.collectionSlug}`} className="truncate">
+                <NextLink href={`/collection/${nft.collectionSlug}`} className="truncate">
                   {nft.collectionName}
                 </NextLink>
-                {nft?.hasBlueCheck && <SVG.blueCheck className="ml-1.5 shrink-0 w-4 h-4" />}
+                {nft.hasBlueCheck && <SVG.blueCheck className="ml-1.5 shrink-0 w-4 h-4" />}
               </div>
             </div>
           </div>
@@ -96,8 +96,14 @@ export const OrderDetailPicker = ({
             src={token.tokenImage || nft.collectionImage}
             className="w-16 h-16 shrink-0 overflow-clip rounded-2xl"
           />
-          <div className="ml-4">
-            <div className="select-none">{nft.collectionName}</div>
+          <div className="ml-4 flex flex-col">
+            <div className="w-44 flex items-center text-black font-body">
+              <NextLink href={`/collection/${nft.collectionSlug}`} className="truncate">
+                {nft.collectionName}
+              </NextLink>
+              {nft.hasBlueCheck && <SVG.blueCheck className="ml-1.5 shrink-0 w-4 h-4" />}
+            </div>
+
             <div className="select-none flex  truncate">{tokenId}</div>
           </div>
 
