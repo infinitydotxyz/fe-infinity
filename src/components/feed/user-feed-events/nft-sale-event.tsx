@@ -1,4 +1,3 @@
-import { NftListingEvent, NftOfferEvent } from '@infinityxyz/lib-frontend/types/core/feed/NftEvent';
 import { UserActivityItemImage } from '../activity-item/user-activity-item-image';
 import { UserActivityItem } from '../activity-item/user-activity-item';
 import { EthPrice } from 'src/components/common';
@@ -7,19 +6,23 @@ import { UserActivityItemTitle } from '../activity-item/user-activity-item-title
 import { UserActivityItemTextField } from '../activity-item/user-activity-item-text-field';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { getUserToDisplay } from 'src/utils';
-import { EventType } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId, EtherscanLinkType, NftSaleEvent as NftSaleFeedEvent } from '@infinityxyz/lib-frontend/types/core';
+import { getEtherscanLink } from '@infinityxyz/lib-frontend/utils';
 
 interface Props {
-  event: NftListingEvent | NftOfferEvent;
+  event: NftSaleFeedEvent;
 }
 
-export const NftOrder = ({ event }: Props) => {
+export const NftSaleEvent = ({ event }: Props) => {
   const { user: currentUser } = useOnboardContext();
 
-  const eventType = event.type === EventType.NftListing ? 'Listing' : 'Offer';
+  const seller = getUserToDisplay(
+    { address: event.seller, username: '', displayName: event.sellerDisplayName },
+    currentUser?.address || ''
+  );
 
-  const maker = getUserToDisplay(
-    { address: event.makerAddress, username: event.makerUsername, displayName: '' },
+  const buyer = getUserToDisplay(
+    { address: event.buyer, username: '', displayName: event.buyerDisplayName },
     currentUser?.address || ''
   );
 
@@ -39,12 +42,20 @@ export const NftOrder = ({ event }: Props) => {
   return (
     <UserActivityItem avatar={avatar} title={title}>
       <>
-        <UserActivityItemTextField title={'Event'} content={eventType} />
+        <UserActivityItemTextField
+          title={'Event'}
+          content={'Sale'}
+          link={getEtherscanLink(
+            { type: EtherscanLinkType.Transaction, transactionHash: event.txHash },
+            event.chainId as ChainId
+          )}
+        />
         <UserActivityItemTextField title={'Price'}>
-          <EthPrice label={`${event.startPriceEth}`} />
+          <EthPrice label={`${event.price}`} />
         </UserActivityItemTextField>
-        <UserActivityItemTextField title={'Date'}>{format(event.startTimeMs)}</UserActivityItemTextField>
-        <UserActivityItemTextField title={'Maker'} content={maker.value} link={maker.link} />
+        <UserActivityItemTextField title={'Date'}>{format(event.timestamp)}</UserActivityItemTextField>
+        <UserActivityItemTextField title={'Buyer'} content={buyer.value} link={buyer.link} />
+        <UserActivityItemTextField title={'Seller'} content={seller.value} link={seller.link} />
       </>
     </UserActivityItem>
   );

@@ -4,9 +4,10 @@ import { EventType, UserFeedEvent } from '@infinityxyz/lib-frontend/types/core/f
 import { DEFAULT_OPTIONS, FeedFilterDropdown } from './feed-filter-dropdown';
 import { CenteredContent, ScrollLoader, Spinner } from '../common';
 import { useUserActivity } from 'src/hooks/api/useUserActivity';
-import { NftOrder } from './user-feed-events/nft-order';
-import { NftSale } from './user-feed-events/nft-sale';
-import { TokenStake } from './user-feed-events/token-stake';
+import { NftOrderEvent } from './user-feed-events/nft-order-event';
+import { NftSaleEvent } from './user-feed-events/nft-sale-event';
+import { TokenStakeEvent } from './user-feed-events/token-stake-event';
+import { VoteEvent } from './user-feed-events/vote-event';
 
 interface UserProfileActivityListProps {
   userAddress?: string;
@@ -70,15 +71,16 @@ export const UserProfileActivityList = ({ userAddress, types, className }: UserP
             switch (event.type) {
               case EventType.NftListing:
               case EventType.NftOffer:
-                return <NftOrder key={`${event.type}-${event.timestamp}`} event={event} />;
+                return <NftOrderEvent key={`${event.type}-${event.timestamp}`} event={event} />;
               case EventType.NftSale:
-                return <NftSale key={`${event.type}-${event.timestamp}`} event={event} />;
+                return <NftSaleEvent key={`${event.type}-${event.timestamp}`} event={event} />;
               case EventType.TokensStaked:
               case EventType.TokensUnStaked:
               case EventType.TokensRageQuit:
-                return <TokenStake key={`${event.type}-${event.timestamp}`} event={event} />;
+                return <TokenStakeEvent key={`${event.type}-${event.timestamp}`} event={event} />;
               case EventType.UserVote:
               case EventType.UserVoteRemoved:
+                return <VoteEvent key={`${event.type}-${event.timestamp}`} event={event} />;
               case EventType.NftTransfer:
                 // return <UserActivityItem key={`${event.type}-${event.timestamp}`} event={event} />;
                 return <></>;

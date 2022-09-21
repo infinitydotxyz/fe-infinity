@@ -25,7 +25,7 @@ const stakeEventNameByType = {
   [EventType.TokensRageQuit]: 'Rage Quit'
 };
 
-export const TokenStake = ({ event }: Props) => {
+export const TokenStakeEvent = ({ event }: Props) => {
   const { user: currentUser } = useOnboardContext();
 
   const user = getUserToDisplay(
@@ -57,7 +57,6 @@ export const TokenStake = ({ event }: Props) => {
           )}
         />
         <UserActivityItemTextField title={'Amount'} content={`${nFormatter(formatEth(event.amount)) ?? ''}`} />
-        <UserActivityItemTextField title={'Votes'} content={`${nFormatter(event.stakePower) ?? ''}`} />
 
         {event.type === EventType.TokensRageQuit && (
           <UserActivityItemTextField
@@ -68,6 +67,7 @@ export const TokenStake = ({ event }: Props) => {
         {event.type === EventType.TokensStaked && (
           <UserActivityItemTextField title={'Duration'} content={`${mapDurationToMonths[event.duration]} Months`} />
         )}
+        <UserActivityItemTextField title={'Votes'} content={`${nFormatter(event.stakePower) ?? ''}`} />
         <UserActivityItemTextField title={'Date'}>{format(event.timestamp)}</UserActivityItemTextField>
       </>
     </UserActivityItem>
