@@ -4,7 +4,7 @@ import { EventType, UserFeedEvent } from '@infinityxyz/lib-frontend/types/core/f
 import { DEFAULT_OPTIONS, FeedFilterDropdown } from './feed-filter-dropdown';
 import { CenteredContent, ScrollLoader, Spinner } from '../common';
 import { useUserActivity } from 'src/hooks/api/useUserActivity';
-import { NftListing } from './user-feed-events/nft-listing-event';
+import { NftListing } from './user-feed-events/nft-listing';
 
 interface UserProfileActivityListProps {
   userAddress?: string;

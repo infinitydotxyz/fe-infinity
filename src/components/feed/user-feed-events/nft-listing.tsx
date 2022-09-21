@@ -5,12 +5,35 @@ import { EthPrice } from 'src/components/common';
 import { format } from 'timeago.js';
 import { UserActivityItemTitle } from '../activity-item/user-activity-item-title';
 import { UserActivityItemTextField } from '../activity-item/user-activity-item-text-field';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { ellipsisAddress } from 'src/utils';
 
 interface Props {
   event: NftListingEvent;
 }
 
 export const NftListing = ({ event }: Props) => {
+  const { user: currentUser } = useOnboardContext();
+
+  const getUserToDisplay = (
+    user: { address: string; username?: string; displayName?: string },
+    currentUserAddress: string
+  ): { value: string; link: string } => {
+    if (currentUserAddress === user.address) {
+      return { value: 'You', link: '/profile/me' };
+    }
+
+    return {
+      value: user.displayName || user.username || ellipsisAddress(user.address),
+      link: `/profile/${user.address}`
+    };
+  };
+
+  const maker = getUserToDisplay(
+    { address: event.makerAddress, username: event.makerUsername, displayName: '' },
+    currentUser?.address || ''
+  );
+
   const collectionLink = `/collection/${event.collectionSlug || event.chainId + event.collectionAddress}`;
   const link = event.tokenId
     ? `/asset/${event.chainId}/${event.collectionAddress}/${event.tokenId}`
@@ -31,6 +54,7 @@ export const NftListing = ({ event }: Props) => {
           <EthPrice label={`${event.startPriceEth}`} />
         </UserActivityItemTextField>
         <UserActivityItemTextField title={'Date'}>{format(event.startTimeMs)}</UserActivityItemTextField>
+        <UserActivityItemTextField title={'Maker'} content={maker.value} link={maker.link} />
       </>
     </UserActivityItem>
   );
