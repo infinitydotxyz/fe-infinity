@@ -3,12 +3,28 @@ import { UserFeedEvent } from '@infinityxyz/lib-frontend/types/core';
 import { UserActivityArrayDto, UserActivityQueryDto } from '@infinityxyz/lib-frontend/types/dto/user';
 
 export function useUserActivity(
-  user: string,
-  events: UserFeedEvent['type'][]
-): { result: UserFeedEvent[]; error: unknown; isLoading: boolean; fetchMore: () => void } {
+  events: UserFeedEvent['type'][],
+  user?: string
+): {
+  result: UserFeedEvent[];
+  error: unknown;
+  isLoading: boolean;
+  fetchMore: () => void;
+} {
+  if (!user) {
+    return {
+      result: [],
+      error: null,
+      isLoading: false,
+      fetchMore: () => {
+        return;
+      }
+    };
+  }
+
   const query: UserActivityQueryDto = {
-    events: events,
-    limit: 50,
+    events,
+    limit: 20,
     cursor: ''
   };
 

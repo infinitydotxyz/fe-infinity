@@ -1,29 +1,10 @@
 import { useEffect, useState } from 'react';
 import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
-import { BaseFeedEvent, EventType, ExchangeEvent } from '@infinityxyz/lib-frontend/types/core/feed';
+import { EventType, UserFeedEvent } from '@infinityxyz/lib-frontend/types/core/feed';
 import { DEFAULT_OPTIONS, FeedFilterDropdown } from './feed-filter-dropdown';
-import { UserActivityItem } from './user-activity-item';
-import { apiGet } from 'src/utils';
 import { CenteredContent, ScrollLoader, Spinner } from '../common';
-
-export type FeedEvent = BaseFeedEvent &
-  ExchangeEvent & {
-    id?: string;
-    type?: EventType;
-    title?: string;
-    text?: string;
-    userDisplayName?: string;
-  };
-
-type UserActivityEvent = FeedEvent & {
-  makerAddress?: string;
-  makerUsername?: string;
-  takerAddress?: string;
-  takerUsername?: string;
-  usersInvolved?: string[];
-  startPriceEth?: number;
-};
-const ITEMS_LIMIT = 10;
+import { useUserActivity } from 'src/hooks/api/useUserActivity';
+import { NftListing } from './user-feed-events/nft-listing-event';
 
 interface UserProfileActivityListProps {
   userAddress?: string;
@@ -35,57 +16,13 @@ interface UserProfileActivityListProps {
 
 export const UserProfileActivityList = ({ userAddress, types, className }: UserProfileActivityListProps) => {
   const [filter, setFilter] = useState<FeedFilter>({ userAddress, types });
-  const [filteringTypes, setFilteringTypes] = useState<EventType[]>([]);
-  const [data, setData] = useState<FeedEvent[]>([]);
-  const [isFetching, setIsFetching] = useState(false);
-  const [cursor, setCursor] = useState('');
-  const [hasNextPage, setHasNextPage] = useState(false);
+  const [filteringTypes, setFilteringTypes] = useState<UserFeedEvent['type'][]>([]);
 
-  const fetchData = async (isRefresh = false) => {
-    setIsFetching(true);
-    let newCursor = cursor;
-    if (isRefresh) {
-      newCursor = '';
-    }
-
-    const { result } = await apiGet(`/user/${userAddress}/activity`, {
-      query: {
-        limit: ITEMS_LIMIT,
-        cursor: newCursor,
-        events: filteringTypes
-      }
-    });
-
-    if (result?.hasNextPage === true) {
-      setCursor(result?.cursor);
-    }
-    setHasNextPage(result?.hasNextPage);
-
-    const moreData: FeedEvent[] = [];
-    // convert UserActivityEvent[] to FeedEvent[] for rendering.
-    result?.data?.map((act: UserActivityEvent) => {
-      moreData.push({
-        ...act,
-        seller: act.seller ?? act.makerAddress ?? '',
-        sellerDisplayName: act.sellerDisplayName ?? act.makerUsername === '_____' ? '' : act.makerUsername ?? '',
-        buyer: act.buyer ?? act.takerAddress ?? '',
-        buyerDisplayName: act.buyerDisplayName ?? act.takerUsername === '_____' ? '' : act.takerUsername ?? '',
-        price: act.price ?? act.startPriceEth ?? 0
-      });
-    });
-
-    setIsFetching(false);
-    if (isRefresh) {
-      setData([...moreData]);
-    } else {
-      setData([...data, ...moreData]);
-    }
-  };
+  const { result: activities, error, isLoading, fetchMore } = useUserActivity(filteringTypes, userAddress);
 
   useEffect(() => {
-    setData([]);
-    fetchData(true);
-  }, [filter]);
+    console.error(error);
+  }, [error]);
 
   const onChangeFilterDropdown = (checked: boolean, checkId: string) => {
     const newFilter = { ...filter };
@@ -100,16 +37,16 @@ export const UserProfileActivityList = ({ userAddress, types, className }: UserP
     if (checked) {
       newFilter.types = [...filteringTypes, selectedType];
       setFilter(newFilter);
-      setFilteringTypes(newFilter.types);
+      setFilteringTypes(newFilter.types as UserFeedEvent['type'][]);
     } else {
       const _newTypes = [...filteringTypes];
-      const index = filteringTypes.indexOf(selectedType);
+      const index = filteringTypes.indexOf(selectedType as UserFeedEvent['type']);
       if (index >= 0) {
         _newTypes.splice(index, 1);
       }
       newFilter.types = _newTypes;
       setFilter(newFilter);
-      setFilteringTypes(_newTypes);
+      setFilteringTypes(_newTypes as UserFeedEvent['type'][]);
     }
   };
 
@@ -124,30 +61,43 @@ export const UserProfileActivityList = ({ userAddress, types, className }: UserP
       </div>
 
       <ul className="space-y-4 pointer-events-auto">
-        {isFetching && (
-          <div className="mt-8">
+        {!isLoading && activities?.length === 0 ? <div className="font-heading">No results found</div> : null}
+
+        {activities.length > 0 &&
+          activities?.map((event) => {
+            switch (event.type) {
+              case EventType.NftListing:
+                return <NftListing key={`${event.type}-${event.timestamp}`} event={event} />;
+              case EventType.NftOffer:
+              case EventType.NftSale:
+              case EventType.TokensStaked:
+              case EventType.TokensUnStaked:
+              case EventType.TokensRageQuit:
+              case EventType.UserVote:
+              case EventType.UserVoteRemoved:
+              case EventType.NftTransfer:
+                // return <UserActivityItem key={`${event.type}-${event.timestamp}`} event={event} />;
+                return <></>;
+              default:
+                console.error(`Unhandled user event type: ${JSON.stringify(event, null, 2)}`);
+                return <></>;
+            }
+          })}
+
+        <div className="mt-8">
+          {isLoading && (
             <CenteredContent>
               <Spinner />
             </CenteredContent>
-          </div>
-        )}
+          )}
+        </div>
 
-        {!isFetching && hasNextPage === false && data?.length === 0 ? (
-          <div className="font-heading">No results found</div>
-        ) : null}
-
-        {!isFetching &&
-          data?.map((event, idx) => {
-            return <UserActivityItem key={idx} event={event} />;
-          })}
-
-        {hasNextPage === true ? (
-          <ScrollLoader
-            onFetchMore={async () => {
-              await fetchData();
-            }}
-          />
-        ) : null}
+        <ScrollLoader
+          onFetchMore={() => {
+            console.log('Fetching more');
+            fetchMore();
+          }}
+        />
       </ul>
     </div>
   );

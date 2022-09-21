@@ -39,8 +39,20 @@ export const DEFAULT_OPTIONS = [
     value: EventType.TokensStaked
   },
   {
+    label: 'Tokens Unstaked',
+    value: EventType.TokensUnStaked
+  },
+  {
+    label: 'Rage Quit',
+    value: EventType.TokensRageQuit
+  },
+  {
     label: 'Vote',
     value: EventType.UserVote
+  },
+  {
+    label: 'Votes Removed',
+    value: EventType.UserVoteRemoved
   },
   {
     label: 'Transfer',
