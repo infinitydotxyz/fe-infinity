@@ -1,18 +1,15 @@
 import { formatEth } from '@infinityxyz/lib-frontend/utils';
 import React, { useState } from 'react';
-import { AiOutlineQuestionCircle } from 'react-icons/ai';
 import { useCurationQuota } from 'src/hooks/api/useCurationQuota';
-import { useRageQuit } from 'src/hooks/contract/staker/useRageQuit';
 import {
   getLockRemainingDescription,
   mapDurationToMonths,
   useRemainingLockTime
 } from 'src/hooks/contract/staker/useRemainingLockTime';
 import { useUnstake } from 'src/hooks/contract/staker/useUnstake';
-import { useHover } from 'src/hooks/useHover';
 import { nFormatter } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import { Divider, Heading, toastError, toastSuccess, TooltipWrapper } from '../common';
+import { Heading, toastError, toastSuccess } from '../common';
 import { Button } from '../common/button';
 import { TextInputBox } from '../common/input-box';
 import { Modal } from '../common/modal';
@@ -22,15 +19,15 @@ interface Props {
 }
 
 export const UnstakeTokensModal = ({ onClose }: Props) => {
-  const [hoverRef, isHovered] = useHover<HTMLDivElement>();
+  // const [hoverRef, isHovered] = useHover<HTMLDivElement>();
   const { user } = useOnboardContext();
   const { result: curationQuota } = useCurationQuota(user?.address ?? null);
   const [value, setValue] = useState(0);
   const [isUnstaking, setIsUnstaking] = useState(false);
-  const [isRageQuitting, setIsRageQuitting] = useState(false);
+  // const [isRageQuitting, setIsRageQuitting] = useState(false);
   const { stakeAmounts, unlockedAmount } = useRemainingLockTime(curationQuota?.stake?.stakeInfo ?? null);
   const { unstake } = useUnstake();
-  const { userAmount: rageQuitYield, penalty: rageQuitPenalty, rageQuit } = useRageQuit();
+  // const { userAmount: rageQuitYield, penalty: rageQuitPenalty, rageQuit } = useRageQuit();
 
   const onUnstake = async () => {
     if (value <= 0) {
@@ -51,18 +48,18 @@ export const UnstakeTokensModal = ({ onClose }: Props) => {
     }
   };
 
-  const onRageQuit = async () => {
-    setIsRageQuitting(true);
+  // const onRageQuit = async () => {
+  //   setIsRageQuitting(true);
 
-    try {
-      await rageQuit();
-      toastSuccess('Unstake successful, change in tokens will reflect shortly.');
-      setIsRageQuitting(false);
-    } catch (err) {
-      console.error(err);
-      setIsRageQuitting(false);
-    }
-  };
+  //   try {
+  //     await rageQuit();
+  //     toastSuccess('Unstake successful, change in tokens will reflect shortly.');
+  //     setIsRageQuitting(false);
+  //   } catch (err) {
+  //     console.error(err);
+  //     setIsRageQuitting(false);
+  //   }
+  // };
 
   return (
     <Modal isOpen={true} onClose={onClose} showActionButtons={false} showCloseIcon={true} wide={false}>
@@ -126,10 +123,11 @@ export const UnstakeTokensModal = ({ onClose }: Props) => {
           </div>
         </div>
 
-        <Button size="large" className="w-full py-3 mt-4" onClick={onUnstake} disabled={isUnstaking || isRageQuitting}>
+        <Button size="large" className="w-full py-3 mt-4" onClick={onUnstake} disabled={isUnstaking}>
           Unstake
         </Button>
-
+        {/* Keep the below code as an example for implementing the rage quit ui */}
+        {/* 
         <Divider className="my-10" />
 
         <TooltipWrapper
@@ -166,7 +164,7 @@ export const UnstakeTokensModal = ({ onClose }: Props) => {
           onClick={onRageQuit}
         >
           Rage quit
-        </Button>
+        </Button> */}
       </div>
     </Modal>
   );
