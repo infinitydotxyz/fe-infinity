@@ -77,15 +77,17 @@ export const UnstakeTokensModal = ({ onClose }: Props) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {stakeAmounts.map((item) => {
-                    return (
-                      <tr className="font-heading text-m" key={item.stakeDuration}>
-                        <td>{mapDurationToMonths[item.stakeDuration]} Months</td>
-                        <td>{nFormatter(formatEth(item.amount))}</td>
-                        <td>{getLockRemainingDescription(item)}</td>
-                      </tr>
-                    );
-                  })}
+                  {stakeAmounts
+                    .sort((a, b) => a.stakeDuration - b.stakeDuration)
+                    .map((item) => {
+                      return (
+                        <tr className="font-heading text-m" key={item.stakeDuration}>
+                          <td>{mapDurationToMonths[item.stakeDuration]} Months</td>
+                          <td>{nFormatter(formatEth(item.amount))}</td>
+                          <td>{getLockRemainingDescription(item)}</td>
+                        </tr>
+                      );
+                    })}
                 </tbody>
               </table>
             </div>

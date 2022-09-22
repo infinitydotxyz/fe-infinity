@@ -43,8 +43,8 @@ export const GallerySort = () => {
         label={label}
         items={[
           { label: SORT_BY_TOKEN_ID, onClick: () => onClickSort('tokenIdNumeric', 'asc') },
-          { label: SORT_BY_RARITY_HIGH_LABEL, onClick: () => onClickSort('rarityRank', 'asc') },
-          { label: SORT_BY_RARITY_LOW_LABEL, onClick: () => onClickSort('rarityRank', 'desc') },
+          // { label: SORT_BY_RARITY_HIGH_LABEL, onClick: () => onClickSort('rarityRank', 'asc') },
+          // { label: SORT_BY_RARITY_LOW_LABEL, onClick: () => onClickSort('rarityRank', 'desc') },
           { label: SORT_BY_PRICE_HIGH_LABEL, onClick: () => onClickSort('price', 'desc') },
           { label: SORT_BY_PRICE_LOW_LABEL, onClick: () => onClickSort('price', 'asc') }
           // { label: 'Clear', onClick: () => onClickSort('desc') }
