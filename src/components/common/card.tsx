@@ -98,11 +98,11 @@ export const Card = ({
         />
       </NextLink>
 
-      {data?.rarityRank && (
+      {/* {data?.rarityRank && (
         <span className="absolute bg-theme-light-200 top-5 right-5 py-1 px-3 rounded-full">
           {Math.round(data?.rarityRank)}
         </span>
-      )}
+      )} */}
 
       <div className="p-1 mt-3">
         <div
