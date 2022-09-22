@@ -11,7 +11,7 @@ interface TitleFieldProps {
 export const UserActivityItemTitle = (props: TitleFieldProps) => {
   return (
     <>
-      <div className="text-black font-bold mr-2">
+      <div className="text-black font-bold mr-2 max-w-[120px] min-w-[120px]">
         {props.titleRelativeLink ? (
           <NextLink
             href={props.titleRelativeLink}
