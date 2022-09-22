@@ -1,5 +1,5 @@
 import { RewardProgram } from '@infinityxyz/lib-frontend/types/core';
-import { RewardPhaseDto, TradingRewardDto } from '@infinityxyz/lib-frontend/types/dto/rewards';
+import { RewardPhaseDto, TradingFeeRefundDto } from '@infinityxyz/lib-frontend/types/dto/rewards';
 import { numberFormatter } from 'src/utils/number-formatter';
 import { InfoBox } from './info-box';
 import { getPhaseTradingRewardsPercent, RewardPhaseStats } from './phase-stats';
@@ -9,7 +9,7 @@ export const PhaseDescription = ({ phase }: { phase: RewardPhaseDto }) => {
   const nft = phase[RewardProgram.NftReward];
   const curation = phase[RewardProgram.Curation];
 
-  const getRewardSplit = (reward: TradingRewardDto, fee: number) => {
+  const getRewardSplit = (reward: TradingFeeRefundDto, fee: number) => {
     const totalReward = (fee * reward.rewardRateNumerator) / reward.rewardRateDenominator;
     const seller = Math.floor(totalReward * reward.sellerPortion);
     let buyer = Math.floor(totalReward * reward.buyerPortion);
