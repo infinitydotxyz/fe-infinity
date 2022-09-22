@@ -138,7 +138,6 @@ export const Field = ({ onSort, sortable = false, onClick, type, label, value, c
         className: `
           w-full h-full overflow-hidden
           grid justify-start items-center
-          cursor-pointer
         `
       },
       element: {
