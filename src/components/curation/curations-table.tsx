@@ -55,7 +55,7 @@ export type CurationRowProps = {
 
 export const CurationRow: React.FC<CurationRowProps> = ({ collection, index, onClick, votes, isReadOnly = false }) => {
   return (
-    <div className="mb-2">
+    <div className="mb-2 pointer-events-auto">
       <div className="w-full h-full p-8 overflow-hidden rounded-3xl bg-gray-100 flex items-center">
         <>
           <FieldWrapper value={index} type="index" className="w-1/2" />

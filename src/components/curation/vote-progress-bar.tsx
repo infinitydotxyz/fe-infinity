@@ -30,7 +30,7 @@ export const VoteProgressBar: React.FC<VoteProgressBarProps> = ({ votes, totalVo
   }, [votes, totalVotes]);
 
   return (
-    <div className={twMerge('bg-gray-100 rounded-3xl w-full relative', className)}>
+    <div className={twMerge('bg-white rounded-3xl w-full relative', className)}>
       <div
         className={twMerge(
           'bg-[#92DEFF] rounded-3xl text-sm font-normal py-6',
