@@ -1,29 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
-import { BaseFeedEvent, EventType, ExchangeEvent } from '@infinityxyz/lib-frontend/types/core/feed';
-import { DEFAULT_OPTIONS, FeedFilterDropdown } from './feed-filter-dropdown';
-import { UserActivityItem } from './user-activity-item';
-import { apiGet } from 'src/utils';
+import { EventType, UserFeedEvent } from '@infinityxyz/lib-frontend/types/core/feed';
+import { FEED_FILTER_DEFAULT_OPTIONS, FeedFilterDropdown } from './feed-filter-dropdown';
 import { CenteredContent, ScrollLoader, Spinner } from '../common';
-
-export type FeedEvent = BaseFeedEvent &
-  ExchangeEvent & {
-    id?: string;
-    type?: EventType;
-    title?: string;
-    text?: string;
-    userDisplayName?: string;
-  };
-
-type UserActivityEvent = FeedEvent & {
-  makerAddress?: string;
-  makerUsername?: string;
-  takerAddress?: string;
-  takerUsername?: string;
-  usersInvolved?: string[];
-  startPriceEth?: number;
-};
-const ITEMS_LIMIT = 10;
+import { useUserActivity } from 'src/hooks/api/useUserActivity';
+import { NftOrderEvent } from './user-feed-events/nft-order-event';
+import { NftSaleEvent } from './user-feed-events/nft-sale-event';
+import { TokenStakeEvent } from './user-feed-events/token-stake-event';
+import { VoteEvent } from './user-feed-events/vote-event';
+import { NftTransferEvent } from './user-feed-events/nft-transfer-event';
 
 interface UserProfileActivityListProps {
   userAddress?: string;
@@ -35,57 +20,9 @@ interface UserProfileActivityListProps {
 
 export const UserProfileActivityList = ({ userAddress, types, className }: UserProfileActivityListProps) => {
   const [filter, setFilter] = useState<FeedFilter>({ userAddress, types });
-  const [filteringTypes, setFilteringTypes] = useState<EventType[]>([]);
-  const [data, setData] = useState<FeedEvent[]>([]);
-  const [isFetching, setIsFetching] = useState(false);
-  const [cursor, setCursor] = useState('');
-  const [hasNextPage, setHasNextPage] = useState(false);
+  const [filteringTypes, setFilteringTypes] = useState<UserFeedEvent['type'][]>([]);
 
-  const fetchData = async (isRefresh = false) => {
-    setIsFetching(true);
-    let newCursor = cursor;
-    if (isRefresh) {
-      newCursor = '';
-    }
-
-    const { result } = await apiGet(`/user/${userAddress}/activity`, {
-      query: {
-        limit: ITEMS_LIMIT,
-        cursor: newCursor,
-        events: filteringTypes
-      }
-    });
-
-    if (result?.hasNextPage === true) {
-      setCursor(result?.cursor);
-    }
-    setHasNextPage(result?.hasNextPage);
-
-    const moreData: FeedEvent[] = [];
-    // convert UserActivityEvent[] to FeedEvent[] for rendering.
-    result?.data?.map((act: UserActivityEvent) => {
-      moreData.push({
-        ...act,
-        seller: act.seller ?? act.makerAddress ?? '',
-        sellerDisplayName: act.sellerDisplayName ?? act.makerUsername === '_____' ? '' : act.makerUsername ?? '',
-        buyer: act.buyer ?? act.takerAddress ?? '',
-        buyerDisplayName: act.buyerDisplayName ?? act.takerUsername === '_____' ? '' : act.takerUsername ?? '',
-        price: act.price ?? act.startPriceEth ?? 0
-      });
-    });
-
-    setIsFetching(false);
-    if (isRefresh) {
-      setData([...moreData]);
-    } else {
-      setData([...data, ...moreData]);
-    }
-  };
-
-  useEffect(() => {
-    setData([]);
-    fetchData(true);
-  }, [filter]);
+  const { result: activities, isLoading, fetchMore } = useUserActivity(filteringTypes, userAddress);
 
   const onChangeFilterDropdown = (checked: boolean, checkId: string) => {
     const newFilter = { ...filter };
@@ -100,16 +37,12 @@ export const UserProfileActivityList = ({ userAddress, types, className }: UserP
     if (checked) {
       newFilter.types = [...filteringTypes, selectedType];
       setFilter(newFilter);
-      setFilteringTypes(newFilter.types);
+      setFilteringTypes(newFilter.types as UserFeedEvent['type'][]);
     } else {
-      const _newTypes = [...filteringTypes];
-      const index = filteringTypes.indexOf(selectedType);
-      if (index >= 0) {
-        _newTypes.splice(index, 1);
-      }
+      const _newTypes = [...filteringTypes].filter((item) => item !== selectedType);
       newFilter.types = _newTypes;
       setFilter(newFilter);
-      setFilteringTypes(_newTypes);
+      setFilteringTypes(_newTypes as UserFeedEvent['type'][]);
     }
   };
 
@@ -119,35 +52,54 @@ export const UserProfileActivityList = ({ userAddress, types, className }: UserP
         <FeedFilterDropdown
           selectedTypes={filteringTypes}
           onChange={onChangeFilterDropdown}
-          options={DEFAULT_OPTIONS}
+          options={FEED_FILTER_DEFAULT_OPTIONS}
         />
       </div>
 
       <ul className="space-y-4 pointer-events-auto">
-        {isFetching && (
-          <div className="mt-8">
+        {!isLoading && activities?.length === 0 ? <div className="font-heading">No results found</div> : null}
+
+        {activities.length > 0 &&
+          activities?.map((event) => {
+            switch (event.type) {
+              case EventType.NftListing:
+              case EventType.NftOffer:
+                return <NftOrderEvent key={`${event.orderItemId}`} event={event} />;
+              case EventType.NftSale:
+                return (
+                  <NftSaleEvent
+                    key={`${event.txHash}-${event.collectionAddress}-${event.tokenId}-${event.type}`}
+                    event={event}
+                  />
+                );
+              case EventType.TokensStaked:
+              case EventType.TokensUnStaked:
+              case EventType.TokensRageQuit:
+                return <TokenStakeEvent key={`${event.txHash}-${event.type}`} event={event} />;
+              case EventType.UserVote:
+              case EventType.UserVoteRemoved:
+                return <VoteEvent key={`${event.collectionAddress}-${event.timestamp}-${event.type}`} event={event} />;
+              case EventType.NftTransfer:
+                return <NftTransferEvent key={`${event.txHash}-${event.type}`} event={event} />;
+              default:
+                console.error(`Unhandled user event type: ${JSON.stringify(event, null, 2)}`);
+                return <></>;
+            }
+          })}
+
+        <div className="mt-8">
+          {isLoading && (
             <CenteredContent>
               <Spinner />
             </CenteredContent>
-          </div>
-        )}
+          )}
+        </div>
 
-        {!isFetching && hasNextPage === false && data?.length === 0 ? (
-          <div className="font-heading">No results found</div>
-        ) : null}
-
-        {!isFetching &&
-          data?.map((event, idx) => {
-            return <UserActivityItem key={idx} event={event} />;
-          })}
-
-        {hasNextPage === true ? (
-          <ScrollLoader
-            onFetchMore={async () => {
-              await fetchData();
-            }}
-          />
-        ) : null}
+        <ScrollLoader
+          onFetchMore={() => {
+            fetchMore();
+          }}
+        />
       </ul>
     </div>
   );
