@@ -50,25 +50,28 @@ export const TokenStakeEvent = ({ event }: Props) => {
       <>
         <UserActivityItemTextField
           title={'Event'}
-          content={stakeEventNameByType[event.type]}
           link={getEtherscanLink(
             { type: EtherscanLinkType.Transaction, transactionHash: event.txHash },
             event.stakerContractChainId
           )}
-        />
-        <UserActivityItemTextField title={'Amount'} content={`${nFormatter(formatEth(event.amount)) ?? ''}`} />
+        >
+          {stakeEventNameByType[event.type]}
+        </UserActivityItemTextField>
+        <UserActivityItemTextField title={'Amount'}>
+          {`${nFormatter(formatEth(event.amount)) ?? ''}`}
+        </UserActivityItemTextField>
 
         {event.type === EventType.TokensRageQuit && (
-          <UserActivityItemTextField
-            title={'Penalty'}
-            content={`${nFormatter(formatEth(event.penaltyAmount)) ?? ''}`}
-          />
+          <UserActivityItemTextField title={'Penalty'}>
+            {`${nFormatter(formatEth(event.penaltyAmount)) ?? ''}`}
+          </UserActivityItemTextField>
         )}
         {event.type === EventType.TokensStaked && (
-          <UserActivityItemTextField title={'Duration'} content={`${mapDurationToMonths[event.duration]} Months`} />
+          <UserActivityItemTextField title={'Duration'}>
+            {`${mapDurationToMonths[event.duration]} Months`}
+          </UserActivityItemTextField>
         )}
-
-        <UserActivityItemTextField title={'Votes'} content={`${nFormatter(event.stakePower) ?? ''}`} />
+        <UserActivityItemTextField title={'Votes'}>{`${nFormatter(event.stakePower) ?? ''}`}</UserActivityItemTextField>
         <UserActivityItemTextField title={'Date'}>{format(event.timestamp)}</UserActivityItemTextField>
       </>
     </UserActivityItem>

@@ -48,17 +48,22 @@ export const NftSaleEvent = ({ event }: Props) => {
       <>
         <UserActivityItemTextField
           title={'Event'}
-          content={'Sale'}
           link={getEtherscanLink(
             { type: EtherscanLinkType.Transaction, transactionHash: event.txHash },
             event.chainId as ChainId
           )}
-        />
+        >
+          {'Sale'}
+        </UserActivityItemTextField>
         <UserActivityItemTextField title={'Price'}>
           <EthPrice label={`${nFormatter(event.price)}`} />
         </UserActivityItemTextField>
-        <UserActivityItemTextField title={'Buyer'} content={buyer.value} link={buyer.link} />
-        <UserActivityItemTextField title={'Seller'} content={seller.value} link={seller.link} />
+        <UserActivityItemTextField title={'Buyer'} link={buyer.link}>
+          {buyer.value}
+        </UserActivityItemTextField>
+        <UserActivityItemTextField title={'Seller'} link={seller.link}>
+          {seller.value}
+        </UserActivityItemTextField>
         <UserActivityItemTextField title={'Date'}>{format(event.timestamp)}</UserActivityItemTextField>
       </>
     </UserActivityItem>

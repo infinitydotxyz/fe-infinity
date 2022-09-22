@@ -60,9 +60,13 @@ export const VoteEvent = ({ event }: Props) => {
   return (
     <UserActivityItem avatar={avatar} title={title}>
       <>
-        <UserActivityItemTextField title={'Event'} content={voteEventNameByType[event.type]} link={collectionLink} />
-        <UserActivityItemTextField title={votes.name} content={`${nFormatter(votes.value) ?? ''}`} />
-        <UserActivityItemTextField title={'User'} content={user.value} link={user.link} />
+        <UserActivityItemTextField title={'Event'} link={collectionLink}>
+          {voteEventNameByType[event.type]}
+        </UserActivityItemTextField>
+        <UserActivityItemTextField title={votes.name}>{`${nFormatter(votes.value) ?? ''}`}</UserActivityItemTextField>
+        <UserActivityItemTextField title={'User'} link={user.link}>
+          {user.value}
+        </UserActivityItemTextField>
         <UserActivityItemTextField title={'Date'}>{format(event.timestamp)}</UserActivityItemTextField>
       </>
     </UserActivityItem>

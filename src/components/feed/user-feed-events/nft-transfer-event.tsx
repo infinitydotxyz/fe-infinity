@@ -54,14 +54,19 @@ export const NftTransferEvent = ({ event }: Props) => {
       <>
         <UserActivityItemTextField
           title={'Event'}
-          content={'Transfer'}
           link={getEtherscanLink(
             { type: EtherscanLinkType.Transaction, transactionHash: event.txHash },
             event.chainId as ChainId
           )}
-        />
-        <UserActivityItemTextField title={'From'} content={from.value} link={from.link} />
-        <UserActivityItemTextField title={'To'} content={to.value} link={to.link} />
+        >
+          {'Transfer'}
+        </UserActivityItemTextField>
+        <UserActivityItemTextField title={'From'} link={from.link}>
+          {from.value}
+        </UserActivityItemTextField>
+        <UserActivityItemTextField title={'To'} link={to.link}>
+          {to.value}
+        </UserActivityItemTextField>
         <UserActivityItemTextField title={'Date'}>{format(event.timestamp)}</UserActivityItemTextField>
       </>
     </UserActivityItem>
