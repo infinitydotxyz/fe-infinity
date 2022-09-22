@@ -138,7 +138,7 @@ const MyRewardsPage: React.FC = () => {
               </div> */}
               <div className="lg:w-1/4 sm:w-full"></div>
               <div className="lg:w-1/4 sm:w-full">
-                <Button size="large" className="font-heading">
+                <Button size="large" className="font-heading" disabled={true}>
                   Claim Rewards
                 </Button>
               </div>
@@ -192,7 +192,7 @@ const MyRewardsPage: React.FC = () => {
                 <div className="text-sm mt-1"></div>
               </div>
               <div className="lg:w-1/4 sm:w-full">
-                <Button size="large" className="font-heading">
+                <Button size="large" className="font-heading" disabled={true}>
                   Claim Rewards
                 </Button>
               </div>
