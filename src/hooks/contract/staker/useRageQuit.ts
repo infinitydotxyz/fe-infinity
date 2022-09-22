@@ -1,15 +1,14 @@
 import { BigNumber } from 'ethers';
 import { useEffect, useState } from 'react';
-import { toastWarning } from 'src/components/common';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { useStakerContract } from './useStakerContract';
 
 export function useRageQuit() {
-  const { user } = useOnboardContext();
+  const { user, checkSignedIn } = useOnboardContext();
   const { contract } = useStakerContract();
-  const [userAmount, setUserAmount] = useState<string>('');
-  const [penalty, setPenalty] = useState<string>('');
-  const [amountLoading, setAmountLoading] = useState<boolean>(false);
+  const [userAmount, setUserAmount] = useState('');
+  const [penalty, setPenalty] = useState('');
+  const [amountLoading, setAmountLoading] = useState(false);
 
   const updateRageQuitAmounts = async () => {
     const address = user?.address;
@@ -34,8 +33,7 @@ export function useRageQuit() {
   }, [user?.address]);
 
   const rageQuit = async () => {
-    if (!user || !user.address) {
-      toastWarning('Please connect your wallet.');
+    if (!checkSignedIn()) {
       return;
     }
     const tx = await contract.rageQuit();

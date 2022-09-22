@@ -35,17 +35,16 @@ export const getLockRemainingDescription = (remainingLock: RemainingLockTime) =>
     return `Unlocked`;
   }
 
-  if (remainingLock.durationRemaining.weeks > 0) {
-    return `${remainingLock.durationRemaining.weeks} weeks`;
-  } else if (remainingLock.durationRemaining.days > 0) {
-    return `${remainingLock.durationRemaining.days} days`;
-  } else if (remainingLock.durationRemaining.hours > 0) {
-    return `${remainingLock.durationRemaining.hours} hours`;
-  } else if (remainingLock.durationRemaining.minutes > 0) {
-    return `${remainingLock.durationRemaining.minutes} minutes`;
-  } else {
-    return `${remainingLock.durationRemaining.seconds} seconds`;
+  for (const [key, value] of Object.entries(remainingLock.durationRemaining) as [keyof DurationRemaining, number][]) {
+    if (value > 0) {
+      return `${value} ${key}`;
+    }
   }
+  console.error(
+    `Failed to get lock remaining description for \n${JSON.stringify(remainingLock.durationRemaining, null, 2)}`
+  );
+
+  return 'Unlocked';
 };
 
 /**
