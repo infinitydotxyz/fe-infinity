@@ -40,3 +40,22 @@ As far as what to show goes, here are the main items:
 npm ls joi @hapi/joi
 
 npm dedupe
+
+https://github.com/remarkjs/remark/blob/main/doc/plugins.md#list-of-plugins
+
+npm i react-linkify
+
+Linkify
+properties={{
+    target: '_blank',
+    style: { color: '#177c8a' },
+  }}
+
+> Please checkout the stack: cluemediator.com/stack
+> <br />
+> Contact us: contact@cluemediator.com > <br /> > <a href="https://www.cluemediator.com/subscribe">Subscribe Us</a> for
+> more updates.
+> </Linkify>
+
+const myRe = new RegExp('\[(.\*?)\]\((.+?)\', 'g');
+const myArray = myRe.test('cdbbdbsbz');

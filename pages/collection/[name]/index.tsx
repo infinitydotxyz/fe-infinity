@@ -144,6 +144,32 @@ const CollectionPage = () => {
     );
   }
 
+  // not sure if this is the best regex, but could not find anything better
+  const markdownRegex = /\[(.*?)\]\((.+?)\)/g;
+  const isMarkdown = markdownRegex.test(collection.metadata?.description ?? '');
+
+  let description = <div>{collection.metadata?.description ?? ''}</div>;
+
+  if (isMarkdown) {
+    description = (
+      <ReactMarkdown
+        components={{
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          a: ({ node, ...props }) => <i style={{ fontStyle: 'normal', color: 'blue' }} {...props} />
+        }}
+      >
+        {collection.metadata?.description ?? ''}
+      </ReactMarkdown>
+    );
+  } else {
+    // convert \n to '<br />'
+    const escapedNewLineToLineBreakTag = (str: string) => {
+      return str.split('\n').map((item, index) => (index === 0 ? item : [<br key={index} />, item]));
+    };
+
+    description = <div>{escapedNewLineToLineBreakTag(collection.metadata?.description ?? '')}</div>;
+  }
+
   return (
     <PageBox showTitle={false} title={collection.metadata?.name ?? ''}>
       <div className="flex flex-col mt-10">
@@ -209,16 +235,7 @@ const CollectionPage = () => {
                   <LoadingDescription />
                 </div>
               ) : (
-                <div className="text-secondary mt-12 md:w-2/3">
-                  <ReactMarkdown
-                    components={{
-                      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                      a: ({ node, ...props }) => <i style={{ fontStyle: 'normal', color: 'blue' }} {...props} />
-                    }}
-                  >
-                    {collection.metadata?.description ?? ''}
-                  </ReactMarkdown>
-                </div>
+                <div className="text-secondary mt-12 md:w-2/3">{description}</div>
               )}
               {collection.metadata?.benefits && (
                 <div className="mt-7 md:w-2/3">
