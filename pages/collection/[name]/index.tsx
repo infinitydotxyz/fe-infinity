@@ -44,6 +44,7 @@ import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { iconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import ReactMarkdown from 'react-markdown';
+import Linkify from '@amit.rajput/react-linkify';
 
 const CollectionPage = () => {
   const { user, chainId, checkSignedIn } = useOnboardContext();
@@ -164,7 +165,9 @@ const CollectionPage = () => {
   } else {
     // convert \n to '<br />'
     const escapedNewLineToLineBreakTag = (str: string) => {
-      return str.split('\n').map((item, index) => (index === 0 ? item : [<br key={index} />, item]));
+      return str.split('\n').map((item, index) => {
+        return index === 0 ? <Linkify>{item}</Linkify> : [<br key={index} />, <Linkify>{item}</Linkify>];
+      });
     };
 
     description = <div>{escapedNewLineToLineBreakTag(collection.metadata?.description ?? '')}</div>;
