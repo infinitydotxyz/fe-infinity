@@ -64,7 +64,7 @@ export const CurationRow: React.FC<CurationRowProps> = ({ collection, index, onC
           <div className="w-full h-full overflow-hidden flex flex-row place-content-center">
             <div className="w-full h-full overflow-hidden grid justify-start items-center">
               <div className="text-theme-light-900 font-bold text-md flex flex-row cursor-pointer" onClick={onClick}>
-                {collection.name} <SVG.blueCheck className="h-5 w-5 ml-1.5" />
+                {collection.name} {collection.hasBlueCheck && <SVG.blueCheck className="h-5 w-5 ml-1.5" />}
               </div>
             </div>
           </div>
