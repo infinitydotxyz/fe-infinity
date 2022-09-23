@@ -4,6 +4,7 @@ import React from 'react';
 import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
 import { twMerge } from 'tailwind-merge';
 import { Field, FieldProps } from '../analytics/field';
+import { SVG } from '../common';
 import { NumericVoteInputBox } from './input';
 import { FeesAprStats, FeesAccruedStats } from './statistics';
 import { StakeTokensButton } from './vote-modal';
@@ -60,7 +61,13 @@ export const CurationRow: React.FC<CurationRowProps> = ({ collection, index, onC
         <>
           <FieldWrapper value={index} type="index" className="w-1/2" />
           <FieldWrapper value={collection.profileImage} className="w-1/2 2xl:w-full" type="image" />
-          <FieldWrapper value={collection.name} type="string" onClick={onClick} />
+          <div className="w-full h-full overflow-hidden flex flex-row place-content-center">
+            <div className="w-full h-full overflow-hidden grid justify-start items-center">
+              <div className="text-theme-light-900 font-bold text-md flex flex-row cursor-pointer" onClick={onClick}>
+                {collection.name} <SVG.blueCheck className="h-5 w-5 ml-1.5" />
+              </div>
+            </div>
+          </div>
           <FieldWrapper type="custom">
             <FeesAprStats value={collection.feesAPR || 0} />
             <br />
