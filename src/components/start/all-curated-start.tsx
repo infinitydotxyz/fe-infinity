@@ -31,15 +31,13 @@ export const AllCuratedStart: React.FC<Props> = ({ orderBy }) => {
     setSize((size) => size + 1);
   };
 
-  console.log(JSON.stringify(result, null, 2));
-
   return (
     <div>
       {error ? <div className="flex flex-col mt-10">Unable to load curated collections.</div> : null}
 
       {result && result[0].data?.length > 0 && (
         <div>
-          <div className="text-3xl mt-4 font-bold">Curated Collections</div>
+          <div className="text-2xl mt-4 font-bold">Curated Collections</div>
           <CurationCardScroller curatedCollections={result.map((result) => result.data)} />
         </div>
       )}
