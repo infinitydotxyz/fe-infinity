@@ -156,7 +156,7 @@ const CollectionPage = () => {
       <ReactMarkdown
         components={{
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          a: ({ node, ...props }) => <i style={{ fontStyle: 'normal', color: 'blue' }} {...props} />
+          a: ({ node, ...props }) => <a style={{ color: 'blue' }} {...props} />
         }}
       >
         {collection.metadata?.description ?? ''}
@@ -170,7 +170,10 @@ const CollectionPage = () => {
       });
     };
 
-    description = <div>{escapedNewLineToLineBreakTag(collection.metadata?.description ?? '')}</div>;
+    description = (
+      // className colors all a tags with blue
+      <div className="[&_a]:text-blue-700">{escapedNewLineToLineBreakTag(collection.metadata?.description ?? '')}</div>
+    );
   }
 
   return (
