@@ -3,10 +3,12 @@ import React from 'react';
 import { useFetchInfinite } from 'src/utils';
 import { CenteredContent, ScrollLoader, Spinner } from '../common';
 import { CuratedCollectionsDto } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections.dto';
+import { CuratedSwiper } from './curated-swiper';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import { CurationCardScroller } from './curation-card-scroller';
 
-type Props = { orderBy: CuratedCollectionsOrderBy };
+interface Props {
+  orderBy: CuratedCollectionsOrderBy;
+}
 
 export const AllCuratedStart: React.FC<Props> = ({ orderBy }) => {
   const { user, chainId } = useOnboardContext();
@@ -37,8 +39,7 @@ export const AllCuratedStart: React.FC<Props> = ({ orderBy }) => {
 
       {result && result[0].data?.length > 0 && (
         <div>
-          <div className="text-2xl mt-4 font-bold">Curated Collections</div>
-          <CurationCardScroller curatedCollections={result.map((result) => result.data)} />
+          <CuratedSwiper collections={result.map((result) => result.data)} />
         </div>
       )}
 

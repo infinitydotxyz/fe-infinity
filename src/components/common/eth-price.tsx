@@ -6,6 +6,7 @@ interface Props {
   rowClassName?: string;
   ethClassName?: string;
   labelClassName?: string;
+  onRight?: boolean;
 }
 
 export const EthSymbol = 'Ξ';
@@ -15,14 +16,27 @@ export const EthPrice = ({
   className = '',
   rowClassName = '',
   ethClassName = '',
-  labelClassName = ''
+  labelClassName = '',
+  onRight = false
 }: Props): JSX.Element => {
   return (
     <div className={className}>
       <div className={twMerge(`flex items-center ${rowClassName}`)}>
-        <div className={`pr-2 font-bold ${ethClassName}`}>{EthSymbol}</div>
+        {onRight && (
+          <>
+            <div className={labelClassName}>{label}</div>
 
-        <div className={labelClassName}>{label}</div>
+            <div className={`ml-1 font-bold ${ethClassName}`}>{EthSymbol}</div>
+          </>
+        )}
+
+        {!onRight && (
+          <>
+            <div className={`mr-1 font-bold ${ethClassName}`}>{EthSymbol}</div>
+
+            <div className={labelClassName}>{label}</div>
+          </>
+        )}
       </div>
     </div>
   );

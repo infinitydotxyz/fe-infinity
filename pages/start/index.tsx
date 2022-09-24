@@ -7,8 +7,10 @@ import { TrendingStart } from 'src/components/start/trending-start';
 const StartPage = () => {
   return (
     <PageBox title="Infinity" showTitle={false}>
+      <div className="text-2xl my-5 font-bold">Curated Collections</div>
       <AllCuratedStart orderBy={CuratedCollectionsOrderBy.Votes} />
 
+      <div className="text-2xl my-5 font-bold">Trending</div>
       <TrendingStart />
     </PageBox>
   );
