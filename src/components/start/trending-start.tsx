@@ -6,6 +6,8 @@ import useScreenSize from 'src/hooks/useScreenSize';
 import { apiGet, formatNumber, ITEMS_PER_PAGE, nFormatter } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
 
+const grayText = 'text-gray-500';
+
 export const TrendingStart = () => {
   const [data, setData] = useState<Collection[]>([]);
   const [offset, setOffset] = useState(0);
@@ -55,7 +57,7 @@ export const TrendingStart = () => {
   }
 
   const tableHeader = (
-    <div className="flex text-xs text-gray-600">
+    <div className={twMerge('flex text-xs', grayText)}>
       <div className="w-2/3 uppercase ml-4">Collection</div>
       <div className="w-1/3 text-right uppercase">Volume</div>
       <div className="w-1/3 text-right uppercase">Avg Price</div>
@@ -104,7 +106,7 @@ const TrendingStartCard = ({ collection, index }: Props) => {
     <div>
       <div className="flex items-center w-full">
         <div className="w-2/3 min-w-0 flex items-center font-body">
-          <div className="text-xl font-body mr-4 shrink-0 text-right w-6">{index}</div>
+          <div className={twMerge('text-xl font-body mr-5 shrink-0 font-bold text-right w-6', grayText)}>{index}</div>
 
           <NextLink href={`/collection/${collection?.slug}`}>
             <EZImage className="w-16 h-16 rounded-2xl overflow-clip" src={collection?.metadata?.profileImage} />
@@ -119,7 +121,7 @@ const TrendingStartCard = ({ collection, index }: Props) => {
         <div className="w-1/3 grow-0 font-bold">
           <EthPrice
             onRight={false}
-            ethClassName="text-gray-500"
+            ethClassName={grayText}
             rowClassName="justify-end"
             label={`${periodStat?.salesVolume ? nFormatter(periodStat?.salesVolume) : '-'}`}
           />
@@ -128,7 +130,7 @@ const TrendingStartCard = ({ collection, index }: Props) => {
         <div className="w-1/3 grow-0   font-bold">
           <EthPrice
             onRight={false}
-            ethClassName="text-gray-500"
+            ethClassName={grayText}
             rowClassName="justify-end"
             label={periodStat?.avgPrice ? formatNumber(periodStat?.avgPrice, 2) : '-'}
           />

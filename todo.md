@@ -12,10 +12,6 @@ https://bgjar.com/sound-wave
 https://fffuel.co/tttwinkle/
 https://fffuel.co/ccchaos/
 
-Curated
-
-Trending
-
 Feed
 
 Phase Info

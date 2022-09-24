@@ -12,6 +12,8 @@ const StartPage = () => {
 
       <div className="text-2xl my-5 font-bold">Trending</div>
       <TrendingStart />
+
+      <div className="text-2xl mt-10 mb-5 font-bold">Feed</div>
     </PageBox>
   );
 };
