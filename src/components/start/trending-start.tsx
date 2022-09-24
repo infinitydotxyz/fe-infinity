@@ -75,7 +75,7 @@ export const TrendingStart = () => {
     );
   };
 
-  if (innerWidth < 100) {
+  if (innerWidth < 1000) {
     const firstFive = data.slice(0, 5);
     return collectionTable(firstFive, '');
   }
