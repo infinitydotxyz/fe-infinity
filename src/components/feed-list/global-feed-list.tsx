@@ -2,23 +2,26 @@ import { useEffect, useState } from 'react';
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { apiGet, getTypesForFilter } from 'src/utils';
 import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
-import { Chip, ScrollLoader, Spacer } from '../common';
+import { Button, CenteredContent, Chip, ScrollLoader, Spacer } from '../common';
 import { NftEventRec } from '../asset/activity/activity-item';
 import { FilterButton } from './filter-button';
 import { CommentPanel } from './comment-panel';
 import { FeedListItem } from './feed-list-item';
+import { useRouter } from 'next/router';
 
 interface Props {
   types?: EventType[];
   className?: string;
+  compact?: boolean;
 }
 
-export const GlobalFeedList = ({ types, className = '' }: Props) => {
+export const GlobalFeedList = ({ types, className = '', compact = false }: Props) => {
   const [filter, setFilter] = useState<FeedFilter>({ types });
   const [commentPanelEvent, setCommentPanelEvent] = useState<NftEventRec | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [activities, setActivities] = useState<NftEventRec[]>([]);
   const [cursor, setCursor] = useState('');
+  const router = useRouter();
 
   const fetchActivity = async (isRefresh = false, fromCursor = '') => {
     try {
@@ -27,7 +30,7 @@ export const GlobalFeedList = ({ types, className = '' }: Props) => {
 
       const { result, error } = await apiGet(url, {
         query: {
-          limit: 10,
+          limit: compact ? 5 : 10,
           eventType: getTypesForFilter(filter),
           cursor: fromCursor
         }
@@ -54,12 +57,14 @@ export const GlobalFeedList = ({ types, className = '' }: Props) => {
 
   return (
     <div className={`${className}`}>
-      <div className="flex items-center mb-8">
-        <Spacer />
-        <Chip content={'Refresh'} onClick={() => fetchActivity(true)} />
+      {!compact && (
+        <div className="flex items-center mb-8">
+          <Spacer />
+          <Chip content={'Refresh'} onClick={() => fetchActivity(true)} />
 
-        <FilterButton className="ml-2" filter={filter} onChange={(f) => setFilter(f)} />
-      </div>
+          <FilterButton className="ml-2" filter={filter} onChange={(f) => setFilter(f)} />
+        </div>
+      )}
 
       {!isLoading && activities.length === 0 ? <div className="font-heading">No results found</div> : null}
 
@@ -105,11 +110,21 @@ export const GlobalFeedList = ({ types, className = '' }: Props) => {
           );
         })}
 
-        <ScrollLoader
-          onFetchMore={() => {
-            fetchActivity(false, cursor);
-          }}
-        />
+        {!compact && (
+          <ScrollLoader
+            onFetchMore={() => {
+              fetchActivity(false, cursor);
+            }}
+          />
+        )}
+
+        {compact && (
+          <CenteredContent>
+            <Button variant="outline" onClick={() => router.push('/feed')}>
+              See More
+            </Button>
+          </CenteredContent>
+        )}
       </div>
     </div>
   );
