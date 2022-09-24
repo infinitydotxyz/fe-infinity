@@ -3,17 +3,22 @@ import { CuratedCollectionsOrderBy } from '@infinityxyz/lib-frontend/types/dto/c
 import { PageBox } from 'src/components/common';
 import { AllCuratedStart } from 'src/components/start/all-curated-start';
 import { TrendingStart } from 'src/components/start/trending-start';
+import { twMerge } from 'tailwind-merge';
 
 const StartPage = () => {
+  const titleHeader = (title: string, className = '') => {
+    return <div className={twMerge('text-2xl my-5 text-gray-700 font-bold', className)}>{title}</div>;
+  };
+
   return (
     <PageBox title="Infinity" showTitle={false}>
-      <div className="text-2xl my-5 font-bold">Curated Collections</div>
+      {titleHeader('Curated Collections')}
       <AllCuratedStart orderBy={CuratedCollectionsOrderBy.Votes} />
 
-      <div className="text-2xl my-5 font-bold">Trending</div>
+      {titleHeader('Trending')}
       <TrendingStart />
 
-      <div className="text-2xl mt-10 mb-5 font-bold">Feed</div>
+      {titleHeader('Feed', 'mt-10 mb-5')}
     </PageBox>
   );
 };
