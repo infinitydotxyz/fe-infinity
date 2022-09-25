@@ -17,7 +17,7 @@
     "node": "16.x"
   },
   "dependencies": {
-    "@amit.rajput/react-linkify": "^1.0.1",
+    "@amit.rajput/react-linkify": "^1.0.4",
     "@headlessui/react": "^1.7.2",
     "@heroicons/react": "^1.0.6",
     "@infinityxyz/lib-frontend": "^1.208.2",
@@ -62,7 +62,6 @@
     "react-content-loader": "^6.2.0",
     "react-datepicker": "^4.8.0",
     "react-dom": "17.0.2",
-    "react-horizontal-scrolling-menu": "^3.2.0",
     "react-hot-toast": "^2.4.0",
     "react-icons": "^4.4.0",
     "react-intersection-observer": "^9.4.0",
@@ -92,7 +91,7 @@
     "@typescript-eslint/eslint-plugin": "^5.38.0",
     "@typescript-eslint/parser": "^5.38.0",
     "autoprefixer": "^10.4.12",
-    "eslint": "^8.23.1",
+    "eslint": "^8.24.0",
     "eslint-config-next": "^12.3.1",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-jsx": "^0.1.0",
