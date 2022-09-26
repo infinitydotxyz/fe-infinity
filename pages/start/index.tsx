@@ -1,6 +1,7 @@
 import { CuratedCollectionsOrderBy } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections-query.dto';
+import GlobalRewards from 'pages/rewards/global-rewards';
 
-import { CenteredContent, PageBox } from 'src/components/common';
+import { PageBox } from 'src/components/common';
 import { GlobalFeedList } from 'src/components/feed-list/global-feed-list';
 import { AllCuratedStart } from 'src/components/start/all-curated-start';
 import { TrendingStart } from 'src/components/start/trending-start';
@@ -22,8 +23,8 @@ const StartPage = () => {
       {titleHeader('Feed', 'mt-12 mb-5')}
       <GlobalFeedList types={[]} compact={true} />
 
-      {titleHeader('Phase Progression', 'mt-12 mb-5')}
-      <CenteredContent>Coming Soon</CenteredContent>
+      {titleHeader('Reward Phases', 'mt-12 mb-5')}
+      <GlobalRewards />
     </PageBox>
   );
 };

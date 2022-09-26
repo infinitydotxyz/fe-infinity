@@ -12,8 +12,6 @@ https://bgjar.com/sound-wave
 https://fffuel.co/tttwinkle/
 https://fffuel.co/ccchaos/
 
-Feed
-
 Phase Info
 Cards like rewards, two columns
 tokens, lottery size, volume in phase

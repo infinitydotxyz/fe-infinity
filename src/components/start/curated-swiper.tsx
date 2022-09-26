@@ -74,7 +74,7 @@ const CuratedSwiperCard: React.FC<Props2> = ({ collection, onClick }) => {
   return (
     <div
       className={twMerge(
-        ' mx-1 mb-2 aspect-1  flex flex-col cursor-pointer  relative   ',
+        ' mx-1 mb-2 pb-1 aspect-1  flex flex-col cursor-pointer  relative   ',
         'overflow-clip rounded-2xl   shadow-md shadow-slate-200 pointer-events-auto'
       )}
       onClick={onClick}
@@ -84,7 +84,7 @@ const CuratedSwiperCard: React.FC<Props2> = ({ collection, onClick }) => {
       </div>
 
       <div className="flex relative   px-5 py-2 items-center">
-        <div className=" p-1 bg-white  rounded-xl -mt-5   ">
+        <div className=" p-1 bg-white shadow-md shadow-slate-200 rounded-xl -mt-6   ">
           <EZImage
             src={collection.profileImage}
             className="border rounded-xl overflow-clip shrink-0 w-16 h-16  bg-gray-300"
