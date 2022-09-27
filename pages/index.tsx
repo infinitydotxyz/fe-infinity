@@ -17,7 +17,7 @@ const HomePage = () => {
       <div className={twMerge('  my-5   flex items-center', className)}>
         <div className="text-3xl my-5 text-gray-600 font-bold">{title}</div>
         <Spacer />
-        <Button size="small" variant="outline" onClick={() => router.push(morePath)}>
+        <Button size="medium" onClick={() => router.push(morePath)}>
           See More
         </Button>
       </div>
@@ -26,7 +26,7 @@ const HomePage = () => {
 
   return (
     <PageBox title="Infinity" showTitle={false} footer={<StartFooter />}>
-      {titleHeader('Curated Collections', '', '/curated')}
+      {titleHeader('Curated Collections', '', '/curated?tab=All+Curated')}
       <AllCuratedStart orderBy={CuratedCollectionsOrderBy.Votes} />
 
       {titleHeader('Trending', '', '/trending')}
@@ -35,8 +35,8 @@ const HomePage = () => {
       {titleHeader('Feed', 'mt-12 mb-5', '/feed')}
       <GlobalFeedList types={[]} compact={true} />
 
-      {titleHeader('Reward Phases', 'mt-12 mb-5', '/rewards')}
-      <GlobalRewards />
+      {/* {titleHeader('Reward Phases', 'mt-12 mb-5', '/rewards')}
+      <GlobalRewards /> */}
     </PageBox>
   );
 };
