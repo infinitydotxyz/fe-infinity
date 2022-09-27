@@ -18,7 +18,7 @@ export function InfoBox({ description, title, children }: InfoBoxProps) {
         <Heading as="h2" className="text-4xl font-body font-medium">
           {title}
         </Heading>
-        <div className="w-1/2 mt-5 text-theme-gray-700">{description}</div>
+        <div className="mr-6 mt-5 text-theme-gray-700">{description}</div>
       </div>
       {children}
     </div>
