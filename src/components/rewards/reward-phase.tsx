@@ -19,7 +19,7 @@ export const PhaseDescription = ({ phase }: { phase: RewardPhaseDto }) => {
   };
   return (
     <>
-      <p>
+      <div className="text-sm">
         {fee && (
           <>
             <strong>{`${getPhaseTradingRewardsPercent(phase)}`}</strong> of the total supply (
@@ -38,21 +38,14 @@ export const PhaseDescription = ({ phase }: { phase: RewardPhaseDto }) => {
           </>
         )}
         {curation && <>{!fee && <>Token emissions go to zero.</>} Curators earn ETH rewards.</>}
-      </p>
+      </div>
     </>
   );
 };
 
 export const RewardPhase = ({ phase }: { phase: RewardPhaseDto }) => {
   return (
-    <InfoBox.Stats
-      title={phase.name}
-      description={
-        <>
-          <PhaseDescription phase={phase} />
-        </>
-      }
-    >
+    <InfoBox.Stats title={phase.name} description={<PhaseDescription phase={phase} />}>
       <RewardPhaseStats phase={phase} />
     </InfoBox.Stats>
   );
