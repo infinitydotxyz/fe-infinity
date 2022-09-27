@@ -30,11 +30,14 @@ export const FeedListItem = ({
   const [likedCache, setLikedCache] = useState<Map<string, boolean>>(new Map());
 
   const typeName = (type: string) => {
-    const classes = 'rounded-full text-white py-1 px-3 text-sm';
+    const classes = 'rounded-full text-white py-1 px-3 w-32 text-center text-sm';
 
     const component = (color: string, label: string) => {
       return (
-        <div onClick={() => console.log(JSON.stringify(activity, null, 2))} className={twMerge(classes, color)}>
+        <div
+          onClick={() => console.log(JSON.stringify(activity, null, 2))}
+          className={twMerge(classes, color, 'bg-opacity-80')}
+        >
           {label}
         </div>
       );
@@ -127,7 +130,7 @@ export const FeedListItem = ({
   };
 
   const bottomBar = (
-    <div className="text-sm   w-full text-gray-500 flex items-center">
+    <div className="text-sm w-full text-gray-500 flex items-center">
       {likeButtons()}
       <Button
         variant="plain"
@@ -290,10 +293,12 @@ export const FeedListItem = ({
     <div className="w-full flex items-start">
       {image()}
 
-      <div className="ml-2 flex-1 flex-col items-start">
-        {header()}
-
-        <div className="text-gray-500 flex text-sm mt-1">{typeName(activity.type)}</div>
+      <div className="ml-2 mt-1 flex-1 flex-col items-start">
+        <div className="flex items-center">
+          {header()}
+          <Spacer />
+          <div className="text-gray-500 flex text-sm  ">{typeName(activity.type)}</div>
+        </div>
 
         <div className="mt-4">
           <FeedListTableItem activity={activity} />

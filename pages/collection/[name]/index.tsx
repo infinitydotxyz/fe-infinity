@@ -44,6 +44,7 @@ import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { iconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import ReactMarkdown from 'react-markdown';
+import Linkify from '@amit.rajput/react-linkify';
 
 const CollectionPage = () => {
   const { user, chainId, checkSignedIn } = useOnboardContext();
@@ -144,6 +145,41 @@ const CollectionPage = () => {
     );
   }
 
+  // not sure if this is the best regex, but could not find anything better
+  const markdownRegex = /\[(.*?)\]\((.+?)\)/g;
+  const isMarkdown = markdownRegex.test(collection.metadata?.description ?? '');
+
+  let description = <div>{collection.metadata?.description ?? ''}</div>;
+
+  if (isMarkdown) {
+    description = (
+      <ReactMarkdown
+        components={{
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          a: ({ node, ...props }) => <a style={{ color: 'blue' }} {...props} />
+        }}
+      >
+        {collection.metadata?.description ?? ''}
+      </ReactMarkdown>
+    );
+  } else {
+    // convert \n to '<br />'
+    const escapedNewLineToLineBreakTag = (str: string) => {
+      return str.split('\n').map((item, index) => {
+        return index === 0 ? (
+          <Linkify key={index + 1000}>{item}</Linkify>
+        ) : (
+          [<br key={index} />, <Linkify key={index + 2000}>{item}</Linkify>]
+        );
+      });
+    };
+
+    description = (
+      // className colors all a tags with blue
+      <div className="[&_a]:text-blue-700">{escapedNewLineToLineBreakTag(collection.metadata?.description ?? '')}</div>
+    );
+  }
+
   return (
     <PageBox showTitle={false} title={collection.metadata?.name ?? ''}>
       <div className="flex flex-col mt-10">
@@ -209,16 +245,7 @@ const CollectionPage = () => {
                   <LoadingDescription />
                 </div>
               ) : (
-                <div className="text-secondary mt-12 md:w-2/3">
-                  <ReactMarkdown
-                    components={{
-                      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                      a: ({ node, ...props }) => <i style={{ fontStyle: 'normal', color: 'blue' }} {...props} />
-                    }}
-                  >
-                    {collection.metadata?.description ?? ''}
-                  </ReactMarkdown>
-                </div>
+                <div className="text-secondary mt-12 md:w-2/3">{description}</div>
               )}
               {collection.metadata?.benefits && (
                 <div className="mt-7 md:w-2/3">

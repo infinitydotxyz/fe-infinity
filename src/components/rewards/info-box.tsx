@@ -15,10 +15,10 @@ export function InfoBox({ description, title, children }: InfoBoxProps) {
   return (
     <div className="flex bg-theme-gray-100 p-10 rounded-2xl my-4">
       <div className="w-1/2">
-        <Heading as="h2" className="text-4xl font-body font-medium">
+        <Heading as="h2" className="text-3xl font-body font-medium">
           {title}
         </Heading>
-        <div className="w-1/2 mt-5 text-theme-gray-700">{description}</div>
+        <div className="mr-6 mt-5 text-theme-gray-700">{description}</div>
       </div>
       {children}
     </div>

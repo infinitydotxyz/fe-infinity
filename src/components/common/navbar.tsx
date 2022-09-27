@@ -223,7 +223,7 @@ export const Navbar = () => {
   );
 
   const desktopNavbar = (
-    <div className="w-full bg-white bg-opacity-70 glass font-heading">
+    <div className="w-full bg-white bg-opacity-70 glass font-body">
       <div className={`${pageStyles} flex space-x-6 items-center py-6 w-full`}>
         <NextLink href="/">
           <SVG.logo className="h-8" />

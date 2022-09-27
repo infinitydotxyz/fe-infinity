@@ -17,7 +17,7 @@ interface FeedFilterDropdownProps {
   autoCheckAll?: boolean;
 }
 
-export const DEFAULT_OPTIONS = [
+export const FEED_FILTER_DEFAULT_OPTIONS = [
   {
     label: 'All',
     value: ''
@@ -39,8 +39,20 @@ export const DEFAULT_OPTIONS = [
     value: EventType.TokensStaked
   },
   {
+    label: 'Tokens Unstaked',
+    value: EventType.TokensUnStaked
+  },
+  {
+    label: 'Rage Quit',
+    value: EventType.TokensRageQuit
+  },
+  {
     label: 'Vote',
     value: EventType.UserVote
+  },
+  {
+    label: 'Votes Removed',
+    value: EventType.UserVoteRemoved
   },
   {
     label: 'Transfer',
@@ -54,7 +66,7 @@ export const FeedFilterDropdown: React.FC<FeedFilterDropdownProps> = ({
   onChange,
   autoCheckAll = true
 }) => {
-  const filterOptions = options ?? DEFAULT_OPTIONS;
+  const filterOptions = options ?? FEED_FILTER_DEFAULT_OPTIONS;
   return (
     <PopoverButton title="Filter">
       {filterOptions.map((item, idx) => {

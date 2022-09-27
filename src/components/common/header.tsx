@@ -2,11 +2,10 @@ import React from 'react';
 import Head from 'next/head';
 
 interface Props {
-  children?: React.ReactNode;
   title?: string;
 }
 
-export const Header = ({ children, title = 'Home' }: Props) => {
+export const Header = ({ title = 'Home' }: Props) => {
   return (
     <>
       <Head>
@@ -15,7 +14,6 @@ export const Header = ({ children, title = 'Home' }: Props) => {
 
         <title>{title ? `${title} | Infinity` : 'Infinity'}</title>
       </Head>
-      {children}
     </>
   );
 };

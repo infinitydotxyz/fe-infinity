@@ -11,9 +11,10 @@ import { FeedListItem } from './feed-list-item';
 interface Props {
   types?: EventType[];
   className?: string;
+  compact?: boolean;
 }
 
-export const GlobalFeedList = ({ types, className = '' }: Props) => {
+export const GlobalFeedList = ({ types, className = '', compact = false }: Props) => {
   const [filter, setFilter] = useState<FeedFilter>({ types });
   const [commentPanelEvent, setCommentPanelEvent] = useState<NftEventRec | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -27,7 +28,7 @@ export const GlobalFeedList = ({ types, className = '' }: Props) => {
 
       const { result, error } = await apiGet(url, {
         query: {
-          limit: 10,
+          limit: compact ? 5 : 10,
           eventType: getTypesForFilter(filter),
           cursor: fromCursor
         }
@@ -54,12 +55,14 @@ export const GlobalFeedList = ({ types, className = '' }: Props) => {
 
   return (
     <div className={`${className}`}>
-      <div className="flex items-center mb-8">
-        <Spacer />
-        <Chip content={'Refresh'} onClick={() => fetchActivity(true)} />
+      {!compact && (
+        <div className="flex items-center mb-8">
+          <Spacer />
+          <Chip content={'Refresh'} onClick={() => fetchActivity(true)} />
 
-        <FilterButton className="ml-2" filter={filter} onChange={(f) => setFilter(f)} />
-      </div>
+          <FilterButton className="ml-2" filter={filter} onChange={(f) => setFilter(f)} />
+        </div>
+      )}
 
       {!isLoading && activities.length === 0 ? <div className="font-heading">No results found</div> : null}
 
@@ -105,11 +108,13 @@ export const GlobalFeedList = ({ types, className = '' }: Props) => {
           );
         })}
 
-        <ScrollLoader
-          onFetchMore={() => {
-            fetchActivity(false, cursor);
-          }}
-        />
+        {!compact && (
+          <ScrollLoader
+            onFetchMore={() => {
+              fetchActivity(false, cursor);
+            }}
+          />
+        )}
       </div>
     </div>
   );

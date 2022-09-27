@@ -17,6 +17,7 @@ export default function useScreenSize() {
       setIsDesktop(getIsDesktop());
     };
 
+    setInnerWidth(window.innerWidth);
     window.addEventListener('resize', onResize);
 
     return () => {
