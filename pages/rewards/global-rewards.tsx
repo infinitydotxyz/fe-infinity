@@ -15,11 +15,11 @@ const getEpochDescription = (epoch: Epoch) => {
             During this epoch, the exchange product is launched in beta alongside the $NFT token and the Infinity NFT
             collection. This epoch has 4 token rewards phases.
           </p>
-          <Heading as="h3" className="text-3xl !font-body !font-medium !text-black">
+          <Heading as="h3" className="text-2xl  mt-2  !font-body !font-medium !text-black">
             Benefits
           </Heading>
           <p className="my-2">Holders of the Infinity NFT are MVPs with benefits including (but not limited to):</p>
-          <ul className="ml-4 list-disc">
+          <ul className="ml-4 my-2 list-disc">
             <li>Early access to all future Infinity products</li>
             <li>Partner offers, raffles, allowlists</li>
           </ul>
@@ -33,10 +33,10 @@ const getEpochDescription = (epoch: Epoch) => {
             In this epoch, in addition to token rewards for trading, curators of collections start earning curation
             rewards in ETH. The free Infinity NFT mint is no longer available starting this epoch.
           </p>
-          <Heading as="h3" className="text-3xl !font-body !font-medium !text-black">
+          <Heading as="h3" className="text-2xl  mt-2  !font-body !font-medium !text-black">
             Benefits
           </Heading>
-          <ul className="list-disc ml-4">
+          <ul className="list-disc my-2 ml-4">
             <li>Curators earn ETH rewards. </li>
           </ul>
         </>
@@ -45,7 +45,7 @@ const getEpochDescription = (epoch: Epoch) => {
       return (
         <>
           <p className="my-2">Starting this epoch, token emissions go to zero. Curators still earn ETH rewards.</p>
-          <Heading as="h3" className="text-3xl !font-body !font-medium !text-black">
+          <Heading as="h3" className="text-2xl mt-2 !font-body !font-medium !text-black">
             Benefits
           </Heading>
           <ul className="list-disc my-2 ml-4">
