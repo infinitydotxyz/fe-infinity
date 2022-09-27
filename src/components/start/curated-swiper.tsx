@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Navigation, Pagination, A11y, Autoplay } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { HiChevronRight, HiChevronLeft } from 'react-icons/hi';
 
 // https://swiperjs.com/react#usage-with-create-react-app
 
@@ -9,7 +11,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/autoplay';
 import styles from './swiper.module.scss';
-import { EZImage, SVG } from '../common';
+import { Button, EZImage, SVG } from '../common';
 import { CuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections.dto';
 import { twMerge } from 'tailwind-merge';
 import { useRouter } from 'next/router';
@@ -21,9 +23,21 @@ interface Props {
 export const CuratedSwiper = ({ collections }: Props) => {
   const curatedCollections = collections.flat();
   const router = useRouter();
+  const buttonPosition = 'absolute top-1/4 z-10';
+  const buttonStyle = 'bg-white border bg-opacity-80 text-black shadow-xl';
 
   return (
-    <div className="    ">
+    <div className="relative">
+      <div className={twMerge(buttonPosition, '-left-4 prevButton')}>
+        <Button variant="round" size="plain" className={buttonStyle}>
+          <HiChevronLeft className="h-10 w-10" />
+        </Button>
+      </div>
+      <div className={twMerge(buttonPosition, '-right-4 nextButton')}>
+        <Button variant="round" size="plain" className={buttonStyle}>
+          <HiChevronRight className="h-10 w-10" />
+        </Button>
+      </div>
       <Swiper
         // autoHeight={true}
         autoplay={{
@@ -43,7 +57,7 @@ export const CuratedSwiper = ({ collections }: Props) => {
         // loopAdditionalSlides={3}
         // loopedSlidesLimit={true}
 
-        navigation
+        navigation={{ nextEl: '.nextButton', prevEl: '.prevButton' }}
         pagination={{ clickable: true }}
         // onSwiper={(swiper) => console.log(swiper)}
         // onSlideChange={() => console.log('slide change')}
