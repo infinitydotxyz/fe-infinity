@@ -76,12 +76,12 @@ const GlobalRewards: React.FC = () => {
     <>
       {data.isLoading && <Spinner />}
       {epochs.length > 0 ? (
-        epochs.map((item) => {
+        epochs.map((item, index1) => {
           return (
-            <InfoBox title={item.name} description={getEpochDescription(item.name)}>
+            <InfoBox key={index1} title={item.name} description={getEpochDescription(item.name)}>
               <InfoBox.SideInfo>
-                {item.phases.map((phase, index) => {
-                  return <RewardPhase key={index} phase={phase} />;
+                {item.phases.map((phase, index2) => {
+                  return <RewardPhase key={index2} phase={phase} />;
                 })}
               </InfoBox.SideInfo>
             </InfoBox>
