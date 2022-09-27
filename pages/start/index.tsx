@@ -4,6 +4,7 @@ import GlobalRewards from 'pages/rewards/global-rewards';
 import { PageBox } from 'src/components/common';
 import { GlobalFeedList } from 'src/components/feed-list/global-feed-list';
 import { AllCuratedStart } from 'src/components/start/all-curated-start';
+import { StartFooter } from 'src/components/start/start-footer';
 import { TrendingStart } from 'src/components/start/trending-start';
 import { twMerge } from 'tailwind-merge';
 
@@ -13,7 +14,7 @@ const StartPage = () => {
   };
 
   return (
-    <PageBox title="Infinity" showTitle={false}>
+    <PageBox title="Infinity" showTitle={false} footer={<StartFooter />}>
       {titleHeader('Curated Collections')}
       <AllCuratedStart orderBy={CuratedCollectionsOrderBy.Votes} />
 

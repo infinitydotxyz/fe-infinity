@@ -80,8 +80,8 @@ const GlobalRewards: React.FC = () => {
           return (
             <InfoBox title={item.name} description={getEpochDescription(item.name)}>
               <InfoBox.SideInfo>
-                {item.phases.map((phase) => {
-                  return <RewardPhase phase={phase} />;
+                {item.phases.map((phase, index) => {
+                  return <RewardPhase key={index} phase={phase} />;
                 })}
               </InfoBox.SideInfo>
             </InfoBox>
