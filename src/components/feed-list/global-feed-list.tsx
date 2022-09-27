@@ -2,12 +2,11 @@ import { useEffect, useState } from 'react';
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { apiGet, getTypesForFilter } from 'src/utils';
 import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
-import { Button, CenteredContent, Chip, ScrollLoader, Spacer } from '../common';
+import { Chip, ScrollLoader, Spacer } from '../common';
 import { NftEventRec } from '../asset/activity/activity-item';
 import { FilterButton } from './filter-button';
 import { CommentPanel } from './comment-panel';
 import { FeedListItem } from './feed-list-item';
-import { useRouter } from 'next/router';
 
 interface Props {
   types?: EventType[];
@@ -21,7 +20,6 @@ export const GlobalFeedList = ({ types, className = '', compact = false }: Props
   const [isLoading, setIsLoading] = useState(false);
   const [activities, setActivities] = useState<NftEventRec[]>([]);
   const [cursor, setCursor] = useState('');
-  const router = useRouter();
 
   const fetchActivity = async (isRefresh = false, fromCursor = '') => {
     try {
@@ -116,14 +114,6 @@ export const GlobalFeedList = ({ types, className = '', compact = false }: Props
               fetchActivity(false, cursor);
             }}
           />
-        )}
-
-        {compact && (
-          <CenteredContent>
-            <Button variant="outline" onClick={() => router.push('/feed')}>
-              See More
-            </Button>
-          </CenteredContent>
         )}
       </div>
     </div>
