@@ -1,6 +1,6 @@
 import { CuratedCollectionsOrderBy } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections-query.dto';
 import { useRouter } from 'next/router';
-import GlobalRewards from 'pages/rewards/global-rewards';
+// import GlobalRewards from 'pages/rewards/global-rewards';
 
 import { Button, PageBox, Spacer } from 'src/components/common';
 import { GlobalFeedList } from 'src/components/feed-list/global-feed-list';
