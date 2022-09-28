@@ -299,11 +299,8 @@ const CollectionPage = () => {
                       {nFormatter(firstAllTimeStats?.numOwners ?? currentStats?.numOwners) ?? '—'}
                     </td>
                     <td className="pr-20">
-                      {firstAllTimeStats?.floorPrice ? (
-                        <EthPrice
-                          label={`${nFormatter(currentStats?.floorPrice ?? firstAllTimeStats?.floorPrice)}`}
-                          labelClassName="font-bold"
-                        />
+                      {currentStats?.floorPrice ? (
+                        <EthPrice label={`${nFormatter(currentStats?.floorPrice)}`} labelClassName="font-bold" />
                       ) : (
                         '—'
                       )}
