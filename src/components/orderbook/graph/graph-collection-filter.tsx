@@ -147,7 +147,7 @@ const CollectionCheckbox = ({ collection }: { collection: CollectionSearchDto })
           <div className="flex items-center">
             {collection.name}
 
-            {collection?.hasBlueCheck ? <SVG.blueCheck className="w-4 h-4 ml-2 shrink-0" /> : null}
+            {collection?.hasBlueCheck ? <SVG.blueCheck className="w-4 h-4 ml-1 shrink-0" /> : null}
           </div>
         }
       />
