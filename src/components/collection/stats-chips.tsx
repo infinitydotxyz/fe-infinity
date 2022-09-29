@@ -1,14 +1,16 @@
-import { BaseCollection, ChainId, CollectionStats } from '@infinityxyz/lib-frontend/types/core';
+import { BaseCollection, ChainId, CollectionStats, StakeLevel } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
-import { FaCaretDown, FaCaretUp, FaDiscord, FaInstagram, FaTwitter } from 'react-icons/fa';
+import { FaCaretDown, FaCaretUp, FaCheck, FaDiscord, FaInstagram, FaStar, FaTwitter } from 'react-icons/fa';
 import { apiDelete, apiGet, apiPost, nFormatter } from 'src/utils';
 import { Chip, Spinner, toastError } from 'src/components/common';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { indexCollection } from 'src/utils/orderbookUtils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { TipModal } from './tip-modal';
+import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
+import { useCurrentFavoriteCollection } from 'src/hooks/api/useFavoriteCollection';
 
 interface Props {
   collection?: BaseCollection | null;
@@ -16,7 +18,7 @@ interface Props {
 }
 
 export const StatsChips = ({ collection, currentStatsData }: Props) => {
-  const { user, chainId, checkSignedIn } = useOnboardContext();
+  const { user, chainId: userChainId, checkSignedIn } = useOnboardContext();
 
   const [isFollowing, setIsFollowing] = useState(false);
   const [editVisible, setEditVisible] = useState(true);
@@ -26,6 +28,10 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
   // TODO(sleeyax): we should probably refactor both 'edit' and 'follow' buttons; they shouldn't be part of this 'social stats' component.
   const router = useRouter();
   const { addCartItem, setOrderDrawerOpen } = useOrderContext();
+
+  const { result: userQuota } = useUserCurationQuota();
+  const { result: currentFavoriteCollection } = useCurrentFavoriteCollection(user?.address);
+  const [hasFavorited, setHasFavorited] = useState(false);
 
   const showFollow = false; // todo: put this back for Social features.
 
@@ -41,7 +47,7 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
     }
     setFollowingLoading(true);
     if (isFollowing) {
-      const { error } = await apiDelete(`/user/${chainId}:${user?.address}/followingCollections`, {
+      const { error } = await apiDelete(`/user/${userChainId}:${user?.address}/followingCollections`, {
         data: {
           collectionChainId: collection?.chainId,
           collectionAddress: collection?.address
@@ -54,7 +60,7 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
         setIsFollowing(false);
       }
     } else {
-      const { error } = await apiPost(`/user/${chainId}:${user?.address}/followingCollections`, {
+      const { error } = await apiPost(`/user/${userChainId}:${user?.address}/followingCollections`, {
         data: {
           collectionChainId: collection?.chainId,
           collectionAddress: collection?.address
@@ -86,9 +92,29 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
     setShowTipModal(true);
   };
 
+  const onClickFavorite = async () => {
+    if (!checkSignedIn()) {
+      return;
+    }
+
+    const { error } = await apiPost(
+      `/collections/${collection?.chainId}:${collection?.address}/favorites/${user?.address}`,
+      {
+        data: { chainId: userChainId }
+      }
+    );
+
+    if (error) {
+      toastError(error?.errorResponse?.message);
+      return;
+    }
+
+    setHasFavorited(true);
+  };
+
   const verifyOwnership = async () => {
     const { error, result } = await apiGet(
-      `/user/${chainId}:${user?.address}/collections/${router.query.name}/permissions`
+      `/user/${userChainId}:${user?.address}/collections/${router.query.name}/permissions`
     );
 
     if (!error) {
@@ -200,7 +226,7 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
 
       <Chip
         content={<>Reindex</>}
-        onClick={() => indexCollection(true, chainId, collection?.address ?? '', collection?.slug ?? '')}
+        onClick={() => indexCollection(true, userChainId, collection?.address ?? '', collection?.slug ?? '')}
       />
 
       <Chip
@@ -211,6 +237,20 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
           !collection?.metadata.tipAddress
             ? "The collection owner hasn't setup tipping yet"
             : 'Tip ETH to provide extra support towards this project'
+        }
+      />
+
+      <Chip
+        left={hasFavorited ? <FaCheck /> : <FaStar />}
+        content={<>Favorite</>}
+        onClick={onClickFavorite}
+        disabled={(userQuota?.stakeLevel || 0) < StakeLevel.Bronze || hasFavorited}
+        title={
+          (userQuota?.stakeLevel || 0) < StakeLevel.Bronze
+            ? 'You must be level Bronze or higher to access this feature'
+            : currentFavoriteCollection?.collection === collection?.address || hasFavorited
+            ? 'You already favorited this collection'
+            : 'Click to favorite this collection (your vote is valid as long as the current phase lasts)'
         }
       />
 
