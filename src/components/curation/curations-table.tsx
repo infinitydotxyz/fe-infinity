@@ -58,35 +58,30 @@ export const CurationRow: React.FC<CurationRowProps> = ({ collection, index, onC
   return (
     <div className="mb-2 pointer-events-auto">
       <div className="w-full h-full p-8 overflow-hidden rounded-3xl bg-gray-100 flex items-center">
-        <>
-          <FieldWrapper value={index} type="index" className="w-1/2" />
-          <FieldWrapper value={collection.profileImage} className="w-1/2 2xl:w-full" type="image" />
-          <div className="w-full h-full overflow-hidden flex flex-row place-content-center">
-            <div className="w-full h-full overflow-hidden grid justify-start items-center">
-              <div className="text-theme-light-900 font-bold text-md flex flex-row cursor-pointer" onClick={onClick}>
-                {collection.name} {collection.hasBlueCheck && <SVG.blueCheck className="h-5 w-5 ml-1.5" />}
-              </div>
+        <FieldWrapper value={index} type="index" className="w-1/2" />
+        <FieldWrapper value={collection.profileImage} className="w-1/2 2xl:w-full" type="image" />
+        <div className="w-full h-full overflow-hidden flex flex-row place-content-center">
+          <div className="w-full h-full overflow-hidden grid justify-start items-center">
+            <div
+              className="text-theme-light-900 items-center font-bold text-md flex flex-row cursor-pointer"
+              onClick={onClick}
+            >
+              {collection.name} {collection.hasBlueCheck && <SVG.blueCheck className="h-5 w-5 ml-1.5" />}
             </div>
           </div>
-          <FieldWrapper type="custom">
-            <FeesAprStats value={collection.feesAPR || 0} />
-            <br />
-            <FeesAccruedStats value={collection.fees || 0} />
+        </div>
+        <FieldWrapper type="custom">
+          <FeesAprStats value={collection.feesAPR || 0} />
+          <br />
+          <FeesAccruedStats value={collection.fees || 0} />
+        </FieldWrapper>
+        <VoteProgressBar totalVotes={collection.numCuratorVotes || 0} votes={collection.votes || 0} className="mr-5" />
+        {!isReadOnly && (
+          <FieldWrapper type="custom" className="">
+            {votes > 0 && <NumericVoteInputBox collectionId={`${collection.chainId}:${collection.address}`} />}
+            {votes === 0 && <StakeTokensButton variant="white" />}
           </FieldWrapper>
-          <VoteProgressBar
-            totalVotes={collection.numCuratorVotes || 0}
-            votes={collection.votes || 0}
-            className="mr-5"
-          />
-          {!isReadOnly && (
-            <>
-              <FieldWrapper type="custom" className="">
-                {votes > 0 && <NumericVoteInputBox collectionId={`${collection.chainId}:${collection.address}`} />}
-                {votes === 0 && <StakeTokensButton variant="white" />}
-              </FieldWrapper>
-            </>
-          )}
-        </>
+        )}
       </div>
     </div>
   );
