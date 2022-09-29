@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { NextLink } from 'src/components/common';
 import { apiGet, ellipsisAddress, standardCard } from 'src/utils';
 import { TopOwnersArrayResponseDto, TopOwnerDto } from '@infinityxyz/lib-frontend/types/dto/collections';
+import { useIsMounted } from 'src/hooks/useIsMounted';
 
 interface Props2 {
   topOwner: TopOwnerDto;
@@ -48,6 +49,7 @@ export const TopHolderList = ({ collection }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [hasNoData, setHasNoData] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const isMounted = useIsMounted();
 
   const getActivityList = async () => {
     setIsLoading(true);
@@ -58,18 +60,20 @@ export const TopHolderList = ({ collection }: Props) => {
       query: { limit: 10 }
     });
 
-    setIsLoading(false);
+    if (isMounted()) {
+      setIsLoading(false);
 
-    if (!error) {
-      if (result?.data && result?.data.length === 0) {
-        setHasNoData(true);
+      if (!error) {
+        if (result?.data && result?.data.length === 0) {
+          setHasNoData(true);
+        }
+
+        const duh = result as TopOwnersArrayResponseDto;
+
+        setTweetList(duh.data || []);
+      } else {
+        setHasError(true);
       }
-
-      const duh = result as TopOwnersArrayResponseDto;
-
-      setTweetList(duh.data || []);
-    } else {
-      setHasError(true);
     }
   };
 
