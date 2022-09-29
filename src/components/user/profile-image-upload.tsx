@@ -94,7 +94,7 @@ export const ProfileImageUpload = ({ onUpload, roundPhoto, onDelete, imgSource =
           )}
         >
           {imgSrc ? (
-            <EZImage className="cursor-pointer" src={imgSrc} />
+            <EZImage className="cursor-pointer" src={imgSrc} center={false} />
           ) : (
             <div className="w-full h-full flex flex-row items-center justify-center cursor-pointer">
               <FaPen className=" -mt-0.5" />
