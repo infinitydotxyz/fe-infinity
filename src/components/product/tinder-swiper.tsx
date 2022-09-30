@@ -1,19 +1,12 @@
 import { BaseCollection } from '@infinityxyz/lib-frontend/types/core/Collection';
 import React, { useState, useMemo, useEffect } from 'react';
-import TinderCard from 'react-tinder-card';
 import { apiGet, useFetch } from 'src/utils';
-import { Button, EZImage } from '../common';
+import { Button, EZImage, Spacer } from '../common';
 import { FullScreenModal } from '../common/full-screen-modal';
 import { PagedData } from '../gallery/token-fetcher';
 import { Erc721Token } from '@infinityxyz/lib-frontend/types/core';
 import { Filter } from 'src/utils/context/FilterContext';
-
-type Direction = 'left' | 'right' | 'up' | 'down';
-
-export interface API {
-  swipe(dir?: Direction): Promise<void>;
-  restoreCard(): Promise<void>;
-}
+import { API, Direction, TinderCard } from './tinder-card';
 
 export const TinderSwiperModal = () => {
   const [open, setOpen] = useState(false);
@@ -55,8 +48,10 @@ export const TinderSwiperModal = () => {
     <>
       <Button onClick={() => setOpen(true)}>Open Swiper</Button>
       <FullScreenModal isOpen={open} onClose={() => setOpen(false)}>
-        <div className=" w-full">
-          <TinderSwiper data={data} />
+        <div className=" w-full flex flex-col items-center">
+          <div className=" text-2xl font-bold mb-10">{collection?.metadata.name}</div>
+
+          <TinderSwiper data={data.reverse()} />
         </div>
       </FullScreenModal>
     </>
@@ -70,31 +65,48 @@ interface Props {
 }
 
 export const TinderSwiper = ({ data }: Props) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(data.length - 1);
+  const [liked, setLiked] = useState<Erc721Token[]>([]);
 
   const childRefs = useMemo(
     () =>
       Array(data.length)
         .fill(0)
         .map(() => React.createRef<HTMLDivElement>()),
-    []
+    [data]
   );
 
+  const currentIndexValid = currentIndex >= 0 && currentIndex < data.length;
+  const canSwipe = currentIndexValid;
   const canGoBack = currentIndex < data.length - 1;
-  const canSwipe = currentIndex >= 0;
+
+  const updateIndex = (index: number) => {
+    if (index >= 0 && index < data.length) {
+      setCurrentIndex(index);
+    }
+  };
 
   // set last direction and decrease current index
-  const swiped = (direction: Direction, name: string, index: number) => {
-    console.log(`${direction} ${name} (${index}) swiped`, index);
-    setCurrentIndex(index + 1);
+  const onSwipe = (direction: Direction, name: string, index: number) => {
+    console.log(`${direction} ${name} (${index}) onSwipe`, index);
+
+    if (direction === 'right') {
+      setLiked([...liked, data[index]]);
+    }
+
+    console.log(currentIndex);
+
+    updateIndex(currentIndex - 1);
   };
 
   const outOfFrame = (direction: Direction, name: string, index: number) => {
-    console.log(`${direction} ${name} (${index}) outOfFrame`, index);
+    if (direction === 'down') {
+      console.log(`${direction} ${name} (${index}) outOfFrame`, index);
+    }
   };
 
   const swipe = (dir: Direction) => {
-    if (canSwipe && currentIndex < data.length) {
+    if (canSwipe) {
       const api = childRefs[currentIndex].current as API | null;
       if (api) {
         api.swipe(dir);
@@ -102,18 +114,26 @@ export const TinderSwiper = ({ data }: Props) => {
     }
   };
 
-  const goBack = async () => {
+  const goBack = () => {
     if (!canGoBack) {
       return;
     }
 
-    const newIndex = currentIndex - 1;
-    setCurrentIndex(newIndex);
+    const newIndex = currentIndex + 1;
+    updateIndex(newIndex);
 
     const api = childRefs[newIndex].current as API | null;
     if (api) {
-      await api.restoreCard();
+      api.restoreCard();
     }
+
+    // remove if in liked list
+    const removeTokenId = data[newIndex].tokenId;
+    const newLiked = liked.filter((x) => {
+      return x.tokenId !== removeTokenId;
+    });
+
+    setLiked(newLiked);
   };
 
   const buttons = (
@@ -128,29 +148,44 @@ export const TinderSwiper = ({ data }: Props) => {
     </div>
   );
 
-  const header = (
-    <div className="p-2 w-full   ">
-      <div className="  ">
-        {currentIndex + 1} / {data.length}
+  const header = () => {
+    let rightSide = <></>;
+
+    if (currentIndexValid) {
+      rightSide = (
+        <>
+          <Spacer />
+          <div className="  "># {data[currentIndex].tokenId}</div>
+        </>
+      );
+    }
+
+    const displayIndex = data.length - currentIndex;
+
+    return (
+      <div className="p-2 w-full flex font-bold">
+        <div className="  ">
+          {displayIndex} / {data.length}
+        </div>
+
+        {rightSide}
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
-    <div className="items-center overflow-clip  flex flex-col ">
+    <div className="items-center overflow-clip w-full flex flex-col ">
       <div className="     ">
-        {header}
+        {header()}
         <div className="relative h-96 w-96  ">
-          {data.reverse().map((nft, idx) => {
-            const index = data.length - 1 - idx;
-
+          {data.map((nft, index) => {
             return (
               <TinderCard
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 ref={childRefs[index] as any}
                 className="absolute top-0 left-0 right-0 bottom-0"
                 key={nft.metadata.name ?? '' + index}
-                onSwipe={(dir) => swiped(dir, nft.tokenId.toString(), index)}
+                onSwipe={(dir) => onSwipe(dir, nft.tokenId.toString(), index)}
                 onCardLeftScreen={(dir) => outOfFrame(dir, nft.tokenId.toString(), index)}
               >
                 <EZImage cover={false} src={nft.metadata.image} className=" cursor-grab rounded-3xl overflow-clip  " />
@@ -160,6 +195,26 @@ export const TinderSwiper = ({ data }: Props) => {
         </div>
       </div>
       {buttons}
+
+      <TinderSwiperLikes data={liked} />
+    </div>
+  );
+};
+
+// ================================================================================
+
+interface Props2 {
+  data: Erc721Token[];
+}
+
+export const TinderSwiperLikes = ({ data }: Props2) => {
+  return (
+    <div className="items-center  flex-wrap  flex  w-full  ">
+      {data.map((nft) => {
+        return (
+          <EZImage cover={false} src={nft.metadata.image} className="h-8 w-8 cursor-grab rounded-3xl overflow-clip  " />
+        );
+      })}
     </div>
   );
 };
