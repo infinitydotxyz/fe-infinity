@@ -60,6 +60,10 @@ export const Navbar = () => {
             {
               label: 'Curated',
               onClick: () => router.push('/curated')
+            },
+            {
+              label: 'Favorites',
+              onClick: () => router.push('/collection/favorites')
             }
           ]
         },
