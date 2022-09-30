@@ -94,7 +94,7 @@ const CuratedSwiperCard: React.FC<Props2> = ({ collection, onClick }) => {
       onClick={onClick}
     >
       <div className="flex-1    ">
-        <EZImage src={collection.bannerImage} className="border  shrink-0  " />
+        <EZImage src={collection.bannerImage || collection.profileImage} className="border  shrink-0  " />
       </div>
 
       <div className="flex relative   px-5 py-2 items-center">
