@@ -1,9 +1,15 @@
 import { useFetch } from 'src/utils';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 const getKey = (userId: string) => `/collections/favorites/${userId}`;
 
-export function useCurrentFavoriteCollection(userId: string | undefined) {
-  return useFetch<{ collection: string; chainId: string } | null>(userId ? getKey(userId) : null, {
-    apiParams: { requiresAuth: true }
-  });
+export function useUserFavoriteCollection() {
+  const { user, chainId } = useOnboardContext();
+
+  return useFetch<{ collectionAddress: string; collectionChainId: string } | null>(
+    user && chainId ? getKey(`${chainId}:${user.address}`) : null,
+    {
+      apiParams: { requiresAuth: true }
+    }
+  );
 }

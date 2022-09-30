@@ -2,26 +2,29 @@ import { BaseCollection, StakeLevel } from '@infinityxyz/lib-frontend/types/core
 import React, { useEffect, useState } from 'react';
 import { FaCheck, FaStar } from 'react-icons/fa';
 import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
-import { useCurrentFavoriteCollection } from 'src/hooks/api/useFavoriteCollection';
+import { useUserFavoriteCollection } from 'src/hooks/api/useFavoriteCollection';
 import { apiPost } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import { Chip, toastError } from '../common';
+import { Chip, Spinner, toastError } from '../common';
 
 export const FavoriteButton: React.FC<{ collection: BaseCollection | null | undefined }> = ({ collection }) => {
   const { user, chainId, checkSignedIn } = useOnboardContext();
   const { result: userQuota } = useUserCurationQuota();
-  const { result: currentFavoriteCollection } = useCurrentFavoriteCollection(user?.address);
+  const { result: currentFavoriteCollection } = useUserFavoriteCollection();
   const [hasFavorited, setHasFavorited] = useState(false);
+  const [isFavoriting, setIsFavoriting] = useState(false);
 
   const invalidStakeLevel = (userQuota?.stakeLevel || 0) < StakeLevel.Bronze;
 
   useEffect(() => {
-    if (currentFavoriteCollection?.collection === collection?.address) {
+    if (currentFavoriteCollection?.collectionAddress === collection?.address) {
       setHasFavorited(true);
     }
-  }, [currentFavoriteCollection?.collection]);
+  }, [currentFavoriteCollection?.collectionAddress]);
 
   const onClickFavorite = async () => {
+    setIsFavoriting(true);
+
     if (!checkSignedIn()) {
       return;
     }
@@ -36,6 +39,7 @@ export const FavoriteButton: React.FC<{ collection: BaseCollection | null | unde
     }
 
     setHasFavorited(true);
+    setIsFavoriting(false);
   };
 
   const formatTitle = () => {
@@ -50,10 +54,10 @@ export const FavoriteButton: React.FC<{ collection: BaseCollection | null | unde
 
   return (
     <Chip
-      left={hasFavorited ? <FaCheck /> : <FaStar />}
+      left={isFavoriting ? <Spinner /> : hasFavorited && !invalidStakeLevel ? <FaCheck /> : <FaStar />}
       content={<>Favorite</>}
       onClick={onClickFavorite}
-      disabled={invalidStakeLevel || hasFavorited}
+      disabled={invalidStakeLevel || hasFavorited || isFavoriting}
       title={formatTitle()}
     />
   );
