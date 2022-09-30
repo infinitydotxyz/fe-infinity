@@ -37,6 +37,7 @@ export const FavoriteButton: React.FC<{ collection: BaseCollection | null | unde
 
     if (error) {
       toastError(error?.errorResponse?.message);
+      setIsFavoriting(false);
       return;
     }
 
