@@ -55,7 +55,7 @@ export const UserPageCuratedTab: React.FC<{ userInfo: UserProfileDto }> = ({ use
           subtitle={`${Math.round(
             (quota?.availableVotes || 0) === 0
               ? 100
-              : ((quota?.stake?.totalCuratedVotes || 0) / (quota?.availableVotes || 0)) * 100
+              : ((quota?.stake?.totalCuratedVotes || 0) / (quota?.stake?.stakePower || 0)) * 100
           )}%`}
         />
         <InfoBox title="Curated" subtitle={quota?.stake?.totalCurated || 0} />

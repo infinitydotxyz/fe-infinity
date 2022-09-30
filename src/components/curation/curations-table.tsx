@@ -4,17 +4,19 @@ import React from 'react';
 import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
 import { twMerge } from 'tailwind-merge';
 import { Field, FieldProps } from '../analytics/field';
-import { SVG } from '../common';
+import { EZImage, SVG } from '../common';
 import { NumericVoteInputBox } from './input';
 import { FeesAprStats, FeesAccruedStats } from './statistics';
 import { StakeTokensButton } from './vote-modal';
 import { VoteProgressBar } from './vote-progress-bar';
 
-const FieldWrapper: React.FC<FieldProps & { className?: string }> = ({ className, ...props }) => (
-  <div className={twMerge('w-full h-full', className)}>
-    <Field {...props} />
-  </div>
-);
+const FieldWrapper: React.FC<FieldProps & { className?: string }> = ({ className = '', ...props }) => {
+  return (
+    <div className={twMerge(' ', className)}>
+      <Field {...props} />
+    </div>
+  );
+};
 
 export type CurationTableProps = {
   curatedCollections: CuratedCollectionDto[][];
@@ -58,35 +60,31 @@ export const CurationRow: React.FC<CurationRowProps> = ({ collection, index, onC
   return (
     <div className="mb-2 pointer-events-auto">
       <div className="w-full h-full p-8 overflow-hidden rounded-3xl bg-gray-100 flex items-center">
-        <>
-          <FieldWrapper value={index} type="index" className="w-1/2" />
-          <FieldWrapper value={collection.profileImage} className="w-1/2 2xl:w-full" type="image" />
-          <div className="w-full h-full overflow-hidden flex flex-row place-content-center">
-            <div className="w-full h-full overflow-hidden grid justify-start items-center">
-              <div className="text-theme-light-900 font-bold text-md flex flex-row cursor-pointer" onClick={onClick}>
-                {collection.name} {collection.hasBlueCheck && <SVG.blueCheck className="h-5 w-5 ml-1.5" />}
-              </div>
+        <div className="flex w-full flex-1 items-center">
+          <div className="text-theme-light-800 text-2xl mr-6 min-w-[32px]  text-right font-heading">{index}</div>
+          <EZImage src={collection.profileImage} className="mr-3 overflow-hidden w-14 h-14 rounded-full" />
+          <div className="w-full h-full overflow-hidden mr-6  justify-start items-center flex    ">
+            <div className="text-theme-light-900 items-center font-bold text-md flex cursor-pointer" onClick={onClick}>
+              {collection.name} {collection.hasBlueCheck && <SVG.blueCheck className="h-5 w-5 ml-1.5" />}
             </div>
           </div>
-          <FieldWrapper type="custom">
-            <FeesAprStats value={collection.feesAPR || 0} />
-            <br />
-            <FeesAccruedStats value={collection.fees || 0} />
+        </div>
+        <FieldWrapper type="custom" className="mr-6">
+          <FeesAprStats value={collection.feesAPR || 0} />
+          <br />
+          <FeesAccruedStats value={collection.fees || 0} />
+        </FieldWrapper>
+        <VoteProgressBar
+          totalVotes={collection.numCuratorVotes || 0}
+          votes={collection.votes || 0}
+          className="mr-5 max-w-[220px]"
+        />
+        {!isReadOnly && (
+          <FieldWrapper type="custom" className="">
+            {votes > 0 && <NumericVoteInputBox collectionId={`${collection.chainId}:${collection.address}`} />}
+            {votes === 0 && <StakeTokensButton variant="white" />}
           </FieldWrapper>
-          <VoteProgressBar
-            totalVotes={collection.numCuratorVotes || 0}
-            votes={collection.votes || 0}
-            className="mr-5"
-          />
-          {!isReadOnly && (
-            <>
-              <FieldWrapper type="custom" className="">
-                {votes > 0 && <NumericVoteInputBox collectionId={`${collection.chainId}:${collection.address}`} />}
-                {votes === 0 && <StakeTokensButton variant="white" />}
-              </FieldWrapper>
-            </>
-          )}
-        </>
+        )}
       </div>
     </div>
   );

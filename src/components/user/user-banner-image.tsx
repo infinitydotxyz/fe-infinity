@@ -22,7 +22,7 @@ export const UserBannerImage = ({ imgSrc, isOwner = false }: UserBannerImageProp
     <div className="h-48 sm:h-60 lg:h-70 xl:h-80 bg-theme-gray-100">
       <div className="w-full h-full overflow-hidden">
         {imgSrc ? (
-          <EZImage src={imgSrc} />
+          <EZImage src={imgSrc} center={false} />
         ) : (
           <div
             className={`relative w-full h-full flex flex-row items-center justify-center bg-theme-gray-100 ${

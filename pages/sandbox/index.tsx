@@ -26,6 +26,7 @@ import {
   PopoverButton,
   TextInputBox
 } from 'src/components/common';
+import { TinderSwiperModal } from 'src/components/product/tinder-swiper';
 import { twMerge } from 'tailwind-merge';
 
 const cardTestData = [
@@ -76,6 +77,8 @@ const SandboxPage = () => {
         <div className="text-primary">text-primary</div>
         <div className="text-secondary">text-secondary</div>
       </div>
+
+      <TinderSwiperModal />
 
       <SBHeader># Button</SBHeader>
       <div className="flex space-x-4 items-center">
