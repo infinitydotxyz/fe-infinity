@@ -105,10 +105,8 @@ export const TinderSwiper = ({ data }: Props) => {
     updateIndex(currentIndex - 1);
   };
 
-  const outOfFrame = (direction: Direction, name: string, index: number) => {
-    if (direction === 'down') {
-      console.log(`${direction} ${name} (${index}) outOfFrame`, index);
-    }
+  const onCardLeftScreen = (direction: Direction, name: string, index: number) => {
+    console.log(`${direction} ${name} (${index}) onCardLeftScreen`, index);
   };
 
   const swipe = (dir: Direction) => {
@@ -192,7 +190,7 @@ export const TinderSwiper = ({ data }: Props) => {
                 className="absolute top-0 left-0 right-0 bottom-0"
                 key={nft.metadata.name ?? '' + index}
                 onSwipe={(dir) => onSwipe(dir, nft.tokenId.toString(), index)}
-                onCardLeftScreen={(dir) => outOfFrame(dir, nft.tokenId.toString(), index)}
+                onCardLeftScreen={(dir) => onCardLeftScreen(dir, nft.tokenId.toString(), index)}
               >
                 <EZImage cover={false} src={nft.metadata.image} className=" cursor-grab rounded-3xl overflow-clip  " />
               </TinderCard>

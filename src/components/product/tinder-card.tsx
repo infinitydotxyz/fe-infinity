@@ -270,7 +270,9 @@ export const TinderCard = forwardRef(
             if (!preventSwipe.includes(dir)) {
               const outVelocity = swipeRequirementType === 'velocity' ? speed : normalize(currentPostion, 600);
               await animateOut(element, outVelocity);
+
               element.style.display = 'none';
+
               if (onCardLeftScreen) {
                 onCardLeftScreen(dir);
               }
