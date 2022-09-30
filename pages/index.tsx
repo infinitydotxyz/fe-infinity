@@ -1,3 +1,4 @@
+import { EventType } from '@infinityxyz/lib-frontend/types/core';
 import { CuratedCollectionsOrderBy } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections-query.dto';
 import { useRouter } from 'next/router';
 // import GlobalRewards from 'pages/rewards/global-rewards';
@@ -15,7 +16,7 @@ const HomePage = () => {
   const titleHeader = (title: string, className = '', morePath = '') => {
     return (
       <div className={twMerge('  my-5   flex items-center', className)}>
-        <div className="text-3xl my-5 text-gray-600 font-bold">{title}</div>
+        <div className="text-3xl my-5 font-bold">{title}</div>
         <Spacer />
         <Button size="medium" onClick={() => router.push(morePath)}>
           See More
@@ -33,7 +34,10 @@ const HomePage = () => {
       <TrendingStart />
 
       {titleHeader('Feed', 'mt-12 mb-5', '/feed')}
-      <GlobalFeedList types={[]} compact={true} />
+      <GlobalFeedList
+        types={[EventType.TwitterTweet, EventType.DiscordAnnouncement, EventType.CoinMarketCapNews]}
+        compact={true}
+      />
 
       {/* {titleHeader('Reward Phases', 'mt-12 mb-5', '/rewards')}
       <GlobalRewards /> */}
