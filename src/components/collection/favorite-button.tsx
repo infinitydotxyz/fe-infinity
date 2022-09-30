@@ -5,10 +5,12 @@ import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
 import { useUserFavoriteCollection } from 'src/hooks/api/useFavoriteCollection';
 import { apiPost } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { useSWRConfig } from 'swr';
 import { Chip, Spinner, toastError } from '../common';
 
 export const FavoriteButton: React.FC<{ collection: BaseCollection | null | undefined }> = ({ collection }) => {
   const { user, chainId, checkSignedIn } = useOnboardContext();
+  const { mutate } = useSWRConfig();
   const { result: userQuota } = useUserCurationQuota();
   const { result: currentFavoriteCollection } = useUserFavoriteCollection();
   const [hasFavorited, setHasFavorited] = useState(false);
@@ -40,6 +42,7 @@ export const FavoriteButton: React.FC<{ collection: BaseCollection | null | unde
 
     setHasFavorited(true);
     setIsFavoriting(false);
+    mutate('/collections/phase/favorites');
   };
 
   const formatTitle = () => {
