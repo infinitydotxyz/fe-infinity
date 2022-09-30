@@ -1,16 +1,15 @@
-import { BaseCollection, ChainId, CollectionStats, StakeLevel } from '@infinityxyz/lib-frontend/types/core';
+import { BaseCollection, ChainId, CollectionStats } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
-import { FaCaretDown, FaCaretUp, FaCheck, FaDiscord, FaInstagram, FaStar, FaTwitter } from 'react-icons/fa';
+import { FaCaretDown, FaCaretUp, FaDiscord, FaInstagram, FaTwitter } from 'react-icons/fa';
 import { apiDelete, apiGet, apiPost, nFormatter } from 'src/utils';
 import { Chip, Spinner, toastError } from 'src/components/common';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { indexCollection } from 'src/utils/orderbookUtils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { TipModal } from './tip-modal';
-import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
-import { useCurrentFavoriteCollection } from 'src/hooks/api/useFavoriteCollection';
+import { FavoriteButton } from './favorite-button';
 
 interface Props {
   collection?: BaseCollection | null;
@@ -28,10 +27,6 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
   // TODO(sleeyax): we should probably refactor both 'edit' and 'follow' buttons; they shouldn't be part of this 'social stats' component.
   const router = useRouter();
   const { addCartItem, setOrderDrawerOpen } = useOrderContext();
-
-  const { result: userQuota } = useUserCurationQuota();
-  const { result: currentFavoriteCollection } = useCurrentFavoriteCollection(user?.address);
-  const [hasFavorited, setHasFavorited] = useState(false);
 
   const showFollow = false; // todo: put this back for Social features.
 
@@ -90,26 +85,6 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
     }
 
     setShowTipModal(true);
-  };
-
-  const onClickFavorite = async () => {
-    if (!checkSignedIn()) {
-      return;
-    }
-
-    const { error } = await apiPost(
-      `/collections/${collection?.chainId}:${collection?.address}/favorites/${user?.address}`,
-      {
-        data: { chainId: userChainId }
-      }
-    );
-
-    if (error) {
-      toastError(error?.errorResponse?.message);
-      return;
-    }
-
-    setHasFavorited(true);
   };
 
   const verifyOwnership = async () => {
@@ -240,19 +215,7 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
         }
       />
 
-      <Chip
-        left={hasFavorited ? <FaCheck /> : <FaStar />}
-        content={<>Favorite</>}
-        onClick={onClickFavorite}
-        disabled={(userQuota?.stakeLevel || 0) < StakeLevel.Bronze || hasFavorited}
-        title={
-          (userQuota?.stakeLevel || 0) < StakeLevel.Bronze
-            ? 'You must be level Bronze or higher to access this feature'
-            : currentFavoriteCollection?.collection === collection?.address || hasFavorited
-            ? 'You already favorited this collection'
-            : 'Click to favorite this collection (your vote is valid as long as the current phase lasts)'
-        }
-      />
+      <FavoriteButton collection={collection} />
 
       <Chip
         content={<>Collection Offer</>}
