@@ -251,7 +251,7 @@ export const TinderCard = forwardRef(
     }));
 
     const handleSwipeReleased = useCallback(
-      async (element, speed) => {
+      async (element: HTMLElement, speed: Coord) => {
         if (swipeAlreadyReleased.current) {
           return;
         }
@@ -374,7 +374,9 @@ export const TinderCard = forwardRef(
       element.current.addEventListener(
         'touchend',
         () => {
-          handleSwipeReleased(element.current, speed);
+          if (element.current) {
+            handleSwipeReleased(element.current, speed);
+          }
         },
         { passive: true }
       );
@@ -384,7 +386,10 @@ export const TinderCard = forwardRef(
         () => {
           if (mouseIsClicked) {
             mouseIsClicked = false;
-            handleSwipeReleased(element.current, speed);
+
+            if (element.current) {
+              handleSwipeReleased(element.current, speed);
+            }
           }
         },
         { passive: true }
@@ -395,7 +400,9 @@ export const TinderCard = forwardRef(
         () => {
           if (mouseIsClicked) {
             mouseIsClicked = false;
-            handleSwipeReleased(element.current, speed);
+            if (element.current) {
+              handleSwipeReleased(element.current, speed);
+            }
           }
         },
         { passive: true }

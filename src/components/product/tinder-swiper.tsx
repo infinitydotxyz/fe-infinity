@@ -48,11 +48,13 @@ export const TinderSwiperModal = () => {
     <>
       <Button onClick={() => setOpen(true)}>Open Swiper</Button>
       <FullScreenModal isOpen={open} onClose={() => setOpen(false)}>
-        <div className=" w-full flex flex-col items-center">
-          <div className=" text-2xl font-bold mb-10">{collection?.metadata.name}</div>
+        {open && (
+          <div className=" w-full flex flex-col items-center">
+            <div className=" text-2xl font-bold mb-10">{collection?.metadata.name}</div>
 
-          <TinderSwiper data={data.reverse()} />
-        </div>
+            <TinderSwiper data={data.reverse()} />
+          </div>
+        )}
       </FullScreenModal>
     </>
   );
@@ -67,6 +69,10 @@ interface Props {
 export const TinderSwiper = ({ data }: Props) => {
   const [currentIndex, setCurrentIndex] = useState(data.length - 1);
   const [liked, setLiked] = useState<Erc721Token[]>([]);
+
+  console.log('rebuilding swiper?');
+  console.log('liked.length');
+  console.log(liked.length);
 
   const childRefs = useMemo(
     () =>
@@ -163,7 +169,7 @@ export const TinderSwiper = ({ data }: Props) => {
     const displayIndex = data.length - currentIndex;
 
     return (
-      <div className="p-2 w-full flex font-bold">
+      <div className="p-2 w-full flex font-bold select-none">
         <div className="  ">
           {displayIndex} / {data.length}
         </div>
@@ -212,7 +218,12 @@ export const TinderSwiperLikes = ({ data }: Props2) => {
     <div className="items-center  flex-wrap  flex  w-full  ">
       {data.map((nft) => {
         return (
-          <EZImage cover={false} src={nft.metadata.image} className="h-8 w-8 cursor-grab rounded-3xl overflow-clip  " />
+          <EZImage
+            key={`${nft.collectionAddress}:${nft.tokenId}`}
+            cover={false}
+            src={nft.metadata.image}
+            className="h-8 w-8 cursor-grab rounded-3xl overflow-clip  "
+          />
         );
       })}
     </div>
