@@ -1,6 +1,6 @@
 /* global WebKitCSSMatrix */
 
-import { forwardRef, ReactNode, useRef, useImperativeHandle, useCallback, useLayoutEffect, createElement } from 'react';
+import { forwardRef, ReactNode, useRef, useImperativeHandle, useCallback, useEffect, createElement } from 'react';
 
 const sleep = (ms: number) => {
   return new Promise(function (resolve) {
@@ -102,10 +102,10 @@ const animateBack = async (element: HTMLElement) => {
   element.style.transform = translation + rotation;
 
   await sleep(settings.snapBackDuration * 0.75);
-  element.style.transform = 'none';
+  element.style.transform = '';
 
   await sleep(settings.snapBackDuration);
-  element.style.transition = '10ms';
+  element.style.transition = '';
 };
 
 const getSwipeDirection = (property: Coord): Direction => {
@@ -291,7 +291,7 @@ export const TinderCard = forwardRef(
       swipeAlreadyReleased.current = false;
     }, [swipeAlreadyReleased]);
 
-    useLayoutEffect(() => {
+    useEffect(() => {
       if (!element.current) {
         return;
       }
@@ -317,12 +317,17 @@ export const TinderCard = forwardRef(
       element.current.addEventListener(
         'mousedown',
         (ev) => {
-          mouseIsClicked = true;
-          handleSwipeStart();
-          offset = {
-            x: -mouseCoordinatesFromEvent(ev).x,
-            y: -mouseCoordinatesFromEvent(ev).y
-          };
+          // left mouse only
+          if (ev.buttons === 1) {
+            // console.log('mouseDown');
+
+            mouseIsClicked = true;
+            handleSwipeStart();
+            offset = {
+              x: -mouseCoordinatesFromEvent(ev).x,
+              y: -mouseCoordinatesFromEvent(ev).y
+            };
+          }
         },
         { passive: true }
       );
@@ -367,6 +372,7 @@ export const TinderCard = forwardRef(
         'mousemove',
         (ev) => {
           if (mouseIsClicked) {
+            // console.log('mousemove');
             handleMove(mouseCoordinatesFromEvent(ev));
           }
         },
@@ -387,6 +393,7 @@ export const TinderCard = forwardRef(
         'mouseup',
         () => {
           if (mouseIsClicked) {
+            // console.log('mouseup');
             mouseIsClicked = false;
 
             if (element.current) {
@@ -401,6 +408,7 @@ export const TinderCard = forwardRef(
         'mouseleave',
         () => {
           if (mouseIsClicked) {
+            // console.log('mouseleave');
             mouseIsClicked = false;
             if (element.current) {
               handleSwipeReleased(element.current, speed);
