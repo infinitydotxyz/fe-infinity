@@ -1,5 +1,5 @@
 import { BaseCollection } from '@infinityxyz/lib-frontend/types/core/Collection';
-import React, { useState, useMemo, useRef, useEffect } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import TinderCard from 'react-tinder-card';
 import { apiGet, useFetch } from 'src/utils';
 import { Button, EZImage } from '../common';
@@ -70,9 +70,7 @@ interface Props {
 }
 
 export const TinderSwiper = ({ data }: Props) => {
-  const [currentIndex, setCurrentIndex] = useState(data.length - 1);
-  // used for outOfFrame closure
-  const currentIndexRef = useRef<number>(currentIndex);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const childRefs = useMemo(
     () =>
@@ -82,29 +80,17 @@ export const TinderSwiper = ({ data }: Props) => {
     []
   );
 
-  const updateCurrentIndex = (val: number) => {
-    setCurrentIndex(val);
-    currentIndexRef.current = val;
-  };
-
   const canGoBack = currentIndex < data.length - 1;
   const canSwipe = currentIndex >= 0;
 
   // set last direction and decrease current index
-  const swiped = (direction: Direction, nameToDelete: string, index: number) => {
-    updateCurrentIndex(index - 1);
+  const swiped = (direction: Direction, name: string, index: number) => {
+    console.log(`${direction} ${name} (${index}) swiped`, index);
+    setCurrentIndex(index + 1);
   };
 
-  const outOfFrame = (name: string, idx: number) => {
-    // console.log(`${name} (${idx}) left the screen!`, currentIndexRef.current);
-    // handle the case in which go back is pressed before card goes outOfFrame
-    const api = currentIndexRef.current >= idx && (childRefs[idx].current as API | null);
-    if (api) {
-      api.restoreCard();
-    }
-    // TODO: when quickly swipe and restore multiple times the same card,
-    // it happens multiple outOfFrame events are queued and the card disappear
-    // during latest swipes. Only the last outOfFrame event should be considered valid
+  const outOfFrame = (direction: Direction, name: string, index: number) => {
+    console.log(`${direction} ${name} (${index}) outOfFrame`, index);
   };
 
   const swipe = (dir: Direction) => {
@@ -116,51 +102,64 @@ export const TinderSwiper = ({ data }: Props) => {
     }
   };
 
-  // increase current index and show card
   const goBack = async () => {
     if (!canGoBack) {
       return;
     }
 
-    const newIndex = currentIndex + 1;
-    updateCurrentIndex(newIndex);
+    const newIndex = currentIndex - 1;
+    setCurrentIndex(newIndex);
 
-    const api = currentIndexRef.current >= newIndex && (childRefs[newIndex].current as API | null);
+    const api = childRefs[newIndex].current as API | null;
     if (api) {
       await api.restoreCard();
     }
   };
 
+  const buttons = (
+    <div className="p-5 flex gap-2">
+      <Button disabled={!canSwipe} onClick={() => swipe('left')}>
+        Swipe left
+      </Button>
+      <Button onClick={() => goBack()}>Undo</Button>
+      <Button disabled={!canSwipe} onClick={() => swipe('right')}>
+        Swipe right
+      </Button>
+    </div>
+  );
+
+  const header = (
+    <div className="p-2 w-full   ">
+      <div className="  ">
+        {currentIndex + 1} / {data.length}
+      </div>
+    </div>
+  );
+
   return (
-    <div className=" items-center flex flex-col">
-      <div className="relative h-80 w-80  ">
-        {data.map((nft, index) => {
-          //   console.log(JSON.stringify(nft, null, 2));
+    <div className="items-center overflow-clip  flex flex-col ">
+      <div className="     ">
+        {header}
+        <div className="relative h-96 w-96  ">
+          {data.reverse().map((nft, idx) => {
+            const index = data.length - 1 - idx;
 
-          return (
-            <TinderCard
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              ref={childRefs[index] as any}
-              className="absolute top-0 left-0 right-0 bottom-0"
-              key={nft.metadata.name ?? '' + index}
-              onSwipe={(dir) => swiped(dir, nft.tokenId.toString(), index)}
-              onCardLeftScreen={() => outOfFrame(nft.tokenId.toString(), index)}
-            >
-              <EZImage src={nft.metadata.image} className="  rounded-lg overflow-clip  " />
-            </TinderCard>
-          );
-        })}
+            return (
+              <TinderCard
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                ref={childRefs[index] as any}
+                className="absolute top-0 left-0 right-0 bottom-0"
+                key={nft.metadata.name ?? '' + index}
+                onSwipe={(dir) => swiped(dir, nft.tokenId.toString(), index)}
+                onCardLeftScreen={(dir) => outOfFrame(dir, nft.tokenId.toString(), index)}
+              >
+                <EZImage cover={false} src={nft.metadata.image} className=" cursor-grab rounded-3xl overflow-clip  " />
+              </TinderCard>
+            );
+          })}
+        </div>
       </div>
-
-      <div className="p-5 transition flex gap-2">
-        <Button disabled={!canSwipe} onClick={() => swipe('left')}>
-          Swipe left!
-        </Button>
-        <Button onClick={() => goBack()}>Undo swipe!</Button>
-        <Button disabled={!canSwipe} onClick={() => swipe('right')}>
-          Swipe right!
-        </Button>
-      </div>
+      {buttons}
     </div>
   );
 };
