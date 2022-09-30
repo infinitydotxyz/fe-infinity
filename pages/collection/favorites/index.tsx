@@ -1,6 +1,6 @@
 import { CollectionFavoriteDto, CollectionFavoriteQueryResultDto } from '@infinityxyz/lib-frontend/types/dto';
 import { useRouter } from 'next/router';
-import { NextLink, PageBox, ScrollLoader, Spinner } from 'src/components/common';
+import { EZImage, NextLink, PageBox, ScrollLoader, Spinner, SVG } from 'src/components/common';
 import { NoResultsBox } from 'src/components/common/no-results-box';
 import { formatNumber, useFetchInfinite } from 'src/utils';
 
@@ -13,10 +13,17 @@ const Leaderboard: React.FC<{ collections: CollectionFavoriteDto[] }> = ({ colle
             key={collection.collectionAddress}
             className="bg-theme-light-200 px-10 h-[110px] rounded-3xl flex items-center font-heading"
           >
+            <NextLink href={`/collection/${collection?.slug}`}>
+              <EZImage className="w-16 h-16 rounded-2xl overflow-clip" src={collection?.profileImage} />
+            </NextLink>
+
             <div className="flex justify-between items-center w-full ml-6">
-              <NextLink href={`/collection/${collection.slug}`} className="truncate">
-                {collection.name}
-              </NextLink>
+              <div className="w-44 flex items-center text-black font-bold font-body">
+                <NextLink href={`/collection/${collection.slug}`} className="truncate">
+                  {collection.name}
+                </NextLink>
+                {collection?.hasBlueCheck && <SVG.blueCheck className="ml-1.5 shrink-0 w-4 h-4" />}
+              </div>
 
               <div className="w-1/9 max-w-[80px] min-w-[80px]">
                 <div className="text-black font-bold font-body flex items-center">Favorites</div>
