@@ -72,16 +72,26 @@ export const TinderSwiper = ({ data }: Props) => {
   const [liked, setLiked] = useState<Erc721Token[]>([]);
   const [emitter] = useState<TinderSwiperEmitter>(new TinderSwiperEmitter());
 
+  const indexValid = (index: number) => {
+    return index >= 0 && index < data.length;
+  };
+
+  const currentIndexValid = indexValid(currentIndex);
+  const canSwipe = currentIndexValid;
+  const canGoBack = currentIndex < data.length - 1;
+
   // handles swipe event
   useEffect(() => {
     const cb = (event: SwiperEvent) => {
       // console.log(`${event.dir} (${event.index}) onSwipe`);
 
-      if (event.dir === 'right') {
-        setLiked([...liked, data[event.index]]);
-      }
+      if (indexValid(event.index)) {
+        if (event.dir === 'right') {
+          setLiked([...liked, data[event.index]]);
+        }
 
-      updateIndex(currentIndex - 1);
+        updateIndex(currentIndex - 1);
+      }
     };
 
     emitter.onSwipe(cb);
@@ -89,7 +99,7 @@ export const TinderSwiper = ({ data }: Props) => {
     return () => {
       emitter.removeSwipe(cb);
     };
-  }, [liked, currentIndex]);
+  }, [liked, currentIndex, canSwipe]);
 
   const childRefs = useMemo(
     () =>
@@ -99,13 +109,11 @@ export const TinderSwiper = ({ data }: Props) => {
     [data]
   );
 
-  const currentIndexValid = currentIndex >= 0 && currentIndex < data.length;
-  const canSwipe = currentIndexValid;
-  const canGoBack = currentIndex < data.length - 1;
-
   const updateIndex = (index: number) => {
-    if (index >= 0 && index < data.length) {
+    if (indexValid(index)) {
       setCurrentIndex(index);
+    } else {
+      setCurrentIndex(-1);
     }
   };
 
@@ -159,24 +167,29 @@ export const TinderSwiper = ({ data }: Props) => {
   );
 
   const header = () => {
+    let leftSide = <div>No more NFTs</div>;
     let rightSide = <></>;
 
     if (currentIndexValid) {
+      const displayIndex = data.length - currentIndex;
+
       rightSide = (
         <>
           <Spacer />
-          <div className="  "># {data[currentIndex].tokenId}</div>
+          <div className=""># {data[currentIndex].tokenId}</div>
         </>
       );
-    }
 
-    const displayIndex = data.length - currentIndex;
-
-    return (
-      <div className="p-2 w-full flex font-bold select-none">
+      leftSide = (
         <div className="">
           {displayIndex} / {data.length}
         </div>
+      );
+    }
+
+    return (
+      <div className="p-2 w-full flex font-bold select-none">
+        {leftSide}
 
         {rightSide}
       </div>

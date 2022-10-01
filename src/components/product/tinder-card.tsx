@@ -11,8 +11,6 @@ const sleep = (ms: number) => {
 
 export type Direction = 'left' | 'right' | 'up' | 'down' | 'none';
 type CardLeftScreenHandler = (direction: Direction) => void;
-type SwipeRequirementFufillUpdate = (direction: Direction) => void;
-type SwipeRequirementUnfufillUpdate = () => void;
 
 type Coord = {
   x: number;
@@ -188,8 +186,6 @@ interface Props {
   onCardLeftScreen?: CardLeftScreenHandler;
   swipeRequirementType?: 'velocity' | 'position';
   swipeThreshold?: number;
-  onSwipeRequirementFulfilled?: SwipeRequirementFufillUpdate;
-  onSwipeRequirementUnfulfilled?: SwipeRequirementUnfufillUpdate;
   className?: string;
   children?: ReactNode;
 }
@@ -203,9 +199,7 @@ export const TinderCard = forwardRef(
       onCardLeftScreen,
       className,
       swipeRequirementType = 'velocity',
-      swipeThreshold = settings.swipeThreshold,
-      onSwipeRequirementFulfilled,
-      onSwipeRequirementUnfulfilled
+      swipeThreshold = settings.swipeThreshold
     }: Props,
     ref
   ) => {
@@ -302,28 +296,17 @@ export const TinderCard = forwardRef(
       let speed = { x: 0, y: 0 };
       let lastLocation = { x: 0, y: 0, time: new Date().getTime() };
       let mouseIsClicked = false;
-      let swipeThresholdFulfilledDirection = 'none';
+
+      const resetOnMouseDown = () => {
+        offset = { x: 0, y: 0 };
+        speed = { x: 0, y: 0 };
+        lastLocation = { x: 0, y: 0, time: new Date().getTime() };
+        mouseIsClicked = false;
+      };
 
       const handleMove = (coordinates: Coord) => {
         if (!elementRef.current) {
           return;
-        }
-
-        // Check fulfillment
-        if (onSwipeRequirementFulfilled || onSwipeRequirementUnfulfilled) {
-          const dir = getSwipeDirection(swipeRequirementType === 'velocity' ? speed : getTranslate(elementRef.current));
-          if (dir !== swipeThresholdFulfilledDirection) {
-            swipeThresholdFulfilledDirection = dir;
-            if (swipeThresholdFulfilledDirection === 'none') {
-              if (onSwipeRequirementUnfulfilled) {
-                onSwipeRequirementUnfulfilled();
-              }
-            } else {
-              if (onSwipeRequirementFulfilled) {
-                onSwipeRequirementFulfilled(dir);
-              }
-            }
-          }
         }
 
         // Move
@@ -338,6 +321,8 @@ export const TinderCard = forwardRef(
           (e) => {
             e.preventDefault();
             e.stopPropagation();
+
+            resetOnMouseDown();
 
             swipeAlreadyReleased.current = false;
 
@@ -382,6 +367,7 @@ export const TinderCard = forwardRef(
             // left mouse only
             if (e.buttons === 1) {
               // console.log('mouseDown');
+              resetOnMouseDown();
 
               mouseIsClicked = true;
               swipeAlreadyReleased.current = false;
