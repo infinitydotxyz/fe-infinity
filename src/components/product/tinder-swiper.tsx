@@ -50,7 +50,7 @@ export const TinderSwiperModal = () => {
       <FullScreenModal isOpen={open} onClose={() => setOpen(false)}>
         {open && (
           <div className=" w-full flex flex-col items-center">
-            <div className=" text-2xl font-bold mb-10">{collection?.metadata.name}</div>
+            <div className=" text-2xl font-bold mb-10 select-none">{collection?.metadata.name}</div>
 
             <TinderSwiper data={data.reverse()} />
           </div>
@@ -164,7 +164,7 @@ export const TinderSwiper = ({ data }: Props) => {
 
     return (
       <div className="p-2 w-full flex font-bold select-none">
-        <div className="  ">
+        <div className="">
           {displayIndex} / {data.length}
         </div>
 
@@ -175,7 +175,7 @@ export const TinderSwiper = ({ data }: Props) => {
 
   return (
     <div className="items-center overflow-clip w-full flex flex-col ">
-      <div className="     ">
+      <div className="">
         {header()}
         <div className="relative h-96 w-96  ">
           {data.map((nft, index) => {
