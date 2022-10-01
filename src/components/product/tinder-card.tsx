@@ -335,68 +335,86 @@ export const TinderCard = forwardRef(
       if (isTouchDevice()) {
         elementRef.current.addEventListener(
           'touchstart',
-          (ev) => {
+          (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
             swipeAlreadyReleased.current = false;
 
             offset = {
-              x: -touchCoordinatesFromEvent(ev).x,
-              y: -touchCoordinatesFromEvent(ev).y
+              x: -touchCoordinatesFromEvent(e).x,
+              y: -touchCoordinatesFromEvent(e).y
             };
           },
-          { passive: true }
+          { passive: false }
         );
 
         elementRef.current.addEventListener(
           'touchmove',
-          (ev) => {
-            handleMove(touchCoordinatesFromEvent(ev));
+          (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            handleMove(touchCoordinatesFromEvent(e));
           },
-          { passive: true }
+          { passive: false }
         );
 
         elementRef.current.addEventListener(
           'touchend',
-          () => {
+          (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
             if (elementRef.current) {
               handleSwipeReleased(elementRef.current, speed);
             }
           },
-          { passive: true }
+          { passive: false }
         );
       } else {
         elementRef.current.addEventListener(
           'mousedown',
-          (ev) => {
+          (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
             // left mouse only
-            if (ev.buttons === 1) {
+            if (e.buttons === 1) {
               // console.log('mouseDown');
 
               mouseIsClicked = true;
               swipeAlreadyReleased.current = false;
 
               offset = {
-                x: -mouseCoordinatesFromEvent(ev).x,
-                y: -mouseCoordinatesFromEvent(ev).y
+                x: -mouseCoordinatesFromEvent(e).x,
+                y: -mouseCoordinatesFromEvent(e).y
               };
             }
           },
-          { passive: true }
+          { passive: false }
         );
 
         elementRef.current.addEventListener(
           'mousemove',
-          (ev) => {
+          (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
             if (mouseIsClicked) {
               // console.log('mousemove');
-              handleMove(mouseCoordinatesFromEvent(ev));
+              handleMove(mouseCoordinatesFromEvent(e));
             }
           },
-          { passive: true }
+          { passive: false }
         );
 
         elementRef.current.addEventListener(
           'mouseup',
-          () => {
+          (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
             if (mouseIsClicked) {
               // console.log('mouseup');
               mouseIsClicked = false;
@@ -406,12 +424,15 @@ export const TinderCard = forwardRef(
               }
             }
           },
-          { passive: true }
+          { passive: false }
         );
 
         elementRef.current.addEventListener(
           'mouseleave',
-          () => {
+          (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
             if (mouseIsClicked) {
               // console.log('mouseleave');
               mouseIsClicked = false;
@@ -420,7 +441,7 @@ export const TinderCard = forwardRef(
               }
             }
           },
-          { passive: true }
+          { passive: false }
         );
       }
     }, []); // TODO fix so swipeRequirementType can be changed on the fly. Pass as dependency cleanup eventlisteners and update new eventlisteners.
