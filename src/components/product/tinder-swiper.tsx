@@ -70,10 +70,6 @@ export const TinderSwiper = ({ data }: Props) => {
   const [currentIndex, setCurrentIndex] = useState(data.length - 1);
   const [liked, setLiked] = useState<Erc721Token[]>([]);
 
-  console.log('rebuilding swiper?');
-  console.log('liked.length');
-  console.log(liked.length);
-
   const childRefs = useMemo(
     () =>
       Array(data.length)
@@ -99,8 +95,6 @@ export const TinderSwiper = ({ data }: Props) => {
     if (direction === 'right') {
       setLiked([...liked, data[index]]);
     }
-
-    console.log(currentIndex);
 
     updateIndex(currentIndex - 1);
   };
@@ -145,7 +139,9 @@ export const TinderSwiper = ({ data }: Props) => {
       <Button disabled={!canSwipe} onClick={() => swipe('left')}>
         Swipe left
       </Button>
-      <Button onClick={() => goBack()}>Undo</Button>
+      <Button disabled={!canGoBack} onClick={() => goBack()}>
+        Undo
+      </Button>
       <Button disabled={!canSwipe} onClick={() => swipe('right')}>
         Swipe right
       </Button>
