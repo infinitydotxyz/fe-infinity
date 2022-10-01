@@ -1,88 +1,68 @@
-import { Epoch } from '@infinityxyz/lib-frontend/types/core';
-import { RewardEpochDto, RewardsProgramByEpochDto } from '@infinityxyz/lib-frontend/types/dto/rewards';
-import React, { useEffect } from 'react';
-import { Heading, Spinner } from 'src/components/common';
+import { TokenomicsConfigDto, TokenomicsPhaseDto } from '@infinityxyz/lib-frontend/types/dto';
+import { TradingFeeDestination } from '@infinityxyz/lib-frontend/types/dto/rewards';
+import React from 'react';
+import { Spinner } from 'src/components/common';
+import { DistributionBar } from 'src/components/common/distribution-bar';
 import { InfoBox } from 'src/components/rewards/info-box';
+import { RewardsProgressBar } from 'src/components/rewards/progressbar';
 import { RewardPhase } from 'src/components/rewards/reward-phase';
+import useScreenSize from 'src/hooks/useScreenSize';
 import { useFetch } from 'src/utils';
 
-const getEpochDescription = (epoch: Epoch) => {
-  switch (epoch) {
-    case Epoch.One:
-      return (
-        <>
-          <p className="my-2">
-            During this epoch, the exchange product is launched in beta alongside the $NFT token and the Infinity NFT
-            collection. This epoch has 4 token rewards phases.
-          </p>
-          <Heading as="h3" className="text-2xl  mt-2  !font-body !font-medium !text-black">
-            Benefits
-          </Heading>
-          <p className="my-2">Holders of the Infinity NFT are MVPs with benefits including (but not limited to):</p>
-          <ul className="ml-4 my-2 list-disc">
-            <li>Early access to all future Infinity products</li>
-            <li>Partner offers, raffles, allowlists</li>
-          </ul>
-        </>
-      );
-
-    case Epoch.Two:
-      return (
-        <>
-          <p className="my-2">
-            In this epoch, in addition to token rewards for trading, curators of collections start earning curation
-            rewards in ETH. The free Infinity NFT mint is no longer available starting this epoch.
-          </p>
-          <Heading as="h3" className="text-2xl  mt-2  !font-body !font-medium !text-black">
-            Benefits
-          </Heading>
-          <ul className="list-disc my-2 ml-4">
-            <li>Curators earn ETH rewards. </li>
-          </ul>
-        </>
-      );
-    case Epoch.Three:
-      return (
-        <>
-          <p className="my-2">Starting this epoch, token emissions go to zero. Curators still earn ETH rewards.</p>
-          <Heading as="h3" className="text-2xl mt-2 !font-body !font-medium !text-black">
-            Benefits
-          </Heading>
-          <ul className="list-disc my-2 ml-4">
-            <li>All ETH rewards go to curators.</li>
-            <li>
-              Only the tokens in circulation are used for staking that gives users voting power. In other words, the
-              only possible curators are the traders/collectors from epochs 1 and 2.
-            </li>
-          </ul>
-          <p className="my-2">Curation rewards are distributed weekly.</p>
-        </>
-      );
-  }
-};
-
 const GlobalRewards: React.FC = () => {
-  const data = useFetch<RewardsProgramByEpochDto>('/rewards');
-  const [epochs, setEpochs] = React.useState<RewardEpochDto[]>([]);
-
-  useEffect(() => {
-    const orderedEpochs = [data?.result?.[Epoch.One], data?.result?.[Epoch.Two], data?.result?.[Epoch.Three]].filter(
-      (item) => !!item
-    );
-    setEpochs(orderedEpochs as RewardEpochDto[]);
-  }, [data.result]);
+  const { result, isLoading } = useFetch<TokenomicsConfigDto>('/rewards');
+  const { isMobile } = useScreenSize();
 
   return (
     <>
-      {data.isLoading && <Spinner />}
-      {epochs.length > 0 ? (
-        epochs.map((item, index1) => {
+      {isLoading && <Spinner />}
+      {result?.phases && result?.phases.length > 0 ? (
+        result.phases.map((phase: TokenomicsPhaseDto) => {
           return (
-            <InfoBox key={index1} title={item.name} description={getEpochDescription(item.name)}>
+            <InfoBox
+              key={phase.id}
+              title={phase.name}
+              description={
+                <InfoBox.Stats title="Trading Fee Distribution">
+                  <>
+                    <DistributionBar
+                      distribution={Object.keys(phase.split)
+                        .sort()
+                        .filter((key) => phase.split[key as TradingFeeDestination].percentage > 0)
+                        .map((key) => {
+                          const item = phase.split[key as TradingFeeDestination];
+                          const configByTradingFeeDestination = {
+                            [TradingFeeDestination.Treasury]: {
+                              name: 'Treasury',
+                              color: 'bg-red-300'
+                            },
+                            [TradingFeeDestination.Raffle]: { name: 'User Raffle', color: 'bg-green-300' },
+                            [TradingFeeDestination.CollectionPot]: { name: 'Collection Pot', color: 'bg-blue-300' },
+                            [TradingFeeDestination.Curators]: { name: 'Curation', color: 'bg-gray-300' }
+                          };
+                          const config = configByTradingFeeDestination[key as TradingFeeDestination];
+
+                          return {
+                            percent: item.percentage,
+                            label: config.name,
+                            className: config.color
+                          };
+                        })}
+                    />
+                    <div className="w-full py-2">
+                      <div className="text-sm mt-1">Progress</div>
+                      <div className="text-2xl font-heading font-bold">
+                        <RewardsProgressBar amount={Math.ceil(phase.progress)} max={100} />
+                      </div>
+                    </div>
+                  </>
+                </InfoBox.Stats>
+              }
+            >
               <InfoBox.SideInfo>
-                {item.phases.map((phase, index2) => {
-                  return <RewardPhase key={index2} phase={phase} />;
-                })}
+                <div className={isMobile ? '' : 'ml-6 flex justify-end mt-14'}>
+                  <RewardPhase key={phase.id} phase={phase} />
+                </div>
               </InfoBox.SideInfo>
             </InfoBox>
           );
