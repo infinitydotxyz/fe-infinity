@@ -1,6 +1,6 @@
 /* global WebKitCSSMatrix */
 
-import { forwardRef, ReactNode, useRef, useImperativeHandle, useCallback, useEffect, createElement } from 'react';
+import { forwardRef, ReactNode, useRef, useImperativeHandle, useCallback, useEffect } from 'react';
 
 const sleep = (ms: number) => {
   return new Promise(function (resolve) {
@@ -162,7 +162,9 @@ const dragableTouchmove = (coordinates: Coord, element: HTMLElement, offset: Coo
   const translation = translationString(pos.x, pos.y);
   const rotCalc = calcSpeed(lastLocation, newLocation).x / 1000;
   const rotation = rotationString(rotCalc * settings.maxTilt);
+
   element.style.transform = translation + rotation;
+
   return newLocation;
 };
 
