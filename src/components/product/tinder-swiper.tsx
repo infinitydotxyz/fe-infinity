@@ -13,6 +13,7 @@ import { MdFavoriteBorder, MdOutlineArrowBack, MdRefresh } from 'react-icons/md'
 export const TinderSwiperModal = () => {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState<Erc721Token[]>([]);
+  const [liked, setLiked] = useState<Erc721Token[]>([]);
 
   const path = `/collections/boredapeyachtclub`;
   const { result: collection } = useFetch<BaseCollection>(path, { chainId: '1' });
@@ -51,10 +52,14 @@ export const TinderSwiperModal = () => {
       <Button onClick={() => setOpen(true)}>Open Swiper</Button>
       <FullScreenModal isOpen={open} onClose={() => setOpen(false)}>
         {open && (
-          <div className=" w-full flex flex-col items-center">
-            <div className=" text-2xl font-bold mb-8 select-none">{collection?.metadata.name}</div>
+          <div className="w-full flex flex-col items-center  ">
+            <div className=" w-full flex flex-col items-center">
+              <div className=" text-2xl font-bold mb-8 select-none">{collection?.metadata.name}</div>
 
-            <TinderSwiper data={data.reverse()} />
+              <TinderSwiper data={data.reverse()} liked={liked} setLiked={setLiked} />
+            </div>
+
+            <TinderSwiperLikes data={liked} />
           </div>
         )}
       </FullScreenModal>
@@ -66,11 +71,12 @@ export const TinderSwiperModal = () => {
 
 interface Props {
   data: Erc721Token[];
+  liked: Erc721Token[];
+  setLiked: (liked: Erc721Token[]) => void;
 }
 
-export const TinderSwiper = ({ data }: Props) => {
+export const TinderSwiper = ({ data, liked, setLiked }: Props) => {
   const [currentIndex, setCurrentIndex] = useState(data.length - 1);
-  const [liked, setLiked] = useState<Erc721Token[]>([]);
   const [emitter] = useState<TinderSwiperEmitter>(new TinderSwiperEmitter());
 
   const indexValid = (index: number) => {
@@ -226,8 +232,6 @@ export const TinderSwiper = ({ data }: Props) => {
         {cards}
       </div>
       {buttons}
-
-      <TinderSwiperLikes data={liked} />
     </div>
   );
 };
