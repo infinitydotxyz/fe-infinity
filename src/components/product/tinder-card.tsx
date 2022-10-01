@@ -1,6 +1,7 @@
 /* global WebKitCSSMatrix */
 
 import { forwardRef, ReactNode, useRef, useImperativeHandle, useCallback, useEffect } from 'react';
+import { TinderSwiperEmitter } from './tinder-swiper';
 
 const sleep = (ms: number) => {
   return new Promise(function (resolve) {
@@ -9,7 +10,6 @@ const sleep = (ms: number) => {
 };
 
 export type Direction = 'left' | 'right' | 'up' | 'down' | 'none';
-type SwipeHandler = (direction: Direction) => void;
 type CardLeftScreenHandler = (direction: Direction) => void;
 type SwipeRequirementFufillUpdate = (direction: Direction) => void;
 type SwipeRequirementUnfufillUpdate = () => void;
@@ -108,6 +108,10 @@ const animateBack = async (element: HTMLElement) => {
   element.style.transition = '';
 };
 
+const isTouchDevice = () => {
+  return 'ontouchstart' in window;
+};
+
 const getSwipeDirection = (property: Coord): Direction => {
   if (Math.abs(property.x) > Math.abs(property.y)) {
     if (property.x > settings.swipeThreshold) {
@@ -179,8 +183,9 @@ const mouseCoordinatesFromEvent = (e: MouseEvent): Coord => {
 
 interface Props {
   ref?: React.Ref<API>;
+  index: number;
   flickOnSwipe?: boolean;
-  onSwipe?: SwipeHandler;
+  emitter: TinderSwiperEmitter;
   onCardLeftScreen?: CardLeftScreenHandler;
   preventSwipe?: string[];
   swipeRequirementType?: 'velocity' | 'position';
@@ -196,7 +201,8 @@ export const TinderCard = forwardRef(
     {
       flickOnSwipe = true,
       children,
-      onSwipe,
+      emitter,
+      index,
       onCardLeftScreen,
       className,
       preventSwipe = [],
@@ -221,9 +227,8 @@ export const TinderCard = forwardRef(
 
         setDisplayNone.current = true;
 
-        if (onSwipe) {
-          onSwipe(dir);
-        }
+        emitter.emitSwipe({ dir, index });
+
         const power = 1000;
         const disturbance = (Math.random() - 0.5) * 100;
         if (dir === 'right') {
@@ -271,9 +276,7 @@ export const TinderCard = forwardRef(
         const dir = getSwipeDirection(swipeRequirementType === 'velocity' ? speed : currentPostion);
 
         if (dir !== 'none') {
-          if (onSwipe) {
-            onSwipe(dir);
-          }
+          emitter.emitSwipe({ dir, index });
 
           if (flickOnSwipe) {
             if (!preventSwipe.includes(dir)) {
@@ -295,7 +298,7 @@ export const TinderCard = forwardRef(
         // Card was not flicked away, animate back to start
         animateBack(element);
       },
-      [swipeAlreadyReleased, flickOnSwipe, onSwipe, onCardLeftScreen, preventSwipe, swipeRequirementType]
+      [swipeAlreadyReleased, flickOnSwipe, onCardLeftScreen, preventSwipe, swipeRequirementType]
     );
 
     useEffect(() => {
@@ -337,95 +340,97 @@ export const TinderCard = forwardRef(
         lastLocation = newLocation;
       };
 
-      elementRef.current.addEventListener(
-        'touchstart',
-        (ev) => {
-          swipeAlreadyReleased.current = false;
-
-          offset = {
-            x: -touchCoordinatesFromEvent(ev).x,
-            y: -touchCoordinatesFromEvent(ev).y
-          };
-        },
-        { passive: true }
-      );
-
-      elementRef.current.addEventListener(
-        'mousedown',
-        (ev) => {
-          // left mouse only
-          if (ev.buttons === 1) {
-            // console.log('mouseDown');
-
-            mouseIsClicked = true;
+      if (isTouchDevice()) {
+        elementRef.current.addEventListener(
+          'touchstart',
+          (ev) => {
             swipeAlreadyReleased.current = false;
 
             offset = {
-              x: -mouseCoordinatesFromEvent(ev).x,
-              y: -mouseCoordinatesFromEvent(ev).y
+              x: -touchCoordinatesFromEvent(ev).x,
+              y: -touchCoordinatesFromEvent(ev).y
             };
-          }
-        },
-        { passive: true }
-      );
+          },
+          { passive: true }
+        );
 
-      elementRef.current.addEventListener(
-        'touchmove',
-        (ev) => {
-          handleMove(touchCoordinatesFromEvent(ev));
-        },
-        { passive: true }
-      );
+        elementRef.current.addEventListener(
+          'touchmove',
+          (ev) => {
+            handleMove(touchCoordinatesFromEvent(ev));
+          },
+          { passive: true }
+        );
 
-      elementRef.current.addEventListener(
-        'mousemove',
-        (ev) => {
-          if (mouseIsClicked) {
-            // console.log('mousemove');
-            handleMove(mouseCoordinatesFromEvent(ev));
-          }
-        },
-        { passive: true }
-      );
-
-      elementRef.current.addEventListener(
-        'touchend',
-        () => {
-          if (elementRef.current) {
-            handleSwipeReleased(elementRef.current, speed);
-          }
-        },
-        { passive: true }
-      );
-
-      elementRef.current.addEventListener(
-        'mouseup',
-        () => {
-          if (mouseIsClicked) {
-            // console.log('mouseup');
-            mouseIsClicked = false;
-
+        elementRef.current.addEventListener(
+          'touchend',
+          () => {
             if (elementRef.current) {
               handleSwipeReleased(elementRef.current, speed);
             }
-          }
-        },
-        { passive: true }
-      );
+          },
+          { passive: true }
+        );
+      } else {
+        elementRef.current.addEventListener(
+          'mousedown',
+          (ev) => {
+            // left mouse only
+            if (ev.buttons === 1) {
+              // console.log('mouseDown');
 
-      elementRef.current.addEventListener(
-        'mouseleave',
-        () => {
-          if (mouseIsClicked) {
-            // console.log('mouseleave');
-            mouseIsClicked = false;
-            if (elementRef.current) {
-              handleSwipeReleased(elementRef.current, speed);
+              mouseIsClicked = true;
+              swipeAlreadyReleased.current = false;
+
+              offset = {
+                x: -mouseCoordinatesFromEvent(ev).x,
+                y: -mouseCoordinatesFromEvent(ev).y
+              };
             }
-          }
-        },
-        { passive: true }
-      );
+          },
+          { passive: true }
+        );
+
+        elementRef.current.addEventListener(
+          'mousemove',
+          (ev) => {
+            if (mouseIsClicked) {
+              // console.log('mousemove');
+              handleMove(mouseCoordinatesFromEvent(ev));
+            }
+          },
+          { passive: true }
+        );
+
+        elementRef.current.addEventListener(
+          'mouseup',
+          () => {
+            if (mouseIsClicked) {
+              // console.log('mouseup');
+              mouseIsClicked = false;
+
+              if (elementRef.current) {
+                handleSwipeReleased(elementRef.current, speed);
+              }
+            }
+          },
+          { passive: true }
+        );
+
+        elementRef.current.addEventListener(
+          'mouseleave',
+          () => {
+            if (mouseIsClicked) {
+              // console.log('mouseleave');
+              mouseIsClicked = false;
+              if (elementRef.current) {
+                handleSwipeReleased(elementRef.current, speed);
+              }
+            }
+          },
+          { passive: true }
+        );
+      }
     }, []); // TODO fix so swipeRequirementType can be changed on the fly. Pass as dependency cleanup eventlisteners and update new eventlisteners.
 
     return (

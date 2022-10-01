@@ -7,6 +7,7 @@ import { PagedData } from '../gallery/token-fetcher';
 import { Erc721Token } from '@infinityxyz/lib-frontend/types/core';
 import { Filter } from 'src/utils/context/FilterContext';
 import { API, Direction, TinderCard } from './tinder-card';
+import mitt from 'mitt';
 
 export const TinderSwiperModal = () => {
   const [open, setOpen] = useState(false);
@@ -69,6 +70,26 @@ interface Props {
 export const TinderSwiper = ({ data }: Props) => {
   const [currentIndex, setCurrentIndex] = useState(data.length - 1);
   const [liked, setLiked] = useState<Erc721Token[]>([]);
+  const [emitter] = useState<TinderSwiperEmitter>(new TinderSwiperEmitter());
+
+  // handles swipe event
+  useEffect(() => {
+    const cb = (event: SwiperEvent) => {
+      console.log(`${event.dir} (${event.index}) onSwipe`);
+
+      if (event.dir === 'right') {
+        setLiked([...liked, data[event.index]]);
+      }
+
+      updateIndex(currentIndex - 1);
+    };
+
+    emitter.onSwipe(cb);
+
+    return () => {
+      emitter.removeSwipe(cb);
+    };
+  }, [liked, currentIndex]);
 
   const childRefs = useMemo(
     () =>
@@ -88,20 +109,9 @@ export const TinderSwiper = ({ data }: Props) => {
     }
   };
 
-  // set last direction and decrease current index
-  const onSwipe = (direction: Direction, name: string, index: number) => {
-    console.log(`${direction} ${name} (${index}) onSwipe`, index);
-
-    if (direction === 'right') {
-      setLiked([...liked, data[index]]);
-    }
-
-    updateIndex(currentIndex - 1);
-  };
-
-  const onCardLeftScreen = (direction: Direction, name: string, index: number) => {
-    console.log(`${direction} ${name} (${index}) onCardLeftScreen`, index);
-  };
+  // const onCardLeftScreen = (direction: Direction, name: string, index: number) => {
+  //   console.log(`${direction} ${name} (${index}) onCardLeftScreen`, index);
+  // };
 
   const swipe = (dir: Direction) => {
     if (canSwipe) {
@@ -185,8 +195,9 @@ export const TinderSwiper = ({ data }: Props) => {
                 ref={childRefs[index] as any}
                 className="absolute top-0 left-0 right-0 bottom-0"
                 key={nft.metadata.name ?? '' + index}
-                onSwipe={(dir) => onSwipe(dir, nft.tokenId.toString(), index)}
-                onCardLeftScreen={(dir) => onCardLeftScreen(dir, nft.tokenId.toString(), index)}
+                emitter={emitter}
+                index={index}
+                // onCardLeftScreen={(dir) => onCardLeftScreen(dir, nft.tokenId.toString(), index)}
               >
                 <EZImage cover={false} src={nft.metadata.image} className=" cursor-grab rounded-3xl overflow-clip  " />
               </TinderCard>
@@ -223,3 +234,31 @@ export const TinderSwiperLikes = ({ data }: Props2) => {
     </div>
   );
 };
+
+// ================================================================================
+
+export type SwiperEvent = {
+  dir: Direction;
+  index: number;
+};
+
+type SwiperType = {
+  swipe: SwiperEvent;
+};
+
+export class TinderSwiperEmitter {
+  private emitter = mitt<SwiperType>();
+
+  emitSwipe(event: SwiperEvent) {
+    console.log(`emitSwipe`);
+    this.emitter.emit('swipe', event);
+  }
+
+  onSwipe(listener: (data: SwiperEvent) => void): void {
+    this.emitter.on('swipe', listener);
+  }
+
+  removeSwipe(listener: (data: SwiperEvent) => void): void {
+    this.emitter.off('swipe', listener);
+  }
+}
