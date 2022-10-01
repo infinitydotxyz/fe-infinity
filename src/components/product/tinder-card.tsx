@@ -426,6 +426,11 @@ export const TinderCard = forwardRef(
       );
     }, []); // TODO fix so swipeRequirementType can be changed on the fly. Pass as dependency cleanup eventlisteners and update new eventlisteners.
 
-    return createElement('div', { ref: elementRef, className }, children);
+    return (
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      <div ref={elementRef as any} className={className}>
+        {children}
+      </div>
+    );
   }
 );
