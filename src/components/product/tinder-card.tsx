@@ -208,11 +208,11 @@ export const TinderCard = forwardRef(
     settings.swipeThreshold = swipeThreshold;
     const swipeAlreadyReleased = useRef(false);
 
-    const element = useRef<HTMLElement>();
+    const elementRef = useRef<HTMLElement>();
 
     useImperativeHandle(ref, () => ({
       async swipe(dir: Direction = 'right') {
-        if (!element.current) {
+        if (!elementRef.current) {
           return;
         }
 
@@ -222,18 +222,18 @@ export const TinderCard = forwardRef(
         const power = 1000;
         const disturbance = (Math.random() - 0.5) * 100;
         if (dir === 'right') {
-          await animateOut(element.current, { x: power, y: disturbance }, true);
+          await animateOut(elementRef.current, { x: power, y: disturbance }, true);
         } else if (dir === 'left') {
-          await animateOut(element.current, { x: -power, y: disturbance }, true);
+          await animateOut(elementRef.current, { x: -power, y: disturbance }, true);
         } else if (dir === 'up') {
-          await animateOut(element.current, { x: disturbance, y: power }, true);
+          await animateOut(elementRef.current, { x: disturbance, y: power }, true);
         } else if (dir === 'down') {
-          await animateOut(element.current, { x: disturbance, y: -power }, true);
+          await animateOut(elementRef.current, { x: disturbance, y: -power }, true);
         }
 
         // can become null after animation
-        if (element.current) {
-          element.current.style.display = 'none';
+        if (elementRef.current) {
+          elementRef.current.style.display = 'none';
         }
 
         if (onCardLeftScreen) {
@@ -241,12 +241,12 @@ export const TinderCard = forwardRef(
         }
       },
       async restoreCard() {
-        if (!element.current) {
+        if (!elementRef.current) {
           return;
         }
 
-        element.current.style.display = 'block';
-        await animateBack(element.current);
+        elementRef.current.style.display = 'block';
+        await animateBack(elementRef.current);
       }
     }));
 
@@ -288,7 +288,7 @@ export const TinderCard = forwardRef(
     );
 
     useEffect(() => {
-      if (!element.current) {
+      if (!elementRef.current) {
         return;
       }
 
@@ -298,7 +298,35 @@ export const TinderCard = forwardRef(
       let mouseIsClicked = false;
       let swipeThresholdFulfilledDirection = 'none';
 
-      element.current.addEventListener(
+      const handleMove = (coordinates: Coord) => {
+        if (!elementRef.current) {
+          return;
+        }
+
+        // Check fulfillment
+        if (onSwipeRequirementFulfilled || onSwipeRequirementUnfulfilled) {
+          const dir = getSwipeDirection(swipeRequirementType === 'velocity' ? speed : getTranslate(elementRef.current));
+          if (dir !== swipeThresholdFulfilledDirection) {
+            swipeThresholdFulfilledDirection = dir;
+            if (swipeThresholdFulfilledDirection === 'none') {
+              if (onSwipeRequirementUnfulfilled) {
+                onSwipeRequirementUnfulfilled();
+              }
+            } else {
+              if (onSwipeRequirementFulfilled) {
+                onSwipeRequirementFulfilled(dir);
+              }
+            }
+          }
+        }
+
+        // Move
+        const newLocation = dragableTouchmove(coordinates, elementRef.current, offset, lastLocation);
+        speed = calcSpeed(lastLocation, newLocation);
+        lastLocation = newLocation;
+      };
+
+      elementRef.current.addEventListener(
         'touchstart',
         (ev) => {
           swipeAlreadyReleased.current = false;
@@ -311,7 +339,7 @@ export const TinderCard = forwardRef(
         { passive: true }
       );
 
-      element.current.addEventListener(
+      elementRef.current.addEventListener(
         'mousedown',
         (ev) => {
           // left mouse only
@@ -330,35 +358,7 @@ export const TinderCard = forwardRef(
         { passive: true }
       );
 
-      const handleMove = (coordinates: Coord) => {
-        if (!element.current) {
-          return;
-        }
-
-        // Check fulfillment
-        if (onSwipeRequirementFulfilled || onSwipeRequirementUnfulfilled) {
-          const dir = getSwipeDirection(swipeRequirementType === 'velocity' ? speed : getTranslate(element.current));
-          if (dir !== swipeThresholdFulfilledDirection) {
-            swipeThresholdFulfilledDirection = dir;
-            if (swipeThresholdFulfilledDirection === 'none') {
-              if (onSwipeRequirementUnfulfilled) {
-                onSwipeRequirementUnfulfilled();
-              }
-            } else {
-              if (onSwipeRequirementFulfilled) {
-                onSwipeRequirementFulfilled(dir);
-              }
-            }
-          }
-        }
-
-        // Move
-        const newLocation = dragableTouchmove(coordinates, element.current, offset, lastLocation);
-        speed = calcSpeed(lastLocation, newLocation);
-        lastLocation = newLocation;
-      };
-
-      element.current.addEventListener(
+      elementRef.current.addEventListener(
         'touchmove',
         (ev) => {
           handleMove(touchCoordinatesFromEvent(ev));
@@ -366,7 +366,7 @@ export const TinderCard = forwardRef(
         { passive: true }
       );
 
-      element.current.addEventListener(
+      elementRef.current.addEventListener(
         'mousemove',
         (ev) => {
           if (mouseIsClicked) {
@@ -377,39 +377,39 @@ export const TinderCard = forwardRef(
         { passive: true }
       );
 
-      element.current.addEventListener(
+      elementRef.current.addEventListener(
         'touchend',
         () => {
-          if (element.current) {
-            handleSwipeReleased(element.current, speed);
+          if (elementRef.current) {
+            handleSwipeReleased(elementRef.current, speed);
           }
         },
         { passive: true }
       );
 
-      element.current.addEventListener(
+      elementRef.current.addEventListener(
         'mouseup',
         () => {
           if (mouseIsClicked) {
             // console.log('mouseup');
             mouseIsClicked = false;
 
-            if (element.current) {
-              handleSwipeReleased(element.current, speed);
+            if (elementRef.current) {
+              handleSwipeReleased(elementRef.current, speed);
             }
           }
         },
         { passive: true }
       );
 
-      element.current.addEventListener(
+      elementRef.current.addEventListener(
         'mouseleave',
         () => {
           if (mouseIsClicked) {
             // console.log('mouseleave');
             mouseIsClicked = false;
-            if (element.current) {
-              handleSwipeReleased(element.current, speed);
+            if (elementRef.current) {
+              handleSwipeReleased(elementRef.current, speed);
             }
           }
         },
@@ -417,6 +417,6 @@ export const TinderCard = forwardRef(
       );
     }, []); // TODO fix so swipeRequirementType can be changed on the fly. Pass as dependency cleanup eventlisteners and update new eventlisteners.
 
-    return createElement('div', { ref: element, className }, children);
+    return createElement('div', { ref: elementRef, className }, children);
   }
 );
