@@ -184,10 +184,8 @@ const mouseCoordinatesFromEvent = (e: MouseEvent): Coord => {
 interface Props {
   ref?: React.Ref<API>;
   index: number;
-  flickOnSwipe?: boolean;
   emitter: TinderSwiperEmitter;
   onCardLeftScreen?: CardLeftScreenHandler;
-  preventSwipe?: string[];
   swipeRequirementType?: 'velocity' | 'position';
   swipeThreshold?: number;
   onSwipeRequirementFulfilled?: SwipeRequirementFufillUpdate;
@@ -199,13 +197,11 @@ interface Props {
 export const TinderCard = forwardRef(
   (
     {
-      flickOnSwipe = true,
       children,
       emitter,
       index,
       onCardLeftScreen,
       className,
-      preventSwipe = [],
       swipeRequirementType = 'velocity',
       swipeThreshold = settings.swipeThreshold,
       onSwipeRequirementFulfilled,
@@ -278,27 +274,23 @@ export const TinderCard = forwardRef(
         if (dir !== 'none') {
           emitter.emitSwipe({ dir, index });
 
-          if (flickOnSwipe) {
-            if (!preventSwipe.includes(dir)) {
-              const outVelocity = swipeRequirementType === 'velocity' ? speed : normalize(currentPostion, 600);
-              await animateOut(element, outVelocity);
+          const outVelocity = swipeRequirementType === 'velocity' ? speed : normalize(currentPostion, 600);
+          await animateOut(element, outVelocity);
 
-              if (setDisplayNone.current) {
-                element.style.display = 'none';
-              }
-
-              if (onCardLeftScreen) {
-                onCardLeftScreen(dir);
-              }
-              return;
-            }
+          if (setDisplayNone.current) {
+            element.style.display = 'none';
           }
+
+          if (onCardLeftScreen) {
+            onCardLeftScreen(dir);
+          }
+          return;
         }
 
         // Card was not flicked away, animate back to start
         animateBack(element);
       },
-      [swipeAlreadyReleased, flickOnSwipe, onCardLeftScreen, preventSwipe, swipeRequirementType]
+      [swipeAlreadyReleased, onCardLeftScreen, swipeRequirementType]
     );
 
     useEffect(() => {
