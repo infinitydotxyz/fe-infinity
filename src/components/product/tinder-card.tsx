@@ -207,6 +207,7 @@ export const TinderCard = forwardRef(
   ) => {
     settings.swipeThreshold = swipeThreshold;
     const swipeAlreadyReleased = useRef(false);
+    const setDisplayNone = useRef(false);
 
     const elementRef = useRef<HTMLElement>();
 
@@ -215,6 +216,8 @@ export const TinderCard = forwardRef(
         if (!elementRef.current) {
           return;
         }
+
+        setDisplayNone.current = true;
 
         if (onSwipe) {
           onSwipe(dir);
@@ -232,7 +235,7 @@ export const TinderCard = forwardRef(
         }
 
         // can become null after animation
-        if (elementRef.current) {
+        if (elementRef.current && setDisplayNone.current) {
           elementRef.current.style.display = 'none';
         }
 
@@ -245,7 +248,10 @@ export const TinderCard = forwardRef(
           return;
         }
 
+        // this prevents a slow animiation finishing and setting display none
+        setDisplayNone.current = false;
         elementRef.current.style.display = 'block';
+
         await animateBack(elementRef.current);
       }
     }));
@@ -256,6 +262,7 @@ export const TinderCard = forwardRef(
           return;
         }
         swipeAlreadyReleased.current = true;
+        setDisplayNone.current = true;
 
         const currentPostion = getTranslate(element);
         // Check if this is a swipe
@@ -271,7 +278,9 @@ export const TinderCard = forwardRef(
               const outVelocity = swipeRequirementType === 'velocity' ? speed : normalize(currentPostion, 600);
               await animateOut(element, outVelocity);
 
-              element.style.display = 'none';
+              if (setDisplayNone.current) {
+                element.style.display = 'none';
+              }
 
               if (onCardLeftScreen) {
                 onCardLeftScreen(dir);
