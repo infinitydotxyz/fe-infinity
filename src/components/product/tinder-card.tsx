@@ -9,10 +9,10 @@ const sleep = (ms: number) => {
 };
 
 export type Direction = 'left' | 'right' | 'up' | 'down' | 'none';
-declare type SwipeHandler = (direction: Direction) => void;
-declare type CardLeftScreenHandler = (direction: Direction) => void;
-declare type SwipeRequirementFufillUpdate = (direction: Direction) => void;
-declare type SwipeRequirementUnfufillUpdate = () => void;
+type SwipeHandler = (direction: Direction) => void;
+type CardLeftScreenHandler = (direction: Direction) => void;
+type SwipeRequirementFufillUpdate = (direction: Direction) => void;
+type SwipeRequirementUnfufillUpdate = () => void;
 
 type Coord = {
   x: number;
@@ -175,7 +175,7 @@ const mouseCoordinatesFromEvent = (e: MouseEvent): Coord => {
   return { x: e.clientX, y: e.clientY };
 };
 
-declare interface Props {
+interface Props {
   ref?: React.Ref<API>;
   flickOnSwipe?: boolean;
   onSwipe?: SwipeHandler;
