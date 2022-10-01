@@ -287,10 +287,6 @@ export const TinderCard = forwardRef(
       [swipeAlreadyReleased, flickOnSwipe, onSwipe, onCardLeftScreen, preventSwipe, swipeRequirementType]
     );
 
-    const handleSwipeStart = useCallback(() => {
-      swipeAlreadyReleased.current = false;
-    }, [swipeAlreadyReleased]);
-
     useEffect(() => {
       if (!element.current) {
         return;
@@ -305,7 +301,8 @@ export const TinderCard = forwardRef(
       element.current.addEventListener(
         'touchstart',
         (ev) => {
-          handleSwipeStart();
+          swipeAlreadyReleased.current = false;
+
           offset = {
             x: -touchCoordinatesFromEvent(ev).x,
             y: -touchCoordinatesFromEvent(ev).y
@@ -322,7 +319,8 @@ export const TinderCard = forwardRef(
             // console.log('mouseDown');
 
             mouseIsClicked = true;
-            handleSwipeStart();
+            swipeAlreadyReleased.current = false;
+
             offset = {
               x: -mouseCoordinatesFromEvent(ev).x,
               y: -mouseCoordinatesFromEvent(ev).y
