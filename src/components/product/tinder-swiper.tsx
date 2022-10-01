@@ -9,6 +9,8 @@ import { Filter } from 'src/utils/context/FilterContext';
 import { API, Direction, TinderCard } from './tinder-card';
 import mitt from 'mitt';
 import { MdFavoriteBorder, MdOutlineArrowBack, MdRefresh } from 'react-icons/md';
+import { inputBorderColor, largeIconButtonStyle } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
 
 export const TinderSwiperModal = () => {
   const [open, setOpen] = useState(false);
@@ -46,6 +48,11 @@ export const TinderSwiperModal = () => {
   useEffect(() => {
     fetch();
   }, [collection]);
+
+  // clear this out on open since it would have the previous likes
+  useEffect(() => {
+    setLiked([]);
+  }, [open]);
 
   return (
     <>
@@ -160,15 +167,15 @@ export const TinderSwiper = ({ data, liked, setLiked }: Props) => {
   };
 
   const buttons = (
-    <div className="p-5 flex space-x-6">
+    <div className="mt-5 flex justify-center space-x-6">
       <Button disabled={!canSwipe} variant="roundBorder" size="round" onClick={() => swipe('left')}>
-        <MdOutlineArrowBack className="h-8 w-8" />
+        <MdOutlineArrowBack className={largeIconButtonStyle} />
       </Button>
       <Button disabled={!canGoBack} variant="roundBorder" size="round" onClick={() => goBack()}>
-        <MdRefresh className="h-8 w-8" />
+        <MdRefresh className={largeIconButtonStyle} />
       </Button>
       <Button disabled={!canSwipe} variant="roundBorder" size="round" onClick={() => swipe('right')}>
-        <MdFavoriteBorder className="h-8 w-8" />
+        <MdFavoriteBorder className={largeIconButtonStyle} />
       </Button>
     </div>
   );
@@ -195,7 +202,7 @@ export const TinderSwiper = ({ data, liked, setLiked }: Props) => {
     }
 
     return (
-      <div className="p-2 w-full flex font-bold select-none">
+      <div className="pb-2 px-2  w-96  flex font-bold select-none">
         {leftSide}
 
         {rightSide}
@@ -227,11 +234,11 @@ export const TinderSwiper = ({ data, liked, setLiked }: Props) => {
 
   return (
     <div className="items-center overflow-clip w-full flex flex-col ">
-      <div className="">
+      <div className={twMerge(inputBorderColor, 'bg-gray-100 flex flex-col border rounded-3xl py-6 px-8 ')}>
         {header()}
         {cards}
+        {buttons}
       </div>
-      {buttons}
     </div>
   );
 };
@@ -244,9 +251,9 @@ interface Props2 {
 
 export const TinderSwiperLikes = ({ data }: Props2) => {
   return (
-    <div className="mt-4 font-bold text-black text-opacity-80  text-lg items-center justify-center   flex flex-col w-full  ">
+    <div className="mt-6 font-bold text-black text-opacity-80  text-lg items-center justify-center   flex flex-col w-full  ">
       <div>{data.length} Liked NFTs</div>
-      <div className="mt-2 max-w-3xl items-center justify-center flex-wrap gap-2 flex  w-full  ">
+      <div className="mt-4 max-w-3xl items-center justify-center flex-wrap gap-2 flex  w-full  ">
         {data.map((nft) => {
           return (
             <EZImage
