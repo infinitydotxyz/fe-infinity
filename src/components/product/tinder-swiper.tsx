@@ -75,7 +75,7 @@ export const TinderSwiper = ({ data }: Props) => {
   // handles swipe event
   useEffect(() => {
     const cb = (event: SwiperEvent) => {
-      console.log(`${event.dir} (${event.index}) onSwipe`);
+      // console.log(`${event.dir} (${event.index}) onSwipe`);
 
       if (event.dir === 'right') {
         setLiked([...liked, data[event.index]]);
@@ -250,7 +250,6 @@ export class TinderSwiperEmitter {
   private emitter = mitt<SwiperType>();
 
   emitSwipe(event: SwiperEvent) {
-    console.log(`emitSwipe`);
     this.emitter.emit('swipe', event);
   }
 
