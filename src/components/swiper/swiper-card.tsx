@@ -1,7 +1,7 @@
 /* global WebKitCSSMatrix */
 
 import { forwardRef, ReactNode, useRef, useImperativeHandle, useCallback, useEffect } from 'react';
-import { TinderSwiperEmitter } from './swiper-emitter';
+import { SwiperEmitter } from './swiper-emitter';
 
 const sleep = (ms: number) => {
   return new Promise(function (resolve) {
@@ -182,7 +182,7 @@ const mouseCoordinatesFromEvent = (e: MouseEvent): Coord => {
 interface Props {
   ref?: React.Ref<API>;
   index: number;
-  emitter: TinderSwiperEmitter;
+  emitter: SwiperEmitter;
   onCardLeftScreen?: CardLeftScreenHandler;
   swipeRequirementType?: 'velocity' | 'position';
   swipeThreshold?: number;
@@ -190,7 +190,7 @@ interface Props {
   children?: ReactNode;
 }
 
-export const TinderCard = forwardRef(
+export const SwiperCard = forwardRef(
   (
     {
       children,

@@ -2,14 +2,14 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { Button, CenteredContent, EZImage, Spacer } from '../common';
 import { FullScreenModal } from '../common/full-screen-modal';
 import { Erc721Token } from '@infinityxyz/lib-frontend/types/core';
-import { API, Direction, TinderCard } from './tinder-card';
+import { API, Direction, SwiperCard } from './swiper-card';
 import { MdFavoriteBorder, MdOutlineArrowBack, MdRefresh } from 'react-icons/md';
 import { inputBorderColor, largeIconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { SwiperEvent, TinderSwiperEmitter } from './swiper-emitter';
+import { SwiperEvent, SwiperEmitter } from './swiper-emitter';
 import { SwiperController } from './swiper-controller';
 
-export const TinderSwiperModal = () => {
+export const NFTSwiperModal = () => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -30,11 +30,11 @@ interface Props {
   setLiked: (liked: Erc721Token[]) => void;
   skipped: Erc721Token[];
   setSkipped: (liked: Erc721Token[]) => void;
+  emitter: SwiperEmitter;
 }
 
-export const TinderSwiper = ({ data, liked, setLiked, skipped, setSkipped }: Props) => {
+export const NFTSwiper = ({ data, liked, setLiked, skipped, emitter, setSkipped }: Props) => {
   const [currentIndex, setCurrentIndex] = useState(-1);
-  const [emitter] = useState<TinderSwiperEmitter>(new TinderSwiperEmitter());
 
   const indexValid = (index: number) => {
     return index >= 0 && index < data.length;
@@ -84,10 +84,6 @@ export const TinderSwiper = ({ data, liked, setLiked, skipped, setSkipped }: Pro
       setCurrentIndex(-1);
     }
   };
-
-  // const onCardLeftScreen = (direction: Direction, name: string, index: number) => {
-  //   console.log(`${direction} ${name} (${index}) onCardLeftScreen`, index);
-  // };
 
   const swipe = (dir: Direction) => {
     if (canSwipe) {
@@ -177,7 +173,7 @@ export const TinderSwiper = ({ data, liked, setLiked, skipped, setSkipped }: Pro
       </div>
       {data.map((nft, index) => {
         return (
-          <TinderCard
+          <SwiperCard
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             ref={childRefs[index] as any}
             className="absolute top-0 left-0 right-0 bottom-0"
@@ -186,7 +182,7 @@ export const TinderSwiper = ({ data, liked, setLiked, skipped, setSkipped }: Pro
             index={index}
           >
             <EZImage cover={false} src={nft.metadata.image} className=" cursor-grab rounded-3xl overflow-clip  " />
-          </TinderCard>
+          </SwiperCard>
         );
       })}
     </div>
