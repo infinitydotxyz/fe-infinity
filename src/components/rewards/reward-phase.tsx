@@ -1,4 +1,5 @@
 import { TokenomicsPhaseDto, TradingFeeRefundDto } from '@infinityxyz/lib-frontend/types/dto';
+import { TOKEN } from 'src/utils';
 import { numberFormatter } from 'src/utils/number-formatter';
 import { InfoBox } from './info-box';
 import { getPhaseTradingRewardsPercent, RewardPhaseStats } from './phase-stats';
@@ -21,11 +22,11 @@ export const PhaseDescription = ({ phase }: { phase: TokenomicsPhaseDto }) => {
             <strong>{`${numberFormatter.format(phase.tradingFeeRefund.rewardSupply)} tokens`}</strong>) are given out as
             trading rewards in the form of in the form of fee refunds. Every{' '}
             <strong>{`$${phase.tradingFeeRefund.rewardRateNumerator}`}</strong> in fees paid gets{' '}
-            <strong>{`${phase.tradingFeeRefund.rewardRateDenominator} $NFT`}</strong> tokens. These are split between
-            the seller ({`${phase.tradingFeeRefund.sellerPortion * 100}%`}) and buyer (
+            <strong>{`${phase.tradingFeeRefund.rewardRateDenominator} $${TOKEN.symbol}`}</strong> tokens. These are
+            split between the seller ({`${phase.tradingFeeRefund.sellerPortion * 100}%`}) and buyer (
             {`${phase.tradingFeeRefund.buyerPortion * 100}%`}). So a trade that has a $10 fee will reward the buyer with{' '}
-            {`${getRewardSplit(phase.tradingFeeRefund, 10).buyer}`} $NFT tokens and the seller with{' '}
-            {`${getRewardSplit(phase.tradingFeeRefund, 10).seller}`} $NFT tokens.{' '}
+            {`${getRewardSplit(phase.tradingFeeRefund, 10).buyer}`} ${TOKEN.symbol} tokens and the seller with{' '}
+            {`${getRewardSplit(phase.tradingFeeRefund, 10).seller}`} ${TOKEN.symbol} tokens.{' '}
           </p>
         )}
       </div>

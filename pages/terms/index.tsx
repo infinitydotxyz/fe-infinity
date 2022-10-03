@@ -1,5 +1,6 @@
 import React from 'react';
 import { PageBox } from 'src/components/common';
+import { TOKEN } from 'src/utils/constants';
 
 const TermsPage = () => {
   return (
@@ -64,26 +65,26 @@ const TermsPage = () => {
           </p>
           <p dir="ltr">
             <span>Infinity comprises a native interoperable utility token (</span>
-            <span className="font-bold">$NFT</span>
+            <span className="font-bold">${TOKEN.symbol}</span>
             <span>
-              ) which functions as the native platform currency and access token within the ecosystem. $NFT has a
-              variety of uses within the marketplace, including but not limited to providing discounts for fees and
-              curating NFTs.&nbsp;
+              ) which functions as the native platform currency and access token within the ecosystem. ${TOKEN.symbol}{' '}
+              has a variety of uses within the marketplace, including but not limited to providing discounts for fees
+              and curating NFTs.&nbsp;
             </span>
           </p>
           <p dir="ltr">
             <span>
-              Holders of $NFT will be able to participate in governance to vote on features of the Infinity ecosystem,
-              for example on new developments to enhance the ecosystem.
+              Holders of ${TOKEN.symbol} will be able to participate in governance to vote on features of the Infinity
+              ecosystem, for example on new developments to enhance the ecosystem.
             </span>
           </p>
           <p dir="ltr">
             <span>
-              $NFT has the following features: (a) it do not have any tangible or physical manifestation, and does not
-              have any intrinsic value (nor does any person make any representation or give any commitment as to its
-              value); (b) it cannot be exchanged for cash (or its equivalent value in any other digital asset) or any
-              payment obligation by Infinity or any of its affiliates; (c) it does not represent or confer on the token
-              holder any right of any form with respect to Infinity or any of its affiliates), or its revenues or
+              ${TOKEN.symbol} has the following features: (a) it do not have any tangible or physical manifestation, and
+              does not have any intrinsic value (nor does any person make any representation or give any commitment as
+              to its value); (b) it cannot be exchanged for cash (or its equivalent value in any other digital asset) or
+              any payment obligation by Infinity or any of its affiliates; (c) it does not represent or confer on the
+              token holder any right of any form with respect to Infinity or any of its affiliates), or its revenues or
               assets, including without limitation any right to receive future dividends, revenue, shares, ownership
               right or stake, share or security, any voting, distribution, redemption, liquidation, proprietary
               (including all forms of intellectual property or licence rights), right to receive accounts, financial
@@ -660,10 +661,10 @@ const TermsPage = () => {
           </p>
           <p dir="ltr">
             <span>
-              Cryptographic tokens such as $NFT are a new and untested technology. In addition to the aforementioned
-              risks, there may be other risks associated with your creation, holding and use of $NFT, including those
-              that Infinity cannot anticipate. Such risks may further materialise as unanticipated variations or
-              combinations of the risks discussed herein.
+              Cryptographic tokens such as ${TOKEN.symbol} are a new and untested technology. In addition to the
+              aforementioned risks, there may be other risks associated with your creation, holding and use of $
+              {TOKEN.symbol}, including those that Infinity cannot anticipate. Such risks may further materialise as
+              unanticipated variations or combinations of the risks discussed herein.
             </span>
           </p>
           <p dir="ltr" className="font-bold">
