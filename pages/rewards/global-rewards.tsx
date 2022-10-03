@@ -1,9 +1,9 @@
 import React from 'react';
 import { TokenomicsConfigDto, TokenomicsPhaseDto } from '@infinityxyz/lib-frontend/types/dto';
 import { TradingFeeDestination } from '@infinityxyz/lib-frontend/types/dto/rewards/tokenomics-phase.dto';
-import { Spinner } from 'src/components/common';
+import { Spinner, TooltipWrapper } from 'src/components/common';
 import { DistributionBar } from 'src/components/common/distribution-bar';
-import { InfoBox } from 'src/components/rewards/info-box';
+import { InfoBox, State } from 'src/components/rewards/info-box';
 import { RewardsProgressBar } from 'src/components/rewards/progressbar';
 import { RewardPhase } from 'src/components/rewards/reward-phase';
 import useScreenSize from 'src/hooks/useScreenSize';
@@ -80,13 +80,46 @@ const GlobalRewards: React.FC = () => {
   const { result, isLoading } = useFetch<TokenomicsConfigDto>('/rewards');
   const { isMobile } = useScreenSize();
 
+  const getPhaseTooltip = (phase: TokenomicsPhaseDto, state: State) => {
+    const renderTooltip = (props: { state: State; isHovered: boolean; children?: React.ReactNode }) => {
+      let message = '';
+      switch (state) {
+        case State.Active:
+          message = `${phase.name} is currently active.`;
+          break;
+        case State.Inactive:
+          message = `${phase.name} will become active once the previous phase has completed.`;
+          break;
+        case State.Complete:
+          message = `${phase.name} has been completed.`;
+          break;
+      }
+      return (
+        <TooltipWrapper
+          className="w-fit"
+          show={props.isHovered}
+          tooltip={{
+            title: `${props.state}`,
+            content: message
+          }}
+        >
+          {props.children}
+        </TooltipWrapper>
+      );
+    };
+
+    return renderTooltip;
+  };
+
   return (
     <>
       {isLoading && <Spinner />}
       {result?.phases && result?.phases.length > 0 ? (
         result.phases.map((phase: TokenomicsPhaseDto) => {
+          const state = phase.isActive ? State.Active : phase.progress === 100 ? State.Complete : State.Inactive;
+
           return (
-            <InfoBox key={phase.id} title={phase.name}>
+            <InfoBox key={phase.id} title={phase.name} state={state} renderTooltip={getPhaseTooltip(phase, state)}>
               <div className={twMerge('flex align-center justify-center', isMobile ? 'flex-col' : '')}>
                 <InfoBox.SideInfo>
                   <InfoBox.Stats title="Trading Fee Distribution">
