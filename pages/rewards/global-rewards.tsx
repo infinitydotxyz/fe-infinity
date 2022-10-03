@@ -56,7 +56,12 @@ const GlobalRewards: React.FC = () => {
                     <div className="w-full py-2">
                       <div className="text-sm mt-1">Progress</div>
                       <div className="text-2xl font-heading font-bold">
-                        <RewardsProgressBar amount={Math.ceil(phase.progress)} max={100} />
+                        <RewardsProgressBar
+                          amount={
+                            phase.progress !== 0 && phase.progress < 1 ? Math.ceil(phase.progress) : phase.progress
+                          }
+                          max={100}
+                        />
                       </div>
                     </div>
                   </>
