@@ -44,12 +44,6 @@ export const SwiperController = () => {
     fetch();
   }, [collection]);
 
-  // clear this out on open since it would have the previous likes
-  // useEffect(() => {
-  //   setLiked([]);
-  //   setSkipped([]);
-  // }, [open]);
-
   return (
     <div className="w-full flex flex-col items-center  ">
       <div className=" w-full flex flex-col items-center">
