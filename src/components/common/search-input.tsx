@@ -43,7 +43,26 @@ export const SearchInput = ({ expanded }: Props) => {
         }
 
         if (isMounted()) {
-          setData(result?.data ?? []);
+          const newData: CollectionItem[] = result?.data ?? [];
+
+          // sort list, blue checks and exact matches first
+          newData.sort((a, b) => {
+            // make sure exact matches are on top
+            if (a.name === text) {
+              if (b.name === text) {
+                return 0;
+              }
+
+              return -1;
+            }
+
+            const aa = a.name.replaceAll(' ', '');
+            const bb = b.name.replaceAll(' ', '');
+
+            return aa.localeCompare(bb);
+          });
+
+          setData(newData);
         }
       } else {
         if (isMounted()) {

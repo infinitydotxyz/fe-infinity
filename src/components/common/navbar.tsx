@@ -223,7 +223,7 @@ export const Navbar = () => {
   );
 
   const desktopNavbar = (
-    <div className="w-full bg-white bg-opacity-70 glass font-heading">
+    <div className="w-full bg-white bg-opacity-70 glass font-body">
       <div className={`${pageStyles} flex space-x-6 items-center py-6 w-full`}>
         <NextLink href="/">
           <SVG.logo className="h-8" />
@@ -239,7 +239,7 @@ export const Navbar = () => {
               <div>
                 <Menu>
                   <Menu.Button>
-                    <div className="flex gap-2 items-center">
+                    <div className="flex gap-2 items-center select-none">
                       {item?.label} <IoMdArrowDropdown />
                     </div>
                   </Menu.Button>

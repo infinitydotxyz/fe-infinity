@@ -1,6 +1,7 @@
 import React, { ReactNode, useState } from 'react';
 import { GoTriangleUp, GoTriangleDown } from 'react-icons/go';
 import { AiOutlineCaretUp, AiOutlineCaretDown } from 'react-icons/ai';
+import { EZImage } from '../common';
 
 export interface FieldProps {
   type?: string;
@@ -138,7 +139,6 @@ export const Field = ({ onSort, sortable = false, onClick, type, label, value, c
         className: `
           w-full h-full overflow-hidden
           grid justify-start items-center
-          cursor-pointer
         `
       },
       element: {
@@ -243,79 +243,77 @@ export const Field = ({ onSort, sortable = false, onClick, type, label, value, c
   };
 
   return (
-    <>
-      <div {...styles?.stat?.container}>
-        <div {...styles?.stat?.field?.container}>
-          {type === 'image' && (
-            <div {...styles?.image?.positioner}>
-              <div {...styles?.image?.container}>
-                <img src={String(value)} {...styles?.image?.element} />
-              </div>
+    <div {...styles?.stat?.container}>
+      <div {...styles?.stat?.field?.container}>
+        {type === 'image' && (
+          <div {...styles?.image?.positioner}>
+            <div {...styles?.image?.container}>
+              <EZImage src={String(value)} {...styles?.image?.element} />
             </div>
-          )}
-          {type === 'string' && (
-            <div {...styles?.string?.container} onClick={onClick}>
-              <div {...styles?.string?.element}>{value}</div>
-            </div>
-          )}
-          {type === 'custom' && (
-            <div {...styles?.custom?.container} onClick={onClick}>
-              <div {...styles?.custom?.element}>{children}</div>
-            </div>
-          )}
-          {type === 'index' && (
-            <div {...styles?.index?.container} onClick={onClick}>
-              <div {...styles?.index?.element}>{value}</div>
-            </div>
-          )}
-          {type === 'number' && (
-            <div {...styles?.number?.container} onClick={handleOnClick}>
-              <div {...styles?.number?.label}>{label}</div>
-              <div {...styles?.number?.value}>{value}</div>
-            </div>
-          )}
-          {type === 'change' && (
-            <div {...styles?.change?.container} onClick={handleOnClick}>
-              <div {...styles?.change?.label}>{label}</div>
-              <div {...styles?.change?.value(Number(value))}>
-                {Number(value) > 0 ? (
-                  <>
-                    <GoTriangleUp /> {value?.toLocaleString()} %
-                  </>
-                ) : Number(value) < 0 ? (
-                  <>
-                    <GoTriangleDown /> {String(Math.abs(Number(value)))?.toLocaleString()} %
-                  </>
-                ) : (
-                  `-`
-                )}
-              </div>
-            </div>
-          )}
-          {type === 'percentage' && (
-            <div {...styles?.percentage?.container} onClick={handleOnClick}>
-              <div {...styles?.percentage?.pill}>
-                <div {...styles?.percentage?.progress}></div>
-                <div {...styles?.percentage?.grid}>
-                  <div {...styles?.percentage?.label}>{label}</div>
-                  <div className="font-mono font-bold  text-sm z-20">{value}</div>
-                </div>
-              </div>
-            </div>
-          )}
-          {type === 'action' && <div {...styles?.action?.container}>{content}</div>}
-        </div>
-        {sortable && (
-          <div {...styles?.stat?.sorting?.container}>
-            <button {...styles?.stat?.sorting?.asc?.container} onClick={() => onSort?.('asc')}>
-              <AiOutlineCaretUp {...styles?.stat?.sorting?.asc?.element} />
-            </button>
-            <button {...styles?.stat?.sorting?.desc?.container} onClick={() => onSort?.('desc')}>
-              <AiOutlineCaretDown {...styles?.stat?.sorting?.desc?.element} />
-            </button>
           </div>
         )}
+        {type === 'string' && (
+          <div {...styles?.string?.container} onClick={onClick}>
+            <div {...styles?.string?.element}>{value}</div>
+          </div>
+        )}
+        {type === 'custom' && (
+          <div {...styles?.custom?.container} onClick={onClick}>
+            <div {...styles?.custom?.element}>{children}</div>
+          </div>
+        )}
+        {type === 'index' && (
+          <div {...styles?.index?.container} onClick={onClick}>
+            <div {...styles?.index?.element}>{value}</div>
+          </div>
+        )}
+        {type === 'number' && (
+          <div {...styles?.number?.container} onClick={handleOnClick}>
+            <div {...styles?.number?.label}>{label}</div>
+            <div {...styles?.number?.value}>{value}</div>
+          </div>
+        )}
+        {type === 'change' && (
+          <div {...styles?.change?.container} onClick={handleOnClick}>
+            <div {...styles?.change?.label}>{label}</div>
+            <div {...styles?.change?.value(Number(value))}>
+              {Number(value) > 0 ? (
+                <>
+                  <GoTriangleUp /> {value?.toLocaleString()} %
+                </>
+              ) : Number(value) < 0 ? (
+                <>
+                  <GoTriangleDown /> {String(Math.abs(Number(value)))?.toLocaleString()} %
+                </>
+              ) : (
+                `-`
+              )}
+            </div>
+          </div>
+        )}
+        {type === 'percentage' && (
+          <div {...styles?.percentage?.container} onClick={handleOnClick}>
+            <div {...styles?.percentage?.pill}>
+              <div {...styles?.percentage?.progress}></div>
+              <div {...styles?.percentage?.grid}>
+                <div {...styles?.percentage?.label}>{label}</div>
+                <div className="font-mono font-bold  text-sm z-20">{value}</div>
+              </div>
+            </div>
+          </div>
+        )}
+        {type === 'action' && <div {...styles?.action?.container}>{content}</div>}
       </div>
-    </>
+      {sortable && (
+        <div {...styles?.stat?.sorting?.container}>
+          <button {...styles?.stat?.sorting?.asc?.container} onClick={() => onSort?.('asc')}>
+            <AiOutlineCaretUp {...styles?.stat?.sorting?.asc?.element} />
+          </button>
+          <button {...styles?.stat?.sorting?.desc?.container} onClick={() => onSort?.('desc')}>
+            <AiOutlineCaretDown {...styles?.stat?.sorting?.desc?.element} />
+          </button>
+        </div>
+      )}
+    </div>
   );
 };

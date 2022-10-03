@@ -42,7 +42,7 @@ export const MyCuratedCollections: React.FC<{ orderBy: CuratedCollectionsOrderBy
       {result && result[0].data?.length === 0 && (
         <NoResultsBox
           tab={CuratedTab.MyCurated}
-          onClick={() => router.replace(`curation?tab=${CuratedTab.AllCurated}`)}
+          onClick={() => router.replace(`curated?tab=${CuratedTab.AllCurated}`)}
         />
       )}
 

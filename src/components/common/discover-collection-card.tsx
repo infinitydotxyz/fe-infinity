@@ -5,6 +5,7 @@ import { EthPrice } from './eth-price';
 import { CollectionStatsDto } from '@infinityxyz/lib-frontend/types/dto/stats';
 import { EZImage } from './ez-image';
 import { DiscoverOrderBy } from './discover-collection-grid';
+import { BsTwitter } from 'react-icons/bs';
 
 interface Props {
   orderBy: DiscoverOrderBy;
@@ -44,7 +45,7 @@ export const DiscoverCollectionCard = ({ orderBy, collection, routerQuery }: Pro
               collection.twitterFollowersPercentChange >= 0.1 ? (
                 <div className="flex flex-row-reverse items-center w-full">
                   <div className="text-green-600 ml-2">{twitterChange}% ↑</div>
-                  <SVG.twitter className="w-4 h-4 ml-1.5" />
+                  <BsTwitter className="w-4 h-4 ml-1.5" />
                 </div>
               ) : null}
 

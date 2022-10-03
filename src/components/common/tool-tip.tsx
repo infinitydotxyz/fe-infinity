@@ -58,7 +58,7 @@ interface Props3 {
 
 const TooltipContent = ({ tooltip }: Props3) => {
   return (
-    <div className="absolute z-50 top-full mt-2 right-0 left-0 pointer-events-none px-6 py-4 bg-white shadow-ttip rounded-2xl">
+    <div className="absolute z-50 top-full mt-2 right-0 left-0 pointer-events-none px-4 py-4 bg-white shadow-ttip rounded-2xl">
       <div className="font-bold text-md mb-1">{tooltip.title}</div>
       <div className="text-sm">{tooltip.content}</div>
     </div>
@@ -70,7 +70,7 @@ const TooltipContent = ({ tooltip }: Props3) => {
 interface Props4 {
   show: boolean;
   tooltip?: TooltipSpec;
-  children: ReactNode;
+  children?: ReactNode;
   className?: string;
 }
 

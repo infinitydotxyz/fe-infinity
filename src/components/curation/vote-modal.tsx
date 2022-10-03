@@ -32,7 +32,7 @@ export const VoteModal: React.FC<VoteModalProps> = ({ collection, isOpen, onClos
   const { user, chainId } = useOnboardContext();
 
   // TODO: re-calculate fees & APR (via API call) when 'votes' change
-  const [votes, setVotes] = useState(0);
+  const [votes, setVotes] = useState<number>(0);
   const { result: quota, isLoading: isLoadingQuota, mutate: mutateQuota } = useUserCurationQuota();
   const [isVoting, setIsVoting] = useState(false);
 
@@ -41,27 +41,34 @@ export const VoteModal: React.FC<VoteModalProps> = ({ collection, isOpen, onClos
   const vote = async () => {
     setIsVoting(true);
 
-    const { error } = await apiPost(
-      `/collections/${collection.chainId}:${collection.address}/curated/${chainId}:${user?.address}`,
-      { data: { votes } }
-    );
+    try {
+      const { error } = await apiPost(
+        `/collections/${collection.chainId}:${collection.address}/curated/${chainId}:${user?.address}`,
+        { data: { votes } }
+      );
 
-    if (error) {
-      toastError(error?.errorResponse?.message);
-      return;
+      if (error) {
+        toastError(error?.errorResponse?.message);
+        return;
+      }
+
+      await mutateQuota(
+        (data: CurationQuotaDto) =>
+          ({
+            availableVotes: data.availableVotes - votes
+          } as CurationQuotaDto),
+        { revalidate: false }
+      );
+
+      await onVote(votes);
+    } catch (err) {
+      console.error(err);
+      toastError('Something went wrong. Please try again later.');
     }
 
-    // TODO: improve these reflective changes to UI (this looks glitchy atm)
-    await onVote(votes);
-    await mutateQuota(
-      (data: CurationQuotaDto) =>
-        ({
-          availableVotes: data.availableVotes - votes
-        } as CurationQuotaDto)
-    );
+    setIsVoting(false);
     setVotes(0);
     onClose();
-    setIsVoting(false);
   };
 
   return (
@@ -102,7 +109,15 @@ export const VoteModal: React.FC<VoteModalProps> = ({ collection, isOpen, onClos
                   type="text"
                   placeholder="0.00"
                   value={votes.toString()}
-                  onChange={(v) => !isNaN(parseInt(v)) && setVotes(parseInt(v))}
+                  onChange={(v) => {
+                    const parsedNumber = v !== '' ? parseInt(v) : 0;
+
+                    if (isNaN(parsedNumber) || parsedNumber > votesAvailable) {
+                      return;
+                    }
+
+                    setVotes(parsedNumber);
+                  }}
                   renderRightIcon={() => (
                     <MaxButton variant="gray" onClick={() => setVotes(votesAvailable)}></MaxButton>
                   )}

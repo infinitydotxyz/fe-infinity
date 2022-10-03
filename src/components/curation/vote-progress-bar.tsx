@@ -30,7 +30,7 @@ export const VoteProgressBar: React.FC<VoteProgressBarProps> = ({ votes, totalVo
   }, [votes, totalVotes]);
 
   return (
-    <div className={twMerge('bg-gray-100 rounded-3xl w-full relative', className)}>
+    <div className={twMerge('bg-white rounded-3xl w-full relative', className)}>
       <div
         className={twMerge(
           'bg-[#92DEFF] rounded-3xl text-sm font-normal py-6',
@@ -39,15 +39,18 @@ export const VoteProgressBar: React.FC<VoteProgressBarProps> = ({ votes, totalVo
         style={{ maxWidth: `${percentage}%` }}
       ></div>
 
-      <div className="absolute top-3 left-4 z-10">
-        <span className="space-x-2 font-heading">
-          <span className="font-black">
-            {numberFormatter.format(votes)} / {numberFormatter.format(totalVotes)}
+      {/* TODO: improve layout on mobile devices (progressbar likely can't grow in height due to position-absolute being set; find other way to compose layout) */}
+      <div className="w-full h-full absolute top-3 px-4">
+        <div className="flex flex-col lg:flex-row justify-between">
+          <span className="font-heading">
+            <span className="font-black">
+              {numberFormatter.format(votes)} / {numberFormatter.format(totalVotes)}
+            </span>
+            <span className="font-normal ml-2">votes</span>
           </span>
-          <span className="font-normal">votes</span>
-        </span>
+          <span className="font-black">{percentage}%</span>
+        </div>
       </div>
-      <span className="absolute top-3 right-4 z-10 font-black">{percentage}%</span>
     </div>
   );
 };

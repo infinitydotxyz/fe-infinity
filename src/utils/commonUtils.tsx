@@ -1,5 +1,5 @@
 import { getAddress } from '@ethersproject/address';
-import { BaseToken, OwnerInfo } from '@infinityxyz/lib-frontend/types/core';
+import { BaseToken, ChainId, OwnerInfo } from '@infinityxyz/lib-frontend/types/core';
 import {
   ETHEREUM_CHAIN_SCANNER_BASE,
   POLYGON_CHAIN_SCANNER_BASE,
@@ -323,4 +323,27 @@ export const getTypesForFilter = (f: FeedFilter) => {
   }
 
   return types;
+};
+
+export const getUserToDisplay = (
+  user: { address: string; username?: string; displayName?: string },
+  currentUserAddress: string
+): { value: string; link: string; address: string } => {
+  if (currentUserAddress === user.address) {
+    return { value: 'You', link: '/profile/me', address: currentUserAddress };
+  }
+
+  return {
+    value: ellipsisString(user.displayName || user.username || ellipsisAddress(user.address)),
+    address: user.address,
+    link: `/profile/${user.address}`
+  };
+};
+
+export const getCollectionLink = ({ slug, address, chainId }: { slug: string; address: string; chainId: ChainId }) => {
+  return `/collection/${slug || chainId.toString() + ':' + address}`;
+};
+
+export const getTokenLink = ({ chainId, address, tokenId }: { chainId: ChainId; address: string; tokenId: string }) => {
+  return `/asset/${chainId.toString()}/${address}/${tokenId}`;
 };

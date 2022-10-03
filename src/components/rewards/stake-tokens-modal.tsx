@@ -5,11 +5,13 @@ import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
 import { useStake } from 'src/hooks/contract/staker/useStake';
 import { useTokenAllowance } from 'src/hooks/contract/token/useTokenAllowance';
 import { useTokenApprove } from 'src/hooks/contract/token/useTokenApprove';
+import { nFormatter } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
-import { Heading, toastError, toastSuccess } from '../common';
+import { Heading, Spinner, toastError, toastSuccess } from '../common';
 import { Button } from '../common/button';
 import { TextInputBox } from '../common/input-box';
 import { Modal } from '../common/modal';
+import { MaxUint256 } from '@ethersproject/constants';
 
 interface Props {
   onClose: () => void;
@@ -45,16 +47,16 @@ export const StakeTokensModal = ({ onClose }: Props) => {
 
     try {
       if (allowance < value) {
-        await approve(value);
+        await approve(MaxUint256);
       }
 
       await stake(value, stakeDuration);
 
-      setIsStaking(false);
       onClose();
       toastSuccess('Stake successfull, change in tokens will reflect shortly.');
     } catch (err) {
       console.error(err);
+    } finally {
       setIsStaking(false);
     }
   };
@@ -106,7 +108,7 @@ export const StakeTokensModal = ({ onClose }: Props) => {
               )}
             />
           </div>
-          <div className="text-right mr-2 mt-1 text-theme-gray-300">Balance: {tokenBalance}</div>
+          <div className="text-right mr-2 mt-1 text-theme-gray-300">Balance: {nFormatter(tokenBalance)}</div>
 
           <div className="text-lg mt-8 flex justify-between">
             <span>Voting power</span>
@@ -122,13 +124,20 @@ export const StakeTokensModal = ({ onClose }: Props) => {
         <Button size="large" className="w-full py-3 mt-8" onClick={onStake} disabled={isStaking}>
           Stake
         </Button>
+
+        {isStaking && (
+          <div className="mt-2 flex flex-row gap-2 items-center">
+            <Spinner />
+            <span>Waiting for transaction to complete...</span>
+          </div>
+        )}
       </div>
     </Modal>
   );
 };
 
 /**
- * Radio button componentn that's rendered on screen like a small card.
+ * Radio button component that's rendered on screen like a small card.
  * To be used within `RadioGroup`.
  */
 const RadioButtonCard: React.FC<{ value: string | number; label: string; description?: string }> = ({

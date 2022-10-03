@@ -35,7 +35,7 @@ export default function Curation() {
     if (error) {
       toastError(error?.errorResponse?.message);
     } else {
-      toastSuccess('Votes registered successfully!');
+      toastSuccess('Votes registered successfully. Your votes will reflect shortly (~ 2 minutes).');
       reset();
     }
 
@@ -63,7 +63,7 @@ export default function Curation() {
             <strong className="mr-2">{votesQuota}</strong>
             <span>votes available</span>
           </span>
-          {votesQuota > 0 && <Button onClick={showModal}>Confirm</Button>}
+          {Object.keys(votes).length > 0 && <Button onClick={showModal}>Confirm</Button>}
         </div>
         <div className="flex flex-row">
           <ToggleTab

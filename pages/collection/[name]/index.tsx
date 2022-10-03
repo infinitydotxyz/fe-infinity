@@ -1,13 +1,13 @@
 import {
   BaseCollection,
   ChainId,
-  Collection,
   CollectionAttributes,
   CollectionStats,
   ERC721CardData
 } from '@infinityxyz/lib-frontend/types/core';
 import { CuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections.dto';
 import { CollectionStatsDto } from '@infinityxyz/lib-frontend/types/dto/stats';
+import { NULL_ADDRESS } from '@infinityxyz/lib-frontend/utils';
 import { useRouter } from 'next/router';
 import NotFound404Page from 'pages/not-found-404';
 import { useEffect, useState } from 'react';
@@ -17,7 +17,18 @@ import { HiOutlineExternalLink } from 'react-icons/hi';
 import { AvatarImage } from 'src/components/collection/avatar-image';
 import { CollectionSalesTab } from 'src/components/collection/collection-activity-tab';
 import { StatsChips } from 'src/components/collection/stats-chips';
-import { Button, Chip, EthPrice, Heading, PageBox, Spinner, SVG, ToggleTab, useToggleTab } from 'src/components/common';
+import {
+  Button,
+  Chip,
+  EthPrice,
+  Heading,
+  PageBox,
+  Spinner,
+  SVG,
+  toastSuccess,
+  ToggleTab,
+  useToggleTab
+} from 'src/components/common';
 import { FeesAprStats, FeesAccruedStats } from 'src/components/curation/statistics';
 import { VoteModal } from 'src/components/curation/vote-modal';
 import { VoteProgressBar } from 'src/components/curation/vote-progress-bar';
@@ -31,8 +42,9 @@ import { useDrawerContext } from 'src/utils/context/DrawerContext';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { iconButtonStyle } from 'src/utils/ui-constants';
-import { useSWRConfig } from 'swr';
 import { twMerge } from 'tailwind-merge';
+import ReactMarkdown from 'react-markdown';
+import Linkify from '@amit.rajput/react-linkify';
 
 const CollectionPage = () => {
   const { user, chainId, checkSignedIn } = useOnboardContext();
@@ -46,7 +58,6 @@ const CollectionPage = () => {
   const {
     query: { name }
   } = router;
-  const { mutate } = useSWRConfig();
   const [isStakeModalOpen, setIsStakeModalOpen] = useState(false);
   const { fulfillDrawerParams } = useDrawerContext();
 
@@ -57,14 +68,8 @@ const CollectionPage = () => {
     }
   }, [isBuyClicked]);
 
-  // useEffect(() => void fetchUserCurated(), [userReady]);
   const path = `/collections/${name}`;
-  const {
-    result: collection,
-    isLoading,
-    error,
-    mutate: mutateCollection
-  } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
+  const { result: collection, isLoading, error } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
   const { result: collectionAttributes } = useFetch<CollectionAttributes>(
     name ? `/collections/${name}/attributes` : '',
     {
@@ -86,8 +91,7 @@ const CollectionPage = () => {
   const createdBy = collection?.deployer ?? collection?.owner ?? '';
 
   const { result: userCurated } = useFetch<CuratedCollectionDto>(
-    user?.address ? `${path}/curated/${chainId}:${user.address}` : null,
-    { apiParams: { requiresAuth: true } }
+    `${path}/curated/${chainId}:${user?.address ?? NULL_ADDRESS}`
   );
 
   const isAlreadyAdded = (data: ERC721CardData | undefined) => {
@@ -138,6 +142,41 @@ const CollectionPage = () => {
       <PageBox showTitle={false} title={'Collection'}>
         {error ? <div className="flex flex-col mt-10">Unable to load this collection.</div> : null}
       </PageBox>
+    );
+  }
+
+  // not sure if this is the best regex, but could not find anything better
+  const markdownRegex = /\[(.*?)\]\((.+?)\)/g;
+  const isMarkdown = markdownRegex.test(collection.metadata?.description ?? '');
+
+  let description = <div>{collection.metadata?.description ?? ''}</div>;
+
+  if (isMarkdown) {
+    description = (
+      <ReactMarkdown
+        components={{
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          a: ({ node, ...props }) => <a style={{ color: 'blue' }} {...props} />
+        }}
+      >
+        {collection.metadata?.description ?? ''}
+      </ReactMarkdown>
+    );
+  } else {
+    // convert \n to '<br />'
+    const escapedNewLineToLineBreakTag = (str: string) => {
+      return str.split('\n').map((item, index) => {
+        return index === 0 ? (
+          <Linkify key={index + 1000}>{item}</Linkify>
+        ) : (
+          [<br key={index} />, <Linkify key={index + 2000}>{item}</Linkify>]
+        );
+      });
+    };
+
+    description = (
+      // className colors all a tags with blue
+      <div className="[&_a]:text-blue-700">{escapedNewLineToLineBreakTag(collection.metadata?.description ?? '')}</div>
     );
   }
 
@@ -206,7 +245,7 @@ const CollectionPage = () => {
                   <LoadingDescription />
                 </div>
               ) : (
-                <div className="text-secondary mt-12 md:w-2/3">{collection.metadata?.description ?? ''}</div>
+                <div className="text-secondary mt-12 md:w-2/3">{description}</div>
               )}
               {collection.metadata?.benefits && (
                 <div className="mt-7 md:w-2/3">
@@ -260,11 +299,8 @@ const CollectionPage = () => {
                       {nFormatter(firstAllTimeStats?.numOwners ?? currentStats?.numOwners) ?? '—'}
                     </td>
                     <td className="pr-20">
-                      {firstAllTimeStats?.floorPrice ? (
-                        <EthPrice
-                          label={`${nFormatter(currentStats?.floorPrice ?? firstAllTimeStats?.floorPrice)}`}
-                          labelClassName="font-bold"
-                        />
+                      {currentStats?.floorPrice ? (
+                        <EthPrice label={`${nFormatter(currentStats?.floorPrice)}`} labelClassName="font-bold" />
                       ) : (
                         '—'
                       )}
@@ -293,7 +329,7 @@ const CollectionPage = () => {
                 <div className="flex flex-row space-x-2 relative">
                   <VoteProgressBar
                     votes={userCurated?.votes || 0}
-                    totalVotes={collection.numCuratorVotes || 0}
+                    totalVotes={userCurated?.numCuratorVotes || 0}
                     className="max-w-[15rem] bg-white"
                   />
                 </div>
@@ -314,7 +350,7 @@ const CollectionPage = () => {
                     fees: 0,
                     feesAPR: 0,
                     timestamp: 0,
-                    numCuratorVotes: collection.numCuratorVotes || 0,
+                    numCuratorVotes: 0,
                     userAddress: '',
                     userChainId: '' as ChainId,
                     stakerContractAddress: '',
@@ -325,17 +361,8 @@ const CollectionPage = () => {
                 }}
                 isOpen={isStakeModalOpen}
                 onClose={() => setIsStakeModalOpen(false)}
-                onVote={async (votes) => {
-                  // update local collection cache with latest amount of total votes
-                  await mutateCollection(
-                    (data: Collection) =>
-                      ({
-                        ...collection,
-                        numCuratorVotes: (data.numCuratorVotes || 0) + votes
-                      } as Collection)
-                  );
-                  // reload user votes and estimates from API
-                  await mutate(`${path}/curated/${chainId}:${user?.address}`);
+                onVote={() => {
+                  toastSuccess('Votes registered successfully. Changes will reflect shortly.');
                 }}
               />
             </section>

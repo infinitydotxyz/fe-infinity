@@ -55,7 +55,7 @@ export const UserPageCuratedTab: React.FC<{ userInfo: UserProfileDto }> = ({ use
           subtitle={`${Math.round(
             (quota?.availableVotes || 0) === 0
               ? 100
-              : ((quota?.stake?.totalCuratedVotes || 0) / (quota?.availableVotes || 0)) * 100
+              : ((quota?.stake?.totalCuratedVotes || 0) / (quota?.stake?.stakePower || 0)) * 100
           )}%`}
         />
         <InfoBox title="Curated" subtitle={quota?.stake?.totalCurated || 0} />
@@ -70,7 +70,7 @@ export const UserPageCuratedTab: React.FC<{ userInfo: UserProfileDto }> = ({ use
         )}
 
         {result && result[0].data?.length === 0 && (
-          <NoResultsBox onClick={() => router.replace(`curation?tab=${CuratedTab.AllCurated}`)}>
+          <NoResultsBox onClick={() => router.replace(`curated?tab=${CuratedTab.AllCurated}`)}>
             This user hasn't curated any collections yet
           </NoResultsBox>
         )}

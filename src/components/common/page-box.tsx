@@ -14,6 +14,7 @@ interface Props {
   className?: string;
   fullWidth?: boolean;
   rightToolbar?: JSX.Element;
+  footer?: JSX.Element;
   scroll?: boolean;
 }
 
@@ -23,6 +24,7 @@ export const PageBox = ({
   showTitle = true,
   fullWidth = false,
   className = '',
+  footer,
   rightToolbar,
   scroll = true
 }: Props): JSX.Element => {
@@ -43,7 +45,9 @@ export const PageBox = ({
       {renderPasswordModal ? (
         <PasswordModal isOpen={true} onClose={() => console.log} />
       ) : (
-        <Header title={title}>
+        <>
+          <Header title={title} />
+
           {chainId !== '1' && (
             <div className="text-center bg-theme-gray-100 text-red-800 py-1">You are not on Ethereum network</div>
           )}
@@ -58,7 +62,9 @@ export const PageBox = ({
             {/* allows scroll so items aren't at the bottom of the screen  */}
             <div className="shrink-0" style={{ height: 300 }} />
           </div>
-        </Header>
+
+          {footer}
+        </>
       )}
     </div>
   );

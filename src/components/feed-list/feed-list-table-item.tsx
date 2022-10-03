@@ -1,7 +1,7 @@
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { ReactNode } from 'react';
 import { EthPrice, EZImage, NextLink } from 'src/components/common';
-import { ellipsisAddress, ellipsisString, NEWS_IMAGE_URL, standardBorderCard } from 'src/utils';
+import { ellipsisAddress, ellipsisString, NEWS_IMAGE_URL, nFormatter, standardBorderCard } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
 import { NftEventRec } from '../asset/activity/activity-item';
@@ -248,7 +248,7 @@ export const FeedListTableItem = ({ activity }: Props) => {
               </NextLink>
             </TableItem>
 
-            <TableItem label="Votes">{activity.price ? <div>{activity.price}</div> : '—'}</TableItem>
+            <TableItem label="Votes">{activity.price ? <div>{nFormatter(activity.price)}</div> : '—'}</TableItem>
 
             <TableItem label="# Users">{activity.toDisplayName}</TableItem>
 
