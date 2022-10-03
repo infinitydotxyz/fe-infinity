@@ -8,15 +8,29 @@ import { RewardsProgressBar } from 'src/components/rewards/progressbar';
 import { RewardPhase } from 'src/components/rewards/reward-phase';
 import useScreenSize from 'src/hooks/useScreenSize';
 import { useFetch } from 'src/utils';
+import { twMerge } from 'tailwind-merge';
 
-const configByTradingFeeDestination: Record<TradingFeeDestination, { name: string; color: string }> = {
+type GRAND_RAFFLE_TYPE = `${TradingFeeDestination.Raffle}-grand`;
+type PHASE_RAFFLE_TYPE = `${TradingFeeDestination.Raffle}-phase`;
+const GRAND_RAFFLE: GRAND_RAFFLE_TYPE = `${TradingFeeDestination.Raffle}-grand`;
+const PHASE_RAFFLE: PHASE_RAFFLE_TYPE = `${TradingFeeDestination.Raffle}-phase`;
+
+const configByTradingFeeDestination: Record<
+  TradingFeeDestination | GRAND_RAFFLE_TYPE | PHASE_RAFFLE_TYPE,
+  { name: string; color: string }
+> = {
   [TradingFeeDestination.Treasury]: {
     name: 'Treasury',
     color: 'bg-red-300'
   },
-  [TradingFeeDestination.Raffle]: { name: 'User Raffle', color: 'bg-green-300' },
+  [GRAND_RAFFLE]: { name: 'User Grand Raffle', color: 'bg-green-300' },
+  [PHASE_RAFFLE]: { name: 'User Phase Raffle', color: 'bg-orange-300' },
   [TradingFeeDestination.CollectionPot]: { name: 'Collection Pot', color: 'bg-blue-300' },
-  [TradingFeeDestination.Curators]: { name: 'Curation', color: 'bg-gray-300' }
+  [TradingFeeDestination.Curators]: { name: 'Curation', color: 'bg-gray-300' },
+  RAFFLE: {
+    name: 'User Raffle',
+    color: 'bg-green-300'
+  }
 };
 
 function getPhaseSplitDistributions(phase: TokenomicsPhaseDto) {
@@ -24,14 +38,40 @@ function getPhaseSplitDistributions(phase: TokenomicsPhaseDto) {
     (key) => phase.split[key as TradingFeeDestination].percentage > 0
   );
 
-  const configs = splitsToDisplay.map((key) => {
+  const configs = splitsToDisplay.flatMap((key) => {
     const item = phase.split[key as TradingFeeDestination];
     const config = configByTradingFeeDestination[key as TradingFeeDestination];
-    return {
-      percent: item.percentage,
-      label: config.name,
-      className: config.color
-    };
+    if (key === TradingFeeDestination.Raffle) {
+      const grandPrize = phase.raffleConfig?.grandPrize;
+      const phasePrize = phase.raffleConfig?.phasePrize;
+      const items: { percent: number; label: string; className: string }[] = [];
+      if (grandPrize) {
+        const config = configByTradingFeeDestination[GRAND_RAFFLE];
+        items.push({
+          percent: (item.percentage * grandPrize.percentage) / 100,
+          label: config.name,
+          className: config.color
+        });
+      }
+      if (phasePrize) {
+        const config = configByTradingFeeDestination[PHASE_RAFFLE];
+        items.push({
+          percent: (item.percentage * phasePrize.percentage) / 100,
+          label: config.name,
+          className: config.color
+        });
+      }
+
+      return items;
+    }
+
+    return [
+      {
+        percent: item.percentage,
+        label: config.name,
+        className: config.color
+      }
+    ];
   });
   return configs.sort((a, b) => a.label.localeCompare(b.label));
 }
@@ -46,33 +86,32 @@ const GlobalRewards: React.FC = () => {
       {result?.phases && result?.phases.length > 0 ? (
         result.phases.map((phase: TokenomicsPhaseDto) => {
           return (
-            <InfoBox
-              key={phase.id}
-              title={phase.name}
-              description={
-                <InfoBox.Stats title="Trading Fee Distribution">
-                  <>
-                    <DistributionBar distribution={getPhaseSplitDistributions(phase)} />
-                    <div className="w-full py-2">
-                      <div className="text-sm mt-1">Progress</div>
-                      <div className="text-2xl font-heading font-bold">
-                        <RewardsProgressBar
-                          amount={
-                            phase.progress !== 0 && phase.progress < 1 ? Math.ceil(phase.progress) : phase.progress
-                          }
-                          max={100}
-                        />
+            <InfoBox key={phase.id} title={phase.name}>
+              <div className={twMerge('flex align-center justify-center', isMobile ? 'flex-col' : '')}>
+                <InfoBox.SideInfo>
+                  <InfoBox.Stats title="Trading Fee Distribution">
+                    <>
+                      <DistributionBar distribution={getPhaseSplitDistributions(phase)} />
+                      <div className="w-full py-2">
+                        <div className="text-sm mt-1">Progress</div>
+                        <div className="text-2xl font-heading font-bold">
+                          <RewardsProgressBar
+                            amount={
+                              phase.progress !== 0 && phase.progress < 1 ? Math.ceil(phase.progress) : phase.progress
+                            }
+                            max={100}
+                          />
+                        </div>
                       </div>
-                    </div>
-                  </>
-                </InfoBox.Stats>
-              }
-            >
-              <InfoBox.SideInfo>
-                <div className={isMobile ? '' : 'ml-6 flex justify-end mt-14'}>
-                  <RewardPhase key={phase.id} phase={phase} />
-                </div>
-              </InfoBox.SideInfo>
+                    </>
+                  </InfoBox.Stats>
+                </InfoBox.SideInfo>
+                <InfoBox.SideInfo>
+                  <div className={isMobile ? '' : 'ml-6'}>
+                    <RewardPhase key={phase.id} phase={phase} />
+                  </div>
+                </InfoBox.SideInfo>
+              </div>
             </InfoBox>
           );
         })
