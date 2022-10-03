@@ -7,15 +7,17 @@ import { PagedData } from '../gallery/token-fetcher';
 import { Erc721Token } from '@infinityxyz/lib-frontend/types/core';
 import { Filter } from 'src/utils/context/FilterContext';
 import { API, Direction, TinderCard } from './tinder-card';
-import mitt from 'mitt';
 import { MdFavoriteBorder, MdOutlineArrowBack, MdRefresh } from 'react-icons/md';
 import { inputBorderColor, largeIconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
+import { SwiperEvent, TinderSwiperEmitter } from './swiper_emitter';
+import { TinderSwiperLikes } from './swiper_likes';
 
 export const TinderSwiperModal = () => {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState<Erc721Token[]>([]);
   const [liked, setLiked] = useState<Erc721Token[]>([]);
+  const [skipped, setSkipped] = useState<Erc721Token[]>([]);
 
   const path = `/collections/boredapeyachtclub`;
   const { result: collection } = useFetch<BaseCollection>(path, { chainId: '1' });
@@ -52,6 +54,7 @@ export const TinderSwiperModal = () => {
   // clear this out on open since it would have the previous likes
   useEffect(() => {
     setLiked([]);
+    setSkipped([]);
   }, [open]);
 
   return (
@@ -63,10 +66,17 @@ export const TinderSwiperModal = () => {
             <div className=" w-full flex flex-col items-center">
               <div className=" text-2xl font-bold mb-8 select-none">{collection?.metadata.name}</div>
 
-              <TinderSwiper data={data.reverse()} liked={liked} setLiked={setLiked} />
+              <TinderSwiper
+                data={data.reverse()}
+                liked={liked}
+                setLiked={setLiked}
+                skipped={skipped}
+                setSkipped={setSkipped}
+              />
             </div>
 
-            <TinderSwiperLikes data={liked} />
+            <TinderSwiperLikes data={liked} liked={true} />
+            <TinderSwiperLikes data={skipped} liked={false} />
           </div>
         )}
       </FullScreenModal>
@@ -80,9 +90,11 @@ interface Props {
   data: Erc721Token[];
   liked: Erc721Token[];
   setLiked: (liked: Erc721Token[]) => void;
+  skipped: Erc721Token[];
+  setSkipped: (liked: Erc721Token[]) => void;
 }
 
-export const TinderSwiper = ({ data, liked, setLiked }: Props) => {
+export const TinderSwiper = ({ data, liked, setLiked, skipped, setSkipped }: Props) => {
   const [currentIndex, setCurrentIndex] = useState(data.length - 1);
   const [emitter] = useState<TinderSwiperEmitter>(new TinderSwiperEmitter());
 
@@ -102,6 +114,8 @@ export const TinderSwiper = ({ data, liked, setLiked }: Props) => {
       if (indexValid(event.index)) {
         if (event.dir === 'right') {
           setLiked([...liked, data[event.index]]);
+        } else {
+          setSkipped([...skipped, data[event.index]]);
         }
 
         updateIndex(currentIndex - 1);
@@ -163,7 +177,13 @@ export const TinderSwiper = ({ data, liked, setLiked }: Props) => {
       return x.tokenId !== removeTokenId;
     });
 
+    // remove if in skipped list
+    const newSkipped = skipped.filter((x) => {
+      return x.tokenId !== removeTokenId;
+    });
+
     setLiked(newLiked);
+    setSkipped(newSkipped);
   };
 
   const buttons = (
@@ -242,56 +262,3 @@ export const TinderSwiper = ({ data, liked, setLiked }: Props) => {
     </div>
   );
 };
-
-// ================================================================================
-
-interface Props2 {
-  data: Erc721Token[];
-}
-
-export const TinderSwiperLikes = ({ data }: Props2) => {
-  return (
-    <div className="mt-6 font-bold text-black text-opacity-80  text-lg items-center justify-center   flex flex-col w-full  ">
-      <div>{data.length} Liked NFTs</div>
-      <div className="mt-4 max-w-3xl items-center justify-center flex-wrap gap-2 flex  w-full  ">
-        {data.map((nft) => {
-          return (
-            <EZImage
-              key={`${nft.collectionAddress}:${nft.tokenId}`}
-              cover={false}
-              src={nft.metadata.image}
-              className="h-8 w-8 cursor-grab rounded-3xl overflow-clip  "
-            />
-          );
-        })}
-      </div>
-    </div>
-  );
-};
-
-// ================================================================================
-
-export type SwiperEvent = {
-  dir: Direction;
-  index: number;
-};
-
-type SwiperType = {
-  swipe: SwiperEvent;
-};
-
-export class TinderSwiperEmitter {
-  private emitter = mitt<SwiperType>();
-
-  emitSwipe(event: SwiperEvent) {
-    this.emitter.emit('swipe', event);
-  }
-
-  onSwipe(listener: (data: SwiperEvent) => void): void {
-    this.emitter.on('swipe', listener);
-  }
-
-  removeSwipe(listener: (data: SwiperEvent) => void): void {
-    this.emitter.off('swipe', listener);
-  }
-}

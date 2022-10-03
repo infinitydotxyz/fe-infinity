@@ -26,7 +26,7 @@ import {
   PopoverButton,
   TextInputBox
 } from 'src/components/common';
-import { TinderSwiperModal } from 'src/components/product/tinder-swiper';
+import { TinderSwiperModal } from 'src/components/swiper/tinder-swiper';
 import { twMerge } from 'tailwind-merge';
 
 const cardTestData = [
