@@ -1,84 +1,22 @@
-import { BaseCollection } from '@infinityxyz/lib-frontend/types/core/Collection';
 import React, { useState, useMemo, useEffect } from 'react';
-import { apiGet, useFetch } from 'src/utils';
 import { Button, CenteredContent, EZImage, Spacer } from '../common';
 import { FullScreenModal } from '../common/full-screen-modal';
-import { PagedData } from '../gallery/token-fetcher';
 import { Erc721Token } from '@infinityxyz/lib-frontend/types/core';
-import { Filter } from 'src/utils/context/FilterContext';
 import { API, Direction, TinderCard } from './tinder-card';
 import { MdFavoriteBorder, MdOutlineArrowBack, MdRefresh } from 'react-icons/md';
 import { inputBorderColor, largeIconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { SwiperEvent, TinderSwiperEmitter } from './swiper_emitter';
-import { TinderSwiperLikes } from './swiper_likes';
+import { SwiperController } from './swiper-controller';
 
 export const TinderSwiperModal = () => {
   const [open, setOpen] = useState(false);
-  const [data, setData] = useState<Erc721Token[]>([]);
-  const [liked, setLiked] = useState<Erc721Token[]>([]);
-  const [skipped, setSkipped] = useState<Erc721Token[]>([]);
-
-  const path = `/collections/boredapeyachtclub`;
-  const { result: collection } = useFetch<BaseCollection>(path, { chainId: '1' });
-
-  const fetch = async () => {
-    if (collection) {
-      const filter: Filter = { chainId: '1', orderBy: 'tokenIdNumeric', orderDirection: 'asc' };
-
-      const response = await apiGet(`/collections/${collection.chainId}:${collection.address}/nfts`, {
-        query: {
-          chainId: '1',
-          limit: 50,
-          cursor: '',
-          ...filter
-        }
-      });
-
-      if (response.error) {
-        console.log(response.error);
-      } else {
-        if (response.result) {
-          const result = response.result as PagedData;
-
-          setData(result.data);
-        }
-      }
-    }
-  };
-
-  useEffect(() => {
-    fetch();
-  }, [collection]);
-
-  // clear this out on open since it would have the previous likes
-  useEffect(() => {
-    setLiked([]);
-    setSkipped([]);
-  }, [open]);
 
   return (
     <>
       <Button onClick={() => setOpen(true)}>Open Swiper</Button>
       <FullScreenModal isOpen={open} onClose={() => setOpen(false)}>
-        {open && (
-          <div className="w-full flex flex-col items-center  ">
-            <div className=" w-full flex flex-col items-center">
-              <div className=" text-2xl font-bold mb-8 select-none">{collection?.metadata.name}</div>
-
-              <TinderSwiper
-                data={data.reverse()}
-                liked={liked}
-                setLiked={setLiked}
-                skipped={skipped}
-                setSkipped={setSkipped}
-              />
-            </div>
-
-            <TinderSwiperLikes data={liked} liked={true} />
-            <TinderSwiperLikes data={skipped} liked={false} />
-          </div>
-        )}
+        {open && <SwiperController />}
       </FullScreenModal>
     </>
   );
@@ -95,7 +33,7 @@ interface Props {
 }
 
 export const TinderSwiper = ({ data, liked, setLiked, skipped, setSkipped }: Props) => {
-  const [currentIndex, setCurrentIndex] = useState(data.length - 1);
+  const [currentIndex, setCurrentIndex] = useState(-1);
   const [emitter] = useState<TinderSwiperEmitter>(new TinderSwiperEmitter());
 
   const indexValid = (index: number) => {
@@ -106,10 +44,21 @@ export const TinderSwiper = ({ data, liked, setLiked, skipped, setSkipped }: Pro
   const canSwipe = currentIndexValid;
   const canGoBack = currentIndex < data.length - 1;
 
+  useEffect(() => {
+    setCurrentIndex(data.length - 1);
+  }, [data]);
+
   // handles swipe event
   useEffect(() => {
     const cb = (event: SwiperEvent) => {
-      // console.log(`${event.dir} (${event.index}) onSwipe`);
+      console.log(`${event.dir} (${event.index}) onSwipe`);
+      console.log(liked);
+      console.log(skipped);
+
+      console.log('currentIndex');
+      console.log(currentIndex);
+      console.log(event.index);
+      console.log(data[event.index]);
 
       if (indexValid(event.index)) {
         if (event.dir === 'right') {
