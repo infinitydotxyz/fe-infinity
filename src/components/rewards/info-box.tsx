@@ -22,7 +22,7 @@ export function InfoBox({ description, title, children }: InfoBoxProps) {
         isMobile ? 'flex-col' : ''
       )}
     >
-      <div className={isMobile ? 'w-full' : `w-1/2`}>
+      <div className={isMobile ? 'w-full' : 'w-1/2'}>
         <Heading as="h2" className="text-3xl font-body font-medium">
           {title}
         </Heading>

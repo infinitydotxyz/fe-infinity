@@ -2,6 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   distDir: 'build'
+  // swcMinify: true
 };
 
 const withBundleAnalyzer = require('@next/bundle-analyzer')({

@@ -36,7 +36,7 @@ export const PhaseDescription = ({ phase }: { phase: TokenomicsPhaseDto }) => {
 export const RewardPhase = ({ phase }: { phase: TokenomicsPhaseDto }) => {
   return (
     phase.tradingFeeRefund && (
-      <InfoBox.Stats title={`Trading Fee Refund`} description={<PhaseDescription phase={phase} />}>
+      <InfoBox.Stats title="Trading Fee Refund" description={<PhaseDescription phase={phase} />}>
         <RewardPhaseStats phase={phase} />
       </InfoBox.Stats>
     )
