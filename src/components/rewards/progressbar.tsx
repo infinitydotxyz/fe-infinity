@@ -26,9 +26,9 @@ export const RewardsProgressBar: React.FC<RewardsProgressBarProps> = ({ amount, 
       <div
         className={twMerge(
           'bg-[#92DEFF] rounded-3xl text-sm font-normal py-4',
-          percentage < 100 ? 'rounded-r-none' : ''
+          percentage < 100 && percentage > 10 ? 'rounded-r-none' : ''
         )}
-        style={{ maxWidth: `${percentage}%` }}
+        style={{ maxWidth: `${percentage}%`, minWidth: percentage > 0 ? '2rem' : '0' }}
       ></div>
 
       <div className="absolute top-0 left-2 z-10">

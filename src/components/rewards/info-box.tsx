@@ -1,26 +1,60 @@
 import React from 'react';
+import useScreenSize from 'src/hooks/useScreenSize';
+import { twMerge } from 'tailwind-merge';
 import { Heading } from '../common';
+import { FaCircle } from 'react-icons/fa';
+import { useHover } from 'src/hooks/useHover';
 
 type ChildrenProps = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  children?: any;
+  children?: React.ReactNode;
 };
+
+export enum State {
+  Active = 'Active',
+  Inactive = 'Inactive',
+  Complete = 'Complete'
+}
 
 export type InfoBoxProps = {
   title: React.ReactNode;
-  description: React.ReactNode;
+  state?: State;
+  renderTooltip?: (props: { state: State; isHovered: boolean } & ChildrenProps) => JSX.Element;
 } & ChildrenProps;
 
-export function InfoBox({ description, title, children }: InfoBoxProps) {
+export function InfoBox({ title, children, state, renderTooltip }: InfoBoxProps) {
+  const [hoverRef, isHovered] = useHover<HTMLDivElement>();
+
+  const stateIcon = React.useMemo(() => {
+    if (!state) {
+      return null;
+    }
+    switch (state) {
+      case State.Active:
+        return <FaCircle color={'rgb(63 131 248)'} />;
+      case State.Inactive:
+        return <FaCircle color={'rgb(55 65 81)'} />;
+      case State.Complete:
+        return <FaCircle color={'rgb(21 164 86)'} />;
+    }
+  }, [state]);
+
+  const content = (
+    <span className="flex w-fit">
+      <Heading as="h2" className="text-2xl font-heading font-bold">
+        {title}
+      </Heading>
+      {state && stateIcon && (
+        <span className="ml-4 mt-1.5" ref={hoverRef}>
+          {stateIcon}
+        </span>
+      )}
+    </span>
+  );
+
   return (
-    <div className="flex bg-theme-gray-100 p-10 rounded-2xl my-4">
-      <div className="w-1/2">
-        <Heading as="h2" className="text-3xl font-body font-medium">
-          {title}
-        </Heading>
-        <div className="mr-6 mt-5 text-theme-gray-700">{description}</div>
-      </div>
-      {children}
+    <div className={twMerge('flex-col bg-theme-gray-100 p-10 rounded-2xl my-8 align-center justify-center')}>
+      {renderTooltip && state ? renderTooltip({ state, isHovered, children: content }) : content}
+      <div className="mt-6">{children}</div>
     </div>
   );
 }
@@ -34,8 +68,8 @@ InfoBox.Stats = function Stats({ title, description, children }: InfoBoxPhasePro
   return (
     <div className="bg-white py-6 px-6 rounded-2xl">
       <div>{title}</div>
-      <div className="flex flex-wrap mt-4">{description}</div>
-      <div className="flex flex-wrap mt-4">{children}</div>
+      {description && <div className="flex flex-wrap mt-4">{description}</div>}
+      {children && <div className="flex flex-wrap mt-4">{children}</div>}
     </div>
   );
 };
@@ -47,7 +81,7 @@ export type InfoBoxStatProps = {
 
 InfoBox.Stat = function Stat({ label, value }: InfoBoxStatProps) {
   return (
-    <div className="lg:w-1/4 sm:w-full p-2">
+    <div className="lg:w-1/2 sm:w-full p-2">
       <div className="text-2xl font-heading font-bold">{value}</div>
       <div className="text-sm mt-1">{label}</div>
     </div>
@@ -55,5 +89,6 @@ InfoBox.Stat = function Stat({ label, value }: InfoBoxStatProps) {
 };
 
 InfoBox.SideInfo = function SideInfo({ children }: ChildrenProps) {
-  return <div className="w-1/2 space-y-4">{children}</div>;
+  const { isMobile } = useScreenSize();
+  return <div className={twMerge(isMobile ? 'w-full my-4' : 'w-1/2')}>{children}</div>;
 };
