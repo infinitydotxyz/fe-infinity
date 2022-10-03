@@ -96,7 +96,7 @@ const GlobalRewards: React.FC = () => {
       }
       return (
         <TooltipWrapper
-          className="w-fit"
+          className="w-fit min-w-[200px]"
           show={props.isHovered}
           tooltip={{
             title: `${props.state}`,
