@@ -6,6 +6,7 @@ import { StakeTokensModal } from 'src/components/rewards/stake-tokens-modal';
 import { UnstakeTokensModal } from 'src/components/rewards/unstake-tokens-modal';
 import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
 import { useUserRewards } from 'src/hooks/api/useUserRewards';
+import { TOKEN } from 'src/utils/constants';
 import { numberFormatter } from 'src/utils/number-formatter';
 
 const MyRewardsPage: React.FC = () => {
@@ -24,13 +25,14 @@ const MyRewardsPage: React.FC = () => {
             Token Balance
           </Heading>
           <div className="w-1/2 mt-5 text-theme-gray-700">
-            Stake $NFT tokens to gain curation power. The longer you lock, the more curation power you’ll earn.
+            Stake ${TOKEN.symbol} tokens to gain curation power. The longer you lock, the more curation power you’ll
+            earn.
           </div>
         </div>
 
         <div className="w-1/2">
           <div className="bg-white py-6 px-6 rounded-2xl">
-            <div>$NFT Tokens</div>
+            <div>${TOKEN.symbol} Tokens</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
                 <div className="text-2xl font-heading font-bold">
@@ -58,7 +60,7 @@ const MyRewardsPage: React.FC = () => {
             </div>
             <div className="lg:w-2/4 sm:w-full flex mt-4">
               <Button size="large" className="font-heading" onClick={() => setShowBuyTokensModal(true)}>
-                Buy $NFT
+                Buy ${TOKEN.symbol}
               </Button>
             </div>
           </div>
@@ -72,7 +74,7 @@ const MyRewardsPage: React.FC = () => {
               <div className="lg:w-1/4 sm:w-full">
                 <div className="text-2xl font-heading font-bold">{`${numberFormatter.format(
                   quota?.totalStaked || 0
-                )} $NFT`}</div>
+                )} $${TOKEN.symbol}`}</div>
                 <div className="text-sm mt-1">TVL</div>
               </div>
               <div className="lg:w-2/4 sm:w-full flex">
@@ -183,7 +185,7 @@ const MyRewardsPage: React.FC = () => {
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
                 <div className="text-2xl font-heading font-bold">
-                  {Math.floor(userRewards?.totals.userRewards ?? 0)} $NFT
+                  {Math.floor(userRewards?.totals.userRewards ?? 0)} ${TOKEN.symbol}
                 </div>
                 <div className="text-sm mt-1">Earned rewards</div>
               </div>
