@@ -6,7 +6,7 @@ import { API, Direction, TinderCard } from './tinder-card';
 import { MdFavoriteBorder, MdOutlineArrowBack, MdRefresh } from 'react-icons/md';
 import { inputBorderColor, largeIconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { SwiperEvent, TinderSwiperEmitter } from './swiper_emitter';
+import { SwiperEvent, TinderSwiperEmitter } from './swiper-emitter';
 import { SwiperController } from './swiper-controller';
 
 export const TinderSwiperModal = () => {
@@ -51,15 +51,6 @@ export const TinderSwiper = ({ data, liked, setLiked, skipped, setSkipped }: Pro
   // handles swipe event
   useEffect(() => {
     const cb = (event: SwiperEvent) => {
-      console.log(`${event.dir} (${event.index}) onSwipe`);
-      console.log(liked);
-      console.log(skipped);
-
-      console.log('currentIndex');
-      console.log(currentIndex);
-      console.log(event.index);
-      console.log(data[event.index]);
-
       if (indexValid(event.index)) {
         if (event.dir === 'right') {
           setLiked([...liked, data[event.index]]);

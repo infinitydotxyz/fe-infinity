@@ -16,21 +16,22 @@ export const TinderSwiperLikes = ({ data, liked }: Props2) => {
       <div className="mt-4 max-w-3xl items-center justify-center flex-wrap gap-2 flex  w-full  ">
         {data.map((nft) => {
           return (
-            <HelpTip
-              content={
-                <div className="flex flex-col items-center">
-                  <div>Token id</div>
-                  <div># {nft.tokenId}</div>
-                </div>
-              }
-            >
-              <EZImage
-                key={`${nft.collectionAddress}:${nft.tokenId}`}
-                cover={false}
-                src={nft.metadata.image}
-                className="h-8 w-8 cursor-grab rounded-3xl overflow-clip  "
-              />
-            </HelpTip>
+            <div key={`${nft.collectionAddress}:${nft.tokenId}`}>
+              <HelpTip
+                content={
+                  <div className="flex flex-col items-center">
+                    <div>Token id</div>
+                    <div># {nft.tokenId}</div>
+                  </div>
+                }
+              >
+                <EZImage
+                  cover={false}
+                  src={nft.metadata.image}
+                  className="h-8 w-8 cursor-grab rounded-3xl overflow-clip  "
+                />
+              </HelpTip>
+            </div>
           );
         })}
       </div>

@@ -1,7 +1,7 @@
 /* global WebKitCSSMatrix */
 
 import { forwardRef, ReactNode, useRef, useImperativeHandle, useCallback, useEffect } from 'react';
-import { TinderSwiperEmitter } from './swiper_emitter';
+import { TinderSwiperEmitter } from './swiper-emitter';
 
 const sleep = (ms: number) => {
   return new Promise(function (resolve) {

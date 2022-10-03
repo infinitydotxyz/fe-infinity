@@ -4,7 +4,7 @@ import { apiGet, useFetch } from 'src/utils';
 import { PagedData } from '../gallery/token-fetcher';
 import { Erc721Token } from '@infinityxyz/lib-frontend/types/core';
 import { Filter } from 'src/utils/context/FilterContext';
-import { TinderSwiperLikes } from './swiper_likes';
+import { TinderSwiperLikes } from './swiper-likes';
 import { TinderSwiper } from './tinder-swiper';
 
 export const SwiperController = () => {
