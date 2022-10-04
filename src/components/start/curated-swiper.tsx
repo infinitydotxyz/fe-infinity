@@ -18,11 +18,10 @@ import { useRouter } from 'next/router';
 import useScreenSize from 'src/hooks/useScreenSize';
 
 interface Props {
-  collections: CuratedCollectionDto[][];
+  collections: CuratedCollectionDto[];
 }
 
 export const CuratedSwiper = ({ collections }: Props) => {
-  const curatedCollections = collections.flat();
   const router = useRouter();
   const buttonPosition = 'absolute top-1/4 z-10';
   const buttonStyle = 'bg-white border bg-opacity-80 text-black shadow-xl';
@@ -73,7 +72,7 @@ export const CuratedSwiper = ({ collections }: Props) => {
         // onSwiper={(swiper) => console.log(swiper)}
         // onSlideChange={() => console.log('slide change')}
       >
-        {curatedCollections.map((collection) => {
+        {collections.map((collection) => {
           return (
             <SwiperSlide className=" " key={collection.address}>
               <CuratedSwiperCard
