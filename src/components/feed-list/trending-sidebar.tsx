@@ -97,7 +97,7 @@ export const TrendingSidebar = () => {
 
   return (
     <>
-      <div className="text-3xl mb-6 mt-16">Trending 7 day vol</div>
+      <div className="text-3xl mb-6 mt-16">Trending 7 day volume</div>
 
       {data.map((e, index) => {
         return <TrendingItem index={index + 1} collection={e} key={`${e.address}:${e.chainId}:${e.slug}`} />;

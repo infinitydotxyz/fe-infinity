@@ -66,7 +66,7 @@ export const TrendingStart = () => {
 
   const collectionTable = (cols: Collection[], className: string, startIndex = 1) => {
     return (
-      <div className={twMerge('space-y-3 flex-1 flex-col', className)}>
+      <div className={twMerge('space-y-4 flex-1 flex-col', className)}>
         {tableHeader}
         {cols.map((collection, index) => {
           return <TrendingStartCard key={collection.address} collection={collection} index={index + startIndex} />;
