@@ -1,11 +1,12 @@
 import { round } from '@infinityxyz/lib-frontend/utils';
 import React, { useState } from 'react';
-import { Button, Heading } from 'src/components/common';
+import { Button, Heading, Spacer } from 'src/components/common';
 import { UniswapModal } from 'src/components/common/uniswap-modal';
 import { StakeTokensModal } from 'src/components/rewards/stake-tokens-modal';
 import { UnstakeTokensModal } from 'src/components/rewards/unstake-tokens-modal';
 import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
 import { useUserRewards } from 'src/hooks/api/useUserRewards';
+import { nFormatter } from 'src/utils';
 import { TOKEN } from 'src/utils/constants';
 import { numberFormatter } from 'src/utils/number-formatter';
 
@@ -45,22 +46,24 @@ const MyRewardsPage: React.FC = () => {
                 <div className="text-sm mt-1">Staked</div>
               </div>
             </div>
-            <div className="lg:w-2/4 sm:w-full flex mt-4">
+            <div className="w-full flex mt-4 items-center flex-wrap">
+              <Button size="large" className="font-heading" onClick={() => setShowBuyTokensModal(true)}>
+                Buy ${TOKEN.symbol}
+              </Button>
+
+              <Spacer />
+
               <Button size="large" className="font-heading" onClick={() => setShowStakeTokensModal(true)}>
                 Stake
               </Button>
+
               <Button
                 size="large"
                 variant="outline"
-                className="font-heading lg:ml-3"
+                className="font-heading ml-3"
                 onClick={() => setShowUnstakeTokensModal(true)}
               >
                 Unstake
-              </Button>
-            </div>
-            <div className="lg:w-2/4 sm:w-full flex mt-4">
-              <Button size="large" className="font-heading" onClick={() => setShowBuyTokensModal(true)}>
-                Buy ${TOKEN.symbol}
               </Button>
             </div>
           </div>
@@ -112,27 +115,27 @@ const MyRewardsPage: React.FC = () => {
             <div>Voting power</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
-                <div className="text-2xl font-heading font-bold">{quota?.stake?.stakePower || 0}</div>
+                <div className="text-2xl font-heading font-bold">{nFormatter(quota?.stake?.stakePower || 0)}</div>
                 <div className="text-sm mt-1"># Votes</div>
               </div>
               <div className="lg:w-1/4 sm:w-full">
-                <div className="text-2xl font-heading font-bold">{quota?.stake.totalCuratedVotes || 0}</div>
+                <div className="text-2xl font-heading font-bold">{nFormatter(quota?.stake.totalCuratedVotes || 0)}</div>
                 <div className="text-sm mt-1">Voted</div>
               </div>
               <div className="lg:w-1/4 sm:w-full">
-                <div className="text-2xl font-heading font-bold">{quota?.availableVotes ?? 0}</div>
+                <div className="text-2xl font-heading font-bold">{nFormatter(quota?.availableVotes ?? 0)}</div>
                 <div className="text-sm mt-1">Remaining Votes</div>
               </div>
             </div>
           </div>
           <div className="bg-white py-4 pl-6 pr-12 rounded-2xl mt-4">
-            <div>Token staking</div>
+            <div>Fees earned</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
                 <div className="text-2xl font-heading font-bold">
-                  {round(userRewards?.totals.userCurationRewardsEth ?? 0, 4)} ETH
+                  {nFormatter(round(userRewards?.totals.userCurationRewardsEth ?? 0, 4))}
                 </div>
-                <div className="text-sm mt-1">Earned rewards</div>
+                <div className="text-sm mt-1">ETH</div>
               </div>
               {/* <div className="lg:w-1/4 sm:w-full">
                 <div className="text-2xl font-heading font-bold">10%</div>
@@ -165,7 +168,9 @@ const MyRewardsPage: React.FC = () => {
             <div className="flex flex-wrap">
               <div className="lg:w-1/3 sm:w-full">
                 <div className="mb-4">Volume Traded</div>
-                <div className="text-2xl font-heading font-bold">{round(userRewards?.totals.userVolume ?? 0, 4)}</div>
+                <div className="text-2xl font-heading font-bold">
+                  {nFormatter(round(userRewards?.totals.userVolume ?? 0, 4))}
+                </div>
                 <div className="text-sm mt-1">ETH</div>
               </div>
               <div className="lg:w-1/3 sm:w-full">
@@ -181,13 +186,13 @@ const MyRewardsPage: React.FC = () => {
             </div>
           </div>
           <div className="bg-white py-4 pl-6 pr-12 rounded-2xl mt-4">
-            <div>Token rewards</div>
+            <div>Tokens earned</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
                 <div className="text-2xl font-heading font-bold">
-                  {Math.floor(userRewards?.totals.userRewards ?? 0)} ${TOKEN.symbol}
+                  {nFormatter(Math.floor(userRewards?.totals.userRewards ?? 0))}
                 </div>
-                <div className="text-sm mt-1">Earned rewards</div>
+                <div className="text-sm mt-1">${TOKEN.symbol}</div>
               </div>
               <div className="lg:w-1/4 sm:w-full">
                 <div className="text-2xl font-heading font-bold"></div>

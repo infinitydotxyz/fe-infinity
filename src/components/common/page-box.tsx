@@ -60,7 +60,7 @@ export const PageBox = ({
             <div className={`w-full ${className}`}>{children}</div>
 
             {/* allows scroll so items aren't at the bottom of the screen  */}
-            <div className="shrink-0" style={{ height: 300 }} />
+            <div className="shrink-0" style={{ height: 200 }} />
           </div>
 
           {footer}

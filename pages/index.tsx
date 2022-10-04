@@ -26,7 +26,7 @@ const HomePage = () => {
   };
 
   return (
-    <PageBox title="Infinity" showTitle={false} footer={<StartFooter />}>
+    <PageBox title="Home" showTitle={false} footer={<StartFooter />}>
       {titleHeader('Curated Collections', '', '/curated?tab=All+Curated')}
       <AllCuratedStart orderBy={CuratedCollectionsOrderBy.Votes} />
 

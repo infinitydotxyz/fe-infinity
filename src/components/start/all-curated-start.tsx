@@ -1,8 +1,8 @@
 import { CuratedCollectionsOrderBy } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections-query.dto';
-import React from 'react';
-import { useFetchInfinite } from 'src/utils';
-import { CenteredContent, ScrollLoader, Spinner } from '../common';
-import { CuratedCollectionsDto } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections.dto';
+import React, { useEffect, useState } from 'react';
+import { apiGet } from 'src/utils';
+import { CenteredContent, Spinner } from '../common';
+import { CuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections.dto';
 import { CuratedSwiper } from './curated-swiper';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
@@ -12,6 +12,9 @@ interface Props {
 
 export const AllCuratedStart: React.FC<Props> = ({ orderBy }) => {
   const { user, chainId } = useOnboardContext();
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
+  const [data, setData] = useState<CuratedCollectionDto[]>([]);
 
   const query = {
     orderBy,
@@ -19,37 +22,45 @@ export const AllCuratedStart: React.FC<Props> = ({ orderBy }) => {
     limit: 12
   };
 
-  const { result, error, isLoading, setSize } = useFetchInfinite<CuratedCollectionsDto>(
-    '/collections/curated/' + (user?.address ? `${chainId}:${user?.address}` : ''),
-    {
-      query,
-      apiParams: { requiresAuth: !!user?.address }
+  const fetch = async () => {
+    const { result, error } = await apiGet(
+      '/collections/curated/' + (user?.address ? `${chainId}:${user?.address}` : ''),
+      {
+        requiresAuth: !!user?.address,
+        query
+      }
+    );
+
+    console.log(error, result);
+
+    setIsLoading(false);
+
+    if (!error) {
+      setData(result?.data as CuratedCollectionDto[]);
+    } else {
+      setHasError(true);
     }
-  );
-
-  // TODO: invalidate cache (or maybe reset size works too) on wallet change/logout
-
-  const fetchMore = () => {
-    setSize((size) => size + 1);
   };
+
+  useEffect(() => {
+    fetch();
+  }, []);
 
   return (
     <div>
-      {error ? <div className="flex flex-col mt-10">Unable to load curated collections.</div> : null}
+      {hasError ? <div className="flex flex-col mt-10">Unable to load curated collections.</div> : null}
 
-      {result && result[0].data?.length > 0 && (
+      {data.length > 0 && (
         <div>
-          <CuratedSwiper collections={result.map((result) => result.data)} />
+          <CuratedSwiper collections={data} />
         </div>
       )}
 
-      {result && result[0].data?.length === 0 && (
+      {data.length === 0 && (
         <CenteredContent>
           <div>Nothing Found</div>
         </CenteredContent>
       )}
-
-      <ScrollLoader onFetchMore={fetchMore} />
 
       {isLoading && <Spinner />}
     </div>

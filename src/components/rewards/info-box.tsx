@@ -2,18 +2,13 @@ import React from 'react';
 import useScreenSize from 'src/hooks/useScreenSize';
 import { twMerge } from 'tailwind-merge';
 import { Heading } from '../common';
-import { FaCircle } from 'react-icons/fa';
 import { useHover } from 'src/hooks/useHover';
+import { PulseIcon } from '../common/pulse-icon';
+import { State } from 'src/utils/state';
 
 type ChildrenProps = {
   children?: React.ReactNode;
 };
-
-export enum State {
-  Active = 'Active',
-  Inactive = 'Inactive',
-  Complete = 'Complete'
-}
 
 export type InfoBoxProps = {
   title: React.ReactNode;
@@ -24,30 +19,12 @@ export type InfoBoxProps = {
 export function InfoBox({ title, children, state, renderTooltip }: InfoBoxProps) {
   const [hoverRef, isHovered] = useHover<HTMLDivElement>();
 
-  const stateIcon = React.useMemo(() => {
-    if (!state) {
-      return null;
-    }
-    switch (state) {
-      case State.Active:
-        return <FaCircle color={'rgb(63 131 248)'} />;
-      case State.Inactive:
-        return <FaCircle color={'rgb(55 65 81)'} />;
-      case State.Complete:
-        return <FaCircle color={'rgb(21 164 86)'} />;
-    }
-  }, [state]);
-
   const content = (
     <span className="flex w-fit">
       <Heading as="h2" className="text-2xl font-heading font-bold">
         {title}
       </Heading>
-      {state && stateIcon && (
-        <span className="ml-4 mt-1.5" ref={hoverRef}>
-          {stateIcon}
-        </span>
-      )}
+      {state && <PulseIcon state={state} ref={hoverRef} className="ml-4 mt-1.5" />}
     </span>
   );
 
