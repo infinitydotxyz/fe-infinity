@@ -36,9 +36,7 @@ export const WaitingForTxModal = ({ title, txHash, onClose }: Props) => {
       showActionButtons={false}
       showCloseIcon={true}
       onClose={() => onClose()}
-      cancelButton="" // hides cancel
-      okButton="Done"
-      title={<div className="w-full flex justify-center">{title}</div>}
+      title={title}
     >
       <div>
         {transactionReceipt ? (
