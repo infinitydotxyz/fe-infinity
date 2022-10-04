@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+
 const getIsMobile = () => typeof window !== 'undefined' && window.innerWidth <= 768;
 const getIsTablet = () => typeof window !== 'undefined' && window.innerWidth > 768 && window.innerWidth <= 1024;
 const getIsDesktop = () => typeof window !== 'undefined' && window.innerWidth > 1024;

@@ -26,6 +26,7 @@ const classes = {
     outlineDanger:
       'rounded-full border rounded-full text-gray-900 bg-theme-gray-100 hover:bg-theme-gray-200 border-red-500 hover:border-red-800 focus:ring-2 focus:ring-red-500 focus:ring-opacity-50',
     round: 'rounded-full p-1', // use plain size
+    roundBorder: twMerge(inputBorderColor, 'border rounded-full bg-white text-black hover:bg-theme-gray-200'),
     white: 'border rounded-full border-gray-100 bg-white text-black hover:bg-theme-gray-200'
   }
 };

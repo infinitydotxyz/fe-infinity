@@ -1,3 +1,5 @@
+import { ChainId } from '@infinityxyz/lib-frontend/types/core';
+import { getToken } from '@infinityxyz/lib-frontend/utils';
 import missingImage from 'src/images/missing-image.png';
 import newsImage from 'src/images/news.png';
 
@@ -41,3 +43,11 @@ export const standardCard = 'rounded-xl border p-5 bg-theme-light-200 my-3';
 export const standardBorderCard = 'rounded-2xl border p-5 my-3';
 
 export const USER_API_END_POINT = '/user';
+
+export const TOKEN = getToken(ChainId.Mainnet) ?? {
+  address: '',
+  name: 'Infinity',
+  symbol: 'INFT',
+  decimals: 18,
+  chainId: ChainId.Mainnet
+};
