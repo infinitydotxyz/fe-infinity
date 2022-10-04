@@ -1,6 +1,6 @@
 import { round } from '@infinityxyz/lib-frontend/utils';
 import React, { useState } from 'react';
-import { Button, Heading } from 'src/components/common';
+import { Button, Heading, Spacer } from 'src/components/common';
 import { UniswapModal } from 'src/components/common/uniswap-modal';
 import { StakeTokensModal } from 'src/components/rewards/stake-tokens-modal';
 import { UnstakeTokensModal } from 'src/components/rewards/unstake-tokens-modal';
@@ -45,22 +45,24 @@ const MyRewardsPage: React.FC = () => {
                 <div className="text-sm mt-1">Staked</div>
               </div>
             </div>
-            <div className="lg:w-2/4 sm:w-full flex mt-4">
+            <div className="w-full flex mt-4 items-center flex-wrap">
+              <Button size="large" className="font-heading" onClick={() => setShowBuyTokensModal(true)}>
+                Buy ${TOKEN.symbol}
+              </Button>
+
+              <Spacer />
+
               <Button size="large" className="font-heading" onClick={() => setShowStakeTokensModal(true)}>
                 Stake
               </Button>
+
               <Button
                 size="large"
                 variant="outline"
-                className="font-heading lg:ml-3"
+                className="font-heading ml-3"
                 onClick={() => setShowUnstakeTokensModal(true)}
               >
                 Unstake
-              </Button>
-            </div>
-            <div className="lg:w-2/4 sm:w-full flex mt-4">
-              <Button size="large" className="font-heading" onClick={() => setShowBuyTokensModal(true)}>
-                Buy ${TOKEN.symbol}
               </Button>
             </div>
           </div>
