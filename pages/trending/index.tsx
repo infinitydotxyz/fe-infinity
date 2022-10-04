@@ -119,7 +119,7 @@ const TrendingPage = () => {
         />
       </div>
 
-      <div className="space-y-3 mt-6">
+      <div className="space-y-3 mt-8">
         {data.map((coll) => {
           return <TrendingPageCard key={coll.address} collection={coll} period={period} />;
         })}
