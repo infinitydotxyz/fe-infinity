@@ -120,8 +120,8 @@ const TrendingPage = () => {
       </div>
 
       <div className="space-y-3 mt-8">
-        {data.map((coll) => {
-          return <TrendingPageCard key={coll.address} collection={coll} period={period} />;
+        {data.map((coll, index) => {
+          return <TrendingPageCard key={coll.address} collection={coll} index={index} period={period} />;
         })}
       </div>
 
@@ -185,9 +185,10 @@ const VoteModalWrapper: React.FC<{ coll: Collection; isOpen: boolean; onClose: (
 interface Props {
   collection: Collection;
   period: string;
+  index: number;
 }
 
-const TrendingPageCard = ({ collection, period }: Props) => {
+const TrendingPageCard = ({ collection, period, index }: Props) => {
   const { checkSignedIn } = useOnboardContext();
   const [selectedCollection, setSelectedCollection] = useState<Collection>();
   const { addCartItem, setOrderDrawerOpen } = useOrderContext();
@@ -215,7 +216,9 @@ const TrendingPageCard = ({ collection, period }: Props) => {
     periodStat = collection?.stats?.monthly;
   }
   return (
-    <div className="bg-theme-light-200 px-6  py-4 rounded-3xl flex items-center font-heading">
+    <div className="bg-theme-light-200 px-7 py-4 rounded-3xl flex items-center font-heading">
+      <div className="text-theme-light-800 text-xl mr-6 min-w-[32px] text-right font-heading">{index + 1}</div>
+
       <NextLink href={`/collection/${collection?.slug}`}>
         <EZImage className="w-16 h-16 rounded-2xl overflow-clip" src={collection?.metadata?.profileImage} />
       </NextLink>
