@@ -17,7 +17,7 @@ const TrendingItem = ({ collection, index }: Props2) => {
       <div className="flex items-center min-w-0">
         <NextLink href={`/collection/${collection.slug}`}>
           <EZImage
-            src={collection.metadata.bannerImage || collection.metadata.profileImage}
+            src={collection.metadata.profileImage || collection.metadata.bannerImage}
             className="w-12 h-12 overflow-clip rounded-full"
           />
         </NextLink>
