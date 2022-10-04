@@ -171,7 +171,7 @@ export const FeedListTableItem = ({ activity }: Props) => {
 
   const tweetItem = () => {
     return (
-      <a href={activity.externalUrl} className=" " target="_blank">
+      <a href={activity.tokenId} className=" " target="_blank">
         <div className={twMerge(standardBorderCard, 'flex items-center font-heading')}>
           <EZImage className="w-16 h-16 overflow-clip rounded-2xl" src={activity?.image || activity?.paymentToken} />
 
