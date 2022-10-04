@@ -3,13 +3,15 @@ import { CuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto/collec
 import { NULL_ADDRESS } from '@infinityxyz/lib-frontend/utils';
 import { useRouter } from 'next/router';
 import { parse } from 'query-string';
-import { Fragment, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Button,
+  CenterFixed,
   EthPrice,
   EZImage,
   NextLink,
   PageBox,
+  Spinner,
   SVG,
   toastSuccess,
   ToggleTab,
@@ -117,13 +119,17 @@ const TrendingPage = () => {
         />
       </div>
 
-      <div className="space-y-4 mt-8">
+      <div className="space-y-3 mt-6">
         {data.map((coll) => {
           return <TrendingPageCard key={coll.address} collection={coll} period={period} />;
         })}
       </div>
 
-      {isLoading && <LoadingCards />}
+      {isLoading && (
+        <CenterFixed>
+          <Spinner />
+        </CenterFixed>
+      )}
 
       {/* <ScrollLoader onFetchMore={() => fetchData()} /> */}
     </PageBox>
@@ -131,18 +137,6 @@ const TrendingPage = () => {
 };
 
 export default TrendingPage;
-
-// =======================================================================
-
-const LoadingCards = () => (
-  <>
-    {Array.from(Array(Math.round(ITEMS_PER_PAGE / 2)).keys())?.map((x, i) => (
-      <Fragment key={i}>
-        <div className="w-full h-[110px] mt-4 bg-theme-light-200 rounded-3xl animate-pulse"></div>
-      </Fragment>
-    ))}
-  </>
-);
 
 // =======================================================================
 
@@ -221,7 +215,7 @@ const TrendingPageCard = ({ collection, period }: Props) => {
     periodStat = collection?.stats?.monthly;
   }
   return (
-    <div className="bg-theme-light-200 px-10 h-[110px] rounded-3xl flex items-center font-heading">
+    <div className="bg-theme-light-200 px-6  py-4 rounded-3xl flex items-center font-heading">
       <NextLink href={`/collection/${collection?.slug}`}>
         <EZImage className="w-16 h-16 rounded-2xl overflow-clip" src={collection?.metadata?.profileImage} />
       </NextLink>
@@ -294,8 +288,12 @@ const TrendingPageCard = ({ collection, period }: Props) => {
         ) : null}
 
         <div className="flex flex-row gap-2 flex-wrap">
-          <Button onClick={() => onClickBuy(collection)}>Buy</Button>
-          <Button onClick={() => checkSignedIn() && setSelectedCollection(collection)}>Curate</Button>
+          <Button size="medium" onClick={() => onClickBuy(collection)}>
+            Buy
+          </Button>
+          <Button size="medium" onClick={() => checkSignedIn() && setSelectedCollection(collection)}>
+            Curate
+          </Button>
         </div>
         <VoteModalWrapper
           coll={collection}
