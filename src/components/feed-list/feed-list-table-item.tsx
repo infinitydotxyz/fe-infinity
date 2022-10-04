@@ -214,10 +214,12 @@ export const FeedListTableItem = ({ activity }: Props) => {
   };
 
   const tokensStakedItem = () => {
+    const url = `/profile/${activity.from}`;
+
     return (
       <div>
         <div className={twMerge(standardBorderCard, 'flex items-center font-heading')}>
-          <NextLink href={`/collection/${activity.collectionSlug}`}>
+          <NextLink href={url}>
             <EZImage className="w-16 h-16 overflow-clip rounded-2xl" src={activity?.image} />
           </NextLink>
 
