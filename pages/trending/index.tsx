@@ -27,7 +27,6 @@ import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 const DEFAULT_TAB = '1 day';
 
 const TrendingPage = () => {
-  const { checkSignedIn } = useOnboardContext();
   const { pathname, query, push } = useRouter();
   const [queryBy, setQueryBy] = useState('by_sales_volume');
   const [data, setData] = useState<Collection[]>([]);
@@ -35,11 +34,7 @@ const TrendingPage = () => {
   const [period, setPeriod] = useState('daily');
   const [offset, setOffset] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedCollection, setSelectedCollection] = useState<Collection>();
-  const { addCartItem, setOrderDrawerOpen } = useOrderContext();
   const isMounted = useIsMounted();
-
-  const { isDesktop, isMobile } = useScreenSize();
 
   useEffect(() => {
     const parsedQs = parse(window?.location?.search); // don't use useRouter-query as it's undefined initially.
@@ -110,18 +105,6 @@ const TrendingPage = () => {
     }
   };
 
-  const onClickBuy = (collection: Collection) => {
-    addCartItem({
-      chainId: collection.chainId as ChainId,
-      collectionName: collection.metadata?.name ?? '',
-      collectionAddress: collection.address ?? '',
-      collectionImage: collection.metadata?.profileImage ?? '',
-      collectionSlug: collection?.slug ?? '',
-      isSellOrder: false
-    });
-    setOrderDrawerOpen(true);
-  };
-
   return (
     <PageBox title="Trending">
       <div className="mt-4 flex justify-between">
@@ -136,102 +119,7 @@ const TrendingPage = () => {
 
       <div className="space-y-4 mt-8">
         {data.map((coll) => {
-          let periodStat: CollectionPeriodStatsContent | undefined = undefined;
-          if (period === 'daily') {
-            periodStat = coll?.stats?.daily;
-          } else if (period === 'weekly') {
-            periodStat = coll?.stats?.weekly;
-          } else if (period === 'monthly') {
-            periodStat = coll?.stats?.monthly;
-          }
-          return (
-            <div
-              key={coll.address}
-              className="bg-theme-light-200 px-10 h-[110px] rounded-3xl flex items-center font-heading"
-            >
-              <NextLink href={`/collection/${coll?.slug}`}>
-                <EZImage className="w-16 h-16 rounded-2xl overflow-clip" src={coll?.metadata?.profileImage} />
-              </NextLink>
-
-              <div className="flex justify-between items-center w-full ml-6">
-                <div className="w-44 flex items-center text-black font-bold font-body">
-                  <NextLink href={`/collection/${coll?.slug}`} className="truncate">
-                    {coll?.metadata?.name}
-                  </NextLink>
-                  {coll?.hasBlueCheck && <SVG.blueCheck className="ml-1.5 shrink-0 w-4 h-4" />}
-                </div>
-
-                {isDesktop ? (
-                  <>
-                    <div className="w-1/9 max-w-[80px] min-w-[80px]">
-                      <div className="text-black font-bold font-body flex items-center">Sales</div>
-                      <div>{formatNumber(periodStat?.numSales)}</div>
-                    </div>
-                  </>
-                ) : null}
-
-                <div className="w-1/9 max-w-[80px] min-w-[80px]">
-                  <div className="text-black font-bold font-body flex items-center">Volume</div>
-                  <div>
-                    <EthPrice label={`${periodStat?.salesVolume ? nFormatter(periodStat?.salesVolume) : '-'}`} />
-                  </div>
-                </div>
-
-                {/* {isMobile ? null : (
-                  <>
-                    <div className="w-1/9 max-w-[80px] min-w-[80px]">
-                      <div className="text-black font-bold font-body flex items-center">Min Price</div>
-                      <div>
-                        <EthPrice label={periodStat?.minPrice ? formatNumber(periodStat?.minPrice, 2) : '-'} />
-                      </div>
-                    </div>
-                  </>
-                )} */}
-
-                <div className="w-1/9 max-w-[80px] min-w-[80px]">
-                  <div className="text-black font-bold font-body flex items-center">Avg Price</div>
-                  <div>
-                    <EthPrice label={periodStat?.avgPrice ? formatNumber(periodStat?.avgPrice, 2) : '-'} />
-                  </div>
-                </div>
-
-                {isMobile ? null : (
-                  <>
-                    <div className="w-1/9 max-w-[80px] min-w-[80px]">
-                      <div className="text-black font-bold font-body flex items-center">Max Price</div>
-                      <div>
-                        <EthPrice label={periodStat?.maxPrice ? formatNumber(periodStat?.maxPrice, 2) : '-'} />
-                      </div>
-                    </div>
-                  </>
-                )}
-
-                {isDesktop ? (
-                  <>
-                    <div className="w-1/9 max-w-[80px] min-w-[80px]">
-                      <div className="text-black font-bold font-body">Owners</div>
-                      <div>{nFormatter(periodStat?.ownerCount ?? 0)}</div>
-                    </div>
-
-                    <div className="w-1/9 max-w-[80px] min-w-[80px]">
-                      <div className="text-black font-bold font-body">Tokens</div>
-                      <div>{nFormatter(periodStat?.tokenCount ?? 0)}</div>
-                    </div>
-                  </>
-                ) : null}
-
-                <div className="flex flex-row gap-2 flex-wrap">
-                  <Button onClick={() => onClickBuy(coll)}>Buy</Button>
-                  <Button onClick={() => checkSignedIn() && setSelectedCollection(coll)}>Curate</Button>
-                </div>
-                <VoteModalWrapper
-                  coll={coll}
-                  isOpen={selectedCollection === coll}
-                  onClose={() => setSelectedCollection(undefined)}
-                />
-              </div>
-            </div>
-          );
+          return <TrendingPageCard key={coll.address} collection={coll} period={period} />;
         })}
       </div>
 
@@ -255,6 +143,8 @@ const LoadingCards = () => (
     ))}
   </>
 );
+
+// =======================================================================
 
 const VoteModalWrapper: React.FC<{ coll: Collection; isOpen: boolean; onClose: () => void }> = ({
   coll,
@@ -293,5 +183,126 @@ const VoteModalWrapper: React.FC<{ coll: Collection; isOpen: boolean; onClose: (
         toastSuccess('Votes registered successfully. Your balance will reflect shortly.');
       }}
     />
+  );
+};
+
+// =======================================================================
+
+interface Props {
+  collection: Collection;
+  period: string;
+}
+
+const TrendingPageCard = ({ collection, period }: Props) => {
+  const { checkSignedIn } = useOnboardContext();
+  const [selectedCollection, setSelectedCollection] = useState<Collection>();
+  const { addCartItem, setOrderDrawerOpen } = useOrderContext();
+
+  const { isDesktop, isMobile } = useScreenSize();
+
+  const onClickBuy = (collection: Collection) => {
+    addCartItem({
+      chainId: collection.chainId as ChainId,
+      collectionName: collection.metadata?.name ?? '',
+      collectionAddress: collection.address ?? '',
+      collectionImage: collection.metadata?.profileImage ?? '',
+      collectionSlug: collection?.slug ?? '',
+      isSellOrder: false
+    });
+    setOrderDrawerOpen(true);
+  };
+
+  let periodStat: CollectionPeriodStatsContent | undefined = undefined;
+  if (period === 'daily') {
+    periodStat = collection?.stats?.daily;
+  } else if (period === 'weekly') {
+    periodStat = collection?.stats?.weekly;
+  } else if (period === 'monthly') {
+    periodStat = collection?.stats?.monthly;
+  }
+  return (
+    <div className="bg-theme-light-200 px-10 h-[110px] rounded-3xl flex items-center font-heading">
+      <NextLink href={`/collection/${collection?.slug}`}>
+        <EZImage className="w-16 h-16 rounded-2xl overflow-clip" src={collection?.metadata?.profileImage} />
+      </NextLink>
+
+      <div className="flex justify-between items-center w-full ml-6">
+        <div className="w-44 flex items-center text-black font-bold font-body">
+          <NextLink href={`/collection/${collection?.slug}`} className="truncate">
+            {collection?.metadata?.name}
+          </NextLink>
+          {collection?.hasBlueCheck && <SVG.blueCheck className="ml-1.5 shrink-0 w-4 h-4" />}
+        </div>
+
+        {isDesktop ? (
+          <>
+            <div className="w-1/9 max-w-[80px] min-w-[80px]">
+              <div className="text-black font-bold font-body flex items-center">Sales</div>
+              <div>{formatNumber(periodStat?.numSales)}</div>
+            </div>
+          </>
+        ) : null}
+
+        <div className="w-1/9 max-w-[80px] min-w-[80px]">
+          <div className="text-black font-bold font-body flex items-center">Volume</div>
+          <div>
+            <EthPrice label={`${periodStat?.salesVolume ? nFormatter(periodStat?.salesVolume) : '-'}`} />
+          </div>
+        </div>
+
+        {/* {isMobile ? null : (
+                  <>
+                    <div className="w-1/9 max-w-[80px] min-w-[80px]">
+                      <div className="text-black font-bold font-body flex items-center">Min Price</div>
+                      <div>
+                        <EthPrice label={periodStat?.minPrice ? formatNumber(periodStat?.minPrice, 2) : '-'} />
+                      </div>
+                    </div>
+                  </>
+                )} */}
+
+        <div className="w-1/9 max-w-[80px] min-w-[80px]">
+          <div className="text-black font-bold font-body flex items-center">Avg Price</div>
+          <div>
+            <EthPrice label={periodStat?.avgPrice ? formatNumber(periodStat?.avgPrice, 2) : '-'} />
+          </div>
+        </div>
+
+        {isMobile ? null : (
+          <>
+            <div className="w-1/9 max-w-[80px] min-w-[80px]">
+              <div className="text-black font-bold font-body flex items-center">Max Price</div>
+              <div>
+                <EthPrice label={periodStat?.maxPrice ? formatNumber(periodStat?.maxPrice, 2) : '-'} />
+              </div>
+            </div>
+          </>
+        )}
+
+        {isDesktop ? (
+          <>
+            <div className="w-1/9 max-w-[80px] min-w-[80px]">
+              <div className="text-black font-bold font-body">Owners</div>
+              <div>{nFormatter(periodStat?.ownerCount ?? 0)}</div>
+            </div>
+
+            <div className="w-1/9 max-w-[80px] min-w-[80px]">
+              <div className="text-black font-bold font-body">Tokens</div>
+              <div>{nFormatter(periodStat?.tokenCount ?? 0)}</div>
+            </div>
+          </>
+        ) : null}
+
+        <div className="flex flex-row gap-2 flex-wrap">
+          <Button onClick={() => onClickBuy(collection)}>Buy</Button>
+          <Button onClick={() => checkSignedIn() && setSelectedCollection(collection)}>Curate</Button>
+        </div>
+        <VoteModalWrapper
+          coll={collection}
+          isOpen={selectedCollection === collection}
+          onClose={() => setSelectedCollection(undefined)}
+        />
+      </div>
+    </div>
   );
 };
