@@ -295,12 +295,13 @@ const TrendingPageCard = ({ collection, period }: Props) => {
             Curate
           </Button>
         </div>
-        <VoteModalWrapper
-          coll={collection}
-          isOpen={selectedCollection === collection}
-          onClose={() => setSelectedCollection(undefined)}
-        />
       </div>
+
+      <VoteModalWrapper
+        coll={collection}
+        isOpen={selectedCollection === collection}
+        onClose={() => setSelectedCollection(undefined)}
+      />
     </div>
   );
 };
