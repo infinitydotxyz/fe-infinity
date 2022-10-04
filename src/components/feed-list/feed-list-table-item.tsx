@@ -86,10 +86,16 @@ export const FeedListTableItem = ({ activity }: Props) => {
   };
 
   const listingItem = () => {
+    let url = activity.internalUrl;
+
+    if (!url) {
+      url = `/collection/${activity.collectionSlug}`;
+    }
+
     return (
       <div>
         <div className={twMerge(standardBorderCard, 'flex items-center font-heading')}>
-          <NextLink href={`/collection/${activity.collectionSlug}`}>
+          <NextLink href={url}>
             <EZImage className="w-16 h-16 overflow-clip rounded-2xl" src={activity?.image} />
           </NextLink>
 
