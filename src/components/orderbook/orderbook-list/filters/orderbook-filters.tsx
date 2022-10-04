@@ -270,8 +270,7 @@ const CollectionCheckbox = ({ collection }: { collection: CollectionSearchDto })
         }}
         label={
           <div className="flex items-center">
-            {collection.name}
-
+            <div className="truncate">{collection.name}</div>
             {collection?.hasBlueCheck ? <SVG.blueCheck className="w-4 h-4 ml-1 shrink-0" /> : null}
           </div>
         }

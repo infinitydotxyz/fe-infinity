@@ -404,7 +404,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
             <ActivityList
               chainId={token.chainId ?? '1'} // default
               collectionAddress={token.collectionAddress ?? ''}
-              tokenId={token.tokenId}
+              token={token}
             />
           </div>
         )}

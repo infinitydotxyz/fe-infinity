@@ -3,7 +3,7 @@ import { EthPrice, EZImage, NextLink } from 'src/components/common';
 import { ellipsisAddress } from 'src/utils';
 import { format } from 'timeago.js';
 import { NftActivity } from '@infinityxyz/lib-frontend/types/dto/collections/nfts';
-import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
+import { BaseCollection, Token } from '@infinityxyz/lib-frontend/types/core';
 
 // the backend adds teh collectionData to the NFtActivity
 export interface NftEventRec extends NftActivity {
@@ -12,18 +12,22 @@ export interface NftEventRec extends NftActivity {
 
 interface Props {
   item: NftEventRec;
+  token?: Token;
 }
 
-export const ActivityItem = ({ item }: Props) => {
+export const ActivityItem = ({ item, token }: Props) => {
   const toValue = item.toDisplayName ? ellipsisAddress(item.toDisplayName) : ellipsisAddress(item.to);
+
+  let imageUrl = item.image || item.collectionData?.metadata?.profileImage;
+  if (token && token.image?.originalUrl) {
+    imageUrl = token.image.originalUrl;
+  }
+
   return (
     <div>
       <div className="bg-theme-light-200 px-10 py-6 rounded-3xl flex items-center font-heading mt-4">
         <NextLink href={`/asset/${item.chainId}/${item.address}/${item.tokenId}`}>
-          <EZImage
-            className="w-16 h-16 max-h-[80px] rounded-2xl overflow-clip"
-            src={item.image || item.collectionData?.metadata?.profileImage}
-          />
+          <EZImage className="w-16 h-16 max-h-[80px] rounded-2xl overflow-clip" src={imageUrl} />
         </NextLink>
         <div className="flex justify-between w-full mx-8">
           <div className="w-1/6">

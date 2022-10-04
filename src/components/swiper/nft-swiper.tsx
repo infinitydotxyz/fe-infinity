@@ -3,7 +3,7 @@ import { Button, CenteredContent, EZImage, Spacer } from '../common';
 import { FullScreenModal } from '../common/full-screen-modal';
 import { Erc721Token } from '@infinityxyz/lib-frontend/types/core';
 import { API, Direction, SwiperCard } from './swiper-card';
-import { MdFavoriteBorder, MdOutlineArrowBack, MdRefresh } from 'react-icons/md';
+import { MdFavoriteBorder, MdClose, MdUndo } from 'react-icons/md';
 import { inputBorderColor, largeIconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { SwiperEvent, SwiperEmitter } from './swiper-emitter';
@@ -125,10 +125,10 @@ export const NFTSwiper = ({ data, liked, setLiked, skipped, emitter, setSkipped 
   const buttons = (
     <div className="mt-5 flex justify-center space-x-6">
       <Button disabled={!canSwipe} variant="roundBorder" size="round" onClick={() => swipe('left')}>
-        <MdOutlineArrowBack className={largeIconButtonStyle} />
+        <MdClose className={largeIconButtonStyle} />
       </Button>
       <Button disabled={!canGoBack} variant="roundBorder" size="round" onClick={() => goBack()}>
-        <MdRefresh className={largeIconButtonStyle} />
+        <MdUndo className={largeIconButtonStyle} />
       </Button>
       <Button disabled={!canSwipe} variant="roundBorder" size="round" onClick={() => swipe('right')}>
         <MdFavoriteBorder className={largeIconButtonStyle} />
