@@ -1,18 +1,20 @@
-import { Phase } from '@infinityxyz/lib-frontend/types/core';
-import { EZImage, NextLink, PageBox, Spinner } from 'src/components/common';
-import { useRaffleLeaderboard } from 'src/hooks/api/useRaffleLeaderboard';
-import { formatNumber, nFormatter } from 'src/utils';
-
-const CURREN_PHASE = Phase.One; // TODO: dynamically get current phase from somewhere?
+import { PageBox, Spinner } from 'src/components/common';
+import { RaffleDescription } from 'src/components/raffles/raffle-description';
+import { useRaffles } from 'src/hooks/api/useRaffles';
 
 const LeaderboardPage = () => {
-  const { result: raffles, isLoading } = useRaffleLeaderboard(CURREN_PHASE);
+  const { result: raffles, isLoading } = useRaffles();
 
   return (
-    <PageBox title={`Leaderboard (${CURREN_PHASE})`}>
+    <PageBox title="Raffles" showTitle={true}>
       <div className="space-y-4 mt-8">
         {isLoading && <Spinner />}
         {!isLoading &&
+          raffles.map((raffle) => {
+            return <RaffleDescription raffle={raffle} />;
+          })}
+
+        {/* {!isLoading &&
           raffles.map((raffle) => {
             return (
               <div
@@ -50,7 +52,7 @@ const LeaderboardPage = () => {
                 </div>
               </div>
             );
-          })}
+          })} */}
       </div>
     </PageBox>
   );

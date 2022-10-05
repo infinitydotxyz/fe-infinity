@@ -1,15 +1,15 @@
-import { ChainId, OrderDirection, Phase } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId, OrderDirection } from '@infinityxyz/lib-frontend/types/core';
 import { useFetchInfinite } from 'src/utils';
 import {
   RaffleLeaderboardQueryDto,
   RaffleLeaderboardArrayDto,
-  UserRaffleTicketsDto
+  RaffleLeaderboardUser
 } from '@infinityxyz/lib-frontend/types/dto/raffle';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 export const useRaffleLeaderboard = (
-  phase: Phase
-): { result: UserRaffleTicketsDto[]; error: unknown; isLoading: boolean; fetchMore: () => void } => {
+  phaseId: string
+): { result: RaffleLeaderboardUser[]; error: unknown; isLoading: boolean; fetchMore: () => void } => {
   const { chainId } = useOnboardContext();
 
   const query: RaffleLeaderboardQueryDto = {
@@ -20,7 +20,7 @@ export const useRaffleLeaderboard = (
   };
 
   const { result, error, isLoading, setSize } = useFetchInfinite<RaffleLeaderboardArrayDto>(
-    `/raffle/${phase}/leaderboard`,
+    `/raffles/${phaseId}/leaderboard`,
     {
       query
     }
