@@ -7,7 +7,7 @@ export const RaffleStats = ({ raffle }: { raffle: Raffle }) => {
   const potSize = raffle.progress > 0 ? Math.floor((raffle.totals.prizePoolEth / raffle.progress) * 100) : 0;
 
   return (
-    <InfoBox.Stats title="Stats">
+    <InfoBox.Stats title="Raffle Stats">
       <div className="flex w-full justify-between border-b-2">
         <InfoBox.Stat label="Tickets" value={nFormatter(parseInt(raffle.totals.totalNumTickets.toString()), 10)} />
         <InfoBox.Stat label="Entrants" value={nFormatter(raffle.totals.numUniqueEntrants)} />
