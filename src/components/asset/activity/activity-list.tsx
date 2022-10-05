@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { apiGet } from 'src/utils';
-import { ActivityItem } from './activity-item';
+import { ActivityItem, NftEventRec } from './activity-item';
 import { CenteredContent, Spinner } from 'src/components/common';
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { FeedFilterDropdown } from 'src/components/feed/feed-filter-dropdown';
+import { Token } from '@infinityxyz/lib-frontend/types/core/Token';
 
-interface ActivityListPropType {
+interface Props {
   className?: string;
   chainId: string;
   collectionAddress: string;
-  tokenId: string;
+  token: Token;
 }
 type EventTypeOptions = EventType | '';
 
@@ -23,14 +24,9 @@ const defaultActivities: EventTypeOptions[] = [
   EventType.NftTransfer
 ];
 
-export const ActivityList: React.FC<ActivityListPropType> = ({
-  className = '',
-  chainId,
-  collectionAddress,
-  tokenId
-}: ActivityListPropType) => {
+export const ActivityList: React.FC<Props> = ({ className = '', chainId, collectionAddress, token }) => {
   const [activityTypes, setActivityTypes] = useState<EventTypeOptions[]>(defaultActivities);
-  const [activityList, setActivityList] = useState([]);
+  const [activityList, setActivityList] = useState<NftEventRec[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasNoData, setHasNoData] = useState(false);
 
@@ -39,7 +35,7 @@ export const ActivityList: React.FC<ActivityListPropType> = ({
   const getActivityList = async () => {
     setIsLoading(true);
     setHasNoData(false);
-    const ACTIVITY_ENDPOINT = `/collections/${chainId}:${collectionAddress}/nfts/${tokenId}/activity`;
+    const ACTIVITY_ENDPOINT = `/collections/${chainId}:${collectionAddress}/nfts/${token.tokenId}/activity`;
     const queryTypes = activityTypes.filter((item) => item !== '');
     const { result, error } = await apiGet(ACTIVITY_ENDPOINT, {
       query: { eventType: queryTypes, limit: 50 }
@@ -59,7 +55,7 @@ export const ActivityList: React.FC<ActivityListPropType> = ({
     } else {
       getActivityList();
     }
-  }, [chainId, collectionAddress, tokenId, activityTypes]);
+  }, [chainId, collectionAddress, token, activityTypes]);
 
   const handleChange = (checked: boolean, checkId: string) => {
     const curType = checkId as EventType;
@@ -103,7 +99,7 @@ export const ActivityList: React.FC<ActivityListPropType> = ({
       {activityList.length > 0 ? (
         <div className="mt-6">
           {activityList.map((item, idx) => {
-            return <ActivityItem key={item + '_' + idx} item={item} />;
+            return <ActivityItem key={item + '_' + idx} item={item} token={token} />;
           })}
         </div>
       ) : null}

@@ -15,16 +15,26 @@ import { Button, EZImage, SVG } from '../common';
 import { CuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections.dto';
 import { twMerge } from 'tailwind-merge';
 import { useRouter } from 'next/router';
+import useScreenSize from 'src/hooks/useScreenSize';
 
 interface Props {
-  collections: CuratedCollectionDto[][];
+  collections: CuratedCollectionDto[];
 }
 
 export const CuratedSwiper = ({ collections }: Props) => {
-  const curatedCollections = collections.flat();
   const router = useRouter();
   const buttonPosition = 'absolute top-1/4 z-10';
   const buttonStyle = 'bg-white border bg-opacity-80 text-black shadow-xl';
+  const { innerWidth } = useScreenSize();
+
+  let columns = 1;
+  if (innerWidth > 1900) {
+    columns = 4;
+  } else if (innerWidth > 900) {
+    columns = 3;
+  } else if (innerWidth > 400) {
+    columns = 2;
+  }
 
   return (
     <div className="relative">
@@ -50,7 +60,7 @@ export const CuratedSwiper = ({ collections }: Props) => {
         // install Swiper modules
         modules={[Navigation, Pagination, A11y, Autoplay]}
         spaceBetween={10}
-        slidesPerView={3}
+        slidesPerView={columns}
         className={styles.swpr}
         loop={true}
         // loopedSlides={2}
@@ -62,7 +72,7 @@ export const CuratedSwiper = ({ collections }: Props) => {
         // onSwiper={(swiper) => console.log(swiper)}
         // onSlideChange={() => console.log('slide change')}
       >
-        {curatedCollections.map((collection) => {
+        {collections.map((collection) => {
           return (
             <SwiperSlide className=" " key={collection.address}>
               <CuratedSwiperCard
@@ -94,7 +104,7 @@ const CuratedSwiperCard: React.FC<Props2> = ({ collection, onClick }) => {
       onClick={onClick}
     >
       <div className="flex-1    ">
-        <EZImage src={collection.bannerImage} className="border  shrink-0  " />
+        <EZImage src={collection.bannerImage || collection.profileImage} className="border  shrink-0  " />
       </div>
 
       <div className="flex relative   px-5 py-2 items-center">

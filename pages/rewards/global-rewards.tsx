@@ -1,95 +1,155 @@
-import { Epoch } from '@infinityxyz/lib-frontend/types/core';
-import { RewardEpochDto, RewardsProgramByEpochDto } from '@infinityxyz/lib-frontend/types/dto/rewards';
-import React, { useEffect } from 'react';
-import { Heading, Spinner } from 'src/components/common';
+import React from 'react';
+import { TokenomicsConfigDto, TokenomicsPhaseDto } from '@infinityxyz/lib-frontend/types/dto';
+import { TradingFeeDestination } from '@infinityxyz/lib-frontend/types/dto/rewards/tokenomics-phase.dto';
+import { Spinner, TooltipWrapper } from 'src/components/common';
+import { DistributionBar } from 'src/components/common/distribution-bar';
 import { InfoBox } from 'src/components/rewards/info-box';
+import { RewardsProgressBar } from 'src/components/rewards/progressbar';
 import { RewardPhase } from 'src/components/rewards/reward-phase';
+import useScreenSize from 'src/hooks/useScreenSize';
 import { useFetch } from 'src/utils';
+import { twMerge } from 'tailwind-merge';
+import { State } from 'src/utils/state';
 
-const getEpochDescription = (epoch: Epoch) => {
-  switch (epoch) {
-    case Epoch.One:
-      return (
-        <>
-          <p className="my-2">
-            During this epoch, the exchange product is launched in beta alongside the $NFT token and the Infinity NFT
-            collection. This epoch has 4 token rewards phases.
-          </p>
-          <Heading as="h3" className="text-2xl  mt-2  !font-body !font-medium !text-black">
-            Benefits
-          </Heading>
-          <p className="my-2">Holders of the Infinity NFT are MVPs with benefits including (but not limited to):</p>
-          <ul className="ml-4 my-2 list-disc">
-            <li>Early access to all future Infinity products</li>
-            <li>Partner offers, raffles, allowlists</li>
-          </ul>
-        </>
-      );
+type GRAND_RAFFLE_TYPE = `${TradingFeeDestination.Raffle}-grand`;
+type PHASE_RAFFLE_TYPE = `${TradingFeeDestination.Raffle}-phase`;
+const GRAND_RAFFLE: GRAND_RAFFLE_TYPE = `${TradingFeeDestination.Raffle}-grand`;
+const PHASE_RAFFLE: PHASE_RAFFLE_TYPE = `${TradingFeeDestination.Raffle}-phase`;
 
-    case Epoch.Two:
-      return (
-        <>
-          <p className="my-2">
-            In this epoch, in addition to token rewards for trading, curators of collections start earning curation
-            rewards in ETH. The free Infinity NFT mint is no longer available starting this epoch.
-          </p>
-          <Heading as="h3" className="text-2xl  mt-2  !font-body !font-medium !text-black">
-            Benefits
-          </Heading>
-          <ul className="list-disc my-2 ml-4">
-            <li>Curators earn ETH rewards. </li>
-          </ul>
-        </>
-      );
-    case Epoch.Three:
-      return (
-        <>
-          <p className="my-2">Starting this epoch, token emissions go to zero. Curators still earn ETH rewards.</p>
-          <Heading as="h3" className="text-2xl mt-2 !font-body !font-medium !text-black">
-            Benefits
-          </Heading>
-          <ul className="list-disc my-2 ml-4">
-            <li>All ETH rewards go to curators.</li>
-            <li>
-              Only the tokens in circulation are used for staking that gives users voting power. In other words, the
-              only possible curators are the traders/collectors from epochs 1 and 2.
-            </li>
-          </ul>
-          <p className="my-2">Curation rewards are distributed weekly.</p>
-        </>
-      );
+const configByTradingFeeDestination: Record<
+  TradingFeeDestination | GRAND_RAFFLE_TYPE | PHASE_RAFFLE_TYPE,
+  { name: string; color: string }
+> = {
+  [TradingFeeDestination.Treasury]: {
+    name: 'Treasury',
+    color: 'bg-red-300'
+  },
+  [GRAND_RAFFLE]: { name: 'User Grand Raffle', color: 'bg-green-300' },
+  [PHASE_RAFFLE]: { name: 'User Phase Raffle', color: 'bg-orange-300' },
+  [TradingFeeDestination.CollectionPot]: { name: 'Collection Pot', color: 'bg-blue-300' },
+  [TradingFeeDestination.Curators]: { name: 'Curation', color: 'bg-gray-300' },
+  RAFFLE: {
+    name: 'User Raffle',
+    color: 'bg-green-300'
   }
 };
 
-const GlobalRewards: React.FC = () => {
-  const data = useFetch<RewardsProgramByEpochDto>('/rewards');
-  const [epochs, setEpochs] = React.useState<RewardEpochDto[]>([]);
+function getPhaseSplitDistributions(phase: TokenomicsPhaseDto) {
+  const splitsToDisplay = Object.keys(phase.split).filter(
+    (key) => phase.split[key as TradingFeeDestination].percentage > 0
+  );
 
-  useEffect(() => {
-    const orderedEpochs = [data?.result?.[Epoch.One], data?.result?.[Epoch.Two], data?.result?.[Epoch.Three]].filter(
-      (item) => !!item
-    );
-    setEpochs(orderedEpochs as RewardEpochDto[]);
-  }, [data.result]);
+  const configs = splitsToDisplay.flatMap((key) => {
+    const item = phase.split[key as TradingFeeDestination];
+    const config = configByTradingFeeDestination[key as TradingFeeDestination];
+    if (key === TradingFeeDestination.Raffle) {
+      const grandPrize = phase.raffleConfig?.grandPrize;
+      const phasePrize = phase.raffleConfig?.phasePrize;
+      const items: { percent: number; label: string; className: string }[] = [];
+      if (grandPrize) {
+        const config = configByTradingFeeDestination[GRAND_RAFFLE];
+        items.push({
+          percent: (item.percentage * grandPrize.percentage) / 100,
+          label: config.name,
+          className: config.color
+        });
+      }
+      if (phasePrize) {
+        const config = configByTradingFeeDestination[PHASE_RAFFLE];
+        items.push({
+          percent: (item.percentage * phasePrize.percentage) / 100,
+          label: config.name,
+          className: config.color
+        });
+      }
+
+      return items;
+    }
+
+    return [
+      {
+        percent: item.percentage,
+        label: config.name,
+        className: config.color
+      }
+    ];
+  });
+  return configs.sort((a, b) => a.label.localeCompare(b.label));
+}
+
+const GlobalRewards: React.FC = () => {
+  const { result, isLoading } = useFetch<TokenomicsConfigDto>('/rewards');
+  const { isMobile } = useScreenSize();
+
+  const getPhaseTooltip = (phase: TokenomicsPhaseDto, state: State) => {
+    const renderTooltip = (props: { state: State; isHovered: boolean; children?: React.ReactNode }) => {
+      let message = '';
+      switch (state) {
+        case State.Active:
+          message = `${phase.name} is currently active.`;
+          break;
+        case State.Inactive:
+          message = `${phase.name} will become active once the previous phase has completed.`;
+          break;
+        case State.Complete:
+          message = `${phase.name} has been completed.`;
+          break;
+      }
+      return (
+        <TooltipWrapper
+          className="w-fit min-w-[200px]"
+          show={props.isHovered}
+          tooltip={{
+            title: `${props.state}`,
+            content: message
+          }}
+        >
+          {props.children}
+        </TooltipWrapper>
+      );
+    };
+
+    return renderTooltip;
+  };
 
   return (
     <>
-      {data.isLoading && <Spinner />}
-      {epochs.length > 0 ? (
-        epochs.map((item, index1) => {
-          return (
-            <InfoBox key={index1} title={item.name} description={getEpochDescription(item.name)}>
-              <InfoBox.SideInfo>
-                {item.phases.map((phase, index2) => {
-                  return <RewardPhase key={index2} phase={phase} />;
-                })}
-              </InfoBox.SideInfo>
-            </InfoBox>
-          );
-        })
-      ) : (
-        <div className="flex flex-col mt-10">Unable to load rewards.</div>
-      )}
+      {isLoading && <Spinner />}
+      {result?.phases && result?.phases.length > 0
+        ? result.phases.map((phase: TokenomicsPhaseDto) => {
+            const state = phase.isActive ? State.Active : phase.progress === 100 ? State.Complete : State.Inactive;
+
+            return (
+              <InfoBox key={phase.id} title={phase.name} state={state} renderTooltip={getPhaseTooltip(phase, state)}>
+                <div className={twMerge('flex align-center justify-center', isMobile ? 'flex-col' : '')}>
+                  <InfoBox.SideInfo>
+                    <InfoBox.Stats title="Trading Fee Distribution">
+                      <>
+                        <DistributionBar distribution={getPhaseSplitDistributions(phase)} />
+                        <div className="w-full py-2">
+                          <div className="text-sm mt-1">Progress</div>
+                          <div className="text-2xl font-heading font-bold">
+                            <RewardsProgressBar
+                              amount={
+                                phase.progress !== 0 && phase.progress < 1 ? Math.ceil(phase.progress) : phase.progress
+                              }
+                              max={100}
+                            />
+                          </div>
+                        </div>
+                      </>
+                    </InfoBox.Stats>
+                  </InfoBox.SideInfo>
+                  <InfoBox.SideInfo>
+                    <div className={isMobile ? '' : 'ml-6'}>
+                      <RewardPhase key={phase.id} phase={phase} />
+                    </div>
+                  </InfoBox.SideInfo>
+                </div>
+              </InfoBox>
+            );
+          })
+        : !isLoading && <div className="flex flex-col mt-10">Unable to load rewards.</div>}
     </>
   );
 };

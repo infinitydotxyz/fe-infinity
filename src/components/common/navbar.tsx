@@ -243,7 +243,7 @@ export const Navbar = () => {
               <div>
                 <Menu>
                   <Menu.Button>
-                    <div className="flex gap-2 items-center">
+                    <div className="flex gap-2 items-center select-none">
                       {item?.label} <IoMdArrowDropdown />
                     </div>
                   </Menu.Button>

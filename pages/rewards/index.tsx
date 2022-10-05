@@ -19,7 +19,7 @@ const RewardsPage = () => {
   return (
     <PageBox title="Rewards" showTitle={false}>
       <ToggleTab
-        className="font-heading pointer-events-auto"
+        className="font-heading pointer-events-auto hidden" // NOTE: hidden for now
         options={options}
         selected={selected}
         onChange={onChange}

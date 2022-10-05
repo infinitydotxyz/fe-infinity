@@ -56,15 +56,15 @@ export const UserProfileActivityList = ({ userAddress, types, className }: UserP
         />
       </div>
 
-      <ul className="space-y-4 pointer-events-auto">
+      <ul className="space-y-3 pointer-events-auto">
         {!isLoading && activities?.length === 0 ? <div className="font-heading">No results found</div> : null}
 
         {activities.length > 0 &&
-          activities?.map((event) => {
+          activities?.map((event, index) => {
             switch (event.type) {
               case EventType.NftListing:
               case EventType.NftOffer:
-                return <NftOrderEvent key={`${event.orderItemId}`} event={event} />;
+                return <NftOrderEvent key={`${event.orderItemId} ${index}`} event={event} />;
               case EventType.NftSale:
                 return (
                   <NftSaleEvent

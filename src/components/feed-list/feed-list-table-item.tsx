@@ -86,10 +86,16 @@ export const FeedListTableItem = ({ activity }: Props) => {
   };
 
   const listingItem = () => {
+    let url = activity.internalUrl;
+
+    if (!url) {
+      url = `/collection/${activity.collectionSlug}`;
+    }
+
     return (
       <div>
         <div className={twMerge(standardBorderCard, 'flex items-center font-heading')}>
-          <NextLink href={`/collection/${activity.collectionSlug}`}>
+          <NextLink href={url}>
             <EZImage className="w-16 h-16 overflow-clip rounded-2xl" src={activity?.image} />
           </NextLink>
 
@@ -171,7 +177,7 @@ export const FeedListTableItem = ({ activity }: Props) => {
 
   const tweetItem = () => {
     return (
-      <a href={activity.externalUrl} className=" " target="_blank">
+      <a href={activity.tokenId} className=" " target="_blank">
         <div className={twMerge(standardBorderCard, 'flex items-center font-heading')}>
           <EZImage className="w-16 h-16 overflow-clip rounded-2xl" src={activity?.image || activity?.paymentToken} />
 
@@ -208,10 +214,12 @@ export const FeedListTableItem = ({ activity }: Props) => {
   };
 
   const tokensStakedItem = () => {
+    const url = `/profile/${activity.from}`;
+
     return (
       <div>
         <div className={twMerge(standardBorderCard, 'flex items-center font-heading')}>
-          <NextLink href={`/collection/${activity.collectionSlug}`}>
+          <NextLink href={url}>
             <EZImage className="w-16 h-16 overflow-clip rounded-2xl" src={activity?.image} />
           </NextLink>
 
