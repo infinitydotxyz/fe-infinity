@@ -1,8 +1,10 @@
 import { RaffleState } from '@infinityxyz/lib-frontend/types/core';
+import { useRaffleEntrant } from 'src/hooks/api/useRaffleEntrant';
 import { useRaffleLeaderboard } from 'src/hooks/api/useRaffleLeaderboard';
 import { Raffle } from 'src/hooks/api/useRaffles';
 import useScreenSize from 'src/hooks/useScreenSize';
 import { ellipsisAddress, nFormatter } from 'src/utils';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { State } from 'src/utils/state';
 import { twMerge } from 'tailwind-merge';
 import { EZImage, NextLink } from '../common';
@@ -47,17 +49,12 @@ const earningTickets = ({ raffle }: { raffle: Raffle }) => {
 };
 
 export const RaffleDescription = ({ raffle }: { raffle: Raffle }) => {
+  const { user } = useOnboardContext();
   const state = states[raffle.state];
   const { isMobile } = useScreenSize();
-  const { isLoading, result } = useRaffleLeaderboard(raffle.id);
-
-  console.log(raffle.id, isLoading, result);
-
+  const { result } = useRaffleLeaderboard(raffle.id); // TODO add loading states
+  const { result: entrant } = useRaffleEntrant(raffle.id, user?.address ?? '');
   const potSize = raffle.progress > 0 ? Math.floor((raffle.totals.prizePoolEth / raffle.progress) * 100) : 0;
-
-  const userNumTickets = 100;
-  const probability =
-    userNumTickets > 0 && raffle.totals.totalNumTickets > 0 ? userNumTickets / raffle.totals.totalNumTickets : 0;
 
   return (
     <InfoBox title={raffle.name} state={state}>
@@ -97,27 +94,17 @@ export const RaffleDescription = ({ raffle }: { raffle: Raffle }) => {
           <div className="my-4">
             <InfoBox.Stats title="Your tickets">
               <div className="flex w-full justify-between border-b-2">
-                <InfoBox.Stat label="Volume" value={nFormatter(2000)}></InfoBox.Stat>
-                <InfoBox.Stat label="Offers" value={nFormatter(2)}></InfoBox.Stat>
-                <InfoBox.Stat label="Listings" value={nFormatter(2)}></InfoBox.Stat>
+                <InfoBox.Stat label="Volume" value={nFormatter(entrant?.data?.volumeUSDC ?? 0)}></InfoBox.Stat>
+                <InfoBox.Stat label="Offers" value={nFormatter(entrant?.data?.numValidOffers ?? 0)}></InfoBox.Stat>
+                <InfoBox.Stat label="Listings" value={nFormatter(entrant?.data?.numValidListings ?? 0)}></InfoBox.Stat>
               </div>
               <div className="flex w-full justify-between">
-                <InfoBox.Stat label="Tickets" value={nFormatter(10_000)}></InfoBox.Stat>
-                <InfoBox.Stat
-                  label="Probability"
-                  value={nFormatter(parseInt(probability.toString(), 10))}
-                ></InfoBox.Stat>
+                <InfoBox.Stat label="Tickets" value={nFormatter(entrant?.numTickets ?? 0)}></InfoBox.Stat>
+                <InfoBox.Stat label="Probability" value={`${nFormatter(entrant?.probability ?? 0)}%`}></InfoBox.Stat>
               </div>
             </InfoBox.Stats>
           </div>
         </InfoBox.SideInfo>
-
-        {/* <InfoBox.SideInfo> */}
-        {/* <div className={isMobile ? '' : 'ml-6'}>
-            <InfoBox.Stats title="Earning Tickets" description={earningTickets({ raffle })}></InfoBox.Stats>
-          </div> */}
-        {/* </InfoBox.SideInfo> */}
-
         <div className="ml-6 w-full">
           <InfoBox.SideInfo className="w-full">
             <InfoBox.Stats title="Leaderboard">
@@ -158,69 +145,11 @@ export const RaffleDescription = ({ raffle }: { raffle: Raffle }) => {
                       </div>
                     );
                   })}
-
-                {/* <InfoBox.Stat label="Volume" value={nFormatter(2000)}></InfoBox.Stat>
-              <InfoBox.Stat label="Offers" value={nFormatter(2)}></InfoBox.Stat>
-              <InfoBox.Stat label="Listings" value={nFormatter(2)}></InfoBox.Stat> */}
               </div>
             </InfoBox.Stats>
           </InfoBox.SideInfo>
         </div>
       </div>
-
-      {/* <div className={twMerge('flex align-center justify-left mt-6', isMobile ? 'flex-col' : '')}>
-        <InfoBox.SideInfo> */}
-      {/* <InfoBox.Stats title="Your tickets">
-            <div className="flex w-full justify-between border-b-2">
-              <InfoBox.Stat label="Volume" value={nFormatter(2000)}></InfoBox.Stat>
-              <InfoBox.Stat label="Offers" value={nFormatter(2)}></InfoBox.Stat>
-              <InfoBox.Stat label="Listings" value={nFormatter(2)}></InfoBox.Stat>
-            </div>
-            <div className="flex w-full justify-between">
-              <InfoBox.Stat label="Tickets" value={nFormatter(10_000)}></InfoBox.Stat>
-              <InfoBox.Stat label="Probability" value={nFormatter(parseInt(probability.toString(), 10))}></InfoBox.Stat>
-            </div>
-          </InfoBox.Stats> */}
-      {/* </InfoBox.SideInfo>
-      </div> */}
-
-      {/* <div className={twMerge('flex align-center justify-left mt-6', isMobile ? 'flex-col' : '')}> */}
-      {/* <InfoBox.SideInfo>
-          <InfoBox.Stats title="Leaderboard">
-            <div className="flex-col w-full justify-between">
-              {result.length > 0 &&
-                result.map((item) => {
-                  return (
-                    <div
-                      key={item.entrant.address}
-                      className="bg-theme-light-200 px-6 py-2 rounded-3xl flex items-center font-heading my-4"
-                    >
-                      <div className="flex justify-between items-center w-full ml-6">
-                        <NextLink href={`/user/${item.entrant.address}`}>
-                          <EZImage className="w-16 h-16 rounded-2xl overflow-clip" src={item.entrant.profileImage} />
-                        </NextLink>
-
-                        <NextLink href={`/user/${item.entrant.address}`} className="truncate hidden md:inline-block">
-                          {item.entrant.username || ellipsisAddress(item.entrant.address)}
-                        </NextLink>
-
-                        <div className="w-1/9 max-w-[80px] min-w-[80px]">
-                          <div className="text-black font-bold font-body flex items-center">Tickets</div>
-                          <div>{nFormatter(item.numTickets)}</div>
-                        </div>
-
-                        <div className="w-1/9 max-w-[80px] min-w-[80px]">
-                          <div className="text-black font-bold font-body flex items-center">Probability</div>
-                          <div>{nFormatter(item.probability)}%</div>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-            </div>
-          </InfoBox.Stats>
-        </InfoBox.SideInfo> */}
-      {/* </div> */}
     </InfoBox>
   );
 };

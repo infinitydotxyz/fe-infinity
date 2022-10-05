@@ -29,7 +29,7 @@ export const useRaffles = () => {
     states: ['active', 'inactive', 'complete']
   };
 
-  const { result, isLoading, isError, error } = useFetch<(Raffle & { progress: number })[]>('/raffles', {
+  const { result, isLoading, isError, error } = useFetch<Raffle[]>('/raffles', {
     query
   });
 
