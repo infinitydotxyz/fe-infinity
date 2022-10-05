@@ -2,7 +2,7 @@ import { PageBox, Spinner } from 'src/components/common';
 import { RaffleDescription } from 'src/components/raffles/raffle-description';
 import { useRaffles } from 'src/hooks/api/useRaffles';
 
-const LeaderboardPage = () => {
+const RafflesPage = () => {
   const { result: raffles, isLoading } = useRaffles();
 
   return (
@@ -18,4 +18,4 @@ const LeaderboardPage = () => {
   );
 };
 
-export default LeaderboardPage;
+export default RafflesPage;
