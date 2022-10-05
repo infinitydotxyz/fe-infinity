@@ -1,4 +1,5 @@
-import { ChainId, RaffleState, UserRaffle } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId, RaffleState } from '@infinityxyz/lib-frontend/types/core';
+import { UserRafflesArrayDto } from '@infinityxyz/lib-frontend/types/dto';
 import { useFetch } from 'src/utils';
 
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
@@ -11,16 +12,6 @@ const stateOrder = {
   [RaffleState.Completed]: 3
 };
 
-export type Raffle = UserRaffle & {
-  progress: number;
-  totals: {
-    numUniqueEntrants: number;
-    totalNumTickets: number;
-    prizePoolEth: number;
-    prizePoolWei: string;
-  };
-};
-
 export const useRaffles = () => {
   const { chainId } = useOnboardContext();
 
@@ -29,12 +20,12 @@ export const useRaffles = () => {
     states: ['active', 'inactive', 'complete']
   };
 
-  const { result, isLoading, isError, error } = useFetch<Raffle[]>('/raffles', {
+  const { result, isLoading, isError, error } = useFetch<UserRafflesArrayDto>('/raffles', {
     query
   });
 
   return {
-    result: (result ?? []).sort((a, b) => stateOrder[a.state] - stateOrder[b.state]),
+    result: (result?.data ?? []).sort((a, b) => stateOrder[a.state] - stateOrder[b.state]),
     isLoading,
     isError,
     error

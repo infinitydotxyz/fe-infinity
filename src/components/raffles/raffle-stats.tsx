@@ -1,9 +1,9 @@
-import { Raffle } from 'src/hooks/api/useRaffles';
+import { UserRaffleDto } from '@infinityxyz/lib-frontend/types/dto';
 import { nFormatter } from 'src/utils';
 import { InfoBox } from '../rewards/info-box';
 import { RewardsProgressBar } from '../rewards/progressbar';
 
-export const RaffleStats = ({ raffle }: { raffle: Raffle }) => {
+export const RaffleStats = ({ raffle }: { raffle: UserRaffleDto }) => {
   const potSize = raffle.progress > 0 ? Math.floor((raffle.totals.prizePoolEth / raffle.progress) * 100) : 0;
 
   return (

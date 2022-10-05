@@ -1,6 +1,6 @@
 import { RaffleState } from '@infinityxyz/lib-frontend/types/core';
+import { UserRaffleDto } from '@infinityxyz/lib-frontend/types/dto';
 import { useRaffleLeaderboard } from 'src/hooks/api/useRaffleLeaderboard';
-import { Raffle } from 'src/hooks/api/useRaffles';
 import useScreenSize from 'src/hooks/useScreenSize';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { twMerge } from 'tailwind-merge';
@@ -45,7 +45,7 @@ const states = {
   }
 };
 
-export const RaffleDescription = ({ raffle }: { raffle: Raffle }) => {
+export const RaffleDescription = ({ raffle }: { raffle: UserRaffleDto }) => {
   const { user } = useOnboardContext();
   const state = states[raffle.state];
   const { isMobile } = useScreenSize();

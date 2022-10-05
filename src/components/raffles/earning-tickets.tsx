@@ -1,6 +1,6 @@
-import { Raffle } from 'src/hooks/api/useRaffles';
+import { UserRaffleDto } from '@infinityxyz/lib-frontend/types/dto';
 
-export const EarningTickets = ({ raffle }: { raffle: Raffle }) => {
+export const EarningTickets = ({ raffle }: { raffle: UserRaffleDto }) => {
   return (
     <>
       <div className="text-sm">
