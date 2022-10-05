@@ -3,35 +3,55 @@ import useScreenSize from 'src/hooks/useScreenSize';
 import { twMerge } from 'tailwind-merge';
 import { Heading } from '../common';
 import { useHover } from 'src/hooks/useHover';
-import { PulseIcon } from '../common/pulse-icon';
+import { PulseIcon, PulseIconColor } from '../common/pulse-icon';
 import { State } from 'src/utils/state';
 
 type ChildrenProps = {
   children?: React.ReactNode;
 };
 
-export type InfoBoxProps = {
-  title: React.ReactNode;
-  state?: State;
-  renderTooltip?: (props: { state: State; isHovered: boolean } & ChildrenProps) => JSX.Element;
+type BaseInfoBoxTooltipProps = {
+  tooltipTitle: string;
+  tooltipMessage: string;
+  renderTooltip: (props: { isHovered: boolean; message?: string; title?: string } & ChildrenProps) => JSX.Element;
+};
+
+type InfoBoxTooltipProps =
+  | (BaseInfoBoxTooltipProps & { state: State })
+  | (BaseInfoBoxProps & { pulseIconColor: PulseIconColor; isPulsing: boolean });
+
+type BaseInfoBoxProps = {
+  title: string;
 } & ChildrenProps;
 
-export function InfoBox({ title, children, state, renderTooltip }: InfoBoxProps) {
+export type InfoBoxProps = BaseInfoBoxProps | (BaseInfoBoxProps & InfoBoxTooltipProps);
+
+export function InfoBox(props: InfoBoxProps) {
   const [hoverRef, isHovered] = useHover<HTMLDivElement>();
 
   const content = (
     <span className="flex w-fit">
       <Heading as="h2" className="text-2xl font-heading font-bold">
-        {title}
+        {props.title}
       </Heading>
-      {state && <PulseIcon state={state} ref={hoverRef} className="ml-4 mt-1.5" />}
+      {'state' in props && <PulseIcon state={props.state} ref={hoverRef} className="ml-4 mt-1.5" />}
+      {'pulseIconColor' in props && (
+        <PulseIcon color={props.pulseIconColor} isPulsing={props.isPulsing} ref={hoverRef} className="ml-4 mt-1.5" />
+      )}
     </span>
   );
 
   return (
     <div className={twMerge('flex-col bg-theme-gray-100 p-10 rounded-2xl my-8 align-center justify-center')}>
-      {renderTooltip && state ? renderTooltip({ state, isHovered, children: content }) : content}
-      <div className="mt-6">{children}</div>
+      {'renderTooltip' in props
+        ? props.renderTooltip({
+            isHovered,
+            children: content,
+            message: props.tooltipMessage,
+            title: props.tooltipTitle
+          })
+        : content}
+      <div className="mt-6">{props.children}</div>
     </div>
   );
 }

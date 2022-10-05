@@ -1,3 +1,4 @@
+import React from 'react';
 import { State } from 'src/utils/state';
 import { twMerge } from 'tailwind-merge';
 
@@ -32,19 +33,15 @@ type Props =
   | {
       className?: string;
       state: State;
-      ref?: React.RefObject<HTMLDivElement>;
     }
   | {
       className?: string;
       color: PulseIconColor;
       isPulsing: boolean;
-      ref?: React.RefObject<HTMLDivElement>;
     };
 
-export const PulseIcon = (props: Props) => {
+export const PulseIcon = React.forwardRef<HTMLSpanElement, Props>((props, ref) => {
   const color = 'color' in props ? props.color : colorsByState[props.state];
   const isPulsing = 'isPulsing' in props ? props.isPulsing : props.state === State.Active;
-  return (
-    <span className={twMerge(color, props.className)} style={isPulsing ? active : inactive} ref={props.ref}></span>
-  );
-};
+  return <span className={twMerge(color, props.className)} style={isPulsing ? active : inactive} ref={ref}></span>;
+});
