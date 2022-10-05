@@ -2,14 +2,14 @@ import { State } from 'src/utils/state';
 import { twMerge } from 'tailwind-merge';
 
 const inactive = {
-  'border-radius': '50%',
+  borderRadius: '50%',
   height: '1rem',
   width: '1rem'
 };
 
 const active = {
   ...inactive,
-  'box-shadow': '0 0 0 0 rgba(0, 0, 0, 1)',
+  boxShadow: '0 0 0 0 rgba(0, 0, 0, 1)',
   transform: 'scale(1)',
   animation: 'pulse 2s infinite'
 };

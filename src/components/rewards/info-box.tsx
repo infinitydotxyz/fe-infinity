@@ -65,7 +65,7 @@ InfoBox.Stat = function Stat({ label, value }: InfoBoxStatProps) {
   );
 };
 
-InfoBox.SideInfo = function SideInfo({ children }: ChildrenProps) {
+InfoBox.SideInfo = function SideInfo({ children, className }: { className?: string } & ChildrenProps) {
   const { isMobile } = useScreenSize();
-  return <div className={twMerge(isMobile ? 'w-full my-4' : 'w-1/2')}>{children}</div>;
+  return <div className={twMerge(isMobile ? 'w-full my-4' : 'w-1/2', className)}>{children}</div>;
 };

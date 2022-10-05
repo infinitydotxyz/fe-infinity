@@ -8,7 +8,7 @@ import {
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 export const useRaffleLeaderboard = (
-  phaseId: string
+  raffleId: string
 ): { result: RaffleLeaderboardUser[]; error: unknown; isLoading: boolean; fetchMore: () => void } => {
   const { chainId } = useOnboardContext();
 
@@ -16,11 +16,11 @@ export const useRaffleLeaderboard = (
     cursor: '',
     chainId: (chainId || ChainId.Mainnet) as ChainId,
     orderDirection: OrderDirection.Ascending,
-    limit: 50
+    limit: 10
   };
 
   const { result, error, isLoading, setSize } = useFetchInfinite<RaffleLeaderboardArrayDto>(
-    `/raffles/${phaseId}/leaderboard`,
+    `/raffles/${raffleId}/leaderboard`,
     {
       query
     }
