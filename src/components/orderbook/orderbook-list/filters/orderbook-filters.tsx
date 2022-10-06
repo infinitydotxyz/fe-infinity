@@ -3,7 +3,7 @@ import { uniqBy } from 'lodash';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
-import { Button, Checkbox, DebouncedTextInputBox, EZImage, SVG, TextInputBox } from 'src/components/common';
+import { BlueCheck, Button, Checkbox, DebouncedTextInputBox, EZImage, TextInputBox } from 'src/components/common';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { useOrderbook } from '../../OrderbookContext';
 import { useCollectionCache } from '../collection-cache';
@@ -254,7 +254,7 @@ const CollectionCheckbox = ({ collection }: { collection: CollectionSearchDto })
         label={
           <div className="flex items-center">
             <div className="truncate">{collection.name}</div>
-            {collection?.hasBlueCheck ? <SVG.blueCheck className="w-4 h-4 ml-1 shrink-0" /> : null}
+            {collection?.hasBlueCheck ? <BlueCheck className="ml-1" /> : null}
           </div>
         }
       />

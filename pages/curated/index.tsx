@@ -62,7 +62,7 @@ export default function Curation() {
       </Modal>
       <div className="flex justify-between mb-8">
         <div className="mt-4">
-          <span className="p-4 border border-gray-300 rounded-3xl mr-2">
+          <span className="px-4 py-2 border border-gray-300 rounded-xl mr-2">
             <strong className="mr-2">{votesQuota}</strong>
             <span>votes available</span>
           </span>

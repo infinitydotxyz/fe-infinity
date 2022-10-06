@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import { parse } from 'query-string';
 import { useEffect, useState } from 'react';
 import {
+  BlueCheck,
   Button,
   CenterFixed,
   EthPrice,
@@ -12,7 +13,6 @@ import {
   NextLink,
   PageBox,
   Spinner,
-  SVG,
   toastSuccess,
   ToggleTab,
   useToggleTab
@@ -228,7 +228,7 @@ const TrendingPageCard = ({ collection, period, index }: Props) => {
           <NextLink href={`/collection/${collection?.slug}`} className="truncate">
             {collection?.metadata?.name}
           </NextLink>
-          {collection?.hasBlueCheck && <SVG.blueCheck className="ml-1.5 shrink-0 w-4 h-4" />}
+          {collection?.hasBlueCheck && <BlueCheck className="ml-1.5" />}
         </div>
 
         {isDesktop ? (

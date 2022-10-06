@@ -1,4 +1,4 @@
-import { NextLink, SVG } from 'src/components/common';
+import { BlueCheck, NextLink } from 'src/components/common';
 
 interface TitleFieldProps {
   title: string;
@@ -21,7 +21,7 @@ export const UserActivityItemTitle = (props: TitleFieldProps) => {
             <div className="font-bold whitespace-pre-wrap flex items-center">
               <p>{props.title}</p>
             </div>
-            {props?.hasBlueCheck && <SVG.blueCheck className="w-4 h-4 ml-1 shrink-0" />}
+            {props?.hasBlueCheck && <BlueCheck className="ml-1" />}
           </NextLink>
         ) : (
           <div className="font-bold whitespace-pre-wrap flex items-center">

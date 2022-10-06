@@ -1,7 +1,7 @@
 import { CollectionSearchDto } from '@infinityxyz/lib-frontend/types/dto/collections';
 import { uniqBy } from 'lodash';
 import React, { useEffect, useState } from 'react';
-import { Button, Checkbox, DebouncedTextInputBox, EZImage, Modal, SVG } from 'src/components/common';
+import { BlueCheck, Button, Checkbox, DebouncedTextInputBox, EZImage, Modal } from 'src/components/common';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { useCollectionCache } from '../orderbook-list/collection-cache';
 import { useOrderbook } from '../OrderbookContext';
@@ -130,7 +130,7 @@ const CollectionCheckbox = ({ collection }: { collection: CollectionSearchDto })
           <div className="flex items-center">
             {collection.name}
 
-            {collection?.hasBlueCheck ? <SVG.blueCheck className="w-4 h-4 ml-1 shrink-0" /> : null}
+            {collection?.hasBlueCheck ? <BlueCheck className="ml-1" /> : null}
           </div>
         }
       />

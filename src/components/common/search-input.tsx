@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Combobox } from '@headlessui/react';
-import { SVG } from './svg';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { debounce } from 'lodash';
 import { EZImage } from './ez-image';
@@ -9,6 +8,7 @@ import { twMerge } from 'tailwind-merge';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { useCollectionCache } from '../orderbook/orderbook-list/collection-cache';
 import { CollectionSearchDto } from '@infinityxyz/lib-frontend/types/dto/collections/collection-search.dto';
+import { BlueCheck } from './blue-check';
 
 interface Props {
   expanded?: boolean;
@@ -169,7 +169,7 @@ export const SearchInput = ({ expanded }: Props) => {
                   >
                     <EZImage className="w-8 h-8 rounded-full overflow-hidden" src={collection?.profileImage} />
                     <div className=" flex-1 truncate font-body text-xs leading-6 tracking-wide">{collection?.name}</div>
-                    {collection?.hasBlueCheck ? <SVG.blueCheck className="h-5 w-5 opacity-60 shrink-0" /> : <></>}
+                    {collection?.hasBlueCheck ? <BlueCheck className="opacity-60" /> : <></>}
                   </div>
                 )}
               </Combobox.Option>

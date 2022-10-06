@@ -4,7 +4,7 @@ import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 
 import { useRouter } from 'next/router';
 import { ReactNode } from 'react';
-import { EZImage, NextLink, SVG } from 'src/components/common';
+import { BlueCheck, EZImage, NextLink } from 'src/components/common';
 import { ENS_ADDRESS } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
 
@@ -167,7 +167,7 @@ const SingleCollectionCell = ({
             title={title}
           >
             <div>{title}</div>
-            {orderNft?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 mx-1 shrink-0" /> : null}
+            {orderNft?.hasBlueCheck === true ? <BlueCheck className="mx-1" /> : null}
           </NextLink>
         ) : (
           <NextLink
@@ -176,7 +176,7 @@ const SingleCollectionCell = ({
             title={title}
           >
             <div>{title}</div>
-            {orderNft?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 mx-1 shrink-0" /> : null}
+            {orderNft?.hasBlueCheck === true ? <BlueCheck className="mx-1" /> : null}
           </NextLink>
         )}
 

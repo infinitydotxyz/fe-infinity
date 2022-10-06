@@ -1,7 +1,7 @@
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { BsChatRight } from 'react-icons/bs';
 import { TbArrowBarUp } from 'react-icons/tb';
-import { Button, EZImage, NextLink, Spacer, SVG } from 'src/components/common';
+import { BlueCheck, Button, EZImage, NextLink, Spacer } from 'src/components/common';
 import { NftEventRec } from '../asset/activity/activity-item';
 import { addUserLike } from 'src/utils/firestore/firestoreUtils';
 import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io';
@@ -179,7 +179,7 @@ export const FeedListItem = ({
               <NextLink href={`/collection/${collectionSlug}`}>{collectionName}</NextLink>
             </div>
 
-            {activity?.hasBlueCheck === true ? <SVG.blueCheck className="w-4 h-4 ml-1 shrink-0" /> : null}
+            {activity?.hasBlueCheck === true ? <BlueCheck className="ml-1" /> : null}
 
             <div className="ml-3 text-gray-600">{timeString}</div>
           </div>

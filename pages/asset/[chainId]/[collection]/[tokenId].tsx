@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { ActivityList, CancelModal, ListNFTModal, MakeOfferModal, SendNFTModal, TraitList } from 'src/components/asset';
 import { LowerPriceModal } from 'src/components/asset/modals/lower-price-modal';
 import {
+  BlueCheck,
   Button,
   CenteredContent,
   EthPrice,
@@ -15,7 +16,6 @@ import {
   ReadMoreText,
   ShortAddress,
   Spinner,
-  SVG,
   toastError,
   toastSuccess,
   ToggleTab,
@@ -281,7 +281,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
             >
               <div>{token.collectionName || ellipsisAddress(token.collectionAddress) || 'Collection'}</div>
             </NextLink>
-            {token.hasBlueCheck && <SVG.blueCheck className="h-5 w-5" />}
+            {token.hasBlueCheck && <BlueCheck />}
           </div>
           <ShortAddress
             label="Collection address:"
