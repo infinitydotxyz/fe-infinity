@@ -20,7 +20,7 @@ export const PhaseDescription = ({ phase }: { phase: TokenomicsPhaseDto }) => {
           <p>
             <strong>{`${getPhaseTradingRewardsPercent(phase)}`}</strong> of the total supply (
             <strong>{`${numberFormatter.format(phase.tradingFeeRefund.rewardSupply)} tokens`}</strong>) are given out as
-            trading rewards in the form of in the form of fee refunds. Every{' '}
+            trading rewards in the form of fee refunds. Every{' '}
             <strong>{`$${phase.tradingFeeRefund.rewardRateDenominator}`}</strong> in fees paid gets{' '}
             <strong>{`${phase.tradingFeeRefund.rewardRateNumerator} $${TOKEN.symbol}`}</strong> tokens. These are split
             between the seller ({`${phase.tradingFeeRefund.sellerPortion * 100}%`}) and buyer (
