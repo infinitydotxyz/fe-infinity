@@ -333,11 +333,7 @@ const CollectionPage = () => {
                     className="max-w-[15rem] bg-white"
                   />
                 </div>
-                <Button
-                  size="large"
-                  onClick={() => checkSignedIn() && setIsStakeModalOpen(true)}
-                  className="font-heading"
-                >
+                <Button onClick={() => checkSignedIn() && setIsStakeModalOpen(true)} className="font-heading">
                   Vote
                 </Button>
               </div>

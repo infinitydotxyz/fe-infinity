@@ -1,6 +1,7 @@
 import React, { Fragment, ReactNode } from 'react';
 import { Popover, Transition } from '@headlessui/react';
 import { Chip } from './chip';
+import { BiCaretDown } from 'react-icons/bi';
 
 interface Props {
   title: string;
@@ -15,7 +16,15 @@ export const PopoverButton = ({ title, children }: Props) => {
         <>
           {/* without as="div", you get a button within button error */}
           <Popover.Button as="div">
-            <Chip disableClick={true} content={title} />
+            <Chip
+              disableClick={true}
+              content={
+                <div className="flex items-center gap-1">
+                  <div className="whitespace-nowrap">{title}</div>
+                  <BiCaretDown />
+                </div>
+              }
+            />
           </Popover.Button>
 
           <Transition
