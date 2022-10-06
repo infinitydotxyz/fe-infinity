@@ -61,7 +61,7 @@ export const Card = ({
           <Button
             key={idx}
             variant="primary"
-            className="flex-1 py-2.5 text-lg"
+            className="flex-1 text-lg"
             onClick={(ev) => {
               cardAction.onClick(ev, data);
             }}

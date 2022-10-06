@@ -11,6 +11,8 @@ import { NoResultsBox } from '../curation/no-results-box';
 import { CuratedTab } from '../curation/types';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user/user-profile.dto';
+import { twMerge } from 'tailwind-merge';
+import { negativeMargin } from 'src/utils/ui-constants';
 
 const InfoBox: React.FC<{ title: string; subtitle: string | number }> = ({ title, subtitle }) => {
   return (
@@ -43,7 +45,7 @@ export const UserPageCuratedTab: React.FC<{ userInfo: UserProfileDto }> = ({ use
   const fetchMore = () => setSize((size) => size + 1);
 
   return (
-    <div className="min-h-[50vh] mt-[-66px]">
+    <div className={twMerge('min-h-[50vh]', negativeMargin)}>
       <div className="flex flex-row-reverse mb-8 bg-transparent">
         <Sort onClick={setOrderBy} />
       </div>

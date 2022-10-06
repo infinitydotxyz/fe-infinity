@@ -6,5 +6,5 @@ interface Props {
 }
 
 export const UserPageActivityTab = ({ userInfo }: Props) => {
-  return <div>{<UserProfileActivityList userAddress={userInfo?.address} forUserActivity={true} />}</div>;
+  return <UserProfileActivityList userAddress={userInfo?.address} forUserActivity={true} />;
 };

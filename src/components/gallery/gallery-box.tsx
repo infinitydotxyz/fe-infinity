@@ -164,7 +164,7 @@ export const GalleryBox = ({
           onClick={() => {
             setFilterShowed((flag) => !flag);
           }}
-          className="py-2.5 mr-2 font-heading pointer-events-auto"
+          className="pointer-events-auto"
         >
           {filterShowed ? 'Hide' : 'Show'} filter
         </Button>

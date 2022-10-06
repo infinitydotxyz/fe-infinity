@@ -58,7 +58,7 @@ export const OrderbookContent = ({ className }: Props4) => {
             onClick={() => {
               setShowFilters(!showFilters);
             }}
-            className="py-2.5 mr-2 font-heading pointer-events-auto"
+            className="mr-2 font-heading pointer-events-auto"
           >
             {showFilters ? 'Hide' : 'Show'} filter
           </Button>

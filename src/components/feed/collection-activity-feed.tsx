@@ -103,7 +103,7 @@ export const CollectionActivityFeed = ({
 
   return (
     <div className={`min-h-[50vh] ${className}`}>
-      {/* <div className="flex justify-between mt-[-66px] mb-6">
+      {/* <div className={twMerge("flex justify-between mb-6", negativeMargin)}>
         <div className="text-3xl mb-6">&nbsp;</div>
          <FeedFilterDropdown
           options={[
