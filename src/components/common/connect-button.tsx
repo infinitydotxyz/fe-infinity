@@ -1,6 +1,6 @@
 import React from 'react';
 import { IoIosCopy } from 'react-icons/io';
-import { RiLogoutBoxRFill } from 'react-icons/ri';
+import { RiLogoutCircleFill } from 'react-icons/ri';
 import { FaEthereum } from 'react-icons/fa';
 import { BsFillPersonFill } from 'react-icons/bs';
 import { Dropdown, DropdownItem } from './dropdown';
@@ -48,7 +48,7 @@ export const ConnectButton = () => {
     },
     {
       label: 'Sign Out',
-      icon: <RiLogoutBoxRFill className=" h-5 w-5 text-black" />,
+      icon: <RiLogoutCircleFill className=" h-5 w-5 text-black" />,
       onClick: () => {
         signOut();
       }

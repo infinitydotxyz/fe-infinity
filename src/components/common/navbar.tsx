@@ -23,6 +23,8 @@ import {
 } from 'src/components/common';
 import { useRouter } from 'next/router';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { MdFeed } from 'react-icons/md';
+import { HiCollection, HiTrendingUp } from 'react-icons/hi';
 
 export const Navbar = () => {
   const router = useRouter();
@@ -54,14 +56,17 @@ export const Navbar = () => {
           menu: [
             {
               label: 'Trending',
+              icon: <HiTrendingUp className=" h-5 w-5 text-black" />,
               onClick: () => router.push('/trending')
             },
             {
               label: 'Feed',
+              icon: <MdFeed className=" h-5 w-5 text-black" />,
               onClick: () => router.push('/feed')
             },
             {
               label: 'Curated',
+              icon: <HiCollection className=" h-5 w-5 text-black" />,
               onClick: () => router.push('/curated')
             }
           ]
