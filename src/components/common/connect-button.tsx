@@ -57,7 +57,7 @@ export const ConnectButton = () => {
 
   return (
     <>
-      {connected && <Dropdown label={`${ellipsisAddress(address, 5, 3)}`} items={menuItems} />}
+      {connected && <Dropdown label={`${ellipsisAddress(address, 5, 3)}`} items={menuItems} alignMenuRight={true} />}
       {!connected && <Button onClick={signIn}>Connect</Button>}
     </>
   );
