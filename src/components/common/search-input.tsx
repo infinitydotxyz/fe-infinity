@@ -9,6 +9,8 @@ import { useIsMounted } from 'src/hooks/useIsMounted';
 import { useCollectionCache } from '../orderbook/orderbook-list/collection-cache';
 import { CollectionSearchDto } from '@infinityxyz/lib-frontend/types/dto/collections/collection-search.dto';
 import { BlueCheck } from './blue-check';
+import { ChainId } from '@infinityxyz/lib-frontend/types/core';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 interface Props {
   expanded?: boolean;
@@ -16,6 +18,7 @@ interface Props {
 
 export const SearchInput = ({ expanded }: Props) => {
   const router = useRouter();
+  const { chainId } = useOnboardContext();
   const [isActive, setIsActive] = useState(false);
   const [selected, setSelected] = useState<CollectionSearchDto | null>(null);
   const [data, setData] = useState<CollectionSearchDto[]>([]);
@@ -31,9 +34,9 @@ export const SearchInput = ({ expanded }: Props) => {
 
   // must use useCallback or it doesn't work
   const doSearch = useCallback(
-    debounce(async (text: string) => {
+    debounce(async (text: string, chainId: ChainId) => {
       if (text) {
-        const results = await getCollectionsByName(text);
+        const results = await getCollectionsByName(text, chainId);
 
         if (isMounted()) {
           setData(results);
@@ -48,8 +51,8 @@ export const SearchInput = ({ expanded }: Props) => {
   );
 
   useEffect(() => {
-    doSearch(text);
-  }, [text]);
+    doSearch(text, chainId as ChainId);
+  }, [text, chainId]);
 
   const activate = () => {
     if (isMounted()) {
