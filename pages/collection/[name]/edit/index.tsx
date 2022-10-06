@@ -207,12 +207,10 @@ const EditCollectionPage = () => {
     <PageBox showTitle={false} title="Edit collection">
       <div className="flex flex-row-reverse p-5">
         <div className="flex flex-row space-x-2">
-          <Button variant="outline" onClick={close} className="font-heading">
+          <Button variant="outline" onClick={close}>
             Cancel
           </Button>
-          <Button onClick={submit} className="font-heading">
-            Save
-          </Button>
+          <Button onClick={submit}>Save</Button>
         </div>
       </div>
       <main className="flex flex-col my-4 mx-auto max-w-xl space-y-20">

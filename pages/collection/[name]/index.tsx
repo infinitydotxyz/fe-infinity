@@ -219,12 +219,12 @@ const CollectionPage = () => {
                       </>
                     )}
                     <span className="font-heading">Collection address </span>
-                    <button
+                    <Button
                       onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection.address)}
                       className="mr-8"
                     >
                       {ellipsisAddress(collection.address ?? '')}
-                    </button>
+                    </Button>
                     {collection?.metadata?.links?.external && (
                       <Chip
                         content={<HiOutlineExternalLink className="text-md" />}
@@ -333,9 +333,7 @@ const CollectionPage = () => {
                     className="max-w-[15rem] bg-white"
                   />
                 </div>
-                <Button onClick={() => checkSignedIn() && setIsStakeModalOpen(true)} className="font-heading">
-                  Vote
-                </Button>
+                <Button onClick={() => checkSignedIn() && setIsStakeModalOpen(true)}>Vote</Button>
               </div>
               <VoteModal
                 collection={{

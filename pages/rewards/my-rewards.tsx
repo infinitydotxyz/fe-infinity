@@ -47,22 +47,17 @@ const MyRewardsPage: React.FC = () => {
               </div>
             </div>
             <div className="w-full flex mt-4 items-center flex-wrap">
-              <Button size="large" className="font-heading" onClick={() => setShowBuyTokensModal(true)}>
+              <Button size="large" onClick={() => setShowBuyTokensModal(true)}>
                 Buy ${TOKEN.symbol}
               </Button>
 
               <Spacer />
 
-              <Button size="large" className="font-heading" onClick={() => setShowStakeTokensModal(true)}>
+              <Button size="large" onClick={() => setShowStakeTokensModal(true)}>
                 Stake
               </Button>
 
-              <Button
-                size="large"
-                variant="outline"
-                className="font-heading ml-3"
-                onClick={() => setShowUnstakeTokensModal(true)}
-              >
+              <Button size="large" variant="outline" className="ml-3" onClick={() => setShowUnstakeTokensModal(true)}>
                 Unstake
               </Button>
             </div>
@@ -81,7 +76,7 @@ const MyRewardsPage: React.FC = () => {
                 <div className="text-sm mt-1">TVL</div>
               </div>
               <div className="lg:w-2/4 sm:w-full flex">
-                <Button size="large" className="font-heading" onClick={() => setShowStakeTokensModal(true)}>
+                <Button size="large"   onClick={() => setShowStakeTokensModal(true)}>
                   Stake
                 </Button>
                 <Button
@@ -143,7 +138,7 @@ const MyRewardsPage: React.FC = () => {
               </div> */}
               <div className="lg:w-1/4 sm:w-full"></div>
               <div className="lg:w-1/4 sm:w-full">
-                <Button size="large" className="font-heading" disabled={true}>
+                <Button size="large" disabled={true}>
                   Claim Rewards
                 </Button>
               </div>
@@ -199,7 +194,7 @@ const MyRewardsPage: React.FC = () => {
                 <div className="text-sm mt-1"></div>
               </div>
               <div className="lg:w-1/4 sm:w-full">
-                <Button size="large" className="font-heading" disabled={true}>
+                <Button size="large" disabled={true}>
                   Claim Rewards
                 </Button>
               </div>

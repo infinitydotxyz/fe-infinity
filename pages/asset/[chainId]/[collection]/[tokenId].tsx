@@ -308,7 +308,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
                   <Button variant="outline" size="large" onClick={onClickCancel}>
                     <div className="flex">
                       <span className="mr-4">Cancel</span>
-                      <span className="font-heading">
+                      <span>
                         <EthPrice label={buyPriceEth} rowClassName="pt-[1px]" />
                       </span>
                     </div>
@@ -346,7 +346,7 @@ const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
                 <Button variant="primary" size="large" onClick={onClickBuy}>
                   <div className="flex">
                     <span className="mr-4">Buy</span>
-                    <span className="font-heading">
+                    <span>
                       <EthPrice label={buyPriceEth} rowClassName="pt-[1px]" />
                     </span>
                   </div>
