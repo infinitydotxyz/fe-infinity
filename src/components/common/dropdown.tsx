@@ -126,7 +126,7 @@ export const CustomMenuItems = ({ children, open, alignMenuRight }: Props2) => {
       >
         <Menu.Items
           className={twMerge(
-            'absolute mt-2 p-2 w-56 rounded-2xl border border-gray-200 bg-white shadow-2xl',
+            'absolute mt-2 p-2 w-56 rounded-2xl border border-gray-200 bg-white shadow-2xl outline-none',
             alignMenuRight ? 'right-0' : ''
           )}
         >
