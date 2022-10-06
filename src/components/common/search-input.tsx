@@ -169,7 +169,7 @@ export const SearchInput = ({ expanded }: Props) => {
                   >
                     <EZImage className="w-8 h-8 rounded-full overflow-hidden" src={collection?.profileImage} />
                     <div className=" flex-1 truncate font-body text-xs leading-6 tracking-wide">{collection?.name}</div>
-                    {collection?.hasBlueCheck ? <BlueCheck className="opacity-60" /> : <></>}
+                    {collection?.hasBlueCheck ? <BlueCheck className="ml-1" /> : <></>}
                   </div>
                 )}
               </Combobox.Option>

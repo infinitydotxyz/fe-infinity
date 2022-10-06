@@ -72,8 +72,7 @@ class _CollectionCache {
 
   // TODO hookup to cache
   getCollectionsByName = async (query: string): Promise<CollectionSearchDto[]> => {
-    const API_ENDPOINT = '/collections/search';
-    const response = await apiGet(API_ENDPOINT, {
+    const response = await apiGet('/collections/search', {
       query: {
         query,
         limit: DEFAULT_LIMIT
