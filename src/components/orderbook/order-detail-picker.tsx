@@ -30,21 +30,19 @@ export const OrderDetailPicker = ({
     // just show collection if no tokens
     if (nft.tokens.length === 0) {
       return (
-        <div className="flex items-center">
+        <NextLink href={`/collection/${nft.collectionSlug}`} className="flex items-center">
           <EZImage src={nft.collectionImage} className="w-16 h-16 shrink-0 overflow-clip rounded-2xl" />
 
           <div className="ml-4 flex-col">
             <div className="flex flex-row">
               <div className="w-44 flex items-center text-black font-body">
-                <NextLink href={`/collection/${nft.collectionSlug}`} className="truncate">
-                  {nft.collectionName}
-                </NextLink>
+                <div className="truncate">{nft.collectionName}</div>
                 {nft.hasBlueCheck && <SVG.blueCheck className="ml-1.5 shrink-0 w-4 h-4" />}
               </div>
             </div>
             <div className="select-none">Collection</div>
           </div>
-        </div>
+        </NextLink>
       );
     }
 
