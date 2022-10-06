@@ -95,7 +95,7 @@ export const RaffleDescription = ({ raffle }: { raffle: UserRaffleDto }) => {
               <RaffleStats raffle={raffle} />
             </div>
           </InfoBox.SideInfo>
-          <div className="ml-6 w-full">
+          <div className={twMerge('w-full', isMobile ? '' : 'ml-6')}>
             <InfoBox.SideInfo className="w-full">
               <InfoBox.Stats title="Leaderboard">
                 <div className="flex-col w-full justify-between">
