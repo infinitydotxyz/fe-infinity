@@ -30,7 +30,7 @@ export const FeedListItem = ({
   const [likedCache, setLikedCache] = useState<Map<string, boolean>>(new Map());
 
   const typeName = (type: string) => {
-    const classes = 'rounded-full text-white py-1 px-3 w-32 text-center text-sm';
+    const classes = 'rounded-md text-white py-1 px-3 w-32 text-center text-sm';
 
     const component = (color: string, label: string) => {
       return (
