@@ -1,9 +1,11 @@
 import { InfinityStakerABI } from '@infinityxyz/lib-frontend/abi/infinityStaker';
-import { ETHEREUM_STAKER_CONTRACT_ADDRESS } from '@infinityxyz/lib-frontend/utils/constants';
+import { getStakerAddress } from '@infinityxyz/lib-frontend/utils';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { useContract } from '../useContract';
 
 export function useStakerContract() {
-  const address = ETHEREUM_STAKER_CONTRACT_ADDRESS;
+  const { chainId } = useOnboardContext();
+  const address = getStakerAddress(chainId);
   const contract = useContract(address, InfinityStakerABI);
 
   return { contract, address };

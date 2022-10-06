@@ -11,7 +11,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/autoplay';
 import styles from './swiper.module.scss';
-import { Button, EZImage, SVG } from '../common';
+import { BlueCheck, Button, EZImage } from '../common';
 import { CuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections.dto';
 import { twMerge } from 'tailwind-merge';
 import { useRouter } from 'next/router';
@@ -116,7 +116,7 @@ const CuratedSwiperCard: React.FC<Props2> = ({ collection, onClick }) => {
         </div>
 
         <div className="text-theme-light-900 font-bold text-md ml-4 flex items-center">
-          {collection.name} {collection.hasBlueCheck && <SVG.blueCheck className="h-5 w-5 ml-1.5" />}
+          {collection.name} {collection.hasBlueCheck && <BlueCheck className="ml-1.5" />}
         </div>
       </div>
     </div>

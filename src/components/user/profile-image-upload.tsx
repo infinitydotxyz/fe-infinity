@@ -104,12 +104,7 @@ export const ProfileImageUpload = ({ onUpload, roundPhoto, onDelete, imgSource =
         </div>
       </label>
       <div className="sm:pl-8 mt-2 sm:mt-0">
-        <Button
-          variant="primary"
-          className="my-1 py-2.5 px-12 mb-3 block w-full sm:w-44 font-heading"
-          onClick={onUploadButtonClick}
-          disabled={isLoading}
-        >
+        <Button variant="primary" className="my-1 mb-3 w-full" onClick={onUploadButtonClick} disabled={isLoading}>
           Select
         </Button>
         <ImageUploaderButtonRef buttonRef={uploadInput} onChangeFile={handleChangeFile} />

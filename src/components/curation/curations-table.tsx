@@ -4,7 +4,7 @@ import React from 'react';
 import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
 import { twMerge } from 'tailwind-merge';
 import { Field, FieldProps } from '../analytics/field';
-import { EZImage, SVG } from '../common';
+import { BlueCheck, EZImage } from '../common';
 import { NumericVoteInputBox } from './input';
 import { FeesAprStats, FeesAccruedStats } from './statistics';
 import { StakeTokensButton } from './vote-modal';
@@ -33,7 +33,7 @@ export const CurationTable: React.FC<CurationTableProps> = ({
   const curatedCollections = curatedCollectionsArray?.flat();
 
   return (
-    <>
+    <div className="space-y-3">
       {curatedCollections.map((curatedCollection, i) => (
         <CurationRow
           key={i}
@@ -44,7 +44,7 @@ export const CurationTable: React.FC<CurationTableProps> = ({
           isReadOnly={isReadOnly}
         />
       ))}
-    </>
+    </div>
   );
 };
 
@@ -58,14 +58,14 @@ export type CurationRowProps = {
 
 export const CurationRow: React.FC<CurationRowProps> = ({ collection, index, onClick, votes, isReadOnly = false }) => {
   return (
-    <div className="mb-2 pointer-events-auto">
-      <div className="w-full h-full p-8 overflow-hidden rounded-3xl bg-gray-100 flex items-center">
+    <div className="pointer-events-auto">
+      <div className="w-full h-full px-7  py-6 overflow-hidden rounded-3xl bg-gray-100 flex items-center">
         <div className="flex w-full flex-1 items-center">
-          <div className="text-theme-light-800 text-2xl mr-6 min-w-[32px]  text-right font-heading">{index}</div>
+          <div className="text-theme-light-800 text-xl mr-6 min-w-[32px] text-right font-heading">{index}</div>
           <EZImage src={collection.profileImage} className="mr-3 overflow-hidden w-14 h-14 rounded-full" />
           <div className="w-full h-full overflow-hidden mr-6  justify-start items-center flex    ">
             <div className="text-theme-light-900 items-center font-bold text-md flex cursor-pointer" onClick={onClick}>
-              {collection.name} {collection.hasBlueCheck && <SVG.blueCheck className="h-5 w-5 ml-1.5" />}
+              {collection.name} {collection.hasBlueCheck && <BlueCheck className="ml-1.5" />}
             </div>
           </div>
         </div>

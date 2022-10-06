@@ -72,8 +72,7 @@ class _CollectionCache {
 
   // TODO hookup to cache
   getCollectionsByName = async (query: string): Promise<CollectionSearchDto[]> => {
-    const API_ENDPOINT = '/collections/search';
-    const response = await apiGet(API_ENDPOINT, {
+    const response = await apiGet('/collections/search', {
       query: {
         query,
         limit: DEFAULT_LIMIT
@@ -84,6 +83,25 @@ class _CollectionCache {
       console.log(response.error);
     } else {
       const data = (response.result?.data ?? []) as CollectionSearchDto[];
+
+      if (data.length) {
+        // sort list exact matches first
+        data.sort((a, b) => {
+          // make sure exact matches are on top
+          if (a.name === query) {
+            if (b.name === query) {
+              return 0;
+            }
+
+            return -1;
+          }
+
+          const aa = a.name.replaceAll(' ', '');
+          const bb = b.name.replaceAll(' ', '');
+
+          return aa.localeCompare(bb);
+        });
+      }
 
       return data;
     }

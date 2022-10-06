@@ -15,11 +15,16 @@ import {
   pageStyles,
   NextLink,
   ShoppingCartButton,
-  DropdownItem
+  DropdownItem,
+  CustomMenuItems,
+  MenuSeparator,
+  CustomMenuButton,
+  CustomMenuContents
 } from 'src/components/common';
-import { twMerge } from 'tailwind-merge';
 import { useRouter } from 'next/router';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { MdFeed } from 'react-icons/md';
+import { HiCollection, HiTrendingUp } from 'react-icons/hi';
 
 export const Navbar = () => {
   const router = useRouter();
@@ -51,14 +56,17 @@ export const Navbar = () => {
           menu: [
             {
               label: 'Trending',
+              icon: <HiTrendingUp className=" h-5 w-5 text-black" />,
               onClick: () => router.push('/trending')
             },
             {
               label: 'Feed',
+              icon: <MdFeed className=" h-5 w-5 text-black" />,
               onClick: () => router.push('/feed')
             },
             {
               label: 'Curated',
+              icon: <HiCollection className=" h-5 w-5 text-black" />,
               onClick: () => router.push('/curated')
             }
           ]
@@ -185,29 +193,26 @@ export const Navbar = () => {
   };
 
   const mobileMenu = (
-    <div className="relative flex justify-center">
-      <Menu>
-        <Menu.Button>
-          <GiHamburgerMenu size="24px" />
-        </Menu.Button>
-        <Menu.Items
-          className={twMerge(
-            `absolute left-0 mt-2 p-4 w-72 origin-top-right rounded-3xl z-50
-            border border-gray-200 bg-white shadow-2xl outline-none`
-          )}
-        >
-          {mobileMenuContent().map((item, i) =>
-            item.label === '-' ? (
-              <hr key={i} className="my-1" />
-            ) : (
-              <CustomMenuItem key={i} onClick={item.onClick}>
-                {item.label}
-              </CustomMenuItem>
-            )
-          )}
-        </Menu.Items>
-      </Menu>
-    </div>
+    <Menu>
+      {({ open }) => (
+        <CustomMenuContents>
+          <CustomMenuButton>
+            <GiHamburgerMenu size="24px" />
+          </CustomMenuButton>
+          <CustomMenuItems open={open}>
+            {mobileMenuContent().map((item, i) =>
+              item.label === '-' ? (
+                <MenuSeparator key={i} />
+              ) : (
+                <CustomMenuItem key={i} onClick={item.onClick}>
+                  {item.label}
+                </CustomMenuItem>
+              )
+            )}
+          </CustomMenuItems>
+        </CustomMenuContents>
+      )}
+    </Menu>
   );
 
   const mobileNavbar = (
@@ -236,30 +241,26 @@ export const Navbar = () => {
           <React.Fragment key={i}>
             {item.type === 'link' && <NextLink href={item?.props?.href ? item.props.href : ''}>{item?.label}</NextLink>}
             {item.type === 'dropdown' && (
-              <div>
-                <Menu>
-                  <Menu.Button>
-                    <div className="flex gap-2 items-center select-none">
-                      {item?.label} <IoMdArrowDropdown />
-                    </div>
-                  </Menu.Button>
-                  <Menu.Items
-                    className={twMerge(
-                      `absolute mt-2 p-4 w-72 origin-top-right rounded-3xl z-50`,
-                      `border border-gray-200 bg-white shadow-2xl outline-none`
-                    )}
-                  >
-                    {item?.menu?.map((x, j) => (
-                      <CustomMenuItem key={j} onClick={x.onClick}>
-                        <div className="flex items-center cursor-pointer">
-                          {x.icon && <div className="mr-4">{x.icon}</div>}
-                          {x.label}
-                        </div>
-                      </CustomMenuItem>
-                    ))}
-                  </Menu.Items>
-                </Menu>
-              </div>
+              <Menu>
+                {({ open }) => (
+                  <CustomMenuContents>
+                    <CustomMenuButton className="flex gap-1 items-center select-none">
+                      <div>{item?.label}</div>
+                      <IoMdArrowDropdown className="h-4 w-4" />
+                    </CustomMenuButton>
+                    <CustomMenuItems open={open}>
+                      {item?.menu?.map((x, j) => (
+                        <CustomMenuItem key={j} onClick={x.onClick}>
+                          <div className="flex items-center cursor-pointer">
+                            {x.icon && <div className="mr-4">{x.icon}</div>}
+                            {x.label}
+                          </div>
+                        </CustomMenuItem>
+                      ))}
+                    </CustomMenuItems>
+                  </CustomMenuContents>
+                )}
+              </Menu>
             )}
           </React.Fragment>
         ))}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { IoIosCopy } from 'react-icons/io';
-import { RiLogoutBoxRLine } from 'react-icons/ri';
+import { RiLogoutCircleFill } from 'react-icons/ri';
 import { FaEthereum } from 'react-icons/fa';
 import { BsFillPersonFill } from 'react-icons/bs';
 import { Dropdown, DropdownItem } from './dropdown';
@@ -48,7 +48,7 @@ export const ConnectButton = () => {
     },
     {
       label: 'Sign Out',
-      icon: <RiLogoutBoxRLine className=" h-5 w-5 text-black" />,
+      icon: <RiLogoutCircleFill className=" h-5 w-5 text-black" />,
       onClick: () => {
         signOut();
       }
@@ -57,7 +57,7 @@ export const ConnectButton = () => {
 
   return (
     <>
-      {connected && <Dropdown label={`${ellipsisAddress(address, 5, 3)}`} items={menuItems} />}
+      {connected && <Dropdown label={`${ellipsisAddress(address, 5, 3)}`} items={menuItems} alignMenuRight={true} />}
       {!connected && <Button onClick={signIn}>Connect</Button>}
     </>
   );

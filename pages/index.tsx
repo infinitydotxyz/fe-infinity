@@ -18,7 +18,7 @@ const HomePage = () => {
       <div className={twMerge('  my-5   flex items-center', className)}>
         <div className="text-3xl my-5 font-bold">{title}</div>
         <Spacer />
-        <Button size="medium" onClick={() => router.push(morePath)}>
+        <Button size="medium" variant="outline" onClick={() => router.push(morePath)}>
           See More
         </Button>
       </div>
@@ -26,7 +26,7 @@ const HomePage = () => {
   };
 
   return (
-    <PageBox title="Infinity" showTitle={false} footer={<StartFooter />}>
+    <PageBox title="Home" showTitle={false} footer={<StartFooter />}>
       {titleHeader('Curated Collections', '', '/curated?tab=All+Curated')}
       <AllCuratedStart orderBy={CuratedCollectionsOrderBy.Votes} />
 

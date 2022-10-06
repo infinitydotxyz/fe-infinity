@@ -18,13 +18,13 @@ import { AvatarImage } from 'src/components/collection/avatar-image';
 import { CollectionSalesTab } from 'src/components/collection/collection-activity-tab';
 import { StatsChips } from 'src/components/collection/stats-chips';
 import {
+  BlueCheck,
   Button,
   Chip,
   EthPrice,
   Heading,
   PageBox,
   Spinner,
-  SVG,
   toastSuccess,
   ToggleTab,
   useToggleTab
@@ -197,7 +197,7 @@ const CollectionPage = () => {
                 </div>
               )}
             </div>
-            {collection.hasBlueCheck ? <SVG.blueCheck className={twMerge(iconButtonStyle, 'mt-3')} /> : null}
+            {collection.hasBlueCheck ? <BlueCheck className={twMerge(iconButtonStyle, 'mt-3')} /> : null}
           </div>
         </span>
 
@@ -219,12 +219,12 @@ const CollectionPage = () => {
                       </>
                     )}
                     <span className="font-heading">Collection address </span>
-                    <button
+                    <Button
                       onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection.address)}
                       className="mr-8"
                     >
                       {ellipsisAddress(collection.address ?? '')}
-                    </button>
+                    </Button>
                     {collection?.metadata?.links?.external && (
                       <Chip
                         content={<HiOutlineExternalLink className="text-md" />}
@@ -333,13 +333,7 @@ const CollectionPage = () => {
                     className="max-w-[15rem] bg-white"
                   />
                 </div>
-                <Button
-                  size="large"
-                  onClick={() => checkSignedIn() && setIsStakeModalOpen(true)}
-                  className="font-heading"
-                >
-                  Vote
-                </Button>
+                <Button onClick={() => checkSignedIn() && setIsStakeModalOpen(true)}>Vote</Button>
               </div>
               <VoteModal
                 collection={{

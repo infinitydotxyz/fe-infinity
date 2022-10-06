@@ -544,7 +544,7 @@ export const Analytics = () => {
                 </Fragment>
               ))}
 
-              <Button variant="outline" className="font-heading" onClick={() => toggleDrawer()}>
+              <Button variant="outline" onClick={() => toggleDrawer()}>
                 Filter
               </Button>
             </Tab.List>

@@ -38,8 +38,9 @@ export const GallerySort = () => {
   }, [filterState]);
 
   return (
-    <span className="pointer-events-auto">
+    <div className="pointer-events-auto">
       <Dropdown
+        alignMenuRight={true}
         label={label}
         items={[
           { label: SORT_BY_TOKEN_ID, onClick: () => onClickSort('tokenIdNumeric', 'asc') },
@@ -49,8 +50,7 @@ export const GallerySort = () => {
           { label: SORT_BY_PRICE_LOW_LABEL, onClick: () => onClickSort('price', 'asc') }
           // { label: 'Clear', onClick: () => onClickSort('desc') }
         ]}
-        contentClassName="right-0 w-64"
       />
-    </span>
+    </div>
   );
 };

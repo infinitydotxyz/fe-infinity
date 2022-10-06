@@ -2,12 +2,13 @@ import { CuratedCollectionsOrderBy } from '@infinityxyz/lib-frontend/types/dto/c
 import React from 'react';
 import { Dropdown } from '../common';
 
-export type SortProps = {
+type Props = {
   onClick: (orderBy: CuratedCollectionsOrderBy) => void;
 };
 
-export const Sort: React.FC<SortProps> = ({ onClick }) => (
+export const Sort: React.FC<Props> = ({ onClick }) => (
   <Dropdown
+    alignMenuRight={true}
     label="Sort"
     className="pointer-events-auto ml-8 cursor-pointer"
     items={[

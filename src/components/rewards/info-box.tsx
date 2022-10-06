@@ -2,59 +2,56 @@ import React from 'react';
 import useScreenSize from 'src/hooks/useScreenSize';
 import { twMerge } from 'tailwind-merge';
 import { Heading } from '../common';
-import { FaCircle } from 'react-icons/fa';
 import { useHover } from 'src/hooks/useHover';
+import { PulseIcon, PulseIconColor } from '../common/pulse-icon';
+import { State } from 'src/utils/state';
 
 type ChildrenProps = {
   children?: React.ReactNode;
 };
 
-export enum State {
-  Active = 'Active',
-  Inactive = 'Inactive',
-  Complete = 'Complete'
-}
+type BaseInfoBoxTooltipProps = {
+  tooltipTitle: string;
+  tooltipMessage: string;
+  renderTooltip: (props: { isHovered: boolean; message?: string; title?: string } & ChildrenProps) => JSX.Element;
+};
 
-export type InfoBoxProps = {
-  title: React.ReactNode;
-  state?: State;
-  renderTooltip?: (props: { state: State; isHovered: boolean } & ChildrenProps) => JSX.Element;
+type InfoBoxTooltipProps =
+  | (BaseInfoBoxTooltipProps & { state: State })
+  | (BaseInfoBoxProps & { pulseIconColor: PulseIconColor; isPulsing: boolean });
+
+type BaseInfoBoxProps = {
+  title: string;
 } & ChildrenProps;
 
-export function InfoBox({ title, children, state, renderTooltip }: InfoBoxProps) {
-  const [hoverRef, isHovered] = useHover<HTMLDivElement>();
+export type InfoBoxProps = BaseInfoBoxProps | (BaseInfoBoxProps & InfoBoxTooltipProps);
 
-  const stateIcon = React.useMemo(() => {
-    if (!state) {
-      return null;
-    }
-    switch (state) {
-      case State.Active:
-        return <FaCircle color={'rgb(63 131 248)'} />;
-      case State.Inactive:
-        return <FaCircle color={'rgb(55 65 81)'} />;
-      case State.Complete:
-        return <FaCircle color={'rgb(21 164 86)'} />;
-    }
-  }, [state]);
+export function InfoBox(props: InfoBoxProps) {
+  const [hoverRef, isHovered] = useHover<HTMLDivElement>();
 
   const content = (
     <span className="flex w-fit">
       <Heading as="h2" className="text-2xl font-heading font-bold">
-        {title}
+        {props.title}
       </Heading>
-      {state && stateIcon && (
-        <span className="ml-4 mt-1.5" ref={hoverRef}>
-          {stateIcon}
-        </span>
+      {'state' in props && <PulseIcon state={props.state} ref={hoverRef} className="ml-4 mt-1.5" />}
+      {'pulseIconColor' in props && (
+        <PulseIcon color={props.pulseIconColor} isPulsing={props.isPulsing} ref={hoverRef} className="ml-4 mt-1.5" />
       )}
     </span>
   );
 
   return (
     <div className={twMerge('flex-col bg-theme-gray-100 p-10 rounded-2xl my-8 align-center justify-center')}>
-      {renderTooltip && state ? renderTooltip({ state, isHovered, children: content }) : content}
-      <div className="mt-6">{children}</div>
+      {'renderTooltip' in props
+        ? props.renderTooltip({
+            isHovered,
+            children: content,
+            message: props.tooltipMessage,
+            title: props.tooltipTitle
+          })
+        : content}
+      <div className="mt-6">{props.children}</div>
     </div>
   );
 }
@@ -88,7 +85,7 @@ InfoBox.Stat = function Stat({ label, value }: InfoBoxStatProps) {
   );
 };
 
-InfoBox.SideInfo = function SideInfo({ children }: ChildrenProps) {
+InfoBox.SideInfo = function SideInfo({ children, className }: { className?: string } & ChildrenProps) {
   const { isMobile } = useScreenSize();
-  return <div className={twMerge(isMobile ? 'w-full my-4' : 'w-1/2')}>{children}</div>;
+  return <div className={twMerge(isMobile ? 'w-full my-4' : 'w-1/2', className)}>{children}</div>;
 };

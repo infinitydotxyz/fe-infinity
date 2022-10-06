@@ -1,19 +1,14 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { apiGet } from 'src/utils';
-import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import { Combobox } from '@headlessui/react';
-import { SVG } from './svg';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { debounce } from 'lodash';
 import { EZImage } from './ez-image';
 import { twMerge } from 'tailwind-merge';
 import { useIsMounted } from 'src/hooks/useIsMounted';
-
-type CollectionItem = BaseCollection & {
-  name: string;
-  profileImage: string;
-};
+import { useCollectionCache } from '../orderbook/orderbook-list/collection-cache';
+import { CollectionSearchDto } from '@infinityxyz/lib-frontend/types/dto/collections/collection-search.dto';
+import { BlueCheck } from './blue-check';
 
 interface Props {
   expanded?: boolean;
@@ -22,10 +17,11 @@ interface Props {
 export const SearchInput = ({ expanded }: Props) => {
   const router = useRouter();
   const [isActive, setIsActive] = useState(false);
-  const [selected, setSelected] = useState<CollectionItem | null>(null);
-  const [data, setData] = useState<CollectionItem[]>([]);
+  const [selected, setSelected] = useState<CollectionSearchDto | null>(null);
+  const [data, setData] = useState<CollectionSearchDto[]>([]);
   const [text, setText] = useState('');
   const isMounted = useIsMounted();
+  const { getCollectionsByName } = useCollectionCache();
 
   const inputRef: React.RefObject<HTMLInputElement> = useRef(null);
 
@@ -37,32 +33,10 @@ export const SearchInput = ({ expanded }: Props) => {
   const doSearch = useCallback(
     debounce(async (text: string) => {
       if (text) {
-        const { result, error } = await apiGet(`/collections/search?query=${text}&limit=15`);
-        if (error) {
-          throw new Error('Error completing request');
-        }
+        const results = await getCollectionsByName(text);
 
         if (isMounted()) {
-          const newData: CollectionItem[] = result?.data ?? [];
-
-          // sort list, blue checks and exact matches first
-          newData.sort((a, b) => {
-            // make sure exact matches are on top
-            if (a.name === text) {
-              if (b.name === text) {
-                return 0;
-              }
-
-              return -1;
-            }
-
-            const aa = a.name.replaceAll(' ', '');
-            const bb = b.name.replaceAll(' ', '');
-
-            return aa.localeCompare(bb);
-          });
-
-          setData(newData);
+          setData(results);
         }
       } else {
         if (isMounted()) {
@@ -157,7 +131,7 @@ export const SearchInput = ({ expanded }: Props) => {
           const value = e.currentTarget.value;
           setText(value);
         },
-        displayValue: (collection: CollectionItem) => collection?.name
+        displayValue: (collection: CollectionSearchDto) => collection?.name
       }
     }
   };
@@ -195,7 +169,7 @@ export const SearchInput = ({ expanded }: Props) => {
                   >
                     <EZImage className="w-8 h-8 rounded-full overflow-hidden" src={collection?.profileImage} />
                     <div className=" flex-1 truncate font-body text-xs leading-6 tracking-wide">{collection?.name}</div>
-                    {collection?.hasBlueCheck ? <SVG.blueCheck className="h-5 w-5 opacity-60 shrink-0" /> : <></>}
+                    {collection?.hasBlueCheck ? <BlueCheck className="ml-1" /> : <></>}
                   </div>
                 )}
               </Combobox.Option>

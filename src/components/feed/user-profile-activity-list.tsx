@@ -9,6 +9,8 @@ import { NftSaleEvent } from './user-feed-events/nft-sale-event';
 import { TokenStakeEvent } from './user-feed-events/token-stake-event';
 import { VoteEvent } from './user-feed-events/vote-event';
 import { NftTransferEvent } from './user-feed-events/nft-transfer-event';
+import { twMerge } from 'tailwind-merge';
+import { negativeMargin } from 'src/utils/ui-constants';
 
 interface UserProfileActivityListProps {
   userAddress?: string;
@@ -47,7 +49,7 @@ export const UserProfileActivityList = ({ userAddress, types, className }: UserP
   };
 
   return (
-    <div className={`min-h-[50vh] mt-[-74px] ${className}`}>
+    <div className={twMerge('min-h-[50vh]', negativeMargin, className)}>
       <div className="flex flex-row-reverse mb-8 bg-transparent">
         <FeedFilterDropdown
           selectedTypes={filteringTypes}
@@ -56,15 +58,15 @@ export const UserProfileActivityList = ({ userAddress, types, className }: UserP
         />
       </div>
 
-      <ul className="space-y-4 pointer-events-auto">
+      <ul className="space-y-3 pointer-events-auto">
         {!isLoading && activities?.length === 0 ? <div className="font-heading">No results found</div> : null}
 
         {activities.length > 0 &&
-          activities?.map((event) => {
+          activities?.map((event, index) => {
             switch (event.type) {
               case EventType.NftListing:
               case EventType.NftOffer:
-                return <NftOrderEvent key={`${event.orderItemId}`} event={event} />;
+                return <NftOrderEvent key={`${event.orderItemId} ${index}`} event={event} />;
               case EventType.NftSale:
                 return (
                   <NftSaleEvent

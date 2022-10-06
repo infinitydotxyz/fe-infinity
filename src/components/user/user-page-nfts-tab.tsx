@@ -171,7 +171,7 @@ export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listCl
 
   return (
     <div>
-      <div className={twMerge(`mt-20 ${className}`)}>
+      <div className={twMerge('mt-[86px]', className)}>
         <GalleryBox
           pageId="PROFILE"
           getEndpoint={userInfo?.address ? `/user/${userInfo?.address}/nfts` : ''}
