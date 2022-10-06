@@ -58,23 +58,6 @@ export const GraphCollectionFilter = ({ defaultCollections }: Props) => {
       const updatedCollections = await getCollectionsByName(searchTerm);
 
       if (updatedCollections?.length) {
-        // sort list exact matches first
-        updatedCollections.sort((a, b) => {
-          // make sure exact matches are on top
-          if (a.name === searchTerm) {
-            if (b.name === searchTerm) {
-              return 0;
-            }
-
-            return -1;
-          }
-
-          const aa = a.name.replaceAll(' ', '');
-          const bb = b.name.replaceAll(' ', '');
-
-          return aa.localeCompare(bb);
-        });
-
         setCollectionsData(updatedCollections);
         setAllCollectionsData(uniqBy([...allCollectionsData, ...updatedCollections], 'address'));
       }
