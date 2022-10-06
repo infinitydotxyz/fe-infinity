@@ -8,6 +8,7 @@ type Props = {
 
 export const Sort: React.FC<Props> = ({ onClick }) => (
   <Dropdown
+    alignMenuRight={true}
     label="Sort"
     className="pointer-events-auto ml-8 cursor-pointer"
     items={[
