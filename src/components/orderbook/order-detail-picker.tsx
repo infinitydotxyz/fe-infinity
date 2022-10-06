@@ -34,7 +34,6 @@ export const OrderDetailPicker = ({
           <EZImage src={nft.collectionImage} className="w-16 h-16 shrink-0 overflow-clip rounded-2xl" />
 
           <div className="ml-4 flex-col">
-            <div className="select-none">Collection</div>
             <div className="flex flex-row">
               <div className="w-44 flex items-center text-black font-body">
                 <NextLink href={`/collection/${nft.collectionSlug}`} className="truncate">
@@ -43,6 +42,7 @@ export const OrderDetailPicker = ({
                 {nft.hasBlueCheck && <SVG.blueCheck className="ml-1.5 shrink-0 w-4 h-4" />}
               </div>
             </div>
+            <div className="select-none">Collection</div>
           </div>
         </div>
       );
@@ -92,20 +92,23 @@ export const OrderDetailPicker = ({
             }
           }}
         >
-          <EZImage
-            src={token.tokenImage || nft.collectionImage}
-            className="w-16 h-16 shrink-0 overflow-clip rounded-2xl"
-          />
-          <div className="ml-4 flex flex-col">
-            <div className="w-44 flex items-center text-black font-body">
-              <NextLink href={`/collection/${nft.collectionSlug}`} className="truncate">
-                {nft.collectionName}
-              </NextLink>
-              {nft.hasBlueCheck && <SVG.blueCheck className="ml-1.5 shrink-0 w-4 h-4" />}
-            </div>
+          <NextLink
+            href={`/asset/${nft.chainId}/${nft.collectionAddress}/${token.tokenId}`}
+            className=" flex items-center"
+          >
+            <EZImage
+              src={token.tokenImage || nft.collectionImage}
+              className="w-16 h-16 shrink-0 overflow-clip rounded-2xl"
+            />
+            <div className="ml-4 flex flex-col">
+              <div className="w-44 flex items-center text-black font-body">
+                <div className="truncate">{nft.collectionName}</div>
+                {nft.hasBlueCheck && <SVG.blueCheck className="ml-1.5 shrink-0 w-4 h-4" />}
+              </div>
 
-            <div className="select-none flex  truncate">{tokenId}</div>
-          </div>
+              <div className="select-none flex  truncate">{tokenId}</div>
+            </div>
+          </NextLink>
 
           {showCheckbox && (
             <>
