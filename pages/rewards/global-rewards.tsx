@@ -81,35 +81,24 @@ const GlobalRewards: React.FC = () => {
   const { result, isLoading } = useFetch<TokenomicsConfigDto>('/rewards');
   const { isMobile } = useScreenSize();
 
-  const getPhaseTooltip = (phase: TokenomicsPhaseDto, state: State) => {
-    const renderTooltip = (props: { state: State; isHovered: boolean; children?: React.ReactNode }) => {
-      let message = '';
-      switch (state) {
-        case State.Active:
-          message = `${phase.name} is currently active.`;
-          break;
-        case State.Inactive:
-          message = `${phase.name} will become active once the previous phase has completed.`;
-          break;
-        case State.Complete:
-          message = `${phase.name} has been completed.`;
-          break;
-      }
-      return (
-        <TooltipWrapper
-          className="w-fit min-w-[200px]"
-          show={props.isHovered}
-          tooltip={{
-            title: `${props.state}`,
-            content: message
-          }}
-        >
-          {props.children}
-        </TooltipWrapper>
-      );
-    };
-
-    return renderTooltip;
+  const renderTooltip = (props: {
+    isHovered: boolean;
+    children?: React.ReactNode;
+    title?: string;
+    message?: string;
+  }) => {
+    return (
+      <TooltipWrapper
+        className="w-fit min-w-[200px]"
+        show={props.isHovered}
+        tooltip={{
+          title: props.title ?? '',
+          content: props.message ?? ''
+        }}
+      >
+        {props.children}
+      </TooltipWrapper>
+    );
   };
 
   return (
@@ -118,9 +107,27 @@ const GlobalRewards: React.FC = () => {
       {result?.phases && result?.phases.length > 0
         ? result.phases.map((phase: TokenomicsPhaseDto) => {
             const state = phase.isActive ? State.Active : phase.progress === 100 ? State.Complete : State.Inactive;
-
+            let message = '';
+            switch (state) {
+              case State.Active:
+                message = `${phase.name} is currently active.`;
+                break;
+              case State.Inactive:
+                message = `${phase.name} will become active once the previous phase has completed.`;
+                break;
+              case State.Complete:
+                message = `${phase.name} has been completed.`;
+                break;
+            }
             return (
-              <InfoBox key={phase.id} title={phase.name} state={state} renderTooltip={getPhaseTooltip(phase, state)}>
+              <InfoBox
+                key={phase.id}
+                title={phase.name}
+                state={state}
+                renderTooltip={renderTooltip}
+                tooltipMessage={message}
+                tooltipTitle={state}
+              >
                 <div className={twMerge('flex align-center justify-center', isMobile ? 'flex-col' : '')}>
                   <InfoBox.SideInfo>
                     <InfoBox.Stats title="Trading Fee Distribution">
