@@ -244,8 +244,9 @@ export const Navbar = () => {
               <Menu>
                 {({ open }) => (
                   <CustomMenuContents>
-                    <CustomMenuButton className="flex gap-2 items-center select-none">
-                      {item?.label} <IoMdArrowDropdown />
+                    <CustomMenuButton className="flex gap-1 items-center select-none">
+                      <div>{item?.label}</div>
+                      <IoMdArrowDropdown className="h-4 w-4" />
                     </CustomMenuButton>
                     <CustomMenuItems open={open}>
                       {item?.menu?.map((x, j) => (
