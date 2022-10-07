@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { formatNumber } from 'src/utils';
 import { numberFormatter } from 'src/utils/number-formatter';
 import { twMerge } from 'tailwind-merge';
 
@@ -18,7 +19,7 @@ export type VoteProgressBarProps = {
 
 export const VoteProgressBar: React.FC<VoteProgressBarProps> = ({ votes, totalVotes, className }) => {
   const percentage = useMemo(() => {
-    const p = Math.floor((votes / totalVotes) * 100);
+    const p = (votes / totalVotes) * 100;
 
     if (isNaN(p)) {
       return 0;
@@ -48,7 +49,7 @@ export const VoteProgressBar: React.FC<VoteProgressBarProps> = ({ votes, totalVo
             </span>
             <span className="font-normal ml-2">votes</span>
           </span>
-          <span className="font-black">{percentage}%</span>
+          <span className="font-black">{`${percentage < 0.01 ? '< ' : ''}${formatNumber(percentage, 2)}%`}</span>
         </div>
       </div>
     </div>
