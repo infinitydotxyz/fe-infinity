@@ -51,7 +51,7 @@ export const FeedList = ({
 
       const { result, error } = await apiGet(url, {
         query: {
-          limit: 10,
+          limit: 20,
           eventType: getTypesForFilter(filter),
           cursor: fromCursor
         }
@@ -95,9 +95,9 @@ export const FeedList = ({
       {!isLoading && activities.length === 0 ? <div className="font-heading">No results found</div> : null}
 
       <div className="space-y-4">
-        {activities.map((activity, idx) => {
+        {activities.map((activity) => {
           return (
-            <div key={idx}>
+            <div key={activity.id}>
               <FeedListItem
                 collectionName={collectionName}
                 collectionSlug={collectionSlug}
