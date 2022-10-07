@@ -62,10 +62,15 @@ export const StakeTokensModal = ({ onClose }: Props) => {
   };
 
   return (
-    <Modal isOpen={true} onClose={onClose} showActionButtons={false} showCloseIcon={true} wide={false}>
+    <Modal
+      isOpen={true}
+      onClose={onClose}
+      showActionButtons={false}
+      title="Stake tokens"
+      showCloseIcon={true}
+      wide={false}
+    >
       <div>
-        <Heading className="text-3xl -mt-8 font-medium font-body">Stake tokens</Heading>
-
         <div className="mt-2">
           <div>
             <RadioGroup value={stakeDuration} onChange={setStakeDuration} className="space-y-2">

@@ -62,9 +62,15 @@ export const UnstakeTokensModal = ({ onClose }: Props) => {
   // };
 
   return (
-    <Modal isOpen={true} onClose={onClose} showActionButtons={false} showCloseIcon={true} wide={false}>
+    <Modal
+      isOpen={true}
+      onClose={onClose}
+      showActionButtons={false}
+      title="Unstake tokens"
+      showCloseIcon={true}
+      wide={false}
+    >
       <div>
-        <Heading className="text-3xl -mt-8 font-medium font-body">Unstake tokens</Heading>
         <div className="mt-4">
           {stakeAmounts.length > 0 && (
             <div className="text-md flex flex-col justify-between">
