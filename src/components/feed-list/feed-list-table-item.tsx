@@ -10,9 +10,13 @@ interface Props {
   activity: NftEventRec;
 }
 
+const ellipseParams = [4, 4];
+
 export const FeedListTableItem = ({ activity }: Props) => {
   const saleItem = () => {
-    const buyer = activity.toDisplayName ? ellipsisAddress(activity.toDisplayName) : ellipsisAddress(activity.to);
+    const buyer = activity.toDisplayName
+      ? ellipsisAddress(activity.toDisplayName, ...ellipseParams)
+      : ellipsisAddress(activity.to, ...ellipseParams);
 
     return (
       <div>
@@ -24,11 +28,17 @@ export const FeedListTableItem = ({ activity }: Props) => {
           <div className="flex w-full justify-around ml-8">
             <TableItem label="Token">
               <NextLink href={`/asset/${activity.chainId}/${activity.address}/${activity.tokenId}`}>
-                {ellipsisAddress(activity.tokenId)}
+                {ellipsisAddress(activity.tokenId, ...ellipseParams)}
               </NextLink>
             </TableItem>
 
-            <TableItem label="Price">{activity.price ? <EthPrice label={`${activity.price}`} /> : '—'}</TableItem>
+            <TableItem label="Price">
+              {activity.price ? (
+                <EthPrice label={`${ellipsisString(activity.price.toString(), ...ellipseParams)}`} />
+              ) : (
+                '—'
+              )}
+            </TableItem>
 
             <TableItem label="Buyer">
               {buyer && <NextLink href={`/profile/${activity.to}`}>{buyer}</NextLink>}
@@ -37,7 +47,9 @@ export const FeedListTableItem = ({ activity }: Props) => {
 
             <TableItem label="Seller">
               <NextLink href={`/profile/${activity.from}`}>
-                {activity.fromDisplayName ? ellipsisAddress(activity.fromDisplayName) : ellipsisAddress(activity.from)}
+                {activity.fromDisplayName
+                  ? ellipsisAddress(activity.fromDisplayName, ...ellipseParams)
+                  : ellipsisAddress(activity.from, ...ellipseParams)}
               </NextLink>
             </TableItem>
 
@@ -49,7 +61,9 @@ export const FeedListTableItem = ({ activity }: Props) => {
   };
 
   const offerItem = () => {
-    const buyer = activity.toDisplayName ? ellipsisAddress(activity.toDisplayName) : ellipsisAddress(activity.to);
+    const buyer = activity.toDisplayName
+      ? ellipsisAddress(activity.toDisplayName, ...ellipseParams)
+      : ellipsisAddress(activity.to, ...ellipseParams);
 
     return (
       <div>
@@ -61,11 +75,17 @@ export const FeedListTableItem = ({ activity }: Props) => {
           <div className="flex w-full justify-around ml-8">
             <TableItem label="Token">
               <NextLink href={`/asset/${activity.chainId}/${activity.address}/${activity.tokenId}`}>
-                {ellipsisAddress(activity.tokenId)}
+                {ellipsisAddress(activity.tokenId, ...ellipseParams)}
               </NextLink>
             </TableItem>
 
-            <TableItem label="Price">{activity.price ? <EthPrice label={`${activity.price}`} /> : '—'}</TableItem>
+            <TableItem label="Price">
+              {activity.price ? (
+                <EthPrice label={`${ellipsisString(activity.price.toString(), ...ellipseParams)}`} />
+              ) : (
+                '—'
+              )}
+            </TableItem>
 
             <TableItem label="Buyer">
               {buyer && <NextLink href={`/profile/${activity.to}`}>{buyer}</NextLink>}
@@ -74,7 +94,9 @@ export const FeedListTableItem = ({ activity }: Props) => {
 
             <TableItem label="Maker">
               <NextLink href={`/profile/${activity.from}`}>
-                {activity.fromDisplayName ? ellipsisAddress(activity.fromDisplayName) : ellipsisAddress(activity.from)}
+                {activity.fromDisplayName
+                  ? ellipsisAddress(activity.fromDisplayName, ...ellipseParams)
+                  : ellipsisAddress(activity.from, ...ellipseParams)}
               </NextLink>
             </TableItem>
 
@@ -102,15 +124,23 @@ export const FeedListTableItem = ({ activity }: Props) => {
           <div className="flex w-full justify-around ml-8">
             <TableItem label="Token">
               <NextLink href={`/asset/${activity.chainId}/${activity.address}/${activity.tokenId}`}>
-                {ellipsisAddress(activity.tokenId)}
+                {ellipsisAddress(activity.tokenId, ...ellipseParams)}
               </NextLink>
             </TableItem>
 
-            <TableItem label="Price">{activity.price ? <EthPrice label={`${activity.price}`} /> : '—'}</TableItem>
+            <TableItem label="Price">
+              {activity.price ? (
+                <EthPrice label={`${ellipsisString(activity.price.toString(), ...ellipseParams)}`} />
+              ) : (
+                '—'
+              )}
+            </TableItem>
 
             <TableItem label="Maker">
               <NextLink href={`/profile/${activity.from}`}>
-                {activity.fromDisplayName ? ellipsisAddress(activity.fromDisplayName) : ellipsisAddress(activity.from)}
+                {activity.fromDisplayName
+                  ? ellipsisAddress(activity.fromDisplayName, ...ellipseParams)
+                  : ellipsisAddress(activity.from, ...ellipseParams)}
               </NextLink>
             </TableItem>
 
@@ -132,19 +162,23 @@ export const FeedListTableItem = ({ activity }: Props) => {
           <div className="flex w-full justify-around ml-8">
             <TableItem label="Token">
               <NextLink href={`/asset/${activity.chainId}/${activity.address}/${activity.tokenId}`}>
-                {ellipsisAddress(activity.tokenId)}
+                {ellipsisAddress(activity.tokenId, ...ellipseParams)}
               </NextLink>
             </TableItem>
 
             <TableItem label="From">
               <NextLink href={`/profile/${activity.from}`}>
-                {activity.fromDisplayName ? ellipsisAddress(activity.fromDisplayName) : ellipsisAddress(activity.from)}
+                {activity.fromDisplayName
+                  ? ellipsisAddress(activity.fromDisplayName, ...ellipseParams)
+                  : ellipsisAddress(activity.from, ...ellipseParams)}
               </NextLink>
             </TableItem>
 
             <TableItem label="To">
               <NextLink href={`/profile/${activity.to}`}>
-                {activity.toDisplayName ? ellipsisAddress(activity.toDisplayName) : ellipsisAddress(activity.to)}
+                {activity.toDisplayName
+                  ? ellipsisAddress(activity.toDisplayName, ...ellipseParams)
+                  : ellipsisAddress(activity.to, ...ellipseParams)}
               </NextLink>
             </TableItem>
 
@@ -226,11 +260,15 @@ export const FeedListTableItem = ({ activity }: Props) => {
           <div className="flex w-full justify-around ml-8">
             <TableItem label="User">
               <NextLink href={`/profile/${activity.from}`}>
-                {activity.fromDisplayName ? ellipsisAddress(activity.fromDisplayName) : ellipsisAddress(activity.from)}
+                {activity.fromDisplayName
+                  ? ellipsisAddress(activity.fromDisplayName, ...ellipseParams)
+                  : ellipsisAddress(activity.from, ...ellipseParams)}
               </NextLink>
             </TableItem>
 
-            <TableItem label="Amount">{activity.paymentToken ? ellipsisString(activity.paymentToken) : '—'}</TableItem>
+            <TableItem label="Amount">
+              {activity.paymentToken ? ellipsisString(activity.paymentToken, ...ellipseParams) : '—'}
+            </TableItem>
             <TableItem label="Duration">{activity.price ? <div>{activity.price}</div> : '—'}</TableItem>
             <TableItem label="Power">{activity.externalUrl ? <div>{activity.externalUrl}</div> : '—'}</TableItem>
 
@@ -252,7 +290,9 @@ export const FeedListTableItem = ({ activity }: Props) => {
           <div className="flex w-full justify-around ml-8">
             <TableItem label="User">
               <NextLink href={`/profile/${activity.from}`}>
-                {activity.fromDisplayName ? ellipsisAddress(activity.fromDisplayName) : ellipsisAddress(activity.from)}
+                {activity.fromDisplayName
+                  ? ellipsisAddress(activity.fromDisplayName, ...ellipseParams)
+                  : ellipsisAddress(activity.from, ...ellipseParams)}
               </NextLink>
             </TableItem>
 

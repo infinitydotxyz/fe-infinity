@@ -9,7 +9,7 @@ const classes = {
   pill: 'rounded-full',
   size: {
     plain: '',
-    round: 'p-3',
+    round: 'p-2.5',
     small: 'px-3 py-1 text-xs',
     normal: 'px-6 py-2',
     medium: 'px-5 py-2 text-sm',

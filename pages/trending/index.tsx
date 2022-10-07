@@ -290,7 +290,7 @@ const TrendingPageCard = ({ collection, period, index }: Props) => {
           </>
         ) : null}
 
-        <div className="flex flex-row gap-2 flex-wrap">
+        <div className="flex flex-row gap-3 flex-wrap">
           <Button size="medium" onClick={() => onClickBuy(collection)}>
             Buy
           </Button>

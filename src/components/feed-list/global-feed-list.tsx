@@ -28,7 +28,7 @@ export const GlobalFeedList = ({ types, className = '', compact = false }: Props
 
       const { result, error } = await apiGet(url, {
         query: {
-          limit: compact ? 5 : 10,
+          limit: compact ? 5 : 20,
           eventType: getTypesForFilter(filter),
           cursor: fromCursor
         }

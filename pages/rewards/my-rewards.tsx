@@ -32,7 +32,7 @@ const MyRewardsPage: React.FC = () => {
         </div>
 
         <div className="w-1/2">
-          <div className="bg-white py-6 px-6 rounded-2xl">
+          <div className="bg-white py-4 px-6 rounded-2xl">
             <div>${TOKEN.symbol} Tokens</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
@@ -62,7 +62,7 @@ const MyRewardsPage: React.FC = () => {
               </Button>
             </div>
           </div>
-          {/* <div className="bg-white py-4 pl-6 pr-12 rounded-2xl mt-4">
+          {/* <div className="bg-white py-4 px-6 rounded-2xl mt-4">
             <div>Token staking</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
@@ -106,7 +106,7 @@ const MyRewardsPage: React.FC = () => {
         </div>
 
         <div className="w-1/2">
-          <div className="bg-white py-6 px-6 rounded-2xl">
+          <div className="bg-white py-4 px-6 rounded-2xl">
             <div>Voting power</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
@@ -123,7 +123,7 @@ const MyRewardsPage: React.FC = () => {
               </div>
             </div>
           </div>
-          <div className="bg-white py-4 pl-6 pr-12 rounded-2xl mt-4">
+          <div className="bg-white py-4 px-6 rounded-2xl mt-4">
             <div>Fees earned</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
@@ -136,12 +136,10 @@ const MyRewardsPage: React.FC = () => {
                 <div className="text-2xl font-heading font-bold">10%</div>
                 <div className="text-sm mt-1">Earned APR</div>
               </div> */}
-              <div className="lg:w-1/4 sm:w-full"></div>
-              <div className="lg:w-1/4 sm:w-full">
-                <Button size="large" disabled={true}>
-                  Claim Rewards
-                </Button>
-              </div>
+              <Spacer />
+              <Button size="large" disabled={true}>
+                Claim Rewards
+              </Button>
             </div>
           </div>
         </div>
@@ -159,7 +157,7 @@ const MyRewardsPage: React.FC = () => {
         </div>
 
         <div className="w-1/2">
-          <div className="bg-white py-6 px-6 rounded-2xl">
+          <div className="bg-white py-4 px-6 rounded-2xl">
             <div className="flex flex-wrap">
               <div className="lg:w-1/3 sm:w-full">
                 <div className="mb-4">Volume Traded</div>
@@ -180,7 +178,7 @@ const MyRewardsPage: React.FC = () => {
               </div>
             </div>
           </div>
-          <div className="bg-white py-4 pl-6 pr-12 rounded-2xl mt-4">
+          <div className="bg-white py-4 px-6 rounded-2xl mt-4">
             <div>Tokens earned</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
@@ -189,15 +187,12 @@ const MyRewardsPage: React.FC = () => {
                 </div>
                 <div className="text-sm mt-1">${TOKEN.symbol}</div>
               </div>
-              <div className="lg:w-1/4 sm:w-full">
-                <div className="text-2xl font-heading font-bold"></div>
-                <div className="text-sm mt-1"></div>
-              </div>
-              <div className="lg:w-1/4 sm:w-full">
-                <Button size="large" disabled={true}>
-                  Claim Rewards
-                </Button>
-              </div>
+
+              <Spacer />
+
+              <Button size="large" disabled={true}>
+                Claim Rewards
+              </Button>
             </div>
           </div>
         </div>

@@ -1,7 +1,7 @@
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { BsChatRight } from 'react-icons/bs';
 import { TbArrowBarUp } from 'react-icons/tb';
-import { BlueCheck, Button, EZImage, NextLink, Spacer } from 'src/components/common';
+import { BlueCheck, Button, ExternalLink, EZImage, NextLink, Spacer } from 'src/components/common';
 import { NftEventRec } from '../asset/activity/activity-item';
 import { addUserLike } from 'src/utils/firestore/firestoreUtils';
 import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io';
@@ -193,7 +193,11 @@ export const FeedListItem = ({
               </div>
             )}
 
-            {!collectionName && <div className="font-bold">{activity.fromDisplayName}</div>}
+            {!collectionName && (
+              <div className="font-bold">
+                <ExternalLink href={`https://twitter.com/${activity.from}`}>{activity.fromDisplayName}</ExternalLink>
+              </div>
+            )}
 
             <div className="ml-3 text-gray-600">{timeString}</div>
           </div>
