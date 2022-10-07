@@ -7,7 +7,7 @@ import { useTokenAllowance } from 'src/hooks/contract/token/useTokenAllowance';
 import { useTokenApprove } from 'src/hooks/contract/token/useTokenApprove';
 import { nFormatter } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
-import { Heading, Spinner, toastError, toastSuccess } from '../common';
+import { Spinner, toastError, toastSuccess } from '../common';
 import { Button } from '../common/button';
 import { TextInputBox } from '../common/input-box';
 import { Modal } from '../common/modal';
