@@ -9,6 +9,8 @@ import { FeedListItem } from './feed-list-item';
 import { FilterButton } from './filter-button';
 import { CommentPanel } from './comment-panel';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { IoMdRefresh } from 'react-icons/io';
+import { iconButtonStyle } from 'src/utils/ui-constants';
 
 interface Props {
   collectionAddress: string;
@@ -84,8 +86,8 @@ export const FeedList = ({
         <div className="text-4xl">Feed</div>
 
         <Spacer />
-        <Button className="mr-2" variant="outline" onClick={() => fetchActivity(true)}>
-          Refresh
+        <Button className="mr-3" variant="roundBorder" size="round" onClick={() => fetchActivity(true)}>
+          <IoMdRefresh className={iconButtonStyle} />
         </Button>
         <FilterButton filter={filter} onChange={(f) => setFilter(f)} />
       </div>
