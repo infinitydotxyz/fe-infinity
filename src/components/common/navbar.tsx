@@ -73,7 +73,7 @@ export const Navbar = () => {
             },
             {
               label: 'Favorites',
-              onClick: () => router.push('/collection/favorites'),
+              onClick: () => router.push('/favorites'),
               icon: <FaStar className={iconStyle} />
             },
             {
