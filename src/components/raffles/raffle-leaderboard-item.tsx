@@ -10,7 +10,7 @@ export const RaffleLeaderboardItem = ({ entrant: item }: { entrant: RaffleLeader
           <NextLink href={`/user/${item.entrant.address}`}>
             <EZImage className="w-12 h-12 rounded-2xl overflow-clip" src={item.entrant.profileImage} />
           </NextLink>
-          <NextLink href={`/user/${item.entrant.address}`} className="truncate hidden md:inline-block ml-2">
+          <NextLink href={`/user/${item.entrant.address}`} className="md:inline-block ml-2">
             {item.entrant.username || ellipsisAddress(item.entrant.address)}
           </NextLink>
         </div>

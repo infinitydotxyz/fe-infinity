@@ -1,3 +1,4 @@
+import { ChainId } from '@infinityxyz/lib-frontend/types/core';
 import { CollectionSearchDto } from '@infinityxyz/lib-frontend/types/dto/collections';
 import { uniqBy } from 'lodash';
 import { useRouter } from 'next/router';
@@ -5,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
 import { BlueCheck, Button, Checkbox, DebouncedTextInputBox, EZImage, TextInputBox } from 'src/components/common';
 import { useIsMounted } from 'src/hooks/useIsMounted';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { useOrderbook } from '../../OrderbookContext';
 import { useCollectionCache } from '../collection-cache';
 
@@ -16,6 +18,7 @@ const ORDER_TYPES = ['Listing', 'Offer'];
 
 export const OrderbookFilters = () => {
   const router = useRouter();
+  const { chainId } = useOnboardContext();
 
   const { filters, updateFilter, updateFilterArray, collectionId, clearFilters } = useOrderbook();
   const [openState, setOpenState] = useState<OpenFilterState>({});
@@ -82,11 +85,11 @@ export const OrderbookFilters = () => {
     }
   }, [filters]);
 
-  const searchForCollections = async (searchTerm: string) => {
+  const searchForCollections = async (searchTerm: string, chainId: ChainId) => {
     setSearchQuery(searchTerm);
 
     if (searchTerm) {
-      const updatedCollections = await getCollectionsByName(searchTerm);
+      const updatedCollections = await getCollectionsByName(searchTerm, chainId);
 
       if (updatedCollections?.length) {
         setCollectionsData(updatedCollections);
@@ -140,7 +143,7 @@ export const OrderbookFilters = () => {
               className="border rounded-full py-2 px-4 mt-1 font-heading w-full"
               value={searchQuery}
               onChange={(value) => {
-                searchForCollections(value);
+                searchForCollections(value, chainId as ChainId);
               }}
               placeholder="Search"
             />

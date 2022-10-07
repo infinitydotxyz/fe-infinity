@@ -1,4 +1,5 @@
 import React from 'react';
+import { FaTicketAlt } from 'react-icons/fa';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { IoMdArrowDropdown } from 'react-icons/io';
 import { SiReadthedocs, SiDiscord } from 'react-icons/si';
@@ -32,6 +33,7 @@ export const Navbar = () => {
   const { signIn, signOut, user } = useOnboardContext();
 
   const connected = user?.address ? true : false;
+  const iconStyle = 'h-5 w-5 text-black';
 
   const content = {
     buttons: {
@@ -56,18 +58,23 @@ export const Navbar = () => {
           menu: [
             {
               label: 'Trending',
-              icon: <HiTrendingUp className=" h-5 w-5 text-black" />,
+              icon: <HiTrendingUp className={iconStyle} />,
               onClick: () => router.push('/trending')
             },
             {
               label: 'Feed',
-              icon: <MdFeed className=" h-5 w-5 text-black" />,
+              icon: <MdFeed className={iconStyle} />,
               onClick: () => router.push('/feed')
             },
             {
               label: 'Curated',
-              icon: <HiCollection className=" h-5 w-5 text-black" />,
+              icon: <HiCollection className={iconStyle} />,
               onClick: () => router.push('/curated')
+            },
+            {
+              label: 'Raffles',
+              icon: <FaTicketAlt className={iconStyle} />,
+              onClick: () => router.push('/raffles')
             }
           ]
         },
@@ -77,28 +84,28 @@ export const Navbar = () => {
           menu: [
             {
               label: 'Read docs',
-              icon: <SiReadthedocs className=" h-5 w-5 text-black" />,
+              icon: <SiReadthedocs className={iconStyle} />,
               onClick: () => {
                 window.open('https://docs.infinity.xyz');
               }
             } as DropdownItem,
             {
               label: 'Twitter',
-              icon: <BsTwitter className=" h-5 w-5 text-black" />,
+              icon: <BsTwitter className={iconStyle} />,
               onClick: () => {
                 window.open('https://twitter.com/infinitydotxyz');
               }
             } as DropdownItem,
             {
               label: 'Discord',
-              icon: <SiDiscord className=" h-5 w-5 text-black" />,
+              icon: <SiDiscord className={iconStyle} />,
               onClick: () => {
                 window.open('https://discord.com/invite/infinitydotxyz');
               }
             } as DropdownItem,
             {
               label: 'Medium',
-              icon: <RiMediumFill className=" h-5 w-5 text-black" />,
+              icon: <RiMediumFill className={iconStyle} />,
               onClick: () => {
                 window.open('https://medium.com/@infinitydotxyz');
               }
