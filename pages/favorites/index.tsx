@@ -12,7 +12,7 @@ export default function FavoriteCollectionsLeaderboard() {
       {isError && <div className="flex flex-col mt-10">Unable to load favorites.</div>}
 
       {phases?.map((phase) => (
-        <FavoritesDescription phase={phase} />
+        <FavoritesDescription key={phase.id} phase={phase} />
       ))}
     </PageBox>
   );
