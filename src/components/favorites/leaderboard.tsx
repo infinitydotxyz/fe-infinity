@@ -3,8 +3,9 @@ import { formatNumber } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
 import { NextLink, EZImage, SVG } from '../common';
 
-export const LeaderBoardRow: React.FC<{ collection: CollectionFavoriteDto; className?: string }> = ({
+export const LeaderBoardRow: React.FC<{ collection: CollectionFavoriteDto; className?: string; minimal?: boolean }> = ({
   collection,
+  minimal = false,
   className
 }) => {
   return (
@@ -24,10 +25,12 @@ export const LeaderBoardRow: React.FC<{ collection: CollectionFavoriteDto; class
           {collection?.hasBlueCheck && <SVG.blueCheck className="ml-1.5 shrink-0 w-4 h-4" />}
         </div>
 
-        <div className="w-1/9 max-w-[80px] min-w-[80px]">
-          <div className="text-black font-bold font-body flex items-center">Favorites</div>
-          <div>{formatNumber(collection.numFavorites)}</div>
-        </div>
+        {!minimal && (
+          <div className="w-1/9 max-w-[80px] min-w-[80px]">
+            <div className="text-black font-bold font-body flex items-center">Favorites</div>
+            <div>{formatNumber(collection.numFavorites)}</div>
+          </div>
+        )}
       </div>
     </div>
   );

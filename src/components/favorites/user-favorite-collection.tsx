@@ -10,7 +10,7 @@ export const UserFavoriteCollection = (favorite: UserFavoriteDto | null | undefi
 
   return (
     <>
-      {favorite && <LeaderBoardRow collection={favorite} className="w-full" />}
+      {favorite && <LeaderBoardRow collection={favorite} className="w-full" minimal />}
       <Button className="mx-auto mt-4" onClick={() => router.push('/trending')}>
         {favorite ? 'Change favorite' : 'Find an interesting collection'}
       </Button>
