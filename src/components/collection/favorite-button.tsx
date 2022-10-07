@@ -16,7 +16,7 @@ export const FavoriteButton: React.FC<{ collection: BaseCollection | null | unde
   const [hasFavorited, setHasFavorited] = useState(false);
   const [isFavoriting, setIsFavoriting] = useState(false);
 
-  const invalidStakeLevel = false ?? (userQuota?.stakeLevel || 0) < StakeLevel.Bronze;
+  const invalidStakeLevel = (userQuota?.stakeLevel || 0) < StakeLevel.Bronze;
 
   useEffect(() => {
     if (currentFavoriteCollection?.collectionAddress === collection?.address) {
