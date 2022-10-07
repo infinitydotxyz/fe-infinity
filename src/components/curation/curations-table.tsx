@@ -1,7 +1,9 @@
 import { CuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections.dto';
+import { round } from '@infinityxyz/lib-frontend/utils';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
+import { nFormatter } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
 import { Field, FieldProps } from '../analytics/field';
 import { BlueCheck, EZImage } from '../common';
@@ -70,9 +72,9 @@ export const CurationRow: React.FC<CurationRowProps> = ({ collection, index, onC
           </div>
         </div>
         <FieldWrapper type="custom" className="mr-6">
-          <FeesAprStats value={collection.feesAPR || 0} />
+          <FeesAprStats value={nFormatter(round(collection.feesAPR ?? 0, 2)) ?? 0} />
           <br />
-          <FeesAccruedStats value={collection.fees || 0} />
+          <FeesAccruedStats value={nFormatter(round(collection.fees ?? 0, 2)) ?? 0} />
         </FieldWrapper>
         <VoteProgressBar
           totalVotes={collection.numCuratorVotes || 0}
