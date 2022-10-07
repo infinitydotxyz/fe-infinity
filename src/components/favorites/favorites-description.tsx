@@ -68,6 +68,7 @@ export const FavoritesDescription: React.FC<{ phase: FavoriteCollectionPhaseDto 
             <InfoBox.Stats title="Leaderboard">
               {isLoadingLeaderboard && <Spinner />}
               {!!leaderboard?.data && <Leaderboard collections={leaderboard.data} />}
+              {!isLoadingLeaderboard && leaderboard?.data.length === 0 && <i>No favorite collections yet.</i>}
             </InfoBox.Stats>
           </InfoBox.SideInfo>
         </div>
