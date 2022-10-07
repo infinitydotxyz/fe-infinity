@@ -1,6 +1,6 @@
 import { Collection, CollectionPeriodStatsContent } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
-import { CenteredContent, EthPrice, EZImage, NextLink, Spinner, SVG } from 'src/components/common';
+import { BlueCheck, CenteredContent, EthPrice, EZImage, NextLink, Spinner } from 'src/components/common';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import useScreenSize from 'src/hooks/useScreenSize';
 import { apiGet, formatNumber, ITEMS_PER_PAGE, nFormatter } from 'src/utils';
@@ -115,7 +115,7 @@ const TrendingStartCard = ({ collection, index }: Props) => {
           <NextLink href={`/collection/${collection?.slug}`} className="truncate ml-4 font-bold">
             {collection?.metadata?.name}
           </NextLink>
-          {collection?.hasBlueCheck && <SVG.blueCheck className="ml-1.5 shrink-0 w-4 h-4" />}
+          {collection?.hasBlueCheck && <BlueCheck className="ml-1.5" />}
         </div>
 
         <div className="w-1/3 grow-0 font-bold">

@@ -1,7 +1,7 @@
 import { OBOrderItem, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import React from 'react';
-import { EZImage, NextLink, Spacer, SVG } from 'src/components/common';
+import { BlueCheck, EZImage, NextLink, Spacer } from 'src/components/common';
 import { ENS_ADDRESS } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
 
@@ -30,21 +30,19 @@ export const OrderDetailPicker = ({
     // just show collection if no tokens
     if (nft.tokens.length === 0) {
       return (
-        <div className="flex items-center">
+        <NextLink href={`/collection/${nft.collectionSlug}`} className="flex items-center">
           <EZImage src={nft.collectionImage} className="w-16 h-16 shrink-0 overflow-clip rounded-2xl" />
 
           <div className="ml-4 flex-col">
-            <div className="select-none">Collection</div>
             <div className="flex flex-row">
               <div className="w-44 flex items-center text-black font-body">
-                <NextLink href={`/collection/${nft.collectionSlug}`} className="truncate">
-                  {nft.collectionName}
-                </NextLink>
-                {nft.hasBlueCheck && <SVG.blueCheck className="ml-1.5 shrink-0 w-4 h-4" />}
+                <div className="truncate">{nft.collectionName}</div>
+                {nft.hasBlueCheck && <BlueCheck className="ml-1.5" />}
               </div>
             </div>
+            <div className="select-none">Collection</div>
           </div>
-        </div>
+        </NextLink>
       );
     }
 
@@ -92,20 +90,23 @@ export const OrderDetailPicker = ({
             }
           }}
         >
-          <EZImage
-            src={token.tokenImage || nft.collectionImage}
-            className="w-16 h-16 shrink-0 overflow-clip rounded-2xl"
-          />
-          <div className="ml-4 flex flex-col">
-            <div className="w-44 flex items-center text-black font-body">
-              <NextLink href={`/collection/${nft.collectionSlug}`} className="truncate">
-                {nft.collectionName}
-              </NextLink>
-              {nft.hasBlueCheck && <SVG.blueCheck className="ml-1.5 shrink-0 w-4 h-4" />}
-            </div>
+          <NextLink
+            href={`/asset/${nft.chainId}/${nft.collectionAddress}/${token.tokenId}`}
+            className=" flex items-center"
+          >
+            <EZImage
+              src={token.tokenImage || nft.collectionImage}
+              className="w-16 h-16 shrink-0 overflow-clip rounded-2xl"
+            />
+            <div className="ml-4 flex flex-col">
+              <div className="w-44 flex items-center text-black font-body">
+                <div className="truncate">{nft.collectionName}</div>
+                {nft.hasBlueCheck && <BlueCheck className="ml-1.5" />}
+              </div>
 
-            <div className="select-none flex  truncate">{tokenId}</div>
-          </div>
+              <div className="select-none flex  truncate">{tokenId}</div>
+            </div>
+          </NextLink>
 
           {showCheckbox && (
             <>

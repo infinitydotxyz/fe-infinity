@@ -13,6 +13,8 @@ import { cancelAllOrders } from 'src/utils/exchange/orders';
 import { fetchOrderNonce } from 'src/utils/orderbookUtils';
 import { useDrawerContext } from 'src/utils/context/DrawerContext';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { twMerge } from 'tailwind-merge';
+import { negativeMargin } from 'src/utils/ui-constants';
 
 type Query = {
   limit: number;
@@ -131,20 +133,11 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
   };
 
   return (
-    <div className={`min-h-[50vh] mt-[-75px] ${className}`}>
-      <div className="flex flex-row-reverse mb-8 bg-transparent">
+    <div className={twMerge('min-h-[50vh]', className, negativeMargin)}>
+      <div className="flex gap-3 justify-end items-center mb-8 bg-transparent">
         <Button
           variant="outline"
-          onClick={() => {
-            setFilterShowed((flag) => !flag);
-          }}
-          className="py-2.5 mr-2 font-heading pointer-events-auto"
-        >
-          {filterShowed ? 'Hide' : 'Show'} filter
-        </Button>
-        <Button
-          variant="outline"
-          className="py-2.5 mr-2 font-heading pointer-events-auto"
+          className="pointer-events-auto"
           disabled={isCancellingAll}
           onClick={async () => {
             try {
@@ -168,6 +161,16 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
           }}
         >
           Cancel all
+        </Button>
+
+        <Button
+          variant="outline"
+          onClick={() => {
+            setFilterShowed((flag) => !flag);
+          }}
+          className="pointer-events-auto"
+        >
+          {filterShowed ? 'Hide' : 'Show'} filter
         </Button>
       </div>
 

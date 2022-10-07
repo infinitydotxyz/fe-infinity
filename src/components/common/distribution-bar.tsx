@@ -14,7 +14,7 @@ export const DistributionBar = ({ distribution }: Props) => {
               className={twMerge('text-sm font-normal rounded-r-3xl py-4', item.className)}
               style={{ maxWidth: `${item.percent}%` }}
             ></div>
-            <div className="absolute top-1 z-10 w-full">
+            <div className="absolute top-1 z-5 w-full">
               <div className="space-x-2 px-1 pr-4 font-heading w-full flex align-between justify-between">
                 <div className="w-[80px] m-0 font-bold">{`${item.percent}%`}</div>
                 <div className="w-[200px] m-0 text-right">{item.label}</div>

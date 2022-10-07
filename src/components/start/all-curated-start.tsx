@@ -31,13 +31,12 @@ export const AllCuratedStart: React.FC<Props> = ({ orderBy }) => {
       }
     );
 
-    console.log(error, result);
-
     setIsLoading(false);
 
     if (!error) {
       setData(result?.data as CuratedCollectionDto[]);
     } else {
+      console.log(error);
       setHasError(true);
     }
   };

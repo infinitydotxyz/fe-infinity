@@ -52,17 +52,18 @@ export const OrderbookContent = ({ className }: Props4) => {
   return (
     <>
       <div className={`flex flex-col gap-1 min-h-[50vh] ${className}`}>
-        <div className="text-right pb-8">
+        <div className="gap-3 flex justify-end pb-8">
           <Button
             variant="outline"
             onClick={() => {
               setShowFilters(!showFilters);
             }}
-            className="py-2.5 mr-2 font-heading pointer-events-auto"
+            className="pointer-events-auto"
           >
             {showFilters ? 'Hide' : 'Show'} filter
           </Button>
           <Dropdown
+            alignMenuRight={true}
             label={label}
             items={[
               {

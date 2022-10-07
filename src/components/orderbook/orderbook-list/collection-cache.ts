@@ -1,4 +1,4 @@
-import { BaseCollection, BaseToken, CollectionStats } from '@infinityxyz/lib-frontend/types/core';
+import { BaseCollection, BaseToken, ChainId, CollectionStats } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { apiGet } from 'src/utils/apiUtils';
 import mitt from 'mitt';
@@ -71,12 +71,12 @@ class _CollectionCache {
   };
 
   // TODO hookup to cache
-  getCollectionsByName = async (query: string): Promise<CollectionSearchDto[]> => {
-    const API_ENDPOINT = '/collections/search';
-    const response = await apiGet(API_ENDPOINT, {
+  getCollectionsByName = async (query: string, chainId: ChainId): Promise<CollectionSearchDto[]> => {
+    const response = await apiGet('/collections/search', {
       query: {
         query,
-        limit: DEFAULT_LIMIT
+        limit: DEFAULT_LIMIT,
+        chainId
       }
     });
 
@@ -84,6 +84,32 @@ class _CollectionCache {
       console.log(response.error);
     } else {
       const data = (response.result?.data ?? []) as CollectionSearchDto[];
+      const sortByName = (a: CollectionSearchDto, b: CollectionSearchDto) => {
+        if (a.name === query) {
+          // make sure exact matches are on top
+          if (b.name === query) {
+            return 0;
+          }
+          return -1;
+        }
+
+        const aa = a.name.replaceAll(' ', '');
+        const bb = b.name.replaceAll(' ', '');
+        return aa.localeCompare(bb);
+      };
+      if (data.length) {
+        data.sort((a, b) => {
+          if (a.hasBlueCheck) {
+            if (b.hasBlueCheck) {
+              return sortByName(a, b);
+            }
+            return -1;
+          } else if (b.hasBlueCheck) {
+            return 1;
+          }
+          return sortByName(a, b);
+        });
+      }
 
       return data;
     }
@@ -238,8 +264,8 @@ export const useCollectionCache = () => {
     return CollectionCache.getTopCollections();
   };
 
-  const getCollectionsByName = (query: string): Promise<CollectionSearchDto[]> => {
-    return CollectionCache.getCollectionsByName(query);
+  const getCollectionsByName = (query: string, chainId: ChainId): Promise<CollectionSearchDto[]> => {
+    return CollectionCache.getCollectionsByName(query, chainId);
   };
 
   const getCollectionsByIds = (ids: string[]): Promise<CollectionSearchDto[]> => {

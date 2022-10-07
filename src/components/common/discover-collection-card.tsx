@@ -1,11 +1,11 @@
 import { formatNumber, getOptimizedCloudImage } from 'src/utils';
 import { NextLink } from './next-link';
-import { SVG } from './svg';
 import { EthPrice } from './eth-price';
 import { CollectionStatsDto } from '@infinityxyz/lib-frontend/types/dto/stats';
 import { EZImage } from './ez-image';
 import { DiscoverOrderBy } from './discover-collection-grid';
 import { BsTwitter } from 'react-icons/bs';
+import { BlueCheck } from './blue-check';
 
 interface Props {
   orderBy: DiscoverOrderBy;
@@ -35,7 +35,7 @@ export const DiscoverCollectionCard = ({ orderBy, collection, routerQuery }: Pro
         <div className="pt-4 flex items-start">
           <span className="flex flex-1 items-start font-body text-base font-medium pl-2 text-black whitespace-pre-wrap">
             <span className="inline-block">{collection.name}</span>
-            {collection.hasBlueCheck ? <SVG.blueCheck className="w-4 h-4 mt-1 shrink-0" /> : null}
+            {collection.hasBlueCheck ? <BlueCheck className="mt-1" /> : null}
           </span>
 
           <div className="font-body text-base px-5 text-theme-light-800">

@@ -1,10 +1,12 @@
+import { ChainId } from '@infinityxyz/lib-frontend/types/core';
 import { CollectionSearchDto } from '@infinityxyz/lib-frontend/types/dto/collections';
 import { uniqBy } from 'lodash';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
-import { Button, Checkbox, DebouncedTextInputBox, EZImage, SVG, TextInputBox } from 'src/components/common';
+import { BlueCheck, Button, Checkbox, DebouncedTextInputBox, EZImage, TextInputBox } from 'src/components/common';
 import { useIsMounted } from 'src/hooks/useIsMounted';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { useOrderbook } from '../../OrderbookContext';
 import { useCollectionCache } from '../collection-cache';
 
@@ -16,6 +18,7 @@ const ORDER_TYPES = ['Listing', 'Offer'];
 
 export const OrderbookFilters = () => {
   const router = useRouter();
+  const { chainId } = useOnboardContext();
 
   const { filters, updateFilter, updateFilterArray, collectionId, clearFilters } = useOrderbook();
   const [openState, setOpenState] = useState<OpenFilterState>({});
@@ -82,30 +85,13 @@ export const OrderbookFilters = () => {
     }
   }, [filters]);
 
-  const searchForCollections = async (searchTerm: string) => {
+  const searchForCollections = async (searchTerm: string, chainId: ChainId) => {
     setSearchQuery(searchTerm);
 
     if (searchTerm) {
-      const updatedCollections = await getCollectionsByName(searchTerm);
+      const updatedCollections = await getCollectionsByName(searchTerm, chainId);
 
       if (updatedCollections?.length) {
-        // sort list exact matches first
-        updatedCollections.sort((a, b) => {
-          // make sure exact matches are on top
-          if (a.name === searchTerm) {
-            if (b.name === searchTerm) {
-              return 0;
-            }
-
-            return -1;
-          }
-
-          const aa = a.name.replaceAll(' ', '');
-          const bb = b.name.replaceAll(' ', '');
-
-          return aa.localeCompare(bb);
-        });
-
         setCollectionsData(updatedCollections);
         setAllCollectionsData(uniqBy([...allCollectionsData, ...updatedCollections], 'address'));
       }
@@ -157,7 +143,7 @@ export const OrderbookFilters = () => {
               className="border rounded-full py-2 px-4 mt-1 font-heading w-full"
               value={searchQuery}
               onChange={(value) => {
-                searchForCollections(value);
+                searchForCollections(value, chainId as ChainId);
               }}
               placeholder="Search"
             />
@@ -271,7 +257,7 @@ const CollectionCheckbox = ({ collection }: { collection: CollectionSearchDto })
         label={
           <div className="flex items-center">
             <div className="truncate">{collection.name}</div>
-            {collection?.hasBlueCheck ? <SVG.blueCheck className="w-4 h-4 ml-1 shrink-0" /> : null}
+            {collection?.hasBlueCheck ? <BlueCheck className="ml-1" /> : null}
           </div>
         }
       />

@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import React from 'react';
 import { PageBox, ToggleTab, useToggleTab } from 'src/components/common';
-// import GlobalRewards from './global-rewards';
+import GlobalRewards from './global-rewards';
 import MyRewardsPage from './my-rewards';
 
 enum RewardTabs {
@@ -9,8 +9,7 @@ enum RewardTabs {
   GlobalRewards = 'Global Rewards'
 }
 
-// const tabs = [RewardTabs.MyRewards, RewardTabs.GlobalRewards];
-const tabs = [RewardTabs.MyRewards];
+const tabs = [RewardTabs.MyRewards, RewardTabs.GlobalRewards];
 
 const RewardsPage = () => {
   const router = useRouter();
@@ -19,14 +18,14 @@ const RewardsPage = () => {
   return (
     <PageBox title="Rewards" showTitle={false}>
       <ToggleTab
-        className="font-heading pointer-events-auto hidden" // NOTE: hidden for now
+        className="font-heading pointer-events-auto"
         options={options}
         selected={selected}
         onChange={onChange}
       />
       <div className="mt-4">
         {selected === RewardTabs.MyRewards && <MyRewardsPage />}
-        {/* {selected === RewardTabs.GlobalRewards && <GlobalRewards />} */}
+        {selected === RewardTabs.GlobalRewards && <GlobalRewards />}
       </div>
     </PageBox>
   );

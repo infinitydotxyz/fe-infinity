@@ -1,8 +1,10 @@
+import { ChainId } from '@infinityxyz/lib-frontend/types/core';
 import { CollectionSearchDto } from '@infinityxyz/lib-frontend/types/dto/collections';
 import { uniqBy } from 'lodash';
 import React, { useEffect, useState } from 'react';
-import { Button, Checkbox, DebouncedTextInputBox, EZImage, Modal, SVG } from 'src/components/common';
+import { BlueCheck, Button, Checkbox, DebouncedTextInputBox, EZImage, Modal } from 'src/components/common';
 import { useIsMounted } from 'src/hooks/useIsMounted';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { useCollectionCache } from '../orderbook-list/collection-cache';
 import { useOrderbook } from '../OrderbookContext';
 
@@ -12,6 +14,7 @@ interface Props {
 
 export const GraphCollectionFilter = ({ defaultCollections }: Props) => {
   const { filters } = useOrderbook();
+  const { chainId } = useOnboardContext();
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [collectionsData, setCollectionsData] = useState<CollectionSearchDto[]>([]);
   const { getTopCollections, getCollectionsByName, getCollectionsByIds } = useCollectionCache();
@@ -51,30 +54,13 @@ export const GraphCollectionFilter = ({ defaultCollections }: Props) => {
     }
   }, [filters]);
 
-  const searchForCollections = async (searchTerm: string) => {
+  const searchForCollections = async (searchTerm: string, chainId: ChainId) => {
     setSearchQuery(searchTerm);
 
     if (searchTerm) {
-      const updatedCollections = await getCollectionsByName(searchTerm);
+      const updatedCollections = await getCollectionsByName(searchTerm, chainId);
 
       if (updatedCollections?.length) {
-        // sort list exact matches first
-        updatedCollections.sort((a, b) => {
-          // make sure exact matches are on top
-          if (a.name === searchTerm) {
-            if (b.name === searchTerm) {
-              return 0;
-            }
-
-            return -1;
-          }
-
-          const aa = a.name.replaceAll(' ', '');
-          const bb = b.name.replaceAll(' ', '');
-
-          return aa.localeCompare(bb);
-        });
-
         setCollectionsData(updatedCollections);
         setAllCollectionsData(uniqBy([...allCollectionsData, ...updatedCollections], 'address'));
       }
@@ -112,7 +98,7 @@ export const GraphCollectionFilter = ({ defaultCollections }: Props) => {
           className="border rounded-full py-2 px-4 mt-1 font-heading w-full"
           value={searchQuery}
           onChange={(value) => {
-            searchForCollections(value);
+            searchForCollections(value, chainId as ChainId);
           }}
           placeholder="Search"
         />
@@ -147,7 +133,7 @@ const CollectionCheckbox = ({ collection }: { collection: CollectionSearchDto })
           <div className="flex items-center">
             {collection.name}
 
-            {collection?.hasBlueCheck ? <SVG.blueCheck className="w-4 h-4 ml-1 shrink-0" /> : null}
+            {collection?.hasBlueCheck ? <BlueCheck className="ml-1" /> : null}
           </div>
         }
       />

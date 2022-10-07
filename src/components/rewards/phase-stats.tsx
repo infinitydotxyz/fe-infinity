@@ -14,7 +14,7 @@ export const RewardPhaseStats = ({ phase }: { phase: TokenomicsPhaseDto }) => {
         <div className="flex w-full justify-between">
           <InfoBox.Stat label="Trading Rewards" value={getPhaseTradingRewardsPercent(phase)} />
           <InfoBox.Stat
-            label={`$ : $${TOKEN.symbol} ratio`}
+            label={`$${TOKEN.symbol} : $USD ratio`}
             value={`${phase.tradingFeeRefund.rewardRateNumerator ?? 0}:${
               phase.tradingFeeRefund.rewardRateDenominator ?? 0
             }`}

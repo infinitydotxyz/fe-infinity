@@ -29,4 +29,6 @@ export const inputBorderColor = 'border-gray-300';
 
 export const drawerPx = 'px-8';
 
+export const negativeMargin = 'mt-[-68px]';
+
 export const selectionOutline = 'outline-4 outline-sky-500 outline-offset-1 outline';

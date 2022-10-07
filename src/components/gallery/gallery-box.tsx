@@ -158,13 +158,13 @@ export const GalleryBox = ({
 
   return (
     <div ref={ref} className={twMerge(className, 'flex flex-col')}>
-      <div className="sm:col-span-2 lg:col-span-3 xl:col-span-4 text-right mt-[-73px] pointer-events-none">
+      <div className="sm:col-span-2 lg:col-span-3 xl:col-span-4 text-right mt-[-73px] pointer-events-none flex justify-end gap-3">
         <Button
           variant="outline"
           onClick={() => {
             setFilterShowed((flag) => !flag);
           }}
-          className="py-2.5 mr-2 font-heading pointer-events-auto"
+          className="pointer-events-auto"
         >
           {filterShowed ? 'Hide' : 'Show'} filter
         </Button>

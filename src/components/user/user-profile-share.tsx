@@ -14,7 +14,7 @@ import {
   WhatsappShareButton,
   WhatsappIcon
 } from 'react-share';
-import { Chip, ClipboardButton } from '../common';
+import { Chip, ClipboardButton, CustomMenuButton, CustomMenuContents } from '../common';
 
 interface UserProfileShareProps {
   username?: string;
@@ -25,48 +25,45 @@ export const UserProfileShare: FunctionComponent<UserProfileShareProps> = ({ use
   const profileLink = `${window.location.origin}/user/${username ?? userAddress ?? ''}`;
 
   return (
-    <div className="relative inline-block text-left">
-      <Menu>
-        {({ open }) => (
-          <>
-            {/* without as="div", you get a button within button error */}
-            <Menu.Button as="div">
-              <Chip disableClick={true} content="Share" left={<FaShareAlt className="text-md" />} />
-            </Menu.Button>
+    <Menu>
+      {({ open }) => (
+        <CustomMenuContents>
+          <CustomMenuButton>
+            <Chip disableClick={true} content="Share" left={<FaShareAlt className="text-md" />} />
+          </CustomMenuButton>
 
-            <Transition
-              show={open}
-              enter="transition ease-out duration-100"
-              enterFrom="transform opacity-0 scale-95"
-              enterTo="transform opacity-100 scale-100"
-              leave="transition ease-in duration-75"
-              leaveFrom="transform opacity-100 scale-100"
-              leaveTo="transform opacity-0 scale-95"
-            >
-              <Menu.Items className="absolute mt-2 pl-8 pr-0 pt-4 pb-4 w-72 origin-top-right divide-y divide-gray-100 rounded-3xl border border-gray-200 bg-white shadow-2xl outline-none">
-                <div className="flex flex-wrap gap-4">
-                  <EmailShareButton subject="Infinity User Profile" body="Infinity User Profile" url={profileLink}>
-                    <EmailIcon size={32} />
-                  </EmailShareButton>
-                  <FacebookShareButton url={profileLink}>
-                    <FacebookIcon size={32} />
-                  </FacebookShareButton>
-                  <TwitterShareButton url={profileLink}>
-                    <TwitterIcon size={32} />
-                  </TwitterShareButton>
-                  <InstapaperShareButton url={profileLink}>
-                    <InstapaperIcon size={32} />
-                  </InstapaperShareButton>
-                  <WhatsappShareButton url={profileLink}>
-                    <WhatsappIcon size={32} />
-                  </WhatsappShareButton>
-                  <ClipboardButton textToCopy={profileLink} className="ml-0 border p-2 bg-gray-50 cursor-pointer" />
-                </div>
-              </Menu.Items>
-            </Transition>
-          </>
-        )}
-      </Menu>
-    </div>
+          <Transition
+            show={open}
+            enter="transition ease-out duration-100"
+            enterFrom="transform opacity-0 scale-95"
+            enterTo="transform opacity-100 scale-100"
+            leave="transition ease-in duration-75"
+            leaveFrom="transform opacity-100 scale-100"
+            leaveTo="transform opacity-0 scale-95"
+          >
+            <Menu.Items className="absolute mt-2 pl-8 pr-0 pt-4 pb-4 w-72 origin-top-right divide-y divide-gray-100 rounded-3xl border border-gray-200 bg-white shadow-2xl outline-none">
+              <div className="flex flex-wrap gap-4">
+                <EmailShareButton subject="Infinity User Profile" body="Infinity User Profile" url={profileLink}>
+                  <EmailIcon size={32} />
+                </EmailShareButton>
+                <FacebookShareButton url={profileLink}>
+                  <FacebookIcon size={32} />
+                </FacebookShareButton>
+                <TwitterShareButton url={profileLink}>
+                  <TwitterIcon size={32} />
+                </TwitterShareButton>
+                <InstapaperShareButton url={profileLink}>
+                  <InstapaperIcon size={32} />
+                </InstapaperShareButton>
+                <WhatsappShareButton url={profileLink}>
+                  <WhatsappIcon size={32} />
+                </WhatsappShareButton>
+                <ClipboardButton textToCopy={profileLink} className="ml-0 border p-2 bg-gray-50 cursor-pointer" />
+              </div>
+            </Menu.Items>
+          </Transition>
+        </CustomMenuContents>
+      )}
+    </Menu>
   );
 };

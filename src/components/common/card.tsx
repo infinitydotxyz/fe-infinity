@@ -9,8 +9,8 @@ import { useRouter } from 'next/router';
 import { MdMoreVert } from 'react-icons/md';
 import { ellipsisAddress, ENS_ADDRESS } from 'src/utils';
 import { inputBorderColor } from 'src/utils/ui-constants';
-import { SVG } from './svg';
 import { EZImage } from './ez-image';
+import { BlueCheck } from './blue-check';
 
 type labelFn = (data?: ERC721CardData) => ReactNode;
 
@@ -61,7 +61,7 @@ export const Card = ({
           <Button
             key={idx}
             variant="primary"
-            className="flex-1 py-2.5 text-lg"
+            className="flex-1 text-lg"
             onClick={(ev) => {
               cardAction.onClick(ev, data);
             }}
@@ -113,7 +113,7 @@ export const Card = ({
           }}
         >
           <div>{collectionName ? collectionName : <>&nbsp;</>}</div>
-          {data?.hasBlueCheck ? <SVG.blueCheck className="w-5 h-5 ml-1 shrink-0" /> : null}
+          {data?.hasBlueCheck ? <BlueCheck className="ml-1" /> : null}
         </div>
         <div className="text-secondary font-heading" title={data?.tokenId}>
           {tokenId}

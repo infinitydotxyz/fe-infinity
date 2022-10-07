@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosRequestHeade
 import useSWR, { SWRConfiguration } from 'swr';
 import { stringify } from 'query-string';
 import { API_BASE } from './constants';
-import useSWRInfinite, { SWRInfiniteConfiguration, SWRInfiniteKeyLoader } from 'swr/infinite';
+import useSWRInfinite, { SWRInfiniteConfiguration, SWRInfiniteKeyLoader, SWRInfiniteResponse } from 'swr/infinite';
 import { OnboardAuthProvider } from './OnboardContext/OnboardAuthProvider';
 
 const HTTP_UNAUTHORIZED = 401;
@@ -192,7 +192,18 @@ interface UseFetchInfiniteParams {
   [key: string]: unknown;
 }
 
-export const useFetchInfinite = <T>(path: string | null, params: UseFetchInfiniteParams) => {
+export type UseFetchInfiniteResponse<T, E> = SWRInfiniteResponse<T, E> & {
+  result: T[] | null;
+  isLoading: boolean;
+  isError: boolean;
+  error?: E;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const useFetchInfinite = <T, E = any>(
+  path: string | null,
+  params: UseFetchInfiniteParams
+): UseFetchInfiniteResponse<T, E> => {
   const getKey: SWRInfiniteKeyLoader = (pageIndex, previousPageData) => {
     if (path === null) {
       return null;
@@ -213,7 +224,7 @@ export const useFetchInfinite = <T>(path: string | null, params: UseFetchInfinit
     revalidateFirstPage: false,
     ...params?.swrOptions
   };
-  const { data, error, ...props } = useSWRInfinite<T>(
+  const { data, error, ...props } = useSWRInfinite<T, E>(
     getKey,
     (path) => swrFetch(path as string, params.apiParams),
     options
