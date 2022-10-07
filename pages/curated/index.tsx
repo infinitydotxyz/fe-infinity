@@ -7,7 +7,7 @@ import { Sort } from 'src/components/curation/sort';
 import { MyCuratedCollections } from 'src/components/curation/my-curated';
 import { CuratedTab } from 'src/components/curation/types';
 import { useCurationBulkVoteContext } from 'src/utils/context/CurationBulkVoteContext';
-import { apiPost } from 'src/utils';
+import { apiPost, nFormatter } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { OrderDirection } from '@infinityxyz/lib-frontend/types/core';
 
@@ -67,7 +67,7 @@ export default function Curation() {
       <div className="flex justify-between mb-8">
         <div className="mt-4">
           <span className="px-4 py-2 border border-gray-300 rounded-xl mr-2">
-            <strong className="mr-2">{votesQuota}</strong>
+            <strong className="mr-2">{nFormatter(votesQuota ?? 0) ?? 0}</strong>
             <span>Votes available</span>
           </span>
           {collectionCount > 0 && <Button onClick={showModal}>Confirm</Button>}
