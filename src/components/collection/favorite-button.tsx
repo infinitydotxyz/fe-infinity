@@ -2,7 +2,7 @@ import { BaseCollection, StakeLevel } from '@infinityxyz/lib-frontend/types/core
 import React, { useEffect, useState } from 'react';
 import { FaCheck, FaStar } from 'react-icons/fa';
 import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
-import { useUserFavoriteCollection } from 'src/hooks/api/useFavoriteCollection';
+import { useUserFavorite } from 'src/hooks/api/useUserFavorite';
 import { useMatchMutate } from 'src/hooks/useMatchMutate';
 import { apiPost } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
@@ -12,7 +12,7 @@ export const FavoriteButton: React.FC<{ collection: BaseCollection | null | unde
   const { user, chainId, checkSignedIn } = useOnboardContext();
   const matchMutate = useMatchMutate();
   const { result: userQuota } = useUserCurationQuota();
-  const { result: currentFavoriteCollection } = useUserFavoriteCollection();
+  const { result: currentFavoriteCollection } = useUserFavorite();
   const [hasFavorited, setHasFavorited] = useState(false);
   const [isFavoriting, setIsFavoriting] = useState(false);
 
@@ -32,7 +32,7 @@ export const FavoriteButton: React.FC<{ collection: BaseCollection | null | unde
     }
 
     const { error } = await apiPost(
-      `/collections/${collection?.chainId}:${collection?.address}/favorites/${chainId}:${user?.address}`
+      `/favorites/${collection?.chainId}:${collection?.address}/${chainId}:${user?.address}`
     );
 
     if (error) {
