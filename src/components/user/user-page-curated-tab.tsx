@@ -13,6 +13,7 @@ import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user/user-profile.dto';
 import { twMerge } from 'tailwind-merge';
 import { negativeMargin } from 'src/utils/ui-constants';
+import { OrderDirection } from '@infinityxyz/lib-frontend/types/core';
 
 const InfoBox: React.FC<{ title: string; subtitle: string | number }> = ({ title, subtitle }) => {
   return (
@@ -26,15 +27,18 @@ const InfoBox: React.FC<{ title: string; subtitle: string | number }> = ({ title
 export const UserPageCuratedTab: React.FC<{ userInfo: UserProfileDto }> = ({ userInfo }) => {
   const { chainId } = useOnboardContext();
 
-  const [orderBy, setOrderBy] = useState(CuratedCollectionsOrderBy.Votes);
+  const [order, setOrder] = useState({
+    orderBy: CuratedCollectionsOrderBy.Votes,
+    direction: OrderDirection.Descending
+  });
   const { result: quota } = useCurationQuota(`${chainId}:${userInfo.address}`);
 
   const { result, setSize, error, isLoading } = useFetchInfinite<CuratedCollectionsDto>(
     `/user/${userInfo.address}/curated`,
     {
       query: {
-        orderBy,
-        orderDirection: 'desc',
+        orderBy: order.orderBy,
+        orderDirection: order.direction,
         limit: 10
       },
       apiParams: { requiresAuth: true }
@@ -47,7 +51,7 @@ export const UserPageCuratedTab: React.FC<{ userInfo: UserProfileDto }> = ({ use
   return (
     <div className={twMerge('min-h-[50vh]', negativeMargin)}>
       <div className="flex flex-row-reverse mb-8 bg-transparent">
-        <Sort onClick={setOrderBy} />
+        <Sort onClick={setOrder} />
       </div>
       <Divider />
       <div className="flex flex-row justify-between my-4">
@@ -61,8 +65,8 @@ export const UserPageCuratedTab: React.FC<{ userInfo: UserProfileDto }> = ({ use
           )}%`}
         />
         <InfoBox title="Curated" subtitle={quota?.stake?.totalCurated || 0} />
-        {/* TODO: implement blended APR */}
-        <InfoBox title="Blended APR" subtitle="0%" />
+        {/* TODO: implement blended APR
+        <InfoBox title="Blended APR" subtitle="0%" /> */}
       </div>
       <div className="!pointer-events-auto">
         {error ? <div className="flex flex-col mt-10">Unable to load this users' curated collections.</div> : null}
