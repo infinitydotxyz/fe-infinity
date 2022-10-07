@@ -32,7 +32,7 @@ export const FavoriteButton: React.FC<{ collection: BaseCollection | null | unde
     if (invalidStakeLevel) {
       toastWarning(
         <span>
-          You must have a stake level of bronze or higher to access this feature. Keep staking your tokens !{' '}
+          You must have a stake level of bronze or higher to access this feature. Keep staking your tokens!{' '}
           <a href="https://docs.infinity.xyz/gm/" target="_blank" className="underline" rel="noopener noreferrer">
             Docs
           </a>
