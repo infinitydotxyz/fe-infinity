@@ -7,12 +7,16 @@ import { Sort } from 'src/components/curation/sort';
 import { MyCuratedCollections } from 'src/components/curation/my-curated';
 import { CuratedTab } from 'src/components/curation/types';
 import { useCurationBulkVoteContext } from 'src/utils/context/CurationBulkVoteContext';
-import { apiPost } from 'src/utils';
+import { apiPost, nFormatter } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { OrderDirection } from '@infinityxyz/lib-frontend/types/core';
 
 export default function Curation() {
   const { chainId, user } = useOnboardContext();
-  const [orderBy, setOrderBy] = useState(CuratedCollectionsOrderBy.Votes);
+  const [order, setOrder] = useState({
+    orderBy: CuratedCollectionsOrderBy.Votes,
+    direction: OrderDirection.Descending
+  });
   const [modalOpen, setModalOpen] = useState(false);
   const [isVoting, setIsVoting] = useState(false);
   const tabs = [CuratedTab.AllCurated, CuratedTab.MyCurated];
@@ -63,7 +67,7 @@ export default function Curation() {
       <div className="flex justify-between mb-8">
         <div className="mt-4">
           <span className="px-4 py-2 border border-gray-300 rounded-xl mr-2">
-            <strong className="mr-2">{votesQuota}</strong>
+            <strong className="mr-2">{nFormatter(votesQuota ?? 0) ?? 0}</strong>
             <span>Votes available</span>
           </span>
           {collectionCount > 0 && <Button onClick={showModal}>Confirm</Button>}
@@ -75,12 +79,12 @@ export default function Curation() {
             selected={selected}
             onChange={onChange}
           />
-          <Sort onClick={setOrderBy} />
+          <Sort onClick={setOrder} />
         </div>
       </div>
       <div>
-        {selected === CuratedTab.AllCurated && <AllCuratedCollections orderBy={orderBy} />}
-        {selected === CuratedTab.MyCurated && <MyCuratedCollections orderBy={orderBy} />}
+        {selected === CuratedTab.AllCurated && <AllCuratedCollections order={order} />}
+        {selected === CuratedTab.MyCurated && <MyCuratedCollections order={order} />}
       </div>
     </PageBox>
   );

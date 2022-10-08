@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaTicketAlt } from 'react-icons/fa';
+import { FaStar, FaTicketAlt } from 'react-icons/fa';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { IoMdArrowDropdown } from 'react-icons/io';
 import { SiReadthedocs, SiDiscord } from 'react-icons/si';
@@ -70,6 +70,11 @@ export const Navbar = () => {
               label: 'Curated',
               icon: <HiCollection className={iconStyle} />,
               onClick: () => router.push('/curated')
+            },
+            {
+              label: 'Favorites',
+              onClick: () => router.push('/favorites'),
+              icon: <FaStar className={iconStyle} />
             },
             {
               label: 'Raffles',

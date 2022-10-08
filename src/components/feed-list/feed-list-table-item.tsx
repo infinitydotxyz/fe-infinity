@@ -1,6 +1,6 @@
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { ReactNode } from 'react';
-import { EthPrice, EZImage, NextLink } from 'src/components/common';
+import { EthPrice, ExternalLink, EZImage, LinkText, NextLink } from 'src/components/common';
 import { ellipsisAddress, ellipsisString, NEWS_IMAGE_URL, nFormatter, standardBorderCard } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
@@ -211,32 +211,34 @@ export const FeedListTableItem = ({ activity }: Props) => {
 
   const tweetItem = () => {
     return (
-      <a href={activity.tokenId} className=" " target="_blank">
-        <div className={twMerge(standardBorderCard, 'flex items-center font-heading')}>
+      <div className={twMerge(standardBorderCard, 'flex items-start font-heading')}>
+        <ExternalLink href={activity.tokenId}>
           <EZImage className="w-16 h-16 overflow-clip rounded-2xl" src={activity?.image || activity?.paymentToken} />
+        </ExternalLink>
 
-          <div className="flex flex-col font-body w-full justify-around ml-8">
-            <div className=" font-bold">{activity.collectionName}</div>
-            <div>{activity.to}</div>
+        <div className="flex flex-col font-body w-full justify-around ml-8">
+          <div className=" font-bold">{activity.collectionName}</div>
 
-            <div className="flex item-center mt-2">
-              <div className="font-bold">{activity.toDisplayName}</div>
-              <div className="ml-4">{format(activity.timestamp)}</div>
-            </div>
+          <LinkText text={activity.to ?? ''} />
+
+          <div className="flex item-center mt-2">
+            <div className="font-bold">{activity.toDisplayName}</div>
+            <div className="ml-4">{format(activity.timestamp)}</div>
           </div>
         </div>
-      </a>
+      </div>
     );
   };
 
   const discordItem = () => {
     return (
-      <div className={twMerge(standardBorderCard, 'flex items-center font-heading')}>
+      <div className={twMerge(standardBorderCard, 'flex items-start font-heading')}>
         <EZImage className="w-16 h-16 overflow-clip rounded-2xl" src={activity?.image} />
 
-        <div className="flex flex-col font-body w-full justify-around ml-8">
+        <div className="flex flex-col font-body w-full justify-around ml-8 break-all">
           <div className=" font-bold">{activity.paymentToken}</div>
-          <div>{activity.internalUrl}</div>
+
+          <LinkText text={activity.internalUrl ?? ''} />
 
           <div className="flex item-center mt-2">
             <div className="font-bold">{activity.fromDisplayName}</div>

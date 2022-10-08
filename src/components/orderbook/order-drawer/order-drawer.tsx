@@ -52,7 +52,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
         <div className="text-lg font-semibold">Cart is empty</div>
         <br />
         Add an item to the order.
-        <div className="flex flex-row gap-2 py-2 w-full h-full mt-5">
+        <div className="flex flex-row gap-3 py-2 w-full h-full mt-5">
           <Button
             size="large"
             onClick={() => {
