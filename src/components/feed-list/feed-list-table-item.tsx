@@ -234,7 +234,7 @@ export const FeedListTableItem = ({ activity }: Props) => {
       <div className={twMerge(standardBorderCard, 'flex items-center font-heading')}>
         <EZImage className="w-16 h-16 overflow-clip rounded-2xl" src={activity?.image} />
 
-        <div className="flex flex-col font-body w-full justify-around ml-8">
+        <div className="flex flex-col font-body w-full justify-around ml-8 break-all">
           <div className=" font-bold">{activity.paymentToken}</div>
           <div>{activity.internalUrl}</div>
 
