@@ -30,10 +30,10 @@ export const VoteProgressBar: React.FC<VoteProgressBarProps> = ({ votes, totalVo
   }, [votes, totalVotes]);
 
   return (
-    <div className={twMerge('bg-white rounded-3xl w-full relative', className)}>
+    <div className={twMerge('bg-white rounded-lg w-full relative', className)}>
       <div
         className={twMerge(
-          'bg-[#92DEFF] rounded-3xl text-sm font-normal py-6',
+          'bg-[#92DEFF] rounded-lg text-sm font-normal py-6',
           percentage < 100 ? 'rounded-r-none' : ''
         )}
         style={{ maxWidth: `${percentage}%` }}
