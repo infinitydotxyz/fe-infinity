@@ -31,10 +31,8 @@ export const RewardsProgressBar: React.FC<RewardsProgressBarProps> = ({ amount, 
         style={{ maxWidth: `${percentage}%`, minWidth: percentage > 0 ? '2rem' : '0' }}
       ></div>
 
-      <div className="absolute top-0 left-2 z-10">
-        <span className="space-x-2 font-heading">
-          <span className="font-black">{round(percentage, 2)}%</span>
-        </span>
+      <div className="absolute top-0 left-3">
+        <div className="font-heading font-black">{round(percentage, 2)}%</div>
       </div>
     </div>
   );
