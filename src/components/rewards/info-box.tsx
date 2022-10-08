@@ -63,7 +63,7 @@ export type InfoBoxPhaseProps = {
 
 InfoBox.Stats = function Stats({ title, description, children }: InfoBoxPhaseProps) {
   return (
-    <div className="bg-white py-6 px-6 rounded-2xl">
+    <div className="bg-white py-4 px-6 rounded-2xl">
       <div>{title}</div>
       {description && <div className="flex flex-wrap mt-4">{description}</div>}
       {children && <div className="flex flex-wrap mt-4">{children}</div>}
