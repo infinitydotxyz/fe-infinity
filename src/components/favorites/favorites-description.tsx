@@ -60,6 +60,12 @@ export const FavoritesDescription: React.FC<{ phase: FavoriteCollectionPhaseDto 
                   />
                 </div>
               </div>
+              <div className="w-full py-2">
+                <div className="text-sm mt-1">Pot</div>
+                <div className="text-2xl font-heading font-bold">
+                  {phase.collectionPotFeesGenerated?.feesGeneratedEth || 0} ETH
+                </div>
+              </div>
             </InfoBox.Stats>
           </div>
         </InfoBox.SideInfo>
