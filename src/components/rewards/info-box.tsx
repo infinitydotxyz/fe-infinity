@@ -42,7 +42,7 @@ export function InfoBox(props: InfoBoxProps) {
   );
 
   return (
-    <div className={twMerge('flex-col bg-theme-gray-100 p-10 rounded-2xl my-8 align-center justify-center')}>
+    <div className={twMerge('flex-col bg-theme-gray-100 px-10 py-7 rounded-2xl my-8 align-center justify-center')}>
       {'renderTooltip' in props
         ? props.renderTooltip({
             isHovered,
@@ -63,8 +63,8 @@ export type InfoBoxPhaseProps = {
 
 InfoBox.Stats = function Stats({ title, description, children }: InfoBoxPhaseProps) {
   return (
-    <div className="bg-white py-6 px-6 rounded-2xl">
-      <div>{title}</div>
+    <div className="bg-white py-4 px-6 rounded-2xl">
+      <div className="font-bold">{title}</div>
       {description && <div className="flex flex-wrap mt-4">{description}</div>}
       {children && <div className="flex flex-wrap mt-4">{children}</div>}
     </div>

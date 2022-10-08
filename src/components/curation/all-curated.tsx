@@ -8,16 +8,17 @@ import { NoResultsBox } from './no-results-box';
 import { CuratedTab } from './types';
 import { useRouter } from 'next/router';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { OrderDirection } from '@infinityxyz/lib-frontend/types/core';
 
-export type AllCuratedProps = { orderBy: CuratedCollectionsOrderBy };
+export type AllCuratedProps = { order: { orderBy: CuratedCollectionsOrderBy; direction: OrderDirection } };
 
-export const AllCuratedCollections: React.FC<AllCuratedProps> = ({ orderBy }) => {
+export const AllCuratedCollections: React.FC<AllCuratedProps> = ({ order }) => {
   const { user, chainId } = useOnboardContext();
   const router = useRouter();
 
   const query = {
-    orderBy,
-    orderDirection: 'desc',
+    orderBy: order.orderBy,
+    orderDirection: order.direction,
     limit: 10
   };
 

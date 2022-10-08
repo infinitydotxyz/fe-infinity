@@ -134,7 +134,7 @@ const GlobalRewards: React.FC = () => {
                       <>
                         <DistributionBar distribution={getPhaseSplitDistributions(phase)} />
                         <div className="w-full py-2">
-                          <div className="text-sm mt-1">Progress</div>
+                          <div className="text-sm mt-1 mb-2">Progress</div>
                           <div className="text-2xl font-heading font-bold">
                             <RewardsProgressBar
                               amount={

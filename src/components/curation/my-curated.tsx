@@ -8,16 +8,19 @@ import { NoResultsBox } from './no-results-box';
 import { CuratedTab } from './types';
 import { useRouter } from 'next/router';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { OrderDirection } from '@infinityxyz/lib-frontend/types/core';
 
-export const MyCuratedCollections: React.FC<{ orderBy: CuratedCollectionsOrderBy }> = ({ orderBy }) => {
+export type MyCuratedCollectionsProps = { order: { orderBy: CuratedCollectionsOrderBy; direction: OrderDirection } };
+
+export const MyCuratedCollections: React.FC<MyCuratedCollectionsProps> = ({ order }) => {
   const { user, chainId } = useOnboardContext();
 
   const { result, setSize, error, isLoading } = useFetchInfinite<CuratedCollectionsDto>(
     user?.address ? `/user/${chainId}:${user.address}/curated` : null,
     {
       query: {
-        orderBy,
-        orderDirection: 'desc',
+        orderBy: order.orderBy,
+        orderDirection: order.direction,
         limit: 10
       },
       apiParams: { requiresAuth: !!user?.address }
