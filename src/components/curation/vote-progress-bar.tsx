@@ -39,9 +39,8 @@ export const VoteProgressBar: React.FC<VoteProgressBarProps> = ({ votes, totalVo
         style={{ maxWidth: `${percentage}%` }}
       ></div>
 
-      {/* TODO: improve layout on mobile devices (progressbar likely can't grow in height due to position-absolute being set; find other way to compose layout) */}
       <div className="w-full h-full absolute top-3 px-4">
-        <div className="flex flex-col lg:flex-row justify-between">
+        <div className="flex flex-row justify-between">
           <span className="font-heading">
             <span className="font-black">
               {numberFormatter.format(votes)} / {numberFormatter.format(totalVotes)}
