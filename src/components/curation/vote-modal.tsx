@@ -93,6 +93,7 @@ export const VoteModal: React.FC<VoteModalProps> = ({ collection, isOpen, onClos
             <VoteProgressBar
               votes={(collection.votes || 0) + votes}
               totalVotes={(collection.numCuratorVotes || 0) + votes}
+              className="bg-gray-100"
             />
           </div>
           <Divider className="my-10" />

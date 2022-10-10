@@ -5,9 +5,9 @@ import useScreenSize from 'src/hooks/useScreenSize';
 import { nFormatter } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
 import { Spinner, TooltipWrapper } from '../common';
+import { ProgressBar } from '../common/progress-bar';
 import { PulseIconColor } from '../common/pulse-icon';
 import { InfoBox } from '../rewards/info-box';
-import { RewardsProgressBar } from '../rewards/progressbar';
 import { CollectionFavoritesInfo } from './info';
 import { Leaderboard } from './leaderboard';
 import { UserFavoriteCollection } from './user-favorite-collection';
@@ -53,12 +53,7 @@ export const FavoritesDescription: React.FC<{ phase: FavoriteCollectionPhaseDto 
             <InfoBox.Stats title="Stats">
               <div className="w-full py-2">
                 <div className="text-sm mt-1">Progress</div>
-                <div className="text-2xl font-heading font-bold">
-                  <RewardsProgressBar
-                    amount={phase.progress < 1 ? Math.ceil(phase.progress) : phase.progress}
-                    max={100}
-                  />
-                </div>
+                <ProgressBar percentage={phase.progress} />
               </div>
               <div className="w-full py-2">
                 <div className="text-sm mt-1">Pot</div>

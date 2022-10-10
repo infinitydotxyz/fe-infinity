@@ -1,7 +1,7 @@
 import { UserRaffleDto } from '@infinityxyz/lib-frontend/types/dto';
 import { nFormatter } from 'src/utils';
+import { ProgressBar } from '../common/progress-bar';
 import { InfoBox } from '../rewards/info-box';
-import { RewardsProgressBar } from '../rewards/progressbar';
 
 export const RaffleStats = ({ raffle }: { raffle: UserRaffleDto }) => {
   const potSize = raffle.progress > 0 ? Math.floor((raffle.totals.prizePoolEth / raffle.progress) * 100) : 0;
@@ -21,12 +21,7 @@ export const RaffleStats = ({ raffle }: { raffle: UserRaffleDto }) => {
       </div>
       <div className="w-full py-2">
         <div className="text-sm mt-1">Progress</div>
-        <div className="text-2xl font-heading font-bold">
-          <RewardsProgressBar
-            amount={raffle.progress !== 0 && raffle.progress < 1 ? Math.ceil(raffle.progress) : raffle.progress}
-            max={100}
-          />
-        </div>
+        <ProgressBar percentage={raffle.progress} />
       </div>
     </InfoBox.Stats>
   );
