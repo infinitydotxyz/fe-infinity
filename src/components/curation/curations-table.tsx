@@ -81,7 +81,7 @@ export const CurationRow: React.FC<CurationRowProps> = ({ collection, index, onC
           amount={collection.votes ?? 0}
           units="Votes"
           className="bg-white max-w-[300px] mr-5"
-          size="xl"
+          overlayClassName="font-normal"
         />
 
         {!isReadOnly && (

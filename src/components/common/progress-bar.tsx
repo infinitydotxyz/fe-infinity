@@ -7,7 +7,6 @@ export type ProgressBarBaseProps = {
   className?: string;
   fillerClassName?: string;
   overlayClassName?: string;
-  size?: 'xl' | '2xl';
 };
 
 export type ProgressBarAmountProps = {
@@ -51,22 +50,11 @@ const ProgressBarFiller = ({ percentage, className }: { percentage: number; clas
 
 const ProgressBarOverlay: React.FC<ProgressBarProps & { percentage: number }> = (props) => {
   const showAmount = 'amount' in props;
-  let top = '0.5';
-  switch (props.size) {
-    case 'xl':
-      top = '0.5';
-      break;
-    case '2xl':
-      top = '0';
-      break;
-    default:
-      top = '0.5';
-  }
   return (
     <div
       className={twMerge(
         'absolute flex flex-row justify-between align-between w-full pl-2 pr-2 font-heading font-bold h-full',
-        `top-${top}`
+        `top-0.5`
       )}
     >
       {showAmount && (
@@ -85,11 +73,10 @@ const ProgressBarOverlay: React.FC<ProgressBarProps & { percentage: number }> = 
 export const ProgressBar: React.FC<ProgressBarProps> = (props) => {
   const { fillerClassName, overlayClassName, className, ...rest } = props;
   const percentage = getPercentage(props);
-  const size = props.size ? props.size : 'xl';
   return (
-    <div className={twMerge('bg-gray-100 rounded-sm w-full relative min-w-[250px]', `text-${size}`, className)}>
+    <div className={twMerge('bg-gray-100 rounded-sm w-full relative min-w-[250px]', `text-xl`, className)}>
       <ProgressBarFiller percentage={percentage} className={fillerClassName} />
-      <ProgressBarOverlay className={overlayClassName} {...rest} percentage={percentage} size={size} />
+      <ProgressBarOverlay className={overlayClassName} {...rest} percentage={percentage} />
     </div>
   );
 };

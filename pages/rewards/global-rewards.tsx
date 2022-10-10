@@ -136,7 +136,7 @@ const GlobalRewards: React.FC = () => {
                         <div className="w-full py-2">
                           <div className="text-sm mt-1 mb-2">Progress</div>
                           <div className="text-2xl font-heading font-bold">
-                            <ProgressBar percentage={phase.progress} size="2xl" />
+                            <ProgressBar percentage={phase.progress} />
                           </div>
                         </div>
                       </>
