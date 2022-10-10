@@ -99,7 +99,7 @@ export const CancelModal = ({ isOpen, onClose, onDone, collectionAddress, token 
 
         {hasNoData ? <div className="font-heading">No listings found.</div> : null}
 
-        {listings.map((listing: SignedOBOrder, idx) => {
+        {listings.map((listing, idx) => {
           return (
             <Checkbox
               key={`${listing.id}_${idx}`}
