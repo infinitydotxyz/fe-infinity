@@ -214,23 +214,26 @@ const CollectionPage = () => {
                           onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection.owner)}
                           className="mr-12"
                         >
-                          {ellipsisAddress(createdBy)}
+                          <span className="underline">{ellipsisAddress(createdBy)}</span>
                         </button>
                       </>
                     )}
                     <span className="font-heading">Collection address </span>
-                    <Button
+                    <button
                       onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection.address)}
                       className="mr-8"
                     >
-                      {ellipsisAddress(collection.address ?? '')}
-                    </Button>
+                      <span className="underline">{ellipsisAddress(collection.address ?? '')}</span>
+                    </button>
                     {collection?.metadata?.links?.external && (
-                      <Chip
-                        content={<HiOutlineExternalLink className="text-md" />}
-                        onClick={() => window.open(collection?.metadata?.links?.external)}
-                        iconOnly={true}
-                      />
+                      <>
+                        <span className="font-heading">Website </span>
+                        <Chip
+                          content={<HiOutlineExternalLink className="text-md" />}
+                          onClick={() => window.open(collection?.metadata?.links?.external)}
+                          iconOnly={true}
+                        />
+                      </>
                     )}
                   </>
                 ) : (
