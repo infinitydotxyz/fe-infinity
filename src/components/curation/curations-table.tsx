@@ -7,10 +7,10 @@ import { nFormatter } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
 import { Field, FieldProps } from '../analytics/field';
 import { BlueCheck, EZImage } from '../common';
+import { ProgressBar } from '../common/progress-bar';
 import { NumericVoteInputBox } from './input';
 import { FeesAprStats, FeesAccruedStats } from './statistics';
 import { StakeTokensButton } from './vote-modal';
-import { VoteProgressBar } from './vote-progress-bar';
 
 const FieldWrapper: React.FC<FieldProps & { className?: string }> = ({ className = '', ...props }) => {
   return (
@@ -76,11 +76,14 @@ export const CurationRow: React.FC<CurationRowProps> = ({ collection, index, onC
           <br />
           <FeesAccruedStats value={nFormatter(round(collection.fees ?? 0, 2)) ?? 0} />
         </FieldWrapper>
-        <VoteProgressBar
-          totalVotes={collection.numCuratorVotes || 0}
-          votes={collection.votes || 0}
-          className="mr-5 max-w-[350px]"
+        <ProgressBar
+          max={collection.numCuratorVotes}
+          amount={collection.votes ?? 0}
+          units="votes"
+          className="bg-white max-w-[300px] mr-5 font-normal"
+          overlayClassName="text-base top-1"
         />
+
         {!isReadOnly && (
           <FieldWrapper type="custom" className="min-w-[200px] max-w-[250px]">
             {votes > 0 && <NumericVoteInputBox collectionId={`${collection.chainId}:${collection.address}`} />}

@@ -1,22 +1,85 @@
+import { round } from '@infinityxyz/lib-frontend/utils';
 import React from 'react';
+import { nFormatter } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
-import { Spacer } from './spacer';
 
-export type ProgressBarProps = {
-  percentage: number;
+export type ProgressBarBaseProps = {
   className?: string;
+  fillerClassName?: string;
+  overlayClassName?: string;
 };
 
-export const ProgressBar: React.FC<ProgressBarProps> = ({ children, className = '', percentage }) => {
-  return (
-    <div className={twMerge('bg-theme-light-200 overflow-clip relative rounded-3xl w-full', className)}>
-      <div className="flex items-center w-full px-4 absolute top-0 bottom-0 left-0 right-0">
-        <div className="">{children}</div>
-        <Spacer />
-        <div className="font-black">{percentage}%</div>
-      </div>
+export type ProgressBarAmountProps = {
+  amount: number;
+  max: number;
+  units: string;
+};
 
-      <div className="bg-[#92DEFF] w-full h-full" style={{ width: `${percentage}%` }}></div>
+export type ProgressBarPercentProps = {
+  percentage: number;
+};
+
+export type ProgressBarProps = (ProgressBarAmountProps | ProgressBarPercentProps) & ProgressBarBaseProps;
+
+const getPercentage = (props: ProgressBarProps): number => {
+  let percentage: number;
+
+  if ('percentage' in props) {
+    percentage = props.percentage;
+  } else {
+    percentage = props.amount <= props.max ? (props.amount / props.max) * 100 : 100;
+    if (Number.isNaN(percentage)) {
+      percentage = 0;
+    }
+  }
+  return round(percentage, 3);
+};
+
+const ProgressBarFiller = ({ percentage, className }: { percentage: number; className?: string }) => {
+  return (
+    <div
+      className={twMerge(
+        'bg-[#92DEFF] rounded-sm font-normal py-4',
+        percentage <= 98 ? 'rounded-r-none' : '',
+        className
+      )}
+      style={{ maxWidth: `${percentage}%`, minWidth: percentage > 0 ? '0.25rem' : '0' }}
+    ></div>
+  );
+};
+
+const ProgressBarOverlay: React.FC<
+  (ProgressBarAmountProps | ProgressBarPercentProps) & { className?: string; percentage: number }
+> = (props) => {
+  const showAmount = 'amount' in props;
+  return (
+    <div
+      className={twMerge(
+        'absolute flex flex-row justify-between align-between w-full pl-2 pr-2 font-heading font-bold h-full',
+        `top-0.5`,
+        props.className
+      )}
+    >
+      {showAmount && (
+        <div className="min-w-[120px] flex flex-row">
+          <div className="mr-1">{nFormatter(round(props.amount, 2))}</div>
+          <div className="mr-1">/</div>
+          <div className="mr-2">{nFormatter(round(props.max, 2))}</div>
+          <div className="font-normal">{props.units}</div>
+        </div>
+      )}
+      <div className={twMerge('w-[80px] font-bold', showAmount ? 'text-right' : '')}>{props.percentage}%</div>
+    </div>
+  );
+};
+
+export const ProgressBar: React.FC<ProgressBarProps> = (props) => {
+  const { fillerClassName, overlayClassName, className, ...rest } = props;
+  const percentage = getPercentage(props);
+  return (
+    <div className={twMerge('bg-gray-100 rounded-sm w-full relative min-w-[250px]', `text-xl`, className)}>
+      <ProgressBarFiller percentage={percentage} className={fillerClassName} />
+      <ProgressBarOverlay className={overlayClassName} {...rest} percentage={percentage} />
     </div>
   );
 };

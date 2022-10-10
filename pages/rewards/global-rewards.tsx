@@ -4,12 +4,12 @@ import { TradingFeeDestination } from '@infinityxyz/lib-frontend/types/dto/rewar
 import { Spinner, TooltipWrapper } from 'src/components/common';
 import { DistributionBar } from 'src/components/common/distribution-bar';
 import { InfoBox } from 'src/components/rewards/info-box';
-import { RewardsProgressBar } from 'src/components/rewards/progressbar';
 import { RewardPhase } from 'src/components/rewards/reward-phase';
 import useScreenSize from 'src/hooks/useScreenSize';
 import { useFetch } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
 import { State } from 'src/utils/state';
+import { ProgressBar } from 'src/components/common/progress-bar';
 
 type GRAND_RAFFLE_TYPE = `${TradingFeeDestination.Raffle}-grand`;
 type PHASE_RAFFLE_TYPE = `${TradingFeeDestination.Raffle}-phase`;
@@ -136,12 +136,7 @@ const GlobalRewards: React.FC = () => {
                         <div className="w-full py-2">
                           <div className="text-sm mt-1 mb-2">Progress</div>
                           <div className="text-2xl font-heading font-bold">
-                            <RewardsProgressBar
-                              amount={
-                                phase.progress !== 0 && phase.progress < 1 ? Math.ceil(phase.progress) : phase.progress
-                              }
-                              max={100}
-                            />
+                            <ProgressBar percentage={phase.progress} />
                           </div>
                         </div>
                       </>
