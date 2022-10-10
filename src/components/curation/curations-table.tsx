@@ -79,10 +79,10 @@ export const CurationRow: React.FC<CurationRowProps> = ({ collection, index, onC
         <VoteProgressBar
           totalVotes={collection.numCuratorVotes || 0}
           votes={collection.votes || 0}
-          className="mr-5 max-w-[220px]"
+          className="mr-5 max-w-[350px]"
         />
         {!isReadOnly && (
-          <FieldWrapper type="custom" className="">
+          <FieldWrapper type="custom" className="min-w-[200px] max-w-[250px]">
             {votes > 0 && <NumericVoteInputBox collectionId={`${collection.chainId}:${collection.address}`} />}
             {votes === 0 && <StakeTokensButton variant="white" />}
           </FieldWrapper>

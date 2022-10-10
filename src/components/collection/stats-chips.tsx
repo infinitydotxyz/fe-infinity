@@ -9,6 +9,7 @@ import { useOrderContext } from 'src/utils/context/OrderContext';
 import { indexCollection } from 'src/utils/orderbookUtils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { TipModal } from './tip-modal';
+import { FavoriteButton } from './favorite-button';
 
 interface Props {
   collection?: BaseCollection | null;
@@ -16,7 +17,7 @@ interface Props {
 }
 
 export const StatsChips = ({ collection, currentStatsData }: Props) => {
-  const { user, chainId, checkSignedIn } = useOnboardContext();
+  const { user, chainId: userChainId, checkSignedIn } = useOnboardContext();
 
   const [isFollowing, setIsFollowing] = useState(false);
   const [editVisible, setEditVisible] = useState(true);
@@ -41,7 +42,7 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
     }
     setFollowingLoading(true);
     if (isFollowing) {
-      const { error } = await apiDelete(`/user/${chainId}:${user?.address}/followingCollections`, {
+      const { error } = await apiDelete(`/user/${userChainId}:${user?.address}/followingCollections`, {
         data: {
           collectionChainId: collection?.chainId,
           collectionAddress: collection?.address
@@ -54,7 +55,7 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
         setIsFollowing(false);
       }
     } else {
-      const { error } = await apiPost(`/user/${chainId}:${user?.address}/followingCollections`, {
+      const { error } = await apiPost(`/user/${userChainId}:${user?.address}/followingCollections`, {
         data: {
           collectionChainId: collection?.chainId,
           collectionAddress: collection?.address
@@ -88,7 +89,7 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
 
   const verifyOwnership = async () => {
     const { error, result } = await apiGet(
-      `/user/${chainId}:${user?.address}/collections/${router.query.name}/permissions`
+      `/user/${userChainId}:${user?.address}/collections/${router.query.name}/permissions`
     );
 
     if (!error) {
@@ -200,7 +201,7 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
 
       <Chip
         content={<>Reindex</>}
-        onClick={() => indexCollection(true, chainId, collection?.address ?? '', collection?.slug ?? '')}
+        onClick={() => indexCollection(true, userChainId, collection?.address ?? '', collection?.slug ?? '')}
       />
 
       <Chip
@@ -213,6 +214,8 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
             : 'Tip ETH to provide extra support towards this project'
         }
       />
+
+      <FavoriteButton collection={collection} />
 
       <Chip
         content={<>Collection Offer</>}

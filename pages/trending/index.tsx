@@ -215,6 +215,8 @@ const TrendingPageCard = ({ collection, period, index }: Props) => {
   } else if (period === 'monthly') {
     periodStat = collection?.stats?.monthly;
   }
+  const floorPrice = periodStat?.floorPrice ?? 0;
+
   return (
     <div className="bg-theme-light-200 px-7 py-4 rounded-3xl flex items-center font-heading">
       <div className="text-theme-light-800 text-xl mr-6 min-w-[32px] text-right font-heading">{index + 1}</div>
@@ -258,10 +260,25 @@ const TrendingPageCard = ({ collection, period, index }: Props) => {
                   </>
                 )} */}
 
-        <div className="w-1/9 max-w-[80px] min-w-[80px]">
+        {/* <div className="w-1/9 max-w-[80px] min-w-[80px]">
           <div className="text-black font-bold font-body flex items-center">Avg Price</div>
           <div>
             <EthPrice label={periodStat?.avgPrice ? formatNumber(periodStat?.avgPrice, 2) : '-'} />
+          </div>
+        </div> */}
+
+        <div className="w-1/9 max-w-[80px] min-w-[80px]">
+          <div className="text-black font-bold font-body flex items-center">Floor Price</div>
+          <div>
+            <EthPrice
+              label={
+                floorPrice > 0
+                  ? formatNumber(floorPrice, 2)
+                  : periodStat?.minPrice
+                  ? formatNumber(periodStat?.minPrice, 2)
+                  : '-'
+              }
+            />
           </div>
         </div>
 

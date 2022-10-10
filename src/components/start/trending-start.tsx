@@ -60,7 +60,7 @@ export const TrendingStart = () => {
     <div className={twMerge('flex text-xs', grayText)}>
       <div className="w-2/3 uppercase ml-4">Collection</div>
       <div className="w-1/3 text-right uppercase">Volume</div>
-      <div className="w-1/3 text-right uppercase">Avg Price</div>
+      <div className="w-1/3 text-right uppercase">Floor Price</div>
     </div>
   );
 
@@ -101,6 +101,8 @@ interface Props {
 const TrendingStartCard = ({ collection, index }: Props) => {
   let periodStat: CollectionPeriodStatsContent | undefined = undefined;
   periodStat = collection?.stats?.daily;
+  let floorPrice = periodStat?.floorPrice ?? 0;
+  floorPrice = floorPrice > 0 ? floorPrice : periodStat?.minPrice ?? 0;
 
   return (
     <div>
@@ -132,7 +134,7 @@ const TrendingStartCard = ({ collection, index }: Props) => {
             onRight={false}
             ethClassName={grayText}
             rowClassName="justify-end"
-            label={periodStat?.avgPrice ? formatNumber(periodStat?.avgPrice, 2) : '-'}
+            label={floorPrice > 0 ? formatNumber(floorPrice, 2) : '-'}
           />
         </div>
       </div>

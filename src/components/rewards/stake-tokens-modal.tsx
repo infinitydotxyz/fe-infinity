@@ -53,7 +53,7 @@ export const StakeTokensModal = ({ onClose }: Props) => {
       await stake(value, stakeDuration);
 
       onClose();
-      toastSuccess('Stake successfull, change in tokens will reflect shortly.');
+      toastSuccess('Stake successful, change in tokens will reflect shortly.');
     } catch (err) {
       console.error(err);
     } finally {

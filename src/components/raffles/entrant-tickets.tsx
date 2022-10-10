@@ -9,7 +9,7 @@ export const EntrantTickets = ({ raffleId, userAddress }: { raffleId: string; us
   return (
     <InfoBox.Stats title="Your Stats">
       <div className="flex w-full justify-between border-b-2">
-        <InfoBox.Stat label="Volume" value={nFormatter(entrant?.data?.volumeUSDC ?? 0)}></InfoBox.Stat>
+        <InfoBox.Stat label="Volume (USD)" value={nFormatter(entrant?.data?.volumeUSDC ?? 0)}></InfoBox.Stat>
         <InfoBox.Stat label="Offers" value={nFormatter(entrant?.data?.numValidOffers ?? 0)}></InfoBox.Stat>
         <InfoBox.Stat label="Listings" value={nFormatter(entrant?.data?.numValidListings ?? 0)}></InfoBox.Stat>
       </div>
