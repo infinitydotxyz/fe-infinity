@@ -101,138 +101,141 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
   const discordChangePct = `${Math.abs(currentStatsData?.discordFollowersPercentChange ?? 0)}`.slice(0, 5);
 
   return (
-    <div className="flex flex-row space-x-2 items-center">
-      {collection?.metadata?.tipAddress && (
-        <TipModal
-          isOpen={showTipModal}
-          onClose={() => setShowTipModal(false)}
-          address={collection.metadata.tipAddress}
-        />
-      )}
+    <div>
+      <div className="flex flex-row space-x-2 items-center">
+        {collection?.metadata?.tipAddress && (
+          <TipModal
+            isOpen={showTipModal}
+            onClose={() => setShowTipModal(false)}
+            address={collection.metadata.tipAddress}
+          />
+        )}
 
-      {showFollow && (
-        <Chip
-          content={
-            followingLoading ? (
-              <span className="flex justify-center">
-                <Spinner />
-              </span>
-            ) : (
+        {showFollow && (
+          <Chip
+            content={
+              followingLoading ? (
+                <span className="flex justify-center">
+                  <Spinner />
+                </span>
+              ) : (
+                <span className="flex items-center">
+                  {isFollowing ? (
+                    <>Following</>
+                  ) : (
+                    <>
+                      <AiOutlinePlus className="mr-1" /> Follow
+                    </>
+                  )}
+                </span>
+              )
+            }
+            onClick={onClickFollow}
+            active={isFollowing}
+            className="w-32"
+          />
+        )}
+
+        {editVisible && <Chip content="Edit" onClick={onClickEdit} />}
+
+        {collection?.metadata?.links?.twitter && (
+          <Chip
+            left={<FaTwitter />}
+            onClick={() => window.open(collection?.metadata?.links?.twitter)}
+            content={
               <span className="flex items-center">
-                {isFollowing ? (
-                  <>Following</>
-                ) : (
+                {nFormatter(currentStatsData?.twitterFollowers) ?? ''}
+                {currentStatsData?.twitterFollowersPercentChange && parseFloat(twitterChangePct) ? (
                   <>
-                    <AiOutlinePlus className="mr-1" /> Follow
+                    {(currentStatsData?.twitterFollowersPercentChange ?? 0) < 0 ? (
+                      <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
+                        <FaCaretDown className="mr-1" /> {twitterChangePct}%
+                      </span>
+                    ) : (
+                      <span className="ml-2 py-1 px-2 rounded-xl bg-green-500 text-white text-xs flex items-center">
+                        <FaCaretUp className="mr-1" /> {twitterChangePct}%
+                      </span>
+                    )}
                   </>
+                ) : (
+                  ''
                 )}
               </span>
-            )
-          }
-          onClick={onClickFollow}
-          active={isFollowing}
-          className="w-32"
-        />
-      )}
+            }
+          />
+        )}
 
-      {editVisible && <Chip content="Edit" onClick={onClickEdit} />}
+        {collection?.metadata?.links?.discord && (
+          <Chip
+            left={<FaDiscord />}
+            onClick={() => window.open(collection?.metadata?.links?.discord)}
+            content={
+              <span className="flex items-center">
+                {nFormatter(currentStatsData?.discordFollowers) ?? ''}
+                {currentStatsData?.discordFollowersPercentChange && parseFloat(discordChangePct) ? (
+                  <>
+                    {(currentStatsData?.discordFollowersPercentChange ?? 0) < 0 ? (
+                      <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
+                        <FaCaretDown className="mr-1" /> {discordChangePct}%
+                      </span>
+                    ) : (
+                      <span className="ml-2 py-1 px-2 rounded-xl bg-green-500 text-white text-xs flex items-center">
+                        <FaCaretUp className="mr-1" /> {discordChangePct}%
+                      </span>
+                    )}
+                  </>
+                ) : (
+                  ''
+                )}
+              </span>
+            }
+          />
+        )}
 
-      {collection?.metadata?.links?.twitter && (
+        {collection?.metadata?.links?.instagram && (
+          <Chip
+            content={<FaInstagram className="text-xl" />}
+            onClick={() => window.open(collection?.metadata?.links?.instagram)}
+            iconOnly={true}
+          />
+        )}
+      </div>
+      <div className="flex flex-row space-x-2 mt-6 items-center">
         <Chip
-          left={<FaTwitter />}
-          onClick={() => window.open(collection?.metadata?.links?.twitter)}
-          content={
-            <span className="flex items-center">
-              {nFormatter(currentStatsData?.twitterFollowers) ?? ''}
-              {currentStatsData?.twitterFollowersPercentChange && parseFloat(twitterChangePct) ? (
-                <>
-                  {(currentStatsData?.twitterFollowersPercentChange ?? 0) < 0 ? (
-                    <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
-                      <FaCaretDown className="mr-1" /> {twitterChangePct}%
-                    </span>
-                  ) : (
-                    <span className="ml-2 py-1 px-2 rounded-xl bg-green-500 text-white text-xs flex items-center">
-                      <FaCaretUp className="mr-1" /> {twitterChangePct}%
-                    </span>
-                  )}
-                </>
-              ) : (
-                ''
-              )}
-            </span>
-          }
+          content={<>Reindex</>}
+          onClick={() => indexCollection(true, userChainId, collection?.address ?? '', collection?.slug ?? '')}
         />
-      )}
 
-      {collection?.metadata?.links?.discord && (
         <Chip
-          left={<FaDiscord />}
-          onClick={() => window.open(collection?.metadata?.links?.discord)}
-          content={
-            <span className="flex items-center">
-              {nFormatter(currentStatsData?.discordFollowers) ?? ''}
-              {currentStatsData?.discordFollowersPercentChange && parseFloat(discordChangePct) ? (
-                <>
-                  {(currentStatsData?.discordFollowersPercentChange ?? 0) < 0 ? (
-                    <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
-                      <FaCaretDown className="mr-1" /> {discordChangePct}%
-                    </span>
-                  ) : (
-                    <span className="ml-2 py-1 px-2 rounded-xl bg-green-500 text-white text-xs flex items-center">
-                      <FaCaretUp className="mr-1" /> {discordChangePct}%
-                    </span>
-                  )}
-                </>
-              ) : (
-                ''
-              )}
-            </span>
+          content={<>Tip</>}
+          onClick={onClickTip}
+          disabled={!collection?.metadata.tipAddress}
+          title={
+            !collection?.metadata.tipAddress
+              ? "The collection owner hasn't setup tipping yet"
+              : 'Tip ETH to provide extra support towards this project'
           }
         />
-      )}
 
-      {collection?.metadata?.links?.instagram && (
+        <FavoriteButton collection={collection} />
+
         <Chip
-          content={<FaInstagram className="text-xl" />}
-          onClick={() => window.open(collection?.metadata?.links?.instagram)}
-          iconOnly={true}
+          content={<>Collection Offer</>}
+          active={true}
+          onClick={() => {
+            // assumes parent view has a drawer
+            addCartItem({
+              chainId: collection?.chainId as ChainId,
+              collectionName: collection?.metadata?.name ?? '',
+              collectionAddress: collection?.address ?? '',
+              collectionImage: collection?.metadata?.profileImage ?? '',
+              collectionSlug: collection?.slug ?? '',
+              isSellOrder: false
+            });
+            setOrderDrawerOpen(true);
+          }}
         />
-      )}
-
-      <Chip
-        content={<>Reindex</>}
-        onClick={() => indexCollection(true, userChainId, collection?.address ?? '', collection?.slug ?? '')}
-      />
-
-      <Chip
-        content={<>Tip</>}
-        onClick={onClickTip}
-        disabled={!collection?.metadata.tipAddress}
-        title={
-          !collection?.metadata.tipAddress
-            ? "The collection owner hasn't setup tipping yet"
-            : 'Tip ETH to provide extra support towards this project'
-        }
-      />
-
-      <FavoriteButton collection={collection} />
-
-      <Chip
-        content={<>Collection Offer</>}
-        active={true}
-        onClick={() => {
-          // assumes parent view has a drawer
-          addCartItem({
-            chainId: collection?.chainId as ChainId,
-            collectionName: collection?.metadata?.name ?? '',
-            collectionAddress: collection?.address ?? '',
-            collectionImage: collection?.metadata?.profileImage ?? '',
-            collectionSlug: collection?.slug ?? '',
-            isSellOrder: false
-          });
-          setOrderDrawerOpen(true);
-        }}
-      />
+      </div>
     </div>
   );
 };
