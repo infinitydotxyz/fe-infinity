@@ -27,7 +27,7 @@ export const CurrencyInput = ({ value, label, placeholder, onChange, autoFocus =
           />
         </div>
       </div>
-      <div className="nft-dropdown z-10 relative flex items-center py-3 pl-5 pr-5 rounded-full bg-theme-light-300">
+      <div className="nft-dropdown relative flex items-center py-3 pl-5 pr-5 rounded-full bg-theme-light-300">
         <div className="uppercase text-heading">{currency}</div>
         {/* <BiCaretDown className="h-3 w-3" />
 
