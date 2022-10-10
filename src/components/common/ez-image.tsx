@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { MISSING_IMAGE_URL } from 'src/utils';
+import { MISSING_IMAGE_URL, replaceIPFSWithGateway } from 'src/utils';
 
 interface Props {
   src?: string;
@@ -11,14 +11,12 @@ interface Props {
   onClick?: () => void;
 }
 
-export const EZImage = ({ src, center = true, cover = true, fade = true, onClick, className = '' }: Props) => {
+export const EZImage = ({ src: _src, center = true, cover = true, fade = true, onClick, className = '' }: Props) => {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
+  let src = replaceIPFSWithGateway(_src ?? '');
 
   // avoid the console errors
-  if (src && src.startsWith('ipfs')) {
-    src = '';
-  }
 
   if (!src) {
     // this image is just transparent? why would we want that?

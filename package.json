@@ -20,7 +20,7 @@
     "@amit.rajput/react-linkify": "^1.0.4",
     "@headlessui/react": "^1.7.3",
     "@heroicons/react": "^1.0.6",
-    "@infinityxyz/lib-frontend": "^1.225.0",
+    "@infinityxyz/lib-frontend": "^1.232.0",
     "@next/bundle-analyzer": "^12.3.1",
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/typography": "^0.5.7",
