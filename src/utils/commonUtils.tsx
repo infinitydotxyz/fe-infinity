@@ -1,6 +1,7 @@
 import { getAddress } from '@ethersproject/address';
 import { BaseToken, ChainId, OwnerInfo } from '@infinityxyz/lib-frontend/types/core';
 import {
+  Env,
   ETHEREUM_CHAIN_SCANNER_BASE,
   POLYGON_CHAIN_SCANNER_BASE,
   trimLowerCase
@@ -362,3 +363,5 @@ export const replaceIPFSWithGateway = (_url?: string) => {
     return _url ?? '';
   }
 };
+
+export const ENV: Env = (process.env.NEXT_PUBLIC_ENV as Env | undefined | '') || Env.Prod;
