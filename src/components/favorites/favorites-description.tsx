@@ -1,11 +1,10 @@
 import { FavoriteCollectionPhaseDto } from '@infinityxyz/lib-frontend/types/dto';
-import { Spinner } from 'flowbite-react';
 import { useFavoriteLeaderboard } from 'src/hooks/api/useFavoriteLeaderboard';
 import { useUserFavorite } from 'src/hooks/api/useUserFavorite';
 import useScreenSize from 'src/hooks/useScreenSize';
 import { nFormatter } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
-import { TooltipWrapper } from '../common';
+import { Spinner, TooltipWrapper } from '../common';
 import { PulseIconColor } from '../common/pulse-icon';
 import { InfoBox } from '../rewards/info-box';
 import { RewardsProgressBar } from '../rewards/progressbar';

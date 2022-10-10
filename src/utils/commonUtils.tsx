@@ -9,6 +9,7 @@ import { ReactNode } from 'react';
 import ethers from 'ethers';
 import { FeedFilter } from './firestore/firestoreUtils';
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
+import { normalize } from 'path';
 
 export const base64Encode = (data: string) => Buffer.from(data).toString('base64');
 
@@ -346,4 +347,18 @@ export const getCollectionLink = ({ slug, address, chainId }: { slug: string; ad
 
 export const getTokenLink = ({ chainId, address, tokenId }: { chainId: ChainId; address: string; tokenId: string }) => {
   return `/asset/${chainId.toString()}/${address}/${tokenId}`;
+};
+
+export const replaceIPFSWithGateway = (_url?: string) => {
+  try {
+    const url = new URL(_url ?? '');
+    if (url.protocol !== 'ipfs:') {
+      return url.toString();
+    }
+    const gateway = 'https://ipfs.io/ipfs';
+    const image = `${gateway}/${url.host}${url.pathname}`;
+    return new URL(normalize(image)).toString();
+  } catch (err) {
+    return _url ?? '';
+  }
 };
