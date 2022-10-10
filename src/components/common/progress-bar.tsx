@@ -48,13 +48,16 @@ const ProgressBarFiller = ({ percentage, className }: { percentage: number; clas
   );
 };
 
-const ProgressBarOverlay: React.FC<ProgressBarProps & { percentage: number }> = (props) => {
+const ProgressBarOverlay: React.FC<
+  (ProgressBarAmountProps | ProgressBarPercentProps) & { className?: string; percentage: number }
+> = (props) => {
   const showAmount = 'amount' in props;
   return (
     <div
       className={twMerge(
         'absolute flex flex-row justify-between align-between w-full pl-2 pr-2 font-heading font-bold h-full',
-        `top-0.5`
+        `top-0.5`,
+        props.className
       )}
     >
       {showAmount && (
@@ -62,10 +65,10 @@ const ProgressBarOverlay: React.FC<ProgressBarProps & { percentage: number }> = 
           <div className="mr-1">{nFormatter(round(props.amount, 2))}</div>
           <div className="mr-1">/</div>
           <div className="mr-2">{nFormatter(round(props.max, 2))}</div>
-          <div className="overflow-clip">{props.units}</div>
+          <div className="font-normal">{props.units}</div>
         </div>
       )}
-      <div className={twMerge('w-[80px]', showAmount ? 'text-right' : '')}>{props.percentage}%</div>
+      <div className={twMerge('w-[80px] font-bold', showAmount ? 'text-right' : '')}>{props.percentage}%</div>
     </div>
   );
 };

@@ -79,9 +79,9 @@ export const CurationRow: React.FC<CurationRowProps> = ({ collection, index, onC
         <ProgressBar
           max={collection.numCuratorVotes}
           amount={collection.votes ?? 0}
-          units="Votes"
-          className="bg-white max-w-[300px] mr-5"
-          overlayClassName="font-normal"
+          units="votes"
+          className="bg-white max-w-[300px] mr-5 font-normal"
+          overlayClassName="text-base top-1"
         />
 
         {!isReadOnly && (
