@@ -85,7 +85,7 @@ export const CurationRow: React.FC<CurationRowProps> = ({ collection, index, onC
         />
 
         {!isReadOnly && (
-          <FieldWrapper type="custom" className="min-w-[200px] max-w-[250px]">
+          <FieldWrapper type="custom" className="min-w-[200px]">
             {votes > 0 && <NumericVoteInputBox collectionId={`${collection.chainId}:${collection.address}`} />}
             {votes === 0 && <StakeTokensButton variant="white" />}
           </FieldWrapper>
