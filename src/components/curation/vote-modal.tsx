@@ -1,4 +1,4 @@
-import { CuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections.dto';
+import { UserCuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto';
 import { CurationQuotaDto } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curation-quota.dto';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
@@ -15,7 +15,7 @@ export type VoteModalProps = {
   isOpen: boolean;
   onClose: () => void;
   onVote: (votes: number) => Promise<void> | void;
-  collection: CuratedCollectionDto;
+  collection: UserCuratedCollectionDto;
 };
 
 export const StakeTokensButton: React.FC<Pick<ButtonProps, 'variant'>> = ({ variant }) => {
@@ -85,13 +85,12 @@ export const VoteModal: React.FC<VoteModalProps> = ({ collection, isOpen, onClos
       {!isLoadingQuota && (
         <>
           <div className="my-8 space-y-2 font-body">
-            {/* TODO: re-calculate these on change */}
             <FeesAprStats value={collection.feesAPR || 0} className="flex flex-row-reverse justify-between" />
             <FeesAccruedStats value={collection.fees || 0} className="flex flex-row-reverse justify-between" />
           </div>
           <div className="my-8">
             <VoteProgressBar
-              votes={(collection.votes || 0) + votes}
+              votes={(collection.curator.votes || 0) + votes}
               totalVotes={(collection.numCuratorVotes || 0) + votes}
               className="bg-gray-100"
             />
