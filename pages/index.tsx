@@ -1,14 +1,17 @@
 import { EventType } from '@infinityxyz/lib-frontend/types/core';
 import { CuratedCollectionsOrderBy } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections-query.dto';
 import { useRouter } from 'next/router';
-// import GlobalRewards from 'pages/rewards/global-rewards';
-
-import { Button, PageBox, Spacer } from 'src/components/common';
+import { RaffleDescription } from 'src/components/raffles/raffle-description';
+import { useRaffles } from 'src/hooks/api/useRaffles';
+import { Button, CenteredContent, PageBox, Spacer, Spinner } from 'src/components/common';
+import { FavoritesDescription } from 'src/components/favorites/favorites-description';
 import { GlobalFeedList } from 'src/components/feed-list/global-feed-list';
 import { AllCuratedStart } from 'src/components/start/all-curated-start';
 import { StartFooter } from 'src/components/start/start-footer';
 import { TrendingStart } from 'src/components/start/trending-start';
+import { useFavorites } from 'src/hooks/api/useFavorites';
 import { twMerge } from 'tailwind-merge';
+import GlobalRewards from './rewards/global-rewards';
 
 const HomePage = () => {
   const router = useRouter();
@@ -39,10 +42,67 @@ const HomePage = () => {
         compact={true}
       />
 
-      {/* {titleHeader('Reward Phases', 'mt-12 mb-5', '/rewards')}
-      <GlobalRewards /> */}
+      {titleHeader('Rewards', 'mt-12 mb-5', '/rewards')}
+      <GlobalRewards />
+
+      {titleHeader('Favorites', 'mt-12 mb-5', '/favorites')}
+      <FavoritesPanel />
+
+      {titleHeader('Raffles', 'mt-12 mb-5', '/raffles')}
+
+      <RafflesPanel />
     </PageBox>
   );
 };
 
 export default HomePage;
+
+// ===========================================================
+
+const FavoritesPanel = () => {
+  const { result: phases, isError, isLoading } = useFavorites();
+
+  if (isLoading) {
+    return (
+      <CenteredContent>
+        <Spinner />
+      </CenteredContent>
+    );
+  }
+
+  if (isError) {
+    return <div className="flex flex-col mt-10">Unable to load favorites.</div>;
+  }
+
+  return (
+    <div className="space-y-4">
+      {phases?.map((phase) => (
+        <FavoritesDescription key={phase.id} phase={phase} />
+      ))}
+    </div>
+  );
+};
+
+const RafflesPanel = () => {
+  const { result, isLoading, isError } = useRaffles();
+
+  if (isLoading) {
+    return (
+      <CenteredContent>
+        <Spinner />
+      </CenteredContent>
+    );
+  }
+
+  if (isError) {
+    return <div className="flex flex-col mt-10">Unable to load raffles.</div>;
+  }
+
+  return (
+    <div className="space-y-4">
+      {result.map((raffle) => {
+        return <RaffleDescription raffle={raffle} key={raffle.id} />;
+      })}
+    </div>
+  );
+};

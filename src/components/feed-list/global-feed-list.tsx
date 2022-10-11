@@ -66,7 +66,7 @@ export const GlobalFeedList = ({ types, className = '', compact = false }: Props
 
       {!isLoading && activities.length === 0 ? <div className="font-heading">No results found</div> : null}
 
-      <div className="space-y-4">
+      <div className="space-y-2">
         {activities.map((activity, idx) => {
           // console.log(JSON.stringify(activity, null, 2));
           return (

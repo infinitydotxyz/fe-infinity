@@ -42,7 +42,7 @@ export function InfoBox(props: InfoBoxProps) {
   );
 
   return (
-    <div className={twMerge('flex-col bg-theme-gray-100 px-10 py-7 rounded-2xl my-8 align-center justify-center')}>
+    <div className={twMerge('flex-col bg-theme-gray-100 px-10 py-7 rounded-2xl align-center justify-center')}>
       {'renderTooltip' in props
         ? props.renderTooltip({
             isHovered,

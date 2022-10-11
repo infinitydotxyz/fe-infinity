@@ -43,7 +43,7 @@ export const Leaderboard: React.FC<{ collections: CollectionFavoriteDto[]; class
   return (
     <div className={twMerge('space-y-4 w-full', className)}>
       {collections.map((collection) => (
-        <LeaderBoardRow collection={collection} className="w-full" />
+        <LeaderBoardRow key={collection.collectionAddress} collection={collection} className="w-full" />
       ))}
     </div>
   );
