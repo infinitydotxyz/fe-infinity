@@ -10,5 +10,5 @@ export function useUserFavorite(phaseId?: string) {
       apiParams: { requiresAuth: true }
     }
   );
-  return { ...result, isLoading: result.result === undefined };
+  return { ...result, isLoading: result.result === undefined && user?.address !== undefined };
 }

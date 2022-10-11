@@ -3,6 +3,7 @@ import { useFavoriteLeaderboard } from 'src/hooks/api/useFavoriteLeaderboard';
 import { useUserFavorite } from 'src/hooks/api/useUserFavorite';
 import useScreenSize from 'src/hooks/useScreenSize';
 import { nFormatter } from 'src/utils';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { twMerge } from 'tailwind-merge';
 import { Spinner, TooltipWrapper } from '../common';
 import { ProgressBar } from '../common/progress-bar';
@@ -29,9 +30,20 @@ const renderTooltip = (props: { isHovered: boolean; children?: React.ReactNode; 
 };
 
 export const FavoritesDescription: React.FC<{ phase: FavoriteCollectionPhaseDto }> = ({ phase }) => {
+  const { user } = useOnboardContext();
   const { result: userFavorite, isLoading: isLoadingUserFavorite } = useUserFavorite(phase.id);
   const { result: leaderboard, isLoading: isLoadingLeaderboard } = useFavoriteLeaderboard(phase.id);
   const { isMobile } = useScreenSize();
+
+  const renderFavorite = () => {
+    if (!user?.address) {
+      return <i>Please connect your wallet.</i>;
+    } else if (isLoadingUserFavorite) {
+      return <Spinner />;
+    } else {
+      return UserFavoriteCollection(userFavorite, phase.isActive);
+    }
+  };
 
   return (
     <InfoBox
@@ -46,10 +58,7 @@ export const FavoritesDescription: React.FC<{ phase: FavoriteCollectionPhaseDto 
         <InfoBox.SideInfo>
           <div className="mb-4 space-y-4">
             <InfoBox.Stats title="Collection Favorites" description={CollectionFavoritesInfo()} />
-            <InfoBox.Stats
-              title="Your Favorite"
-              description={isLoadingUserFavorite ? <Spinner /> : UserFavoriteCollection(userFavorite, phase.isActive)}
-            />
+            <InfoBox.Stats title="Your Favorite" description={renderFavorite()} />
             <InfoBox.Stats title="Stats">
               <div className="w-full py-2">
                 <div className="text-sm mt-1">Progress</div>
