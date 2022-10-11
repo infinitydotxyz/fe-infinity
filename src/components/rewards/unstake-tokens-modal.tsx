@@ -9,7 +9,7 @@ import {
 import { useUnstake } from 'src/hooks/contract/staker/useUnstake';
 import { nFormatter } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import { toastError, toastSuccess } from '../common';
+import { Spinner, toastError, toastSuccess } from '../common';
 import { Button } from '../common/button';
 import { TextInputBox } from '../common/input-box';
 import { Modal } from '../common/modal';
@@ -134,6 +134,14 @@ export const UnstakeTokensModal = ({ onClose }: Props) => {
         <Button size="large" className="w-full py-3 mt-4" onClick={onUnstake} disabled={isUnstaking}>
           Unstake
         </Button>
+
+        {isUnstaking && (
+          <div className="mt-2 flex flex-row gap-2 items-center">
+            <Spinner />
+            <span>Waiting for transaction to complete...</span>
+          </div>
+        )}
+
         {/* Keep the below code as an example for implementing the rage quit ui */}
         {/* 
         <Divider className="my-10" />
