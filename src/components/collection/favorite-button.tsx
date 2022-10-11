@@ -6,7 +6,7 @@ import { useUserFavorite } from 'src/hooks/api/useUserFavorite';
 import { useMatchMutate } from 'src/hooks/useMatchMutate';
 import { apiPost } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import { Chip, Spinner, toastError, toastWarning } from '../common';
+import { Chip, Modal, Spinner, toastError, toastWarning } from '../common';
 
 export const FavoriteButton: React.FC<{ collection: BaseCollection | null | undefined }> = ({ collection }) => {
   const { user, chainId, checkSignedIn } = useOnboardContext();
@@ -15,6 +15,7 @@ export const FavoriteButton: React.FC<{ collection: BaseCollection | null | unde
   const { result: currentFavoriteCollection } = useUserFavorite();
   const [hasFavorited, setHasFavorited] = useState(false);
   const [isFavoriting, setIsFavoriting] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   const invalidStakeLevel = (userQuota?.stakeLevel || 0) < StakeLevel.Bronze;
 
@@ -24,7 +25,7 @@ export const FavoriteButton: React.FC<{ collection: BaseCollection | null | unde
     }
   }, [currentFavoriteCollection?.collectionAddress]);
 
-  const onClickFavorite = async () => {
+  const onClickFavorite = () => {
     if (!checkSignedIn()) {
       return;
     }
@@ -41,6 +42,11 @@ export const FavoriteButton: React.FC<{ collection: BaseCollection | null | unde
       return;
     }
 
+    setShowConfirmModal(true);
+  };
+
+  const onConfirm = async () => {
+    setShowConfirmModal(false);
     setIsFavoriting(true);
 
     const { error } = await apiPost(
@@ -59,16 +65,39 @@ export const FavoriteButton: React.FC<{ collection: BaseCollection | null | unde
   };
 
   return (
-    <Chip
-      left={isFavoriting ? <Spinner /> : hasFavorited ? <FaCheck /> : <FaStar />}
-      content={<>Favorite</>}
-      onClick={onClickFavorite}
-      disabled={hasFavorited || isFavoriting}
-      title={
-        hasFavorited
-          ? 'You already favorited this collection'
-          : 'Click to favorite this collection (your vote is valid as long as the current phase lasts)'
-      }
-    />
+    <>
+      <Modal
+        isOpen={showConfirmModal}
+        onClose={() => setShowConfirmModal(false)}
+        onOKButton={onConfirm}
+        showCloseIcon={true}
+        wide={false}
+      >
+        <div>
+          <div className="text-3xl font-medium">Favorite collection</div>
+
+          <div className="mt-5">
+            <p>
+              Are you sure you want to favorite <strong>{collection?.metadata.name}</strong>?
+            </p>
+            <br />
+            <p>
+              <strong>You cannot change your choice until the end of the phase!</strong>
+            </p>
+          </div>
+        </div>
+      </Modal>
+      <Chip
+        left={isFavoriting ? <Spinner /> : hasFavorited ? <FaCheck /> : <FaStar />}
+        content={<>Favorite</>}
+        onClick={onClickFavorite}
+        disabled={hasFavorited || isFavoriting}
+        title={
+          hasFavorited
+            ? 'You already favorited this collection'
+            : 'Click to favorite this collection (your vote is valid as long as the current phase lasts)'
+        }
+      />
+    </>
   );
 };
