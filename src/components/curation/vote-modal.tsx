@@ -3,6 +3,7 @@ import { CurationQuotaDto } from '@infinityxyz/lib-frontend/types/dto/collection
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
+import { useIsMounted } from 'src/hooks/useIsMounted';
 import { apiPost } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { AvatarImage } from '../collection/avatar-image';
@@ -10,13 +11,6 @@ import { Button, ButtonProps, Divider, Heading, Modal, Spinner, TextInputBox, to
 import { MaxButton } from './max-button';
 import { FeesAccruedStats, FeesAprStats, Statistics } from './statistics';
 import { VoteProgressBar } from './vote-progress-bar';
-
-export type VoteModalProps = {
-  isOpen: boolean;
-  onClose: () => void;
-  onVote: (votes: number) => Promise<void> | void;
-  collection: UserCuratedCollectionDto;
-};
 
 export const StakeTokensButton: React.FC<Pick<ButtonProps, 'variant'>> = ({ variant }) => {
   const router = useRouter();
@@ -28,13 +22,21 @@ export const StakeTokensButton: React.FC<Pick<ButtonProps, 'variant'>> = ({ vari
   );
 };
 
-export const VoteModal: React.FC<VoteModalProps> = ({ collection, isOpen, onClose, onVote }) => {
+interface Props {
+  isOpen: boolean;
+  onClose: () => void;
+  onVote: (votes: number) => Promise<void> | void;
+  collection: UserCuratedCollectionDto;
+}
+
+export const VoteModal: React.FC<Props> = ({ collection, isOpen, onClose, onVote }) => {
   const { user, chainId } = useOnboardContext();
 
   // TODO: re-calculate fees & APR (via API call) when 'votes' change
   const [votes, setVotes] = useState<number>(0);
   const { result: quota, isLoading: isLoadingQuota, mutate: mutateQuota } = useUserCurationQuota();
   const [isVoting, setIsVoting] = useState(false);
+  const isMounted = useIsMounted();
 
   const votesAvailable = quota?.availableVotes || 0;
 
@@ -66,8 +68,11 @@ export const VoteModal: React.FC<VoteModalProps> = ({ collection, isOpen, onClos
       toastError('Something went wrong. Please try again later.');
     }
 
-    setIsVoting(false);
-    setVotes(0);
+    if (isMounted()) {
+      setIsVoting(false);
+      setVotes(0);
+    }
+
     onClose();
   };
 
@@ -90,7 +95,7 @@ export const VoteModal: React.FC<VoteModalProps> = ({ collection, isOpen, onClos
           </div>
           <div className="my-8">
             <VoteProgressBar
-              votes={(collection.curator.votes || 0) + votes}
+              votes={(collection.curator?.votes || 0) + votes}
               totalVotes={(collection.numCuratorVotes || 0) + votes}
               className="bg-gray-100"
             />

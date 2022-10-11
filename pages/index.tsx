@@ -42,8 +42,8 @@ const HomePage = () => {
         compact={true}
       />
 
-      {titleHeader('Rewards', 'mt-12 mb-5', '/rewards')}
-      <GlobalRewards />
+      {titleHeader('Rewards', 'mt-12 mb-5', '/rewards?tab=Global+Rewards')}
+      <GlobalRewards showCount={1} />
 
       {titleHeader('Favorites', 'mt-12 mb-5', '/favorites')}
       <FavoritesPanel />
@@ -76,12 +76,16 @@ const FavoritesPanel = () => {
 
   return (
     <div className="space-y-4">
-      {phases?.map((phase) => (
-        <FavoritesDescription key={phase.id} phase={phase} />
-      ))}
+      {phases?.map((phase, index) => {
+        if (index < 1) {
+          return <FavoritesDescription key={phase.id} phase={phase} />;
+        }
+      })}
     </div>
   );
 };
+
+// ======================================================
 
 const RafflesPanel = () => {
   const { result, isLoading, isError } = useRaffles();
@@ -100,8 +104,11 @@ const RafflesPanel = () => {
 
   return (
     <div className="space-y-4">
-      {result.map((raffle) => {
-        return <RaffleDescription raffle={raffle} key={raffle.id} />;
+      {result.map((raffle, index) => {
+        // just show first two
+        if (index < 2) {
+          return <RaffleDescription raffle={raffle} key={raffle.id} />;
+        }
       })}
     </div>
   );

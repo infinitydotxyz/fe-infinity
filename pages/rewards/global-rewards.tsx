@@ -77,7 +77,11 @@ function getPhaseSplitDistributions(phase: TokenomicsPhaseDto) {
   return configs.sort((a, b) => a.label.localeCompare(b.label));
 }
 
-const GlobalRewards: React.FC = () => {
+interface Props {
+  showCount?: number;
+}
+
+const GlobalRewards = ({ showCount }: Props) => {
   const { result, isLoading, isError } = useFetch<TokenomicsConfigDto>('/rewards');
   const { isMobile } = useScreenSize();
 
@@ -116,7 +120,11 @@ const GlobalRewards: React.FC = () => {
   if (result?.phases && result?.phases.length > 0) {
     return (
       <div className="space-y-4">
-        {result.phases.map((phase: TokenomicsPhaseDto) => {
+        {result.phases.map((phase: TokenomicsPhaseDto, index) => {
+          if (showCount && index >= showCount) {
+            return;
+          }
+
           const state = phase.isActive ? State.Active : phase.progress === 100 ? State.Complete : State.Inactive;
           let message = '';
           switch (state) {

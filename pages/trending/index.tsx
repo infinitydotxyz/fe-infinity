@@ -152,12 +152,17 @@ const VoteModalWrapper: React.FC<{ coll: Collection; isOpen: boolean; onClose: (
       : null
   );
 
+  // TODO sleeyax I added this, was not correct before if this is undefined, double check if Ok
+  if (!curatedCollection) {
+    return <></>;
+  }
+
   return (
     <VoteModal
       collection={{
         ...coll,
         ...coll.metadata,
-        ...(curatedCollection as UserCuratedCollectionDto)
+        ...curatedCollection
       }}
       isOpen={isOpen}
       onClose={onClose}
