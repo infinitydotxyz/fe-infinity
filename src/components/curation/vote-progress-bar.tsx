@@ -21,7 +21,7 @@ export const VoteProgressBar: React.FC<VoteProgressBarProps> = ({ votes, totalVo
     <ProgressBar
       max={totalVotes}
       amount={votes}
-      units="Votes"
+      units="votes"
       className={twMerge('bg-white max-w-[300px] mr-5', className)}
     />
   );
