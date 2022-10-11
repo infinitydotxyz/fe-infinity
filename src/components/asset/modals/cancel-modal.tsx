@@ -92,7 +92,7 @@ export const CancelModal = ({ isOpen, onClose, onDone, collectionAddress, token 
       disableOK={isSubmitting}
       onOKButton={onOKButton}
     >
-      <ul className={`mt-4 p-2 flex flex-col w-full overflow-y-auto overflow-x-clip  min-h-[35vh] max-h-[35vh]`}>
+      <ul className={`mt-4 p-2 flex flex-col w-full overflow-y-auto overflow-x-clip  min-h-[35vh]`}>
         {isLoading && <Spinner />}
 
         {!isLoading && error ? <div className="font-heading">{error}</div> : null}
