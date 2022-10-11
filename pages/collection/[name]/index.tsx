@@ -5,9 +5,8 @@ import {
   CollectionStats,
   ERC721CardData
 } from '@infinityxyz/lib-frontend/types/core';
-import { CuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections.dto';
 import { CollectionStatsDto } from '@infinityxyz/lib-frontend/types/dto/stats';
-import { NULL_ADDRESS } from '@infinityxyz/lib-frontend/utils';
+import { NULL_ADDRESS, round } from '@infinityxyz/lib-frontend/utils';
 import { useRouter } from 'next/router';
 import NotFound404Page from 'pages/not-found-404';
 import { useEffect, useState } from 'react';
@@ -45,6 +44,7 @@ import { iconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import ReactMarkdown from 'react-markdown';
 import Linkify from '@amit.rajput/react-linkify';
+import { UserCuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto';
 
 const CollectionPage = () => {
   const { user, chainId, checkSignedIn } = useOnboardContext();
@@ -90,7 +90,7 @@ const CollectionPage = () => {
 
   const createdBy = collection?.deployer ?? collection?.owner ?? '';
 
-  const { result: userCurated } = useFetch<CuratedCollectionDto>(
+  const { result: curatedCollection } = useFetch<UserCuratedCollectionDto>(
     `${path}/curated/${chainId}:${user?.address ?? NULL_ADDRESS}`
   );
 
@@ -327,41 +327,31 @@ const CollectionPage = () => {
                 <Heading as="h2" className="font-body text-3xl font-medium">
                   Curate this collection
                 </Heading>
-                <FeesAprStats value={userCurated?.feesAPR || 0} className="mr-8" />
-                <FeesAccruedStats value={userCurated?.fees || 0} />
+                <FeesAprStats value={nFormatter(round(curatedCollection?.feesAPR || 0, 3)) ?? 0} className="mr-8" />
+                <FeesAccruedStats value={nFormatter(round(curatedCollection?.fees || 0, 3)) ?? 0} />
                 <div className="flex flex-row space-x-2 relative">
                   <VoteProgressBar
-                    votes={userCurated?.votes || 0}
-                    totalVotes={userCurated?.numCuratorVotes || 0}
+                    votes={curatedCollection?.curator?.votes || 0}
+                    totalVotes={curatedCollection?.numCuratorVotes || 0}
                     className="max-w-[15rem] bg-white"
                   />
                 </div>
                 <Button onClick={() => checkSignedIn() && setIsStakeModalOpen(true)}>Vote</Button>
               </div>
-              <VoteModal
-                collection={{
-                  ...collection,
-                  ...collection.metadata,
-                  ...(userCurated || {
-                    votes: 0,
-                    fees: 0,
-                    feesAPR: 0,
-                    timestamp: 0,
-                    numCuratorVotes: 0,
-                    userAddress: '',
-                    userChainId: '' as ChainId,
-                    stakerContractAddress: '',
-                    stakerContractChainId: '' as ChainId,
-                    tokenContractAddress: '',
-                    tokenContractChainId: '' as ChainId
-                  })
-                }}
-                isOpen={isStakeModalOpen}
-                onClose={() => setIsStakeModalOpen(false)}
-                onVote={() => {
-                  toastSuccess('Votes registered successfully. Changes will reflect shortly.');
-                }}
-              />
+              {curatedCollection && (
+                <VoteModal
+                  collection={{
+                    ...collection,
+                    ...collection.metadata,
+                    ...curatedCollection
+                  }}
+                  isOpen={isStakeModalOpen}
+                  onClose={() => setIsStakeModalOpen(false)}
+                  onVote={() => {
+                    toastSuccess('Votes registered successfully. Changes will reflect shortly.');
+                  }}
+                />
+              )}
             </section>
           </div>
 

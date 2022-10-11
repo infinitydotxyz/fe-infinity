@@ -64,79 +64,82 @@ export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth, onDone }:
   tableItems.push({ title: 'Fee', value: <div className="font-bold">{INFINITY_FEE_PCT}%</div> });
   tableItems.push({ title: 'Royalty', value: <div className="font-bold">{INFINITY_ROYALTY_PCT}%</div> });
 
+  const lowerPrice = async () => {
+    const priceVal = parseFloat(price);
+    if (!orderDetails || !user || !price || priceVal <= 0) {
+      return;
+    }
+    const buyPriceEthVal = parseFloat(buyPriceEth ?? '0');
+    if (priceVal >= buyPriceEthVal) {
+      setErrorMsg('New price must be lower than the current price');
+      return;
+    } else {
+      setErrorMsg('');
+    }
+
+    // todo: remove this once BE fix validation of tokens' images (not needed):
+    for (const nft of orderDetails.nfts) {
+      for (const token of nft.tokens) {
+        token.tokenImage = token.tokenImage || MISSING_IMAGE_URL;
+      }
+    }
+
+    try {
+      const signedOrders: SignedOBOrder[] = [];
+      const signer = getSigner();
+      setIsSubmitting(true);
+      const gasPrice = await getEstimatedGasPrice(getEthersProvider());
+      if (signer) {
+        // keep the last Order & set the New Price:
+        const order: OBOrder = {
+          id: '',
+          chainId,
+          isSellOrder: orderDetails.isSellOrder,
+          makerAddress: orderDetails.makerAddress,
+          makerUsername: orderDetails.makerUsername,
+          numItems: orderDetails.numItems,
+          startTimeMs: orderDetails.startTimeMs,
+          endTimeMs: orderDetails.endTimeMs,
+          startPriceEth: priceVal, // set the New Price.
+          endPriceEth: priceVal, // set the New Price.
+          nfts: orderDetails.nfts,
+          nonce: orderDetails.nonce,
+          execParams: orderDetails.execParams,
+          extraParams: orderDetails.extraParams,
+          maxGasPriceWei: gasPrice ?? DEFAULT_MAX_GAS_PRICE_WEI
+        };
+
+        const signedOrder = await getSignedOBOrder(user, chainId, signer, order);
+        if (signedOrder) {
+          signedOrders.push(signedOrder);
+          try {
+            await postOrders(user.address, signedOrders);
+            setIsSubmitting(false);
+            toastSuccess('Lowered price successfully');
+            onDone();
+          } catch (ex) {
+            toastError(`${ex}`);
+            return false;
+          }
+        }
+      }
+    } catch (err) {
+      toastError(extractErrorMsg(err));
+    }
+    onClose();
+  };
+
   return (
     <Modal
+      wide={false}
       isOpen={isOpen}
       onClose={onClose}
       okButton="Lower Price"
       title="Lower Price"
       disableOK={isSubmitting}
-      onOKButton={async () => {
-        const priceVal = parseFloat(price);
-        if (!orderDetails || !user || !price || priceVal <= 0) {
-          return;
-        }
-        const buyPriceEthVal = parseFloat(buyPriceEth ?? '0');
-        if (priceVal >= buyPriceEthVal) {
-          setErrorMsg('New price must be lower than the current price');
-          return;
-        } else {
-          setErrorMsg('');
-        }
-
-        // todo: remove this once BE fix validation of tokens' images (not needed):
-        for (const nft of orderDetails.nfts) {
-          for (const token of nft.tokens) {
-            token.tokenImage = token.tokenImage || MISSING_IMAGE_URL;
-          }
-        }
-
-        try {
-          const signedOrders: SignedOBOrder[] = [];
-          const signer = getSigner();
-          setIsSubmitting(true);
-          const gasPrice = await getEstimatedGasPrice(getEthersProvider());
-          if (signer) {
-            // keep the last Order & set the New Price:
-            const order: OBOrder = {
-              id: '',
-              chainId,
-              isSellOrder: orderDetails.isSellOrder,
-              makerAddress: orderDetails.makerAddress,
-              makerUsername: orderDetails.makerUsername,
-              numItems: orderDetails.numItems,
-              startTimeMs: orderDetails.startTimeMs,
-              endTimeMs: orderDetails.endTimeMs,
-              startPriceEth: priceVal, // set the New Price.
-              endPriceEth: priceVal, // set the New Price.
-              nfts: orderDetails.nfts,
-              nonce: orderDetails.nonce,
-              execParams: orderDetails.execParams,
-              extraParams: orderDetails.extraParams,
-              maxGasPriceWei: gasPrice ?? DEFAULT_MAX_GAS_PRICE_WEI
-            };
-
-            const signedOrder = await getSignedOBOrder(user, chainId, signer, order);
-            if (signedOrder) {
-              signedOrders.push(signedOrder);
-              try {
-                await postOrders(user.address, signedOrders);
-                setIsSubmitting(false);
-                toastSuccess('Lowered price successfully');
-                onDone();
-              } catch (ex) {
-                toastError(`${ex}`);
-                return false;
-              }
-            }
-          }
-        } catch (err) {
-          toastError(extractErrorMsg(err));
-        }
-        onClose();
-      }}
+      onOKButton={lowerPrice}
     >
-      <SimpleTable className="my-3" items={tableItems} />
+      <SimpleTable className="mb-5" items={tableItems} />
 
       <TextInputBox
         autoFocus={true}

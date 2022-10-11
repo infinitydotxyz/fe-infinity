@@ -122,7 +122,7 @@ export const Modal = ({
               >
                 <Dialog.Title
                   as="h3"
-                  className="flex items-center tracking-tight text-xl font-bold leading-6 text-gray-900 mb-6"
+                  className="flex items-center tracking-tight text-xl font-bold leading-6 text-gray-900 mb-5"
                 >
                   {title}
 
@@ -138,7 +138,7 @@ export const Modal = ({
                 </Dialog.Title>
 
                 {children}
-                {showActionButtons && buttons.length > 0 && <div className="p-4 flex space-x-4 mt-8">{buttons}</div>}
+                {showActionButtons && buttons.length > 0 && <div className="flex space-x-4 mt-10">{buttons}</div>}
               </Dialog.Panel>
             </Transition.Child>
           </div>

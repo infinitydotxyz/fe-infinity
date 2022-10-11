@@ -1,5 +1,5 @@
 import { ChainId, Collection, CollectionPeriodStatsContent } from '@infinityxyz/lib-frontend/types/core';
-import { CuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto/collections';
+import { UserCuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto/collections';
 import { NULL_ADDRESS } from '@infinityxyz/lib-frontend/utils';
 import { useRouter } from 'next/router';
 import { parse } from 'query-string';
@@ -146,30 +146,23 @@ const VoteModalWrapper: React.FC<{ coll: Collection; isOpen: boolean; onClose: (
   onClose
 }) => {
   const { user, chainId } = useOnboardContext();
-  const { result: userCurated } = useFetch<CuratedCollectionDto>(
+  const { result: curatedCollection } = useFetch<UserCuratedCollectionDto>(
     coll.metadata.name && isOpen
       ? `/collections/${coll.slug}/curated/${chainId}:${user?.address ?? NULL_ADDRESS}`
       : null
   );
+
+  // TODO sleeyax I added this, was not correct before if this is undefined, double check if Ok
+  if (!curatedCollection) {
+    return <></>;
+  }
 
   return (
     <VoteModal
       collection={{
         ...coll,
         ...coll.metadata,
-        ...(userCurated || {
-          votes: 0,
-          fees: 0,
-          feesAPR: 0,
-          timestamp: 0,
-          numCuratorVotes: 0,
-          userAddress: '',
-          userChainId: '' as ChainId,
-          stakerContractAddress: '',
-          stakerContractChainId: '' as ChainId,
-          tokenContractAddress: '',
-          tokenContractChainId: '' as ChainId
-        })
+        ...curatedCollection
       }}
       isOpen={isOpen}
       onClose={onClose}

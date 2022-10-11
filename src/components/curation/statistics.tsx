@@ -21,5 +21,5 @@ export const FeesAprStats: React.FC<Omit<StatisticsProp, 'label'>> = ({ value, .
 );
 
 export const FeesAccruedStats: React.FC<Omit<StatisticsProp, 'label'>> = ({ value, ...props }) => (
-  <Statistics label="Fees accrued" value={`$${value}`} {...props} />
+  <Statistics label="Fees accrued" value={`${value} ETH`} {...props} />
 );

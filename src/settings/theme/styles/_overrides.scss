@@ -39,21 +39,25 @@ input:checked ~ .dot {
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
+  appearance: none;
   margin: 0;
 }
 
 /* Firefox */
 input[type='number'] {
   -moz-appearance: textfield;
+  appearance: none;
 }
 
 input[type='range'] {
   -webkit-appearance: none;
+  appearance: none;
   height: 4px;
   background: #f3f3f3;
 }
 input[type='range']::-webkit-slider-thumb {
   -webkit-appearance: none;
+  appearance: none;
   height: 15px;
   width: 15px;
   border-radius: 50%;
@@ -64,11 +68,17 @@ input[type='range']::-webkit-slider-thumb {
 
 // .Toastify__toast - https://fkhadra.github.io/react-toastify/how-to-style/
 .Toastify__toast {
-  background-color: #f0f0f0 !important;
+  background-color: #f4f4f4 !important;
   border-radius: 10px !important;
+  border: solid 1px #ddd !important;
   color: #000 !important;
   font-family: F37 Zagma Mono !important;
 }
 .Toastify__toast-body {
   padding: 15px !important;
+  word-break: break-all !important;
+}
+
+.Toastify__toast-container {
+  width: 400px !important;
 }

@@ -1,4 +1,4 @@
-import { CuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections.dto';
+import { CuratedCollectionDto, UserCuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto';
 import { round } from '@infinityxyz/lib-frontend/utils';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -21,7 +21,7 @@ const FieldWrapper: React.FC<FieldProps & { className?: string }> = ({ className
 };
 
 export type CurationTableProps = {
-  curatedCollections: CuratedCollectionDto[][];
+  curatedCollections: (CuratedCollectionDto | UserCuratedCollectionDto)[][];
   isReadOnly?: boolean;
 };
 
@@ -52,7 +52,7 @@ export const CurationTable: React.FC<CurationTableProps> = ({
 
 export type CurationRowProps = {
   index: number;
-  collection: CuratedCollectionDto;
+  collection: CuratedCollectionDto | UserCuratedCollectionDto;
   onClick: () => void;
   votes: number;
   isReadOnly?: boolean;
@@ -78,14 +78,14 @@ export const CurationRow: React.FC<CurationRowProps> = ({ collection, index, onC
         </FieldWrapper>
         <ProgressBar
           max={collection.numCuratorVotes}
-          amount={collection.votes ?? 0}
+          amount={'curator' in collection ? collection.curator.votes : 0}
           units="votes"
           className="bg-white max-w-[300px] mr-5 font-normal"
           overlayClassName="text-base top-1"
         />
 
         {!isReadOnly && (
-          <FieldWrapper type="custom" className="min-w-[200px] max-w-[250px]">
+          <FieldWrapper type="custom" className="min-w-[200px]">
             {votes > 0 && <NumericVoteInputBox collectionId={`${collection.chainId}:${collection.address}`} />}
             {votes === 0 && <StakeTokensButton variant="white" />}
           </FieldWrapper>
