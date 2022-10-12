@@ -14,7 +14,7 @@
     "deploy:prod": "npm run build && gcloud app deploy -q --appyaml=./app.yaml --project=nftc-infinity"
   },
   "engines": {
-    "node": "16.x"
+    "node": "16.15.0"
   },
   "dependencies": {
     "@amit.rajput/react-linkify": "^1.0.4",
