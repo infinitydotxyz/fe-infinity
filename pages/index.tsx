@@ -19,7 +19,7 @@ const HomePage = () => {
   const titleHeader = (title: string, className = '', morePath = '') => {
     return (
       <div className={twMerge('  my-5   flex items-center', className)}>
-        <div className="text-3xl my-5 font-bold">{title}</div>
+        <div className="text-3xl text-gray-700 my-5 font-bold">{title}</div>
         <Spacer />
         <Button size="medium" variant="outline" onClick={() => router.push(morePath)}>
           See More
