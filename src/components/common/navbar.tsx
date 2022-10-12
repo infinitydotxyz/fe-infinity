@@ -1,10 +1,11 @@
 import React from 'react';
-import { FaStar, FaTicketAlt } from 'react-icons/fa';
-import { GiHamburgerMenu } from 'react-icons/gi';
+import { FaTicketAlt, FaAward } from 'react-icons/fa';
+import { GiHamburgerMenu, GiOpenBook } from 'react-icons/gi';
 import { IoMdArrowDropdown } from 'react-icons/io';
 import { SiReadthedocs, SiDiscord } from 'react-icons/si';
-import { BsTwitter } from 'react-icons/bs';
-import { RiMediumFill } from 'react-icons/ri';
+import { BsTwitter, BsFillPersonFill, BsCollectionFill } from 'react-icons/bs';
+import { RiMediumFill, RiLogoutCircleFill } from 'react-icons/ri';
+import { MdFavorite } from 'react-icons/md';
 
 import { Menu } from '@headlessui/react';
 import {
@@ -74,7 +75,7 @@ export const Navbar = () => {
             {
               label: 'Favorites',
               onClick: () => router.push('/favorites'),
-              icon: <FaStar className={iconStyle} />
+              icon: <MdFavorite className={iconStyle} />
             },
             {
               label: 'Raffles',
@@ -128,7 +129,48 @@ export const Navbar = () => {
     const result: DropdownItem[] = [];
 
     result.push({
+      label: 'Orderbook',
+      icon: <GiOpenBook className={iconStyle} />,
+      onClick: () => {
+        router.push('/orderbook');
+      }
+    });
+
+    result.push({
+      label: 'Rewards',
+      icon: <FaAward className={iconStyle} />,
+      onClick: () => {
+        router.push('/rewards');
+      }
+    });
+
+    result.push({
+      label: 'Curated',
+      icon: <BsCollectionFill className={iconStyle} />,
+      onClick: () => {
+        router.push('/curated');
+      }
+    });
+
+    result.push({
+      label: 'Favorites',
+      icon: <MdFavorite className={iconStyle} />,
+      onClick: () => {
+        router.push('/favorites');
+      }
+    });
+
+    result.push({
+      label: 'Raffles',
+      icon: <FaTicketAlt className={iconStyle} />,
+      onClick: () => {
+        router.push('/raffles');
+      }
+    });
+
+    result.push({
       label: 'Trending',
+      icon: <HiTrendingUp className={iconStyle} />,
       onClick: () => {
         router.push('/trending');
       }
@@ -136,22 +178,52 @@ export const Navbar = () => {
 
     result.push({
       label: 'Feed',
+      icon: <MdFeed className={iconStyle} />,
       onClick: () => {
         router.push('/feed');
       }
     });
 
     result.push({
-      label: 'Orderbook',
+      label: '-',
       onClick: () => {
-        router.push('/orderbook');
+        // divider
       }
     });
 
     result.push({
-      label: 'Profile',
+      label: 'Read docs',
+      icon: <SiReadthedocs className={iconStyle} />,
       onClick: () => {
-        router.push('/profile/me');
+        window.open('https://docs.infinity.xyz');
+      }
+    });
+    result.push({
+      label: 'Twitter',
+      icon: <BsTwitter className={iconStyle} />,
+      onClick: () => {
+        window.open('https://twitter.com/infinitydotxyz');
+      }
+    });
+    result.push({
+      label: 'Discord',
+      icon: <SiDiscord className={iconStyle} />,
+      onClick: () => {
+        window.open('https://discord.com/invite/infinitydotxyz');
+      }
+    });
+    result.push({
+      label: 'Medium',
+      icon: <RiMediumFill className={iconStyle} />,
+      onClick: () => {
+        window.open('https://medium.com/@infinitydotxyz');
+      }
+    });
+
+    result.push({
+      label: '-',
+      onClick: () => {
+        // divider
       }
     });
 
@@ -162,44 +234,21 @@ export const Navbar = () => {
       });
     } else {
       result.push({
+        label: 'My Profile',
+        icon: <BsFillPersonFill className=" h-5 w-5 text-black" />,
+        onClick: () => {
+          router.push('/profile/me');
+        }
+      });
+
+      result.push({
         label: 'Sign out',
+        icon: <RiLogoutCircleFill className=" h-5 w-5 text-black" />,
         onClick: () => {
           signOut();
         }
       });
     }
-
-    result.push({
-      label: '-',
-      onClick: () => {
-        // divider
-      }
-    });
-
-    result.push({
-      label: 'Docs',
-      onClick: () => {
-        window.open('https://docs.infinity.xyz');
-      }
-    });
-    result.push({
-      label: 'Twitter',
-      onClick: () => {
-        window.open('https://twitter.com/infinitydotxyz');
-      }
-    });
-    result.push({
-      label: 'Discord',
-      onClick: () => {
-        window.open('https://discord.com/invite/infinitydotxyz');
-      }
-    });
-    result.push({
-      label: 'Medium',
-      onClick: () => {
-        window.open('https://medium.com/@infinitydotxyz');
-      }
-    });
 
     return result;
   };
@@ -217,7 +266,10 @@ export const Navbar = () => {
                 <MenuSeparator key={i} />
               ) : (
                 <CustomMenuItem key={i} onClick={item.onClick}>
-                  {item.label}
+                  <div className="flex items-center cursor-pointer">
+                    {item.icon && <div className="mr-4">{item.icon}</div>}
+                    {item.label}
+                  </div>
                 </CustomMenuItem>
               )
             )}
