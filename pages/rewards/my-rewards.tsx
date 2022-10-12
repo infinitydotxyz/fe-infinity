@@ -128,7 +128,7 @@ const MyRewardsPage: React.FC = () => {
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
                 <div className="text-2xl font-heading font-bold">
-                  {nFormatter(round(userRewards?.totals.userCurationRewardsEth ?? 0, 4))}
+                  {nFormatter(round(userRewards?.totals.curation.totalRewardsEth ?? 0, 4))}
                 </div>
                 <div className="text-sm mt-1">ETH</div>
               </div>
@@ -162,18 +162,18 @@ const MyRewardsPage: React.FC = () => {
               <div className="lg:w-1/3 sm:w-full">
                 <div className="mb-4">Volume Traded</div>
                 <div className="text-2xl font-heading font-bold">
-                  {nFormatter(round(userRewards?.totals.userVolume ?? 0, 4))}
+                  {nFormatter(round(userRewards?.totals.tradingRefund.volume ?? 0, 4))}
                 </div>
                 <div className="text-sm mt-1">ETH</div>
               </div>
               <div className="lg:w-1/3 sm:w-full">
                 <div className="mb-4">Buys</div>
-                <div className="text-2xl font-heading font-bold">{userRewards?.totals.userBuys ?? 0}</div>
+                <div className="text-2xl font-heading font-bold">{userRewards?.totals.tradingRefund.buys ?? 0}</div>
                 <div className="text-sm mt-1">NFTs</div>
               </div>
               <div className="lg:w-1/3 sm:w-full">
                 <div className="mb-4">Sells</div>
-                <div className="text-2xl font-heading font-bold">{userRewards?.totals.userSells ?? 0}</div>
+                <div className="text-2xl font-heading font-bold">{userRewards?.totals.tradingRefund.sells ?? 0}</div>
                 <div className="text-sm mt-1">NFTs</div>
               </div>
             </div>
@@ -183,7 +183,7 @@ const MyRewardsPage: React.FC = () => {
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
                 <div className="text-2xl font-heading font-bold">
-                  {nFormatter(Math.floor(userRewards?.totals.userRewards ?? 0))}
+                  {nFormatter(Math.floor(userRewards?.totals.tradingRefund.rewards ?? 0))}
                 </div>
                 <div className="text-sm mt-1">${TOKEN.symbol}</div>
               </div>
