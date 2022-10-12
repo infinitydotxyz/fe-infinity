@@ -57,7 +57,7 @@ const MyRewardsPage: React.FC = () => {
 
         <div className="w-1/2">
           <div className="bg-white py-4 px-6 rounded-2xl">
-            <div>${TOKEN.symbol} Tokens</div>
+            <div>${TOKEN.symbol} tokens</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
                 <div className="text-2xl font-heading font-bold">{nFormatter(round(quota?.tokenBalance || 0, 2))}</div>
@@ -141,12 +141,12 @@ const MyRewardsPage: React.FC = () => {
               </div>
               <div className="lg:w-1/4 sm:w-full">
                 <div className="text-2xl font-heading font-bold">{nFormatter(quota?.availableVotes ?? 0)}</div>
-                <div className="text-sm mt-1">Remaining Votes</div>
+                <div className="text-sm mt-1">Remaining votes</div>
               </div>
             </div>
           </div>
           <div className="bg-white py-4 px-6 rounded-2xl mt-4">
-            <div>ETH Fees earned</div>
+            <div>ETH fees earned</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
                 <div className="text-2xl font-heading font-bold">
@@ -197,7 +197,7 @@ const MyRewardsPage: React.FC = () => {
           <div className="bg-white py-4 px-6 rounded-2xl">
             <div className="flex flex-wrap">
               <div className="lg:w-1/3 sm:w-full">
-                <div className="mb-4">Volume Traded</div>
+                <div className="mb-4">Volume traded</div>
                 <div className="text-2xl font-heading font-bold">
                   {nFormatter(round(userRewards?.totals.tradingRefund.volume ?? 0, 4))}
                 </div>
