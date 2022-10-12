@@ -2,6 +2,7 @@ import { CollectionFavoriteDto } from '@infinityxyz/lib-frontend/types/dto';
 import { formatNumber } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
 import { NextLink, EZImage, SVG } from '../common';
+import person from 'src/images/person.png';
 
 export const LeaderBoardRow: React.FC<{ collection: CollectionFavoriteDto; className?: string; minimal?: boolean }> = ({
   collection,
@@ -14,7 +15,11 @@ export const LeaderBoardRow: React.FC<{ collection: CollectionFavoriteDto; class
       className={twMerge('bg-theme-light-200 px-10 h-[110px] rounded-3xl flex items-center font-heading', className)}
     >
       <NextLink href={`/collection/${collection?.slug}`}>
-        <EZImage className="w-16 h-16 rounded-2xl overflow-clip" src={collection?.profileImage} />
+        <EZImage
+          className="w-16 h-16 rounded-2xl overflow-clip"
+          src={collection?.profileImage}
+          missingImage={person.src}
+        />
       </NextLink>
 
       <div className="flex justify-between items-center w-full ml-6">

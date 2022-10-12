@@ -9,9 +9,18 @@ interface Props {
   className?: string;
   fade?: boolean;
   onClick?: () => void;
+  missingImage?: string;
 }
 
-export const EZImage = ({ src: _src, center = true, cover = true, fade = true, onClick, className = '' }: Props) => {
+export const EZImage = ({
+  src: _src,
+  center = true,
+  cover = true,
+  fade = true,
+  onClick,
+  className = '',
+  missingImage = MISSING_IMAGE_URL
+}: Props) => {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
   let src = replaceIPFSWithGateway(_src ?? '');
@@ -19,10 +28,7 @@ export const EZImage = ({ src: _src, center = true, cover = true, fade = true, o
   // avoid the console errors
 
   if (!src) {
-    // this image is just transparent? why would we want that?
-    // src = PLACEHOLDER_IMAGE;
-
-    src = MISSING_IMAGE_URL;
+    src = missingImage;
   }
 
   src = src?.replace('storage.opensea.io', 'openseauserdata.com');
@@ -58,7 +64,7 @@ export const EZImage = ({ src: _src, center = true, cover = true, fade = true, o
 
   let imgUrl = src;
   if (error) {
-    imgUrl = MISSING_IMAGE_URL;
+    imgUrl = missingImage;
   }
 
   return (
