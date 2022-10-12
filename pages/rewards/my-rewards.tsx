@@ -1,14 +1,17 @@
+import { AirdropType } from '@infinityxyz/lib-frontend/types/core';
+import { UserCumulativeRewardsDto } from '@infinityxyz/lib-frontend/types/dto';
 import { round } from '@infinityxyz/lib-frontend/utils';
 import React, { useState } from 'react';
-import { Button, Heading, Spacer } from 'src/components/common';
+import { Button, Heading, Spacer, toastInfo, toastSuccess } from 'src/components/common';
 import { UniswapModal } from 'src/components/common/uniswap-modal';
 import { StakeTokensModal } from 'src/components/rewards/stake-tokens-modal';
 import { UnstakeTokensModal } from 'src/components/rewards/unstake-tokens-modal';
 import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
 import { useUserRewards } from 'src/hooks/api/useUserRewards';
-import { nFormatter } from 'src/utils';
+import { useClaim } from 'src/hooks/contract/cm-distributor/claim';
+import { ellipsisAddress, nFormatter } from 'src/utils';
 import { TOKEN } from 'src/utils/constants';
-import { numberFormatter } from 'src/utils/number-formatter';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 const MyRewardsPage: React.FC = () => {
   const [showStakeTokensModal, setShowStakeTokensModal] = useState(false);
@@ -16,6 +19,27 @@ const MyRewardsPage: React.FC = () => {
   const [showUnstakeTokensModal, setShowUnstakeTokensModal] = useState(false);
   const { result: quota, mutate: mutateQuota } = useUserCurationQuota();
   const { result: userRewards } = useUserRewards();
+  const { claim } = useClaim();
+  const { waitForTransaction } = useOnboardContext();
+
+  const onClaim = async (type: AirdropType, props?: UserCumulativeRewardsDto) => {
+    if (!props || !props.claimableWei || props.claimableWei === '0') {
+      throw new Error('Nothing to claim');
+    }
+
+    const { hash } = await claim({
+      type,
+      account: props.account,
+      cumulativeAmount: props.claimableWei,
+      merkleRoot: props.merkleRoot,
+      merkleProof: props.merkleProof,
+      contractAddress: props.contractAddress
+    });
+    toastSuccess('Sent txn to chain for execution');
+    waitForTransaction(hash, () => {
+      toastInfo(`Transaction confirmed ${ellipsisAddress(hash)}`);
+    });
+  };
 
   return (
     <>
@@ -36,13 +60,11 @@ const MyRewardsPage: React.FC = () => {
             <div>${TOKEN.symbol} Tokens</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
-                <div className="text-2xl font-heading font-bold">
-                  {numberFormatter.format(quota?.tokenBalance || 0)}
-                </div>
+                <div className="text-2xl font-heading font-bold">{nFormatter(round(quota?.tokenBalance || 0, 2))}</div>
                 <div className="text-sm mt-1">Wallet</div>
               </div>
               <div className="lg:w-1/4 sm:w-full">
-                <div className="text-2xl font-heading font-bold">{numberFormatter.format(quota?.totalStaked || 0)}</div>
+                <div className="text-2xl font-heading font-bold">{nFormatter(round(quota?.totalStaked || 0, 0))}</div>
                 <div className="text-sm mt-1">Staked</div>
               </div>
             </div>
@@ -124,20 +146,35 @@ const MyRewardsPage: React.FC = () => {
             </div>
           </div>
           <div className="bg-white py-4 px-6 rounded-2xl mt-4">
-            <div>Fees earned</div>
+            <div>ETH Fees earned</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
                 <div className="text-2xl font-heading font-bold">
-                  {nFormatter(round(userRewards?.totals.curation.totalRewardsEth ?? 0, 4))}
+                  {nFormatter(round(userRewards?.totals.curation.totalRewardsEth ?? 0, 2))}
                 </div>
-                <div className="text-sm mt-1">ETH</div>
+                <div className="text-sm mt-1">Total</div>
+              </div>
+
+              <div className="lg:w-1/4 sm:w-full">
+                <div className="text-2xl font-heading font-bold">
+                  {nFormatter(round(userRewards?.totals.curation.claim.claimableEth ?? 0, 2))}
+                </div>
+                <div className="text-sm mt-1">Claimable</div>
               </div>
               {/* <div className="lg:w-1/4 sm:w-full">
                 <div className="text-2xl font-heading font-bold">10%</div>
                 <div className="text-sm mt-1">Earned APR</div>
               </div> */}
               <Spacer />
-              <Button size="large" disabled={true}>
+              <Button
+                size="large"
+                onClick={() => {
+                  onClaim(AirdropType.Curation, userRewards?.totals?.curation?.claim);
+                }}
+                disabled={
+                  !userRewards?.totals?.curation?.claim || userRewards?.totals?.curation?.claim?.claimableWei === '0'
+                }
+              >
                 Claim Rewards
               </Button>
             </div>
@@ -179,18 +216,36 @@ const MyRewardsPage: React.FC = () => {
             </div>
           </div>
           <div className="bg-white py-4 px-6 rounded-2xl mt-4">
-            <div>Tokens earned</div>
+            <div>${TOKEN.symbol} earned</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
                 <div className="text-2xl font-heading font-bold">
-                  {nFormatter(Math.floor(userRewards?.totals.tradingRefund.rewards ?? 0))}
+                  {nFormatter(round(userRewards?.totals.tradingRefund.rewards ?? 0), 2)}
                 </div>
-                <div className="text-sm mt-1">${TOKEN.symbol}</div>
+                <div className="text-sm mt-1"></div>
+                <div className="text-sm mt-1">Total</div>
               </div>
 
               <Spacer />
 
-              <Button size="large" disabled={true}>
+              <div className="lg:w-1/4 sm:w-full">
+                <div className="text-2xl font-heading font-bold">
+                  {nFormatter(round(userRewards?.totals.tradingRefund.claim.claimableEth ?? 0, 2))}
+                </div>
+                <div className="text-sm mt-1">Claimable</div>
+              </div>
+              <Spacer />
+
+              <Button
+                size="large"
+                onClick={() => {
+                  onClaim(AirdropType.TxFees, userRewards?.totals?.tradingRefund?.claim);
+                }}
+                disabled={
+                  !userRewards?.totals?.tradingRefund?.claim ||
+                  userRewards?.totals?.tradingRefund?.claim?.claimableWei === '0'
+                }
+              >
                 Claim Rewards
               </Button>
             </div>
