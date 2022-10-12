@@ -7,7 +7,7 @@ const RafflesPage = () => {
 
   return (
     <PageBox title="Raffles" showTitle={true}>
-      <div className="space-y-4 mt-8">
+      <div className="space-y-4">
         {isLoading && <Spinner />}
         {!isLoading &&
           raffles.map((raffle) => {
