@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { Modal } from 'src/components/common';
-import { base64Encode, isLocalhost } from 'src/utils';
+import { base64Encode } from 'src/utils';
 import { TextInputBox } from './input-box';
 
 const LOCAL_STORAGE_KEY = 'ppp';
 const encPass = 'look!!! you searched minified js' && 'bmZ0ODg4';
-const NO_PASSWORD_PAGES = ['/terms', '/privacy'];
+// const NO_PASSWORD_PAGES = ['/terms', '/privacy'];
 
 export const isPasswordModalNeeded = () => {
-  const str = localStorage.getItem(LOCAL_STORAGE_KEY) ?? '';
-  if (location.pathname === '/' || NO_PASSWORD_PAGES.indexOf(location.pathname) >= 0) {
-    // don't show for Home page / and excluded pages.
-    return false;
-  }
-  if (!isLocalhost() && str !== encPass) {
-    return true;
-  }
+  // const str = localStorage.getItem(LOCAL_STORAGE_KEY) ?? '';
+  // if (location.pathname === '/' || NO_PASSWORD_PAGES.indexOf(location.pathname) >= 0) {
+  //   // don't show for Home page / and excluded pages.
+  //   return false;
+  // }
+  // if (!isLocalhost() && str !== encPass) {
+  //   return true;
+  // }
   return false;
 };
 
