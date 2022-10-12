@@ -24,7 +24,6 @@ import {
   Heading,
   PageBox,
   Spinner,
-  toastSuccess,
   ToggleTab,
   useToggleTab
 } from 'src/components/common';
@@ -347,9 +346,6 @@ const CollectionPage = () => {
                   }}
                   isOpen={isStakeModalOpen}
                   onClose={() => setIsStakeModalOpen(false)}
-                  onVote={() => {
-                    toastSuccess('Votes registered successfully. Changes will reflect shortly.');
-                  }}
                 />
               )}
             </section>

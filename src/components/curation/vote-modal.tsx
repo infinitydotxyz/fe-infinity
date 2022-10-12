@@ -1,13 +1,15 @@
 import { UserCuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto';
 import { CurationQuotaDto } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curation-quota.dto';
+import { sleep } from '@infinityxyz/lib-frontend/utils';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
+import { FaTwitter } from 'react-icons/fa';
 import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { apiPost } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { AvatarImage } from '../collection/avatar-image';
-import { Button, ButtonProps, Divider, Heading, Modal, Spinner, TextInputBox, toastError } from '../common';
+import { Button, ButtonProps, Chip, Divider, Heading, Modal, Spinner, TextInputBox, toastError } from '../common';
 import { MaxButton } from './max-button';
 import { FeesAccruedStats, FeesAprStats, Statistics } from './statistics';
 import { VoteProgressBar } from './vote-progress-bar';
@@ -25,22 +27,23 @@ export const StakeTokensButton: React.FC<Pick<ButtonProps, 'variant'>> = ({ vari
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  onVote: (votes: number) => Promise<void> | void;
   collection: UserCuratedCollectionDto;
 }
 
-export const VoteModal: React.FC<Props> = ({ collection, isOpen, onClose, onVote }) => {
+export const VoteModal: React.FC<Props> = ({ collection, isOpen, onClose }) => {
   const { user, chainId } = useOnboardContext();
 
   // TODO: re-calculate fees & APR (via API call) when 'votes' change
   const [votes, setVotes] = useState<number>(0);
   const { result: quota, isLoading: isLoadingQuota, mutate: mutateQuota } = useUserCurationQuota();
   const [isVoting, setIsVoting] = useState(false);
+  const [hasVoted, setHasVoted] = useState(false);
   const isMounted = useIsMounted();
 
   const votesAvailable = quota?.availableVotes || 0;
 
   const vote = async () => {
+    setHasVoted(false);
     setIsVoting(true);
 
     try {
@@ -61,23 +64,30 @@ export const VoteModal: React.FC<Props> = ({ collection, isOpen, onClose, onVote
           } as CurationQuotaDto),
         { revalidate: false }
       );
-
-      await onVote(votes);
     } catch (err) {
       console.error(err);
       toastError('Something went wrong. Please try again later.');
     }
 
     if (isMounted()) {
+      setHasVoted(true);
       setIsVoting(false);
       setVotes(0);
     }
-
-    onClose();
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} showCloseIcon showActionButtons={false} wide={false}>
+    <Modal
+      isOpen={isOpen}
+      onClose={async () => {
+        onClose();
+        await sleep(300); // hack to makes sure the modal is hidden before resseting 'hasVoted' state
+        setHasVoted(false);
+      }}
+      showCloseIcon
+      showActionButtons={false}
+      wide={false}
+    >
       <div className="space-y-4">
         <AvatarImage url={collection.profileImage} />
         <Heading as="h3" className="font-body text-3xl font-medium">
@@ -85,9 +95,29 @@ export const VoteModal: React.FC<Props> = ({ collection, isOpen, onClose, onVote
         </Heading>
       </div>
 
-      {isLoadingQuota && <Spinner />}
+      {hasVoted && (
+        <>
+          <div className="bg-green-100 rounded-lg py-5 px-6 mb-4 mt-4 text-base text-green-700" role="alert">
+            <strong>Votes have been registered successfully! Changes will be visible shortly.</strong>
+          </div>
+          <Chip
+            onClick={() => {
+              const win = window.open(
+                `https://twitter.com/intent/tweet?url=https://infinity.xyz/collection/${collection.slug}&text=I just curated ${collection.name} on Infinity! Come check it out at `,
+                '_blank'
+              );
+              win?.focus();
+            }}
+            content={<FaTwitter />}
+            title="click to tweet"
+            right={<span className="ml-2">Share on twitter</span>}
+          />
+        </>
+      )}
 
-      {!isLoadingQuota && (
+      {!hasVoted && isLoadingQuota && <Spinner />}
+
+      {!hasVoted && !isLoadingQuota && (
         <>
           <div className="my-8 space-y-2 font-body">
             <FeesAprStats value={collection.feesAPR || 0} className="flex flex-row-reverse justify-between" />
