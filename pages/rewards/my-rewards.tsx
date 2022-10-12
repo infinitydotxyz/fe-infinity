@@ -30,7 +30,7 @@ const MyRewardsPage: React.FC = () => {
     const { hash } = await claim({
       type,
       account: props.account,
-      cumulativeAmount: props.claimableWei,
+      cumulativeAmount: props.cumulativeAmount,
       merkleRoot: props.merkleRoot,
       merkleProof: props.merkleProof,
       contractAddress: props.contractAddress
