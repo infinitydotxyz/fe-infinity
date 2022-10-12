@@ -69,11 +69,11 @@ const MyRewardsPage: React.FC = () => {
               </div>
             </div>
             <div className="w-full flex mt-4 items-center flex-wrap">
-              <Button size="large" onClick={() => setShowBuyTokensModal(true)}>
+              {/* <Button size="large" onClick={() => setShowBuyTokensModal(true)}>
                 Buy ${TOKEN.symbol}
               </Button>
 
-              <Spacer />
+              <Spacer /> */}
 
               <Button size="large" onClick={() => setShowStakeTokensModal(true)}>
                 Stake
