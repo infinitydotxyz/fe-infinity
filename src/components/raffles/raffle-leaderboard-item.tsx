@@ -1,6 +1,7 @@
 import { RaffleLeaderboardUser } from '@infinityxyz/lib-frontend/types/dto';
 import { ellipsisAddress, nFormatter } from 'src/utils';
 import { EZImage, NextLink } from '../common';
+import person from 'src/images/person.png';
 
 export const RaffleLeaderboardItem = ({ entrant: item }: { entrant: RaffleLeaderboardUser }) => {
   return (
@@ -8,7 +9,11 @@ export const RaffleLeaderboardItem = ({ entrant: item }: { entrant: RaffleLeader
       <div className="flex justify-between items-center w-full">
         <div className="flex items-center w-full">
           <NextLink href={`/user/${item.entrant.address}`}>
-            <EZImage className="w-12 h-12 rounded-2xl overflow-clip" src={item.entrant.profileImage} />
+            <EZImage
+              className="w-12 h-12 rounded-2xl overflow-clip"
+              src={item.entrant.profileImage}
+              missingImage={person.src}
+            />
           </NextLink>
           <NextLink href={`/user/${item.entrant.address}`} className="md:inline-block ml-2">
             {item.entrant.username || ellipsisAddress(item.entrant.address)}
