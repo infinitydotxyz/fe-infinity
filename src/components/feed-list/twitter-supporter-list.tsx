@@ -86,7 +86,7 @@ export const TwitterSupporterList = ({ collection }: Props) => {
 
   return (
     <>
-      <div className="text-3xl mb-6 mt-16">Top Twitter supporters</div>
+      <div className="text-2xl mb-6 font-medium">Top Twitter supporters</div>
 
       {tweetList.map((e) => {
         return <TwitterSupporter tweet={e} key={e.tweetId} />;

@@ -42,9 +42,9 @@ export const CommunityFeed = ({ collection, className }: Props) => {
   );
 
   return (
-    <div className={twMerge('grid lg:grid-cols-2 xl:grid-cols-3 gap-16 min-h-[50vh]', className)}>
-      <div className="lg:col-span-1 xl:col-span-2">{content}</div>
-      <div className="col-span-1">{collection && rightSide}</div>
+    <div className={twMerge('flex gap-10', className)}>
+      <div className="w-2/3">{content}</div>
+      <div className="w-1/3">{collection && rightSide}</div>
     </div>
   );
 };
