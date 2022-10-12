@@ -64,12 +64,12 @@ export default function Curation() {
         <span>vote{voteCount > 1 ? 's' : ''} on</span> <strong>{collectionCount}</strong>{' '}
         <span>collection{collectionCount > 1 ? 's' : ''}?</span>
       </Modal>
-      <div className="flex justify-between mb-8">
-        <div className="mt-4">
-          <span className="px-4 py-2 border border-gray-300 rounded-xl mr-2">
+      <div className="flex items-center justify-between mb-8">
+        <div className="mt-1">
+          <div className="px-4 py-2 flex border border-gray-300 rounded-xl mr-2">
             <strong className="mr-2">{nFormatter(votesQuota ?? 0) ?? 0}</strong>
-            <span>Votes available</span>
-          </span>
+            <div className="whitespace-nowrap">Votes available</div>
+          </div>
           {collectionCount > 0 && <Button onClick={showModal}>Confirm</Button>}
         </div>
         <div className="flex flex-row">

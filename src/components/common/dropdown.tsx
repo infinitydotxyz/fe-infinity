@@ -140,7 +140,7 @@ export const CustomMenuItems = ({ children, open, alignMenuRight }: Props2) => {
 // =======================================================================
 
 export const MenuSeparator = () => {
-  return <Divider />;
+  return <Divider className="my-1" />;
 };
 
 // =======================================================================

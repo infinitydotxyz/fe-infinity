@@ -3,7 +3,7 @@ import { PageBox } from 'src/components/common';
 
 const PrivacyPolicyPage = () => {
   return (
-    <PageBox title="Privacy Policy" showTitle={false}>
+    <PageBox title="Privacy Policy">
       <div className="flex flex-col items-center justify-center space-y-2">
         <div className="font-normal text-3xl">Infinity</div>
         <div className="underline">Privacy Policy</div>

@@ -16,7 +16,7 @@ const RewardsPage = () => {
   const { options, onChange, selected } = useToggleTab(tabs, (router?.query?.tab as string) || tabs[0]);
 
   return (
-    <PageBox title="Rewards" showTitle={false}>
+    <PageBox title="Rewards">
       <ToggleTab
         className="font-heading pointer-events-auto"
         options={options}

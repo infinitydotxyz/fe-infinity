@@ -10,6 +10,7 @@ import { useState } from 'react';
 import { timeAgo } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { twMerge } from 'tailwind-merge';
+import person from 'src/images/person.png';
 
 interface Props {
   activity: NftEventRec;
@@ -272,7 +273,7 @@ export const FeedListItem = ({
       case EventType.TokensStaked:
         return (
           <EZImage
-            src={activity?.image || collectionProfileImage}
+            src={activity?.image || collectionProfileImage || person.src}
             className="border rounded-full overflow-clip shrink-0 w-10 h-10 bg-theme-light-200"
           />
         );

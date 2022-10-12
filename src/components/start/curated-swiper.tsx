@@ -23,8 +23,8 @@ interface Props {
 
 export const CuratedSwiper = ({ collections }: Props) => {
   const router = useRouter();
-  const buttonPosition = 'absolute top-1/4 z-10';
-  const buttonStyle = 'bg-white border bg-opacity-80 text-black shadow-xl';
+  const buttonPosition = 'absolute top-1/3 z-10';
+  const buttonStyle = 'bg-white border bg-opacity-90 text-black shadow-lg';
   const { innerWidth } = useScreenSize();
 
   let columns = 1;
@@ -38,12 +38,12 @@ export const CuratedSwiper = ({ collections }: Props) => {
 
   return (
     <div className="relative">
-      <div className={twMerge(buttonPosition, '-left-4 prevButton')}>
+      <div className={twMerge(buttonPosition, '-left-5 prevButton')}>
         <Button variant="round" size="plain" className={buttonStyle}>
           <HiChevronLeft className="h-10 w-10" />
         </Button>
       </div>
-      <div className={twMerge(buttonPosition, '-right-4 nextButton')}>
+      <div className={twMerge(buttonPosition, '-right-5 nextButton')}>
         <Button variant="round" size="plain" className={buttonStyle}>
           <HiChevronRight className="h-10 w-10" />
         </Button>

@@ -109,7 +109,7 @@ const TrendingPage = () => {
 
   return (
     <PageBox title="Trending">
-      <div className="mt-4 flex justify-between">
+      <div className="  flex justify-between">
         <ToggleTab
           small={true}
           className="font-heading"
@@ -186,7 +186,7 @@ const TrendingPageCard = ({ collection, period, index }: Props) => {
   const [selectedCollection, setSelectedCollection] = useState<Collection>();
   const { addCartItem, setOrderDrawerOpen } = useOrderContext();
 
-  const { isDesktop, isMobile } = useScreenSize();
+  const { isDesktop } = useScreenSize();
 
   const onClickBuy = (collection: Collection) => {
     addCartItem({
@@ -275,7 +275,7 @@ const TrendingPageCard = ({ collection, period, index }: Props) => {
           </div>
         </div>
 
-        {isMobile ? null : (
+        {/* {isMobile ? null : (
           <>
             <div className="w-1/9 max-w-[80px] min-w-[80px]">
               <div className="text-black font-bold font-body flex items-center">Max Price</div>
@@ -284,7 +284,7 @@ const TrendingPageCard = ({ collection, period, index }: Props) => {
               </div>
             </div>
           </>
-        )}
+        )} */}
 
         {isDesktop ? (
           <>

@@ -18,8 +18,8 @@ const HomePage = () => {
 
   const titleHeader = (title: string, className = '', morePath = '') => {
     return (
-      <div className={twMerge('  my-5   flex items-center', className)}>
-        <div className="text-3xl my-5 font-bold">{title}</div>
+      <div className={twMerge('mb-6 flex items-center', className)}>
+        <div className="text-3xl text-gray-700 font-bold">{title}</div>
         <Spacer />
         <Button size="medium" variant="outline" onClick={() => router.push(morePath)}>
           See More
@@ -30,25 +30,25 @@ const HomePage = () => {
 
   return (
     <PageBox title="Home" showTitle={false} footer={<StartFooter />}>
-      {titleHeader('Curated Collections', '', '/curated?tab=All+Curated')}
+      {titleHeader('Curated Collections', 'mt-6', '/curated?tab=All+Curated')}
       <AllCuratedStart orderBy={CuratedCollectionsOrderBy.Votes} />
 
-      {titleHeader('Trending', '', '/trending')}
+      {titleHeader('Trending', 'mt-8', '/trending')}
       <TrendingStart />
 
-      {titleHeader('Feed', 'mt-12 mb-5', '/feed')}
+      {titleHeader('Feed', 'mt-10', '/feed')}
       <GlobalFeedList
         types={[EventType.TwitterTweet, EventType.DiscordAnnouncement, EventType.CoinMarketCapNews]}
         compact={true}
       />
 
-      {titleHeader('Rewards', 'mt-12 mb-5', '/rewards?tab=Global+Rewards')}
+      {titleHeader('Rewards', 'mt-10', '/rewards?tab=Global+Rewards')}
       <GlobalRewards showCount={1} />
 
-      {titleHeader('Favorites', 'mt-12 mb-5', '/favorites')}
+      {titleHeader('Favorites', 'mt-10', '/favorites')}
       <FavoritesPanel />
 
-      {titleHeader('Raffles', 'mt-12 mb-5', '/raffles')}
+      {titleHeader('Raffles', 'mt-10', '/raffles')}
 
       <RafflesPanel />
     </PageBox>

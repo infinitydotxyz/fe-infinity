@@ -1,7 +1,8 @@
 import React, { FunctionComponent } from 'react';
-import { FaPen } from 'react-icons/fa';
+import { FaUserEdit } from 'react-icons/fa';
 import { useRouter } from 'next/router';
 import { EZImage } from '../common';
+import profileEditBg from 'src/images/profile/profile-edit-bg.png';
 
 interface UserProfileImageProps {
   imgSrc?: string;
@@ -31,12 +32,13 @@ export const UserProfileImage: FunctionComponent<UserProfileImageProps> = ({ img
         <EZImage src={imgSrc} />
       ) : (
         <div
-          className={`w-full h-full flex flex-row items-center justify-center ${
+          className={`relative w-full h-full flex flex-row items-center justify-center bg-theme-gray-100 ${
             isOwner ? 'hover:bg-theme-gray-200 cursor-pointer' : ''
           }`}
           onClick={handleClick}
         >
-          {isOwner && <FaPen className=" -mt-0.5" />}
+          <EZImage src={profileEditBg.src} />
+          <FaUserEdit className="w-14 h-14 ml-2 absolute opacity-60" />
         </div>
       )}
     </div>

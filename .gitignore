@@ -17,6 +17,9 @@ pages/_local
 # production
 /build
 
+# development
+/build-dev
+
 # misc
 .DS_Store
 *.pem

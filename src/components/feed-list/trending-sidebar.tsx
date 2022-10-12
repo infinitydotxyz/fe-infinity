@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { EZImage, HelpTip, NextLink, Spacer } from 'src/components/common';
+import { ErrorOrLoading, EZImage, HelpTip, NextLink, Spacer } from 'src/components/common';
 import { apiGet, nFormatter, standardCard } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
 import { Collection } from '@infinityxyz/lib-frontend/types/core';
+import { ReactNode } from 'react-markdown/lib/react-markdown';
 
 interface Props2 {
   collection: Collection;
@@ -90,18 +91,19 @@ export const TrendingSidebar = () => {
     getActivityList();
   }, []);
 
+  let contents: ReactNode = <></>;
   if (hasError || isLoading || hasNoData) {
-    // return <ErrorOrLoading error={hasError} noData={hasNoData} />;
-    return <></>;
+    contents = <ErrorOrLoading error={hasError} noData={hasNoData} />;
+  } else {
+    contents = data.map((e, index) => {
+      return <TrendingItem index={index + 1} collection={e} key={`${e.address}:${e.chainId}:${e.slug}`} />;
+    });
   }
 
   return (
     <>
-      <div className="text-3xl mb-6 mt-16">Trending 7 day volume</div>
-
-      {data.map((e, index) => {
-        return <TrendingItem index={index + 1} collection={e} key={`${e.address}:${e.chainId}:${e.slug}`} />;
-      })}
+      <div className="text-2xl mb-6 font-medium">Trending 7 day volume</div>
+      {contents}
     </>
   );
 };

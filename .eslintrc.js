@@ -89,6 +89,7 @@ module.exports = {
     '/.yarn',
     '/**/__snapshots__',
     'build/**',
+    'build-dev/**',
     'node_modules/**'
   ]
 };
