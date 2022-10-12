@@ -25,7 +25,7 @@ import {
   trimLowerCase
 } from '@infinityxyz/lib-frontend/utils';
 import { toastError } from 'src/components/common';
-import { DEFAULT_MAX_GAS_PRICE_WEI, GAS_LIMIT_BUFFER } from '../constants';
+import { DEFAULT_MAX_GAS_PRICE_WEI } from '../constants';
 import { User } from '../context/AppContext';
 
 export async function getSignedOBOrder(
@@ -522,7 +522,6 @@ export async function takeOrders(
   makerOrders: ChainOBOrder[],
   takerItems: ChainNFTs[][]
 ) {
-  console.log(`TAKE ORDERS`);
   const exchangeAddress = getExchangeAddress(chainId);
   const infinityExchange = new Contract(exchangeAddress, InfinityExchangeABI, signer);
   const totalPrice = makerOrders
@@ -538,13 +537,19 @@ export async function takeOrders(
     return { hash: '' };
   }
 
+  const gasLimit = 300_000 * makerOrders.length;
   // perform exchange
   // if fulfilling a sell order, send ETH
   if (isSellOrder) {
     const options = {
-      value: totalPrice
+      value: totalPrice,
+      gasLimit
     };
-    const result = await submitTransaction(infinityExchange, 'takeOrders', [makerOrders, takerItems], options);
+    const result = await infinityExchange.takeOrders(makerOrders, takerItems, options);
+    // const options = {
+    //   value: totalPrice
+    // };
+    // const result = await submitTransaction(infinityExchange, 'takeOrders', [makerOrders, takerItems], options);
 
     return {
       hash: result?.hash ?? ''
@@ -563,7 +568,8 @@ export async function takeOrders(
       await signer.provider?.waitForTransaction(hash);
     }
 
-    const result = await submitTransaction(infinityExchange, 'takeOrders', [makerOrders, takerItems]);
+    const result = await infinityExchange.takeOrders(makerOrders, takerItems, { gasLimit });
+    // const result = await submitTransaction(infinityExchange, 'takeOrders', [makerOrders, takerItems]);
     return {
       hash: result?.hash ?? ''
     };
@@ -580,6 +586,7 @@ export async function takeMultipleOneOrders(signer: JsonRpcSigner, chainId: stri
   // it is assumed that all orders have these value same, so no need to check. Contract throws if this is not the case.
   const isSellOrder = makerOrders[0].isSellOrder;
   const isCurrencyETH = makerOrders[0].execParams[1] === NULL_ADDRESS;
+  const gasLimit = 300_000 * makerOrders.length;
   if (isSellOrder && !isCurrencyETH) {
     toastError('Listing currency is not ETH. Cannot execute');
     return { hash: '' };
@@ -588,9 +595,14 @@ export async function takeMultipleOneOrders(signer: JsonRpcSigner, chainId: stri
   // perform exchange
   // if fulfilling a sell order, send ETH
   if (isSellOrder) {
-    const result = await submitTransaction(infinityExchange, 'takeMultipleOneOrders', [makerOrders], {
-      value: totalPrice
-    });
+    const options = {
+      value: totalPrice,
+      gasLimit
+    };
+    const result = await infinityExchange.takeMultipleOneOrders(makerOrders, options);
+    // const result = await submitTransaction(infinityExchange, 'takeMultipleOneOrders', [makerOrders], {
+    //   value: totalPrice
+    // });
 
     return {
       hash: result?.hash ?? ''
@@ -609,7 +621,8 @@ export async function takeMultipleOneOrders(signer: JsonRpcSigner, chainId: stri
       await signer.provider?.waitForTransaction(hash);
     }
 
-    const result = await submitTransaction(infinityExchange, 'takeMultipleOneOrders', [makerOrders]);
+    const result = await infinityExchange.takeMultipleOneOrders(makerOrders, { gasLimit });
+    // const result = await submitTransaction(infinityExchange, 'takeMultipleOneOrders', [makerOrders]);
     return {
       hash: result?.hash ?? ''
     };
@@ -642,37 +655,37 @@ export function getOBOrderFromFirestoreOrderItem(firestoreOrderItem: FirestoreOr
   return ord;
 }
 
-export const submitTransaction = async (
-  contract: Contract,
-  method: string,
-  methodArgs: unknown[],
-  _options: { value?: BigNumberish } = {}
-) => {
-  const options: {
-    value?: BigNumberish;
-    gasLimit?: BigNumberish;
-  } = {
-    ..._options
-  };
+// export const submitTransaction = async (
+//   contract: Contract,
+//   method: string,
+//   methodArgs: unknown[],
+//   _options: { value?: BigNumberish } = {}
+// ) => {
+//   const options: {
+//     value?: BigNumberish;
+//     gasLimit?: BigNumberish;
+//   } = {
+//     ..._options
+//   };
 
-  console.log(`Preparing to submit transaction on contract ${contract.address} for method ${method}`);
+//   console.log(`Preparing to submit transaction on contract ${contract.address} for method ${method}`);
 
-  const args = [...methodArgs, options];
-  const gasLimit = await contract.estimateGas[method](...args);
+//   const args = [...methodArgs, options];
+//   const gasLimit = await contract.estimateGas[method](...args);
 
-  console.log(`Estimated gas limit: ${gasLimit.toString()}`);
+//   console.log(`Estimated gas limit: ${gasLimit.toString()}`);
 
-  options.gasLimit = gasLimit.mul(GAS_LIMIT_BUFFER * 1000).div(1000);
+//   options.gasLimit = gasLimit.mul(GAS_LIMIT_BUFFER * 1000).div(1000);
 
-  console.log(
-    `Submitting transaction on contract ${
-      contract.address
-    } for method ${method} with gas limit ${options.gasLimit.toString()}`
-  );
+//   console.log(
+//     `Submitting transaction on contract ${
+//       contract.address
+//     } for method ${method} with gas limit ${options.gasLimit.toString()}`
+//   );
 
-  const result = await contract[method](...args);
+//   const result = await contract[method](...args);
 
-  console.log(`Transaction submitted with hash ${result.hash}`);
+//   console.log(`Transaction submitted with hash ${result.hash}`);
 
-  return result;
-};
+//   return result;
+// };
