@@ -13,7 +13,6 @@ import {
   NextLink,
   PageBox,
   Spinner,
-  toastSuccess,
   ToggleTab,
   useToggleTab
 } from 'src/components/common';
@@ -166,9 +165,6 @@ const VoteModalWrapper: React.FC<{ coll: Collection; isOpen: boolean; onClose: (
       }}
       isOpen={isOpen}
       onClose={onClose}
-      onVote={() => {
-        toastSuccess('Votes registered successfully. Your balance will reflect shortly.');
-      }}
     />
   );
 };
