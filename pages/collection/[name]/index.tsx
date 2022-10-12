@@ -24,7 +24,6 @@ import {
   Heading,
   PageBox,
   Spinner,
-  toastSuccess,
   ToggleTab,
   useToggleTab
 } from 'src/components/common';
@@ -322,7 +321,7 @@ const CollectionPage = () => {
                 </tbody>
               </table>
             </section>
-            <section className="mt-20 md:w-1/2 min-h-[280px] min-w-[380px] max-h-[280px] max-w-[580px]">
+            <section className="mt-20 md:w-1/2 min-h-[280px] min-w-[28rem] max-h-[280px] max-w-[28rem]">
               <div className={twMerge(standardCard, 'items-center space-y-8')}>
                 <Heading as="h2" className="font-body text-3xl font-medium">
                   Curate this collection
@@ -333,7 +332,7 @@ const CollectionPage = () => {
                   <VoteProgressBar
                     votes={curatedCollection?.curator?.votes || 0}
                     totalVotes={curatedCollection?.numCuratorVotes || 0}
-                    className="max-w-[20rem] bg-white"
+                    className="max-w-[25rem] bg-white"
                   />
                 </div>
                 <Button onClick={() => checkSignedIn() && setIsStakeModalOpen(true)}>Vote</Button>
@@ -347,9 +346,6 @@ const CollectionPage = () => {
                   }}
                   isOpen={isStakeModalOpen}
                   onClose={() => setIsStakeModalOpen(false)}
-                  onVote={() => {
-                    toastSuccess('Votes registered successfully. Changes will reflect shortly.');
-                  }}
                 />
               )}
             </section>

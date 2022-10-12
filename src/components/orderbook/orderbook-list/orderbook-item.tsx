@@ -5,7 +5,7 @@ import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { useRouter } from 'next/router';
 import { ReactNode } from 'react';
 import { BlueCheck, EZImage, NextLink } from 'src/components/common';
-import { ENS_ADDRESS } from 'src/utils';
+import { ellipsisString, ENS_ADDRESS } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
 
 type Props1 = {
@@ -201,7 +201,7 @@ const SingleCollectionCell = ({
                 className="whitespace-pre-wrap text-gray-400"
                 title={token?.tokenId}
               >
-                {tokenId}
+                {ellipsisString(tokenId)}
               </NextLink>
             )}
           </>

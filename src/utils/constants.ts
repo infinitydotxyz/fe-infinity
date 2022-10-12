@@ -27,6 +27,7 @@ export const NFT_DATA_SOURCES = {
 };
 
 export const DEFAULT_MAX_GAS_PRICE_WEI = '500000000000'; // 500 gwei
+export const GAS_LIMIT_BUFFER = 1.1;
 
 export const NFT_TOTAL_SUPPLY = 2_000_000_000;
 

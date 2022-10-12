@@ -63,10 +63,14 @@ const MyRewardsPage: React.FC = () => {
                 <div className="text-2xl font-heading font-bold">{nFormatter(round(quota?.tokenBalance || 0, 2))}</div>
                 <div className="text-sm mt-1">Wallet</div>
               </div>
+              <Spacer />
               <div className="lg:w-1/4 sm:w-full">
                 <div className="text-2xl font-heading font-bold">{nFormatter(round(quota?.totalStaked || 0, 0))}</div>
                 <div className="text-sm mt-1">Staked</div>
               </div>
+              <Spacer />
+              <div className="lg:w-1/4 sm:w-full"></div>
+              <Spacer />
             </div>
             <div className="w-full flex mt-4 items-center flex-wrap">
               {/* <Button size="large" onClick={() => setShowBuyTokensModal(true)}>
@@ -133,16 +137,19 @@ const MyRewardsPage: React.FC = () => {
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
                 <div className="text-2xl font-heading font-bold">{nFormatter(quota?.stake?.stakePower || 0)}</div>
-                <div className="text-sm mt-1"># Votes</div>
+                <div className="text-sm mt-1">Total</div>
               </div>
+              <Spacer />
               <div className="lg:w-1/4 sm:w-full">
                 <div className="text-2xl font-heading font-bold">{nFormatter(quota?.stake.totalCuratedVotes || 0)}</div>
-                <div className="text-sm mt-1">Voted</div>
+                <div className="text-sm mt-1">Used</div>
               </div>
+              <Spacer />
               <div className="lg:w-1/4 sm:w-full">
                 <div className="text-2xl font-heading font-bold">{nFormatter(quota?.availableVotes ?? 0)}</div>
-                <div className="text-sm mt-1">Remaining votes</div>
+                <div className="text-sm mt-1">Remaining</div>
               </div>
+              <Spacer />
             </div>
           </div>
           <div className="bg-white py-4 px-6 rounded-2xl mt-4">
@@ -154,6 +161,7 @@ const MyRewardsPage: React.FC = () => {
                 </div>
                 <div className="text-sm mt-1">Total</div>
               </div>
+              <Spacer />
 
               <div className="lg:w-1/4 sm:w-full">
                 <div className="text-2xl font-heading font-bold">
@@ -161,11 +169,17 @@ const MyRewardsPage: React.FC = () => {
                 </div>
                 <div className="text-sm mt-1">Claimable</div>
               </div>
-              {/* <div className="lg:w-1/4 sm:w-full">
-                <div className="text-2xl font-heading font-bold">10%</div>
-                <div className="text-sm mt-1">Earned APR</div>
-              </div> */}
               <Spacer />
+
+              <div className="lg:w-1/4 sm:w-full">
+                <div className="text-2xl font-heading font-bold">
+                  {nFormatter(round(userRewards?.totals.curation.claim.claimedEth ?? 0, 2))}
+                </div>
+                <div className="text-sm mt-1">Claimed</div>
+              </div>
+              <Spacer />
+            </div>
+            <div className="w-full flex mt-4 items-center flex-wrap">
               <Button
                 size="large"
                 onClick={() => {
@@ -203,16 +217,19 @@ const MyRewardsPage: React.FC = () => {
                 </div>
                 <div className="text-sm mt-1">ETH</div>
               </div>
+              <Spacer />
               <div className="lg:w-1/3 sm:w-full">
                 <div className="mb-4">Buys</div>
                 <div className="text-2xl font-heading font-bold">{userRewards?.totals.tradingRefund.buys ?? 0}</div>
                 <div className="text-sm mt-1">NFTs</div>
               </div>
+              <Spacer />
               <div className="lg:w-1/3 sm:w-full">
                 <div className="mb-4">Sells</div>
                 <div className="text-2xl font-heading font-bold">{userRewards?.totals.tradingRefund.sells ?? 0}</div>
                 <div className="text-sm mt-1">NFTs</div>
               </div>
+              <Spacer />
             </div>
           </div>
           <div className="bg-white py-4 px-6 rounded-2xl mt-4">
@@ -236,6 +253,15 @@ const MyRewardsPage: React.FC = () => {
               </div>
               <Spacer />
 
+              <div className="lg:w-1/4 sm:w-full">
+                <div className="text-2xl font-heading font-bold">
+                  {nFormatter(round(userRewards?.totals.tradingRefund.claim.claimedEth ?? 0, 2))}
+                </div>
+                <div className="text-sm mt-1">Claimed</div>
+              </div>
+              <Spacer />
+            </div>
+            <div className="w-full flex mt-4 items-center flex-wrap">
               <Button
                 size="large"
                 onClick={() => {
