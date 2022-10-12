@@ -522,7 +522,6 @@ export async function takeOrders(
   makerOrders: ChainOBOrder[],
   takerItems: ChainNFTs[][]
 ) {
-  console.log(`TAKE ORDERS`);
   const exchangeAddress = getExchangeAddress(chainId);
   const infinityExchange = new Contract(exchangeAddress, InfinityExchangeABI, signer);
   const totalPrice = makerOrders
