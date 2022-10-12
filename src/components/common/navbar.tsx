@@ -5,7 +5,7 @@ import { IoMdArrowDropdown } from 'react-icons/io';
 import { SiReadthedocs, SiDiscord } from 'react-icons/si';
 import { BsTwitter, BsFillPersonFill, BsCollectionFill } from 'react-icons/bs';
 import { RiMediumFill, RiLogoutCircleFill } from 'react-icons/ri';
-import { MdFavorite } from 'react-icons/md';
+import { MdFavorite, MdFeed } from 'react-icons/md';
 
 import { Menu } from '@headlessui/react';
 import {
@@ -25,7 +25,6 @@ import {
 } from 'src/components/common';
 import { useRouter } from 'next/router';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import { MdFeed } from 'react-icons/md';
 import { HiCollection, HiTrendingUp } from 'react-icons/hi';
 
 export const Navbar = () => {
