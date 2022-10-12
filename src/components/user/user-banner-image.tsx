@@ -1,4 +1,4 @@
-import { FaPen } from 'react-icons/fa';
+import { FaEdit } from 'react-icons/fa';
 import { useRouter } from 'next/router';
 import { EZImage } from '../common';
 import profileEditBg from 'src/images/profile/profile-edit-bg.png';
@@ -31,7 +31,7 @@ export const UserBannerImage = ({ imgSrc, isOwner = false }: UserBannerImageProp
             onClick={handleClick}
           >
             <EZImage src={profileEditBg.src} />
-            {isOwner && <FaPen className="absolute" />}
+            {isOwner && <FaEdit className="w-14 h-14 ml-2 absolute opacity-60" />}
           </div>
         )}
       </div>
