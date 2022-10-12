@@ -1,4 +1,5 @@
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
+import { formatEth, round } from '@infinityxyz/lib-frontend/utils';
 import { ReactNode } from 'react';
 import { EthPrice, ExternalLink, EZImage, LinkText, NextLink } from 'src/components/common';
 import { ellipsisAddress, ellipsisString, NEWS_IMAGE_URL, nFormatter, standardBorderCard } from 'src/utils';
@@ -252,6 +253,12 @@ export const FeedListTableItem = ({ activity }: Props) => {
   const tokensStakedItem = () => {
     const url = `/profile/${activity.from}`;
 
+    const amount = [EventType.TokensStaked, EventType.TokensUnStaked, EventType.TokensRageQuit].includes(activity.type)
+      ? nFormatter(round(formatEth(activity.paymentToken), 3))
+      : activity.paymentToken
+      ? ellipsisString(activity.paymentToken, ...ellipseParams)
+      : '—';
+
     return (
       <div>
         <div className={twMerge(standardBorderCard, 'flex items-center font-heading')}>
@@ -268,9 +275,7 @@ export const FeedListTableItem = ({ activity }: Props) => {
               </NextLink>
             </TableItem>
 
-            <TableItem label="Amount">
-              {activity.paymentToken ? ellipsisString(activity.paymentToken, ...ellipseParams) : '—'}
-            </TableItem>
+            <TableItem label="Amount">{amount}</TableItem>
             <TableItem label="Duration">{activity.price ? <div>{activity.price}</div> : '—'}</TableItem>
             <TableItem label="Power">{activity.externalUrl ? <div>{activity.externalUrl}</div> : '—'}</TableItem>
 
