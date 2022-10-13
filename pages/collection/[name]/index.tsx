@@ -167,9 +167,30 @@ const CollectionPage = () => {
     const escapedNewLineToLineBreakTag = (str: string) => {
       return str.split('\n').map((item, index) => {
         return index === 0 ? (
-          <Linkify key={index + 1000}>{item}</Linkify>
+          <Linkify
+            key={index + 1000}
+            componentDecorator={(decoratedHref, decoratedText, key) => (
+              <a href={decoratedHref} key={key} target="_blank">
+                {decoratedText}
+              </a>
+            )}
+          >
+            {item}
+          </Linkify>
         ) : (
-          [<br key={index} />, <Linkify key={index + 2000}>{item}</Linkify>]
+          [
+            <br key={index} />,
+            <Linkify
+              key={index + 2000}
+              componentDecorator={(decoratedHref, decoratedText, key) => (
+                <a href={decoratedHref} key={key} target="_blank">
+                  {decoratedText}
+                </a>
+              )}
+            >
+              {item}
+            </Linkify>
+          ]
         );
       });
     };
