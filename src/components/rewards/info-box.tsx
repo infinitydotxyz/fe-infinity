@@ -65,7 +65,7 @@ InfoBox.Stats = function Stats({ title, description, children }: InfoBoxPhasePro
   return (
     <div className="bg-white py-4 px-6 rounded-2xl">
       <div className="font-bold">{title}</div>
-      {description && <div className="flex flex-wrap mt-4">{description}</div>}
+      {description && <div className="flex flex-wrap text-sm font-normal mt-2">{description}</div>}
       {children && <div className="flex flex-wrap mt-4">{children}</div>}
     </div>
   );

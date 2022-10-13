@@ -35,6 +35,13 @@ export const FavoritesDescription: React.FC<{ phase: FavoriteCollectionPhaseDto 
   const { result: leaderboard, isLoading: isLoadingLeaderboard } = useFavoriteLeaderboard(phase.id);
   const { isMobile } = useScreenSize();
 
+  const ethPrice = 1200;
+  const potSize =
+    phase.progress > 0
+      ? Math.floor(((phase.collectionPotFeesGenerated?.feesGeneratedEth ?? 0) / phase.progress) * 100)
+      : 0;
+  const potSizeUSD = potSize * ethPrice;
+
   const renderFavorite = () => {
     if (!user?.address) {
       return <i>Please connect your wallet.</i>;
@@ -60,15 +67,27 @@ export const FavoritesDescription: React.FC<{ phase: FavoriteCollectionPhaseDto 
             <InfoBox.Stats title="Collection Favorites" description={CollectionFavoritesInfo()} />
             <InfoBox.Stats title="Your Favorite" description={renderFavorite()} />
             <InfoBox.Stats title="Stats">
-              <div className="w-full py-2">
-                <div className="text-sm mt-1">Progress</div>
-                <ProgressBar percentage={phase.progress} />
-              </div>
-              <div className="w-full py-2">
+              {/* <div className="w-full py-2">
                 <div className="text-sm mt-1">Pot</div>
                 <div className="text-2xl font-heading font-bold">
                   {nFormatter(phase.collectionPotFeesGenerated?.feesGeneratedEth || 0)} ETH
                 </div>
+              </div>
+               */}
+              <div className="w-full py-2 border-b-2">
+                <div className="text-sm mt-1">Pot</div>
+                <div className="text-2xl font-heading font-bold flex">
+                  <InfoBox.Stat
+                    label="Current (ETH)"
+                    value={`${nFormatter(phase.collectionPotFeesGenerated?.feesGeneratedEth || 0)}`}
+                  />
+                  <InfoBox.Stat label="Expected (ETH)" value={`${nFormatter(potSize)}`} />
+                  <InfoBox.Stat label="Expected (USD)" value={`${nFormatter(potSizeUSD)}`} />
+                </div>
+              </div>
+              <div className="w-full py-2">
+                <div className="text-sm mt-1">Progress</div>
+                <ProgressBar percentage={phase.progress} />
               </div>
             </InfoBox.Stats>
           </div>

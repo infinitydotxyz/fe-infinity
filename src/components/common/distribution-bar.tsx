@@ -2,7 +2,7 @@ import { twMerge } from 'tailwind-merge';
 import { Spacer } from './spacer';
 
 interface Props {
-  distribution: { percent: number; label: string; className?: string }[];
+  distribution: { percent: number; label: string; value?: string | number; className?: string }[];
 }
 
 export const DistributionBar = ({ distribution }: Props) => {
@@ -20,6 +20,11 @@ export const DistributionBar = ({ distribution }: Props) => {
                 <div className="font-bold">{`${item.percent}%`}</div>
                 <Spacer />
                 <div className="text-right text-sm">{item.label}</div>
+                {item?.value && (
+                  <>
+                    <div className="text-right ml-4 text-sm text-light">{item.value}</div>
+                  </>
+                )}
               </div>
             </div>
           </div>

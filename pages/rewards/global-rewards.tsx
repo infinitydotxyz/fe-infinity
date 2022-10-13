@@ -6,7 +6,7 @@ import { DistributionBar } from 'src/components/common/distribution-bar';
 import { InfoBox } from 'src/components/rewards/info-box';
 import { RewardPhase } from 'src/components/rewards/reward-phase';
 import useScreenSize from 'src/hooks/useScreenSize';
-import { useFetch } from 'src/utils';
+import { nFormatter, useFetch } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
 import { State } from 'src/utils/state';
 import { ProgressBar } from 'src/components/common/progress-bar';
@@ -38,6 +38,15 @@ function getPhaseSplitDistributions(phase: TokenomicsPhaseDto) {
   const splitsToDisplay = Object.keys(phase.split).filter(
     (key) => phase.split[key as TradingFeeDestination].percentage > 0
   );
+  const phaseExpectedTotal = (phase.feesGenerated.feesGeneratedUSDC / phase.progress) * 100;
+
+  const getValue = (percent: number) => {
+    if (!Number.isFinite(phaseExpectedTotal) || Number.isNaN(phaseExpectedTotal)) {
+      return '';
+    }
+    const value = (percent / 100) * phaseExpectedTotal;
+    return `${nFormatter(value)} USD`;
+  };
 
   const configs = splitsToDisplay.flatMap((key) => {
     const item = phase.split[key as TradingFeeDestination];
@@ -45,19 +54,23 @@ function getPhaseSplitDistributions(phase: TokenomicsPhaseDto) {
     if (key === TradingFeeDestination.Raffle) {
       const grandPrize = phase.raffleConfig?.grandPrize;
       const phasePrize = phase.raffleConfig?.phasePrize;
-      const items: { percent: number; label: string; className: string }[] = [];
+      const items: { percent: number; label: string; className: string; value: string }[] = [];
       if (grandPrize) {
         const config = configByTradingFeeDestination[GRAND_RAFFLE];
+        const percent = (item.percentage * grandPrize.percentage) / 100;
         items.push({
-          percent: (item.percentage * grandPrize.percentage) / 100,
+          percent,
+          value: getValue(percent),
           label: config.name,
           className: config.color
         });
       }
       if (phasePrize) {
         const config = configByTradingFeeDestination[PHASE_RAFFLE];
+        const percent = (item.percentage * phasePrize.percentage) / 100;
         items.push({
-          percent: (item.percentage * phasePrize.percentage) / 100,
+          percent,
+          value: getValue(percent),
           label: config.name,
           className: config.color
         });
@@ -68,6 +81,7 @@ function getPhaseSplitDistributions(phase: TokenomicsPhaseDto) {
 
     return [
       {
+        value: getValue(item.percentage),
         percent: item.percentage,
         label: config.name,
         className: config.color
@@ -149,13 +163,20 @@ const GlobalRewards = ({ showCount }: Props) => {
             >
               <div className={twMerge('flex align-center justify-center', isMobile ? 'flex-col' : '')}>
                 <InfoBox.SideInfo>
-                  <InfoBox.Stats title="Trading Fee Distribution">
+                  <InfoBox.Stats title="Trading Fee Distribution" description={`Trading Fee: 2.5%`}>
                     <>
                       <DistributionBar distribution={getPhaseSplitDistributions(phase)} />
                       <div className="w-full py-2">
                         <div className="text-sm mt-1 mb-2">Progress</div>
                         <div className="text-2xl font-heading font-bold">
-                          <ProgressBar percentage={phase.progress} />
+                          <ProgressBar
+                            percentage={phase.progress}
+                            total={
+                              phase.progress > 0
+                                ? `${nFormatter((phase.feesGenerated.feesGeneratedUSDC / phase.progress) * 100)} USD`
+                                : ''
+                            }
+                          />
                         </div>
                       </div>
                     </>
