@@ -5,7 +5,7 @@ import useScreenSize from 'src/hooks/useScreenSize';
 import { nFormatter } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { twMerge } from 'tailwind-merge';
-import { Spinner, TooltipWrapper } from '../common';
+import { EthPrice, Spinner, TooltipWrapper } from '../common';
 import { ProgressBar } from '../common/progress-bar';
 import { PulseIconColor } from '../common/pulse-icon';
 import { InfoBox } from '../rewards/info-box';
@@ -34,13 +34,6 @@ export const FavoritesDescription: React.FC<{ phase: FavoriteCollectionPhaseDto 
   const { result: userFavorite, isLoading: isLoadingUserFavorite } = useUserFavorite(phase.id);
   const { result: leaderboard, isLoading: isLoadingLeaderboard } = useFavoriteLeaderboard(phase.id);
   const { isMobile } = useScreenSize();
-
-  const ethPrice = 1200;
-  const potSize =
-    phase.progress > 0
-      ? Math.floor(((phase.collectionPotFeesGenerated?.feesGeneratedEth ?? 0) / phase.progress) * 100)
-      : 0;
-  const potSizeUSD = potSize * ethPrice;
 
   const renderFavorite = () => {
     if (!user?.address) {
@@ -81,13 +74,16 @@ export const FavoritesDescription: React.FC<{ phase: FavoriteCollectionPhaseDto 
                     label="Current (ETH)"
                     value={`${nFormatter(phase.collectionPotFeesGenerated?.feesGeneratedEth || 0)}`}
                   />
-                  <InfoBox.Stat label="Expected (ETH)" value={`${nFormatter(potSize)}`} />
-                  <InfoBox.Stat label="Expected (USD)" value={`${nFormatter(potSizeUSD)}`} />
+                  <InfoBox.Stat
+                    label="Expected (ETH)"
+                    value={`${nFormatter((phase.collectionPotFeesGenerated?.feesGeneratedEth / phase.progress) * 100)}`}
+                  />
+                  <InfoBox.Stat label="Expected (USD)" value={`${nFormatter(phase.expectedPrizePoolUSDC)}`} />
                 </div>
               </div>
               <div className="w-full py-2">
                 <div className="text-sm mt-1">Progress</div>
-                <ProgressBar percentage={phase.progress} />
+                <ProgressBar percentage={phase.progress} total={`${nFormatter(phase.expectedPrizePoolUSDC)} USD`} />
               </div>
             </InfoBox.Stats>
           </div>

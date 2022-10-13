@@ -11,7 +11,7 @@ export const UserFavoriteCollection = (favorite: UserFavoriteDto | null | undefi
       {favorite ? (
         <LeaderBoardRow collection={favorite} className="w-full" minimal />
       ) : (
-        <i>You haven't favorite'd a collection for this phase yet</i>
+        <i>You haven't favorited a collection for this phase yet</i>
       )}
     </>
   );
