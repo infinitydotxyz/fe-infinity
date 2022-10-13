@@ -45,7 +45,7 @@ const states = {
   }
 };
 
-export const RaffleDescription = ({ raffle }: { raffle: UserRaffleDto; ethPrice: number }) => {
+export const RaffleDescription = ({ raffle, ethPrice }: { raffle: UserRaffleDto; ethPrice: number }) => {
   const { user } = useOnboardContext();
   const state = states[raffle.state];
   const { isMobile } = useScreenSize();
@@ -92,7 +92,7 @@ export const RaffleDescription = ({ raffle }: { raffle: UserRaffleDto; ethPrice:
               <EntrantTickets raffleId={raffle.id} userAddress={user?.address}></EntrantTickets>
             </div>
             <div className="my-4">
-              <RaffleStats raffle={raffle} />
+              <RaffleStats raffle={raffle} ethPrice={ethPrice} />
             </div>
           </InfoBox.SideInfo>
           <div className={twMerge('w-full', isMobile ? '' : 'ml-6')}>

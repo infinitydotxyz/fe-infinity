@@ -3,8 +3,9 @@ import { nFormatter } from 'src/utils';
 import { ProgressBar } from '../common/progress-bar';
 import { InfoBox } from '../rewards/info-box';
 
-export const RaffleStats = ({ raffle }: { raffle: UserRaffleDto }) => {
+export const RaffleStats = ({ raffle, ethPrice }: { raffle: UserRaffleDto; ethPrice: number }) => {
   const potSize = raffle.progress > 0 ? Math.floor((raffle.totals.prizePoolEth / raffle.progress) * 100) : 0;
+  const potSizeUSD = potSize * ethPrice;
 
   return (
     <InfoBox.Stats title="Raffle Stats">
@@ -17,6 +18,7 @@ export const RaffleStats = ({ raffle }: { raffle: UserRaffleDto }) => {
         <div className="text-2xl font-heading font-bold flex">
           <InfoBox.Stat label="Current (ETH)" value={`${nFormatter(raffle.totals.prizePoolEth)}`} />
           <InfoBox.Stat label="Expected (ETH)" value={`${nFormatter(potSize)}`} />
+          <InfoBox.Stat label="Expected (USD)" value={`${nFormatter(potSizeUSD)}`} />
         </div>
       </div>
       <div className="w-full py-2">
