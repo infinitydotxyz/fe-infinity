@@ -45,7 +45,7 @@ const states = {
   }
 };
 
-export const RaffleDescription = ({ raffle }: { raffle: UserRaffleDto }) => {
+export const RaffleDescription = ({ raffle }: { raffle: UserRaffleDto; ethPrice: number }) => {
   const { user } = useOnboardContext();
   const state = states[raffle.state];
   const { isMobile } = useScreenSize();

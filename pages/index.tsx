@@ -88,7 +88,11 @@ const FavoritesPanel = () => {
 // ======================================================
 
 const RafflesPanel = () => {
-  const { result, isLoading, isError } = useRaffles();
+  const {
+    result: { raffles, ethPrice },
+    isLoading,
+    isError
+  } = useRaffles();
 
   if (isLoading) {
     return (
@@ -104,10 +108,10 @@ const RafflesPanel = () => {
 
   return (
     <div className="space-y-4">
-      {result.map((raffle, index) => {
+      {raffles.map((raffle, index) => {
         // just show first two
         if (index < 2) {
-          return <RaffleDescription raffle={raffle} key={raffle.id} />;
+          return <RaffleDescription raffle={raffle} key={raffle.id} ethPrice={ethPrice} />;
         }
       })}
     </div>

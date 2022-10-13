@@ -25,7 +25,10 @@ export const useRaffles = () => {
   });
 
   return {
-    result: (result?.data ?? []).sort((a, b) => stateOrder[a.state] - stateOrder[b.state]),
+    result: {
+      raffles: (result?.data?.raffles ?? []).sort((a, b) => stateOrder[a.state] - stateOrder[b.state]),
+      ethPrice: result?.data?.ethPrice ?? 0
+    },
     isLoading,
     isError,
     error
