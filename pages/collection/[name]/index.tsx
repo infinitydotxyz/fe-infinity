@@ -201,7 +201,20 @@ const CollectionPage = () => {
   }
 
   return (
-    <PageBox showTitle={false} title={collection.metadata?.name ?? ''}>
+    // TODO: set meta tags server side
+    <PageBox
+      showTitle={false}
+      title={collection.metadata?.name ?? ''}
+      header={
+        <>
+          <meta name="twitter:card" content="collection" />
+          <meta name="twitter:site" content="@infinitydotxyz" />
+          <meta name="twitter:title" content={collection.metadata.name} />
+          <meta name="twitter:description" content={collection.metadata.description} />
+          <meta name="twitter:image" content={collection.metadata.bannerImage} />
+        </>
+      }
+    >
       <div className="flex flex-col mt-10">
         <span>
           <AvatarImage url={collection.metadata?.profileImage} className="mb-2" />
