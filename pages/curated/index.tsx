@@ -70,7 +70,11 @@ export default function Curation() {
             <strong className="mr-2">{nFormatter(votesQuota ?? 0) ?? 0}</strong>
             <div className="whitespace-nowrap">Votes available</div>
           </div>
-          {collectionCount > 0 && <Button onClick={showModal}>Confirm</Button>}
+          {collectionCount > 0 && (
+            <Button className="mt-2" onClick={showModal}>
+              Confirm
+            </Button>
+          )}
         </div>
         <div className="flex flex-row">
           <ToggleTab
