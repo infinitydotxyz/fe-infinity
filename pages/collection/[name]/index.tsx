@@ -194,7 +194,6 @@ const CollectionPage = () => {
         );
       });
     };
-
     description = (
       // className colors all a tags with blue
       <div className="[&_a]:text-blue-700">{escapedNewLineToLineBreakTag(collection.metadata?.description ?? '')}</div>
@@ -224,7 +223,7 @@ const CollectionPage = () => {
 
         <main>
           <div className="flex flex-col space-x-0 xl:flex-row xl:space-x-10">
-            <section className="w-fit">
+            <section className="w-fit xl:w-1/2">
               <div className="text-secondary mt-6 mb-6 font-heading">
                 {collection ? (
                   <>
@@ -343,7 +342,7 @@ const CollectionPage = () => {
                 </tbody>
               </table>
             </section>
-            <section className="mt-20 md:w-1/2 min-h-[280px] min-w-[28rem] max-h-[280px] max-w-[28rem]">
+            <section className="mt-8 xl:mt-20 md:w-1/2 min-h-[280px] min-w-[28rem] max-h-[280px] max-w-[28rem]">
               <div className={twMerge(standardCard, 'items-center space-y-8')}>
                 <Heading as="h2" className="font-body text-3xl font-medium">
                   Curate this collection
