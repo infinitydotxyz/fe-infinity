@@ -157,6 +157,7 @@ const CollectionPage = () => {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           a: ({ node, ...props }) => <a style={{ color: 'blue' }} {...props} />
         }}
+        linkTarget="_blank"
       >
         {collection.metadata?.description ?? ''}
       </ReactMarkdown>

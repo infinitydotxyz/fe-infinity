@@ -5,7 +5,7 @@ import useScreenSize from 'src/hooks/useScreenSize';
 import { nFormatter } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { twMerge } from 'tailwind-merge';
-import { EthPrice, Spinner, TooltipWrapper } from '../common';
+import { Spinner, TooltipWrapper } from '../common';
 import { ProgressBar } from '../common/progress-bar';
 import { PulseIconColor } from '../common/pulse-icon';
 import { InfoBox } from '../rewards/info-box';
