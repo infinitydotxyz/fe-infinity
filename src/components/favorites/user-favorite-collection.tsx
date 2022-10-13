@@ -6,5 +6,13 @@ export const UserFavoriteCollection = (favorite: UserFavoriteDto | null | undefi
     return <i>You didn't vote on any collection during this phase.</i>;
   }
 
-  return <>{favorite && <LeaderBoardRow collection={favorite} className="w-full" minimal />}</>;
+  return (
+    <>
+      {favorite ? (
+        <LeaderBoardRow collection={favorite} className="w-full" minimal />
+      ) : (
+        <i>You haven't favorite'd a collection for this phase yet</i>
+      )}
+    </>
+  );
 };

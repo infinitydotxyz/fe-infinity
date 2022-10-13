@@ -34,17 +34,20 @@ const configByTradingFeeDestination: Record<
   }
 };
 
-function getPhaseSplitDistributions(phase: TokenomicsPhaseDto) {
+export const roundToNearest = (num: number, nearest: number) => {
+  return Math.round(num / nearest) * nearest;
+};
+
+function getPhaseSplitDistributions(phase: TokenomicsPhaseDto, phaseTotalFees: number) {
   const splitsToDisplay = Object.keys(phase.split).filter(
     (key) => phase.split[key as TradingFeeDestination].percentage > 0
   );
-  const phaseExpectedTotal = (phase.feesGenerated.feesGeneratedUSDC / phase.progress) * 100;
 
   const getValue = (percent: number) => {
-    if (!Number.isFinite(phaseExpectedTotal) || Number.isNaN(phaseExpectedTotal)) {
+    if (!Number.isFinite(phaseTotalFees) || Number.isNaN(phaseTotalFees)) {
       return '';
     }
-    const value = (percent / 100) * phaseExpectedTotal;
+    const value = (percent / 100) * phaseTotalFees;
     return `${nFormatter(value)} USD`;
   };
 
@@ -139,6 +142,10 @@ const GlobalRewards = ({ showCount }: Props) => {
             return;
           }
 
+          const phaseTotalFeesUSD =
+            ((phase.tradingFeeRefund?.rewardSupply ?? 0) * (phase.tradingFeeRefund?.rewardRateDenominator ?? 0)) /
+            (phase.tradingFeeRefund?.rewardRateNumerator ?? 1);
+
           const state = phase.isActive ? State.Active : phase.progress === 100 ? State.Complete : State.Inactive;
           let message = '';
           switch (state) {
@@ -165,18 +172,11 @@ const GlobalRewards = ({ showCount }: Props) => {
                 <InfoBox.SideInfo>
                   <InfoBox.Stats title="Trading Fee Distribution" description={`Trading Fee: 2.5%`}>
                     <>
-                      <DistributionBar distribution={getPhaseSplitDistributions(phase)} />
+                      <DistributionBar distribution={getPhaseSplitDistributions(phase, phaseTotalFeesUSD)} />
                       <div className="w-full py-2">
                         <div className="text-sm mt-1 mb-2">Progress</div>
                         <div className="text-2xl font-heading font-bold">
-                          <ProgressBar
-                            percentage={phase.progress}
-                            total={
-                              phase.progress > 0
-                                ? `${nFormatter((phase.feesGenerated.feesGeneratedUSDC / phase.progress) * 100)} USD`
-                                : ''
-                            }
-                          />
+                          <ProgressBar percentage={phase.progress} total={`${nFormatter(phaseTotalFeesUSD)} USD`} />
                         </div>
                       </div>
                     </>
