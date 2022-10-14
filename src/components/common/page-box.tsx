@@ -16,7 +16,6 @@ interface Props {
   rightToolbar?: JSX.Element;
   footer?: JSX.Element;
   scroll?: boolean;
-  header?: React.ReactNode;
 }
 
 export const PageBox = ({
@@ -27,8 +26,7 @@ export const PageBox = ({
   className = '',
   footer,
   rightToolbar,
-  scroll = true,
-  header
+  scroll = true
 }: Props): JSX.Element => {
   const { chainId } = useOnboardContext();
   const [renderPasswordModal, setRenderPasswordModal] = useState(false);
@@ -48,7 +46,7 @@ export const PageBox = ({
         <PasswordModal isOpen={true} onClose={() => console.log} />
       ) : (
         <>
-          <Header title={title}>{header}</Header>
+          <Header title={title} />
 
           {chainId !== '1' && (
             <div className="text-center bg-theme-gray-100 text-red-800 py-1">You are not on Ethereum network</div>

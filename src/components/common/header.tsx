@@ -3,10 +3,9 @@ import Head from 'next/head';
 
 interface Props {
   title?: string;
-  children?: React.ReactNode;
 }
 
-export const Header = ({ title = 'Home', children }: Props) => {
+export const Header = ({ title = 'Home' }: Props) => {
   return (
     <>
       <Head>
@@ -14,8 +13,6 @@ export const Header = ({ title = 'Home', children }: Props) => {
         <meta name="description" content="Infinity NFT marketplace" />
 
         <title>{title ? `${title} | Infinity` : 'Infinity'}</title>
-
-        {children}
       </Head>
     </>
   );
