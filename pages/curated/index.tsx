@@ -64,16 +64,28 @@ export default function Curation() {
         <span>vote{voteCount > 1 ? 's' : ''} on</span> <strong>{collectionCount}</strong>{' '}
         <span>collection{collectionCount > 1 ? 's' : ''}?</span>
       </Modal>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-4">
         <div className="mt-1">
           <div className="px-4 py-2 flex border border-gray-300 rounded-xl mr-2">
             <strong className="mr-2">{nFormatter(votesQuota ?? 0) ?? 0}</strong>
             <div className="whitespace-nowrap">Votes available</div>
           </div>
           {collectionCount > 0 && (
-            <Button className="mt-2" onClick={showModal}>
-              Confirm
-            </Button>
+            <>
+              <Button className="mt-4" onClick={showModal}>
+                Confirm
+              </Button>
+              <div className="text-secondary text-md font-light font-heading mt-2 ml-1">
+                Votes cannot be reallocated to prevent 'vote rotation'. See{' '}
+                <a
+                  href="https://docs.infinity.xyz/gm/features/curation#view-your-curated-collections"
+                  target="_blank"
+                  className="underline"
+                >
+                  docs
+                </a>
+              </div>
+            </>
           )}
         </div>
         <div className="flex flex-row">

@@ -15,6 +15,7 @@ import { Modal, toastWarning } from 'src/components/common';
 import { PleaseConnectMsg } from '../commonUtils';
 import { TransactionReceipt } from '@ethersproject/abstract-provider';
 import { JSONRPCRequestPayload, JSONRPCResponsePayload, ProviderEvents } from './UserRejectException';
+import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 
 setupOnboard();
 
@@ -133,7 +134,7 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
 
   const userAddress = (): string => {
     if (wallet && wallet?.accounts.length > 0) {
-      return wallet?.accounts[0].address;
+      return trimLowerCase(wallet?.accounts[0].address);
     }
 
     return '';

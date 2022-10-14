@@ -17,6 +17,7 @@ export type ProgressBarAmountProps = {
 
 export type ProgressBarPercentProps = {
   percentage: number;
+  total?: number | string;
 };
 
 export type ProgressBarProps = (ProgressBarAmountProps | ProgressBarPercentProps) & ProgressBarBaseProps;
@@ -69,6 +70,7 @@ const ProgressBarOverlay: React.FC<
         </div>
       )}
       <div className={twMerge('w-[80px] font-bold', showAmount ? 'text-right' : '')}>{props.percentage}%</div>
+      {'total' in props && <div className={twMerge('font-bold', showAmount ? 'text-right' : '')}>{props.total}</div>}
     </div>
   );
 };

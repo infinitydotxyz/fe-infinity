@@ -33,6 +33,15 @@ const HomePage = () => {
       {titleHeader('Curated Collections', 'mt-6', '/curated?tab=All+Curated')}
       <AllCuratedStart orderBy={CuratedCollectionsOrderBy.Votes} />
 
+      {titleHeader('Rewards', 'mt-10', '/rewards?tab=Global+Rewards')}
+      <GlobalRewards showCount={1} />
+
+      {titleHeader('Favorites', 'mt-10', '/favorites')}
+      <FavoritesPanel />
+
+      {titleHeader('Raffles', 'mt-10', '/raffles')}
+      <RafflesPanel />
+
       {titleHeader('Trending', 'mt-8', '/trending')}
       <TrendingStart />
 
@@ -41,16 +50,6 @@ const HomePage = () => {
         types={[EventType.TwitterTweet, EventType.DiscordAnnouncement, EventType.CoinMarketCapNews]}
         compact={true}
       />
-
-      {titleHeader('Rewards', 'mt-10', '/rewards?tab=Global+Rewards')}
-      <GlobalRewards showCount={1} />
-
-      {titleHeader('Favorites', 'mt-10', '/favorites')}
-      <FavoritesPanel />
-
-      {titleHeader('Raffles', 'mt-10', '/raffles')}
-
-      <RafflesPanel />
     </PageBox>
   );
 };
@@ -88,7 +87,11 @@ const FavoritesPanel = () => {
 // ======================================================
 
 const RafflesPanel = () => {
-  const { result, isLoading, isError } = useRaffles();
+  const {
+    result: { raffles, ethPrice },
+    isLoading,
+    isError
+  } = useRaffles();
 
   if (isLoading) {
     return (
@@ -104,10 +107,10 @@ const RafflesPanel = () => {
 
   return (
     <div className="space-y-4">
-      {result.map((raffle, index) => {
+      {raffles.map((raffle, index) => {
         // just show first two
         if (index < 2) {
-          return <RaffleDescription raffle={raffle} key={raffle.id} />;
+          return <RaffleDescription raffle={raffle} key={raffle.id} ethPrice={ethPrice} />;
         }
       })}
     </div>

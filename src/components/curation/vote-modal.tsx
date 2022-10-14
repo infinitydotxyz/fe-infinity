@@ -130,8 +130,8 @@ export const VoteModal: React.FC<Props> = ({ collection, isOpen, onClose }) => {
               className="bg-gray-100"
             />
           </div>
-          <Divider className="my-10" />
-          <div className="space-y-8">
+          <Divider className="my-6" />
+          <div className="space-y-4">
             <Statistics
               value={votesAvailable}
               className="flex flex-row-reverse justify-between"
@@ -170,6 +170,16 @@ export const VoteModal: React.FC<Props> = ({ collection, isOpen, onClose }) => {
                 <StakeTokensButton />
               </>
             )}
+            <div className="text-secondary text-sm font-light font-heading">
+              Votes cannot be reallocated to prevent 'vote rotation'. See{' '}
+              <a
+                href="https://docs.infinity.xyz/gm/features/curation#view-your-curated-collections"
+                target="_blank"
+                className="underline"
+              >
+                docs
+              </a>
+            </div>
           </div>
         </>
       )}

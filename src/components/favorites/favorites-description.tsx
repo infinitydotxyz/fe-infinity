@@ -60,15 +60,30 @@ export const FavoritesDescription: React.FC<{ phase: FavoriteCollectionPhaseDto 
             <InfoBox.Stats title="Collection Favorites" description={CollectionFavoritesInfo()} />
             <InfoBox.Stats title="Your Favorite" description={renderFavorite()} />
             <InfoBox.Stats title="Stats">
-              <div className="w-full py-2">
-                <div className="text-sm mt-1">Progress</div>
-                <ProgressBar percentage={phase.progress} />
-              </div>
-              <div className="w-full py-2">
+              {/* <div className="w-full py-2">
                 <div className="text-sm mt-1">Pot</div>
                 <div className="text-2xl font-heading font-bold">
                   {nFormatter(phase.collectionPotFeesGenerated?.feesGeneratedEth || 0)} ETH
                 </div>
+              </div>
+               */}
+              <div className="w-full py-2 border-b-2">
+                <div className="text-sm mt-1">Pot</div>
+                <div className="text-2xl font-heading font-bold flex">
+                  <InfoBox.Stat
+                    label="Current (ETH)"
+                    value={`${nFormatter(phase.collectionPotFeesGenerated?.feesGeneratedEth || 0)}`}
+                  />
+                  <InfoBox.Stat
+                    label="Expected (ETH)"
+                    value={`${nFormatter((phase.collectionPotFeesGenerated?.feesGeneratedEth / phase.progress) * 100)}`}
+                  />
+                  <InfoBox.Stat label="Expected (USD)" value={`${nFormatter(phase.expectedPrizePoolUSDC)}`} />
+                </div>
+              </div>
+              <div className="w-full py-2">
+                <div className="text-sm mt-1">Progress</div>
+                <ProgressBar percentage={phase.progress} total={`${nFormatter(phase.expectedPrizePoolUSDC)} USD`} />
               </div>
             </InfoBox.Stats>
           </div>
