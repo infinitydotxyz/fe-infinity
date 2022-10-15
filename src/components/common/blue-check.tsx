@@ -10,5 +10,5 @@ export const BlueCheck = ({ className = '' }: Props) => {
 };
 
 export const BlueCheckInline = () => {
-  return <BlueCheck className="inline ml-2 mb-0.5" />;
+  return <BlueCheck className="inline ml-1 mb-0.5" />;
 };

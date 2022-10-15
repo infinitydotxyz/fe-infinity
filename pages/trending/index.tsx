@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import { parse } from 'query-string';
 import { useEffect, useState } from 'react';
 import {
-  BlueCheck,
+  BlueCheckInline,
   Button,
   CenterFixed,
   EthPrice,
@@ -208,18 +208,21 @@ const TrendingPageCard = ({ collection, period, index }: Props) => {
 
   return (
     <div className="bg-theme-light-200 px-7 py-4 rounded-3xl flex items-center font-heading">
-      <div className="text-theme-light-800 text-xl mr-6 min-w-[32px] text-right font-heading">{index + 1}</div>
+      <div
+        className="grid gap-4 justify-between items-center w-full"
+        style={{ gridTemplateColumns: 'minmax(0, 2fr) repeat(auto-fit, minmax(0, 1fr))' }}
+      >
+        <div className="flex items-center text-black font-bold font-body">
+          <div className="text-theme-light-800 text-xl mr-4 min-w-[32px] text-right font-heading">{index + 1}</div>
 
-      <NextLink href={`/collection/${collection?.slug}`}>
-        <EZImage className="w-16 h-16 rounded-2xl overflow-clip" src={collection?.metadata?.profileImage} />
-      </NextLink>
-
-      <div className="flex justify-between items-center w-full ml-6">
-        <div className="w-44 flex items-center text-black font-bold font-body">
-          <NextLink href={`/collection/${collection?.slug}`} className="truncate">
-            {collection?.metadata?.name}
+          <NextLink href={`/collection/${collection?.slug}`}>
+            <EZImage className="w-16 h-16 rounded-2xl overflow-clip" src={collection?.metadata?.profileImage} />
           </NextLink>
-          {collection?.hasBlueCheck && <BlueCheck className="ml-1.5" />}
+
+          <NextLink href={`/collection/${collection?.slug}`} className="ml-2 whitespace-normal">
+            {collection?.metadata?.name}
+            {collection?.hasBlueCheck && <BlueCheckInline />}
+          </NextLink>
         </div>
 
         {isDesktop ? (
@@ -296,7 +299,13 @@ const TrendingPageCard = ({ collection, period, index }: Props) => {
           </>
         ) : null}
 
-        <div className="flex flex-row gap-3 flex-wrap">
+        <div
+          className="flex gap-2"
+          style={{
+            gridColumn: -1,
+            width: '170px'
+          }}
+        >
           <Button size="medium" onClick={() => onClickBuy(collection)}>
             Buy
           </Button>
