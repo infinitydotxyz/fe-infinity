@@ -1,3 +1,4 @@
+import { Collection } from '@infinityxyz/lib-frontend/types/core';
 import { UserCuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto';
 import { CurationQuotaDto } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curation-quota.dto';
 import { sleep } from '@infinityxyz/lib-frontend/utils';
@@ -10,6 +11,7 @@ import { apiPost } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { AvatarImage } from '../collection/avatar-image';
 import { Button, ButtonProps, Chip, Divider, Heading, Modal, Spinner, TextInputBox, toastError } from '../common';
+import { Message } from '../common/message';
 import { MaxButton } from './max-button';
 import { FeesAccruedStats, FeesAprStats, Statistics } from './statistics';
 import { VoteProgressBar } from './vote-progress-bar';
@@ -19,7 +21,7 @@ export const StakeTokensButton: React.FC<Pick<ButtonProps, 'variant'>> = ({ vari
 
   return (
     <Button variant={variant} size="large" className="w-full" onClick={() => router.push('/rewards')}>
-      Stake tokens to get votes
+      <div className="truncate">Stake tokens to get votes</div>
     </Button>
   );
 };
@@ -27,7 +29,7 @@ export const StakeTokensButton: React.FC<Pick<ButtonProps, 'variant'>> = ({ vari
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  collection: UserCuratedCollectionDto;
+  collection: Collection & UserCuratedCollectionDto;
 }
 
 export const VoteModal: React.FC<Props> = ({ collection, isOpen, onClose }) => {
@@ -97,13 +99,17 @@ export const VoteModal: React.FC<Props> = ({ collection, isOpen, onClose }) => {
 
       {hasVoted && (
         <>
-          <div className="bg-green-100 rounded-lg py-5 px-6 mb-4 mt-4 text-base text-green-700" role="alert">
+          <Message>
             <strong>Votes have been registered successfully! Changes will be visible shortly.</strong>
-          </div>
+          </Message>
           <Chip
             onClick={() => {
               const win = window.open(
-                `https://twitter.com/intent/tweet?url=https://infinity.xyz/collection/${collection.slug}&text=I just curated ${collection.name} on Infinity! Come check it out at `,
+                `https://twitter.com/intent/tweet?url=https://infinity.xyz/collection/${
+                  collection.slug
+                }&text=I just curated ${
+                  collection.metadata.links.twitter ? `@${collection.metadata.links.twitter}` : collection.name
+                } on Infinity! Come check it out at `,
                 '_blank'
               );
               win?.focus();

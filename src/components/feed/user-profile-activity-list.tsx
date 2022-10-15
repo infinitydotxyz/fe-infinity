@@ -58,7 +58,7 @@ export const UserProfileActivityList = ({ userAddress, types, className }: UserP
         />
       </div>
 
-      <ul className="space-y-3 pointer-events-auto">
+      <div className="space-y-3 pointer-events-auto">
         {!isLoading && activities?.length === 0 ? <div className="font-heading">No results found</div> : null}
 
         {activities.length > 0 &&
@@ -102,7 +102,7 @@ export const UserProfileActivityList = ({ userAddress, types, className }: UserP
             fetchMore();
           }}
         />
-      </ul>
+      </div>
     </div>
   );
 };
