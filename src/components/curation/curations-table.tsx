@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
 import { nFormatter } from 'src/utils';
-import { BlueCheck, EZImage } from '../common';
+import { BlueCheckInline, EZImage } from '../common';
 import { ProgressBar } from '../common/progress-bar';
 import { NumericVoteInputBox } from './input';
 import { FeesAprStats, FeesAccruedStats } from './statistics';
@@ -59,7 +59,8 @@ export const CurationRow: React.FC<Props2> = ({ collection, index, onClick, vote
           <EZImage src={collection.profileImage} className="mr-3 overflow-hidden w-14 h-14 rounded-full" />
           <div className="w-full h-full overflow-hidden justify-start items-center flex">
             <div className="text-theme-light-900 font-bold text-md cursor-pointer" onClick={onClick}>
-              {collection.name} {collection.hasBlueCheck && <BlueCheck className="inline" />}
+              {collection.name}
+              {collection.hasBlueCheck && <BlueCheckInline />}
             </div>
           </div>
         </div>
