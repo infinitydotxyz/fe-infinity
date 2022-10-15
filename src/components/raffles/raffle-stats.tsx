@@ -15,7 +15,7 @@ export const RaffleStats = ({ raffle }: { raffle: UserRaffleDto; ethPrice: numbe
       <div className="w-full py-2 border-b-2">
         <div className="text-sm mt-1">Pot</div>
         <div className="text-2xl font-heading font-bold flex">
-          <InfoBox.Stat label="Current (USD)" value={`${nFormatter(raffle.totals.prizePoolEth)}`} />
+          <InfoBox.Stat label="Current (ETH)" value={`${nFormatter(raffle.totals.prizePoolEth)}`} />
           <InfoBox.Stat label="Expected (ETH)" value={`${nFormatter(potSize)}`} />
           <InfoBox.Stat label="Expected (USD)" value={`${nFormatter(raffle.totals.expectedPrizePoolUSDC)}`} />
         </div>
