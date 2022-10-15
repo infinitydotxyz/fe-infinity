@@ -21,7 +21,7 @@ export const StakeTokensButton: React.FC<Pick<ButtonProps, 'variant'>> = ({ vari
 
   return (
     <Button variant={variant} size="large" className="w-full" onClick={() => router.push('/rewards')}>
-      Stake tokens to get votes
+      <div className="truncate">Stake tokens to get votes</div>
     </Button>
   );
 };
