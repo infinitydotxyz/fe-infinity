@@ -265,7 +265,6 @@ const CollectionPage = ({ collection, error }: { collection: BaseCollection; err
                     </button>
                     {collection.metadata?.links?.external && (
                       <>
-                        <span className="font-heading">Website </span>
                         <Chip
                           content={<HiOutlineExternalLink className="text-md" />}
                           onClick={() => window.open(collection.metadata?.links?.external)}
