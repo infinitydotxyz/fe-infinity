@@ -1,5 +1,6 @@
 import { ChainId, SearchType } from '@infinityxyz/lib-frontend/types/core';
-import { useSearch, useSearchState } from 'src/hooks/api/useSearch';
+import { useSearch } from 'src/hooks/api/useSearch';
+import { useSearchState } from 'src/hooks/api/useSearchState';
 import { SearchInput } from './search-input';
 
 interface Props {

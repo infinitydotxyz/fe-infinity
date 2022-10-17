@@ -1,15 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   ChainId,
   SearchBy,
   SearchQuery,
   SearchType,
   SubQuery,
-  SubQuerySearchBy,
   SubQueryType
 } from '@infinityxyz/lib-frontend/types/core';
-import { useState } from 'react';
 import { SearchResult } from 'src/components/common/search/types';
 import { useFetch } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
@@ -64,84 +61,4 @@ export const defaultSearchByType: Record<SearchType, ClientSearches> = {
     searchBy: 'slug',
     query: ''
   }
-};
-
-export const useSearchState = <
-  T extends SearchType = any,
-  U extends SearchBy<T> = any,
-  V extends SubQueryType<T, U> = any
->(
-  defaultSearch?: ClientSearches<T, U, V>
-) => {
-  const [search, setSearch] = useState<ClientSearches<T, U, V>>(
-    defaultSearch ?? defaultSearchByType[SearchType.Collection]
-  );
-
-  const setType = (type: SearchType) => {
-    setSearch(defaultSearchByType[type]);
-  };
-
-  const setQuery = (query: string) => {
-    setSearch((prev) => ({ ...prev, query }));
-  };
-
-  const setSubType = <T extends SearchType = any, U extends SearchBy<T> = any, V extends SubQueryType<T, U> = any>(
-    subType?: V,
-    subTypeSearchBy?: SubQuerySearchBy<T, U, V>
-  ) => {
-    if (!subType) {
-      setSearch((prev) => {
-        if ('subType' in prev) {
-          const { subType, subTypeQuery, subTypeSearchBy, ...rest } = prev;
-          return rest;
-        }
-        return prev;
-      });
-      return;
-    }
-
-    switch (search.type) {
-      case SearchType.Collection: {
-        switch (search.searchBy) {
-          case 'slug':
-          case 'address':
-            setSearch((prev) => ({
-              ...prev,
-              subType,
-              subTypeQuery: '',
-              subTypeSearchBy: subTypeSearchBy
-            }));
-            break;
-          default:
-            throw new Error('Not yet implemented');
-        }
-        break;
-      }
-      default:
-        throw new Error('Not yet implemented');
-    }
-  };
-
-  const setSubTypeQuery = (subTypeQuery: string) => {
-    setSearch((prev) => ({ ...prev, subTypeQuery }));
-  };
-
-  const setSubTypeSearchBy = <
-    T extends SearchType = any,
-    U extends SearchBy<T> = any,
-    V extends SubQueryType<T, U> = any
-  >(
-    subTypeSearchBy: SubQuerySearchBy<T, U, V>
-  ) => {
-    setSearch((prev) => ({ ...prev, subTypeSearchBy }));
-  };
-
-  return {
-    search,
-    setType,
-    setQuery,
-    setSubType,
-    setSubTypeQuery,
-    setSubTypeSearchBy
-  };
 };

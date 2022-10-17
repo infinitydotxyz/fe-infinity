@@ -1,5 +1,6 @@
 import { SearchType } from '@infinityxyz/lib-frontend/types/core';
-import { defaultSearchByType, useSearch, useSearchState } from 'src/hooks/api/useSearch';
+import { defaultSearchByType, useSearch } from 'src/hooks/api/useSearch';
+import { useSearchState } from 'src/hooks/api/useSearchState';
 import { SearchInput } from './search-input';
 
 interface Props {
