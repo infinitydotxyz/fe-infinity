@@ -27,7 +27,6 @@ export * from 'src/components/common/scroll-loader';
 export * from 'src/components/common/divider';
 export * from 'src/components/common/drawer';
 export * from 'src/components/common/eth-price';
-export * from 'src/components/common/search-input';
 export * from 'src/components/common/navbar';
 export * from 'src/components/common/connect-button';
 export * from 'src/components/common/collection-grid';

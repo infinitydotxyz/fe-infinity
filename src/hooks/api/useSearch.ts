@@ -1,9 +1,12 @@
-import { BaseCollection, ChainId } from '@infinityxyz/lib-frontend/types/core';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { ChainId } from '@infinityxyz/lib-frontend/types/core';
 import { useState } from 'react';
+import { SearchResult } from 'src/components/common/search/types';
 import { useFetch } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { useDebounce } from '../useDebounce';
 
-type Response = { data: BaseCollection[]; cursor: string; hasNextPage: boolean };
+type Response = { data: SearchResult[]; cursor: string; hasNextPage: boolean };
 
 export enum SearchType {
   Collection = 'collection',
@@ -26,17 +29,15 @@ export interface BaseUserSearchQuery extends SearchQuery {
   type: SearchType.User;
 }
 
-enum CollectionSearchBy {
+export enum CollectionSearchBy {
   Slug = 'slug',
   Address = 'address'
 }
 
 export interface BaseCollectionSearchQuery extends SearchQuery {
   type: SearchType.Collection;
-  subType?: CollectionSearchType;
   searchBy: CollectionSearchBy;
 }
-
 export interface CollectionSearchQueryByAddress extends BaseCollectionSearchQuery {
   searchBy: CollectionSearchBy.Address;
 }
@@ -59,7 +60,31 @@ export type BaseNftSearchQuery = BaseCollectionSearches & {
 
 export type NftSearchQueryByTokenId = BaseNftSearchQuery & {
   subTypeSearchBy: CollectionNftsSearchBy.TokenId;
-  tokenId: string;
+};
+
+const isUserQuery = (search: Searches): search is BaseUserSearchQuery => {
+  return search.type === SearchType.User;
+};
+
+const isCollectionQuery = (search: Searches): search is BaseCollectionSearches => {
+  return search.type === SearchType.Collection;
+};
+
+const isCollectionQueryBySlug = (search: Searches): search is CollectionSearchQueryBySlug => {
+  return isCollectionQuery(search) && search.searchBy === CollectionSearchBy.Slug;
+};
+
+const isCollectionQueryByAddress = (search: Searches): search is CollectionSearchQueryByAddress => {
+  return isCollectionQuery(search) && search.searchBy === CollectionSearchBy.Address;
+};
+
+const isNftSearchQueryByTokenId = (search: Searches): search is NftSearchQueryByTokenId => {
+  return (
+    isCollectionQuery(search) &&
+    'subType' in search &&
+    search.subType === CollectionSearchType.Nft &&
+    search.subTypeSearchBy === CollectionNftsSearchBy.TokenId
+  );
 };
 
 export type CollectionNftSearches = NftSearchQueryByTokenId;
@@ -75,33 +100,37 @@ export type ClientSearches = Searches & Partial<Pick<SearchQuery, 'chainId' | 'l
 export const useSearch = (search: ClientSearches) => {
   const { chainId } = useOnboardContext();
 
+  const { debouncedValue: debouncedSearch } = useDebounce(search, 300);
+
   const { result, isLoading } = useFetch<Response>('/search', {
     query: {
-      ...search,
+      ...debouncedSearch,
       cursor: '',
-      limit: 5,
       chainId: chainId
     }
   });
 
   return {
-    result,
+    result: {
+      ...result,
+      data: (result?.data ?? []) as SearchResult[]
+    },
     isLoading
   };
 };
 
 const common = {
   cursor: '',
-  limit: 5,
+  limit: 10,
   chainId: ChainId.Mainnet
 };
 
-const defaultsByType: Record<SearchType, ClientSearches> = {
+export const defaultSearchByType: Record<SearchType, ClientSearches> = {
   [SearchType.Collection]: {
     ...common,
     type: SearchType.Collection,
     searchBy: CollectionSearchBy.Slug,
-    query: 'bored'
+    query: ''
   },
   [SearchType.User]: {
     ...common,
@@ -110,20 +139,40 @@ const defaultsByType: Record<SearchType, ClientSearches> = {
   }
 };
 
-export const useSearchState = () => {
-  const [search, setSearch] = useState<ClientSearches>(defaultsByType[SearchType.Collection]);
+export const useSearchState = (defaultSearch?: ClientSearches) => {
+  const [search, setSearch] = useState<ClientSearches>(defaultSearch ?? defaultSearchByType[SearchType.Collection]);
 
   const setType = (type: SearchType) => {
-    setSearch(defaultsByType[type]);
+    setSearch(defaultSearchByType[type]);
   };
 
   const setQuery = (query: string) => {
     setSearch((prev) => ({ ...prev, query }));
   };
 
+  const setSubType = (subType?: CollectionSearchType) => {
+    if (subType) {
+      setSearch((prev) => ({ ...prev, subType, subTypeQuery: '', subTypeSearchBy: CollectionNftsSearchBy.TokenId }));
+    } else if (isNftSearchQueryByTokenId(search)) {
+      const { subType, subTypeQuery, subTypeSearchBy, ...rest } = search;
+      setSearch(rest);
+    }
+  };
+
+  const setSubTypeQuery = (subTypeQuery: string) => {
+    setSearch((prev) => ({ ...prev, subTypeQuery }));
+  };
+
+  const setSubTypeSearchBy = (subTypeSearchBy: CollectionNftsSearchBy) => {
+    setSearch((prev) => ({ ...prev, subTypeSearchBy }));
+  };
+
   return {
     search,
     setType,
-    setQuery
+    setQuery,
+    setSubType,
+    setSubTypeQuery,
+    setSubTypeSearchBy
   };
 };

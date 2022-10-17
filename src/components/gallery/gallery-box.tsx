@@ -10,6 +10,7 @@ import { useRouter } from 'next/router';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { TokenFetcher, TokenFetcherCache } from './token-fetcher';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { CollectionNftSearchInput } from '../common/search/collection-nft-search-input';
 
 interface Props {
   collection?: BaseCollection | null;
@@ -169,6 +170,12 @@ export const GalleryBox = ({
           {filterShowed ? 'Hide' : 'Show'} filter
         </Button>
         {showSort ? <GallerySort /> : null}
+      </div>
+
+      <div className="w-full flex justify-end">
+        <div className="mt-4 w-1/4">
+          <CollectionNftSearchInput expanded slug={collection?.slug ?? ''}></CollectionNftSearchInput>
+        </div>
       </div>
 
       <div className={twMerge(className, 'flex items-start mt-[60px]')}>

@@ -10,7 +10,6 @@ import { MdFavorite, MdFeed } from 'react-icons/md';
 import { Menu } from '@headlessui/react';
 import {
   SVG,
-  SearchInput,
   ConnectButton,
   Spacer,
   CustomMenuItem,
@@ -26,6 +25,7 @@ import {
 import { useRouter } from 'next/router';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { HiCollection, HiTrendingUp } from 'react-icons/hi';
+import { CollectionSearchInput } from './search/collection-search-input';
 
 export const Navbar = () => {
   const router = useRouter();
@@ -285,7 +285,7 @@ export const Navbar = () => {
         <SVG.miniLogo className="h-8" />
       </NextLink>
 
-      <SearchInput expanded={true} />
+      <CollectionSearchInput expanded />
       <ShoppingCartButton />
     </div>
   );
@@ -294,11 +294,12 @@ export const Navbar = () => {
     <div className="w-full bg-white bg-opacity-70 glass font-body">
       <div className={`${pageStyles} flex space-x-6 items-center py-6 w-full`}>
         <NextLink href="/">
-          <SVG.logo className="h-8" />
+          <SVG.miniLogo className="h-8 xl:hidden" />
+          <SVG.logo className="h-8 hidden xl:inline-flex" />
         </NextLink>
 
         <Spacer />
-        <SearchInput />
+        <CollectionSearchInput />
 
         {content?.buttons?.items?.map((item, i) => (
           <React.Fragment key={i}>
