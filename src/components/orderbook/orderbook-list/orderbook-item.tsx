@@ -4,7 +4,7 @@ import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 
 import { useRouter } from 'next/router';
 import { ReactNode } from 'react';
-import { BlueCheck, EZImage, NextLink } from 'src/components/common';
+import { BlueCheckInline, EZImage, NextLink } from 'src/components/common';
 import { ellipsisString, ENS_ADDRESS } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
 
@@ -166,8 +166,10 @@ const SingleCollectionCell = ({
             className="font-bold whitespace-pre-wrap flex items-center"
             title={title}
           >
-            <div>{title}</div>
-            {orderNft?.hasBlueCheck === true ? <BlueCheck className="mx-1" /> : null}
+            <div>
+              {title}
+              {orderNft?.hasBlueCheck === true && <BlueCheckInline />}
+            </div>
           </NextLink>
         ) : (
           <NextLink
@@ -175,8 +177,10 @@ const SingleCollectionCell = ({
             className="font-bold whitespace-pre-wrap flex items-center"
             title={title}
           >
-            <div>{title}</div>
-            {orderNft?.hasBlueCheck === true ? <BlueCheck className="mx-1" /> : null}
+            <div>
+              {title}
+              {orderNft?.hasBlueCheck === true && <BlueCheckInline />}
+            </div>
           </NextLink>
         )}
 

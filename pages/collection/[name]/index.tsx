@@ -10,7 +10,6 @@ import { NULL_ADDRESS, round } from '@infinityxyz/lib-frontend/utils';
 import { useRouter } from 'next/router';
 import NotFound404Page from 'pages/not-found-404';
 import { useEffect, useState } from 'react';
-import ContentLoader from 'react-content-loader';
 import { BsCheck } from 'react-icons/bs';
 import { HiOutlineExternalLink } from 'react-icons/hi';
 import { AvatarImage } from 'src/components/collection/avatar-image';
@@ -35,7 +34,7 @@ import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { OrderbookContainer } from 'src/components/orderbook/orderbook-list';
 import { useFetchSignedOBOrder } from 'src/hooks/api/useFetchSignedOBOrder';
 import { ellipsisAddress, getChainScannerBase, nFormatter, standardCard } from 'src/utils';
-import { useFetch } from 'src/utils/apiUtils';
+import { apiGet, useFetch } from 'src/utils/apiUtils';
 import { useDrawerContext } from 'src/utils/context/DrawerContext';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
@@ -44,8 +43,10 @@ import { twMerge } from 'tailwind-merge';
 import ReactMarkdown from 'react-markdown';
 import Linkify from '@amit.rajput/react-linkify';
 import { UserCuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto';
+import { GetServerSidePropsContext } from 'next';
+import Head from 'next/head';
 
-const CollectionPage = () => {
+const CollectionPage = ({ collection, error }: { collection: BaseCollection; error?: Error }) => {
   const { user, chainId, checkSignedIn } = useOnboardContext();
 
   const { fetchSignedOBOrder } = useFetchSignedOBOrder();
@@ -68,7 +69,6 @@ const CollectionPage = () => {
   }, [isBuyClicked]);
 
   const path = `/collections/${name}`;
-  const { result: collection, isLoading, error } = useFetch<BaseCollection>(name ? path : '', { chainId: '1' });
   const { result: collectionAttributes } = useFetch<CollectionAttributes>(
     name ? `/collections/${name}/attributes` : '',
     {
@@ -87,7 +87,7 @@ const CollectionPage = () => {
   );
   const firstAllTimeStats = allTimeStats?.data[0]; // first row = latest daily stats
 
-  const createdBy = collection?.deployer ?? collection?.owner ?? '';
+  const createdBy = collection.deployer ?? collection.owner ?? '';
 
   const { result: curatedCollection } = useFetch<UserCuratedCollectionDto>(
     `${path}/curated/${chainId}:${user?.address ?? NULL_ADDRESS}`
@@ -124,25 +124,6 @@ const CollectionPage = () => {
     });
     updateOrders(ordersInCart.filter((order) => order.cartItems.length > 0));
   };
-
-  if (error) {
-    // failed to load collection (collection not indexed?)
-    return (
-      <NotFound404Page
-        collectionSlug={name?.toString()}
-        collectionAddress={collection?.address}
-        chainId={collection?.chainId}
-      />
-    );
-  }
-
-  if (!collection) {
-    return (
-      <PageBox showTitle={false} title={'Collection'}>
-        {error ? <div className="flex flex-col mt-10">Unable to load this collection.</div> : null}
-      </PageBox>
-    );
-  }
 
   // not sure if this is the best regex, but could not find anything better
   const markdownRegex = /\[(.*?)\]\((.+?)\)/g;
@@ -200,12 +181,50 @@ const CollectionPage = () => {
     );
   }
 
+  if (error) {
+    // failed to load collection (collection not indexed?)
+    return (
+      <NotFound404Page
+        collectionSlug={name?.toString()}
+        collectionAddress={collection.address}
+        chainId={collection.chainId}
+      />
+    );
+  }
+
+  if (!collection) {
+    return (
+      <PageBox showTitle={false} title={'Invalid collection'}>
+        <div className="flex flex-col mt-10">Unable to load this collection.</div>
+      </PageBox>
+    );
+  }
+
   return (
     <PageBox showTitle={false} title={collection.metadata?.name ?? ''}>
+      <Head>
+        <meta property="og:title" content={collection.metadata?.name} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={`https://infinity.xyz/collection/${collection.metadata?.name}`} />
+        <meta property="og:site_name" content="infinity.xyz" />
+        <meta property="og:image" content={collection.metadata?.bannerImage || collection.metadata?.profileImage} />
+        <meta property="og:image:alt" content={collection.metadata?.description} />
+        <meta property="og:description" content={collection.metadata?.description} />
+
+        <meta name="theme-color" content="#000000" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@infinitydotxyz" />
+        <meta name="twitter:title" content={collection.metadata?.name} />
+        <meta name="twitter:description" content={collection.metadata?.description} />
+        <meta name="twitter:image" content={collection.metadata?.bannerImage || collection.metadata?.profileImage} />
+        <meta property="twitter:image:alt" content={collection.metadata?.description} />
+        <meta property="twitter:creator" content={collection.metadata?.links?.twitter} />
+      </Head>
+
       <div className="flex flex-col mt-10">
         <span>
           <AvatarImage url={collection.metadata?.profileImage} className="mb-2" />
-
           <div className="flex gap-3 items-center">
             <div className="text-6xl">
               {collection.metadata?.name ? (
@@ -220,7 +239,6 @@ const CollectionPage = () => {
             {collection.hasBlueCheck ? <BlueCheck className={twMerge(iconButtonStyle, 'mt-3')} /> : null}
           </div>
         </span>
-
         <main>
           <div className="flex flex-col space-x-0 xl:flex-row xl:space-x-10">
             <section className="w-fit xl:w-1/2">
@@ -245,12 +263,11 @@ const CollectionPage = () => {
                     >
                       <span className="underline">{ellipsisAddress(collection.address ?? '')}</span>
                     </button>
-                    {collection?.metadata?.links?.external && (
+                    {collection.metadata?.links?.external && (
                       <>
-                        <span className="font-heading">Website </span>
                         <Chip
                           content={<HiOutlineExternalLink className="text-md" />}
-                          onClick={() => window.open(collection?.metadata?.links?.external)}
+                          onClick={() => window.open(collection.metadata?.links?.external)}
                           iconOnly={true}
                         />
                       </>
@@ -263,13 +280,9 @@ const CollectionPage = () => {
                 )}
               </div>
               <StatsChips collection={collection} currentStatsData={currentStats || firstAllTimeStats} />
-              {isLoading ? (
-                <div className="mt-6">
-                  <LoadingDescription />
-                </div>
-              ) : (
-                <div className="text-secondary mt-12 md:w-2/3">{description}</div>
-              )}
+
+              <div className="text-secondary mt-12 md:w-2/3">{description}</div>
+
               {collection.metadata?.benefits && (
                 <div className="mt-7 md:w-2/3">
                   <div className="font-medium">Ownership includes</div>
@@ -371,7 +384,6 @@ const CollectionPage = () => {
               )}
             </section>
           </div>
-
           <section>
             <ToggleTab
               className="mt-20 font-heading pointer-events-auto"
@@ -460,19 +472,13 @@ const CollectionPage = () => {
   );
 };
 
-const LoadingDescription = () => (
-  <ContentLoader
-    speed={2}
-    width={400}
-    height={120}
-    viewBox="0 0 400 120"
-    backgroundColor="#f3f3f3"
-    foregroundColor="#ecebeb"
-  >
-    <rect x="3" y="3" rx="12" ry="12" width="390" height="20" />
-    <rect x="3" y="34" rx="12" ry="12" width="390" height="20" />
-    <rect x="3" y="66" rx="12" ry="12" width="203" height="20" />
-  </ContentLoader>
-);
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const slug = context.query.name;
+  const res = await apiGet(`/collections/${slug}`);
+
+  return {
+    props: { collection: res.result, error: res.error ?? null }
+  };
+}
 
 export default CollectionPage;
