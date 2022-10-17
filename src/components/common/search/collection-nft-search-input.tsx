@@ -1,12 +1,5 @@
-import { ChainId } from '@infinityxyz/lib-frontend/types/core';
-import {
-  CollectionNftsSearchBy,
-  CollectionSearchBy,
-  CollectionSearchType,
-  SearchType,
-  useSearch,
-  useSearchState
-} from 'src/hooks/api/useSearch';
+import { ChainId, SearchType } from '@infinityxyz/lib-frontend/types/core';
+import { useSearch, useSearchState } from 'src/hooks/api/useSearch';
 import { SearchInput } from './search-input';
 
 interface Props {
@@ -15,16 +8,16 @@ interface Props {
 }
 
 export const CollectionNftSearchInput = ({ expanded, slug }: Props) => {
-  const { search, setSubTypeQuery } = useSearchState({
+  const { search, setSubTypeQuery } = useSearchState<SearchType.Collection, 'slug', 'nft'>({
     type: SearchType.Collection,
     query: slug,
-    searchBy: CollectionSearchBy.Slug,
+    searchBy: 'slug',
     limit: 10,
-    subType: CollectionSearchType.Nft,
+    subType: 'nft',
     subTypeQuery: '',
     cursor: '',
     chainId: ChainId.Mainnet,
-    subTypeSearchBy: CollectionNftsSearchBy.TokenId
+    subTypeSearchBy: 'tokenId'
   });
   const { result } = useSearch(search);
 

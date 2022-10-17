@@ -1,5 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { ChainId } from '@infinityxyz/lib-frontend/types/core';
+import {
+  ChainId,
+  SearchBy,
+  SearchQuery,
+  SearchType,
+  SubQuery,
+  SubQuerySearchBy,
+  SubQueryType
+} from '@infinityxyz/lib-frontend/types/core';
 import { useState } from 'react';
 import { SearchResult } from 'src/components/common/search/types';
 import { useFetch } from 'src/utils';
@@ -8,96 +17,19 @@ import { useDebounce } from '../useDebounce';
 
 type Response = { data: SearchResult[]; cursor: string; hasNextPage: boolean };
 
-export enum SearchType {
-  Collection = 'collection',
-  User = 'user'
-}
+type OptionalProps<T extends SearchType = any, U extends SearchBy<T> = any> = Partial<
+  Pick<SearchQuery<T, U>, 'chainId' | 'limit' | 'cursor'>
+>;
 
-export interface SearchQuery {
-  type?: SearchType;
-  cursor: string;
-  limit: number;
-  chainId: ChainId;
-  query: string;
-}
+export type ClientSearches<
+  T extends SearchType = any,
+  U extends SearchBy<T> = any,
+  V extends SubQueryType<T, U> = any
+> = (SubQuery<T, U, V> & OptionalProps) | (SearchQuery<T, U> & OptionalProps<T, U>);
 
-export enum CollectionSearchType {
-  Nft = 'nft'
-}
-
-export interface BaseUserSearchQuery extends SearchQuery {
-  type: SearchType.User;
-}
-
-export enum CollectionSearchBy {
-  Slug = 'slug',
-  Address = 'address'
-}
-
-export interface BaseCollectionSearchQuery extends SearchQuery {
-  type: SearchType.Collection;
-  searchBy: CollectionSearchBy;
-}
-export interface CollectionSearchQueryByAddress extends BaseCollectionSearchQuery {
-  searchBy: CollectionSearchBy.Address;
-}
-
-export interface CollectionSearchQueryBySlug extends BaseCollectionSearchQuery {
-  searchBy: CollectionSearchBy.Slug;
-}
-
-export type BaseCollectionSearches = CollectionSearchQueryByAddress | CollectionSearchQueryBySlug;
-
-export enum CollectionNftsSearchBy {
-  TokenId = 'tokenId'
-}
-
-export type BaseNftSearchQuery = BaseCollectionSearches & {
-  subType: CollectionSearchType.Nft;
-  subTypeQuery: string;
-  subTypeSearchBy: CollectionNftsSearchBy;
-};
-
-export type NftSearchQueryByTokenId = BaseNftSearchQuery & {
-  subTypeSearchBy: CollectionNftsSearchBy.TokenId;
-};
-
-const isUserQuery = (search: Searches): search is BaseUserSearchQuery => {
-  return search.type === SearchType.User;
-};
-
-const isCollectionQuery = (search: Searches): search is BaseCollectionSearches => {
-  return search.type === SearchType.Collection;
-};
-
-const isCollectionQueryBySlug = (search: Searches): search is CollectionSearchQueryBySlug => {
-  return isCollectionQuery(search) && search.searchBy === CollectionSearchBy.Slug;
-};
-
-const isCollectionQueryByAddress = (search: Searches): search is CollectionSearchQueryByAddress => {
-  return isCollectionQuery(search) && search.searchBy === CollectionSearchBy.Address;
-};
-
-const isNftSearchQueryByTokenId = (search: Searches): search is NftSearchQueryByTokenId => {
-  return (
-    isCollectionQuery(search) &&
-    'subType' in search &&
-    search.subType === CollectionSearchType.Nft &&
-    search.subTypeSearchBy === CollectionNftsSearchBy.TokenId
-  );
-};
-
-export type CollectionNftSearches = NftSearchQueryByTokenId;
-
-export type CollectionSearches = BaseCollectionSearches | CollectionNftSearches;
-
-export type UserSearches = BaseUserSearchQuery;
-
-export type Searches = CollectionSearches | UserSearches;
-
-export type ClientSearches = Searches & Partial<Pick<SearchQuery, 'chainId' | 'limit' | 'cursor'>>;
-
-export const useSearch = (search: ClientSearches) => {
+export const useSearch = <T extends SearchType = any, U extends SearchBy<T> = any, V extends SubQueryType<T, U> = any>(
+  search: ClientSearches<T, U, V>
+) => {
   const { chainId } = useOnboardContext();
 
   const { debouncedValue: debouncedSearch } = useDebounce(search, 300);
@@ -129,18 +61,21 @@ export const defaultSearchByType: Record<SearchType, ClientSearches> = {
   [SearchType.Collection]: {
     ...common,
     type: SearchType.Collection,
-    searchBy: CollectionSearchBy.Slug,
-    query: ''
-  },
-  [SearchType.User]: {
-    ...common,
-    type: SearchType.User,
+    searchBy: 'slug',
     query: ''
   }
 };
 
-export const useSearchState = (defaultSearch?: ClientSearches) => {
-  const [search, setSearch] = useState<ClientSearches>(defaultSearch ?? defaultSearchByType[SearchType.Collection]);
+export const useSearchState = <
+  T extends SearchType = any,
+  U extends SearchBy<T> = any,
+  V extends SubQueryType<T, U> = any
+>(
+  defaultSearch?: ClientSearches<T, U, V>
+) => {
+  const [search, setSearch] = useState<ClientSearches<T, U, V>>(
+    defaultSearch ?? defaultSearchByType[SearchType.Collection]
+  );
 
   const setType = (type: SearchType) => {
     setSearch(defaultSearchByType[type]);
@@ -150,12 +85,40 @@ export const useSearchState = (defaultSearch?: ClientSearches) => {
     setSearch((prev) => ({ ...prev, query }));
   };
 
-  const setSubType = (subType?: CollectionSearchType) => {
-    if (subType) {
-      setSearch((prev) => ({ ...prev, subType, subTypeQuery: '', subTypeSearchBy: CollectionNftsSearchBy.TokenId }));
-    } else if (isNftSearchQueryByTokenId(search)) {
-      const { subType, subTypeQuery, subTypeSearchBy, ...rest } = search;
-      setSearch(rest);
+  const setSubType = <T extends SearchType = any, U extends SearchBy<T> = any, V extends SubQueryType<T, U> = any>(
+    subType?: V,
+    subTypeSearchBy?: SubQuerySearchBy<T, U, V>
+  ) => {
+    if (!subType) {
+      setSearch((prev) => {
+        if ('subType' in prev) {
+          const { subType, subTypeQuery, subTypeSearchBy, ...rest } = prev;
+          return rest;
+        }
+        return prev;
+      });
+      return;
+    }
+
+    switch (search.type) {
+      case SearchType.Collection: {
+        switch (search.searchBy) {
+          case 'slug':
+          case 'address':
+            setSearch((prev) => ({
+              ...prev,
+              subType,
+              subTypeQuery: '',
+              subTypeSearchBy: subTypeSearchBy
+            }));
+            break;
+          default:
+            throw new Error('Not yet implemented');
+        }
+        break;
+      }
+      default:
+        throw new Error('Not yet implemented');
     }
   };
 
@@ -163,7 +126,13 @@ export const useSearchState = (defaultSearch?: ClientSearches) => {
     setSearch((prev) => ({ ...prev, subTypeQuery }));
   };
 
-  const setSubTypeSearchBy = (subTypeSearchBy: CollectionNftsSearchBy) => {
+  const setSubTypeSearchBy = <
+    T extends SearchType = any,
+    U extends SearchBy<T> = any,
+    V extends SubQueryType<T, U> = any
+  >(
+    subTypeSearchBy: SubQuerySearchBy<T, U, V>
+  ) => {
     setSearch((prev) => ({ ...prev, subTypeSearchBy }));
   };
 
