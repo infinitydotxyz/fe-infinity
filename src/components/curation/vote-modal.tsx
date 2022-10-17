@@ -8,6 +8,7 @@ import { FaTwitter } from 'react-icons/fa';
 import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { apiPost } from 'src/utils';
+import { toTwitterHandle } from 'src/utils/converters';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { AvatarImage } from '../collection/avatar-image';
 import { Button, ButtonProps, Chip, Divider, Heading, Modal, Spinner, TextInputBox, toastError } from '../common';
@@ -108,7 +109,9 @@ export const VoteModal: React.FC<Props> = ({ collection, isOpen, onClose }) => {
                 `https://twitter.com/intent/tweet?url=https://infinity.xyz/collection/${
                   collection.slug
                 }&text=I just curated ${
-                  collection.metadata.links.twitter ? `@${collection.metadata.links.twitter}` : collection.name
+                  collection.metadata.links.twitter
+                    ? `@${toTwitterHandle(collection.metadata.links.twitter)}`
+                    : collection.name
                 } on Infinity! Come check it out at `,
                 '_blank'
               );
