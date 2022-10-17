@@ -45,8 +45,14 @@ import Linkify from '@amit.rajput/react-linkify';
 import { UserCuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
+import { useSaveReferral } from 'src/hooks/api/useSaveReferral';
 
 const CollectionPage = ({ collection, error }: { collection: BaseCollection; error?: Error }) => {
+  /**
+   * handle saving referrals for this page
+   */
+  useSaveReferral(collection.address, collection.chainId as ChainId);
+
   const { user, chainId, checkSignedIn } = useOnboardContext();
 
   const { fetchSignedOBOrder } = useFetchSignedOBOrder();

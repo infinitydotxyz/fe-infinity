@@ -1,4 +1,4 @@
-import { CollectionAttributes, Erc721Metadata, OBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId, CollectionAttributes, Erc721Metadata, OBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
 import { getCurrentOBOrderPrice } from '@infinityxyz/lib-frontend/utils';
 import { utils } from 'ethers';
 import { useRouter } from 'next/router';
@@ -23,6 +23,7 @@ import {
 } from 'src/components/common';
 import { WaitingForTxModal } from 'src/components/orderbook/order-drawer/waiting-for-tx-modal';
 import { OrderbookContainer } from 'src/components/orderbook/orderbook-list';
+import { useSaveReferral } from 'src/hooks/api/useSaveReferral';
 import { apiGet, ellipsisAddress, getOwnerAddress, MISSING_IMAGE_URL, useFetch } from 'src/utils';
 import { useDrawerContext } from 'src/utils/context/DrawerContext';
 import { getOBOrderFromFirestoreOrderItem } from 'src/utils/exchange/orders';
@@ -61,24 +62,29 @@ const AssetDetailPage = () => {
       </PageBox>
     );
   }
-  return <AssetDetailContent qchainId={query.chainId} qcollection={query.collection} qtokenId={query.tokenId} />;
+  return <AssetDetailContent chainId={query.chainId} collectionAddress={query.collection} tokenId={query.tokenId} />;
 };
 
 // ===========================================================
 
 interface Props {
-  qchainId: string;
-  qcollection: string;
-  qtokenId: string;
+  chainId: string;
+  collectionAddress: string;
+  tokenId: string;
 }
 
-const AssetDetailContent = ({ qchainId, qcollection, qtokenId }: Props) => {
+const AssetDetailContent = ({ chainId, collectionAddress, tokenId }: Props) => {
+  /**
+   * handle saving referrals for this page
+   */
+  useSaveReferral(collectionAddress, chainId as ChainId, tokenId);
+
   const { checkSignedIn, user } = useOnboardContext();
 
   const { isLoading, error, token, collectionAttributes, refreshAssetInfo } = useFetchAssetInfo(
-    qchainId,
-    qcollection,
-    qtokenId
+    chainId,
+    collectionAddress,
+    tokenId
   );
   const { options, onChange, selected } = useToggleTab(['Activity', 'Orders'], 'Activity');
   const [showListModal, setShowListModal] = useState(false);
