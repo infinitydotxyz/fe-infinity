@@ -397,6 +397,7 @@ const CollectionPage = ({ collection, error }: { collection: BaseCollection; err
                   pageId="COLLECTION"
                   getEndpoint={`/collections/${collection.chainId}:${collection.address}/nfts`}
                   collection={collection}
+                  showNftSearch={true}
                   collectionAttributes={collectionAttributes || undefined}
                   cardProps={{
                     cardActions: [

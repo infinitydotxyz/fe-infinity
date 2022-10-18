@@ -22,6 +22,7 @@ interface Props {
   pageId?: 'COLLECTION' | 'PROFILE';
   showCollectionsFilter?: boolean;
   showSort?: boolean;
+  showNftSearch?: boolean;
   userAddress?: string; // for User's NFTs and User's Collection Filter
 }
 
@@ -35,6 +36,7 @@ export const GalleryBox = ({
   filterShowedDefault = false,
   showCollectionsFilter = false,
   showSort = true,
+  showNftSearch = false,
   userAddress = ''
 }: Props) => {
   const [cardData, setCardData] = useState<ERC721CardData[]>([]);
@@ -172,11 +174,13 @@ export const GalleryBox = ({
         {showSort ? <GallerySort /> : null}
       </div>
 
-      <div className="w-full flex justify-end">
-        <div className="mt-4 w-1/4">
-          <CollectionNftSearchInput expanded slug={collection?.slug ?? ''}></CollectionNftSearchInput>
+      {showNftSearch && (
+        <div className="w-full flex justify-end">
+          <div className="mt-4 w-1/4">
+            <CollectionNftSearchInput expanded slug={collection?.slug ?? ''}></CollectionNftSearchInput>
+          </div>
         </div>
-      </div>
+      )}
 
       <div className={twMerge(className, 'flex items-start mt-[60px]')}>
         {filterShowed && (
