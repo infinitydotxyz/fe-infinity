@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { AirdropType } from '@infinityxyz/lib-frontend/types/core';
 import { UserCumulativeRewardsDto } from '@infinityxyz/lib-frontend/types/dto';
 import { round } from '@infinityxyz/lib-frontend/utils';
@@ -191,6 +192,39 @@ const MyRewardsPage: React.FC = () => {
               >
                 Claim Rewards
               </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex bg-theme-gray-100 p-10 rounded-2xl mt-5">
+        <div className="w-1/2">
+          <Heading as="h2" className="text-4xl font-body font-medium">
+            Referral Rewards
+          </Heading>
+          <div className="w-1/2 mt-5 text-theme-gray-700">
+            Refer users to collections or assets, and receive a portion of the sales fees if the referral results in a
+            purchase.
+          </div>
+        </div>
+
+        <div className="w-1/2">
+          <div className="bg-white py-4 px-6 rounded-2xl">
+            <div className="flex flex-wrap">
+              <div className="lg:w-1/3 sm:w-full">
+                <div className="mb-4">Referrals</div>
+                <div className="text-2xl font-heading font-bold">
+                  {nFormatter(round(userRewards?.totals?.referrals?.numReferrals ?? 0, 4))}
+                </div>
+                <div className="text-sm mt-1">Total</div>
+              </div>
+              <div className="lg:w-1/3 sm:w-full">
+                <div className="mb-4">Referral rewards</div>
+                <div className="text-2xl font-heading font-bold">
+                  {nFormatter(round(userRewards?.totals?.referrals?.totalRewardsEth ?? 0, 4))}
+                </div>
+                <div className="text-sm mt-1">ETH</div>
+              </div>
             </div>
           </div>
         </div>
