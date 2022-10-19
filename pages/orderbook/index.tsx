@@ -23,6 +23,7 @@ const _OrderbookPage = () => {
 
   const { options, onChange, selected } = useToggleTab(
     ['List view', 'Graph view'],
+    // ['List view', 'Graph view', 'Reservoir'],
     (router?.query?.tab as string) || 'List view'
   );
 
@@ -32,6 +33,7 @@ const _OrderbookPage = () => {
         <ToggleTab className="" options={options} selected={selected} onChange={onChange} />
         {selected === 'Graph view' && <OrderbookGraph className="mt-10" />}
         {selected === 'List view' && <OrderbookContent className="" />}
+        {selected === 'Reservoir' && <OrderbookContent className="" />}
       </>
     </>
   );
