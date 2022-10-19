@@ -46,7 +46,7 @@ import { UserCuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 
-const CollectionPage = ({ collection, error }: { collection: BaseCollection; error?: Error }) => {
+const CollectionPage = ({ collection, error }: { collection?: BaseCollection; error?: Error }) => {
   const { user, chainId, checkSignedIn } = useOnboardContext();
 
   const { fetchSignedOBOrder } = useFetchSignedOBOrder();
@@ -87,7 +87,7 @@ const CollectionPage = ({ collection, error }: { collection: BaseCollection; err
   );
   const firstAllTimeStats = allTimeStats?.data[0]; // first row = latest daily stats
 
-  const createdBy = collection.deployer ?? collection.owner ?? '';
+  const createdBy = collection?.deployer ?? collection?.owner ?? '';
 
   const { result: curatedCollection } = useFetch<UserCuratedCollectionDto>(
     `${path}/curated/${chainId}:${user?.address ?? NULL_ADDRESS}`
@@ -127,9 +127,9 @@ const CollectionPage = ({ collection, error }: { collection: BaseCollection; err
 
   // not sure if this is the best regex, but could not find anything better
   const markdownRegex = /\[(.*?)\]\((.+?)\)/g;
-  const isMarkdown = markdownRegex.test(collection.metadata?.description ?? '');
+  const isMarkdown = markdownRegex.test(collection?.metadata?.description ?? '');
 
-  let description = <div>{collection.metadata?.description ?? ''}</div>;
+  let description = <div>{collection?.metadata?.description ?? ''}</div>;
 
   if (isMarkdown) {
     description = (
@@ -140,7 +140,7 @@ const CollectionPage = ({ collection, error }: { collection: BaseCollection; err
         }}
         linkTarget="_blank"
       >
-        {collection.metadata?.description ?? ''}
+        {collection?.metadata?.description ?? ''}
       </ReactMarkdown>
     );
   } else {
@@ -177,7 +177,7 @@ const CollectionPage = ({ collection, error }: { collection: BaseCollection; err
     };
     description = (
       // className colors all a tags with blue
-      <div className="[&_a]:text-blue-700">{escapedNewLineToLineBreakTag(collection.metadata?.description ?? '')}</div>
+      <div className="[&_a]:text-blue-700">{escapedNewLineToLineBreakTag(collection?.metadata?.description ?? '')}</div>
     );
   }
 
@@ -186,8 +186,8 @@ const CollectionPage = ({ collection, error }: { collection: BaseCollection; err
     return (
       <NotFound404Page
         collectionSlug={name?.toString()}
-        collectionAddress={collection.address}
-        chainId={collection.chainId}
+        collectionAddress={collection?.address}
+        chainId={collection?.chainId}
       />
     );
   }
@@ -478,7 +478,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const res = await apiGet(`/collections/${slug}`);
 
   return {
-    props: { collection: res.result, error: res.error ?? null }
+    // undefined fails, must pass null
+    props: { collection: res.result ?? null, error: res.error ?? null }
   };
 }
 
