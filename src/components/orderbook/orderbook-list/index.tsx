@@ -1,21 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Dropdown } from 'src/components/common';
-import { OrderbookProvider, SORT_FILTERS, useOrderbook } from '../OrderbookContext';
+import { getSortLabel, OrderbookProvider, SORT_FILTERS, SORT_LABELS, useOrderbook } from '../OrderbookContext';
 import { OrderbookList } from './orderbook-list';
-
-const SORT_LABELS: {
-  [key: string]: string;
-} = {
-  [SORT_FILTERS.highestPrice]: 'Highest Price',
-  [SORT_FILTERS.lowestPrice]: 'Lowest Price',
-  [SORT_FILTERS.mostRecent]: 'Most Recent'
-};
-
-const getSortLabel = (key: string | undefined) => {
-  return key ? SORT_LABELS[key] || 'Sort' : 'Sort';
-};
-
-// ======================================================
 
 interface Props {
   collectionId?: string;
