@@ -1,4 +1,4 @@
-import { AirdropType } from '@infinityxyz/lib-frontend/types/core';
+import { DistributionType } from '@infinityxyz/lib-frontend/types/core';
 import { UserCumulativeRewardsDto } from '@infinityxyz/lib-frontend/types/dto';
 import { round } from '@infinityxyz/lib-frontend/utils';
 import React, { useState } from 'react';
@@ -22,7 +22,7 @@ const MyRewardsPage: React.FC = () => {
   const { claim } = useClaim();
   const { waitForTransaction } = useOnboardContext();
 
-  const onClaim = async (type: AirdropType, props?: UserCumulativeRewardsDto) => {
+  const onClaim = async (type: DistributionType, props?: UserCumulativeRewardsDto) => {
     if (!props || !props.claimableWei || props.claimableWei === '0') {
       throw new Error('Nothing to claim');
     }
@@ -183,7 +183,7 @@ const MyRewardsPage: React.FC = () => {
               <Button
                 size="large"
                 onClick={() => {
-                  onClaim(AirdropType.Curation, userRewards?.totals?.curation?.claim);
+                  onClaim(DistributionType.ETH, userRewards?.totals?.curation?.claim);
                 }}
                 disabled={
                   !userRewards?.totals?.curation?.claim || userRewards?.totals?.curation?.claim?.claimableWei === '0'
@@ -265,7 +265,7 @@ const MyRewardsPage: React.FC = () => {
               <Button
                 size="large"
                 onClick={() => {
-                  onClaim(AirdropType.TxFees, userRewards?.totals?.tradingRefund?.claim);
+                  onClaim(DistributionType.INFT, userRewards?.totals?.tradingRefund?.claim);
                 }}
                 disabled={
                   !userRewards?.totals?.tradingRefund?.claim ||
