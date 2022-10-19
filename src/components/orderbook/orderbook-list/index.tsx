@@ -1,21 +1,7 @@
 import React, { useState } from 'react';
-import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { Button, CenteredContent, Dropdown, ScrollLoader, Spinner } from 'src/components/common';
-import { OrderbookProvider, SORT_FILTERS, useOrderbook } from '../OrderbookContext';
-import { OrderbookRow } from './orderbook-row';
-import { OrderbookFilters } from './filters/orderbook-filters';
-
-const SORT_LABELS: {
-  [key: string]: string;
-} = {
-  [SORT_FILTERS.highestPrice]: 'Highest Price',
-  [SORT_FILTERS.lowestPrice]: 'Lowest Price',
-  [SORT_FILTERS.mostRecent]: 'Most Recent'
-};
-
-const getSortLabel = (key: string | undefined) => {
-  return key ? SORT_LABELS[key] || 'Sort' : 'Sort';
-};
+import { Button, Dropdown } from 'src/components/common';
+import { getSortLabel, OrderbookProvider, SORT_FILTERS, SORT_LABELS, useOrderbook } from '../OrderbookContext';
+import { OrderbookList } from './orderbook-list';
 
 interface Props {
   collectionId?: string;
@@ -30,6 +16,8 @@ export const OrderbookContainer = ({ collectionId, tokenId, className = '' }: Pr
     </OrderbookProvider>
   );
 };
+
+// ======================================================
 
 interface Props4 {
   className?: string;
@@ -93,51 +81,5 @@ export const OrderbookContent = ({ className }: Props4) => {
         />
       </div>
     </>
-  );
-};
-
-// ========================================================================
-
-interface Props2 {
-  orderList: SignedOBOrder[];
-  isLoading: boolean;
-  fetchMore: () => void;
-  showFilters?: boolean;
-  hasMoreOrders?: boolean;
-  hasNoData?: boolean;
-}
-
-const OrderbookList = ({
-  orderList,
-  showFilters,
-  isLoading,
-  fetchMore,
-  hasMoreOrders,
-  hasNoData
-}: Props2): JSX.Element => {
-  return (
-    <div className="flex gap-4 pointer-events-auto">
-      {showFilters && (
-        <div className="w-1/5 shrink-0">
-          <OrderbookFilters />
-        </div>
-      )}
-      <div className="flex flex-col items-start w-full">
-        {hasNoData && <div className="font-heading">No results found</div>}
-
-        {orderList.length > 0 &&
-          orderList.map((order: SignedOBOrder, i: number) => {
-            return <OrderbookRow key={`${i}-${order.id}`} order={order} isFilterOpen={showFilters ?? false} />;
-          })}
-
-        {isLoading && (
-          <CenteredContent>
-            <Spinner />
-          </CenteredContent>
-        )}
-
-        {hasMoreOrders && <ScrollLoader onFetchMore={fetchMore} />}
-      </div>
-    </div>
   );
 };

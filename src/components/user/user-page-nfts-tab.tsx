@@ -178,6 +178,7 @@ export const UserPageNftsTab = ({ userInfo, forTransfers, className = '', listCl
           userAddress={userInfo?.address}
           showCollectionsFilter={true}
           showSort={false}
+          showNftSearch={false}
           cardProps={{
             cardActions,
             getDropdownActions: (data) => {
