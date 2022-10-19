@@ -1,12 +1,12 @@
 import { InfinityCmDistributorABI } from '@infinityxyz/lib-frontend/abi';
-import { AirdropType } from '@infinityxyz/lib-frontend/types/core';
+import { DistributionType } from '@infinityxyz/lib-frontend/types/core';
 import { getCmDistributorAddress } from '@infinityxyz/lib-frontend/utils';
 import { ENV } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { useContract } from '../useContract';
 
 export interface ClaimProps {
-  type: AirdropType;
+  type: DistributionType;
   account: string;
   cumulativeAmount: string;
   merkleRoot: string;
@@ -24,7 +24,7 @@ export const useClaim = () => {
     }
     const { type, account, cumulativeAmount, merkleRoot, merkleProof } = data;
     let txn: { hash?: string };
-    if (type === AirdropType.Curation) {
+    if (type === DistributionType.ETH) {
       txn = await contract?.claimETH(account, cumulativeAmount, merkleRoot, merkleProof);
     } else {
       txn = await contract?.claimINFT(account, cumulativeAmount, merkleRoot, merkleProof);
