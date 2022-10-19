@@ -5,20 +5,6 @@ import { useRouter } from 'next/router';
 import { OrderbookGraph } from 'src/components/orderbook/graph/orderbook-graph';
 
 const OrderbookPage = () => {
-  return (
-    <PageBox title="Orderbook">
-      <OrderbookProvider limit={50}>
-        <_OrderbookPage />
-      </OrderbookProvider>
-    </PageBox>
-  );
-};
-
-export default OrderbookPage;
-
-// =====================================================
-
-const _OrderbookPage = () => {
   const router = useRouter();
 
   const { options, onChange, selected } = useToggleTab(
@@ -28,13 +14,25 @@ const _OrderbookPage = () => {
   );
 
   return (
-    <>
-      <>
-        <ToggleTab className="" options={options} selected={selected} onChange={onChange} />
-        {selected === 'Graph view' && <OrderbookGraph className="mt-10" />}
-        {selected === 'List view' && <OrderbookContent className="" />}
-        {selected === 'Reservoir' && <OrderbookContent className="" />}
-      </>
-    </>
+    <PageBox title="Orderbook">
+      <ToggleTab className="" options={options} selected={selected} onChange={onChange} />
+      {selected === 'Graph view' && (
+        <OrderbookProvider limit={50}>
+          <OrderbookGraph className="mt-10" />
+        </OrderbookProvider>
+      )}
+      {selected === 'List view' && (
+        <OrderbookProvider limit={50}>
+          <OrderbookContent className="" />
+        </OrderbookProvider>
+      )}
+      {selected === 'Reservoir' && (
+        <OrderbookProvider limit={50} reservoir={true}>
+          <OrderbookContent className="" />
+        </OrderbookProvider>
+      )}
+    </PageBox>
   );
 };
+
+export default OrderbookPage;
