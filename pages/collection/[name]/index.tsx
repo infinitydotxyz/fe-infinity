@@ -210,6 +210,45 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
     );
   }
 
+  const galleryOnClick = async (
+    ev: React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>,
+    data?: ERC721CardData
+  ) => {
+    if (!checkSignedIn()) {
+      return;
+    }
+    if (isAlreadyAdded(data)) {
+      findAndRemove(data);
+      return;
+    }
+    const price = data?.orderSnippet?.listing?.orderItem?.startPriceEth ?? 0;
+    // setPrice(`${price}`);
+    // addCartItem...
+    if (price) {
+      // Buy a listing
+      // setIsBuyClicked(true); // to add to cart as a Buy order. (see: useEffect)
+      const signedOBOrder = await fetchSignedOBOrder(data?.orderSnippet?.listing?.orderItem?.id ?? '');
+      if (signedOBOrder) {
+        fulfillDrawerParams.addOrder(signedOBOrder);
+        fulfillDrawerParams.setShowDrawer(true);
+      }
+    } else {
+      // Add a Buy order to cart (Make offer)
+      addCartItem({
+        chainId: data?.chainId as ChainId,
+        collectionName: data?.collectionName ?? '',
+        collectionAddress: data?.tokenAddress ?? '',
+        collectionImage: data?.cardImage ?? data?.image ?? '',
+        collectionSlug: data?.collectionSlug ?? '',
+        tokenImage: data?.image ?? '',
+        tokenName: data?.name ?? '',
+        tokenId: data?.tokenId ?? '-1',
+        isSellOrder: false,
+        attributes: data?.attributes ?? []
+      });
+    }
+  };
+
   const nfts = (
     <GalleryBox
       pageId="COLLECTION"
@@ -235,41 +274,7 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
               }
               return <div className="font-normal">Add to order</div>;
             },
-            onClick: async (ev, data) => {
-              if (!checkSignedIn()) {
-                return;
-              }
-              if (isAlreadyAdded(data)) {
-                findAndRemove(data);
-                return;
-              }
-              const price = data?.orderSnippet?.listing?.orderItem?.startPriceEth ?? 0;
-              // setPrice(`${price}`);
-              // addCartItem...
-              if (price) {
-                // Buy a listing
-                // setIsBuyClicked(true); // to add to cart as a Buy order. (see: useEffect)
-                const signedOBOrder = await fetchSignedOBOrder(data?.orderSnippet?.listing?.orderItem?.id ?? '');
-                if (signedOBOrder) {
-                  fulfillDrawerParams.addOrder(signedOBOrder);
-                  fulfillDrawerParams.setShowDrawer(true);
-                }
-              } else {
-                // Add a Buy order to cart (Make offer)
-                addCartItem({
-                  chainId: data?.chainId as ChainId,
-                  collectionName: data?.collectionName ?? '',
-                  collectionAddress: data?.tokenAddress ?? '',
-                  collectionImage: data?.cardImage ?? data?.image ?? '',
-                  collectionSlug: data?.collectionSlug ?? '',
-                  tokenImage: data?.image ?? '',
-                  tokenName: data?.name ?? '',
-                  tokenId: data?.tokenId ?? '-1',
-                  isSellOrder: false,
-                  attributes: data?.attributes ?? []
-                });
-              }
-            }
+            onClick: galleryOnClick
           }
         ]
       }}
