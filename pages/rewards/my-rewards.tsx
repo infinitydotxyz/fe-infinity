@@ -262,7 +262,7 @@ const MyRewardsPage: React.FC = () => {
         }
       ></RewardsSection>
 
-      <RewardsSection
+      {/* <RewardsSection
         title="Referral Rewards"
         subTitle="Refer users to collections or assets, and receive a portion of the sales fees if the referral results in a purchase."
         sideInfo={
@@ -285,7 +285,7 @@ const MyRewardsPage: React.FC = () => {
             </div>
           </div>
         }
-      ></RewardsSection>
+      ></RewardsSection> */}
 
       {showStakeTokensModal && (
         <StakeTokensModal
