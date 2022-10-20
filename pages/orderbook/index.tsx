@@ -3,15 +3,18 @@ import { OrderbookContent } from 'src/components/orderbook/orderbook-list';
 import { OrderbookProvider } from 'src/components/orderbook/OrderbookContext';
 import { useRouter } from 'next/router';
 import { OrderbookGraph } from 'src/components/orderbook/graph/orderbook-graph';
+import { isProd } from 'src/utils';
 
 const OrderbookPage = () => {
   const router = useRouter();
 
-  const { options, onChange, selected } = useToggleTab(
-    ['List view', 'Graph view'],
-    // ['List view', 'Graph view', 'Reservoir'],
-    (router?.query?.tab as string) || 'List view'
-  );
+  let tabs = ['List view', 'Graph view'];
+
+  if (!isProd()) {
+    tabs = ['List view', 'Graph view', 'Reservoir'];
+  }
+
+  const { options, onChange, selected } = useToggleTab(tabs, (router?.query?.tab as string) || 'List view');
 
   return (
     <PageBox title="Orderbook">
