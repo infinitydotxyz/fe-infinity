@@ -305,11 +305,9 @@ export const OrderbookProvider = ({
           getUrl = '/orders/reservoir';
         }
 
-        const getRes = await apiGet(getUrl, {
+        response = await apiGet(getUrl, {
           query
         });
-
-        response = getRes;
 
         // save in cache
         orderCache.set(cacheKey, response);

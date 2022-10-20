@@ -46,6 +46,7 @@ import { UserCuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import { useSaveReferral } from 'src/hooks/api/useSaveReferral';
+import { ReservoirCards } from 'src/components/gallery/reservoir-card-grid';
 
 const CollectionPage = ({ collection, error }: { collection?: BaseCollection; error?: Error }) => {
   /**
@@ -493,6 +494,7 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
               {/* {currentTab === 1 && <ActivityTab dailyStats={dailyStats} weeklyStats={weeklyStats} />} */}
               {selected === 'Sales' && <CollectionSalesTab collectionAddress={collection.address} />}
               {selected === 'Community' && <CommunityFeed collection={collection} className="mt-16" />}
+              {selected === 'Reservoir' && <ReservoirCards collection={collection} className="mt-16" />}
             </div>
           </section>
         </main>
