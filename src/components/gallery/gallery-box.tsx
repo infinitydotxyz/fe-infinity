@@ -114,48 +114,25 @@ export const GalleryBox = ({
   if (error || loading || noData) {
     contents = <ErrorOrLoading error={error} noData={noData} />;
   } else {
-    let gridColumns = 'grid-cols-2';
-    let cardHeight = 310;
+    let width = 0;
 
     if (gridWidth > 0) {
-      let width = gridWidth;
+      width = gridWidth;
 
       if (filterShowed) {
         width -= 360;
       }
-
-      const cols = Math.round(width / cardHeight);
-      gridColumns = `repeat(${cols}, minmax(0, 1fr))`;
-
-      const w = width / cols;
-      cardHeight = w * 1.2;
     }
 
     contents = (
-      <div
-        className={twMerge('w-full flex-1 grid gap-12 pointer-events-none')}
-        style={{ gridTemplateColumns: gridColumns }}
-      >
-        {cardData.map((item, idx) => {
-          return (
-            <Card
-              key={`${item.address}_${item.tokenId}_${idx}`}
-              height={cardHeight}
-              data={item}
-              {...cardProps}
-              paddedImages={paddedImages}
-            />
-          );
-        })}
-
-        {hasNextPage && (
-          <ScrollLoader
-            onFetchMore={async () => {
-              await handleFetch(true);
-            }}
-          />
-        )}
-      </div>
+      <CardGrid
+        cardData={cardData}
+        handleFetch={handleFetch}
+        hasNextPage={hasNextPage}
+        paddedImages={paddedImages}
+        width={width}
+        cardProps={cardProps}
+      />
     );
   }
 
@@ -193,6 +170,57 @@ export const GalleryBox = ({
 
         {contents}
       </div>
+    </div>
+  );
+};
+
+// ====================================================================
+
+interface Props2 {
+  cardData: ERC721CardData[];
+  paddedImages: boolean;
+  hasNextPage: boolean;
+  width: number;
+  cardProps?: CardProps;
+  handleFetch: (loadMore: boolean) => void;
+}
+
+const CardGrid = ({ cardData, width, hasNextPage, cardProps, paddedImages, handleFetch }: Props2) => {
+  let gridColumns = 'grid-cols-2';
+  let cardHeight = 310;
+
+  if (width > 0) {
+    const cols = Math.round(width / cardHeight);
+    gridColumns = `repeat(${cols}, minmax(0, 1fr))`;
+
+    const w = width / cols;
+    cardHeight = w * 1.2;
+  }
+
+  return (
+    <div
+      className={twMerge('w-full flex-1 grid gap-12 pointer-events-none')}
+      style={{ gridTemplateColumns: gridColumns }}
+    >
+      {cardData.map((item, idx) => {
+        return (
+          <Card
+            key={`${item.address}_${item.tokenId}_${idx}`}
+            height={cardHeight}
+            data={item}
+            {...cardProps}
+            paddedImages={paddedImages}
+          />
+        );
+      })}
+
+      {hasNextPage && (
+        <ScrollLoader
+          onFetchMore={() => {
+            handleFetch(true);
+          }}
+        />
+      )}
     </div>
   );
 };
