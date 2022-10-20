@@ -365,6 +365,46 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
     </Head>
   );
 
+  const createdBySection = (
+    <div className="text-secondary mt-6 mb-6 font-heading">
+      {collection ? (
+        <>
+          {createdBy && (
+            <>
+              <span>Created by </span>
+              <button
+                onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection.owner)}
+                className="mr-12"
+              >
+                <span className="underline">{ellipsisAddress(createdBy)}</span>
+              </button>
+            </>
+          )}
+          <span className="font-heading">Collection address </span>
+          <button
+            onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection.address)}
+            className="mr-8"
+          >
+            <span className="underline">{ellipsisAddress(collection.address ?? '')}</span>
+          </button>
+          {collection.metadata?.links?.external && (
+            <>
+              <Chip
+                content={<HiOutlineExternalLink className="text-md" />}
+                onClick={() => window.open(collection.metadata?.links?.external)}
+                iconOnly={true}
+              />
+            </>
+          )}
+        </>
+      ) : (
+        <>
+          <span>&nbsp;</span>
+        </>
+      )}
+    </div>
+  );
+
   return (
     <PageBox showTitle={false} title={collection.metadata?.name ?? ''}>
       {head}
@@ -388,43 +428,7 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
         <main>
           <div className="flex flex-col space-x-0 xl:flex-row xl:space-x-10">
             <section className="w-fit xl:w-1/2">
-              <div className="text-secondary mt-6 mb-6 font-heading">
-                {collection ? (
-                  <>
-                    {createdBy && (
-                      <>
-                        <span>Created by </span>
-                        <button
-                          onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection.owner)}
-                          className="mr-12"
-                        >
-                          <span className="underline">{ellipsisAddress(createdBy)}</span>
-                        </button>
-                      </>
-                    )}
-                    <span className="font-heading">Collection address </span>
-                    <button
-                      onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection.address)}
-                      className="mr-8"
-                    >
-                      <span className="underline">{ellipsisAddress(collection.address ?? '')}</span>
-                    </button>
-                    {collection.metadata?.links?.external && (
-                      <>
-                        <Chip
-                          content={<HiOutlineExternalLink className="text-md" />}
-                          onClick={() => window.open(collection.metadata?.links?.external)}
-                          iconOnly={true}
-                        />
-                      </>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    <span>&nbsp;</span>
-                  </>
-                )}
-              </div>
+              {createdBySection}
               <StatsChips collection={collection} currentStatsData={currentStats || firstAllTimeStats} />
 
               <div className="text-secondary mt-12 md:w-2/3">{description}</div>
