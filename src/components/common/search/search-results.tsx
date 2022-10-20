@@ -9,7 +9,7 @@ const CollectionSearchResult = ({ item }: { item: CollectionSearchDto | Collecti
   return (
     <>
       <EZImage className="w-8 h-8 rounded-full overflow-hidden" src={item?.profileImage} />
-      <div className=" flex-1 truncate font-body text-xs leading-6 tracking-wide">{item?.name}</div>
+      <div className="flex-1 truncate font-body text-xs leading-6 tracking-wide">{item?.name}</div>
       {item?.hasBlueCheck ? <BlueCheck className="ml-1" /> : <></>}
     </>
   );
@@ -19,7 +19,7 @@ const NftSearchResult = ({ item }: { item: NftDisplayData }) => {
   return (
     <>
       <EZImage className="w-10 h-10 rounded-full overflow-hidden" src={item.image} />
-      <div className="flex-1">
+      <div className="flex-1 w-20">
         <div className="truncate font-body text-xs leading-6 tracking-wide -mb-2">
           {item?.collectionDisplayData?.name}
         </div>

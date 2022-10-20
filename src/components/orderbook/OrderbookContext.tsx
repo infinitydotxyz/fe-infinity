@@ -7,7 +7,7 @@ import { apiGet, ITEMS_PER_PAGE } from 'src/utils';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { OrderCache } from './order-cache';
 
-export type OBFilters = {
+type OBFilters = {
   sort?: string;
   orderTypes?: string[];
   collections?: string[];
@@ -21,6 +21,20 @@ export const SORT_FILTERS = {
   lowestPrice: 'lowestPrice',
   mostRecent: 'mostRecent'
 };
+
+export const SORT_LABELS: {
+  [key: string]: string;
+} = {
+  [SORT_FILTERS.highestPrice]: 'Highest Price',
+  [SORT_FILTERS.lowestPrice]: 'Lowest Price',
+  [SORT_FILTERS.mostRecent]: 'Most Recent'
+};
+
+export const getSortLabel = (key: string | undefined) => {
+  return key ? SORT_LABELS[key] || 'Sort' : 'Sort';
+};
+
+// ============================================================
 
 const getIsSellOrder = (orderTypes: OBFilters['orderTypes']) => {
   if (!orderTypes || orderTypes.length === 0) {
@@ -138,6 +152,8 @@ const parseRouterQueryParamsToFilters = (query: ParsedUrlQuery): OBFilters => {
   return newFilters;
 };
 
+// ============================================================
+
 type OBContextType = {
   orders: SignedOBOrder[];
   isLoading: boolean;
@@ -168,9 +184,16 @@ interface Props {
   collectionId?: string;
   tokenId?: string;
   limit?: number;
+  reservoir?: boolean;
 }
 
-export const OrderbookProvider = ({ children, collectionId, tokenId, limit = ITEMS_PER_PAGE }: Props) => {
+export const OrderbookProvider = ({
+  children,
+  collectionId,
+  tokenId,
+  limit = ITEMS_PER_PAGE,
+  reservoir = false
+}: Props) => {
   const router = useRouter();
 
   const [isReady, setIsReady] = useState(false);
@@ -205,7 +228,6 @@ export const OrderbookProvider = ({ children, collectionId, tokenId, limit = ITE
     fetchOrders();
   };
 
-  // filters helper functions
   const clearFilters = (names: string[]): Promise<boolean> => {
     const newQueryParams = { ...router.query };
 
@@ -256,7 +278,6 @@ export const OrderbookProvider = ({ children, collectionId, tokenId, limit = ITE
     return router.replace({ pathname: router.pathname, query: { ...query } });
   };
 
-  // todo: make this prod ready
   const fetchOrders = async (refreshData = false) => {
     try {
       const parsedFilters = parseFiltersToApiQueryParams(filters);
@@ -273,16 +294,20 @@ export const OrderbookProvider = ({ children, collectionId, tokenId, limit = ITE
         query.tokenId = tokenId;
       }
 
-      // use cached value if exists
-      const cacheKey = JSON.stringify(query);
-      let response = orderCache.get(cacheKey);
+      const cacheKey = JSON.stringify(query) + (reservoir ? '-reservoir' : '');
 
+      // use cached value if exists
+      let response = orderCache.get(cacheKey);
       if (!response) {
-        const getRes = await apiGet('/orders', {
+        let getUrl = '/orders';
+
+        if (reservoir) {
+          getUrl = '/orders/reservoir';
+        }
+
+        response = await apiGet(getUrl, {
           query
         });
-
-        response = getRes;
 
         // save in cache
         orderCache.set(cacheKey, response);

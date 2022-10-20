@@ -1,7 +1,7 @@
 import { BaseCollection, CollectionAttributes, ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { defaultFilter, useFilterContext } from 'src/utils/context/FilterContext';
-import { Button, Card, CardProps, ErrorOrLoading, ScrollLoader } from 'src/components/common';
+import { Button, CardProps, ErrorOrLoading } from 'src/components/common';
 import { FilterPanel } from '../filter/filter-panel';
 import { GallerySort } from './gallery-sort';
 import { twMerge } from 'tailwind-merge';
@@ -11,6 +11,7 @@ import { useIsMounted } from 'src/hooks/useIsMounted';
 import { TokenFetcher, TokenFetcherCache } from './token-fetcher';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { CollectionNftSearchInput } from '../common/search/collection-nft-search-input';
+import { CardGrid } from './card-grid';
 
 interface Props {
   collection?: BaseCollection | null;
@@ -22,6 +23,7 @@ interface Props {
   pageId?: 'COLLECTION' | 'PROFILE';
   showCollectionsFilter?: boolean;
   showSort?: boolean;
+  showNftSearch?: boolean;
   userAddress?: string; // for User's NFTs and User's Collection Filter
 }
 
@@ -35,6 +37,7 @@ export const GalleryBox = ({
   filterShowedDefault = false,
   showCollectionsFilter = false,
   showSort = true,
+  showNftSearch = false,
   userAddress = ''
 }: Props) => {
   const [cardData, setCardData] = useState<ERC721CardData[]>([]);
@@ -112,48 +115,25 @@ export const GalleryBox = ({
   if (error || loading || noData) {
     contents = <ErrorOrLoading error={error} noData={noData} />;
   } else {
-    let gridColumns = 'grid-cols-2';
-    let cardHeight = 310;
+    let width = 0;
 
     if (gridWidth > 0) {
-      let width = gridWidth;
+      width = gridWidth;
 
       if (filterShowed) {
         width -= 360;
       }
-
-      const cols = Math.round(width / cardHeight);
-      gridColumns = `repeat(${cols}, minmax(0, 1fr))`;
-
-      const w = width / cols;
-      cardHeight = w * 1.2;
     }
 
     contents = (
-      <div
-        className={twMerge('w-full flex-1 grid gap-12 pointer-events-none')}
-        style={{ gridTemplateColumns: gridColumns }}
-      >
-        {cardData.map((item, idx) => {
-          return (
-            <Card
-              key={`${item.address}_${item.tokenId}_${idx}`}
-              height={cardHeight}
-              data={item}
-              {...cardProps}
-              paddedImages={paddedImages}
-            />
-          );
-        })}
-
-        {hasNextPage && (
-          <ScrollLoader
-            onFetchMore={async () => {
-              await handleFetch(true);
-            }}
-          />
-        )}
-      </div>
+      <CardGrid
+        cardData={cardData}
+        handleFetch={handleFetch}
+        hasNextPage={hasNextPage}
+        paddedImages={paddedImages}
+        width={width}
+        cardProps={cardProps}
+      />
     );
   }
 
@@ -172,11 +152,13 @@ export const GalleryBox = ({
         {showSort ? <GallerySort /> : null}
       </div>
 
-      <div className="w-full flex justify-end">
-        <div className="mt-4 w-1/4">
-          <CollectionNftSearchInput expanded slug={collection?.slug ?? ''}></CollectionNftSearchInput>
+      {showNftSearch && (
+        <div className="w-full flex justify-end">
+          <div className="mt-4 w-1/4">
+            <CollectionNftSearchInput expanded slug={collection?.slug ?? ''}></CollectionNftSearchInput>
+          </div>
         </div>
-      </div>
+      )}
 
       <div className={twMerge(className, 'flex items-start mt-[60px]')}>
         {filterShowed && (
