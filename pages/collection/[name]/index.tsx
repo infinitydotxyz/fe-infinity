@@ -33,7 +33,7 @@ import { CommunityFeed } from 'src/components/feed-list/community-feed';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { OrderbookContainer } from 'src/components/orderbook/orderbook-list';
 import { useFetchSignedOBOrder } from 'src/hooks/api/useFetchSignedOBOrder';
-import { ellipsisAddress, getChainScannerBase, nFormatter, standardCard } from 'src/utils';
+import { ellipsisAddress, getChainScannerBase, isProd, nFormatter, standardCard } from 'src/utils';
 import { apiGet, useFetch } from 'src/utils/apiUtils';
 import { useDrawerContext } from 'src/utils/context/DrawerContext';
 import { useOrderContext } from 'src/utils/context/OrderContext';
@@ -61,7 +61,9 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
   const router = useRouter();
   const { addCartItem, removeCartItem, ordersInCart, cartItems, addOrderToCart, updateOrders } = useOrderContext();
   const [isBuyClicked, setIsBuyClicked] = useState(false);
-  const toggleOptions = ['NFTs', 'Orders', 'Sales', 'Community'];
+  const toggleOptions = isProd()
+    ? ['NFTs', 'Orders', 'Sales', 'Community']
+    : ['NFTs', 'Orders', 'Sales', 'Community', 'Reservoir'];
   const { options, onChange, selected } = useToggleTab(toggleOptions, (router?.query?.tab as string) || 'NFTs');
   const {
     query: { name }
@@ -208,28 +210,164 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
     );
   }
 
+  const nfts = (
+    <GalleryBox
+      pageId="COLLECTION"
+      getEndpoint={`/collections/${collection.chainId}:${collection.address}/nfts`}
+      collection={collection}
+      showNftSearch={true}
+      collectionAttributes={collectionAttributes || undefined}
+      cardProps={{
+        cardActions: [
+          {
+            label: (data) => {
+              const price = data?.orderSnippet?.listing?.orderItem?.startPriceEth ?? '';
+              if (price) {
+                return (
+                  <div className="flex justify-center">
+                    <span className="mr-4 font-normal">Buy</span>
+                    <EthPrice label={`${price}`} />
+                  </div>
+                );
+              }
+              if (isAlreadyAdded(data)) {
+                return <div className="font-normal">✓ Added</div>;
+              }
+              return <div className="font-normal">Add to order</div>;
+            },
+            onClick: async (ev, data) => {
+              if (!checkSignedIn()) {
+                return;
+              }
+              if (isAlreadyAdded(data)) {
+                findAndRemove(data);
+                return;
+              }
+              const price = data?.orderSnippet?.listing?.orderItem?.startPriceEth ?? 0;
+              // setPrice(`${price}`);
+              // addCartItem...
+              if (price) {
+                // Buy a listing
+                // setIsBuyClicked(true); // to add to cart as a Buy order. (see: useEffect)
+                const signedOBOrder = await fetchSignedOBOrder(data?.orderSnippet?.listing?.orderItem?.id ?? '');
+                if (signedOBOrder) {
+                  fulfillDrawerParams.addOrder(signedOBOrder);
+                  fulfillDrawerParams.setShowDrawer(true);
+                }
+              } else {
+                // Add a Buy order to cart (Make offer)
+                addCartItem({
+                  chainId: data?.chainId as ChainId,
+                  collectionName: data?.collectionName ?? '',
+                  collectionAddress: data?.tokenAddress ?? '',
+                  collectionImage: data?.cardImage ?? data?.image ?? '',
+                  collectionSlug: data?.collectionSlug ?? '',
+                  tokenImage: data?.image ?? '',
+                  tokenName: data?.name ?? '',
+                  tokenId: data?.tokenId ?? '-1',
+                  isSellOrder: false,
+                  attributes: data?.attributes ?? []
+                });
+              }
+            }
+          }
+        ]
+      }}
+    />
+  );
+
+  const table = (
+    <table className="mt-8">
+      <thead>
+        <tr className="text-gray-400">
+          <th className="text-left font-medium font-heading">Items</th>
+          <th className="text-left font-medium font-heading">Owned by</th>
+          <th className="text-left font-medium font-heading">Floor price</th>
+          <th className="text-left font-medium font-heading">Volume traded</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr className="font-bold font-heading text-2xl">
+          <td className="pr-20">{nFormatter(firstAllTimeStats?.numNfts ?? currentStats?.numNfts) ?? '—'}</td>
+          <td className="pr-20">{nFormatter(firstAllTimeStats?.numOwners ?? currentStats?.numOwners) ?? '—'}</td>
+          <td className="pr-20">
+            {currentStats?.floorPrice ? (
+              <EthPrice label={`${nFormatter(currentStats?.floorPrice)}`} labelClassName="font-bold" />
+            ) : (
+              '—'
+            )}
+          </td>
+          <td className="pr-20">
+            {firstAllTimeStats?.volume ? (
+              <EthPrice
+                label={`${nFormatter(firstAllTimeStats?.volume ?? currentStats?.volume)}`}
+                labelClassName="font-bold"
+              />
+            ) : (
+              '—'
+            )}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  );
+
+  const curateSection = (
+    <section className="mt-8 xl:mt-20 md:w-1/2 min-h-[280px] min-w-[28rem] max-h-[280px] max-w-[28rem]">
+      <div className={twMerge(standardCard, 'items-center space-y-8')}>
+        <Heading as="h2" className="font-body text-3xl font-medium">
+          Curate this collection
+        </Heading>
+        <FeesAprStats value={nFormatter(round(curatedCollection?.feesAPR || 0, 3)) ?? 0} className="mr-8" />
+        <FeesAccruedStats value={nFormatter(round(curatedCollection?.fees || 0, 3)) ?? 0} />
+        <div className="flex flex-row space-x-2 relative">
+          <VoteProgressBar
+            votes={curatedCollection?.curator?.votes || 0}
+            totalVotes={curatedCollection?.numCuratorVotes || 0}
+            className="max-w-[25rem] bg-white"
+          />
+        </div>
+        <Button onClick={() => checkSignedIn() && setIsStakeModalOpen(true)}>Vote</Button>
+      </div>
+      {curatedCollection && (
+        <VoteModal
+          collection={{
+            ...collection,
+            ...collection.metadata,
+            ...curatedCollection
+          }}
+          isOpen={isStakeModalOpen}
+          onClose={() => setIsStakeModalOpen(false)}
+        />
+      )}
+    </section>
+  );
+
+  const head = (
+    <Head>
+      <meta property="og:title" content={collection.metadata?.name} />
+      <meta property="og:type" content="website" />
+      <meta property="og:url" content={`https://infinity.xyz/collection/${collection.metadata?.name}`} />
+      <meta property="og:site_name" content="infinity.xyz" />
+      <meta property="og:image" content={collection.metadata?.bannerImage || collection.metadata?.profileImage} />
+      <meta property="og:image:alt" content={collection.metadata?.description} />
+      <meta property="og:description" content={collection.metadata?.description} />
+
+      <meta name="theme-color" content="#000000" />
+
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:site" content="@infinitydotxyz" />
+      <meta name="twitter:title" content={collection.metadata?.name} />
+      <meta name="twitter:description" content={collection.metadata?.description} />
+      <meta name="twitter:image" content={collection.metadata?.bannerImage || collection.metadata?.profileImage} />
+      <meta property="twitter:image:alt" content={collection.metadata?.description} />
+      <meta property="twitter:creator" content={collection.metadata?.links?.twitter} />
+    </Head>
+  );
+
   return (
     <PageBox showTitle={false} title={collection.metadata?.name ?? ''}>
-      <Head>
-        <meta property="og:title" content={collection.metadata?.name} />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content={`https://infinity.xyz/collection/${collection.metadata?.name}`} />
-        <meta property="og:site_name" content="infinity.xyz" />
-        <meta property="og:image" content={collection.metadata?.bannerImage || collection.metadata?.profileImage} />
-        <meta property="og:image:alt" content={collection.metadata?.description} />
-        <meta property="og:description" content={collection.metadata?.description} />
-
-        <meta name="theme-color" content="#000000" />
-
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:site" content="@infinitydotxyz" />
-        <meta name="twitter:title" content={collection.metadata?.name} />
-        <meta name="twitter:description" content={collection.metadata?.description} />
-        <meta name="twitter:image" content={collection.metadata?.bannerImage || collection.metadata?.profileImage} />
-        <meta property="twitter:image:alt" content={collection.metadata?.description} />
-        <meta property="twitter:creator" content={collection.metadata?.links?.twitter} />
-      </Head>
-
+      {head}
       <div className="flex flex-col mt-10">
         <span>
           <AvatarImage url={collection.metadata?.profileImage} className="mb-2" />
@@ -327,70 +465,9 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
                   </div>
                 </div>
               )}
-              <table className="mt-8">
-                <thead>
-                  <tr className="text-gray-400">
-                    <th className="text-left font-medium font-heading">Items</th>
-                    <th className="text-left font-medium font-heading">Owned by</th>
-                    <th className="text-left font-medium font-heading">Floor price</th>
-                    <th className="text-left font-medium font-heading">Volume traded</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="font-bold font-heading text-2xl">
-                    <td className="pr-20">{nFormatter(firstAllTimeStats?.numNfts ?? currentStats?.numNfts) ?? '—'}</td>
-                    <td className="pr-20">
-                      {nFormatter(firstAllTimeStats?.numOwners ?? currentStats?.numOwners) ?? '—'}
-                    </td>
-                    <td className="pr-20">
-                      {currentStats?.floorPrice ? (
-                        <EthPrice label={`${nFormatter(currentStats?.floorPrice)}`} labelClassName="font-bold" />
-                      ) : (
-                        '—'
-                      )}
-                    </td>
-                    <td className="pr-20">
-                      {firstAllTimeStats?.volume ? (
-                        <EthPrice
-                          label={`${nFormatter(firstAllTimeStats?.volume ?? currentStats?.volume)}`}
-                          labelClassName="font-bold"
-                        />
-                      ) : (
-                        '—'
-                      )}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              {table}
             </section>
-            <section className="mt-8 xl:mt-20 md:w-1/2 min-h-[280px] min-w-[28rem] max-h-[280px] max-w-[28rem]">
-              <div className={twMerge(standardCard, 'items-center space-y-8')}>
-                <Heading as="h2" className="font-body text-3xl font-medium">
-                  Curate this collection
-                </Heading>
-                <FeesAprStats value={nFormatter(round(curatedCollection?.feesAPR || 0, 3)) ?? 0} className="mr-8" />
-                <FeesAccruedStats value={nFormatter(round(curatedCollection?.fees || 0, 3)) ?? 0} />
-                <div className="flex flex-row space-x-2 relative">
-                  <VoteProgressBar
-                    votes={curatedCollection?.curator?.votes || 0}
-                    totalVotes={curatedCollection?.numCuratorVotes || 0}
-                    className="max-w-[25rem] bg-white"
-                  />
-                </div>
-                <Button onClick={() => checkSignedIn() && setIsStakeModalOpen(true)}>Vote</Button>
-              </div>
-              {curatedCollection && (
-                <VoteModal
-                  collection={{
-                    ...collection,
-                    ...collection.metadata,
-                    ...curatedCollection
-                  }}
-                  isOpen={isStakeModalOpen}
-                  onClose={() => setIsStakeModalOpen(false)}
-                />
-              )}
-            </section>
+            {curateSection}
           </div>
           <section>
             <ToggleTab
@@ -400,73 +477,7 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
               onChange={onChange}
             />
             <div className="mt-6">
-              {selected === 'NFTs' && collection && (
-                <GalleryBox
-                  pageId="COLLECTION"
-                  getEndpoint={`/collections/${collection.chainId}:${collection.address}/nfts`}
-                  collection={collection}
-                  showNftSearch={true}
-                  collectionAttributes={collectionAttributes || undefined}
-                  cardProps={{
-                    cardActions: [
-                      {
-                        label: (data) => {
-                          const price = data?.orderSnippet?.listing?.orderItem?.startPriceEth ?? '';
-                          if (price) {
-                            return (
-                              <div className="flex justify-center">
-                                <span className="mr-4 font-normal">Buy</span>
-                                <EthPrice label={`${price}`} />
-                              </div>
-                            );
-                          }
-                          if (isAlreadyAdded(data)) {
-                            return <div className="font-normal">✓ Added</div>;
-                          }
-                          return <div className="font-normal">Add to order</div>;
-                        },
-                        onClick: async (ev, data) => {
-                          if (!checkSignedIn()) {
-                            return;
-                          }
-                          if (isAlreadyAdded(data)) {
-                            findAndRemove(data);
-                            return;
-                          }
-                          const price = data?.orderSnippet?.listing?.orderItem?.startPriceEth ?? 0;
-                          // setPrice(`${price}`);
-                          // addCartItem...
-                          if (price) {
-                            // Buy a listing
-                            // setIsBuyClicked(true); // to add to cart as a Buy order. (see: useEffect)
-                            const signedOBOrder = await fetchSignedOBOrder(
-                              data?.orderSnippet?.listing?.orderItem?.id ?? ''
-                            );
-                            if (signedOBOrder) {
-                              fulfillDrawerParams.addOrder(signedOBOrder);
-                              fulfillDrawerParams.setShowDrawer(true);
-                            }
-                          } else {
-                            // Add a Buy order to cart (Make offer)
-                            addCartItem({
-                              chainId: data?.chainId as ChainId,
-                              collectionName: data?.collectionName ?? '',
-                              collectionAddress: data?.tokenAddress ?? '',
-                              collectionImage: data?.cardImage ?? data?.image ?? '',
-                              collectionSlug: data?.collectionSlug ?? '',
-                              tokenImage: data?.image ?? '',
-                              tokenName: data?.name ?? '',
-                              tokenId: data?.tokenId ?? '-1',
-                              isSellOrder: false,
-                              attributes: data?.attributes ?? []
-                            });
-                          }
-                        }
-                      }
-                    ]
-                  }}
-                />
-              )}
+              {selected === 'NFTs' && collection && nfts}
               {selected === 'Orders' && (
                 <OrderbookContainer collectionId={collection.address} className="mt-[-70px] pointer-events-none" />
               )}

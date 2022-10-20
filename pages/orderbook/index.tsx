@@ -8,11 +8,7 @@ import { isProd } from 'src/utils';
 const OrderbookPage = () => {
   const router = useRouter();
 
-  let tabs = ['List view', 'Graph view'];
-
-  if (!isProd()) {
-    tabs = ['List view', 'Graph view', 'Reservoir'];
-  }
+  const tabs = isProd() ? ['List view', 'Graph view'] : ['List view', 'Graph view', 'Reservoir'];
 
   const { options, onChange, selected } = useToggleTab(tabs, (router?.query?.tab as string) || 'List view');
 
