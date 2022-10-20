@@ -1,7 +1,7 @@
 import { BaseCollection, CollectionAttributes, ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { defaultFilter, useFilterContext } from 'src/utils/context/FilterContext';
-import { Button, Card, CardProps, ErrorOrLoading, ScrollLoader } from 'src/components/common';
+import { Button, CardProps, ErrorOrLoading } from 'src/components/common';
 import { FilterPanel } from '../filter/filter-panel';
 import { GallerySort } from './gallery-sort';
 import { twMerge } from 'tailwind-merge';
@@ -11,6 +11,7 @@ import { useIsMounted } from 'src/hooks/useIsMounted';
 import { TokenFetcher, TokenFetcherCache } from './token-fetcher';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { CollectionNftSearchInput } from '../common/search/collection-nft-search-input';
+import { CardGrid } from './card-grid';
 
 interface Props {
   collection?: BaseCollection | null;
@@ -170,57 +171,6 @@ export const GalleryBox = ({
 
         {contents}
       </div>
-    </div>
-  );
-};
-
-// ====================================================================
-
-interface Props2 {
-  cardData: ERC721CardData[];
-  paddedImages: boolean;
-  hasNextPage: boolean;
-  width: number;
-  cardProps?: CardProps;
-  handleFetch: (loadMore: boolean) => void;
-}
-
-const CardGrid = ({ cardData, width, hasNextPage, cardProps, paddedImages, handleFetch }: Props2) => {
-  let gridColumns = 'grid-cols-2';
-  let cardHeight = 310;
-
-  if (width > 0) {
-    const cols = Math.round(width / cardHeight);
-    gridColumns = `repeat(${cols}, minmax(0, 1fr))`;
-
-    const w = width / cols;
-    cardHeight = w * 1.2;
-  }
-
-  return (
-    <div
-      className={twMerge('w-full flex-1 grid gap-12 pointer-events-none')}
-      style={{ gridTemplateColumns: gridColumns }}
-    >
-      {cardData.map((item, idx) => {
-        return (
-          <Card
-            key={`${item.address}_${item.tokenId}_${idx}`}
-            height={cardHeight}
-            data={item}
-            {...cardProps}
-            paddedImages={paddedImages}
-          />
-        );
-      })}
-
-      {hasNextPage && (
-        <ScrollLoader
-          onFetchMore={() => {
-            handleFetch(true);
-          }}
-        />
-      )}
     </div>
   );
 };
