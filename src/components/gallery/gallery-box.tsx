@@ -1,7 +1,8 @@
 import { BaseCollection, CollectionAttributes, ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { defaultFilter, useFilterContext } from 'src/utils/context/FilterContext';
-import { Button, CardProps, ErrorOrLoading } from 'src/components/common';
+import { Button, ErrorOrLoading } from 'src/components/common';
+import { CardProps } from 'src/components/token-card/card';
 import { FilterPanel } from '../filter/filter-panel';
 import { GallerySort } from './gallery-sort';
 import { twMerge } from 'tailwind-merge';
@@ -11,7 +12,7 @@ import { useIsMounted } from 'src/hooks/useIsMounted';
 import { TokenFetcher, TokenFetcherCache } from './token-fetcher';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { CollectionNftSearchInput } from '../common/search/collection-nft-search-input';
-import { CardGrid } from './card-grid';
+import { CardGrid } from '../token-card/card-grid';
 
 interface Props {
   collection?: BaseCollection | null;

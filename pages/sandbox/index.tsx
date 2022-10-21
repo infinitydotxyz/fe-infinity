@@ -2,6 +2,7 @@ import { EventType, EventTypeNames } from '@infinityxyz/lib-frontend/types/core/
 import { ReactNode, useState } from 'react';
 import { FaTwitter, FaFacebook, FaEdit } from 'react-icons/fa';
 import { RemoveIcon } from 'src/components/collection/edit/remove-icon';
+import { Card } from 'src/components/token-card/card';
 import {
   Button,
   CurrencyInput,
@@ -13,7 +14,6 @@ import {
   ToggleTab,
   useToggleTab,
   PageBox,
-  Card,
   toastError,
   toastSuccess,
   toastWarning,

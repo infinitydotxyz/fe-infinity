@@ -1,5 +1,6 @@
 import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
-import { Card, CardProps, ScrollLoader } from 'src/components/common';
+import { ScrollLoader } from 'src/components/common';
+import { Card, CardProps } from './card';
 import { twMerge } from 'tailwind-merge';
 
 interface Props {

@@ -1,10 +1,11 @@
 import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
-import { CardProps, ErrorOrLoading } from 'src/components/common';
+import { ErrorOrLoading } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 import { useResizeDetector } from 'react-resize-detector';
 import { CardGrid } from './card-grid';
 import { ReservoirProvider, useReservoir } from './reservoir-context';
+import { CardProps } from './card';
 
 interface Props {
   collection: BaseCollection;
