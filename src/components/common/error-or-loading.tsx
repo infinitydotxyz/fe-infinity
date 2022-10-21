@@ -1,13 +1,14 @@
-import { CenteredContent } from './centered-content';
+import { CenteredContent, CenterFixed } from './centered-content';
 import { Spinner } from './spinner';
 
 interface Props2 {
   error: boolean;
   noData: boolean;
   message?: string;
+  fixed?: boolean;
 }
 
-export const ErrorOrLoading = ({ error, noData, message = 'Nothing found' }: Props2) => {
+export const ErrorOrLoading = ({ error, noData, message = 'Nothing found', fixed = false }: Props2) => {
   let contents;
 
   if (error) {
@@ -18,6 +19,14 @@ export const ErrorOrLoading = ({ error, noData, message = 'Nothing found' }: Pro
     } else {
       contents = <Spinner />;
     }
+  }
+
+  if (fixed) {
+    return (
+      <div className="h-full w-full dark:text-dark-body text-light-body text-xl">
+        <CenterFixed>{contents}</CenterFixed>
+      </div>
+    );
   }
 
   return (

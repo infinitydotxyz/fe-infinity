@@ -10,6 +10,7 @@ import {
   BlueCheck,
   Button,
   CenteredContent,
+  ErrorOrLoading,
   EthPrice,
   NextLink,
   PageBox,
@@ -151,8 +152,9 @@ const AssetDetailContent = ({ chainId, collectionAddress, tokenId }: Props) => {
     return <NotFound404Page />;
   }
 
-  if (!token) {
-    return null;
+  if (!token || !token.metadata) {
+    // the BE might have to index an NFT, so the first load will fail
+    return <ErrorOrLoading fixed={true} error={false} noData={true} message="Not found. Try refreshing the browser." />;
   }
 
   const tokenMetadata = token.metadata as Erc721Metadata;
