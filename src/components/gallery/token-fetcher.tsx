@@ -1,4 +1,4 @@
-import { ERC721CardData, Erc721Token, OrdersSnippet } from '@infinityxyz/lib-frontend/types/core';
+import { BaseToken, ERC721CardData, Erc721Token, OrdersSnippet } from '@infinityxyz/lib-frontend/types/core';
 import { ITEMS_PER_PAGE } from 'src/utils/constants';
 import { Filter } from 'src/utils/context/FilterContext';
 import { ApiResponse, apiGet } from 'src/utils/apiUtils';
@@ -181,14 +181,18 @@ export const nftsToCardData = (
   collectionName: string
 ): ERC721CardData[] => {
   let result: ERC721CardData[] = (tokens || []).map((item: ApiNftData) => {
-    return {
+    const image =
+      item?.image?.url || item?.alchemyCachedImage || item?.image?.originalUrl || item?.zoraImage?.url || '';
+
+    const result: ERC721CardData = {
       id: collectionAddress + '_' + item.tokenId,
       name: item.metadata?.name ?? item.metadata?.title,
       title: item.collectionName ?? collectionName,
       collectionName: item.collectionName ?? collectionName,
       collectionSlug: item.collectionSlug ?? '',
       description: item.metadata?.description ?? '',
-      image: item?.image?.url || item?.alchemyCachedImage || item?.image?.originalUrl || '',
+      image: image,
+      isVideo: isVideoNft(item),
       price: item?.orderSnippet?.listing?.orderItem?.startPriceEth ?? 0,
       chainId: item.chainId,
       tokenAddress: item.collectionAddress ?? collectionAddress,
@@ -198,7 +202,9 @@ export const nftsToCardData = (
       orderSnippet: item.ordersSnippet,
       hasBlueCheck: item.hasBlueCheck ?? false,
       attributes: item.metadata?.attributes ?? []
-    } as ERC721CardData;
+    };
+
+    return result;
   });
 
   // remove any with blank images
@@ -207,4 +213,9 @@ export const nftsToCardData = (
   });
 
   return result;
+};
+
+export const isVideoNft = (token: BaseToken) => {
+  // could also check image extension?
+  return token.zoraImage?.mimeType === 'video/mp4';
 };

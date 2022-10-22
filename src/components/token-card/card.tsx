@@ -78,6 +78,14 @@ export const Card = ({
     // return <LoadingCard className={className} />;
   }
 
+  let image = (
+    <EZImage src={data?.image} className="group-hover:scale-[1.15] transition-all duration-300" cover={!paddedImages} />
+  );
+
+  if (data?.isVideo) {
+    image = <video loop controls src={data?.image}></video>;
+  }
+
   const heightStyle = `${height}px`;
   return (
     <div
@@ -91,11 +99,7 @@ export const Card = ({
         href={`/asset/${data?.chainId}/${data?.tokenAddress ?? data?.address}/${data?.tokenId}`}
         className="h-full overflow-clip rounded-3xl"
       >
-        <EZImage
-          src={data?.image}
-          className="group-hover:scale-[1.15] transition-all duration-300"
-          cover={!paddedImages}
-        />
+        {image}
       </NextLink>
 
       {/* {data?.rarityRank && (
