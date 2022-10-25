@@ -11,15 +11,13 @@ import { FeesAprStats, FeesAccruedStats } from './statistics';
 import { StakeTokensButton } from './vote-modal';
 
 interface Props {
-  curatedCollections: (CuratedCollectionDto | UserCuratedCollectionDto)[][];
+  curatedCollections: (CuratedCollectionDto | UserCuratedCollectionDto)[];
   isReadOnly?: boolean;
 }
 
-export const CurationTable: React.FC<Props> = ({ curatedCollections: curatedCollectionsArray, isReadOnly = false }) => {
+export const CurationTable: React.FC<Props> = ({ curatedCollections, isReadOnly = false }) => {
   const router = useRouter();
   const { result: quota } = useUserCurationQuota();
-
-  const curatedCollections = curatedCollectionsArray?.flat();
 
   return (
     <div className="space-y-3">

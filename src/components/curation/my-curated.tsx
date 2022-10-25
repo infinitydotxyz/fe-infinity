@@ -16,7 +16,7 @@ export const MyCuratedCollections: React.FC<MyCuratedCollectionsProps> = ({ orde
   const { user, chainId } = useOnboardContext();
 
   const { result, setSize, error, isLoading } = useFetchInfinite<CuratedCollectionsDto>(
-    user?.address ? `/user/${chainId}:${user.address}/curated` : null,
+    user?.address ? `/user/${chainId}:${user.address}/curated` : null, // TODO refactor
     {
       query: {
         orderBy: order.orderBy,
@@ -39,7 +39,7 @@ export const MyCuratedCollections: React.FC<MyCuratedCollectionsProps> = ({ orde
       {error && <div className="flex flex-col mt-10">Unable to load curated collections.</div>}
 
       {result && result[0].data?.length > 0 && (
-        <CurationTable curatedCollections={result?.map((result) => result.data)} />
+        <CurationTable curatedCollections={result?.map((result) => result.data).flat()} />
       )}
 
       {result && result[0].data?.length === 0 && (

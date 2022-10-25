@@ -74,7 +74,7 @@ export const UserPageCuratedTab: React.FC<{ userInfo: UserProfileDto }> = ({ use
         {error ? <div className="flex flex-col mt-10">Unable to load this users' curated collections.</div> : null}
 
         {result && result[0].data?.length > 0 && (
-          <CurationTable curatedCollections={result?.map((result) => result.data)} isReadOnly />
+          <CurationTable curatedCollections={result?.map((result) => result.data).flat()} isReadOnly />
         )}
 
         {result && result[0].data?.length === 0 && (
