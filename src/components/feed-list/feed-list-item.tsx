@@ -1,7 +1,7 @@
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { BsChatRight, BsStarFill } from 'react-icons/bs';
 import { TbArrowBarUp } from 'react-icons/tb';
-import { BlueCheck, Button, ExternalLink, EZImage, NextLink, Spacer } from 'src/components/common';
+import { BlueCheck, Button, ExternalLink, EZImage, NextLink, SimpleTooltip, Spacer } from 'src/components/common';
 import { NftEventRec } from '../asset/activity/activity-item';
 import { addUserLike } from 'src/utils/firestore/firestoreUtils';
 import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io';
@@ -32,21 +32,25 @@ export const FeedListItem = ({
   const [likedCache, setLikedCache] = useState<Map<string, boolean>>(new Map());
 
   const typeName = (activity: NftEventRec) => {
-    const classes = 'rounded-md text-white px-3 w-32 text-center text-sm';
+    const classes = 'rounded-md text-white px-3 py-0.5 w-32 text-center text-sm';
 
     let rightSide = <></>;
     if (activity.source === SaleSource.Infinity) {
-      rightSide = <BsStarFill className="ml-2 h-3 w-3 text-white text-opacity-60" />;
+      rightSide = (
+        <SimpleTooltip tooltip={{ title: 'Sold', content: 'on Infinity marketplace' }}>
+          <BsStarFill className="h-3 w-3 text-white text-opacity-70" />
+        </SimpleTooltip>
+      );
     }
 
     const component = (color: string, label: string) => {
       return (
         <div
           onClick={() => console.log(JSON.stringify(activity, null, 2))}
-          className={twMerge(classes, color, 'flex justify-center items-center bg-opacity-80')}
+          className={twMerge(classes, color, 'relative flex justify-center items-center bg-opacity-80')}
         >
           <div>{label}</div>
-          <div>{rightSide}</div>
+          <div className="absolute right-2">{rightSide}</div>
         </div>
       );
     };
