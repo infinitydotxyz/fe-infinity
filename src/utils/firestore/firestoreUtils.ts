@@ -18,6 +18,7 @@ import { firestoreConstants } from '@infinityxyz/lib-frontend/utils';
 import { increaseComments } from './counterUtils';
 import { firestoreConfig } from './creds';
 import { apiPost } from '../apiUtils';
+import { SaleSource } from '@infinityxyz/lib-frontend/types/core';
 
 interface IncrementQuery {
   liked: boolean;
@@ -33,6 +34,7 @@ export type FeedFilter = {
   collectionAddress?: string;
   tokenId?: string;
   userAddress?: string;
+  source?: SaleSource;
 };
 
 export type Comment = {

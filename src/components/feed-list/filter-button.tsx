@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
 import { FeedFilterDropdown } from '../feed/feed-filter-dropdown';
+import { SaleSource } from '@infinityxyz/lib-frontend/types/core';
 
 interface Props {
   filter: FeedFilter;
@@ -43,6 +44,16 @@ export const FilterButton = ({ onChange, filter, className = '' }: Props) => {
   return (
     <div className={className}>
       <FeedFilterDropdown
+        optionInfinityOnly={filter.source === SaleSource.Infinity}
+        onOptionChange={(checked: boolean, checkId: string) => {
+          if (checkId === 'infinityOnly') {
+            const newFilter = { ...filter };
+
+            newFilter.source = checked ? SaleSource.Infinity : undefined;
+
+            onChange(newFilter);
+          }
+        }}
         options={[
           {
             label: 'All',

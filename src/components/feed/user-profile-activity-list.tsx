@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
 import { EventType, UserFeedEvent } from '@infinityxyz/lib-frontend/types/core/feed';
-import { FEED_FILTER_DEFAULT_OPTIONS, FeedFilterDropdown } from './feed-filter-dropdown';
+import { FeedFilterDropdown } from './feed-filter-dropdown';
 import { CenteredContent, ScrollLoader, Spinner } from '../common';
 import { useUserActivity } from 'src/hooks/api/useUserActivity';
 import { NftOrderEvent } from './user-feed-events/nft-order-event';
@@ -51,11 +51,7 @@ export const UserProfileActivityList = ({ userAddress, types, className }: UserP
   return (
     <div className={twMerge('min-h-[50vh]', negativeMargin, className)}>
       <div className="flex flex-row-reverse mb-8 bg-transparent">
-        <FeedFilterDropdown
-          selectedTypes={filteringTypes}
-          onChange={onChangeFilterDropdown}
-          options={FEED_FILTER_DEFAULT_OPTIONS}
-        />
+        <FeedFilterDropdown selectedTypes={filteringTypes} onChange={onChangeFilterDropdown} />
       </div>
 
       <div className="space-y-3 pointer-events-auto">

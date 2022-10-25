@@ -53,7 +53,8 @@ export const FeedList = ({
         query: {
           limit: 20,
           eventType: getTypesForFilter(filter),
-          cursor: fromCursor
+          cursor: fromCursor,
+          source: filter.source
         }
       });
 
