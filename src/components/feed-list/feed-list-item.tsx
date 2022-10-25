@@ -1,7 +1,7 @@
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
-import { BsChatRight } from 'react-icons/bs';
+import { BsChatRight, BsStarFill } from 'react-icons/bs';
 import { TbArrowBarUp } from 'react-icons/tb';
-import { BlueCheck, Button, ExternalLink, EZImage, NextLink, Spacer } from 'src/components/common';
+import { BlueCheck, Button, ExternalLink, EZImage, NextLink, SimpleTooltip, Spacer } from 'src/components/common';
 import { NftEventRec } from '../asset/activity/activity-item';
 import { addUserLike } from 'src/utils/firestore/firestoreUtils';
 import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io';
@@ -11,6 +11,7 @@ import { timeAgo } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { twMerge } from 'tailwind-merge';
 import person from 'src/images/person.png';
+import { SaleSource } from '@infinityxyz/lib-frontend/types/core';
 
 interface Props {
   activity: NftEventRec;
@@ -30,21 +31,31 @@ export const FeedListItem = ({
   const { user } = useOnboardContext();
   const [likedCache, setLikedCache] = useState<Map<string, boolean>>(new Map());
 
-  const typeName = (type: string) => {
-    const classes = 'rounded-md text-white px-3 w-32 text-center text-sm';
+  const typeName = (activity: NftEventRec) => {
+    const classes = 'rounded-md text-white px-3 py-0.5 w-32 text-center text-sm';
+
+    let rightSide = <></>;
+    if (activity.source === SaleSource.Infinity) {
+      rightSide = (
+        <SimpleTooltip tooltip={{ title: 'Sold', content: 'on Infinity marketplace' }}>
+          <BsStarFill className="h-3 w-3 text-white text-opacity-70" />
+        </SimpleTooltip>
+      );
+    }
 
     const component = (color: string, label: string) => {
       return (
         <div
           onClick={() => console.log(JSON.stringify(activity, null, 2))}
-          className={twMerge(classes, color, 'bg-opacity-80')}
+          className={twMerge(classes, color, 'relative flex justify-center items-center bg-opacity-80')}
         >
-          {label}
+          <div>{label}</div>
+          <div className="absolute right-2">{rightSide}</div>
         </div>
       );
     };
 
-    switch (type) {
+    switch (activity.type) {
       case EventType.TwitterTweet:
         return component('bg-amber-600', 'Tweet');
       case EventType.DiscordAnnouncement:
@@ -68,7 +79,7 @@ export const FeedListItem = ({
       case EventType.UserVoteRemoved:
       case EventType.TokensRageQuit:
       default:
-        return component('bg-red-700', type);
+        return component('bg-red-700', activity.type);
     }
   };
 
@@ -302,7 +313,7 @@ export const FeedListItem = ({
         <div className="flex items-center">
           {header()}
           <Spacer />
-          <div className="text-gray-500 flex text-sm  ">{typeName(activity.type)}</div>
+          <div className="text-gray-500 flex text-sm  ">{typeName(activity)}</div>
         </div>
 
         <div className="mt-4">

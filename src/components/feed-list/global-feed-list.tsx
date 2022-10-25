@@ -30,7 +30,8 @@ export const GlobalFeedList = ({ types, className = '', compact = false }: Props
         query: {
           limit: compact ? 5 : 20,
           eventType: getTypesForFilter(filter),
-          cursor: fromCursor
+          cursor: fromCursor,
+          source: filter.source
         }
       });
 

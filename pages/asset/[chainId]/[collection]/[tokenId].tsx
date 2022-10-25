@@ -10,7 +10,9 @@ import {
   BlueCheck,
   Button,
   CenteredContent,
+  ErrorOrLoading,
   EthPrice,
+  EZImage,
   NextLink,
   PageBox,
   ReadMoreText,
@@ -21,6 +23,7 @@ import {
   ToggleTab,
   useToggleTab
 } from 'src/components/common';
+import { isVideoNft } from 'src/components/gallery/token-fetcher';
 import { WaitingForTxModal } from 'src/components/orderbook/order-drawer/waiting-for-tx-modal';
 import { OrderbookContainer } from 'src/components/orderbook/orderbook-list';
 import { useSaveReferral } from 'src/hooks/api/useSaveReferral';
@@ -151,8 +154,9 @@ const AssetDetailContent = ({ chainId, collectionAddress, tokenId }: Props) => {
     return <NotFound404Page />;
   }
 
-  if (!token) {
-    return null;
+  if (!token || !token.metadata) {
+    // the BE might have to index an NFT, so the first load will fail
+    return <ErrorOrLoading fixed={true} error={false} noData={true} message="Not found. Try refreshing the browser." />;
   }
 
   const tokenMetadata = token.metadata as Erc721Metadata;
@@ -270,12 +274,17 @@ const AssetDetailContent = ({ chainId, collectionAddress, tokenId }: Props) => {
     </>
   );
 
+  const imageClass = 'rounded-3xl overflow-clip w-80 mx-auto sm:w-96 md:w-96 lg:w-144';
+  let image = <EZImage src={imgUrl} className={imageClass} />;
+
+  if (isVideoNft(token)) {
+    image = <video loop controls src={imgUrl} className={imageClass}></video>;
+  }
+
   return (
     <PageBox title={assetName} showTitle={false} className="flex flex-col max-w-screen-2xl mt-4">
       <div className="sm:flex">
-        <div className="min-h-12 w-80 mx-auto sm:w-96 md:w-96 lg:w-144 sm:mr-6 md:mr-8 lg:mr-12 mb-4">
-          <img className="rounded-3xl w-80 mx-auto sm:w-96 md:w-96 lg:w-144" src={imgUrl} alt={assetName} />
-        </div>
+        <div className="min-h-12 w-80 mx-auto sm:w-96 md:w-96 lg:w-144 sm:mr-6 md:mr-8 lg:mr-12 mb-4">{image}</div>
         <div className="flex-1">
           <h3 className="text-black font-body text-2xl font-bold leading-normal tracking-wide pb-1">
             {tokenMetadata.name ? tokenMetadata.name : `${token.collectionName} #${token.tokenId}`}

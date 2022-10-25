@@ -1,16 +1,16 @@
 import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { ReactNode } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { Button } from './button';
-import { Dropdown, DropdownItem } from './dropdown';
-import { NextLink } from './next-link';
+import { Button } from '../common/button';
+import { Dropdown, DropdownItem } from '../common/dropdown';
+import { NextLink } from '../common/next-link';
 import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { useRouter } from 'next/router';
 import { MdMoreVert } from 'react-icons/md';
 import { ellipsisAddress, ENS_ADDRESS } from 'src/utils';
 import { inputBorderColor } from 'src/utils/ui-constants';
-import { EZImage } from './ez-image';
-import { BlueCheck } from './blue-check';
+import { EZImage } from '../common/ez-image';
+import { BlueCheck } from '../common/blue-check';
 
 type labelFn = (data?: ERC721CardData) => ReactNode;
 
@@ -78,6 +78,14 @@ export const Card = ({
     // return <LoadingCard className={className} />;
   }
 
+  let image = (
+    <EZImage src={data?.image} className="group-hover:scale-[1.15] transition-all duration-300" cover={!paddedImages} />
+  );
+
+  if (data?.isVideo) {
+    image = <video loop controls src={data?.image}></video>;
+  }
+
   const heightStyle = `${height}px`;
   return (
     <div
@@ -91,11 +99,7 @@ export const Card = ({
         href={`/asset/${data?.chainId}/${data?.tokenAddress ?? data?.address}/${data?.tokenId}`}
         className="h-full overflow-clip rounded-3xl"
       >
-        <EZImage
-          src={data?.image}
-          className="group-hover:scale-[1.15] transition-all duration-300"
-          cover={!paddedImages}
-        />
+        {image}
       </NextLink>
 
       {/* {data?.rarityRank && (

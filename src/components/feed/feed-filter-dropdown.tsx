@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
-import { Checkbox, PopoverButton } from '../common';
+import { Checkbox, Divider, PopoverButton } from '../common';
 
 type FilterOption = {
   label: string;
@@ -13,6 +13,8 @@ export type EventTypeOption = EventType | '';
 interface FeedFilterDropdownProps {
   selectedTypes: Array<EventTypeOption>;
   onChange: (checked: boolean, checkId: string) => void;
+  onOptionChange?: (checked: boolean, checkId: string) => void;
+  optionInfinityOnly?: boolean;
   options?: FilterOption[];
   autoCheckAll?: boolean;
 }
@@ -64,6 +66,8 @@ export const FeedFilterDropdown: React.FC<FeedFilterDropdownProps> = ({
   options,
   selectedTypes,
   onChange,
+  onOptionChange,
+  optionInfinityOnly,
   autoCheckAll = true
 }) => {
   const filterOptions = options ?? FEED_FILTER_DEFAULT_OPTIONS;
@@ -88,6 +92,24 @@ export const FeedFilterDropdown: React.FC<FeedFilterDropdownProps> = ({
           />
         );
       })}
+
+      {onOptionChange && (
+        <>
+          <Divider />
+          <Checkbox
+            className="pointer-events-auto"
+            boxOnLeft={false}
+            key="infinityOnly"
+            label="Infinity sales only"
+            checked={optionInfinityOnly ?? false}
+            onChange={(checked) => {
+              if (onOptionChange) {
+                onOptionChange(checked, 'infinityOnly');
+              }
+            }}
+          />
+        </>
+      )}
     </PopoverButton>
   );
 };

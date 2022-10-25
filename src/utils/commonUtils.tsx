@@ -22,6 +22,10 @@ export const isLocalhost = () => !isServer() && (window?.location?.host || '').i
 
 export const isProd = () => process.env.NODE_ENV === 'production';
 
+export const cl = (data: unknown) => {
+  console.log(JSON.stringify(data, null, 2));
+};
+
 export const toChecksumAddress = (address?: string): string => {
   if (address) {
     let result = address;

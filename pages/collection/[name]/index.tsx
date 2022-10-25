@@ -46,7 +46,7 @@ import { UserCuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import { useSaveReferral } from 'src/hooks/api/useSaveReferral';
-import { ReservoirCards } from 'src/components/gallery/reservoir-card-grid';
+import { ReservoirCards } from 'src/components/token-card/reservoir-card-grid';
 
 const CollectionPage = ({ collection, error }: { collection?: BaseCollection; error?: Error }) => {
   /**

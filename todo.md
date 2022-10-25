@@ -36,3 +36,13 @@ https://github.com/remarkjs/remark/blob/main/doc/plugins.md#list-of-plugins
 > Contact us: contact@cluemediator.com > <br /> > <a href="https://www.cluemediator.com/subscribe">Subscribe Us</a> for
 > more updates.
 > </Linkify>
+
+global order book
+trending?
+top 5 collection and show orders for those collections
+
+logo for exchange. hold off.
+
+ico, one liner makes it clear what invinity is
+
+curation auto execution of orders
