@@ -4,6 +4,7 @@ import { stringify } from 'query-string';
 import { API_BASE } from './constants';
 import useSWRInfinite, { SWRInfiniteConfiguration, SWRInfiniteKeyLoader, SWRInfiniteResponse } from 'swr/infinite';
 import { OnboardAuthProvider } from './OnboardContext/OnboardAuthProvider';
+import { useState } from 'react';
 
 const HTTP_UNAUTHORIZED = 401;
 const HTTP_TOO_MANY_REQUESTS = 429;
@@ -166,6 +167,7 @@ interface useFetchParams {
 }
 export const useFetch = <T>(path: string | null, params: useFetchParams = {}) => {
   const queryStr = buildQueryString(params?.query);
+  const [isLoading, setIsLoading] = useState(false);
   const options = {
     errorRetryCount: 0,
     revalidateOnFocus: false,
@@ -173,12 +175,17 @@ export const useFetch = <T>(path: string | null, params: useFetchParams = {}) =>
   };
   const { data, error, mutate } = useSWR(
     path ? `${path}${queryStr}` : null,
-    (path) => swrFetch(path, params.apiParams),
+    (path) => {
+      setIsLoading(true);
+      return swrFetch(path as string, params.apiParams).finally(() => {
+        setIsLoading(false);
+      });
+    },
     options
   );
   return {
     result: error ? null : (data as T),
-    isLoading: !error && !data,
+    isLoading,
     isError: !!error,
     mutate,
     error
@@ -204,6 +211,8 @@ export const useFetchInfinite = <T, E = any>(
   path: string | null,
   params: UseFetchInfiniteParams
 ): UseFetchInfiniteResponse<T, E> => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const getKey: SWRInfiniteKeyLoader = (pageIndex, previousPageData) => {
     if (path === null) {
       return null;
@@ -226,13 +235,17 @@ export const useFetchInfinite = <T, E = any>(
   };
   const { data, error, ...props } = useSWRInfinite<T, E>(
     getKey,
-    (path) => swrFetch(path as string, params.apiParams),
+    (path) => {
+      setIsLoading(true);
+      return swrFetch(path as string, params.apiParams).finally(() => {
+        setIsLoading(false);
+      });
+    },
     options
   );
   return {
     result: error ? null : (data as T[]),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    isLoading: (!error && !data) || (data?.[data.length - 1] as any)?.hasNextPage,
+    isLoading,
     isError: !!error,
     error,
     ...props

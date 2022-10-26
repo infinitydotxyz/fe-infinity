@@ -3,9 +3,8 @@ import React, { useState } from 'react';
 import { Sort } from '../curation/sort';
 import { Divider, ScrollLoader, Spinner } from '../common';
 import { useCurationQuota } from 'src/hooks/api/useCurationQuota';
-import { CuratedCollectionsDto } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections.dto';
 import { useRouter } from 'next/router';
-import { nFormatter, useFetchInfinite } from 'src/utils';
+import { nFormatter } from 'src/utils';
 import { CurationTable } from '../curation/curations-table';
 import { NoResultsBox } from '../curation/no-results-box';
 import { CuratedTab } from '../curation/types';
@@ -15,6 +14,7 @@ import { twMerge } from 'tailwind-merge';
 import { negativeMargin } from 'src/utils/ui-constants';
 import { OrderDirection } from '@infinityxyz/lib-frontend/types/core';
 import { round } from '@infinityxyz/lib-frontend/utils';
+import { useUserCuratedCollections } from 'src/hooks/api/useUserCuratedCollections';
 
 const InfoBox: React.FC<{ title: string; subtitle: string | number }> = ({ title, subtitle }) => {
   return (
@@ -34,20 +34,16 @@ export const UserPageCuratedTab: React.FC<{ userInfo: UserProfileDto }> = ({ use
   });
   const { result: quota } = useCurationQuota(`${chainId}:${userInfo.address}`);
 
-  const { result, setSize, error, isLoading } = useFetchInfinite<CuratedCollectionsDto>(
-    `/user/${userInfo.address}/curated`,
+  const { result, error, fetchMore, isLoading } = useUserCuratedCollections(
     {
-      query: {
-        orderBy: order.orderBy,
-        orderDirection: order.direction,
-        limit: 10
-      },
-      apiParams: { requiresAuth: true }
-    }
+      orderBy: order.orderBy,
+      orderDirection: order.direction,
+      limit: 10
+    },
+    userInfo.address ?? ''
   );
-  const router = useRouter();
 
-  const fetchMore = () => setSize((size) => size + 1);
+  const router = useRouter();
 
   return (
     <div className={twMerge('min-h-[50vh]', negativeMargin)}>
@@ -73,11 +69,11 @@ export const UserPageCuratedTab: React.FC<{ userInfo: UserProfileDto }> = ({ use
       <div className="!pointer-events-auto">
         {error ? <div className="flex flex-col mt-10">Unable to load this users' curated collections.</div> : null}
 
-        {result && result[0].data?.length > 0 && (
-          <CurationTable curatedCollections={result?.map((result) => result.data)} isReadOnly />
+        {result && result?.length > 0 && (
+          <CurationTable curatedCollections={result?.map((result) => result)} isReadOnly />
         )}
 
-        {result && result[0].data?.length === 0 && (
+        {result && result.length === 0 && (
           <NoResultsBox onClick={() => router.push(`/curated?tab=${CuratedTab.AllCurated}`)}>
             This user hasn't curated any collections yet
           </NoResultsBox>
