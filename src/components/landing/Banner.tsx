@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '../common';
 
-export const Banner: React.FC = ({ children }) => {
+export const Banner: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [hidden, setHidden] = useState(false); // TODO: store in local storage?
 
   const hide = () => setHidden(true);

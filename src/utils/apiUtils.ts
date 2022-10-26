@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosRequestHeaders } from 'axios';
+import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, RawAxiosRequestHeaders } from 'axios';
 import useSWR, { SWRConfiguration } from 'swr';
 import { stringify } from 'query-string';
 import { API_BASE } from './constants';
@@ -47,7 +47,7 @@ const catchError = (err: any) => {
   return { error: errorData, status: err?.response?.status };
 };
 
-export const getAuthHeaders = (): AxiosRequestHeaders => {
+export const getAuthHeaders = (): RawAxiosRequestHeaders => {
   return OnboardAuthProvider.getAuthHeaders();
 };
 

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { LOGIN_NONCE_EXPIRY_TIME, trimLowerCase } from '@infinityxyz/lib-frontend/utils';
-import { AxiosRequestHeaders } from 'axios';
+import { RawAxiosRequestHeaders } from 'axios';
 import { Signature } from 'ethers';
 import { verifyMessage } from 'ethers/lib/utils';
 import { base64Encode, getLoginMessage } from '../commonUtils';
@@ -48,7 +48,7 @@ class _OnboardAuthProvider {
     }
   }
 
-  getAuthHeaders(): AxiosRequestHeaders {
+  getAuthHeaders(): RawAxiosRequestHeaders {
     if (this.isLoggedInAndAuthenticated()) {
       return {
         [StorageKeys.AuthNonce]: this.authNonce,

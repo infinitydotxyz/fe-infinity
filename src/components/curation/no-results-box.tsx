@@ -4,10 +4,11 @@ import { CuratedTab } from './types';
 export type NoResultsBoxProps = {
   tab?: CuratedTab;
   onClick: () => void;
+  children?: React.ReactNode;
 };
 
 /**
- * Component to render when no curations have been found.
+ * Component to render when no curated collections have been found.
  */
 export const NoResultsBox: React.FC<NoResultsBoxProps> = ({ tab, onClick, children }) => {
   return (

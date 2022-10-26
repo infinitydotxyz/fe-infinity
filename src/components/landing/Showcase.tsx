@@ -8,6 +8,7 @@ export interface Props {
   title: string;
   subtitle: string;
   className?: string;
+  children?: React.ReactNode;
 }
 
 export const ShowCase: React.FC<Props> = ({ subtitle, title, className, children }) => {
@@ -47,7 +48,7 @@ export const ShowCase: React.FC<Props> = ({ subtitle, title, className, children
   );
 };
 
-export const SubTitle: React.FC<{ className?: string }> = ({ children, className }) => {
+export const SubTitle: React.FC<{ className?: string; children?: React.ReactNode }> = ({ children, className }) => {
   // NOTE: we don't have an exact 'grey' color like on the design, so gray-500 is used here instead
   return <p className={twMerge('font-body text-lg font-normal text-gray-500', className)}>{children}</p>;
 };
