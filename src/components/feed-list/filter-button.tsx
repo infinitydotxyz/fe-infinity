@@ -48,8 +48,12 @@ export const FilterButton = ({ onChange, filter, className = '' }: Props) => {
         onOptionChange={(checked: boolean, checkId: string) => {
           if (checkId === 'infinityOnly') {
             const newFilter = { ...filter };
-
             newFilter.source = checked ? SaleSource.Infinity : undefined;
+            if (checked) {
+              newFilter.types = [EventType.NftSale];
+            } else {
+              newFilter.types = [];
+            }
 
             onChange(newFilter);
           }
