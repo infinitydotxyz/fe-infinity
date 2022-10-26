@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, EthSymbol, SimpleTable, SimpleTableItem } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 import { useOrderbook } from '../OrderbookContext';
 import { textAltColorTW, textColorTW } from './graph-utils';
 import { MdClear } from 'react-icons/md';
-import { numStr } from 'src/utils';
 
 interface Props3 {
   className?: string;
@@ -42,15 +41,24 @@ interface Props {
 const FilterInput = ({ modeMinPrice }: Props) => {
   const { filters, updateFilter } = useOrderbook();
   const { minPrice, maxPrice } = filters;
+  const [price, setPrice] = useState(modeMinPrice ? minPrice?.toString() ?? '0' : maxPrice?.toString() ?? '0');
+
+  const onSubmit = () => {
+    updateFilter(modeMinPrice ? 'minPrice' : 'maxPrice', price);
+  };
 
   return (
-    <div className="flex items-center">
+    <form className="flex items-center" onSubmit={onSubmit}>
       <input
         autoFocus={false}
         type="number"
-        value={modeMinPrice ? numStr(minPrice ?? '') : numStr(maxPrice ?? '')}
+        value={price}
+        step="any" // allows 0.0001 etc
+        onBlur={() => {
+          onSubmit();
+        }}
         onChange={(e) => {
-          updateFilter(modeMinPrice ? 'minPrice' : 'maxPrice', e.target.value);
+          setPrice(e.target.value);
         }}
         className={twMerge(
           'px-2 placeholder-gray-300 max-w-[70px] py-0 border-none bg-black focus:ring-0 block bg-transparent text-right font-heading'
@@ -69,6 +77,6 @@ const FilterInput = ({ modeMinPrice }: Props) => {
       >
         <MdClear className="h-3 w-3" />
       </Button>
-    </div>
+    </form>
   );
 };
