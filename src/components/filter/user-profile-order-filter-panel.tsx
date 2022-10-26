@@ -42,7 +42,7 @@ export const UserProfileOrderFilterPanel = ({ className, onChange, userInfo }: P
     }
     setCollections([]);
     setCollectionSearchLoading(true);
-    const { result, error } = await apiGet(`/orders/${userInfo.address}/collections`, {
+    const { result, error } = await apiGet(`/userOrders/${userInfo.address}/collections`, {
       requiresAuth: true,
       query: {
         limit: 50,

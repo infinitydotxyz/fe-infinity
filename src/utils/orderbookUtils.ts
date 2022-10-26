@@ -28,7 +28,7 @@ export const postOrders = async (user: string, orders: SignedOBOrder[]): Promise
 
 export const fetchOrderNonce = async (user: string): Promise<number> => {
   try {
-    const response = await apiGet(`/orders/${user}/nonce`, { requiresAuth: true });
+    const response = await apiGet(`/userOrders/${user}/nonce`, { requiresAuth: true });
     if (typeof response.result === 'number') {
       return response.result;
     }
@@ -67,7 +67,7 @@ export const fetchUserSignedOBOrder = async (orderId: string | undefined) => {
   if (!orderId) {
     return null;
   }
-  const { result, error } = await apiGet(`/orders/id/${orderId}`, {
+  const { result, error } = await apiGet(`/orders/${orderId}`, {
     query: {
       limit: 1
     }
