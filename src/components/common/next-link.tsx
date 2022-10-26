@@ -20,6 +20,19 @@ export const NextLink = ({ children, className = '', href, title }: Props) => {
   );
 };
 
+// export const NextLink = ({ children, className = '', href, title }: Props) => {
+//   if (!href) {
+//     return <></>;
+//   }
+
+//   return (
+//     <Link href={href}>
+//       <a className={twMerge('whitespace-nowrap cursor-pointer', className)} title={title ?? ''}>
+//         {children}
+//       </a>
+//     </Link>
+//   );
+// };
 // use for external links (https://infinity.xyz)
 export const ExternalLink = ({ children, className = '', target = '_blank', ...props }: Props) => {
   if (!props.href) {
