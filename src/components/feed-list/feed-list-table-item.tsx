@@ -6,6 +6,7 @@ import { ellipsisAddress, ellipsisString, NEWS_IMAGE_URL, nFormatter, standardBo
 import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
 import { NftEventRec } from '../asset/activity/activity-item';
+import person from 'src/images/person.png';
 
 interface Props {
   activity: NftEventRec;
@@ -263,7 +264,7 @@ export const FeedListTableItem = ({ activity }: Props) => {
       <div>
         <div className={twMerge(standardBorderCard, 'flex items-center font-heading')}>
           <NextLink href={url}>
-            <EZImage className="w-16 h-16 overflow-clip rounded-2xl" src={activity?.image} />
+            <EZImage className="w-16 h-16 overflow-clip rounded-2xl" src={activity?.image || person.src} />
           </NextLink>
 
           <div className="flex w-full justify-around ml-8">
