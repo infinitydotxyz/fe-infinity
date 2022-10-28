@@ -21,7 +21,6 @@ export const CollectionActivityFeed = ({
 }: Props) => {
   const { chainId } = useOnboardContext();
   const [filter] = useState<FeedFilter>({ collectionAddress, tokenId, types });
-  // const [filteringTypes, setFilteringTypes] = useState<EventType[]>(types);
 
   const [isLoading, setIsLoading] = useState(false);
   const [activities, setActivities] = useState<NftEventRec[]>([]);
@@ -71,64 +70,12 @@ export const CollectionActivityFeed = ({
     fetchActivity(true);
   }, [filter]);
 
-  // const onChangeFilterDropdown = (checked: boolean, checkId: string) => {
-  //   const newFilter = { ...filter };
-
-  //   if (checkId === '') {
-  //     setFilteringTypes([]);
-  //     delete newFilter.types;
-  //     setFilter(newFilter);
-  //     return;
-  //   }
-  //   const selectedType = checkId as EventType;
-  //   if (checked) {
-  //     newFilter.types = [...filteringTypes, selectedType];
-  //     setFilter(newFilter);
-  //     setFilteringTypes(newFilter.types);
-  //   } else {
-  //     const _newTypes = [...filteringTypes];
-  //     const index = filteringTypes.indexOf(selectedType);
-  //     if (index >= 0) {
-  //       _newTypes.splice(index, 1);
-  //     }
-  //     newFilter.types = _newTypes;
-  //     setFilter(newFilter);
-  //     setFilteringTypes(_newTypes);
-  //   }
-  // };
-
   if (!collectionAddress) {
     return null; // require collectionAddress
   }
 
   return (
     <div className={`min-h-[50vh] ${className}`}>
-      {/* <div className={twMerge("flex justify-between mb-6", negativeMargin)}>
-        <div className="text-3xl mb-6">&nbsp;</div>
-         <FeedFilterDropdown
-          options={[
-            {
-              label: 'All',
-              value: ''
-            },
-            {
-              label: 'Listings',
-              value: EventType.NftListing
-            },
-            {
-              label: 'Offers',
-              value: EventType.NftOffer
-            },
-            {
-              label: 'Sales',
-              value: EventType.NftSale
-            }
-          ]}
-          selectedTypes={filteringTypes}
-          onChange={onChangeFilterDropdown}
-        /> 
-      </div> */}
-
       {!isLoading && activities.length === 0 ? <div className="font-heading">No results found</div> : null}
 
       <ul className="space-y-4">
