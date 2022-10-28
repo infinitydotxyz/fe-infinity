@@ -274,8 +274,9 @@ const AssetDetailContent = ({ chainId, collectionAddress, tokenId }: Props) => {
     </>
   );
 
+  const isCover = token?.displayType === 'cover';
   const imageClass = 'rounded-3xl overflow-clip w-80 mx-auto sm:w-96 md:w-96 lg:w-144';
-  let image = <EZImage src={imgUrl} className={imageClass} />;
+  let image = <EZImage src={imgUrl} className={imageClass} cover={isCover} />;
 
   if (isVideoNft(token)) {
     image = <video loop controls src={imgUrl} className={imageClass}></video>;

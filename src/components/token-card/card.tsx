@@ -35,7 +35,6 @@ export const Card = ({
   cardActions,
   getDropdownActions,
   isLoading,
-  paddedImages = false,
   className = ''
 }: CardProps): JSX.Element => {
   const router = useRouter();
@@ -78,8 +77,9 @@ export const Card = ({
     // return <LoadingCard className={className} />;
   }
 
+  const isCover = data?.displayType === 'cover';
   let image = (
-    <EZImage src={data?.image} className="group-hover:scale-[1.15] transition-all duration-300" cover={!paddedImages} />
+    <EZImage src={data?.image} className="group-hover:scale-[1.15] transition-all duration-300" cover={isCover} />
   );
 
   if (data?.isVideo) {
