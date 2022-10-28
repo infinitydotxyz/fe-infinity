@@ -192,6 +192,7 @@ export const nftsToCardData = (
       collectionSlug: item.collectionSlug ?? '',
       description: item.metadata?.description ?? '',
       image: image,
+      displayType: item.displayType,
       isVideo: isVideoNft(item),
       price: item?.orderSnippet?.listing?.orderItem?.startPriceEth ?? 0,
       chainId: item.chainId,

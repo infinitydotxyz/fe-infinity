@@ -57,6 +57,7 @@ export const GalleryBox = ({
   const { width, ref } = useResizeDetector();
   const isMounted = useIsMounted();
 
+  // todo: steve - there are 3 display types afaik: cover, contain and padded; this is only checking for padded
   const paddedImages = collection?.metadata.displayType === 'padded';
 
   useEffect(() => {
