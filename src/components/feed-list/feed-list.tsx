@@ -1,21 +1,21 @@
 import { useEffect, useState } from 'react';
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
-import { apiGet, getTypesForFilter } from 'src/utils';
+import { apiGet } from 'src/utils';
 import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
 import { Button, ScrollLoader, Spacer } from '../common';
 // import { CommentPanel } from '../feed/comment-panel';
 import { NftEventRec } from '../asset/activity/activity-item';
 import { FeedListItem } from './feed-list-item';
-import { FilterButton } from './filter-button';
 import { CommentPanel } from './comment-panel';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { IoMdRefresh } from 'react-icons/io';
 import { iconButtonStyle } from 'src/utils/ui-constants';
+import { filterButtonDefaultOptions, FilterPopdown } from './filter-popdown';
 
 interface Props {
   collectionAddress: string;
   tokenId?: string;
-  types?: EventType[];
+  types: EventType[];
   className?: string;
   collectionName?: string;
   collectionSlug?: string;
@@ -25,9 +25,9 @@ interface Props {
 export const FeedList = ({
   collectionAddress,
   tokenId,
-  types,
   collectionName,
   collectionSlug,
+  types,
   collectionProfileImage,
   className = ''
 }: Props) => {
@@ -45,26 +45,33 @@ export const FeedList = ({
 
     try {
       setIsLoading(true);
-      const url = tokenId
-        ? `/collections/${chainId}:${collectionAddress}/nfts/${tokenId}/activity`
-        : `/collections/${chainId}:${collectionAddress}/activity`;
 
-      const { result, error } = await apiGet(url, {
-        query: {
-          limit: 20,
-          eventType: getTypesForFilter(filter),
-          cursor: fromCursor,
-          source: filter.source
-        }
-      });
+      const types = filter.types ?? [];
+      if (types?.length > 0) {
+        const url = tokenId
+          ? `/collections/${chainId}:${collectionAddress}/nfts/${tokenId}/activity`
+          : `/collections/${chainId}:${collectionAddress}/activity`;
 
-      if (!error && result) {
-        if (isRefresh) {
-          setActivities([...result.data]);
-        } else {
-          setActivities([...activities, ...result.data]);
+        const { result, error } = await apiGet(url, {
+          query: {
+            limit: 20,
+            eventType: filter.types,
+            cursor: fromCursor,
+            source: filter.source
+          }
+        });
+
+        if (!error && result) {
+          if (isRefresh) {
+            setActivities([...result.data]);
+          } else {
+            setActivities([...activities, ...result.data]);
+          }
+          setCursor(result?.cursor);
         }
-        setCursor(result?.cursor);
+      } else {
+        setActivities([]);
+        setCursor('');
       }
     } catch (err) {
       console.log(err);
@@ -90,7 +97,14 @@ export const FeedList = ({
         <Button className="mr-3" variant="roundBorder" size="round" onClick={() => fetchActivity(true)}>
           <IoMdRefresh className={iconButtonStyle} />
         </Button>
-        <FilterButton filter={filter} onChange={(f) => setFilter(f)} />
+
+        <FilterPopdown
+          options={filterButtonDefaultOptions}
+          filter={filter}
+          onChange={(f) => {
+            setFilter(f);
+          }}
+        />
       </div>
 
       {!isLoading && activities.length === 0 ? <div className="font-heading">No results found</div> : null}

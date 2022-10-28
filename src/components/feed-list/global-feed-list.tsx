@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
-import { apiGet, getTypesForFilter } from 'src/utils';
+import { apiGet } from 'src/utils';
 import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
 import { Chip, ScrollLoader, Spacer } from '../common';
 import { NftEventRec } from '../asset/activity/activity-item';
-import { FilterButton } from './filter-button';
 import { CommentPanel } from './comment-panel';
 import { FeedListItem } from './feed-list-item';
+import { FilterPopdown, filterButtonDefaultOptions } from './filter-popdown';
 
 interface Props {
-  types?: EventType[];
+  types: EventType[];
   className?: string;
   compact?: boolean;
 }
@@ -24,24 +24,31 @@ export const GlobalFeedList = ({ types, className = '', compact = false }: Props
   const fetchActivity = async (isRefresh = false, fromCursor = '') => {
     try {
       setIsLoading(true);
-      const url = '/feed/activity';
 
-      const { result, error } = await apiGet(url, {
-        query: {
-          limit: compact ? 5 : 20,
-          eventType: getTypesForFilter(filter),
-          cursor: fromCursor,
-          source: filter.source
-        }
-      });
+      const types = filter.types ?? [];
+      if (types?.length > 0) {
+        const url = '/feed/activity';
 
-      if (!error && result) {
-        if (isRefresh) {
-          setActivities([...result.data]);
-        } else {
-          setActivities([...activities, ...result.data]);
+        const { result, error } = await apiGet(url, {
+          query: {
+            limit: compact ? 5 : 20,
+            eventType: filter.types,
+            cursor: fromCursor,
+            source: filter.source
+          }
+        });
+
+        if (!error && result) {
+          if (isRefresh) {
+            setActivities([...result.data]);
+          } else {
+            setActivities([...activities, ...result.data]);
+          }
+          setCursor(result?.cursor);
         }
-        setCursor(result?.cursor);
+      } else {
+        setActivities([]);
+        setCursor('');
       }
     } catch (err) {
       console.log(err);
@@ -61,7 +68,14 @@ export const GlobalFeedList = ({ types, className = '', compact = false }: Props
           <Spacer />
           <Chip content={'Refresh'} onClick={() => fetchActivity(true)} />
 
-          <FilterButton className="ml-2" filter={filter} onChange={(f) => setFilter(f)} />
+          <FilterPopdown
+            className="ml-3"
+            options={filterButtonDefaultOptions}
+            filter={filter}
+            onChange={(f) => {
+              setFilter(f);
+            }}
+          />
         </div>
       )}
 
