@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { apiGet } from 'src/utils';
 import { ActivityItem, NftEventRec } from './activity-item';
 import { CenteredContent, Spinner } from 'src/components/common';
-import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
-import { FeedFilterDropdown } from 'src/components/feed/feed-filter-dropdown';
 import { Token } from '@infinityxyz/lib-frontend/types/core/Token';
+import { filterButtonDefaultOptions, FilterPopdown, shortEventTypes } from 'src/components/feed-list/filter-popdown';
+import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
 
 interface Props {
   className?: string;
@@ -12,82 +12,51 @@ interface Props {
   collectionAddress: string;
   token: Token;
 }
-type EventTypeOptions = EventType | '';
-
-const defaultActivities: EventTypeOptions[] = [
-  '',
-  EventType.NftSale,
-  EventType.NftOffer,
-  EventType.NftListing,
-  EventType.TokensStaked,
-  EventType.UserVote,
-  EventType.NftTransfer
-];
 
 export const ActivityList: React.FC<Props> = ({ className = '', chainId, collectionAddress, token }) => {
-  const [activityTypes, setActivityTypes] = useState<EventTypeOptions[]>(defaultActivities);
   const [activityList, setActivityList] = useState<NftEventRec[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasNoData, setHasNoData] = useState(false);
-
-  // { query: { eventType: 'sale', limit: 50 } }
+  const [filter, setFilter] = useState<FeedFilter>({ types: shortEventTypes });
 
   const getActivityList = async () => {
     setIsLoading(true);
     setHasNoData(false);
-    const ACTIVITY_ENDPOINT = `/collections/${chainId}:${collectionAddress}/nfts/${token.tokenId}/activity`;
-    const queryTypes = activityTypes.filter((item) => item !== '');
-    const { result, error } = await apiGet(ACTIVITY_ENDPOINT, {
-      query: { eventType: queryTypes, limit: 50 }
-    });
-    setIsLoading(false);
-    if (!error) {
-      if (result?.data && result?.data.length === 0) {
-        setHasNoData(true);
+
+    const types = filter.types ?? [];
+    if (types.length === 0) {
+      const ACTIVITY_ENDPOINT = `/collections/${chainId}:${collectionAddress}/nfts/${token.tokenId}/activity`;
+
+      const { result, error } = await apiGet(ACTIVITY_ENDPOINT, {
+        query: { eventType: filter.types, limit: 50, source: filter.source }
+      });
+      if (!error) {
+        if (result?.data && result?.data.length === 0) {
+          setHasNoData(true);
+        }
+        setActivityList(result?.data || []);
       }
-      setActivityList(result?.data || []);
+    } else {
+      setActivityList([]);
     }
+
+    setIsLoading(false);
   };
 
   React.useEffect(() => {
-    if (activityTypes.length === 0) {
-      setActivityList([]);
-    } else {
-      getActivityList();
-    }
-  }, [chainId, collectionAddress, token, activityTypes]);
-
-  const handleChange = (checked: boolean, checkId: string) => {
-    const curType = checkId as EventType;
-    if (checkId === '') {
-      if (checked === true) {
-        setActivityTypes(defaultActivities);
-      } else {
-        setActivityTypes([]);
-      }
-      return;
-    }
-    let newTypes = [];
-    if (checked) {
-      newTypes = [...activityTypes, curType];
-    } else {
-      const _activityTypes = [...activityTypes];
-      const index = activityTypes.indexOf(curType);
-      if (index > -1) {
-        _activityTypes.splice(index, 1);
-      }
-      newTypes = _activityTypes;
-    }
-    setActivityTypes(newTypes);
-  };
+    getActivityList();
+  }, [chainId, collectionAddress, token, filter]);
 
   return (
     <div className={className}>
-      <div className="mt-4 md:mt-8">
-        <div className="flex items-center justify-between">
-          <p className="mt-4 sm:mt-6 sm:mb-4 font-body tracking-base text-black font-bold">&nbsp;</p>
-          <FeedFilterDropdown selectedTypes={activityTypes} onChange={handleChange} autoCheckAll={false} />
-        </div>
+      <div className="mt-4 md:mt-8 flex items-center justify-end">
+        <FilterPopdown
+          options={filterButtonDefaultOptions}
+          filter={filter}
+          onChange={(f) => {
+            setFilter(f);
+          }}
+        />
       </div>
 
       {isLoading ? (

@@ -75,7 +75,7 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
       query.makerAddress = userInfo.address;
     }
 
-    const { result } = await apiGet(`/orders/${userInfo.address}`, {
+    const { result } = await apiGet(`/userOrders/${userInfo.address}`, {
       query,
       requiresAuth: true
     });

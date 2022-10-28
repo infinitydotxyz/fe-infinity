@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
-import { EventType, UserFeedEvent } from '@infinityxyz/lib-frontend/types/core/feed';
-import { FeedFilterDropdown } from './feed-filter-dropdown';
+import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { CenteredContent, ScrollLoader, Spinner } from '../common';
 import { useUserActivity } from 'src/hooks/api/useUserActivity';
 import { NftOrderEvent } from './user-feed-events/nft-order-event';
@@ -11,47 +10,30 @@ import { VoteEvent } from './user-feed-events/vote-event';
 import { NftTransferEvent } from './user-feed-events/nft-transfer-event';
 import { twMerge } from 'tailwind-merge';
 import { negativeMargin } from 'src/utils/ui-constants';
+import { filterButtonDefaultOptions, FilterPopdown } from '../feed-list/filter-popdown';
 
-interface UserProfileActivityListProps {
+interface Props {
   userAddress?: string;
-  types?: EventType[];
+  types: EventType[];
   forActivity?: boolean;
   forUserActivity?: boolean;
   className?: string;
 }
 
-export const UserProfileActivityList = ({ userAddress, types, className }: UserProfileActivityListProps) => {
+export const UserProfileActivityList = ({ userAddress, types, className }: Props) => {
   const [filter, setFilter] = useState<FeedFilter>({ userAddress, types });
-  const [filteringTypes, setFilteringTypes] = useState<UserFeedEvent['type'][]>([]);
-
-  const { result: activities, isLoading, fetchMore } = useUserActivity(filteringTypes, userAddress);
-
-  const onChangeFilterDropdown = (checked: boolean, checkId: string) => {
-    const newFilter = { ...filter };
-
-    if (checkId === '') {
-      setFilteringTypes([]);
-      delete newFilter.types;
-      setFilter(newFilter);
-      return;
-    }
-    const selectedType = checkId as EventType;
-    if (checked) {
-      newFilter.types = [...filteringTypes, selectedType];
-      setFilter(newFilter);
-      setFilteringTypes(newFilter.types as UserFeedEvent['type'][]);
-    } else {
-      const _newTypes = [...filteringTypes].filter((item) => item !== selectedType);
-      newFilter.types = _newTypes;
-      setFilter(newFilter);
-      setFilteringTypes(_newTypes as UserFeedEvent['type'][]);
-    }
-  };
+  const { result: activities, isLoading, fetchMore } = useUserActivity(filter.types ?? [], userAddress);
 
   return (
     <div className={twMerge('min-h-[50vh]', negativeMargin, className)}>
       <div className="flex flex-row-reverse mb-8 bg-transparent">
-        <FeedFilterDropdown selectedTypes={filteringTypes} onChange={onChangeFilterDropdown} />
+        <FilterPopdown
+          options={filterButtonDefaultOptions}
+          filter={filter}
+          onChange={(f) => {
+            setFilter(f);
+          }}
+        />
       </div>
 
       <div className="space-y-3 pointer-events-auto">

@@ -4,6 +4,7 @@ import { FeedList } from 'src/components/feed-list/feed-list';
 import { TwitterSupporterList } from './twitter-supporter-list';
 import { TopHolderList } from './top-holder-list';
 import { twMerge } from 'tailwind-merge';
+import { globalEventTypes } from './filter-popdown';
 
 interface Props {
   collection: BaseCollection;
@@ -23,7 +24,7 @@ export const CommunityFeed = ({ collection, className }: Props) => {
     content = (
       <div className="lg:col-span-1 xl:col-span-2">
         <FeedList
-          types={[]}
+          types={globalEventTypes}
           collectionAddress={collection?.address ?? ''}
           collectionName={collection?.metadata.name ?? ''}
           collectionSlug={collection?.slug ?? ''}

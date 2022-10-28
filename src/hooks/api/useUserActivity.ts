@@ -1,12 +1,9 @@
 import { useFetchInfinite } from 'src/utils';
-import { UserFeedEvent } from '@infinityxyz/lib-frontend/types/core';
+import { EventType, UserFeedEvent } from '@infinityxyz/lib-frontend/types/core';
 import { UserActivityArrayDto, UserActivityQueryDto } from '@infinityxyz/lib-frontend/types/dto/user';
-import { FEED_FILTER_DEFAULT_OPTIONS } from 'src/components/feed/feed-filter-dropdown';
-
-export type UserFeedEventTypes = UserFeedEvent['type'][];
 
 export function useUserActivity(
-  events: UserFeedEvent['type'][],
+  events: EventType[],
   user?: string
 ): {
   result: UserFeedEvent[];
@@ -25,15 +22,20 @@ export function useUserActivity(
     };
   }
 
+  let limit = 20;
+  let invalid = false;
+
   if (events.length === 0) {
-    events = FEED_FILTER_DEFAULT_OPTIONS.map((option) => option.value).filter(
-      (item) => item !== ''
-    ) as UserFeedEvent['type'][];
+    invalid = true;
+
+    // just pass some bullshit, we are forced to call this hook below, so we call it, but don't return the data
+    limit = 1;
+    events = [EventType.CoinMarketCapNews];
   }
 
   const query: UserActivityQueryDto = {
     events,
-    limit: 20,
+    limit: limit,
     cursor: ''
   };
 
@@ -42,11 +44,18 @@ export function useUserActivity(
   });
 
   const fetchMore = () => {
-    setSize((size) => size + 1);
+    if (!invalid) {
+      setSize((size) => size + 1);
+    }
   };
 
+  let resultList = result?.flatMap(({ data }) => data) ?? [];
+  if (invalid) {
+    resultList = [];
+  }
+
   return {
-    result: result?.flatMap(({ data }) => data) ?? [],
+    result: resultList,
     error,
     isLoading,
     fetchMore

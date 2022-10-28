@@ -25,7 +25,7 @@ export const CancelModal = ({ isOpen, onClose, onDone, collectionAddress, token 
 
   const fetchListings = async () => {
     setIsLoading(true);
-    const { result, error } = await apiGet(`/orders/${user?.address}`, {
+    const { result, error } = await apiGet(`/userOrders/${user?.address}`, {
       query: {
         limit: 50,
         isSellOrder: true,
