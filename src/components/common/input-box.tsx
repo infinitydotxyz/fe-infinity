@@ -169,6 +169,7 @@ export const TextInputBox = ({
         <input
           autoFocus={autoFocus}
           type={type}
+          step="any" // allows 0.0001 etc
           value={value}
           onChange={(e) => {
             if (onChange) {
