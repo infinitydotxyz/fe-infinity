@@ -46,3 +46,7 @@ logo for exchange. hold off.
 ico, one liner makes it clear what invinity is
 
 curation auto execution of orders
+
+---
+
+todo: cover, padded etc

@@ -107,7 +107,12 @@ export const StakeTokensModal = ({ onClose }: Props) => {
               placeholder="Enter amount to stake"
               isFullWidth
               renderRightIcon={() => (
-                <Button variant="gray" className="rounded-full py-2 px-3" onClick={() => setValue(tokenBalance)}>
+                <Button
+                  variant="gray"
+                  size="small"
+                  className="rounded-full py-2 px-3"
+                  onClick={() => setValue(tokenBalance)}
+                >
                   Max
                 </Button>
               )}
