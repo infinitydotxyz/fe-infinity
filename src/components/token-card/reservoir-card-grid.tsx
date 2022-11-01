@@ -131,7 +131,7 @@ interface Props2 {
   className?: string;
 }
 
-const ReservoirCardGrid = ({ collection, className = '', cardProps }: Props2) => {
+const ReservoirCardGrid = ({ className = '', cardProps }: Props2) => {
   const [error, setError] = useState(false);
   const [hasNextPage, setHasNextPage] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -141,8 +141,6 @@ const ReservoirCardGrid = ({ collection, className = '', cardProps }: Props2) =>
 
   const { width, ref } = useResizeDetector();
   // const isMounted = useIsMounted();
-
-  const paddedImages = collection?.metadata.displayType === 'padded';
 
   useEffect(() => {
     setHasNextPage(false);
@@ -177,7 +175,6 @@ const ReservoirCardGrid = ({ collection, className = '', cardProps }: Props2) =>
         cardData={cardData}
         handleFetch={handleFetch}
         hasNextPage={hasNextPage}
-        paddedImages={paddedImages}
         width={width}
         cardProps={cardProps}
       />

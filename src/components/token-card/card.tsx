@@ -26,7 +26,6 @@ export interface CardProps {
   isLoading?: boolean;
   className?: string;
   height?: number;
-  paddedImages?: boolean;
 }
 
 export const Card = ({
@@ -77,9 +76,29 @@ export const Card = ({
     // return <LoadingCard className={className} />;
   }
 
-  const isCover = data?.displayType === 'cover';
+  let isCover = true;
+  let padding = '';
+
+  switch (data?.displayType) {
+    case 'cover':
+      isCover = true;
+      break;
+    case 'contain':
+      isCover = false;
+      break;
+    case 'padded':
+      padding = 'p-2';
+      break;
+    default:
+      break;
+  }
+
   let image = (
-    <EZImage src={data?.image} className="group-hover:scale-[1.15] transition-all duration-300" cover={isCover} />
+    <EZImage
+      src={data?.image}
+      className={twMerge('group-hover:scale-[1.15] transition-all duration-300', padding)}
+      cover={isCover}
+    />
   );
 
   if (data?.isVideo) {
@@ -97,7 +116,7 @@ export const Card = ({
     >
       <NextLink
         href={`/asset/${data?.chainId}/${data?.tokenAddress ?? data?.address}/${data?.tokenId}`}
-        className="h-full overflow-clip rounded-3xl"
+        className="h-full overflow-clip rounded-t-3xl"
       >
         {image}
       </NextLink>
@@ -108,7 +127,7 @@ export const Card = ({
         </span>
       )} */}
 
-      <div className="p-1 mt-3">
+      <div className="p-1 mt-2">
         <div
           className="flex items-center cursor-pointer font-bold truncate"
           title={data?.title}

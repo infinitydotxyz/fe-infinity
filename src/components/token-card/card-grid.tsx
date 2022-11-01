@@ -5,14 +5,13 @@ import { twMerge } from 'tailwind-merge';
 
 interface Props {
   cardData: ERC721CardData[];
-  paddedImages: boolean;
   hasNextPage: boolean;
   width: number;
   cardProps?: CardProps;
   handleFetch: (loadMore: boolean) => void;
 }
 
-export const CardGrid = ({ cardData, width, hasNextPage, cardProps, paddedImages, handleFetch }: Props) => {
+export const CardGrid = ({ cardData, width, hasNextPage, cardProps, handleFetch }: Props) => {
   let gridColumns = 'grid-cols-2';
   let cardHeight = 310;
 
@@ -30,15 +29,7 @@ export const CardGrid = ({ cardData, width, hasNextPage, cardProps, paddedImages
       style={{ gridTemplateColumns: gridColumns }}
     >
       {cardData.map((item, idx) => {
-        return (
-          <Card
-            key={`${item.address}_${item.tokenId}_${idx}`}
-            height={cardHeight}
-            data={item}
-            {...cardProps}
-            paddedImages={paddedImages}
-          />
-        );
+        return <Card key={`${item.address}_${item.tokenId}_${idx}`} height={cardHeight} data={item} {...cardProps} />;
       })}
 
       {hasNextPage && (
