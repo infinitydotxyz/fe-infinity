@@ -1,6 +1,6 @@
 import { CuratedCollectionsOrderBy } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections-query.dto';
 import React, { useState } from 'react';
-import { Sort } from '../curation/sort';
+import { Sort, SortButtonOrder } from '../curation/sort';
 import { Divider, ScrollLoader, Spinner } from '../common';
 import { useCurationQuota } from 'src/hooks/api/useCurationQuota';
 import { useRouter } from 'next/router';
@@ -28,7 +28,7 @@ const InfoBox: React.FC<{ title: string; subtitle: string | number }> = ({ title
 export const UserPageCuratedTab: React.FC<{ userInfo: UserProfileDto }> = ({ userInfo }) => {
   const { chainId } = useOnboardContext();
 
-  const [order, setOrder] = useState({
+  const [order, setOrder] = useState<SortButtonOrder>({
     orderBy: CuratedCollectionsOrderBy.Votes,
     direction: OrderDirection.Descending
   });
@@ -48,7 +48,7 @@ export const UserPageCuratedTab: React.FC<{ userInfo: UserProfileDto }> = ({ use
   return (
     <div className={twMerge('min-h-[50vh]', negativeMargin)}>
       <div className="flex flex-row-reverse mb-8 bg-transparent">
-        <Sort onClick={setOrder} />
+        <Sort order={order} onClick={setOrder} />
       </div>
       <Divider />
       <div className="flex flex-row justify-between my-4">
