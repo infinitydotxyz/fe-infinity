@@ -3,7 +3,7 @@ import { apiGet } from 'src/utils';
 import { ActivityItem, NftEventRec } from './activity-item';
 import { CenteredContent, Spinner } from 'src/components/common';
 import { Token } from '@infinityxyz/lib-frontend/types/core/Token';
-import { filterButtonDefaultOptions, FilterPopdown, shortEventTypes } from 'src/components/feed-list/filter-popdown';
+import { assetDefaultOptions, FilterPopdown, shortEventTypes } from 'src/components/feed-list/filter-popdown';
 import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
 
 interface Props {
@@ -51,7 +51,7 @@ export const ActivityList: React.FC<Props> = ({ className = '', chainId, collect
     <div className={className}>
       <div className="mt-4 md:mt-8 flex items-center justify-end">
         <FilterPopdown
-          options={filterButtonDefaultOptions}
+          options={assetDefaultOptions}
           filter={filter}
           onChange={(f) => {
             setFilter(f);

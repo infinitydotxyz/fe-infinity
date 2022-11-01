@@ -229,6 +229,28 @@ export const feedFilterDefaultOptions: FilterPopdownOption[] = [
   }
 ];
 
+// from discord
+// On the asset page “tokens staked”, “vote”, “tweets”, “discord” and “news”.
+// None of these are related to the specific asset so could be removed. Not a priority though.
+export const assetDefaultOptions: FilterPopdownOption[] = [
+  {
+    label: 'Listings',
+    value: EventType.NftListing
+  },
+  {
+    label: 'Offers',
+    value: EventType.NftOffer
+  },
+  {
+    label: 'Sales',
+    value: EventType.NftSale
+  },
+  {
+    label: 'Transfers',
+    value: EventType.NftTransfer
+  }
+];
+
 // why is this different?
 export const filterButtonDefaultOptions: FilterPopdownOption[] = [
   {
