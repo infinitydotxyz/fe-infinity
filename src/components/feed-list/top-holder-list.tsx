@@ -1,11 +1,13 @@
 import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
 import { twMerge } from 'tailwind-merge';
+import { ethers } from 'ethers';
 
 import { useEffect, useState } from 'react';
 import { NextLink } from 'src/components/common';
-import { apiGet, ellipsisAddress, standardCard } from 'src/utils';
+import { apiGet, ellipsisAddress, ellipsisString, standardCard } from 'src/utils';
 import { TopOwnersArrayResponseDto, TopOwnerDto } from '@infinityxyz/lib-frontend/types/dto/collections';
 import { useIsMounted } from 'src/hooks/useIsMounted';
+import { useConnectWallet } from '@web3-onboard/react';
 
 interface Props2 {
   topOwner: TopOwnerDto;
@@ -13,6 +15,32 @@ interface Props2 {
 }
 
 const TopHolder = ({ topOwner, index }: Props2) => {
+  const [ensName, setEnsName] = useState('');
+
+  const [{ wallet }] = useConnectWallet();
+
+  useEffect(() => {
+    if (wallet) {
+      const ethersProvider = new ethers.providers.Web3Provider(wallet.provider, 'any');
+
+      const asyncFunct = async () => {
+        const name = await ethersProvider.lookupAddress(topOwner.ownerAddress);
+
+        if (name) {
+          setEnsName(name);
+        }
+      };
+
+      asyncFunct();
+    }
+  }, [wallet]);
+
+  let name = ellipsisString(ensName, 9, 0);
+
+  if (!name) {
+    name = ellipsisAddress(topOwner.ownerAddress, 8, 0);
+  }
+
   return (
     <div className={twMerge(standardCard, 'flex items-center')}>
       <div className="w-12 rounded-full max-w-18 h-12 p-3 bg-white px-5 font-bold"> {index + 1}</div>
@@ -20,9 +48,7 @@ const TopHolder = ({ topOwner, index }: Props2) => {
         <div className="ml-5 py-1">
           <div className="text-theme-light-800 text-sm">Address</div>
           <div className="font-heading mt-1">
-            <NextLink href={'/profile/' + topOwner.ownerAddress}>
-              {ellipsisAddress(topOwner.ownerAddress, 8, 0)}
-            </NextLink>
+            <NextLink href={'/profile/' + topOwner.ownerAddress}>{name}</NextLink>
           </div>
         </div>
 
@@ -88,7 +114,7 @@ export const TopHolderList = ({ collection }: Props) => {
 
   return (
     <>
-      <div className="text-2xl my-6 font-medium">Top Holders</div>
+      <div className="text-2xl my-6 font-medium">Top holders</div>
 
       {tweetList.map((e, index) => {
         return <TopHolder topOwner={e} index={index} key={e.ownerAddress} />;

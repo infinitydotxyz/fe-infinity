@@ -127,7 +127,6 @@ export const AccountSettingsPage: FunctionComponent<AccountSettingsProps> = (pro
                 imgSource={userInfo.profileImage}
               />
             </div>
-            {/* <h2 className="font-body text-4xl mt-20 mb-4 font-bold">Edit Profile</h2> */}
 
             <UserProfileForm />
             <div>
@@ -140,8 +139,6 @@ export const AccountSettingsPage: FunctionComponent<AccountSettingsProps> = (pro
                 imgSource={userInfo.bannerImage}
               />
             </div>
-            {/* <h2 className="font-body text-4xl mt-10 mb-10 font-bold">Wallets</h2> */}
-            {/* <UserWalletForm /> */}
           </div>
         </Form>
       )}
