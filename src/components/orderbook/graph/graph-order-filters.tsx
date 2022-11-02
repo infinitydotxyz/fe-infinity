@@ -41,7 +41,7 @@ interface Props {
 const FilterInput = ({ modeMinPrice }: Props) => {
   const { filters, updateFilter } = useOrderbook();
   const { minPrice, maxPrice } = filters;
-  const [price, setPrice] = useState(modeMinPrice ? minPrice?.toString() ?? '0' : maxPrice?.toString() ?? '0');
+  const [price, setPrice] = useState(modeMinPrice ? minPrice?.toString() ?? '' : maxPrice?.toString() ?? '');
 
   const onSubmit = () => {
     updateFilter(modeMinPrice ? 'minPrice' : 'maxPrice', price);
