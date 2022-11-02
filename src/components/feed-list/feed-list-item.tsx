@@ -7,7 +7,7 @@ import { addUserLike } from 'src/utils/firestore/firestoreUtils';
 import { IoMdArrowDropdown, IoMdArrowDropup } from 'react-icons/io';
 import { FeedListTableItem, NewsImage } from './feed-list-table-item';
 import { useState } from 'react';
-import { timeAgo } from 'src/utils';
+import { cl, timeAgo } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { twMerge } from 'tailwind-merge';
 import person from 'src/images/person.png';
@@ -46,7 +46,7 @@ export const FeedListItem = ({
     const component = (color: string, label: string) => {
       return (
         <div
-          onClick={() => console.log(JSON.stringify(activity, null, 2))}
+          onClick={() => cl(activity)}
           className={twMerge(classes, color, 'relative flex justify-center items-center bg-opacity-80')}
         >
           <div>{label}</div>

@@ -57,7 +57,6 @@ const TrendingPage = () => {
 
     if (isMounted()) {
       setIsLoading(false);
-      // console.log('result', result);
 
       if (result?.data?.length > 0) {
         if (refresh) {

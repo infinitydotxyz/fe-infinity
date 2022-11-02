@@ -51,8 +51,6 @@ const MyRewardsPage: React.FC = () => {
       throw new Error('Nothing to claim');
     }
 
-    console.log(props);
-
     const { hash } = await claim({
       type,
       account: props.account,

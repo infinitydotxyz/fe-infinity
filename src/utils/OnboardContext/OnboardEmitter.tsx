@@ -56,7 +56,6 @@ class _Emitter {
   }
 
   emit(event: ProviderEvents, ...args: any) {
-    console.log(`emit: ${event}`);
     this.emitter.emit(event, args);
   }
 

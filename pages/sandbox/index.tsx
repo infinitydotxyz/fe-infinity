@@ -288,7 +288,6 @@ const SandboxPage = () => {
           title="Dark mode"
           checked={switchChecked}
           onChange={() => {
-            console.log('switched');
             setSwitchChecked(!switchChecked);
           }}
         />
