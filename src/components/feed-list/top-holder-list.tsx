@@ -1,13 +1,12 @@
 import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
 import { twMerge } from 'tailwind-merge';
-import { ethers } from 'ethers';
 
 import { useEffect, useState } from 'react';
 import { NextLink } from 'src/components/common';
 import { apiGet, ellipsisAddress, ellipsisString, standardCard } from 'src/utils';
 import { TopOwnersArrayResponseDto, TopOwnerDto } from '@infinityxyz/lib-frontend/types/dto/collections';
 import { useIsMounted } from 'src/hooks/useIsMounted';
-import { useConnectWallet } from '@web3-onboard/react';
+import { useEnsName } from 'src/hooks/useEnsName';
 
 interface Props2 {
   topOwner: TopOwnerDto;
@@ -15,30 +14,11 @@ interface Props2 {
 }
 
 const TopHolder = ({ topOwner, index }: Props2) => {
-  const [ensName, setEnsName] = useState('');
+  const ensName = useEnsName(topOwner.ownerAddress);
+  let name = ellipsisAddress(topOwner.ownerAddress, 8, 0);
 
-  const [{ wallet }] = useConnectWallet();
-
-  useEffect(() => {
-    if (wallet) {
-      const ethersProvider = new ethers.providers.Web3Provider(wallet.provider, 'any');
-
-      const asyncFunct = async () => {
-        const name = await ethersProvider.lookupAddress(topOwner.ownerAddress);
-
-        if (name) {
-          setEnsName(name);
-        }
-      };
-
-      asyncFunct();
-    }
-  }, [wallet]);
-
-  let name = ellipsisString(ensName, 9, 0);
-
-  if (!name) {
-    name = ellipsisAddress(topOwner.ownerAddress, 8, 0);
+  if (ensName) {
+    name = ellipsisString(ensName, 9, 0);
   }
 
   return (
