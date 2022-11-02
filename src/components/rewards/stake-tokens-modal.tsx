@@ -28,7 +28,7 @@ const getMultiplier = (duration: StakeDuration) => `Multiplier: ${multipliers[du
 
 export const StakeTokensModal = ({ onClose }: Props) => {
   const [stakeDuration, setStakeDuration] = useState<StakeDuration>(StakeDuration.None);
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState('');
   const [isStaking, setIsStaking] = useState(false);
   const { result: quota } = useUserCurationQuota();
   const { stake } = useStake();
@@ -37,8 +37,12 @@ export const StakeTokensModal = ({ onClose }: Props) => {
 
   const tokenBalance = quota?.tokenBalance || 0;
 
+  const valueAsNumber = () => {
+    return parseFloat(value);
+  };
+
   const onStake = async () => {
-    if (value === 0) {
+    if (valueAsNumber() <= 0) {
       toastError('Please enter a stake amount');
       return;
     }
@@ -46,11 +50,11 @@ export const StakeTokensModal = ({ onClose }: Props) => {
     setIsStaking(true);
 
     try {
-      if (allowance < value) {
+      if (allowance < valueAsNumber()) {
         await approve(MaxUint256);
       }
 
-      await stake(value, stakeDuration);
+      await stake(valueAsNumber(), stakeDuration);
 
       onClose();
       toastSuccess('Stake successful, change in tokens will reflect shortly.');
@@ -101,13 +105,28 @@ export const StakeTokensModal = ({ onClose }: Props) => {
           <div className="mt-8">
             <TextInputBox
               label=""
-              value={value?.toString()}
-              type="text"
-              onChange={(v) => !isNaN(+v) && +v <= tokenBalance && setValue(+v)}
+              value={value}
+              type="number"
+              onChange={(v) => {
+                if (v) {
+                  const floatVal = +parseFloat(v);
+
+                  if (!isNaN(floatVal) && floatVal <= tokenBalance) {
+                    setValue(v);
+                  }
+                } else {
+                  setValue('');
+                }
+              }}
               placeholder="Enter amount to stake"
               isFullWidth
               renderRightIcon={() => (
-                <Button variant="gray" className="rounded-full py-2 px-3" onClick={() => setValue(tokenBalance)}>
+                <Button
+                  variant="gray"
+                  size="small"
+                  className="rounded-full py-2 px-3"
+                  onClick={() => setValue(tokenBalance.toString())}
+                >
                   Max
                 </Button>
               )}
@@ -117,7 +136,7 @@ export const StakeTokensModal = ({ onClose }: Props) => {
 
           <div className="text-lg mt-8 flex justify-between">
             <span>Voting power</span>
-            <span>{value * multipliers[stakeDuration]}</span>
+            <span>{valueAsNumber() * multipliers[stakeDuration]}</span>
           </div>
           {/* <hr className="my-3" />
           <div className="text-lg font-medium flex justify-between">

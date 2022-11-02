@@ -3,7 +3,7 @@ import { Button, Modal, PageBox, toastError, toastSuccess, ToggleTab, useToggleT
 import { CuratedCollectionsOrderBy } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections-query.dto';
 import { useRouter } from 'next/router';
 import { AllCuratedCollections } from 'src/components/curation/all-curated';
-import { Sort } from 'src/components/curation/sort';
+import { Sort, SortButtonOrder } from 'src/components/curation/sort';
 import { MyCuratedCollections } from 'src/components/curation/my-curated';
 import { CuratedTab } from 'src/components/curation/types';
 import { useCurationBulkVoteContext } from 'src/utils/context/CurationBulkVoteContext';
@@ -13,7 +13,7 @@ import { OrderDirection } from '@infinityxyz/lib-frontend/types/core';
 
 export default function Curation() {
   const { chainId, user } = useOnboardContext();
-  const [order, setOrder] = useState({
+  const [order, setOrder] = useState<SortButtonOrder>({
     orderBy: CuratedCollectionsOrderBy.Votes,
     direction: OrderDirection.Descending
   });
@@ -88,14 +88,14 @@ export default function Curation() {
             </>
           )}
         </div>
-        <div className="flex flex-row">
+        <div className="flex items-center flex-row">
           <ToggleTab
             className="font-heading pointer-events-auto"
             options={options}
             selected={selected}
             onChange={onChange}
           />
-          <Sort onClick={setOrder} />
+          <Sort order={order} onClick={setOrder} />
         </div>
       </div>
       <div>

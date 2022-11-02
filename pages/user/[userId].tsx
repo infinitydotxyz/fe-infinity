@@ -15,8 +15,9 @@ const UserDetailPage = () => {
   }
 
   const { result, isLoading, isError, error } = useFetch(`${USER_API_END_POINT}/${query.userId}`);
+  const userInfo = result as UserProfileDto;
 
-  if (isLoading) {
+  if (isLoading || (!userInfo && !isError)) {
     return (
       <PageBox title="Loading...">
         <CenteredContent>
@@ -24,23 +25,20 @@ const UserDetailPage = () => {
         </CenteredContent>
       </PageBox>
     );
-  }
-
-  if (isError) {
+  } else if (isError) {
     console.error(error);
     return (
       <PageBox title="Error" className="mb-12">
         Failed fetching user profile
       </PageBox>
     );
+  } else {
+    return (
+      <PageBox title={userInfo.username || userInfo.address} showTitle={false} className="pb-8">
+        <UserPage userInfo={result as UserProfileDto} isOwner={!!(user && user.address === userInfo.address)} />
+      </PageBox>
+    );
   }
-
-  const userInfo = result as UserProfileDto;
-  return (
-    <PageBox title={userInfo.username || userInfo.address} showTitle={false} className="pb-8">
-      <UserPage userInfo={result as UserProfileDto} isOwner={!!(user && user.address === userInfo.address)} />
-    </PageBox>
-  );
 };
 
 export default UserDetailPage;

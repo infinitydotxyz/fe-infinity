@@ -1,4 +1,5 @@
 import { ChainId, SearchType } from '@infinityxyz/lib-frontend/types/core';
+import { useEffect } from 'react';
 import { useSearch } from 'src/hooks/api/useSearch';
 import { useSearchState } from 'src/hooks/api/useSearchState';
 import { SearchInput } from './search-input';
@@ -9,7 +10,7 @@ interface Props {
 }
 
 export const CollectionNftSearchInput = ({ expanded, slug }: Props) => {
-  const { search, setSubTypeQuery } = useSearchState<SearchType.Collection, 'slug', 'nft'>({
+  const { search, setSubTypeQuery, setQuery } = useSearchState<SearchType.Collection, 'slug', 'nft'>({
     type: SearchType.Collection,
     query: slug,
     searchBy: 'slug',
@@ -21,6 +22,10 @@ export const CollectionNftSearchInput = ({ expanded, slug }: Props) => {
     subTypeSearchBy: 'tokenId'
   });
   const { result } = useSearch(search);
+
+  useEffect(() => {
+    setQuery(slug);
+  }, [slug]);
 
   return (
     <SearchInput
