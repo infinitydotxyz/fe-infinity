@@ -27,12 +27,13 @@ import { isVideoNft } from 'src/components/gallery/token-fetcher';
 import { WaitingForTxModal } from 'src/components/orderbook/order-drawer/waiting-for-tx-modal';
 import { OrderbookContainer } from 'src/components/orderbook/orderbook-list';
 import { useSaveReferral } from 'src/hooks/api/useSaveReferral';
-import { apiGet, ellipsisAddress, getOwnerAddress, MISSING_IMAGE_URL, useFetch } from 'src/utils';
+import { apiGet, displayTypeToProps, ellipsisAddress, getOwnerAddress, MISSING_IMAGE_URL, useFetch } from 'src/utils';
 import { useDrawerContext } from 'src/utils/context/DrawerContext';
 import { getOBOrderFromFirestoreOrderItem } from 'src/utils/exchange/orders';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { fetchUserSignedOBOrder } from 'src/utils/orderbookUtils';
 import { useSWRConfig } from 'swr';
+import { twMerge } from 'tailwind-merge';
 
 const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
   const { mutate } = useSWRConfig();
@@ -274,8 +275,9 @@ const AssetDetailContent = ({ chainId, collectionAddress, tokenId }: Props) => {
     </>
   );
 
-  const isCover = token?.displayType === 'cover';
-  const imageClass = 'rounded-3xl overflow-clip w-80 mx-auto sm:w-96 md:w-96 lg:w-144';
+  const { isCover, padding } = displayTypeToProps(token?.displayType);
+  const imageClass = twMerge('rounded-3xl overflow-clip w-80 mx-auto sm:w-96 md:w-96 lg:w-144', padding);
+
   let image = <EZImage src={imgUrl} className={imageClass} cover={isCover} />;
 
   if (isVideoNft(token)) {

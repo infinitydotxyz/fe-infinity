@@ -20,6 +20,28 @@ export const isLocalhost = () => !isServer() && (window?.location?.host || '').i
 
 export const isProd = () => process.env.NODE_ENV === 'production';
 
+export const displayTypeToProps = (displayType: string | undefined): { isCover: boolean; padding: string } => {
+  let isCover = true;
+  let padding = '';
+
+  switch (displayType) {
+    case 'cover':
+      isCover = true;
+      break;
+    case 'contain':
+      isCover = false;
+      break;
+    case 'padded':
+      padding = 'p-2';
+      isCover = false;
+      break;
+    default:
+      break;
+  }
+
+  return { isCover, padding };
+};
+
 export const cl = (data: unknown) => {
   console.log(JSON.stringify(data, null, 2));
 };
