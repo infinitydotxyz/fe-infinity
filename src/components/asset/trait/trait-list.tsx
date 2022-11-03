@@ -5,15 +5,16 @@ import { Trait } from './trait';
 interface TraitListProps {
   traits: Erc721Attribute[];
   collectionTraits?: CollectionAttributes;
+  className?: string;
 }
 
-export const TraitList: FC<TraitListProps> = ({ traits, collectionTraits }) => {
+export const TraitList: FC<TraitListProps> = ({ traits, className = 'mt-6', collectionTraits }) => {
   return (
     <>
       {traits?.length > 0 ? (
         <>
-          <div className="mt-10">
-            <p className="mt-4 sm:mt-6 sm:mb-4 tracking-base text-black font-bold">Traits</p>
+          <div className={className}>
+            <p className=" text-xl text-black font-bold">Traits</p>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-4 mt-6">
               {traits?.map((trait: Erc721Attribute, idx) => {
