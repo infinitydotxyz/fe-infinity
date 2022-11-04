@@ -2,8 +2,20 @@ import { RaffleLeaderboardUser } from '@infinityxyz/lib-frontend/types/dto';
 import { ellipsisAddress, nFormatter } from 'src/utils';
 import { EZImage, NextLink } from '../common';
 import person from 'src/images/person.png';
+import { useEnsName } from 'src/hooks/useEnsName';
 
 export const RaffleLeaderboardItem = ({ entrant: item }: { entrant: RaffleLeaderboardUser }) => {
+  const ensName = useEnsName(item.entrant.address);
+
+  let name = item.entrant.username;
+  if (!name) {
+    name = ensName;
+
+    if (!name) {
+      name = ellipsisAddress(item.entrant.address);
+    }
+  }
+
   return (
     <div className="bg-theme-light-200 py-4 px-2 rounded-3xl flex items-center font-heading my-2">
       <div className="flex justify-between items-center w-full">
@@ -16,7 +28,7 @@ export const RaffleLeaderboardItem = ({ entrant: item }: { entrant: RaffleLeader
             />
           </NextLink>
           <NextLink href={`/user/${item.entrant.address}`} className="md:inline-block ml-2">
-            {item.entrant.username || ellipsisAddress(item.entrant.address)}
+            {name}
           </NextLink>
         </div>
 
