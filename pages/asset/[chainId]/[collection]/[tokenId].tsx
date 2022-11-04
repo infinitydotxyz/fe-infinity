@@ -4,7 +4,6 @@ import { utils } from 'ethers';
 import { useRouter } from 'next/router';
 import NotFound404Page from 'pages/not-found-404';
 import { useEffect, useState } from 'react';
-import { useResizeDetector } from 'react-resize-detector';
 import { ActivityList, CancelModal, ListNFTModal, MakeOfferModal, SendNFTModal, TraitList } from 'src/components/asset';
 import { LowerPriceModal } from 'src/components/asset/modals/lower-price-modal';
 import {
@@ -28,6 +27,7 @@ import { isVideoNft } from 'src/components/gallery/token-fetcher';
 import { WaitingForTxModal } from 'src/components/orderbook/order-drawer/waiting-for-tx-modal';
 import { OrderbookContainer } from 'src/components/orderbook/orderbook-list';
 import { useSaveReferral } from 'src/hooks/api/useSaveReferral';
+import useScreenSize from 'src/hooks/useScreenSize';
 import { apiGet, ellipsisAddress, getOwnerAddress, MISSING_IMAGE_URL, useFetch } from 'src/utils';
 import { useDrawerContext } from 'src/utils/context/DrawerContext';
 import { getOBOrderFromFirestoreOrderItem } from 'src/utils/exchange/orders';
@@ -417,7 +417,7 @@ interface Props2 {
 }
 
 const ResponsiveImage = ({ token }: Props2) => {
-  const { width, ref } = useResizeDetector();
+  const { innerWidth } = useScreenSize();
 
   if (token?.image?.url) {
     token.image.url = token.image.url.replace('storage.opensea.io', 'openseauserdata.com');
@@ -451,10 +451,10 @@ const ResponsiveImage = ({ token }: Props2) => {
     image = <video loop controls src={imgUrl} className={imageClass}></video>;
   }
 
-  const height = Math.min(width ?? 500, 500);
+  const height = Math.min(innerWidth ?? 500, 500);
 
   return (
-    <div ref={ref} className=" md:flex-1" style={{ height: height, minWidth: height }}>
+    <div className=" md:flex-1" style={{ height: height, width: height }}>
       {image}
     </div>
   );
