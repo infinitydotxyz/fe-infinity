@@ -48,3 +48,12 @@ ico, one liner makes it clear what invinity is
 curation auto execution of orders
 
 ---
+
+hey Infinity is asking me to sign in everytime I change networks. It's extremely annoying and the only protocol that does so. Can you please turn this off? I'll sign in whenever I need to be on the protocol
+even when I switch to a random testnet I would get the infinity connection pop-up
+
+I have it open in a tab typically, but when I change network and am doing very different stuff it will always bother me with pop ups
+[9:17 AM]
+Its the only thing I am aware that does it bcs I have many many tabs open at all times
+
+So just to confirm this happens even when infinity is not the active tab right?
