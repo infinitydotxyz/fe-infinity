@@ -11,14 +11,17 @@ export const useEnsName = (address: string) => {
 
   useEffect(() => {
     if (wallet) {
-      const ethersProvider = new ethers.providers.Web3Provider(wallet.provider, 'any');
-
       const asyncFunct = async () => {
-        const name = await ethersProvider.lookupAddress(address);
+        // don't try if not an address
+        if (address && address.startsWith('0x')) {
+          const ethersProvider = new ethers.providers.Web3Provider(wallet.provider, 'any');
 
-        if (name) {
-          if (isMounted()) {
-            setEnsName(name);
+          const name = await ethersProvider.lookupAddress(address);
+
+          if (name) {
+            if (isMounted()) {
+              setEnsName(name);
+            }
           }
         }
       };
