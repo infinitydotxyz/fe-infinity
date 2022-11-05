@@ -106,6 +106,9 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
   // ===========================================================
 
   const updateWallet = async () => {
+    // reset to false for the case of someone switching, then switching back
+    setShowUserUpdatedDialog(false);
+
     if (OnboardEmitter.isUserAddressChanging(userAddress())) {
       if (wallet) {
         if (!document.hasFocus()) {
@@ -294,6 +297,8 @@ interface Props {
   onClose: () => void;
 }
 
+// the purpose of this modal is to force the user to click "Continue" which will dismiss the open metamask
+// window, then after dismissing, another metamask window is able to pop down without issues.
 export const UserChangedModel = ({ userAddress, isOpen, onClose }: Props) => {
   const onOKButton = () => {
     onClose();
