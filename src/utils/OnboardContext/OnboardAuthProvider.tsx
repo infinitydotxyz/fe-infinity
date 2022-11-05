@@ -6,26 +6,30 @@ import { verifyMessage } from 'ethers/lib/utils';
 import { base64Encode, getLoginMessage } from '../commonUtils';
 import { WalletSigner } from './WalletSigner';
 
-enum StorageKeys {
-  CurrentUser = 'CURRENT_USER',
-  AuthNonce = 'X-AUTH-NONCE',
-  AuthSignature = 'X-AUTH-SIGNATURE',
-  AuthMessage = 'X-AUTH-MESSAGE',
-  Wallet = 'WALLET'
-}
+type WalletCreds = {
+  nonce: number;
+  signature: Signature | undefined;
+  message: string;
+};
 
 class _OnboardAuthProvider {
-  private authNonce = 0;
-  private authSignature?: Signature;
-  private authMessage = '';
+  private currentCreds: WalletCreds = {
+    nonce: 0,
+    signature: undefined,
+    message: ''
+  };
   private walletSigner: WalletSigner | null = null;
 
   clear() {
     this.walletSigner = null;
-    this.authNonce = 0;
-    this.authSignature = undefined;
-    this.authMessage = '';
-    this.saveAuthSignature();
+
+    this.currentCreds = {
+      nonce: 0,
+      signature: undefined,
+      message: ''
+    };
+
+    this.saveCreds();
   }
 
   // OnboardContext updates this
@@ -51,9 +55,9 @@ class _OnboardAuthProvider {
   getAuthHeaders(): AxiosRequestHeaders {
     if (this.isLoggedInAndAuthenticated()) {
       return {
-        [StorageKeys.AuthNonce]: this.authNonce,
-        [StorageKeys.AuthMessage]: base64Encode(this.authMessage),
-        [StorageKeys.AuthSignature]: JSON.stringify(this.authSignature)
+        'X-AUTH-NONCE': this.currentCreds.nonce,
+        'X-AUTH-MESSAGE': base64Encode(this.currentCreds.message),
+        'X-AUTH-SIGNATURE': JSON.stringify(this.currentCreds.signature)
       };
     }
 
@@ -66,11 +70,11 @@ class _OnboardAuthProvider {
     if (this.walletSigner) {
       const currentUser = trimLowerCase(this.walletSigner.address());
 
-      if (currentUser && this.authNonce && this.authMessage && this.authSignature) {
+      if (currentUser && this.currentCreds.nonce && this.currentCreds.message && this.currentCreds.signature) {
         try {
-          const signer = verifyMessage(this.authMessage, this.authSignature).toLowerCase();
+          const signer = verifyMessage(this.currentCreds.message, this.currentCreds.signature).toLowerCase();
           const isSigValid = signer === currentUser;
-          const isNonceValid = Date.now() - this.authNonce < LOGIN_NONCE_EXPIRY_TIME;
+          const isNonceValid = Date.now() - this.currentCreds.nonce < LOGIN_NONCE_EXPIRY_TIME;
 
           const result = isSigValid && isNonceValid;
 
@@ -86,37 +90,67 @@ class _OnboardAuthProvider {
   }
 
   loadCreds = () => {
-    const localStorage = window.localStorage;
-    const authNonce = localStorage.getItem(StorageKeys.AuthNonce);
-    const authSignature = localStorage.getItem(StorageKeys.AuthSignature);
-    const authMessage = localStorage.getItem(StorageKeys.AuthMessage);
+    if (this.walletSigner) {
+      const currentUser = trimLowerCase(this.walletSigner.address());
 
-    let parsedSignature;
-    try {
-      parsedSignature = JSON.parse(authSignature || '');
-    } catch (err) {
-      console.error(err);
-    }
+      if (currentUser) {
+        const key = `creds-${currentUser}`;
 
-    if (
-      parsedSignature &&
-      'r' in parsedSignature &&
-      's' in parsedSignature &&
-      'v' in parsedSignature &&
-      'recoveryParam' in parsedSignature
-    ) {
-      this.authSignature = parsedSignature;
+        const credsString = localStorage.getItem(key);
+        if (credsString) {
+          try {
+            const creds = JSON.parse(credsString);
+
+            const nonceString = creds['nonce'];
+            const signatureString = creds['signature'];
+            const messageString = creds['message'];
+
+            const parsedSignature = JSON.parse(signatureString || '');
+
+            let signature;
+            if (
+              parsedSignature &&
+              'r' in parsedSignature &&
+              's' in parsedSignature &&
+              'v' in parsedSignature &&
+              'recoveryParam' in parsedSignature
+            ) {
+              signature = parsedSignature;
+            }
+
+            if (nonceString && signature && messageString) {
+              const result: WalletCreds = {
+                nonce: parseInt(nonceString) ?? 0,
+                message: messageString ?? '',
+                signature: signature
+              };
+
+              this.currentCreds = result;
+            }
+          } catch (err) {
+            console.log(err);
+          }
+        }
+      }
     }
-    this.authMessage = authMessage ?? '';
-    this.authNonce = parseInt(authNonce ?? '0');
   };
 
-  saveAuthSignature = () => {
-    const localStorage = window.localStorage;
+  saveCreds = () => {
+    if (this.walletSigner) {
+      const currentUser = trimLowerCase(this.walletSigner.address());
 
-    localStorage.setItem(StorageKeys.AuthNonce, this.authNonce.toString());
-    localStorage.setItem(StorageKeys.AuthSignature, JSON.stringify(this.authSignature ?? {}));
-    localStorage.setItem(StorageKeys.AuthMessage, this.authMessage);
+      if (currentUser) {
+        const key = `creds-${currentUser}`;
+
+        const data = {
+          nonce: this.currentCreds.nonce,
+          message: this.currentCreds.message,
+          signature: JSON.stringify(this.currentCreds.signature ?? {})
+        };
+
+        localStorage.setItem(key, JSON.stringify(data));
+      }
+    }
   };
 
   authenticate = async () => {
@@ -128,14 +162,13 @@ class _OnboardAuthProvider {
       }
 
       const nonce = Date.now();
-      const loginMsg = getLoginMessage(nonce);
-      const signature = await this.walletSigner.signMessage(loginMsg);
+      const message = getLoginMessage(nonce);
+      const signature = await this.walletSigner.signMessage(message);
       if (signature) {
         try {
-          this.authNonce = nonce;
-          this.authSignature = signature;
-          this.authMessage = loginMsg;
-          this.saveAuthSignature();
+          this.currentCreds = { nonce, signature, message };
+
+          this.saveCreds();
         } catch (err) {
           console.error('Error saving login info', err);
         }
