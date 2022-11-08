@@ -3,7 +3,8 @@ import { LOGIN_NONCE_EXPIRY_TIME, trimLowerCase } from '@infinityxyz/lib-fronten
 import { AxiosRequestHeaders } from 'axios';
 import { Signature } from 'ethers';
 import { verifyMessage } from 'ethers/lib/utils';
-import { base64Encode, getLoginMessage } from '../commonUtils';
+import { base64Encode } from '../commonUtils';
+import { getMutex } from './mutex';
 import { WalletSigner } from './WalletSigner';
 
 type WalletCreds = {
@@ -19,6 +20,7 @@ class _OnboardAuthProvider {
     message: ''
   };
   private walletSigner: WalletSigner | null = null;
+  private mutex = getMutex();
 
   clear() {
     this.walletSigner = null;
@@ -33,7 +35,7 @@ class _OnboardAuthProvider {
   }
 
   // OnboardContext updates this
-  async updateWalletSigner(walletSigner: WalletSigner | null) {
+  updateWalletSigner(walletSigner: WalletSigner | null) {
     let update = true;
 
     if (this.walletSigner !== null && walletSigner !== null) {
@@ -46,13 +48,18 @@ class _OnboardAuthProvider {
     if (update) {
       this.walletSigner = walletSigner;
 
-      if (this.walletSigner) {
-        await this.authenticate();
-      }
+      // we will authenticate as needed in getAuthHeaders
+      // if (this.walletSigner) {
+      //   await this.authenticate();
+      // }
     }
   }
 
-  getAuthHeaders(): AxiosRequestHeaders {
+  async getAuthHeaders(): Promise<AxiosRequestHeaders> {
+    if (!this.isAuthenticated()) {
+      await this.authenticate();
+    }
+
     if (this.isAuthenticated()) {
       return {
         'X-AUTH-NONCE': this.currentCreds.nonce,
@@ -153,27 +160,44 @@ class _OnboardAuthProvider {
     }
   };
 
+  getLoginMessage = (nonce: number): string => {
+    // ignore the formatting of this multiline string
+    const msg = `Welcome to Infinity. Click "Sign" to sign in. No password needed. This request will not trigger a blockchain transaction or cost any gas fees.
+   
+  I accept the Infinity Terms of Service: https://infinity.xyz/terms
+  
+  Nonce: ${nonce}
+  Expires in: 24 hrs`;
+
+    return msg;
+  };
+
   authenticate = async () => {
     if (this.walletSigner) {
-      this.loadCreds();
-
-      if (this.isAuthenticated()) {
-        return;
-      }
+      const [lock, release] = this.mutex.getLock();
 
       try {
-        const nonce = Date.now();
-        const message = getLoginMessage(nonce);
-        const signature = await this.walletSigner.signMessage(message);
-        if (signature) {
-          this.currentCreds = { nonce, signature, message };
+        // we don't want 4 authenticate calls all at once, do them one at a time
+        await lock;
 
-          this.saveCreds();
-        } else {
-          console.error('No signature');
+        this.loadCreds();
+
+        if (!this.isAuthenticated()) {
+          const nonce = Date.now();
+          const message = this.getLoginMessage(nonce);
+          const signature = await this.walletSigner.signMessage(message);
+          if (signature) {
+            this.currentCreds = { nonce, signature, message };
+
+            this.saveCreds();
+          } else {
+            console.error('No signature');
+          }
         }
       } catch (err) {
-        console.error('Error when signMessage', err);
+        console.error('Error in authenticate', err);
+      } finally {
+        release();
       }
     }
   };

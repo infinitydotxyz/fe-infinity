@@ -101,7 +101,7 @@ export const apiGet = async (path: string, params?: ApiParams): Promise<ApiRespo
 // example: const { result, error, status } = await apiPost(`/api/path`, { data: { somekey: 'somevalue' } });
 export const apiPost = async (path: string, params?: ApiParams): Promise<ApiResponse> => {
   const queryStr = buildQueryString(params?.query);
-  const headers = OnboardAuthProvider.getAuthHeaders();
+  const headers = await OnboardAuthProvider.getAuthHeaders();
   try {
     const { data, status } = await axiosApi({
       url: `${API_BASE}${path}${queryStr}`,
@@ -129,7 +129,7 @@ export const apiPut = (path: string, params?: ApiParams) => {
 
 export const apiDelete = async (path: string, params?: ApiParams): Promise<ApiResponse> => {
   const queryStr = buildQueryString(params?.query);
-  const headers = OnboardAuthProvider.getAuthHeaders();
+  const headers = await OnboardAuthProvider.getAuthHeaders();
   try {
     const { data, status } = await axiosApi({
       url: `${API_BASE}${path}${queryStr}`,

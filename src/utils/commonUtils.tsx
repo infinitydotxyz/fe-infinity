@@ -224,18 +224,6 @@ export const truncateDecimals = (numStr: string) => {
   return ((numStr ?? '') + ' ').slice(0, numStr.indexOf('.'));
 };
 
-export const getLoginMessage = (nonce: number): string => {
-  // ignore the formatting of this multiline string
-  const msg = `Welcome to Infinity. Click "Sign" to sign in. No password needed. This request will not trigger a blockchain transaction or cost any gas fees.
- 
-I accept the Infinity Terms of Service: https://infinity.xyz/terms
-
-Nonce: ${nonce}
-Expires in: 24 hrs`;
-
-  return msg;
-};
-
 // optimize googleusercontent banner image to have smaller resolution for faster loading.
 // src example: https://lh3.googleusercontent.com/o7jTd9uDpVGbHOCgpHvId3c-O6clNo-DnvrJ0fSaZOH9fs4Wj2W1WZL6_RlfGk0a8gRb0GXgiMuwdUZVB0cn3zIM_1NPC9thgdGXJA=s2500
 export const getOptimizedCloudImage = (src: string | undefined, resolution = 'h300') => {

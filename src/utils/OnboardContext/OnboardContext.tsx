@@ -122,13 +122,13 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
     // keep OnboardAuthProvider in sync
     if (wallet) {
       const walletSigner = new WalletSigner(wallet);
-      await OnboardAuthProvider.updateWalletSigner(walletSigner);
+      OnboardAuthProvider.updateWalletSigner(walletSigner);
 
       setUser({ address: userAddress() });
 
       await updateUserInfo(userAddress());
     } else {
-      await OnboardAuthProvider.updateWalletSigner(null);
+      OnboardAuthProvider.updateWalletSigner(null);
       setUser(null);
     }
 
