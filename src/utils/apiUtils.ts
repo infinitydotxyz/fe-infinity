@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosRequestHeaders } from 'axios';
+import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios';
 import useSWR, { SWRConfiguration } from 'swr';
 import { stringify } from 'query-string';
 import { API_BASE } from './constants';
@@ -47,10 +47,6 @@ const catchError = (err: any) => {
   return { error: errorData, status: err?.response?.status };
 };
 
-export const getAuthHeaders = (): AxiosRequestHeaders => {
-  return OnboardAuthProvider.getAuthHeaders();
-};
-
 interface ApiParams {
   query?: unknown; // query object - will be converted to query string (?param1=value1&param2=value2...).
   data?: unknown; // data (payload) for Post, Put, Delete
@@ -82,7 +78,7 @@ export const apiGet = async (path: string, params?: ApiParams): Promise<ApiRespo
 
     let authHeaders = {};
     if (requiresAuth) {
-      authHeaders = getAuthHeaders();
+      authHeaders = OnboardAuthProvider.getAuthHeaders();
     }
 
     const { data, status } = await axiosApi({
@@ -105,7 +101,7 @@ export const apiGet = async (path: string, params?: ApiParams): Promise<ApiRespo
 // example: const { result, error, status } = await apiPost(`/api/path`, { data: { somekey: 'somevalue' } });
 export const apiPost = async (path: string, params?: ApiParams): Promise<ApiResponse> => {
   const queryStr = buildQueryString(params?.query);
-  const headers = getAuthHeaders();
+  const headers = OnboardAuthProvider.getAuthHeaders();
   try {
     const { data, status } = await axiosApi({
       url: `${API_BASE}${path}${queryStr}`,
@@ -133,7 +129,7 @@ export const apiPut = (path: string, params?: ApiParams) => {
 
 export const apiDelete = async (path: string, params?: ApiParams): Promise<ApiResponse> => {
   const queryStr = buildQueryString(params?.query);
-  const headers = getAuthHeaders();
+  const headers = OnboardAuthProvider.getAuthHeaders();
   try {
     const { data, status } = await axiosApi({
       url: `${API_BASE}${path}${queryStr}`,
