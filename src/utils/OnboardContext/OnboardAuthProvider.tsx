@@ -53,7 +53,7 @@ class _OnboardAuthProvider {
   }
 
   getAuthHeaders(): AxiosRequestHeaders {
-    if (this.isLoggedInAndAuthenticated()) {
+    if (this.isAuthenticated()) {
       return {
         'X-AUTH-NONCE': this.currentCreds.nonce,
         'X-AUTH-MESSAGE': base64Encode(this.currentCreds.message),
@@ -66,7 +66,7 @@ class _OnboardAuthProvider {
     return {};
   }
 
-  isLoggedInAndAuthenticated(): boolean {
+  isAuthenticated(): boolean {
     if (this.walletSigner) {
       const currentUser = trimLowerCase(this.walletSigner.address());
 
@@ -157,23 +157,23 @@ class _OnboardAuthProvider {
     if (this.walletSigner) {
       this.loadCreds();
 
-      if (this.isLoggedInAndAuthenticated()) {
+      if (this.isAuthenticated()) {
         return;
       }
 
-      const nonce = Date.now();
-      const message = getLoginMessage(nonce);
-      const signature = await this.walletSigner.signMessage(message);
-      if (signature) {
-        try {
+      try {
+        const nonce = Date.now();
+        const message = getLoginMessage(nonce);
+        const signature = await this.walletSigner.signMessage(message);
+        if (signature) {
           this.currentCreds = { nonce, signature, message };
 
           this.saveCreds();
-        } catch (err) {
-          console.error('Error saving login info', err);
+        } else {
+          console.error('No signature');
         }
-      } else {
-        console.error('No signature');
+      } catch (err) {
+        console.error('Error when signMessage', err);
       }
     }
   };
