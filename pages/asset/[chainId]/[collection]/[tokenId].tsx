@@ -27,6 +27,7 @@ import { isVideoNft } from 'src/components/gallery/token-fetcher';
 import { WaitingForTxModal } from 'src/components/orderbook/order-drawer/waiting-for-tx-modal';
 import { OrderbookContainer } from 'src/components/orderbook/orderbook-list';
 import { useSaveReferral } from 'src/hooks/api/useSaveReferral';
+import useScreenSize from 'src/hooks/useScreenSize';
 import { apiGet, ellipsisAddress, getOwnerAddress, MISSING_IMAGE_URL, useFetch } from 'src/utils';
 import { useDrawerContext } from 'src/utils/context/DrawerContext';
 import { getOBOrderFromFirestoreOrderItem } from 'src/utils/exchange/orders';
@@ -119,26 +120,6 @@ const AssetDetailContent = ({ chainId, collectionAddress, tokenId }: Props) => {
       setSellPriceEth(utils.formatEther(price));
     }
   }, [token]);
-
-  if (token?.image?.url) {
-    token.image.url = token.image.url.replace('storage.opensea.io', 'openseauserdata.com');
-  }
-
-  // if cached url is null, try original url or the blank image
-  if (token && !token?.image?.url) {
-    token.image = token.image || {};
-    token.image.url = token.alchemyCachedImage ?? token.image?.originalUrl ?? '';
-  }
-
-  const images = [token?.image?.url, token?.alchemyCachedImage, token?.metadata?.image, MISSING_IMAGE_URL].filter(
-    (url) => !!url && !url.startsWith('ipfs')
-  );
-  const imgUrl = images[0];
-  if (token && (!imgUrl || imgUrl.startsWith('ipfs'))) {
-    if (token.image) {
-      token.image.url = MISSING_IMAGE_URL;
-    }
-  }
 
   if (isLoading) {
     return (
@@ -274,26 +255,18 @@ const AssetDetailContent = ({ chainId, collectionAddress, tokenId }: Props) => {
     </>
   );
 
-  const isCover = token?.displayType === 'cover';
-  const imageClass = 'rounded-3xl overflow-clip w-80 mx-auto sm:w-96 md:w-96 lg:w-144';
-  let image = <EZImage src={imgUrl} className={imageClass} cover={isCover} />;
-
-  if (isVideoNft(token)) {
-    image = <video loop controls src={imgUrl} className={imageClass}></video>;
-  }
-
   return (
-    <PageBox title={assetName} showTitle={false} className="flex flex-col max-w-screen-2xl mt-4">
-      <div className="sm:flex">
-        <div className="min-h-12 w-80 mx-auto sm:w-96 md:w-96 lg:w-144 sm:mr-6 md:mr-8 lg:mr-12 mb-4">{image}</div>
-        <div className="flex-1">
+    <PageBox title={assetName} showTitle={false} className="flex flex-col mt-6">
+      <div className="flex flex-col gap-10 mr-auto max-w-[1100px] md:flex-row md:items-start">
+        <ResponsiveImage token={token} />
+        <div className="md:flex-1 ">
           <h3 className="text-black font-body text-2xl font-bold leading-normal tracking-wide pb-1">
             {tokenMetadata.name ? tokenMetadata.name : `${token.collectionName} #${token.tokenId}`}
           </h3>
-          <div className="flex items-center sm:mb-6">
+          <div className="flex items-center mb-6">
             <NextLink
               href={`/collection/${token.collectionSlug || `${token.chainId}:${token.collectionAddress}`}`}
-              className="text-theme-light-800 font-heading tracking-tight mr-2"
+              className="  font-heading tracking-tight mr-2"
             >
               <div>{token.collectionName || ellipsisAddress(token.collectionAddress) || 'Collection'}</div>
             </NextLink>
@@ -321,7 +294,7 @@ const AssetDetailContent = ({ chainId, collectionAddress, tokenId }: Props) => {
             <div className="flex flex-col md:flex-row gap-4 my-4 md:my-6 lg:mt-10">
               {buyPriceEth && (
                 <>
-                  <Button variant="outline" size="large" onClick={onClickCancel}>
+                  <Button variant="outline" onClick={onClickCancel}>
                     <div className="flex">
                       <span className="mr-4">Cancel</span>
                       <span>
@@ -329,7 +302,7 @@ const AssetDetailContent = ({ chainId, collectionAddress, tokenId }: Props) => {
                       </span>
                     </div>
                   </Button>
-                  <Button variant="outline" size="large" onClick={onClickLowerPrice}>
+                  <Button variant="outline" onClick={onClickLowerPrice}>
                     Lower Price
                   </Button>
                 </>
@@ -339,16 +312,16 @@ const AssetDetailContent = ({ chainId, collectionAddress, tokenId }: Props) => {
 
           {isNftOwner ? (
             <div className="flex flex-col md:flex-row gap-4 my-4 md:my-6 lg:mt-10">
-              <Button variant="outline" size="large" onClick={onClickSend}>
+              <Button variant="outline" onClick={onClickSend}>
                 Send
               </Button>
               {!isListingOwner && (
-                <Button variant="outline" size="large" onClick={onClickList}>
+                <Button variant="outline" onClick={onClickList}>
                   List
                 </Button>
               )}
               {sellPriceEth && (
-                <Button variant="outline" size="large" className="" onClick={onClickAcceptOffer}>
+                <Button variant="outline" className="" onClick={onClickAcceptOffer}>
                   <div className="flex">
                     Accept Offer <EthPrice label={`${sellPriceEth}`} className="ml-2" />
                   </div>
@@ -359,7 +332,7 @@ const AssetDetailContent = ({ chainId, collectionAddress, tokenId }: Props) => {
             // Other users' action buttons
             <div className="flex flex-col md:flex-row gap-4 my-4 md:my-6 lg:mt-10">
               {buyPriceEth && (
-                <Button variant="primary" size="large" onClick={onClickBuy}>
+                <Button variant="primary" onClick={onClickBuy}>
                   <div className="flex">
                     <span className="mr-4">Buy</span>
                     <span>
@@ -368,7 +341,7 @@ const AssetDetailContent = ({ chainId, collectionAddress, tokenId }: Props) => {
                   </div>
                 </Button>
               )}
-              <Button variant="outline" size="large" onClick={onClickMakeOffer}>
+              <Button variant="outline" onClick={onClickMakeOffer}>
                 Make offer
               </Button>
             </div>
@@ -377,7 +350,6 @@ const AssetDetailContent = ({ chainId, collectionAddress, tokenId }: Props) => {
           <div className="flex flex-col md:flex-row">
             <Button
               variant="outline"
-              size="large"
               onClick={async () => {
                 const { error } = await apiGet(
                   `/collections/${token.chainId}:${token.collectionAddress}/nfts/${token.tokenId}/refresh-metadata`
@@ -398,7 +370,7 @@ const AssetDetailContent = ({ chainId, collectionAddress, tokenId }: Props) => {
 
           {tokenMetadata.description ? (
             <>
-              <p className="font-body text-black mb-1 lg:mt-10">Description</p>
+              <p className="font-body text-black mb-1 mt-6">Description</p>
               <div>
                 <ReadMoreText text={tokenMetadata.description ?? ''} min={100} ideal={150} max={300} />
               </div>
@@ -437,3 +409,53 @@ const AssetDetailContent = ({ chainId, collectionAddress, tokenId }: Props) => {
 };
 
 export default AssetDetailPage;
+
+// ================================================================================
+
+interface Props2 {
+  token: Token;
+}
+
+const ResponsiveImage = ({ token }: Props2) => {
+  const { innerWidth } = useScreenSize();
+
+  if (token?.image?.url) {
+    token.image.url = token.image.url.replace('storage.opensea.io', 'openseauserdata.com');
+  }
+
+  // if cached url is null, try original url or the blank image
+  if (token && !token?.image?.url) {
+    token.image = token.image || {};
+    token.image.url = token.alchemyCachedImage ?? token.image?.originalUrl ?? '';
+  }
+
+  const images = [token?.image?.url, token?.alchemyCachedImage, token?.metadata?.image, MISSING_IMAGE_URL].filter(
+    (url) => !!url && !url.startsWith('ipfs')
+  );
+  const imgUrl = images[0];
+  if (token && (!imgUrl || imgUrl.startsWith('ipfs'))) {
+    if (token.image) {
+      token.image.url = MISSING_IMAGE_URL;
+    }
+  }
+
+  // we want to show the entire nft at the correct aspect ratio
+  // below is used on the cards
+  // const { isCover, padding } = displayTypeToProps(token?.displayType);
+  // const imageClass = twMerge('rounded-3xl overflow-clip w-80 mx-auto sm:w-96 md:w-96 lg:w-144', padding);
+
+  const imageClass = '';
+  let image = <EZImage src={imgUrl} className={imageClass} cover={false} center={false} />;
+
+  if (isVideoNft(token)) {
+    image = <video loop controls src={imgUrl} className={imageClass}></video>;
+  }
+
+  const height = Math.min(innerWidth ?? 500, 500);
+
+  return (
+    <div className=" md:flex-1" style={{ height: height, width: height }}>
+      {image}
+    </div>
+  );
+};

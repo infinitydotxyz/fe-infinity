@@ -83,7 +83,6 @@ export const GlobalFeedList = ({ types, className = '', compact = false }: Props
 
       <div className="space-y-2">
         {activities.map((activity, idx) => {
-          // console.log(JSON.stringify(activity, null, 2));
           return (
             <div key={idx}>
               <FeedListItem

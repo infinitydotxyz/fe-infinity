@@ -7,6 +7,7 @@ import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
 import { NftEventRec } from '../asset/activity/activity-item';
 import person from 'src/images/person.png';
+import { useEnsName } from 'src/hooks/useEnsName';
 
 interface Props {
   activity: NftEventRec;
@@ -15,11 +16,28 @@ interface Props {
 const ellipseParams = [4, 4];
 
 export const FeedListTableItem = ({ activity }: Props) => {
-  const saleItem = () => {
-    const buyer = activity.toDisplayName
-      ? ellipsisAddress(activity.toDisplayName, ...ellipseParams)
-      : ellipsisAddress(activity.to, ...ellipseParams);
+  const fromEns = useEnsName(activity.from);
+  const toEns = useEnsName(activity.to ?? '');
 
+  let fromName = ellipsisAddress(activity.from, ...ellipseParams);
+  if (activity.fromDisplayName) {
+    fromName = ellipsisString(activity.fromDisplayName, ...ellipseParams);
+  } else {
+    if (fromEns) {
+      fromName = ellipsisString(fromEns, 9, 0);
+    }
+  }
+
+  let toName = ellipsisAddress(activity.to, ...ellipseParams);
+  if (activity.toDisplayName) {
+    toName = ellipsisString(activity.toDisplayName, ...ellipseParams);
+  } else {
+    if (toEns) {
+      toName = ellipsisString(toEns, 9, 0);
+    }
+  }
+
+  const saleItem = () => {
     return (
       <div>
         <div className={twMerge(standardBorderCard, 'flex items-center font-heading')}>
@@ -43,16 +61,12 @@ export const FeedListTableItem = ({ activity }: Props) => {
             </TableItem>
 
             <TableItem label="Buyer">
-              {buyer && <NextLink href={`/profile/${activity.to}`}>{buyer}</NextLink>}
-              {!buyer && <div>None</div>}
+              {toName && <NextLink href={`/profile/${activity.to}`}>{toName}</NextLink>}
+              {!toName && <div>None</div>}
             </TableItem>
 
             <TableItem label="Seller">
-              <NextLink href={`/profile/${activity.from}`}>
-                {activity.fromDisplayName
-                  ? ellipsisAddress(activity.fromDisplayName, ...ellipseParams)
-                  : ellipsisAddress(activity.from, ...ellipseParams)}
-              </NextLink>
+              <NextLink href={`/profile/${activity.from}`}>{fromName}</NextLink>
             </TableItem>
 
             <TableItem label="Date">{format(activity.timestamp)}</TableItem>
@@ -63,10 +77,6 @@ export const FeedListTableItem = ({ activity }: Props) => {
   };
 
   const offerItem = () => {
-    const buyer = activity.toDisplayName
-      ? ellipsisAddress(activity.toDisplayName, ...ellipseParams)
-      : ellipsisAddress(activity.to, ...ellipseParams);
-
     return (
       <div>
         <div className={twMerge(standardBorderCard, 'flex items-center font-heading')}>
@@ -90,16 +100,12 @@ export const FeedListTableItem = ({ activity }: Props) => {
             </TableItem>
 
             <TableItem label="Buyer">
-              {buyer && <NextLink href={`/profile/${activity.to}`}>{buyer}</NextLink>}
-              {!buyer && <div>None</div>}
+              {toName && <NextLink href={`/profile/${activity.to}`}>{toName}</NextLink>}
+              {!toName && <div>None</div>}
             </TableItem>
 
             <TableItem label="Maker">
-              <NextLink href={`/profile/${activity.from}`}>
-                {activity.fromDisplayName
-                  ? ellipsisAddress(activity.fromDisplayName, ...ellipseParams)
-                  : ellipsisAddress(activity.from, ...ellipseParams)}
-              </NextLink>
+              <NextLink href={`/profile/${activity.from}`}>{fromName}</NextLink>
             </TableItem>
 
             <TableItem label="Date">{format(activity.timestamp)}</TableItem>
@@ -139,11 +145,7 @@ export const FeedListTableItem = ({ activity }: Props) => {
             </TableItem>
 
             <TableItem label="Maker">
-              <NextLink href={`/profile/${activity.from}`}>
-                {activity.fromDisplayName
-                  ? ellipsisAddress(activity.fromDisplayName, ...ellipseParams)
-                  : ellipsisAddress(activity.from, ...ellipseParams)}
-              </NextLink>
+              <NextLink href={`/profile/${activity.from}`}>{fromName}</NextLink>
             </TableItem>
 
             <TableItem label="Date">{format(activity.timestamp)}</TableItem>
@@ -169,19 +171,11 @@ export const FeedListTableItem = ({ activity }: Props) => {
             </TableItem>
 
             <TableItem label="From">
-              <NextLink href={`/profile/${activity.from}`}>
-                {activity.fromDisplayName
-                  ? ellipsisAddress(activity.fromDisplayName, ...ellipseParams)
-                  : ellipsisAddress(activity.from, ...ellipseParams)}
-              </NextLink>
+              <NextLink href={`/profile/${activity.from}`}>{fromName}</NextLink>
             </TableItem>
 
             <TableItem label="To">
-              <NextLink href={`/profile/${activity.to}`}>
-                {activity.toDisplayName
-                  ? ellipsisAddress(activity.toDisplayName, ...ellipseParams)
-                  : ellipsisAddress(activity.to, ...ellipseParams)}
-              </NextLink>
+              <NextLink href={`/profile/${activity.to}`}>{toName}</NextLink>
             </TableItem>
 
             <TableItem label="Date">{format(activity.timestamp)}</TableItem>
@@ -269,11 +263,7 @@ export const FeedListTableItem = ({ activity }: Props) => {
 
           <div className="flex w-full justify-around ml-8">
             <TableItem label="User">
-              <NextLink href={`/profile/${activity.from}`}>
-                {activity.fromDisplayName
-                  ? ellipsisAddress(activity.fromDisplayName, ...ellipseParams)
-                  : ellipsisAddress(activity.from, ...ellipseParams)}
-              </NextLink>
+              <NextLink href={`/profile/${activity.from}`}>{fromName}</NextLink>
             </TableItem>
 
             <TableItem label="Amount">{amount}</TableItem>
@@ -297,11 +287,7 @@ export const FeedListTableItem = ({ activity }: Props) => {
 
           <div className="flex w-full justify-around ml-8">
             <TableItem label="User">
-              <NextLink href={`/profile/${activity.from}`}>
-                {activity.fromDisplayName
-                  ? ellipsisAddress(activity.fromDisplayName, ...ellipseParams)
-                  : ellipsisAddress(activity.from, ...ellipseParams)}
-              </NextLink>
+              <NextLink href={`/profile/${activity.from}`}>{fromName}</NextLink>
             </TableItem>
 
             <TableItem label="Votes">{activity.price ? <div>{nFormatter(activity.price)}</div> : '—'}</TableItem>

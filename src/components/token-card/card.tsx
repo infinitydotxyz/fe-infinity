@@ -7,7 +7,7 @@ import { NextLink } from '../common/next-link';
 import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { useRouter } from 'next/router';
 import { MdMoreVert } from 'react-icons/md';
-import { ellipsisAddress, ENS_ADDRESS } from 'src/utils';
+import { displayTypeToProps, ellipsisAddress, ENS_ADDRESS } from 'src/utils';
 import { inputBorderColor } from 'src/utils/ui-constants';
 import { EZImage } from '../common/ez-image';
 import { BlueCheck } from '../common/blue-check';
@@ -76,23 +76,7 @@ export const Card = ({
     // return <LoadingCard className={className} />;
   }
 
-  let isCover = true;
-  let padding = '';
-
-  switch (data?.displayType) {
-    case 'cover':
-      isCover = true;
-      break;
-    case 'contain':
-      isCover = false;
-      break;
-    case 'padded':
-      padding = 'p-2';
-      break;
-    default:
-      break;
-  }
-
+  const { isCover, padding } = displayTypeToProps(data?.displayType);
   let image = (
     <EZImage
       src={data?.image}

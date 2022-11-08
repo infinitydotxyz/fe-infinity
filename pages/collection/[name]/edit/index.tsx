@@ -136,8 +136,6 @@ const EditCollectionPage = () => {
   const close = () => router.replace(`/collection/${router.query.name}`);
 
   const submit = async () => {
-    // console.log(metadata);
-
     if (!checkSignedIn()) {
       return;
     }

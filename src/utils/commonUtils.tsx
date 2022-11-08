@@ -20,6 +20,28 @@ export const isLocalhost = () => !isServer() && (window?.location?.host || '').i
 
 export const isProd = () => process.env.NODE_ENV === 'production';
 
+export const displayTypeToProps = (displayType: string | undefined): { isCover: boolean; padding: string } => {
+  let isCover = true;
+  let padding = '';
+
+  switch (displayType) {
+    case 'cover':
+      isCover = true;
+      break;
+    case 'contain':
+      isCover = false;
+      break;
+    case 'padded':
+      padding = 'p-2';
+      isCover = false;
+      break;
+    default:
+      break;
+  }
+
+  return { isCover, padding };
+};
+
 export const cl = (data: unknown) => {
   console.log(JSON.stringify(data, null, 2));
 };
@@ -200,18 +222,6 @@ export const PleaseConnectMsg = () => <>Please connect your wallet.</>;
 
 export const truncateDecimals = (numStr: string) => {
   return ((numStr ?? '') + ' ').slice(0, numStr.indexOf('.'));
-};
-
-export const getLoginMessage = (nonce: number): string => {
-  // ignore the formatting of this multiline string
-  const msg = `Welcome to Infinity. Click "Sign" to sign in. No password needed. This request will not trigger a blockchain transaction or cost any gas fees.
- 
-I accept the Infinity Terms of Service: https://infinity.xyz/terms
-
-Nonce: ${nonce}
-Expires in: 24 hrs`;
-
-  return msg;
 };
 
 // optimize googleusercontent banner image to have smaller resolution for faster loading.

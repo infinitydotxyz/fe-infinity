@@ -20,8 +20,6 @@ export const AllCuratedStart: React.FC<Props> = ({ orderBy }) => {
     limit: 12
   });
 
-  console.log(isLoading);
-
   return (
     <div>
       {hasError ? <div className="flex flex-col mt-10">Unable to load curated collections.</div> : null}
