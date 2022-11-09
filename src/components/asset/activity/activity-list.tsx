@@ -24,7 +24,7 @@ export const ActivityList: React.FC<Props> = ({ className = '', chainId, collect
     setHasNoData(false);
 
     const types = filter.types ?? [];
-    if (types.length === 0) {
+    if (types.length !== 0) {
       const ACTIVITY_ENDPOINT = `/collections/${chainId}:${collectionAddress}/nfts/${token.tokenId}/activity`;
 
       const { result, error } = await apiGet(ACTIVITY_ENDPOINT, {
