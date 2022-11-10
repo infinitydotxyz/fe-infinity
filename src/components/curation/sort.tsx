@@ -37,6 +37,16 @@ export const Sort: React.FC<Props> = ({ onClick, order }) => {
           break;
       }
       break;
+    case CuratedCollectionsOrderBy.Timestamp:
+      switch (order.direction) {
+        case OrderDirection.Ascending:
+          label = 'Least recent';
+          break;
+        case OrderDirection.Descending:
+          label = 'Most recent';
+          break;
+      }
+      break;
   }
 
   return (
@@ -50,13 +60,13 @@ export const Sort: React.FC<Props> = ({ onClick, order }) => {
           onClick: () => onClick({ orderBy: CuratedCollectionsOrderBy.Votes, direction: OrderDirection.Descending })
         },
         {
+          label: 'Most recent',
+          onClick: () => onClick({ orderBy: CuratedCollectionsOrderBy.Timestamp, direction: OrderDirection.Descending })
+        },
+        {
           label: 'APR: High to low',
           onClick: () => onClick({ orderBy: CuratedCollectionsOrderBy.Apr, direction: OrderDirection.Descending })
         },
-        {
-          label: 'APR: Low to high',
-          onClick: () => onClick({ orderBy: CuratedCollectionsOrderBy.Apr, direction: OrderDirection.Ascending })
-        }
       ]}
     />
   );

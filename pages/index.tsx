@@ -30,8 +30,8 @@ const HomePage = () => {
 
   return (
     <PageBox title="Home" showTitle={false} footer={<StartFooter />}>
-      {titleHeader('Curated Collections', 'mt-6', '/curated?tab=All+Curated')}
-      <AllCuratedStart orderBy={CuratedCollectionsOrderBy.Votes} />
+      {titleHeader('Recently Curated Collections', 'mt-6', '/curated?tab=All+Curated')}
+      <AllCuratedStart orderBy={CuratedCollectionsOrderBy.Timestamp} />
 
       {titleHeader('Rewards', 'mt-10', '/rewards?tab=Global+Rewards')}
       <GlobalRewards showCount={1} />
