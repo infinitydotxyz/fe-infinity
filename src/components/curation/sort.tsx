@@ -66,7 +66,7 @@ export const Sort: React.FC<Props> = ({ onClick, order }) => {
         {
           label: 'APR: High to low',
           onClick: () => onClick({ orderBy: CuratedCollectionsOrderBy.Apr, direction: OrderDirection.Descending })
-        },
+        }
       ]}
     />
   );
