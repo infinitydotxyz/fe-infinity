@@ -83,7 +83,8 @@ class _OnboardAuthProvider {
           const isSigValid = signer === currentUser;
           const isNonceValid = Date.now() - this.currentCreds.nonce < LOGIN_NONCE_EXPIRY_TIME;
 
-          const result = isSigValid && isNonceValid;
+          const result =
+            isSigValid && isNonceValid && this.currentCreds.message === this.getLoginMessage(this.currentCreds.nonce);
 
           return result;
         } catch (err) {
@@ -163,11 +164,11 @@ class _OnboardAuthProvider {
   getLoginMessage = (nonce: number): string => {
     // ignore the formatting of this multiline string
     const msg = `Welcome to Infinity. Click "Sign" to sign in. No password needed. This request will not trigger a blockchain transaction or cost any gas fees.
-   
-  I accept the Infinity Terms of Service: https://infinity.xyz/terms
-  
-  Nonce: ${nonce}
-  Expires in: 24 hrs`;
+ 
+I accept the Infinity Terms of Service: https://infinity.xyz/terms
+
+Nonce: ${nonce}
+Expires in: 24 hrs`;
 
     return msg;
   };
