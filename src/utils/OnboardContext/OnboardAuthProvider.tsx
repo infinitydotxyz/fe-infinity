@@ -83,7 +83,8 @@ class _OnboardAuthProvider {
           const isSigValid = signer === currentUser;
           const isNonceValid = Date.now() - this.currentCreds.nonce < LOGIN_NONCE_EXPIRY_TIME;
 
-          const result = isSigValid && isNonceValid;
+          const result =
+            isSigValid && isNonceValid && this.currentCreds.message === this.getLoginMessage(this.currentCreds.nonce);
 
           return result;
         } catch (err) {
