@@ -11,8 +11,6 @@ scroll bar on side drawer and modal
 
 sort button no in the default state button title wrong most recent
 
-spinner on sort button change on orderbook page
-
 http://localhost:3000/collection/manekigang?tab=Reservoir
 [9:41 PM]
 

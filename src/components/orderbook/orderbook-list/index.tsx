@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Dropdown } from 'src/components/common';
 import { getSortLabel, OrderbookProvider, SORT_FILTERS, SORT_LABELS, useOrderbook } from '../OrderbookContext';
 import { OrderbookList } from './orderbook-list';
@@ -32,8 +32,11 @@ export const OrderbookContent = ({ className }: Props4) => {
   );
   const [label, setLabel] = useState<string>(getSortLabel(filters?.sort));
 
+  useEffect(() => {
+    setLabel(getSortLabel(filters?.sort));
+  }, [filters]);
+
   const onClickSort = (_label: string, sortOrder: string) => {
-    setLabel(_label);
     updateFilter('sort', sortOrder);
   };
 
