@@ -5,11 +5,7 @@ one other bug i found: when the network is not ethereum, we show a banner on top
 that is not static right now, it scrolls with the page
 fix it to the top even on scroll
 
-remove gray and bold on table title
-
 scroll bar on side drawer and modal
-
-sort button no in the default state button title wrong most recent
 
 http://localhost:3000/collection/manekigang?tab=Reservoir
 [9:41 PM]
