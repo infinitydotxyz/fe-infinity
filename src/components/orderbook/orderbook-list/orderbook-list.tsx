@@ -1,6 +1,6 @@
 import React from 'react';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { CenteredContent, ScrollLoader, Spinner } from 'src/components/common';
+import { CenterFixed, ScrollLoader, Spinner } from 'src/components/common';
 import { OrderbookRow } from './orderbook-row';
 import { OrderbookFilters } from './filters/orderbook-filters';
 
@@ -31,15 +31,16 @@ export const OrderbookList = ({
       <div className="flex flex-col items-start w-full">
         {hasNoData && <div className="font-heading">No results found</div>}
 
-        {orderList.length > 0 &&
+        {!isLoading &&
+          orderList.length > 0 &&
           orderList.map((order: SignedOBOrder, i: number) => {
             return <OrderbookRow key={`${i}-${order.id}`} order={order} isFilterOpen={showFilters ?? false} />;
           })}
 
         {isLoading && (
-          <CenteredContent>
+          <CenterFixed>
             <Spinner />
-          </CenteredContent>
+          </CenterFixed>
         )}
 
         {hasMoreOrders && <ScrollLoader onFetchMore={fetchMore} />}
