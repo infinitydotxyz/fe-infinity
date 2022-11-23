@@ -30,8 +30,15 @@ export const SORT_LABELS: {
   [SORT_FILTERS.mostRecent]: 'Most Recent'
 };
 
-export const getSortLabel = (key: string | undefined) => {
-  return key ? SORT_LABELS[key] || 'Sort' : 'Sort';
+export const getSortLabel = (key?: string): string => {
+  let result = '';
+
+  if (key) {
+    result = SORT_LABELS[key];
+  }
+
+  // mostRecent is the default if blank
+  return result || SORT_LABELS[SORT_FILTERS.mostRecent];
 };
 
 // ============================================================
