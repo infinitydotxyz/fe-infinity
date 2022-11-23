@@ -1,59 +1,30 @@
 // export const API_BASE = 'http://localhost:9090';
 export const API_BASE = 'https://sv.infinity.xyz';
 
-http://www.potlabicons.com/
+one other bug i found: when the network is not ethereum, we show a banner on top
+that is not static right now, it scrolls with the page
+fix it to the top even on scroll
 
-<a href="https://www.freepik.com/free-photos-vectors/background" className="text-gray-500">
+remove gray and bold on table title
 
-https://bgjar.com/cloudy
+scroll bar on side drawer and modal
 
-https://bgjar.com/sound-wave
+sort button no in the default state button title wrong most recent
 
-https://fffuel.co/tttwinkle/
-https://fffuel.co/ccchaos/
+spinner on sort button change on orderbook page
 
-Phase Info
-Cards like rewards, two columns
-tokens, lottery size, volume in phase
+http://localhost:3000/collection/manekigang?tab=Reservoir
+[9:41 PM]
 
-Top linked collections
-
-Go to chart view
-
-As far as what to show goes, here are the main items:
-
-- Top curated collections
-- Current phase progression - including trading rewards, lottery pot size, highest number of tickets any person holds etc
-
-npm ls joi @hapi/joi
-
-npm dedupe
-
-https://github.com/remarkjs/remark/blob/main/doc/plugins.md#list-of-plugins
-
-> Please checkout the stack: cluemediator.com/stack
-> <br />
-> Contact us: contact@cluemediator.com > <br /> > <a href="https://www.cluemediator.com/subscribe">Subscribe Us</a> for
-> more updates.
-> </Linkify>
-
-global order book
-trending?
-top 5 collection and show orders for those collections
-
-logo for exchange. hold off.
-
-ico, one liner makes it clear what invinity is
-
-curation auto execution of orders
-
----
-
-hey Infinity is asking me to sign in everytime I change networks. It's extremely annoying and the only protocol that does so. Can you please turn this off? I'll sign in whenever I need to be on the protocol
-even when I switch to a random testnet I would get the infinity connection pop-up
-
-I have it open in a tab typically, but when I change network and am doing very different stuff it will always bother me with pop ups
-[9:17 AM]
-Its the only thing I am aware that does it bcs I have many many tabs open at all times
-
-So just to confirm this happens even when infinity is not the active tab right?
+1. after add to order is clicked, btn state doesn't change to added
+   [9:41 PM]
+2. no filters on the tab? can you add price filters?
+   [9:42 PM]
+3. what are these items? are they available to buy? if so, where is the price displayed? (edited)
+   [9:42 PM]
+   On the NFTs tab:
+   http://localhost:3000/collection/manekigang?tab=NFTs
+   [9:43 PM]
+   also add a 'add to cart' btn next to 'add to order' btn
+   [9:44 PM]
+   'add to cart' is simply a shortcut that adds single item orders to cart directly instead of 'add item to order' -> 'add order to cart' flow
