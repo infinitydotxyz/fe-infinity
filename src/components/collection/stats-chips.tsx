@@ -20,7 +20,7 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
   const { user, chainId: userChainId, checkSignedIn } = useOnboardContext();
 
   const [isFollowing, setIsFollowing] = useState(false);
-  const [editVisible, setEditVisible] = useState(true);
+  const [editVisible, setEditVisible] = useState(false);
   const [followingLoading, setFollowingLoading] = useState(false);
   const [showTipModal, setShowTipModal] = useState(false);
   const { push: pushRoute } = useRouter();
@@ -31,9 +31,7 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
   const showFollow = false; // todo: put this back for Social features.
 
   useEffect(() => {
-    if (user) {
-      verifyOwnership();
-    }
+    verifyOwnership();
   }, [user]);
 
   const onClickFollow = async () => {
@@ -88,12 +86,16 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
   };
 
   const verifyOwnership = async () => {
-    const { error, result } = await apiGet(
-      `/user/${userChainId}:${user?.address}/collections/${router.query.name}/permissions`
-    );
+    if (user) {
+      const { error, result } = await apiGet(
+        `/user/${userChainId}:${user?.address}/collections/${router.query.name}/permissions`
+      );
 
-    if (!error) {
-      setEditVisible(result.canModify);
+      if (!error) {
+        setEditVisible(result.canModify);
+      }
+    } else {
+      setEditVisible(false);
     }
   };
 
