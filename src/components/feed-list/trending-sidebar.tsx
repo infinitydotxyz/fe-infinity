@@ -12,38 +12,38 @@ interface Props2 {
 
 const TrendingItem = ({ collection, index }: Props2) => {
   return (
-    <div className={twMerge(standardCard, 'flex items-center')}>
-      <div className="mr-4 text-theme-light-800">{index}</div>
-      {/* NOTE min-w-0 is the secret to getting truncate working in flexboxes */}
-      <div className="flex items-center min-w-0">
-        <NextLink href={`/collection/${collection.slug}`}>
+    <NextLink href={`/collection/${collection.slug}`}>
+      <div className={twMerge(standardCard, 'flex items-center')}>
+        <div className="mr-4 text-theme-light-800">{index}</div>
+        {/* NOTE min-w-0 is the secret to getting truncate working in flexboxes */}
+        <div className="flex items-center min-w-0">
           <EZImage
             src={collection.metadata.profileImage || collection.metadata.bannerImage}
             className="w-12 h-12 overflow-clip rounded-full"
           />
-        </NextLink>
 
-        <div className="flex flex-col ml-4 overflow-clip">
-          <div className="font-bold truncate font-heading">{collection.metadata.name}</div>
-          <div className="text-theme-light-800 font-body text-sm">{`Volume ${nFormatter(
-            collection.stats?.weekly?.salesVolume
-          )}`}</div>
-        </div>
-      </div>
-      <Spacer />
-      <HelpTip
-        content={
-          <div className="flex flex-col items-center">
-            <div>Number of sales</div>
-            <div>last 7 days</div>
+          <div className="flex flex-col ml-4 overflow-clip">
+            <div className="font-bold truncate font-heading">{collection.metadata.name}</div>
+            <div className="text-theme-light-800 font-body text-sm">{`Volume ${nFormatter(
+              collection.stats?.weekly?.salesVolume
+            )}`}</div>
           </div>
-        }
-      >
-        <div className="bg-white px-3 font-bold py-1 rounded-full mx-3">{`${nFormatter(
-          collection.stats?.weekly?.numSales
-        )}`}</div>
-      </HelpTip>
-    </div>
+        </div>
+        <Spacer />
+        <HelpTip
+          content={
+            <div className="flex flex-col items-center">
+              <div>Number of sales</div>
+              <div>last 7 days</div>
+            </div>
+          }
+        >
+          <div className="bg-white px-3 font-bold py-1 rounded-full mx-3">{`${nFormatter(
+            collection.stats?.weekly?.numSales
+          )}`}</div>
+        </HelpTip>
+      </div>
+    </NextLink>
   );
 };
 
