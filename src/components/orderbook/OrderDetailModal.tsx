@@ -31,14 +31,16 @@ export const OrderDetailModal = ({ order, isOpen, onClose }: Props) => {
 
   return (
     <Modal wide={false} isOpen={isOpen} onClose={onClose} title="Order details" showActionButtons={false}>
-      <OrderDetailPicker order={order} scroll={true} />
+      <div className="max-h-[480px] flex flex-col">
+        <OrderDetailPicker order={order} scroll={true} />
 
-      <SimpleTable className="text-gray-500 mt-3" items={tableItems} />
+        <SimpleTable className="text-gray-500 mt-3" items={tableItems} />
 
-      <div className="mt-10">
-        <Button variant="primary" className="w-full font-heading" onClick={onClose}>
-          Done
-        </Button>
+        <div className="mt-10">
+          <Button variant="primary" className="w-full font-heading" onClick={onClose}>
+            Done
+          </Button>
+        </div>
       </div>
     </Modal>
   );

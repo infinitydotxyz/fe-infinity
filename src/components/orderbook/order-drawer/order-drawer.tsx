@@ -226,7 +226,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
 
     contents = (
       <>
-        <div className={twMerge(drawerPx, 'flex flex-col   space-y-2')}>
+        <div className={twMerge(drawerPx, 'flex flex-col min-h-0  space-y-2')}>
           <OrderBuilder />
         </div>
 

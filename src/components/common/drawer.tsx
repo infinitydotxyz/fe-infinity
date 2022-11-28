@@ -63,7 +63,7 @@ export const Drawer = ({ open, tooltip, subtitle, divide, onClose, title, childr
         >
           <div className="relative w-screen max-w-md pb-7 flex flex-col space-y-6 overflow-y-auto overflow-x-clip h-full">
             {header}
-            <div className="flex h-full flex-col">{children}</div>
+            <div className="flex h-full min-h-0 flex-col">{children}</div>
           </div>
         </div>
       </div>
