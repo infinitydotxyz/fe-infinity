@@ -276,14 +276,13 @@ export const OrderContextProvider = ({ children }: Props) => {
     return false;
   };
 
-  const specToOBOrder = async (spec: OBOrderSpec): Promise<OBOrder | undefined> => {
+  const specToOBOrder = async (spec: OBOrderSpec, orderNonce: number): Promise<OBOrder | undefined> => {
     if (!user || !user.address) {
       toastWarning('Please connect your wallet.');
       return;
     }
 
     try {
-      const orderNonce = await fetchOrderNonce(user.address);
       // sell orders are always in ETH
       const currencyAddress = spec.isSellOrder ? NULL_ADDRESS : getTxnCurrencyAddress(chainId);
       const gasPrice = await getEstimatedGasPrice(getEthersProvider());
@@ -331,8 +330,10 @@ export const OrderContextProvider = ({ children }: Props) => {
     // sign orders
     let hasErrors = false;
     const signedOrders: SignedOBOrder[] = [];
+    let orderNonce = await fetchOrderNonce(user.address);
     for (const orderInCart of ordersInCart) {
-      const order = await specToOBOrder(orderInCart.orderSpec);
+      const order = await specToOBOrder(orderInCart.orderSpec, orderNonce);
+      orderNonce += 1;
       if (order) {
         try {
           const signedOrder = await getSignedOBOrder(user, chainId, signer, order);

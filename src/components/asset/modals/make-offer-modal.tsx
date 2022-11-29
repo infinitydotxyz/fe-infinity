@@ -1,5 +1,5 @@
 import { ChainId, Erc721Token, OBOrder, SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
-import { ETHEREUM_WETH_ADDRESS, getOBComplicationAddress, NULL_ADDRESS } from '@infinityxyz/lib-frontend/utils';
+import { chainConstants, getOBComplicationAddress, NULL_ADDRESS } from '@infinityxyz/lib-frontend/utils';
 import { useState } from 'react';
 import { CurrencyInput, DatePickerBox, Modal, toastError, toastSuccess } from 'src/components/common';
 import { DEFAULT_MAX_GAS_PRICE_WEI, extractErrorMsg, getEstimatedGasPrice, getOwnerAddress } from 'src/utils';
@@ -59,6 +59,8 @@ export const MakeOfferModal = ({ isOpen, onClose, onDone, buyPriceEth, token }: 
         };
 
         const gasPrice = await getEstimatedGasPrice(getEthersProvider());
+        const currency = chainConstants[chainId as ChainId]?.prod?.v2?.wethAddress;
+
         const order: OBOrder = {
           id: '',
           chainId,
@@ -71,10 +73,10 @@ export const MakeOfferModal = ({ isOpen, onClose, onDone, buyPriceEth, token }: 
           startPriceEth: priceVal, // set the Offer Price.
           endPriceEth: priceVal, // set the Offer Price.
           nfts: [orderItem],
-          nonce: orderNonce,
+          nonce: orderNonce + signedOrders.length,
           execParams: {
             complicationAddress: getOBComplicationAddress(chainId),
-            currencyAddress: ETHEREUM_WETH_ADDRESS
+            currencyAddress: currency
           },
           extraParams: {
             buyer: NULL_ADDRESS
