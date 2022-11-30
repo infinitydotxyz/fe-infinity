@@ -49,27 +49,30 @@ export const Card = ({
 
   tokenId = tokenId.length > 15 ? tokenId.slice(0, 10) + '...' : tokenId;
 
-  const buttonJsx = (
-    <div className="flex w-[100%]">
-      {(cardActions ?? []).map((cardAction, idx) => {
-        if (!cardAction?.label) {
-          return null;
-        }
-        return (
-          <Button
-            key={idx}
-            variant="primary"
-            className="flex-1 text-lg"
-            onClick={(ev) => {
-              cardAction.onClick(ev, data);
-            }}
-          >
-            {typeof cardAction.label === 'function' ? cardAction.label(data) : cardAction.label}
-          </Button>
-        );
-      })}
-    </div>
-  );
+  const buttonJsx = () => {
+    return (
+      <div className="flex w-full">
+        {(cardActions ?? []).map((cardAction, idx) => {
+          if (!cardAction?.label) {
+            return null;
+          }
+          return (
+            <Button
+              key={idx}
+              variant="primary"
+              size="large"
+              className="flex-1"
+              onClick={(ev) => {
+                cardAction.onClick(ev, data);
+              }}
+            >
+              {typeof cardAction.label === 'function' ? cardAction.label(data) : cardAction.label}
+            </Button>
+          );
+        })}
+      </div>
+    );
+  };
 
   if (isLoading) {
     return <></>;
@@ -128,7 +131,7 @@ export const Card = ({
       </div>
 
       <footer className="text-sm flex items-center justify-between mt-3">
-        {buttonJsx}
+        {buttonJsx()}
 
         {getDropdownActions && getDropdownActions(data) !== null ? (
           <Dropdown

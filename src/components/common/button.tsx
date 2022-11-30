@@ -13,7 +13,7 @@ const classes = {
     small: 'px-3 py-1 text-xs',
     normal: 'px-6 py-2',
     medium: 'px-5 py-2 text-sm',
-    large: 'px-8 py-3 text-lg'
+    large: 'px-5 py-2 text-lg'
   },
   variant: {
     plain: '',

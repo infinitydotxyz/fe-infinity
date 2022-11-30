@@ -47,6 +47,7 @@ import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import { useSaveReferral } from 'src/hooks/api/useSaveReferral';
 import { ReservoirCards } from 'src/components/token-card/reservoir-card-grid';
+import { CardAction } from 'src/components/token-card/card';
 
 const CollectionPage = ({ collection, error }: { collection?: BaseCollection; error?: Error }) => {
   /**
@@ -250,6 +251,37 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
     }
   };
 
+  const cardActions = (): CardAction[] => {
+    return [
+      {
+        label: (data) => {
+          const price = data?.orderSnippet?.listing?.orderItem?.startPriceEth ?? '';
+          if (price) {
+            return (
+              <div className="flex justify-center">
+                <span className="mr-4 font-normal">Buy</span>
+                <EthPrice label={`${price}`} />
+              </div>
+            );
+          }
+          if (isAlreadyAdded(data)) {
+            return <div className="font-normal">✓ Added</div>;
+          }
+          return <div className="font-normal">Add to order</div>;
+        },
+        onClick: galleryOnClick
+      }
+      // {
+      //   label: (data) => {
+      //     if (!isAlreadyAdded(data)) {
+      //       return <div className="font-normal">Add to cart</div>;
+      //     }
+      //   },
+      //   onClick: galleryOnClick
+      // }
+    ];
+  };
+
   const nfts = (
     <GalleryBox
       pageId="COLLECTION"
@@ -258,26 +290,7 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
       showNftSearch={true}
       collectionAttributes={collectionAttributes || undefined}
       cardProps={{
-        cardActions: [
-          {
-            label: (data) => {
-              const price = data?.orderSnippet?.listing?.orderItem?.startPriceEth ?? '';
-              if (price) {
-                return (
-                  <div className="flex justify-center">
-                    <span className="mr-4 font-normal">Buy</span>
-                    <EthPrice label={`${price}`} />
-                  </div>
-                );
-              }
-              if (isAlreadyAdded(data)) {
-                return <div className="font-normal">✓ Added</div>;
-              }
-              return <div className="font-normal">Add to order</div>;
-            },
-            onClick: galleryOnClick
-          }
-        ]
+        cardActions: cardActions()
       }}
     />
   );
