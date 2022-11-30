@@ -29,6 +29,7 @@ import { CollectionSearchInput } from './search/collection-search-input';
 
 export const Navbar = () => {
   const router = useRouter();
+  const { chainId } = useOnboardContext();
 
   const { signIn, signOut, user } = useOnboardContext();
 
@@ -292,6 +293,10 @@ export const Navbar = () => {
 
   const desktopNavbar = (
     <div className="w-full bg-white bg-opacity-70 glass font-body">
+      {chainId !== '1' && (
+        <div className="text-center bg-red-600 text-white py-1">You are not on the Ethereum network</div>
+      )}
+
       <div className={`${pageStyles} flex space-x-6 items-center py-6 w-full`}>
         <NextLink href="/">
           <SVG.miniLogo className="h-8 xl:hidden" />

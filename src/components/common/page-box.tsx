@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Navbar, Spacer, Header } from 'src/components/common';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { twMerge } from 'tailwind-merge';
 import { isPasswordModalNeeded, PasswordModal } from './password-modal';
 
@@ -28,7 +27,6 @@ export const PageBox = ({
   rightToolbar,
   scroll = true
 }: Props): JSX.Element => {
-  const { chainId } = useOnboardContext();
   const [renderPasswordModal, setRenderPasswordModal] = useState(false);
 
   useEffect(() => {
@@ -47,10 +45,6 @@ export const PageBox = ({
       ) : (
         <>
           <Header title={title} />
-
-          {chainId !== '1' && (
-            <div className="text-center bg-theme-gray-100 text-red-800 py-1">You are not on Ethereum network</div>
-          )}
 
           <Navbar />
 

@@ -5,7 +5,7 @@ import { PageBox } from 'src/components/common';
 import { apiPut } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
-export const DiscordIntegration = () => {
+const DiscordIntegration = () => {
   const { query } = useRouter();
   const { user, chainId } = useOnboardContext();
 
@@ -54,3 +54,5 @@ export const DiscordIntegration = () => {
 
   return <PageBox title="Enable integration">{status}</PageBox>;
 };
+
+export default DiscordIntegration;

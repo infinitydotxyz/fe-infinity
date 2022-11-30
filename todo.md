@@ -1,12 +1,6 @@
 // export const API_BASE = 'http://localhost:9090';
 export const API_BASE = 'https://sv.infinity.xyz';
 
-one other bug i found: when the network is not ethereum, we show a banner on top
-that is not static right now, it scrolls with the page
-fix it to the top even on scroll
-
-scroll bar on side drawer and modal
-
 http://localhost:3000/collection/manekigang?tab=Reservoir
 [9:41 PM]
 
