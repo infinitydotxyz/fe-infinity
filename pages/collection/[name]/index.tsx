@@ -212,10 +212,7 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
     );
   }
 
-  const galleryOnClick = async (
-    ev: React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>,
-    data?: ERC721CardData
-  ) => {
+  const galleryOnClick = async (data?: ERC721CardData) => {
     if (!checkSignedIn()) {
       return;
     }
@@ -269,16 +266,8 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
           }
           return <div className="font-normal">Add to order</div>;
         },
-        onClick: galleryOnClick
+        onClick: (ev, data) => galleryOnClick(data)
       }
-      // {
-      //   label: (data) => {
-      //     if (!isAlreadyAdded(data)) {
-      //       return <div className="font-normal">Add to cart</div>;
-      //     }
-      //   },
-      //   onClick: galleryOnClick
-      // }
     ];
   };
 
@@ -291,6 +280,19 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
       collectionAttributes={collectionAttributes || undefined}
       cardProps={{
         cardActions: cardActions()
+        // getDropdownActions: (data) => {
+        //   return [
+        //     {
+        //       label: 'Add directly to cart',
+        //       onClick: () => {
+        //         galleryOnClick(data);
+        //         setTimeout(() => {
+        //           addOrderToCart();
+        //         }, 1200);
+        //       }
+        //     }
+        //   ];
+        // }
       }}
     />
   );
