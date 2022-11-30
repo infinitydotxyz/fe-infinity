@@ -92,7 +92,7 @@ export const ListNFTModal = ({ isOpen, onClose, onDone, token }: Props) => {
               startPriceEth: priceVal, // set the Offer Price.
               endPriceEth: priceVal, // set the Offer Price.
               nfts: [orderItem],
-              nonce: orderNonce,
+              nonce: orderNonce + signedOrders.length,
               execParams: {
                 complicationAddress: getOBComplicationAddress(chainId),
                 currencyAddress: NULL_ADDRESS
