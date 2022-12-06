@@ -3,7 +3,18 @@ import { CuratedCollectionsOrderBy } from '@infinityxyz/lib-frontend/types/dto/c
 import { useRouter } from 'next/router';
 import { RaffleDescription } from 'src/components/raffles/raffle-description';
 import { useRaffles } from 'src/hooks/api/useRaffles';
-import { Button, CenteredContent, PageBox, pageStyles, Spacer, Spinner } from 'src/components/common';
+import {
+  CenteredContent,
+  ColoredButton,
+  backColorForTheme,
+  textColorForTheme,
+  PageBox,
+  pageStyles,
+  Spacer,
+  Spinner,
+  ThemeColor,
+  headerColorForTheme
+} from 'src/components/common';
 import { FavoritesDescription } from 'src/components/favorites/favorites-description';
 import { GlobalFeedList } from 'src/components/feed-list/global-feed-list';
 import { AllCuratedStart } from 'src/components/start/all-curated-start';
@@ -15,49 +26,34 @@ import GlobalRewards from './rewards/global-rewards';
 import { ReactNode } from 'react';
 
 const HomePage = () => {
-  const router = useRouter();
-
-  const titleHeader = (title: string, className = '', morePath = '') => {
-    return (
-      <div className={twMerge('mb-6 flex items-center', className)}>
-        <div className="text-3xl text-gray-700 font-bold">{title}</div>
-        <Spacer />
-        <Button size="medium" variant="outline" onClick={() => router.push(morePath)}>
-          See More
-        </Button>
-      </div>
-    );
-  };
-
   return (
     <PageBox title="Home" fullWidth showTitle={false} footer={<StartFooter />}>
-      <HomeSection theme="white">
-        {titleHeader('Recently Curated Collections', 'mt-6', '/curated?tab=All+Curated')}
+      <HomeSection
+        title="Recently Curated Collections"
+        altTitle="Collections"
+        url="/curated?tab=All+Curated"
+        theme="white"
+      >
         <AllCuratedStart orderBy={CuratedCollectionsOrderBy.Timestamp} />
       </HomeSection>
 
-      <HomeSection theme="red">
-        {titleHeader('Rewards', 'mt-10', '/rewards?tab=Global+Rewards')}
+      <HomeSection title="Rewards" url="/rewards?tab=Global+Rewards" theme="red">
         <GlobalRewards showCount={1} />
       </HomeSection>
 
-      <HomeSection theme="blue">
-        {titleHeader('Favorites', 'mt-10', '/favorites')}
+      <HomeSection title="Favorites" url="/favorites" theme="blue">
         <FavoritesPanel />
       </HomeSection>
 
-      <HomeSection theme="black">
-        {titleHeader('Raffles', 'mt-10', '/raffles')}
+      <HomeSection title="Raffles" url="/raffles" theme="black">
         <RafflesPanel />
       </HomeSection>
 
-      <HomeSection theme="red">
-        {titleHeader('Trending', 'mt-8', '/trending')}
+      <HomeSection title="Trending" url="trending" theme="red">
         <TrendingStart />
       </HomeSection>
 
-      <HomeSection theme="blue">
-        {titleHeader('Feed', 'mt-10', '/feed')}
+      <HomeSection title="Feed" url="/feed" theme="blue">
         <GlobalFeedList
           types={[EventType.TwitterTweet, EventType.DiscordAnnouncement, EventType.CoinMarketCapNews]}
           compact={true}
@@ -134,30 +130,47 @@ const RafflesPanel = () => {
 
 interface Props {
   children: ReactNode;
-  theme: 'red' | 'white' | 'blue' | 'black';
+  title: string;
+  altTitle?: string;
+  url: string;
+  theme: ThemeColor;
 }
 
-const HomeSection = ({ children, theme }: Props) => {
-  let bg = '';
+const HomeSection = ({ children, altTitle, theme, title, url }: Props) => {
+  const router = useRouter();
 
-  switch (theme) {
-    case 'red':
-      bg = 'bg-red-500';
-      break;
-    case 'white':
-      break;
+  const titleHeader = (title: string, className = '', theme: ThemeColor, morePath = '') => {
+    return (
+      <div className={twMerge('mb-6 flex items-center', className)}>
+        <div className="text-7xl font-bold font-[empires] " style={{ color: headerColorForTheme(theme) }}>
+          {title}
+        </div>
+        <Spacer />
+        <ColoredButton
+          textColor={textColorForTheme(theme)}
+          backgroundColor={backColorForTheme(theme)}
+          onClick={() => router.push(morePath)}
+        >
+          See More
+        </ColoredButton>
+      </div>
+    );
+  };
 
-    case 'blue':
-      bg = 'bg-blue-500';
-      break;
-
-    case 'black':
-      bg = 'bg-black';
-      break;
-  }
   return (
-    <div className={twMerge(bg, 'pt-7 pb-24')}>
-      <div className={pageStyles}>{children}</div>
+    <div className="pt-28 pb-24 relative" style={{ background: textColorForTheme(theme) }}>
+      <div
+        className="absolute -top-10 -left-7 right-0 font-[empires]  opacity-25  text-[299px]"
+        style={{ color: backColorForTheme(theme) }}
+      >
+        {altTitle ?? title}
+      </div>
+
+      <div className={twMerge(pageStyles, 'relative')}>
+        {titleHeader(title, 'mt-6', theme, url)}
+
+        {children}
+      </div>
     </div>
   );
 };
