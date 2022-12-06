@@ -13,7 +13,8 @@ import {
   Spacer,
   Spinner,
   ThemeColor,
-  headerColorForTheme
+  headerColorForTheme,
+  SVG
 } from 'src/components/common';
 import { FavoritesDescription } from 'src/components/favorites/favorites-description';
 import { GlobalFeedList } from 'src/components/feed-list/global-feed-list';
@@ -142,9 +143,14 @@ const HomeSection = ({ children, altTitle, theme, title, url }: Props) => {
   const titleHeader = (title: string, className = '', theme: ThemeColor, morePath = '') => {
     return (
       <div className={twMerge('mb-6 flex items-center', className)}>
-        <div className="text-7xl font-bold font-[empires] " style={{ color: headerColorForTheme(theme) }}>
-          {title}
+        <div className=" flex gap-4 items-center">
+          <div className="text-7xl font-bold font-[empires] " style={{ color: headerColorForTheme(theme) }}>
+            {title}
+          </div>
+
+          <SVG.skull className="  w-20 h-20" style={{ color: headerColorForTheme(theme) }} />
         </div>
+
         <Spacer />
         <ColoredButton
           textColor={textColorForTheme(theme)}
@@ -165,6 +171,17 @@ const HomeSection = ({ children, altTitle, theme, title, url }: Props) => {
       >
         {altTitle ?? title}
       </div>
+
+      {theme !== 'white' && (
+        <div className="absolute   bottom-0 right-0 overflow-clip">
+          <div
+            className=" w-[800px] h-[800px]"
+            style={{
+              background: 'radial-gradient(at bottom right, rgba(209, 0, 219, 1), rgba(0, 0, 0, 0) 50%)'
+            }}
+          ></div>
+        </div>
+      )}
 
       <div className={twMerge(pageStyles, 'relative')}>
         {titleHeader(title, 'mt-6', theme, url)}
