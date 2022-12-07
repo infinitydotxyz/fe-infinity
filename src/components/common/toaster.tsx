@@ -1,13 +1,14 @@
 import { ReactNode } from 'react';
-import { toast as reactToast } from 'react-toastify';
+import { toast as reactToast, TypeOptions } from 'react-toastify';
+import { ellipsisString } from 'src/utils';
 
 export const toastInfo = (message: ReactNode) => {
-  reactToast(message, { type: 'info' });
+  _showToast(message, 'info');
 };
 
 // Toast a success message
 export const toastSuccess = (message: ReactNode) => {
-  reactToast(message, { type: 'success' });
+  _showToast(message, 'success');
 };
 
 // Toast an error message
@@ -19,9 +20,7 @@ export const toastError = (message: ReactNode, onClick?: (message: ReactNode) =>
         onClick: () => onClick(message)
       });
     } else {
-      reactToast(message, {
-        type: 'error'
-      });
+      _showToast(message, 'error');
     }
   } catch (err) {
     console.error(err);
@@ -30,5 +29,18 @@ export const toastError = (message: ReactNode, onClick?: (message: ReactNode) =>
 
 // Toast a warning message
 export const toastWarning = (message: ReactNode) => {
-  reactToast(message, { type: 'warning' });
+  _showToast(message, 'warning');
+};
+
+export const _showToast = (message: ReactNode, type: TypeOptions | undefined) => {
+  let msg = message;
+
+  // some toasts show a failed transaction which can be long
+  if (msg && typeof msg === 'string') {
+    if (msg.length > 200) {
+      msg = ellipsisString(msg, 200, 0);
+    }
+  }
+
+  reactToast(msg, { type: type });
 };
