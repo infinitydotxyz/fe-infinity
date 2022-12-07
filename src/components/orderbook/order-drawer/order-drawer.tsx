@@ -271,7 +271,7 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
                 <Dropdown
                   label="Dropdown"
                   toggler={
-                    <HelpTip content={<div className="whitespace-nowrap">Remove all</div>}>
+                    <HelpTip placement="right" content={<div className="whitespace-nowrap">Remove all</div>}>
                       <div className="font-normal text-sm w-8 h-8 flex items-center justify-center rounded-full bg-theme-gray-100">
                         {cartItems.length > 0 ? cartItems.length : ordersInCart.length}
                       </div>
