@@ -23,8 +23,6 @@ similar to beta.gem
 nneverlander
 Click to see attachment
 
-move tooltip to side on drawer
-
 Change colors/fonts of the UI as per new figma
 
 Better UX overall including no user initiated txns, simpler/faster flow when buying/making offers
