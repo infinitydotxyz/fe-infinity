@@ -3,9 +3,7 @@ export const API_BASE = 'https://sv.infinity.xyz';
 
 http://localhost:3000/collection/manekigang?tab=NFTs
 
-[9:43 PM]
 also add a 'add to cart' btn next to 'add to order' btn
-[9:44 PM]
 'add to cart' is simply a shortcut that adds single item orders to cart directly instead of 'add item to order' -> 'add order to cart' flow
 
 // home page
@@ -13,15 +11,10 @@ https://www.figma.com/file/R14MZXLv336FbK7RNsEZOa/Homepage-reskin?node-id=0%3A1
 
 Hide feed, collection pot, community tab and Orderbook page from UI
 
-im getting this when rejecting a txn from metamask
-(truncate trnx in toast)
+make offer broken?
 
 you could also work on getting rid of the popout side panel and replacing it with one that is part of the page
-[2:08 AM]
 similar to beta.gem
-
-nneverlander
-Click to see attachment
 
 Change colors/fonts of the UI as per new figma
 

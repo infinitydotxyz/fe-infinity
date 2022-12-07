@@ -3,7 +3,7 @@ import { ITEMS_PER_PAGE } from 'src/utils/constants';
 import { Filter } from 'src/utils/context/FilterContext';
 import { ApiResponse, apiGet } from 'src/utils/apiUtils';
 
-type ApiNftData = Erc721Token & {
+export type ApiNftData = Erc721Token & {
   orderSnippet?: OrdersSnippet;
 };
 
