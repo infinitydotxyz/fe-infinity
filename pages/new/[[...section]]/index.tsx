@@ -118,7 +118,7 @@ export default DashboardPage;
 interface Props2 {
   message: string;
 }
-function WarningBanner({ message }: Props2) {
+const WarningBanner = ({ message }: Props2) => {
   return (
     <div className="  absolute bottom-6 left-2 right-2 flex justify-center">
       <div className="rounded-md max-w-lg bg-red-600 p-4  ">
@@ -142,4 +142,4 @@ function WarningBanner({ message }: Props2) {
       </div>
     </div>
   );
-}
+};
