@@ -70,16 +70,7 @@ export const DashboardBase = () => {
 
   const cmp = findSlugMatchingCmp().component;
 
-  const exten = (
-    <div>
-      {/* <div>
-        {routes.map((route) => (
-          <Link href={route.slug}>{route.label}</Link>
-        ))}
-      </div> */}
-      {cmp}
-    </div>
-  );
+  const exten = <div className="overflow-y-auto">{cmp}</div>;
 
   let result;
 

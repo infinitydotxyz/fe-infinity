@@ -1,8 +1,7 @@
 import { RefObject } from 'react';
-import { PageBox } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 
-export const gridTemplate = (
+export const MainDashboardGrid = (
   navBar: JSX.Element,
   sideBar: JSX.Element,
   grid: JSX.Element,
@@ -13,8 +12,10 @@ export const gridTemplate = (
   showCart: boolean
 ) => {
   return (
-    <PageBox title="Stuff" fullWidth={true} showTitle={false}>
+    <div>
       <div ref={containerRef} className="h-screen w-screen grid grid-rows-[auto_1fr] grid-cols-[auto_1fr_auto]">
+        <div className="col-span-full">{navBar}</div>
+
         <div className="row-span-3 col-span-1">{sideBar}</div>
 
         <div ref={gridRef} className="col-span-1 overflow-y-scroll overflow-x-hidden">
@@ -27,6 +28,6 @@ export const gridTemplate = (
 
         <div className="col-start-2 col-span-1">{footer}</div>
       </div>
-    </PageBox>
+    </div>
   );
 };

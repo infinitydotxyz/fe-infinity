@@ -59,7 +59,7 @@ export const AstraSidebar = ({ onClick, onLoad, selectedCollection }: Props) => 
 
   return (
     <div className="flex flex-col h-full">
-      <div className={twMerge(inputBorderColor, 'px-4 py-4 border-r-2')}>
+      <div className={twMerge(inputBorderColor, 'px-4 py-4')}>
         <DebouncedTextInputBox
           label=""
           value={query}

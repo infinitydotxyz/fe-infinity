@@ -15,6 +15,7 @@ interface Props {
   rightToolbar?: JSX.Element;
   footer?: JSX.Element;
   scroll?: boolean;
+  extraSpaceAtBottom?: boolean;
 }
 
 export const PageBox = ({
@@ -25,7 +26,8 @@ export const PageBox = ({
   className = '',
   footer,
   rightToolbar,
-  scroll = true
+  scroll = true,
+  extraSpaceAtBottom = true
 }: Props): JSX.Element => {
   const [renderPasswordModal, setRenderPasswordModal] = useState(false);
 
@@ -54,7 +56,7 @@ export const PageBox = ({
             <div className={`w-full ${className}`}>{children}</div>
 
             {/* allows scroll so items aren't at the bottom of the screen  */}
-            <div className="shrink-0" style={{ height: 200 }} />
+            {extraSpaceAtBottom && <div className="shrink-0" style={{ height: 200 }} />}
           </div>
 
           {footer}
