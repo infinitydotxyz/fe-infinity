@@ -142,7 +142,7 @@ export const RateGraph: React.FC<RateGraphProps> = ({
             tickLabelProps={verticalTickLabelStyle}
             // looks better if we do the default tickValues
             // tickValues={countAxisLabels}
-            label="Number of orders"
+            label={`Number of ${graphType}`}
             labelProps={labelStyle}
             labelOffset={48}
             // animationTrajectory="center"
