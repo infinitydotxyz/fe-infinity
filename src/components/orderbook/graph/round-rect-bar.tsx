@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { clamp, hoverStrokeColor } from './graph-utils';
 
-interface Props {
+export interface RoundRectProps {
   width: number;
   height: number;
   tl?: number;
@@ -33,7 +33,7 @@ export const RoundRectBar = ({
   onMouseMove,
   onClick,
   fill
-}: Props) => {
+}: RoundRectProps) => {
   const [mouseOver, setMouseOver] = useState(false);
   const ref = useRef<SVGPathElement>(null);
 

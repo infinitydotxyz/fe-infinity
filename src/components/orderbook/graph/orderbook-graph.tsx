@@ -10,6 +10,7 @@ import { GraphOrderFilters } from './graph-order-filters';
 import { OrderbookGraphInfo } from './orderbook-graph-info';
 import { GraphBox } from './graph-box';
 import { CollectionFilterModal } from './graph-collection-filter';
+import { ResponsiveRateGraph, RateGraphType } from './rate-graph';
 
 interface Props {
   className?: string;
@@ -131,7 +132,7 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
 
   content = (
     <div className={twMerge('flex flex-col  ', className)}>
-      <div className="  flex  w-full">
+      <div className="flex w-full">
         <div className="flex flex-1 mb-4 justify-between items-center">
           <CollectionFilterModal
             modalIsOpen={collectionFilterShown}
@@ -151,6 +152,28 @@ export const OrderbookGraph = ({ className = '' }: Props) => {
       </div>
       <div className="flex" style={{ height: graphHeight }}>
         <div className="relative flex-1 min-w-0">
+          <GraphBox dark={true} className="h-full">
+            <ResponsiveRateGraph
+              graphType={RateGraphType.Offers}
+              graphData={graphData}
+              onClick={handleOnClick}
+              onSelection={(orders, index) => {
+                if (index !== selectedIndex) {
+                  setSelectedIndex(index);
+                }
+
+                let arrayEquals = false;
+                if (orders.length === selectedOrders.length) {
+                  arrayEquals = orders.every((v, i) => v.id === selectedOrders[i].id);
+                }
+
+                if (!arrayEquals) {
+                  setSelectedOrders(orders);
+                }
+              }}
+            />
+          </GraphBox>
+
           <GraphBox dark={true} className="h-full">
             {graph}
           </GraphBox>
