@@ -5,7 +5,7 @@ import { CurrencyInput, DatePickerBox, Modal, toastError, toastSuccess } from 's
 import { DEFAULT_MAX_GAS_PRICE_WEI, extractErrorMsg, getEstimatedGasPrice, getOwnerAddress } from 'src/utils';
 import { getSignedOBOrder } from 'src/utils/exchange/orders';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import { fetchOrderNonce, postOrders } from 'src/utils/orderbookUtils';
+import { fetchOrderNonce, postOrdersV2 } from 'src/utils/orderbookUtils';
 import { secondsPerDay } from 'src/utils/ui-constants';
 
 interface Props {
@@ -89,7 +89,7 @@ export const MakeOfferModal = ({ isOpen, onClose, onDone, buyPriceEth, token }: 
         if (signedOrder) {
           signedOrders.push(signedOrder);
           try {
-            await postOrders(user.address, signedOrders);
+            await postOrdersV2(chainId as ChainId, signedOrders);
             toastSuccess('Offer sent successfully');
             onDone();
           } catch (ex) {

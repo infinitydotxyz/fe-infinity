@@ -1,4 +1,4 @@
-import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { apiPost, apiPut } from 'src/utils/apiUtils';
 import { apiGet } from '.';
@@ -12,6 +12,28 @@ export const postOrders = async (user: string, orders: SignedOBOrder[]): Promise
     };
 
     const { result, error } = await apiPost(`/orders`, {
+      data: body
+    });
+    if (error) {
+      const msg = error?.errorResponse?.message ?? 'postOrders failed.';
+      console.error(msg);
+      throw msg;
+    }
+    return result as string;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
+export const postOrdersV2 = async (chainId: ChainId, orders: SignedOBOrder[]): Promise<string> => {
+  try {
+    const body = {
+      chainId,
+      orders: orders.map((item) => item.signedOrder)
+    };
+
+    const { result, error } = await apiPost(`/orders-v2`, {
       data: body
     });
     if (error) {
@@ -43,7 +65,7 @@ export const bigNumToDate = (time: BigNumberish): Date => {
   return new Date(BigNumber.from(time).toNumber() * 1000);
 };
 
-export const getOrderType = (order: SignedOBOrder): 'Listing' | 'Offer' => {
+export const getOrderType = (order: { isSellOrder: boolean }): 'Listing' | 'Offer' => {
   return order.isSellOrder ? 'Listing' : 'Offer';
 };
 
