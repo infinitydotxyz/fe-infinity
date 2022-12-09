@@ -5,9 +5,11 @@ import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { GridHeader, RouteUtils } from './grid-header';
 import { useRouter } from 'next/router';
 import { useScrollInfo } from './useScrollHook';
+import { useState } from 'react';
 
 export const DashboardBase = () => {
   const { setNumTokens, tokenFetcher, isSelected, isSelectable, toggleSelection, gridWidth } = useDashboardContext();
+  const [listMode, setListMode] = useState(false);
 
   const router = useRouter();
 
@@ -33,7 +35,7 @@ export const DashboardBase = () => {
         case 'items':
           return (
             <TokensGrid
-              listMode={false}
+              listMode={listMode}
               tokenFetcher={tokenFetcher}
               className="px-8 py-6"
               onClick={onCardClick}
@@ -70,7 +72,7 @@ export const DashboardBase = () => {
 
   return (
     <div className="flex flex-col h-full w-full">
-      <GridHeader expanded={expanded} />
+      <GridHeader expanded={expanded} listMode={listMode} setListMode={setListMode} />
       <div ref={setRef} className="overflow-y-auto">
         {componentForId(currentId())}
       </div>

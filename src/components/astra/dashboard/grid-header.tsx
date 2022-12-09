@@ -3,11 +3,15 @@ import { twMerge } from 'tailwind-merge';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { BlueCheck, EZImage, NextLink, ReadMoreText, Spacer } from 'src/components/common';
 import { NextRouter, useRouter } from 'next/router';
+import { BsList, BsGrid } from 'react-icons/bs';
+import { ReactNode } from 'react';
 
 interface Props {
   expanded: boolean;
+  listMode: boolean;
+  setListMode: (value: boolean) => void;
 }
-export const GridHeader = ({ expanded }: Props) => {
+export const GridHeader = ({ expanded, listMode, setListMode }: Props) => {
   const { numTokens, collection } = useDashboardContext();
 
   const avatarUrl = collection?.bannerImage || collection?.profileImage;
@@ -42,6 +46,19 @@ export const GridHeader = ({ expanded }: Props) => {
         )}
 
         <HeaderTabBar />
+
+        <div className="w-full flex mt-3">
+          <Spacer />
+          <div className="flex items-center">
+            <ToggleButton selected={listMode} onClick={() => setListMode(true)}>
+              <BsList className="h-4 w-4" />
+            </ToggleButton>
+            <div className="  w-1  " />
+            <ToggleButton selected={!listMode} onClick={() => setListMode(false)}>
+              <BsGrid className="h-4 w-4" />
+            </ToggleButton>
+          </div>
+        </div>
       </div>
     );
   }
@@ -111,5 +128,27 @@ export const HeaderTabBar = () => {
         );
       })}
     </div>
+  );
+};
+
+interface Props4 {
+  children: ReactNode;
+  selected: boolean;
+  onClick: () => void;
+}
+
+export const ToggleButton = ({ selected, children, onClick }: Props4) => {
+  return (
+    <button
+      onClick={() => {
+        onClick();
+      }}
+      className={twMerge(
+        'p-2 rounded-md  select-none focus:outline-none focus-visible:ring focus:ring-black focus:ring-opacity-50 transition ease-in-out duration-300 active:bg-gray-900 active:text-white',
+        selected ? 'bg-gray-300' : ''
+      )}
+    >
+      {children}
+    </button>
   );
 };
