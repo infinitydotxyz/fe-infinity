@@ -310,23 +310,38 @@ export const OrderbookProvider = ({ children, collectionId, tokenId, limit = ITE
         query: any;
       };
 
+      const v2OrderBy = {
+        startPriceEth: 'price',
+        startTimeMs: 'startTime',
+        endTimeMs: 'endTime',
+        collectionSlug: 'collectionSlug'
+      };
+
       const v2BaseQuery = {
         isSellOrder: v1Query.isSellOrder,
         minPrice: v1Query.minPrice,
         maxPrice: v1Query.maxPrice,
         cursor: v1Query.cursor,
-        limit: v1Query.limit
+        limit: v1Query.limit,
+        orderBy: v2OrderBy[v1Query.orderBy as keyof typeof v2OrderBy],
+        orderDirection: v1Query.orderByDirection
       };
 
       if (tokenId && collectionId) {
         options = {
           endpoint: `/collections/${chainId}:${collectionId}/nfts/${tokenId}/orders`,
-          query: v2BaseQuery
+          query: {
+            ...v2BaseQuery,
+            status: 'active'
+          }
         };
       } else if (collectionId) {
         options = {
           endpoint: `/collections/${chainId}:${collectionId}/orders`,
-          query: v2BaseQuery
+          query: {
+            ...v2BaseQuery,
+            status: 'active'
+          }
         };
       } else {
         throw new Error('Invalid query');

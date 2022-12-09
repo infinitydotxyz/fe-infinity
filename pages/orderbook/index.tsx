@@ -8,7 +8,7 @@ import { isProd } from 'src/utils';
 const OrderbookPage = () => {
   const router = useRouter();
 
-  const tabs = isProd() ? ['List view', 'Graph view'] : ['List view', 'Graph view', 'Reservoir'];
+  const tabs = isProd() ? ['List view', 'Graph view'] : ['List view', 'Graph view'];
 
   const { options, onChange, selected } = useToggleTab(tabs, (router?.query?.tab as string) || 'List view');
 
@@ -22,11 +22,6 @@ const OrderbookPage = () => {
       )}
       {selected === 'List view' && (
         <OrderbookProvider limit={50}>
-          <OrderbookContent className="" />
-        </OrderbookProvider>
-      )}
-      {selected === 'Reservoir' && (
-        <OrderbookProvider limit={50} reservoir={true}>
           <OrderbookContent className="" />
         </OrderbookProvider>
       )}
