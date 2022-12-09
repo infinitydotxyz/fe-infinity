@@ -1,4 +1,4 @@
-import { CenteredContent } from 'src/components/common';
+import { CenterFixed } from 'src/components/common';
 import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { TokensGrid } from 'src/components/astra/token-grid/token-grid';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
@@ -47,7 +47,7 @@ export const DashboardBase = () => {
         {
           slug: '/new/orders',
           label: 'Orders',
-          component: <div>Orders</div>
+          component: <CenterFixed>Orders go here</CenterFixed>
         }
       ];
 
@@ -58,32 +58,25 @@ export const DashboardBase = () => {
       if (result) {
         return result;
       }
+    } else {
+      return {
+        slug: 'select',
+        label: 'Select',
+        component: <CenterFixed>Select a Collection</CenterFixed>
+      };
     }
 
     return {
       slug: 'error',
       label: 'Error',
-      component: <div>error</div>
+      component: <CenterFixed>An Error occurred</CenterFixed>
     };
   };
 
-  const cmp = findSlugMatchingCmp().component;
-  const exten = <div className="overflow-y-auto">{cmp}</div>;
-
-  let result;
-
-  const emptyMessage = 'Select a Collection';
-
-  if (tokenFetcher) {
-    result = (
-      <div className="flex flex-col h-full w-full">
-        <GridHeader />
-        {exten}
-      </div>
-    );
-  } else {
-    result = <CenteredContent>{emptyMessage}</CenteredContent>;
-  }
-
-  return result;
+  return (
+    <div className="flex flex-col h-full w-full">
+      <GridHeader />
+      <div className="overflow-y-auto">{findSlugMatchingCmp().component}</div>
+    </div>
+  );
 };
