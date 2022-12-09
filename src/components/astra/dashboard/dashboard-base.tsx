@@ -1,4 +1,4 @@
-import { CenterFixed } from 'src/components/common';
+import { CenteredContent } from 'src/components/common';
 import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { TokensGrid } from 'src/components/astra/token-grid/token-grid';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
@@ -19,14 +19,21 @@ export const DashboardBase = () => {
     toggleSelection(data);
   };
 
-  const findSlugMatchingCmp = () => {
+  const componentForId = (path: string) => {
     if (tokenFetcher) {
-      const routes = [
-        {
-          slug: '/new/items',
-          label: 'Items',
-          component: (
+      switch (path) {
+        case 'orders':
+          return <CenteredContent>Orders go here</CenteredContent>;
+        case 'analytics':
+          return <CenteredContent>analytics go here</CenteredContent>;
+        case 'activity':
+          return <CenteredContent>activity go here</CenteredContent>;
+        case 'select':
+          return <CenteredContent>Select a Collection</CenteredContent>;
+        case 'items':
+          return (
             <TokensGrid
+              listMode={false}
               tokenFetcher={tokenFetcher}
               className="px-8 py-6"
               onClick={onCardClick}
@@ -37,42 +44,35 @@ export const DashboardBase = () => {
               }}
               onLoad={(value) => setNumTokens(value)}
             />
-          )
-        },
-        {
-          slug: '/new/orders',
-          label: 'Orders',
-          component: <CenterFixed>Orders go here</CenterFixed>
-        }
-      ];
+          );
+      }
+    }
 
-      const result = routes.find((cmp) => {
-        return cmp.slug === RouteUtils.currentPath(router);
+    return <CenteredContent>Select a Collection</CenteredContent>;
+  };
+
+  const currentId = () => {
+    if (tokenFetcher) {
+      const tabItems = RouteUtils.tabItems(router);
+      const result = tabItems.find((cmp) => {
+        return cmp.path === RouteUtils.currentPath(router);
       });
 
       if (result) {
-        return result;
+        return result.id;
       }
     } else {
-      return {
-        slug: 'select',
-        label: 'Select',
-        component: <CenterFixed>Select a Collection</CenterFixed>
-      };
+      return 'select';
     }
 
-    return {
-      slug: 'error',
-      label: 'Error',
-      component: <CenterFixed>An Error occurred</CenterFixed>
-    };
+    return 'error';
   };
 
   return (
     <div className="flex flex-col h-full w-full">
       <GridHeader expanded={expanded} />
       <div ref={setRef} className="overflow-y-auto">
-        {findSlugMatchingCmp().component}
+        {componentForId(currentId())}
       </div>
     </div>
   );

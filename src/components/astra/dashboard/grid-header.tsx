@@ -49,6 +49,8 @@ export const GridHeader = ({ expanded }: Props) => {
   return <></>;
 };
 
+// ==============================================
+
 export class RouteUtils {
   static currentPath = (router: NextRouter) => {
     let result = router.asPath;
@@ -65,21 +67,25 @@ export class RouteUtils {
 
     return [
       {
+        id: 'items',
         path: '/new/items',
         selected: '/new/items' === path,
         name: 'Items'
       },
       {
+        id: 'orders',
         path: '/new/orders',
         selected: '/new/orders' === path,
         name: 'Orders'
       },
       {
+        id: 'activity',
         path: '/new/activity',
         selected: '/new/activity' === path,
         name: 'Activity'
       },
       {
+        id: 'analytics',
         path: '/new/analytics',
         selected: '/new/analytics' === path,
         name: 'Analytics'
