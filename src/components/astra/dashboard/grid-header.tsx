@@ -4,7 +4,10 @@ import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { BlueCheck, EZImage, NextLink, ReadMoreText, Spacer } from 'src/components/common';
 import { NextRouter, useRouter } from 'next/router';
 
-export const GridHeader = () => {
+interface Props {
+  expanded: boolean;
+}
+export const GridHeader = ({ expanded }: Props) => {
   const { numTokens, collection } = useDashboardContext();
 
   const avatarUrl = collection?.bannerImage || collection?.profileImage;
@@ -14,25 +17,29 @@ export const GridHeader = () => {
   if (collection) {
     return (
       <div className={twMerge(inputBorderColor, 'flex-col items-center bg-gray-100 border-b px-8 py-3')}>
-        <div className="flex flex-col items-start">
-          <div className="flex w-full items-start">
-            <EZImage src={avatarUrl} className="mr-6 h-20 w-20 rounded-xl" />
+        {expanded && (
+          <>
+            <div className="flex flex-col items-start">
+              <div className="flex w-full items-start">
+                <EZImage src={avatarUrl} className="mr-6 h-20 w-20 rounded-xl" />
 
-            <div className="flex w-full items-center">
-              <div className="tracking-tight font-bold text-4xl  ">{name}</div>
+                <div className="flex w-full items-center">
+                  <div className="tracking-tight font-bold text-4xl  ">{name}</div>
 
-              {collection.hasBlueCheck ? <BlueCheck className="ml-2" /> : null}
+                  {collection.hasBlueCheck ? <BlueCheck className="ml-2" /> : null}
+                </div>
+              </div>
+
+              <div className="max-w-3xl">
+                <ReadMoreText text={description} min={50} ideal={160} max={10000} />
+              </div>
             </div>
-          </div>
-
-          <div className="max-w-3xl">
-            <ReadMoreText text={description} min={50} ideal={160} max={10000} />
-          </div>
-        </div>
-        <Spacer />
-        <div className="flex flex-col items-end">
-          <div className="text-lg whitespace-nowrap ml-3">{numTokens} Nfts</div>
-        </div>
+            <Spacer />
+            <div className="flex flex-col items-end">
+              <div className="text-lg whitespace-nowrap ml-3">{numTokens} Nfts</div>
+            </div>
+          </>
+        )}
 
         <HeaderTabBar />
       </div>
@@ -90,8 +97,8 @@ export const HeaderTabBar = () => {
     <div className="flex  space-x-4">
       {tabItems.map((e) => {
         return (
-          <div className={twMerge('pb-2', e.selected ? 'border-b-4 border-black' : '')}>
-            <NextLink key={e.path} href={e.path}>
+          <div key={e.path} className={twMerge('pb-2', e.selected ? 'border-b-4 border-black' : '')}>
+            <NextLink href={e.path}>
               <div>{e.name}</div>
             </NextLink>
           </div>

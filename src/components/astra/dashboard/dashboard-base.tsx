@@ -4,11 +4,16 @@ import { TokensGrid } from 'src/components/astra/token-grid/token-grid';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { GridHeader, RouteUtils } from './grid-header';
 import { useRouter } from 'next/router';
+import { useScrollInfo } from './useScrollHook';
 
 export const DashboardBase = () => {
   const { setNumTokens, tokenFetcher, isSelected, isSelectable, toggleSelection, gridWidth } = useDashboardContext();
 
   const router = useRouter();
+
+  const { setRef, scrollTop } = useScrollInfo();
+
+  const expanded = scrollTop < 100;
 
   const onCardClick = (data: ERC721CardData) => {
     toggleSelection(data);
@@ -65,8 +70,10 @@ export const DashboardBase = () => {
 
   return (
     <div className="flex flex-col h-full w-full">
-      <GridHeader />
-      <div className="overflow-y-auto">{findSlugMatchingCmp().component}</div>
+      <GridHeader expanded={expanded} />
+      <div ref={setRef} className="overflow-y-auto">
+        {findSlugMatchingCmp().component}
+      </div>
     </div>
   );
 };
