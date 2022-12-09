@@ -7,16 +7,16 @@ import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 
 interface Props {
-  cardData: ERC721CardData[];
-  onRemove: (token: ERC721CardData) => void;
+  tokens: ERC721CardData[];
+  onRemove: (token?: ERC721CardData) => void;
   onCheckout: () => void;
 }
 
-export const AstraCart = ({ cardData, onRemove, onCheckout }: Props) => {
+export const AstraCart = ({ tokens, onRemove, onCheckout }: Props) => {
   const map = new Map<string, ERC721CardData[]>();
   const { user, chainId } = useOnboardContext();
 
-  for (const token of cardData) {
+  for (const token of tokens) {
     const tkns = map.get(token.tokenAddress ?? '') ?? [];
     tkns.push(token);
     map.set(token.tokenAddress ?? '', tkns);
@@ -24,16 +24,16 @@ export const AstraCart = ({ cardData, onRemove, onCheckout }: Props) => {
 
   let clearButton = <></>;
 
-  if (cardData.length > 0) {
+  if (tokens.length > 0) {
     clearButton = (
       <div className="flex items-center">
-        <div className="bg-gray-300 rounded-full h-6 w-6 text-center mr-1 ">{cardData.length}</div>
+        <div className="bg-gray-300 rounded-full h-6 w-6 text-center mr-1 ">{tokens.length}</div>
         <Button
           variant="plain"
           size="plain"
           className="px-2 rounded-lg text-gray-500 text-sm"
           onClick={() => {
-            // sdf
+            onRemove();
           }}
         >
           Clear
@@ -92,11 +92,11 @@ export const AstraCart = ({ cardData, onRemove, onCheckout }: Props) => {
 
       <div className="m-4 flex flex-col">
         <Button
-          disabled={!user || chainId !== '1' || cardData.length === 0}
+          disabled={!user || chainId !== '1' || tokens.length === 0}
           onClick={onCheckout}
           className="bg-light-gray-100 dark:bg-dark-bg"
         >
-          Checkout
+          Buy Now
         </Button>
       </div>
     </div>

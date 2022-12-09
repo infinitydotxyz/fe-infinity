@@ -63,7 +63,7 @@ const DashboardPage = () => {
 
   const cart = (
     <AstraCart
-      cardData={selection}
+      tokens={selection}
       onCheckout={() => {
         clearSelection();
         handleCheckout(selection);

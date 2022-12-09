@@ -35,7 +35,7 @@ export type DashboardContextType = {
   toggleSelection: (data: ERC721CardData) => void;
   isSelected: (data: ERC721CardData) => boolean;
   isSelectable: (data: ERC721CardData) => boolean;
-  removeFromSelection: (data: ERC721CardData) => void;
+  removeFromSelection: (data?: ERC721CardData) => void;
   selection: ERC721CardData[];
   clearSelection: () => void;
 };
