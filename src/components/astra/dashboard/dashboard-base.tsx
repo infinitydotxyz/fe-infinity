@@ -2,7 +2,7 @@ import { CenterFixed } from 'src/components/common';
 import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { TokensGrid } from 'src/components/astra/token-grid/token-grid';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
-import { GridHeader } from './grid-header';
+import { GridHeader, RouteUtils } from './grid-header';
 import { useRouter } from 'next/router';
 
 export const DashboardBase = () => {
@@ -12,16 +12,6 @@ export const DashboardBase = () => {
 
   const onCardClick = (data: ERC721CardData) => {
     toggleSelection(data);
-  };
-
-  const currentPath = () => {
-    let result = router.asPath;
-
-    if (result === '/new') {
-      result = '/new/items';
-    }
-
-    return result;
   };
 
   const findSlugMatchingCmp = () => {
@@ -52,7 +42,7 @@ export const DashboardBase = () => {
       ];
 
       const result = routes.find((cmp) => {
-        return cmp.slug === currentPath();
+        return cmp.slug === RouteUtils.currentPath(router);
       });
 
       if (result) {

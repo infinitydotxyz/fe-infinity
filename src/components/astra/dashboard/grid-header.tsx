@@ -2,6 +2,7 @@ import { inputBorderColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { BlueCheck, EZImage, NextLink, ReadMoreText, Spacer } from 'src/components/common';
+import { NextRouter, useRouter } from 'next/router';
 
 export const GridHeader = () => {
   const { numTokens, collection } = useDashboardContext();
@@ -33,23 +34,69 @@ export const GridHeader = () => {
           <div className="text-lg whitespace-nowrap ml-3">{numTokens} Nfts</div>
         </div>
 
-        <div className="flex  space-x-4">
-          <NextLink href={'/new/items'}>
-            <div>Items</div>
-          </NextLink>
-          <NextLink href={'/new/orders'}>
-            <div>Orders</div>
-          </NextLink>
-          <NextLink href={'/new/items'}>
-            <div>Activity</div>
-          </NextLink>
-          <NextLink href={'/new/orders'}>
-            <div>Analytics</div>
-          </NextLink>
-        </div>
+        <HeaderTabBar />
       </div>
     );
   }
 
   return <></>;
+};
+
+export class RouteUtils {
+  static currentPath = (router: NextRouter) => {
+    let result = router.asPath;
+
+    if (result === '/new') {
+      result = '/new/items';
+    }
+
+    return result;
+  };
+
+  static tabItems = (router: NextRouter) => {
+    const path = RouteUtils.currentPath(router);
+
+    return [
+      {
+        path: '/new/items',
+        selected: '/new/items' === path,
+        name: 'Items'
+      },
+      {
+        path: '/new/orders',
+        selected: '/new/orders' === path,
+        name: 'Orders'
+      },
+      {
+        path: '/new/activity',
+        selected: '/new/activity' === path,
+        name: 'Activity'
+      },
+      {
+        path: '/new/analytics',
+        selected: '/new/analytics' === path,
+        name: 'Analytics'
+      }
+    ];
+  };
+}
+
+export const HeaderTabBar = () => {
+  const router = useRouter();
+
+  const tabItems = RouteUtils.tabItems(router);
+
+  return (
+    <div className="flex  space-x-4">
+      {tabItems.map((e) => {
+        return (
+          <div className={twMerge('pb-2', e.selected ? 'border-b-4 border-black' : '')}>
+            <NextLink key={e.path} href={e.path}>
+              <div>{e.name}</div>
+            </NextLink>
+          </div>
+        );
+      })}
+    </div>
+  );
 };
