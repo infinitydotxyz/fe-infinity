@@ -47,7 +47,7 @@ export const GridHeader = ({ expanded, listMode, setListMode }: Props) => {
 
         <HeaderTabBar />
 
-        <div className="w-full flex mt-3">
+        <div className="w-full flex   pt-2 border-t-[1px]">
           <Spacer />
           <div className="flex items-center">
             <ToggleButton selected={listMode} onClick={() => setListMode(true)}>

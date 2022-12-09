@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { ScrollLoader } from 'src/components/common';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { twMerge } from 'tailwind-merge';
-import { TokenCard } from './token-card';
+import { TokenCard, TokenListCard } from './token-card';
 import { TokenFetcherAlt } from './token-fetcher';
 import { ErrorOrLoading } from '../error-or-loading';
 import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
@@ -71,7 +71,35 @@ export const TokensGrid = ({
   } else {
     if (wrapWidth > 0) {
       if (listMode) {
-        contents = <div>List mode</div>;
+        contents = (
+          <>
+            <div className={twMerge('space-y-1 flex flex-col')}>
+              {cardData.map((data) => {
+                return (
+                  <TokenListCard
+                    key={data.id}
+                    data={data}
+                    selected={isSelected(data)}
+                    isSelectable={isSelectable}
+                    onClick={(data) => {
+                      if (onClick) {
+                        return onClick(data);
+                      }
+                    }}
+                  />
+                );
+              })}
+            </div>
+
+            {hasNextPage && (
+              <ScrollLoader
+                onFetchMore={() => {
+                  handleFetch(true);
+                }}
+              />
+            )}
+          </>
+        );
       } else {
         let divisor = wrapWidth < 1500 ? 500 : 380;
         divisor = wrapWidth < 950 ? 700 : divisor;
