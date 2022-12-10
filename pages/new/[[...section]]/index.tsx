@@ -5,7 +5,9 @@ import { useResizeDetector } from 'react-resize-detector';
 import { MainDashboardGrid } from 'src/components/astra/dashboard/main-grid-dashboard';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { DashboardAll } from 'src/components/astra/dashboard/dashboard-all';
-import { Navbar } from 'src/components/common';
+import { Button, Navbar, Spacer, SVG } from 'src/components/common';
+import { MdDarkMode, MdLightMode } from 'react-icons/md';
+import { usePreferences } from 'src/utils/preferences';
 
 const DashboardPage = () => {
   const {
@@ -19,6 +21,7 @@ const DashboardPage = () => {
     removeFromSelection,
     setShowCart
   } = useDashboardContext();
+  const { darkMode, setDarkMode } = usePreferences();
 
   const gridRef = useRef<HTMLDivElement>(null);
 
@@ -75,8 +78,33 @@ const DashboardPage = () => {
   );
 
   const footer = <div>footer</div>;
+  const sideNavBar = (
+    <div className="flex px-2 py-4 h-full flex-col items-center ">
+      {darkMode ? <SVG.miniLogoDark className="shrink-0 h-8 w-8" /> : <SVG.miniLogo className="shrink-0 h-8 w-8" />}
+      <Spacer />
+      <Button
+        variant="plain"
+        size="plain"
+        onClick={() => {
+          setDarkMode(!darkMode);
+        }}
+      >
+        {darkMode ? <MdLightMode className="h-8 w-8" /> : <MdDarkMode className="h-8 w-8" />}
+      </Button>
+    </div>
+  );
 
-  return MainDashboardGrid(<Navbar />, sidebar, <DashboardAll />, cart, footer, gridRef, containerRef, showCart);
+  return MainDashboardGrid(
+    <Navbar />,
+    sideNavBar,
+    sidebar,
+    <DashboardAll />,
+    cart,
+    footer,
+    gridRef,
+    containerRef,
+    showCart
+  );
 };
 
 export default DashboardPage;

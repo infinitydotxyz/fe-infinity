@@ -12,7 +12,7 @@ import { DrawerContextProvider } from 'src/utils/context/DrawerContext';
 import { CurationBulkVoteContextProvider } from 'src/utils/context/CurationBulkVoteContext';
 import { AppContextProvider } from 'src/utils/context/AppContext';
 import { DashboardContextProvider } from 'src/utils/context/DashboardContext';
-import { Preferences } from 'src/utils/preferences';
+import { usePreferences } from 'src/utils/preferences';
 
 const Page: FunctionComponent<AppProps> = ({ Component, pageProps }) => <Component {...pageProps} />;
 const Memoized = memo(Page, (p, n) => p.Component === n.Component && p.pageProps === n.pageProps);
@@ -33,6 +33,8 @@ const App: FunctionComponent<AppProps> = (props) => {
     return () => router.events.off('routeChangeComplete', handleRouteChange);
   }, [router.events]);
 
+  const { darkMode } = usePreferences();
+
   return (
     <StrictMode>
       <AppContextProvider>
@@ -42,7 +44,7 @@ const App: FunctionComponent<AppProps> = (props) => {
               <DashboardContextProvider>
                 <DrawerContextProvider>
                   <CurationBulkVoteContextProvider>
-                    <div className={Preferences.darkMode() ? 'dark' : 'light'}>
+                    <div className={darkMode ? 'dark' : 'light'}>
                       <Memoized {...props} />
                     </div>
                   </CurationBulkVoteContextProvider>
