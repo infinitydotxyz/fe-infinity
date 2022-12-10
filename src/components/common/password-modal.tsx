@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Modal } from 'src/components/common';
 import { base64Encode } from 'src/utils';
+import { Preferences } from 'src/utils/preferences';
 import { TextInputBox } from './input-box';
 
 const LOCAL_STORAGE_KEY = 'ppp';
@@ -31,7 +32,7 @@ export const PasswordModal = ({ isOpen, onClose }: Props) => {
   useEffect(() => {
     if (base64Encode(password) === encPass) {
       setIsValidPassword(true);
-      localStorage.setItem(LOCAL_STORAGE_KEY, base64Encode(password));
+      Preferences.setString(LOCAL_STORAGE_KEY, base64Encode(password));
       window.location.reload();
     } else {
       setIsValidPassword(false);

@@ -4,6 +4,7 @@ import { AxiosRequestHeaders } from 'axios';
 import { Signature } from 'ethers';
 import { verifyMessage } from 'ethers/lib/utils';
 import { base64Encode } from '../commonUtils';
+import { Preferences } from '../preferences';
 import { getMutex } from './mutex';
 import { WalletSigner } from './WalletSigner';
 
@@ -104,7 +105,7 @@ class _OnboardAuthProvider {
       if (currentUser) {
         const key = `creds-${currentUser}`;
 
-        const credsString = localStorage.getItem(key);
+        const credsString = Preferences.getString(key);
         if (credsString) {
           try {
             const creds = JSON.parse(credsString);
@@ -156,7 +157,7 @@ class _OnboardAuthProvider {
           signature: JSON.stringify(this.currentCreds.signature ?? {})
         };
 
-        localStorage.setItem(key, JSON.stringify(data));
+        Preferences.setString(key, JSON.stringify(data));
       }
     }
   };
