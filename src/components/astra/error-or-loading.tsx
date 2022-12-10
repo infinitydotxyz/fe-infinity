@@ -1,4 +1,6 @@
 import { CenteredContent, Spinner } from 'src/components/common';
+import { textClr } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
 
 interface Props2 {
   error: boolean;
@@ -20,7 +22,7 @@ export const ErrorOrLoading = ({ error, noData, message = 'Nothing found' }: Pro
   }
 
   return (
-    <div className="h-full w-full dark:text-dark-body text-light-body">
+    <div className={twMerge(textClr, 'h-full w-full  ')}>
       <CenteredContent>{contents}</CenteredContent>
     </div>
   );

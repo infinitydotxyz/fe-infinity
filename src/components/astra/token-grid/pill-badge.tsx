@@ -3,6 +3,7 @@ import { twMerge } from 'tailwind-merge';
 import { IoMdEye } from 'react-icons/io';
 import { numberWithCommas } from 'src/utils/astra-utils';
 import { ARoundButton } from '../astra-button';
+import { textClr } from 'src/utils/ui-constants';
 
 interface Props {
   val: number | string | undefined;
@@ -63,7 +64,7 @@ export const EyeBadge = ({ onClick, className = 'bottom-0 right-1' }: Props3) =>
   return (
     <div className={twMerge(className, 'absolute')}>
       <ARoundButton onClick={onClick}>
-        <IoMdEye className={'h-8 w-8 dark:text-dark-body text-light-body opacity-50 hover:opacity-100'} />
+        <IoMdEye className={twMerge(textClr, 'h-8 w-8   opacity-50 hover:opacity-100')} />
       </ARoundButton>
     </div>
   );

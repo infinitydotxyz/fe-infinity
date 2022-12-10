@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { cardColor, inputBorderColor, textColor } from 'src/utils/ui-constants';
+import { cardClr, inputBorderColor, textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 interface Props {
@@ -15,7 +15,7 @@ export const AButton = ({ small = false, disabled = false, children, className =
   return (
     <ButtonBase
       disabled={disabled}
-      className={twMerge(small ? 'text-sm px-3 py-0.5' : 'px-4 py-1', 'rounded-md', cardColor, className)}
+      className={twMerge(small ? 'text-sm px-3 py-0.5' : 'px-4 py-1', 'rounded-md', cardClr, className)}
       onClick={onClick}
     >
       {children}
@@ -48,7 +48,7 @@ const ButtonBase = ({
       // otherwise a disabled buttons click will go to the parent, onClick isn't called
       // disabled={disabled}
       className={twMerge(
-        textColor,
+        textClr,
         'active:dark:bg-light-bg  active:dark:text-dark-bg  ',
         'active:bg-dark-bg active:text-light-bg',
         'hover:dark:bg-opacity-10 hover:dark:bg-gray-200   ',

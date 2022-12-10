@@ -25,7 +25,7 @@ export const weekSeconds = secondsPerDay * 7;
 export const thirtyDaySeconds = secondsPerDay * 30;
 
 // used for outline buttons, input boxes etc.
-export const inputBorderColor = 'border-gray-300';
+export const inputBorderColor = 'dark:border-dark-border  border-light-border';
 
 export const drawerPx = 'px-8';
 
@@ -33,5 +33,5 @@ export const negativeMargin = 'mt-[-68px]';
 
 export const selectionOutline = 'outline-4 outline-sky-500 outline-offset-1 outline';
 
-export const cardColor = 'dark:bg-dark-card bg-light-card';
-export const textColor = 'dark:text-dark-body text-light-body';
+export const cardClr = 'dark:bg-dark-card bg-light-card';
+export const textClr = 'dark:text-dark-body text-light-body';

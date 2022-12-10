@@ -1,6 +1,6 @@
 import { EZImage, Spacer } from 'src/components/common';
 import { AButton, ARoundButton, ATextButton } from 'src/components/astra';
-import { smallIconButtonStyle } from 'src/utils/ui-constants';
+import { smallIconButtonStyle, textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { ReactNode } from 'react';
 import { MdClose } from 'react-icons/md';
@@ -64,16 +64,13 @@ export const AstraCart = ({ tokens, onRemove, onCheckout }: Props) => {
 
     // min-w-0 is important. otherwise text doesn't truncate
     listComponent = (
-      <div className="min-w-0 flex px-6 flex-col space-y-2 items-start flex-1 dark:text-dark-body text-light-body overflow-y-auto">
+      <div className={twMerge(textClr, 'min-w-0 flex px-6 flex-col space-y-2 items-start flex-1 overflow-y-auto')}>
         {divList}
       </div>
     );
   } else {
     listComponent = (
-      <div
-        key={Math.random()}
-        className="flex items-center justify-center dark:text-dark-body text-light-body uppercase flex-1"
-      >
+      <div key={Math.random()} className={twMerge(textClr, 'flex items-center justify-center   uppercase flex-1')}>
         <div>Cart empty</div>
       </div>
     );
@@ -83,7 +80,7 @@ export const AstraCart = ({ tokens, onRemove, onCheckout }: Props) => {
     // setting to  w-72 so it doen't shrink and expand while animating
     <div className="h-full flex flex-col w-72">
       <div className=" m-4 flex items-center">
-        <div className="text-4xl lg:text-3xl font-bold dark:text-dark-body text-light-body mr-3">Cart</div>
+        <div className={twMerge(textClr, 'text-4xl lg:text-3xl font-bold mr-3')}>Cart</div>
         {clearButton}
       </div>
 

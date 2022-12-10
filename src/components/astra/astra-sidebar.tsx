@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { CollectionList } from 'src/components/astra/collection-list';
-import { cardColor, inputBorderColor, textColor } from 'src/utils/ui-constants';
+import { cardClr, inputBorderColor, textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 // import { useLocation } from 'react-router';
 // import queryString from 'query-string';
@@ -107,8 +107,8 @@ export const DbouncedTextField = ({ value, placeholder, onChange, className = ''
         value={query}
         placeholder={placeholder}
         className={twMerge(
-          cardColor,
-          textColor,
+          cardClr,
+          textClr,
           'w-full outline-none',
           'rounded-full focus-visible:ring focus:ring-0 py-2 px-4 text-lg lg:text-md leading-5'
         )}
