@@ -41,7 +41,9 @@ const App: FunctionComponent<AppProps> = (props) => {
               <DashboardContextProvider>
                 <DrawerContextProvider>
                   <CurationBulkVoteContextProvider>
-                    <Memoized {...props} />
+                    <div className="light">
+                      <Memoized {...props} />
+                    </div>
                   </CurationBulkVoteContextProvider>
                 </DrawerContextProvider>
               </DashboardContextProvider>
