@@ -1,4 +1,5 @@
-import { EZImage, Button, Spacer } from 'src/components/common';
+import { EZImage, Spacer } from 'src/components/common';
+import { AButton, ARoundButton, ATextButton } from 'src/components/astra';
 import { smallIconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { ReactNode } from 'react';
@@ -28,16 +29,14 @@ export const AstraCart = ({ tokens, onRemove, onCheckout }: Props) => {
     clearButton = (
       <div className="flex items-center">
         <div className="bg-gray-300 rounded-full h-6 w-6 text-center mr-1 ">{tokens.length}</div>
-        <Button
-          variant="plain"
-          size="plain"
+        <ATextButton
           className="px-2 rounded-lg text-gray-500 text-sm"
           onClick={() => {
             onRemove();
           }}
         >
           Clear
-        </Button>
+        </ATextButton>
       </div>
     );
   }
@@ -83,7 +82,7 @@ export const AstraCart = ({ tokens, onRemove, onCheckout }: Props) => {
   return (
     // setting to  w-72 so it doen't shrink and expand while animating
     <div className="h-full flex flex-col w-72">
-      <div className=" m-4 flex">
+      <div className=" m-4 flex items-center">
         <div className="text-4xl lg:text-3xl font-bold dark:text-dark-body text-light-body mr-3">Cart</div>
         {clearButton}
       </div>
@@ -91,13 +90,9 @@ export const AstraCart = ({ tokens, onRemove, onCheckout }: Props) => {
       {listComponent}
 
       <div className="m-4 flex flex-col">
-        <Button
-          disabled={!user || chainId !== '1' || tokens.length === 0}
-          onClick={onCheckout}
-          className="bg-light-gray-100 dark:bg-dark-bg"
-        >
+        <AButton disabled={!user || chainId !== '1' || tokens.length === 0} onClick={onCheckout}>
           Buy Now
-        </Button>
+        </AButton>
       </div>
     </div>
   );
@@ -123,15 +118,13 @@ export const AstraCartItem = ({ token, index, onRemove }: Props2) => {
       </div>
 
       <Spacer />
-      <Button
-        size="plain"
-        variant="round"
+      <ARoundButton
         onClick={() => {
           onRemove(token);
         }}
       >
-        <MdClose className={twMerge(smallIconButtonStyle, 'opacity-75 dark:text-dark-body text-light-body')} />
-      </Button>
+        <MdClose className={twMerge(smallIconButtonStyle, '   ')} />
+      </ARoundButton>
     </div>
   );
 };

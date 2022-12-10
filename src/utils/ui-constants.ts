@@ -32,3 +32,6 @@ export const drawerPx = 'px-8';
 export const negativeMargin = 'mt-[-68px]';
 
 export const selectionOutline = 'outline-4 outline-sky-500 outline-offset-1 outline';
+
+export const cardColor = 'dark:bg-dark-card bg-light-card';
+export const textColor = 'dark:text-dark-body text-light-body';

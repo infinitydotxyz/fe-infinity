@@ -5,9 +5,11 @@ import { useResizeDetector } from 'react-resize-detector';
 import { MainDashboardGrid } from 'src/components/astra/dashboard/main-grid-dashboard';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { DashboardAll } from 'src/components/astra/dashboard/dashboard-all';
-import { Button, Navbar, Spacer, SVG } from 'src/components/common';
+import { ConnectButton, ShoppingCartButton, Spacer, SVG } from 'src/components/common';
 import { MdDarkMode, MdLightMode } from 'react-icons/md';
 import { useAppContext } from 'src/utils/context/AppContext';
+import { ARoundButton } from 'src/components/astra';
+import { CollectionSearchInput } from 'src/components/common/search/collection-search-input';
 
 const DashboardPage = () => {
   const {
@@ -82,20 +84,30 @@ const DashboardPage = () => {
     <div className="flex px-2 py-4 h-full flex-col items-center ">
       {darkMode ? <SVG.miniLogoDark className="shrink-0 h-8 w-8" /> : <SVG.miniLogo className="shrink-0 h-8 w-8" />}
       <Spacer />
-      <Button
-        variant="plain"
-        size="plain"
+      <ARoundButton
         onClick={() => {
           setDarkMode(!darkMode);
         }}
       >
         {darkMode ? <MdLightMode className="h-8 w-8" /> : <MdDarkMode className="h-8 w-8" />}
-      </Button>
+      </ARoundButton>
+    </div>
+  );
+
+  const topBar = (
+    <div className="flex px-5 py-2 space-x-4 items-center">
+      <div className="ml-80 max-w-96">
+        <CollectionSearchInput expanded />
+      </div>
+
+      <Spacer />
+      <ShoppingCartButton />
+      <ConnectButton />
     </div>
   );
 
   return MainDashboardGrid(
-    <Navbar />,
+    topBar,
     sideNavBar,
     sidebar,
     <DashboardAll />,

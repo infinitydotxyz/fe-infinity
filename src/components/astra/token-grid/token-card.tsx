@@ -1,9 +1,10 @@
-import { selectionOutline } from 'src/utils/ui-constants';
+import { cardColor, selectionOutline } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { Button, Checkbox, EZImage, Spacer, SVG } from '../../common';
+import { Checkbox, EZImage, Spacer, SVG } from '../../common';
 import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { useState } from 'react';
 import { TokenCardModal } from './token-card-modal';
+import { AOutlineButton } from '../astra-button';
 
 interface Props {
   data: ERC721CardData;
@@ -22,9 +23,8 @@ export const TokenCard = ({ data, onClick, selected, isSelectable }: Props): JSX
   return (
     <div
       className={twMerge(
-        // 'border',
-        // inputBorderColor,
-        'rounded-2xl w-full relative flex flex-col dark:bg-dark-card bg-light-card shadow-[0_20px_20px_1px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_20px_1px_rgba(0,0,0,0.15)] transition-all duration-300',
+        cardColor,
+        'rounded-2xl w-full relative flex flex-col  shadow-[0_20px_20px_1px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_20px_1px_rgba(0,0,0,0.15)] transition-all duration-300',
         selected ? selectionOutline : '',
         notSelectable ? 'animate-wiggle' : ''
       )}
@@ -57,9 +57,9 @@ export const TokenCard = ({ data, onClick, selected, isSelectable }: Props): JSX
           <div className="flex items-center">
             <div className="truncate">Id: {tokenId}</div>
             <Spacer />
-            <Button size="small" variant="outline" onClick={() => setModalOpen(true)}>
+            <AOutlineButton small onClick={() => setModalOpen(true)}>
               Details
-            </Button>
+            </AOutlineButton>
           </div>
         </div>
       </div>
@@ -81,7 +81,8 @@ export const TokenListCard = ({ data, onClick, selected, isSelectable }: Props):
   return (
     <div
       className={twMerge(
-        '  w-full relative flex flex-col dark:bg-dark-card bg-light-card px-3 py-2  hover:bg-gray-100 transition-all duration-300',
+        cardColor,
+        '  w-full relative flex flex-col  px-3 py-2  hover:bg-gray-100 transition-all duration-300',
         notSelectable ? 'animate-wiggle' : ''
       )}
       onClick={() => {
@@ -114,9 +115,9 @@ export const TokenListCard = ({ data, onClick, selected, isSelectable }: Props):
         </div>
 
         <Spacer />
-        <Button size="small" variant="outline" onClick={() => setModalOpen(true)}>
+        <AOutlineButton small onClick={() => setModalOpen(true)}>
           Details
-        </Button>
+        </AOutlineButton>
       </div>
 
       <TokenCardModal data={data} modalOpen={modalOpen} setModalOpen={setModalOpen} />

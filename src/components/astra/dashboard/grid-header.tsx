@@ -1,10 +1,10 @@
-import { inputBorderColor } from 'src/utils/ui-constants';
+import { cardColor, inputBorderColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { BlueCheck, EZImage, NextLink, ReadMoreText, Spacer } from 'src/components/common';
 import { NextRouter, useRouter } from 'next/router';
 import { BsList, BsGrid } from 'react-icons/bs';
-import { ReactNode } from 'react';
+import { AToggleButton } from '../astra-button';
 
 interface Props {
   expanded: boolean;
@@ -20,7 +20,7 @@ export const GridHeader = ({ expanded, listMode, setListMode }: Props) => {
 
   if (collection) {
     return (
-      <div className={twMerge(inputBorderColor, 'flex-col items-center bg-gray-100 border-b px-8 py-3')}>
+      <div className={twMerge(inputBorderColor, cardColor, textColor, 'flex-col items-center   border-b px-8 py-3')}>
         {expanded && (
           <>
             <div className="flex flex-col items-start">
@@ -50,13 +50,13 @@ export const GridHeader = ({ expanded, listMode, setListMode }: Props) => {
         <div className="w-full flex   pt-2 border-t-[1px]">
           <Spacer />
           <div className="flex items-center">
-            <ToggleButton selected={listMode} onClick={() => setListMode(true)}>
+            <AToggleButton selected={listMode} onClick={() => setListMode(true)}>
               <BsList className="h-4 w-4" />
-            </ToggleButton>
+            </AToggleButton>
             <div className="  w-1  " />
-            <ToggleButton selected={!listMode} onClick={() => setListMode(false)}>
+            <AToggleButton selected={!listMode} onClick={() => setListMode(false)}>
               <BsGrid className="h-4 w-4" />
-            </ToggleButton>
+            </AToggleButton>
           </div>
         </div>
       </div>
@@ -128,27 +128,5 @@ export const HeaderTabBar = () => {
         );
       })}
     </div>
-  );
-};
-
-interface Props4 {
-  children: ReactNode;
-  selected: boolean;
-  onClick: () => void;
-}
-
-export const ToggleButton = ({ selected, children, onClick }: Props4) => {
-  return (
-    <button
-      onClick={() => {
-        onClick();
-      }}
-      className={twMerge(
-        'p-2 rounded-md  select-none focus:outline-none focus-visible:ring focus:ring-black focus:ring-opacity-50 transition ease-in-out duration-300 active:bg-gray-900 active:text-white',
-        selected ? 'bg-gray-300' : ''
-      )}
-    >
-      {children}
-    </button>
   );
 };

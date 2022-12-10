@@ -12,6 +12,7 @@ import { DrawerContextProvider } from 'src/utils/context/DrawerContext';
 import { CurationBulkVoteContextProvider } from 'src/utils/context/CurationBulkVoteContext';
 import { AppContextProvider, useAppContext } from 'src/utils/context/AppContext';
 import { DashboardContextProvider } from 'src/utils/context/DashboardContext';
+import { twMerge } from 'tailwind-merge';
 
 const Page: FunctionComponent<AppProps> = ({ Component, pageProps }) => <Component {...pageProps} />;
 const Memoized = memo(Page, (p, n) => p.Component === n.Component && p.pageProps === n.pageProps);
@@ -57,7 +58,7 @@ const AppBody = (props: AppProps) => {
   const { darkMode } = useAppContext();
 
   return (
-    <div className={darkMode ? 'dark' : 'light'}>
+    <div className={twMerge(darkMode ? 'dark' : 'light', darkMode ? 'bg-black' : 'bg-white')}>
       <Memoized {...props} />
     </div>
   );

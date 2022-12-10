@@ -1,7 +1,8 @@
-import { Button, ButtonProps, HelpTip, SVG } from 'src/components/common';
+import { HelpTip, SVG } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 import { IoMdEye } from 'react-icons/io';
 import { numberWithCommas } from 'src/utils/astra-utils';
+import { ARoundButton } from '../astra-button';
 
 interface Props {
   val: number | string | undefined;
@@ -51,18 +52,6 @@ export const BlueCheckBadge = ({ val, tooltip = 'Blue check verified', className
   return <></>;
 };
 
-// ================================================
-
-export const RoundButton = ({ disabled = false, children, className = '', onClick }: ButtonProps): JSX.Element => {
-  const cn = 'rounded-full p-2';
-
-  return (
-    <Button disabled={disabled} className={twMerge(cn, className)} onClick={onClick}>
-      {children}
-    </Button>
-  );
-};
-
 // ===========================================================
 interface Props3 {
   onClick: () => void;
@@ -73,9 +62,9 @@ interface Props3 {
 export const EyeBadge = ({ onClick, className = 'bottom-0 right-1' }: Props3) => {
   return (
     <div className={twMerge(className, 'absolute')}>
-      <RoundButton onClick={onClick}>
+      <ARoundButton onClick={onClick}>
         <IoMdEye className={'h-8 w-8 dark:text-dark-body text-light-body opacity-50 hover:opacity-100'} />
-      </RoundButton>
+      </ARoundButton>
     </div>
   );
 };
