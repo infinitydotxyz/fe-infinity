@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react';
-
 export class Preferences {
   static darkMode = (): boolean => {
     return Preferences.getString('darkMode') === 'true';
@@ -11,6 +9,7 @@ export class Preferences {
 
   static getString(key: string) {
     if (typeof window === 'undefined') {
+      console.log('Preferences getString: no window');
       return '';
     }
 
@@ -19,6 +18,7 @@ export class Preferences {
 
   static setString(key: string, value: string) {
     if (typeof window === 'undefined') {
+      console.log('Preferences setString: no window');
       return;
     }
 
@@ -27,25 +27,10 @@ export class Preferences {
 
   static remove(key: string) {
     if (typeof window === 'undefined') {
+      console.log('Preferences remove: no window');
       return;
     }
 
     window.localStorage.removeItem(key);
   }
 }
-
-// =====================================================================
-
-export const usePreferences = () => {
-  const [darkMode, setDarkMode] = useState(false);
-
-  useEffect(() => {
-    setDarkMode(Preferences.darkMode());
-  }, []);
-
-  useEffect(() => {
-    Preferences.setDarkMode(darkMode);
-  }, [darkMode]);
-
-  return { darkMode, setDarkMode };
-};

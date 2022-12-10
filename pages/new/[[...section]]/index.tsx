@@ -7,7 +7,7 @@ import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { DashboardAll } from 'src/components/astra/dashboard/dashboard-all';
 import { Button, Navbar, Spacer, SVG } from 'src/components/common';
 import { MdDarkMode, MdLightMode } from 'react-icons/md';
-import { usePreferences } from 'src/utils/preferences';
+import { useAppContext } from 'src/utils/context/AppContext';
 
 const DashboardPage = () => {
   const {
@@ -21,7 +21,7 @@ const DashboardPage = () => {
     removeFromSelection,
     setShowCart
   } = useDashboardContext();
-  const { darkMode, setDarkMode } = usePreferences();
+  const { darkMode, setDarkMode } = useAppContext();
 
   const gridRef = useRef<HTMLDivElement>(null);
 

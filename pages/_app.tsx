@@ -10,9 +10,8 @@ import { FilterContextProvider } from 'src/utils/context/FilterContext';
 import React, { FunctionComponent, memo, StrictMode, useEffect } from 'react';
 import { DrawerContextProvider } from 'src/utils/context/DrawerContext';
 import { CurationBulkVoteContextProvider } from 'src/utils/context/CurationBulkVoteContext';
-import { AppContextProvider } from 'src/utils/context/AppContext';
+import { AppContextProvider, useAppContext } from 'src/utils/context/AppContext';
 import { DashboardContextProvider } from 'src/utils/context/DashboardContext';
-import { usePreferences } from 'src/utils/preferences';
 
 const Page: FunctionComponent<AppProps> = ({ Component, pageProps }) => <Component {...pageProps} />;
 const Memoized = memo(Page, (p, n) => p.Component === n.Component && p.pageProps === n.pageProps);
@@ -22,7 +21,7 @@ if (!isLocalhost()) {
   LogRocket.init('0pu9ak/nftco');
 }
 
-const App: FunctionComponent<AppProps> = (props) => {
+const App = (props: AppProps) => {
   // For every route change in production,
   // we inject google analytics tracker.
   const router = useRouter();
@@ -33,8 +32,6 @@ const App: FunctionComponent<AppProps> = (props) => {
     return () => router.events.off('routeChangeComplete', handleRouteChange);
   }, [router.events]);
 
-  const { darkMode } = usePreferences();
-
   return (
     <StrictMode>
       <AppContextProvider>
@@ -44,9 +41,7 @@ const App: FunctionComponent<AppProps> = (props) => {
               <DashboardContextProvider>
                 <DrawerContextProvider>
                   <CurationBulkVoteContextProvider>
-                    <div className={darkMode ? 'dark' : 'light'}>
-                      <Memoized {...props} />
-                    </div>
+                    <AppBody {...props} />
                   </CurationBulkVoteContextProvider>
                 </DrawerContextProvider>
               </DashboardContextProvider>
@@ -55,6 +50,16 @@ const App: FunctionComponent<AppProps> = (props) => {
         </OnboardContextProvider>
       </AppContextProvider>
     </StrictMode>
+  );
+};
+
+const AppBody = (props: AppProps) => {
+  const { darkMode } = useAppContext();
+
+  return (
+    <div className={darkMode ? 'dark' : 'light'}>
+      <Memoized {...props} />
+    </div>
   );
 };
 
