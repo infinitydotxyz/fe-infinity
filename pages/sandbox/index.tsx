@@ -18,8 +18,8 @@ import {
   toastSuccess,
   toastWarning,
   Chip,
-  ComboBox,
-  ComboBoxBaseType,
+  // ComboBox,
+  // ComboBoxBaseType,
   SVG,
   Checkbox,
   Modal,
@@ -48,11 +48,11 @@ const cardTestData = [
   }
 ];
 
-const comboValues: ComboBoxBaseType[] = [
-  { id: 0, name: 'Empty Trash' },
-  { id: 1, name: 'Save File' },
-  { id: 2, name: 'Download' }
-];
+// const comboValues: ComboBoxBaseType[] = [
+//   { id: 0, name: 'Empty Trash' },
+//   { id: 1, name: 'Save File' },
+//   { id: 2, name: 'Download' }
+// ];
 
 const SandboxPage = () => {
   const { options, onChange, selected } = useToggleTab(['Buy NFTs', 'Sell NFTs', 'Trade NFTs'], 'Buy NFTs');
@@ -60,7 +60,7 @@ const SandboxPage = () => {
   const [checked, setChecked] = useState<boolean>(false);
   const [checked2, setChecked2] = useState<boolean>(false);
   const [switchChecked, setSwitchChecked] = useState<boolean>(false);
-  const [comboValue, setComboValue] = useState<ComboBoxBaseType>(comboValues[0]);
+  // const [comboValue, setComboValue] = useState<ComboBoxBaseType>(comboValues[0]);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [activityTypes, setActivityTypes] = useState<EventType[]>([]);
 
@@ -293,10 +293,10 @@ const SandboxPage = () => {
         />
       </div>
 
-      <SBHeader># ComboBox</SBHeader>
+      {/* <SBHeader># ComboBox</SBHeader>
       <div className="w-1/2">
         <ComboBox options={comboValues} value={comboValue} onChange={(value) => setComboValue(value)} />
-      </div>
+      </div> */}
 
       <SBHeader># SimpleTable</SBHeader>
       <SimpleTable items={tableItems} className="w-1/2" />
