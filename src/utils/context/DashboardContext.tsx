@@ -19,9 +19,6 @@ export type DashboardContextType = {
   showCart: boolean;
   setShowCart: (value: boolean) => void;
 
-  showOnlyUnvisible: boolean;
-  setShowOnlyUnvisible: (value: boolean) => void;
-
   numTokens: number;
   setNumTokens: (value: number) => void;
 
@@ -49,7 +46,6 @@ interface Props {
 export const DashboardContextProvider = ({ children }: Props) => {
   const [collection, setCollection] = useState<CollectionInfo>();
   const [showCart, setShowCart] = useState(false);
-  const [showOnlyUnvisible, setShowOnlyUnvisible] = useState(false);
   const [numTokens, setNumTokens] = useState(0);
   const [tokenFetcher, setTokenFetcher] = useState<TokenFetcherAlt | undefined>();
   const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -64,7 +60,7 @@ export const DashboardContextProvider = ({ children }: Props) => {
 
   useEffect(() => {
     refreshData();
-  }, [showOnlyUnvisible]);
+  }, []);
 
   const handleCheckout = (selection: ERC721CardData[]) => {
     if (user) {
@@ -94,9 +90,6 @@ export const DashboardContextProvider = ({ children }: Props) => {
 
     numTokens,
     setNumTokens,
-
-    showOnlyUnvisible,
-    setShowOnlyUnvisible,
 
     tokenFetcher,
     setTokenFetcher,
