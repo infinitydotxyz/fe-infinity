@@ -117,7 +117,7 @@ export const HeaderTabBar = () => {
   const tabItems = RouteUtils.tabItems(router);
 
   return (
-    <div className="flex  space-x-4">
+    <div className="flex  space-x-6">
       {tabItems.map((e) => {
         return (
           <div key={e.path} className={twMerge('pb-2', e.selected ? 'border-b-4 border-black dark:border-white' : '')}>
