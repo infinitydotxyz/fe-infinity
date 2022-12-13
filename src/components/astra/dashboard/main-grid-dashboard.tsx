@@ -21,7 +21,8 @@ export const MainDashboardGrid = (
 
         <div className="row-span-3">{sideBar}</div>
 
-        <div ref={gridRef} className="overflow-y-scroll overflow-x-hidden">
+        {/* adding overflow-y-scroll here added space on the right? not needed anyway */}
+        <div ref={gridRef} className="overflow-y-hidden overflow-x-hidden">
           {grid}
         </div>
 
