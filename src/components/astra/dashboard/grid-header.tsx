@@ -120,7 +120,7 @@ export const HeaderTabBar = () => {
     <div className="flex  space-x-4">
       {tabItems.map((e) => {
         return (
-          <div key={e.path} className={twMerge('pb-2', e.selected ? 'border-b-4 border-black' : '')}>
+          <div key={e.path} className={twMerge('pb-2', e.selected ? 'border-b-4 border-black dark:border-white' : '')}>
             <NextLink href={e.path}>
               <div>{e.name}</div>
             </NextLink>

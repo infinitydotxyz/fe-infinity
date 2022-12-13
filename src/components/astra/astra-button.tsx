@@ -3,12 +3,11 @@ import { cardClr, inputBorderColor, textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 interface Props {
-  onClick: (ev: React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => void;
+  onClick?: (ev: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   children: ReactNode;
   small?: boolean;
   disabled?: boolean;
   className?: string;
-  propagateClick?: boolean;
 }
 
 export const AButton = ({ small = false, disabled = false, children, className = '', onClick }: Props): JSX.Element => {
@@ -26,20 +25,13 @@ export const AButton = ({ small = false, disabled = false, children, className =
 // ======================================================
 
 interface BaseProps {
-  onClick: (ev: React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => void;
+  onClick?: (ev: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   children: ReactNode;
   disabled?: boolean;
   className?: string;
-  propagateClick?: boolean;
 }
 
-const ButtonBase = ({
-  disabled = false,
-  children,
-  className = '',
-  onClick,
-  propagateClick
-}: BaseProps): JSX.Element => {
+const ButtonBase = ({ disabled = false, children, className = '', onClick }: BaseProps): JSX.Element => {
   const disabledClass = 'opacity-30 cursor-not-allowed';
 
   return (
@@ -59,13 +51,13 @@ const ButtonBase = ({
         className
       )}
       onClick={(e) => {
-        if (!propagateClick) {
+        if (onClick) {
           e.stopPropagation();
           e.preventDefault();
-        }
 
-        if (!disabled) {
-          onClick(e);
+          if (!disabled) {
+            onClick(e);
+          }
         }
       }}
     >
