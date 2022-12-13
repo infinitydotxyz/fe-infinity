@@ -22,6 +22,9 @@ export type DashboardContextType = {
   showCollections: boolean;
   setShowCollections: (value: boolean) => void;
 
+  listMode: boolean;
+  setListMode: (value: boolean) => void;
+
   numTokens: number;
   setNumTokens: (value: number) => void;
 
@@ -54,6 +57,7 @@ export const DashboardContextProvider = ({ children }: Props) => {
   const [tokenFetcher, setTokenFetcher] = useState<TokenFetcherAlt | undefined>();
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [gridWidth, setGridWidth] = useState(0);
+  const [listMode, setListMode] = useState(false);
 
   const [displayName, setDisplayName] = useState<string>('');
 
@@ -94,6 +98,9 @@ export const DashboardContextProvider = ({ children }: Props) => {
 
     showCollections,
     setShowCollections,
+
+    listMode,
+    setListMode,
 
     numTokens,
     setNumTokens,

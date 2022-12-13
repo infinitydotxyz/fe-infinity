@@ -3,15 +3,12 @@ import { twMerge } from 'tailwind-merge';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { BlueCheck, EZImage, NextLink, ReadMoreText, Spacer } from 'src/components/common';
 import { NextRouter, useRouter } from 'next/router';
-import { BsList, BsGrid } from 'react-icons/bs';
-import { AToggleButton } from '../astra-button';
+import { AListGridButton } from '../astra-button';
 
 interface Props {
   expanded: boolean;
-  listMode: boolean;
-  setListMode: (value: boolean) => void;
 }
-export const GridHeader = ({ expanded, listMode, setListMode }: Props) => {
+export const GridHeader = ({ expanded }: Props) => {
   const { numTokens, collection } = useDashboardContext();
 
   const avatarUrl = collection?.bannerImage || collection?.profileImage;
@@ -20,7 +17,14 @@ export const GridHeader = ({ expanded, listMode, setListMode }: Props) => {
 
   if (collection) {
     return (
-      <div className={twMerge(inputBorderColor, cardClr, textClr, 'flex-col items-center   border-b px-8 py-3')}>
+      <div
+        className={twMerge(
+          inputBorderColor,
+          cardClr,
+          textClr,
+          'flex-col items-center rounded-tl-lg border-b px-8 pt-5'
+        )}
+      >
         {expanded && (
           <>
             <div className="flex flex-col items-start">
@@ -47,17 +51,9 @@ export const GridHeader = ({ expanded, listMode, setListMode }: Props) => {
 
         <HeaderTabBar />
 
-        <div className={twMerge(inputBorderColor, 'w-full flex   pt-2 border-t-[1px]')}>
+        <div className={twMerge(inputBorderColor, 'w-full flex   py-2 border-t-[1px]')}>
           <Spacer />
-          <div className="flex items-center">
-            <AToggleButton selected={listMode} onClick={() => setListMode(true)}>
-              <BsList className="h-4 w-4" />
-            </AToggleButton>
-            <div className="  w-1  " />
-            <AToggleButton selected={!listMode} onClick={() => setListMode(false)}>
-              <BsGrid className="h-4 w-4" />
-            </AToggleButton>
-          </div>
+          <AListGridButton />
         </div>
       </div>
     );

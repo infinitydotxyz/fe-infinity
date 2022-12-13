@@ -1,4 +1,6 @@
 import React, { ReactNode } from 'react';
+import { BsGrid, BsList } from 'react-icons/bs';
+import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { cardClr, hoverClr, inputBorderColor, primaryTextColor, textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
@@ -150,22 +152,36 @@ export const ATextButton = ({
 
 interface Props4 {
   children: ReactNode;
-  selected: boolean;
   onClick: () => void;
 }
 
-export const AToggleButton = ({ selected, children, onClick }: Props4) => {
+export const AToggleButton = ({ children, onClick }: Props4) => {
   return (
     <AButton
       onClick={() => {
         onClick();
       }}
-      className={twMerge(
-        'p-2 rounded-md  select-none focus:outline-none focus-visible:ring focus:ring-black focus:ring-opacity-50 transition ease-in-out duration-300 active:bg-gray-900 active:text-white',
-        selected ? 'bg-gray-300' : ''
-      )}
+      className={twMerge('p-2 rounded-md')}
     >
       {children}
     </AButton>
+  );
+};
+
+// ==============================================================
+
+export const AListGridButton = () => {
+  const { setListMode, listMode } = useDashboardContext();
+
+  return (
+    <div className="flex items-center">
+      <AToggleButton onClick={() => setListMode(true)}>
+        <BsList className={twMerge(listMode ? primaryTextColor : '', 'h-4 w-4')} />
+      </AToggleButton>
+      <div className="  w-1  " />
+      <AToggleButton onClick={() => setListMode(false)}>
+        <BsGrid className={twMerge(!listMode ? primaryTextColor : '', 'h-4 w-4')} />
+      </AToggleButton>
+    </div>
   );
 };
