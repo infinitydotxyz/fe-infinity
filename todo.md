@@ -25,6 +25,5 @@ https://docs.google.com/spreadsheets/d/172Rwt4x0WSR9pfIUP9krC4wF6fj6-_r6hRlJvfd-
 
 https://beta.gem.xyz/collection/otherdeed
 
-use primary color on cart button
 search button ugly
 animate collections popout
