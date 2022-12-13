@@ -4,7 +4,7 @@ import { BiCaretDown } from 'react-icons/bi';
 import { cardClr, hoverClr, inputBorderColor, textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { Divider } from '../common';
-import { AOutlineButton } from './astra-button';
+import { AOutlineButton, ATextButton } from './astra-button';
 
 export type ADropdownItem = {
   label: string | ReactElement;
@@ -17,9 +17,23 @@ interface DropdownProps {
   items: ADropdownItem[];
   className?: string;
   alignMenuRight?: boolean;
+  hasBorder?: boolean;
 }
 
-export const ADropdown = ({ label, items, className = '', alignMenuRight = false }: DropdownProps) => {
+export const ADropdown = ({
+  label,
+  items,
+  className = '',
+  hasBorder = true,
+  alignMenuRight = false
+}: DropdownProps) => {
+  const buttonContents = (
+    <div className="flex items-center gap-1">
+      <div className="whitespace-nowrap">{label}</div>
+      <BiCaretDown />
+    </div>
+  );
+
   return (
     <div className={twMerge(className)}>
       <Menu>
@@ -27,12 +41,8 @@ export const ADropdown = ({ label, items, className = '', alignMenuRight = false
           <CustomMenuContents>
             <span>
               <CustomMenuButton>
-                <AOutlineButton>
-                  <div className="flex items-center gap-1">
-                    <div className="whitespace-nowrap">{label}</div>
-                    <BiCaretDown />
-                  </div>
-                </AOutlineButton>
+                {hasBorder && <AOutlineButton>{buttonContents}</AOutlineButton>}{' '}
+                {!hasBorder && <ATextButton>{buttonContents}</ATextButton>}
               </CustomMenuButton>
             </span>
 
