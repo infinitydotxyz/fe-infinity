@@ -5,13 +5,13 @@ import { DashboardBase } from './dashboard-base';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 export const DashboardAll = () => {
-  const { setTokenFetcher, collection, refreshTrigger, setDisplayName, showOnlyUnvisible } = useDashboardContext();
+  const { setTokenFetcher, collection, refreshTrigger, setDisplayName } = useDashboardContext();
 
   const { chainId } = useOnboardContext();
 
   useEffect(() => {
     if (collection && chainId) {
-      setTokenFetcher(CollectionTokenCache.shared().fetcher(collection, chainId, showOnlyUnvisible));
+      setTokenFetcher(CollectionTokenCache.shared().fetcher(collection, chainId));
 
       setDisplayName(collection?.name ?? '');
     }

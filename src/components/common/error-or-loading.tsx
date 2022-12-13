@@ -1,3 +1,5 @@
+import { textClr } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
 import { CenteredContent, CenterFixed } from './centered-content';
 import { Spinner } from './spinner';
 
@@ -23,7 +25,7 @@ export const ErrorOrLoading = ({ error, noData, message = 'Nothing found', fixed
 
   if (fixed) {
     return (
-      <div className="h-full w-full dark:text-dark-body text-light-body text-xl">
+      <div className={twMerge(textClr, 'h-full w-full   text-xl')}>
         <CenterFixed>{contents}</CenterFixed>
       </div>
     );

@@ -5,7 +5,7 @@ interface CardSelectionResult {
   toggleSelection: (data: ERC721CardData) => void;
   isSelected: (data: ERC721CardData) => boolean;
   isSelectable: (data: ERC721CardData) => boolean;
-  removeFromSelection: (data: ERC721CardData) => void;
+  removeFromSelection: (data?: ERC721CardData) => void; // null to remove all
   selection: ERC721CardData[];
   clearSelection: () => void;
 }
@@ -34,12 +34,16 @@ export const useCardSelection = (): CardSelectionResult => {
     return value.address !== null;
   };
 
-  const removeFromSelection = (value: ERC721CardData) => {
-    if (isSelected(value)) {
-      const copy = new Map(selectionMap);
-      copy.delete(value.id);
+  const removeFromSelection = (value?: ERC721CardData) => {
+    if (value) {
+      if (isSelected(value)) {
+        const copy = new Map(selectionMap);
+        copy.delete(value.id);
 
-      setSelectionMap(copy);
+        setSelectionMap(copy);
+      }
+    } else {
+      setSelectionMap(new Map());
     }
   };
 

@@ -1,5 +1,6 @@
 const extensions = require('./elements/extensions.js');
 const foundations = require('./elements/foundations.js');
+const theme = require('./tailwind.theme.js');
 
 module.exports = {
   content: [
@@ -14,7 +15,8 @@ module.exports = {
   theme: {
     extend: {
       ...foundations,
-      ...extensions
+      ...extensions,
+      ...theme
     }
   },
   plugins: [

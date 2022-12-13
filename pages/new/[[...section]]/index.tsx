@@ -5,14 +5,17 @@ import { useResizeDetector } from 'react-resize-detector';
 import { MainDashboardGrid } from 'src/components/astra/dashboard/main-grid-dashboard';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { DashboardAll } from 'src/components/astra/dashboard/dashboard-all';
-import { Navbar } from 'src/components/common';
+import { ConnectButton, Spacer } from 'src/components/common';
+import { SidebarNav } from 'src/components/astra/dashboard/sidebar-nav';
+import { AstraCartButton } from 'src/components/astra/astra-cart-button';
+import { twMerge } from 'tailwind-merge';
+import { textClr } from 'src/utils/ui-constants';
 
 const DashboardPage = () => {
   const {
     collection,
     setCollection,
     setGridWidth,
-    showCart,
     handleCheckout,
     selection,
     clearSelection,
@@ -63,7 +66,7 @@ const DashboardPage = () => {
 
   const cart = (
     <AstraCart
-      cardData={selection}
+      tokens={selection}
       onCheckout={() => {
         clearSelection();
         handleCheckout(selection);
@@ -76,7 +79,20 @@ const DashboardPage = () => {
 
   const footer = <div>footer</div>;
 
-  return MainDashboardGrid(<Navbar />, sidebar, <DashboardAll />, cart, footer, gridRef, containerRef, showCart);
+  const topBar = (
+    <div className="flex px-5 py-2 space-x-4 items-center">
+      <div className=" max-w-96">
+        {/* <CollectionSearchInput expanded /> */}
+        <div className={twMerge(textClr, 'text-2xl')}>Infinity</div>
+      </div>
+
+      <Spacer />
+      <AstraCartButton />
+      <ConnectButton />
+    </div>
+  );
+
+  return MainDashboardGrid(topBar, <SidebarNav />, sidebar, <DashboardAll />, cart, footer, gridRef, containerRef);
 };
 
 export default DashboardPage;

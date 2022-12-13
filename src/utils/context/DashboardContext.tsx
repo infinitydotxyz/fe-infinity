@@ -19,8 +19,11 @@ export type DashboardContextType = {
   showCart: boolean;
   setShowCart: (value: boolean) => void;
 
-  showOnlyUnvisible: boolean;
-  setShowOnlyUnvisible: (value: boolean) => void;
+  showCollections: boolean;
+  setShowCollections: (value: boolean) => void;
+
+  listMode: boolean;
+  setListMode: (value: boolean) => void;
 
   numTokens: number;
   setNumTokens: (value: number) => void;
@@ -35,7 +38,7 @@ export type DashboardContextType = {
   toggleSelection: (data: ERC721CardData) => void;
   isSelected: (data: ERC721CardData) => boolean;
   isSelectable: (data: ERC721CardData) => boolean;
-  removeFromSelection: (data: ERC721CardData) => void;
+  removeFromSelection: (data?: ERC721CardData) => void;
   selection: ERC721CardData[];
   clearSelection: () => void;
 };
@@ -49,11 +52,12 @@ interface Props {
 export const DashboardContextProvider = ({ children }: Props) => {
   const [collection, setCollection] = useState<CollectionInfo>();
   const [showCart, setShowCart] = useState(false);
-  const [showOnlyUnvisible, setShowOnlyUnvisible] = useState(false);
+  const [showCollections, setShowCollections] = useState(true);
   const [numTokens, setNumTokens] = useState(0);
   const [tokenFetcher, setTokenFetcher] = useState<TokenFetcherAlt | undefined>();
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [gridWidth, setGridWidth] = useState(0);
+  const [listMode, setListMode] = useState(false);
 
   const [displayName, setDisplayName] = useState<string>('');
 
@@ -64,7 +68,7 @@ export const DashboardContextProvider = ({ children }: Props) => {
 
   useEffect(() => {
     refreshData();
-  }, [showOnlyUnvisible]);
+  }, []);
 
   const handleCheckout = (selection: ERC721CardData[]) => {
     if (user) {
@@ -92,11 +96,14 @@ export const DashboardContextProvider = ({ children }: Props) => {
     showCart,
     setShowCart,
 
+    showCollections,
+    setShowCollections,
+
+    listMode,
+    setListMode,
+
     numTokens,
     setNumTokens,
-
-    showOnlyUnvisible,
-    setShowOnlyUnvisible,
 
     tokenFetcher,
     setTokenFetcher,

@@ -16,6 +16,7 @@ import { PleaseConnectMsg } from '../commonUtils';
 import { TransactionReceipt } from '@ethersproject/abstract-provider';
 import { JSONRPCRequestPayload, JSONRPCResponsePayload, ProviderEvents } from './UserRejectException';
 import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
+import { Preferences } from '../preferences';
 
 setupOnboard();
 
@@ -73,7 +74,7 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
     }
 
     const connectedWalletsLabelArray = connectedWallets.map(({ label }) => label);
-    window.localStorage.setItem('connectedWallets', JSON.stringify(connectedWalletsLabelArray));
+    Preferences.setString('connectedWallets', JSON.stringify(connectedWalletsLabelArray));
   }, [connectedWallets]);
 
   useEffect(() => {
@@ -92,7 +93,7 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
 
   // auto connect to the first wallet saved in localStorage
   useEffect(() => {
-    const savedConnectedWallets = JSON.parse(window.localStorage.getItem('connectedWallets') ?? '[]');
+    const savedConnectedWallets = JSON.parse(Preferences.getString('connectedWallets') ?? '[]');
 
     if (savedConnectedWallets?.length) {
       const setWalletFromLocalStorage = async () => {
@@ -164,7 +165,7 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
   const signOut = () => {
     if (wallet) {
       disconnect(wallet);
-      window.localStorage.removeItem('connectedWallets');
+      Preferences.remove('connectedWallets');
     }
   };
 

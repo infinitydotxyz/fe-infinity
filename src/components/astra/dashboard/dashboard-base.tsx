@@ -2,90 +2,83 @@ import { CenteredContent } from 'src/components/common';
 import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { TokensGrid } from 'src/components/astra/token-grid/token-grid';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
-import { GridHeader } from './grid-header';
-
+import { GridHeader, RouteUtils } from './grid-header';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useScrollInfo } from './useScrollHook';
+import { OrderbookProvider } from 'src/components/orderbook/OrderbookContext';
 
 export const DashboardBase = () => {
-  const { setNumTokens, tokenFetcher, isSelected, isSelectable, toggleSelection, gridWidth } = useDashboardContext();
+  const { setNumTokens, tokenFetcher, isSelected, isSelectable, toggleSelection, gridWidth, listMode } =
+    useDashboardContext();
 
   const router = useRouter();
-  const currentPath = router.asPath;
+
+  const { setRef, scrollTop } = useScrollInfo();
+
+  const expanded = scrollTop < 100;
 
   const onCardClick = (data: ERC721CardData) => {
     toggleSelection(data);
   };
 
-  const routes = [
-    {
-      slug: '/new/items',
-      label: 'Items',
-      component: tokenFetcher ? (
-        <TokensGrid
-          tokenFetcher={tokenFetcher}
-          className="px-8 py-6"
-          onClick={onCardClick}
-          wrapWidth={gridWidth}
-          isSelectable={isSelectable}
-          isSelected={(data) => {
-            return isSelected(data);
-          }}
-          onLoad={(value) => setNumTokens(value)}
-        />
-      ) : (
-        <div>no fetcher</div>
-      )
-    },
-    {
-      slug: '/new/orders',
-      label: 'Orders',
-      component: <div>Orders</div>
-    }
-  ];
-
-  const findSlugMatchingCmp = () => {
-    const result = routes.find((cmp) => {
-      return cmp.slug === currentPath;
-    });
-
-    if (result) {
-      return result;
+  const componentForId = (path: string) => {
+    if (tokenFetcher) {
+      switch (path) {
+        case 'orders':
+          return <CenteredContent>Orders go here</CenteredContent>;
+        case 'analytics':
+          return <CenteredContent>analytics go here</CenteredContent>;
+        case 'activity':
+          return <CenteredContent>activity go here</CenteredContent>;
+        case 'select':
+          return <CenteredContent>Select a Collection</CenteredContent>;
+        case 'items':
+          return (
+            <TokensGrid
+              listMode={listMode}
+              tokenFetcher={tokenFetcher}
+              className="px-8 py-6"
+              onClick={onCardClick}
+              wrapWidth={gridWidth}
+              isSelectable={isSelectable}
+              isSelected={(data) => {
+                return isSelected(data);
+              }}
+              onLoad={(value) => setNumTokens(value)}
+            />
+          );
+      }
     }
 
-    return {
-      slug: 'error',
-      label: 'Error',
-      component: <div>error</div>
-    };
+    return <CenteredContent>Select a Collection</CenteredContent>;
   };
 
-  useEffect(() => {
-    const foundComponent = findSlugMatchingCmp();
+  const currentId = () => {
+    if (tokenFetcher) {
+      const tabItems = RouteUtils.tabItems(router);
+      const result = tabItems.find((cmp) => {
+        return cmp.path === RouteUtils.currentPath(router);
+      });
 
-    if (currentPath && !foundComponent) {
-      router.push('/404');
+      if (result) {
+        return result.id;
+      }
+    } else {
+      return 'select';
     }
-  }, [router]);
 
-  const cmp = findSlugMatchingCmp().component;
+    return 'error';
+  };
 
-  const exten = <div className="overflow-y-auto">{cmp}</div>;
-
-  let result;
-
-  const emptyMessage = 'Select a Collection';
-
-  if (tokenFetcher) {
-    result = (
+  return (
+    // This is added just for the ASortButton, so remove if we change how this works
+    <OrderbookProvider limit={50}>
       <div className="flex flex-col h-full w-full">
-        <GridHeader />
-        {exten}
+        <GridHeader expanded={expanded} />
+        <div ref={setRef} className="overflow-y-auto">
+          {componentForId(currentId())}
+        </div>
       </div>
-    );
-  } else {
-    result = <CenteredContent>{emptyMessage}</CenteredContent>;
-  }
-
-  return result;
+    </OrderbookProvider>
+  );
 };

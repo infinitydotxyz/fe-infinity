@@ -144,5 +144,6 @@ export const httpErrorResponse = (error: unknown) => {
   }
   console.log(err.config);
 
-  return { status: status, error: message };
+  // make sure error: is never undefined since if (error) fails in that case
+  return { status: status, error: message ?? 'Unknown Error' };
 };
