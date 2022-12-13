@@ -6,9 +6,10 @@ import { MainDashboardGrid } from 'src/components/astra/dashboard/main-grid-dash
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { DashboardAll } from 'src/components/astra/dashboard/dashboard-all';
 import { ConnectButton, Spacer } from 'src/components/common';
-import { CollectionSearchInput } from 'src/components/common/search/collection-search-input';
 import { SidebarNav } from 'src/components/astra/dashboard/sidebar-nav';
 import { AstraCartButton } from 'src/components/astra/astra-cart-button';
+import { twMerge } from 'tailwind-merge';
+import { textClr } from 'src/utils/ui-constants';
 
 const DashboardPage = () => {
   const {
@@ -80,8 +81,9 @@ const DashboardPage = () => {
 
   const topBar = (
     <div className="flex px-5 py-2 space-x-4 items-center">
-      <div className="ml-80 max-w-96">
-        <CollectionSearchInput expanded />
+      <div className=" max-w-96">
+        {/* <CollectionSearchInput expanded /> */}
+        <div className={twMerge(textClr, 'text-2xl')}>Infinity</div>
       </div>
 
       <Spacer />
