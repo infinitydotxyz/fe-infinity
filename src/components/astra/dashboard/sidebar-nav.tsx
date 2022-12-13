@@ -1,6 +1,6 @@
 import { Spacer, SVG } from 'src/components/common';
 import { MdDarkMode, MdLightMode } from 'react-icons/md';
-import { GrSend, GrTag } from 'react-icons/gr';
+import { AiOutlineSend, AiOutlineTag } from 'react-icons/ai';
 import { BsWallet2 } from 'react-icons/bs';
 
 import { useAppContext } from 'src/utils/context/AppContext';
@@ -21,7 +21,7 @@ export const SidebarNav = () => {
             // setDarkMode(!darkMode);
           }}
         >
-          <GrTag className="h-8 w-8" />
+          <AiOutlineTag className="h-8 w-8" />
         </ARoundButton>
 
         <ARoundButton
@@ -37,7 +37,7 @@ export const SidebarNav = () => {
             // setDarkMode(!darkMode);
           }}
         >
-          <GrSend className="h-8 w-8" />
+          <AiOutlineSend className="h-8 w-8" />
         </ARoundButton>
       </div>
 
