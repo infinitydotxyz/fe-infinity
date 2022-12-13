@@ -1,8 +1,7 @@
-import { Spacer, SVG } from 'src/components/common';
+import { HelpTip, Spacer, SVG } from 'src/components/common';
 import { MdDarkMode, MdLightMode } from 'react-icons/md';
 import { AiOutlineSend, AiOutlineTag } from 'react-icons/ai';
-import { BsWallet2 } from 'react-icons/bs';
-
+import { BsWallet2, BsCollection } from 'react-icons/bs';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { ARoundButton } from 'src/components/astra';
 
@@ -16,29 +15,45 @@ export const SidebarNav = () => {
       <div className="h-24" />
 
       <div className="flex flex-col space-y-4">
-        <ARoundButton
-          onClick={() => {
-            // setDarkMode(!darkMode);
-          }}
-        >
-          <AiOutlineTag className="h-8 w-8" />
-        </ARoundButton>
+        <HelpTip placement="right" content={<div className="whitespace-nowrap">Collections</div>}>
+          <ARoundButton
+            onClick={() => {
+              // setDarkMode(!darkMode);
+            }}
+          >
+            <BsCollection className="h-8 w-8" />
+          </ARoundButton>
+        </HelpTip>
 
-        <ARoundButton
-          onClick={() => {
-            // setDarkMode(!darkMode);
-          }}
-        >
-          <BsWallet2 className="h-8 w-8" />
-        </ARoundButton>
+        <HelpTip placement="right" content={<div className="whitespace-nowrap">Sell</div>}>
+          <ARoundButton
+            onClick={() => {
+              // setDarkMode(!darkMode);
+            }}
+          >
+            <AiOutlineTag className="h-8 w-8" />
+          </ARoundButton>
+        </HelpTip>
 
-        <ARoundButton
-          onClick={() => {
-            // setDarkMode(!darkMode);
-          }}
-        >
-          <AiOutlineSend className="h-8 w-8" />
-        </ARoundButton>
+        <HelpTip placement="right" content={<div className="whitespace-nowrap">Profile</div>}>
+          <ARoundButton
+            onClick={() => {
+              // setDarkMode(!darkMode);
+            }}
+          >
+            <BsWallet2 className="h-8 w-8" />
+          </ARoundButton>
+        </HelpTip>
+
+        <HelpTip placement="right" content={<div className="whitespace-nowrap">Send</div>}>
+          <ARoundButton
+            onClick={() => {
+              // setDarkMode(!darkMode);
+            }}
+          >
+            <AiOutlineSend className="h-8 w-8" />
+          </ARoundButton>
+        </HelpTip>
       </div>
 
       <Spacer />
