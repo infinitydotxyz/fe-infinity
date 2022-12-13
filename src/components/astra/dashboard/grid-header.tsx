@@ -1,4 +1,4 @@
-import { cardClr, inputBorderColor, textClr } from 'src/utils/ui-constants';
+import { cardClr, inputBorderColor, textClr, primaryBorderColor, primaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { BlueCheck, EZImage, NextLink, ReadMoreText, Spacer } from 'src/components/common';
@@ -117,12 +117,12 @@ export const HeaderTabBar = () => {
   const tabItems = RouteUtils.tabItems(router);
 
   return (
-    <div className="flex  space-x-6">
+    <div className="flex space-x-6">
       {tabItems.map((e) => {
         return (
-          <div key={e.path} className={twMerge('pb-2', e.selected ? 'border-b-4 border-black dark:border-white' : '')}>
+          <div key={e.path} className={twMerge('pb-3', e.selected ? `border-b-4 ${primaryBorderColor}` : '')}>
             <NextLink href={e.path}>
-              <div>{e.name}</div>
+              <div className={e.selected ? primaryTextColor : ''}>{e.name}</div>
             </NextLink>
           </div>
         );

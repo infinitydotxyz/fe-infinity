@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { cardClr, hoverClr, inputBorderColor, primaryColor, textClr } from 'src/utils/ui-constants';
+import { cardClr, hoverClr, inputBorderColor, primaryTextColor, textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 interface Props {
@@ -48,7 +48,7 @@ const ButtonBase = ({
       // otherwise a disabled buttons click will go to the parent, onClick isn't called
       // disabled={disabled}
       className={twMerge(
-        highlighted ? primaryColor : textClr,
+        highlighted ? primaryTextColor : textClr,
         'active:dark:bg-light-bg  active:dark:text-dark-bg  ',
         'active:bg-dark-bg active:text-light-bg',
         hoverClr,
