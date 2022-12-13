@@ -21,8 +21,8 @@ export const MainDashboardGrid = (
       <div ref={containerRef} className="h-screen w-screen grid grid-rows-[auto_1fr] grid-cols-[auto_1fr_auto]">
         <div className="col-span-full">{navBar}</div>
 
-        <div className="row-span-3">
-          <div className={twMerge('h-full', showCollections ? 'w-72' : 'w-0 hidden', 'transition-width duration-300')}>
+        <div className="row-span-3 overflow-x-hidden">
+          <div className={twMerge('h-full', showCollections ? 'w-72' : 'w-0', 'transition-width duration-300')}>
             {sideBar}
           </div>
         </div>
