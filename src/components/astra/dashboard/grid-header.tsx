@@ -4,6 +4,7 @@ import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { BlueCheck, EZImage, NextLink, ReadMoreText, Spacer } from 'src/components/common';
 import { NextRouter, useRouter } from 'next/router';
 import { AListGridButton } from '../astra-button';
+import { ASortButton } from '../astra-sort-button';
 
 interface Props {
   expanded: boolean;
@@ -52,6 +53,7 @@ export const GridHeader = ({ expanded }: Props) => {
         <HeaderTabBar />
 
         <div className={twMerge(inputBorderColor, 'w-full flex   py-2 border-t-[1px]')}>
+          <ASortButton />
           <Spacer />
           <AListGridButton />
         </div>

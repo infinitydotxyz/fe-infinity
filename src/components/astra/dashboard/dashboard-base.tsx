@@ -5,6 +5,7 @@ import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { GridHeader, RouteUtils } from './grid-header';
 import { useRouter } from 'next/router';
 import { useScrollInfo } from './useScrollHook';
+import { OrderbookProvider } from 'src/components/orderbook/OrderbookContext';
 
 export const DashboardBase = () => {
   const { setNumTokens, tokenFetcher, isSelected, isSelectable, toggleSelection, gridWidth, listMode } =
@@ -70,11 +71,14 @@ export const DashboardBase = () => {
   };
 
   return (
-    <div className="flex flex-col h-full w-full">
-      <GridHeader expanded={expanded} />
-      <div ref={setRef} className="overflow-y-auto">
-        {componentForId(currentId())}
+    // This is added just for the ASortButton, so remove if we change how this works
+    <OrderbookProvider limit={50}>
+      <div className="flex flex-col h-full w-full">
+        <GridHeader expanded={expanded} />
+        <div ref={setRef} className="overflow-y-auto">
+          {componentForId(currentId())}
+        </div>
       </div>
-    </div>
+    </OrderbookProvider>
   );
 };
