@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { cardClr, inputBorderColor, textClr } from 'src/utils/ui-constants';
+import { cardClr, inputBorderColor, primaryColor, textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 interface Props {
@@ -8,6 +8,7 @@ interface Props {
   small?: boolean;
   disabled?: boolean;
   className?: string;
+  highlighted?: boolean;
 }
 
 export const AButton = ({ small = false, disabled = false, children, className = '', onClick }: Props): JSX.Element => {
@@ -29,9 +30,16 @@ interface BaseProps {
   children: ReactNode;
   disabled?: boolean;
   className?: string;
+  highlighted?: boolean;
 }
 
-const ButtonBase = ({ disabled = false, children, className = '', onClick }: BaseProps): JSX.Element => {
+const ButtonBase = ({
+  disabled = false,
+  children,
+  className = '',
+  highlighted = false,
+  onClick
+}: BaseProps): JSX.Element => {
   const disabledClass = 'opacity-30 cursor-not-allowed';
 
   return (
@@ -40,7 +48,7 @@ const ButtonBase = ({ disabled = false, children, className = '', onClick }: Bas
       // otherwise a disabled buttons click will go to the parent, onClick isn't called
       // disabled={disabled}
       className={twMerge(
-        textClr,
+        highlighted ? primaryColor : textClr,
         'active:dark:bg-light-bg  active:dark:text-dark-bg  ',
         'active:bg-dark-bg active:text-light-bg',
         'hover:dark:bg-opacity-10 hover:dark:bg-gray-200   ',
@@ -72,14 +80,19 @@ export const ARoundButton = ({
   small = false,
   disabled = false,
   children,
-
+  highlighted,
   className = '',
   onClick
 }: Props): JSX.Element => {
   const base = 'rounded-full p-2  ';
 
   return (
-    <ButtonBase disabled={disabled} className={twMerge(base, small ? '' : '', className)} onClick={onClick}>
+    <ButtonBase
+      disabled={disabled}
+      highlighted={highlighted}
+      className={twMerge(base, small ? 'p-1' : 'p-3', className)}
+      onClick={onClick}
+    >
       {children}
     </ButtonBase>
   );

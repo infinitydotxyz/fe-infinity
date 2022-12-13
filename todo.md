@@ -24,6 +24,3 @@ Better UX overall including no user initiated txns, simpler/faster flow when buy
 https://docs.google.com/spreadsheets/d/172Rwt4x0WSR9pfIUP9krC4wF6fj6-_r6hRlJvfd-lr8/edit#gid=0
 
 https://beta.gem.xyz/collection/otherdeed
-
-dark menu,
-space on right side

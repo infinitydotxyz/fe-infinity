@@ -14,7 +14,6 @@ const DashboardPage = () => {
     collection,
     setCollection,
     setGridWidth,
-    showCart,
     handleCheckout,
     selection,
     clearSelection,
@@ -90,17 +89,7 @@ const DashboardPage = () => {
     </div>
   );
 
-  return MainDashboardGrid(
-    topBar,
-    <SidebarNav />,
-    sidebar,
-    <DashboardAll />,
-    cart,
-    footer,
-    gridRef,
-    containerRef,
-    showCart
-  );
+  return MainDashboardGrid(topBar, <SidebarNav />, sidebar, <DashboardAll />, cart, footer, gridRef, containerRef);
 };
 
 export default DashboardPage;
