@@ -5,9 +5,10 @@ import { useResizeDetector } from 'react-resize-detector';
 import { MainDashboardGrid } from 'src/components/astra/dashboard/main-grid-dashboard';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { DashboardAll } from 'src/components/astra/dashboard/dashboard-all';
-import { ConnectButton, ShoppingCartButton, Spacer } from 'src/components/common';
+import { ConnectButton, Spacer } from 'src/components/common';
 import { CollectionSearchInput } from 'src/components/common/search/collection-search-input';
 import { SidebarNav } from 'src/components/astra/dashboard/sidebar-nav';
+import { AstraCartButton } from 'src/components/astra/astra-cart-button';
 
 const DashboardPage = () => {
   const {
@@ -84,7 +85,7 @@ const DashboardPage = () => {
       </div>
 
       <Spacer />
-      <ShoppingCartButton />
+      <AstraCartButton />
       <ConnectButton />
     </div>
   );

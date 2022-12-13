@@ -1,7 +1,7 @@
 import { Menu, Transition } from '@headlessui/react';
 import { ReactElement, ReactNode } from 'react';
 import { BiCaretDown } from 'react-icons/bi';
-import { cardClr, hoverColor, inputBorderColor, textClr } from 'src/utils/ui-constants';
+import { cardClr, hoverClr, inputBorderColor, textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { Divider } from '../common';
 import { AOutlineButton } from './astra-button';
@@ -75,7 +75,7 @@ const CustomMenuItem = (props: Props) => {
         <div
           className={twMerge(
             'flex w-full px-4 py-4 leading-5 font-heading ',
-            active ? twMerge(hoverColor, ' rounded-xl') : ' ',
+            active ? twMerge(hoverClr, ' rounded-xl') : ' ',
             disabled && 'cursor-not-allowed opacity-50'
           )}
         >

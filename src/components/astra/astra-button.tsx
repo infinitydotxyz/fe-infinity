@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { cardClr, inputBorderColor, primaryColor, textClr } from 'src/utils/ui-constants';
+import { cardClr, hoverClr, inputBorderColor, primaryColor, textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 interface Props {
@@ -51,8 +51,7 @@ const ButtonBase = ({
         highlighted ? primaryColor : textClr,
         'active:dark:bg-light-bg  active:dark:text-dark-bg  ',
         'active:bg-dark-bg active:text-light-bg',
-        'hover:dark:bg-opacity-10 hover:dark:bg-gray-200   ',
-        'hover:bg-opacity-80 hover:bg-gray-200 ',
+        hoverClr,
         'select-none transition ease-in-out duration-300',
         'focus:outline-none focus-visible:ring focus:ring-black focus:ring-opacity-50',
         disabled ? disabledClass : '',
@@ -90,7 +89,7 @@ export const ARoundButton = ({
     <ButtonBase
       disabled={disabled}
       highlighted={highlighted}
-      className={twMerge(base, small ? 'p-1' : 'p-3', className)}
+      className={twMerge(base, small ? 'p-1' : 'p-2', className)}
       onClick={onClick}
     >
       {children}
