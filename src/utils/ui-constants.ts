@@ -34,3 +34,4 @@ export const selectionOutline = 'outline-4 outline-sky-500 outline-offset-1 outl
 export const cardClr = 'dark:bg-dark-card bg-light-card';
 export const textClr = 'dark:text-dark-body text-light-body';
 export const inputBorderColor = 'dark:border-dark-border  border-light-border';
+export const hoverColor = 'dark:hover:bg-gray-200  hover:bg-gray-200 hover:bg-opacity-60 dark:hover:bg-opacity-10';
