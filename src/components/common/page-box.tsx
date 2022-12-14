@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Navbar, Spacer, Header } from 'src/components/common';
+import { Spacer, Header } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 import { isPasswordModalNeeded, PasswordModal } from './password-modal';
 
@@ -22,7 +22,6 @@ export const PageBox = ({
   children,
   title,
   showTitle = true,
-  fullWidth = false,
   className = '',
   footer,
   rightToolbar,
@@ -38,7 +37,7 @@ export const PageBox = ({
   return (
     <div
       className={twMerge(
-        'transition w-screen h-screen justify-items-center overflow-x-clip',
+        'transition justify-items-center overflow-x-clip',
         scroll ? 'overflow-y-auto' : 'overflow-y-clip'
       )}
     >
@@ -48,9 +47,7 @@ export const PageBox = ({
         <>
           <Header title={title} />
 
-          <Navbar />
-
-          <div className={`transition ${fullWidth ? 'w-full' : pageStyles}`}>
+          <div className="transition w-full">
             {showTitle ? <PageHeader title={title} rightToolbar={rightToolbar} /> : null}
 
             <div className={`w-full ${className}`}>{children}</div>

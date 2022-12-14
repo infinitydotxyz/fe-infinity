@@ -1,4 +1,4 @@
-import { HelpTip, Spacer, SVG } from 'src/components/common';
+import { HelpTip, NextLink, Spacer, SVG } from 'src/components/common';
 import { MdDarkMode, MdLightMode } from 'react-icons/md';
 import { AiOutlineSend, AiOutlineTag } from 'react-icons/ai';
 import { BsWallet2, BsCollection } from 'react-icons/bs';
@@ -12,7 +12,9 @@ export const SidebarNav = () => {
 
   return (
     <div className="flex px-2 py-4 h-full flex-col items-center ">
-      {darkMode ? <SVG.miniLogoDark className="shrink-0 h-8 w-8" /> : <SVG.miniLogo className="shrink-0 h-8 w-8" />}
+      <NextLink href="/">
+        {darkMode ? <SVG.miniLogoDark className="shrink-0 h-8 w-8" /> : <SVG.miniLogo className="shrink-0 h-8 w-8" />}
+      </NextLink>
 
       <div className="h-24" />
 
