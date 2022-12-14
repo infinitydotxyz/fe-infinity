@@ -78,14 +78,5 @@ export const Layout = ({ children }: Props) => {
 
   const footer = <div>footer</div>;
 
-  return MainDashboardGrid(
-    <ANavbar />,
-    <SidebarNav />,
-    sidebar,
-    <div className="px-6">{children}</div>,
-    cart,
-    footer,
-    gridRef,
-    containerRef
-  );
+  return MainDashboardGrid(<ANavbar />, <SidebarNav />, sidebar, <>{children}</>, cart, footer, gridRef, containerRef);
 };
