@@ -6,6 +6,7 @@ import { GridHeader, RouteUtils } from './grid-header';
 import { useRouter } from 'next/router';
 import { useScrollInfo } from './useScrollHook';
 import { OrderbookProvider } from 'src/components/orderbook/OrderbookContext';
+import { OrderbookGraph } from 'src/components/orderbook/graph/orderbook-graph';
 
 export const DashboardBase = () => {
   const { setNumTokens, tokenFetcher, isSelected, isSelectable, toggleSelection, gridWidth, listMode } =
@@ -25,7 +26,8 @@ export const DashboardBase = () => {
     if (tokenFetcher) {
       switch (path) {
         case 'orders':
-          return <CenteredContent>Orders go here</CenteredContent>;
+          // TODO: adjust colors to fit theme (preferably using tailwind config so we can properly reuse colors accross all pages)
+          return <OrderbookGraph />;
         case 'analytics':
           return <CenteredContent>analytics go here</CenteredContent>;
         case 'activity':
