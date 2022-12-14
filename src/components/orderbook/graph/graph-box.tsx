@@ -1,23 +1,37 @@
 import { ReactNode } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { borderColor, darkGradientTW, gradientTW } from './graph-utils';
+import { blackGradientTW, borderColor, graphHeight, greyGradientTW, whiteGradientTW } from './graph-utils';
 
-interface Props {
-  children: ReactNode;
-  className?: string;
-  dark?: boolean;
+export enum GraphBoxTheme {
+  White,
+  Grey,
+  Dark
 }
 
-export const GraphBox = ({ children, className = '', dark = false }: Props) => {
+interface GraphBoxProps {
+  children: ReactNode;
+  className?: string;
+  theme?: GraphBoxTheme;
+}
+
+export const GraphBox = ({ children, className = '', theme = GraphBoxTheme.Grey }: GraphBoxProps) => {
+  let themeColors = '';
+  switch (theme) {
+    case GraphBoxTheme.White:
+      themeColors = `border-gray-200 ${greyGradientTW}`;
+      break;
+    case GraphBoxTheme.Grey:
+      themeColors = `${borderColor} ${whiteGradientTW}`;
+      break;
+    case GraphBoxTheme.Dark:
+      themeColors = `${blackGradientTW}`;
+      break;
+  }
+
   return (
     <div
-      className={twMerge(
-        'relative flex flex-col border rounded-xl px-8 overflow-clip',
-        dark ? 'border-gray-200' : borderColor,
-        dark ? darkGradientTW : gradientTW,
-        dark ? twMerge('rounded-xl p-6') : '',
-        className
-      )}
+      className={twMerge('flex flex-col border rounded-xl p-6 overflow-clip', themeColors, className)}
+      style={{ height: graphHeight }}
     >
       {children}
     </div>

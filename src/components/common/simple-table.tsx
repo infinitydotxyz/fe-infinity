@@ -15,7 +15,7 @@ import { twMerge } from 'tailwind-merge';
 
 export interface SimpleTableItem {
   title: string | JSX.Element;
-  value: JSX.Element;
+  value: string | JSX.Element;
 }
 
 interface Props {
