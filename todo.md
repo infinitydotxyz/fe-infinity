@@ -14,9 +14,6 @@ Hide feed, collection pot, community tab and Orderbook page from UI
 make offer broken?
 collection/search returns duplicates?
 
-you could also work on getting rid of the popout side panel and replacing it with one that is part of the page
-similar to beta.gem
-
 Change colors/fonts of the UI as per new figma
 
 Better UX overall including no user initiated txns, simpler/faster flow when buying/making offers
@@ -27,3 +24,6 @@ https://beta.gem.xyz/collection/otherdeed
 
 search button ugly
 animate collections popout
+
+show cart
+collections search field

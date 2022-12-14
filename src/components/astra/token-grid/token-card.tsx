@@ -81,7 +81,6 @@ export const TokenListCard = ({ data, onClick, selected, isSelectable }: Props):
   return (
     <div
       className={twMerge(
-        // cardClr,
         hoverClr,
         '  w-full relative flex flex-col  px-3 py-2 transition-all duration-200',
         notSelectable ? 'animate-wiggle' : ''
