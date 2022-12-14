@@ -166,13 +166,15 @@ export const OrderbookGraph: React.FC<OrderBookGraphProps> = ({ className = '' }
             )}
           </div>
 
-          <div className="w-[360px] flex flex-col space-y-2 ml-6 h-full">
-            <GraphOrderDetails
-              orders={selectedOrders}
-              index={selectedIndex}
-              valueClassName={textAltColorTW}
-              setIndex={setSelectedIndex}
-            />
+          <div className="w-[360px] px-5">
+            <div className="w-[360px] fixed">
+              <GraphOrderDetails
+                orders={selectedOrders}
+                index={selectedIndex}
+                valueClassName={textAltColorTW}
+                setIndex={setSelectedIndex}
+              />
+            </div>
           </div>
         </div>
       </div>
