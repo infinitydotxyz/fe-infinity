@@ -157,7 +157,7 @@ export const OrderbookGraph: React.FC<OrderBookGraphProps> = ({ className = '' }
             )}
 
             {isLoading && (
-              <div className={twMerge(infoBoxStyle, 'absolute top-0 left-0 right-0 bottom-0 pointer-events-none')}>
+              <div className={twMerge(infoBoxStyle, 'pointer-events-none')}>
                 <div className="flex flex-col items-center justify-center">
                   <Spinner />
                   <div className="mt-4">Loading...</div>
