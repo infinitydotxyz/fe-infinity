@@ -329,7 +329,7 @@ export const OrderbookProvider = ({ children, collectionId, tokenId, limit = ITE
 
       if (tokenId && collectionId) {
         options = {
-          endpoint: `/collections/${chainId}:${collectionId}/nfts/${tokenId}/orders`,
+          endpoint: `/v2/collections/${chainId}:${collectionId}/tokens/${tokenId}/orders`,
           query: {
             ...v2BaseQuery,
             status: 'active'
@@ -337,7 +337,7 @@ export const OrderbookProvider = ({ children, collectionId, tokenId, limit = ITE
         };
       } else if (collectionId) {
         options = {
-          endpoint: `/collections/${chainId}:${collectionId}/orders`,
+          endpoint: `/v2/collections/${chainId}:${collectionId}/orders`,
           query: {
             ...v2BaseQuery,
             status: 'active'

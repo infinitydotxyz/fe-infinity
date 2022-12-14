@@ -33,7 +33,7 @@ export const postOrdersV2 = async (chainId: ChainId, orders: SignedOBOrder[]): P
       orders: orders.map((item) => item.signedOrder)
     };
 
-    const { result, error } = await apiPost(`/orders-v2`, {
+    const { result, error } = await apiPost(`/v2/orders`, {
       data: body
     });
     if (error) {
@@ -50,7 +50,7 @@ export const postOrdersV2 = async (chainId: ChainId, orders: SignedOBOrder[]): P
 
 export const fetchOrderNonce = async (user: string): Promise<number> => {
   try {
-    const response = await apiGet(`/userOrders/${user}/nonce`, { requiresAuth: true });
+    const response = await apiGet(`/v2/users/${user}/nonce`, { requiresAuth: false });
     if (typeof response.result === 'number') {
       return response.result;
     }
