@@ -1,8 +1,7 @@
 import { useOrderbook } from '../OrderbookContext';
-import { StackedBarGraph } from './stacked-bar-graph';
 import { useEffect, useState } from 'react';
-import { GraphData, graphHeight, textAltColorTW } from './graph-utils';
-import { Spinner } from 'src/components/common';
+import { GraphData, textAltColorTW } from './graph-utils';
+import { Heading, Spinner } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 import { GraphOrderDetails } from './graph-order-details';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
@@ -111,8 +110,8 @@ export const OrderbookGraph: React.FC<OrderBookGraphProps> = ({ className = '' }
 
           <div className="w-[360px] flex ml-6 h-full"></div>
         </div>
-        <div className="flex" style={{ height: graphHeight }}>
-          <div className="relative flex-1 min-w-0">
+        <div className="flex">
+          <div className="flex-1 min-w-0">
             {graphData.length === 0 && !isLoading && (
               <div className={infoBoxStyle}>
                 <div className="flex flex-col items-center justify-center">
@@ -129,6 +128,7 @@ export const OrderbookGraph: React.FC<OrderBookGraphProps> = ({ className = '' }
             {/* TODO: Improve loading screen, it looks a bit jumpy cus both charts are re-rendered when the data changes. Perhaps add an individual loader per chart? */}
             {!isLoading && graphData.length > 0 && (
               <>
+                <Heading as="h4">Offers</Heading>
                 <GraphBox theme={GraphBoxTheme.Dark} className="h-full">
                   <ResponsiveRateGraph
                     graphType={RateGraphType.Offers}
@@ -138,9 +138,21 @@ export const OrderbookGraph: React.FC<OrderBookGraphProps> = ({ className = '' }
                   />
                 </GraphBox>
 
-                <GraphBox theme={GraphBoxTheme.White} className="h-full">
-                  <StackedBarGraph data={graphData} onClick={handleOnClick} onSelection={handleSelect} />
+                <Heading as="h4" className="mt-4">
+                  Listings
+                </Heading>
+                <GraphBox theme={GraphBoxTheme.Dark} className="h-full">
+                  <ResponsiveRateGraph
+                    graphType={RateGraphType.Listings}
+                    graphData={graphData}
+                    onClick={handleOnClick}
+                    onSelection={handleSelect}
+                  />
                 </GraphBox>
+
+                {/* <GraphBox theme={GraphBoxTheme.White} className="h-full">
+                  <StackedBarGraph data={graphData} onClick={handleOnClick} onSelection={handleSelect} />
+                </GraphBox> */}
               </>
             )}
 

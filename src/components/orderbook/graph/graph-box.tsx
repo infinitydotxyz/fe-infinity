@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { blackGradientTW, borderColor, greyGradientTW, whiteGradientTW } from './graph-utils';
+import { blackGradientTW, borderColor, graphHeight, greyGradientTW, whiteGradientTW } from './graph-utils';
 
 export enum GraphBoxTheme {
   White,
@@ -29,7 +29,10 @@ export const GraphBox = ({ children, className = '', theme = GraphBoxTheme.Grey 
   }
 
   return (
-    <div className={twMerge('relative flex flex-col border rounded-xl p-6 overflow-clip', themeColors, className)}>
+    <div
+      className={twMerge('flex flex-col border rounded-xl p-6 overflow-clip', themeColors, className)}
+      style={{ height: graphHeight }}
+    >
       {children}
     </div>
   );
