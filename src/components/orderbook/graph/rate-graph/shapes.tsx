@@ -1,7 +1,10 @@
 import { RoundRectBar } from '../round-rect-bar';
 import { StackedBarProps } from './types';
 
-export const StackedBar: React.FC<StackedBarProps> = ({ color, height, radius, width, x, y, ...props }) => {
+export const candleStickColor = '#FFFFFF';
+export const candleStickGradientId = 'candle-stick-gradient';
+
+export const CandleStick: React.FC<StackedBarProps> = ({ color, height, radius, width, x, y, ...props }) => {
   // TODO: create custom candle-like shape to mimic Apple's chart.
   return (
     <>
@@ -14,8 +17,8 @@ export const StackedBar: React.FC<StackedBarProps> = ({ color, height, radius, w
             height={Math.max(height, 1)}
             tl={radius}
             tr={radius}
-            br={0}
-            bl={0}
+            br={radius}
+            bl={radius}
             fill={color}
             {...props}
           />

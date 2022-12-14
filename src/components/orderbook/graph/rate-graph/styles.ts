@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { TickLabelProps } from '@visx/axis';
 import { TextProps } from '@visx/text';
-import { textColor, textLight } from '../graph-utils';
+import { labelColor, textColorLight } from '../graph-utils';
 
 export const rateGraphMargins = {
   top: 30,
@@ -12,7 +12,7 @@ export const rateGraphMargins = {
 
 export const tickLabelStyle: TickLabelProps<string> = () =>
 ({
-  fill: textColor,
+  fill: textColorLight,
   fontSize: 16,
   textAnchor: 'middle',
   dy: 6
@@ -21,7 +21,7 @@ export const tickLabelStyle: TickLabelProps<string> = () =>
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const verticalTickLabelStyle: TickLabelProps<any> = () =>
 ({
-  fill: textColor,
+  fill: textColorLight,
   fontSize: 16,
   dx: -10,
   textAnchor: 'end',
@@ -29,7 +29,8 @@ export const verticalTickLabelStyle: TickLabelProps<any> = () =>
 } as const);
 
 export const labelStyle: Partial<TextProps> = {
-  fill: textLight,
+  fill: labelColor,
   fontSize: 16,
+  fontWeight: 'bold',
   textAnchor: 'middle'
 };

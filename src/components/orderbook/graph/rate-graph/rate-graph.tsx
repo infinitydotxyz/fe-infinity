@@ -6,12 +6,12 @@ import { scaleBand, scaleLinear } from '@visx/scale';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { useTooltip, useTooltipInPortal } from '@visx/tooltip';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { accentColor, axisLineColor, accentAltColor, textColor } from '../graph-utils';
+import { axisLineColorLight, textColorLight } from '../graph-utils';
 import { tooltipStyles } from '../tooltip';
 import { getAxisLabel, getOrder, getOrderCount } from './accessors';
-import { RateGraphData, RateGraphProps, ResponsiveRateGraphProps } from './types';
+import { RateGraphData, RateGraphProps as RateGraphProps, ResponsiveRateGraphProps } from './types';
 import { convertGraphData } from './utils';
-import { StackedBar } from './shapes';
+import { CandleStick, candleStickColor, candleStickGradientId } from './shapes';
 import { labelStyle, rateGraphMargins, tickLabelStyle, verticalTickLabelStyle } from './styles';
 
 export const ResponsiveRateGraph: React.FC<ResponsiveRateGraphProps> = (props) => {
@@ -48,7 +48,7 @@ export const RateGraph: React.FC<RateGraphProps> = ({
         range: [0, width],
         round: true,
         domain: axisLabels,
-        padding: 0.5
+        padding: 0.7
       }),
     [width, data]
   );
@@ -66,11 +66,11 @@ export const RateGraph: React.FC<RateGraphProps> = ({
   const getBarMeasurements = (data: RateGraphData, index: number) => {
     const barHeight = height - (yScale(getOrderCount(data)) ?? 0);
 
-    let bColor = 'url(#bar-gradient)';
+    let bColor = `url(#${candleStickGradientId})`;
     let barRadius = 10;
     if (barHeight === 0) {
       barRadius = 0;
-      bColor = axisLineColor;
+      bColor = axisLineColorLight;
     }
 
     const barWidth = xScale.bandwidth();
@@ -102,54 +102,52 @@ export const RateGraph: React.FC<RateGraphProps> = ({
 
   return (
     <>
-      <svg ref={containerRef} width={outerWidth} height={outerHeight}>
-        <LinearGradient from={accentColor} to={accentColor} toOpacity={1} fromOpacity={0.8} id="bar-gradient" />
+      <svg ref={containerRef} width={outerWidth} height={outerHeight} style={{ backgroundColor: '#26262A' }}>
         <LinearGradient
-          from={accentAltColor}
-          to={accentAltColor}
+          from={candleStickColor}
+          to={candleStickColor}
           toOpacity={1}
           fromOpacity={0.8}
-          id="offers-bar-gradient"
+          id={candleStickGradientId}
         />
 
         <Group transform={`translate(${rateGraphMargins.left},${rateGraphMargins.top})`}>
           <AxisBottom
-            key={`axis-center`}
-            // orientation={Orientation.bottom}
-            top={height + 2}
+            top={height + 5}
             scale={xScale}
             tickFormat={(v) => `${v}`}
-            stroke={axisLineColor}
-            tickStroke={textColor}
+            stroke={axisLineColorLight}
+            tickStroke={textColorLight}
             tickLineProps={{ strokeWidth: 1, opacity: 0.6, transform: 'translate(0,0)' }}
             hideAxisLine={true}
             tickLabelProps={tickLabelStyle}
             tickValues={axisLabels}
+            tickLength={5}
             label="Price in ETH"
             labelProps={labelStyle}
             labelOffset={30}
+            hideZero={true}
             // animationTrajectory="center"
           />
 
           <AxisLeft
-            key={`axis-vert`}
-            // orientation={Orientation.left}
+            left={50}
             scale={yScale}
             tickFormat={(v) => `${v}`}
-            stroke={axisLineColor}
-            tickStroke={textColor}
+            stroke={axisLineColorLight}
+            tickStroke={textColorLight}
             tickLineProps={{ strokeWidth: 1, opacity: 1, transform: 'translate(0,0)' }}
+            tickLength={5}
+            hideAxisLine={true}
             tickLabelProps={verticalTickLabelStyle}
-            // looks better if we do the default tickValues
-            // tickValues={countAxisLabels}
             label={`Number of ${graphType}`}
             labelProps={labelStyle}
-            labelOffset={48}
+            labelOffset={55}
             // animationTrajectory="center"
           />
           {data.map((d, index) => {
             return (
-              <StackedBar
+              <CandleStick
                 {...getBarMeasurements(d, index)}
                 key={index}
                 onClick={() => onClick(d.start.toString(), d.end.toString())}

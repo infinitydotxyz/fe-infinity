@@ -8,7 +8,7 @@ import { GraphOrderDetails } from './graph-order-details';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { GraphOrderFilters } from './graph-order-filters';
 import { OrderbookGraphInfo } from './orderbook-graph-info';
-import { GraphBox } from './graph-box';
+import { GraphBox, GraphBoxTheme } from './graph-box';
 import { CollectionFilterModal } from './graph-collection-filter';
 import { ResponsiveRateGraph, RateGraphType } from './rate-graph';
 import { ResetButton } from './reset-button';
@@ -62,6 +62,16 @@ export const OrderbookGraph: React.FC<OrderBookGraphProps> = ({ className = '' }
       return result;
     });
     setGraphData(gdata);
+    // setGraphData(
+    //   [...new Array(100)].map(
+    //     () =>
+    //       ({
+    //         price: +(Math.random() * (10 - 0.01) + 0.01).toFixed(2),
+    //         isSellOrder: Math.random() > 0.5,
+    //         order: gdata[0].order
+    //       } as GraphData)
+    //   )
+    // );
 
     // set defaultCollections
     const dcs: Set<string> = new Set<string>(defaultCollections);
@@ -119,7 +129,7 @@ export const OrderbookGraph: React.FC<OrderBookGraphProps> = ({ className = '' }
             {/* TODO: Improve loading screen, it looks a bit jumpy cus both charts are re-rendered when the data changes. Perhaps add an individual loader per chart? */}
             {!isLoading && graphData.length > 0 && (
               <>
-                <GraphBox dark={true} className="h-full">
+                <GraphBox theme={GraphBoxTheme.Dark} className="h-full">
                   <ResponsiveRateGraph
                     graphType={RateGraphType.Offers}
                     graphData={graphData}
@@ -128,7 +138,7 @@ export const OrderbookGraph: React.FC<OrderBookGraphProps> = ({ className = '' }
                   />
                 </GraphBox>
 
-                <GraphBox dark={true} className="h-full">
+                <GraphBox theme={GraphBoxTheme.White} className="h-full">
                   <StackedBarGraph data={graphData} onClick={handleOnClick} onSelection={handleSelect} />
                 </GraphBox>
               </>
