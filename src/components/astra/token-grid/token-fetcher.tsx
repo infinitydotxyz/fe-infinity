@@ -78,15 +78,15 @@ export class CollectionTokenCache {
     this.cache = new Map<string, TokenFetcherAlt>();
   };
 
-  fetcher(collection: CollectionInfo, chainId: string, showOnlyUnvisible: boolean): TokenFetcherAlt {
-    const key = `${collection.address}:${chainId}:${showOnlyUnvisible}`;
+  fetcher(collection: CollectionInfo, chainId: string): TokenFetcherAlt {
+    const key = `${collection.address}:${chainId}`;
     const cached = this.cache.get(key);
 
     if (cached) {
       return cached;
     }
 
-    const result = new CollectionTokenFetcher(collection, chainId, showOnlyUnvisible);
+    const result = new CollectionTokenFetcher(collection, chainId);
     this.cache.set(key, result);
 
     return result;
@@ -98,14 +98,12 @@ export class CollectionTokenCache {
 class CollectionTokenFetcher extends TokenFetcherAlt {
   private collection: CollectionInfo;
   private chainId: string;
-  private showOnlyUnvisible: boolean;
 
-  constructor(collection: CollectionInfo, chainId: string, showOnlyUnvisible: boolean) {
+  constructor(collection: CollectionInfo, chainId: string) {
     super();
 
     this.collection = collection;
     this.chainId = chainId;
-    this.showOnlyUnvisible = showOnlyUnvisible;
 
     // not sure if this is needed now days
     this.collectionName = collection.name ?? '';

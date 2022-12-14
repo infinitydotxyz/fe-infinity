@@ -1,12 +1,10 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { CollectionList } from 'src/components/astra/collection-list';
-import { DebouncedTextInputBox } from 'src/components/common';
 import { inputBorderColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-// import { useLocation } from 'react-router';
-// import queryString from 'query-string';
 import { CollectionInfo, getCollection } from 'src/utils/astra-utils';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
+import { ADebouncedTextField } from './astra-debounced-text-field';
 
 interface Props {
   onClick: (value: CollectionInfo) => void;
@@ -16,7 +14,6 @@ interface Props {
 
 export const AstraSidebar = ({ onClick, onLoad, selectedCollection }: Props) => {
   const [query, setQuery] = useState('');
-  // const location = useLocation();
 
   const { collection } = useDashboardContext();
 
@@ -40,6 +37,7 @@ export const AstraSidebar = ({ onClick, onLoad, selectedCollection }: Props) => 
         if (collections.length > 0 && !collection) {
           let handled = false;
 
+          // if query has a collection, but right now it's disabled
           if (parsedQs.col) {
             const collect = await getCollection(parsedQs.col as string);
 
@@ -58,10 +56,9 @@ export const AstraSidebar = ({ onClick, onLoad, selectedCollection }: Props) => 
   );
 
   return (
-    <div className="flex flex-col h-full">
-      <div className={twMerge(inputBorderColor, 'px-4 py-4 border-r-2')}>
-        <DebouncedTextInputBox
-          label=""
+    <div className="flex flex-col h-full mr-2">
+      <div className={twMerge(inputBorderColor, 'px-4')}>
+        <ADebouncedTextField
           value={query}
           placeholder="Search"
           onChange={(value) => {

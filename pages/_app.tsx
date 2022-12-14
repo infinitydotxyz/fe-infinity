@@ -7,21 +7,21 @@ import { isLocalhost } from 'src/utils/commonUtils';
 import { OnboardContextProvider } from 'src/utils/OnboardContext/OnboardContext';
 import { OrderContextProvider } from 'src/utils/context/OrderContext';
 import { FilterContextProvider } from 'src/utils/context/FilterContext';
-import React, { FunctionComponent, memo, StrictMode, useEffect } from 'react';
+import React, { memo, StrictMode, useEffect } from 'react';
 import { DrawerContextProvider } from 'src/utils/context/DrawerContext';
 import { CurationBulkVoteContextProvider } from 'src/utils/context/CurationBulkVoteContext';
-import { AppContextProvider } from 'src/utils/context/AppContext';
+import { AppContextProvider, useAppContext } from 'src/utils/context/AppContext';
 import { DashboardContextProvider } from 'src/utils/context/DashboardContext';
+import { twMerge } from 'tailwind-merge';
+import { Layout } from 'src/components/astra/layout';
 
-const Page: FunctionComponent<AppProps> = ({ Component, pageProps }) => <Component {...pageProps} />;
-const Memoized = memo(Page, (p, n) => p.Component === n.Component && p.pageProps === n.pageProps);
 const isProduction = process.env.NODE_ENV === 'production';
 
 if (!isLocalhost()) {
   LogRocket.init('0pu9ak/nftco');
 }
 
-const App: FunctionComponent<AppProps> = (props) => {
+const App = (props: AppProps) => {
   // For every route change in production,
   // we inject google analytics tracker.
   const router = useRouter();
@@ -41,7 +41,7 @@ const App: FunctionComponent<AppProps> = (props) => {
               <DashboardContextProvider>
                 <DrawerContextProvider>
                   <CurationBulkVoteContextProvider>
-                    <Memoized {...props} />
+                    <AppBody {...props} />
                   </CurationBulkVoteContextProvider>
                 </DrawerContextProvider>
               </DashboardContextProvider>
@@ -50,6 +50,28 @@ const App: FunctionComponent<AppProps> = (props) => {
         </OnboardContextProvider>
       </AppContextProvider>
     </StrictMode>
+  );
+};
+
+// ======================================================================
+
+const Page = ({ Component, pageProps }: AppProps) => {
+  return (
+    <Layout>
+      <Component {...pageProps} />
+    </Layout>
+  );
+};
+
+const Memoized = memo(Page, (p, n) => p.Component === n.Component && p.pageProps === n.pageProps);
+
+const AppBody = (props: AppProps) => {
+  const { darkMode } = useAppContext();
+
+  return (
+    <div className={twMerge(darkMode ? 'dark' : 'light', darkMode ? 'bg-neutral-900' : 'bg-white')}>
+      <Memoized {...props} />
+    </div>
   );
 };
 

@@ -2,13 +2,14 @@ import { useState, useEffect } from 'react';
 import { ScrollLoader } from 'src/components/common';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { twMerge } from 'tailwind-merge';
-import { TokenCard } from './token-card';
+import { TokenCard, TokenListCard } from './token-card';
 import { TokenFetcherAlt } from './token-fetcher';
 import { ErrorOrLoading } from '../error-or-loading';
 import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 
 interface Props {
   tokenFetcher: TokenFetcherAlt;
+  listMode: boolean;
   className?: string;
   wrapWidth?: number;
   onClick?: (data: ERC721CardData) => void;
@@ -24,7 +25,8 @@ export const TokensGrid = ({
   onClick,
   isSelected,
   isSelectable,
-  wrapWidth = 0
+  wrapWidth = 0,
+  listMode
 }: Props) => {
   const [cardData, setCardData] = useState<ERC721CardData[]>([]);
   const [error, setError] = useState(false);
@@ -68,41 +70,73 @@ export const TokensGrid = ({
     contents = <ErrorOrLoading error={error} noData={noData} message="Error" />;
   } else {
     if (wrapWidth > 0) {
-      let divisor = wrapWidth < 1500 ? 500 : 380;
-      divisor = wrapWidth < 950 ? 700 : divisor;
+      if (listMode) {
+        contents = (
+          <>
+            <div className={twMerge('space-y-1 flex flex-col')}>
+              {cardData.map((data) => {
+                return (
+                  <TokenListCard
+                    key={data.id}
+                    data={data}
+                    selected={isSelected(data)}
+                    isSelectable={isSelectable}
+                    onClick={(data) => {
+                      if (onClick) {
+                        return onClick(data);
+                      }
+                    }}
+                  />
+                );
+              })}
+            </div>
 
-      const cols = Math.round(wrapWidth / divisor);
-      const gridColumns = `repeat(${cols}, minmax(0, 1fr))`;
+            {hasNextPage && (
+              <ScrollLoader
+                onFetchMore={() => {
+                  handleFetch(true);
+                }}
+              />
+            )}
+          </>
+        );
+      } else {
+        let divisor = wrapWidth < 1500 ? 500 : 380;
+        divisor = wrapWidth < 950 ? 700 : divisor;
 
-      contents = (
-        <>
-          <div className={twMerge('grid gap-10')} style={{ gridTemplateColumns: gridColumns }}>
-            {cardData.map((data) => {
-              return (
-                <TokenCard
-                  key={data.id}
-                  data={data}
-                  selected={isSelected(data)}
-                  isSelectable={isSelectable}
-                  onClick={(data) => {
-                    if (onClick) {
-                      return onClick(data);
-                    }
-                  }}
-                />
-              );
-            })}
-          </div>
+        const cols = Math.round(wrapWidth / divisor);
+        const gridColumns = `repeat(${cols}, minmax(0, 1fr))`;
 
-          {hasNextPage && (
-            <ScrollLoader
-              onFetchMore={() => {
-                handleFetch(true);
-              }}
-            />
-          )}
-        </>
-      );
+        contents = (
+          <>
+            <div className={twMerge('grid gap-10')} style={{ gridTemplateColumns: gridColumns }}>
+              {cardData.map((data) => {
+                return (
+                  <TokenCard
+                    key={data.id}
+                    data={data}
+                    selected={isSelected(data)}
+                    isSelectable={isSelectable}
+                    onClick={(data) => {
+                      if (onClick) {
+                        return onClick(data);
+                      }
+                    }}
+                  />
+                );
+              })}
+            </div>
+
+            {hasNextPage && (
+              <ScrollLoader
+                onFetchMore={() => {
+                  handleFetch(true);
+                }}
+              />
+            )}
+          </>
+        );
+      }
     }
   }
 

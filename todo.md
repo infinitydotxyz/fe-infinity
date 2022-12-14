@@ -12,9 +12,7 @@ https://www.figma.com/file/R14MZXLv336FbK7RNsEZOa/Homepage-reskin?node-id=0%3A1
 Hide feed, collection pot, community tab and Orderbook page from UI
 
 make offer broken?
-
-you could also work on getting rid of the popout side panel and replacing it with one that is part of the page
-similar to beta.gem
+collection/search returns duplicates?
 
 Change colors/fonts of the UI as per new figma
 
@@ -23,3 +21,9 @@ Better UX overall including no user initiated txns, simpler/faster flow when buy
 https://docs.google.com/spreadsheets/d/172Rwt4x0WSR9pfIUP9krC4wF6fj6-_r6hRlJvfd-lr8/edit#gid=0
 
 https://beta.gem.xyz/collection/otherdeed
+
+search button ugly
+animate collections popout
+
+show cart
+collections search field

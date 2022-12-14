@@ -3,11 +3,13 @@ import { IoIosCopy } from 'react-icons/io';
 import { RiLogoutCircleFill } from 'react-icons/ri';
 import { FaEthereum } from 'react-icons/fa';
 import { BsFillPersonFill } from 'react-icons/bs';
-import { Dropdown, DropdownItem } from './dropdown';
-import { Button } from './button';
 import { ellipsisAddress } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { useRouter } from 'next/router';
+import { AOutlineButton } from '../astra';
+import { ADropdown, ADropdownItem } from '../astra/astra-dropdown';
+import { twMerge } from 'tailwind-merge';
+import { textClr } from 'src/utils/ui-constants';
 
 export const ConnectButton = () => {
   const { signIn, signOut, user } = useOnboardContext();
@@ -20,10 +22,10 @@ export const ConnectButton = () => {
     navigator.clipboard.writeText(textToCopy);
   };
 
-  const menuItems: DropdownItem[] = [
+  const menuItems: ADropdownItem[] = [
     {
       label: 'Copy Address',
-      icon: <IoIosCopy className=" h-5 w-5 text-black" />,
+      icon: <IoIosCopy className={twMerge(textClr, 'h-5 w-5')} />,
       onClick: () => {
         address ? copyToClipboard(address) : null;
       }
@@ -34,12 +36,12 @@ export const ConnectButton = () => {
     },
     {
       label: 'My Profile',
-      icon: <BsFillPersonFill className=" h-5 w-5 text-black" />,
+      icon: <BsFillPersonFill className={twMerge(textClr, 'h-5 w-5')} />,
       onClick: () => router.push('/profile/me')
     },
     {
       label: 'Etherscan',
-      icon: <FaEthereum className=" h-5 w-5 text-black" />,
+      icon: <FaEthereum className={twMerge(textClr, 'h-5 w-5')} />,
       onClick: () => window.open(`https://etherscan.io/address/${address}`)
     },
     {
@@ -48,7 +50,7 @@ export const ConnectButton = () => {
     },
     {
       label: 'Sign Out',
-      icon: <RiLogoutCircleFill className=" h-5 w-5 text-black" />,
+      icon: <RiLogoutCircleFill className={twMerge(textClr, 'h-5 w-5')} />,
       onClick: () => {
         signOut();
       }
@@ -57,8 +59,8 @@ export const ConnectButton = () => {
 
   return (
     <>
-      {connected && <Dropdown label={`${ellipsisAddress(address, 5, 3)}`} items={menuItems} alignMenuRight={true} />}
-      {!connected && <Button onClick={signIn}>Connect</Button>}
+      {connected && <ADropdown label={`${ellipsisAddress(address, 5, 3)}`} items={menuItems} alignMenuRight={true} />}
+      {!connected && <AOutlineButton onClick={signIn}>Connect</AOutlineButton>}
     </>
   );
 };
