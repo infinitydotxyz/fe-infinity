@@ -51,8 +51,8 @@ interface Props {
 
 export const DashboardContextProvider = ({ children }: Props) => {
   const [collection, setCollection] = useState<CollectionInfo>();
-  const [showCart, setShowCart] = useState(false);
-  const [showCollections, setShowCollections] = useState(true);
+  const [showCart, setShowCart] = useState(true);
+  const [showCollections, setShowCollections] = useState(false);
   const [numTokens, setNumTokens] = useState(0);
   const [tokenFetcher, setTokenFetcher] = useState<TokenFetcherAlt | undefined>();
   const [refreshTrigger, setRefreshTrigger] = useState(0);

@@ -27,15 +27,15 @@ export const APageBox = ({ children, title, showTitle = true, className = '', ri
 
 // ==================================================
 
-type PageHeaderProps = {
+type Props2 = {
   title?: string;
   rightToolbar?: JSX.Element;
 };
 
-export const APageHeader = ({ title, rightToolbar }: PageHeaderProps): JSX.Element => {
+export const APageHeader = ({ title, rightToolbar }: Props2): JSX.Element => {
   return (
     <div className="flex flex-row items-center">
-      <div className={twMerge(textClr, 'font-medium text-5xl tracking-tight mb-8')}>{title}</div>
+      <div className={twMerge(textClr, 'font-medium text-5xl tracking-tight mt-4 mb-8')}>{title}</div>
 
       {rightToolbar && (
         <>

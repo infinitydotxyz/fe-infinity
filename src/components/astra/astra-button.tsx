@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { BsGrid, BsList } from 'react-icons/bs';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
-import { cardClr, hoverClr, inputBorderColor, primaryTextColor, textClr } from 'src/utils/ui-constants';
+import { hoverClr, inputBorderColor, primaryBGColor, primaryTextColor, textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 interface Props {
@@ -17,7 +17,7 @@ export const AButton = ({ small = false, disabled = false, children, className =
   return (
     <ButtonBase
       disabled={disabled}
-      className={twMerge(small ? 'text-sm px-3 py-0.5' : 'px-4 py-1', 'rounded-md', cardClr, className)}
+      className={twMerge(small ? 'text-sm px-3 py-0.5' : 'px-4 py-1', 'rounded-md', primaryBGColor, className)}
       onClick={onClick}
     >
       {children}

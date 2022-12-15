@@ -11,16 +11,8 @@ interface Props {
   children: ReactNode;
 }
 export const Layout = ({ children }: Props) => {
-  const {
-    collection,
-    setCollection,
-    setGridWidth,
-    handleCheckout,
-    selection,
-    clearSelection,
-    removeFromSelection,
-    setShowCart
-  } = useDashboardContext();
+  const { collection, setCollection, setGridWidth, handleCheckout, selection, clearSelection, removeFromSelection } =
+    useDashboardContext();
 
   const gridRef = useRef<HTMLDivElement>(null);
 
@@ -32,13 +24,13 @@ export const Layout = ({ children }: Props) => {
     }
   }, [containerWidth]);
 
-  useEffect(() => {
-    if (selection.length > 0) {
-      setShowCart(true);
-    } else {
-      setShowCart(false);
-    }
-  }, [selection]);
+  // useEffect(() => {
+  //   if (selection.length > 0) {
+  //     setShowCart(true);
+  //   } else {
+  //     setShowCart(false);
+  //   }
+  // }, [selection]);
 
   useEffect(() => {
     gridRef.current?.scrollTo({ left: 0, top: 0 });
