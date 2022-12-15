@@ -11,7 +11,7 @@ export const Statistics: React.FC<StatisticsProp> = ({ label, value, className }
   return (
     <span className={twMerge('space-x-2 inline-block', className)}>
       <strong className="font-heading font-black">{value}</strong>
-      <span className="font-heading text-secondary font-light">{label}</span>
+      <span className="font-heading font-light">{label}</span>
     </span>
   );
 };

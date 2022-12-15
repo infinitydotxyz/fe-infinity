@@ -179,7 +179,7 @@ export const VoteModal: React.FC<Props> = ({ collection, isOpen, onClose }) => {
                 <StakeTokensButton />
               </>
             )}
-            <div className="text-secondary text-sm font-light font-heading">
+            <div className="  text-sm font-light font-heading">
               Votes cannot be reallocated to prevent 'vote rotation'. See{' '}
               <a
                 href="https://docs.infinity.xyz/gm/features/curation#view-your-curated-collections"

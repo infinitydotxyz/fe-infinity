@@ -125,7 +125,7 @@ export const Card = ({
           <div>{collectionName ? collectionName : <>&nbsp;</>}</div>
           {data?.hasBlueCheck ? <BlueCheck className="ml-1" /> : null}
         </div>
-        <div className="text-secondary font-heading" title={data?.tokenId}>
+        <div className=" font-heading" title={data?.tokenId}>
           {tokenId}
         </div>
       </div>

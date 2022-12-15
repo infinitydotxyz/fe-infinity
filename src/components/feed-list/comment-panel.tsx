@@ -83,7 +83,7 @@ export const CommentPanel = ({ isOpen, onClose, event, contentOnly }: Props) => 
         }}
       />
 
-      <Button variant="outline" onClick={onClickReply} className="h-10 ml-2 font-heading text-secondary">
+      <Button variant="outline" onClick={onClickReply} className="h-10 ml-2 font-heading">
         Reply
       </Button>
     </div>
@@ -110,7 +110,7 @@ export const CommentPanel = ({ isOpen, onClose, event, contentOnly }: Props) => 
               <NextLink href={`/profile/${item.username ?? item.userAddress}`} className="ml-4 font-bold">
                 {ellipsisString(item.username ?? item.userAddress)}
               </NextLink>
-              <div className="ml-4 text-secondary" title={new Date(item.timestamp).toLocaleString()}>
+              <div className="ml-4" title={new Date(item.timestamp).toLocaleString()}>
                 {format(item.timestamp)}
               </div>
             </div>

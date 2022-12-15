@@ -387,7 +387,7 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
   );
 
   const createdBySection = (
-    <div className="text-secondary mt-6 mb-6 font-heading">
+    <div className="mt-6 mb-6 font-heading">
       {collection ? (
         <>
           {createdBy && (
@@ -452,7 +452,7 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
               {createdBySection}
               <StatsChips collection={collection} currentStatsData={currentStats || firstAllTimeStats} />
 
-              <div className="text-secondary mt-12 md:w-2/3">{description}</div>
+              <div className=" mt-12 md:w-2/3">{description}</div>
 
               {collection.metadata?.benefits && (
                 <div className="mt-7 md:w-2/3">
@@ -461,7 +461,7 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
                     {collection.metadata?.benefits?.slice(0, 3).map((benefit) => {
                       const benefitStr = benefit.slice(0, 300);
                       return (
-                        <div className="flex items-center text-secondary">
+                        <div className="flex items-center  ">
                           <BsCheck className="text-2xl mr-2 text-black" />
                           {benefitStr}
                         </div>
@@ -478,7 +478,7 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
                       const partnershipStr = partnership?.name.slice(0, 100);
                       return (
                         <div
-                          className="flex items-center text-secondary hover:text-black cursor-pointer"
+                          className="flex items-center hover:text-black cursor-pointer"
                           onClick={() => {
                             window.open(partnership.link);
                           }}

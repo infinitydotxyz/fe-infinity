@@ -75,7 +75,7 @@ export default function Curation() {
               <Button className="mt-4" onClick={showModal}>
                 Confirm
               </Button>
-              <div className="text-secondary text-md font-light font-heading mt-2 ml-1">
+              <div className="  text-md font-light font-heading mt-2 ml-1">
                 Votes cannot be reallocated to prevent 'vote rotation'. See{' '}
                 <a
                   href="https://docs.infinity.xyz/gm/features/curation#view-your-curated-collections"

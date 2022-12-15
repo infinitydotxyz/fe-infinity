@@ -72,12 +72,6 @@ const SandboxPage = () => {
 
   return (
     <PageBox title="SandBox">
-      <SBHeader># Text</SBHeader>
-      <div>
-        <div className="text-primary">text-primary</div>
-        <div className="text-secondary">text-secondary</div>
-      </div>
-
       <NFTSwiperModal />
 
       <SBHeader># Button</SBHeader>
