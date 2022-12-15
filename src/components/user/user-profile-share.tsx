@@ -14,7 +14,9 @@ import {
   WhatsappShareButton,
   WhatsappIcon
 } from 'react-share';
-import { Chip, ClipboardButton, CustomMenuButton, CustomMenuContents } from '../common';
+import { ClipboardButton } from '../common';
+import { ACustomMenuContents, ACustomMenuButton } from '../astra/astra-dropdown';
+import { AOutlineButton } from '../astra';
 
 interface UserProfileShareProps {
   username?: string;
@@ -27,10 +29,15 @@ export const UserProfileShare: FunctionComponent<UserProfileShareProps> = ({ use
   return (
     <Menu>
       {({ open }) => (
-        <CustomMenuContents>
-          <CustomMenuButton>
-            <Chip disableClick={true} content="Share" left={<FaShareAlt className="text-md" />} />
-          </CustomMenuButton>
+        <ACustomMenuContents>
+          <ACustomMenuButton>
+            <AOutlineButton>
+              <div className="flex gap-3 items-center">
+                <FaShareAlt className="text-md" />
+                Share
+              </div>
+            </AOutlineButton>
+          </ACustomMenuButton>
 
           <Transition
             show={open}
@@ -62,7 +69,7 @@ export const UserProfileShare: FunctionComponent<UserProfileShareProps> = ({ use
               </div>
             </Menu.Items>
           </Transition>
-        </CustomMenuContents>
+        </ACustomMenuContents>
       )}
     </Menu>
   );

@@ -1,7 +1,7 @@
 import { FunctionComponent } from 'react';
 import { useRouter } from 'next/router';
 import { UserProfileShare } from './user-profile-share';
-import { Chip, ToggleTab, useToggleTab, ExternalLink } from 'src/components/common';
+import { ToggleTab, useToggleTab, ExternalLink } from 'src/components/common';
 import { UserPageNftsTab } from './user-page-nfts-tab';
 import { UserPageActivityTab } from './user-page-activity-tab';
 import { ellipsisAddress } from 'src/utils';
@@ -11,6 +11,9 @@ import { UserBannerImage } from './user-banner-image';
 import { UserProfileImage } from './user-profile-image';
 import { UserPageCuratedTab } from './user-page-curated-tab';
 import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user/user-profile.dto';
+import { twMerge } from 'tailwind-merge';
+import { textClr } from 'src/utils/ui-constants';
+import { AOutlineButton } from '../astra';
 
 interface UserPageProps {
   userInfo: UserProfileDto;
@@ -34,7 +37,7 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
     <>
       <ProfilePageHeader userInfo={userInfo} isOwner={isOwner} />
 
-      <div className="relative flex flex-col">
+      <div className={twMerge(textClr, 'relative flex flex-col')}>
         <h2 className="my-2 text-6xl font-body">{userInfo.displayName || 'No Display Name'}</h2>
 
         <div className="flex flex-wrap font-heading -ml-3 mb-8">
@@ -55,12 +58,13 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
         </div>
         <div className="my-2 flex flex-wrap items-center space-x-3">
           {isOwner && (
-            <Chip
-              content="Edit"
+            <AOutlineButton
               onClick={() => {
                 router.push(`/profile/settings`);
               }}
-            />
+            >
+              Edit
+            </AOutlineButton>
           )}
           <UserProfileShare username={userInfo.username} userAddress={userInfo.address} />
         </div>
