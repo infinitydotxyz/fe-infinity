@@ -1,7 +1,7 @@
 import { HelpTip, NextLink, Spacer, SVG } from 'src/components/common';
 import { MdDarkMode, MdLightMode } from 'react-icons/md';
 import { AiOutlineSend, AiOutlineTag } from 'react-icons/ai';
-import { BsWallet2, BsCollection } from 'react-icons/bs';
+import { BsWallet2, BsHouse, BsCollection } from 'react-icons/bs';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { ARoundButton } from 'src/components/astra';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
@@ -21,14 +21,14 @@ export const SidebarNav = () => {
       <div className="h-24" />
 
       <div className="flex flex-col space-y-4">
-        <HelpTip placement="right" content={<div className="whitespace-nowrap">Collections</div>}>
+        <HelpTip placement="right" content={<div className="whitespace-nowrap">Tokens</div>}>
           <ARoundButton
             highlighted={showCollections}
             onClick={() => {
-              setShowCollections(!showCollections);
+              router.push('/new');
             }}
           >
-            <BsCollection className="h-8 w-8" />
+            <BsHouse className="h-8 w-8" />
           </ARoundButton>
         </HelpTip>
 
@@ -63,6 +63,17 @@ export const SidebarNav = () => {
           </ARoundButton>
         </HelpTip>
       </div>
+
+      <HelpTip placement="right" content={<div className="whitespace-nowrap">Collections</div>}>
+        <ARoundButton
+          highlighted={showCollections}
+          onClick={() => {
+            setShowCollections(!showCollections);
+          }}
+        >
+          <BsCollection className="h-8 w-8" />
+        </ARoundButton>
+      </HelpTip>
 
       <Spacer />
       <ARoundButton

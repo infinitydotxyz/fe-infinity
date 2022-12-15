@@ -4,8 +4,8 @@ import { AstraCart } from 'src/components/astra/astra-cart';
 import { useResizeDetector } from 'react-resize-detector';
 import { MainDashboardGrid } from 'src/components/astra/dashboard/main-grid-dashboard';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
-import { SidebarNav } from 'src/components/astra/dashboard/sidebar-nav';
 import { ANavbar } from './astra-navbar';
+import { SidebarNav } from './sidebar-nav';
 
 interface Props {
   children: ReactNode;
