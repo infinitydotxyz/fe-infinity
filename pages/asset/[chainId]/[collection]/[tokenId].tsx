@@ -6,6 +6,7 @@ import NotFound404Page from 'pages/not-found-404';
 import { useEffect, useState } from 'react';
 import { ActivityList, CancelModal, ListNFTModal, MakeOfferModal, SendNFTModal, TraitList } from 'src/components/asset';
 import { LowerPriceModal } from 'src/components/asset/modals/lower-price-modal';
+import { APageBox } from 'src/components/astra/astra-page-box';
 import {
   BlueCheck,
   Button,
@@ -14,7 +15,6 @@ import {
   EthPrice,
   EZImage,
   NextLink,
-  PageBox,
   ReadMoreText,
   ShortAddress,
   Spinner,
@@ -61,9 +61,9 @@ const AssetDetailPage = () => {
 
   if (typeof query.chainId !== 'string' || typeof query.collection !== 'string' || typeof query.tokenId !== 'string') {
     return (
-      <PageBox title="Asset" showTitle={false}>
+      <APageBox title="Asset" showTitle={false}>
         <div className="flex flex-col max-w-screen-2xl mt-4"></div>
-      </PageBox>
+      </APageBox>
     );
   }
   return <AssetDetailContent chainId={query.chainId} collectionAddress={query.collection} tokenId={query.tokenId} />;
@@ -123,11 +123,11 @@ const AssetDetailContent = ({ chainId, collectionAddress, tokenId }: Props) => {
 
   if (isLoading) {
     return (
-      <PageBox title="Loading..." showTitle={false}>
+      <APageBox title="Loading..." showTitle={false}>
         <CenteredContent>
           <Spinner />
         </CenteredContent>
-      </PageBox>
+      </APageBox>
     );
   }
 
@@ -256,7 +256,7 @@ const AssetDetailContent = ({ chainId, collectionAddress, tokenId }: Props) => {
   );
 
   return (
-    <PageBox title={assetName} showTitle={false} className="flex flex-col mt-6">
+    <APageBox title={assetName} showTitle={false} className="flex flex-col mt-6">
       <div className="flex flex-col gap-10 mr-auto max-w-[1100px] md:flex-row md:items-start">
         <ResponsiveImage token={token} />
         <div className="md:flex-1 ">
@@ -404,7 +404,7 @@ const AssetDetailContent = ({ chainId, collectionAddress, tokenId }: Props) => {
         )}
       </div>
       {modals}
-    </PageBox>
+    </APageBox>
   );
 };
 

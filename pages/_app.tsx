@@ -69,7 +69,7 @@ const AppBody = (props: AppProps) => {
   const { darkMode } = useAppContext();
 
   return (
-    <div className={twMerge(darkMode ? 'dark' : 'light', darkMode ? 'bg-neutral-900' : 'bg-white')}>
+    <div className={twMerge(darkMode ? 'dark' : 'light')}>
       <Memoized {...props} />
     </div>
   );

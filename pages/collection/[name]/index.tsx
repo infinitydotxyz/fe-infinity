@@ -15,17 +15,7 @@ import { HiOutlineExternalLink } from 'react-icons/hi';
 import { AvatarImage } from 'src/components/collection/avatar-image';
 import { CollectionSalesTab } from 'src/components/collection/collection-activity-tab';
 import { StatsChips } from 'src/components/collection/stats-chips';
-import {
-  BlueCheck,
-  Button,
-  Chip,
-  EthPrice,
-  Heading,
-  PageBox,
-  Spinner,
-  ToggleTab,
-  useToggleTab
-} from 'src/components/common';
+import { BlueCheck, Button, Chip, EthPrice, Heading, Spinner, ToggleTab, useToggleTab } from 'src/components/common';
 import { FeesAprStats, FeesAccruedStats } from 'src/components/curation/statistics';
 import { VoteModal } from 'src/components/curation/vote-modal';
 import { VoteProgressBar } from 'src/components/curation/vote-progress-bar';
@@ -48,6 +38,7 @@ import Head from 'next/head';
 import { useSaveReferral } from 'src/hooks/api/useSaveReferral';
 import { ReservoirCards } from 'src/components/token-card/reservoir-card-grid';
 import { CardAction } from 'src/components/token-card/card';
+import { APageBox } from 'src/components/astra/astra-page-box';
 
 const CollectionPage = ({ collection, error }: { collection?: BaseCollection; error?: Error }) => {
   /**
@@ -206,9 +197,9 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
 
   if (!collection) {
     return (
-      <PageBox showTitle={false} title={'Invalid collection'}>
+      <APageBox showTitle={false} title={'Invalid collection'}>
         <div className="flex flex-col mt-10">Unable to load this collection.</div>
-      </PageBox>
+      </APageBox>
     );
   }
 
@@ -427,7 +418,7 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
   );
 
   return (
-    <PageBox showTitle={false} title={collection.metadata?.name ?? ''}>
+    <APageBox showTitle={false} title={collection.metadata?.name ?? ''}>
       {head}
       <div className="flex flex-col mt-10">
         <span>
@@ -514,7 +505,7 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
           </section>
         </main>
       </div>
-    </PageBox>
+    </APageBox>
   );
 };
 

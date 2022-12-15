@@ -4,6 +4,7 @@ import { NULL_ADDRESS } from '@infinityxyz/lib-frontend/utils';
 import { useRouter } from 'next/router';
 import { parse } from 'query-string';
 import { useEffect, useState } from 'react';
+import { APageBox } from 'src/components/astra/astra-page-box';
 import {
   BlueCheckInline,
   Button,
@@ -11,7 +12,6 @@ import {
   EthPrice,
   EZImage,
   NextLink,
-  PageBox,
   Spinner,
   ToggleTab,
   useToggleTab
@@ -106,7 +106,7 @@ const TrendingPage = () => {
   };
 
   return (
-    <PageBox title="Trending">
+    <APageBox title="Trending">
       <div className="  flex justify-between">
         <ToggleTab
           small={true}
@@ -130,7 +130,7 @@ const TrendingPage = () => {
       )}
 
       {/* <ScrollLoader onFetchMore={() => fetchData()} /> */}
-    </PageBox>
+    </APageBox>
   );
 };
 

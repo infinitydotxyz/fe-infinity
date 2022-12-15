@@ -14,13 +14,15 @@ import { ConnectButton, Spacer, NextLink, DropdownItem } from 'src/components/co
 import { useRouter } from 'next/router';
 import { HiCollection, HiTrendingUp } from 'react-icons/hi';
 import { ACustomMenuContents, ACustomMenuButton, ACustomMenuItems, ACustomMenuItem } from './astra-dropdown';
+import { CollectionSearchInput } from '../common/search/collection-search-input';
 
 export const ANavbar = () => {
   return (
     <div className="flex px-5 py-2 space-x-4 items-center">
+      <div className={twMerge(textClr, 'text-2xl mr-12')}>Infinity</div>
+
       <div className=" max-w-96">
-        {/* <CollectionSearchInput expanded /> */}
-        <div className={twMerge(textClr, 'text-2xl')}>Infinity</div>
+        <CollectionSearchInput expanded />
       </div>
 
       <Spacer />
