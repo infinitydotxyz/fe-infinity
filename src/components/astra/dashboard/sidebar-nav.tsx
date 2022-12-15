@@ -5,10 +5,12 @@ import { BsWallet2, BsCollection } from 'react-icons/bs';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { ARoundButton } from 'src/components/astra';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
+import { useRouter } from 'next/router';
 
 export const SidebarNav = () => {
   const { darkMode, setDarkMode } = useAppContext();
   const { showCollections, setShowCollections } = useDashboardContext();
+  const router = useRouter();
 
   return (
     <div className="flex px-2 py-4 h-full flex-col items-center ">
@@ -42,8 +44,9 @@ export const SidebarNav = () => {
 
         <HelpTip placement="right" content={<div className="whitespace-nowrap">Profile</div>}>
           <ARoundButton
+            highlighted={router.asPath === '/profile/me'}
             onClick={() => {
-              // setDarkMode(!darkMode);
+              router.push('/profile/me');
             }}
           >
             <BsWallet2 className="h-8 w-8" />

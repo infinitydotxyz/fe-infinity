@@ -2,10 +2,8 @@ import React from 'react';
 import { IoIosCopy } from 'react-icons/io';
 import { RiLogoutCircleFill } from 'react-icons/ri';
 import { FaEthereum } from 'react-icons/fa';
-import { BsFillPersonFill } from 'react-icons/bs';
 import { ellipsisAddress } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import { useRouter } from 'next/router';
 import { AOutlineButton } from '../astra';
 import { ADropdown, ADropdownItem } from '../astra/astra-dropdown';
 import { twMerge } from 'tailwind-merge';
@@ -16,7 +14,6 @@ export const ConnectButton = () => {
 
   const connected = user?.address ? true : false;
   const address = user?.address;
-  const router = useRouter();
 
   const copyToClipboard = (textToCopy: string) => {
     navigator.clipboard.writeText(textToCopy);
@@ -33,11 +30,6 @@ export const ConnectButton = () => {
     {
       label: '-',
       onClick: () => console.log('separator')
-    },
-    {
-      label: 'My Profile',
-      icon: <BsFillPersonFill className={twMerge(textClr, 'h-5 w-5')} />,
-      onClick: () => router.push('/profile/me')
     },
     {
       label: 'Etherscan',
