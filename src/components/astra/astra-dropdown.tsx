@@ -38,33 +38,33 @@ export const ADropdown = ({
     <div className={twMerge(className)}>
       <Menu>
         {({ open }) => (
-          <CustomMenuContents>
+          <ACustomMenuContents>
             <span>
-              <CustomMenuButton>
+              <ACustomMenuButton>
                 {hasBorder && <AOutlineButton>{buttonContents}</AOutlineButton>}{' '}
                 {!hasBorder && <ATextButton>{buttonContents}</ATextButton>}
-              </CustomMenuButton>
+              </ACustomMenuButton>
             </span>
 
-            <CustomMenuItems open={open} alignMenuRight={alignMenuRight}>
+            <ACustomMenuItems open={open} alignMenuRight={alignMenuRight}>
               <div className="">
                 {items.map((item, idx) => {
                   if (item.label === '-') {
-                    return <MenuSeparator key={idx} />;
+                    return <AMenuSeparator key={idx} />;
                   }
 
                   return (
-                    <CustomMenuItem key={idx} onClick={item.onClick}>
+                    <ACustomMenuItem key={idx} onClick={item.onClick}>
                       <div className={twMerge(textClr, 'flex items-center cursor-pointer')}>
                         {item.icon && <div className={twMerge('mr-4')}>{item.icon}</div>}
                         {item.label}
                       </div>
-                    </CustomMenuItem>
+                    </ACustomMenuItem>
                   );
                 })}
               </div>
-            </CustomMenuItems>
-          </CustomMenuContents>
+            </ACustomMenuItems>
+          </ACustomMenuContents>
         )}
       </Menu>
     </div>
@@ -78,7 +78,7 @@ interface Props {
   children: ReactElement | string;
 }
 
-const CustomMenuItem = (props: Props) => {
+export const ACustomMenuItem = (props: Props) => {
   return (
     <Menu.Item {...props}>
       {({ active, disabled }) => (
@@ -104,7 +104,7 @@ interface Props2 {
   alignMenuRight?: boolean;
 }
 
-export const CustomMenuItems = ({ children, open, alignMenuRight }: Props2) => {
+export const ACustomMenuItems = ({ children, open, alignMenuRight }: Props2) => {
   return (
     <div className={twMerge('absolute bottom-0  z-50', alignMenuRight ? 'right-0' : ' ')}>
       <Transition
@@ -133,7 +133,7 @@ export const CustomMenuItems = ({ children, open, alignMenuRight }: Props2) => {
 
 // =======================================================================
 
-const MenuSeparator = () => {
+export const AMenuSeparator = () => {
   return <Divider className="my-1" />;
 };
 
@@ -144,7 +144,7 @@ interface Props3 {
   className?: string;
 }
 
-const CustomMenuButton = ({ children, className = '' }: Props3) => {
+export const ACustomMenuButton = ({ children, className = '' }: Props3) => {
   // without as="div", you get a button within button error
   return (
     <Menu.Button as="div" className={twMerge('', className)}>
@@ -159,7 +159,7 @@ interface Props4 {
   children: ReactNode;
 }
 
-const CustomMenuContents = ({ children }: Props4) => {
+export const ACustomMenuContents = ({ children }: Props4) => {
   // button needs to be relative for the menu positioning
   return <div className="relative">{children}</div>;
 };

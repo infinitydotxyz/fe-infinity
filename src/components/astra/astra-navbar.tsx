@@ -10,18 +10,10 @@ import { RiMediumFill } from 'react-icons/ri';
 import { MdFavorite, MdFeed } from 'react-icons/md';
 
 import { Menu } from '@headlessui/react';
-import {
-  ConnectButton,
-  Spacer,
-  CustomMenuItem,
-  NextLink,
-  DropdownItem,
-  CustomMenuItems,
-  CustomMenuButton,
-  CustomMenuContents
-} from 'src/components/common';
+import { ConnectButton, Spacer, NextLink, DropdownItem } from 'src/components/common';
 import { useRouter } from 'next/router';
 import { HiCollection, HiTrendingUp } from 'react-icons/hi';
+import { ACustomMenuContents, ACustomMenuButton, ACustomMenuItems, ACustomMenuItem } from './astra-dropdown';
 
 export const ANavbar = () => {
   return (
@@ -46,7 +38,7 @@ export const ANavbar = () => {
 export const ANavbarButtons = () => {
   const router = useRouter();
 
-  const iconStyle = 'h-5 w-5 text-black';
+  const iconStyle = twMerge(textClr, 'h-5 w-5');
 
   const content = {
     buttons: {
@@ -141,26 +133,30 @@ export const ANavbarButtons = () => {
     <>
       {content?.buttons?.items?.map((item, i) => (
         <React.Fragment key={i}>
-          {item.type === 'link' && <NextLink href={item?.props?.href ? item.props.href : ''}>{item?.label}</NextLink>}
+          {item.type === 'link' && (
+            <NextLink href={item?.props?.href ? item.props.href : ''} className={textClr}>
+              {item?.label}
+            </NextLink>
+          )}
           {item.type === 'dropdown' && (
             <Menu>
               {({ open }) => (
-                <CustomMenuContents>
-                  <CustomMenuButton className="flex gap-1 items-center select-none">
-                    <div>{item?.label}</div>
-                    <IoMdArrowDropdown className="h-4 w-4" />
-                  </CustomMenuButton>
-                  <CustomMenuItems open={open}>
+                <ACustomMenuContents>
+                  <ACustomMenuButton className="flex gap-1 items-center select-none">
+                    <div className={textClr}>{item?.label}</div>
+                    <IoMdArrowDropdown className={twMerge(textClr, 'h-4 w-4')} />
+                  </ACustomMenuButton>
+                  <ACustomMenuItems open={open}>
                     {item?.menu?.map((x, j) => (
-                      <CustomMenuItem key={j} onClick={x.onClick}>
-                        <div className="flex items-center cursor-pointer">
-                          {x.icon && <div className="mr-4">{x.icon}</div>}
+                      <ACustomMenuItem key={j} onClick={x.onClick}>
+                        <div className={twMerge(textClr, 'flex items-center cursor-pointer')}>
+                          {x.icon && <div className={twMerge('mr-4')}>{x.icon}</div>}
                           {x.label}
                         </div>
-                      </CustomMenuItem>
+                      </ACustomMenuItem>
                     ))}
-                  </CustomMenuItems>
-                </CustomMenuContents>
+                  </ACustomMenuItems>
+                </ACustomMenuContents>
               )}
             </Menu>
           )}
