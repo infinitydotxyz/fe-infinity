@@ -15,7 +15,7 @@ interface Props {
 
 export const APageBox = ({ children, title, showTitle = true, className = '', rightToolbar }: Props): JSX.Element => {
   return (
-    <div className={twMerge('transition  w-full h-full flex flex-col overflow-y-clip overflow-x-clip', className)}>
+    <div className={twMerge('transition pl-6 w-full h-full flex flex-col overflow-y-clip overflow-x-clip', className)}>
       <Header title={title} />
 
       {showTitle ? <APageHeader title={title} rightToolbar={rightToolbar} /> : null}
