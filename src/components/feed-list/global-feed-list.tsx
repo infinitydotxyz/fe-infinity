@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react';
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { apiGet } from 'src/utils';
 import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
-import { Chip, ScrollLoader, Spacer } from '../common';
+import { ScrollLoader, Spacer } from '../common';
 import { NftEventRec } from '../asset/activity/activity-item';
 import { CommentPanel } from './comment-panel';
 import { FeedListItem } from './feed-list-item';
 import { FilterPopdown, filterButtonDefaultOptions } from './filter-popdown';
+import { AOutlineButton } from '../astra';
 
 interface Props {
   types: EventType[];
@@ -66,7 +67,7 @@ export const GlobalFeedList = ({ types, className = '', compact = false }: Props
       {!compact && (
         <div className="flex items-center mb-8">
           <Spacer />
-          <Chip content={'Refresh'} onClick={() => fetchActivity(true)} />
+          <AOutlineButton onClick={() => fetchActivity(true)}>Refresh</AOutlineButton>
 
           <FilterPopdown
             className="ml-3"

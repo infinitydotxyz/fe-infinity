@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { BsGrid, BsList } from 'react-icons/bs';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
-import { hoverClr, inputBorderColor, primaryBGColor, primaryTextColor, textClr } from 'src/utils/ui-constants';
+import { hoverClr, inputBorderColor, primaryTextColor, textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 interface Props {
@@ -32,8 +32,8 @@ export const AButton = ({
       tooltip={tooltip}
       className={twMerge(
         small ? 'text-sm px-3 py-0.5' : 'px-4 py-1',
-        'rounded-md',
-        primary ? primaryBGColor : '',
+        'rounded-full',
+        primary ? 'bg-black text-white' : '',
         className
       )}
       onClick={onClick}

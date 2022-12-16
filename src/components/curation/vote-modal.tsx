@@ -10,8 +10,9 @@ import { useIsMounted } from 'src/hooks/useIsMounted';
 import { apiPost } from 'src/utils';
 import { toTwitterHandle } from 'src/utils/converters';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { AButtonContents, AOutlineButton } from '../astra';
 import { AvatarImage } from '../collection/avatar-image';
-import { Button, ButtonProps, Chip, Divider, Heading, Modal, Spinner, TextInputBox, toastError } from '../common';
+import { Button, ButtonProps, Divider, Heading, Modal, Spinner, TextInputBox, toastError } from '../common';
 import { Message } from '../common/message';
 import { MaxButton } from './max-button';
 import { FeesAccruedStats, FeesAprStats, Statistics } from './statistics';
@@ -103,7 +104,7 @@ export const VoteModal: React.FC<Props> = ({ collection, isOpen, onClose }) => {
           <Message>
             <strong>Votes have been registered successfully! Changes will be visible shortly.</strong>
           </Message>
-          <Chip
+          <AOutlineButton
             onClick={() => {
               const win = window.open(
                 `https://twitter.com/intent/tweet?url=https://infinity.xyz/collection/${
@@ -117,10 +118,10 @@ export const VoteModal: React.FC<Props> = ({ collection, isOpen, onClose }) => {
               );
               win?.focus();
             }}
-            content={<FaTwitter />}
-            title="click to tweet"
-            right={<span className="ml-2">Share on twitter</span>}
-          />
+            tooltip="click to tweet"
+          >
+            <AButtonContents label="Share on Twitter" left={<FaTwitter />} />
+          </AOutlineButton>
         </>
       )}
 
