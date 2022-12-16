@@ -11,22 +11,31 @@ interface Props {
   disabled?: boolean;
   className?: string;
   highlighted?: boolean;
+  primary?: boolean;
   tooltip?: string;
 }
 
 export const AButton = ({
   small = false,
   disabled = false,
+  primary = false,
   children,
   className = '',
   tooltip = '',
+  highlighted = false,
   onClick
 }: Props): JSX.Element => {
   return (
     <ButtonBase
       disabled={disabled}
+      highlighted={highlighted}
       tooltip={tooltip}
-      className={twMerge(small ? 'text-sm px-3 py-0.5' : 'px-4 py-1', 'rounded-md', primaryBGColor, className)}
+      className={twMerge(
+        small ? 'text-sm px-3 py-0.5' : 'px-4 py-1',
+        'rounded-md',
+        primary ? primaryBGColor : '',
+        className
+      )}
       onClick={onClick}
     >
       {children}
@@ -235,7 +244,7 @@ interface Props5 {
 
 export const AButtonContents = ({ left, right, label }: Props5) => {
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-1">
       {left}
       <div className="whitespace-nowrap">{label}</div>
       {right}

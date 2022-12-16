@@ -91,14 +91,6 @@ const SandboxPage = () => {
         <Button variant="ghost">Ghost</Button>
       </div>
 
-      <SBHeader># Chip</SBHeader>
-      <div className="flex flex-row space-x-4">
-        <Chip content="Watch" />
-        <Chip left={<FaEdit />} content="Edit" active={true} />
-        <Chip content={<FaTwitter />} />
-        <Chip content={<FaFacebook />} />
-      </div>
-
       <SBHeader># Checkbox</SBHeader>
       <div className="w-1/2">
         <Checkbox

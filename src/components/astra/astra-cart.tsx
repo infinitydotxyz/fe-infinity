@@ -87,7 +87,7 @@ export const AstraCart = ({ tokens, onRemove, onCheckout }: Props) => {
       {listComponent}
 
       <div className="m-6 flex flex-col">
-        <AButton disabled={!user || chainId !== '1' || tokens.length === 0} onClick={onCheckout}>
+        <AButton primary={true} disabled={!user || chainId !== '1' || tokens.length === 0} onClick={onCheckout}>
           Buy Now
         </AButton>
       </div>

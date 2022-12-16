@@ -6,7 +6,8 @@ import { useUserFavorite } from 'src/hooks/api/useUserFavorite';
 import { useMatchMutate } from 'src/hooks/useMatchMutate';
 import { apiPost } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import { Chip, Modal, Spinner, toastError, toastWarning } from '../common';
+import { AButtonContents, AOutlineButton } from '../astra';
+import { Modal, Spinner, toastError, toastWarning } from '../common';
 
 export const FavoriteButton: React.FC<{ collection: BaseCollection | null | undefined }> = ({ collection }) => {
   const { user, chainId, checkSignedIn } = useOnboardContext();
@@ -87,17 +88,17 @@ export const FavoriteButton: React.FC<{ collection: BaseCollection | null | unde
           </div>
         </div>
       </Modal>
-      <Chip
-        left={isFavoriting ? <Spinner /> : hasFavorited ? <FaCheck /> : <FaStar />}
-        content={<>Favorite</>}
+      <AOutlineButton
         onClick={onClickFavorite}
         disabled={hasFavorited || isFavoriting}
-        title={
+        tooltip={
           hasFavorited
             ? 'You already favorited this collection'
             : 'Click to favorite this collection (your vote is valid as long as the current phase lasts)'
         }
-      />
+      >
+        <AButtonContents label="Favorite" left={isFavoriting ? <Spinner /> : hasFavorited ? <FaCheck /> : <FaStar />} />
+      </AOutlineButton>
     </>
   );
 };
