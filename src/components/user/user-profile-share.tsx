@@ -16,7 +16,7 @@ import {
 } from 'react-share';
 import { ClipboardButton } from '../common';
 import { ACustomMenuContents, ACustomMenuButton } from '../astra/astra-dropdown';
-import { AOutlineButton } from '../astra';
+import { AButtonContents, AOutlineButton } from '../astra';
 
 interface UserProfileShareProps {
   username?: string;
@@ -32,10 +32,7 @@ export const UserProfileShare: FunctionComponent<UserProfileShareProps> = ({ use
         <ACustomMenuContents>
           <ACustomMenuButton>
             <AOutlineButton>
-              <div className="flex gap-3 items-center">
-                <FaShareAlt className="text-md" />
-                Share
-              </div>
+              <AButtonContents left={<FaShareAlt className="text-md" />} label="Share" />
             </AOutlineButton>
           </ACustomMenuButton>
 

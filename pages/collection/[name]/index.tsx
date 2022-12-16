@@ -15,7 +15,7 @@ import { HiOutlineExternalLink } from 'react-icons/hi';
 import { AvatarImage } from 'src/components/collection/avatar-image';
 import { CollectionSalesTab } from 'src/components/collection/collection-activity-tab';
 import { StatsChips } from 'src/components/collection/stats-chips';
-import { BlueCheck, Button, Chip, EthPrice, Heading, Spinner, ToggleTab, useToggleTab } from 'src/components/common';
+import { BlueCheck, Button, EthPrice, Heading, Spinner, ToggleTab, useToggleTab } from 'src/components/common';
 import { FeesAprStats, FeesAccruedStats } from 'src/components/curation/statistics';
 import { VoteModal } from 'src/components/curation/vote-modal';
 import { VoteProgressBar } from 'src/components/curation/vote-progress-bar';
@@ -39,6 +39,7 @@ import { useSaveReferral } from 'src/hooks/api/useSaveReferral';
 import { ReservoirCards } from 'src/components/token-card/reservoir-card-grid';
 import { CardAction } from 'src/components/token-card/card';
 import { APageBox } from 'src/components/astra/astra-page-box';
+import { ARoundOutlineButton } from 'src/components/astra';
 
 const CollectionPage = ({ collection, error }: { collection?: BaseCollection; error?: Error }) => {
   /**
@@ -401,11 +402,9 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
           </button>
           {collection.metadata?.links?.external && (
             <>
-              <Chip
-                content={<HiOutlineExternalLink className="text-md" />}
-                onClick={() => window.open(collection.metadata?.links?.external)}
-                iconOnly={true}
-              />
+              <ARoundOutlineButton onClick={() => window.open(collection.metadata?.links?.external)}>
+                <HiOutlineExternalLink className="text-md" />
+              </ARoundOutlineButton>
             </>
           )}
         </>

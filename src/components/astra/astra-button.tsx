@@ -11,12 +11,21 @@ interface Props {
   disabled?: boolean;
   className?: string;
   highlighted?: boolean;
+  tooltip?: string;
 }
 
-export const AButton = ({ small = false, disabled = false, children, className = '', onClick }: Props): JSX.Element => {
+export const AButton = ({
+  small = false,
+  disabled = false,
+  children,
+  className = '',
+  tooltip = '',
+  onClick
+}: Props): JSX.Element => {
   return (
     <ButtonBase
       disabled={disabled}
+      tooltip={tooltip}
       className={twMerge(small ? 'text-sm px-3 py-0.5' : 'px-4 py-1', 'rounded-md', primaryBGColor, className)}
       onClick={onClick}
     >
@@ -33,6 +42,7 @@ interface BaseProps {
   disabled?: boolean;
   className?: string;
   highlighted?: boolean;
+  tooltip?: string;
 }
 
 const ButtonBase = ({
@@ -40,6 +50,7 @@ const ButtonBase = ({
   children,
   className = '',
   highlighted = false,
+  tooltip = '',
   onClick
 }: BaseProps): JSX.Element => {
   const disabledClass = 'opacity-30 cursor-not-allowed';
@@ -59,6 +70,7 @@ const ButtonBase = ({
         disabled ? disabledClass : '',
         className
       )}
+      title={tooltip}
       onClick={(e) => {
         if (onClick) {
           e.stopPropagation();
@@ -82,6 +94,7 @@ export const ARoundButton = ({
   disabled = false,
   children,
   highlighted,
+  tooltip = '',
   className = '',
   onClick
 }: Props): JSX.Element => {
@@ -90,12 +103,38 @@ export const ARoundButton = ({
   return (
     <ButtonBase
       disabled={disabled}
+      tooltip={tooltip}
       highlighted={highlighted}
       className={twMerge(base, small ? 'p-1' : 'p-2', className)}
       onClick={onClick}
     >
       {children}
     </ButtonBase>
+  );
+};
+
+// ======================================================
+
+export const ARoundOutlineButton = ({
+  small = false,
+  disabled = false,
+  children,
+  highlighted,
+  className = '',
+  tooltip = '',
+  onClick
+}: Props): JSX.Element => {
+  return (
+    <ARoundButton
+      small={small}
+      tooltip={tooltip}
+      disabled={disabled}
+      highlighted={highlighted}
+      className={twMerge(inputBorderColor, 'border rounded-full', className)}
+      onClick={onClick}
+    >
+      {children}
+    </ARoundButton>
   );
 };
 
@@ -106,21 +145,19 @@ export const AOutlineButton = ({
   disabled = false,
   children,
   className = '',
+  tooltip = '',
   onClick
 }: Props): JSX.Element => {
   return (
-    <ButtonBase
+    <AButton
+      small={small}
+      tooltip={tooltip}
       disabled={disabled}
-      className={twMerge(
-        small ? 'text-sm px-3 py-0.5' : 'px-4 py-1',
-        inputBorderColor,
-        'border rounded-full',
-        className
-      )}
+      className={twMerge(inputBorderColor, 'border rounded-full', className)}
       onClick={onClick}
     >
       {children}
-    </ButtonBase>
+    </AButton>
   );
 };
 
@@ -131,11 +168,13 @@ export const ATextButton = ({
   disabled = false,
   children,
   className = '',
+  tooltip = '',
   onClick
 }: Props): JSX.Element => {
   return (
     <ButtonBase
       disabled={disabled}
+      tooltip={tooltip}
       className={twMerge(
         small ? 'text-sm px-3 py-0.5' : 'px-4 py-1',
         '  rounded-full text-gray-900 hover:bg-theme-gray-700',
@@ -182,6 +221,24 @@ export const AListGridButton = () => {
       <AToggleButton onClick={() => setListMode(false)}>
         <BsGrid className={twMerge(!listMode ? primaryTextColor : '', 'h-4 w-4')} />
       </AToggleButton>
+    </div>
+  );
+};
+
+// ==============================================================
+
+interface Props5 {
+  left?: ReactNode;
+  label?: string;
+  right?: ReactNode;
+}
+
+export const AButtonContents = ({ left, right, label }: Props5) => {
+  return (
+    <div className="flex items-center gap-3">
+      {left}
+      <div className="whitespace-nowrap">{label}</div>
+      {right}
     </div>
   );
 };

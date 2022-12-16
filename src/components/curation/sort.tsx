@@ -1,7 +1,7 @@
 import { OrderDirection } from '@infinityxyz/lib-frontend/types/core';
 import { CuratedCollectionsOrderBy } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections-query.dto';
 import React from 'react';
-import { Dropdown } from '../common';
+import { ADropdown } from '../astra/astra-dropdown';
 
 export type SortButtonOrder = {
   orderBy: CuratedCollectionsOrderBy;
@@ -50,7 +50,7 @@ export const Sort: React.FC<Props> = ({ onClick, order }) => {
   }
 
   return (
-    <Dropdown
+    <ADropdown
       alignMenuRight={true}
       label={label}
       className="pointer-events-auto ml-4 cursor-pointer"

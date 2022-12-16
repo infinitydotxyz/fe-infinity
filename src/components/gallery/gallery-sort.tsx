@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useFilterContext } from 'src/utils/context/FilterContext';
-import { Dropdown } from 'src/components/common';
+import { ADropdown } from '../astra/astra-dropdown';
 
 const SORT_BY_TOKEN_ID = 'Token Id';
 const SORT_BY_RARITY_HIGH_LABEL = 'Rarity: High to low';
@@ -39,7 +39,7 @@ export const GallerySort = () => {
 
   return (
     <div className="pointer-events-auto">
-      <Dropdown
+      <ADropdown
         alignMenuRight={true}
         label={label}
         items={[
