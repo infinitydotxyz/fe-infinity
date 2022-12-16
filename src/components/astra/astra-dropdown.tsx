@@ -16,6 +16,7 @@ interface DropdownProps {
   label?: string | ReactElement;
   items: ADropdownItem[];
   className?: string;
+  tooltip?: string;
   alignMenuRight?: boolean;
   hasBorder?: boolean;
 }
@@ -24,6 +25,7 @@ export const ADropdown = ({
   label,
   items,
   className = '',
+  tooltip = '',
   hasBorder = true,
   alignMenuRight = false
 }: DropdownProps) => {
@@ -41,8 +43,8 @@ export const ADropdown = ({
           <ACustomMenuContents>
             <span>
               <ACustomMenuButton>
-                {hasBorder && <AOutlineButton>{buttonContents}</AOutlineButton>}{' '}
-                {!hasBorder && <ATextButton>{buttonContents}</ATextButton>}
+                {hasBorder && <AOutlineButton tooltip={tooltip}>{buttonContents}</AOutlineButton>}{' '}
+                {!hasBorder && <ATextButton tooltip={tooltip}>{buttonContents}</ATextButton>}
               </ACustomMenuButton>
             </span>
 

@@ -6,7 +6,6 @@ import { Card } from 'src/components/token-card/card';
 import {
   Button,
   CurrencyInput,
-  Dropdown,
   ShortAddress,
   SimpleTable,
   SimpleTableItem,
@@ -27,6 +26,7 @@ import {
 } from 'src/components/common';
 import { NFTSwiperModal } from 'src/components/swiper/nft-swiper';
 import { twMerge } from 'tailwind-merge';
+import { ADropdown } from 'src/components/astra/astra-dropdown';
 
 const cardTestData = [
   {
@@ -145,19 +145,11 @@ const SandboxPage = () => {
 
       <SBHeader># Dropdown</SBHeader>
       <div className="flex flex-row space-x-4">
-        <Dropdown
+        <ADropdown
           label="Dropdown"
           items={[
             { label: 'Item 1', onClick: console.log },
             { label: 'Item 2', onClick: console.log }
-          ]}
-        />
-        <Dropdown
-          label="Custom Dropdown"
-          toggler={<div className="border rounded-full py-2 px-4 bg-black text-white">Custom Toggler</div>}
-          items={[
-            { label: 'Item 3', onClick: console.log },
-            { label: 'Item 4', onClick: console.log }
           ]}
         />
       </div>

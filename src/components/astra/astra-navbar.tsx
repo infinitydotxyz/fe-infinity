@@ -10,10 +10,16 @@ import { RiMediumFill } from 'react-icons/ri';
 import { MdFavorite, MdFeed } from 'react-icons/md';
 
 import { Menu } from '@headlessui/react';
-import { ConnectButton, Spacer, NextLink, DropdownItem } from 'src/components/common';
+import { ConnectButton, Spacer, NextLink } from 'src/components/common';
 import { useRouter } from 'next/router';
 import { HiCollection, HiTrendingUp } from 'react-icons/hi';
-import { ACustomMenuContents, ACustomMenuButton, ACustomMenuItems, ACustomMenuItem } from './astra-dropdown';
+import {
+  ACustomMenuContents,
+  ACustomMenuButton,
+  ACustomMenuItems,
+  ACustomMenuItem,
+  ADropdownItem
+} from './astra-dropdown';
 import { CollectionSearchInput } from '../common/search/collection-search-input';
 
 export const ANavbar = () => {
@@ -100,28 +106,28 @@ export const ANavbarButtons = () => {
               onClick: () => {
                 window.open('https://docs.infinity.xyz');
               }
-            } as DropdownItem,
+            } as ADropdownItem,
             {
               label: 'Twitter',
               icon: <BsTwitter className={iconStyle} />,
               onClick: () => {
                 window.open('https://twitter.com/infinitydotxyz');
               }
-            } as DropdownItem,
+            } as ADropdownItem,
             {
               label: 'Discord',
               icon: <SiDiscord className={iconStyle} />,
               onClick: () => {
                 window.open('https://discord.com/invite/infinitydotxyz');
               }
-            } as DropdownItem,
+            } as ADropdownItem,
             {
               label: 'Medium',
               icon: <RiMediumFill className={iconStyle} />,
               onClick: () => {
                 window.open('https://medium.com/@infinitydotxyz');
               }
-            } as DropdownItem
+            } as ADropdownItem
           ]
         }
       ],

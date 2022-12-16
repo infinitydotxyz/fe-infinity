@@ -2,15 +2,14 @@ import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { ReactNode } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { Button } from '../common/button';
-import { Dropdown, DropdownItem } from '../common/dropdown';
 import { NextLink } from '../common/next-link';
 import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { useRouter } from 'next/router';
 import { MdMoreVert } from 'react-icons/md';
 import { displayTypeToProps, ellipsisAddress, ENS_ADDRESS } from 'src/utils';
-import { inputBorderColor } from 'src/utils/ui-constants';
 import { EZImage } from '../common/ez-image';
 import { BlueCheck } from '../common/blue-check';
+import { ADropdown, ADropdownItem } from '../astra/astra-dropdown';
 
 type labelFn = (data?: ERC721CardData) => ReactNode;
 
@@ -22,7 +21,7 @@ export type CardAction = {
 export interface CardProps {
   data?: ERC721CardData;
   cardActions?: CardAction[];
-  getDropdownActions?: (data: ERC721CardData | undefined) => DropdownItem[] | null;
+  getDropdownActions?: (data: ERC721CardData | undefined) => ADropdownItem[] | null;
   isLoading?: boolean;
   className?: string;
   height?: number;
@@ -134,13 +133,9 @@ export const Card = ({
         {buttonJsx()}
 
         {getDropdownActions && getDropdownActions(data) !== null ? (
-          <Dropdown
+          <ADropdown
             className="ml-2"
-            toggler={
-              <div className={twMerge(inputBorderColor, 'border rounded-full w-12 h-12 flex flex-col justify-center')}>
-                <MdMoreVert className="w-full text-lg" />
-              </div>
-            }
+            label={<MdMoreVert className="w-full text-lg" />}
             items={getDropdownActions(data) ?? []}
           />
         ) : null}
@@ -148,19 +143,3 @@ export const Card = ({
     </div>
   );
 };
-
-// const LoadingCard = ({ className }: { className?: string }) => (
-//   <ContentLoader
-//     speed={2}
-//     width={310}
-//     height={350}
-//     viewBox="0 0 400 460"
-//     backgroundColor="#f3f3f3"
-//     foregroundColor="#ecebeb"
-//     className={className}
-//   >
-//     <rect x="5" y="394" rx="18" ry="18" width="390" height="28" />
-//     <rect x="6" y="7" rx="45" ry="45" width="390" height="372" />
-//     <rect x="5" y="431" rx="18" ry="18" width="390" height="28" />
-//   </ContentLoader>
-// );
