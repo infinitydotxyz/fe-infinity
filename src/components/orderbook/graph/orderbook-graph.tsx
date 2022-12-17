@@ -7,7 +7,7 @@ import { GraphOrderDetails } from './graph-order-details';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { GraphOrderFilters } from './graph-order-filters';
 import { OrderbookGraphInfo } from './orderbook-graph-info';
-import { GraphBox, GraphBoxTheme } from './graph-box';
+import { GraphBox } from './graph-box';
 import { CollectionFilterModal } from './graph-collection-filter';
 import { ResponsiveRateGraph, RateGraphType } from './rate-graph';
 import { ResetButton } from './reset-button';
@@ -129,7 +129,7 @@ export const OrderbookGraph: React.FC<OrderBookGraphProps> = ({ className = '' }
             {!isLoading && graphData.length > 0 && (
               <>
                 <Heading as="h4">Offers</Heading>
-                <GraphBox theme={GraphBoxTheme.Dark} className="h-full">
+                <GraphBox className="h-full">
                   <ResponsiveRateGraph
                     graphType={RateGraphType.Offers}
                     graphData={graphData}
@@ -141,7 +141,7 @@ export const OrderbookGraph: React.FC<OrderBookGraphProps> = ({ className = '' }
                 <Heading as="h4" className="mt-4">
                   Listings
                 </Heading>
-                <GraphBox theme={GraphBoxTheme.Dark} className="h-full">
+                <GraphBox className="h-full">
                   <ResponsiveRateGraph
                     graphType={RateGraphType.Listings}
                     graphData={graphData}

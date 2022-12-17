@@ -28,7 +28,7 @@ interface Props {
 export const SimpleTable = ({ items, className = '', rowClassName = '', valueClassName = '' }: Props) => {
   const table = items.map((item) => {
     return (
-      <div key={Math.random()} className={twMerge(`  flex w-full items-start ${rowClassName}`)}>
+      <div key={Math.random()} className={twMerge(`flex w-full items-start ${rowClassName}`)}>
         <div>{item.title}</div>
         <Spacer />
         <div className={twMerge('', valueClassName)}>{item.value}</div>
