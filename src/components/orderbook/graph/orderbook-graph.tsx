@@ -8,9 +8,9 @@ import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { GraphOrderFilters } from './graph-order-filters';
 import { OrderbookGraphInfo } from './orderbook-graph-info';
 import { GraphBox } from './graph-box';
-import { CollectionFilterModal } from './graph-collection-filter';
 import { ResponsiveRateGraph, RateGraphType } from './rate-graph';
 import { ResetButton } from './reset-button';
+import { textClr } from 'src/utils/ui-constants';
 
 const infoBoxStyle = 'flex items-center justify-center text-black opacity-60 font-bold text-lg h-full';
 
@@ -23,7 +23,6 @@ export const OrderbookGraph: React.FC<OrderBookGraphProps> = ({ className = '' }
   const [graphData, setGraphData] = useState<GraphData[]>([]);
   const [selectedOrders, setSelectedOrders] = useState<SignedOBOrder[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [collectionFilterShown, setCollectionFilterShown] = useState(false);
   const [defaultCollections, setDefaultCollections] = useState<string[]>([]);
 
   const { minPrice, maxPrice, collections } = filters;
@@ -84,31 +83,9 @@ export const OrderbookGraph: React.FC<OrderBookGraphProps> = ({ className = '' }
 
   return (
     <div className={twMerge('w-full h-full relative flex flex-col pr-7', className)}>
-      <div className="flex flex-1 mb-4 justify-between items-center">
-        <CollectionFilterModal
-          modalIsOpen={collectionFilterShown}
-          setIsOpen={(open) => setCollectionFilterShown(open)}
-          defaultCollections={defaultCollections}
-        />
-
-        <div>
-          <GraphOrderFilters className="pointer-events-auto" />
-        </div>
-        <div>
-          <div className={twMerge(className)}>
-            <OrderbookGraphInfo graphData={graphData} />
-          </div>
-        </div>
-        <ResetButton
-          large={true}
-          disabled={!minPrice && !maxPrice && !(collections && collections.length > 0)}
-          onClick={handleReset}
-        />
-      </div>
-
       <div className="w-[360px] flex ml-6 h-full"></div>
       <div className="flex">
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-0 space-y-4 my-4">
           {graphData.length === 0 && !isLoading && (
             <div className={infoBoxStyle}>
               <div className="flex flex-col items-center justify-center">
@@ -125,7 +102,7 @@ export const OrderbookGraph: React.FC<OrderBookGraphProps> = ({ className = '' }
           {/* TODO: Improve loading screen, it looks a bit jumpy cus both charts are re-rendered when the data changes. Perhaps add an individual loader per chart? */}
           {!isLoading && graphData.length > 0 && (
             <>
-              <GraphBox className="h-full mb-4">
+              <GraphBox className="h-full">
                 <ResponsiveRateGraph
                   graphType={RateGraphType.Offers}
                   graphData={graphData}
@@ -159,8 +136,26 @@ export const OrderbookGraph: React.FC<OrderBookGraphProps> = ({ className = '' }
           )}
         </div>
 
-        <div className="w-[360px] px-4">
-          <div className="w-[360px] fixed pointer-events-none">
+        <div className="w-[360px] p-4">
+          <div className="w-[360px] fixed pointer-events-none space-y-4">
+            <GraphBox noCSSStyles className="space-y-2">
+              <div className={twMerge(textClr, 'text-lg font-bold')}>Filters</div>
+
+              <GraphOrderFilters className="pointer-events-auto" />
+
+              <div>
+                <div className={twMerge(className)}>
+                  <OrderbookGraphInfo graphData={graphData} />
+                </div>
+              </div>
+              <ResetButton
+                className="pointer-events-auto"
+                large={true}
+                disabled={!minPrice && !maxPrice && !(collections && collections.length > 0)}
+                onClick={handleReset}
+              />
+            </GraphBox>
+
             <GraphOrderDetails
               orders={selectedOrders}
               index={selectedIndex}

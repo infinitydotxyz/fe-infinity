@@ -1,15 +1,15 @@
-import { Button, ButtonProps } from 'src/components/common';
+import { AButton } from 'src/components/astra';
+import { ButtonProps } from 'src/components/common';
 
 export const ResetButton: React.FC<{ large: boolean; className?: string } & Omit<ButtonProps, 'children'>> = ({
-  large,
   className,
   ...props
 }) => {
   return (
     <div className={className}>
-      <Button {...props} variant="primary" size={large ? 'normal' : 'small'}>
+      <AButton {...props} primary>
         Reset
-      </Button>
+      </AButton>
     </div>
   );
 };

@@ -7,7 +7,7 @@ import { OrderbookRowButton } from '../orderbook-list/orderbook-row-button';
 import { clamp } from './graph-utils';
 import { GraphBox } from './graph-box';
 import { NextPrevArrows } from './next-prev-arrows';
-import { cardClr, textClr } from 'src/utils/ui-constants';
+import { textClr } from 'src/utils/ui-constants';
 
 interface Props9 {
   orders: SignedOBOrder[];
@@ -36,7 +36,7 @@ export const GraphOrderDetails = ({ orders, index, setIndex, valueClassName = ''
     ];
 
     return (
-      <div className={twMerge(textClr, cardClr, 'p-3 rounded-xl flex-1')}>
+      <GraphBox noCSSStyles className={textClr}>
         <div className={twMerge(textClr, 'mb-3 flex items-center')}>
           <div className={twMerge(textClr, 'flex-[2] text-lg font-bold')}>Order details</div>
           <Spacer />
@@ -50,7 +50,7 @@ export const GraphOrderDetails = ({ orders, index, setIndex, valueClassName = ''
         </div>
 
         <OrderDetailPicker order={order} scroll={true} className="text-dark-gray-200" />
-      </div>
+      </GraphBox>
     );
   }
 

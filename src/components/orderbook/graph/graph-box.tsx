@@ -12,13 +12,14 @@ export enum GraphBoxTheme {
 interface GraphBoxProps {
   children: ReactNode;
   className?: string;
+  noCSSStyles?: boolean;
 }
 
-export const GraphBox = ({ children, className = '' }: GraphBoxProps) => {
+export const GraphBox = ({ children, className = '', noCSSStyles: noStyle = false }: GraphBoxProps) => {
   return (
     <div
       className={twMerge('flex flex-col rounded-xl p-6 overflow-clip', cardClr, className)}
-      style={{ height: graphHeight }}
+      style={noStyle ? undefined : { height: graphHeight }}
     >
       {children}
     </div>
