@@ -4,6 +4,7 @@ import { OrderCartItem, useOrderContext } from 'src/utils/context/OrderContext';
 import { checkOffersToUser } from 'src/utils/orderbookUtils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { useDrawerContext } from 'src/utils/context/DrawerContext';
+import { AButton } from 'src/components/astra';
 
 type OrderButtonProps = Omit<ButtonProps, 'children'>;
 
@@ -118,9 +119,9 @@ export const OrderbookRowButton = ({ order, outlineButtons = false }: Props) => 
       );
     } else if (isOfferToUser === false) {
       return (
-        <Button {...buttonProps} onClick={() => onClickBidHigher(order)}>
+        <AButton {...buttonProps} primary onClick={() => onClickBidHigher(order)}>
           Bid higher
-        </Button>
+        </AButton>
       );
     } else {
       return null;

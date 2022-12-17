@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, EthSymbol, SimpleTable, SimpleTableItem } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 import { useOrderbook } from '../OrderbookContext';
-import { textAltColorTW, textColorTW } from './graph-utils';
+import { textColorTW } from './graph-utils';
 import { MdClear } from 'react-icons/md';
 
 interface Props3 {
@@ -25,7 +25,7 @@ export const GraphOrderFilters = ({ className = '' }: Props3) => {
   ];
 
   return (
-    <div className={twMerge(textAltColorTW, 'flex flex-col items-start', className)}>
+    <div className={twMerge('text-dark-gray-300 flex flex-col items-start', className)}>
       <SimpleTable className={twMerge('w-full space-y-0', textColorTW)} items={tableItems} />
       <SimpleTable className={twMerge('w-full space-y-0  ', textColorTW)} items={tableItems2} />
     </div>

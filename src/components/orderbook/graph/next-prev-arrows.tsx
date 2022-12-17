@@ -3,7 +3,7 @@ import { Button, Spacer } from '../../common';
 import { FaPlay } from 'react-icons/fa';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { twMerge } from 'tailwind-merge';
-import { textAltColorTW } from './graph-utils';
+import { textClr } from 'src/utils/ui-constants';
 
 interface Props {
   orders: SignedOBOrder[];
@@ -14,7 +14,7 @@ interface Props {
 
 export const NextPrevArrows = ({ orders, index, setIndex, className = '' }: Props) => {
   return (
-    <div className={twMerge(textAltColorTW, className)}>
+    <div className={twMerge(textClr, className)}>
       <NextPrev
         numItems={orders.length}
         index={index}
