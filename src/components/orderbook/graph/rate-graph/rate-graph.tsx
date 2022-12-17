@@ -85,7 +85,11 @@ export const RateGraph: React.FC<RateGraphProps> = ({
             onClick(datum.start.toString(), datum.end.toString());
           }
         }}
-        onPointerMove={({ datum }) => onSelection(datum.data.map(getOrder), datum.data.length - 1)}
+        onPointerMove={({ datum }) => {
+          if (datum.data.length) {
+            onSelection(datum.data.map(getOrder), datum.data.length - 1);
+          }
+        }}
       />
       <Tooltip
         snapTooltipToDatumX
