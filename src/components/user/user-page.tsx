@@ -9,7 +9,6 @@ import { ETHEREUM_CHAIN_SCANNER_BASE } from '@infinityxyz/lib-frontend/utils';
 import { UserPageOrderList } from '../feed/user-page-order-list';
 import { UserBannerImage } from './user-banner-image';
 import { UserProfileImage } from './user-profile-image';
-import { UserPageCuratedTab } from './user-page-curated-tab';
 import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user/user-profile.dto';
 import { twMerge } from 'tailwind-merge';
 import { textClr } from 'src/utils/ui-constants';
@@ -34,7 +33,7 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
   const { options, onChange, selected } = useToggleTab(tabs, (router?.query?.tab as string) || 'Collected');
 
   return (
-    <div className='overflow-y-auto overflow-x-clip'>
+    <div className="overflow-y-auto overflow-x-clip">
       <ProfilePageHeader userInfo={userInfo} isOwner={isOwner} />
 
       <div className={twMerge(textClr, 'relative flex flex-col')}>
@@ -70,20 +69,13 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
         </div>
         {userInfo.bio && <p className="text-theme-light-800 mt-8 ml-1 max-w-md">{userInfo.bio || ''}</p>}
 
-        <ToggleTab
-          small
-          className="mt-14 "
-          options={options}
-          selected={selected}
-          onChange={onChange}
-        />
+        <ToggleTab small className="mt-14 " options={options} selected={selected} onChange={onChange} />
 
         <div className="mt-6 min-h-[50vh] pointer-events-none">
           {selected === 'Collected' && <UserPageNftsTab userInfo={userInfo} />}
           {selected === 'Orders' && <UserPageOrderList userInfo={userInfo} />}
           {selected === 'Activity' && <UserPageActivityTab userInfo={userInfo} />}
           {selected === 'Send' && <UserPageNftsTab userInfo={userInfo} forTransfers={true} />}
-          {selected === 'Curated' && <UserPageCuratedTab userInfo={userInfo} />}
         </div>
       </div>
     </div>

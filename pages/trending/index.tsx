@@ -1,6 +1,4 @@
 import { ChainId, Collection, CollectionPeriodStatsContent } from '@infinityxyz/lib-frontend/types/core';
-import { UserCuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto/collections';
-import { NULL_ADDRESS } from '@infinityxyz/lib-frontend/utils';
 import { useRouter } from 'next/router';
 import { parse } from 'query-string';
 import { useEffect, useState } from 'react';
@@ -16,12 +14,10 @@ import {
   ToggleTab,
   useToggleTab
 } from 'src/components/common';
-import { VoteModal } from 'src/components/curation/vote-modal';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import useScreenSize from 'src/hooks/useScreenSize';
-import { apiGet, formatNumber, ITEMS_PER_PAGE, nFormatter, useFetch } from 'src/utils';
+import { apiGet, formatNumber, ITEMS_PER_PAGE, nFormatter } from 'src/utils';
 import { useOrderContext } from 'src/utils/context/OrderContext';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 // - cache stats 5mins
 
@@ -138,38 +134,6 @@ export default TrendingPage;
 
 // =======================================================================
 
-const VoteModalWrapper: React.FC<{ coll: Collection; isOpen: boolean; onClose: () => void }> = ({
-  coll,
-  isOpen,
-  onClose
-}) => {
-  const { user, chainId } = useOnboardContext();
-  const { result: curatedCollection } = useFetch<UserCuratedCollectionDto>(
-    coll.metadata.name && isOpen
-      ? `/collections/${coll.slug}/curated/${chainId}:${user?.address ?? NULL_ADDRESS}`
-      : null
-  );
-
-  // TODO sleeyax I added this, was not correct before if this is undefined, double check if Ok
-  if (!curatedCollection) {
-    return <></>;
-  }
-
-  return (
-    <VoteModal
-      collection={{
-        ...coll,
-        ...coll.metadata,
-        ...curatedCollection
-      }}
-      isOpen={isOpen}
-      onClose={onClose}
-    />
-  );
-};
-
-// =======================================================================
-
 interface Props {
   collection: Collection;
   period: string;
@@ -177,8 +141,6 @@ interface Props {
 }
 
 const TrendingPageCard = ({ collection, period, index }: Props) => {
-  const { checkSignedIn } = useOnboardContext();
-  const [selectedCollection, setSelectedCollection] = useState<Collection>();
   const { addCartItem, setOrderDrawerOpen } = useOrderContext();
 
   const { isDesktop } = useScreenSize();
@@ -308,17 +270,8 @@ const TrendingPageCard = ({ collection, period, index }: Props) => {
           <Button size="medium" onClick={() => onClickBuy(collection)}>
             Buy
           </Button>
-          <Button size="medium" onClick={() => checkSignedIn() && setSelectedCollection(collection)}>
-            Curate
-          </Button>
         </div>
       </div>
-
-      <VoteModalWrapper
-        coll={collection}
-        isOpen={selectedCollection === collection}
-        onClose={() => setSelectedCollection(undefined)}
-      />
     </div>
   );
 };
