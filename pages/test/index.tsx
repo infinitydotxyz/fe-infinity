@@ -48,14 +48,6 @@ export const TestPage = () => {
 
             <Button
               onClick={() => {
-                void router.push('/curation');
-              }}
-            >
-              Curation
-            </Button>
-
-            <Button
-              onClick={() => {
                 void router.push('/rewards');
               }}
             >

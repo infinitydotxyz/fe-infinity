@@ -3,8 +3,7 @@ import { apiGet } from 'src/utils';
 import { ActivityItem, NftEventRec } from './activity-item';
 import { CenteredContent, Spinner } from 'src/components/common';
 import { Token } from '@infinityxyz/lib-frontend/types/core/Token';
-import { assetDefaultOptions, FilterPopdown, shortEventTypes } from 'src/components/feed-list/filter-popdown';
-import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
+import { assetDefaultOptions, FeedFilter, FilterPopdown, shortEventTypes } from 'src/components/feed/filter-popdown';
 
 interface Props {
   className?: string;
