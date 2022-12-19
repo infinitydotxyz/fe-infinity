@@ -1,5 +1,5 @@
 import { NextLink, pageStyles } from 'src/components/common';
-import { DiscordIconLink, InstagramIconLink, MediumIconLink, TwitterIconLink } from 'src/components/landing/Icons';
+import { DiscordIconLink, InstagramIconLink, MediumIconLink, TwitterIconLink } from 'src/components/start/Icons';
 
 export const StartFooter = () => {
   return (
