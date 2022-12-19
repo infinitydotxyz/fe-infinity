@@ -5,6 +5,7 @@ import { User } from 'src/utils/context/AppContext';
 import { PleaseConnectMsg, useFetch, USER_API_END_POINT } from 'src/utils';
 import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { APageBox } from 'src/components/astra/astra-page-box';
 
 const ProfilePage = () => {
   const router = useRouter();
@@ -63,9 +64,9 @@ const ProfilePageContents = ({ user, userAddress }: Props) => {
   const isOwner = user?.address === userInfo.address;
 
   return (
-    <PageBox showTitle={false} title="">
+    <APageBox showTitle={false} title="">
       <UserPage userInfo={userInfo} isOwner={isOwner} />
-    </PageBox>
+    </APageBox>
   );
 };
 

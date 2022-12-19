@@ -34,7 +34,7 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
   const { options, onChange, selected } = useToggleTab(tabs, (router?.query?.tab as string) || 'Collected');
 
   return (
-    <>
+    <div className='overflow-y-auto overflow-x-clip'>
       <ProfilePageHeader userInfo={userInfo} isOwner={isOwner} />
 
       <div className={twMerge(textClr, 'relative flex flex-col')}>
@@ -72,7 +72,7 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
 
         <ToggleTab
           small
-          className="mt-14 -ml-2 font-heading pointer-events-auto"
+          className="mt-14 "
           options={options}
           selected={selected}
           onChange={onChange}
@@ -86,7 +86,7 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
           {selected === 'Curated' && <UserPageCuratedTab userInfo={userInfo} />}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
@@ -99,7 +99,7 @@ interface Props2 {
 
 export const ProfilePageHeader = ({ userInfo, isOwner }: Props2) => {
   return (
-    <div className="relative w-screen mb-20" style={{ marginLeft: 'calc(-1 * ((100vw - 100%) / 2))' }}>
+    <div className="relative w-full mb-20">
       <UserBannerImage imgSrc={userInfo.bannerImage} isOwner={isOwner} />
 
       <div className="absolute -bottom-16 left-10 w-full">

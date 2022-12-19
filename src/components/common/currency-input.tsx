@@ -22,7 +22,7 @@ export const CurrencyInput = ({ value, label, placeholder, onChange, autoFocus =
             type="number"
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            className="p-0 border-none focus:ring-0 block w-full text-base"
+            className="p-0 border-none bg-transparent focus:ring-0 block w-full text-base"
             placeholder={placeholder}
           />
         </div>
