@@ -1,4 +1,3 @@
-import { EventType } from '@infinityxyz/lib-frontend/types/core';
 import { CuratedCollectionsOrderBy } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections-query.dto';
 import { useRouter } from 'next/router';
 import { RaffleDescription } from 'src/components/raffles/raffle-description';
@@ -17,7 +16,6 @@ import {
   SVG
 } from 'src/components/common';
 import { FavoritesDescription } from 'src/components/favorites/favorites-description';
-import { GlobalFeedList } from 'src/components/feed-list/global-feed-list';
 import { AllCuratedStart } from 'src/components/start/all-curated-start';
 import { StartFooter } from 'src/components/start/start-footer';
 import { TrendingStart } from 'src/components/start/trending-start';
@@ -52,13 +50,6 @@ const HomePage = () => {
 
       <HomeSection title="Trending" url="trending" theme="red">
         <TrendingStart />
-      </HomeSection>
-
-      <HomeSection title="Feed" url="/feed" theme="blue">
-        <GlobalFeedList
-          types={[EventType.TwitterTweet, EventType.DiscordAnnouncement, EventType.CoinMarketCapNews]}
-          compact={true}
-        />
       </HomeSection>
     </PageBox>
   );

@@ -15,7 +15,6 @@ import { AvatarImage } from 'src/components/collection/avatar-image';
 import { CollectionSalesTab } from 'src/components/collection/collection-activity-tab';
 import { StatsChips } from 'src/components/collection/stats-chips';
 import { BlueCheck, EthPrice, Spinner, ToggleTab, useToggleTab } from 'src/components/common';
-import { CommunityFeed } from 'src/components/feed-list/community-feed';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { OrderbookContainer } from 'src/components/orderbook/orderbook-list';
 import { useFetchSignedOBOrder } from 'src/hooks/api/useFetchSignedOBOrder';
@@ -456,7 +455,6 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
               )}
               {/* {currentTab === 1 && <ActivityTab dailyStats={dailyStats} weeklyStats={weeklyStats} />} */}
               {selected === 'Sales' && <CollectionSalesTab collectionAddress={collection.address} />}
-              {selected === 'Community' && <CommunityFeed collection={collection} className="mt-16" />}
               {selected === 'Reservoir' && <ReservoirCards collection={collection} className="mt-16" />}
             </div>
           </section>
