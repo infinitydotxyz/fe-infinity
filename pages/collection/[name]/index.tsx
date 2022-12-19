@@ -419,7 +419,7 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
   return (
     <APageBox showTitle={false} title={collection.metadata?.name ?? ''}>
       {head}
-      <div className="flex flex-col mt-10">
+      <div className="flex flex-col mt-10 overflow-y-auto overflow-x-clip">
         <span>
           <AvatarImage url={collection.metadata?.profileImage} className="mb-2" />
           <div className="flex gap-3 items-center">
