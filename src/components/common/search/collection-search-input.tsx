@@ -13,5 +13,13 @@ export const CollectionSearchInput = ({ expanded }: Props) => {
   );
   const { result } = useSearch(search);
 
-  return <SearchInput expanded={expanded} query={search.query} setQuery={setQuery} data={result.data} />;
+  return (
+    <SearchInput
+      expanded={expanded}
+      query={search.query}
+      setQuery={setQuery}
+      data={result.data}
+      placeholder="Search by collection"
+    />
+  );
 };
