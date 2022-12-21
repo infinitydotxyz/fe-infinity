@@ -18,7 +18,7 @@ interface GraphBoxProps {
 export const GraphBox = ({ children, className = '', noCSSStyles: noStyle = false }: GraphBoxProps) => {
   return (
     <div
-      className={twMerge('rounded-xl p-6', cardClr, className)}
+      className={twMerge('rounded-xl px-6 pt-5 pb-12', cardClr, className)}
       style={noStyle ? undefined : { height: graphHeight }}
     >
       {children}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { AnimatedAxis, AnimatedBarSeries, AnimatedGrid, Tooltip, XYChart } from '@visx/xychart';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { getAxisLabel, getOrder, getOrderCount } from './accessors';
@@ -10,6 +10,7 @@ import { EthSymbol } from 'src/components/common';
 import { useChartTheme } from './use-theme';
 import { textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
+import { GraphBox } from '../graph-box';
 
 const rateGraphMargins = {
   top: 30,
@@ -18,11 +19,32 @@ const rateGraphMargins = {
   left: 0
 };
 
-export const ResponsiveRateGraph: React.FC<ResponsiveRateGraphProps> = (props) => {
+const priceBuckets = [0.01, 0.05, 0.1, 0.5, 1, 2, 5, 10];
+
+export const ResponsiveRateGraph: React.FC<Omit<ResponsiveRateGraphProps, 'priceBucket'>> = (props) => {
+  const [selectedPriceBucket, setSelectedPriceBucket] = useState(0.01);
+
   return (
-    <ParentSize debounceTime={10}>
-      {({ width, height }) => <RateGraph {...props} width={width} height={height} />}
-    </ParentSize>
+    <GraphBox className="h-full">
+      <select
+        onChange={(e) => setSelectedPriceBucket(+e.target.value)}
+        className={twMerge(
+          'form-select rounded-full bg-transparent border-ring-gray-400 focus:ring-gray-400 focus:border-none float-right',
+          textClr
+        )}
+      >
+        {priceBuckets.map((filter) => (
+          <option value={filter} selected={filter === selectedPriceBucket}>
+            {filter} {EthSymbol}
+          </option>
+        ))}
+      </select>
+      <ParentSize debounceTime={10}>
+        {({ width, height }) => (
+          <RateGraph {...props} priceBucket={selectedPriceBucket} width={width} height={height} />
+        )}
+      </ParentSize>
+    </GraphBox>
   );
 };
 
@@ -32,13 +54,14 @@ export const RateGraph: React.FC<RateGraphProps> = ({
   height: outerHeight,
   graphType,
   onClick,
-  onSelection
+  onSelection,
+  priceBucket
 }) => {
   const { theme } = useChartTheme();
   const width = outerWidth - rateGraphMargins.left - rateGraphMargins.right;
   const height = outerHeight - rateGraphMargins.top - rateGraphMargins.bottom;
 
-  const data = convertGraphData(graphData, width, graphType);
+  const data = convertGraphData(graphData, width, graphType, priceBucket);
   const axisLabels = data.map(getAxisLabel);
 
   if (data.every((d) => d.data.length === 0)) {

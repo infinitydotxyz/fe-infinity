@@ -102,23 +102,19 @@ export const OrderbookGraph: React.FC<OrderBookGraphProps> = ({ className = '' }
           {/* TODO: Improve loading screen, it looks a bit jumpy cus both charts are re-rendered when the data changes. Perhaps add an individual loader per chart? */}
           {!isLoading && graphData.length > 0 && (
             <>
-              <GraphBox className="h-full">
-                <ResponsiveRateGraph
-                  graphType={RateGraphType.Offers}
-                  graphData={graphData}
-                  onClick={handleOnClick}
-                  onSelection={handleSelect}
-                />
-              </GraphBox>
+              <ResponsiveRateGraph
+                graphType={RateGraphType.Offers}
+                graphData={graphData}
+                onClick={handleOnClick}
+                onSelection={handleSelect}
+              />
 
-              <GraphBox className="h-full">
-                <ResponsiveRateGraph
-                  graphType={RateGraphType.Listings}
-                  graphData={graphData}
-                  onClick={handleOnClick}
-                  onSelection={handleSelect}
-                />
-              </GraphBox>
+              <ResponsiveRateGraph
+                graphType={RateGraphType.Listings}
+                graphData={graphData}
+                onClick={handleOnClick}
+                onSelection={handleSelect}
+              />
 
               {/* <GraphBox theme={GraphBoxTheme.White} className="h-full">
                 <StackedBarGraph data={graphData} onClick={handleOnClick} onSelection={handleSelect} />

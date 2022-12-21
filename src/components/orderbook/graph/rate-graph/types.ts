@@ -22,6 +22,7 @@ export type RateGraphProps = {
   graphType: RateGraphType;
   onClick: (minPrice: string, maxPrice: string) => void;
   onSelection: (orders: SignedOBOrder[], index: number) => void;
+  priceBucket: number;
 };
 
 export type ResponsiveRateGraphProps = Omit<RateGraphProps, 'width' | 'height'>;
