@@ -8,6 +8,8 @@ import { Tooltip as TooltipRenderer } from '../tooltip';
 import { numStr } from 'src/utils';
 import { EthSymbol } from 'src/components/common';
 import { useChartTheme } from './use-theme';
+import { textClr } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
 
 const rateGraphMargins = {
   top: 30,
@@ -38,6 +40,10 @@ export const RateGraph: React.FC<RateGraphProps> = ({
 
   const data = convertGraphData(graphData, width, graphType);
   const axisLabels = data.map(getAxisLabel);
+
+  if (data.every((d) => d.data.length === 0)) {
+    return <strong className={twMerge(textClr, 'h-full flex justify-center items-center')}>No {graphType} data</strong>;
+  }
 
   return (
     <XYChart
