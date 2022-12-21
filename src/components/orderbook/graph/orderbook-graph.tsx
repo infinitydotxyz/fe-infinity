@@ -139,21 +139,21 @@ export const OrderbookGraph: React.FC<OrderBookGraphProps> = ({ className = '' }
         <div className="w-[360px] p-4">
           <div className="w-[360px] fixed pointer-events-none space-y-4">
             <GraphBox noCSSStyles className="space-y-2">
-              <div className={twMerge(textClr, 'text-lg font-bold')}>Filters</div>
+              <div className={twMerge(textClr, 'text-lg font-bold')}>Advanced filters</div>
 
               <GraphOrderFilters className="pointer-events-auto" />
 
-              <div>
+              <div className="flex justify-between">
                 <div className={twMerge(className)}>
                   <OrderbookGraphInfo graphData={graphData} />
                 </div>
+                <ResetButton
+                  className="pointer-events-auto"
+                  large={true}
+                  disabled={!minPrice && !maxPrice && !(collections && collections.length > 0)}
+                  onClick={handleReset}
+                />
               </div>
-              <ResetButton
-                className="pointer-events-auto"
-                large={true}
-                disabled={!minPrice && !maxPrice && !(collections && collections.length > 0)}
-                onClick={handleReset}
-              />
             </GraphBox>
 
             <GraphOrderDetails
