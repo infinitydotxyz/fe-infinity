@@ -89,7 +89,7 @@ export const OrderbookGraph: React.FC<OrderBookGraphProps> = ({ className = '' }
           {graphData.length === 0 && !isLoading && (
             <div className={infoBoxStyle}>
               <div className="flex flex-col items-center justify-center">
-                <div className="mb-3">No data</div>
+                <div className={twMerge('mb-3', textClr)}>No data</div>
                 <ResetButton
                   large={true}
                   disabled={!minPrice && !maxPrice && !(collections && collections.length > 0)}
@@ -127,7 +127,7 @@ export const OrderbookGraph: React.FC<OrderBookGraphProps> = ({ className = '' }
           )}
 
           {isLoading && (
-            <div className={twMerge(infoBoxStyle, 'pointer-events-none')}>
+            <div className={twMerge(infoBoxStyle, textClr, 'pointer-events-none')}>
               <div className="flex flex-col items-center justify-center">
                 <Spinner />
                 <div className="mt-4">Loading...</div>
