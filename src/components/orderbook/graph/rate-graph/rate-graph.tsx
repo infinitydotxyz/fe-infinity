@@ -12,13 +12,13 @@ import { useChartTheme } from './use-theme';
 const rateGraphMargins = {
   top: 30,
   right: 0,
-  bottom: 74,
-  left: 70
+  bottom: 30,
+  left: 0
 };
 
 export const ResponsiveRateGraph: React.FC<ResponsiveRateGraphProps> = (props) => {
   return (
-    <ParentSize debounceTime={10} className="h-full">
+    <ParentSize debounceTime={10}>
       {({ width, height }) => <RateGraph {...props} width={width} height={height} />}
     </ParentSize>
   );
@@ -48,26 +48,30 @@ export const RateGraph: React.FC<RateGraphProps> = ({
       width={outerWidth}
       height={outerHeight}
       xScale={{ type: 'band', range: [0, width], round: true, domain: axisLabels, padding: 0.8 }}
-      yScale={{ type: 'linear', range: [height, 0], round: true, domain: [0, Math.max(...data.map(getOrderCount))] }}
+      yScale={{
+        type: 'linear',
+        range: [height, 10], // NOTE: I don't know why, but removing the second item from this array makes the top of the chart look 'cut off' ¯\_(ツ)_/¯
+        round: true,
+        domain: [0, Math.max(...data.map(getOrderCount))]
+      }}
       theme={theme}
     >
       <AnimatedAxis
         orientation="bottom"
-        top={height + 5}
+        top={height}
         tickFormat={(v) => `${v}`}
         hideAxisLine={true}
         tickValues={axisLabels}
         label="Price in ETH"
-        labelOffset={30}
+        labelOffset={25}
         hideZero={true}
       />
       <AnimatedAxis
         orientation="left"
-        left={55}
         tickFormat={(v) => `${v}`}
         hideAxisLine={true}
         label={`Number of ${graphType}`}
-        labelOffset={20}
+        labelOffset={15}
         // animationTrajectory="center"
       />
       <AnimatedGrid columns={false} strokeDasharray="6,6" />
