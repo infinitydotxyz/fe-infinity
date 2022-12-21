@@ -26,7 +26,6 @@ export const DashboardBase = () => {
     if (tokenFetcher) {
       switch (path) {
         case 'orders':
-          // TODO: adjust colors to fit theme (preferably using tailwind config so we can properly reuse colors accross all pages)
           return (
             <OrderbookProvider limit={50}>
               <OrderbookGraph />
@@ -63,7 +62,7 @@ export const DashboardBase = () => {
     if (tokenFetcher) {
       const tabItems = RouteUtils.tabItems(router);
       const result = tabItems.find((cmp) => {
-        return cmp.path === RouteUtils.currentPath(router);
+        return RouteUtils.currentPath(router).startsWith(cmp.path);
       });
 
       if (result) {
