@@ -39,10 +39,6 @@ export const RateGraph: React.FC<RateGraphProps> = ({
   const data = convertGraphData(graphData, width, graphType);
   const axisLabels = data.map(getAxisLabel);
 
-  if (width < 10) {
-    return null;
-  }
-
   return (
     <XYChart
       width={outerWidth}
