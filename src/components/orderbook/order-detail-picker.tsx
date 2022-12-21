@@ -17,25 +17,19 @@ interface Props2 {
   className?: string;
 }
 
-export const OrderDetailPicker = ({
-  selection,
-  onChange,
-  order,
-  scroll = false,
-  className = 'text-gray-500'
-}: Props2) => {
+export const OrderDetailPicker = ({ selection, onChange, order, scroll = false, className }: Props2) => {
   const showCheckbox = onChange !== undefined && selection !== undefined;
 
   const _contents = (nft: OBOrderItem) => {
     // just show collection if no tokens
     if (nft.tokens.length === 0) {
       return (
-        <NextLink href={`/collection/${nft.collectionSlug}`} className="flex items-center">
+        <NextLink href={`/collection/${nft.collectionSlug}`} className="pointer-events-auto flex items-center">
           <EZImage src={nft.collectionImage} className="w-16 h-16 shrink-0 overflow-clip rounded-2xl" />
 
           <div className="ml-4 flex-col">
             <div className="flex flex-row">
-              <div className="w-44 flex items-center text-black font-body">
+              <div className="w-44 flex items-center dark:text-dark-body text-light-body font-body">
                 <div className="truncate">{nft.collectionName}</div>
                 {nft.hasBlueCheck && <BlueCheck className="ml-1.5" />}
               </div>
@@ -92,14 +86,14 @@ export const OrderDetailPicker = ({
         >
           <NextLink
             href={`/asset/${nft.chainId}/${nft.collectionAddress}/${token.tokenId}`}
-            className=" flex items-center"
+            className="pointer-events-auto flex items-center"
           >
             <EZImage
               src={token.tokenImage || nft.collectionImage}
               className="w-16 h-16 shrink-0 overflow-clip rounded-2xl"
             />
             <div className="ml-4 flex flex-col">
-              <div className="w-44 flex items-center text-black font-body">
+              <div className="w-44 flex items-center dark:text-dark-body text-light-body font-body">
                 <div className="truncate">{nft.collectionName}</div>
                 {nft.hasBlueCheck && <BlueCheck className="ml-1.5" />}
               </div>

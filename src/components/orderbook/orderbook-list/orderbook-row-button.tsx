@@ -1,9 +1,10 @@
 import { ChainId, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { Button, ButtonProps } from 'src/components/common';
+import { ButtonProps } from 'src/components/common';
 import { OrderCartItem, useOrderContext } from 'src/utils/context/OrderContext';
 import { checkOffersToUser } from 'src/utils/orderbookUtils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { useDrawerContext } from 'src/utils/context/DrawerContext';
+import { AButton } from 'src/components/astra';
 
 type OrderButtonProps = Omit<ButtonProps, 'children'>;
 
@@ -96,31 +97,31 @@ export const OrderbookRowButton = ({ order, outlineButtons = false }: Props) => 
   const actionButton = () => {
     if (isOwner) {
       return (
-        <Button {...buttonProps} onClick={() => onClickEdit(order)}>
+        <AButton {...buttonProps} primary onClick={() => onClickEdit(order)}>
           Edit
-        </Button>
+        </AButton>
       );
     }
     const isOfferToUser = checkOffersToUser(order, user);
     if (order.isSellOrder) {
       // Sell Order (Listing)
       return (
-        <Button {...buttonProps} onClick={() => onClickBuySell(order)}>
+        <AButton {...buttonProps} primary onClick={() => onClickBuySell(order)}>
           Buy
-        </Button>
+        </AButton>
       );
     } else if (isOfferToUser === true) {
       // Buy Order (Offer) => show Sell button (if offer made to current user)
       return (
-        <Button {...buttonProps} onClick={() => onClickBuySell(order)}>
+        <AButton {...buttonProps} primary onClick={() => onClickBuySell(order)}>
           Sell
-        </Button>
+        </AButton>
       );
     } else if (isOfferToUser === false) {
       return (
-        <Button {...buttonProps} onClick={() => onClickBidHigher(order)}>
+        <AButton {...buttonProps} primary onClick={() => onClickBidHigher(order)}>
           Bid higher
-        </Button>
+        </AButton>
       );
     } else {
       return null;

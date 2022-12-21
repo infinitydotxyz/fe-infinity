@@ -1,24 +1,50 @@
-import React, { useMemo } from 'react';
-import { Group } from '@visx/group';
-import { LinearGradient } from '@visx/gradient';
-import { AxisBottom, AxisLeft } from '@visx/axis';
-import { scaleBand, scaleLinear } from '@visx/scale';
+import React, { useState } from 'react';
+import { AnimatedAxis, AnimatedBarSeries, AnimatedGrid, Tooltip, XYChart } from '@visx/xychart';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
-import { useTooltip, useTooltipInPortal } from '@visx/tooltip';
-import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { axisLineColorLight, textColorLight } from '../graph-utils';
-import { tooltipStyles } from '../tooltip';
 import { getAxisLabel, getOrder, getOrderCount } from './accessors';
 import { RateGraphData, RateGraphProps as RateGraphProps, ResponsiveRateGraphProps } from './types';
 import { convertGraphData } from './utils';
-import { CandleStick, candleStickColor, candleStickGradientId } from './shapes';
-import { labelStyle, rateGraphMargins, tickLabelStyle, verticalTickLabelStyle } from './styles';
+import { Tooltip as TooltipRenderer } from '../tooltip';
+import { numStr } from 'src/utils';
+import { EthSymbol } from 'src/components/common';
+import { useChartTheme } from './use-theme';
+import { textClr } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
+import { GraphBox } from '../graph-box';
 
-export const ResponsiveRateGraph: React.FC<ResponsiveRateGraphProps> = (props) => {
+const rateGraphMargins = {
+  top: 30,
+  right: 0,
+  bottom: 30,
+  left: 0
+};
+
+const priceBuckets = [0.01, 0.05, 0.1, 0.5, 1, 2, 5, 10];
+
+export const ResponsiveRateGraph: React.FC<Omit<ResponsiveRateGraphProps, 'priceBucket'>> = (props) => {
+  const [selectedPriceBucket, setSelectedPriceBucket] = useState(0.01);
+
   return (
-    <ParentSize debounceTime={10} className="h-full">
-      {({ width, height }) => <RateGraph {...props} width={width} height={height} />}
-    </ParentSize>
+    <GraphBox className="h-full">
+      <select
+        onChange={(e) => setSelectedPriceBucket(+e.target.value)}
+        className={twMerge(
+          'form-select rounded-full bg-transparent border-ring-gray-400 focus:ring-gray-400 focus:border-none float-right',
+          textClr
+        )}
+      >
+        {priceBuckets.map((filter) => (
+          <option value={filter} selected={filter === selectedPriceBucket}>
+            {filter} {EthSymbol}
+          </option>
+        ))}
+      </select>
+      <ParentSize debounceTime={10}>
+        {({ width, height }) => (
+          <RateGraph {...props} priceBucket={selectedPriceBucket} width={width} height={height} />
+        )}
+      </ParentSize>
+    </GraphBox>
   );
 };
 
@@ -28,144 +54,88 @@ export const RateGraph: React.FC<RateGraphProps> = ({
   height: outerHeight,
   graphType,
   onClick,
-  onSelection
+  onSelection,
+  priceBucket
 }) => {
+  const { theme } = useChartTheme();
   const width = outerWidth - rateGraphMargins.left - rateGraphMargins.right;
   const height = outerHeight - rateGraphMargins.top - rateGraphMargins.bottom;
 
-  const data = convertGraphData(graphData, width, graphType);
+  const data = convertGraphData(graphData, width, graphType, priceBucket);
   const axisLabels = data.map(getAxisLabel);
 
-  const { tooltipData, tooltipLeft, tooltipTop, tooltipOpen, showTooltip, hideTooltip } = useTooltip();
-  const { containerRef, containerBounds, TooltipInPortal } = useTooltipInPortal({
-    scroll: true,
-    detectBounds: false
-  });
-
-  const xScale = useMemo(
-    () =>
-      scaleBand<string>({
-        range: [0, width],
-        round: true,
-        domain: axisLabels,
-        padding: 0.7
-      }),
-    [width, data]
-  );
-
-  const yScale = useMemo(
-    () =>
-      scaleLinear<number>({
-        range: [height, 0],
-        round: true,
-        domain: [0, Math.max(...data.map(getOrderCount))]
-      }),
-    [height, data]
-  );
-
-  const getBarMeasurements = (data: RateGraphData, index: number) => {
-    const barHeight = height - (yScale(getOrderCount(data)) ?? 0);
-
-    let bColor = `url(#${candleStickGradientId})`;
-    let barRadius = 10;
-    if (barHeight === 0) {
-      barRadius = 0;
-      bColor = axisLineColorLight;
-    }
-
-    const barWidth = xScale.bandwidth();
-    const barX = xScale(axisLabels[index]);
-    const barY = height - barHeight;
-
-    return { y: barY, x: barX || 0, width: barWidth, color: bColor, radius: barRadius, height: barHeight };
-  };
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleMouseEnter = (event: React.MouseEvent, tooltip: any) => {
-    const containerX = (event.clientX ?? 0) - containerBounds.left;
-    const containerY = (event.clientY ?? 0) - containerBounds.top;
-    showTooltip({
-      tooltipLeft: containerX,
-      tooltipTop: containerY,
-      tooltipData: tooltip
-    });
-  };
-
-  const handleMouseMove = (_: React.MouseEvent, orders: SignedOBOrder[], yRatio: number) => {
-    const index = Math.ceil(orders.length * yRatio);
-    onSelection(orders, index - 1);
-  };
-
-  if (width < 10) {
-    return null;
+  if (data.every((d) => d.data.length === 0)) {
+    return <strong className={twMerge(textClr, 'h-full flex justify-center items-center')}>No {graphType} data</strong>;
   }
 
   return (
-    <>
-      <svg ref={containerRef} width={outerWidth} height={outerHeight} style={{ backgroundColor: '#26262A' }}>
-        <LinearGradient
-          from={candleStickColor}
-          to={candleStickColor}
-          toOpacity={1}
-          fromOpacity={0.8}
-          id={candleStickGradientId}
-        />
-
-        <Group transform={`translate(${rateGraphMargins.left},${rateGraphMargins.top})`}>
-          <AxisBottom
-            top={height + 5}
-            scale={xScale}
-            tickFormat={(v) => `${v}`}
-            stroke={axisLineColorLight}
-            tickStroke={textColorLight}
-            tickLineProps={{ strokeWidth: 1, opacity: 0.6, transform: 'translate(0,0)' }}
-            hideAxisLine={true}
-            tickLabelProps={tickLabelStyle}
-            tickValues={axisLabels}
-            tickLength={5}
-            label="Price in ETH"
-            labelProps={labelStyle}
-            labelOffset={30}
-            hideZero={true}
-            // animationTrajectory="center"
-          />
-
-          <AxisLeft
-            left={50}
-            scale={yScale}
-            tickFormat={(v) => `${v}`}
-            stroke={axisLineColorLight}
-            tickStroke={textColorLight}
-            tickLineProps={{ strokeWidth: 1, opacity: 1, transform: 'translate(0,0)' }}
-            tickLength={5}
-            hideAxisLine={true}
-            tickLabelProps={verticalTickLabelStyle}
-            label={`Number of ${graphType}`}
-            labelProps={labelStyle}
-            labelOffset={55}
-            // animationTrajectory="center"
-          />
-          {data.map((d, index) => {
-            return (
-              <CandleStick
-                {...getBarMeasurements(d, index)}
-                key={index}
-                onClick={() => onClick(d.start.toString(), d.end.toString())}
-                onMouseMove={(event: React.MouseEvent, yRatio: number) =>
-                  handleMouseMove(event, d.data.map(getOrder), yRatio)
-                }
-                onMouseEnter={(event: React.MouseEvent) => handleMouseEnter(event, d.tooltip)}
-                onMouseLeave={hideTooltip}
-              />
-            );
-          })}
-        </Group>
-      </svg>
-      {tooltipOpen && (
-        <TooltipInPortal top={tooltipTop} left={tooltipLeft} style={tooltipStyles}>
-          <div>{tooltipData}</div>
-        </TooltipInPortal>
-      )}
-    </>
+    <XYChart
+      width={outerWidth}
+      height={outerHeight}
+      xScale={{ type: 'band', range: [0, width], round: true, domain: axisLabels, padding: 0.8 }}
+      yScale={{
+        type: 'linear',
+        range: [height, 10], // NOTE: I don't know why, but removing the second item from this array makes the top of the chart look 'cut off' ¯\_(ツ)_/¯
+        round: true,
+        domain: [0, Math.max(...data.map(getOrderCount))]
+      }}
+      theme={theme}
+    >
+      <AnimatedAxis
+        orientation="bottom"
+        top={height}
+        tickFormat={(v) => `${v}`}
+        hideAxisLine={true}
+        tickValues={axisLabels}
+        label="Price in ETH"
+        labelOffset={25}
+        hideZero={true}
+      />
+      <AnimatedAxis
+        orientation="left"
+        tickFormat={(v) => `${v}`}
+        hideAxisLine={true}
+        label={`Number of ${graphType}`}
+        labelOffset={15}
+        // animationTrajectory="center"
+      />
+      <AnimatedGrid columns={false} strokeDasharray="6,6" />
+      <AnimatedBarSeries
+        data={data}
+        dataKey={graphType}
+        xAccessor={getAxisLabel}
+        yAccessor={getOrderCount}
+        radius={10}
+        radiusAll
+        onPointerDown={({ event, datum }) => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const isLeftMouseClick = (event as unknown as any).button === 0;
+          if (isLeftMouseClick) {
+            onClick(datum.start.toString(), datum.end.toString());
+          }
+        }}
+        onPointerMove={({ datum }) => {
+          if (datum.data.length) {
+            onSelection(datum.data.map(getOrder), datum.data.length - 1);
+          }
+        }}
+      />
+      <Tooltip
+        snapTooltipToDatumX
+        snapTooltipToDatumY
+        showVerticalCrosshair
+        showSeriesGlyphs
+        renderTooltip={({ tooltipData }) => {
+          const nearest = tooltipData?.nearestDatum?.datum as unknown as RateGraphData;
+          return (
+            <TooltipRenderer
+              title={`${nearest.data.length} ${graphType}`}
+              from={`${numStr(nearest.start)} ${EthSymbol}`}
+              to={`${numStr(nearest.end)} ${EthSymbol}`}
+            />
+          );
+        }}
+      />
+    </XYChart>
   );
 };

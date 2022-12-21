@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Button, EthSymbol, SimpleTable, SimpleTableItem } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 import { useOrderbook } from '../OrderbookContext';
-import { textAltColorTW, textColorTW } from './graph-utils';
 import { MdClear } from 'react-icons/md';
+import { textClr } from 'src/utils/ui-constants';
 
 interface Props3 {
   className?: string;
@@ -12,22 +12,22 @@ interface Props3 {
 export const GraphOrderFilters = ({ className = '' }: Props3) => {
   const tableItems: SimpleTableItem[] = [
     {
-      title: <div className="text-black font-normal text-sm">Min:</div>,
+      title: <div className="font-normal text-sm">Min:</div>,
       value: <FilterInput modeMinPrice={true} />
     }
   ];
 
   const tableItems2: SimpleTableItem[] = [
     {
-      title: <div className="text-black font-normal text-sm">Max:</div>,
+      title: <div className="font-normal text-sm">Max:</div>,
       value: <FilterInput modeMinPrice={false} />
     }
   ];
 
   return (
-    <div className={twMerge(textAltColorTW, 'flex flex-col items-start', className)}>
-      <SimpleTable className={twMerge('w-full space-y-0', textColorTW)} items={tableItems} />
-      <SimpleTable className={twMerge('w-full space-y-0  ', textColorTW)} items={tableItems2} />
+    <div className={twMerge('flex flex-col items-start', textClr, className)}>
+      <SimpleTable className={twMerge('w-full space-y-0')} items={tableItems} />
+      <SimpleTable className={twMerge('w-full space-y-0')} items={tableItems2} />
     </div>
   );
 };

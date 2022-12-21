@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
+import { cardClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { blackGradientTW, borderColor, graphHeight, greyGradientTW, whiteGradientTW } from './graph-utils';
+import { graphHeight } from './graph-utils';
 
 export enum GraphBoxTheme {
   White,
@@ -11,27 +12,14 @@ export enum GraphBoxTheme {
 interface GraphBoxProps {
   children: ReactNode;
   className?: string;
-  theme?: GraphBoxTheme;
+  noCSSStyles?: boolean;
 }
 
-export const GraphBox = ({ children, className = '', theme = GraphBoxTheme.Grey }: GraphBoxProps) => {
-  let themeColors = '';
-  switch (theme) {
-    case GraphBoxTheme.White:
-      themeColors = `border-gray-200 ${greyGradientTW}`;
-      break;
-    case GraphBoxTheme.Grey:
-      themeColors = `${borderColor} ${whiteGradientTW}`;
-      break;
-    case GraphBoxTheme.Dark:
-      themeColors = `${blackGradientTW}`;
-      break;
-  }
-
+export const GraphBox = ({ children, className = '', noCSSStyles: noStyle = false }: GraphBoxProps) => {
   return (
     <div
-      className={twMerge('flex flex-col border rounded-xl p-6 overflow-clip', themeColors, className)}
-      style={{ height: graphHeight }}
+      className={twMerge('rounded-xl px-6 pt-5 pb-12', cardClr, className)}
+      style={noStyle ? undefined : { height: graphHeight }}
     >
       {children}
     </div>

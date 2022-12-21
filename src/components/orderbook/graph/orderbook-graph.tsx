@@ -1,16 +1,16 @@
 import { useOrderbook } from '../OrderbookContext';
 import { useEffect, useState } from 'react';
-import { GraphData, textAltColorTW } from './graph-utils';
-import { Heading, Spinner } from 'src/components/common';
+import { GraphData } from './graph-utils';
+import { Spinner } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 import { GraphOrderDetails } from './graph-order-details';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { GraphOrderFilters } from './graph-order-filters';
 import { OrderbookGraphInfo } from './orderbook-graph-info';
-import { GraphBox, GraphBoxTheme } from './graph-box';
-import { CollectionFilterModal } from './graph-collection-filter';
+import { GraphBox } from './graph-box';
 import { ResponsiveRateGraph, RateGraphType } from './rate-graph';
 import { ResetButton } from './reset-button';
+import { textClr } from 'src/utils/ui-constants';
 
 const infoBoxStyle = 'flex items-center justify-center text-black opacity-60 font-bold text-lg h-full';
 
@@ -23,7 +23,6 @@ export const OrderbookGraph: React.FC<OrderBookGraphProps> = ({ className = '' }
   const [graphData, setGraphData] = useState<GraphData[]>([]);
   const [selectedOrders, setSelectedOrders] = useState<SignedOBOrder[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [collectionFilterShown, setCollectionFilterShown] = useState(false);
   const [defaultCollections, setDefaultCollections] = useState<string[]>([]);
 
   const { minPrice, maxPrice, collections } = filters;
@@ -83,98 +82,82 @@ export const OrderbookGraph: React.FC<OrderBookGraphProps> = ({ className = '' }
   }, [orders]);
 
   return (
-    <div className={twMerge('w-full h-full relative flex flex-col')}>
-      <div className={twMerge('flex flex-col', className)}>
-        <div className="flex w-full">
-          <div className="flex flex-1 mb-4 justify-between items-center">
-            <CollectionFilterModal
-              modalIsOpen={collectionFilterShown}
-              setIsOpen={(open) => setCollectionFilterShown(open)}
-              defaultCollections={defaultCollections}
-            />
-
-            <div>
-              <GraphOrderFilters className="pointer-events-auto" />
-            </div>
-            <div>
-              <div className={twMerge(className)}>
-                <OrderbookGraphInfo graphData={graphData} />
+    <div className={twMerge('w-full h-full relative flex flex-col pr-7', className)}>
+      <div className="w-[360px] flex ml-6 h-full"></div>
+      <div className="flex">
+        <div className="flex-1 min-w-0 space-y-4 my-4">
+          {graphData.length === 0 && !isLoading && (
+            <div className={infoBoxStyle}>
+              <div className="flex flex-col items-center justify-center">
+                <div className={twMerge('mb-3', textClr)}>No data</div>
+                <ResetButton
+                  large={true}
+                  disabled={!minPrice && !maxPrice && !(collections && collections.length > 0)}
+                  onClick={handleReset}
+                />
               </div>
             </div>
-            <ResetButton
-              large={true}
-              disabled={!minPrice && !maxPrice && !(collections && collections.length > 0)}
-              onClick={handleReset}
-            />
-          </div>
+          )}
 
-          <div className="w-[360px] flex ml-6 h-full"></div>
-        </div>
-        <div className="flex">
-          <div className="flex-1 min-w-0">
-            {graphData.length === 0 && !isLoading && (
-              <div className={infoBoxStyle}>
-                <div className="flex flex-col items-center justify-center">
-                  <div className="mb-3">No data</div>
-                  <ResetButton
-                    large={true}
-                    disabled={!minPrice && !maxPrice && !(collections && collections.length > 0)}
-                    onClick={handleReset}
-                  />
-                </div>
-              </div>
-            )}
-
-            {/* TODO: Improve loading screen, it looks a bit jumpy cus both charts are re-rendered when the data changes. Perhaps add an individual loader per chart? */}
-            {!isLoading && graphData.length > 0 && (
-              <>
-                <Heading as="h4">Offers</Heading>
-                <GraphBox theme={GraphBoxTheme.Dark} className="h-full">
-                  <ResponsiveRateGraph
-                    graphType={RateGraphType.Offers}
-                    graphData={graphData}
-                    onClick={handleOnClick}
-                    onSelection={handleSelect}
-                  />
-                </GraphBox>
-
-                <Heading as="h4" className="mt-4">
-                  Listings
-                </Heading>
-                <GraphBox theme={GraphBoxTheme.Dark} className="h-full">
-                  <ResponsiveRateGraph
-                    graphType={RateGraphType.Listings}
-                    graphData={graphData}
-                    onClick={handleOnClick}
-                    onSelection={handleSelect}
-                  />
-                </GraphBox>
-
-                {/* <GraphBox theme={GraphBoxTheme.White} className="h-full">
-                  <StackedBarGraph data={graphData} onClick={handleOnClick} onSelection={handleSelect} />
-                </GraphBox> */}
-              </>
-            )}
-
-            {isLoading && (
-              <div className={twMerge(infoBoxStyle, 'pointer-events-none')}>
-                <div className="flex flex-col items-center justify-center">
-                  <Spinner />
-                  <div className="mt-4">Loading...</div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div className="w-[360px] px-5">
-            <div className="w-[360px] fixed">
-              <GraphOrderDetails
-                orders={selectedOrders}
-                index={selectedIndex}
-                valueClassName={textAltColorTW}
-                setIndex={setSelectedIndex}
+          {/* TODO: Improve loading screen, it looks a bit jumpy cus both charts are re-rendered when the data changes. Perhaps add an individual loader per chart? */}
+          {!isLoading && graphData.length > 0 && (
+            <>
+              <ResponsiveRateGraph
+                graphType={RateGraphType.Offers}
+                graphData={graphData}
+                onClick={handleOnClick}
+                onSelection={handleSelect}
               />
+
+              <ResponsiveRateGraph
+                graphType={RateGraphType.Listings}
+                graphData={graphData}
+                onClick={handleOnClick}
+                onSelection={handleSelect}
+              />
+
+              {/* <GraphBox theme={GraphBoxTheme.White} className="h-full">
+                <StackedBarGraph data={graphData} onClick={handleOnClick} onSelection={handleSelect} />
+              </GraphBox> */}
+            </>
+          )}
+
+          {isLoading && (
+            <div className={twMerge(infoBoxStyle, textClr, 'pointer-events-none')}>
+              <div className="flex flex-col items-center justify-center">
+                <Spinner />
+                <div className="mt-4">Loading...</div>
+              </div>
             </div>
+          )}
+        </div>
+
+        <div className="w-[360px] p-4">
+          <div className="w-[360px] fixed pointer-events-none space-y-4">
+            <GraphBox noCSSStyles className="space-y-2">
+              <div className={twMerge(textClr, 'text-lg font-bold')}>Advanced filters</div>
+
+              <GraphOrderFilters className="pointer-events-auto" />
+
+              <div className="flex justify-between">
+                <div className={twMerge(className)}>
+                  <OrderbookGraphInfo graphData={graphData} />
+                </div>
+                <ResetButton
+                  className="pointer-events-auto"
+                  large={true}
+                  disabled={!minPrice && !maxPrice && !(collections && collections.length > 0)}
+                  onClick={handleReset}
+                />
+              </div>
+            </GraphBox>
+
+            <GraphOrderDetails
+              orders={selectedOrders}
+              index={selectedIndex}
+              valueClassName="text-dark-gray-300"
+              setIndex={setSelectedIndex}
+            />
           </div>
         </div>
       </div>

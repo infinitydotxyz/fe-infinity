@@ -4,9 +4,10 @@ import { SimpleTable, SimpleTableItem, Spacer } from '../../common';
 import { OrderDetailPicker } from '../order-detail-picker';
 import { twMerge } from 'tailwind-merge';
 import { OrderbookRowButton } from '../orderbook-list/orderbook-row-button';
-import { textAltColorTW, clamp, textColorTW } from './graph-utils';
+import { clamp } from './graph-utils';
 import { GraphBox } from './graph-box';
 import { NextPrevArrows } from './next-prev-arrows';
+import { textClr } from 'src/utils/ui-constants';
 
 interface Props9 {
   orders: SignedOBOrder[];
@@ -35,26 +36,26 @@ export const GraphOrderDetails = ({ orders, index, setIndex, valueClassName = ''
     ];
 
     return (
-      <GraphBox className={twMerge(textColorTW, 'pt-3 pb-5 flex-1')}>
-        <div className={twMerge(textAltColorTW, 'mb-3 flex items-center')}>
-          <div className={twMerge(textAltColorTW, 'flex-[2] text-lg')}>Order details</div>
+      <GraphBox noCSSStyles className={textClr}>
+        <div className={twMerge(textClr, 'mb-3 flex items-center')}>
+          <div className={twMerge(textClr, 'flex-[2] text-lg font-bold')}>Order details</div>
           <Spacer />
-          <NextPrevArrows orders={orders} index={index} setIndex={setIndex} className="flex-[2]" />
+          <NextPrevArrows orders={orders} index={index} setIndex={setIndex} className="flex-[2] pointer-events-auto" />
         </div>
 
         <SimpleTable className="space-y-1" items={tableItems} valueClassName={valueClassName} rowClassName="text-md" />
 
-        <div className="my-2 flex justify-center">
+        <div className="my-2 flex justify-center pointer-events-auto">
           <OrderbookRowButton order={order} outlineButtons={false} />
         </div>
 
-        <OrderDetailPicker order={order} scroll={true} />
+        <OrderDetailPicker order={order} scroll={true} className="text-dark-gray-200" />
       </GraphBox>
     );
   }
 
   return (
-    <GraphBox className={twMerge(textColorTW, 'flex-1 items-center justify-center')}>
+    <GraphBox className={twMerge(textClr, 'flex-1 items-center justify-center')}>
       <div className="text-center">Nothing selected</div>
     </GraphBox>
   );

@@ -45,8 +45,11 @@ export const DashboardBase = () => {
     if (tokenFetcher) {
       switch (path) {
         case 'orders':
-          // TODO: adjust colors to fit theme (preferably using tailwind config so we can properly reuse colors accross all pages)
-          return <OrderbookGraph />;
+          return (
+            <OrderbookProvider limit={50}>
+              <OrderbookGraph />
+            </OrderbookProvider>
+          );
         case 'analytics':
           return <CenteredContent>analytics go here</CenteredContent>;
         case 'activity':
