@@ -17,7 +17,7 @@ export function useChartTheme() {
 
       // labels
       svgLabelBig: { fill: color, fontSize: 16, fontWeight: 'bold' }, // label at bottom and side of the chart
-      svgLabelSmall: { fill: darkMode ? '#AAAAAA' : color, fontSize: 16 }, // tick labels
+      svgLabelSmall: { fill: darkMode ? '#AAAAAA' : color, fontSize: 14 }, // tick labels
       htmlLabel: {}, // text in tooltip
 
       // lines
