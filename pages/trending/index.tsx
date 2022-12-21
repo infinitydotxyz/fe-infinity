@@ -1,27 +1,26 @@
 import { ChainId, Collection, CollectionPeriodStatsContent } from '@infinityxyz/lib-frontend/types/core';
-import { UserCuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto/collections';
-import { NULL_ADDRESS } from '@infinityxyz/lib-frontend/utils';
 import { useRouter } from 'next/router';
 import { parse } from 'query-string';
 import { useEffect, useState } from 'react';
+import { AButton } from 'src/components/astra';
 import { APageBox } from 'src/components/astra/astra-page-box';
 import {
   BlueCheckInline,
-  Button,
   CenterFixed,
   EthPrice,
   EZImage,
   NextLink,
+  ScrollLoader,
   Spinner,
   ToggleTab,
   useToggleTab
 } from 'src/components/common';
-import { VoteModal } from 'src/components/curation/vote-modal';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import useScreenSize from 'src/hooks/useScreenSize';
-import { apiGet, formatNumber, ITEMS_PER_PAGE, nFormatter, useFetch } from 'src/utils';
+import { apiGet, formatNumber, ITEMS_PER_PAGE, nFormatter } from 'src/utils';
 import { useOrderContext } from 'src/utils/context/OrderContext';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { inputBorderColor } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
 
 // - cache stats 5mins
 
@@ -106,8 +105,10 @@ const TrendingPage = () => {
   };
 
   return (
-    <APageBox title="Trending">
-      <div className="  flex justify-between">
+    <APageBox title="Trending" showTitle={false}>
+      <div>Trending</div>
+
+      <div className="overflow-y-auto overflow-x-clip">
         <ToggleTab
           small={true}
           className="font-heading"
@@ -115,58 +116,26 @@ const TrendingPage = () => {
           selected={selected}
           onChange={onChangeToggleTab}
         />
+
+        <div className="space-y-3 mt-8">
+          {data.map((coll, index) => {
+            return <TrendingPageCard key={coll.address} collection={coll} index={index} period={period} />;
+          })}
+        </div>
+
+        {isLoading && (
+          <CenterFixed>
+            <Spinner />
+          </CenterFixed>
+        )}
+
+        <ScrollLoader onFetchMore={() => fetchData()} />
       </div>
-
-      <div className="space-y-3 mt-8">
-        {data.map((coll, index) => {
-          return <TrendingPageCard key={coll.address} collection={coll} index={index} period={period} />;
-        })}
-      </div>
-
-      {isLoading && (
-        <CenterFixed>
-          <Spinner />
-        </CenterFixed>
-      )}
-
-      {/* <ScrollLoader onFetchMore={() => fetchData()} /> */}
     </APageBox>
   );
 };
 
 export default TrendingPage;
-
-// =======================================================================
-
-const VoteModalWrapper: React.FC<{ coll: Collection; isOpen: boolean; onClose: () => void }> = ({
-  coll,
-  isOpen,
-  onClose
-}) => {
-  const { user, chainId } = useOnboardContext();
-  const { result: curatedCollection } = useFetch<UserCuratedCollectionDto>(
-    coll.metadata.name && isOpen
-      ? `/collections/${coll.slug}/curated/${chainId}:${user?.address ?? NULL_ADDRESS}`
-      : null
-  );
-
-  // TODO sleeyax I added this, was not correct before if this is undefined, double check if Ok
-  if (!curatedCollection) {
-    return <></>;
-  }
-
-  return (
-    <VoteModal
-      collection={{
-        ...coll,
-        ...coll.metadata,
-        ...curatedCollection
-      }}
-      isOpen={isOpen}
-      onClose={onClose}
-    />
-  );
-};
 
 // =======================================================================
 
@@ -177,8 +146,6 @@ interface Props {
 }
 
 const TrendingPageCard = ({ collection, period, index }: Props) => {
-  const { checkSignedIn } = useOnboardContext();
-  const [selectedCollection, setSelectedCollection] = useState<Collection>();
   const { addCartItem, setOrderDrawerOpen } = useOrderContext();
 
   const { isDesktop } = useScreenSize();
@@ -206,13 +173,13 @@ const TrendingPageCard = ({ collection, period, index }: Props) => {
   const floorPrice = periodStat?.floorPrice ?? 0;
 
   return (
-    <div className="bg-theme-light-200 px-7 py-4 rounded-3xl flex items-center font-heading">
+    <div className={twMerge(inputBorderColor, 'border-b  py-4 flex items-center font-heading')}>
       <div
         className="grid gap-4 justify-between items-center w-full"
         style={{ gridTemplateColumns: 'minmax(0, 2fr) repeat(auto-fit, minmax(0, 1fr))' }}
       >
-        <div className="flex items-center text-black font-bold font-body">
-          <div className="text-theme-light-800 text-xl mr-4 min-w-[32px] text-right font-heading">{index + 1}</div>
+        <div className="flex items-center font-bold ">
+          <div className="text-theme-light-800 text-lg mr-4 min-w-[32px] text-right font-heading">{index + 1}</div>
 
           <NextLink href={`/collection/${collection?.slug}`}>
             <EZImage className="w-16 h-16 rounded-2xl overflow-clip" src={collection?.metadata?.profileImage} />
@@ -227,39 +194,21 @@ const TrendingPageCard = ({ collection, period, index }: Props) => {
         {isDesktop ? (
           <>
             <div className="w-1/9 max-w-[80px] min-w-[80px]">
-              <div className="text-black font-bold font-body flex items-center">Sales</div>
+              <div className="text-sm font-bold   flex items-center">Sales</div>
               <div>{formatNumber(periodStat?.numSales)}</div>
             </div>
           </>
         ) : null}
 
         <div className="w-1/9 max-w-[80px] min-w-[80px]">
-          <div className="text-black font-bold font-body flex items-center">Volume</div>
+          <div className="text-sm font-bold  flex items-center">Volume</div>
           <div>
             <EthPrice label={`${periodStat?.salesVolume ? nFormatter(periodStat?.salesVolume) : '-'}`} />
           </div>
         </div>
 
-        {/* {isMobile ? null : (
-                  <>
-                    <div className="w-1/9 max-w-[80px] min-w-[80px]">
-                      <div className="text-black font-bold font-body flex items-center">Min Price</div>
-                      <div>
-                        <EthPrice label={periodStat?.minPrice ? formatNumber(periodStat?.minPrice, 2) : '-'} />
-                      </div>
-                    </div>
-                  </>
-                )} */}
-
-        {/* <div className="w-1/9 max-w-[80px] min-w-[80px]">
-          <div className="text-black font-bold font-body flex items-center">Avg Price</div>
-          <div>
-            <EthPrice label={periodStat?.avgPrice ? formatNumber(periodStat?.avgPrice, 2) : '-'} />
-          </div>
-        </div> */}
-
         <div className="w-1/9 max-w-[80px] min-w-[80px]">
-          <div className="text-black font-bold font-body flex items-center">Floor Price</div>
+          <div className="text-sm font-bold  flex items-center">Floor Price</div>
           <div>
             <EthPrice
               label={
@@ -273,26 +222,15 @@ const TrendingPageCard = ({ collection, period, index }: Props) => {
           </div>
         </div>
 
-        {/* {isMobile ? null : (
-          <>
-            <div className="w-1/9 max-w-[80px] min-w-[80px]">
-              <div className="text-black font-bold font-body flex items-center">Max Price</div>
-              <div>
-                <EthPrice label={periodStat?.maxPrice ? formatNumber(periodStat?.maxPrice, 2) : '-'} />
-              </div>
-            </div>
-          </>
-        )} */}
-
         {isDesktop ? (
           <>
             <div className="w-1/9 max-w-[80px] min-w-[80px]">
-              <div className="text-black font-bold font-body">Owners</div>
+              <div className="text-sm font-bold ">Owners</div>
               <div>{nFormatter(periodStat?.ownerCount ?? 0)}</div>
             </div>
 
             <div className="w-1/9 max-w-[80px] min-w-[80px]">
-              <div className="text-black font-bold font-body">Tokens</div>
+              <div className=" text-sm font-bold ">Tokens</div>
               <div>{nFormatter(periodStat?.tokenCount ?? 0)}</div>
             </div>
           </>
@@ -305,20 +243,11 @@ const TrendingPageCard = ({ collection, period, index }: Props) => {
             width: '170px'
           }}
         >
-          <Button size="medium" onClick={() => onClickBuy(collection)}>
+          <AButton primary small onClick={() => onClickBuy(collection)}>
             Buy
-          </Button>
-          <Button size="medium" onClick={() => checkSignedIn() && setSelectedCollection(collection)}>
-            Curate
-          </Button>
+          </AButton>
         </div>
       </div>
-
-      <VoteModalWrapper
-        coll={collection}
-        isOpen={selectedCollection === collection}
-        onClose={() => setSelectedCollection(undefined)}
-      />
     </div>
   );
 };

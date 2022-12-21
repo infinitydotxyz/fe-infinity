@@ -1,6 +1,5 @@
 import { FunctionComponent, useState } from 'react';
 import { useRouter } from 'next/router';
-import { Button } from 'src/components/common';
 import { Formik, Form } from 'formik';
 import { User } from 'src/utils/context/AppContext';
 import { apiPut } from 'src/utils';
@@ -8,6 +7,7 @@ import { ProfileImageUpload } from './profile-image-upload';
 import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user';
 import { UserProfileForm } from './user-profile-form';
 import { getUserProfileSchema } from './schemas/user-profile-schema';
+import { AButton, AOutlineButton } from '../astra';
 
 interface AccountSettingsProps {
   user: User;
@@ -104,20 +104,19 @@ export const AccountSettingsPage: FunctionComponent<AccountSettingsProps> = (pro
       {({ isSubmitting }) => (
         <Form>
           <div className="flex flex-row justify-end my-12">
-            <Button
-              variant="outline"
+            <AOutlineButton
               className="mr-3"
               onClick={() => {
                 router.push('/profile/me');
               }}
             >
               Cancel
-            </Button>
-            <Button variant="primary" className="" type="submit" disabled={isSubmitting}>
+            </AOutlineButton>
+            <AButton primary className="" submit disabled={isSubmitting}>
               Save
-            </Button>
+            </AButton>
           </div>
-          <div className="flex flex-col bg-white max-w-3xl mx-auto px-4 sm:px-12 rounded-3xl">
+          <div className="flex flex-col max-w-3xl mx-auto px-4 sm:px-12 rounded-3xl">
             <div className="font-body text-2xl mb-8 font-bold">Profile photo</div>
             <div className="">
               <ProfileImageUpload

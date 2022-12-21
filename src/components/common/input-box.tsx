@@ -176,7 +176,7 @@ export const TextInputBox = ({
               onChange(e.target.value);
             }
           }}
-          className={twMerge(`p-0 border-none focus:ring-0 block w-full font-heading ${inputClassName}`)}
+          className={twMerge(`p-0 bg-transparent border-none focus:ring-0 block w-full font-heading ${inputClassName}`)}
           placeholder={placeholder}
         />
       </div>

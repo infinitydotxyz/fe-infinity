@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
-import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
 import { SaleSource } from '@infinityxyz/lib-frontend/types/core';
 import { Button, Checkbox, Divider, PopoverButton } from '../common';
 
@@ -33,6 +32,14 @@ export const globalEventTypes: EventType[] = [
   EventType.NftListing,
   EventType.NftOffer
 ];
+
+export type FeedFilter = {
+  types?: EventType[];
+  collectionAddress?: string;
+  tokenId?: string;
+  userAddress?: string;
+  source?: SaleSource;
+};
 
 interface Props {
   options: FilterPopdownOption[];

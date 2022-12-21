@@ -12,6 +12,7 @@ interface Props {
   className?: string;
   highlighted?: boolean;
   primary?: boolean;
+  submit?: boolean;
   tooltip?: string;
 }
 
@@ -19,6 +20,7 @@ export const AButton = ({
   small = false,
   disabled = false,
   primary = false,
+  submit = false,
   children,
   className = '',
   tooltip = '',
@@ -28,6 +30,7 @@ export const AButton = ({
   return (
     <ButtonBase
       disabled={disabled}
+      submit={submit}
       highlighted={highlighted}
       tooltip={tooltip}
       className={twMerge(
@@ -51,11 +54,13 @@ interface BaseProps {
   disabled?: boolean;
   className?: string;
   highlighted?: boolean;
+  submit?: boolean;
   tooltip?: string;
 }
 
 const ButtonBase = ({
   disabled = false,
+  submit = false,
   children,
   className = '',
   highlighted = false,
@@ -66,6 +71,7 @@ const ButtonBase = ({
 
   return (
     <button
+      type={submit ? 'submit' : 'button'}
       // don't disable here, just use the disabled style
       // otherwise a disabled buttons click will go to the parent, onClick isn't called
       // disabled={disabled}

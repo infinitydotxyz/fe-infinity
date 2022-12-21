@@ -1,6 +1,6 @@
 import { UserProfileActivityList } from '../feed/user-profile-activity-list';
 import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user';
-import { shortEventTypes } from '../feed-list/filter-popdown';
+import { shortEventTypes } from '../feed/filter-popdown';
 
 interface Props {
   userInfo: UserProfileDto;

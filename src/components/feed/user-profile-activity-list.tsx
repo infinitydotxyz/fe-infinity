@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { CenteredContent, ScrollLoader, Spinner } from '../common';
 import { useUserActivity } from 'src/hooks/api/useUserActivity';
@@ -10,7 +9,7 @@ import { VoteEvent } from './user-feed-events/vote-event';
 import { NftTransferEvent } from './user-feed-events/nft-transfer-event';
 import { twMerge } from 'tailwind-merge';
 import { negativeMargin } from 'src/utils/ui-constants';
-import { filterButtonDefaultOptions, FilterPopdown } from '../feed-list/filter-popdown';
+import { FeedFilter, filterButtonDefaultOptions, FilterPopdown } from './filter-popdown';
 
 interface Props {
   userAddress?: string;

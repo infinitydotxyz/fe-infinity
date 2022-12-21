@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { apiGet } from 'src/utils';
-import { FeedFilter } from 'src/utils/firestore/firestoreUtils';
 import { ScrollLoader } from '../common';
 import { ActivityItem, NftEventRec } from '../asset/activity/activity-item';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { FeedFilter } from './filter-popdown';
 
 interface Props {
   collectionAddress?: string;

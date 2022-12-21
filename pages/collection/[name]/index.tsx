@@ -6,7 +6,6 @@ import {
   ERC721CardData
 } from '@infinityxyz/lib-frontend/types/core';
 import { CollectionStatsDto } from '@infinityxyz/lib-frontend/types/dto/stats';
-import { NULL_ADDRESS, round } from '@infinityxyz/lib-frontend/utils';
 import { useRouter } from 'next/router';
 import NotFound404Page from 'pages/not-found-404';
 import { useEffect, useState } from 'react';
@@ -15,15 +14,11 @@ import { HiOutlineExternalLink } from 'react-icons/hi';
 import { AvatarImage } from 'src/components/collection/avatar-image';
 import { CollectionSalesTab } from 'src/components/collection/collection-activity-tab';
 import { StatsChips } from 'src/components/collection/stats-chips';
-import { BlueCheck, Button, EthPrice, Heading, Spinner, ToggleTab, useToggleTab } from 'src/components/common';
-import { FeesAprStats, FeesAccruedStats } from 'src/components/curation/statistics';
-import { VoteModal } from 'src/components/curation/vote-modal';
-import { VoteProgressBar } from 'src/components/curation/vote-progress-bar';
-import { CommunityFeed } from 'src/components/feed-list/community-feed';
+import { BlueCheck, EthPrice, Spinner, ToggleTab, useToggleTab } from 'src/components/common';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { OrderbookContainer } from 'src/components/orderbook/orderbook-list';
 import { useFetchSignedOBOrder } from 'src/hooks/api/useFetchSignedOBOrder';
-import { ellipsisAddress, getChainScannerBase, isProd, nFormatter, standardCard } from 'src/utils';
+import { ellipsisAddress, getChainScannerBase, isProd, nFormatter } from 'src/utils';
 import { apiGet, useFetch } from 'src/utils/apiUtils';
 import { useDrawerContext } from 'src/utils/context/DrawerContext';
 import { useOrderContext } from 'src/utils/context/OrderContext';
@@ -32,7 +27,6 @@ import { iconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import ReactMarkdown from 'react-markdown';
 import Linkify from '@amit.rajput/react-linkify';
-import { UserCuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import { useSaveReferral } from 'src/hooks/api/useSaveReferral';
@@ -49,7 +43,7 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
     useSaveReferral(collection.address, collection.chainId as ChainId);
   }
 
-  const { user, chainId, checkSignedIn } = useOnboardContext();
+  const { chainId, checkSignedIn } = useOnboardContext();
 
   const { fetchSignedOBOrder } = useFetchSignedOBOrder();
   const router = useRouter();
@@ -62,7 +56,6 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
   const {
     query: { name }
   } = router;
-  const [isStakeModalOpen, setIsStakeModalOpen] = useState(false);
   const { fulfillDrawerParams } = useDrawerContext();
 
   useEffect(() => {
@@ -92,10 +85,6 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
   const firstAllTimeStats = allTimeStats?.data[0]; // first row = latest daily stats
 
   const createdBy = collection?.deployer ?? collection?.owner ?? '';
-
-  const { result: curatedCollection } = useFetch<UserCuratedCollectionDto>(
-    `${path}/curated/${chainId}:${user?.address ?? NULL_ADDRESS}`
-  );
 
   const isAlreadyAdded = (data: ERC721CardData | undefined) => {
     // check if this item was already added to cartItems or order.
@@ -325,37 +314,6 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
     </table>
   );
 
-  const curateSection = (
-    <section className="mt-8 xl:mt-20 md:w-1/2 min-h-[280px] min-w-[28rem] max-h-[280px] max-w-[28rem]">
-      <div className={twMerge(standardCard, 'items-center space-y-8')}>
-        <Heading as="h2" className="font-body text-3xl font-medium">
-          Curate this collection
-        </Heading>
-        <FeesAprStats value={nFormatter(round(curatedCollection?.feesAPR || 0, 3)) ?? 0} className="mr-8" />
-        <FeesAccruedStats value={nFormatter(round(curatedCollection?.fees || 0, 3)) ?? 0} />
-        <div className="flex flex-row space-x-2 relative">
-          <VoteProgressBar
-            votes={curatedCollection?.curator?.votes || 0}
-            totalVotes={curatedCollection?.numCuratorVotes || 0}
-            className="max-w-[25rem] bg-white"
-          />
-        </div>
-        <Button onClick={() => checkSignedIn() && setIsStakeModalOpen(true)}>Vote</Button>
-      </div>
-      {curatedCollection && (
-        <VoteModal
-          collection={{
-            ...collection,
-            ...collection.metadata,
-            ...curatedCollection
-          }}
-          isOpen={isStakeModalOpen}
-          onClose={() => setIsStakeModalOpen(false)}
-        />
-      )}
-    </section>
-  );
-
   const head = (
     <Head>
       <meta property="og:title" content={collection.metadata?.name} />
@@ -419,7 +377,7 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
   return (
     <APageBox showTitle={false} title={collection.metadata?.name ?? ''}>
       {head}
-      <div className="flex flex-col mt-10">
+      <div className="flex flex-col mt-10 overflow-y-auto overflow-x-clip">
         <span>
           <AvatarImage url={collection.metadata?.profileImage} className="mb-2" />
           <div className="flex gap-3 items-center">
@@ -482,7 +440,6 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
               )}
               {table}
             </section>
-            {curateSection}
           </div>
           <section>
             <ToggleTab
@@ -498,7 +455,6 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
               )}
               {/* {currentTab === 1 && <ActivityTab dailyStats={dailyStats} weeklyStats={weeklyStats} />} */}
               {selected === 'Sales' && <CollectionSalesTab collectionAddress={collection.address} />}
-              {selected === 'Community' && <CommunityFeed collection={collection} className="mt-16" />}
               {selected === 'Reservoir' && <ReservoirCards collection={collection} className="mt-16" />}
             </div>
           </section>
