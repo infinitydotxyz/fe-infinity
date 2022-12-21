@@ -8,24 +8,19 @@ import { RiMediumFill, RiLogoutCircleFill } from 'react-icons/ri';
 import { MdFavorite, MdFeed } from 'react-icons/md';
 
 import { Menu } from '@headlessui/react';
-import {
-  SVG,
-  ConnectButton,
-  Spacer,
-  CustomMenuItem,
-  pageStyles,
-  NextLink,
-  ShoppingCartButton,
-  DropdownItem,
-  CustomMenuItems,
-  MenuSeparator,
-  CustomMenuButton,
-  CustomMenuContents
-} from 'src/components/common';
+import { SVG, ConnectButton, Spacer, pageStyles, NextLink, ShoppingCartButton } from 'src/components/common';
 import { useRouter } from 'next/router';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { HiCollection, HiTrendingUp } from 'react-icons/hi';
 import { CollectionSearchInput } from './search/collection-search-input';
+import {
+  ACustomMenuButton,
+  ACustomMenuContents,
+  ACustomMenuItem,
+  ACustomMenuItems,
+  ADropdownItem,
+  AMenuSeparator
+} from '../astra/astra-dropdown';
 
 export const Navbar = () => {
   const router = useRouter();
@@ -94,28 +89,28 @@ export const Navbar = () => {
               onClick: () => {
                 window.open('https://docs.infinity.xyz');
               }
-            } as DropdownItem,
+            } as ADropdownItem,
             {
               label: 'Twitter',
               icon: <BsTwitter className={iconStyle} />,
               onClick: () => {
                 window.open('https://twitter.com/infinitydotxyz');
               }
-            } as DropdownItem,
+            } as ADropdownItem,
             {
               label: 'Discord',
               icon: <SiDiscord className={iconStyle} />,
               onClick: () => {
                 window.open('https://discord.com/invite/infinitydotxyz');
               }
-            } as DropdownItem,
+            } as ADropdownItem,
             {
               label: 'Medium',
               icon: <RiMediumFill className={iconStyle} />,
               onClick: () => {
                 window.open('https://medium.com/@infinitydotxyz');
               }
-            } as DropdownItem
+            } as ADropdownItem
           ]
         }
       ],
@@ -126,7 +121,7 @@ export const Navbar = () => {
   };
 
   const mobileMenuContent = () => {
-    const result: DropdownItem[] = [];
+    const result: ADropdownItem[] = [];
 
     result.push({
       label: 'Orderbook',
@@ -256,25 +251,25 @@ export const Navbar = () => {
   const mobileMenu = (
     <Menu>
       {({ open }) => (
-        <CustomMenuContents>
-          <CustomMenuButton>
+        <ACustomMenuContents>
+          <ACustomMenuButton>
             <GiHamburgerMenu size="24px" />
-          </CustomMenuButton>
-          <CustomMenuItems open={open}>
+          </ACustomMenuButton>
+          <ACustomMenuItems open={open}>
             {mobileMenuContent().map((item, i) =>
               item.label === '-' ? (
-                <MenuSeparator key={i} />
+                <AMenuSeparator key={i} />
               ) : (
-                <CustomMenuItem key={i} onClick={item.onClick}>
+                <ACustomMenuItem key={i} onClick={item.onClick}>
                   <div className="flex items-center cursor-pointer">
                     {item.icon && <div className="mr-4">{item.icon}</div>}
                     {item.label}
                   </div>
-                </CustomMenuItem>
+                </ACustomMenuItem>
               )
             )}
-          </CustomMenuItems>
-        </CustomMenuContents>
+          </ACustomMenuItems>
+        </ACustomMenuContents>
       )}
     </Menu>
   );
@@ -312,22 +307,22 @@ export const Navbar = () => {
             {item.type === 'dropdown' && (
               <Menu>
                 {({ open }) => (
-                  <CustomMenuContents>
-                    <CustomMenuButton className="flex gap-1 items-center select-none">
+                  <ACustomMenuContents>
+                    <ACustomMenuButton className="flex gap-1 items-center select-none">
                       <div>{item?.label}</div>
                       <IoMdArrowDropdown className="h-4 w-4" />
-                    </CustomMenuButton>
-                    <CustomMenuItems open={open}>
+                    </ACustomMenuButton>
+                    <ACustomMenuItems open={open}>
                       {item?.menu?.map((x, j) => (
-                        <CustomMenuItem key={j} onClick={x.onClick}>
+                        <ACustomMenuItem key={j} onClick={x.onClick}>
                           <div className="flex items-center cursor-pointer">
                             {x.icon && <div className="mr-4">{x.icon}</div>}
                             {x.label}
                           </div>
-                        </CustomMenuItem>
+                        </ACustomMenuItem>
                       ))}
-                    </CustomMenuItems>
-                  </CustomMenuContents>
+                    </ACustomMenuItems>
+                  </ACustomMenuContents>
                 )}
               </Menu>
             )}

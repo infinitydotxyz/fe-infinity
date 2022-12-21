@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { UserPageOrderListItem } from './user-page-order-list-item';
 import { apiGet, extractErrorMsg, ITEMS_PER_PAGE, ellipsisAddress } from 'src/utils';
-import { Button, CenteredContent, ScrollLoader, Spinner, toastError, toastInfo, toastSuccess } from '../common';
+import { CenteredContent, ScrollLoader, Spinner, toastError, toastInfo, toastSuccess } from '../common';
 import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import {
@@ -15,6 +15,7 @@ import { useDrawerContext } from 'src/utils/context/DrawerContext';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { twMerge } from 'tailwind-merge';
 import { negativeMargin } from 'src/utils/ui-constants';
+import { AOutlineButton } from '../astra';
 
 type Query = {
   limit: number;
@@ -135,9 +136,7 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
   return (
     <div className={twMerge('min-h-[50vh]', className, negativeMargin)}>
       <div className="flex gap-3 justify-end items-center mb-8 bg-transparent">
-        <Button
-          variant="outline"
-          className="pointer-events-auto"
+        <AOutlineButton
           disabled={isCancellingAll}
           onClick={async () => {
             try {
@@ -161,17 +160,16 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
           }}
         >
           Cancel all
-        </Button>
+        </AOutlineButton>
 
-        <Button
-          variant="outline"
+        <AOutlineButton
           onClick={() => {
             setFilterShowed((flag) => !flag);
           }}
           className="pointer-events-auto"
         >
           {filterShowed ? 'Hide' : 'Show'} filter
-        </Button>
+        </AOutlineButton>
       </div>
 
       <div className="flex items-start">

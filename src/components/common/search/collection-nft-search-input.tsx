@@ -32,6 +32,7 @@ export const CollectionNftSearchInput = ({ expanded, slug }: Props) => {
       expanded={expanded}
       query={'subTypeQuery' in search ? search.subTypeQuery : ''}
       setQuery={setSubTypeQuery}
+      placeholder="Search by collection"
       data={result.data}
     />
   );

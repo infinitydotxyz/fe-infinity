@@ -1,5 +1,6 @@
 import { RefObject } from 'react';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
+import { backgroundClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 export const MainDashboardGrid = (
@@ -15,7 +16,7 @@ export const MainDashboardGrid = (
   const { showCollections, showCart } = useDashboardContext();
 
   return (
-    <div className="flex">
+    <div className={twMerge(backgroundClr, 'flex')}>
       <div className="">{sideNavBar}</div>
 
       <div ref={containerRef} className="h-screen w-screen grid grid-rows-[auto_1fr] grid-cols-[auto_1fr_auto]">

@@ -4,12 +4,13 @@ import { useEffect, useState } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { FaCaretDown, FaCaretUp, FaDiscord, FaInstagram, FaTwitter } from 'react-icons/fa';
 import { apiDelete, apiGet, apiPost, nFormatter } from 'src/utils';
-import { Chip, Spinner, toastError } from 'src/components/common';
+import { Spinner, toastError } from 'src/components/common';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { indexCollection } from 'src/utils/orderbookUtils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { TipModal } from './tip-modal';
 import { FavoriteButton } from './favorite-button';
+import { AButton, AButtonContents, AOutlineButton, ARoundOutlineButton } from '../astra';
 
 interface Props {
   collection?: BaseCollection | null;
@@ -114,116 +115,112 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
         )}
 
         {showFollow && (
-          <Chip
-            content={
-              followingLoading ? (
-                <span className="flex justify-center">
-                  <Spinner />
-                </span>
-              ) : (
-                <span className="flex items-center">
-                  {isFollowing ? (
-                    <>Following</>
-                  ) : (
-                    <>
-                      <AiOutlinePlus className="mr-1" /> Follow
-                    </>
-                  )}
-                </span>
-              )
-            }
-            onClick={onClickFollow}
-            active={isFollowing}
-            className="w-32"
-          />
-        )}
-
-        {editVisible && <Chip content="Edit" onClick={onClickEdit} />}
-
-        {collection?.metadata?.links?.twitter && (
-          <Chip
-            left={<FaTwitter />}
-            onClick={() => window.open(collection?.metadata?.links?.twitter)}
-            content={
+          <AOutlineButton onClick={onClickFollow}>
+            {followingLoading ? (
+              <span className="flex justify-center">
+                <Spinner />
+              </span>
+            ) : (
               <span className="flex items-center">
-                {nFormatter(currentStatsData?.twitterFollowers) ?? ''}
-                {currentStatsData?.twitterFollowersPercentChange && parseFloat(twitterChangePct) ? (
-                  <>
-                    {(currentStatsData?.twitterFollowersPercentChange ?? 0) < 0 ? (
-                      <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
-                        <FaCaretDown className="mr-1" /> {twitterChangePct}%
-                      </span>
-                    ) : (
-                      <span className="ml-2 py-1 px-2 rounded-xl bg-green-500 text-white text-xs flex items-center">
-                        <FaCaretUp className="mr-1" /> {twitterChangePct}%
-                      </span>
-                    )}
-                  </>
+                {isFollowing ? (
+                  <>Following</>
                 ) : (
-                  ''
+                  <>
+                    <AiOutlinePlus className="mr-1" /> Follow
+                  </>
                 )}
               </span>
-            }
-          />
+            )}
+          </AOutlineButton>
+        )}
+
+        {editVisible && <AOutlineButton onClick={onClickEdit}>Edit</AOutlineButton>}
+
+        {collection?.metadata?.links?.twitter && (
+          <AOutlineButton onClick={() => window.open(collection?.metadata?.links?.twitter)}>
+            <AButtonContents
+              left={<FaTwitter className="text-xl" />}
+              right={
+                <span className="flex items-center">
+                  {nFormatter(currentStatsData?.twitterFollowers) ?? ''}
+                  {currentStatsData?.twitterFollowersPercentChange && parseFloat(twitterChangePct) ? (
+                    <>
+                      {(currentStatsData?.twitterFollowersPercentChange ?? 0) < 0 ? (
+                        <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
+                          <FaCaretDown className="mr-1" /> {twitterChangePct}%
+                        </span>
+                      ) : (
+                        <span className="ml-2 py-1 px-2 rounded-xl bg-green-500 text-white text-xs flex items-center">
+                          <FaCaretUp className="mr-1" /> {twitterChangePct}%
+                        </span>
+                      )}
+                    </>
+                  ) : (
+                    ''
+                  )}
+                </span>
+              }
+            />
+          </AOutlineButton>
         )}
 
         {collection?.metadata?.links?.discord && (
-          <Chip
-            left={<FaDiscord />}
-            onClick={() => window.open(collection?.metadata?.links?.discord)}
-            content={
-              <span className="flex items-center">
-                {nFormatter(currentStatsData?.discordFollowers) ?? ''}
-                {currentStatsData?.discordFollowersPercentChange && parseFloat(discordChangePct) ? (
-                  <>
-                    {(currentStatsData?.discordFollowersPercentChange ?? 0) < 0 ? (
-                      <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
-                        <FaCaretDown className="mr-1" /> {discordChangePct}%
-                      </span>
-                    ) : (
-                      <span className="ml-2 py-1 px-2 rounded-xl bg-green-500 text-white text-xs flex items-center">
-                        <FaCaretUp className="mr-1" /> {discordChangePct}%
-                      </span>
-                    )}
-                  </>
-                ) : (
-                  ''
-                )}
-              </span>
-            }
-          />
+          <AOutlineButton onClick={() => window.open(collection?.metadata?.links?.discord)}>
+            <AButtonContents
+              left={<FaDiscord />}
+              right={
+                <span className="flex items-center">
+                  {nFormatter(currentStatsData?.discordFollowers) ?? ''}
+                  {currentStatsData?.discordFollowersPercentChange && parseFloat(discordChangePct) ? (
+                    <>
+                      {(currentStatsData?.discordFollowersPercentChange ?? 0) < 0 ? (
+                        <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
+                          <FaCaretDown className="mr-1" /> {discordChangePct}%
+                        </span>
+                      ) : (
+                        <span className="ml-2 py-1 px-2 rounded-xl bg-green-500 text-white text-xs flex items-center">
+                          <FaCaretUp className="mr-1" /> {discordChangePct}%
+                        </span>
+                      )}
+                    </>
+                  ) : (
+                    ''
+                  )}
+                </span>
+              }
+            />
+          </AOutlineButton>
         )}
 
         {collection?.metadata?.links?.instagram && (
-          <Chip
-            content={<FaInstagram className="text-xl" />}
-            onClick={() => window.open(collection?.metadata?.links?.instagram)}
-            iconOnly={true}
-          />
+          <ARoundOutlineButton onClick={() => window.open(collection?.metadata?.links?.instagram)}>
+            <FaInstagram className="text-xl" />
+          </ARoundOutlineButton>
         )}
       </div>
       <div className="flex flex-row space-x-2 mt-6 items-center">
-        <Chip
-          content={<>Reindex</>}
+        <AOutlineButton
           onClick={() => indexCollection(true, userChainId, collection?.address ?? '', collection?.slug ?? '')}
-        />
+        >
+          Reindex
+        </AOutlineButton>
 
-        <Chip
-          content={<>Tip</>}
+        <AOutlineButton
           onClick={onClickTip}
           disabled={!collection?.metadata.tipAddress}
-          title={
+          tooltip={
             !collection?.metadata.tipAddress
               ? "The collection owner hasn't setup tipping yet"
               : 'Tip ETH to provide extra support towards this project'
           }
-        />
+        >
+          Tip
+        </AOutlineButton>
 
         <FavoriteButton collection={collection} />
 
-        <Chip
-          content={<>Collection Offer</>}
-          active={true}
+        <AButton
+          primary={true}
           onClick={() => {
             // assumes parent view has a drawer
             addCartItem({
@@ -236,7 +233,9 @@ export const StatsChips = ({ collection, currentStatsData }: Props) => {
             });
             setOrderDrawerOpen(true);
           }}
-        />
+        >
+          Collection Offer
+        </AButton>
       </div>
     </div>
   );

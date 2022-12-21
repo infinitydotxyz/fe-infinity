@@ -7,15 +7,14 @@ import { isLocalhost } from 'src/utils/commonUtils';
 import { OnboardContextProvider } from 'src/utils/OnboardContext/OnboardContext';
 import { OrderContextProvider } from 'src/utils/context/OrderContext';
 import { FilterContextProvider } from 'src/utils/context/FilterContext';
-import React, { FunctionComponent, memo, StrictMode, useEffect } from 'react';
+import React, { memo, StrictMode, useEffect } from 'react';
 import { DrawerContextProvider } from 'src/utils/context/DrawerContext';
 import { CurationBulkVoteContextProvider } from 'src/utils/context/CurationBulkVoteContext';
 import { AppContextProvider, useAppContext } from 'src/utils/context/AppContext';
 import { DashboardContextProvider } from 'src/utils/context/DashboardContext';
 import { twMerge } from 'tailwind-merge';
+import { Layout } from 'src/components/astra/layout';
 
-const Page: FunctionComponent<AppProps> = ({ Component, pageProps }) => <Component {...pageProps} />;
-const Memoized = memo(Page, (p, n) => p.Component === n.Component && p.pageProps === n.pageProps);
 const isProduction = process.env.NODE_ENV === 'production';
 
 if (!isLocalhost()) {
@@ -54,11 +53,23 @@ const App = (props: AppProps) => {
   );
 };
 
+// ======================================================================
+
+const Page = ({ Component, pageProps }: AppProps) => {
+  return (
+    <Layout>
+      <Component {...pageProps} />
+    </Layout>
+  );
+};
+
+const Memoized = memo(Page, (p, n) => p.Component === n.Component && p.pageProps === n.pageProps);
+
 const AppBody = (props: AppProps) => {
   const { darkMode } = useAppContext();
 
   return (
-    <div className={twMerge(darkMode ? 'dark' : 'light', darkMode ? 'bg-black' : 'bg-white')}>
+    <div className={twMerge(darkMode ? 'dark' : 'light')}>
       <Memoized {...props} />
     </div>
   );

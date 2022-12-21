@@ -1,6 +1,6 @@
 import { EZImage, Spacer } from 'src/components/common';
 import { AButton, ARoundButton, ATextButton } from 'src/components/astra';
-import { smallIconButtonStyle, textClr } from 'src/utils/ui-constants';
+import { infoBoxBGClr, smallIconButtonStyle, textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { ReactNode } from 'react';
 import { MdClose } from 'react-icons/md';
@@ -78,7 +78,7 @@ export const AstraCart = ({ tokens, onRemove, onCheckout }: Props) => {
 
   return (
     // setting to  w-72 so it doen't shrink and expand while animating
-    <div className="h-full flex flex-col w-72">
+    <div className={twMerge(infoBoxBGClr, 'h-full flex flex-col w-72')}>
       <div className=" m-4 flex items-center">
         <div className={twMerge(textClr, 'text-4xl lg:text-3xl font-bold mr-3')}>Cart</div>
         {clearButton}
@@ -87,7 +87,7 @@ export const AstraCart = ({ tokens, onRemove, onCheckout }: Props) => {
       {listComponent}
 
       <div className="m-6 flex flex-col">
-        <AButton disabled={!user || chainId !== '1' || tokens.length === 0} onClick={onCheckout}>
+        <AButton primary={true} disabled={!user || chainId !== '1' || tokens.length === 0} onClick={onCheckout}>
           Buy Now
         </AButton>
       </div>

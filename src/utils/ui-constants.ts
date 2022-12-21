@@ -37,3 +37,5 @@ export const primaryTextColor = 'text-sky-500';
 export const primaryBGColor = 'bg-sky-500';
 export const primaryBorderColor = 'border-sky-500';
 export const selectionOutline = 'outline-4 outline-offset-1 outline outline-sky-500';
+export const infoBoxBGClr = 'dark:bg-gray-200   bg-gray-200  bg-opacity-60 dark:bg-opacity-10';
+export const backgroundClr = 'dark:bg-neutral-900   bg-white ';

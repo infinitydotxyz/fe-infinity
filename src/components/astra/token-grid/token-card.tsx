@@ -1,4 +1,4 @@
-import { cardClr, selectionOutline, textClr } from 'src/utils/ui-constants';
+import { cardClr, hoverClr, selectionOutline, textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { Checkbox, EZImage, Spacer, SVG } from '../../common';
 import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
@@ -81,8 +81,8 @@ export const TokenListCard = ({ data, onClick, selected, isSelectable }: Props):
   return (
     <div
       className={twMerge(
-        // cardClr,
-        '  w-full relative flex flex-col  px-3 py-2  hover:bg-gray-100 transition-all duration-300',
+        hoverClr,
+        '  w-full relative flex flex-col  px-3 py-2 transition-all duration-200',
         notSelectable ? 'animate-wiggle' : ''
       )}
       onClick={() => {

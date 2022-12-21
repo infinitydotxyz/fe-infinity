@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Dropdown } from 'src/components/common';
+import { AOutlineButton } from 'src/components/astra';
+import { ADropdown } from 'src/components/astra/astra-dropdown';
 import { getSortLabel, OrderbookProvider, SORT_FILTERS, SORT_LABELS, useOrderbook } from '../OrderbookContext';
 import { OrderbookList } from './orderbook-list';
 
@@ -42,18 +43,17 @@ export const OrderbookContent = ({ className }: Props4) => {
 
   return (
     <>
-      <div className={`flex flex-col gap-1 min-h-[50vh] ${className}`}>
-        <div className="gap-3 flex justify-end pb-8">
-          <Button
-            variant="outline"
+      <div className={`flex flex-col h-full overflow-y-clip min-h-[50vh] ${className}`}>
+        <div className="gap-3 flex justify-end pb-6">
+          <AOutlineButton
             onClick={() => {
               setShowFilters(!showFilters);
             }}
             className="pointer-events-auto"
           >
             {showFilters ? 'Hide' : 'Show'} filter
-          </Button>
-          <Dropdown
+          </AOutlineButton>
+          <ADropdown
             alignMenuRight={true}
             label={label}
             items={[

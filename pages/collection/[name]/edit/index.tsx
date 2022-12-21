@@ -1,10 +1,11 @@
 import { BaseCollection, CollectionMetadata } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import React, { useEffect, useReducer } from 'react';
+import { APageBox } from 'src/components/astra/astra-page-box';
 import { PlusButton } from 'src/components/collection/edit/buttons';
 import { RemoveIcon } from 'src/components/collection/edit/remove-icon';
 import { SocialsInputGroup } from 'src/components/collection/socials-input-group';
-import { Button, PageBox, TextAreaInputBox, TextInputBox } from 'src/components/common';
+import { Button, TextAreaInputBox, TextInputBox } from 'src/components/common';
 import { Heading } from 'src/components/common/heading';
 import { toastError, toastSuccess } from 'src/components/common/toaster';
 import { ProfileImageUpload } from 'src/components/user/profile-image-upload';
@@ -197,11 +198,11 @@ const EditCollectionPage = () => {
   };
 
   if (isLoading || !Object.keys(metadata).length) {
-    return <PageBox title="Loading..."></PageBox>;
+    return <APageBox title="Loading..."></APageBox>;
   }
 
   return (
-    <PageBox showTitle={false} title="Edit collection">
+    <APageBox showTitle={false} title="Edit collection">
       <div className="flex flex-row-reverse p-5">
         <div className="flex flex-row space-x-2">
           <Button variant="outline" onClick={close}>
@@ -486,7 +487,7 @@ const EditCollectionPage = () => {
         </article>
       </main>
       <footer className="p-5"></footer>
-    </PageBox>
+    </APageBox>
   );
 };
 

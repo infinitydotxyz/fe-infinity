@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { FaPen } from 'react-icons/fa';
 import AvatarEditor from 'react-avatar-editor';
-import { ImageUploader, Button, ImageUploaderButtonRef, Modal, EZImage } from 'src/components/common';
+import { ImageUploader, ImageUploaderButtonRef, Modal, EZImage } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
+import { AButton, AOutlineButton } from '../astra';
 
 interface Props {
   imgSource?: string | null;
@@ -104,18 +105,13 @@ export const ProfileImageUpload = ({ onUpload, roundPhoto, onDelete, imgSource =
         </div>
       </label>
       <div className="sm:pl-8 mt-2 sm:mt-0">
-        <Button variant="primary" className="my-1 mb-3 w-full" onClick={onUploadButtonClick} disabled={isLoading}>
+        <AButton primary className="my-1 mb-3 w-full" onClick={onUploadButtonClick} disabled={isLoading}>
           Select
-        </Button>
+        </AButton>
         <ImageUploaderButtonRef buttonRef={uploadInput} onChangeFile={handleChangeFile} />
-        <Button
-          variant="outline"
-          className="my-1 py-2 px-12 d-block w-full sm:w-44 block font-heading"
-          disabled={isLoading || !imgSrc}
-          onClick={handleImageRemove}
-        >
+        <AOutlineButton className="my-1 w-full " disabled={isLoading || !imgSrc} onClick={handleImageRemove}>
           Delete
-        </Button>
+        </AOutlineButton>
       </div>
 
       <Modal isOpen={modalIsOpen} onClose={() => setIsOpen(false)} okButton="Save" wide={true} onOKButton={onClickSave}>

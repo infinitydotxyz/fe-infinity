@@ -1,15 +1,4 @@
-import {
-  Spacer,
-  Divider,
-  TooltipSpec,
-  EthPrice,
-  Button,
-  Drawer,
-  SimpleTable,
-  Modal,
-  Dropdown,
-  HelpTip
-} from 'src/components/common';
+import { Spacer, Divider, TooltipSpec, EthPrice, Button, Drawer, SimpleTable, Modal } from 'src/components/common';
 import { useOrderContext } from 'src/utils/context/OrderContext';
 import { OrderBuilder } from './order-builder';
 import { OrderSummary } from './order-summary';
@@ -19,6 +8,7 @@ import { numStr } from 'src/utils';
 import { useRouter } from 'next/router';
 import { twMerge } from 'tailwind-merge';
 import { drawerPx } from 'src/utils/ui-constants';
+import { ADropdown } from 'src/components/astra/astra-dropdown';
 
 interface Props {
   open: boolean;
@@ -268,14 +258,12 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
             <div className="mr-3">{title}</div>
             {ordersInCart.length > 0 || cartItems.length > 0 ? (
               <>
-                <Dropdown
-                  label="Dropdown"
-                  toggler={
-                    <HelpTip placement="right" content={<div className="whitespace-nowrap">Remove all</div>}>
-                      <div className="font-normal text-sm w-8 h-8 flex items-center justify-center rounded-full bg-theme-gray-100">
-                        {cartItems.length > 0 ? cartItems.length : ordersInCart.length}
-                      </div>
-                    </HelpTip>
+                <ADropdown
+                  tooltip="Remove all"
+                  label={
+                    <div className="font-normal text-sm w-8 h-8 flex items-center justify-center rounded-full bg-theme-gray-100">
+                      {cartItems.length > 0 ? cartItems.length : ordersInCart.length}
+                    </div>
                   }
                   items={[
                     {
@@ -287,8 +275,6 @@ export const OrderDrawer = ({ open, onClose }: Props) => {
                     { label: 'Cancel', onClick: console.log }
                   ]}
                   className="text-sm"
-                  itemListClassName="flex"
-                  itemClassName="px-0 justify-center"
                 />
               </>
             ) : null}

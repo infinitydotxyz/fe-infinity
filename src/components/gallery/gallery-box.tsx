@@ -1,7 +1,7 @@
 import { BaseCollection, CollectionAttributes, ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { defaultFilter, useFilterContext } from 'src/utils/context/FilterContext';
-import { Button, ErrorOrLoading } from 'src/components/common';
+import { ErrorOrLoading } from 'src/components/common';
 import { CardProps } from 'src/components/token-card/card';
 import { FilterPanel } from '../filter/filter-panel';
 import { GallerySort } from './gallery-sort';
@@ -13,6 +13,7 @@ import { TokenFetcher, TokenFetcherCache } from './token-fetcher';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { CollectionNftSearchInput } from '../common/search/collection-nft-search-input';
 import { CardGrid } from '../token-card/card-grid';
+import { AOutlineButton } from '../astra';
 
 interface Props {
   collection?: BaseCollection | null;
@@ -138,15 +139,14 @@ export const GalleryBox = ({
   return (
     <div ref={ref} className={twMerge(className, 'flex flex-col')}>
       <div className="sm:col-span-2 lg:col-span-3 xl:col-span-4 text-right mt-[-73px] pointer-events-none flex justify-end gap-3">
-        <Button
-          variant="outline"
+        <AOutlineButton
           onClick={() => {
             setFilterShowed((flag) => !flag);
           }}
           className="pointer-events-auto"
         >
           {filterShowed ? 'Hide' : 'Show'} filter
-        </Button>
+        </AOutlineButton>
         {showSort ? <GallerySort /> : null}
       </div>
 

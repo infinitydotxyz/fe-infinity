@@ -22,13 +22,14 @@ export const OrderbookList = ({
   hasNoData
 }: Props2): JSX.Element => {
   return (
-    <div className="flex gap-4 pointer-events-auto">
+    <div className="flex overflow-y-clip overflow-x-clip">
       {showFilters && (
         <div className="w-1/5 shrink-0">
           <OrderbookFilters />
         </div>
       )}
-      <div className="flex flex-col items-start w-full">
+
+      <div className="flex flex-col items-start w-full h-full overflow-y-auto  ">
         {hasNoData && <div className="font-heading">No results found</div>}
 
         {!isLoading &&

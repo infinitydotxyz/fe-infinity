@@ -1,10 +1,11 @@
 import { useRouter } from 'next/router';
-import { CenteredContent, PageBox, Spinner } from 'src/components/common';
+import { CenteredContent, Spinner } from 'src/components/common';
 import { UserPage } from 'src/components/user/user-page';
 import { User } from 'src/utils/context/AppContext';
 import { PleaseConnectMsg, useFetch, USER_API_END_POINT } from 'src/utils';
 import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { APageBox } from 'src/components/astra/astra-page-box';
 
 const ProfilePage = () => {
   const router = useRouter();
@@ -19,9 +20,9 @@ const ProfilePage = () => {
   const isMyProfile = address === 'me';
   if (isMyProfile && !user) {
     return (
-      <PageBox title="Account" className="mb-12">
+      <APageBox title="Account" className="mb-12">
         <PleaseConnectMsg />
-      </PageBox>
+      </APageBox>
     );
   }
 
@@ -40,20 +41,20 @@ const ProfilePageContents = ({ user, userAddress }: Props) => {
 
   if (isLoading) {
     return (
-      <PageBox title="Loading..." showTitle={false}>
+      <APageBox title="Loading..." showTitle={false}>
         <CenteredContent>
           <Spinner />
         </CenteredContent>
-      </PageBox>
+      </APageBox>
     );
   }
 
   if (isError) {
     console.error(error);
     return (
-      <PageBox title="Error" className="mb-12">
+      <APageBox title="Error" className="mb-12">
         Failed fetching profile
-      </PageBox>
+      </APageBox>
     );
   }
 
@@ -63,9 +64,9 @@ const ProfilePageContents = ({ user, userAddress }: Props) => {
   const isOwner = user?.address === userInfo.address;
 
   return (
-    <PageBox showTitle={false} title={'Profile'}>
+    <APageBox showTitle={false} title="">
       <UserPage userInfo={userInfo} isOwner={isOwner} />
-    </PageBox>
+    </APageBox>
   );
 };
 

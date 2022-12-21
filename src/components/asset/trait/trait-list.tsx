@@ -14,7 +14,7 @@ export const TraitList: FC<TraitListProps> = ({ traits, className = 'mt-6', coll
       {traits?.length > 0 ? (
         <>
           <div className={className}>
-            <p className=" text-xl text-black font-bold">Traits</p>
+            <p className=" text-xl  font-bold">Traits</p>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-4 mt-6">
               {traits?.map((trait: Erc721Attribute, idx) => {
