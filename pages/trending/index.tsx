@@ -105,9 +105,7 @@ const TrendingPage = () => {
   };
 
   return (
-    <APageBox title="Trending" showTitle={false}>
-      <div>Trending</div>
-
+    <APageBox title="Trending Collections" showTitle={true}>
       <div className="overflow-y-auto overflow-x-clip">
         <ToggleTab
           small={true}
@@ -243,7 +241,7 @@ const TrendingPageCard = ({ collection, period, index }: Props) => {
             width: '170px'
           }}
         >
-          <AButton primary small onClick={() => onClickBuy(collection)}>
+          <AButton primary onClick={() => onClickBuy(collection)}>
             Buy
           </AButton>
         </div>

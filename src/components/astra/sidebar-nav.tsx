@@ -1,15 +1,13 @@
-import { HelpTip, NextLink, Spacer, SVG } from 'src/components/common';
-import { MdDarkMode, MdLightMode } from 'react-icons/md';
-import { AiOutlineSend, AiOutlineTag } from 'react-icons/ai';
-import { BsWallet2, BsHouse, BsCollection } from 'react-icons/bs';
-import { useAppContext } from 'src/utils/context/AppContext';
-import { ARoundButton } from 'src/components/astra';
-import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { useRouter } from 'next/router';
+import { AiOutlineSend, AiOutlineTag } from 'react-icons/ai';
+import { BsHouse, BsWallet2 } from 'react-icons/bs';
+import { MdDarkMode, MdLightMode } from 'react-icons/md';
+import { ARoundButton } from 'src/components/astra';
+import { HelpTip, NextLink, Spacer, SVG } from 'src/components/common';
+import { useAppContext } from 'src/utils/context/AppContext';
 
 export const SidebarNav = () => {
   const { darkMode, setDarkMode } = useAppContext();
-  const { showCollections, setShowCollections } = useDashboardContext();
   const router = useRouter();
 
   return (
@@ -21,11 +19,11 @@ export const SidebarNav = () => {
       <div className="h-24" />
 
       <div className="flex flex-col space-y-4">
-        <HelpTip placement="right" content={<div className="whitespace-nowrap">Tokens</div>}>
+        <HelpTip placement="right" content={<div className="whitespace-nowrap">Trending</div>}>
           <ARoundButton
-            highlighted={showCollections}
+            highlighted={true}
             onClick={() => {
-              router.push('/new');
+              router.push('/trending');
             }}
           >
             <BsHouse className="h-8 w-8" />
@@ -63,17 +61,6 @@ export const SidebarNav = () => {
           </ARoundButton>
         </HelpTip>
       </div>
-
-      <HelpTip placement="right" content={<div className="whitespace-nowrap">Collections</div>}>
-        <ARoundButton
-          highlighted={showCollections}
-          onClick={() => {
-            setShowCollections(!showCollections);
-          }}
-        >
-          <BsCollection className="h-8 w-8" />
-        </ARoundButton>
-      </HelpTip>
 
       <Spacer />
       <ARoundButton
