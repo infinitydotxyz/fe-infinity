@@ -6,7 +6,7 @@ import { getEstimatedGasPrice } from '../commonUtils';
 import { DEFAULT_MAX_GAS_PRICE_WEI } from '../constants';
 import { getSignedOBOrder } from '../exchange/orders';
 import { useOnboardContext } from '../OnboardContext/OnboardContext';
-import { fetchOrderNonce, postOrders } from '../orderbookUtils';
+import { fetchOrderNonce, postOrdersV2 } from '../orderbookUtils';
 import { secondsPerDay } from '../ui-constants';
 import { useAppContext } from './AppContext';
 
@@ -352,7 +352,7 @@ export const OrderContextProvider = ({ children }: Props) => {
 
     // post orders
     try {
-      await postOrders(user.address, signedOrders);
+      await postOrdersV2(chainId as ChainId, signedOrders);
     } catch (ex) {
       toastError(`${ex}`);
       return false;

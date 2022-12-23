@@ -1,11 +1,18 @@
 import isEqual from 'lodash/isEqual';
-import { GetOrderItemsQuery, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import {
+  ChainOBOrder,
+  GetOrderItemsQuery,
+  Order,
+  OrderItemToken,
+  SignedOBOrder
+} from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import React, { ReactNode, useEffect, useState } from 'react';
 import { ParsedUrlQuery } from 'querystring';
 import { apiGet, ITEMS_PER_PAGE } from 'src/utils';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { OrderCache } from './order-cache';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 type OBFilters = {
   sort?: string;
@@ -191,17 +198,11 @@ interface Props {
   collectionId?: string;
   tokenId?: string;
   limit?: number;
-  reservoir?: boolean;
 }
 
-export const OrderbookProvider = ({
-  children,
-  collectionId,
-  tokenId,
-  limit = ITEMS_PER_PAGE,
-  reservoir = false
-}: Props) => {
+export const OrderbookProvider = ({ children, collectionId, tokenId, limit = ITEMS_PER_PAGE }: Props) => {
   const router = useRouter();
+  const { chainId } = useOnboardContext();
 
   const [isReady, setIsReady] = useState(false);
   const [orders, setOrders] = useState<SignedOBOrder[]>([]);
@@ -289,31 +290,70 @@ export const OrderbookProvider = ({
     try {
       const parsedFilters = parseFiltersToApiQueryParams(filters);
 
+      if (parsedFilters.collections && parsedFilters.collections.length > 1) {
+        throw new Error('Multiple collections not yet supported');
+      }
+
+      // const collection = parsedFilters.collections[1];
+
       // eslint-disable-next-line
-      const query: any = {
+      const v1Query: any = {
         limit: limit,
         cursor: refreshData ? '' : cursor,
         ...parsedFilters,
         collections: collectionId ? [collectionId] : parsedFilters.collections
       };
 
-      if (tokenId) {
-        query.tokenId = tokenId;
+      let options: {
+        endpoint: string;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        query: any;
+      };
+
+      const v2OrderBy = {
+        startPriceEth: 'price',
+        startTimeMs: 'startTime',
+        endTimeMs: 'endTime',
+        collectionSlug: 'collectionSlug'
+      };
+
+      const v2BaseQuery = {
+        isSellOrder: v1Query.isSellOrder,
+        minPrice: v1Query.minPrice,
+        maxPrice: v1Query.maxPrice,
+        cursor: v1Query.cursor,
+        limit: v1Query.limit,
+        orderBy: v2OrderBy[v1Query.orderBy as keyof typeof v2OrderBy],
+        orderDirection: v1Query.orderByDirection
+      };
+
+      if (tokenId && collectionId) {
+        options = {
+          endpoint: `/v2/collections/${chainId}:${collectionId}/tokens/${tokenId}/orders`,
+          query: {
+            ...v2BaseQuery,
+            status: 'active'
+          }
+        };
+      } else if (collectionId) {
+        options = {
+          endpoint: `/v2/collections/${chainId}:${collectionId}/orders`,
+          query: {
+            ...v2BaseQuery,
+            status: 'active'
+          }
+        };
+      } else {
+        throw new Error('Invalid query');
       }
 
-      const cacheKey = JSON.stringify(query) + (reservoir ? '-reservoir' : '');
+      const cacheKey = JSON.stringify(options);
 
       // use cached value if exists
       let response = orderCache.get(cacheKey);
       if (!response) {
-        let getUrl = '/orders';
-
-        if (reservoir) {
-          getUrl = '/orders/reservoir';
-        }
-
-        response = await apiGet(getUrl, {
-          query
+        response = await apiGet(options.endpoint, {
+          query: options.query
         });
 
         // save in cache
@@ -330,7 +370,73 @@ export const OrderbookProvider = ({
             newData = [...orders, ...response.result.data];
           }
 
-          setOrders(newData);
+          setOrders(
+            newData.map((order: Order) => {
+              const orderItems = order.kind === 'single-collection' ? [order.item] : order.items;
+              const nfts = orderItems.map((item) => {
+                let tokens: OrderItemToken[];
+                switch (item.kind) {
+                  case 'collection-wide':
+                    tokens = [];
+                    break;
+                  case 'single-token':
+                    tokens = [item.token];
+                    break;
+
+                  case 'token-list':
+                    tokens = item.tokens;
+                    break;
+                }
+
+                const chainTokens = tokens.map((item) => {
+                  return {
+                    tokenId: item.tokenId,
+                    tokenName: item.name,
+                    tokenImage: item.image,
+                    takerUsername: item.owner.username,
+                    takerAddress: item.owner.address,
+                    numTokens: item.quantity,
+                    attributes: []
+                  };
+                });
+                return {
+                  chainId: order.chainId,
+                  collectionAddress: item.address,
+                  collectionName: item.name,
+                  collectionImage: item.profileImage,
+                  collectionSlug: item.slug,
+                  hasBlueCheck: item.hasBlueCheck,
+                  tokens: chainTokens
+                };
+              });
+
+              const signedObOrder: SignedOBOrder = {
+                id: order.id,
+                chainId: order.chainId,
+                isSellOrder: order.isSellOrder,
+                numItems: order.numItems,
+                makerUsername: order.maker.username,
+                makerAddress: order.maker.address,
+                startPriceEth: order.startPriceEth,
+                endPriceEth: order.endPriceEth,
+                startTimeMs: order.startTimeMs,
+                endTimeMs: order.endTimeMs,
+                maxGasPriceWei: '0',
+                nonce: 0,
+                nfts: nfts,
+                execParams: {
+                  complicationAddress: '',
+                  currencyAddress: order.currency
+                },
+                extraParams: {
+                  buyer: order.isPrivate ? order.taker.address : ''
+                },
+                signedOrder: {} as unknown as ChainOBOrder
+              };
+
+              return signedObOrder;
+            })
+          );
           setHasNoData(newData.length === 0);
 
           setHasMoreOrders(response.result.hasNextPage);
