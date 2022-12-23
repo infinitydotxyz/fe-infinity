@@ -319,7 +319,7 @@ export async function signOBOrder(
   const orderToSign = {
     isSellOrder: order.isSellOrder,
     signer: order.makerAddress,
-    constraints,
+    constraints: constraints.map((item) => item.toString()),
     nfts,
     execParams,
     extraParams

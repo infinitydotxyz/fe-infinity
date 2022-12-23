@@ -1,4 +1,4 @@
-import { OBOrder, SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId, OBOrder, SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import {
   EthPrice,
@@ -19,7 +19,7 @@ import {
 } from 'src/utils';
 import { getSignedOBOrder } from 'src/utils/exchange/orders';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import { fetchUserSignedOBOrder, postOrders } from 'src/utils/orderbookUtils';
+import { fetchUserSignedOBOrder, postOrdersV2 } from 'src/utils/orderbookUtils';
 
 interface Props {
   isOpen: boolean;
@@ -113,7 +113,7 @@ export const LowerPriceModal = ({ isOpen, onClose, token, buyPriceEth, onDone }:
         if (signedOrder) {
           signedOrders.push(signedOrder);
           try {
-            await postOrders(user.address, signedOrders);
+            await postOrdersV2(chainId as ChainId, signedOrders);
             setIsSubmitting(false);
             toastSuccess('Lowered price successfully');
             onDone();
