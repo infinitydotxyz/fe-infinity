@@ -1,5 +1,4 @@
 import { useRouter } from 'next/router';
-import { AiOutlineSend, AiOutlineTag } from 'react-icons/ai';
 import { BsHouse, BsWallet2 } from 'react-icons/bs';
 import { MdDarkMode, MdLightMode } from 'react-icons/md';
 import { ARoundButton } from 'src/components/astra';
@@ -23,20 +22,10 @@ export const SidebarNav = () => {
           <ARoundButton
             highlighted={true}
             onClick={() => {
-              router.push('/trending');
+              router.push('/v3/trending');
             }}
           >
             <BsHouse className="h-8 w-8" />
-          </ARoundButton>
-        </HelpTip>
-
-        <HelpTip placement="right" content={<div className="whitespace-nowrap">Sell</div>}>
-          <ARoundButton
-            onClick={() => {
-              // setDarkMode(!darkMode);
-            }}
-          >
-            <AiOutlineTag className="h-8 w-8" />
           </ARoundButton>
         </HelpTip>
 
@@ -44,20 +33,10 @@ export const SidebarNav = () => {
           <ARoundButton
             highlighted={router.asPath === '/profile/me'}
             onClick={() => {
-              router.push('/profile/me');
+              router.push('/v3/profile/me');
             }}
           >
             <BsWallet2 className="h-8 w-8" />
-          </ARoundButton>
-        </HelpTip>
-
-        <HelpTip placement="right" content={<div className="whitespace-nowrap">Send</div>}>
-          <ARoundButton
-            onClick={() => {
-              // setDarkMode(!darkMode);
-            }}
-          >
-            <AiOutlineSend className="h-8 w-8" />
           </ARoundButton>
         </HelpTip>
       </div>

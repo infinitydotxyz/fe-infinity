@@ -29,7 +29,6 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
     tabs = ['Collected', 'Activity'];
   }
 
-  tabs.push('Curated');
   const { options, onChange, selected } = useToggleTab(tabs, (router?.query?.tab as string) || 'Collected');
 
   return (
