@@ -2,19 +2,19 @@ import { ChainId, CollectionAttributes, Erc721Metadata, OBOrder, Token } from '@
 import { getCurrentOBOrderPrice } from '@infinityxyz/lib-frontend/utils';
 import { utils } from 'ethers';
 import { useRouter } from 'next/router';
-import NotFound404Page from 'pages/not-found-404';
+import NotFound404Page from 'pages/v3/not-found-404';
 import { useEffect, useState } from 'react';
 import { ActivityList, CancelModal, ListNFTModal, MakeOfferModal, SendNFTModal, TraitList } from 'src/components/asset';
 import { LowerPriceModal } from 'src/components/asset/modals/lower-price-modal';
+import { AButton, AOutlineButton } from 'src/components/astra';
+import { APageBox } from 'src/components/astra/astra-page-box';
 import {
   BlueCheck,
-  Button,
   CenteredContent,
   ErrorOrLoading,
   EthPrice,
   EZImage,
   NextLink,
-  PageBox,
   ReadMoreText,
   ShortAddress,
   Spinner,
@@ -61,9 +61,9 @@ const AssetDetailPage = () => {
 
   if (typeof query.chainId !== 'string' || typeof query.collection !== 'string' || typeof query.tokenId !== 'string') {
     return (
-      <PageBox title="Asset" showTitle={false}>
+      <APageBox title="Asset" showTitle={false}>
         <div className="flex flex-col max-w-screen-2xl mt-4"></div>
-      </PageBox>
+      </APageBox>
     );
   }
   return <AssetDetailContent chainId={query.chainId} collectionAddress={query.collection} tokenId={query.tokenId} />;
@@ -123,11 +123,11 @@ const AssetDetailContent = ({ chainId, collectionAddress, tokenId }: Props) => {
 
   if (isLoading) {
     return (
-      <PageBox title="Loading..." showTitle={false}>
+      <APageBox title="Loading..." showTitle={false}>
         <CenteredContent>
           <Spinner />
         </CenteredContent>
-      </PageBox>
+      </APageBox>
     );
   }
 
@@ -256,11 +256,11 @@ const AssetDetailContent = ({ chainId, collectionAddress, tokenId }: Props) => {
   );
 
   return (
-    <PageBox title={assetName} showTitle={false} className="flex flex-col mt-6">
-      <div className="flex flex-col gap-10 mr-auto max-w-[1100px] md:flex-row md:items-start">
+    <APageBox title={assetName} showTitle={false} className=" mt-6 overflow-y-auto overflow-x-clip">
+      <div className="flex flex-col gap-10 mr-auto max-w-[1100px] md:flex-row md:items-start ">
         <ResponsiveImage token={token} />
         <div className="md:flex-1 ">
-          <h3 className="text-black font-body text-2xl font-bold leading-normal tracking-wide pb-1">
+          <h3 className=" font-body text-2xl font-bold leading-normal tracking-wide pb-1">
             {tokenMetadata.name ? tokenMetadata.name : `${token.collectionName} #${token.tokenId}`}
           </h3>
           <div className="flex items-center mb-6">
@@ -294,17 +294,15 @@ const AssetDetailContent = ({ chainId, collectionAddress, tokenId }: Props) => {
             <div className="flex flex-col md:flex-row gap-4 my-4 md:my-6 lg:mt-10">
               {buyPriceEth && (
                 <>
-                  <Button variant="outline" onClick={onClickCancel}>
+                  <AOutlineButton onClick={onClickCancel}>
                     <div className="flex">
                       <span className="mr-4">Cancel</span>
                       <span>
                         <EthPrice label={buyPriceEth} rowClassName="pt-[1px]" />
                       </span>
                     </div>
-                  </Button>
-                  <Button variant="outline" onClick={onClickLowerPrice}>
-                    Lower Price
-                  </Button>
+                  </AOutlineButton>
+                  <AOutlineButton onClick={onClickLowerPrice}>Lower Price</AOutlineButton>
                 </>
               )}
             </div>
@@ -312,44 +310,35 @@ const AssetDetailContent = ({ chainId, collectionAddress, tokenId }: Props) => {
 
           {isNftOwner ? (
             <div className="flex flex-col md:flex-row gap-4 my-4 md:my-6 lg:mt-10">
-              <Button variant="outline" onClick={onClickSend}>
-                Send
-              </Button>
-              {!isListingOwner && (
-                <Button variant="outline" onClick={onClickList}>
-                  List
-                </Button>
-              )}
+              <AOutlineButton onClick={onClickSend}>Send</AOutlineButton>
+              {!isListingOwner && <AOutlineButton onClick={onClickList}>List</AOutlineButton>}
               {sellPriceEth && (
-                <Button variant="outline" className="" onClick={onClickAcceptOffer}>
+                <AOutlineButton className="" onClick={onClickAcceptOffer}>
                   <div className="flex">
                     Accept Offer <EthPrice label={`${sellPriceEth}`} className="ml-2" />
                   </div>
-                </Button>
+                </AOutlineButton>
               )}
             </div>
           ) : (
             // Other users' action buttons
             <div className="flex flex-col md:flex-row gap-4 my-4 md:my-6 lg:mt-10">
               {buyPriceEth && (
-                <Button variant="primary" onClick={onClickBuy}>
+                <AButton primary onClick={onClickBuy}>
                   <div className="flex">
                     <span className="mr-4">Buy</span>
                     <span>
                       <EthPrice label={buyPriceEth} rowClassName="pt-[1px]" />
                     </span>
                   </div>
-                </Button>
+                </AButton>
               )}
-              <Button variant="outline" onClick={onClickMakeOffer}>
-                Make offer
-              </Button>
+              <AOutlineButton onClick={onClickMakeOffer}>Make offer</AOutlineButton>
             </div>
           )}
 
           <div className="flex flex-col md:flex-row">
-            <Button
-              variant="outline"
+            <AOutlineButton
               onClick={async () => {
                 const { error } = await apiGet(
                   `/collections/${token.chainId}:${token.collectionAddress}/nfts/${token.tokenId}/refresh-metadata`
@@ -365,12 +354,12 @@ const AssetDetailContent = ({ chainId, collectionAddress, tokenId }: Props) => {
               }}
             >
               Refresh metadata
-            </Button>
+            </AOutlineButton>
           </div>
 
           {tokenMetadata.description ? (
             <>
-              <p className="font-body text-black mb-1 mt-6">Description</p>
+              <p className="font-body mb-1 mt-6">Description</p>
               <div>
                 <ReadMoreText text={tokenMetadata.description ?? ''} min={100} ideal={150} max={300} />
               </div>
@@ -404,7 +393,7 @@ const AssetDetailContent = ({ chainId, collectionAddress, tokenId }: Props) => {
         )}
       </div>
       {modals}
-    </PageBox>
+    </APageBox>
   );
 };
 

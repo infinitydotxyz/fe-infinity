@@ -1,16 +1,15 @@
 import { AccountSettingsPage } from 'src/components/user/profile-settings';
-import { CenteredContent, Spinner } from 'src/components/common';
+import { CenteredContent, PageBox, Spinner } from 'src/components/common';
 import { User } from 'src/utils/context/AppContext';
 import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user';
 import { useFetch, USER_API_END_POINT } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import { APageBox } from 'src/components/astra/astra-page-box';
 
 const AccountSettings = () => {
   const { user, chainId } = useOnboardContext();
 
   if (!user) {
-    return <APageBox title="Account Settings"></APageBox>;
+    return <PageBox title="Account Settings"></PageBox>;
   }
 
   return <AccountSettingsContent user={user} chainId={chainId} />;
@@ -28,18 +27,18 @@ const AccountSettingsContent = ({ user, chainId }: Props) => {
 
   if (isLoading) {
     return (
-      <APageBox title="Loading..." showTitle={false}>
+      <PageBox title="Loading..." showTitle={false}>
         <CenteredContent>
           <Spinner />
         </CenteredContent>
-      </APageBox>
+      </PageBox>
     );
   }
 
   return (
-    <APageBox title="Account" showTitle={false} className="pb-8">
+    <PageBox title="Account" showTitle={false} className="pb-8">
       <AccountSettingsPage user={user} chainId={chainId} userInfo={result as UserProfileDto} />
-    </APageBox>
+    </PageBox>
   );
 };
 

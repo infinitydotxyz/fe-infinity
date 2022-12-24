@@ -1,6 +1,6 @@
 import { EventType, EventTypeNames } from '@infinityxyz/lib-frontend/types/core/feed';
 import { ReactNode, useState } from 'react';
-import { FaTwitter, FaFacebook, FaEdit } from 'react-icons/fa';
+import { FaEdit } from 'react-icons/fa';
 import { RemoveIcon } from 'src/components/collection/edit/remove-icon';
 import { Card } from 'src/components/token-card/card';
 import {
@@ -16,9 +16,8 @@ import {
   toastError,
   toastSuccess,
   toastWarning,
-  Chip,
-  ComboBox,
-  ComboBoxBaseType,
+  // ComboBox,
+  // ComboBoxBaseType,
   SVG,
   Checkbox,
   Modal,
@@ -27,6 +26,7 @@ import {
 } from 'src/components/common';
 import { NFTSwiperModal } from 'src/components/swiper/nft-swiper';
 import { twMerge } from 'tailwind-merge';
+import { ADropdown } from 'src/components/astra/astra-dropdown';
 
 const cardTestData = [
   {
@@ -47,11 +47,11 @@ const cardTestData = [
   }
 ];
 
-const comboValues: ComboBoxBaseType[] = [
-  { id: 0, name: 'Empty Trash' },
-  { id: 1, name: 'Save File' },
-  { id: 2, name: 'Download' }
-];
+// const comboValues: ComboBoxBaseType[] = [
+//   { id: 0, name: 'Empty Trash' },
+//   { id: 1, name: 'Save File' },
+//   { id: 2, name: 'Download' }
+// ];
 
 const SandboxPage = () => {
   const { options, onChange, selected } = useToggleTab(['Buy NFTs', 'Sell NFTs', 'Trade NFTs'], 'Buy NFTs');
@@ -59,7 +59,7 @@ const SandboxPage = () => {
   const [checked, setChecked] = useState<boolean>(false);
   const [checked2, setChecked2] = useState<boolean>(false);
   const [switchChecked, setSwitchChecked] = useState<boolean>(false);
-  const [comboValue, setComboValue] = useState<ComboBoxBaseType>(comboValues[0]);
+  // const [comboValue, setComboValue] = useState<ComboBoxBaseType>(comboValues[0]);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [activityTypes, setActivityTypes] = useState<EventType[]>([]);
 
@@ -71,12 +71,6 @@ const SandboxPage = () => {
 
   return (
     <PageBox title="SandBox">
-      <SBHeader># Text</SBHeader>
-      <div>
-        <div className="text-primary">text-primary</div>
-        <div className="text-secondary">text-secondary</div>
-      </div>
-
       <NFTSwiperModal />
 
       <SBHeader># Button</SBHeader>
@@ -94,14 +88,6 @@ const SandboxPage = () => {
           Unstyled (plain)
         </Button>
         <Button variant="ghost">Ghost</Button>
-      </div>
-
-      <SBHeader># Chip</SBHeader>
-      <div className="flex flex-row space-x-4">
-        <Chip content="Watch" />
-        <Chip left={<FaEdit />} content="Edit" active={true} />
-        <Chip content={<FaTwitter />} />
-        <Chip content={<FaFacebook />} />
       </div>
 
       <SBHeader># Checkbox</SBHeader>
@@ -158,23 +144,15 @@ const SandboxPage = () => {
       </PopoverButton>
 
       <SBHeader># Dropdown</SBHeader>
-      {/* <div className="flex flex-row space-x-4">
-        <Dropdown
+      <div className="flex flex-row space-x-4">
+        <ADropdown
           label="Dropdown"
           items={[
             { label: 'Item 1', onClick: console.log },
             { label: 'Item 2', onClick: console.log }
           ]}
         />
-        <Dropdown
-          label="Custom Dropdown"
-          toggler={<div className="border rounded-full py-2 px-4 bg-black text-white">Custom Toggler</div>}
-          items={[
-            { label: 'Item 3', onClick: console.log },
-            { label: 'Item 4', onClick: console.log }
-          ]}
-        />
-      </div> */}
+      </div>
 
       <SBHeader># ToggleTab</SBHeader>
       <ToggleTab options={options} selected={selected} onChange={onChange} />
@@ -292,10 +270,10 @@ const SandboxPage = () => {
         />
       </div>
 
-      <SBHeader># ComboBox</SBHeader>
+      {/* <SBHeader># ComboBox</SBHeader>
       <div className="w-1/2">
         <ComboBox options={comboValues} value={comboValue} onChange={(value) => setComboValue(value)} />
-      </div>
+      </div> */}
 
       <SBHeader># SimpleTable</SBHeader>
       <SimpleTable items={tableItems} className="w-1/2" />

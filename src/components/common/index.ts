@@ -1,4 +1,5 @@
 export * from 'src/components/common/button';
+export * from 'src/components/common/chip';
 export * from 'src/components/common/input-box';
 export * from 'src/components/common/form-inputs';
 export * from 'src/components/common/date-picker';
@@ -10,6 +11,7 @@ export * from 'src/components/common/currency-input';
 export * from 'src/components/common/read-more-text';
 export * from 'src/components/common/short-address';
 export * from 'src/components/common/modal';
+export * from 'src/components/common/simple-tooltip';
 export * from 'src/components/common/clipboard-button';
 export * from 'src/components/common/link-text';
 export * from 'src/components/common/colored-button';

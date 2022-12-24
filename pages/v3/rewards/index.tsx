@@ -1,6 +1,9 @@
 import { useRouter } from 'next/router';
 import React from 'react';
-import { PageBox, ToggleTab, useToggleTab } from 'src/components/common';
+import { APageBox } from 'src/components/astra/astra-page-box';
+import { ToggleTab, useToggleTab } from 'src/components/common';
+import { textClr } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
 import GlobalRewards from './global-rewards';
 import MyRewardsPage from './my-rewards';
 
@@ -16,18 +19,18 @@ const RewardsPage = () => {
   const { options, onChange, selected } = useToggleTab(tabs, (router?.query?.tab as string) || tabs[0]);
 
   return (
-    <PageBox title="Rewards">
+    <APageBox title="Rewards">
       <ToggleTab
         className="font-heading pointer-events-auto"
         options={options}
         selected={selected}
         onChange={onChange}
       />
-      <div className="mt-4">
+      <div className={twMerge(textClr, 'flex flex-col h-full w-full overflow-y-auto overflow-x-hidden')}>
         {selected === RewardTabs.MyRewards && <MyRewardsPage />}
         {selected === RewardTabs.GlobalRewards && <GlobalRewards />}
       </div>
-    </PageBox>
+    </APageBox>
   );
 };
 

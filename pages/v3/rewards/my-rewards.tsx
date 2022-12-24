@@ -12,6 +12,8 @@ import { useClaim } from 'src/hooks/contract/cm-distributor/claim';
 import { ellipsisAddress, nFormatter } from 'src/utils';
 import { TOKEN } from 'src/utils/constants';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { infoBoxBGClr } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
 
 interface RewardsSectionProps {
   title: string;
@@ -22,7 +24,7 @@ interface RewardsSectionProps {
 
 const RewardsSection = (props: RewardsSectionProps) => {
   return (
-    <div className="flex-col bg-theme-gray-100 p-10 rounded-2xl mt-5 w-full">
+    <div className="flex-col bg-theme-gray-100 px-10 rounded-2xl   w-full">
       <div className="flex w-full">
         <div className="w-1/2">
           <Heading as="h2" className="text-4xl font-body font-medium">
@@ -37,7 +39,7 @@ const RewardsSection = (props: RewardsSectionProps) => {
   );
 };
 
-const MyRewardsPage: React.FC = () => {
+const MyRewardsPage = () => {
   const [showStakeTokensModal, setShowStakeTokensModal] = useState(false);
   const [showBuyTokensModal, setShowBuyTokensModal] = useState(false);
   const [showUnstakeTokensModal, setShowUnstakeTokensModal] = useState(false);
@@ -66,10 +68,10 @@ const MyRewardsPage: React.FC = () => {
   };
 
   return (
-    <>
+    <div className="space-y-10 mt-4">
       <RewardsSection title="Claim">
         <div className="flex flex-col md:!flex-row mt-4 w-full">
-          <div className="bg-white py-4 px-6 rounded-2xl grow">
+          <div className={twMerge(infoBoxBGClr, '  py-4 px-6 rounded-2xl grow')}>
             <div>ETH Earned</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4">
@@ -113,7 +115,7 @@ const MyRewardsPage: React.FC = () => {
 
           <Spacer />
 
-          <div className="bg-white py-4 px-6 rounded-2xl grow mt-4 md:mt-0">
+          <div className={twMerge(infoBoxBGClr, ' py-4 px-6 rounded-2xl grow mt-4 md:mt-0')}>
             <div>${TOKEN.symbol} earned</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4">
@@ -165,7 +167,7 @@ const MyRewardsPage: React.FC = () => {
         title="Token Balance"
         subTitle={`Stake ${TOKEN.symbol} tokens to gain curation power. The longer you lock, the more curation power you'll earn.`}
         sideInfo={
-          <div className="bg-white py-4 px-6 rounded-2xl">
+          <div className={twMerge(infoBoxBGClr, '  py-4 px-6 rounded-2xl')}>
             <div>${TOKEN.symbol} tokens</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
@@ -204,7 +206,7 @@ const MyRewardsPage: React.FC = () => {
         title="Curation Rewards"
         subTitle="Earn curation rewards for voting on collections with your votes. You'll gain a portion of the transaction fees for each collection you curate."
         sideInfo={
-          <div className="bg-white py-4 px-6 rounded-2xl">
+          <div className={twMerge(infoBoxBGClr, '  py-4 px-6 rounded-2xl')}>
             <div>Voting power</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
@@ -233,7 +235,7 @@ const MyRewardsPage: React.FC = () => {
         title="Trading Rewards"
         subTitle="Earn trading rewards for buying and selling NFTs on Infinity. Rewards are distributed once per week."
         sideInfo={
-          <div className="bg-white py-4 px-6 rounded-2xl">
+          <div className={twMerge(infoBoxBGClr, '  py-4 px-6 rounded-2xl')}>
             <div className="flex flex-wrap">
               <div className="lg:w-1/3 sm:w-full">
                 <div className="mb-4">Volume traded</div>
@@ -296,7 +298,7 @@ const MyRewardsPage: React.FC = () => {
       {showUnstakeTokensModal && <UnstakeTokensModal onClose={() => setShowUnstakeTokensModal(false)} />}
 
       {showBuyTokensModal && <UniswapModal onClose={() => setShowBuyTokensModal(false)} />}
-    </>
+    </div>
   );
 };
 

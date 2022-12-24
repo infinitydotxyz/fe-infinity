@@ -6,6 +6,7 @@ import {
   ERC721CardData
 } from '@infinityxyz/lib-frontend/types/core';
 import { CollectionStatsDto } from '@infinityxyz/lib-frontend/types/dto/stats';
+import { NULL_ADDRESS, round } from '@infinityxyz/lib-frontend/utils';
 import { useRouter } from 'next/router';
 import NotFound404Page from 'pages/not-found-404';
 import { useEffect, useState } from 'react';
@@ -14,11 +15,25 @@ import { HiOutlineExternalLink } from 'react-icons/hi';
 import { AvatarImage } from 'src/components/collection/avatar-image';
 import { CollectionSalesTab } from 'src/components/collection/collection-activity-tab';
 import { StatsChips } from 'src/components/collection/stats-chips';
-import { BlueCheck, EthPrice, Spinner, ToggleTab, useToggleTab } from 'src/components/common';
+import {
+  BlueCheck,
+  Button,
+  Chip,
+  EthPrice,
+  Heading,
+  PageBox,
+  Spinner,
+  ToggleTab,
+  useToggleTab
+} from 'src/components/common';
+import { FeesAprStats, FeesAccruedStats } from 'src/components/curation/statistics';
+import { VoteModal } from 'src/components/curation/vote-modal';
+import { VoteProgressBar } from 'src/components/curation/vote-progress-bar';
+import { CommunityFeed } from 'src/components/feed-list/community-feed';
 import { GalleryBox } from 'src/components/gallery/gallery-box';
 import { OrderbookContainer } from 'src/components/orderbook/orderbook-list';
 import { useFetchSignedOBOrder } from 'src/hooks/api/useFetchSignedOBOrder';
-import { ellipsisAddress, getChainScannerBase, isProd, nFormatter } from 'src/utils';
+import { ellipsisAddress, getChainScannerBase, isProd, nFormatter, standardCard } from 'src/utils';
 import { apiGet, useFetch } from 'src/utils/apiUtils';
 import { useDrawerContext } from 'src/utils/context/DrawerContext';
 import { useOrderContext } from 'src/utils/context/OrderContext';
@@ -27,13 +42,11 @@ import { iconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import ReactMarkdown from 'react-markdown';
 import Linkify from '@amit.rajput/react-linkify';
+import { UserCuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import { useSaveReferral } from 'src/hooks/api/useSaveReferral';
 import { ReservoirCards } from 'src/components/token-card/reservoir-card-grid';
-import { CardAction } from 'src/components/token-card/card';
-import { APageBox } from 'src/components/astra/astra-page-box';
-import { ARoundOutlineButton } from 'src/components/astra';
 
 const CollectionPage = ({ collection, error }: { collection?: BaseCollection; error?: Error }) => {
   /**
@@ -43,7 +56,7 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
     useSaveReferral(collection.address, collection.chainId as ChainId);
   }
 
-  const { chainId, checkSignedIn } = useOnboardContext();
+  const { user, chainId, checkSignedIn } = useOnboardContext();
 
   const { fetchSignedOBOrder } = useFetchSignedOBOrder();
   const router = useRouter();
@@ -56,6 +69,7 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
   const {
     query: { name }
   } = router;
+  const [isStakeModalOpen, setIsStakeModalOpen] = useState(false);
   const { fulfillDrawerParams } = useDrawerContext();
 
   useEffect(() => {
@@ -85,6 +99,10 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
   const firstAllTimeStats = allTimeStats?.data[0]; // first row = latest daily stats
 
   const createdBy = collection?.deployer ?? collection?.owner ?? '';
+
+  const { result: curatedCollection } = useFetch<UserCuratedCollectionDto>(
+    `${path}/curated/${chainId}:${user?.address ?? NULL_ADDRESS}`
+  );
 
   const isAlreadyAdded = (data: ERC721CardData | undefined) => {
     // check if this item was already added to cartItems or order.
@@ -187,13 +205,16 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
 
   if (!collection) {
     return (
-      <APageBox showTitle={false} title={'Invalid collection'}>
+      <PageBox showTitle={false} title={'Invalid collection'}>
         <div className="flex flex-col mt-10">Unable to load this collection.</div>
-      </APageBox>
+      </PageBox>
     );
   }
 
-  const galleryOnClick = async (data?: ERC721CardData) => {
+  const galleryOnClick = async (
+    ev: React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>,
+    data?: ERC721CardData
+  ) => {
     if (!checkSignedIn()) {
       return;
     }
@@ -229,29 +250,6 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
     }
   };
 
-  const cardActions = (): CardAction[] => {
-    return [
-      {
-        label: (data) => {
-          const price = data?.orderSnippet?.listing?.orderItem?.startPriceEth ?? '';
-          if (price) {
-            return (
-              <div className="flex justify-center">
-                <span className="mr-4 font-normal">Buy</span>
-                <EthPrice label={`${price}`} />
-              </div>
-            );
-          }
-          if (isAlreadyAdded(data)) {
-            return <div className="font-normal">✓ Added</div>;
-          }
-          return <div className="font-normal">Add to order</div>;
-        },
-        onClick: (ev, data) => galleryOnClick(data)
-      }
-    ];
-  };
-
   const nfts = (
     <GalleryBox
       pageId="COLLECTION"
@@ -260,20 +258,26 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
       showNftSearch={true}
       collectionAttributes={collectionAttributes || undefined}
       cardProps={{
-        cardActions: cardActions()
-        // getDropdownActions: (data) => {
-        //   return [
-        //     {
-        //       label: 'Add directly to cart',
-        //       onClick: () => {
-        //         galleryOnClick(data);
-        //         setTimeout(() => {
-        //           addOrderToCart();
-        //         }, 1200);
-        //       }
-        //     }
-        //   ];
-        // }
+        cardActions: [
+          {
+            label: (data) => {
+              const price = data?.orderSnippet?.listing?.orderItem?.startPriceEth ?? '';
+              if (price) {
+                return (
+                  <div className="flex justify-center">
+                    <span className="mr-4 font-normal">Buy</span>
+                    <EthPrice label={`${price}`} />
+                  </div>
+                );
+              }
+              if (isAlreadyAdded(data)) {
+                return <div className="font-normal">✓ Added</div>;
+              }
+              return <div className="font-normal">Add to order</div>;
+            },
+            onClick: galleryOnClick
+          }
+        ]
       }}
     />
   );
@@ -314,6 +318,37 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
     </table>
   );
 
+  const curateSection = (
+    <section className="mt-8 xl:mt-20 md:w-1/2 min-h-[280px] min-w-[28rem] max-h-[280px] max-w-[28rem]">
+      <div className={twMerge(standardCard, 'items-center space-y-8')}>
+        <Heading as="h2" className="font-body text-3xl font-medium">
+          Curate this collection
+        </Heading>
+        <FeesAprStats value={nFormatter(round(curatedCollection?.feesAPR || 0, 3)) ?? 0} className="mr-8" />
+        <FeesAccruedStats value={nFormatter(round(curatedCollection?.fees || 0, 3)) ?? 0} />
+        <div className="flex flex-row space-x-2 relative">
+          <VoteProgressBar
+            votes={curatedCollection?.curator?.votes || 0}
+            totalVotes={curatedCollection?.numCuratorVotes || 0}
+            className="max-w-[25rem] bg-white"
+          />
+        </div>
+        <Button onClick={() => checkSignedIn() && setIsStakeModalOpen(true)}>Vote</Button>
+      </div>
+      {curatedCollection && (
+        <VoteModal
+          collection={{
+            ...collection,
+            ...collection.metadata,
+            ...curatedCollection
+          }}
+          isOpen={isStakeModalOpen}
+          onClose={() => setIsStakeModalOpen(false)}
+        />
+      )}
+    </section>
+  );
+
   const head = (
     <Head>
       <meta property="og:title" content={collection.metadata?.name} />
@@ -337,7 +372,7 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
   );
 
   const createdBySection = (
-    <div className="mt-6 mb-6 font-heading">
+    <div className="text-secondary mt-6 mb-6 font-heading">
       {collection ? (
         <>
           {createdBy && (
@@ -360,9 +395,11 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
           </button>
           {collection.metadata?.links?.external && (
             <>
-              <ARoundOutlineButton onClick={() => window.open(collection.metadata?.links?.external)}>
-                <HiOutlineExternalLink className="text-md" />
-              </ARoundOutlineButton>
+              <Chip
+                content={<HiOutlineExternalLink className="text-md" />}
+                onClick={() => window.open(collection.metadata?.links?.external)}
+                iconOnly={true}
+              />
             </>
           )}
         </>
@@ -375,9 +412,9 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
   );
 
   return (
-    <APageBox showTitle={false} title={collection.metadata?.name ?? ''}>
+    <PageBox showTitle={false} title={collection.metadata?.name ?? ''}>
       {head}
-      <div className="flex flex-col mt-10 overflow-y-auto overflow-x-clip">
+      <div className="flex flex-col mt-10">
         <span>
           <AvatarImage url={collection.metadata?.profileImage} className="mb-2" />
           <div className="flex gap-3 items-center">
@@ -400,7 +437,7 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
               {createdBySection}
               <StatsChips collection={collection} currentStatsData={currentStats || firstAllTimeStats} />
 
-              <div className=" mt-12 md:w-2/3">{description}</div>
+              <div className="text-secondary mt-12 md:w-2/3">{description}</div>
 
               {collection.metadata?.benefits && (
                 <div className="mt-7 md:w-2/3">
@@ -409,7 +446,7 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
                     {collection.metadata?.benefits?.slice(0, 3).map((benefit) => {
                       const benefitStr = benefit.slice(0, 300);
                       return (
-                        <div className="flex items-center  ">
+                        <div className="flex items-center text-secondary">
                           <BsCheck className="text-2xl mr-2 text-black" />
                           {benefitStr}
                         </div>
@@ -426,7 +463,7 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
                       const partnershipStr = partnership?.name.slice(0, 100);
                       return (
                         <div
-                          className="flex items-center hover:text-black cursor-pointer"
+                          className="flex items-center text-secondary hover:text-black cursor-pointer"
                           onClick={() => {
                             window.open(partnership.link);
                           }}
@@ -440,6 +477,7 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
               )}
               {table}
             </section>
+            {curateSection}
           </div>
           <section>
             <ToggleTab
@@ -455,12 +493,13 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
               )}
               {/* {currentTab === 1 && <ActivityTab dailyStats={dailyStats} weeklyStats={weeklyStats} />} */}
               {selected === 'Sales' && <CollectionSalesTab collectionAddress={collection.address} />}
+              {selected === 'Community' && <CommunityFeed collection={collection} className="mt-16" />}
               {selected === 'Reservoir' && <ReservoirCards collection={collection} className="mt-16" />}
             </div>
           </section>
         </main>
       </div>
-    </APageBox>
+    </PageBox>
   );
 };
 

@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { SBHeader } from 'pages/sandbox';
+import { SBHeader } from 'pages/v3/sandbox';
 import { Button, PageBox } from 'src/components/common';
 
 export const TestPage = () => {
@@ -44,14 +44,6 @@ export const TestPage = () => {
               }}
             >
               Terms of Service
-            </Button>
-
-            <Button
-              onClick={() => {
-                void router.push('/curation');
-              }}
-            >
-              Curation
             </Button>
 
             <Button
