@@ -1,4 +1,5 @@
 export * from 'src/components/common/button';
+export * from 'src/components/common/chip';
 export * from 'src/components/common/input-box';
 export * from 'src/components/common/form-inputs';
 export * from 'src/components/common/date-picker';

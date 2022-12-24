@@ -6,7 +6,6 @@ import { Card } from 'src/components/token-card/card';
 import {
   Button,
   CurrencyInput,
-  Dropdown,
   ShortAddress,
   SimpleTable,
   SimpleTableItem,
@@ -159,7 +158,7 @@ const SandboxPage = () => {
       </PopoverButton>
 
       <SBHeader># Dropdown</SBHeader>
-      <div className="flex flex-row space-x-4">
+      {/* <div className="flex flex-row space-x-4">
         <Dropdown
           label="Dropdown"
           items={[
@@ -175,7 +174,7 @@ const SandboxPage = () => {
             { label: 'Item 4', onClick: console.log }
           ]}
         />
-      </div>
+      </div> */}
 
       <SBHeader># ToggleTab</SBHeader>
       <ToggleTab options={options} selected={selected} onChange={onChange} />
