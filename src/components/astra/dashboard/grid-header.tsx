@@ -68,7 +68,7 @@ export const GridHeader = ({ expanded }: Props) => {
 
 export class RouteUtils {
   static tabItems = (router: NextRouter) => {
-    const path = router.asPath;
+    const path = router.pathname;
 
     return [
       {
