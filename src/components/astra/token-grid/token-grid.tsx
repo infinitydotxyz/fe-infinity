@@ -8,7 +8,7 @@ import { ErrorOrLoading } from '../error-or-loading';
 import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 
 interface Props {
-  tokenFetcher: TokenFetcherAlt;
+  tokenFetcher?: TokenFetcherAlt;
   listMode: boolean;
   className?: string;
   wrapWidth?: number;
@@ -43,6 +43,10 @@ export const TokensGrid = ({
   }, [tokenFetcher]);
 
   const handleFetch = async (loadMore: boolean) => {
+    if (!tokenFetcher) {
+      return;
+    }
+
     const { hasNextPage: fhasNextPage, cardData: fcardData, error: ferror } = await tokenFetcher.fetch(loadMore);
 
     // can't update react state after unmount

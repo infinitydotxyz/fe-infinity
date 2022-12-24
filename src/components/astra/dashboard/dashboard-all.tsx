@@ -20,7 +20,7 @@ export const DashboardAll = () => {
     if (collection && chainId) {
       setTokenFetcher(CollectionTokenCache.shared().fetcher(collection, chainId));
 
-      setDisplayName(collection?.name ?? '');
+      setDisplayName(collection?.metadata.name ?? '');
     }
   }, [collection, chainId, refreshTrigger]);
 
@@ -81,7 +81,7 @@ export const DashboardBase = () => {
     if (tokenFetcher) {
       const tabItems = RouteUtils.tabItems(router);
       const result = tabItems.find((cmp) => {
-        return cmp.path === RouteUtils.currentPath(router);
+        return cmp.path === router.asPath;
       });
 
       if (result) {
