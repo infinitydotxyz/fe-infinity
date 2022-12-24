@@ -317,4 +317,3 @@ export const Field = ({ onSort, sortable = false, onClick, type, label, value, c
     </div>
   );
 };
-

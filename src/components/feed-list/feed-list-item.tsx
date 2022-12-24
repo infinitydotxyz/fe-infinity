@@ -106,7 +106,7 @@ export const FeedListItem = ({
         <Button
           size="plain"
           variant="round"
-          onClick={async () => {
+          onClick={() => {
             if (user && user?.address) {
               // await addUserLike(true, activity.id, user.address);
 
@@ -124,7 +124,7 @@ export const FeedListItem = ({
         <Button
           variant="round"
           size="plain"
-          onClick={async () => {
+          onClick={() => {
             if (user && user?.address) {
               // await addUserLike(false, activity.id, user.address);
 
