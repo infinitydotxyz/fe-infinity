@@ -134,7 +134,7 @@ export const AstraCart = ({ tokens, collections, onTokensRemove, onCollsRemove, 
 
       <div className="m-6 flex flex-col">
         <AButton primary={true} disabled={!user || chainId !== '1' || tokens.length === 0} onClick={onCheckout}>
-          Buy Now
+          Place orders
         </AButton>
       </div>
     </div>
