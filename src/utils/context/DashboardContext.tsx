@@ -3,12 +3,11 @@ import { CollectionTokenCache, TokenFetcherAlt } from 'src/components/astra/toke
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import { useCardSelection } from 'src/components/astra/useCardSelection';
 import { useOnboardContext } from '../OnboardContext/OnboardContext';
-import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
-import { CollectionInfo } from '../astra-utils';
+import { BaseCollection, ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 
 export type DashboardContextType = {
-  collection: CollectionInfo | undefined;
-  setCollection: (value: CollectionInfo) => void;
+  collection: BaseCollection | undefined;
+  setCollection: (value: BaseCollection) => void;
 
   gridWidth: number;
   setGridWidth: (value: number) => void;
@@ -18,9 +17,6 @@ export type DashboardContextType = {
 
   showCart: boolean;
   setShowCart: (value: boolean) => void;
-
-  showCollections: boolean;
-  setShowCollections: (value: boolean) => void;
 
   listMode: boolean;
   setListMode: (value: boolean) => void;
@@ -50,9 +46,8 @@ interface Props {
 }
 
 export const DashboardContextProvider = ({ children }: Props) => {
-  const [collection, setCollection] = useState<CollectionInfo>();
+  const [collection, setCollection] = useState<BaseCollection>();
   const [showCart, setShowCart] = useState(true);
-  const [showCollections, setShowCollections] = useState(false);
   const [numTokens, setNumTokens] = useState(0);
   const [tokenFetcher, setTokenFetcher] = useState<TokenFetcherAlt | undefined>();
   const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -95,9 +90,6 @@ export const DashboardContextProvider = ({ children }: Props) => {
 
     showCart,
     setShowCart,
-
-    showCollections,
-    setShowCollections,
 
     listMode,
     setListMode,

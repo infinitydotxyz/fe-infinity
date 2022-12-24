@@ -1,5 +1,4 @@
 import { ReactNode, useEffect, useRef } from 'react';
-import { AstraSidebar } from 'src/components/astra/astra-sidebar';
 import { AstraCart } from 'src/components/astra/astra-cart';
 import { useResizeDetector } from 'react-resize-detector';
 import { MainDashboardGrid } from 'src/components/astra/dashboard/main-grid-dashboard';
@@ -11,7 +10,7 @@ interface Props {
   children: ReactNode;
 }
 export const Layout = ({ children }: Props) => {
-  const { collection, setCollection, setGridWidth, handleCheckout, selection, clearSelection, removeFromSelection } =
+  const { collection, setGridWidth, handleCheckout, selection, clearSelection, removeFromSelection } =
     useDashboardContext();
 
   const gridRef = useRef<HTMLDivElement>(null);
@@ -36,25 +35,6 @@ export const Layout = ({ children }: Props) => {
     gridRef.current?.scrollTo({ left: 0, top: 0 });
   }, [collection]);
 
-  const sidebar = (
-    <AstraSidebar
-      selectedCollection={collection}
-      onClick={(value) => {
-        // avoid clicking if already selected (avoids a network fetch)
-        if (value.address !== collection?.address) {
-          setCollection(value);
-        }
-
-        // navigate(`all?col=${value.address}`);
-      }}
-      onLoad={(value) => {
-        if (value.address !== collection?.address) {
-          setCollection(value);
-        }
-      }}
-    />
-  );
-
   const cart = (
     <AstraCart
       tokens={selection}
@@ -70,5 +50,5 @@ export const Layout = ({ children }: Props) => {
 
   const footer = <></>;
 
-  return MainDashboardGrid(<ANavbar />, <SidebarNav />, sidebar, <>{children}</>, cart, footer, gridRef, containerRef);
+  return MainDashboardGrid(<ANavbar />, <SidebarNav />, <>{children}</>, cart, footer, gridRef, containerRef);
 };
