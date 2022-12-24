@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useRef } from 'react';
-import { AstraCart } from 'src/components/astra/astra-cart';
 import { useResizeDetector } from 'react-resize-detector';
+import { AstraCart } from 'src/components/astra/astra-cart';
 import { MainDashboardGrid } from 'src/components/astra/dashboard/main-grid-dashboard';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { ANavbar } from './astra-navbar';
@@ -10,8 +10,17 @@ interface Props {
   children: ReactNode;
 }
 export const Layout = ({ children }: Props) => {
-  const { collection, setGridWidth, handleCheckout, selection, clearSelection, removeFromSelection } =
-    useDashboardContext();
+  const {
+    collection,
+    setGridWidth,
+    handleCheckout,
+    selection,
+    clearSelection,
+    removeFromSelection,
+    collSelection,
+    clearCollSelection,
+    removeCollFromSelection
+  } = useDashboardContext();
 
   const gridRef = useRef<HTMLDivElement>(null);
 
@@ -23,14 +32,6 @@ export const Layout = ({ children }: Props) => {
     }
   }, [containerWidth]);
 
-  // useEffect(() => {
-  //   if (selection.length > 0) {
-  //     setShowCart(true);
-  //   } else {
-  //     setShowCart(false);
-  //   }
-  // }, [selection]);
-
   useEffect(() => {
     gridRef.current?.scrollTo({ left: 0, top: 0 });
   }, [collection]);
@@ -38,12 +39,17 @@ export const Layout = ({ children }: Props) => {
   const cart = (
     <AstraCart
       tokens={selection}
+      collections={collSelection}
       onCheckout={() => {
         clearSelection();
+        clearCollSelection();
         handleCheckout(selection);
       }}
-      onRemove={(value) => {
+      onTokensRemove={(value) => {
         removeFromSelection(value);
+      }}
+      onCollsRemove={(value) => {
+        removeCollFromSelection(value);
       }}
     />
   );

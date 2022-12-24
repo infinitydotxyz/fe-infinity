@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
 import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
+import { useEffect, useState } from 'react';
 
 interface CardSelectionResult {
   toggleSelection: (data: ERC721CardData) => void;
@@ -20,7 +20,6 @@ export const useCardSelection = (): CardSelectionResult => {
 
   const toggleSelection = (value: ERC721CardData) => {
     if (!isSelected(value)) {
-      // don't allow an already revealed and visible card to be added to cart
       const copy = new Map(selectionMap);
       copy.set(value.id, value);
 

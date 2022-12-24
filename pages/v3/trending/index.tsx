@@ -1,4 +1,5 @@
-import { ChainId, Collection, CollectionPeriodStatsContent } from '@infinityxyz/lib-frontend/types/core';
+import { CheckIcon } from '@heroicons/react/solid';
+import { Collection, CollectionPeriodStatsContent, Erc721Collection } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import { parse } from 'query-string';
 import { useEffect, useState } from 'react';
@@ -18,7 +19,7 @@ import {
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import useScreenSize from 'src/hooks/useScreenSize';
 import { apiGet, formatNumber, ITEMS_PER_PAGE, nFormatter } from 'src/utils';
-import { useOrderContext } from 'src/utils/context/OrderContext';
+import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { inputBorderColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
@@ -35,6 +36,7 @@ const TrendingPage = () => {
   const [offset, setOffset] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const isMounted = useIsMounted();
+  const { isCollSelected, isCollSelectable, toggleCollSelection } = useDashboardContext();
 
   useEffect(() => {
     const parsedQs = parse(window?.location?.search); // don't use useRouter-query as it's undefined initially.
@@ -117,7 +119,21 @@ const TrendingPage = () => {
 
         <div className="space-y-3 mt-8">
           {data.map((coll, index) => {
-            return <TrendingPageCard key={coll.address} collection={coll} index={index} period={period} />;
+            return (
+              <TrendingPageCard
+                key={coll.address}
+                collection={coll}
+                isCollSelectable={isCollSelectable}
+                isCollSelected={isCollSelected}
+                onClickBuy={(data) => {
+                  if (toggleCollSelection) {
+                    return toggleCollSelection(data);
+                  }
+                }}
+                index={index}
+                period={period}
+              />
+            );
           })}
         </div>
 
@@ -141,24 +157,13 @@ interface Props {
   collection: Collection;
   period: string;
   index: number;
+  onClickBuy: (data: Erc721Collection) => void;
+  isCollSelected: (data: Erc721Collection) => boolean;
+  isCollSelectable: (data: Erc721Collection) => boolean;
 }
 
-const TrendingPageCard = ({ collection, period, index }: Props) => {
-  const { addCartItem, setOrderDrawerOpen } = useOrderContext();
-
+const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelectable, period, index }: Props) => {
   const { isDesktop } = useScreenSize();
-
-  const onClickBuy = (collection: Collection) => {
-    addCartItem({
-      chainId: collection.chainId as ChainId,
-      collectionName: collection.metadata?.name ?? '',
-      collectionAddress: collection.address ?? '',
-      collectionImage: collection.metadata?.profileImage ?? '',
-      collectionSlug: collection?.slug ?? '',
-      isSellOrder: false
-    });
-    setOrderDrawerOpen(true);
-  };
 
   let periodStat: CollectionPeriodStatsContent | undefined = undefined;
   if (period === 'daily') {
@@ -241,8 +246,15 @@ const TrendingPageCard = ({ collection, period, index }: Props) => {
             width: '170px'
           }}
         >
-          <AButton primary onClick={() => onClickBuy(collection)}>
-            Buy
+          <AButton
+            primary
+            onClick={() => {
+              if (isCollSelectable(collection as Erc721Collection)) {
+                onClickBuy(collection as Erc721Collection);
+              }
+            }}
+          >
+            {isCollSelected(collection as Erc721Collection) ? <CheckIcon className="w-5 h-5" /> : 'Buy'}
           </AButton>
         </div>
       </div>

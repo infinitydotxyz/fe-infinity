@@ -1,9 +1,11 @@
-import { toastError, toastSuccess } from 'src/components/common';
-import { CollectionTokenCache, TokenFetcherAlt } from 'src/components/astra/token-grid/token-fetcher';
-import React, { ReactNode, useContext, useEffect, useState } from 'react';
-import { useCardSelection } from 'src/components/astra/useCardSelection';
-import { useOnboardContext } from '../OnboardContext/OnboardContext';
 import { BaseCollection, ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
+import { Erc721Collection } from '@infinityxyz/lib-frontend/types/core/Collection';
+import React, { ReactNode, useContext, useEffect, useState } from 'react';
+import { CollectionTokenCache, TokenFetcherAlt } from 'src/components/astra/token-grid/token-fetcher';
+import { useCardSelection } from 'src/components/astra/useCardSelection';
+import { useCollectionSelection } from 'src/components/astra/useCollectionSelection';
+import { toastError, toastSuccess } from 'src/components/common';
+import { useOnboardContext } from '../OnboardContext/OnboardContext';
 
 export type DashboardContextType = {
   collection: BaseCollection | undefined;
@@ -37,6 +39,13 @@ export type DashboardContextType = {
   removeFromSelection: (data?: ERC721CardData) => void;
   selection: ERC721CardData[];
   clearSelection: () => void;
+
+  toggleCollSelection: (data: Erc721Collection) => void;
+  isCollSelected: (data: Erc721Collection) => boolean;
+  isCollSelectable: (data: Erc721Collection) => boolean;
+  removeCollFromSelection: (data?: Erc721Collection) => void; // null to remove all
+  collSelection: Erc721Collection[];
+  clearCollSelection: () => void;
 };
 
 const DashboardContext = React.createContext<DashboardContextType | null>(null);
@@ -60,6 +69,15 @@ export const DashboardContextProvider = ({ children }: Props) => {
 
   const { isSelected, isSelectable, toggleSelection, clearSelection, selection, removeFromSelection } =
     useCardSelection();
+
+  const {
+    isCollSelected,
+    isCollSelectable,
+    toggleCollSelection,
+    clearCollSelection,
+    collSelection,
+    removeCollFromSelection
+  } = useCollectionSelection();
 
   useEffect(() => {
     refreshData();
@@ -113,7 +131,14 @@ export const DashboardContextProvider = ({ children }: Props) => {
     toggleSelection,
     clearSelection,
     selection,
-    removeFromSelection
+    removeFromSelection,
+
+    isCollSelected,
+    isCollSelectable,
+    toggleCollSelection,
+    clearCollSelection,
+    collSelection,
+    removeCollFromSelection
   };
 
   return <DashboardContext.Provider value={value}>{children}</DashboardContext.Provider>;

@@ -1,10 +1,10 @@
+import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
+import { useState } from 'react';
 import { cardClr, hoverClr, selectionOutline, textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { Checkbox, EZImage, Spacer, SVG } from '../../common';
-import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
-import { useState } from 'react';
-import { TokenCardModal } from './token-card-modal';
 import { AOutlineButton } from '../astra-button';
+import { TokenCardModal } from './token-card-modal';
 
 interface Props {
   data: ERC721CardData;
@@ -31,7 +31,6 @@ export const TokenCard = ({ data, onClick, selected, isSelectable }: Props): JSX
       style={{ aspectRatio: '4 / 5' }}
       onClick={() => {
         if (!isSelectable(data)) {
-          // toastWarning('NFT rank is already revealed', 'Try another NFT');
           setNotSelectable(true);
         } else {
           onClick(data);

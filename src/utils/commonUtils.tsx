@@ -1,14 +1,15 @@
 import { getAddress } from '@ethersproject/address';
 import { BaseToken, ChainId, OwnerInfo } from '@infinityxyz/lib-frontend/types/core';
+import { Erc721Collection } from '@infinityxyz/lib-frontend/types/core/Collection';
 import {
   Env,
   ETHEREUM_CHAIN_SCANNER_BASE,
   POLYGON_CHAIN_SCANNER_BASE,
   trimLowerCase
 } from '@infinityxyz/lib-frontend/utils';
-import { ReactNode } from 'react';
 import ethers from 'ethers';
 import { normalize } from 'path';
+import { ReactNode } from 'react';
 
 export const base64Encode = (data: string) => Buffer.from(data).toString('base64');
 
@@ -61,6 +62,10 @@ export const toChecksumAddress = (address?: string): string => {
   }
 
   return '';
+};
+
+export const getCollectionId = (coll: Erc721Collection) => {
+  return trimLowerCase(`${coll?.chainId}:${coll?.address}`);
 };
 
 // use ellipsisString for non-address numbers, this gets the checksum address
