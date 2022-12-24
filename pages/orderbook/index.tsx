@@ -25,11 +25,11 @@ const OrderbookPage = () => {
           <OrderbookContent className="" />
         </OrderbookProvider>
       )}
-      {selected === 'Reservoir' && (
+      {/* {selected === 'Reservoir' && (
         <OrderbookProvider limit={50} reservoir={true}>
           <OrderbookContent className="" />
         </OrderbookProvider>
-      )}
+      )} */}
     </PageBox>
   );
 };
