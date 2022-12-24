@@ -1,6 +1,6 @@
 import { ApiResponse } from 'src/utils';
-import { CollectionInfo, fetchTokens } from 'src/utils/astra-utils';
-import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
+import { fetchTokens } from 'src/utils/astra-utils';
+import { BaseCollection, ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { ApiNftData, nftsToCardData, PagedData, TokenFetcherResult } from '../../gallery/token-fetcher';
 
 export class TokenFetcherAlt {
@@ -78,7 +78,7 @@ export class CollectionTokenCache {
     this.cache = new Map<string, TokenFetcherAlt>();
   };
 
-  fetcher(collection: CollectionInfo, chainId: string): TokenFetcherAlt {
+  fetcher(collection: BaseCollection, chainId: string): TokenFetcherAlt {
     const key = `${collection.address}:${chainId}`;
     const cached = this.cache.get(key);
 
@@ -96,17 +96,17 @@ export class CollectionTokenCache {
 // ========================================================================
 
 class CollectionTokenFetcher extends TokenFetcherAlt {
-  private collection: CollectionInfo;
+  private collection: BaseCollection;
   private chainId: string;
 
-  constructor(collection: CollectionInfo, chainId: string) {
+  constructor(collection: BaseCollection, chainId: string) {
     super();
 
     this.collection = collection;
     this.chainId = chainId;
 
     // not sure if this is needed now days
-    this.collectionName = collection.name ?? '';
+    this.collectionName = collection.metadata.name ?? '';
   }
 
   // override

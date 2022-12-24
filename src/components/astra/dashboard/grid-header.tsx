@@ -12,9 +12,9 @@ interface Props {
 export const GridHeader = ({ expanded }: Props) => {
   const { numTokens, collection } = useDashboardContext();
 
-  const avatarUrl = collection?.bannerImage || collection?.profileImage;
-  const name = collection?.name ?? '';
-  const description = collection?.description ?? '';
+  const avatarUrl = collection?.metadata.bannerImage || collection?.metadata.profileImage;
+  const name = collection?.metadata.name ?? '';
+  const description = collection?.metadata.description ?? '';
 
   if (collection) {
     return (
@@ -67,42 +67,32 @@ export const GridHeader = ({ expanded }: Props) => {
 // ==============================================
 
 export class RouteUtils {
-  static currentPath = (router: NextRouter) => {
-    let result = router.asPath;
-
-    if (result === '/new') {
-      result = '/new/items';
-    }
-
-    return result;
-  };
-
   static tabItems = (router: NextRouter) => {
-    const path = RouteUtils.currentPath(router);
+    const path = router.asPath;
 
     return [
       {
         id: 'items',
-        path: '/new/items',
-        selected: '/new/items' === path,
+        path: 'items',
+        selected: path.endsWith('items'),
         name: 'Items'
       },
       {
         id: 'orders',
-        path: '/new/orders',
-        selected: '/new/orders' === path,
+        path: 'orders',
+        selected: path.endsWith('orders'),
         name: 'Orders'
       },
       {
         id: 'activity',
-        path: '/new/activity',
-        selected: '/new/activity' === path,
+        path: 'activity',
+        selected: path.endsWith('activity'),
         name: 'Activity'
       },
       {
         id: 'analytics',
-        path: '/new/analytics',
-        selected: '/new/analytics' === path,
+        path: 'analytics',
+        selected: path.endsWith('analytics'),
         name: 'Analytics'
       }
     ];
@@ -110,6 +100,7 @@ export class RouteUtils {
 }
 
 export const HeaderTabBar = () => {
+  const { collection } = useDashboardContext();
   const router = useRouter();
 
   const tabItems = RouteUtils.tabItems(router);
@@ -119,7 +110,7 @@ export const HeaderTabBar = () => {
       {tabItems.map((e) => {
         return (
           <div key={e.path} className={twMerge('pb-3', e.selected ? `border-b-4 ${primaryBorderColor}` : '')}>
-            <NextLink href={e.path}>
+            <NextLink href={`/v3/collection/${collection?.slug}/${e.path}`}>
               <div className={e.selected ? primaryTextColor : ''}>{e.name}</div>
             </NextLink>
           </div>
