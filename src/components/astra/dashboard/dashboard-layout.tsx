@@ -37,7 +37,7 @@ export const DashboardLayout: React.FC<DashBoardProps> = ({ children, collection
 
   return (
     // This is added just for the ASortButton, so remove if we change how this works
-    <OrderbookProvider limit={50}>
+    <OrderbookProvider limit={50} collectionId={collection?.address}>
       <div className="flex flex-col h-full w-full">
         <GridHeader expanded={expanded} />
         <div ref={setRef} className="overflow-y-auto">
