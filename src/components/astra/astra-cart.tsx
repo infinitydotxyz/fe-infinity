@@ -101,12 +101,6 @@ export const AstraCart = ({ tokens, collections, onTokensRemove, onCollsRemove, 
       const first = collArray[0];
       const collId = getCollectionId(first);
 
-      // divList.push(
-      //   <div className="w-full rounded-md px-4 font-bold truncate" key={`header-${collId}`}>
-      //     {first.metadata.name}
-      //   </div>
-      // );
-
       for (const t of collArray) {
         divList.push(<AstraCollectionCartItem key={collId} collection={t} index={index++} onRemove={onCollsRemove} />);
       }
