@@ -2,7 +2,7 @@ import { ChainId, CollectionAttributes, Erc721Metadata, OBOrder, Token } from '@
 import { getCurrentOBOrderPrice } from '@infinityxyz/lib-frontend/utils';
 import { utils } from 'ethers';
 import { useRouter } from 'next/router';
-import NotFound404Page from 'pages/not-found-404';
+import NotFound404Page from 'pages/v3/not-found-404';
 import { useEffect, useState } from 'react';
 import { ActivityList, CancelModal, ListNFTModal, MakeOfferModal, SendNFTModal, TraitList } from 'src/components/asset';
 import { LowerPriceModal } from 'src/components/asset/modals/lower-price-modal';

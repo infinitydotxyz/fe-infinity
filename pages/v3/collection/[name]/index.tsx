@@ -7,7 +7,7 @@ import {
 } from '@infinityxyz/lib-frontend/types/core';
 import { CollectionStatsDto } from '@infinityxyz/lib-frontend/types/dto/stats';
 import { useRouter } from 'next/router';
-import NotFound404Page from 'pages/not-found-404';
+import NotFound404Page from 'pages/v3/not-found-404';
 import { useEffect, useState } from 'react';
 import { BsCheck } from 'react-icons/bs';
 import { HiOutlineExternalLink } from 'react-icons/hi';
