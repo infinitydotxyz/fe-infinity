@@ -3,6 +3,7 @@ import { useResizeDetector } from 'react-resize-detector';
 import { AstraCart } from 'src/components/astra/astra-cart';
 import { MainDashboardGrid } from 'src/components/astra/dashboard/main-grid-dashboard';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
+import { toastError } from '../common';
 import { ANavbar } from './astra-navbar';
 import { SidebarNav } from './sidebar-nav';
 
@@ -13,7 +14,8 @@ export const Layout = ({ children }: Props) => {
   const {
     collection,
     setGridWidth,
-    handleCheckout,
+    handleTokenCheckout,
+    handleCollCheckout,
     selection,
     clearSelection,
     removeFromSelection,
@@ -40,10 +42,19 @@ export const Layout = ({ children }: Props) => {
     <AstraCart
       tokens={selection}
       collections={collSelection}
-      onCheckout={() => {
-        clearSelection();
-        clearCollSelection();
-        handleCheckout(selection);
+      onCheckout={async () => {
+        try {
+          if (selection.length > 0) {
+            await handleTokenCheckout(selection);
+            clearSelection();
+          } else if (collSelection.length > 0) {
+            await handleCollCheckout(collSelection);
+            clearCollSelection();
+          }
+        } catch (e) {
+          console.log(e);
+          toastError(e);
+        }
       }}
       onTokensRemove={(value) => {
         removeFromSelection(value);
