@@ -10,6 +10,7 @@ import {
 import ethers from 'ethers';
 import { normalize } from 'path';
 import { ReactNode } from 'react';
+import { ORDER_EXPIRY_TIME } from 'src/components/astra/types';
 
 export const base64Encode = (data: string) => Buffer.from(data).toString('base64');
 
@@ -343,6 +344,27 @@ export const getUserToDisplay = (
     address: user.address,
     link: `/profile/${user.address}`
   };
+};
+
+export const getDefaultOrderExpiryTime = (): ORDER_EXPIRY_TIME => {
+  return ORDER_EXPIRY_TIME.WEEK;
+};
+
+export const getOrderExpiryTimeInMsFromEnum = (expiry: ORDER_EXPIRY_TIME): number => {
+  switch (expiry) {
+    case ORDER_EXPIRY_TIME.HOUR:
+      return Date.now() + 60 * 60 * 1000;
+    case ORDER_EXPIRY_TIME.DAY:
+      return Date.now() + 24 * 60 * 60 * 1000;
+    case ORDER_EXPIRY_TIME.WEEK:
+      return Date.now() + 7 * 24 * 60 * 60 * 1000;
+    case ORDER_EXPIRY_TIME.MONTH:
+      return Date.now() + 30 * 24 * 60 * 60 * 1000;
+    case ORDER_EXPIRY_TIME.YEAR:
+      return Date.now() + 365 * 24 * 60 * 60 * 1000;
+    default:
+      return Date.now() + 7 * 24 * 60 * 60 * 1000;
+  }
 };
 
 export const getCollectionLink = ({ slug, address, chainId }: { slug: string; address: string; chainId: ChainId }) => {

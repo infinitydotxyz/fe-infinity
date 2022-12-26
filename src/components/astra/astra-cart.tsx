@@ -1,24 +1,25 @@
-import { ERC721CardData, Erc721Collection } from '@infinityxyz/lib-frontend/types/core';
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import { MdClose } from 'react-icons/md';
 import { AButton, ARoundButton, ATextButton } from 'src/components/astra';
-import { EZImage, Spacer } from 'src/components/common';
-import { getCollectionKeyId, getTokenKeyId } from 'src/utils';
+import { EZImage, Spacer, TextInputBox } from 'src/components/common';
+import { getCollectionKeyId, getDefaultOrderExpiryTime, getTokenKeyId } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { infoBoxBGClr, smallIconButtonStyle, textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
+import { ADropdown } from './astra-dropdown';
+import { Erc721CollectionOffer, Erc721TokenOffer, ORDER_EXPIRY_TIME } from './types';
 
 interface Props {
-  collections: Erc721Collection[];
-  tokens: ERC721CardData[];
-  onCollsRemove: (coll?: Erc721Collection) => void;
-  onTokensRemove: (token?: ERC721CardData) => void;
+  collections: Erc721CollectionOffer[];
+  tokens: Erc721TokenOffer[];
+  onCollsRemove: (coll?: Erc721CollectionOffer) => void;
+  onTokensRemove: (token?: Erc721TokenOffer) => void;
   onCheckout: () => void;
 }
 
 export const AstraCart = ({ tokens, collections, onTokensRemove, onCollsRemove, onCheckout }: Props) => {
-  const tokenMap = new Map<string, ERC721CardData[]>();
-  const collMap = new Map<string, Erc721Collection[]>();
+  const tokenMap = new Map<string, Erc721TokenOffer[]>();
+  const collMap = new Map<string, Erc721CollectionOffer[]>();
   const { user, chainId } = useOnboardContext();
 
   for (const token of tokens) {
@@ -76,7 +77,7 @@ export const AstraCart = ({ tokens, collections, onTokensRemove, onCollsRemove, 
       const first = tokenArray[0];
 
       divList.push(
-        <div className="w-full rounded-md px-4 font-bold truncate" key={`header-${first.id}`}>
+        <div className="w-full rounded-md font-bold truncate" key={`header-${first.id}`}>
           {first.collectionName}
         </div>
       );
@@ -148,19 +149,19 @@ export const AstraCart = ({ tokens, collections, onTokensRemove, onCollsRemove, 
 // ====================================================================
 
 interface Props2 {
-  token: ERC721CardData;
+  token: Erc721TokenOffer;
   index: number;
-  onRemove: (token: ERC721CardData) => void;
+  onRemove: (token: Erc721TokenOffer) => void;
 }
 
-export const AstraTokenCartItem = ({ token, index, onRemove }: Props2) => {
+export const AstraTokenCartItem = ({ token, onRemove }: Props2) => {
   return (
     <div key={getTokenKeyId(token)} className="flex items-center w-full">
-      <div className="w-4 mr-2 text-right pr-2 text-sm">{index + 1}</div>
       <EZImage className={twMerge('h-12 w-12 rounded-lg overflow-clip')} src={token.image} />
 
       <div className="ml-3 flex flex-col w-full">
         <div className="leading-5 text-lg font-bold">{token.tokenId}</div>
+        <PriceAndExpiry token={token}></PriceAndExpiry>
       </div>
 
       <Spacer />
@@ -176,19 +177,19 @@ export const AstraTokenCartItem = ({ token, index, onRemove }: Props2) => {
 };
 
 interface Props3 {
-  collection: Erc721Collection;
+  collection: Erc721CollectionOffer;
   index: number;
-  onRemove: (coll: Erc721Collection) => void;
+  onRemove: (coll: Erc721CollectionOffer) => void;
 }
 
-export const AstraCollectionCartItem = ({ collection, index, onRemove }: Props3) => {
+export const AstraCollectionCartItem = ({ collection, onRemove }: Props3) => {
   return (
     <div key={getCollectionKeyId(collection)} className="flex items-center w-full">
-      <div className="w-4 mr-2 text-right pr-2 text-sm">{index + 1}</div>
       <EZImage className={twMerge('h-12 w-12 rounded-lg overflow-clip')} src={collection.metadata.profileImage} />
 
       <div className="ml-3 flex flex-col w-full">
         <div className="leading-5 text-gray-500">{collection.metadata.name}</div>
+        <PriceAndExpiry collection={collection}></PriceAndExpiry>
       </div>
 
       <Spacer />
@@ -199,6 +200,100 @@ export const AstraCollectionCartItem = ({ collection, index, onRemove }: Props3)
       >
         <MdClose className={twMerge(smallIconButtonStyle, '   ')} />
       </ARoundButton>
+    </div>
+  );
+};
+
+interface Props4 {
+  token?: Erc721TokenOffer;
+  collection?: Erc721CollectionOffer;
+}
+
+const PriceAndExpiry = ({ token, collection }: Props4) => {
+  const [price, setPrice] = useState('');
+  const [expiry, setExpiry] = useState(getDefaultOrderExpiryTime());
+  return (
+    <div className="flex flex-row space-x-4">
+      <TextInputBox
+        autoFocus={true}
+        addEthSymbol={true}
+        type="number"
+        value={price}
+        label="Price"
+        placeholder="0"
+        onChange={(value) => {
+          setPrice(value);
+          if (token) {
+            token.ethPrice = parseFloat(value);
+          } else if (collection) {
+            collection.ethPrice = parseFloat(value);
+          }
+        }}
+      />
+      <div>
+        <div className="text-md mb-2">Expiry</div>
+        <ADropdown
+          hasBorder={true}
+          label={expiry}
+          items={[
+            {
+              label: ORDER_EXPIRY_TIME.HOUR,
+              onClick: () => {
+                setExpiry(ORDER_EXPIRY_TIME.HOUR);
+                if (token) {
+                  token.expiry = ORDER_EXPIRY_TIME.HOUR;
+                } else if (collection) {
+                  collection.expiry = ORDER_EXPIRY_TIME.HOUR;
+                }
+              }
+            },
+            {
+              label: ORDER_EXPIRY_TIME.DAY,
+              onClick: () => {
+                setExpiry(ORDER_EXPIRY_TIME.DAY);
+                if (token) {
+                  token.expiry = ORDER_EXPIRY_TIME.DAY;
+                } else if (collection) {
+                  collection.expiry = ORDER_EXPIRY_TIME.DAY;
+                }
+              }
+            },
+            {
+              label: ORDER_EXPIRY_TIME.WEEK,
+              onClick: () => {
+                setExpiry(ORDER_EXPIRY_TIME.WEEK);
+                if (token) {
+                  token.expiry = ORDER_EXPIRY_TIME.WEEK;
+                } else if (collection) {
+                  collection.expiry = ORDER_EXPIRY_TIME.WEEK;
+                }
+              }
+            },
+            {
+              label: ORDER_EXPIRY_TIME.MONTH,
+              onClick: () => {
+                setExpiry(ORDER_EXPIRY_TIME.MONTH);
+                if (token) {
+                  token.expiry = ORDER_EXPIRY_TIME.MONTH;
+                } else if (collection) {
+                  collection.expiry = ORDER_EXPIRY_TIME.MONTH;
+                }
+              }
+            },
+            {
+              label: ORDER_EXPIRY_TIME.YEAR,
+              onClick: () => {
+                setExpiry(ORDER_EXPIRY_TIME.YEAR);
+                if (token) {
+                  token.expiry = ORDER_EXPIRY_TIME.YEAR;
+                } else if (collection) {
+                  collection.expiry = ORDER_EXPIRY_TIME.YEAR;
+                }
+              }
+            }
+          ]}
+        />
+      </div>
     </div>
   );
 };

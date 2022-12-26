@@ -1,25 +1,25 @@
-import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { getTokenKeyId } from 'src/utils';
+import { Erc721TokenOffer } from './types';
 
 interface CardSelectionResult {
-  toggleSelection: (data: ERC721CardData) => void;
-  isSelected: (data: ERC721CardData) => boolean;
-  isSelectable: (data: ERC721CardData) => boolean;
-  removeFromSelection: (data?: ERC721CardData) => void; // null to remove all
-  selection: ERC721CardData[];
+  toggleSelection: (data: Erc721TokenOffer) => void;
+  isSelected: (data: Erc721TokenOffer) => boolean;
+  isSelectable: (data: Erc721TokenOffer) => boolean;
+  removeFromSelection: (data?: Erc721TokenOffer) => void; // null to remove all
+  selection: Erc721TokenOffer[];
   clearSelection: () => void;
 }
 
 export const useCardSelection = (): CardSelectionResult => {
-  const [selectionMap, setSelectionMap] = useState<Map<string, ERC721CardData>>(new Map());
-  const [selection, setSelection] = useState<ERC721CardData[]>([]);
+  const [selectionMap, setSelectionMap] = useState<Map<string, Erc721TokenOffer>>(new Map());
+  const [selection, setSelection] = useState<Erc721TokenOffer[]>([]);
 
   useEffect(() => {
     setSelection(Array.from(selectionMap.values()));
   }, [selectionMap]);
 
-  const toggleSelection = (value: ERC721CardData) => {
+  const toggleSelection = (value: Erc721TokenOffer) => {
     if (!isSelected(value)) {
       const copy = new Map(selectionMap);
       copy.set(getTokenKeyId(value), value);
@@ -30,11 +30,11 @@ export const useCardSelection = (): CardSelectionResult => {
     }
   };
 
-  const isSelectable = (value: ERC721CardData): boolean => {
+  const isSelectable = (value: Erc721TokenOffer): boolean => {
     return value.address !== null;
   };
 
-  const removeFromSelection = (value?: ERC721CardData) => {
+  const removeFromSelection = (value?: Erc721TokenOffer) => {
     if (value) {
       if (isSelected(value)) {
         const copy = new Map(selectionMap);
@@ -47,7 +47,7 @@ export const useCardSelection = (): CardSelectionResult => {
     }
   };
 
-  const isSelected = (value: ERC721CardData): boolean => {
+  const isSelected = (value: Erc721TokenOffer): boolean => {
     return selectionMap.has(getTokenKeyId(value));
   };
 

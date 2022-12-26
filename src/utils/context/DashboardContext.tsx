@@ -1,25 +1,23 @@
 import {
   BaseCollection,
   ChainId,
-  ERC721CardData,
   OBOrder,
   OBOrderItem,
   OBTokenInfo,
   SignedOBOrder
 } from '@infinityxyz/lib-frontend/types/core';
-import { Erc721Collection } from '@infinityxyz/lib-frontend/types/core/Collection';
 import { getOBComplicationAddress, getTxnCurrencyAddress } from '@infinityxyz/lib-frontend/utils';
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import { CollectionTokenCache, TokenFetcherAlt } from 'src/components/astra/token-grid/token-fetcher';
+import { Erc721CollectionOffer, Erc721TokenOffer } from 'src/components/astra/types';
 import { useCardSelection } from 'src/components/astra/useCardSelection';
 import { useCollectionSelection } from 'src/components/astra/useCollectionSelection';
 import { toastError, toastSuccess } from 'src/components/common';
-import { getEstimatedGasPrice } from '../commonUtils';
+import { getDefaultOrderExpiryTime, getEstimatedGasPrice, getOrderExpiryTimeInMsFromEnum } from '../commonUtils';
 import { DEFAULT_MAX_GAS_PRICE_WEI } from '../constants';
 import { getSignedOBOrder } from '../exchange/orders';
 import { useOnboardContext } from '../OnboardContext/OnboardContext';
 import { fetchOrderNonce, postOrdersV2 } from '../orderbookUtils';
-import { weekSeconds } from '../ui-constants';
 
 export type DashboardContextType = {
   collection: BaseCollection | undefined;
@@ -43,23 +41,23 @@ export type DashboardContextType = {
   tokenFetcher: TokenFetcherAlt | undefined;
   setTokenFetcher: (value: TokenFetcherAlt | undefined) => void;
 
-  handleTokenCheckout: (selection: ERC721CardData[]) => Promise<void>;
-  handleCollCheckout: (selection: Erc721Collection[]) => Promise<void>;
+  handleTokenCheckout: (selection: Erc721TokenOffer[]) => Promise<void>;
+  handleCollCheckout: (selection: Erc721CollectionOffer[]) => Promise<void>;
   refreshData: () => void;
   refreshTrigger: number;
 
-  toggleSelection: (data: ERC721CardData) => void;
-  isSelected: (data: ERC721CardData) => boolean;
-  isSelectable: (data: ERC721CardData) => boolean;
-  removeFromSelection: (data?: ERC721CardData) => void;
-  selection: ERC721CardData[];
+  toggleSelection: (data: Erc721TokenOffer) => void;
+  isSelected: (data: Erc721TokenOffer) => boolean;
+  isSelectable: (data: Erc721TokenOffer) => boolean;
+  removeFromSelection: (data?: Erc721TokenOffer) => void;
+  selection: Erc721TokenOffer[];
   clearSelection: () => void;
 
-  toggleCollSelection: (data: Erc721Collection) => void;
-  isCollSelected: (data: Erc721Collection) => boolean;
-  isCollSelectable: (data: Erc721Collection) => boolean;
-  removeCollFromSelection: (data?: Erc721Collection) => void; // null to remove all
-  collSelection: Erc721Collection[];
+  toggleCollSelection: (data: Erc721CollectionOffer) => void;
+  isCollSelected: (data: Erc721CollectionOffer) => boolean;
+  isCollSelectable: (data: Erc721CollectionOffer) => boolean;
+  removeCollFromSelection: (data?: Erc721CollectionOffer) => void; // null to remove all
+  collSelection: Erc721CollectionOffer[];
   clearCollSelection: () => void;
 };
 
@@ -98,7 +96,7 @@ export const DashboardContextProvider = ({ children }: Props) => {
     refreshData();
   }, []);
 
-  const handleTokenCheckout = async (tokens: ERC721CardData[]) => {
+  const handleTokenCheckout = async (tokens: Erc721TokenOffer[]) => {
     const signer = getSigner();
     if (!user || !user.address || !signer) {
       toastError('No logged in user');
@@ -124,8 +122,10 @@ export const DashboardContextProvider = ({ children }: Props) => {
 
       // post orders
       try {
-        await postOrdersV2(chainId as ChainId, signedOrders);
-        toastSuccess('Orders posted');
+        if (signedOrders.length > 0) {
+          await postOrdersV2(chainId as ChainId, signedOrders);
+          toastSuccess('Orders posted');
+        }
       } catch (ex) {
         console.error(ex);
         toastError(`${ex}}`);
@@ -133,7 +133,7 @@ export const DashboardContextProvider = ({ children }: Props) => {
     }
   };
 
-  const handleCollCheckout = async (collections: Erc721Collection[]) => {
+  const handleCollCheckout = async (collections: Erc721CollectionOffer[]) => {
     const signer = getSigner();
     if (!user || !user.address || !signer) {
       toastError('No logged in user');
@@ -159,8 +159,10 @@ export const DashboardContextProvider = ({ children }: Props) => {
 
       // post orders
       try {
-        await postOrdersV2(chainId as ChainId, signedOrders);
-        toastSuccess('Orders posted');
+        if (signedOrders.length > 0) {
+          await postOrdersV2(chainId as ChainId, signedOrders);
+          toastSuccess('Orders posted');
+        }
       } catch (ex) {
         console.error(ex);
         toastError(`${ex}}`);
@@ -168,10 +170,16 @@ export const DashboardContextProvider = ({ children }: Props) => {
     }
   };
 
-  const tokenToOBOrder = async (token: ERC721CardData, orderNonce: number): Promise<OBOrder | undefined> => {
+  const tokenToOBOrder = async (token: Erc721TokenOffer, orderNonce: number): Promise<OBOrder | undefined> => {
     try {
       const currencyAddress = getTxnCurrencyAddress(chainId);
       const gasPrice = await getEstimatedGasPrice(getEthersProvider());
+      const ethPrice = token.ethPrice;
+      if (ethPrice === 0) {
+        throw new Error('Price is 0');
+      }
+      const expiry = token.expiry ?? getDefaultOrderExpiryTime();
+      const endTimeMs = getOrderExpiryTimeInMsFromEnum(expiry);
       const obTokenInfo: OBTokenInfo = {
         tokenId: token.tokenId ?? '',
         tokenName: token.name ?? '',
@@ -197,9 +205,9 @@ export const DashboardContextProvider = ({ children }: Props) => {
         makerAddress: user?.address ?? '',
         numItems: 1, // defaulting to one for now; m of n orders not supported in this release via FE
         startTimeMs: Date.now(),
-        endTimeMs: Date.now() + weekSeconds * 1000, // default one week todo: get from FE
-        startPriceEth: 1, // defaulting to 1 ETH for now todo: get from FE
-        endPriceEth: 1, // defaulting to 1 ETH for now
+        endTimeMs,
+        startPriceEth: ethPrice,
+        endPriceEth: ethPrice,
         nfts: [obOrderItem],
         makerUsername: '', // filled in BE
         nonce: orderNonce,
@@ -219,12 +227,18 @@ export const DashboardContextProvider = ({ children }: Props) => {
   };
 
   const collectionToOBOrder = async (
-    collection: Erc721Collection,
+    collection: Erc721CollectionOffer,
     orderNonce: number
   ): Promise<OBOrder | undefined> => {
     try {
       const currencyAddress = getTxnCurrencyAddress(chainId);
       const gasPrice = await getEstimatedGasPrice(getEthersProvider());
+      const ethPrice = collection.ethPrice;
+      if (ethPrice === 0) {
+        throw new Error('Price is 0');
+      }
+      const expiry = collection.expiry ?? getDefaultOrderExpiryTime();
+      const endTimeMs = getOrderExpiryTimeInMsFromEnum(expiry);
       const obOrderItem: OBOrderItem = {
         chainId: collection.chainId as ChainId,
         collectionAddress: collection.address,
@@ -241,9 +255,9 @@ export const DashboardContextProvider = ({ children }: Props) => {
         makerAddress: user?.address ?? '',
         numItems: 1, // defaulting to one for now; m of n orders not supported in this release via FE
         startTimeMs: Date.now(),
-        endTimeMs: Date.now() + weekSeconds * 1000, // default one week todo: get from FE
-        startPriceEth: 1, // defaulting to 1 ETH for now todo: get from FE
-        endPriceEth: 1, // defaulting to 1 ETH for now
+        endTimeMs,
+        startPriceEth: ethPrice,
+        endPriceEth: ethPrice,
         nfts: [obOrderItem],
         makerUsername: '', // filled in BE
         nonce: orderNonce,

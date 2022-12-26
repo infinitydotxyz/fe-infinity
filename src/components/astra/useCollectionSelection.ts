@@ -1,25 +1,25 @@
-import { Erc721Collection } from '@infinityxyz/lib-frontend/types/core/Collection';
 import { useEffect, useState } from 'react';
 import { getCollectionKeyId } from 'src/utils';
+import { Erc721CollectionOffer } from './types';
 
 interface CollectionSelectionResult {
-  toggleCollSelection: (data: Erc721Collection) => void;
-  isCollSelected: (data: Erc721Collection) => boolean;
-  isCollSelectable: (data: Erc721Collection) => boolean;
-  removeCollFromSelection: (data?: Erc721Collection) => void; // null to remove all
-  collSelection: Erc721Collection[];
+  toggleCollSelection: (data: Erc721CollectionOffer) => void;
+  isCollSelected: (data: Erc721CollectionOffer) => boolean;
+  isCollSelectable: (data: Erc721CollectionOffer) => boolean;
+  removeCollFromSelection: (data?: Erc721CollectionOffer) => void; // null to remove all
+  collSelection: Erc721CollectionOffer[];
   clearCollSelection: () => void;
 }
 
 export const useCollectionSelection = (): CollectionSelectionResult => {
-  const [collSelectionMap, setCollSelectionMap] = useState<Map<string, Erc721Collection>>(new Map());
-  const [collSelection, setCollSelection] = useState<Erc721Collection[]>([]);
+  const [collSelectionMap, setCollSelectionMap] = useState<Map<string, Erc721CollectionOffer>>(new Map());
+  const [collSelection, setCollSelection] = useState<Erc721CollectionOffer[]>([]);
 
   useEffect(() => {
     setCollSelection(Array.from(collSelectionMap.values()));
   }, [collSelectionMap]);
 
-  const toggleCollSelection = (value: Erc721Collection) => {
+  const toggleCollSelection = (value: Erc721CollectionOffer) => {
     if (!isCollSelected(value)) {
       const copy = new Map(collSelectionMap);
       copy.set(getCollectionKeyId(value), value);
@@ -30,11 +30,11 @@ export const useCollectionSelection = (): CollectionSelectionResult => {
     }
   };
 
-  const isCollSelectable = (value: Erc721Collection): boolean => {
+  const isCollSelectable = (value: Erc721CollectionOffer): boolean => {
     return value.address !== null;
   };
 
-  const removeCollFromSelection = (value?: Erc721Collection) => {
+  const removeCollFromSelection = (value?: Erc721CollectionOffer) => {
     if (value) {
       if (isCollSelected(value)) {
         const copy = new Map(collSelectionMap);
@@ -47,7 +47,7 @@ export const useCollectionSelection = (): CollectionSelectionResult => {
     }
   };
 
-  const isCollSelected = (value: Erc721Collection): boolean => {
+  const isCollSelected = (value: Erc721CollectionOffer): boolean => {
     return collSelectionMap.has(getCollectionKeyId(value));
   };
 
