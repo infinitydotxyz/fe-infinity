@@ -1,6 +1,6 @@
 import { Erc721Collection } from '@infinityxyz/lib-frontend/types/core/Collection';
 import { useEffect, useState } from 'react';
-import { getCollectionId } from 'src/utils';
+import { getCollectionKeyId } from 'src/utils';
 
 interface CollectionSelectionResult {
   toggleCollSelection: (data: Erc721Collection) => void;
@@ -22,7 +22,7 @@ export const useCollectionSelection = (): CollectionSelectionResult => {
   const toggleCollSelection = (value: Erc721Collection) => {
     if (!isCollSelected(value)) {
       const copy = new Map(collSelectionMap);
-      copy.set(getCollectionId(value), value);
+      copy.set(getCollectionKeyId(value), value);
 
       setCollSelectionMap(copy);
     } else {
@@ -38,7 +38,7 @@ export const useCollectionSelection = (): CollectionSelectionResult => {
     if (value) {
       if (isCollSelected(value)) {
         const copy = new Map(collSelectionMap);
-        copy.delete(getCollectionId(value));
+        copy.delete(getCollectionKeyId(value));
 
         setCollSelectionMap(copy);
       }
@@ -48,7 +48,7 @@ export const useCollectionSelection = (): CollectionSelectionResult => {
   };
 
   const isCollSelected = (value: Erc721Collection): boolean => {
-    return collSelectionMap.has(getCollectionId(value));
+    return collSelectionMap.has(getCollectionKeyId(value));
   };
 
   const clearCollSelection = () => {

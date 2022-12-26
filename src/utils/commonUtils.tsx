@@ -1,5 +1,5 @@
 import { getAddress } from '@ethersproject/address';
-import { BaseToken, ChainId, OwnerInfo } from '@infinityxyz/lib-frontend/types/core';
+import { BaseToken, ChainId, ERC721CardData, OwnerInfo } from '@infinityxyz/lib-frontend/types/core';
 import { Erc721Collection } from '@infinityxyz/lib-frontend/types/core/Collection';
 import {
   Env,
@@ -64,8 +64,12 @@ export const toChecksumAddress = (address?: string): string => {
   return '';
 };
 
-export const getCollectionId = (coll: Erc721Collection) => {
+export const getCollectionKeyId = (coll: Erc721Collection) => {
   return trimLowerCase(`${coll?.chainId}:${coll?.address}`);
+};
+
+export const getTokenKeyId = (data: ERC721CardData) => {
+  return trimLowerCase(`${data?.chainId}:${data?.address}:${data?.tokenId}`);
 };
 
 // use ellipsisString for non-address numbers, this gets the checksum address

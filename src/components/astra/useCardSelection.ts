@@ -1,5 +1,6 @@
 import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
+import { getTokenKeyId } from 'src/utils';
 
 interface CardSelectionResult {
   toggleSelection: (data: ERC721CardData) => void;
@@ -21,7 +22,7 @@ export const useCardSelection = (): CardSelectionResult => {
   const toggleSelection = (value: ERC721CardData) => {
     if (!isSelected(value)) {
       const copy = new Map(selectionMap);
-      copy.set(value.id, value);
+      copy.set(getTokenKeyId(value), value);
 
       setSelectionMap(copy);
     } else {
@@ -37,7 +38,7 @@ export const useCardSelection = (): CardSelectionResult => {
     if (value) {
       if (isSelected(value)) {
         const copy = new Map(selectionMap);
-        copy.delete(value.id);
+        copy.delete(getTokenKeyId(value));
 
         setSelectionMap(copy);
       }
@@ -47,7 +48,7 @@ export const useCardSelection = (): CardSelectionResult => {
   };
 
   const isSelected = (value: ERC721CardData): boolean => {
-    return selectionMap.has(value.id);
+    return selectionMap.has(getTokenKeyId(value));
   };
 
   const clearSelection = () => {

@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 import { MdClose } from 'react-icons/md';
 import { AButton, ARoundButton, ATextButton } from 'src/components/astra';
 import { EZImage, Spacer } from 'src/components/common';
-import { getCollectionId } from 'src/utils';
+import { getCollectionKeyId, getTokenKeyId } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { infoBoxBGClr, smallIconButtonStyle, textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
@@ -28,9 +28,9 @@ export const AstraCart = ({ tokens, collections, onTokensRemove, onCollsRemove, 
   }
 
   for (const coll of collections) {
-    const colls = collMap.get(getCollectionId(coll) ?? '') ?? [];
+    const colls = collMap.get(getCollectionKeyId(coll) ?? '') ?? [];
     colls.push(coll);
-    collMap.set(getCollectionId(coll) ?? '', colls);
+    collMap.set(getCollectionKeyId(coll) ?? '', colls);
   }
 
   let clearButton = <></>;
@@ -82,7 +82,7 @@ export const AstraCart = ({ tokens, collections, onTokensRemove, onCollsRemove, 
       );
 
       for (const t of tokenArray) {
-        divList.push(<AstraTokenCartItem key={t.id} token={t} index={index++} onRemove={onTokensRemove} />);
+        divList.push(<AstraTokenCartItem key={getTokenKeyId(t)} token={t} index={index++} onRemove={onTokensRemove} />);
       }
 
       divList.push(<div key={Math.random()} className="h-1" />);
@@ -99,7 +99,7 @@ export const AstraCart = ({ tokens, collections, onTokensRemove, onCollsRemove, 
     let index = 0;
     collMap.forEach((collArray) => {
       const first = collArray[0];
-      const collId = getCollectionId(first);
+      const collId = getCollectionKeyId(first);
 
       for (const t of collArray) {
         divList.push(<AstraCollectionCartItem key={collId} collection={t} index={index++} onRemove={onCollsRemove} />);
@@ -155,12 +155,11 @@ interface Props2 {
 
 export const AstraTokenCartItem = ({ token, index, onRemove }: Props2) => {
   return (
-    <div key={token.id} className="flex items-center w-full">
+    <div key={getTokenKeyId(token)} className="flex items-center w-full">
       <div className="w-4 mr-2 text-right pr-2 text-sm">{index + 1}</div>
       <EZImage className={twMerge('h-12 w-12 rounded-lg overflow-clip')} src={token.image} />
 
       <div className="ml-3 flex flex-col w-full">
-        <div className="leading-5 text-gray-500">{token.collectionName}</div>
         <div className="leading-5 text-lg font-bold">{token.tokenId}</div>
       </div>
 
@@ -184,7 +183,7 @@ interface Props3 {
 
 export const AstraCollectionCartItem = ({ collection, index, onRemove }: Props3) => {
   return (
-    <div key={getCollectionId(collection)} className="flex items-center w-full">
+    <div key={getCollectionKeyId(collection)} className="flex items-center w-full">
       <div className="w-4 mr-2 text-right pr-2 text-sm">{index + 1}</div>
       <EZImage className={twMerge('h-12 w-12 rounded-lg overflow-clip')} src={collection.metadata.profileImage} />
 
