@@ -265,7 +265,7 @@ const AssetDetailContent = ({ chainId, collectionAddress, tokenId }: Props) => {
           </h3>
           <div className="flex items-center mb-6">
             <NextLink
-              href={`/collection/${token.collectionSlug || `${token.chainId}:${token.collectionAddress}`}`}
+              href={`/v3/collection/${token.collectionSlug || `${token.chainId}:${token.collectionAddress}`}`}
               className="  font-heading tracking-tight mr-2"
             >
               <div>{token.collectionName || ellipsisAddress(token.collectionAddress) || 'Collection'}</div>
