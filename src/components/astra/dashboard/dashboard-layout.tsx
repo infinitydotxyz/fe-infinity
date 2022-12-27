@@ -49,7 +49,7 @@ export const DashboardLayout: React.FC<DashboardProps> = ({ children, error, ...
   useEffect(() => {
     if (props.kind === 'collection' || props.kind === 'token') {
       setCollection(props.asset.collection);
-    } else {
+    } else if (props.kind === 'profile') {
       setCollection(undefined);
     }
   }, [props.kind, props.asset]);

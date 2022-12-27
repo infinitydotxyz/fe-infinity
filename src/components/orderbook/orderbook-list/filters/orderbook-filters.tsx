@@ -1,12 +1,10 @@
-import { ChainId } from '@infinityxyz/lib-frontend/types/core';
 import { CollectionSearchDto } from '@infinityxyz/lib-frontend/types/dto/collections';
 import { uniqBy } from 'lodash';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
-import { BlueCheck, Button, Checkbox, DebouncedTextInputBox, EZImage, TextInputBox } from 'src/components/common';
+import { Checkbox, TextInputBox } from 'src/components/common';
 import { useIsMounted } from 'src/hooks/useIsMounted';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { useOrderbook } from '../../OrderbookContext';
 import { useCollectionCache } from '../collection-cache';
 
@@ -18,18 +16,15 @@ const ORDER_TYPES = ['Listing', 'Offer'];
 
 export const OrderbookFilters = () => {
   const router = useRouter();
-  const { chainId } = useOnboardContext();
 
-  const { filters, updateFilter, updateFilterArray, collectionId, clearFilters } = useOrderbook();
+  const { filters, updateFilter, updateFilterArray } = useOrderbook();
   const [openState, setOpenState] = useState<OpenFilterState>({});
-  const [searchQuery, setSearchQuery] = useState<string>('');
   const [collectionsData, setCollectionsData] = useState<CollectionSearchDto[]>([]);
-  const { getTopCollections, getCollectionsByName, getCollectionsByIds } = useCollectionCache();
+  const { getTopCollections, getCollectionsByIds } = useCollectionCache();
   const [allCollectionsData, setAllCollectionsData] = useState<CollectionSearchDto[]>([]);
   const isMounted = useIsMounted();
 
   const { orderTypes = [], collections = [], minPrice, maxPrice, numberOfNfts } = filters;
-  const hasCollectionSearchResults = collections.length > 0 || searchQuery.length > 0;
 
   useEffect(() => {
     if (router.isReady) {
@@ -85,40 +80,6 @@ export const OrderbookFilters = () => {
     }
   }, [filters]);
 
-  const searchForCollections = async (searchTerm: string, chainId: ChainId) => {
-    setSearchQuery(searchTerm);
-
-    if (searchTerm) {
-      const updatedCollections = await getCollectionsByName(searchTerm, chainId);
-
-      if (updatedCollections?.length) {
-        setCollectionsData(updatedCollections);
-        setAllCollectionsData(uniqBy([...allCollectionsData, ...updatedCollections], 'address'));
-      }
-    } else {
-      setupDefaultCollections();
-    }
-  };
-
-  const collectionCheckboxes = () => {
-    const checks = [];
-
-    for (const coll of collections) {
-      const collection = allCollectionsData.find((c) => `${c.chainId}:${c.address}` === coll);
-      if (collection) {
-        checks.push(<CollectionCheckbox key={collection.address} collection={collection} />);
-      }
-    }
-
-    for (const collection of collectionsData) {
-      if (!collections.includes(`${collection.chainId}:${collection.address}`)) {
-        checks.push(<CollectionCheckbox key={collection.address} collection={collection} />);
-      }
-    }
-
-    return checks;
-  };
-
   return (
     <div className="flex flex-col mr-12">
       <div className="text-2xl font-bold">Filter</div>
@@ -134,42 +95,6 @@ export const OrderbookFilters = () => {
           ))}
         </div>
       </OrderbookFilterItem>
-
-      {!collectionId && (
-        <OrderbookFilterItem key="Collection" openState={openState} setOpenState={setOpenState} item="Collection">
-          <div>
-            <DebouncedTextInputBox
-              label=""
-              className="border rounded-full py-2 px-4 mt-1 font-heading w-full"
-              value={searchQuery}
-              onChange={(value) => {
-                searchForCollections(value, chainId as ChainId);
-              }}
-              placeholder="Search"
-            />
-
-            {hasCollectionSearchResults && (
-              <>
-                <div className="my-4 pr-2 max-h-80 w-full overflow-y-auto overflow-x-clip space-y-2">
-                  {collectionCheckboxes()}
-                </div>
-
-                <div className="w-full flex justify-end">
-                  <Button
-                    variant="outline"
-                    size="small"
-                    onClick={() => {
-                      clearFilters(['collections']);
-                    }}
-                  >
-                    Clear
-                  </Button>
-                </div>
-              </>
-            )}
-          </div>
-        </OrderbookFilterItem>
-      )}
       <OrderbookFilterItem key="Sale price" openState={openState} setOpenState={setOpenState} item="Sale price">
         <div className="flex flex-col space-y-4">
           <TextInputBox
@@ -233,34 +158,5 @@ const OrderbookFilterItem = ({ openState, setOpenState, item, children }: Orderb
 
       {openState[item] && <div className="mb-2">{children}</div>}
     </React.Fragment>
-  );
-};
-
-// =========================================================
-
-const CollectionCheckbox = ({ collection }: { collection: CollectionSearchDto }) => {
-  const { filters, updateFilterArray } = useOrderbook();
-
-  const collections = filters.collections ?? [];
-
-  return (
-    <div className="flex items-center space-x-2">
-      <EZImage className="h-7 w-7 rounded-full shrink-0 overflow-clip" src={collection.profileImage} />
-
-      <Checkbox
-        boxOnLeft={false}
-        className="w-full"
-        checked={collections.includes(`${collection.chainId}:${collection.address}`)}
-        onChange={(checked) => {
-          updateFilterArray('collections', collections, `${collection.chainId}:${collection.address}`, checked);
-        }}
-        label={
-          <div className="flex items-center">
-            <div className="truncate">{collection.name}</div>
-            {collection?.hasBlueCheck ? <BlueCheck className="ml-1" /> : null}
-          </div>
-        }
-      />
-    </div>
   );
 };

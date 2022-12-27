@@ -12,7 +12,7 @@ interface Props {
 
 export const OrderbookContainer = ({ collectionId, tokenId, className = '' }: Props): JSX.Element => {
   return (
-    <OrderbookProvider collectionId={collectionId} tokenId={tokenId}>
+    <OrderbookProvider kind={'token'} context={{ collectionAddress: collectionId ?? '', tokenId: tokenId ?? '' }}>
       <OrderbookContent className={className} />
     </OrderbookProvider>
   );

@@ -4,10 +4,12 @@ import { MdDarkMode, MdLightMode } from 'react-icons/md';
 import { ARoundButton } from 'src/components/astra';
 import { HelpTip, NextLink, Spacer, SVG } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 export const SidebarNav = () => {
   const { darkMode, setDarkMode } = useAppContext();
   const router = useRouter();
+  const { user } = useOnboardContext();
 
   return (
     <div className="flex px-2 py-4 h-full flex-col items-center ">
@@ -31,9 +33,9 @@ export const SidebarNav = () => {
 
         <HelpTip placement="right" content={<div className="whitespace-nowrap">Profile</div>}>
           <ARoundButton
-            highlighted={router.asPath === '/profile/me'}
+            highlighted={router.asPath === `/v3/profile/${user?.address}/items`}
             onClick={() => {
-              router.push('/v3/profile/me');
+              router.push(`/v3/profile/${user?.address}/items`);
             }}
           >
             <BsWallet2 className="h-8 w-8" />

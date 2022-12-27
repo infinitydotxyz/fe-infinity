@@ -101,34 +101,54 @@ export const DashboardContextProvider = ({ children }: Props) => {
     if (!user || !user.address || !signer) {
       toastError('No logged in user');
     } else {
-      // sign orders
-      const signedOrders: SignedOBOrder[] = [];
-      let orderNonce = await fetchOrderNonce(user.address);
-      for (const token of tokens) {
-        const order = await tokenToOBOrder(token, orderNonce);
-        orderNonce += 1;
-        if (order) {
-          try {
-            const signedOrder = await getSignedOBOrder(user, chainId, signer, order);
-            if (signedOrder) {
-              signedOrders.push(signedOrder);
+      // identify checkout type: token offer vs token listing vs token send
+      const url = window.location.href;
+      const isCollection = url.includes('collection');
+      const isProfile = url.includes('profile');
+      const isItems = url.includes('items');
+      const isSend = url.includes('send');
+      const isOfferCart = isCollection && isItems;
+      const isListingCart = isProfile && isItems;
+      const isSendCart = isProfile && isSend;
+
+      if (isSendCart) {
+        // send tokens
+      } else {
+        // place orders
+        // first sign orders
+        const signedOrders: SignedOBOrder[] = [];
+        let orderNonce = await fetchOrderNonce(user.address);
+        for (const token of tokens) {
+          let order;
+          if (isOfferCart) {
+            order = await tokenToOBOrder(token, orderNonce, false);
+          } else if (isListingCart) {
+            order = await tokenToOBOrder(token, orderNonce, true);
+          }
+          orderNonce += 1;
+          if (order) {
+            try {
+              const signedOrder = await getSignedOBOrder(user, chainId, signer, order);
+              if (signedOrder) {
+                signedOrders.push(signedOrder);
+              }
+            } catch (ex) {
+              console.error(ex);
+              toastError(`${ex}`);
             }
-          } catch (ex) {
-            console.error(ex);
-            toastError(`${ex}`);
           }
         }
-      }
 
-      // post orders
-      try {
-        if (signedOrders.length > 0) {
-          await postOrdersV2(chainId as ChainId, signedOrders);
-          toastSuccess('Orders posted');
+        // post orders
+        try {
+          if (signedOrders.length > 0) {
+            await postOrdersV2(chainId as ChainId, signedOrders);
+            toastSuccess('Orders posted');
+          }
+        } catch (ex) {
+          console.error(ex);
+          toastError(`${ex}}`);
         }
-      } catch (ex) {
-        console.error(ex);
-        toastError(`${ex}}`);
       }
     }
   };
@@ -170,7 +190,11 @@ export const DashboardContextProvider = ({ children }: Props) => {
     }
   };
 
-  const tokenToOBOrder = async (token: Erc721TokenOffer, orderNonce: number): Promise<OBOrder | undefined> => {
+  const tokenToOBOrder = async (
+    token: Erc721TokenOffer,
+    orderNonce: number,
+    isSellOrder: boolean
+  ): Promise<OBOrder | undefined> => {
     try {
       const currencyAddress = getTxnCurrencyAddress(chainId);
       const gasPrice = await getEstimatedGasPrice(getEthersProvider());
@@ -201,7 +225,7 @@ export const DashboardContextProvider = ({ children }: Props) => {
       const order: OBOrder = {
         id: '',
         chainId: token.chainId ?? '1',
-        isSellOrder: false, // orders are always buys in this release
+        isSellOrder,
         makerAddress: user?.address ?? '',
         numItems: 1, // defaulting to one for now; m of n orders not supported in this release via FE
         startTimeMs: Date.now(),
