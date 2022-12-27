@@ -9,6 +9,7 @@ import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import * as Queries from '@infinityxyz/lib-frontend/types/dto/orders/orders-queries.dto';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { useEffect } from 'react';
+import { ProfileLayout } from './profile-layout';
 
 // TODO: Upgrade to Next.js 13 to use layouts natively?
 interface BaseDashboardProps {
@@ -80,13 +81,6 @@ export const DashboardLayout: React.FC<DashboardProps> = ({ children, error, ...
 
   switch (props.kind) {
     case 'profile': {
-      const headerProps: GridHeaderProps = {
-        expanded: scrollTop < 100,
-        avatarUrl: props.asset.user.profileImage,
-        title: props.asset.user.username,
-        description: ''
-      };
-
       return (
         // This is added just for the ASortButton, so remove if we change how this works
         <OrderbookProvider
@@ -94,12 +88,7 @@ export const DashboardLayout: React.FC<DashboardProps> = ({ children, error, ...
           kind={'user'}
           context={{ chainId: chainId as ChainId, userAddress: props.asset.user.address, side: props.asset.orderSide }}
         >
-          <div className="flex flex-col h-full w-full">
-            <GridHeader {...headerProps}></GridHeader>
-            <div ref={setRef} className="overflow-y-auto">
-              {children}
-            </div>
-          </div>
+          <ProfileLayout>{children}</ProfileLayout>
         </OrderbookProvider>
       );
     }
