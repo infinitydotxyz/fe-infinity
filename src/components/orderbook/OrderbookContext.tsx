@@ -351,8 +351,6 @@ export const OrderbookProvider = ({ children, limit = ITEMS_PER_PAGE, ...props }
         orderDirection: v1Query.orderByDirection
       };
 
-      console.log(`Loading orders for ${props.kind}`);
-
       if (props.kind === 'token') {
         const query: Queries.TokenOrdersQuery = {
           ...baseQuery,
