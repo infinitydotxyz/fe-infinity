@@ -1,7 +1,7 @@
 import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
 import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { ApiResponse, getCollectionKeyId } from 'src/utils';
-import { fetchCollectionTokens, fetchProfileTokens } from 'src/utils/astra-utils';
+import { fetchCollectionTokens, TokenFetcherOptions, fetchProfileTokens } from 'src/utils/astra-utils';
 import { ApiNftData, nftsToCardDataWithOfferFields, PagedData, TokenFetcherResult } from '../../gallery/token-fetcher';
 import { Erc721TokenOffer } from '../types';
 
@@ -12,42 +12,31 @@ export class TokenFetcherAlt {
   hasNextPage = false;
   cardData: Erc721TokenOffer[] = [];
 
-  fetch = async (loadMore: boolean): Promise<TokenFetcherResult> => {
-    let callFetch = true;
+  fetch = async (loadMore: boolean, options: TokenFetcherOptions): Promise<TokenFetcherResult> => {
+    const response = await this.doFetch(options);
 
-    // if first load, but we have some cache, don't fetch
-    if (!loadMore) {
-      if (this.cardData.length > 0) {
-        callFetch = false;
+    if (response.error) {
+      this.error = response.error !== null;
+      console.error(response.error);
+    } else {
+      const result = response.result as PagedData;
+      let newCards = this.toCardData(result.data);
+
+      if (loadMore) {
+        newCards = [...this.cardData, ...newCards];
       }
-    }
 
-    if (callFetch) {
-      const response = await this.doFetch();
-
-      if (response.error) {
-        this.error = response.error !== null;
-        console.error(response.error);
-      } else {
-        const result = response.result as PagedData;
-        let newCards = this.toCardData(result.data);
-
-        if (loadMore) {
-          newCards = [...this.cardData, ...newCards];
-        }
-
-        this.cardData = newCards;
-        this.cursor = result.cursor;
-        this.hasNextPage = result.hasNextPage;
-      }
+      this.cardData = newCards;
+      this.cursor = result.cursor;
+      this.hasNextPage = result.hasNextPage;
     }
 
     return { cursor: this.cursor, hasNextPage: this.hasNextPage, cardData: this.cardData, error: this.error };
   };
 
   // override this
-  // eslint-disable-next-line require-await
-  protected doFetch = async (): Promise<ApiResponse> => {
+  // eslint-disable-next-line require-await, @typescript-eslint/no-unused-vars
+  protected doFetch = async (_: TokenFetcherOptions): Promise<ApiResponse> => {
     return { status: 0 };
   };
 
@@ -113,8 +102,8 @@ class CollectionTokenFetcher extends TokenFetcherAlt {
 
   // override
   // eslint-disable-next-line require-await
-  protected doFetch = async (): Promise<ApiResponse> => {
-    return fetchCollectionTokens(this.collection.address, this.chainId, this.cursor);
+  protected doFetch = async (options: TokenFetcherOptions): Promise<ApiResponse> => {
+    return fetchCollectionTokens(this.collection.address, this.chainId, { ...options, cursor: this.cursor });
   };
 }
 

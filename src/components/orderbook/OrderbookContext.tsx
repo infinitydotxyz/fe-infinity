@@ -28,7 +28,10 @@ type OBFilters = {
 export const SORT_FILTERS = {
   highestPrice: 'highestPrice',
   lowestPrice: 'lowestPrice',
-  mostRecent: 'mostRecent'
+  mostRecent: 'mostRecent',
+  rarityRank: 'rarityRank',
+  tokenId: 'tokenId',
+  tokenIdNumeric: 'tokenIdNumeric'
 };
 
 export const SORT_LABELS: {
@@ -36,7 +39,10 @@ export const SORT_LABELS: {
 } = {
   [SORT_FILTERS.highestPrice]: 'Highest Price',
   [SORT_FILTERS.lowestPrice]: 'Lowest Price',
-  [SORT_FILTERS.mostRecent]: 'Most Recent'
+  [SORT_FILTERS.mostRecent]: 'Most Recent',
+  [SORT_FILTERS.rarityRank]: 'Rarity Rank',
+  [SORT_FILTERS.tokenId]: 'Token ID',
+  [SORT_FILTERS.tokenIdNumeric]: 'Token ID (numeric)'
 };
 
 export const getSortLabel = (key?: string): string => {
@@ -46,8 +52,8 @@ export const getSortLabel = (key?: string): string => {
     result = SORT_LABELS[key];
   }
 
-  // mostRecent is the default if blank
-  return result || SORT_LABELS[SORT_FILTERS.mostRecent];
+  // default if blank
+  return result || SORT_LABELS[SORT_FILTERS.tokenIdNumeric];
 };
 
 // ============================================================
@@ -65,7 +71,7 @@ const getIsSellOrder = (orderTypes: OBFilters['orderTypes']) => {
   }
 };
 
-const parseFiltersToApiQueryParams = (filters: OBFilters): GetOrderItemsQuery => {
+export const parseFiltersToApiQueryParams = (filters: OBFilters): GetOrderItemsQuery => {
   const parsedFilters: GetOrderItemsQuery = {};
 
   Object.keys(filters).forEach((filter) => {

@@ -183,7 +183,12 @@ export const nftsToCardDataWithOfferFields = (
 ): Erc721TokenOffer[] => {
   let result: Erc721TokenOffer[] = (tokens || []).map((item: ApiNftData) => {
     const image =
-      item?.image?.url || item?.alchemyCachedImage || item?.image?.originalUrl || item?.zoraImage?.url || '';
+      item?.metadata?.image ||
+      item?.image?.url ||
+      item?.alchemyCachedImage ||
+      item?.image?.originalUrl ||
+      item?.zoraImage?.url ||
+      '';
 
     const result: Erc721TokenOffer = {
       id: collectionAddress + '_' + item.tokenId,
