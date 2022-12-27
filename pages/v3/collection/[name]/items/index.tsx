@@ -2,7 +2,7 @@ import { GetServerSidePropsContext } from 'next';
 import { useEffect } from 'react';
 import {
   DashboardLayout,
-  DashBoardProps,
+  DashboardProps,
   getServerSideProps as getDashboardServerSideProps
 } from 'src/components/astra/dashboard/dashboard-layout';
 import { CollectionTokenCache } from 'src/components/astra/token-grid/token-fetcher';
@@ -10,7 +10,7 @@ import { TokensGrid } from 'src/components/astra/token-grid/token-grid';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
-export default function ItemsPage(props: DashBoardProps) {
+export default function ItemsPage(props: DashboardProps) {
   const {
     setNumTokens,
     tokenFetcher,
@@ -50,5 +50,6 @@ export default function ItemsPage(props: DashBoardProps) {
 }
 
 export function getServerSideProps(context: GetServerSidePropsContext) {
-  return getDashboardServerSideProps(context);
+  const slug = context.query.name as string;
+  return getDashboardServerSideProps('collection', slug);
 }

@@ -1,12 +1,12 @@
 import { GetServerSidePropsContext } from 'next';
 import {
   DashboardLayout,
-  DashBoardProps,
+  DashboardProps,
   getServerSideProps as getDashboardServerSideProps
 } from 'src/components/astra/dashboard/dashboard-layout';
 import { CenteredContent } from 'src/components/common';
 
-export default function ActivityPage(props: DashBoardProps) {
+export default function ActivityPage(props: DashboardProps) {
   return (
     <DashboardLayout {...props}>
       <CenteredContent>activity goes here</CenteredContent>
@@ -15,5 +15,6 @@ export default function ActivityPage(props: DashBoardProps) {
 }
 
 export function getServerSideProps(context: GetServerSidePropsContext) {
-  return getDashboardServerSideProps(context);
+  const slug = context.query.name as string;
+  return getDashboardServerSideProps('collection', slug);
 }

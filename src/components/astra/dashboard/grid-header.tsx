@@ -6,62 +6,56 @@ import { NextRouter, useRouter } from 'next/router';
 import { AListGridButton } from '../astra-button';
 import { ASortButton } from '../astra-sort-button';
 
-interface Props {
+export interface GridHeaderProps {
   expanded: boolean;
+  avatarUrl: string;
+  title: string;
+  description?: string;
+  hasBlueCheck?: boolean;
+  children?: React.ReactNode;
 }
-export const GridHeader = ({ expanded }: Props) => {
-  const { numTokens, collection } = useDashboardContext();
+export const GridHeader = ({ expanded, avatarUrl, title, description, hasBlueCheck, children }: GridHeaderProps) => {
+  return (
+    <div
+      className={twMerge(inputBorderColor, cardClr, textClr, 'flex-col items-center rounded-tl-lg border-b px-8 pt-5')}
+    >
+      {expanded && (
+        <>
+          <div className="flex flex-col items-start">
+            <div className="flex w-full items-start">
+              <EZImage src={avatarUrl} className="mr-6 h-20 w-20 rounded-xl" />
 
-  const avatarUrl = collection?.metadata.bannerImage || collection?.metadata.profileImage;
-  const name = collection?.metadata.name ?? '';
-  const description = collection?.metadata.description ?? '';
+              <div className="flex w-full items-center">
+                <div className="tracking-tight font-bold text-4xl  ">{title}</div>
 
-  if (collection) {
-    return (
-      <div
-        className={twMerge(
-          inputBorderColor,
-          cardClr,
-          textClr,
-          'flex-col items-center rounded-tl-lg border-b px-8 pt-5'
-        )}
-      >
-        {expanded && (
-          <>
-            <div className="flex flex-col items-start">
-              <div className="flex w-full items-start">
-                <EZImage src={avatarUrl} className="mr-6 h-20 w-20 rounded-xl" />
-
-                <div className="flex w-full items-center">
-                  <div className="tracking-tight font-bold text-4xl  ">{name}</div>
-
-                  {collection.hasBlueCheck ? <BlueCheck className="ml-2" /> : null}
-                </div>
+                {hasBlueCheck ? <BlueCheck className="ml-2" /> : null}
               </div>
+            </div>
 
+            {description && (
               <div className="max-w-3xl">
                 <ReadMoreText text={description} min={50} ideal={160} max={10000} />
               </div>
-            </div>
-            <Spacer />
-            <div className="flex flex-col items-end">
-              <div className="text-lg whitespace-nowrap ml-3">{numTokens} Nfts</div>
-            </div>
-          </>
-        )}
+            )}
+          </div>
+          {children && (
+            <>
+              <Spacer />
+              {children}
+            </>
+          )}
+        </>
+      )}
 
-        <HeaderTabBar />
+      <HeaderTabBar />
 
-        <div className={twMerge(inputBorderColor, 'w-full flex   py-2 border-t-[1px]')}>
-          <ASortButton />
-          <Spacer />
-          <AListGridButton />
-        </div>
+      <div className={twMerge(inputBorderColor, 'w-full flex   py-2 border-t-[1px]')}>
+        <ASortButton />
+        <Spacer />
+        <AListGridButton />
       </div>
-    );
-  }
-
-  return <></>;
+    </div>
+  );
 };
 
 // ==============================================
