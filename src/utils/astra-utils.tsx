@@ -4,7 +4,7 @@ import { ApiResponse } from './apiUtils';
 import { OnboardAuthProvider } from './OnboardContext/OnboardAuthProvider';
 import { trimText } from 'src/components/common';
 
-export const fetchTokens = async (
+export const fetchCollectionTokens = async (
   collectionAddress: string,
   chainId: string,
   cursor?: string
@@ -12,12 +12,27 @@ export const fetchTokens = async (
   const query = {
     limit: LARGE_LIMIT,
     cursor,
-    chainId: '1',
+    chainId,
     orderBy: 'tokenIdNumeric',
     orderDirection: 'asc'
   };
 
   const response = await httpGet(`/collections/${chainId}:${collectionAddress}/nfts`, query);
+  return response;
+};
+
+export const fetchProfileTokens = async (
+  userAddress: string,
+  chainId: string,
+  cursor?: string
+): Promise<ApiResponse> => {
+  const query = {
+    limit: LARGE_LIMIT,
+    cursor,
+    chainId
+  };
+
+  const response = await httpGet(`/user/${userAddress}/nfts`, query);
   return response;
 };
 

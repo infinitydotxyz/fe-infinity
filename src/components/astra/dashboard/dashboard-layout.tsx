@@ -28,7 +28,7 @@ export const DashboardLayout: React.FC<DashBoardProps> = ({ children, collection
     // failed to load collection (collection not indexed?)
     return (
       <NotFound404Page
-        collectionSlug={collection?.metadata.name.toString()}
+        collectionSlug={collection?.slug.toString()}
         collectionAddress={collection?.address}
         chainId={collection?.chainId}
       />

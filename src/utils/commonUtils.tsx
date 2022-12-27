@@ -1,6 +1,6 @@
 import { getAddress } from '@ethersproject/address';
 import { BaseToken, ChainId, ERC721CardData, OwnerInfo } from '@infinityxyz/lib-frontend/types/core';
-import { Erc721Collection } from '@infinityxyz/lib-frontend/types/core/Collection';
+import { BaseCollection } from '@infinityxyz/lib-frontend/types/core/Collection';
 import {
   Env,
   ETHEREUM_CHAIN_SCANNER_BASE,
@@ -65,7 +65,7 @@ export const toChecksumAddress = (address?: string): string => {
   return '';
 };
 
-export const getCollectionKeyId = (coll: Erc721Collection) => {
+export const getCollectionKeyId = (coll: BaseCollection) => {
   return trimLowerCase(`${coll?.chainId}:${coll?.address}`);
 };
 
