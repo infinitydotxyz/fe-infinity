@@ -71,7 +71,7 @@ export const apiGet = async (path: string, params?: ApiParams): Promise<ApiRespo
   try {
     const userEndpointRegex = /\/(u|user)\//;
     const publicUserEndpoint = /\/p\/u\//;
-    let requiresAuth = userEndpointRegex.test(path) && !publicUserEndpoint.test(path);
+    let requiresAuth = params?.requiresAuth ?? (userEndpointRegex.test(path) && !publicUserEndpoint.test(path));
     if (params?.requiresAuth === true) {
       requiresAuth = true;
     }
@@ -81,6 +81,7 @@ export const apiGet = async (path: string, params?: ApiParams): Promise<ApiRespo
       authHeaders = await OnboardAuthProvider.getAuthHeaders();
     }
 
+    console.log(path, requiresAuth);
     const { data, status } = await axiosApi({
       url: path.startsWith('http') ? path : `${API_BASE}${path}${queryStr}`,
       method: 'GET',

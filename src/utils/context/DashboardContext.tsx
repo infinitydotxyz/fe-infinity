@@ -21,7 +21,7 @@ import { fetchOrderNonce, postOrdersV2 } from '../orderbookUtils';
 
 export type DashboardContextType = {
   collection: BaseCollection | undefined;
-  setCollection: (value: BaseCollection) => void;
+  setCollection: (value?: BaseCollection) => void;
 
   gridWidth: number;
   setGridWidth: (value: number) => void;

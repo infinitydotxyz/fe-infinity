@@ -1,5 +1,6 @@
 import isEqual from 'lodash/isEqual';
 import {
+  ChainId,
   ChainOBOrder,
   GetOrderItemsQuery,
   Order,
@@ -13,6 +14,7 @@ import { apiGet, ITEMS_PER_PAGE } from 'src/utils';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { OrderCache } from './order-cache';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import * as Queries from '@infinityxyz/lib-frontend/types/dto/orders/orders-queries.dto';
 
 type OBFilters = {
   sort?: string;
@@ -183,7 +185,6 @@ type OBContextType = {
   ) => Promise<boolean>;
   updateFilter: (name: string, value: string) => Promise<boolean>;
   updateFilters: (params: { name: string; value: string }[]) => Promise<boolean>;
-  collectionId: string | undefined;
   hasMoreOrders: boolean;
   hasNoData: boolean;
   isReady: boolean;
@@ -193,14 +194,39 @@ const OrderbookContext = React.createContext<OBContextType | null>(null);
 
 const orderCache = new OrderCache();
 
-interface Props {
+interface BaseProps {
   children: ReactNode;
-  collectionId?: string;
-  tokenId?: string;
+  kind: 'collection' | 'token' | 'user';
   limit?: number;
 }
 
-export const OrderbookProvider = ({ children, collectionId, tokenId, limit = ITEMS_PER_PAGE }: Props) => {
+interface CollectionProps extends BaseProps {
+  kind: 'collection';
+  context: {
+    collectionAddress: string;
+  };
+}
+
+interface TokenProps extends BaseProps {
+  kind: 'token';
+  context: {
+    collectionAddress: string;
+    tokenId: string;
+  };
+}
+
+interface UserProps extends BaseProps {
+  kind: 'user';
+  context: {
+    chainId: ChainId;
+    userAddress: string;
+    side: Queries.Side;
+  };
+}
+
+export type OrderbookProviderProps = CollectionProps | TokenProps | UserProps;
+
+export const OrderbookProvider = ({ children, limit = ITEMS_PER_PAGE, ...props }: OrderbookProviderProps) => {
   const router = useRouter();
   const { chainId } = useOnboardContext();
 
@@ -218,7 +244,7 @@ export const OrderbookProvider = ({ children, collectionId, tokenId, limit = ITE
       setIsLoading(true);
       fetchOrders(true);
     }
-  }, [collectionId, filters, isReady]);
+  }, [props.kind, props.context, filters, isReady]);
 
   useEffect(() => {
     if (router.isReady) {
@@ -300,8 +326,7 @@ export const OrderbookProvider = ({ children, collectionId, tokenId, limit = ITE
       const v1Query: any = {
         limit: limit,
         cursor: refreshData ? '' : cursor,
-        ...parsedFilters,
-        collections: collectionId ? [collectionId] : parsedFilters.collections
+        ...parsedFilters
       };
 
       let options: {
@@ -310,14 +335,13 @@ export const OrderbookProvider = ({ children, collectionId, tokenId, limit = ITE
         query: any;
       };
 
-      const v2OrderBy = {
-        startPriceEth: 'price',
-        startTimeMs: 'startTime',
-        endTimeMs: 'endTime',
-        collectionSlug: 'collectionSlug'
+      const v2OrderBy: Record<string, Queries.OrderBy> = {
+        startPriceEth: Queries.OrderBy.Price,
+        startTimeMs: Queries.OrderBy.StartTime,
+        endTimeMs: Queries.OrderBy.EndTime
       };
 
-      const v2BaseQuery = {
+      const baseQuery: Queries.BaseOrderQuery = {
         isSellOrder: v1Query.isSellOrder,
         minPrice: v1Query.minPrice,
         maxPrice: v1Query.maxPrice,
@@ -327,22 +351,53 @@ export const OrderbookProvider = ({ children, collectionId, tokenId, limit = ITE
         orderDirection: v1Query.orderByDirection
       };
 
-      if (tokenId && collectionId) {
-        options = {
-          endpoint: `/v2/collections/${chainId}:${collectionId}/tokens/${tokenId}/orders`,
-          query: {
-            ...v2BaseQuery,
-            status: 'active'
-          }
+      console.log(`Loading orders for ${props.kind}`);
+
+      if (props.kind === 'token') {
+        const query: Queries.TokenOrdersQuery = {
+          ...baseQuery,
+          status: Queries.OrderStatus.Active
         };
-      } else if (collectionId) {
+
         options = {
-          endpoint: `/v2/collections/${chainId}:${collectionId}/orders`,
-          query: {
-            ...v2BaseQuery,
-            status: 'active'
-          }
+          endpoint: `/v2/collections/${chainId}:${props.context.collectionAddress}/tokens/${props.context.tokenId}/orders`,
+          query
         };
+      } else if (props.kind === 'collection') {
+        const query: Queries.CollectionOrdersQuery = {
+          ...baseQuery,
+          status: Queries.OrderStatus.Active
+        };
+
+        options = {
+          endpoint: `/v2/collections/${chainId}:${props.context.collectionAddress}/orders`,
+          query
+        };
+      } else if (props.kind === 'user') {
+        if (props.context.side === Queries.Side.Maker) {
+          const query: Queries.MakerOrdersQuery = {
+            ...baseQuery,
+            chainId: props.context.chainId,
+            side: Queries.Side.Maker,
+            status: Queries.OrderStatus.Active
+          };
+
+          options = {
+            endpoint: `/v2/users/${props.context.userAddress}/orders`,
+            query
+          };
+        } else {
+          const query: Queries.TakerOrdersQuery = {
+            ...baseQuery,
+            chainId: props.context.chainId,
+            side: Queries.Side.Taker,
+            status: Queries.OrderStatus.Active
+          };
+          options = {
+            endpoint: `/v2/users/${props.context.userAddress}/orders`,
+            query
+          };
+        }
       } else {
         throw new Error('Invalid query');
       }
@@ -353,7 +408,8 @@ export const OrderbookProvider = ({ children, collectionId, tokenId, limit = ITE
       let response = orderCache.get(cacheKey);
       if (!response) {
         response = await apiGet(options.endpoint, {
-          query: options.query
+          query: options.query,
+          requiresAuth: false
         });
 
         // save in cache
@@ -393,8 +449,8 @@ export const OrderbookProvider = ({ children, collectionId, tokenId, limit = ITE
                     tokenId: item.tokenId,
                     tokenName: item.name,
                     tokenImage: item.image,
-                    takerUsername: item.owner.username,
-                    takerAddress: item.owner.address,
+                    takerUsername: item.owner?.username,
+                    takerAddress: item.owner?.address,
                     numTokens: item.quantity,
                     attributes: []
                   };
@@ -415,8 +471,8 @@ export const OrderbookProvider = ({ children, collectionId, tokenId, limit = ITE
                 chainId: order.chainId,
                 isSellOrder: order.isSellOrder,
                 numItems: order.numItems,
-                makerUsername: order.maker.username,
-                makerAddress: order.maker.address,
+                makerUsername: order.maker?.username,
+                makerAddress: order.maker?.address,
                 startPriceEth: order.startPriceEth,
                 endPriceEth: order.endPriceEth,
                 startTimeMs: order.startTimeMs,
@@ -462,7 +518,6 @@ export const OrderbookProvider = ({ children, collectionId, tokenId, limit = ITE
     updateFilterArray,
     updateFilter,
     updateFilters,
-    collectionId,
     hasMoreOrders,
     hasNoData,
     isReady
