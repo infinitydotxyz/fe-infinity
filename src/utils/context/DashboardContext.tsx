@@ -23,7 +23,7 @@ import {
   getEstimatedGasPrice,
   getOrderExpiryTimeInMsFromEnum
 } from '../commonUtils';
-import { DEFAULT_MAX_GAS_PRICE_WEI } from '../constants';
+import { DEFAULT_MAX_GAS_PRICE_WEI, ZERO_ADDRESS } from '../constants';
 import { getSignedOBOrder, sendMultipleNfts, sendSingleNft } from '../exchange/orders';
 import { useOnboardContext } from '../OnboardContext/OnboardContext';
 import { fetchOrderNonce, postOrdersV2 } from '../orderbookUtils';
@@ -259,7 +259,10 @@ export const DashboardContextProvider = ({ children }: Props) => {
     isSellOrder: boolean
   ): Promise<OBOrder | undefined> => {
     try {
-      const currencyAddress = getTxnCurrencyAddress(chainId);
+      let currencyAddress = getTxnCurrencyAddress(chainId);
+      if (isSellOrder) {
+        currencyAddress = ZERO_ADDRESS; // sell orders are always in ETH
+      }
       const gasPrice = await getEstimatedGasPrice(getEthersProvider());
       const ethPrice = token.offerPriceEth ?? 0;
       if (ethPrice === 0) {

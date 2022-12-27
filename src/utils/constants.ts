@@ -52,3 +52,5 @@ export const TOKEN = getToken(ChainId.Mainnet) ?? {
   decimals: 18,
   chainId: ChainId.Mainnet
 };
+
+export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
