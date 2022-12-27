@@ -224,9 +224,9 @@ const PriceAndExpiry = ({ token, collection }: Props4) => {
         onChange={(value) => {
           setPrice(value);
           if (token) {
-            token.ethPrice = parseFloat(value);
+            token.offerPriceEth = parseFloat(value);
           } else if (collection) {
-            collection.ethPrice = parseFloat(value);
+            collection.offerPriceEth = parseFloat(value);
           }
         }}
       />
@@ -241,9 +241,9 @@ const PriceAndExpiry = ({ token, collection }: Props4) => {
               onClick: () => {
                 setExpiry(ORDER_EXPIRY_TIME.HOUR);
                 if (token) {
-                  token.expiry = ORDER_EXPIRY_TIME.HOUR;
+                  token.offerExpiry = ORDER_EXPIRY_TIME.HOUR;
                 } else if (collection) {
-                  collection.expiry = ORDER_EXPIRY_TIME.HOUR;
+                  collection.offerExpiry = ORDER_EXPIRY_TIME.HOUR;
                 }
               }
             },
@@ -252,9 +252,9 @@ const PriceAndExpiry = ({ token, collection }: Props4) => {
               onClick: () => {
                 setExpiry(ORDER_EXPIRY_TIME.DAY);
                 if (token) {
-                  token.expiry = ORDER_EXPIRY_TIME.DAY;
+                  token.offerExpiry = ORDER_EXPIRY_TIME.DAY;
                 } else if (collection) {
-                  collection.expiry = ORDER_EXPIRY_TIME.DAY;
+                  collection.offerExpiry = ORDER_EXPIRY_TIME.DAY;
                 }
               }
             },
@@ -263,9 +263,9 @@ const PriceAndExpiry = ({ token, collection }: Props4) => {
               onClick: () => {
                 setExpiry(ORDER_EXPIRY_TIME.WEEK);
                 if (token) {
-                  token.expiry = ORDER_EXPIRY_TIME.WEEK;
+                  token.offerExpiry = ORDER_EXPIRY_TIME.WEEK;
                 } else if (collection) {
-                  collection.expiry = ORDER_EXPIRY_TIME.WEEK;
+                  collection.offerExpiry = ORDER_EXPIRY_TIME.WEEK;
                 }
               }
             },
@@ -274,9 +274,9 @@ const PriceAndExpiry = ({ token, collection }: Props4) => {
               onClick: () => {
                 setExpiry(ORDER_EXPIRY_TIME.MONTH);
                 if (token) {
-                  token.expiry = ORDER_EXPIRY_TIME.MONTH;
+                  token.offerExpiry = ORDER_EXPIRY_TIME.MONTH;
                 } else if (collection) {
-                  collection.expiry = ORDER_EXPIRY_TIME.MONTH;
+                  collection.offerExpiry = ORDER_EXPIRY_TIME.MONTH;
                 }
               }
             },
@@ -285,9 +285,9 @@ const PriceAndExpiry = ({ token, collection }: Props4) => {
               onClick: () => {
                 setExpiry(ORDER_EXPIRY_TIME.YEAR);
                 if (token) {
-                  token.expiry = ORDER_EXPIRY_TIME.YEAR;
+                  token.offerExpiry = ORDER_EXPIRY_TIME.YEAR;
                 } else if (collection) {
-                  collection.expiry = ORDER_EXPIRY_TIME.YEAR;
+                  collection.offerExpiry = ORDER_EXPIRY_TIME.YEAR;
                 }
               }
             }

@@ -174,11 +174,11 @@ export const DashboardContextProvider = ({ children }: Props) => {
     try {
       const currencyAddress = getTxnCurrencyAddress(chainId);
       const gasPrice = await getEstimatedGasPrice(getEthersProvider());
-      const ethPrice = token.ethPrice;
+      const ethPrice = token.offerPriceEth ?? 0;
       if (ethPrice === 0) {
         throw new Error('Price is 0');
       }
-      const expiry = token.expiry ?? getDefaultOrderExpiryTime();
+      const expiry = token.offerExpiry ?? getDefaultOrderExpiryTime();
       const endTimeMs = getOrderExpiryTimeInMsFromEnum(expiry);
       const obTokenInfo: OBTokenInfo = {
         tokenId: token.tokenId ?? '',
@@ -233,11 +233,11 @@ export const DashboardContextProvider = ({ children }: Props) => {
     try {
       const currencyAddress = getTxnCurrencyAddress(chainId);
       const gasPrice = await getEstimatedGasPrice(getEthersProvider());
-      const ethPrice = collection.ethPrice;
+      const ethPrice = collection.offerPriceEth ?? 0;
       if (ethPrice === 0) {
         throw new Error('Price is 0');
       }
-      const expiry = collection.expiry ?? getDefaultOrderExpiryTime();
+      const expiry = collection.offerExpiry ?? getDefaultOrderExpiryTime();
       const endTimeMs = getOrderExpiryTimeInMsFromEnum(expiry);
       const obOrderItem: OBOrderItem = {
         chainId: collection.chainId as ChainId,

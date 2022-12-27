@@ -9,11 +9,11 @@ export enum ORDER_EXPIRY_TIME {
 }
 
 export interface Erc721CollectionOffer extends Erc721Collection {
-  ethPrice: number;
-  expiry: ORDER_EXPIRY_TIME;
+  offerPriceEth?: number;
+  offerExpiry?: ORDER_EXPIRY_TIME;
 }
 
 export interface Erc721TokenOffer extends ERC721CardData {
-  ethPrice: number;
-  expiry: ORDER_EXPIRY_TIME;
+  offerPriceEth?: number;
+  offerExpiry?: ORDER_EXPIRY_TIME;
 }

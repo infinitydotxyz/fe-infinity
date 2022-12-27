@@ -3,7 +3,7 @@ import { apiGet, ITEMS_PER_PAGE } from 'src/utils';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { OrderCache } from '../orderbook/order-cache';
 import { BaseCollection } from '@infinityxyz/lib-frontend/types/core/Collection';
-import { nftsToCardData, PagedData } from '../gallery/token-fetcher';
+import { nftsToCardDataWithOfferFields, PagedData } from '../gallery/token-fetcher';
 import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core/NftInterface';
 
 type ReservoirContextType = {
@@ -79,7 +79,11 @@ export const ReservoirProvider = ({ children, collection, limit = ITEMS_PER_PAGE
 
           if (pagedData.data) {
             let newData;
-            const newCardData = nftsToCardData(pagedData.data, collection.address, collection.metadata.name);
+            const newCardData = nftsToCardDataWithOfferFields(
+              pagedData.data,
+              collection.address,
+              collection.metadata.name
+            );
 
             if (refreshData) {
               newData = [...newCardData];

@@ -1,16 +1,16 @@
-import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { useState } from 'react';
 import { cardClr, hoverClr, selectionOutline, textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { Checkbox, EZImage, Spacer, SVG } from '../../common';
 import { AOutlineButton } from '../astra-button';
+import { Erc721TokenOffer } from '../types';
 import { TokenCardModal } from './token-card-modal';
 
 interface Props {
-  data: ERC721CardData;
+  data: Erc721TokenOffer;
   selected: boolean;
-  isSelectable: (data: ERC721CardData) => boolean;
-  onClick: (data: ERC721CardData) => void;
+  isSelectable: (data: Erc721TokenOffer) => boolean;
+  onClick: (data: Erc721TokenOffer) => void;
 }
 
 export const TokenCard = ({ data, onClick, selected, isSelectable }: Props): JSX.Element => {

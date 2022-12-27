@@ -2,6 +2,7 @@ import { BaseToken, ERC721CardData, Erc721Token, OrdersSnippet } from '@infinity
 import { ITEMS_PER_PAGE } from 'src/utils/constants';
 import { Filter } from 'src/utils/context/FilterContext';
 import { ApiResponse, apiGet } from 'src/utils/apiUtils';
+import { Erc721TokenOffer } from '../astra/types';
 
 export type ApiNftData = Erc721Token & {
   orderSnippet?: OrdersSnippet;
@@ -110,7 +111,7 @@ export class TokenFetcher {
   };
 
   toCardData = (data: ApiNftData[]): ERC721CardData[] => {
-    return nftsToCardData(data, this.collectionAddress, this.collectionName);
+    return nftsToCardDataWithOfferFields(data, this.collectionAddress, this.collectionName);
   };
 }
 
@@ -175,16 +176,16 @@ export class TokenFetcherCache {
 
 // ========================================================================
 
-export const nftsToCardData = (
+export const nftsToCardDataWithOfferFields = (
   tokens: ApiNftData[],
   collectionAddress: string,
   collectionName: string
-): ERC721CardData[] => {
-  let result: ERC721CardData[] = (tokens || []).map((item: ApiNftData) => {
+): Erc721TokenOffer[] => {
+  let result: Erc721TokenOffer[] = (tokens || []).map((item: ApiNftData) => {
     const image =
       item?.image?.url || item?.alchemyCachedImage || item?.image?.originalUrl || item?.zoraImage?.url || '';
 
-    const result: ERC721CardData = {
+    const result: Erc721TokenOffer = {
       id: collectionAddress + '_' + item.tokenId,
       name: item.metadata?.name ?? item.metadata?.title,
       title: item.collectionName ?? collectionName,

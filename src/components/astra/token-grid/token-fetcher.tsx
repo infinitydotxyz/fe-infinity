@@ -1,14 +1,15 @@
 import { ApiResponse } from 'src/utils';
 import { fetchTokens } from 'src/utils/astra-utils';
-import { BaseCollection, ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
-import { ApiNftData, nftsToCardData, PagedData, TokenFetcherResult } from '../../gallery/token-fetcher';
+import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
+import { ApiNftData, nftsToCardDataWithOfferFields, PagedData, TokenFetcherResult } from '../../gallery/token-fetcher';
+import { Erc721TokenOffer } from '../types';
 
 export class TokenFetcherAlt {
   error = false;
   cursor = '';
   collectionName = '';
   hasNextPage = false;
-  cardData: ERC721CardData[] = [];
+  cardData: Erc721TokenOffer[] = [];
 
   fetch = async (loadMore: boolean): Promise<TokenFetcherResult> => {
     let callFetch = true;
@@ -50,8 +51,8 @@ export class TokenFetcherAlt {
   };
 
   // override this
-  protected toCardData = (data: ApiNftData[]): ERC721CardData[] => {
-    return nftsToCardData(data, '', '');
+  protected toCardData = (data: ApiNftData[]): Erc721TokenOffer[] => {
+    return nftsToCardDataWithOfferFields(data, '', '');
   };
 }
 

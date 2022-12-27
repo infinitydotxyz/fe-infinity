@@ -5,16 +5,16 @@ import { twMerge } from 'tailwind-merge';
 import { TokenCard, TokenListCard } from './token-card';
 import { TokenFetcherAlt } from './token-fetcher';
 import { ErrorOrLoading } from '../error-or-loading';
-import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
+import { Erc721TokenOffer } from '../types';
 
 interface Props {
   tokenFetcher?: TokenFetcherAlt;
   listMode: boolean;
   className?: string;
   wrapWidth?: number;
-  onClick?: (data: ERC721CardData) => void;
-  isSelected: (data: ERC721CardData) => boolean;
-  isSelectable: (data: ERC721CardData) => boolean;
+  onClick?: (data: Erc721TokenOffer) => void;
+  isSelected: (data: Erc721TokenOffer) => boolean;
+  isSelectable: (data: Erc721TokenOffer) => boolean;
   onLoad: (numItems: number) => void;
 }
 
@@ -28,7 +28,7 @@ export const TokensGrid = ({
   wrapWidth = 0,
   listMode
 }: Props) => {
-  const [cardData, setCardData] = useState<ERC721CardData[]>([]);
+  const [cardData, setCardData] = useState<Erc721TokenOffer[]>([]);
   const [error, setError] = useState(false);
   const [hasNextPage, setHasNextPage] = useState(false);
   const [loading, setLoading] = useState(false);

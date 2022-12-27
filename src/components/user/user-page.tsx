@@ -12,7 +12,6 @@ import { UserProfileImage } from './user-profile-image';
 import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user/user-profile.dto';
 import { twMerge } from 'tailwind-merge';
 import { textClr } from 'src/utils/ui-constants';
-import { AOutlineButton } from '../astra';
 
 interface UserPageProps {
   userInfo: UserProfileDto;
@@ -33,42 +32,17 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
 
   return (
     <div className="overflow-y-auto overflow-x-clip">
-      <ProfilePageHeader userInfo={userInfo} isOwner={isOwner} />
-
       <div className={twMerge(textClr, 'relative flex flex-col')}>
-        <h2 className="my-2 text-6xl font-body">{userInfo.displayName || 'No Display Name'}</h2>
-
-        <div className="flex flex-wrap font-heading -ml-3 mb-8">
-          <span className="leading-wide ml-4 font-bold">@{userInfo.username || 'no-username'}</span>
-          <ExternalLink
-            href={`${ETHEREUM_CHAIN_SCANNER_BASE}/address/${userInfo.address}`}
-            className="leading-wide font-bold ml-8"
-          >
-            {ellipsisAddress(userInfo.address)}
-          </ExternalLink>
-          {userInfo.createdAt && (
-            <span className="leading-wide ml-8 text-gray-500">
-              Joined {new Date(userInfo.createdAt ?? '').toLocaleDateString()}
-            </span>
-          )}
-
-          {/* <UserWatchList userWatchList={[userInfo.address, userInfo.address]} /> */}
-        </div>
-        <div className="my-2 flex flex-wrap items-center space-x-3">
-          {isOwner && (
-            <AOutlineButton
-              onClick={() => {
-                router.push(`/profile/settings`);
-              }}
-            >
-              Edit
-            </AOutlineButton>
-          )}
+        <div className="my-4 space-x-4 flex flex-row items-center">
+          <h2 className="text-4xl font-body">
+            <ExternalLink href={`${ETHEREUM_CHAIN_SCANNER_BASE}/address/${userInfo.address}`} className="font-bold">
+              {ellipsisAddress(userInfo.address)}
+            </ExternalLink>
+          </h2>
           <UserProfileShare username={userInfo.username} userAddress={userInfo.address} />
         </div>
-        {userInfo.bio && <p className="text-theme-light-800 mt-8 ml-1 max-w-md">{userInfo.bio || ''}</p>}
 
-        <ToggleTab small className="mt-14 " options={options} selected={selected} onChange={onChange} />
+        <ToggleTab small className="mt-6" options={options} selected={selected} onChange={onChange} />
 
         <div className="mt-6 min-h-[50vh] pointer-events-none">
           {selected === 'Collected' && <UserPageNftsTab userInfo={userInfo} />}
