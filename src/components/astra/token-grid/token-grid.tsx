@@ -6,6 +6,7 @@ import { TokenCard, TokenListCard } from './token-card';
 import { TokenFetcherAlt } from './token-fetcher';
 import { ErrorOrLoading } from '../error-or-loading';
 import { Erc721TokenOffer } from '../types';
+import { useOrderbook } from 'src/components/orderbook/OrderbookContext';
 
 interface Props {
   tokenFetcher?: TokenFetcherAlt;
@@ -28,6 +29,7 @@ export const TokensGrid = ({
   wrapWidth = 0,
   listMode
 }: Props) => {
+  const { filters } = useOrderbook();
   const [cardData, setCardData] = useState<Erc721TokenOffer[]>([]);
   const [error, setError] = useState(false);
   const [hasNextPage, setHasNextPage] = useState(false);
@@ -36,18 +38,26 @@ export const TokensGrid = ({
 
   const isMounted = useIsMounted();
 
+  // TODO: replace this 'token fetcher' trash with a proper custom hook!
   useEffect(() => {
+    if (tokenFetcher) {
+      tokenFetcher.cursor = '';
+    }
     setCardData([]);
     setLoading(true);
     handleFetch(false);
-  }, [tokenFetcher]);
+  }, [filters.sort]);
 
   const handleFetch = async (loadMore: boolean) => {
     if (!tokenFetcher) {
       return;
     }
 
-    const { hasNextPage: fhasNextPage, cardData: fcardData, error: ferror } = await tokenFetcher.fetch(loadMore);
+    const {
+      hasNextPage: fhasNextPage,
+      cardData: fcardData,
+      error: ferror
+    } = await tokenFetcher.fetch(loadMore, filters);
 
     // can't update react state after unmount
     if (!isMounted()) {
@@ -71,7 +81,7 @@ export const TokensGrid = ({
   let contents;
 
   if (error || loading || noData) {
-    contents = <ErrorOrLoading error={error} noData={noData} message="Error" />;
+    contents = <ErrorOrLoading error={error} noData={noData} />;
   } else {
     if (wrapWidth > 0) {
       if (listMode) {

@@ -3,18 +3,40 @@ import axios, { AxiosRequestHeaders } from 'axios';
 import { ApiResponse } from './apiUtils';
 import { OnboardAuthProvider } from './OnboardContext/OnboardAuthProvider';
 import { trimText } from 'src/components/common';
+import { SORT_FILTERS } from 'src/components/orderbook/OrderbookContext';
+
+export type TokenFetcherOptions = { cursor?: string; sort?: string };
 
 export const fetchCollectionTokens = async (
   collectionAddress: string,
   chainId: string,
-  cursor?: string
+  { cursor, sort = 'tokenIdNumeric' }: TokenFetcherOptions = {}
 ): Promise<ApiResponse> => {
+  const filters = {
+    orderBy: '',
+    orderDirection: ''
+  };
+
+  switch (sort) {
+    case SORT_FILTERS.highestPrice:
+    case SORT_FILTERS.lowestPrice:
+      filters.orderBy = 'price';
+      filters.orderDirection = sort === SORT_FILTERS.highestPrice ? 'desc' : 'asc';
+      break;
+    case SORT_FILTERS.rarityRank:
+    case SORT_FILTERS.tokenId:
+    case SORT_FILTERS.tokenIdNumeric:
+      filters.orderBy = sort;
+      filters.orderDirection = 'asc';
+      break;
+  }
+
   const query = {
     limit: LARGE_LIMIT,
     cursor,
     chainId,
-    orderBy: 'tokenIdNumeric',
-    orderDirection: 'asc'
+    ...filters
+    // ...parseFiltersToApiQueryParams({ sort }) // TODO: update API to support v2 filters for collections like this?
   };
 
   const response = await httpGet(`/collections/${chainId}:${collectionAddress}/nfts`, query);

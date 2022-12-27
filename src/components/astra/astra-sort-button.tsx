@@ -13,7 +13,7 @@ export const ASortButton = ({ className }: Props) => {
 
   useEffect(() => {
     setLabel(getSortLabel(filters?.sort));
-  }, [filters]);
+  }, [filters?.sort]);
 
   const onClickSort = (_label: string, sortOrder: string) => {
     updateFilter('sort', sortOrder);
@@ -35,8 +35,16 @@ export const ASortButton = ({ className }: Props) => {
               onClick: () => onClickSort(SORT_LABELS[SORT_FILTERS.lowestPrice], SORT_FILTERS.lowestPrice)
             },
             {
-              label: SORT_LABELS[SORT_FILTERS.mostRecent],
-              onClick: () => onClickSort(SORT_LABELS[SORT_FILTERS.mostRecent], SORT_FILTERS.mostRecent)
+              label: SORT_LABELS[SORT_FILTERS.rarityRank],
+              onClick: () => onClickSort(SORT_LABELS[SORT_FILTERS.rarityRank], SORT_FILTERS.rarityRank)
+            },
+            {
+              label: SORT_LABELS[SORT_FILTERS.tokenId],
+              onClick: () => onClickSort(SORT_LABELS[SORT_FILTERS.tokenId], SORT_FILTERS.tokenId)
+            },
+            {
+              label: SORT_LABELS[SORT_FILTERS.tokenIdNumeric],
+              onClick: () => onClickSort(SORT_LABELS[SORT_FILTERS.tokenIdNumeric], SORT_FILTERS.tokenIdNumeric)
             }
           ]}
         />
