@@ -5,6 +5,8 @@ import { BlueCheck, EZImage, NextLink, ReadMoreText, Spacer } from 'src/componen
 import { NextRouter, useRouter } from 'next/router';
 import { AListGridButton } from '../astra-button';
 import { ASortButton } from '../astra-sort-button';
+import { CollectionSearchInput } from 'src/components/common/search/collection-search-input';
+import { AStatusFilterButton } from '../astra-status-button';
 
 export interface GridHeaderProps {
   expanded: boolean;
@@ -51,6 +53,8 @@ export const GridHeader = ({ expanded, avatarUrl, title, description, hasBlueChe
 
       <div className={twMerge(inputBorderColor, 'w-full flex   py-2 border-t-[1px]')}>
         <ASortButton />
+        <AStatusFilterButton />
+        <CollectionSearchInput />
         <Spacer />
         <AListGridButton />
       </div>
