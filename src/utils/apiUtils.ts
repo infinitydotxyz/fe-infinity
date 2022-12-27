@@ -81,7 +81,6 @@ export const apiGet = async (path: string, params?: ApiParams): Promise<ApiRespo
       authHeaders = await OnboardAuthProvider.getAuthHeaders();
     }
 
-    console.log(path, requiresAuth);
     const { data, status } = await axiosApi({
       url: path.startsWith('http') ? path : `${API_BASE}${path}${queryStr}`,
       method: 'GET',
