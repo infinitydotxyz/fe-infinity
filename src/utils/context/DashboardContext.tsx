@@ -1,21 +1,30 @@
 import {
   BaseCollection,
   ChainId,
+  ChainNFTs,
   OBOrder,
   OBOrderItem,
   OBTokenInfo,
   SignedOBOrder
 } from '@infinityxyz/lib-frontend/types/core';
-import { getOBComplicationAddress, getTxnCurrencyAddress } from '@infinityxyz/lib-frontend/utils';
+import { getOBComplicationAddress, getTxnCurrencyAddress, trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import { CollectionTokenCache, TokenFetcherAlt } from 'src/components/astra/token-grid/token-fetcher';
 import { Erc721CollectionOffer, Erc721TokenOffer } from 'src/components/astra/types';
 import { useCardSelection } from 'src/components/astra/useCardSelection';
 import { useCollectionSelection } from 'src/components/astra/useCollectionSelection';
-import { toastError, toastSuccess } from 'src/components/common';
-import { getDefaultOrderExpiryTime, getEstimatedGasPrice, getOrderExpiryTimeInMsFromEnum } from '../commonUtils';
+import { toastError, toastSuccess, toastWarning } from 'src/components/common';
+import { WaitingForTxModal } from 'src/components/orderbook/order-drawer/waiting-for-tx-modal';
+import {
+  CART_TYPE,
+  extractErrorMsg,
+  getCartType,
+  getDefaultOrderExpiryTime,
+  getEstimatedGasPrice,
+  getOrderExpiryTimeInMsFromEnum
+} from '../commonUtils';
 import { DEFAULT_MAX_GAS_PRICE_WEI } from '../constants';
-import { getSignedOBOrder } from '../exchange/orders';
+import { getSignedOBOrder, sendMultipleNfts, sendSingleNft } from '../exchange/orders';
 import { useOnboardContext } from '../OnboardContext/OnboardContext';
 import { fetchOrderNonce, postOrdersV2 } from '../orderbookUtils';
 
@@ -41,6 +50,7 @@ export type DashboardContextType = {
   tokenFetcher: TokenFetcherAlt | undefined;
   setTokenFetcher: (value: TokenFetcherAlt | undefined) => void;
 
+  handleTokenSend: (selection: Erc721TokenOffer[], sendToAddress: string) => Promise<void>;
   handleTokenCheckout: (selection: Erc721TokenOffer[]) => Promise<void>;
   handleCollCheckout: (selection: Erc721CollectionOffer[]) => Promise<void>;
   refreshData: () => void;
@@ -75,6 +85,7 @@ export const DashboardContextProvider = ({ children }: Props) => {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [gridWidth, setGridWidth] = useState(0);
   const [listMode, setListMode] = useState(false);
+  const [txnHash, setTxnHash] = useState<string>('');
 
   const [displayName, setDisplayName] = useState<string>('');
 
@@ -96,24 +107,76 @@ export const DashboardContextProvider = ({ children }: Props) => {
     refreshData();
   }, []);
 
+  const handleTokenSend = async (nftsToSend: Erc721TokenOffer[], sendToAddress: string) => {
+    const orderItems: ChainNFTs[] = [];
+    const collectionToTokenMap: { [collection: string]: { tokenId: string; numTokens: number }[] } = {};
+
+    // group tokens by collections
+    for (const nftToSend of nftsToSend) {
+      const collection = trimLowerCase(nftToSend.address);
+      const tokenId = nftToSend.tokenId;
+      if (!collection || !tokenId) {
+        continue;
+      }
+      const numTokens = 1;
+      const tokens = collectionToTokenMap[collection] ?? [];
+      tokens.push({ tokenId, numTokens });
+      collectionToTokenMap[collection] = tokens;
+    }
+
+    // add to orderItems
+    for (const item in collectionToTokenMap) {
+      const tokens = collectionToTokenMap[item];
+      orderItems.push({
+        collection: item,
+        tokens
+      });
+    }
+
+    try {
+      if (sendToAddress) {
+        const signer = getSigner();
+        if (signer) {
+          let result;
+          if (nftsToSend.length === 1) {
+            const nftToSend = nftsToSend[0];
+            result = await sendSingleNft(
+              signer,
+              chainId,
+              nftToSend.address ?? nftToSend.tokenAddress ?? '',
+              nftToSend.tokenId ?? '',
+              sendToAddress
+            );
+          } else {
+            result = await sendMultipleNfts(signer, chainId, orderItems, sendToAddress);
+          }
+          if (result.hash) {
+            setTxnHash(result.hash);
+          }
+        } else {
+          console.error('signer is null');
+        }
+      } else {
+        toastWarning('To address is blank');
+      }
+    } catch (err) {
+      toastError(extractErrorMsg(err), () => {
+        alert(err);
+      });
+    }
+  };
+
   const handleTokenCheckout = async (tokens: Erc721TokenOffer[]) => {
     const signer = getSigner();
     if (!user || !user.address || !signer) {
       toastError('No logged in user');
     } else {
-      // identify checkout type: token offer vs token listing vs token send
-      const url = window.location.href;
-      const isCollection = url.includes('collection');
-      const isProfile = url.includes('profile');
-      const isItems = url.includes('items');
-      const isSend = url.includes('send');
-      const isOfferCart = isCollection && isItems;
-      const isListingCart = isProfile && isItems;
-      const isSendCart = isProfile && isSend;
+      const url = typeof window !== 'undefined' ? window.location.href : '';
+      const isOfferCart = getCartType(url) === CART_TYPE.BID;
+      const isListingCart = getCartType(url) === CART_TYPE.LIST;
+      const isSendCart = getCartType(url) === CART_TYPE.SEND;
 
-      if (isSendCart) {
-        // send tokens
-      } else {
+      if (!isSendCart) {
         // place orders
         // first sign orders
         const signedOrders: SignedOBOrder[] = [];
@@ -326,6 +389,7 @@ export const DashboardContextProvider = ({ children }: Props) => {
     tokenFetcher,
     setTokenFetcher,
 
+    handleTokenSend,
     handleTokenCheckout,
     handleCollCheckout,
     refreshData,
@@ -350,7 +414,14 @@ export const DashboardContextProvider = ({ children }: Props) => {
     removeCollFromSelection
   };
 
-  return <DashboardContext.Provider value={value}>{children}</DashboardContext.Provider>;
+  return (
+    <DashboardContext.Provider value={value}>
+      <>
+        {children}{' '}
+        {txnHash && <WaitingForTxModal title={'Sending NFTs'} txHash={txnHash} onClose={() => setTxnHash('')} />}
+      </>
+    </DashboardContext.Provider>
+  );
 };
 
 export const useDashboardContext = (): DashboardContextType => {

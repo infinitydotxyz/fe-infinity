@@ -1,16 +1,53 @@
+import * as Queries from '@infinityxyz/lib-frontend/types/dto/orders/orders-queries.dto';
+import { GetServerSidePropsContext } from 'next';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import {
   DashboardLayout,
   DashboardProps,
   getServerSideProps as getDashboardServerSideProps
 } from 'src/components/astra/dashboard/dashboard-layout';
-import { CenteredContent } from 'src/components/common';
-import * as Queries from '@infinityxyz/lib-frontend/types/dto/orders/orders-queries.dto';
-import { GetServerSidePropsContext } from 'next';
+import { ProfileTokenCache } from 'src/components/astra/token-grid/token-fetcher';
+import { TokensGrid } from 'src/components/astra/token-grid/token-grid';
+import { useDashboardContext } from 'src/utils/context/DashboardContext';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
+// todo this and profileItemsPage are the same, refactor
 export default function ProfileSendPage(props: DashboardProps) {
+  const {
+    tokenFetcher,
+    isSelected,
+    isSelectable,
+    gridWidth,
+    listMode,
+    toggleSelection,
+    setTokenFetcher,
+    refreshTrigger,
+    setNumTokens
+  } = useDashboardContext();
+
+  const { chainId } = useOnboardContext();
+  const router = useRouter();
+  const addressFromPath = router.query?.address as string;
+
+  useEffect(() => {
+    if (addressFromPath) {
+      setTokenFetcher(ProfileTokenCache.shared().fetcher(addressFromPath, chainId));
+    }
+  }, [addressFromPath, chainId, refreshTrigger]);
+
   return (
     <DashboardLayout {...props}>
-      <CenteredContent>send goes here</CenteredContent>
+      <TokensGrid
+        listMode={listMode}
+        tokenFetcher={tokenFetcher}
+        className="px-8 py-6"
+        onClick={toggleSelection}
+        wrapWidth={gridWidth}
+        isSelectable={isSelectable}
+        isSelected={isSelected}
+        onLoad={setNumTokens}
+      />
     </DashboardLayout>
   );
 }

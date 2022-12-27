@@ -1,8 +1,9 @@
+import { getAddress } from '@ethersproject/address';
 import { ReactNode, useState } from 'react';
 import { MdClose } from 'react-icons/md';
 import { AButton, ARoundButton, ATextButton } from 'src/components/astra';
 import { EZImage, Spacer, TextInputBox } from 'src/components/common';
-import { getCollectionKeyId, getDefaultOrderExpiryTime, getTokenKeyId } from 'src/utils';
+import { CART_TYPE, getCartType, getCollectionKeyId, getDefaultOrderExpiryTime, getTokenKeyId } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { infoBoxBGClr, smallIconButtonStyle, textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
@@ -15,12 +16,14 @@ interface Props {
   onCollsRemove: (coll?: Erc721CollectionOffer) => void;
   onTokensRemove: (token?: Erc721TokenOffer) => void;
   onCheckout: () => void;
+  onTokenSend: (toAddress: string) => void;
 }
 
-export const AstraCart = ({ tokens, collections, onTokensRemove, onCollsRemove, onCheckout }: Props) => {
+export const AstraCart = ({ tokens, collections, onTokensRemove, onCollsRemove, onCheckout, onTokenSend }: Props) => {
   const tokenMap = new Map<string, Erc721TokenOffer[]>();
   const collMap = new Map<string, Erc721CollectionOffer[]>();
-  const { user, chainId } = useOnboardContext();
+  const [sendToAddress, setSendToAddress] = useState('');
+  const { user, getEthersProvider, chainId } = useOnboardContext();
 
   for (const token of tokens) {
     const tkns = tokenMap.get(token.tokenAddress ?? '') ?? [];
@@ -68,6 +71,25 @@ export const AstraCart = ({ tokens, collections, onTokensRemove, onCollsRemove, 
     );
   }
 
+  let checkoutBtnText = 'Place Order';
+  const url = typeof window !== 'undefined' ? window.location.href : '';
+  const cartType = getCartType(url);
+  if (cartType === CART_TYPE.LIST) {
+    if (tokens.length > 1) {
+      checkoutBtnText = 'Bulk List';
+    } else {
+      checkoutBtnText = 'List';
+    }
+  } else if (cartType === CART_TYPE.BID) {
+    if (tokens.length > 1) {
+      checkoutBtnText = 'Bulk Bid';
+    } else {
+      checkoutBtnText = 'Bid';
+    }
+  } else if (cartType === CART_TYPE.SEND) {
+    checkoutBtnText = 'Send';
+  }
+
   let listComponent;
 
   if (tokenMap.size > 0) {
@@ -83,7 +105,15 @@ export const AstraCart = ({ tokens, collections, onTokensRemove, onCollsRemove, 
       );
 
       for (const t of tokenArray) {
-        divList.push(<AstraTokenCartItem key={getTokenKeyId(t)} token={t} index={index++} onRemove={onTokensRemove} />);
+        if (cartType === CART_TYPE.SEND) {
+          divList.push(
+            <AstraSendCartItem key={getTokenKeyId(t)} token={t} index={index++} onRemove={onTokensRemove} />
+          );
+        } else {
+          divList.push(
+            <AstraTokenCartItem key={getTokenKeyId(t)} token={t} index={index++} onRemove={onTokensRemove} />
+          );
+        }
       }
 
       divList.push(<div key={Math.random()} className="h-1" />);
@@ -123,6 +153,18 @@ export const AstraCart = ({ tokens, collections, onTokensRemove, onCollsRemove, 
     );
   }
 
+  const finalSendToAddress = async (addr: string) => {
+    let finalAddress: string | null = addr;
+    if (addr.endsWith('.eth')) {
+      const provider = getEthersProvider();
+      finalAddress = (await provider?.resolveName(addr)) ?? '';
+    }
+    if (finalAddress) {
+      return getAddress(finalAddress);
+    }
+    return '';
+  };
+
   return (
     // setting to  w-72 so it doen't shrink and expand while animating
     <div className={twMerge(infoBoxBGClr, 'h-full flex flex-col w-72')}>
@@ -131,15 +173,29 @@ export const AstraCart = ({ tokens, collections, onTokensRemove, onCollsRemove, 
         {clearButton}
       </div>
 
+      {cartType === CART_TYPE.SEND && tokenMap.size > 0 && (
+        <div className="p-8">
+          <TextInputBox
+            type="text"
+            value={sendToAddress}
+            placeholder=""
+            label={'Address or ENS'}
+            onChange={(value) => setSendToAddress(value)}
+          />
+        </div>
+      )}
+
       {listComponent}
 
       <div className="m-6 flex flex-col">
         <AButton
           primary={true}
           disabled={!user || chainId !== '1' || (tokens.length === 0 && collections.length === 0)}
-          onClick={onCheckout}
+          onClick={async () => {
+            cartType === CART_TYPE.SEND ? onTokenSend(await finalSendToAddress(sendToAddress)) : onCheckout;
+          }}
         >
-          Place orders
+          {checkoutBtnText}
         </AButton>
       </div>
     </div>
@@ -162,6 +218,27 @@ export const AstraTokenCartItem = ({ token, onRemove }: Props2) => {
       <div className="ml-3 flex flex-col w-full">
         <div className="leading-5 text-lg font-bold">{token.tokenId}</div>
         <PriceAndExpiry token={token}></PriceAndExpiry>
+      </div>
+
+      <Spacer />
+      <ARoundButton
+        onClick={() => {
+          onRemove(token);
+        }}
+      >
+        <MdClose className={twMerge(smallIconButtonStyle, '   ')} />
+      </ARoundButton>
+    </div>
+  );
+};
+
+export const AstraSendCartItem = ({ token, onRemove }: Props2) => {
+  return (
+    <div key={getTokenKeyId(token)} className="flex items-center w-full">
+      <EZImage className={twMerge('h-12 w-12 rounded-lg overflow-clip')} src={token.image} />
+
+      <div className="ml-3 flex flex-col w-full">
+        <div className="leading-5 text-lg font-bold">{token.tokenId}</div>
       </div>
 
       <Spacer />

@@ -14,6 +14,7 @@ export const Layout = ({ children }: Props) => {
   const {
     collection,
     setGridWidth,
+    handleTokenSend,
     handleTokenCheckout,
     handleCollCheckout,
     selection,
@@ -55,6 +56,10 @@ export const Layout = ({ children }: Props) => {
           console.log(e);
           toastError(e);
         }
+      }}
+      onTokenSend={async (value) => {
+        await handleTokenSend(selection, value);
+        clearSelection();
       }}
       onTokensRemove={(value) => {
         removeFromSelection(value);

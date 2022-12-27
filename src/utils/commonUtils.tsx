@@ -65,6 +65,32 @@ export const toChecksumAddress = (address?: string): string => {
   return '';
 };
 
+export enum CART_TYPE {
+  BID = 'bid',
+  LIST = 'list',
+  SEND = 'send',
+  NONE = 'none'
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const getCartType = (url: string): CART_TYPE => {
+  const isCollection = url.includes('collection');
+  const isProfile = url.includes('profile');
+  const isItems = url.includes('items');
+  const isSend = url.includes('send');
+  const isOfferCart = isCollection && isItems;
+  const isListingCart = isProfile && isItems;
+  const isSendCart = isProfile && isSend;
+  if (isOfferCart) {
+    return CART_TYPE.BID;
+  } else if (isListingCart) {
+    return CART_TYPE.LIST;
+  } else if (isSendCart) {
+    return CART_TYPE.SEND;
+  }
+  return CART_TYPE.NONE;
+};
+
 export const getCollectionKeyId = (coll: BaseCollection) => {
   return trimLowerCase(`${coll?.chainId}:${coll?.address}`);
 };
