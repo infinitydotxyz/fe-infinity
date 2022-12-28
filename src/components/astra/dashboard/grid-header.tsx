@@ -7,6 +7,7 @@ import { AListGridButton } from '../astra-button';
 import { ASortButton } from '../astra-sort-button';
 import { AStatusFilterButton } from '../astra-status-button';
 import { CollectionNftSearchInput } from 'src/components/common/search/collection-nft-search-input';
+import { APriceFilter } from '../astra-price-filter';
 
 export interface GridHeaderProps {
   expanded: boolean;
@@ -63,6 +64,7 @@ export const GridHeader = ({
       <div className={twMerge(inputBorderColor, 'w-full flex   py-2 border-t-[1px]')}>
         <ASortButton />
         <AStatusFilterButton />
+        <APriceFilter />
         <CollectionNftSearchInput slug={slug} expanded />
         <Spacer />
         <AListGridButton />

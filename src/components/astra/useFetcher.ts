@@ -39,7 +39,7 @@ export function useTokenFetcher<From, To>({
   const refetch = () => fetch(false);
 
   // reset whenever these filters change
-  useEffect(reset, [filters.sort, filters.orderType]);
+  useEffect(reset, [filters.sort, filters.orderType, filters.minPrice, filters.maxPrice]);
 
   // refetch whenever 'reset' finished updating the state (also fired on mount)
   useEffect(() => {

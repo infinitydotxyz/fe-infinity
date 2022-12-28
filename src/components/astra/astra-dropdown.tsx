@@ -21,6 +21,15 @@ interface DropdownProps {
   hasBorder?: boolean;
 }
 
+export const ADropdownButton: React.FC = ({ children }) => {
+  return (
+    <div className="flex items-center gap-1">
+      <div className="whitespace-nowrap">{children}</div>
+      <BiCaretDown />
+    </div>
+  );
+};
+
 export const ADropdown = ({
   label,
   items,
@@ -29,13 +38,6 @@ export const ADropdown = ({
   hasBorder = true,
   alignMenuRight = false
 }: DropdownProps) => {
-  const buttonContents = (
-    <div className="flex items-center gap-1">
-      <div className="whitespace-nowrap">{label}</div>
-      <BiCaretDown />
-    </div>
-  );
-
   return (
     <div className={twMerge(className)}>
       <Menu>
@@ -43,8 +45,16 @@ export const ADropdown = ({
           <ACustomMenuContents>
             <span>
               <ACustomMenuButton>
-                {hasBorder && <AOutlineButton tooltip={tooltip}>{buttonContents}</AOutlineButton>}{' '}
-                {!hasBorder && <ATextButton tooltip={tooltip}>{buttonContents}</ATextButton>}
+                {hasBorder && (
+                  <AOutlineButton tooltip={tooltip}>
+                    <ADropdownButton>{label}</ADropdownButton>
+                  </AOutlineButton>
+                )}{' '}
+                {!hasBorder && (
+                  <ATextButton tooltip={tooltip}>
+                    <ADropdownButton>{label}</ADropdownButton>
+                  </ATextButton>
+                )}
               </ACustomMenuButton>
             </span>
 
