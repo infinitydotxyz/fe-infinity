@@ -12,17 +12,24 @@ export const AStatusFilterButton: React.FC = () => {
       label={label}
       items={[
         {
-          label: 'Buy now',
+          label: 'All items',
           onClick: () => {
-            setLabel('Buy now');
-            updateFilter('status', 'buyNow');
+            setLabel('All items');
+            updateFilter('orderType', '');
+          }
+        },
+        {
+          label: 'Has listings',
+          onClick: () => {
+            setLabel('Has listings');
+            updateFilter('orderType', 'listing');
           }
         },
         {
           label: 'Has offers',
           onClick: () => {
             setLabel('Has offers');
-            updateFilter('status', 'hasOffers');
+            updateFilter('orderType', 'offer');
           }
         }
       ]}

@@ -18,7 +18,11 @@ import * as Queries from '@infinityxyz/lib-frontend/types/dto/orders/orders-quer
 
 export type OBFilters = {
   sort?: string;
+  /**
+   * @deprecated No longer used in v3. Use `orderType` instead.
+   */
   orderTypes?: string[];
+  orderType?: string;
   collections?: string[];
   minPrice?: string;
   maxPrice?: string;
@@ -125,7 +129,15 @@ export const parseFiltersToApiQueryParams = (filters: OBFilters): GetOrderItemsQ
 };
 
 const parseRouterQueryParamsToFilters = (query: ParsedUrlQuery): OBFilters => {
-  const { collections: _collections, orderTypes: _orderTypes, minPrice, maxPrice, numberOfNfts, sort } = query;
+  const {
+    collections: _collections,
+    orderTypes: _orderTypes,
+    orderType: _orderType,
+    minPrice,
+    maxPrice,
+    numberOfNfts,
+    sort
+  } = query;
 
   const newFilters: OBFilters = {};
 
@@ -170,6 +182,8 @@ const parseRouterQueryParamsToFilters = (query: ParsedUrlQuery): OBFilters => {
   if (sort) {
     newFilters.sort = sort as string;
   }
+
+  newFilters.orderType = _orderType as string;
 
   return newFilters;
 };
