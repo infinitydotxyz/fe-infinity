@@ -27,6 +27,8 @@ export type OBFilters = {
   minPrice?: string;
   maxPrice?: string;
   numberOfNfts?: number;
+  traitTypes?: string[];
+  traitValues?: string[];
 };
 
 export const SORT_FILTERS = {

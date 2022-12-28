@@ -114,9 +114,10 @@ interface Props2 {
   children: ReactNode;
   open: boolean;
   alignMenuRight?: boolean;
+  innerClassName?: string;
 }
 
-export const ACustomMenuItems = ({ children, open, alignMenuRight }: Props2) => {
+export const ACustomMenuItems = ({ children, open, alignMenuRight, innerClassName }: Props2) => {
   return (
     <div className={twMerge('absolute bottom-0  z-50', alignMenuRight ? 'right-0' : ' ')}>
       <Transition
@@ -133,7 +134,8 @@ export const ACustomMenuItems = ({ children, open, alignMenuRight }: Props2) => 
             cardClr,
             inputBorderColor,
             'absolute mt-2 p-2 w-56 rounded-2xl border shadow-2xl outline-none',
-            alignMenuRight ? 'right-0' : ''
+            alignMenuRight ? 'right-0' : '',
+            innerClassName
           )}
         >
           {children}

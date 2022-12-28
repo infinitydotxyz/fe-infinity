@@ -8,6 +8,7 @@ import { ASortButton } from '../astra-sort-button';
 import { AStatusFilterButton } from '../astra-status-button';
 import { CollectionNftSearchInput } from 'src/components/common/search/collection-nft-search-input';
 import { APriceFilter } from '../astra-price-filter';
+import { ATraitFilter } from '../astra-trait-filter';
 
 export interface GridHeaderProps {
   expanded: boolean;
@@ -65,6 +66,7 @@ export const GridHeader = ({
         <ASortButton />
         <AStatusFilterButton />
         <APriceFilter />
+        <ATraitFilter />
         <CollectionNftSearchInput slug={slug} expanded />
         <Spacer />
         <AListGridButton />
