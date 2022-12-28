@@ -1,12 +1,11 @@
-import { useState, useEffect } from 'react';
 import { ScrollLoader } from 'src/components/common';
-import { useIsMounted } from 'src/hooks/useIsMounted';
 import { twMerge } from 'tailwind-merge';
 import { TokenCard, TokenListCard } from './token-card';
 import { TokenFetcherAlt } from './token-fetcher';
 import { ErrorOrLoading } from '../error-or-loading';
 import { Erc721TokenOffer } from '../types';
-import { useOrderbook } from 'src/components/orderbook/OrderbookContext';
+import { useCollectionTokenFetcher } from '../useFetcher';
+import { useDashboardContext } from 'src/utils/context/DashboardContext';
 
 interface Props {
   tokenFetcher?: TokenFetcherAlt;
@@ -19,69 +18,22 @@ interface Props {
   onLoad: (numItems: number) => void;
 }
 
-export const TokensGrid = ({
-  tokenFetcher,
-  className = '',
-  onLoad,
-  onClick,
-  isSelected,
-  isSelectable,
-  wrapWidth = 0,
-  listMode
-}: Props) => {
-  const { filters } = useOrderbook();
-  const [cardData, setCardData] = useState<Erc721TokenOffer[]>([]);
-  const [error, setError] = useState(false);
-  const [hasNextPage, setHasNextPage] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [noData, setNoData] = useState(false);
+export const TokensGrid = ({ className = '', onClick, isSelected, isSelectable, wrapWidth = 0, listMode }: Props) => {
+  const { collection } = useDashboardContext();
 
-  const isMounted = useIsMounted();
+  if (!collection) {
+    // this is kinda hacky but idk how to solve this yet
+    return null;
+  }
 
-  // TODO: replace this 'token fetcher' trash with a proper custom hook!
-  useEffect(() => {
-    if (tokenFetcher) {
-      tokenFetcher.cursor = '';
-    }
-    setCardData([]);
-    setLoading(true);
-    handleFetch(false);
-  }, [tokenFetcher, filters.sort]);
+  const { data: cardData, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection.address);
 
-  const handleFetch = async (loadMore: boolean) => {
-    if (!tokenFetcher) {
-      return;
-    }
-
-    const {
-      hasNextPage: fhasNextPage,
-      cardData: fcardData,
-      error: ferror
-    } = await tokenFetcher.fetch(loadMore, filters);
-
-    // can't update react state after unmount
-    if (!isMounted()) {
-      return;
-    }
-
-    setHasNextPage(fhasNextPage);
-    setError(ferror);
-
-    if (!ferror) {
-      setCardData(fcardData);
-
-      setNoData(fcardData.length === 0);
-
-      onLoad(fcardData.length);
-    }
-
-    setLoading(false);
-  };
+  const noData = cardData.length === 0;
 
   let contents;
 
-  if (error || loading || noData) {
-    contents = <ErrorOrLoading error={error} noData={noData} />;
+  if (error || isLoading || noData) {
+    contents = <ErrorOrLoading error={!!error} noData={noData} />;
   } else {
     if (wrapWidth > 0) {
       if (listMode) {
@@ -108,7 +60,7 @@ export const TokensGrid = ({
             {hasNextPage && (
               <ScrollLoader
                 onFetchMore={() => {
-                  handleFetch(true);
+                  fetch(true);
                 }}
               />
             )}
@@ -144,7 +96,7 @@ export const TokensGrid = ({
             {hasNextPage && (
               <ScrollLoader
                 onFetchMore={() => {
-                  handleFetch(true);
+                  fetch(true);
                 }}
               />
             )}

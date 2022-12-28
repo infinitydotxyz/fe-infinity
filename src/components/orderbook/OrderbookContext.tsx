@@ -16,7 +16,7 @@ import { OrderCache } from './order-cache';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import * as Queries from '@infinityxyz/lib-frontend/types/dto/orders/orders-queries.dto';
 
-type OBFilters = {
+export type OBFilters = {
   sort?: string;
   orderTypes?: string[];
   collections?: string[];
