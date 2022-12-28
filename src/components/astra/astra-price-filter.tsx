@@ -27,55 +27,53 @@ export const APriceFilter: React.FC = () => {
   };
 
   return (
-    <>
-      <Menu>
-        {({ open }) => (
-          <ACustomMenuContents>
-            <span>
-              <ACustomMenuButton>
-                <ATextButton tooltip="Click to open price filter">
-                  <ADropdownButton>Price</ADropdownButton>
-                </ATextButton>
-              </ACustomMenuButton>
-            </span>
+    <Menu>
+      {({ open }) => (
+        <ACustomMenuContents>
+          <span>
+            <ACustomMenuButton>
+              <ATextButton tooltip="Click to open price filter">
+                <ADropdownButton>Price</ADropdownButton>
+              </ATextButton>
+            </ACustomMenuButton>
+          </span>
 
-            {open && (
-              <ACustomMenuItems open={open}>
-                <div className="flex">
-                  <TextInputBox
-                    addEthSymbol={true}
-                    type="number"
-                    className="border-gray-300 font-heading"
-                    label="Min"
-                    placeholder=""
-                    value={minPriceVal}
-                    onChange={(value) => {
-                      setMinPriceVal(value);
-                    }}
-                  />
-                  <TextInputBox
-                    addEthSymbol={true}
-                    type="number"
-                    className="border-gray-300 font-heading ml-2"
-                    label="Max"
-                    placeholder=""
-                    value={maxPriceVal}
-                    onChange={(value) => {
-                      setMaxPriceVal(value);
-                    }}
-                  />
-                </div>
-                <Menu.Button onClick={onClear} className="mt-2 float-left">
-                  <AButton highlighted>Clear</AButton>
-                </Menu.Button>
-                <Menu.Button onClick={onSave} className="mt-2 float-right">
-                  <AButton primary>Save</AButton>
-                </Menu.Button>
-              </ACustomMenuItems>
-            )}
-          </ACustomMenuContents>
-        )}
-      </Menu>
-    </>
+          {open && (
+            <ACustomMenuItems open={open}>
+              <div className="flex">
+                <TextInputBox
+                  addEthSymbol={true}
+                  type="number"
+                  className="border-gray-300 font-heading"
+                  label="Min"
+                  placeholder=""
+                  value={minPriceVal}
+                  onChange={(value) => {
+                    setMinPriceVal(value);
+                  }}
+                />
+                <TextInputBox
+                  addEthSymbol={true}
+                  type="number"
+                  className="border-gray-300 font-heading ml-2"
+                  label="Max"
+                  placeholder=""
+                  value={maxPriceVal}
+                  onChange={(value) => {
+                    setMaxPriceVal(value);
+                  }}
+                />
+              </div>
+              <Menu.Button onClick={onClear} className="mt-2 float-left">
+                <AButton highlighted>Clear</AButton>
+              </Menu.Button>
+              <Menu.Button onClick={onSave} className="mt-2 float-right">
+                <AButton primary>Save</AButton>
+              </Menu.Button>
+            </ACustomMenuItems>
+          )}
+        </ACustomMenuContents>
+      )}
+    </Menu>
   );
 };
