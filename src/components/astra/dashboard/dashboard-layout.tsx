@@ -99,7 +99,8 @@ export const DashboardLayout: React.FC<DashboardProps> = ({ children, error, ...
         avatarUrl: props.asset.collection.metadata.profileImage || props.asset.collection.metadata.bannerImage,
         title: props.asset.collection.metadata.name,
         description: props.asset.collection.metadata.description,
-        hasBlueCheck: props.asset.collection.hasBlueCheck
+        hasBlueCheck: props.asset.collection.hasBlueCheck,
+        slug: props.asset.collection.slug
       };
 
       const gridChildren = (
@@ -130,7 +131,8 @@ export const DashboardLayout: React.FC<DashboardProps> = ({ children, error, ...
         avatarUrl: props.asset.collection.metadata.profileImage || props.asset.collection.metadata.bannerImage,
         title: props.asset.collection.metadata.name,
         description: props.asset.collection.metadata.description,
-        hasBlueCheck: props.asset.collection.hasBlueCheck
+        hasBlueCheck: props.asset.collection.hasBlueCheck,
+        slug: props.asset.collection.slug
       };
 
       const gridChildren = (

@@ -5,18 +5,27 @@ import { BlueCheck, EZImage, NextLink, ReadMoreText, Spacer } from 'src/componen
 import { NextRouter, useRouter } from 'next/router';
 import { AListGridButton } from '../astra-button';
 import { ASortButton } from '../astra-sort-button';
-import { CollectionSearchInput } from 'src/components/common/search/collection-search-input';
 import { AStatusFilterButton } from '../astra-status-button';
+import { CollectionNftSearchInput } from 'src/components/common/search/collection-nft-search-input';
 
 export interface GridHeaderProps {
   expanded: boolean;
   avatarUrl: string;
   title: string;
+  slug: string;
   description?: string;
   hasBlueCheck?: boolean;
   children?: React.ReactNode;
 }
-export const GridHeader = ({ expanded, avatarUrl, title, description, hasBlueCheck, children }: GridHeaderProps) => {
+export const GridHeader = ({
+  expanded,
+  avatarUrl,
+  title,
+  slug,
+  description,
+  hasBlueCheck,
+  children
+}: GridHeaderProps) => {
   return (
     <div
       className={twMerge(inputBorderColor, cardClr, textClr, 'flex-col items-center rounded-tl-lg border-b px-8 pt-5')}
@@ -54,7 +63,7 @@ export const GridHeader = ({ expanded, avatarUrl, title, description, hasBlueChe
       <div className={twMerge(inputBorderColor, 'w-full flex   py-2 border-t-[1px]')}>
         <ASortButton />
         <AStatusFilterButton />
-        <CollectionSearchInput />
+        <CollectionNftSearchInput slug={slug} expanded />
         <Spacer />
         <AListGridButton />
       </div>
