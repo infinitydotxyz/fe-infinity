@@ -46,7 +46,7 @@ export const TokensGrid = ({
     setCardData([]);
     setLoading(true);
     handleFetch(false);
-  }, [filters.sort]);
+  }, [tokenFetcher, filters.sort]);
 
   const handleFetch = async (loadMore: boolean) => {
     if (!tokenFetcher) {
