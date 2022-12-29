@@ -27,6 +27,7 @@ interface Props {
 
   showActionButtons?: boolean;
   wide?: boolean;
+  panelClassName?: string;
 }
 
 export const Modal = ({
@@ -42,7 +43,8 @@ export const Modal = ({
   title,
   onClose, // X icon, or click outside dialog
   showActionButtons = true,
-  wide = true
+  wide = true,
+  panelClassName
 }: Props) => {
   const buttons = [];
 
@@ -117,12 +119,13 @@ export const Modal = ({
                 className={twMerge(
                   'w-full',
                   wide ? 'max-w-xl' : 'max-w-md',
-                  'transform rounded-2xl bg-white py-8 px-9 text-left align-middle shadow-xl transition-all'
+                  'transform rounded-2xl bg-white dark:bg-neutral-900 dark:text-white py-8 px-9 text-left align-middle shadow-xl transition-all',
+                  panelClassName
                 )}
               >
                 <Dialog.Title
                   as="h3"
-                  className="flex items-center tracking-tight text-xl font-bold leading-6 text-gray-900 mb-5"
+                  className="flex items-center tracking-tight text-xl font-bold leading-6 text-gray-900 dark:text-white mb-5"
                 >
                   {title}
 

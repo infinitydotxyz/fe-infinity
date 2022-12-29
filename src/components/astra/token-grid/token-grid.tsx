@@ -6,6 +6,9 @@ import { ErrorOrLoading } from '../error-or-loading';
 import { Erc721TokenOffer } from '../types';
 import { useCollectionTokenFetcher } from '../useFetcher';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
+import { TokenCardModal } from './token-card-modal';
+import { useState } from 'react';
+import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 
 interface Props {
   tokenFetcher?: TokenFetcherAlt;
@@ -20,13 +23,13 @@ interface Props {
 
 export const TokensGrid = ({ className = '', onClick, isSelected, isSelectable, wrapWidth = 0, listMode }: Props) => {
   const { collection } = useDashboardContext();
+  const [data, setData] = useState<ERC721CardData>();
 
-  if (!collection) {
-    // this is kinda hacky but idk how to solve this yet
-    return null;
-  }
+  const modalOpen = !!data;
+  const setModalOpen = () => setData(undefined);
 
-  const { data: cardData, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection.address);
+  // TODO: `collection.address` param shouldn't be of type `string | undefined` cus it sends an unnecessary request to an empty collection
+  const { data: cardData, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection?.address);
 
   const noData = cardData.length === 0;
 
@@ -48,10 +51,9 @@ export const TokensGrid = ({ className = '', onClick, isSelected, isSelectable, 
                     selected={isSelected(data)}
                     isSelectable={isSelectable}
                     onClick={(data) => {
-                      if (onClick) {
-                        return onClick(data);
-                      }
+                      onClick?.(data);
                     }}
+                    onClickDetails={setData}
                   />
                 );
               })}
@@ -84,10 +86,9 @@ export const TokensGrid = ({ className = '', onClick, isSelected, isSelectable, 
                     selected={isSelected(data)}
                     isSelectable={isSelectable}
                     onClick={(data) => {
-                      if (onClick) {
-                        return onClick(data);
-                      }
+                      onClick?.(data);
                     }}
+                    onClickDetails={setData}
                   />
                 );
               })}
@@ -109,6 +110,10 @@ export const TokensGrid = ({ className = '', onClick, isSelected, isSelectable, 
   return (
     <div className={twMerge('h-full w-full', className)}>
       {contents}
+
+      {data && (
+        <TokenCardModal data={data as Required<ERC721CardData>} modalOpen={modalOpen} setModalOpen={setModalOpen} />
+      )}
 
       <div className="h-1/3" />
     </div>

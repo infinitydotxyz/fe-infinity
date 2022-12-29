@@ -1,3 +1,4 @@
+import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { useState } from 'react';
 import { cardClr, hoverClr, selectionOutline, textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
@@ -11,11 +12,11 @@ interface Props {
   selected: boolean;
   isSelectable: (data: Erc721TokenOffer) => boolean;
   onClick: (data: Erc721TokenOffer) => void;
+  onClickDetails: (data: Erc721TokenOffer) => void;
 }
 
-export const TokenCard = ({ data, onClick, selected, isSelectable }: Props): JSX.Element => {
+export const TokenCard = ({ data, onClick, onClickDetails, selected, isSelectable }: Props): JSX.Element => {
   const [notSelectable, setNotSelectable] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
   const title = data?.title;
   const tokenId = data?.tokenId;
   const hasBlueCheck = data?.hasBlueCheck ?? false;
@@ -56,14 +57,12 @@ export const TokenCard = ({ data, onClick, selected, isSelectable }: Props): JSX
           <div className="flex items-center">
             <div className="truncate">Id: {tokenId}</div>
             <Spacer />
-            <AOutlineButton small onClick={() => setModalOpen(true)}>
+            <AOutlineButton small onClick={() => onClickDetails(data)}>
               Details
             </AOutlineButton>
           </div>
         </div>
       </div>
-
-      <TokenCardModal data={data} modalOpen={modalOpen} setModalOpen={setModalOpen} />
     </div>
   );
 };
@@ -119,7 +118,9 @@ export const TokenListCard = ({ data, onClick, selected, isSelectable }: Props):
         </AOutlineButton>
       </div>
 
-      <TokenCardModal data={data} modalOpen={modalOpen} setModalOpen={setModalOpen} />
+      {data && (
+        <TokenCardModal data={data as Required<ERC721CardData>} modalOpen={modalOpen} setModalOpen={setModalOpen} />
+      )}
     </div>
   );
 };

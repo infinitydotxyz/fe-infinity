@@ -35,7 +35,7 @@ import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { fetchUserSignedOBOrder } from 'src/utils/orderbookUtils';
 import { useSWRConfig } from 'swr';
 
-const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
+export const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
   const { mutate } = useSWRConfig();
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
   const COLLECTION_ATTRIBUTES_API_ENDPOINT = `/collections/${chainId}:${collection}/attributes`;

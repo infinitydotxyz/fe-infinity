@@ -7,7 +7,7 @@ import { ApiNftData, nftsToCardDataWithOfferFields } from '../gallery/token-fetc
 import { OBFilters, useOrderbook } from '../orderbook/OrderbookContext';
 import { Erc721TokenOffer } from './types';
 
-export function useCollectionTokenFetcher(collectionAddress: string) {
+export function useCollectionTokenFetcher(collectionAddress: string | undefined) {
   const { chainId } = useOnboardContext();
 
   return useTokenFetcher<ApiNftData, Erc721TokenOffer>({
@@ -72,6 +72,7 @@ export function useTokenFetcher<From, To>({
       setData(loadMore ? (state) => [...state, ...newData] : newData);
       setCursor(result.cursor);
       setHasNextPage(result.hasNextPage);
+      setError(undefined);
     }
 
     setIsLoading(false);
