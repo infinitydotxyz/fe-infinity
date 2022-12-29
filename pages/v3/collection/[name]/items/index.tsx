@@ -1,5 +1,5 @@
 import { GetServerSidePropsContext } from 'next';
-import { useEffect } from 'react';
+import { FC, useEffect } from 'react';
 import {
   DashboardLayout,
   DashboardProps,
@@ -7,10 +7,11 @@ import {
 } from 'src/components/astra/dashboard/dashboard-layout';
 import { CollectionTokenCache } from 'src/components/astra/token-grid/token-fetcher';
 import { TokensGrid } from 'src/components/astra/token-grid/token-grid';
+import { useCollectionTokenFetcher } from 'src/components/astra/useFetcher';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
-export default function ItemsPage(props: DashboardProps) {
+const GridWrapper: FC = () => {
   const {
     setNumTokens,
     tokenFetcher,
@@ -33,18 +34,33 @@ export default function ItemsPage(props: DashboardProps) {
     }
   }, [collection, chainId, refreshTrigger]);
 
+  // TODO: `collection.address` param shouldn't be of type `string | undefined` cus then the fetcher sends an unnecessary request to a empty collection ('')
+  // we should probably reconsider what the best approach is to fetch the tokens (with proper suppor for filters in the URL AND w/o too much code duplication!)
+  const { data, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection?.address);
+
+  return (
+    <TokensGrid
+      listMode={listMode}
+      tokenFetcher={tokenFetcher}
+      className="px-8 py-6"
+      onClick={toggleSelection}
+      wrapWidth={gridWidth}
+      isSelectable={isSelectable}
+      isSelected={isSelected}
+      onLoad={setNumTokens}
+      data={data}
+      hasNextPage={hasNextPage}
+      onFetchMore={() => fetch(true)}
+      isError={!!error}
+      isLoading={!!isLoading}
+    />
+  );
+};
+
+export default function ItemsPage(props: DashboardProps) {
   return (
     <DashboardLayout {...props}>
-      <TokensGrid
-        listMode={listMode}
-        tokenFetcher={tokenFetcher}
-        className="px-8 py-6"
-        onClick={toggleSelection}
-        wrapWidth={gridWidth}
-        isSelectable={isSelectable}
-        isSelected={isSelected}
-        onLoad={setNumTokens}
-      />
+      <GridWrapper />
     </DashboardLayout>
   );
 }

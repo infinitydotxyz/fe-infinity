@@ -4,8 +4,6 @@ import { TokenCard, TokenListCard } from './token-card';
 import { TokenFetcherAlt } from './token-fetcher';
 import { ErrorOrLoading } from '../error-or-loading';
 import { Erc721TokenOffer } from '../types';
-import { useCollectionTokenFetcher } from '../useFetcher';
-import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { TokenCardModal } from './token-card-modal';
 import { useState } from 'react';
 import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
@@ -19,24 +17,33 @@ interface Props {
   isSelected: (data: Erc721TokenOffer) => boolean;
   isSelectable: (data: Erc721TokenOffer) => boolean;
   onLoad: (numItems: number) => void;
+  data: Erc721TokenOffer[];
+  hasNextPage: boolean;
+  onFetchMore: () => void;
+  isError?: boolean;
+  isLoading?: boolean;
 }
 
-export const TokensGrid = ({ className = '', onClick, isSelected, isSelectable, wrapWidth = 0, listMode }: Props) => {
-  const { collection } = useDashboardContext();
-  const [data, setData] = useState<ERC721CardData>();
-
-  const modalOpen = !!data;
-  const setModalOpen = () => setData(undefined);
-
-  // TODO: `collection.address` param shouldn't be of type `string | undefined` cus it sends an unnecessary request to an empty collection
-  const { data: cardData, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection?.address);
-
-  const noData = cardData.length === 0;
+export const TokensGrid = ({
+  className = '',
+  onClick,
+  isSelected,
+  isSelectable,
+  wrapWidth = 0,
+  listMode,
+  data: cardData,
+  hasNextPage,
+  onFetchMore,
+  isError,
+  isLoading
+}: Props) => {
+  const [openModal, setOpenModal] = useState(false);
+  const [modalData, setModalData] = useState<ERC721CardData>();
 
   let contents;
 
-  if (error || isLoading || noData) {
-    contents = <ErrorOrLoading error={!!error} noData={noData} />;
+  if (cardData.length === 0 || isError || isLoading) {
+    contents = <ErrorOrLoading error={!!isError || !!isLoading} noData={cardData.length === 0} />;
   } else {
     if (wrapWidth > 0) {
       if (listMode) {
@@ -53,19 +60,16 @@ export const TokensGrid = ({ className = '', onClick, isSelected, isSelectable, 
                     onClick={(data) => {
                       onClick?.(data);
                     }}
-                    onClickDetails={setData}
+                    onClickDetails={() => {
+                      setModalData(data);
+                      setOpenModal(true);
+                    }}
                   />
                 );
               })}
             </div>
 
-            {hasNextPage && (
-              <ScrollLoader
-                onFetchMore={() => {
-                  fetch(true);
-                }}
-              />
-            )}
+            {hasNextPage && <ScrollLoader onFetchMore={onFetchMore} />}
           </>
         );
       } else {
@@ -88,19 +92,16 @@ export const TokensGrid = ({ className = '', onClick, isSelected, isSelectable, 
                     onClick={(data) => {
                       onClick?.(data);
                     }}
-                    onClickDetails={setData}
+                    onClickDetails={() => {
+                      setModalData(data);
+                      setOpenModal(true);
+                    }}
                   />
                 );
               })}
             </div>
 
-            {hasNextPage && (
-              <ScrollLoader
-                onFetchMore={() => {
-                  fetch(true);
-                }}
-              />
-            )}
+            {hasNextPage && <ScrollLoader onFetchMore={onFetchMore} />}
           </>
         );
       }
@@ -111,8 +112,12 @@ export const TokensGrid = ({ className = '', onClick, isSelected, isSelectable, 
     <div className={twMerge('h-full w-full', className)}>
       {contents}
 
-      {data && (
-        <TokenCardModal data={data as Required<ERC721CardData>} modalOpen={modalOpen} setModalOpen={setModalOpen} />
+      {modalData && (
+        <TokenCardModal
+          data={modalData as Required<ERC721CardData>}
+          modalOpen={openModal}
+          setModalOpen={setOpenModal}
+        />
       )}
 
       <div className="h-1/3" />
