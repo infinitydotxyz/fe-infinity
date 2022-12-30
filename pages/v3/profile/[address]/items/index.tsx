@@ -11,6 +11,7 @@ import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import * as Queries from '@infinityxyz/lib-frontend/types/dto/orders/orders-queries.dto';
 import { GetServerSidePropsContext } from 'next';
+import { useProfileTokenFetcher } from 'src/components/astra/useFetcher';
 
 export default function ProfileItemsPage(props: DashboardProps) {
   const {
@@ -35,6 +36,8 @@ export default function ProfileItemsPage(props: DashboardProps) {
     }
   }, [addressFromPath, chainId, refreshTrigger]);
 
+  const { data, error, hasNextPage, isLoading, fetch } = useProfileTokenFetcher(addressFromPath);
+
   return (
     <DashboardLayout {...props}>
       <TokensGrid
@@ -46,6 +49,11 @@ export default function ProfileItemsPage(props: DashboardProps) {
         isSelectable={isSelectable}
         isSelected={isSelected}
         onLoad={setNumTokens}
+        data={data}
+        isError={!!error}
+        hasNextPage={hasNextPage}
+        onFetchMore={() => fetch(true)}
+        isLoading={isLoading}
       />
     </DashboardLayout>
   );

@@ -47,9 +47,10 @@ export const fetchCollectionTokens = async (
 export const fetchProfileTokens = async (
   userAddress: string,
   chainId: string,
-  cursor?: string
+  { cursor, ...options }: TokenFetcherOptions = {}
 ): Promise<ApiResponse> => {
   const query = {
+    ...options,
     limit: LARGE_LIMIT,
     cursor,
     chainId

@@ -9,6 +9,7 @@ import {
 } from 'src/components/astra/dashboard/dashboard-layout';
 import { ProfileTokenCache } from 'src/components/astra/token-grid/token-fetcher';
 import { TokensGrid } from 'src/components/astra/token-grid/token-grid';
+import { useProfileTokenFetcher } from 'src/components/astra/useFetcher';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
@@ -36,6 +37,8 @@ export default function ProfileSendPage(props: DashboardProps) {
     }
   }, [addressFromPath, chainId, refreshTrigger]);
 
+  const { data, error, hasNextPage, isLoading, fetch } = useProfileTokenFetcher(addressFromPath);
+
   return (
     <DashboardLayout {...props}>
       <TokensGrid
@@ -47,6 +50,11 @@ export default function ProfileSendPage(props: DashboardProps) {
         isSelectable={isSelectable}
         isSelected={isSelected}
         onLoad={setNumTokens}
+        data={data}
+        isError={!!error}
+        hasNextPage={hasNextPage}
+        onFetchMore={() => fetch(true)}
+        isLoading={isLoading}
       />
     </DashboardLayout>
   );

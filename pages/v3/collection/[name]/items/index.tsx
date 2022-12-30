@@ -34,8 +34,6 @@ const GridWrapper: FC = () => {
     }
   }, [collection, chainId, refreshTrigger]);
 
-  // TODO: `collection.address` param shouldn't be of type `string | undefined` cus then the fetcher sends an unnecessary request to a empty collection ('')
-  // we should probably reconsider what the best approach is to fetch the tokens (with proper suppor for filters in the URL AND w/o too much code duplication!)
   const { data, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection?.address);
 
   return (

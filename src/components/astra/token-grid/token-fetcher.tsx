@@ -161,6 +161,6 @@ class ProfileTokenFetcher extends TokenFetcherAlt {
   // override
   // eslint-disable-next-line require-await
   protected doFetch = async (): Promise<ApiResponse> => {
-    return fetchProfileTokens(this.userAddress, this.chainId, this.cursor);
+    return fetchProfileTokens(this.userAddress, this.chainId, { cursor: this.cursor });
   };
 }

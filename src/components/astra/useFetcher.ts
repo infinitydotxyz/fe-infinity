@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { ApiResponse } from 'src/utils';
-import { fetchCollectionTokens } from 'src/utils/astra-utils';
+import { fetchCollectionTokens, fetchProfileTokens } from 'src/utils/astra-utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { ApiNftData, nftsToCardDataWithOfferFields } from '../gallery/token-fetcher';
 import { OBFilters, useOrderbook } from '../orderbook/OrderbookContext';
@@ -12,16 +12,29 @@ export function useCollectionTokenFetcher(collectionAddress: string | undefined)
 
   return useTokenFetcher<ApiNftData, Erc721TokenOffer>({
     fetcher: (cursor, filters) => fetchCollectionTokens(collectionAddress || '', chainId, { cursor, ...filters }),
-    mapper: (data) => nftsToCardDataWithOfferFields(data, '', '')
+    mapper: (data) => nftsToCardDataWithOfferFields(data, '', ''),
+    execute: collectionAddress !== ''
+  });
+}
+
+export function useProfileTokenFetcher(collectionAddress: string | undefined) {
+  const { chainId } = useOnboardContext();
+
+  return useTokenFetcher<ApiNftData, Erc721TokenOffer>({
+    fetcher: (cursor, filters) => fetchProfileTokens(collectionAddress || '', chainId, { cursor, ...filters }),
+    mapper: (data) => nftsToCardDataWithOfferFields(data, '', ''),
+    execute: collectionAddress !== ''
   });
 }
 
 export function useTokenFetcher<From, To>({
   fetcher,
-  mapper
+  mapper,
+  execute
 }: {
   fetcher: (cursor: string, filters: OBFilters) => Promise<ApiResponse>;
   mapper: (data: From[]) => To[];
+  execute: boolean;
 }) {
   const { filters } = useOrderbook();
   const isMounted = useIsMounted();
@@ -56,7 +69,7 @@ export function useTokenFetcher<From, To>({
   }, [cursor, data]);
 
   const fetch = async (loadMore: boolean) => {
-    if (!isMounted) {
+    if (!isMounted || !execute) {
       return;
     }
 
