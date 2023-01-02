@@ -15,29 +15,11 @@ import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 // todo this and profileItemsPage are the same, refactor
 const TokensGridWrapper: FC = () => {
-  const {
-    tokenFetcher,
-    isSelected,
-    isSelectable,
-    gridWidth,
-    listMode,
-    toggleSelection,
-    setTokenFetcher,
-    refreshTrigger,
-    setNumTokens
-  } = useDashboardContext();
+  const { tokenFetcher, isSelected, isSelectable, gridWidth, listMode, toggleSelection, setNumTokens } =
+    useDashboardContext();
 
-  const { chainId } = useOnboardContext();
   const router = useRouter();
   const addressFromPath = router.query?.address as string;
-
-  // TODO: perhaps this can be removed now?
-  useEffect(() => {
-    if (addressFromPath) {
-      setTokenFetcher(ProfileTokenCache.shared().fetcher(addressFromPath, chainId));
-    }
-  }, [addressFromPath, chainId, refreshTrigger]);
-  // --
 
   const { data, error, hasNextPage, isLoading, fetch } = useProfileTokenFetcher(addressFromPath);
 

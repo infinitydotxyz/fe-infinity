@@ -1,3 +1,5 @@
+import * as Queries from '@infinityxyz/lib-frontend/types/dto/orders/orders-queries.dto';
+import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { FC, useEffect } from 'react';
 import {
@@ -7,36 +9,16 @@ import {
 } from 'src/components/astra/dashboard/dashboard-layout';
 import { ProfileTokenCache } from 'src/components/astra/token-grid/token-fetcher';
 import { TokensGrid } from 'src/components/astra/token-grid/token-grid';
+import { useProfileTokenFetcher } from 'src/components/astra/useFetcher';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import * as Queries from '@infinityxyz/lib-frontend/types/dto/orders/orders-queries.dto';
-import { GetServerSidePropsContext } from 'next';
-import { useProfileTokenFetcher } from 'src/components/astra/useFetcher';
 
 const TokensGridWrapper: FC = () => {
-  const {
-    tokenFetcher,
-    isSelected,
-    isSelectable,
-    gridWidth,
-    listMode,
-    toggleSelection,
-    setTokenFetcher,
-    refreshTrigger,
-    setNumTokens
-  } = useDashboardContext();
+  const { tokenFetcher, isSelected, isSelectable, gridWidth, listMode, toggleSelection, setNumTokens } =
+    useDashboardContext();
 
-  const { chainId } = useOnboardContext();
   const router = useRouter();
   const addressFromPath = router.query?.address as string;
-
-  // TODO: perhaps this can be removed now?
-  useEffect(() => {
-    if (addressFromPath) {
-      setTokenFetcher(ProfileTokenCache.shared().fetcher(addressFromPath, chainId));
-    }
-  }, [addressFromPath, chainId, refreshTrigger]);
-  // --
 
   const { data, error, hasNextPage, isLoading, fetch } = useProfileTokenFetcher(addressFromPath);
 
