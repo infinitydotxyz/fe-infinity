@@ -1,7 +1,7 @@
 import * as Queries from '@infinityxyz/lib-frontend/types/dto/orders/orders-queries.dto';
 import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { FC, useEffect } from 'react';
 import {
   DashboardLayout,
   DashboardProps,
@@ -14,7 +14,7 @@ import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 // todo this and profileItemsPage are the same, refactor
-export default function ProfileSendPage(props: DashboardProps) {
+const TokensGridWrapper: FC = () => {
   const {
     tokenFetcher,
     isSelected,
@@ -31,31 +31,50 @@ export default function ProfileSendPage(props: DashboardProps) {
   const router = useRouter();
   const addressFromPath = router.query?.address as string;
 
+  // TODO: perhaps this can be removed now?
+  useEffect(() => {
+    if (addressFromPath) {
+      setTokenFetcher(ProfileTokenCache.shared().fetcher(addressFromPath, chainId));
+    }
+  }, [addressFromPath, chainId, refreshTrigger]);
+  // --
+
+  const { data, error, hasNextPage, isLoading, fetch } = useProfileTokenFetcher(addressFromPath);
+
+  return (
+    <TokensGrid
+      listMode={listMode}
+      tokenFetcher={tokenFetcher}
+      className="px-8 py-6"
+      onClick={toggleSelection}
+      wrapWidth={gridWidth}
+      isSelectable={isSelectable}
+      isSelected={isSelected}
+      onLoad={setNumTokens}
+      data={data}
+      isError={!!error}
+      hasNextPage={hasNextPage}
+      onFetchMore={() => fetch(true)}
+      isLoading={isLoading}
+    />
+  );
+};
+
+export default function ProfileSendPage(props: DashboardProps) {
+  const { setTokenFetcher, refreshTrigger } = useDashboardContext();
+  const { chainId } = useOnboardContext();
+  const router = useRouter();
+  const addressFromPath = router.query?.address as string;
+
   useEffect(() => {
     if (addressFromPath) {
       setTokenFetcher(ProfileTokenCache.shared().fetcher(addressFromPath, chainId));
     }
   }, [addressFromPath, chainId, refreshTrigger]);
 
-  const { data, error, hasNextPage, isLoading, fetch } = useProfileTokenFetcher(addressFromPath);
-
   return (
     <DashboardLayout {...props}>
-      <TokensGrid
-        listMode={listMode}
-        tokenFetcher={tokenFetcher}
-        className="px-8 py-6"
-        onClick={toggleSelection}
-        wrapWidth={gridWidth}
-        isSelectable={isSelectable}
-        isSelected={isSelected}
-        onLoad={setNumTokens}
-        data={data}
-        isError={!!error}
-        hasNextPage={hasNextPage}
-        onFetchMore={() => fetch(true)}
-        isLoading={isLoading}
-      />
+      <TokensGridWrapper />
     </DashboardLayout>
   );
 }
