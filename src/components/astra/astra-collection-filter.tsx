@@ -104,7 +104,7 @@ interface Props2 {
 
 const CollectionFilterCheckbox = ({ selection, collection, onChange }: Props2) => {
   return (
-    <div className="flex items-center space-x-2 z-50">
+    <div className="flex items-center space-x-2">
       <EZImage className="h-9 w-9 rounded-full shrink-0 overflow-clip" src={collection.profileImage} />
 
       <Checkbox
