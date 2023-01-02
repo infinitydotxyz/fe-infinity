@@ -1,12 +1,10 @@
 import { NextRouter, useRouter } from 'next/router';
-import { EZImage, NextLink, Spacer } from 'src/components/common';
+import { EZImage, NextLink } from 'src/components/common';
 import person from 'src/images/person.png';
 import { ellipsisAddress } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { cardClr, inputBorderColor, primaryBorderColor, primaryTextColor, textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { AListGridButton } from '../astra-button';
-import { ACollectionFilter } from '../astra-collection-filter';
 
 interface Props {
   expanded: boolean;
@@ -33,12 +31,6 @@ export const ProfileHeader = ({ expanded }: Props) => {
       )}
 
       <ProfileHeaderTabBar />
-
-      <div className={twMerge(inputBorderColor, 'w-full flex   py-2 border-t-[1px]')}>
-        <ACollectionFilter />
-        <Spacer />
-        <AListGridButton />
-      </div>
     </div>
   );
 

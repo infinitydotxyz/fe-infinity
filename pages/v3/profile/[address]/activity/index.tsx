@@ -1,16 +1,17 @@
 import {
   DashboardLayout,
-  DashboardProps,
+  ProfileDashboardProps,
   getServerSideProps as getDashboardServerSideProps
 } from 'src/components/astra/dashboard/dashboard-layout';
-import { CenteredContent } from 'src/components/common';
 import * as Queries from '@infinityxyz/lib-frontend/types/dto/orders/orders-queries.dto';
 import { GetServerSidePropsContext } from 'next';
+import { UserProfileActivityList } from 'src/components/feed/user-profile-activity-list';
+import { minEventTypes } from 'src/components/astra/astra-filter-popdown';
 
-export default function ProfileActivityPage(props: DashboardProps) {
+export default function ProfileActivityPage(props: ProfileDashboardProps) {
   return (
     <DashboardLayout {...props}>
-      <CenteredContent>activity goes here</CenteredContent>
+      <UserProfileActivityList types={minEventTypes} userAddress={props?.asset.user.address} forUserActivity={true} />
     </DashboardLayout>
   );
 }

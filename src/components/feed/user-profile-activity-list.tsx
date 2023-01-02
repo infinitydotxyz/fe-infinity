@@ -1,15 +1,16 @@
-import { useState } from 'react';
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
-import { CenteredContent, ScrollLoader, Spinner } from '../common';
+import { useState } from 'react';
 import { useUserActivity } from 'src/hooks/api/useUserActivity';
+import { inputBorderColor } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
+import { AFilterPopdown } from '../astra/astra-filter-popdown';
+import { CenteredContent, ScrollLoader, Spacer, Spinner } from '../common';
+import { FeedFilter, filterButtonDefaultOptions } from './filter-popdown';
 import { NftOrderEvent } from './user-feed-events/nft-order-event';
 import { NftSaleEvent } from './user-feed-events/nft-sale-event';
+import { NftTransferEvent } from './user-feed-events/nft-transfer-event';
 import { TokenStakeEvent } from './user-feed-events/token-stake-event';
 import { VoteEvent } from './user-feed-events/vote-event';
-import { NftTransferEvent } from './user-feed-events/nft-transfer-event';
-import { twMerge } from 'tailwind-merge';
-import { negativeMargin } from 'src/utils/ui-constants';
-import { FeedFilter, filterButtonDefaultOptions, FilterPopdown } from './filter-popdown';
 
 interface Props {
   userAddress?: string;
@@ -24,17 +25,19 @@ export const UserProfileActivityList = ({ userAddress, types, className }: Props
   const { result: activities, isLoading, fetchMore } = useUserActivity(filter.types ?? [], userAddress);
 
   return (
-    <div className={twMerge('min-h-[50vh]', negativeMargin, className)}>
-      <div className="flex flex-row-reverse mb-8 bg-transparent">
-        <FilterPopdown
-          options={filterButtonDefaultOptions}
-          filter={filter}
-          onChange={(f) => {
-            setFilter(f);
-          }}
-        />
+    <div className={twMerge('min-h-[50vh]', className)}>
+      <div className={twMerge(inputBorderColor, 'w-full flex   py-2 border-t-[1px]')}>
+        <Spacer />
+        <div className="flex flex-row-reverse mb-8 bg-transparent">
+          <AFilterPopdown
+            options={filterButtonDefaultOptions}
+            filter={filter}
+            onChange={(f) => {
+              setFilter(f);
+            }}
+          />
+        </div>
       </div>
-
       <div className="space-y-3 pointer-events-auto">
         {!isLoading && activities?.length === 0 ? <div className="font-heading">No results found</div> : null}
 

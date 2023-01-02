@@ -17,7 +17,7 @@ interface BaseDashboardProps {
   error?: Error;
 }
 
-interface ProfileDashboardProps extends BaseDashboardProps {
+export interface ProfileDashboardProps extends BaseDashboardProps {
   kind: 'profile';
   asset: {
     user: UserProfileDto;

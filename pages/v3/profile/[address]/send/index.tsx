@@ -2,6 +2,7 @@ import * as Queries from '@infinityxyz/lib-frontend/types/dto/orders/orders-quer
 import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { FC, useEffect } from 'react';
+import { ACollectionFilter } from 'src/components/astra/astra-collection-filter';
 import {
   DashboardLayout,
   DashboardProps,
@@ -12,6 +13,8 @@ import { TokensGrid } from 'src/components/astra/token-grid/token-grid';
 import { useProfileTokenFetcher } from 'src/components/astra/useFetcher';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { inputBorderColor } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
 
 // todo this and profileItemsPage are the same, refactor
 const TokensGridWrapper: FC = () => {
@@ -56,6 +59,9 @@ export default function ProfileSendPage(props: DashboardProps) {
 
   return (
     <DashboardLayout {...props}>
+      <div className={twMerge(inputBorderColor, 'w-full flex   py-2 border-t-[1px]')}>
+        <ACollectionFilter />
+      </div>
       <TokensGridWrapper />
     </DashboardLayout>
   );
