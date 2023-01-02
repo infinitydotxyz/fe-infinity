@@ -41,6 +41,28 @@ export const SidebarNav = () => {
             <BsWallet2 className="h-8 w-8" />
           </ARoundButton>
         </HelpTip>
+
+        <HelpTip placement="right" content={<div className="whitespace-nowrap">Raffles</div>}>
+          <ARoundButton
+            highlighted={router.asPath === `/v3/raffles`}
+            onClick={() => {
+              router.push(`/v3/raffles`);
+            }}
+          >
+            <BsWallet2 className="h-8 w-8" />
+          </ARoundButton>
+        </HelpTip>
+
+        <HelpTip placement="right" content={<div className="whitespace-nowrap">Rewards</div>}>
+          <ARoundButton
+            highlighted={router.asPath === `/v3/rewards`}
+            onClick={() => {
+              router.push(`/v3/rewards`);
+            }}
+          >
+            <BsWallet2 className="h-8 w-8" />
+          </ARoundButton>
+        </HelpTip>
       </div>
 
       <Spacer />
