@@ -58,7 +58,8 @@ export function useTokenFetcher<From, To>({
     filters.minPrice,
     filters.maxPrice,
     filters.traitTypes,
-    filters.traitValues
+    filters.traitValues,
+    filters.collections
   ]);
 
   // refetch whenever 'reset' finished updating the state (also fired on mount)
