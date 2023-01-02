@@ -1,6 +1,4 @@
 import NextDocument, { Html, Head, Main, NextScript } from 'next/document';
-import { Preferences } from 'src/utils/preferences';
-import { twMerge } from 'tailwind-merge';
 import { GA_TRACKING_ID } from '../lib/ga/gtag';
 
 export default class Document extends NextDocument {
@@ -31,7 +29,7 @@ export default class Document extends NextDocument {
             </>
           }
         </Head>
-        <body className={twMerge(Preferences.darkMode() ? 'dark' : 'light')}>
+        <body>
           <Main />
           <NextScript />
         </body>

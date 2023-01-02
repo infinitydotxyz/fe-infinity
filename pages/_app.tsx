@@ -10,8 +10,9 @@ import { FilterContextProvider } from 'src/utils/context/FilterContext';
 import React, { memo, StrictMode, useEffect } from 'react';
 import { DrawerContextProvider } from 'src/utils/context/DrawerContext';
 import { CurationBulkVoteContextProvider } from 'src/utils/context/CurationBulkVoteContext';
-import { AppContextProvider } from 'src/utils/context/AppContext';
+import { AppContextProvider, useAppContext } from 'src/utils/context/AppContext';
 import { DashboardContextProvider } from 'src/utils/context/DashboardContext';
+import { twMerge } from 'tailwind-merge';
 import { Layout } from 'src/components/astra/layout';
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -65,7 +66,13 @@ const Page = ({ Component, pageProps }: AppProps) => {
 const Memoized = memo(Page, (p, n) => p.Component === n.Component && p.pageProps === n.pageProps);
 
 const AppBody = (props: AppProps) => {
-  return <Memoized {...props} />;
+  const { darkMode } = useAppContext();
+
+  return (
+    <div className={twMerge(darkMode ? 'dark' : 'light')}>
+      <Memoized {...props} />
+    </div>
+  );
 };
 
 export default App;
