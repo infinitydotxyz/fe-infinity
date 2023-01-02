@@ -34,12 +34,12 @@ export const RaffleLeaderboardItem = ({ entrant: item }: { entrant: RaffleLeader
 
         <div className="flex flex-row justify-between ml-4 w-full">
           <div className="w-1/9 max-w-[80px] min-w-[80px]">
-            <div className="text-black font-header flex items-center">Tickets</div>
+            <div className="font-header flex items-center">Tickets</div>
             <div>{nFormatter(item.numTickets)}</div>
           </div>
 
           <div className="w-1/9 max-w-[80px] min-w-[80px]">
-            <div className="text-black font-body flex items-center">Probability</div>
+            <div className="font-body flex items-center">Probability</div>
             <div>{nFormatter(item.probability)}%</div>
           </div>
         </div>
