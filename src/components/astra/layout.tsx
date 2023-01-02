@@ -45,6 +45,7 @@ export const Layout = ({ children }: Props) => {
       collections={collSelection}
       onCheckout={async () => {
         try {
+          console.log('checkout');
           if (selection.length > 0) {
             await handleTokenCheckout(selection);
             clearSelection();
@@ -58,6 +59,7 @@ export const Layout = ({ children }: Props) => {
         }
       }}
       onTokenSend={async (value) => {
+        console.log('send');
         await handleTokenSend(selection, value);
         clearSelection();
       }}

@@ -192,7 +192,8 @@ export const AstraCart = ({ tokens, collections, onTokensRemove, onCollsRemove, 
           primary={true}
           disabled={!user || chainId !== '1' || (tokens.length === 0 && collections.length === 0)}
           onClick={async () => {
-            cartType === CART_TYPE.SEND ? onTokenSend(await finalSendToAddress(sendToAddress)) : onCheckout;
+            console.log('checkout clicked', cartType);
+            cartType === CART_TYPE.SEND ? onTokenSend(await finalSendToAddress(sendToAddress)) : onCheckout();
           }}
         >
           {checkoutBtnText}

@@ -171,6 +171,7 @@ export const DashboardContextProvider = ({ children }: Props) => {
     if (!user || !user.address || !signer) {
       toastError('No logged in user');
     } else {
+      console.log('handleTokenCheckout');
       const url = typeof window !== 'undefined' ? window.location.href : '';
       const isOfferCart = getCartType(url) === CART_TYPE.BID;
       const isListingCart = getCartType(url) === CART_TYPE.LIST;
