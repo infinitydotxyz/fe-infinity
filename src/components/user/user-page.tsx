@@ -6,7 +6,6 @@ import { UserPageNftsTab } from './user-page-nfts-tab';
 import { UserPageActivityTab } from './user-page-activity-tab';
 import { ellipsisAddress } from 'src/utils';
 import { ETHEREUM_CHAIN_SCANNER_BASE } from '@infinityxyz/lib-frontend/utils';
-import { UserPageOrderList } from '../feed/user-page-order-list';
 import { UserBannerImage } from './user-banner-image';
 import { UserProfileImage } from './user-profile-image';
 import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user/user-profile.dto';
@@ -46,7 +45,7 @@ export const UserPage: FunctionComponent<UserPageProps> = ({ userInfo, isOwner =
 
         <div className="mt-6 min-h-[50vh] pointer-events-none">
           {selected === 'Collected' && <UserPageNftsTab userInfo={userInfo} />}
-          {selected === 'Orders' && <UserPageOrderList userInfo={userInfo} />}
+          {/* {selected === 'Orders' && <UserPageOrderList userInfo={userInfo} />} */}
           {selected === 'Activity' && <UserPageActivityTab userInfo={userInfo} />}
           {selected === 'Send' && <UserPageNftsTab userInfo={userInfo} forTransfers={true} />}
         </div>
