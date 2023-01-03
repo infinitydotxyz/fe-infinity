@@ -72,7 +72,7 @@ export const SendNFTsDrawer = ({ open, onClose, nftsForTransfer, onClickRemove, 
             onSubmit(result.hash);
           }
         } else {
-          console.error('signer is null');
+          console.error('Signer is null');
         }
       } else {
         toastWarning('Destination address is blank');

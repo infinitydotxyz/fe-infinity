@@ -46,7 +46,7 @@ export const SendNFTModal = ({ isOpen, onClose, onSubmit, token }: Props) => {
                   onSubmit(result.hash);
                 }
               } else {
-                console.error('signer is null');
+                console.error('Signer is null');
               }
             } else {
               console.error('required data for send is missing');

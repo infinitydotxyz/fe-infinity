@@ -9,13 +9,13 @@ import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user';
 
 interface Props {
   order: SignedOBOrder;
+  selected?: boolean;
   orderType: UserOrderFilter['orderType'];
   userInfo: UserProfileDto;
-  onClickActionBtn: (order: SignedOBOrder, checked: boolean) => void;
+  onClickActionBtn: (order: SignedOBOrder) => void;
 }
 
-export const UserPageOrderListItem = ({ order, orderType, onClickActionBtn: onClickActionBtn }: Props) => {
-  const [isTakingAction, setIsTakingAction] = useState(false);
+export const UserPageOrderListItem = ({ order, orderType, onClickActionBtn, selected }: Props) => {
   const [selectedOrder, setSelectedOrder] = useState<SignedOBOrder | null>(null);
 
   return (
@@ -54,24 +54,12 @@ export const UserPageOrderListItem = ({ order, orderType, onClickActionBtn: onCl
           {orderType === 'listings' || orderType === 'offers-made' ? (
             <Button
               onClick={() => {
-                const newState = !isTakingAction;
-                setIsTakingAction(newState);
-                onClickActionBtn(order, newState);
+                onClickActionBtn(order);
               }}
             >
-              {isTakingAction ? '✓' : ''} Cancel
+              {selected ? '✓' : ''} Cancel
             </Button>
-          ) : (
-            <Button
-              onClick={() => {
-                const newState = !isTakingAction;
-                setIsTakingAction(newState);
-                onClickActionBtn(order, newState);
-              }}
-            >
-              {isTakingAction ? '✓' : ''} Accept
-            </Button>
-          )}
+          ) : null}
         </div>
       </div>
 

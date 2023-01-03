@@ -3,7 +3,6 @@ import { ChainOBOrder, Order, OrderItemToken, SignedOBOrder } from '@infinityxyz
 import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user';
 import { useEffect, useState } from 'react';
 import { apiGet, ellipsisAddress, extractErrorMsg, ITEMS_PER_PAGE } from 'src/utils';
-import { useDrawerContext } from 'src/utils/context/DrawerContext';
 import { cancelAllOrders } from 'src/utils/exchange/orders';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { fetchOrderNonce } from 'src/utils/orderbookUtils';
@@ -74,12 +73,13 @@ export type UserOrderFilter = {
 interface Props {
   userInfo: UserProfileDto;
   className?: string;
+  toggleOrderSelection: (data: SignedOBOrder) => void;
+  isOrderSelected: (data: SignedOBOrder) => boolean;
 }
 
-export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
+export const UserPageOrderList = ({ userInfo, className = '', toggleOrderSelection, isOrderSelected }: Props) => {
   const { user, chainId, waitForTransaction, getSigner } = useOnboardContext();
 
-  const { fulfillDrawerParams, cancelDrawerParams } = useDrawerContext();
   const [minPriceVal, setMinPriceVal] = useState('');
   const [maxPriceVal, setMaxPriceVal] = useState('');
   const [data, setData] = useState<SignedOBOrder[]>([]);
@@ -224,31 +224,11 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
     setApiFilter(newFilter);
   };
 
-  const listItemButtonClick = (order: SignedOBOrder, checked: boolean) => {
+  const onClickAcceptOfferCancelOrder = (order: SignedOBOrder) => {
     if (apiFilter.orderType === 'offers-received') {
-      if (checked) {
-        fulfillDrawerParams.addOrder(order);
-        fulfillDrawerParams.setShowDrawer(true);
-      } else {
-        fulfillDrawerParams.removeOrder(order);
-        // setShowDrawer(true);
-      }
+      // no op in this release; in future allow users to accept offers
     } else {
-      if (checked) {
-        const arr = [...cancelDrawerParams.orders, order];
-        cancelDrawerParams.setOrders(arr);
-
-        if (arr.length === 1) {
-          cancelDrawerParams.setShowDrawer(true);
-        }
-      } else {
-        const arr = cancelDrawerParams.orders.filter((o) => o.id !== order.id);
-        cancelDrawerParams.setOrders(arr);
-
-        if (arr.length === 0) {
-          cancelDrawerParams.setShowDrawer(false);
-        }
-      }
+      toggleOrderSelection(order);
     }
   };
 
@@ -400,7 +380,8 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
                 order={order}
                 orderType={apiFilter.orderType}
                 userInfo={userInfo}
-                onClickActionBtn={listItemButtonClick}
+                selected={isOrderSelected(order)}
+                onClickActionBtn={onClickAcceptOfferCancelOrder}
               />
             );
           })}

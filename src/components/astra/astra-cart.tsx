@@ -1,4 +1,5 @@
 import { getAddress } from '@ethersproject/address';
+import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { ReactNode, useState } from 'react';
 import { MdClose } from 'react-icons/md';
 import { AButton, ARoundButton, ATextButton } from 'src/components/astra';
@@ -13,15 +14,27 @@ import { Erc721CollectionOffer, Erc721TokenOffer, ORDER_EXPIRY_TIME } from './ty
 interface Props {
   collections: Erc721CollectionOffer[];
   tokens: Erc721TokenOffer[];
+  orders: SignedOBOrder[];
   onCollsRemove: (coll?: Erc721CollectionOffer) => void;
   onTokensRemove: (token?: Erc721TokenOffer) => void;
+  onOrdersRemove: (order?: SignedOBOrder) => void;
   onCheckout: () => void;
   onTokenSend: (toAddress: string) => void;
 }
 
-export const AstraCart = ({ tokens, collections, onTokensRemove, onCollsRemove, onCheckout, onTokenSend }: Props) => {
+export const AstraCart = ({
+  tokens,
+  collections,
+  orders,
+  onTokensRemove,
+  onCollsRemove,
+  onOrdersRemove,
+  onCheckout,
+  onTokenSend
+}: Props) => {
   const tokenMap = new Map<string, Erc721TokenOffer[]>();
   const collMap = new Map<string, Erc721CollectionOffer[]>();
+  const ordersMap = new Map<string, SignedOBOrder[]>();
   const [sendToAddress, setSendToAddress] = useState('');
   const { user, getEthersProvider, chainId } = useOnboardContext();
 
@@ -35,6 +48,12 @@ export const AstraCart = ({ tokens, collections, onTokensRemove, onCollsRemove, 
     const colls = collMap.get(getCollectionKeyId(coll) ?? '') ?? [];
     colls.push(coll);
     collMap.set(getCollectionKeyId(coll) ?? '', colls);
+  }
+
+  for (const order of orders) {
+    const ords = ordersMap.get(order.id ?? '') ?? [];
+    ords.push(order);
+    ordersMap.set(order.id ?? '', ords);
   }
 
   let clearButton = <></>;
@@ -71,6 +90,22 @@ export const AstraCart = ({ tokens, collections, onTokensRemove, onCollsRemove, 
     );
   }
 
+  if (orders.length > 0) {
+    clearButton = (
+      <div className="flex items-center">
+        <div className="bg-gray-300 rounded-full h-6 w-6 text-center mr-1 ">{orders.length}</div>
+        <ATextButton
+          className="px-2 rounded-lg text-gray-500 text-sm"
+          onClick={() => {
+            onOrdersRemove();
+          }}
+        >
+          Clear
+        </ATextButton>
+      </div>
+    );
+  }
+
   let checkoutBtnText = 'Place Order';
   const url = typeof window !== 'undefined' ? window.location.href : '';
   const cartType = getCartType(url);
@@ -81,13 +116,19 @@ export const AstraCart = ({ tokens, collections, onTokensRemove, onCollsRemove, 
       checkoutBtnText = 'List';
     }
   } else if (cartType === CART_TYPE.BID) {
-    if (tokens.length > 1) {
+    if (tokens.length || collections.length > 1) {
       checkoutBtnText = 'Bulk Bid';
     } else {
       checkoutBtnText = 'Bid';
     }
   } else if (cartType === CART_TYPE.SEND) {
     checkoutBtnText = 'Send';
+  } else if (cartType === CART_TYPE.CANCEL) {
+    if (orders.length > 1) {
+      checkoutBtnText = 'Cancel Orders';
+    } else {
+      checkoutBtnText = 'Cancel Order';
+    }
   }
 
   let listComponent;
@@ -145,6 +186,32 @@ export const AstraCart = ({ tokens, collections, onTokensRemove, onCollsRemove, 
         {divList}
       </div>
     );
+  } else if (ordersMap.size > 0) {
+    const divList: ReactNode[] = [];
+    let index = 0;
+    ordersMap.forEach((ordArray) => {
+      const first = ordArray[0];
+      const orderId = first.id;
+
+      divList.push(
+        <div className="w-full rounded-md font-bold truncate" key={`header-${first.id}`}>
+          {first.nfts.length > 1 ? 'Multiple Collections' : first.nfts[0].collectionName}
+        </div>
+      );
+
+      for (const t of ordArray) {
+        divList.push(<AstraCancelCartItem key={orderId} order={t} index={index++} onRemove={onOrdersRemove} />);
+      }
+
+      divList.push(<div key={Math.random()} className="h-1" />);
+    });
+
+    // min-w-0 is important. otherwise text doesn't truncate
+    listComponent = (
+      <div className={twMerge(textClr, 'min-w-0 flex px-6 flex-col space-y-2 items-start flex-1 overflow-y-auto')}>
+        {divList}
+      </div>
+    );
   } else {
     listComponent = (
       <div key={Math.random()} className={twMerge(textClr, 'flex items-center justify-center   uppercase flex-1')}>
@@ -190,9 +257,10 @@ export const AstraCart = ({ tokens, collections, onTokensRemove, onCollsRemove, 
       <div className="m-6 flex flex-col">
         <AButton
           primary={true}
-          disabled={!user || chainId !== '1' || (tokens.length === 0 && collections.length === 0)}
+          disabled={
+            !user || chainId !== '1' || (tokens.length === 0 && collections.length === 0 && orders.length === 0)
+          }
           onClick={async () => {
-            console.log('checkout clicked', cartType);
             cartType === CART_TYPE.SEND ? onTokenSend(await finalSendToAddress(sendToAddress)) : onCheckout();
           }}
         >
@@ -283,11 +351,47 @@ export const AstraCollectionCartItem = ({ collection, onRemove }: Props3) => {
 };
 
 interface Props4 {
+  order: SignedOBOrder;
+  index: number;
+  onRemove: (order: SignedOBOrder) => void;
+}
+
+export const AstraCancelCartItem = ({ order, onRemove }: Props4) => {
+  return (
+    <div key={order.id} className="flex items-center w-full">
+      <EZImage
+        className={twMerge('h-12 w-12 rounded-lg overflow-clip')}
+        src={order.nfts[0].tokens[0].tokenImage ?? order.nfts[0].collectionImage}
+      />
+
+      <div className="ml-3 flex flex-col w-full">
+        <div className="leading-5 text-gray-500">
+          {order.nfts.length > 1
+            ? 'Multiple tokens'
+            : order.nfts[0].tokens.length > 1
+            ? 'Multiple tokens'
+            : order.nfts[0].tokens[0].tokenId}
+        </div>
+      </div>
+
+      <Spacer />
+      <ARoundButton
+        onClick={() => {
+          onRemove(order);
+        }}
+      >
+        <MdClose className={twMerge(smallIconButtonStyle, '   ')} />
+      </ARoundButton>
+    </div>
+  );
+};
+
+interface Props5 {
   token?: Erc721TokenOffer;
   collection?: Erc721CollectionOffer;
 }
 
-const PriceAndExpiry = ({ token, collection }: Props4) => {
+const PriceAndExpiry = ({ token, collection }: Props5) => {
   const [price, setPrice] = useState('');
   const [expiry, setExpiry] = useState(getDefaultOrderExpiryTime());
   return (

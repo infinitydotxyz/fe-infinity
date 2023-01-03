@@ -69,6 +69,7 @@ export enum CART_TYPE {
   BID = 'bid',
   LIST = 'list',
   SEND = 'send',
+  CANCEL = 'cancel',
   NONE = 'none'
 }
 
@@ -78,15 +79,19 @@ export const getCartType = (url: string): CART_TYPE => {
   const isProfile = url.includes('profile');
   const isItems = url.includes('items');
   const isSend = url.includes('send');
+  const isOrders = url.includes('orders');
   const isOfferCart = isCollection && isItems;
   const isListingCart = isProfile && isItems;
   const isSendCart = isProfile && isSend;
+  const isCancelCart = isProfile && isOrders;
   if (isOfferCart) {
     return CART_TYPE.BID;
   } else if (isListingCart) {
     return CART_TYPE.LIST;
   } else if (isSendCart) {
     return CART_TYPE.SEND;
+  } else if (isCancelCart) {
+    return CART_TYPE.CANCEL;
   }
   return CART_TYPE.NONE;
 };

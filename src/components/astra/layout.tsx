@@ -17,12 +17,16 @@ export const Layout = ({ children }: Props) => {
     handleTokenSend,
     handleTokenCheckout,
     handleCollCheckout,
+    handleOrdersCancel,
     selection,
     clearSelection,
     removeFromSelection,
     collSelection,
     clearCollSelection,
-    removeCollFromSelection
+    removeCollFromSelection,
+    orderSelection,
+    clearOrderSelection,
+    removeOrderFromSelection
   } = useDashboardContext();
 
   const gridRef = useRef<HTMLDivElement>(null);
@@ -43,15 +47,18 @@ export const Layout = ({ children }: Props) => {
     <AstraCart
       tokens={selection}
       collections={collSelection}
+      orders={orderSelection}
       onCheckout={async () => {
         try {
-          console.log('checkout');
           if (selection.length > 0) {
             await handleTokenCheckout(selection);
             clearSelection();
           } else if (collSelection.length > 0) {
             await handleCollCheckout(collSelection);
             clearCollSelection();
+          } else if (orderSelection.length > 0) {
+            await handleOrdersCancel(orderSelection);
+            clearOrderSelection();
           }
         } catch (e) {
           console.log(e);
@@ -59,7 +66,6 @@ export const Layout = ({ children }: Props) => {
         }
       }}
       onTokenSend={async (value) => {
-        console.log('send');
         await handleTokenSend(selection, value);
         clearSelection();
       }}
@@ -68,6 +74,9 @@ export const Layout = ({ children }: Props) => {
       }}
       onCollsRemove={(value) => {
         removeCollFromSelection(value);
+      }}
+      onOrdersRemove={(value) => {
+        removeOrderFromSelection(value);
       }}
     />
   );

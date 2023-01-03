@@ -13,10 +13,13 @@ import { CollectionTokenCache, TokenFetcherAlt } from 'src/components/astra/toke
 import { Erc721CollectionOffer, Erc721TokenOffer } from 'src/components/astra/types';
 import { useCardSelection } from 'src/components/astra/useCardSelection';
 import { useCollectionSelection } from 'src/components/astra/useCollectionSelection';
-import { toastError, toastSuccess, toastWarning } from 'src/components/common';
+import { useOrderSelection } from 'src/components/astra/useOrderSelection';
+import { toastError, toastInfo, toastSuccess, toastWarning } from 'src/components/common';
 import { WaitingForTxModal } from 'src/components/orderbook/order-drawer/waiting-for-tx-modal';
+import { cancelMultipleOrders } from 'src/utils/exchange/orders';
 import {
   CART_TYPE,
+  ellipsisAddress,
   extractErrorMsg,
   getCartType,
   getDefaultOrderExpiryTime,
@@ -53,6 +56,7 @@ export type DashboardContextType = {
   handleTokenSend: (selection: Erc721TokenOffer[], sendToAddress: string) => Promise<void>;
   handleTokenCheckout: (selection: Erc721TokenOffer[]) => Promise<void>;
   handleCollCheckout: (selection: Erc721CollectionOffer[]) => Promise<void>;
+  handleOrdersCancel: (selection: SignedOBOrder[]) => Promise<void>;
   refreshData: () => void;
   refreshTrigger: number;
 
@@ -69,6 +73,12 @@ export type DashboardContextType = {
   removeCollFromSelection: (data?: Erc721CollectionOffer) => void; // null to remove all
   collSelection: Erc721CollectionOffer[];
   clearCollSelection: () => void;
+
+  toggleOrderSelection: (data: SignedOBOrder) => void;
+  isOrderSelected: (data: SignedOBOrder) => boolean;
+  removeOrderFromSelection: (data?: SignedOBOrder) => void; // null to remove all
+  orderSelection: SignedOBOrder[];
+  clearOrderSelection: () => void;
 };
 
 const DashboardContext = React.createContext<DashboardContextType | null>(null);
@@ -89,7 +99,7 @@ export const DashboardContextProvider = ({ children }: Props) => {
 
   const [displayName, setDisplayName] = useState<string>('');
 
-  const { getSigner, getEthersProvider, user, chainId } = useOnboardContext();
+  const { getSigner, getEthersProvider, user, chainId, waitForTransaction } = useOnboardContext();
 
   const { isSelected, isSelectable, toggleSelection, clearSelection, selection, removeFromSelection } =
     useCardSelection();
@@ -102,6 +112,9 @@ export const DashboardContextProvider = ({ children }: Props) => {
     collSelection,
     removeCollFromSelection
   } = useCollectionSelection();
+
+  const { isOrderSelected, toggleOrderSelection, clearOrderSelection, orderSelection, removeOrderFromSelection } =
+    useOrderSelection();
 
   useEffect(() => {
     refreshData();
@@ -154,7 +167,7 @@ export const DashboardContextProvider = ({ children }: Props) => {
             setTxnHash(result.hash);
           }
         } else {
-          console.error('signer is null');
+          console.error('Signer is null');
         }
       } else {
         toastWarning('To address is blank');
@@ -367,6 +380,24 @@ export const DashboardContextProvider = ({ children }: Props) => {
     }
   };
 
+  const handleOrdersCancel = async (ordersToCancel: SignedOBOrder[]) => {
+    try {
+      const signer = getSigner();
+      if (signer) {
+        const nonces = ordersToCancel.map((order) => order.nonce);
+        const { hash } = await cancelMultipleOrders(signer, chainId, nonces);
+        toastSuccess('Sent txn to chain for execution');
+        waitForTransaction(hash, () => {
+          toastInfo(`Transaction confirmed ${ellipsisAddress(hash)}`);
+        });
+      } else {
+        throw 'Signer is null';
+      }
+    } catch (err) {
+      toastError(extractErrorMsg(err));
+    }
+  };
+
   const refreshData = () => {
     CollectionTokenCache.shared().refresh();
 
@@ -396,6 +427,7 @@ export const DashboardContextProvider = ({ children }: Props) => {
     handleTokenSend,
     handleTokenCheckout,
     handleCollCheckout,
+    handleOrdersCancel,
     refreshData,
     refreshTrigger,
 
@@ -415,7 +447,13 @@ export const DashboardContextProvider = ({ children }: Props) => {
     toggleCollSelection,
     clearCollSelection,
     collSelection,
-    removeCollFromSelection
+    removeCollFromSelection,
+
+    isOrderSelected,
+    toggleOrderSelection,
+    clearOrderSelection,
+    orderSelection,
+    removeOrderFromSelection
   };
 
   return (

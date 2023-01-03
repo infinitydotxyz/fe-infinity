@@ -75,7 +75,7 @@ export const CancelModal = ({ isOpen, onClose, onDone, collectionAddress, token 
           onDone();
         });
       } else {
-        console.error('signer is null');
+        console.error('Signer is null');
       }
     } catch (err) {
       toastError(extractErrorMsg(err));

@@ -7,11 +7,17 @@ import {
 
 import * as Queries from '@infinityxyz/lib-frontend/types/dto/orders/orders-queries.dto';
 import { UserPageOrderList } from 'src/components/feed/user-page-order-list';
+import { useDashboardContext } from 'src/utils/context/DashboardContext';
 
 export default function ProfileOrdersPage(props: ProfileDashboardProps) {
+  const { isOrderSelected, toggleOrderSelection } = useDashboardContext();
   return (
     <DashboardLayout {...props}>
-      <UserPageOrderList userInfo={props?.asset.user} />
+      <UserPageOrderList
+        userInfo={props?.asset.user}
+        isOrderSelected={isOrderSelected}
+        toggleOrderSelection={toggleOrderSelection}
+      />
     </DashboardLayout>
   );
 }
