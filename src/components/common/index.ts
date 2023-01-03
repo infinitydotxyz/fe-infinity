@@ -29,3 +29,4 @@ export * from 'src/components/common/spinner';
 export * from 'src/components/common/modal';
 export * from 'src/components/common/simple-table';
 export * from 'src/components/common/header';
+export * from 'src/components/common/link-test';
