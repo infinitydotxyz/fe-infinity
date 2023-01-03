@@ -24,7 +24,7 @@ export const SidebarNav = () => {
           <ARoundButton
             highlighted={true}
             onClick={() => {
-              router.push('/v3/trending');
+              router.push('/trending');
             }}
           >
             <BsHouse className="h-8 w-8" />
@@ -33,9 +33,9 @@ export const SidebarNav = () => {
 
         <HelpTip placement="right" content={<div className="whitespace-nowrap">Profile</div>}>
           <ARoundButton
-            highlighted={router.asPath === `/v3/profile/${user?.address}/items`}
+            highlighted={router.asPath === `/profile/${user?.address}/items`}
             onClick={() => {
-              router.push(`/v3/profile/${user?.address}/items`);
+              router.push(`/profile/${user?.address}/items`);
             }}
           >
             <BsWallet2 className="h-8 w-8" />
@@ -44,9 +44,9 @@ export const SidebarNav = () => {
 
         <HelpTip placement="right" content={<div className="whitespace-nowrap">Raffles</div>}>
           <ARoundButton
-            highlighted={router.asPath === `/v3/raffles`}
+            highlighted={router.asPath === `/raffles`}
             onClick={() => {
-              router.push(`/v3/raffles`);
+              router.push(`/raffles`);
             }}
           >
             <BsReceipt className="h-8 w-8" />
@@ -55,9 +55,9 @@ export const SidebarNav = () => {
 
         <HelpTip placement="right" content={<div className="whitespace-nowrap">Rewards</div>}>
           <ARoundButton
-            highlighted={router.asPath === `/v3/rewards`}
+            highlighted={router.asPath === `/rewards`}
             onClick={() => {
-              router.push(`/v3/rewards`);
+              router.push(`/rewards`);
             }}
           >
             <BsTrophy className="h-8 w-8" />

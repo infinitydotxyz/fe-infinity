@@ -2,7 +2,7 @@ import { GridHeader, GridHeaderProps } from './grid-header';
 import { useScrollInfo } from './useScrollHook';
 import { apiGet } from 'src/utils';
 import { BaseCollection, ChainId } from '@infinityxyz/lib-frontend/types/core';
-import NotFound404Page from 'pages/v3/not-found-404';
+import NotFound404Page from 'pages/not-found-404';
 import { NftDto, UserProfileDto } from '@infinityxyz/lib-frontend/types/dto';
 import { OrderbookProvider } from 'src/components/orderbook/OrderbookContext';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';

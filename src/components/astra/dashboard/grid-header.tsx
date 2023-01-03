@@ -121,7 +121,7 @@ export const HeaderTabBar = () => {
       {tabItems.map((e) => {
         return (
           <div key={e.path} className={twMerge('pb-3', e.selected ? `border-b-4 ${primaryBorderColor}` : '')}>
-            <NextLink href={`/v3/collection/${collection?.slug}/${e.path}`}>
+            <NextLink href={`/collection/${collection?.slug}/${e.path}`}>
               <div className={e.selected ? primaryTextColor : ''}>{e.name}</div>
             </NextLink>
           </div>

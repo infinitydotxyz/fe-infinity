@@ -15,7 +15,7 @@ import {
 import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { apiGet, ellipsisAddress } from 'src/utils';
 import { ActivityList } from 'src/components/asset';
-import { useFetchAssetInfo } from 'pages/v3/asset/[chainId]/[collection]/[tokenId]';
+import { useFetchAssetInfo } from 'pages/asset/[chainId]/[collection]/[tokenId]';
 import { OrderbookContainer } from 'src/components/orderbook/orderbook-list';
 import { ATraitList } from '../astra-trait-list';
 import { AButton } from '../astra-button';

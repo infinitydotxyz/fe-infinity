@@ -15,7 +15,7 @@ import {
 import { RaffleDescription } from 'src/components/raffles/raffle-description';
 import { useRaffles } from 'src/hooks/api/useRaffles';
 import { twMerge } from 'tailwind-merge';
-import GlobalRewards from './v3/rewards/global-rewards';
+import GlobalRewards from './rewards/global-rewards';
 
 const HomePage = () => {
   return (

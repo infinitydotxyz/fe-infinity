@@ -184,11 +184,11 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
         <div className="flex items-center font-bold ">
           <div className="text-theme-light-800 text-lg mr-4 min-w-[32px] text-right font-heading">{index + 1}</div>
 
-          <NextLink href={`/v3/collection/${collection?.slug}/items`}>
+          <NextLink href={`/collection/${collection?.slug}/items`}>
             <EZImage className="w-16 h-16 rounded-2xl overflow-clip" src={collection?.metadata?.profileImage} />
           </NextLink>
 
-          <NextLink href={`/v3/collection/${collection?.slug}/items`} className="ml-2 whitespace-normal">
+          <NextLink href={`/collection/${collection?.slug}/items`} className="ml-2 whitespace-normal">
             {collection?.metadata?.name}
             {collection?.hasBlueCheck && <BlueCheckInline />}
           </NextLink>

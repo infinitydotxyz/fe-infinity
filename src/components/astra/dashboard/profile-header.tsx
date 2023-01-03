@@ -90,7 +90,7 @@ export const ProfileHeaderTabBar = () => {
       {tabItems.map((e) => {
         return (
           <div key={e.path} className={twMerge('pb-3', e.selected ? `border-b-4 ${primaryBorderColor}` : '')}>
-            <NextLink href={`/v3/profile/${addressFromPath}/${e.path}`}>
+            <NextLink href={`/profile/${addressFromPath}/${e.path}`}>
               <div className={e.selected ? primaryTextColor : ''}>{e.name}</div>
             </NextLink>
           </div>

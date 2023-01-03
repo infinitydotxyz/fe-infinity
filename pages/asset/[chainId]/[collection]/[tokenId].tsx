@@ -2,7 +2,7 @@ import { ChainId, CollectionAttributes, Erc721Metadata, OBOrder, Token } from '@
 import { getCurrentOBOrderPrice } from '@infinityxyz/lib-frontend/utils';
 import { utils } from 'ethers';
 import { useRouter } from 'next/router';
-import NotFound404Page from 'pages/v3/not-found-404';
+import NotFound404Page from 'pages/not-found-404';
 import { useEffect, useState } from 'react';
 import { ActivityList, CancelModal, ListNFTModal, MakeOfferModal, SendNFTModal, TraitList } from 'src/components/asset';
 import { LowerPriceModal } from 'src/components/asset/modals/lower-price-modal';
@@ -262,7 +262,7 @@ const AssetDetailContent = ({ chainId, collectionAddress, tokenId }: Props) => {
           </h3>
           <div className="flex items-center mb-6">
             <NextLink
-              href={`/v3/collection/${token.collectionSlug || `${token.chainId}:${token.collectionAddress}`}`}
+              href={`/collection/${token.collectionSlug || `${token.chainId}:${token.collectionAddress}`}`}
               className="  font-heading tracking-tight mr-2"
             >
               <div>{token.collectionName || ellipsisAddress(token.collectionAddress) || 'Collection'}</div>
