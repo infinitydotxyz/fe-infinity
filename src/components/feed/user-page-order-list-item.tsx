@@ -1,11 +1,13 @@
-import { useState } from 'react';
-import { EthPrice, Button } from 'src/components/common';
-import { format } from 'timeago.js';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { OrderbookItem } from '../orderbook/orderbook-list/orderbook-item';
-import { UserOrderFilter } from '../filter/user-profile-order-filter-panel';
-import { OrderDetailModal } from '../orderbook/OrderDetailModal';
 import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user';
+import { useState } from 'react';
+import { Button, EthPrice } from 'src/components/common';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { format } from 'timeago.js';
+import { ALowerPriceModal } from '../astra/modals/astra-lower-price-modal';
+import { UserOrderFilter } from '../filter/user-profile-order-filter-panel';
+import { OrderbookItem } from '../orderbook/orderbook-list/orderbook-item';
+import { OrderDetailModal } from '../orderbook/OrderDetailModal';
 
 interface Props {
   order: SignedOBOrder;
@@ -17,9 +19,27 @@ interface Props {
 
 export const UserPageOrderListItem = ({ order, orderType, onClickActionBtn, selected }: Props) => {
   const [selectedOrder, setSelectedOrder] = useState<SignedOBOrder | null>(null);
+  const [showLowerPriceModal, setShowLowerPriceModal] = useState(false);
+  const [startPriceEth, setStartPriceEth] = useState(order.startPriceEth);
+  const { checkSignedIn } = useOnboardContext();
+
+  const onClickLowerPrice = () => {
+    if (!checkSignedIn()) {
+      return;
+    }
+    setShowLowerPriceModal(true);
+  };
 
   return (
     <div>
+      {showLowerPriceModal && (
+        <ALowerPriceModal
+          isOpen={showLowerPriceModal}
+          onClose={() => setShowLowerPriceModal(false)}
+          order={order}
+          onDone={(val) => setStartPriceEth(val)}
+        />
+      )}
       <div className="bg-gray-100 px-10 py-6 rounded-3xl flex font-heading">
         <div className="flex justify-between items-center w-full">
           <div className="w-1/4">
@@ -40,7 +60,7 @@ export const UserPageOrderListItem = ({ order, orderType, onClickActionBtn, sele
           <div className="w-1/8">
             <div className="text-gray-400">Price</div>
             <div className="font-bold">
-              <EthPrice label={`${order.startPriceEth}`} />
+              <EthPrice label={`${startPriceEth}`} />
             </div>
           </div>
           <div className="w-1/8">
@@ -51,6 +71,15 @@ export const UserPageOrderListItem = ({ order, orderType, onClickActionBtn, sele
             <div className="text-gray-400">Expiry</div>
             <div className="font-bold">{format(order.endTimeMs)}</div>
           </div>
+          {orderType === 'listings' || orderType === 'offers-made' ? (
+            <Button
+              onClick={() => {
+                onClickLowerPrice();
+              }}
+            >
+              Lower Price
+            </Button>
+          ) : null}
           {orderType === 'listings' || orderType === 'offers-made' ? (
             <Button
               onClick={() => {
