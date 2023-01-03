@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { BsHouse, BsWallet2 } from 'react-icons/bs';
+import { BsHouse, BsReceipt, BsTrophy, BsWallet2 } from 'react-icons/bs';
 import { MdDarkMode, MdLightMode } from 'react-icons/md';
 import { ARoundButton } from 'src/components/astra';
 import { HelpTip, NextLink, Spacer, SVG } from 'src/components/common';
@@ -49,7 +49,7 @@ export const SidebarNav = () => {
               router.push(`/v3/raffles`);
             }}
           >
-            <BsWallet2 className="h-8 w-8" />
+            <BsReceipt className="h-8 w-8" />
           </ARoundButton>
         </HelpTip>
 
@@ -60,7 +60,7 @@ export const SidebarNav = () => {
               router.push(`/v3/rewards`);
             }}
           >
-            <BsWallet2 className="h-8 w-8" />
+            <BsTrophy className="h-8 w-8" />
           </ARoundButton>
         </HelpTip>
       </div>
