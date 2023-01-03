@@ -275,25 +275,5 @@ export const filterButtonDefaultOptions: FilterPopdownOption[] = [
   {
     label: 'Transfers',
     value: EventType.NftTransfer
-  },
-  {
-    label: 'News',
-    value: EventType.CoinMarketCapNews
-  },
-  {
-    label: 'Discord',
-    value: EventType.DiscordAnnouncement
-  },
-  {
-    label: 'Tweets',
-    value: EventType.TwitterTweet
-  },
-  {
-    label: 'Tokens Staked',
-    value: EventType.TokensStaked
-  },
-  {
-    label: 'Vote',
-    value: EventType.UserVote
   }
 ];
