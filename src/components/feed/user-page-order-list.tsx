@@ -1,32 +1,74 @@
-import { useEffect, useState } from 'react';
-import { UserPageOrderListItem } from './user-page-order-list-item';
-import { apiGet, extractErrorMsg, ITEMS_PER_PAGE, ellipsisAddress } from 'src/utils';
-import { CenteredContent, ScrollLoader, Spinner, toastError, toastInfo, toastSuccess } from '../common';
+import { Menu } from '@headlessui/react';
+import { ChainOBOrder, Order, OrderItemToken, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user';
-import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import {
-  DEFAULT_ORDER_TYPE_FILTER,
-  UserOrderFilter,
-  UserProfileOrderFilterPanel
-} from '../filter/user-profile-order-filter-panel';
-import { cancelAllOrders } from 'src/utils/exchange/orders';
-import { fetchOrderNonce } from 'src/utils/orderbookUtils';
+import { useEffect, useState } from 'react';
+import { apiGet, ellipsisAddress, extractErrorMsg, ITEMS_PER_PAGE } from 'src/utils';
 import { useDrawerContext } from 'src/utils/context/DrawerContext';
+import { cancelAllOrders } from 'src/utils/exchange/orders';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { fetchOrderNonce } from 'src/utils/orderbookUtils';
+import { inputBorderColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { negativeMargin } from 'src/utils/ui-constants';
-import { AOutlineButton } from '../astra';
+import { AButton, AOutlineButton, ATextButton } from '../astra';
+import {
+  ACustomMenuButton,
+  ACustomMenuContents,
+  ACustomMenuItems,
+  ADropdown,
+  ADropdownButton
+} from '../astra/astra-dropdown';
+import {
+  CenteredContent,
+  ScrollLoader,
+  Spacer,
+  Spinner,
+  TextInputBox,
+  toastError,
+  toastInfo,
+  toastSuccess
+} from '../common';
+import { DEFAULT_ORDER_TYPE_FILTER } from '../filter/user-profile-order-filter-panel';
+import { UserPageOrderListItem } from './user-page-order-list-item';
+
+enum Side {
+  Maker = 'maker',
+  Taker = 'taker'
+}
+
+enum OrderStatus {
+  Active = 'active',
+  Inactive = 'inactive',
+  Filled = 'filled',
+  Cancelled = 'cancelled',
+  Expired = 'expired'
+}
+
+enum OrderBy {
+  Price = 'price',
+  StartTime = 'startTime',
+  EndTime = 'endTime'
+}
 
 type Query = {
   limit: number;
   cursor: string;
   isSellOrder?: boolean;
-  makerAddress?: string;
-  takerAddress?: string;
+  minPrice?: string;
+  maxPrice?: string;
+  numItems?: string;
+  side?: Side;
+  status?: OrderStatus;
+  collections?: string[];
+  orderBy?: OrderBy;
+};
+
+export type UserOrderFilter = {
+  orderType?: 'listings' | 'offers-made' | 'offers-received' | '';
   minPrice?: string;
   maxPrice?: string;
   numItems?: string;
   collections?: string[];
+  orderBy?: OrderBy;
 };
 
 interface Props {
@@ -38,13 +80,18 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
   const { user, chainId, waitForTransaction, getSigner } = useOnboardContext();
 
   const { fulfillDrawerParams, cancelDrawerParams } = useDrawerContext();
+  const [minPriceVal, setMinPriceVal] = useState('');
+  const [maxPriceVal, setMaxPriceVal] = useState('');
   const [data, setData] = useState<SignedOBOrder[]>([]);
   const [isFetching, setIsFetching] = useState(false);
   const [cursor, setCursor] = useState('');
   const [hasNextPage, setHasNextPage] = useState(false);
-  const [filterShowed, setFilterShowed] = useState(true);
   const [isCancellingAll, setIsCancellingAll] = useState(false);
   const [apiFilter, setApiFilter] = useState<UserOrderFilter>({ orderType: DEFAULT_ORDER_TYPE_FILTER });
+  const [ddLabel, setDdLabel] = useState<string>('Listings');
+  const [filter, setFilter] = useState<UserOrderFilter>({
+    orderType: DEFAULT_ORDER_TYPE_FILTER
+  });
 
   const fetchData = async (isRefresh = false) => {
     setIsFetching(true);
@@ -59,24 +106,23 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
       minPrice: apiFilter.minPrice,
       maxPrice: apiFilter.maxPrice,
       numItems: apiFilter.numItems,
-      collections: apiFilter.collections
+      collections: apiFilter.collections,
+      orderBy: apiFilter.orderBy
     };
 
     if (apiFilter.orderType === 'listings') {
-      query.makerAddress = userInfo.address;
+      query.side = Side.Maker;
       query.isSellOrder = true;
     } else if (apiFilter.orderType === 'offers-made') {
-      query.makerAddress = userInfo.address;
+      query.side = Side.Maker;
       query.isSellOrder = false;
     } else if (apiFilter.orderType === 'offers-received') {
-      query.takerAddress = userInfo.address;
+      query.side = Side.Taker;
       query.isSellOrder = false;
-    } else {
-      query.takerAddress = userInfo.address;
-      query.makerAddress = userInfo.address;
+      query.status = OrderStatus.Active;
     }
 
-    const { result } = await apiGet(`/userOrders/${userInfo.address}`, {
+    const { result } = await apiGet(`/v2/users/${userInfo.address}/orders`, {
       query,
       requiresAuth: true
     });
@@ -87,23 +133,96 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
 
     setHasNextPage(result?.hasNextPage);
 
-    const moreData: SignedOBOrder[] = [];
-    result?.data?.map((item: SignedOBOrder) => {
-      moreData.push(item);
-    });
+    let newData;
+    if (isRefresh) {
+      newData = [...result.data];
+    } else {
+      newData = [...data, ...result.data];
+    }
 
     setIsFetching(false);
-    if (isRefresh) {
-      setData([...moreData]);
-    } else {
-      setData([...data, ...moreData]);
-    }
+
+    setData(
+      newData.map((order: Order) => {
+        const orderItems = order.kind === 'single-collection' ? [order.item] : order.items;
+        const nfts = orderItems.map((item) => {
+          let tokens: OrderItemToken[];
+          switch (item.kind) {
+            case 'collection-wide':
+              tokens = [];
+              break;
+            case 'single-token':
+              tokens = [item.token];
+              break;
+
+            case 'token-list':
+              tokens = item.tokens;
+              break;
+          }
+
+          const chainTokens = tokens.map((item) => {
+            return {
+              tokenId: item.tokenId,
+              tokenName: item.name,
+              tokenImage: item.image,
+              takerUsername: item.owner?.username,
+              takerAddress: item.owner?.address,
+              numTokens: item.quantity,
+              attributes: []
+            };
+          });
+          return {
+            chainId: order.chainId,
+            collectionAddress: item.address,
+            collectionName: item.name,
+            collectionImage: item.profileImage,
+            collectionSlug: item.slug,
+            hasBlueCheck: item.hasBlueCheck,
+            tokens: chainTokens
+          };
+        });
+
+        const signedObOrder: SignedOBOrder = {
+          id: order.id,
+          chainId: order.chainId,
+          isSellOrder: order.isSellOrder,
+          numItems: order.numItems,
+          makerUsername: order.maker?.username,
+          makerAddress: order.maker?.address,
+          startPriceEth: order.startPriceEth,
+          endPriceEth: order.endPriceEth,
+          startTimeMs: order.startTimeMs,
+          endTimeMs: order.endTimeMs,
+          maxGasPriceWei: '0',
+          nonce: 0,
+          nfts: nfts,
+          execParams: {
+            complicationAddress: '',
+            currencyAddress: order.currency
+          },
+          extraParams: {
+            buyer: order.isPrivate ? order.taker.address : ''
+          },
+          signedOrder: {} as unknown as ChainOBOrder
+        };
+
+        return signedObOrder;
+      })
+    );
   };
 
   useEffect(() => {
     setData([]);
     fetchData(true);
   }, [apiFilter]);
+
+  const onClear = () => {
+    const newFilter = { ...filter };
+    newFilter.minPrice = '';
+    newFilter.maxPrice = '';
+    setFilter(newFilter);
+    setApiFilter(newFilter);
+  };
 
   const listItemButtonClick = (order: SignedOBOrder, checked: boolean) => {
     if (apiFilter.orderType === 'offers-received') {
@@ -133,52 +252,134 @@ export const UserPageOrderList = ({ userInfo, className = '' }: Props) => {
     }
   };
 
+  const onClickOrderType = (newType: 'listings' | 'offers-made' | 'offers-received' | '') => {
+    const newFilter = {
+      ...filter,
+      orderType: newType
+    };
+    setFilter(newFilter);
+    setApiFilter(newFilter);
+  };
+
   return (
-    <div className={twMerge('min-h-[50vh]', className, negativeMargin)}>
-      <div className="flex gap-3 justify-end items-center mb-8 bg-transparent">
-        <AOutlineButton
-          disabled={isCancellingAll}
-          onClick={async () => {
-            try {
-              const signer = getSigner();
-
-              if (signer && user) {
-                setIsCancellingAll(true);
-                const minOrderNonce = await fetchOrderNonce(user.address);
-                const { hash } = await cancelAllOrders(signer, chainId, minOrderNonce);
-                setIsCancellingAll(false);
-                toastSuccess('Sent txn to chain for execution');
-                waitForTransaction(hash, () => {
-                  toastInfo(`Transaction confirmed ${ellipsisAddress(hash)}`);
-                });
-              } else {
-                throw 'User is null';
+    <div className={twMerge('min-h-[50vh]', className)}>
+      <div className={twMerge(inputBorderColor, 'w-full flex   py-2 border-t-[1px]')}>
+        {/* <ACollectionFilter /> todo: put this back */}
+        <Spacer />
+        <ADropdown
+          hasBorder={false}
+          label={ddLabel}
+          items={[
+            {
+              label: 'Listings',
+              onClick: () => {
+                setDdLabel('Listings');
+                onClickOrderType('listings');
               }
-            } catch (err) {
-              toastError(extractErrorMsg(err));
+            },
+            {
+              label: 'Offers made',
+              onClick: () => {
+                setDdLabel('Offers made');
+                onClickOrderType('offers-made');
+              }
+            },
+            {
+              label: 'Offers received',
+              onClick: () => {
+                setDdLabel('Offers received');
+                onClickOrderType('offers-received');
+              }
             }
-          }}
-        >
-          Cancel all
-        </AOutlineButton>
+          ]}
+        />
 
-        <AOutlineButton
-          onClick={() => {
-            setFilterShowed((flag) => !flag);
-          }}
-          className="pointer-events-auto"
-        >
-          {filterShowed ? 'Hide' : 'Show'} filter
-        </AOutlineButton>
+        <Menu>
+          {({ open }) => (
+            <ACustomMenuContents>
+              <span>
+                <ACustomMenuButton>
+                  <ATextButton tooltip="Click to open price filter">
+                    <ADropdownButton>Price</ADropdownButton>
+                  </ATextButton>
+                </ACustomMenuButton>
+              </span>
+
+              {open && (
+                <ACustomMenuItems open={open}>
+                  <div className="flex">
+                    <TextInputBox
+                      addEthSymbol={true}
+                      type="number"
+                      className="border-gray-300 font-heading"
+                      label="Min"
+                      placeholder=""
+                      value={minPriceVal}
+                      onChange={(value) => {
+                        setMinPriceVal(value);
+                        const newFilter = { ...filter };
+                        newFilter.minPrice = value;
+                        newFilter.orderBy = OrderBy.Price;
+                        setFilter(newFilter);
+                        setApiFilter(newFilter);
+                      }}
+                    />
+                    <TextInputBox
+                      addEthSymbol={true}
+                      type="number"
+                      className="border-gray-300 font-heading ml-2"
+                      label="Max"
+                      placeholder=""
+                      value={maxPriceVal}
+                      onChange={(value) => {
+                        setMaxPriceVal(value);
+                        const newFilter = { ...filter };
+                        newFilter.maxPrice = value;
+                        newFilter.orderBy = OrderBy.Price;
+                        setFilter(newFilter);
+                        setApiFilter(newFilter);
+                      }}
+                    />
+                  </div>
+                  <Menu.Button onClick={onClear} className="mt-2 float-left">
+                    <AButton highlighted>Clear</AButton>
+                  </Menu.Button>
+                </ACustomMenuItems>
+              )}
+            </ACustomMenuContents>
+          )}
+        </Menu>
+
+        <div className="flex gap-3 justify-end items-center mb-8 bg-transparent">
+          <AOutlineButton
+            disabled={isCancellingAll}
+            onClick={async () => {
+              try {
+                const signer = getSigner();
+
+                if (signer && user) {
+                  setIsCancellingAll(true);
+                  const minOrderNonce = await fetchOrderNonce(user.address);
+                  const { hash } = await cancelAllOrders(signer, chainId, minOrderNonce);
+                  setIsCancellingAll(false);
+                  toastSuccess('Sent txn to chain for execution');
+                  waitForTransaction(hash, () => {
+                    toastInfo(`Transaction confirmed ${ellipsisAddress(hash)}`);
+                  });
+                } else {
+                  throw 'User is null';
+                }
+              } catch (err) {
+                toastError(extractErrorMsg(err));
+              }
+            }}
+          >
+            Cancel all
+          </AOutlineButton>
+        </div>
       </div>
 
       <div className="flex items-start">
-        {filterShowed && (
-          <div className="mt-4">
-            <UserProfileOrderFilterPanel userInfo={userInfo} onChange={(filter) => setApiFilter(filter)} />
-          </div>
-        )}
-
         <div className="w-full space-y-4 pointer-events-auto">
           {isFetching && (
             <div className="mt-8">

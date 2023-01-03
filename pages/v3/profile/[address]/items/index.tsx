@@ -67,6 +67,6 @@ export default function ProfileItemsPage(props: DashboardProps) {
 }
 
 export function getServerSideProps(context: GetServerSidePropsContext) {
-  const address = context.query.name as string;
+  const address = context.query.address as string;
   return getDashboardServerSideProps('profile', address, Queries.Side.Maker); // TODO get this from the query params or refactor to use a filter
 }
