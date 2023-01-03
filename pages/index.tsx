@@ -1,89 +1,37 @@
-import { CuratedCollectionsOrderBy } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curated-collections-query.dto';
 import { useRouter } from 'next/router';
-import { RaffleDescription } from 'src/components/raffles/raffle-description';
-import { useRaffles } from 'src/hooks/api/useRaffles';
+import { ReactNode } from 'react';
+import { APageBox, pageStyles } from 'src/components/astra/astra-page-box';
 import {
+  backColorForTheme,
   CenteredContent,
   ColoredButton,
-  backColorForTheme,
-  textColorForTheme,
-  PageBox,
-  pageStyles,
+  headerColorForTheme,
   Spacer,
   Spinner,
-  ThemeColor,
-  headerColorForTheme,
-  SVG
+  SVG,
+  textColorForTheme,
+  ThemeColor
 } from 'src/components/common';
-import { FavoritesDescription } from 'src/components/favorites/favorites-description';
-import { AllCuratedStart } from 'src/components/start/all-curated-start';
-import { StartFooter } from 'src/components/start/start-footer';
-import { TrendingStart } from 'src/components/start/trending-start';
-import { useFavorites } from 'src/hooks/api/useFavorites';
+import { RaffleDescription } from 'src/components/raffles/raffle-description';
+import { useRaffles } from 'src/hooks/api/useRaffles';
 import { twMerge } from 'tailwind-merge';
-import GlobalRewards from './rewards/global-rewards';
-import { ReactNode } from 'react';
+import GlobalRewards from './v3/rewards/global-rewards';
 
 const HomePage = () => {
   return (
-    <PageBox title="Home" fullWidth showTitle={false} footer={<StartFooter />}>
-      <HomeSection
-        title="Recently Curated Collections"
-        altTitle="Collections"
-        url="/curated?tab=All+Curated"
-        theme="white"
-      >
-        <AllCuratedStart orderBy={CuratedCollectionsOrderBy.Timestamp} />
-      </HomeSection>
-
+    <APageBox title="Home" fullWidth showTitle={false}>
       <HomeSection title="Rewards" url="/rewards?tab=Global+Rewards" theme="red">
         <GlobalRewards showCount={1} />
-      </HomeSection>
-
-      <HomeSection title="Favorites" url="/favorites" theme="blue">
-        <FavoritesPanel />
       </HomeSection>
 
       <HomeSection title="Raffles" url="/raffles" theme="black">
         <RafflesPanel />
       </HomeSection>
-
-      <HomeSection title="Trending" url="trending" theme="red">
-        <TrendingStart />
-      </HomeSection>
-    </PageBox>
+    </APageBox>
   );
 };
 
 export default HomePage;
-
-// ===========================================================
-
-const FavoritesPanel = () => {
-  const { result: phases, isError, isLoading } = useFavorites();
-
-  if (isLoading) {
-    return (
-      <CenteredContent>
-        <Spinner />
-      </CenteredContent>
-    );
-  }
-
-  if (isError) {
-    return <div className="flex flex-col mt-10">Unable to load favorites.</div>;
-  }
-
-  return (
-    <div className="space-y-4">
-      {phases?.map((phase, index) => {
-        if (index < 1) {
-          return <FavoritesDescription key={phase.id} phase={phase} />;
-        }
-      })}
-    </div>
-  );
-};
 
 // ======================================================
 

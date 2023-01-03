@@ -24,18 +24,16 @@ import {
   useToggleTab
 } from 'src/components/common';
 import { isVideoNft } from 'src/components/gallery/token-fetcher';
-import { WaitingForTxModal } from 'src/components/orderbook/order-drawer/waiting-for-tx-modal';
+import { WaitingForTxModal } from 'src/components/orderbook/waiting-for-tx-modal';
 import { OrderbookContainer } from 'src/components/orderbook/orderbook-list';
 import { useSaveReferral } from 'src/hooks/api/useSaveReferral';
 import useScreenSize from 'src/hooks/useScreenSize';
 import { apiGet, ellipsisAddress, getOwnerAddress, MISSING_IMAGE_URL, useFetch } from 'src/utils';
-import { useDrawerContext } from 'src/utils/context/DrawerContext';
 import { getOBOrderFromFirestoreOrderItem } from 'src/utils/exchange/orders';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import { fetchUserSignedOBOrder } from 'src/utils/orderbookUtils';
 import { useSWRConfig } from 'swr';
 
-const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
+export const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
   const { mutate } = useSWRConfig();
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
   const COLLECTION_ATTRIBUTES_API_ENDPOINT = `/collections/${chainId}:${collection}/attributes`;
@@ -99,7 +97,6 @@ const AssetDetailContent = ({ chainId, collectionAddress, tokenId }: Props) => {
   const [buyPriceEth, setBuyPriceEth] = useState('');
   const [sellPriceEth, setSellPriceEth] = useState('');
   const [sendTxHash, setSendTxHash] = useState('');
-  const { fulfillDrawerParams } = useDrawerContext();
 
   const tokenOwner = getOwnerAddress(token);
   const isNftOwner = token ? user?.address === tokenOwner : false;
@@ -148,11 +145,11 @@ const AssetDetailContent = ({ chainId, collectionAddress, tokenId }: Props) => {
 
   const onClickBuy = async () => {
     try {
-      const signedListing = await fetchUserSignedOBOrder(token?.ordersSnippet?.listing?.orderItem?.id);
-      if (signedListing) {
-        fulfillDrawerParams.addOrder(signedListing);
-        fulfillDrawerParams.setShowDrawer(true);
-      }
+      // const signedListing = await fetchUserSignedOBOrder(token?.ordersSnippet?.listing?.orderItem?.id);
+      // if (signedListing) {
+      //   fulfillDrawerParams.addOrder(signedListing);
+      //   fulfillDrawerParams.setShowDrawer(true);
+      // }
     } catch (err) {
       toastError(`Failed to fetch signed listing`);
     }
@@ -160,11 +157,11 @@ const AssetDetailContent = ({ chainId, collectionAddress, tokenId }: Props) => {
 
   const onClickAcceptOffer = async () => {
     try {
-      const signedOffer = await fetchUserSignedOBOrder(token?.ordersSnippet?.offer?.orderItem?.id);
-      if (signedOffer) {
-        fulfillDrawerParams.addOrder(signedOffer);
-        fulfillDrawerParams.setShowDrawer(true);
-      }
+      // const signedOffer = await fetchUserSignedOBOrder(token?.ordersSnippet?.offer?.orderItem?.id);
+      // if (signedOffer) {
+      //   fulfillDrawerParams.addOrder(signedOffer);
+      //   fulfillDrawerParams.setShowDrawer(true);
+      // }
     } catch (err) {
       toastError(`Failed to fetch signed offer`);
     }

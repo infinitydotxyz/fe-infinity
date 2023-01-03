@@ -1,11 +1,10 @@
-import React, { ReactElement, ReactNode, useState } from 'react';
-import { DatePicker } from 'src/components/common';
-import { ComboBox, ComboBoxBaseType } from './combo-box';
 import { CalendarIcon } from '@heroicons/react/outline';
-import { EthSymbol } from './eth-price';
-import { Tooltip, TooltipIcon, TooltipSpec, TooltipWrapper } from './tool-tip';
+import { ReactElement, ReactNode, useState } from 'react';
+import { DatePicker } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 import { inputBorderColor } from '../../utils/ui-constants';
+import { EthSymbol } from './eth-price';
+import { Tooltip, TooltipIcon, TooltipSpec, TooltipWrapper } from './tool-tip';
 
 interface Props {
   label?: string;
@@ -97,24 +96,6 @@ export const DatePickerBox = ({ tooltip, label, value, onChange, placeholder }: 
         </div>
         <DatePicker value={value} onChange={onChange} placeholder={placeholder} />
       </div>
-    </InputBox>
-  );
-};
-
-// ================================================================
-
-interface Props3<T extends ComboBoxBaseType> {
-  label: string;
-  options: T[];
-  value: T;
-  onChange: (value: T) => void;
-  tooltip?: TooltipSpec;
-}
-
-export const ComboInputBox = <T extends ComboBoxBaseType>({ tooltip, label, options, onChange, value }: Props3<T>) => {
-  return (
-    <InputBox label={label} tooltip={tooltip}>
-      <ComboBox options={options} value={value} onChange={onChange} />
     </InputBox>
   );
 };

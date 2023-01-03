@@ -1,9 +1,8 @@
-import React from 'react';
-import { PageBox } from 'src/components/common';
+import { APageBox } from 'src/components/astra/astra-page-box';
 
 const PrivacyPolicyPage = () => {
   return (
-    <PageBox title="Privacy Policy">
+    <APageBox title="Privacy Policy">
       <div className="flex flex-col items-center justify-center space-y-2">
         <div className="font-normal text-3xl">Infinity</div>
         <div className="underline">Privacy Policy</div>
@@ -474,7 +473,7 @@ const PrivacyPolicyPage = () => {
           <span>&nbsp;</span>
         </p>
       </div>
-    </PageBox>
+    </APageBox>
   );
 };
 

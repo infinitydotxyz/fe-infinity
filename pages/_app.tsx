@@ -1,19 +1,16 @@
-import LogRocket from 'logrocket';
 import * as gtag from 'lib/ga/gtag';
-import { useRouter } from 'next/router';
+import LogRocket from 'logrocket';
 import type { AppProps } from 'next/app';
+import { useRouter } from 'next/router';
+import { memo, StrictMode, useEffect } from 'react';
+import { Layout } from 'src/components/astra/layout';
 import 'src/settings/theme/globals.scss';
 import { isLocalhost } from 'src/utils/commonUtils';
-import { OnboardContextProvider } from 'src/utils/OnboardContext/OnboardContext';
-import { OrderContextProvider } from 'src/utils/context/OrderContext';
-import { FilterContextProvider } from 'src/utils/context/FilterContext';
-import React, { memo, StrictMode, useEffect } from 'react';
-import { DrawerContextProvider } from 'src/utils/context/DrawerContext';
-import { CurationBulkVoteContextProvider } from 'src/utils/context/CurationBulkVoteContext';
 import { AppContextProvider, useAppContext } from 'src/utils/context/AppContext';
 import { DashboardContextProvider } from 'src/utils/context/DashboardContext';
+import { FilterContextProvider } from 'src/utils/context/FilterContext';
+import { OnboardContextProvider } from 'src/utils/OnboardContext/OnboardContext';
 import { twMerge } from 'tailwind-merge';
-import { Layout } from 'src/components/astra/layout';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -37,15 +34,9 @@ const App = (props: AppProps) => {
       <AppContextProvider>
         <OnboardContextProvider>
           <FilterContextProvider>
-            <OrderContextProvider>
-              <DashboardContextProvider>
-                <DrawerContextProvider>
-                  <CurationBulkVoteContextProvider>
-                    <AppBody {...props} />
-                  </CurationBulkVoteContextProvider>
-                </DrawerContextProvider>
-              </DashboardContextProvider>
-            </OrderContextProvider>
+            <DashboardContextProvider>
+              <AppBody {...props} />
+            </DashboardContextProvider>
           </FilterContextProvider>
         </OnboardContextProvider>
       </AppContextProvider>

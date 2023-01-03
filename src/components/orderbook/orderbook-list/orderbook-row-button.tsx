@@ -3,7 +3,6 @@ import { ButtonProps } from 'src/components/common';
 import { OrderCartItem, useOrderContext } from 'src/utils/context/OrderContext';
 import { checkOffersToUser } from 'src/utils/orderbookUtils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import { useDrawerContext } from 'src/utils/context/DrawerContext';
 import { AButton } from 'src/components/astra';
 
 type OrderButtonProps = Omit<ButtonProps, 'children'>;
@@ -15,7 +14,6 @@ type Props = {
 
 export const OrderbookRowButton = ({ order, outlineButtons = false }: Props) => {
   const { user, checkSignedIn } = useOnboardContext();
-  const { fulfillDrawerParams } = useDrawerContext();
 
   const { addCartItem, setOrderDrawerOpen } = useOrderContext();
 
@@ -82,8 +80,9 @@ export const OrderbookRowButton = ({ order, outlineButtons = false }: Props) => 
     if (!checkSignedIn()) {
       return;
     }
+    console.log('onClickBuySell', order);
 
-    fulfillDrawerParams.addOrder(order);
+    // fulfillDrawerParams.addOrder(order);
   };
 
   const isOwner = order.makerAddress === user?.address;

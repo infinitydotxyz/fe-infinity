@@ -13,6 +13,9 @@ interface Props {
   footer?: JSX.Element;
 }
 
+// used in the Header
+export const pageStyles = 'mx-auto desktop:w-5/6 desktop-sm:w-[95%] tabloid:w-[95%] mobile:w-[98%]';
+
 export const APageBox = ({ children, title, showTitle = true, className = '', rightToolbar }: Props): JSX.Element => {
   return (
     <div

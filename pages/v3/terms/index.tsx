@@ -1,10 +1,9 @@
-import React from 'react';
-import { PageBox } from 'src/components/common';
+import { APageBox } from 'src/components/astra/astra-page-box';
 import { TOKEN } from 'src/utils/constants';
 
 const TermsPage = () => {
   return (
-    <PageBox title="Terms and Conditions">
+    <APageBox title="Terms and Conditions">
       <div className="flex flex-col items-center justify-center space-y-2">
         <div className="font-normal text-3xl">Infinity</div>
         <div className="underline">Terms and Conditions of Use</div>
@@ -792,7 +791,7 @@ const TermsPage = () => {
         </div>
         <div></div>
       </div>
-    </PageBox>
+    </APageBox>
   );
 };
 

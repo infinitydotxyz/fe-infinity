@@ -1,51 +1,46 @@
 import { EventType, EventTypeNames } from '@infinityxyz/lib-frontend/types/core/feed';
 import { ReactNode, useState } from 'react';
 import { FaEdit } from 'react-icons/fa';
-import { RemoveIcon } from 'src/components/collection/edit/remove-icon';
-import { Card } from 'src/components/token-card/card';
+import { ADropdown } from 'src/components/astra/astra-dropdown';
+import { APageBox } from 'src/components/astra/astra-page-box';
 import {
   Button,
-  CurrencyInput,
-  ShortAddress,
-  SimpleTable,
-  SimpleTableItem,
-  Switch,
-  ToggleTab,
-  useToggleTab,
-  PageBox,
-  toastError,
-  toastSuccess,
-  toastWarning,
-  // ComboBox,
-  // ComboBoxBaseType,
-  SVG,
   Checkbox,
   Modal,
   PopoverButton,
-  TextInputBox
+  ShortAddress,
+  SimpleTable,
+  SimpleTableItem,
+  // ComboBox,
+  // ComboBoxBaseType,
+  SVG,
+  TextInputBox,
+  toastError,
+  toastSuccess,
+  toastWarning,
+  ToggleTab,
+  useToggleTab
 } from 'src/components/common';
-import { NFTSwiperModal } from 'src/components/swiper/nft-swiper';
 import { twMerge } from 'tailwind-merge';
-import { ADropdown } from 'src/components/astra/astra-dropdown';
 
-const cardTestData = [
-  {
-    id: 'nft1',
-    title: 'NFT 1',
-    tokenId: 'Token1',
-    price: 1.5,
-    image:
-      'https://media.voguebusiness.com/photos/61b8dfb99ba90ab572dea0bd/3:4/w_1998,h_2664,c_limit/adidas-nft-voguebus-adidas-nft-dec-21-story.jpg'
-  },
-  {
-    id: 'nft2',
-    title: 'NFT 2',
-    tokenId: 'Token2 - very long long long token id',
-    price: 2.5,
-    image:
-      'https://media.voguebusiness.com/photos/61b8dfb99ba90ab572dea0bd/3:4/w_1998,h_2664,c_limit/adidas-nft-voguebus-adidas-nft-dec-21-story.jpg'
-  }
-];
+// const cardTestData = [
+//   {
+//     id: 'nft1',
+//     title: 'NFT 1',
+//     tokenId: 'Token1',
+//     price: 1.5,
+//     image:
+//       'https://media.voguebusiness.com/photos/61b8dfb99ba90ab572dea0bd/3:4/w_1998,h_2664,c_limit/adidas-nft-voguebus-adidas-nft-dec-21-story.jpg'
+//   },
+//   {
+//     id: 'nft2',
+//     title: 'NFT 2',
+//     tokenId: 'Token2 - very long long long token id',
+//     price: 2.5,
+//     image:
+//       'https://media.voguebusiness.com/photos/61b8dfb99ba90ab572dea0bd/3:4/w_1998,h_2664,c_limit/adidas-nft-voguebus-adidas-nft-dec-21-story.jpg'
+//   }
+// ];
 
 // const comboValues: ComboBoxBaseType[] = [
 //   { id: 0, name: 'Empty Trash' },
@@ -55,10 +50,8 @@ const cardTestData = [
 
 const SandboxPage = () => {
   const { options, onChange, selected } = useToggleTab(['Buy NFTs', 'Sell NFTs', 'Trade NFTs'], 'Buy NFTs');
-  const [currency, setCurrency] = useState<number>(12.33);
   const [checked, setChecked] = useState<boolean>(false);
   const [checked2, setChecked2] = useState<boolean>(false);
-  const [switchChecked, setSwitchChecked] = useState<boolean>(false);
   // const [comboValue, setComboValue] = useState<ComboBoxBaseType>(comboValues[0]);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [activityTypes, setActivityTypes] = useState<EventType[]>([]);
@@ -70,9 +63,7 @@ const SandboxPage = () => {
   const iconClass = 'w-12 h-12 m-3';
 
   return (
-    <PageBox title="SandBox">
-      <NFTSwiperModal />
-
+    <APageBox title="SandBox">
       <SBHeader># Button</SBHeader>
       <div className="flex space-x-4 items-center">
         <Button variant="primary">Primary</Button>
@@ -188,34 +179,6 @@ const SandboxPage = () => {
         <SVGPreview svg={<SVG.blueCheck className={iconClass} />} name="blueCheck" />
       </div>
 
-      <SBHeader># Card - WIP</SBHeader>
-      <div className="flex flex-row space-x-4 w-1/2">
-        <Card
-          data={cardTestData[0]}
-          cardActions={[
-            {
-              label: 'Details',
-              onClick: console.log
-            }
-          ]}
-          getDropdownActions={() => {
-            return [
-              { label: 'Dropdown Action 1', onClick: console.log },
-              { label: 'Dropdown Action 2', onClick: console.log }
-            ];
-          }}
-        />
-        <Card
-          data={cardTestData[1]}
-          cardActions={[
-            {
-              label: 'Details',
-              onClick: console.log
-            }
-          ]}
-        />
-      </div>
-
       <SBHeader># TextInputBox</SBHeader>
       <TextInputBox
         // autoFocus={true}
@@ -237,16 +200,6 @@ const SandboxPage = () => {
         onChange={(value) => console.log(value)}
       />
 
-      <SBHeader># CurrencyInput</SBHeader>
-      <CurrencyInput
-        value={currency}
-        label="Enter offer"
-        placeholder=""
-        onChange={(value) => {
-          setCurrency(parseFloat(value));
-        }}
-      />
-
       <SBHeader># ShortAddress</SBHeader>
       <ShortAddress
         label="Contact address:"
@@ -254,21 +207,6 @@ const SandboxPage = () => {
         href={`/collection/xxx`}
         tooltip={'0x78979787978'}
       />
-
-      <SBHeader># RemoveIcon</SBHeader>
-
-      <RemoveIcon onClick={() => console.log('removeIcon clicked')} />
-
-      <SBHeader># Switch</SBHeader>
-      <div className="w-1/2">
-        <Switch
-          title="Dark mode"
-          checked={switchChecked}
-          onChange={() => {
-            setSwitchChecked(!switchChecked);
-          }}
-        />
-      </div>
 
       {/* <SBHeader># ComboBox</SBHeader>
       <div className="w-1/2">
@@ -298,7 +236,7 @@ const SandboxPage = () => {
           Erase Zip Drive?
         </Modal>
       </div>
-    </PageBox>
+    </APageBox>
   );
 };
 

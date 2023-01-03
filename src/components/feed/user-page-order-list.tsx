@@ -26,8 +26,9 @@ import {
   toastInfo,
   toastSuccess
 } from '../common';
-import { DEFAULT_ORDER_TYPE_FILTER } from '../filter/user-profile-order-filter-panel';
 import { UserPageOrderListItem } from './user-page-order-list-item';
+
+export const DEFAULT_ORDER_TYPE_FILTER = 'listings';
 
 enum Side {
   Maker = 'maker',

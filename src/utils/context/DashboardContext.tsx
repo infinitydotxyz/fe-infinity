@@ -15,7 +15,7 @@ import { useCardSelection } from 'src/components/astra/useCardSelection';
 import { useCollectionSelection } from 'src/components/astra/useCollectionSelection';
 import { useOrderSelection } from 'src/components/astra/useOrderSelection';
 import { toastError, toastInfo, toastSuccess, toastWarning } from 'src/components/common';
-import { WaitingForTxModal } from 'src/components/orderbook/order-drawer/waiting-for-tx-modal';
+import { WaitingForTxModal } from 'src/components/orderbook/waiting-for-tx-modal';
 import { cancelMultipleOrders } from 'src/utils/exchange/orders';
 import {
   CART_TYPE,

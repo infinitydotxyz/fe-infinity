@@ -5,7 +5,6 @@ import { Button, EthPrice } from 'src/components/common';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { format } from 'timeago.js';
 import { ALowerPriceModal } from '../astra/modals/astra-lower-price-modal';
-import { UserOrderFilter } from '../filter/user-profile-order-filter-panel';
 import { OrderbookItem } from '../orderbook/orderbook-list/orderbook-item';
 import { OrderDetailModal } from '../orderbook/OrderDetailModal';
 
@@ -16,6 +15,14 @@ interface Props {
   userInfo: UserProfileDto;
   onClickActionBtn: (order: SignedOBOrder) => void;
 }
+
+type UserOrderFilter = {
+  orderType?: 'listings' | 'offers-made' | 'offers-received' | '';
+  minPrice?: string;
+  maxPrice?: string;
+  numItems?: string;
+  collections?: string[];
+};
 
 export const UserPageOrderListItem = ({ order, orderType, onClickActionBtn, selected }: Props) => {
   const [selectedOrder, setSelectedOrder] = useState<SignedOBOrder | null>(null);

@@ -1,7 +1,7 @@
 import { ChainId, Erc721Token, OBOrder, SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
 import { chainConstants, getOBComplicationAddress, NULL_ADDRESS } from '@infinityxyz/lib-frontend/utils';
 import { useState } from 'react';
-import { CurrencyInput, DatePickerBox, Modal, toastError, toastSuccess } from 'src/components/common';
+import { DatePickerBox, Modal, TextInputBox, toastError, toastSuccess } from 'src/components/common';
 import { DEFAULT_MAX_GAS_PRICE_WEI, extractErrorMsg, getEstimatedGasPrice, getOwnerAddress } from 'src/utils';
 import { getSignedOBOrder } from 'src/utils/exchange/orders';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
@@ -109,8 +109,10 @@ export const MakeOfferModal = ({ isOpen, onClose, onDone, buyPriceEth, token }: 
       <div>
         <div className="mb-4">Buy this NFT for the price shown</div>
         <div>
-          <CurrencyInput
+          <TextInputBox
             autoFocus={true}
+            addEthSymbol={true}
+            type="number"
             value={price}
             label="Enter offer"
             placeholder=""
