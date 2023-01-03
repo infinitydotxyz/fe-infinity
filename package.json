@@ -10,6 +10,7 @@
     "format": "prettier --write {src,pages}/**/{**,}/*.{tsx,ts}",
     "update:lib": "npm install @infinityxyz/lib-frontend@latest",
     "analyze": "ANALYZE=true next build",
+    "find:unused": "next-unused",
     "deploy:dev": "npm run build && gcloud app deploy -q --appyaml=./app.yaml --project=nftc-dev",
     "deploy:prod": "npm run build && gcloud app deploy -q --appyaml=./app.yaml --project=nftc-infinity"
   },
@@ -20,7 +21,7 @@
     "@amit.rajput/react-linkify": "^1.0.5",
     "@headlessui/react": "^1.7.5",
     "@heroicons/react": "^1.0.6",
-    "@infinityxyz/lib-frontend": "^1.278.0",
+    "@infinityxyz/lib-frontend": "^1.279.0",
     "@next/bundle-analyzer": "^13.0.6",
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/typography": "^0.5.8",
@@ -99,6 +100,7 @@
     "eslint-plugin-jsx": "^0.1.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^4.2.1",
+    "next-unused": "^0.0.6",
     "postcss": "^8.4.20",
     "prettier": "^2.8.1",
     "sass": "^1.56.2",
@@ -110,5 +112,10 @@
     "printWidth": 120,
     "singleQuote": true,
     "trailingComma": "none"
+  },
+  "next-unused": {
+    "include": [
+      "src"
+    ]
   }
 }
