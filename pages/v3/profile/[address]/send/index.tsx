@@ -2,6 +2,7 @@ import * as Queries from '@infinityxyz/lib-frontend/types/dto/orders/orders-quer
 import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { FC, useEffect } from 'react';
+import { AListGridButton } from 'src/components/astra';
 import { ACollectionFilter } from 'src/components/astra/astra-collection-filter';
 import {
   DashboardLayout,
@@ -11,6 +12,7 @@ import {
 import { ProfileTokenCache } from 'src/components/astra/token-grid/token-fetcher';
 import { TokensGrid } from 'src/components/astra/token-grid/token-grid';
 import { useProfileTokenFetcher } from 'src/components/astra/useFetcher';
+import { Spacer } from 'src/components/common';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { inputBorderColor } from 'src/utils/ui-constants';
@@ -61,6 +63,8 @@ export default function ProfileSendPage(props: DashboardProps) {
     <DashboardLayout {...props}>
       <div className={twMerge(inputBorderColor, 'w-full flex   py-2 border-t-[1px]')}>
         <ACollectionFilter />
+        <Spacer />
+        <AListGridButton />
       </div>
       <TokensGridWrapper />
     </DashboardLayout>
