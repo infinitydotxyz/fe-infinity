@@ -26,7 +26,7 @@ import {
   toastInfo,
   toastSuccess
 } from '../common';
-import { UserPageOrderListItem } from './user-page-order-list-item';
+import { UserOrderListItem } from './user-order-list-item';
 
 export const DEFAULT_ORDER_TYPE_FILTER = 'listings';
 
@@ -78,7 +78,7 @@ interface Props {
   isOrderSelected: (data: SignedOBOrder) => boolean;
 }
 
-export const UserPageOrderList = ({ userInfo, className = '', toggleOrderSelection, isOrderSelected }: Props) => {
+export const UserOrderList = ({ userInfo, className = '', toggleOrderSelection, isOrderSelected }: Props) => {
   const { user, chainId, waitForTransaction, getSigner } = useOnboardContext();
 
   const [minPriceVal, setMinPriceVal] = useState('');
@@ -376,7 +376,7 @@ export const UserPageOrderList = ({ userInfo, className = '', toggleOrderSelecti
 
           {data?.map((order, idx) => {
             return (
-              <UserPageOrderListItem
+              <UserOrderListItem
                 key={idx}
                 order={order}
                 orderType={apiFilter.orderType}

@@ -5,13 +5,13 @@ import {
 } from 'src/components/astra/dashboard/dashboard-layout';
 import * as Queries from '@infinityxyz/lib-frontend/types/dto/orders/orders-queries.dto';
 import { GetServerSidePropsContext } from 'next';
-import { UserProfileActivityList } from 'src/components/feed/user-profile-activity-list';
 import { minEventTypes } from 'src/components/astra/astra-filter-popdown';
+import { UserActivityList } from 'src/components/profile/user-activity-list';
 
 export default function ProfileActivityPage(props: ProfileDashboardProps) {
   return (
     <DashboardLayout {...props}>
-      <UserProfileActivityList types={minEventTypes} userAddress={props?.asset.user.address} forUserActivity={true} />
+      <UserActivityList types={minEventTypes} userAddress={props?.asset.user.address} forUserActivity={true} />
     </DashboardLayout>
   );
 }

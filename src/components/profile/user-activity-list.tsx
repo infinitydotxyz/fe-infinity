@@ -3,14 +3,13 @@ import { useState } from 'react';
 import { useUserActivity } from 'src/hooks/api/useUserActivity';
 import { inputBorderColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { AFilterPopdown } from '../astra/astra-filter-popdown';
+import { AFilterPopdown, FeedFilter, filterButtonDefaultOptions } from '../astra/astra-filter-popdown';
 import { CenteredContent, ScrollLoader, Spacer, Spinner } from '../common';
-import { FeedFilter, filterButtonDefaultOptions } from './filter-popdown';
-import { NftOrderEvent } from './user-feed-events/nft-order-event';
-import { NftSaleEvent } from './user-feed-events/nft-sale-event';
-import { NftTransferEvent } from './user-feed-events/nft-transfer-event';
-import { TokenStakeEvent } from './user-feed-events/token-stake-event';
-import { VoteEvent } from './user-feed-events/vote-event';
+import { NftOrderEvent } from '../feed/user-feed-events/nft-order-event';
+import { NftSaleEvent } from '../feed/user-feed-events/nft-sale-event';
+import { NftTransferEvent } from '../feed/user-feed-events/nft-transfer-event';
+import { TokenStakeEvent } from '../feed/user-feed-events/token-stake-event';
+import { VoteEvent } from '../feed/user-feed-events/vote-event';
 
 interface Props {
   userAddress?: string;
@@ -20,7 +19,7 @@ interface Props {
   className?: string;
 }
 
-export const UserProfileActivityList = ({ userAddress, types, className }: Props) => {
+export const UserActivityList = ({ userAddress, types, className }: Props) => {
   const [filter, setFilter] = useState<FeedFilter>({ userAddress, types });
   const { result: activities, isLoading, fetchMore } = useUserActivity(filter.types ?? [], userAddress);
 

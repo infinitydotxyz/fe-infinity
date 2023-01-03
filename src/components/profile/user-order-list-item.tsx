@@ -24,7 +24,7 @@ type UserOrderFilter = {
   collections?: string[];
 };
 
-export const UserPageOrderListItem = ({ order, orderType, onClickActionBtn, selected }: Props) => {
+export const UserOrderListItem = ({ order, orderType, onClickActionBtn, selected }: Props) => {
   const [selectedOrder, setSelectedOrder] = useState<SignedOBOrder | null>(null);
   const [showLowerPriceModal, setShowLowerPriceModal] = useState(false);
   const [startPriceEth, setStartPriceEth] = useState(order.startPriceEth);

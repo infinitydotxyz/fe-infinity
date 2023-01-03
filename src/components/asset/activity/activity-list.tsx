@@ -3,7 +3,12 @@ import { apiGet } from 'src/utils';
 import { ActivityItem, NftEventRec } from './activity-item';
 import { CenteredContent, Spinner } from 'src/components/common';
 import { Token } from '@infinityxyz/lib-frontend/types/core/Token';
-import { assetDefaultOptions, FeedFilter, FilterPopdown, shortEventTypes } from 'src/components/feed/filter-popdown';
+import {
+  AFilterPopdown,
+  FeedFilter,
+  filterButtonDefaultOptions,
+  shortEventTypes
+} from 'src/components/astra/astra-filter-popdown';
 
 interface Props {
   className?: string;
@@ -49,8 +54,8 @@ export const ActivityList: React.FC<Props> = ({ className = '', chainId, collect
   return (
     <div className={className}>
       <div className="mt-4 md:mt-8 flex items-center justify-end">
-        <FilterPopdown
-          options={assetDefaultOptions}
+        <AFilterPopdown
+          options={filterButtonDefaultOptions}
           filter={filter}
           onChange={(f) => {
             setFilter(f);
