@@ -1,5 +1,6 @@
 import { Menu } from '@headlessui/react';
 import { ChainOBOrder, Order, OrderItemToken, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { BaseOrderQuery, MakerOrdersQuery, TakerOrdersQuery } from '@infinityxyz/lib-frontend/types/dto';
 import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user';
 import { useEffect, useState } from 'react';
 import { apiGet, ellipsisAddress, extractErrorMsg, ITEMS_PER_PAGE } from 'src/utils';
@@ -9,6 +10,7 @@ import { fetchOrderNonce } from 'src/utils/orderbookUtils';
 import { inputBorderColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { AButton, AOutlineButton, ATextButton } from '../astra';
+import { ACollectionFilter } from '../astra/astra-collection-filter';
 import {
   ACustomMenuButton,
   ACustomMenuContents,
@@ -101,26 +103,39 @@ export const UserOrderList = ({ userInfo, className = '', toggleOrderSelection, 
       newCursor = '';
     }
 
-    const query: Query = {
+    const baseQuery: BaseOrderQuery = {
       limit: ITEMS_PER_PAGE,
       cursor: newCursor,
-      minPrice: apiFilter.minPrice,
-      maxPrice: apiFilter.maxPrice,
-      numItems: apiFilter.numItems,
-      collections: apiFilter.collections,
+      minPrice: parseFloat(apiFilter.minPrice ?? ''),
+      maxPrice: parseFloat(apiFilter.maxPrice ?? ''),
       orderBy: apiFilter.orderBy
     };
 
+    let query: MakerOrdersQuery | TakerOrdersQuery | BaseOrderQuery = { ...baseQuery };
     if (apiFilter.orderType === 'listings') {
-      query.side = Side.Maker;
-      query.isSellOrder = true;
+      query = {
+        isSellOrder: true,
+        side: Side.Maker
+      };
     } else if (apiFilter.orderType === 'offers-made') {
-      query.side = Side.Maker;
-      query.isSellOrder = false;
+      query = {
+        isSellOrder: false,
+        side: Side.Maker
+      };
     } else if (apiFilter.orderType === 'offers-received') {
-      query.side = Side.Taker;
-      query.isSellOrder = false;
-      query.status = OrderStatus.Active;
+      query = {
+        isSellOrder: false,
+        side: Side.Taker,
+        status: OrderStatus.Active
+      };
+    }
+
+    const collection = apiFilter.collections?.[0] ?? ''; // api only supports 1 collection for now
+    if (collection) {
+      query = {
+        ...query,
+        collection
+      };
     }
 
     const { result } = await apiGet(`/v2/users/${userInfo.address}/orders`, {
@@ -245,7 +260,14 @@ export const UserOrderList = ({ userInfo, className = '', toggleOrderSelection, 
   return (
     <div className={twMerge('min-h-[50vh]', className)}>
       <div className={twMerge(inputBorderColor, 'w-full flex   py-2 border-t-[1px]')}>
-        {/* <ACollectionFilter /> todo: put this back */}
+        <ACollectionFilter
+          setSelectedCollections={(value) => {
+            const newFilter = { ...filter };
+            newFilter.collections = value;
+            setFilter(newFilter);
+            setApiFilter(newFilter);
+          }}
+        />
         <Spacer />
         <ADropdown
           hasBorder={false}

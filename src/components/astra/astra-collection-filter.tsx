@@ -4,7 +4,11 @@ import { apiGet } from 'src/utils';
 import { Checkbox, DebouncedTextInputBox, EZImage } from '../common';
 import { useOrderbook } from '../orderbook/OrderbookContext';
 
-export const ACollectionFilter = () => {
+interface Props {
+  setSelectedCollections?: (collections: string[]) => void;
+}
+
+export const ACollectionFilter = ({ setSelectedCollections }: Props) => {
   const [collections, setCollections] = useState<CollectionSearchDto[]>([]);
   const [allCollections, setAllCollections] = useState<CollectionSearchDto[]>([]);
   const { filters, setFilters } = useOrderbook();
@@ -36,6 +40,9 @@ export const ACollectionFilter = () => {
 
     newFilter.collections = updatedSelections;
     setFilters(newFilter);
+    if (setSelectedCollections) {
+      setSelectedCollections(updatedSelections);
+    }
   };
 
   const collectionCheckboxes = () => {
