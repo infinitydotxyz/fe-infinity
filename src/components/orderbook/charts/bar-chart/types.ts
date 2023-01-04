@@ -1,7 +1,7 @@
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { ChartData } from '../chart-utils';
 
-export type RateGraphData = {
+export type BarChartData = {
   data: ChartData[];
   axisLabel: string;
   tooltip?: React.ReactNode;
@@ -9,19 +9,19 @@ export type RateGraphData = {
   end: number;
 };
 
-export enum RateGraphType {
+export enum BarChartType {
   Offers = 'offers',
   Listings = 'listings'
 }
 
-export type RateGraphProps = {
+export type BarChartProps = {
   graphData: ChartData[];
   width: number;
   height: number;
-  graphType: RateGraphType;
+  graphType: BarChartType;
   onClick: (minPrice: string, maxPrice: string) => void;
   onSelection: (orders: SignedOBOrder[], index: number) => void;
   priceBucket: number;
 };
 
-export type ResponsiveRateGraphProps = Omit<RateGraphProps, 'width' | 'height'>;
+export type ResponsiveBarChartProps = Omit<BarChartProps, 'width' | 'height'>;

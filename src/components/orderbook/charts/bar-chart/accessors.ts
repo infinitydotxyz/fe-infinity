@@ -1,7 +1,7 @@
 import { ChartData } from '../chart-utils';
-import { RateGraphData } from './types';
+import { BarChartData } from './types';
 
 export const getPriceValue = (d: ChartData) => d.price;
 export const getOrder = (d: ChartData) => d.order;
-export const getOrderCount = (d: RateGraphData) => d.data.length;
-export const getAxisLabel = (d: RateGraphData) => d.axisLabel;
+export const getOrderCount = (d: BarChartData) => d.data.length;
+export const getAxisLabel = (d: BarChartData) => d.axisLabel;

@@ -6,7 +6,7 @@ import { twMerge } from 'tailwind-merge';
 import { useOrderbook } from '../OrderbookContext';
 import { ChartOrderDetails } from './chart-order-details';
 import { ChartData } from './chart-utils';
-import { RateGraphType, ResponsiveRateGraph } from './bar-chart';
+import { BarChartType, ResponsiveBarChart } from './bar-chart';
 import SalesScatterChart from './scatter-chart/sales-chart';
 
 const infoBoxStyle = 'flex items-center justify-center opacity-60 font-bold text-lg h-full';
@@ -52,17 +52,17 @@ export const OrderbookCharts: React.FC<OrderBookChartProps> = ({ className = '' 
       };
       return result;
     });
-    setGraphData(gdata); // todo use real data
-    // setGraphData(
-    //   [...new Array(100)].map(
-    //     () =>
-    //       ({
-    //         price: +(Math.random() * (10 - 0.01) + 0.01).toFixed(2),
-    //         isSellOrder: Math.random() > 0.5,
-    //         order: {}
-    //       } as GraphData)
-    //   )
-    // );
+    //setGraphData(gdata); // todo use real data
+    setGraphData(
+      [...new Array(100)].map(
+        () =>
+          ({
+            price: +(Math.random() * (10 - 0.01) + 0.01).toFixed(2),
+            isSellOrder: Math.random() > 0.5,
+            order: {}
+          } as ChartData)
+      )
+    );
 
     // set defaultCollections
     const dcs: Set<string> = new Set<string>(defaultCollections);
@@ -82,21 +82,21 @@ export const OrderbookCharts: React.FC<OrderBookChartProps> = ({ className = '' 
           {/* TODO: Improve loading screen, it looks a bit jumpy cus both charts are re-rendered when the data changes. Perhaps add an individual loader per chart? */}
           {!isLoading && graphData.length > 0 && (
             <>
-              <ResponsiveRateGraph
-                graphType={RateGraphType.Offers}
+              <SalesScatterChart width={600} height={400} />
+
+              <ResponsiveBarChart
+                graphType={BarChartType.Offers}
                 graphData={graphData}
                 onClick={handleOnClick}
                 onSelection={handleSelect}
               />
 
-              <ResponsiveRateGraph
-                graphType={RateGraphType.Listings}
+              <ResponsiveBarChart
+                graphType={BarChartType.Listings}
                 graphData={graphData}
                 onClick={handleOnClick}
                 onSelection={handleSelect}
               />
-
-              <SalesScatterChart width={800} height={600} />
             </>
           )}
 

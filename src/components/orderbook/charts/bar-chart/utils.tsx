@@ -1,24 +1,24 @@
 import { numStr } from 'src/utils';
 import { ChartData } from '../chart-utils';
 import { getPriceValue } from './accessors';
-import { RateGraphData, RateGraphType } from './types';
+import { BarChartData, BarChartType } from './types';
 
 /**
- * Utility function to convert a raw `GraphData` array to a `RateGraphData` array of values.
+ * Utility function to convert a raw `ChartData` array to a `RateGraphData` array of values.
  */
-export function convertGraphData(
+export function convertChartData(
   data: ChartData[],
   width: number,
-  graphType: RateGraphType,
+  chartType: BarChartType,
   priceBucket: number
-): RateGraphData[] {
+): BarChartData[] {
   const columnWidth = 80;
 
   if (width < columnWidth || data.length === 0) {
     return [];
   }
 
-  const newData: RateGraphData[] = [];
+  const newData: BarChartData[] = [];
   const columns = Math.ceil(width / columnWidth);
   const values = data.map(getPriceValue);
   const minPrice = Math.min(...values);
@@ -37,9 +37,9 @@ export function convertGraphData(
   for (const item of data) {
     const i = Math.floor((item.price - minPrice) / range);
 
-    if (item.isSellOrder && graphType === RateGraphType.Listings) {
+    if (item.isSellOrder && chartType === BarChartType.Listings) {
       newData[i].data.push(item);
-    } else if (!item.isSellOrder && graphType === RateGraphType.Offers) {
+    } else if (!item.isSellOrder && chartType === BarChartType.Offers) {
       newData[i].data.push(item);
     }
   }

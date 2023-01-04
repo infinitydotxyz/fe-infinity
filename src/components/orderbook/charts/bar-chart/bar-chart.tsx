@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { AnimatedAxis, AnimatedBarSeries, AnimatedGrid, Tooltip, XYChart } from '@visx/xychart';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { getAxisLabel, getOrder, getOrderCount } from './accessors';
-import { RateGraphData, RateGraphProps as RateGraphProps, ResponsiveRateGraphProps } from './types';
-import { convertGraphData } from './utils';
+import { BarChartData, BarChartProps as BarChartProps, ResponsiveBarChartProps } from './types';
+import { convertChartData } from './utils';
 import { TooltipRenderer } from '../tooltip';
 import { numStr } from 'src/utils';
 import { EthSymbol } from 'src/components/common';
@@ -21,7 +21,7 @@ const rateGraphMargins = {
 
 const priceBuckets = [0.01, 0.05, 0.1, 0.5, 1, 5, 10, 100];
 
-export const ResponsiveRateGraph: React.FC<Omit<ResponsiveRateGraphProps, 'priceBucket'>> = (props) => {
+export const ResponsiveBarChart: React.FC<Omit<ResponsiveBarChartProps, 'priceBucket'>> = (props) => {
   const [selectedPriceBucket, setSelectedPriceBucket] = useState(0.01);
 
   return (
@@ -40,15 +40,13 @@ export const ResponsiveRateGraph: React.FC<Omit<ResponsiveRateGraphProps, 'price
         ))}
       </select>
       <ParentSize debounceTime={10}>
-        {({ width, height }) => (
-          <RateGraph {...props} priceBucket={selectedPriceBucket} width={width} height={height} />
-        )}
+        {({ width, height }) => <BarChart {...props} priceBucket={selectedPriceBucket} width={width} height={height} />}
       </ParentSize>
     </ChartBox>
   );
 };
 
-export const RateGraph: React.FC<RateGraphProps> = ({
+const BarChart: React.FC<BarChartProps> = ({
   graphData,
   width: outerWidth,
   height: outerHeight,
@@ -61,7 +59,7 @@ export const RateGraph: React.FC<RateGraphProps> = ({
   const width = outerWidth - rateGraphMargins.left - rateGraphMargins.right;
   const height = outerHeight - rateGraphMargins.top - rateGraphMargins.bottom;
 
-  const data = convertGraphData(graphData, width, graphType, priceBucket);
+  const data = convertChartData(graphData, width, graphType, priceBucket);
   const axisLabels = data.map(getAxisLabel);
 
   if (data.every((d) => d.data.length === 0)) {
@@ -126,7 +124,7 @@ export const RateGraph: React.FC<RateGraphProps> = ({
         showVerticalCrosshair
         showSeriesGlyphs
         renderTooltip={({ tooltipData }) => {
-          const nearest = tooltipData?.nearestDatum?.datum as unknown as RateGraphData;
+          const nearest = tooltipData?.nearestDatum?.datum as unknown as BarChartData;
           return (
             <TooltipRenderer
               title={`${nearest.data.length} ${graphType}`}
