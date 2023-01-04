@@ -4,12 +4,14 @@ import {
   DashboardProps,
   getServerSideProps as getDashboardServerSideProps
 } from 'src/components/astra/dashboard/dashboard-layout';
-import { CenteredContent } from 'src/components/common';
+import { CommunityFeed } from 'src/components/feed/community-feed';
+import { useDashboardContext } from 'src/utils/context/DashboardContext';
 
 export default function ActivityPage(props: DashboardProps) {
+  const { collection } = useDashboardContext();
   return (
     <DashboardLayout {...props}>
-      <CenteredContent>activity goes here</CenteredContent>
+      <CommunityFeed collection={collection!}></CommunityFeed>
     </DashboardLayout>
   );
 }

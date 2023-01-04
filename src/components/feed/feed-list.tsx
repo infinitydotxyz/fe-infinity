@@ -92,8 +92,8 @@ export const FeedList = ({
         <div className="text-4xl">Feed</div>
 
         <Spacer />
-        <Button className="mr-3" variant="roundBorder" size="round" onClick={() => fetchActivity(true)}>
-          <IoMdRefresh className={iconButtonStyle} />
+        <Button className="mr-3 hover:scale-110" variant="roundBorder" size="small" onClick={() => fetchActivity(true)}>
+          {isLoading ? <IoMdRefresh className={iconButtonStyle} /> : <IoMdRefresh className={iconButtonStyle} />}
         </Button>
 
         <AFilterPopdown

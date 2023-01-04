@@ -1,10 +1,7 @@
-import React from 'react';
 import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
-import { FeedList } from './feed-list';
-import { TwitterSupporterList } from './twitter-supporter-list';
-import { TopHolderList } from './top-holder-list';
 import { twMerge } from 'tailwind-merge';
 import { globalEventTypes } from '../astra/astra-filter-popdown';
+import { FeedList } from './feed-list';
 
 interface Props {
   collection: BaseCollection;
@@ -35,17 +32,10 @@ export const CommunityFeed = ({ collection, className }: Props) => {
   }
   // }
 
-  const rightSide = (
-    <div>
-      <TwitterSupporterList collection={collection} />
-      <TopHolderList collection={collection} />
-    </div>
-  );
 
   return (
-    <div className={twMerge('flex gap-10', className)}>
-      <div className="w-2/3">{content}</div>
-      <div className="w-1/3">{collection && rightSide}</div>
+    <div className={twMerge('flex', className)}>
+      <div className="w-full px-10 py-10">{content}</div>
     </div>
   );
 };
