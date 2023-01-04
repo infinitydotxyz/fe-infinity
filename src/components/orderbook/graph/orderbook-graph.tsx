@@ -12,7 +12,7 @@ import { ResponsiveRateGraph, RateGraphType } from './rate-graph';
 import { ResetButton } from './reset-button';
 import { textClr } from 'src/utils/ui-constants';
 
-const infoBoxStyle = 'flex items-center justify-center text-black opacity-60 font-bold text-lg h-full';
+const infoBoxStyle = 'flex items-center justify-center opacity-60 font-bold text-lg h-full';
 
 export type OrderBookGraphProps = {
   className?: string;

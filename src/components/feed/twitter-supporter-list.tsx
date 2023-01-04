@@ -16,7 +16,7 @@ interface Props2 {
 const TwitterSupporter = ({ tweet }: Props2) => {
   return (
     <div className={twMerge(standardCard, 'flex justify-between items-center overflow-clip')}>
-      <div className="flex mr-2 mb-3 items-center">
+      <div className="flex py-1 items-center">
         <EZImage src={tweet.author.profileImageUrl} className="w-12 h-12  overflow-clip rounded-full" />
         <div className="ml-5">
           <div className="font-bold font-heading">{tweet.author.name}</div>
@@ -58,7 +58,7 @@ export const TwitterSupporterList = ({ collection }: Props) => {
 
     const ep = `/collections/${collection.chainId}:${collection.address}/mentions`;
     const { result, error } = await apiGet(ep, {
-      query: { limit: 3 }
+      query: { limit: 10 }
     });
 
     setIsLoading(false);

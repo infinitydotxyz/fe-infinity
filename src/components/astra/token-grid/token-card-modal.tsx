@@ -138,7 +138,7 @@ export const TokenCardModal = ({ data, modalOpen, setModalOpen }: Props): JSX.El
 
               {data.description && (
                 <>
-                  <p className="font-body text-black mb-1 mt-6">Description</p>
+                  <p className="font-body mb-1 mt-6">Description</p>
                   <div>
                     <ReadMoreText text={data.description ?? ''} min={100} ideal={150} max={300} />
                   </div>

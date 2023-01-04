@@ -13,19 +13,19 @@ export const OrderDetailModal = ({ order, isOpen, onClose }: Props) => {
   const tableItems: SimpleTableItem[] = [
     {
       title: <div className="">Type</div>,
-      value: <div className="text-black font-heading">{order.isSellOrder ? 'Listing' : 'Offer'}</div>
+      value: <div className="font-heading">{order.isSellOrder ? 'Listing' : 'Offer'}</div>
     },
     {
       title: <div className="">Price</div>,
-      value: <div className="text-black font-heading">{order.startPriceEth}</div>
+      value: <div className="font-heading">{order.startPriceEth}</div>
     },
     {
       title: <div className=""># NFTs</div>,
-      value: <div className="text-black font-heading">{order.numItems}</div>
+      value: <div className="font-heading">{order.numItems}</div>
     },
     {
       title: <div className="">Expiry date</div>,
-      value: <div className="text-black font-heading">{new Date(order.endTimeMs).toLocaleString()}</div>
+      value: <div className="font-heading">{new Date(order.endTimeMs).toLocaleString()}</div>
     }
   ];
 

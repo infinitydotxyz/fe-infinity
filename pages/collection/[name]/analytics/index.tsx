@@ -5,11 +5,22 @@ import {
   getServerSideProps as getDashboardServerSideProps
 } from 'src/components/astra/dashboard/dashboard-layout';
 import { CenteredContent } from 'src/components/common';
+import { TopHolderList } from 'src/components/feed/top-holder-list';
+import { TwitterSupporterList } from 'src/components/feed/twitter-supporter-list';
+import { useDashboardContext } from 'src/utils/context/DashboardContext';
 
 export default function AnalyticsPage(props: DashboardProps) {
+  const { collection } = useDashboardContext();
   return (
     <DashboardLayout {...props}>
-      <CenteredContent>analytics go here</CenteredContent>
+      <div className="flex space-x-10 px-10 py-10">
+        <div className="flex-1">
+          <TopHolderList collection={collection!}></TopHolderList>
+        </div>
+        <div className="flex-1">
+          <TwitterSupporterList collection={collection!}></TwitterSupporterList>
+        </div>
+      </div>
     </DashboardLayout>
   );
 }

@@ -191,7 +191,7 @@ const RadioButtonCard: React.FC<{ value: string | number; label: string; descrip
                 </RadioGroup.Description>
               )}
             </div>
-            <input type="radio" checked={checked} className="text-black" readOnly />
+            <input type="radio" checked={checked} readOnly />
           </>
         )}
       </RadioGroup.Option>

@@ -31,7 +31,7 @@ export const ActivityItem = ({ item, token }: Props) => {
         </NextLink>
         <div className="flex justify-between w-full mx-8">
           <div className="w-1/6">
-            {/* <div className="text-black font-bold font-body">
+            {/* <div className="font-bold font-body">
               <a href={`/collection/${item.collectionSlug}`}>{item.collectionName}</a>
             </div> */}
             <div className="text-gray-400">Token</div>

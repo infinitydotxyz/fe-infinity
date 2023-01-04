@@ -94,7 +94,7 @@ export const TopHolderList = ({ collection }: Props) => {
 
   return (
     <>
-      <div className="text-2xl my-6 font-medium">Top holders</div>
+      <div className="text-2xl mb-6 font-medium">Top holders</div>
 
       {tweetList.map((e, index) => {
         return <TopHolder topOwner={e} index={index} key={e.ownerAddress} />;
