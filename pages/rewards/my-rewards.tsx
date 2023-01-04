@@ -3,7 +3,6 @@ import { UserCumulativeRewardsDto } from '@infinityxyz/lib-frontend/types/dto';
 import { round } from '@infinityxyz/lib-frontend/utils';
 import React, { useState } from 'react';
 import { Button, Heading, Spacer, toastInfo, toastSuccess } from 'src/components/common';
-import { UniswapModal } from 'src/components/common/uniswap-modal';
 import { StakeTokensModal } from 'src/components/rewards/stake-tokens-modal';
 import { UnstakeTokensModal } from 'src/components/rewards/unstake-tokens-modal';
 import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
@@ -41,7 +40,6 @@ const RewardsSection = (props: RewardsSectionProps) => {
 
 const MyRewardsPage = () => {
   const [showStakeTokensModal, setShowStakeTokensModal] = useState(false);
-  const [showBuyTokensModal, setShowBuyTokensModal] = useState(false);
   const [showUnstakeTokensModal, setShowUnstakeTokensModal] = useState(false);
   const { result: quota, mutate: mutateQuota } = useUserCurationQuota();
   const { result: userRewards } = useUserRewards();
@@ -184,12 +182,6 @@ const MyRewardsPage = () => {
               <Spacer />
             </div>
             <div className="w-full flex mt-4 items-center flex-wrap">
-              {/* <Button size="large" onClick={() => setShowBuyTokensModal(true)}>
-                Buy ${TOKEN.symbol}
-              </Button>
-
-              <Spacer /> */}
-
               <Button size="large" onClick={() => setShowStakeTokensModal(true)}>
                 Stake
               </Button>
@@ -296,8 +288,6 @@ const MyRewardsPage = () => {
         />
       )}
       {showUnstakeTokensModal && <UnstakeTokensModal onClose={() => setShowUnstakeTokensModal(false)} />}
-
-      {showBuyTokensModal && <UniswapModal onClose={() => setShowBuyTokensModal(false)} />}
     </div>
   );
 };

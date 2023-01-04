@@ -25,7 +25,6 @@
     "@next/bundle-analyzer": "^13.0.6",
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/typography": "^0.5.8",
-    "@uniswap/widgets": "^2.22.10",
     "@visx/tooltip": "^2.16.0",
     "@visx/xychart": "^2.16.0",
     "@web3-onboard/coinbase": "^2.2.0",
