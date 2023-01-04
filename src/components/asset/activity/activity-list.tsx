@@ -53,7 +53,7 @@ export const ActivityList: React.FC<Props> = ({ className = '', chainId, collect
 
   return (
     <div className={className}>
-      <div className="mt-4 md:mt-8 flex items-center justify-end">
+      <div className="flex items-center justify-end">
         <AFilterPopdown
           options={filterButtonDefaultOptions}
           filter={filter}
@@ -70,7 +70,7 @@ export const ActivityList: React.FC<Props> = ({ className = '', chainId, collect
       ) : null}
 
       {activityList.length > 0 ? (
-        <div className="mt-6">
+        <div className="">
           {activityList.map((item, idx) => {
             return <ActivityItem key={item + '_' + idx} item={item} token={token} />;
           })}
@@ -78,7 +78,7 @@ export const ActivityList: React.FC<Props> = ({ className = '', chainId, collect
       ) : null}
 
       {hasNoData ? (
-        <div className="bg-theme-light-200 px-6 sm:px-6 md:px-8 lg:px-16 mt-6 md:pt-11 md:pb-11 rounded-3xl text-center font-heading">
+        <div className="bg-gray-100 px-6 sm:px-6 md:px-8 lg:px-16 mt-6 md:pt-11 md:pb-11 rounded-3xl text-center font-heading">
           No Activity
         </div>
       ) : null}

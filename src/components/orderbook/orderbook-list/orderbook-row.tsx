@@ -11,10 +11,9 @@ import { OrderbookRowButton } from './orderbook-row-button';
 
 type Props = {
   order: SignedOBOrder;
-  isFilterOpen: boolean;
 };
 
-export const OrderbookRow = ({ order, isFilterOpen }: Props) => {
+export const OrderbookRow = ({ order }: Props) => {
   const [selectedOrder, setSelectedOrder] = useState<SignedOBOrder | null>(null);
 
   const valueDiv = (dataColumn: DataColumn) => {
@@ -68,7 +67,7 @@ export const OrderbookRow = ({ order, isFilterOpen }: Props) => {
   let gridTemplate = '';
 
   defaultDataColumns(order).forEach((data) => {
-    if (isFilterOpen === true && (data.name === 'From' || data.name === 'Date')) {
+    if (data.name === 'From' || data.name === 'Date') {
       // isFilterOpen => don't show those columns.
     } else {
       gridTemplate += ` ${data.width}`;
@@ -76,7 +75,7 @@ export const OrderbookRow = ({ order, isFilterOpen }: Props) => {
   });
 
   return (
-    <div className="rounded-3xl mb-3 px-8 py-6 w-full bg-theme-light-200">
+    <div className="rounded-3xl mb-3 px-8 py-6 w-full bg-gray-100">
       {/* for larger screen - show row summary: */}
       <div className="items-center w-full hidden lg:grid" style={{ gridTemplateColumns: gridTemplate }}>
         {defaultDataColumns(order).map((data) => {
@@ -92,7 +91,7 @@ export const OrderbookRow = ({ order, isFilterOpen }: Props) => {
             );
           }
 
-          if (isFilterOpen === true && (data.name === 'From' || data.name === 'Date')) {
+          if (data.name === 'From' || data.name === 'Date') {
             return null;
           }
 

@@ -29,6 +29,7 @@ export type OBFilters = {
   numberOfNfts?: number;
   traitTypes?: string[];
   traitValues?: string[];
+  orderBy?: string;
 };
 
 export const SORT_FILTERS = {
@@ -51,7 +52,7 @@ export const SORT_LABELS: {
   [SORT_FILTERS.tokenIdNumeric]: 'Token ID (numeric)'
 };
 
-export const getSortLabel = (key?: string): string => {
+export const getSortLabel = (key?: string, defaultLabel?: string): string => {
   let result = '';
 
   if (key) {
@@ -59,7 +60,7 @@ export const getSortLabel = (key?: string): string => {
   }
 
   // default if blank
-  return result || SORT_LABELS[SORT_FILTERS.tokenIdNumeric];
+  return result || defaultLabel || SORT_LABELS[SORT_FILTERS.tokenIdNumeric];
 };
 
 // ============================================================
@@ -137,6 +138,7 @@ const parseRouterQueryParamsToFilters = (query: ParsedUrlQuery): OBFilters => {
     orderType: _orderType,
     minPrice,
     maxPrice,
+    orderBy,
     numberOfNfts,
     sort
   } = query;
@@ -175,6 +177,10 @@ const parseRouterQueryParamsToFilters = (query: ParsedUrlQuery): OBFilters => {
 
   if (maxPrice) {
     newFilters.maxPrice = maxPrice as string;
+  }
+
+  if (orderBy) {
+    newFilters.orderBy = orderBy as string;
   }
 
   if (numberOfNfts) {
@@ -351,6 +357,10 @@ export const OrderbookProvider = ({ children, limit = ITEMS_PER_PAGE, ...props }
         ...parsedFilters
       };
 
+      if (parsedFilters.minPrice || parsedFilters.maxPrice) {
+        v1Query.orderBy = Queries.OrderBy.Price;
+      }
+
       let options: {
         endpoint: string;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -360,7 +370,8 @@ export const OrderbookProvider = ({ children, limit = ITEMS_PER_PAGE, ...props }
       const v2OrderBy: Record<string, Queries.OrderBy> = {
         startPriceEth: Queries.OrderBy.Price,
         startTimeMs: Queries.OrderBy.StartTime,
-        endTimeMs: Queries.OrderBy.EndTime
+        endTimeMs: Queries.OrderBy.EndTime,
+        price: Queries.OrderBy.Price
       };
 
       const baseQuery: Queries.BaseOrderQuery = {

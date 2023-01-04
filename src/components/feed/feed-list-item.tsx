@@ -180,7 +180,7 @@ export const FeedListItem = ({
         return (
           <EZImage
             src={activity?.paymentToken || activity?.image}
-            className="border rounded-full overflow-clip shrink-0 w-10 h-10 bg-theme-light-200"
+            className="border rounded-full overflow-clip shrink-0 w-10 h-10 bg-gray-100"
           />
         );
 
@@ -192,7 +192,7 @@ export const FeedListItem = ({
         return (
           <EZImage
             src={activity?.image || collectionProfileImage}
-            className="border rounded-full overflow-clip shrink-0 w-10 h-10 bg-theme-light-200"
+            className="border rounded-full overflow-clip shrink-0 w-10 h-10 bg-gray-100"
           />
         );
 
@@ -200,7 +200,7 @@ export const FeedListItem = ({
         return (
           <NewsImage
             src={activity?.image || collectionProfileImage}
-            className="border rounded-full overflow-clip shrink-0 w-10 h-10 bg-theme-light-200"
+            className="border rounded-full overflow-clip shrink-0 w-10 h-10 bg-gray-100"
           />
         );
 
@@ -208,7 +208,7 @@ export const FeedListItem = ({
         return (
           <EZImage
             src={activity?.image || collectionProfileImage || person.src}
-            className="border rounded-full overflow-clip shrink-0 w-10 h-10 bg-theme-light-200"
+            className="border rounded-full overflow-clip shrink-0 w-10 h-10 bg-gray-100"
           />
         );
 
@@ -216,7 +216,7 @@ export const FeedListItem = ({
         return (
           <EZImage
             src={activity?.image || collectionProfileImage}
-            className="border rounded-full overflow-clip shrink-0 w-10 h-10 bg-theme-light-200"
+            className="border rounded-full overflow-clip shrink-0 w-10 h-10 bg-gray-100"
           />
         );
 
