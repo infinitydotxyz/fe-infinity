@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
-import { AnimatedAxis, AnimatedBarSeries, AnimatedGrid, Tooltip, XYChart } from '@visx/xychart';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
-import { getAxisLabel, getOrder, getOrderCount } from './accessors';
-import { BarChartData, BarChartProps as BarChartProps, ResponsiveBarChartProps } from './types';
-import { convertChartData } from './utils';
-import { TooltipRenderer } from '../tooltip';
-import { numStr } from 'src/utils';
+import { AnimatedAxis, AnimatedBarSeries, AnimatedGrid, Tooltip, XYChart } from '@visx/xychart';
+import React, { useState } from 'react';
 import { EthSymbol } from 'src/components/common';
-import { useChartTheme } from './use-theme';
+import { numStr } from 'src/utils';
 import { textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { ChartBox } from '../chart-box';
+import { TooltipRenderer } from '../tooltip';
+import { getAxisLabel, getOrder, getOrderCount } from './accessors';
+import { BarChartData, BarChartProps, ResponsiveBarChartProps } from './types';
+import { useChartTheme } from './use-theme';
+import { convertChartData } from './utils';
 
-const rateGraphMargins = {
+const barChartMargins = {
   top: 30,
   right: 0,
   bottom: 30,
-  left: 0
+  left: -40
 };
 
 const priceBuckets = [0.01, 0.05, 0.1, 0.5, 1, 5, 10, 100];
@@ -56,8 +56,8 @@ const BarChart: React.FC<BarChartProps> = ({
   priceBucket
 }) => {
   const { theme } = useChartTheme();
-  const width = outerWidth - rateGraphMargins.left - rateGraphMargins.right;
-  const height = outerHeight - rateGraphMargins.top - rateGraphMargins.bottom;
+  const width = outerWidth - barChartMargins.left - barChartMargins.right;
+  const height = outerHeight - barChartMargins.top - barChartMargins.bottom;
 
   const data = convertChartData(graphData, width, graphType, priceBucket);
   const axisLabels = data.map(getAxisLabel);
@@ -86,15 +86,15 @@ const BarChart: React.FC<BarChartProps> = ({
         hideAxisLine={true}
         tickValues={axisLabels}
         label={`${EthSymbol} price`}
-        labelOffset={25}
+        labelOffset={15}
         hideZero={true}
       />
       <AnimatedAxis
         orientation="left"
-        tickFormat={(v) => `${v}`}
+        tickFormat={(v) => `${parseInt(v)}`}
         hideAxisLine={true}
         label={`# ${graphType}`}
-        labelOffset={15}
+        labelOffset={10}
         // animationTrajectory="center"
       />
       <AnimatedGrid columns={false} strokeDasharray="6,6" />

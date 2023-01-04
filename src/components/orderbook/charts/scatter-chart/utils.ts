@@ -13,8 +13,8 @@ interface Dimensions {
 
 function getDimensions({ width, height }: { width: number; height: number }): Dimensions {
   const margin = {
-    top: 100,
-    right: 10,
+    top: 10,
+    right: 0,
     bottom: 60,
     left: 70
   };

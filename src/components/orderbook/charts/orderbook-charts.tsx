@@ -4,10 +4,10 @@ import { Spinner } from 'src/components/common';
 import { textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { useOrderbook } from '../OrderbookContext';
+import { BarChartType, ResponsiveBarChart } from './bar-chart';
 import { ChartOrderDetails } from './chart-order-details';
 import { ChartData } from './chart-utils';
-import { BarChartType, ResponsiveBarChart } from './bar-chart';
-import SalesScatterChart from './scatter-chart/sales-chart';
+import { ResponsiveSalesScatterChart, ScatterChartType } from './scatter-chart/scatter-chart';
 
 const infoBoxStyle = 'flex items-center justify-center opacity-60 font-bold text-lg h-full';
 
@@ -82,7 +82,7 @@ export const OrderbookCharts: React.FC<OrderBookChartProps> = ({ className = '' 
           {/* TODO: Improve loading screen, it looks a bit jumpy cus both charts are re-rendered when the data changes. Perhaps add an individual loader per chart? */}
           {!isLoading && graphData.length > 0 && (
             <>
-              <SalesScatterChart width={600} height={400} />
+              <ResponsiveSalesScatterChart graphType={ScatterChartType.Sales} />
 
               <ResponsiveBarChart
                 graphType={BarChartType.Offers}

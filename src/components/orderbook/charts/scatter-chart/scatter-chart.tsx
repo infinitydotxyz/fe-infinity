@@ -1,6 +1,7 @@
 import { AxisBottom, AxisLeft } from '@visx/axis';
 import { localPoint } from '@visx/event';
 import { Group } from '@visx/group';
+import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { scaleLinear } from '@visx/scale';
 import { Circle } from '@visx/shape';
 import { Text } from '@visx/text';
@@ -8,15 +9,55 @@ import { defaultStyles, TooltipWithBounds, useTooltip } from '@visx/tooltip';
 import { voronoi } from '@visx/voronoi';
 import { extent } from 'd3';
 import { MouseEvent, TouchEvent, useCallback, useMemo, useState } from 'react';
-import { WeatherEntry, demoData } from './demoData';
+import { textClr } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
+import { ChartBox } from '../chart-box';
+import { demoData, WeatherEntry } from './demoData';
 import { cloudAccessor, getDimensions, xAccessor, yAccessor } from './utils';
 
-interface Props {
-  width: number;
-  height: number;
+export enum ScatterChartType {
+  Sales = 'sales'
 }
 
-export default function SalesScatterChart({ width, height }: Props) {
+type ScatterChartProps = {
+  width: number;
+  height: number;
+  graphType: ScatterChartType;
+  timeBucket: string;
+};
+
+const timeBuckets = ['1h', '24h', '1d', '1w', '1m', '1y'];
+
+export type ResponsiveScatterChartProps = Omit<ScatterChartProps, 'width' | 'height'>;
+
+export const ResponsiveSalesScatterChart: React.FC<Omit<ResponsiveScatterChartProps, 'timeBucket'>> = (props) => {
+  const [selectedTimeBucket, setSelectedTimeBucket] = useState('1w');
+
+  return (
+    <ChartBox className="h-full">
+      <select
+        onChange={(e) => setSelectedTimeBucket(e.target.value)}
+        className={twMerge(
+          'form-select rounded-full bg-transparent border-ring-gray-400 focus:ring-gray-400 focus:border-none float-right',
+          textClr
+        )}
+      >
+        {timeBuckets.map((filter) => (
+          <option value={filter} selected={filter === selectedTimeBucket}>
+            {filter}
+          </option>
+        ))}
+      </select>
+      <ParentSize debounceTime={10}>
+        {({ width, height }) => (
+          <ScatterChart {...props} timeBucket={selectedTimeBucket} width={width} height={height} />
+        )}
+      </ParentSize>
+    </ChartBox>
+  );
+};
+
+function ScatterChart({ width, height }: ScatterChartProps) {
   const {
     showTooltip,
     hideTooltip,
@@ -35,8 +76,6 @@ export default function SalesScatterChart({ width, height }: Props) {
     width,
     height
   });
-
-  const [activeEntry] = useState<WeatherEntry>();
 
   const xScale = useMemo(
     () =>
@@ -119,16 +158,6 @@ export default function SalesScatterChart({ width, height }: Props) {
     [xScale, yScale, cloudsColorScale]
   );
 
-  const activeDot = activeEntry && (
-    <Circle
-      key={`active-${activeEntry.date}`}
-      cx={xScale(xAccessor(activeEntry))}
-      cy={yScale(yAccessor(activeEntry))}
-      r={7}
-      fill={'#fff'} // todo: based on theme
-    />
-  );
-
   const axisLeftLabel = (
     <Text textAnchor="middle" verticalAnchor="end" angle={-90} y={boundedHeight / 2} x={0} dx={-50}>
       Relative humidity
@@ -142,7 +171,7 @@ export default function SalesScatterChart({ width, height }: Props) {
   );
 
   return (
-    <div className={'relative' /* needed for the tooltip */}>
+    <div>
       <svg
         width={width}
         height={height}
@@ -178,7 +207,6 @@ export default function SalesScatterChart({ width, height }: Props) {
           />
           {axisBottomLabel}
           {dots}
-          {activeDot}
         </Group>
       </svg>
 
