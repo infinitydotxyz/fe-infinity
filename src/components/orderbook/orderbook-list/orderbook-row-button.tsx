@@ -15,8 +15,6 @@ type Props = {
 export const OrderbookRowButton = ({ order, outlineButtons = false }: Props) => {
   const { user, checkSignedIn } = useOnboardContext();
 
-  const { addCartItem, setOrderDrawerOpen } = useOrderContext();
-
   const getCartItem = (order: SignedOBOrder): OrderCartItem => {
     const cartItem: OrderCartItem = {
       chainId: order?.chainId as ChainId,
@@ -60,29 +58,21 @@ export const OrderbookRowButton = ({ order, outlineButtons = false }: Props) => 
   };
 
   const onClickEdit = (order: SignedOBOrder) => {
-    addCartItem(getCartItem(order));
-    setOrderDrawerOpen(true);
+    // todo open modal here
   };
 
   const onClickBidHigher = (order: SignedOBOrder) => {
     // add to Cart as a New Buy Order:
     // todo: steve - addCartItem needs to know whether order is a single collection single nft order
     // or single collection multi nft order  or a multi-collection order for proper image display
-    const cartItem = getCartItem(order);
-    addCartItem({
-      ...cartItem,
-      isSellOrder: false
-    });
-    setOrderDrawerOpen(true);
+    // todo open modal here
   };
 
   const onClickBuySell = (order: SignedOBOrder) => {
     if (!checkSignedIn()) {
       return;
     }
-    console.log('onClickBuySell', order);
-
-    // fulfillDrawerParams.addOrder(order);
+    console.log('onClickBuySell', order); // todo open modal here
   };
 
   const isOwner = order.makerAddress === user?.address;
