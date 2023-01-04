@@ -2,7 +2,7 @@ import { DistributionType } from '@infinityxyz/lib-frontend/types/core';
 import { UserCumulativeRewardsDto } from '@infinityxyz/lib-frontend/types/dto';
 import { round } from '@infinityxyz/lib-frontend/utils';
 import React, { useState } from 'react';
-import { Button, Heading, Spacer, toastInfo, toastSuccess } from 'src/components/common';
+import { Button, Spacer, toastInfo, toastSuccess } from 'src/components/common';
 import { StakeTokensModal } from 'src/components/rewards/stake-tokens-modal';
 import { UnstakeTokensModal } from 'src/components/rewards/unstake-tokens-modal';
 import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
@@ -26,9 +26,7 @@ const RewardsSection = (props: RewardsSectionProps) => {
     <div className="flex-col bg-theme-gray-100 px-10 rounded-2xl   w-full">
       <div className="flex w-full">
         <div className="w-1/2">
-          <div className="text-4xl font-body font-medium">
-            {props.title}
-          </div>
+          <div className="text-4xl font-body font-medium">{props.title}</div>
           {props.subTitle && <div className="w-1/2 mt-5 text-theme-gray-700">{props.subTitle}</div>}
         </div>
         {props?.sideInfo && <div className="w-1/2">{props.sideInfo}</div>}

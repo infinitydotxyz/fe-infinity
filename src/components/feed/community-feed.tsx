@@ -32,7 +32,6 @@ export const CommunityFeed = ({ collection, className }: Props) => {
   }
   // }
 
-
   return (
     <div className={twMerge('flex', className)}>
       <div className="w-full px-10 py-10">{content}</div>

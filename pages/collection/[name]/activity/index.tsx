@@ -11,7 +11,7 @@ export default function ActivityPage(props: DashboardProps) {
   const { collection } = useDashboardContext();
   return (
     <DashboardLayout {...props}>
-      <CommunityFeed collection={collection!}></CommunityFeed>
+      {collection && <CommunityFeed collection={collection}></CommunityFeed>}
     </DashboardLayout>
   );
 }

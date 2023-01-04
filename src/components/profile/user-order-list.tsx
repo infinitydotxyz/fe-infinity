@@ -51,19 +51,6 @@ enum OrderBy {
   EndTime = 'endTime'
 }
 
-type Query = {
-  limit: number;
-  cursor: string;
-  isSellOrder?: boolean;
-  minPrice?: string;
-  maxPrice?: string;
-  numItems?: string;
-  side?: Side;
-  status?: OrderStatus;
-  collections?: string[];
-  orderBy?: OrderBy;
-};
-
 export type UserOrderFilter = {
   orderType?: 'listings' | 'offers-made' | 'offers-received' | '';
   minPrice?: string;

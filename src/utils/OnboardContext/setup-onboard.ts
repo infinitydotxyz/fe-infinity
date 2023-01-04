@@ -5,7 +5,6 @@ import ledgerModule from '@web3-onboard/ledger';
 import walletConnectModule from '@web3-onboard/walletconnect';
 import coinbaseModule from '@web3-onboard/coinbase';
 import torusModule from '@web3-onboard/torus';
-import keepkeyModule from '@web3-onboard/keepkey';
 import gnosisModule from '@web3-onboard/gnosis';
 import blocknativeLogo from 'src/images/blocknative-logo';
 import blocknativeIcon from 'src/images/blocknative-icon';
@@ -19,7 +18,6 @@ const coinbase = coinbaseModule();
 const walletConnect = walletConnectModule();
 const torus = torusModule();
 const ledger = ledgerModule();
-const keepkey = keepkeyModule();
 const gnosis = gnosisModule();
 
 const trezorOptions = {
@@ -31,7 +29,7 @@ const trezor = trezorModule(trezorOptions);
 
 export const setupOnboard = () => {
   init({
-    wallets: [injected, ledger, coinbase, trezor, walletConnect, gnosis, keepkey, torus],
+    wallets: [injected, ledger, coinbase, trezor, walletConnect, gnosis, torus],
     chains: [
       {
         id: '0x1',

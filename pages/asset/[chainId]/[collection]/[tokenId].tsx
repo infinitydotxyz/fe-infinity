@@ -143,6 +143,7 @@ const AssetDetailContent = ({ chainId, collectionAddress, tokenId }: Props) => {
     ? `${tokenMetadata.name} - ${token.collectionName}`
     : tokenMetadata.name || token.collectionName || 'brrrr';
 
+  // eslint-disable-next-line require-await
   const onClickBuy = async () => {
     try {
       // const signedListing = await fetchUserSignedOBOrder(token?.ordersSnippet?.listing?.orderItem?.id);
@@ -155,6 +156,7 @@ const AssetDetailContent = ({ chainId, collectionAddress, tokenId }: Props) => {
     }
   };
 
+  // eslint-disable-next-line require-await
   const onClickAcceptOffer = async () => {
     try {
       // const signedOffer = await fetchUserSignedOBOrder(token?.ordersSnippet?.offer?.orderItem?.id);

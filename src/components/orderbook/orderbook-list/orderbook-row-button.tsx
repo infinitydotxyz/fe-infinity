@@ -1,9 +1,8 @@
-import { ChainId, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { ButtonProps } from 'src/components/common';
-import { OrderCartItem, useOrderContext } from 'src/utils/context/OrderContext';
-import { checkOffersToUser } from 'src/utils/orderbookUtils';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { AButton } from 'src/components/astra';
+import { ButtonProps } from 'src/components/common';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { checkOffersToUser } from 'src/utils/orderbookUtils';
 
 type OrderButtonProps = Omit<ButtonProps, 'children'>;
 
@@ -15,53 +14,12 @@ type Props = {
 export const OrderbookRowButton = ({ order, outlineButtons = false }: Props) => {
   const { user, checkSignedIn } = useOnboardContext();
 
-  const getCartItem = (order: SignedOBOrder): OrderCartItem => {
-    const cartItem: OrderCartItem = {
-      chainId: order?.chainId as ChainId,
-      isSellOrder: order?.isSellOrder ?? false
-    };
-
-    // one collection
-    if (order.nfts.length === 1) {
-      const nft = order.nfts[0];
-      // one item from one collection
-      if (nft.tokens.length === 1) {
-        const token = nft.tokens[0];
-        cartItem.tokenId = token.tokenId;
-        cartItem.tokenName = token.tokenName;
-        cartItem.tokenImage = token.tokenImage;
-        cartItem.collectionName = nft.collectionName;
-        cartItem.collectionAddress = nft.collectionAddress;
-        cartItem.collectionImage = nft.collectionImage;
-        cartItem.collectionSlug = nft.collectionSlug;
-        cartItem.attributes = token.attributes;
-        cartItem.hasBlueCheck = nft.hasBlueCheck;
-      } else {
-        // multiple items from one collection or no tokens specified
-        cartItem.collectionName = nft.collectionName;
-        cartItem.collectionAddress = nft.collectionAddress;
-        cartItem.collectionImage = nft.collectionImage;
-        cartItem.collectionSlug = nft.collectionSlug;
-        cartItem.hasBlueCheck = nft.hasBlueCheck;
-      }
-    }
-
-    // multiple collections
-    if (order.nfts.length > 1) {
-      // todo: steve handle this better
-      const nft = order.nfts[0];
-      cartItem.collectionName = `${order.nfts.length} Collections`;
-      cartItem.collectionImage = nft.collectionImage;
-    }
-
-    return cartItem;
-  };
-
   const onClickEdit = (order: SignedOBOrder) => {
-    // todo open modal here
+    console.log('onClickEdit', order); // todo open modal here
   };
 
   const onClickBidHigher = (order: SignedOBOrder) => {
+    console.log('onClickBidHigher', order);
     // add to Cart as a New Buy Order:
     // todo: steve - addCartItem needs to know whether order is a single collection single nft order
     // or single collection multi nft order  or a multi-collection order for proper image display
