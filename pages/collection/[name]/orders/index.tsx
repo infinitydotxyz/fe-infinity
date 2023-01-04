@@ -4,12 +4,12 @@ import {
   DashboardProps,
   getServerSideProps as getDashboardServerSideProps
 } from 'src/components/astra/dashboard/dashboard-layout';
-import { OrderbookGraph } from 'src/components/orderbook/graph/orderbook-graph';
+import { OrderbookCharts } from 'src/components/orderbook/charts/orderbook-charts';
 
 export default function OrdersPage(props: DashboardProps) {
   return (
     <DashboardLayout {...props}>
-      <OrderbookGraph />
+      <OrderbookCharts />
     </DashboardLayout>
   );
 }

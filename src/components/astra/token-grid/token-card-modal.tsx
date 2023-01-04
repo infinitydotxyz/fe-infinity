@@ -1,6 +1,6 @@
 import { CollectionAttributes, ERC721CardData, Token } from '@infinityxyz/lib-frontend/types/core';
 import { ActivityList } from 'src/components/asset';
-import { OrderbookContainer } from 'src/components/orderbook/orderbook-list';
+import { OrderbookContainer } from 'src/components/orderbook/list';
 import { ellipsisAddress, useFetch } from 'src/utils';
 import { useSWRConfig } from 'swr';
 import {

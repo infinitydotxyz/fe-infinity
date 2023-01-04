@@ -1,25 +1,25 @@
 import { ReactNode } from 'react';
 import { cardClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { graphHeight } from './graph-utils';
+import { chartHeight } from './chart-utils';
 
-export enum GraphBoxTheme {
+export enum ChartBoxTheme {
   White,
   Grey,
   Dark
 }
 
-interface GraphBoxProps {
+interface ChartBoxProps {
   children: ReactNode;
   className?: string;
   noCSSStyles?: boolean;
 }
 
-export const GraphBox = ({ children, className = '', noCSSStyles: noStyle = false }: GraphBoxProps) => {
+export const ChartBox = ({ children, className = '', noCSSStyles: noStyle = false }: ChartBoxProps) => {
   return (
     <div
       className={twMerge('rounded-xl px-6 pt-5 pb-12', cardClr, className)}
-      style={noStyle ? undefined : { height: graphHeight }}
+      style={noStyle ? undefined : { height: chartHeight }}
     >
       {children}
     </div>

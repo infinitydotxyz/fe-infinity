@@ -1,12 +1,12 @@
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 
-export type GraphData = {
+export type ChartData = {
   isSellOrder: boolean;
   price: number;
   order: SignedOBOrder;
 };
 
-export const graphHeight = 400;
+export const chartHeight = 400;
 
 export const clamp = (num: number, min: number, max: number): number => {
   return Math.max(min, Math.min(num, max));

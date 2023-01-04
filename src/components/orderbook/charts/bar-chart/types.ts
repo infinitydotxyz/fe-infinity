@@ -1,8 +1,8 @@
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { GraphData } from '../graph-utils';
+import { ChartData } from '../chart-utils';
 
 export type RateGraphData = {
-  data: GraphData[];
+  data: ChartData[];
   axisLabel: string;
   tooltip?: React.ReactNode;
   start: number;
@@ -11,12 +11,11 @@ export type RateGraphData = {
 
 export enum RateGraphType {
   Offers = 'offers',
-  Listings = 'listings',
-  Sales = 'sales'
+  Listings = 'listings'
 }
 
 export type RateGraphProps = {
-  graphData: GraphData[];
+  graphData: ChartData[];
   width: number;
   height: number;
   graphType: RateGraphType;

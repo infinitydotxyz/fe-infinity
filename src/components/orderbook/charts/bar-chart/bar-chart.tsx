@@ -4,13 +4,13 @@ import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { getAxisLabel, getOrder, getOrderCount } from './accessors';
 import { RateGraphData, RateGraphProps as RateGraphProps, ResponsiveRateGraphProps } from './types';
 import { convertGraphData } from './utils';
-import { Tooltip as TooltipRenderer } from '../tooltip';
+import { TooltipRenderer } from '../tooltip';
 import { numStr } from 'src/utils';
 import { EthSymbol } from 'src/components/common';
 import { useChartTheme } from './use-theme';
 import { textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { GraphBox } from '../graph-box';
+import { ChartBox } from '../chart-box';
 
 const rateGraphMargins = {
   top: 30,
@@ -19,13 +19,13 @@ const rateGraphMargins = {
   left: 0
 };
 
-const priceBuckets = [0.01, 0.05, 0.1, 0.5, 1, 2, 5, 10];
+const priceBuckets = [0.01, 0.05, 0.1, 0.5, 1, 5, 10, 100];
 
 export const ResponsiveRateGraph: React.FC<Omit<ResponsiveRateGraphProps, 'priceBucket'>> = (props) => {
   const [selectedPriceBucket, setSelectedPriceBucket] = useState(0.01);
 
   return (
-    <GraphBox className="h-full">
+    <ChartBox className="h-full">
       <select
         onChange={(e) => setSelectedPriceBucket(+e.target.value)}
         className={twMerge(
@@ -44,7 +44,7 @@ export const ResponsiveRateGraph: React.FC<Omit<ResponsiveRateGraphProps, 'price
           <RateGraph {...props} priceBucket={selectedPriceBucket} width={width} height={height} />
         )}
       </ParentSize>
-    </GraphBox>
+    </ChartBox>
   );
 };
 
@@ -87,7 +87,7 @@ export const RateGraph: React.FC<RateGraphProps> = ({
         tickFormat={(v) => `${v}`}
         hideAxisLine={true}
         tickValues={axisLabels}
-        label="Price in ETH"
+        label={`${EthSymbol} price`}
         labelOffset={25}
         hideZero={true}
       />
@@ -95,7 +95,7 @@ export const RateGraph: React.FC<RateGraphProps> = ({
         orientation="left"
         tickFormat={(v) => `${v}`}
         hideAxisLine={true}
-        label={`Number of ${graphType}`}
+        label={`# ${graphType}`}
         labelOffset={15}
         // animationTrajectory="center"
       />

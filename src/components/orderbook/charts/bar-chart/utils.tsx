@@ -1,5 +1,5 @@
 import { numStr } from 'src/utils';
-import { GraphData } from '../graph-utils';
+import { ChartData } from '../chart-utils';
 import { getPriceValue } from './accessors';
 import { RateGraphData, RateGraphType } from './types';
 
@@ -7,7 +7,7 @@ import { RateGraphData, RateGraphType } from './types';
  * Utility function to convert a raw `GraphData` array to a `RateGraphData` array of values.
  */
 export function convertGraphData(
-  data: GraphData[],
+  data: ChartData[],
   width: number,
   graphType: RateGraphType,
   priceBucket: number

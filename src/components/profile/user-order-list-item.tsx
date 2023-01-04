@@ -5,7 +5,7 @@ import { Button, EthPrice } from 'src/components/common';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { format } from 'timeago.js';
 import { ALowerPriceModal } from '../astra/modals/astra-lower-price-modal';
-import { OrderbookItem } from '../orderbook/orderbook-list/orderbook-item';
+import { OrderbookItem } from '../orderbook/list/orderbook-item';
 import { OrderDetailModal } from '../orderbook/OrderDetailModal';
 
 interface Props {
