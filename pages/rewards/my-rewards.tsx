@@ -26,9 +26,9 @@ const RewardsSection = (props: RewardsSectionProps) => {
     <div className="flex-col bg-theme-gray-100 px-10 rounded-2xl   w-full">
       <div className="flex w-full">
         <div className="w-1/2">
-          <Heading as="h2" className="text-4xl font-body font-medium">
+          <div className="text-4xl font-body font-medium">
             {props.title}
-          </Heading>
+          </div>
           {props.subTitle && <div className="w-1/2 mt-5 text-theme-gray-700">{props.subTitle}</div>}
         </div>
         {props?.sideInfo && <div className="w-1/2">{props.sideInfo}</div>}
