@@ -9,8 +9,8 @@ import { defaultStyles, TooltipWithBounds, useTooltip } from '@visx/tooltip';
 import { voronoi } from '@visx/voronoi';
 import { extent } from 'd3';
 import { MouseEvent, TouchEvent, useCallback, useMemo, useState } from 'react';
-import { EthSymbol } from 'src/components/common';
-import { textClr } from 'src/utils/ui-constants';
+import { EZImage } from 'src/components/common';
+import { cardClr, textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { ChartBox } from './chart-box';
 
@@ -18,7 +18,7 @@ export enum ScatterChartType {
   Sales = 'sales'
 }
 
-export interface SaleEntry {
+export interface SaleData {
   timestamp?: number;
   collectionAddress?: string;
   collectionName?: string;
@@ -34,8 +34,8 @@ type ScatterChartProps = {
   height?: number;
   graphType: ScatterChartType;
   timeBucket?: string;
-  data: SaleEntry[];
-  onSelection: (sale: SaleEntry) => void;
+  data: SaleData[];
+  displayDetails: (sale: SaleData) => void;
 };
 
 interface Dimensions {
@@ -64,12 +64,12 @@ const getDimensions = ({ width = 0, height = 0 }: { width?: number; height?: num
   };
 };
 
-const yAccessor = (d: SaleEntry) => d.salePrice ?? 0;
-const xAccessor = (d: SaleEntry) => new Date(d.timestamp ?? 0);
+const yAccessor = (d: SaleData) => d.salePrice ?? 0;
+const xAccessor = (d: SaleData) => new Date(d.timestamp ?? 0);
 
 const timeBuckets = ['1h', '24h', '1d', '1w', '1m', '1y'];
 
-export const ResponsiveScatterChart = ({ onSelection, data, graphType }: ScatterChartProps) => {
+export const ResponsiveScatterChart = ({ displayDetails, data, graphType }: ScatterChartProps) => {
   const [selectedTimeBucket, setSelectedTimeBucket] = useState('1w');
 
   return (
@@ -95,7 +95,7 @@ export const ResponsiveScatterChart = ({ onSelection, data, graphType }: Scatter
             timeBucket={selectedTimeBucket}
             width={width}
             height={height}
-            onSelection={onSelection}
+            displayDetails={displayDetails}
           />
         )}
       </ParentSize>
@@ -103,7 +103,7 @@ export const ResponsiveScatterChart = ({ onSelection, data, graphType }: Scatter
   );
 };
 
-function ScatterChart({ width, height, data, onSelection }: ScatterChartProps) {
+function ScatterChart({ width, height, data, displayDetails }: ScatterChartProps) {
   const {
     showTooltip,
     hideTooltip,
@@ -111,7 +111,7 @@ function ScatterChart({ width, height, data, onSelection }: ScatterChartProps) {
     tooltipData,
     tooltipLeft = 0,
     tooltipTop = 0
-  } = useTooltip<SaleEntry>({
+  } = useTooltip<SaleData>({
     tooltipOpen: false,
     tooltipLeft: 0,
     tooltipTop: 0,
@@ -144,7 +144,7 @@ function ScatterChart({ width, height, data, onSelection }: ScatterChartProps) {
   );
 
   const voronoiLayout = useMemo(() => {
-    return voronoi<SaleEntry>({
+    return voronoi<SaleData>({
       x: (d) => xScale(xAccessor(d)),
       y: (d) => yScale(yAccessor(d)),
       width: boundedWidth,
@@ -154,17 +154,22 @@ function ScatterChart({ width, height, data, onSelection }: ScatterChartProps) {
 
   const voronoiPolygons = useMemo(() => voronoiLayout.polygons(), [voronoiLayout]);
 
+  const getClosestPoint = (e: TouchEvent<SVGSVGElement> | MouseEvent<SVGSVGElement>) => {
+    const point = localPoint(e);
+    if (!point) {
+      return hideTooltip();
+    }
+
+    const { x, y } = point;
+    const neighborRadius = 100;
+    const closest = voronoiLayout.find(x - margin.left, y - margin.top, neighborRadius);
+
+    return closest;
+  };
+
   const handleMouseMove = useCallback(
     (e: TouchEvent<SVGSVGElement> | MouseEvent<SVGSVGElement>) => {
-      const point = localPoint(e);
-      if (!point) {
-        return hideTooltip();
-      }
-
-      const { x, y } = point;
-      const neighborRadius = 100;
-      const closest = voronoiLayout.find(x - margin.left, y - margin.top, neighborRadius);
-
+      const closest = getClosestPoint(e);
       if (!closest) {
         return;
       }
@@ -176,7 +181,17 @@ function ScatterChart({ width, height, data, onSelection }: ScatterChartProps) {
           ...closest.data
         }
       });
-      onSelection(closest.data);
+    },
+    [xScale, yScale, voronoiLayout, voronoiPolygons]
+  );
+
+  const handleMouseClick = useCallback(
+    (e: TouchEvent<SVGSVGElement> | MouseEvent<SVGSVGElement>) => {
+      const closest = getClosestPoint(e);
+      if (!closest) {
+        return;
+      }
+      displayDetails(closest.data);
     },
     [xScale, yScale, voronoiLayout, voronoiPolygons]
   );
@@ -217,6 +232,7 @@ function ScatterChart({ width, height, data, onSelection }: ScatterChartProps) {
         onTouchStart={handleMouseMove}
         onTouchMove={handleMouseMove}
         onMouseMove={handleMouseMove}
+        onMouseDown={handleMouseClick}
         onMouseLeave={() => hideTooltip()}
         role="figure"
       >
@@ -256,7 +272,7 @@ function ScatterChart({ width, height, data, onSelection }: ScatterChartProps) {
 interface Props2 {
   left: number;
   top: number;
-  data?: SaleEntry;
+  data?: SaleData;
   isTooltipOpen: boolean;
 }
 
@@ -266,22 +282,30 @@ function ToolTip({ left, top, data, isTooltipOpen }: Props2) {
       key={isTooltipOpen ? 1 : 0} // needed for bounds to update correctly
       style={{
         ...defaultStyles,
-        display: 'flex',
-        flexDirection: 'column',
-        rowGap: 10,
-        backgroundColor: 'black',
+        background: 'white',
         opacity: isTooltipOpen ? 1 : 0,
-        transition: 'all 0.1s ease-out',
-        color: 'white'
+        transition: 'all 0.1s ease-out'
       }}
       left={left}
       top={top}
     >
-      <div className="flex flex-col space-y-2">
-        <div>
-          {data?.salePrice} {EthSymbol}
+      <div className={twMerge(cardClr, textClr, 'flex flex-col p-1')} style={{ aspectRatio: '3.5 / 5' }}>
+        <div className="flex-1 rounded-2xl overflow-clip">
+          <EZImage src={data?.tokenImage} />
         </div>
-        <div>{new Date(data?.timestamp ?? 0).toLocaleDateString()}</div>
+
+        <div className="font-bold truncate ml-1 mt-1">{data?.tokenId}</div>
+
+        <div className={twMerge(textClr, 'flex flex-row space-x-3 m-1')}>
+          <div className="flex flex-col">
+            <div className="truncate">Sale price</div>
+            <div className="truncate">{data?.salePrice}</div>
+          </div>
+          <div className="flex flex-col">
+            <div className="truncate">Date</div>
+            <div className="truncate">{new Date(data?.timestamp ?? 0).toLocaleDateString()}</div>
+          </div>
+        </div>
       </div>
     </TooltipWithBounds>
   );

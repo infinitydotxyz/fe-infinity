@@ -8,7 +8,7 @@ import { clamp } from './chart-utils';
 import { ChartBox } from './chart-box';
 import { NextPrevArrows } from './next-prev-arrows';
 import { cardClr, textClr } from 'src/utils/ui-constants';
-import { SaleEntry } from './scatter-chart';
+import { SaleData } from './scatter-chart';
 
 interface Props {
   orders: SignedOBOrder[];
@@ -20,7 +20,6 @@ interface Props {
 export const OrdersChartDetails = ({ orders, index, setIndex, valueClassName = '' }: Props) => {
   if (orders.length > 0) {
     const order = orders[clamp(index, 0, orders.length - 1)];
-
     const tableItems: SimpleTableItem[] = [
       {
         title: <div className="">Type</div>,
@@ -29,10 +28,6 @@ export const OrdersChartDetails = ({ orders, index, setIndex, valueClassName = '
       {
         title: <div className="">Price</div>,
         value: <div className="  font-heading">{order.startPriceEth}</div>
-      },
-      {
-        title: <div className=""># NFTs</div>,
-        value: <div className=" selection: font-heading">{order.numItems}</div>
       }
     ];
 
@@ -56,25 +51,23 @@ export const OrdersChartDetails = ({ orders, index, setIndex, valueClassName = '
   }
 
   return (
-    <ChartBox className={twMerge(textClr, 'flex-1 items-center justify-center')}>
-      <div className="text-center">Nothing selected</div>
+    <ChartBox className={twMerge(textClr, 'flex items-center justify-center')}>
+      <div className="text-center">Click a bar to drill down the chart and see orders in the clicked bar</div>
     </ChartBox>
   );
 };
 
 interface Props2 {
-  data?: SaleEntry;
+  data?: SaleData;
 }
 
 export const SalesChartDetails = ({ data }: Props2) => {
   if (data) {
     return (
-      <ChartBox noCSSStyles className={textClr}>
-        <div className={twMerge(cardClr, 'rounded-2xl flex flex-col')} style={{ aspectRatio: '4 / 5' }}>
-          <div className="relative flex-1">
-            <div className="absolute top-0 bottom-0 left-0 right-0 rounded-t-2xl overflow-clip">
-              <EZImage src={data?.tokenImage} className="transition-all" />
-            </div>
+      <ChartBox noCSSStyles className="px-4 py-4">
+        <div className={twMerge(cardClr, textClr, 'flex flex-col')} style={{ aspectRatio: '4 / 5' }}>
+          <div className="flex-1 rounded-2xl overflow-clip">
+            <EZImage src={data?.tokenImage} className="duration-300 hover:scale-110" />
           </div>
 
           <div className="font-bold truncate ml-1 mt-1">{data?.tokenId}</div>
@@ -85,8 +78,8 @@ export const SalesChartDetails = ({ data }: Props2) => {
               <div className="truncate">{data?.salePrice}</div>
             </div>
             <div className="flex flex-col">
-              <div className="truncate">Sale price</div>
-              <div className="truncate">{data?.salePrice}</div>
+              <div className="truncate">Date</div>
+              <div className="truncate">{new Date(data?.timestamp ?? 0).toLocaleDateString()}</div>
             </div>
           </div>
         </div>
@@ -95,8 +88,8 @@ export const SalesChartDetails = ({ data }: Props2) => {
   }
 
   return (
-    <ChartBox className={twMerge(textClr, 'flex-1 items-center justify-center')}>
-      <div className="text-center">Nothing selected</div>
+    <ChartBox className={twMerge(textClr, 'flex items-center justify-center')}>
+      <div className="text-center">Click a dot to see more details</div>
     </ChartBox>
   );
 };

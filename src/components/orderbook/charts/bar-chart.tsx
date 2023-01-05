@@ -14,9 +14,7 @@ export enum BarChartType {
   Listings = 'listings'
 }
 
-export type ChartEntry = {
-  isSellOrder: boolean;
-  price: number;
+export type OrderData = {
   order: SignedOBOrder;
 };
 
@@ -30,7 +28,7 @@ const barChartMargins = {
 };
 
 type BarChartEntry = {
-  data: ChartEntry[];
+  data: OrderData[];
   axisLabel: string;
   tooltip?: React.ReactNode;
   start: number;
@@ -38,17 +36,17 @@ type BarChartEntry = {
 };
 
 type BarChartProps = {
-  graphData: ChartEntry[];
+  graphData: OrderData[];
   width?: number;
   height?: number;
   graphType: BarChartType;
-  onClick: (minPrice: string, maxPrice: string) => void;
-  onSelection: (orders: SignedOBOrder[], index: number) => void;
+  fetchNewData: (minPrice: string, maxPrice: string) => void;
+  displayDetails: (orders: SignedOBOrder[], index: number) => void;
   priceBucket?: number;
 };
 
-const getPriceValue = (d: ChartEntry) => d.price;
-const getOrder = (d: ChartEntry) => d.order;
+const getPriceValue = (d: OrderData) => d.order.startPriceEth;
+const getOrder = (d: OrderData) => d.order;
 const getOrderCount = (d: BarChartEntry) => d.data.length;
 const getAxisLabel = (d: BarChartEntry) => d.axisLabel;
 
@@ -58,7 +56,7 @@ const priceBuckets = [0.01, 0.05, 0.1, 0.5, 1, 5, 10, 100];
  * Utility function to convert a raw `ChartData` array to a `BarChartData` array of values.
  */
 function convertChartData(
-  data: ChartEntry[],
+  data: OrderData[],
   width: number,
   chartType: BarChartType,
   priceBucket: number
@@ -86,11 +84,11 @@ function convertChartData(
   }
 
   for (const item of data) {
-    const i = Math.floor((item.price - minPrice) / range);
+    const i = Math.floor((item.order.startPriceEth - minPrice) / range);
 
-    if (item.isSellOrder && chartType === BarChartType.Listings) {
+    if (item.order.isSellOrder && chartType === BarChartType.Listings) {
       newData[i].data.push(item);
-    } else if (!item.isSellOrder && chartType === BarChartType.Offers) {
+    } else if (!item.order.isSellOrder && chartType === BarChartType.Offers) {
       newData[i].data.push(item);
     }
   }
@@ -98,7 +96,7 @@ function convertChartData(
   return newData;
 }
 
-export const ResponsiveBarChart = ({ graphData, graphType, onClick, onSelection }: BarChartProps) => {
+export const ResponsiveBarChart = ({ graphData, graphType, fetchNewData, displayDetails }: BarChartProps) => {
   const [selectedPriceBucket, setSelectedPriceBucket] = useState(0.01);
 
   return (
@@ -124,8 +122,8 @@ export const ResponsiveBarChart = ({ graphData, graphType, onClick, onSelection 
             priceBucket={selectedPriceBucket}
             width={width}
             height={height}
-            onClick={onClick}
-            onSelection={onSelection}
+            fetchNewData={fetchNewData}
+            displayDetails={displayDetails}
           />
         )}
       </ParentSize>
@@ -138,7 +136,8 @@ const BarChart: React.FC<BarChartProps> = ({
   width: outerWidth,
   height: outerHeight,
   graphType,
-  onSelection,
+  fetchNewData,
+  displayDetails,
   priceBucket
 }) => {
   const { theme } = useChartTheme();
@@ -195,15 +194,8 @@ const BarChart: React.FC<BarChartProps> = ({
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const isLeftMouseClick = (event as unknown as any).button === 0;
           if (isLeftMouseClick) {
-            // onClick(datum.start.toString(), datum.end.toString());
-            if (datum.data.length) {
-              onSelection(datum.data.map(getOrder), 0);
-            }
-          }
-        }}
-        onPointerMove={({ datum }) => {
-          if (datum.data.length) {
-            onSelection(datum.data.map(getOrder), 0);
+            fetchNewData(datum.start.toString(), datum.end.toString());
+            displayDetails(datum.data.map(getOrder), 0);
           }
         }}
       />
