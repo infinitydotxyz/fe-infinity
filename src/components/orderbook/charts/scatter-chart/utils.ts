@@ -1,4 +1,4 @@
-import { WeatherEntry } from './demoData';
+import { SaleEntry } from './demoData';
 
 interface Dimensions {
   margin: {
@@ -26,8 +26,7 @@ function getDimensions({ width, height }: { width: number; height: number }): Di
   };
 }
 
-const yAccessor = (d: WeatherEntry) => d.humidity;
-const xAccessor = (d: WeatherEntry) => d.dewPoint;
-const cloudAccessor = (d: WeatherEntry) => d.cloudCover;
+const yAccessor = (d: SaleEntry) => d.salePrice ?? 0;
+const xAccessor = (d: SaleEntry) => new Date(d.timestamp ?? 0);
 
-export { getDimensions, yAccessor, xAccessor, cloudAccessor };
+export { getDimensions, yAccessor, xAccessor };

@@ -9,11 +9,12 @@ import { defaultStyles, TooltipWithBounds, useTooltip } from '@visx/tooltip';
 import { voronoi } from '@visx/voronoi';
 import { extent } from 'd3';
 import { MouseEvent, TouchEvent, useCallback, useMemo, useState } from 'react';
-import { textClr } from 'src/utils/ui-constants';
+import { EZImage } from 'src/components/common';
+import { cardClr, textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { ChartBox } from '../chart-box';
-import { demoData, WeatherEntry } from './demoData';
-import { cloudAccessor, getDimensions, xAccessor, yAccessor } from './utils';
+import { demoData, SaleEntry } from './demoData';
+import { getDimensions, xAccessor, yAccessor } from './utils';
 
 export enum ScatterChartType {
   Sales = 'sales'
@@ -65,7 +66,7 @@ function ScatterChart({ width, height }: ScatterChartProps) {
     tooltipData,
     tooltipLeft = 0,
     tooltipTop = 0
-  } = useTooltip<TooltipData>({
+  } = useTooltip<SaleEntry>({
     tooltipOpen: false,
     tooltipLeft: 0,
     tooltipTop: 0,
@@ -81,7 +82,7 @@ function ScatterChart({ width, height }: ScatterChartProps) {
     () =>
       scaleLinear<number>({
         range: [0, boundedWidth],
-        domain: extent(demoData, xAccessor) as [number, number],
+        domain: extent(demoData, xAccessor) as [Date, Date],
         nice: true
       }),
     [boundedWidth]
@@ -98,7 +99,7 @@ function ScatterChart({ width, height }: ScatterChartProps) {
   );
 
   const voronoiLayout = useMemo(() => {
-    return voronoi<WeatherEntry>({
+    return voronoi<SaleEntry>({
       x: (d) => xScale(xAccessor(d)),
       y: (d) => yScale(yAccessor(d)),
       width: boundedWidth,
@@ -127,8 +128,7 @@ function ScatterChart({ width, height }: ScatterChartProps) {
         tooltipLeft: xScale(xAccessor(closest.data)) + margin.left,
         tooltipTop: yScale(yAccessor(closest.data)) + margin.top,
         tooltipData: {
-          dewPoint: closest.data.dewPoint,
-          date: new Date(closest.data.date)
+          ...closest.data
         }
       });
     },
@@ -138,8 +138,7 @@ function ScatterChart({ width, height }: ScatterChartProps) {
   const cloudsColorScale = useMemo(
     () =>
       scaleLinear<string>({
-        range: ['black'], // todo: based on theme
-        domain: extent(demoData, cloudAccessor) as [number, number]
+        range: ['black'] // todo: based on theme
       }),
     []
   );
@@ -147,26 +146,20 @@ function ScatterChart({ width, height }: ScatterChartProps) {
   const dots = useMemo(
     () =>
       demoData.map((d) => (
-        <Circle
-          key={d.date}
-          fill={cloudsColorScale(cloudAccessor(d))}
-          cx={xScale(xAccessor(d))}
-          cy={yScale(yAccessor(d))}
-          r={5}
-        />
+        <Circle key={d.timestamp} fill={'black'} cx={xScale(xAccessor(d))} cy={yScale(yAccessor(d))} r={5} />
       )),
     [xScale, yScale, cloudsColorScale]
   );
 
   const axisLeftLabel = (
     <Text textAnchor="middle" verticalAnchor="end" angle={-90} y={boundedHeight / 2} x={0} dx={-50}>
-      Relative humidity
+      Price
     </Text>
   );
 
   const axisBottomLabel = (
     <Text textAnchor="middle" verticalAnchor="start" y={boundedHeight} x={boundedWidth / 2} dy={30}>
-      Dew point (°F)
+      Date
     </Text>
   );
 
@@ -181,7 +174,7 @@ function ScatterChart({ width, height }: ScatterChartProps) {
         onMouseLeave={() => hideTooltip()}
         role="figure"
       >
-        <title>Scatterplot looking at the relation between relative humidity and dew point</title>
+        <title>Sales</title>
         <Group top={margin.top} left={margin.left}>
           <AxisLeft
             numTicks={4}
@@ -215,19 +208,14 @@ function ScatterChart({ width, height }: ScatterChartProps) {
   );
 }
 
-interface TooltipData {
-  dewPoint?: number;
-  date?: Date;
-}
-
 interface Props2 {
   left: number;
   top: number;
-  data?: TooltipData;
+  data?: SaleEntry;
   isTooltipOpen: boolean;
 }
 
-function ToolTip({ left, top, data = {}, isTooltipOpen }: Props2) {
+function ToolTip({ left, top, data, isTooltipOpen }: Props2) {
   return (
     <TooltipWithBounds
       key={isTooltipOpen ? 1 : 0} // needed for bounds to update correctly
@@ -243,28 +231,26 @@ function ToolTip({ left, top, data = {}, isTooltipOpen }: Props2) {
       left={left}
       top={top}
     >
-      <span>
-        <span>
-          <span role="img" aria-label="date">
-            📅
-          </span>{' '}
-          date:{' '}
-        </span>
-        {data.date &&
-          new Intl.DateTimeFormat('fr-FR', {
-            day: 'numeric',
-            month: 'short'
-          }).format(data.date)}
-      </span>
-      <span>
-        <span>
-          <span role="img" aria-label="temperature">
-            💧
-          </span>{' '}
-          dew point:{' '}
-        </span>
-        {data.dewPoint}
-      </span>
+      <div className={twMerge(cardClr, 'rounded-2xl flex flex-col')} style={{ aspectRatio: '3 / 5' }}>
+        <div className="relative flex-1">
+          <div className="absolute top-0 bottom-0 left-0 right-0 rounded-t-2xl overflow-clip">
+            <EZImage src={data?.tokenImage} className="transition-all" />
+          </div>
+        </div>
+
+        <div className="font-bold truncate ml-1 mt-1">{data?.tokenId}</div>
+
+        <div className={twMerge(textClr, 'flex flex-row space-x-3 m-1')}>
+          <div className="flex flex-col">
+            <div className="truncate">Sale price</div>
+            <div className="truncate">{data?.salePrice}</div>
+          </div>
+          <div className="flex flex-col">
+            <div className="truncate">Sale price</div>
+            <div className="truncate">{data?.salePrice}</div>
+          </div>
+        </div>
+      </div>
     </TooltipWithBounds>
   );
 }
