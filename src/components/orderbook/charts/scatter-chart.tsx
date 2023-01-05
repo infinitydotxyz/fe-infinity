@@ -36,7 +36,6 @@ type ScatterChartProps = {
   timeBucket?: string;
   data: SaleEntry[];
   onSelection: (sale: SaleEntry) => void;
-  onNilSelection: () => void;
 };
 
 interface Dimensions {
@@ -70,7 +69,7 @@ const xAccessor = (d: SaleEntry) => new Date(d.timestamp ?? 0);
 
 const timeBuckets = ['1h', '24h', '1d', '1w', '1m', '1y'];
 
-export const ResponsiveScatterChart = ({ onSelection, data, graphType, onNilSelection }: ScatterChartProps) => {
+export const ResponsiveScatterChart = ({ onSelection, data, graphType }: ScatterChartProps) => {
   const [selectedTimeBucket, setSelectedTimeBucket] = useState('1w');
 
   return (
@@ -97,7 +96,6 @@ export const ResponsiveScatterChart = ({ onSelection, data, graphType, onNilSele
             width={width}
             height={height}
             onSelection={onSelection}
-            onNilSelection={onNilSelection}
           />
         )}
       </ParentSize>
@@ -105,7 +103,7 @@ export const ResponsiveScatterChart = ({ onSelection, data, graphType, onNilSele
   );
 };
 
-function ScatterChart({ width, height, data, onSelection, onNilSelection }: ScatterChartProps) {
+function ScatterChart({ width, height, data, onSelection }: ScatterChartProps) {
   const {
     showTooltip,
     hideTooltip,
@@ -250,13 +248,7 @@ function ScatterChart({ width, height, data, onSelection, onNilSelection }: Scat
         </Group>
       </svg>
 
-      <ToolTip
-        isTooltipOpen={tooltipOpen}
-        left={tooltipLeft}
-        top={tooltipTop}
-        data={tooltipData}
-        onNilSelection={onNilSelection}
-      />
+      <ToolTip isTooltipOpen={tooltipOpen} left={tooltipLeft} top={tooltipTop} data={tooltipData} />
     </div>
   );
 }
@@ -266,13 +258,9 @@ interface Props2 {
   top: number;
   data?: SaleEntry;
   isTooltipOpen: boolean;
-  onNilSelection: () => void;
 }
 
-function ToolTip({ left, top, data, isTooltipOpen, onNilSelection }: Props2) {
-  if (!isTooltipOpen) {
-    onNilSelection();
-  }
+function ToolTip({ left, top, data, isTooltipOpen }: Props2) {
   return (
     <TooltipWithBounds
       key={isTooltipOpen ? 1 : 0} // needed for bounds to update correctly

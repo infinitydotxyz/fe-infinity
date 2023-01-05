@@ -21,8 +21,6 @@ export const OrderbookCharts: React.FC<OrderBookChartProps> = ({ className = '' 
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [salesData, setSalesData] = useState<SaleEntry[]>([]);
   const [selectedSale, setSelectedSale] = useState<SaleEntry>();
-  const [showSalesChartDetails, setShowSalesChartDetails] = useState(true);
-  const [showOrdersChartDetails, setShowOrdersChartDetails] = useState(true);
 
   const handleOnClick = (minPrice: string, maxPrice: string): Promise<boolean> =>
     updateFilters([
@@ -31,7 +29,6 @@ export const OrderbookCharts: React.FC<OrderBookChartProps> = ({ className = '' 
     ]);
 
   const handleSelect = (orders: SignedOBOrder[], index: number) => {
-    setShowOrdersChartDetails(true);
     if (index !== selectedIndex) {
       setSelectedIndex(index);
     }
@@ -121,11 +118,7 @@ export const OrderbookCharts: React.FC<OrderBookChartProps> = ({ className = '' 
               <ResponsiveScatterChart
                 graphType={ScatterChartType.Sales}
                 data={salesData}
-                onSelection={(value) => {
-                  setSelectedSale(value);
-                  setShowSalesChartDetails(true);
-                }}
-                onNilSelection={() => setShowSalesChartDetails(false)}
+                onSelection={setSelectedSale}
               />
 
               <ResponsiveBarChart
@@ -133,7 +126,6 @@ export const OrderbookCharts: React.FC<OrderBookChartProps> = ({ className = '' 
                 graphData={graphData}
                 onClick={handleOnClick}
                 onSelection={handleSelect}
-                onNilSelection={() => setShowOrdersChartDetails(false)}
               />
 
               <ResponsiveBarChart
@@ -141,7 +133,6 @@ export const OrderbookCharts: React.FC<OrderBookChartProps> = ({ className = '' 
                 graphData={graphData}
                 onClick={handleOnClick}
                 onSelection={handleSelect}
-                onNilSelection={() => setShowOrdersChartDetails(false)}
               />
             </>
           )}
@@ -158,15 +149,13 @@ export const OrderbookCharts: React.FC<OrderBookChartProps> = ({ className = '' 
 
         <div className="w-[360px] p-4">
           <div className="w-[360px] fixed pointer-events-none space-y-4">
-            {showSalesChartDetails && <SalesChartDetails data={selectedSale} />}
-            {showOrdersChartDetails && (
-              <OrdersChartDetails
-                orders={selectedOrders}
-                index={selectedIndex}
-                valueClassName="text-dark-gray-300"
-                setIndex={setSelectedIndex}
-              />
-            )}
+            <SalesChartDetails data={selectedSale} />
+            <OrdersChartDetails
+              orders={selectedOrders}
+              index={selectedIndex}
+              valueClassName="text-dark-gray-300"
+              setIndex={setSelectedIndex}
+            />
           </div>
         </div>
       </div>

@@ -45,7 +45,6 @@ type BarChartProps = {
   onClick: (minPrice: string, maxPrice: string) => void;
   onSelection: (orders: SignedOBOrder[], index: number) => void;
   priceBucket?: number;
-  onNilSelection: () => void;
 };
 
 const getPriceValue = (d: ChartEntry) => d.price;
@@ -99,7 +98,7 @@ function convertChartData(
   return newData;
 }
 
-export const ResponsiveBarChart = ({ graphData, graphType, onClick, onSelection, onNilSelection }: BarChartProps) => {
+export const ResponsiveBarChart = ({ graphData, graphType, onClick, onSelection }: BarChartProps) => {
   const [selectedPriceBucket, setSelectedPriceBucket] = useState(0.01);
 
   return (
@@ -127,7 +126,6 @@ export const ResponsiveBarChart = ({ graphData, graphType, onClick, onSelection,
             height={height}
             onClick={onClick}
             onSelection={onSelection}
-            onNilSelection={onNilSelection}
           />
         )}
       </ParentSize>
@@ -140,9 +138,7 @@ const BarChart: React.FC<BarChartProps> = ({
   width: outerWidth,
   height: outerHeight,
   graphType,
-  onClick,
   onSelection,
-  onNilSelection,
   priceBucket
 }) => {
   const { theme } = useChartTheme();
@@ -199,15 +195,17 @@ const BarChart: React.FC<BarChartProps> = ({
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const isLeftMouseClick = (event as unknown as any).button === 0;
           if (isLeftMouseClick) {
-            onClick(datum.start.toString(), datum.end.toString());
+            // onClick(datum.start.toString(), datum.end.toString());
+            if (datum.data.length) {
+              onSelection(datum.data.map(getOrder), 0);
+            }
           }
         }}
         onPointerMove={({ datum }) => {
           if (datum.data.length) {
-            onSelection(datum.data.map(getOrder), datum.data.length - 1);
+            onSelection(datum.data.map(getOrder), 0);
           }
         }}
-        onPointerOut={() => onNilSelection()}
       />
 
       <Tooltip
