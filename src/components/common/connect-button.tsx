@@ -4,7 +4,7 @@ import { RiLogoutCircleFill } from 'react-icons/ri';
 import { FaEthereum } from 'react-icons/fa';
 import { ellipsisAddress } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import { AOutlineButton } from '../astra';
+import { AOutlineButton } from '../astra/astra-button';
 import { ADropdown, ADropdownItem } from '../astra/astra-dropdown';
 import { twMerge } from 'tailwind-merge';
 import { textClr } from 'src/utils/ui-constants';

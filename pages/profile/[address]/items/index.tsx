@@ -2,7 +2,7 @@ import * as Queries from '@infinityxyz/lib-frontend/types/dto/orders/orders-quer
 import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { FC, useEffect } from 'react';
-import { AListGridButton } from 'src/components/astra';
+import { AListGridButton } from 'src/components/astra/astra-button';
 import { ACollectionFilter } from 'src/components/astra/astra-collection-filter';
 import {
   DashboardLayout,

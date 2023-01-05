@@ -1,6 +1,6 @@
 import { GetServerSidePropsContext } from 'next';
 import { FC } from 'react';
-import { AListGridButton } from 'src/components/astra';
+import { AListGridButton } from 'src/components/astra/astra-button';
 import { APriceFilter } from 'src/components/astra/astra-price-filter';
 import { ASortButton } from 'src/components/astra/astra-sort-button';
 import { AStatusFilterButton } from 'src/components/astra/astra-status-button';

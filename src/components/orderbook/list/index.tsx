@@ -1,6 +1,6 @@
 import { Menu } from '@headlessui/react';
 import { useEffect, useState } from 'react';
-import { AButton, ATextButton } from 'src/components/astra';
+import { AButton, ATextButton } from 'src/components/astra/astra-button';
 import {
   ACustomMenuButton,
   ACustomMenuContents,

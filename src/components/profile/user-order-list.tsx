@@ -9,7 +9,7 @@ import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { fetchOrderNonce } from 'src/utils/orderbookUtils';
 import { inputBorderColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { AButton, AOutlineButton, ATextButton } from '../astra';
+import { AButton, AOutlineButton, ATextButton } from '../astra/astra-button';
 import { ACollectionFilter } from '../astra/astra-collection-filter';
 import {
   ACustomMenuButton,

@@ -1,7 +1,7 @@
 import React, { Fragment, ReactNode } from 'react';
 import { Popover, Transition } from '@headlessui/react';
 import { BiCaretDown } from 'react-icons/bi';
-import { AOutlineButton } from '../astra';
+import { AOutlineButton } from '../astra/astra-button';
 
 interface Props {
   title: string;
