@@ -1,13 +1,12 @@
 import { useRouter } from 'next/router';
 import { BsHouse, BsReceipt, BsTrophy, BsWallet2 } from 'react-icons/bs';
-import { MdDarkMode, MdLightMode } from 'react-icons/md';
 import { ARoundButton } from 'src/components/astra';
 import { HelpTip, NextLink, Spacer, SVG } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 
 export const SidebarNav = () => {
-  const { darkMode, setDarkMode } = useAppContext();
+  const { darkMode } = useAppContext();
   const router = useRouter();
   const { user } = useOnboardContext();
 
@@ -66,13 +65,13 @@ export const SidebarNav = () => {
       </div>
 
       <Spacer />
-      <ARoundButton
+      {/* <ARoundButton
         onClick={() => {
           setDarkMode(!darkMode);
         }}
       >
         {darkMode ? <MdLightMode className="h-8 w-8" /> : <MdDarkMode className="h-8 w-8" />}
-      </ARoundButton>
+      </ARoundButton> */}
     </div>
   );
 };
