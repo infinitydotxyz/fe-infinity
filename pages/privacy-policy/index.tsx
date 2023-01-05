@@ -12,7 +12,7 @@ const PrivacyPolicyPage = () => {
         <p dir="ltr">
           <span>Last Updated: </span>
           <span data-rich-links='{"dat_df":{"fres_frt":1,"dfie_ts":{"tv":{"tv_s":1654862400,"tv_n":0}},"dfie_l":"en","dfie_p":{"fres_frt":0,"tres_tv":"MMM d, y"},"dfie_dt":"Jun 10, 2022","dfie_pt":3},"type":"date"}'>
-            Jun 10, 2022
+            Nov 10, 2022
           </span>
         </p>
         <p dir="ltr">

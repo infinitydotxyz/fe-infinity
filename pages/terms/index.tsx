@@ -10,7 +10,7 @@ const TermsPage = () => {
       </div>
 
       <div className="space-y-2">
-        <div>Last Updated: Jun 10, 2022</div>
+        <div>Last Updated: Nov 10, 2022</div>
         <div className="space-y-4">
           <p dir="ltr" className="font-bold">
             <span>Introduction</span>
@@ -168,10 +168,8 @@ const TermsPage = () => {
               being compromised. You agree to immediately notify us if you discover or otherwise suspect any security
               issues related to the Service or your Account{' '}
             </span>
-            <a href="https://twitter.com/infinitydotxyz">
-              <a href="https://twitter.com/infinitydotxyz" className="underline">
-                here
-              </a>
+            <a href="https://twitter.com/infinitydotxyz" className="underline">
+              here
             </a>
             <span>.&nbsp;</span>
           </p>
