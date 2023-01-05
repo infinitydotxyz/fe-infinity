@@ -16,7 +16,14 @@ interface Props {
 // used in the Header
 export const pageStyles = 'mx-auto desktop:w-5/6 desktop-sm:w-[95%] tabloid:w-[95%] mobile:w-[98%]';
 
-export const APageBox = ({ children, title, showTitle = true, className = '', rightToolbar }: Props): JSX.Element => {
+export const APageBox = ({
+  children,
+  title,
+  showTitle = true,
+  className = '',
+  rightToolbar,
+  footer
+}: Props): JSX.Element => {
   return (
     <div
       className={twMerge(
@@ -30,6 +37,7 @@ export const APageBox = ({ children, title, showTitle = true, className = '', ri
       {showTitle ? <APageHeader title={title} rightToolbar={rightToolbar} /> : null}
 
       {children}
+      {footer}
     </div>
   );
 };

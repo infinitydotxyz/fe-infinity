@@ -2,7 +2,7 @@ import { getAddress } from '@ethersproject/address';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { ReactNode, useState } from 'react';
 import { MdClose } from 'react-icons/md';
-import { AButton, ARoundButton, ATextButton } from 'src/components/astra';
+import { AButton, ARoundButton, ATextButton } from 'src/components/astra/astra-button';
 import { EZImage, Spacer, TextInputBox } from 'src/components/common';
 import { CART_TYPE, getCartType, getCollectionKeyId, getDefaultOrderExpiryTime, getTokenKeyId } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';

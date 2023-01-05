@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { BsHouse, BsReceipt, BsTrophy, BsWallet2 } from 'react-icons/bs';
-import { ARoundButton } from 'src/components/astra';
+import { ARoundButton } from 'src/components/astra/astra-button';
 import { HelpTip, NextLink, Spacer, SVG } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';

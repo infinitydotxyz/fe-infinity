@@ -10,6 +10,7 @@ import { SidebarNav } from './sidebar-nav';
 interface Props {
   children: ReactNode;
 }
+
 export const Layout = ({ children }: Props) => {
   const {
     collection,

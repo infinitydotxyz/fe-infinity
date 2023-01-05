@@ -3,7 +3,7 @@ import { Collection, CollectionPeriodStatsContent, Erc721Collection } from '@inf
 import { useRouter } from 'next/router';
 import { parse } from 'query-string';
 import { useEffect, useState } from 'react';
-import { AButton } from 'src/components/astra';
+import { AButton } from 'src/components/astra/astra-button';
 import { APageBox } from 'src/components/astra/astra-page-box';
 import {
   BlueCheckInline,
