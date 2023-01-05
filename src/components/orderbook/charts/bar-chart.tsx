@@ -7,6 +7,7 @@ import { numStr } from 'src/utils';
 import { textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { ChartBox } from './chart-box';
+import { getChartDimensions } from './chart-utils';
 import { useChartTheme } from './use-theme';
 
 export enum BarChartType {
@@ -131,24 +132,21 @@ export const ResponsiveBarChart = ({ graphData, graphType, fetchData, displayDet
 
 const BarChart: React.FC<BarChartProps> = ({
   graphData,
-  width: outerWidth,
-  height: outerHeight,
+  width,
+  height,
   graphType,
   fetchData,
   displayDetails,
   selectedPriceBucket
 }) => {
   const { theme } = useChartTheme();
-  const margins = {
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0
-  };
-  const width = outerWidth ?? 0 - margins.left - margins.right;
-  const height = outerHeight ?? 0 - margins.top - margins.bottom;
 
-  const data = convertRawDataToChartData(graphData, width, graphType, selectedPriceBucket);
+  const { boundedWidth, boundedHeight } = getChartDimensions({
+    width,
+    height
+  });
+
+  const data = convertRawDataToChartData(graphData, boundedWidth, graphType, selectedPriceBucket);
   const axisLabels = data.map(getAxisLabel);
 
   if (data.every((d) => d.data.length === 0)) {
@@ -157,20 +155,26 @@ const BarChart: React.FC<BarChartProps> = ({
 
   return (
     <XYChart
-      width={outerWidth}
-      height={outerHeight}
-      xScale={{ type: 'band', range: [0, width], round: true, domain: axisLabels, padding: 0.85 }}
+      width={width}
+      height={height}
+      xScale={{ type: 'band', range: [0, boundedWidth], round: true, domain: axisLabels, padding: 0.85 }}
       yScale={{
         type: 'linear',
-        range: [height, 0],
+        range: [boundedHeight, 0],
         round: true,
         domain: [0, Math.max(...data.map(getOrderCount))]
       }}
       theme={theme}
     >
-      <AnimatedAxis orientation="bottom" tickFormat={(v) => `${v}`} hideAxisLine={true} hideTicks={true} top={height} />
+      <AnimatedAxis
+        orientation="bottom"
+        tickFormat={(v) => `${v}`}
+        hideAxisLine={true}
+        hideTicks={true}
+        top={boundedHeight}
+      />
       <AnimatedAxis orientation="left" tickFormat={(v) => `${parseInt(v)}`} hideAxisLine={true} hideTicks={true} />
-      <AnimatedGrid columns={false} strokeDasharray="6,6" />
+      <AnimatedGrid columns={false} strokeDasharray="6,6" numTicks={8} />
       <AnimatedBarSeries
         data={data}
         dataKey={graphType}

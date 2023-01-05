@@ -14,6 +14,7 @@ import { EZImage } from 'src/components/common';
 import { cardClr, textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { ChartBox } from './chart-box';
+import { getChartDimensions } from './chart-utils';
 
 export enum ScatterChartType {
   Sales = 'Sales'
@@ -48,35 +49,6 @@ interface ScatterChartProps {
   data: SaleData[];
   displayDetails: (sale: SaleData) => void;
 }
-
-interface Dimensions {
-  margin: {
-    top: number;
-    right: number;
-    bottom: number;
-    left: number;
-  };
-  boundedWidth: number;
-  boundedHeight: number;
-}
-
-const getDimensions = ({ width = 0, height = 0 }: { width?: number; height?: number }): Dimensions => {
-  const margin = {
-    top: 10,
-    right: 0,
-    bottom: 60,
-    left: 60
-  };
-
-  return {
-    margin,
-    boundedWidth: width - margin.left - margin.right,
-    boundedHeight: height - margin.top - margin.bottom
-  };
-};
-
-const yAccessor = (d: SaleData) => d.salePrice ?? 0;
-const xAccessor = (d?: SaleData) => new Date(d?.timestamp ?? 0);
 
 export const ResponsiveScatterChart = ({
   displayDetails,
@@ -134,10 +106,13 @@ function ScatterChart({ width, height, data, displayDetails }: ScatterChartProps
     }
   });
 
-  const { margin, boundedWidth, boundedHeight } = getDimensions({
+  const { margin, boundedWidth, boundedHeight } = getChartDimensions({
     width,
     height
   });
+
+  const yAccessor = (d: SaleData) => d.salePrice;
+  const xAccessor = (d: SaleData) => new Date(d.timestamp);
 
   const xScale = useMemo(
     () =>
@@ -243,10 +218,11 @@ function ScatterChart({ width, height, data, displayDetails }: ScatterChartProps
         <Group top={margin.top} left={margin.left}>
           <GridRows
             scale={yScale}
-            width={boundedWidth ?? 0}
-            height={boundedHeight ?? 0}
+            width={boundedWidth}
+            height={boundedHeight}
             stroke="#777"
             strokeDasharray="6,6"
+            numTicks={6}
           />
           <AxisLeft
             numTicks={5}
@@ -314,7 +290,7 @@ function ToolTip({ left, top, data, isTooltipOpen }: Props2) {
           </div>
           <div className="flex flex-col">
             <div className="truncate">Date</div>
-            <div className="truncate">{format(xAccessor(data), 'MMM dd yyyy')}</div>
+            <div className="truncate">{format(new Date(data?.timestamp ?? 0), 'MMM dd yyyy')}</div>
           </div>
         </div>
       </div>
