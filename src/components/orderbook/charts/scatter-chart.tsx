@@ -28,12 +28,12 @@ export enum TimeBuckets {
 }
 
 export interface SaleData {
-  timestamp?: number;
-  collectionAddress?: string;
-  collectionName?: string;
-  tokenId?: string;
-  tokenImage?: string;
-  salePrice?: number;
+  timestamp: number;
+  collectionAddress: string;
+  collectionName: string;
+  tokenId: string;
+  tokenImage: string;
+  salePrice: number;
 }
 
 export interface ResponsiveScatterChartProps extends Omit<ScatterChartProps, 'width' | 'height'> {
@@ -124,7 +124,14 @@ function ScatterChart({ width, height, data, displayDetails }: ScatterChartProps
     tooltipOpen: false,
     tooltipLeft: 0,
     tooltipTop: 0,
-    tooltipData: {}
+    tooltipData: {
+      timestamp: 0,
+      collectionAddress: '',
+      collectionName: '',
+      tokenId: '',
+      tokenImage: '',
+      salePrice: 0
+    }
   });
 
   const { margin, boundedWidth, boundedHeight } = getDimensions({

@@ -18,24 +18,26 @@ export type OrderData = {
   order: SignedOBOrder;
 };
 
-export type ResponsiveBarChartProps = Omit<BarChartProps, 'width' | 'height'>;
+export interface ResponsiveBarChartProps extends Omit<BarChartProps, 'width' | 'height' | 'selectedPriceBucket'> {
+  graphType: BarChartType;
+}
+
+interface BarChartProps {
+  graphData: OrderData[];
+  selectedPriceBucket: number;
+  width: number;
+  height: number;
+  graphType: BarChartType;
+  fetchData: (minPrice: string, maxPrice: string) => void;
+  displayDetails: (orders: SignedOBOrder[], index: number) => void;
+}
 
 type BarChartEntry = {
   data: OrderData[];
   axisLabel: string;
-  tooltip?: React.ReactNode;
+  tooltip: React.ReactNode;
   start: number;
   end: number;
-};
-
-type BarChartProps = {
-  graphData: OrderData[];
-  width?: number;
-  height?: number;
-  graphType: BarChartType;
-  fetchData: (minPrice: string, maxPrice: string) => void;
-  displayDetails: (orders: SignedOBOrder[], index: number) => void;
-  priceBucket?: number;
 };
 
 const getPriceValue = (d: OrderData) => d.order.startPriceEth;
@@ -72,7 +74,8 @@ function convertRawDataToChartData(
       data: [],
       axisLabel: numStr(minPrice + i * range),
       start: minPrice + i * range,
-      end: minPrice + (i + 1) * range
+      end: minPrice + (i + 1) * range,
+      tooltip: ''
     });
   }
 
@@ -89,9 +92,8 @@ function convertRawDataToChartData(
   return newData;
 }
 
-export const ResponsiveBarChart = ({ graphData, graphType, fetchData, displayDetails }: BarChartProps) => {
+export const ResponsiveBarChart = ({ graphData, graphType, fetchData, displayDetails }: ResponsiveBarChartProps) => {
   const [selectedPriceBucket, setSelectedPriceBucket] = useState(1);
-
   return (
     <ChartBox className="h-full">
       <div className="flex justify-between mb-4">
@@ -115,10 +117,10 @@ export const ResponsiveBarChart = ({ graphData, graphType, fetchData, displayDet
           <BarChart
             graphData={graphData}
             graphType={graphType}
-            priceBucket={selectedPriceBucket}
             width={width}
             height={height}
             fetchData={fetchData}
+            selectedPriceBucket={selectedPriceBucket}
             displayDetails={displayDetails}
           />
         )}
@@ -134,7 +136,7 @@ const BarChart: React.FC<BarChartProps> = ({
   graphType,
   fetchData,
   displayDetails,
-  priceBucket
+  selectedPriceBucket
 }) => {
   const { theme } = useChartTheme();
   const margins = {
@@ -146,7 +148,7 @@ const BarChart: React.FC<BarChartProps> = ({
   const width = outerWidth ?? 0 - margins.left - margins.right;
   const height = outerHeight ?? 0 - margins.top - margins.bottom;
 
-  const data = convertRawDataToChartData(graphData, width, graphType, priceBucket ?? 1);
+  const data = convertRawDataToChartData(graphData, width, graphType, selectedPriceBucket);
   const axisLabels = data.map(getAxisLabel);
 
   if (data.every((d) => d.data.length === 0)) {
