@@ -2,8 +2,14 @@
 const nextConfig = {
   reactStrictMode: true,
   distDir: process.env.NODE_ENV === 'development' ? 'build-dev' : 'build',
+  // eslint-disable-next-line require-await
   async redirects() {
     return [
+      {
+        source: '/',
+        destination: '/trending',
+        permanent: true
+      },
       {
         source: '/collection/:name',
         destination: '/collection/:name/items',
@@ -11,7 +17,7 @@ const nextConfig = {
       },
       {
         source: '/profile/:address',
-        destination: '/profile/:address/items', //todo: this doesn't seem to work if :address starts with 0x
+        destination: '/profile/:address/items',
         permanent: true
       }
     ];
