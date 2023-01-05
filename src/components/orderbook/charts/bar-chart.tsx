@@ -48,7 +48,7 @@ const priceBuckets = [0.01, 0.05, 0.1, 0.5, 1, 5, 10, 100];
 /**
  * Utility function to convert a raw `ChartData` array to a `BarChartData` array of values.
  */
-function convertChartData(
+function convertRawDataToChartData(
   data: OrderData[],
   width: number,
   chartType: BarChartType,
@@ -146,7 +146,7 @@ const BarChart: React.FC<BarChartProps> = ({
   const width = outerWidth ?? 0 - margins.left - margins.right;
   const height = outerHeight ?? 0 - margins.top - margins.bottom;
 
-  const data = convertChartData(graphData, width, graphType, priceBucket ?? 1);
+  const data = convertRawDataToChartData(graphData, width, graphType, priceBucket ?? 1);
   const axisLabels = data.map(getAxisLabel);
 
   if (data.every((d) => d.data.length === 0)) {
@@ -160,14 +160,14 @@ const BarChart: React.FC<BarChartProps> = ({
       xScale={{ type: 'band', range: [0, width], round: true, domain: axisLabels, padding: 0.85 }}
       yScale={{
         type: 'linear',
-        range: [height, 10], // NOTE: I don't know why, but removing the second item from this array makes the top of the chart look 'cut off' ¯\_(ツ)_/¯
+        range: [height, 0],
         round: true,
         domain: [0, Math.max(...data.map(getOrderCount))]
       }}
       theme={theme}
     >
-      <AnimatedAxis orientation="bottom" tickFormat={(v) => `${v}`} hideAxisLine={true} top={height} />
-      <AnimatedAxis orientation="left" tickFormat={(v) => `${parseInt(v)}`} hideAxisLine={true} />
+      <AnimatedAxis orientation="bottom" tickFormat={(v) => `${v}`} hideAxisLine={true} hideTicks={true} top={height} />
+      <AnimatedAxis orientation="left" tickFormat={(v) => `${parseInt(v)}`} hideAxisLine={true} hideTicks={true} />
       <AnimatedGrid columns={false} strokeDasharray="6,6" />
       <AnimatedBarSeries
         data={data}

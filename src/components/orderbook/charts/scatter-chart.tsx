@@ -1,13 +1,14 @@
 import { AxisBottom, AxisLeft } from '@visx/axis';
 import { localPoint } from '@visx/event';
+import { GridRows } from '@visx/grid';
 import { Group } from '@visx/group';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
-import { scaleLinear } from '@visx/scale';
+import { scaleLinear, scaleTime } from '@visx/scale';
 import { Circle } from '@visx/shape';
-import { Text } from '@visx/text';
 import { defaultStyles, TooltipWithBounds, useTooltip } from '@visx/tooltip';
 import { voronoi } from '@visx/voronoi';
 import { extent } from 'd3';
+import { format } from 'date-fns';
 import { MouseEvent, TouchEvent, useCallback, useMemo, useState } from 'react';
 import { EZImage } from 'src/components/common';
 import { cardClr, textClr } from 'src/utils/ui-constants';
@@ -15,7 +16,7 @@ import { twMerge } from 'tailwind-merge';
 import { ChartBox } from './chart-box';
 
 export enum ScatterChartType {
-  Sales = 'sales'
+  Sales = 'Sales'
 }
 
 export interface SaleData {
@@ -54,7 +55,7 @@ const getDimensions = ({ width = 0, height = 0 }: { width?: number; height?: num
     top: 10,
     right: 0,
     bottom: 60,
-    left: 70
+    left: 60
   };
 
   return {
@@ -65,7 +66,7 @@ const getDimensions = ({ width = 0, height = 0 }: { width?: number; height?: num
 };
 
 const yAccessor = (d: SaleData) => d.salePrice ?? 0;
-const xAccessor = (d: SaleData) => new Date(d.timestamp ?? 0);
+const xAccessor = (d?: SaleData) => new Date(d?.timestamp ?? 0);
 
 const timeBuckets = ['1h', '24h', '1d', '1w', '1m', '1y'];
 
@@ -74,19 +75,22 @@ export const ResponsiveScatterChart = ({ displayDetails, data, graphType }: Scat
 
   return (
     <ChartBox className="h-full">
-      <select
-        onChange={(e) => setSelectedTimeBucket(e.target.value)}
-        className={twMerge(
-          'form-select rounded-full bg-transparent border-ring-gray-400 focus:ring-gray-400 focus:border-none float-right',
-          textClr
-        )}
-      >
-        {timeBuckets.map((filter) => (
-          <option value={filter} selected={filter === selectedTimeBucket}>
-            {filter}
-          </option>
-        ))}
-      </select>
+      <div className="flex justify-between mb-4">
+        <div className="ml-5 font-bold mt-3">{graphType}</div>
+        <select
+          onChange={(e) => setSelectedTimeBucket(e.target.value)}
+          className={twMerge(
+            'form-select rounded-full bg-transparent border-ring-gray-400 focus:ring-gray-400 focus:border-none float-right',
+            textClr
+          )}
+        >
+          {timeBuckets.map((filter) => (
+            <option value={filter} selected={filter === selectedTimeBucket}>
+              {filter}
+            </option>
+          ))}
+        </select>
+      </div>
       <ParentSize debounceTime={10}>
         {({ width, height }) => (
           <ScatterChart
@@ -125,7 +129,7 @@ function ScatterChart({ width, height, data, displayDetails }: ScatterChartProps
 
   const xScale = useMemo(
     () =>
-      scaleLinear<number>({
+      scaleTime<number>({
         range: [0, boundedWidth],
         domain: extent(data, xAccessor) as [Date, Date],
         nice: true
@@ -212,18 +216,6 @@ function ScatterChart({ width, height, data, displayDetails }: ScatterChartProps
     [xScale, yScale, cloudsColorScale]
   );
 
-  const axisLeftLabel = (
-    <Text textAnchor="middle" verticalAnchor="end" angle={-90} y={boundedHeight / 2} x={0} dx={-50}>
-      Price
-    </Text>
-  );
-
-  const axisBottomLabel = (
-    <Text textAnchor="middle" verticalAnchor="start" y={boundedHeight} x={boundedWidth / 2} dy={30}>
-      Date
-    </Text>
-  );
-
   return (
     <div>
       <svg
@@ -237,29 +229,36 @@ function ScatterChart({ width, height, data, displayDetails }: ScatterChartProps
         role="figure"
       >
         <Group top={margin.top} left={margin.left}>
-          <AxisLeft
-            numTicks={4}
+          <GridRows
             scale={yScale}
-            top={0}
+            width={boundedWidth ?? 0}
+            height={boundedHeight ?? 0}
+            stroke="#777"
+            strokeDasharray="6,6"
+          />
+          <AxisLeft
+            numTicks={5}
+            hideAxisLine={true}
+            hideTicks={true}
+            scale={yScale}
             tickLabelProps={() => ({
-              fill: '#1c1917',
-              fontSize: 10,
+              fontSize: 14,
               textAnchor: 'end',
               verticalAnchor: 'middle',
-              x: -10
+              x: -20
             })}
           />
-          {axisLeftLabel}
           <AxisBottom
+            numTicks={5}
             top={boundedHeight}
+            hideAxisLine={true}
+            hideTicks={true}
             scale={xScale}
             tickLabelProps={() => ({
-              fill: '#1c1917',
-              fontSize: 11,
+              fontSize: 14,
               textAnchor: 'middle'
             })}
           />
-          {axisBottomLabel}
           {dots}
         </Group>
       </svg>
@@ -303,7 +302,7 @@ function ToolTip({ left, top, data, isTooltipOpen }: Props2) {
           </div>
           <div className="flex flex-col">
             <div className="truncate">Date</div>
-            <div className="truncate">{new Date(data?.timestamp ?? 0).toLocaleDateString()}</div>
+            <div className="truncate">{format(xAccessor(data), 'MMM dd yyyy')}</div>
           </div>
         </div>
       </div>
