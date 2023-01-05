@@ -1,6 +1,6 @@
 import { buildChartTheme } from '@visx/xychart';
 import { useAppContext } from 'src/utils/context/AppContext';
-import tailwindConfig from '../../../../settings/theme/tailwind.theme';
+import tailwindConfig from '../../../settings/theme/tailwind.theme';
 
 export function useChartTheme() {
   const { darkMode } = useAppContext();

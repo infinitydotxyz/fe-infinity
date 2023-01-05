@@ -9,29 +9,68 @@ import { defaultStyles, TooltipWithBounds, useTooltip } from '@visx/tooltip';
 import { voronoi } from '@visx/voronoi';
 import { extent } from 'd3';
 import { MouseEvent, TouchEvent, useCallback, useMemo, useState } from 'react';
-import { EZImage } from 'src/components/common';
-import { cardClr, textClr } from 'src/utils/ui-constants';
+import { EthSymbol } from 'src/components/common';
+import { textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { ChartBox } from '../chart-box';
-import { demoData, SaleEntry } from './demoData';
-import { getDimensions, xAccessor, yAccessor } from './utils';
+import { ChartBox } from './chart-box';
 
 export enum ScatterChartType {
   Sales = 'sales'
 }
 
-type ScatterChartProps = {
-  width: number;
-  height: number;
-  graphType: ScatterChartType;
-  timeBucket: string;
-};
-
-const timeBuckets = ['1h', '24h', '1d', '1w', '1m', '1y'];
+export interface SaleEntry {
+  timestamp?: number;
+  collectionAddress?: string;
+  collectionName?: string;
+  tokenId?: string;
+  tokenImage?: string;
+  salePrice?: number;
+}
 
 export type ResponsiveScatterChartProps = Omit<ScatterChartProps, 'width' | 'height'>;
 
-export const ResponsiveSalesScatterChart: React.FC<Omit<ResponsiveScatterChartProps, 'timeBucket'>> = (props) => {
+type ScatterChartProps = {
+  width?: number;
+  height?: number;
+  graphType: ScatterChartType;
+  timeBucket?: string;
+  data: SaleEntry[];
+  onSelection: (sale: SaleEntry) => void;
+  onNilSelection: () => void;
+};
+
+interface Dimensions {
+  margin: {
+    top: number;
+    right: number;
+    bottom: number;
+    left: number;
+  };
+  boundedWidth: number;
+  boundedHeight: number;
+}
+
+const getDimensions = ({ width = 0, height = 0 }: { width?: number; height?: number }): Dimensions => {
+  const margin = {
+    top: 10,
+    right: 0,
+    bottom: 60,
+    left: 70
+  };
+
+  return {
+    margin,
+    boundedWidth: width - margin.left - margin.right,
+    boundedHeight: height - margin.top - margin.bottom
+  };
+};
+
+const yAccessor = (d: SaleEntry) => d.salePrice ?? 0;
+const xAccessor = (d: SaleEntry) => new Date(d.timestamp ?? 0);
+
+const timeBuckets = ['1h', '24h', '1d', '1w', '1m', '1y'];
+
+export const ResponsiveScatterChart = ({ onSelection, data, graphType, onNilSelection }: ScatterChartProps) => {
   const [selectedTimeBucket, setSelectedTimeBucket] = useState('1w');
 
   return (
@@ -51,14 +90,22 @@ export const ResponsiveSalesScatterChart: React.FC<Omit<ResponsiveScatterChartPr
       </select>
       <ParentSize debounceTime={10}>
         {({ width, height }) => (
-          <ScatterChart {...props} timeBucket={selectedTimeBucket} width={width} height={height} />
+          <ScatterChart
+            data={data}
+            graphType={graphType}
+            timeBucket={selectedTimeBucket}
+            width={width}
+            height={height}
+            onSelection={onSelection}
+            onNilSelection={onNilSelection}
+          />
         )}
       </ParentSize>
     </ChartBox>
   );
 };
 
-function ScatterChart({ width, height }: ScatterChartProps) {
+function ScatterChart({ width, height, data, onSelection, onNilSelection }: ScatterChartProps) {
   const {
     showTooltip,
     hideTooltip,
@@ -82,7 +129,7 @@ function ScatterChart({ width, height }: ScatterChartProps) {
     () =>
       scaleLinear<number>({
         range: [0, boundedWidth],
-        domain: extent(demoData, xAccessor) as [Date, Date],
+        domain: extent(data, xAccessor) as [Date, Date],
         nice: true
       }),
     [boundedWidth]
@@ -92,7 +139,7 @@ function ScatterChart({ width, height }: ScatterChartProps) {
     () =>
       scaleLinear<number>({
         range: [boundedHeight, 0],
-        domain: extent(demoData, yAccessor) as [number, number],
+        domain: extent(data, yAccessor) as [number, number],
         nice: true
       }),
     [boundedHeight]
@@ -104,7 +151,7 @@ function ScatterChart({ width, height }: ScatterChartProps) {
       y: (d) => yScale(yAccessor(d)),
       width: boundedWidth,
       height: boundedHeight
-    })(demoData);
+    })(data);
   }, [boundedWidth, boundedHeight, xScale, yScale]);
 
   const voronoiPolygons = useMemo(() => voronoiLayout.polygons(), [voronoiLayout]);
@@ -131,6 +178,7 @@ function ScatterChart({ width, height }: ScatterChartProps) {
           ...closest.data
         }
       });
+      onSelection(closest.data);
     },
     [xScale, yScale, voronoiLayout, voronoiPolygons]
   );
@@ -145,7 +193,7 @@ function ScatterChart({ width, height }: ScatterChartProps) {
 
   const dots = useMemo(
     () =>
-      demoData.map((d) => (
+      data.map((d) => (
         <Circle key={d.timestamp} fill={'black'} cx={xScale(xAccessor(d))} cy={yScale(yAccessor(d))} r={5} />
       )),
     [xScale, yScale, cloudsColorScale]
@@ -174,7 +222,6 @@ function ScatterChart({ width, height }: ScatterChartProps) {
         onMouseLeave={() => hideTooltip()}
         role="figure"
       >
-        <title>Sales</title>
         <Group top={margin.top} left={margin.left}>
           <AxisLeft
             numTicks={4}
@@ -203,7 +250,13 @@ function ScatterChart({ width, height }: ScatterChartProps) {
         </Group>
       </svg>
 
-      <ToolTip isTooltipOpen={tooltipOpen} left={tooltipLeft} top={tooltipTop} data={tooltipData} />
+      <ToolTip
+        isTooltipOpen={tooltipOpen}
+        left={tooltipLeft}
+        top={tooltipTop}
+        data={tooltipData}
+        onNilSelection={onNilSelection}
+      />
     </div>
   );
 }
@@ -213,9 +266,13 @@ interface Props2 {
   top: number;
   data?: SaleEntry;
   isTooltipOpen: boolean;
+  onNilSelection: () => void;
 }
 
-function ToolTip({ left, top, data, isTooltipOpen }: Props2) {
+function ToolTip({ left, top, data, isTooltipOpen, onNilSelection }: Props2) {
+  if (!isTooltipOpen) {
+    onNilSelection();
+  }
   return (
     <TooltipWithBounds
       key={isTooltipOpen ? 1 : 0} // needed for bounds to update correctly
@@ -224,32 +281,19 @@ function ToolTip({ left, top, data, isTooltipOpen }: Props2) {
         display: 'flex',
         flexDirection: 'column',
         rowGap: 10,
-        backgroundColor: 'grey',
+        backgroundColor: 'black',
         opacity: isTooltipOpen ? 1 : 0,
-        transition: 'all 0.1s ease-out'
+        transition: 'all 0.1s ease-out',
+        color: 'white'
       }}
       left={left}
       top={top}
     >
-      <div className={twMerge(cardClr, 'rounded-2xl flex flex-col')} style={{ aspectRatio: '3 / 5' }}>
-        <div className="relative flex-1">
-          <div className="absolute top-0 bottom-0 left-0 right-0 rounded-t-2xl overflow-clip">
-            <EZImage src={data?.tokenImage} className="transition-all" />
-          </div>
+      <div className="flex flex-col space-y-2">
+        <div>
+          {data?.salePrice} {EthSymbol}
         </div>
-
-        <div className="font-bold truncate ml-1 mt-1">{data?.tokenId}</div>
-
-        <div className={twMerge(textClr, 'flex flex-row space-x-3 m-1')}>
-          <div className="flex flex-col">
-            <div className="truncate">Sale price</div>
-            <div className="truncate">{data?.salePrice}</div>
-          </div>
-          <div className="flex flex-col">
-            <div className="truncate">Sale price</div>
-            <div className="truncate">{data?.salePrice}</div>
-          </div>
-        </div>
+        <div>{new Date(data?.timestamp ?? 0).toLocaleDateString()}</div>
       </div>
     </TooltipWithBounds>
   );

@@ -1,22 +1,23 @@
 import React from 'react';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { SimpleTable, SimpleTableItem, Spacer } from '../../common';
+import { EZImage, SimpleTable, SimpleTableItem, Spacer } from '../../common';
 import { OrderDetailPicker } from '../order-detail-picker';
 import { twMerge } from 'tailwind-merge';
 import { OrderbookRowButton } from '../list/orderbook-row-button';
 import { clamp } from './chart-utils';
 import { ChartBox } from './chart-box';
 import { NextPrevArrows } from './next-prev-arrows';
-import { textClr } from 'src/utils/ui-constants';
+import { cardClr, textClr } from 'src/utils/ui-constants';
+import { SaleEntry } from './scatter-chart';
 
-interface Props9 {
+interface Props {
   orders: SignedOBOrder[];
   index: number;
   setIndex: (index: number) => void;
   valueClassName?: string;
 }
 
-export const ChartOrderDetails = ({ orders, index, setIndex, valueClassName = '' }: Props9) => {
+export const OrdersChartDetails = ({ orders, index, setIndex, valueClassName = '' }: Props) => {
   if (orders.length > 0) {
     const order = orders[clamp(index, 0, orders.length - 1)];
 
@@ -50,6 +51,45 @@ export const ChartOrderDetails = ({ orders, index, setIndex, valueClassName = ''
         </div>
 
         <OrderDetailPicker order={order} scroll={true} className="text-dark-gray-200" />
+      </ChartBox>
+    );
+  }
+
+  return (
+    <ChartBox className={twMerge(textClr, 'flex-1 items-center justify-center')}>
+      <div className="text-center">Nothing selected</div>
+    </ChartBox>
+  );
+};
+
+interface Props2 {
+  data?: SaleEntry;
+}
+
+export const SalesChartDetails = ({ data }: Props2) => {
+  if (data) {
+    return (
+      <ChartBox noCSSStyles className={textClr}>
+        <div className={twMerge(cardClr, 'rounded-2xl flex flex-col')} style={{ aspectRatio: '4 / 5' }}>
+          <div className="relative flex-1">
+            <div className="absolute top-0 bottom-0 left-0 right-0 rounded-t-2xl overflow-clip">
+              <EZImage src={data?.tokenImage} className="transition-all" />
+            </div>
+          </div>
+
+          <div className="font-bold truncate ml-1 mt-1">{data?.tokenId}</div>
+
+          <div className={twMerge(textClr, 'flex flex-row space-x-3 m-1')}>
+            <div className="flex flex-col">
+              <div className="truncate">Sale price</div>
+              <div className="truncate">{data?.salePrice}</div>
+            </div>
+            <div className="flex flex-col">
+              <div className="truncate">Sale price</div>
+              <div className="truncate">{data?.salePrice}</div>
+            </div>
+          </div>
+        </div>
       </ChartBox>
     );
   }

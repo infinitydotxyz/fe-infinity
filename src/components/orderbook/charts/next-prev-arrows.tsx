@@ -43,14 +43,14 @@ export const NextPrevArrows = ({ orders, index, setIndex, className = '' }: Prop
 
 // ====================================================================
 
-interface Props4 {
+interface Props2 {
   numItems: number;
   index: number;
   onNext: () => void;
   onPrev: () => void;
 }
 
-const NextPrev = ({ index, numItems, onNext, onPrev }: Props4) => {
+const NextPrev = ({ index, numItems, onNext, onPrev }: Props2) => {
   let progress = '0';
 
   if (numItems > 0) {

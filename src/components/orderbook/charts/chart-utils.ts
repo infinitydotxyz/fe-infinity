@@ -1,11 +1,3 @@
-import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-
-export type ChartData = {
-  isSellOrder: boolean;
-  price: number;
-  order: SignedOBOrder;
-};
-
 export const chartHeight = 400;
 
 export const clamp = (num: number, min: number, max: number): number => {

@@ -4,10 +4,9 @@ import { Spinner } from 'src/components/common';
 import { textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { useOrderbook } from '../OrderbookContext';
-import { BarChartType, ResponsiveBarChart } from './bar-chart';
-import { ChartOrderDetails } from './chart-order-details';
-import { ChartData } from './chart-utils';
-import { ResponsiveSalesScatterChart, ScatterChartType } from './scatter-chart/scatter-chart';
+import { BarChartType, ChartEntry, ResponsiveBarChart } from './bar-chart';
+import { OrdersChartDetails, SalesChartDetails } from './chart-details';
+import { ResponsiveScatterChart, SaleEntry, ScatterChartType } from './scatter-chart';
 
 const infoBoxStyle = 'flex items-center justify-center opacity-60 font-bold text-lg h-full';
 
@@ -17,10 +16,13 @@ export type OrderBookChartProps = {
 
 export const OrderbookCharts: React.FC<OrderBookChartProps> = ({ className = '' }) => {
   const { orders, updateFilters, isLoading } = useOrderbook();
-  const [graphData, setGraphData] = useState<ChartData[]>([]);
+  const [graphData, setGraphData] = useState<ChartEntry[]>([]);
   const [selectedOrders, setSelectedOrders] = useState<SignedOBOrder[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [defaultCollections, setDefaultCollections] = useState<string[]>([]);
+  const [salesData, setSalesData] = useState<SaleEntry[]>([]);
+  const [selectedSale, setSelectedSale] = useState<SaleEntry>();
+  const [showSalesChartDetails, setShowSalesChartDetails] = useState(true);
+  const [showOrdersChartDetails, setShowOrdersChartDetails] = useState(true);
 
   const handleOnClick = (minPrice: string, maxPrice: string): Promise<boolean> =>
     updateFilters([
@@ -29,6 +31,7 @@ export const OrderbookCharts: React.FC<OrderBookChartProps> = ({ className = '' 
     ]);
 
   const handleSelect = (orders: SignedOBOrder[], index: number) => {
+    setShowOrdersChartDetails(true);
     if (index !== selectedIndex) {
       setSelectedIndex(index);
     }
@@ -44,34 +47,67 @@ export const OrderbookCharts: React.FC<OrderBookChartProps> = ({ className = '' 
   };
 
   useEffect(() => {
-    const gdata = orders.map((x) => {
-      const result: ChartData = {
-        price: x.endPriceEth,
-        isSellOrder: x.isSellOrder,
-        order: x
-      };
-      return result;
-    });
+    // const gdata = orders.map((x) => {
+    //   const result: ChartEntry = {
+    //     price: x.endPriceEth,
+    //     isSellOrder: x.isSellOrder,
+    //     order: x
+    //   };
+    //   return result;
+    // });
     //setGraphData(gdata); // todo use real data
     setGraphData(
-      [...new Array(100)].map(
+      [...new Array(300)].map(
         () =>
           ({
-            price: +(Math.random() * (10 - 0.01) + 0.01).toFixed(2),
+            price: +(Math.random() * (100 - 0.01) + 0.01).toFixed(2),
             isSellOrder: Math.random() > 0.5,
-            order: {}
-          } as ChartData)
+            order: {
+              nfts: [
+                {
+                  collectionAddress: '0x123',
+                  collectionName: 'Test Collection ' + Math.floor(Math.random() * 100),
+                  collectionImage:
+                    'https://i.seadn.io/gae/8GNiYHlI96za-qLdNuBdhW64Y9fNquLw4V9NojDZt5XZhownn8tHQJTEMfZfqfRzk9GngBxiz6BKsr_VaHFyGk6Lm2Qai6RXgH7bwB4?auto=format&w=750',
+                  tokens: [
+                    {
+                      tokenId: Math.floor(Math.random() * 10000).toString(),
+                      tokenImage:
+                        'https://i.seadn.io/gae/8GNiYHlI96za-qLdNuBdhW64Y9fNquLw4V9NojDZt5XZhownn8tHQJTEMfZfqfRzk9GngBxiz6BKsr_VaHFyGk6Lm2Qai6RXgH7bwB4?auto=format&w=750'
+                    }
+                  ]
+                }
+              ]
+            }
+          } as ChartEntry)
+      )
+    );
+
+    const nowTimestamp = Date.now();
+    const timestampOneYearAgo = nowTimestamp - 1000 * 60 * 60 * 24 * 365;
+    setSalesData(
+      [...new Array(300)].map(
+        () =>
+          ({
+            salePrice: +(Math.random() * (100 - 0.01) + 0.01).toFixed(2),
+            tokenImage:
+              'https://i.seadn.io/gae/8GNiYHlI96za-qLdNuBdhW64Y9fNquLw4V9NojDZt5XZhownn8tHQJTEMfZfqfRzk9GngBxiz6BKsr_VaHFyGk6Lm2Qai6RXgH7bwB4?auto=format&w=750',
+            collectionAddress: '0x123',
+            collectionName: 'abc',
+            tokenId: '123',
+            timestamp: Math.random() * (nowTimestamp - timestampOneYearAgo) + timestampOneYearAgo
+          } as SaleEntry)
       )
     );
 
     // set defaultCollections
-    const dcs: Set<string> = new Set<string>(defaultCollections);
-    for (const gd of gdata) {
-      for (const nft of gd.order.nfts) {
-        dcs.add(`${nft.chainId}:${nft.collectionAddress}`);
-      }
-    }
-    setDefaultCollections(Array.from(dcs));
+    // const dcs: Set<string> = new Set<string>(defaultCollections);
+    // for (const gd of gdata) {
+    //   for (const nft of gd.order.nfts) {
+    //     dcs.add(`${nft.chainId}:${nft.collectionAddress}`);
+    //   }
+    // }
+    // setDefaultCollections(Array.from(dcs));
   }, [orders]);
 
   return (
@@ -82,13 +118,22 @@ export const OrderbookCharts: React.FC<OrderBookChartProps> = ({ className = '' 
           {/* TODO: Improve loading screen, it looks a bit jumpy cus both charts are re-rendered when the data changes. Perhaps add an individual loader per chart? */}
           {!isLoading && graphData.length > 0 && (
             <>
-              <ResponsiveSalesScatterChart graphType={ScatterChartType.Sales} />
+              <ResponsiveScatterChart
+                graphType={ScatterChartType.Sales}
+                data={salesData}
+                onSelection={(value) => {
+                  setSelectedSale(value);
+                  setShowSalesChartDetails(true);
+                }}
+                onNilSelection={() => setShowSalesChartDetails(false)}
+              />
 
               <ResponsiveBarChart
                 graphType={BarChartType.Offers}
                 graphData={graphData}
                 onClick={handleOnClick}
                 onSelection={handleSelect}
+                onNilSelection={() => setShowOrdersChartDetails(false)}
               />
 
               <ResponsiveBarChart
@@ -96,6 +141,7 @@ export const OrderbookCharts: React.FC<OrderBookChartProps> = ({ className = '' 
                 graphData={graphData}
                 onClick={handleOnClick}
                 onSelection={handleSelect}
+                onNilSelection={() => setShowOrdersChartDetails(false)}
               />
             </>
           )}
@@ -112,12 +158,15 @@ export const OrderbookCharts: React.FC<OrderBookChartProps> = ({ className = '' 
 
         <div className="w-[360px] p-4">
           <div className="w-[360px] fixed pointer-events-none space-y-4">
-            <ChartOrderDetails
-              orders={selectedOrders}
-              index={selectedIndex}
-              valueClassName="text-dark-gray-300"
-              setIndex={setSelectedIndex}
-            />
+            {showSalesChartDetails && <SalesChartDetails data={selectedSale} />}
+            {showOrdersChartDetails && (
+              <OrdersChartDetails
+                orders={selectedOrders}
+                index={selectedIndex}
+                valueClassName="text-dark-gray-300"
+                setIndex={setSelectedIndex}
+              />
+            )}
           </div>
         </div>
       </div>
