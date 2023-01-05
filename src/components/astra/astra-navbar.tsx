@@ -4,7 +4,7 @@ import { IoMdArrowDropdown } from 'react-icons/io';
 import { RiMediumFill } from 'react-icons/ri';
 import { SiDiscord, SiReadthedocs } from 'react-icons/si';
 import { AstraCartButton } from 'src/components/astra/astra-cart-button';
-import { textClr } from 'src/utils/ui-constants';
+import { infoBoxBGClr, textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 import { Menu } from '@headlessui/react';
@@ -20,7 +20,7 @@ import {
 
 export const ANavbar = () => {
   return (
-    <div className="flex px-5 py-3 space-x-4 items-center">
+    <div className={twMerge(infoBoxBGClr, 'flex px-5 py-3 space-x-4 items-center border-b-2')}>
       <div className=" max-w-96">
         <CollectionSearchInput expanded />
       </div>

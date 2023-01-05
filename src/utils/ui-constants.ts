@@ -24,18 +24,13 @@ export const secondsPerDay = 86400;
 export const weekSeconds = secondsPerDay * 7;
 export const thirtyDaySeconds = secondsPerDay * 30;
 
-export const drawerPx = 'px-8';
-
-export const negativeMargin = 'mt-[-68px]';
-
 // these include both dark and light
 export const cardClr = 'dark:bg-dark-card bg-light-card';
 export const textClr = 'dark:text-dark-body text-light-body';
-export const inputBorderColor = 'dark:border-dark-border  border-light-border';
-export const hoverClr = 'dark:hover:bg-gray-200  hover:bg-gray-200 hover:bg-opacity-60 dark:hover:bg-opacity-10';
+export const inputBorderColor = 'dark:border-dark-border border-light-border';
+export const hoverClr = 'dark:hover:bg-gray-200 dark:hover:bg-opacity-10 hover:bg-gray-200 hover:bg-opacity-60';
 export const primaryTextColor = 'text-sky-500';
-export const primaryBGColor = 'bg-sky-500';
 export const primaryBorderColor = 'border-sky-500';
 export const selectionOutline = 'outline-4 outline-offset-1 outline outline-sky-500';
-export const infoBoxBGClr = 'dark:bg-gray-200   bg-gray-200  bg-opacity-60 dark:bg-opacity-10';
-export const backgroundClr = 'dark:bg-neutral-900   bg-white ';
+export const infoBoxBGClr = 'dark:bg-gray-200 dark:bg-opacity-10 bg-gray-200 bg-opacity-60';
+export const backgroundClr = 'dark:bg-neutral-900 bg-white ';
