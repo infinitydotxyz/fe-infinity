@@ -33,7 +33,7 @@ type BarChartProps = {
   width?: number;
   height?: number;
   graphType: BarChartType;
-  fetchNewData: (minPrice: string, maxPrice: string) => void;
+  fetchData: (minPrice: string, maxPrice: string) => void;
   displayDetails: (orders: SignedOBOrder[], index: number) => void;
   priceBucket?: number;
 };
@@ -89,7 +89,7 @@ function convertRawDataToChartData(
   return newData;
 }
 
-export const ResponsiveBarChart = ({ graphData, graphType, fetchNewData, displayDetails }: BarChartProps) => {
+export const ResponsiveBarChart = ({ graphData, graphType, fetchData, displayDetails }: BarChartProps) => {
   const [selectedPriceBucket, setSelectedPriceBucket] = useState(1);
 
   return (
@@ -118,7 +118,7 @@ export const ResponsiveBarChart = ({ graphData, graphType, fetchNewData, display
             priceBucket={selectedPriceBucket}
             width={width}
             height={height}
-            fetchNewData={fetchNewData}
+            fetchData={fetchData}
             displayDetails={displayDetails}
           />
         )}
@@ -132,7 +132,7 @@ const BarChart: React.FC<BarChartProps> = ({
   width: outerWidth,
   height: outerHeight,
   graphType,
-  fetchNewData,
+  fetchData,
   displayDetails,
   priceBucket
 }) => {
@@ -180,7 +180,7 @@ const BarChart: React.FC<BarChartProps> = ({
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const isLeftMouseClick = (event as unknown as any).button === 0;
           if (isLeftMouseClick) {
-            fetchNewData(datum.start.toString(), datum.end.toString());
+            fetchData(datum.start.toString(), datum.end.toString());
             displayDetails(datum.data.map(getOrder), 0);
           }
         }}

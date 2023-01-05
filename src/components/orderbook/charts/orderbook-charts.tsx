@@ -6,7 +6,7 @@ import { twMerge } from 'tailwind-merge';
 import { useOrderbook } from '../OrderbookContext';
 import { BarChartType, OrderData, ResponsiveBarChart } from './bar-chart';
 import { OrdersChartDetails, SalesChartDetails } from './chart-details';
-import { ResponsiveScatterChart, SaleData, ScatterChartType } from './scatter-chart';
+import { ResponsiveScatterChart, SaleData, ScatterChartType, TimeBuckets } from './scatter-chart';
 
 const infoBoxStyle = 'flex items-center justify-center opacity-60 font-bold text-lg h-full';
 
@@ -23,8 +23,9 @@ export const OrderbookCharts = ({ className = '' }: OrderBookChartProps) => {
   const [selectedOffers, setSelectedOffers] = useState<SignedOBOrder[]>([]);
   const [selectedListingIndex, setSelectedListingIndex] = useState(0);
   const [selectedOfferIndex, setSelectedOfferIndex] = useState(0);
+  const [selectedTimeBucket, setSelectedTimeBucket] = useState(TimeBuckets.ONE_WEEK.toString());
 
-  const fetchNewData = (minPrice: string, maxPrice: string): Promise<boolean> =>
+  const fetchOrdersDataForPriceRange = (minPrice: string, maxPrice: string): Promise<boolean> =>
     updateFilters([
       { name: 'minPrice', value: minPrice },
       { name: 'maxPrice', value: maxPrice }
@@ -60,10 +61,32 @@ export const OrderbookCharts = ({ className = '' }: OrderBookChartProps) => {
     }
   };
 
-  useEffect(() => {
+  const fetchSalesDataForTimeBucket = (timeBucket: string) => {
     // todo use real data
     const nowTimestamp = Date.now();
-    const timestampOneYearAgo = nowTimestamp - 1000 * 60 * 60 * 24 * 365;
+    let prevTimestamp = nowTimestamp;
+    switch (timeBucket) {
+      case TimeBuckets.ONE_HOUR:
+        prevTimestamp = nowTimestamp - 1000 * 60 * 60;
+        break;
+      case TimeBuckets.ONE_DAY:
+        prevTimestamp = nowTimestamp - 1000 * 60 * 60 * 24;
+        break;
+      case TimeBuckets.ONE_WEEK:
+        prevTimestamp = nowTimestamp - 1000 * 60 * 60 * 24 * 7;
+        break;
+      case TimeBuckets.ONE_MONTH:
+        prevTimestamp = nowTimestamp - 1000 * 60 * 60 * 24 * 30;
+        break;
+      case TimeBuckets.ONE_YEAR:
+        prevTimestamp = nowTimestamp - 1000 * 60 * 60 * 24 * 365;
+        break;
+      default:
+        break;
+    }
+
+    setSelectedTimeBucket(timeBucket);
+
     setSalesData(
       [...new Array(300)].map(
         () =>
@@ -74,7 +97,27 @@ export const OrderbookCharts = ({ className = '' }: OrderBookChartProps) => {
             collectionAddress: '0x123',
             collectionName: 'abc',
             tokenId: '123',
-            timestamp: Math.random() * (nowTimestamp - timestampOneYearAgo) + timestampOneYearAgo
+            timestamp: Math.random() * (nowTimestamp - prevTimestamp) + prevTimestamp
+          } as SaleData)
+      )
+    );
+  };
+
+  useEffect(() => {
+    // todo use real data
+    const nowTimestamp = Date.now();
+    const timestampOneWeekAgo = nowTimestamp - 1000 * 60 * 60 * 24 * 7; // default week
+    setSalesData(
+      [...new Array(300)].map(
+        () =>
+          ({
+            salePrice: +(Math.random() * (100 - 0.01) + 0.01).toFixed(2),
+            tokenImage:
+              'https://i.seadn.io/gae/8GNiYHlI96za-qLdNuBdhW64Y9fNquLw4V9NojDZt5XZhownn8tHQJTEMfZfqfRzk9GngBxiz6BKsr_VaHFyGk6Lm2Qai6RXgH7bwB4?auto=format&w=750',
+            collectionAddress: '0x123',
+            collectionName: 'abc',
+            tokenId: '123',
+            timestamp: Math.random() * (nowTimestamp - timestampOneWeekAgo) + timestampOneWeekAgo
           } as SaleData)
       )
     );
@@ -113,9 +156,12 @@ export const OrderbookCharts = ({ className = '' }: OrderBookChartProps) => {
         <div className="w-2/3 p-2">
           {!isLoading && salesData.length > 0 && (
             <ResponsiveScatterChart
+              key={selectedTimeBucket}
+              selectedTimeBucket={selectedTimeBucket}
               graphType={ScatterChartType.Sales}
               data={salesData}
               displayDetails={setSelectedSale}
+              fetchData={fetchSalesDataForTimeBucket}
             />
           )}
 
@@ -132,7 +178,7 @@ export const OrderbookCharts = ({ className = '' }: OrderBookChartProps) => {
             <ResponsiveBarChart
               graphType={BarChartType.Listings}
               graphData={ordersData}
-              fetchNewData={fetchNewData}
+              fetchData={fetchOrdersDataForPriceRange}
               displayDetails={displayListingDetails}
             />
           )}
@@ -155,7 +201,7 @@ export const OrderbookCharts = ({ className = '' }: OrderBookChartProps) => {
             <ResponsiveBarChart
               graphType={BarChartType.Offers}
               graphData={ordersData}
-              fetchNewData={fetchNewData}
+              fetchData={fetchOrdersDataForPriceRange}
               displayDetails={displayOfferDetails}
             />
           )}

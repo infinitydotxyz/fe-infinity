@@ -9,7 +9,7 @@ import { defaultStyles, TooltipWithBounds, useTooltip } from '@visx/tooltip';
 import { voronoi } from '@visx/voronoi';
 import { extent } from 'd3';
 import { format } from 'date-fns';
-import { MouseEvent, TouchEvent, useCallback, useMemo, useState } from 'react';
+import { MouseEvent, TouchEvent, useCallback, useMemo } from 'react';
 import { EZImage } from 'src/components/common';
 import { cardClr, textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
@@ -17,6 +17,14 @@ import { ChartBox } from './chart-box';
 
 export enum ScatterChartType {
   Sales = 'Sales'
+}
+
+export enum TimeBuckets {
+  ONE_HOUR = '1h',
+  ONE_DAY = '1d',
+  ONE_WEEK = '1w',
+  ONE_MONTH = '1m',
+  ONE_YEAR = '1y'
 }
 
 export interface SaleData {
@@ -28,16 +36,18 @@ export interface SaleData {
   salePrice?: number;
 }
 
-export type ResponsiveScatterChartProps = Omit<ScatterChartProps, 'width' | 'height'>;
-
-type ScatterChartProps = {
-  width?: number;
-  height?: number;
+export interface ResponsiveScatterChartProps extends Omit<ScatterChartProps, 'width' | 'height'> {
+  selectedTimeBucket: string;
+  fetchData: (timeBucket: string) => void;
   graphType: ScatterChartType;
-  timeBucket?: string;
+}
+
+interface ScatterChartProps {
+  width: number;
+  height: number;
   data: SaleData[];
   displayDetails: (sale: SaleData) => void;
-};
+}
 
 interface Dimensions {
   margin: {
@@ -68,23 +78,25 @@ const getDimensions = ({ width = 0, height = 0 }: { width?: number; height?: num
 const yAccessor = (d: SaleData) => d.salePrice ?? 0;
 const xAccessor = (d?: SaleData) => new Date(d?.timestamp ?? 0);
 
-const timeBuckets = ['1h', '24h', '1d', '1w', '1m', '1y'];
-
-export const ResponsiveScatterChart = ({ displayDetails, data, graphType }: ScatterChartProps) => {
-  const [selectedTimeBucket, setSelectedTimeBucket] = useState('1w');
-
+export const ResponsiveScatterChart = ({
+  displayDetails,
+  data,
+  graphType,
+  selectedTimeBucket,
+  fetchData
+}: ResponsiveScatterChartProps) => {
   return (
     <ChartBox className="h-full">
       <div className="flex justify-between mb-4">
         <div className="ml-5 font-bold mt-3">{graphType}</div>
         <select
-          onChange={(e) => setSelectedTimeBucket(e.target.value)}
+          onChange={(e) => fetchData(e.target.value)}
           className={twMerge(
             'form-select rounded-full bg-transparent border-ring-gray-400 focus:ring-gray-400 focus:border-none float-right',
             textClr
           )}
         >
-          {timeBuckets.map((filter) => (
+          {Object.values(TimeBuckets).map((filter) => (
             <option value={filter} selected={filter === selectedTimeBucket}>
               {filter}
             </option>
@@ -93,14 +105,7 @@ export const ResponsiveScatterChart = ({ displayDetails, data, graphType }: Scat
       </div>
       <ParentSize debounceTime={10}>
         {({ width, height }) => (
-          <ScatterChart
-            data={data}
-            graphType={graphType}
-            timeBucket={selectedTimeBucket}
-            width={width}
-            height={height}
-            displayDetails={displayDetails}
-          />
+          <ScatterChart data={data} width={width} height={height} displayDetails={displayDetails} />
         )}
       </ParentSize>
     </ChartBox>
