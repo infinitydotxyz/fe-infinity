@@ -234,7 +234,7 @@ export const AstraCart = ({
 
   return (
     // setting to  w-72 so it doen't shrink and expand while animating
-    <div className={twMerge(infoBoxBGClr, 'h-full flex flex-col w-72')}>
+    <div className={twMerge(infoBoxBGClr, 'h-full flex flex-col')}>
       <div className=" m-4 flex items-center">
         <div className={twMerge(textClr, 'text-4xl lg:text-3xl font-bold mr-3')}>Cart</div>
         {clearButton}

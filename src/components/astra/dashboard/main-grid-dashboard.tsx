@@ -28,8 +28,10 @@ export const MainDashboardGrid = (
           {grid}
         </div>
 
-        <div className="row-span-3  selection: overflow-y-auto overflow-x-hidden">
-          <div className={twMerge('h-full', showCart ? 'w-72' : 'w-0', 'transition-width duration-300')}>{cart}</div>
+        <div className="row-span-3 selection:overflow-y-auto overflow-x-hidden">
+          <div className={twMerge('h-full', showCart ? 'w-[22rem]' : 'w-0', 'transition-width duration-100')}>
+            {cart}
+          </div>
         </div>
 
         <div className="col-start-2  ">{footer}</div>
