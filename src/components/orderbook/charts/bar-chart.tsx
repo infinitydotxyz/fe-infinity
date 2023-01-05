@@ -97,7 +97,7 @@ function convertChartData(
 }
 
 export const ResponsiveBarChart = ({ graphData, graphType, fetchNewData, displayDetails }: BarChartProps) => {
-  const [selectedPriceBucket, setSelectedPriceBucket] = useState(0.01);
+  const [selectedPriceBucket, setSelectedPriceBucket] = useState(1);
 
   return (
     <ChartBox className="h-full">
