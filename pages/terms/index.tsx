@@ -3,7 +3,7 @@ import { TOKEN } from 'src/utils/constants';
 
 const TermsPage = () => {
   return (
-    <APageBox title="Terms and Conditions">
+    <APageBox title="Terms and Conditions" className="overflow-x-clip overflow-y-auto">
       <div className="flex flex-col items-center justify-center space-y-2">
         <div className="font-normal text-3xl">Infinity</div>
         <div className="underline">Terms and Conditions of Use</div>
@@ -69,12 +69,6 @@ const TermsPage = () => {
               ) which functions as the native platform currency and access token within the ecosystem. ${TOKEN.symbol}{' '}
               has a variety of uses within the marketplace, including but not limited to providing discounts for fees
               and curating NFTs.&nbsp;
-            </span>
-          </p>
-          <p dir="ltr">
-            <span>
-              Holders of ${TOKEN.symbol} will be able to participate in governance to vote on features of the Infinity
-              ecosystem, for example on new developments to enhance the ecosystem.
             </span>
           </p>
           <p dir="ltr">

@@ -20,7 +20,7 @@ import GlobalRewards from './rewards/global-rewards';
 
 const HomePage = () => {
   return (
-    <APageBox title="Home" fullWidth showTitle={false} footer={<Footer />}>
+    <APageBox title="Home" fullWidth showTitle={false} footer={<Footer />} className="overflow-x-clip overflow-y-auto">
       <HomeSection title="Rewards" url="/rewards?tab=Global+Rewards" theme="red">
         <GlobalRewards showCount={1} />
       </HomeSection>

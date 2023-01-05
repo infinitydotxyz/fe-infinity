@@ -2,7 +2,7 @@ import { APageBox } from 'src/components/astra/astra-page-box';
 
 const PrivacyPolicyPage = () => {
   return (
-    <APageBox title="Privacy Policy">
+    <APageBox title="Privacy Policy" className="overflow-x-clip overflow-y-auto">
       <div className="flex flex-col items-center justify-center space-y-2">
         <div className="font-normal text-3xl">Infinity</div>
         <div className="underline">Privacy Policy</div>
