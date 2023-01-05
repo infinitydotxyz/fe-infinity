@@ -12,6 +12,7 @@ import {
   textColorForTheme,
   ThemeColor
 } from 'src/components/common';
+import { Footer } from 'src/components/landing/footer';
 import { RaffleDescription } from 'src/components/raffles/raffle-description';
 import { useRaffles } from 'src/hooks/api/useRaffles';
 import { twMerge } from 'tailwind-merge';
@@ -19,7 +20,7 @@ import GlobalRewards from './rewards/global-rewards';
 
 const HomePage = () => {
   return (
-    <APageBox title="Home" fullWidth showTitle={false}>
+    <APageBox title="Home" fullWidth showTitle={false} footer={<Footer />}>
       <HomeSection title="Rewards" url="/rewards?tab=Global+Rewards" theme="red">
         <GlobalRewards showCount={1} />
       </HomeSection>
