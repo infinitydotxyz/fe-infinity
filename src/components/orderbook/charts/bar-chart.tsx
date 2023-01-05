@@ -10,8 +10,8 @@ import { ChartBox } from './chart-box';
 import { useChartTheme } from './use-theme';
 
 export enum BarChartType {
-  Offers = 'offers',
-  Listings = 'listings'
+  Offers = 'Offers',
+  Listings = 'Listings'
 }
 
 export type OrderData = {
@@ -19,13 +19,6 @@ export type OrderData = {
 };
 
 export type ResponsiveBarChartProps = Omit<BarChartProps, 'width' | 'height'>;
-
-const barChartMargins = {
-  top: 30,
-  right: 0,
-  bottom: 30,
-  left: -40
-};
 
 type BarChartEntry = {
   data: OrderData[];
@@ -101,19 +94,22 @@ export const ResponsiveBarChart = ({ graphData, graphType, fetchNewData, display
 
   return (
     <ChartBox className="h-full">
-      <select
-        onChange={(e) => setSelectedPriceBucket(+e.target.value)}
-        className={twMerge(
-          'form-select rounded-full bg-transparent border-ring-gray-400 focus:ring-gray-400 focus:border-none float-right',
-          textClr
-        )}
-      >
-        {priceBuckets.map((filter) => (
-          <option value={filter} selected={filter === selectedPriceBucket}>
-            {filter} {EthSymbol}
-          </option>
-        ))}
-      </select>
+      <div className="flex justify-between mb-4">
+        <div className="ml-6 font-bold mt-3">{graphType}</div>
+        <select
+          onChange={(e) => setSelectedPriceBucket(+e.target.value)}
+          className={twMerge(
+            'form-select rounded-full bg-transparent border-ring-gray-400 focus:ring-gray-400 focus:border-none',
+            textClr
+          )}
+        >
+          {priceBuckets.map((filter) => (
+            <option value={filter} selected={filter === selectedPriceBucket}>
+              {filter} {EthSymbol}
+            </option>
+          ))}
+        </select>
+      </div>
       <ParentSize debounceTime={10}>
         {({ width, height }) => (
           <BarChart
@@ -141,10 +137,16 @@ const BarChart: React.FC<BarChartProps> = ({
   priceBucket
 }) => {
   const { theme } = useChartTheme();
-  const width = outerWidth ?? 0 - barChartMargins.left - barChartMargins.right;
-  const height = outerHeight ?? 0 - barChartMargins.top - barChartMargins.bottom;
+  const margins = {
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0
+  };
+  const width = outerWidth ?? 0 - margins.left - margins.right;
+  const height = outerHeight ?? 0 - margins.top - margins.bottom;
 
-  const data = convertChartData(graphData, width, graphType, priceBucket ?? 0.01);
+  const data = convertChartData(graphData, width, graphType, priceBucket ?? 1);
   const axisLabels = data.map(getAxisLabel);
 
   if (data.every((d) => d.data.length === 0)) {
@@ -155,7 +157,7 @@ const BarChart: React.FC<BarChartProps> = ({
     <XYChart
       width={outerWidth}
       height={outerHeight}
-      xScale={{ type: 'band', range: [0, width], round: true, domain: axisLabels, padding: 0.8 }}
+      xScale={{ type: 'band', range: [0, width], round: true, domain: axisLabels, padding: 0.85 }}
       yScale={{
         type: 'linear',
         range: [height, 10], // NOTE: I don't know why, but removing the second item from this array makes the top of the chart look 'cut off' ¯\_(ツ)_/¯
@@ -164,24 +166,8 @@ const BarChart: React.FC<BarChartProps> = ({
       }}
       theme={theme}
     >
-      <AnimatedAxis
-        orientation="bottom"
-        top={height}
-        tickFormat={(v) => `${v}`}
-        hideAxisLine={true}
-        tickValues={axisLabels}
-        label={`${EthSymbol} price`}
-        labelOffset={15}
-        hideZero={true}
-      />
-      <AnimatedAxis
-        orientation="left"
-        tickFormat={(v) => `${parseInt(v)}`}
-        hideAxisLine={true}
-        label={`# ${graphType}`}
-        labelOffset={10}
-        // animationTrajectory="center"
-      />
+      <AnimatedAxis orientation="bottom" tickFormat={(v) => `${v}`} hideAxisLine={true} top={height} />
+      <AnimatedAxis orientation="left" tickFormat={(v) => `${parseInt(v)}`} hideAxisLine={true} />
       <AnimatedGrid columns={false} strokeDasharray="6,6" />
       <AnimatedBarSeries
         data={data}
