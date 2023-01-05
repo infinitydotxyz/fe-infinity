@@ -1,14 +1,8 @@
-import { cardClr, inputBorderColor, textClr, primaryBorderColor, primaryTextColor } from 'src/utils/ui-constants';
-import { twMerge } from 'tailwind-merge';
-import { useDashboardContext } from 'src/utils/context/DashboardContext';
-import { BlueCheck, EZImage, NextLink, ReadMoreText, Spacer } from 'src/components/common';
 import { NextRouter, useRouter } from 'next/router';
-import { AListGridButton } from '../astra-button';
-import { ASortButton } from '../astra-sort-button';
-import { AStatusFilterButton } from '../astra-status-button';
-import { CollectionNftSearchInput } from 'src/components/common/search/collection-nft-search-input';
-import { APriceFilter } from '../astra-price-filter';
-import { ATraitFilter } from '../astra-trait-filter';
+import { BlueCheck, EZImage, NextLink, ReadMoreText, Spacer } from 'src/components/common';
+import { useDashboardContext } from 'src/utils/context/DashboardContext';
+import { cardClr, inputBorderColor, primaryBorderColor, primaryTextColor, textClr } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
 
 export interface GridHeaderProps {
   expanded: boolean;
@@ -19,15 +13,7 @@ export interface GridHeaderProps {
   hasBlueCheck?: boolean;
   children?: React.ReactNode;
 }
-export const GridHeader = ({
-  expanded,
-  avatarUrl,
-  title,
-  slug,
-  description,
-  hasBlueCheck,
-  children
-}: GridHeaderProps) => {
+export const GridHeader = ({ expanded, avatarUrl, title, description, hasBlueCheck, children }: GridHeaderProps) => {
   return (
     <div
       className={twMerge(inputBorderColor, cardClr, textClr, 'flex-col items-center rounded-tl-lg border-b px-8 pt-5')}
@@ -61,16 +47,6 @@ export const GridHeader = ({
       )}
 
       <HeaderTabBar />
-
-      <div className={twMerge(inputBorderColor, 'w-full flex   py-2 border-t-[1px]')}>
-        <ASortButton />
-        <AStatusFilterButton />
-        <APriceFilter />
-        <ATraitFilter />
-        <CollectionNftSearchInput slug={slug} expanded />
-        <Spacer />
-        <AListGridButton />
-      </div>
     </div>
   );
 };

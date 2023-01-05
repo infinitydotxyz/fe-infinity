@@ -25,14 +25,14 @@ export interface ProfileDashboardProps extends BaseDashboardProps {
   };
 }
 
-interface CollectionDashboardProps extends BaseDashboardProps {
+export interface CollectionDashboardProps extends BaseDashboardProps {
   kind: 'collection';
   asset: {
     collection: BaseCollection;
   };
 }
 
-interface TokenDashboardProps extends BaseDashboardProps {
+export interface TokenDashboardProps extends BaseDashboardProps {
   kind: 'token';
   asset: {
     token: NftDto;
