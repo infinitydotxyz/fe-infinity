@@ -10,7 +10,7 @@ import {
   getServerSideProps as getDashboardServerSideProps
 } from 'src/components/astra/dashboard/dashboard-layout';
 import { ProfileTokenCache } from 'src/components/astra/token-grid/token-fetcher';
-import { TokensGrid } from 'src/components/astra/token-grid/token-grid';
+import { TokenGrid } from 'src/components/astra/token-grid/token-grid';
 import { useProfileTokenFetcher } from 'src/components/astra/useFetcher';
 import { Spacer } from 'src/components/common';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
@@ -27,7 +27,7 @@ const TokensGridWrapper: FC = () => {
   const { data, error, hasNextPage, isLoading, fetch } = useProfileTokenFetcher(addressFromPath);
 
   return (
-    <TokensGrid
+    <TokenGrid
       listMode={listMode}
       tokenFetcher={tokenFetcher}
       className="px-8 py-6"

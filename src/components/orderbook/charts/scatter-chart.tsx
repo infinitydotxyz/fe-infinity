@@ -261,7 +261,7 @@ function ScatterChart({ width, height, data }: ScatterChartProps) {
       </svg>
 
       <ToolTip isTooltipOpen={tooltipOpen} left={tooltipLeft} top={tooltipTop} data={tooltipData} />
-      <TokenCardModal data={basicTokenInfo} modalOpen={modalOpen} setModalOpen={setModalOpen} />
+      {modalOpen && <TokenCardModal data={basicTokenInfo} modalOpen={modalOpen} setModalOpen={setModalOpen} />}
     </div>
   );
 }

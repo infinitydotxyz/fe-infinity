@@ -10,7 +10,7 @@ import {
   DashboardProps,
   getServerSideProps as getDashboardServerSideProps
 } from 'src/components/astra/dashboard/dashboard-layout';
-import { TokensGrid } from 'src/components/astra/token-grid/token-grid';
+import { TokenGrid } from 'src/components/astra/token-grid/token-grid';
 import { useCollectionTokenFetcher } from 'src/components/astra/useFetcher';
 import { Spacer } from 'src/components/common';
 import { CollectionNftSearchInput } from 'src/components/common/search/collection-nft-search-input';
@@ -20,10 +20,14 @@ const GridWrapper: FC = () => {
   const { setNumTokens, tokenFetcher, isSelected, isSelectable, listMode, toggleSelection, collection } =
     useDashboardContext();
 
-  const { data, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection?.address);
+  if (!collection) {
+    return null;
+  }
+
+  const { data, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection.address);
 
   return (
-    <TokensGrid
+    <TokenGrid
       listMode={listMode}
       tokenFetcher={tokenFetcher}
       className="px-8 py-6"

@@ -69,9 +69,9 @@ export const GridCard = ({ data, onClick, selected, isSelectable }: Props): JSX.
         </div>
 
         <div className={twMerge(textColor, 'mt-1 mb-3 px-2')}>
-          <div className="flex items-center">
-            <div className="truncate flex-1 text-xs">{title}</div>
-            {hasBlueCheck ? <SVG.blueCheck className={'h-5 w-5'} /> : ''}
+          <div className="flex items-center space-x-1">
+            <div className="truncate text-xs">{title}</div>
+            {hasBlueCheck ? <SVG.blueCheck className={'h-3 w-3'} /> : ''}
           </div>
 
           <div className="flex items-center">
@@ -96,7 +96,7 @@ export const GridCard = ({ data, onClick, selected, isSelectable }: Props): JSX.
         </div>
       </div>
 
-      <TokenCardModal data={basicTokenInfo} modalOpen={modalOpen} setModalOpen={setModalOpen} />
+      {modalOpen && <TokenCardModal data={basicTokenInfo} modalOpen={modalOpen} setModalOpen={setModalOpen} />}
     </div>
   );
 };

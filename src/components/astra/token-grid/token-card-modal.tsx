@@ -24,6 +24,7 @@ interface Props {
   setModalOpen: (set: boolean) => void;
 }
 
+// todo: is this necessary?
 const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
   const { mutate } = useSWRConfig();
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;

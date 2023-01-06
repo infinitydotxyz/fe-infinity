@@ -1,8 +1,12 @@
-import { ScrollLoader } from 'src/components/common';
+import { useState } from 'react';
+import { Checkbox, EZImage, ScrollLoader, Spacer, SVG } from 'src/components/common';
+import { GridCard } from 'src/components/common/card';
+import { hoverColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
+import { AOutlineButton } from '../astra-button';
 import { ErrorOrLoading } from '../error-or-loading';
-import { Erc721TokenOffer } from '../types';
-import { TokenGridItem, TokenListItem } from './token-grid-item';
+import { BasicTokenInfo, Erc721TokenOffer } from '../types';
+import { TokenCardModal } from './token-card-modal';
 import { TokenFetcherAlt } from './token-fetcher';
 
 interface Props {
@@ -20,7 +24,7 @@ interface Props {
   isLoading?: boolean;
 }
 
-export const TokensGrid = ({
+export const TokenGrid = ({
   className = '',
   onClick,
   isSelected,
@@ -43,7 +47,7 @@ export const TokensGrid = ({
           <div className={twMerge('space-y-1 flex flex-col')}>
             {cardData.map((data) => {
               return (
-                <TokenListItem
+                <GridItem
                   key={data.id}
                   data={data}
                   selected={isSelected(data)}
@@ -68,7 +72,7 @@ export const TokensGrid = ({
           >
             {cardData.map((data) => {
               return (
-                <TokenGridItem
+                <GridCard
                   key={data.id}
                   data={data}
                   selected={isSelected(data)}
@@ -91,6 +95,72 @@ export const TokensGrid = ({
     <div className={twMerge('h-full w-full', className)}>
       {contents}
       <div className="h-1/3" />
+    </div>
+  );
+};
+
+interface Props2 {
+  data: Erc721TokenOffer;
+  selected: boolean;
+  isSelectable: (data: Erc721TokenOffer) => boolean;
+  onClick: (data: Erc721TokenOffer) => void;
+}
+
+const GridItem = ({ data, onClick, selected, isSelectable }: Props2): JSX.Element => {
+  const [notSelectable, setNotSelectable] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const title = data?.title;
+  const tokenId = data?.tokenId;
+  const hasBlueCheck = data?.hasBlueCheck ?? false;
+  const basicTokenInfo: BasicTokenInfo = {
+    tokenId: data?.tokenId ?? '',
+    collectionAddress: data?.address ?? '',
+    chainId: data?.chainId ?? ''
+  };
+
+  return (
+    <div
+      className={twMerge(
+        hoverColor,
+        '  w-full relative flex flex-col  px-3 py-2 transition-all duration-200',
+        notSelectable ? 'animate-wiggle' : ''
+      )}
+      onClick={() => {
+        if (!isSelectable(data)) {
+          setNotSelectable(true);
+        } else {
+          onClick(data);
+        }
+      }}
+      onAnimationEnd={() => setNotSelectable(false)}
+    >
+      <div className="h-full flex items-center  text-2xl lg:text-sm">
+        <Checkbox
+          label=""
+          checked={selected}
+          onChange={() => {
+            // setChecked(isChecked);
+          }}
+        />
+
+        <EZImage src={data?.image} className=" w-12 h-12 mr-4 rounded-lg overflow-clip" />
+
+        <div className={textColor}>
+          <div className="flex items-center">
+            <div className=" text-sm truncate flex-1 mr-2">{title}</div>
+            {hasBlueCheck ? <SVG.blueCheck className={'h-5 w-5'} /> : ''}
+          </div>
+
+          <div className="truncate text-lg font-bold">{tokenId}</div>
+        </div>
+
+        <Spacer />
+        <AOutlineButton small onClick={() => setModalOpen(true)}>
+          Details
+        </AOutlineButton>
+      </div>
+
+      {modalOpen && <TokenCardModal data={basicTokenInfo} modalOpen={modalOpen} setModalOpen={setModalOpen} />}
     </div>
   );
 };
