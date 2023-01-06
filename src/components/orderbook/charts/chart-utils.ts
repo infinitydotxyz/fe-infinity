@@ -30,7 +30,7 @@ export const getChartDimensions = ({ width = 0, height = 0 }: { width?: number; 
   const margin = {
     top: 10,
     right: 0,
-    bottom: 60,
+    bottom: 50,
     left: 60
   };
 
