@@ -9,7 +9,7 @@ export const AstraCartButton = () => {
   const numItems = Math.max(selection.length, collSelection.length, orderSelection.length);
 
   return (
-    <AButton onClick={() => setShowCart(!showCart)} className={twMerge('relative', showCart ? clickClr : '')}>
+    <AButton onClick={() => setShowCart(!showCart)} className={twMerge('relative py-2.5', showCart ? clickClr : '')}>
       {numItems > 0 ? (
         <>
           <BsCartCheckFill className={twMerge(iconButtonStyle)} />

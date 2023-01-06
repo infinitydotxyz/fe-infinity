@@ -42,7 +42,11 @@ export const ConnectButton = () => {
   return (
     <>
       {connected && <ADropdown label={`${ellipsisAddress(address, 5, 3)}`} items={menuItems} alignMenuRight={true} />}
-      {!connected && <AOutlineButton onClick={signIn}>Connect</AOutlineButton>}
+      {!connected && (
+        <AOutlineButton onClick={signIn} className="text-sm py-2.5">
+          Connect
+        </AOutlineButton>
+      )}
     </>
   );
 };
