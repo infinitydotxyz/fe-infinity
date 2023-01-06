@@ -8,7 +8,7 @@ export const AStatusFilterButton: React.FC = () => {
 
   return (
     <ADropdown
-      hasBorder={false}
+      hasBorder={true}
       label={label}
       items={[
         {

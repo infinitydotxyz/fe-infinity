@@ -2,7 +2,7 @@ import { Menu } from '@headlessui/react';
 import { useState } from 'react';
 import { TextInputBox } from '../common';
 import { useOrderbook } from '../orderbook/OrderbookContext';
-import { AButton, ATextButton } from './astra-button';
+import { AButton, AOutlineButton } from './astra-button';
 import { ACustomMenuButton, ACustomMenuContents, ACustomMenuItems, ADropdownButton } from './astra-dropdown';
 
 export const APriceFilter: React.FC = () => {
@@ -32,14 +32,14 @@ export const APriceFilter: React.FC = () => {
         <ACustomMenuContents>
           <span>
             <ACustomMenuButton>
-              <ATextButton tooltip="Click to open price filter">
-                <ADropdownButton>Price</ADropdownButton>
-              </ATextButton>
+              <AOutlineButton tooltip="Click to open price filter">
+                <ADropdownButton isMenuOpen={open}>Price</ADropdownButton>
+              </AOutlineButton>
             </ACustomMenuButton>
           </span>
 
           {open && (
-            <ACustomMenuItems open={open}>
+            <ACustomMenuItems open={open} alignMenuRight={true}>
               <div className="flex">
                 <TextInputBox
                   addEthSymbol={true}

@@ -23,7 +23,7 @@ export const ASortButton = ({ className }: Props) => {
     <>
       <div className={className}>
         <ADropdown
-          hasBorder={false}
+          hasBorder={true}
           label={label}
           items={[
             {

@@ -1,13 +1,13 @@
 import React from 'react';
-import { BsTwitter } from 'react-icons/bs';
+import { BsMedium, BsTwitter } from 'react-icons/bs';
 import { IoMdArrowDropdown } from 'react-icons/io';
-import { RiMediumFill } from 'react-icons/ri';
-import { SiDiscord, SiReadthedocs } from 'react-icons/si';
+import { SiDiscord } from 'react-icons/si';
 import { AstraCartButton } from 'src/components/astra/astra-cart-button';
-import { infoBoxBGClr, textClr } from 'src/utils/ui-constants';
+import { infoBoxBGClr, smallIconButtonStyle, textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 import { Menu } from '@headlessui/react';
+import { AiFillRead } from 'react-icons/ai';
 import { ConnectButton, Spacer } from 'src/components/common';
 import { CollectionSearchInput } from '../common/search/collection-search-input';
 import {
@@ -21,7 +21,7 @@ import {
 export const ANavbar = () => {
   return (
     <div className={twMerge(infoBoxBGClr, 'flex px-5 py-3 space-x-4 items-center border-b-2')}>
-      <div className=" max-w-96">
+      <div className="w-4/12">
         <CollectionSearchInput expanded />
       </div>
 
@@ -38,8 +38,6 @@ export const ANavbar = () => {
 // ===========================================================================
 
 export const ANavbarButtons = () => {
-  const iconStyle = twMerge(textClr, 'h-5 w-5');
-
   const content = {
     buttons: {
       items: [
@@ -49,28 +47,28 @@ export const ANavbarButtons = () => {
           menu: [
             {
               label: 'Read docs',
-              icon: <SiReadthedocs className={iconStyle} />,
+              icon: <AiFillRead className={smallIconButtonStyle} />,
               onClick: () => {
                 window.open('https://docs.infinity.xyz');
               }
             } as ADropdownItem,
             {
               label: 'Twitter',
-              icon: <BsTwitter className={iconStyle} />,
+              icon: <BsTwitter className={smallIconButtonStyle} />,
               onClick: () => {
                 window.open('https://twitter.com/infinitydotxyz');
               }
             } as ADropdownItem,
             {
               label: 'Discord',
-              icon: <SiDiscord className={iconStyle} />,
+              icon: <SiDiscord className={smallIconButtonStyle} />,
               onClick: () => {
                 window.open('https://discord.com/invite/infinitydotxyz');
               }
             } as ADropdownItem,
             {
               label: 'Medium',
-              icon: <RiMediumFill className={iconStyle} />,
+              icon: <BsMedium className={smallIconButtonStyle} />,
               onClick: () => {
                 window.open('https://medium.com/@infinitydotxyz');
               }
@@ -94,9 +92,9 @@ export const ANavbarButtons = () => {
                 <ACustomMenuContents>
                   <ACustomMenuButton className="flex gap-1 items-center select-none">
                     <div className={textClr}>{item?.label}</div>
-                    <IoMdArrowDropdown className={twMerge(textClr, 'h-4 w-4')} />
+                    <IoMdArrowDropdown className={twMerge(textClr, 'h-4 w-4 mt-1')} />
                   </ACustomMenuButton>
-                  <ACustomMenuItems open={open}>
+                  <ACustomMenuItems open={open} innerClassName="border-0">
                     {item?.menu?.map((x, j) => (
                       <ACustomMenuItem key={j} onClick={x.onClick}>
                         <div className={twMerge(textClr, 'flex items-center cursor-pointer')}>

@@ -1,6 +1,5 @@
 import { GetServerSidePropsContext } from 'next';
 import { FC } from 'react';
-import { AListGridButton } from 'src/components/astra/astra-button';
 import { APriceFilter } from 'src/components/astra/astra-price-filter';
 import { ASortButton } from 'src/components/astra/astra-sort-button';
 import { AStatusFilterButton } from 'src/components/astra/astra-status-button';
@@ -16,8 +15,6 @@ import { useCollectionTokenFetcher } from 'src/components/astra/useFetcher';
 import { Spacer } from 'src/components/common';
 import { CollectionNftSearchInput } from 'src/components/common/search/collection-nft-search-input';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
-import { inputBorderColor } from 'src/utils/ui-constants';
-import { twMerge } from 'tailwind-merge';
 
 const GridWrapper: FC = () => {
   const { setNumTokens, tokenFetcher, isSelected, isSelectable, gridWidth, listMode, toggleSelection, collection } =
@@ -47,14 +44,17 @@ const GridWrapper: FC = () => {
 export default function ItemsPage(props: DashboardProps) {
   return (
     <DashboardLayout {...props}>
-      <div className={twMerge(inputBorderColor, 'w-full flex   py-2 border-t-[1px]')}>
-        <ASortButton />
-        <AStatusFilterButton />
-        <APriceFilter />
-        <ATraitFilter />
-        <CollectionNftSearchInput slug={(props as CollectionDashboardProps).asset.collection.slug} expanded />
+      <div className="w-full flex mt-3 px-8">
+        <div className="flex">
+          <CollectionNftSearchInput slug={(props as CollectionDashboardProps).asset.collection.slug} expanded />
+        </div>
         <Spacer />
-        <AListGridButton />
+        <div className="flex space-x-2">
+          <ASortButton />
+          <AStatusFilterButton />
+          <APriceFilter />
+          <ATraitFilter />
+        </div>
       </div>
       <GridWrapper />
     </DashboardLayout>

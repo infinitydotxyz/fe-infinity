@@ -63,7 +63,7 @@ export function SearchInput({ expanded, query, setQuery, placeholder, data }: Pr
       className={twMerge(
         textClr,
         inputBorderColor,
-        'border w-full px-4 py-1 rounded-full max-h-full  flex place-items-center gap-2'
+        'border w-full px-4 rounded-xl text-center h-10 flex place-items-center'
       )}
     >
       <div className="w-content h-content  hover:cursor-pointer" onClick={activate}>
@@ -77,13 +77,13 @@ export function SearchInput({ expanded, query, setQuery, placeholder, data }: Pr
       >
         <Combobox.Input
           className={twMerge(
-            'w-full bg-transparent max-h-full p-0',
+            'w-full bg-transparent max-h-full',
             'hover:outline-none hover:ring-transparent hover:border-transparent hover:shadow-none',
             'focus:outline-none focus:ring-transparent focus:border-transparent focus:shadow-none',
             'focus-visible:outline-none focus:ring-transparent focus:border-transparent focus:shadow-none',
             'active:outline-none active:ring-transparent active:border-transparent active:shadow-none',
             'outline-none ring-transparent border-transparent shadow-none',
-            'text-sm'
+            'text-md align-middle'
           )}
           placeholder={placeholder}
           ref={inputRef}

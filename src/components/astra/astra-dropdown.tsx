@@ -1,7 +1,7 @@
 import { Menu, Transition } from '@headlessui/react';
 import { ReactElement, ReactNode } from 'react';
-import { BiCaretDown } from 'react-icons/bi';
-import { cardClr, hoverClr, inputBorderColor, textClr } from 'src/utils/ui-constants';
+import { RxCaretDown } from 'react-icons/rx';
+import { cardClr, hoverClr, inputBorderColor, smallIconButtonStyle, textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { Divider } from '../common';
 import { AOutlineButton, ATextButton } from './astra-button';
@@ -12,6 +12,26 @@ export type ADropdownItem = {
   onClick: () => void;
 };
 
+interface DropdownBtnProps {
+  children?: ReactNode;
+  isMenuOpen?: boolean;
+}
+
+export const ADropdownButton = ({ children, isMenuOpen }: DropdownBtnProps) => {
+  return (
+    <div className="flex items-center gap-1 py-1 text-sm">
+      <div className="whitespace-nowrap">{children}</div>
+      <RxCaretDown
+        className={smallIconButtonStyle}
+        style={{
+          transition: 'all 0.25s ease',
+          transform: `rotate(${!isMenuOpen ? 0 : '0.5turn'})`
+        }}
+      />
+    </div>
+  );
+};
+
 interface DropdownProps {
   label?: string | ReactElement;
   items: ADropdownItem[];
@@ -20,15 +40,6 @@ interface DropdownProps {
   alignMenuRight?: boolean;
   hasBorder?: boolean;
 }
-
-export const ADropdownButton: React.FC = ({ children }) => {
-  return (
-    <div className="flex items-center gap-1">
-      <div className="whitespace-nowrap">{children}</div>
-      <BiCaretDown />
-    </div>
-  );
-};
 
 export const ADropdown = ({
   label,
@@ -47,18 +58,18 @@ export const ADropdown = ({
               <ACustomMenuButton>
                 {hasBorder && (
                   <AOutlineButton tooltip={tooltip}>
-                    <ADropdownButton>{label}</ADropdownButton>
+                    <ADropdownButton isMenuOpen={open}>{label}</ADropdownButton>
                   </AOutlineButton>
                 )}{' '}
                 {!hasBorder && (
                   <ATextButton tooltip={tooltip}>
-                    <ADropdownButton>{label}</ADropdownButton>
+                    <ADropdownButton isMenuOpen={open}>{label}</ADropdownButton>
                   </ATextButton>
                 )}
               </ACustomMenuButton>
             </span>
 
-            <ACustomMenuItems open={open} alignMenuRight={alignMenuRight}>
+            <ACustomMenuItems open={open} alignMenuRight={alignMenuRight} innerClassName="border-0">
               <div className="">
                 {items.map((item, idx) => {
                   if (item.label === '-') {
@@ -119,7 +130,7 @@ interface Props2 {
 
 export const ACustomMenuItems = ({ children, open, alignMenuRight, innerClassName }: Props2) => {
   return (
-    <div className={twMerge('absolute bottom-0  z-50', alignMenuRight ? 'right-0' : ' ')}>
+    <div className={twMerge('absolute bottom-0 z-50', alignMenuRight ? 'right-0' : '')}>
       <Transition
         show={open}
         enter="transition ease-out duration-100"

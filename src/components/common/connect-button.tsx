@@ -1,13 +1,11 @@
-import React from 'react';
-import { IoIosCopy } from 'react-icons/io';
-import { RiLogoutCircleFill } from 'react-icons/ri';
-import { FaEthereum } from 'react-icons/fa';
+import { BiLogOut } from 'react-icons/bi';
+import { HiOutlineExternalLink } from 'react-icons/hi';
+import { MdOutlineContentCopy } from 'react-icons/md';
 import { ellipsisAddress } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { iconButtonStyle } from 'src/utils/ui-constants';
 import { AOutlineButton } from '../astra/astra-button';
 import { ADropdown, ADropdownItem } from '../astra/astra-dropdown';
-import { twMerge } from 'tailwind-merge';
-import { textClr } from 'src/utils/ui-constants';
 
 export const ConnectButton = () => {
   const { signIn, signOut, user } = useOnboardContext();
@@ -22,27 +20,19 @@ export const ConnectButton = () => {
   const menuItems: ADropdownItem[] = [
     {
       label: 'Copy Address',
-      icon: <IoIosCopy className={twMerge(textClr, 'h-5 w-5')} />,
+      icon: <MdOutlineContentCopy className={iconButtonStyle} />,
       onClick: () => {
         address ? copyToClipboard(address) : null;
       }
     },
     {
-      label: '-',
-      onClick: () => console.log('separator')
-    },
-    {
       label: 'Etherscan',
-      icon: <FaEthereum className={twMerge(textClr, 'h-5 w-5')} />,
+      icon: <HiOutlineExternalLink className={iconButtonStyle} />,
       onClick: () => window.open(`https://etherscan.io/address/${address}`)
     },
     {
-      label: '-',
-      onClick: () => console.log('separator')
-    },
-    {
       label: 'Sign Out',
-      icon: <RiLogoutCircleFill className={twMerge(textClr, 'h-5 w-5')} />,
+      icon: <BiLogOut className={iconButtonStyle} />,
       onClick: () => {
         signOut();
       }

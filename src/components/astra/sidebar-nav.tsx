@@ -1,10 +1,13 @@
 import { useRouter } from 'next/router';
-import { BsHouse, BsReceipt, BsTrophy, BsWallet2 } from 'react-icons/bs';
-import { ARoundButton } from 'src/components/astra/astra-button';
+import { HiOutlineTicket } from 'react-icons/hi';
+import { IoWalletOutline } from 'react-icons/io5';
+import { MdOutlineHomeMax } from 'react-icons/md';
+import { RiCoinsLine } from 'react-icons/ri';
+import { AButton } from 'src/components/astra/astra-button';
 import { HelpTip, NextLink, Spacer, SVG } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import { infoBoxBGClr } from 'src/utils/ui-constants';
+import { infoBoxBGClr, largeIconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 export const SidebarNav = () => {
@@ -15,54 +18,54 @@ export const SidebarNav = () => {
   return (
     <div className={twMerge(infoBoxBGClr, 'flex px-2 py-4 h-full flex-col items-center border-r-2')}>
       <NextLink href="/">
-        {darkMode ? <SVG.miniLogoDark className="shrink-0 h-8 w-8" /> : <SVG.miniLogo className="shrink-0 h-8 w-8" />}
+        {darkMode ? <SVG.miniLogoDark className="shrink-0 h-9 w-9" /> : <SVG.miniLogo className="shrink-0 h-9 w-9" />}
       </NextLink>
 
-      <div className="h-24" />
+      <div className="h-8" />
 
       <div className="flex flex-col space-y-4">
         <HelpTip placement="right" content={<div className="whitespace-nowrap">Trending</div>}>
-          <ARoundButton
-            highlighted={true}
+          <AButton
+            highlighted={router.asPath.startsWith('/trending') || router.asPath.startsWith('/?tab')}
             onClick={() => {
               router.push('/trending');
             }}
           >
-            <BsHouse className="h-8 w-8" />
-          </ARoundButton>
+            <MdOutlineHomeMax className={largeIconButtonStyle} />
+          </AButton>
         </HelpTip>
 
         <HelpTip placement="right" content={<div className="whitespace-nowrap">Profile</div>}>
-          <ARoundButton
-            highlighted={router.asPath === `/profile/${user?.address}/items`}
+          <AButton
+            highlighted={router.asPath.startsWith(`/profile`)}
             onClick={() => {
               router.push(`/profile/${user?.address}/items`);
             }}
           >
-            <BsWallet2 className="h-8 w-8" />
-          </ARoundButton>
+            <IoWalletOutline className={largeIconButtonStyle} />
+          </AButton>
         </HelpTip>
 
         <HelpTip placement="right" content={<div className="whitespace-nowrap">Raffles</div>}>
-          <ARoundButton
-            highlighted={router.asPath === `/raffles`}
+          <AButton
+            highlighted={router.asPath.startsWith(`/raffles`)}
             onClick={() => {
               router.push(`/raffles`);
             }}
           >
-            <BsReceipt className="h-8 w-8" />
-          </ARoundButton>
+            <HiOutlineTicket className={largeIconButtonStyle} />
+          </AButton>
         </HelpTip>
 
         <HelpTip placement="right" content={<div className="whitespace-nowrap">Rewards</div>}>
-          <ARoundButton
-            highlighted={router.asPath === `/rewards`}
+          <AButton
+            highlighted={router.asPath.startsWith(`/rewards`)}
             onClick={() => {
               router.push(`/rewards`);
             }}
           >
-            <BsTrophy className="h-8 w-8" />
-          </ARoundButton>
+            <RiCoinsLine className={largeIconButtonStyle} />
+          </AButton>
         </HelpTip>
       </div>
 

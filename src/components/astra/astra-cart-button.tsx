@@ -1,20 +1,25 @@
-import { HiOutlineShoppingCart } from 'react-icons/hi';
+import { BsCartCheckFill, BsCartDash } from 'react-icons/bs';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
-import { iconButtonStyle, primaryTextColor } from 'src/utils/ui-constants';
+import { clickClr, iconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { ARoundButton } from './astra-button';
+import { AButton } from './astra-button';
 
 export const AstraCartButton = () => {
-  const { showCart, setShowCart, selection, collSelection } = useDashboardContext();
+  const { showCart, setShowCart, selection, collSelection, orderSelection } = useDashboardContext();
+  const numItems = Math.max(selection.length, collSelection.length, orderSelection.length);
 
   return (
-    <ARoundButton onClick={() => setShowCart(!showCart)} className="relative">
-      <HiOutlineShoppingCart className={twMerge(iconButtonStyle, showCart ? primaryTextColor : '')} />
-      {selection.length > 0 || collSelection.length > 0 ? (
-        <span className="px-1.5 absolute top-1 right-1.5   bg-red-500   text-white rounded-full text-xs">
-          {selection.length > collSelection.length ? selection.length : collSelection.length}
-        </span>
-      ) : null}
-    </ARoundButton>
+    <AButton onClick={() => setShowCart(!showCart)} className={twMerge('relative', showCart ? clickClr : '')}>
+      {numItems > 0 ? (
+        <>
+          <BsCartCheckFill className={twMerge(iconButtonStyle)} />
+          <span className="px-1.5 absolute top-0.5 right-0.5 bg-red-500 text-white rounded-full text-xs">
+            {numItems}
+          </span>
+        </>
+      ) : (
+        <BsCartDash className={twMerge(iconButtonStyle)} />
+      )}
+    </AButton>
   );
 };

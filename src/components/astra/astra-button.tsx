@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { BsGrid, BsList } from 'react-icons/bs';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
-import { hoverClr, inputBorderColor, primaryTextColor, textClr } from 'src/utils/ui-constants';
+import { clickClr, hoverClr, inputBorderColor, primaryTextColor, textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 interface Props {
@@ -34,8 +34,8 @@ export const AButton = ({
       highlighted={highlighted}
       tooltip={tooltip}
       className={twMerge(
-        small ? 'text-sm px-3 py-0.5' : 'px-4 py-1',
-        'rounded-full',
+        small ? 'text-sm px-3 py-0.5' : 'px-4 py-1.5',
+        'rounded-xl',
         primary ? 'bg-black text-white' : '',
         className
       )}
@@ -76,7 +76,7 @@ const ButtonBase = ({
       // otherwise a disabled buttons click will go to the parent, onClick isn't called
       // disabled={disabled}
       className={twMerge(
-        highlighted ? primaryTextColor : textClr,
+        highlighted ? clickClr : textClr,
         'active:dark:bg-light-bg  active:dark:text-dark-bg  ',
         'active:bg-dark-bg active:text-light-bg',
         hoverClr,
@@ -168,7 +168,7 @@ export const AOutlineButton = ({
       small={small}
       tooltip={tooltip}
       disabled={disabled}
-      className={twMerge(inputBorderColor, 'border rounded-full', className)}
+      className={twMerge(inputBorderColor, 'border rounded-xl', className)}
       onClick={onClick}
     >
       {children}

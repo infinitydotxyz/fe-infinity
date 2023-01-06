@@ -7,8 +7,8 @@ import { Filter } from 'src/utils/context/FilterContext';
 import { Spinner } from '../common';
 import { TraitSelection } from '../filter/trait-selection';
 import { useOrderbook } from '../orderbook/OrderbookContext';
-import { ATextButton } from './astra-button';
-import { ACustomMenuContents, ACustomMenuButton, ADropdownButton, ACustomMenuItems } from './astra-dropdown';
+import { AOutlineButton } from './astra-button';
+import { ACustomMenuButton, ACustomMenuContents, ACustomMenuItems, ADropdownButton } from './astra-dropdown';
 
 export const ATraitFilter: React.FC = () => {
   const { setFilters } = useOrderbook();
@@ -30,14 +30,14 @@ export const ATraitFilter: React.FC = () => {
         <ACustomMenuContents>
           <span>
             <ACustomMenuButton>
-              <ATextButton tooltip="Click to filter by trait">
-                <ADropdownButton>Trait</ADropdownButton>
-              </ATextButton>
+              <AOutlineButton tooltip="Click to filter by trait">
+                <ADropdownButton isMenuOpen={open}>Traits</ADropdownButton>
+              </AOutlineButton>
             </ACustomMenuButton>
           </span>
 
           {open && (
-            <ACustomMenuItems open={open} innerClassName="w-80">
+            <ACustomMenuItems open={open} innerClassName="w-80" alignMenuRight={true}>
               {!collectionAttributes && <Spinner />}
               {collectionAttributes && (
                 <div className="h-[400px] overflow-y-scroll">
