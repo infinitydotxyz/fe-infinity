@@ -1,6 +1,6 @@
-import { BiLogOut } from 'react-icons/bi';
 import { HiOutlineExternalLink } from 'react-icons/hi';
-import { MdOutlineContentCopy } from 'react-icons/md';
+import { RiLogoutCircleLine } from 'react-icons/ri';
+import { RxCopy } from 'react-icons/rx';
 import { ellipsisAddress } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { iconButtonStyle } from 'src/utils/ui-constants';
@@ -20,7 +20,7 @@ export const ConnectButton = () => {
   const menuItems: ADropdownItem[] = [
     {
       label: 'Copy Address',
-      icon: <MdOutlineContentCopy className={iconButtonStyle} />,
+      icon: <RxCopy className={iconButtonStyle} />,
       onClick: () => {
         address ? copyToClipboard(address) : null;
       }
@@ -32,7 +32,7 @@ export const ConnectButton = () => {
     },
     {
       label: 'Sign Out',
-      icon: <BiLogOut className={iconButtonStyle} />,
+      icon: <RiLogoutCircleLine className={iconButtonStyle} />,
       onClick: () => {
         signOut();
       }

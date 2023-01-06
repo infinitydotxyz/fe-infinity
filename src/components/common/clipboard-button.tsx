@@ -1,27 +1,30 @@
 import React, { useState } from 'react';
-import { MdOutlineContentCopy } from 'react-icons/md';
+import { AiOutlineCheckCircle } from 'react-icons/ai';
+import { RxCopy } from 'react-icons/rx';
+import { TooltipWrapper } from 'src/components/common';
 import { useIsMounted } from 'src/hooks/useIsMounted';
-import { twMerge } from 'tailwind-merge';
 
 interface ClipboardButtonProps {
   textToCopy: string;
   className?: string;
+  ignoreTooltip?: boolean;
 }
 
-export const ClipboardButton: React.FC<ClipboardButtonProps> = ({ textToCopy, className }) => {
+export const ClipboardButton: React.FC<ClipboardButtonProps> = ({ textToCopy, className, ignoreTooltip }) => {
   const [copied, setCopied] = useState(false);
   const isMounted = useIsMounted();
+  const [showTooltip, setShowTooltip] = useState(false);
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(textToCopy).then(
       () => {
         setCopied(true);
-        // changing back to default state after 2 seconds.
+        // changing back to default state after a bit
         setTimeout(() => {
           if (isMounted()) {
             setCopied(false);
           }
-        }, 2000);
+        }, 1500);
       },
       (err) => {
         console.log('failed to copy', err.mesage);
@@ -32,11 +35,23 @@ export const ClipboardButton: React.FC<ClipboardButtonProps> = ({ textToCopy, cl
   return (
     <>
       {copied ? (
-        <span className="pl-4 cursor-pointer">✓</span>
+        <AiOutlineCheckCircle className={className} />
       ) : (
-        <button className={twMerge(`ml-4 pt-1cursor-pointer ${className ?? ''}`)}>
-          <MdOutlineContentCopy width={16} height={16} onClick={copyToClipboard} />
-        </button>
+        <div>
+          <RxCopy
+            onClick={copyToClipboard}
+            className={className}
+            onMouseEnter={() => setShowTooltip(true)}
+            onMouseLeave={() => setShowTooltip(false)}
+          />
+          <TooltipWrapper
+            className="w-[21rem]"
+            show={!ignoreTooltip && showTooltip}
+            tooltip={{
+              content: textToCopy
+            }}
+          ></TooltipWrapper>
+        </div>
       )}
     </>
   );

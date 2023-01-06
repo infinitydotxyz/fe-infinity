@@ -144,7 +144,7 @@ export const ACustomMenuItems = ({ children, open, alignMenuRight, innerClassNam
           className={twMerge(
             cardColor,
             inputBorderColor,
-            'absolute mt-2 p-2 w-56 rounded-2xl border shadow-2xl outline-none',
+            'absolute mt-2 p-2 w-56 rounded-xl border shadow-2xl outline-none',
             alignMenuRight ? 'right-0' : '',
             innerClassName
           )}

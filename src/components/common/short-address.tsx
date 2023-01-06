@@ -1,6 +1,6 @@
-import React from 'react';
 import { ClipboardButton } from 'src/components/common';
 import { ellipsisAddress } from 'src/utils';
+import { smallIconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 interface Props {
@@ -23,7 +23,7 @@ export const ShortAddress = ({ address, href, label, tooltip, className }: Props
         {ellipsisAddress(address)}
       </a>
 
-      <ClipboardButton textToCopy={address} />
+      <ClipboardButton textToCopy={address} className={twMerge('ml-2 cursor-pointer', smallIconButtonStyle)} />
     </div>
   );
 };

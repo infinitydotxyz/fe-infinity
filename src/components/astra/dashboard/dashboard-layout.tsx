@@ -1,15 +1,17 @@
-import { GridHeader, GridHeaderProps } from './grid-header';
-import { useScrollInfo } from './useScrollHook';
-import { apiGet } from 'src/utils';
 import { BaseCollection, ChainId } from '@infinityxyz/lib-frontend/types/core';
-import NotFound404Page from 'pages/not-found-404';
 import { NftDto, UserProfileDto } from '@infinityxyz/lib-frontend/types/dto';
-import { OrderbookProvider } from 'src/components/orderbook/OrderbookContext';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import * as Queries from '@infinityxyz/lib-frontend/types/dto/orders/orders-queries.dto';
-import { useDashboardContext } from 'src/utils/context/DashboardContext';
+import NotFound404Page from 'pages/not-found-404';
 import { useEffect } from 'react';
+import { EthSymbol } from 'src/components/common';
+import { OrderbookProvider } from 'src/components/orderbook/OrderbookContext';
+import { apiGet } from 'src/utils';
+import { useDashboardContext } from 'src/utils/context/DashboardContext';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { textColorSecondary } from 'src/utils/ui-constants';
+import { GridHeader, GridHeaderProps } from './grid-header';
 import { ProfileLayout } from './profile-layout';
+import { useScrollInfo } from './useScrollHook';
 
 // TODO: Upgrade to Next.js 13 to use layouts natively?
 interface BaseDashboardProps {
@@ -100,12 +102,40 @@ export const DashboardLayout: React.FC<DashboardProps> = ({ children, error, ...
         title: props.asset.collection.metadata.name,
         description: props.asset.collection.metadata.description,
         hasBlueCheck: props.asset.collection.hasBlueCheck,
-        slug: props.asset.collection.slug
+        slug: props.asset.collection.slug,
+        collectionAddress: props.asset.collection.address
       };
 
       const gridChildren = (
-        <div className="flex flex-col items-end">
-          <div className="text-lg whitespace-nowrap ml-3">{props.asset.collection.numNfts} Nfts</div>
+        <div className="flex text-sm divide-x divide-gray-300 items-center">
+          <div className="flex pr-2 gap-1 whitespace-nowrap">
+            <span className={textColorSecondary}>Floor </span>
+            <span className="">
+              {props.asset.collection.stats?.allTime?.floorPrice ?? '-'} {EthSymbol}
+            </span>
+          </div>
+          <div className="flex px-2 gap-1 whitespace-nowrap">
+            <span className={textColorSecondary}>24h Vol </span>
+            <span className="">
+              {props.asset.collection.stats?.daily?.salesVolume ?? '-'} {EthSymbol}
+            </span>
+          </div>
+          <div className="flex px-2 gap-1 whitespace-nowrap">
+            <span className={textColorSecondary}>Total Vol </span>
+            <span className="">
+              {props.asset.collection.stats?.allTime?.salesVolume ?? '-'} {EthSymbol}
+            </span>
+          </div>
+          <div className="flex px-2 gap-1 whitespace-nowrap">
+            <span className={textColorSecondary}>Owned By </span>
+            <span className="">
+              {props.asset.collection.numOwners ?? props.asset.collection.stats?.allTime?.ownerCount ?? '-'}
+            </span>
+          </div>
+          <div className="flex pl-2 gap-1 whitespace-nowrap">
+            <span className={textColorSecondary}>Items </span>
+            {props.asset.collection.numNfts ?? '-'}
+          </div>
         </div>
       );
       return (
@@ -137,7 +167,7 @@ export const DashboardLayout: React.FC<DashboardProps> = ({ children, error, ...
 
       const gridChildren = (
         <div className="flex flex-col items-end">
-          <div className="text-lg whitespace-nowrap ml-3">{props.asset.collection.numNfts} Nfts</div>
+          <div className="whitespace-nowrap ml-3">{props.asset.collection.numNfts} Nfts</div>
         </div>
       );
       return (

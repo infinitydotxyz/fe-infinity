@@ -75,6 +75,7 @@ export const GridCard = ({ data, onClick, selected, isSelectable }: Props): JSX.
           </div>
 
           <div className="flex items-center">
+            {/* todo use right color on hover */}
             <div
               className="truncate hover:text-blue-500"
               onClick={(e) => {

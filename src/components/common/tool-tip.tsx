@@ -1,11 +1,11 @@
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { IoMdInformationCircleOutline } from 'react-icons/io';
+import { cardColor, smallIconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { smallIconButtonStyle } from 'src/utils/ui-constants';
 
 export interface TooltipSpec {
-  title: string;
-  content: string;
+  title?: string;
+  content?: string;
 }
 
 export const TooltipIcon = () => {
@@ -58,9 +58,14 @@ interface Props3 {
 
 const TooltipContent = ({ tooltip }: Props3) => {
   return (
-    <div className="absolute z-50 top-full mt-2 right-0 left-0 pointer-events-none px-4 py-4 bg-white shadow-ttip rounded-2xl">
-      <div className="font-bold text-md mb-1">{tooltip.title}</div>
-      <div className="text-sm">{tooltip.content}</div>
+    <div
+      className={twMerge(
+        'absolute z-50 top-full mt-2 right-0 left-0 pointer-events-none p-3 shadow-ttip rounded-xl',
+        cardColor
+      )}
+    >
+      {tooltip.title && <div className="font-bold text-md mb-1">{tooltip.title}</div>}
+      {tooltip.content && <div className="text-sm">{tooltip.content}</div>}
     </div>
   );
 };
