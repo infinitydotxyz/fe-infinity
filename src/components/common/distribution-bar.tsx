@@ -1,4 +1,4 @@
-import { infoBoxBGClr } from 'src/utils/ui-constants';
+import { infoBoxBgColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { Spacer } from './spacer';
 
@@ -8,7 +8,7 @@ interface Props {
 
 export const DistributionBar = ({ distribution }: Props) => {
   return (
-    <div className={twMerge(infoBoxBGClr, '  rounded-3xl px-5 py-3 w-full')}>
+    <div className={twMerge(infoBoxBgColor, '  rounded-3xl px-5 py-3 w-full')}>
       {distribution.map((item, index) => {
         return (
           <div key={index} className="relative w-full">

@@ -1,7 +1,7 @@
 import { Menu, Transition } from '@headlessui/react';
 import { ReactElement, ReactNode } from 'react';
 import { RxCaretDown } from 'react-icons/rx';
-import { cardClr, hoverClr, inputBorderColor, smallIconButtonStyle, textClr } from 'src/utils/ui-constants';
+import { cardColor, hoverColor, inputBorderColor, smallIconButtonStyle, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { Divider } from '../common';
 import { AOutlineButton, ATextButton } from './astra-button';
@@ -78,7 +78,7 @@ export const ADropdown = ({
 
                   return (
                     <ACustomMenuItem key={idx} onClick={item.onClick}>
-                      <div className={twMerge(textClr, 'flex items-center cursor-pointer')}>
+                      <div className={twMerge(textColor, 'flex items-center cursor-pointer')}>
                         {item.icon && <div className={twMerge('mr-4')}>{item.icon}</div>}
                         {item.label}
                       </div>
@@ -108,7 +108,7 @@ export const ACustomMenuItem = (props: Props) => {
         <div
           className={twMerge(
             'flex w-full px-4 py-4 leading-5 font-heading ',
-            active ? twMerge(hoverClr, ' rounded-xl') : ' ',
+            active ? twMerge(hoverColor, ' rounded-xl') : ' ',
             disabled && 'cursor-not-allowed opacity-50'
           )}
         >
@@ -142,7 +142,7 @@ export const ACustomMenuItems = ({ children, open, alignMenuRight, innerClassNam
       >
         <Menu.Items
           className={twMerge(
-            cardClr,
+            cardColor,
             inputBorderColor,
             'absolute mt-2 p-2 w-56 rounded-2xl border shadow-2xl outline-none',
             alignMenuRight ? 'right-0' : '',

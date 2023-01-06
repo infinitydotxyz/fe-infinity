@@ -6,7 +6,7 @@ import { AButton, ARoundButton, ATextButton } from 'src/components/astra/astra-b
 import { EZImage, Spacer, TextInputBox } from 'src/components/common';
 import { CART_TYPE, getCartType, getCollectionKeyId, getDefaultOrderExpiryTime, getTokenKeyId } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import { infoBoxBGClr, smallIconButtonStyle, textClr } from 'src/utils/ui-constants';
+import { infoBoxBgColor, smallIconButtonStyle, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { ADropdown } from './astra-dropdown';
 import { Erc721CollectionOffer, Erc721TokenOffer, ORDER_EXPIRY_TIME } from './types';
@@ -162,7 +162,7 @@ export const AstraCart = ({
 
     // min-w-0 is important. otherwise text doesn't truncate
     listComponent = (
-      <div className={twMerge(textClr, 'min-w-0 flex px-6 flex-col space-y-2 items-start flex-1 overflow-y-auto')}>
+      <div className={twMerge(textColor, 'min-w-0 flex px-6 flex-col space-y-2 items-start flex-1 overflow-y-auto')}>
         {divList}
       </div>
     );
@@ -182,7 +182,7 @@ export const AstraCart = ({
 
     // min-w-0 is important. otherwise text doesn't truncate
     listComponent = (
-      <div className={twMerge(textClr, 'min-w-0 flex px-6 flex-col space-y-2 items-start flex-1 overflow-y-auto')}>
+      <div className={twMerge(textColor, 'min-w-0 flex px-6 flex-col space-y-2 items-start flex-1 overflow-y-auto')}>
         {divList}
       </div>
     );
@@ -208,13 +208,13 @@ export const AstraCart = ({
 
     // min-w-0 is important. otherwise text doesn't truncate
     listComponent = (
-      <div className={twMerge(textClr, 'min-w-0 flex px-6 flex-col space-y-2 items-start flex-1 overflow-y-auto')}>
+      <div className={twMerge(textColor, 'min-w-0 flex px-6 flex-col space-y-2 items-start flex-1 overflow-y-auto')}>
         {divList}
       </div>
     );
   } else {
     listComponent = (
-      <div key={Math.random()} className={twMerge(textClr, 'flex items-center justify-center   uppercase flex-1')}>
+      <div key={Math.random()} className={twMerge(textColor, 'flex items-center justify-center   uppercase flex-1')}>
         <div>Cart empty</div>
       </div>
     );
@@ -234,9 +234,9 @@ export const AstraCart = ({
 
   return (
     // setting to  w-72 so it doen't shrink and expand while animating
-    <div className={twMerge(infoBoxBGClr, 'h-full flex flex-col')}>
+    <div className={twMerge(infoBoxBgColor, 'h-full flex flex-col')}>
       <div className=" m-4 flex items-center">
-        <div className={twMerge(textClr, 'text-4xl lg:text-3xl font-bold mr-3')}>Cart</div>
+        <div className={twMerge(textColor, 'text-4xl lg:text-3xl font-bold mr-3')}>Cart</div>
         {clearButton}
       </div>
 

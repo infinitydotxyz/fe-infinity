@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { APageBox } from 'src/components/astra/astra-page-box';
 import { ToggleTab, useToggleTab } from 'src/components/common';
-import { textClr } from 'src/utils/ui-constants';
+import { textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import GlobalRewards from './global-rewards';
 import MyRewardsPage from './my-rewards';
@@ -26,7 +26,7 @@ const RewardsPage = () => {
         selected={selected}
         onChange={onChange}
       />
-      <div className={twMerge(textClr, 'flex flex-col h-full w-full overflow-y-auto overflow-x-hidden')}>
+      <div className={twMerge(textColor, 'flex flex-col h-full w-full overflow-y-auto overflow-x-hidden')}>
         {selected === RewardTabs.MyRewards && <MyRewardsPage />}
         {selected === RewardTabs.GlobalRewards && <GlobalRewards />}
       </div>

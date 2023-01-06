@@ -1,6 +1,6 @@
 import React from 'react';
 import { Header, Spacer } from 'src/components/common';
-import { textClr } from 'src/utils/ui-constants';
+import { textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 interface Props {
@@ -27,7 +27,7 @@ export const APageBox = ({
   return (
     <div
       className={twMerge(
-        textClr,
+        textColor,
         'transition pl-6 w-full h-full flex flex-col overflow-y-clip overflow-x-clip',
         className
       )}
@@ -52,7 +52,7 @@ type Props2 = {
 export const APageHeader = ({ title, rightToolbar }: Props2): JSX.Element => {
   return (
     <div className="flex flex-row items-center">
-      <div className={twMerge(textClr, 'font-medium text-3xl tracking-tight mt-4 mb-8')}>{title}</div>
+      <div className={twMerge(textColor, 'font-medium text-3xl tracking-tight mt-4 mb-8')}>{title}</div>
 
       {rightToolbar && (
         <>

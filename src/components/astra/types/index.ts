@@ -17,3 +17,9 @@ export interface Erc721TokenOffer extends ERC721CardData {
   offerPriceEth?: number;
   offerExpiry?: ORDER_EXPIRY_TIME;
 }
+
+export interface BasicTokenInfo {
+  chainId: string;
+  collectionAddress: string;
+  tokenId: string;
+}

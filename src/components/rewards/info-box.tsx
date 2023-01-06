@@ -5,7 +5,7 @@ import { Heading } from '../common';
 import { useHover } from 'src/hooks/useHover';
 import { PulseIcon, PulseIconColor } from '../common/pulse-icon';
 import { State } from 'src/utils/state';
-import { infoBoxBGClr } from 'src/utils/ui-constants';
+import { infoBoxBgColor } from 'src/utils/ui-constants';
 
 type ChildrenProps = {
   children?: React.ReactNode;
@@ -64,7 +64,7 @@ export type InfoBoxPhaseProps = {
 
 InfoBox.Stats = function Stats({ title, description, children }: InfoBoxPhaseProps) {
   return (
-    <div className={twMerge(infoBoxBGClr, ' py-4 px-6 rounded-2xl')}>
+    <div className={twMerge(infoBoxBgColor, ' py-4 px-6 rounded-2xl')}>
       <div className="font-bold">{title}</div>
       {description && <div className="flex flex-wrap text-sm font-normal mt-2">{description}</div>}
       {children && <div className="flex flex-wrap mt-4">{children}</div>}

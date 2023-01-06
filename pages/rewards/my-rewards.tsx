@@ -11,7 +11,7 @@ import { useClaim } from 'src/hooks/contract/cm-distributor/claim';
 import { ellipsisAddress, nFormatter } from 'src/utils';
 import { TOKEN } from 'src/utils/constants';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import { infoBoxBGClr } from 'src/utils/ui-constants';
+import { infoBoxBgColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 interface RewardsSectionProps {
@@ -67,7 +67,7 @@ const MyRewardsPage = () => {
     <div className="space-y-10 mt-4">
       <RewardsSection title="Claim">
         <div className="flex flex-col md:!flex-row mt-4 w-full">
-          <div className={twMerge(infoBoxBGClr, '  py-4 px-6 rounded-2xl grow')}>
+          <div className={twMerge(infoBoxBgColor, '  py-4 px-6 rounded-2xl grow')}>
             <div>ETH Earned</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4">
@@ -111,7 +111,7 @@ const MyRewardsPage = () => {
 
           <Spacer />
 
-          <div className={twMerge(infoBoxBGClr, ' py-4 px-6 rounded-2xl grow mt-4 md:mt-0')}>
+          <div className={twMerge(infoBoxBgColor, ' py-4 px-6 rounded-2xl grow mt-4 md:mt-0')}>
             <div>${TOKEN.symbol} earned</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4">
@@ -163,7 +163,7 @@ const MyRewardsPage = () => {
         title="Token Balance"
         subTitle={`Stake ${TOKEN.symbol} tokens to gain curation power. The longer you lock, the more curation power you'll earn.`}
         sideInfo={
-          <div className={twMerge(infoBoxBGClr, '  py-4 px-6 rounded-2xl')}>
+          <div className={twMerge(infoBoxBgColor, '  py-4 px-6 rounded-2xl')}>
             <div>${TOKEN.symbol} tokens</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
@@ -196,7 +196,7 @@ const MyRewardsPage = () => {
         title="Curation Rewards"
         subTitle="Earn curation rewards for voting on collections with your votes. You'll gain a portion of the transaction fees for each collection you curate."
         sideInfo={
-          <div className={twMerge(infoBoxBGClr, '  py-4 px-6 rounded-2xl')}>
+          <div className={twMerge(infoBoxBgColor, '  py-4 px-6 rounded-2xl')}>
             <div>Voting power</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
@@ -225,7 +225,7 @@ const MyRewardsPage = () => {
         title="Trading Rewards"
         subTitle="Earn trading rewards for buying and selling NFTs on Infinity. Rewards are distributed once per week."
         sideInfo={
-          <div className={twMerge(infoBoxBGClr, '  py-4 px-6 rounded-2xl')}>
+          <div className={twMerge(infoBoxBgColor, '  py-4 px-6 rounded-2xl')}>
             <div className="flex flex-wrap">
               <div className="lg:w-1/3 sm:w-full">
                 <div className="mb-4">Volume traded</div>

@@ -2,7 +2,7 @@ import { ScrollLoader } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 import { ErrorOrLoading } from '../error-or-loading';
 import { Erc721TokenOffer } from '../types';
-import { TokenGridCard, TokenListCard } from './token-card';
+import { TokenGridItem, TokenListItem } from './token-grid-item';
 import { TokenFetcherAlt } from './token-fetcher';
 
 interface Props {
@@ -46,7 +46,7 @@ export const TokensGrid = ({
             <div className={twMerge('space-y-1 flex flex-col')}>
               {cardData.map((data) => {
                 return (
-                  <TokenListCard
+                  <TokenListItem
                     key={data.id}
                     data={data}
                     selected={isSelected(data)}
@@ -63,18 +63,15 @@ export const TokensGrid = ({
           </>
         );
       } else {
-        let divisor = wrapWidth < 1500 ? 500 : 380;
-        divisor = wrapWidth < 950 ? 700 : divisor;
-
-        const cols = Math.round(wrapWidth / divisor);
-        const gridColumns = `repeat(${cols}, minmax(0, 1fr))`;
-
         contents = (
           <>
-            <div className={twMerge('grid gap-10')} style={{ gridTemplateColumns: gridColumns }}>
+            <div
+              className="grid grid-flow-row-dense gap-2 3xl:grid-cols-[repeat(auto-fill,_minmax(200px,_1fr))]
+                          sm:grid-cols-[repeat(auto-fill,_minmax(167px,_1fr))] grid-cols-[repeat(auto-fit,_minmax(160px,_1fr))]"
+            >
               {cardData.map((data) => {
                 return (
-                  <TokenGridCard
+                  <TokenGridItem
                     key={data.id}
                     data={data}
                     selected={isSelected(data)}

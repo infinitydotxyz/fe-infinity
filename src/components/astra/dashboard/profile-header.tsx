@@ -3,7 +3,7 @@ import { EZImage, NextLink } from 'src/components/common';
 import person from 'src/images/person.png';
 import { ellipsisAddress } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import { cardClr, inputBorderColor, primaryBorderColor, primaryTextColor, textClr } from 'src/utils/ui-constants';
+import { cardColor, inputBorderColor, primaryBorderColor, primaryTextColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 interface Props {
@@ -15,7 +15,12 @@ export const ProfileHeader = ({ expanded }: Props) => {
   const addressFromPath = router.query?.address as string;
   return (
     <div
-      className={twMerge(inputBorderColor, cardClr, textClr, 'flex-col items-center rounded-tl-lg border-b px-8 pt-5')}
+      className={twMerge(
+        inputBorderColor,
+        cardColor,
+        textColor,
+        'flex-col items-center rounded-tl-lg border-b px-8 pt-5'
+      )}
     >
       {expanded && (
         <>

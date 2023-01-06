@@ -1,7 +1,7 @@
 import { NextRouter, useRouter } from 'next/router';
 import { BlueCheck, EZImage, NextLink, ReadMoreText, Spacer } from 'src/components/common';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
-import { cardClr, inputBorderColor, primaryBorderColor, primaryTextColor, textClr } from 'src/utils/ui-constants';
+import { cardColor, inputBorderColor, primaryBorderColor, primaryTextColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 export interface GridHeaderProps {
@@ -16,7 +16,12 @@ export interface GridHeaderProps {
 export const GridHeader = ({ expanded, avatarUrl, title, description, hasBlueCheck, children }: GridHeaderProps) => {
   return (
     <div
-      className={twMerge(inputBorderColor, cardClr, textClr, 'flex-col items-center rounded-tl-lg border-b px-8 pt-1')}
+      className={twMerge(
+        inputBorderColor,
+        cardColor,
+        textColor,
+        'flex-col items-center rounded-tl-lg border-b px-8 pt-1'
+      )}
     >
       {expanded && (
         <>

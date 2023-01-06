@@ -1,7 +1,7 @@
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { Spinner } from 'src/components/common';
-import { textClr } from 'src/utils/ui-constants';
+import { textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { useOrderbook } from '../OrderbookContext';
 import { BarChartType, OrderData, ResponsiveBarChart } from './bar-chart';
@@ -218,7 +218,7 @@ export const OrderbookCharts = ({ className = '' }: OrderBookChartProps) => {
 
 const Loading = () => {
   return (
-    <div className={twMerge(infoBoxStyle, textClr, 'pointer-events-none')}>
+    <div className={twMerge(infoBoxStyle, textColor, 'pointer-events-none')}>
       <div className="flex flex-col items-center justify-center">
         <Spinner />
         <div className="mt-4">Loading...</div>

@@ -1,7 +1,7 @@
 import { BsMedium, BsTwitter } from 'react-icons/bs';
 import { SiDiscord } from 'react-icons/si';
 import { AstraCartButton } from 'src/components/astra/astra-cart-button';
-import { infoBoxBGClr, smallIconButtonStyle } from 'src/utils/ui-constants';
+import { infoBoxBgColor, smallIconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 import { AiFillRead } from 'react-icons/ai';
@@ -11,7 +11,7 @@ import { ADropdown, ADropdownItem } from './astra-dropdown';
 
 export const ANavbar = () => {
   return (
-    <div className={twMerge(infoBoxBGClr, 'flex px-5 py-2 space-x-4 items-center border-b-2')}>
+    <div className={twMerge(infoBoxBgColor, 'flex px-5 py-2 space-x-4 items-center border-b-2')}>
       <div className="w-4/12">
         <CollectionSearchInput expanded />
       </div>

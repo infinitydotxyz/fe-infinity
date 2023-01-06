@@ -11,8 +11,9 @@ import { extent } from 'd3';
 import { format } from 'date-fns';
 import { MouseEvent, TouchEvent, useCallback, useMemo, useState } from 'react';
 import { TokenCardModal } from 'src/components/astra/token-grid/token-card-modal';
+import { BasicTokenInfo } from 'src/components/astra/types';
 import { EZImage } from 'src/components/common';
-import { cardClr, textClr } from 'src/utils/ui-constants';
+import { cardColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { ChartBox } from './chart-box';
 import { getChartDimensions } from './chart-utils';
@@ -64,7 +65,7 @@ export const ResponsiveScatterChart = ({
           onChange={(e) => fetchData(e.target.value)}
           className={twMerge(
             'form-select rounded-full bg-transparent border-ring-gray-400 focus:ring-gray-400 focus:border-none float-right',
-            textClr
+            textColor
           )}
         >
           {Object.values(TimeBuckets).map((filter) => (
@@ -205,7 +206,7 @@ function ScatterChart({ width, height, data }: ScatterChartProps) {
     [xScale, yScale, cloudsColorScale]
   );
 
-  const basicTokenInfo = {
+  const basicTokenInfo: BasicTokenInfo = {
     tokenId: selectedSale?.tokenId ?? '',
     collectionAddress: selectedSale?.collectionAddress ?? '',
     chainId: '1' // todo dont hardcode
@@ -285,14 +286,14 @@ function ToolTip({ left, top, data, isTooltipOpen }: Props2) {
       left={left}
       top={top}
     >
-      <div className={twMerge(cardClr, textClr, 'flex flex-col p-1')} style={{ aspectRatio: '3.5 / 5' }}>
+      <div className={twMerge(cardColor, textColor, 'flex flex-col p-1')} style={{ aspectRatio: '3.5 / 5' }}>
         <div className="flex-1 rounded-2xl overflow-clip">
           <EZImage src={data?.tokenImage} />
         </div>
 
         <div className="font-bold truncate ml-1 mt-1">{data?.tokenId}</div>
 
-        <div className={twMerge(textClr, 'flex flex-row space-x-3 m-1')}>
+        <div className={twMerge(textColor, 'flex flex-row space-x-3 m-1')}>
           <div className="flex flex-col">
             <div className="truncate">Sale price</div>
             <div className="truncate">{data?.salePrice}</div>

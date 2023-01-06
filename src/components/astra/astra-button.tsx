@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { BsGrid, BsList } from 'react-icons/bs';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
-import { clickClr, hoverClr, inputBorderColor, primaryTextColor, textClr } from 'src/utils/ui-constants';
+import { clickColor, hoverColor, inputBorderColor, primaryTextColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 interface Props {
@@ -76,10 +76,10 @@ const ButtonBase = ({
       // otherwise a disabled buttons click will go to the parent, onClick isn't called
       // disabled={disabled}
       className={twMerge(
-        highlighted ? clickClr : textClr,
+        highlighted ? clickColor : textColor,
         'active:dark:bg-light-bg  active:dark:text-dark-bg  ',
         'active:bg-dark-bg active:text-light-bg',
-        hoverClr,
+        hoverColor,
         'select-none transition ease-in-out duration-300',
         'focus:outline-none focus-visible:ring focus:ring-black focus:ring-opacity-50',
         disabled ? disabledClass : '',

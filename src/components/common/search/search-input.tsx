@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { useIsMounted } from 'src/hooks/useIsMounted';
-import { cardClr, hoverClr, inputBorderColor, textClr } from 'src/utils/ui-constants';
+import { cardColor, hoverColor, inputBorderColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { getSearchResultKey, getSearchResultLink, SearchResultItem } from './search-results';
 import { SearchResult } from './types';
@@ -61,13 +61,13 @@ export function SearchInput({ expanded, query, setQuery, placeholder, data }: Pr
   return (
     <div
       className={twMerge(
-        textClr,
+        textColor,
         inputBorderColor,
         'border w-full px-4 rounded-xl text-center h-10 flex place-items-center'
       )}
     >
       <div className="w-content h-content  hover:cursor-pointer" onClick={activate}>
-        <AiOutlineSearch className={twMerge(textClr, 'flex-[1] w-[18px] h-[18px] max-h-full')}></AiOutlineSearch>
+        <AiOutlineSearch className={twMerge(textColor, 'flex-[1] w-[18px] h-[18px] max-h-full')}></AiOutlineSearch>
       </div>
       <Combobox
         as="div"
@@ -97,7 +97,7 @@ export function SearchInput({ expanded, query, setQuery, placeholder, data }: Pr
         <div className="relative z-20">
           <Combobox.Options
             className={twMerge(
-              cardClr,
+              cardColor,
               data.length === 0 ? 'opacity-0' : '', // without this, a thin line appears
               inputBorderColor,
               'absolute z-20 -mx-8 top-2  w-content h-content max-h-content',
@@ -112,8 +112,8 @@ export function SearchInput({ expanded, query, setQuery, placeholder, data }: Pr
                     <div
                       className={twMerge(
                         active ? 'bg-transparent' : 'bg-transparent',
-                        hoverClr,
-                        textClr,
+                        hoverColor,
+                        textColor,
                         'font-body text-sm py-1.5 px-4   rounded-md transition-all duration-200',
                         'flex gap-3 place-items-center',
                         'hover:cursor-pointer w-60 z-20'

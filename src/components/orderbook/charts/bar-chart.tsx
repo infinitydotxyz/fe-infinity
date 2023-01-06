@@ -4,7 +4,7 @@ import { AnimatedAxis, AnimatedBarSeries, AnimatedGrid, Tooltip, XYChart } from 
 import React, { useMemo, useState } from 'react';
 import { EthSymbol, SimpleTable, SimpleTableItem } from 'src/components/common';
 import { numStr } from 'src/utils';
-import { textClr } from 'src/utils/ui-constants';
+import { textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { ChartBox } from './chart-box';
 import { getChartDimensions } from './chart-utils';
@@ -103,7 +103,7 @@ export const ResponsiveBarChart = ({ graphData, graphType, fetchData, displayDet
           onChange={(e) => setSelectedPriceBucket(+e.target.value)}
           className={twMerge(
             'form-select rounded-full bg-transparent border-ring-gray-400 focus:ring-gray-400 focus:border-none',
-            textClr
+            textColor
           )}
         >
           {priceBuckets.map((filter) => (
@@ -150,7 +150,9 @@ const BarChart: React.FC<BarChartProps> = ({
   const axisLabels = data.map(getAxisLabel);
 
   if (data.every((d) => d.data.length === 0)) {
-    return <strong className={twMerge(textClr, 'h-full flex justify-center items-center')}>No {graphType} data</strong>;
+    return (
+      <strong className={twMerge(textColor, 'h-full flex justify-center items-center')}>No {graphType} data</strong>
+    );
   }
 
   return (

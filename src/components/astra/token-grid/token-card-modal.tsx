@@ -16,12 +16,7 @@ import {
   useToggleTab
 } from '../../common';
 import { ATraitList } from '../astra-trait-list';
-
-export interface BasicTokenInfo {
-  chainId: string;
-  collectionAddress: string;
-  tokenId: string;
-}
+import { BasicTokenInfo } from '../types';
 
 interface Props {
   data: BasicTokenInfo;

@@ -25,13 +25,13 @@ export const weekSeconds = secondsPerDay * 7;
 export const thirtyDaySeconds = secondsPerDay * 30;
 
 // these include both dark and light
-export const cardClr = 'dark:bg-dark-card bg-light-card';
-export const textClr = 'dark:text-dark-body text-light-body';
+export const cardColor = 'dark:bg-dark-card bg-light-card';
+export const textColor = 'dark:text-dark-body text-light-body';
 export const inputBorderColor = 'dark:border-dark-border border-light-border';
-export const hoverClr = 'dark:hover:bg-gray-200 dark:hover:bg-opacity-10 hover:bg-gray-300 hover:bg-opacity-100';
-export const clickClr = 'dark:bg-gray-200 dark:bg-opacity-10 bg-gray-300 bg-opacity-100';
-export const primaryTextColor = textClr;
+export const hoverColor = 'dark:hover:bg-gray-200 dark:hover:bg-opacity-10 hover:bg-gray-300 hover:bg-opacity-100';
+export const clickColor = 'dark:bg-gray-200 dark:bg-opacity-10 bg-gray-300 bg-opacity-100';
+export const primaryTextColor = textColor;
 export const primaryBorderColor = inputBorderColor;
 export const selectionOutline = 'outline-4 outline-offset-1 outline outline-sky-500';
-export const infoBoxBGClr = 'dark:bg-gray-200 dark:bg-opacity-10 bg-gray-200 bg-opacity-60';
-export const backgroundClr = 'dark:bg-neutral-900 bg-white ';
+export const infoBoxBgColor = 'dark:bg-gray-200 dark:bg-opacity-10 bg-gray-200 bg-opacity-60';
+export const bgColor = 'dark:bg-neutral-900 bg-white ';

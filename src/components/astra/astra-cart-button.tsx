@@ -1,6 +1,6 @@
 import { BsCartCheckFill, BsCartDash } from 'react-icons/bs';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
-import { clickClr, iconButtonStyle } from 'src/utils/ui-constants';
+import { clickColor, iconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { AButton } from './astra-button';
 
@@ -9,7 +9,7 @@ export const AstraCartButton = () => {
   const numItems = Math.max(selection.length, collSelection.length, orderSelection.length);
 
   return (
-    <AButton onClick={() => setShowCart(!showCart)} className={twMerge('relative py-2.5', showCart ? clickClr : '')}>
+    <AButton onClick={() => setShowCart(!showCart)} className={twMerge('relative py-2.5', showCart ? clickColor : '')}>
       {numItems > 0 ? (
         <>
           <BsCartCheckFill className={twMerge(iconButtonStyle)} />
