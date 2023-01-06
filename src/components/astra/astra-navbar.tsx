@@ -11,7 +11,7 @@ import { ADropdown, ADropdownItem } from './astra-dropdown';
 
 export const ANavbar = () => {
   return (
-    <div className={twMerge(infoBoxBGClr, 'flex px-5 py-3 space-x-4 items-center border-b-2')}>
+    <div className={twMerge(infoBoxBGClr, 'flex px-5 py-2 space-x-4 items-center border-b-2')}>
       <div className="w-4/12">
         <CollectionSearchInput expanded />
       </div>

@@ -16,7 +16,7 @@ export const SidebarNav = () => {
   const { user } = useOnboardContext();
 
   return (
-    <div className={twMerge(infoBoxBGClr, 'flex px-2 py-4 h-full flex-col items-center border-r-2')}>
+    <div className={twMerge(infoBoxBGClr, 'flex px-2 py-4 h-full w-[4.5rem] flex-col items-center border-r-2')}>
       <NextLink href="/">
         {darkMode ? <SVG.miniLogoDark className="shrink-0 h-9 w-9" /> : <SVG.miniLogo className="shrink-0 h-9 w-9" />}
       </NextLink>

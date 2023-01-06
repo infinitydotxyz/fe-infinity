@@ -16,24 +16,22 @@ export interface GridHeaderProps {
 export const GridHeader = ({ expanded, avatarUrl, title, description, hasBlueCheck, children }: GridHeaderProps) => {
   return (
     <div
-      className={twMerge(inputBorderColor, cardClr, textClr, 'flex-col items-center rounded-tl-lg border-b px-8 pt-5')}
+      className={twMerge(inputBorderColor, cardClr, textClr, 'flex-col items-center rounded-tl-lg border-b px-8 pt-1')}
     >
       {expanded && (
         <>
           <div className="flex flex-col items-start">
-            <div className="flex w-full items-start">
-              <EZImage src={avatarUrl} className="mr-6 h-20 w-20 rounded-xl" />
-
+            <div className="flex w-full items-center">
+              <EZImage src={avatarUrl} className="mr-6 h-16 w-16 rounded-xl" />
               <div className="flex w-full items-center">
-                <div className="tracking-tight font-bold text-4xl  ">{title}</div>
-
+                <div className="tracking-tight font-bold text-2xl">{title}</div>
                 {hasBlueCheck ? <BlueCheck className="ml-2" /> : null}
               </div>
             </div>
 
             {description && (
-              <div className="max-w-3xl">
-                <ReadMoreText text={description} min={50} ideal={160} max={10000} />
+              <div className="max-w-5xl">
+                <ReadMoreText text={description} min={50} ideal={160} max={1000} />
               </div>
             )}
           </div>
