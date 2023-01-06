@@ -35,9 +35,6 @@ export type DashboardContextType = {
   collection: BaseCollection | undefined;
   setCollection: (value?: BaseCollection) => void;
 
-  gridWidth: number;
-  setGridWidth: (value: number) => void;
-
   displayName: string;
   setDisplayName: (value: string) => void;
 
@@ -93,7 +90,6 @@ export const DashboardContextProvider = ({ children }: Props) => {
   const [numTokens, setNumTokens] = useState(0);
   const [tokenFetcher, setTokenFetcher] = useState<TokenFetcherAlt | undefined>();
   const [refreshTrigger, setRefreshTrigger] = useState(0);
-  const [gridWidth, setGridWidth] = useState(0);
   const [listMode, setListMode] = useState(false);
   const [txnHash, setTxnHash] = useState<string>('');
 
@@ -408,9 +404,6 @@ export const DashboardContextProvider = ({ children }: Props) => {
   const value: DashboardContextType = {
     collection,
     setCollection,
-
-    gridWidth,
-    setGridWidth,
 
     showCart,
     setShowCart,

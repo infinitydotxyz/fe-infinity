@@ -17,7 +17,7 @@ import { CollectionNftSearchInput } from 'src/components/common/search/collectio
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
 
 const GridWrapper: FC = () => {
-  const { setNumTokens, tokenFetcher, isSelected, isSelectable, gridWidth, listMode, toggleSelection, collection } =
+  const { setNumTokens, tokenFetcher, isSelected, isSelectable, listMode, toggleSelection, collection } =
     useDashboardContext();
 
   const { data, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection?.address);
@@ -28,7 +28,6 @@ const GridWrapper: FC = () => {
       tokenFetcher={tokenFetcher}
       className="px-8 py-6"
       onClick={toggleSelection}
-      wrapWidth={gridWidth}
       isSelectable={isSelectable}
       isSelected={isSelected}
       onLoad={setNumTokens}

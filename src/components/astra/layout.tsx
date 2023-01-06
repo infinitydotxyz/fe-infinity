@@ -14,7 +14,6 @@ interface Props {
 export const Layout = ({ children }: Props) => {
   const {
     collection,
-    setGridWidth,
     handleTokenSend,
     handleTokenCheckout,
     handleCollCheckout,
@@ -32,13 +31,7 @@ export const Layout = ({ children }: Props) => {
 
   const gridRef = useRef<HTMLDivElement>(null);
 
-  const { width: containerWidth, ref: containerRef } = useResizeDetector();
-
-  useEffect(() => {
-    if (containerWidth && containerWidth > 0) {
-      setGridWidth(containerWidth);
-    }
-  }, [containerWidth]);
+  const { ref: containerRef } = useResizeDetector();
 
   useEffect(() => {
     gridRef.current?.scrollTo({ left: 0, top: 0 });

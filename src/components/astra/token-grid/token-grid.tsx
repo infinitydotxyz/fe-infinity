@@ -9,7 +9,6 @@ interface Props {
   tokenFetcher?: TokenFetcherAlt;
   listMode: boolean;
   className?: string;
-  wrapWidth?: number;
   onClick?: (data: Erc721TokenOffer) => void;
   isSelected: (data: Erc721TokenOffer) => boolean;
   isSelectable: (data: Erc721TokenOffer) => boolean;
@@ -26,7 +25,6 @@ export const TokensGrid = ({
   onClick,
   isSelected,
   isSelectable,
-  wrapWidth = 0,
   listMode,
   data: cardData,
   hasNextPage,
@@ -39,55 +37,53 @@ export const TokensGrid = ({
   if (cardData.length === 0 || isError || isLoading) {
     contents = <ErrorOrLoading error={!!isError || !!isLoading} noData={cardData.length === 0} />;
   } else {
-    if (wrapWidth > 0) {
-      if (listMode) {
-        contents = (
-          <>
-            <div className={twMerge('space-y-1 flex flex-col')}>
-              {cardData.map((data) => {
-                return (
-                  <TokenListItem
-                    key={data.id}
-                    data={data}
-                    selected={isSelected(data)}
-                    isSelectable={isSelectable}
-                    onClick={(data) => {
-                      onClick?.(data);
-                    }}
-                  />
-                );
-              })}
-            </div>
+    if (listMode) {
+      contents = (
+        <>
+          <div className={twMerge('space-y-1 flex flex-col')}>
+            {cardData.map((data) => {
+              return (
+                <TokenListItem
+                  key={data.id}
+                  data={data}
+                  selected={isSelected(data)}
+                  isSelectable={isSelectable}
+                  onClick={(data) => {
+                    onClick?.(data);
+                  }}
+                />
+              );
+            })}
+          </div>
 
-            {hasNextPage && <ScrollLoader onFetchMore={onFetchMore} />}
-          </>
-        );
-      } else {
-        contents = (
-          <>
-            <div
-              className="grid grid-flow-row-dense gap-2 3xl:grid-cols-[repeat(auto-fill,_minmax(200px,_1fr))]
+          {hasNextPage && <ScrollLoader onFetchMore={onFetchMore} />}
+        </>
+      );
+    } else {
+      contents = (
+        <>
+          <div
+            className="grid grid-flow-row-dense gap-2 3xl:grid-cols-[repeat(auto-fill,_minmax(200px,_1fr))]
                           sm:grid-cols-[repeat(auto-fill,_minmax(167px,_1fr))] grid-cols-[repeat(auto-fit,_minmax(160px,_1fr))]"
-            >
-              {cardData.map((data) => {
-                return (
-                  <TokenGridItem
-                    key={data.id}
-                    data={data}
-                    selected={isSelected(data)}
-                    isSelectable={isSelectable}
-                    onClick={(data) => {
-                      onClick?.(data);
-                    }}
-                  />
-                );
-              })}
-            </div>
+          >
+            {cardData.map((data) => {
+              return (
+                <TokenGridItem
+                  key={data.id}
+                  data={data}
+                  selected={isSelected(data)}
+                  isSelectable={isSelectable}
+                  onClick={(data) => {
+                    onClick?.(data);
+                  }}
+                />
+              );
+            })}
+          </div>
 
-            {hasNextPage && <ScrollLoader onFetchMore={onFetchMore} />}
-          </>
-        );
-      }
+          {hasNextPage && <ScrollLoader onFetchMore={onFetchMore} />}
+        </>
+      );
     }
   }
 

@@ -19,8 +19,7 @@ import { inputBorderColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 const TokensGridWrapper: FC = () => {
-  const { tokenFetcher, isSelected, isSelectable, gridWidth, listMode, toggleSelection, setNumTokens } =
-    useDashboardContext();
+  const { tokenFetcher, isSelected, isSelectable, listMode, toggleSelection, setNumTokens } = useDashboardContext();
 
   const router = useRouter();
   const addressFromPath = router.query?.address as string;
@@ -33,7 +32,6 @@ const TokensGridWrapper: FC = () => {
       tokenFetcher={tokenFetcher}
       className="px-8 py-6"
       onClick={toggleSelection}
-      wrapWidth={gridWidth}
       isSelectable={isSelectable}
       isSelected={isSelected}
       onLoad={setNumTokens}
