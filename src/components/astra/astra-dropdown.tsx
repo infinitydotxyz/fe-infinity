@@ -24,7 +24,7 @@ export const ADropdownButton = ({ children, isMenuOpen }: DropdownBtnProps) => {
       <RxCaretDown
         className={smallIconButtonStyle}
         style={{
-          transition: 'all 0.25s ease',
+          transition: 'all 0.1s ease',
           transform: `rotate(${!isMenuOpen ? 0 : '0.5turn'})`
         }}
       />
