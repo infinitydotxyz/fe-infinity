@@ -9,7 +9,8 @@ import { defaultStyles, TooltipWithBounds, useTooltip } from '@visx/tooltip';
 import { voronoi } from '@visx/voronoi';
 import { extent } from 'd3';
 import { format } from 'date-fns';
-import { MouseEvent, TouchEvent, useCallback, useMemo } from 'react';
+import { MouseEvent, TouchEvent, useCallback, useMemo, useState } from 'react';
+import { TokenCardModal } from 'src/components/astra/token-grid/token-card-modal';
 import { EZImage } from 'src/components/common';
 import { cardClr, textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
@@ -47,11 +48,9 @@ interface ScatterChartProps {
   width: number;
   height: number;
   data: SaleData[];
-  displayDetails: (sale: SaleData) => void;
 }
 
 export const ResponsiveScatterChart = ({
-  displayDetails,
   data,
   graphType,
   selectedTimeBucket,
@@ -76,15 +75,16 @@ export const ResponsiveScatterChart = ({
         </select>
       </div>
       <ParentSize debounceTime={10}>
-        {({ width, height }) => (
-          <ScatterChart data={data} width={width} height={height} displayDetails={displayDetails} />
-        )}
+        {({ width, height }) => <ScatterChart data={data} width={width} height={height} />}
       </ParentSize>
     </ChartBox>
   );
 };
 
-function ScatterChart({ width, height, data, displayDetails }: ScatterChartProps) {
+function ScatterChart({ width, height, data }: ScatterChartProps) {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedSale, setSelectedSale] = useState<SaleData>();
+
   const {
     showTooltip,
     hideTooltip,
@@ -172,6 +172,7 @@ function ScatterChart({ width, height, data, displayDetails }: ScatterChartProps
           ...closest.data
         }
       });
+      setModalOpen(false);
     },
     [xScale, yScale, voronoiLayout, voronoiPolygons]
   );
@@ -182,7 +183,8 @@ function ScatterChart({ width, height, data, displayDetails }: ScatterChartProps
       if (!closest) {
         return;
       }
-      displayDetails(closest.data);
+      setModalOpen(true);
+      setSelectedSale(closest.data);
     },
     [xScale, yScale, voronoiLayout, voronoiPolygons]
   );
@@ -202,6 +204,12 @@ function ScatterChart({ width, height, data, displayDetails }: ScatterChartProps
       )),
     [xScale, yScale, cloudsColorScale]
   );
+
+  const basicTokenInfo = {
+    tokenId: selectedSale?.tokenId ?? '',
+    collectionAddress: selectedSale?.collectionAddress ?? '',
+    chainId: '1' // todo dont hardcode
+  };
 
   return (
     <div>
@@ -252,6 +260,7 @@ function ScatterChart({ width, height, data, displayDetails }: ScatterChartProps
       </svg>
 
       <ToolTip isTooltipOpen={tooltipOpen} left={tooltipLeft} top={tooltipTop} data={tooltipData} />
+      <TokenCardModal data={basicTokenInfo} modalOpen={modalOpen} setModalOpen={setModalOpen} />
     </div>
   );
 }

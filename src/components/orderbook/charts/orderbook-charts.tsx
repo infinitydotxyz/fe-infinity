@@ -5,7 +5,7 @@ import { textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { useOrderbook } from '../OrderbookContext';
 import { BarChartType, OrderData, ResponsiveBarChart } from './bar-chart';
-import { OrdersChartDetails, SalesChartDetails } from './chart-details';
+import { OrdersChartDetails } from './chart-details';
 import { ResponsiveScatterChart, SaleData, ScatterChartType, TimeBuckets } from './scatter-chart';
 
 const infoBoxStyle = 'flex items-center justify-center opacity-60 font-bold text-lg h-full';
@@ -18,7 +18,6 @@ export const OrderbookCharts = ({ className = '' }: OrderBookChartProps) => {
   const { orders, updateFilters, isLoading } = useOrderbook();
   const [salesData, setSalesData] = useState<SaleData[]>([]);
   const [ordersData, setOrdersData] = useState<OrderData[]>([]);
-  const [selectedSale, setSelectedSale] = useState<SaleData>();
   const [selectedListings, setSelectedListings] = useState<SignedOBOrder[]>([]);
   const [selectedOffers, setSelectedOffers] = useState<SignedOBOrder[]>([]);
   const [selectedListingIndex, setSelectedListingIndex] = useState(0);
@@ -94,9 +93,9 @@ export const OrderbookCharts = ({ className = '' }: OrderBookChartProps) => {
             salePrice: +(Math.random() * (100 - 0.01) + 0.01).toFixed(2),
             tokenImage:
               'https://i.seadn.io/gae/8GNiYHlI96za-qLdNuBdhW64Y9fNquLw4V9NojDZt5XZhownn8tHQJTEMfZfqfRzk9GngBxiz6BKsr_VaHFyGk6Lm2Qai6RXgH7bwB4?auto=format&w=750',
-            collectionAddress: '0x123',
-            collectionName: 'abc',
-            tokenId: '123',
+            collectionAddress: '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d',
+            collectionName: 'BAYC',
+            tokenId: Math.ceil(Math.random() * (10000 - 1) + 1).toString(),
             timestamp: Math.random() * (nowTimestamp - prevTimestamp) + prevTimestamp
           } as SaleData)
       )
@@ -114,9 +113,9 @@ export const OrderbookCharts = ({ className = '' }: OrderBookChartProps) => {
             salePrice: +(Math.random() * (100 - 0.01) + 0.01).toFixed(2),
             tokenImage:
               'https://i.seadn.io/gae/8GNiYHlI96za-qLdNuBdhW64Y9fNquLw4V9NojDZt5XZhownn8tHQJTEMfZfqfRzk9GngBxiz6BKsr_VaHFyGk6Lm2Qai6RXgH7bwB4?auto=format&w=750',
-            collectionAddress: '0x123',
-            collectionName: 'abc',
-            tokenId: '123',
+            collectionAddress: '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d',
+            collectionName: 'BAYC',
+            tokenId: Math.ceil(Math.random() * (10000 - 1) + 1).toString(),
             timestamp: Math.random() * (nowTimestamp - timestampOneWeekAgo) + timestampOneWeekAgo
           } as SaleData)
       )
@@ -153,22 +152,18 @@ export const OrderbookCharts = ({ className = '' }: OrderBookChartProps) => {
   return (
     <div className={twMerge('w-full h-full relative flex flex-col p-2', className)}>
       <div className="flex">
-        <div className="w-2/3 p-2">
+        <div className="w-full p-2">
           {!isLoading && salesData.length > 0 && (
             <ResponsiveScatterChart
               key={selectedTimeBucket}
               selectedTimeBucket={selectedTimeBucket}
               graphType={ScatterChartType.Sales}
               data={salesData}
-              displayDetails={setSelectedSale}
               fetchData={fetchSalesDataForTimeBucket}
             />
           )}
 
           {isLoading && <Loading />}
-        </div>
-        <div className="w-1/3 p-2">
-          <SalesChartDetails data={selectedSale} />
         </div>
       </div>
 

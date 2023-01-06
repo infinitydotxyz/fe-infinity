@@ -1,25 +1,29 @@
-import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
 import { useState } from 'react';
 import { cardClr, hoverClr, selectionOutline, textClr } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { Checkbox, EZImage, Spacer, SVG } from '../../common';
 import { AOutlineButton } from '../astra-button';
 import { Erc721TokenOffer } from '../types';
-import { TokenCardModal } from './token-card-modal';
+import { BasicTokenInfo, TokenCardModal } from './token-card-modal';
 
 interface Props {
   data: Erc721TokenOffer;
   selected: boolean;
   isSelectable: (data: Erc721TokenOffer) => boolean;
   onClick: (data: Erc721TokenOffer) => void;
-  onClickDetails: (data: Erc721TokenOffer) => void;
 }
 
-export const TokenCard = ({ data, onClick, onClickDetails, selected, isSelectable }: Props): JSX.Element => {
+export const TokenGridCard = ({ data, onClick, selected, isSelectable }: Props): JSX.Element => {
   const [notSelectable, setNotSelectable] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
   const title = data?.title;
   const tokenId = data?.tokenId;
   const hasBlueCheck = data?.hasBlueCheck ?? false;
+  const basicTokenInfo: BasicTokenInfo = {
+    tokenId: data?.tokenId ?? '',
+    collectionAddress: data?.address ?? '',
+    chainId: data?.chainId ?? ''
+  };
 
   return (
     <div
@@ -57,12 +61,14 @@ export const TokenCard = ({ data, onClick, onClickDetails, selected, isSelectabl
           <div className="flex items-center">
             <div className="truncate">Id: {tokenId}</div>
             <Spacer />
-            <AOutlineButton small onClick={() => onClickDetails(data)}>
+            <AOutlineButton small onClick={() => setModalOpen(true)}>
               Details
             </AOutlineButton>
           </div>
         </div>
       </div>
+
+      <TokenCardModal data={basicTokenInfo} modalOpen={modalOpen} setModalOpen={setModalOpen} />
     </div>
   );
 };
@@ -75,6 +81,11 @@ export const TokenListCard = ({ data, onClick, selected, isSelectable }: Props):
   const title = data?.title;
   const tokenId = data?.tokenId;
   const hasBlueCheck = data?.hasBlueCheck ?? false;
+  const basicTokenInfo: BasicTokenInfo = {
+    tokenId: data?.tokenId ?? '',
+    collectionAddress: data?.address ?? '',
+    chainId: data?.chainId ?? ''
+  };
 
   return (
     <div
@@ -118,9 +129,7 @@ export const TokenListCard = ({ data, onClick, selected, isSelectable }: Props):
         </AOutlineButton>
       </div>
 
-      {data && (
-        <TokenCardModal data={data as Required<ERC721CardData>} modalOpen={modalOpen} setModalOpen={setModalOpen} />
-      )}
+      <TokenCardModal data={basicTokenInfo} modalOpen={modalOpen} setModalOpen={setModalOpen} />
     </div>
   );
 };

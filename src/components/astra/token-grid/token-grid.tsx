@@ -1,12 +1,9 @@
 import { ScrollLoader } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
-import { TokenCard, TokenListCard } from './token-card';
-import { TokenFetcherAlt } from './token-fetcher';
 import { ErrorOrLoading } from '../error-or-loading';
 import { Erc721TokenOffer } from '../types';
-import { TokenCardModal } from './token-card-modal';
-import { useState } from 'react';
-import { ERC721CardData } from '@infinityxyz/lib-frontend/types/core';
+import { TokenGridCard, TokenListCard } from './token-card';
+import { TokenFetcherAlt } from './token-fetcher';
 
 interface Props {
   tokenFetcher?: TokenFetcherAlt;
@@ -37,9 +34,6 @@ export const TokensGrid = ({
   isError,
   isLoading
 }: Props) => {
-  const [openModal, setOpenModal] = useState(false);
-  const [modalData, setModalData] = useState<ERC721CardData>();
-
   let contents;
 
   if (cardData.length === 0 || isError || isLoading) {
@@ -59,10 +53,6 @@ export const TokensGrid = ({
                     isSelectable={isSelectable}
                     onClick={(data) => {
                       onClick?.(data);
-                    }}
-                    onClickDetails={() => {
-                      setModalData(data);
-                      setOpenModal(true);
                     }}
                   />
                 );
@@ -84,17 +74,13 @@ export const TokensGrid = ({
             <div className={twMerge('grid gap-10')} style={{ gridTemplateColumns: gridColumns }}>
               {cardData.map((data) => {
                 return (
-                  <TokenCard
+                  <TokenGridCard
                     key={data.id}
                     data={data}
                     selected={isSelected(data)}
                     isSelectable={isSelectable}
                     onClick={(data) => {
                       onClick?.(data);
-                    }}
-                    onClickDetails={() => {
-                      setModalData(data);
-                      setOpenModal(true);
                     }}
                   />
                 );
@@ -111,15 +97,6 @@ export const TokensGrid = ({
   return (
     <div className={twMerge('h-full w-full', className)}>
       {contents}
-
-      {modalData && (
-        <TokenCardModal
-          data={modalData as Required<ERC721CardData>}
-          modalOpen={openModal}
-          setModalOpen={setOpenModal}
-        />
-      )}
-
       <div className="h-1/3" />
     </div>
   );

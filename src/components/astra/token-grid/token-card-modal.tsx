@@ -1,4 +1,4 @@
-import { CollectionAttributes, ERC721CardData, Token } from '@infinityxyz/lib-frontend/types/core';
+import { CollectionAttributes, Erc721Token, Token } from '@infinityxyz/lib-frontend/types/core';
 import { ActivityList } from 'src/components/asset';
 import { OrderbookContainer } from 'src/components/orderbook/list';
 import { ellipsisAddress, useFetch } from 'src/utils';
@@ -17,8 +17,14 @@ import {
 } from '../../common';
 import { ATraitList } from '../astra-trait-list';
 
+export interface BasicTokenInfo {
+  chainId: string;
+  collectionAddress: string;
+  tokenId: string;
+}
+
 interface Props {
-  data: Required<ERC721CardData>;
+  data: BasicTokenInfo;
   modalOpen: boolean;
   setModalOpen: (set: boolean) => void;
 }
@@ -44,7 +50,11 @@ const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string)
 
 export const TokenCardModal = ({ data, modalOpen, setModalOpen }: Props): JSX.Element => {
   const { options, onChange, selected } = useToggleTab(['Activity', 'Orders'], 'Activity');
-  const { isLoading, token, error, collectionAttributes } = useFetchAssetInfo(data.chainId, data.address, data.tokenId);
+  const { isLoading, token, error, collectionAttributes } = useFetchAssetInfo(
+    data.chainId,
+    data.collectionAddress,
+    data.tokenId
+  );
 
   if (isLoading) {
     return <Spinner />;
@@ -63,33 +73,33 @@ export const TokenCardModal = ({ data, modalOpen, setModalOpen }: Props): JSX.El
             <div className="md:flex-1 ">
               <div className="flex items-center mb-2">
                 <NextLink
-                  href={`/collection/${data.collectionSlug || `${data.chainId}:${data.address}`}`}
+                  href={`/collection/${token.collectionSlug || `${token.chainId}:${token.collectionAddress}`}`}
                   className="font-heading tracking-tight mr-2"
                 >
-                  <div>{data.collectionName || ellipsisAddress(data.address) || 'Collection'}</div>
+                  <div>{token.collectionName || ellipsisAddress(token.collectionAddress) || 'Collection'}</div>
                 </NextLink>
-                {data.hasBlueCheck && <BlueCheck />}
+                {token.hasBlueCheck && <BlueCheck />}
               </div>
-              <h3 className="font-body text-2xl font-bold mb-2">{data.tokenId}</h3>
+              <h3 className="font-body text-2xl font-bold mb-2">{token.tokenId}</h3>
               <ShortAddress
                 label="Collection address:"
-                address={data.address ?? ''}
-                href={`https://etherscan.io/address/${data.address}`}
-                tooltip={data.address ?? ''}
+                address={token.collectionAddress ?? ''}
+                href={`https://etherscan.io/address/${token.collectionAddress}`}
+                tooltip={token.collectionAddress ?? ''}
               />
               <ShortAddress
                 className="mt-2"
                 label="Owned by:"
                 address={token?.owner?.toString() || ''}
                 href={`https://infinity.xyz/profile/${token?.owner?.toString() || ''}`}
-                tooltip={data.owner || ''}
+                tooltip={token.owner?.toString() || ''}
               />
 
-              {data.description && (
+              {token.metadata.description && (
                 <>
                   <p className="font-body mb-1 mt-4">Description</p>
                   <div>
-                    <ReadMoreText text={data.description ?? ''} min={100} ideal={150} max={300} />
+                    <ReadMoreText text={token.metadata.description ?? ''} min={100} ideal={150} max={300} />
                   </div>
                 </>
               )}
@@ -121,8 +131,14 @@ export const TokenCardModal = ({ data, modalOpen, setModalOpen }: Props): JSX.El
         </div>
 
         <div className="flex flex-col">
-          <EZImage src={data?.image} className="h-80 w-80" />
-          <ATraitList traits={data.attributes ?? []} collectionTraits={collectionAttributes ?? {}} />
+          <EZImage
+            src={token?.image?.url ?? token.alchemyCachedImage ?? token.image?.originalUrl ?? ''}
+            className="h-80 w-80"
+          />
+          <ATraitList
+            traits={(token as Erc721Token).metadata.attributes ?? []}
+            collectionTraits={collectionAttributes ?? {}}
+          />
         </div>
       </div>
     </Modal>
