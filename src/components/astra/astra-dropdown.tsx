@@ -101,7 +101,7 @@ interface Props {
   children: ReactElement | string;
 }
 
-export const ACustomMenuItem = (props: Props) => {
+const ACustomMenuItem = (props: Props) => {
   return (
     <Menu.Item {...props}>
       {({ active, disabled }) => (
@@ -144,11 +144,18 @@ export const ACustomMenuItems = ({ children, open, alignMenuRight, innerClassNam
           className={twMerge(
             cardColor,
             inputBorderColor,
-            'absolute mt-2 p-2 w-56 rounded-xl border shadow-2xl outline-none',
+            'absolute mt-4 p-2 w-56 rounded-xl border shadow-dropdown outline-none',
             alignMenuRight ? 'right-0' : '',
             innerClassName
           )}
         >
+          <div
+            className={twMerge(
+              'h-6 w-6 rotate-45 absolute top-[-6px]',
+              cardColor,
+              alignMenuRight ? 'right-8' : 'left-8'
+            )}
+          ></div>
           {children}
         </Menu.Items>
       </Transition>

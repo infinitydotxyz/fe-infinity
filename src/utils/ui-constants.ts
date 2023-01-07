@@ -38,3 +38,4 @@ export const primaryBorderColor = inputBorderColor;
 export const selectionBorder = 'border-[1px] border-blue-500';
 export const infoBoxBgColor = 'dark:bg-gray-200 dark:bg-opacity-10 bg-gray-200 bg-opacity-60';
 export const bgColor = 'dark:bg-neutral-900 bg-white';
+export const bgColorInverse = 'dark:bg-white bg-neutral-900';

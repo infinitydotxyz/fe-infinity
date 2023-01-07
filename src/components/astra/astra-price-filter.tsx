@@ -38,40 +38,38 @@ export const APriceFilter: React.FC = () => {
             </ACustomMenuButton>
           </span>
 
-          {open && (
-            <ACustomMenuItems open={open} alignMenuRight={true}>
-              <div className="flex">
-                <TextInputBox
-                  addEthSymbol={true}
-                  type="number"
-                  className="font-heading"
-                  label="Min"
-                  placeholder=""
-                  value={minPriceVal}
-                  onChange={(value) => {
-                    setMinPriceVal(value);
-                  }}
-                />
-                <TextInputBox
-                  addEthSymbol={true}
-                  type="number"
-                  className="font-heading ml-2"
-                  label="Max"
-                  placeholder=""
-                  value={maxPriceVal}
-                  onChange={(value) => {
-                    setMaxPriceVal(value);
-                  }}
-                />
-              </div>
-              <Menu.Button onClick={onClear} className="mt-2 float-left">
-                <AButton highlighted>Clear</AButton>
-              </Menu.Button>
-              <Menu.Button onClick={onSave} className="mt-2 float-right">
-                <AButton primary>Save</AButton>
-              </Menu.Button>
-            </ACustomMenuItems>
-          )}
+          <ACustomMenuItems open={open} alignMenuRight={true} innerClassName="border-0">
+            <div className="flex mr-2">
+              <TextInputBox
+                addEthSymbol={true}
+                type="number"
+                className="font-heading p-3"
+                label="Min"
+                placeholder=""
+                value={minPriceVal}
+                onChange={(value) => {
+                  setMinPriceVal(value);
+                }}
+              />
+              <TextInputBox
+                addEthSymbol={true}
+                type="number"
+                className="font-heading ml-2 p-3"
+                label="Max"
+                placeholder=""
+                value={maxPriceVal}
+                onChange={(value) => {
+                  setMaxPriceVal(value);
+                }}
+              />
+            </div>
+            <Menu.Button onClick={onClear} className="mt-4 ml-1">
+              Clear
+            </Menu.Button>
+            <Menu.Button onClick={onSave} className="mt-2 mr-1 float-right">
+              <AButton primary={true}>Apply</AButton>
+            </Menu.Button>
+          </ACustomMenuItems>
         </ACustomMenuContents>
       )}
     </Menu>

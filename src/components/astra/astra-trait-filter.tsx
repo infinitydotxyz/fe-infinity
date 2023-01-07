@@ -36,33 +36,31 @@ export const ATraitFilter: React.FC = () => {
             </ACustomMenuButton>
           </span>
 
-          {open && (
-            <ACustomMenuItems open={open} innerClassName="w-80" alignMenuRight={true}>
-              {!collectionAttributes && <Spinner />}
-              {collectionAttributes && (
-                <div className="h-[400px] overflow-y-scroll">
-                  <TraitSelection
-                    traits={collectionAttributes}
-                    collectionAddress={collection?.address}
-                    onChange={(traitTypes, traitValues) => {
-                      const newFilter: Filter = {};
-                      newFilter.traitTypes = traitTypes;
-                      newFilter.traitValues = traitValues;
-                      newFilter.orderBy = 'tokenIdNumeric';
-                      setFilters((state) => ({ ...state, ...newFilter }));
-                    }}
-                    onClearAll={() => {
-                      const newFilter: Filter = {};
-                      newFilter.traitTypes = [];
-                      newFilter.traitValues = [];
-                      newFilter.orderBy = 'tokenIdNumeric';
-                      setFilters((state) => ({ ...state, ...newFilter }));
-                    }}
-                  />
-                </div>
-              )}
-            </ACustomMenuItems>
-          )}
+          <ACustomMenuItems open={open} innerClassName="w-80 border-0" alignMenuRight={true}>
+            {!collectionAttributes && <Spinner />}
+            {collectionAttributes && (
+              <div className="h-[400px] overflow-y-scroll">
+                <TraitSelection
+                  traits={collectionAttributes}
+                  collectionAddress={collection?.address}
+                  onChange={(traitTypes, traitValues) => {
+                    const newFilter: Filter = {};
+                    newFilter.traitTypes = traitTypes;
+                    newFilter.traitValues = traitValues;
+                    newFilter.orderBy = 'tokenIdNumeric';
+                    setFilters((state) => ({ ...state, ...newFilter }));
+                  }}
+                  onClearAll={() => {
+                    const newFilter: Filter = {};
+                    newFilter.traitTypes = [];
+                    newFilter.traitValues = [];
+                    newFilter.orderBy = 'tokenIdNumeric';
+                    setFilters((state) => ({ ...state, ...newFilter }));
+                  }}
+                />
+              </div>
+            )}
+          </ACustomMenuItems>
         </ACustomMenuContents>
       )}
     </Menu>

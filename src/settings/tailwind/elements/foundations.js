@@ -116,7 +116,9 @@ module.exports = {
     // used for tooltip shadow
     ttip: '0 2px 18px rgba(0, 0, 0, 0.12)',
     graph: '0 15px 30px -20px rgba(0, 0, 0, 0.22)',
-    drawer: '0 0 68px rgba(0, 0, 0, 0.3)'
+    drawer: '0 0 68px rgba(0, 0, 0, 0.3)',
+    dropdown:
+      '0 0 20px 4px rgb(154 161 177 / 15%), 0 4px 80px -8px rgb(36 40 47 / 25%), 0 4px 4px -2px rgb(91 94 105 / 15%)'
   },
   colors: {
     background: 'transparent',
