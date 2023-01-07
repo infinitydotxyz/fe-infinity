@@ -7,7 +7,7 @@ export function useChartTheme() {
 
   const theme = tailwindConfig.colors[darkMode ? 'dark' : 'light'];
   const color = darkMode ? '#FFFFFF' : '#000000';
-  const colorGrid = theme.gray[darkMode ? 100 : 300];
+  const colorGrid = theme.bg[darkMode ? 100 : 300];
 
   return {
     theme: buildChartTheme({
