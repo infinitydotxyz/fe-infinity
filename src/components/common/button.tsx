@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { inputBorderColor } from '../../utils/ui-constants';
+import { hoverColor, inputBorderColor, textColor, textColorReverse } from '../../utils/ui-constants';
 
 const classes = {
   // focus ring appears on keyboard tab key navigation for accessibility, not on clicks
@@ -18,16 +18,20 @@ const classes = {
   variant: {
     plain: '',
     ghost: 'rounded-xl', // hover fill needs to be rounded
-    primary: 'rounded-xl border-gray-100 bg-gradient-to-b from-[#333] to-[#000] text-white hover:bg-theme-gray-900',
-    gray: 'border-none rounded-xl bg-theme-gray-100 hover:bg-theme-gray-200',
-    outline: twMerge(inputBorderColor, 'border rounded-xl text-gray-900 hover:bg-theme-gray-200'),
-    outlineWhite: twMerge(inputBorderColor, 'border bg-white rounded-xl text-gray-900 hover:bg-theme-gray-200'),
-    danger: 'rounded-xl bg-red-500 hover:bg-red-800 focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 text-white',
+    primary: twMerge(
+      inputBorderColor,
+      hoverColor,
+      textColorReverse,
+      'rounded-xl bg-gradient-to-b from-[#333] to-[#000]'
+    ),
+    outline: twMerge(inputBorderColor, hoverColor, textColor, 'border rounded-xl'),
+    outlineWhite: twMerge(inputBorderColor, hoverColor, 'border bg-white rounded-xl'),
+    danger: twMerge(
+      textColor,
+      'rounded-xl bg-red-500 hover:bg-red-800 focus:ring-2 focus:ring-red-500 focus:ring-opacity-50'
+    ),
     outlineDanger:
-      'rounded-xl border rounded-full text-gray-900 bg-theme-gray-100 hover:bg-theme-gray-200 border-red-500 hover:border-red-800 focus:ring-2 focus:ring-red-500 focus:ring-opacity-50',
-    round: 'rounded-full p-1', // use plain size
-    roundBorder: twMerge(inputBorderColor, 'border rounded-full bg-white text-black hover:bg-theme-gray-200'),
-    white: 'border rounded-xl border-gray-100 bg-white text-black hover:bg-theme-gray-200'
+      'rounded-xl border rounded-full text-gray-900 bg-theme-gray-100 hover:bg-theme-gray-200 border-red-500 hover:border-red-800 focus:ring-2 focus:ring-red-500 focus:ring-opacity-50'
   }
 };
 
