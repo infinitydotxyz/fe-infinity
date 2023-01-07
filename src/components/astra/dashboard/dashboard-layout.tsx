@@ -1,11 +1,11 @@
-import { BaseCollection, ChainId } from '@infinityxyz/lib-frontend/types/core';
-import { NftDto, UserProfileDto } from '@infinityxyz/lib-frontend/types/dto';
+import { BaseCollection, ChainId, CollectionStats } from '@infinityxyz/lib-frontend/types/core';
+import { CollectionStatsDto, NftDto, UserProfileDto } from '@infinityxyz/lib-frontend/types/dto';
 import * as Queries from '@infinityxyz/lib-frontend/types/dto/orders/orders-queries.dto';
 import NotFound404Page from 'pages/not-found-404';
 import { useEffect } from 'react';
 import { EthSymbol } from 'src/components/common';
 import { OrderbookProvider } from 'src/components/orderbook/OrderbookContext';
-import { apiGet } from 'src/utils';
+import { apiGet, nFormatter } from 'src/utils';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { textColorSecondary } from 'src/utils/ui-constants';
@@ -31,6 +31,8 @@ export interface CollectionDashboardProps extends BaseDashboardProps {
   kind: 'collection';
   asset: {
     collection: BaseCollection;
+    collectionAllTimeStats?: CollectionStats;
+    collectionCurrentStats?: CollectionStatsDto;
   };
 }
 
@@ -103,38 +105,40 @@ export const DashboardLayout: React.FC<DashboardProps> = ({ children, error, ...
         description: props.asset.collection.metadata.description,
         hasBlueCheck: props.asset.collection.hasBlueCheck,
         slug: props.asset.collection.slug,
-        collectionAddress: props.asset.collection.address
+        collectionAddress: props.asset.collection.address,
+        collection: props.asset.collection,
+        collectionStats: props.asset.collectionCurrentStats || props.asset.collectionAllTimeStats
       };
+
+      const firstAllTimeStats = props.asset.collectionAllTimeStats;
+      const currentStats = props.asset.collectionCurrentStats;
+      const totalVol = nFormatter(firstAllTimeStats?.volume ? firstAllTimeStats.volume : currentStats?.volume);
+      const numOwners = nFormatter(
+        firstAllTimeStats?.numOwners ? firstAllTimeStats.numOwners : currentStats?.numOwners
+      );
+      const numNfts = nFormatter(firstAllTimeStats?.numNfts ? firstAllTimeStats.numNfts : currentStats?.numNfts);
 
       const gridChildren = (
         <div className="flex text-sm divide-x divide-gray-300 items-center">
-          <div className="flex pr-2 gap-1 whitespace-nowrap">
+          <div className="flex pr-4 gap-2 whitespace-nowrap">
             <span className={textColorSecondary}>Floor </span>
             <span className="">
-              {props.asset.collection.stats?.allTime?.floorPrice ?? '-'} {EthSymbol}
+              {nFormatter(currentStats?.floorPrice) ?? '-'} {EthSymbol}
             </span>
           </div>
-          <div className="flex px-2 gap-1 whitespace-nowrap">
-            <span className={textColorSecondary}>24h Vol </span>
-            <span className="">
-              {props.asset.collection.stats?.daily?.salesVolume ?? '-'} {EthSymbol}
-            </span>
-          </div>
-          <div className="flex px-2 gap-1 whitespace-nowrap">
+          <div className="flex px-4 gap-2 whitespace-nowrap">
             <span className={textColorSecondary}>Total Vol </span>
             <span className="">
-              {props.asset.collection.stats?.allTime?.salesVolume ?? '-'} {EthSymbol}
+              {totalVol ?? '-'} {EthSymbol}
             </span>
           </div>
-          <div className="flex px-2 gap-1 whitespace-nowrap">
-            <span className={textColorSecondary}>Owned By </span>
-            <span className="">
-              {props.asset.collection.numOwners ?? props.asset.collection.stats?.allTime?.ownerCount ?? '-'}
-            </span>
+          <div className="flex px-4 gap-2 whitespace-nowrap">
+            <span className={textColorSecondary}>Owners </span>
+            <span className="">{numOwners ?? '-'}</span>
           </div>
-          <div className="flex pl-2 gap-1 whitespace-nowrap">
+          <div className="flex pl-4 gap-2 whitespace-nowrap">
             <span className={textColorSecondary}>Items </span>
-            {props.asset.collection.numNfts ?? '-'}
+            {numNfts ?? '-'}
           </div>
         </div>
       );
@@ -208,15 +212,39 @@ export async function getServerSideProps(
   id: string,
   tokenIdOrdOrderSide?: string
 ): Promise<{ props: DashboardProps }> {
+  const chainId = '1'; // todo dont harcode
   switch (kind) {
     case 'collection': {
-      const res = await apiGet(`/collections/${id}`);
+      const collBaseData = await apiGet(`/collections/${id}`);
+
+      const { result: allTimeStatsResult } = await apiGet(`/collections/${id}/stats`, {
+        query: {
+          chainId,
+          offset: 0,
+          limit: 10,
+          orderBy: 'volume',
+          orderDirection: 'desc',
+          minDate: 0,
+          maxDate: 2648764957623,
+          period: 'all'
+        }
+      });
+      const allTimeStats = allTimeStatsResult?.data;
+      const firstAllTimeStats = allTimeStats?.[0]; // first row = latest daily stats
+
+      const { result: currentStatsResult } = await apiGet(`/collections/${id}/stats/current`, {
+        query: { chainId }
+      });
+      const currentStats = currentStatsResult?.data;
+
       return {
         props: {
           asset: {
-            collection: res.result ?? null
+            collection: collBaseData.result ?? null,
+            collectionAllTimeStats: firstAllTimeStats ?? null,
+            collectionCurrentStats: currentStats ?? null
           },
-          error: res.error ?? null,
+          error: collBaseData.error ?? null,
           // undefined fails, must pass null
           kind: 'collection'
         }

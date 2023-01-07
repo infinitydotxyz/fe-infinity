@@ -1,5 +1,8 @@
+import { BaseCollection, CollectionStats } from '@infinityxyz/lib-frontend/types/core';
 import { NextRouter, useRouter } from 'next/router';
+import { FaCaretDown, FaCaretUp, FaDiscord, FaInstagram, FaTwitter } from 'react-icons/fa';
 import { BlueCheck, ClipboardButton, EZImage, NextLink, ReadMoreText, Spacer } from 'src/components/common';
+import { nFormatter } from 'src/utils';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import {
   cardColor,
@@ -20,6 +23,8 @@ export interface GridHeaderProps {
   hasBlueCheck?: boolean;
   children?: React.ReactNode;
   collectionAddress?: string;
+  collection?: BaseCollection;
+  collectionStats?: CollectionStats;
 }
 
 export const GridHeader = ({
@@ -29,8 +34,13 @@ export const GridHeader = ({
   description,
   collectionAddress,
   hasBlueCheck,
-  children
+  children,
+  collection,
+  collectionStats
 }: GridHeaderProps) => {
+  const twitterChangePct = `${Math.abs(collectionStats?.twitterFollowersPercentChange ?? 0)}`.slice(0, 5);
+  const discordChangePct = `${Math.abs(collectionStats?.discordFollowersPercentChange ?? 0)}`.slice(0, 5);
+
   return (
     <div className={twMerge(inputBorderColor, cardColor, textColor, 'border-b px-8')}>
       {expanded && (
@@ -45,6 +55,67 @@ export const GridHeader = ({
                   textToCopy={collectionAddress ?? ''}
                   className={twMerge('cursor-pointer', smallIconButtonStyle)}
                 />
+                {collection?.metadata?.links?.twitter && (
+                  <Chip
+                    left={<FaTwitter />}
+                    onClick={() => window.open(collection?.metadata?.links?.twitter)}
+                    content={
+                      <span className="flex items-center">
+                        {nFormatter(collectionStats?.twitterFollowers) ?? ''}
+                        {collectionStats?.twitterFollowersPercentChange && parseFloat(twitterChangePct) ? (
+                          <>
+                            {(collectionStats?.twitterFollowersPercentChange ?? 0) < 0 ? (
+                              <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
+                                <FaCaretDown className="mr-1" /> {twitterChangePct}%
+                              </span>
+                            ) : (
+                              <span className="ml-2 py-1 px-2 rounded-xl bg-green-500 text-white text-xs flex items-center">
+                                <FaCaretUp className="mr-1" /> {twitterChangePct}%
+                              </span>
+                            )}
+                          </>
+                        ) : (
+                          ''
+                        )}
+                      </span>
+                    }
+                  />
+                )}
+
+                {collection?.metadata?.links?.discord && (
+                  <Chip
+                    left={<FaDiscord />}
+                    onClick={() => window.open(collection?.metadata?.links?.discord)}
+                    content={
+                      <span className="flex items-center">
+                        {nFormatter(collectionStats?.discordFollowers) ?? ''}
+                        {collectionStats?.discordFollowersPercentChange && parseFloat(discordChangePct) ? (
+                          <>
+                            {(collectionStats?.discordFollowersPercentChange ?? 0) < 0 ? (
+                              <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
+                                <FaCaretDown className="mr-1" /> {discordChangePct}%
+                              </span>
+                            ) : (
+                              <span className="ml-2 py-1 px-2 rounded-xl bg-green-500 text-white text-xs flex items-center">
+                                <FaCaretUp className="mr-1" /> {discordChangePct}%
+                              </span>
+                            )}
+                          </>
+                        ) : (
+                          ''
+                        )}
+                      </span>
+                    }
+                  />
+                )}
+
+                {collection?.metadata?.links?.instagram && (
+                  <Chip
+                    content={<FaInstagram className="text-xl" />}
+                    onClick={() => window.open(collection?.metadata?.links?.instagram)}
+                    iconOnly={true}
+                  />
+                )}
               </div>
             </div>
 
