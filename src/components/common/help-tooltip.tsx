@@ -8,7 +8,7 @@ interface Props {
   placement?: 'top' | 'right' | 'bottom' | 'left';
 }
 
-export const HelpTip = ({ content, children, placement = 'bottom' }: Props) => {
+export const HelpToolTip = ({ content, children, placement = 'bottom' }: Props) => {
   return (
     <Tooltip mouseEnterDelay={0.5} placement={placement} trigger={['hover']} overlay={<span>{content}</span>}>
       {/* can't use <>{children}</>, this shit is buggy */}

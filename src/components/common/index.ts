@@ -19,7 +19,7 @@ export * from 'src/components/common/scroll-loader';
 export * from 'src/components/common/divider';
 export * from 'src/components/common/eth-price';
 export * from 'src/components/common/connect-button';
-export * from 'src/components/common/help-tip';
+export * from 'src/components/common/help-tooltip';
 export * from 'src/components/common/toggle-tab';
 export * from 'src/components/common/error-or-loading';
 export * from 'src/components/common/svg';

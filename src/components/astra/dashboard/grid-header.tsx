@@ -3,7 +3,6 @@ import { NextRouter, useRouter } from 'next/router';
 import { FaCaretDown, FaCaretUp, FaDiscord, FaInstagram, FaTwitter } from 'react-icons/fa';
 import { HiOutlineExternalLink } from 'react-icons/hi';
 import { BlueCheck, ClipboardButton, EZImage, NextLink, ReadMoreText, Spacer } from 'src/components/common';
-import { Chip } from 'src/components/common/chip';
 import etherscanLogo from 'src/images/etherscan-logo.png';
 import { ellipsisAddress, getChainScannerBase, nFormatter } from 'src/utils';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
@@ -18,6 +17,7 @@ import {
   textColor
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
+import { AOutlineButton } from '../astra-button';
 export interface GridHeaderProps {
   expanded: boolean;
   avatarUrl: string;
@@ -50,7 +50,11 @@ export const GridHeader = ({
         <>
           <div className="flex flex-col space-y-3">
             <div className="flex w-full items-center">
-              <EZImage src={avatarUrl} className="mr-4 h-14 w-14 rounded-xl" />
+              <EZImage
+                src={avatarUrl}
+                className="mr-4 h-14 w-14 rounded-xl cursor-pointer hover:scale-90 duration-100"
+                onClick={() => window.open(collection?.metadata?.links?.external)}
+              />
               <div className="flex w-full items-center space-x-2">
                 <div className="font-bold text-xl">{title}</div>
                 {hasBlueCheck ? <BlueCheck /> : null}
@@ -62,94 +66,94 @@ export const GridHeader = ({
                   </div>
                 </div>
                 <Spacer />
-                <Chip
+                <AOutlineButton
                   className={hoverColor}
-                  content={
-                    <span className="flex items-center">
-                      <EZImage src={etherscanLogo.src} className="mr-2 h-5 w-5 rounded-xl" />
-                      <HiOutlineExternalLink className="text-md" />
-                    </span>
-                  }
                   onClick={() => window.open(getChainScannerBase(chainId) + '/address/' + collection?.address)}
-                />
+                >
+                  <span className="flex items-center">
+                    <EZImage src={etherscanLogo.src} className="mr-2 h-5 w-5 rounded-xl" />
+                    <HiOutlineExternalLink className="text-md" />
+                  </span>
+                </AOutlineButton>
 
                 {collection?.metadata?.links?.twitter && (
-                  <Chip
+                  <AOutlineButton
                     className={hoverColor}
-                    left={<FaTwitter />}
                     onClick={() => window.open(collection?.metadata?.links?.twitter)}
-                    content={
-                      <span className="flex items-center">
-                        {nFormatter(collectionStats?.twitterFollowers) ?? ''}
-                        {collectionStats?.twitterFollowersPercentChange && parseFloat(twitterChangePct) ? (
-                          <>
-                            {(collectionStats?.twitterFollowersPercentChange ?? 0) < 0 ? (
-                              <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
-                                <FaCaretDown className="mr-1" /> {twitterChangePct}%
-                              </span>
-                            ) : (
-                              <span className="ml-2 py-1 px-2 rounded-xl bg-green-500 text-white text-xs flex items-center">
-                                <FaCaretUp className="mr-1" /> {twitterChangePct}%
-                              </span>
-                            )}
-                          </>
-                        ) : (
-                          ''
-                        )}
-                      </span>
-                    }
-                  />
+                  >
+                    <span className="flex items-center">
+                      <div className="pr-2">
+                        <FaTwitter />
+                      </div>
+                      {nFormatter(collectionStats?.twitterFollowers) ?? ''}
+                      {collectionStats?.twitterFollowersPercentChange && parseFloat(twitterChangePct) ? (
+                        <>
+                          {(collectionStats?.twitterFollowersPercentChange ?? 0) < 0 ? (
+                            <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
+                              <FaCaretDown className="mr-1" /> {twitterChangePct}%
+                            </span>
+                          ) : (
+                            <span className="ml-2 py-1 px-2 rounded-xl bg-green-500 text-white text-xs flex items-center">
+                              <FaCaretUp className="mr-1" /> {twitterChangePct}%
+                            </span>
+                          )}
+                        </>
+                      ) : (
+                        ''
+                      )}
+                    </span>
+                  </AOutlineButton>
                 )}
 
                 {collection?.metadata?.links?.discord && (
-                  <Chip
+                  <AOutlineButton
                     className={hoverColor}
-                    left={<FaDiscord />}
                     onClick={() => window.open(collection?.metadata?.links?.discord)}
-                    content={
-                      <span className="flex items-center">
-                        {nFormatter(collectionStats?.discordFollowers) ?? ''}
-                        {collectionStats?.discordFollowersPercentChange && parseFloat(discordChangePct) ? (
-                          <>
-                            {(collectionStats?.discordFollowersPercentChange ?? 0) < 0 ? (
-                              <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
-                                <FaCaretDown className="mr-1" /> {discordChangePct}%
-                              </span>
-                            ) : (
-                              <span className="ml-2 py-1 px-2 rounded-xl bg-green-500 text-white text-xs flex items-center">
-                                <FaCaretUp className="mr-1" /> {discordChangePct}%
-                              </span>
-                            )}
-                          </>
-                        ) : (
-                          ''
-                        )}
-                      </span>
-                    }
-                  />
+                  >
+                    <span className="flex items-center">
+                      <div className="pr-2">
+                        <FaDiscord />
+                      </div>
+                      {nFormatter(collectionStats?.discordFollowers) ?? ''}
+                      {collectionStats?.discordFollowersPercentChange && parseFloat(discordChangePct) ? (
+                        <>
+                          {(collectionStats?.discordFollowersPercentChange ?? 0) < 0 ? (
+                            <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
+                              <FaCaretDown className="mr-1" /> {discordChangePct}%
+                            </span>
+                          ) : (
+                            <span className="ml-2 py-1 px-2 rounded-xl bg-green-500 text-white text-xs flex items-center">
+                              <FaCaretUp className="mr-1" /> {discordChangePct}%
+                            </span>
+                          )}
+                        </>
+                      ) : (
+                        ''
+                      )}
+                    </span>
+                  </AOutlineButton>
                 )}
 
                 {collection?.metadata?.links?.instagram && (
-                  <Chip
+                  <AOutlineButton
                     className={hoverColor}
-                    content={<FaInstagram className="text-xl" />}
                     onClick={() => window.open(collection?.metadata?.links?.instagram)}
-                    iconOnly={true}
-                  />
+                  >
+                    <FaInstagram className="text-xl" />
+                  </AOutlineButton>
                 )}
 
                 {collection?.metadata?.links?.external && (
                   <>
-                    <Chip
+                    <AOutlineButton
                       className={hoverColor}
-                      content={
-                        <span className="flex items-center">
-                          <EZImage src={avatarUrl} className="mr-2 h-5 w-5 rounded-xl" />
-                          <HiOutlineExternalLink className="text-md" />
-                        </span>
-                      }
                       onClick={() => window.open(collection.metadata?.links?.external)}
-                    />
+                    >
+                      <span className="flex items-center">
+                        <EZImage src={avatarUrl} className="mr-2 h-5 w-5 rounded-xl" />
+                        <HiOutlineExternalLink className="text-md" />
+                      </span>
+                    </AOutlineButton>
                   </>
                 )}
               </div>

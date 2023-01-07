@@ -34,7 +34,7 @@ export const AButton = ({
       highlighted={highlighted}
       tooltip={tooltip}
       className={twMerge(
-        small ? 'text-sm px-3 py-0.5' : 'px-4 py-1.5',
+        small ? 'text-sm px-2 py-0.5' : 'px-2.5 py-1.5',
         'rounded-xl',
         primary ? 'bg-black text-white' : '',
         className
