@@ -105,7 +105,6 @@ export const DashboardLayout: React.FC<DashboardProps> = ({ children, error, ...
         description: props.asset.collection.metadata.description,
         hasBlueCheck: props.asset.collection.hasBlueCheck,
         slug: props.asset.collection.slug,
-        collectionAddress: props.asset.collection.address,
         collection: props.asset.collection,
         collectionStats: props.asset.collectionCurrentStats || props.asset.collectionAllTimeStats
       };

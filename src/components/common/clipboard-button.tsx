@@ -1,19 +1,16 @@
 import React, { useState } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { RxCopy } from 'react-icons/rx';
-import { TooltipWrapper } from 'src/components/common';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 
 interface ClipboardButtonProps {
   textToCopy: string;
   className?: string;
-  ignoreTooltip?: boolean;
 }
 
-export const ClipboardButton: React.FC<ClipboardButtonProps> = ({ textToCopy, className, ignoreTooltip }) => {
+export const ClipboardButton: React.FC<ClipboardButtonProps> = ({ textToCopy, className }) => {
   const [copied, setCopied] = useState(false);
   const isMounted = useIsMounted();
-  const [showTooltip, setShowTooltip] = useState(false);
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(textToCopy).then(
@@ -38,19 +35,7 @@ export const ClipboardButton: React.FC<ClipboardButtonProps> = ({ textToCopy, cl
         <AiOutlineCheckCircle className={className} />
       ) : (
         <div>
-          <RxCopy
-            onClick={copyToClipboard}
-            className={className}
-            onMouseEnter={() => setShowTooltip(true)}
-            onMouseLeave={() => setShowTooltip(false)}
-          />
-          <TooltipWrapper
-            className="w-[21rem]"
-            show={!ignoreTooltip && showTooltip}
-            tooltip={{
-              content: textToCopy
-            }}
-          ></TooltipWrapper>
+          <RxCopy onClick={copyToClipboard} className={className} />
         </div>
       )}
     </>

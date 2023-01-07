@@ -1,11 +1,16 @@
 import { BaseCollection, CollectionStats } from '@infinityxyz/lib-frontend/types/core';
 import { NextRouter, useRouter } from 'next/router';
 import { FaCaretDown, FaCaretUp, FaDiscord, FaInstagram, FaTwitter } from 'react-icons/fa';
+import { HiOutlineExternalLink } from 'react-icons/hi';
 import { BlueCheck, ClipboardButton, EZImage, NextLink, ReadMoreText, Spacer } from 'src/components/common';
-import { nFormatter } from 'src/utils';
+import { Chip } from 'src/components/common/chip';
+import etherscanLogo from 'src/images/etherscan-logo.png';
+import { ellipsisAddress, getChainScannerBase, nFormatter } from 'src/utils';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import {
   cardColor,
+  hoverColor,
   inputBorderColor,
   primaryBorderColor,
   primaryTextColor,
@@ -13,7 +18,6 @@ import {
   textColor
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-
 export interface GridHeaderProps {
   expanded: boolean;
   avatarUrl: string;
@@ -22,7 +26,6 @@ export interface GridHeaderProps {
   description?: string;
   hasBlueCheck?: boolean;
   children?: React.ReactNode;
-  collectionAddress?: string;
   collection?: BaseCollection;
   collectionStats?: CollectionStats;
 }
@@ -32,7 +35,6 @@ export const GridHeader = ({
   avatarUrl,
   title,
   description,
-  collectionAddress,
   hasBlueCheck,
   children,
   collection,
@@ -40,6 +42,7 @@ export const GridHeader = ({
 }: GridHeaderProps) => {
   const twitterChangePct = `${Math.abs(collectionStats?.twitterFollowersPercentChange ?? 0)}`.slice(0, 5);
   const discordChangePct = `${Math.abs(collectionStats?.discordFollowersPercentChange ?? 0)}`.slice(0, 5);
+  const { chainId } = useOnboardContext();
 
   return (
     <div className={twMerge(inputBorderColor, cardColor, textColor, 'border-b px-8')}>
@@ -51,12 +54,28 @@ export const GridHeader = ({
               <div className="flex w-full items-center space-x-2">
                 <div className="font-bold text-xl">{title}</div>
                 {hasBlueCheck ? <BlueCheck /> : null}
-                <ClipboardButton
-                  textToCopy={collectionAddress ?? ''}
-                  className={twMerge('cursor-pointer', smallIconButtonStyle)}
+
+                <div className={twMerge('flex p-2 text-sm space-x-2 items-center')}>
+                  <div>{ellipsisAddress(collection?.address).toLowerCase()}</div>
+                  <div className={twMerge('cursor-pointer p-2 rounded-xl', hoverColor)}>
+                    <ClipboardButton textToCopy={collection?.address ?? ''} className={twMerge(smallIconButtonStyle)} />
+                  </div>
+                </div>
+                <Spacer />
+                <Chip
+                  className={hoverColor}
+                  content={
+                    <span className="flex items-center">
+                      <EZImage src={etherscanLogo.src} className="mr-2 h-5 w-5 rounded-xl" />
+                      <HiOutlineExternalLink className="text-md" />
+                    </span>
+                  }
+                  onClick={() => window.open(getChainScannerBase(chainId) + '/address/' + collection?.address)}
                 />
+
                 {collection?.metadata?.links?.twitter && (
                   <Chip
+                    className={hoverColor}
                     left={<FaTwitter />}
                     onClick={() => window.open(collection?.metadata?.links?.twitter)}
                     content={
@@ -84,6 +103,7 @@ export const GridHeader = ({
 
                 {collection?.metadata?.links?.discord && (
                   <Chip
+                    className={hoverColor}
                     left={<FaDiscord />}
                     onClick={() => window.open(collection?.metadata?.links?.discord)}
                     content={
@@ -111,10 +131,26 @@ export const GridHeader = ({
 
                 {collection?.metadata?.links?.instagram && (
                   <Chip
+                    className={hoverColor}
                     content={<FaInstagram className="text-xl" />}
                     onClick={() => window.open(collection?.metadata?.links?.instagram)}
                     iconOnly={true}
                   />
+                )}
+
+                {collection?.metadata?.links?.external && (
+                  <>
+                    <Chip
+                      className={hoverColor}
+                      content={
+                        <span className="flex items-center">
+                          <EZImage src={avatarUrl} className="mr-2 h-5 w-5 rounded-xl" />
+                          <HiOutlineExternalLink className="text-md" />
+                        </span>
+                      }
+                      onClick={() => window.open(collection.metadata?.links?.external)}
+                    />
+                  </>
                 )}
               </div>
             </div>

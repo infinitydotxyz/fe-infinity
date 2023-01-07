@@ -83,7 +83,7 @@ export function SearchInput({ expanded, query, setQuery, placeholder, data }: Pr
             'focus-visible:outline-none focus:ring-transparent focus:border-transparent focus:shadow-none',
             'active:outline-none active:ring-transparent active:border-transparent active:shadow-none',
             'outline-none ring-transparent border-transparent shadow-none',
-            'text-md align-middle'
+            'text-sm align-middle'
           )}
           placeholder={placeholder}
           ref={inputRef}
