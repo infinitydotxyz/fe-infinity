@@ -44,7 +44,7 @@ export const APriceFilter: React.FC = () => {
                 <TextInputBox
                   addEthSymbol={true}
                   type="number"
-                  className="border-gray-300 font-heading"
+                  className="font-heading"
                   label="Min"
                   placeholder=""
                   value={minPriceVal}
@@ -55,7 +55,7 @@ export const APriceFilter: React.FC = () => {
                 <TextInputBox
                   addEthSymbol={true}
                   type="number"
-                  className="border-gray-300 font-heading ml-2"
+                  className="font-heading ml-2"
                   label="Max"
                   placeholder=""
                   value={maxPriceVal}

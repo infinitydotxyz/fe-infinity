@@ -27,7 +27,7 @@ const configByTradingFeeDestination: Record<
   [GRAND_RAFFLE]: { name: 'User Grand Raffle', color: 'bg-green-300' },
   [PHASE_RAFFLE]: { name: 'User Phase Raffle', color: 'bg-orange-300' },
   [TradingFeeDestination.CollectionPot]: { name: 'Collection Pot', color: 'bg-blue-300' },
-  [TradingFeeDestination.Curators]: { name: 'Curation', color: 'bg-gray-300' },
+  [TradingFeeDestination.Curators]: { name: 'Curation', color: 'bg-red-300' },
   RAFFLE: {
     name: 'User Raffle',
     color: 'bg-green-300'

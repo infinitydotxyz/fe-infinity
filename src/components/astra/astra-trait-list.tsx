@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { Erc721Attribute, CollectionAttributes } from '@infinityxyz/lib-frontend/types/core';
 import { twMerge } from 'tailwind-merge';
-import { inputBorderColor } from 'src/utils/ui-constants';
+import { infoBoxBgColor, inputBorderColor } from 'src/utils/ui-constants';
 
 interface ATraitListProps {
   traits: Erc721Attribute[];
@@ -35,10 +35,10 @@ export const ATrait: FC<ATraitProps> = ({ trait, description }) => {
   return (
     <div className={twMerge(inputBorderColor, 'border rounded-3xl flex flex-col justify-between')}>
       <div>
-        <p className="text-center text-sm text-light-800 font-body break-words">{trait.trait_type}</p>
+        <p className="text-center text-sm font-body break-words">{trait.trait_type}</p>
         <p className="text-center text-sm font-body font-bold break-words">{trait.value}</p>
       </div>
-      <p className="text-center text-xs font-heading text-light-800 bg-light-300 rounded-3xl tracking-tighter">
+      <p className={twMerge(infoBoxBgColor, 'text-center text-xs font-heading rounded-3xl tracking-tighter')}>
         {description}
       </p>
     </div>

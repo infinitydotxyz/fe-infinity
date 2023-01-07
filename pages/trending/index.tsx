@@ -182,7 +182,7 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
         style={{ gridTemplateColumns: 'minmax(0, 2fr) repeat(auto-fit, minmax(0, 1fr))' }}
       >
         <div className="flex items-center font-bold ">
-          <div className="text-light-800 text-lg mr-4 min-w-[32px] text-right font-heading">{index + 1}</div>
+          <div className="text-lg mr-4 min-w-[32px] text-right font-heading">{index + 1}</div>
 
           <NextLink href={`/collection/${collection?.slug}/items`}>
             <EZImage className="w-16 h-16 rounded-2xl overflow-clip" src={collection?.metadata?.profileImage} />

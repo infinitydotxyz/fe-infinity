@@ -45,7 +45,7 @@ export const OrdersChartDetails = ({ orders, index, setIndex, valueClassName = '
           <OrderbookRowButton order={order} outlineButtons={false} />
         </div>
 
-        <OrderDetailPicker order={order} scroll={true} className="text-dark-gray-200" />
+        <OrderDetailPicker order={order} scroll={true} className="text-gray-700" />
       </ChartBox>
     );
   }

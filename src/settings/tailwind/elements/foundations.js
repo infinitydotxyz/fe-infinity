@@ -121,8 +121,6 @@ module.exports = {
   colors: {
     background: 'transparent',
     current: 'currentColor',
-    primary: '#000',
-    secondary: '#666',
     red: {
       500: '#d63c3c',
       300: '#e8adad'
@@ -134,68 +132,18 @@ module.exports = {
       500: '#15a456'
     },
     dark: {
-      50: '#FFFFFF',
-      100: '#F7F8F8',
-      200: '#5E6AD2',
-      250: '#4F46E5',
-      300: '#F2C94C',
-      400: '#F74040',
-      500: '#8A8F98',
-      600: '#81808E',
-      700: '#303236',
-      800: '#27282B',
-      900: '#1F2023',
       bg: '#111',
       body: '#fff',
-      blue: '#1c63f2',
       disabled: '#777',
       border: '#454545',
-      card: '#222',
-      navbar: '#111',
-      gray: {
-        100: '#555',
-        200: '#666',
-        300: '#777'
-      }
+      card: '#222'
     },
     light: {
-      50: '#FFFFFF',
-      100: '#FEFEFE',
-      200: '#F6F6F6',
-      300: '#F0F0F0',
-      400: '#0000FF',
-      500: '#008A37',
-      600: '#BF4500',
-      700: '#BEBEBE',
-      800: '#666666',
-      850: '#222222',
-      900: '#000000',
       bg: '#FFF',
       body: '#000000',
-      blue: '#1c63f2',
       disabled: '#555555',
-      card: '#f3f4f6',
-      border: '#aaa',
-      navbar: '#FFF',
-      gray: {
-        50: '#fafafa',
-        100: '#F0F0F0',
-        200: '#DEDEDE',
-        300: '#BEBEBE'
-      }
-    },
-    // new figma tokens (05/17/2022) - example: bg-theme-gray-200
-    gray: {
-      50: '#FFFFFF',
-      100: '#F0F0F0',
-      200: '#DEDEDE',
-      300: '#BEBEBE',
-      400: '#BEBEBE', // todo
-      500: '#8E8E8E',
-      600: '#8E8E8E', // todo
-      700: '#666666',
-      800: '#666666', // todo
-      900: '#2E2E2E'
+      card: '#FbFbFb',
+      border: '#aaa'
     }
   },
   letterSpacing: {

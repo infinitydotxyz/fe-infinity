@@ -2,6 +2,8 @@ import React, { Fragment, ReactNode } from 'react';
 import { Popover, Transition } from '@headlessui/react';
 import { BiCaretDown } from 'react-icons/bi';
 import { AOutlineButton } from '../astra/astra-button';
+import { twMerge } from 'tailwind-merge';
+import { infoBoxBgColor } from 'src/utils/ui-constants';
 
 interface Props {
   title: string;
@@ -34,8 +36,13 @@ export const PopoverButton = ({ title, children }: Props) => {
             leaveTo="opacity-0 translate-y-1"
           >
             <Popover.Panel className="absolute z-10 max-w-sm px-4 mt-3 right-0 transform sm:px-0">
-              <div className="overflow-hidden rounded-3xl shadow-[0_20px_10px_-10px_rgba(0,0,0,0.07),0_0px_10px_-2px_rgba(0,0,0,0.08)] p-6 bg-light-50">
-                <div className="px-4 bg-light-50 w-80 space-y-4">{children}</div>
+              <div
+                className={twMerge(
+                  infoBoxBgColor,
+                  'overflow-hidden rounded-3xl shadow-[0_20px_10px_-10px_rgba(0,0,0,0.07),0_0px_10px_-2px_rgba(0,0,0,0.08)] p-6'
+                )}
+              >
+                <div className={twMerge(infoBoxBgColor, 'px-4 w-80 space-y-4')}>{children}</div>
               </div>
             </Popover.Panel>
           </Transition>

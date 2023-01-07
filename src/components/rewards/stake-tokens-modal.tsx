@@ -132,7 +132,7 @@ export const StakeTokensModal = ({ onClose }: Props) => {
               )}
             />
           </div>
-          <div className="text-right mr-2 mt-1 text-gray-300">Balance: {nFormatter(tokenBalance)}</div>
+          <div className="text-right mr-2 mt-1">Balance: {nFormatter(tokenBalance)}</div>
 
           <div className="text-lg mt-8 flex justify-between">
             <span>Voting power</span>

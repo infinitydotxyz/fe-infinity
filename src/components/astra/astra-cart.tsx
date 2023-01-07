@@ -61,7 +61,7 @@ export const AstraCart = ({
   if (tokens.length > 0) {
     clearButton = (
       <div className="flex items-center">
-        <div className="bg-gray-300 rounded-full h-6 w-6 text-center mr-1 ">{tokens.length}</div>
+        <div className={twMerge(infoBoxBgColor, 'rounded-full h-6 w-6 text-center mr-1')}>{tokens.length}</div>
         <ATextButton
           className="px-2 rounded-lg text-gray-500 text-sm"
           onClick={() => {
@@ -77,7 +77,7 @@ export const AstraCart = ({
   if (collections.length > 0) {
     clearButton = (
       <div className="flex items-center">
-        <div className="bg-gray-300 rounded-full h-6 w-6 text-center mr-1 ">{collections.length}</div>
+        <div className={twMerge(infoBoxBgColor, 'rounded-full h-6 w-6 text-center mr-1 ')}>{collections.length}</div>
         <ATextButton
           className="px-2 rounded-lg text-gray-500 text-sm"
           onClick={() => {
@@ -93,7 +93,7 @@ export const AstraCart = ({
   if (orders.length > 0) {
     clearButton = (
       <div className="flex items-center">
-        <div className="bg-gray-300 rounded-full h-6 w-6 text-center mr-1 ">{orders.length}</div>
+        <div className={twMerge(infoBoxBgColor, 'rounded-full h-6 w-6 text-center mr-1')}>{orders.length}</div>
         <ATextButton
           className="px-2 rounded-lg text-gray-500 text-sm"
           onClick={() => {
@@ -233,8 +233,7 @@ export const AstraCart = ({
   };
 
   return (
-    // setting to  w-72 so it doen't shrink and expand while animating
-    <div className={twMerge(infoBoxBgColor, 'h-full flex flex-col')}>
+    <div className={twMerge('h-full flex flex-col border-l-[1px]')}>
       <div className=" m-4 flex items-center">
         <div className={twMerge(textColor, 'text-4xl lg:text-3xl font-bold mr-3')}>Cart</div>
         {clearButton}

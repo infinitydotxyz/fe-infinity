@@ -184,7 +184,7 @@ export const OrderbookCharts = ({ className = '' }: OrderBookChartProps) => {
           <OrdersChartDetails
             orders={selectedListings}
             index={selectedListingIndex}
-            valueClassName="text-dark-gray-300"
+            valueClassName="text-gray-800"
             setIndex={setSelectedListingIndex}
           />
         </div>
@@ -207,7 +207,7 @@ export const OrderbookCharts = ({ className = '' }: OrderBookChartProps) => {
           <OrdersChartDetails
             orders={selectedOffers}
             index={selectedOfferIndex}
-            valueClassName="text-dark-gray-300"
+            valueClassName="text-gray-800"
             setIndex={setSelectedOfferIndex}
           />
         </div>
