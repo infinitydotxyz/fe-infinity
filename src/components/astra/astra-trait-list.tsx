@@ -35,10 +35,10 @@ export const ATrait: FC<ATraitProps> = ({ trait, description }) => {
   return (
     <div className={twMerge(inputBorderColor, 'border rounded-3xl flex flex-col justify-between')}>
       <div>
-        <p className="text-center text-sm text-theme-light-800 font-body break-words">{trait.trait_type}</p>
+        <p className="text-center text-sm text-light-800 font-body break-words">{trait.trait_type}</p>
         <p className="text-center text-sm font-body font-bold break-words">{trait.value}</p>
       </div>
-      <p className="text-center text-xs font-heading text-theme-light-800 bg-theme-light-300 rounded-3xl tracking-tighter">
+      <p className="text-center text-xs font-heading text-light-800 bg-light-300 rounded-3xl tracking-tighter">
         {description}
       </p>
     </div>

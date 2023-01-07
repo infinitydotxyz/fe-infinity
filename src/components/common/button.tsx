@@ -24,14 +24,17 @@ const classes = {
       textColorReverse,
       'rounded-xl bg-gradient-to-b from-[#333] to-[#000]'
     ),
+    gray: twMerge(hoverColor, 'border-none rounded-xl bg-gray-100'),
     outline: twMerge(inputBorderColor, hoverColor, textColor, 'border rounded-xl'),
     outlineWhite: twMerge(inputBorderColor, hoverColor, 'border bg-white rounded-xl'),
+    round: 'rounded-full',
+    roundBorder: twMerge(inputBorderColor, hoverColor, textColor, 'border rounded-full'),
     danger: twMerge(
       textColor,
       'rounded-xl bg-red-500 hover:bg-red-800 focus:ring-2 focus:ring-red-500 focus:ring-opacity-50'
     ),
     outlineDanger:
-      'rounded-xl border rounded-full text-gray-900 bg-theme-gray-100 hover:bg-theme-gray-200 border-red-500 hover:border-red-800 focus:ring-2 focus:ring-red-500 focus:ring-opacity-50'
+      'rounded-xl border rounded-full text-gray-900 bg-gray-100 hover:bg-gray-200 border-red-500 hover:border-red-800 focus:ring-2 focus:ring-red-500 focus:ring-opacity-50'
   }
 };
 

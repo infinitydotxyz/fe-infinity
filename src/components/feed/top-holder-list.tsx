@@ -26,19 +26,19 @@ const TopHolder = ({ topOwner, index }: Props2) => {
       <div className="w-12 rounded-full max-w-18 h-12 p-3 bg-white px-5 font-bold"> {index + 1}</div>
       <div className="flex justify-between flex-1">
         <div className="ml-5 py-1">
-          <div className="text-theme-light-800 text-sm">Address</div>
+          <div className="text-light-800 text-sm">Address</div>
           <div className="font-heading mt-1">
             <NextLink href={'/profile/' + topOwner.ownerAddress}>{name}</NextLink>
           </div>
         </div>
 
         <div className="ml-5 py-1">
-          <div className="text-theme-light-800 text-sm">Owned</div>
+          <div className="text-light-800 text-sm">Owned</div>
           <div className="font-heading mt-1">{topOwner.ownedCount}</div>
         </div>
 
         <div className="ml-5 py-1 float-right">
-          <div className="text-theme-light-800 text-sm">Percentage</div>
+          <div className="text-light-800 text-sm">Percentage</div>
           <div className="font-heading mt-1">{topOwner.percentOwned}</div>
         </div>
       </div>

@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  @import './styles/filters';
+  @import './styles/overrides';
+  @import './styles/fonts';
+}
+
+// https://v1.tailwindcss.com/docs/adding-new-utilities
+@layer utilities {
+  @import './styles/utils';
+}

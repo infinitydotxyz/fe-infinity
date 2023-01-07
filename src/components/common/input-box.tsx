@@ -36,7 +36,7 @@ export const InputBox = ({
       <div
         className={twMerge(
           inputBorderColor,
-          'py-3 pl-6 pr-2 border rounded-2xl w-full flex items-center focus-within:border-theme-gray-700',
+          'py-3 pl-6 pr-2 border rounded-2xl w-full flex items-center focus-within:border-gray-700',
           className
         )}
       >
@@ -44,10 +44,7 @@ export const InputBox = ({
         <div className="w-full">
           {label && (
             <label
-              className={twMerge(
-                'block font-normal font-heading text-sm text-theme-gray-700 select-none',
-                labelClassname
-              )}
+              className={twMerge('block font-normal font-heading text-sm text-gray-700 select-none', labelClassname)}
             >
               {label}
             </label>

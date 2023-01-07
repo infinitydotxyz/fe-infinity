@@ -20,7 +20,7 @@ const TwitterSupporter = ({ tweet }: Props2) => {
         <EZImage src={tweet.author.profileImageUrl} className="w-12 h-12  overflow-clip rounded-full" />
         <div className="ml-5">
           <div className="font-bold font-heading">{tweet.author.name}</div>
-          <div className="text-theme-light-800 font-body text-sm">{`${nFormatter(
+          <div className="text-light-800 font-body text-sm">{`${nFormatter(
             tweet.author.followersCount
           )} Followers`}</div>
         </div>

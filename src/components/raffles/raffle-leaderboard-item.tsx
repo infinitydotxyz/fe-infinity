@@ -17,7 +17,7 @@ export const RaffleLeaderboardItem = ({ entrant: item }: { entrant: RaffleLeader
   }
 
   return (
-    <div className="bg-theme-light-200 py-4 px-2 rounded-3xl flex items-center font-heading my-2">
+    <div className="bg-light-200 py-4 px-2 rounded-3xl flex items-center font-heading my-2">
       <div className="flex justify-between items-center w-full">
         <div className="flex items-center w-full">
           <NextLink href={`/user/${item.entrant.address}`}>

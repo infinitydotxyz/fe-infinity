@@ -23,7 +23,7 @@ export const Checkbox = ({
 }: Props) => {
   const labelClass = boxOnLeft ? 'ml-3' : 'mr-3';
   const checkLabel = (
-    <div className={twMerge('text-theme-light-800 font-heading select-none truncate', labelClass, labelClassName)}>
+    <div className={twMerge('text-light-800 font-heading select-none truncate', labelClass, labelClassName)}>
       {label}
     </div>
   );

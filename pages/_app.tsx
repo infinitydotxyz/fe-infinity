@@ -4,7 +4,7 @@ import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 import { memo, StrictMode, useEffect } from 'react';
 import { Layout } from 'src/components/astra/layout';
-import 'src/settings/theme/globals.scss';
+import 'src/settings/tailwind/globals.scss';
 import { isLocalhost } from 'src/utils/commonUtils';
 import { AppContextProvider, useAppContext } from 'src/utils/context/AppContext';
 import { DashboardContextProvider } from 'src/utils/context/DashboardContext';

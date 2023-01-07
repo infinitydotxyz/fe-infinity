@@ -132,7 +132,7 @@ export const StakeTokensModal = ({ onClose }: Props) => {
               )}
             />
           </div>
-          <div className="text-right mr-2 mt-1 text-theme-gray-300">Balance: {nFormatter(tokenBalance)}</div>
+          <div className="text-right mr-2 mt-1 text-gray-300">Balance: {nFormatter(tokenBalance)}</div>
 
           <div className="text-lg mt-8 flex justify-between">
             <span>Voting power</span>
@@ -174,7 +174,7 @@ const RadioButtonCard: React.FC<{ value: string | number; label: string; descrip
       <RadioGroup.Option
         value={value}
         className={({ checked }) => `
-            ${checked ? 'border-theme-gray-200 bg-theme-gray-100' : 'border-gray-200'}
+            ${checked ? 'border-gray-200 bg-gray-100' : 'border-gray-200'}
             relative flex flex-row justify-between items-center border rounded-md p-4
           `}
       >
