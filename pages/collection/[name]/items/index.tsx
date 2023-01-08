@@ -1,5 +1,6 @@
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
+import NotFound404Page from 'pages/not-found-404';
 import { FC } from 'react';
 import { APriceFilter } from 'src/components/astra/astra-price-filter';
 import { ASortButton } from 'src/components/astra/astra-sort-button';
@@ -47,6 +48,10 @@ const GridWrapper: FC = () => {
 
 export default function ItemsPage(props: DashboardProps) {
   const collection = (props as CollectionDashboardProps).asset.collection;
+
+  if (!collection) {
+    return <NotFound404Page />;
+  }
 
   const head = (
     <Head>

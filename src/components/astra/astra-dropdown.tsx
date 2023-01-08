@@ -107,7 +107,7 @@ const ACustomMenuItem = (props: Props) => {
       {({ active, disabled }) => (
         <div
           className={twMerge(
-            'flex w-full px-4 py-4 leading-5 font-heading ',
+            'flex w-full px-4 py-4 leading-5',
             active ? twMerge(hoverColor, ' rounded-xl') : ' ',
             disabled && 'cursor-not-allowed opacity-50'
           )}
