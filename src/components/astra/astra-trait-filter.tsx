@@ -4,8 +4,8 @@ import { useRouter } from 'next/router';
 import { useFetch } from 'src/utils';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { Filter } from 'src/utils/context/FilterContext';
+import CollectionTraits from '../collection/traits';
 import { Spinner } from '../common';
-import { TraitSelection } from '../filter/trait-selection';
 import { useOrderbook } from '../orderbook/OrderbookContext';
 import { AOutlineButton } from './astra-button';
 import { ACustomMenuButton, ACustomMenuContents, ACustomMenuItems, ADropdownButton } from './astra-dropdown';
@@ -36,11 +36,29 @@ export const ATraitFilter: React.FC = () => {
             </ACustomMenuButton>
           </span>
 
-          <ACustomMenuItems open={open} innerClassName="w-80 border-0" alignMenuRight={true}>
+          <ACustomMenuItems open={open} innerClassName="w-[580px] border-0" alignMenuRight={true}>
             {!collectionAttributes && <Spinner />}
             {collectionAttributes && (
-              <div className="h-[400px] overflow-y-scroll">
-                <TraitSelection
+              <div className="h-[440px]">
+                {/* <TraitSelection
+                  traits={collectionAttributes}
+                  collectionAddress={collection?.address}
+                  onChange={(traitTypes, traitValues) => {
+                    const newFilter: Filter = {};
+                    newFilter.traitTypes = traitTypes;
+                    newFilter.traitValues = traitValues;
+                    newFilter.orderBy = 'tokenIdNumeric';
+                    setFilters((state) => ({ ...state, ...newFilter }));
+                  }}
+                  onClearAll={() => {
+                    const newFilter: Filter = {};
+                    newFilter.traitTypes = [];
+                    newFilter.traitValues = [];
+                    newFilter.orderBy = 'tokenIdNumeric';
+                    setFilters((state) => ({ ...state, ...newFilter }));
+                  }}
+                /> */}
+                <CollectionTraits
                   traits={collectionAttributes}
                   collectionAddress={collection?.address}
                   onChange={(traitTypes, traitValues) => {

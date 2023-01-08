@@ -3,7 +3,7 @@ import { twMerge } from 'tailwind-merge';
 import { Spacer } from './spacer';
 
 interface Props {
-  label: string | ReactNode;
+  label?: string | ReactNode;
   checked: boolean;
   boxOnLeft?: boolean;
   onChange: (checked: boolean) => void;
