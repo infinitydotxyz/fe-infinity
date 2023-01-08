@@ -135,7 +135,7 @@ module.exports = {
     },
     dark: {
       bg: '#111',
-      body: '#fff',
+      body: '#efefef',
       disabled: '#777',
       border: '#454545',
       card: '#222'
