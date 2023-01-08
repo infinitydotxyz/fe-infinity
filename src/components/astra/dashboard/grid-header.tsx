@@ -56,7 +56,7 @@ export const GridHeader = ({
                 onClick={() => window.open(collection?.metadata?.links?.external)}
               />
               <div className="flex w-full items-center space-x-2">
-                <div className="font-bold text-xl">{title}</div>
+                <div className="font-bold font-heading text-xl">{title}</div>
                 {hasBlueCheck ? <BlueCheck /> : null}
 
                 <div className={twMerge('flex p-2 text-sm space-x-2 items-center')}>
