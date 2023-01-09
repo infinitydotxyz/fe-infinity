@@ -220,25 +220,25 @@ class RouteUtils {
         path: 'items',
         selected: path.endsWith('items'),
         name: 'Items'
-      },
-      {
-        id: 'orders',
-        path: 'orders',
-        selected: path.endsWith('orders'),
-        name: 'Orders'
-      },
-      {
-        id: 'activity',
-        path: 'activity',
-        selected: path.endsWith('activity'),
-        name: 'Activity'
-      },
-      {
-        id: 'analytics',
-        path: 'analytics',
-        selected: path.endsWith('analytics'),
-        name: 'Analytics'
       }
+      // {
+      //   id: 'orders',
+      //   path: 'orders',
+      //   selected: path.endsWith('orders'),
+      //   name: 'Orders'
+      // },
+      // {
+      //   id: 'activity',
+      //   path: 'activity',
+      //   selected: path.endsWith('activity'),
+      //   name: 'Activity'
+      // },
+      // {
+      //   id: 'analytics',
+      //   path: 'analytics',
+      //   selected: path.endsWith('analytics'),
+      //   name: 'Analytics'
+      // }
     ];
   };
 }
