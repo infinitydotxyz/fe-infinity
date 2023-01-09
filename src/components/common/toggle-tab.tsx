@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import { infoBoxBgColor, textColor } from 'src/utils/ui-constants';
+import { bgColor, bgColorInverse, infoBoxBgColor, textColor, textColorInverse } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 interface Props {
@@ -45,7 +45,7 @@ export const ToggleTab = ({ options, onChange, selected, className = '', small =
               className={twMerge(
                 small ? 'min-w-[110px]' : 'min-w-[140px]',
                 'select-none flex text-md items-center justify-center  text-center whitespace-nowrap font-medium rounded-full',
-                selected === option ? 'bg-black text-white font-bold' : textColor,
+                selected === option ? twMerge(bgColorInverse, textColorInverse) : twMerge(bgColor, textColor),
                 'py-1 px-6'
               )}
               onClick={() => {

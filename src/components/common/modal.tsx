@@ -2,7 +2,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, ReactNode } from 'react';
 import { Spacer, Button } from 'src/components/common';
 import { XIcon } from '@heroicons/react/outline';
-import { iconButtonStyle } from 'src/utils/ui-constants';
+import { bgColor, iconButtonStyle, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 interface Props {
@@ -119,13 +119,15 @@ export const Modal = ({
                 className={twMerge(
                   'w-full',
                   wide ? 'max-w-xl' : 'max-w-md',
-                  'transform rounded-2xl bg-white dark:bg-neutral-900 dark:text-white py-8 px-9 text-left align-middle shadow-xl transition-all',
-                  panelClassName
+                  'transform rounded-2xl py-8 px-9 text-left align-middle shadow-xl transition-all',
+                  panelClassName,
+                  bgColor,
+                  textColor
                 )}
               >
                 <Dialog.Title
                   as="h3"
-                  className="flex items-center tracking-tight text-xl font-bold leading-6 text-gray-900 dark:text-white mb-5"
+                  className={twMerge('flex items-center tracking-tight text-xl font-bold leading-6 mb-5', textColor)}
                 >
                   {title}
 

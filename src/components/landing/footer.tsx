@@ -1,10 +1,12 @@
 import { NextLink } from 'src/components/common';
 import { DiscordIconLink, MediumIconLink, TwitterIconLink } from 'src/components/landing/icons';
+import { bgColor, textColor } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
 import { pageStyles } from '../astra/astra-page-box';
 
 export const Footer = () => {
   return (
-    <footer className={'bg-black text-white'}>
+    <footer className={twMerge(bgColor, textColor)}>
       <div className={`${pageStyles} p-5 md:p-20`}>
         <p className="font-body w-[346px]">
           Infinity is building the best tools and infrastructure for NFT trading. Join us on discord to find out more.

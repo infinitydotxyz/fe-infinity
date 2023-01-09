@@ -286,7 +286,7 @@ const SelectableImage = ({ name, checked, imageUrl, onChange }: Props5) => {
         )}
         src={imageUrl}
       />
-      <div className={twMerge('mt-1 px-2', checked ? 'bg-blue-500 rounded-2xl text-white' : '')}>{name}</div>
+      <div className={twMerge('mt-1 px-2', checked ? 'bg-blue-500 rounded-2xl' : '')}>{name}</div>
     </div>
   );
 };

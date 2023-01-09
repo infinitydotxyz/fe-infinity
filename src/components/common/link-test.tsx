@@ -16,5 +16,5 @@ export const LinkText = ({ text }: Props) => {
   };
 
   // className colors all a tags with blue
-  return <div className="[&_a]:text-blue-700">{escapedNewLineToLineBreakTag(text)}</div>;
+  return <div className="[&_a]:text-blue-500">{escapedNewLineToLineBreakTag(text)}</div>;
 };

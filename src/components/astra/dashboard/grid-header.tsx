@@ -88,11 +88,11 @@ export const GridHeader = ({
                       {collectionStats?.twitterFollowersPercentChange && parseFloat(twitterChangePct) ? (
                         <>
                           {(collectionStats?.twitterFollowersPercentChange ?? 0) < 0 ? (
-                            <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
+                            <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-dark-body dark:bg-red-500 dark:text-dark-body text-xs flex items-center">
                               <FaCaretDown className="mr-1" /> {twitterChangePct}%
                             </span>
                           ) : (
-                            <span className="ml-2 py-1 px-2 rounded-xl bg-green-500 text-white text-xs flex items-center">
+                            <span className="ml-2 py-1 px-2 rounded-xl bg-green-500 text-dark-body dark:bg-green-500 dark:text-dark-body text-xs flex items-center">
                               <FaCaretUp className="mr-1" /> {twitterChangePct}%
                             </span>
                           )}
@@ -117,11 +117,11 @@ export const GridHeader = ({
                       {collectionStats?.discordFollowersPercentChange && parseFloat(discordChangePct) ? (
                         <>
                           {(collectionStats?.discordFollowersPercentChange ?? 0) < 0 ? (
-                            <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-white text-xs flex items-center">
+                            <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-dark-body dark:bg-red-500 dark:text-dark-body text-xs flex items-center">
                               <FaCaretDown className="mr-1" /> {discordChangePct}%
                             </span>
                           ) : (
-                            <span className="ml-2 py-1 px-2 rounded-xl bg-green-500 text-white text-xs flex items-center">
+                            <span className="ml-2 py-1 px-2 rounded-xl bg-green-500 text-dark-body dark:bg-green-500 dark:text-dark-body text-xs flex items-center">
                               <FaCaretUp className="mr-1" /> {discordChangePct}%
                             </span>
                           )}

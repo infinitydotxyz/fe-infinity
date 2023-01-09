@@ -94,7 +94,7 @@ export const ReadMoreText: React.FC<ReadMoreTextPropType> = (props) => {
   if (!secondaryText) {
     displayText = (
       <div className="leading-6">
-        <span className="text-black">{`${primaryText} ${secondaryText}`}</span>
+        <span className="">{`${primaryText} ${secondaryText}`}</span>
       </div>
     );
   } else if (displaySecondary) {

@@ -4,6 +4,7 @@ import { TbArrowBarUp } from 'react-icons/tb';
 import { BlueCheck, Button, ExternalLink, EZImage, NextLink, Spacer } from 'src/components/common';
 import person from 'src/images/person.png';
 import { cl, timeAgo } from 'src/utils';
+import { textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { NftEventRec } from '../asset/activity/activity-item';
 import { FeedListTableItem, NewsImage } from './feed-list-table-item';
@@ -24,7 +25,7 @@ export const FeedListItem = ({
   collectionProfileImage
 }: Props) => {
   const typeName = (activity: NftEventRec) => {
-    const classes = 'rounded-md text-white px-3 py-0.5 w-32 text-center text-sm';
+    const classes = twMerge('rounded-md px-3 py-0.5 w-32 text-center text-sm', textColor);
 
     const component = (color: string, label: string) => {
       return (
