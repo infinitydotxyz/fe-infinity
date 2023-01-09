@@ -7,7 +7,7 @@ import { AButton, ARoundButton } from 'src/components/astra/astra-button';
 import { HelpToolTip, NextLink, Spacer, SVG } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import { cardColor, iconButtonStyle, borderColor } from 'src/utils/ui-constants';
+import { borderColor, iconButtonStyle, secondaryBgColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 export const SidebarNav = () => {
@@ -17,7 +17,11 @@ export const SidebarNav = () => {
 
   return (
     <div
-      className={twMerge(cardColor, 'flex px-2 py-3 h-full w-[4rem] flex-col items-center border-r-[1px]', borderColor)}
+      className={twMerge(
+        secondaryBgColor,
+        'flex px-2 py-3 h-full w-[4rem] flex-col items-center border-r-[1px]',
+        borderColor
+      )}
     >
       <NextLink href="/">
         {darkMode ? <SVG.miniLogoDark className="shrink-0 h-9 w-9" /> : <SVG.miniLogo className="shrink-0 h-9 w-9" />}
