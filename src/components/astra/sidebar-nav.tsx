@@ -1,3 +1,4 @@
+import { useTheme } from 'next-themes';
 import { useRouter } from 'next/router';
 import { HiOutlineTicket } from 'react-icons/hi';
 import { IoWalletOutline } from 'react-icons/io5';
@@ -5,13 +6,12 @@ import { MdDarkMode, MdLightMode, MdOutlineHomeMax } from 'react-icons/md';
 import { RiCoinsLine } from 'react-icons/ri';
 import { AButton, ARoundButton } from 'src/components/astra/astra-button';
 import { HelpToolTip, NextLink, Spacer, SVG } from 'src/components/common';
-import { useAppContext } from 'src/utils/context/AppContext';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { borderColor, iconButtonStyle, secondaryBgColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 export const SidebarNav = () => {
-  const { darkMode, setDarkMode } = useAppContext();
+  const { theme, setTheme } = useTheme();
   const router = useRouter();
   const { user } = useOnboardContext();
 
@@ -24,7 +24,11 @@ export const SidebarNav = () => {
       )}
     >
       <NextLink href="/">
-        {darkMode ? <SVG.miniLogoDark className="shrink-0 h-9 w-9" /> : <SVG.miniLogo className="shrink-0 h-9 w-9" />}
+        {theme === 'dark' ? (
+          <SVG.miniLogoDark className="shrink-0 h-9 w-9" />
+        ) : (
+          <SVG.miniLogo className="shrink-0 h-9 w-9" />
+        )}
       </NextLink>
 
       <div className="h-8" />
@@ -76,12 +80,8 @@ export const SidebarNav = () => {
       </div>
 
       <Spacer />
-      <ARoundButton
-        onClick={() => {
-          setDarkMode(!darkMode);
-        }}
-      >
-        {darkMode ? <MdLightMode className="h-8 w-8" /> : <MdDarkMode className="h-8 w-8" />}
+      <ARoundButton onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
+        {theme === 'dark' ? <MdLightMode className="h-8 w-8" /> : <MdDarkMode className="h-8 w-8" />}
       </ARoundButton>
     </div>
   );

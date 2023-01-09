@@ -1,15 +1,4 @@
 export class Preferences {
-  static darkMode = (): boolean => {
-    const pref = Preferences.getString('darkMode');
-
-    // darkMode is the default, so check both states
-    return !pref || pref === 'true';
-  };
-
-  static setDarkMode = (flag: boolean) => {
-    Preferences.setString('darkMode', flag ? 'true' : 'false');
-  };
-
   static getString(key: string) {
     if (typeof window === 'undefined') {
       console.log('Preferences getString: no window');

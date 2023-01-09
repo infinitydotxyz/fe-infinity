@@ -1,18 +1,19 @@
 import { buildChartTheme } from '@visx/xychart';
-import { useAppContext } from 'src/utils/context/AppContext';
+import { useTheme } from 'next-themes';
 import tailwindConfig from '../../../settings/tailwind/elements/foundations';
 
 export function useChartTheme() {
-  const { darkMode } = useAppContext();
+  const { theme } = useTheme();
+  const darkMode = theme === 'dark';
 
-  const theme = tailwindConfig.colors[darkMode ? 'dark' : 'light'];
+  const themeToUse = tailwindConfig.colors[darkMode ? 'dark' : 'light'];
   const color = darkMode ? '#FFFFFF' : '#000000';
-  const colorGrid = theme.bg[darkMode ? 100 : 300];
+  const colorGrid = themeToUse.bg[darkMode ? 100 : 300];
 
   return {
     theme: buildChartTheme({
       // colors
-      backgroundColor: theme.bg, // used by Tooltip, Annotation
+      backgroundColor: themeToUse.bg, // used by Tooltip, Annotation
       colors: [color], // categorical colors, mapped to series via `dataKey`s
 
       // labels

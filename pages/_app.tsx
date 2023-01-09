@@ -1,16 +1,16 @@
 import * as gtag from 'lib/ga/gtag';
 import LogRocket from 'logrocket';
+import { ThemeProvider } from 'next-themes';
 import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 import { memo, StrictMode, useEffect } from 'react';
 import { Layout } from 'src/components/astra/layout';
 import 'src/settings/tailwind/globals.scss';
 import { isLocalhost } from 'src/utils/commonUtils';
-import { AppContextProvider, useAppContext } from 'src/utils/context/AppContext';
+import { AppContextProvider } from 'src/utils/context/AppContext';
 import { DashboardContextProvider } from 'src/utils/context/DashboardContext';
 import { FilterContextProvider } from 'src/utils/context/FilterContext';
 import { OnboardContextProvider } from 'src/utils/OnboardContext/OnboardContext';
-import { twMerge } from 'tailwind-merge';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -57,12 +57,10 @@ const Page = ({ Component, pageProps }: AppProps) => {
 const Memoized = memo(Page, (p, n) => p.Component === n.Component && p.pageProps === n.pageProps);
 
 const AppBody = (props: AppProps) => {
-  const { darkMode } = useAppContext();
-
   return (
-    <div className={twMerge(darkMode ? 'dark' : 'light')}>
+    <ThemeProvider attribute="class">
       <Memoized {...props} />
-    </div>
+    </ThemeProvider>
   );
 };
 

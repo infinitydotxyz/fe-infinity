@@ -1,9 +1,8 @@
-import React, { createContext, PropsWithChildren, ReactNode, useContext, useEffect, useState } from 'react';
+import { createContext, PropsWithChildren, ReactNode, useContext } from 'react';
 import { getCustomExceptionMsg } from 'src/utils/commonUtils';
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Preferences } from '../preferences';
 
 export type User = {
   address: string;
@@ -13,23 +12,11 @@ export type User = {
 export type AppContextType = {
   showAppError: (msg: string) => void;
   showAppMessage: (msg: string) => void;
-  darkMode: boolean;
-  setDarkMode: (mode: boolean) => void;
 };
 
 const AppContext = createContext<AppContextType | null>(null);
 
 export const AppContextProvider = (props: PropsWithChildren<unknown>) => {
-  const [darkMode, setDarkMode] = useState(false);
-
-  useEffect(() => {
-    setDarkMode(Preferences.darkMode());
-  }, []);
-
-  useEffect(() => {
-    Preferences.setDarkMode(darkMode);
-  }, [darkMode]);
-
   const showAppError = (message: ReactNode) => {
     getCustomExceptionMsg(message);
   };
@@ -38,9 +25,7 @@ export const AppContextProvider = (props: PropsWithChildren<unknown>) => {
 
   const value: AppContextType = {
     showAppError,
-    showAppMessage,
-    darkMode,
-    setDarkMode
+    showAppMessage
   };
 
   return (
