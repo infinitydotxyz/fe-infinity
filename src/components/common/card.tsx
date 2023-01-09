@@ -1,6 +1,13 @@
 import { useState } from 'react';
 import { AiOutlineCheckCircle, AiOutlinePlusCircle } from 'react-icons/ai';
-import { brandTextColor, cardColor, largeIconButtonStyle, selectionBorder, textColor } from 'src/utils/ui-constants';
+import {
+  bgColor,
+  brandTextColor,
+  cardColor,
+  iconButtonStyle,
+  selectionBorder,
+  textColor
+} from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { AButton } from '../astra/astra-button';
 import { TokenCardModal } from '../astra/token-grid/token-card-modal';
@@ -33,7 +40,7 @@ export const GridCard = ({ data, onClick, selected, isSelectable }: Props): JSX.
       className={twMerge(
         cardColor,
         'rounded-2xl w-full relative flex flex-col shadow-[0px_4px_10px_0px_rgba(0,0,0,0.12)] \
-             hover:shadow-[0px_4px_10px_0px_rgba(0,0,0,0.2)] transition-all duration-100 cursor-pointer',
+             hover:shadow-[0px_4px_10px_0px_rgba(0,0,0,0.2)] cursor-pointer',
         selected ? selectionBorder : '',
         notSelectable ? 'animate-wiggle' : ''
       )}
@@ -56,13 +63,13 @@ export const GridCard = ({ data, onClick, selected, isSelectable }: Props): JSX.
           <div className="absolute top-0 bottom-0 left-0 right-0 rounded-t-2xl overflow-clip">
             <EZImage src={data?.image} className="hover:scale-110 transition-all" />
             {selected && (
-              <div className="absolute top-3 right-3">
-                <AiOutlineCheckCircle className={twMerge(largeIconButtonStyle, brandTextColor)} />
+              <div className={twMerge('absolute top-3 right-3 rounded-full p-0.5', bgColor)}>
+                <AiOutlineCheckCircle className={twMerge(iconButtonStyle, brandTextColor)} />
               </div>
             )}
             {showPlusIcon && !selected && (
-              <div className="absolute top-3 right-3">
-                <AiOutlinePlusCircle className={twMerge(largeIconButtonStyle, brandTextColor)} />
+              <div className={twMerge('absolute top-3 right-3 rounded-full p-0.5', bgColor)}>
+                <AiOutlinePlusCircle className={twMerge(iconButtonStyle, brandTextColor)} />
               </div>
             )}
           </div>

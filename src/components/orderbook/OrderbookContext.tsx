@@ -37,7 +37,6 @@ export const SORT_FILTERS = {
   lowestPrice: 'lowestPrice',
   mostRecent: 'mostRecent',
   rarityRank: 'rarityRank',
-  tokenId: 'tokenId',
   tokenIdNumeric: 'tokenIdNumeric'
 };
 
@@ -48,8 +47,7 @@ export const SORT_LABELS: {
   [SORT_FILTERS.lowestPrice]: 'Lowest Price',
   [SORT_FILTERS.mostRecent]: 'Most Recent',
   [SORT_FILTERS.rarityRank]: 'Rarity Rank',
-  [SORT_FILTERS.tokenId]: 'Token ID',
-  [SORT_FILTERS.tokenIdNumeric]: 'Token ID (numeric)'
+  [SORT_FILTERS.tokenIdNumeric]: 'Token ID'
 };
 
 export const getSortLabel = (key?: string, defaultLabel?: string): string => {

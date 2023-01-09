@@ -35,14 +35,6 @@ export const ASortButton = ({ className }: Props) => {
               onClick: () => onClickSort(SORT_LABELS[SORT_FILTERS.lowestPrice], SORT_FILTERS.lowestPrice)
             },
             {
-              label: SORT_LABELS[SORT_FILTERS.rarityRank],
-              onClick: () => onClickSort(SORT_LABELS[SORT_FILTERS.rarityRank], SORT_FILTERS.rarityRank)
-            },
-            {
-              label: SORT_LABELS[SORT_FILTERS.tokenId],
-              onClick: () => onClickSort(SORT_LABELS[SORT_FILTERS.tokenId], SORT_FILTERS.tokenId)
-            },
-            {
               label: SORT_LABELS[SORT_FILTERS.tokenIdNumeric],
               onClick: () => onClickSort(SORT_LABELS[SORT_FILTERS.tokenIdNumeric], SORT_FILTERS.tokenIdNumeric)
             }

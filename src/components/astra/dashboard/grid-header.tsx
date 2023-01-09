@@ -82,7 +82,7 @@ export const GridHeader = ({
                     className={hoverColor}
                     onClick={() => window.open(collection?.metadata?.links?.twitter)}
                   >
-                    <span className="flex items-center">
+                    <span className="flex items-center text-sm">
                       <div className="pr-2">
                         <FaTwitter className="text-brand-twitter" />
                       </div>
@@ -111,7 +111,7 @@ export const GridHeader = ({
                     className={hoverColor}
                     onClick={() => window.open(collection?.metadata?.links?.discord)}
                   >
-                    <span className="flex items-center">
+                    <span className="flex items-center text-sm">
                       <div className="pr-2">
                         <FaDiscord className="text-brand-discord" />
                       </div>

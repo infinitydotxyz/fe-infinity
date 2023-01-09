@@ -50,7 +50,7 @@ export const ADropdown = ({
   alignMenuRight = false
 }: DropdownProps) => {
   return (
-    <div className={twMerge(className)}>
+    <div className={twMerge(className, 'text-sm')}>
       <Menu>
         {({ open }) => (
           <ACustomMenuContents>

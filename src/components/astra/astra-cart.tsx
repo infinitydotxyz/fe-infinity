@@ -128,7 +128,7 @@ export const AstraCart = ({
       checkoutBtnText = 'List';
     }
   } else if (cartType === CART_TYPE.BID) {
-    if (tokens.length || collections.length > 1) {
+    if (tokens.length > 1 || collections.length > 1) {
       checkoutBtnText = 'Bulk Bid';
     } else {
       checkoutBtnText = 'Bid';
