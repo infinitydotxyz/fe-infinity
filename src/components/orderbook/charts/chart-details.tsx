@@ -7,7 +7,7 @@ import { OrderbookRowButton } from '../list/orderbook-row-button';
 import { clamp } from './chart-utils';
 import { ChartBox } from './chart-box';
 import { NextPrevArrows } from './next-prev-arrows';
-import { cardColor, textColor } from 'src/utils/ui-constants';
+import { cardColor, secondaryTextColor, textColor } from 'src/utils/ui-constants';
 import { SaleData } from './scatter-chart';
 
 interface Props {
@@ -45,7 +45,7 @@ export const OrdersChartDetails = ({ orders, index, setIndex, valueClassName = '
           <OrderbookRowButton order={order} outlineButtons={false} />
         </div>
 
-        <OrderDetailPicker order={order} scroll={true} className="text-gray-700" />
+        <OrderDetailPicker order={order} scroll={true} className={secondaryTextColor} />
       </ChartBox>
     );
   }

@@ -82,7 +82,7 @@ export const GridHeader = ({
                   >
                     <span className="flex items-center">
                       <div className="pr-2">
-                        <FaTwitter />
+                        <FaTwitter className="text-brand-twitter" />
                       </div>
                       {nFormatter(collectionStats?.twitterFollowers) ?? ''}
                       {collectionStats?.twitterFollowersPercentChange && parseFloat(twitterChangePct) ? (
@@ -111,7 +111,7 @@ export const GridHeader = ({
                   >
                     <span className="flex items-center">
                       <div className="pr-2">
-                        <FaDiscord />
+                        <FaDiscord className="text-brand-discord" />
                       </div>
                       {nFormatter(collectionStats?.discordFollowers) ?? ''}
                       {collectionStats?.discordFollowersPercentChange && parseFloat(discordChangePct) ? (

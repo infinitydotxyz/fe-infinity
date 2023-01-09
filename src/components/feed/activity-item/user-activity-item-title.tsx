@@ -1,4 +1,5 @@
 import { BlueCheck, NextLink } from 'src/components/common';
+import { secondaryTextColor } from 'src/utils/ui-constants';
 
 interface TitleFieldProps {
   title: string;
@@ -30,7 +31,7 @@ export const UserActivityItemTitle = (props: TitleFieldProps) => {
         )}
       </div>
       {props.subtitle && (
-        <div className="text-gray-400">
+        <div className={secondaryTextColor}>
           {props.subtitleRelativeLink ? (
             <NextLink
               href={props.subtitleRelativeLink}

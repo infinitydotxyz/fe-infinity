@@ -12,6 +12,7 @@ import { Button } from '../common/button';
 import { TextInputBox } from '../common/input-box';
 import { Modal } from '../common/modal';
 import { MaxUint256 } from '@ethersproject/constants';
+import { secondaryTextColor } from 'src/utils/ui-constants';
 
 interface Props {
   onClose: () => void;
@@ -186,7 +187,7 @@ const RadioButtonCard: React.FC<{ value: string | number; label: string; descrip
               </RadioGroup.Label>
 
               {description && (
-                <RadioGroup.Description as="span" className={twMerge('text-gray-500', 'block text-sm')}>
+                <RadioGroup.Description as="span" className={twMerge(secondaryTextColor, 'block text-sm')}>
                   {description}
                 </RadioGroup.Description>
               )}

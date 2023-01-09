@@ -148,7 +148,9 @@ module.exports = {
       border: '#aaa'
     },
     brand: {
-      primary: '#FF7518'
+      primary: '#FF7518',
+      twitter: '#1C9BEF',
+      discord: '#5765F2'
     }
   },
   letterSpacing: {

@@ -1,4 +1,6 @@
 import { NextLink } from 'src/components/common';
+import { secondaryTextColor } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
 
 interface TextFieldProps {
   title: string;
@@ -9,7 +11,7 @@ interface TextFieldProps {
 export const UserActivityItemTextField = (props: TextFieldProps) => {
   return (
     <div className="max-w-[120px] min-w-[120px] mx-2">
-      <div className="text-gray-400">{props.title}</div>
+      <div className={twMerge(secondaryTextColor)}>{props.title}</div>
       <div className="font-bold">
         {props.link ? <NextLink href={props.link}>{props.children}</NextLink> : props.children}
       </div>

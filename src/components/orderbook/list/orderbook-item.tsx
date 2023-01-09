@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import { ReactNode } from 'react';
 import { BlueCheckInline, EZImage, NextLink } from 'src/components/common';
 import { ellipsisString, ENS_ADDRESS } from 'src/utils';
+import { secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 type Props1 = {
@@ -63,7 +64,7 @@ export const OrderbookItem = ({ title, content, nameItem, order, onClick }: Prop
 
   return (
     <div className="flex flex-col min-w-0">
-      <div className="text-gray-500">{title}</div>
+      <div className={secondaryTextColor}>{title}</div>
       <div className="font-heading">{content}</div>
     </div>
   );
@@ -202,7 +203,7 @@ const SingleCollectionCell = ({
             {tokenId && (
               <NextLink
                 href={`/asset/1/${orderNft?.collectionAddress}/${token?.tokenId}`}
-                className="whitespace-pre-wrap text-gray-400"
+                className={twMerge(secondaryTextColor, 'whitespace-pre-wrap')}
                 title={token?.tokenId}
               >
                 {ellipsisString(tokenId)}

@@ -18,7 +18,7 @@ export const AstraCartButton = () => {
           <BsCartCheckFill className={twMerge(iconButtonStyle)} />
           <span
             className={twMerge(
-              'px-1.5 absolute top-0.5 right-0.5 rounded-full text-xs',
+              'px-1 absolute top-0.5 right-0.5 rounded-full text-xs',
               bgColorInverse,
               textColorInverse
             )}

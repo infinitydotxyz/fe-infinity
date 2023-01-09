@@ -1,6 +1,8 @@
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import React from 'react';
 import { Button, Modal, SimpleTable, SimpleTableItem } from 'src/components/common';
+import { secondaryTextColor } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
 import { OrderDetailPicker } from './order-detail-picker';
 
 interface Props {
@@ -34,7 +36,7 @@ export const OrderDetailModal = ({ order, isOpen, onClose }: Props) => {
       <div className="max-h-[480px] flex flex-col">
         <OrderDetailPicker order={order} scroll={true} />
 
-        <SimpleTable className="text-gray-500 mt-3" items={tableItems} />
+        <SimpleTable className={twMerge(secondaryTextColor, 'mt-3')} items={tableItems} />
 
         <div className="mt-10">
           <Button variant="primary" className="w-full font-heading" onClick={onClose}>

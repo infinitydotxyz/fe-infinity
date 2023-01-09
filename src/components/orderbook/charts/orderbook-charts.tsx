@@ -1,7 +1,7 @@
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { Spinner } from 'src/components/common';
-import { textColor } from 'src/utils/ui-constants';
+import { secondaryTextColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { useOrderbook } from '../OrderbookContext';
 import { BarChartType, OrderData, ResponsiveBarChart } from './bar-chart';
@@ -184,7 +184,7 @@ export const OrderbookCharts = ({ className = '' }: OrderBookChartProps) => {
           <OrdersChartDetails
             orders={selectedListings}
             index={selectedListingIndex}
-            valueClassName="text-gray-800"
+            valueClassName={secondaryTextColor}
             setIndex={setSelectedListingIndex}
           />
         </div>
@@ -207,7 +207,7 @@ export const OrderbookCharts = ({ className = '' }: OrderBookChartProps) => {
           <OrdersChartDetails
             orders={selectedOffers}
             index={selectedOfferIndex}
-            valueClassName="text-gray-800"
+            valueClassName={secondaryTextColor}
             setIndex={setSelectedOfferIndex}
           />
         </div>

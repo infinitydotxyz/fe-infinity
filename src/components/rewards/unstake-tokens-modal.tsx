@@ -9,6 +9,7 @@ import {
 import { useUnstake } from 'src/hooks/contract/staker/useUnstake';
 import { nFormatter } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { secondaryTextColor } from 'src/utils/ui-constants';
 import { Spinner, toastError, toastSuccess } from '../common';
 import { Button } from '../common/button';
 import { TextInputBox } from '../common/input-box';
@@ -76,7 +77,7 @@ export const UnstakeTokensModal = ({ onClose }: Props) => {
             <div className="text-md flex flex-col justify-between">
               <table>
                 <thead>
-                  <tr className="text-gray-400">
+                  <tr className={secondaryTextColor}>
                     <th className="text-left font-medium font-heading">Stake duration</th>
                     <th className="text-left font-medium font-heading">Amount</th>
                     <th className="text-left font-medium font-heading">Lock remaining</th>

@@ -194,7 +194,7 @@ export const ATextButton = ({
       tooltip={tooltip}
       className={twMerge(
         small ? 'text-sm px-3 py-0.5' : 'px-4 py-1',
-        '  rounded-full text-gray-900 hover:bg-gray-700',
+        'rounded-full hover:text-brand-primary',
         className
       )}
       onClick={onClick}

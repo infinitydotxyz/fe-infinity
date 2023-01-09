@@ -2,7 +2,7 @@ import { CalendarIcon } from '@heroicons/react/outline';
 import { ReactElement, ReactNode, useState } from 'react';
 import { DatePicker } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
-import { inputBorderColor } from '../../utils/ui-constants';
+import { inputBorderColor, secondaryTextColor } from '../../utils/ui-constants';
 import { EthSymbol } from './eth-price';
 import { Tooltip, TooltipIcon, TooltipSpec, TooltipWrapper } from './tool-tip';
 
@@ -44,7 +44,11 @@ export const InputBox = ({
         <div className="w-full">
           {label && (
             <label
-              className={twMerge('block font-normal font-heading text-sm text-gray-700 select-none', labelClassname)}
+              className={twMerge(
+                'block font-normal font-heading text-sm select-none',
+                secondaryTextColor,
+                labelClassname
+              )}
             >
               {label}
             </label>

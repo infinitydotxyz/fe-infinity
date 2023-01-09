@@ -4,7 +4,7 @@ import { TbArrowBarUp } from 'react-icons/tb';
 import { BlueCheck, Button, ExternalLink, EZImage, NextLink, Spacer } from 'src/components/common';
 import person from 'src/images/person.png';
 import { cl, timeAgo } from 'src/utils';
-import { textColor } from 'src/utils/ui-constants';
+import { secondaryTextColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { NftEventRec } from '../asset/activity/activity-item';
 import { FeedListTableItem, NewsImage } from './feed-list-table-item';
@@ -67,7 +67,7 @@ export const FeedListItem = ({
   };
 
   const bottomBar = (
-    <div className="text-sm w-full text-gray-500 flex items-center">
+    <div className={twMerge(secondaryTextColor, 'text-sm w-full flex items-center')}>
       <Button
         variant="plain"
         className="px-0 ml-12"
@@ -117,7 +117,7 @@ export const FeedListItem = ({
 
             {activity?.hasBlueCheck === true ? <BlueCheck className="ml-1" /> : null}
 
-            <div className="ml-3 text-gray-600">{timeString}</div>
+            <div className={twMerge(secondaryTextColor, 'ml-3')}>{timeString}</div>
           </div>
         );
       case EventType.TwitterTweet:
@@ -135,7 +135,7 @@ export const FeedListItem = ({
               </div>
             )}
 
-            <div className="ml-3 text-gray-600">{timeString}</div>
+            <div className={twMerge(secondaryTextColor, 'ml-3')}>{timeString}</div>
           </div>
         );
       case EventType.CoinMarketCapNews:
@@ -145,7 +145,7 @@ export const FeedListItem = ({
 
             {!collectionName && <div className="font-bold">{activity.fromDisplayName}</div>}
 
-            <div className="ml-3 text-gray-600">{timeString}</div>
+            <div className={twMerge(secondaryTextColor, 'ml-3')}>{timeString}</div>
           </div>
         );
       case EventType.DiscordAnnouncement:
@@ -153,7 +153,7 @@ export const FeedListItem = ({
           <div className="flex items-center">
             <div className="font-bold">{activity.paymentToken}</div>
 
-            <div className="ml-3 text-gray-600">{timeString}</div>
+            <div className={twMerge(secondaryTextColor, 'ml-3')}>{timeString}</div>
           </div>
         );
       case EventType.TokensStaked:
@@ -163,7 +163,7 @@ export const FeedListItem = ({
               {activity.fromDisplayName}
             </NextLink>
 
-            <div className="ml-3 text-gray-600">{timeString}</div>
+            <div className={twMerge(secondaryTextColor, 'ml-3')}>{timeString}</div>
           </div>
         );
 
@@ -237,7 +237,7 @@ export const FeedListItem = ({
         <div className="flex items-center">
           {header()}
           <Spacer />
-          <div className="text-gray-500 flex text-sm  ">{typeName(activity)}</div>
+          <div className={twMerge(secondaryTextColor, 'flex text-sm')}>{typeName(activity)}</div>
         </div>
 
         <div className="mt-4">

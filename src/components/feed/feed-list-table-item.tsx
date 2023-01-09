@@ -8,6 +8,7 @@ import { format } from 'timeago.js';
 import { NftEventRec } from '../asset/activity/activity-item';
 import person from 'src/images/person.png';
 import { useEnsName } from 'src/hooks/useEnsName';
+import { secondaryTextColor } from 'src/utils/ui-constants';
 
 interface Props {
   activity: NftEventRec;
@@ -342,7 +343,7 @@ interface Props2 {
 const TableItem = ({ label, children }: Props2) => {
   return (
     <div className="w-auto mr-4">
-      <div className="text-gray-400 whitespace-nowrap">{label}</div>
+      <div className={twMerge(secondaryTextColor, 'whitespace-nowrap')}>{label}</div>
       <div className="font-medium whitespace-nowrap">{children}</div>
     </div>
   );

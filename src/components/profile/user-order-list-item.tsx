@@ -3,6 +3,7 @@ import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user';
 import { useState } from 'react';
 import { Button, EthPrice } from 'src/components/common';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { secondaryTextColor } from 'src/utils/ui-constants';
 import { format } from 'timeago.js';
 import { ALowerPriceModal } from '../astra/modals/astra-lower-price-modal';
 import { OrderbookItem } from '../orderbook/list/orderbook-item';
@@ -59,23 +60,23 @@ export const UserOrderListItem = ({ order, orderType, onClickActionBtn, selected
           </div>
 
           <div className="w-1/8">
-            <div className="text-gray-400">Order type</div>
+            <div className={secondaryTextColor}>Order type</div>
             <div className="font-bold">
               {orderType === 'listings' ? 'Listing' : orderType === 'offers-made' ? 'Offer made' : 'Offer received'}
             </div>
           </div>
           <div className="w-1/8">
-            <div className="text-gray-400">Price</div>
+            <div className={secondaryTextColor}>Price</div>
             <div className="font-bold">
               <EthPrice label={`${startPriceEth}`} />
             </div>
           </div>
           <div className="w-1/8">
-            <div className="text-gray-400"># NFTs</div>
+            <div className={secondaryTextColor}># NFTs</div>
             <div className="font-bold">{order.numItems}</div>
           </div>
           <div className="w-1/8">
-            <div className="text-gray-400">Expiry</div>
+            <div className={secondaryTextColor}>Expiry</div>
             <div className="font-bold">{format(order.endTimeMs)}</div>
           </div>
           {orderType === 'listings' || orderType === 'offers-made' ? (

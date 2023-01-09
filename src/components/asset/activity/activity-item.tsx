@@ -4,6 +4,7 @@ import { ellipsisAddress } from 'src/utils';
 import { format } from 'timeago.js';
 import { NftActivity } from '@infinityxyz/lib-frontend/types/dto/collections/nfts';
 import { BaseCollection, Token } from '@infinityxyz/lib-frontend/types/core';
+import { secondaryTextColor } from 'src/utils/ui-constants';
 
 // the backend adds teh collectionData to the NFtActivity
 export interface NftEventRec extends NftActivity {
@@ -34,13 +35,13 @@ export const ActivityItem = ({ item, token }: Props) => {
             {/* <div className="font-bold font-body">
               <a href={`/collection/${item.collectionSlug}`}>{item.collectionName}</a>
             </div> */}
-            <div className="text-gray-400">Token</div>
+            <div className={secondaryTextColor}>Token</div>
             <div>
               <a href={`/asset/${item.chainId}/${item.address}/${item.tokenId}`}>{ellipsisAddress(item.tokenId)}</a>
             </div>
           </div>
           <div className="w-1/6">
-            <div className="text-gray-400">Event</div>
+            <div className={secondaryTextColor}>Event</div>
             <div className="font-bold">
               <a href={`${item.externalUrl}`} target="_blank" rel="noopener noreferrer">
                 {EventTypeNames[item.type]}
@@ -48,11 +49,11 @@ export const ActivityItem = ({ item, token }: Props) => {
             </div>
           </div>
           <div className="w-1/6">
-            <div className="text-gray-400">Price</div>
+            <div className={secondaryTextColor}>Price</div>
             <div className="font-bold overflow-hidden">{item.price ? <EthPrice label={`${item.price}`} /> : '—'}</div>
           </div>
           <div className="w-1/6">
-            <div className="text-gray-400">Date</div>
+            <div className={secondaryTextColor}>Date</div>
             <div className="font-bold">
               <a href={item.externalUrl} target="_blank" rel="noopener noreferrer">
                 {format(item.timestamp)}
@@ -60,7 +61,7 @@ export const ActivityItem = ({ item, token }: Props) => {
             </div>
           </div>
           <div className="w-1/6">
-            <div className="text-gray-400">From</div>
+            <div className={secondaryTextColor}>From</div>
             <div className="font-bold">
               <NextLink href={`/profile/${item.from}`}>
                 {item.fromDisplayName ? ellipsisAddress(item.fromDisplayName) : ellipsisAddress(item.from)}
@@ -68,7 +69,7 @@ export const ActivityItem = ({ item, token }: Props) => {
             </div>
           </div>
           <div className="w-1/6">
-            <div className="text-gray-400">{toValue ? 'To' : ''}</div>
+            <div className={secondaryTextColor}>{toValue ? 'To' : ''}</div>
             <div className="font-bold">
               <NextLink href={`/profile/${item.to}`}>{toValue}</NextLink>
             </div>

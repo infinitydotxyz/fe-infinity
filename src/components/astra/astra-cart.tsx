@@ -6,7 +6,7 @@ import { AButton, ARoundButton, ATextButton } from 'src/components/astra/astra-b
 import { EZImage, Spacer, TextInputBox } from 'src/components/common';
 import { CART_TYPE, getCartType, getCollectionKeyId, getDefaultOrderExpiryTime, getTokenKeyId } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import { infoBoxBgColor, smallIconButtonStyle, textColor } from 'src/utils/ui-constants';
+import { infoBoxBgColor, secondaryTextColor, smallIconButtonStyle, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { ADropdown } from './astra-dropdown';
 import { Erc721CollectionOffer, Erc721TokenOffer, ORDER_EXPIRY_TIME } from './types';
@@ -61,9 +61,11 @@ export const AstraCart = ({
   if (tokens.length > 0) {
     clearButton = (
       <div className="flex items-center">
-        <div className={twMerge(infoBoxBgColor, 'rounded-full h-6 w-6 text-center mr-1')}>{tokens.length}</div>
+        <div className={twMerge(infoBoxBgColor, textColor, 'rounded-full h-6 w-6 text-center mr-1')}>
+          {tokens.length}
+        </div>
         <ATextButton
-          className="px-2 rounded-lg text-gray-500 text-sm"
+          className={twMerge('px-2 rounded-lg text-sm')}
           onClick={() => {
             onTokensRemove();
           }}
@@ -77,9 +79,11 @@ export const AstraCart = ({
   if (collections.length > 0) {
     clearButton = (
       <div className="flex items-center">
-        <div className={twMerge(infoBoxBgColor, 'rounded-full h-6 w-6 text-center mr-1 ')}>{collections.length}</div>
+        <div className={twMerge(infoBoxBgColor, textColor, 'rounded-full h-6 w-6 text-center mr-1 ')}>
+          {collections.length}
+        </div>
         <ATextButton
-          className="px-2 rounded-lg text-gray-500 text-sm"
+          className={twMerge('px-2 rounded-lg text-sm')}
           onClick={() => {
             onCollsRemove();
           }}
@@ -93,9 +97,11 @@ export const AstraCart = ({
   if (orders.length > 0) {
     clearButton = (
       <div className="flex items-center">
-        <div className={twMerge(infoBoxBgColor, 'rounded-full h-6 w-6 text-center mr-1')}>{orders.length}</div>
+        <div className={twMerge(infoBoxBgColor, textColor, 'rounded-full h-6 w-6 text-center mr-1')}>
+          {orders.length}
+        </div>
         <ATextButton
-          className="px-2 rounded-lg text-gray-500 text-sm"
+          className={twMerge('px-2 rounded-lg text-sm')}
           onClick={() => {
             onOrdersRemove();
           }}
@@ -253,9 +259,10 @@ export const AstraCart = ({
 
       {listComponent}
 
+      {/* todo: change the chainId check here when more chains are supported */}
       <div className="m-6 flex flex-col">
         <AButton
-          className="rounded-md"
+          className="p-3"
           primary={true}
           disabled={
             !user || chainId !== '1' || (tokens.length === 0 && collections.length === 0 && orders.length === 0)
@@ -334,7 +341,7 @@ export const AstraCollectionCartItem = ({ collection, onRemove }: Props3) => {
       <EZImage className={twMerge('h-12 w-12 rounded-lg overflow-clip')} src={collection.metadata.profileImage} />
 
       <div className="ml-3 flex flex-col w-full">
-        <div className="leading-5 text-gray-500">{collection.metadata.name}</div>
+        <div className={twMerge('leading-5', secondaryTextColor)}>{collection.metadata.name}</div>
         <PriceAndExpiry collection={collection}></PriceAndExpiry>
       </div>
 
@@ -365,7 +372,7 @@ export const AstraCancelCartItem = ({ order, onRemove }: Props4) => {
       />
 
       <div className="ml-3 flex flex-col w-full">
-        <div className="leading-5 text-gray-500">
+        <div className={twMerge('leading-5', secondaryTextColor)}>
           {order.nfts.length > 1
             ? 'Multiple tokens'
             : order.nfts[0].tokens.length > 1
