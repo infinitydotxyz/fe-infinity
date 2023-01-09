@@ -3,8 +3,8 @@ import { getToken } from '@infinityxyz/lib-frontend/utils';
 import missingImage from 'src/images/missing-image.png';
 import newsImage from 'src/images/news.png';
 
-export const API_BASE = 'http://localhost:9090';
-export const SITE_HOST = 'http://localhost:3000';
+export const API_BASE = 'https://sv.infinity.xyz';
+export const SITE_HOST = 'https://infinity.xyz';
 export const DISCORD_BOT_INVITE_URL =
   'https://discord.com/api/oauth2/authorize?client_id=956292440778743838&permissions=1024&scope=bot%20applications.commands';
 
