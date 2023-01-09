@@ -1,6 +1,6 @@
 import { BsCartCheckFill, BsCartDash } from 'react-icons/bs';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
-import { bgColorInverse, brandTextColor, iconButtonStyle, textColorInverse } from 'src/utils/ui-constants';
+import { inverseBgColor, brandTextColor, iconButtonStyle, inverseTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { AButton } from './astra-button';
 
@@ -19,8 +19,8 @@ export const AstraCartButton = () => {
           <span
             className={twMerge(
               'px-1 absolute top-0.5 right-0.5 rounded-full text-xs',
-              bgColorInverse,
-              textColorInverse
+              inverseBgColor,
+              inverseTextColor
             )}
           >
             {numItems}

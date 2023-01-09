@@ -85,7 +85,7 @@ const MultiCollectionCell = ({ nfts, onClick }: Props2) => {
           return (
             <EZImage
               key={nft.collectionAddress}
-              className="inline-block h-12 w-12 rounded-2xl overflow-clip ring-2 ring-white bg-white"
+              className="inline-block h-12 w-12 rounded-2xl overflow-clip ring-2"
               src={nft.collectionImage}
             />
           );
@@ -153,7 +153,7 @@ const SingleCollectionCell = ({
           <EZImage className="h-14 w-14 rounded-2xl overflow-clip" src={image} />
 
           {count > 1 && (
-            <div className="text-xs text-center pt-1 absolute top-0 right-0 block h-6 w-6 transform -translate-y-1/2 translate-x-1/2 rounded-full bg-white">
+            <div className="text-xs text-center pt-1 absolute top-0 right-0 block h-6 w-6 transform -translate-y-1/2 translate-x-1/2 rounded-full">
               {count}
             </div>
           )}

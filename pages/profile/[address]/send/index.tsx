@@ -15,7 +15,7 @@ import { useProfileTokenFetcher } from 'src/components/astra/useFetcher';
 import { Spacer } from 'src/components/common';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import { inputBorderColor } from 'src/utils/ui-constants';
+import { borderColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 // todo this and profileItemsPage are the same, refactor
@@ -59,7 +59,7 @@ export default function ProfileSendPage(props: DashboardProps) {
 
   return (
     <DashboardLayout {...props}>
-      <div className={twMerge(inputBorderColor, 'w-full flex   py-2 border-t-[1px]')}>
+      <div className={twMerge(borderColor, 'w-full flex   py-2 border-t-[1px]')}>
         <ACollectionFilter />
         <Spacer />
         <AListGridButton />

@@ -63,10 +63,7 @@ export const ResponsiveScatterChart = ({
         <div className="ml-5 font-bold mt-3">{graphType}</div>
         <select
           onChange={(e) => fetchData(e.target.value)}
-          className={twMerge(
-            'form-select rounded-full bg-transparent border-ring-gray-400 focus:ring-gray-400 focus:border-none float-right',
-            textColor
-          )}
+          className={twMerge('form-select rounded-full bg-transparent focus:border-none float-right', textColor)}
         >
           {Object.values(TimeBuckets).map((filter) => (
             <option value={filter} selected={filter === selectedTimeBucket}>

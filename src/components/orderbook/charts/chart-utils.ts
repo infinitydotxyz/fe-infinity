@@ -23,10 +23,6 @@ export const accentColor = '#92deff';
 export const accentAltColor = '#e8adad';
 export const axisLineColor = `${textColor}88`;
 
-// for GraphBox
-export const borderColor = 'border-gray-200';
-export const hoverStrokeColor = '#62aeff';
-
 export const getChartDimensions = ({ width = 0, height = 0 }: { width?: number; height?: number }): ChartDimensions => {
   const margin = {
     top: 10,

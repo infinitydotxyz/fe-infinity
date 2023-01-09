@@ -118,26 +118,26 @@ export const DashboardLayout: React.FC<DashboardProps> = ({ children, error, ...
       const numNfts = nFormatter(firstAllTimeStats?.numNfts ? firstAllTimeStats.numNfts : currentStats?.numNfts);
 
       const gridChildren = (
-        <div className="flex text-sm divide-x divide-gray-300 items-center">
-          <div className="flex pr-4 gap-2 whitespace-nowrap">
+        <div className="flex text-sm divide-x divide-light-border dark:divide-dark-border items-center">
+          <div className="flex pr-4 gap-2 whitespace-nowrap font-medium">
             <span className={secondaryTextColor}>Floor </span>
             <span className="">
               {nFormatter(currentStats?.floorPrice) ?? '-'} {EthSymbol}
             </span>
           </div>
-          <div className="flex px-4 gap-2 whitespace-nowrap">
+          <div className="flex px-4 gap-2 whitespace-nowrap font-medium">
             <span className={secondaryTextColor}>Total Vol </span>
             <span className="">
               {totalVol ?? '-'} {EthSymbol}
             </span>
           </div>
-          <div className="flex px-4 gap-2 whitespace-nowrap">
+          <div className="flex px-4 gap-2 whitespace-nowrap font-medium">
             <span className={secondaryTextColor}>Owners </span>
             <span className="">{numOwners ?? '-'}</span>
           </div>
-          <div className="flex pl-4 gap-2 whitespace-nowrap">
+          <div className="flex pl-4 gap-2 whitespace-nowrap font-medium">
             <span className={secondaryTextColor}>Items </span>
-            {numNfts ?? '-'}
+            <span className="">{numNfts ?? '-'}</span>
           </div>
         </div>
       );

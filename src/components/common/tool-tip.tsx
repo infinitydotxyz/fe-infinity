@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { IoMdInformationCircleOutline } from 'react-icons/io';
-import { cardColor, smallIconButtonStyle } from 'src/utils/ui-constants';
+import { cardColor, secondaryBgColor, smallIconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 export interface TooltipSpec {
@@ -9,7 +9,7 @@ export interface TooltipSpec {
 }
 
 export const TooltipIcon = () => {
-  return <IoMdInformationCircleOutline className={`fill-gray-600 ${smallIconButtonStyle}`} />;
+  return <IoMdInformationCircleOutline className={`${secondaryBgColor} ${smallIconButtonStyle}`} />;
 };
 
 interface Props {

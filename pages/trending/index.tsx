@@ -20,7 +20,7 @@ import { useIsMounted } from 'src/hooks/useIsMounted';
 import useScreenSize from 'src/hooks/useScreenSize';
 import { apiGet, formatNumber, ITEMS_PER_PAGE, nFormatter } from 'src/utils';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
-import { inputBorderColor } from 'src/utils/ui-constants';
+import { borderColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 // - cache stats 5mins
@@ -176,7 +176,7 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
   const floorPrice = periodStat?.floorPrice ?? 0;
 
   return (
-    <div className={twMerge(inputBorderColor, 'border-b  py-4 flex items-center font-heading')}>
+    <div className={twMerge(borderColor, 'border-b py-4 flex items-center font-heading')}>
       <div
         className="grid gap-4 justify-between items-center w-full"
         style={{ gridTemplateColumns: 'minmax(0, 2fr) repeat(auto-fit, minmax(0, 1fr))' }}

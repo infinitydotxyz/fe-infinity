@@ -2,13 +2,13 @@ import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { formatEth, round } from '@infinityxyz/lib-frontend/utils';
 import { ReactNode } from 'react';
 import { EthPrice, ExternalLink, EZImage, LinkText, NextLink } from 'src/components/common';
-import { ellipsisAddress, ellipsisString, NEWS_IMAGE_URL, nFormatter, standardBorderCard } from 'src/utils';
+import { useEnsName } from 'src/hooks/useEnsName';
+import person from 'src/images/person.png';
+import { ellipsisAddress, ellipsisString, NEWS_IMAGE_URL, nFormatter } from 'src/utils';
+import { secondaryTextColor, standardBorderCard } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
 import { NftEventRec } from '../asset/activity/activity-item';
-import person from 'src/images/person.png';
-import { useEnsName } from 'src/hooks/useEnsName';
-import { secondaryTextColor } from 'src/utils/ui-constants';
 
 interface Props {
   activity: NftEventRec;
@@ -43,7 +43,7 @@ export const FeedListTableItem = ({ activity }: Props) => {
       <div>
         <div className={twMerge(standardBorderCard, 'flex items-center font-heading')}>
           <NextLink href={`/asset/${activity.chainId}/${activity.address}/${activity.tokenId}`}>
-            <EZImage className="w-16 h-16 overflow-clip rounded-2xl" src={activity?.image} />
+            <EZImage className="w-16 h-16 overflow-clip rounded-lg" src={activity?.image} />
           </NextLink>
 
           <div className="flex w-full justify-around ml-8">
@@ -82,7 +82,7 @@ export const FeedListTableItem = ({ activity }: Props) => {
       <div>
         <div className={twMerge(standardBorderCard, 'flex items-center font-heading')}>
           <NextLink href={`/collection/${activity.collectionSlug}`}>
-            <EZImage className="w-16 h-16 overflow-clip rounded-2xl" src={activity?.image} />
+            <EZImage className="w-16 h-16 overflow-clip rounded-lg" src={activity?.image} />
           </NextLink>
 
           <div className="flex w-full justify-around ml-8">
@@ -127,7 +127,7 @@ export const FeedListTableItem = ({ activity }: Props) => {
       <div>
         <div className={twMerge(standardBorderCard, 'flex items-center font-heading')}>
           <NextLink href={url}>
-            <EZImage className="w-16 h-16 overflow-clip rounded-2xl" src={activity?.image} />
+            <EZImage className="w-16 h-16 overflow-clip rounded-lg" src={activity?.image} />
           </NextLink>
 
           <div className="flex w-full justify-around ml-8">
@@ -161,7 +161,7 @@ export const FeedListTableItem = ({ activity }: Props) => {
       <div>
         <div className={twMerge(standardBorderCard, 'flex items-center font-heading')}>
           <NextLink href={`/collection/${activity.collectionSlug}`}>
-            <EZImage className="w-16 h-16 overflow-clip rounded-2xl" src={activity?.image} />
+            <EZImage className="w-16 h-16 overflow-clip rounded-lg" src={activity?.image} />
           </NextLink>
 
           <div className="flex w-full justify-around ml-8">
@@ -190,7 +190,7 @@ export const FeedListTableItem = ({ activity }: Props) => {
     return (
       <a href={activity.externalUrl} className=" " target="_blank">
         <div className={twMerge(standardBorderCard, 'flex items-stretch font-heading')}>
-          <NewsImage className="w-28 h-auto overflow-clip rounded-2xl" src={activity?.image} />
+          <NewsImage className="w-28 h-auto overflow-clip rounded-lg" src={activity?.image} />
 
           <div className="flex flex-col font-body w-full justify-around ml-8">
             <div className="font-bold">{activity.paymentToken}</div>
@@ -210,7 +210,7 @@ export const FeedListTableItem = ({ activity }: Props) => {
     return (
       <div className={twMerge(standardBorderCard, 'flex items-start font-heading')}>
         <ExternalLink href={activity.tokenId}>
-          <EZImage className="w-16 h-16 overflow-clip rounded-2xl" src={activity?.image || activity?.paymentToken} />
+          <EZImage className="w-16 h-16 overflow-clip rounded-lg" src={activity?.image || activity?.paymentToken} />
         </ExternalLink>
 
         <div className="flex flex-col font-body w-full justify-around ml-8">
@@ -230,7 +230,7 @@ export const FeedListTableItem = ({ activity }: Props) => {
   const discordItem = () => {
     return (
       <div className={twMerge(standardBorderCard, 'flex items-start font-heading')}>
-        <EZImage className="w-16 h-16 overflow-clip rounded-2xl" src={activity?.image} />
+        <EZImage className="w-16 h-16 overflow-clip rounded-lg" src={activity?.image} />
 
         <div className="flex flex-col font-body w-full justify-around ml-8 break-all">
           <div className=" font-bold">{activity.paymentToken}</div>
@@ -259,7 +259,7 @@ export const FeedListTableItem = ({ activity }: Props) => {
       <div>
         <div className={twMerge(standardBorderCard, 'flex items-center font-heading')}>
           <NextLink href={url}>
-            <EZImage className="w-16 h-16 overflow-clip rounded-2xl" src={activity?.image || person.src} />
+            <EZImage className="w-16 h-16 overflow-clip rounded-lg" src={activity?.image || person.src} />
           </NextLink>
 
           <div className="flex w-full justify-around ml-8">
@@ -283,7 +283,7 @@ export const FeedListTableItem = ({ activity }: Props) => {
       <div>
         <div className={twMerge(standardBorderCard, 'flex items-center font-heading')}>
           <NextLink href={`/collection/${activity.collectionSlug}`}>
-            <EZImage className="w-16 h-16 overflow-clip rounded-2xl" src={activity?.image} />
+            <EZImage className="w-16 h-16 overflow-clip rounded-lg" src={activity?.image} />
           </NextLink>
 
           <div className="flex w-full justify-around ml-8">

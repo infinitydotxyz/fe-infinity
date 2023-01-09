@@ -8,12 +8,13 @@ import { ellipsisAddress, getChainScannerBase, nFormatter } from 'src/utils';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import {
-  cardColor,
   hoverColor,
-  inputBorderColor,
-  primaryBorderColor,
+  borderColor,
+  brandBorderColor,
+  secondaryBgColor,
   smallIconButtonStyle,
-  textColor
+  textColor,
+  secondaryTextColor
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { AOutlineButton } from '../astra-button';
@@ -44,7 +45,7 @@ export const GridHeader = ({
   const { chainId } = useOnboardContext();
 
   return (
-    <div className={twMerge(inputBorderColor, cardColor, textColor, 'border-b px-8')}>
+    <div className={twMerge(borderColor, secondaryBgColor, textColor, 'border-b px-8')}>
       {expanded && (
         <>
           <div className="flex flex-col space-y-3">
@@ -184,12 +185,12 @@ const HeaderTabBar = ({ children }: Props2) => {
 
   return (
     <div className="flex mt-4 text-sm">
-      <div className="flex space-x-8">
+      <div className="flex space-x-5">
         {tabItems.map((e) => {
           return (
-            <div key={e.path} className={twMerge('pb-2', e.selected ? `border-b-2 ${primaryBorderColor}` : '')}>
+            <div key={e.path} className={twMerge('pb-2 px-3', e.selected ? `border-b-2 ${brandBorderColor}` : '')}>
               <NextLink href={`/collection/${collection?.slug}/${e.path}`}>
-                <div className={e.selected ? textColor : ''}>{e.name}</div>
+                <div className={twMerge(e.selected ? textColor : secondaryTextColor, 'font-medium')}>{e.name}</div>
               </NextLink>
             </div>
           );

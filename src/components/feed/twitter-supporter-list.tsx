@@ -4,7 +4,8 @@ import { Button } from '../common/button';
 import { EZImage } from '../common/ez-image';
 import { twMerge } from 'tailwind-merge';
 import { TweetArrayDto, TweetDto } from '@infinityxyz/lib-frontend/types/dto/twitter';
-import { apiGet, nFormatter, standardCard } from 'src/utils';
+import { apiGet, nFormatter } from 'src/utils';
+import { standardCard } from 'src/utils/ui-constants';
 
 // @Get('/:id/topOwners')  TopOwnersArrayResponseDto
 // @Get('/:id/mentions')  TweetArrayDto
@@ -24,7 +25,7 @@ const TwitterSupporter = ({ tweet }: Props2) => {
         </div>
       </div>
       <Button
-        className="bg-white"
+        className=""
         variant="outline"
         onClick={() => {
           window.open(`https://twitter.com/${tweet.author.username}`);

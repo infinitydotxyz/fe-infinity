@@ -101,7 +101,7 @@ export const Modal = ({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black bg-opacity-40  " />
+          <div className="fixed inset-0 bg-dark-bg bg-opacity-40  " />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto overflow-x-clip">

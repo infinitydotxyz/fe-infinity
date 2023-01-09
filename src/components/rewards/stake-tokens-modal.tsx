@@ -171,7 +171,7 @@ const RadioButtonCard: React.FC<{ value: string | number; label: string; descrip
   description
 }) => {
   return (
-    <div className="bg-white cursor-pointer">
+    <div className="cursor-pointer">
       <RadioGroup.Option
         value={value}
         className={({ checked }) => `

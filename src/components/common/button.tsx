@@ -1,11 +1,11 @@
 import React, { ReactNode } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { activeColor, hoverColor, inputBorderColor, primaryBtnBgColor, textColor } from '../../utils/ui-constants';
+import { activeColor, hoverColor, borderColor, primaryBtnBgColor, textColor } from '../../utils/ui-constants';
 
 const classes = {
   // focus ring appears on keyboard tab key navigation for accessibility, not on clicks
   base: twMerge(
-    'select-none focus:outline-none focus-visible:ring focus:ring-black focus:ring-opacity-50 transition ease-in-out duration-300',
+    'select-none focus:outline-none focus-visible:ring focus:ring-dark-bg focus:ring-opacity-50 transition ease-in-out duration-300',
     activeColor
   ),
   disabled: 'opacity-50 cursor-not-allowed',
@@ -21,12 +21,12 @@ const classes = {
   variant: {
     plain: '',
     ghost: 'rounded-xl', // hover fill needs to be rounded
-    primary: twMerge(inputBorderColor, hoverColor, primaryBtnBgColor, 'text-light-body', 'rounded-xl'),
+    primary: twMerge(borderColor, hoverColor, primaryBtnBgColor, 'text-light-body', 'rounded-xl'),
     gray: twMerge(hoverColor, 'border-none rounded-xl bg-gray-100'),
-    outline: twMerge(inputBorderColor, hoverColor, textColor, 'border rounded-xl'),
-    outlineWhite: twMerge(inputBorderColor, hoverColor, 'border bg-white rounded-xl'),
+    outline: twMerge(borderColor, hoverColor, textColor, 'border rounded-xl'),
+    outlineWhite: twMerge(borderColor, hoverColor, 'border rounded-xl'),
     round: 'rounded-full',
-    roundBorder: twMerge(inputBorderColor, hoverColor, textColor, 'border rounded-full'),
+    roundBorder: twMerge(borderColor, hoverColor, textColor, 'border rounded-full'),
     danger: twMerge(
       textColor,
       'rounded-xl bg-red-500 hover:bg-red-800 focus:ring-2 focus:ring-red-500 focus:ring-opacity-50'

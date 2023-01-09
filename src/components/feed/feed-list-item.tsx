@@ -25,7 +25,7 @@ export const FeedListItem = ({
   collectionProfileImage
 }: Props) => {
   const typeName = (activity: NftEventRec) => {
-    const classes = twMerge('rounded-md px-3 py-0.5 w-32 text-center text-sm', textColor);
+    const classes = twMerge('rounded-lg px-3 py-0.5 w-32 text-center text-sm', textColor);
 
     const component = (color: string, label: string) => {
       return (
@@ -181,7 +181,7 @@ export const FeedListItem = ({
         return (
           <EZImage
             src={activity?.paymentToken || activity?.image}
-            className="border rounded-full overflow-clip shrink-0 w-10 h-10 bg-gray-100"
+            className="rounded-full overflow-clip shrink-0 w-10 h-10"
           />
         );
 
@@ -193,7 +193,7 @@ export const FeedListItem = ({
         return (
           <EZImage
             src={activity?.image || collectionProfileImage}
-            className="border rounded-full overflow-clip shrink-0 w-10 h-10 bg-gray-100"
+            className="rounded-full overflow-clip shrink-0 w-10 h-10"
           />
         );
 
@@ -201,7 +201,7 @@ export const FeedListItem = ({
         return (
           <NewsImage
             src={activity?.image || collectionProfileImage}
-            className="border rounded-full overflow-clip shrink-0 w-10 h-10 bg-gray-100"
+            className="rounded-full overflow-clip shrink-0 w-10 h-10"
           />
         );
 
@@ -209,7 +209,7 @@ export const FeedListItem = ({
         return (
           <EZImage
             src={activity?.image || collectionProfileImage || person.src}
-            className="border rounded-full overflow-clip shrink-0 w-10 h-10 bg-gray-100"
+            className="rounded-full overflow-clip shrink-0 w-10 h-10"
           />
         );
 
@@ -217,7 +217,7 @@ export const FeedListItem = ({
         return (
           <EZImage
             src={activity?.image || collectionProfileImage}
-            className="border rounded-full overflow-clip shrink-0 w-10 h-10 bg-gray-100"
+            className="rounded-full overflow-clip shrink-0 w-10 h-10"
           />
         );
 

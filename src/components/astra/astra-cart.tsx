@@ -6,7 +6,13 @@ import { AButton, ARoundButton, ATextButton } from 'src/components/astra/astra-b
 import { EZImage, Spacer, TextInputBox } from 'src/components/common';
 import { CART_TYPE, getCartType, getCollectionKeyId, getDefaultOrderExpiryTime, getTokenKeyId } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import { infoBoxBgColor, secondaryTextColor, smallIconButtonStyle, textColor } from 'src/utils/ui-constants';
+import {
+  borderColor,
+  secondaryBgColor,
+  secondaryTextColor,
+  smallIconButtonStyle,
+  textColor
+} from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { ADropdown } from './astra-dropdown';
 import { Erc721CollectionOffer, Erc721TokenOffer, ORDER_EXPIRY_TIME } from './types';
@@ -61,7 +67,7 @@ export const AstraCart = ({
   if (tokens.length > 0) {
     clearButton = (
       <div className="flex items-center">
-        <div className={twMerge(infoBoxBgColor, textColor, 'rounded-full h-6 w-6 text-center mr-1')}>
+        <div className={twMerge(secondaryBgColor, textColor, 'rounded-full h-6 w-6 text-center mr-1')}>
           {tokens.length}
         </div>
         <ATextButton
@@ -79,7 +85,7 @@ export const AstraCart = ({
   if (collections.length > 0) {
     clearButton = (
       <div className="flex items-center">
-        <div className={twMerge(infoBoxBgColor, textColor, 'rounded-full h-6 w-6 text-center mr-1 ')}>
+        <div className={twMerge(secondaryBgColor, textColor, 'rounded-full h-6 w-6 text-center mr-1 ')}>
           {collections.length}
         </div>
         <ATextButton
@@ -97,7 +103,7 @@ export const AstraCart = ({
   if (orders.length > 0) {
     clearButton = (
       <div className="flex items-center">
-        <div className={twMerge(infoBoxBgColor, textColor, 'rounded-full h-6 w-6 text-center mr-1')}>
+        <div className={twMerge(secondaryBgColor, textColor, 'rounded-full h-6 w-6 text-center mr-1')}>
           {orders.length}
         </div>
         <ATextButton
@@ -239,7 +245,7 @@ export const AstraCart = ({
   };
 
   return (
-    <div className={twMerge('h-full flex flex-col border-l-[1px]')}>
+    <div className={twMerge('h-full flex flex-col border-l-[1px]', borderColor)}>
       <div className=" m-4 flex items-center">
         <div className={twMerge(textColor, 'text-4xl lg:text-3xl font-bold mr-3')}>Cart</div>
         {clearButton}

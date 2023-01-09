@@ -4,7 +4,8 @@ import { ellipsisAddress } from 'src/utils';
 import { format } from 'timeago.js';
 import { NftActivity } from '@infinityxyz/lib-frontend/types/dto/collections/nfts';
 import { BaseCollection, Token } from '@infinityxyz/lib-frontend/types/core';
-import { secondaryTextColor } from 'src/utils/ui-constants';
+import { secondaryBgColor, secondaryTextColor } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
 
 // the backend adds teh collectionData to the NFtActivity
 export interface NftEventRec extends NftActivity {
@@ -26,7 +27,7 @@ export const ActivityItem = ({ item, token }: Props) => {
 
   return (
     <div>
-      <div className="bg-gray-100 px-4 py-4 rounded-3xl flex items-center font-heading mt-4">
+      <div className={twMerge(secondaryBgColor, 'px-4 py-4 rounded-3xl flex items-center font-heading mt-4')}>
         <NextLink href={`/asset/${item.chainId}/${item.address}/${item.tokenId}`}>
           <EZImage className="w-16 h-16 max-h-[80px] rounded-2xl overflow-clip" src={imageUrl} />
         </NextLink>

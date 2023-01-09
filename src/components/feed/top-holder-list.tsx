@@ -3,10 +3,11 @@ import { twMerge } from 'tailwind-merge';
 
 import { useEffect, useState } from 'react';
 import { NextLink } from 'src/components/common';
-import { apiGet, ellipsisAddress, ellipsisString, standardCard } from 'src/utils';
+import { apiGet, ellipsisAddress, ellipsisString } from 'src/utils';
 import { TopOwnersArrayResponseDto, TopOwnerDto } from '@infinityxyz/lib-frontend/types/dto/collections';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { useEnsName } from 'src/hooks/useEnsName';
+import { standardCard } from 'src/utils/ui-constants';
 
 interface Props2 {
   topOwner: TopOwnerDto;
@@ -23,7 +24,7 @@ const TopHolder = ({ topOwner, index }: Props2) => {
 
   return (
     <div className={twMerge(standardCard, 'flex items-center')}>
-      <div className="w-12 rounded-full max-w-18 h-12 p-3 bg-white px-5 font-bold"> {index + 1}</div>
+      <div className="w-12 rounded-full max-w-18 h-12 p-3 px-5 font-bold"> {index + 1}</div>
       <div className="flex justify-between flex-1">
         <div className="ml-5 py-1">
           <div className="text-sm">Address</div>

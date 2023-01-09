@@ -4,7 +4,7 @@ import { EZImage, NextLink } from '../common';
 import person from 'src/images/person.png';
 import { useEnsName } from 'src/hooks/useEnsName';
 import { twMerge } from 'tailwind-merge';
-import { infoBoxBgColor } from 'src/utils/ui-constants';
+import { secondaryBgColor } from 'src/utils/ui-constants';
 
 export const RaffleLeaderboardItem = ({ entrant: item }: { entrant: RaffleLeaderboardUser }) => {
   const ensName = useEnsName(item.entrant.address);
@@ -19,7 +19,7 @@ export const RaffleLeaderboardItem = ({ entrant: item }: { entrant: RaffleLeader
   }
 
   return (
-    <div className={twMerge(infoBoxBgColor, 'py-4 px-2 rounded-3xl flex items-center font-heading my-2')}>
+    <div className={twMerge(secondaryBgColor, 'py-4 px-2 rounded-3xl flex items-center font-heading my-2')}>
       <div className="flex justify-between items-center w-full">
         <div className="flex items-center w-full">
           <NextLink href={`/user/${item.entrant.address}`}>

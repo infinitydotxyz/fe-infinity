@@ -1,3 +1,6 @@
+import { secondaryBgColor } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
+
 interface Props {
   avatar?: React.ReactNode;
   title?: React.ReactNode;
@@ -6,7 +9,7 @@ interface Props {
 
 export const UserActivityItem = ({ avatar, title, children }: Props) => {
   return (
-    <div className="bg-gray-100 px-7 py-5 rounded-3xl flex items-center font-heading overflow-hidden">
+    <div className={twMerge(secondaryBgColor, 'px-7 py-5 rounded-3xl flex items-center font-heading overflow-hidden')}>
       {avatar}
       <div className="w-full mx-8 ml-4 flex items-center overflow-none">
         <div className="mr-4">{title}</div>

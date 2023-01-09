@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { useIsMounted } from 'src/hooks/useIsMounted';
-import { cardColor, hoverColor, inputBorderColor, textColor } from 'src/utils/ui-constants';
+import { cardColor, hoverColor, borderColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { getSearchResultKey, getSearchResultLink, SearchResultItem } from './search-results';
 import { SearchResult } from './types';
@@ -62,7 +62,7 @@ export function SearchInput({ expanded, query, setQuery, placeholder, data }: Pr
     <div
       className={twMerge(
         textColor,
-        inputBorderColor,
+        borderColor,
         'border w-full px-4 rounded-xl text-center h-10 flex place-items-center'
       )}
     >
@@ -99,7 +99,7 @@ export function SearchInput({ expanded, query, setQuery, placeholder, data }: Pr
             className={twMerge(
               cardColor,
               data.length === 0 ? 'opacity-0' : '', // without this, a thin line appears
-              inputBorderColor,
+              borderColor,
               'absolute z-20 -mx-8 top-2  w-content h-content max-h-content',
               '  py-2 border rounded-2xl flex flex-col   shadow-lg'
             )}

@@ -2,7 +2,6 @@ import * as Queries from '@infinityxyz/lib-frontend/types/dto/orders/orders-quer
 import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { FC, useEffect } from 'react';
-import { AListGridButton } from 'src/components/astra/astra-button';
 import { ACollectionFilter } from 'src/components/astra/astra-collection-filter';
 import {
   DashboardLayout,
@@ -15,7 +14,7 @@ import { useProfileTokenFetcher } from 'src/components/astra/useFetcher';
 import { Spacer } from 'src/components/common';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import { inputBorderColor } from 'src/utils/ui-constants';
+import { borderColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 const TokensGridWrapper: FC = () => {
@@ -30,7 +29,7 @@ const TokensGridWrapper: FC = () => {
     <TokenGrid
       listMode={listMode}
       tokenFetcher={tokenFetcher}
-      className="px-8 py-6"
+      className="px-6"
       onClick={toggleSelection}
       isSelectable={isSelectable}
       isSelected={isSelected}
@@ -58,10 +57,9 @@ export default function ProfileItemsPage(props: DashboardProps) {
 
   return (
     <DashboardLayout {...props}>
-      <div className={twMerge(inputBorderColor, 'w-full flex   py-2 border-t-[1px]')}>
+      <div className={twMerge(borderColor, 'w-full flex py-2 px-2 border-t-[1px]')}>
         <ACollectionFilter />
         <Spacer />
-        <AListGridButton />
       </div>
       <TokensGridWrapper />
     </DashboardLayout>

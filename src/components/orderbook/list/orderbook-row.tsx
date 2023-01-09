@@ -8,6 +8,8 @@ import { DataColumn, defaultDataColumns } from './data-columns';
 import { OrderbookItem } from './orderbook-item';
 import { OrderDetailModal } from '../OrderDetailModal';
 import { OrderbookRowButton } from './orderbook-row-button';
+import { twMerge } from 'tailwind-merge';
+import { secondaryBgColor } from 'src/utils/ui-constants';
 
 type Props = {
   order: SignedOBOrder;
@@ -75,7 +77,7 @@ export const OrderbookRow = ({ order }: Props) => {
   });
 
   return (
-    <div className="rounded-3xl mb-3 px-8 py-6 w-full bg-gray-100">
+    <div className={twMerge(secondaryBgColor, 'rounded-3xl mb-3 px-8 py-6 w-full')}>
       {/* for larger screen - show row summary: */}
       <div className="items-center w-full hidden lg:grid" style={{ gridTemplateColumns: gridTemplate }}>
         {defaultDataColumns(order).map((data) => {

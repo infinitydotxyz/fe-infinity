@@ -138,7 +138,7 @@ const AFeedFilterPopdown: React.FC<Props2> = ({ options, selectedTypes, onChange
         return (
           <Checkbox
             className="pointer-events-auto"
-            boxOnLeft={false}
+            boxOnLeft={true}
             key={idx}
             label={item.label}
             checked={isChecked}

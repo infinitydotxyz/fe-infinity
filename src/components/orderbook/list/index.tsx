@@ -9,6 +9,8 @@ import {
   ADropdownButton
 } from 'src/components/astra/astra-dropdown';
 import { TextInputBox } from 'src/components/common';
+import { borderColor } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
 import { getSortLabel, OrderbookProvider, SORT_FILTERS, SORT_LABELS, useOrderbook } from '../OrderbookContext';
 import { OrderbookList } from './orderbook-list';
 
@@ -120,7 +122,7 @@ export const OrderbookContent = ({ className }: Props4) => {
                       <TextInputBox
                         addEthSymbol={true}
                         type="number"
-                        className="border-gray-300 font-heading"
+                        className={twMerge(borderColor, 'font-heading')}
                         label="Min"
                         placeholder=""
                         value={minPriceVal}
@@ -135,7 +137,7 @@ export const OrderbookContent = ({ className }: Props4) => {
                       <TextInputBox
                         addEthSymbol={true}
                         type="number"
-                        className="border-gray-300 font-heading ml-2"
+                        className={twMerge(borderColor, 'font-heading ml-2')}
                         label="Max"
                         placeholder=""
                         value={maxPriceVal}

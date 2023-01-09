@@ -7,7 +7,7 @@ import { apiGet, ellipsisAddress, extractErrorMsg, ITEMS_PER_PAGE } from 'src/ut
 import { cancelAllOrders } from 'src/utils/exchange/orders';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { fetchOrderNonce } from 'src/utils/orderbookUtils';
-import { inputBorderColor } from 'src/utils/ui-constants';
+import { borderColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { AButton, AOutlineButton, ATextButton } from '../astra/astra-button';
 import { ACollectionFilter } from '../astra/astra-collection-filter';
@@ -246,7 +246,7 @@ export const UserOrderList = ({ userInfo, className = '', toggleOrderSelection, 
 
   return (
     <div className={twMerge('min-h-[50vh]', className)}>
-      <div className={twMerge(inputBorderColor, 'w-full flex   py-2 border-t-[1px]')}>
+      <div className={twMerge(borderColor, 'w-full flex   py-2 border-t-[1px]')}>
         <ACollectionFilter
           setSelectedCollections={(value) => {
             const newFilter = { ...filter };
@@ -301,7 +301,7 @@ export const UserOrderList = ({ userInfo, className = '', toggleOrderSelection, 
                     <TextInputBox
                       addEthSymbol={true}
                       type="number"
-                      className="border-gray-300 font-heading"
+                      className={twMerge(borderColor, 'font-heading')}
                       label="Min"
                       placeholder=""
                       value={minPriceVal}
@@ -317,7 +317,7 @@ export const UserOrderList = ({ userInfo, className = '', toggleOrderSelection, 
                     <TextInputBox
                       addEthSymbol={true}
                       type="number"
-                      className="border-gray-300 font-heading ml-2"
+                      className={twMerge(borderColor, 'font-heading ml-2')}
                       label="Max"
                       placeholder=""
                       value={maxPriceVal}

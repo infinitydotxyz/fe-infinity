@@ -111,7 +111,7 @@ export const OrderDetailPicker = ({ selection, onChange, order, scroll = false, 
                 checked={selection.has(key)}
                 onChange={() => false}
                 // NOTE: "focus-visible:ring focus:ring-0" shows the focus ring on tab, but not click
-                className="focus-visible:ring focus:ring-0 rounded h-6 w-6 border-gray-300 cursor-pointer checked:bg-black checked:hover:bg-black checked:focus:bg-black"
+                className="focus-visible:ring focus:ring-0 rounded h-6 w-6 cursor-pointer checked:bg-dark-bg checked:hover:bg-dark-bg checked:focus:bg-dark-bg"
               />
             </>
           )}

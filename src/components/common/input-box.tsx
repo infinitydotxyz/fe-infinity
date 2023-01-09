@@ -2,7 +2,7 @@ import { CalendarIcon } from '@heroicons/react/outline';
 import { ReactElement, ReactNode, useState } from 'react';
 import { DatePicker } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
-import { inputBorderColor, secondaryTextColor } from '../../utils/ui-constants';
+import { borderColor, secondaryTextColor } from '../../utils/ui-constants';
 import { EthSymbol } from './eth-price';
 import { Tooltip, TooltipIcon, TooltipSpec, TooltipWrapper } from './tool-tip';
 
@@ -35,7 +35,7 @@ export const InputBox = ({
     <TooltipWrapper show={showTooltip} tooltip={tooltip} className={isFullWidth ? 'w-full' : ''}>
       <div
         className={twMerge(
-          inputBorderColor,
+          borderColor,
           'py-3 pl-6 pr-2 border rounded-2xl w-full flex items-center focus-within:border-gray-700',
           className
         )}

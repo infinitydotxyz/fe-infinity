@@ -1,7 +1,7 @@
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { useState } from 'react';
 import { useUserActivity } from 'src/hooks/api/useUserActivity';
-import { inputBorderColor } from 'src/utils/ui-constants';
+import { borderColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { AFilterPopdown, FeedFilter, filterButtonDefaultOptions } from '../astra/astra-filter-popdown';
 import { CenteredContent, ScrollLoader, Spacer, Spinner } from '../common';
@@ -25,7 +25,7 @@ export const UserActivityList = ({ userAddress, types, className }: Props) => {
 
   return (
     <div className={twMerge('min-h-[50vh]', className)}>
-      <div className={twMerge(inputBorderColor, 'w-full flex   py-2 border-t-[1px]')}>
+      <div className={twMerge(borderColor, 'w-full flex   py-2 border-t-[1px]')}>
         <Spacer />
         <div className="flex flex-row-reverse mb-8 bg-transparent">
           <AFilterPopdown

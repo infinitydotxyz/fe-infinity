@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { BsGrid, BsList } from 'react-icons/bs';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
-import { activeColor, hoverColor, inputBorderColor, primaryBtnBgColor, textColor } from 'src/utils/ui-constants';
+import { activeColor, hoverColor, borderColor, primaryBtnBgColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 interface Props {
@@ -83,7 +83,7 @@ const ButtonBase = ({
         activeColor,
         hoverColor,
         'select-none transition ease-in-out duration-300',
-        'focus:outline-none focus-visible:ring focus:ring-black focus:ring-opacity-50',
+        'focus:outline-none focus-visible:ring focus:ring-dark-bg focus:ring-opacity-50',
         disabled ? disabledClass : '',
         className
       )}
@@ -147,7 +147,7 @@ export const ARoundOutlineButton = ({
       tooltip={tooltip}
       disabled={disabled}
       highlighted={highlighted}
-      className={twMerge(inputBorderColor, 'border rounded-full', className)}
+      className={twMerge(borderColor, 'border rounded-full', className)}
       onClick={onClick}
     >
       {children}
@@ -170,7 +170,7 @@ export const AOutlineButton = ({
       small={small}
       tooltip={tooltip}
       disabled={disabled}
-      className={twMerge(inputBorderColor, 'border rounded-xl', className)}
+      className={twMerge(borderColor, 'border rounded-xl', className)}
       onClick={onClick}
     >
       {children}

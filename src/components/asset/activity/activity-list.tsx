@@ -9,6 +9,8 @@ import {
   filterButtonDefaultOptions,
   shortEventTypes
 } from 'src/components/astra/astra-filter-popdown';
+import { twMerge } from 'tailwind-merge';
+import { secondaryBgColor } from 'src/utils/ui-constants';
 
 interface Props {
   className?: string;
@@ -78,7 +80,12 @@ export const ActivityList: React.FC<Props> = ({ className = '', chainId, collect
       ) : null}
 
       {hasNoData ? (
-        <div className="bg-gray-100 px-6 sm:px-6 md:px-8 lg:px-16 mt-6 md:pt-11 md:pb-11 rounded-3xl text-center font-heading">
+        <div
+          className={twMerge(
+            secondaryBgColor,
+            'px-6 sm:px-6 md:px-8 lg:px-16 mt-6 md:pt-11 md:pb-11 rounded-3xl text-center font-heading'
+          )}
+        >
           No Activity
         </div>
       ) : null}

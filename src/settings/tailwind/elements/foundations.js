@@ -134,18 +134,18 @@ module.exports = {
       500: '#15a456'
     },
     dark: {
-      bg: '#111',
-      body: '#efefef',
-      disabled: '#777',
-      border: '#454545',
-      card: '#222'
+      bg: '#141416',
+      body: '#fbfbfb',
+      disabled: '#777E90',
+      border: '#353945',
+      card: '#23262f'
     },
     light: {
-      bg: '#FFF',
-      body: '#000000',
-      disabled: '#555555',
+      bg: '#FFFFFF',
+      body: '#23262f',
+      disabled: '#777E90',
       card: '#FbFbFb',
-      border: '#aaa'
+      border: '#e6e8ec'
     },
     brand: {
       primary: '#FF7518',

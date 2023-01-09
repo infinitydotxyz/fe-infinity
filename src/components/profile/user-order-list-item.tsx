@@ -3,7 +3,8 @@ import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user';
 import { useState } from 'react';
 import { Button, EthPrice } from 'src/components/common';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import { secondaryTextColor } from 'src/utils/ui-constants';
+import { secondaryBgColor, secondaryTextColor } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
 import { ALowerPriceModal } from '../astra/modals/astra-lower-price-modal';
 import { OrderbookItem } from '../orderbook/list/orderbook-item';
@@ -48,7 +49,7 @@ export const UserOrderListItem = ({ order, orderType, onClickActionBtn, selected
           onDone={(val) => setStartPriceEth(val)}
         />
       )}
-      <div className="bg-gray-100 px-10 py-6 rounded-3xl flex font-heading">
+      <div className={twMerge(secondaryBgColor, 'px-10 py-6 rounded-3xl flex font-heading')}>
         <div className="flex justify-between items-center w-full">
           <div className="w-1/4">
             <OrderbookItem
