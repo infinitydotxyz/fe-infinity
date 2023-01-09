@@ -1,9 +1,7 @@
 import { useTheme } from 'next-themes';
 import { useRouter } from 'next/router';
-import { HiOutlineTicket } from 'react-icons/hi';
 import { IoWalletOutline } from 'react-icons/io5';
 import { MdDarkMode, MdLightMode, MdOutlineHomeMax } from 'react-icons/md';
-import { RiCoinsLine } from 'react-icons/ri';
 import { AButton, ARoundButton } from 'src/components/astra/astra-button';
 import { HelpToolTip, NextLink, Spacer, SVG } from 'src/components/common';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
@@ -56,7 +54,7 @@ export const SidebarNav = () => {
           </AButton>
         </HelpToolTip>
 
-        <HelpToolTip placement="right" content={<div className="whitespace-nowrap">Raffles</div>}>
+        {/* <HelpToolTip placement="right" content={<div className="whitespace-nowrap">Raffles</div>}>
           <AButton
             highlighted={router.asPath.startsWith(`/raffles`)}
             onClick={() => {
@@ -76,7 +74,7 @@ export const SidebarNav = () => {
           >
             <RiCoinsLine className={iconButtonStyle} />
           </AButton>
-        </HelpToolTip>
+        </HelpToolTip> */}
       </div>
 
       <Spacer />
