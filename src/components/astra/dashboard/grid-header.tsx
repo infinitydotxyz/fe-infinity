@@ -14,7 +14,8 @@ import {
   secondaryBgColor,
   smallIconButtonStyle,
   textColor,
-  secondaryTextColor
+  secondaryTextColor,
+  hoverColorBrandText
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { AOutlineButton } from '../astra-button';
@@ -190,7 +191,11 @@ const HeaderTabBar = ({ children }: Props2) => {
           return (
             <div key={e.path} className={twMerge('pb-2 px-3', e.selected ? `border-b-2 ${brandBorderColor}` : '')}>
               <NextLink href={`/collection/${collection?.slug}/${e.path}`}>
-                <div className={twMerge(e.selected ? textColor : secondaryTextColor, 'font-medium')}>{e.name}</div>
+                <div
+                  className={twMerge(e.selected ? textColor : secondaryTextColor, hoverColorBrandText, 'font-medium')}
+                >
+                  {e.name}
+                </div>
               </NextLink>
             </div>
           );

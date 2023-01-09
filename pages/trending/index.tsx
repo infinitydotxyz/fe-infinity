@@ -1,8 +1,8 @@
-import { CheckIcon } from '@heroicons/react/solid';
 import { Collection, CollectionPeriodStatsContent, Erc721Collection } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import { parse } from 'query-string';
 import { useEffect, useState } from 'react';
+import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { AButton } from 'src/components/astra/astra-button';
 import { APageBox } from 'src/components/astra/astra-page-box';
 import {
@@ -20,7 +20,7 @@ import { useIsMounted } from 'src/hooks/useIsMounted';
 import useScreenSize from 'src/hooks/useScreenSize';
 import { apiGet, formatNumber, ITEMS_PER_PAGE, nFormatter } from 'src/utils';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
-import { borderColor } from 'src/utils/ui-constants';
+import { borderColor, iconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 // - cache stats 5mins
@@ -248,13 +248,18 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
         >
           <AButton
             primary
+            className="px-9 py-3"
             onClick={() => {
               if (isCollSelectable(collection as Erc721Collection)) {
                 onClickBuy(collection as Erc721Collection);
               }
             }}
           >
-            {isCollSelected(collection as Erc721Collection) ? <CheckIcon className="w-5 h-5" /> : 'Buy'}
+            {isCollSelected(collection as Erc721Collection) ? (
+              <AiOutlineCheckCircle className={iconButtonStyle} />
+            ) : (
+              'Buy'
+            )}
           </AButton>
         </div>
       </div>
