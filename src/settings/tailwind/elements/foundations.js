@@ -146,6 +146,9 @@ module.exports = {
       disabled: '#555555',
       card: '#FbFbFb',
       border: '#aaa'
+    },
+    brand: {
+      primary: '#FF7518'
     }
   },
   letterSpacing: {

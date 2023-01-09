@@ -3,7 +3,7 @@ import { EZImage, NextLink } from 'src/components/common';
 import person from 'src/images/person.png';
 import { ellipsisAddress } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import { cardColor, inputBorderColor, primaryBorderColor, primaryTextColor, textColor } from 'src/utils/ui-constants';
+import { cardColor, inputBorderColor, primaryBorderColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 interface Props {
@@ -94,9 +94,9 @@ export const ProfileHeaderTabBar = () => {
     <div className="mt-6 flex space-x-6">
       {tabItems.map((e) => {
         return (
-          <div key={e.path} className={twMerge('pb-3', e.selected ? `border-b-4 ${primaryBorderColor}` : '')}>
+          <div key={e.path} className={twMerge('pb-3', e.selected ? `border-b-2 ${primaryBorderColor}` : '')}>
             <NextLink href={`/profile/${addressFromPath}/${e.path}`}>
-              <div className={e.selected ? primaryTextColor : ''}>{e.name}</div>
+              <div className={e.selected ? textColor : ''}>{e.name}</div>
             </NextLink>
           </div>
         );

@@ -12,7 +12,6 @@ import {
   hoverColor,
   inputBorderColor,
   primaryBorderColor,
-  primaryTextColor,
   smallIconButtonStyle,
   textColor
 } from 'src/utils/ui-constants';
@@ -190,7 +189,7 @@ const HeaderTabBar = ({ children }: Props2) => {
           return (
             <div key={e.path} className={twMerge('pb-2', e.selected ? `border-b-2 ${primaryBorderColor}` : '')}>
               <NextLink href={`/collection/${collection?.slug}/${e.path}`}>
-                <div className={e.selected ? primaryTextColor : ''}>{e.name}</div>
+                <div className={e.selected ? textColor : ''}>{e.name}</div>
               </NextLink>
             </div>
           );

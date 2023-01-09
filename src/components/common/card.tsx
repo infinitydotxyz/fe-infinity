@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { AiOutlineCheckCircle, AiOutlinePlusCircle } from 'react-icons/ai';
 import { cardColor, largeIconButtonStyle, selectionBorder, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { AOutlineButton } from '../astra/astra-button';
+import { AButton } from '../astra/astra-button';
 import { TokenCardModal } from '../astra/token-grid/token-card-modal';
 import { BasicTokenInfo, Erc721TokenOffer } from '../astra/types';
 import { EthSymbol, EZImage, Spacer, SVG } from '../common';
@@ -90,9 +90,9 @@ export const GridCard = ({ data, onClick, selected, isSelectable }: Props): JSX.
           <div className="flex items-center">
             <div className="truncate">{buyNowPrice}</div>
             <Spacer />
-            <AOutlineButton small className="rounded-md" onClick={() => setModalOpen(true)}>
+            <AButton primary className="rounded-md" onClick={() => setModalOpen(true)}>
               Details
-            </AOutlineButton>
+            </AButton>
           </div>
         </div>
       </div>

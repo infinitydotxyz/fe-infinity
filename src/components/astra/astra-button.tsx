@@ -1,15 +1,7 @@
 import React, { ReactNode } from 'react';
 import { BsGrid, BsList } from 'react-icons/bs';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
-import {
-  bgColorInverse,
-  clickColor,
-  hoverColor,
-  inputBorderColor,
-  primaryTextColor,
-  textColor,
-  textColorInverse
-} from 'src/utils/ui-constants';
+import { activeColor, hoverColor, inputBorderColor, primaryBtnBgColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 interface Props {
@@ -39,12 +31,13 @@ export const AButton = ({
     <ButtonBase
       disabled={disabled}
       submit={submit}
+      primary={primary}
       highlighted={highlighted}
       tooltip={tooltip}
       className={twMerge(
         small ? 'text-sm px-2 py-0.5' : 'px-2.5 py-1.5',
         'rounded-xl',
-        primary ? twMerge(bgColorInverse, textColorInverse) : '',
+        primary ? primaryBtnBgColor : '',
         className
       )}
       onClick={onClick}
@@ -61,12 +54,14 @@ interface BaseProps {
   children: ReactNode;
   disabled?: boolean;
   className?: string;
+  primary?: boolean;
   highlighted?: boolean;
   submit?: boolean;
   tooltip?: string;
 }
 
 const ButtonBase = ({
+  primary = false,
   disabled = false,
   submit = false,
   children,
@@ -84,9 +79,8 @@ const ButtonBase = ({
       // otherwise a disabled buttons click will go to the parent, onClick isn't called
       // disabled={disabled}
       className={twMerge(
-        highlighted ? clickColor : textColor,
-        'active:dark:bg-light-bg  active:dark:text-dark-bg  ',
-        'active:bg-dark-bg active:text-light-bg',
+        highlighted ? 'text-brand-primary' : primary ? 'text-light-body' : textColor,
+        activeColor,
         hoverColor,
         'select-none transition ease-in-out duration-300',
         'focus:outline-none focus-visible:ring focus:ring-black focus:ring-opacity-50',
@@ -238,11 +232,11 @@ export const AListGridButton = () => {
   return (
     <div className="flex items-center">
       <AToggleButton onClick={() => setListMode(true)}>
-        <BsList className={twMerge(listMode ? primaryTextColor : '', 'h-4 w-4')} />
+        <BsList className={twMerge(listMode ? textColor : '', 'h-4 w-4')} />
       </AToggleButton>
       <div className="  w-1  " />
       <AToggleButton onClick={() => setListMode(false)}>
-        <BsGrid className={twMerge(!listMode ? primaryTextColor : '', 'h-4 w-4')} />
+        <BsGrid className={twMerge(!listMode ? textColor : '', 'h-4 w-4')} />
       </AToggleButton>
     </div>
   );

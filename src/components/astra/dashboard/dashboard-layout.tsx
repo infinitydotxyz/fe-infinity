@@ -8,7 +8,7 @@ import { OrderbookProvider } from 'src/components/orderbook/OrderbookContext';
 import { apiGet, nFormatter } from 'src/utils';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import { textColorSecondary } from 'src/utils/ui-constants';
+import { secondaryTextColor } from 'src/utils/ui-constants';
 import { GridHeader, GridHeaderProps } from './grid-header';
 import { ProfileLayout } from './profile-layout';
 import { useScrollInfo } from './useScrollHook';
@@ -120,23 +120,23 @@ export const DashboardLayout: React.FC<DashboardProps> = ({ children, error, ...
       const gridChildren = (
         <div className="flex text-sm divide-x divide-gray-300 items-center">
           <div className="flex pr-4 gap-2 whitespace-nowrap">
-            <span className={textColorSecondary}>Floor </span>
+            <span className={secondaryTextColor}>Floor </span>
             <span className="">
               {nFormatter(currentStats?.floorPrice) ?? '-'} {EthSymbol}
             </span>
           </div>
           <div className="flex px-4 gap-2 whitespace-nowrap">
-            <span className={textColorSecondary}>Total Vol </span>
+            <span className={secondaryTextColor}>Total Vol </span>
             <span className="">
               {totalVol ?? '-'} {EthSymbol}
             </span>
           </div>
           <div className="flex px-4 gap-2 whitespace-nowrap">
-            <span className={textColorSecondary}>Owners </span>
+            <span className={secondaryTextColor}>Owners </span>
             <span className="">{numOwners ?? '-'}</span>
           </div>
           <div className="flex pl-4 gap-2 whitespace-nowrap">
-            <span className={textColorSecondary}>Items </span>
+            <span className={secondaryTextColor}>Items </span>
             {numNfts ?? '-'}
           </div>
         </div>
