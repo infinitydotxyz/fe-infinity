@@ -5,7 +5,7 @@ import { twMerge } from 'tailwind-merge';
 import { AButton } from '../astra/astra-button';
 import { TokenCardModal } from '../astra/token-grid/token-card-modal';
 import { BasicTokenInfo, Erc721TokenOffer } from '../astra/types';
-import { EthSymbol, EZImage, Spacer, SVG } from '../common';
+import { BlueCheck, EthSymbol, EZImage, Spacer } from '../common';
 
 interface Props {
   data: Erc721TokenOffer;
@@ -71,7 +71,7 @@ export const GridCard = ({ data, onClick, selected, isSelectable }: Props): JSX.
         <div className={twMerge(textColor, 'mt-1 mb-3 px-2')}>
           <div className="flex items-center space-x-1">
             <div className="truncate text-xs">{title}</div>
-            {hasBlueCheck ? <SVG.blueCheck className={'h-3 w-3'} /> : ''}
+            {hasBlueCheck ? <BlueCheck className={'h-3 w-3'} /> : ''}
           </div>
 
           <div className="flex items-center">

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Checkbox, EZImage, ScrollLoader, Spacer, SVG } from 'src/components/common';
+import { BlueCheck, Checkbox, EZImage, ScrollLoader, Spacer } from 'src/components/common';
 import { GridCard } from 'src/components/common/card';
 import { hoverColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
@@ -148,7 +148,7 @@ const GridItem = ({ data, onClick, selected, isSelectable }: Props2): JSX.Elemen
         <div className={textColor}>
           <div className="flex items-center">
             <div className=" text-sm truncate flex-1 mr-2">{title}</div>
-            {hasBlueCheck ? <SVG.blueCheck className={'h-5 w-5'} /> : ''}
+            {hasBlueCheck ? <BlueCheck className={'h-5 w-5'} /> : ''}
           </div>
 
           <div className="truncate text-lg font-bold">{tokenId}</div>

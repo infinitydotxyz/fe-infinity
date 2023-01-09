@@ -11,7 +11,7 @@ export const AstraCartButton = () => {
   return (
     <AButton
       onClick={() => setShowCart(!showCart)}
-      className={twMerge('relative py-2.5', showCart ? brandTextColor : '')}
+      className={twMerge('relative py-2.5', showCart || numItems > 0 ? brandTextColor : '')}
     >
       {numItems > 0 ? (
         <>

@@ -255,6 +255,7 @@ export const AstraCart = ({
 
       <div className="m-6 flex flex-col">
         <AButton
+          className="rounded-md"
           primary={true}
           disabled={
             !user || chainId !== '1' || (tokens.length === 0 && collections.length === 0 && orders.length === 0)
