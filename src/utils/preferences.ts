@@ -1,10 +1,9 @@
 export class Preferences {
   static darkMode = (): boolean => {
-    return false;
-    // const pref = Preferences.getString('darkMode');
+    const pref = Preferences.getString('darkMode');
 
-    // // darkMode is the default, so check both states
-    // return !pref || pref === 'true';
+    // darkMode is the default, so check both states
+    return !pref || pref === 'true';
   };
 
   static setDarkMode = (flag: boolean) => {
