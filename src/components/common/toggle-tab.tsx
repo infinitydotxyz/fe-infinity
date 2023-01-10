@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
-import { bgColor, inverseBgColor, secondaryBgColor, textColor, inverseTextColor } from 'src/utils/ui-constants';
+import { useEffect, useState } from 'react';
+import { bgColor, primaryBtnBgColorText, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 interface Props {
@@ -37,16 +37,16 @@ export const useToggleTab = (options: string[], selectedOption: string) => {
 export const ToggleTab = ({ options, onChange, selected, className = '', small = false }: Props) => {
   return (
     <div className={`flex ${className}`}>
-      <div className={twMerge('cursor-pointer flex gap-1 rounded-full items-center p-0.5', secondaryBgColor)}>
+      <div className={twMerge('cursor-pointer flex gap-1 rounded-xl items-center p-0.5')}>
         {options.map((option: string) => {
           return (
             <div
               key={option}
               className={twMerge(
                 small ? 'min-w-[110px]' : 'min-w-[140px]',
-                'select-none flex text-md items-center justify-center  text-center whitespace-nowrap font-medium rounded-full',
-                selected === option ? twMerge(inverseBgColor, inverseTextColor) : twMerge(bgColor, textColor),
-                'py-1 px-6'
+                'select-none flex text-md items-center justify-center  text-center whitespace-nowrap font-medium rounded-lg',
+                selected === option ? twMerge(primaryBtnBgColorText) : twMerge(bgColor, textColor),
+                'py-2 px-6'
               )}
               onClick={() => {
                 if (option !== selected) {

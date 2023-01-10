@@ -1,7 +1,13 @@
 import React, { ReactNode } from 'react';
 import { BsGrid, BsList } from 'react-icons/bs';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
-import { activeColor, hoverColor, borderColor, primaryBtnBgColorTransition, textColor } from 'src/utils/ui-constants';
+import {
+  activeColor,
+  hoverColor,
+  borderColor,
+  primaryBtnBgColorTextTransition,
+  textColor
+} from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 interface Props {
@@ -37,7 +43,7 @@ export const AButton = ({
       className={twMerge(
         small ? 'text-sm px-2 py-0.5' : 'px-2.5 py-1.5',
         'rounded-xl',
-        primary ? primaryBtnBgColorTransition : '',
+        primary ? primaryBtnBgColorTextTransition : '',
         className
       )}
       onClick={onClick}

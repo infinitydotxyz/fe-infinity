@@ -154,13 +154,13 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
   const floorPrice = periodStat?.floorPrice ?? 0;
 
   return (
-    <div className={twMerge(borderColor, 'border-b py-4 flex items-center font-heading')}>
+    <div className={twMerge(borderColor, 'border-b py-4 flex items-center')}>
       <div
-        className="grid gap-4 justify-between items-center w-full"
-        style={{ gridTemplateColumns: 'minmax(0, 2fr) repeat(auto-fit, minmax(0, 1fr))' }}
+        className="grid gap-2 justify-between items-center w-full"
+        style={{ gridTemplateColumns: 'minmax(0, 4fr) repeat(auto-fit, minmax(0, 1fr))' }}
       >
-        <div className="flex items-center font-bold ">
-          <div className="text-lg mr-4 min-w-[32px] text-right font-heading">{index + 1}</div>
+        <div className="flex items-center font-bold font-heading">
+          <div className="text-lg mr-4 min-w-[40px] text-right">{index + 1}</div>
 
           <NextLink href={`/collection/${collection?.slug}/items`}>
             <EZImage className="w-16 h-16 rounded-2xl overflow-clip" src={collection?.metadata?.profileImage} />
@@ -174,22 +174,22 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
 
         {isDesktop ? (
           <>
-            <div className="w-1/9 max-w-[80px] min-w-[80px]">
-              <div className="text-sm font-bold   flex items-center">Sales</div>
+            <div className="">
+              <div className="text-sm font-bold flex items-center">Sales</div>
               <div>{formatNumber(periodStat?.numSales)}</div>
             </div>
           </>
         ) : null}
 
-        <div className="w-1/9 max-w-[80px] min-w-[80px]">
-          <div className="text-sm font-bold  flex items-center">Volume</div>
+        <div className="">
+          <div className="text-sm font-bold flex items-center">Volume</div>
           <div>
             <EthPrice label={`${periodStat?.salesVolume ? nFormatter(periodStat?.salesVolume) : '-'}`} />
           </div>
         </div>
 
-        <div className="w-1/9 max-w-[80px] min-w-[80px]">
-          <div className="text-sm font-bold  flex items-center">Floor Price</div>
+        <div className="">
+          <div className="text-sm font-bold flex items-center">Floor Price</div>
           <div>
             <EthPrice
               label={
@@ -205,12 +205,12 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
 
         {isDesktop ? (
           <>
-            <div className="w-1/9 max-w-[80px] min-w-[80px]">
+            <div className="">
               <div className="text-sm font-bold ">Owners</div>
               <div>{nFormatter(periodStat?.ownerCount ?? 0)}</div>
             </div>
 
-            <div className="w-1/9 max-w-[80px] min-w-[80px]">
+            <div className="">
               <div className=" text-sm font-bold ">Tokens</div>
               <div>{nFormatter(periodStat?.tokenCount ?? 0)}</div>
             </div>
