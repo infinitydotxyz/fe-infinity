@@ -1,5 +1,4 @@
 import { Collection, CollectionPeriodStatsContent, Erc721Collection } from '@infinityxyz/lib-frontend/types/core';
-import { useRouter } from 'next/router';
 import { parse } from 'query-string';
 import { useEffect, useState } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
@@ -11,14 +10,13 @@ import {
   EthPrice,
   EZImage,
   NextLink,
-  ScrollLoader,
   Spinner,
   ToggleTab,
   useToggleTab
 } from 'src/components/common';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import useScreenSize from 'src/hooks/useScreenSize';
-import { apiGet, formatNumber, ITEMS_PER_PAGE, nFormatter } from 'src/utils';
+import { apiGet, formatNumber, nFormatter } from 'src/utils';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { borderColor, iconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
@@ -28,12 +26,10 @@ import { twMerge } from 'tailwind-merge';
 const DEFAULT_TAB = '1 day';
 
 const TrendingPage = () => {
-  const { pathname, query, push } = useRouter();
-  const [queryBy, setQueryBy] = useState('by_sales_volume');
+  const queryBy = 'by_sales_volume';
   const [data, setData] = useState<Collection[]>([]);
   const { options, onChange, selected } = useToggleTab(['1 day', '7 days', '30 days'], DEFAULT_TAB);
   const [period, setPeriod] = useState('daily');
-  const [offset, setOffset] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const isMounted = useIsMounted();
   const { isCollSelected, isCollSelectable, toggleCollSelection } = useDashboardContext();
@@ -41,7 +37,6 @@ const TrendingPage = () => {
   useEffect(() => {
     const parsedQs = parse(window?.location?.search); // don't use useRouter-query as it's undefined initially.
     onChangeToggleTab(parsedQs.tab ? `${parsedQs.tab}` : DEFAULT_TAB);
-    onClickQueryBy(parsedQs.queryBy ? `${parsedQs.queryBy}` : 'by_sales_volume', `${parsedQs.tab ?? ''}`);
   }, []);
 
   const fetchData = async (refresh = false) => {
@@ -52,7 +47,7 @@ const TrendingPage = () => {
     const { result } = await apiGet('/collections/stats', {
       query: {
         period,
-        queryBy: queryBy // 'by_avg_price' // 'by_sales_volume'
+        queryBy: queryBy
       }
     });
 
@@ -68,27 +63,12 @@ const TrendingPage = () => {
           setData(newData);
         }
       }
-      setOffset(refresh ? 0 : offset + ITEMS_PER_PAGE);
     }
   };
 
   useEffect(() => {
     fetchData(true);
   }, [queryBy, period]);
-
-  const onClickQueryBy = (val: string, setTab = '') => {
-    if (val !== queryBy) {
-      setQueryBy(val);
-      push(
-        {
-          pathname,
-          query: { ...query, tab: (setTab ? setTab : query?.tab) || DEFAULT_TAB, queryBy: val }
-        },
-        undefined,
-        { shallow: true }
-      );
-    }
-  };
 
   const onChangeToggleTab = (value: string) => {
     onChange(value);
@@ -142,8 +122,6 @@ const TrendingPage = () => {
             <Spinner />
           </CenterFixed>
         )}
-
-        <ScrollLoader onFetchMore={() => fetchData()} />
       </div>
     </APageBox>
   );
