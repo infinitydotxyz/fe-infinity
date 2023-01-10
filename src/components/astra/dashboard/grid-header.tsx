@@ -50,10 +50,10 @@ export const GridHeader = ({
       {expanded && (
         <>
           <div className="flex flex-col space-y-3">
-            <div className="flex w-full items-center">
+            <div className="flex w-full items-center mt-2">
               <EZImage
                 src={avatarUrl}
-                className="mr-4 h-14 w-14 rounded-xl cursor-pointer hover:scale-90 duration-100"
+                className="mr-4 h-14 w-14 rounded-lg cursor-pointer hover:scale-90 duration-100"
                 onClick={() => window.open(collection?.metadata?.links?.external)}
               />
               <div className="flex w-full items-center space-x-2">
@@ -66,7 +66,9 @@ export const GridHeader = ({
                     <ClipboardButton textToCopy={collection?.address ?? ''} className={twMerge(smallIconButtonStyle)} />
                   </div>
                 </div>
+
                 <Spacer />
+
                 <AOutlineButton
                   className={hoverColor}
                   onClick={() => window.open(getChainScannerBase(chainId) + '/address/' + collection?.address)}
