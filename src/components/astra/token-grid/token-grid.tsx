@@ -94,7 +94,7 @@ export const TokenGrid = ({
   return (
     <div className={twMerge('h-full w-full', className)}>
       {contents}
-      <div className="h-1/3" />
+      <div className="h-1/3 mb-3" />
     </div>
   );
 };
