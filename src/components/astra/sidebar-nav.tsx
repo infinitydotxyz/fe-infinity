@@ -21,7 +21,7 @@ export const SidebarNav = () => {
         borderColor
       )}
     >
-      <NextLink href="/">
+      <NextLink href="/trending">
         {theme === 'dark' ? (
           <SVG.miniLogoDark className="shrink-0 h-9 w-9" />
         ) : (

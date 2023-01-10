@@ -182,8 +182,8 @@ export const DashboardContextProvider = ({ children }: Props) => {
     } else {
       console.log('handleTokenCheckout');
       const url = typeof window !== 'undefined' ? window.location.href : '';
-      const isOfferCart = getCartType(url) === CART_TYPE.BID;
-      const isListingCart = getCartType(url) === CART_TYPE.LIST;
+      const isBuyCart = getCartType(url) === CART_TYPE.BUY;
+      const isSellCart = getCartType(url) === CART_TYPE.SELL;
       const isSendCart = getCartType(url) === CART_TYPE.SEND;
 
       if (!isSendCart) {
@@ -193,9 +193,9 @@ export const DashboardContextProvider = ({ children }: Props) => {
         let orderNonce = await fetchOrderNonce(user.address);
         for (const token of tokens) {
           let order;
-          if (isOfferCart) {
+          if (isBuyCart) {
             order = await tokenToOBOrder(token, orderNonce, false);
-          } else if (isListingCart) {
+          } else if (isSellCart) {
             order = await tokenToOBOrder(token, orderNonce, true);
           }
           orderNonce += 1;

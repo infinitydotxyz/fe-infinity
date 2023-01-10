@@ -66,8 +66,8 @@ export const toChecksumAddress = (address?: string): string => {
 };
 
 export enum CART_TYPE {
-  BID = 'bid',
-  LIST = 'list',
+  BUY = 'buy',
+  SELL = 'sell',
   SEND = 'send',
   CANCEL = 'cancel',
   NONE = 'none'
@@ -75,19 +75,20 @@ export enum CART_TYPE {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getCartType = (url: string): CART_TYPE => {
+  const isTrending = url.includes('trending');
   const isCollection = url.includes('collection');
   const isProfile = url.includes('profile');
   const isItems = url.includes('items');
   const isSend = url.includes('send');
   const isOrders = url.includes('orders');
-  const isOfferCart = isCollection && isItems;
-  const isListingCart = isProfile && isItems;
+  const isBuyCart = (isCollection && isItems) || isTrending;
+  const isSellCart = isProfile && isItems;
   const isSendCart = isProfile && isSend;
   const isCancelCart = isProfile && isOrders;
-  if (isOfferCart) {
-    return CART_TYPE.BID;
-  } else if (isListingCart) {
-    return CART_TYPE.LIST;
+  if (isBuyCart) {
+    return CART_TYPE.BUY;
+  } else if (isSellCart) {
+    return CART_TYPE.SELL;
   } else if (isSendCart) {
     return CART_TYPE.SEND;
   } else if (isCancelCart) {
