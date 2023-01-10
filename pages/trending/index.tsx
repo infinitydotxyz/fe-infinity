@@ -226,7 +226,7 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
         >
           <AButton
             primary
-            className="px-9 py-3"
+            className="px-9 py-3 rounded-lg"
             onClick={() => {
               if (isCollSelectable(collection as Erc721Collection)) {
                 onClickBuy(collection as Erc721Collection);
