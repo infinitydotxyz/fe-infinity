@@ -4,7 +4,6 @@ import { AiOutlineSearch } from 'react-icons/ai';
 import {
   borderColor,
   brandTextColor,
-  cardColor,
   hoverColor,
   secondaryBgColor,
   secondaryTextColor,
@@ -135,7 +134,7 @@ const CollectionTraits = ({ traits, onChange, onClearAll }: Props) => {
 
   return (
     <div className="w-full h-full">
-      <div className={twMerge('border-b-[1px] pb-3', borderColor)}>
+      <div className={twMerge('border-b-[1px] px-2 py-4', borderColor)}>
         <TextInputBox
           type="text"
           value={searchText}
@@ -149,7 +148,7 @@ const CollectionTraits = ({ traits, onChange, onClearAll }: Props) => {
         ></TextInputBox>
       </div>
       <div className={twMerge('h-full flex border-b-[1px]', borderColor)}>
-        <div className={twMerge('w-1/3 border-r-[1px] overflow-y-scroll text-sm', cardColor, borderColor)}>
+        <div className={twMerge('w-1/3 border-r-[1px] overflow-y-scroll text-sm px-2', secondaryBgColor, borderColor)}>
           {traitTypeAndNumValues?.map((item) => {
             return (
               <div
@@ -174,7 +173,7 @@ const CollectionTraits = ({ traits, onChange, onClearAll }: Props) => {
         </div>
       </div>
       <div
-        className={twMerge('float-left mt-4 cursor-pointer text-sm', brandTextColor)}
+        className={twMerge('float-left px-4 py-3 cursor-pointer text-sm', brandTextColor)}
         onClick={() => {
           onClearAll();
           setTypeValueMap({});

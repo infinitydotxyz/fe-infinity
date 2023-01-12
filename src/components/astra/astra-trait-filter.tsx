@@ -36,10 +36,10 @@ export const ATraitFilter: React.FC = () => {
             </ACustomMenuButton>
           </span>
 
-          <ACustomMenuItems open={open} innerClassName="w-[580px] border-0" alignMenuRight={true}>
+          <ACustomMenuItems open={open} innerClassName="w-[580px] border-0 px-0 py-0" alignMenuRight={true}>
             {!collectionAttributes && <Spinner />}
             {collectionAttributes && (
-              <div className="h-[440px]">
+              <div className="h-[400px]">
                 {/* <TraitSelection
                   traits={collectionAttributes}
                   collectionAddress={collection?.address}
