@@ -3,11 +3,12 @@ import { useEffect, useState } from 'react';
 import { AiOutlineSearch } from 'react-icons/ai';
 import {
   borderColor,
+  brandTextColor,
   cardColor,
   hoverColor,
+  secondaryBgColor,
   secondaryTextColor,
-  smallIconButtonStyle,
-  textColor
+  smallIconButtonStyle
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { Checkbox, TextInputBox } from '../common';
@@ -156,7 +157,7 @@ const CollectionTraits = ({ traits, onChange, onClearAll }: Props) => {
                   'flex cursor-pointer rounded-lg justify-between py-2 px-2',
                   hoverColor,
                   secondaryTextColor,
-                  selectedTraitType === item.name && twMerge('font-bold', textColor)
+                  selectedTraitType === item.name && twMerge(brandTextColor)
                 )}
                 onClick={() => {
                   setSelectedTraitType(item.name);
@@ -173,7 +174,7 @@ const CollectionTraits = ({ traits, onChange, onClearAll }: Props) => {
         </div>
       </div>
       <div
-        className="float-left py-3 px-5 text-blue-500 cursor-pointer"
+        className={twMerge('float-left mt-4 cursor-pointer text-sm', brandTextColor)}
         onClick={() => {
           onClearAll();
           setTypeValueMap({});

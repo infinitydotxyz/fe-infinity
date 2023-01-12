@@ -1,7 +1,15 @@
 import { Menu, Transition } from '@headlessui/react';
 import { ReactElement, ReactNode } from 'react';
 import { RxCaretDown } from 'react-icons/rx';
-import { bgColor, hoverColor, borderColor, smallIconButtonStyle, textColor } from 'src/utils/ui-constants';
+import {
+  bgColor,
+  borderColor,
+  dropShadow,
+  hoverColor,
+  secondaryTextColor,
+  smallIconButtonStyle,
+  textColor
+} from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { Divider } from '../common';
 import { AOutlineButton, ATextButton } from './astra-button';
@@ -20,7 +28,7 @@ interface DropdownBtnProps {
 export const ADropdownButton = ({ children, isMenuOpen }: DropdownBtnProps) => {
   return (
     <div className="flex items-center gap-1 py-1 text-sm">
-      <div className="whitespace-nowrap">{children}</div>
+      <div className={twMerge('whitespace-nowrap font-medium', secondaryTextColor)}>{children}</div>
       <RxCaretDown
         className={smallIconButtonStyle}
         style={{
@@ -144,7 +152,8 @@ export const ACustomMenuItems = ({ children, open, alignMenuRight, innerClassNam
           className={twMerge(
             bgColor,
             borderColor,
-            'absolute mt-4 px-2 py-4 w-56 rounded-xl border shadow-dropdown outline-none',
+            dropShadow,
+            'absolute mt-4 px-2 py-4 w-56 rounded-xl border outline-none',
             alignMenuRight ? 'right-0' : '',
             innerClassName
           )}

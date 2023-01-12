@@ -45,3 +45,4 @@ export const hoverColor = `dark:hover:bg-gray-200 dark:hover:bg-opacity-10 hover
 export const activeColor =
   'dark:active:bg-gray-200 dark:active:bg-opacity-10 active:bg-gray-300 active:bg-opacity-50 active:text-brand-primary dark:active:text-brand-primary';
 export const selectionBorder = `border-[1px] ${brandBorderColor}`;
+export const dropShadow = 'shadow-lightDropdown dark:shadow-darkDropdown';

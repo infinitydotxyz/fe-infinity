@@ -1,21 +1,16 @@
 import { Menu } from '@headlessui/react';
 import { useState } from 'react';
+import { brandTextColor } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
 import { TextInputBox } from '../common';
 import { useOrderbook } from '../orderbook/OrderbookContext';
-import { AButton, AOutlineButton } from './astra-button';
+import { AOutlineButton } from './astra-button';
 import { ACustomMenuButton, ACustomMenuContents, ACustomMenuItems, ADropdownButton } from './astra-dropdown';
 
 export const APriceFilter: React.FC = () => {
   const { updateFilters, filters } = useOrderbook();
   const [minPriceVal, setMinPriceVal] = useState(filters.minPrice || '');
   const [maxPriceVal, setMaxPriceVal] = useState(filters.maxPrice || '');
-
-  const onSave = () => {
-    updateFilters([
-      { name: 'minPrice', value: minPriceVal },
-      { name: 'maxPrice', value: maxPriceVal }
-    ]);
-  };
 
   const onClear = () => {
     setMinPriceVal('');
@@ -63,11 +58,8 @@ export const APriceFilter: React.FC = () => {
                 }}
               />
             </div>
-            <Menu.Button onClick={onClear} className="mt-4 ml-1">
+            <Menu.Button onClick={onClear} className={twMerge('mt-4 ml-1 text-sm', brandTextColor)}>
               Clear
-            </Menu.Button>
-            <Menu.Button onClick={onSave} className="mt-2 mr-1 float-right">
-              <AButton primary={true}>Apply</AButton>
             </Menu.Button>
           </ACustomMenuItems>
         </ACustomMenuContents>

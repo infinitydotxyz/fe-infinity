@@ -117,8 +117,9 @@ module.exports = {
     ttip: '0 2px 18px rgba(0, 0, 0, 0.12)',
     graph: '0 15px 30px -20px rgba(0, 0, 0, 0.22)',
     drawer: '0 0 68px rgba(0, 0, 0, 0.3)',
-    dropdown:
-      '0 0 20px 4px rgb(154 161 177 / 15%), 0 4px 80px -8px rgb(36 40 47 / 25%), 0 4px 4px -2px rgb(91 94 105 / 15%)'
+    lightDropdown:
+      '0 0 20px 4px rgb(154 161 177 / 15%), 0 4px 80px -8px rgb(36 40 47 / 25%), 0 4px 4px -2px rgb(91 94 105 / 15%)',
+    darkDropdown: '0 1px 3px 0 hsla(0,0%,100%,.1),0 1px 2px -1px hsla(0,0%,100%,.1)'
   },
   colors: {
     background: 'transparent',
@@ -135,7 +136,7 @@ module.exports = {
     },
     dark: {
       bg: '#141416',
-      body: '#fbfbfb',
+      body: '#dcdcdc',
       disabled: '#777E90',
       border: '#353945',
       card: '#23262f'
