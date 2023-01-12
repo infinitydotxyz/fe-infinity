@@ -3,11 +3,11 @@ import { CollectionAttributes } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { RxCaretDown } from 'react-icons/rx';
-import { useFilterContext } from 'src/utils/context/FilterContext';
 import { cardColor, hoverColor, smallIconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { Checkbox, TextInputBox } from '../common';
 import { DisclosureData } from '../common/disclosure';
+import { useOrderbook } from '../orderbook/OrderbookContext';
 
 type ValueMapItem = {
   [k: string]: boolean;
@@ -25,29 +25,74 @@ interface Props {
 }
 
 const CollectionTraits = ({ traits, onChange, onClearAll }: Props) => {
-  const { filterState } = useFilterContext();
+  const { filters } = useOrderbook();
   const [typeValueMap, setTypeValueMap] = useState<TypeValueMap>({});
   const [selectedTraitType, setSelectedTraitType] = useState<string>('All');
+  const [disclosureData, setDisclosureData] = useState<DisclosureData[]>([]);
   const [searchText, setSearchText] = useState<string>('');
 
-  const allDisclosureData: DisclosureData[] = [];
-  Object.keys(traits)?.map((item) => {
-    const title = item;
+  const traitTypeAndNumValues = [];
+  let totalNumTraitValues = 0;
+  for (const traitName in traits) {
+    totalNumTraitValues += Object.keys(traits[traitName].values).length;
+    traitTypeAndNumValues.push({
+      name: traitName,
+      numValues: Object.keys(traits[traitName].values).length
+    });
+  }
+  traitTypeAndNumValues.unshift({
+    name: 'All',
+    numValues: totalNumTraitValues
+  });
+
+  useEffect(() => {
+    // when filterState changed (somewhere else) => parse it and set to TypeValueMap for checkboxes' states
+    const traitTypes = filters?.traitTypes || [];
+    const traitValues = filters?.traitValues || [];
+    const map: TypeValueMap = {};
+    for (let i = 0; i < traitTypes.length; i++) {
+      const type = traitTypes[i];
+      if (!type) {
+        continue;
+      }
+      const values = traitValues[i].split('|');
+      map[type] = map[type] || {};
+      for (const val of values) {
+        if (!val) {
+          continue;
+        }
+        map[type][val] = true;
+      }
+    }
+    setTypeValueMap(map);
+  }, [filters]);
+
+  useEffect(() => {
+    if (selectedTraitType === 'All') {
+      setDisclosureData(Array.from(allDisclosureData.values()));
+    } else {
+      setDisclosureData([allDisclosureData.get(selectedTraitType) ?? { title: '', content: <></> }]);
+    }
+  }, [selectedTraitType]);
+
+  const allDisclosureData: Map<string, DisclosureData> = new Map();
+  Object.keys(traits)?.map((traitType) => {
+    const title = traitType;
     const content = (
       <div className="flex flex-col">
-        {Object.entries(traits[item].values)?.map((val) => {
+        {Object.entries(traits[traitType].values)?.map((val) => {
           const key = val[0];
           const value = val[1];
           return (
             <div className="flex border-b-[1px] py-2">
               <Checkbox
-                checked={typeValueMap[item]?.[key]}
+                checked={typeValueMap[traitType]?.[key]}
                 onChange={(checked) => {
                   const map = { ...typeValueMap };
-                  if (!map[item]) {
-                    map[item] = {};
+                  if (!map[traitType]) {
+                    map[traitType] = {};
                   }
-                  map[item][key] = checked;
+                  map[traitType][key] = checked;
                   setTypeValueMap(map);
                   const traitTypes = [];
                   const traitValues = [];
@@ -79,102 +124,7 @@ const CollectionTraits = ({ traits, onChange, onClearAll }: Props) => {
       </div>
     );
     const discDataItem: DisclosureData = { title, content };
-    allDisclosureData.push(discDataItem);
-  });
-
-  //   const getDisclosureData = (traitType: string) => {
-  //     if (traitType === 'All') {
-  //       return allDisclosureData;
-  //     }
-
-  //     const retData: DisclosureData[] = [];
-  //     const item = traits[traitType];
-  //     const content = (
-  //       <div className="flex flex-col">
-  //         {Object.entries(item.values)?.map((val) => {
-  //           const key = val[0];
-  //           const value = val[1];
-  //           return (
-  //             <div className="flex border-b-[1px] py-2">
-  //               <Checkbox
-  //                 checked={typeValueMap[traitType]?.[key]}
-  //                 onChange={(checked) => {
-  //                   const map = { ...typeValueMap };
-  //                   if (!map[traitType]) {
-  //                     map[traitType] = {};
-  //                   }
-  //                   map[traitType][key] = checked;
-  //                   setTypeValueMap(map);
-  //                   const traitTypes = [];
-  //                   const traitValues = [];
-  //                   for (const type in map) {
-  //                     const values = [];
-  //                     for (const val in map[type]) {
-  //                       if (map[type][val]) {
-  //                         values.push(val);
-  //                       }
-  //                     }
-  //                     if (values.length > 0) {
-  //                       traitTypes.push(type);
-  //                       traitValues.push(values.join('|'));
-  //                     }
-  //                   }
-  //                   onChange(traitTypes, traitValues);
-  //                 }}
-  //               />
-  //               <div>
-  //                 <div className="truncate">{key}</div>
-  //                 <div className="flex space-x-2">
-  //                   <div className="truncate">{value.count}</div>
-  //                   <div className="truncate">({value.percent}%)</div>
-  //                 </div>
-  //               </div>
-  //             </div>
-  //           );
-  //         })}
-  //       </div>
-  //     );
-  //     const discDataItem: DisclosureData = { title: traitType, content };
-  //     retData.push(discDataItem);
-  //     return retData;
-  //   };
-
-  // const [disclosureData, setDisclosureData] = useState<DisclosureData[]>(getDisclosureData('All'));
-
-  useEffect(() => {
-    // when filterState changed (somewhere else) => parse it and set to TypeValueMap for checkboxes' states
-    const traitTypes = filterState?.traitTypes || [];
-    const traitValues = filterState?.traitValues || [];
-    const map: TypeValueMap = {};
-    for (let i = 0; i < traitTypes.length; i++) {
-      const type = traitTypes[i];
-      if (!type) {
-        continue;
-      }
-      const values = traitValues[i].split('|');
-      map[type] = map[type] || {};
-      for (const val of values) {
-        if (!val) {
-          continue;
-        }
-        map[type][val] = true;
-      }
-    }
-    setTypeValueMap(map);
-  }, [filterState]);
-
-  const traitTypeAndNumValues = [];
-  let totalNumTraitValues = 0;
-  for (const traitName in traits) {
-    totalNumTraitValues += Object.keys(traits[traitName].values).length;
-    traitTypeAndNumValues.push({
-      name: traitName,
-      numValues: Object.keys(traits[traitName].values).length
-    });
-  }
-  traitTypeAndNumValues.unshift({
-    name: 'All',
-    numValues: totalNumTraitValues
+    allDisclosureData.set(traitType, discDataItem);
   });
 
   return (
@@ -214,7 +164,7 @@ const CollectionTraits = ({ traits, onChange, onClearAll }: Props) => {
         </div>
         <div className="w-2/3 ml-2 overflow-y-scroll">
           <div className="w-full space-y-1">
-            {allDisclosureData.map((item) => {
+            {disclosureData.map((item) => {
               return (
                 <Disclosure defaultOpen>
                   {({ open }) => (

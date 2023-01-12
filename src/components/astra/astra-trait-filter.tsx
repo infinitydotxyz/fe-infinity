@@ -30,7 +30,7 @@ export const ATraitFilter: React.FC = () => {
         <ACustomMenuContents>
           <span>
             <ACustomMenuButton>
-              <AOutlineButton tooltip="Click to filter by trait">
+              <AOutlineButton tooltip="Filter by traits">
                 <ADropdownButton isMenuOpen={open}>Traits</ADropdownButton>
               </AOutlineButton>
             </ACustomMenuButton>

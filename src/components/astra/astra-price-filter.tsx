@@ -32,7 +32,7 @@ export const APriceFilter: React.FC = () => {
         <ACustomMenuContents>
           <span>
             <ACustomMenuButton>
-              <AOutlineButton tooltip="Click to open price filter">
+              <AOutlineButton tooltip="Filter by price">
                 <ADropdownButton isMenuOpen={open}>Price</ADropdownButton>
               </AOutlineButton>
             </ACustomMenuButton>

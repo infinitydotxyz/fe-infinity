@@ -148,7 +148,7 @@ module.exports = {
       border: '#e6e8ec'
     },
     brand: {
-      primary: '#FF7518',
+      primary: '#5c5cf4',
       twitter: '#1C9BEF',
       discord: '#5765F2'
     }
