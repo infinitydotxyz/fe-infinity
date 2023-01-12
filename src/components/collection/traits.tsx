@@ -2,6 +2,7 @@ import { CollectionAttributes } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { AiOutlineSearch } from 'react-icons/ai';
 import {
+  bgColor,
   borderColor,
   brandTextColor,
   hoverColor,
@@ -168,7 +169,7 @@ const CollectionTraits = ({ traits, onChange, onClearAll }: Props) => {
             );
           })}
         </div>
-        <div className="w-2/3 ml-2 overflow-y-scroll">
+        <div className={twMerge('w-2/3 overflow-y-scroll', bgColor)}>
           <ADisclosure data={disclosureData} />
         </div>
       </div>

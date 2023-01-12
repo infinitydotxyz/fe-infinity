@@ -2,10 +2,11 @@ import { Menu, Transition } from '@headlessui/react';
 import { ReactElement, ReactNode } from 'react';
 import { RxCaretDown } from 'react-icons/rx';
 import {
-  bgColor,
   borderColor,
   dropShadow,
   hoverColor,
+  hoverColorBrandText,
+  secondaryBgColor,
   secondaryTextColor,
   smallIconButtonStyle,
   textColor
@@ -27,10 +28,10 @@ interface DropdownBtnProps {
 
 export const ADropdownButton = ({ children, isMenuOpen }: DropdownBtnProps) => {
   return (
-    <div className="flex items-center gap-1 py-1 text-sm">
-      <div className={twMerge('whitespace-nowrap font-medium', secondaryTextColor)}>{children}</div>
+    <div className={twMerge('flex items-center gap-1 py-1 text-sm', secondaryTextColor, hoverColorBrandText)}>
+      <div className={twMerge('whitespace-nowrap font-medium')}>{children}</div>
       <RxCaretDown
-        className={smallIconButtonStyle}
+        className={twMerge(smallIconButtonStyle)}
         style={{
           transition: 'all 0.1s ease',
           transform: `rotate(${!isMenuOpen ? 0 : '0.5turn'})`
@@ -150,7 +151,7 @@ export const ACustomMenuItems = ({ children, open, alignMenuRight, innerClassNam
       >
         <Menu.Items
           className={twMerge(
-            bgColor,
+            secondaryBgColor,
             borderColor,
             dropShadow,
             'absolute mt-4 px-2 py-4 w-56 rounded-xl border outline-none',
@@ -159,7 +160,11 @@ export const ACustomMenuItems = ({ children, open, alignMenuRight, innerClassNam
           )}
         >
           <div
-            className={twMerge('h-4 w-4 rotate-45 absolute top-[-6px]', bgColor, alignMenuRight ? 'right-8' : 'left-8')}
+            className={twMerge(
+              'h-4 w-4 rotate-45 absolute top-[-6px]',
+              secondaryBgColor,
+              alignMenuRight ? 'right-8' : 'left-8'
+            )}
           ></div>
           {children}
         </Menu.Items>
