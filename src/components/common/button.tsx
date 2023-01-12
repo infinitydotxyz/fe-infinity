@@ -4,7 +4,7 @@ import {
   activeColor,
   hoverColor,
   borderColor,
-  primaryBtnBgColorTextTransition,
+  primaryBtnWithBgColorTextTransition,
   textColor
 } from '../../utils/ui-constants';
 
@@ -27,7 +27,7 @@ const classes = {
   variant: {
     plain: '',
     ghost: 'rounded-xl', // hover fill needs to be rounded
-    primary: twMerge(primaryBtnBgColorTextTransition, 'rounded-xl'),
+    primary: twMerge(primaryBtnWithBgColorTextTransition, 'rounded-xl'),
     gray: twMerge(hoverColor, 'border-none rounded-xl bg-gray-100'),
     outline: twMerge(borderColor, hoverColor, textColor, 'border rounded-xl'),
     outlineWhite: twMerge(borderColor, hoverColor, 'border rounded-xl'),

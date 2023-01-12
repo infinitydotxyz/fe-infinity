@@ -5,7 +5,7 @@ import {
   activeColor,
   hoverColor,
   borderColor,
-  primaryBtnBgColorTextTransition,
+  primaryBtnWithBgColorTextTransition,
   textColor
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
@@ -43,7 +43,7 @@ export const AButton = ({
       className={twMerge(
         small ? 'text-sm px-2 py-0.5' : 'px-2.5 py-1.5',
         'rounded-xl',
-        primary ? primaryBtnBgColorTextTransition : '',
+        primary ? primaryBtnWithBgColorTextTransition : '',
         className
       )}
       onClick={onClick}

@@ -152,6 +152,9 @@ module.exports = {
       primary: '#5c5cf4',
       twitter: '#1C9BEF',
       discord: '#5765F2'
+    },
+    gray: {
+      400: '#b1b5c3'
     }
   },
   letterSpacing: {

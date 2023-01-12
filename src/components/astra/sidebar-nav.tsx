@@ -1,11 +1,13 @@
 import { useTheme } from 'next-themes';
 import { useRouter } from 'next/router';
-import { IoWalletOutline } from 'react-icons/io5';
-import { MdDarkMode, MdLightMode, MdOutlineHomeMax } from 'react-icons/md';
+import { BiGlobeAlt, BiWalletAlt } from 'react-icons/bi';
+import { HiOutlineTag } from 'react-icons/hi';
+import { MdDarkMode, MdLightMode } from 'react-icons/md';
+import { TbActivityHeartbeat, TbSend } from 'react-icons/tb';
 import { AButton, ARoundButton } from 'src/components/astra/astra-button';
 import { HelpToolTip, NextLink, Spacer, SVG } from 'src/components/common';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import { borderColor, iconButtonStyle, secondaryBgColor } from 'src/utils/ui-constants';
+import { borderColor, hoverColorBrandText, iconButtonStyle, secondaryBgColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 export const SidebarNav = () => {
@@ -29,9 +31,13 @@ export const SidebarNav = () => {
         )}
       </NextLink>
 
-      <div className="h-8" />
+      <div className="h-12" />
 
       <div className="flex flex-col space-y-4">
+        <div className="font-medium text-xs text-dark-border dark:text-dark-border tracking-wide text-center">
+          Explore
+        </div>
+
         <HelpToolTip placement="right" content={<div className="whitespace-nowrap">Trending</div>}>
           <AButton
             highlighted={router.asPath.startsWith('/trending') || router.asPath.startsWith('/?tab')}
@@ -39,47 +45,103 @@ export const SidebarNav = () => {
               router.push('/trending');
             }}
           >
-            <MdOutlineHomeMax className={iconButtonStyle} />
+            <BiGlobeAlt
+              className={twMerge(
+                iconButtonStyle,
+                hoverColorBrandText,
+                router.asPath.startsWith('/trending') || router.asPath.startsWith('/?tab')
+                  ? 'text-brand-primary'
+                  : 'text-gray-400'
+              )}
+            />
           </AButton>
         </HelpToolTip>
 
+        <div className="font-medium text-xs text-dark-border dark:text-dark-border tracking-wide text-center">
+          Wallet
+        </div>
+
         <HelpToolTip placement="right" content={<div className="whitespace-nowrap">Profile</div>}>
           <AButton
-            highlighted={router.asPath.startsWith(`/profile`)}
+            highlighted={router.asPath.startsWith(`/profile`) && router.asPath.endsWith(`/items`)}
             onClick={() => {
               router.push(`/profile/${user?.address}/items`);
             }}
           >
-            <IoWalletOutline className={iconButtonStyle} />
+            <BiWalletAlt
+              className={twMerge(
+                iconButtonStyle,
+                hoverColorBrandText,
+                router.asPath.startsWith(`/profile`) && router.asPath.endsWith('/items')
+                  ? 'text-brand-primary'
+                  : 'text-gray-400'
+              )}
+            />
           </AButton>
         </HelpToolTip>
 
-        {/* <HelpToolTip placement="right" content={<div className="whitespace-nowrap">Raffles</div>}>
+        <HelpToolTip placement="right" content={<div className="whitespace-nowrap">Orders</div>}>
           <AButton
-            highlighted={router.asPath.startsWith(`/raffles`)}
+            highlighted={router.asPath.startsWith(`/profile`) && router.asPath.endsWith(`/orders`)}
             onClick={() => {
-              router.push(`/raffles`);
+              router.push(`/profile/${user?.address}/orders`);
             }}
           >
-            <HiOutlineTicket className={iconButtonStyle} />
+            <HiOutlineTag
+              style={{ transform: 'rotate(90deg)' }}
+              className={twMerge(
+                iconButtonStyle,
+                hoverColorBrandText,
+                router.asPath.startsWith(`/profile`) && router.asPath.endsWith(`/orders`)
+                  ? 'text-brand-primary'
+                  : 'text-gray-400'
+              )}
+            />
           </AButton>
         </HelpToolTip>
 
-        <HelpToolTip placement="right" content={<div className="whitespace-nowrap">Rewards</div>}>
+        <HelpToolTip placement="right" content={<div className="whitespace-nowrap">Activity</div>}>
           <AButton
-            highlighted={router.asPath.startsWith(`/rewards`)}
+            highlighted={router.asPath.startsWith(`/profile`) && router.asPath.endsWith(`/activity`)}
             onClick={() => {
-              router.push(`/rewards`);
+              router.push(`/profile/${user?.address}/activity`);
             }}
           >
-            <RiCoinsLine className={iconButtonStyle} />
+            <TbActivityHeartbeat
+              className={twMerge(
+                iconButtonStyle,
+                hoverColorBrandText,
+                router.asPath.startsWith(`/profile`) && router.asPath.endsWith(`/activity`)
+                  ? 'text-brand-primary'
+                  : 'text-gray-400'
+              )}
+            />
           </AButton>
-        </HelpToolTip> */}
+        </HelpToolTip>
+
+        <HelpToolTip placement="right" content={<div className="whitespace-nowrap">Send</div>}>
+          <AButton
+            highlighted={router.asPath.startsWith(`/profile`) && router.asPath.endsWith(`/send`)}
+            onClick={() => {
+              router.push(`/profile/${user?.address}/send`);
+            }}
+          >
+            <TbSend
+              className={twMerge(
+                iconButtonStyle,
+                hoverColorBrandText,
+                router.asPath.startsWith(`/profile`) && router.asPath.endsWith(`/send`)
+                  ? 'text-brand-primary'
+                  : 'text-gray-400'
+              )}
+            />
+          </AButton>
+        </HelpToolTip>
       </div>
 
       <Spacer />
       <ARoundButton onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
-        {theme === 'dark' ? <MdLightMode className="h-8 w-8" /> : <MdDarkMode className="h-8 w-8" />}
+        {theme === 'dark' ? <MdLightMode className={iconButtonStyle} /> : <MdDarkMode className={iconButtonStyle} />}
       </ARoundButton>
     </div>
   );
