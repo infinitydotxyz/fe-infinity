@@ -22,10 +22,16 @@ export function ADisclosure({ data }: Props) {
             {({ open }) => (
               <>
                 <Disclosure.Button
-                  className={twMerge(cardColor, hoverColor, 'flex w-full justify-between rounded-lg p-2 text-sm')}
+                  className={twMerge(cardColor, hoverColor, 'flex w-full justify-between rounded-lg p-2 text-xs')}
                 >
                   <span>{item.title}</span>
-                  <RxCaretDown className={twMerge(`${open ? 'rotate-180 transform' : ''}`, smallIconButtonStyle)} />
+                  <RxCaretDown
+                    className={twMerge(
+                      `${open ? 'rotate-180 transform' : ''}`,
+                      smallIconButtonStyle,
+                      'text-brand-primary'
+                    )}
+                  />
                 </Disclosure.Button>
                 <Disclosure.Panel className="text-sm px-2">{item.content}</Disclosure.Panel>
               </>

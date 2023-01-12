@@ -1,12 +1,17 @@
-import { Disclosure } from '@headlessui/react';
 import { CollectionAttributes } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { AiOutlineSearch } from 'react-icons/ai';
-import { RxCaretDown } from 'react-icons/rx';
-import { cardColor, hoverColor, smallIconButtonStyle } from 'src/utils/ui-constants';
+import {
+  borderColor,
+  cardColor,
+  hoverColor,
+  secondaryTextColor,
+  smallIconButtonStyle,
+  textColor
+} from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { Checkbox, TextInputBox } from '../common';
-import { DisclosureData } from '../common/disclosure';
+import { ADisclosure, DisclosureData } from '../common/disclosure';
 import { useOrderbook } from '../orderbook/OrderbookContext';
 
 type ValueMapItem = {
@@ -84,7 +89,7 @@ const CollectionTraits = ({ traits, onChange, onClearAll }: Props) => {
           const key = val[0];
           const value = val[1];
           return (
-            <div className="flex border-b-[1px] py-2">
+            <div className={twMerge('flex border-b-[1px] py-2', borderColor)}>
               <Checkbox
                 checked={typeValueMap[traitType]?.[key]}
                 onChange={(checked) => {
@@ -113,7 +118,7 @@ const CollectionTraits = ({ traits, onChange, onClearAll }: Props) => {
               />
               <div>
                 <div className="truncate">{key}</div>
-                <div className="flex space-x-2">
+                <div className={twMerge('flex space-x-2 text-xs', secondaryTextColor)}>
                   <div className="truncate">{value.count}</div>
                   <div className="truncate">({value.percent}%)</div>
                 </div>
@@ -129,7 +134,7 @@ const CollectionTraits = ({ traits, onChange, onClearAll }: Props) => {
 
   return (
     <div className="w-full h-full">
-      <div className="border-b-[1px] pb-3">
+      <div className={twMerge('border-b-[1px] pb-3', borderColor)}>
         <TextInputBox
           type="text"
           value={searchText}
@@ -142,48 +147,29 @@ const CollectionTraits = ({ traits, onChange, onClearAll }: Props) => {
           }}
         ></TextInputBox>
       </div>
-      <div className="h-full flex border-b-[1px]">
-        <div className={twMerge('w-1/3 border-r-[1px] overflow-y-scroll text-sm', cardColor)}>
+      <div className={twMerge('h-full flex border-b-[1px]', borderColor)}>
+        <div className={twMerge('w-1/3 border-r-[1px] overflow-y-scroll text-sm', cardColor, borderColor)}>
           {traitTypeAndNumValues?.map((item) => {
             return (
               <div
                 className={twMerge(
                   'flex cursor-pointer rounded-lg justify-between py-2 px-2',
                   hoverColor,
-                  selectedTraitType === item.name && 'font-bold'
+                  secondaryTextColor,
+                  selectedTraitType === item.name && twMerge('font-bold', textColor)
                 )}
                 onClick={() => {
                   setSelectedTraitType(item.name);
                 }}
               >
                 <div className="truncate">{item.name}</div>
-                <div className="">{item.numValues}</div>
+                <div className="text-xs">{item.numValues}</div>
               </div>
             );
           })}
         </div>
         <div className="w-2/3 ml-2 overflow-y-scroll">
-          <div className="w-full space-y-1">
-            {disclosureData.map((item) => {
-              return (
-                <Disclosure defaultOpen>
-                  {({ open }) => (
-                    <>
-                      <Disclosure.Button
-                        className={twMerge(cardColor, hoverColor, 'flex w-full justify-between rounded-lg p-2 text-sm')}
-                      >
-                        <span>{item.title}</span>
-                        <RxCaretDown
-                          className={twMerge(`${open ? 'rotate-180 transform' : ''}`, smallIconButtonStyle)}
-                        />
-                      </Disclosure.Button>
-                      <Disclosure.Panel className="text-sm px-2">{item.content}</Disclosure.Panel>
-                    </>
-                  )}
-                </Disclosure>
-              );
-            })}
-          </div>
+          <ADisclosure data={disclosureData} />
         </div>
       </div>
       <div
