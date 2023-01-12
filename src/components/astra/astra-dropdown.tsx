@@ -8,8 +8,7 @@ import {
   hoverColorBrandText,
   secondaryBgColor,
   secondaryTextColor,
-  smallIconButtonStyle,
-  textColor
+  smallIconButtonStyle
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { Divider } from '../common';
@@ -87,7 +86,7 @@ export const ADropdown = ({
 
                   return (
                     <ACustomMenuItem key={idx} onClick={item.onClick}>
-                      <div className={twMerge(textColor, 'flex items-center cursor-pointer')}>
+                      <div className={twMerge(hoverColorBrandText, 'flex items-center cursor-pointer')}>
                         {item.icon && <div className={twMerge('mr-4')}>{item.icon}</div>}
                         {item.label}
                       </div>
@@ -117,7 +116,7 @@ const ACustomMenuItem = (props: Props) => {
         <div
           className={twMerge(
             'flex w-full px-4 py-4 leading-5',
-            active ? twMerge(hoverColor, ' rounded-xl') : ' ',
+            active ? twMerge(hoverColor, ' rounded-lg') : ' ',
             disabled && 'cursor-not-allowed opacity-50'
           )}
         >
@@ -154,7 +153,7 @@ export const ACustomMenuItems = ({ children, open, alignMenuRight, innerClassNam
             secondaryBgColor,
             borderColor,
             dropShadow,
-            'absolute mt-4 px-2 py-4 w-56 rounded-xl border outline-none',
+            'absolute mt-4 px-2 py-4 w-56 rounded-lg border outline-none',
             alignMenuRight ? 'right-0' : '',
             innerClassName
           )}

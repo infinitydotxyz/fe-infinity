@@ -57,6 +57,7 @@ export const ActivityList: React.FC<Props> = ({ className = '', chainId, collect
     <div className={className}>
       <div className="flex items-center justify-end">
         <AFilterPopdown
+          alignMenuRight={true}
           options={filterButtonDefaultOptions}
           filter={filter}
           onChange={(f) => {

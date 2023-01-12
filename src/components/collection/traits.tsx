@@ -142,7 +142,7 @@ const CollectionTraits = ({ traits, onChange, onClearAll }: Props) => {
           label=""
           placeholder="Search"
           icon={<AiOutlineSearch className={twMerge(smallIconButtonStyle, 'mr-3')} />}
-          className="px-4 py-2 rounded-xl"
+          className="px-4 py-2 rounded-lg"
           onChange={(value) => {
             setSearchText(value);
           }}

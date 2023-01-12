@@ -2,7 +2,7 @@ import { getAddress } from '@ethersproject/address';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { ReactNode, useEffect, useState } from 'react';
 import { MdClose } from 'react-icons/md';
-import { AButton, ATextButton } from 'src/components/astra/astra-button';
+import { AButton } from 'src/components/astra/astra-button';
 import { EZImage, TextInputBox } from 'src/components/common';
 import { CART_TYPE, getCartType, getCollectionKeyId, getDefaultOrderExpiryTime, getTokenKeyId } from 'src/utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
@@ -11,6 +11,7 @@ import {
   brandTextColor,
   extraSmallIconButtonStyle,
   inverseBgColor,
+  inverseTextColor,
   secondaryBgColor,
   secondaryTextColor,
   textColor
@@ -105,14 +106,14 @@ export const AstraCart = ({
         <div className={twMerge(secondaryBgColor, textColor, 'rounded-full h-6 w-6 text-center mr-1')}>
           {tokens.length}
         </div>
-        <ATextButton
-          className={twMerge('px-2 rounded-lg text-sm')}
+        <div
+          className={twMerge('ml-2 text-sm cursor-pointer', brandTextColor)}
           onClick={() => {
             onTokensRemove();
           }}
         >
           Clear
-        </ATextButton>
+        </div>
       </div>
     );
   }
@@ -123,14 +124,14 @@ export const AstraCart = ({
         <div className={twMerge(secondaryBgColor, textColor, 'rounded-full h-6 w-6 text-center mr-1 ')}>
           {collections.length}
         </div>
-        <ATextButton
-          className={twMerge('px-2 rounded-lg text-sm')}
+        <div
+          className={twMerge('ml-2 text-sm cursor-pointer', brandTextColor)}
           onClick={() => {
             onCollsRemove();
           }}
         >
           Clear
-        </ATextButton>
+        </div>
       </div>
     );
   }
@@ -141,14 +142,14 @@ export const AstraCart = ({
         <div className={twMerge(secondaryBgColor, textColor, 'rounded-full h-6 w-6 text-center mr-1')}>
           {orders.length}
         </div>
-        <ATextButton
-          className={twMerge('px-2 rounded-lg text-sm')}
+        <div
+          className={twMerge('ml-2 text-sm cursor-pointer', brandTextColor)}
           onClick={() => {
             onOrdersRemove();
           }}
         >
           Clear
-        </ATextButton>
+        </div>
       </div>
     );
   }
@@ -309,7 +310,7 @@ export const AstraTokenCartItem = ({ token, onRemove }: Props2) => {
         <EZImage className={twMerge('h-12 w-12 rounded-lg overflow-clip')} src={token.image} />
         <div className={twMerge('absolute top-[-5px] right-[-5px] rounded-full p-0.5 cursor-pointer', inverseBgColor)}>
           <MdClose
-            className={twMerge(extraSmallIconButtonStyle, brandTextColor)}
+            className={twMerge(extraSmallIconButtonStyle, inverseTextColor)}
             onClick={() => {
               onRemove(token);
             }}
@@ -332,7 +333,7 @@ export const AstraSendCartItem = ({ token, onRemove }: Props2) => {
         <EZImage className={twMerge('h-12 w-12 rounded-lg overflow-clip')} src={token.image} />
         <div className={twMerge('absolute top-[-5px] right-[-5px] rounded-full p-0.5 cursor-pointer', inverseBgColor)}>
           <MdClose
-            className={twMerge(extraSmallIconButtonStyle, brandTextColor)}
+            className={twMerge(extraSmallIconButtonStyle, inverseTextColor)}
             onClick={() => {
               onRemove(token);
             }}
@@ -360,7 +361,7 @@ export const AstraCollectionCartItem = ({ collection, onRemove }: Props3) => {
         <EZImage className={twMerge('h-12 w-12 rounded-lg overflow-clip')} src={collection.metadata.profileImage} />
         <div className={twMerge('absolute top-[-5px] right-[-5px] rounded-full p-0.5 cursor-pointer', inverseBgColor)}>
           <MdClose
-            className={twMerge(extraSmallIconButtonStyle, brandTextColor)}
+            className={twMerge(extraSmallIconButtonStyle, inverseTextColor)}
             onClick={() => {
               onRemove(collection);
             }}
@@ -392,7 +393,7 @@ export const AstraCancelCartItem = ({ order, onRemove }: Props4) => {
         />
         <div className={twMerge('absolute top-[-5px] right-[-5px] rounded-full p-0.5 cursor-pointer', inverseBgColor)}>
           <MdClose
-            className={twMerge(extraSmallIconButtonStyle, brandTextColor)}
+            className={twMerge(extraSmallIconButtonStyle, inverseTextColor)}
             onClick={() => {
               onRemove(order);
             }}

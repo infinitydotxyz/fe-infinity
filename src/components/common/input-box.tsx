@@ -33,7 +33,7 @@ export const InputBox = ({
 
   return (
     <TooltipWrapper show={showTooltip} tooltip={tooltip} className={isFullWidth ? 'w-full' : ''}>
-      <div className={twMerge(borderColor, 'py-2 px-3 border rounded-xl w-full flex items-center', className)}>
+      <div className={twMerge(borderColor, 'py-2 px-3 border rounded-lg w-full flex items-center', className)}>
         {icon && <span>{icon}</span>}
         <div className="w-full">
           {label && (

@@ -42,7 +42,7 @@ export const AButton = ({
       tooltip={tooltip}
       className={twMerge(
         small ? 'text-sm px-2 py-0.5' : 'px-2.5 py-1.5',
-        'rounded-xl',
+        'rounded-lg',
         primary ? primaryBtnWithBgColorTextTransition : '',
         className
       )}
@@ -176,7 +176,7 @@ export const AOutlineButton = ({
       small={small}
       tooltip={tooltip}
       disabled={disabled}
-      className={twMerge(borderColor, 'border rounded-xl', className)}
+      className={twMerge(borderColor, 'border rounded-lg', className)}
       onClick={onClick}
     >
       {children}

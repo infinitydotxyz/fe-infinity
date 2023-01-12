@@ -63,7 +63,7 @@ export function SearchInput({ expanded, query, setQuery, placeholder, data }: Pr
       className={twMerge(
         textColor,
         borderColor,
-        'border w-full px-4 rounded-xl text-center h-10 flex place-items-center'
+        'border w-full px-4 rounded-lg text-center h-10 flex place-items-center'
       )}
     >
       <div className="w-content h-content  hover:cursor-pointer" onClick={activate}>
@@ -101,7 +101,7 @@ export function SearchInput({ expanded, query, setQuery, placeholder, data }: Pr
               data.length === 0 ? 'opacity-0' : '', // without this, a thin line appears
               borderColor,
               'absolute z-20 -mx-8 top-2  w-content h-content max-h-content',
-              '  py-2 border rounded-2xl flex flex-col   shadow-lg'
+              'py-2 border rounded-2xl flex flex-col shadow-lg'
             )}
           >
             {data.map((item) => {

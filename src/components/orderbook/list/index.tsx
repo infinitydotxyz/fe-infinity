@@ -1,6 +1,6 @@
 import { Menu } from '@headlessui/react';
 import { useEffect, useState } from 'react';
-import { AButton, ATextButton } from 'src/components/astra/astra-button';
+import { AOutlineButton } from 'src/components/astra/astra-button';
 import {
   ACustomMenuButton,
   ACustomMenuContents,
@@ -9,7 +9,7 @@ import {
   ADropdownButton
 } from 'src/components/astra/astra-dropdown';
 import { TextInputBox } from 'src/components/common';
-import { borderColor } from 'src/utils/ui-constants';
+import { brandTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { getSortLabel, OrderbookProvider, SORT_FILTERS, SORT_LABELS, useOrderbook } from '../OrderbookContext';
 import { OrderbookList } from './orderbook-list';
@@ -83,7 +83,6 @@ export const OrderbookContent = ({ className }: Props4) => {
       <div className={`flex flex-col h-full overflow-y-clip min-h-[50vh] ${className}`}>
         <div className="gap-3 flex justify-end pb-6">
           <ADropdown
-            hasBorder={false}
             label={orderTypeLabel}
             items={[
               {
@@ -110,51 +109,49 @@ export const OrderbookContent = ({ className }: Props4) => {
               <ACustomMenuContents>
                 <span>
                   <ACustomMenuButton>
-                    <ATextButton tooltip="Click to open price filter">
-                      <ADropdownButton>Price</ADropdownButton>
-                    </ATextButton>
+                    <AOutlineButton tooltip="Filter by price">
+                      <ADropdownButton isMenuOpen={open}>Price</ADropdownButton>
+                    </AOutlineButton>
                   </ACustomMenuButton>
                 </span>
 
-                {open && (
-                  <ACustomMenuItems open={open}>
-                    <div className="flex">
-                      <TextInputBox
-                        addEthSymbol={true}
-                        type="number"
-                        className={twMerge(borderColor, 'font-heading')}
-                        label="Min"
-                        placeholder=""
-                        value={minPriceVal}
-                        onChange={(value) => {
-                          setMinPriceVal(value);
-                          const newFilters = { ...filters };
-                          newFilters.minPrice = value;
-                          newFilters.orderBy = OrderBy.Price;
-                          setFilters(newFilters);
-                        }}
-                      />
-                      <TextInputBox
-                        addEthSymbol={true}
-                        type="number"
-                        className={twMerge(borderColor, 'font-heading ml-2')}
-                        label="Max"
-                        placeholder=""
-                        value={maxPriceVal}
-                        onChange={(value) => {
-                          setMaxPriceVal(value);
-                          const newFilters = { ...filters };
-                          newFilters.maxPrice = value;
-                          newFilters.orderBy = OrderBy.Price;
-                          setFilters(newFilters);
-                        }}
-                      />
-                    </div>
-                    <Menu.Button onClick={onClear} className="mt-2 float-left">
-                      <AButton highlighted>Clear</AButton>
-                    </Menu.Button>
-                  </ACustomMenuItems>
-                )}
+                <ACustomMenuItems open={open} alignMenuRight={true} innerClassName="border-0">
+                  <div className="flex mr-2">
+                    <TextInputBox
+                      addEthSymbol={true}
+                      type="number"
+                      className={twMerge('font-heading p-3')}
+                      label="Min"
+                      placeholder=""
+                      value={minPriceVal}
+                      onChange={(value) => {
+                        setMinPriceVal(value);
+                        const newFilters = { ...filters };
+                        newFilters.minPrice = value;
+                        newFilters.orderBy = OrderBy.Price;
+                        setFilters(newFilters);
+                      }}
+                    />
+                    <TextInputBox
+                      addEthSymbol={true}
+                      type="number"
+                      className={twMerge('font-heading ml-2 p-3')}
+                      label="Max"
+                      placeholder=""
+                      value={maxPriceVal}
+                      onChange={(value) => {
+                        setMaxPriceVal(value);
+                        const newFilters = { ...filters };
+                        newFilters.maxPrice = value;
+                        newFilters.orderBy = OrderBy.Price;
+                        setFilters(newFilters);
+                      }}
+                    />
+                  </div>
+                  <Menu.Button onClick={onClear} className={twMerge('mt-4 ml-1 text-sm', brandTextColor)}>
+                    Clear
+                  </Menu.Button>
+                </ACustomMenuItems>
               </ACustomMenuContents>
             )}
           </Menu>

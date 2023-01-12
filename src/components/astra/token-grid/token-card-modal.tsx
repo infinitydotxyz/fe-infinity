@@ -2,7 +2,9 @@ import { CollectionAttributes, Erc721Token, Token } from '@infinityxyz/lib-front
 import { ActivityList } from 'src/components/asset';
 import { OrderbookContainer } from 'src/components/orderbook/list';
 import { ellipsisAddress, useFetch } from 'src/utils';
+import { dropShadow } from 'src/utils/ui-constants';
 import { useSWRConfig } from 'swr';
+import { twMerge } from 'tailwind-merge';
 import {
   BlueCheck,
   ErrorOrLoading,
@@ -62,9 +64,14 @@ export const TokenCardModal = ({ data, modalOpen, setModalOpen }: Props): JSX.El
   }
 
   return (
-    <Modal isOpen={modalOpen} showActionButtons={false} onClose={() => setModalOpen(false)} panelClassName="max-w-6xl">
-      <div className="flex justify-between">
-        <div className="flex">
+    <Modal
+      isOpen={modalOpen}
+      showActionButtons={false}
+      onClose={() => setModalOpen(false)}
+      panelClassName={twMerge('max-w-6xl', dropShadow)}
+    >
+      <div className="flex space-x-4">
+        <div className="flex-1">
           <div className="flex flex-col gap-10 mr-auto md:flex-row md:items-start">
             <div className="md:flex-1 ">
               <div className="flex items-center mb-2">
@@ -102,7 +109,7 @@ export const TokenCardModal = ({ data, modalOpen, setModalOpen }: Props): JSX.El
 
               <div className="min-h-[50vh] mt-10">
                 <ToggleTab
-                  className="flex space-x-2 items-center relative max-w-xl font-heading"
+                  className="flex space-x-2 items-center relative max-w-xl font-heading text-sm"
                   options={options}
                   selected={selected}
                   onChange={onChange}

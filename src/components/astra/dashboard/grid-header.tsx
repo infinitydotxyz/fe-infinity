@@ -62,7 +62,7 @@ export const GridHeader = ({
 
                 <div className={twMerge('flex p-2 text-sm space-x-2 items-center')}>
                   <div>{ellipsisAddress(collection?.address).toLowerCase()}</div>
-                  <div className={twMerge('cursor-pointer p-2 rounded-xl', hoverColor)}>
+                  <div className={twMerge('cursor-pointer p-2 rounded-lg', hoverColor)}>
                     <ClipboardButton textToCopy={collection?.address ?? ''} className={twMerge(smallIconButtonStyle)} />
                   </div>
                 </div>
@@ -74,7 +74,7 @@ export const GridHeader = ({
                   onClick={() => window.open(getChainScannerBase(chainId) + '/address/' + collection?.address)}
                 >
                   <span className="flex items-center">
-                    <EZImage src={etherscanLogo.src} className="mr-2 h-5 w-5 rounded-xl" />
+                    <EZImage src={etherscanLogo.src} className="mr-2 h-5 w-5 rounded-lg" />
                     <HiOutlineExternalLink className="text-md" />
                   </span>
                 </AOutlineButton>
@@ -92,11 +92,11 @@ export const GridHeader = ({
                       {collectionStats?.twitterFollowersPercentChange && parseFloat(twitterChangePct) ? (
                         <>
                           {(collectionStats?.twitterFollowersPercentChange ?? 0) < 0 ? (
-                            <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-dark-body dark:bg-red-500 dark:text-dark-body text-xs flex items-center">
+                            <span className="ml-2 py-1 px-2 rounded-lg bg-red-500 text-dark-body dark:bg-red-500 dark:text-dark-body text-xs flex items-center">
                               <FaCaretDown className="mr-1" /> {twitterChangePct}%
                             </span>
                           ) : (
-                            <span className="ml-2 py-1 px-2 rounded-xl bg-green-500 text-dark-body dark:bg-green-500 dark:text-dark-body text-xs flex items-center">
+                            <span className="ml-2 py-1 px-2 rounded-lg bg-green-500 text-dark-body dark:bg-green-500 dark:text-dark-body text-xs flex items-center">
                               <FaCaretUp className="mr-1" /> {twitterChangePct}%
                             </span>
                           )}
@@ -121,11 +121,11 @@ export const GridHeader = ({
                       {collectionStats?.discordFollowersPercentChange && parseFloat(discordChangePct) ? (
                         <>
                           {(collectionStats?.discordFollowersPercentChange ?? 0) < 0 ? (
-                            <span className="ml-2 py-1 px-2 rounded-xl bg-red-500 text-dark-body dark:bg-red-500 dark:text-dark-body text-xs flex items-center">
+                            <span className="ml-2 py-1 px-2 rounded-lg bg-red-500 text-dark-body dark:bg-red-500 dark:text-dark-body text-xs flex items-center">
                               <FaCaretDown className="mr-1" /> {discordChangePct}%
                             </span>
                           ) : (
-                            <span className="ml-2 py-1 px-2 rounded-xl bg-green-500 text-dark-body dark:bg-green-500 dark:text-dark-body text-xs flex items-center">
+                            <span className="ml-2 py-1 px-2 rounded-lg bg-green-500 text-dark-body dark:bg-green-500 dark:text-dark-body text-xs flex items-center">
                               <FaCaretUp className="mr-1" /> {discordChangePct}%
                             </span>
                           )}
@@ -153,7 +153,7 @@ export const GridHeader = ({
                       onClick={() => window.open(collection.metadata?.links?.external)}
                     >
                       <span className="flex items-center">
-                        <EZImage src={avatarUrl} className="mr-2 h-5 w-5 rounded-xl" />
+                        <EZImage src={avatarUrl} className="mr-2 h-5 w-5 rounded-lg" />
                         <HiOutlineExternalLink className="text-md" />
                       </span>
                     </AOutlineButton>
