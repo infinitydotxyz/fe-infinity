@@ -5,6 +5,7 @@ import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 import { memo, StrictMode, useEffect } from 'react';
 import { Layout } from 'src/components/astra/layout';
+import { OrderbookContextProvider } from 'src/components/orderbook/OrderbookContext';
 import 'src/settings/tailwind/globals.scss';
 import { isLocalhost } from 'src/utils/commonUtils';
 import { AppContextProvider } from 'src/utils/context/AppContext';
@@ -35,7 +36,9 @@ const App = (props: AppProps) => {
         <OnboardContextProvider>
           <FilterContextProvider>
             <DashboardContextProvider>
-              <AppBody {...props} />
+              <OrderbookContextProvider>
+                <AppBody {...props} />
+              </OrderbookContextProvider>
             </DashboardContextProvider>
           </FilterContextProvider>
         </OnboardContextProvider>

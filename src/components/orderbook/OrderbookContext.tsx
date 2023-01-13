@@ -222,28 +222,28 @@ const orderCache = new OrderCache();
 
 interface BaseProps {
   children: ReactNode;
-  kind: 'collection' | 'token' | 'user';
+  kind?: 'collection' | 'token' | 'user';
   limit?: number;
 }
 
 interface CollectionProps extends BaseProps {
-  kind: 'collection';
-  context: {
+  kind?: 'collection';
+  context?: {
     collectionAddress: string;
   };
 }
 
 interface TokenProps extends BaseProps {
-  kind: 'token';
-  context: {
+  kind?: 'token';
+  context?: {
     collectionAddress: string;
     tokenId: string;
   };
 }
 
 interface UserProps extends BaseProps {
-  kind: 'user';
-  context: {
+  kind?: 'user';
+  context?: {
     chainId: ChainId;
     userAddress: string;
     side: Queries.Side;
@@ -252,7 +252,7 @@ interface UserProps extends BaseProps {
 
 export type OrderbookProviderProps = CollectionProps | TokenProps | UserProps;
 
-export const OrderbookProvider = ({ children, limit = ITEMS_PER_PAGE, ...props }: OrderbookProviderProps) => {
+export const OrderbookContextProvider = ({ children, limit = ITEMS_PER_PAGE, ...props }: OrderbookProviderProps) => {
   const router = useRouter();
   const { chainId } = useOnboardContext();
 
@@ -389,7 +389,7 @@ export const OrderbookProvider = ({ children, limit = ITEMS_PER_PAGE, ...props }
         };
 
         options = {
-          endpoint: `/v2/collections/${chainId}:${props.context.collectionAddress}/tokens/${props.context.tokenId}/orders`,
+          endpoint: `/v2/collections/${chainId}:${props.context?.collectionAddress}/tokens/${props.context?.tokenId}/orders`,
           query
         };
       } else if (props.kind === 'collection') {
@@ -399,11 +399,11 @@ export const OrderbookProvider = ({ children, limit = ITEMS_PER_PAGE, ...props }
         };
 
         options = {
-          endpoint: `/v2/collections/${chainId}:${props.context.collectionAddress}/orders`,
+          endpoint: `/v2/collections/${chainId}:${props.context?.collectionAddress}/orders`,
           query
         };
       } else if (props.kind === 'user') {
-        if (props.context.side === Queries.Side.Maker) {
+        if (props.context?.side === Queries.Side.Maker) {
           const query: Queries.MakerOrdersQuery = {
             ...baseQuery,
             chainId: props.context.chainId,
@@ -418,12 +418,12 @@ export const OrderbookProvider = ({ children, limit = ITEMS_PER_PAGE, ...props }
         } else {
           const query: Queries.TakerOrdersQuery = {
             ...baseQuery,
-            chainId: props.context.chainId,
+            chainId: props.context?.chainId,
             side: Queries.Side.Taker,
             status: Queries.OrderStatus.Active
           };
           options = {
-            endpoint: `/v2/users/${props.context.userAddress}/orders`,
+            endpoint: `/v2/users/${props.context?.userAddress}/orders`,
             query
           };
         }

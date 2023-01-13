@@ -5,9 +5,10 @@ import { SearchInput } from './search-input';
 
 interface Props {
   expanded?: boolean;
+  profileSearch?: boolean;
 }
 
-export const CollectionSearchInput = ({ expanded }: Props) => {
+export const CollectionSearchInput = ({ expanded, profileSearch }: Props) => {
   const { search, setQuery } = useSearchState<SearchType.Collection, 'slug'>(
     defaultSearchByType[SearchType.Collection]
   );
@@ -15,6 +16,7 @@ export const CollectionSearchInput = ({ expanded }: Props) => {
 
   return (
     <SearchInput
+      profileSearch={profileSearch}
       expanded={expanded}
       query={search.query}
       setQuery={setQuery}

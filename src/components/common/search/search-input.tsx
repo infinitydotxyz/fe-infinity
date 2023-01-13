@@ -1,7 +1,9 @@
 import { Combobox } from '@headlessui/react';
+import { CollectionSearchDto } from '@infinityxyz/lib-frontend/types/dto';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { AiOutlineSearch } from 'react-icons/ai';
+import { useOrderbook } from 'src/components/orderbook/OrderbookContext';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { cardColor, hoverColor, borderColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
@@ -14,13 +16,15 @@ interface Props {
   placeholder: string;
   setQuery: (query: string) => void;
   data: SearchResult[];
+  profileSearch?: boolean;
 }
 
-export function SearchInput({ expanded, query, setQuery, placeholder, data }: Props): JSX.Element {
+export function SearchInput({ expanded, query, setQuery, placeholder, data, profileSearch }: Props): JSX.Element {
   const router = useRouter();
   const [isActive, setIsActive] = useState(false);
   const [selected, setSelected] = useState<SearchResult | null>(null);
   const isMounted = useIsMounted();
+  const { filters, setFilters } = useOrderbook();
 
   const inputRef: React.RefObject<HTMLInputElement> = useRef(null);
 
@@ -33,6 +37,7 @@ export function SearchInput({ expanded, query, setQuery, placeholder, data }: Pr
       setIsActive(true);
     }
   };
+
   const deactivate = () => {
     if (isMounted()) {
       query.length === 0 && !expanded ? setIsActive(false) : null;
@@ -40,7 +45,11 @@ export function SearchInput({ expanded, query, setQuery, placeholder, data }: Pr
   };
 
   useEffect(() => {
-    if (selected) {
+    if (selected && profileSearch) {
+      const newFilter = { ...filters };
+      newFilter.collections = [(selected as CollectionSearchDto).address];
+      setFilters(newFilter);
+    } else if (selected) {
       const pathname = getSearchResultLink(selected);
       router.push(
         {
@@ -114,7 +123,7 @@ export function SearchInput({ expanded, query, setQuery, placeholder, data }: Pr
                         active ? 'bg-transparent' : 'bg-transparent',
                         hoverColor,
                         textColor,
-                        'font-body text-sm py-1.5 px-4   rounded-md transition-all duration-200',
+                        'font-body text-sm py-1.5 px-4 rounded-md transition-all duration-200',
                         'flex gap-3 place-items-center',
                         'hover:cursor-pointer w-60 z-20'
                       )}

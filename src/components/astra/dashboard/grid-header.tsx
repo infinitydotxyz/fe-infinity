@@ -69,6 +69,20 @@ export const GridHeader = ({
 
                 <Spacer />
 
+                {collection?.metadata?.links?.external && (
+                  <>
+                    <AOutlineButton
+                      className={hoverColor}
+                      onClick={() => window.open(collection.metadata?.links?.external)}
+                    >
+                      <span className="flex items-center">
+                        <EZImage src={avatarUrl} className="mr-2 h-5 w-5 rounded-lg" />
+                        <HiOutlineExternalLink className="text-md" />
+                      </span>
+                    </AOutlineButton>
+                  </>
+                )}
+
                 <AOutlineButton
                   className={hoverColor}
                   onClick={() => window.open(getChainScannerBase(chainId) + '/address/' + collection?.address)}
@@ -144,20 +158,6 @@ export const GridHeader = ({
                   >
                     <FaInstagram className="text-xl" />
                   </AOutlineButton>
-                )}
-
-                {collection?.metadata?.links?.external && (
-                  <>
-                    <AOutlineButton
-                      className={hoverColor}
-                      onClick={() => window.open(collection.metadata?.links?.external)}
-                    >
-                      <span className="flex items-center">
-                        <EZImage src={avatarUrl} className="mr-2 h-5 w-5 rounded-lg" />
-                        <HiOutlineExternalLink className="text-md" />
-                      </span>
-                    </AOutlineButton>
-                  </>
                 )}
               </div>
             </div>

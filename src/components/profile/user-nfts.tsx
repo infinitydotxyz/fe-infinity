@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router';
 import { FC, useEffect } from 'react';
-import { ACollectionFilter } from 'src/components/astra/astra-collection-filter';
 import { DashboardLayout, DashboardProps } from 'src/components/astra/dashboard/dashboard-layout';
 import { ProfileTokenCache } from 'src/components/astra/token-grid/token-fetcher';
 import { TokenGrid } from 'src/components/astra/token-grid/token-grid';
@@ -9,6 +8,7 @@ import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { borderColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
+import { CollectionSearchInput } from '../common/search/collection-search-input';
 
 const TokensGridWrapper: FC = () => {
   const { tokenFetcher, isSelected, isSelectable, listMode, toggleSelection, setNumTokens } = useDashboardContext();
@@ -22,7 +22,7 @@ const TokensGridWrapper: FC = () => {
     <TokenGrid
       listMode={listMode}
       tokenFetcher={tokenFetcher}
-      className="px-8 py-6"
+      className="px-4 py-4"
       onClick={toggleSelection}
       isSelectable={isSelectable}
       isSelected={isSelected}
@@ -50,8 +50,10 @@ export const UserNFTs = (props: DashboardProps) => {
 
   return (
     <DashboardLayout {...props}>
-      <div className={twMerge(borderColor, 'w-full flex   py-2 border-t-[1px]')}>
-        <ACollectionFilter />
+      <div className={twMerge(borderColor, 'w-full flex border-t-[1px]')}>
+        <div className="px-4 mt-2">
+          <CollectionSearchInput expanded profileSearch />
+        </div>
       </div>
       <TokensGridWrapper />
     </DashboardLayout>

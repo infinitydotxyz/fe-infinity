@@ -4,7 +4,7 @@ import * as Queries from '@infinityxyz/lib-frontend/types/dto/orders/orders-quer
 import NotFound404Page from 'pages/not-found-404';
 import { useEffect } from 'react';
 import { EthSymbol } from 'src/components/common';
-import { OrderbookProvider } from 'src/components/orderbook/OrderbookContext';
+import { OrderbookContextProvider } from 'src/components/orderbook/OrderbookContext';
 import { apiGet, nFormatter } from 'src/utils';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
@@ -87,13 +87,13 @@ export const DashboardLayout: React.FC<DashboardProps> = ({ children, error, ...
     case 'profile': {
       return (
         // This is added just for the ASortButton, so remove if we change how this works
-        <OrderbookProvider
+        <OrderbookContextProvider
           limit={50}
           kind={'user'}
           context={{ chainId: chainId as ChainId, userAddress: props.asset.user.address, side: props.asset.orderSide }}
         >
           <ProfileLayout>{children}</ProfileLayout>
-        </OrderbookProvider>
+        </OrderbookContextProvider>
       );
     }
 
@@ -143,7 +143,7 @@ export const DashboardLayout: React.FC<DashboardProps> = ({ children, error, ...
       );
       return (
         // This is added just for the ASortButton, so remove if we change how this works
-        <OrderbookProvider
+        <OrderbookContextProvider
           limit={50}
           kind={'collection'}
           context={{ collectionAddress: props.asset.collection.address }}
@@ -154,7 +154,7 @@ export const DashboardLayout: React.FC<DashboardProps> = ({ children, error, ...
               {children}
             </div>
           </div>
-        </OrderbookProvider>
+        </OrderbookContextProvider>
       );
     }
 
@@ -175,7 +175,7 @@ export const DashboardLayout: React.FC<DashboardProps> = ({ children, error, ...
       );
       return (
         // This is added just for the ASortButton, so remove if we change how this works
-        <OrderbookProvider
+        <OrderbookContextProvider
           limit={50}
           kind={'token'}
           context={{ collectionAddress: props.asset.collection.address, tokenId: props.asset.token.tokenId }}
@@ -186,7 +186,7 @@ export const DashboardLayout: React.FC<DashboardProps> = ({ children, error, ...
               {children}
             </div>
           </div>
-        </OrderbookProvider>
+        </OrderbookContextProvider>
       );
     }
   }

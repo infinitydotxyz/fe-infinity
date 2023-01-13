@@ -11,7 +11,7 @@ import {
 import { TextInputBox } from 'src/components/common';
 import { brandTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { getSortLabel, OrderbookProvider, SORT_FILTERS, SORT_LABELS, useOrderbook } from '../OrderbookContext';
+import { getSortLabel, OrderbookContextProvider, SORT_FILTERS, SORT_LABELS, useOrderbook } from '../OrderbookContext';
 import { OrderbookList } from './orderbook-list';
 
 interface Props {
@@ -28,9 +28,12 @@ enum OrderBy {
 
 export const OrderbookContainer = ({ collectionId, tokenId, className = '' }: Props): JSX.Element => {
   return (
-    <OrderbookProvider kind={'token'} context={{ collectionAddress: collectionId ?? '', tokenId: tokenId ?? '' }}>
+    <OrderbookContextProvider
+      kind={'token'}
+      context={{ collectionAddress: collectionId ?? '', tokenId: tokenId ?? '' }}
+    >
       <OrderbookContent className={className} />
-    </OrderbookProvider>
+    </OrderbookContextProvider>
   );
 };
 

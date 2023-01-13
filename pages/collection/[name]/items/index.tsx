@@ -32,7 +32,7 @@ const GridWrapper: FC = () => {
     <TokenGrid
       listMode={listMode}
       tokenFetcher={tokenFetcher}
-      className="px-8 py-6"
+      className="px-4 py-4"
       onClick={toggleSelection}
       isSelectable={isSelectable}
       isSelected={isSelected}
@@ -78,7 +78,7 @@ export default function ItemsPage(props: DashboardProps) {
   return (
     <DashboardLayout {...props}>
       {head}
-      <div className="w-full flex mt-3 px-8">
+      <div className="w-full flex mt-2 px-4">
         <div className="flex">
           <CollectionNftSearchInput slug={collection.slug} expanded />
         </div>
