@@ -20,7 +20,6 @@ export * from 'src/components/common/eth-price';
 export * from 'src/components/common/connect-button';
 export * from 'src/components/common/help-tooltip';
 export * from 'src/components/common/toggle-tab';
-export * from 'src/components/common/error-or-loading';
 export * from 'src/components/common/svg';
 export * from 'src/components/common/toaster';
 export * from 'src/components/common/heading';

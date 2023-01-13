@@ -1,4 +1,5 @@
 import { SearchType } from '@infinityxyz/lib-frontend/types/core';
+import { CollectionSearchDto } from '@infinityxyz/lib-frontend/types/dto';
 import { defaultSearchByType, useSearch } from 'src/hooks/api/useSearch';
 import { useSearchState } from 'src/hooks/api/useSearchState';
 import { SearchInput } from './search-input';
@@ -7,7 +8,7 @@ interface Props {
   expanded?: boolean;
   profileSearch?: boolean;
   orderSearch?: boolean;
-  setSelectedCollection?: (collection: string) => void;
+  setSelectedCollection?: (collection: CollectionSearchDto) => void;
 }
 
 export const CollectionSearchInput = ({ expanded, profileSearch, orderSearch, setSelectedCollection }: Props) => {

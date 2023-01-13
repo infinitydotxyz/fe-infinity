@@ -5,7 +5,6 @@ import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { BasicTokenInfo } from 'src/components/astra/types';
-import { useOrderbook } from 'src/components/orderbook/OrderbookContext';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { borderColor, cardColor, hoverColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
@@ -21,7 +20,7 @@ interface Props {
   tokenSearch?: boolean;
   profileSearch?: boolean;
   orderSearch?: boolean;
-  setSelectedCollection?: (collection: string) => void;
+  setSelectedCollection?: (collection: CollectionSearchDto) => void;
   setSelectedToken?: (basicTokenInfo: BasicTokenInfo) => void;
 }
 
@@ -41,7 +40,6 @@ export function SearchInput({
   const [isActive, setIsActive] = useState(false);
   const [selected, setSelected] = useState<SearchResult | null>(null);
   const isMounted = useIsMounted();
-  const { filters, setFilters } = useOrderbook();
   const inputRef: React.RefObject<HTMLInputElement> = useRef(null);
 
   useEffect(() => {
@@ -61,12 +59,8 @@ export function SearchInput({
   };
 
   useEffect(() => {
-    if (selected && profileSearch) {
-      const newFilter = { ...filters };
-      newFilter.collections = [(selected as CollectionSearchDto).address];
-      setFilters(newFilter);
-    } else if (selected && orderSearch) {
-      setSelectedCollection && setSelectedCollection((selected as CollectionSearchDto).address);
+    if (selected && (profileSearch || orderSearch)) {
+      setSelectedCollection && setSelectedCollection(selected as CollectionSearchDto);
     } else if (selected && tokenSearch) {
       const basicTokenInfo: BasicTokenInfo = {
         tokenId: (selected as NftDisplayData).tokenId,

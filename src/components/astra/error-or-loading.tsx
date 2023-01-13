@@ -22,7 +22,7 @@ export const ErrorOrLoading = ({ error, noData, message = 'Nothing found' }: Pro
   }
 
   return (
-    <div className={twMerge(textColor, 'h-full w-full  ')}>
+    <div className={twMerge(textColor, 'h-full w-full')}>
       <CenteredContent>{contents}</CenteredContent>
     </div>
   );

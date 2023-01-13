@@ -7,7 +7,6 @@ import { useSWRConfig } from 'swr';
 import { twMerge } from 'tailwind-merge';
 import {
   BlueCheck,
-  ErrorOrLoading,
   EZImage,
   Modal,
   NextLink,
@@ -18,6 +17,7 @@ import {
   useToggleTab
 } from '../../common';
 import { ATraitList } from '../astra-trait-list';
+import { ErrorOrLoading } from '../error-or-loading';
 import { BasicTokenInfo } from '../types';
 
 interface Props {
@@ -60,7 +60,7 @@ export const TokenCardModal = ({ data, modalOpen, setModalOpen }: Props): JSX.El
 
   if (!token || error) {
     console.error(error);
-    return <ErrorOrLoading fixed error={!!error} noData message="Something went wrong." />;
+    return <ErrorOrLoading error={!!error} noData message="Something went wrong" />;
   }
 
   return (

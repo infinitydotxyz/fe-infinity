@@ -41,7 +41,7 @@ export const AButton = ({
       highlighted={highlighted}
       tooltip={tooltip}
       className={twMerge(
-        small ? 'text-sm px-2 py-0.5' : 'px-2.5 py-1.5',
+        small ? 'text-sm px-2 py-0.5' : 'px-2.5 py-[5px]',
         'rounded-lg',
         primary ? primaryBtnWithBgColorTextTransition : '',
         className

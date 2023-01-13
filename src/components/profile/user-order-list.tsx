@@ -1,8 +1,14 @@
 import { Menu } from '@headlessui/react';
 import { ChainOBOrder, Order, OrderItemToken, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { BaseOrderQuery, MakerOrdersQuery, TakerOrdersQuery } from '@infinityxyz/lib-frontend/types/dto';
+import {
+  BaseOrderQuery,
+  CollectionSearchDto,
+  MakerOrdersQuery,
+  TakerOrdersQuery
+} from '@infinityxyz/lib-frontend/types/dto';
 import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user';
 import { useEffect, useState } from 'react';
+import { MdClose } from 'react-icons/md';
 import { apiGet, ellipsisAddress, extractErrorMsg, ITEMS_PER_PAGE } from 'src/utils';
 import { cancelAllOrders } from 'src/utils/exchange/orders';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
@@ -19,6 +25,7 @@ import {
 } from '../astra/astra-dropdown';
 import {
   CenteredContent,
+  EZImage,
   ScrollLoader,
   Spacer,
   Spinner,
@@ -82,6 +89,23 @@ export const UserOrderList = ({ userInfo, className = '', toggleOrderSelection, 
   const [filter, setFilter] = useState<UserOrderFilter>({
     orderType: DEFAULT_ORDER_TYPE_FILTER
   });
+  const [selectedCollection, setSelectedCollection] = useState<CollectionSearchDto>();
+
+  const handleCollectionSearchResult = (result: CollectionSearchDto) => {
+    setSelectedCollection(result);
+    const newFilter = { ...filter };
+    newFilter.collections = [result.address];
+    setFilter(newFilter);
+    setApiFilter(newFilter);
+  };
+
+  const handleCollectionSearchClear = () => {
+    setSelectedCollection(undefined);
+    const newFilter = { ...filter };
+    newFilter.collections = [];
+    setFilter(newFilter);
+    setApiFilter(newFilter);
+  };
 
   const fetchData = async (isRefresh = false) => {
     setIsFetching(true);
@@ -252,14 +276,30 @@ export const UserOrderList = ({ userInfo, className = '', toggleOrderSelection, 
             expanded
             orderSearch
             setSelectedCollection={(value) => {
-              const newFilter = { ...filter };
-              newFilter.collections = [value];
-              setFilter(newFilter);
-              setApiFilter(newFilter);
+              handleCollectionSearchResult(value);
             }}
           />
         </div>
+
+        {selectedCollection && (
+          <div className={twMerge('flex items-center rounded-lg border px-2', borderColor)}>
+            <div className="flex items-center">
+              <EZImage src={selectedCollection.profileImage} className="w-6 h-6 rounded-full mr-2" />
+              <div className="text-sm font-medium">{selectedCollection.name}</div>
+            </div>
+            <div className="ml-2">
+              <MdClose
+                className={twMerge('h-4 w-4 cursor-pointer', hoverColorBrandText)}
+                onClick={() => {
+                  handleCollectionSearchClear();
+                }}
+              />
+            </div>
+          </div>
+        )}
+
         <Spacer />
+
         <ADropdown
           label={ddLabel}
           items={[
