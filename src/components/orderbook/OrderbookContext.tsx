@@ -36,7 +36,6 @@ export const SORT_FILTERS = {
   highestPrice: 'highestPrice',
   lowestPrice: 'lowestPrice',
   mostRecent: 'mostRecent',
-  rarityRank: 'rarityRank',
   tokenIdNumeric: 'tokenIdNumeric'
 };
 
@@ -46,7 +45,6 @@ export const SORT_LABELS: {
   [SORT_FILTERS.highestPrice]: 'Highest Price',
   [SORT_FILTERS.lowestPrice]: 'Lowest Price',
   [SORT_FILTERS.mostRecent]: 'Most Recent',
-  [SORT_FILTERS.rarityRank]: 'Rarity Rank',
   [SORT_FILTERS.tokenIdNumeric]: 'Token ID'
 };
 
