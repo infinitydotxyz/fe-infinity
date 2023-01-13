@@ -90,13 +90,15 @@ export const ACollectionFilter = ({ setSelectedCollections }: Props) => {
     <div className="">
       <DebouncedTextInputBox
         label=""
-        className="border rounded-full py-2 px-4 mb-6 font-heading w-full"
+        className="border rounded-full py-2 px-4 mb-6 font-heading w-full text-sm"
         value=""
         onChange={(value) => fetchData(value)}
         placeholder="Search"
       />
 
-      <div className="max-h-[250px] overflow-y-auto overflow-x-clip space-y-2 pr-2">{collectionCheckboxes()} </div>
+      <div className="max-h-[250px] overflow-y-auto overflow-x-clip space-y-2 pr-2 text-sm">
+        {collectionCheckboxes()}{' '}
+      </div>
     </div>
   );
 };

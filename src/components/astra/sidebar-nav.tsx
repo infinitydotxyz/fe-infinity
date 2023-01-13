@@ -34,7 +34,7 @@ export const SidebarNav = () => {
       <div className="h-12" />
 
       <div className="flex flex-col space-y-4">
-        <div className="font-medium text-xs text-dark-border dark:text-dark-border tracking-wide text-center">
+        <div className="font-medium text-xs text-dark-border dark:text-light-border tracking-wide text-center">
           Explore
         </div>
 
@@ -57,7 +57,7 @@ export const SidebarNav = () => {
           </AButton>
         </HelpToolTip>
 
-        <div className="font-medium text-xs text-dark-border dark:text-dark-border tracking-wide text-center">
+        <div className="font-medium text-xs text-dark-border dark:text-light-border tracking-wide text-center">
           Wallet
         </div>
 
