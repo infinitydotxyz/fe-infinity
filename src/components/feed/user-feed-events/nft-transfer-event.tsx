@@ -1,16 +1,16 @@
-import { UserActivityItemImage } from '../activity-item/user-activity-item-image';
-import { UserActivityItem } from '../activity-item/user-activity-item';
-import { format } from 'timeago.js';
-import { UserActivityItemTitle } from '../activity-item/user-activity-item-title';
-import { UserActivityItemTextField } from '../activity-item/user-activity-item-text-field';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import { getCollectionLink, getTokenLink, getUserToDisplay } from 'src/utils';
 import {
   ChainId,
   EtherscanLinkType,
   NftTransferEvent as NftTransferEventFeed
 } from '@infinityxyz/lib-frontend/types/core';
 import { getEtherscanLink } from '@infinityxyz/lib-frontend/utils';
+import { getCollectionLink, getUserToDisplay } from 'src/utils';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { format } from 'timeago.js';
+import { UserActivityItem } from '../activity-item/user-activity-item';
+import { UserActivityItemImage } from '../activity-item/user-activity-item-image';
+import { UserActivityItemTextField } from '../activity-item/user-activity-item-text-field';
+import { UserActivityItemTitle } from '../activity-item/user-activity-item-title';
 
 interface Props {
   event: NftTransferEventFeed;
@@ -34,19 +34,22 @@ export const NftTransferEvent = ({ event }: Props) => {
     address: event.collectionAddress,
     chainId: event.chainId as ChainId
   });
-  const nftLink = getTokenLink({
-    chainId: event.chainId as ChainId,
-    address: event.collectionAddress,
-    tokenId: event.tokenId
+
+  const avatar = UserActivityItemImage({
+    src: event.image || event.collectionProfileImage,
+    showModal: true,
+    basicTokenInfo: {
+      chainId: event.chainId as ChainId,
+      collectionAddress: event.collectionAddress,
+      tokenId: event.tokenId
+    }
   });
 
-  const avatar = UserActivityItemImage({ src: event.image || event.collectionProfileImage, relativeLink: nftLink });
   const title = UserActivityItemTitle({
     title: event.collectionName,
     hasBlueCheck: event.hasBlueCheck,
     titleRelativeLink: collectionLink,
-    subtitle: event.tokenId ? event.tokenId : undefined,
-    subtitleRelativeLink: nftLink
+    subtitle: event.tokenId ? event.tokenId : undefined
   });
 
   return (

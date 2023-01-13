@@ -25,10 +25,11 @@ export const UserActivityList = ({ userAddress, types, className }: Props) => {
 
   return (
     <div className={twMerge('min-h-[50vh]', className)}>
-      <div className={twMerge(borderColor, 'w-full flex   py-2 border-t-[1px]')}>
+      <div className={twMerge(borderColor, 'w-full flex py-2 px-4 border-t-[1px]')}>
         <Spacer />
-        <div className="flex flex-row-reverse mb-8 bg-transparent">
+        <div className="flex flex-row-reverse">
           <AFilterPopdown
+            alignMenuRight={true}
             options={filterButtonDefaultOptions}
             filter={filter}
             onChange={(f) => {
@@ -37,7 +38,7 @@ export const UserActivityList = ({ userAddress, types, className }: Props) => {
           />
         </div>
       </div>
-      <div className="space-y-3 pointer-events-auto">
+      <div className="pointer-events-auto text-sm mx-4">
         {!isLoading && activities?.length === 0 ? (
           <CenteredContent>
             <div className="text-sm">No results found</div>
@@ -72,7 +73,7 @@ export const UserActivityList = ({ userAddress, types, className }: Props) => {
             }
           })}
 
-        <div className="mt-8">
+        <div className="">
           {isLoading && (
             <CenteredContent>
               <Spinner />

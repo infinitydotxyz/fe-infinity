@@ -1,13 +1,13 @@
-import { NftListingEvent, NftOfferEvent } from '@infinityxyz/lib-frontend/types/core/feed/NftEvent';
-import { UserActivityItemImage } from '../activity-item/user-activity-item-image';
-import { UserActivityItem } from '../activity-item/user-activity-item';
-import { EthPrice } from 'src/components/common';
-import { format } from 'timeago.js';
-import { UserActivityItemTitle } from '../activity-item/user-activity-item-title';
-import { UserActivityItemTextField } from '../activity-item/user-activity-item-text-field';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import { getCollectionLink, getTokenLink, getUserToDisplay, nFormatter } from 'src/utils';
 import { ChainId, EventType } from '@infinityxyz/lib-frontend/types/core';
+import { NftListingEvent, NftOfferEvent } from '@infinityxyz/lib-frontend/types/core/feed/NftEvent';
+import { EthPrice } from 'src/components/common';
+import { getCollectionLink, getUserToDisplay, nFormatter } from 'src/utils';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { format } from 'timeago.js';
+import { UserActivityItem } from '../activity-item/user-activity-item';
+import { UserActivityItemImage } from '../activity-item/user-activity-item-image';
+import { UserActivityItemTextField } from '../activity-item/user-activity-item-text-field';
+import { UserActivityItemTitle } from '../activity-item/user-activity-item-title';
 
 interface Props {
   event: NftListingEvent | NftOfferEvent;
@@ -28,16 +28,22 @@ export const NftOrderEvent = ({ event }: Props) => {
     address: event.collectionAddress,
     chainId: event.chainId as ChainId
   });
-  const link = event.tokenId
-    ? getTokenLink({ chainId: event.chainId as ChainId, address: event.collectionAddress, tokenId: event.tokenId })
-    : collectionLink;
-  const avatar = UserActivityItemImage({ src: event.image || event.collectionProfileImage, relativeLink: link });
+
+  const avatar = UserActivityItemImage({
+    src: event.image || event.collectionProfileImage,
+    showModal: true,
+    basicTokenInfo: {
+      chainId: event.chainId as ChainId,
+      collectionAddress: event.collectionAddress,
+      tokenId: event.tokenId
+    }
+  });
+
   const title = UserActivityItemTitle({
     title: event.collectionName,
     hasBlueCheck: event.hasBlueCheck,
     titleRelativeLink: collectionLink,
-    subtitle: event.tokenId ? event.tokenId : undefined,
-    subtitleRelativeLink: link
+    subtitle: event.tokenId ? event.tokenId : undefined
   });
 
   return (

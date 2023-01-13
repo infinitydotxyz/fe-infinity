@@ -27,7 +27,7 @@ export const PopoverButton = ({ title, children, alignMenuRight }: Props) => {
           {/* without as="div", you get a button within button error */}
           <Popover.Button as="div">
             <AOutlineButton>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 py-1">
                 <div className={twMerge('whitespace-nowrap font-medium', secondaryTextColor, hoverColorBrandText)}>
                   {title}
                 </div>
