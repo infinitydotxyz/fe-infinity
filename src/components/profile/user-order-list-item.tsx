@@ -3,7 +3,7 @@ import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user';
 import { useState } from 'react';
 import { Button, EthPrice } from 'src/components/common';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import { secondaryBgColor, secondaryTextColor } from 'src/utils/ui-constants';
+import { secondaryTextColor, standardBorderCard } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
 import { ALowerPriceModal } from '../astra/modals/astra-lower-price-modal';
@@ -49,10 +49,11 @@ export const UserOrderListItem = ({ order, orderType, onClickActionBtn, selected
           onDone={(val) => setStartPriceEth(val)}
         />
       )}
-      <div className={twMerge(secondaryBgColor, 'px-10 py-6 rounded-3xl flex font-heading')}>
+      <div className={twMerge(standardBorderCard, 'flex mx-4 text-sm')}>
         <div className="flex justify-between items-center w-full">
           <div className="w-1/4">
             <OrderbookItem
+              canShowAssetModal={true}
               nameItem={true}
               key={`${order.id} ${order.chainId}`}
               order={order}
@@ -60,25 +61,21 @@ export const UserOrderListItem = ({ order, orderType, onClickActionBtn, selected
             />
           </div>
 
-          <div className="w-1/8">
-            <div className={secondaryTextColor}>Order type</div>
-            <div className="font-bold">
+          <div className="w-1/6">
+            <div className={twMerge(secondaryTextColor, 'font-medium')}>Order type</div>
+            <div className="">
               {orderType === 'listings' ? 'Listing' : orderType === 'offers-made' ? 'Offer made' : 'Offer received'}
             </div>
           </div>
-          <div className="w-1/8">
-            <div className={secondaryTextColor}>Price</div>
-            <div className="font-bold">
+          <div className="w-1/6">
+            <div className={twMerge(secondaryTextColor, 'font-medium')}>Price</div>
+            <div className="">
               <EthPrice label={`${startPriceEth}`} />
             </div>
           </div>
-          <div className="w-1/8">
-            <div className={secondaryTextColor}># NFTs</div>
-            <div className="font-bold">{order.numItems}</div>
-          </div>
-          <div className="w-1/8">
-            <div className={secondaryTextColor}>Expiry</div>
-            <div className="font-bold">{format(order.endTimeMs)}</div>
+          <div className="w-1/6">
+            <div className={twMerge(secondaryTextColor, 'font-medium')}>Expiry</div>
+            <div className="">{format(order.endTimeMs)}</div>
           </div>
           {orderType === 'listings' || orderType === 'offers-made' ? (
             <Button

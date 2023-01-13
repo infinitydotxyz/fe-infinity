@@ -70,7 +70,7 @@ export const TokenCardModal = ({ data, modalOpen, setModalOpen }: Props): JSX.El
       onClose={() => setModalOpen(false)}
       panelClassName={twMerge('max-w-6xl', dropShadow)}
     >
-      <div className="flex space-x-4">
+      <div className="flex space-x-4 text-sm">
         <div className="flex-1">
           <div className="flex flex-col gap-10 mr-auto md:flex-row md:items-start">
             <div className="md:flex-1 ">
@@ -100,8 +100,7 @@ export const TokenCardModal = ({ data, modalOpen, setModalOpen }: Props): JSX.El
 
               {token.metadata.description && (
                 <>
-                  <p className="font-body mb-1 mt-4">Description</p>
-                  <div>
+                  <div className="mt-2">
                     <ReadMoreText text={token.metadata.description ?? ''} min={100} ideal={150} max={300} />
                   </div>
                 </>
@@ -125,7 +124,11 @@ export const TokenCardModal = ({ data, modalOpen, setModalOpen }: Props): JSX.El
 
                 {selected === 'Orders' && (
                   <div className="">
-                    <OrderbookContainer collectionId={token?.collectionAddress} tokenId={token?.tokenId} />
+                    <OrderbookContainer
+                      collectionId={token?.collectionAddress}
+                      tokenId={token?.tokenId}
+                      canShowAssetModal={false}
+                    />
                   </div>
                 )}
               </div>
@@ -136,7 +139,7 @@ export const TokenCardModal = ({ data, modalOpen, setModalOpen }: Props): JSX.El
         <div className="flex flex-col">
           <EZImage
             src={token?.image?.url ?? token.alchemyCachedImage ?? token.image?.originalUrl ?? ''}
-            className="h-80 w-80"
+            className="h-80 w-80 rounded-lg"
           />
           <ATraitList
             traits={(token as Erc721Token).metadata.attributes ?? []}

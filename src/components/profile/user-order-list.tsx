@@ -7,9 +7,9 @@ import { apiGet, ellipsisAddress, extractErrorMsg, ITEMS_PER_PAGE } from 'src/ut
 import { cancelAllOrders } from 'src/utils/exchange/orders';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { fetchOrderNonce } from 'src/utils/orderbookUtils';
-import { borderColor } from 'src/utils/ui-constants';
+import { borderColor, brandTextColor, hoverColorBrandText, secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { AButton, AOutlineButton, ATextButton } from '../astra/astra-button';
+import { AOutlineButton } from '../astra/astra-button';
 import {
   ACustomMenuButton,
   ACustomMenuContents,
@@ -246,8 +246,8 @@ export const UserOrderList = ({ userInfo, className = '', toggleOrderSelection, 
 
   return (
     <div className={twMerge('min-h-[50vh]', className)}>
-      <div className={twMerge(borderColor, 'w-full flex   py-2 border-t-[1px]')}>
-        <div className="ml-4">
+      <div className={twMerge(borderColor, 'w-full flex py-2 px-4 border-t-[1px] space-x-2')}>
+        <div className="">
           <CollectionSearchInput
             expanded
             orderSearch
@@ -261,7 +261,6 @@ export const UserOrderList = ({ userInfo, className = '', toggleOrderSelection, 
         </div>
         <Spacer />
         <ADropdown
-          hasBorder={false}
           label={ddLabel}
           items={[
             {
@@ -293,90 +292,86 @@ export const UserOrderList = ({ userInfo, className = '', toggleOrderSelection, 
             <ACustomMenuContents>
               <span>
                 <ACustomMenuButton>
-                  <ATextButton tooltip="Click to open price filter">
+                  <AOutlineButton tooltip="Filter by price">
                     <ADropdownButton>Price</ADropdownButton>
-                  </ATextButton>
+                  </AOutlineButton>
                 </ACustomMenuButton>
               </span>
 
-              {open && (
-                <ACustomMenuItems open={open}>
-                  <div className="flex">
-                    <TextInputBox
-                      addEthSymbol={true}
-                      type="number"
-                      className={twMerge(borderColor, 'font-heading')}
-                      label="Min"
-                      placeholder=""
-                      value={minPriceVal}
-                      onChange={(value) => {
-                        setMinPriceVal(value);
-                        const newFilter = { ...filter };
-                        newFilter.minPrice = value;
-                        newFilter.orderBy = OrderBy.Price;
-                        setFilter(newFilter);
-                        setApiFilter(newFilter);
-                      }}
-                    />
-                    <TextInputBox
-                      addEthSymbol={true}
-                      type="number"
-                      className={twMerge(borderColor, 'font-heading ml-2')}
-                      label="Max"
-                      placeholder=""
-                      value={maxPriceVal}
-                      onChange={(value) => {
-                        setMaxPriceVal(value);
-                        const newFilter = { ...filter };
-                        newFilter.maxPrice = value;
-                        newFilter.orderBy = OrderBy.Price;
-                        setFilter(newFilter);
-                        setApiFilter(newFilter);
-                      }}
-                    />
-                  </div>
-                  <Menu.Button onClick={onClear} className="mt-2 float-left">
-                    <AButton highlighted>Clear</AButton>
-                  </Menu.Button>
-                </ACustomMenuItems>
-              )}
+              <ACustomMenuItems open={open} alignMenuRight={true} innerClassName="border-0">
+                <div className="flex mr-2">
+                  <TextInputBox
+                    addEthSymbol={true}
+                    type="number"
+                    className="font-heading p-3"
+                    label="Min"
+                    placeholder=""
+                    value={minPriceVal}
+                    onChange={(value) => {
+                      setMinPriceVal(value);
+                      const newFilter = { ...filter };
+                      newFilter.minPrice = value;
+                      newFilter.orderBy = OrderBy.Price;
+                      setFilter(newFilter);
+                      setApiFilter(newFilter);
+                    }}
+                  />
+                  <TextInputBox
+                    addEthSymbol={true}
+                    type="number"
+                    className="font-heading ml-2 p-3"
+                    label="Max"
+                    placeholder=""
+                    value={maxPriceVal}
+                    onChange={(value) => {
+                      setMaxPriceVal(value);
+                      const newFilter = { ...filter };
+                      newFilter.maxPrice = value;
+                      newFilter.orderBy = OrderBy.Price;
+                      setFilter(newFilter);
+                      setApiFilter(newFilter);
+                    }}
+                  />
+                </div>
+                <Menu.Button onClick={onClear} className={twMerge('mt-4 ml-1 text-sm', brandTextColor)}>
+                  Clear
+                </Menu.Button>
+              </ACustomMenuItems>
             </ACustomMenuContents>
           )}
         </Menu>
 
-        <div className="flex gap-3 justify-end items-center mb-8 bg-transparent">
-          <AOutlineButton
-            disabled={isCancellingAll}
-            onClick={async () => {
-              try {
-                const signer = getSigner();
-
-                if (signer && user) {
-                  setIsCancellingAll(true);
-                  const minOrderNonce = await fetchOrderNonce(user.address);
-                  const { hash } = await cancelAllOrders(signer, chainId, minOrderNonce);
-                  setIsCancellingAll(false);
-                  toastSuccess('Sent txn to chain for execution');
-                  waitForTransaction(hash, () => {
-                    toastInfo(`Transaction confirmed ${ellipsisAddress(hash)}`);
-                  });
-                } else {
-                  throw 'User is null';
-                }
-              } catch (err) {
-                toastError(extractErrorMsg(err));
+        <AOutlineButton
+          className={twMerge('font-medium text-sm', secondaryTextColor, hoverColorBrandText)}
+          disabled={isCancellingAll}
+          onClick={async () => {
+            try {
+              const signer = getSigner();
+              if (signer && user) {
+                const minOrderNonce = await fetchOrderNonce(user.address);
+                const { hash } = await cancelAllOrders(signer, chainId, minOrderNonce);
+                toastSuccess('Sent txn to chain for execution');
+                setIsCancellingAll(true);
+                waitForTransaction(hash, () => {
+                  toastInfo(`Transaction confirmed ${ellipsisAddress(hash)}`);
+                });
+                setIsCancellingAll(false);
+              } else {
+                throw 'User is null';
               }
-            }}
-          >
-            Cancel all
-          </AOutlineButton>
-        </div>
+            } catch (err) {
+              toastError(extractErrorMsg(err));
+            }
+          }}
+        >
+          Cancel all
+        </AOutlineButton>
       </div>
 
-      <div className="flex items-start">
-        <div className="w-full space-y-4 pointer-events-auto">
+      <div className="flex">
+        <div className="w-full pointer-events-auto">
           {isFetching && (
-            <div className="mt-8">
+            <div className="">
               <CenteredContent>
                 <Spinner />
               </CenteredContent>
@@ -384,7 +379,9 @@ export const UserOrderList = ({ userInfo, className = '', toggleOrderSelection, 
           )}
 
           {!isFetching && hasNextPage === false && data?.length === 0 ? (
-            <div className="font-heading">No results found</div>
+            <CenteredContent>
+              <div className="font-heading">No results found</div>
+            </CenteredContent>
           ) : null}
 
           {data?.map((order, idx) => {

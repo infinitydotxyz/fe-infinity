@@ -1,9 +1,11 @@
-import { OBOrder, OBOrderItem } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId, OBOrder, OBOrderItem } from '@infinityxyz/lib-frontend/types/core';
 import { OBTokenInfoDto } from '@infinityxyz/lib-frontend/types/dto/orders';
 import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 
 import { useRouter } from 'next/router';
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
+import { TokenCardModal } from 'src/components/astra/token-grid/token-card-modal';
+import { BasicTokenInfo } from 'src/components/astra/types';
 import { BlueCheckInline, EZImage, NextLink } from 'src/components/common';
 import { ellipsisString, ENS_ADDRESS } from 'src/utils';
 import { secondaryTextColor } from 'src/utils/ui-constants';
@@ -16,9 +18,10 @@ type Props1 = {
   nameItem?: boolean;
   sortClick?: () => void;
   onClick?: () => void;
+  canShowAssetModal?: boolean;
 };
 
-export const OrderbookItem = ({ title, content, nameItem, order, onClick }: Props1): JSX.Element => {
+export const OrderbookItem = ({ title, content, nameItem, order, onClick, canShowAssetModal }: Props1): JSX.Element => {
   const router = useRouter();
 
   if (nameItem) {
@@ -31,6 +34,7 @@ export const OrderbookItem = ({ title, content, nameItem, order, onClick }: Prop
         const token = nft.tokens[0];
         return (
           <SingleCollectionCell
+            canShowAssetModal={canShowAssetModal}
             image={token?.tokenImage || nft.collectionImage}
             title={nft.collectionName}
             orderNft={nft}
@@ -42,6 +46,7 @@ export const OrderbookItem = ({ title, content, nameItem, order, onClick }: Prop
         // multiple items from one collection
         return (
           <SingleCollectionCell
+            canShowAssetModal={false}
             order={order}
             nfts={order.nfts}
             onClickTitle={() => {
@@ -64,8 +69,8 @@ export const OrderbookItem = ({ title, content, nameItem, order, onClick }: Prop
 
   return (
     <div className="flex flex-col min-w-0">
-      <div className={secondaryTextColor}>{title}</div>
-      <div className="font-heading">{content}</div>
+      <div className={twMerge(secondaryTextColor, 'font-medium')}>{title}</div>
+      <div className="">{content}</div>
     </div>
   );
 };
@@ -93,7 +98,7 @@ const MultiCollectionCell = ({ nfts, onClick }: Props2) => {
       </div>
 
       <div className="flex flex-col truncate">
-        <div className="truncate font-bold">{nfts.length} Collections</div>
+        <div className="truncate font-medium">{nfts.length} Collections</div>
       </div>
     </div>
   );
@@ -111,6 +116,7 @@ type Props3 = {
   onClickTitle?: () => void;
   nfts?: OBOrderItem[];
   onClick?: () => void;
+  canShowAssetModal?: boolean;
 };
 
 const SingleCollectionCell = ({
@@ -122,9 +128,11 @@ const SingleCollectionCell = ({
   token,
   count = 0,
   nfts,
-  onClick
+  canShowAssetModal
 }: Props3) => {
   const tokenNames: string[] = [];
+  const [modalOpen, setModalOpen] = useState(false);
+  let basicTokenInfo: BasicTokenInfo | null = null;
 
   if (nfts && nfts.length && nfts[0].tokens) {
     for (const nft of nfts) {
@@ -141,23 +149,34 @@ const SingleCollectionCell = ({
     tokenId = token?.tokenName;
   }
 
+  if (count < 1 && tokenId && orderNft) {
+    basicTokenInfo = {
+      tokenId: tokenId,
+      collectionAddress: orderNft?.collectionAddress ?? '',
+      chainId: orderNft?.chainId ?? ChainId.Mainnet
+    };
+  }
+
   return (
     <div className="flex gap-2 items-center">
-      <div className="flex justify-center shrink-0 h-14 w-14">
-        <span
-          className="inline-block relative cursor-pointer"
-          onClick={() => {
-            onClick && onClick();
-          }}
-        >
-          <EZImage className="h-14 w-14 rounded-2xl overflow-clip" src={image} />
+      {canShowAssetModal && modalOpen && basicTokenInfo && (
+        <TokenCardModal data={basicTokenInfo} modalOpen={modalOpen} setModalOpen={setModalOpen} />
+      )}
 
-          {count > 1 && (
-            <div className="text-xs text-center pt-1 absolute top-0 right-0 block h-6 w-6 transform -translate-y-1/2 translate-x-1/2 rounded-full">
-              {count}
-            </div>
-          )}
-        </span>
+      <div className="flex justify-center shrink-0 h-14 w-14 mr-2">
+        <EZImage
+          className={twMerge('h-14 w-14 rounded-lg overflow-clip', canShowAssetModal ? 'cursor-pointer' : '')}
+          src={image}
+          onClick={() => {
+            setModalOpen(true);
+          }}
+        />
+
+        {count > 1 && (
+          <div className="text-xs text-center pt-1 absolute top-0 right-0 block h-6 w-6 transform -translate-y-1/2 translate-x-1/2 rounded-full">
+            {count}
+          </div>
+        )}
       </div>
 
       <div className={`flex flex-col truncate ${onClickTitle ? 'cursor-pointer' : ''}`}>
@@ -167,7 +186,7 @@ const SingleCollectionCell = ({
             className="font-bold whitespace-pre-wrap flex items-center"
             title={title}
           >
-            <div>
+            <div className={twMerge(secondaryTextColor, 'font-medium')}>
               {title}
               {orderNft?.hasBlueCheck === true && <BlueCheckInline />}
             </div>
@@ -199,17 +218,7 @@ const SingleCollectionCell = ({
             </ReactTooltip> */}
           </div>
         ) : (
-          <>
-            {tokenId && (
-              <NextLink
-                href={`/asset/1/${orderNft?.collectionAddress}/${token?.tokenId}`}
-                className={twMerge(secondaryTextColor, 'whitespace-pre-wrap')}
-                title={token?.tokenId}
-              >
-                {ellipsisString(tokenId)}
-              </NextLink>
-            )}
-          </>
+          <>{tokenId && <div className={twMerge('whitespace-pre-wrap')}>{ellipsisString(tokenId)}</div>}</>
         )}
       </div>
     </div>

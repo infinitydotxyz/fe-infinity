@@ -22,7 +22,7 @@ export const OrderbookRowButton = ({ order, outlineButtons = false }: Props) => 
     console.log('onClickBidHigher', order);
     // add to Cart as a New Buy Order:
     // todo: steve - addCartItem needs to know whether order is a single collection single nft order
-    // or single collection multi nft order  or a multi-collection order for proper image display
+    // or single collection multi nft order or a multi-collection order for proper image display
     // todo open modal here
   };
 

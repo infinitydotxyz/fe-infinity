@@ -18,6 +18,7 @@ interface Props {
   collectionId?: string;
   tokenId?: string;
   className?: string;
+  canShowAssetModal?: boolean;
 }
 
 enum OrderBy {
@@ -26,13 +27,18 @@ enum OrderBy {
   EndTime = 'endTime'
 }
 
-export const OrderbookContainer = ({ collectionId, tokenId, className = '' }: Props): JSX.Element => {
+export const OrderbookContainer = ({
+  collectionId,
+  tokenId,
+  className = '',
+  canShowAssetModal
+}: Props): JSX.Element => {
   return (
     <OrderbookContextProvider
       kind={'token'}
       context={{ collectionAddress: collectionId ?? '', tokenId: tokenId ?? '' }}
     >
-      <OrderbookContent className={className} />
+      <OrderbookContent className={className} canShowAssetModal={canShowAssetModal} />
     </OrderbookContextProvider>
   );
 };
@@ -41,9 +47,10 @@ export const OrderbookContainer = ({ collectionId, tokenId, className = '' }: Pr
 
 interface Props4 {
   className?: string;
+  canShowAssetModal?: boolean;
 }
 
-export const OrderbookContent = ({ className }: Props4) => {
+const OrderbookContent = ({ className, canShowAssetModal }: Props4) => {
   // const { query } = useRouter();
   const {
     orders,
@@ -84,7 +91,7 @@ export const OrderbookContent = ({ className }: Props4) => {
   return (
     <>
       <div className={`flex flex-col h-full overflow-y-clip min-h-[50vh] ${className}`}>
-        <div className="gap-3 flex justify-end pb-6">
+        <div className="gap-3 flex justify-end">
           <ADropdown
             label={orderTypeLabel}
             items={[
@@ -123,7 +130,7 @@ export const OrderbookContent = ({ className }: Props4) => {
                     <TextInputBox
                       addEthSymbol={true}
                       type="number"
-                      className={twMerge('font-heading p-3')}
+                      className={twMerge('p-3')}
                       label="Min"
                       placeholder=""
                       value={minPriceVal}
@@ -138,7 +145,7 @@ export const OrderbookContent = ({ className }: Props4) => {
                     <TextInputBox
                       addEthSymbol={true}
                       type="number"
-                      className={twMerge('font-heading ml-2 p-3')}
+                      className={twMerge('ml-2 p-3')}
                       label="Max"
                       placeholder=""
                       value={maxPriceVal}
@@ -181,6 +188,7 @@ export const OrderbookContent = ({ className }: Props4) => {
         </div>
 
         <OrderbookList
+          canShowAssetModal={canShowAssetModal}
           orderList={orders}
           isLoading={isLoading}
           fetchMore={fetchMore}

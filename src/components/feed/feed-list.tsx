@@ -1,7 +1,7 @@
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { useEffect, useState } from 'react';
 import { apiGet } from 'src/utils';
-import { Button, ScrollLoader, Spacer } from '../common';
+import { Button, CenteredContent, ScrollLoader, Spacer } from '../common';
 // import { CommentPanel } from '../feed/comment-panel';
 import { IoMdRefresh } from 'react-icons/io';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
@@ -105,7 +105,11 @@ export const FeedList = ({
         />
       </div>
 
-      {!isLoading && activities.length === 0 ? <div className="font-heading">No results found</div> : null}
+      {!isLoading && activities.length === 0 ? (
+        <CenteredContent>
+          <div className="text-sm">No results found</div>
+        </CenteredContent>
+      ) : null}
 
       <div className="space-y-4">
         {activities.map((activity) => {

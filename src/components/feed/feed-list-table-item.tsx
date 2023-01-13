@@ -173,11 +173,11 @@ export const FeedListTableItem = ({ activity }: Props) => {
           <NewsImage className="w-28 h-auto overflow-clip rounded-lg" src={activity?.image} />
 
           <div className="flex flex-col font-body w-full justify-around ml-8">
-            <div className="font-bold">{activity.paymentToken}</div>
+            <div className="">{activity.paymentToken}</div>
             <div>{activity.internalUrl}</div>
 
             <div className="flex item-center mt-2">
-              <div className="font-bold">{activity.fromDisplayName}</div>
+              <div className="">{activity.fromDisplayName}</div>
               <div className="ml-4">{format(activity.timestamp)}</div>
             </div>
           </div>
@@ -194,12 +194,12 @@ export const FeedListTableItem = ({ activity }: Props) => {
         </ExternalLink>
 
         <div className="flex flex-col font-body w-full justify-around ml-8">
-          <div className=" font-bold">{activity.collectionName}</div>
+          <div className="">{activity.collectionName}</div>
 
           <LinkText text={activity.to ?? ''} />
 
           <div className="flex item-center mt-2">
-            <div className="font-bold">{activity.toDisplayName}</div>
+            <div className="">{activity.toDisplayName}</div>
             <div className="ml-4">{format(activity.timestamp)}</div>
           </div>
         </div>
@@ -213,12 +213,12 @@ export const FeedListTableItem = ({ activity }: Props) => {
         <EZImage className="w-16 h-16 overflow-clip rounded-lg" src={activity?.image} />
 
         <div className="flex flex-col font-body w-full justify-around ml-8 break-all">
-          <div className=" font-bold">{activity.paymentToken}</div>
+          <div className="">{activity.paymentToken}</div>
 
           <LinkText text={activity.internalUrl ?? ''} />
 
           <div className="flex item-center mt-2">
-            <div className="font-bold">{activity.fromDisplayName}</div>
+            <div className="">{activity.fromDisplayName}</div>
             <div className="ml-4">{format(activity.timestamp)}</div>
           </div>
         </div>
@@ -323,8 +323,8 @@ interface Props2 {
 const TableItem = ({ label, children }: Props2) => {
   return (
     <div className="w-auto mr-4">
-      <div className={twMerge(secondaryTextColor, 'whitespace-nowrap')}>{label}</div>
-      <div className="font-medium whitespace-nowrap">{children}</div>
+      <div className={twMerge(secondaryTextColor, 'font-medium whitespace-nowrap')}>{label}</div>
+      <div className="whitespace-nowrap">{children}</div>
     </div>
   );
 };

@@ -38,7 +38,11 @@ export const UserActivityList = ({ userAddress, types, className }: Props) => {
         </div>
       </div>
       <div className="space-y-3 pointer-events-auto">
-        {!isLoading && activities?.length === 0 ? <div className="font-heading">No results found</div> : null}
+        {!isLoading && activities?.length === 0 ? (
+          <CenteredContent>
+            <div className="text-sm">No results found</div>
+          </CenteredContent>
+        ) : null}
 
         {activities.length > 0 &&
           activities?.map((event, index) => {
