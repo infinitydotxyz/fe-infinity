@@ -1,13 +1,15 @@
 import { Combobox } from '@headlessui/react';
+import { NftDisplayData } from '@infinityxyz/lib-frontend/types/core';
 import { CollectionSearchDto } from '@infinityxyz/lib-frontend/types/dto';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { AiOutlineSearch } from 'react-icons/ai';
+import { BasicTokenInfo } from 'src/components/astra/types';
 import { useOrderbook } from 'src/components/orderbook/OrderbookContext';
 import { useIsMounted } from 'src/hooks/useIsMounted';
-import { cardColor, hoverColor, borderColor, textColor } from 'src/utils/ui-constants';
+import { borderColor, cardColor, hoverColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { getSearchResultKey, getSearchResultLink, SearchResultItem } from './search-results';
+import { getSearchResultKey, SearchResultItem } from './search-results';
 import { SearchResult } from './types';
 
 interface Props {
@@ -16,16 +18,30 @@ interface Props {
   placeholder: string;
   setQuery: (query: string) => void;
   data: SearchResult[];
+  tokenSearch?: boolean;
   profileSearch?: boolean;
+  orderSearch?: boolean;
+  setSelectedCollection?: (collection: string) => void;
+  setSelectedToken?: (basicTokenInfo: BasicTokenInfo) => void;
 }
 
-export function SearchInput({ expanded, query, setQuery, placeholder, data, profileSearch }: Props): JSX.Element {
+export function SearchInput({
+  expanded,
+  query,
+  setQuery,
+  placeholder,
+  data,
+  tokenSearch,
+  profileSearch,
+  orderSearch,
+  setSelectedCollection,
+  setSelectedToken
+}: Props): JSX.Element {
   const router = useRouter();
   const [isActive, setIsActive] = useState(false);
   const [selected, setSelected] = useState<SearchResult | null>(null);
   const isMounted = useIsMounted();
   const { filters, setFilters } = useOrderbook();
-
   const inputRef: React.RefObject<HTMLInputElement> = useRef(null);
 
   useEffect(() => {
@@ -49,8 +65,17 @@ export function SearchInput({ expanded, query, setQuery, placeholder, data, prof
       const newFilter = { ...filters };
       newFilter.collections = [(selected as CollectionSearchDto).address];
       setFilters(newFilter);
+    } else if (selected && orderSearch) {
+      setSelectedCollection && setSelectedCollection((selected as CollectionSearchDto).address);
+    } else if (selected && tokenSearch) {
+      const basicTokenInfo: BasicTokenInfo = {
+        tokenId: (selected as NftDisplayData).tokenId,
+        collectionAddress: (selected as NftDisplayData).collectionDisplayData?.address,
+        chainId: (selected as NftDisplayData).collectionDisplayData?.chainId
+      };
+      setSelectedToken && setSelectedToken(basicTokenInfo);
     } else if (selected) {
-      const pathname = getSearchResultLink(selected);
+      const pathname = `/collection/${(selected as CollectionSearchDto).slug}/items`;
       router.push(
         {
           pathname

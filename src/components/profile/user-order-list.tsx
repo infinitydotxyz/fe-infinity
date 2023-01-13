@@ -10,7 +10,6 @@ import { fetchOrderNonce } from 'src/utils/orderbookUtils';
 import { borderColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { AButton, AOutlineButton, ATextButton } from '../astra/astra-button';
-import { ACollectionFilter } from '../astra/astra-collection-filter';
 import {
   ACustomMenuButton,
   ACustomMenuContents,
@@ -28,6 +27,7 @@ import {
   toastInfo,
   toastSuccess
 } from '../common';
+import { CollectionSearchInput } from '../common/search/collection-search-input';
 import { UserOrderListItem } from './user-order-list-item';
 
 export const DEFAULT_ORDER_TYPE_FILTER = 'listings';
@@ -247,14 +247,18 @@ export const UserOrderList = ({ userInfo, className = '', toggleOrderSelection, 
   return (
     <div className={twMerge('min-h-[50vh]', className)}>
       <div className={twMerge(borderColor, 'w-full flex   py-2 border-t-[1px]')}>
-        <ACollectionFilter
-          setSelectedCollections={(value) => {
-            const newFilter = { ...filter };
-            newFilter.collections = value;
-            setFilter(newFilter);
-            setApiFilter(newFilter);
-          }}
-        />
+        <div className="ml-4">
+          <CollectionSearchInput
+            expanded
+            orderSearch
+            setSelectedCollection={(value) => {
+              const newFilter = { ...filter };
+              newFilter.collections = [value];
+              setFilter(newFilter);
+              setApiFilter(newFilter);
+            }}
+          />
+        </div>
         <Spacer />
         <ADropdown
           hasBorder={false}

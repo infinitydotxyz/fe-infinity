@@ -40,16 +40,6 @@ export const getSearchResultKey = (item: SearchResult) => {
   }
 };
 
-export const getSearchResultLink = (item: SearchResult) => {
-  if ('address' in item) {
-    return `/collection/${item.slug}/items`;
-  } else if ('tokenId' in item) {
-    return `/asset/${item.collectionDisplayData?.chainId ?? '1'}/${item.collectionDisplayData?.address}/${
-      item.tokenId
-    }`;
-  }
-};
-
 export const SearchResultItem = ({ item }: { item: SearchResult }) => {
   if ('address' in item) {
     return <CollectionSearchResult item={item} />;
