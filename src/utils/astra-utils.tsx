@@ -23,7 +23,6 @@ export const fetchCollectionTokens = async (
       filters.orderBy = 'price';
       filters.orderDirection = sort === SORT_FILTERS.highestPrice ? 'desc' : 'asc';
       break;
-    case SORT_FILTERS.rarityRank:
     case SORT_FILTERS.tokenIdNumeric:
       filters.orderBy = sort;
       filters.orderDirection = 'asc';
