@@ -1,21 +1,18 @@
 import { CollectionSearchDto } from '@infinityxyz/lib-frontend/types/dto';
 import { useRouter } from 'next/router';
-import { FC, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { MdClose } from 'react-icons/md';
-import { DashboardLayout, DashboardProps } from 'src/components/astra/dashboard/dashboard-layout';
-import { ProfileTokenCache } from 'src/components/astra/token-grid/token-fetcher';
 import { TokenGrid } from 'src/components/astra/token-grid/token-grid';
 import { useProfileTokenFetcher } from 'src/components/astra/useFetcher';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { borderColor, hoverColorBrandText } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { EZImage } from '../common';
 import { CollectionSearchInput } from '../common/search/collection-search-input';
 import { useOrderbook } from '../orderbook/OrderbookContext';
 
-const TokensGridWrapper: FC = () => {
-  const { tokenFetcher, isSelected, isSelectable, listMode, toggleSelection, setNumTokens } = useDashboardContext();
+const TokensGridWrapper = () => {
+  const { isSelected, isSelectable, listMode, toggleSelection, setNumTokens } = useDashboardContext();
 
   const router = useRouter();
   const addressFromPath = router.query?.address as string;
@@ -25,7 +22,6 @@ const TokensGridWrapper: FC = () => {
   return (
     <TokenGrid
       listMode={listMode}
-      tokenFetcher={tokenFetcher}
       className="px-4 py-4"
       onClick={toggleSelection}
       isSelectable={isSelectable}
@@ -40,48 +36,40 @@ const TokensGridWrapper: FC = () => {
   );
 };
 
-export const UserNFTs = (props: DashboardProps) => {
-  const { setTokenFetcher, refreshTrigger } = useDashboardContext();
-  const { chainId } = useOnboardContext();
-  const router = useRouter();
-  const addressFromPath = router.query?.address as string;
-  const { filters, setFilters } = useOrderbook();
+export const UserNFTs = () => {
   const [selectedCollection, setSelectedCollection] = useState<CollectionSearchDto>();
+  const { filters, setFilters } = useOrderbook();
 
   const handleCollectionSearchResult = (result: CollectionSearchDto) => {
-    setSelectedCollection(result);
     const newFilter = { ...filters };
     newFilter.collections = [result.address];
     setFilters(newFilter);
+    setSelectedCollection(result);
   };
 
   const handleCollectionSearchClear = () => {
-    setSelectedCollection(undefined);
     const newFilter = { ...filters };
     newFilter.collections = [];
     setFilters(newFilter);
+    setSelectedCollection(undefined);
   };
 
-  useEffect(() => {
-    if (addressFromPath) {
-      setTokenFetcher(ProfileTokenCache.shared().fetcher(addressFromPath, chainId));
-    }
-  }, [addressFromPath, chainId, refreshTrigger]);
-
   return (
-    <DashboardLayout {...props}>
-      <div className={twMerge(borderColor, 'w-full flex border-t-[1px]')}>
-        <div className="px-4 mt-2">
-          <CollectionSearchInput
-            expanded
-            profileSearch
-            setSelectedCollection={(value) => {
-              handleCollectionSearchResult(value);
-            }}
-          />
+    <>
+      <div className={twMerge(borderColor, 'flex border-t-[1px]')}>
+        <div className="flex px-4 mt-2 w-full">
+          <div className="">
+            <CollectionSearchInput
+              expanded
+              profileSearch
+              setSelectedCollection={(value) => {
+                handleCollectionSearchResult(value);
+              }}
+            />
+          </div>
 
           {selectedCollection && (
-            <div className={twMerge('flex items-center rounded-lg border px-2', borderColor)}>
+            <div className={twMerge('flex items-center rounded-lg border px-2 ml-2', borderColor)}>
               <div className="flex items-center">
                 <EZImage src={selectedCollection.profileImage} className="w-6 h-6 rounded-full mr-2" />
                 <div className="text-sm font-medium">{selectedCollection.name}</div>
@@ -99,6 +87,6 @@ export const UserNFTs = (props: DashboardProps) => {
         </div>
       </div>
       <TokensGridWrapper />
-    </DashboardLayout>
+    </>
   );
 };

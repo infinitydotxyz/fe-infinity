@@ -89,7 +89,7 @@ export const DashboardLayout: React.FC<DashboardProps> = ({ children, error, ...
         // This is added just for the ASortButton, so remove if we change how this works
         <OrderbookContextProvider
           limit={50}
-          kind={'user'}
+          kind={'profile'}
           context={{ chainId: chainId as ChainId, userAddress: props.asset.user.address, side: props.asset.orderSide }}
         >
           <ProfileLayout>{children}</ProfileLayout>

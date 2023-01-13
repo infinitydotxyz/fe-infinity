@@ -17,13 +17,13 @@ export function useCollectionTokenFetcher(collectionAddress: string | undefined)
   });
 }
 
-export function useProfileTokenFetcher(collectionAddress: string | undefined) {
+export function useProfileTokenFetcher(userAddress: string | undefined) {
   const { chainId } = useOnboardContext();
 
   return useTokenFetcher<ApiNftData, Erc721TokenOffer>({
-    fetcher: (cursor, filters) => fetchProfileTokens(collectionAddress || '', chainId, { cursor, ...filters }),
+    fetcher: (cursor, filters) => fetchProfileTokens(userAddress || '', chainId, { cursor, ...filters }),
     mapper: (data) => nftsToCardDataWithOfferFields(data, '', ''),
-    execute: collectionAddress !== ''
+    execute: userAddress !== ''
   });
 }
 

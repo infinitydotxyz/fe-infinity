@@ -220,7 +220,7 @@ const orderCache = new OrderCache();
 
 interface BaseProps {
   children: ReactNode;
-  kind?: 'collection' | 'token' | 'user';
+  kind?: 'collection' | 'token' | 'profile';
   limit?: number;
 }
 
@@ -239,8 +239,8 @@ interface TokenProps extends BaseProps {
   };
 }
 
-interface UserProps extends BaseProps {
-  kind?: 'user';
+interface ProfileProps extends BaseProps {
+  kind?: 'profile';
   context?: {
     chainId: ChainId;
     userAddress: string;
@@ -248,7 +248,7 @@ interface UserProps extends BaseProps {
   };
 }
 
-export type OrderbookProviderProps = CollectionProps | TokenProps | UserProps;
+export type OrderbookProviderProps = CollectionProps | TokenProps | ProfileProps;
 
 export const OrderbookContextProvider = ({ children, limit = ITEMS_PER_PAGE, ...props }: OrderbookProviderProps) => {
   const router = useRouter();
@@ -400,7 +400,7 @@ export const OrderbookContextProvider = ({ children, limit = ITEMS_PER_PAGE, ...
           endpoint: `/v2/collections/${chainId}:${props.context?.collectionAddress}/orders`,
           query
         };
-      } else if (props.kind === 'user') {
+      } else if (props.kind === 'profile') {
         if (props.context?.side === Queries.Side.Maker) {
           const query: Queries.MakerOrdersQuery = {
             ...baseQuery,
@@ -465,7 +465,6 @@ export const OrderbookContextProvider = ({ children, limit = ITEMS_PER_PAGE, ...
                   case 'single-token':
                     tokens = [item.token];
                     break;
-
                   case 'token-list':
                     tokens = item.tokens;
                     break;

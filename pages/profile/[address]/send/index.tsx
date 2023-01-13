@@ -1,13 +1,18 @@
 import * as Queries from '@infinityxyz/lib-frontend/types/dto/orders/orders-queries.dto';
 import { GetServerSidePropsContext } from 'next';
 import {
-  DashboardProps,
-  getServerSideProps as getDashboardServerSideProps
+  DashboardLayout,
+  getServerSideProps as getDashboardServerSideProps,
+  ProfileDashboardProps
 } from 'src/components/astra/dashboard/dashboard-layout';
 import { UserNFTs } from 'src/components/profile/user-nfts';
 
-export default function ProfileSendPage(props: DashboardProps) {
-  return <UserNFTs {...props} />;
+export default function ProfileSendPage(props: ProfileDashboardProps) {
+  return (
+    <DashboardLayout {...props}>
+      <UserNFTs />
+    </DashboardLayout>
+  );
 }
 
 export function getServerSideProps(context: GetServerSidePropsContext) {
