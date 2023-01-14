@@ -7,10 +7,8 @@ import { AOutlineButton } from '../astra-button';
 import { ErrorOrLoading } from '../error-or-loading';
 import { BasicTokenInfo, Erc721TokenOffer } from '../types';
 import { TokenCardModal } from './token-card-modal';
-import { TokenFetcherAlt } from './token-fetcher';
 
 interface Props {
-  tokenFetcher?: TokenFetcherAlt;
   listMode: boolean;
   className?: string;
   onClick?: (data: Erc721TokenOffer) => void;

@@ -98,21 +98,26 @@ export const AstraCart = ({
     ordersMap.set(order.id ?? '', ords);
   }
 
+  const numItems = Math.max(tokens.length, collections.length, orders.length);
   const clearButton = (
     <div className="flex items-center">
-      <div className={twMerge(secondaryBgColor, textColor, 'rounded-full h-6 w-6 text-center mr-1')}>
-        {Math.max(tokens.length, collections.length, orders.length)}
-      </div>
-      <div
-        className={twMerge('ml-2 text-sm cursor-pointer', brandTextColor)}
-        onClick={() => {
-          onCollsRemove();
-          onTokensRemove();
-          onOrdersRemove();
-        }}
-      >
-        Clear
-      </div>
+      {numItems > 0 && (
+        <>
+          <div className={twMerge(secondaryBgColor, textColor, 'rounded-full h-6 w-6 text-center mr-1')}>
+            {Math.max(tokens.length, collections.length, orders.length)}
+          </div>
+          <div
+            className={twMerge('ml-2 text-sm cursor-pointer', brandTextColor)}
+            onClick={() => {
+              onCollsRemove();
+              onTokensRemove();
+              onOrdersRemove();
+            }}
+          >
+            Clear
+          </div>
+        </>
+      )}
     </div>
   );
 

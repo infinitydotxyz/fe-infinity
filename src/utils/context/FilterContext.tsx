@@ -9,7 +9,7 @@ export enum OrderType {
 export type Filter = {
   chainId?: string;
   listingType?: ListingType | '';
-  orderType?: OrderType | '';
+  orderType?: 'listings' | 'offers-made' | 'offers-received' | '';
   traitTypes?: string[];
   traitValues?: string[];
   collectionAddresses?: string[];
