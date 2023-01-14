@@ -1,4 +1,3 @@
-import { Menu } from '@headlessui/react';
 import { ChainOBOrder, Order, OrderItemToken, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import {
   BaseOrderQuery,
@@ -13,23 +12,17 @@ import { apiGet, ellipsisAddress, extractErrorMsg, ITEMS_PER_PAGE } from 'src/ut
 import { cancelAllOrders } from 'src/utils/exchange/orders';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { fetchOrderNonce } from 'src/utils/orderbookUtils';
-import { borderColor, brandTextColor, hoverColorBrandText, secondaryTextColor } from 'src/utils/ui-constants';
+import { borderColor, hoverColorBrandText, secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { AOutlineButton } from '../astra/astra-button';
-import {
-  ACustomMenuButton,
-  ACustomMenuContents,
-  ACustomMenuItems,
-  ADropdown,
-  ADropdownButton
-} from '../astra/astra-dropdown';
+import { ADropdown } from '../astra/astra-dropdown';
+import { APriceFilter } from '../astra/astra-price-filter';
 import {
   CenteredContent,
   EZImage,
   ScrollLoader,
   Spacer,
   Spinner,
-  TextInputBox,
   toastError,
   toastInfo,
   toastSuccess
@@ -76,15 +69,11 @@ interface Props {
 
 export const UserOrderList = ({ userInfo, className = '', toggleOrderSelection, isOrderSelected }: Props) => {
   const { user, chainId, waitForTransaction, getSigner } = useOnboardContext();
-
-  const [minPriceVal, setMinPriceVal] = useState('');
-  const [maxPriceVal, setMaxPriceVal] = useState('');
   const [data, setData] = useState<SignedOBOrder[]>([]);
   const [isFetching, setIsFetching] = useState(false);
   const [cursor, setCursor] = useState('');
   const [hasNextPage, setHasNextPage] = useState(false);
   const [isCancellingAll, setIsCancellingAll] = useState(false);
-  const [apiFilter, setApiFilter] = useState<UserOrderFilter>({ orderType: DEFAULT_ORDER_TYPE_FILTER });
   const [ddLabel, setDdLabel] = useState<string>('Listings');
   const [filter, setFilter] = useState<UserOrderFilter>({
     orderType: DEFAULT_ORDER_TYPE_FILTER
@@ -96,7 +85,6 @@ export const UserOrderList = ({ userInfo, className = '', toggleOrderSelection, 
     const newFilter = { ...filter };
     newFilter.collections = [result.address];
     setFilter(newFilter);
-    setApiFilter(newFilter);
   };
 
   const handleCollectionSearchClear = () => {
@@ -104,7 +92,6 @@ export const UserOrderList = ({ userInfo, className = '', toggleOrderSelection, 
     const newFilter = { ...filter };
     newFilter.collections = [];
     setFilter(newFilter);
-    setApiFilter(newFilter);
   };
 
   const fetchData = async (isRefresh = false) => {
@@ -117,31 +104,34 @@ export const UserOrderList = ({ userInfo, className = '', toggleOrderSelection, 
     const baseQuery: BaseOrderQuery = {
       limit: ITEMS_PER_PAGE,
       cursor: newCursor,
-      minPrice: parseFloat(apiFilter.minPrice ?? ''),
-      maxPrice: parseFloat(apiFilter.maxPrice ?? ''),
-      orderBy: apiFilter.orderBy
+      minPrice: parseFloat(filter.minPrice ?? ''),
+      maxPrice: parseFloat(filter.maxPrice ?? ''),
+      orderBy: filter.orderBy
     };
 
-    let query: MakerOrdersQuery | TakerOrdersQuery | BaseOrderQuery = { ...baseQuery };
-    if (apiFilter.orderType === 'listings') {
+    let query: MakerOrdersQuery | TakerOrdersQuery | BaseOrderQuery = baseQuery;
+    if (filter.orderType === 'listings') {
       query = {
+        ...query,
         isSellOrder: true,
         side: Side.Maker
       };
-    } else if (apiFilter.orderType === 'offers-made') {
+    } else if (filter.orderType === 'offers-made') {
       query = {
+        ...query,
         isSellOrder: false,
         side: Side.Maker
       };
-    } else if (apiFilter.orderType === 'offers-received') {
+    } else if (filter.orderType === 'offers-received') {
       query = {
+        ...query,
         isSellOrder: false,
         side: Side.Taker,
         status: OrderStatus.Active
       };
     }
 
-    const collection = apiFilter.collections?.[0] ?? ''; // api only supports 1 collection for now
+    const collection = filter.collections?.[0] ?? ''; // api only supports 1 collection for now
     if (collection) {
       query = {
         ...query,
@@ -241,18 +231,10 @@ export const UserOrderList = ({ userInfo, className = '', toggleOrderSelection, 
   useEffect(() => {
     setData([]);
     fetchData(true);
-  }, [apiFilter]);
-
-  const onClear = () => {
-    const newFilter = { ...filter };
-    newFilter.minPrice = '';
-    newFilter.maxPrice = '';
-    setFilter(newFilter);
-    setApiFilter(newFilter);
-  };
+  }, [filter]);
 
   const onClickAcceptOfferCancelOrder = (order: SignedOBOrder) => {
-    if (apiFilter.orderType === 'offers-received') {
+    if (filter.orderType === 'offers-received') {
       // no op in this release; in future allow users to accept offers
     } else {
       toggleOrderSelection(order);
@@ -265,7 +247,27 @@ export const UserOrderList = ({ userInfo, className = '', toggleOrderSelection, 
       orderType: newType
     };
     setFilter(newFilter);
-    setApiFilter(newFilter);
+  };
+
+  const setMinPrice = (value: string) => {
+    const newFilter = { ...filter };
+    newFilter.minPrice = value;
+    newFilter.orderBy = OrderBy.Price;
+    setFilter(newFilter);
+  };
+
+  const setMaxPrice = (value: string) => {
+    const newFilter = { ...filter };
+    newFilter.maxPrice = value;
+    newFilter.orderBy = OrderBy.Price;
+    setFilter(newFilter);
+  };
+
+  const onPricesClear = () => {
+    const newFilter = { ...filter };
+    newFilter.minPrice = '';
+    newFilter.maxPrice = '';
+    setFilter(newFilter);
   };
 
   return (
@@ -327,59 +329,7 @@ export const UserOrderList = ({ userInfo, className = '', toggleOrderSelection, 
           ]}
         />
 
-        <Menu>
-          {({ open }) => (
-            <ACustomMenuContents>
-              <span>
-                <ACustomMenuButton>
-                  <AOutlineButton tooltip="Filter by price">
-                    <ADropdownButton>Price</ADropdownButton>
-                  </AOutlineButton>
-                </ACustomMenuButton>
-              </span>
-
-              <ACustomMenuItems open={open} alignMenuRight={true} innerClassName="border-0">
-                <div className="flex mr-2">
-                  <TextInputBox
-                    addEthSymbol={true}
-                    type="number"
-                    className="font-heading p-3"
-                    label="Min"
-                    placeholder=""
-                    value={minPriceVal}
-                    onChange={(value) => {
-                      setMinPriceVal(value);
-                      const newFilter = { ...filter };
-                      newFilter.minPrice = value;
-                      newFilter.orderBy = OrderBy.Price;
-                      setFilter(newFilter);
-                      setApiFilter(newFilter);
-                    }}
-                  />
-                  <TextInputBox
-                    addEthSymbol={true}
-                    type="number"
-                    className="font-heading ml-2 p-3"
-                    label="Max"
-                    placeholder=""
-                    value={maxPriceVal}
-                    onChange={(value) => {
-                      setMaxPriceVal(value);
-                      const newFilter = { ...filter };
-                      newFilter.maxPrice = value;
-                      newFilter.orderBy = OrderBy.Price;
-                      setFilter(newFilter);
-                      setApiFilter(newFilter);
-                    }}
-                  />
-                </div>
-                <Menu.Button onClick={onClear} className={twMerge('mt-4 ml-1 text-sm', brandTextColor)}>
-                  Clear
-                </Menu.Button>
-              </ACustomMenuItems>
-            </ACustomMenuContents>
-          )}
-        </Menu>
+        <APriceFilter onClear={onPricesClear} setMinPrice={setMinPrice} setMaxPrice={setMaxPrice} />
 
         <AOutlineButton
           className={twMerge('font-medium text-sm', secondaryTextColor, hoverColorBrandText)}
@@ -429,7 +379,7 @@ export const UserOrderList = ({ userInfo, className = '', toggleOrderSelection, 
               <UserOrderListItem
                 key={idx}
                 order={order}
-                orderType={apiFilter.orderType}
+                orderType={filter.orderType}
                 userInfo={userInfo}
                 selected={isOrderSelected(order)}
                 onClickActionBtn={onClickAcceptOfferCancelOrder}

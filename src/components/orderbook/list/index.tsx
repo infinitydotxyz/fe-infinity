@@ -1,16 +1,6 @@
-import { Menu } from '@headlessui/react';
 import { useEffect, useState } from 'react';
-import { AOutlineButton } from 'src/components/astra/astra-button';
-import {
-  ACustomMenuButton,
-  ACustomMenuContents,
-  ACustomMenuItems,
-  ADropdown,
-  ADropdownButton
-} from 'src/components/astra/astra-dropdown';
-import { TextInputBox } from 'src/components/common';
-import { brandTextColor } from 'src/utils/ui-constants';
-import { twMerge } from 'tailwind-merge';
+import { ADropdown } from 'src/components/astra/astra-dropdown';
+import { APriceFilter } from 'src/components/astra/astra-price-filter';
 import { getSortLabel, OrderbookContextProvider, SORT_FILTERS, SORT_LABELS, useOrderbook } from '../OrderbookContext';
 import { OrderbookList } from './orderbook-list';
 
@@ -66,8 +56,6 @@ const OrderbookContent = ({ className, canShowAssetModal }: Props4) => {
   } = useOrderbook();
   const [sortLabel, setSortLabel] = useState<string>(SORT_LABELS[SORT_FILTERS.highestPrice]);
   const [orderTypeLabel, setOrderTypeLabel] = useState<string>('Listings');
-  const [minPriceVal, setMinPriceVal] = useState(filters.minPrice || '');
-  const [maxPriceVal, setMaxPriceVal] = useState(filters.maxPrice || '');
 
   useEffect(() => {
     setSortLabel(getSortLabel(filters?.sort, SORT_LABELS[SORT_FILTERS.highestPrice]));
@@ -79,9 +67,21 @@ const OrderbookContent = ({ className, canShowAssetModal }: Props4) => {
 
   const { orderTypes = [] } = filters;
 
-  const onClear = () => {
-    setMinPriceVal('');
-    setMaxPriceVal('');
+  const setMinPrice = (value: string) => {
+    const newFilters = { ...filters };
+    newFilters.minPrice = value;
+    newFilters.orderBy = OrderBy.Price;
+    setFilters(newFilters);
+  };
+
+  const setMaxPrice = (value: string) => {
+    const newFilters = { ...filters };
+    newFilters.maxPrice = value;
+    newFilters.orderBy = OrderBy.Price;
+    setFilters(newFilters);
+  };
+
+  const onPricesClear = () => {
     updateFilters([
       { name: 'minPrice', value: '' },
       { name: 'maxPrice', value: '' }
@@ -114,57 +114,7 @@ const OrderbookContent = ({ className, canShowAssetModal }: Props4) => {
             ]}
           />
 
-          <Menu>
-            {({ open }) => (
-              <ACustomMenuContents>
-                <span>
-                  <ACustomMenuButton>
-                    <AOutlineButton tooltip="Filter by price">
-                      <ADropdownButton isMenuOpen={open}>Price</ADropdownButton>
-                    </AOutlineButton>
-                  </ACustomMenuButton>
-                </span>
-
-                <ACustomMenuItems open={open} alignMenuRight={true} innerClassName="border-0">
-                  <div className="flex mr-2">
-                    <TextInputBox
-                      addEthSymbol={true}
-                      type="number"
-                      className={twMerge('p-3')}
-                      label="Min"
-                      placeholder=""
-                      value={minPriceVal}
-                      onChange={(value) => {
-                        setMinPriceVal(value);
-                        const newFilters = { ...filters };
-                        newFilters.minPrice = value;
-                        newFilters.orderBy = OrderBy.Price;
-                        setFilters(newFilters);
-                      }}
-                    />
-                    <TextInputBox
-                      addEthSymbol={true}
-                      type="number"
-                      className={twMerge('ml-2 p-3')}
-                      label="Max"
-                      placeholder=""
-                      value={maxPriceVal}
-                      onChange={(value) => {
-                        setMaxPriceVal(value);
-                        const newFilters = { ...filters };
-                        newFilters.maxPrice = value;
-                        newFilters.orderBy = OrderBy.Price;
-                        setFilters(newFilters);
-                      }}
-                    />
-                  </div>
-                  <Menu.Button onClick={onClear} className={twMerge('mt-4 ml-1 text-sm', brandTextColor)}>
-                    Clear
-                  </Menu.Button>
-                </ACustomMenuItems>
-              </ACustomMenuContents>
-            )}
-          </Menu>
+          <APriceFilter onClear={onPricesClear} setMinPrice={setMinPrice} setMaxPrice={setMaxPrice} />
 
           <ADropdown
             alignMenuRight={true}

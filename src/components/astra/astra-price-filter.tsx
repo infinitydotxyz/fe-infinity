@@ -3,23 +3,18 @@ import { useState } from 'react';
 import { brandTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { TextInputBox } from '../common';
-import { useOrderbook } from '../orderbook/OrderbookContext';
 import { AOutlineButton } from './astra-button';
 import { ACustomMenuButton, ACustomMenuContents, ACustomMenuItems, ADropdownButton } from './astra-dropdown';
 
-export const APriceFilter: React.FC = () => {
-  const { updateFilters, filters } = useOrderbook();
-  const [minPriceVal, setMinPriceVal] = useState(filters.minPrice || '');
-  const [maxPriceVal, setMaxPriceVal] = useState(filters.maxPrice || '');
+interface Props {
+  setMinPrice: (value: string) => void;
+  setMaxPrice: (value: string) => void;
+  onClear: () => void;
+}
 
-  const onClear = () => {
-    setMinPriceVal('');
-    setMaxPriceVal('');
-    updateFilters([
-      { name: 'minPrice', value: '' },
-      { name: 'maxPrice', value: '' }
-    ]);
-  };
+export const APriceFilter = ({ setMinPrice, setMaxPrice, onClear }: Props) => {
+  const [minPriceVal, setMinPriceVal] = useState('');
+  const [maxPriceVal, setMaxPriceVal] = useState('');
 
   return (
     <Menu>
@@ -44,6 +39,7 @@ export const APriceFilter: React.FC = () => {
                 value={minPriceVal}
                 onChange={(value) => {
                   setMinPriceVal(value);
+                  setMinPrice(value);
                 }}
               />
               <TextInputBox
@@ -55,10 +51,18 @@ export const APriceFilter: React.FC = () => {
                 value={maxPriceVal}
                 onChange={(value) => {
                   setMaxPriceVal(value);
+                  setMaxPrice(value);
                 }}
               />
             </div>
-            <Menu.Button onClick={onClear} className={twMerge('mt-4 ml-1 text-sm', brandTextColor)}>
+            <Menu.Button
+              onClick={() => {
+                setMinPriceVal('');
+                setMaxPriceVal('');
+                onClear();
+              }}
+              className={twMerge('mt-4 ml-1 text-sm', brandTextColor)}
+            >
               Clear
             </Menu.Button>
           </ACustomMenuItems>

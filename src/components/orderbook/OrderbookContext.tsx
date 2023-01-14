@@ -22,7 +22,7 @@ export type OBFilters = {
    * @deprecated No longer used in v3. Use `orderType` instead.
    */
   orderTypes?: string[];
-  orderType?: string;
+  orderType?: 'listings' | 'offers-made' | 'offers-received' | '';
   collections?: string[];
   minPrice?: string;
   maxPrice?: string;
@@ -187,7 +187,7 @@ const parseRouterQueryParamsToFilters = (query: ParsedUrlQuery): OBFilters => {
     newFilters.sort = sort as string;
   }
 
-  newFilters.orderType = _orderType as string;
+  newFilters.orderType = _orderType as 'listings' | 'offers-made' | 'offers-received' | '';
 
   return newFilters;
 };

@@ -16,6 +16,7 @@ import { TokenGrid } from 'src/components/astra/token-grid/token-grid';
 import { useCollectionTokenFetcher } from 'src/components/astra/useFetcher';
 import { Spacer } from 'src/components/common';
 import { CollectionNftSearchInput } from 'src/components/common/search/collection-nft-search-input';
+import { useOrderbook } from 'src/components/orderbook/OrderbookContext';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
 
 const GridWrapper: FC = () => {
@@ -75,6 +76,23 @@ export default function ItemsPage(props: DashboardProps) {
     </Head>
   );
 
+  const { updateFilters } = useOrderbook();
+
+  const setMinPrice = (value: string) => {
+    updateFilters([{ name: 'minPrice', value }]);
+  };
+
+  const setMaxPrice = (value: string) => {
+    updateFilters([{ name: 'maxPrice', value }]);
+  };
+
+  const onPricesClear = () => {
+    updateFilters([
+      { name: 'minPrice', value: '' },
+      { name: 'maxPrice', value: '' }
+    ]);
+  };
+
   return (
     <DashboardLayout {...props}>
       {head}
@@ -86,7 +104,7 @@ export default function ItemsPage(props: DashboardProps) {
         <div className="flex space-x-2">
           <ASortButton />
           <AStatusFilterButton />
-          <APriceFilter />
+          <APriceFilter onClear={onPricesClear} setMinPrice={setMinPrice} setMaxPrice={setMaxPrice} />
           <ATraitFilter />
         </div>
       </div>
