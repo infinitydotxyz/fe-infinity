@@ -5,12 +5,12 @@ const TermsPage = () => {
   return (
     <APageBox title="Terms and Conditions" className="overflow-x-clip overflow-y-auto">
       <div className="flex flex-col items-center justify-center space-y-2">
-        <div className="font-normal text-3xl">Infinity</div>
+        <div className="font-bold font-heading text-3xl">Infinity</div>
         <div className="underline">Terms and Conditions of Use</div>
       </div>
 
-      <div className="space-y-2">
-        <div>Last Updated: Nov 10, 2022</div>
+      <div className="space-y-2 text-sm">
+        <div>Last Updated: Jan 20, 2023</div>
         <div className="space-y-4">
           <p dir="ltr" className="font-bold">
             <span>Introduction</span>
