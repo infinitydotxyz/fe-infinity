@@ -38,7 +38,7 @@ export const TokenGrid = ({
 }: Props) => {
   let contents;
 
-  if (cardData.length === 0 || isError || isLoading) {
+  if (isError) {
     contents = <ErrorOrLoading error={!!isError || !!isLoading} noData={cardData.length === 0} />;
   } else {
     if (listMode) {

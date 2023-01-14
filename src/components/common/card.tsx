@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { AiOutlineCheckCircle, AiOutlinePlusCircle } from 'react-icons/ai';
-import { bgColor, brandTextColor, cardColor, iconButtonStyle, selectionBorder } from 'src/utils/ui-constants';
+import { brandTextColor, cardColor, iconButtonStyle, secondaryBgColor, selectionBorder } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { AButton } from '../astra/astra-button';
 import { TokenCardModal } from '../astra/token-grid/token-card-modal';
@@ -56,12 +56,12 @@ export const GridCard = ({ data, onClick, selected, isSelectable }: Props): JSX.
           <div className="absolute top-0 bottom-0 left-0 right-0 rounded-t-lg overflow-clip">
             <EZImage src={data?.image} className="hover:scale-110 transition-all" />
             {selected && (
-              <div className={twMerge('absolute top-2 right-2 rounded-full', bgColor)}>
+              <div className={twMerge('absolute top-2 right-2 rounded-full', secondaryBgColor)}>
                 <AiOutlineCheckCircle className={twMerge(iconButtonStyle, brandTextColor)} />
               </div>
             )}
             {showPlusIcon && !selected && (
-              <div className={twMerge('absolute top-2 right-2 rounded-full', bgColor)}>
+              <div className={twMerge('absolute top-2 right-2 rounded-full', secondaryBgColor)}>
                 <AiOutlinePlusCircle className={twMerge(iconButtonStyle, brandTextColor)} />
               </div>
             )}

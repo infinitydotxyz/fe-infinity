@@ -1,5 +1,4 @@
 import { CenteredContent, Spinner } from 'src/components/common';
-import { textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 interface Props2 {
@@ -12,17 +11,17 @@ export const ErrorOrLoading = ({ error, noData, message = 'Nothing found' }: Pro
   let contents;
 
   if (error) {
-    contents = <div>Unable to load data</div>;
+    contents = <div className="text-sm">Unable to load data</div>;
   } else {
     if (noData) {
-      contents = <div>{message}</div>;
+      contents = <div className="text-sm">{message}</div>;
     } else {
       contents = <Spinner />;
     }
   }
 
   return (
-    <div className={twMerge(textColor, 'h-full w-full')}>
+    <div className={twMerge('h-full w-full text-sm')}>
       <CenteredContent>{contents}</CenteredContent>
     </div>
   );
