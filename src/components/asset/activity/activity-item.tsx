@@ -27,7 +27,7 @@ export const ActivityItem = ({ item, token }: Props) => {
 
   return (
     <div className={twMerge(standardBorderCard, 'flex items-center mt-4 text-sm')}>
-      <EZImage className="w-16 h-16 max-h-[80px] rounded-lg overflow-clip" src={imageUrl} />
+      <EZImage className="w-14 h-14 max-h-[80px] rounded-lg overflow-clip" src={imageUrl} />
       <div className="flex justify-between w-full space-x-2 ml-4">
         <div className="w-1/6">
           {/* <div className="font-bold font-body">

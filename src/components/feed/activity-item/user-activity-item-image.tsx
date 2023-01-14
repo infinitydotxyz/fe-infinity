@@ -21,7 +21,7 @@ export const UserActivityItemImage = ({ src, relativeLink, showModal, basicToken
         )}
         <EZImage
           src={src}
-          className="w-16 h-16 rounded-lg overflow-clip cursor-pointer"
+          className="w-14 h-14 rounded-lg overflow-clip cursor-pointer"
           onClick={() => {
             setModalOpen(true);
           }}
@@ -31,7 +31,7 @@ export const UserActivityItemImage = ({ src, relativeLink, showModal, basicToken
   } else {
     return (
       <NextLink href={relativeLink}>
-        <EZImage src={src} className="w-16 h-16 rounded-lg overflow-clip" />
+        <EZImage src={src} className="w-14 h-14 rounded-lg overflow-clip" />
       </NextLink>
     );
   }

@@ -182,3 +182,14 @@ export const filterButtonDefaultOptions: AFilterPopdownOption[] = [
     value: EventType.NftTransfer
   }
 ];
+
+export const miniFilterButtonOptions: AFilterPopdownOption[] = [
+  {
+    label: 'Listings',
+    value: EventType.NftListing
+  },
+  {
+    label: 'Offers',
+    value: EventType.NftOffer
+  }
+];
