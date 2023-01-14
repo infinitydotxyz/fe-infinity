@@ -251,7 +251,7 @@ export const numStr = (value: string | number): string => {
   return short;
 };
 
-export const getChainScannerBase = (chainId?: string): string | null => {
+export const getChainScannerBase = (chainId: string): string | null => {
   if (chainId === '1') {
     return ETHEREUM_CHAIN_SCANNER_BASE;
   } else if (chainId === '137') {

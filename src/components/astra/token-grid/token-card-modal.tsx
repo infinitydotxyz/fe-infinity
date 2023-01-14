@@ -1,11 +1,13 @@
 import { CollectionAttributes, Erc721Token, Token } from '@infinityxyz/lib-frontend/types/core';
+import { useState } from 'react';
 import { ActivityList } from 'src/components/asset';
 import { OrderbookContainer } from 'src/components/orderbook/list';
-import { ellipsisAddress, useFetch } from 'src/utils';
+import { ellipsisAddress, getChainScannerBase, useFetch } from 'src/utils';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { dropShadow } from 'src/utils/ui-constants';
 import { useSWRConfig } from 'swr';
 import { twMerge } from 'tailwind-merge';
-import { BlueCheck, EZImage, Modal, NextLink, ReadMoreText, ShortAddress, ToggleTab, useToggleTab } from '../../common';
+import { BlueCheck, EZImage, Modal, NextLink, ReadMoreText, ShortAddress, ToggleTab } from '../../common';
 import { ATraitList } from '../astra-trait-list';
 import { ErrorOrLoading } from '../error-or-loading';
 import { BasicTokenInfo } from '../types';
@@ -16,7 +18,6 @@ interface Props {
   setModalOpen: (set: boolean) => void;
 }
 
-// todo: is this necessary?
 const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
   const { mutate } = useSWRConfig();
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
@@ -37,8 +38,11 @@ const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string)
 };
 
 export const TokenCardModal = ({ data, modalOpen, setModalOpen }: Props): JSX.Element | null => {
-  const { options, onChange, selected } = useToggleTab(['Activity', 'Orders'], 'Activity');
+  const options = ['Activity', 'Orders'];
+  const DEFAULT_TAB = 'Activity';
   const { token, error, collectionAttributes } = useFetchAssetInfo(data.chainId, data.collectionAddress, data.tokenId);
+  const [selected, setSelected] = useState(DEFAULT_TAB);
+  const { chainId } = useOnboardContext();
 
   if (error) {
     return <ErrorOrLoading error={!!error} noData message="No Data" />;
@@ -72,7 +76,7 @@ export const TokenCardModal = ({ data, modalOpen, setModalOpen }: Props): JSX.El
               <ShortAddress
                 label="Collection address:"
                 address={token.collectionAddress ?? ''}
-                href={`https://etherscan.io/address/${token.collectionAddress}`}
+                href={`${getChainScannerBase(chainId)}/address/${token.collectionAddress}`}
                 tooltip={token.collectionAddress ?? ''}
               />
               <ShortAddress
@@ -95,8 +99,8 @@ export const TokenCardModal = ({ data, modalOpen, setModalOpen }: Props): JSX.El
                 <ToggleTab
                   className="flex space-x-2 items-center relative max-w-xl font-heading text-sm"
                   options={options}
-                  selected={selected}
-                  onChange={onChange}
+                  defaultOption={DEFAULT_TAB}
+                  onChange={setSelected}
                 />
 
                 {selected === 'Activity' && (
