@@ -38,13 +38,13 @@ export const ALowerPriceModal = ({ isOpen, onClose, order, onDone }: Props) => {
   tableItems.push({
     title: 'Current price',
     value: (
-      <div className="font-bold">
+      <div className="font-medium">
         <EthPrice label={order.startPriceEth.toString() ?? ''} />
       </div>
     )
   });
-  tableItems.push({ title: 'Fee', value: <div className="font-bold">{INFINITY_FEE_PCT}%</div> });
-  tableItems.push({ title: 'Royalty', value: <div className="font-bold">{INFINITY_ROYALTY_PCT}%</div> });
+  tableItems.push({ title: 'Fee', value: <div className="font-medium">{INFINITY_FEE_PCT}%</div> });
+  tableItems.push({ title: 'Royalty', value: <div className="font-medium">{INFINITY_ROYALTY_PCT}%</div> });
 
   const lowerPrice = async () => {
     const newPriceEth = parseFloat(price);
@@ -121,7 +121,7 @@ export const ALowerPriceModal = ({ isOpen, onClose, order, onDone }: Props) => {
       disableOK={isSubmitting}
       onOKButton={lowerPrice}
     >
-      <SimpleTable className="mb-5" items={tableItems} />
+      <SimpleTable className="mb-5 space-y-1" items={tableItems} />
 
       <TextInputBox
         autoFocus={true}
