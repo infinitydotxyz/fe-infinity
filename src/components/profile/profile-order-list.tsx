@@ -5,7 +5,6 @@ import {
   MakerOrdersQuery,
   TakerOrdersQuery
 } from '@infinityxyz/lib-frontend/types/dto';
-import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user';
 import { useEffect, useState } from 'react';
 import { MdClose } from 'react-icons/md';
 import { apiGet, ellipsisAddress, extractErrorMsg, ITEMS_PER_PAGE } from 'src/utils';
@@ -28,7 +27,7 @@ import {
   toastSuccess
 } from '../common';
 import { CollectionSearchInput } from '../common/search/collection-search-input';
-import { UserOrderListItem } from './user-order-list-item';
+import { ProfileOrderListItem } from './profile-order-list-item';
 
 export const DEFAULT_ORDER_TYPE_FILTER = 'listings';
 
@@ -51,7 +50,7 @@ enum OrderBy {
   EndTime = 'endTime'
 }
 
-export type UserOrderFilter = {
+export type ProfileOrderFilter = {
   orderType?: 'listings' | 'offers-made' | 'offers-received' | '';
   minPrice?: string;
   maxPrice?: string;
@@ -61,13 +60,13 @@ export type UserOrderFilter = {
 };
 
 interface Props {
-  userInfo: UserProfileDto;
+  userAddress: string;
   className?: string;
   toggleOrderSelection: (data: SignedOBOrder) => void;
   isOrderSelected: (data: SignedOBOrder) => boolean;
 }
 
-export const UserOrderList = ({ userInfo, className = '', toggleOrderSelection, isOrderSelected }: Props) => {
+export const ProfileOrderList = ({ userAddress, className = '', toggleOrderSelection, isOrderSelected }: Props) => {
   const { user, chainId, waitForTransaction, getSigner } = useOnboardContext();
   const [data, setData] = useState<SignedOBOrder[]>([]);
   const [isFetching, setIsFetching] = useState(false);
@@ -75,7 +74,7 @@ export const UserOrderList = ({ userInfo, className = '', toggleOrderSelection, 
   const [hasNextPage, setHasNextPage] = useState(false);
   const [isCancellingAll, setIsCancellingAll] = useState(false);
   const [ddLabel, setDdLabel] = useState<string>('Listings');
-  const [filter, setFilter] = useState<UserOrderFilter>({
+  const [filter, setFilter] = useState<ProfileOrderFilter>({
     orderType: DEFAULT_ORDER_TYPE_FILTER
   });
   const [selectedCollection, setSelectedCollection] = useState<CollectionSearchDto>();
@@ -139,7 +138,7 @@ export const UserOrderList = ({ userInfo, className = '', toggleOrderSelection, 
       };
     }
 
-    const { result } = await apiGet(`/v2/users/${userInfo.address}/orders`, {
+    const { result } = await apiGet(`/v2/users/${userAddress}/orders`, {
       query,
       requiresAuth: true
     });
@@ -376,11 +375,10 @@ export const UserOrderList = ({ userInfo, className = '', toggleOrderSelection, 
 
           {data?.map((order, idx) => {
             return (
-              <UserOrderListItem
+              <ProfileOrderListItem
                 key={idx}
                 order={order}
                 orderType={filter.orderType}
-                userInfo={userInfo}
                 selected={isOrderSelected(order)}
                 onClickActionBtn={onClickAcceptOfferCancelOrder}
               />

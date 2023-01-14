@@ -36,7 +36,7 @@ const RewardsSection = (props: RewardsSectionProps) => {
   );
 };
 
-const MyRewardsPage = () => {
+const MyRewards = () => {
   const [showStakeTokensModal, setShowStakeTokensModal] = useState(false);
   const [showUnstakeTokensModal, setShowUnstakeTokensModal] = useState(false);
   const { result: quota, mutate: mutateQuota } = useUserCurationQuota();
@@ -290,4 +290,4 @@ const MyRewardsPage = () => {
   );
 };
 
-export default MyRewardsPage;
+export default MyRewards;

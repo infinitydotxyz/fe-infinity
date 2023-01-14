@@ -8,7 +8,7 @@ import { APriceFilter } from 'src/components/astra/astra-price-filter';
 import { ASortButton } from 'src/components/astra/astra-sort-button';
 import { AStatusFilterButton } from 'src/components/astra/astra-status-button';
 import { ATraitFilter } from 'src/components/astra/astra-trait-filter';
-import { useScrollInfo } from 'src/components/astra/dashboard/useScrollHook';
+import { useScrollInfo } from 'src/hooks/useScrollHook';
 import { TokenGrid } from 'src/components/astra/token-grid/token-grid';
 import { useCollectionTokenFetcher } from 'src/components/astra/useFetcher';
 import { CollectionPageHeader, CollectionPageHeaderProps } from 'src/components/collection/collection-page-header';

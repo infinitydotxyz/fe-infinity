@@ -1,5 +1,4 @@
 import { CollectionSearchDto } from '@infinityxyz/lib-frontend/types/dto';
-import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { MdClose } from 'react-icons/md';
 import { TokenGrid } from 'src/components/astra/token-grid/token-grid';
@@ -11,34 +10,15 @@ import { EZImage } from '../common';
 import { CollectionSearchInput } from '../common/search/collection-search-input';
 import { useOrderbook } from '../orderbook/OrderbookContext';
 
-const TokensGridWrapper = () => {
-  const { isSelected, isSelectable, listMode, toggleSelection, setNumTokens } = useDashboardContext();
+interface Props {
+  userAddress: string;
+}
 
-  const router = useRouter();
-  const addressFromPath = router.query?.address as string;
-
-  const { data, error, hasNextPage, isLoading, fetch } = useProfileTokenFetcher(addressFromPath);
-
-  return (
-    <TokenGrid
-      listMode={listMode}
-      className="px-4 py-4"
-      onClick={toggleSelection}
-      isSelectable={isSelectable}
-      isSelected={isSelected}
-      onLoad={setNumTokens}
-      data={data}
-      isError={!!error}
-      hasNextPage={hasNextPage}
-      onFetchMore={() => fetch(true)}
-      isLoading={isLoading}
-    />
-  );
-};
-
-export const UserNFTs = () => {
+export const ProfileNFTs = ({ userAddress }: Props) => {
   const [selectedCollection, setSelectedCollection] = useState<CollectionSearchDto>();
   const { filters, setFilters } = useOrderbook();
+  const { isSelected, isSelectable, listMode, toggleSelection, setNumTokens } = useDashboardContext();
+  const { data, error, hasNextPage, isLoading, fetch } = useProfileTokenFetcher(userAddress);
 
   const handleCollectionSearchResult = (result: CollectionSearchDto) => {
     const newFilter = { ...filters };
@@ -86,7 +66,20 @@ export const UserNFTs = () => {
           )}
         </div>
       </div>
-      <TokensGridWrapper />
+
+      <TokenGrid
+        listMode={listMode}
+        className="px-4 py-4"
+        onClick={toggleSelection}
+        isSelectable={isSelectable}
+        isSelected={isSelected}
+        onLoad={setNumTokens}
+        data={data}
+        isError={!!error}
+        hasNextPage={hasNextPage}
+        onFetchMore={() => fetch(true)}
+        isLoading={isLoading}
+      />
     </>
   );
 };

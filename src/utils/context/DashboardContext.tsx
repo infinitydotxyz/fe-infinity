@@ -8,6 +8,7 @@ import {
   SignedOBOrder
 } from '@infinityxyz/lib-frontend/types/core';
 import { getOBComplicationAddress, getTxnCurrencyAddress, trimLowerCase } from '@infinityxyz/lib-frontend/utils';
+import { ProfileTabs } from 'pages/profile/[address]';
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import { CollectionTokenCache, TokenFetcherAlt } from 'src/components/astra/token-grid/token-fetcher';
 import { Erc721CollectionOffer, Erc721TokenOffer } from 'src/components/astra/types';
@@ -40,6 +41,9 @@ export type DashboardContextType = {
 
   showCart: boolean;
   setShowCart: (value: boolean) => void;
+
+  selectedProfileTab: string;
+  setSelectedProfileTab: (value: string) => void;
 
   listMode: boolean;
   setListMode: (value: boolean) => void;
@@ -90,16 +94,13 @@ export const DashboardContextProvider = ({ children }: Props) => {
   const [numTokens, setNumTokens] = useState(0);
   const [tokenFetcher, setTokenFetcher] = useState<TokenFetcherAlt | undefined>();
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [selectedProfileTab, setSelectedProfileTab] = useState(ProfileTabs.Items.toString());
   const [listMode, setListMode] = useState(false);
   const [txnHash, setTxnHash] = useState<string>('');
-
   const [displayName, setDisplayName] = useState<string>('');
-
   const { getSigner, getEthersProvider, user, chainId, waitForTransaction } = useOnboardContext();
-
   const { isSelected, isSelectable, toggleSelection, clearSelection, selection, removeFromSelection } =
     useCardSelection();
-
   const {
     isCollSelected,
     isCollSelectable,
@@ -108,7 +109,6 @@ export const DashboardContextProvider = ({ children }: Props) => {
     collSelection,
     removeCollFromSelection
   } = useCollectionSelection();
-
   const { isOrderSelected, toggleOrderSelection, clearOrderSelection, orderSelection, removeOrderFromSelection } =
     useOrderSelection();
 
@@ -407,6 +407,9 @@ export const DashboardContextProvider = ({ children }: Props) => {
 
     showCart,
     setShowCart,
+
+    selectedProfileTab,
+    setSelectedProfileTab,
 
     listMode,
     setListMode,

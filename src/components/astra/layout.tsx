@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useRef } from 'react';
 import { useResizeDetector } from 'react-resize-detector';
 import { AstraCart } from 'src/components/astra/astra-cart';
-import { MainDashboardGrid } from 'src/components/astra/dashboard/main-grid-dashboard';
+import { Grid } from 'src/components/astra/grid';
 import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { toastError } from '../common';
 import { ANavbar } from './astra-navbar';
@@ -77,5 +77,5 @@ export const Layout = ({ children }: Props) => {
 
   const footer = <></>;
 
-  return MainDashboardGrid(<ANavbar />, <SidebarNav />, <>{children}</>, cart, footer, gridRef, containerRef);
+  return Grid(<ANavbar />, <SidebarNav />, <>{children}</>, cart, footer, gridRef, containerRef);
 };

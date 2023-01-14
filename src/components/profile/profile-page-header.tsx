@@ -1,9 +1,10 @@
-import { NextRouter, useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import { HiOutlineExternalLink } from 'react-icons/hi';
-import { ClipboardButton, EZImage, NextLink } from 'src/components/common';
+import { ClipboardButton, EZImage } from 'src/components/common';
 import etherscanLogo from 'src/images/etherscan-logo.png';
 import person from 'src/images/person.png';
 import { ellipsisAddress, getChainScannerBase } from 'src/utils';
+import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import {
   borderColor,
@@ -16,16 +17,18 @@ import {
   textColor
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { AOutlineButton } from '../astra-button';
+import { AOutlineButton } from '../astra/astra-button';
 
-interface Props {
+export interface ProfileHeaderProps {
   expanded: boolean;
+  tabs: string[];
 }
 
-export const ProfileHeader = ({ expanded }: Props) => {
+export const ProfilePageHeader = ({ expanded, tabs }: ProfileHeaderProps) => {
   const router = useRouter();
   const addressFromPath = router.query?.address as string;
   const { chainId } = useOnboardContext();
+  const { selectedProfileTab, setSelectedProfileTab } = useDashboardContext();
 
   return (
     <div className={twMerge(borderColor, cardColor, textColor, 'px-6 pt-4')}>
@@ -58,74 +61,29 @@ export const ProfileHeader = ({ expanded }: Props) => {
         </>
       )}
 
-      <ProfileHeaderTabBar />
-    </div>
-  );
-
-  return <></>;
-};
-
-// ==============================================
-
-export const ProfileHeaderTabBar = () => {
-  const router = useRouter();
-  const tabItems = RouteUtils.tabItems(router);
-  const addressFromPath = router.query?.address as string;
-
-  return (
-    <div className="mt-6 flex space-x-5 text-sm">
-      {tabItems.map((e) => {
-        return (
-          <div key={e.path} className={twMerge('pb-2 px-3', e.selected ? `border-b-2 ${brandBorderColor}` : '')}>
-            <NextLink href={`/profile/${addressFromPath}/${e.path}`}>
-              <div className={twMerge(e.selected ? textColor : secondaryTextColor, hoverColorBrandText, 'font-medium')}>
-                {e.name}
+      <div className="mt-6 flex space-x-5 text-sm">
+        {tabs.map((e) => {
+          return (
+            <div
+              key={e}
+              className={twMerge('pb-2 px-3', selectedProfileTab === e ? `border-b-2 ${brandBorderColor}` : '')}
+            >
+              <div
+                className={twMerge(
+                  selectedProfileTab === e ? '' : secondaryTextColor,
+                  hoverColorBrandText,
+                  'font-medium cursor-pointer'
+                )}
+                onClick={() => {
+                  setSelectedProfileTab(e);
+                }}
+              >
+                {e}
               </div>
-            </NextLink>
-          </div>
-        );
-      })}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };
-
-class RouteUtils {
-  static tabItems = (router: NextRouter) => {
-    const path = router.pathname;
-    const addressFromPath = router.query?.address;
-    const { user } = useOnboardContext();
-    const isOwner = addressFromPath === user?.address;
-
-    const returnData = [
-      {
-        id: 'items',
-        path: 'items',
-        selected: path.endsWith('items'),
-        name: 'Items'
-      },
-      {
-        id: 'orders',
-        path: 'orders',
-        selected: path.endsWith('orders'),
-        name: 'Orders'
-      },
-      {
-        id: 'activity',
-        path: 'activity',
-        selected: path.endsWith('activity'),
-        name: 'Activity'
-      }
-    ];
-
-    if (isOwner) {
-      returnData.push({
-        id: 'send',
-        path: 'send',
-        selected: path.endsWith('send'),
-        name: 'Send'
-      });
-    }
-
-    return returnData;
-  };
-}

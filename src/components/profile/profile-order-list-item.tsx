@@ -1,5 +1,4 @@
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user';
 import { useState } from 'react';
 import { Button, EthPrice } from 'src/components/common';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
@@ -9,24 +8,16 @@ import { format } from 'timeago.js';
 import { ALowerPriceModal } from '../astra/modals/astra-lower-price-modal';
 import { OrderbookItem } from '../orderbook/list/orderbook-item';
 import { OrderDetailModal } from '../orderbook/OrderDetailModal';
+import { ProfileOrderFilter } from './profile-order-list';
 
 interface Props {
   order: SignedOBOrder;
   selected?: boolean;
-  orderType: UserOrderFilter['orderType'];
-  userInfo: UserProfileDto;
+  orderType: ProfileOrderFilter['orderType'];
   onClickActionBtn: (order: SignedOBOrder) => void;
 }
 
-type UserOrderFilter = {
-  orderType?: 'listings' | 'offers-made' | 'offers-received' | '';
-  minPrice?: string;
-  maxPrice?: string;
-  numItems?: string;
-  collections?: string[];
-};
-
-export const UserOrderListItem = ({ order, orderType, onClickActionBtn, selected }: Props) => {
+export const ProfileOrderListItem = ({ order, orderType, onClickActionBtn, selected }: Props) => {
   const [selectedOrder, setSelectedOrder] = useState<SignedOBOrder | null>(null);
   const [showLowerPriceModal, setShowLowerPriceModal] = useState(false);
   const [startPriceEth, setStartPriceEth] = useState(order.startPriceEth);

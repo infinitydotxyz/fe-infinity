@@ -1,11 +1,13 @@
 import { useTheme } from 'next-themes';
 import { useRouter } from 'next/router';
+import { ProfileTabs } from 'pages/profile/[address]';
 import { BiGlobeAlt, BiWalletAlt } from 'react-icons/bi';
 import { HiOutlineTag } from 'react-icons/hi';
 import { MdDarkMode, MdLightMode } from 'react-icons/md';
 import { TbActivityHeartbeat, TbSend } from 'react-icons/tb';
 import { AButton, ARoundButton } from 'src/components/astra/astra-button';
 import { HelpToolTip, NextLink, Spacer, SVG } from 'src/components/common';
+import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { borderColor, hoverColorBrandText, iconButtonStyle, secondaryBgColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
@@ -14,6 +16,7 @@ export const SidebarNav = () => {
   const { theme, setTheme } = useTheme();
   const router = useRouter();
   const { user } = useOnboardContext();
+  const { selectedProfileTab, setSelectedProfileTab } = useDashboardContext();
 
   return (
     <div
@@ -61,16 +64,17 @@ export const SidebarNav = () => {
 
         <HelpToolTip placement="right" content={<div className="whitespace-nowrap">Profile</div>}>
           <AButton
-            highlighted={router.asPath.startsWith(`/profile`) && router.asPath.endsWith(`/items`)}
+            highlighted={router.asPath.startsWith(`/profile`) && selectedProfileTab === ProfileTabs.Items}
             onClick={() => {
-              router.push(`/profile/${user?.address}/items`);
+              setSelectedProfileTab(ProfileTabs.Items);
+              router.push(`/profile/${user?.address}`);
             }}
           >
             <BiWalletAlt
               className={twMerge(
                 iconButtonStyle,
                 hoverColorBrandText,
-                router.asPath.startsWith(`/profile`) && router.asPath.endsWith('/items')
+                router.asPath.startsWith(`/profile`) && selectedProfileTab === ProfileTabs.Items
                   ? 'text-brand-primary'
                   : 'text-gray-400'
               )}
@@ -80,9 +84,10 @@ export const SidebarNav = () => {
 
         <HelpToolTip placement="right" content={<div className="whitespace-nowrap">Orders</div>}>
           <AButton
-            highlighted={router.asPath.startsWith(`/profile`) && router.asPath.endsWith(`/orders`)}
+            highlighted={router.asPath.startsWith(`/profile`) && selectedProfileTab === ProfileTabs.Orders}
             onClick={() => {
-              router.push(`/profile/${user?.address}/orders`);
+              setSelectedProfileTab(ProfileTabs.Orders);
+              router.push(`/profile/${user?.address}`);
             }}
           >
             <HiOutlineTag
@@ -90,7 +95,7 @@ export const SidebarNav = () => {
               className={twMerge(
                 iconButtonStyle,
                 hoverColorBrandText,
-                router.asPath.startsWith(`/profile`) && router.asPath.endsWith(`/orders`)
+                router.asPath.startsWith(`/profile`) && selectedProfileTab === ProfileTabs.Orders
                   ? 'text-brand-primary'
                   : 'text-gray-400'
               )}
@@ -100,16 +105,17 @@ export const SidebarNav = () => {
 
         <HelpToolTip placement="right" content={<div className="whitespace-nowrap">Activity</div>}>
           <AButton
-            highlighted={router.asPath.startsWith(`/profile`) && router.asPath.endsWith(`/activity`)}
+            highlighted={router.asPath.startsWith(`/profile`) && selectedProfileTab === ProfileTabs.Activity}
             onClick={() => {
-              router.push(`/profile/${user?.address}/activity`);
+              setSelectedProfileTab(ProfileTabs.Activity);
+              router.push(`/profile/${user?.address}`);
             }}
           >
             <TbActivityHeartbeat
               className={twMerge(
                 iconButtonStyle,
                 hoverColorBrandText,
-                router.asPath.startsWith(`/profile`) && router.asPath.endsWith(`/activity`)
+                router.asPath.startsWith(`/profile`) && selectedProfileTab === ProfileTabs.Activity
                   ? 'text-brand-primary'
                   : 'text-gray-400'
               )}
@@ -119,16 +125,17 @@ export const SidebarNav = () => {
 
         <HelpToolTip placement="right" content={<div className="whitespace-nowrap">Send</div>}>
           <AButton
-            highlighted={router.asPath.startsWith(`/profile`) && router.asPath.endsWith(`/send`)}
+            highlighted={router.asPath.startsWith(`/profile`) && selectedProfileTab === ProfileTabs.Send}
             onClick={() => {
-              router.push(`/profile/${user?.address}/send`);
+              setSelectedProfileTab(ProfileTabs.Send);
+              router.push(`/profile/${user?.address}`);
             }}
           >
             <TbSend
               className={twMerge(
                 iconButtonStyle,
                 hoverColorBrandText,
-                router.asPath.startsWith(`/profile`) && router.asPath.endsWith(`/send`)
+                router.asPath.startsWith(`/profile`) && selectedProfileTab === ProfileTabs.Send
                   ? 'text-brand-primary'
                   : 'text-gray-400'
               )}

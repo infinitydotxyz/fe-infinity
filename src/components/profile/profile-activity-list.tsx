@@ -19,7 +19,7 @@ interface Props {
   className?: string;
 }
 
-export const UserActivityList = ({ userAddress, types, className }: Props) => {
+export const ProfileActivityList = ({ userAddress, types, className }: Props) => {
   const [filter, setFilter] = useState<FeedFilter>({ userAddress, types });
   const { result: activities, isLoading, fetchMore } = useUserActivity(filter.types ?? [], userAddress);
 

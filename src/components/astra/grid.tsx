@@ -3,7 +3,7 @@ import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { bgColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
-export const MainDashboardGrid = (
+export const Grid = (
   navBar: JSX.Element,
   sideNavBar: JSX.Element,
   grid: JSX.Element,
