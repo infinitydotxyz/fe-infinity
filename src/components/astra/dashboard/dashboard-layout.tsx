@@ -112,6 +112,9 @@ export const DashboardLayout: React.FC<DashboardProps> = ({ children, error, ...
       const firstAllTimeStats = props.asset.collectionAllTimeStats;
       const currentStats = props.asset.collectionCurrentStats;
       const totalVol = nFormatter(firstAllTimeStats?.volume ? firstAllTimeStats.volume : currentStats?.volume);
+      const floorPrice = nFormatter(
+        firstAllTimeStats?.floorPrice ? firstAllTimeStats.floorPrice : currentStats?.floorPrice
+      );
       const numOwners = nFormatter(
         firstAllTimeStats?.numOwners ? firstAllTimeStats.numOwners : currentStats?.numOwners
       );
@@ -122,7 +125,7 @@ export const DashboardLayout: React.FC<DashboardProps> = ({ children, error, ...
           <div className="flex pr-4 gap-2 whitespace-nowrap font-medium">
             <span className={secondaryTextColor}>Floor </span>
             <span className="">
-              {nFormatter(currentStats?.floorPrice) ?? '-'} {EthSymbol}
+              {floorPrice ?? '-'} {EthSymbol}
             </span>
           </div>
           <div className="flex px-4 gap-2 whitespace-nowrap font-medium">

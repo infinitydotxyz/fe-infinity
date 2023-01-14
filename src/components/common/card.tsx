@@ -1,13 +1,6 @@
 import { useState } from 'react';
 import { AiOutlineCheckCircle, AiOutlinePlusCircle } from 'react-icons/ai';
-import {
-  bgColor,
-  brandTextColor,
-  cardColor,
-  iconButtonStyle,
-  selectionBorder,
-  textColor
-} from 'src/utils/ui-constants';
+import { bgColor, brandTextColor, cardColor, iconButtonStyle, selectionBorder } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { AButton } from '../astra/astra-button';
 import { TokenCardModal } from '../astra/token-grid/token-card-modal';
@@ -28,7 +21,7 @@ export const GridCard = ({ data, onClick, selected, isSelectable }: Props): JSX.
   const title = data?.title;
   const tokenId = data?.tokenId;
   const hasBlueCheck = data?.hasBlueCheck ?? false;
-  const buyNowPrice = data?.price ? data?.price.toString() + EthSymbol : '-';
+  const buyNowPrice = data?.price ? data?.price.toString() + EthSymbol : '';
   const basicTokenInfo: BasicTokenInfo = {
     tokenId: data?.tokenId ?? '',
     collectionAddress: data?.address ?? '',
@@ -75,14 +68,13 @@ export const GridCard = ({ data, onClick, selected, isSelectable }: Props): JSX.
           </div>
         </div>
 
-        <div className={twMerge(textColor, 'mt-1 mb-3 px-2')}>
+        <div className={twMerge('mt-1 mb-3 px-2')}>
           <div className="flex items-center space-x-1">
             <div className="truncate text-xs">{title}</div>
             {hasBlueCheck ? <BlueCheck className={'h-3 w-3'} /> : ''}
           </div>
 
-          <div className="flex items-center">
-            {/* todo use right color on hover */}
+          <div className="flex items-center text-sm mt-0.5">
             <div
               className="truncate hover:text-blue-500"
               onClick={(e) => {
@@ -94,7 +86,7 @@ export const GridCard = ({ data, onClick, selected, isSelectable }: Props): JSX.
             </div>
           </div>
 
-          <div className="flex items-center">
+          <div className="flex items-center text-xs">
             <div className="truncate">{buyNowPrice}</div>
             <Spacer />
             <AButton primary className="rounded-md" onClick={() => setModalOpen(true)}>
