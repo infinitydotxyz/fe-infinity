@@ -90,7 +90,7 @@ const MultiCollectionCell = ({ nfts, onClick }: Props2) => {
           return (
             <EZImage
               key={nft.collectionAddress}
-              className="inline-block h-12 w-12 rounded-2xl overflow-clip ring-2"
+              className="inline-block h-12 w-12 rounded-lg overflow-clip ring-2"
               src={nft.collectionImage}
             />
           );
@@ -291,12 +291,12 @@ const SelectableImage = ({ name, checked, imageUrl, onChange }: Props5) => {
     <div onClick={() => onChange(!checked)} className="flex flex-col items-center">
       <EZImage
         className={twMerge(
-          'h-14 w-14 rounded-2xl overflow-clip border-4',
+          'h-14 w-14 rounded-lg overflow-clip border-4',
           checked ? ' border-blue-500' : 'border-transparent'
         )}
         src={imageUrl}
       />
-      <div className={twMerge('mt-1 px-2', checked ? 'bg-blue-500 rounded-2xl' : '')}>{name}</div>
+      <div className={twMerge('mt-1 px-2', checked ? 'bg-blue-500 rounded-lg' : '')}>{name}</div>
     </div>
   );
 };

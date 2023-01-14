@@ -26,7 +26,7 @@ export const ProfileHeader = ({ expanded }: Props) => {
         <>
           <div className="flex flex-col items-start">
             <div className="flex w-full items-center">
-              <EZImage src={person.src} className="mr-4 h-14 w-14 rounded-full overflow-clip" />
+              <EZImage src={person.src} className="mr-4 h-14 w-14 rounded-lg overflow-clip" />
               <div className="flex w-full items-center">
                 <div className="font-heading font-bold text-xl">{ellipsisAddress(addressFromPath)}</div>
               </div>

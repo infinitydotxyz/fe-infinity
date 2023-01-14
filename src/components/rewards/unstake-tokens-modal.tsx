@@ -121,7 +121,7 @@ export const UnstakeTokensModal = ({ onClose }: Props) => {
               renderRightIcon={() => (
                 <Button
                   variant="gray"
-                  className="rounded-full py-2 px-3"
+                  className="rounded-lg py-2 px-3"
                   size="small"
                   onClick={() => setValue(unlockedAmount ?? 0)}
                 >

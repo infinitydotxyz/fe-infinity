@@ -198,11 +198,7 @@ export const ATextButton = ({
     <ButtonBase
       disabled={disabled}
       tooltip={tooltip}
-      className={twMerge(
-        small ? 'text-sm px-3 py-0.5' : 'px-4 py-1',
-        'rounded-full hover:text-brand-primary',
-        className
-      )}
+      className={twMerge(small ? 'text-sm px-3 py-0.5' : 'px-4 py-1', 'rounded-lg hover:text-brand-primary', className)}
       onClick={onClick}
     >
       {children}

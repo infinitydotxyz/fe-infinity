@@ -129,7 +129,7 @@ export function SearchInput({
               data.length === 0 ? 'opacity-0' : '', // without this, a thin line appears
               borderColor,
               'absolute z-20 -mx-8 top-2  w-content h-content max-h-content',
-              'py-2 border rounded-2xl flex flex-col shadow-lg'
+              'py-2 border rounded-lg flex flex-col shadow-lg'
             )}
           >
             {data.map((item) => {
@@ -142,9 +142,9 @@ export function SearchInput({
                         active ? 'bg-transparent' : 'bg-transparent',
                         hoverColor,
                         textColor,
-                        'font-body text-sm py-1.5 px-4 rounded-md transition-all duration-200',
+                        'text-sm py-1 px-3 transition-all duration-200',
                         'flex gap-3 place-items-center',
-                        'hover:cursor-pointer w-60 z-20'
+                        'hover:cursor-pointer w-96 z-20'
                       )}
                     >
                       <SearchResultItem item={item} />

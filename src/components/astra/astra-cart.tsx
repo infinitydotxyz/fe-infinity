@@ -217,7 +217,7 @@ export const AstraCart = ({
       const orderId = first.id;
 
       divList.push(
-        <div className="w-full rounded-md font-bold truncate" key={`header-${first.id}`}>
+        <div className="w-full rounded-md truncate" key={`header-${first.id}`}>
           {first.nfts.length > 1 ? 'Multiple Collections' : first.nfts[0].collectionName}
         </div>
       );

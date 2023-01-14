@@ -39,7 +39,7 @@ export const GridCard = ({ data, onClick, selected, isSelectable }: Props): JSX.
     <div
       className={twMerge(
         cardColor,
-        'rounded-2xl w-full relative flex flex-col shadow-[0px_4px_10px_0px_rgba(0,0,0,0.12)] \
+        'rounded-lg w-full relative flex flex-col shadow-[0px_4px_10px_0px_rgba(0,0,0,0.12)] \
              hover:shadow-[0px_4px_10px_0px_rgba(0,0,0,0.2)] cursor-pointer',
         selected ? selectionBorder : '',
         notSelectable ? 'animate-wiggle' : ''
@@ -60,7 +60,7 @@ export const GridCard = ({ data, onClick, selected, isSelectable }: Props): JSX.
         <div className="relative flex-1">
           {/* we can't overflow clip the whole card or the tooltips get clipped
               so we do this absolute image below the pillbadges */}
-          <div className="absolute top-0 bottom-0 left-0 right-0 rounded-t-2xl overflow-clip">
+          <div className="absolute top-0 bottom-0 left-0 right-0 rounded-t-lg overflow-clip">
             <EZImage src={data?.image} className="hover:scale-110 transition-all" />
             {selected && (
               <div className={twMerge('absolute top-3 right-3 rounded-full p-0.5', bgColor)}>

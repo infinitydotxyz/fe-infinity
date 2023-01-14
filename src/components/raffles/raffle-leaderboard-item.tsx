@@ -19,12 +19,12 @@ export const RaffleLeaderboardItem = ({ entrant: item }: { entrant: RaffleLeader
   }
 
   return (
-    <div className={twMerge(secondaryBgColor, 'py-4 px-2 rounded-3xl flex items-center font-heading my-2')}>
+    <div className={twMerge(secondaryBgColor, 'py-4 px-2 rounded-lg flex items-center font-heading my-2')}>
       <div className="flex justify-between items-center w-full">
         <div className="flex items-center w-full">
           <NextLink href={`/user/${item.entrant.address}`}>
             <EZImage
-              className="w-12 h-12 rounded-2xl overflow-clip"
+              className="w-12 h-12 rounded-lg overflow-clip"
               src={item.entrant.profileImage}
               missingImage={person.src}
             />
