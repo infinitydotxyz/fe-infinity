@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { bgColor, borderColor, hoverColorBrandText, primaryBtnBgColorText, textColor } from 'src/utils/ui-constants';
+import { borderColor, hoverColorBrandText, primaryBtnBgColorText } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 interface Props {
@@ -45,8 +45,8 @@ export const ToggleTab = ({ options, onChange, selected, className = '', small =
               className={twMerge(
                 hoverColorBrandText,
                 small ? 'min-w-[110px]' : 'min-w-[140px]',
-                'select-none flex text-md items-center justify-center  text-center whitespace-nowrap font-medium rounded-lg',
-                selected === option ? twMerge(primaryBtnBgColorText) : twMerge(bgColor, textColor),
+                'select-none flex text-md items-center justify-center text-center whitespace-nowrap font-medium rounded-lg',
+                selected === option ? twMerge(primaryBtnBgColorText) : '',
                 'py-2 px-6'
               )}
               onClick={() => {

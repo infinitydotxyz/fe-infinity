@@ -370,7 +370,7 @@ export const UserOrderList = ({ userInfo, className = '', toggleOrderSelection, 
 
           {!isFetching && hasNextPage === false && data?.length === 0 ? (
             <CenteredContent>
-              <div className="font-heading">No results found</div>
+              <div className="font-heading mt-4">No Orders</div>
             </CenteredContent>
           ) : null}
 

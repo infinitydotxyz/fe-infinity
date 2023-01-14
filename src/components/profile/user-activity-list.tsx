@@ -41,7 +41,7 @@ export const UserActivityList = ({ userAddress, types, className }: Props) => {
       <div className="pointer-events-auto text-sm mx-4">
         {!isLoading && activities?.length === 0 ? (
           <CenteredContent>
-            <div className="text-sm">No results found</div>
+            <div className="text-sm mt-4">No Activity</div>
           </CenteredContent>
         ) : null}
 

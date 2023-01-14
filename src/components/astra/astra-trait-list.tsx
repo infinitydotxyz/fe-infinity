@@ -33,12 +33,12 @@ interface ATraitProps {
 export const ATrait: FC<ATraitProps> = ({ trait, description }) => {
   // TODO: improve style to look more like gem's?
   return (
-    <div className={twMerge(borderColor, 'border rounded-lg flex flex-col justify-between')}>
-      <div>
-        <p className="text-center text-xs break-words">{trait.trait_type}</p>
-        <p className="text-center text-sm font-medium break-words">{trait.value}</p>
+    <div className={twMerge(borderColor, 'border rounded-lg flex flex-col py-1')}>
+      <div className="text-center text-xs break-words">{trait.trait_type}</div>
+      <div className="text-center text-sm font-medium break-words mt-0.5">{trait.value}</div>
+      <div className={twMerge('text-center text-xs rounded-br-lg rounded-bl-lg tracking-tighter mt-0.5')}>
+        {description}
       </div>
-      <p className={twMerge('text-center text-xs rounded-br-lg rounded-bl-lg tracking-tighter')}>{description}</p>
     </div>
   );
 };

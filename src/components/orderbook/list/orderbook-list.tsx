@@ -25,7 +25,7 @@ export const OrderbookList = ({
       <div className="flex flex-col items-start w-full h-full overflow-y-auto  ">
         {hasNoData && (
           <CenteredContent>
-            <div className="text-sm">No results found</div>
+            <div className="text-sm mt-4">No Orders</div>
           </CenteredContent>
         )}
 

@@ -7,11 +7,11 @@ interface Props2 {
   message?: string;
 }
 
-export const ErrorOrLoading = ({ error, noData, message = 'Nothing found' }: Props2) => {
+export const ErrorOrLoading = ({ error, noData, message = 'No Data' }: Props2) => {
   let contents;
 
   if (error) {
-    contents = <div className="text-sm">Unable to load data</div>;
+    contents = <div className="text-sm">No Data</div>;
   } else {
     if (noData) {
       contents = <div className="text-sm">{message}</div>;
@@ -21,7 +21,7 @@ export const ErrorOrLoading = ({ error, noData, message = 'Nothing found' }: Pro
   }
 
   return (
-    <div className={twMerge('h-full w-full text-sm')}>
+    <div className={twMerge('h-full w-full text-sm mt-4')}>
       <CenteredContent>{contents}</CenteredContent>
     </div>
   );

@@ -107,7 +107,7 @@ export const FeedList = ({
 
       {!isLoading && activities.length === 0 ? (
         <CenteredContent>
-          <div className="text-sm">No results found</div>
+          <div className="text-sm mt-4">No Activity</div>
         </CenteredContent>
       ) : null}
 

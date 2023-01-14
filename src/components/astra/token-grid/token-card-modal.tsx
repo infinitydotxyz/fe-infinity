@@ -5,17 +5,7 @@ import { ellipsisAddress, useFetch } from 'src/utils';
 import { dropShadow } from 'src/utils/ui-constants';
 import { useSWRConfig } from 'swr';
 import { twMerge } from 'tailwind-merge';
-import {
-  BlueCheck,
-  EZImage,
-  Modal,
-  NextLink,
-  ReadMoreText,
-  ShortAddress,
-  Spinner,
-  ToggleTab,
-  useToggleTab
-} from '../../common';
+import { BlueCheck, EZImage, Modal, NextLink, ReadMoreText, ShortAddress, ToggleTab, useToggleTab } from '../../common';
 import { ATraitList } from '../astra-trait-list';
 import { ErrorOrLoading } from '../error-or-loading';
 import { BasicTokenInfo } from '../types';
@@ -46,21 +36,16 @@ const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string)
   };
 };
 
-export const TokenCardModal = ({ data, modalOpen, setModalOpen }: Props): JSX.Element => {
+export const TokenCardModal = ({ data, modalOpen, setModalOpen }: Props): JSX.Element | null => {
   const { options, onChange, selected } = useToggleTab(['Activity', 'Orders'], 'Activity');
-  const { isLoading, token, error, collectionAttributes } = useFetchAssetInfo(
-    data.chainId,
-    data.collectionAddress,
-    data.tokenId
-  );
+  const { token, error, collectionAttributes } = useFetchAssetInfo(data.chainId, data.collectionAddress, data.tokenId);
 
-  if (isLoading) {
-    return <Spinner />;
+  if (error) {
+    return <ErrorOrLoading error={!!error} noData message="No Data" />;
   }
 
-  if (!token || error) {
-    console.error(error);
-    return <ErrorOrLoading error={!!error} noData message="Something went wrong" />;
+  if (!token) {
+    return null;
   }
 
   return (
