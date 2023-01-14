@@ -86,7 +86,6 @@ export const DashboardLayout: React.FC<DashboardProps> = ({ children, error, ...
   switch (props.kind) {
     case 'profile': {
       return (
-        // This is added just for the ASortButton, so remove if we change how this works
         <OrderbookContextProvider
           limit={50}
           kind={'profile'}
@@ -144,8 +143,8 @@ export const DashboardLayout: React.FC<DashboardProps> = ({ children, error, ...
           </div>
         </div>
       );
+
       return (
-        // This is added just for the ASortButton, so remove if we change how this works
         <OrderbookContextProvider
           limit={50}
           kind={'collection'}
@@ -177,7 +176,6 @@ export const DashboardLayout: React.FC<DashboardProps> = ({ children, error, ...
         </div>
       );
       return (
-        // This is added just for the ASortButton, so remove if we change how this works
         <OrderbookContextProvider
           limit={50}
           kind={'token'}

@@ -76,7 +76,7 @@ export const GridHeader = ({
                       onClick={() => window.open(collection.metadata?.links?.external)}
                     >
                       <span className="flex items-center">
-                        <EZImage src={avatarUrl} className="mr-2 h-5 w-5 rounded-lg" />
+                        <EZImage src={avatarUrl} className="mr-2 h-5 w-5 rounded-full" />
                         <HiOutlineExternalLink className="text-md" />
                       </span>
                     </AOutlineButton>
