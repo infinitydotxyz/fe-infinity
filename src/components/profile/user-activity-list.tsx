@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useUserActivity } from 'src/hooks/api/useUserActivity';
 import { borderColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { AFilterPopdown, FeedFilter, miniFilterButtonOptions } from '../astra/astra-filter-popdown';
+import { AFilterPopdown, FeedFilter, filterButtonDefaultOptions } from '../astra/astra-filter-popdown';
 import { CenteredContent, ScrollLoader, Spacer, Spinner } from '../common';
 import { NftOrderEvent } from '../feed/user-feed-events/nft-order-event';
 import { NftSaleEvent } from '../feed/user-feed-events/nft-sale-event';
@@ -30,7 +30,7 @@ export const UserActivityList = ({ userAddress, types, className }: Props) => {
         <div className="flex flex-row-reverse">
           <AFilterPopdown
             alignMenuRight={true}
-            options={miniFilterButtonOptions}
+            options={filterButtonDefaultOptions}
             filter={filter}
             onChange={(f) => {
               setFilter(f);
