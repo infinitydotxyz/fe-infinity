@@ -1,5 +1,5 @@
 import { getAddress } from '@ethersproject/address';
-import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { ReactNode, useEffect, useState } from 'react';
 import { MdClose } from 'react-icons/md';
 import { AButton } from 'src/components/astra/astra-button';
@@ -98,67 +98,28 @@ export const AstraCart = ({
     ordersMap.set(order.id ?? '', ords);
   }
 
-  let clearButton = <></>;
-
-  if (tokens.length > 0) {
-    clearButton = (
-      <div className="flex items-center">
-        <div className={twMerge(secondaryBgColor, textColor, 'rounded-full h-6 w-6 text-center mr-1')}>
-          {tokens.length}
-        </div>
-        <div
-          className={twMerge('ml-2 text-sm cursor-pointer', brandTextColor)}
-          onClick={() => {
-            onTokensRemove();
-          }}
-        >
-          Clear
-        </div>
+  const clearButton = (
+    <div className="flex items-center">
+      <div className={twMerge(secondaryBgColor, textColor, 'rounded-full h-6 w-6 text-center mr-1')}>
+        {Math.max(tokens.length, collections.length, orders.length)}
       </div>
-    );
-  }
-
-  if (collections.length > 0) {
-    clearButton = (
-      <div className="flex items-center">
-        <div className={twMerge(secondaryBgColor, textColor, 'rounded-full h-6 w-6 text-center mr-1 ')}>
-          {collections.length}
-        </div>
-        <div
-          className={twMerge('ml-2 text-sm cursor-pointer', brandTextColor)}
-          onClick={() => {
-            onCollsRemove();
-          }}
-        >
-          Clear
-        </div>
+      <div
+        className={twMerge('ml-2 text-sm cursor-pointer', brandTextColor)}
+        onClick={() => {
+          onCollsRemove();
+          onTokensRemove();
+          onOrdersRemove();
+        }}
+      >
+        Clear
       </div>
-    );
-  }
-
-  if (orders.length > 0) {
-    clearButton = (
-      <div className="flex items-center">
-        <div className={twMerge(secondaryBgColor, textColor, 'rounded-full h-6 w-6 text-center mr-1')}>
-          {orders.length}
-        </div>
-        <div
-          className={twMerge('ml-2 text-sm cursor-pointer', brandTextColor)}
-          onClick={() => {
-            onOrdersRemove();
-          }}
-        >
-          Clear
-        </div>
-      </div>
-    );
-  }
+    </div>
+  );
 
   let listComponent;
 
   if (tokenMap.size > 0) {
     const divList: ReactNode[] = [];
-    let index = 0;
     tokenMap.forEach((tokenArray) => {
       const first = tokenArray[0];
 
@@ -171,11 +132,11 @@ export const AstraCart = ({
       for (const t of tokenArray) {
         if (cartType === CART_TYPE.SEND) {
           divList.push(
-            <AstraSendCartItem key={getTokenKeyId(t)} token={t} index={index++} onRemove={onTokensRemove} />
+            <AstraTokenCartItem key={getTokenKeyId(t)} token={t} onRemove={onTokensRemove} showPriceAndExpiry={false} />
           );
         } else {
           divList.push(
-            <AstraTokenCartItem key={getTokenKeyId(t)} token={t} index={index++} onRemove={onTokensRemove} />
+            <AstraTokenCartItem key={getTokenKeyId(t)} token={t} onRemove={onTokensRemove} showPriceAndExpiry={true} />
           );
         }
       }
@@ -238,7 +199,7 @@ export const AstraCart = ({
   } else {
     listComponent = (
       <div key={Math.random()} className={twMerge(textColor, 'flex items-center justify-center uppercase flex-1')}>
-        <div className={twMerge('font-medium', secondaryTextColor)}>Cart empty</div>
+        <div className={twMerge('font-medium font-heading', secondaryTextColor)}>Cart empty</div>
       </div>
     );
   }
@@ -282,7 +243,9 @@ export const AstraCart = ({
           className="p-3"
           primary={true}
           disabled={
-            !user || chainId !== '1' || (tokens.length === 0 && collections.length === 0 && orders.length === 0)
+            !user ||
+            chainId !== ChainId.Mainnet ||
+            (tokens.length === 0 && collections.length === 0 && orders.length === 0)
           }
           onClick={async () => {
             cartType === CART_TYPE.SEND ? onTokenSend(await finalSendToAddress(sendToAddress)) : onCheckout();
@@ -299,11 +262,11 @@ export const AstraCart = ({
 
 interface Props2 {
   token: Erc721TokenOffer;
-  index: number;
   onRemove: (token: Erc721TokenOffer) => void;
+  showPriceAndExpiry?: boolean;
 }
 
-export const AstraTokenCartItem = ({ token, onRemove }: Props2) => {
+export const AstraTokenCartItem = ({ token, onRemove, showPriceAndExpiry }: Props2) => {
   return (
     <div key={getTokenKeyId(token)} className="flex items-center w-full">
       <div className="relative">
@@ -320,29 +283,7 @@ export const AstraTokenCartItem = ({ token, onRemove }: Props2) => {
 
       <div className="ml-3 flex w-full space-x-2 items-center">
         <div className="font-bold font-heading w-1/3 text-sm">{token.tokenId}</div>
-        <PriceAndExpiry token={token} className=""></PriceAndExpiry>
-      </div>
-    </div>
-  );
-};
-
-export const AstraSendCartItem = ({ token, onRemove }: Props2) => {
-  return (
-    <div key={getTokenKeyId(token)} className="flex items-center w-full">
-      <div className="relative">
-        <EZImage className={twMerge('h-12 w-12 rounded-lg overflow-clip')} src={token.image} />
-        <div className={twMerge('absolute top-[-5px] right-[-5px] rounded-full p-0.5 cursor-pointer', inverseBgColor)}>
-          <MdClose
-            className={twMerge(extraSmallIconButtonStyle, inverseTextColor)}
-            onClick={() => {
-              onRemove(token);
-            }}
-          />
-        </div>
-      </div>
-
-      <div className="ml-3 flex flex-col w-full">
-        <div className="font-bold font-heading text-sm">{token.tokenId}</div>
+        {showPriceAndExpiry && <PriceAndExpiry token={token} className=""></PriceAndExpiry>}
       </div>
     </div>
   );
