@@ -40,7 +40,7 @@ export const SidebarNav = () => {
 
         <HelpToolTip placement="right" content={<div className="whitespace-nowrap">Trending</div>}>
           <AButton
-            highlighted={router.asPath.startsWith('/trending') || router.asPath.startsWith('/?tab')}
+            highlighted={router.asPath.startsWith('/trending')}
             onClick={() => {
               router.push('/trending');
             }}
@@ -49,9 +49,7 @@ export const SidebarNav = () => {
               className={twMerge(
                 iconButtonStyle,
                 hoverColorBrandText,
-                router.asPath.startsWith('/trending') || router.asPath.startsWith('/?tab')
-                  ? 'text-brand-primary'
-                  : 'text-gray-400'
+                router.asPath.startsWith('/trending') ? 'text-brand-primary' : 'text-gray-400'
               )}
             />
           </AButton>
