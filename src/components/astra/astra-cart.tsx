@@ -237,8 +237,8 @@ export const AstraCart = ({
     );
   } else {
     listComponent = (
-      <div key={Math.random()} className={twMerge(textColor, 'flex items-center justify-center   uppercase flex-1')}>
-        <div>Cart empty</div>
+      <div key={Math.random()} className={twMerge(textColor, 'flex items-center justify-center uppercase flex-1')}>
+        <div className={twMerge('font-medium', secondaryTextColor)}>Cart empty</div>
       </div>
     );
   }
