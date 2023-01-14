@@ -56,12 +56,12 @@ export const GridCard = ({ data, onClick, selected, isSelectable }: Props): JSX.
           <div className="absolute top-0 bottom-0 left-0 right-0 rounded-t-lg overflow-clip">
             <EZImage src={data?.image} className="hover:scale-110 transition-all" />
             {selected && (
-              <div className={twMerge('absolute top-3 right-3 rounded-full p-0.5', bgColor)}>
+              <div className={twMerge('absolute top-2 right-2 rounded-full p-0.5', bgColor)}>
                 <AiOutlineCheckCircle className={twMerge(iconButtonStyle, brandTextColor)} />
               </div>
             )}
             {showPlusIcon && !selected && (
-              <div className={twMerge('absolute top-3 right-3 rounded-full p-0.5', bgColor)}>
+              <div className={twMerge('absolute top-2 right-2 rounded-full p-0.5', bgColor)}>
                 <AiOutlinePlusCircle className={twMerge(iconButtonStyle, brandTextColor)} />
               </div>
             )}
