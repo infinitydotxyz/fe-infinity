@@ -88,7 +88,7 @@ const TrendingPage = () => {
 
   return (
     <APageBox title="Trending Collections" showTitle={true}>
-      <div className="overflow-y-auto overflow-x-clip">
+      <div className="overflow-y-auto overflow-x-clip text-sm">
         <ToggleTab
           small={true}
           className="font-heading"
@@ -160,10 +160,10 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
         style={{ gridTemplateColumns: 'minmax(0, 4fr) repeat(auto-fit, minmax(0, 1fr))' }}
       >
         <div className="flex items-center font-bold font-heading">
-          <div className="text-lg mr-4 min-w-[40px] text-right">{index + 1}</div>
+          <div className="text-lg mr-8 text-right">{index + 1}</div>
 
           <NextLink href={`/collection/${collection?.slug}/items`}>
-            <EZImage className="w-16 h-16 rounded-lg overflow-clip" src={collection?.metadata?.profileImage} />
+            <EZImage className="w-14 h-14 rounded-lg overflow-clip" src={collection?.metadata?.profileImage} />
           </NextLink>
 
           <NextLink href={`/collection/${collection?.slug}/items`} className="ml-2 whitespace-normal">
@@ -217,13 +217,7 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
           </>
         ) : null}
 
-        <div
-          className="flex gap-2"
-          style={{
-            gridColumn: -1,
-            width: '170px'
-          }}
-        >
+        <div className="flex gap-2">
           <AButton
             primary
             className="px-9 py-3 rounded-lg"
