@@ -2,21 +2,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { SearchType, SearchBy, SubQueryType, SubQuerySearchBy } from '@infinityxyz/lib-frontend/types/core';
 import { useState } from 'react';
-import { ClientSearches, defaultSearchByType } from './useSearch';
+import { ClientSearches } from './useSearch';
 
 export const useSearchState = <
   T extends SearchType = any,
   U extends SearchBy<T> = any,
   V extends SubQueryType<T, U> = any
 >(
-  defaultSearch?: ClientSearches<T, U, V>
+  defaultSearch: ClientSearches<T, U, V>
 ) => {
-  const [search, setSearch] = useState<ClientSearches<T, U, V>>(
-    defaultSearch ?? defaultSearchByType[SearchType.Collection]
-  );
+  const [search, setSearch] = useState<ClientSearches<T, U, V>>(defaultSearch);
 
   const setType = (type: SearchType) => {
-    setSearch(defaultSearchByType[type]);
+    setSearch(defaultSearch);
   };
 
   const setQuery = (query: string) => {

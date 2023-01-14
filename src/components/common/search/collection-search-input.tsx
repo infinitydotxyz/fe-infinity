@@ -1,7 +1,8 @@
-import { SearchType } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId, SearchType } from '@infinityxyz/lib-frontend/types/core';
 import { CollectionSearchDto } from '@infinityxyz/lib-frontend/types/dto';
-import { defaultSearchByType, useSearch } from 'src/hooks/api/useSearch';
+import { useSearch } from 'src/hooks/api/useSearch';
 import { useSearchState } from 'src/hooks/api/useSearchState';
+import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { SearchInput } from './search-input';
 
 interface Props {
@@ -12,9 +13,15 @@ interface Props {
 }
 
 export const CollectionSearchInput = ({ expanded, profileSearch, orderSearch, setSelectedCollection }: Props) => {
-  const { search, setQuery } = useSearchState<SearchType.Collection, 'slug'>(
-    defaultSearchByType[SearchType.Collection]
-  );
+  const { chainId } = useOnboardContext();
+  const { search, setQuery } = useSearchState<SearchType.Collection, 'slug'>({
+    cursor: '',
+    limit: 10,
+    chainId: chainId as ChainId,
+    type: SearchType.Collection,
+    searchBy: 'slug',
+    query: ''
+  });
   const { result } = useSearch(search);
 
   return (
