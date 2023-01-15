@@ -1,6 +1,14 @@
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { AiOutlineCheckCircle, AiOutlinePlusCircle } from 'react-icons/ai';
-import { brandTextColor, cardColor, iconButtonStyle, secondaryBgColor, selectionBorder } from 'src/utils/ui-constants';
+import {
+  brandTextColor,
+  cardColor,
+  hoverColorBrandText,
+  iconButtonStyle,
+  secondaryBgColor,
+  selectionBorder
+} from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { AButton } from '../astra/astra-button';
 import { TokenCardModal } from '../astra/token-grid/token-card-modal';
@@ -27,6 +35,7 @@ export const GridCard = ({ data, onClick, selected, isSelectable }: Props): JSX.
     collectionAddress: data?.address ?? '',
     chainId: data?.chainId ?? ''
   };
+  const router = useRouter();
 
   return (
     <div
@@ -69,8 +78,14 @@ export const GridCard = ({ data, onClick, selected, isSelectable }: Props): JSX.
         </div>
 
         <div className={twMerge('mt-1 mb-3 px-2')}>
-          <div className="flex items-center space-x-1">
-            <div className="truncate text-xs">{title}</div>
+          <div
+            className="flex items-center space-x-1 cursor-pointer"
+            onClick={(e) => {
+              e.stopPropagation();
+              router.push(`/collection/${data?.collectionSlug}`);
+            }}
+          >
+            <div className={twMerge('truncate text-xs', hoverColorBrandText)}>{title}</div>
             {hasBlueCheck ? <BlueCheck className={'h-3 w-3'} /> : ''}
           </div>
 

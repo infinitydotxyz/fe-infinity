@@ -69,7 +69,7 @@ export function SearchInput({
       };
       setSelectedToken && setSelectedToken(basicTokenInfo);
     } else if (selected) {
-      const pathname = `/collection/${(selected as CollectionSearchDto).slug}/items`;
+      const pathname = `/collection/${(selected as CollectionSearchDto).slug}`;
       router.push(
         {
           pathname
