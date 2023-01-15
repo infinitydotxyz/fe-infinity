@@ -9,7 +9,6 @@ import { OrderbookContextProvider } from 'src/components/orderbook/OrderbookCont
 import 'src/settings/tailwind/globals.scss';
 import { isLocalhost } from 'src/utils/commonUtils';
 import { AppContextProvider } from 'src/utils/context/AppContext';
-import { FilterContextProvider } from 'src/utils/context/FilterContext';
 import { OnboardContextProvider } from 'src/utils/OnboardContext/OnboardContext';
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -32,13 +31,11 @@ const App = (props: AppProps) => {
   return (
     <StrictMode>
       <OnboardContextProvider>
-        <FilterContextProvider>
-          <AppContextProvider>
-            <OrderbookContextProvider>
-              <AppBody {...props} />
-            </OrderbookContextProvider>
-          </AppContextProvider>
-        </FilterContextProvider>
+        <AppContextProvider>
+          <OrderbookContextProvider>
+            <AppBody {...props} />
+          </OrderbookContextProvider>
+        </AppContextProvider>
       </OnboardContextProvider>
     </StrictMode>
   );

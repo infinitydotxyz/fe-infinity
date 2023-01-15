@@ -1,11 +1,15 @@
+import { BaseToken, Erc721Token, OrdersSnippet } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { ApiResponse } from 'src/utils';
 import { fetchCollectionTokens, fetchProfileTokens } from 'src/utils/astra-utils';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import { ApiNftData, nftsToCardDataWithOfferFields } from '../gallery/token-fetcher';
 import { OBFilters, useOrderbook } from '../orderbook/OrderbookContext';
 import { Erc721TokenOffer } from './types';
+
+type ApiNftData = Erc721Token & {
+  orderSnippet?: OrdersSnippet;
+};
 
 export function useCollectionTokenFetcher(collectionAddress: string | undefined) {
   const { chainId } = useOnboardContext();
@@ -94,3 +98,54 @@ export function useTokenFetcher<From, To>({
 
   return { error, cursor, data, hasNextPage, isLoading, fetch };
 }
+
+const nftsToCardDataWithOfferFields = (
+  tokens: ApiNftData[],
+  collectionAddress: string,
+  collectionName: string
+): Erc721TokenOffer[] => {
+  let result: Erc721TokenOffer[] = (tokens || []).map((item: ApiNftData) => {
+    const image =
+      item?.metadata?.image ||
+      item?.image?.url ||
+      item?.alchemyCachedImage ||
+      item?.image?.originalUrl ||
+      item?.zoraImage?.url ||
+      '';
+
+    const result: Erc721TokenOffer = {
+      id: collectionAddress + '_' + item.tokenId,
+      name: item.metadata?.name ?? item.metadata?.title,
+      title: item.collectionName ?? collectionName,
+      collectionName: item.collectionName ?? collectionName,
+      collectionSlug: item.collectionSlug ?? '',
+      description: item.metadata?.description ?? '',
+      image: image,
+      displayType: item.displayType,
+      isVideo: isVideoNft(item),
+      price: item?.orderSnippet?.listing?.orderItem?.startPriceEth ?? 0,
+      chainId: item.chainId,
+      tokenAddress: item.collectionAddress ?? collectionAddress,
+      address: item.collectionAddress ?? collectionAddress,
+      tokenId: item.tokenId,
+      rarityRank: item.rarityRank,
+      orderSnippet: item.ordersSnippet,
+      hasBlueCheck: item.hasBlueCheck ?? false,
+      attributes: item.metadata?.attributes ?? []
+    };
+
+    return result;
+  });
+
+  // remove any with blank images
+  result = result.filter((x) => {
+    return x.image && x.image.length > 0;
+  });
+
+  return result;
+};
+
+const isVideoNft = (token: BaseToken) => {
+  // could also check image extension?
+  return token.zoraImage?.mimeType === 'video/mp4';
+};

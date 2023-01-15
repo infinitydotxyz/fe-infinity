@@ -10,10 +10,9 @@ import { getOBComplicationAddress, getTxnCurrencyAddress, trimLowerCase } from '
 import { ProfileTabs } from 'pages/profile/[address]';
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
-import { CollectionTokenCache } from 'src/components/astra/token-grid/token-fetcher';
 import { Erc721CollectionOffer, Erc721TokenOffer } from 'src/components/astra/types';
-import { useNFTSelection } from 'src/components/astra/useNFTSelection';
 import { useCollectionSelection } from 'src/components/astra/useCollectionSelection';
+import { useNFTSelection } from 'src/components/astra/useNFTSelection';
 import { useOrderSelection } from 'src/components/astra/useOrderSelection';
 import { toastError, toastInfo, toastSuccess, toastWarning } from 'src/components/common';
 import { WaitingForTxModal } from 'src/components/orderbook/waiting-for-tx-modal';
@@ -401,8 +400,6 @@ export const AppContextProvider = ({ children }: Props) => {
   };
 
   const refreshData = () => {
-    CollectionTokenCache.shared().refresh();
-
     // updating fetchers triggers rebuild
     setRefreshTrigger(refreshTrigger + 1);
   };
