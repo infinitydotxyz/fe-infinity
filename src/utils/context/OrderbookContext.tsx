@@ -12,8 +12,8 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import { ParsedUrlQuery } from 'querystring';
 import { apiGet, ITEMS_PER_PAGE } from 'src/utils';
 import { useIsMounted } from 'src/hooks/useIsMounted';
-import { OrderCache } from './order-cache';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { OrderCache } from '../../components/orderbook/order-cache';
+import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import * as Queries from '@infinityxyz/lib-frontend/types/dto/orders/orders-queries.dto';
 
 export type OBFilters = {
@@ -22,7 +22,7 @@ export type OBFilters = {
    * @deprecated No longer used in v3. Use `orderType` instead.
    */
   orderTypes?: string[];
-  orderType?: string;
+  orderType?: 'listings' | 'offers-made' | 'offers-received' | '';
   collections?: string[];
   minPrice?: string;
   maxPrice?: string;
@@ -36,7 +36,6 @@ export const SORT_FILTERS = {
   highestPrice: 'highestPrice',
   lowestPrice: 'lowestPrice',
   mostRecent: 'mostRecent',
-  rarityRank: 'rarityRank',
   tokenIdNumeric: 'tokenIdNumeric'
 };
 
@@ -46,7 +45,6 @@ export const SORT_LABELS: {
   [SORT_FILTERS.highestPrice]: 'Highest Price',
   [SORT_FILTERS.lowestPrice]: 'Lowest Price',
   [SORT_FILTERS.mostRecent]: 'Most Recent',
-  [SORT_FILTERS.rarityRank]: 'Rarity Rank',
   [SORT_FILTERS.tokenIdNumeric]: 'Token ID'
 };
 
@@ -189,7 +187,7 @@ const parseRouterQueryParamsToFilters = (query: ParsedUrlQuery): OBFilters => {
     newFilters.sort = sort as string;
   }
 
-  newFilters.orderType = _orderType as string;
+  newFilters.orderType = _orderType as 'listings' | 'offers-made' | 'offers-received' | '';
 
   return newFilters;
 };
@@ -222,37 +220,37 @@ const orderCache = new OrderCache();
 
 interface BaseProps {
   children: ReactNode;
-  kind: 'collection' | 'token' | 'user';
+  kind?: 'collection' | 'token' | 'profile';
   limit?: number;
 }
 
 interface CollectionProps extends BaseProps {
-  kind: 'collection';
-  context: {
+  kind?: 'collection';
+  context?: {
     collectionAddress: string;
   };
 }
 
 interface TokenProps extends BaseProps {
-  kind: 'token';
-  context: {
+  kind?: 'token';
+  context?: {
     collectionAddress: string;
     tokenId: string;
   };
 }
 
-interface UserProps extends BaseProps {
-  kind: 'user';
-  context: {
+interface ProfileProps extends BaseProps {
+  kind?: 'profile';
+  context?: {
     chainId: ChainId;
     userAddress: string;
     side: Queries.Side;
   };
 }
 
-export type OrderbookProviderProps = CollectionProps | TokenProps | UserProps;
+export type OrderbookProviderProps = CollectionProps | TokenProps | ProfileProps;
 
-export const OrderbookProvider = ({ children, limit = ITEMS_PER_PAGE, ...props }: OrderbookProviderProps) => {
+export const OrderbookContextProvider = ({ children, limit = ITEMS_PER_PAGE, ...props }: OrderbookProviderProps) => {
   const router = useRouter();
   const { chainId } = useOnboardContext();
 
@@ -389,7 +387,7 @@ export const OrderbookProvider = ({ children, limit = ITEMS_PER_PAGE, ...props }
         };
 
         options = {
-          endpoint: `/v2/collections/${chainId}:${props.context.collectionAddress}/tokens/${props.context.tokenId}/orders`,
+          endpoint: `/v2/collections/${chainId}:${props.context?.collectionAddress}/tokens/${props.context?.tokenId}/orders`,
           query
         };
       } else if (props.kind === 'collection') {
@@ -399,11 +397,11 @@ export const OrderbookProvider = ({ children, limit = ITEMS_PER_PAGE, ...props }
         };
 
         options = {
-          endpoint: `/v2/collections/${chainId}:${props.context.collectionAddress}/orders`,
+          endpoint: `/v2/collections/${chainId}:${props.context?.collectionAddress}/orders`,
           query
         };
-      } else if (props.kind === 'user') {
-        if (props.context.side === Queries.Side.Maker) {
+      } else if (props.kind === 'profile') {
+        if (props.context?.side === Queries.Side.Maker) {
           const query: Queries.MakerOrdersQuery = {
             ...baseQuery,
             chainId: props.context.chainId,
@@ -418,12 +416,12 @@ export const OrderbookProvider = ({ children, limit = ITEMS_PER_PAGE, ...props }
         } else {
           const query: Queries.TakerOrdersQuery = {
             ...baseQuery,
-            chainId: props.context.chainId,
+            chainId: props.context?.chainId,
             side: Queries.Side.Taker,
             status: Queries.OrderStatus.Active
           };
           options = {
-            endpoint: `/v2/users/${props.context.userAddress}/orders`,
+            endpoint: `/v2/users/${props.context?.userAddress}/orders`,
             query
           };
         }
@@ -467,7 +465,6 @@ export const OrderbookProvider = ({ children, limit = ITEMS_PER_PAGE, ...props }
                   case 'single-token':
                     tokens = [item.token];
                     break;
-
                   case 'token-list':
                     tokens = item.tokens;
                     break;
@@ -555,6 +552,6 @@ export const OrderbookProvider = ({ children, limit = ITEMS_PER_PAGE, ...props }
   return <OrderbookContext.Provider value={value}>{children}</OrderbookContext.Provider>;
 };
 
-export const useOrderbook = () => {
+export const useOrderbookContext = () => {
   return React.useContext(OrderbookContext) as OBContextType;
 };

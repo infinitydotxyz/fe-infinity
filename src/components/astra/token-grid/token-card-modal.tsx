@@ -1,21 +1,15 @@
 import { CollectionAttributes, Erc721Token, Token } from '@infinityxyz/lib-frontend/types/core';
+import { useState } from 'react';
 import { ActivityList } from 'src/components/asset';
 import { OrderbookContainer } from 'src/components/orderbook/list';
-import { ellipsisAddress, useFetch } from 'src/utils';
+import { ellipsisAddress, getChainScannerBase, useFetch } from 'src/utils';
+import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
+import { dropShadow } from 'src/utils/ui-constants';
 import { useSWRConfig } from 'swr';
-import {
-  BlueCheck,
-  ErrorOrLoading,
-  EZImage,
-  Modal,
-  NextLink,
-  ReadMoreText,
-  ShortAddress,
-  Spinner,
-  ToggleTab,
-  useToggleTab
-} from '../../common';
+import { twMerge } from 'tailwind-merge';
+import { BlueCheck, EZImage, Modal, NextLink, ReadMoreText, ShortAddress, ToggleTab } from '../../common';
 import { ATraitList } from '../astra-trait-list';
+import { ErrorOrLoading } from '../error-or-loading';
 import { BasicTokenInfo } from '../types';
 
 interface Props {
@@ -24,7 +18,6 @@ interface Props {
   setModalOpen: (set: boolean) => void;
 }
 
-// todo: is this necessary?
 const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
   const { mutate } = useSWRConfig();
   const NFT_API_ENDPOINT = `/collections/${chainId}:${collection}/nfts/${tokenId}`;
@@ -44,27 +37,30 @@ const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string)
   };
 };
 
-export const TokenCardModal = ({ data, modalOpen, setModalOpen }: Props): JSX.Element => {
-  const { options, onChange, selected } = useToggleTab(['Activity', 'Orders'], 'Activity');
-  const { isLoading, token, error, collectionAttributes } = useFetchAssetInfo(
-    data.chainId,
-    data.collectionAddress,
-    data.tokenId
-  );
+export const TokenCardModal = ({ data, modalOpen, setModalOpen }: Props): JSX.Element | null => {
+  const options = ['Activity', 'Orders'];
+  const DEFAULT_TAB = 'Activity';
+  const { token, error, collectionAttributes } = useFetchAssetInfo(data.chainId, data.collectionAddress, data.tokenId);
+  const [selected, setSelected] = useState(DEFAULT_TAB);
+  const { chainId } = useOnboardContext();
 
-  if (isLoading) {
-    return <Spinner />;
+  if (error) {
+    return <ErrorOrLoading error={!!error} noData message="No Data" />;
   }
 
-  if (!token || error) {
-    console.error(error);
-    return <ErrorOrLoading fixed error={!!error} noData message="Something went wrong." />;
+  if (!token) {
+    return null;
   }
 
   return (
-    <Modal isOpen={modalOpen} showActionButtons={false} onClose={() => setModalOpen(false)} panelClassName="max-w-6xl">
-      <div className="flex justify-between">
-        <div className="flex">
+    <Modal
+      isOpen={modalOpen}
+      showActionButtons={false}
+      onClose={() => setModalOpen(false)}
+      panelClassName={twMerge('max-w-6xl', dropShadow)}
+    >
+      <div className="flex space-x-4 text-sm">
+        <div className="flex-1">
           <div className="flex flex-col gap-10 mr-auto md:flex-row md:items-start">
             <div className="md:flex-1 ">
               <div className="flex items-center mb-2">
@@ -80,7 +76,7 @@ export const TokenCardModal = ({ data, modalOpen, setModalOpen }: Props): JSX.El
               <ShortAddress
                 label="Collection address:"
                 address={token.collectionAddress ?? ''}
-                href={`https://etherscan.io/address/${token.collectionAddress}`}
+                href={`${getChainScannerBase(chainId)}/address/${token.collectionAddress}`}
                 tooltip={token.collectionAddress ?? ''}
               />
               <ShortAddress
@@ -93,8 +89,7 @@ export const TokenCardModal = ({ data, modalOpen, setModalOpen }: Props): JSX.El
 
               {token.metadata.description && (
                 <>
-                  <p className="font-body mb-1 mt-4">Description</p>
-                  <div>
+                  <div className="mt-2">
                     <ReadMoreText text={token.metadata.description ?? ''} min={100} ideal={150} max={300} />
                   </div>
                 </>
@@ -102,10 +97,10 @@ export const TokenCardModal = ({ data, modalOpen, setModalOpen }: Props): JSX.El
 
               <div className="min-h-[50vh] mt-10">
                 <ToggleTab
-                  className="flex space-x-2 items-center relative max-w-xl font-heading"
+                  className="flex space-x-2 items-center relative max-w-xl font-heading text-sm"
                   options={options}
-                  selected={selected}
-                  onChange={onChange}
+                  defaultOption={DEFAULT_TAB}
+                  onChange={setSelected}
                 />
 
                 {selected === 'Activity' && (
@@ -118,7 +113,11 @@ export const TokenCardModal = ({ data, modalOpen, setModalOpen }: Props): JSX.El
 
                 {selected === 'Orders' && (
                   <div className="">
-                    <OrderbookContainer collectionId={token?.collectionAddress} tokenId={token?.tokenId} />
+                    <OrderbookContainer
+                      collectionId={token?.collectionAddress}
+                      tokenId={token?.tokenId}
+                      canShowAssetModal={false}
+                    />
                   </div>
                 )}
               </div>
@@ -129,7 +128,7 @@ export const TokenCardModal = ({ data, modalOpen, setModalOpen }: Props): JSX.El
         <div className="flex flex-col">
           <EZImage
             src={token?.image?.url ?? token.alchemyCachedImage ?? token.image?.originalUrl ?? ''}
-            className="h-80 w-80"
+            className="h-80 w-80 rounded-lg"
           />
           <ATraitList
             traits={(token as Erc721Token).metadata.attributes ?? []}

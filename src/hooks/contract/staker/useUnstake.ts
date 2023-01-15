@@ -1,5 +1,5 @@
 import { utils } from 'ethers';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { useStakerContract } from './useStakerContract';
 
 export function useUnstake() {

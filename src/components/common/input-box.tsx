@@ -33,13 +33,7 @@ export const InputBox = ({
 
   return (
     <TooltipWrapper show={showTooltip} tooltip={tooltip} className={isFullWidth ? 'w-full' : ''}>
-      <div
-        className={twMerge(
-          borderColor,
-          'py-3 pl-6 pr-2 border rounded-2xl w-full flex items-center focus-within:border-gray-700',
-          className
-        )}
-      >
+      <div className={twMerge(borderColor, 'py-2 px-3 border rounded-lg w-full flex items-center', className)}>
         {icon && <span>{icon}</span>}
         <div className="w-full">
           {label && (
@@ -104,7 +98,7 @@ export const DatePickerBox = ({ tooltip, label, value, onChange, placeholder }: 
 // ================================================================
 
 interface Props4 {
-  label: string;
+  label?: string;
   value: string;
   type: string;
   placeholder: string;

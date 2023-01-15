@@ -1,11 +1,11 @@
+import { BaseCollection, Token } from '@infinityxyz/lib-frontend/types/core';
 import { EventTypeNames } from '@infinityxyz/lib-frontend/types/core/feed';
+import { NftActivity } from '@infinityxyz/lib-frontend/types/dto/collections/nfts';
 import { EthPrice, EZImage, NextLink } from 'src/components/common';
 import { ellipsisAddress } from 'src/utils';
-import { format } from 'timeago.js';
-import { NftActivity } from '@infinityxyz/lib-frontend/types/dto/collections/nfts';
-import { BaseCollection, Token } from '@infinityxyz/lib-frontend/types/core';
-import { secondaryBgColor, secondaryTextColor } from 'src/utils/ui-constants';
+import { secondaryTextColor, standardBorderCard } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
+import { format } from 'timeago.js';
 
 // the backend adds teh collectionData to the NFtActivity
 export interface NftEventRec extends NftActivity {
@@ -26,54 +26,46 @@ export const ActivityItem = ({ item, token }: Props) => {
   }
 
   return (
-    <div>
-      <div className={twMerge(secondaryBgColor, 'px-4 py-4 rounded-3xl flex items-center font-heading mt-4')}>
-        <NextLink href={`/asset/${item.chainId}/${item.address}/${item.tokenId}`}>
-          <EZImage className="w-16 h-16 max-h-[80px] rounded-2xl overflow-clip" src={imageUrl} />
-        </NextLink>
-        <div className="flex justify-between w-full mx-8">
-          <div className="w-1/6">
-            {/* <div className="font-bold font-body">
+    <div className={twMerge(standardBorderCard, 'flex items-center mt-4 text-sm')}>
+      <EZImage className="w-14 h-14 max-h-[80px] rounded-lg overflow-clip" src={imageUrl} />
+      <div className="flex justify-between w-full space-x-2 ml-4">
+        <div className="w-1/6">
+          {/* <div className="font-bold font-body">
               <a href={`/collection/${item.collectionSlug}`}>{item.collectionName}</a>
             </div> */}
-            <div className={secondaryTextColor}>Token</div>
-            <div>
-              <a href={`/asset/${item.chainId}/${item.address}/${item.tokenId}`}>{ellipsisAddress(item.tokenId)}</a>
-            </div>
+          <div className={twMerge(secondaryTextColor, 'font-medium')}>Token ID</div>
+          <div>
+            <a href={`/asset/${item.chainId}/${item.address}/${item.tokenId}`}>{ellipsisAddress(item.tokenId)}</a>
           </div>
-          <div className="w-1/6">
-            <div className={secondaryTextColor}>Event</div>
-            <div className="font-bold">
-              <a href={`${item.externalUrl}`} target="_blank" rel="noopener noreferrer">
-                {EventTypeNames[item.type]}
-              </a>
-            </div>
+        </div>
+        <div className="w-1/6">
+          <div className={twMerge(secondaryTextColor, 'font-medium')}>Event</div>
+          <div className="">{EventTypeNames[item.type]}</div>
+        </div>
+        <div className="w-1/6">
+          <div className={twMerge(secondaryTextColor, 'font-medium')}>Price</div>
+          <div className="overflow-hidden">{item.price ? <EthPrice label={`${item.price}`} /> : '—'}</div>
+        </div>
+        <div className="w-1/6">
+          <div className={twMerge(secondaryTextColor, 'font-medium')}>Date</div>
+          <div className="">
+            <a href={item.externalUrl} target="_blank" rel="noopener noreferrer">
+              {format(item.timestamp)}
+            </a>
           </div>
-          <div className="w-1/6">
-            <div className={secondaryTextColor}>Price</div>
-            <div className="font-bold overflow-hidden">{item.price ? <EthPrice label={`${item.price}`} /> : '—'}</div>
+        </div>
+        <div className="w-1/6">
+          <div className={twMerge(secondaryTextColor, 'font-medium')}>From</div>
+          <div className="truncate">
+            <NextLink href={`/profile/${item.from}`}>
+              {item.fromDisplayName ? ellipsisAddress(item.fromDisplayName) : ellipsisAddress(item.from)}
+            </NextLink>
           </div>
-          <div className="w-1/6">
-            <div className={secondaryTextColor}>Date</div>
-            <div className="font-bold">
-              <a href={item.externalUrl} target="_blank" rel="noopener noreferrer">
-                {format(item.timestamp)}
-              </a>
-            </div>
-          </div>
-          <div className="w-1/6">
-            <div className={secondaryTextColor}>From</div>
-            <div className="font-bold">
-              <NextLink href={`/profile/${item.from}`}>
-                {item.fromDisplayName ? ellipsisAddress(item.fromDisplayName) : ellipsisAddress(item.from)}
-              </NextLink>
-            </div>
-          </div>
-          <div className="w-1/6">
-            <div className={secondaryTextColor}>{toValue ? 'To' : ''}</div>
-            <div className="font-bold">
-              <NextLink href={`/profile/${item.to}`}>{toValue}</NextLink>
-            </div>
+        </div>
+        <div className="w-1/6">
+          <div className={twMerge(secondaryTextColor, 'font-medium')}>{toValue ? 'To' : ''}</div>
+          <div className="truncate">
+            <NextLink href={`/profile/${item.to}`}>{toValue}</NextLink>
           </div>
         </div>
       </div>

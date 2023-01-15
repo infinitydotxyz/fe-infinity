@@ -1,7 +1,7 @@
+import { CollectionAttributes, Erc721Attribute } from '@infinityxyz/lib-frontend/types/core';
 import type { FC } from 'react';
-import { Erc721Attribute, CollectionAttributes } from '@infinityxyz/lib-frontend/types/core';
+import { borderColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { secondaryBgColor, borderColor } from 'src/utils/ui-constants';
 
 interface ATraitListProps {
   traits: Erc721Attribute[];
@@ -33,14 +33,12 @@ interface ATraitProps {
 export const ATrait: FC<ATraitProps> = ({ trait, description }) => {
   // TODO: improve style to look more like gem's?
   return (
-    <div className={twMerge(borderColor, 'border rounded-3xl flex flex-col justify-between')}>
-      <div>
-        <p className="text-center text-sm font-body break-words">{trait.trait_type}</p>
-        <p className="text-center text-sm font-body font-bold break-words">{trait.value}</p>
-      </div>
-      <p className={twMerge(secondaryBgColor, 'text-center text-xs font-heading rounded-3xl tracking-tighter')}>
+    <div className={twMerge(borderColor, 'border rounded-lg flex flex-col py-1')}>
+      <div className="text-center text-xs break-words">{trait.trait_type}</div>
+      <div className="text-center text-sm font-medium break-words mt-0.5">{trait.value}</div>
+      <div className={twMerge('text-center text-xs rounded-br-lg rounded-bl-lg tracking-tighter mt-0.5')}>
         {description}
-      </p>
+      </div>
     </div>
   );
 };
@@ -49,7 +47,7 @@ export const ATraitList: FC<ATraitListProps> = ({ traits, className = 'mt-6', co
   traits.sort((a, b) => getPercentage(a, collectionTraits) - getPercentage(b, collectionTraits));
   return (
     <div className={className}>
-      <p className="text-xl font-bold">Traits</p>
+      <p className="text-lg font-bold font-heading mb-1">Traits</p>
       <div className="space-y-2 max-h-80 overflow-y-scroll">
         {traits?.map((trait: Erc721Attribute, idx) => (
           <ATrait

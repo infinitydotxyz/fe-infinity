@@ -19,16 +19,17 @@ interface Props {
   className?: string;
 }
 
-export const UserActivityList = ({ userAddress, types, className }: Props) => {
+export const ProfileActivityList = ({ userAddress, types, className }: Props) => {
   const [filter, setFilter] = useState<FeedFilter>({ userAddress, types });
   const { result: activities, isLoading, fetchMore } = useUserActivity(filter.types ?? [], userAddress);
 
   return (
     <div className={twMerge('min-h-[50vh]', className)}>
-      <div className={twMerge(borderColor, 'w-full flex   py-2 border-t-[1px]')}>
+      <div className={twMerge(borderColor, 'w-full flex py-2 px-4 border-t-[1px]')}>
         <Spacer />
-        <div className="flex flex-row-reverse mb-8 bg-transparent">
+        <div className="flex flex-row-reverse">
           <AFilterPopdown
+            alignMenuRight={true}
             options={filterButtonDefaultOptions}
             filter={filter}
             onChange={(f) => {
@@ -37,8 +38,12 @@ export const UserActivityList = ({ userAddress, types, className }: Props) => {
           />
         </div>
       </div>
-      <div className="space-y-3 pointer-events-auto">
-        {!isLoading && activities?.length === 0 ? <div className="font-heading">No results found</div> : null}
+      <div className="pointer-events-auto text-sm mx-4">
+        {!isLoading && activities?.length === 0 ? (
+          <CenteredContent>
+            <div className="text-sm mt-4">No Activity</div>
+          </CenteredContent>
+        ) : null}
 
         {activities.length > 0 &&
           activities?.map((event, index) => {
@@ -68,7 +73,7 @@ export const UserActivityList = ({ userAddress, types, className }: Props) => {
             }
           })}
 
-        <div className="mt-8">
+        <div className="">
           {isLoading && (
             <CenteredContent>
               <Spinner />

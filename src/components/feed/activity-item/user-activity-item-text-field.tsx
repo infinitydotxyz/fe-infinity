@@ -11,10 +11,8 @@ interface TextFieldProps {
 export const UserActivityItemTextField = (props: TextFieldProps) => {
   return (
     <div className="max-w-[120px] min-w-[120px] mx-2">
-      <div className={twMerge(secondaryTextColor)}>{props.title}</div>
-      <div className="font-bold">
-        {props.link ? <NextLink href={props.link}>{props.children}</NextLink> : props.children}
-      </div>
+      <div className={twMerge(secondaryTextColor, 'font-medium')}>{props.title}</div>
+      <div className="">{props.link ? <NextLink href={props.link}>{props.children}</NextLink> : props.children}</div>
     </div>
   );
 };

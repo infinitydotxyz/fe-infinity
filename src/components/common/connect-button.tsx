@@ -2,7 +2,7 @@ import { HiOutlineExternalLink } from 'react-icons/hi';
 import { RiLogoutCircleLine } from 'react-icons/ri';
 import { RxCopy } from 'react-icons/rx';
 import { ellipsisAddress } from 'src/utils';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { iconButtonStyle } from 'src/utils/ui-constants';
 import { AOutlineButton } from '../astra/astra-button';
 import { ADropdown, ADropdownItem } from '../astra/astra-dropdown';

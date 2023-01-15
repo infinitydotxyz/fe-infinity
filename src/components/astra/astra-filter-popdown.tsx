@@ -1,6 +1,8 @@
 import { SaleSource } from '@infinityxyz/lib-frontend/types/core';
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import React, { useState } from 'react';
+import { hoverColor } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
 import { Checkbox, PopoverButton } from '../common';
 
 export const commonEventTypes = [
@@ -53,9 +55,10 @@ interface Props {
   filter: FeedFilter;
   className?: string;
   onChange: (filter: FeedFilter) => void;
+  alignMenuRight?: boolean;
 }
 
-export const AFilterPopdown = ({ onChange, options, filter, className = '' }: Props) => {
+export const AFilterPopdown = ({ onChange, options, filter, className = '', alignMenuRight }: Props) => {
   const [filteringTypes, setFilteringTypes] = useState<EventType[]>(filter.types ?? []);
 
   const onChangeFilterDropdown = (checked: boolean, checkId: EventType) => {
@@ -101,6 +104,7 @@ export const AFilterPopdown = ({ onChange, options, filter, className = '' }: Pr
   return (
     <div className={className}>
       <AFeedFilterPopdown
+        alignMenuRight={alignMenuRight}
         optionInfinityOnly={filter.source === SaleSource.Infinity}
         onOptionChange={onOptionChange}
         options={options}
@@ -127,17 +131,18 @@ interface Props2 {
   onOptionChange: (checked: boolean, checkId: string) => void;
   optionInfinityOnly?: boolean;
   options: AFilterPopdownOption[];
+  alignMenuRight?: boolean;
 }
 
-const AFeedFilterPopdown: React.FC<Props2> = ({ options, selectedTypes, onChange }) => {
+const AFeedFilterPopdown: React.FC<Props2> = ({ options, selectedTypes, onChange, alignMenuRight }) => {
   return (
-    <PopoverButton title="Filter">
+    <PopoverButton title="Filter" alignMenuRight={alignMenuRight}>
       {options.map((item, idx) => {
         const isChecked = selectedTypes.indexOf(item.value as EventType) >= 0;
 
         return (
           <Checkbox
-            className="pointer-events-auto"
+            className={twMerge('pointer-events-auto p-3 rounded-lg cursor-pointer', hoverColor)}
             boxOnLeft={true}
             key={idx}
             label={item.label}

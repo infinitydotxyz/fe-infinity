@@ -1,21 +1,21 @@
-import { useState } from 'react';
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import moment from 'moment';
+import { useState } from 'react';
 import { EthPrice } from 'src/components/common';
 import { ellipsisAddress, numStr, shortDate } from 'src/utils';
 import { getOrderType } from 'src/utils/orderbookUtils';
+import { standardBorderCard } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
+import { OrderDetailModal } from '../OrderDetailModal';
 import { DataColumn, defaultDataColumns } from './data-columns';
 import { OrderbookItem } from './orderbook-item';
-import { OrderDetailModal } from '../OrderDetailModal';
-import { OrderbookRowButton } from './orderbook-row-button';
-import { twMerge } from 'tailwind-merge';
-import { secondaryBgColor } from 'src/utils/ui-constants';
 
 type Props = {
   order: SignedOBOrder;
+  canShowAssetModal?: boolean;
 };
 
-export const OrderbookRow = ({ order }: Props) => {
+export const OrderbookRow = ({ order, canShowAssetModal }: Props) => {
   const [selectedOrder, setSelectedOrder] = useState<SignedOBOrder | null>(null);
 
   const valueDiv = (dataColumn: DataColumn) => {
@@ -51,14 +51,14 @@ export const OrderbookRow = ({ order }: Props) => {
     switch (dataColumn.type) {
       case 'Text':
         return (
-          <div className="flex truncate flex-row items-center" title={value}>
-            {value ? <div className="truncate font-bold">{value}</div> : <div>---</div>}
+          <div className={twMerge('flex truncate flex-row items-center')} title={value}>
+            {value ? <div className="truncate">{value}</div> : <div>---</div>}
           </div>
         );
       case 'Currency':
         return (
           <div className="flex flex-row items-center">
-            <EthPrice label={value} labelClassName="font-bold" />
+            <EthPrice label={value} labelClassName="" />
           </div>
         );
       case 'Name':
@@ -77,7 +77,7 @@ export const OrderbookRow = ({ order }: Props) => {
   });
 
   return (
-    <div className={twMerge(secondaryBgColor, 'rounded-3xl mb-3 px-8 py-6 w-full')}>
+    <div className={twMerge(standardBorderCard, 'w-full text-sm')}>
       {/* for larger screen - show row summary: */}
       <div className="items-center w-full hidden lg:grid" style={{ gridTemplateColumns: gridTemplate }}>
         {defaultDataColumns(order).map((data) => {
@@ -85,12 +85,12 @@ export const OrderbookRow = ({ order }: Props) => {
 
           const title = data.name;
 
+          // todo: fix this - do not remove comment
           if (data.field === 'buyOrSell') {
-            return (
-              <div key={`${order.id} ${data.field}`}>
-                <OrderbookRowButton order={order} />
-              </div>
-            );
+            return null;
+            // <div key={`${order.id} ${data.field}`}>
+            //   {/* <OrderbookRowButton order={order} /> */}
+            // </div>
           }
 
           if (data.name === 'From' || data.name === 'Date') {
@@ -99,6 +99,7 @@ export const OrderbookRow = ({ order }: Props) => {
 
           return (
             <OrderbookItem
+              canShowAssetModal={canShowAssetModal}
               nameItem={data.type === 'Name'}
               key={`${order.id} ${data.field}`}
               title={title}
@@ -132,15 +133,12 @@ export const OrderbookRow = ({ order }: Props) => {
                 label={
                   order.isSellOrder ? numStr(order.startPriceEth.toString()) : numStr(order.endPriceEth.toString())
                 }
-                labelClassName="font-bold"
+                labelClassName=""
               />
             </div>
-            <div># NFTs: {numStr(order.numItems.toString())}</div>
           </div>
         </div>
         <div className="text-right">
-          <OrderbookRowButton order={order} />
-
           <div>{moment(order.startTimeMs).fromNow()}</div>
           <div>Expiry: {shortDate(new Date(order.endTimeMs))}</div>
         </div>

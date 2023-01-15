@@ -22,9 +22,7 @@ export const Checkbox = ({
   labelClassName = ''
 }: Props) => {
   const labelClass = boxOnLeft ? 'ml-3' : 'mr-3';
-  const checkLabel = (
-    <div className={twMerge('font-heading select-none truncate', labelClass, labelClassName)}>{label}</div>
-  );
+  const checkLabel = <div className={twMerge('select-none truncate', labelClass, labelClassName)}>{label}</div>;
 
   return (
     <label className={twMerge('flex items-center overflow-hidden', className)}>
@@ -41,7 +39,7 @@ export const Checkbox = ({
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
         // NOTE: "focus-visible:ring focus:ring-0" shows the focus ring on tab, but not click
-        className="focus-visible:ring focus:ring-0 rounded h-5 w-5 cursor-pointer checked:bg-dark-bg checked:hover:bg-dark-bg checked:focus:bg-dark-bg"
+        className="focus-visible:ring focus:ring-0 rounded h-5 w-5 cursor-pointer checked:text-brand-primary"
       />
 
       {boxOnLeft && checkLabel}

@@ -1,6 +1,6 @@
 import { BigNumber, utils } from 'ethers';
 import { useEffect, useState } from 'react';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { useStakerContract } from '../staker/useStakerContract';
 import { useTokenContract } from './useTokenContract';
 

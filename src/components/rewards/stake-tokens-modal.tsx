@@ -125,7 +125,7 @@ export const StakeTokensModal = ({ onClose }: Props) => {
                 <Button
                   variant="gray"
                   size="small"
-                  className="rounded-full py-2 px-3"
+                  className="rounded-lg py-2 px-3"
                   onClick={() => setValue(tokenBalance.toString())}
                 >
                   Max

@@ -66,7 +66,7 @@ export const SalesChartDetails = ({ data }: Props2) => {
     return (
       <ChartBox noCSSStyles className="px-4 py-4">
         <div className={twMerge(cardColor, textColor, 'flex flex-col')} style={{ aspectRatio: '4 / 5' }}>
-          <div className="flex-1 rounded-2xl overflow-clip">
+          <div className="flex-1 rounded-lg overflow-clip">
             <EZImage src={data?.tokenImage} className="duration-300 hover:scale-110" />
           </div>
 

@@ -1,7 +1,7 @@
 import { Disclosure } from '@headlessui/react';
 import { ReactNode } from 'react';
 import { RxCaretDown } from 'react-icons/rx';
-import { cardColor, hoverColor, smallIconButtonStyle } from 'src/utils/ui-constants';
+import { borderColor, hoverColor, secondaryBgColor, smallIconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 export interface DisclosureData {
@@ -15,17 +15,28 @@ interface Props {
 
 export function ADisclosure({ data }: Props) {
   return (
-    <div className="w-full space-y-1">
+    <div className="w-full">
       {data.map((item) => {
         return (
           <Disclosure defaultOpen>
             {({ open }) => (
               <>
                 <Disclosure.Button
-                  className={twMerge(cardColor, hoverColor, 'flex w-full justify-between rounded-lg p-2 text-sm')}
+                  className={twMerge(
+                    secondaryBgColor,
+                    hoverColor,
+                    'flex w-full justify-between p-2 text-xs border-b-[1px]',
+                    borderColor
+                  )}
                 >
                   <span>{item.title}</span>
-                  <RxCaretDown className={twMerge(`${open ? 'rotate-180 transform' : ''}`, smallIconButtonStyle)} />
+                  <RxCaretDown
+                    className={twMerge(
+                      `${open ? 'rotate-180 transform' : ''}`,
+                      smallIconButtonStyle,
+                      'text-brand-primary'
+                    )}
+                  />
                 </Disclosure.Button>
                 <Disclosure.Panel className="text-sm px-2">{item.content}</Disclosure.Panel>
               </>

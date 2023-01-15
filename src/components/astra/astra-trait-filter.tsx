@@ -2,17 +2,18 @@ import { Menu } from '@headlessui/react';
 import { CollectionAttributes } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import { useFetch } from 'src/utils';
-import { useDashboardContext } from 'src/utils/context/DashboardContext';
-import { Filter } from 'src/utils/context/FilterContext';
-import CollectionTraits from '../collection/traits';
+import CollectionTraits from '../collection/collection-traits';
 import { Spinner } from '../common';
-import { useOrderbook } from '../orderbook/OrderbookContext';
+import { OBFilters, useOrderbookContext } from '../../utils/context/OrderbookContext';
 import { AOutlineButton } from './astra-button';
 import { ACustomMenuButton, ACustomMenuContents, ACustomMenuItems, ADropdownButton } from './astra-dropdown';
 
-export const ATraitFilter: React.FC = () => {
-  const { setFilters } = useOrderbook();
-  const { collection } = useDashboardContext();
+interface Props {
+  collectionAddress: string;
+}
+
+export const ATraitFilter = ({ collectionAddress }: Props) => {
+  const { setFilters } = useOrderbookContext();
   const {
     query: { name }
   } = useRouter();
@@ -30,46 +31,28 @@ export const ATraitFilter: React.FC = () => {
         <ACustomMenuContents>
           <span>
             <ACustomMenuButton>
-              <AOutlineButton tooltip="Click to filter by trait">
+              <AOutlineButton tooltip="Filter by traits">
                 <ADropdownButton isMenuOpen={open}>Traits</ADropdownButton>
               </AOutlineButton>
             </ACustomMenuButton>
           </span>
 
-          <ACustomMenuItems open={open} innerClassName="w-[580px] border-0" alignMenuRight={true}>
+          <ACustomMenuItems open={open} innerClassName="w-[580px] border-0 px-0 py-0" alignMenuRight={true}>
             {!collectionAttributes && <Spinner />}
             {collectionAttributes && (
-              <div className="h-[440px]">
-                {/* <TraitSelection
-                  traits={collectionAttributes}
-                  collectionAddress={collection?.address}
-                  onChange={(traitTypes, traitValues) => {
-                    const newFilter: Filter = {};
-                    newFilter.traitTypes = traitTypes;
-                    newFilter.traitValues = traitValues;
-                    newFilter.orderBy = 'tokenIdNumeric';
-                    setFilters((state) => ({ ...state, ...newFilter }));
-                  }}
-                  onClearAll={() => {
-                    const newFilter: Filter = {};
-                    newFilter.traitTypes = [];
-                    newFilter.traitValues = [];
-                    newFilter.orderBy = 'tokenIdNumeric';
-                    setFilters((state) => ({ ...state, ...newFilter }));
-                  }}
-                /> */}
+              <div className="h-[400px]">
                 <CollectionTraits
                   traits={collectionAttributes}
-                  collectionAddress={collection?.address}
+                  collectionAddress={collectionAddress}
                   onChange={(traitTypes, traitValues) => {
-                    const newFilter: Filter = {};
+                    const newFilter: OBFilters = {};
                     newFilter.traitTypes = traitTypes;
                     newFilter.traitValues = traitValues;
                     newFilter.orderBy = 'tokenIdNumeric';
                     setFilters((state) => ({ ...state, ...newFilter }));
                   }}
                   onClearAll={() => {
-                    const newFilter: Filter = {};
+                    const newFilter: OBFilters = {};
                     newFilter.traitTypes = [];
                     newFilter.traitValues = [];
                     newFilter.orderBy = 'tokenIdNumeric';

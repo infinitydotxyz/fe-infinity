@@ -2,7 +2,7 @@ import { ChainId, RaffleState } from '@infinityxyz/lib-frontend/types/core';
 import { UserRafflesArrayDto } from '@infinityxyz/lib-frontend/types/dto';
 import { useFetch } from 'src/utils';
 
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 
 const stateOrder = {
   [RaffleState.Unstarted]: 4,

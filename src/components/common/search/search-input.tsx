@@ -1,11 +1,14 @@
 import { Combobox } from '@headlessui/react';
+import { NftDisplayData } from '@infinityxyz/lib-frontend/types/core';
+import { CollectionSearchDto } from '@infinityxyz/lib-frontend/types/dto';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { AiOutlineSearch } from 'react-icons/ai';
+import { BasicTokenInfo } from 'src/components/astra/types';
 import { useIsMounted } from 'src/hooks/useIsMounted';
-import { cardColor, hoverColor, borderColor, textColor } from 'src/utils/ui-constants';
+import { borderColor, cardColor, hoverColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { getSearchResultKey, getSearchResultLink, SearchResultItem } from './search-results';
+import { getSearchResultKey, SearchResultItem } from './search-results';
 import { SearchResult } from './types';
 
 interface Props {
@@ -14,14 +17,29 @@ interface Props {
   placeholder: string;
   setQuery: (query: string) => void;
   data: SearchResult[];
+  tokenSearch?: boolean;
+  profileSearch?: boolean;
+  orderSearch?: boolean;
+  setSelectedCollection?: (collection: CollectionSearchDto) => void;
+  setSelectedToken?: (basicTokenInfo: BasicTokenInfo) => void;
 }
 
-export function SearchInput({ expanded, query, setQuery, placeholder, data }: Props): JSX.Element {
+export function SearchInput({
+  expanded,
+  query,
+  setQuery,
+  placeholder,
+  data,
+  tokenSearch,
+  profileSearch,
+  orderSearch,
+  setSelectedCollection,
+  setSelectedToken
+}: Props): JSX.Element {
   const router = useRouter();
   const [isActive, setIsActive] = useState(false);
   const [selected, setSelected] = useState<SearchResult | null>(null);
   const isMounted = useIsMounted();
-
   const inputRef: React.RefObject<HTMLInputElement> = useRef(null);
 
   useEffect(() => {
@@ -33,6 +51,7 @@ export function SearchInput({ expanded, query, setQuery, placeholder, data }: Pr
       setIsActive(true);
     }
   };
+
   const deactivate = () => {
     if (isMounted()) {
       query.length === 0 && !expanded ? setIsActive(false) : null;
@@ -40,8 +59,17 @@ export function SearchInput({ expanded, query, setQuery, placeholder, data }: Pr
   };
 
   useEffect(() => {
-    if (selected) {
-      const pathname = getSearchResultLink(selected);
+    if (selected && (profileSearch || orderSearch)) {
+      setSelectedCollection && setSelectedCollection(selected as CollectionSearchDto);
+    } else if (selected && tokenSearch) {
+      const basicTokenInfo: BasicTokenInfo = {
+        tokenId: (selected as NftDisplayData).tokenId,
+        collectionAddress: (selected as NftDisplayData).collectionDisplayData?.address,
+        chainId: (selected as NftDisplayData).collectionDisplayData?.chainId
+      };
+      setSelectedToken && setSelectedToken(basicTokenInfo);
+    } else if (selected) {
+      const pathname = `/collection/${(selected as CollectionSearchDto).slug}`;
       router.push(
         {
           pathname
@@ -63,7 +91,7 @@ export function SearchInput({ expanded, query, setQuery, placeholder, data }: Pr
       className={twMerge(
         textColor,
         borderColor,
-        'border w-full px-4 rounded-xl text-center h-10 flex place-items-center'
+        'border w-full px-4 rounded-lg text-center h-10 flex place-items-center'
       )}
     >
       <div className="w-content h-content  hover:cursor-pointer" onClick={activate}>
@@ -101,7 +129,7 @@ export function SearchInput({ expanded, query, setQuery, placeholder, data }: Pr
               data.length === 0 ? 'opacity-0' : '', // without this, a thin line appears
               borderColor,
               'absolute z-20 -mx-8 top-2  w-content h-content max-h-content',
-              '  py-2 border rounded-2xl flex flex-col   shadow-lg'
+              'py-2 border rounded-lg flex flex-col shadow-lg'
             )}
           >
             {data.map((item) => {
@@ -114,9 +142,9 @@ export function SearchInput({ expanded, query, setQuery, placeholder, data }: Pr
                         active ? 'bg-transparent' : 'bg-transparent',
                         hoverColor,
                         textColor,
-                        'font-body text-sm py-1.5 px-4   rounded-md transition-all duration-200',
+                        'text-sm py-1 px-3 transition-all duration-200',
                         'flex gap-3 place-items-center',
-                        'hover:cursor-pointer w-60 z-20'
+                        'hover:cursor-pointer w-96 z-20'
                       )}
                     >
                       <SearchResultItem item={item} />

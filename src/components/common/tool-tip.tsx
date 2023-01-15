@@ -60,7 +60,7 @@ const TooltipContent = ({ tooltip }: Props3) => {
   return (
     <div
       className={twMerge(
-        'absolute z-50 top-full mt-2 right-0 left-0 pointer-events-none p-3 shadow-ttip rounded-xl',
+        'absolute z-50 top-full mt-2 right-0 left-0 pointer-events-none p-3 shadow-ttip rounded-lg',
         cardColor
       )}
     >

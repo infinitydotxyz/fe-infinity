@@ -1,5 +1,5 @@
 import { Contract, ContractInterface } from 'ethers';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 
 export function useContract(address: string, abi: ContractInterface) {
   const { getSigner } = useOnboardContext();

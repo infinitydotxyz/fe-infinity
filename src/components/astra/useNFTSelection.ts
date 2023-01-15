@@ -2,16 +2,16 @@ import { useEffect, useState } from 'react';
 import { getTokenKeyId } from 'src/utils';
 import { Erc721TokenOffer } from './types';
 
-interface CardSelectionResult {
-  toggleSelection: (data: Erc721TokenOffer) => void;
-  isSelected: (data: Erc721TokenOffer) => boolean;
-  isSelectable: (data: Erc721TokenOffer) => boolean;
-  removeFromSelection: (data?: Erc721TokenOffer) => void; // null to remove all
-  selection: Erc721TokenOffer[];
-  clearSelection: () => void;
+interface NFTSelectionResult {
+  toggleNFTSelection: (data: Erc721TokenOffer) => void;
+  isNFTSelected: (data: Erc721TokenOffer) => boolean;
+  isNFTSelectable: (data: Erc721TokenOffer) => boolean;
+  removeNFTFromSelection: (data?: Erc721TokenOffer) => void; // null to remove all
+  nftSelection: Erc721TokenOffer[];
+  clearNFTSelection: () => void;
 }
 
-export const useCardSelection = (): CardSelectionResult => {
+export const useNFTSelection = (): NFTSelectionResult => {
   const [selectionMap, setSelectionMap] = useState<Map<string, Erc721TokenOffer>>(new Map());
   const [selection, setSelection] = useState<Erc721TokenOffer[]>([]);
 
@@ -55,5 +55,12 @@ export const useCardSelection = (): CardSelectionResult => {
     setSelectionMap(new Map());
   };
 
-  return { selection, isSelected, isSelectable, clearSelection, toggleSelection, removeFromSelection };
+  return {
+    nftSelection: selection,
+    isNFTSelected: isSelected,
+    isNFTSelectable: isSelectable,
+    clearNFTSelection: clearSelection,
+    toggleNFTSelection: toggleSelection,
+    removeNFTFromSelection: removeFromSelection
+  };
 };

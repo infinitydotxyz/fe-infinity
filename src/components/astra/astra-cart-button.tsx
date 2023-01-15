@@ -1,11 +1,11 @@
 import { BsCartCheckFill, BsCartDash } from 'react-icons/bs';
-import { useDashboardContext } from 'src/utils/context/DashboardContext';
+import { useAppContext } from 'src/utils/context/AppContext';
 import { inverseBgColor, brandTextColor, iconButtonStyle, inverseTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { AButton } from './astra-button';
 
 export const AstraCartButton = () => {
-  const { showCart, setShowCart, selection, collSelection, orderSelection } = useDashboardContext();
+  const { showCart, setShowCart, nftSelection: selection, collSelection, orderSelection } = useAppContext();
   const numItems = Math.max(selection.length, collSelection.length, orderSelection.length);
 
   return (

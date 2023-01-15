@@ -1,7 +1,15 @@
 import { Menu, Transition } from '@headlessui/react';
 import { ReactElement, ReactNode } from 'react';
 import { RxCaretDown } from 'react-icons/rx';
-import { bgColor, hoverColor, borderColor, smallIconButtonStyle, textColor } from 'src/utils/ui-constants';
+import {
+  borderColor,
+  dropShadow,
+  hoverColor,
+  hoverColorBrandText,
+  secondaryBgColor,
+  secondaryTextColor,
+  smallIconButtonStyle
+} from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { Divider } from '../common';
 import { AOutlineButton, ATextButton } from './astra-button';
@@ -19,10 +27,10 @@ interface DropdownBtnProps {
 
 export const ADropdownButton = ({ children, isMenuOpen }: DropdownBtnProps) => {
   return (
-    <div className="flex items-center gap-1 py-1 text-sm">
-      <div className="whitespace-nowrap">{children}</div>
+    <div className={twMerge('flex items-center gap-1 py-1 text-sm', secondaryTextColor, hoverColorBrandText)}>
+      <div className={twMerge('whitespace-nowrap font-medium')}>{children}</div>
       <RxCaretDown
-        className={smallIconButtonStyle}
+        className={twMerge(smallIconButtonStyle)}
         style={{
           transition: 'all 0.1s ease',
           transform: `rotate(${!isMenuOpen ? 0 : '0.5turn'})`
@@ -78,7 +86,7 @@ export const ADropdown = ({
 
                   return (
                     <ACustomMenuItem key={idx} onClick={item.onClick}>
-                      <div className={twMerge(textColor, 'flex items-center cursor-pointer')}>
+                      <div className={twMerge(hoverColorBrandText, 'flex items-center cursor-pointer')}>
                         {item.icon && <div className={twMerge('mr-4')}>{item.icon}</div>}
                         {item.label}
                       </div>
@@ -108,7 +116,7 @@ const ACustomMenuItem = (props: Props) => {
         <div
           className={twMerge(
             'flex w-full px-4 py-4 leading-5',
-            active ? twMerge(hoverColor, ' rounded-xl') : ' ',
+            active ? twMerge(hoverColor, ' rounded-lg') : ' ',
             disabled && 'cursor-not-allowed opacity-50'
           )}
         >
@@ -142,15 +150,20 @@ export const ACustomMenuItems = ({ children, open, alignMenuRight, innerClassNam
       >
         <Menu.Items
           className={twMerge(
-            bgColor,
+            secondaryBgColor,
             borderColor,
-            'absolute mt-4 px-2 py-4 w-56 rounded-xl border shadow-dropdown outline-none',
+            dropShadow,
+            'absolute mt-4 px-2 py-4 w-56 rounded-lg border outline-none',
             alignMenuRight ? 'right-0' : '',
             innerClassName
           )}
         >
           <div
-            className={twMerge('h-4 w-4 rotate-45 absolute top-[-6px]', bgColor, alignMenuRight ? 'right-8' : 'left-8')}
+            className={twMerge(
+              'h-4 w-4 rotate-45 absolute top-[-6px]',
+              secondaryBgColor,
+              alignMenuRight ? 'right-8' : 'left-8'
+            )}
           ></div>
           {children}
         </Menu.Items>

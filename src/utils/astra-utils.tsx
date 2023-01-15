@@ -1,9 +1,9 @@
 import { DEFAULT_LIMIT, LARGE_LIMIT, API_BASE } from './constants';
 import axios, { AxiosRequestHeaders } from 'axios';
 import { ApiResponse } from './apiUtils';
-import { OnboardAuthProvider } from './OnboardContext/OnboardAuthProvider';
+import { OnboardAuthProvider } from './context/OnboardContext/OnboardAuthProvider';
 import { trimText } from 'src/components/common';
-import { OBFilters, SORT_FILTERS } from 'src/components/orderbook/OrderbookContext';
+import { OBFilters, SORT_FILTERS } from 'src/utils/context/OrderbookContext';
 
 export type TokenFetcherOptions = { cursor?: string } & OBFilters;
 
@@ -23,7 +23,6 @@ export const fetchCollectionTokens = async (
       filters.orderBy = 'price';
       filters.orderDirection = sort === SORT_FILTERS.highestPrice ? 'desc' : 'asc';
       break;
-    case SORT_FILTERS.rarityRank:
     case SORT_FILTERS.tokenIdNumeric:
       filters.orderBy = sort;
       filters.orderDirection = 'asc';

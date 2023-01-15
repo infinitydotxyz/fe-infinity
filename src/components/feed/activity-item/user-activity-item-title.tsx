@@ -1,5 +1,6 @@
 import { BlueCheck, NextLink } from 'src/components/common';
 import { secondaryTextColor } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
 
 interface TitleFieldProps {
   title: string;
@@ -12,26 +13,26 @@ interface TitleFieldProps {
 export const UserActivityItemTitle = (props: TitleFieldProps) => {
   return (
     <>
-      <div className="font-bold mr-2 w-[220px]">
+      <div className="mr-2 w-[220px]">
         {props.titleRelativeLink ? (
           <NextLink
             href={props.titleRelativeLink}
-            className="font-bold whitespace-pre-wrap flex items-center"
+            className="whitespace-pre-wrap flex items-center"
             title={props.title}
           >
-            <div className="font-bold whitespace-pre-wrap flex items-center">
+            <div className={twMerge('whitespace-pre-wrap flex items-center font-medium', secondaryTextColor)}>
               <p>{props.title}</p>
             </div>
             {props?.hasBlueCheck && <BlueCheck className="ml-1" />}
           </NextLink>
         ) : (
-          <div className="font-bold whitespace-pre-wrap flex items-center">
+          <div className="whitespace-pre-wrap flex items-center">
             <p>{props.title}</p>
           </div>
         )}
       </div>
       {props.subtitle && (
-        <div className={secondaryTextColor}>
+        <div className="">
           {props.subtitleRelativeLink ? (
             <NextLink
               href={props.subtitleRelativeLink}

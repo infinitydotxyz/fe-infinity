@@ -101,7 +101,7 @@ export const ResponsiveBarChart = ({ graphData, graphType, fetchData, displayDet
         <div className="ml-6 font-bold mt-3">{graphType}</div>
         <select
           onChange={(e) => setSelectedPriceBucket(+e.target.value)}
-          className={twMerge('form-select rounded-full bg-transparent focus:border-none', textColor)}
+          className={twMerge('form-select rounded-lg bg-transparent focus:border-none', textColor)}
         >
           {priceBuckets.map((filter) => (
             <option value={filter} selected={filter === selectedPriceBucket}>

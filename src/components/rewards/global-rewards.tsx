@@ -195,7 +195,7 @@ const GlobalRewards = ({ showCount }: Props) => {
     );
   }
 
-  return <div className="flex flex-col mt-10">Unable to load rewards.</div>;
+  return <div className="flex flex-col mt-10 text-sm">Unable to load rewards</div>;
 };
 
 export default GlobalRewards;

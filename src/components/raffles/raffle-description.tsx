@@ -2,7 +2,7 @@ import { RaffleState } from '@infinityxyz/lib-frontend/types/core';
 import { UserRaffleDto } from '@infinityxyz/lib-frontend/types/dto';
 import { useRaffleLeaderboard } from 'src/hooks/api/useRaffleLeaderboard';
 import useScreenSize from 'src/hooks/useScreenSize';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { twMerge } from 'tailwind-merge';
 import { TooltipWrapper } from '../common';
 import { PulseIconColor } from '../common/pulse-icon';

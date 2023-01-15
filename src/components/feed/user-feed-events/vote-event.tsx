@@ -7,7 +7,7 @@ import {
 } from '@infinityxyz/lib-frontend/types/core';
 import { getEtherscanLink } from '@infinityxyz/lib-frontend/utils';
 import { ellipsisAddress, getCollectionLink, getUserToDisplay, nFormatter } from 'src/utils/commonUtils';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { format } from 'timeago.js';
 import { UserActivityItem } from '../activity-item/user-activity-item';
 import { UserActivityItemImage } from '../activity-item/user-activity-item-image';

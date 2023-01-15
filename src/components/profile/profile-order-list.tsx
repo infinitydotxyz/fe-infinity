@@ -1,34 +1,33 @@
-import { Menu } from '@headlessui/react';
 import { ChainOBOrder, Order, OrderItemToken, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { BaseOrderQuery, MakerOrdersQuery, TakerOrdersQuery } from '@infinityxyz/lib-frontend/types/dto';
-import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user';
-import { useEffect, useState } from 'react';
-import { apiGet, ellipsisAddress, extractErrorMsg, ITEMS_PER_PAGE } from 'src/utils';
-import { cancelAllOrders } from 'src/utils/exchange/orders';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import { fetchOrderNonce } from 'src/utils/orderbookUtils';
-import { borderColor } from 'src/utils/ui-constants';
-import { twMerge } from 'tailwind-merge';
-import { AButton, AOutlineButton, ATextButton } from '../astra/astra-button';
-import { ACollectionFilter } from '../astra/astra-collection-filter';
 import {
-  ACustomMenuButton,
-  ACustomMenuContents,
-  ACustomMenuItems,
-  ADropdown,
-  ADropdownButton
-} from '../astra/astra-dropdown';
+  BaseOrderQuery,
+  CollectionSearchDto,
+  MakerOrdersQuery,
+  TakerOrdersQuery
+} from '@infinityxyz/lib-frontend/types/dto';
+import { useEffect, useState } from 'react';
+import { MdClose } from 'react-icons/md';
+import { apiGet, ellipsisAddress, extractErrorMsg, ITEMS_PER_PAGE } from 'src/utils';
+import { cancelAllOrders } from 'src/utils/orders';
+import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
+import { fetchOrderNonce } from 'src/utils/orderbookUtils';
+import { borderColor, hoverColorBrandText, secondaryTextColor } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
+import { AOutlineButton } from '../astra/astra-button';
+import { ADropdown } from '../astra/astra-dropdown';
+import { APriceFilter } from '../astra/astra-price-filter';
 import {
   CenteredContent,
+  EZImage,
   ScrollLoader,
   Spacer,
   Spinner,
-  TextInputBox,
   toastError,
   toastInfo,
   toastSuccess
 } from '../common';
-import { UserOrderListItem } from './user-order-list-item';
+import { CollectionSearchInput } from '../common/search/collection-search-input';
+import { ProfileOrderListItem } from './profile-order-list-item';
 
 export const DEFAULT_ORDER_TYPE_FILTER = 'listings';
 
@@ -51,7 +50,7 @@ enum OrderBy {
   EndTime = 'endTime'
 }
 
-export type UserOrderFilter = {
+export type ProfileOrderFilter = {
   orderType?: 'listings' | 'offers-made' | 'offers-received' | '';
   minPrice?: string;
   maxPrice?: string;
@@ -61,27 +60,38 @@ export type UserOrderFilter = {
 };
 
 interface Props {
-  userInfo: UserProfileDto;
+  userAddress: string;
   className?: string;
   toggleOrderSelection: (data: SignedOBOrder) => void;
   isOrderSelected: (data: SignedOBOrder) => boolean;
 }
 
-export const UserOrderList = ({ userInfo, className = '', toggleOrderSelection, isOrderSelected }: Props) => {
+export const ProfileOrderList = ({ userAddress, className = '', toggleOrderSelection, isOrderSelected }: Props) => {
   const { user, chainId, waitForTransaction, getSigner } = useOnboardContext();
-
-  const [minPriceVal, setMinPriceVal] = useState('');
-  const [maxPriceVal, setMaxPriceVal] = useState('');
   const [data, setData] = useState<SignedOBOrder[]>([]);
   const [isFetching, setIsFetching] = useState(false);
   const [cursor, setCursor] = useState('');
   const [hasNextPage, setHasNextPage] = useState(false);
   const [isCancellingAll, setIsCancellingAll] = useState(false);
-  const [apiFilter, setApiFilter] = useState<UserOrderFilter>({ orderType: DEFAULT_ORDER_TYPE_FILTER });
   const [ddLabel, setDdLabel] = useState<string>('Listings');
-  const [filter, setFilter] = useState<UserOrderFilter>({
+  const [filter, setFilter] = useState<ProfileOrderFilter>({
     orderType: DEFAULT_ORDER_TYPE_FILTER
   });
+  const [selectedCollection, setSelectedCollection] = useState<CollectionSearchDto>();
+
+  const handleCollectionSearchResult = (result: CollectionSearchDto) => {
+    setSelectedCollection(result);
+    const newFilter = { ...filter };
+    newFilter.collections = [result.address];
+    setFilter(newFilter);
+  };
+
+  const handleCollectionSearchClear = () => {
+    setSelectedCollection(undefined);
+    const newFilter = { ...filter };
+    newFilter.collections = [];
+    setFilter(newFilter);
+  };
 
   const fetchData = async (isRefresh = false) => {
     setIsFetching(true);
@@ -93,31 +103,34 @@ export const UserOrderList = ({ userInfo, className = '', toggleOrderSelection, 
     const baseQuery: BaseOrderQuery = {
       limit: ITEMS_PER_PAGE,
       cursor: newCursor,
-      minPrice: parseFloat(apiFilter.minPrice ?? ''),
-      maxPrice: parseFloat(apiFilter.maxPrice ?? ''),
-      orderBy: apiFilter.orderBy
+      minPrice: parseFloat(filter.minPrice ?? ''),
+      maxPrice: parseFloat(filter.maxPrice ?? ''),
+      orderBy: filter.orderBy
     };
 
-    let query: MakerOrdersQuery | TakerOrdersQuery | BaseOrderQuery = { ...baseQuery };
-    if (apiFilter.orderType === 'listings') {
+    let query: MakerOrdersQuery | TakerOrdersQuery | BaseOrderQuery = baseQuery;
+    if (filter.orderType === 'listings') {
       query = {
+        ...query,
         isSellOrder: true,
         side: Side.Maker
       };
-    } else if (apiFilter.orderType === 'offers-made') {
+    } else if (filter.orderType === 'offers-made') {
       query = {
+        ...query,
         isSellOrder: false,
         side: Side.Maker
       };
-    } else if (apiFilter.orderType === 'offers-received') {
+    } else if (filter.orderType === 'offers-received') {
       query = {
+        ...query,
         isSellOrder: false,
         side: Side.Taker,
         status: OrderStatus.Active
       };
     }
 
-    const collection = apiFilter.collections?.[0] ?? ''; // api only supports 1 collection for now
+    const collection = filter.collections?.[0] ?? ''; // api only supports 1 collection for now
     if (collection) {
       query = {
         ...query,
@@ -125,7 +138,7 @@ export const UserOrderList = ({ userInfo, className = '', toggleOrderSelection, 
       };
     }
 
-    const { result } = await apiGet(`/v2/users/${userInfo.address}/orders`, {
+    const { result } = await apiGet(`/v2/users/${userAddress}/orders`, {
       query,
       requiresAuth: true
     });
@@ -217,18 +230,10 @@ export const UserOrderList = ({ userInfo, className = '', toggleOrderSelection, 
   useEffect(() => {
     setData([]);
     fetchData(true);
-  }, [apiFilter]);
-
-  const onClear = () => {
-    const newFilter = { ...filter };
-    newFilter.minPrice = '';
-    newFilter.maxPrice = '';
-    setFilter(newFilter);
-    setApiFilter(newFilter);
-  };
+  }, [filter]);
 
   const onClickAcceptOfferCancelOrder = (order: SignedOBOrder) => {
-    if (apiFilter.orderType === 'offers-received') {
+    if (filter.orderType === 'offers-received') {
       // no op in this release; in future allow users to accept offers
     } else {
       toggleOrderSelection(order);
@@ -241,23 +246,62 @@ export const UserOrderList = ({ userInfo, className = '', toggleOrderSelection, 
       orderType: newType
     };
     setFilter(newFilter);
-    setApiFilter(newFilter);
+  };
+
+  const setMinPrice = (value: string) => {
+    const newFilter = { ...filter };
+    newFilter.minPrice = value;
+    newFilter.orderBy = OrderBy.Price;
+    setFilter(newFilter);
+  };
+
+  const setMaxPrice = (value: string) => {
+    const newFilter = { ...filter };
+    newFilter.maxPrice = value;
+    newFilter.orderBy = OrderBy.Price;
+    setFilter(newFilter);
+  };
+
+  const onPricesClear = () => {
+    const newFilter = { ...filter };
+    newFilter.minPrice = '';
+    newFilter.maxPrice = '';
+    setFilter(newFilter);
   };
 
   return (
     <div className={twMerge('min-h-[50vh]', className)}>
-      <div className={twMerge(borderColor, 'w-full flex   py-2 border-t-[1px]')}>
-        <ACollectionFilter
-          setSelectedCollections={(value) => {
-            const newFilter = { ...filter };
-            newFilter.collections = value;
-            setFilter(newFilter);
-            setApiFilter(newFilter);
-          }}
-        />
+      <div className={twMerge(borderColor, 'w-full flex py-2 px-4 border-t-[1px] space-x-2')}>
+        <div className="">
+          <CollectionSearchInput
+            expanded
+            orderSearch
+            setSelectedCollection={(value) => {
+              handleCollectionSearchResult(value);
+            }}
+          />
+        </div>
+
+        {selectedCollection && (
+          <div className={twMerge('flex items-center rounded-lg border px-2', borderColor)}>
+            <div className="flex items-center">
+              <EZImage src={selectedCollection.profileImage} className="w-6 h-6 rounded-full mr-2" />
+              <div className="text-sm font-medium">{selectedCollection.name}</div>
+            </div>
+            <div className="ml-2">
+              <MdClose
+                className={twMerge('h-4 w-4 cursor-pointer', hoverColorBrandText)}
+                onClick={() => {
+                  handleCollectionSearchClear();
+                }}
+              />
+            </div>
+          </div>
+        )}
+
         <Spacer />
+
         <ADropdown
-          hasBorder={false}
           label={ddLabel}
           items={[
             {
@@ -284,95 +328,39 @@ export const UserOrderList = ({ userInfo, className = '', toggleOrderSelection, 
           ]}
         />
 
-        <Menu>
-          {({ open }) => (
-            <ACustomMenuContents>
-              <span>
-                <ACustomMenuButton>
-                  <ATextButton tooltip="Click to open price filter">
-                    <ADropdownButton>Price</ADropdownButton>
-                  </ATextButton>
-                </ACustomMenuButton>
-              </span>
+        <APriceFilter onClear={onPricesClear} setMinPrice={setMinPrice} setMaxPrice={setMaxPrice} />
 
-              {open && (
-                <ACustomMenuItems open={open}>
-                  <div className="flex">
-                    <TextInputBox
-                      addEthSymbol={true}
-                      type="number"
-                      className={twMerge(borderColor, 'font-heading')}
-                      label="Min"
-                      placeholder=""
-                      value={minPriceVal}
-                      onChange={(value) => {
-                        setMinPriceVal(value);
-                        const newFilter = { ...filter };
-                        newFilter.minPrice = value;
-                        newFilter.orderBy = OrderBy.Price;
-                        setFilter(newFilter);
-                        setApiFilter(newFilter);
-                      }}
-                    />
-                    <TextInputBox
-                      addEthSymbol={true}
-                      type="number"
-                      className={twMerge(borderColor, 'font-heading ml-2')}
-                      label="Max"
-                      placeholder=""
-                      value={maxPriceVal}
-                      onChange={(value) => {
-                        setMaxPriceVal(value);
-                        const newFilter = { ...filter };
-                        newFilter.maxPrice = value;
-                        newFilter.orderBy = OrderBy.Price;
-                        setFilter(newFilter);
-                        setApiFilter(newFilter);
-                      }}
-                    />
-                  </div>
-                  <Menu.Button onClick={onClear} className="mt-2 float-left">
-                    <AButton highlighted>Clear</AButton>
-                  </Menu.Button>
-                </ACustomMenuItems>
-              )}
-            </ACustomMenuContents>
-          )}
-        </Menu>
-
-        <div className="flex gap-3 justify-end items-center mb-8 bg-transparent">
-          <AOutlineButton
-            disabled={isCancellingAll}
-            onClick={async () => {
-              try {
-                const signer = getSigner();
-
-                if (signer && user) {
-                  setIsCancellingAll(true);
-                  const minOrderNonce = await fetchOrderNonce(user.address);
-                  const { hash } = await cancelAllOrders(signer, chainId, minOrderNonce);
-                  setIsCancellingAll(false);
-                  toastSuccess('Sent txn to chain for execution');
-                  waitForTransaction(hash, () => {
-                    toastInfo(`Transaction confirmed ${ellipsisAddress(hash)}`);
-                  });
-                } else {
-                  throw 'User is null';
-                }
-              } catch (err) {
-                toastError(extractErrorMsg(err));
+        <AOutlineButton
+          className={twMerge('font-medium text-sm', secondaryTextColor, hoverColorBrandText)}
+          disabled={isCancellingAll}
+          onClick={async () => {
+            try {
+              const signer = getSigner();
+              if (signer && user) {
+                const minOrderNonce = await fetchOrderNonce(user.address);
+                const { hash } = await cancelAllOrders(signer, chainId, minOrderNonce);
+                toastSuccess('Sent txn to chain for execution');
+                setIsCancellingAll(true);
+                waitForTransaction(hash, () => {
+                  toastInfo(`Transaction confirmed ${ellipsisAddress(hash)}`);
+                });
+                setIsCancellingAll(false);
+              } else {
+                throw 'User is null';
               }
-            }}
-          >
-            Cancel all
-          </AOutlineButton>
-        </div>
+            } catch (err) {
+              toastError(extractErrorMsg(err));
+            }
+          }}
+        >
+          Cancel all
+        </AOutlineButton>
       </div>
 
-      <div className="flex items-start">
-        <div className="w-full space-y-4 pointer-events-auto">
+      <div className="flex">
+        <div className="w-full pointer-events-auto">
           {isFetching && (
-            <div className="mt-8">
+            <div className="">
               <CenteredContent>
                 <Spinner />
               </CenteredContent>
@@ -380,16 +368,17 @@ export const UserOrderList = ({ userInfo, className = '', toggleOrderSelection, 
           )}
 
           {!isFetching && hasNextPage === false && data?.length === 0 ? (
-            <div className="font-heading">No results found</div>
+            <CenteredContent>
+              <div className="font-heading mt-4">No Orders</div>
+            </CenteredContent>
           ) : null}
 
           {data?.map((order, idx) => {
             return (
-              <UserOrderListItem
+              <ProfileOrderListItem
                 key={idx}
                 order={order}
-                orderType={apiFilter.orderType}
-                userInfo={userInfo}
+                orderType={filter.orderType}
                 selected={isOrderSelected(order)}
                 onClickActionBtn={onClickAcceptOfferCancelOrder}
               />

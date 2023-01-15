@@ -1,48 +1,25 @@
 import { Collection, CollectionPeriodStatsContent, Erc721Collection } from '@infinityxyz/lib-frontend/types/core';
-import { useRouter } from 'next/router';
-import { parse } from 'query-string';
 import { useEffect, useState } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { AButton } from 'src/components/astra/astra-button';
 import { APageBox } from 'src/components/astra/astra-page-box';
-import {
-  BlueCheckInline,
-  CenterFixed,
-  EthPrice,
-  EZImage,
-  NextLink,
-  ScrollLoader,
-  Spinner,
-  ToggleTab,
-  useToggleTab
-} from 'src/components/common';
+import { BlueCheckInline, CenterFixed, EthPrice, EZImage, NextLink, Spinner, ToggleTab } from 'src/components/common';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import useScreenSize from 'src/hooks/useScreenSize';
-import { apiGet, formatNumber, ITEMS_PER_PAGE, nFormatter } from 'src/utils';
-import { useDashboardContext } from 'src/utils/context/DashboardContext';
+import { apiGet, formatNumber, nFormatter } from 'src/utils';
+import { useAppContext } from 'src/utils/context/AppContext';
 import { borderColor, iconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
-// - cache stats 5mins
-
-const DEFAULT_TAB = '1 day';
-
 const TrendingPage = () => {
-  const { pathname, query, push } = useRouter();
-  const [queryBy, setQueryBy] = useState('by_sales_volume');
+  const queryBy = 'by_sales_volume';
   const [data, setData] = useState<Collection[]>([]);
-  const { options, onChange, selected } = useToggleTab(['1 day', '7 days', '30 days'], DEFAULT_TAB);
   const [period, setPeriod] = useState('daily');
-  const [offset, setOffset] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const isMounted = useIsMounted();
-  const { isCollSelected, isCollSelectable, toggleCollSelection } = useDashboardContext();
-
-  useEffect(() => {
-    const parsedQs = parse(window?.location?.search); // don't use useRouter-query as it's undefined initially.
-    onChangeToggleTab(parsedQs.tab ? `${parsedQs.tab}` : DEFAULT_TAB);
-    onClickQueryBy(parsedQs.queryBy ? `${parsedQs.queryBy}` : 'by_sales_volume', `${parsedQs.tab ?? ''}`);
-  }, []);
+  const { isCollSelected, isCollSelectable, toggleCollSelection } = useAppContext();
+  const options = ['1 day', '7 days', '30 days'];
+  const DEFAULT_TAB = '1 day';
 
   const fetchData = async (refresh = false) => {
     setIsLoading(true);
@@ -52,13 +29,12 @@ const TrendingPage = () => {
     const { result } = await apiGet('/collections/stats', {
       query: {
         period,
-        queryBy: queryBy // 'by_avg_price' // 'by_sales_volume'
+        queryBy: queryBy
       }
     });
 
     if (isMounted()) {
       setIsLoading(false);
-
       if (result?.data?.length > 0) {
         if (refresh) {
           const newData = [...result.data];
@@ -68,31 +44,14 @@ const TrendingPage = () => {
           setData(newData);
         }
       }
-      setOffset(refresh ? 0 : offset + ITEMS_PER_PAGE);
     }
   };
 
   useEffect(() => {
     fetchData(true);
-  }, [queryBy, period]);
-
-  const onClickQueryBy = (val: string, setTab = '') => {
-    if (val !== queryBy) {
-      setQueryBy(val);
-      push(
-        {
-          pathname,
-          query: { ...query, tab: (setTab ? setTab : query?.tab) || DEFAULT_TAB, queryBy: val }
-        },
-        undefined,
-        { shallow: true }
-      );
-    }
-  };
+  }, [period]);
 
   const onChangeToggleTab = (value: string) => {
-    onChange(value);
-
     switch (value) {
       case '1 day':
         setPeriod('daily');
@@ -108,12 +67,11 @@ const TrendingPage = () => {
 
   return (
     <APageBox title="Trending Collections" showTitle={true}>
-      <div className="overflow-y-auto overflow-x-clip">
+      <div className="overflow-y-auto overflow-x-clip text-sm">
         <ToggleTab
-          small={true}
           className="font-heading"
           options={options}
-          selected={selected}
+          defaultOption={DEFAULT_TAB}
           onChange={onChangeToggleTab}
         />
 
@@ -142,8 +100,6 @@ const TrendingPage = () => {
             <Spinner />
           </CenterFixed>
         )}
-
-        <ScrollLoader onFetchMore={() => fetchData()} />
       </div>
     </APageBox>
   );
@@ -176,19 +132,19 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
   const floorPrice = periodStat?.floorPrice ?? 0;
 
   return (
-    <div className={twMerge(borderColor, 'border-b py-4 flex items-center font-heading')}>
+    <div className={twMerge(borderColor, 'border-b py-4 flex items-center')}>
       <div
-        className="grid gap-4 justify-between items-center w-full"
-        style={{ gridTemplateColumns: 'minmax(0, 2fr) repeat(auto-fit, minmax(0, 1fr))' }}
+        className="grid gap-2 justify-between items-center w-full"
+        style={{ gridTemplateColumns: 'minmax(0, 4fr) repeat(auto-fit, minmax(0, 1fr))' }}
       >
-        <div className="flex items-center font-bold ">
-          <div className="text-lg mr-4 min-w-[32px] text-right font-heading">{index + 1}</div>
+        <div className="flex items-center font-bold font-heading">
+          <div className="text-lg mr-8 text-right">{index + 1}</div>
 
-          <NextLink href={`/collection/${collection?.slug}/items`}>
-            <EZImage className="w-16 h-16 rounded-2xl overflow-clip" src={collection?.metadata?.profileImage} />
+          <NextLink href={`/collection/${collection?.slug}`}>
+            <EZImage className="w-14 h-14 rounded-lg overflow-clip" src={collection?.metadata?.profileImage} />
           </NextLink>
 
-          <NextLink href={`/collection/${collection?.slug}/items`} className="ml-2 whitespace-normal">
+          <NextLink href={`/collection/${collection?.slug}`} className="ml-2 whitespace-normal">
             {collection?.metadata?.name}
             {collection?.hasBlueCheck && <BlueCheckInline />}
           </NextLink>
@@ -196,22 +152,22 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
 
         {isDesktop ? (
           <>
-            <div className="w-1/9 max-w-[80px] min-w-[80px]">
-              <div className="text-sm font-bold   flex items-center">Sales</div>
+            <div className="">
+              <div className="text-sm font-bold flex items-center">Sales</div>
               <div>{formatNumber(periodStat?.numSales)}</div>
             </div>
           </>
         ) : null}
 
-        <div className="w-1/9 max-w-[80px] min-w-[80px]">
-          <div className="text-sm font-bold  flex items-center">Volume</div>
+        <div className="">
+          <div className="text-sm font-bold flex items-center">Volume</div>
           <div>
             <EthPrice label={`${periodStat?.salesVolume ? nFormatter(periodStat?.salesVolume) : '-'}`} />
           </div>
         </div>
 
-        <div className="w-1/9 max-w-[80px] min-w-[80px]">
-          <div className="text-sm font-bold  flex items-center">Floor Price</div>
+        <div className="">
+          <div className="text-sm font-bold flex items-center">Floor Price</div>
           <div>
             <EthPrice
               label={
@@ -227,28 +183,22 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
 
         {isDesktop ? (
           <>
-            <div className="w-1/9 max-w-[80px] min-w-[80px]">
+            <div className="">
               <div className="text-sm font-bold ">Owners</div>
               <div>{nFormatter(periodStat?.ownerCount ?? 0)}</div>
             </div>
 
-            <div className="w-1/9 max-w-[80px] min-w-[80px]">
+            <div className="">
               <div className=" text-sm font-bold ">Tokens</div>
               <div>{nFormatter(periodStat?.tokenCount ?? 0)}</div>
             </div>
           </>
         ) : null}
 
-        <div
-          className="flex gap-2"
-          style={{
-            gridColumn: -1,
-            width: '170px'
-          }}
-        >
+        <div className="flex gap-2">
           <AButton
             primary
-            className="px-9 py-3"
+            className="px-9 py-3 rounded-lg"
             onClick={() => {
               if (isCollSelectable(collection as Erc721Collection)) {
                 onClickBuy(collection as Erc721Collection);
