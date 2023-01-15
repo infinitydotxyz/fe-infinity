@@ -7,7 +7,7 @@ import { BlueCheckInline, CenterFixed, EthPrice, EZImage, NextLink, Spinner, Tog
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import useScreenSize from 'src/hooks/useScreenSize';
 import { apiGet, formatNumber, nFormatter } from 'src/utils';
-import { useDashboardContext } from 'src/utils/context/DashboardContext';
+import { useAppContext } from 'src/utils/context/AppContext';
 import { borderColor, iconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
@@ -17,7 +17,7 @@ const TrendingPage = () => {
   const [period, setPeriod] = useState('daily');
   const [isLoading, setIsLoading] = useState(false);
   const isMounted = useIsMounted();
-  const { isCollSelected, isCollSelectable, toggleCollSelection } = useDashboardContext();
+  const { isCollSelected, isCollSelectable, toggleCollSelection } = useAppContext();
   const options = ['1 day', '7 days', '30 days'];
   const DEFAULT_TAB = '1 day';
 

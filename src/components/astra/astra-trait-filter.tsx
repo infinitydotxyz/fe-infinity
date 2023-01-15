@@ -2,7 +2,6 @@ import { Menu } from '@headlessui/react';
 import { CollectionAttributes } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import { useFetch } from 'src/utils';
-import { useDashboardContext } from 'src/utils/context/DashboardContext';
 import { Filter } from 'src/utils/context/FilterContext';
 import CollectionTraits from '../collection/traits';
 import { Spinner } from '../common';
@@ -10,9 +9,12 @@ import { useOrderbook } from '../orderbook/OrderbookContext';
 import { AOutlineButton } from './astra-button';
 import { ACustomMenuButton, ACustomMenuContents, ACustomMenuItems, ADropdownButton } from './astra-dropdown';
 
-export const ATraitFilter: React.FC = () => {
+interface Props {
+  collectionAddress: string;
+}
+
+export const ATraitFilter = ({ collectionAddress }: Props) => {
   const { setFilters } = useOrderbook();
-  const { collection } = useDashboardContext();
   const {
     query: { name }
   } = useRouter();
@@ -60,7 +62,7 @@ export const ATraitFilter: React.FC = () => {
                 /> */}
                 <CollectionTraits
                   traits={collectionAttributes}
-                  collectionAddress={collection?.address}
+                  collectionAddress={collectionAddress}
                   onChange={(traitTypes, traitValues) => {
                     const newFilter: Filter = {};
                     newFilter.traitTypes = traitTypes;

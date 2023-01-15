@@ -7,7 +7,7 @@ import { MdDarkMode, MdLightMode } from 'react-icons/md';
 import { TbActivityHeartbeat, TbSend } from 'react-icons/tb';
 import { AButton, ARoundButton } from 'src/components/astra/astra-button';
 import { HelpToolTip, NextLink, Spacer, SVG } from 'src/components/common';
-import { useDashboardContext } from 'src/utils/context/DashboardContext';
+import { useAppContext } from 'src/utils/context/AppContext';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import { borderColor, hoverColorBrandText, iconButtonStyle, secondaryBgColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
@@ -16,7 +16,7 @@ export const SidebarNav = () => {
   const { theme, setTheme } = useTheme();
   const router = useRouter();
   const { user } = useOnboardContext();
-  const { selectedProfileTab, setSelectedProfileTab } = useDashboardContext();
+  const { selectedProfileTab, setSelectedProfileTab } = useAppContext();
 
   return (
     <div

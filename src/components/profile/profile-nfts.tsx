@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { MdClose } from 'react-icons/md';
 import { TokenGrid } from 'src/components/astra/token-grid/token-grid';
 import { useProfileTokenFetcher } from 'src/components/astra/useFetcher';
-import { useDashboardContext } from 'src/utils/context/DashboardContext';
+import { useAppContext } from 'src/utils/context/AppContext';
 import { borderColor, hoverColorBrandText } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { EZImage } from '../common';
@@ -17,7 +17,7 @@ interface Props {
 export const ProfileNFTs = ({ userAddress }: Props) => {
   const [selectedCollection, setSelectedCollection] = useState<CollectionSearchDto>();
   const { filters, setFilters } = useOrderbook();
-  const { isSelected, isSelectable, listMode, toggleSelection, setNumTokens } = useDashboardContext();
+  const { isNFTSelected, isNFTSelectable, listMode, toggleNFTSelection } = useAppContext();
   const { data, error, hasNextPage, isLoading, fetch } = useProfileTokenFetcher(userAddress);
 
   const handleCollectionSearchResult = (result: CollectionSearchDto) => {
@@ -70,10 +70,9 @@ export const ProfileNFTs = ({ userAddress }: Props) => {
       <TokenGrid
         listMode={listMode}
         className="px-4 py-4"
-        onClick={toggleSelection}
-        isSelectable={isSelectable}
-        isSelected={isSelected}
-        onLoad={setNumTokens}
+        onClick={toggleNFTSelection}
+        isSelectable={isNFTSelectable}
+        isSelected={isNFTSelected}
         data={data}
         isError={!!error}
         hasNextPage={hasNextPage}

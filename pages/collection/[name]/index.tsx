@@ -20,7 +20,7 @@ import { TwitterSupporterList } from 'src/components/feed/twitter-supporter-list
 import { OrderbookCharts } from 'src/components/orderbook/charts/orderbook-charts';
 import { useOrderbook } from 'src/components/orderbook/OrderbookContext';
 import { apiGet, nFormatter } from 'src/utils';
-import { useDashboardContext } from 'src/utils/context/DashboardContext';
+import { useAppContext } from 'src/utils/context/AppContext';
 
 interface CollectionDashboardProps {
   collection: BaseCollection;
@@ -35,7 +35,12 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     return <NotFound404Page />;
   }
 
-  const { setNumTokens, isSelected, isSelectable, listMode, toggleSelection } = useDashboardContext();
+  const {
+    isNFTSelected: isSelected,
+    isNFTSelectable: isSelectable,
+    listMode,
+    toggleNFTSelection: toggleSelection
+  } = useAppContext();
   const { data, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection.address);
   const { updateFilters } = useOrderbook();
   const { setRef, scrollTop } = useScrollInfo();
@@ -138,7 +143,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                   <ASortButton />
                   <AStatusFilterButton />
                   <APriceFilter onClear={onPricesClear} setMinPrice={setMinPrice} setMaxPrice={setMaxPrice} />
-                  <ATraitFilter />
+                  <ATraitFilter collectionAddress={collection.address} />
                 </div>
               </div>
 
@@ -148,7 +153,6 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                 onClick={toggleSelection}
                 isSelectable={isSelectable}
                 isSelected={isSelected}
-                onLoad={setNumTokens}
                 data={data}
                 hasNextPage={hasNextPage}
                 onFetchMore={() => fetch(true)}

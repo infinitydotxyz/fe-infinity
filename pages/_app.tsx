@@ -9,7 +9,6 @@ import { OrderbookContextProvider } from 'src/components/orderbook/OrderbookCont
 import 'src/settings/tailwind/globals.scss';
 import { isLocalhost } from 'src/utils/commonUtils';
 import { AppContextProvider } from 'src/utils/context/AppContext';
-import { DashboardContextProvider } from 'src/utils/context/DashboardContext';
 import { FilterContextProvider } from 'src/utils/context/FilterContext';
 import { OnboardContextProvider } from 'src/utils/OnboardContext/OnboardContext';
 
@@ -32,17 +31,15 @@ const App = (props: AppProps) => {
 
   return (
     <StrictMode>
-      <AppContextProvider>
-        <OnboardContextProvider>
-          <FilterContextProvider>
-            <DashboardContextProvider>
-              <OrderbookContextProvider>
-                <AppBody {...props} />
-              </OrderbookContextProvider>
-            </DashboardContextProvider>
-          </FilterContextProvider>
-        </OnboardContextProvider>
-      </AppContextProvider>
+      <OnboardContextProvider>
+        <FilterContextProvider>
+          <AppContextProvider>
+            <OrderbookContextProvider>
+              <AppBody {...props} />
+            </OrderbookContextProvider>
+          </AppContextProvider>
+        </FilterContextProvider>
+      </OnboardContextProvider>
     </StrictMode>
   );
 };

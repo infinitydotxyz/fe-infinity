@@ -4,7 +4,7 @@ import { ClipboardButton, EZImage } from 'src/components/common';
 import etherscanLogo from 'src/images/etherscan-logo.png';
 import person from 'src/images/person.png';
 import { ellipsisAddress, getChainScannerBase } from 'src/utils';
-import { useDashboardContext } from 'src/utils/context/DashboardContext';
+import { useAppContext } from 'src/utils/context/AppContext';
 import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
 import {
   borderColor,
@@ -28,7 +28,7 @@ export const ProfilePageHeader = ({ expanded, tabs }: ProfileHeaderProps) => {
   const router = useRouter();
   const addressFromPath = router.query?.address as string;
   const { chainId } = useOnboardContext();
-  const { selectedProfileTab, setSelectedProfileTab } = useDashboardContext();
+  const { selectedProfileTab, setSelectedProfileTab } = useAppContext();
 
   return (
     <div className={twMerge(borderColor, cardColor, textColor, 'px-6 pt-4')}>

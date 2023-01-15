@@ -14,7 +14,6 @@ interface Props {
   onClick?: (data: Erc721TokenOffer) => void;
   isSelected: (data: Erc721TokenOffer) => boolean;
   isSelectable: (data: Erc721TokenOffer) => boolean;
-  onLoad: (numItems: number) => void;
   data: Erc721TokenOffer[];
   hasNextPage: boolean;
   onFetchMore: () => void;

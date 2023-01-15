@@ -1,5 +1,5 @@
 import { RefObject } from 'react';
-import { useDashboardContext } from 'src/utils/context/DashboardContext';
+import { useAppContext } from 'src/utils/context/AppContext';
 import { bgColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
@@ -12,7 +12,7 @@ export const Grid = (
   gridRef: RefObject<HTMLDivElement>,
   containerRef: RefObject<HTMLDivElement>
 ) => {
-  const { showCart } = useDashboardContext();
+  const { showCart } = useAppContext();
 
   return (
     <div className={twMerge(bgColor, 'flex')}>

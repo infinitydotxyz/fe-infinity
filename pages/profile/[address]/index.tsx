@@ -5,7 +5,7 @@ import { ProfileNFTs } from 'src/components/profile/profile-nfts';
 import { ProfileOrderList } from 'src/components/profile/profile-order-list';
 import { ProfilePageHeader } from 'src/components/profile/profile-page-header';
 import { useScrollInfo } from 'src/hooks/useScrollHook';
-import { useDashboardContext } from 'src/utils/context/DashboardContext';
+import { useAppContext } from 'src/utils/context/AppContext';
 
 export enum ProfileTabs {
   Items = 'Items',
@@ -23,7 +23,7 @@ export default function ProfileItemsPage() {
     ProfileTabs.Activity.toString(),
     ProfileTabs.Send.toString()
   ];
-  const { selectedProfileTab, isOrderSelected, toggleOrderSelection } = useDashboardContext();
+  const { selectedProfileTab, isOrderSelected, toggleOrderSelection } = useAppContext();
 
   const router = useRouter();
   const addressFromPath = router.query.address as string;

@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { BsGrid, BsList } from 'react-icons/bs';
-import { useDashboardContext } from 'src/utils/context/DashboardContext';
+import { useAppContext } from 'src/utils/context/AppContext';
 import {
   activeColor,
   hoverColor,
@@ -229,7 +229,7 @@ export const AToggleButton = ({ children, onClick }: Props4) => {
 // ==============================================================
 
 export const AListGridButton = () => {
-  const { setListMode, listMode } = useDashboardContext();
+  const { setListMode, listMode } = useAppContext();
 
   return (
     <div className="flex items-center">
