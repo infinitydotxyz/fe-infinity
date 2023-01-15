@@ -1,9 +1,9 @@
 import { DEFAULT_LIMIT, LARGE_LIMIT, API_BASE } from './constants';
 import axios, { AxiosRequestHeaders } from 'axios';
 import { ApiResponse } from './apiUtils';
-import { OnboardAuthProvider } from './OnboardContext/OnboardAuthProvider';
+import { OnboardAuthProvider } from './context/OnboardContext/OnboardAuthProvider';
 import { trimText } from 'src/components/common';
-import { OBFilters, SORT_FILTERS } from 'src/components/orderbook/OrderbookContext';
+import { OBFilters, SORT_FILTERS } from 'src/utils/context/OrderbookContext';
 
 export type TokenFetcherOptions = { cursor?: string } & OBFilters;
 

@@ -2,7 +2,7 @@ import { ChainId, SearchType } from '@infinityxyz/lib-frontend/types/core';
 import { CollectionSearchDto } from '@infinityxyz/lib-frontend/types/dto';
 import { useSearch } from 'src/hooks/api/useSearch';
 import { useSearchState } from 'src/hooks/api/useSearchState';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { SearchInput } from './search-input';
 
 interface Props {

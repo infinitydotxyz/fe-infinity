@@ -2,7 +2,7 @@
 import { SearchBy, SearchQuery, SearchType, SubQuery, SubQueryType } from '@infinityxyz/lib-frontend/types/core';
 import { SearchResult } from 'src/components/common/search/types';
 import { useFetch } from 'src/utils';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { useDebounce } from '../useDebounce';
 
 type Response = { data: SearchResult[]; cursor: string; hasNextPage: boolean };

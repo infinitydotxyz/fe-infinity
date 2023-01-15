@@ -5,7 +5,7 @@ import { HiOutlineExternalLink } from 'react-icons/hi';
 import { BlueCheck, ClipboardButton, EthSymbol, EZImage, ReadMoreText, Spacer } from 'src/components/common';
 import etherscanLogo from 'src/images/etherscan-logo.png';
 import { ellipsisAddress, getChainScannerBase } from 'src/utils';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import {
   borderColor,
   brandBorderColor,

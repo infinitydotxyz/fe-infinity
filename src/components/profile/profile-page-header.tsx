@@ -5,7 +5,7 @@ import etherscanLogo from 'src/images/etherscan-logo.png';
 import person from 'src/images/person.png';
 import { ellipsisAddress, getChainScannerBase } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import {
   borderColor,
   brandBorderColor,

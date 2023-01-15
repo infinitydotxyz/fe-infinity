@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getSortLabel, SORT_FILTERS, SORT_LABELS, useOrderbook } from '../orderbook/OrderbookContext';
+import { getSortLabel, SORT_FILTERS, SORT_LABELS, useOrderbookContext } from '../../utils/context/OrderbookContext';
 import { ADropdown } from './astra-dropdown';
 
 interface Props {
@@ -8,7 +8,7 @@ interface Props {
 
 // There has to be a parent with OrderbookProvider to work.
 export const ASortButton = ({ className }: Props) => {
-  const { updateFilter, filters } = useOrderbook();
+  const { updateFilter, filters } = useOrderbookContext();
   const [label, setLabel] = useState<string>(getSortLabel(filters?.sort));
 
   useEffect(() => {

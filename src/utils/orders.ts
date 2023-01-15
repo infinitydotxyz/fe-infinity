@@ -25,8 +25,8 @@ import {
   trimLowerCase
 } from '@infinityxyz/lib-frontend/utils';
 import { toastError } from 'src/components/common';
-import { DEFAULT_MAX_GAS_PRICE_WEI } from '../constants';
-import { User } from '../context/AppContext';
+import { DEFAULT_MAX_GAS_PRICE_WEI } from './constants';
+import { User } from './context/AppContext';
 
 export async function getSignedOBOrder(
   user: User,

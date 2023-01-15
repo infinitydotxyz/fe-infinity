@@ -13,7 +13,7 @@ import {
 import { twMerge } from 'tailwind-merge';
 import { Checkbox, TextInputBox } from '../common';
 import { ADisclosure, DisclosureData } from '../common/disclosure';
-import { useOrderbook } from '../orderbook/OrderbookContext';
+import { useOrderbookContext } from '../../utils/context/OrderbookContext';
 
 type ValueMapItem = {
   [k: string]: boolean;
@@ -31,7 +31,7 @@ interface Props {
 }
 
 const CollectionTraits = ({ traits, onChange, onClearAll }: Props) => {
-  const { filters } = useOrderbook();
+  const { filters } = useOrderbookContext();
   const [typeValueMap, setTypeValueMap] = useState<TypeValueMap>({});
   const [selectedTraitType, setSelectedTraitType] = useState<string>('All');
   const [disclosureData, setDisclosureData] = useState<DisclosureData[]>([]);

@@ -3,8 +3,8 @@ import { LOGIN_NONCE_EXPIRY_TIME, trimLowerCase } from '@infinityxyz/lib-fronten
 import { AxiosRequestHeaders } from 'axios';
 import { Signature } from 'ethers';
 import { verifyMessage } from 'ethers/lib/utils';
-import { base64Encode } from '../commonUtils';
-import { Preferences } from '../preferences';
+import { base64Encode } from '../../commonUtils';
+import { Preferences } from '../../preferences';
 import { getMutex } from './mutex';
 import { WalletSigner } from './WalletSigner';
 

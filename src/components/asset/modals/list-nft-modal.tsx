@@ -11,8 +11,8 @@ import {
   toastSuccess
 } from 'src/components/common';
 import { DEFAULT_MAX_GAS_PRICE_WEI, extractErrorMsg, getEstimatedGasPrice, INFINITY_FEE_PCT } from 'src/utils';
-import { getSignedOBOrder } from 'src/utils/exchange/orders';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { getSignedOBOrder } from 'src/utils/orders';
+import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { fetchOrderNonce, postOrdersV2 } from 'src/utils/orderbookUtils';
 import { secondsPerDay } from 'src/utils/ui-constants';
 

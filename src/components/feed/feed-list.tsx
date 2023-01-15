@@ -4,7 +4,7 @@ import { apiGet } from 'src/utils';
 import { Button, CenteredContent, ScrollLoader, Spacer } from '../common';
 // import { CommentPanel } from '../feed/comment-panel';
 import { IoMdRefresh } from 'react-icons/io';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { iconButtonStyle } from 'src/utils/ui-constants';
 import { NftEventRec } from '../asset/activity/activity-item';
 import { AFilterPopdown, FeedFilter, filterButtonDefaultOptions } from '../astra/astra-filter-popdown';

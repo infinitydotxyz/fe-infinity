@@ -18,7 +18,7 @@ import { CommunityFeed } from 'src/components/feed/community-feed';
 import { TopHolderList } from 'src/components/feed/top-holder-list';
 import { TwitterSupporterList } from 'src/components/feed/twitter-supporter-list';
 import { OrderbookCharts } from 'src/components/orderbook/charts/orderbook-charts';
-import { useOrderbook } from 'src/components/orderbook/OrderbookContext';
+import { useOrderbookContext } from 'src/utils/context/OrderbookContext';
 import { apiGet, nFormatter } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 
@@ -42,7 +42,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     toggleNFTSelection: toggleSelection
   } = useAppContext();
   const { data, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection.address);
-  const { updateFilters } = useOrderbook();
+  const { updateFilters } = useOrderbookContext();
   const { setRef, scrollTop } = useScrollInfo();
   const tabs = ['Items'];
   const [selectedTab, setSelectedTab] = useState(tabs[0]);

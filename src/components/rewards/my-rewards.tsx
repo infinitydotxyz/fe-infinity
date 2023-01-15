@@ -10,7 +10,7 @@ import { useUserRewards } from 'src/hooks/api/useUserRewards';
 import { useClaim } from 'src/hooks/contract/cm-distributor/claim';
 import { ellipsisAddress, nFormatter } from 'src/utils';
 import { TOKEN } from 'src/utils/constants';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { bgColor, secondaryBgColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 

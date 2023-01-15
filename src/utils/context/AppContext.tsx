@@ -16,7 +16,7 @@ import { useNFTSelection } from 'src/components/astra/useNFTSelection';
 import { useOrderSelection } from 'src/components/astra/useOrderSelection';
 import { toastError, toastInfo, toastSuccess, toastWarning } from 'src/components/common';
 import { WaitingForTxModal } from 'src/components/orderbook/waiting-for-tx-modal';
-import { cancelMultipleOrders } from 'src/utils/exchange/orders';
+import { cancelMultipleOrders } from 'src/utils/orders';
 import {
   CART_TYPE,
   ellipsisAddress,
@@ -28,8 +28,8 @@ import {
   getOrderExpiryTimeInMsFromEnum
 } from '../commonUtils';
 import { DEFAULT_MAX_GAS_PRICE_WEI, ZERO_ADDRESS } from '../constants';
-import { getSignedOBOrder, sendMultipleNfts, sendSingleNft } from '../exchange/orders';
-import { useOnboardContext } from '../OnboardContext/OnboardContext';
+import { getSignedOBOrder, sendMultipleNfts, sendSingleNft } from '../orders';
+import { useOnboardContext } from './OnboardContext/OnboardContext';
 import { fetchOrderNonce, postOrdersV2 } from '../orderbookUtils';
 
 export type User = {

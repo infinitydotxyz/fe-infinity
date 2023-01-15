@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useFetch } from 'src/utils';
 import CollectionTraits from '../collection/collection-traits';
 import { Spinner } from '../common';
-import { OBFilters, useOrderbook } from '../orderbook/OrderbookContext';
+import { OBFilters, useOrderbookContext } from '../../utils/context/OrderbookContext';
 import { AOutlineButton } from './astra-button';
 import { ACustomMenuButton, ACustomMenuContents, ACustomMenuItems, ADropdownButton } from './astra-dropdown';
 
@@ -13,7 +13,7 @@ interface Props {
 }
 
 export const ATraitFilter = ({ collectionAddress }: Props) => {
-  const { setFilters } = useOrderbook();
+  const { setFilters } = useOrderbookContext();
   const {
     query: { name }
   } = useRouter();

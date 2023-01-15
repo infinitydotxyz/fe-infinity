@@ -17,8 +17,8 @@ import {
   INFINITY_ROYALTY_PCT,
   MISSING_IMAGE_URL
 } from 'src/utils';
-import { getSignedOBOrder } from 'src/utils/exchange/orders';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { getSignedOBOrder } from 'src/utils/orders';
+import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { postOrdersV2 } from 'src/utils/orderbookUtils';
 
 interface Props {

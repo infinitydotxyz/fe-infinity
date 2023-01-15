@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { ApiResponse } from 'src/utils';
 import { fetchCollectionTokens, fetchProfileTokens } from 'src/utils/astra-utils';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import { OBFilters, useOrderbook } from '../orderbook/OrderbookContext';
+import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
+import { OBFilters, useOrderbookContext } from '../../utils/context/OrderbookContext';
 import { Erc721TokenOffer } from './types';
 
 type ApiNftData = Erc721Token & {
@@ -40,7 +40,7 @@ export function useTokenFetcher<From, To>({
   mapper: (data: From[]) => To[];
   execute: boolean;
 }) {
-  const { filters } = useOrderbook();
+  const { filters } = useOrderbookContext();
   const isMounted = useIsMounted();
   const [error, setError] = useState<string>();
   const [cursor, setCursor] = useState('');

@@ -3,8 +3,8 @@ import { Token } from '@infinityxyz/lib-frontend/types/core';
 import { useState } from 'react';
 import { Modal, TextInputBox, toastError } from 'src/components/common';
 import { extractErrorMsg } from 'src/utils';
-import { sendSingleNft } from 'src/utils/exchange/orders';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { sendSingleNft } from 'src/utils/orders';
+import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 
 interface Props {
   isOpen: boolean;

@@ -1,7 +1,7 @@
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { useState } from 'react';
 import { Button, EthPrice } from 'src/components/common';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { secondaryTextColor, standardBorderCard } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';

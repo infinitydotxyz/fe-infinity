@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { ActivityList } from 'src/components/asset';
 import { OrderbookContainer } from 'src/components/orderbook/list';
 import { ellipsisAddress, getChainScannerBase, useFetch } from 'src/utils';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { dropShadow } from 'src/utils/ui-constants';
 import { useSWRConfig } from 'swr';
 import { twMerge } from 'tailwind-merge';

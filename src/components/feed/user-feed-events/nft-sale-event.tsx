@@ -2,7 +2,7 @@ import { ChainId, EtherscanLinkType, NftSaleEvent as NftSaleFeedEvent } from '@i
 import { getEtherscanLink } from '@infinityxyz/lib-frontend/utils';
 import { EthPrice } from 'src/components/common';
 import { getCollectionLink, getUserToDisplay, nFormatter } from 'src/utils';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { format } from 'timeago.js';
 import { UserActivityItem } from '../activity-item/user-activity-item';
 import { UserActivityItemImage } from '../activity-item/user-activity-item-image';

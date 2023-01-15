@@ -8,7 +8,7 @@ import {
 } from 'src/hooks/contract/staker/useRemainingLockTime';
 import { useUnstake } from 'src/hooks/contract/staker/useUnstake';
 import { nFormatter } from 'src/utils';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { secondaryTextColor } from 'src/utils/ui-constants';
 import { Spinner, toastError, toastSuccess } from '../common';
 import { Button } from '../common/button';

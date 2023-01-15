@@ -1,7 +1,7 @@
 import { ChainId } from '@infinityxyz/lib-frontend/types/core';
 import { RaffleLeaderboardUser } from '@infinityxyz/lib-frontend/types/dto';
 import { useFetch } from 'src/utils';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 
 export const useRaffleEntrant = (raffleId: string, userAddress: string) => {
   const { chainId } = useOnboardContext();

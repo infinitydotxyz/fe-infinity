@@ -5,11 +5,11 @@ import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 import { memo, StrictMode, useEffect } from 'react';
 import { Layout } from 'src/components/astra/layout';
-import { OrderbookContextProvider } from 'src/components/orderbook/OrderbookContext';
+import { OrderbookContextProvider } from 'src/utils/context/OrderbookContext';
 import 'src/settings/tailwind/globals.scss';
 import { isLocalhost } from 'src/utils/commonUtils';
 import { AppContextProvider } from 'src/utils/context/AppContext';
-import { OnboardContextProvider } from 'src/utils/OnboardContext/OnboardContext';
+import { OnboardContextProvider } from 'src/utils/context/OnboardContext/OnboardContext';
 
 const isProduction = process.env.NODE_ENV === 'production';
 

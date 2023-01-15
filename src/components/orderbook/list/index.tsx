@@ -1,7 +1,13 @@
 import { useEffect, useState } from 'react';
 import { ADropdown } from 'src/components/astra/astra-dropdown';
 import { APriceFilter } from 'src/components/astra/astra-price-filter';
-import { getSortLabel, OrderbookContextProvider, SORT_FILTERS, SORT_LABELS, useOrderbook } from '../OrderbookContext';
+import {
+  getSortLabel,
+  OrderbookContextProvider,
+  SORT_FILTERS,
+  SORT_LABELS,
+  useOrderbookContext
+} from '../../../utils/context/OrderbookContext';
 import { OrderbookList } from './orderbook-list';
 
 interface Props {
@@ -53,7 +59,7 @@ const OrderbookContent = ({ className, canShowAssetModal }: Props4) => {
     setFilters,
     hasMoreOrders,
     hasNoData
-  } = useOrderbook();
+  } = useOrderbookContext();
   const [sortLabel, setSortLabel] = useState<string>(SORT_LABELS[SORT_FILTERS.highestPrice]);
   const [orderTypeLabel, setOrderTypeLabel] = useState<string>('Listings');
 

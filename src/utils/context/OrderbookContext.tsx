@@ -12,8 +12,8 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import { ParsedUrlQuery } from 'querystring';
 import { apiGet, ITEMS_PER_PAGE } from 'src/utils';
 import { useIsMounted } from 'src/hooks/useIsMounted';
-import { OrderCache } from './order-cache';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { OrderCache } from '../../components/orderbook/order-cache';
+import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import * as Queries from '@infinityxyz/lib-frontend/types/dto/orders/orders-queries.dto';
 
 export type OBFilters = {
@@ -552,6 +552,6 @@ export const OrderbookContextProvider = ({ children, limit = ITEMS_PER_PAGE, ...
   return <OrderbookContext.Provider value={value}>{children}</OrderbookContext.Provider>;
 };
 
-export const useOrderbook = () => {
+export const useOrderbookContext = () => {
   return React.useContext(OrderbookContext) as OBContextType;
 };

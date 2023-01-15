@@ -1,7 +1,7 @@
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { AButton } from 'src/components/astra/astra-button';
 import { ButtonProps } from 'src/components/common';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { checkOffersToUser } from 'src/utils/orderbookUtils';
 
 type OrderButtonProps = Omit<ButtonProps, 'children'>;

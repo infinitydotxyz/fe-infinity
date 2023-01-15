@@ -8,8 +8,8 @@ import {
 import { useEffect, useState } from 'react';
 import { MdClose } from 'react-icons/md';
 import { apiGet, ellipsisAddress, extractErrorMsg, ITEMS_PER_PAGE } from 'src/utils';
-import { cancelAllOrders } from 'src/utils/exchange/orders';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { cancelAllOrders } from 'src/utils/orders';
+import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { fetchOrderNonce } from 'src/utils/orderbookUtils';
 import { borderColor, hoverColorBrandText, secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';

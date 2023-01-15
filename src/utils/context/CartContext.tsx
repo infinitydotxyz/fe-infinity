@@ -4,8 +4,8 @@ import React, { ReactNode, useContext, useState } from 'react';
 import { toastError, toastWarning } from 'src/components/common';
 import { getEstimatedGasPrice } from '../commonUtils';
 import { DEFAULT_MAX_GAS_PRICE_WEI } from '../constants';
-import { getSignedOBOrder } from '../exchange/orders';
-import { useOnboardContext } from '../OnboardContext/OnboardContext';
+import { getSignedOBOrder } from '../orders';
+import { useOnboardContext } from './OnboardContext/OnboardContext';
 import { fetchOrderNonce, postOrdersV2 } from '../orderbookUtils';
 import { secondsPerDay } from '../ui-constants';
 import { useAppContext } from './AppContext';
@@ -64,7 +64,7 @@ const indexOfCartItem = (list: OrderCartItem[], item: OrderCartItem): number => 
   return -1;
 };
 
-export type OrderContextType = {
+export type CartContextType = {
   orderDrawerOpen: boolean;
   setOrderDrawerOpen: (flag: boolean) => void;
 
@@ -100,13 +100,13 @@ export type OrderContextType = {
   setNumItems: (items: number) => void;
 };
 
-const OrderContext = React.createContext<OrderContextType | null>(null);
+const CartContext = React.createContext<CartContextType | null>(null);
 
 interface Props {
   children: ReactNode;
 }
 
-export const OrderContextProvider = ({ children }: Props) => {
+export const CartContextProvider = ({ children }: Props) => {
   const [orderDrawerOpen, setOrderDrawerOpen] = useState<boolean>(false);
   const [isEditingOrder, setIsEditingOrder] = useState<boolean>(false);
 
@@ -442,7 +442,7 @@ export const OrderContextProvider = ({ children }: Props) => {
 
   // ===============================================================
 
-  const value: OrderContextType = {
+  const value: CartContextType = {
     orderDrawerOpen,
     setOrderDrawerOpen,
     isEditingOrder,
@@ -470,9 +470,9 @@ export const OrderContextProvider = ({ children }: Props) => {
     setNumItems
   };
 
-  return <OrderContext.Provider value={value}>{children}</OrderContext.Provider>;
+  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 };
 
-export const useOrderContext = (): OrderContextType => {
-  return useContext(OrderContext) as OrderContextType;
+export const useCartContext = (): CartContextType => {
+  return useContext(CartContext) as CartContextType;
 };
