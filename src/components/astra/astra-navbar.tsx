@@ -34,28 +34,28 @@ export const ANavbarButtons = () => {
       label: 'Read docs',
       icon: <AiFillRead className={smallIconButtonStyle} />,
       onClick: () => {
-        window.open('https://docs.infinity.xyz');
+        window.open('https://docs.flow.so');
       }
     } as ADropdownItem,
     {
       label: 'Twitter',
       icon: <BsTwitter className={smallIconButtonStyle} />,
       onClick: () => {
-        window.open('https://twitter.com/infinitydotxyz');
+        window.open('https://twitter.com/flowdotso');
       }
     } as ADropdownItem,
     {
       label: 'Discord',
       icon: <SiDiscord className={smallIconButtonStyle} />,
       onClick: () => {
-        window.open('https://discord.com/invite/infinitydotxyz');
+        window.open('https://discord.com/invite/flowdotso');
       }
     } as ADropdownItem,
     {
       label: 'Medium',
       icon: <BsMedium className={smallIconButtonStyle} />,
       onClick: () => {
-        window.open('https://medium.com/@infinitydotxyz');
+        window.open('https://flowdotso.medium.com');
       }
     } as ADropdownItem
   ];

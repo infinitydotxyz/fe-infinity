@@ -83,7 +83,7 @@ export const TokenCardModal = ({ data, modalOpen, setModalOpen }: Props): JSX.El
                 className="mt-2"
                 label="Owned by:"
                 address={token?.owner?.toString() || ''}
-                href={`https://infinity.xyz/profile/${token?.owner?.toString() || ''}`}
+                href={`https://flow.so/profile/${token?.owner?.toString() || ''}`}
                 tooltip={token.owner?.toString() || ''}
               />
 

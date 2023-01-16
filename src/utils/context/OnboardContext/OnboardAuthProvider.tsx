@@ -166,7 +166,7 @@ class _OnboardAuthProvider {
     // ignore the formatting of this multiline string
     const msg = `Welcome to Infinity. Click "Sign" to sign in. No password needed. This request will not trigger a blockchain transaction or cost any gas fees.
  
-I accept the Infinity Terms of Service: https://infinity.xyz/terms
+I accept the Infinity Terms of Service: https://flow.so/terms
 
 Nonce: ${nonce}
 Expires in: 24 hrs`;

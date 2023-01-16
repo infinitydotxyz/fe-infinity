@@ -21,8 +21,8 @@ const ledger = ledgerModule();
 const gnosis = gnosisModule();
 
 const trezorOptions = {
-  email: 'hi@infinity.xyz',
-  appUrl: 'https://infinity.xyz'
+  email: 'hi@flow.so',
+  appUrl: 'https://flow.so'
 };
 
 const trezor = trezorModule(trezorOptions);
@@ -74,11 +74,11 @@ export const setupOnboard = () => {
       ],
       agreement: {
         version: '1.0.0',
-        termsUrl: 'https://infinity.xyz/terms',
-        privacyUrl: 'https://www.infinity.xyz/privacy-policy'
+        termsUrl: 'https://flow.so/terms',
+        privacyUrl: 'https://www.flow.so/privacy-policy'
       }
-      // gettingStartedGuide: 'https://infinity.xyz',
-      // explore: 'https://infinity.xyz'
+      // gettingStartedGuide: 'https://flow.so',
+      // explore: 'https://flow.so'
     },
     accountCenter: {
       desktop: {

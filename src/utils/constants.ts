@@ -3,8 +3,8 @@ import { getToken } from '@infinityxyz/lib-frontend/utils';
 import missingImage from 'src/images/missing-image.png';
 import newsImage from 'src/images/news.png';
 
-export const API_BASE = process.env.NEXT_API_BASE || 'https://sv.infinity.xyz';
-export const SITE_HOST = 'https://infinity.xyz';
+export const API_BASE = process.env.NEXT_API_BASE || 'https://sv.flow.so';
+export const SITE_HOST = 'https://flow.so';
 export const DISCORD_BOT_INVITE_URL =
   'https://discord.com/api/oauth2/authorize?client_id=956292440778743838&permissions=1024&scope=bot%20applications.commands';
 
@@ -42,10 +42,18 @@ export const ENS_ADDRESS = '0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85'.toLowerC
 
 export const USER_API_END_POINT = '/user';
 
-export const TOKEN = getToken(ChainId.Mainnet) ?? {
+export const INFT_TOKEN = getToken(ChainId.Mainnet) ?? {
   address: '',
   name: 'Infinity',
   symbol: 'INFT',
+  decimals: 18,
+  chainId: ChainId.Mainnet
+};
+
+export const FLOW_TOKEN = getToken(ChainId.Mainnet) ?? {
+  address: '',
+  name: 'Flow',
+  symbol: 'FLOW',
   decimals: 18,
   chainId: ChainId.Mainnet
 };

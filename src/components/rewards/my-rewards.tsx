@@ -9,7 +9,7 @@ import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
 import { useUserRewards } from 'src/hooks/api/useUserRewards';
 import { useClaim } from 'src/hooks/contract/cm-distributor/claim';
 import { ellipsisAddress, nFormatter } from 'src/utils';
-import { TOKEN } from 'src/utils/constants';
+import { INFT_TOKEN } from 'src/utils/constants';
 import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { bgColor, secondaryBgColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
@@ -112,7 +112,7 @@ const MyRewards = () => {
           <Spacer />
 
           <div className={twMerge(bgColor, 'py-4 px-6 rounded-lg grow mt-4 md:mt-0')}>
-            <div>${TOKEN.symbol} earned</div>
+            <div>${INFT_TOKEN.symbol} earned</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4">
                 <div className="text-2xl font-heading font-bold">
@@ -151,7 +151,7 @@ const MyRewards = () => {
                   userRewards?.totals?.tradingRefund?.claim?.claimableWei === '0'
                 }
               >
-                {`Claim $${TOKEN.symbol}`}
+                {`Claim $${INFT_TOKEN.symbol}`}
               </Button>
             </div>
           </div>
@@ -161,10 +161,10 @@ const MyRewards = () => {
       {/* Token Balance */}
       <RewardsSection
         title="Token Balance"
-        subTitle={`Stake ${TOKEN.symbol} tokens to gain curation power. The longer you lock, the more curation power you'll earn.`}
+        subTitle={`Stake ${INFT_TOKEN.symbol} tokens to gain curation power. The longer you lock, the more curation power you'll earn.`}
         sideInfo={
           <div className={twMerge(bgColor, 'py-4 px-6 rounded-lg')}>
-            <div>${TOKEN.symbol} tokens</div>
+            <div>${INFT_TOKEN.symbol} tokens</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
                 <div className="text-2xl font-heading font-bold">{nFormatter(round(quota?.tokenBalance || 0, 2))}</div>
