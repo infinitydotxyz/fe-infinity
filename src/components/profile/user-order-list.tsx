@@ -1,5 +1,5 @@
 import { Menu } from '@headlessui/react';
-import { ChainOBOrder, Order, OrderItemToken, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId, ChainOBOrder, Order, OrderItemToken, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { BaseOrderQuery, MakerOrdersQuery, TakerOrdersQuery } from '@infinityxyz/lib-frontend/types/dto';
 import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user';
 import { useEffect, useState } from 'react';
@@ -353,7 +353,7 @@ export const UserOrderList = ({ userInfo, className = '', toggleOrderSelection, 
 
                 if (signer && user) {
                   setIsCancellingAll(true);
-                  const minOrderNonce = await fetchOrderNonce(user.address);
+                  const minOrderNonce = await fetchOrderNonce(user.address, chainId as ChainId);
                   const { hash } = await cancelAllOrders(signer, chainId, minOrderNonce);
                   setIsCancellingAll(false);
                   toastSuccess('Sent txn to chain for execution');

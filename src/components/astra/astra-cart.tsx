@@ -47,7 +47,7 @@ export const AstraCart = ({
   const [cartTitle, setCartTitle] = useState('Cart');
   const [checkoutBtnText, setCheckoutBtnText] = useState('Checkout');
   const [sendToAddress, setSendToAddress] = useState('');
-  const { user, getEthersProvider, chainId } = useOnboardContext();
+  const { user, getEthersProvider } = useOnboardContext();
 
   const url = typeof window !== 'undefined' ? window.location.href : '';
   const cartType = getCartType(url);
@@ -281,9 +281,7 @@ export const AstraCart = ({
         <AButton
           className="p-3"
           primary={true}
-          disabled={
-            !user || chainId !== '1' || (tokens.length === 0 && collections.length === 0 && orders.length === 0)
-          }
+          disabled={!user || (tokens.length === 0 && collections.length === 0 && orders.length === 0)}
           onClick={async () => {
             cartType === CART_TYPE.SEND ? onTokenSend(await finalSendToAddress(sendToAddress)) : onCheckout();
           }}

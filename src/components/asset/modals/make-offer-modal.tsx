@@ -28,7 +28,7 @@ export const MakeOfferModal = ({ isOpen, onClose, onDone, buyPriceEth, token }: 
     }
     try {
       const priceVal = parseFloat(price);
-      const orderNonce = await fetchOrderNonce(user.address);
+      const orderNonce = await fetchOrderNonce(user.address, chainId as ChainId);
       const signedOrders: SignedOBOrder[] = [];
 
       const signer = getSigner();

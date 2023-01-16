@@ -330,7 +330,7 @@ export const OrderContextProvider = ({ children }: Props) => {
     // sign orders
     let hasErrors = false;
     const signedOrders: SignedOBOrder[] = [];
-    let orderNonce = await fetchOrderNonce(user.address);
+    let orderNonce = await fetchOrderNonce(user.address, chainId as ChainId);
     for (const orderInCart of ordersInCart) {
       const order = await specToOBOrder(orderInCart.orderSpec, orderNonce);
       orderNonce += 1;

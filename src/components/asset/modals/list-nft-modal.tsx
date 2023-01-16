@@ -54,7 +54,7 @@ export const ListNFTModal = ({ isOpen, onClose, onDone, token }: Props) => {
         try {
           setIsSubmitting(true);
           const priceVal = parseFloat(price);
-          const orderNonce = await fetchOrderNonce(user.address);
+          const orderNonce = await fetchOrderNonce(user.address, chainId as ChainId);
           const signedOrders: SignedOBOrder[] = [];
 
           const signer = getSigner();
