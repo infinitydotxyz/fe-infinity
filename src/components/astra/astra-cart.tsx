@@ -1,5 +1,5 @@
 import { getAddress } from '@ethersproject/address';
-import { ChainId, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { ReactNode, useEffect, useState } from 'react';
 import { MdClose } from 'react-icons/md';
 import { AButton } from 'src/components/astra/astra-button';
@@ -47,7 +47,7 @@ export const AstraCart = ({
   const [cartTitle, setCartTitle] = useState('Cart');
   const [checkoutBtnText, setCheckoutBtnText] = useState('Checkout');
   const [sendToAddress, setSendToAddress] = useState('');
-  const { user, getEthersProvider, chainId } = useOnboardContext();
+  const { user, getEthersProvider } = useOnboardContext();
 
   const url = typeof window !== 'undefined' ? window.location.href : '';
   const cartType = getCartType(url);
@@ -247,11 +247,7 @@ export const AstraCart = ({
         <AButton
           className="p-3"
           primary={true}
-          disabled={
-            !user ||
-            chainId !== ChainId.Mainnet ||
-            (tokens.length === 0 && collections.length === 0 && orders.length === 0)
-          }
+          disabled={!user || (tokens.length === 0 && collections.length === 0 && orders.length === 0)}
           onClick={async () => {
             cartType === CART_TYPE.SEND ? onTokenSend(await finalSendToAddress(sendToAddress)) : onCheckout();
           }}

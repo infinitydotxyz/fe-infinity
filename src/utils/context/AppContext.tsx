@@ -195,7 +195,7 @@ export const AppContextProvider = ({ children }: Props) => {
         // place orders
         // first sign orders
         const signedOrders: SignedOBOrder[] = [];
-        let orderNonce = await fetchOrderNonce(user.address);
+        let orderNonce = await fetchOrderNonce(user.address, chainId as ChainId);
         for (const token of tokens) {
           let order;
           if (isBuyCart) {
@@ -238,7 +238,7 @@ export const AppContextProvider = ({ children }: Props) => {
     } else {
       // sign orders
       const signedOrders: SignedOBOrder[] = [];
-      let orderNonce = await fetchOrderNonce(user.address);
+      let orderNonce = await fetchOrderNonce(user.address, chainId as ChainId);
       for (const collection of collections) {
         const order = await collectionToOBOrder(collection, orderNonce);
         orderNonce += 1;

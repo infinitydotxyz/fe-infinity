@@ -1,4 +1,4 @@
-import { ChainOBOrder, Order, OrderItemToken, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId, ChainOBOrder, Order, OrderItemToken, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import {
   BaseOrderQuery,
   CollectionSearchDto,
@@ -337,7 +337,7 @@ export const ProfileOrderList = ({ userAddress, className = '', toggleOrderSelec
             try {
               const signer = getSigner();
               if (signer && user) {
-                const minOrderNonce = await fetchOrderNonce(user.address);
+                const minOrderNonce = await fetchOrderNonce(user.address, chainId as ChainId);
                 const { hash } = await cancelAllOrders(signer, chainId, minOrderNonce);
                 toastSuccess('Sent txn to chain for execution');
                 setIsCancellingAll(true);

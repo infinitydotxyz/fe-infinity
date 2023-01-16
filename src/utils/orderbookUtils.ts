@@ -48,9 +48,14 @@ export const postOrdersV2 = async (chainId: ChainId, orders: SignedOBOrder[]): P
   }
 };
 
-export const fetchOrderNonce = async (user: string): Promise<number> => {
+export const fetchOrderNonce = async (user: string, chainId: ChainId): Promise<number> => {
   try {
-    const response = await apiGet(`/v2/users/${user}/nonce`, { requiresAuth: false });
+    const response = await apiGet(`/v2/users/${user}/nonce`, {
+      requiresAuth: false,
+      query: {
+        chainId
+      }
+    });
     if (typeof response.result === 'number') {
       return response.result;
     }
