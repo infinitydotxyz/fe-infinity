@@ -10,7 +10,7 @@ interface Props {
 
 export const Trait: FC<Props> = ({ trait, description }) => {
   return (
-    <div className={twMerge(borderColor, 'border rounded-3xl px-5 py-5 flex flex-col justify-between')}>
+    <div className={twMerge(borderColor, 'border rounded-lg px-5 py-5 flex flex-col justify-between')}>
       <div>
         <p className="text-center text-sm mb-1 break-words">{trait.trait_type}</p>
         <p className="text-center text-sm font-body font-bold break-words">{trait.value}</p>
@@ -18,7 +18,7 @@ export const Trait: FC<Props> = ({ trait, description }) => {
       <p
         className={twMerge(
           secondaryBgColor,
-          'text-center text-xs font-heading rounded-3xl py-1 mt-3 lg:mt-4 tracking-tighter px-2'
+          'text-center text-xs font-heading rounded-lg py-1 mt-3 lg:mt-4 tracking-tighter px-2'
         )}
       >
         {description}

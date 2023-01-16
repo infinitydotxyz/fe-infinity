@@ -10,7 +10,7 @@ import { useUserRewards } from 'src/hooks/api/useUserRewards';
 import { useClaim } from 'src/hooks/contract/cm-distributor/claim';
 import { ellipsisAddress, nFormatter } from 'src/utils';
 import { TOKEN } from 'src/utils/constants';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { bgColor, secondaryBgColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
@@ -23,7 +23,7 @@ interface RewardsSectionProps {
 
 const RewardsSection = (props: RewardsSectionProps) => {
   return (
-    <div className={twMerge(secondaryBgColor, 'flex-col px-10 rounded-2xl w-full')}>
+    <div className={twMerge(secondaryBgColor, 'flex-col px-10 rounded-lg w-full')}>
       <div className="flex w-full">
         <div className="w-1/2">
           <div className="text-4xl font-body font-medium">{props.title}</div>
@@ -36,7 +36,7 @@ const RewardsSection = (props: RewardsSectionProps) => {
   );
 };
 
-const MyRewardsPage = () => {
+const MyRewards = () => {
   const [showStakeTokensModal, setShowStakeTokensModal] = useState(false);
   const [showUnstakeTokensModal, setShowUnstakeTokensModal] = useState(false);
   const { result: quota, mutate: mutateQuota } = useUserCurationQuota();
@@ -67,7 +67,7 @@ const MyRewardsPage = () => {
     <div className="space-y-10 mt-4">
       <RewardsSection title="Claim">
         <div className="flex flex-col md:!flex-row mt-4 w-full">
-          <div className={twMerge(bgColor, 'py-4 px-6 rounded-2xl grow')}>
+          <div className={twMerge(bgColor, 'py-4 px-6 rounded-lg grow')}>
             <div>ETH Earned</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4">
@@ -111,7 +111,7 @@ const MyRewardsPage = () => {
 
           <Spacer />
 
-          <div className={twMerge(bgColor, 'py-4 px-6 rounded-2xl grow mt-4 md:mt-0')}>
+          <div className={twMerge(bgColor, 'py-4 px-6 rounded-lg grow mt-4 md:mt-0')}>
             <div>${TOKEN.symbol} earned</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4">
@@ -163,7 +163,7 @@ const MyRewardsPage = () => {
         title="Token Balance"
         subTitle={`Stake ${TOKEN.symbol} tokens to gain curation power. The longer you lock, the more curation power you'll earn.`}
         sideInfo={
-          <div className={twMerge(bgColor, 'py-4 px-6 rounded-2xl')}>
+          <div className={twMerge(bgColor, 'py-4 px-6 rounded-lg')}>
             <div>${TOKEN.symbol} tokens</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
@@ -196,7 +196,7 @@ const MyRewardsPage = () => {
         title="Curation Rewards"
         subTitle="Earn curation rewards for voting on collections with your votes. You'll gain a portion of the transaction fees for each collection you curate."
         sideInfo={
-          <div className={twMerge(bgColor, 'py-4 px-6 rounded-2xl')}>
+          <div className={twMerge(bgColor, 'py-4 px-6 rounded-lg')}>
             <div>Voting power</div>
             <div className="flex flex-wrap mt-4">
               <div className="lg:w-1/4 sm:w-full">
@@ -225,7 +225,7 @@ const MyRewardsPage = () => {
         title="Trading Rewards"
         subTitle="Earn trading rewards for buying and selling NFTs on Infinity. Rewards are distributed once per week."
         sideInfo={
-          <div className={twMerge(bgColor, 'py-4 px-6 rounded-2xl')}>
+          <div className={twMerge(bgColor, 'py-4 px-6 rounded-lg')}>
             <div className="flex flex-wrap">
               <div className="lg:w-1/3 sm:w-full">
                 <div className="mb-4">Volume traded</div>
@@ -256,7 +256,7 @@ const MyRewardsPage = () => {
         title="Referral Rewards"
         subTitle="Refer users to collections or assets, and receive a portion of the sales fees if the referral results in a purchase."
         sideInfo={
-          <div className="py-4 px-6 rounded-2xl">
+          <div className="py-4 px-6 rounded-lg">
             <div className="flex flex-wrap">
               <div className="lg:w-1/3 sm:w-full">
                 <div className="mb-4">Referrals</div>
@@ -290,4 +290,4 @@ const MyRewardsPage = () => {
   );
 };
 
-export default MyRewardsPage;
+export default MyRewards;

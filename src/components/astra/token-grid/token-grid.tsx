@@ -7,16 +7,13 @@ import { AOutlineButton } from '../astra-button';
 import { ErrorOrLoading } from '../error-or-loading';
 import { BasicTokenInfo, Erc721TokenOffer } from '../types';
 import { TokenCardModal } from './token-card-modal';
-import { TokenFetcherAlt } from './token-fetcher';
 
 interface Props {
-  tokenFetcher?: TokenFetcherAlt;
   listMode: boolean;
   className?: string;
   onClick?: (data: Erc721TokenOffer) => void;
   isSelected: (data: Erc721TokenOffer) => boolean;
   isSelectable: (data: Erc721TokenOffer) => boolean;
-  onLoad: (numItems: number) => void;
   data: Erc721TokenOffer[];
   hasNextPage: boolean;
   onFetchMore: () => void;
@@ -38,7 +35,7 @@ export const TokenGrid = ({
 }: Props) => {
   let contents;
 
-  if (cardData.length === 0 || isError || isLoading) {
+  if (isError) {
     contents = <ErrorOrLoading error={!!isError || !!isLoading} noData={cardData.length === 0} />;
   } else {
     if (listMode) {

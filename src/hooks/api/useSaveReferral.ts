@@ -4,7 +4,7 @@ import { ethers } from 'ethers';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { apiPut } from 'src/utils';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 
 export const useSaveReferral = (assetAddress: string, chainId: ChainId, tokenId?: string) => {
   const { user, checkSignedIn } = useOnboardContext();

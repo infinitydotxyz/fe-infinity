@@ -8,7 +8,7 @@ import {
 } from 'src/hooks/contract/staker/useRemainingLockTime';
 import { useUnstake } from 'src/hooks/contract/staker/useUnstake';
 import { nFormatter } from 'src/utils';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { secondaryTextColor } from 'src/utils/ui-constants';
 import { Spinner, toastError, toastSuccess } from '../common';
 import { Button } from '../common/button';
@@ -121,7 +121,7 @@ export const UnstakeTokensModal = ({ onClose }: Props) => {
               renderRightIcon={() => (
                 <Button
                   variant="gray"
-                  className="rounded-full py-2 px-3"
+                  className="rounded-lg py-2 px-3"
                   size="small"
                   onClick={() => setValue(unlockedAmount ?? 0)}
                 >

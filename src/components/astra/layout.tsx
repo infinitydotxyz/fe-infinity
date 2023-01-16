@@ -1,8 +1,8 @@
-import { ReactNode, useEffect, useRef } from 'react';
+import { ReactNode, useRef } from 'react';
 import { useResizeDetector } from 'react-resize-detector';
 import { AstraCart } from 'src/components/astra/astra-cart';
-import { MainDashboardGrid } from 'src/components/astra/dashboard/main-grid-dashboard';
-import { useDashboardContext } from 'src/utils/context/DashboardContext';
+import { Grid } from 'src/components/astra/grid';
+import { useAppContext } from 'src/utils/context/AppContext';
 import { toastError } from '../common';
 import { ANavbar } from './astra-navbar';
 import { SidebarNav } from './sidebar-nav';
@@ -13,40 +13,35 @@ interface Props {
 
 export const Layout = ({ children }: Props) => {
   const {
-    collection,
     handleTokenSend,
     handleTokenCheckout,
     handleCollCheckout,
     handleOrdersCancel,
-    selection,
-    clearSelection,
-    removeFromSelection,
+    nftSelection,
+    clearNFTSelection,
+    removeNFTFromSelection,
     collSelection,
     clearCollSelection,
     removeCollFromSelection,
     orderSelection,
     clearOrderSelection,
     removeOrderFromSelection
-  } = useDashboardContext();
+  } = useAppContext();
 
   const gridRef = useRef<HTMLDivElement>(null);
 
   const { ref: containerRef } = useResizeDetector();
 
-  useEffect(() => {
-    gridRef.current?.scrollTo({ left: 0, top: 0 });
-  }, [collection]);
-
   const cart = (
     <AstraCart
-      tokens={selection}
+      tokens={nftSelection}
       collections={collSelection}
       orders={orderSelection}
       onCheckout={async () => {
         try {
-          if (selection.length > 0) {
-            await handleTokenCheckout(selection);
-            clearSelection();
+          if (nftSelection.length > 0) {
+            await handleTokenCheckout(nftSelection);
+            clearNFTSelection();
           } else if (collSelection.length > 0) {
             await handleCollCheckout(collSelection);
             clearCollSelection();
@@ -60,11 +55,11 @@ export const Layout = ({ children }: Props) => {
         }
       }}
       onTokenSend={async (value) => {
-        await handleTokenSend(selection, value);
-        clearSelection();
+        await handleTokenSend(nftSelection, value);
+        clearNFTSelection();
       }}
       onTokensRemove={(value) => {
-        removeFromSelection(value);
+        removeNFTFromSelection(value);
       }}
       onCollsRemove={(value) => {
         removeCollFromSelection(value);
@@ -77,5 +72,5 @@ export const Layout = ({ children }: Props) => {
 
   const footer = <></>;
 
-  return MainDashboardGrid(<ANavbar />, <SidebarNav />, <>{children}</>, cart, footer, gridRef, containerRef);
+  return Grid(<ANavbar />, <SidebarNav />, <>{children}</>, cart, footer, gridRef, containerRef);
 };

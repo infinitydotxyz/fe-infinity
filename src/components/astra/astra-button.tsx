@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { BsGrid, BsList } from 'react-icons/bs';
-import { useDashboardContext } from 'src/utils/context/DashboardContext';
+import { useAppContext } from 'src/utils/context/AppContext';
 import {
   activeColor,
   hoverColor,
@@ -41,7 +41,7 @@ export const AButton = ({
       highlighted={highlighted}
       tooltip={tooltip}
       className={twMerge(
-        small ? 'text-sm px-2 py-0.5' : 'px-2.5 py-1.5',
+        small ? 'text-sm px-2 py-0.5' : 'px-2.5 py-[5px]',
         'rounded-lg',
         primary ? primaryBtnWithBgColorTextTransition : '',
         className
@@ -198,11 +198,7 @@ export const ATextButton = ({
     <ButtonBase
       disabled={disabled}
       tooltip={tooltip}
-      className={twMerge(
-        small ? 'text-sm px-3 py-0.5' : 'px-4 py-1',
-        'rounded-full hover:text-brand-primary',
-        className
-      )}
+      className={twMerge(small ? 'text-sm px-3 py-0.5' : 'px-4 py-1', 'rounded-lg hover:text-brand-primary', className)}
       onClick={onClick}
     >
       {children}
@@ -233,7 +229,7 @@ export const AToggleButton = ({ children, onClick }: Props4) => {
 // ==============================================================
 
 export const AListGridButton = () => {
-  const { setListMode, listMode } = useDashboardContext();
+  const { setListMode, listMode } = useAppContext();
 
   return (
     <div className="flex items-center">

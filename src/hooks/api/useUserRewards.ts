@@ -1,6 +1,6 @@
 import { UserRewardsDto } from '@infinityxyz/lib-frontend/types/dto/rewards';
 import { useFetch } from 'src/utils';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 
 export function useUserRewards() {
   const { user, chainId } = useOnboardContext();

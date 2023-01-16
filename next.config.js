@@ -9,16 +9,6 @@ const nextConfig = {
         source: '/',
         destination: '/trending',
         permanent: true
-      },
-      {
-        source: '/collection/:name',
-        destination: '/collection/:name/items',
-        permanent: true
-      },
-      {
-        source: '/profile/:address',
-        destination: '/profile/:address/items',
-        permanent: true
       }
     ];
   }

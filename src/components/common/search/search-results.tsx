@@ -7,28 +7,20 @@ import { SearchResult } from './types';
 
 const CollectionSearchResult = ({ item }: { item: CollectionSearchDto | CollectionDisplayData }) => {
   return (
-    <>
-      <EZImage className="w-8 h-8 rounded-full overflow-hidden" src={item?.profileImage} />
-      <div className="flex-1 truncate font-body text-xs leading-6 tracking-wide">{item?.name}</div>
+    <div className="flex items-center space-x-4 truncate py-1">
+      <EZImage className="w-8 h-8 rounded-lg overflow-hidden" src={item?.profileImage} />
+      <div className="">{item?.name}</div>
       {item?.hasBlueCheck ? <BlueCheck className="ml-1" /> : <></>}
-    </>
+    </div>
   );
 };
 
 const NftSearchResult = ({ item }: { item: NftDisplayData }) => {
   return (
-    <>
-      <EZImage className="w-10 h-10 rounded-full overflow-hidden" src={item.image} />
-      <div className="flex-1 w-20">
-        <div className="truncate font-body text-xs leading-6 tracking-wide -mb-2">
-          {item?.collectionDisplayData?.name}
-        </div>
-        <div className="truncate font-body text-xs leading-6 tracking-wide overflow-hidden">
-          {ellipsisString(item?.tokenId)}
-        </div>
-      </div>
-      {item?.collectionDisplayData?.hasBlueCheck ? <BlueCheck className="ml-1" /> : <></>}
-    </>
+    <div className="flex items-center space-x-4 truncate py-1">
+      <EZImage className="w-8 h-8 rounded-lg overflow-hidden" src={item.image} />
+      <div className="">{ellipsisString(item?.tokenId)}</div>
+    </div>
   );
 };
 

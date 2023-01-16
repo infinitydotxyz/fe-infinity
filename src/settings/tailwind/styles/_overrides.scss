@@ -1,15 +1,14 @@
 ::-webkit-scrollbar {
-  width: 2px;
-  cursor: pointer;
+  width: 3px;
 }
 
 ::-webkit-scrollbar-track {
-  cursor: pointer;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  cursor: pointer;
   background-color: #5c5cf4;
+  border-radius: 3px;
 }
 
 html,

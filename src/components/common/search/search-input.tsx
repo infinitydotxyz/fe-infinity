@@ -5,7 +5,6 @@ import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { BasicTokenInfo } from 'src/components/astra/types';
-import { useOrderbook } from 'src/components/orderbook/OrderbookContext';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { borderColor, cardColor, hoverColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
@@ -21,7 +20,7 @@ interface Props {
   tokenSearch?: boolean;
   profileSearch?: boolean;
   orderSearch?: boolean;
-  setSelectedCollection?: (collection: string) => void;
+  setSelectedCollection?: (collection: CollectionSearchDto) => void;
   setSelectedToken?: (basicTokenInfo: BasicTokenInfo) => void;
 }
 
@@ -41,7 +40,6 @@ export function SearchInput({
   const [isActive, setIsActive] = useState(false);
   const [selected, setSelected] = useState<SearchResult | null>(null);
   const isMounted = useIsMounted();
-  const { filters, setFilters } = useOrderbook();
   const inputRef: React.RefObject<HTMLInputElement> = useRef(null);
 
   useEffect(() => {
@@ -61,12 +59,8 @@ export function SearchInput({
   };
 
   useEffect(() => {
-    if (selected && profileSearch) {
-      const newFilter = { ...filters };
-      newFilter.collections = [(selected as CollectionSearchDto).address];
-      setFilters(newFilter);
-    } else if (selected && orderSearch) {
-      setSelectedCollection && setSelectedCollection((selected as CollectionSearchDto).address);
+    if (selected && (profileSearch || orderSearch)) {
+      setSelectedCollection && setSelectedCollection(selected as CollectionSearchDto);
     } else if (selected && tokenSearch) {
       const basicTokenInfo: BasicTokenInfo = {
         tokenId: (selected as NftDisplayData).tokenId,
@@ -75,7 +69,7 @@ export function SearchInput({
       };
       setSelectedToken && setSelectedToken(basicTokenInfo);
     } else if (selected) {
-      const pathname = `/collection/${(selected as CollectionSearchDto).slug}/items`;
+      const pathname = `/collection/${(selected as CollectionSearchDto).slug}`;
       router.push(
         {
           pathname
@@ -135,7 +129,7 @@ export function SearchInput({
               data.length === 0 ? 'opacity-0' : '', // without this, a thin line appears
               borderColor,
               'absolute z-20 -mx-8 top-2  w-content h-content max-h-content',
-              'py-2 border rounded-2xl flex flex-col shadow-lg'
+              'py-2 border rounded-lg flex flex-col shadow-lg'
             )}
           >
             {data.map((item) => {
@@ -148,9 +142,9 @@ export function SearchInput({
                         active ? 'bg-transparent' : 'bg-transparent',
                         hoverColor,
                         textColor,
-                        'font-body text-sm py-1.5 px-4 rounded-md transition-all duration-200',
+                        'text-sm py-1 px-3 transition-all duration-200',
                         'flex gap-3 place-items-center',
-                        'hover:cursor-pointer w-60 z-20'
+                        'hover:cursor-pointer w-96 z-20'
                       )}
                     >
                       <SearchResultItem item={item} />

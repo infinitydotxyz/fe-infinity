@@ -1,7 +1,7 @@
 import { ERC20ABI } from '@infinityxyz/lib-frontend/abi/erc20';
 import { getTokenAddress } from '@infinityxyz/lib-frontend/utils';
 import { ENV } from 'src/utils';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { useContract } from '../useContract';
 
 export function useTokenContract() {

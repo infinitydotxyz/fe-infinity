@@ -4,7 +4,7 @@ import { TbArrowBarUp } from 'react-icons/tb';
 import { BlueCheck, Button, ExternalLink, EZImage, NextLink, Spacer } from 'src/components/common';
 import person from 'src/images/person.png';
 import { cl, timeAgo } from 'src/utils';
-import { secondaryTextColor, textColor } from 'src/utils/ui-constants';
+import { secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { NftEventRec } from '../asset/activity/activity-item';
 import { FeedListTableItem, NewsImage } from './feed-list-table-item';
@@ -25,7 +25,7 @@ export const FeedListItem = ({
   collectionProfileImage
 }: Props) => {
   const typeName = (activity: NftEventRec) => {
-    const classes = twMerge('rounded-lg px-3 py-0.5 w-32 text-center text-sm', textColor);
+    const classes = twMerge('rounded-lg px-3 py-0.5 w-32 text-center text-sm');
 
     const component = (color: string, label: string) => {
       return (
@@ -111,7 +111,7 @@ export const FeedListItem = ({
       case EventType.UserVote:
         return (
           <div className="flex items-center">
-            <div className="font-bold">
+            <div className="">
               <NextLink href={`/collection/${collectionSlug}`}>{collectionName}</NextLink>
             </div>
 
@@ -124,13 +124,13 @@ export const FeedListItem = ({
         return (
           <div className="flex items-center">
             {collectionName && (
-              <div className="font-bold">
+              <div className="">
                 <NextLink href={`/collection/${collectionSlug}`}>{collectionName}</NextLink>
               </div>
             )}
 
             {!collectionName && (
-              <div className="font-bold">
+              <div className="">
                 <ExternalLink href={`https://twitter.com/${activity.from}`}>{activity.fromDisplayName}</ExternalLink>
               </div>
             )}
@@ -151,7 +151,7 @@ export const FeedListItem = ({
       case EventType.DiscordAnnouncement:
         return (
           <div className="flex items-center">
-            <div className="font-bold">{activity.paymentToken}</div>
+            <div className="">{activity.paymentToken}</div>
 
             <div className={twMerge(secondaryTextColor, 'ml-3')}>{timeString}</div>
           </div>
@@ -159,7 +159,7 @@ export const FeedListItem = ({
       case EventType.TokensStaked:
         return (
           <div className="flex items-center">
-            <NextLink className="font-bold" href={`/profile/${activity.from}`}>
+            <NextLink className="" href={`/profile/${activity.from}`}>
               {activity.fromDisplayName}
             </NextLink>
 
@@ -178,12 +178,7 @@ export const FeedListItem = ({
   const image = () => {
     switch (activity.type) {
       case EventType.TwitterTweet:
-        return (
-          <EZImage
-            src={activity?.paymentToken || activity?.image}
-            className="rounded-full overflow-clip shrink-0 w-10 h-10"
-          />
-        );
+        return <EZImage src={activity?.image} className="rounded-full overflow-clip shrink-0 w-10 h-10" />;
 
       case EventType.NftSale:
       case EventType.NftOffer:
@@ -193,7 +188,7 @@ export const FeedListItem = ({
         return (
           <EZImage
             src={activity?.image || collectionProfileImage}
-            className="rounded-full overflow-clip shrink-0 w-10 h-10"
+            className="rounded-lg overflow-clip shrink-0 w-10 h-10"
           />
         );
 
@@ -201,7 +196,7 @@ export const FeedListItem = ({
         return (
           <NewsImage
             src={activity?.image || collectionProfileImage}
-            className="rounded-full overflow-clip shrink-0 w-10 h-10"
+            className="rounded-lg overflow-clip shrink-0 w-10 h-10"
           />
         );
 
@@ -209,7 +204,7 @@ export const FeedListItem = ({
         return (
           <EZImage
             src={activity?.image || collectionProfileImage || person.src}
-            className="rounded-full overflow-clip shrink-0 w-10 h-10"
+            className="rounded-lg overflow-clip shrink-0 w-10 h-10"
           />
         );
 
@@ -217,7 +212,7 @@ export const FeedListItem = ({
         return (
           <EZImage
             src={activity?.image || collectionProfileImage}
-            className="rounded-full overflow-clip shrink-0 w-10 h-10"
+            className="rounded-lg overflow-clip shrink-0 w-10 h-10"
           />
         );
 

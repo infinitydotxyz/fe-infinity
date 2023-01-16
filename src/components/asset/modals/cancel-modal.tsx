@@ -3,8 +3,8 @@ import { SignedOBOrder, Token } from '@infinityxyz/lib-frontend/types/core';
 import { Checkbox, EthPrice, Modal, Spinner, toastError, toastInfo, toastSuccess } from 'src/components/common';
 import { apiGet, ellipsisAddress, extractErrorMsg } from 'src/utils';
 import { OrderbookItem } from 'src/components/orderbook/list/orderbook-item';
-import { cancelMultipleOrders } from 'src/utils/exchange/orders';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { cancelMultipleOrders } from 'src/utils/orders';
+import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 
 interface Props {
   isOpen: boolean;
@@ -114,7 +114,12 @@ export const CancelModal = ({ isOpen, onClose, onDone, collectionAddress, token 
                     {listing.nfts.length} NFT{listing.nfts.length > 1 ? 's' : ''}
                   </div>
                   <div className="w-1/3">{listing.startPriceEth} ETH</div> */}
-                  <OrderbookItem nameItem={true} key={`${listing.id} ${listing.chainId}`} order={listing} />
+                  <OrderbookItem
+                    nameItem={true}
+                    key={`${listing.id} ${listing.chainId}`}
+                    order={listing}
+                    canShowAssetModal={false}
+                  />
                   <div className="w-1/6">
                     <EthPrice label={`${listing.startPriceEth}`} />
                   </div>

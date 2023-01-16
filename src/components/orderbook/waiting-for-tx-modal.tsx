@@ -2,7 +2,7 @@ import { TransactionReceipt } from '@ethersproject/abstract-provider';
 import { useEffect, useState } from 'react';
 import { Button, Modal, Spinner } from 'src/components/common';
 import { ellipsisAddress, ETHERSCAN_BASE_URL } from 'src/utils';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 
 interface Props {
   title: string;

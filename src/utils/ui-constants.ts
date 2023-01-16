@@ -6,7 +6,7 @@ export const purgeCSSHack = 'h-14 w-14';
 
 export const collectionIconHeight = `h-${collectionIconRem}`;
 export const collectionIconWidth = `w-${collectionIconRem}`;
-export const collectionIconStyle = `${collectionIconHeight} ${collectionIconWidth} rounded-2xl overflow-clip`;
+export const collectionIconStyle = `${collectionIconHeight} ${collectionIconWidth} rounded-lg overflow-clip`;
 
 export const collectionIconWidthInPx = (): number => {
   return pixelsPerRem() * collectionIconRem;
@@ -38,8 +38,8 @@ export const textColor = 'dark:text-dark-body text-light-body';
 export const secondaryTextColor = 'dark:text-dark-disabled text-light-disabled';
 export const brandTextColor = 'dark:text-brand-primary text-brand-primary';
 export const inverseTextColor = 'dark:text-light-body text-dark-body';
-export const primaryBtnBgColorText = `bg-gray-200 bg-opacity-40 dark:bg-gray-200 dark:bg-opacity-10 text-brand-primary`;
-export const primaryBtnWithBgColorTextTransition = `${primaryBtnBgColorText} hover:scale-95 duration-100`;
+export const primaryBtnBgColorText = `bg-gray-200 bg-opacity-40 dark:bg-gray-100 dark:bg-opacity-5 text-brand-primary`;
+export const primaryBtnWithBgColorTextTransition = `${primaryBtnBgColorText} hover:scale-95 duration-100 font-medium`;
 export const hoverColorBrandText = 'hover:text-brand-primary dark:hover:text-brand-primary';
 export const hoverColor = `dark:hover:bg-gray-200 dark:hover:bg-opacity-10 hover:bg-gray-200 hover:bg-opacity-40 ${hoverColorBrandText}`;
 export const activeColor =

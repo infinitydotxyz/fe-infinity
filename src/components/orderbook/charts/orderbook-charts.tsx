@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Spinner } from 'src/components/common';
 import { secondaryTextColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { useOrderbook } from '../OrderbookContext';
+import { useOrderbookContext } from '../../../utils/context/OrderbookContext';
 import { BarChartType, OrderData, ResponsiveBarChart } from './bar-chart';
 import { OrdersChartDetails } from './chart-details';
 import { ResponsiveScatterChart, SaleData, ScatterChartType, TimeBuckets } from './scatter-chart';
@@ -15,7 +15,7 @@ export type OrderBookChartProps = {
 };
 
 export const OrderbookCharts = ({ className = '' }: OrderBookChartProps) => {
-  const { orders, updateFilters, isLoading } = useOrderbook();
+  const { orders, updateFilters, isLoading } = useOrderbookContext();
   const [salesData, setSalesData] = useState<SaleData[]>([]);
   const [ordersData, setOrdersData] = useState<OrderData[]>([]);
   const [selectedListings, setSelectedListings] = useState<SignedOBOrder[]>([]);

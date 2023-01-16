@@ -5,18 +5,18 @@ import { ethers, Signature } from 'ethers';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user';
-import { apiGet } from '../apiUtils';
+import { apiGet } from '../../apiUtils';
 import { setupOnboard } from './setup-onboard';
-import { User } from '../context/AppContext';
+import { User } from '../AppContext';
 import { OnboardAuthProvider } from './OnboardAuthProvider';
 import { WalletSigner } from './WalletSigner';
 import { OnboardEmitter } from './OnboardEmitter';
 import { Modal, toastWarning } from 'src/components/common';
-import { PleaseConnectMsg } from '../commonUtils';
+import { PleaseConnectMsg } from '../../commonUtils';
 import { TransactionReceipt } from '@ethersproject/abstract-provider';
 import { JSONRPCRequestPayload, JSONRPCResponsePayload, ProviderEvents } from './UserRejectException';
 import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
-import { Preferences } from '../preferences';
+import { Preferences } from '../../preferences';
 
 setupOnboard();
 

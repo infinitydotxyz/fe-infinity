@@ -1,16 +1,14 @@
-import React, { useState } from 'react';
-import { apiGet } from 'src/utils';
-import { ActivityItem, NftEventRec } from './activity-item';
-import { CenteredContent, Spinner } from 'src/components/common';
 import { Token } from '@infinityxyz/lib-frontend/types/core/Token';
+import React, { useState } from 'react';
 import {
   AFilterPopdown,
   FeedFilter,
   filterButtonDefaultOptions,
   shortEventTypes
 } from 'src/components/astra/astra-filter-popdown';
-import { twMerge } from 'tailwind-merge';
-import { secondaryBgColor } from 'src/utils/ui-constants';
+import { CenteredContent, Spinner } from 'src/components/common';
+import { apiGet } from 'src/utils';
+import { ActivityItem, NftEventRec } from './activity-item';
 
 interface Props {
   className?: string;
@@ -81,14 +79,9 @@ export const ActivityList: React.FC<Props> = ({ className = '', chainId, collect
       ) : null}
 
       {hasNoData ? (
-        <div
-          className={twMerge(
-            secondaryBgColor,
-            'px-6 sm:px-6 md:px-8 lg:px-16 mt-6 md:pt-11 md:pb-11 rounded-3xl text-center font-heading'
-          )}
-        >
-          No Activity
-        </div>
+        <CenteredContent>
+          <div className="text-sm">No Activity</div>
+        </CenteredContent>
       ) : null}
     </div>
   );

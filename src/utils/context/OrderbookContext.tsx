@@ -12,8 +12,8 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import { ParsedUrlQuery } from 'querystring';
 import { apiGet, ITEMS_PER_PAGE } from 'src/utils';
 import { useIsMounted } from 'src/hooks/useIsMounted';
-import { OrderCache } from './order-cache';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { OrderCache } from '../../components/orderbook/order-cache';
+import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import * as Queries from '@infinityxyz/lib-frontend/types/dto/orders/orders-queries.dto';
 
 export type OBFilters = {
@@ -22,7 +22,7 @@ export type OBFilters = {
    * @deprecated No longer used in v3. Use `orderType` instead.
    */
   orderTypes?: string[];
-  orderType?: string;
+  orderType?: 'listings' | 'offers-made' | 'offers-received' | '';
   collections?: string[];
   minPrice?: string;
   maxPrice?: string;
@@ -187,7 +187,7 @@ const parseRouterQueryParamsToFilters = (query: ParsedUrlQuery): OBFilters => {
     newFilters.sort = sort as string;
   }
 
-  newFilters.orderType = _orderType as string;
+  newFilters.orderType = _orderType as 'listings' | 'offers-made' | 'offers-received' | '';
 
   return newFilters;
 };
@@ -220,7 +220,7 @@ const orderCache = new OrderCache();
 
 interface BaseProps {
   children: ReactNode;
-  kind?: 'collection' | 'token' | 'user';
+  kind?: 'collection' | 'token' | 'profile';
   limit?: number;
 }
 
@@ -239,8 +239,8 @@ interface TokenProps extends BaseProps {
   };
 }
 
-interface UserProps extends BaseProps {
-  kind?: 'user';
+interface ProfileProps extends BaseProps {
+  kind?: 'profile';
   context?: {
     chainId: ChainId;
     userAddress: string;
@@ -248,7 +248,7 @@ interface UserProps extends BaseProps {
   };
 }
 
-export type OrderbookProviderProps = CollectionProps | TokenProps | UserProps;
+export type OrderbookProviderProps = CollectionProps | TokenProps | ProfileProps;
 
 export const OrderbookContextProvider = ({ children, limit = ITEMS_PER_PAGE, ...props }: OrderbookProviderProps) => {
   const router = useRouter();
@@ -400,7 +400,7 @@ export const OrderbookContextProvider = ({ children, limit = ITEMS_PER_PAGE, ...
           endpoint: `/v2/collections/${chainId}:${props.context?.collectionAddress}/orders`,
           query
         };
-      } else if (props.kind === 'user') {
+      } else if (props.kind === 'profile') {
         if (props.context?.side === Queries.Side.Maker) {
           const query: Queries.MakerOrdersQuery = {
             ...baseQuery,
@@ -465,7 +465,6 @@ export const OrderbookContextProvider = ({ children, limit = ITEMS_PER_PAGE, ...
                   case 'single-token':
                     tokens = [item.token];
                     break;
-
                   case 'token-list':
                     tokens = item.tokens;
                     break;
@@ -553,6 +552,6 @@ export const OrderbookContextProvider = ({ children, limit = ITEMS_PER_PAGE, ...
   return <OrderbookContext.Provider value={value}>{children}</OrderbookContext.Provider>;
 };
 
-export const useOrderbook = () => {
+export const useOrderbookContext = () => {
   return React.useContext(OrderbookContext) as OBContextType;
 };

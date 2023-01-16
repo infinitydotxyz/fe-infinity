@@ -1,12 +1,13 @@
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { AiOutlineCheckCircle, AiOutlinePlusCircle } from 'react-icons/ai';
 import {
-  bgColor,
   brandTextColor,
   cardColor,
+  hoverColorBrandText,
   iconButtonStyle,
-  selectionBorder,
-  textColor
+  secondaryBgColor,
+  selectionBorder
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { AButton } from '../astra/astra-button';
@@ -28,18 +29,19 @@ export const GridCard = ({ data, onClick, selected, isSelectable }: Props): JSX.
   const title = data?.title;
   const tokenId = data?.tokenId;
   const hasBlueCheck = data?.hasBlueCheck ?? false;
-  const buyNowPrice = data?.price ? data?.price.toString() + EthSymbol : '-';
+  const buyNowPrice = data?.price ? data?.price.toString() + EthSymbol : '';
   const basicTokenInfo: BasicTokenInfo = {
     tokenId: data?.tokenId ?? '',
     collectionAddress: data?.address ?? '',
     chainId: data?.chainId ?? ''
   };
+  const router = useRouter();
 
   return (
     <div
       className={twMerge(
         cardColor,
-        'rounded-2xl w-full relative flex flex-col shadow-[0px_4px_10px_0px_rgba(0,0,0,0.12)] \
+        'rounded-lg w-full relative flex flex-col shadow-[0px_4px_10px_0px_rgba(0,0,0,0.12)] \
              hover:shadow-[0px_4px_10px_0px_rgba(0,0,0,0.2)] cursor-pointer',
         selected ? selectionBorder : '',
         notSelectable ? 'animate-wiggle' : ''
@@ -60,29 +62,34 @@ export const GridCard = ({ data, onClick, selected, isSelectable }: Props): JSX.
         <div className="relative flex-1">
           {/* we can't overflow clip the whole card or the tooltips get clipped
               so we do this absolute image below the pillbadges */}
-          <div className="absolute top-0 bottom-0 left-0 right-0 rounded-t-2xl overflow-clip">
+          <div className="absolute top-0 bottom-0 left-0 right-0 rounded-t-lg overflow-clip">
             <EZImage src={data?.image} className="hover:scale-110 transition-all" />
             {selected && (
-              <div className={twMerge('absolute top-3 right-3 rounded-full p-0.5', bgColor)}>
+              <div className={twMerge('absolute top-2 right-2 rounded-full', secondaryBgColor)}>
                 <AiOutlineCheckCircle className={twMerge(iconButtonStyle, brandTextColor)} />
               </div>
             )}
             {showPlusIcon && !selected && (
-              <div className={twMerge('absolute top-3 right-3 rounded-full p-0.5', bgColor)}>
+              <div className={twMerge('absolute top-2 right-2 rounded-full', secondaryBgColor)}>
                 <AiOutlinePlusCircle className={twMerge(iconButtonStyle, brandTextColor)} />
               </div>
             )}
           </div>
         </div>
 
-        <div className={twMerge(textColor, 'mt-1 mb-3 px-2')}>
-          <div className="flex items-center space-x-1">
-            <div className="truncate text-xs">{title}</div>
+        <div className={twMerge('mt-1 mb-3 px-2')}>
+          <div
+            className="flex items-center space-x-1 cursor-pointer"
+            onClick={(e) => {
+              e.stopPropagation();
+              router.push(`/collection/${data?.collectionSlug}`);
+            }}
+          >
+            <div className={twMerge('truncate text-xs', hoverColorBrandText)}>{title}</div>
             {hasBlueCheck ? <BlueCheck className={'h-3 w-3'} /> : ''}
           </div>
 
-          <div className="flex items-center">
-            {/* todo use right color on hover */}
+          <div className="flex items-center text-sm mt-0.5">
             <div
               className="truncate hover:text-blue-500"
               onClick={(e) => {
@@ -94,7 +101,7 @@ export const GridCard = ({ data, onClick, selected, isSelectable }: Props): JSX.
             </div>
           </div>
 
-          <div className="flex items-center">
+          <div className="flex items-center text-xs">
             <div className="truncate">{buyNowPrice}</div>
             <Spacer />
             <AButton primary className="rounded-md" onClick={() => setModalOpen(true)}>

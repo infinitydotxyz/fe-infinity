@@ -63,7 +63,7 @@ export const ResponsiveScatterChart = ({
         <div className="ml-5 font-bold mt-3">{graphType}</div>
         <select
           onChange={(e) => fetchData(e.target.value)}
-          className={twMerge('form-select rounded-full bg-transparent focus:border-none float-right', textColor)}
+          className={twMerge('form-select rounded-lg bg-transparent focus:border-none float-right', textColor)}
         >
           {Object.values(TimeBuckets).map((filter) => (
             <option value={filter} selected={filter === selectedTimeBucket}>
@@ -284,7 +284,7 @@ function ToolTip({ left, top, data, isTooltipOpen }: Props2) {
       top={top}
     >
       <div className={twMerge(cardColor, textColor, 'flex flex-col p-1')} style={{ aspectRatio: '3.5 / 5' }}>
-        <div className="flex-1 rounded-2xl overflow-clip">
+        <div className="flex-1 rounded-lg overflow-clip">
           <EZImage src={data?.tokenImage} />
         </div>
 

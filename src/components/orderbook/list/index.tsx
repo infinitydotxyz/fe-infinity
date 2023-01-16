@@ -1,23 +1,20 @@
-import { Menu } from '@headlessui/react';
 import { useEffect, useState } from 'react';
-import { AOutlineButton } from 'src/components/astra/astra-button';
+import { ADropdown } from 'src/components/astra/astra-dropdown';
+import { APriceFilter } from 'src/components/astra/astra-price-filter';
 import {
-  ACustomMenuButton,
-  ACustomMenuContents,
-  ACustomMenuItems,
-  ADropdown,
-  ADropdownButton
-} from 'src/components/astra/astra-dropdown';
-import { TextInputBox } from 'src/components/common';
-import { brandTextColor } from 'src/utils/ui-constants';
-import { twMerge } from 'tailwind-merge';
-import { getSortLabel, OrderbookContextProvider, SORT_FILTERS, SORT_LABELS, useOrderbook } from '../OrderbookContext';
+  getSortLabel,
+  OrderbookContextProvider,
+  SORT_FILTERS,
+  SORT_LABELS,
+  useOrderbookContext
+} from '../../../utils/context/OrderbookContext';
 import { OrderbookList } from './orderbook-list';
 
 interface Props {
   collectionId?: string;
   tokenId?: string;
   className?: string;
+  canShowAssetModal?: boolean;
 }
 
 enum OrderBy {
@@ -26,13 +23,18 @@ enum OrderBy {
   EndTime = 'endTime'
 }
 
-export const OrderbookContainer = ({ collectionId, tokenId, className = '' }: Props): JSX.Element => {
+export const OrderbookContainer = ({
+  collectionId,
+  tokenId,
+  className = '',
+  canShowAssetModal
+}: Props): JSX.Element => {
   return (
     <OrderbookContextProvider
       kind={'token'}
       context={{ collectionAddress: collectionId ?? '', tokenId: tokenId ?? '' }}
     >
-      <OrderbookContent className={className} />
+      <OrderbookContent className={className} canShowAssetModal={canShowAssetModal} />
     </OrderbookContextProvider>
   );
 };
@@ -41,9 +43,10 @@ export const OrderbookContainer = ({ collectionId, tokenId, className = '' }: Pr
 
 interface Props4 {
   className?: string;
+  canShowAssetModal?: boolean;
 }
 
-export const OrderbookContent = ({ className }: Props4) => {
+const OrderbookContent = ({ className, canShowAssetModal }: Props4) => {
   // const { query } = useRouter();
   const {
     orders,
@@ -56,11 +59,9 @@ export const OrderbookContent = ({ className }: Props4) => {
     setFilters,
     hasMoreOrders,
     hasNoData
-  } = useOrderbook();
+  } = useOrderbookContext();
   const [sortLabel, setSortLabel] = useState<string>(SORT_LABELS[SORT_FILTERS.highestPrice]);
   const [orderTypeLabel, setOrderTypeLabel] = useState<string>('Listings');
-  const [minPriceVal, setMinPriceVal] = useState(filters.minPrice || '');
-  const [maxPriceVal, setMaxPriceVal] = useState(filters.maxPrice || '');
 
   useEffect(() => {
     setSortLabel(getSortLabel(filters?.sort, SORT_LABELS[SORT_FILTERS.highestPrice]));
@@ -72,9 +73,21 @@ export const OrderbookContent = ({ className }: Props4) => {
 
   const { orderTypes = [] } = filters;
 
-  const onClear = () => {
-    setMinPriceVal('');
-    setMaxPriceVal('');
+  const setMinPrice = (value: string) => {
+    const newFilters = { ...filters };
+    newFilters.minPrice = value;
+    newFilters.orderBy = OrderBy.Price;
+    setFilters(newFilters);
+  };
+
+  const setMaxPrice = (value: string) => {
+    const newFilters = { ...filters };
+    newFilters.maxPrice = value;
+    newFilters.orderBy = OrderBy.Price;
+    setFilters(newFilters);
+  };
+
+  const onPricesClear = () => {
     updateFilters([
       { name: 'minPrice', value: '' },
       { name: 'maxPrice', value: '' }
@@ -84,7 +97,7 @@ export const OrderbookContent = ({ className }: Props4) => {
   return (
     <>
       <div className={`flex flex-col h-full overflow-y-clip min-h-[50vh] ${className}`}>
-        <div className="gap-3 flex justify-end pb-6">
+        <div className="gap-3 flex justify-end">
           <ADropdown
             label={orderTypeLabel}
             items={[
@@ -107,57 +120,7 @@ export const OrderbookContent = ({ className }: Props4) => {
             ]}
           />
 
-          <Menu>
-            {({ open }) => (
-              <ACustomMenuContents>
-                <span>
-                  <ACustomMenuButton>
-                    <AOutlineButton tooltip="Filter by price">
-                      <ADropdownButton isMenuOpen={open}>Price</ADropdownButton>
-                    </AOutlineButton>
-                  </ACustomMenuButton>
-                </span>
-
-                <ACustomMenuItems open={open} alignMenuRight={true} innerClassName="border-0">
-                  <div className="flex mr-2">
-                    <TextInputBox
-                      addEthSymbol={true}
-                      type="number"
-                      className={twMerge('font-heading p-3')}
-                      label="Min"
-                      placeholder=""
-                      value={minPriceVal}
-                      onChange={(value) => {
-                        setMinPriceVal(value);
-                        const newFilters = { ...filters };
-                        newFilters.minPrice = value;
-                        newFilters.orderBy = OrderBy.Price;
-                        setFilters(newFilters);
-                      }}
-                    />
-                    <TextInputBox
-                      addEthSymbol={true}
-                      type="number"
-                      className={twMerge('font-heading ml-2 p-3')}
-                      label="Max"
-                      placeholder=""
-                      value={maxPriceVal}
-                      onChange={(value) => {
-                        setMaxPriceVal(value);
-                        const newFilters = { ...filters };
-                        newFilters.maxPrice = value;
-                        newFilters.orderBy = OrderBy.Price;
-                        setFilters(newFilters);
-                      }}
-                    />
-                  </div>
-                  <Menu.Button onClick={onClear} className={twMerge('mt-4 ml-1 text-sm', brandTextColor)}>
-                    Clear
-                  </Menu.Button>
-                </ACustomMenuItems>
-              </ACustomMenuContents>
-            )}
-          </Menu>
+          <APriceFilter onClear={onPricesClear} setMinPrice={setMinPrice} setMaxPrice={setMaxPrice} />
 
           <ADropdown
             alignMenuRight={true}
@@ -181,6 +144,7 @@ export const OrderbookContent = ({ className }: Props4) => {
         </div>
 
         <OrderbookList
+          canShowAssetModal={canShowAssetModal}
           orderList={orders}
           isLoading={isLoading}
           fetchMore={fetchMore}

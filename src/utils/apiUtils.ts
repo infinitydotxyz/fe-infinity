@@ -3,7 +3,7 @@ import useSWR, { SWRConfiguration } from 'swr';
 import { stringify } from 'query-string';
 import { API_BASE } from './constants';
 import useSWRInfinite, { SWRInfiniteConfiguration, SWRInfiniteKeyLoader, SWRInfiniteResponse } from 'swr/infinite';
-import { OnboardAuthProvider } from './OnboardContext/OnboardAuthProvider';
+import { OnboardAuthProvider } from './context/OnboardContext/OnboardAuthProvider';
 import { useState } from 'react';
 
 const HTTP_UNAUTHORIZED = 401;

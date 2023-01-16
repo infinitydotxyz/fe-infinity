@@ -28,12 +28,12 @@ export const defaultDataColumns = (order: SignedOBOrder): DataColumn[] => {
       name: 'Name',
       type: 'Name',
       field: 'name',
-      width: '2fr',
-      onClick: () => {
-        // console.log('order', order);
-        // const maker = order.makerUsername || order.makerAddress;
-        // router.push(`/profile/${maker}`);
-      }
+      width: '2fr'
+      // onClick: () => {
+      //   // console.log('order', order);
+      //   // const maker = order.makerUsername || order.makerAddress;
+      //   // router.push(`/profile/${maker}`);
+      // }
     },
     {
       name: 'Event',
@@ -47,12 +47,12 @@ export const defaultDataColumns = (order: SignedOBOrder): DataColumn[] => {
       field: order.isSellOrder ? 'minSalePrice' : 'maxBuyPrice',
       width: '1fr'
     },
-    {
-      name: '# NFTs',
-      type: 'Text',
-      field: 'numNFTs',
-      width: '1fr'
-    },
+    // {
+    //   name: '# NFTs',
+    //   type: 'Text',
+    //   field: 'numNFTs',
+    //   width: '1fr'
+    // },
     {
       name: 'From',
       type: 'Text',
