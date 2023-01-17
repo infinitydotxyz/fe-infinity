@@ -18,10 +18,6 @@ import * as Queries from '@infinityxyz/lib-frontend/types/dto/orders/orders-quer
 
 export type OrdersFilter = {
   sort?: string;
-  /**
-   * @deprecated No longer used in v3. Use `orderType` instead.
-   */
-  orderTypes?: string[];
   orderType?: 'listings' | 'offers-made' | 'offers-received' | '';
   collections?: string[];
   minPrice?: string;
@@ -59,21 +55,6 @@ export const getSortLabel = (key?: string, defaultLabel?: string): string => {
   return result || defaultLabel || SORT_LABELS[SORT_FILTERS.tokenIdNumeric];
 };
 
-// ============================================================
-
-const getIsSellOrder = (orderTypes: OrdersFilter['orderTypes']) => {
-  if (!orderTypes || orderTypes.length === 0) {
-    return undefined;
-  } else if (orderTypes.length === 1 && orderTypes.includes('Listing')) {
-    // todo: check with backend types
-    return true;
-  } else if (orderTypes.length === 1 && orderTypes.includes('Offer')) {
-    return false;
-  } else {
-    return undefined;
-  }
-};
-
 export const parseFiltersToApiQueryParams = (filter: OrdersFilter): GetOrderItemsQuery => {
   const parsedFilters: GetOrderItemsQuery = {};
 
@@ -91,11 +72,6 @@ export const parseFiltersToApiQueryParams = (filter: OrdersFilter): GetOrderItem
         if (filter.sort === SORT_FILTERS.mostRecent) {
           parsedFilters.orderBy = 'startTimeMs';
           parsedFilters.orderByDirection = 'desc';
-        }
-        break;
-      case 'orderTypes':
-        if (filter?.orderTypes?.length) {
-          parsedFilters.isSellOrder = getIsSellOrder(filter?.orderTypes);
         }
         break;
       case 'collections':
@@ -128,16 +104,7 @@ export const parseFiltersToApiQueryParams = (filter: OrdersFilter): GetOrderItem
 };
 
 const parseRouterQueryParamsToFilters = (query: ParsedUrlQuery): OrdersFilter => {
-  const {
-    collections: _collections,
-    orderTypes: _orderTypes,
-    orderType: _orderType,
-    minPrice,
-    maxPrice,
-    orderBy,
-    numberOfNfts,
-    sort
-  } = query;
+  const { collections: _collections, orderType: _orderType, minPrice, maxPrice, orderBy, numberOfNfts, sort } = query;
 
   const newFilter: OrdersFilter = {};
 
@@ -148,19 +115,6 @@ const parseRouterQueryParamsToFilters = (query: ParsedUrlQuery): OrdersFilter =>
 
   if (typeof _collections === 'object') {
     collections = [..._collections];
-  }
-
-  let orderTypes: string[] = [];
-  if (typeof _orderTypes === 'string') {
-    orderTypes = [_orderTypes];
-  }
-
-  if (typeof _orderTypes === 'object') {
-    orderTypes = [..._orderTypes];
-  }
-
-  if (orderTypes.length > 0) {
-    newFilter.orderTypes = orderTypes;
   }
 
   if (collections.length > 0) {
