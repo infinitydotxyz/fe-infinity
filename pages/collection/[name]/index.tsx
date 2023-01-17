@@ -8,19 +8,18 @@ import { APriceFilter } from 'src/components/astra/astra-price-filter';
 import { ASortButton } from 'src/components/astra/astra-sort-button';
 import { AStatusFilterButton } from 'src/components/astra/astra-status-button';
 import { ATraitFilter } from 'src/components/astra/astra-trait-filter';
-import { useScrollInfo } from 'src/hooks/useScrollHook';
 import { TokenGrid } from 'src/components/astra/token-grid/token-grid';
 import { useCollectionTokenFetcher } from 'src/components/astra/useFetcher';
 import { CollectionPageHeader, CollectionPageHeaderProps } from 'src/components/collection/collection-page-header';
 import { Spacer } from 'src/components/common';
 import { CollectionNftSearchInput } from 'src/components/common/search/collection-nft-search-input';
-import { CommunityFeed } from 'src/components/feed/community-feed';
 import { TopHolderList } from 'src/components/feed/top-holder-list';
 import { TwitterSupporterList } from 'src/components/feed/twitter-supporter-list';
 import { OrderbookCharts } from 'src/components/orderbook/charts/orderbook-charts';
-import { useOrderbookContext } from 'src/utils/context/OrderbookContext';
+import { useScrollInfo } from 'src/hooks/useScrollHook';
 import { apiGet, nFormatter } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
+import { useOrderbookContext } from 'src/utils/context/OrderbookContext';
 
 interface CollectionDashboardProps {
   collection: BaseCollection;
@@ -163,7 +162,6 @@ export default function ItemsPage(props: CollectionDashboardProps) {
           )}
 
           {selectedTab === 'Orders' && <OrderbookCharts />}
-          {selectedTab === 'Activity' && <CommunityFeed collection={collection}></CommunityFeed>}
           {selectedTab === 'Analytics' && (
             <div className="flex space-x-10 px-10 py-10">
               <div className="flex-1">{collection && <TopHolderList collection={collection}></TopHolderList>}</div>
