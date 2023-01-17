@@ -64,10 +64,10 @@ export const setupOnboard = () => {
     ],
 
     appMetadata: {
-      name: 'Infinity XYZ',
+      name: 'Flow',
       icon: blocknativeIcon,
       logo: blocknativeLogo,
-      description: 'Infinity NFT exchange',
+      description: 'Flow NFT auto sniper',
       recommendedInjectedWallets: [
         { name: 'Coinbase', url: 'https://wallet.coinbase.com/' },
         { name: 'MetaMask', url: 'https://metamask.io' }
@@ -75,10 +75,8 @@ export const setupOnboard = () => {
       agreement: {
         version: '1.0.0',
         termsUrl: 'https://flow.so/terms',
-        privacyUrl: 'https://www.flow.so/privacy-policy'
+        privacyUrl: 'https://flow.so/privacy-policy'
       }
-      // gettingStartedGuide: 'https://flow.so',
-      // explore: 'https://flow.so'
     },
     accountCenter: {
       desktop: {

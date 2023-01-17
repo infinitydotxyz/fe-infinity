@@ -13,8 +13,8 @@ import {
   DEFAULT_MAX_GAS_PRICE_WEI,
   extractErrorMsg,
   getEstimatedGasPrice,
-  INFINITY_FEE_PCT,
-  INFINITY_ROYALTY_PCT,
+  FLOW_FEE_PCT,
+  FLOW_ROYALTY_PCT,
   MISSING_IMAGE_URL
 } from 'src/utils';
 import { getSignedOBOrder } from 'src/utils/orders';
@@ -43,8 +43,8 @@ export const ALowerPriceModal = ({ isOpen, onClose, order, onDone }: Props) => {
       </div>
     )
   });
-  tableItems.push({ title: 'Fee', value: <div className="font-medium">{INFINITY_FEE_PCT}%</div> });
-  tableItems.push({ title: 'Royalty', value: <div className="font-medium">{INFINITY_ROYALTY_PCT}%</div> });
+  tableItems.push({ title: 'Fee', value: <div className="font-medium">{FLOW_FEE_PCT}%</div> });
+  tableItems.push({ title: 'Royalty', value: <div className="font-medium">{FLOW_ROYALTY_PCT}%</div> });
 
   const lowerPrice = async () => {
     const newPriceEth = parseFloat(price);
