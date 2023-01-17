@@ -4,7 +4,7 @@ import { useIsMounted } from 'src/hooks/useIsMounted';
 import { ApiResponse } from 'src/utils';
 import { fetchCollectionTokens, fetchProfileTokens } from 'src/utils/astra-utils';
 import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
-import { OBFilters, useOrderbookContext } from '../../utils/context/OrderbookContext';
+import { OrdersFilter, useOrdersContext } from '../../utils/context/OrdersContext';
 import { Erc721TokenOffer } from './types';
 
 type ApiNftData = Erc721Token & {
@@ -36,11 +36,11 @@ export function useTokenFetcher<From, To>({
   mapper,
   execute
 }: {
-  fetcher: (cursor: string, filters: OBFilters) => Promise<ApiResponse>;
+  fetcher: (cursor: string, filters: OrdersFilter) => Promise<ApiResponse>;
   mapper: (data: From[]) => To[];
   execute: boolean;
 }) {
-  const { filters } = useOrderbookContext();
+  const { filter } = useOrdersContext();
   const isMounted = useIsMounted();
   const [error, setError] = useState<string>();
   const [cursor, setCursor] = useState('');
@@ -57,13 +57,13 @@ export function useTokenFetcher<From, To>({
 
   // reset whenever these filters change
   useEffect(reset, [
-    filters.sort,
-    filters.orderType,
-    filters.minPrice,
-    filters.maxPrice,
-    filters.traitTypes,
-    filters.traitValues,
-    filters.collections
+    filter.sort,
+    filter.orderType,
+    filter.minPrice,
+    filter.maxPrice,
+    filter.traitTypes,
+    filter.traitValues,
+    filter.collections
   ]);
 
   // refetch whenever 'reset' finished updating the state (also fired on mount)
@@ -78,7 +78,7 @@ export function useTokenFetcher<From, To>({
       return;
     }
 
-    const response = await fetcher(cursor, filters);
+    const response = await fetcher(cursor, filter);
 
     if (response.error) {
       setError(response.error);

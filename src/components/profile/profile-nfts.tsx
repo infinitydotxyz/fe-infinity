@@ -8,7 +8,7 @@ import { borderColor, hoverColorBrandText } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { EZImage } from '../common';
 import { CollectionSearchInput } from '../common/search/collection-search-input';
-import { useOrderbookContext } from '../../utils/context/OrderbookContext';
+import { useOrdersContext } from '../../utils/context/OrdersContext';
 
 interface Props {
   userAddress: string;
@@ -16,21 +16,21 @@ interface Props {
 
 export const ProfileNFTs = ({ userAddress }: Props) => {
   const [selectedCollection, setSelectedCollection] = useState<CollectionSearchDto>();
-  const { filters, setFilters } = useOrderbookContext();
+  const { filter, setFilter } = useOrdersContext();
   const { isNFTSelected, isNFTSelectable, listMode, toggleNFTSelection } = useAppContext();
   const { data, error, hasNextPage, isLoading, fetch } = useProfileTokenFetcher(userAddress);
 
   const handleCollectionSearchResult = (result: CollectionSearchDto) => {
-    const newFilter = { ...filters };
+    const newFilter = { ...filter };
     newFilter.collections = [result.address];
-    setFilters(newFilter);
+    setFilter(newFilter);
     setSelectedCollection(result);
   };
 
   const handleCollectionSearchClear = () => {
-    const newFilter = { ...filters };
+    const newFilter = { ...filter };
     newFilter.collections = [];
-    setFilters(newFilter);
+    setFilter(newFilter);
     setSelectedCollection(undefined);
   };
 

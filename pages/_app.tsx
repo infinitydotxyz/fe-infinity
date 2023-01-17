@@ -5,7 +5,7 @@ import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 import { memo, StrictMode, useEffect } from 'react';
 import { Layout } from 'src/components/astra/layout';
-import { OrderbookContextProvider } from 'src/utils/context/OrderbookContext';
+import { OrdersContextProvider } from 'src/utils/context/OrdersContext';
 import 'src/settings/tailwind/globals.scss';
 import { isLocalhost } from 'src/utils/commonUtils';
 import { AppContextProvider } from 'src/utils/context/AppContext';
@@ -32,9 +32,9 @@ const App = (props: AppProps) => {
     <StrictMode>
       <OnboardContextProvider>
         <AppContextProvider>
-          <OrderbookContextProvider>
+          <OrdersContextProvider>
             <AppBody {...props} />
-          </OrderbookContextProvider>
+          </OrdersContextProvider>
         </AppContextProvider>
       </OnboardContextProvider>
     </StrictMode>

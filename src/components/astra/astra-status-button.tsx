@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { useOrderbookContext } from '../../utils/context/OrderbookContext';
+import { useOrdersContext } from '../../utils/context/OrdersContext';
 import { ADropdown } from './astra-dropdown';
 
 export const AStatusFilterButton: React.FC = () => {
-  const { updateFilter } = useOrderbookContext();
+  const { updateFilter } = useOrdersContext();
   const [label, setLabel] = useState<string>('Status');
 
   return (

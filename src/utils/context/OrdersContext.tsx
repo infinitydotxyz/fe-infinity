@@ -16,7 +16,7 @@ import { OrderCache } from '../../components/orderbook/order-cache';
 import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import * as Queries from '@infinityxyz/lib-frontend/types/dto/orders/orders-queries.dto';
 
-export type OBFilters = {
+export type OrdersFilter = {
   sort?: string;
   /**
    * @deprecated No longer used in v3. Use `orderType` instead.
@@ -61,7 +61,7 @@ export const getSortLabel = (key?: string, defaultLabel?: string): string => {
 
 // ============================================================
 
-const getIsSellOrder = (orderTypes: OBFilters['orderTypes']) => {
+const getIsSellOrder = (orderTypes: OrdersFilter['orderTypes']) => {
   if (!orderTypes || orderTypes.length === 0) {
     return undefined;
   } else if (orderTypes.length === 1 && orderTypes.includes('Listing')) {
@@ -74,51 +74,51 @@ const getIsSellOrder = (orderTypes: OBFilters['orderTypes']) => {
   }
 };
 
-export const parseFiltersToApiQueryParams = (filters: OBFilters): GetOrderItemsQuery => {
+export const parseFiltersToApiQueryParams = (filter: OrdersFilter): GetOrderItemsQuery => {
   const parsedFilters: GetOrderItemsQuery = {};
 
-  Object.keys(filters).forEach((filter) => {
-    switch (filter) {
+  Object.keys(filter).forEach((filterVal) => {
+    switch (filterVal) {
       case 'sort':
-        if (filters.sort === SORT_FILTERS.lowestPrice) {
+        if (filter.sort === SORT_FILTERS.lowestPrice) {
           parsedFilters.orderBy = 'startPriceEth';
           parsedFilters.orderByDirection = 'asc';
         }
-        if (filters.sort === SORT_FILTERS.highestPrice) {
+        if (filter.sort === SORT_FILTERS.highestPrice) {
           parsedFilters.orderBy = 'startPriceEth';
           parsedFilters.orderByDirection = 'desc';
         }
-        if (filters.sort === SORT_FILTERS.mostRecent) {
+        if (filter.sort === SORT_FILTERS.mostRecent) {
           parsedFilters.orderBy = 'startTimeMs';
           parsedFilters.orderByDirection = 'desc';
         }
         break;
       case 'orderTypes':
-        if (filters?.orderTypes?.length) {
-          parsedFilters.isSellOrder = getIsSellOrder(filters?.orderTypes);
+        if (filter?.orderTypes?.length) {
+          parsedFilters.isSellOrder = getIsSellOrder(filter?.orderTypes);
         }
         break;
       case 'collections':
-        if (filters?.collections?.length) {
-          parsedFilters.collections = filters?.collections.map((collection) => {
+        if (filter?.collections?.length) {
+          parsedFilters.collections = filter?.collections.map((collection) => {
             const decoded = decodeURIComponent(collection);
             return decoded.split(':')[1];
           });
         }
         break;
       case 'minPrice':
-        if (filters?.minPrice) {
-          parsedFilters.minPrice = parseFloat(filters?.minPrice);
+        if (filter?.minPrice) {
+          parsedFilters.minPrice = parseFloat(filter?.minPrice);
         }
         break;
       case 'maxPrice':
-        if (filters?.maxPrice) {
-          parsedFilters.maxPrice = parseFloat(filters?.maxPrice);
+        if (filter?.maxPrice) {
+          parsedFilters.maxPrice = parseFloat(filter?.maxPrice);
         }
         break;
       case 'numberOfNfts':
-        if (filters?.numberOfNfts) {
-          parsedFilters.numItems = filters?.numberOfNfts;
+        if (filter?.numberOfNfts) {
+          parsedFilters.numItems = filter?.numberOfNfts;
         }
         break;
     }
@@ -127,7 +127,7 @@ export const parseFiltersToApiQueryParams = (filters: OBFilters): GetOrderItemsQ
   return parsedFilters;
 };
 
-const parseRouterQueryParamsToFilters = (query: ParsedUrlQuery): OBFilters => {
+const parseRouterQueryParamsToFilters = (query: ParsedUrlQuery): OrdersFilter => {
   const {
     collections: _collections,
     orderTypes: _orderTypes,
@@ -139,7 +139,7 @@ const parseRouterQueryParamsToFilters = (query: ParsedUrlQuery): OBFilters => {
     sort
   } = query;
 
-  const newFilters: OBFilters = {};
+  const newFilter: OrdersFilter = {};
 
   let collections: string[] = [];
   if (typeof _collections === 'string') {
@@ -160,47 +160,47 @@ const parseRouterQueryParamsToFilters = (query: ParsedUrlQuery): OBFilters => {
   }
 
   if (orderTypes.length > 0) {
-    newFilters.orderTypes = orderTypes;
+    newFilter.orderTypes = orderTypes;
   }
 
   if (collections.length > 0) {
-    newFilters.collections = collections;
+    newFilter.collections = collections;
   }
 
   if (minPrice) {
-    newFilters.minPrice = minPrice as string;
+    newFilter.minPrice = minPrice as string;
   }
 
   if (maxPrice) {
-    newFilters.maxPrice = maxPrice as string;
+    newFilter.maxPrice = maxPrice as string;
   }
 
   if (orderBy) {
-    newFilters.orderBy = orderBy as string;
+    newFilter.orderBy = orderBy as string;
   }
 
   if (numberOfNfts) {
-    newFilters.numberOfNfts = parseInt(numberOfNfts as string);
+    newFilter.numberOfNfts = parseInt(numberOfNfts as string);
   }
 
   if (sort) {
-    newFilters.sort = sort as string;
+    newFilter.sort = sort as string;
   }
 
-  newFilters.orderType = _orderType as 'listings' | 'offers-made' | 'offers-received' | '';
+  newFilter.orderType = _orderType as 'listings' | 'offers-made' | 'offers-received' | '';
 
-  return newFilters;
+  return newFilter;
 };
 
 // ============================================================
 
-type OBContextType = {
+type OrdersContextType = {
   orders: SignedOBOrder[];
   isLoading: boolean;
   fetchMore: () => void;
-  filters: OBFilters;
-  setFilters: React.Dispatch<React.SetStateAction<OBFilters>>;
-  clearFilters: (names: string[]) => Promise<boolean>;
+  filter: OrdersFilter;
+  setFilter: React.Dispatch<React.SetStateAction<OrdersFilter>>;
+  clearFilter: (names: string[]) => Promise<boolean>;
   updateFilterArray: (
     filterName: string,
     currentFitlers: string[],
@@ -214,7 +214,7 @@ type OBContextType = {
   isReady: boolean;
 };
 
-const OrderbookContext = React.createContext<OBContextType | null>(null);
+const OrdersContext = React.createContext<OrdersContextType | null>(null);
 
 const orderCache = new OrderCache();
 
@@ -248,15 +248,15 @@ interface ProfileProps extends BaseProps {
   };
 }
 
-export type OrderbookProviderProps = CollectionProps | TokenProps | ProfileProps;
+export type OrdersContextProviderProps = CollectionProps | TokenProps | ProfileProps;
 
-export const OrderbookContextProvider = ({ children, limit = ITEMS_PER_PAGE, ...props }: OrderbookProviderProps) => {
+export const OrdersContextProvider = ({ children, limit = ITEMS_PER_PAGE, ...props }: OrdersContextProviderProps) => {
   const router = useRouter();
   const { chainId } = useOnboardContext();
 
   const [isReady, setIsReady] = useState(false);
   const [orders, setOrders] = useState<SignedOBOrder[]>([]);
-  const [filters, setFilters] = useState<OBFilters>({});
+  const [filter, setFilter] = useState<OrdersFilter>({});
   const [isLoading, setIsLoading] = useState(false);
   const [hasMoreOrders, setHasMoreOrders] = useState<boolean>(false);
   const [hasNoData, setHasNoData] = useState<boolean>(false);
@@ -268,16 +268,16 @@ export const OrderbookContextProvider = ({ children, limit = ITEMS_PER_PAGE, ...
       setIsLoading(true);
       fetchOrders(true);
     }
-  }, [props.kind, props.context, filters, isReady]);
+  }, [props.kind, props.context, filter, isReady]);
 
   useEffect(() => {
     if (router.isReady) {
       setIsReady(true);
 
-      const newFilters = parseRouterQueryParamsToFilters(router.query);
+      const newFilter = parseRouterQueryParamsToFilters(router.query);
 
-      if (!isEqual(newFilters, filters)) {
-        setFilters(newFilters);
+      if (!isEqual(newFilter, filter)) {
+        setFilter(newFilter);
       }
     }
   }, [router.query]);
@@ -286,7 +286,7 @@ export const OrderbookContextProvider = ({ children, limit = ITEMS_PER_PAGE, ...
     fetchOrders();
   };
 
-  const clearFilters = (names: string[]): Promise<boolean> => {
+  const clearFilter = (names: string[]): Promise<boolean> => {
     const newQueryParams = { ...router.query };
 
     for (const name of names) {
@@ -314,7 +314,7 @@ export const OrderbookContextProvider = ({ children, limit = ITEMS_PER_PAGE, ...
 
   const updateFilter = (name: string, value: string): Promise<boolean> => {
     if (!value) {
-      return clearFilters([name]);
+      return clearFilter([name]);
     } else {
       return router.replace({ pathname: router.pathname, query: { ...router.query, [name]: value } });
     }
@@ -338,7 +338,7 @@ export const OrderbookContextProvider = ({ children, limit = ITEMS_PER_PAGE, ...
 
   const fetchOrders = async (refreshData = false) => {
     try {
-      const parsedFilters = parseFiltersToApiQueryParams(filters);
+      const parsedFilters = parseFiltersToApiQueryParams(filter);
 
       if (parsedFilters.collections && parsedFilters.collections.length > 1) {
         throw new Error('Multiple collections not yet supported');
@@ -534,13 +534,13 @@ export const OrderbookContextProvider = ({ children, limit = ITEMS_PER_PAGE, ...
     }
   };
 
-  const value: OBContextType = {
+  const value: OrdersContextType = {
     orders,
     isLoading,
     fetchMore,
-    filters,
-    setFilters,
-    clearFilters,
+    filter,
+    setFilter,
+    clearFilter,
     updateFilterArray,
     updateFilter,
     updateFilters,
@@ -549,9 +549,9 @@ export const OrderbookContextProvider = ({ children, limit = ITEMS_PER_PAGE, ...
     isReady
   };
 
-  return <OrderbookContext.Provider value={value}>{children}</OrderbookContext.Provider>;
+  return <OrdersContext.Provider value={value}>{children}</OrdersContext.Provider>;
 };
 
-export const useOrderbookContext = () => {
-  return React.useContext(OrderbookContext) as OBContextType;
+export const useOrdersContext = () => {
+  return React.useContext(OrdersContext) as OrdersContextType;
 };

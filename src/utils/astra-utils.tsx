@@ -3,9 +3,9 @@ import axios, { AxiosRequestHeaders } from 'axios';
 import { ApiResponse } from './apiUtils';
 import { OnboardAuthProvider } from './context/OnboardContext/OnboardAuthProvider';
 import { trimText } from 'src/components/common';
-import { OBFilters, SORT_FILTERS } from 'src/utils/context/OrderbookContext';
+import { OrdersFilter, SORT_FILTERS } from 'src/utils/context/OrdersContext';
 
-export type TokenFetcherOptions = { cursor?: string } & OBFilters;
+export type TokenFetcherOptions = { cursor?: string } & OrdersFilter;
 
 export const fetchCollectionTokens = async (
   collectionAddress: string,

@@ -19,7 +19,7 @@ import { OrderbookCharts } from 'src/components/orderbook/charts/orderbook-chart
 import { useScrollInfo } from 'src/hooks/useScrollHook';
 import { apiGet, nFormatter } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { useOrderbookContext } from 'src/utils/context/OrderbookContext';
+import { useOrdersContext } from 'src/utils/context/OrdersContext';
 
 interface CollectionDashboardProps {
   collection: BaseCollection;
@@ -41,7 +41,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     toggleNFTSelection: toggleSelection
   } = useAppContext();
   const { data, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection.address);
-  const { updateFilters } = useOrderbookContext();
+  const { updateFilters } = useOrdersContext();
   const { setRef, scrollTop } = useScrollInfo();
   const tabs = ['Items'];
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
