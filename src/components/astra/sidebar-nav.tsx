@@ -4,7 +4,7 @@ import { ProfileTabs } from 'pages/profile/[address]';
 import { BiGlobeAlt, BiWalletAlt } from 'react-icons/bi';
 import { HiOutlineTag } from 'react-icons/hi';
 import { MdDarkMode, MdLightMode } from 'react-icons/md';
-import { TbActivityHeartbeat, TbSend } from 'react-icons/tb';
+import { TbSend } from 'react-icons/tb';
 import { AButton, ARoundButton } from 'src/components/astra/astra-button';
 import { HelpToolTip, NextLink, Spacer, SVG } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
@@ -96,26 +96,6 @@ export const SidebarNav = () => {
                 iconButtonStyle,
                 hoverColorBrandText,
                 router.asPath.startsWith(`/profile`) && selectedProfileTab === ProfileTabs.Orders
-                  ? 'text-brand-primary'
-                  : 'text-gray-400'
-              )}
-            />
-          </AButton>
-        </HelpToolTip>
-
-        <HelpToolTip placement="right" content={<div className="whitespace-nowrap">Activity</div>}>
-          <AButton
-            highlighted={router.asPath.startsWith(`/profile`) && selectedProfileTab === ProfileTabs.Activity}
-            onClick={() => {
-              setSelectedProfileTab(ProfileTabs.Activity);
-              router.push(`/profile/${user?.address}`);
-            }}
-          >
-            <TbActivityHeartbeat
-              className={twMerge(
-                iconButtonStyle,
-                hoverColorBrandText,
-                router.asPath.startsWith(`/profile`) && selectedProfileTab === ProfileTabs.Activity
                   ? 'text-brand-primary'
                   : 'text-gray-400'
               )}

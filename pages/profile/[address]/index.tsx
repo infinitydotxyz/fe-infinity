@@ -1,6 +1,4 @@
 import { useRouter } from 'next/router';
-import { minEventTypes } from 'src/components/astra/astra-filter-popdown';
-import { ProfileActivityList } from 'src/components/profile/profile-activity-list';
 import { ProfileNFTs } from 'src/components/profile/profile-nfts';
 import { ProfileOrderList } from 'src/components/profile/profile-order-list';
 import { ProfilePageHeader } from 'src/components/profile/profile-page-header';
@@ -10,19 +8,13 @@ import { useAppContext } from 'src/utils/context/AppContext';
 export enum ProfileTabs {
   Items = 'Items',
   Orders = 'Orders',
-  Activity = 'Activity',
   Send = 'Send'
 }
 
 export default function ProfileItemsPage() {
   const { setRef, scrollTop } = useScrollInfo();
   const expanded = scrollTop < 100;
-  const tabs = [
-    ProfileTabs.Items.toString(),
-    ProfileTabs.Orders.toString(),
-    ProfileTabs.Activity.toString(),
-    ProfileTabs.Send.toString()
-  ];
+  const tabs = [ProfileTabs.Items.toString(), ProfileTabs.Orders.toString(), ProfileTabs.Send.toString()];
   const { selectedProfileTab, isOrderSelected, toggleOrderSelection } = useAppContext();
 
   const router = useRouter();
@@ -42,9 +34,6 @@ export default function ProfileItemsPage() {
             isOrderSelected={isOrderSelected}
             toggleOrderSelection={toggleOrderSelection}
           />
-        )}
-        {selectedProfileTab === 'Activity' && (
-          <ProfileActivityList types={minEventTypes} userAddress={addressFromPath} forUserActivity={true} />
         )}
         {selectedProfileTab === 'Send' && <ProfileNFTs userAddress={addressFromPath} />}
       </div>
