@@ -27,6 +27,9 @@ import {
 import { toastError } from 'src/components/common';
 import { DEFAULT_MAX_GAS_PRICE_WEI } from './constants';
 import { User } from './context/AppContext';
+import { keccak256 } from '@ethersproject/keccak256';
+import { keccak256 as solidityKeccak256 } from '@ethersproject/solidity';
+import { MerkleTree } from 'merkletreejs';
 
 export async function getSignedOBOrder(
   user: User,
@@ -256,7 +259,7 @@ export async function signOBOrder(
   signer: JsonRpcSigner
 ): Promise<ChainOBOrder | undefined> {
   const domain = {
-    name: 'InfinityComplication',
+    name: 'FlowComplication',
     version: '1',
     chainId: chainId,
     verifyingContract: order.execParams.complicationAddress || getOBComplicationAddress(chainId.toString())
@@ -290,6 +293,9 @@ export async function signOBOrder(
     order.nonce,
     order.maxGasPriceWei
   ];
+  if ('isTrustedExec' in order && order.isTrustedExec) {
+    constraints.push(1);
+  }
 
   const nfts: ChainNFTs[] = order.nfts.reduce((acc: ChainNFTs[], { collectionAddress, tokens }) => {
     let nft = acc.find(({ collection }) => collection === collectionAddress);
@@ -337,6 +343,184 @@ export async function signOBOrder(
   }
 }
 
+export async function bulkSignOBOrders(
+  chainId: BigNumberish,
+  obOrders: OBOrder[],
+  signer: JsonRpcSigner
+): Promise<ChainOBOrder[] | undefined> {
+  const domain = {
+    name: 'FlowComplication',
+    version: '1',
+    chainId: chainId,
+    verifyingContract: obOrders[0].execParams.complicationAddress || getOBComplicationAddress(chainId.toString())
+  };
+
+  const types = {
+    Order: [
+      { name: 'isSellOrder', type: 'bool' },
+      { name: 'signer', type: 'address' },
+      { name: 'constraints', type: 'uint256[]' },
+      { name: 'nfts', type: 'OrderItem[]' },
+      { name: 'execParams', type: 'address[]' },
+      { name: 'extraParams', type: 'bytes' }
+    ],
+    OrderItem: [
+      { name: 'collection', type: 'address' },
+      { name: 'tokens', type: 'TokenInfo[]' }
+    ],
+    TokenInfo: [
+      { name: 'tokenId', type: 'uint256' },
+      { name: 'numTokens', type: 'uint256' }
+    ]
+  };
+
+  const chainObOrders: ChainOBOrder[] = obOrders.map((order) => {
+    const constraints = [
+      order.numItems,
+      parseEther(String(order.startPriceEth)),
+      parseEther(String(order.endPriceEth)),
+      Math.floor(order.startTimeMs / 1000),
+      Math.floor(order.endTimeMs / 1000),
+      order.nonce,
+      order.maxGasPriceWei
+    ];
+    if ('isTrustedExec' in order && order.isTrustedExec) {
+      constraints.push(1);
+    }
+
+    const nfts: ChainNFTs[] = order.nfts.reduce((acc: ChainNFTs[], { collectionAddress, tokens }) => {
+      let nft = acc.find(({ collection }) => collection === collectionAddress);
+      if (!nft) {
+        nft = { collection: collectionAddress, tokens: [] };
+        acc.push(nft);
+      }
+      const chainTokens = [];
+      for (const token of tokens) {
+        chainTokens.push({
+          tokenId: token.tokenId,
+          numTokens: token.numTokens
+        });
+      }
+      nft.tokens.push(...chainTokens);
+      return acc;
+    }, [] as ChainNFTs[]);
+
+    // don't use ?? operator here
+    const execParams = [
+      order.execParams.complicationAddress || getOBComplicationAddress(chainId.toString()),
+      order.execParams.currencyAddress || getTxnCurrencyAddress(chainId.toString())
+    ];
+    // don't use ?? operator here
+    const extraParams = defaultAbiCoder.encode(['address'], [order.extraParams.buyer || NULL_ADDRESS]);
+
+    const orderToSign = {
+      isSellOrder: order.isSellOrder,
+      signer: order.makerAddress,
+      constraints: constraints.map((item) => item.toString()),
+      nfts,
+      execParams,
+      extraParams,
+      sig: ''
+    };
+    return orderToSign;
+  });
+
+  const { tree, root } = await getOrderTreeRoot(chainObOrders);
+  const sig = await signer._signTypedData(domain, types, { root });
+  const splitSig = splitSignature(sig ?? '');
+
+  // sign each order
+  for (let index = 0; index < chainObOrders.length; index++) {
+    const order = chainObOrders[index];
+    const hash = orderHash(order);
+    const merkleProof = tree.getHexProof(hash);
+    order.sig = defaultAbiCoder.encode(
+      ['bytes32', 'bytes32', 'uint8', 'bytes32[]'],
+      [splitSig.r, splitSig.s, splitSig.v, merkleProof]
+    );
+  }
+
+  return chainObOrders;
+}
+
+export async function getOrderTreeRoot(orders: ChainOBOrder[]) {
+  const leaves = await Promise.all(
+    orders.map((order) => {
+      return orderHash(order);
+    })
+  );
+  const tree = new MerkleTree(leaves, keccak256, { sort: true });
+  const root = tree.getHexRoot();
+  return { tree, root };
+}
+
+function orderHash(order: ChainOBOrder): string {
+  const fnSign =
+    'Order(bool isSellOrder,address signer,uint256[] constraints,OrderItem[] nfts,address[] execParams,bytes extraParams)OrderItem(address collection,TokenInfo[] tokens)TokenInfo(uint256 tokenId,uint256 numTokens)';
+  const orderTypeHash = solidityKeccak256(['string'], [fnSign]);
+
+  const constraints = order.constraints;
+  const execParams = order.execParams;
+  const extraParams = order.extraParams;
+
+  const typesArr = [];
+  for (let i = 0; i < constraints.length; i++) {
+    typesArr.push('uint256');
+  }
+  const constraintsHash = keccak256(defaultAbiCoder.encode(typesArr, constraints));
+
+  const orderItemsHash = nftsHash(order.nfts);
+  const execParamsHash = keccak256(defaultAbiCoder.encode(['address', 'address'], execParams));
+
+  const calcEncode = defaultAbiCoder.encode(
+    ['bytes32', 'bool', 'address', 'bytes32', 'bytes32', 'bytes32', 'bytes32'],
+    [
+      orderTypeHash,
+      order.isSellOrder,
+      order.signer,
+      constraintsHash,
+      orderItemsHash,
+      execParamsHash,
+      keccak256(extraParams)
+    ]
+  );
+
+  return keccak256(calcEncode);
+}
+
+function nftsHash(nfts: ChainNFTs[]): string {
+  const fnSign = 'OrderItem(address collection,TokenInfo[] tokens)TokenInfo(uint256 tokenId,uint256 numTokens)';
+  const typeHash = solidityKeccak256(['string'], [fnSign]);
+
+  const hashes: string[] = [];
+  for (const nft of nfts) {
+    const hash = keccak256(
+      defaultAbiCoder.encode(['bytes32', 'uint256', 'bytes32'], [typeHash, nft.collection, tokensHash(nft.tokens)])
+    );
+    hashes.push(hash);
+  }
+  const encodeTypeArray = hashes.map(() => 'bytes32');
+  const nftsHash = keccak256(defaultAbiCoder.encode(encodeTypeArray, hashes));
+
+  return nftsHash;
+}
+
+function tokensHash(tokens: ChainNFTs['tokens']): string {
+  const fnSign = 'TokenInfo(uint256 tokenId,uint256 numTokens)';
+  const typeHash = solidityKeccak256(['string'], [fnSign]);
+
+  const hashes: string[] = [];
+  for (const token of tokens) {
+    const hash = keccak256(
+      defaultAbiCoder.encode(['bytes32', 'uint256', 'uint256'], [typeHash, token.tokenId, token.numTokens])
+    );
+    hashes.push(hash);
+  }
+  const encodeTypeArray = hashes.map(() => 'bytes32');
+  const tokensHash = keccak256(defaultAbiCoder.encode(encodeTypeArray, hashes));
+  return tokensHash;
+}
+
 export const getCurrentChainOBOrderPrice = (order: ChainOBOrder): BigNumber => {
   const startPrice = BigNumber.from(order.constraints[1]);
   const endPrice = BigNumber.from(order.constraints[2]);
@@ -364,60 +548,6 @@ export const getCurrentChainOBOrderPrice = (order: ChainOBOrder): BigNumber => {
   }
   return currentPrice;
 };
-
-export async function signChainOBOrder(
-  chainId: BigNumberish,
-  contractAddress: string,
-  order: ChainOBOrder,
-  signer: JsonRpcSigner
-): Promise<string> {
-  const domain = {
-    name: 'InfinityExchange',
-    version: '1',
-    chainId: chainId,
-    verifyingContract: contractAddress
-  };
-
-  const types = {
-    Order: [
-      { name: 'isSellOrder', type: 'bool' },
-      { name: 'signer', type: 'address' },
-      { name: 'constraints', type: 'uint256[]' },
-      { name: 'nfts', type: 'OrderItem[]' },
-      { name: 'execParams', type: 'address[]' },
-      { name: 'extraParams', type: 'bytes' }
-    ],
-    OrderItem: [
-      { name: 'collection', type: 'address' },
-      { name: 'tokens', type: 'TokenInfo[]' }
-    ],
-    TokenInfo: [
-      { name: 'tokenId', type: 'uint256' },
-      { name: 'numTokens', type: 'uint256' }
-    ]
-  };
-
-  // remove sig
-  const orderToSign = {
-    isSellOrder: order.isSellOrder,
-    signer: order.signer,
-    constraints: order.constraints,
-    nfts: order.nfts,
-    execParams: order.execParams,
-    extraParams: order.extraParams
-  };
-
-  // sign order
-  try {
-    const sig = await signer._signTypedData(domain, types, orderToSign);
-    const splitSig = splitSignature(sig ?? '');
-    const encodedSig = defaultAbiCoder.encode(['bytes32', 'bytes32', 'uint8'], [splitSig.r, splitSig.s, splitSig.v]);
-    return encodedSig;
-  } catch (e) {
-    console.error('Error signing order', e);
-  }
-  return '';
-}
 
 export async function sendSingleNft(
   signer: JsonRpcSigner,
