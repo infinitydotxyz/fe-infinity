@@ -3,7 +3,7 @@ import { useOrdersContext } from '../../utils/context/OrdersContext';
 import { ADropdown } from './astra-dropdown';
 
 export const AStatusFilterButton: React.FC = () => {
-  const { updateFilter } = useOrdersContext();
+  const { updateFilters } = useOrdersContext();
   const [label, setLabel] = useState<string>('Status');
 
   return (
@@ -15,21 +15,21 @@ export const AStatusFilterButton: React.FC = () => {
           label: 'All items',
           onClick: () => {
             setLabel('All items');
-            updateFilter('orderType', '');
+            updateFilters([{ name: 'orderType', value: '' }]);
           }
         },
         {
           label: 'Has listings',
           onClick: () => {
             setLabel('Has listings');
-            updateFilter('orderType', 'listing');
+            updateFilters([{ name: 'orderType', value: 'listing' }]);
           }
         },
         {
           label: 'Has offers',
           onClick: () => {
             setLabel('Has offers');
-            updateFilter('orderType', 'offer');
+            updateFilters([{ name: 'orderType', value: 'offer' }]);
           }
         }
       ]}

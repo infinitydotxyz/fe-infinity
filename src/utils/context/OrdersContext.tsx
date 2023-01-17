@@ -18,7 +18,7 @@ import * as Queries from '@infinityxyz/lib-frontend/types/dto/orders/orders-quer
 
 export type OrdersFilter = {
   sort?: string;
-  orderType?: 'listings' | 'offers-made' | 'offers-received' | '';
+  orderType?: 'listings' | 'offers-made' | 'offers-received' | ''; // todo add 'listing' and 'offer'?
   collections?: string[];
   minPrice?: string;
   maxPrice?: string;
@@ -145,13 +145,6 @@ type OrdersContextType = {
   filter: OrdersFilter;
   setFilter: React.Dispatch<React.SetStateAction<OrdersFilter>>;
   clearFilter: (names: string[]) => Promise<boolean>;
-  updateFilterArray: (
-    filterName: string,
-    currentFitlers: string[],
-    selectionName: string,
-    checked: boolean
-  ) => Promise<boolean>;
-  updateFilter: (name: string, value: string) => Promise<boolean>;
   updateFilters: (params: { name: string; value: string }[]) => Promise<boolean>;
   hasMoreOrders: boolean;
   hasNoData: boolean;
@@ -238,30 +231,6 @@ export const OrdersContextProvider = ({ children, limit = ITEMS_PER_PAGE, ...pro
     }
 
     return router.replace({ pathname: router.pathname, query: { ...newQueryParams } });
-  };
-
-  const updateFilterArray = (
-    filterName: string,
-    currentFilters: string[],
-    selectionName: string,
-    checked: boolean
-  ): Promise<boolean> => {
-    let updatedSelections = [];
-    if (checked) {
-      updatedSelections = [...currentFilters, selectionName];
-    } else {
-      updatedSelections = currentFilters.filter((currentFilter) => currentFilter !== selectionName);
-    }
-
-    return router.replace({ pathname: router.pathname, query: { ...router.query, [filterName]: updatedSelections } });
-  };
-
-  const updateFilter = (name: string, value: string): Promise<boolean> => {
-    if (!value) {
-      return clearFilter([name]);
-    } else {
-      return router.replace({ pathname: router.pathname, query: { ...router.query, [name]: value } });
-    }
   };
 
   const updateFilters = (params: { name: string; value: string }[]): Promise<boolean> => {
@@ -485,8 +454,6 @@ export const OrdersContextProvider = ({ children, limit = ITEMS_PER_PAGE, ...pro
     filter,
     setFilter,
     clearFilter,
-    updateFilterArray,
-    updateFilter,
     updateFilters,
     hasMoreOrders,
     hasNoData,

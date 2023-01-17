@@ -8,7 +8,7 @@ interface Props {
 
 // There has to be a parent with OrderbookProvider to work.
 export const ASortButton = ({ className }: Props) => {
-  const { updateFilter, filter } = useOrdersContext();
+  const { updateFilters, filter } = useOrdersContext();
   const [label, setLabel] = useState<string>(getSortLabel(filter?.sort));
 
   useEffect(() => {
@@ -16,7 +16,7 @@ export const ASortButton = ({ className }: Props) => {
   }, [filter?.sort]);
 
   const onClickSort = (_label: string, sortOrder: string) => {
-    updateFilter('sort', sortOrder);
+    updateFilters([{ name: 'sort', value: sortOrder }]);
   };
 
   return (
