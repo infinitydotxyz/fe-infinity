@@ -10,7 +10,7 @@ import {
   toastError,
   toastSuccess
 } from 'src/components/common';
-import { DEFAULT_MAX_GAS_PRICE_WEI, extractErrorMsg, getEstimatedGasPrice, INFINITY_FEE_PCT } from 'src/utils';
+import { DEFAULT_MAX_GAS_PRICE_WEI, extractErrorMsg, getEstimatedGasPrice, FLOW_FEE_PCT } from 'src/utils';
 import { getSignedOBOrder } from 'src/utils/orders';
 import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { fetchOrderNonce, postOrdersV2 } from 'src/utils/orderbookUtils';
@@ -35,7 +35,7 @@ export const ListNFTModal = ({ isOpen, onClose, onDone, token }: Props) => {
   // const { options, onChange, selected } = useToggleTab(['Set Price'], 'Set Price');
 
   const tableItems: SimpleTableItem[] = [];
-  tableItems.push({ title: 'Fee', value: <div className="font-bold">{INFINITY_FEE_PCT}%</div> });
+  tableItems.push({ title: 'Fee', value: <div className="font-bold">{FLOW_FEE_PCT}%</div> });
   tableItems.push({ title: 'Royalty', value: <div className="font-bold">0%</div> });
 
   return (

@@ -107,8 +107,8 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     <Head>
       <meta property="og:title" content={collection.metadata?.name} />
       <meta property="og:type" content="website" />
-      <meta property="og:url" content={`https://infinity.xyz/collection/${collection?.slug}`} />
-      <meta property="og:site_name" content="infinity.xyz" />
+      <meta property="og:url" content={`https://flow.so/collection/${collection?.slug}`} />
+      <meta property="og:site_name" content="flow.so" />
       <meta property="og:image" content={collection.metadata?.bannerImage || collection.metadata?.profileImage} />
       <meta property="og:image:alt" content={collection.metadata?.description} />
       <meta property="og:description" content={collection.metadata?.description} />
@@ -116,7 +116,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
       <meta name="theme-color" content="#000000" />
 
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:site" content="@infinitydotxyz" />
+      <meta name="twitter:site" content="@flowdotso" />
       <meta name="twitter:title" content={collection.metadata?.name} />
       <meta name="twitter:description" content={collection.metadata?.description} />
       <meta name="twitter:image" content={collection.metadata?.bannerImage || collection.metadata?.profileImage} />

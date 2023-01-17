@@ -223,7 +223,7 @@ const MyRewards = () => {
 
       <RewardsSection
         title="Trading Rewards"
-        subTitle="Earn trading rewards for buying and selling NFTs on Infinity. Rewards are distributed once per week."
+        subTitle="Earn trading rewards for buying and selling NFTs on Flow. Rewards are distributed once per week."
         sideInfo={
           <div className={twMerge(bgColor, 'py-4 px-6 rounded-lg')}>
             <div className="flex flex-wrap">

@@ -3,15 +3,15 @@ import { getToken } from '@infinityxyz/lib-frontend/utils';
 import missingImage from 'src/images/missing-image.png';
 import newsImage from 'src/images/news.png';
 
-export const API_BASE = process.env.NEXT_API_BASE || 'https://sv.infinity.xyz';
-export const SITE_HOST = 'https://infinity.xyz';
+export const API_BASE = process.env.NEXT_API_BASE || 'https://sv.flow.so';
+export const SITE_HOST = 'https://flow.so';
 export const DISCORD_BOT_INVITE_URL =
   'https://discord.com/api/oauth2/authorize?client_id=956292440778743838&permissions=1024&scope=bot%20applications.commands';
 
 export const ETHERSCAN_BASE_URL = 'https://etherscan.io';
 
-export const INFINITY_FEE_PCT = 2.5;
-export const INFINITY_ROYALTY_PCT = 0;
+export const FLOW_FEE_PCT = 2.5;
+export const FLOW_ROYALTY_PCT = 0;
 
 // not sure why there are two of these.
 export const ITEMS_PER_PAGE = 30;

@@ -23,7 +23,7 @@ export const NextLink = ({ children, className = '', href, title }: Props) => {
   );
 };
 
-// use for external links (https://infinity.xyz)
+// use for external links (https://flow.so)
 export const ExternalLink = ({ children, className = '', target = '_blank', ...props }: Props) => {
   if (!props.href) {
     return <></>;
