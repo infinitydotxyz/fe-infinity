@@ -22,7 +22,6 @@ export type OrdersFilter = {
   collections?: string[];
   minPrice?: string;
   maxPrice?: string;
-  numberOfNfts?: number;
   traitTypes?: string[];
   traitValues?: string[];
   orderBy?: string;
@@ -92,11 +91,6 @@ export const parseFiltersToApiQueryParams = (filter: OrdersFilter): GetOrderItem
           parsedFilters.maxPrice = parseFloat(filter?.maxPrice);
         }
         break;
-      case 'numberOfNfts':
-        if (filter?.numberOfNfts) {
-          parsedFilters.numItems = filter?.numberOfNfts;
-        }
-        break;
     }
   });
 
@@ -104,7 +98,7 @@ export const parseFiltersToApiQueryParams = (filter: OrdersFilter): GetOrderItem
 };
 
 const parseRouterQueryParamsToFilters = (query: ParsedUrlQuery): OrdersFilter => {
-  const { collections: _collections, orderType: _orderType, minPrice, maxPrice, orderBy, numberOfNfts, sort } = query;
+  const { collections: _collections, orderType: _orderType, minPrice, maxPrice, orderBy, sort } = query;
 
   const newFilter: OrdersFilter = {};
 
@@ -131,10 +125,6 @@ const parseRouterQueryParamsToFilters = (query: ParsedUrlQuery): OrdersFilter =>
 
   if (orderBy) {
     newFilter.orderBy = orderBy as string;
-  }
-
-  if (numberOfNfts) {
-    newFilter.numberOfNfts = parseInt(numberOfNfts as string);
   }
 
   if (sort) {
