@@ -7,14 +7,14 @@ import { useAppContext } from 'src/utils/context/AppContext';
 
 export enum ProfileTabs {
   Items = 'Items',
-  Orders = 'Orders',
-  Send = 'Send'
+  Orders = 'Orders'
+  // Send = 'Send'
 }
 
 export default function ProfileItemsPage() {
   const { setRef, scrollTop } = useScrollInfo();
   const expanded = scrollTop < 100;
-  const tabs = [ProfileTabs.Items.toString(), ProfileTabs.Orders.toString(), ProfileTabs.Send.toString()];
+  const tabs = [ProfileTabs.Items.toString(), ProfileTabs.Orders.toString()];
   const { selectedProfileTab, isOrderSelected, toggleOrderSelection } = useAppContext();
 
   const router = useRouter();

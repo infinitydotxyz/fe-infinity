@@ -4,7 +4,6 @@ import { ProfileTabs } from 'pages/profile/[address]';
 import { BiGlobeAlt, BiWalletAlt } from 'react-icons/bi';
 import { HiOutlineTag } from 'react-icons/hi';
 import { MdDarkMode, MdLightMode } from 'react-icons/md';
-import { TbSend } from 'react-icons/tb';
 import { AButton, ARoundButton } from 'src/components/astra/astra-button';
 import { HelpToolTip, NextLink, Spacer, SVG } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
@@ -103,7 +102,7 @@ export const SidebarNav = () => {
           </AButton>
         </HelpToolTip>
 
-        <HelpToolTip placement="right" content={<div className="whitespace-nowrap">Send</div>}>
+        {/* <HelpToolTip placement="right" content={<div className="whitespace-nowrap">Send</div>}>
           <AButton
             highlighted={router.asPath.startsWith(`/profile`) && selectedProfileTab === ProfileTabs.Send}
             onClick={() => {
@@ -121,7 +120,7 @@ export const SidebarNav = () => {
               )}
             />
           </AButton>
-        </HelpToolTip>
+        </HelpToolTip> */}
       </div>
 
       <Spacer />
