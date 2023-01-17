@@ -1,13 +1,10 @@
 import { CollectionAttributes, Erc721Token, Token } from '@infinityxyz/lib-frontend/types/core';
-import { useState } from 'react';
-import { ActivityList } from 'src/components/asset';
-import { OrderbookContainer } from 'src/components/orderbook/list';
 import { ellipsisAddress, getChainScannerBase, useFetch } from 'src/utils';
 import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { dropShadow } from 'src/utils/ui-constants';
 import { useSWRConfig } from 'swr';
 import { twMerge } from 'tailwind-merge';
-import { BlueCheck, EZImage, Modal, NextLink, ReadMoreText, ShortAddress, ToggleTab } from '../../common';
+import { BlueCheck, EZImage, Modal, NextLink, ReadMoreText, ShortAddress } from '../../common';
 import { ATraitList } from '../astra-trait-list';
 import { ErrorOrLoading } from '../error-or-loading';
 import { BasicTokenInfo } from '../types';
@@ -38,10 +35,7 @@ const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string)
 };
 
 export const TokenCardModal = ({ data, modalOpen, setModalOpen }: Props): JSX.Element | null => {
-  const options = ['Activity', 'Orders'];
-  const DEFAULT_TAB = 'Activity';
   const { token, error, collectionAttributes } = useFetchAssetInfo(data.chainId, data.collectionAddress, data.tokenId);
-  const [selected, setSelected] = useState(DEFAULT_TAB);
   const { chainId } = useOnboardContext();
 
   if (error) {
@@ -94,33 +88,6 @@ export const TokenCardModal = ({ data, modalOpen, setModalOpen }: Props): JSX.El
                   </div>
                 </>
               )}
-
-              <div className="min-h-[50vh] mt-10">
-                <ToggleTab
-                  className="flex space-x-2 items-center relative max-w-xl font-heading text-sm"
-                  options={options}
-                  defaultOption={DEFAULT_TAB}
-                  onChange={setSelected}
-                />
-
-                {selected === 'Activity' && (
-                  <ActivityList
-                    chainId={token?.chainId ?? '1'} // default
-                    collectionAddress={token?.collectionAddress ?? ''}
-                    token={token}
-                  />
-                )}
-
-                {selected === 'Orders' && (
-                  <div className="">
-                    <OrderbookContainer
-                      collectionId={token?.collectionAddress}
-                      tokenId={token?.tokenId}
-                      canShowAssetModal={false}
-                    />
-                  </div>
-                )}
-              </div>
             </div>
           </div>
         </div>
