@@ -43,7 +43,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   const { data, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection.address);
   const { setFilter } = useOrdersContext();
   const { setRef, scrollTop } = useScrollInfo();
-  const tabs = ['Items'];
+  const tabs = ['Items', 'Orders'];
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
 
   const setMinPrice = (value: string) => {
