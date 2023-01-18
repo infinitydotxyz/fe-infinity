@@ -1,5 +1,6 @@
 import { Menu } from '@headlessui/react';
 import { useState } from 'react';
+import { OrderBy, TokensFilter } from 'src/utils/types';
 import { brandTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { TextInputBox } from '../common';
@@ -7,12 +8,11 @@ import { AOutlineButton } from './astra-button';
 import { ACustomMenuButton, ACustomMenuContents, ACustomMenuItems, ADropdownButton } from './astra-dropdown';
 
 interface Props {
-  setMinPrice: (value: string) => void;
-  setMaxPrice: (value: string) => void;
-  onClear: () => void;
+  filter: TokensFilter;
+  setFilter: (filter: TokensFilter) => void;
 }
 
-export const APriceFilter = ({ setMinPrice, setMaxPrice, onClear }: Props) => {
+export const APriceFilter = ({ filter, setFilter }: Props) => {
   const [minPriceVal, setMinPriceVal] = useState('');
   const [maxPriceVal, setMaxPriceVal] = useState('');
 
@@ -39,7 +39,10 @@ export const APriceFilter = ({ setMinPrice, setMaxPrice, onClear }: Props) => {
                 value={minPriceVal}
                 onChange={(value) => {
                   setMinPriceVal(value);
-                  setMinPrice(value);
+                  const newFilter: TokensFilter = {};
+                  newFilter.minPrice = value;
+                  newFilter.orderBy = OrderBy.Price;
+                  setFilter({ ...filter, ...newFilter });
                 }}
               />
               <TextInputBox
@@ -51,7 +54,10 @@ export const APriceFilter = ({ setMinPrice, setMaxPrice, onClear }: Props) => {
                 value={maxPriceVal}
                 onChange={(value) => {
                   setMaxPriceVal(value);
-                  setMaxPrice(value);
+                  const newFilter: TokensFilter = {};
+                  newFilter.minPrice = value;
+                  newFilter.orderBy = OrderBy.Price;
+                  setFilter({ ...filter, ...newFilter });
                 }}
               />
             </div>
@@ -59,7 +65,10 @@ export const APriceFilter = ({ setMinPrice, setMaxPrice, onClear }: Props) => {
               onClick={() => {
                 setMinPriceVal('');
                 setMaxPriceVal('');
-                onClear();
+                const newFilter: TokensFilter = {};
+                newFilter.minPrice = '';
+                newFilter.maxPrice = '';
+                setFilter({ ...filter, ...newFilter });
               }}
               className={twMerge('mt-4 ml-1 text-sm', brandTextColor)}
             >

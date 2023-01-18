@@ -3,24 +3,23 @@ import { CollectionStatsDto } from '@infinityxyz/lib-frontend/types/dto';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import NotFound404Page from 'pages/not-found-404';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { APriceFilter } from 'src/components/astra/astra-price-filter';
 import { ASortButton } from 'src/components/astra/astra-sort-button';
 import { AStatusFilterButton } from 'src/components/astra/astra-status-button';
 import { ATraitFilter } from 'src/components/astra/astra-trait-filter';
 import { TokenGrid } from 'src/components/astra/token-grid/token-grid';
-import { useCollectionTokenFetcher } from 'src/components/astra/useFetcher';
 import { CollectionPageHeader, CollectionPageHeaderProps } from 'src/components/collection/collection-page-header';
 import { Spacer } from 'src/components/common';
 import { CollectionNftSearchInput } from 'src/components/common/search/collection-nft-search-input';
 import { TopHolderList } from 'src/components/feed/top-holder-list';
 import { TwitterSupporterList } from 'src/components/feed/twitter-supporter-list';
 import { OrderbookCharts } from 'src/components/orderbook/charts/orderbook-charts';
+import { useCollectionTokenFetcher } from 'src/hooks/api/useTokenFetcher';
 import { useScrollInfo } from 'src/hooks/useScrollHook';
 import { apiGet, nFormatter } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { useOrdersContext } from 'src/utils/context/OrdersContext';
-import { OrdersFilter } from 'src/utils/types';
+import { TokensFilter } from 'src/utils/types';
 
 interface CollectionDashboardProps {
   collection: BaseCollection;
@@ -41,30 +40,15 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     listMode,
     toggleNFTSelection: toggleSelection
   } = useAppContext();
-  const { data, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection.address);
-  const { setFilter } = useOrdersContext();
+  const [filter, setFilter] = useState<TokensFilter>({});
+  const { data, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection.address, filter);
   const { setRef, scrollTop } = useScrollInfo();
   const tabs = ['Items', 'Orders'];
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
 
-  const setMinPrice = (value: string) => {
-    const newFilter: OrdersFilter = {};
-    newFilter.minPrice = value;
-    setFilter((state) => ({ ...state, ...newFilter }));
-  };
-
-  const setMaxPrice = (value: string) => {
-    const newFilter: OrdersFilter = {};
-    newFilter.maxPrice = value;
-    setFilter((state) => ({ ...state, ...newFilter }));
-  };
-
-  const onPricesClear = () => {
-    const newFilter: OrdersFilter = {};
-    newFilter.minPrice = '';
-    newFilter.maxPrice = '';
-    setFilter((state) => ({ ...state, ...newFilter }));
-  };
+  useEffect(() => {
+    // fetchOrders(true);
+  }, [filter]);
 
   const onTabChange = (tab: string) => {
     setSelectedTab(tab);
@@ -144,10 +128,10 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                 </div>
                 <Spacer />
                 <div className="flex space-x-2">
-                  <ASortButton />
-                  <AStatusFilterButton />
-                  <APriceFilter onClear={onPricesClear} setMinPrice={setMinPrice} setMaxPrice={setMaxPrice} />
-                  <ATraitFilter collectionAddress={collection.address} />
+                  <ASortButton filter={filter} setFilter={setFilter} />
+                  <AStatusFilterButton filter={filter} setFilter={setFilter} />
+                  <APriceFilter filter={filter} setFilter={setFilter} />
+                  <ATraitFilter collectionAddress={collection.address} filter={filter} setFilter={setFilter} />
                 </div>
               </div>
 

@@ -4,17 +4,17 @@ import { useRouter } from 'next/router';
 import { useFetch } from 'src/utils';
 import CollectionTraits from '../collection/collection-traits';
 import { Spinner } from '../common';
-import { useOrdersContext } from '../../utils/context/OrdersContext';
-import { OrdersFilter } from 'src/utils/types';
+import { TokensFilter } from 'src/utils/types';
 import { AOutlineButton } from './astra-button';
 import { ACustomMenuButton, ACustomMenuContents, ACustomMenuItems, ADropdownButton } from './astra-dropdown';
 
 interface Props {
   collectionAddress: string;
+  filter: TokensFilter;
+  setFilter: (filter: TokensFilter) => void;
 }
 
-export const ATraitFilter = ({ collectionAddress }: Props) => {
-  const { setFilter } = useOrdersContext();
+export const ATraitFilter = ({ collectionAddress, filter, setFilter }: Props) => {
   const {
     query: { name }
   } = useRouter();
@@ -45,20 +45,8 @@ export const ATraitFilter = ({ collectionAddress }: Props) => {
                 <CollectionTraits
                   traits={collectionAttributes}
                   collectionAddress={collectionAddress}
-                  onChange={(traitTypes, traitValues) => {
-                    const newFilter: OrdersFilter = {};
-                    newFilter.traitTypes = traitTypes;
-                    newFilter.traitValues = traitValues;
-                    newFilter.orderBy = 'tokenIdNumeric';
-                    setFilter((state) => ({ ...state, ...newFilter }));
-                  }}
-                  onClearAll={() => {
-                    const newFilter: OrdersFilter = {};
-                    newFilter.traitTypes = [];
-                    newFilter.traitValues = [];
-                    newFilter.orderBy = 'tokenIdNumeric';
-                    setFilter((state) => ({ ...state, ...newFilter }));
-                  }}
+                  filter={filter}
+                  setFilter={setFilter}
                 />
               </div>
             )}

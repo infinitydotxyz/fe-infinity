@@ -1,6 +1,7 @@
 import { CollectionAttributes } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { AiOutlineSearch } from 'react-icons/ai';
+import { TokensFilter } from 'src/utils/types';
 import {
   bgColor,
   borderColor,
@@ -13,7 +14,6 @@ import {
 import { twMerge } from 'tailwind-merge';
 import { Checkbox, TextInputBox } from '../common';
 import { ADisclosure, DisclosureData } from '../common/disclosure';
-import { useOrdersContext } from '../../utils/context/OrdersContext';
 
 type ValueMapItem = {
   [k: string]: boolean;
@@ -26,12 +26,11 @@ type TypeValueMap = {
 interface Props {
   traits: CollectionAttributes;
   collectionAddress?: string;
-  onChange: (traitTypes: string[], traitValues: string[]) => void;
-  onClearAll: () => void;
+  filter: TokensFilter;
+  setFilter: (filter: TokensFilter) => void;
 }
 
-const CollectionTraits = ({ traits, onChange, onClearAll }: Props) => {
-  const { filter: filters } = useOrdersContext();
+const CollectionTraits = ({ traits, filter, setFilter }: Props) => {
   const [typeValueMap, setTypeValueMap] = useState<TypeValueMap>({});
   const [selectedTraitType, setSelectedTraitType] = useState<string>('All');
   const [disclosureData, setDisclosureData] = useState<DisclosureData[]>([]);
@@ -53,8 +52,8 @@ const CollectionTraits = ({ traits, onChange, onClearAll }: Props) => {
 
   useEffect(() => {
     // when filterState changed (somewhere else) => parse it and set to TypeValueMap for checkboxes' states
-    const traitTypes = filters?.traitTypes || [];
-    const traitValues = filters?.traitValues || [];
+    const traitTypes = filter.traitTypes || [];
+    const traitValues = filter.traitValues || [];
     const map: TypeValueMap = {};
     for (let i = 0; i < traitTypes.length; i++) {
       const type = traitTypes[i];
@@ -71,7 +70,7 @@ const CollectionTraits = ({ traits, onChange, onClearAll }: Props) => {
       }
     }
     setTypeValueMap(map);
-  }, [filters]);
+  }, [filter]);
 
   useEffect(() => {
     if (selectedTraitType === 'All') {
@@ -114,7 +113,12 @@ const CollectionTraits = ({ traits, onChange, onClearAll }: Props) => {
                       traitValues.push(values.join('|'));
                     }
                   }
-                  onChange(traitTypes, traitValues);
+                  // update filter
+                  const newFilter: TokensFilter = {};
+                  newFilter.traitTypes = traitTypes;
+                  newFilter.traitValues = traitValues;
+                  newFilter.orderBy = 'tokenIdNumeric';
+                  setFilter({ ...filter, ...newFilter });
                 }}
               />
               <div>
@@ -176,8 +180,13 @@ const CollectionTraits = ({ traits, onChange, onClearAll }: Props) => {
       <div
         className={twMerge('float-left px-4 py-3 cursor-pointer text-sm', brandTextColor)}
         onClick={() => {
-          onClearAll();
           setTypeValueMap({});
+
+          const newFilter: TokensFilter = {};
+          newFilter.traitTypes = [];
+          newFilter.traitValues = [];
+          newFilter.orderBy = 'tokenIdNumeric';
+          setFilter({ ...filter, ...newFilter });
         }}
       >
         Clear

@@ -1,5 +1,27 @@
 import { ERC721CardData, Erc721Collection } from '@infinityxyz/lib-frontend/types/core';
 
+export enum OrderBy {
+  Price = 'price',
+  StartTime = 'startTime',
+  EndTime = 'endTime'
+}
+
+export const SORT_FILTERS = {
+  highestPrice: 'highestPrice',
+  lowestPrice: 'lowestPrice',
+  mostRecent: 'mostRecent',
+  tokenIdNumeric: 'tokenIdNumeric'
+};
+
+export const SORT_LABELS: {
+  [key: string]: string;
+} = {
+  [SORT_FILTERS.highestPrice]: 'Highest Price',
+  [SORT_FILTERS.lowestPrice]: 'Lowest Price',
+  [SORT_FILTERS.mostRecent]: 'Most Recent',
+  [SORT_FILTERS.tokenIdNumeric]: 'Token ID'
+};
+
 export enum ORDER_EXPIRY_TIME {
   HOUR = '1h',
   DAY = '1d',
@@ -24,13 +46,24 @@ export interface BasicTokenInfo {
   tokenId: string;
 }
 
-export type OrdersFilter = {
+export type TokensFilter = {
   sort?: string;
-  orderType?: 'listings' | 'offers-made' | 'offers-received' | 'listing' | 'offer' | ''; // todo add 'listing' and 'offer'?
+  orderType?: 'listings' | 'offers-made' | 'offers-received' | 'listing' | 'offer' | '';
   collections?: string[];
   minPrice?: string;
   maxPrice?: string;
   traitTypes?: string[];
   traitValues?: string[];
   orderBy?: string;
+};
+
+export const getSortLabel = (key?: string, defaultLabel?: string): string => {
+  let result = '';
+
+  if (key) {
+    result = SORT_LABELS[key];
+  }
+
+  // default if blank
+  return result || defaultLabel || SORT_LABELS[SORT_FILTERS.tokenIdNumeric];
 };

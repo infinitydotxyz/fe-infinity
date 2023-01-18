@@ -4,43 +4,45 @@ import { useIsMounted } from 'src/hooks/useIsMounted';
 import { ApiResponse } from 'src/utils';
 import { fetchCollectionTokens, fetchProfileTokens } from 'src/utils/astra-utils';
 import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
-import { useOrdersContext } from '../../utils/context/OrdersContext';
-import { OrdersFilter, Erc721TokenOffer } from 'src/utils/types';
+import { Erc721TokenOffer, TokensFilter } from 'src/utils/types';
 
 type ApiNftData = Erc721Token & {
   orderSnippet?: OrdersSnippet;
 };
 
-export function useCollectionTokenFetcher(collectionAddress: string | undefined) {
+export function useCollectionTokenFetcher(collectionAddress: string | undefined, filter: TokensFilter) {
   const { chainId } = useOnboardContext();
 
   return useTokenFetcher<ApiNftData, Erc721TokenOffer>({
     fetcher: (cursor, filters) => fetchCollectionTokens(collectionAddress || '', chainId, { cursor, ...filters }),
     mapper: (data) => nftsToCardDataWithOfferFields(data, '', ''),
-    execute: collectionAddress !== ''
+    execute: collectionAddress !== '',
+    filter
   });
 }
 
-export function useProfileTokenFetcher(userAddress: string | undefined) {
+export function useProfileTokenFetcher(userAddress: string | undefined, filter: TokensFilter) {
   const { chainId } = useOnboardContext();
 
   return useTokenFetcher<ApiNftData, Erc721TokenOffer>({
     fetcher: (cursor, filters) => fetchProfileTokens(userAddress || '', chainId, { cursor, ...filters }),
     mapper: (data) => nftsToCardDataWithOfferFields(data, '', ''),
-    execute: userAddress !== ''
+    execute: userAddress !== '',
+    filter
   });
 }
 
-export function useTokenFetcher<From, To>({
+function useTokenFetcher<From, To>({
   fetcher,
   mapper,
-  execute
+  execute,
+  filter
 }: {
-  fetcher: (cursor: string, filters: OrdersFilter) => Promise<ApiResponse>;
+  fetcher: (cursor: string, filters: TokensFilter) => Promise<ApiResponse>;
   mapper: (data: From[]) => To[];
   execute: boolean;
+  filter: TokensFilter;
 }) {
-  const { filter } = useOrdersContext();
   const isMounted = useIsMounted();
   const [error, setError] = useState<string>();
   const [cursor, setCursor] = useState('');
@@ -48,23 +50,7 @@ export function useTokenFetcher<From, To>({
   const [hasNextPage, setHasNextPage] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const reset = () => {
-    setCursor('');
-    setData([]);
-  };
-
   const refetch = () => fetch(false);
-
-  // reset whenever these filters change
-  useEffect(reset, [
-    filter.sort,
-    filter.orderType,
-    filter.minPrice,
-    filter.maxPrice,
-    filter.traitTypes,
-    filter.traitValues,
-    filter.collections
-  ]);
 
   // refetch whenever 'reset' finished updating the state (also fired on mount)
   useEffect(() => {

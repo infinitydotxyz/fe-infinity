@@ -1,10 +1,13 @@
 import { useState } from 'react';
-import { useOrdersContext } from '../../utils/context/OrdersContext';
-import { OrdersFilter } from 'src/utils/types';
+import { TokensFilter } from 'src/utils/types';
 import { ADropdown } from './astra-dropdown';
 
-export const AStatusFilterButton: React.FC = () => {
-  const { setFilter } = useOrdersContext();
+interface Props {
+  filter: TokensFilter;
+  setFilter: (filter: TokensFilter) => void;
+}
+
+export const AStatusFilterButton = ({ filter, setFilter }: Props) => {
   const [label, setLabel] = useState<string>('Status');
 
   return (
@@ -16,27 +19,27 @@ export const AStatusFilterButton: React.FC = () => {
           label: 'All items',
           onClick: () => {
             setLabel('All items');
-            const newFilter: OrdersFilter = {};
+            const newFilter: TokensFilter = {};
             newFilter.orderType = '';
-            setFilter((state) => ({ ...state, ...newFilter }));
+            setFilter({ ...filter, ...newFilter });
           }
         },
         {
           label: 'Has listings',
           onClick: () => {
             setLabel('Has listings');
-            const newFilter: OrdersFilter = {};
+            const newFilter: TokensFilter = {};
             newFilter.orderType = 'listing';
-            setFilter((state) => ({ ...state, ...newFilter }));
+            setFilter({ ...filter, ...newFilter });
           }
         },
         {
           label: 'Has offers',
           onClick: () => {
             setLabel('Has offers');
-            const newFilter: OrdersFilter = {};
+            const newFilter: TokensFilter = {};
             newFilter.orderType = 'offer';
-            setFilter((state) => ({ ...state, ...newFilter }));
+            setFilter({ ...filter, ...newFilter });
           }
         }
       ]}

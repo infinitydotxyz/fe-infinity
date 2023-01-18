@@ -2,13 +2,13 @@ import { CollectionSearchDto } from '@infinityxyz/lib-frontend/types/dto';
 import { useState } from 'react';
 import { MdClose } from 'react-icons/md';
 import { TokenGrid } from 'src/components/astra/token-grid/token-grid';
-import { useProfileTokenFetcher } from 'src/components/astra/useFetcher';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { borderColor, hoverColorBrandText } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { EZImage } from '../common';
 import { CollectionSearchInput } from '../common/search/collection-search-input';
-import { useOrdersContext } from '../../utils/context/OrdersContext';
+import { useProfileTokenFetcher } from 'src/hooks/api/useTokenFetcher';
+import { TokensFilter } from 'src/utils/types';
 
 interface Props {
   userAddress: string;
@@ -16,9 +16,9 @@ interface Props {
 
 export const ProfileNFTs = ({ userAddress }: Props) => {
   const [selectedCollection, setSelectedCollection] = useState<CollectionSearchDto>();
-  const { filter, setFilter } = useOrdersContext();
+  const [filter, setFilter] = useState<TokensFilter>({});
   const { isNFTSelected, isNFTSelectable, listMode, toggleNFTSelection } = useAppContext();
-  const { data, error, hasNextPage, isLoading, fetch } = useProfileTokenFetcher(userAddress);
+  const { data, error, hasNextPage, isLoading, fetch } = useProfileTokenFetcher(userAddress, filter);
 
   const handleCollectionSearchResult = (result: CollectionSearchDto) => {
     const newFilter = { ...filter };

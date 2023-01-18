@@ -1,8 +1,8 @@
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { Spinner } from 'src/components/common';
-import { useOrdersContext } from 'src/utils/context/OrdersContext';
-import { OrdersFilter } from 'src/utils/types';
+import { useCollectionOrderFetcher } from 'src/hooks/api/useOrderFetcher';
+import { TokensFilter } from 'src/utils/types';
 import { secondaryTextColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { BarChartType, OrderData, ResponsiveBarChart } from './bar-chart';
@@ -16,7 +16,6 @@ export type OrderBookChartProps = {
 };
 
 export const OrderbookCharts = ({ className = '' }: OrderBookChartProps) => {
-  const { orders, isLoading, setFilter } = useOrdersContext();
   const [salesData, setSalesData] = useState<SaleData[]>([]);
   const [ordersData, setOrdersData] = useState<OrderData[]>([]);
   const [selectedListings, setSelectedListings] = useState<SignedOBOrder[]>([]);
@@ -24,12 +23,14 @@ export const OrderbookCharts = ({ className = '' }: OrderBookChartProps) => {
   const [selectedListingIndex, setSelectedListingIndex] = useState(0);
   const [selectedOfferIndex, setSelectedOfferIndex] = useState(0);
   const [selectedTimeBucket, setSelectedTimeBucket] = useState(TimeBuckets.ONE_WEEK.toString());
+  const [filter, setFilter] = useState<TokensFilter>({});
+  const { orders, isLoading } = useCollectionOrderFetcher(100, filter, ''); // todo: use real data
 
   const fetchOrdersDataForPriceRange = (minPrice: string, maxPrice: string) => {
-    const newFilter: OrdersFilter = {};
+    const newFilter: TokensFilter = {};
     newFilter.minPrice = minPrice;
     newFilter.maxPrice = maxPrice;
-    setFilter((state) => ({ ...state, ...newFilter }));
+    setFilter({ ...filter, ...newFilter });
   };
 
   const displayListingDetails = (orders: SignedOBOrder[], index: number) => {

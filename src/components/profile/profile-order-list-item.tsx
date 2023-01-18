@@ -2,18 +2,18 @@ import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { useState } from 'react';
 import { Button, EthPrice } from 'src/components/common';
 import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
+import { TokensFilter } from 'src/utils/types';
 import { secondaryTextColor, standardBorderCard } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
 import { ALowerPriceModal } from '../astra/modals/astra-lower-price-modal';
 import { OrderbookItem } from '../orderbook/list/orderbook-item';
-import { OrderDetailModal } from '../orderbook/OrderDetailModal';
-import { ProfileOrderFilter } from './profile-order-list';
+import { OrderDetailModal } from '../orderbook/order-detail-modal';
 
 interface Props {
   order: SignedOBOrder;
   selected?: boolean;
-  orderType: ProfileOrderFilter['orderType'];
+  orderType: TokensFilter['orderType'];
   onClickActionBtn: (order: SignedOBOrder) => void;
 }
 
