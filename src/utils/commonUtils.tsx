@@ -8,6 +8,7 @@ import {
   trimLowerCase
 } from '@infinityxyz/lib-frontend/utils';
 import ethers from 'ethers';
+import { ProfileTabs } from 'pages/profile/[address]';
 import { normalize } from 'path';
 import { ReactNode } from 'react';
 import { ORDER_EXPIRY_TIME } from 'src/components/astra/types';
@@ -74,23 +75,23 @@ export enum CART_TYPE {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const getCartType = (url: string): CART_TYPE => {
-  const isTrending = url.includes('trending');
-  const isCollection = url.includes('collection');
-  const isProfile = url.includes('profile');
-  const isItems = url.includes('items');
-  const isSend = url.includes('send');
-  const isOrders = url.includes('orders');
-  const isBuyCart = (isCollection && isItems) || isTrending;
-  const isSellCart = isProfile && isItems;
-  const isSendCart = isProfile && isSend;
-  const isCancelCart = isProfile && isOrders;
+export const getCartType = (path: string, selectedProfileTab: string): CART_TYPE => {
+  const isTrending = path.includes('trending');
+  const isCollection = path.includes('collection');
+  const isProfile = path.includes('profile');
+  const isProfileItems = selectedProfileTab === ProfileTabs.Items.toString();
+  // const isProfileSend = selectedProfileTab === ProfileTabs.Send.toString(); todo: uncomment when send is implemented
+  const isProfileOrders = selectedProfileTab === ProfileTabs.Orders.toString();
+  const isBuyCart = isCollection || isTrending;
+  const isSellCart = isProfile && isProfileItems;
+  // const isSendCart = isProfile && isProfileSend;
+  const isCancelCart = isProfile && isProfileOrders;
   if (isBuyCart) {
     return CART_TYPE.BUY;
   } else if (isSellCart) {
     return CART_TYPE.SELL;
-  } else if (isSendCart) {
-    return CART_TYPE.SEND;
+    // } else if (isSendCart) {
+    //   return CART_TYPE.SEND;
   } else if (isCancelCart) {
     return CART_TYPE.CANCEL;
   }

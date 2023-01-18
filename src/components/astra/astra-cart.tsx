@@ -1,10 +1,12 @@
 import { getAddress } from '@ethersproject/address';
-import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { useRouter } from 'next/router';
 import { ReactNode, useEffect, useState } from 'react';
 import { MdClose } from 'react-icons/md';
 import { AButton } from 'src/components/astra/astra-button';
 import { EZImage, TextInputBox } from 'src/components/common';
 import { CART_TYPE, getCartType, getCollectionKeyId, getDefaultOrderExpiryTime, getTokenKeyId } from 'src/utils';
+import { useAppContext } from 'src/utils/context/AppContext';
 import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import {
   borderColor,
@@ -47,10 +49,18 @@ export const AstraCart = ({
   const [cartTitle, setCartTitle] = useState('Cart');
   const [checkoutBtnText, setCheckoutBtnText] = useState('Checkout');
   const [sendToAddress, setSendToAddress] = useState('');
-  const { user, getEthersProvider } = useOnboardContext();
+  const { user, getEthersProvider, chainId } = useOnboardContext();
+  const [cartType, setCartType] = useState<CART_TYPE>(CART_TYPE.NONE);
+  const router = useRouter();
+  const { selectedProfileTab } = useAppContext();
 
-  const url = typeof window !== 'undefined' ? window.location.href : '';
-  const cartType = getCartType(url);
+  useEffect(() => {
+    if (router.isReady) {
+      const typeOfCart = getCartType(router.asPath, selectedProfileTab);
+      console.log('cartType', typeOfCart);
+      setCartType(typeOfCart);
+    }
+  }, [router.pathname, selectedProfileTab]);
 
   useEffect(() => {
     if (cartType === CART_TYPE.SELL) {
@@ -247,7 +257,11 @@ export const AstraCart = ({
         <AButton
           className="p-3"
           primary={true}
-          disabled={!user || (tokens.length === 0 && collections.length === 0 && orders.length === 0)}
+          disabled={
+            !user ||
+            chainId !== ChainId.Mainnet ||
+            (tokens.length === 0 && collections.length === 0 && orders.length === 0)
+          }
           onClick={async () => {
             cartType === CART_TYPE.SEND ? onTokenSend(await finalSendToAddress(sendToAddress)) : onCheckout();
           }}
