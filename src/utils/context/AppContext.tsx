@@ -31,6 +31,7 @@ import { DEFAULT_MAX_GAS_PRICE_WEI, ZERO_ADDRESS } from '../constants';
 import { getSignedOBOrder, sendMultipleNfts, sendSingleNft } from '../orders';
 import { useOnboardContext } from './OnboardContext/OnboardContext';
 import { fetchOrderNonce, postOrdersV2 } from '../orderbookUtils';
+import { useRouter } from 'next/router';
 
 export type User = {
   address: string;
@@ -111,6 +112,8 @@ export const AppContextProvider = ({ children }: Props) => {
   const { isOrderSelected, toggleOrderSelection, clearOrderSelection, orderSelection, removeOrderFromSelection } =
     useOrderSelection();
 
+  const router = useRouter();
+
   useEffect(() => {
     refreshData();
   }, []);
@@ -185,11 +188,9 @@ export const AppContextProvider = ({ children }: Props) => {
     if (!user || !user.address || !signer) {
       toastError('No logged in user');
     } else {
-      console.log('handleTokenCheckout');
-      const url = typeof window !== 'undefined' ? window.location.href : '';
-      const isBuyCart = getCartType(url) === CART_TYPE.BUY;
-      const isSellCart = getCartType(url) === CART_TYPE.SELL;
-      const isSendCart = getCartType(url) === CART_TYPE.SEND;
+      const isBuyCart = getCartType(router.asPath, selectedProfileTab) === CART_TYPE.BUY;
+      const isSellCart = getCartType(router.asPath, selectedProfileTab) === CART_TYPE.SELL;
+      const isSendCart = getCartType(router.asPath, selectedProfileTab) === CART_TYPE.SEND;
 
       if (!isSendCart) {
         // place orders

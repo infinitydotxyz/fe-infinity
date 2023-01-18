@@ -56,7 +56,7 @@ export const getSortLabel = (key?: string, defaultLabel?: string): string => {
 
 export const parseFiltersToApiQueryParams = (filter: OrdersFilter): GetOrderItemsQuery => {
   const parsedFilters: GetOrderItemsQuery = {};
-  // todo: add traitTypes and traitValues and orderType
+  // todo: add orderType
   Object.keys(filter).forEach((filterVal) => {
     switch (filterVal) {
       case 'sort':
@@ -98,7 +98,7 @@ export const parseFiltersToApiQueryParams = (filter: OrdersFilter): GetOrderItem
 };
 
 const parseRouterQueryParamsToFilters = (query: ParsedUrlQuery): OrdersFilter => {
-  // todo: add traitTypes and traitValues and orderType
+  // todo: add orderType
   const { collections: _collections, orderType: _orderType, minPrice, maxPrice, orderBy, sort } = query;
 
   const newFilter: OrdersFilter = {};

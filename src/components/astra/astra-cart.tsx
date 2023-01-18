@@ -57,7 +57,6 @@ export const AstraCart = ({
   useEffect(() => {
     if (router.isReady) {
       const typeOfCart = getCartType(router.asPath, selectedProfileTab);
-      console.log('cartType', typeOfCart);
       setCartType(typeOfCart);
     }
   }, [router.pathname, selectedProfileTab]);
