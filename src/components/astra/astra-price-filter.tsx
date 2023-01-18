@@ -55,7 +55,7 @@ export const APriceFilter = ({ filter, setFilter }: Props) => {
                 onChange={(value) => {
                   setMaxPriceVal(value);
                   const newFilter: TokensFilter = {};
-                  newFilter.minPrice = value;
+                  newFilter.maxPrice = value;
                   newFilter.orderBy = OrderBy.Price;
                   setFilter({ ...filter, ...newFilter });
                 }}
@@ -74,6 +74,7 @@ export const APriceFilter = ({ filter, setFilter }: Props) => {
             >
               Clear
             </Menu.Button>
+            <Menu.Button className={twMerge('mt-4 mr-1 text-sm float-right', brandTextColor)}>Apply</Menu.Button>
           </ACustomMenuItems>
         </ACustomMenuContents>
       )}

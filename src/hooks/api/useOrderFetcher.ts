@@ -49,9 +49,19 @@ const orderCache = new OrderCache();
 
 const parseFiltersToApiQueryParams = (filter: TokensFilter): GetOrderItemsQuery => {
   const parsedFilters: GetOrderItemsQuery = {};
-  // todo: add orderType
   Object.keys(filter).forEach((filterVal) => {
     switch (filterVal) {
+      case 'orderType':
+        if (filter.orderType === 'listings') {
+          parsedFilters.isSellOrder = true;
+        }
+        if (filter.orderType === 'offers-made') {
+          parsedFilters.isSellOrder = false;
+        }
+        if (filter.orderType === 'offers-received') {
+          parsedFilters.isSellOrder = false;
+        }
+        break;
       case 'sort':
         if (filter.sort === SORT_FILTERS.lowestPrice) {
           parsedFilters.orderBy = 'startPriceEth';
@@ -64,14 +74,6 @@ const parseFiltersToApiQueryParams = (filter: TokensFilter): GetOrderItemsQuery 
         if (filter.sort === SORT_FILTERS.mostRecent) {
           parsedFilters.orderBy = 'startTimeMs';
           parsedFilters.orderByDirection = 'desc';
-        }
-        break;
-      case 'collections':
-        if (filter?.collections?.length) {
-          parsedFilters.collections = filter?.collections.map((collection) => {
-            const decoded = decodeURIComponent(collection);
-            return decoded.split(':')[1];
-          });
         }
         break;
       case 'minPrice':
@@ -147,11 +149,12 @@ const useOrderFetcher = (limit = ITEMS_PER_PAGE, filter: TokensFilter, props: Fe
     try {
       const parsedFilters = parseFiltersToApiQueryParams(filter);
 
-      if (parsedFilters.collections && parsedFilters.collections.length > 1) {
+      let collection = '';
+      if (filter.collections && filter.collections.length > 1) {
         throw new Error('Multiple collections not yet supported');
+      } else if (filter.collections && filter.collections.length === 1) {
+        collection = filter.collections[0];
       }
-
-      // const collection = parsedFilters.collections[1];
 
       // eslint-disable-next-line
       const v1Query: any = {
@@ -216,6 +219,10 @@ const useOrderFetcher = (limit = ITEMS_PER_PAGE, filter: TokensFilter, props: Fe
             status: Queries.OrderStatus.Active
           };
 
+          if (collection) {
+            query.collection = collection;
+          }
+
           options = {
             endpoint: `/v2/users/${props.context.userAddress}/orders`,
             query
@@ -227,6 +234,11 @@ const useOrderFetcher = (limit = ITEMS_PER_PAGE, filter: TokensFilter, props: Fe
             side: Queries.Side.Taker,
             status: Queries.OrderStatus.Active
           };
+
+          if (collection) {
+            query.collection = collection;
+          }
+
           options = {
             endpoint: `/v2/users/${props.context?.userAddress}/orders`,
             query
