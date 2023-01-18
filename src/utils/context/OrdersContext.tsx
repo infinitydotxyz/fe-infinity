@@ -56,7 +56,7 @@ export const getSortLabel = (key?: string, defaultLabel?: string): string => {
 
 export const parseFiltersToApiQueryParams = (filter: OrdersFilter): GetOrderItemsQuery => {
   const parsedFilters: GetOrderItemsQuery = {};
-
+  // todo: add traitTypes and traitValues and orderType
   Object.keys(filter).forEach((filterVal) => {
     switch (filterVal) {
       case 'sort':
@@ -98,6 +98,7 @@ export const parseFiltersToApiQueryParams = (filter: OrdersFilter): GetOrderItem
 };
 
 const parseRouterQueryParamsToFilters = (query: ParsedUrlQuery): OrdersFilter => {
+  // todo: add traitTypes and traitValues and orderType
   const { collections: _collections, orderType: _orderType, minPrice, maxPrice, orderBy, sort } = query;
 
   const newFilter: OrdersFilter = {};
@@ -432,8 +433,8 @@ export const OrdersContextProvider = ({ children, limit = ITEMS_PER_PAGE, ...pro
               return signedObOrder;
             })
           );
-          setHasNoData(newData.length === 0);
 
+          setHasNoData(newData.length === 0);
           setHasMoreOrders(response.result.hasNextPage);
           setCursor(response.result.cursor);
         }
