@@ -1,4 +1,3 @@
-import isEqual from 'lodash/isEqual';
 import {
   ChainId,
   ChainOBOrder,
@@ -7,18 +6,17 @@ import {
   OrderItemToken,
   SignedOBOrder
 } from '@infinityxyz/lib-frontend/types/core';
+import * as Queries from '@infinityxyz/lib-frontend/types/dto/orders/orders-queries.dto';
 import { useRouter } from 'next/router';
 import React, { ReactNode, useEffect, useState } from 'react';
-import { ParsedUrlQuery } from 'querystring';
-import { apiGet, ITEMS_PER_PAGE } from 'src/utils';
 import { useIsMounted } from 'src/hooks/useIsMounted';
-import { OrderCache } from '../../components/orderbook/order-cache';
+import { apiGet, ITEMS_PER_PAGE } from 'src/utils';
 import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
-import * as Queries from '@infinityxyz/lib-frontend/types/dto/orders/orders-queries.dto';
+import { OrderCache } from '../../components/orderbook/order-cache';
 
 export type OrdersFilter = {
   sort?: string;
-  orderType?: 'listings' | 'offers-made' | 'offers-received' | ''; // todo add 'listing' and 'offer'?
+  orderType?: 'listings' | 'offers-made' | 'offers-received' | 'listing' | 'offer' | ''; // todo add 'listing' and 'offer'?
   collections?: string[];
   minPrice?: string;
   maxPrice?: string;
@@ -97,46 +95,6 @@ export const parseFiltersToApiQueryParams = (filter: OrdersFilter): GetOrderItem
   return parsedFilters;
 };
 
-const parseRouterQueryParamsToFilters = (query: ParsedUrlQuery): OrdersFilter => {
-  // todo: add orderType
-  const { collections: _collections, orderType: _orderType, minPrice, maxPrice, orderBy, sort } = query;
-
-  const newFilter: OrdersFilter = {};
-
-  let collections: string[] = [];
-  if (typeof _collections === 'string') {
-    collections = [_collections];
-  }
-
-  if (typeof _collections === 'object') {
-    collections = [..._collections];
-  }
-
-  if (collections.length > 0) {
-    newFilter.collections = collections;
-  }
-
-  if (minPrice) {
-    newFilter.minPrice = minPrice as string;
-  }
-
-  if (maxPrice) {
-    newFilter.maxPrice = maxPrice as string;
-  }
-
-  if (orderBy) {
-    newFilter.orderBy = orderBy as string;
-  }
-
-  if (sort) {
-    newFilter.sort = sort as string;
-  }
-
-  newFilter.orderType = _orderType as 'listings' | 'offers-made' | 'offers-received' | '';
-
-  return newFilter;
-};
-
 // ============================================================
 
 type OrdersContextType = {
@@ -145,8 +103,6 @@ type OrdersContextType = {
   fetchMore: () => void;
   filter: OrdersFilter;
   setFilter: React.Dispatch<React.SetStateAction<OrdersFilter>>;
-  clearFilter: (names: string[]) => Promise<boolean>;
-  updateFilters: (params: { name: string; value: string }[]) => Promise<boolean>;
   hasMoreOrders: boolean;
   hasNoData: boolean;
   isReady: boolean;
@@ -211,43 +167,11 @@ export const OrdersContextProvider = ({ children, limit = ITEMS_PER_PAGE, ...pro
   useEffect(() => {
     if (router.isReady) {
       setIsReady(true);
-
-      const newFilter = parseRouterQueryParamsToFilters(router.query);
-
-      if (!isEqual(newFilter, filter)) {
-        setFilter(newFilter);
-      }
     }
   }, [router.query]);
 
   const fetchMore = () => {
     fetchOrders();
-  };
-
-  const clearFilter = (names: string[]): Promise<boolean> => {
-    const newQueryParams = { ...router.query };
-
-    for (const name of names) {
-      delete newQueryParams[name];
-    }
-
-    return router.replace({ pathname: router.pathname, query: { ...newQueryParams } });
-  };
-
-  const updateFilters = (params: { name: string; value: string }[]): Promise<boolean> => {
-    let query = { ...router.query };
-
-    for (const param of params) {
-      const val = param['value'];
-
-      if (val) {
-        query = { ...query, [param['name']]: param['value'] };
-      } else {
-        delete query[param['name']];
-      }
-    }
-
-    return router.replace({ pathname: router.pathname, query: { ...query } });
   };
 
   const fetchOrders = async (refreshData = false) => {
@@ -454,8 +378,6 @@ export const OrdersContextProvider = ({ children, limit = ITEMS_PER_PAGE, ...pro
     fetchMore,
     filter,
     setFilter,
-    clearFilter,
-    updateFilters,
     hasMoreOrders,
     hasNoData,
     isReady

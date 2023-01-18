@@ -19,7 +19,7 @@ import { OrderbookCharts } from 'src/components/orderbook/charts/orderbook-chart
 import { useScrollInfo } from 'src/hooks/useScrollHook';
 import { apiGet, nFormatter } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { useOrdersContext } from 'src/utils/context/OrdersContext';
+import { OrdersFilter, useOrdersContext } from 'src/utils/context/OrdersContext';
 
 interface CollectionDashboardProps {
   collection: BaseCollection;
@@ -41,24 +41,28 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     toggleNFTSelection: toggleSelection
   } = useAppContext();
   const { data, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection.address);
-  const { updateFilters } = useOrdersContext();
+  const { setFilter } = useOrdersContext();
   const { setRef, scrollTop } = useScrollInfo();
   const tabs = ['Items'];
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
 
   const setMinPrice = (value: string) => {
-    updateFilters([{ name: 'minPrice', value }]);
+    const newFilter: OrdersFilter = {};
+    newFilter.minPrice = value;
+    setFilter((state) => ({ ...state, ...newFilter }));
   };
 
   const setMaxPrice = (value: string) => {
-    updateFilters([{ name: 'maxPrice', value }]);
+    const newFilter: OrdersFilter = {};
+    newFilter.maxPrice = value;
+    setFilter((state) => ({ ...state, ...newFilter }));
   };
 
   const onPricesClear = () => {
-    updateFilters([
-      { name: 'minPrice', value: '' },
-      { name: 'maxPrice', value: '' }
-    ]);
+    const newFilter: OrdersFilter = {};
+    newFilter.minPrice = '';
+    newFilter.maxPrice = '';
+    setFilter((state) => ({ ...state, ...newFilter }));
   };
 
   const onTabChange = (tab: string) => {

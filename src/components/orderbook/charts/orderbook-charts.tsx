@@ -1,9 +1,9 @@
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { Spinner } from 'src/components/common';
+import { OrdersFilter, useOrdersContext } from 'src/utils/context/OrdersContext';
 import { secondaryTextColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { useOrdersContext } from '../../../utils/context/OrdersContext';
 import { BarChartType, OrderData, ResponsiveBarChart } from './bar-chart';
 import { OrdersChartDetails } from './chart-details';
 import { ResponsiveScatterChart, SaleData, ScatterChartType, TimeBuckets } from './scatter-chart';
@@ -15,7 +15,7 @@ export type OrderBookChartProps = {
 };
 
 export const OrderbookCharts = ({ className = '' }: OrderBookChartProps) => {
-  const { orders, updateFilters, isLoading } = useOrdersContext();
+  const { orders, isLoading, setFilter } = useOrdersContext();
   const [salesData, setSalesData] = useState<SaleData[]>([]);
   const [ordersData, setOrdersData] = useState<OrderData[]>([]);
   const [selectedListings, setSelectedListings] = useState<SignedOBOrder[]>([]);
@@ -24,11 +24,12 @@ export const OrderbookCharts = ({ className = '' }: OrderBookChartProps) => {
   const [selectedOfferIndex, setSelectedOfferIndex] = useState(0);
   const [selectedTimeBucket, setSelectedTimeBucket] = useState(TimeBuckets.ONE_WEEK.toString());
 
-  const fetchOrdersDataForPriceRange = (minPrice: string, maxPrice: string): Promise<boolean> =>
-    updateFilters([
-      { name: 'minPrice', value: minPrice },
-      { name: 'maxPrice', value: maxPrice }
-    ]);
+  const fetchOrdersDataForPriceRange = (minPrice: string, maxPrice: string) => {
+    const newFilter: OrdersFilter = {};
+    newFilter.minPrice = minPrice;
+    newFilter.maxPrice = maxPrice;
+    setFilter((state) => ({ ...state, ...newFilter }));
+  };
 
   const displayListingDetails = (orders: SignedOBOrder[], index: number) => {
     if (index !== selectedListingIndex) {

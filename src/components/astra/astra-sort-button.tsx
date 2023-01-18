@@ -1,5 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { getSortLabel, SORT_FILTERS, SORT_LABELS, useOrdersContext } from '../../utils/context/OrdersContext';
+import { useEffect, useState } from 'react';
+import {
+  getSortLabel,
+  OrdersFilter,
+  SORT_FILTERS,
+  SORT_LABELS,
+  useOrdersContext
+} from '../../utils/context/OrdersContext';
 import { ADropdown } from './astra-dropdown';
 
 interface Props {
@@ -8,7 +14,7 @@ interface Props {
 
 // There has to be a parent with OrderbookProvider to work.
 export const ASortButton = ({ className }: Props) => {
-  const { updateFilters, filter } = useOrdersContext();
+  const { setFilter, filter } = useOrdersContext();
   const [label, setLabel] = useState<string>(getSortLabel(filter?.sort));
 
   useEffect(() => {
@@ -16,7 +22,9 @@ export const ASortButton = ({ className }: Props) => {
   }, [filter?.sort]);
 
   const onClickSort = (_label: string, sortOrder: string) => {
-    updateFilters([{ name: 'sort', value: sortOrder }]);
+    const newFilter: OrdersFilter = {};
+    newFilter.sort = sortOrder;
+    setFilter((state) => ({ ...state, ...newFilter }));
   };
 
   return (
