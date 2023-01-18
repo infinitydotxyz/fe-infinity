@@ -13,17 +13,7 @@ import { useIsMounted } from 'src/hooks/useIsMounted';
 import { apiGet, ITEMS_PER_PAGE } from 'src/utils';
 import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { OrderCache } from '../../components/orderbook/order-cache';
-
-export type OrdersFilter = {
-  sort?: string;
-  orderType?: 'listings' | 'offers-made' | 'offers-received' | 'listing' | 'offer' | ''; // todo add 'listing' and 'offer'?
-  collections?: string[];
-  minPrice?: string;
-  maxPrice?: string;
-  traitTypes?: string[];
-  traitValues?: string[];
-  orderBy?: string;
-};
+import { OrdersFilter } from 'src/utils/types';
 
 export const SORT_FILTERS = {
   highestPrice: 'highestPrice',

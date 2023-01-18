@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getTokenKeyId } from 'src/utils';
-import { Erc721TokenOffer } from './types';
+import { Erc721TokenOffer } from 'src/utils/types';
 
 interface NFTSelectionResult {
   toggleNFTSelection: (data: Erc721TokenOffer) => void;

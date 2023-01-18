@@ -5,7 +5,7 @@ import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { useRouter } from 'next/router';
 import { ReactNode, useState } from 'react';
 import { TokenCardModal } from 'src/components/astra/token-grid/token-card-modal';
-import { BasicTokenInfo } from 'src/components/astra/types';
+import { BasicTokenInfo } from 'src/utils/types';
 import { BlueCheckInline, EZImage, NextLink } from 'src/components/common';
 import { ellipsisString, ENS_ADDRESS } from 'src/utils';
 import { secondaryTextColor } from 'src/utils/ui-constants';

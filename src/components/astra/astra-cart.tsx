@@ -20,7 +20,7 @@ import {
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { ADropdown } from './astra-dropdown';
-import { Erc721CollectionOffer, Erc721TokenOffer, ORDER_EXPIRY_TIME } from './types';
+import { Erc721CollectionOffer, Erc721TokenOffer, ORDER_EXPIRY_TIME } from 'src/utils/types';
 
 interface Props {
   collections: Erc721CollectionOffer[];

@@ -10,7 +10,7 @@ import { getOBComplicationAddress, getTxnCurrencyAddress, trimLowerCase } from '
 import { ProfileTabs } from 'pages/profile/[address]';
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
-import { Erc721CollectionOffer, Erc721TokenOffer } from 'src/components/astra/types';
+import { Erc721CollectionOffer, Erc721TokenOffer } from 'src/utils/types';
 import { useCollectionSelection } from 'src/components/astra/useCollectionSelection';
 import { useNFTSelection } from 'src/components/astra/useNFTSelection';
 import { useOrderSelection } from 'src/components/astra/useOrderSelection';

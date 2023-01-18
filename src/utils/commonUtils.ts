@@ -11,7 +11,7 @@ import ethers from 'ethers';
 import { ProfileTabs } from 'pages/profile/[address]';
 import { normalize } from 'path';
 import { ReactNode } from 'react';
-import { ORDER_EXPIRY_TIME } from 'src/components/astra/types';
+import { ORDER_EXPIRY_TIME } from 'src/utils/types';
 
 export const base64Encode = (data: string) => Buffer.from(data).toString('base64');
 
@@ -261,7 +261,7 @@ export const getChainScannerBase = (chainId: string): string | null => {
   return null;
 };
 
-export const PleaseConnectMsg = () => <>Please connect your wallet.</>;
+export const pleaseConnectMsgString = 'Please connect your wallet';
 
 export const truncateDecimals = (numStr: string) => {
   return ((numStr ?? '') + ' ').slice(0, numStr.indexOf('.'));

@@ -4,7 +4,7 @@ import { CollectionSearchDto } from '@infinityxyz/lib-frontend/types/dto';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { AiOutlineSearch } from 'react-icons/ai';
-import { BasicTokenInfo } from 'src/components/astra/types';
+import { BasicTokenInfo } from 'src/utils/types';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { borderColor, cardColor, hoverColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';

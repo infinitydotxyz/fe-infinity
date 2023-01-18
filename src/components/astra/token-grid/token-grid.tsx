@@ -5,7 +5,7 @@ import { hoverColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { AOutlineButton } from '../astra-button';
 import { ErrorOrLoading } from '../error-or-loading';
-import { BasicTokenInfo, Erc721TokenOffer } from '../types';
+import { BasicTokenInfo, Erc721TokenOffer } from 'src/utils/types';
 import { TokenCardModal } from './token-card-modal';
 
 interface Props {

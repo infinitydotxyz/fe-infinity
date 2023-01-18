@@ -1,7 +1,8 @@
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { Spinner } from 'src/components/common';
-import { OrdersFilter, useOrdersContext } from 'src/utils/context/OrdersContext';
+import { useOrdersContext } from 'src/utils/context/OrdersContext';
+import { OrdersFilter } from 'src/utils/types';
 import { secondaryTextColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { BarChartType, OrderData, ResponsiveBarChart } from './bar-chart';

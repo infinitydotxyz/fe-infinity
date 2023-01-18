@@ -11,7 +11,7 @@ import { extent } from 'd3';
 import { format } from 'date-fns';
 import { MouseEvent, TouchEvent, useCallback, useMemo, useState } from 'react';
 import { TokenCardModal } from 'src/components/astra/token-grid/token-card-modal';
-import { BasicTokenInfo } from 'src/components/astra/types';
+import { BasicTokenInfo } from 'src/utils/types';
 import { EZImage } from 'src/components/common';
 import { cardColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';

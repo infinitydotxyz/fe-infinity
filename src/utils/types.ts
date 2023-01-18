@@ -23,3 +23,14 @@ export interface BasicTokenInfo {
   collectionAddress: string;
   tokenId: string;
 }
+
+export type OrdersFilter = {
+  sort?: string;
+  orderType?: 'listings' | 'offers-made' | 'offers-received' | 'listing' | 'offer' | ''; // todo add 'listing' and 'offer'?
+  collections?: string[];
+  minPrice?: string;
+  maxPrice?: string;
+  traitTypes?: string[];
+  traitValues?: string[];
+  orderBy?: string;
+};

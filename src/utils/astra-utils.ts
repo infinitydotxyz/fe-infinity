@@ -3,7 +3,8 @@ import axios, { AxiosRequestHeaders } from 'axios';
 import { ApiResponse } from './apiUtils';
 import { OnboardAuthProvider } from './context/OnboardContext/OnboardAuthProvider';
 import { trimText } from 'src/components/common';
-import { OrdersFilter, SORT_FILTERS } from 'src/utils/context/OrdersContext';
+import { SORT_FILTERS } from 'src/utils/context/OrdersContext';
+import { OrdersFilter } from 'src/utils/types';
 
 export type TokenFetcherOptions = { cursor?: string } & OrdersFilter;
 

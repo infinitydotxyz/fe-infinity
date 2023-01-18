@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getCollectionKeyId } from 'src/utils';
-import { Erc721CollectionOffer } from './types';
+import { Erc721CollectionOffer } from 'src/utils/types';
 
 interface CollectionSelectionResult {
   toggleCollSelection: (data: Erc721CollectionOffer) => void;

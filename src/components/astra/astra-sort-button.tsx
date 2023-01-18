@@ -1,11 +1,6 @@
 import { useEffect, useState } from 'react';
-import {
-  getSortLabel,
-  OrdersFilter,
-  SORT_FILTERS,
-  SORT_LABELS,
-  useOrdersContext
-} from '../../utils/context/OrdersContext';
+import { getSortLabel, SORT_FILTERS, SORT_LABELS, useOrdersContext } from '../../utils/context/OrdersContext';
+import { OrdersFilter } from 'src/utils/types';
 import { ADropdown } from './astra-dropdown';
 
 interface Props {

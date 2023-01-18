@@ -4,7 +4,7 @@ import { useSearch } from 'src/hooks/api/useSearch';
 import { useSearchState } from 'src/hooks/api/useSearchState';
 import { SearchInput } from './search-input';
 import { TokenCardModal } from '../../astra/token-grid/token-card-modal';
-import { BasicTokenInfo } from 'src/components/astra/types';
+import { BasicTokenInfo } from 'src/utils/types';
 
 interface Props {
   expanded?: boolean;

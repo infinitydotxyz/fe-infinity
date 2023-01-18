@@ -12,7 +12,7 @@ import { OnboardAuthProvider } from './OnboardAuthProvider';
 import { WalletSigner } from './WalletSigner';
 import { OnboardEmitter } from './OnboardEmitter';
 import { Modal, toastWarning } from 'src/components/common';
-import { PleaseConnectMsg } from '../../commonUtils';
+import { pleaseConnectMsgString } from '../../commonUtils';
 import { TransactionReceipt } from '@ethersproject/abstract-provider';
 import { JSONRPCRequestPayload, JSONRPCResponsePayload, ProviderEvents } from './UserRejectException';
 import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
@@ -171,7 +171,7 @@ export const OnboardContextProvider = (props: React.PropsWithChildren<unknown>) 
 
   const checkSignedIn = () => {
     if (!userAddress()) {
-      toastWarning(<PleaseConnectMsg />);
+      toastWarning(<>{pleaseConnectMsgString}</>);
       return false;
     }
     return true;

@@ -7,7 +7,7 @@ import { twMerge } from 'tailwind-merge';
 import { BlueCheck, EZImage, Modal, NextLink, ReadMoreText, ShortAddress } from '../../common';
 import { ATraitList } from '../astra-trait-list';
 import { ErrorOrLoading } from '../error-or-loading';
-import { BasicTokenInfo } from '../types';
+import { BasicTokenInfo } from 'src/utils/types';
 
 interface Props {
   data: BasicTokenInfo;

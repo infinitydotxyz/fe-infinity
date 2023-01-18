@@ -12,7 +12,7 @@ import {
 import { twMerge } from 'tailwind-merge';
 import { AButton } from '../astra/astra-button';
 import { TokenCardModal } from '../astra/token-grid/token-card-modal';
-import { BasicTokenInfo, Erc721TokenOffer } from '../astra/types';
+import { BasicTokenInfo, Erc721TokenOffer } from 'src/utils/types';
 import { BlueCheck, EthSymbol, EZImage, Spacer } from '../common';
 
 interface Props {

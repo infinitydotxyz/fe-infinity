@@ -4,8 +4,8 @@ import { useIsMounted } from 'src/hooks/useIsMounted';
 import { ApiResponse } from 'src/utils';
 import { fetchCollectionTokens, fetchProfileTokens } from 'src/utils/astra-utils';
 import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
-import { OrdersFilter, useOrdersContext } from '../../utils/context/OrdersContext';
-import { Erc721TokenOffer } from './types';
+import { useOrdersContext } from '../../utils/context/OrdersContext';
+import { OrdersFilter, Erc721TokenOffer } from 'src/utils/types';
 
 type ApiNftData = Erc721Token & {
   orderSnippet?: OrdersSnippet;

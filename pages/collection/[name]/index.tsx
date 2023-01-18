@@ -19,7 +19,8 @@ import { OrderbookCharts } from 'src/components/orderbook/charts/orderbook-chart
 import { useScrollInfo } from 'src/hooks/useScrollHook';
 import { apiGet, nFormatter } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { OrdersFilter, useOrdersContext } from 'src/utils/context/OrdersContext';
+import { useOrdersContext } from 'src/utils/context/OrdersContext';
+import { OrdersFilter } from 'src/utils/types';
 
 interface CollectionDashboardProps {
   collection: BaseCollection;

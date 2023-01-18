@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { OrdersFilter, useOrdersContext } from '../../utils/context/OrdersContext';
+import { useOrdersContext } from '../../utils/context/OrdersContext';
+import { OrdersFilter } from 'src/utils/types';
 import { ADropdown } from './astra-dropdown';
 
 export const AStatusFilterButton: React.FC = () => {

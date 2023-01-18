@@ -4,7 +4,8 @@ import { useRouter } from 'next/router';
 import { useFetch } from 'src/utils';
 import CollectionTraits from '../collection/collection-traits';
 import { Spinner } from '../common';
-import { OrdersFilter, useOrdersContext } from '../../utils/context/OrdersContext';
+import { useOrdersContext } from '../../utils/context/OrdersContext';
+import { OrdersFilter } from 'src/utils/types';
 import { AOutlineButton } from './astra-button';
 import { ACustomMenuButton, ACustomMenuContents, ACustomMenuItems, ADropdownButton } from './astra-dropdown';
 
