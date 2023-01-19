@@ -1,9 +1,9 @@
-import { DEFAULT_LIMIT, LARGE_LIMIT, API_BASE } from './constants';
 import axios, { AxiosRequestHeaders } from 'axios';
-import { ApiResponse } from './apiUtils';
-import { OnboardAuthProvider } from './context/OnboardContext/OnboardAuthProvider';
 import { trimText } from 'src/components/common';
-import { TokensFilter, SORT_FILTERS } from 'src/utils/types';
+import { SORT_FILTERS, TokensFilter } from 'src/utils/types';
+import { ApiResponse } from './apiUtils';
+import { API_BASE, LARGE_LIMIT, SMALL_LIMIT } from './constants';
+import { OnboardAuthProvider } from './context/OnboardContext/OnboardAuthProvider';
 
 export type TokenFetcherOptions = { cursor?: string } & TokensFilter;
 
@@ -61,7 +61,7 @@ export const fetchProfileTokens = async (
 export const fetchCollections = async (query: string, cursor?: string): Promise<ApiResponse> => {
   const response = await httpGet('/collections/search', {
     query,
-    limit: DEFAULT_LIMIT,
+    limit: SMALL_LIMIT,
     cursor
   });
 

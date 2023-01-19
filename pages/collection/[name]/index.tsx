@@ -47,7 +47,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
 
   useEffect(() => {
-    // fetchOrders(true);
+    fetch(false);
   }, [filter]);
 
   const onTabChange = (tab: string) => {

@@ -1,4 +1,4 @@
-import { CenteredContent, Spinner } from 'src/components/common';
+import { CenterFixed, Spinner } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 
 interface Props2 {
@@ -22,7 +22,7 @@ export const ErrorOrLoading = ({ error, noData, message = 'No Data' }: Props2) =
 
   return (
     <div className={twMerge('h-full w-full text-sm mt-4')}>
-      <CenteredContent>{contents}</CenteredContent>
+      <CenterFixed>{contents}</CenterFixed>
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import { CollectionSearchDto } from '@infinityxyz/lib-frontend/types/dto';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MdClose } from 'react-icons/md';
 import { TokenGrid } from 'src/components/astra/token-grid/token-grid';
 import { useAppContext } from 'src/utils/context/AppContext';
@@ -19,6 +19,10 @@ export const ProfileNFTs = ({ userAddress }: Props) => {
   const [filter, setFilter] = useState<TokensFilter>({});
   const { isNFTSelected, isNFTSelectable, listMode, toggleNFTSelection } = useAppContext();
   const { data, error, hasNextPage, isLoading, fetch } = useProfileTokenFetcher(userAddress, filter);
+
+  useEffect(() => {
+    fetch(false);
+  }, [filter]);
 
   const handleCollectionSearchResult = (result: CollectionSearchDto) => {
     const newFilter = { ...filter };

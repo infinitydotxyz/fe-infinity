@@ -19,9 +19,8 @@ export const AStatusFilterButton = ({ filter, setFilter }: Props) => {
           label: 'All items',
           onClick: () => {
             setLabel('All items');
-            const newFilter: TokensFilter = {};
-            newFilter.orderType = '';
-            setFilter({ ...filter, ...newFilter });
+            delete filter.orderType;
+            setFilter({ ...filter });
           }
         },
         {

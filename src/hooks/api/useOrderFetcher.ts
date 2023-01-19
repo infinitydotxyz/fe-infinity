@@ -8,7 +8,7 @@ import {
 } from '@infinityxyz/lib-frontend/types/core';
 import * as Queries from '@infinityxyz/lib-frontend/types/dto/orders/orders-queries.dto';
 import { useState } from 'react';
-import { apiGet, ITEMS_PER_PAGE } from 'src/utils';
+import { apiGet, DEFAULT_LIMIT } from 'src/utils';
 import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { TokensFilter, SORT_FILTERS } from 'src/utils/types';
 import { OrderCache } from '../../components/orderbook/order-cache';
@@ -137,7 +137,7 @@ export const useTokenOrderFetcher = (
   return useOrderFetcher(limit, filter, props);
 };
 
-const useOrderFetcher = (limit = ITEMS_PER_PAGE, filter: TokensFilter, props: FetcherProps) => {
+const useOrderFetcher = (limit = DEFAULT_LIMIT, filter: TokensFilter, props: FetcherProps) => {
   const { chainId } = useOnboardContext();
   const [orders, setOrders] = useState<SignedOBOrder[]>([]);
   const [error, setError] = useState<string>('');

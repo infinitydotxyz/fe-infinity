@@ -13,10 +13,10 @@ export const ETHERSCAN_BASE_URL = 'https://etherscan.io';
 export const FLOW_FEE_PCT = 2.5;
 export const FLOW_ROYALTY_PCT = 0;
 
-// not sure why there are two of these.
-export const ITEMS_PER_PAGE = 30;
-export const DEFAULT_LIMIT = 24;
+export const DEFAULT_LIMIT = 30;
+export const SMALL_LIMIT = 10;
 export const LARGE_LIMIT = 50;
+export const EXTRA_LARGE_LIMIT = 100;
 
 export const NFT_DATA_SOURCES = {
   INFINITY: 0,
