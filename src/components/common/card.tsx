@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { AiOutlineCheckCircle, AiOutlinePlusCircle } from 'react-icons/ai';
 import {
+  borderColor,
   brandTextColor,
   cardColor,
   hoverColorBrandText,
@@ -29,13 +30,16 @@ export const GridCard = ({ data, onClick, selected, isSelectable }: Props): JSX.
   const title = data?.title;
   const tokenId = data?.tokenId;
   const hasBlueCheck = data?.hasBlueCheck ?? false;
-  const buyNowPrice = data?.price ? data?.price.toString() + EthSymbol : '';
+  const buyNowPrice = data?.orderSnippet?.listing?.orderItem?.startPriceEth
+    ? data?.orderSnippet?.listing?.orderItem?.startPriceEth
+    : '';
   const basicTokenInfo: BasicTokenInfo = {
     tokenId: data?.tokenId ?? '',
     collectionAddress: data?.address ?? '',
     chainId: data?.chainId ?? ''
   };
   const router = useRouter();
+  const isCollectionPage = router.asPath.includes('/collection');
 
   return (
     <div
@@ -78,18 +82,20 @@ export const GridCard = ({ data, onClick, selected, isSelectable }: Props): JSX.
         </div>
 
         <div className={twMerge('mt-1 mb-3 px-2')}>
-          <div
-            className="flex items-center space-x-1 cursor-pointer"
-            onClick={(e) => {
-              e.stopPropagation();
-              router.push(`/collection/${data?.collectionSlug}`);
-            }}
-          >
-            <div className={twMerge('truncate text-xs', hoverColorBrandText)}>{title}</div>
-            {hasBlueCheck ? <BlueCheck className={'h-3 w-3'} /> : ''}
-          </div>
+          {!isCollectionPage && (
+            <div
+              className="flex items-center space-x-1 cursor-pointer"
+              onClick={(e) => {
+                e.stopPropagation();
+                router.push(`/collection/${data?.collectionSlug}`);
+              }}
+            >
+              <div className={twMerge('truncate text-xs', hoverColorBrandText)}>{title}</div>
+              {hasBlueCheck ? <BlueCheck className={'h-3 w-3'} /> : ''}
+            </div>
+          )}
 
-          <div className="flex items-center text-sm mt-0.5">
+          <div className="flex items-center text-xs mt-0.5">
             <div
               className="truncate hover:text-blue-500"
               onClick={(e) => {
@@ -101,10 +107,15 @@ export const GridCard = ({ data, onClick, selected, isSelectable }: Props): JSX.
             </div>
           </div>
 
-          <div className="flex items-center text-xs">
-            <div className="truncate">{buyNowPrice}</div>
+          <div className="flex items-center">
+            {buyNowPrice && (
+              <div className="flex items-center border-[1px] rounded-sm px-1.5 py-0.5 space-x-1 mt-1">
+                <div className={twMerge('truncate font-medium text-md', borderColor)}>{buyNowPrice}</div>
+                <div className="text-xs">{EthSymbol}</div>
+              </div>
+            )}
             <Spacer />
-            <AButton primary className="rounded-md" onClick={() => setModalOpen(true)}>
+            <AButton primary className="rounded-md text-xs" onClick={() => setModalOpen(true)}>
               Details
             </AButton>
           </div>
