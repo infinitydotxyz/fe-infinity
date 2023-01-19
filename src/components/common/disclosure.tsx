@@ -18,7 +18,7 @@ export function ADisclosure({ data }: Props) {
     <div className="w-full">
       {data.map((item) => {
         return (
-          <Disclosure defaultOpen>
+          <Disclosure defaultOpen key={item.title}>
             {({ open }) => (
               <>
                 <Disclosure.Button

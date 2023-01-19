@@ -55,6 +55,7 @@ export type TokensFilter = {
   traitTypes?: string[];
   traitValues?: string[];
   orderBy?: string;
+  cursor?: string;
 };
 
 export const getSortLabel = (key?: string, defaultLabel?: string): string => {

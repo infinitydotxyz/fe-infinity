@@ -12,16 +12,8 @@ import {
   smallIconButtonStyle
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { Checkbox, TextInputBox } from '../common';
-import { ADisclosure, DisclosureData } from '../common/disclosure';
-
-type ValueMapItem = {
-  [k: string]: boolean;
-};
-
-type TypeValueMap = {
-  [k: string]: ValueMapItem;
-};
+import { TextInputBox } from '../common';
+import { CollectionTraitsDisclosure, TypeValueMap } from './collection-traits-disclosure';
 
 interface Props {
   traits: CollectionAttributes;
@@ -33,7 +25,6 @@ interface Props {
 const CollectionTraits = ({ traits, filter, setFilter }: Props) => {
   const [typeValueMap, setTypeValueMap] = useState<TypeValueMap>({});
   const [selectedTraitType, setSelectedTraitType] = useState<string>('All');
-  const [disclosureData, setDisclosureData] = useState<DisclosureData[]>([]);
   const [searchText, setSearchText] = useState<string>('');
 
   const traitTypeAndNumValues = [];
@@ -51,7 +42,6 @@ const CollectionTraits = ({ traits, filter, setFilter }: Props) => {
   });
 
   useEffect(() => {
-    // when filterState changed (somewhere else) => parse it and set to TypeValueMap for checkboxes' states
     const traitTypes = filter.traitTypes || [];
     const traitValues = filter.traitValues || [];
     const map: TypeValueMap = {};
@@ -72,71 +62,6 @@ const CollectionTraits = ({ traits, filter, setFilter }: Props) => {
     setTypeValueMap(map);
   }, [filter]);
 
-  useEffect(() => {
-    if (selectedTraitType === 'All') {
-      setDisclosureData(Array.from(allDisclosureData.values()));
-    } else {
-      setDisclosureData([allDisclosureData.get(selectedTraitType) ?? { title: '', content: <></> }]);
-    }
-  }, [selectedTraitType]);
-
-  const allDisclosureData: Map<string, DisclosureData> = new Map();
-  Object.keys(traits)?.map((traitType) => {
-    const title = traitType;
-    const content = (
-      <div className="flex flex-col">
-        {Object.entries(traits[traitType].values)?.map((val) => {
-          const key = val[0];
-          const value = val[1];
-          return (
-            <div className={twMerge('flex border-b-[1px] py-2', borderColor)}>
-              <Checkbox
-                checked={typeValueMap[traitType]?.[key]}
-                onChange={(checked) => {
-                  const map = { ...typeValueMap };
-                  if (!map[traitType]) {
-                    map[traitType] = {};
-                  }
-                  map[traitType][key] = checked;
-                  setTypeValueMap(map);
-                  const traitTypes = [];
-                  const traitValues = [];
-                  for (const type in map) {
-                    const values = [];
-                    for (const val in map[type]) {
-                      if (map[type][val]) {
-                        values.push(val);
-                      }
-                    }
-                    if (values.length > 0) {
-                      traitTypes.push(type);
-                      traitValues.push(values.join('|'));
-                    }
-                  }
-                  // update filter
-                  const newFilter: TokensFilter = {};
-                  newFilter.traitTypes = traitTypes;
-                  newFilter.traitValues = traitValues;
-                  newFilter.orderBy = 'tokenIdNumeric';
-                  setFilter({ ...filter, ...newFilter });
-                }}
-              />
-              <div>
-                <div className="truncate">{key}</div>
-                <div className={twMerge('flex space-x-2 text-xs', secondaryTextColor)}>
-                  <div className="truncate">{value.count}</div>
-                  <div className="truncate">({value.percent}%)</div>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    );
-    const discDataItem: DisclosureData = { title, content };
-    allDisclosureData.set(traitType, discDataItem);
-  });
-
   return (
     <div className="w-full h-full">
       <div className={twMerge('border-b-[1px] px-2 py-4', borderColor)}>
@@ -152,11 +77,13 @@ const CollectionTraits = ({ traits, filter, setFilter }: Props) => {
           }}
         ></TextInputBox>
       </div>
+
       <div className={twMerge('h-full flex border-b-[1px]', borderColor)}>
         <div className={twMerge('w-1/3 border-r-[1px] overflow-y-scroll text-sm px-2', secondaryBgColor, borderColor)}>
           {traitTypeAndNumValues?.map((item) => {
             return (
               <div
+                key={item.name}
                 className={twMerge(
                   'flex cursor-pointer rounded-lg justify-between py-2 px-2',
                   hoverColor,
@@ -173,10 +100,19 @@ const CollectionTraits = ({ traits, filter, setFilter }: Props) => {
             );
           })}
         </div>
+
         <div className={twMerge('w-2/3 overflow-y-scroll', bgColor)}>
-          <ADisclosure data={disclosureData} />
+          <CollectionTraitsDisclosure
+            typeValueMap={typeValueMap}
+            setTypeValueMap={setTypeValueMap}
+            selectedTraitType={selectedTraitType}
+            traits={traits}
+            filter={filter}
+            setFilter={setFilter}
+          />
         </div>
       </div>
+
       <div
         className={twMerge('float-left px-4 py-3 cursor-pointer text-sm', brandTextColor)}
         onClick={() => {
@@ -186,6 +122,7 @@ const CollectionTraits = ({ traits, filter, setFilter }: Props) => {
           newFilter.traitTypes = [];
           newFilter.traitValues = [];
           newFilter.orderBy = 'tokenIdNumeric';
+          newFilter.cursor = '';
           setFilter({ ...filter, ...newFilter });
         }}
       >
