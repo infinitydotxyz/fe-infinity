@@ -61,7 +61,7 @@ export const ProfileOrderList = ({ userAddress, className = '', toggleOrderSelec
   };
 
   useEffect(() => {
-    fetch(true);
+    fetch(false);
   }, [filter]);
 
   const onClickAcceptOfferCancelOrder = (order: SignedOBOrder) => {
@@ -199,7 +199,7 @@ export const ProfileOrderList = ({ userAddress, className = '', toggleOrderSelec
           {hasNextPage === true ? (
             <ScrollLoader
               onFetchMore={async () => {
-                await fetch();
+                await fetch(true);
               }}
             />
           ) : null}

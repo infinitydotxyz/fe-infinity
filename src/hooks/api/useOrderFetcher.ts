@@ -145,7 +145,7 @@ const useOrderFetcher = (limit = DEFAULT_LIMIT, filter: TokensFilter, props: Fet
   const [cursor, setCursor] = useState('');
   const [hasNextPage, setHasNextPage] = useState<boolean>(false);
 
-  const fetch = async (isRefresh = false) => {
+  const fetch = async (loadMore: boolean) => {
     try {
       const parsedFilters = parseFiltersToApiQueryParams(filter);
 
@@ -157,11 +157,16 @@ const useOrderFetcher = (limit = DEFAULT_LIMIT, filter: TokensFilter, props: Fet
       }
 
       // eslint-disable-next-line
-      const v1Query: any = {
-        limit: limit,
-        cursor,
-        ...parsedFilters
-      };
+      let v1Query: any = { limit, ...parsedFilters };
+      if (loadMore) {
+        v1Query = {
+          cursor
+        };
+      } else {
+        v1Query = {
+          cursor: '' // reset cursor
+        };
+      }
 
       if (parsedFilters.minPrice || parsedFilters.maxPrice) {
         v1Query.orderBy = Queries.OrderBy.Price;
@@ -269,10 +274,10 @@ const useOrderFetcher = (limit = DEFAULT_LIMIT, filter: TokensFilter, props: Fet
         orderCache.set(cacheKey, response);
 
         let newData;
-        if (isRefresh) {
-          newData = [...response.result.data];
-        } else {
+        if (loadMore) {
           newData = [...orders, ...response.result.data];
+        } else {
+          newData = [...response.result.data];
         }
 
         setOrders(
@@ -351,5 +356,5 @@ const useOrderFetcher = (limit = DEFAULT_LIMIT, filter: TokensFilter, props: Fet
     setIsLoading(false);
   };
 
-  return { orders, isLoading, cursor, hasNextPage, fetch, error };
+  return { orders, isLoading, hasNextPage, fetch, error };
 };

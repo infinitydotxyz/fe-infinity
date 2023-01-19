@@ -59,7 +59,7 @@ function useTokenFetcher<From, To>({
     if (loadMore) {
       response = await fetcher(cursor, filter);
     } else {
-      response = await fetcher('', filter);
+      response = await fetcher('', filter); // reset cursor
     }
 
     if (response.error) {
