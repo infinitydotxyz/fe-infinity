@@ -1,19 +1,18 @@
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { AiOutlineCheckCircle, AiOutlinePlusCircle } from 'react-icons/ai';
+import { BasicTokenInfo, Erc721TokenOffer } from 'src/utils/types';
 import {
   borderColor,
   brandTextColor,
   cardColor,
   hoverColorBrandText,
   iconButtonStyle,
-  secondaryBgColor,
   selectionBorder
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { AButton } from '../astra/astra-button';
 import { TokenCardModal } from '../astra/token-grid/token-card-modal';
-import { BasicTokenInfo, Erc721TokenOffer } from 'src/utils/types';
 import { BlueCheck, EthSymbol, EZImage, Spacer } from '../common';
 
 interface Props {
@@ -47,7 +46,7 @@ export const GridCard = ({ data, onClick, selected, isSelectable }: Props): JSX.
         cardColor,
         'rounded-lg w-full relative flex flex-col shadow-[0px_4px_10px_0px_rgba(0,0,0,0.12)] \
              hover:shadow-[0px_4px_10px_0px_rgba(0,0,0,0.2)] cursor-pointer',
-        selected ? selectionBorder : '',
+        selected ? selectionBorder : `hover:border-[1px] border-gray-400`,
         notSelectable ? 'animate-wiggle' : ''
       )}
       style={{ aspectRatio: '3.5/5' }}
@@ -68,14 +67,14 @@ export const GridCard = ({ data, onClick, selected, isSelectable }: Props): JSX.
               so we do this absolute image below the pillbadges */}
           <div className="absolute top-0 bottom-0 left-0 right-0 rounded-t-lg overflow-clip">
             <EZImage src={data?.image} className="hover:scale-110 transition-all" />
-            {selected && (
-              <div className={twMerge('absolute top-2 right-2 rounded-full', secondaryBgColor)}>
-                <AiOutlineCheckCircle className={twMerge(iconButtonStyle, brandTextColor)} />
+            {showPlusIcon && !selected && (
+              <div className={twMerge('absolute top-2 right-2 rounded-full')}>
+                <AiOutlinePlusCircle className={twMerge(iconButtonStyle, brandTextColor)} />
               </div>
             )}
-            {showPlusIcon && !selected && (
-              <div className={twMerge('absolute top-2 right-2 rounded-full', secondaryBgColor)}>
-                <AiOutlinePlusCircle className={twMerge(iconButtonStyle, brandTextColor)} />
+            {selected && (
+              <div className={twMerge('absolute top-2 right-2 rounded-full')}>
+                <AiOutlineCheckCircle className={twMerge(iconButtonStyle, brandTextColor)} />
               </div>
             )}
           </div>

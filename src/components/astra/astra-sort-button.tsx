@@ -8,12 +8,11 @@ interface Props {
   setFilter: (filter: TokensFilter) => void;
 }
 
-// There has to be a parent with OrderbookProvider to work.
 export const ASortButton = ({ className, filter, setFilter }: Props) => {
-  const [label, setLabel] = useState<string>(getSortLabel(filter.sort));
+  const [label, setLabel] = useState<string>();
 
   useEffect(() => {
-    setLabel(getSortLabel(filter.sort));
+    setLabel(getSortLabel(filter.sort ?? SORT_FILTERS.lowestPrice));
   }, [filter.sort]);
 
   const onClickSort = (_label: string, sortOrder: string) => {

@@ -24,18 +24,18 @@ export const AStatusFilterButton = ({ filter, setFilter }: Props) => {
           }
         },
         {
-          label: 'Has listings',
+          label: 'With Listings',
           onClick: () => {
-            setLabel('Has listings');
+            setLabel('With Listings');
             const newFilter: TokensFilter = {};
             newFilter.orderType = 'listing';
             setFilter({ ...filter, ...newFilter });
           }
         },
         {
-          label: 'Has offers',
+          label: 'With Offers',
           onClick: () => {
-            setLabel('Has offers');
+            setLabel('With Offers');
             const newFilter: TokensFilter = {};
             newFilter.orderType = 'offer';
             setFilter({ ...filter, ...newFilter });

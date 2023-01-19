@@ -69,7 +69,6 @@ export function CollectionTraitsDisclosure({
                   const newFilter: TokensFilter = {};
                   newFilter.traitTypes = traitTypes;
                   newFilter.traitValues = traitValues;
-                  newFilter.orderBy = 'tokenIdNumeric';
                   setFilter({ ...filter, ...newFilter });
                 }}
               />

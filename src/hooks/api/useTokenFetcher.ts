@@ -1,5 +1,5 @@
 import { BaseToken, Erc721Token, OrdersSnippet } from '@infinityxyz/lib-frontend/types/core';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { ApiResponse } from 'src/utils';
 import { fetchCollectionTokens, fetchProfileTokens } from 'src/utils/astra-utils';
@@ -50,21 +50,17 @@ function useTokenFetcher<From, To>({
   const [hasNextPage, setHasNextPage] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const refetch = () => fetch(false);
-
-  // refetch whenever 'reset' finished updating the state (also fired on mount)
-  useEffect(() => {
-    if (cursor === '' && data.length === 0) {
-      refetch();
-    }
-  }, [cursor, data]);
-
   const fetch = async (loadMore: boolean) => {
     if (!isMounted || !execute) {
       return;
     }
 
-    const response = await fetcher(cursor, filter);
+    let response;
+    if (loadMore) {
+      response = await fetcher(cursor, filter);
+    } else {
+      response = await fetcher('', filter);
+    }
 
     if (response.error) {
       setError(response.error);
@@ -72,9 +68,8 @@ function useTokenFetcher<From, To>({
     } else {
       const result = response.result;
       const newData = mapper(result.data);
-
-      setData(loadMore ? (state) => [...state, ...newData] : newData);
       setCursor(result.cursor);
+      setData(loadMore ? (state) => [...state, ...newData] : newData);
       setHasNextPage(result.hasNextPage);
       setError(undefined);
     }
@@ -82,7 +77,7 @@ function useTokenFetcher<From, To>({
     setIsLoading(false);
   };
 
-  return { error, cursor, data, hasNextPage, isLoading, fetch };
+  return { error, data, hasNextPage, isLoading, fetch };
 }
 
 const nftsToCardDataWithOfferFields = (

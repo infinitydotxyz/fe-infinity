@@ -10,7 +10,7 @@ export type TokenFetcherOptions = { cursor?: string } & TokensFilter;
 export const fetchCollectionTokens = async (
   collectionAddress: string,
   chainId: string,
-  { cursor, sort = 'tokenIdNumeric', ...options }: TokenFetcherOptions = {}
+  { cursor, sort = SORT_FILTERS.lowestPrice, ...options }: TokenFetcherOptions = {}
 ): Promise<ApiResponse> => {
   const filters = {
     orderBy: '',
