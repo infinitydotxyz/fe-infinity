@@ -4,11 +4,10 @@ import React, { ReactNode, useContext, useState } from 'react';
 import { toastError, toastWarning } from 'src/components/common';
 import { getEstimatedGasPrice } from '../commonUtils';
 import { DEFAULT_MAX_GAS_PRICE_WEI } from '../constants';
-import { getSignedOBOrder } from '../orders';
-import { useOnboardContext } from './OnboardContext/OnboardContext';
 import { fetchOrderNonce, postOrdersV2 } from '../orderbookUtils';
+import { getSignedOBOrder } from '../orders';
 import { secondsPerDay } from '../ui-constants';
-import { useAppContext } from './AppContext';
+import { useOnboardContext } from './OnboardContext/OnboardContext';
 
 export interface OrderCartItem {
   isSellOrder: boolean;
@@ -121,7 +120,6 @@ export const CartContextProvider = ({ children }: Props) => {
   const [numItems, setNumItems] = useState<number>(1);
 
   // for executing orders
-  const { showAppError } = useAppContext();
   const { getSigner, getEthersProvider, user, chainId } = useOnboardContext();
 
   const isOrderBuilderEmpty = (): boolean => {
@@ -249,7 +247,7 @@ export const CartContextProvider = ({ children }: Props) => {
       setCartItems([]);
     } catch (err) {
       console.error(err);
-      showAppError('Failed constructing order');
+      toastError('Failed constructing order');
       return;
     }
   };
@@ -317,12 +315,12 @@ export const CartContextProvider = ({ children }: Props) => {
 
   const executeOrder = async (): Promise<boolean> => {
     if (!user) {
-      showAppError('You must be logged in to execute an order');
+      toastError('You must be logged in to execute an order');
       return false;
     }
     const signer = getSigner();
     if (!signer) {
-      showAppError('signer not found');
+      toastError('No Signer');
       return false;
     }
     setOrderDrawerOpen(false);

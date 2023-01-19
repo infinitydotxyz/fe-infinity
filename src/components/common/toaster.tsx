@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { toast as reactToast, TypeOptions } from 'react-toastify';
-import { ellipsisString } from 'src/utils';
+import { ellipsisString, getCustomExceptionMsg } from 'src/utils';
 
 export const toastInfo = (message: ReactNode) => {
   _showToast(message, 'info');
@@ -13,14 +13,15 @@ export const toastSuccess = (message: ReactNode) => {
 
 // Toast an error message
 export const toastError = (message: ReactNode, onClick?: (message: ReactNode) => void) => {
+  const customMsg = getCustomExceptionMsg(message);
   try {
     if (onClick) {
-      reactToast(message, {
+      reactToast(customMsg, {
         type: 'error',
-        onClick: () => onClick(message)
+        onClick: () => onClick(customMsg)
       });
     } else {
-      _showToast(message, 'error');
+      _showToast(customMsg, 'error');
     }
   } catch (err) {
     console.error(err);
@@ -32,7 +33,7 @@ export const toastWarning = (message: ReactNode) => {
   _showToast(message, 'warning');
 };
 
-export const _showToast = (message: ReactNode, type: TypeOptions | undefined) => {
+const _showToast = (message: ReactNode, type: TypeOptions | undefined) => {
   let msg = message;
 
   // some toasts show a failed transaction which can be long

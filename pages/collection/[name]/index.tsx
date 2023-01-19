@@ -48,7 +48,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
 
   useEffect(() => {
     fetch(false);
-  }, [filter]);
+  }, [filter, collection.address]);
 
   const onTabChange = (tab: string) => {
     setSelectedTab(tab);
@@ -137,7 +137,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
 
               <TokenGrid
                 listMode={listMode}
-                className="px-4 py-4"
+                className="px-4 py-4 min-h-[600px]" // this min height is to prevent the grid from collapsing when there are no items so filter menus can still render
                 onClick={toggleSelection}
                 isSelectable={isSelectable}
                 isSelected={isSelected}

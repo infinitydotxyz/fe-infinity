@@ -7,31 +7,31 @@ import {
   SignedOBOrder
 } from '@infinityxyz/lib-frontend/types/core';
 import { getOBComplicationAddress, getTxnCurrencyAddress, trimLowerCase } from '@infinityxyz/lib-frontend/utils';
+import { useRouter } from 'next/router';
 import { ProfileTabs } from 'pages/profile/[address]';
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
-import { Erc721CollectionOffer, Erc721TokenOffer } from 'src/utils/types';
+import 'react-toastify/dist/ReactToastify.min.css';
+import { toastError, toastInfo, toastSuccess, toastWarning } from 'src/components/common';
+import { WaitingForTxModal } from 'src/components/orderbook/waiting-for-tx-modal';
 import { useCollectionSelection } from 'src/hooks/useCollectionSelection';
 import { useNFTSelection } from 'src/hooks/useNFTSelection';
 import { useOrderSelection } from 'src/hooks/useOrderSelection';
-import { toastError, toastInfo, toastSuccess, toastWarning } from 'src/components/common';
-import { WaitingForTxModal } from 'src/components/orderbook/waiting-for-tx-modal';
 import { cancelMultipleOrders } from 'src/utils/orders';
+import { Erc721CollectionOffer, Erc721TokenOffer } from 'src/utils/types';
 import {
   CART_TYPE,
   ellipsisAddress,
   extractErrorMsg,
   getCartType,
-  getCustomExceptionMsg,
   getDefaultOrderExpiryTime,
   getEstimatedGasPrice,
   getOrderExpiryTimeInMsFromEnum
 } from '../commonUtils';
 import { DEFAULT_MAX_GAS_PRICE_WEI, ZERO_ADDRESS } from '../constants';
+import { fetchOrderNonce, postOrdersV2 } from '../orderbookUtils';
 import { getSignedOBOrder, sendMultipleNfts, sendSingleNft } from '../orders';
 import { useOnboardContext } from './OnboardContext/OnboardContext';
-import { fetchOrderNonce, postOrdersV2 } from '../orderbookUtils';
-import { useRouter } from 'next/router';
 
 export type User = {
   address: string;
@@ -39,9 +39,6 @@ export type User = {
 };
 
 type AppContextType = {
-  showAppError: (msg: string) => void;
-  showAppMessage: (msg: string) => void;
-
   showCart: boolean;
   setShowCart: (value: boolean) => void;
 
@@ -117,12 +114,6 @@ export const AppContextProvider = ({ children }: Props) => {
   useEffect(() => {
     refreshData();
   }, []);
-
-  const showAppError = (message: ReactNode) => {
-    getCustomExceptionMsg(message);
-  };
-
-  const showAppMessage = (message: ReactNode) => message;
 
   const handleTokenSend = async (nftsToSend: Erc721TokenOffer[], sendToAddress: string) => {
     const orderItems: ChainNFTs[] = [];
@@ -406,9 +397,6 @@ export const AppContextProvider = ({ children }: Props) => {
   };
 
   const value: AppContextType = {
-    showAppError,
-    showAppMessage,
-
     showCart,
     setShowCart,
 
@@ -452,6 +440,7 @@ export const AppContextProvider = ({ children }: Props) => {
         {children}{' '}
         {txnHash && <WaitingForTxModal title={'Sending NFTs'} txHash={txnHash} onClose={() => setTxnHash('')} />}
         <ToastContainer
+          limit={3}
           position="top-right"
           autoClose={3000}
           hideProgressBar={false}

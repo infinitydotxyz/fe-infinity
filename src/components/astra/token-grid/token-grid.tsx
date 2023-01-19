@@ -114,7 +114,7 @@ const GridItem = ({ data, onClick, selected, isSelectable }: Props2): JSX.Elemen
     <div
       className={twMerge(
         hoverColor,
-        '  w-full relative flex flex-col  px-3 py-2 transition-all duration-200',
+        'w-full relative flex flex-col  px-3 py-2 transition-all duration-200',
         notSelectable ? 'animate-wiggle' : ''
       )}
       onClick={() => {

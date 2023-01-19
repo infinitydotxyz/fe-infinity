@@ -1,5 +1,5 @@
 import { getAddress } from '@ethersproject/address';
-import { BaseToken, ChainId, ERC721CardData, OwnerInfo } from '@infinityxyz/lib-frontend/types/core';
+import { BaseToken, ERC721CardData, OwnerInfo } from '@infinityxyz/lib-frontend/types/core';
 import { BaseCollection } from '@infinityxyz/lib-frontend/types/core/Collection';
 import {
   Env,
@@ -206,7 +206,7 @@ export const getCustomExceptionMsg = (msg: ReactNode) => {
     customMsg = 'Insufficient funds for gas * price + value';
   }
   if (typeof msg === 'string' && msg.indexOf('User denied transaction signature.') > 0) {
-    customMsg = 'MetaMask: User denied transaction signature';
+    customMsg = 'Denied';
   }
   return customMsg;
 };
@@ -364,21 +364,6 @@ export const getEstimatedGasPrice = async (
   return priceEstimate.toString();
 };
 
-export const getUserToDisplay = (
-  user: { address: string; username?: string; displayName?: string },
-  currentUserAddress: string
-): { value: string; link: string; address: string } => {
-  if (currentUserAddress === user.address) {
-    return { value: 'You', link: '/profile/me', address: currentUserAddress };
-  }
-
-  return {
-    value: ellipsisString(user.displayName || user.username || ellipsisAddress(user.address)),
-    address: user.address,
-    link: `/profile/${user.address}`
-  };
-};
-
 export const getDefaultOrderExpiryTime = (): ORDER_EXPIRY_TIME => {
   return ORDER_EXPIRY_TIME.WEEK;
 };
@@ -398,14 +383,6 @@ export const getOrderExpiryTimeInMsFromEnum = (expiry: ORDER_EXPIRY_TIME): numbe
     default:
       return Date.now() + 7 * 24 * 60 * 60 * 1000;
   }
-};
-
-export const getCollectionLink = ({ slug, address, chainId }: { slug: string; address: string; chainId: ChainId }) => {
-  return `/collection/${slug || chainId.toString() + ':' + address}`;
-};
-
-export const getTokenLink = ({ chainId, address, tokenId }: { chainId: ChainId; address: string; tokenId: string }) => {
-  return `/asset/${chainId.toString()}/${address}/${tokenId}`;
 };
 
 export const replaceIPFSWithGateway = (_url?: string) => {
