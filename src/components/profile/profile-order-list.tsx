@@ -5,7 +5,7 @@ import { MdClose } from 'react-icons/md';
 import { useProfileOrderFetcher } from 'src/hooks/api/useOrderFetcher';
 import { ellipsisAddress, extractErrorMsg } from 'src/utils';
 import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
-import { fetchOrderNonce } from 'src/utils/orderbookUtils';
+import { fetchOrderNonce } from 'src/utils/orderbook-utils';
 import { cancelAllOrders } from 'src/utils/orders';
 import { TokensFilter } from 'src/utils/types';
 import { borderColor, hoverColorBrandText, secondaryTextColor } from 'src/utils/ui-constants';

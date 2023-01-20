@@ -1,7 +1,7 @@
 import axios, { AxiosRequestHeaders } from 'axios';
 import { trimText } from 'src/components/common';
 import { SORT_FILTERS, TokensFilter } from 'src/utils/types';
-import { ApiResponse } from './apiUtils';
+import { ApiResponse } from './api-utils';
 import { API_BASE, LARGE_LIMIT, SMALL_LIMIT } from './constants';
 import { OnboardAuthProvider } from './context/OnboardContext/OnboardAuthProvider';
 

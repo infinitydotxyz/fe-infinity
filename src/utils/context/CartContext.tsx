@@ -2,14 +2,14 @@ import { ChainId, Erc721Attribute, OBOrder, OBOrderItem, SignedOBOrder } from '@
 import { getOBComplicationAddress, getTxnCurrencyAddress, NULL_ADDRESS } from '@infinityxyz/lib-frontend/utils';
 import React, { ReactNode, useContext, useState } from 'react';
 import { toastError, toastWarning } from 'src/components/common';
-import { getEstimatedGasPrice } from '../commonUtils';
+import { getEstimatedGasPrice } from '../common-utils';
 import { DEFAULT_MAX_GAS_PRICE_WEI } from '../constants';
-import { fetchOrderNonce, postOrdersV2 } from '../orderbookUtils';
+import { fetchOrderNonce, postOrdersV2 } from '../orderbook-utils';
 import { getSignedOBOrder } from '../orders';
 import { secondsPerDay } from '../ui-constants';
 import { useOnboardContext } from './OnboardContext/OnboardContext';
 
-export interface OrderCartItem {
+interface OrderCartItem {
   isSellOrder: boolean;
   tokenImage?: string;
   tokenName?: string;
@@ -24,7 +24,7 @@ export interface OrderCartItem {
   attributes?: Erc721Attribute[];
 }
 
-export interface OBOrderSpec {
+interface OBOrderSpec {
   chainId: string;
   isSellOrder: boolean;
   numItems: number;
@@ -37,7 +37,7 @@ export interface OBOrderSpec {
   nfts: OBOrderItem[];
 }
 
-export interface OrderInCart {
+interface OrderInCart {
   id: number;
   cartItems: OrderCartItem[];
   orderSpec: OBOrderSpec;
@@ -63,7 +63,7 @@ const indexOfCartItem = (list: OrderCartItem[], item: OrderCartItem): number => 
   return -1;
 };
 
-export type CartContextType = {
+type CartContextType = {
   orderDrawerOpen: boolean;
   setOrderDrawerOpen: (flag: boolean) => void;
 

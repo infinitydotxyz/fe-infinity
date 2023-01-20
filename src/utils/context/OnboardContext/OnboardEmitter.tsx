@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import mitt from 'mitt';
-import { ProviderEvents } from './UserRejectException';
+import { ProviderEvents } from './types';
 
 class _Emitter {
   // cache

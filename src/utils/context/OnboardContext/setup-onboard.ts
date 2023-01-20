@@ -6,8 +6,7 @@ import walletConnectModule from '@web3-onboard/walletconnect';
 import coinbaseModule from '@web3-onboard/coinbase';
 import torusModule from '@web3-onboard/torus';
 import gnosisModule from '@web3-onboard/gnosis';
-import blocknativeLogo from 'src/images/blocknative-logo';
-import blocknativeIcon from 'src/images/blocknative-icon';
+import dummyIcon from 'src/images/dummyIcon';
 
 const alchemyJsonRpcEthMainnet = 'https://eth-mainnet.alchemyapi.io/v2/1kQ5oCC7TqDhhOWw1aOHA1Rmt7aXMvcW';
 const alchemyJsonRpcPolygonMainnet = 'https://polygon-mainnet.g.alchemy.com/v2/LxNovF6VKKnd82eTr-sExIgwj-p-lIcm';
@@ -65,9 +64,8 @@ export const setupOnboard = () => {
 
     appMetadata: {
       name: 'Flow',
-      icon: blocknativeIcon,
-      logo: blocknativeLogo,
-      description: 'Flow NFT auto sniper',
+      icon: dummyIcon,
+      description: 'Flow',
       recommendedInjectedWallets: [
         { name: 'Coinbase', url: 'https://wallet.coinbase.com/' },
         { name: 'MetaMask', url: 'https://metamask.io' }

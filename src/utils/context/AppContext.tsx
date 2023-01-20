@@ -27,9 +27,9 @@ import {
   getDefaultOrderExpiryTime,
   getEstimatedGasPrice,
   getOrderExpiryTimeInMsFromEnum
-} from '../commonUtils';
+} from '../common-utils';
 import { DEFAULT_MAX_GAS_PRICE_WEI, ZERO_ADDRESS } from '../constants';
-import { fetchOrderNonce, postOrdersV2 } from '../orderbookUtils';
+import { fetchOrderNonce, postOrdersV2 } from '../orderbook-utils';
 import { getSignedOBOrder, sendMultipleNfts, sendSingleNft } from '../orders';
 import { useOnboardContext } from './OnboardContext/OnboardContext';
 

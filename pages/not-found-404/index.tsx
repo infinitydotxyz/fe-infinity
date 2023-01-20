@@ -1,7 +1,7 @@
 import { APageBox } from 'src/components/astra/astra-page-box';
 import { Button } from 'src/components/common';
 import image404 from 'src/images/404.png';
-import { indexCollection } from 'src/utils/orderbookUtils';
+import { indexCollection } from 'src/utils/orderbook-utils';
 
 interface Props {
   collectionSlug?: string;

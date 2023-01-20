@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { WalletState } from '@web3-onboard/core';
 import { ethers, Signature } from 'ethers';
-import { splitSignature } from 'ethers/lib/utils';
+import { splitSignature } from '@ethersproject/bytes';
 
 export class WalletSigner {
   public wallet;

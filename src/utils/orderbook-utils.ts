@@ -1,6 +1,6 @@
 import { ChainId, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
-import { apiPost, apiPut } from 'src/utils/apiUtils';
+import { apiPost, apiPut } from 'src/utils/api-utils';
 import { apiGet } from '.';
 import { User } from './context/AppContext';
 import { toastSuccess } from 'src/components/common';

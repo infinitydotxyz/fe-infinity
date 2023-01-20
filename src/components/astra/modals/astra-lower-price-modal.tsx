@@ -19,7 +19,7 @@ import {
 } from 'src/utils';
 import { getSignedOBOrder } from 'src/utils/orders';
 import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
-import { postOrdersV2 } from 'src/utils/orderbookUtils';
+import { postOrdersV2 } from 'src/utils/orderbook-utils';
 
 interface Props {
   isOpen: boolean;

@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import { memo, StrictMode, useEffect } from 'react';
 import { Layout } from 'src/components/astra/layout';
 import 'src/settings/tailwind/globals.scss';
-import { isLocalhost } from 'src/utils/commonUtils';
+import { isLocalhost } from 'src/utils/common-utils';
 import { AppContextProvider } from 'src/utils/context/AppContext';
 import { OnboardContextProvider } from 'src/utils/context/OnboardContext/OnboardContext';
 

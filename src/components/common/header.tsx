@@ -10,7 +10,7 @@ export const Header = ({ title = 'Home' }: Props) => {
     <>
       <Head>
         <link rel="shortcut icon" href="/favicon.ico" />
-        <meta name="description" content="Flow NFT auto sniper" />
+        <meta name="description" content="Flow" />
 
         <title>{title ? `${title} | Flow` : 'Flow'}</title>
       </Head>
