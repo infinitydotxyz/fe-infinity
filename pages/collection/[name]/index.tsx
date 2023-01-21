@@ -4,6 +4,8 @@ import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import NotFound404Page from 'pages/not-found-404';
 import { useEffect, useState } from 'react';
+import { AiOutlineCheckCircle } from 'react-icons/ai';
+import { AButton } from 'src/components/astra/astra-button';
 import { APriceFilter } from 'src/components/astra/astra-price-filter';
 import { ASortButton } from 'src/components/astra/astra-sort-button';
 import { AStatusFilterButton } from 'src/components/astra/astra-status-button';
@@ -19,7 +21,9 @@ import { useCollectionTokenFetcher } from 'src/hooks/api/useTokenFetcher';
 import { useScrollInfo } from 'src/hooks/useScrollHook';
 import { apiGet, nFormatter } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { TokensFilter } from 'src/utils/types';
+import { CartType, useCartContext } from 'src/utils/context/CartContext';
+import { ERC721CollectionCartItem, TokensFilter } from 'src/utils/types';
+import { twMerge } from 'tailwind-merge';
 
 interface CollectionDashboardProps {
   collection: BaseCollection;
@@ -35,20 +39,34 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   }
 
   const {
-    isNFTSelected: isSelected,
-    isNFTSelectable: isSelectable,
+    isNFTSelected,
+    isNFTSelectable,
     listMode,
-    toggleNFTSelection: toggleSelection
+    toggleNFTSelection,
+    toggleCollSelection,
+    isCollSelected,
+    isCollSelectable,
+    tokenGridDisabled,
+    setTokenGridDisabled
   } = useAppContext();
   const [filter, setFilter] = useState<TokensFilter>({});
   const { data, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection.address, filter);
   const { setRef, scrollTop } = useScrollInfo();
   const tabs = ['Items'];
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
+  const { setCartType } = useCartContext();
 
   useEffect(() => {
     fetch(false);
   }, [filter, collection.address]);
+
+  useEffect(() => {
+    if (tokenGridDisabled) {
+      setCartType(CartType.CollectionOffer);
+    } else {
+      setCartType(CartType.TokenOffer);
+    }
+  }, [tokenGridDisabled]);
 
   const onTabChange = (tab: string) => {
     setSelectedTab(tab);
@@ -128,6 +146,28 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                 </div>
                 <Spacer />
                 <div className="flex space-x-2">
+                  <div className="flex gap-2">
+                    <AButton
+                      primary
+                      className="px-5 py-1 rounded-lg text-sm"
+                      onClick={() => {
+                        setCartType(CartType.CollectionOffer);
+                        setTokenGridDisabled(!tokenGridDisabled);
+                        if (isCollSelectable(collection as ERC721CollectionCartItem)) {
+                          return toggleCollSelection(collection as ERC721CollectionCartItem);
+                        }
+                      }}
+                    >
+                      {isCollSelected(collection as ERC721CollectionCartItem) ? (
+                        <div className="flex items-center space-x-1">
+                          <AiOutlineCheckCircle className={'h-4 w-4'} />
+                          <div>Collection Offer</div>
+                        </div>
+                      ) : (
+                        'Collection Offer'
+                      )}
+                    </AButton>
+                  </div>
                   <ASortButton filter={filter} setFilter={setFilter} />
                   <AStatusFilterButton filter={filter} setFilter={setFilter} />
                   <APriceFilter filter={filter} setFilter={setFilter} />
@@ -137,10 +177,13 @@ export default function ItemsPage(props: CollectionDashboardProps) {
 
               <TokenGrid
                 listMode={listMode}
-                className="px-4 py-4 min-h-[600px]" // this min height is to prevent the grid from collapsing when there are no items so filter menus can still render
-                onClick={toggleSelection}
-                isSelectable={isSelectable}
-                isSelected={isSelected}
+                className={twMerge(
+                  'px-4 py-4 min-h-[600px]',
+                  tokenGridDisabled ? 'opacity-30 duration-300 pointer-events-none' : 'duration-300'
+                )} // this min height is to prevent the grid from collapsing when there are no items so filter menus can still render
+                onClick={toggleNFTSelection}
+                isSelectable={isNFTSelectable}
+                isSelected={isNFTSelected}
                 data={data}
                 hasNextPage={hasNextPage}
                 onFetchMore={() => fetch(true)}

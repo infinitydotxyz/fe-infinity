@@ -42,6 +42,9 @@ type AppContextType = {
   showCart: boolean;
   setShowCart: (value: boolean) => void;
 
+  tokenGridDisabled: boolean;
+  setTokenGridDisabled: (value: boolean) => void;
+
   selectedProfileTab: string;
   setSelectedProfileTab: (value: string) => void;
 
@@ -89,6 +92,7 @@ export const AppContextProvider = ({ children }: Props) => {
   const [selectedProfileTab, setSelectedProfileTab] = useState(ProfileTabs.Items.toString());
   const [listMode, setListMode] = useState(false);
   const [txnHash, setTxnHash] = useState<string>('');
+  const [tokenGridDisabled, setTokenGridDisabled] = useState(false);
   const { getSigner, getEthersProvider, user, chainId, waitForTransaction } = useOnboardContext();
   const {
     isNFTSelected,
@@ -259,6 +263,8 @@ export const AppContextProvider = ({ children }: Props) => {
         toastError(`${ex}}`);
       }
     }
+
+    setTokenGridDisabled(!tokenGridDisabled);
   };
 
   const tokenToOBOrder = async (
@@ -400,6 +406,9 @@ export const AppContextProvider = ({ children }: Props) => {
   const value: AppContextType = {
     showCart,
     setShowCart,
+
+    tokenGridDisabled,
+    setTokenGridDisabled,
 
     selectedProfileTab,
     setSelectedProfileTab,
