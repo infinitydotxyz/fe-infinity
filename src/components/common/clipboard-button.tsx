@@ -24,7 +24,7 @@ export const ClipboardButton: React.FC<ClipboardButtonProps> = ({ textToCopy, cl
         }, 1500);
       },
       (err) => {
-        console.log('failed to copy', err.mesage);
+        console.error('failed to copy', err.mesage);
       }
     );
   };

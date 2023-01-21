@@ -172,14 +172,14 @@ export const httpErrorResponse = (error: unknown) => {
   if (err.response) {
     message = err.response.data;
     status = err.response.status;
-    console.log(err.response.headers);
+    console.error(err.response.headers);
   } else if (err.request) {
-    console.log(err.request);
+    console.error(err.request);
     message = 'request error';
   } else {
     message = err.message;
   }
-  console.log(err.config);
+  console.error(err.config);
 
   // make sure error: is never undefined since if (error) fails in that case
   return { status: status, error: message ?? 'Unknown Error' };

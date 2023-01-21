@@ -69,8 +69,6 @@ class _OnboardAuthProvider {
       };
     }
 
-    console.log('### getAuthHeaders called when not authenticated');
-
     return {};
   }
 
@@ -89,7 +87,7 @@ class _OnboardAuthProvider {
 
           return result;
         } catch (err) {
-          console.log(err);
+          console.error(err);
           return false;
         }
       }
@@ -137,7 +135,7 @@ class _OnboardAuthProvider {
               this.currentCreds = result;
             }
           } catch (err) {
-            console.log(err);
+            console.error(err);
           }
         }
       }

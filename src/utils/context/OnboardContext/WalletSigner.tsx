@@ -56,7 +56,7 @@ export class WalletSigner {
         return splitSignature(result);
       }
     } catch (err: any) {
-      console.log(err);
+      console.error(err);
       // if (err?.code === 4001) {
       //   throw new UserRejectException(WalletType.MetaMask);
       // }

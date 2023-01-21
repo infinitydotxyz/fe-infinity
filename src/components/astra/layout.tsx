@@ -47,7 +47,7 @@ export const Layout = ({ children }: Props) => {
             clearOrderSelection();
           }
         } catch (e) {
-          console.log(e);
+          console.error(e);
           toastError(e);
         }
       }}

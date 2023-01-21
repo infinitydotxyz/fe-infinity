@@ -320,7 +320,7 @@ export const AppContextProvider = ({ children }: Props) => {
       };
       return order;
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
@@ -370,7 +370,7 @@ export const AppContextProvider = ({ children }: Props) => {
       };
       return order;
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 

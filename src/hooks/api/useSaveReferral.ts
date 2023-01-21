@@ -26,7 +26,6 @@ export const useSaveReferral = (assetAddress: string, chainId: ChainId, tokenId?
         assetTokenId: tokenId ?? ''
       };
 
-      console.log(`Saving referral for ${userAddress} from ${body.referrer} for ${chainId}:${assetAddress}:${tokenId}`);
       apiPut(`/user/${user.address}/referrals`, { data: body }).catch((err) => console.error(err));
     }
   }, [user?.address, assetAddress, chainId, tokenId, query.referrer]);

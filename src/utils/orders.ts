@@ -88,7 +88,6 @@ export async function isOrderValid(
 
   // check if nonce is valid
   const isNonceValid = await infinityExchange.isNonceValid(user.address, order.nonce);
-  console.log('Nonce valid:', isNonceValid);
   if (!isNonceValid) {
     console.error('Order nonce is not valid');
     return false;
@@ -112,7 +111,6 @@ export async function grantApprovals(
   signer: JsonRpcSigner,
   exchange: string
 ): Promise<boolean> {
-  console.log('Granting approvals');
   if (!order.isSellOrder) {
     // approve currencies
     const currentPrice = getCurrentOBOrderPrice(order);
@@ -133,7 +131,6 @@ export async function checkERC20Balance(
   price: BigNumberish,
   signer: JsonRpcSigner
 ) {
-  console.log('Checking ERC20 balance for currency', currencyAddress);
   if (currencyAddress !== NULL_ADDRESS) {
     const contract = new Contract(currencyAddress, ERC20ABI, signer);
     const balance = BigNumber.from(await contract.balanceOf(user));
@@ -155,14 +152,11 @@ export async function approveERC20(
   infinityExchangeAddress: string
 ) {
   try {
-    console.log('Granting ERC20 approval for currency', currencyAddress);
     if (currencyAddress !== NULL_ADDRESS) {
       const contract = new Contract(currencyAddress, ERC20ABI, signer);
       const allowance = BigNumber.from(await contract.allowance(user, infinityExchangeAddress));
       if (allowance.lt(price)) {
         await contract.approve(infinityExchangeAddress, MaxUint256);
-      } else {
-        console.log('ERC20 approval already granted');
       }
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -179,7 +173,6 @@ export async function approveERC721ForChainNFTs(
   exchange: string
 ) {
   try {
-    console.log('Granting ERC721 approval');
     const collectionsChecked = new Set<string>();
     const results: unknown[] = [];
     for (const item of items) {
@@ -190,8 +183,6 @@ export async function approveERC721ForChainNFTs(
         if (!isApprovedForAll) {
           const result = await contract.setApprovalForAll(exchange, true);
           results.push(result);
-        } else {
-          console.log('Already approved for all');
         }
         collectionsChecked.add(collection);
       }
@@ -206,15 +197,12 @@ export async function approveERC721ForChainNFTs(
 
 export async function approveERC721(user: string, items: OBOrderItem[], signer: JsonRpcSigner, exchange: string) {
   try {
-    console.log('Granting ERC721 approval');
     for (const item of items) {
       const collection = item.collectionAddress;
       const contract = new Contract(collection, ERC721ABI, signer);
       const isApprovedForAll = await contract.isApprovedForAll(user, exchange);
       if (!isApprovedForAll) {
         await contract.setApprovalForAll(exchange, true);
-      } else {
-        console.log('Already approved for all');
       }
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -225,7 +213,6 @@ export async function approveERC721(user: string, items: OBOrderItem[], signer: 
 }
 
 export async function checkOnChainOwnership(user: User, order: OBOrder, signer: JsonRpcSigner): Promise<boolean> {
-  console.log('Checking on chain ownership');
   let result = true;
   for (const nft of order.nfts) {
     const collection = nft.collectionAddress;
@@ -239,7 +226,6 @@ export async function checkOnChainOwnership(user: User, order: OBOrder, signer: 
 
 export async function checkERC721Ownership(user: User, contract: Contract, tokenId: BigNumberish): Promise<boolean> {
   try {
-    console.log('Checking ERC721 on chain ownership');
     const owner = trimLowerCase(await contract.ownerOf(tokenId));
     if (owner !== trimLowerCase(user.address)) {
       // todo: adi should continue to check if other nfts are owned
@@ -560,7 +546,6 @@ export async function sendSingleNft(
   // perform send
   const from = await signer.getAddress();
   const transferResult = await erc721['safeTransferFrom(address,address,uint256)'](from, toAddress, tokenId);
-  console.log('transferResult', transferResult);
   return {
     hash: transferResult?.hash ?? ''
   };

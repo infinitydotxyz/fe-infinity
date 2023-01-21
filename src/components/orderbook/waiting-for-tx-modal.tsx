@@ -16,11 +16,9 @@ export const WaitingForTxModal = ({ title, txHash, onClose }: Props) => {
   const [transactionReceipt, setTransactionReceipt] = useState<TransactionReceipt | undefined>(undefined);
 
   const waitForTransaction = async () => {
-    console.log('waitForTransaction', txHash);
     if (txHash) {
       const provider = getEthersProvider();
       const receipt = await provider?.waitForTransaction(txHash);
-      console.log('waitForTransaction result', receipt);
       setTransactionReceipt(receipt);
     }
   };
