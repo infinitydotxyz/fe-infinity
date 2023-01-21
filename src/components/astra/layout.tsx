@@ -58,13 +58,13 @@ export const Layout = ({ children }: Props) => {
         await handleTokenSend(nftSelection, value);
         clearNFTSelection();
       }}
-      onTokensRemove={(value) => {
+      onTokenRemove={(value) => {
         removeNFTFromSelection(value);
       }}
-      onCollsRemove={(value) => {
+      onCollRemove={(value) => {
         removeCollFromSelection(value);
       }}
-      onOrdersRemove={(value) => {
+      onOrderRemove={(value) => {
         removeOrderFromSelection(value);
       }}
     />

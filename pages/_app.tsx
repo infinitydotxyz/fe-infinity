@@ -8,6 +8,7 @@ import { Layout } from 'src/components/astra/layout';
 import 'src/settings/tailwind/globals.scss';
 import { isLocalhost } from 'src/utils/common-utils';
 import { AppContextProvider } from 'src/utils/context/AppContext';
+import { CartContextProvider } from 'src/utils/context/CartContext';
 import { OnboardContextProvider } from 'src/utils/context/OnboardContext/OnboardContext';
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -30,9 +31,11 @@ const App = (props: AppProps) => {
   return (
     <StrictMode>
       <OnboardContextProvider>
-        <AppContextProvider>
-          <AppBody {...props} />
-        </AppContextProvider>
+        <CartContextProvider>
+          <AppContextProvider>
+            <AppBody {...props} />
+          </AppContextProvider>
+        </CartContextProvider>
       </OnboardContextProvider>
     </StrictMode>
   );

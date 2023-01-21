@@ -1,66 +1,64 @@
 import { useEffect, useState } from 'react';
-import { getTokenKeyId } from 'src/utils';
-import { Erc721TokenOffer } from 'src/utils/types';
+import { getTokenCartItemKey } from 'src/utils';
+import { useCartContext } from 'src/utils/context/CartContext';
+import { ERC721TokenCartItem } from 'src/utils/types';
 
 interface NFTSelectionResult {
-  toggleNFTSelection: (data: Erc721TokenOffer) => void;
-  isNFTSelected: (data: Erc721TokenOffer) => boolean;
-  isNFTSelectable: (data: Erc721TokenOffer) => boolean;
-  removeNFTFromSelection: (data?: Erc721TokenOffer) => void; // null to remove all
-  nftSelection: Erc721TokenOffer[];
+  toggleNFTSelection: (data: ERC721TokenCartItem) => void;
+  isNFTSelected: (data: ERC721TokenCartItem) => boolean;
+  isNFTSelectable: (data: ERC721TokenCartItem) => boolean;
+  removeNFTFromSelection: (data: ERC721TokenCartItem) => void;
+  nftSelection: ERC721TokenCartItem[];
   clearNFTSelection: () => void;
 }
 
 export const useNFTSelection = (): NFTSelectionResult => {
-  const [selectionMap, setSelectionMap] = useState<Map<string, Erc721TokenOffer>>(new Map());
-  const [selection, setSelection] = useState<Erc721TokenOffer[]>([]);
+  const [nftSelectionMap, setNFTSelectionMap] = useState<Map<string, ERC721TokenCartItem>>(new Map());
+  const [nftSelection, setNFTSelection] = useState<ERC721TokenCartItem[]>([]);
+  const { cartType, setCartItems } = useCartContext();
 
   useEffect(() => {
-    setSelection(Array.from(selectionMap.values()));
-  }, [selectionMap]);
+    setNFTSelection(Array.from(nftSelectionMap.values()));
+    setCartItems(Array.from(nftSelectionMap.values()));
+  }, [nftSelectionMap]);
 
-  const toggleSelection = (value: Erc721TokenOffer) => {
-    if (!isSelected(value)) {
-      const copy = new Map(selectionMap);
-      copy.set(getTokenKeyId(value), value);
-
-      setSelectionMap(copy);
+  const toggleNFTSelection = (value: ERC721TokenCartItem) => {
+    value.cartType = cartType;
+    if (!isNFTSelected(value)) {
+      const copy = new Map(nftSelectionMap);
+      copy.set(getTokenCartItemKey(value), value);
+      setNFTSelectionMap(copy);
     } else {
-      removeFromSelection(value);
+      removeNFTFromSelection(value);
     }
   };
 
-  const isSelectable = (value: Erc721TokenOffer): boolean => {
+  const removeNFTFromSelection = (value: ERC721TokenCartItem) => {
+    if (isNFTSelected(value)) {
+      const copy = new Map(nftSelectionMap);
+      copy.delete(getTokenCartItemKey(value));
+      setNFTSelectionMap(copy);
+    }
+  };
+
+  const clearNFTSelection = () => {
+    setNFTSelectionMap(new Map());
+  };
+
+  const isNFTSelectable = (value: ERC721TokenCartItem): boolean => {
     return value.address !== null;
   };
 
-  const removeFromSelection = (value?: Erc721TokenOffer) => {
-    if (value) {
-      if (isSelected(value)) {
-        const copy = new Map(selectionMap);
-        copy.delete(getTokenKeyId(value));
-
-        setSelectionMap(copy);
-      }
-    } else {
-      setSelectionMap(new Map());
-    }
-  };
-
-  const isSelected = (value: Erc721TokenOffer): boolean => {
-    return selectionMap.has(getTokenKeyId(value));
-  };
-
-  const clearSelection = () => {
-    setSelectionMap(new Map());
+  const isNFTSelected = (value: ERC721TokenCartItem): boolean => {
+    return nftSelectionMap.has(getTokenCartItemKey(value));
   };
 
   return {
-    nftSelection: selection,
-    isNFTSelected: isSelected,
-    isNFTSelectable: isSelectable,
-    clearNFTSelection: clearSelection,
-    toggleNFTSelection: toggleSelection,
-    removeNFTFromSelection: removeFromSelection
+    nftSelection,
+    isNFTSelected,
+    isNFTSelectable,
+    clearNFTSelection,
+    toggleNFTSelection,
+    removeNFTFromSelection
   };
 };

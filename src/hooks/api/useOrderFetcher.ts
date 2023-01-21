@@ -147,9 +147,7 @@ const useOrderFetcher = (limit = DEFAULT_LIMIT, filter: TokensFilter, props: Fet
 
   const fetch = async (loadMore: boolean) => {
     try {
-      console.log('filter', filter);
       const parsedFilters = parseFiltersToApiQueryParams(filter);
-      console.log('parsedFilters', parsedFilters);
 
       let collection = '';
       if (filter.collections && filter.collections.length > 1) {
@@ -214,7 +212,6 @@ const useOrderFetcher = (limit = DEFAULT_LIMIT, filter: TokensFilter, props: Fet
           query
         };
       } else if (props.kind === 'profile') {
-        console.log('baseQuery', baseQuery);
         if (props.context?.side === Queries.Side.Maker) {
           const query: Queries.MakerOrdersQuery = {
             ...baseQuery,

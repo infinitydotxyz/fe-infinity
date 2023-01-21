@@ -1,4 +1,4 @@
-import { Collection, CollectionPeriodStatsContent, Erc721Collection } from '@infinityxyz/lib-frontend/types/core';
+import { Collection, CollectionPeriodStatsContent } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { AButton } from 'src/components/astra/astra-button';
@@ -8,6 +8,7 @@ import { useIsMounted } from 'src/hooks/useIsMounted';
 import useScreenSize from 'src/hooks/useScreenSize';
 import { apiGet, formatNumber, nFormatter } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
+import { ERC721CollectionCartItem } from 'src/utils/types';
 import { borderColor, iconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
@@ -113,9 +114,9 @@ interface Props {
   collection: Collection;
   period: string;
   index: number;
-  onClickBuy: (data: Erc721Collection) => void;
-  isCollSelected: (data: Erc721Collection) => boolean;
-  isCollSelectable: (data: Erc721Collection) => boolean;
+  onClickBuy: (data: ERC721CollectionCartItem) => void;
+  isCollSelected: (data: ERC721CollectionCartItem) => boolean;
+  isCollSelectable: (data: ERC721CollectionCartItem) => boolean;
 }
 
 const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelectable, period, index }: Props) => {
@@ -200,12 +201,12 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
             primary
             className="px-9 py-3 rounded-lg"
             onClick={() => {
-              if (isCollSelectable(collection as Erc721Collection)) {
-                onClickBuy(collection as Erc721Collection);
+              if (isCollSelectable(collection as ERC721CollectionCartItem)) {
+                onClickBuy(collection as ERC721CollectionCartItem);
               }
             }}
           >
-            {isCollSelected(collection as Erc721Collection) ? (
+            {isCollSelected(collection as ERC721CollectionCartItem) ? (
               <AiOutlineCheckCircle className={iconButtonStyle} />
             ) : (
               'Buy'

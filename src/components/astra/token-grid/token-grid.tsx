@@ -5,16 +5,16 @@ import { hoverColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { AOutlineButton } from '../astra-button';
 import { ErrorOrLoading } from '../error-or-loading';
-import { BasicTokenInfo, Erc721TokenOffer } from 'src/utils/types';
+import { BasicTokenInfo, ERC721TokenCartItem } from 'src/utils/types';
 import { TokenCardModal } from './token-card-modal';
 
 interface Props {
   listMode: boolean;
   className?: string;
-  onClick?: (data: Erc721TokenOffer) => void;
-  isSelected: (data: Erc721TokenOffer) => boolean;
-  isSelectable: (data: Erc721TokenOffer) => boolean;
-  data: Erc721TokenOffer[];
+  onClick?: (data: ERC721TokenCartItem) => void;
+  isSelected: (data: ERC721TokenCartItem) => boolean;
+  isSelectable: (data: ERC721TokenCartItem) => boolean;
+  data: ERC721TokenCartItem[];
   hasNextPage: boolean;
   onFetchMore: () => void;
   isError?: boolean;
@@ -92,10 +92,10 @@ export const TokenGrid = ({
 };
 
 interface Props2 {
-  data: Erc721TokenOffer;
+  data: ERC721TokenCartItem;
   selected: boolean;
-  isSelectable: (data: Erc721TokenOffer) => boolean;
-  onClick: (data: Erc721TokenOffer) => void;
+  isSelectable: (data: ERC721TokenCartItem) => boolean;
+  onClick: (data: ERC721TokenCartItem) => void;
 }
 
 const GridItem = ({ data, onClick, selected, isSelectable }: Props2): JSX.Element => {

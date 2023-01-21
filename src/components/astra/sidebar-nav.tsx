@@ -10,6 +10,7 @@ import { useAppContext } from 'src/utils/context/AppContext';
 import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { borderColor, hoverColorBrandText, iconButtonStyle, secondaryBgColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
+import { TbSend } from 'react-icons/tb';
 
 export const SidebarNav = () => {
   const { theme, setTheme } = useTheme();
@@ -102,7 +103,7 @@ export const SidebarNav = () => {
           </AButton>
         </HelpToolTip>
 
-        {/* <HelpToolTip placement="right" content={<div className="whitespace-nowrap">Send</div>}>
+        <HelpToolTip placement="right" content={<div className="whitespace-nowrap">Send</div>}>
           <AButton
             highlighted={router.asPath.startsWith(`/profile`) && selectedProfileTab === ProfileTabs.Send}
             onClick={() => {
@@ -120,7 +121,7 @@ export const SidebarNav = () => {
               )}
             />
           </AButton>
-        </HelpToolTip> */}
+        </HelpToolTip>
       </div>
 
       <Spacer />

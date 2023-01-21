@@ -2,7 +2,7 @@ import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { useState } from 'react';
 import { Button, EthPrice } from 'src/components/common';
 import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
-import { TokensFilter } from 'src/utils/types';
+import { ERC721OrderCartItem, TokensFilter } from 'src/utils/types';
 import { secondaryTextColor, standardBorderCard } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
@@ -11,10 +11,10 @@ import { OrderbookItem } from '../orderbook/list/orderbook-item';
 import { OrderDetailModal } from '../orderbook/order-detail-modal';
 
 interface Props {
-  order: SignedOBOrder;
+  order: ERC721OrderCartItem;
   selected?: boolean;
   orderType: TokensFilter['orderType'];
-  onClickActionBtn: (order: SignedOBOrder) => void;
+  onClickActionBtn: (order: ERC721OrderCartItem) => void;
 }
 
 export const ProfileOrderListItem = ({ order, orderType, onClickActionBtn, selected }: Props) => {

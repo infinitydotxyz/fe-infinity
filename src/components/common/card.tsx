@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { AiOutlineCheckCircle, AiOutlinePlusCircle } from 'react-icons/ai';
-import { BasicTokenInfo, Erc721TokenOffer } from 'src/utils/types';
+import { BasicTokenInfo, ERC721TokenCartItem } from 'src/utils/types';
 import {
   borderColor,
   brandTextColor,
@@ -16,10 +16,10 @@ import { TokenCardModal } from '../astra/token-grid/token-card-modal';
 import { BlueCheck, EthSymbol, EZImage, Spacer } from '../common';
 
 interface Props {
-  data: Erc721TokenOffer;
+  data: ERC721TokenCartItem;
   selected: boolean;
-  isSelectable: (data: Erc721TokenOffer) => boolean;
-  onClick: (data: Erc721TokenOffer) => void;
+  isSelectable: (data: ERC721TokenCartItem) => boolean;
+  onClick: (data: ERC721TokenCartItem) => void;
 }
 
 export const GridCard = ({ data, onClick, selected, isSelectable }: Props): JSX.Element => {

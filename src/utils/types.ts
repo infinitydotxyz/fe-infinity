@@ -1,4 +1,5 @@
-import { ERC721CardData, Erc721Collection } from '@infinityxyz/lib-frontend/types/core';
+import { ERC721CardData, Erc721Collection, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { CartType } from './context/CartContext';
 
 export enum OrderBy {
   Price = 'price',
@@ -30,14 +31,20 @@ export enum ORDER_EXPIRY_TIME {
   YEAR = '1y'
 }
 
-export interface Erc721CollectionOffer extends Erc721Collection {
+export interface ERC721CollectionCartItem extends Erc721Collection {
   offerPriceEth?: number;
   offerExpiry?: ORDER_EXPIRY_TIME;
+  cartType: CartType.CollectionOffer;
 }
 
-export interface Erc721TokenOffer extends ERC721CardData {
+export interface ERC721TokenCartItem extends ERC721CardData {
   offerPriceEth?: number;
   offerExpiry?: ORDER_EXPIRY_TIME;
+  cartType: CartType;
+}
+
+export interface ERC721OrderCartItem extends SignedOBOrder {
+  cartType: CartType.Cancel;
 }
 
 export interface BasicTokenInfo {

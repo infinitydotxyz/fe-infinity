@@ -1,13 +1,15 @@
 import { getAddress } from '@ethersproject/address';
-import { ChainId, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect, useState } from 'react';
 import { MdClose } from 'react-icons/md';
 import { AButton } from 'src/components/astra/astra-button';
 import { EZImage, TextInputBox } from 'src/components/common';
-import { CART_TYPE, getCartType, getCollectionKeyId, getDefaultOrderExpiryTime, getTokenKeyId } from 'src/utils';
+import { getCartType, getCollectionKeyId, getDefaultOrderExpiryTime, getTokenCartItemKey } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
+import { CartType, useCartContext } from 'src/utils/context/CartContext';
 import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
+import { ERC721CollectionCartItem, ERC721OrderCartItem, ERC721TokenCartItem, ORDER_EXPIRY_TIME } from 'src/utils/types';
 import {
   borderColor,
   brandTextColor,
@@ -20,15 +22,14 @@ import {
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { ADropdown } from './astra-dropdown';
-import { Erc721CollectionOffer, Erc721TokenOffer, ORDER_EXPIRY_TIME } from 'src/utils/types';
 
 interface Props {
-  collections: Erc721CollectionOffer[];
-  tokens: Erc721TokenOffer[];
-  orders: SignedOBOrder[];
-  onCollsRemove: (coll?: Erc721CollectionOffer) => void;
-  onTokensRemove: (token?: Erc721TokenOffer) => void;
-  onOrdersRemove: (order?: SignedOBOrder) => void;
+  collections: ERC721CollectionCartItem[];
+  tokens: ERC721TokenCartItem[];
+  orders: ERC721OrderCartItem[];
+  onCollRemove: (coll: ERC721CollectionCartItem) => void;
+  onTokenRemove: (token: ERC721TokenCartItem) => void;
+  onOrderRemove: (order: ERC721OrderCartItem) => void;
   onCheckout: () => void;
   onTokenSend: (toAddress: string) => void;
 }
@@ -37,20 +38,20 @@ export const AstraCart = ({
   tokens,
   collections,
   orders,
-  onTokensRemove,
-  onCollsRemove,
-  onOrdersRemove,
+  onTokenRemove,
+  onCollRemove,
+  onOrderRemove,
   onCheckout,
   onTokenSend
 }: Props) => {
-  const tokenMap = new Map<string, Erc721TokenOffer[]>();
-  const collMap = new Map<string, Erc721CollectionOffer[]>();
-  const ordersMap = new Map<string, SignedOBOrder[]>();
+  const tokenMap = new Map<string, ERC721TokenCartItem[]>();
+  const collMap = new Map<string, ERC721CollectionCartItem[]>();
+  const ordersMap = new Map<string, ERC721OrderCartItem[]>();
   const [cartTitle, setCartTitle] = useState('Cart');
   const [checkoutBtnText, setCheckoutBtnText] = useState('Checkout');
   const [sendToAddress, setSendToAddress] = useState('');
   const { user, getEthersProvider, chainId } = useOnboardContext();
-  const [cartType, setCartType] = useState<CART_TYPE>(CART_TYPE.NONE);
+  const { cartType, setCartType } = useCartContext();
   const router = useRouter();
   const { selectedProfileTab } = useAppContext();
 
@@ -62,24 +63,42 @@ export const AstraCart = ({
   }, [router.pathname, selectedProfileTab]);
 
   useEffect(() => {
-    if (cartType === CART_TYPE.SELL) {
-      setCartTitle('Sell');
+    if (cartType === CartType.TokenList) {
+      setCartTitle('List');
       if (tokens.length > 1) {
         setCheckoutBtnText('Bulk List');
       } else {
         setCheckoutBtnText('List');
       }
-    } else if (cartType === CART_TYPE.BUY) {
-      setCartTitle('Buy');
+    } else if (cartType === CartType.CollectionOffer || cartType === CartType.TokenOffer) {
+      setCartTitle('Bid');
       if (tokens.length > 1 || collections.length > 1) {
         setCheckoutBtnText('Bulk Bid');
       } else {
         setCheckoutBtnText('Bid');
       }
-    } else if (cartType === CART_TYPE.SEND) {
+    } else if (cartType === CartType.BuyNow) {
+      setCartTitle('Buy');
+      if (tokens.length > 1) {
+        setCheckoutBtnText('Bulk Buy');
+      } else {
+        setCheckoutBtnText('Buy');
+      }
+    } else if (cartType === CartType.SellNow) {
+      setCartTitle('Sell');
+      if (tokens.length > 1) {
+        setCheckoutBtnText('Bulk Sell');
+      } else {
+        setCheckoutBtnText('Sell');
+      }
+    } else if (cartType === CartType.Send) {
       setCartTitle('Send');
-      setCheckoutBtnText('Send');
-    } else if (cartType === CART_TYPE.CANCEL) {
+      if (tokens.length > 1) {
+        setCheckoutBtnText('Bulk Send');
+      } else {
+        setCheckoutBtnText('Send');
+      }
+    } else if (cartType === CartType.Cancel) {
       setCartTitle('Cancel');
       if (orders.length > 1) {
         setCheckoutBtnText('Cancel Orders');
@@ -118,9 +137,7 @@ export const AstraCart = ({
           <div
             className={twMerge('ml-2 text-sm cursor-pointer', brandTextColor)}
             onClick={() => {
-              onCollsRemove();
-              onTokensRemove();
-              onOrdersRemove();
+              // todo: clear cart items
             }}
           >
             Clear
@@ -144,13 +161,23 @@ export const AstraCart = ({
       );
 
       for (const t of tokenArray) {
-        if (cartType === CART_TYPE.SEND) {
+        if (cartType === CartType.Send) {
           divList.push(
-            <AstraTokenCartItem key={getTokenKeyId(t)} token={t} onRemove={onTokensRemove} showPriceAndExpiry={false} />
+            <AstraTokenCartItem
+              key={getTokenCartItemKey(t)}
+              token={t}
+              onRemove={onTokenRemove}
+              showPriceAndExpiry={false}
+            />
           );
         } else {
           divList.push(
-            <AstraTokenCartItem key={getTokenKeyId(t)} token={t} onRemove={onTokensRemove} showPriceAndExpiry={true} />
+            <AstraTokenCartItem
+              key={getTokenCartItemKey(t)}
+              token={t}
+              onRemove={onTokenRemove}
+              showPriceAndExpiry={true}
+            />
           );
         }
       }
@@ -172,7 +199,7 @@ export const AstraCart = ({
       const collId = getCollectionKeyId(first);
 
       for (const t of collArray) {
-        divList.push(<AstraCollectionCartItem key={collId} collection={t} index={index++} onRemove={onCollsRemove} />);
+        divList.push(<AstraCollectionCartItem key={collId} collection={t} index={index++} onRemove={onCollRemove} />);
       }
 
       divList.push(<div key={Math.random()} className={twMerge('h-2 w-full border-b-[1px]', borderColor)} />);
@@ -198,7 +225,7 @@ export const AstraCart = ({
       );
 
       for (const t of ordArray) {
-        divList.push(<AstraCancelCartItem key={orderId} order={t} index={index++} onRemove={onOrdersRemove} />);
+        divList.push(<AstraCancelCartItem key={orderId} order={t} index={index++} onRemove={onOrderRemove} />);
       }
 
       divList.push(<div key={Math.random()} className={twMerge('h-2 w-full border-b-[1px]', borderColor)} />);
@@ -237,7 +264,7 @@ export const AstraCart = ({
         {clearButton}
       </div>
 
-      {cartType === CART_TYPE.SEND && tokenMap.size > 0 && (
+      {cartType === CartType.Send && tokenMap.size > 0 && (
         <div className="px-6 mb-4">
           <TextInputBox
             type="text"
@@ -262,7 +289,7 @@ export const AstraCart = ({
             (tokens.length === 0 && collections.length === 0 && orders.length === 0)
           }
           onClick={async () => {
-            cartType === CART_TYPE.SEND ? onTokenSend(await finalSendToAddress(sendToAddress)) : onCheckout();
+            cartType === CartType.Send ? onTokenSend(await finalSendToAddress(sendToAddress)) : onCheckout();
           }}
         >
           {checkoutBtnText}
@@ -275,14 +302,14 @@ export const AstraCart = ({
 // ====================================================================
 
 interface Props2 {
-  token: Erc721TokenOffer;
-  onRemove: (token: Erc721TokenOffer) => void;
+  token: ERC721TokenCartItem;
+  onRemove: (token: ERC721TokenCartItem) => void;
   showPriceAndExpiry?: boolean;
 }
 
-export const AstraTokenCartItem = ({ token, onRemove, showPriceAndExpiry }: Props2) => {
+const AstraTokenCartItem = ({ token, onRemove, showPriceAndExpiry }: Props2) => {
   return (
-    <div key={getTokenKeyId(token)} className="flex items-center w-full">
+    <div key={getTokenCartItemKey(token)} className="flex items-center w-full">
       <div className="relative">
         <EZImage className={twMerge('h-12 w-12 rounded-lg overflow-clip')} src={token.image} />
         <div className={twMerge('absolute top-[-5px] right-[-5px] rounded-full p-0.5 cursor-pointer', inverseBgColor)}>
@@ -304,12 +331,12 @@ export const AstraTokenCartItem = ({ token, onRemove, showPriceAndExpiry }: Prop
 };
 
 interface Props3 {
-  collection: Erc721CollectionOffer;
+  collection: ERC721CollectionCartItem;
   index: number;
-  onRemove: (coll: Erc721CollectionOffer) => void;
+  onRemove: (coll: ERC721CollectionCartItem) => void;
 }
 
-export const AstraCollectionCartItem = ({ collection, onRemove }: Props3) => {
+const AstraCollectionCartItem = ({ collection, onRemove }: Props3) => {
   return (
     <div key={getCollectionKeyId(collection)} className="flex items-center w-full">
       <div className="relative">
@@ -333,12 +360,12 @@ export const AstraCollectionCartItem = ({ collection, onRemove }: Props3) => {
 };
 
 interface Props4 {
-  order: SignedOBOrder;
+  order: ERC721OrderCartItem;
   index: number;
-  onRemove: (order: SignedOBOrder) => void;
+  onRemove: (order: ERC721OrderCartItem) => void;
 }
 
-export const AstraCancelCartItem = ({ order, onRemove }: Props4) => {
+const AstraCancelCartItem = ({ order, onRemove }: Props4) => {
   return (
     <div key={order.id} className="flex items-center w-full">
       <div className="relative">
@@ -370,8 +397,8 @@ export const AstraCancelCartItem = ({ order, onRemove }: Props4) => {
 };
 
 interface Props5 {
-  token?: Erc721TokenOffer;
-  collection?: Erc721CollectionOffer;
+  token?: ERC721TokenCartItem;
+  collection?: ERC721CollectionCartItem;
   className?: string;
 }
 

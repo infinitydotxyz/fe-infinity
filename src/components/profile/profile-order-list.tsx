@@ -1,13 +1,14 @@
-import { ChainId, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId } from '@infinityxyz/lib-frontend/types/core';
 import { CollectionSearchDto } from '@infinityxyz/lib-frontend/types/dto';
 import { useEffect, useState } from 'react';
 import { MdClose } from 'react-icons/md';
 import { useProfileOrderFetcher } from 'src/hooks/api/useOrderFetcher';
 import { ellipsisAddress, extractErrorMsg } from 'src/utils';
+import { CartType } from 'src/utils/context/CartContext';
 import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { fetchOrderNonce } from 'src/utils/orderbook-utils';
 import { cancelAllOrders } from 'src/utils/orders';
-import { TokensFilter } from 'src/utils/types';
+import { ERC721OrderCartItem, TokensFilter } from 'src/utils/types';
 import { borderColor, hoverColorBrandText, secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { AOutlineButton } from '../astra/astra-button';
@@ -31,8 +32,8 @@ export const DEFAULT_ORDER_TYPE_FILTER = 'listings';
 interface Props {
   userAddress: string;
   className?: string;
-  toggleOrderSelection: (data: SignedOBOrder) => void;
-  isOrderSelected: (data: SignedOBOrder) => boolean;
+  toggleOrderSelection: (data: ERC721OrderCartItem) => void;
+  isOrderSelected: (data: ERC721OrderCartItem) => boolean;
 }
 
 export const ProfileOrderList = ({ userAddress, className = '', toggleOrderSelection, isOrderSelected }: Props) => {
@@ -64,7 +65,7 @@ export const ProfileOrderList = ({ userAddress, className = '', toggleOrderSelec
     fetch(false);
   }, [filter]);
 
-  const onClickAcceptOfferCancelOrder = (order: SignedOBOrder) => {
+  const onClickAcceptOfferCancelOrder = (order: ERC721OrderCartItem) => {
     if (filter.orderType === 'offers-received') {
       // no op in this release; in future allow users to accept offers
     } else {
@@ -185,12 +186,14 @@ export const ProfileOrderList = ({ userAddress, className = '', toggleOrderSelec
           ) : null}
 
           {orders?.map((order, idx) => {
+            const orderCartItem = order as ERC721OrderCartItem;
+            orderCartItem.cartType = CartType.Cancel;
             return (
               <ProfileOrderListItem
                 key={idx}
-                order={order}
+                order={orderCartItem}
                 orderType={filter.orderType}
-                selected={isOrderSelected(order)}
+                selected={isOrderSelected(orderCartItem)}
                 onClickActionBtn={onClickAcceptOfferCancelOrder}
               />
             );

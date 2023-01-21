@@ -3,8 +3,9 @@ import { useState } from 'react';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { ApiResponse } from 'src/utils';
 import { fetchCollectionTokens, fetchProfileTokens } from 'src/utils/astra-utils';
+import { CartType } from 'src/utils/context/CartContext';
 import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
-import { Erc721TokenOffer, TokensFilter } from 'src/utils/types';
+import { ERC721TokenCartItem, TokensFilter } from 'src/utils/types';
 
 type ApiNftData = Erc721Token & {
   orderSnippet?: OrdersSnippet;
@@ -13,7 +14,7 @@ type ApiNftData = Erc721Token & {
 export function useCollectionTokenFetcher(collectionAddress: string | undefined, filter: TokensFilter) {
   const { chainId } = useOnboardContext();
 
-  return useTokenFetcher<ApiNftData, Erc721TokenOffer>({
+  return useTokenFetcher<ApiNftData, ERC721TokenCartItem>({
     fetcher: (cursor, filters) => fetchCollectionTokens(collectionAddress || '', chainId, { cursor, ...filters }),
     mapper: (data) => nftsToCardDataWithOfferFields(data, '', ''),
     execute: collectionAddress !== '',
@@ -24,7 +25,7 @@ export function useCollectionTokenFetcher(collectionAddress: string | undefined,
 export function useProfileTokenFetcher(userAddress: string | undefined, filter: TokensFilter) {
   const { chainId } = useOnboardContext();
 
-  return useTokenFetcher<ApiNftData, Erc721TokenOffer>({
+  return useTokenFetcher<ApiNftData, ERC721TokenCartItem>({
     fetcher: (cursor, filters) => fetchProfileTokens(userAddress || '', chainId, { cursor, ...filters }),
     mapper: (data) => nftsToCardDataWithOfferFields(data, '', ''),
     execute: userAddress !== '',
@@ -84,8 +85,8 @@ const nftsToCardDataWithOfferFields = (
   tokens: ApiNftData[],
   collectionAddress: string,
   collectionName: string
-): Erc721TokenOffer[] => {
-  let result: Erc721TokenOffer[] = (tokens || []).map((item: ApiNftData) => {
+): ERC721TokenCartItem[] => {
+  let result: ERC721TokenCartItem[] = (tokens || []).map((item: ApiNftData) => {
     const image =
       item?.metadata?.image ||
       item?.image?.url ||
@@ -94,7 +95,7 @@ const nftsToCardDataWithOfferFields = (
       item?.zoraImage?.url ||
       '';
 
-    const result: Erc721TokenOffer = {
+    const result: ERC721TokenCartItem = {
       id: collectionAddress + '_' + item.tokenId,
       name: item.metadata?.name ?? item.metadata?.title,
       title: item.collectionName ?? collectionName,
@@ -112,7 +113,8 @@ const nftsToCardDataWithOfferFields = (
       rarityRank: item.rarityRank,
       orderSnippet: item.ordersSnippet,
       hasBlueCheck: item.hasBlueCheck ?? false,
-      attributes: item.metadata?.attributes ?? []
+      attributes: item.metadata?.attributes ?? [],
+      cartType: CartType.None
     };
 
     return result;

@@ -18,9 +18,8 @@ import { useCollectionSelection } from 'src/hooks/useCollectionSelection';
 import { useNFTSelection } from 'src/hooks/useNFTSelection';
 import { useOrderSelection } from 'src/hooks/useOrderSelection';
 import { cancelMultipleOrders } from 'src/utils/orders';
-import { Erc721CollectionOffer, Erc721TokenOffer } from 'src/utils/types';
+import { ERC721CollectionCartItem, ERC721OrderCartItem, ERC721TokenCartItem } from 'src/utils/types';
 import {
-  CART_TYPE,
   ellipsisAddress,
   extractErrorMsg,
   getCartType,
@@ -31,6 +30,7 @@ import {
 import { DEFAULT_MAX_GAS_PRICE_WEI, ZERO_ADDRESS } from '../constants';
 import { fetchOrderNonce, postOrdersV2 } from '../orderbook-utils';
 import { getSignedOBOrder, sendMultipleNfts, sendSingleNft } from '../orders';
+import { CartType } from './CartContext';
 import { useOnboardContext } from './OnboardContext/OnboardContext';
 
 export type User = {
@@ -48,32 +48,32 @@ type AppContextType = {
   listMode: boolean;
   setListMode: (value: boolean) => void;
 
-  handleTokenSend: (selection: Erc721TokenOffer[], sendToAddress: string) => Promise<void>;
-  handleTokenCheckout: (selection: Erc721TokenOffer[]) => Promise<void>;
-  handleCollCheckout: (selection: Erc721CollectionOffer[]) => Promise<void>;
-  handleOrdersCancel: (selection: SignedOBOrder[]) => Promise<void>;
+  handleTokenSend: (selection: ERC721TokenCartItem[], sendToAddress: string) => Promise<void>;
+  handleTokenCheckout: (selection: ERC721TokenCartItem[]) => Promise<void>;
+  handleCollCheckout: (selection: ERC721CollectionCartItem[]) => Promise<void>;
+  handleOrdersCancel: (selection: ERC721OrderCartItem[]) => Promise<void>;
 
   refreshData: () => void;
   refreshTrigger: number;
 
-  toggleNFTSelection: (data: Erc721TokenOffer) => void;
-  isNFTSelected: (data: Erc721TokenOffer) => boolean;
-  isNFTSelectable: (data: Erc721TokenOffer) => boolean;
-  removeNFTFromSelection: (data?: Erc721TokenOffer) => void;
-  nftSelection: Erc721TokenOffer[];
+  toggleNFTSelection: (data: ERC721TokenCartItem) => void;
+  isNFTSelected: (data: ERC721TokenCartItem) => boolean;
+  isNFTSelectable: (data: ERC721TokenCartItem) => boolean;
+  removeNFTFromSelection: (data: ERC721TokenCartItem) => void;
+  nftSelection: ERC721TokenCartItem[];
   clearNFTSelection: () => void;
 
-  toggleCollSelection: (data: Erc721CollectionOffer) => void;
-  isCollSelected: (data: Erc721CollectionOffer) => boolean;
-  isCollSelectable: (data: Erc721CollectionOffer) => boolean;
-  removeCollFromSelection: (data?: Erc721CollectionOffer) => void; // null to remove all
-  collSelection: Erc721CollectionOffer[];
+  toggleCollSelection: (data: ERC721CollectionCartItem) => void;
+  isCollSelected: (data: ERC721CollectionCartItem) => boolean;
+  isCollSelectable: (data: ERC721CollectionCartItem) => boolean;
+  removeCollFromSelection: (data: ERC721CollectionCartItem) => void;
+  collSelection: ERC721CollectionCartItem[];
   clearCollSelection: () => void;
 
-  toggleOrderSelection: (data: SignedOBOrder) => void;
-  isOrderSelected: (data: SignedOBOrder) => boolean;
-  removeOrderFromSelection: (data?: SignedOBOrder) => void; // null to remove all
-  orderSelection: SignedOBOrder[];
+  toggleOrderSelection: (data: ERC721OrderCartItem) => void;
+  isOrderSelected: (data: ERC721OrderCartItem) => boolean;
+  removeOrderFromSelection: (data: ERC721OrderCartItem) => void;
+  orderSelection: ERC721OrderCartItem[];
   clearOrderSelection: () => void;
 };
 
@@ -115,7 +115,7 @@ export const AppContextProvider = ({ children }: Props) => {
     refreshData();
   }, []);
 
-  const handleTokenSend = async (nftsToSend: Erc721TokenOffer[], sendToAddress: string) => {
+  const handleTokenSend = async (nftsToSend: ERC721TokenCartItem[], sendToAddress: string) => {
     const orderItems: ChainNFTs[] = [];
     const collectionToTokenMap: { [collection: string]: { tokenId: string; numTokens: number }[] } = {};
 
@@ -174,14 +174,15 @@ export const AppContextProvider = ({ children }: Props) => {
     }
   };
 
-  const handleTokenCheckout = async (tokens: Erc721TokenOffer[]) => {
+  const handleTokenCheckout = async (tokens: ERC721TokenCartItem[]) => {
     const signer = getSigner();
     if (!user || !user.address || !signer) {
       toastError('No logged in user');
     } else {
-      const isBuyCart = getCartType(router.asPath, selectedProfileTab) === CART_TYPE.BUY;
-      const isSellCart = getCartType(router.asPath, selectedProfileTab) === CART_TYPE.SELL;
-      const isSendCart = getCartType(router.asPath, selectedProfileTab) === CART_TYPE.SEND;
+      const cartType = getCartType(router.asPath, selectedProfileTab);
+      const isBuyCart = cartType === CartType.BuyNow || cartType === CartType.TokenOffer;
+      const isSellCart = cartType === CartType.SellNow || cartType === CartType.TokenList;
+      const isSendCart = cartType === CartType.Send;
 
       if (!isSendCart) {
         // place orders
@@ -223,7 +224,7 @@ export const AppContextProvider = ({ children }: Props) => {
     }
   };
 
-  const handleCollCheckout = async (collections: Erc721CollectionOffer[]) => {
+  const handleCollCheckout = async (collections: ERC721CollectionCartItem[]) => {
     const signer = getSigner();
     if (!user || !user.address || !signer) {
       toastError('No logged in user');
@@ -261,7 +262,7 @@ export const AppContextProvider = ({ children }: Props) => {
   };
 
   const tokenToOBOrder = async (
-    token: Erc721TokenOffer,
+    token: ERC721TokenCartItem,
     orderNonce: number,
     isSellOrder: boolean
   ): Promise<OBOrder | undefined> => {
@@ -324,7 +325,7 @@ export const AppContextProvider = ({ children }: Props) => {
   };
 
   const collectionToOBOrder = async (
-    collection: Erc721CollectionOffer,
+    collection: ERC721CollectionCartItem,
     orderNonce: number
   ): Promise<OBOrder | undefined> => {
     try {
@@ -373,7 +374,7 @@ export const AppContextProvider = ({ children }: Props) => {
     }
   };
 
-  const handleOrdersCancel = async (ordersToCancel: SignedOBOrder[]) => {
+  const handleOrdersCancel = async (ordersToCancel: ERC721OrderCartItem[]) => {
     try {
       const signer = getSigner();
       if (signer) {

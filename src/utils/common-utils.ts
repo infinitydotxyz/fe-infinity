@@ -1,5 +1,5 @@
 import { getAddress } from '@ethersproject/address';
-import { BaseToken, ERC721CardData, OwnerInfo } from '@infinityxyz/lib-frontend/types/core';
+import { BaseToken, OwnerInfo } from '@infinityxyz/lib-frontend/types/core';
 import { BaseCollection } from '@infinityxyz/lib-frontend/types/core/Collection';
 import {
   Env,
@@ -11,7 +11,8 @@ import ethers from 'ethers';
 import { ProfileTabs } from 'pages/profile/[address]';
 import { normalize } from 'path';
 import { ReactNode } from 'react';
-import { ORDER_EXPIRY_TIME } from 'src/utils/types';
+import { ERC721TokenCartItem, ORDER_EXPIRY_TIME } from 'src/utils/types';
+import { CartType } from './context/CartContext';
 
 export const base64Encode = (data: string) => Buffer.from(data).toString('base64');
 
@@ -66,44 +67,41 @@ export const toChecksumAddress = (address?: string): string => {
   return '';
 };
 
-export enum CART_TYPE {
-  BUY = 'buy',
-  SELL = 'sell',
-  SEND = 'send',
-  CANCEL = 'cancel',
-  NONE = 'none'
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const getCartType = (path: string, selectedProfileTab: string): CART_TYPE => {
-  const isTrending = path.includes('trending');
-  const isCollection = path.includes('collection');
-  const isProfile = path.includes('profile');
+export const getCartType = (path: string, selectedProfileTab: string): CartType => {
+  // todo: to implement tokenOffer and sellNow
+  const isTrendingPage = path.includes('trending');
+  const isCollectionPage = path.includes('collection');
+  const isProfilePage = path.includes('profile');
   const isProfileItems = selectedProfileTab === ProfileTabs.Items.toString();
-  // const isProfileSend = selectedProfileTab === ProfileTabs.Send.toString(); todo: uncomment when send is implemented
+  const isProfileSend = selectedProfileTab === ProfileTabs.Send.toString();
   const isProfileOrders = selectedProfileTab === ProfileTabs.Orders.toString();
-  const isBuyCart = isCollection || isTrending;
-  const isSellCart = isProfile && isProfileItems;
-  // const isSendCart = isProfile && isProfileSend;
-  const isCancelCart = isProfile && isProfileOrders;
-  if (isBuyCart) {
-    return CART_TYPE.BUY;
-  } else if (isSellCart) {
-    return CART_TYPE.SELL;
-    // } else if (isSendCart) {
-    //   return CART_TYPE.SEND;
+
+  const isCollectionOfferCart = isTrendingPage;
+  const isTokenListCart = isProfilePage && isProfileItems;
+  const isBuyNowCart = isCollectionPage;
+  const isSendCart = isProfilePage && isProfileSend;
+  const isCancelCart = isProfilePage && isProfileOrders;
+
+  if (isCollectionOfferCart) {
+    return CartType.CollectionOffer;
+  } else if (isBuyNowCart) {
+    return CartType.BuyNow;
+  } else if (isTokenListCart) {
+    return CartType.TokenList;
+  } else if (isSendCart) {
+    return CartType.Send;
   } else if (isCancelCart) {
-    return CART_TYPE.CANCEL;
+    return CartType.Cancel;
   }
-  return CART_TYPE.NONE;
+  return CartType.None;
 };
 
 export const getCollectionKeyId = (coll: BaseCollection) => {
   return trimLowerCase(`${coll?.chainId}:${coll?.address}`);
 };
 
-export const getTokenKeyId = (data: ERC721CardData) => {
-  return trimLowerCase(`${data?.chainId}:${data?.address}:${data?.tokenId}`);
+export const getTokenCartItemKey = (data: ERC721TokenCartItem) => {
+  return trimLowerCase(`${data?.chainId}:${data?.address}:${data?.tokenId}:${data?.cartType}`);
 };
 
 // use ellipsisString for non-address numbers, this gets the checksum address
