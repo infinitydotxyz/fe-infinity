@@ -187,33 +187,6 @@ export const AstraCart = ({
       )}
 
       <div className={twMerge(textColor, 'min-w-0 flex px-6 flex-col space-y-2 items-start flex-1 overflow-y-auto')}>
-        {tokenMap.forEach((tokenArray) => {
-          <div className="w-full font-bold font-heading truncate" key={`header-${tokenArray[0].id}`}>
-            {tokenArray[0].collectionName}
-          </div>;
-
-          {
-            tokenArray.map((token) =>
-              cartType === CartType.Send ? (
-                <AstraTokenCartItem
-                  key={getTokenCartItemKey(token)}
-                  token={token}
-                  onRemove={onTokenRemove}
-                  showPriceAndExpiry={false}
-                />
-              ) : (
-                <AstraTokenCartItem
-                  key={getTokenCartItemKey(token)}
-                  token={token}
-                  onRemove={onTokenRemove}
-                  showPriceAndExpiry={true}
-                />
-              )
-            );
-          }
-
-          <div key={Math.random()} className={twMerge('h-2 w-full border-b-[1px]', borderColor)} />;
-        })}
         {cartType === CartType.Send || cartType === CartType.TokenList || cartType === CartType.TokenOffer ? (
           tokenMap.forEach((tokenArray) => {
             <div className="w-full font-bold font-heading truncate" key={`header-${tokenArray[0].id}`}>
