@@ -5,8 +5,6 @@ export enum CartType {
   CollectionOffer,
   TokenOffer,
   TokenList,
-  BuyNow,
-  SellNow,
   Send,
   Cancel,
   None

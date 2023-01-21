@@ -68,7 +68,6 @@ export const toChecksumAddress = (address?: string): string => {
 };
 
 export const getCartType = (path: string, selectedProfileTab: string): CartType => {
-  // todo: to implement tokenOffer and sellNow
   const isTrendingPage = path.includes('trending');
   const isCollectionPage = path.includes('collection');
   const isProfilePage = path.includes('profile');
@@ -78,14 +77,14 @@ export const getCartType = (path: string, selectedProfileTab: string): CartType 
 
   const isCollectionOfferCart = isTrendingPage;
   const isTokenListCart = isProfilePage && isProfileItems;
-  const isBuyNowCart = isCollectionPage;
+  const isTokenOfferCart = isCollectionPage;
   const isSendCart = isProfilePage && isProfileSend;
   const isCancelCart = isProfilePage && isProfileOrders;
 
   if (isCollectionOfferCart) {
     return CartType.CollectionOffer;
-  } else if (isBuyNowCart) {
-    return CartType.BuyNow;
+  } else if (isTokenOfferCart) {
+    return CartType.TokenOffer;
   } else if (isTokenListCart) {
     return CartType.TokenList;
   } else if (isSendCart) {

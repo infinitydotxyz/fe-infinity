@@ -180,8 +180,8 @@ export const AppContextProvider = ({ children }: Props) => {
       toastError('No logged in user');
     } else {
       const cartType = getCartType(router.asPath, selectedProfileTab);
-      const isBuyCart = cartType === CartType.BuyNow || cartType === CartType.TokenOffer;
-      const isSellCart = cartType === CartType.SellNow || cartType === CartType.TokenList;
+      const isBuyCart = cartType === CartType.TokenOffer;
+      const isSellCart = cartType === CartType.TokenList;
       const isSendCart = cartType === CartType.Send;
 
       if (!isSendCart) {

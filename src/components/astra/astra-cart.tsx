@@ -65,13 +65,7 @@ export const AstraCart = ({
   useEffect(() => {
     const cartItems: CartItem[] = getCurrentCartItems();
     setCurrentCartItems(cartItems);
-    if (
-      cartType === CartType.TokenList ||
-      cartType === CartType.TokenOffer ||
-      cartType === CartType.BuyNow ||
-      cartType === CartType.SellNow ||
-      cartType === CartType.Send
-    ) {
+    if (cartType === CartType.TokenList || cartType === CartType.TokenOffer || cartType === CartType.Send) {
       tokenMap.clear();
       for (const item of cartItems) {
         const token = item as ERC721TokenCartItem;
@@ -105,32 +99,18 @@ export const AstraCart = ({
     }
 
     if (cartType === CartType.TokenList) {
-      setCartTitle('List');
-      if (cartItems.length > 1) {
-        setCheckoutBtnText('Bulk List');
-      } else {
-        setCheckoutBtnText('List');
-      }
-    } else if (cartType === CartType.CollectionOffer || cartType === CartType.TokenOffer) {
-      setCartTitle('Bid');
-      if (cartItems.length > 1) {
-        setCheckoutBtnText('Bulk Bid');
-      } else {
-        setCheckoutBtnText('Bid');
-      }
-    } else if (cartType === CartType.BuyNow) {
-      setCartTitle('Buy');
-      if (cartItems.length > 1) {
-        setCheckoutBtnText('Bulk Buy');
-      } else {
-        setCheckoutBtnText('Buy');
-      }
-    } else if (cartType === CartType.SellNow) {
       setCartTitle('Sell');
       if (cartItems.length > 1) {
         setCheckoutBtnText('Bulk Sell');
       } else {
         setCheckoutBtnText('Sell');
+      }
+    } else if (cartType === CartType.CollectionOffer || cartType === CartType.TokenOffer) {
+      setCartTitle('Buy');
+      if (cartItems.length > 1) {
+        setCheckoutBtnText('Bulk Buy');
+      } else {
+        setCheckoutBtnText('Buy');
       }
     } else if (cartType === CartType.Send) {
       setCartTitle('Send');
@@ -176,8 +156,6 @@ export const AstraCart = ({
                 className={twMerge('ml-2 text-sm cursor-pointer', brandTextColor)}
                 onClick={() => {
                   if (
-                    cartType === CartType.BuyNow ||
-                    cartType === CartType.SellNow ||
                     cartType === CartType.Send ||
                     cartType === CartType.TokenList ||
                     cartType === CartType.TokenOffer
@@ -236,11 +214,7 @@ export const AstraCart = ({
 
           <div key={Math.random()} className={twMerge('h-2 w-full border-b-[1px]', borderColor)} />;
         })}
-        {cartType === CartType.BuyNow ||
-        cartType === CartType.SellNow ||
-        cartType === CartType.Send ||
-        cartType === CartType.TokenList ||
-        cartType === CartType.TokenOffer ? (
+        {cartType === CartType.Send || cartType === CartType.TokenList || cartType === CartType.TokenOffer ? (
           tokenMap.forEach((tokenArray) => {
             <div className="w-full font-bold font-heading truncate" key={`header-${tokenArray[0].id}`}>
               {tokenArray[0].collectionName}
