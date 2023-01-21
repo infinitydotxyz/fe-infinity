@@ -65,7 +65,6 @@ export const AstraCart = ({
   useEffect(() => {
     const cartItems: CartItem[] = getCurrentCartItems();
     setCurrentCartItems(cartItems);
-    console.log('cartType', cartType, cartItems);
     if (
       cartType === CartType.TokenList ||
       cartType === CartType.TokenOffer ||
@@ -81,7 +80,6 @@ export const AstraCart = ({
         tokenMap.set(token.tokenAddress ?? '', tkns);
       }
       setTokenMap(tokenMap);
-      console.log('tokenMap', tokenMap);
     }
 
     if (cartType === CartType.CollectionOffer) {
@@ -93,7 +91,6 @@ export const AstraCart = ({
         collMap.set(coll.address ?? '', colls);
       }
       setCollMap(collMap);
-      console.log('collMap', collMap);
     }
 
     if (cartType === CartType.Cancel) {
@@ -105,7 +102,6 @@ export const AstraCart = ({
         orderMap.set(order.id ?? '', orders);
       }
       setOrderMap(orderMap);
-      console.log('orderMap', orderMap);
     }
 
     if (cartType === CartType.TokenList) {
