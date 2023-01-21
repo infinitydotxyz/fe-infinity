@@ -12,12 +12,13 @@ export enum CartType {
   None
 }
 
-type CartItem = ERC721CollectionCartItem | ERC721TokenCartItem | ERC721OrderCartItem;
+export type CartItem = ERC721CollectionCartItem | ERC721TokenCartItem | ERC721OrderCartItem;
 
 type CartContextType = {
   cartType: CartType;
   setCartType: (cartType: CartType) => void;
-  getCartItemsForCartType: (cartType: CartType) => CartItem[];
+  getCurrentCartItems: () => CartItem[];
+  cartItems: CartItem[];
   setCartItems: (cartItems: CartItem[]) => void;
 };
 
@@ -31,14 +32,15 @@ export const CartContextProvider = ({ children }: Props) => {
   const [cartType, setCartType] = useState<CartType>(CartType.CollectionOffer);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
-  const getCartItemsForCartType = (cartType: CartType) => {
+  const getCurrentCartItems = () => {
     return cartItems.filter((cartItem) => cartItem.cartType === cartType);
   };
 
   const value: CartContextType = {
     cartType,
     setCartType,
-    getCartItemsForCartType,
+    getCurrentCartItems,
+    cartItems,
     setCartItems
   };
 

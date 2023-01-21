@@ -1,13 +1,13 @@
 import { getAddress } from '@ethersproject/address';
 import { ChainId } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
-import { ReactNode, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MdClose } from 'react-icons/md';
 import { AButton } from 'src/components/astra/astra-button';
 import { EZImage, TextInputBox } from 'src/components/common';
 import { getCartType, getCollectionKeyId, getDefaultOrderExpiryTime, getTokenCartItemKey } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { CartType, useCartContext } from 'src/utils/context/CartContext';
+import { CartItem, CartType, useCartContext } from 'src/utils/context/CartContext';
 import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { ERC721CollectionCartItem, ERC721OrderCartItem, ERC721TokenCartItem, ORDER_EXPIRY_TIME } from 'src/utils/types';
 import {
@@ -24,9 +24,9 @@ import { twMerge } from 'tailwind-merge';
 import { ADropdown } from './astra-dropdown';
 
 interface Props {
-  collections: ERC721CollectionCartItem[];
-  tokens: ERC721TokenCartItem[];
-  orders: ERC721OrderCartItem[];
+  onTokensClear: () => void;
+  onCollsClear: () => void;
+  onOrdersClear: () => void;
   onCollRemove: (coll: ERC721CollectionCartItem) => void;
   onTokenRemove: (token: ERC721TokenCartItem) => void;
   onOrderRemove: (order: ERC721OrderCartItem) => void;
@@ -35,25 +35,27 @@ interface Props {
 }
 
 export const AstraCart = ({
-  tokens,
-  collections,
-  orders,
+  onTokensClear,
+  onCollsClear,
+  onOrdersClear,
   onTokenRemove,
   onCollRemove,
   onOrderRemove,
   onCheckout,
   onTokenSend
 }: Props) => {
-  const tokenMap = new Map<string, ERC721TokenCartItem[]>();
-  const collMap = new Map<string, ERC721CollectionCartItem[]>();
-  const ordersMap = new Map<string, ERC721OrderCartItem[]>();
+  const router = useRouter();
+  const { selectedProfileTab } = useAppContext();
   const [cartTitle, setCartTitle] = useState('Cart');
   const [checkoutBtnText, setCheckoutBtnText] = useState('Checkout');
   const [sendToAddress, setSendToAddress] = useState('');
   const { user, getEthersProvider, chainId } = useOnboardContext();
-  const { cartType, setCartType } = useCartContext();
-  const router = useRouter();
-  const { selectedProfileTab } = useAppContext();
+  const { cartType, setCartType, getCurrentCartItems, cartItems } = useCartContext();
+  const [currentCartItems, setCurrentCartItems] = useState<CartItem[]>([]);
+
+  const [tokenMap, setTokenMap] = useState<Map<string, ERC721TokenCartItem[]>>(new Map());
+  const [collMap, setCollMap] = useState<Map<string, ERC721CollectionCartItem[]>>(new Map());
+  const [orderMap, setOrderMap] = useState<Map<string, ERC721OrderCartItem[]>>(new Map());
 
   useEffect(() => {
     if (router.isReady) {
@@ -63,81 +65,119 @@ export const AstraCart = ({
   }, [router.pathname, selectedProfileTab]);
 
   useEffect(() => {
+    const cartItems: CartItem[] = getCurrentCartItems();
+    setCurrentCartItems(cartItems);
+
+    console.log('cartType', cartType);
+
+    if (
+      cartType === CartType.TokenList ||
+      cartType === CartType.TokenOffer ||
+      cartType === CartType.BuyNow ||
+      cartType === CartType.SellNow ||
+      cartType === CartType.Send
+    ) {
+      tokenMap.clear();
+      for (const item of cartItems) {
+        const token = item as ERC721TokenCartItem;
+        const tkns = tokenMap.get(token.tokenAddress ?? '') ?? [];
+        tkns.push(token);
+        tokenMap.set(token.tokenAddress ?? '', tkns);
+      }
+      setTokenMap(tokenMap);
+      console.log('tokenMap', tokenMap, tokenMap.size);
+    }
+
+    if (cartType === CartType.CollectionOffer) {
+      collMap.clear();
+      for (const item of cartItems) {
+        const coll = item as ERC721CollectionCartItem;
+        const colls = collMap.get(coll.address ?? '') ?? [];
+        colls.push(coll);
+        collMap.set(coll.address ?? '', colls);
+      }
+      setCollMap(collMap);
+    }
+
+    if (cartType === CartType.Cancel) {
+      orderMap.clear();
+      for (const item of cartItems) {
+        const order = item as ERC721OrderCartItem;
+        const orders = orderMap.get(order.id ?? '') ?? [];
+        orders.push(order);
+        orderMap.set(order.id ?? '', orders);
+      }
+      setOrderMap(orderMap);
+    }
+
     if (cartType === CartType.TokenList) {
       setCartTitle('List');
-      if (tokens.length > 1) {
+      if (cartItems.length > 1) {
         setCheckoutBtnText('Bulk List');
       } else {
         setCheckoutBtnText('List');
       }
     } else if (cartType === CartType.CollectionOffer || cartType === CartType.TokenOffer) {
       setCartTitle('Bid');
-      if (tokens.length > 1 || collections.length > 1) {
+      if (cartItems.length > 1) {
         setCheckoutBtnText('Bulk Bid');
       } else {
         setCheckoutBtnText('Bid');
       }
     } else if (cartType === CartType.BuyNow) {
       setCartTitle('Buy');
-      if (tokens.length > 1) {
+      if (cartItems.length > 1) {
         setCheckoutBtnText('Bulk Buy');
       } else {
         setCheckoutBtnText('Buy');
       }
     } else if (cartType === CartType.SellNow) {
       setCartTitle('Sell');
-      if (tokens.length > 1) {
+      if (cartItems.length > 1) {
         setCheckoutBtnText('Bulk Sell');
       } else {
         setCheckoutBtnText('Sell');
       }
     } else if (cartType === CartType.Send) {
       setCartTitle('Send');
-      if (tokens.length > 1) {
+      if (cartItems.length > 1) {
         setCheckoutBtnText('Bulk Send');
       } else {
         setCheckoutBtnText('Send');
       }
     } else if (cartType === CartType.Cancel) {
       setCartTitle('Cancel');
-      if (orders.length > 1) {
+      if (cartItems.length > 1) {
         setCheckoutBtnText('Cancel Orders');
       } else {
         setCheckoutBtnText('Cancel Order');
       }
     }
-  }, [cartType, tokens.length, collections.length, orders.length]);
+  }, [cartType, cartItems]);
 
-  for (const token of tokens) {
-    const tkns = tokenMap.get(token.tokenAddress ?? '') ?? [];
-    tkns.push(token);
-    tokenMap.set(token.tokenAddress ?? '', tkns);
-  }
-
-  for (const coll of collections) {
-    const colls = collMap.get(getCollectionKeyId(coll) ?? '') ?? [];
-    colls.push(coll);
-    collMap.set(getCollectionKeyId(coll) ?? '', colls);
-  }
-
-  for (const order of orders) {
-    const ords = ordersMap.get(order.id ?? '') ?? [];
-    ords.push(order);
-    ordersMap.set(order.id ?? '', ords);
-  }
-
-  const numItems = Math.max(tokens.length, collections.length, orders.length);
   const clearButton = (
     <div className="flex items-center">
-      {numItems > 0 && (
+      {currentCartItems.length > 0 && (
         <>
           <div className={twMerge(secondaryBgColor, textColor, 'rounded-full h-6 w-6 text-center mr-1')}>
-            {Math.max(tokens.length, collections.length, orders.length)}
+            {currentCartItems.length}
           </div>
           <div
             className={twMerge('ml-2 text-sm cursor-pointer', brandTextColor)}
             onClick={() => {
-              // todo: clear cart items
+              if (
+                cartType === CartType.BuyNow ||
+                cartType === CartType.SellNow ||
+                cartType === CartType.Send ||
+                cartType === CartType.TokenList ||
+                cartType === CartType.TokenOffer
+              ) {
+                onTokensClear();
+              } else if (cartType === CartType.CollectionOffer) {
+                onCollsClear();
+              } else if (cartType === CartType.Cancel) {
+                onOrdersClear();
+              }
             }}
           >
             Clear
@@ -146,104 +186,6 @@ export const AstraCart = ({
       )}
     </div>
   );
-
-  let listComponent;
-
-  if (tokenMap.size > 0) {
-    const divList: ReactNode[] = [];
-    tokenMap.forEach((tokenArray) => {
-      const first = tokenArray[0];
-
-      divList.push(
-        <div className="w-full font-bold font-heading truncate" key={`header-${first.id}`}>
-          {first.collectionName}
-        </div>
-      );
-
-      for (const t of tokenArray) {
-        if (cartType === CartType.Send) {
-          divList.push(
-            <AstraTokenCartItem
-              key={getTokenCartItemKey(t)}
-              token={t}
-              onRemove={onTokenRemove}
-              showPriceAndExpiry={false}
-            />
-          );
-        } else {
-          divList.push(
-            <AstraTokenCartItem
-              key={getTokenCartItemKey(t)}
-              token={t}
-              onRemove={onTokenRemove}
-              showPriceAndExpiry={true}
-            />
-          );
-        }
-      }
-
-      divList.push(<div key={Math.random()} className={twMerge('h-2 w-full border-b-[1px]', borderColor)} />);
-    });
-
-    // min-w-0 is important. otherwise text doesn't truncate
-    listComponent = (
-      <div className={twMerge(textColor, 'min-w-0 flex px-6 flex-col space-y-2 items-start flex-1 overflow-y-auto')}>
-        {divList}
-      </div>
-    );
-  } else if (collMap.size > 0) {
-    const divList: ReactNode[] = [];
-    let index = 0;
-    collMap.forEach((collArray) => {
-      const first = collArray[0];
-      const collId = getCollectionKeyId(first);
-
-      for (const t of collArray) {
-        divList.push(<AstraCollectionCartItem key={collId} collection={t} index={index++} onRemove={onCollRemove} />);
-      }
-
-      divList.push(<div key={Math.random()} className={twMerge('h-2 w-full border-b-[1px]', borderColor)} />);
-    });
-
-    // min-w-0 is important. otherwise text doesn't truncate
-    listComponent = (
-      <div className={twMerge(textColor, 'min-w-0 flex px-6 flex-col space-y-2 items-start flex-1 overflow-y-auto')}>
-        {divList}
-      </div>
-    );
-  } else if (ordersMap.size > 0) {
-    const divList: ReactNode[] = [];
-    let index = 0;
-    ordersMap.forEach((ordArray) => {
-      const first = ordArray[0];
-      const orderId = first.id;
-
-      divList.push(
-        <div className="w-full rounded-md truncate" key={`header-${first.id}`}>
-          {first.nfts.length > 1 ? 'Multiple Collections' : first.nfts[0].collectionName}
-        </div>
-      );
-
-      for (const t of ordArray) {
-        divList.push(<AstraCancelCartItem key={orderId} order={t} index={index++} onRemove={onOrderRemove} />);
-      }
-
-      divList.push(<div key={Math.random()} className={twMerge('h-2 w-full border-b-[1px]', borderColor)} />);
-    });
-
-    // min-w-0 is important. otherwise text doesn't truncate
-    listComponent = (
-      <div className={twMerge(textColor, 'min-w-0 flex px-6 flex-col space-y-2 items-start flex-1 overflow-y-auto')}>
-        {divList}
-      </div>
-    );
-  } else {
-    listComponent = (
-      <div key={Math.random()} className={twMerge(textColor, 'flex items-center justify-center uppercase flex-1')}>
-        <div className={twMerge('font-medium font-heading', secondaryTextColor)}>Cart empty</div>
-      </div>
-    );
-  }
 
   const finalSendToAddress = async (addr: string) => {
     let finalAddress: string | null = addr;
@@ -265,18 +207,79 @@ export const AstraCart = ({
       </div>
 
       {cartType === CartType.Send && tokenMap.size > 0 && (
-        <div className="px-6 mb-4">
+        <div className="px-4 mb-4">
           <TextInputBox
             type="text"
             value={sendToAddress}
-            placeholder=""
-            label={'Address or ENS'}
+            placeholder="Address or ENS"
             onChange={(value) => setSendToAddress(value)}
           />
         </div>
       )}
 
-      {listComponent}
+      <div className={twMerge(textColor, 'min-w-0 flex px-6 flex-col space-y-2 items-start flex-1 overflow-y-auto')}>
+        {cartType === CartType.BuyNow ||
+        cartType === CartType.SellNow ||
+        cartType === CartType.Send ||
+        cartType === CartType.TokenList ||
+        cartType === CartType.TokenOffer ? (
+          tokenMap.forEach((tokenArray) => {
+            <div className="w-full font-bold font-heading truncate" key={`header-${tokenArray[0].id}`}>
+              {tokenArray[0].collectionName}
+            </div>;
+
+            {
+              tokenArray.map((token) =>
+                cartType === CartType.Send ? (
+                  <AstraTokenCartItem
+                    key={getTokenCartItemKey(token)}
+                    token={token}
+                    onRemove={onTokenRemove}
+                    showPriceAndExpiry={false}
+                  />
+                ) : (
+                  <AstraTokenCartItem
+                    key={getTokenCartItemKey(token)}
+                    token={token}
+                    onRemove={onTokenRemove}
+                    showPriceAndExpiry={true}
+                  />
+                )
+              );
+            }
+
+            <div key={Math.random()} className={twMerge('h-2 w-full border-b-[1px]', borderColor)} />;
+          })
+        ) : cartType === CartType.CollectionOffer ? (
+          collMap.forEach((collArray) => {
+            {
+              collArray.forEach((coll) => (
+                <AstraCollectionCartItem key={getCollectionKeyId(coll)} collection={coll} onRemove={onCollRemove} />
+              ));
+            }
+
+            <div key={Math.random()} className={twMerge('h-2 w-full border-b-[1px]', borderColor)} />;
+          })
+        ) : cartType === CartType.Cancel ? (
+          orderMap.forEach((ordArray) => {
+            <div className="w-full rounded-md truncate" key={`header-${ordArray[0].id}`}>
+              {ordArray[0].nfts.length > 1 ? 'Multiple Collections' : ordArray[0].nfts[0].collectionName}
+            </div>;
+
+            {
+              ordArray.forEach((order) => (
+                <AstraCancelCartItem key={order.id} order={order} onRemove={onOrderRemove} />
+              ));
+            }
+
+            <div key={Math.random()} className={twMerge('h-2 w-full border-b-[1px]', borderColor)} />;
+          })
+        ) : (
+          <div key={Math.random()} className={twMerge(textColor, 'flex items-center justify-center uppercase flex-1')}>
+            <div className={twMerge('font-medium font-heading', secondaryTextColor)}>Cart empty</div>
+          </div>
+        )}
+      </div>
 
       {/* todo: change the chainId check here when more chains are supported */}
       <div className="m-6 flex flex-col">
@@ -286,7 +289,8 @@ export const AstraCart = ({
           disabled={
             !user ||
             chainId !== ChainId.Mainnet ||
-            (tokens.length === 0 && collections.length === 0 && orders.length === 0)
+            currentCartItems.length === 0 ||
+            (cartType === CartType.Send && !sendToAddress)
           }
           onClick={async () => {
             cartType === CartType.Send ? onTokenSend(await finalSendToAddress(sendToAddress)) : onCheckout();
@@ -332,7 +336,6 @@ const AstraTokenCartItem = ({ token, onRemove, showPriceAndExpiry }: Props2) => 
 
 interface Props3 {
   collection: ERC721CollectionCartItem;
-  index: number;
   onRemove: (coll: ERC721CollectionCartItem) => void;
 }
 
@@ -361,7 +364,6 @@ const AstraCollectionCartItem = ({ collection, onRemove }: Props3) => {
 
 interface Props4 {
   order: ERC721OrderCartItem;
-  index: number;
   onRemove: (order: ERC721OrderCartItem) => void;
 }
 

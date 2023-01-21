@@ -15,11 +15,12 @@ interface CollectionSelectionResult {
 export const useCollectionSelection = (): CollectionSelectionResult => {
   const [collSelectionMap, setCollSelectionMap] = useState<Map<string, ERC721CollectionCartItem>>(new Map());
   const [collSelection, setCollSelection] = useState<ERC721CollectionCartItem[]>([]);
-  const { setCartItems } = useCartContext();
+  const { cartType, cartItems, setCartItems } = useCartContext();
 
   useEffect(() => {
     setCollSelection(Array.from(collSelectionMap.values()));
-    setCartItems(Array.from(collSelectionMap.values()));
+    const otherTypeCartItems = cartItems.filter((cartItem) => cartItem.cartType !== cartType);
+    setCartItems(otherTypeCartItems.concat(Array.from(collSelectionMap.values())));
   }, [collSelectionMap]);
 
   const toggleCollSelection = (value: ERC721CollectionCartItem) => {

@@ -34,9 +34,6 @@ export const Layout = ({ children }: Props) => {
 
   const cart = (
     <AstraCart
-      tokens={nftSelection}
-      collections={collSelection}
-      orders={orderSelection}
       onCheckout={async () => {
         try {
           if (nftSelection.length > 0) {
@@ -66,6 +63,15 @@ export const Layout = ({ children }: Props) => {
       }}
       onOrderRemove={(value) => {
         removeOrderFromSelection(value);
+      }}
+      onTokensClear={() => {
+        clearNFTSelection();
+      }}
+      onCollsClear={() => {
+        clearCollSelection();
+      }}
+      onOrdersClear={() => {
+        clearOrderSelection();
       }}
     />
   );

@@ -13,11 +13,12 @@ interface OrderSelectionResult {
 export const useOrderSelection = (): OrderSelectionResult => {
   const [orderSelectionMap, setOrderSelectionMap] = useState<Map<string, ERC721OrderCartItem>>(new Map());
   const [orderSelection, setOrderSelection] = useState<ERC721OrderCartItem[]>([]);
-  const { setCartItems } = useCartContext();
+  const { cartType, cartItems, setCartItems } = useCartContext();
 
   useEffect(() => {
     setOrderSelection(Array.from(orderSelectionMap.values()));
-    setCartItems(Array.from(orderSelectionMap.values()));
+    const otherTypeCartItems = cartItems.filter((cartItem) => cartItem.cartType !== cartType);
+    setCartItems(otherTypeCartItems.concat(Array.from(orderSelectionMap.values())));
   }, [orderSelectionMap]);
 
   const toggleOrderSelection = (value: ERC721OrderCartItem) => {
