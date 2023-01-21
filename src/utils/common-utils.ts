@@ -101,7 +101,7 @@ export const getCollectionKeyId = (coll: BaseCollection) => {
 };
 
 export const getTokenCartItemKey = (data: ERC721TokenCartItem) => {
-  return trimLowerCase(`${data?.chainId}:${data?.address}:${data?.tokenId}:${data?.cartType}`);
+  return trimLowerCase(`${data?.chainId}:${data?.address}:${data?.tokenId}`);
 };
 
 // use ellipsisString for non-address numbers, this gets the checksum address

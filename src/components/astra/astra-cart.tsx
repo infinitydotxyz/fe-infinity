@@ -58,18 +58,14 @@ export const AstraCart = ({
   const [orderMap, setOrderMap] = useState<Map<string, ERC721OrderCartItem[]>>(new Map());
 
   useEffect(() => {
-    if (router.isReady) {
-      const typeOfCart = getCartType(router.asPath, selectedProfileTab);
-      setCartType(typeOfCart);
-    }
+    const cartType = getCartType(router.asPath, selectedProfileTab);
+    setCartType(cartType);
   }, [router.pathname, selectedProfileTab]);
 
   useEffect(() => {
     const cartItems: CartItem[] = getCurrentCartItems();
     setCurrentCartItems(cartItems);
-
-    console.log('cartType', cartType);
-
+    console.log('cartType', cartType, cartItems);
     if (
       cartType === CartType.TokenList ||
       cartType === CartType.TokenOffer ||
@@ -85,7 +81,7 @@ export const AstraCart = ({
         tokenMap.set(token.tokenAddress ?? '', tkns);
       }
       setTokenMap(tokenMap);
-      console.log('tokenMap', tokenMap, tokenMap.size);
+      console.log('tokenMap', tokenMap);
     }
 
     if (cartType === CartType.CollectionOffer) {
@@ -97,6 +93,7 @@ export const AstraCart = ({
         collMap.set(coll.address ?? '', colls);
       }
       setCollMap(collMap);
+      console.log('collMap', collMap);
     }
 
     if (cartType === CartType.Cancel) {
@@ -108,6 +105,7 @@ export const AstraCart = ({
         orderMap.set(order.id ?? '', orders);
       }
       setOrderMap(orderMap);
+      console.log('orderMap', orderMap);
     }
 
     if (cartType === CartType.TokenList) {
@@ -155,38 +153,6 @@ export const AstraCart = ({
     }
   }, [cartType, cartItems]);
 
-  const clearButton = (
-    <div className="flex items-center">
-      {currentCartItems.length > 0 && (
-        <>
-          <div className={twMerge(secondaryBgColor, textColor, 'rounded-full h-6 w-6 text-center mr-1')}>
-            {currentCartItems.length}
-          </div>
-          <div
-            className={twMerge('ml-2 text-sm cursor-pointer', brandTextColor)}
-            onClick={() => {
-              if (
-                cartType === CartType.BuyNow ||
-                cartType === CartType.SellNow ||
-                cartType === CartType.Send ||
-                cartType === CartType.TokenList ||
-                cartType === CartType.TokenOffer
-              ) {
-                onTokensClear();
-              } else if (cartType === CartType.CollectionOffer) {
-                onCollsClear();
-              } else if (cartType === CartType.Cancel) {
-                onOrdersClear();
-              }
-            }}
-          >
-            Clear
-          </div>
-        </>
-      )}
-    </div>
-  );
-
   const finalSendToAddress = async (addr: string) => {
     let finalAddress: string | null = addr;
     if (addr.endsWith('.eth')) {
@@ -203,7 +169,36 @@ export const AstraCart = ({
     <div className={twMerge('h-full flex flex-col border-l-[1px]', borderColor)}>
       <div className=" m-4 flex items-center">
         <div className={twMerge(textColor, 'text-3xl lg:text-2xl font-bold font-heading mr-3')}>{cartTitle}</div>
-        {clearButton}
+
+        <div className="flex items-center">
+          {currentCartItems.length > 0 && (
+            <>
+              <div className={twMerge(secondaryBgColor, textColor, 'rounded-full h-6 w-6 text-center mr-1')}>
+                {currentCartItems.length}
+              </div>
+              <div
+                className={twMerge('ml-2 text-sm cursor-pointer', brandTextColor)}
+                onClick={() => {
+                  if (
+                    cartType === CartType.BuyNow ||
+                    cartType === CartType.SellNow ||
+                    cartType === CartType.Send ||
+                    cartType === CartType.TokenList ||
+                    cartType === CartType.TokenOffer
+                  ) {
+                    onTokensClear();
+                  } else if (cartType === CartType.CollectionOffer) {
+                    onCollsClear();
+                  } else if (cartType === CartType.Cancel) {
+                    onOrdersClear();
+                  }
+                }}
+              >
+                Clear
+              </div>
+            </>
+          )}
+        </div>
       </div>
 
       {cartType === CartType.Send && tokenMap.size > 0 && (
@@ -218,6 +213,33 @@ export const AstraCart = ({
       )}
 
       <div className={twMerge(textColor, 'min-w-0 flex px-6 flex-col space-y-2 items-start flex-1 overflow-y-auto')}>
+        {tokenMap.forEach((tokenArray) => {
+          <div className="w-full font-bold font-heading truncate" key={`header-${tokenArray[0].id}`}>
+            {tokenArray[0].collectionName}
+          </div>;
+
+          {
+            tokenArray.map((token) =>
+              cartType === CartType.Send ? (
+                <AstraTokenCartItem
+                  key={getTokenCartItemKey(token)}
+                  token={token}
+                  onRemove={onTokenRemove}
+                  showPriceAndExpiry={false}
+                />
+              ) : (
+                <AstraTokenCartItem
+                  key={getTokenCartItemKey(token)}
+                  token={token}
+                  onRemove={onTokenRemove}
+                  showPriceAndExpiry={true}
+                />
+              )
+            );
+          }
+
+          <div key={Math.random()} className={twMerge('h-2 w-full border-b-[1px]', borderColor)} />;
+        })}
         {cartType === CartType.BuyNow ||
         cartType === CartType.SellNow ||
         cartType === CartType.Send ||

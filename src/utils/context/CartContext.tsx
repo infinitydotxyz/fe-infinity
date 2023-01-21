@@ -18,8 +18,8 @@ type CartContextType = {
   cartType: CartType;
   setCartType: (cartType: CartType) => void;
   getCurrentCartItems: () => CartItem[];
-  cartItems: CartItem[];
-  setCartItems: (cartItems: CartItem[]) => void;
+  setCartItemsForCartType: (cartType: CartType, cartItems: CartItem[]) => void;
+  cartItems: Map<CartType, CartItem[]>;
 };
 
 const CartContext = React.createContext<CartContextType | null>(null);
@@ -30,18 +30,26 @@ interface Props {
 
 export const CartContextProvider = ({ children }: Props) => {
   const [cartType, setCartType] = useState<CartType>(CartType.CollectionOffer);
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [cartItems, setCartItems] = useState<Map<CartType, CartItem[]>>(new Map());
 
   const getCurrentCartItems = () => {
-    return cartItems.filter((cartItem) => cartItem.cartType === cartType);
+    return cartItems.get(cartType) || [];
+  };
+
+  const setCartItemsForCartType = (cartType: CartType, cartItems: CartItem[]) => {
+    setCartItems((prev) => {
+      const newMap = new Map(prev);
+      newMap.set(cartType, cartItems);
+      return newMap;
+    });
   };
 
   const value: CartContextType = {
     cartType,
     setCartType,
     getCurrentCartItems,
-    cartItems,
-    setCartItems
+    setCartItemsForCartType,
+    cartItems
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

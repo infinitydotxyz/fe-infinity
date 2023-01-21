@@ -15,16 +15,14 @@ interface NFTSelectionResult {
 export const useNFTSelection = (): NFTSelectionResult => {
   const [nftSelectionMap, setNFTSelectionMap] = useState<Map<string, ERC721TokenCartItem>>(new Map());
   const [nftSelection, setNFTSelection] = useState<ERC721TokenCartItem[]>([]);
-  const { cartType, cartItems, setCartItems, getCurrentCartItems } = useCartContext();
+  const { cartType, getCurrentCartItems, setCartItemsForCartType } = useCartContext();
 
   useEffect(() => {
     setNFTSelection(Array.from(nftSelectionMap.values()));
-    const otherTypeCartItems = cartItems.filter((cartItem) => cartItem.cartType !== cartType);
-    setCartItems(otherTypeCartItems.concat(Array.from(nftSelectionMap.values())));
+    setCartItemsForCartType(cartType, Array.from(nftSelectionMap.values()));
   }, [nftSelectionMap]);
 
   const toggleNFTSelection = (value: ERC721TokenCartItem) => {
-    value.cartType = cartType;
     if (!isNFTSelected(value)) {
       const copy = new Map(nftSelectionMap);
       copy.set(getTokenCartItemKey(value), value);
