@@ -141,7 +141,6 @@ export const TextInputBox = ({
       className={className}
     >
       <div className="flex items-center w-full">
-        {addEthSymbol && <div className="pr-2 select-none">{EthSymbol}</div>}
         <input
           autoFocus={autoFocus}
           type={type}
@@ -155,6 +154,7 @@ export const TextInputBox = ({
           className={twMerge(`p-0 bg-transparent border-none focus:ring-0 block w-full font-heading ${inputClassName}`)}
           placeholder={placeholder}
         />
+        {addEthSymbol && <div className="pr-2 select-none">{EthSymbol}</div>}
       </div>
     </InputBox>
   );

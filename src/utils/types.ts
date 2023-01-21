@@ -38,8 +38,8 @@ export interface ERC721CollectionCartItem extends Erc721Collection {
 }
 
 export interface ERC721TokenCartItem extends ERC721CardData {
-  offerPriceEth?: number;
-  offerExpiry?: ORDER_EXPIRY_TIME;
+  orderPriceEth?: number;
+  orderExpiry?: ORDER_EXPIRY_TIME;
   cartType: CartType;
 }
 

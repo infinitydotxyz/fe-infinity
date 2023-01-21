@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { ReactNode, useEffect, useState } from 'react';
 import { MdClose } from 'react-icons/md';
 import { AButton } from 'src/components/astra/astra-button';
-import { EZImage, TextInputBox } from 'src/components/common';
+import { EthSymbol, EZImage, Spacer, TextInputBox } from 'src/components/common';
 import { getCartType, getCollectionKeyId, getDefaultOrderExpiryTime, getTokenCartItemKey } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartItem, CartType, useCartContext } from 'src/utils/context/CartContext';
@@ -416,88 +416,117 @@ interface Props5 {
 }
 
 const PriceAndExpiry = ({ token, collection, className }: Props5) => {
-  const [price, setPrice] = useState('');
+  const { cartType } = useCartContext();
+  let currentPrice = '';
+
+  if (cartType === CartType.TokenOffer) {
+    currentPrice = token?.orderSnippet?.listing?.orderItem?.startPriceEth
+      ? token?.orderSnippet?.listing?.orderItem?.startPriceEth.toString()
+      : '';
+  } else if (cartType === CartType.TokenList) {
+    currentPrice = token?.orderSnippet?.offer?.orderItem?.startPriceEth
+      ? token?.orderSnippet?.offer?.orderItem?.startPriceEth.toString()
+      : '';
+  }
+
+  const [price, setPrice] = useState(currentPrice.toString());
   const [expiry, setExpiry] = useState(getDefaultOrderExpiryTime());
+
+  const priceEditable = !currentPrice || cartType === CartType.TokenList;
+
   return (
-    <div className={twMerge('flex flex-row space-x-4', className)}>
-      <TextInputBox
-        autoFocus={true}
-        addEthSymbol={true}
-        type="number"
-        value={price}
-        placeholder="0"
-        onChange={(value) => {
-          setPrice(value);
-          if (token) {
-            token.offerPriceEth = parseFloat(value);
-          } else if (collection) {
-            collection.offerPriceEth = parseFloat(value);
-          }
-        }}
-      />
-      <div>
-        <ADropdown
-          hasBorder={true}
-          label={expiry}
-          items={[
-            {
-              label: ORDER_EXPIRY_TIME.HOUR,
-              onClick: () => {
-                setExpiry(ORDER_EXPIRY_TIME.HOUR);
-                if (token) {
-                  token.offerExpiry = ORDER_EXPIRY_TIME.HOUR;
-                } else if (collection) {
-                  collection.offerExpiry = ORDER_EXPIRY_TIME.HOUR;
+    <div className={twMerge('flex flex-row space-x-4 w-full', className)}>
+      {!priceEditable ? (
+        <div className="flex w-full">
+          <Spacer />
+          <div className={twMerge('flex flex-row items-center space-x-1')}>
+            <div className={twMerge('font-bold font-heading')}>{price}</div>
+            <div className={twMerge('font-bold font-heading')}>{EthSymbol}</div>
+          </div>
+        </div>
+      ) : (
+        <>
+          <ADropdown
+            hasBorder={true}
+            alignMenuRight={true}
+            label={expiry}
+            items={[
+              {
+                label: ORDER_EXPIRY_TIME.HOUR,
+                onClick: () => {
+                  setExpiry(ORDER_EXPIRY_TIME.HOUR);
+                  if (token) {
+                    token.orderExpiry = ORDER_EXPIRY_TIME.HOUR;
+                  } else if (collection) {
+                    collection.offerExpiry = ORDER_EXPIRY_TIME.HOUR;
+                  }
+                }
+              },
+              {
+                label: ORDER_EXPIRY_TIME.DAY,
+                onClick: () => {
+                  setExpiry(ORDER_EXPIRY_TIME.DAY);
+                  if (token) {
+                    token.orderExpiry = ORDER_EXPIRY_TIME.DAY;
+                  } else if (collection) {
+                    collection.offerExpiry = ORDER_EXPIRY_TIME.DAY;
+                  }
+                }
+              },
+              {
+                label: ORDER_EXPIRY_TIME.WEEK,
+                onClick: () => {
+                  setExpiry(ORDER_EXPIRY_TIME.WEEK);
+                  if (token) {
+                    token.orderExpiry = ORDER_EXPIRY_TIME.WEEK;
+                  } else if (collection) {
+                    collection.offerExpiry = ORDER_EXPIRY_TIME.WEEK;
+                  }
+                }
+              },
+              {
+                label: ORDER_EXPIRY_TIME.MONTH,
+                onClick: () => {
+                  setExpiry(ORDER_EXPIRY_TIME.MONTH);
+                  if (token) {
+                    token.orderExpiry = ORDER_EXPIRY_TIME.MONTH;
+                  } else if (collection) {
+                    collection.offerExpiry = ORDER_EXPIRY_TIME.MONTH;
+                  }
+                }
+              },
+              {
+                label: ORDER_EXPIRY_TIME.YEAR,
+                onClick: () => {
+                  setExpiry(ORDER_EXPIRY_TIME.YEAR);
+                  if (token) {
+                    token.orderExpiry = ORDER_EXPIRY_TIME.YEAR;
+                  } else if (collection) {
+                    collection.offerExpiry = ORDER_EXPIRY_TIME.YEAR;
+                  }
                 }
               }
-            },
-            {
-              label: ORDER_EXPIRY_TIME.DAY,
-              onClick: () => {
-                setExpiry(ORDER_EXPIRY_TIME.DAY);
-                if (token) {
-                  token.offerExpiry = ORDER_EXPIRY_TIME.DAY;
-                } else if (collection) {
-                  collection.offerExpiry = ORDER_EXPIRY_TIME.DAY;
-                }
+            ]}
+          />
+
+          <TextInputBox
+            inputClassName="font-heading font-bold"
+            autoFocus={true}
+            addEthSymbol={true}
+            type="number"
+            value={price}
+            placeholder=""
+            onChange={(value) => {
+              setPrice(value);
+              if (token) {
+                token.orderPriceEth = parseFloat(value);
+              } else if (collection) {
+                collection.offerPriceEth = parseFloat(value);
               }
-            },
-            {
-              label: ORDER_EXPIRY_TIME.WEEK,
-              onClick: () => {
-                setExpiry(ORDER_EXPIRY_TIME.WEEK);
-                if (token) {
-                  token.offerExpiry = ORDER_EXPIRY_TIME.WEEK;
-                } else if (collection) {
-                  collection.offerExpiry = ORDER_EXPIRY_TIME.WEEK;
-                }
-              }
-            },
-            {
-              label: ORDER_EXPIRY_TIME.MONTH,
-              onClick: () => {
-                setExpiry(ORDER_EXPIRY_TIME.MONTH);
-                if (token) {
-                  token.offerExpiry = ORDER_EXPIRY_TIME.MONTH;
-                } else if (collection) {
-                  collection.offerExpiry = ORDER_EXPIRY_TIME.MONTH;
-                }
-              }
-            },
-            {
-              label: ORDER_EXPIRY_TIME.YEAR,
-              onClick: () => {
-                setExpiry(ORDER_EXPIRY_TIME.YEAR);
-                if (token) {
-                  token.offerExpiry = ORDER_EXPIRY_TIME.YEAR;
-                } else if (collection) {
-                  collection.offerExpiry = ORDER_EXPIRY_TIME.YEAR;
-                }
-              }
-            }
-          ]}
-        />
-      </div>
+            }}
+          />
+        </>
+      )}
     </div>
   );
 };

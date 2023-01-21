@@ -272,11 +272,11 @@ export const AppContextProvider = ({ children }: Props) => {
         currencyAddress = ZERO_ADDRESS; // sell orders are always in ETH
       }
       const gasPrice = await getEstimatedGasPrice(getEthersProvider());
-      const ethPrice = token.offerPriceEth ?? 0;
+      const ethPrice = token.orderPriceEth ?? 0;
       if (ethPrice === 0) {
         throw new Error('Price is 0');
       }
-      const expiry = token.offerExpiry ?? getDefaultOrderExpiryTime();
+      const expiry = token.orderExpiry ?? getDefaultOrderExpiryTime();
       const endTimeMs = getOrderExpiryTimeInMsFromEnum(expiry);
       const obTokenInfo: OBTokenInfo = {
         tokenId: token.tokenId ?? '',
