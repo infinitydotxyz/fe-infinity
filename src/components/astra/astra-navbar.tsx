@@ -4,7 +4,6 @@ import { AstraCartButton } from 'src/components/astra/astra-cart-button';
 import { borderColor, smallIconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
-import { AiFillRead } from 'react-icons/ai';
 import { ConnectButton, Spacer } from 'src/components/common';
 import { CollectionSearchInput } from '../common/search/collection-search-input';
 import { ADropdown, ADropdownItem } from './astra-dropdown';
@@ -30,13 +29,6 @@ export const ANavbar = () => {
 
 export const ANavbarButtons = () => {
   const menuItems = [
-    {
-      label: 'Read docs',
-      icon: <AiFillRead className={smallIconButtonStyle} />,
-      onClick: () => {
-        window.open('https://docs.flow.so');
-      }
-    } as ADropdownItem,
     {
       label: 'Twitter',
       icon: <BsTwitter className={smallIconButtonStyle} />,
