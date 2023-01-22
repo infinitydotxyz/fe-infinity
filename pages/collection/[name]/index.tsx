@@ -84,8 +84,8 @@ export default function ItemsPage(props: CollectionDashboardProps) {
 
   const totalVol = nFormatter(firstAllTimeStats?.volume ? firstAllTimeStats.volume : currentStats?.volume);
   const floorPrice = nFormatter(
-    data[0].orderSnippet?.listing?.orderItem?.startPriceEth
-      ? data[0].orderSnippet?.listing?.orderItem?.startPriceEth
+    data[0]?.orderSnippet?.listing?.orderItem?.startPriceEth
+      ? data[0]?.orderSnippet?.listing?.orderItem?.startPriceEth
       : firstAllTimeStats?.floorPrice
       ? firstAllTimeStats.floorPrice
       : currentStats?.floorPrice
