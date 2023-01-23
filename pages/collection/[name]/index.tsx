@@ -46,27 +46,26 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     toggleCollSelection,
     isCollSelected,
     isCollSelectable,
-    tokenGridDisabled,
-    setTokenGridDisabled
+    collSelection
   } = useAppContext();
   const [filter, setFilter] = useState<TokensFilter>({});
   const { data, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection.address, filter);
   const { setRef, scrollTop } = useScrollInfo();
   const tabs = ['Items', 'Orders', 'Analytics'];
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
-  const { setCartType } = useCartContext();
+  const { cartType, setCartType } = useCartContext();
 
   useEffect(() => {
     fetch(false);
   }, [filter, collection.address]);
 
   useEffect(() => {
-    if (tokenGridDisabled) {
+    if (collSelection.length > 0) {
       setCartType(CartType.CollectionOffer);
     } else {
       setCartType(CartType.TokenOffer);
     }
-  }, [tokenGridDisabled]);
+  });
 
   const onTabChange = (tab: string) => {
     setSelectedTab(tab);
@@ -156,7 +155,6 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                       className="px-5 py-1 rounded-lg text-sm"
                       onClick={() => {
                         setCartType(CartType.CollectionOffer);
-                        setTokenGridDisabled(!tokenGridDisabled);
                         if (isCollSelectable(collection as ERC721CollectionCartItem)) {
                           return toggleCollSelection(collection as ERC721CollectionCartItem);
                         }
@@ -183,7 +181,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                 listMode={listMode}
                 className={twMerge(
                   'px-4 py-4 min-h-[600px]',
-                  tokenGridDisabled ? 'opacity-30 duration-300 pointer-events-none' : 'duration-300'
+                  cartType === CartType.CollectionOffer ? 'opacity-30 duration-300 pointer-events-none' : 'duration-300'
                 )} // this min height is to prevent the grid from collapsing when there are no items so filter menus can still render
                 onClick={toggleNFTSelection}
                 isSelectable={isNFTSelectable}

@@ -202,8 +202,11 @@ export const getCustomExceptionMsg = (msg: ReactNode) => {
   if (typeof msg === 'string' && msg.indexOf('err: insufficient funds for gas * price + value') > 0) {
     customMsg = 'Insufficient funds for gas * price + value';
   }
-  if (typeof msg === 'string' && msg.indexOf('User denied transaction signature.') > 0) {
+  if (typeof msg === 'string' && msg.indexOf('User denied transaction signature') > 0) {
     customMsg = 'Denied';
+  }
+  if (typeof msg === 'string' && msg.indexOf('rejected transaction') > 0) {
+    customMsg = ''; // this is a common error message when user rejects a transaction
   }
   return customMsg;
 };

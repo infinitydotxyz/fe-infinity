@@ -14,6 +14,9 @@ export const toastSuccess = (message: ReactNode) => {
 // Toast an error message
 export const toastError = (message: ReactNode, onClick?: (message: ReactNode) => void) => {
   const customMsg = getCustomExceptionMsg(message);
+  if (!customMsg) {
+    return;
+  }
   try {
     if (onClick) {
       reactToast(customMsg, {

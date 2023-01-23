@@ -42,19 +42,16 @@ type AppContextType = {
   showCart: boolean;
   setShowCart: (value: boolean) => void;
 
-  tokenGridDisabled: boolean;
-  setTokenGridDisabled: (value: boolean) => void;
-
   selectedProfileTab: string;
   setSelectedProfileTab: (value: string) => void;
 
   listMode: boolean;
   setListMode: (value: boolean) => void;
 
-  handleTokenSend: (selection: ERC721TokenCartItem[], sendToAddress: string) => Promise<void>;
-  handleTokenCheckout: (selection: ERC721TokenCartItem[]) => Promise<void>;
-  handleCollCheckout: (selection: ERC721CollectionCartItem[]) => Promise<void>;
-  handleOrdersCancel: (selection: ERC721OrderCartItem[]) => Promise<void>;
+  handleTokenSend: (selection: ERC721TokenCartItem[], sendToAddress: string) => Promise<boolean>;
+  handleTokenCheckout: (selection: ERC721TokenCartItem[]) => Promise<boolean>;
+  handleCollCheckout: (selection: ERC721CollectionCartItem[]) => Promise<boolean>;
+  handleOrdersCancel: (selection: ERC721OrderCartItem[]) => Promise<boolean>;
 
   refreshData: () => void;
   refreshTrigger: number;
@@ -92,7 +89,6 @@ export const AppContextProvider = ({ children }: Props) => {
   const [selectedProfileTab, setSelectedProfileTab] = useState(ProfileTabs.Items.toString());
   const [listMode, setListMode] = useState(false);
   const [txnHash, setTxnHash] = useState<string>('');
-  const [tokenGridDisabled, setTokenGridDisabled] = useState(false);
   const { getSigner, getEthersProvider, user, chainId, waitForTransaction } = useOnboardContext();
   const {
     isNFTSelected,
@@ -119,7 +115,7 @@ export const AppContextProvider = ({ children }: Props) => {
     refreshData();
   }, []);
 
-  const handleTokenSend = async (nftsToSend: ERC721TokenCartItem[], sendToAddress: string) => {
+  const handleTokenSend = async (nftsToSend: ERC721TokenCartItem[], sendToAddress: string): Promise<boolean> => {
     const orderItems: ChainNFTs[] = [];
     const collectionToTokenMap: { [collection: string]: { tokenId: string; numTokens: number }[] } = {};
 
@@ -165,6 +161,8 @@ export const AppContextProvider = ({ children }: Props) => {
           if (result.hash) {
             setTxnHash(result.hash);
           }
+
+          return true;
         } else {
           console.error('Signer is null');
         }
@@ -172,99 +170,116 @@ export const AppContextProvider = ({ children }: Props) => {
         toastWarning('To address is blank');
       }
     } catch (err) {
-      toastError(extractErrorMsg(err), () => {
-        alert(err);
-      });
+      toastError(extractErrorMsg(err));
     }
+
+    return false;
   };
 
-  const handleTokenCheckout = async (tokens: ERC721TokenCartItem[]) => {
+  const handleTokenCheckout = async (tokens: ERC721TokenCartItem[]): Promise<boolean> => {
     const signer = getSigner();
-    if (!user || !user.address || !signer) {
-      toastError('No logged in user');
-    } else {
-      const cartType = getCartType(router.asPath, selectedProfileTab);
-      const isBuyCart = cartType === CartType.TokenOffer;
-      const isSellCart = cartType === CartType.TokenList;
-      const isSendCart = cartType === CartType.Send;
+    try {
+      if (!user || !user.address || !signer) {
+        toastError('No logged in user');
+      } else {
+        const cartType = getCartType(router.asPath, selectedProfileTab);
+        const isBuyCart = cartType === CartType.TokenOffer;
+        const isSellCart = cartType === CartType.TokenList;
+        const isSendCart = cartType === CartType.Send;
 
-      if (!isSendCart) {
-        // place orders
-        // first sign orders
-        const signedOrders: SignedOBOrder[] = [];
-        let orderNonce = await fetchOrderNonce(user.address, chainId as ChainId);
-        for (const token of tokens) {
-          let order;
-          if (isBuyCart) {
-            order = await tokenToOBOrder(token, orderNonce, false);
-          } else if (isSellCart) {
-            order = await tokenToOBOrder(token, orderNonce, true);
-          }
-          orderNonce += 1;
-          if (order) {
-            try {
+        if (!isSendCart) {
+          // place orders
+          // first sign orders
+          const signedOrders: SignedOBOrder[] = [];
+          let orderNonce = await fetchOrderNonce(user.address, chainId as ChainId);
+          for (const token of tokens) {
+            let order;
+            if (isBuyCart) {
+              order = await tokenToOBOrder(token, orderNonce, false);
+            } else if (isSellCart) {
+              order = await tokenToOBOrder(token, orderNonce, true);
+            }
+            orderNonce += 1;
+            if (order) {
               const signedOrder = await getSignedOBOrder(user, chainId, signer, order);
               if (signedOrder) {
                 signedOrders.push(signedOrder);
               }
-            } catch (ex) {
-              console.error(ex);
-              toastError(`${ex}`);
+            }
+          }
+
+          // post orders
+          if (signedOrders.length > 0) {
+            await postOrdersV2(chainId as ChainId, signedOrders);
+            toastSuccess('Orders posted');
+          }
+          return true;
+        }
+      }
+    } catch (ex) {
+      console.error(ex);
+      toastError(`${ex}`);
+    }
+
+    return false;
+  };
+
+  const handleCollCheckout = async (collections: ERC721CollectionCartItem[]): Promise<boolean> => {
+    const signer = getSigner();
+    try {
+      if (!user || !user.address || !signer) {
+        toastError('No logged in user');
+      } else {
+        // sign orders
+        const signedOrders: SignedOBOrder[] = [];
+        let orderNonce = await fetchOrderNonce(user.address, chainId as ChainId);
+        for (const collection of collections) {
+          const order = await collectionToOBOrder(collection, orderNonce);
+          orderNonce += 1;
+          if (order) {
+            const signedOrder = await getSignedOBOrder(user, chainId, signer, order);
+            if (signedOrder) {
+              signedOrders.push(signedOrder);
             }
           }
         }
 
         // post orders
-        try {
-          if (signedOrders.length > 0) {
-            await postOrdersV2(chainId as ChainId, signedOrders);
-            toastSuccess('Orders posted');
-          }
-        } catch (ex) {
-          console.error(ex);
-          toastError(`${ex}}`);
-        }
-      }
-    }
-  };
-
-  const handleCollCheckout = async (collections: ERC721CollectionCartItem[]) => {
-    const signer = getSigner();
-    if (!user || !user.address || !signer) {
-      toastError('No logged in user');
-    } else {
-      // sign orders
-      const signedOrders: SignedOBOrder[] = [];
-      let orderNonce = await fetchOrderNonce(user.address, chainId as ChainId);
-      for (const collection of collections) {
-        const order = await collectionToOBOrder(collection, orderNonce);
-        orderNonce += 1;
-        if (order) {
-          try {
-            const signedOrder = await getSignedOBOrder(user, chainId, signer, order);
-            if (signedOrder) {
-              signedOrders.push(signedOrder);
-            }
-          } catch (ex) {
-            console.error(ex);
-            toastError(`${ex}`);
-          }
-        }
-      }
-
-      // post orders
-      try {
         if (signedOrders.length > 0) {
           await postOrdersV2(chainId as ChainId, signedOrders);
           toastSuccess('Orders posted');
         }
-      } catch (ex) {
-        console.error(ex);
-        toastError(`${ex}}`);
+
+        return true;
       }
+    } catch (ex) {
+      console.error(ex);
+      toastError(`${ex}`);
     }
 
-    setTokenGridDisabled(!tokenGridDisabled);
+    return false;
+  };
+
+  const handleOrdersCancel = async (ordersToCancel: ERC721OrderCartItem[]): Promise<boolean> => {
+    try {
+      const signer = getSigner();
+      if (signer) {
+        const nonces = ordersToCancel.map((order) => order.nonce);
+        const { hash } = await cancelMultipleOrders(signer, chainId, nonces);
+        toastSuccess('Sent txn to chain for execution');
+        waitForTransaction(hash, () => {
+          toastInfo(`Transaction confirmed ${ellipsisAddress(hash)}`);
+        });
+
+        return true;
+      } else {
+        throw 'Signer is null';
+      }
+    } catch (err) {
+      toastError(extractErrorMsg(err));
+    }
+
+    return false;
   };
 
   const tokenToOBOrder = async (
@@ -380,24 +395,6 @@ export const AppContextProvider = ({ children }: Props) => {
     }
   };
 
-  const handleOrdersCancel = async (ordersToCancel: ERC721OrderCartItem[]) => {
-    try {
-      const signer = getSigner();
-      if (signer) {
-        const nonces = ordersToCancel.map((order) => order.nonce);
-        const { hash } = await cancelMultipleOrders(signer, chainId, nonces);
-        toastSuccess('Sent txn to chain for execution');
-        waitForTransaction(hash, () => {
-          toastInfo(`Transaction confirmed ${ellipsisAddress(hash)}`);
-        });
-      } else {
-        throw 'Signer is null';
-      }
-    } catch (err) {
-      toastError(extractErrorMsg(err));
-    }
-  };
-
   const refreshData = () => {
     // updating fetchers triggers rebuild
     setRefreshTrigger(refreshTrigger + 1);
@@ -406,9 +403,6 @@ export const AppContextProvider = ({ children }: Props) => {
   const value: AppContextType = {
     showCart,
     setShowCart,
-
-    tokenGridDisabled,
-    setTokenGridDisabled,
 
     selectedProfileTab,
     setSelectedProfileTab,

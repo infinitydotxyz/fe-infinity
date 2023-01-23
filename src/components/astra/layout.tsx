@@ -37,14 +37,14 @@ export const Layout = ({ children }: Props) => {
       onCheckout={async () => {
         try {
           if (nftSelection.length > 0) {
-            await handleTokenCheckout(nftSelection);
-            clearNFTSelection();
+            const result = await handleTokenCheckout(nftSelection);
+            result && clearNFTSelection();
           } else if (collSelection.length > 0) {
-            await handleCollCheckout(collSelection);
-            clearCollSelection();
+            const result = await handleCollCheckout(collSelection);
+            result && clearCollSelection();
           } else if (orderSelection.length > 0) {
-            await handleOrdersCancel(orderSelection);
-            clearOrderSelection();
+            const result = await handleOrdersCancel(orderSelection);
+            result && clearOrderSelection();
           }
         } catch (e) {
           console.error(e);
@@ -52,8 +52,8 @@ export const Layout = ({ children }: Props) => {
         }
       }}
       onTokenSend={async (value) => {
-        await handleTokenSend(nftSelection, value);
-        clearNFTSelection();
+        const result = await handleTokenSend(nftSelection, value);
+        result && clearNFTSelection();
       }}
       onTokenRemove={(value) => {
         removeNFTFromSelection(value);

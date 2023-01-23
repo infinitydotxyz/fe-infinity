@@ -220,7 +220,15 @@ export const AstraCart = ({
       } else {
         setCheckoutBtnText('Sell');
       }
-    } else if (cartType === CartType.CollectionOffer || cartType === CartType.TokenOffer) {
+    } else if (cartType === CartType.CollectionOffer) {
+      if (cartItems.length > 1) {
+        setCartTitle('Collection Offers');
+        setCheckoutBtnText('Place offers');
+      } else {
+        setCartTitle('Collection Offer');
+        setCheckoutBtnText('Place offer');
+      }
+    } else if (cartType === CartType.TokenOffer) {
       setCartTitle('Buy');
       if (cartItems.length > 1) {
         setCheckoutBtnText('Bulk Buy');
