@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { AiOutlineCheckCircle, AiOutlinePlusCircle } from 'react-icons/ai';
+import { HiCheckCircle, HiPlusCircle } from 'react-icons/hi';
 import { BasicTokenInfo, ERC721TokenCartItem } from 'src/utils/types';
 import {
   borderColor,
@@ -68,13 +68,13 @@ export const GridCard = ({ data, onClick, selected, isSelectable }: Props): JSX.
           <div className="absolute top-0 bottom-0 left-0 right-0 rounded-t-lg overflow-clip">
             <EZImage src={data?.image} className="hover:scale-110 transition-all" />
             {showPlusIcon && !selected && (
-              <div className={twMerge('absolute top-2 right-2 rounded-full')}>
-                <AiOutlinePlusCircle className={twMerge(iconButtonStyle, brandTextColor)} />
+              <div className={twMerge('absolute top-2 right-2 rounded-full bg-gray-100')}>
+                <HiPlusCircle className={twMerge(iconButtonStyle, brandTextColor)} />
               </div>
             )}
             {selected && (
-              <div className={twMerge('absolute top-2 right-2 rounded-full')}>
-                <AiOutlineCheckCircle className={twMerge(iconButtonStyle, brandTextColor)} />
+              <div className={twMerge('absolute top-2 right-2 rounded-full bg-gray-100')}>
+                <HiCheckCircle className={twMerge(iconButtonStyle, brandTextColor)} />
               </div>
             )}
           </div>
