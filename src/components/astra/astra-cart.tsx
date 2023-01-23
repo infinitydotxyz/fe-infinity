@@ -73,7 +73,10 @@ export const AstraCart = ({
   };
 
   const upateCartItemList = () => {
-    if (cartType === CartType.TokenList || cartType === CartType.TokenOffer || cartType === CartType.Send) {
+    if (
+      (cartType === CartType.TokenList || cartType === CartType.TokenOffer || cartType === CartType.Send) &&
+      tokenMap.size > 0
+    ) {
       const divList: ReactNode[] = [];
       tokenMap.forEach((tokenArray) => {
         const first = tokenArray[0];
@@ -114,7 +117,7 @@ export const AstraCart = ({
           {divList}
         </div>
       );
-    } else if (cartType === CartType.CollectionOffer) {
+    } else if (cartType === CartType.CollectionOffer && collMap.size > 0) {
       const divList: ReactNode[] = [];
       collMap.forEach((collArray) => {
         const first = collArray[0];
@@ -133,7 +136,7 @@ export const AstraCart = ({
           {divList}
         </div>
       );
-    } else if (cartType === CartType.Cancel) {
+    } else if (cartType === CartType.Cancel && orderMap.size > 0) {
       const divList: ReactNode[] = [];
       orderMap.forEach((ordArray) => {
         const first = ordArray[0];
