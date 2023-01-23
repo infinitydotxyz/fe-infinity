@@ -52,7 +52,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   const [filter, setFilter] = useState<TokensFilter>({});
   const { data, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection.address, filter);
   const { setRef, scrollTop } = useScrollInfo();
-  const tabs = ['Items'];
+  const tabs = ['Items', 'Orders', 'Analytics'];
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
   const { setCartType } = useCartContext();
 
@@ -224,7 +224,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       chainId,
       offset: 0,
       limit: 1,
-      orderBy: 'volume',
       orderDirection: 'desc',
       minDate: 0,
       maxDate: 2648764957623,
