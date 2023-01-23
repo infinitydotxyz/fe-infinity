@@ -223,7 +223,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     query: {
       chainId,
       offset: 0,
-      limit: 10,
+      limit: 1,
       orderBy: 'volume',
       orderDirection: 'desc',
       minDate: 0,
