@@ -24,6 +24,25 @@ export const useSearch = <T extends SearchType = any, U extends SearchBy<T> = an
 
   const { debouncedValue: debouncedSearch } = useDebounce(search, 300);
 
+  if (!debouncedSearch.query) {
+    return {
+      result: {
+        data: [],
+        cursor: '',
+        hasNextPage: false
+      },
+      isLoading: false
+    };
+  } else if ('subType' in debouncedSearch && !debouncedSearch.subTypeQuery) {
+    return {
+      result: {
+        data: [],
+        cursor: '',
+        hasNextPage: false
+      },
+      isLoading: false
+    };
+  }
   const { result, isLoading } = useFetch<Response>('/search', {
     query: {
       ...debouncedSearch,
