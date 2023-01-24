@@ -2,6 +2,7 @@ import { getAddress } from '@ethersproject/address';
 import { ChainId } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect, useState } from 'react';
+import { FiEdit3 } from 'react-icons/fi';
 import { MdClose } from 'react-icons/md';
 import { AButton } from 'src/components/astra/astra-button';
 import { EthSymbol, EZImage, Spacer, TextInputBox } from 'src/components/common';
@@ -18,6 +19,7 @@ import {
   inverseTextColor,
   secondaryBgColor,
   secondaryTextColor,
+  smallIconButtonStyle,
   textColor
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
@@ -89,23 +91,9 @@ export const AstraCart = ({
 
         for (const t of tokenArray) {
           if (cartType === CartType.Send) {
-            divList.push(
-              <AstraTokenCartItem
-                key={getTokenCartItemKey(t)}
-                token={t}
-                onRemove={onTokenRemove}
-                showPriceAndExpiry={false}
-              />
-            );
+            divList.push(<AstraTokenCartItem key={getTokenCartItemKey(t)} token={t} onRemove={onTokenRemove} />);
           } else {
-            divList.push(
-              <AstraTokenCartItem
-                key={getTokenCartItemKey(t)}
-                token={t}
-                onRemove={onTokenRemove}
-                showPriceAndExpiry={true}
-              />
-            );
+            divList.push(<AstraTokenCartItem key={getTokenCartItemKey(t)} token={t} onRemove={onTokenRemove} />);
           }
         }
         divList.push(<div key={Math.random()} className={twMerge('h-2 w-full border-b-[1px]', borderColor)} />);
@@ -330,10 +318,17 @@ export const AstraCart = ({
 interface Props2 {
   token: ERC721TokenCartItem;
   onRemove: (token: ERC721TokenCartItem) => void;
-  showPriceAndExpiry?: boolean;
 }
 
-const AstraTokenCartItem = ({ token, onRemove, showPriceAndExpiry }: Props2) => {
+const AstraTokenCartItem = ({ token, onRemove }: Props2) => {
+  const { cartType } = useCartContext();
+  const price = token?.orderSnippet?.listing?.orderItem?.startPriceEth
+    ? token?.orderSnippet?.listing?.orderItem?.startPriceEth.toString()
+    : '';
+
+  const [editedPrice, setEditedPrice] = useState(price);
+  const [editing, setEditing] = useState(price ? false : true);
+
   return (
     <div key={getTokenCartItemKey(token)} className="flex items-center w-full">
       <div className="relative">
@@ -350,7 +345,22 @@ const AstraTokenCartItem = ({ token, onRemove, showPriceAndExpiry }: Props2) => 
 
       <div className="ml-3 flex w-full space-x-2 items-center">
         <div className="font-bold font-heading w-1/3 text-sm">{token.tokenId}</div>
-        {showPriceAndExpiry && <PriceAndExpiry token={token} className=""></PriceAndExpiry>}
+        {cartType !== CartType.Send && (
+          <PriceAndExpiry
+            token={token}
+            className=""
+            editing={editing}
+            onEditComplete={(value) => {
+              setEditedPrice(value);
+              setEditing(false);
+            }}
+            useSpacer
+            currentPrice={editedPrice}
+          ></PriceAndExpiry>
+        )}
+        {!editing && cartType !== CartType.Send && (
+          <FiEdit3 className={twMerge(smallIconButtonStyle, 'cursor-pointer')} onClick={() => setEditing(true)} />
+        )}
       </div>
     </div>
   );
@@ -362,8 +372,11 @@ interface Props3 {
 }
 
 const AstraCollectionCartItem = ({ collection, onRemove }: Props3) => {
+  const [editedPrice, setEditedPrice] = useState(collection.offerPriceEth?.toString());
+  const [editing, setEditing] = useState(editedPrice ? false : true);
+
   return (
-    <div key={getCollectionKeyId(collection)} className="flex items-center w-full">
+    <div key={getCollectionKeyId(collection)} className="flex items-center w-full mt-3">
       <div className="relative">
         <EZImage className={twMerge('h-12 w-12 rounded-lg overflow-clip')} src={collection.metadata.profileImage} />
         <div className={twMerge('absolute top-[-5px] right-[-5px] rounded-full p-0.5 cursor-pointer', inverseBgColor)}>
@@ -378,7 +391,23 @@ const AstraCollectionCartItem = ({ collection, onRemove }: Props3) => {
 
       <div className="ml-4 flex w-full flex-col space-y-2">
         <div className={twMerge('font-bold font-heading text-sm truncate')}>{collection.metadata.name}</div>
-        <PriceAndExpiry collection={collection}></PriceAndExpiry>
+        <div className="flex flex-row items-center">
+          <PriceAndExpiry
+            collection={collection}
+            editing={editing}
+            onEditComplete={(value) => {
+              setEditedPrice(value);
+              setEditing(false);
+            }}
+            currentPrice={editedPrice}
+          ></PriceAndExpiry>
+          {!editing && (
+            <FiEdit3
+              className={twMerge(smallIconButtonStyle, 'ml-2 cursor-pointer')}
+              onClick={() => setEditing(true)}
+            />
+          )}
+        </div>
       </div>
     </div>
   );
@@ -424,35 +453,29 @@ interface Props5 {
   token?: ERC721TokenCartItem;
   collection?: ERC721CollectionCartItem;
   className?: string;
+  editing?: boolean;
+  onEditComplete?: (price: string) => void;
+  useSpacer?: boolean;
+  currentPrice?: string;
 }
 
-const PriceAndExpiry = ({ token, collection, className }: Props5) => {
-  const { cartType } = useCartContext();
-  let currentPrice = '';
-
-  if (cartType === CartType.TokenOffer) {
-    currentPrice = token?.orderSnippet?.listing?.orderItem?.startPriceEth
-      ? token?.orderSnippet?.listing?.orderItem?.startPriceEth.toString()
-      : '';
-  } else if (cartType === CartType.TokenList) {
-    currentPrice = token?.orderSnippet?.offer?.orderItem?.startPriceEth
-      ? token?.orderSnippet?.offer?.orderItem?.startPriceEth.toString()
-      : '';
-  }
-
-  const [price, setPrice] = useState(currentPrice.toString());
+const PriceAndExpiry = ({ token, collection, className, editing, onEditComplete, useSpacer, currentPrice }: Props5) => {
+  const [price, setPrice] = useState(currentPrice?.toString() ?? '');
   const [expiry, setExpiry] = useState(getDefaultOrderExpiryTime());
 
-  const priceEditable = !currentPrice || cartType === CartType.TokenList;
+  const priceEditable = !currentPrice || editing;
 
   return (
     <div className={twMerge('flex flex-row space-x-4 w-full', className)}>
       {!priceEditable ? (
         <div className="flex w-full">
-          <Spacer />
-          <div className={twMerge('flex flex-row items-center space-x-1')}>
-            <div className={twMerge('font-bold font-heading')}>{price}</div>
-            <div className={twMerge('font-bold font-heading')}>{EthSymbol}</div>
+          {useSpacer && <Spacer />}
+          <div className={twMerge('flex flex-col items-end')}>
+            <div className="flex flex-row">
+              <div className={twMerge('font-bold font-heading')}>{price}</div>
+              <div className={twMerge('font-bold font-heading ml-1')}>{EthSymbol}</div>
+            </div>
+            <div className={twMerge(secondaryTextColor, 'text-xs font-medium')}>{expiry}</div>
           </div>
         </div>
       ) : (
@@ -461,6 +484,7 @@ const PriceAndExpiry = ({ token, collection, className }: Props5) => {
             hasBorder={true}
             alignMenuRight={true}
             label={expiry}
+            innerClassName="w-24"
             items={[
               {
                 label: ORDER_EXPIRY_TIME.HOUR,
@@ -522,6 +546,7 @@ const PriceAndExpiry = ({ token, collection, className }: Props5) => {
 
           <TextInputBox
             inputClassName="font-heading font-bold"
+            className="p-[6.5px]"
             autoFocus={true}
             addEthSymbol={true}
             type="number"
@@ -534,6 +559,9 @@ const PriceAndExpiry = ({ token, collection, className }: Props5) => {
               } else if (collection) {
                 collection.offerPriceEth = parseFloat(value);
               }
+            }}
+            onEnter={() => {
+              onEditComplete?.(price);
             }}
           />
         </>

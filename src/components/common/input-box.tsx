@@ -112,6 +112,7 @@ interface Props4 {
   renderLeftIcon?: () => ReactElement;
   className?: string;
   inputClassName?: string;
+  onEnter?: () => void;
 }
 
 export const TextInputBox = ({
@@ -128,7 +129,8 @@ export const TextInputBox = ({
   renderRightIcon,
   renderLeftIcon,
   className,
-  inputClassName = ''
+  inputClassName = '',
+  onEnter
 }: Props4) => {
   return (
     <InputBox
@@ -153,6 +155,11 @@ export const TextInputBox = ({
           }}
           className={twMerge(`p-0 bg-transparent border-none focus:ring-0 block w-full font-heading ${inputClassName}`)}
           placeholder={placeholder}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && onEnter) {
+              onEnter();
+            }
+          }}
         />
         {addEthSymbol && <div className="pr-2 select-none">{EthSymbol}</div>}
       </div>

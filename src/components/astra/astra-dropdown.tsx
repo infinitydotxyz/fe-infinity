@@ -47,6 +47,7 @@ interface DropdownProps {
   tooltip?: string;
   alignMenuRight?: boolean;
   hasBorder?: boolean;
+  innerClassName?: string;
 }
 
 export const ADropdown = ({
@@ -55,7 +56,8 @@ export const ADropdown = ({
   className = '',
   tooltip = '',
   hasBorder = true,
-  alignMenuRight = false
+  alignMenuRight = false,
+  innerClassName = ''
 }: DropdownProps) => {
   return (
     <div className={twMerge(className, 'text-sm')}>
@@ -77,7 +79,11 @@ export const ADropdown = ({
               </ACustomMenuButton>
             </span>
 
-            <ACustomMenuItems open={open} alignMenuRight={alignMenuRight} innerClassName="border-0">
+            <ACustomMenuItems
+              open={open}
+              alignMenuRight={alignMenuRight}
+              innerClassName={twMerge('border-0', innerClassName)}
+            >
               <div className="">
                 {items.map((item, idx) => {
                   if (item.label === '-') {

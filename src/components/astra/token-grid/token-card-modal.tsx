@@ -170,6 +170,7 @@ export const TokenCardModal = ({ data, modalOpen }: Props): JSX.Element | null =
                       }}
                     >
                       {listingPrice && !isOwner && <span>{addedToCart ? 'Remove from Cart' : 'Add to Cart'}</span>}
+                      {listingPrice && isOwner && <span>{addedToCart ? 'Remove from Cart' : 'Edit in Cart'}</span>}
                       {offerPrice && isOwner && <span>{addedToCart ? 'Added to Cart' : 'Sell Now'}</span>}
                     </AButton>
                   </div>
