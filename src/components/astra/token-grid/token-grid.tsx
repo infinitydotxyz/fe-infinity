@@ -19,6 +19,7 @@ interface Props {
   onFetchMore: () => void;
   isError?: boolean;
   isLoading?: boolean;
+  collectionFloorPrice?: string | number | null | undefined;
 }
 
 export const TokenGrid = ({
@@ -31,7 +32,8 @@ export const TokenGrid = ({
   hasNextPage,
   onFetchMore,
   isError,
-  isLoading
+  isLoading,
+  collectionFloorPrice
 }: Props) => {
   let contents;
 
@@ -49,6 +51,7 @@ export const TokenGrid = ({
                   data={data}
                   selected={isSelected(data)}
                   isSelectable={isSelectable}
+                  collectionFloorPrice={collectionFloorPrice}
                   onClick={(data) => {
                     onClick?.(data);
                   }}
@@ -73,6 +76,7 @@ export const TokenGrid = ({
                   key={data.id}
                   data={data}
                   selected={isSelected(data)}
+                  collectionFloorPrice={collectionFloorPrice}
                   isSelectable={isSelectable}
                   onClick={(data) => {
                     onClick?.(data);
@@ -96,9 +100,10 @@ interface Props2 {
   selected: boolean;
   isSelectable: (data: ERC721TokenCartItem) => boolean;
   onClick: (data: ERC721TokenCartItem) => void;
+  collectionFloorPrice?: string | number | null | undefined;
 }
 
-const GridItem = ({ data, onClick, selected, isSelectable }: Props2): JSX.Element => {
+const GridItem = ({ data, onClick, selected, isSelectable, collectionFloorPrice }: Props2): JSX.Element => {
   const [notSelectable, setNotSelectable] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const title = data?.title;
@@ -107,7 +112,8 @@ const GridItem = ({ data, onClick, selected, isSelectable }: Props2): JSX.Elemen
   const basicTokenInfo: BasicTokenInfo = {
     tokenId: data?.tokenId ?? '',
     collectionAddress: data?.address ?? '',
-    chainId: data?.chainId ?? ''
+    chainId: data?.chainId ?? '',
+    collectionFloorPrice
   };
 
   return (

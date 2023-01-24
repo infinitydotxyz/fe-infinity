@@ -9,9 +9,10 @@ import { BasicTokenInfo } from 'src/utils/types';
 interface Props {
   expanded?: boolean;
   slug: string;
+  collectionFloorPrice?: string | number | null | undefined;
 }
 
-export const CollectionNftSearchInput = ({ expanded, slug }: Props) => {
+export const CollectionNftSearchInput = ({ expanded, slug, collectionFloorPrice }: Props) => {
   const { search, setSubTypeQuery, setQuery } = useSearchState<SearchType.Collection, 'slug', 'nft'>({
     type: SearchType.Collection,
     query: slug,
@@ -42,7 +43,14 @@ export const CollectionNftSearchInput = ({ expanded, slug }: Props) => {
     <>
       <SearchInput
         tokenSearch
-        setSelectedToken={setBasicTokenInfo}
+        setSelectedToken={() => {
+          const info = basicTokenInfo;
+          if (!info) {
+            return;
+          }
+          info.collectionFloorPrice = collectionFloorPrice;
+          setBasicTokenInfo(info);
+        }}
         expanded={expanded}
         query={'subTypeQuery' in search ? search.subTypeQuery : ''}
         setQuery={setSubTypeQuery}

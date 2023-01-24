@@ -51,6 +51,7 @@ export interface BasicTokenInfo {
   chainId: string;
   collectionAddress: string;
   tokenId: string;
+  collectionFloorPrice?: string | number | null | undefined;
 }
 
 export type TokensFilter = {

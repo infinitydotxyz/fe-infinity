@@ -20,9 +20,10 @@ interface Props {
   selected: boolean;
   isSelectable: (data: ERC721TokenCartItem) => boolean;
   onClick: (data: ERC721TokenCartItem) => void;
+  collectionFloorPrice?: string | number | null | undefined;
 }
 
-export const GridCard = ({ data, onClick, selected, isSelectable }: Props): JSX.Element => {
+export const GridCard = ({ data, onClick, selected, isSelectable, collectionFloorPrice }: Props): JSX.Element => {
   const [notSelectable, setNotSelectable] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [showPlusIcon, setShowPlusIcon] = useState(false);
@@ -35,7 +36,8 @@ export const GridCard = ({ data, onClick, selected, isSelectable }: Props): JSX.
   const basicTokenInfo: BasicTokenInfo = {
     tokenId: data?.tokenId ?? '',
     collectionAddress: data?.address ?? '',
-    chainId: data?.chainId ?? ''
+    chainId: data?.chainId ?? '',
+    collectionFloorPrice
   };
   const router = useRouter();
   const isCollectionPage = router.asPath.includes('/collection');

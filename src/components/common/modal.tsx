@@ -1,8 +1,9 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { XIcon } from '@heroicons/react/outline';
+import { useTheme } from 'next-themes';
 import { Fragment, ReactNode } from 'react';
 import { Button, Spacer } from 'src/components/common';
-import { iconButtonStyle, secondaryBgColor } from 'src/utils/ui-constants';
+import { bgColor, iconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 interface Props {
@@ -46,6 +47,7 @@ export const Modal = ({
   wide = true,
   panelClassName
 }: Props) => {
+  const { theme } = useTheme();
   const buttons = [];
 
   // pass in '' to hide button
@@ -101,7 +103,7 @@ export const Modal = ({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-dark-bg bg-opacity-60" />
+          <div className={twMerge('fixed inset-0', theme === 'dark' ? 'bg-light-bg' : 'bg-dark-bg', 'bg-opacity-30')} />
         </Transition.Child>
 
         <div className={twMerge('fixed inset-0 overflow-y-auto overflow-x-clip')}>
@@ -121,7 +123,7 @@ export const Modal = ({
                   wide ? 'max-w-xl' : 'max-w-md',
                   'transform rounded-lg py-8 px-9 text-left align-middle shadow-xl transition-all text-sm',
                   panelClassName,
-                  secondaryBgColor
+                  bgColor
                 )}
               >
                 <Dialog.Title

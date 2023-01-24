@@ -16,7 +16,7 @@ export function useCollectionTokenFetcher(collectionAddress: string | undefined,
 
   return useTokenFetcher<ApiNftData, ERC721TokenCartItem>({
     fetcher: (cursor, filters) => fetchCollectionTokens(collectionAddress || '', chainId, { cursor, ...filters }),
-    mapper: (data) => nftsToCardDataWithOfferFields(data, '', ''),
+    mapper: (data) => nftsToCardDataWithOrderFields(data),
     execute: collectionAddress !== '',
     filter
   });
@@ -27,7 +27,7 @@ export function useProfileTokenFetcher(userAddress: string | undefined, filter: 
 
   return useTokenFetcher<ApiNftData, ERC721TokenCartItem>({
     fetcher: (cursor, filters) => fetchProfileTokens(userAddress || '', chainId, { cursor, ...filters }),
-    mapper: (data) => nftsToCardDataWithOfferFields(data, '', ''),
+    mapper: (data) => nftsToCardDataWithOrderFields(data),
     execute: userAddress !== '',
     filter
   });
@@ -81,49 +81,49 @@ function useTokenFetcher<From, To>({
   return { error, data, hasNextPage, isLoading, fetch };
 }
 
-const nftsToCardDataWithOfferFields = (
-  tokens: ApiNftData[],
-  collectionAddress: string,
-  collectionName: string
-): ERC721TokenCartItem[] => {
+export const nftsToCardDataWithOrderFields = (tokens: ApiNftData[]): ERC721TokenCartItem[] => {
   let result: ERC721TokenCartItem[] = (tokens || []).map((item: ApiNftData) => {
-    const image =
-      item?.metadata?.image ||
-      item?.image?.url ||
-      item?.alchemyCachedImage ||
-      item?.image?.originalUrl ||
-      item?.zoraImage?.url ||
-      '';
-
-    const result: ERC721TokenCartItem = {
-      id: collectionAddress + '_' + item.tokenId,
-      name: item.metadata?.name ?? item.metadata?.title,
-      title: item.collectionName ?? collectionName,
-      collectionName: item.collectionName ?? collectionName,
-      collectionSlug: item.collectionSlug ?? '',
-      description: item.metadata?.description ?? '',
-      image: image,
-      displayType: item.displayType,
-      isVideo: isVideoNft(item),
-      price: item?.orderSnippet?.listing?.orderItem?.startPriceEth ?? 0,
-      chainId: item.chainId,
-      tokenAddress: item.collectionAddress ?? collectionAddress,
-      address: item.collectionAddress ?? collectionAddress,
-      tokenId: item.tokenId,
-      rarityRank: item.rarityRank,
-      orderSnippet: item.ordersSnippet,
-      hasBlueCheck: item.hasBlueCheck ?? false,
-      attributes: item.metadata?.attributes ?? [],
-      cartType: CartType.None
-    };
-
-    return result;
+    return nftToCardDataWithOrderFields(item);
   });
 
   // remove any with blank images
   result = result.filter((x) => {
     return x.image && x.image.length > 0;
   });
+
+  return result;
+};
+
+export const nftToCardDataWithOrderFields = (item: ApiNftData): ERC721TokenCartItem => {
+  const image =
+    item?.metadata?.image ||
+    item?.image?.url ||
+    item?.alchemyCachedImage ||
+    item?.image?.originalUrl ||
+    item?.zoraImage?.url ||
+    '';
+
+  const result: ERC721TokenCartItem = {
+    id: item.chainId + ':' + item.collectionAddress + '_' + item.tokenId,
+    name: item.metadata?.name ?? item.metadata?.title,
+    title: item.collectionName ?? '',
+    collectionName: item.collectionName ?? '',
+    collectionSlug: item.collectionSlug ?? '',
+    description: item.metadata?.description ?? '',
+    image: image,
+    displayType: item.displayType,
+    isVideo: isVideoNft(item),
+    price: item?.orderSnippet?.listing?.orderItem?.startPriceEth ?? 0,
+    chainId: item.chainId,
+    tokenAddress: item.collectionAddress ?? item.collectionAddress,
+    address: item.collectionAddress ?? item.collectionAddress,
+    tokenId: item.tokenId,
+    rarityRank: item.rarityRank,
+    orderSnippet: item.ordersSnippet,
+    hasBlueCheck: item.hasBlueCheck ?? false,
+    attributes: item.metadata?.attributes ?? [],
+    cartType: CartType.None
+  };
 
   return result;
 };

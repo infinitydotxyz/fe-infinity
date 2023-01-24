@@ -145,7 +145,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
             <div>
               <div className="flex mt-2 px-4">
                 <div className="flex">
-                  <CollectionNftSearchInput slug={collection.slug} expanded />
+                  <CollectionNftSearchInput slug={collection.slug} expanded collectionFloorPrice={floorPrice} />
                 </div>
                 <Spacer />
                 <div className="flex space-x-2">
@@ -178,6 +178,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
               </div>
 
               <TokenGrid
+                collectionFloorPrice={floorPrice}
                 listMode={listMode}
                 className={twMerge(
                   'px-4 py-4 min-h-[600px]',
