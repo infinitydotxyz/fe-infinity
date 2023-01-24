@@ -21,10 +21,9 @@ export const ToggleTab = ({ options, onChange, defaultOption, className = '', sm
             <div
               key={option}
               className={twMerge(
-                hoverColorBrandText,
                 small ? 'min-w-[110px]' : 'min-w-[140px]',
                 'select-none flex text-md items-center justify-center text-center whitespace-nowrap font-medium rounded-lg',
-                selected === option ? twMerge(primaryBtnBgColorText) : '',
+                selected === option ? twMerge(primaryBtnBgColorText) : hoverColorBrandText,
                 'py-2 px-6'
               )}
               onClick={() => {
