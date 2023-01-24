@@ -32,11 +32,9 @@ export const DEFAULT_ORDER_TYPE_FILTER = 'listings';
 interface Props {
   userAddress: string;
   className?: string;
-  toggleOrderSelection: (data: ERC721OrderCartItem) => void;
-  isOrderSelected: (data: ERC721OrderCartItem) => boolean;
 }
 
-export const ProfileOrderList = ({ userAddress, className = '', toggleOrderSelection, isOrderSelected }: Props) => {
+export const ProfileOrderList = ({ userAddress, className = '' }: Props) => {
   const { user, chainId, waitForTransaction, getSigner } = useOnboardContext();
   const [isCancellingAll, setIsCancellingAll] = useState(false);
   const [ddLabel, setDdLabel] = useState<string>('Listings');
@@ -64,14 +62,6 @@ export const ProfileOrderList = ({ userAddress, className = '', toggleOrderSelec
   useEffect(() => {
     fetch(false);
   }, [filter]);
-
-  const onClickAcceptOfferCancelOrder = (order: ERC721OrderCartItem) => {
-    if (filter.orderType === 'offers-received') {
-      // no op in this release; in future allow users to accept offers
-    } else {
-      toggleOrderSelection(order);
-    }
-  };
 
   const onClickOrderType = (newType: 'listings' | 'offers-made' | 'offers-received' | '') => {
     const newFilter = {
@@ -188,15 +178,7 @@ export const ProfileOrderList = ({ userAddress, className = '', toggleOrderSelec
           {orders?.map((order, idx) => {
             const orderCartItem = order as ERC721OrderCartItem;
             orderCartItem.cartType = CartType.Cancel;
-            return (
-              <ProfileOrderListItem
-                key={idx}
-                order={orderCartItem}
-                orderType={filter.orderType}
-                selected={isOrderSelected(orderCartItem)}
-                onClickActionBtn={onClickAcceptOfferCancelOrder}
-              />
-            );
+            return <ProfileOrderListItem key={idx} order={orderCartItem} orderType={filter.orderType} />;
           })}
 
           {hasNextPage === true ? (

@@ -324,6 +324,8 @@ const AstraTokenCartItem = ({ token, onRemove }: Props2) => {
   const { cartType } = useCartContext();
   const price = token?.orderSnippet?.listing?.orderItem?.startPriceEth
     ? token?.orderSnippet?.listing?.orderItem?.startPriceEth.toString()
+    : token?.orderPriceEth
+    ? token?.orderPriceEth.toString()
     : '';
 
   const [editedPrice, setEditedPrice] = useState(price);

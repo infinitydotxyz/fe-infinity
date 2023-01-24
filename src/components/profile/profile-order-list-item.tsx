@@ -1,6 +1,9 @@
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, EthPrice } from 'src/components/common';
+import { erc721OrderCartItemToTokenCartItem } from 'src/utils';
+import { useAppContext } from 'src/utils/context/AppContext';
+import { CartType, useCartContext } from 'src/utils/context/CartContext';
 import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { ERC721OrderCartItem, TokensFilter } from 'src/utils/types';
 import { secondaryTextColor, standardBorderCard } from 'src/utils/ui-constants';
@@ -11,15 +14,25 @@ import { OrderDetailModal } from '../orderbook/order-detail-modal';
 
 interface Props {
   order: ERC721OrderCartItem;
-  selected?: boolean;
   orderType: TokensFilter['orderType'];
-  onClickActionBtn: (order: ERC721OrderCartItem) => void;
 }
 
-export const ProfileOrderListItem = ({ order, orderType, onClickActionBtn, selected }: Props) => {
+export const ProfileOrderListItem = ({ order, orderType }: Props) => {
   const [selectedOrder, setSelectedOrder] = useState<SignedOBOrder | null>(null);
   const [startPriceEth] = useState(order.startPriceEth);
   const { checkSignedIn } = useOnboardContext();
+  const { cartType, cartItems, setCartType } = useCartContext();
+  const { isNFTSelectable, isNFTSelected, toggleNFTSelection, isOrderSelected, toggleOrderSelection } = useAppContext();
+
+  const editCartToken = erc721OrderCartItemToTokenCartItem(order);
+
+  const [addedToEditCart, setAddedToEditCart] = useState(isNFTSelected(editCartToken));
+  const [addedToCancelCart, setAddedToCancelCart] = useState(isOrderSelected(order));
+
+  useEffect(() => {
+    setAddedToEditCart(isNFTSelected(editCartToken));
+    setAddedToCancelCart(isOrderSelected(order));
+  }, [cartType, cartItems]);
 
   return (
     <div>
@@ -51,24 +64,57 @@ export const ProfileOrderListItem = ({ order, orderType, onClickActionBtn, selec
             <div className={twMerge(secondaryTextColor, 'font-medium')}>Expiry</div>
             <div className="">{format(order.endTimeMs)}</div>
           </div>
+
           {orderType === 'listings' || orderType === 'offers-made' ? (
             <Button
               onClick={() => {
                 if (!checkSignedIn()) {
                   return;
                 }
+                const newCartType = orderType === 'listings' ? CartType.TokenList : CartType.TokenOffer;
+                editCartToken.cartType = newCartType;
+                if (isNFTSelectable(editCartToken)) {
+                  setCartType(newCartType);
+                  toggleNFTSelection(editCartToken);
+                }
               }}
             >
-              Edit in Cart
+              {addedToEditCart && (cartType === CartType.TokenList || cartType === CartType.TokenOffer) ? '✓' : ''} Edit
+              in Cart
             </Button>
           ) : null}
+
           {orderType === 'listings' || orderType === 'offers-made' ? (
             <Button
               onClick={() => {
-                onClickActionBtn(order);
+                if (!checkSignedIn()) {
+                  return;
+                }
+                const newCartType = CartType.Cancel;
+                order.cartType = newCartType;
+                setCartType(newCartType);
+                toggleOrderSelection(order);
               }}
             >
-              {selected ? '✓' : ''} Cancel
+              {addedToCancelCart && cartType === CartType.Cancel ? '✓' : ''} Cancel
+            </Button>
+          ) : null}
+
+          {orderType === 'offers-received' ? (
+            <Button
+              onClick={() => {
+                if (!checkSignedIn()) {
+                  return;
+                }
+                const newCartType = CartType.TokenList;
+                editCartToken.cartType = newCartType;
+                if (isNFTSelectable(editCartToken)) {
+                  setCartType(newCartType);
+                  toggleNFTSelection(editCartToken);
+                }
+              }}
+            >
+              {addedToEditCart && cartType === CartType.TokenList ? '✓' : ''} Sell Now
             </Button>
           ) : null}
         </div>
