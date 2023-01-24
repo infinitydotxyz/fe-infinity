@@ -1,11 +1,13 @@
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { AnimatedAxis, AnimatedBarSeries, AnimatedGrid, Tooltip, XYChart } from '@visx/xychart';
+import { useTheme } from 'next-themes';
 import React, { useMemo, useState } from 'react';
 import { EthSymbol, SimpleTable, SimpleTableItem } from 'src/components/common';
 import { numStr } from 'src/utils';
-import { textColor } from 'src/utils/ui-constants';
+import { borderColor, secondaryBgColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
+import tailwindConfig from '../../../settings/tailwind/elements/foundations';
 import { ChartBox } from './chart-box';
 import { getChartDimensions } from './chart-utils';
 import { useChartTheme } from './use-theme';
@@ -98,10 +100,10 @@ export const ResponsiveBarChart = ({ graphData, graphType, fetchData, displayDet
   return (
     <ChartBox className="h-full">
       <div className="flex justify-between mb-4">
-        <div className="ml-6 font-bold mt-3">{graphType}</div>
+        <div className="ml-6 font-medium mt-3">{graphType}</div>
         <select
           onChange={(e) => setSelectedPriceBucket(+e.target.value)}
-          className={twMerge('form-select rounded-lg bg-transparent focus:border-none', textColor)}
+          className={twMerge('form-select rounded-lg bg-transparent focus:border-none focus:outline-none text-sm')}
         >
           {priceBuckets.map((filter) => (
             <option value={filter} selected={filter === selectedPriceBucket}>
@@ -136,8 +138,6 @@ const BarChart: React.FC<BarChartProps> = ({
   displayDetails,
   selectedPriceBucket
 }) => {
-  const { theme } = useChartTheme();
-
   const { boundedWidth, boundedHeight } = getChartDimensions({
     width,
     height
@@ -152,6 +152,11 @@ const BarChart: React.FC<BarChartProps> = ({
     );
   }
 
+  const { theme } = useTheme();
+  const darkMode = theme === 'dark';
+  const themeToUse = tailwindConfig.colors[darkMode ? 'dark' : 'light'];
+  const { theme: chartTheme } = useChartTheme();
+
   return (
     <XYChart
       width={width}
@@ -163,17 +168,37 @@ const BarChart: React.FC<BarChartProps> = ({
         round: true,
         domain: [0, Math.max(...data.map(getOrderCount))]
       }}
-      theme={theme}
+      theme={chartTheme}
     >
       <AnimatedAxis
+        numTicks={5}
         orientation="bottom"
         tickFormat={(v) => `${v}`}
         hideAxisLine={true}
         hideTicks={true}
         top={boundedHeight}
+        tickLabelProps={() => ({
+          fill: themeToUse.disabled,
+          fontWeight: 700,
+          fontSize: 12,
+          textAnchor: 'middle'
+        })}
       />
-      <AnimatedAxis orientation="left" tickFormat={(v) => `${parseInt(v)}`} hideAxisLine={true} hideTicks={true} />
-      <AnimatedGrid columns={false} strokeDasharray="6,6" numTicks={8} />
+      <AnimatedAxis
+        numTicks={5}
+        orientation="left"
+        tickFormat={(v) => `${parseInt(v)}`}
+        hideAxisLine={true}
+        hideTicks={true}
+        tickLabelProps={() => ({
+          fill: themeToUse.disabled,
+          fontWeight: 700,
+          fontSize: 12,
+          textAnchor: 'end',
+          verticalAnchor: 'middle'
+        })}
+      />
+      <AnimatedGrid columns={false} strokeDasharray="6,6" stroke={themeToUse.disabledFade} numTicks={6} />
       <AnimatedBarSeries
         data={data}
         dataKey={graphType}
@@ -210,14 +235,14 @@ const BarChart: React.FC<BarChartProps> = ({
           );
 
           return (
-            <>
-              <div className="mb-1">
+            <div className={twMerge(borderColor, secondaryBgColor, 'border rounded-lg p-2')}>
+              <div className="mb-1 p-1">
                 <span>{title}</span>
               </div>
-              <div className="w-full">
-                <SimpleTable items={items} rowClassName="mb-1" />
+              <div className="w-full p-1">
+                <SimpleTable items={items} rowClassName="mb-2" valueClassName="ml-2" />
               </div>
-            </>
+            </div>
           );
         }}
       />

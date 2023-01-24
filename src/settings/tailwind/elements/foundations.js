@@ -138,6 +138,7 @@ module.exports = {
       bg: '#141416',
       body: '#dcdcdc',
       disabled: '#777E90',
+      disabledFade: '#777E9080',
       border: '#353945',
       card: '#23262f'
     },
@@ -145,11 +146,13 @@ module.exports = {
       bg: '#FFFFFF',
       body: '#23262f',
       disabled: '#777E90',
+      disabledFade: '#777E9080',
       card: '#FbFbFb',
       border: '#e6e8ec'
     },
     brand: {
       primary: '#5c5cf4',
+      primaryFade: '#5c5cf488',
       twitter: '#1C9BEF',
       discord: '#5765F2'
     },

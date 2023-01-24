@@ -15,14 +15,6 @@ export const clamp = (num: number, min: number, max: number): number => {
   return Math.max(min, Math.min(num, max));
 };
 
-// todo: check for dark mode
-export const textColor = '#333333';
-export const textColorTW = 'text-[#333333]';
-export const textLight = '#777';
-export const accentColor = '#92deff';
-export const accentAltColor = '#e8adad';
-export const axisLineColor = `${textColor}88`;
-
 export const getChartDimensions = ({ width = 0, height = 0 }: { width?: number; height?: number }): ChartDimensions => {
   const margin = {
     top: 10,

@@ -9,6 +9,7 @@ import { defaultStyles, TooltipWithBounds, useTooltip } from '@visx/tooltip';
 import { voronoi } from '@visx/voronoi';
 import { extent } from 'd3';
 import { format } from 'date-fns';
+import { useTheme } from 'next-themes';
 import { useRouter } from 'next/router';
 import { MouseEvent, TouchEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { TokenCardModal } from 'src/components/astra/token-grid/token-card-modal';
@@ -16,6 +17,7 @@ import { EZImage } from 'src/components/common';
 import { BasicTokenInfo } from 'src/utils/types';
 import { secondaryBgColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
+import tailwindConfig from '../../../settings/tailwind/elements/foundations';
 import { ChartBox } from './chart-box';
 import { getChartDimensions } from './chart-utils';
 
@@ -61,10 +63,10 @@ export const ResponsiveScatterChart = ({
   return (
     <ChartBox className="h-full">
       <div className="flex justify-between mb-4">
-        <div className="ml-5 font-bold mt-3">{graphType}</div>
+        <div className={twMerge('ml-5 mt-3 font-medium')}>{graphType}</div>
         <select
           onChange={(e) => fetchData(e.target.value)}
-          className={twMerge('form-select rounded-lg bg-transparent focus:border-none float-right')}
+          className={twMerge('form-select rounded-lg bg-transparent focus:border-none float-right text-sm')}
         >
           {Object.values(TimeBuckets).map((filter) => (
             <option value={filter} selected={filter === selectedTimeBucket}>
@@ -173,8 +175,8 @@ function ScatterChart({ width, height, data }: ScatterChartProps) {
       }
 
       showTooltip({
-        tooltipLeft: xScale(xAccessor(closest.data)) + margin.left,
-        tooltipTop: yScale(yAccessor(closest.data)) + margin.top,
+        tooltipLeft: xScale(xAccessor(closest.data)) - 1.68 * margin.left,
+        tooltipTop: yScale(yAccessor(closest.data)) + 30 * margin.top,
         tooltipData: {
           ...closest.data
         }
@@ -198,20 +200,18 @@ function ScatterChart({ width, height, data }: ScatterChartProps) {
     [xScale, yScale, voronoiLayout, voronoiPolygons]
   );
 
-  const cloudsColorScale = useMemo(
-    () =>
-      scaleLinear<string>({
-        range: ['black'] // todo: based on theme
-      }),
-    []
-  );
-
   const dots = useMemo(
     () =>
       data.map((d) => (
-        <Circle key={d.timestamp} fill={'black'} cx={xScale(xAccessor(d))} cy={yScale(yAccessor(d))} r={5} />
+        <Circle
+          key={d.timestamp}
+          fill={tailwindConfig.colors.brand.primaryFade}
+          cx={xScale(xAccessor(d))}
+          cy={yScale(yAccessor(d))}
+          r={5}
+        />
       )),
-    [xScale, yScale, cloudsColorScale]
+    [xScale, yScale]
   );
 
   const basicTokenInfo: BasicTokenInfo = {
@@ -219,6 +219,10 @@ function ScatterChart({ width, height, data }: ScatterChartProps) {
     collectionAddress: selectedSale?.collectionAddress ?? '',
     chainId: '1' // todo dont hardcode
   };
+
+  const { theme } = useTheme();
+  const darkMode = theme === 'dark';
+  const themeToUse = tailwindConfig.colors[darkMode ? 'dark' : 'light'];
 
   return (
     <div>
@@ -237,7 +241,7 @@ function ScatterChart({ width, height, data }: ScatterChartProps) {
             scale={yScale}
             width={boundedWidth}
             height={boundedHeight}
-            stroke="#777"
+            stroke={themeToUse.disabledFade}
             strokeDasharray="6,6"
             numTicks={6}
           />
@@ -247,10 +251,11 @@ function ScatterChart({ width, height, data }: ScatterChartProps) {
             hideTicks={true}
             scale={yScale}
             tickLabelProps={() => ({
-              fontSize: 14,
+              fill: themeToUse.disabled,
+              fontWeight: 700,
+              fontSize: 12,
               textAnchor: 'end',
-              verticalAnchor: 'middle',
-              x: -20
+              verticalAnchor: 'middle'
             })}
           />
           <AxisBottom
@@ -260,7 +265,9 @@ function ScatterChart({ width, height, data }: ScatterChartProps) {
             hideTicks={true}
             scale={xScale}
             tickLabelProps={() => ({
-              fontSize: 14,
+              fill: themeToUse.disabled,
+              fontWeight: 700,
+              fontSize: 12,
               textAnchor: 'middle'
             })}
           />
