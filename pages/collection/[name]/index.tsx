@@ -216,9 +216,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const id = context.query.name as string;
   const chainId = ChainId.Mainnet; // todo do not hardcode
-  const collBaseData = await apiGet(`/collections/${id}`); // todo: needs to send chainId in query for multi chain to work
-
-  const { result: allTimeStatsResult } = await apiGet(`/collections/${id}/stats`, {
+  const collBaseDataPromise = apiGet(`/collections/${id}`); // todo: needs to send chainId in query for multi chain to work
+  const collAllTimeStatsPromise = apiGet(`/collections/${id}/stats`, {
     query: {
       chainId,
       offset: 0,
@@ -229,12 +228,18 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       period: 'all'
     }
   });
-  const allTimeStats = allTimeStatsResult?.data;
-  const firstAllTimeStats = allTimeStats?.[0]; // first item = latest daily stats
-
-  const { result: currentStatsResult } = await apiGet(`/collections/${id}/stats/current`, {
+  const collCurrentStatsPromise = apiGet(`/collections/${id}/stats/current`, {
     query: { chainId }
   });
+
+  const [collBaseData, { result: allTimeStatsResult }, { result: currentStatsResult }] = await Promise.all([
+    collBaseDataPromise,
+    collAllTimeStatsPromise,
+    collCurrentStatsPromise
+  ]);
+
+  const allTimeStats = allTimeStatsResult?.data;
+  const firstAllTimeStats = allTimeStats?.[0]; // first item = latest daily stats
   const currentStats = currentStatsResult?.data;
 
   return {
