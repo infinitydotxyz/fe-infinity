@@ -1,7 +1,5 @@
 import { Menu } from '@headlessui/react';
 import { CollectionAttributes } from '@infinityxyz/lib-frontend/types/core';
-import { useRouter } from 'next/router';
-import { useFetch } from 'src/utils';
 import CollectionTraits from '../collection/collection-traits';
 import { Spinner } from '../common';
 import { TokensFilter } from 'src/utils/types';
@@ -12,20 +10,10 @@ interface Props {
   collectionAddress: string;
   filter: TokensFilter;
   setFilter: (filter: TokensFilter) => void;
+  collectionAttributes?: CollectionAttributes;
 }
 
-export const ATraitFilter = ({ collectionAddress, filter, setFilter }: Props) => {
-  const {
-    query: { name }
-  } = useRouter();
-
-  const { result: collectionAttributes } = useFetch<CollectionAttributes>(
-    name ? `/collections/${name}/attributes` : '',
-    {
-      chainId: '1'
-    }
-  );
-
+export const ATraitFilter = ({ collectionAddress, filter, setFilter, collectionAttributes }: Props) => {
   return (
     <Menu>
       {({ open }) => (

@@ -1,4 +1,4 @@
-import { BaseCollection, ChainId, CollectionStats } from '@infinityxyz/lib-frontend/types/core';
+import { BaseCollection, ChainId, CollectionAttributes, CollectionStats } from '@infinityxyz/lib-frontend/types/core';
 import { CollectionStatsDto } from '@infinityxyz/lib-frontend/types/dto';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
@@ -29,6 +29,7 @@ interface CollectionDashboardProps {
   collection: BaseCollection;
   collectionAllTimeStats?: CollectionStats;
   collectionCurrentStats?: CollectionStatsDto;
+  collectionAttributes?: CollectionAttributes;
   error?: Error;
 }
 
@@ -173,7 +174,12 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                   <ASortButton filter={filter} setFilter={setFilter} />
                   <AStatusFilterButton filter={filter} setFilter={setFilter} />
                   <APriceFilter filter={filter} setFilter={setFilter} />
-                  <ATraitFilter collectionAddress={collection.address} filter={filter} setFilter={setFilter} />
+                  <ATraitFilter
+                    collectionAddress={collection.address}
+                    filter={filter}
+                    setFilter={setFilter}
+                    collectionAttributes={props.collectionAttributes}
+                  />
                 </div>
               </div>
 
@@ -232,11 +238,18 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     query: { chainId }
   });
 
-  const [collBaseData, { result: allTimeStatsResult }, { result: currentStatsResult }] = await Promise.all([
-    collBaseDataPromise,
-    collAllTimeStatsPromise,
-    collCurrentStatsPromise
-  ]);
+  const attributesPromise = apiGet(`/collections/${id}/attributes`, {
+    query: {
+      chainId: '1'
+    }
+  });
+
+  const [
+    collBaseData,
+    { result: allTimeStatsResult },
+    { result: currentStatsResult },
+    { result: collectionAttributes }
+  ] = await Promise.all([collBaseDataPromise, collAllTimeStatsPromise, collCurrentStatsPromise, attributesPromise]);
 
   const allTimeStats = allTimeStatsResult?.data;
   const firstAllTimeStats = allTimeStats?.[0]; // first item = latest daily stats
@@ -247,6 +260,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       collection: collBaseData.result ?? null,
       collectionAllTimeStats: firstAllTimeStats ?? null,
       collectionCurrentStats: currentStats ?? null,
+      collectionAttributes: collectionAttributes ?? null,
       error: collBaseData.error ?? null
     }
   };
