@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { BasicTokenInfo } from 'src/utils/types';
 import { useIsMounted } from 'src/hooks/useIsMounted';
-import { borderColor, cardColor, hoverColor, textColor } from 'src/utils/ui-constants';
+import { borderColor, secondaryBgColor, hoverColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { getSearchResultKey, SearchResultItem } from './search-results';
 import { SearchResult } from './types';
@@ -125,7 +125,7 @@ export function SearchInput({
         <div className="relative z-20">
           <Combobox.Options
             className={twMerge(
-              cardColor,
+              secondaryBgColor,
               data.length === 0 ? 'opacity-0' : '', // without this, a thin line appears
               borderColor,
               'absolute z-20 -mx-8 top-2  w-content h-content max-h-content',

@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { IoMdInformationCircleOutline } from 'react-icons/io';
-import { cardColor, secondaryBgColor, smallIconButtonStyle } from 'src/utils/ui-constants';
+import { secondaryBgColor, smallIconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 export interface TooltipSpec {
@@ -61,7 +61,7 @@ const TooltipContent = ({ tooltip }: Props3) => {
     <div
       className={twMerge(
         'absolute z-50 top-full mt-2 right-0 left-0 pointer-events-none p-3 shadow-ttip rounded-lg',
-        cardColor
+        secondaryBgColor
       )}
     >
       {tooltip.title && <div className="font-bold text-md mb-1">{tooltip.title}</div>}

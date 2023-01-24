@@ -7,7 +7,7 @@ import { OrderbookRowButton } from '../list/orderbook-row-button';
 import { clamp } from './chart-utils';
 import { ChartBox } from './chart-box';
 import { NextPrevArrows } from './next-prev-arrows';
-import { cardColor, secondaryTextColor, textColor } from 'src/utils/ui-constants';
+import { secondaryBgColor, secondaryTextColor } from 'src/utils/ui-constants';
 import { SaleData } from './scatter-chart';
 
 interface Props {
@@ -32,9 +32,9 @@ export const OrdersChartDetails = ({ orders, index, setIndex, valueClassName = '
     ];
 
     return (
-      <ChartBox noCSSStyles className={textColor}>
-        <div className={twMerge(textColor, 'mb-3 flex items-center')}>
-          <div className={twMerge(textColor, 'flex-[2] text-lg font-bold')}>Order details</div>
+      <ChartBox noCSSStyles>
+        <div className={twMerge('mb-3 flex items-center')}>
+          <div className={twMerge('flex-[2] text-lg font-bold')}>Order details</div>
           <Spacer />
           <NextPrevArrows orders={orders} index={index} setIndex={setIndex} className="flex-[2] pointer-events-auto" />
         </div>
@@ -51,7 +51,7 @@ export const OrdersChartDetails = ({ orders, index, setIndex, valueClassName = '
   }
 
   return (
-    <ChartBox className={twMerge(textColor, 'flex items-center justify-center')}>
+    <ChartBox className={twMerge('flex items-center justify-center')}>
       <div className="text-center">Click a bar to drill down the chart and see orders in the clicked bar</div>
     </ChartBox>
   );
@@ -65,14 +65,14 @@ export const SalesChartDetails = ({ data }: Props2) => {
   if (data) {
     return (
       <ChartBox noCSSStyles className="px-4 py-4">
-        <div className={twMerge(cardColor, textColor, 'flex flex-col')} style={{ aspectRatio: '4 / 5' }}>
+        <div className={twMerge(secondaryBgColor, 'flex flex-col')} style={{ aspectRatio: '4 / 5' }}>
           <div className="flex-1 rounded-lg overflow-clip">
             <EZImage src={data?.tokenImage} className="duration-300 hover:scale-110" />
           </div>
 
           <div className="font-bold truncate ml-1 mt-1">{data?.tokenId}</div>
 
-          <div className={twMerge(textColor, 'flex flex-row space-x-3 m-1')}>
+          <div className={twMerge('flex flex-row space-x-3 m-1')}>
             <div className="flex flex-col">
               <div className="truncate">Sale price</div>
               <div className="truncate">{data?.salePrice}</div>
@@ -88,7 +88,7 @@ export const SalesChartDetails = ({ data }: Props2) => {
   }
 
   return (
-    <ChartBox className={twMerge(textColor, 'flex items-center justify-center')}>
+    <ChartBox className={twMerge('flex items-center justify-center')}>
       <div className="text-center">Click a dot to see more details</div>
     </ChartBox>
   );

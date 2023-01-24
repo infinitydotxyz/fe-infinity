@@ -9,12 +9,11 @@ import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardConte
 import {
   borderColor,
   brandBorderColor,
-  cardColor,
+  secondaryBgColor,
   hoverColor,
   hoverColorBrandText,
   secondaryTextColor,
-  smallIconButtonStyle,
-  textColor
+  smallIconButtonStyle
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { AOutlineButton } from '../astra/astra-button';
@@ -31,7 +30,7 @@ export const ProfilePageHeader = ({ expanded, tabs }: ProfileHeaderProps) => {
   const { selectedProfileTab, setSelectedProfileTab } = useAppContext();
 
   return (
-    <div className={twMerge(borderColor, cardColor, textColor, 'px-6 pt-4')}>
+    <div className={twMerge(borderColor, secondaryBgColor, 'px-6 pt-4')}>
       {expanded && (
         <>
           <div className="flex flex-col items-start">

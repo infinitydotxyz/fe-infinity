@@ -29,7 +29,6 @@ export const thirtyDaySeconds = secondsPerDay * 30;
 export const bgColor = 'dark:bg-dark-bg bg-light-bg';
 export const inverseBgColor = 'dark:bg-light-bg bg-dark-bg';
 export const secondaryBgColor = 'dark:bg-dark-card bg-light-card';
-export const cardColor = secondaryBgColor;
 export const brandBorderColor = 'border-brand-primary';
 export const borderColor = 'dark:border-dark-border border-light-border';
 export const standardCard = `rounded-lg border p-5 my-3 ${borderColor} ${secondaryBgColor}`;

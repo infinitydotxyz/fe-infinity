@@ -14,7 +14,7 @@ import { MouseEvent, TouchEvent, useCallback, useEffect, useMemo, useState } fro
 import { TokenCardModal } from 'src/components/astra/token-grid/token-card-modal';
 import { EZImage } from 'src/components/common';
 import { BasicTokenInfo } from 'src/utils/types';
-import { cardColor, textColor } from 'src/utils/ui-constants';
+import { secondaryBgColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { ChartBox } from './chart-box';
 import { getChartDimensions } from './chart-utils';
@@ -64,7 +64,7 @@ export const ResponsiveScatterChart = ({
         <div className="ml-5 font-bold mt-3">{graphType}</div>
         <select
           onChange={(e) => fetchData(e.target.value)}
-          className={twMerge('form-select rounded-lg bg-transparent focus:border-none float-right', textColor)}
+          className={twMerge('form-select rounded-lg bg-transparent focus:border-none float-right')}
         >
           {Object.values(TimeBuckets).map((filter) => (
             <option value={filter} selected={filter === selectedTimeBucket}>
@@ -294,14 +294,14 @@ function ToolTip({ left, top, data, isTooltipOpen }: Props2) {
       left={left}
       top={top}
     >
-      <div className={twMerge(cardColor, textColor, 'flex flex-col p-1')} style={{ aspectRatio: '3.5 / 5' }}>
+      <div className={twMerge(secondaryBgColor, 'flex flex-col p-1')} style={{ aspectRatio: '3.5 / 5' }}>
         <div className="flex-1 rounded-lg overflow-clip">
           <EZImage src={data?.tokenImage} />
         </div>
 
         <div className="font-bold truncate ml-1 mt-1">{data?.tokenId}</div>
 
-        <div className={twMerge(textColor, 'flex flex-row space-x-3 m-1')}>
+        <div className={twMerge('flex flex-row space-x-3 m-1')}>
           <div className="flex flex-col">
             <div className="truncate">Sale price</div>
             <div className="truncate">{data?.salePrice}</div>

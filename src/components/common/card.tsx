@@ -5,7 +5,7 @@ import { BasicTokenInfo, ERC721TokenCartItem } from 'src/utils/types';
 import {
   borderColor,
   brandTextColor,
-  cardColor,
+  secondaryBgColor,
   hoverColorBrandText,
   iconButtonStyle,
   selectionBorder
@@ -53,7 +53,7 @@ export const GridCard = ({ data, onClick, selected, isSelectable, collectionFloo
   return (
     <div
       className={twMerge(
-        cardColor,
+        secondaryBgColor,
         'rounded-lg w-full relative flex flex-col shadow-[0px_4px_10px_0px_rgba(0,0,0,0.12)] \
              hover:shadow-[0px_4px_10px_0px_rgba(0,0,0,0.2)] cursor-pointer',
         selected ? selectionBorder : `hover:border-[1px] border-gray-400`,
