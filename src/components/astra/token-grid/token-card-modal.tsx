@@ -117,7 +117,8 @@ export const TokenCardModal = ({ data, modalOpen }: Props): JSX.Element | null =
               <ShortAddress
                 className="mt-2"
                 label="Owned by:"
-                address={token?.owner?.toString() || ''}
+                address={isOwner ? 'You' : token?.owner?.toString() || ''}
+                textToCopy={token?.owner?.toString() || ''}
                 href={`https://flow.so/profile/${token?.owner?.toString() || ''}`}
                 tooltip={token.owner?.toString() || ''}
               />

@@ -10,9 +10,10 @@ interface Props {
   tooltip: string;
   target?: string;
   className?: string;
+  textToCopy?: string;
 }
 
-export const ShortAddress = ({ address, href, label, tooltip, className }: Props) => {
+export const ShortAddress = ({ address, href, label, tooltip, className, textToCopy }: Props) => {
   return (
     <div className={twMerge('flex items-center', className)}>
       <div>{label}</div>
@@ -23,7 +24,10 @@ export const ShortAddress = ({ address, href, label, tooltip, className }: Props
         {ellipsisAddress(address)}
       </a>
 
-      <ClipboardButton textToCopy={address} className={twMerge('ml-2 cursor-pointer', smallIconButtonStyle)} />
+      <ClipboardButton
+        textToCopy={textToCopy ? textToCopy : address}
+        className={twMerge('ml-2 cursor-pointer', smallIconButtonStyle)}
+      />
     </div>
   );
 };
