@@ -8,7 +8,8 @@ import {
   secondaryBgColor,
   hoverColorBrandText,
   iconButtonStyle,
-  selectionBorder
+  selectionBorder,
+  secondaryBtnBgColorText
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { AButton } from '../astra/astra-button';
@@ -128,8 +129,7 @@ export const GridCard = ({ data, onClick, selected, isSelectable, collectionFloo
             )}
             <Spacer />
             <AButton
-              primary
-              className="rounded-md text-xs"
+              className={twMerge('rounded-md text-xs', secondaryBtnBgColorText)}
               onClick={() => {
                 const { pathname, query } = router;
                 query['tokenId'] = basicTokenInfo.tokenId;
