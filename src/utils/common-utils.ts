@@ -1,5 +1,5 @@
 import { getAddress } from '@ethersproject/address';
-import { BaseToken, OwnerInfo } from '@infinityxyz/lib-frontend/types/core';
+import { BaseToken, OrdersSnippet, OwnerInfo } from '@infinityxyz/lib-frontend/types/core';
 import { BaseCollection } from '@infinityxyz/lib-frontend/types/core/Collection';
 import {
   Env,
@@ -11,7 +11,7 @@ import ethers from 'ethers';
 import { ProfileTabs } from 'pages/profile/[address]';
 import { normalize } from 'path';
 import { ReactNode } from 'react';
-import { ERC721TokenCartItem, ORDER_EXPIRY_TIME } from 'src/utils/types';
+import { ERC721OrderCartItem, ERC721TokenCartItem, ORDER_EXPIRY_TIME } from 'src/utils/types';
 import { CartType } from './context/CartContext';
 
 export const base64Encode = (data: string) => Buffer.from(data).toString('base64');
@@ -397,6 +397,52 @@ export const replaceIPFSWithGateway = (_url?: string) => {
   } catch (err) {
     return _url ?? '';
   }
+};
+
+export const erc721OrderCartItemToTokenCartItem = (order: ERC721OrderCartItem): ERC721TokenCartItem => {
+  // this function assumes single item orders only not m of n types
+  const collInfo = order.nfts[0];
+  const item = order.nfts[0]?.tokens[0];
+  let orderSnippet: OrdersSnippet;
+  if (order.isSellOrder) {
+    orderSnippet = {
+      listing: {
+        hasOrder: true,
+        signedOrder: order.signedOrder
+      }
+    };
+  } else {
+    orderSnippet = {
+      offer: {
+        hasOrder: true,
+        signedOrder: order.signedOrder
+      }
+    };
+  }
+
+  const result: ERC721TokenCartItem = {
+    id: collInfo.chainId + ':' + collInfo.collectionAddress + '_' + item.tokenId,
+    name: item.tokenName ?? '',
+    title: collInfo.collectionName ?? '',
+    collectionName: collInfo.collectionName ?? '',
+    collectionSlug: collInfo.collectionSlug ?? '',
+    description: '',
+    image: item?.tokenImage,
+    displayType: 'contain',
+    isVideo: false,
+    price: order?.startPriceEth ?? 0,
+    chainId: collInfo.chainId,
+    tokenAddress: collInfo.collectionAddress ?? '',
+    address: collInfo.collectionAddress ?? '',
+    tokenId: item.tokenId,
+    rarityRank: 0,
+    orderSnippet,
+    hasBlueCheck: collInfo.hasBlueCheck ?? false,
+    attributes: [],
+    cartType: CartType.None
+  };
+
+  return result;
 };
 
 export const ENV: Env = (process.env.NEXT_PUBLIC_ENV as Env | undefined | '') || Env.Prod;

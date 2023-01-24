@@ -15,7 +15,7 @@ export default function ProfileItemsPage() {
   const { setRef, scrollTop } = useScrollInfo();
   const expanded = scrollTop < 100;
   const tabs = [ProfileTabs.Items.toString(), ProfileTabs.Orders.toString(), ProfileTabs.Send.toString()];
-  const { selectedProfileTab, isOrderSelected, toggleOrderSelection } = useAppContext();
+  const { selectedProfileTab } = useAppContext();
 
   const router = useRouter();
   const addressFromPath = router.query.address as string;
@@ -28,13 +28,7 @@ export default function ProfileItemsPage() {
       <ProfilePageHeader expanded={expanded} tabs={tabs} />
       <div ref={setRef} className="overflow-y-auto">
         {selectedProfileTab === 'Items' && <ProfileNFTs userAddress={addressFromPath} />}
-        {selectedProfileTab === 'Orders' && (
-          <ProfileOrderList
-            userAddress={addressFromPath}
-            isOrderSelected={isOrderSelected}
-            toggleOrderSelection={toggleOrderSelection}
-          />
-        )}
+        {selectedProfileTab === 'Orders' && <ProfileOrderList userAddress={addressFromPath} />}
         {selectedProfileTab === 'Send' && <ProfileNFTs userAddress={addressFromPath} />}
       </div>
     </div>

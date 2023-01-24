@@ -324,6 +324,8 @@ const AstraTokenCartItem = ({ token, onRemove }: Props2) => {
   const { cartType } = useCartContext();
   const price = token?.orderSnippet?.listing?.orderItem?.startPriceEth
     ? token?.orderSnippet?.listing?.orderItem?.startPriceEth.toString()
+    : token?.orderPriceEth
+    ? token?.orderPriceEth.toString()
     : '';
 
   const [editedPrice, setEditedPrice] = useState(price);
@@ -489,6 +491,7 @@ const PriceAndExpiry = ({ token, collection, className, editing, onEditComplete,
               {
                 label: ORDER_EXPIRY_TIME.HOUR,
                 onClick: () => {
+                  onEditComplete?.(price);
                   setExpiry(ORDER_EXPIRY_TIME.HOUR);
                   if (token) {
                     token.orderExpiry = ORDER_EXPIRY_TIME.HOUR;
@@ -500,6 +503,7 @@ const PriceAndExpiry = ({ token, collection, className, editing, onEditComplete,
               {
                 label: ORDER_EXPIRY_TIME.DAY,
                 onClick: () => {
+                  onEditComplete?.(price);
                   setExpiry(ORDER_EXPIRY_TIME.DAY);
                   if (token) {
                     token.orderExpiry = ORDER_EXPIRY_TIME.DAY;
@@ -511,6 +515,7 @@ const PriceAndExpiry = ({ token, collection, className, editing, onEditComplete,
               {
                 label: ORDER_EXPIRY_TIME.WEEK,
                 onClick: () => {
+                  onEditComplete?.(price);
                   setExpiry(ORDER_EXPIRY_TIME.WEEK);
                   if (token) {
                     token.orderExpiry = ORDER_EXPIRY_TIME.WEEK;
@@ -522,6 +527,7 @@ const PriceAndExpiry = ({ token, collection, className, editing, onEditComplete,
               {
                 label: ORDER_EXPIRY_TIME.MONTH,
                 onClick: () => {
+                  onEditComplete?.(price);
                   setExpiry(ORDER_EXPIRY_TIME.MONTH);
                   if (token) {
                     token.orderExpiry = ORDER_EXPIRY_TIME.MONTH;
@@ -533,6 +539,7 @@ const PriceAndExpiry = ({ token, collection, className, editing, onEditComplete,
               {
                 label: ORDER_EXPIRY_TIME.YEAR,
                 onClick: () => {
+                  onEditComplete?.(price);
                   setExpiry(ORDER_EXPIRY_TIME.YEAR);
                   if (token) {
                     token.orderExpiry = ORDER_EXPIRY_TIME.YEAR;

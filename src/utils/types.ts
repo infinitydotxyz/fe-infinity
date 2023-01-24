@@ -26,8 +26,8 @@ export const SORT_LABELS: {
 export enum ORDER_EXPIRY_TIME {
   HOUR = '1h',
   DAY = '1d',
-  WEEK = '1w',
-  MONTH = '1m',
+  WEEK = '7d',
+  MONTH = '30d',
   YEAR = '1y'
 }
 
