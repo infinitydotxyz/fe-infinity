@@ -1,4 +1,5 @@
 import { CollectionAttributes, Erc721Token, Token } from '@infinityxyz/lib-frontend/types/core';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { nftToCardDataWithOrderFields } from 'src/hooks/api/useTokenFetcher';
 import { ellipsisAddress, getChainScannerBase, nFormatter, useFetch } from 'src/utils';
@@ -18,7 +19,6 @@ import { ErrorOrLoading } from '../error-or-loading';
 interface Props {
   data: BasicTokenInfo;
   modalOpen: boolean;
-  setModalOpen: (set: boolean) => void;
 }
 
 const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string) => {
@@ -40,12 +40,13 @@ const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string)
   };
 };
 
-export const TokenCardModal = ({ data, modalOpen, setModalOpen }: Props): JSX.Element | null => {
+export const TokenCardModal = ({ data, modalOpen }: Props): JSX.Element | null => {
   const { token, error, collectionAttributes } = useFetchAssetInfo(data.chainId, data.collectionAddress, data.tokenId);
   const { chainId, user } = useOnboardContext();
   const [addedToCart, setAddedToCart] = useState(false);
   const { setCartType } = useCartContext();
   const { isNFTSelectable, toggleNFTSelection } = useAppContext();
+  const router = useRouter();
 
   if (error) {
     return <ErrorOrLoading error={!!error} noData message="No Data" />;
@@ -77,11 +78,20 @@ export const TokenCardModal = ({ data, modalOpen, setModalOpen }: Props): JSX.El
 
   const isOwner = user?.address && user?.address === token.owner?.toString();
 
+  const removeViewParams = () => {
+    const { pathname, query } = router;
+    delete query['tokenId'];
+    delete query['collectionAddress'];
+    router.replace({ pathname, query }, undefined, { shallow: true });
+  };
+
   return (
     <Modal
       isOpen={modalOpen}
       showActionButtons={false}
-      onClose={() => setModalOpen(false)}
+      onClose={() => {
+        removeViewParams();
+      }}
       panelClassName={twMerge('max-w-6xl rounded-3xl', dropShadow)}
     >
       <div className="flex space-x-4 text-sm">

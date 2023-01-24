@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import { BlueCheck, Checkbox, EZImage, ScrollLoader, Spacer } from 'src/components/common';
 import { GridCard } from 'src/components/common/card';
+import { BasicTokenInfo, ERC721TokenCartItem } from 'src/utils/types';
 import { hoverColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { AOutlineButton } from '../astra-button';
 import { ErrorOrLoading } from '../error-or-loading';
-import { BasicTokenInfo, ERC721TokenCartItem } from 'src/utils/types';
 import { TokenCardModal } from './token-card-modal';
 
 interface Props {
@@ -105,7 +106,6 @@ interface Props2 {
 
 const GridItem = ({ data, onClick, selected, isSelectable, collectionFloorPrice }: Props2): JSX.Element => {
   const [notSelectable, setNotSelectable] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
   const title = data?.title;
   const tokenId = data?.tokenId;
   const hasBlueCheck = data?.hasBlueCheck ?? false;
@@ -115,6 +115,16 @@ const GridItem = ({ data, onClick, selected, isSelectable, collectionFloorPrice 
     chainId: data?.chainId ?? '',
     collectionFloorPrice
   };
+
+  const router = useRouter();
+  const [modalOpen, setModalOpen] = useState(false);
+
+  useEffect(() => {
+    const isModalOpen =
+      router.query?.tokenId === basicTokenInfo.tokenId &&
+      router.query?.collectionAddress === basicTokenInfo.collectionAddress;
+    setModalOpen(isModalOpen);
+  }, [router.query]);
 
   return (
     <div
@@ -153,12 +163,20 @@ const GridItem = ({ data, onClick, selected, isSelectable, collectionFloorPrice 
         </div>
 
         <Spacer />
-        <AOutlineButton small onClick={() => setModalOpen(true)}>
+        <AOutlineButton
+          small
+          onClick={() => {
+            const { pathname, query } = router;
+            query['tokenId'] = basicTokenInfo.tokenId;
+            query['collectionAddress'] = basicTokenInfo.collectionAddress;
+            router.replace({ pathname, query }, undefined, { shallow: true });
+          }}
+        >
           Details
         </AOutlineButton>
       </div>
 
-      {modalOpen && <TokenCardModal data={basicTokenInfo} modalOpen={modalOpen} setModalOpen={setModalOpen} />}
+      {modalOpen && <TokenCardModal data={basicTokenInfo} modalOpen={modalOpen} />}
     </div>
   );
 };

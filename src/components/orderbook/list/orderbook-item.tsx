@@ -3,11 +3,11 @@ import { OBTokenInfoDto } from '@infinityxyz/lib-frontend/types/dto/orders';
 import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 
 import { useRouter } from 'next/router';
-import { ReactNode, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { TokenCardModal } from 'src/components/astra/token-grid/token-card-modal';
-import { BasicTokenInfo } from 'src/utils/types';
 import { BlueCheckInline, EZImage, NextLink } from 'src/components/common';
 import { ellipsisString, ENS_ADDRESS } from 'src/utils';
+import { BasicTokenInfo } from 'src/utils/types';
 import { secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
@@ -157,10 +157,21 @@ const SingleCollectionCell = ({
     };
   }
 
+  const router = useRouter();
+
+  useEffect(() => {
+    if (basicTokenInfo) {
+      const isModalOpen =
+        router.query?.tokenId === basicTokenInfo.tokenId &&
+        router.query?.collectionAddress === basicTokenInfo.collectionAddress;
+      setModalOpen(isModalOpen);
+    }
+  }, [router.query]);
+
   return (
     <div className="flex gap-2 items-center">
       {canShowAssetModal && modalOpen && basicTokenInfo && (
-        <TokenCardModal data={basicTokenInfo} modalOpen={modalOpen} setModalOpen={setModalOpen} />
+        <TokenCardModal data={basicTokenInfo} modalOpen={modalOpen} />
       )}
 
       <div className="flex justify-center shrink-0 h-14 w-14 mr-2">
@@ -168,7 +179,12 @@ const SingleCollectionCell = ({
           className={twMerge('h-14 w-14 rounded-lg overflow-clip', canShowAssetModal ? 'cursor-pointer' : '')}
           src={image}
           onClick={() => {
-            setModalOpen(true);
+            if (basicTokenInfo) {
+              const { pathname, query } = router;
+              query['tokenId'] = basicTokenInfo.tokenId;
+              query['collectionAddress'] = basicTokenInfo.collectionAddress;
+              router.replace({ pathname, query }, undefined, { shallow: true });
+            }
           }}
         />
 

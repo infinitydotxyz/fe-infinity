@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { HiCheckCircle, HiPlusCircle } from 'react-icons/hi';
 import { BasicTokenInfo, ERC721TokenCartItem } from 'src/utils/types';
 import {
@@ -25,7 +25,6 @@ interface Props {
 
 export const GridCard = ({ data, onClick, selected, isSelectable, collectionFloorPrice }: Props): JSX.Element => {
   const [notSelectable, setNotSelectable] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
   const [showPlusIcon, setShowPlusIcon] = useState(false);
   const title = data?.title;
   const tokenId = data?.tokenId;
@@ -41,6 +40,15 @@ export const GridCard = ({ data, onClick, selected, isSelectable, collectionFloo
   };
   const router = useRouter();
   const isCollectionPage = router.asPath.includes('/collection');
+
+  const [modalOpen, setModalOpen] = useState(false);
+
+  useEffect(() => {
+    const isModalOpen =
+      router.query?.tokenId === basicTokenInfo.tokenId &&
+      router.query?.collectionAddress === basicTokenInfo.collectionAddress;
+    setModalOpen(isModalOpen);
+  }, [router.query]);
 
   return (
     <div
@@ -101,7 +109,10 @@ export const GridCard = ({ data, onClick, selected, isSelectable, collectionFloo
               className="truncate hover:text-blue-500"
               onClick={(e) => {
                 e.stopPropagation();
-                setModalOpen(true);
+                const { pathname, query } = router;
+                query['tokenId'] = basicTokenInfo.tokenId;
+                query['collectionAddress'] = basicTokenInfo.collectionAddress;
+                router.replace({ pathname, query }, undefined, { shallow: true });
               }}
             >
               {tokenId}
@@ -116,14 +127,23 @@ export const GridCard = ({ data, onClick, selected, isSelectable, collectionFloo
               </div>
             )}
             <Spacer />
-            <AButton primary className="rounded-md text-xs" onClick={() => setModalOpen(true)}>
+            <AButton
+              primary
+              className="rounded-md text-xs"
+              onClick={() => {
+                const { pathname, query } = router;
+                query['tokenId'] = basicTokenInfo.tokenId;
+                query['collectionAddress'] = basicTokenInfo.collectionAddress;
+                router.replace({ pathname, query }, undefined, { shallow: true });
+              }}
+            >
               Details
             </AButton>
           </div>
         </div>
       </div>
 
-      {modalOpen && <TokenCardModal data={basicTokenInfo} modalOpen={modalOpen} setModalOpen={setModalOpen} />}
+      {modalOpen && <TokenCardModal data={basicTokenInfo} modalOpen={modalOpen} />}
     </div>
   );
 };

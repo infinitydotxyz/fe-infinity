@@ -67,7 +67,7 @@ export function SearchInput({
         collectionAddress: (selected as NftDisplayData).collectionDisplayData?.address,
         chainId: (selected as NftDisplayData).collectionDisplayData?.chainId
       };
-      setSelectedToken && setSelectedToken(basicTokenInfo);
+      setSelectedToken?.(basicTokenInfo);
     } else if (selected) {
       const pathname = `/collection/${(selected as CollectionSearchDto).slug}`;
       router.push(
