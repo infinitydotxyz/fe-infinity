@@ -5,6 +5,7 @@ import Head from 'next/head';
 import NotFound404Page from 'pages/not-found-404';
 import { useEffect, useState } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
+import { GiBroom } from 'react-icons/gi';
 import { AButton } from 'src/components/astra/astra-button';
 import { APriceFilter } from 'src/components/astra/astra-price-filter';
 import { ASortButton } from 'src/components/astra/astra-sort-button';
@@ -12,7 +13,7 @@ import { AStatusFilterButton } from 'src/components/astra/astra-status-button';
 import { ATraitFilter } from 'src/components/astra/astra-trait-filter';
 import { TokenGrid } from 'src/components/astra/token-grid/token-grid';
 import { CollectionPageHeader, CollectionPageHeaderProps } from 'src/components/collection/collection-page-header';
-import { Spacer } from 'src/components/common';
+import { Spacer, TextInputBox } from 'src/components/common';
 import { CollectionNftSearchInput } from 'src/components/common/search/collection-nft-search-input';
 import { TopHolderList } from 'src/components/feed/top-holder-list';
 import { TwitterSupporterList } from 'src/components/feed/twitter-supporter-list';
@@ -22,7 +23,8 @@ import { useScrollInfo } from 'src/hooks/useScrollHook';
 import { apiGet, nFormatter } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartType, useCartContext } from 'src/utils/context/CartContext';
-import { ERC721CollectionCartItem, TokensFilter } from 'src/utils/types';
+import { ERC721CollectionCartItem, ERC721TokenCartItem, TokensFilter } from 'src/utils/types';
+import { borderColor, brandTextColor, hoverColor, iconButtonStyle, selectedColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 interface CollectionDashboardProps {
@@ -44,6 +46,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     isNFTSelectable,
     listMode,
     toggleNFTSelection,
+    toggleMultipleNFTSelection,
     toggleCollSelection,
     isCollSelected,
     isCollSelectable,
@@ -55,6 +58,10 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   const tabs = ['Items', 'Orders', 'Analytics'];
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
   const { cartType, setCartType } = useCartContext();
+  const [numSweep, setNumSweep] = useState('');
+  const [customSweep, setCustomSweep] = useState('');
+
+  const MAX_NUM_SWEEP_ITEMS = 50;
 
   useEffect(() => {
     fetch(false);
@@ -68,8 +75,21 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     }
   });
 
+  useEffect(() => {
+    const numToSelect = Math.min(data.length, parseInt(numSweep), MAX_NUM_SWEEP_ITEMS);
+    const tokens = [];
+    for (let i = 0; i < numToSelect; i++) {
+      tokens.push(data[i]);
+    }
+    toggleMultipleNFTSelection(tokens);
+  }, [numSweep]);
+
   const onTabChange = (tab: string) => {
     setSelectedTab(tab);
+  };
+
+  const onClickNFT = (token: ERC721TokenCartItem) => {
+    toggleNFTSelection(token);
   };
 
   const firstAllTimeStats = props.collectionAllTimeStats;
@@ -149,7 +169,78 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                   <CollectionNftSearchInput slug={collection.slug} expanded collectionFloorPrice={floorPrice} />
                 </div>
                 <Spacer />
-                <div className="flex space-x-2">
+                <div className="flex space-x-2 text-sm">
+                  <div className="flex items-center mr-2">
+                    <GiBroom className={twMerge(iconButtonStyle, brandTextColor)} />
+                  </div>
+                  <div className={twMerge('flex flex-row rounded-lg border cursor-pointer', borderColor)}>
+                    <div
+                      className={twMerge(
+                        'px-4 h-full flex items-center border-r-[1px]',
+                        borderColor,
+                        hoverColor,
+                        numSweep === '5' && selectedColor
+                      )}
+                      onClick={() => {
+                        setNumSweep('5');
+                      }}
+                    >
+                      5
+                    </div>
+                    <div
+                      className={twMerge(
+                        'px-4 h-full flex items-center border-r-[1px]',
+                        borderColor,
+                        hoverColor,
+                        numSweep === '10' && selectedColor
+                      )}
+                      onClick={() => {
+                        setNumSweep('10');
+                      }}
+                    >
+                      10
+                    </div>
+                    <div
+                      className={twMerge(
+                        'px-4 h-full flex items-center border-r-[1px]',
+                        borderColor,
+                        hoverColor,
+                        numSweep === '20' && selectedColor
+                      )}
+                      onClick={() => {
+                        setNumSweep('20');
+                      }}
+                    >
+                      20
+                    </div>
+                    <div
+                      className={twMerge(
+                        'px-4 h-full flex items-center border-r-[1px]',
+                        borderColor,
+                        hoverColor,
+                        numSweep === '50' && selectedColor
+                      )}
+                      onClick={() => {
+                        setNumSweep('50');
+                      }}
+                    >
+                      50
+                    </div>
+                    <div className="px-4 h-full flex items-center">
+                      <TextInputBox
+                        autoFocus={true}
+                        inputClassName="text-sm"
+                        className="border-0 w-14 p-0 text-sm"
+                        type="number"
+                        placeholder="Custom"
+                        value={customSweep}
+                        onChange={(value) => {
+                          setNumSweep(value);
+                          setCustomSweep(value);
+                        }}
+                      />
+                    </div>
+                  </div>
                   <div className="flex gap-2">
                     <AButton
                       primary
@@ -190,7 +281,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                   'px-4 py-4 min-h-[600px]',
                   cartType === CartType.CollectionOffer ? 'opacity-30 duration-300 pointer-events-none' : 'duration-300'
                 )} // this min height is to prevent the grid from collapsing when there are no items so filter menus can still render
-                onClick={toggleNFTSelection}
+                onClick={onClickNFT}
                 isSelectable={isNFTSelectable}
                 isSelected={isNFTSelected}
                 data={data}

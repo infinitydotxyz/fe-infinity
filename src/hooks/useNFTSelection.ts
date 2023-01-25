@@ -5,6 +5,7 @@ import { ERC721TokenCartItem } from 'src/utils/types';
 
 interface NFTSelectionResult {
   toggleNFTSelection: (data: ERC721TokenCartItem) => void;
+  toggleMultipleNFTSelection: (data: ERC721TokenCartItem[]) => void;
   isNFTSelected: (data: ERC721TokenCartItem) => boolean;
   isNFTSelectable: (data: ERC721TokenCartItem) => boolean;
   removeNFTFromSelection: (data: ERC721TokenCartItem) => void;
@@ -35,6 +36,17 @@ export const useNFTSelection = (): NFTSelectionResult => {
     } else {
       removeNFTFromSelection(value);
     }
+  };
+
+  const toggleMultipleNFTSelection = (values: ERC721TokenCartItem[]) => {
+    const copy = new Map(nftSelectionMap.get(cartType));
+    copy.clear();
+    const copy2 = new Map(nftSelectionMap);
+    for (const value of values) {
+      copy.set(getTokenCartItemKey(value), value);
+    }
+    copy2.set(cartType, copy);
+    setNFTSelectionMap(copy2);
   };
 
   const removeNFTFromSelection = (value: ERC721TokenCartItem) => {
@@ -79,6 +91,7 @@ export const useNFTSelection = (): NFTSelectionResult => {
     isNFTSelectable,
     clearNFTSelection,
     toggleNFTSelection,
+    toggleMultipleNFTSelection,
     removeNFTFromSelection
   };
 };

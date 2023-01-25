@@ -122,7 +122,7 @@ export const GridCard = ({ data, onClick, selected, isSelectable, collectionFloo
 
           <div className="flex items-center">
             {buyNowPrice && (
-              <div className="flex items-center border-[1px] rounded-sm px-1.5 py-0.5 space-x-1 mt-1">
+              <div className="flex items-center border-[1px] rounded-sm px-1.5 py-0.5 space-x-1 mt-1 text-sm">
                 <div className={twMerge('truncate font-medium text-md', borderColor)}>{buyNowPrice}</div>
                 <div className="text-xs">{EthSymbol}</div>
               </div>

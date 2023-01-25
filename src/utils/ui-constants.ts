@@ -44,6 +44,7 @@ export const primaryBtnWithBgColorTextTransition = `${primaryBtnBgColorText} fon
 export const secondaryBtnBgColorText = `dark:bg-gray-400 dark:bg-opacity-10 bg-gray-200 bg-opacity-60 ${brandTextColor}`;
 export const hoverColorBrandText = 'hover:text-brand-primary dark:hover:text-brand-primary';
 export const hoverColor = `dark:hover:bg-gray-200 dark:hover:bg-opacity-10 hover:bg-gray-200 hover:bg-opacity-40 ${hoverColorBrandText}`;
+export const selectedColor = `dark:bg-gray-200 dark:bg-opacity-10 bg-gray-200 bg-opacity-40 ${brandTextColor}`;
 export const activeColor =
   'dark:active:bg-gray-200 dark:active:bg-opacity-10 active:bg-gray-300 active:bg-opacity-50 active:text-brand-primary dark:active:text-brand-primary';
 export const selectionBorder = `border-[1px] ${brandBorderColor}`;

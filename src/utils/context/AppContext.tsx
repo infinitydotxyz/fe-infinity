@@ -57,6 +57,7 @@ type AppContextType = {
   refreshTrigger: number;
 
   toggleNFTSelection: (data: ERC721TokenCartItem) => void;
+  toggleMultipleNFTSelection: (data: ERC721TokenCartItem[]) => void;
   isNFTSelected: (data: ERC721TokenCartItem) => boolean;
   isNFTSelectable: (data: ERC721TokenCartItem) => boolean;
   removeNFTFromSelection: (data: ERC721TokenCartItem) => void;
@@ -94,6 +95,7 @@ export const AppContextProvider = ({ children }: Props) => {
     isNFTSelected,
     isNFTSelectable,
     toggleNFTSelection,
+    toggleMultipleNFTSelection,
     clearNFTSelection,
     nftSelection,
     removeNFTFromSelection
@@ -420,6 +422,7 @@ export const AppContextProvider = ({ children }: Props) => {
     isNFTSelected,
     isNFTSelectable,
     toggleNFTSelection,
+    toggleMultipleNFTSelection,
     clearNFTSelection,
     nftSelection,
     removeNFTFromSelection,
