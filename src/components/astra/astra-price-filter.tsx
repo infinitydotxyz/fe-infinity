@@ -34,8 +34,8 @@ export const APriceFilter = ({ filter, setFilter }: Props) => {
                 addEthSymbol={true}
                 type="number"
                 className="p-3"
-                label="Min"
-                placeholder=""
+                inputClassName="text-sm"
+                placeholder="Min"
                 value={minPriceVal}
                 onChange={(value) => {
                   setMinPriceVal(value);
@@ -49,8 +49,8 @@ export const APriceFilter = ({ filter, setFilter }: Props) => {
                 addEthSymbol={true}
                 type="number"
                 className="ml-2 p-3"
-                label="Max"
-                placeholder=""
+                inputClassName="text-sm"
+                placeholder="Max"
                 value={maxPriceVal}
                 onChange={(value) => {
                   setMaxPriceVal(value);
