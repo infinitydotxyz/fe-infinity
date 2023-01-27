@@ -1,9 +1,8 @@
-import axios, { AxiosRequestHeaders } from 'axios';
+import axios from 'axios';
 import { trimText } from 'src/components/common';
 import { SORT_FILTERS, TokensFilter } from 'src/utils/types';
 import { ApiResponse } from './api-utils';
 import { API_BASE, LARGE_LIMIT, SMALL_LIMIT } from './constants';
-import { OnboardAuthProvider } from './context/OnboardContext/OnboardAuthProvider';
 
 export type TokenFetcherOptions = { cursor?: string } & TokensFilter;
 
@@ -124,8 +123,8 @@ export const sleep = (ms: number) => {
 
 export const httpGet = async (path: string, params?: object): Promise<ApiResponse> => {
   try {
-    const headers = await authHeaders(path);
-    const response = await axios.get(`${API_BASE}${path}`, { headers, params });
+    // const headers = await authHeaders(path);
+    const response = await axios.get(`${API_BASE}${path}`, { params });
 
     return { status: response.status, error: '', result: response.data };
   } catch (error) {
@@ -137,8 +136,8 @@ export const httpGet = async (path: string, params?: object): Promise<ApiRespons
 
 export const httpPost = async (path: string, body: object): Promise<ApiResponse> => {
   try {
-    const headers = await authHeaders(path);
-    const response = await axios.post(`${API_BASE}${path}`, body, { headers });
+    // const headers = await authHeaders(path);
+    const response = await axios.post(`${API_BASE}${path}`, body);
 
     return { status: response.status, error: '', result: response.data };
   } catch (error) {
@@ -148,18 +147,18 @@ export const httpPost = async (path: string, body: object): Promise<ApiResponse>
 
 // ===================================================================
 
-export const authHeaders = async (path: string): Promise<AxiosRequestHeaders> => {
-  const userEndpointRegex = /\/(u|user)\//;
-  const publicUserEndpoint = /\/p\/u\//;
-  const requiresAuth = userEndpointRegex.test(path) && !publicUserEndpoint.test(path);
+// export const authHeaders = async (path: string): Promise<AxiosRequestHeaders> => {
+//   const userEndpointRegex = /\/(u|user)\//;
+//   const publicUserEndpoint = /\/p\/u\//;
+//   const requiresAuth = userEndpointRegex.test(path) && !publicUserEndpoint.test(path);
 
-  let authHeaders = {};
-  if (requiresAuth) {
-    authHeaders = await OnboardAuthProvider.getAuthHeaders();
-  }
+//   let authHeaders = {};
+//   if (requiresAuth) {
+//     authHeaders = await OnboardAuthProvider.getAuthHeaders();
+//   }
 
-  return authHeaders;
-};
+//   return authHeaders;
+// };
 
 // ===================================================================
 

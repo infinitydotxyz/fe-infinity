@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { LOGIN_NONCE_EXPIRY_TIME, trimLowerCase } from '@infinityxyz/lib-frontend/utils';
-import { AxiosRequestHeaders } from 'axios';
-import { Signature } from 'ethers';
 import { verifyMessage } from '@ethersproject/wallet';
-import { base64Encode } from '../../common-utils';
+import { LOGIN_NONCE_EXPIRY_TIME, trimLowerCase } from '@infinityxyz/lib-frontend/utils';
+import { Signature } from 'ethers';
 import { Preferences } from '../../preferences';
 import { getMutex } from './mutex';
 import { WalletSigner } from './WalletSigner';
@@ -56,21 +54,21 @@ class _OnboardAuthProvider {
     }
   }
 
-  async getAuthHeaders(): Promise<AxiosRequestHeaders> {
-    if (!this.isAuthenticated()) {
-      await this.authenticate();
-    }
+  // async getAuthHeaders(): Promise<AxiosRequestHeaders> {
+  //   if (!this.isAuthenticated()) {
+  //     await this.authenticate();
+  //   }
 
-    if (this.isAuthenticated()) {
-      return {
-        'X-AUTH-NONCE': this.currentCreds.nonce,
-        'X-AUTH-MESSAGE': base64Encode(this.currentCreds.message),
-        'X-AUTH-SIGNATURE': JSON.stringify(this.currentCreds.signature)
-      };
-    }
+  //   if (this.isAuthenticated()) {
+  //     return {
+  //       'X-AUTH-NONCE': this.currentCreds.nonce,
+  //       'X-AUTH-MESSAGE': base64Encode(this.currentCreds.message),
+  //       'X-AUTH-SIGNATURE': JSON.stringify(this.currentCreds.signature)
+  //     };
+  //   }
 
-    return {};
-  }
+  //   return {};
+  // }
 
   isAuthenticated(): boolean {
     if (this.walletSigner) {

@@ -1,10 +1,9 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios';
-import useSWR, { SWRConfiguration } from 'swr';
 import { stringify } from 'query-string';
-import { API_BASE } from './constants';
-import useSWRInfinite, { SWRInfiniteConfiguration, SWRInfiniteKeyLoader, SWRInfiniteResponse } from 'swr/infinite';
-import { OnboardAuthProvider } from './context/OnboardContext/OnboardAuthProvider';
 import { useState } from 'react';
+import useSWR, { SWRConfiguration } from 'swr';
+import useSWRInfinite, { SWRInfiniteConfiguration, SWRInfiniteKeyLoader, SWRInfiniteResponse } from 'swr/infinite';
+import { API_BASE } from './constants';
 
 const HTTP_UNAUTHORIZED = 401;
 const HTTP_TOO_MANY_REQUESTS = 429;
@@ -69,22 +68,22 @@ export const apiGet = async (path: string, params?: ApiParams): Promise<ApiRespo
   const queryStr = buildQueryString(params?.query);
 
   try {
-    const userEndpointRegex = /\/(u|user)\//;
-    const publicUserEndpoint = /\/p\/u\//;
-    let requiresAuth = params?.requiresAuth ?? (userEndpointRegex.test(path) && !publicUserEndpoint.test(path));
-    if (params?.requiresAuth === true) {
-      requiresAuth = true;
-    }
+    // const userEndpointRegex = /\/(u|user)\//;
+    // const publicUserEndpoint = /\/p\/u\//;
+    // let requiresAuth = params?.requiresAuth ?? (userEndpointRegex.test(path) && !publicUserEndpoint.test(path));
+    // if (params?.requiresAuth === true) {
+    //   requiresAuth = true;
+    // }
 
-    let authHeaders = {};
-    if (requiresAuth) {
-      authHeaders = await OnboardAuthProvider.getAuthHeaders();
-    }
+    // let authHeaders = {};
+    // if (requiresAuth) {
+    //   authHeaders = await OnboardAuthProvider.getAuthHeaders();
+    // }
 
     const { data, status } = await axiosApi({
       url: path.startsWith('http') ? path : `${API_BASE}${path}${queryStr}`,
       method: 'GET',
-      headers: authHeaders,
+      // headers: authHeaders,
       ...params?.options
     });
     return { result: data, status };
@@ -101,12 +100,12 @@ export const apiGet = async (path: string, params?: ApiParams): Promise<ApiRespo
 // example: const { result, error, status } = await apiPost(`/api/path`, { data: { somekey: 'somevalue' } });
 export const apiPost = async (path: string, params?: ApiParams): Promise<ApiResponse> => {
   const queryStr = buildQueryString(params?.query);
-  const headers = await OnboardAuthProvider.getAuthHeaders();
+  // const headers = await OnboardAuthProvider.getAuthHeaders();
   try {
     const { data, status } = await axiosApi({
       url: `${API_BASE}${path}${queryStr}`,
       method: 'POST',
-      headers,
+      // headers,
       data: params?.data,
       ...params?.options
     });
@@ -129,12 +128,12 @@ export const apiPut = (path: string, params?: ApiParams) => {
 
 export const apiDelete = async (path: string, params?: ApiParams): Promise<ApiResponse> => {
   const queryStr = buildQueryString(params?.query);
-  const headers = await OnboardAuthProvider.getAuthHeaders();
+  // const headers = await OnboardAuthProvider.getAuthHeaders();
   try {
     const { data, status } = await axiosApi({
       url: `${API_BASE}${path}${queryStr}`,
       method: 'DELETE',
-      headers,
+      // headers,
       data: params?.data,
       ...params?.options
     });
