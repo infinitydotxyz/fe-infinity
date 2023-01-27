@@ -26,7 +26,7 @@ export default function ProfileItemsPage() {
   return (
     <div className="flex flex-col h-full w-full">
       <ProfilePageHeader expanded={expanded} tabs={tabs} />
-      <div ref={setRef} className="overflow-y-auto">
+      <div ref={setRef} className="overflow-y-auto scrollbar-hide">
         {selectedProfileTab === 'Items' && <ProfileNFTs userAddress={addressFromPath} />}
         {selectedProfileTab === 'Orders' && <ProfileOrderList userAddress={addressFromPath} />}
         {selectedProfileTab === 'Send' && <ProfileNFTs userAddress={addressFromPath} />}

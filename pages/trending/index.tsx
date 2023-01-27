@@ -68,7 +68,7 @@ const TrendingPage = () => {
 
   return (
     <APageBox title="Trending Collections" showTitle={true}>
-      <div className="overflow-y-auto overflow-x-clip text-sm">
+      <div className="overflow-y-auto overflow-x-clip text-sm scrollbar-hide">
         <ToggleTab
           className="font-heading"
           options={options}

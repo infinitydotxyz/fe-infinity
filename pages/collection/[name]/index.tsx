@@ -161,7 +161,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
       <div className="h-full w-full flex flex-col">
         <CollectionPageHeader {...headerProps} />
 
-        <div ref={setRef} className="overflow-y-auto">
+        <div ref={setRef} className="overflow-y-auto scrollbar-hide">
           {selectedTab === 'Items' && (
             <div>
               <div className="flex mt-2 px-4">
