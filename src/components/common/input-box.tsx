@@ -1,6 +1,4 @@
-import { CalendarIcon } from '@heroicons/react/outline';
 import { ReactElement, ReactNode, useState } from 'react';
-import { DatePicker } from 'src/components/common';
 import { twMerge } from 'tailwind-merge';
 import { borderColor, secondaryTextColor } from '../../utils/ui-constants';
 import { EthSymbol } from './eth-price';
@@ -69,29 +67,6 @@ export const InputBox = ({
         </div>
       </div>
     </TooltipWrapper>
-  );
-};
-
-// =======================================================
-
-interface Props2 {
-  label: string;
-  value: Date;
-  placeholder?: string;
-  onChange: (value: Date) => void;
-  tooltip?: TooltipSpec;
-}
-
-export const DatePickerBox = ({ tooltip, label, value, onChange, placeholder }: Props2) => {
-  return (
-    <InputBox label={label} tooltip={tooltip}>
-      <div className="flex items-center w-full">
-        <div className="pr-2">
-          <CalendarIcon className="h-4 w-4" />
-        </div>
-        <DatePicker value={value} onChange={onChange} placeholder={placeholder} />
-      </div>
-    </InputBox>
   );
 };
 

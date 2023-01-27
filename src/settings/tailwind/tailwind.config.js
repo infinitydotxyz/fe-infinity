@@ -6,9 +6,7 @@ module.exports = {
     './pages/**/*.{js,ts,jsx,tsx}',
     './public/**/*.html',
     './src/**/*.{js,jsx,ts,tsx,css,scss}',
-    './src/**/**/*.{js,jsx,ts,tsx,css,scss}',
-    './node_modules/flowbite/**/*.js',
-    './node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}'
+    './src/**/**/*.{js,jsx,ts,tsx,css,scss}'
   ],
   darkMode: 'class',
   theme: {
@@ -17,14 +15,5 @@ module.exports = {
       ...extensions
     }
   },
-  plugins: [
-    require('tailwindcss'),
-    require('@tailwindcss/aspect-ratio'),
-    require('autoprefixer'),
-    require('postcss-import'),
-    require('tailwindcss/nesting'),
-    require('@tailwindcss/typography'),
-    require('@tailwindcss/forms'),
-    require('flowbite/plugin')
-  ]
+  plugins: [require('tailwindcss'), require('autoprefixer'), require('postcss-import')]
 };
