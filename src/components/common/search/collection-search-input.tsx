@@ -2,7 +2,7 @@ import { ChainId, SearchType } from '@infinityxyz/lib-frontend/types/core';
 import { CollectionSearchDto } from '@infinityxyz/lib-frontend/types/dto';
 import { useSearch } from 'src/hooks/api/useSearch';
 import { useSearchState } from 'src/hooks/api/useSearchState';
-import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
+import { useNetwork } from 'wagmi';
 import { SearchInput } from './search-input';
 
 interface Props {
@@ -13,7 +13,8 @@ interface Props {
 }
 
 export const CollectionSearchInput = ({ expanded, profileSearch, orderSearch, setSelectedCollection }: Props) => {
-  const { chainId } = useOnboardContext();
+  const { chain } = useNetwork();
+  const chainId = String(chain?.id ?? 1) as ChainId;
   const { search, setQuery } = useSearchState<SearchType.Collection, 'slug'>({
     cursor: '',
     limit: 10,

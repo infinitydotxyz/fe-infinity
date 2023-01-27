@@ -1,16 +1,16 @@
-import { CollectionAttributes, Erc721Token, Token } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId, CollectionAttributes, Erc721Token, Token } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { nftToCardDataWithOrderFields } from 'src/hooks/api/useTokenFetcher';
 import { ellipsisAddress, getChainScannerBase, nFormatter, useFetch } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartType, useCartContext } from 'src/utils/context/CartContext';
-import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { BasicTokenInfo } from 'src/utils/types';
 import { borderColor, dropShadow, secondaryBgColor, secondaryTextColor } from 'src/utils/ui-constants';
 import { useSWRConfig } from 'swr';
 import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
+import { useAccount, useNetwork } from 'wagmi';
 import { BlueCheck, EthSymbol, EZImage, Modal, NextLink, ReadMoreText, ShortAddress, Spacer } from '../../common';
 import { AButton } from '../astra-button';
 import { ATraitList } from '../astra-trait-list';
@@ -42,7 +42,9 @@ const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string)
 
 export const TokenCardModal = ({ data, modalOpen }: Props): JSX.Element | null => {
   const { token, error, collectionAttributes } = useFetchAssetInfo(data.chainId, data.collectionAddress, data.tokenId);
-  const { chainId, user } = useOnboardContext();
+  const { chain } = useNetwork();
+  const { address: user } = useAccount();
+  const chainId = String(chain?.id ?? 1) as ChainId;
   const [addedToCart, setAddedToCart] = useState(false);
   const { setCartType } = useCartContext();
   const { isNFTSelectable, toggleNFTSelection } = useAppContext();
@@ -76,7 +78,7 @@ export const TokenCardModal = ({ data, modalOpen }: Props): JSX.Element | null =
     : 0;
   const percentDiff = floorPrice ? `${nFormatter((priceDiff / Number(floorPrice)) * 100)}%` : 0;
 
-  const isOwner = user?.address && user?.address === token.owner?.toString();
+  const isOwner = user && user === token.owner?.toString();
 
   const removeViewParams = () => {
     const { pathname, query } = router;

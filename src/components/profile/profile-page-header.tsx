@@ -1,3 +1,4 @@
+import { ChainId } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import { HiOutlineExternalLink } from 'react-icons/hi';
 import { ClipboardButton, EZImage } from 'src/components/common';
@@ -5,7 +6,6 @@ import etherscanLogo from 'src/images/etherscan-logo.png';
 import person from 'src/images/person.png';
 import { ellipsisAddress, getChainScannerBase } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import {
   borderColor,
   brandBorderColor,
@@ -16,6 +16,7 @@ import {
   smallIconButtonStyle
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
+import { useNetwork } from 'wagmi';
 import { AOutlineButton } from '../astra/astra-button';
 
 export interface ProfileHeaderProps {
@@ -26,7 +27,8 @@ export interface ProfileHeaderProps {
 export const ProfilePageHeader = ({ expanded, tabs }: ProfileHeaderProps) => {
   const router = useRouter();
   const addressFromPath = router.query?.address as string;
-  const { chainId } = useOnboardContext();
+  const { chain } = useNetwork();
+  const chainId = String(chain?.id ?? 1) as ChainId;
   const { selectedProfileTab, setSelectedProfileTab } = useAppContext();
 
   return (

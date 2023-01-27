@@ -12,7 +12,7 @@ import { normalize } from 'path';
 import { ReactNode } from 'react';
 import { ERC721OrderCartItem, ERC721TokenCartItem, ORDER_EXPIRY_TIME } from 'src/utils/types';
 import { CartType } from './context/CartContext';
-import { Web3Provider } from '@ethersproject/providers';
+import { Provider } from '@ethersproject/providers';
 
 export const base64Encode = (data: string) => Buffer.from(data).toString('base64');
 
@@ -353,7 +353,7 @@ export const infinityExchangeCustomError = (err: string) => {
   }
 };
 
-export const getEstimatedGasPrice = async (provider: Web3Provider | undefined): Promise<string | undefined> => {
+export const getEstimatedGasPrice = async (provider: Provider | undefined): Promise<string | undefined> => {
   if (!provider) {
     return undefined;
   }

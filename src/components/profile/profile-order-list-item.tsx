@@ -4,11 +4,11 @@ import { Button, EthPrice } from 'src/components/common';
 import { erc721OrderCartItemToTokenCartItem } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartType, useCartContext } from 'src/utils/context/CartContext';
-import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { ERC721OrderCartItem, TokensFilter } from 'src/utils/types';
 import { secondaryTextColor, standardBorderCard } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
+import { useAccount } from 'wagmi';
 import { OrderbookItem } from '../orderbook/list/orderbook-item';
 import { OrderDetailModal } from '../orderbook/order-detail-modal';
 
@@ -20,7 +20,7 @@ interface Props {
 export const ProfileOrderListItem = ({ order, orderType }: Props) => {
   const [selectedOrder, setSelectedOrder] = useState<SignedOBOrder | null>(null);
   const [startPriceEth] = useState(order.startPriceEth);
-  const { checkSignedIn } = useOnboardContext();
+  const { isConnected } = useAccount();
   const { cartType, cartItems, setCartType } = useCartContext();
   const { isNFTSelectable, isNFTSelected, toggleNFTSelection, isOrderSelected, toggleOrderSelection } = useAppContext();
 
@@ -68,7 +68,7 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
           {orderType === 'listings' || orderType === 'offers-made' ? (
             <Button
               onClick={() => {
-                if (!checkSignedIn()) {
+                if (!isConnected) {
                   return;
                 }
                 const newCartType = orderType === 'listings' ? CartType.TokenList : CartType.TokenOffer;
@@ -87,7 +87,7 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
           {orderType === 'listings' || orderType === 'offers-made' ? (
             <Button
               onClick={() => {
-                if (!checkSignedIn()) {
+                if (!isConnected) {
                   return;
                 }
                 const newCartType = CartType.Cancel;
@@ -103,7 +103,7 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
           {orderType === 'offers-received' ? (
             <Button
               onClick={() => {
-                if (!checkSignedIn()) {
+                if (!isConnected) {
                   return;
                 }
                 const newCartType = CartType.TokenList;

@@ -1,6 +1,6 @@
 import { BigNumber, utils } from 'ethers';
 import { useEffect, useState } from 'react';
-import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
+import { useAccount } from 'wagmi';
 import { useStakerContract } from '../staker/useStakerContract';
 import { useTokenContract } from './useTokenContract';
 
@@ -12,19 +12,19 @@ import { useTokenContract } from './useTokenContract';
  * @param spender Address of the contract. Defaults to the InfinityStaker contract address.
  */
 export function useTokenAllowance(owner?: string, spender?: string) {
-  const { user } = useOnboardContext();
+  const { address: user } = useAccount();
   const { contract } = useTokenContract();
   const { address: stakerAddress } = useStakerContract();
   const [allowance, setAllowance] = useState(0);
 
   useEffect(() => {
-    if (user?.address) {
+    if (user) {
       contract
-        .allowance(owner || user.address, spender || stakerAddress)
+        .allowance(owner || user, spender || stakerAddress)
         .then((allowance: BigNumber) => setAllowance(+utils.formatEther(allowance)))
         .catch(console.error);
     }
-  }, [user?.address]);
+  }, [user]);
 
   return { allowance };
 }

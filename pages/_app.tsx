@@ -9,13 +9,23 @@ import 'src/settings/tailwind/globals.scss';
 import { isLocalhost } from 'src/utils/common-utils';
 import { AppContextProvider } from 'src/utils/context/AppContext';
 import { CartContextProvider } from 'src/utils/context/CartContext';
-import { OnboardContextProvider } from 'src/utils/context/OnboardContext/OnboardContext';
+import { WagmiConfig, createClient } from 'wagmi';
+import { ConnectKitProvider, getDefaultClient } from 'connectkit';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
 if (!isLocalhost()) {
   LogRocket.init('0pu9ak/nftco');
 }
+
+const alchemyApiKey = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY ?? '';
+
+const client = createClient(
+  getDefaultClient({
+    appName: 'Flow',
+    alchemyId: alchemyApiKey
+  })
+);
 
 const App = (props: AppProps) => {
   // For every route change in production,
@@ -30,13 +40,15 @@ const App = (props: AppProps) => {
 
   return (
     <StrictMode>
-      <OnboardContextProvider>
-        <CartContextProvider>
-          <AppContextProvider>
-            <AppBody {...props} />
-          </AppContextProvider>
-        </CartContextProvider>
-      </OnboardContextProvider>
+      <WagmiConfig client={client}>
+        <ConnectKitProvider>
+          <CartContextProvider>
+            <AppContextProvider>
+              <AppBody {...props} />
+            </AppContextProvider>
+          </CartContextProvider>
+        </ConnectKitProvider>
+      </WagmiConfig>
     </StrictMode>
   );
 };

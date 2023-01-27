@@ -2,17 +2,18 @@ import { RaffleLeaderboardUser } from '@infinityxyz/lib-frontend/types/dto';
 import { ellipsisAddress, nFormatter } from 'src/utils';
 import { EZImage, NextLink } from '../common';
 import person from 'src/images/person.png';
-import { useEnsName } from 'src/hooks/useEnsName';
 import { twMerge } from 'tailwind-merge';
 import { secondaryBgColor } from 'src/utils/ui-constants';
+import { useEnsName } from 'wagmi';
 
 export const RaffleLeaderboardItem = ({ entrant: item }: { entrant: RaffleLeaderboardUser }) => {
-  const ensName = useEnsName(item.entrant.address);
+  const { data } = useEnsName({
+    address: item.entrant.address as `0x${string}`
+  });
 
   let name = item.entrant.username;
   if (!name) {
-    name = ensName;
-
+    name = data ?? '';
     if (!name) {
       name = ellipsisAddress(item.entrant.address);
     }

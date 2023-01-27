@@ -12,15 +12,15 @@ import { ProfileTabs } from 'pages/profile/[address]';
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
-import { toastError, toastInfo, toastSuccess, toastWarning } from 'src/components/common';
+import { toastError, toastSuccess, toastWarning } from 'src/components/common';
 import { WaitingForTxModal } from 'src/components/orderbook/waiting-for-tx-modal';
 import { useCollectionSelection } from 'src/hooks/useCollectionSelection';
 import { useNFTSelection } from 'src/hooks/useNFTSelection';
 import { useOrderSelection } from 'src/hooks/useOrderSelection';
 import { cancelMultipleOrders } from 'src/utils/orders';
 import { ERC721CollectionCartItem, ERC721OrderCartItem, ERC721TokenCartItem } from 'src/utils/types';
+import { useAccount, useNetwork, useProvider, useSigner } from 'wagmi';
 import {
-  ellipsisAddress,
   extractErrorMsg,
   getCartType,
   getDefaultOrderExpiryTime,
@@ -31,12 +31,6 @@ import { DEFAULT_MAX_GAS_PRICE_WEI, ZERO_ADDRESS } from '../constants';
 import { fetchOrderNonce, postOrdersV2 } from '../orderbook-utils';
 import { getSignedOBOrder, sendMultipleNfts, sendSingleNft } from '../orders';
 import { CartType } from './CartContext';
-import { useOnboardContext } from './OnboardContext/OnboardContext';
-
-export type User = {
-  address: string;
-  username?: string;
-};
 
 type AppContextType = {
   showCart: boolean;
@@ -90,7 +84,13 @@ export const AppContextProvider = ({ children }: Props) => {
   const [selectedProfileTab, setSelectedProfileTab] = useState(ProfileTabs.Items.toString());
   const [listMode, setListMode] = useState(false);
   const [txnHash, setTxnHash] = useState<string>('');
-  const { getSigner, getEthersProvider, user, chainId, waitForTransaction } = useOnboardContext();
+
+  const { data: signer } = useSigner();
+  const provider = useProvider();
+  const { chain } = useNetwork();
+  const { address: user } = useAccount();
+  const chainId = String(chain?.id ?? 1) as ChainId;
+
   const {
     isNFTSelected,
     isNFTSelectable,
@@ -145,7 +145,6 @@ export const AppContextProvider = ({ children }: Props) => {
 
     try {
       if (sendToAddress) {
-        const signer = getSigner();
         if (signer) {
           let result;
           if (nftsToSend.length === 1) {
@@ -179,9 +178,8 @@ export const AppContextProvider = ({ children }: Props) => {
   };
 
   const handleTokenCheckout = async (tokens: ERC721TokenCartItem[]): Promise<boolean> => {
-    const signer = getSigner();
     try {
-      if (!user || !user.address || !signer) {
+      if (!user || !signer) {
         toastError('No logged in user');
       } else {
         const cartType = getCartType(router.asPath, selectedProfileTab);
@@ -193,7 +191,7 @@ export const AppContextProvider = ({ children }: Props) => {
           // place orders
           // first sign orders
           const signedOrders: SignedOBOrder[] = [];
-          let orderNonce = await fetchOrderNonce(user.address, chainId as ChainId);
+          let orderNonce = await fetchOrderNonce(user, chainId as ChainId);
           for (const token of tokens) {
             let order;
             if (isBuyCart) {
@@ -227,14 +225,13 @@ export const AppContextProvider = ({ children }: Props) => {
   };
 
   const handleCollCheckout = async (collections: ERC721CollectionCartItem[]): Promise<boolean> => {
-    const signer = getSigner();
     try {
-      if (!user || !user.address || !signer) {
+      if (!user || !signer) {
         toastError('No logged in user');
       } else {
         // sign orders
         const signedOrders: SignedOBOrder[] = [];
-        let orderNonce = await fetchOrderNonce(user.address, chainId as ChainId);
+        let orderNonce = await fetchOrderNonce(user, chainId as ChainId);
         for (const collection of collections) {
           const order = await collectionToOBOrder(collection, orderNonce);
           orderNonce += 1;
@@ -264,14 +261,13 @@ export const AppContextProvider = ({ children }: Props) => {
 
   const handleOrdersCancel = async (ordersToCancel: ERC721OrderCartItem[]): Promise<boolean> => {
     try {
-      const signer = getSigner();
       if (signer) {
         const nonces = ordersToCancel.map((order) => order.nonce);
-        const { hash } = await cancelMultipleOrders(signer, chainId, nonces);
+        await cancelMultipleOrders(signer, chainId, nonces);
         toastSuccess('Sent txn to chain for execution');
-        waitForTransaction(hash, () => {
-          toastInfo(`Transaction confirmed ${ellipsisAddress(hash)}`);
-        });
+        // todo: waitForTransaction(hash, () => {
+        //   toastInfo(`Transaction confirmed ${ellipsisAddress(hash)}`);
+        // });
 
         return true;
       } else {
@@ -294,7 +290,7 @@ export const AppContextProvider = ({ children }: Props) => {
       if (isSellOrder) {
         currencyAddress = ZERO_ADDRESS; // sell orders are always in ETH
       }
-      const gasPrice = await getEstimatedGasPrice(getEthersProvider());
+      const gasPrice = await getEstimatedGasPrice(provider);
       const ethPrice = token.orderPriceEth ?? 0;
       if (ethPrice === 0) {
         throw new Error('Price is 0');
@@ -323,7 +319,7 @@ export const AppContextProvider = ({ children }: Props) => {
         id: '',
         chainId: token.chainId ?? '1',
         isSellOrder,
-        makerAddress: user?.address ?? '',
+        makerAddress: user ?? '',
         numItems: 1, // defaulting to one for now; m of n orders not supported in this release via FE
         startTimeMs: Date.now(),
         endTimeMs,
@@ -353,7 +349,7 @@ export const AppContextProvider = ({ children }: Props) => {
   ): Promise<OBOrder | undefined> => {
     try {
       const currencyAddress = getTxnCurrencyAddress(chainId);
-      const gasPrice = await getEstimatedGasPrice(getEthersProvider());
+      const gasPrice = await getEstimatedGasPrice(provider);
       const ethPrice = collection.offerPriceEth ?? 0;
       if (ethPrice === 0) {
         throw new Error('Price is 0');
@@ -373,7 +369,7 @@ export const AppContextProvider = ({ children }: Props) => {
         id: '',
         chainId: collection.chainId,
         isSellOrder: false, // collection orders are always buys
-        makerAddress: user?.address ?? '',
+        makerAddress: user ?? '',
         numItems: 1, // defaulting to one for now; m of n orders not supported in this release via FE
         startTimeMs: Date.now(),
         endTimeMs,

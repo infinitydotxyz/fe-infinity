@@ -1,12 +1,10 @@
 import { Contract, ContractInterface } from 'ethers';
-import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
+import { useSigner } from 'wagmi';
 
 export function useContract(address: string, abi: ContractInterface) {
-  const { getSigner } = useOnboardContext();
+  const { data: signer } = useSigner();
 
-  const signer = getSigner();
-
-  const contract = new Contract(address, abi, signer);
+  const contract = new Contract(address, abi, signer ? signer : undefined);
 
   return contract;
 }

@@ -6,8 +6,8 @@ import { NextLink } from 'src/components/common';
 import { apiGet, ellipsisAddress, ellipsisString } from 'src/utils';
 import { TopOwnersArrayResponseDto, TopOwnerDto } from '@infinityxyz/lib-frontend/types/dto/collections';
 import { useIsMounted } from 'src/hooks/useIsMounted';
-import { useEnsName } from 'src/hooks/useEnsName';
 import { standardCard } from 'src/utils/ui-constants';
+import { useEnsName } from 'wagmi';
 
 interface Props2 {
   topOwner: TopOwnerDto;
@@ -15,11 +15,13 @@ interface Props2 {
 }
 
 const TopHolder = ({ topOwner, index }: Props2) => {
-  const ensName = useEnsName(topOwner.ownerAddress);
+  const { data } = useEnsName({
+    address: topOwner.ownerAddress as `0x${string}`
+  });
   let name = ellipsisAddress(topOwner.ownerAddress, 8, 0);
 
-  if (ensName) {
-    name = ellipsisString(ensName, 9, 0);
+  if (data) {
+    name = ellipsisString(data, 9, 0);
   }
 
   return (

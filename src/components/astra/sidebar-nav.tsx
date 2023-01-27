@@ -7,15 +7,15 @@ import { MdDarkMode, MdLightMode } from 'react-icons/md';
 import { AButton, ARoundButton } from 'src/components/astra/astra-button';
 import { HelpToolTip, NextLink, Spacer, SVG } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { borderColor, hoverColorBrandText, iconButtonStyle, secondaryBgColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { TbSend } from 'react-icons/tb';
+import { useAccount } from 'wagmi';
 
 export const SidebarNav = () => {
   const { theme, setTheme } = useTheme();
   const router = useRouter();
-  const { user } = useOnboardContext();
+  const { address: user } = useAccount();
   const { selectedProfileTab, setSelectedProfileTab } = useAppContext();
 
   return (
@@ -67,7 +67,7 @@ export const SidebarNav = () => {
             highlighted={router.asPath.startsWith(`/profile`) && selectedProfileTab === ProfileTabs.Items}
             onClick={() => {
               setSelectedProfileTab(ProfileTabs.Items);
-              router.push(`/profile/${user?.address}`);
+              router.push(`/profile/${user}`);
             }}
           >
             <BiWalletAlt
@@ -87,7 +87,7 @@ export const SidebarNav = () => {
             highlighted={router.asPath.startsWith(`/profile`) && selectedProfileTab === ProfileTabs.Orders}
             onClick={() => {
               setSelectedProfileTab(ProfileTabs.Orders);
-              router.push(`/profile/${user?.address}`);
+              router.push(`/profile/${user}`);
             }}
           >
             <HiOutlineTag
@@ -108,7 +108,7 @@ export const SidebarNav = () => {
             highlighted={router.asPath.startsWith(`/profile`) && selectedProfileTab === ProfileTabs.Send}
             onClick={() => {
               setSelectedProfileTab(ProfileTabs.Send);
-              router.push(`/profile/${user?.address}`);
+              router.push(`/profile/${user}`);
             }}
           >
             <TbSend

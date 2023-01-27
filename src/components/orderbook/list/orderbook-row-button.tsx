@@ -1,8 +1,8 @@
 import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { AButton } from 'src/components/astra/astra-button';
 import { ButtonProps } from 'src/components/common';
-import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { checkOffersToUser } from 'src/utils/orderbook-utils';
+import { useAccount } from 'wagmi';
 
 type OrderButtonProps = Omit<ButtonProps, 'children'>;
 
@@ -12,7 +12,7 @@ type Props = {
 };
 
 export const OrderbookRowButton = ({ order, outlineButtons = false }: Props) => {
-  const { user, checkSignedIn } = useOnboardContext();
+  const { address: user, isConnected } = useAccount();
 
   const onClickEdit = (order: SignedOBOrder) => {
     console.log('onClickEdit', order); // todo open modal here
@@ -27,13 +27,13 @@ export const OrderbookRowButton = ({ order, outlineButtons = false }: Props) => 
   };
 
   const onClickBuySell = (order: SignedOBOrder) => {
-    if (!checkSignedIn()) {
+    if (!isConnected) {
       return;
     }
     console.log('onClickBuySell', order); // todo open modal here
   };
 
-  const isOwner = order.makerAddress === user?.address;
+  const isOwner = user && order.makerAddress === user;
 
   let buttonProps: OrderButtonProps = { className: 'w-32' };
 
@@ -49,7 +49,7 @@ export const OrderbookRowButton = ({ order, outlineButtons = false }: Props) => 
         </AButton>
       );
     }
-    const isOfferToUser = checkOffersToUser(order, user);
+    const isOfferToUser = checkOffersToUser(order, user ?? '');
     if (order.isSellOrder) {
       // Sell Order (Listing)
       return (

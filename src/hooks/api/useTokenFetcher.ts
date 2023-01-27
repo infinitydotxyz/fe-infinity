@@ -1,18 +1,19 @@
-import { BaseToken, Erc721Token, OrdersSnippet } from '@infinityxyz/lib-frontend/types/core';
+import { BaseToken, ChainId, Erc721Token, OrdersSnippet } from '@infinityxyz/lib-frontend/types/core';
 import { useState } from 'react';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { ApiResponse } from 'src/utils';
 import { fetchCollectionTokens, fetchProfileTokens } from 'src/utils/astra-utils';
 import { CartType } from 'src/utils/context/CartContext';
-import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { ERC721TokenCartItem, TokensFilter } from 'src/utils/types';
+import { useNetwork } from 'wagmi';
 
 type ApiNftData = Erc721Token & {
   orderSnippet?: OrdersSnippet;
 };
 
 export function useCollectionTokenFetcher(collectionAddress: string | undefined, filter: TokensFilter) {
-  const { chainId } = useOnboardContext();
+  const { chain } = useNetwork();
+  const chainId = String(chain?.id ?? 1) as ChainId;
 
   return useTokenFetcher<ApiNftData, ERC721TokenCartItem>({
     fetcher: (cursor, filters) => fetchCollectionTokens(collectionAddress || '', chainId, { cursor, ...filters }),
@@ -23,7 +24,8 @@ export function useCollectionTokenFetcher(collectionAddress: string | undefined,
 }
 
 export function useProfileTokenFetcher(userAddress: string | undefined, filter: TokensFilter) {
-  const { chainId } = useOnboardContext();
+  const { chain } = useNetwork();
+  const chainId = String(chain?.id ?? 1) as ChainId;
 
   return useTokenFetcher<ApiNftData, ERC721TokenCartItem>({
     fetcher: (cursor, filters) => fetchProfileTokens(userAddress || '', chainId, { cursor, ...filters }),

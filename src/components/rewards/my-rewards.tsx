@@ -2,15 +2,14 @@ import { DistributionType } from '@infinityxyz/lib-frontend/types/core';
 import { UserCumulativeRewardsDto } from '@infinityxyz/lib-frontend/types/dto';
 import { round } from '@infinityxyz/lib-frontend/utils';
 import React, { useState } from 'react';
-import { Button, Spacer, toastInfo, toastSuccess } from 'src/components/common';
+import { Button, Spacer, toastSuccess } from 'src/components/common';
 import { StakeTokensModal } from 'src/components/rewards/stake-tokens-modal';
 import { UnstakeTokensModal } from 'src/components/rewards/unstake-tokens-modal';
 import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
 import { useUserRewards } from 'src/hooks/api/useUserRewards';
 import { useClaim } from 'src/hooks/contract/cm-distributor/claim';
-import { ellipsisAddress, nFormatter } from 'src/utils';
+import { nFormatter } from 'src/utils';
 import { INFT_TOKEN } from 'src/utils/constants';
-import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { bgColor, secondaryBgColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
@@ -42,14 +41,13 @@ const MyRewards = () => {
   const { result: quota, mutate: mutateQuota } = useUserCurationQuota();
   const { result: userRewards } = useUserRewards();
   const { claim } = useClaim();
-  const { waitForTransaction } = useOnboardContext();
 
   const onClaim = async (type: DistributionType, props?: UserCumulativeRewardsDto) => {
     if (!props || !props.claimableWei || props.claimableWei === '0') {
       throw new Error('Nothing to claim');
     }
 
-    const { hash } = await claim({
+    await claim({
       type,
       account: props.account,
       cumulativeAmount: props.cumulativeAmount,
@@ -58,9 +56,9 @@ const MyRewards = () => {
       contractAddress: props.contractAddress
     });
     toastSuccess('Sent txn to chain for execution');
-    waitForTransaction(hash, () => {
-      toastInfo(`Transaction confirmed ${ellipsisAddress(hash)}`);
-    });
+    // todo: waitForTransaction(hash, () => {
+    //   toastInfo(`Transaction confirmed ${ellipsisAddress(hash)}`);
+    // });
   };
 
   return (
