@@ -327,7 +327,7 @@ const useOrderFetcher = (limit = DEFAULT_LIMIT, filter: TokensFilter, props: Fet
               startTimeMs: order.startTimeMs,
               endTimeMs: order.endTimeMs,
               maxGasPriceWei: '0',
-              nonce: 0,
+              nonce: parseInt(order.nonce, 10),
               nfts: nfts,
               execParams: {
                 complicationAddress: '',
