@@ -1,4 +1,4 @@
-import { BsMedium, BsTwitter } from 'react-icons/bs';
+import { BsTwitter } from 'react-icons/bs';
 import { SiDiscord } from 'react-icons/si';
 import { AstraCartButton } from 'src/components/astra/astra-cart-button';
 import { borderColor, smallIconButtonStyle } from 'src/utils/ui-constants';
@@ -42,14 +42,14 @@ export const ANavbarButtons = () => {
       onClick: () => {
         window.open('https://discord.com/invite/flowdotso');
       }
-    } as ADropdownItem,
-    {
-      label: 'Medium',
-      icon: <BsMedium className={smallIconButtonStyle} />,
-      onClick: () => {
-        window.open('https://flowdotso.medium.com');
-      }
     } as ADropdownItem
+    // {
+    //   label: 'Medium',
+    //   icon: <BsMedium className={smallIconButtonStyle} />,
+    //   onClick: () => {
+    //     window.open('https://flowdotso.medium.com');
+    //   }
+    // } as ADropdownItem
   ];
 
   return (
