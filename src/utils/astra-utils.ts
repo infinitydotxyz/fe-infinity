@@ -2,7 +2,7 @@ import axios from 'axios';
 import { trimText } from 'src/components/common';
 import { SORT_FILTERS, TokensFilter } from 'src/utils/types';
 import { ApiResponse } from './api-utils';
-import { API_BASE, LARGE_LIMIT, SMALL_LIMIT } from './constants';
+import { API_BASE, LARGE_LIMIT } from './constants';
 
 export type TokenFetcherOptions = { cursor?: string } & TokensFilter;
 
@@ -54,16 +54,6 @@ export const fetchProfileTokens = async (
   };
 
   const response = await httpGet(`/user/${userAddress}/nfts`, query);
-  return response;
-};
-
-export const fetchCollections = async (query: string, cursor?: string): Promise<ApiResponse> => {
-  const response = await httpGet('/collections/search', {
-    query,
-    limit: SMALL_LIMIT,
-    cursor
-  });
-
   return response;
 };
 
