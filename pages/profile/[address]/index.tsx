@@ -1,9 +1,12 @@
+import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { useRouter } from 'next/router';
+import { CenteredContent, ConnectButton } from 'src/components/common';
 import { ProfileNFTs } from 'src/components/profile/profile-nfts';
 import { ProfileOrderList } from 'src/components/profile/profile-order-list';
 import { ProfilePageHeader } from 'src/components/profile/profile-page-header';
 import { useScrollInfo } from 'src/hooks/useScrollHook';
 import { useAppContext } from 'src/utils/context/AppContext';
+import { useAccount } from 'wagmi';
 
 export enum ProfileTabs {
   Items = 'Items',
@@ -13,23 +16,32 @@ export enum ProfileTabs {
 
 export default function ProfileItemsPage() {
   const { setRef, scrollTop } = useScrollInfo();
+  const { address } = useAccount();
   const expanded = scrollTop < 100;
-  const tabs = [ProfileTabs.Items.toString(), ProfileTabs.Orders.toString(), ProfileTabs.Send.toString()];
+  const tabs = [ProfileTabs.Items.toString(), ProfileTabs.Orders.toString()];
   const { selectedProfileTab } = useAppContext();
 
   const router = useRouter();
   const addressFromPath = router.query.address as string;
-  if (!addressFromPath) {
-    return null;
+  if (!addressFromPath || addressFromPath === 'undefined') {
+    return (
+      <CenteredContent>
+        <ConnectButton />
+      </CenteredContent>
+    );
+  }
+
+  if (trimLowerCase(addressFromPath) === trimLowerCase(address)) {
+    tabs.push(ProfileTabs.Send.toString());
   }
 
   return (
     <div className="flex flex-col h-full w-full">
       <ProfilePageHeader expanded={expanded} tabs={tabs} />
       <div ref={setRef} className="overflow-y-auto scrollbar-hide">
-        {selectedProfileTab === 'Items' && <ProfileNFTs userAddress={addressFromPath} />}
-        {selectedProfileTab === 'Orders' && <ProfileOrderList userAddress={addressFromPath} />}
-        {selectedProfileTab === 'Send' && <ProfileNFTs userAddress={addressFromPath} />}
+        {selectedProfileTab === ProfileTabs.Items && <ProfileNFTs userAddress={addressFromPath} />}
+        {selectedProfileTab === ProfileTabs.Orders && <ProfileOrderList userAddress={addressFromPath} />}
+        {selectedProfileTab === ProfileTabs.Send && <ProfileNFTs userAddress={addressFromPath} />}
       </div>
     </div>
   );

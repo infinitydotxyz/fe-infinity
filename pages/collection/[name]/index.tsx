@@ -168,12 +168,34 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                 <div className="flex">
                   <CollectionNftSearchInput slug={collection.slug} expanded collectionFloorPrice={floorPrice} />
                 </div>
+
                 <Spacer />
+
                 <div className="flex space-x-2 text-sm">
-                  <div className="flex items-center mr-2">
-                    <GiBroom className={twMerge(iconButtonStyle, brandTextColor)} />
-                  </div>
+                  <AButton
+                    primary
+                    className="px-5 py-1 rounded-lg text-sm"
+                    onClick={() => {
+                      setCartType(CartType.CollectionOffer);
+                      if (isCollSelectable(collection as ERC721CollectionCartItem)) {
+                        return toggleCollSelection(collection as ERC721CollectionCartItem);
+                      }
+                    }}
+                  >
+                    {isCollSelected(collection as ERC721CollectionCartItem) ? (
+                      <div className="flex items-center space-x-1">
+                        <AiOutlineCheckCircle className={'h-4 w-4'} />
+                        <div>Collection Offer</div>
+                      </div>
+                    ) : (
+                      'Collection Offer'
+                    )}
+                  </AButton>
+
                   <div className={twMerge('flex flex-row rounded-lg border cursor-pointer', borderColor)}>
+                    <div className="flex items-center border-r-[1px] px-6">
+                      <GiBroom className={twMerge(iconButtonStyle, brandTextColor)} />
+                    </div>
                     <div
                       className={twMerge(
                         'px-4 h-full flex items-center border-r-[1px]',
@@ -229,7 +251,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                     <div className="px-4 h-full flex items-center">
                       <TextInputBox
                         autoFocus={true}
-                        inputClassName="text-sm"
+                        inputClassName="text-sm outline-none ring-transparent border-transparent shadow-none"
                         className="border-0 w-14 p-0 text-sm"
                         type="number"
                         placeholder="Custom"
@@ -241,27 +263,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                       />
                     </div>
                   </div>
-                  <div className="flex gap-2">
-                    <AButton
-                      primary
-                      className="px-5 py-1 rounded-lg text-sm"
-                      onClick={() => {
-                        setCartType(CartType.CollectionOffer);
-                        if (isCollSelectable(collection as ERC721CollectionCartItem)) {
-                          return toggleCollSelection(collection as ERC721CollectionCartItem);
-                        }
-                      }}
-                    >
-                      {isCollSelected(collection as ERC721CollectionCartItem) ? (
-                        <div className="flex items-center space-x-1">
-                          <AiOutlineCheckCircle className={'h-4 w-4'} />
-                          <div>Collection Offer</div>
-                        </div>
-                      ) : (
-                        'Collection Offer'
-                      )}
-                    </AButton>
-                  </div>
+
                   <ASortButton filter={filter} setFilter={setFilter} />
                   <AStatusFilterButton filter={filter} setFilter={setFilter} />
                   <APriceFilter filter={filter} setFilter={setFilter} />

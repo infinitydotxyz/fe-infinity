@@ -1,3 +1,4 @@
+import { ConnectKitProvider, getDefaultClient } from 'connectkit';
 import * as gtag from 'lib/ga/gtag';
 import LogRocket from 'logrocket';
 import { ThemeProvider } from 'next-themes';
@@ -9,8 +10,7 @@ import 'src/settings/tailwind/globals.scss';
 import { isLocalhost } from 'src/utils/common-utils';
 import { AppContextProvider } from 'src/utils/context/AppContext';
 import { CartContextProvider } from 'src/utils/context/CartContext';
-import { WagmiConfig, createClient } from 'wagmi';
-import { ConnectKitProvider, getDefaultClient } from 'connectkit';
+import { createClient, WagmiConfig } from 'wagmi';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -41,7 +41,11 @@ const App = (props: AppProps) => {
   return (
     <StrictMode>
       <WagmiConfig client={client}>
-        <ConnectKitProvider>
+        <ConnectKitProvider
+          customTheme={{
+            '--ck-font-family': '"DM Sans"'
+          }}
+        >
           <CartContextProvider>
             <AppContextProvider>
               <AppBody {...props} />
