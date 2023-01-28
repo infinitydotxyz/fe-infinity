@@ -54,3 +54,5 @@ export const DiscordIntegration = () => {
 
   return <PageBox title="Enable integration">{status}</PageBox>;
 };
+
+export default DiscordIntegration;
