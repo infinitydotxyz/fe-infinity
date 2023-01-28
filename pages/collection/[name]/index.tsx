@@ -55,7 +55,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   const [filter, setFilter] = useState<TokensFilter>({});
   const { data, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection.address, filter);
   const { setRef, scrollTop } = useScrollInfo();
-  const tabs = ['Items', 'Orders', 'Analytics'];
+  const tabs = ['Items'];
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
   const { cartType, setCartType } = useCartContext();
   const [numSweep, setNumSweep] = useState('');
@@ -193,7 +193,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                   </AButton>
 
                   <div className={twMerge('flex flex-row rounded-lg border cursor-pointer', borderColor)}>
-                    <div className="flex items-center border-r-[1px] px-6">
+                    <div className="flex items-center border-r-[1px] px-6 cursor-default">
                       <GiBroom className={twMerge(iconButtonStyle, brandTextColor)} />
                     </div>
                     <div
