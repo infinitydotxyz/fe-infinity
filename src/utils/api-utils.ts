@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios';
-import { stringify } from 'query-string';
+import queryString from 'query-string';
 import { useState } from 'react';
 import useSWR, { SWRConfiguration } from 'swr';
 import useSWRInfinite, { SWRInfiniteConfiguration, SWRInfiniteKeyLoader, SWRInfiniteResponse } from 'swr/infinite';
@@ -17,7 +17,7 @@ export const isStatusOK = (response: ApiResponse) => {
 };
 
 // eslint-disable-next-line
-const buildQueryString = (queryObj: any) => (queryObj ? '?' + stringify(queryObj) : '');
+const buildQueryString = (queryObj: any) => (queryObj ? '?' + queryString.stringify(queryObj) : '');
 
 const axiosApi: AxiosInstance = axios.create({
   headers: {}

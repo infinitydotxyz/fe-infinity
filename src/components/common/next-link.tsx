@@ -12,13 +12,12 @@ export const NextLink = ({ children, className = '', href, title }: Props) => {
   }
 
   return (
-    <Link href={href}>
-      <a
-        className={twMerge('whitespace-nowrap cursor-pointer focus:outline-none focus-visible:outline-none', className)}
-        title={title ?? ''}
-      >
-        {children}
-      </a>
+    <Link
+      href={href}
+      className={twMerge('whitespace-nowrap cursor-pointer focus:outline-none focus-visible:outline-none', className)}
+      title={title ?? ''}
+    >
+      {children}
     </Link>
   );
 };

@@ -128,7 +128,9 @@ export const TextInputBox = ({
               onChange(e.target.value);
             }
           }}
-          className={twMerge(`p-0 bg-transparent border-none focus:ring-0 block w-full font-heading ${inputClassName}`)}
+          className={twMerge(
+            `p-0 bg-transparent border-none focus:ring-0 block w-full font-heading outline-none ring-transparent shadow-none ${inputClassName}`
+          )}
           placeholder={placeholder}
           onKeyDown={(e) => {
             if (e.key === 'Enter' && onEnter) {

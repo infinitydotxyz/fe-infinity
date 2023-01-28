@@ -1,7 +1,7 @@
 import { Dialog, Transition } from '@headlessui/react';
-import { XIcon } from '@heroicons/react/outline';
 import { useTheme } from 'next-themes';
 import { Fragment, ReactNode } from 'react';
+import { MdClose } from 'react-icons/md';
 import { Button, Spacer } from 'src/components/common';
 import { bgColor, iconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
@@ -137,7 +137,7 @@ export const Modal = ({
                       <Spacer />
 
                       <Button size="plain" variant="round" onClick={onClose}>
-                        <XIcon className={iconButtonStyle} />
+                        <MdClose className={iconButtonStyle} />
                       </Button>
                     </>
                   )}

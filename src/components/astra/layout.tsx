@@ -48,7 +48,7 @@ export const Layout = ({ children }: Props) => {
           }
         } catch (e) {
           console.error(e);
-          toastError(e);
+          toastError(String(e));
         }
       }}
       onTokenSend={async (value) => {

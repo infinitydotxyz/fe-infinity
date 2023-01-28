@@ -251,7 +251,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                     <div className="px-4 h-full flex items-center">
                       <TextInputBox
                         autoFocus={true}
-                        inputClassName="text-sm outline-none ring-transparent border-transparent shadow-none"
+                        inputClassName="text-sm"
                         className="border-0 w-14 p-0 text-sm"
                         type="number"
                         placeholder="Custom"

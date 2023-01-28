@@ -45,7 +45,8 @@ export const useScrollInfo = () => {
     }
   }
 
-  const setRef = useCallback((node) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const setRef = useCallback((node: any) => {
     if (node) {
       // When the ref is first set (after mounting)
       node.addEventListener('scroll', update);
