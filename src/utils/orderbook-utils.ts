@@ -1,9 +1,8 @@
-import { ChainId, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
+import { ChainId, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { toastSuccess } from 'src/components/common';
 import { apiPost, apiPut } from 'src/utils/api-utils';
 import { apiGet } from '.';
-import { User } from './context/AppContext';
-import { toastSuccess } from 'src/components/common';
 
 export const postOrders = async (user: string, orders: SignedOBOrder[]): Promise<string> => {
   try {
@@ -75,14 +74,14 @@ export const getOrderType = (order: { isSellOrder: boolean }): 'Listing' | 'Offe
 };
 
 // check if an offer made to current user
-export const checkOffersToUser = (order: SignedOBOrder, currentUser: User | null) => {
+export const checkOffersToUser = (order: SignedOBOrder, currentUser: string | null) => {
   if (!currentUser) {
     return false;
   }
   let result = false;
   for (const nft of order.nfts) {
     for (const token of nft.tokens) {
-      if (token.takerAddress === currentUser.address) {
+      if (token.takerAddress === currentUser) {
         result = true;
       }
     }

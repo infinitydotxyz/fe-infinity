@@ -1,11 +1,10 @@
-import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
+import { BaseCollection, ChainId } from '@infinityxyz/lib-frontend/types/core';
 import { useState } from 'react';
 import { FaCaretDown, FaCaretUp, FaDiscord, FaInstagram, FaTwitter } from 'react-icons/fa';
 import { HiOutlineExternalLink } from 'react-icons/hi';
 import { BlueCheck, ClipboardButton, EthSymbol, EZImage, ReadMoreText, Spacer } from 'src/components/common';
 import etherscanLogo from 'src/images/etherscan-logo.png';
 import { ellipsisAddress, getChainScannerBase } from 'src/utils';
-import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import {
   borderColor,
   brandBorderColor,
@@ -16,6 +15,7 @@ import {
   smallIconButtonStyle
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
+import { useNetwork } from 'wagmi';
 import { AOutlineButton } from '../astra/astra-button';
 
 export interface CollectionPageHeaderProps {
@@ -57,7 +57,8 @@ export const CollectionPageHeader = ({
   tabs,
   onTabChange
 }: CollectionPageHeaderProps) => {
-  const { chainId } = useOnboardContext();
+  const { chain } = useNetwork();
+  const chainId = String(chain?.id ?? 1) as ChainId;
 
   const twitterChangePct = `${Math.abs(Number(twitterFollowersPercentChange ?? 0))}`.slice(0, 5);
   const discordChangePct = `${Math.abs(Number(discordFollowersPercentChange ?? 0))}`.slice(0, 5);

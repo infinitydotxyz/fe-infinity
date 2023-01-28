@@ -8,8 +8,8 @@ import {
 } from 'src/hooks/contract/staker/useRemainingLockTime';
 import { useUnstake } from 'src/hooks/contract/staker/useUnstake';
 import { nFormatter } from 'src/utils';
-import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { secondaryTextColor } from 'src/utils/ui-constants';
+import { useAccount } from 'wagmi';
 import { Spinner, toastError, toastSuccess } from '../common';
 import { Button } from '../common/button';
 import { TextInputBox } from '../common/input-box';
@@ -21,8 +21,8 @@ interface Props {
 
 export const UnstakeTokensModal = ({ onClose }: Props) => {
   // const [hoverRef, isHovered] = useHover<HTMLDivElement>();
-  const { user } = useOnboardContext();
-  const { result: curationQuota } = useCurationQuota(user?.address ?? null);
+  const { address: user } = useAccount();
+  const { result: curationQuota } = useCurationQuota(user ?? null);
   const [value, setValue] = useState(0);
   const [isUnstaking, setIsUnstaking] = useState(false);
   // const [isRageQuitting, setIsRageQuitting] = useState(false);

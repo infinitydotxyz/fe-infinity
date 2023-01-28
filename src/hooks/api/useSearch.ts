@@ -1,8 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { SearchBy, SearchQuery, SearchType, SubQuery, SubQueryType } from '@infinityxyz/lib-frontend/types/core';
+import {
+  ChainId,
+  SearchBy,
+  SearchQuery,
+  SearchType,
+  SubQuery,
+  SubQueryType
+} from '@infinityxyz/lib-frontend/types/core';
 import { SearchResult } from 'src/components/common/search/types';
 import { useFetch } from 'src/utils';
-import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
+import { useNetwork } from 'wagmi';
 import { useDebounce } from '../useDebounce';
 
 type Response = { data: SearchResult[]; cursor: string; hasNextPage: boolean };
@@ -20,7 +27,8 @@ export type ClientSearches<
 export const useSearch = <T extends SearchType = any, U extends SearchBy<T> = any, V extends SubQueryType<T, U> = any>(
   search: ClientSearches<T, U, V>
 ) => {
-  const { chainId } = useOnboardContext();
+  const { chain } = useNetwork();
+  const chainId = String(chain?.id ?? 1) as ChainId;
 
   const { debouncedValue: debouncedSearch } = useDebounce(search, 300);
 

@@ -1,6 +1,7 @@
 import { useFetch } from 'src/utils';
 import { CurationQuotaDto } from '@infinityxyz/lib-frontend/types/dto/collections/curation/curation-quota.dto';
-import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
+import { useAccount, useNetwork } from 'wagmi';
+import { ChainId } from '@infinityxyz/lib-frontend/types/core';
 
 export const getCurationQuotaKey = (userId: string) => `/user/${userId}/curatedQuota`;
 
@@ -17,7 +18,9 @@ export function useCurationQuota(userId: string | null) {
  * See {@link useCurationQuota}.
  */
 export function useUserCurationQuota() {
-  const { user, chainId } = useOnboardContext();
+  const { chain } = useNetwork();
+  const { address: user } = useAccount();
+  const chainId = String(chain?.id ?? 1) as ChainId;
 
-  return useCurationQuota(user?.address ? `${chainId}:${user.address}` : null);
+  return useCurationQuota(user ? `${chainId}:${user}` : null);
 }

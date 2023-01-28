@@ -3,27 +3,18 @@ import { CollectionSearchDto } from '@infinityxyz/lib-frontend/types/dto';
 import { useEffect, useState } from 'react';
 import { MdClose } from 'react-icons/md';
 import { useProfileOrderFetcher } from 'src/hooks/api/useOrderFetcher';
-import { ellipsisAddress, extractErrorMsg } from 'src/utils';
+import { extractErrorMsg } from 'src/utils';
 import { CartType } from 'src/utils/context/CartContext';
-import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { fetchOrderNonce } from 'src/utils/orderbook-utils';
 import { cancelAllOrders } from 'src/utils/orders';
 import { ERC721OrderCartItem, TokensFilter } from 'src/utils/types';
 import { borderColor, hoverColorBrandText, secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
+import { useAccount, useNetwork, useSigner } from 'wagmi';
 import { AOutlineButton } from '../astra/astra-button';
 import { ADropdown } from '../astra/astra-dropdown';
 import { APriceFilter } from '../astra/astra-price-filter';
-import {
-  CenteredContent,
-  EZImage,
-  ScrollLoader,
-  Spacer,
-  Spinner,
-  toastError,
-  toastInfo,
-  toastSuccess
-} from '../common';
+import { CenteredContent, EZImage, ScrollLoader, Spacer, Spinner, toastError, toastSuccess } from '../common';
 import { CollectionSearchInput } from '../common/search/collection-search-input';
 import { ProfileOrderListItem } from './profile-order-list-item';
 
@@ -35,7 +26,11 @@ interface Props {
 }
 
 export const ProfileOrderList = ({ userAddress, className = '' }: Props) => {
-  const { user, chainId, waitForTransaction, getSigner } = useOnboardContext();
+  const { data: signer } = useSigner();
+  const { chain } = useNetwork();
+  const { address: user } = useAccount();
+
+  const chainId = String(chain?.id ?? 1) as ChainId;
   const [isCancellingAll, setIsCancellingAll] = useState(false);
   const [ddLabel, setDdLabel] = useState<string>('Listings');
   const [filter, setFilter] = useState<TokensFilter>({
@@ -137,15 +132,14 @@ export const ProfileOrderList = ({ userAddress, className = '' }: Props) => {
           disabled={isCancellingAll}
           onClick={async () => {
             try {
-              const signer = getSigner();
               if (signer && user) {
-                const minOrderNonce = await fetchOrderNonce(user.address, chainId as ChainId);
-                const { hash } = await cancelAllOrders(signer, chainId, minOrderNonce);
+                const minOrderNonce = await fetchOrderNonce(user, chainId as ChainId);
+                await cancelAllOrders(signer, chainId, minOrderNonce);
                 toastSuccess('Sent txn to chain for execution');
                 setIsCancellingAll(true);
-                waitForTransaction(hash, () => {
-                  toastInfo(`Transaction confirmed ${ellipsisAddress(hash)}`);
-                });
+                // todo waitForTransaction(hash, () => {
+                //   toastInfo(`Transaction confirmed ${ellipsisAddress(hash)}`);
+                // });
                 setIsCancellingAll(false);
               } else {
                 throw 'User is null';

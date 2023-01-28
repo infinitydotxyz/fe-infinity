@@ -9,7 +9,6 @@ import { EthSymbol, EZImage, Spacer, TextInputBox } from 'src/components/common'
 import { getCartType, getCollectionKeyId, getDefaultOrderExpiryTime, getTokenCartItemKey } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartItem, CartType, useCartContext } from 'src/utils/context/CartContext';
-import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { ERC721CollectionCartItem, ERC721OrderCartItem, ERC721TokenCartItem, ORDER_EXPIRY_TIME } from 'src/utils/types';
 import {
   borderColor,
@@ -23,6 +22,7 @@ import {
   textColor
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
+import { useAccount, useNetwork, useProvider } from 'wagmi';
 import { ADropdown } from './astra-dropdown';
 
 interface Props {
@@ -51,7 +51,12 @@ export const AstraCart = ({
   const [cartTitle, setCartTitle] = useState('Cart');
   const [checkoutBtnText, setCheckoutBtnText] = useState('Checkout');
   const [sendToAddress, setSendToAddress] = useState('');
-  const { user, getEthersProvider, chainId } = useOnboardContext();
+
+  const provider = useProvider();
+  const { chain } = useNetwork();
+  const { address: user } = useAccount();
+  const chainId = String(chain?.id ?? 1) as ChainId;
+
   const { cartType, setCartType, getCurrentCartItems, cartItems } = useCartContext();
   const [currentCartItems, setCurrentCartItems] = useState<CartItem[]>([]);
 
@@ -65,7 +70,6 @@ export const AstraCart = ({
   const finalSendToAddress = async (addr: string) => {
     let finalAddress: string | null = addr;
     if (addr.endsWith('.eth')) {
-      const provider = getEthersProvider();
       finalAddress = (await provider?.resolveName(addr)) ?? '';
     }
     if (finalAddress) {

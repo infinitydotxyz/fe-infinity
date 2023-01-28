@@ -18,4 +18,10 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true'
 });
 
+// const withTM = require('next-transpile-modules')(['connectkit']);
+
+// module.exports = withTM({
+//   reactStrictMode: true
+// });
+
 module.exports = withBundleAnalyzer(nextConfig);

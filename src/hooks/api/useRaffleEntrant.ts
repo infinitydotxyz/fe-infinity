@@ -1,10 +1,11 @@
 import { ChainId } from '@infinityxyz/lib-frontend/types/core';
 import { RaffleLeaderboardUser } from '@infinityxyz/lib-frontend/types/dto';
 import { useFetch } from 'src/utils';
-import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
+import { useNetwork } from 'wagmi';
 
 export const useRaffleEntrant = (raffleId: string, userAddress: string) => {
-  const { chainId } = useOnboardContext();
+  const { chain } = useNetwork();
+  const chainId = String(chain?.id ?? 1) as ChainId;
 
   const query = {
     chainId: (chainId || ChainId.Mainnet) as ChainId

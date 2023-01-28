@@ -1,8 +1,8 @@
 import { InfinityCmDistributorABI } from '@infinityxyz/lib-frontend/abi';
-import { DistributionType } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId, DistributionType } from '@infinityxyz/lib-frontend/types/core';
 import { getCmDistributorAddress } from '@infinityxyz/lib-frontend/utils';
 import { ENV } from 'src/utils';
-import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
+import { useNetwork } from 'wagmi';
 import { useContract } from '../useContract';
 
 export interface ClaimProps {
@@ -15,7 +15,9 @@ export interface ClaimProps {
 }
 
 export const useClaim = () => {
-  const { chainId } = useOnboardContext();
+  const { chain } = useNetwork();
+  const chainId = String(chain?.id ?? 1) as ChainId;
+
   const contractAddress = getCmDistributorAddress(chainId, ENV);
   const contract = useContract(contractAddress, InfinityCmDistributorABI);
   const claim = async (data: ClaimProps) => {

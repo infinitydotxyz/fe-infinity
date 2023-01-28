@@ -2,8 +2,8 @@ import { RaffleState } from '@infinityxyz/lib-frontend/types/core';
 import { UserRaffleDto } from '@infinityxyz/lib-frontend/types/dto';
 import { useRaffleLeaderboard } from 'src/hooks/api/useRaffleLeaderboard';
 import useScreenSize from 'src/hooks/useScreenSize';
-import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { twMerge } from 'tailwind-merge';
+import { useAccount } from 'wagmi';
 import { TooltipWrapper } from '../common';
 import { PulseIconColor } from '../common/pulse-icon';
 import { InfoBox } from '../rewards/info-box';
@@ -46,7 +46,7 @@ const states = {
 };
 
 export const RaffleDescription = ({ raffle, ethPrice }: { raffle: UserRaffleDto; ethPrice: number }) => {
-  const { user } = useOnboardContext();
+  const { address: user } = useAccount();
   const state = states[raffle.state];
   const { isMobile } = useScreenSize();
   const { result } = useRaffleLeaderboard(raffle.id); // TODO add loading states
@@ -89,7 +89,7 @@ export const RaffleDescription = ({ raffle, ethPrice }: { raffle: UserRaffleDto;
               <InfoBox.Stats title="Earning Tickets" description={EarningTickets({ raffle })}></InfoBox.Stats>
             </div>
             <div className="my-4">
-              <EntrantTickets raffleId={raffle.id} userAddress={user?.address}></EntrantTickets>
+              <EntrantTickets raffleId={raffle.id} userAddress={user}></EntrantTickets>
             </div>
             <div className="my-4">
               <RaffleStats raffle={raffle} ethPrice={ethPrice} />

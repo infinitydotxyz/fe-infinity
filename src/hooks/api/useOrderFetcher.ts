@@ -9,8 +9,8 @@ import {
 import * as Queries from '@infinityxyz/lib-frontend/types/dto/orders/orders-queries.dto';
 import { useState } from 'react';
 import { apiGet, DEFAULT_LIMIT } from 'src/utils';
-import { useOnboardContext } from 'src/utils/context/OnboardContext/OnboardContext';
 import { TokensFilter, SORT_FILTERS } from 'src/utils/types';
+import { useNetwork } from 'wagmi';
 import { OrderCache } from '../../components/orderbook/order-cache';
 
 interface BaseProps {
@@ -138,7 +138,8 @@ export const useTokenOrderFetcher = (
 };
 
 const useOrderFetcher = (limit = DEFAULT_LIMIT, filter: TokensFilter, props: FetcherProps) => {
-  const { chainId } = useOnboardContext();
+  const { chain } = useNetwork();
+  const chainId = String(chain?.id ?? 1) as ChainId;
   const [orders, setOrders] = useState<SignedOBOrder[]>([]);
   const [error, setError] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
