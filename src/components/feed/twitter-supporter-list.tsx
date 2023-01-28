@@ -7,7 +7,6 @@ import { TweetArrayDto, TweetDto } from '@infinityxyz/lib-frontend/types/dto/twi
 import { apiGet, nFormatter } from 'src/utils';
 import { standardCard } from 'src/utils/ui-constants';
 
-// @Get('/:id/topOwners')  TopOwnersArrayResponseDto
 // @Get('/:id/mentions')  TweetArrayDto
 
 interface Props2 {
@@ -46,10 +45,6 @@ export const TwitterSupporterList = ({ collection }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [hasNoData, setHasNoData] = useState(false);
   const [hasError, setHasError] = useState(false);
-
-  // const { result, isLoading } = useFetch(`${USER_API_END_POINT}/${user.address}`);
-
-  // const topOwners = `/collections/${chainId}:${collectionAddress}/topOwners`;
 
   const getActivityList = async () => {
     setIsLoading(true);
