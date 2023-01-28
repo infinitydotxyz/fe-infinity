@@ -193,7 +193,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                   </AButton>
 
                   <div className={twMerge('flex flex-row rounded-lg border cursor-pointer', borderColor)}>
-                    <div className="flex items-center border-r-[1px] px-6 cursor-default">
+                    <div className={twMerge('flex items-center border-r-[1px] px-6 cursor-default', borderColor)}>
                       <GiBroom className={twMerge(iconButtonStyle, brandTextColor)} />
                     </div>
                     <div
