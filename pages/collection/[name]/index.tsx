@@ -306,7 +306,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
           )}
 
           {selectedTab === 'Orders' && <OrderbookCharts />}
-          {selectedTab === 'Socials' && (
+          {selectedTab === 'Analytics' && (
             <div className="flex justify-center px-4 mt-5 space-x-4">
               <div className="flex space-x-4">
                 <div className="w-1/2">{collection && <TopHolderList collection={collection}></TopHolderList>}</div>
