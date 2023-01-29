@@ -3,7 +3,7 @@ import * as gtag from 'lib/ga/gtag';
 import LogRocket from 'logrocket';
 import { ThemeProvider } from 'next-themes';
 import type { AppProps } from 'next/app';
-import { useRouter } from 'next/router';
+import { Router, useRouter } from 'next/router';
 import { memo, StrictMode, useEffect } from 'react';
 import { Layout } from 'src/components/astra/layout';
 import 'src/settings/tailwind/globals.scss';
@@ -11,6 +11,13 @@ import { isLocalhost } from 'src/utils/common-utils';
 import { AppContextProvider } from 'src/utils/context/AppContext';
 import { CartContextProvider } from 'src/utils/context/CartContext';
 import { createClient, WagmiConfig } from 'wagmi';
+
+import NProgress from 'nprogress'; //nprogress module
+import 'nprogress/nprogress.css'; //styles of nprogress
+//Binding events.
+Router.events.on('routeChangeStart', () => NProgress.start());
+Router.events.on('routeChangeComplete', () => NProgress.done());
+Router.events.on('routeChangeError', () => NProgress.done());
 
 const isProduction = process.env.NODE_ENV === 'production';
 
