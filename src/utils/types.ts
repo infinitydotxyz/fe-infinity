@@ -41,6 +41,9 @@ export interface ERC721TokenCartItem extends ERC721CardData {
   orderPriceEth?: number;
   orderExpiry?: ORDER_EXPIRY_TIME;
   cartType: CartType;
+  lastSalePriceEth?: string | number | null | undefined;
+  lastSaleTimestamp?: number;
+  mintPriceEth?: string | number | null | undefined;
 }
 
 export interface ERC721OrderCartItem extends SignedOBOrder {
@@ -52,6 +55,9 @@ export interface BasicTokenInfo {
   collectionAddress: string;
   tokenId: string;
   collectionFloorPrice?: string | number | null | undefined;
+  collectionCreator?: string;
+  lastSalePriceEth?: string | number | null | undefined;
+  mintPriceEth?: string | number | null | undefined;
 }
 
 export type TokensFilter = {

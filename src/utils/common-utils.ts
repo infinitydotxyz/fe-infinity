@@ -105,7 +105,7 @@ export const getTokenCartItemKey = (data: ERC721TokenCartItem) => {
 
 // use ellipsisString for non-address numbers, this gets the checksum address
 export const ellipsisAddress = (address?: string, left = 6, right = 4) => {
-  return ellipsisString(toChecksumAddress(address), left, right);
+  return ellipsisString(address, left, right);
 };
 
 export const addressesEqual = (left?: string, right?: string): boolean => {

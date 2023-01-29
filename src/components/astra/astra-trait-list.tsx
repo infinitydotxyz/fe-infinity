@@ -48,7 +48,7 @@ export const ATraitList: FC<ATraitListProps> = ({ traits, className = 'mt-6', co
   return (
     <div className={className}>
       <p className="text-lg font-bold font-heading mb-1">Traits</p>
-      <div className="space-y-2 max-h-80 overflow-auto pr-1.5">
+      <div className="space-y-2 max-h-80 overflow-auto scrollbar-hide">
         {traits?.map((trait: Erc721Attribute, idx) => (
           <ATrait
             key={idx + '_' + trait.trait_type}

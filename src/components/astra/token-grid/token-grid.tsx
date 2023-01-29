@@ -21,6 +21,7 @@ interface Props {
   isError?: boolean;
   isLoading?: boolean;
   collectionFloorPrice?: string | number | null | undefined;
+  collectionCreator?: string;
 }
 
 export const TokenGrid = ({
@@ -34,7 +35,8 @@ export const TokenGrid = ({
   onFetchMore,
   isError,
   isLoading,
-  collectionFloorPrice
+  collectionFloorPrice,
+  collectionCreator
 }: Props) => {
   let contents;
 
@@ -78,6 +80,7 @@ export const TokenGrid = ({
                   data={data}
                   selected={isSelected(data)}
                   collectionFloorPrice={collectionFloorPrice}
+                  collectionCreator={collectionCreator}
                   isSelectable={isSelectable}
                   onClick={(data) => {
                     onClick?.(data);

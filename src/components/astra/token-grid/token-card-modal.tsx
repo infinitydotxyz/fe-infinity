@@ -11,7 +11,7 @@ import { useSWRConfig } from 'swr';
 import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
 import { useAccount, useNetwork } from 'wagmi';
-import { BlueCheck, EthSymbol, EZImage, Modal, NextLink, ReadMoreText, ShortAddress, Spacer } from '../../common';
+import { BlueCheck, EthSymbol, EZImage, Modal, NextLink, ShortAddress, Spacer } from '../../common';
 import { AButton } from '../astra-button';
 import { ATraitList } from '../astra-trait-list';
 import { ErrorOrLoading } from '../error-or-loading';
@@ -71,12 +71,21 @@ export const TokenCardModal = ({ data, modalOpen }: Props): JSX.Element | null =
   const offerTimeStr = offerTime ? format(offerTime) : '-';
 
   const floorPrice = data.collectionFloorPrice;
-  const priceDiff = listingPrice
+  const floorPriceDiff = listingPrice
     ? Number(listingPrice) - Number(floorPrice)
     : offerPrice
     ? Number(offerPrice) - Number(floorPrice)
     : 0;
-  const percentDiff = floorPrice ? `${nFormatter((priceDiff / Number(floorPrice)) * 100)}%` : 0;
+  const floorPricePercentDiff = floorPrice ? `${nFormatter((floorPriceDiff / Number(floorPrice)) * 100)}%` : 0;
+
+  const markupPrice = listingPrice || offerPrice;
+  const markupPriceDiff =
+    listingPrice && data.lastSalePriceEth
+      ? Number(listingPrice) - Number(data.lastSalePriceEth)
+      : offerPrice && data.lastSalePriceEth
+      ? Number(offerPrice) - Number(data.lastSalePriceEth)
+      : 0;
+  const markupPricePercentDiff = markupPrice ? `${nFormatter((markupPriceDiff / Number(markupPrice)) * 100)}%` : 0;
 
   const isOwner = user && user === token.owner?.toString();
 
@@ -108,33 +117,75 @@ export const TokenCardModal = ({ data, modalOpen }: Props): JSX.Element | null =
                   <div>{token.collectionName || ellipsisAddress(token.collectionAddress) || 'Collection'}</div>
                 </NextLink>
                 {token.hasBlueCheck && <BlueCheck />}
+                <ShortAddress
+                  className="ml-2"
+                  address={token.collectionAddress ?? ''}
+                  href={`${getChainScannerBase(chainId)}/address/${token.collectionAddress}`}
+                  tooltip={token.collectionAddress ?? ''}
+                />
               </div>
-              <h3 className="font-body text-2xl font-bold mb-2">{token.tokenId}</h3>
-              <ShortAddress
-                label="Collection address:"
-                address={token.collectionAddress ?? ''}
-                href={`${getChainScannerBase(chainId)}/address/${token.collectionAddress}`}
-                tooltip={token.collectionAddress ?? ''}
-              />
-              <ShortAddress
-                className="mt-2"
-                label="Owned by:"
-                address={isOwner ? 'You' : token?.owner?.toString() || ''}
-                textToCopy={token?.owner?.toString() || ''}
-                href={`https://flow.so/profile/${token?.owner?.toString() || ''}`}
-                tooltip={token.owner?.toString() || ''}
-              />
 
-              {token.metadata.description && (
-                <>
-                  <div className="mt-2">
-                    <ReadMoreText text={token.metadata.description ?? ''} min={100} ideal={150} max={300} />
+              <h3 className="font-body text-2xl font-bold mb-2">{token.tokenId}</h3>
+
+              <div className="flex justify-between">
+                {data.collectionCreator && (
+                  <div>
+                    <div className={twMerge('text-xs font-medium mb-1', secondaryTextColor)}>Creator</div>
+                    <div>
+                      <ShortAddress
+                        address={isOwner ? 'You' : data.collectionCreator || ''}
+                        textToCopy={data.collectionCreator || ''}
+                        href={`https://flow.so/profile/${data.collectionCreator || ''}`}
+                        tooltip={data.collectionCreator || ''}
+                      />
+                    </div>
                   </div>
-                </>
-              )}
+                )}
+
+                {token?.owner && (
+                  <div>
+                    <div className={twMerge('text-xs font-medium mb-1', secondaryTextColor)}>Owner</div>
+                    <div>
+                      <ShortAddress
+                        address={isOwner ? 'You' : token?.owner?.toString() || ''}
+                        textToCopy={token?.owner?.toString() || ''}
+                        href={`https://flow.so/profile/${token?.owner?.toString() || ''}`}
+                        tooltip={token.owner?.toString() || ''}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {data.mintPriceEth && (
+                  <div>
+                    <div className={twMerge('text-xs font-medium mb-1', secondaryTextColor)}>Mint Price</div>
+                    <div>
+                      {data.mintPriceEth} {EthSymbol}
+                    </div>
+                  </div>
+                )}
+
+                {data.lastSalePriceEth && (
+                  <div>
+                    <div className={twMerge('text-xs font-medium mb-1', secondaryTextColor)}>Last Price</div>
+                    <div>
+                      {data.lastSalePriceEth} {EthSymbol}
+                    </div>
+                  </div>
+                )}
+
+                {data.collectionFloorPrice && (
+                  <div>
+                    <div className={twMerge('text-xs font-medium mb-1', secondaryTextColor)}>Collection Floor</div>
+                    <div>
+                      {data.collectionFloorPrice} {EthSymbol}
+                    </div>
+                  </div>
+                )}
+              </div>
 
               {(listingPrice || offerPrice) && (
-                <div className={twMerge(secondaryBgColor, borderColor, 'rounded-xl p-6 border')}>
+                <div className={twMerge(secondaryBgColor, borderColor, 'rounded-xl p-8 border')}>
                   <div className="flex flex-row">
                     <div className="space-y-1">
                       <div className="text-lg font-medium">
@@ -191,24 +242,27 @@ export const TokenCardModal = ({ data, modalOpen }: Props): JSX.Element | null =
                     </div>
 
                     <div className="space-y-1">
+                      <div className={twMerge('text-xs font-medium ml-[-1px]', secondaryTextColor)}>Markup</div>
+                      <div>{markupPricePercentDiff ?? '-'}</div>
+                    </div>
+
+                    <div className="space-y-1">
                       <div className={twMerge('text-xs font-medium ml-[-1px]', secondaryTextColor)}>
                         Floor difference
                       </div>
-                      <div>{percentDiff ?? '-'}</div>
+                      <div>{floorPricePercentDiff ?? '-'}</div>
                     </div>
 
-                    {listingPrice && (
-                      <div className="space-y-1 mr-1.5">
-                        <div className={twMerge('text-xs font-medium ml-[-1px]', secondaryTextColor)}>Top offer</div>
-                        {offerPrice ? (
-                          <div>
-                            {offerPrice} {EthSymbol}
-                          </div>
-                        ) : (
-                          <div>-</div>
-                        )}
-                      </div>
-                    )}
+                    <div className="space-y-1 mr-1.5">
+                      <div className={twMerge('text-xs font-medium ml-[-1px]', secondaryTextColor)}>Top offer</div>
+                      {offerPrice ? (
+                        <div>
+                          {offerPrice} {EthSymbol}
+                        </div>
+                      ) : (
+                        <div>-</div>
+                      )}
+                    </div>
                   </div>
                 </div>
               )}

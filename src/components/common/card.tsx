@@ -9,7 +9,8 @@ import {
   hoverColorBrandText,
   iconButtonStyle,
   selectionBorder,
-  secondaryBtnBgColorText
+  secondaryBtnBgColorText,
+  secondaryTextColor
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { AButton } from '../astra/astra-button';
@@ -22,9 +23,17 @@ interface Props {
   isSelectable: (data: ERC721TokenCartItem) => boolean;
   onClick: (data: ERC721TokenCartItem) => void;
   collectionFloorPrice?: string | number | null | undefined;
+  collectionCreator?: string;
 }
 
-export const GridCard = ({ data, onClick, selected, isSelectable, collectionFloorPrice }: Props): JSX.Element => {
+export const GridCard = ({
+  data,
+  onClick,
+  selected,
+  isSelectable,
+  collectionFloorPrice,
+  collectionCreator
+}: Props): JSX.Element => {
   const [notSelectable, setNotSelectable] = useState(false);
   const [showPlusIcon, setShowPlusIcon] = useState(false);
   const title = data?.title;
@@ -37,8 +46,14 @@ export const GridCard = ({ data, onClick, selected, isSelectable, collectionFloo
     tokenId: data?.tokenId ?? '',
     collectionAddress: data?.address ?? '',
     chainId: data?.chainId ?? '',
-    collectionFloorPrice
+    collectionFloorPrice,
+    lastSalePriceEth: data?.lastSalePriceEth,
+    mintPriceEth: data?.mintPriceEth,
+    collectionCreator
   };
+
+  const lastSalePrice = data?.lastSalePriceEth;
+
   const router = useRouter();
   const isCollectionPage = router.asPath.includes('/collection');
 
@@ -91,7 +106,7 @@ export const GridCard = ({ data, onClick, selected, isSelectable, collectionFloo
           </div>
         </div>
 
-        <div className={twMerge('mt-1 mb-3 px-2')}>
+        <div className={twMerge('mt-1 mb-1 px-2')}>
           {!isCollectionPage && (
             <div
               className="flex items-center space-x-1 cursor-pointer"
@@ -120,14 +135,24 @@ export const GridCard = ({ data, onClick, selected, isSelectable, collectionFloo
             </div>
           </div>
 
-          <div className="flex items-center">
-            {buyNowPrice && (
-              <div className="flex items-center border-[1px] rounded-sm px-1.5 py-0.5 space-x-1 mt-1 text-sm">
-                <div className={twMerge('truncate font-medium text-md', borderColor)}>{buyNowPrice}</div>
-                <div className="text-xs">{EthSymbol}</div>
-              </div>
-            )}
+          <div className="flex mt-1 items-center">
+            <div>
+              {buyNowPrice && (
+                <div className="flex items-center rounded-sm space-x-1">
+                  <div className={twMerge('truncate font-medium', borderColor)}>{buyNowPrice}</div>
+                  <div className="text-xs">{EthSymbol}</div>
+                </div>
+              )}
+
+              {lastSalePrice && (
+                <div className={twMerge('text-[10px] font-medium', secondaryTextColor)}>
+                  Last {lastSalePrice} {EthSymbol}
+                </div>
+              )}
+            </div>
+
             <Spacer />
+
             <AButton
               className={twMerge('rounded-md text-xs', secondaryBtnBgColorText)}
               onClick={() => {

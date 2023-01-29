@@ -1,7 +1,7 @@
 import { BaseToken, ChainId, Erc721Token, OrdersSnippet } from '@infinityxyz/lib-frontend/types/core';
 import { useState } from 'react';
 import { useIsMounted } from 'src/hooks/useIsMounted';
-import { ApiResponse } from 'src/utils';
+import { ApiResponse, nFormatter } from 'src/utils';
 import { fetchCollectionTokens, fetchProfileTokens } from 'src/utils/astra-utils';
 import { CartType } from 'src/utils/context/CartContext';
 import { ERC721TokenCartItem, TokensFilter } from 'src/utils/types';
@@ -105,6 +105,9 @@ export const nftToCardDataWithOrderFields = (item: ApiNftData): ERC721TokenCartI
     item?.zoraImage?.url ||
     '';
 
+  const mintPriceEth = nFormatter(item?.mintPrice);
+  const lastSalePriceEth = nFormatter(item?.lastSalePriceEth);
+
   const result: ERC721TokenCartItem = {
     id: item.chainId + ':' + item.collectionAddress + '_' + item.tokenId,
     name: item.metadata?.name ?? item.metadata?.title,
@@ -124,7 +127,10 @@ export const nftToCardDataWithOrderFields = (item: ApiNftData): ERC721TokenCartI
     orderSnippet: item.ordersSnippet,
     hasBlueCheck: item.hasBlueCheck ?? false,
     attributes: item.metadata?.attributes ?? [],
-    cartType: CartType.None
+    cartType: CartType.None,
+    lastSalePriceEth,
+    lastSaleTimestamp: item.lastSaleTimestamp,
+    mintPriceEth
   };
 
   return result;

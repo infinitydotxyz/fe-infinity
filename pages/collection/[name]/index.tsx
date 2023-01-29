@@ -99,6 +99,8 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     toggleNFTSelection(token);
   };
 
+  const collectionCreator = collection.owner;
+
   const firstAllTimeStats = props.collectionAllTimeStats;
   const currentStats = props.collectionCurrentStats;
 
@@ -284,6 +286,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
               </div>
 
               <TokenGrid
+                collectionCreator={collectionCreator}
                 collectionFloorPrice={floorPrice}
                 listMode={listMode}
                 className={twMerge(
