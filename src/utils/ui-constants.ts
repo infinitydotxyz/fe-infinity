@@ -31,6 +31,7 @@ export const inverseBgColor = 'dark:bg-light-bg bg-dark-bg';
 export const secondaryBgColor = 'dark:bg-dark-card bg-light-card';
 export const brandBorderColor = 'border-brand-primary';
 export const borderColor = 'dark:border-dark-border border-light-border';
+export const divideColor = 'dark:divide-dark-border divide-light-border';
 export const standardCard = `rounded-lg border p-5 my-3 ${borderColor} ${secondaryBgColor}`;
 export const standardBorderCard = `rounded-lg border p-2 my-3 ${borderColor}`;
 export const textColor = 'dark:text-dark-body text-light-body';
