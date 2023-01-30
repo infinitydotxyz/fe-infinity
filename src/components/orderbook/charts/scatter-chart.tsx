@@ -37,7 +37,7 @@ export interface SaleData {
 
 export interface ResponsiveScatterChartProps extends Omit<ScatterChartProps, 'width' | 'height'> {
   selectedTimeBucket: string;
-  fetchData: (timeBucket: HistoricalSalesTimeBucket) => void;
+  setSelectedTimeBucket: (timeBucket: HistoricalSalesTimeBucket) => void;
   graphType: ScatterChartType;
 }
 
@@ -51,14 +51,14 @@ export const ResponsiveScatterChart = ({
   data,
   graphType,
   selectedTimeBucket,
-  fetchData
+  setSelectedTimeBucket
 }: ResponsiveScatterChartProps) => {
   return (
     <ChartBox className="h-full">
       <div className="flex justify-between mb-4">
         <div className={twMerge('ml-5 mt-3 font-medium')}>{graphType}</div>
         <select
-          onChange={(e) => fetchData(e.target.value as HistoricalSalesTimeBucket)}
+          onChange={(e) => setSelectedTimeBucket(e.target.value as HistoricalSalesTimeBucket)}
           className={twMerge('form-select rounded-lg bg-transparent focus:border-none float-right text-sm')}
         >
           {Object.values(HistoricalSalesTimeBucket).map((filter) => (

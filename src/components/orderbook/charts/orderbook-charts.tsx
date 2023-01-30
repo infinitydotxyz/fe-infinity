@@ -1,4 +1,4 @@
-import { ChainId, HistoricalSalesTimeBucket } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId, CollectionHistoricalSale, HistoricalSalesTimeBucket } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { apiGet } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
@@ -16,12 +16,12 @@ export const OrderbookCharts = ({ className = '', collectionAddress }: OrderBook
   const [salesData, setSalesData] = useState<SaleData[]>([]);
   const { chain } = useNetwork();
   const chainId = chain?.id ?? ChainId.Mainnet;
+  const [selectedTimeBucket, setSelectedTimeBucket] = useState(HistoricalSalesTimeBucket.ONE_WEEK);
   // const [ordersData, setOrdersData] = useState<OrderData[]>([]);
   // const [selectedListings, setSelectedListings] = useState<SignedOBOrder[]>([]);
   // const [selectedOffers, setSelectedOffers] = useState<SignedOBOrder[]>([]);
   // const [selectedListingIndex, setSelectedListingIndex] = useState(0);
   // const [selectedOfferIndex, setSelectedOfferIndex] = useState(0);
-  const [selectedTimeBucket, setSelectedTimeBucket] = useState(HistoricalSalesTimeBucket.ONE_WEEK);
   // const [filter] = useState<TokensFilter>({});
   // const { order } = useCollectionOrderFetcher(100, filter, ''); // todo: use real data
 
@@ -63,31 +63,6 @@ export const OrderbookCharts = ({ className = '', collectionAddress }: OrderBook
   // };
 
   const fetchSalesDataForTimeBucket = async (timeBucket: HistoricalSalesTimeBucket) => {
-    // todo use real data
-    const nowTimestamp = Date.now();
-    let prevTimestamp = nowTimestamp;
-    switch (timeBucket) {
-      case HistoricalSalesTimeBucket.ONE_HOUR:
-        prevTimestamp = nowTimestamp - 1000 * 60 * 60;
-        break;
-      case HistoricalSalesTimeBucket.ONE_DAY:
-        prevTimestamp = nowTimestamp - 1000 * 60 * 60 * 24;
-        break;
-      case HistoricalSalesTimeBucket.ONE_WEEK:
-        prevTimestamp = nowTimestamp - 1000 * 60 * 60 * 24 * 7;
-        break;
-      case HistoricalSalesTimeBucket.ONE_MONTH:
-        prevTimestamp = nowTimestamp - 1000 * 60 * 60 * 24 * 30;
-        break;
-      case HistoricalSalesTimeBucket.ONE_YEAR:
-        prevTimestamp = nowTimestamp - 1000 * 60 * 60 * 24 * 365;
-        break;
-      default:
-        break;
-    }
-
-    setSelectedTimeBucket(timeBucket);
-
     const { result, error } = await apiGet(`/collections/${chainId}:${collectionAddress}/sales`, {
       query: {
         period: timeBucket
@@ -99,54 +74,51 @@ export const OrderbookCharts = ({ className = '', collectionAddress }: OrderBook
       return;
     }
 
-    console.log(result.data);
-
     setSalesData(
-      [...new Array(300)].map(
-        () =>
-          ({
-            salePrice: +(Math.random() * (100 - 0.01) + 0.01).toFixed(2),
-            tokenImage:
-              'https://i.seadn.io/gae/8GNiYHlI96za-qLdNuBdhW64Y9fNquLw4V9NojDZt5XZhownn8tHQJTEMfZfqfRzk9GngBxiz6BKsr_VaHFyGk6Lm2Qai6RXgH7bwB4?auto=format&w=750',
-            collectionAddress: '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d',
-            collectionName: 'BAYC',
-            tokenId: Math.ceil(Math.random() * (10000 - 1) + 1).toString(),
-            timestamp: Math.random() * (nowTimestamp - prevTimestamp) + prevTimestamp
-          } as SaleData)
-      )
+      result.map((sale: CollectionHistoricalSale) => {
+        return {
+          salePrice: sale.salePriceEth,
+          tokenImage: sale.tokenImage,
+          collectionAddress,
+          tokenId: sale.tokenId,
+          timestamp: sale.timestamp
+        };
+      })
     );
   };
 
   useEffect(() => {
     fetchSalesDataForTimeBucket(selectedTimeBucket);
+  }, [selectedTimeBucket]);
 
-    // setOrdersData(
-    //   [...new Array(300)].map(
-    //     () =>
-    //       ({
-    //         order: {
-    //           isSellOrder: Math.random() > 0.5,
-    //           startPriceEth: +(Math.random() * (100 - 0.01) + 0.01).toFixed(2),
-    //           nfts: [
-    //             {
-    //               collectionAddress: '0x123',
-    //               collectionName: 'Test Collection ' + Math.floor(Math.random() * 100),
-    //               collectionImage:
-    //                 'https://i.seadn.io/gae/8GNiYHlI96za-qLdNuBdhW64Y9fNquLw4V9NojDZt5XZhownn8tHQJTEMfZfqfRzk9GngBxiz6BKsr_VaHFyGk6Lm2Qai6RXgH7bwB4?auto=format&w=750',
-    //               tokens: [
-    //                 {
-    //                   tokenId: Math.floor(Math.random() * 10000).toString(),
-    //                   tokenImage:
-    //                     'https://i.seadn.io/gae/8GNiYHlI96za-qLdNuBdhW64Y9fNquLw4V9NojDZt5XZhownn8tHQJTEMfZfqfRzk9GngBxiz6BKsr_VaHFyGk6Lm2Qai6RXgH7bwB4?auto=format&w=750'
-    //                 }
-    //               ]
-    //             }
-    //           ]
-    //         }
-    //       } as OrderData)
-    //   )
-    // );
-  });
+  // useEffect(() => {
+  //   setOrdersData(
+  //     [...new Array(300)].map(
+  //       () =>
+  //         ({
+  //           order: {
+  //             isSellOrder: Math.random() > 0.5,
+  //             startPriceEth: +(Math.random() * (100 - 0.01) + 0.01).toFixed(2),
+  //             nfts: [
+  //               {
+  //                 collectionAddress: '0x123',
+  //                 collectionName: 'Test Collection ' + Math.floor(Math.random() * 100),
+  //                 collectionImage:
+  //                   'https://i.seadn.io/gae/8GNiYHlI96za-qLdNuBdhW64Y9fNquLw4V9NojDZt5XZhownn8tHQJTEMfZfqfRzk9GngBxiz6BKsr_VaHFyGk6Lm2Qai6RXgH7bwB4?auto=format&w=750',
+  //                 tokens: [
+  //                   {
+  //                     tokenId: Math.floor(Math.random() * 10000).toString(),
+  //                     tokenImage:
+  //                       'https://i.seadn.io/gae/8GNiYHlI96za-qLdNuBdhW64Y9fNquLw4V9NojDZt5XZhownn8tHQJTEMfZfqfRzk9GngBxiz6BKsr_VaHFyGk6Lm2Qai6RXgH7bwB4?auto=format&w=750'
+  //                   }
+  //                 ]
+  //               }
+  //             ]
+  //           }
+  //         } as OrderData)
+  //     )
+  //   );
+  // });
 
   return (
     <div className={twMerge('w-full h-full relative flex flex-col p-2', className)}>
@@ -156,9 +128,9 @@ export const OrderbookCharts = ({ className = '', collectionAddress }: OrderBook
             <ResponsiveScatterChart
               key={selectedTimeBucket}
               selectedTimeBucket={selectedTimeBucket}
+              setSelectedTimeBucket={setSelectedTimeBucket}
               graphType={ScatterChartType.Sales}
               data={salesData}
-              fetchData={fetchSalesDataForTimeBucket}
             />
           )}
 
