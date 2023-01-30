@@ -343,10 +343,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     }
   });
 
-  // todo: this seems to be returning null
-  const collCurrentStatsPromise = apiGet(`/collections/${id}/stats/current`, {
-    query: { chainId }
-  });
+  // todo: this seems to be returning null so commenting out for now
+  // const collCurrentStatsPromise = apiGet(`/collections/${id}/stats/current`, {
+  //   query: { chainId }
+  // });
 
   const attributesPromise = apiGet(`/collections/${id}/attributes`, {
     query: {
@@ -354,22 +354,20 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     }
   });
 
-  const [
-    collBaseData,
-    { result: allTimeStatsResult },
-    { result: currentStatsResult },
-    { result: collectionAttributes }
-  ] = await Promise.all([collBaseDataPromise, collAllTimeStatsPromise, collCurrentStatsPromise, attributesPromise]);
+  const [collBaseData, { result: allTimeStatsResult }, { result: collectionAttributes }] = await Promise.all([
+    collBaseDataPromise,
+    collAllTimeStatsPromise,
+    attributesPromise
+  ]);
 
   const allTimeStats = allTimeStatsResult?.data;
   const firstAllTimeStats = allTimeStats?.[0]; // first item = latest daily stats
-  const currentStats = currentStatsResult?.data;
 
   return {
     props: {
       collection: collBaseData.result ?? null,
       collectionAllTimeStats: firstAllTimeStats ?? null,
-      collectionCurrentStats: currentStats ?? null,
+      collectionCurrentStats: null, // todo: this seems to be returning null clean up later
       collectionAttributes: collectionAttributes ?? null,
       error: collBaseData.error ?? null
     }
