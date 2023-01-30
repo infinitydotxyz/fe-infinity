@@ -1,10 +1,4 @@
-import {
-  BaseCollection,
-  ChainId,
-  CollectionAttributes,
-  CollectionStats,
-  EventType
-} from '@infinityxyz/lib-frontend/types/core';
+import { BaseCollection, ChainId, CollectionAttributes, CollectionStats } from '@infinityxyz/lib-frontend/types/core';
 import { CollectionStatsDto } from '@infinityxyz/lib-frontend/types/dto';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
@@ -19,9 +13,6 @@ import { AStatusFilterButton } from 'src/components/astra/astra-status-button';
 import { ATraitFilter } from 'src/components/astra/astra-trait-filter';
 import { TokenGrid } from 'src/components/astra/token-grid/token-grid';
 import { CollectionPageHeader, CollectionPageHeaderProps } from 'src/components/collection/collection-page-header';
-import { CollectionSocialFeed } from 'src/components/collection/collection-social-feed';
-import { TopHolderList } from 'src/components/collection/collection-top-holders';
-import { TwitterSupporterList } from 'src/components/collection/collection-top-twitter-supporters';
 import { Spacer, TextInputBox } from 'src/components/common';
 import { CollectionNftSearchInput } from 'src/components/common/search/collection-nft-search-input';
 import { OrderbookCharts } from 'src/components/orderbook/charts/orderbook-charts';
@@ -62,7 +53,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   const [filter, setFilter] = useState<TokensFilter>({});
   const { data, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection.address, filter);
   const { setRef, scrollTop } = useScrollInfo();
-  const tabs = ['Items', 'Orders'];
+  const tabs = ['Items', 'Analytics'];
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
   const { cartType, setCartType } = useCartContext();
   const [numSweep, setNumSweep] = useState('');
@@ -305,8 +296,8 @@ export default function ItemsPage(props: CollectionDashboardProps) {
             </div>
           )}
 
-          {selectedTab === 'Orders' && <OrderbookCharts />}
-          {selectedTab === 'Analytics' && (
+          {selectedTab === 'Analytics' && <OrderbookCharts collectionAddress={collection.address} />}
+          {/* {selectedTab === 'Analytics' && (
             <div className="flex justify-center px-4 mt-5 space-x-4">
               <div className="flex space-x-4">
                 <div className="w-1/2">{collection && <TopHolderList collection={collection}></TopHolderList>}</div>
@@ -327,7 +318,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                 )}
               </div>
             </div>
-          )}
+          )} */}
         </div>
       </div>
     </div>
@@ -351,6 +342,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       period: 'all'
     }
   });
+
+  // todo: this seems to be returning null
   const collCurrentStatsPromise = apiGet(`/collections/${id}/stats/current`, {
     query: { chainId }
   });

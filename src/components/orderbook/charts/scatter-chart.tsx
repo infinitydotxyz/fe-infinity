@@ -1,3 +1,4 @@
+import { HistoricalSalesTimeBucket } from '@infinityxyz/lib-frontend/types/core';
 import { AxisBottom, AxisLeft } from '@visx/axis';
 import { localPoint } from '@visx/event';
 import { GridRows } from '@visx/grid';
@@ -25,14 +26,6 @@ export enum ScatterChartType {
   Sales = 'Sales'
 }
 
-export enum TimeBuckets {
-  ONE_HOUR = '1h',
-  ONE_DAY = '1d',
-  ONE_WEEK = '7d',
-  ONE_MONTH = '30d',
-  ONE_YEAR = '1y'
-}
-
 export interface SaleData {
   timestamp: number;
   collectionAddress: string;
@@ -44,7 +37,7 @@ export interface SaleData {
 
 export interface ResponsiveScatterChartProps extends Omit<ScatterChartProps, 'width' | 'height'> {
   selectedTimeBucket: string;
-  fetchData: (timeBucket: string) => void;
+  fetchData: (timeBucket: HistoricalSalesTimeBucket) => void;
   graphType: ScatterChartType;
 }
 
@@ -65,10 +58,10 @@ export const ResponsiveScatterChart = ({
       <div className="flex justify-between mb-4">
         <div className={twMerge('ml-5 mt-3 font-medium')}>{graphType}</div>
         <select
-          onChange={(e) => fetchData(e.target.value)}
+          onChange={(e) => fetchData(e.target.value as HistoricalSalesTimeBucket)}
           className={twMerge('form-select rounded-lg bg-transparent focus:border-none float-right text-sm')}
         >
-          {Object.values(TimeBuckets).map((filter) => (
+          {Object.values(HistoricalSalesTimeBucket).map((filter) => (
             <option value={filter} selected={filter === selectedTimeBucket}>
               {filter}
             </option>
