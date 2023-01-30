@@ -26,7 +26,7 @@ export enum ScatterChartType {
   Sales = 'Sales'
 }
 
-export interface SaleData {
+export interface SalesChartData {
   timestamp: number;
   collectionAddress: string;
   collectionName: string;
@@ -44,7 +44,7 @@ export interface ResponsiveScatterChartProps extends Omit<ScatterChartProps, 'wi
 interface ScatterChartProps {
   width: number;
   height: number;
-  data: SaleData[];
+  data: SalesChartData[];
 }
 
 export const ResponsiveScatterChart = ({
@@ -76,7 +76,7 @@ export const ResponsiveScatterChart = ({
 };
 
 function ScatterChart({ width, height, data }: ScatterChartProps) {
-  const [selectedSale, setSelectedSale] = useState<SaleData>();
+  const [selectedSale, setSelectedSale] = useState<SalesChartData>();
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -94,7 +94,7 @@ function ScatterChart({ width, height, data }: ScatterChartProps) {
     tooltipData,
     tooltipLeft = 0,
     tooltipTop = 0
-  } = useTooltip<SaleData>({
+  } = useTooltip<SalesChartData>({
     tooltipOpen: false,
     tooltipLeft: 0,
     tooltipTop: 0,
@@ -113,8 +113,8 @@ function ScatterChart({ width, height, data }: ScatterChartProps) {
     height
   });
 
-  const yAccessor = (d: SaleData) => d.salePrice;
-  const xAccessor = (d: SaleData) => new Date(d.timestamp);
+  const yAccessor = (d: SalesChartData) => d.salePrice;
+  const xAccessor = (d: SalesChartData) => new Date(d.timestamp);
 
   const xScale = useMemo(
     () =>
@@ -137,7 +137,7 @@ function ScatterChart({ width, height, data }: ScatterChartProps) {
   );
 
   const voronoiLayout = useMemo(() => {
-    return voronoi<SaleData>({
+    return voronoi<SalesChartData>({
       x: (d) => xScale(xAccessor(d)),
       y: (d) => yScale(yAccessor(d)),
       width: boundedWidth,
@@ -277,7 +277,7 @@ function ScatterChart({ width, height, data }: ScatterChartProps) {
 interface Props2 {
   left: number;
   top: number;
-  data?: SaleData;
+  data?: SalesChartData;
   isTooltipOpen: boolean;
 }
 

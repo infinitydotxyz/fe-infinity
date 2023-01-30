@@ -8,7 +8,7 @@ import { clamp } from './chart-utils';
 import { ChartBox } from './chart-box';
 import { NextPrevArrows } from './next-prev-arrows';
 import { secondaryBgColor, secondaryTextColor } from 'src/utils/ui-constants';
-import { SaleData } from './scatter-chart';
+import { SalesChartData } from './scatter-chart';
 
 interface Props {
   orders: SignedOBOrder[];
@@ -58,7 +58,7 @@ export const OrdersChartDetails = ({ orders, index, setIndex, valueClassName = '
 };
 
 interface Props2 {
-  data?: SaleData;
+  data?: SalesChartData;
 }
 
 export const SalesChartDetails = ({ data }: Props2) => {

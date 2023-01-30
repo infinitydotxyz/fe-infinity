@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { apiGet } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
 import { useNetwork } from 'wagmi';
-import { ResponsiveScatterChart, SaleData, ScatterChartType } from './scatter-chart';
+import { ResponsiveScatterChart, SalesChartData, ScatterChartType } from './scatter-chart';
 
 // const infoBoxStyle = 'flex items-center justify-center opacity-60 font-bold text-lg h-full';
 
@@ -13,7 +13,7 @@ export type OrderBookChartProps = {
 };
 
 export const OrderbookCharts = ({ className = '', collectionAddress }: OrderBookChartProps) => {
-  const [salesData, setSalesData] = useState<SaleData[]>([]);
+  const [salesData, setSalesData] = useState<SalesChartData[]>([]);
   const { chain } = useNetwork();
   const chainId = chain?.id ?? ChainId.Mainnet;
   const [selectedTimeBucket, setSelectedTimeBucket] = useState(HistoricalSalesTimeBucket.ONE_WEEK);
