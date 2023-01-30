@@ -197,7 +197,7 @@ function ScatterChart({ width, height, data }: ScatterChartProps) {
     () =>
       data.map((d) => (
         <Circle
-          key={d.timestamp}
+          key={`${d.timestamp}:${d.tokenId}`}
           fill={tailwindConfig.colors.brand.primaryFade}
           cx={xScale(xAccessor(d))}
           cy={yScale(yAccessor(d))}
