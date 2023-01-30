@@ -13,7 +13,7 @@ export type OrderBookChartProps = {
 };
 
 export const OrderbookCharts = ({ className = '', collectionAddress }: OrderBookChartProps) => {
-  const [salesData, setSalesData] = useState<SalesChartData[]>([]);
+  const [salesChartData, setSalesChartData] = useState<SalesChartData[]>([]);
   const { chain } = useNetwork();
   const chainId = chain?.id ?? ChainId.Mainnet;
   const [selectedTimeBucket, setSelectedTimeBucket] = useState(HistoricalSalesTimeBucket.ONE_WEEK);
@@ -74,7 +74,7 @@ export const OrderbookCharts = ({ className = '', collectionAddress }: OrderBook
       return;
     }
 
-    setSalesData(
+    setSalesChartData(
       result.map((sale: CollectionHistoricalSale) => {
         return {
           salePrice: sale.salePriceEth,
@@ -124,13 +124,13 @@ export const OrderbookCharts = ({ className = '', collectionAddress }: OrderBook
     <div className={twMerge('w-full h-full relative flex flex-col p-2', className)}>
       <div className="flex">
         <div className="w-full p-2">
-          {salesData.length > 0 && (
+          {salesChartData.length > 0 && (
             <ResponsiveScatterChart
               key={selectedTimeBucket}
               selectedTimeBucket={selectedTimeBucket}
               setSelectedTimeBucket={setSelectedTimeBucket}
               graphType={ScatterChartType.Sales}
-              data={salesData}
+              data={salesChartData}
             />
           )}
 
