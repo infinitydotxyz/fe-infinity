@@ -1,7 +1,6 @@
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { ChainId, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { toastSuccess } from 'src/components/common';
-import { apiPost, apiPut } from 'src/utils/api-utils';
+import { apiPost } from 'src/utils/api-utils';
 import { apiGet } from '.';
 
 export const postOrders = async (user: string, orders: SignedOBOrder[]): Promise<string> => {
@@ -106,27 +105,4 @@ export const fetchUserSignedOBOrder = async (orderId: string | undefined) => {
     return order;
   }
   return null;
-};
-
-// =====================================================
-
-export const indexCollection = async (
-  reset: boolean,
-  chainId: string,
-  collectionAddress: string,
-  collectionSlug: string
-) => {
-  let id = `${chainId}:${collectionAddress}`;
-  if (!id) {
-    id = collectionSlug;
-  }
-  const body = {
-    reset
-  };
-  const { error } = await apiPut(`/collections/${id}/enqueue`, { data: body });
-  if (error) {
-    console.error(error);
-  } else {
-    toastSuccess('Collection queued for indexing');
-  }
 };
