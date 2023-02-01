@@ -1,6 +1,6 @@
 import { BaseCollection, ChainId } from '@infinityxyz/lib-frontend/types/core';
 import { useState } from 'react';
-import { FaCaretDown, FaCaretUp, FaDiscord, FaInstagram, FaTwitter } from 'react-icons/fa';
+import { FaDiscord, FaInstagram, FaTwitter } from 'react-icons/fa';
 import { HiOutlineExternalLink } from 'react-icons/hi';
 import { BlueCheck, ClipboardButton, EthSymbol, EZImage, ReadMoreText, Spacer } from 'src/components/common';
 import etherscanLogo from 'src/images/etherscan-logo.png';
@@ -31,9 +31,7 @@ export interface CollectionPageHeaderProps {
   floorPrice: string | number | null | undefined;
   numOwners: string | number | null | undefined;
   numNfts: string | number | null | undefined;
-  twitterFollowersPercentChange: string | number | null | undefined;
   twitterFollowers: string | number | null | undefined;
-  discordFollowersPercentChange: string | number | null | undefined;
   discordFollowers: string | number | null | undefined;
   tabs: string[];
   onTabChange: (tab: string) => void;
@@ -50,19 +48,13 @@ export const CollectionPageHeader = ({
   floorPrice,
   numOwners,
   numNfts,
-  twitterFollowersPercentChange,
   twitterFollowers,
-  discordFollowersPercentChange,
   discordFollowers,
   tabs,
   onTabChange
 }: CollectionPageHeaderProps) => {
   const { chain } = useNetwork();
   const chainId = String(chain?.id ?? 1) as ChainId;
-
-  const twitterChangePct = `${Math.abs(Number(twitterFollowersPercentChange ?? 0))}`.slice(0, 5);
-  const discordChangePct = `${Math.abs(Number(discordFollowersPercentChange ?? 0))}`.slice(0, 5);
-
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
 
   return (
@@ -122,21 +114,6 @@ export const CollectionPageHeader = ({
                       <FaTwitter className="text-brand-twitter" />
                     </div>
                     {twitterFollowers ?? ''}
-                    {twitterFollowersPercentChange && parseFloat(twitterChangePct) ? (
-                      <>
-                        {(twitterFollowersPercentChange ?? 0) < 0 ? (
-                          <span className="ml-2 py-1 px-2 rounded-lg bg-red-500 text-dark-body dark:bg-red-500 dark:text-dark-body text-xs flex items-center">
-                            <FaCaretDown className="mr-1" /> {twitterChangePct}%
-                          </span>
-                        ) : (
-                          <span className="ml-2 py-1 px-2 rounded-lg bg-green-500 text-dark-body dark:bg-green-500 dark:text-dark-body text-xs flex items-center">
-                            <FaCaretUp className="mr-1" /> {twitterChangePct}%
-                          </span>
-                        )}
-                      </>
-                    ) : (
-                      ''
-                    )}
                   </span>
                 </AOutlineButton>
               )}
@@ -151,21 +128,6 @@ export const CollectionPageHeader = ({
                       <FaDiscord className="text-brand-discord" />
                     </div>
                     {discordFollowers ?? ''}
-                    {discordFollowersPercentChange && parseFloat(discordChangePct) ? (
-                      <>
-                        {(discordFollowersPercentChange ?? 0) < 0 ? (
-                          <span className="ml-2 py-1 px-2 rounded-lg bg-red-500 text-dark-body dark:bg-red-500 dark:text-dark-body text-xs flex items-center">
-                            <FaCaretDown className="mr-1" /> {discordChangePct}%
-                          </span>
-                        ) : (
-                          <span className="ml-2 py-1 px-2 rounded-lg bg-green-500 text-dark-body dark:bg-green-500 dark:text-dark-body text-xs flex items-center">
-                            <FaCaretUp className="mr-1" /> {discordChangePct}%
-                          </span>
-                        )}
-                      </>
-                    ) : (
-                      ''
-                    )}
                   </span>
                 </AOutlineButton>
               )}

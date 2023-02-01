@@ -1,5 +1,4 @@
 import { BaseCollection, ChainId, CollectionAttributes, CollectionStats } from '@infinityxyz/lib-frontend/types/core';
-import { CollectionStatsDto } from '@infinityxyz/lib-frontend/types/dto';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import NotFound404Page from 'pages/not-found-404';
@@ -28,7 +27,6 @@ import { twMerge } from 'tailwind-merge';
 interface CollectionDashboardProps {
   collection: BaseCollection;
   collectionAllTimeStats?: CollectionStats;
-  collectionCurrentStats?: CollectionStatsDto;
   collectionAttributes?: CollectionAttributes;
   error?: Error;
 }
@@ -93,25 +91,20 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   const collectionCreator = collection.owner;
 
   const firstAllTimeStats = props.collectionAllTimeStats;
-  const currentStats = props.collectionCurrentStats;
 
-  const twitterFollowersPercentChange =
-    firstAllTimeStats?.twitterFollowersPercentChange ?? currentStats?.twitterFollowersPercentChange;
-  const twitterFollowers = nFormatter(firstAllTimeStats?.twitterFollowers ?? currentStats?.twitterFollowers);
-  const discordFollowersPercentChange =
-    firstAllTimeStats?.discordFollowersPercentChange ?? currentStats?.discordFollowersPercentChange;
-  const discordFollowers = nFormatter(firstAllTimeStats?.discordFollowers ?? currentStats?.discordFollowers);
+  const twitterFollowers = nFormatter(firstAllTimeStats?.twitterFollowers);
+  const discordFollowers = nFormatter(firstAllTimeStats?.discordFollowers);
 
-  const totalVol = nFormatter(firstAllTimeStats?.volume ? firstAllTimeStats.volume : currentStats?.volume);
+  const totalVol = nFormatter(firstAllTimeStats?.volume ? firstAllTimeStats.volume : 0);
   const floorPrice = nFormatter(
     data[0]?.orderSnippet?.listing?.orderItem?.startPriceEth
       ? data[0]?.orderSnippet?.listing?.orderItem?.startPriceEth
       : firstAllTimeStats?.floorPrice
       ? firstAllTimeStats.floorPrice
-      : currentStats?.floorPrice
+      : 0
   );
-  const numOwners = nFormatter(firstAllTimeStats?.numOwners ? firstAllTimeStats.numOwners : currentStats?.numOwners);
-  const numNfts = nFormatter(firstAllTimeStats?.numNfts ? firstAllTimeStats.numNfts : currentStats?.numNfts);
+  const numOwners = nFormatter(firstAllTimeStats?.numOwners ? firstAllTimeStats.numOwners : 0);
+  const numNfts = nFormatter(firstAllTimeStats?.numNfts ? firstAllTimeStats.numNfts : 0);
 
   const headerProps: CollectionPageHeaderProps = {
     expanded: scrollTop < 100,
@@ -125,9 +118,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     floorPrice,
     numOwners,
     numNfts,
-    twitterFollowersPercentChange,
     twitterFollowers,
-    discordFollowersPercentChange,
     discordFollowers,
     tabs,
     onTabChange
@@ -343,11 +334,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     }
   });
 
-  // todo: this seems to be returning null so commenting out for now
-  // const collCurrentStatsPromise = apiGet(`/collections/${id}/stats/current`, {
-  //   query: { chainId }
-  // });
-
   const attributesPromise = apiGet(`/collections/${id}/attributes`, {
     query: {
       chainId: '1'
@@ -367,7 +353,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     props: {
       collection: collBaseData.result ?? null,
       collectionAllTimeStats: firstAllTimeStats ?? null,
-      collectionCurrentStats: null, // todo: this seems to be returning null clean up later
       collectionAttributes: collectionAttributes ?? null,
       error: collBaseData.error ?? null
     }
