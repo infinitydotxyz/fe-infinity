@@ -155,7 +155,8 @@ export const GridCard = ({
 
             <AButton
               className={twMerge('rounded-md text-xs', secondaryBtnBgColorText)}
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 const { pathname, query } = router;
                 query['tokenId'] = basicTokenInfo.tokenId;
                 query['collectionAddress'] = basicTokenInfo.collectionAddress;
