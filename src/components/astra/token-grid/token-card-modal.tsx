@@ -96,6 +96,29 @@ export const TokenCardModal = ({ data, modalOpen }: Props): JSX.Element | null =
     router.replace({ pathname, query }, undefined, { shallow: true });
   };
 
+  const addToCartBtn = () => {
+    return (
+      <AButton
+        className="w-52 p-4"
+        primary
+        onClick={() => {
+          const newCartType = isOwner ? CartType.TokenList : CartType.TokenOffer;
+          const cartToken = nftToCardDataWithOrderFields(token as Erc721Token);
+          cartToken.cartType = newCartType;
+          if (isNFTSelectable(cartToken)) {
+            setCartType(newCartType);
+            setAddedToCart(!addedToCart);
+            toggleNFTSelection(cartToken);
+          }
+        }}
+      >
+        {listingPrice && !isOwner && <span>{addedToCart ? 'Remove from Cart' : 'Add to Cart'}</span>}
+        {listingPrice && isOwner && <span>{addedToCart ? 'Remove from Cart' : 'Edit in Cart'}</span>}
+        {offerPrice && isOwner && <span>{addedToCart ? 'Added to Cart' : 'Sell Now'}</span>}
+      </AButton>
+    );
+  };
+
   return (
     <Modal
       isOpen={modalOpen}
@@ -184,6 +207,8 @@ export const TokenCardModal = ({ data, modalOpen }: Props): JSX.Element | null =
                 )}
               </div>
 
+              {!(listingPrice || offerPrice) && addToCartBtn()}
+
               {(listingPrice || offerPrice) && (
                 <div className={twMerge(secondaryBgColor, borderColor, 'rounded-xl p-8 border')}>
                   <div className="flex flex-row">
@@ -206,27 +231,8 @@ export const TokenCardModal = ({ data, modalOpen }: Props): JSX.Element | null =
                         {!listingExpiry && offerExpiry && <span>Expires {offerExpiryStr}</span>}
                       </div>
                     </div>
-
                     <Spacer />
-
-                    <AButton
-                      className="w-52"
-                      primary
-                      onClick={() => {
-                        const newCartType = isOwner ? CartType.TokenList : CartType.TokenOffer;
-                        const cartToken = nftToCardDataWithOrderFields(token as Erc721Token);
-                        cartToken.cartType = newCartType;
-                        if (isNFTSelectable(cartToken)) {
-                          setCartType(newCartType);
-                          setAddedToCart(!addedToCart);
-                          toggleNFTSelection(cartToken);
-                        }
-                      }}
-                    >
-                      {listingPrice && !isOwner && <span>{addedToCart ? 'Remove from Cart' : 'Add to Cart'}</span>}
-                      {listingPrice && isOwner && <span>{addedToCart ? 'Remove from Cart' : 'Edit in Cart'}</span>}
-                      {offerPrice && isOwner && <span>{addedToCart ? 'Added to Cart' : 'Sell Now'}</span>}
-                    </AButton>
+                    {addToCartBtn()}
                   </div>
 
                   <div className="flex flex-row items-center justify-between mt-[26px]">
