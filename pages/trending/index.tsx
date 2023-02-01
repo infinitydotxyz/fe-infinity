@@ -131,6 +131,9 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
     periodStat = collection?.stats?.monthly;
   }
   const floorPrice = periodStat?.floorPrice ?? 0;
+  const numOwners = collection?.numOwners && nFormatter(collection.numOwners);
+  const floorPriceChange = Number(nFormatter(periodStat?.floorPriceChange));
+  const salesVolumeChange = Number(nFormatter(periodStat?.salesVolumeChange));
 
   return (
     <div className={twMerge(borderColor, 'border-b py-4 flex items-center')}>
@@ -151,45 +154,34 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
           </NextLink>
         </div>
 
-        {isDesktop ? (
-          <>
-            <div className="">
-              <div className="text-sm font-bold flex items-center">Sales</div>
-              <div>{formatNumber(periodStat?.numSales)}</div>
-            </div>
-          </>
-        ) : null}
-
-        <div className="">
+        <div className="space-y-1">
           <div className="text-sm font-bold flex items-center">Volume</div>
-          <div>
+          <div className="flex items-center">
             <EthPrice label={`${periodStat?.salesVolume ? nFormatter(periodStat?.salesVolume) : '-'}`} />
+            <div className={twMerge('ml-1 text-xs', salesVolumeChange >= 0 ? 'text-green-600' : 'text-red-600')}>
+              {salesVolumeChange} %
+            </div>
           </div>
         </div>
 
-        <div className="">
-          <div className="text-sm font-bold flex items-center">Floor Price</div>
-          <div>
-            <EthPrice
-              label={
-                floorPrice > 0
-                  ? formatNumber(floorPrice, 2)
-                  : periodStat?.minPrice
-                  ? formatNumber(periodStat?.minPrice, 2)
-                  : '-'
-              }
-            />
+        <div className="space-y-1">
+          <div className="text-sm font-bold flex items-center">Floor</div>
+          <div className="flex items-center">
+            <EthPrice label={floorPrice > 0 ? formatNumber(floorPrice, 2) : '-'} />
+            <div className={twMerge('ml-1 text-xs', floorPriceChange >= 0 ? 'text-green-600' : 'text-red-600')}>
+              {floorPriceChange} %
+            </div>
           </div>
         </div>
 
         {isDesktop ? (
           <>
-            <div className="">
+            <div className="space-y-1">
               <div className="text-sm font-bold ">Owners</div>
-              <div>{nFormatter(periodStat?.ownerCount ?? 0)}</div>
+              <div>{numOwners ? numOwners : '-'}</div>
             </div>
 
-            <div className="">
+            <div className="space-y-1">
               <div className=" text-sm font-bold ">Tokens</div>
               <div>{nFormatter(periodStat?.tokenCount ?? 0)}</div>
             </div>
