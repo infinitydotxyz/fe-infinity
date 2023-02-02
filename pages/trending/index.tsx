@@ -159,23 +159,25 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
         </div>
 
         <div className="space-y-1">
-          <div className="text-sm font-bold flex items-center">Volume</div>
-          <div className="flex items-center">
-            <EthPrice label={`${periodStat?.salesVolume ? nFormatter(periodStat?.salesVolume) : '-'}`} />
-            <div className={twMerge('ml-2 text-xs', salesVolumeChange >= 0 ? 'text-green-600' : 'text-red-600')}>
-              {salesVolumeChange} %
-            </div>
+          <div className="text-sm font-bold flex items-center">Vol</div>
+          <EthPrice label={`${periodStat?.salesVolume ? nFormatter(periodStat?.salesVolume) : '-'}`} />
+        </div>
+
+        <div className="space-y-1">
+          <div className="text-sm font-bold flex items-center">Vol Change</div>
+          <div className={twMerge('ml-2 text-xs', salesVolumeChange >= 0 ? 'text-green-600' : 'text-red-600')}>
+            {salesVolumeChange} %
           </div>
         </div>
 
         <div className="space-y-1">
           <div className="text-sm font-bold flex items-center">Floor</div>
-          <div className="flex items-center">
-            <EthPrice label={floorPrice > 0 ? formatNumber(floorPrice, 2) : '-'} />
-            <div className={twMerge('ml-2 text-xs', floorPriceChange >= 0 ? 'text-green-600' : 'text-red-600')}>
-              {floorPriceChange} %
-            </div>
-          </div>
+          <EthPrice label={floorPrice > 0 ? formatNumber(floorPrice, 2) : '-'} />
+        </div>
+
+        <div className="space-y-1 text-sm">
+          <div className="font-bold flex items-center">Floor Change</div>
+          <div className={twMerge(floorPriceChange >= 0 ? 'text-green-600' : 'text-red-600')}>{floorPriceChange} %</div>
         </div>
 
         {isDesktop ? (
