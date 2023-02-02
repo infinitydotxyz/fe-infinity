@@ -138,7 +138,7 @@ export const GridCard = ({
           <div className="flex mt-1 items-center">
             <div>
               {buyNowPrice && (
-                <div className="flex items-center rounded-sm space-x-1">
+                <div className="flex items-center rounded-sm space-x-1 text-sm">
                   <div className={twMerge('truncate font-medium', borderColor)}>{buyNowPrice}</div>
                   <div className="text-xs">{EthSymbol}</div>
                 </div>

@@ -1,12 +1,13 @@
 import { getAddress } from '@ethersproject/address';
 import { ChainId } from '@infinityxyz/lib-frontend/types/core';
+import { ETHEREUM_WETH_ADDRESS } from '@infinityxyz/lib-frontend/utils';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect, useState } from 'react';
 import { FiEdit3 } from 'react-icons/fi';
 import { MdClose } from 'react-icons/md';
 import { AButton } from 'src/components/astra/astra-button';
 import { EthSymbol, EZImage, Spacer, TextInputBox } from 'src/components/common';
-import { getCartType, getCollectionKeyId, getDefaultOrderExpiryTime, getTokenCartItemKey } from 'src/utils';
+import { getCartType, getCollectionKeyId, getDefaultOrderExpiryTime, getTokenCartItemKey, nFormatter } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartItem, CartType, useCartContext } from 'src/utils/context/CartContext';
 import { ERC721CollectionCartItem, ERC721OrderCartItem, ERC721TokenCartItem, ORDER_EXPIRY_TIME } from 'src/utils/types';
@@ -22,7 +23,7 @@ import {
   textColor
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { useAccount, useNetwork, useProvider } from 'wagmi';
+import { useAccount, useBalance, useNetwork, useProvider } from 'wagmi';
 import { ADropdown } from './astra-dropdown';
 
 interface Props {
@@ -59,6 +60,7 @@ export const AstraCart = ({
 
   const { cartType, setCartType, getCurrentCartItems, cartItems } = useCartContext();
   const [currentCartItems, setCurrentCartItems] = useState<CartItem[]>([]);
+  const [cartTotal, setCartTotal] = useState(0);
 
   const [tokenMap, setTokenMap] = useState<Map<string, ERC721TokenCartItem[]>>(new Map());
   const [collMap, setCollMap] = useState<Map<string, ERC721CollectionCartItem[]>>(new Map());
@@ -66,6 +68,11 @@ export const AstraCart = ({
 
   let cartItemList: ReactNode;
   const [cartContent, setCartContent] = useState<ReactNode>(cartItemList);
+
+  const { data: wethBalance, isLoading } = useBalance({
+    address: user,
+    token: ETHEREUM_WETH_ADDRESS as `0x{string}` // todo change when supporting multiple chains
+  });
 
   const finalSendToAddress = async (addr: string) => {
     let finalAddress: string | null = addr;
@@ -79,6 +86,7 @@ export const AstraCart = ({
   };
 
   const upateCartItemList = () => {
+    let newCartTotal = 0;
     if (
       (cartType === CartType.TokenList || cartType === CartType.TokenOffer || cartType === CartType.Send) &&
       tokenMap.size > 0
@@ -94,11 +102,25 @@ export const AstraCart = ({
         );
 
         for (const t of tokenArray) {
-          if (cartType === CartType.Send) {
-            divList.push(<AstraTokenCartItem key={getTokenCartItemKey(t)} token={t} onRemove={onTokenRemove} />);
-          } else {
-            divList.push(<AstraTokenCartItem key={getTokenCartItemKey(t)} token={t} onRemove={onTokenRemove} />);
+          if (cartType !== CartType.Send) {
+            const price = t?.orderPriceEth
+              ? t?.orderPriceEth
+              : t?.orderSnippet?.listing?.orderItem?.startPriceEth
+              ? t?.orderSnippet?.listing?.orderItem?.startPriceEth
+              : 0;
+            newCartTotal += price;
           }
+          divList.push(
+            <AstraTokenCartItem
+              key={getTokenCartItemKey(t)}
+              token={t}
+              onRemove={onTokenRemove}
+              updateCartTotal={(newVal: string, oldVal: string) => {
+                newCartTotal += Number(newVal) - Number(oldVal);
+                setCartTotal(newCartTotal);
+              }}
+            />
+          );
         }
         divList.push(<div key={Math.random()} className={twMerge('h-2 w-full border-b-[1px]', borderColor)} />);
       });
@@ -116,7 +138,18 @@ export const AstraCart = ({
         const collId = getCollectionKeyId(first);
 
         for (const t of collArray) {
-          divList.push(<AstraCollectionCartItem key={collId} collection={t} onRemove={onCollRemove} />);
+          newCartTotal += t.offerPriceEth ?? 0;
+          divList.push(
+            <AstraCollectionCartItem
+              key={collId}
+              collection={t}
+              onRemove={onCollRemove}
+              updateCartTotal={(newVal: string, oldVal: string) => {
+                newCartTotal += Number(newVal) - Number(oldVal);
+                setCartTotal(newCartTotal);
+              }}
+            />
+          );
         }
 
         divList.push(<div key={Math.random()} className={twMerge('h-2 w-full border-b-[1px]', borderColor)} />);
@@ -160,6 +193,8 @@ export const AstraCart = ({
         </div>
       );
     }
+
+    setCartTotal(newCartTotal);
   };
 
   useEffect(() => {
@@ -295,6 +330,23 @@ export const AstraCart = ({
 
       {cartContent}
 
+      <div className="m-6 flex flex-col text-sm space-y-2">
+        <div>
+          <span className={twMerge(secondaryTextColor, 'font-medium')}>Total: </span>
+          <span className="font-heading">{nFormatter(Number(cartTotal))}</span>
+        </div>
+        <div className="">
+          <span className={twMerge(secondaryTextColor, 'font-medium')}>Wallet Balance: </span>
+          {isLoading ? (
+            <span>Loading...</span>
+          ) : (
+            <span className="font-heading">
+              {nFormatter(Number(wethBalance?.formatted))} {wethBalance?.symbol}
+            </span>
+          )}
+        </div>
+      </div>
+
       {/* todo: change the chainId check here when more chains are supported */}
       <div className="m-6 flex flex-col">
         <AButton
@@ -322,14 +374,15 @@ export const AstraCart = ({
 interface Props2 {
   token: ERC721TokenCartItem;
   onRemove: (token: ERC721TokenCartItem) => void;
+  updateCartTotal: (prevPrice: string, newPrice: string) => void;
 }
 
-const AstraTokenCartItem = ({ token, onRemove }: Props2) => {
+const AstraTokenCartItem = ({ token, onRemove, updateCartTotal }: Props2) => {
   const { cartType } = useCartContext();
-  const price = token?.orderSnippet?.listing?.orderItem?.startPriceEth
-    ? token?.orderSnippet?.listing?.orderItem?.startPriceEth.toString()
-    : token?.orderPriceEth
+  const price = token?.orderPriceEth
     ? token?.orderPriceEth.toString()
+    : token?.orderSnippet?.listing?.orderItem?.startPriceEth
+    ? token?.orderSnippet?.listing?.orderItem?.startPriceEth.toString()
     : '';
 
   const [editedPrice, setEditedPrice] = useState(price);
@@ -356,8 +409,9 @@ const AstraTokenCartItem = ({ token, onRemove }: Props2) => {
             token={token}
             className=""
             editing={editing}
-            onEditComplete={(value) => {
-              setEditedPrice(value);
+            onEditComplete={(newValue) => {
+              updateCartTotal(newValue, editedPrice);
+              setEditedPrice(newValue);
               setEditing(false);
             }}
             useSpacer
@@ -375,9 +429,10 @@ const AstraTokenCartItem = ({ token, onRemove }: Props2) => {
 interface Props3 {
   collection: ERC721CollectionCartItem;
   onRemove: (coll: ERC721CollectionCartItem) => void;
+  updateCartTotal: (prevPrice: string, newPrice: string) => void;
 }
 
-const AstraCollectionCartItem = ({ collection, onRemove }: Props3) => {
+const AstraCollectionCartItem = ({ collection, onRemove, updateCartTotal }: Props3) => {
   const [editedPrice, setEditedPrice] = useState(collection.offerPriceEth?.toString());
   const [editing, setEditing] = useState(editedPrice ? false : true);
 
@@ -401,8 +456,9 @@ const AstraCollectionCartItem = ({ collection, onRemove }: Props3) => {
           <PriceAndExpiry
             collection={collection}
             editing={editing}
-            onEditComplete={(value) => {
-              setEditedPrice(value);
+            onEditComplete={(newValue) => {
+              updateCartTotal(newValue, editedPrice ?? '0');
+              setEditedPrice(newValue);
               setEditing(false);
             }}
             currentPrice={editedPrice}
