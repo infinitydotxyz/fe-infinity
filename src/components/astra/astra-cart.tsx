@@ -385,6 +385,8 @@ const AstraTokenCartItem = ({ token, onRemove, updateCartTotal }: Props2) => {
     ? token?.orderSnippet?.listing?.orderItem?.startPriceEth.toString()
     : '';
 
+  token.orderPriceEth = parseFloat(price);
+
   const [editedPrice, setEditedPrice] = useState(price);
   const [editing, setEditing] = useState(price ? false : true);
 

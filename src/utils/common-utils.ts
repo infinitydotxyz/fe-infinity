@@ -208,6 +208,9 @@ export const getCustomExceptionMsg = (msg: ReactNode) => {
   if (typeof msg === 'string' && msg.indexOf('rejected transaction') > 0) {
     customMsg = ''; // this is a common error message when user rejects a transaction
   }
+  if (typeof msg === 'string' && msg.indexOf('rejected signing') > 0) {
+    customMsg = ''; // this is a common error message when user rejects a transaction
+  }
   return customMsg;
 };
 

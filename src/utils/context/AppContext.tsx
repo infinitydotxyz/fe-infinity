@@ -1,3 +1,4 @@
+import { JsonRpcSigner } from '@ethersproject/providers';
 import {
   ChainId,
   ChainNFTs,
@@ -29,7 +30,7 @@ import {
 } from '../common-utils';
 import { DEFAULT_MAX_GAS_PRICE_WEI, ZERO_ADDRESS } from '../constants';
 import { fetchOrderNonce, postOrdersV2 } from '../orderbook-utils';
-import { getSignedOBOrder, sendMultipleNfts, sendSingleNft } from '../orders';
+import { sendMultipleNfts, sendSingleNft, signOrders } from '../orders';
 import { CartType } from './CartContext';
 
 type AppContextType = {
@@ -150,14 +151,13 @@ export const AppContextProvider = ({ children }: Props) => {
           if (nftsToSend.length === 1) {
             const nftToSend = nftsToSend[0];
             result = await sendSingleNft(
-              signer,
-              chainId,
+              signer as JsonRpcSigner,
               nftToSend.address ?? nftToSend.tokenAddress ?? '',
               nftToSend.tokenId ?? '',
               sendToAddress
             );
           } else {
-            result = await sendMultipleNfts(signer, chainId, orderItems, sendToAddress);
+            result = await sendMultipleNfts(signer as JsonRpcSigner, chainId, orderItems, sendToAddress);
           }
           if (result.hash) {
             setTxnHash(result.hash);
@@ -188,9 +188,8 @@ export const AppContextProvider = ({ children }: Props) => {
         const isSendCart = cartType === CartType.Send;
 
         if (!isSendCart) {
-          // place orders
-          // first sign orders
-          const signedOrders: SignedOBOrder[] = [];
+          // prepare orders
+          const preSignedOrders: OBOrder[] = [];
           let orderNonce = await fetchOrderNonce(user, chainId as ChainId);
           for (const token of tokens) {
             let order;
@@ -201,15 +200,20 @@ export const AppContextProvider = ({ children }: Props) => {
             }
             orderNonce += 1;
             if (order) {
-              const signedOrder = await getSignedOBOrder(user, chainId, signer, order);
-              if (signedOrder) {
-                signedOrders.push(signedOrder);
-              }
+              preSignedOrders.push(order);
             }
           }
 
+          // sign orders
+          const signedOrders: SignedOBOrder[] | undefined = await signOrders(
+            signer as JsonRpcSigner,
+            chainId,
+            preSignedOrders
+          );
+
           // post orders
-          if (signedOrders.length > 0) {
+          if (signedOrders) {
+            console.log('signedOrders', signedOrders);
             await postOrdersV2(chainId as ChainId, signedOrders);
             toastSuccess('Orders posted');
           }
@@ -230,21 +234,25 @@ export const AppContextProvider = ({ children }: Props) => {
         toastError('No logged in user');
       } else {
         // sign orders
-        const signedOrders: SignedOBOrder[] = [];
+        const preSignedOrders: OBOrder[] = [];
         let orderNonce = await fetchOrderNonce(user, chainId as ChainId);
         for (const collection of collections) {
           const order = await collectionToOBOrder(collection, orderNonce);
           orderNonce += 1;
           if (order) {
-            const signedOrder = await getSignedOBOrder(user, chainId, signer, order);
-            if (signedOrder) {
-              signedOrders.push(signedOrder);
-            }
+            preSignedOrders.push(order);
           }
         }
 
+        // sign orders
+        const signedOrders: SignedOBOrder[] | undefined = await signOrders(
+          signer as JsonRpcSigner,
+          chainId,
+          preSignedOrders
+        );
+
         // post orders
-        if (signedOrders.length > 0) {
+        if (signedOrders) {
           await postOrdersV2(chainId as ChainId, signedOrders);
           toastSuccess('Orders posted');
         }
@@ -263,7 +271,7 @@ export const AppContextProvider = ({ children }: Props) => {
     try {
       if (signer) {
         const nonces = ordersToCancel.map((order) => order.nonce);
-        await cancelMultipleOrders(signer, chainId, nonces);
+        await cancelMultipleOrders(signer as JsonRpcSigner, chainId, nonces);
         toastSuccess('Sent txn to chain for execution');
         // todo: waitForTransaction(hash, () => {
         //   toastInfo(`Transaction confirmed ${ellipsisAddress(hash)}`);
