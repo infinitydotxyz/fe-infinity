@@ -18,6 +18,7 @@ import { ErrorOrLoading } from '../error-or-loading';
 
 interface Props {
   data: BasicTokenInfo;
+  isNFTSelected?: boolean;
   modalOpen: boolean;
 }
 
@@ -40,15 +41,16 @@ const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string)
   };
 };
 
-export const TokenCardModal = ({ data, modalOpen }: Props): JSX.Element | null => {
+export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.Element | null => {
   const { token, error, collectionAttributes } = useFetchAssetInfo(data.chainId, data.collectionAddress, data.tokenId);
   const { chain } = useNetwork();
   const { address: user } = useAccount();
   const chainId = String(chain?.id ?? 1) as ChainId;
-  const [addedToCart, setAddedToCart] = useState(false);
   const { setCartType } = useCartContext();
   const { isNFTSelectable, toggleNFTSelection } = useAppContext();
   const router = useRouter();
+
+  const [addedToCart, setAddedToCart] = useState(isNFTSelected);
 
   if (error) {
     return <ErrorOrLoading error={!!error} noData message="No Data" />;

@@ -169,7 +169,7 @@ export const GridCard = ({
         </div>
       </div>
 
-      {modalOpen && <TokenCardModal data={basicTokenInfo} modalOpen={modalOpen} />}
+      {modalOpen && <TokenCardModal data={basicTokenInfo} modalOpen={modalOpen} isNFTSelected={selected} />}
     </div>
   );
 };

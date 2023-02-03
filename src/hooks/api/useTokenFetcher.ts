@@ -109,7 +109,7 @@ export const nftToCardDataWithOrderFields = (item: ApiNftData): ERC721TokenCartI
   const lastSalePriceEth = nFormatter(item?.lastSalePriceEth);
 
   const result: ERC721TokenCartItem = {
-    id: item.chainId + ':' + item.collectionAddress + '_' + item.tokenId,
+    id: item.chainId + ':' + item.collectionAddress + ':' + item.tokenId,
     name: item.metadata?.name ?? item.metadata?.title,
     title: item.collectionName ?? '',
     collectionName: item.collectionName ?? '',
