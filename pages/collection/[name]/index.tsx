@@ -93,7 +93,13 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   const firstAllTimeStats = props.collectionAllTimeStats;
 
   const twitterFollowers = nFormatter(firstAllTimeStats?.twitterFollowers);
-  const discordFollowers = nFormatter(firstAllTimeStats?.discordFollowers);
+  const discordFollowers = nFormatter(
+    isNaN(firstAllTimeStats?.discordFollowers ?? 0)
+      ? firstAllTimeStats?.prevDiscordFollowers
+      : firstAllTimeStats?.discordFollowers
+  );
+
+  console.log(firstAllTimeStats);
 
   const totalVol = nFormatter(firstAllTimeStats?.volume ? firstAllTimeStats.volume : 0);
   const floorPrice = nFormatter(
@@ -325,11 +331,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const collAllTimeStatsPromise = apiGet(`/collections/${id}/stats`, {
     query: {
       chainId,
-      offset: 0,
-      limit: 1,
-      orderDirection: 'desc',
-      minDate: 0,
-      maxDate: 2648764957623,
       period: 'all'
     }
   });
@@ -346,13 +347,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     attributesPromise
   ]);
 
-  const allTimeStats = allTimeStatsResult?.data;
-  const firstAllTimeStats = allTimeStats?.[0]; // first item = latest daily stats
-
   return {
     props: {
       collection: collBaseData.result ?? null,
-      collectionAllTimeStats: firstAllTimeStats ?? null,
+      collectionAllTimeStats: allTimeStatsResult ?? null,
       collectionAttributes: collectionAttributes ?? null,
       error: collBaseData.error ?? null
     }
