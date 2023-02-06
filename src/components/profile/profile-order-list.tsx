@@ -1,3 +1,4 @@
+import { JsonRpcSigner } from '@ethersproject/providers';
 import { ChainId } from '@infinityxyz/lib-frontend/types/core';
 import { CollectionSearchDto } from '@infinityxyz/lib-frontend/types/dto';
 import { useEffect, useState } from 'react';
@@ -134,7 +135,7 @@ export const ProfileOrderList = ({ userAddress, className = '' }: Props) => {
             try {
               if (signer && user) {
                 const minOrderNonce = await fetchOrderNonce(user, chainId as ChainId);
-                await cancelAllOrders(signer, chainId, minOrderNonce);
+                await cancelAllOrders(signer as JsonRpcSigner, chainId, minOrderNonce);
                 toastSuccess('Sent txn to chain for execution');
                 setIsCancellingAll(true);
                 // todo waitForTransaction(hash, () => {
