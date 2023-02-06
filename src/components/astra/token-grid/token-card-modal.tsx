@@ -126,6 +126,10 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
       isOpen={modalOpen}
       showActionButtons={false}
       onClose={() => {
+        if (event instanceof PointerEvent) {
+          event.stopPropagation();
+          event.preventDefault();
+        }
         removeViewParams();
       }}
       panelClassName={twMerge('max-w-6xl rounded-3xl', dropShadow)}
