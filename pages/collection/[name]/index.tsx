@@ -4,6 +4,7 @@ import Head from 'next/head';
 import NotFound404Page from 'pages/not-found-404';
 import { useEffect, useState } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
+import { FaDiscord } from 'react-icons/fa';
 import { GiBroom } from 'react-icons/gi';
 import { AButton } from 'src/components/astra/astra-button';
 import { APriceFilter } from 'src/components/astra/astra-price-filter';
@@ -12,7 +13,7 @@ import { AStatusFilterButton } from 'src/components/astra/astra-status-button';
 import { ATraitFilter } from 'src/components/astra/astra-trait-filter';
 import { TokenGrid } from 'src/components/astra/token-grid/token-grid';
 import { CollectionPageHeader, CollectionPageHeaderProps } from 'src/components/collection/collection-page-header';
-import { Spacer, TextInputBox } from 'src/components/common';
+import { CenteredContent, ExternalLink, EZImage, Spacer, TextInputBox } from 'src/components/common';
 import { CollectionNftSearchInput } from 'src/components/common/search/collection-nft-search-input';
 import { OrderbookCharts } from 'src/components/orderbook/charts/orderbook-charts';
 import { useCollectionTokenFetcher } from 'src/hooks/api/useTokenFetcher';
@@ -21,7 +22,14 @@ import { apiGet, nFormatter } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartType, useCartContext } from 'src/utils/context/CartContext';
 import { ERC721CollectionCartItem, ERC721TokenCartItem, TokensFilter } from 'src/utils/types';
-import { borderColor, brandTextColor, hoverColor, iconButtonStyle, selectedColor } from 'src/utils/ui-constants';
+import {
+  borderColor,
+  brandTextColor,
+  hoverColor,
+  iconButtonStyle,
+  selectedColor,
+  smallIconButtonStyle
+} from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 interface CollectionDashboardProps {
@@ -87,6 +95,33 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   const onClickNFT = (token: ERC721TokenCartItem) => {
     toggleNFTSelection(token);
   };
+
+  const isCollSupported = collection.isSupported ?? false;
+
+  if (!isCollSupported) {
+    return (
+      <CenteredContent>
+        <div className="flex flex-col items-center space-y-2">
+          <EZImage src={collection.metadata.profileImage} className="h-40 w-40 rounded-lg overflow-clip" />
+          <div className="text-3xl font-heading font-medium">{collection.metadata.name} is not supported on Flow</div>
+          <div className="flex flex-col text-md">
+            <span>Common reasons a collection is not supported:</span>
+            <ul className="list-disc list-inside mt-2 mb-2">
+              <li>Low volumes</li>
+              <li>Creator(s) rugged the project</li>
+              <li>Dead community</li>
+            </ul>
+            <div className="flex items-center space-x-2">
+              <div>If this is a mistake, let us know on</div>
+              <ExternalLink href="https://discord.gg/flowdotso">
+                <FaDiscord className={twMerge('text-brand-discord cursor-pointer', smallIconButtonStyle)} />
+              </ExternalLink>
+            </div>
+          </div>
+        </div>
+      </CenteredContent>
+    );
+  }
 
   const collectionCreator = collection.owner;
 
