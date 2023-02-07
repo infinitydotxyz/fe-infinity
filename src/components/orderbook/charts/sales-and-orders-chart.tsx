@@ -35,24 +35,24 @@ export interface SalesChartData {
   salePrice: number;
 }
 
-export interface ResponsiveScatterChartProps extends Omit<ScatterChartProps, 'width' | 'height'> {
+export interface ResponsiveSalesChartProps extends Omit<SalesChartProps, 'width' | 'height'> {
   selectedTimeBucket: string;
   setSelectedTimeBucket: (timeBucket: HistoricalSalesTimeBucket) => void;
   graphType: ScatterChartType;
 }
 
-interface ScatterChartProps {
+interface SalesChartProps {
   width: number;
   height: number;
   data: SalesChartData[];
 }
 
-export const ResponsiveScatterChart = ({
+export const ResponsiveSalesChart = ({
   data,
   graphType,
   selectedTimeBucket,
   setSelectedTimeBucket
-}: ResponsiveScatterChartProps) => {
+}: ResponsiveSalesChartProps) => {
   return (
     <ChartBox className="h-full">
       <div className="flex justify-between mb-4">
@@ -69,13 +69,13 @@ export const ResponsiveScatterChart = ({
         </select>
       </div>
       <ParentSize debounceTime={10}>
-        {({ width, height }) => <ScatterChart data={data} width={width} height={height} />}
+        {({ width, height }) => <SalesChart data={data} width={width} height={height} />}
       </ParentSize>
     </ChartBox>
   );
 };
 
-function ScatterChart({ width, height, data }: ScatterChartProps) {
+function SalesChart({ width, height, data }: SalesChartProps) {
   const [selectedSale, setSelectedSale] = useState<SalesChartData>();
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);

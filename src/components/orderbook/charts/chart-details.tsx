@@ -8,7 +8,7 @@ import { clamp } from './chart-utils';
 import { ChartBox } from './chart-box';
 import { NextPrevArrows } from './next-prev-arrows';
 import { secondaryBgColor, secondaryTextColor } from 'src/utils/ui-constants';
-import { SalesChartData } from './scatter-chart';
+import { SalesChartData } from './sales-chart';
 
 interface Props {
   orders: SignedOBOrder[];

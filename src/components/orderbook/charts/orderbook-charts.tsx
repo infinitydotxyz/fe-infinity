@@ -13,7 +13,7 @@ import { twMerge } from 'tailwind-merge';
 import { useNetwork } from 'wagmi';
 import { BarChartType, OrderData, ResponsiveBarChart } from './bar-chart';
 import { OrdersChartDetails } from './chart-details';
-import { ResponsiveScatterChart, SalesChartData, ScatterChartType } from './scatter-chart';
+import { ResponsiveSalesChart, SalesChartData, ScatterChartType } from './sales-chart';
 
 // const infoBoxStyle = 'flex items-center justify-center opacity-60 font-bold text-lg h-full';
 
@@ -135,7 +135,7 @@ export const OrderbookCharts = ({ className = '', collectionAddress }: OrderBook
       <div className="flex">
         <div className="w-full p-2">
           {salesChartData.length > 0 && (
-            <ResponsiveScatterChart
+            <ResponsiveSalesChart
               key={selectedTimeBucket}
               selectedTimeBucket={selectedTimeBucket}
               setSelectedTimeBucket={setSelectedTimeBucket}
