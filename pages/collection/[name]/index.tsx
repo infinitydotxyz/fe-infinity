@@ -134,8 +134,6 @@ export default function ItemsPage(props: CollectionDashboardProps) {
       : firstAllTimeStats?.discordFollowers
   );
 
-  console.log(firstAllTimeStats);
-
   const totalVol = nFormatter(firstAllTimeStats?.volume ? firstAllTimeStats.volume : 0);
   const floorPrice = nFormatter(firstAllTimeStats?.floorPrice ? firstAllTimeStats.floorPrice : 0);
   const numOwners = nFormatter(firstAllTimeStats?.numOwners ? firstAllTimeStats.numOwners : 0);

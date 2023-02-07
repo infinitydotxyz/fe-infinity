@@ -35,7 +35,7 @@ export interface SalesChartData {
 interface ResponsiveSalesChartProps extends Omit<SalesChartProps, 'width' | 'height'> {
   selectedTimeBucket: string;
   setSelectedTimeBucket: (timeBucket: HistoricalSalesTimeBucket) => void;
-  graphType: ScatterChartType;
+  graphType: ScatterChartType.Sales;
 }
 
 interface SalesChartProps {

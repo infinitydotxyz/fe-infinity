@@ -3,57 +3,67 @@ import { AxisBottom, AxisLeft } from '@visx/axis';
 import { localPoint } from '@visx/event';
 import { GridRows } from '@visx/grid';
 import { Group } from '@visx/group';
+import { LegendItem, LegendLabel, LegendOrdinal } from '@visx/legend';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
-import { scaleLinear, scaleTime } from '@visx/scale';
+import { scaleLinear, scaleOrdinal, scaleTime } from '@visx/scale';
 import { Circle } from '@visx/shape';
 import { defaultStyles, TooltipWithBounds, useTooltip } from '@visx/tooltip';
 import { voronoi } from '@visx/voronoi';
 import { extent } from 'd3';
 import { format } from 'date-fns';
 import { useTheme } from 'next-themes';
-import { useRouter } from 'next/router';
-import { MouseEvent, TouchEvent, useCallback, useEffect, useMemo, useState } from 'react';
-import { TokenCardModal } from 'src/components/astra/token-grid/token-card-modal';
-import { EZImage } from 'src/components/common';
-import { BasicTokenInfo } from 'src/utils/types';
+import { MouseEvent, TouchEvent, useCallback, useMemo } from 'react';
+import { EthSymbol } from 'src/components/common';
 import { secondaryBgColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import tailwindConfig from '../../../settings/tailwind/elements/foundations';
 import { ChartBox } from './chart-box';
-import { getChartDimensions } from './chart-utils';
-import { ScatterChartType } from './types';
+import { SalesAndOrdersDataPointType, ScatterChartType } from './types';
 
-export interface SalesChartData {
+export interface SalesAndOrdersChartData {
   timestamp: number;
   collectionAddress: string;
   collectionName: string;
   tokenId: string;
   tokenImage: string;
-  salePrice: number;
+  priceEth: number;
+  dataType: SalesAndOrdersDataPointType;
 }
 
-export interface ResponsiveSalesChartProps extends Omit<SalesChartProps, 'width' | 'height'> {
+export interface ResponsiveSalesAndOrdersChartProps extends Omit<SalesAndOrdersChartProps, 'width' | 'height'> {
   selectedTimeBucket: string;
   setSelectedTimeBucket: (timeBucket: HistoricalSalesTimeBucket) => void;
-  graphType: ScatterChartType;
+  graphType: ScatterChartType.SalesAndOrders;
 }
 
-interface SalesChartProps {
+interface SalesAndOrdersChartProps {
   width: number;
   height: number;
-  data: SalesChartData[];
+  saleColor?: string;
+  listingColor?: string;
+  offerColor?: string;
+  data: SalesAndOrdersChartData[];
 }
 
-export const ResponsiveSalesChart = ({
+export const ResponsiveSalesAndOrdersChart = ({
   data,
   graphType,
   selectedTimeBucket,
   setSelectedTimeBucket
-}: ResponsiveSalesChartProps) => {
+}: ResponsiveSalesAndOrdersChartProps) => {
+  const saleColor = '#66d981';
+  const listingColor = '#4899f1';
+  const offerColor = '#7d81f6';
+
+  const ordinalColorScale = scaleOrdinal({
+    domain: ['Sale', 'Listing', 'Offer'],
+    range: [saleColor, listingColor, offerColor]
+  });
+
   return (
     <ChartBox className="h-full">
       <div className="flex justify-between mb-4">
-        <div className={twMerge('ml-5 mt-3 font-medium')}>{graphType}</div>
+        <div className={twMerge('font-medium')}>{graphType}</div>
         <select
           onChange={(e) => setSelectedTimeBucket(e.target.value as HistoricalSalesTimeBucket)}
           className={twMerge('form-select rounded-lg bg-transparent focus:border-none float-right text-sm')}
@@ -65,25 +75,41 @@ export const ResponsiveSalesChart = ({
           ))}
         </select>
       </div>
-      <ParentSize debounceTime={10}>
-        {({ width, height }) => <SalesChart data={data} width={width} height={height} />}
+
+      <ParentSize debounceTime={10} style={{ height: '95%' }}>
+        {({ width, height }) => (
+          <SalesAndOrdersChart
+            data={data}
+            width={width}
+            height={height}
+            saleColor={saleColor}
+            listingColor={listingColor}
+            offerColor={offerColor}
+          />
+        )}
       </ParentSize>
+
+      <div className="flex flex-row justify-center w-full mt-[-20px]">
+        <LegendOrdinal scale={ordinalColorScale} labelFormat={(label) => `${label}`}>
+          {(labels) => (
+            <div className="flex flex-row items-center">
+              {labels.map((label, i) => (
+                <LegendItem key={`legend-ordinal-${i}`} margin="0 5px">
+                  <svg width={20} height={20}>
+                    <Circle fill={label.value} r={5} cx={10} cy={10} />
+                  </svg>
+                  <LegendLabel margin="10px">{label.text}</LegendLabel>
+                </LegendItem>
+              ))}
+            </div>
+          )}
+        </LegendOrdinal>
+      </div>
     </ChartBox>
   );
 };
 
-function SalesChart({ width, height, data }: SalesChartProps) {
-  const [selectedSale, setSelectedSale] = useState<SalesChartData>();
-  const router = useRouter();
-  const [modalOpen, setModalOpen] = useState(false);
-
-  useEffect(() => {
-    const isModalOpen =
-      router.query?.tokenId === basicTokenInfo.tokenId &&
-      router.query?.collectionAddress === basicTokenInfo.collectionAddress;
-    setModalOpen(isModalOpen);
-  }, [router.query]);
-
+function SalesAndOrdersChart({ width, height, data, saleColor, listingColor, offerColor }: SalesAndOrdersChartProps) {
   const {
     showTooltip,
     hideTooltip,
@@ -91,7 +117,7 @@ function SalesChart({ width, height, data }: SalesChartProps) {
     tooltipData,
     tooltipLeft = 0,
     tooltipTop = 0
-  } = useTooltip<SalesChartData>({
+  } = useTooltip<SalesAndOrdersChartData>({
     tooltipOpen: false,
     tooltipLeft: 0,
     tooltipTop: 0,
@@ -101,17 +127,33 @@ function SalesChart({ width, height, data }: SalesChartProps) {
       collectionName: '',
       tokenId: '',
       tokenImage: '',
-      salePrice: 0
+      priceEth: 0,
+      dataType: 'Sale'
     }
   });
+
+  const getChartDimensions = ({ width = 0, height = 0 }: { width?: number; height?: number }) => {
+    const margin = {
+      top: 10,
+      right: 0,
+      bottom: 50,
+      left: 30
+    };
+
+    return {
+      margin,
+      boundedWidth: width - margin.left - margin.right,
+      boundedHeight: height - margin.top - margin.bottom
+    };
+  };
 
   const { margin, boundedWidth, boundedHeight } = getChartDimensions({
     width,
     height
   });
 
-  const yAccessor = (d: SalesChartData) => d.salePrice;
-  const xAccessor = (d: SalesChartData) => new Date(d.timestamp);
+  const yAccessor = (d: SalesAndOrdersChartData) => d.priceEth;
+  const xAccessor = (d: SalesAndOrdersChartData) => new Date(d.timestamp);
 
   const xScale = useMemo(
     () =>
@@ -134,7 +176,7 @@ function SalesChart({ width, height, data }: SalesChartProps) {
   );
 
   const voronoiLayout = useMemo(() => {
-    return voronoi<SalesChartData>({
+    return voronoi<SalesAndOrdersChartData>({
       x: (d) => xScale(xAccessor(d)),
       y: (d) => yScale(yAccessor(d)),
       width: boundedWidth,
@@ -181,34 +223,47 @@ function SalesChart({ width, height, data }: SalesChartProps) {
       if (!closest) {
         return;
       }
-      const { pathname, query } = router;
-      query['tokenId'] = closest.data.tokenId;
-      query['collectionAddress'] = closest.data.collectionAddress;
-      router.replace({ pathname, query }, undefined, { shallow: true });
-      setSelectedSale(closest.data);
     },
     [xScale, yScale, voronoiLayout, voronoiPolygons]
   );
 
   const dots = useMemo(
     () =>
-      data.map((d) => (
-        <Circle
-          key={`${d.timestamp}:${d.tokenId}`}
-          fill={tailwindConfig.colors.brand.primaryFade}
-          cx={xScale(xAccessor(d))}
-          cy={yScale(yAccessor(d))}
-          r={5}
-        />
-      )),
+      data.map((d) => {
+        if (d.dataType === 'Sale') {
+          return (
+            <Circle
+              key={`${d.timestamp}:${d.tokenId}`}
+              fill={saleColor}
+              cx={xScale(xAccessor(d))}
+              cy={yScale(yAccessor(d))}
+              r={5}
+            />
+          );
+        } else if (d.dataType === 'Listing') {
+          return (
+            <Circle
+              key={`${d.timestamp}:${d.tokenId}`}
+              fill={listingColor}
+              cx={xScale(xAccessor(d))}
+              cy={yScale(yAccessor(d))}
+              r={5}
+            />
+          );
+        } else if (d.dataType === 'Offer') {
+          return (
+            <Circle
+              key={`${d.timestamp}:${d.tokenId}`}
+              fill={offerColor}
+              cx={xScale(xAccessor(d))}
+              cy={yScale(yAccessor(d))}
+              r={5}
+            />
+          );
+        }
+      }),
     [xScale, yScale]
   );
-
-  const basicTokenInfo: BasicTokenInfo = {
-    tokenId: selectedSale?.tokenId ?? '',
-    collectionAddress: selectedSale?.collectionAddress ?? '',
-    chainId: '1' // todo dont hardcode
-  };
 
   const { theme } = useTheme();
   const darkMode = theme === 'dark';
@@ -265,8 +320,15 @@ function SalesChart({ width, height, data }: SalesChartProps) {
         </Group>
       </svg>
 
-      <ToolTip isTooltipOpen={tooltipOpen} left={tooltipLeft} top={tooltipTop} data={tooltipData} />
-      {modalOpen && <TokenCardModal data={basicTokenInfo} modalOpen={modalOpen} />}
+      <ToolTip
+        isTooltipOpen={tooltipOpen}
+        left={tooltipLeft}
+        top={tooltipTop}
+        data={tooltipData}
+        saleColor={saleColor}
+        listingColor={listingColor}
+        offerColor={offerColor}
+      />
     </div>
   );
 }
@@ -274,36 +336,53 @@ function SalesChart({ width, height, data }: SalesChartProps) {
 interface Props2 {
   left: number;
   top: number;
-  data?: SalesChartData;
+  data?: SalesAndOrdersChartData;
+  saleColor?: string;
+  listingColor?: string;
+  offerColor?: string;
   isTooltipOpen: boolean;
 }
 
-function ToolTip({ left, top, data, isTooltipOpen }: Props2) {
+function ToolTip({ left, top, data, saleColor, listingColor, offerColor, isTooltipOpen }: Props2) {
+  const circleColor = () => {
+    const dataType = data?.dataType;
+    if (dataType === 'Sale') {
+      return saleColor;
+    } else if (dataType === 'Listing') {
+      return listingColor;
+    } else if (dataType === 'Offer') {
+      return offerColor;
+    }
+  };
+
   return (
     <TooltipWithBounds
       key={isTooltipOpen ? 1 : 0} // needed for bounds to update correctly
       style={{
         ...defaultStyles,
-        background: 'white',
         opacity: isTooltipOpen ? 1 : 0,
         transition: 'all 0.1s ease-out'
       }}
       left={left}
       top={top}
     >
-      <div className={twMerge(secondaryBgColor, 'flex flex-col p-1')} style={{ aspectRatio: '3.5 / 5' }}>
-        <div className="flex-1 rounded-lg overflow-clip">
-          <EZImage src={data?.tokenImage} />
+      <div className={twMerge(secondaryBgColor, 'flex flex-col p-2 space-y-2')}>
+        <div className={twMerge('flex flex-row space-x-1 items-center ml-[-5px]')}>
+          <svg width={20} height={20}>
+            <Circle fill={circleColor()} r={5} cx={10} cy={10} />
+          </svg>
+          <div>{data?.dataType}</div>
         </div>
 
-        <div className="font-bold truncate ml-1 mt-1">{data?.tokenId}</div>
-
-        <div className={twMerge('flex flex-row space-x-3 m-1')}>
-          <div className="flex flex-col">
-            <div className="truncate">Sale price</div>
-            <div className="truncate">{data?.salePrice}</div>
+        <div className={twMerge('flex flex-row space-x-3')}>
+          <div className="flex flex-col space-y-2">
+            <div className="truncate">Price</div>
+            <div className="truncate">
+              {data?.priceEth} {EthSymbol}
+            </div>
           </div>
-          <div className="flex flex-col">
+
+          <div className="flex flex-col space-y-2">
             <div className="truncate">Date</div>
             <div className="truncate">{format(new Date(data?.timestamp ?? 0), 'MMM dd yyyy')}</div>
           </div>
