@@ -13,7 +13,8 @@ import { twMerge } from 'tailwind-merge';
 import { useNetwork } from 'wagmi';
 import { BarChartType, OrderData, ResponsiveBarChart } from './bar-chart';
 import { OrdersChartDetails } from './chart-details';
-import { ResponsiveSalesChart, SalesChartData, ScatterChartType } from './sales-chart';
+import { ResponsiveSalesChart, SalesChartData } from './sales-chart';
+import { ScatterChartType } from './types';
 
 // const infoBoxStyle = 'flex items-center justify-center opacity-60 font-bold text-lg h-full';
 

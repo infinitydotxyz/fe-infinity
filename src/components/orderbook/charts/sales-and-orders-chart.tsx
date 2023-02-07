@@ -21,10 +21,7 @@ import { twMerge } from 'tailwind-merge';
 import tailwindConfig from '../../../settings/tailwind/elements/foundations';
 import { ChartBox } from './chart-box';
 import { getChartDimensions } from './chart-utils';
-
-export enum ScatterChartType {
-  Sales = 'Sales'
-}
+import { ScatterChartType } from './types';
 
 export interface SalesChartData {
   timestamp: number;
