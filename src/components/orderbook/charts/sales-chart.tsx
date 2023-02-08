@@ -194,7 +194,7 @@ function SalesChart({ width, height, data }: SalesChartProps) {
     () =>
       data.map((d) => (
         <Circle
-          key={`${d.timestamp}:${d.tokenId}`}
+          key={`${d.timestamp}:${d.tokenId}:${d.salePrice}`}
           fill={tailwindConfig.colors.brand.primaryFade}
           cx={xScale(xAccessor(d))}
           cy={yScale(yAccessor(d))}
