@@ -58,7 +58,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   } = useAppContext();
   const [filter, setFilter] = useState<TokensFilter>({});
   const { data, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection.address, filter);
-  const { setRef, scrollTop } = useScrollInfo();
+  const { setRef } = useScrollInfo();
   const tabs = ['Items', 'Analytics'];
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
   const { cartType, setCartType } = useCartContext();
@@ -140,7 +140,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   const numNfts = nFormatter(firstAllTimeStats?.numNfts ? firstAllTimeStats.numNfts : 0);
 
   const headerProps: CollectionPageHeaderProps = {
-    expanded: scrollTop < 100,
+    expanded: true,
     avatarUrl: collection.metadata.profileImage || collection.metadata.bannerImage,
     title: collection.metadata.name,
     description: collection.metadata.description,
