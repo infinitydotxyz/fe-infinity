@@ -1,4 +1,3 @@
-import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { Button, EthPrice } from 'src/components/common';
 import { erc721OrderCartItemToTokenCartItem } from 'src/utils';
@@ -10,7 +9,6 @@ import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
 import { useAccount } from 'wagmi';
 import { OrderbookItem } from '../orderbook/list/orderbook-item';
-import { OrderDetailModal } from '../orderbook/order-detail-modal';
 
 interface Props {
   order: ERC721OrderCartItem;
@@ -18,7 +16,6 @@ interface Props {
 }
 
 export const ProfileOrderListItem = ({ order, orderType }: Props) => {
-  const [selectedOrder, setSelectedOrder] = useState<SignedOBOrder | null>(null);
   const [startPriceEth] = useState(order.startPriceEth);
   const { isConnected } = useAccount();
   const { cartType, cartItems, setCartType } = useCartContext();
@@ -44,7 +41,6 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
               nameItem={true}
               key={`${order.id} ${order.chainId}`}
               order={order}
-              onClick={() => setSelectedOrder(order)}
             />
           </div>
 
@@ -119,16 +115,6 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
           ) : null}
         </div>
       </div>
-
-      {selectedOrder !== null ? (
-        <OrderDetailModal
-          order={selectedOrder}
-          isOpen={true}
-          onClose={() => {
-            setSelectedOrder(null);
-          }}
-        />
-      ) : null}
     </div>
   );
 };

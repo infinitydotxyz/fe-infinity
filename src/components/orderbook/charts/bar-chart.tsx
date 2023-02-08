@@ -1,4 +1,4 @@
-import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { CollectionOrder } from '@infinityxyz/lib-frontend/types/core';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { AnimatedAxis, AnimatedBarSeries, AnimatedGrid, Tooltip, XYChart } from '@visx/xychart';
 import { useTheme } from 'next-themes';
@@ -17,34 +17,30 @@ export enum BarChartType {
   Listings = 'Listings'
 }
 
-export type OrderData = {
-  order: SignedOBOrder;
-};
-
 export interface ResponsiveBarChartProps extends Omit<BarChartProps, 'width' | 'height' | 'selectedPriceBucket'> {
   graphType: BarChartType;
 }
 
 interface BarChartProps {
-  graphData: OrderData[];
+  graphData: CollectionOrder[];
   selectedPriceBucket: number;
   width: number;
   height: number;
   graphType: BarChartType;
   fetchData: (minPrice: string, maxPrice: string) => void;
-  displayDetails: (orders: SignedOBOrder[], index: number) => void;
+  displayDetails: (orders: CollectionOrder[], index: number) => void;
 }
 
 type BarChartEntry = {
-  data: OrderData[];
+  data: CollectionOrder[];
   axisLabel: string;
   tooltip: React.ReactNode;
   start: number;
   end: number;
 };
 
-const getPriceValue = (d: OrderData) => d.order.startPriceEth;
-const getOrder = (d: OrderData) => d.order;
+const getPriceValue = (d: CollectionOrder) => d.priceEth;
+const getOrder = (d: CollectionOrder) => d;
 const getOrderCount = (d: BarChartEntry) => d.data.length;
 const getAxisLabel = (d: BarChartEntry) => d.axisLabel;
 
@@ -54,7 +50,7 @@ const priceBuckets = [0.01, 0.05, 0.1, 0.5, 1, 5, 10, 100];
  * Utility function to convert a raw `ChartData` array to a `BarChartData` array of values.
  */
 function convertRawDataToChartData(
-  data: OrderData[],
+  data: CollectionOrder[],
   width: number,
   chartType: BarChartType,
   priceBucket: number
@@ -83,11 +79,11 @@ function convertRawDataToChartData(
   }
 
   for (const item of data) {
-    const i = Math.floor((item.order.startPriceEth - minPrice) / range);
+    const i = Math.floor((item.priceEth - minPrice) / range);
 
-    if (item.order.isSellOrder && chartType === BarChartType.Listings) {
+    if (item.isSellOrder && chartType === BarChartType.Listings) {
       newData[i].data.push(item);
-    } else if (!item.order.isSellOrder && chartType === BarChartType.Offers) {
+    } else if (!item.isSellOrder && chartType === BarChartType.Offers) {
       newData[i].data.push(item);
     }
   }

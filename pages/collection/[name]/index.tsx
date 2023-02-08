@@ -320,7 +320,12 @@ export default function ItemsPage(props: CollectionDashboardProps) {
             </div>
           )}
 
-          {selectedTab === 'Analytics' && <OrderbookCharts collectionAddress={collection.address} />}
+          {selectedTab === 'Analytics' && (
+            <OrderbookCharts
+              collectionAddress={collection.address}
+              collectionImage={collection.metadata.profileImage}
+            />
+          )}
           {/* {selectedTab === 'Analytics' && (
             <div className="flex justify-center px-4 mt-5 space-x-4">
               <div className="flex space-x-4">

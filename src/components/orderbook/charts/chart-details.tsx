@@ -1,58 +1,55 @@
-import React from 'react';
-import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
-import { EZImage, SimpleTable, SimpleTableItem, Spacer } from '../../common';
-import { OrderDetailPicker } from '../order-detail-picker';
+import { CollectionOrder } from '@infinityxyz/lib-frontend/types/core';
+import { secondaryBgColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
+import { EZImage } from '../../common';
 import { OrderbookRowButton } from '../list/orderbook-row-button';
-import { clamp } from './chart-utils';
+import { OrderDetailViewer } from '../order-detail-viewer';
 import { ChartBox } from './chart-box';
+import { clamp } from './chart-utils';
 import { NextPrevArrows } from './next-prev-arrows';
-import { secondaryBgColor, secondaryTextColor } from 'src/utils/ui-constants';
 import { SalesChartData } from './sales-chart';
 
 interface Props {
-  orders: SignedOBOrder[];
+  orders: CollectionOrder[];
   index: number;
   setIndex: (index: number) => void;
   valueClassName?: string;
+  collectionAddress: string;
+  collectionImage: string;
 }
 
-export const OrdersChartDetails = ({ orders, index, setIndex, valueClassName = '' }: Props) => {
+export const OrdersChartDetails = ({ orders, index, setIndex, collectionAddress, collectionImage }: Props) => {
   if (orders.length > 0) {
     const order = orders[clamp(index, 0, orders.length - 1)];
-    const tableItems: SimpleTableItem[] = [
-      {
-        title: <div className="">Type</div>,
-        value: <div className=" selection: font-heading">{order.isSellOrder ? 'Listing' : 'Offer'}</div>
-      },
-      {
-        title: <div className="">Price</div>,
-        value: <div className="  font-heading">{order.startPriceEth}</div>
-      }
-    ];
 
     return (
       <ChartBox noCSSStyles>
-        <div className={twMerge('mb-3 flex items-center')}>
-          <div className={twMerge('flex-[2] text-lg font-bold')}>Order details</div>
-          <Spacer />
-          <NextPrevArrows orders={orders} index={index} setIndex={setIndex} className="flex-[2] pointer-events-auto" />
+        <div className={twMerge('flex items-center justify-center')}>
+          <NextPrevArrows
+            orders={orders}
+            index={index}
+            setIndex={setIndex}
+            className="flex pointer-events-auto text-sm"
+          />
         </div>
 
-        <SimpleTable className="space-y-1" items={tableItems} valueClassName={valueClassName} rowClassName="text-md" />
+        <OrderDetailViewer
+          order={order}
+          scroll={true}
+          collectionAddress={collectionAddress}
+          collectionImage={collectionImage}
+        />
 
-        <div className="my-2 flex justify-center pointer-events-auto">
+        <div className="mt-2 flex justify-center">
           <OrderbookRowButton order={order} outlineButtons={false} />
         </div>
-
-        <OrderDetailPicker order={order} scroll={true} className={secondaryTextColor} />
       </ChartBox>
     );
   }
 
   return (
     <ChartBox className={twMerge('flex items-center justify-center')}>
-      <div className="text-center">Click a bar to drill down the chart and see orders in the clicked bar</div>
+      <div className="text-center">Click on a bar!</div>
     </ChartBox>
   );
 };

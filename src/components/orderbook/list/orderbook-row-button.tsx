@@ -1,39 +1,37 @@
-import { SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { CollectionOrder } from '@infinityxyz/lib-frontend/types/core';
 import { AButton } from 'src/components/astra/astra-button';
 import { ButtonProps } from 'src/components/common';
-import { checkOffersToUser } from 'src/utils/orderbook-utils';
 import { useAccount } from 'wagmi';
 
 type OrderButtonProps = Omit<ButtonProps, 'children'>;
 
 type Props = {
-  order: SignedOBOrder;
+  order: CollectionOrder;
   outlineButtons?: boolean;
 };
 
 export const OrderbookRowButton = ({ order, outlineButtons = false }: Props) => {
   const { address: user, isConnected } = useAccount();
 
-  const onClickEdit = (order: SignedOBOrder) => {
-    console.log('onClickEdit', order); // todo open modal here
+  const onClickEdit = (order: CollectionOrder) => {
+    console.log('onClickEdit', order); // todo no action in this release
   };
 
-  const onClickBidHigher = (order: SignedOBOrder) => {
+  const onClickBidHigher = (order: CollectionOrder) => {
     console.log('onClickBidHigher', order);
-    // add to Cart as a New Buy Order:
+    // todo add to Cart as a New Buy Order:
     // todo: steve - addCartItem needs to know whether order is a single collection single nft order
     // or single collection multi nft order or a multi-collection order for proper image display
-    // todo open modal here
   };
 
-  const onClickBuySell = (order: SignedOBOrder) => {
+  const onClickBuySell = (order: CollectionOrder) => {
     if (!isConnected) {
       return;
     }
-    console.log('onClickBuySell', order); // todo open modal here
+    console.log('onClickBuySell', order); // todo: add to cart here
   };
 
-  const isOwner = user && order.makerAddress === user;
+  const isOwner = user && order.maker === user;
 
   let buttonProps: OrderButtonProps = { className: 'w-32' };
 
@@ -49,25 +47,16 @@ export const OrderbookRowButton = ({ order, outlineButtons = false }: Props) => 
         </AButton>
       );
     }
-    const isOfferToUser = checkOffersToUser(order, user ?? '');
-    if (order.isSellOrder) {
-      // Sell Order (Listing)
+    if (order.isSellOrder && !isOwner) {
       return (
         <AButton {...buttonProps} primary onClick={() => onClickBuySell(order)}>
           Buy
         </AButton>
       );
-    } else if (isOfferToUser === true) {
-      // Buy Order (Offer) => show Sell button (if offer made to current user)
-      return (
-        <AButton {...buttonProps} primary onClick={() => onClickBuySell(order)}>
-          Sell
-        </AButton>
-      );
-    } else if (isOfferToUser === false) {
+    } else if (!order.isSellOrder && !isOwner) {
       return (
         <AButton {...buttonProps} primary onClick={() => onClickBidHigher(order)}>
-          Bid higher
+          Bid Higher
         </AButton>
       );
     } else {
