@@ -22,14 +22,7 @@ import { apiGet, nFormatter } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartType, useCartContext } from 'src/utils/context/CartContext';
 import { ERC721CollectionCartItem, ERC721TokenCartItem, TokensFilter } from 'src/utils/types';
-import {
-  borderColor,
-  brandTextColor,
-  hoverColor,
-  iconButtonStyle,
-  selectedColor,
-  smallIconButtonStyle
-} from 'src/utils/ui-constants';
+import { borderColor, brandTextColor, hoverColor, iconButtonStyle, selectedColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 interface CollectionDashboardProps {
@@ -114,7 +107,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
             <div className="flex items-center space-x-2">
               <div>If this is a mistake, let us know on</div>
               <ExternalLink href="https://discord.gg/flowdotso">
-                <FaDiscord className={twMerge('text-brand-discord cursor-pointer', smallIconButtonStyle)} />
+                <FaDiscord className={twMerge('text-brand-discord cursor-pointer mt-1', iconButtonStyle)} />
               </ExternalLink>
             </div>
           </div>
@@ -307,7 +300,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                 className={twMerge(
                   'px-4 py-4 min-h-[600px]',
                   cartType === CartType.CollectionOffer ? 'opacity-30 duration-300 pointer-events-none' : 'duration-300'
-                )} // this min height is to prevent the grid from collapsing when there are no items so filter menus can still render
+                )} // this min-height is to prevent the grid from collapsing when there are no items so filter menus can still render
                 onClick={onClickNFT}
                 isSelectable={isNFTSelectable}
                 isSelected={isNFTSelected}

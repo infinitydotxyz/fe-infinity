@@ -25,6 +25,10 @@ export const secondsPerDay = 86400;
 export const weekSeconds = secondsPerDay * 7;
 export const thirtyDaySeconds = secondsPerDay * 30;
 
+export const saleDataPointColor = '#66d981';
+export const listingDataPointColor = '#4899f1';
+export const offerDataPointColor = '#7d81f6';
+
 // these include both dark and light
 export const bgColor = 'dark:bg-dark-bg bg-light-bg';
 export const inverseBgColor = 'dark:bg-light-bg bg-dark-bg';

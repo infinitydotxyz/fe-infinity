@@ -13,14 +13,16 @@ import { format } from 'date-fns';
 import { useTheme } from 'next-themes';
 import { useRouter } from 'next/router';
 import { MouseEvent, TouchEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import { ASwitchButton } from 'src/components/astra/astra-button';
+import { ADropdown } from 'src/components/astra/astra-dropdown';
 import { TokenCardModal } from 'src/components/astra/token-grid/token-card-modal';
 import { EZImage } from 'src/components/common';
 import { BasicTokenInfo } from 'src/utils/types';
-import { secondaryBgColor } from 'src/utils/ui-constants';
+import { secondaryBgColor, secondaryTextColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import tailwindConfig from '../../../settings/tailwind/elements/foundations';
 import { ChartBox } from './chart-box';
-import { getChartDimensions } from './chart-utils';
+import { ChartDimensions } from './chart-utils';
 import { ScatterChartType } from './types';
 
 export interface SalesChartData {
@@ -42,6 +44,7 @@ interface SalesChartProps {
   width: number;
   height: number;
   data: SalesChartData[];
+  hideOutliers?: boolean;
 }
 
 export const ResponsiveSalesChart = ({
@@ -50,29 +53,45 @@ export const ResponsiveSalesChart = ({
   selectedTimeBucket,
   setSelectedTimeBucket
 }: ResponsiveSalesChartProps) => {
+  const [showOutliers, setShowOutliers] = useState(false);
   return (
     <ChartBox className="h-full">
       <div className="flex justify-between mb-4">
         <div className={twMerge('ml-5 mt-3 font-medium')}>{graphType}</div>
-        <select
-          onChange={(e) => setSelectedTimeBucket(e.target.value as HistoricalSalesTimeBucket)}
-          className={twMerge('form-select rounded-lg bg-transparent focus:border-none float-right text-sm')}
-        >
-          {Object.values(HistoricalSalesTimeBucket).map((filter) => (
-            <option value={filter} selected={filter === selectedTimeBucket}>
-              {filter}
-            </option>
-          ))}
-        </select>
+
+        <div className="items-center flex space-x-6">
+          <div className="flex items-center space-x-2">
+            <ASwitchButton
+              checked={showOutliers}
+              onChange={() => {
+                setShowOutliers(!showOutliers);
+              }}
+            ></ASwitchButton>
+
+            <span className={twMerge('text-sm font-medium', secondaryTextColor)}>Outliers</span>
+          </div>
+
+          <ADropdown
+            hasBorder={true}
+            alignMenuRight
+            innerClassName="w-[100px]"
+            menuItemClassName="py-2"
+            label={selectedTimeBucket}
+            items={Object.values(HistoricalSalesTimeBucket).map((bucket) => ({
+              label: bucket,
+              onClick: () => setSelectedTimeBucket(bucket)
+            }))}
+          />
+        </div>
       </div>
       <ParentSize debounceTime={10}>
-        {({ width, height }) => <SalesChart data={data} width={width} height={height} />}
+        {({ width, height }) => <SalesChart data={data} width={width} height={height} hideOutliers={!showOutliers} />}
       </ParentSize>
     </ChartBox>
   );
 };
 
-function SalesChart({ width, height, data }: SalesChartProps) {
+function SalesChart({ width, height, data, hideOutliers }: SalesChartProps) {
   const [selectedSale, setSelectedSale] = useState<SalesChartData>();
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
@@ -105,10 +124,36 @@ function SalesChart({ width, height, data }: SalesChartProps) {
     }
   });
 
+  const getChartDimensions = ({ width = 0, height = 0 }: { width?: number; height?: number }): ChartDimensions => {
+    const margin = {
+      top: 10,
+      right: 0,
+      bottom: 50,
+      left: 75
+    };
+
+    return {
+      margin,
+      boundedWidth: width - margin.left - margin.right,
+      boundedHeight: height - margin.top - margin.bottom
+    };
+  };
+
   const { margin, boundedWidth, boundedHeight } = getChartDimensions({
     width,
     height
   });
+
+  let dataToRender = data;
+  const values = data.map((d) => d.salePrice).sort((a, b) => a - b);
+  if (hideOutliers) {
+    const lowerHalfMedian = values[Math.floor(values.length / 4)];
+    const upperHalfMedian = values[Math.floor((values.length * 3) / 4)];
+    const iqr = upperHalfMedian - lowerHalfMedian;
+    const lowerThreshold = lowerHalfMedian - 1.5 * iqr;
+    const upperThreshold = upperHalfMedian + 1.5 * iqr;
+    dataToRender = data.filter((v) => v.salePrice >= lowerThreshold && v.salePrice <= upperThreshold);
+  }
 
   const yAccessor = (d: SalesChartData) => d.salePrice;
   const xAccessor = (d: SalesChartData) => new Date(d.timestamp);
@@ -117,7 +162,7 @@ function SalesChart({ width, height, data }: SalesChartProps) {
     () =>
       scaleTime<number>({
         range: [0, boundedWidth],
-        domain: extent(data, xAccessor) as [Date, Date],
+        domain: extent(dataToRender, xAccessor) as [Date, Date],
         nice: true
       }),
     [boundedWidth]
@@ -127,7 +172,7 @@ function SalesChart({ width, height, data }: SalesChartProps) {
     () =>
       scaleLinear<number>({
         range: [boundedHeight, 0],
-        domain: extent(data, yAccessor) as [number, number],
+        domain: extent(dataToRender, yAccessor) as [number, number],
         nice: true
       }),
     [boundedHeight]
@@ -139,7 +184,7 @@ function SalesChart({ width, height, data }: SalesChartProps) {
       y: (d) => yScale(yAccessor(d)),
       width: boundedWidth,
       height: boundedHeight
-    })(data);
+    })(dataToRender);
   }, [boundedWidth, boundedHeight, xScale, yScale]);
 
   const voronoiPolygons = useMemo(() => voronoiLayout.polygons(), [voronoiLayout]);
@@ -151,7 +196,7 @@ function SalesChart({ width, height, data }: SalesChartProps) {
     }
 
     const { x, y } = point;
-    const neighborRadius = 100;
+    const neighborRadius = 50;
     const closest = voronoiLayout.find(x - margin.left, y - margin.top, neighborRadius);
 
     return closest;
@@ -165,7 +210,7 @@ function SalesChart({ width, height, data }: SalesChartProps) {
       }
 
       showTooltip({
-        tooltipLeft: xScale(xAccessor(closest.data)) - 1.68 * margin.left,
+        tooltipLeft: xScale(xAccessor(closest.data)) - 1 * margin.left,
         tooltipTop: yScale(yAccessor(closest.data)) + 30 * margin.top,
         tooltipData: {
           ...closest.data
@@ -192,13 +237,14 @@ function SalesChart({ width, height, data }: SalesChartProps) {
 
   const dots = useMemo(
     () =>
-      data.map((d) => (
+      dataToRender.map((d) => (
         <Circle
           key={`${d.timestamp}:${d.tokenId}:${d.salePrice}`}
           fill={tailwindConfig.colors.brand.primaryFade}
           cx={xScale(xAccessor(d))}
           cy={yScale(yAccessor(d))}
           r={5}
+          style={{ cursor: 'pointer' }}
         />
       )),
     [xScale, yScale]
@@ -284,27 +330,33 @@ function ToolTip({ left, top, data, isTooltipOpen }: Props2) {
       key={isTooltipOpen ? 1 : 0} // needed for bounds to update correctly
       style={{
         ...defaultStyles,
-        background: 'white',
+        background: 'none',
+        zIndex: 100,
+        borderRadius: 9,
+        padding: 0,
         opacity: isTooltipOpen ? 1 : 0,
         transition: 'all 0.1s ease-out'
       }}
       left={left}
       top={top}
     >
-      <div className={twMerge(secondaryBgColor, 'flex flex-col p-1')} style={{ aspectRatio: '3.5 / 5' }}>
+      <div
+        className={twMerge(secondaryBgColor, textColor, 'flex flex-col p-2 rounded-lg')}
+        style={{ aspectRatio: '3.5 / 5' }}
+      >
         <div className="flex-1 rounded-lg overflow-clip">
           <EZImage src={data?.tokenImage} />
         </div>
 
-        <div className="font-bold truncate ml-1 mt-1">{data?.tokenId}</div>
+        <div className="truncate py-2">{data?.tokenId}</div>
 
-        <div className={twMerge('flex flex-row space-x-3 m-1')}>
-          <div className="flex flex-col">
-            <div className="truncate">Sale price</div>
+        <div className={twMerge('flex flex-row space-x-3')}>
+          <div className="flex flex-col space-y-1">
+            <div className={twMerge('font-medium text-xs', secondaryTextColor)}>Sale price</div>
             <div className="truncate">{data?.salePrice}</div>
           </div>
-          <div className="flex flex-col">
-            <div className="truncate">Date</div>
+          <div className="flex flex-col space-y-1">
+            <div className={twMerge('font-medium text-xs', secondaryTextColor)}>Date</div>
             <div className="truncate">{format(new Date(data?.timestamp ?? 0), 'MMM dd yyyy')}</div>
           </div>
         </div>

@@ -14,7 +14,14 @@ import { format } from 'date-fns';
 import { useTheme } from 'next-themes';
 import { MouseEvent, TouchEvent, useCallback, useMemo } from 'react';
 import { EthSymbol } from 'src/components/common';
-import { secondaryBgColor } from 'src/utils/ui-constants';
+import {
+  listingDataPointColor,
+  offerDataPointColor,
+  saleDataPointColor,
+  secondaryBgColor,
+  secondaryTextColor,
+  textColor
+} from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import tailwindConfig from '../../../settings/tailwind/elements/foundations';
 import { ChartBox } from './chart-box';
@@ -44,13 +51,9 @@ interface SalesAndOrdersChartProps {
 }
 
 export const ResponsiveSalesAndOrdersChart = ({ data, graphType }: ResponsiveSalesAndOrdersChartProps) => {
-  const saleColor = '#66d981';
-  const listingColor = '#4899f1';
-  const offerColor = '#7d81f6';
-
   const ordinalColorScale = scaleOrdinal({
     domain: ['Sale', 'Listing', 'Offer'],
-    range: [saleColor, listingColor, offerColor]
+    range: [saleDataPointColor, listingDataPointColor, offerDataPointColor]
   });
 
   return (
@@ -65,9 +68,9 @@ export const ResponsiveSalesAndOrdersChart = ({ data, graphType }: ResponsiveSal
             data={data}
             width={width}
             height={height}
-            saleColor={saleColor}
-            listingColor={listingColor}
-            offerColor={offerColor}
+            saleColor={saleDataPointColor}
+            listingColor={listingDataPointColor}
+            offerColor={offerDataPointColor}
           />
         )}
       </ParentSize>
@@ -186,8 +189,8 @@ function SalesAndOrdersChart({ width, height, data, saleColor, listingColor, off
       }
 
       showTooltip({
-        tooltipLeft: xScale(xAccessor(closest.data)) - 1.68 * margin.left,
-        tooltipTop: yScale(yAccessor(closest.data)) + 30 * margin.top,
+        tooltipLeft: xScale(xAccessor(closest.data)) + 2 * margin.left,
+        tooltipTop: yScale(yAccessor(closest.data)) + 50 * margin.top,
         tooltipData: {
           ...closest.data
         }
@@ -339,13 +342,16 @@ function ToolTip({ left, top, data, saleColor, listingColor, offerColor, isToolt
       key={isTooltipOpen ? 1 : 0} // needed for bounds to update correctly
       style={{
         ...defaultStyles,
+        background: 'none',
+        borderRadius: 9,
+        padding: 0,
         opacity: isTooltipOpen ? 1 : 0,
         transition: 'all 0.1s ease-out'
       }}
       left={left}
       top={top}
     >
-      <div className={twMerge(secondaryBgColor, 'flex flex-col p-2 space-y-2')}>
+      <div className={twMerge(secondaryBgColor, textColor, 'flex flex-col p-2 space-y-2 rounded-lg')}>
         <div className={twMerge('flex flex-row space-x-1 items-center ml-[-5px]')}>
           <svg width={20} height={20}>
             <Circle fill={circleColor()} r={5} cx={10} cy={10} />
@@ -354,15 +360,15 @@ function ToolTip({ left, top, data, saleColor, listingColor, offerColor, isToolt
         </div>
 
         <div className={twMerge('flex flex-row space-x-3')}>
-          <div className="flex flex-col space-y-2">
-            <div className="truncate">Price</div>
+          <div className="flex flex-col space-y-1">
+            <div className={twMerge('font-medium text-xs', secondaryTextColor)}>Price</div>
             <div className="truncate">
               {data?.priceEth} {EthSymbol}
             </div>
           </div>
 
-          <div className="flex flex-col space-y-2">
-            <div className="truncate">Date</div>
+          <div className="flex flex-col space-y-1">
+            <div className={twMerge('font-medium text-xs', secondaryTextColor)}>Date</div>
             <div className="truncate">{format(new Date(data?.timestamp ?? 0), 'MMM dd yyyy')}</div>
           </div>
         </div>

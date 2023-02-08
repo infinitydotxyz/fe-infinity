@@ -3,32 +3,35 @@ import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { AnimatedAxis, AnimatedBarSeries, AnimatedGrid, Tooltip, XYChart } from '@visx/xychart';
 import { useTheme } from 'next-themes';
 import React, { useMemo, useState } from 'react';
+import { ASwitchButton } from 'src/components/astra/astra-button';
+import { ADropdown } from 'src/components/astra/astra-dropdown';
 import { EthSymbol, SimpleTable, SimpleTableItem } from 'src/components/common';
 import { numStr } from 'src/utils';
-import { borderColor, secondaryBgColor, textColor } from 'src/utils/ui-constants';
+import {
+  borderColor,
+  saleDataPointColor,
+  secondaryBgColor,
+  secondaryTextColor,
+  textColor
+} from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import tailwindConfig from '../../../settings/tailwind/elements/foundations';
 import { ChartBox } from './chart-box';
-import { getChartDimensions } from './chart-utils';
+import { BarChartType } from './types';
 import { useChartTheme } from './use-theme';
-
-export enum BarChartType {
-  Offers = 'Offers',
-  Listings = 'Listings'
-}
 
 export interface ResponsiveBarChartProps extends Omit<BarChartProps, 'width' | 'height' | 'selectedPriceBucket'> {
   graphType: BarChartType;
 }
 
 interface BarChartProps {
-  graphData: CollectionOrder[];
+  data: CollectionOrder[];
   selectedPriceBucket: number;
   width: number;
   height: number;
   graphType: BarChartType;
-  fetchData: (minPrice: string, maxPrice: string) => void;
   displayDetails: (orders: CollectionOrder[], index: number) => void;
+  hideOutliers?: boolean;
 }
 
 type BarChartEntry = {
@@ -39,12 +42,12 @@ type BarChartEntry = {
   end: number;
 };
 
-const getPriceValue = (d: CollectionOrder) => d.priceEth;
+const getPriceValue = (d: CollectionOrder) => d?.priceEth;
 const getOrder = (d: CollectionOrder) => d;
-const getOrderCount = (d: BarChartEntry) => d.data.length;
-const getAxisLabel = (d: BarChartEntry) => d.axisLabel;
+const getOrderCount = (d: BarChartEntry) => d?.data?.length;
+const getAxisLabel = (d: BarChartEntry) => d?.axisLabel;
 
-const priceBuckets = [0.01, 0.05, 0.1, 0.5, 1, 5, 10, 100];
+const priceBuckets = [0.1, 0.5, 1, 5, 10, 100];
 
 /**
  * Utility function to convert a raw `ChartData` array to a `BarChartData` array of values.
@@ -52,72 +55,102 @@ const priceBuckets = [0.01, 0.05, 0.1, 0.5, 1, 5, 10, 100];
 function convertRawDataToChartData(
   data: CollectionOrder[],
   width: number,
-  chartType: BarChartType,
-  priceBucket: number
-): BarChartEntry[] {
+  priceBucket: number,
+  hideOutliers = true
+): { listings: BarChartEntry[]; minPrice: number; maxPrice: number } {
   const columnWidth = 80;
 
   if (width < columnWidth || data.length === 0) {
-    return [];
+    return { listings: [], minPrice: 0, maxPrice: 0 };
   }
 
-  const newData: BarChartEntry[] = [];
-  const columns = Math.ceil(width / columnWidth);
-  const values = data.map(getPriceValue);
-  const minPrice = Math.min(...values);
-  const maxPrice = Math.max(...values) + priceBucket;
-  const range = (maxPrice - minPrice) / columns;
+  const listings: BarChartEntry[] = [];
+  const values = data
+    .filter((v) => v.isSellOrder)
+    .map(getPriceValue)
+    .sort((a, b) => a - b);
 
-  for (let i = 0; i < columns; i++) {
-    newData.push({
+  let dataToRender = data;
+  let minPrice = Math.min(...values);
+  let maxPrice = Math.max(...values);
+
+  if (hideOutliers) {
+    const lowerHalfMedian = values[Math.floor(values.length / 4)];
+    const upperHalfMedian = values[Math.floor((values.length * 3) / 4)];
+    const iqr = upperHalfMedian - lowerHalfMedian;
+    const lowerThreshold = lowerHalfMedian - 1.5 * iqr;
+    const upperThreshold = upperHalfMedian + 1.5 * iqr;
+    const nonOutliers = values.filter((v) => v >= lowerThreshold && v <= upperThreshold);
+    dataToRender = data.filter((v) => v.priceEth >= lowerThreshold && v.priceEth <= upperThreshold);
+    minPrice = Math.min(...nonOutliers);
+    maxPrice = Math.max(...nonOutliers);
+  }
+
+  const numBars = Math.ceil((maxPrice - minPrice) / priceBucket);
+
+  for (let i = 0; i <= numBars; i++) {
+    listings.push({
       data: [],
-      axisLabel: numStr(minPrice + i * range),
-      start: minPrice + i * range,
-      end: minPrice + (i + 1) * range,
+      axisLabel: numStr(Math.floor(minPrice + i * priceBucket)),
+      start: minPrice + i * priceBucket,
+      end: minPrice + (i + 1) * priceBucket,
       tooltip: ''
     });
   }
 
-  for (const item of data) {
-    const i = Math.floor((item.priceEth - minPrice) / range);
-
-    if (item.isSellOrder && chartType === BarChartType.Listings) {
-      newData[i].data.push(item);
-    } else if (!item.isSellOrder && chartType === BarChartType.Offers) {
-      newData[i].data.push(item);
+  for (const item of dataToRender) {
+    const i = Math.floor((item.priceEth - minPrice) / priceBucket);
+    if (item.isSellOrder) {
+      listings[i].data.push(item);
     }
   }
 
-  return newData;
+  return { listings, minPrice, maxPrice };
 }
 
-export const ResponsiveBarChart = ({ graphData, graphType, fetchData, displayDetails }: ResponsiveBarChartProps) => {
+export const ResponsiveBarChart = ({ data, graphType, displayDetails }: ResponsiveBarChartProps) => {
   const [selectedPriceBucket, setSelectedPriceBucket] = useState(1);
+  const [showOutliers, setShowOutliers] = useState(false);
   return (
     <ChartBox className="h-full">
       <div className="flex justify-between mb-4">
         <div className="ml-6 font-medium mt-3">{graphType}</div>
-        <select
-          onChange={(e) => setSelectedPriceBucket(+e.target.value)}
-          className={twMerge('form-select rounded-lg bg-transparent focus:border-none focus:outline-none text-sm')}
-        >
-          {priceBuckets.map((filter) => (
-            <option value={filter} selected={filter === selectedPriceBucket}>
-              {filter} {EthSymbol}
-            </option>
-          ))}
-        </select>
+        <div className="items-center flex space-x-6">
+          <div className="flex items-center space-x-2">
+            <ASwitchButton
+              checked={showOutliers}
+              onChange={() => {
+                setShowOutliers(!showOutliers);
+              }}
+            ></ASwitchButton>
+
+            <span className={twMerge('text-sm font-medium', secondaryTextColor)}>Outliers</span>
+          </div>
+
+          <ADropdown
+            hasBorder={true}
+            alignMenuRight
+            innerClassName="w-[100px]"
+            menuItemClassName="py-2"
+            label={selectedPriceBucket + ' ' + EthSymbol}
+            items={priceBuckets.map((bucket) => ({
+              label: numStr(bucket),
+              onClick: () => setSelectedPriceBucket(bucket)
+            }))}
+          />
+        </div>
       </div>
+
       <ParentSize debounceTime={10}>
         {({ width, height }) => (
           <BarChart
-            graphData={graphData}
+            data={data}
             graphType={graphType}
             width={width}
             height={height}
-            fetchData={fetchData}
             selectedPriceBucket={selectedPriceBucket}
             displayDetails={displayDetails}
+            hideOutliers={!showOutliers}
           />
         )}
       </ParentSize>
@@ -126,43 +159,61 @@ export const ResponsiveBarChart = ({ graphData, graphType, fetchData, displayDet
 };
 
 const BarChart: React.FC<BarChartProps> = ({
-  graphData,
+  data,
   width,
   height,
   graphType,
-  fetchData,
   displayDetails,
-  selectedPriceBucket
+  selectedPriceBucket,
+  hideOutliers
 }) => {
+  const getChartDimensions = ({ width = 0, height = 0 }: { width?: number; height?: number }) => {
+    const margin = {
+      top: 10,
+      right: 0,
+      bottom: 50,
+      left: 60
+    };
+
+    return {
+      margin,
+      boundedWidth: width - margin.left - margin.right,
+      boundedHeight: height - margin.top - margin.bottom
+    };
+  };
+
   const { boundedWidth, boundedHeight } = getChartDimensions({
     width,
     height
   });
 
-  const data = convertRawDataToChartData(graphData, boundedWidth, graphType, selectedPriceBucket);
-  const axisLabels = data.map(getAxisLabel);
+  const chartData = convertRawDataToChartData(data, boundedWidth, selectedPriceBucket, hideOutliers);
 
-  if (data.every((d) => d.data.length === 0)) {
-    return (
-      <strong className={twMerge(textColor, 'h-full flex justify-center items-center')}>No {graphType} data</strong>
-    );
+  if (chartData.listings.every((d) => d.data.length === 0)) {
+    return <strong className={twMerge(textColor, 'h-full flex justify-center items-center')}>No {graphType}</strong>;
   }
 
   const { theme } = useTheme();
   const darkMode = theme === 'dark';
   const themeToUse = tailwindConfig.colors[darkMode ? 'dark' : 'light'];
   const { theme: chartTheme } = useChartTheme();
+  const [hoveredBarIndex, setHoveredBarIndex] = useState(-1);
 
   return (
     <XYChart
       width={width}
       height={height}
-      xScale={{ type: 'band', range: [0, boundedWidth], round: true, domain: axisLabels, padding: 0.85 }}
+      xScale={{
+        type: 'linear',
+        range: [chartData.minPrice, boundedWidth],
+        round: true,
+        domain: [chartData.minPrice, chartData.maxPrice]
+      }}
       yScale={{
         type: 'linear',
         range: [boundedHeight, 0],
         round: true,
-        domain: [0, Math.max(...data.map(getOrderCount))]
+        domain: [0, Math.max(...chartData.listings.map(getOrderCount))]
       }}
       theme={chartTheme}
     >
@@ -196,27 +247,23 @@ const BarChart: React.FC<BarChartProps> = ({
       />
       <AnimatedGrid columns={false} strokeDasharray="6,6" stroke={themeToUse.disabledFade} numTicks={6} />
       <AnimatedBarSeries
-        data={data}
-        dataKey={graphType}
+        data={chartData.listings}
+        dataKey="listings"
         xAccessor={getAxisLabel}
+        barPadding={0.4}
         yAccessor={getOrderCount}
-        radius={10}
-        radiusAll
+        colorAccessor={(_, i) => (i === hoveredBarIndex ? saleDataPointColor : undefined)}
+        onPointerMove={({ index }) => setHoveredBarIndex(index)}
         onPointerDown={({ event, datum }) => {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const isLeftMouseClick = (event as unknown as any).button === 0;
           if (isLeftMouseClick) {
-            fetchData(datum.start.toString(), datum.end.toString());
             displayDetails(datum.data.map(getOrder), 0);
           }
         }}
       />
 
       <Tooltip
-        snapTooltipToDatumX
-        snapTooltipToDatumY
-        showVerticalCrosshair
-        showSeriesGlyphs
         renderTooltip={({ tooltipData }) => {
           const nearest = tooltipData?.nearestDatum?.datum as unknown as BarChartEntry;
           const from = `${numStr(nearest.start)} ${EthSymbol}`;
@@ -224,8 +271,8 @@ const BarChart: React.FC<BarChartProps> = ({
           const title = `${nearest.data.length} ${graphType}`;
           const items = useMemo<SimpleTableItem[]>(
             () => [
-              { title: 'from:', value: <div>{from}</div> },
-              { title: 'to:', value: <div>{to}</div> }
+              { title: 'From:', value: <div>{from}</div> },
+              { title: 'To:', value: <div>{to}</div> }
             ],
             [from, to]
           );
@@ -236,7 +283,11 @@ const BarChart: React.FC<BarChartProps> = ({
                 <span>{title}</span>
               </div>
               <div className="w-full p-1">
-                <SimpleTable items={items} rowClassName="mb-2" valueClassName="ml-2" />
+                <SimpleTable
+                  items={items}
+                  rowClassName={twMerge('mb-2 font-medium', secondaryTextColor)}
+                  valueClassName={twMerge('ml-2', textColor)}
+                />
               </div>
             </div>
           );

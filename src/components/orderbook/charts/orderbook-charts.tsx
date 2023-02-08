@@ -10,10 +10,10 @@ import { apiGet } from 'src/utils';
 import { secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { useNetwork } from 'wagmi';
-import { BarChartType, ResponsiveBarChart } from './bar-chart';
+import { ResponsiveBarChart } from './bar-chart';
 import { OrdersChartDetails } from './chart-details';
 import { ResponsiveSalesChart, SalesChartData } from './sales-chart';
-import { ScatterChartType } from './types';
+import { BarChartType, ScatterChartType } from './types';
 
 const infoBoxStyle = 'flex items-center justify-center opacity-60 font-bold text-lg h-full';
 
@@ -29,22 +29,22 @@ export const OrderbookCharts = ({ className = '', collectionAddress, collectionI
   const chainId = chain?.id ?? ChainId.Mainnet;
   const [selectedTimeBucket, setSelectedTimeBucket] = useState(HistoricalSalesTimeBucket.ONE_WEEK);
   const [ordersData, setOrdersData] = useState<CollectionOrder[]>([]);
-  const [selectedListings, setSelectedListings] = useState<CollectionOrder[]>([]);
-  const [selectedListingIndex, setSelectedListingIndex] = useState(0);
+  const [selectedOrders, setSelectedOrders] = useState<CollectionOrder[]>([]);
+  const [selectedOrderIndex, setSelectedOrderIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
-  const displayListingDetails = (orders: CollectionOrder[], index: number) => {
-    if (index !== selectedListingIndex) {
-      setSelectedListingIndex(index);
+  const displayDetails = (orders: CollectionOrder[], index: number) => {
+    if (index !== selectedOrderIndex) {
+      setSelectedOrderIndex(index);
     }
 
     let arrayEquals = false;
-    if (orders.length === selectedListings.length) {
-      arrayEquals = orders.every((v, i) => v.id === selectedListings[i].id);
+    if (orders.length === selectedOrders.length) {
+      arrayEquals = orders.every((v, i) => v.id === selectedOrders[i].id);
     }
 
     if (!arrayEquals) {
-      setSelectedListings(orders);
+      setSelectedOrders(orders);
     }
   };
 
@@ -121,27 +121,27 @@ export const OrderbookCharts = ({ className = '', collectionAddress, collectionI
       <div className="flex">
         <div className="w-2/3 p-2">
           {ordersData.length > 0 && (
-            <ResponsiveBarChart
-              graphType={BarChartType.Listings}
-              graphData={ordersData}
-              fetchData={fetchOrdersData}
-              displayDetails={displayListingDetails}
-            />
+            <ResponsiveBarChart graphType={BarChartType.Listings} data={ordersData} displayDetails={displayDetails} />
           )}
 
           {isLoading && <Loading />}
         </div>
         <div className="w-1/3 p-2">
           <OrdersChartDetails
-            orders={selectedListings}
-            index={selectedListingIndex}
+            orders={selectedOrders}
+            index={selectedOrderIndex}
             valueClassName={secondaryTextColor}
-            setIndex={setSelectedListingIndex}
+            setIndex={setSelectedOrderIndex}
             collectionAddress={collectionAddress}
             collectionImage={collectionImage}
           />
         </div>
       </div>
+
+      {/* todo: uncomment <div className="w-full p-2 flex space-x-5 underline text-sm mt-6">
+        <ExternalLink href="https://flow.so/terms">Terms</ExternalLink>
+        <ExternalLink href="https://flow.so/privacy-policy">Privacy Policy</ExternalLink>
+      </div> */}
     </div>
   );
 };

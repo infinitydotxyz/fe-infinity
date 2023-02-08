@@ -1,15 +1,12 @@
 import { buildChartTheme } from '@visx/xychart';
-import { textColor } from 'src/utils/ui-constants';
-import tailwindConfig from '../../../settings/tailwind/elements/foundations';
+import { listingDataPointColor, textColor } from 'src/utils/ui-constants';
 
 export function useChartTheme() {
-  const color = tailwindConfig.colors.brand.primaryFade;
-
   return {
     theme: buildChartTheme({
       // colors
       backgroundColor: '', // used by Tooltip, Annotation
-      colors: [color], // categorical colors, mapped to series via `dataKey`s
+      colors: [listingDataPointColor], // categorical colors, mapped to series via `dataKey`s
 
       // labels
       svgLabelBig: { fill: textColor, fontSize: 12, fontWeight: 'normal' }, // label at bottom and side of the chart
