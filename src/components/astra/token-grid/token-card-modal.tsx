@@ -1,19 +1,10 @@
-import {
-  ChainId,
-  CollectionAttributes,
-  Erc721Token,
-  HistoricalSalesTimeBucket,
-  Token
-} from '@infinityxyz/lib-frontend/types/core';
+import { CollectionAttributes, Erc721Token, NftSaleAndOrder, Token } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import {
-  ResponsiveSalesAndOrdersChart,
-  SalesAndOrdersChartData
-} from 'src/components/orderbook/charts/sales-and-orders-chart';
+import { ResponsiveSalesAndOrdersChart } from 'src/components/orderbook/charts/sales-and-orders-chart';
 import { ScatterChartType } from 'src/components/orderbook/charts/types';
 import { nftToCardDataWithOrderFields } from 'src/hooks/api/useTokenFetcher';
-import { ellipsisAddress, getChainScannerBase, nFormatter, useFetch } from 'src/utils';
+import { apiGet, ellipsisAddress, getChainScannerBase, nFormatter, useFetch } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartType, useCartContext } from 'src/utils/context/CartContext';
 import { BasicTokenInfo } from 'src/utils/types';
@@ -21,7 +12,7 @@ import { borderColor, dropShadow, secondaryBgColor, secondaryTextColor } from 's
 import { useSWRConfig } from 'swr';
 import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
-import { useAccount, useNetwork } from 'wagmi';
+import { useAccount } from 'wagmi';
 import { BlueCheck, EthSymbol, EZImage, Modal, NextLink, ShortAddress, Spacer } from '../../common';
 import { AButton } from '../astra-button';
 import { ATraitList } from '../astra-trait-list';
@@ -53,17 +44,31 @@ const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string)
 };
 
 export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.Element | null => {
-  const [salesAndOrdersChartData, setSalesAndOrdersChartData] = useState<SalesAndOrdersChartData[]>([]);
+  const [salesAndOrdersChartData, setSalesAndOrdersChartData] = useState<NftSaleAndOrder[]>([]);
   const { token, error, collectionAttributes } = useFetchAssetInfo(data.chainId, data.collectionAddress, data.tokenId);
-  const [selectedTimeBucket, setSelectedTimeBucket] = useState(HistoricalSalesTimeBucket.ONE_WEEK);
-  const { chain } = useNetwork();
   const { address: user } = useAccount();
-  const chainId = String(chain?.id ?? 1) as ChainId;
+  const chainId = data.chainId;
   const { setCartType } = useCartContext();
   const { isNFTSelectable, toggleNFTSelection } = useAppContext();
   const router = useRouter();
-
   const [addedToCart, setAddedToCart] = useState(isNFTSelected);
+
+  const fetchSalesAndOrdersForTimeBucket = async () => {
+    const { result, error } = await apiGet(
+      `/collections/${chainId}:${data.collectionAddress}/nfts/${data.tokenId}/salesorders`
+    );
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    setSalesAndOrdersChartData(result);
+  };
+
+  useEffect(() => {
+    fetchSalesAndOrdersForTimeBucket();
+  }, []);
 
   if (error) {
     return <ErrorOrLoading error={!!error} noData message="No Data" />;
@@ -72,55 +77,6 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
   if (!token) {
     return null;
   }
-
-  useEffect(() => {
-    fetchSalesDataForTimeBucket(selectedTimeBucket);
-  }, [selectedTimeBucket]);
-
-  const fetchSalesDataForTimeBucket = (timeBucket: HistoricalSalesTimeBucket) => {
-    // todo use real data
-    const nowTimestamp = Date.now();
-    let prevTimestamp = nowTimestamp;
-    switch (timeBucket) {
-      case HistoricalSalesTimeBucket.ONE_HOUR:
-        prevTimestamp = nowTimestamp - 1000 * 60 * 60;
-        break;
-      case HistoricalSalesTimeBucket.ONE_DAY:
-        prevTimestamp = nowTimestamp - 1000 * 60 * 60 * 24;
-        break;
-      case HistoricalSalesTimeBucket.ONE_WEEK:
-        prevTimestamp = nowTimestamp - 1000 * 60 * 60 * 24 * 7;
-        break;
-      case HistoricalSalesTimeBucket.ONE_MONTH:
-        prevTimestamp = nowTimestamp - 1000 * 60 * 60 * 24 * 30;
-        break;
-      case HistoricalSalesTimeBucket.ONE_YEAR:
-        prevTimestamp = nowTimestamp - 1000 * 60 * 60 * 24 * 365;
-        break;
-      default:
-        break;
-    }
-
-    setSelectedTimeBucket(timeBucket);
-
-    setSalesAndOrdersChartData(
-      [...new Array(30)].map(() => {
-        const rand = Math.random();
-        return {
-          dataType: rand > 0.33 ? (rand > 0.66 ? 'Sale' : 'Listing') : 'Offer',
-          timestamp: Math.random() * (nowTimestamp - prevTimestamp) + prevTimestamp,
-          priceEth: +(Math.random() * (100 - 0.01) + 0.01).toFixed(2),
-          collectionAddress: '0x123',
-          collectionName: 'Test Collection ' + Math.floor(Math.random() * 100),
-          collectionImage:
-            'https://i.seadn.io/gae/8GNiYHlI96za-qLdNuBdhW64Y9fNquLw4V9NojDZt5XZhownn8tHQJTEMfZfqfRzk9GngBxiz6BKsr_VaHFyGk6Lm2Qai6RXgH7bwB4?auto=format&w=750',
-          tokenId: Math.floor(Math.random() * 10000).toString(),
-          tokenImage:
-            'https://i.seadn.io/gae/8GNiYHlI96za-qLdNuBdhW64Y9fNquLw4V9NojDZt5XZhownn8tHQJTEMfZfqfRzk9GngBxiz6BKsr_VaHFyGk6Lm2Qai6RXgH7bwB4?auto=format&w=750'
-        } as SalesAndOrdersChartData;
-      })
-    );
-  };
 
   const listingPrice = nFormatter(token.ordersSnippet?.listing?.orderItem?.startPriceEth);
   const listingExpiry = token.ordersSnippet?.listing?.orderItem?.endTimeMs;
@@ -344,9 +300,6 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
               <div className="w-full py-2">
                 {salesAndOrdersChartData.length > 0 && (
                   <ResponsiveSalesAndOrdersChart
-                    key={selectedTimeBucket}
-                    selectedTimeBucket={selectedTimeBucket}
-                    setSelectedTimeBucket={setSelectedTimeBucket}
                     graphType={ScatterChartType.SalesAndOrders}
                     data={salesAndOrdersChartData}
                   />

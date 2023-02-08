@@ -1,4 +1,4 @@
-import { HistoricalSalesTimeBucket } from '@infinityxyz/lib-frontend/types/core';
+import { NftSaleAndOrder } from '@infinityxyz/lib-frontend/types/core';
 import { AxisBottom, AxisLeft } from '@visx/axis';
 import { localPoint } from '@visx/event';
 import { GridRows } from '@visx/grid';
@@ -31,8 +31,6 @@ export interface SalesAndOrdersChartData {
 }
 
 export interface ResponsiveSalesAndOrdersChartProps extends Omit<SalesAndOrdersChartProps, 'width' | 'height'> {
-  selectedTimeBucket: string;
-  setSelectedTimeBucket: (timeBucket: HistoricalSalesTimeBucket) => void;
   graphType: ScatterChartType.SalesAndOrders;
 }
 
@@ -42,15 +40,10 @@ interface SalesAndOrdersChartProps {
   saleColor?: string;
   listingColor?: string;
   offerColor?: string;
-  data: SalesAndOrdersChartData[];
+  data: NftSaleAndOrder[];
 }
 
-export const ResponsiveSalesAndOrdersChart = ({
-  data,
-  graphType,
-  selectedTimeBucket,
-  setSelectedTimeBucket
-}: ResponsiveSalesAndOrdersChartProps) => {
+export const ResponsiveSalesAndOrdersChart = ({ data, graphType }: ResponsiveSalesAndOrdersChartProps) => {
   const saleColor = '#66d981';
   const listingColor = '#4899f1';
   const offerColor = '#7d81f6';
@@ -64,16 +57,6 @@ export const ResponsiveSalesAndOrdersChart = ({
     <ChartBox className="h-full">
       <div className="flex justify-between mb-4">
         <div className={twMerge('font-medium')}>{graphType}</div>
-        <select
-          onChange={(e) => setSelectedTimeBucket(e.target.value as HistoricalSalesTimeBucket)}
-          className={twMerge('form-select rounded-lg bg-transparent focus:border-none float-right text-sm')}
-        >
-          {Object.values(HistoricalSalesTimeBucket).map((filter) => (
-            <option value={filter} selected={filter === selectedTimeBucket}>
-              {filter}
-            </option>
-          ))}
-        </select>
       </div>
 
       <ParentSize debounceTime={10} style={{ height: '95%' }}>
@@ -117,16 +100,12 @@ function SalesAndOrdersChart({ width, height, data, saleColor, listingColor, off
     tooltipData,
     tooltipLeft = 0,
     tooltipTop = 0
-  } = useTooltip<SalesAndOrdersChartData>({
+  } = useTooltip<NftSaleAndOrder>({
     tooltipOpen: false,
     tooltipLeft: 0,
     tooltipTop: 0,
     tooltipData: {
       timestamp: 0,
-      collectionAddress: '',
-      collectionName: '',
-      tokenId: '',
-      tokenImage: '',
       priceEth: 0,
       dataType: 'Sale'
     }
@@ -152,8 +131,8 @@ function SalesAndOrdersChart({ width, height, data, saleColor, listingColor, off
     height
   });
 
-  const yAccessor = (d: SalesAndOrdersChartData) => d.priceEth;
-  const xAccessor = (d: SalesAndOrdersChartData) => new Date(d.timestamp);
+  const yAccessor = (d: NftSaleAndOrder) => d.priceEth;
+  const xAccessor = (d: NftSaleAndOrder) => new Date(d.timestamp);
 
   const xScale = useMemo(
     () =>
@@ -176,7 +155,7 @@ function SalesAndOrdersChart({ width, height, data, saleColor, listingColor, off
   );
 
   const voronoiLayout = useMemo(() => {
-    return voronoi<SalesAndOrdersChartData>({
+    return voronoi<NftSaleAndOrder>({
       x: (d) => xScale(xAccessor(d)),
       y: (d) => yScale(yAccessor(d)),
       width: boundedWidth,
@@ -233,7 +212,7 @@ function SalesAndOrdersChart({ width, height, data, saleColor, listingColor, off
         if (d.dataType === 'Sale') {
           return (
             <Circle
-              key={`${d.timestamp}:${d.tokenId}`}
+              key={`${d.timestamp}:${d.dataType}:${d.priceEth}`}
               fill={saleColor}
               cx={xScale(xAccessor(d))}
               cy={yScale(yAccessor(d))}
@@ -243,7 +222,7 @@ function SalesAndOrdersChart({ width, height, data, saleColor, listingColor, off
         } else if (d.dataType === 'Listing') {
           return (
             <Circle
-              key={`${d.timestamp}:${d.tokenId}`}
+              key={`${d.timestamp}:${d.dataType}:${d.priceEth}`}
               fill={listingColor}
               cx={xScale(xAccessor(d))}
               cy={yScale(yAccessor(d))}
@@ -253,7 +232,7 @@ function SalesAndOrdersChart({ width, height, data, saleColor, listingColor, off
         } else if (d.dataType === 'Offer') {
           return (
             <Circle
-              key={`${d.timestamp}:${d.tokenId}`}
+              key={`${d.timestamp}:${d.dataType}:${d.priceEth}`}
               fill={offerColor}
               cx={xScale(xAccessor(d))}
               cy={yScale(yAccessor(d))}
@@ -336,7 +315,7 @@ function SalesAndOrdersChart({ width, height, data, saleColor, listingColor, off
 interface Props2 {
   left: number;
   top: number;
-  data?: SalesAndOrdersChartData;
+  data?: NftSaleAndOrder;
   saleColor?: string;
   listingColor?: string;
   offerColor?: string;

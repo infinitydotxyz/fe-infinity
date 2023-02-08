@@ -79,7 +79,7 @@ export const OrderbookCharts = ({ className = '', collectionAddress, collectionI
 
   const fetchOrdersData = async () => {
     setIsLoading(true);
-    const { result, error } = await apiGet(`/collections/${chainId}:${collectionAddress}/orders`, {});
+    const { result, error } = await apiGet(`/collections/${chainId}:${collectionAddress}/orders`);
 
     if (error) {
       setIsLoading(false);
@@ -94,8 +94,11 @@ export const OrderbookCharts = ({ className = '', collectionAddress, collectionI
 
   useEffect(() => {
     fetchSalesDataForTimeBucket(selectedTimeBucket);
-    fetchOrdersData();
   }, [selectedTimeBucket]);
+
+  useEffect(() => {
+    fetchOrdersData();
+  }, []);
 
   return (
     <div className={twMerge('w-full h-full relative flex flex-col p-2', className)}>
