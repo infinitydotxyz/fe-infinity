@@ -1,4 +1,10 @@
-import { BaseCollection, ChainId, CollectionAttributes, CollectionStats } from '@infinityxyz/lib-frontend/types/core';
+import {
+  BaseCollection,
+  ChainId,
+  CollectionAttributes,
+  CollectionStats,
+  EventType
+} from '@infinityxyz/lib-frontend/types/core';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import NotFound404Page from 'pages/not-found-404';
@@ -12,10 +18,13 @@ import { ASortButton } from 'src/components/astra/astra-sort-button';
 import { AStatusFilterButton } from 'src/components/astra/astra-status-button';
 import { ATraitFilter } from 'src/components/astra/astra-trait-filter';
 import { TokenGrid } from 'src/components/astra/token-grid/token-grid';
+import { CollectionAXCharts } from 'src/components/collection/collection-analytics-charts';
 import { CollectionPageHeader, CollectionPageHeaderProps } from 'src/components/collection/collection-page-header';
+import { CollectionSocialFeed } from 'src/components/collection/collection-social-feed';
+import { TopHolderList } from 'src/components/collection/collection-top-holders';
+import { TwitterSupporterList } from 'src/components/collection/collection-top-twitter-supporters';
 import { CenteredContent, ExternalLink, EZImage, Spacer, TextInputBox } from 'src/components/common';
 import { CollectionNftSearchInput } from 'src/components/common/search/collection-nft-search-input';
-import { CollectionAXCharts } from 'src/components/collection/collection-analytics-charts';
 import { useCollectionTokenFetcher } from 'src/hooks/api/useTokenFetcher';
 import { useScrollInfo } from 'src/hooks/useScrollHook';
 import { apiGet, nFormatter } from 'src/utils';
@@ -314,33 +323,34 @@ export default function ItemsPage(props: CollectionDashboardProps) {
           )}
 
           {selectedTab === 'Analytics' && (
-            <CollectionAXCharts
-              collectionAddress={collection.address}
-              collectionImage={collection.metadata.profileImage}
-            />
-          )}
-          {/* {selectedTab === 'Analytics' && (
-            <div className="flex justify-center px-4 mt-5 space-x-4">
-              <div className="flex space-x-4">
-                <div className="w-1/2">{collection && <TopHolderList collection={collection}></TopHolderList>}</div>
+            <div>
+              <CollectionAXCharts
+                collectionAddress={collection.address}
+                collectionImage={collection.metadata.profileImage}
+              />
+
+              <div className="flex px-4 mt-2 space-x-4">
+                <div className="flex space-x-4 w-1/2">
+                  <div className="w-1/2">{collection && <TopHolderList collection={collection}></TopHolderList>}</div>
+                  <div className="w-1/2">
+                    {collection && <TwitterSupporterList collection={collection}></TwitterSupporterList>}
+                  </div>
+                </div>
+
                 <div className="w-1/2">
-                  {collection && <TwitterSupporterList collection={collection}></TwitterSupporterList>}
+                  {collection && (
+                    <CollectionSocialFeed
+                      types={[EventType.DiscordAnnouncement, EventType.TwitterTweet]}
+                      collectionAddress={collection?.address ?? ''}
+                      collectionName={collection?.metadata.name ?? ''}
+                      collectionSlug={collection?.slug ?? ''}
+                      collectionProfileImage={collection?.metadata.profileImage ?? ''}
+                    />
+                  )}
                 </div>
               </div>
-
-              <div className="w-1/2">
-                {collection && (
-                  <CollectionSocialFeed
-                    types={[EventType.DiscordAnnouncement, EventType.TwitterTweet]}
-                    collectionAddress={collection?.address ?? ''}
-                    collectionName={collection?.metadata.name ?? ''}
-                    collectionSlug={collection?.slug ?? ''}
-                    collectionProfileImage={collection?.metadata.profileImage ?? ''}
-                  />
-                )}
-              </div>
             </div>
-          )} */}
+          )}
         </div>
       </div>
     </div>
