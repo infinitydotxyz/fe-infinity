@@ -333,7 +333,7 @@ export const AstraCart = ({
       <div className="m-6 flex flex-col text-sm space-y-2">
         <div>
           <span className={twMerge(secondaryTextColor, 'font-medium')}>Total: </span>
-          <span className="font-heading">{nFormatter(Number(cartTotal))}</span>
+          <span className="font-heading">{nFormatter(Number(cartTotal))} WETH</span>
         </div>
         <div className="">
           <span className={twMerge(secondaryTextColor, 'font-medium')}>Wallet Balance: </span>
