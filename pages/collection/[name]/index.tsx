@@ -221,7 +221,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                         numSweep === '5' && selectedColor
                       )}
                       onClick={() => {
-                        setNumSweep('5');
+                        numSweep === '5' ? setNumSweep('') : setNumSweep('5');
                       }}
                     >
                       5
@@ -234,7 +234,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                         numSweep === '10' && selectedColor
                       )}
                       onClick={() => {
-                        setNumSweep('10');
+                        numSweep === '10' ? setNumSweep('') : setNumSweep('10');
                       }}
                     >
                       10
@@ -247,7 +247,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                         numSweep === '20' && selectedColor
                       )}
                       onClick={() => {
-                        setNumSweep('20');
+                        numSweep === '20' ? setNumSweep('') : setNumSweep('20');
                       }}
                     >
                       20
@@ -260,7 +260,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                         numSweep === '50' && selectedColor
                       )}
                       onClick={() => {
-                        setNumSweep('50');
+                        numSweep === '50' ? setNumSweep('') : setNumSweep('50');
                       }}
                     >
                       50
