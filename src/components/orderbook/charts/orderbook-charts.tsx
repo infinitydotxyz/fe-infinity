@@ -1,9 +1,4 @@
-import {
-  ChainId,
-  CollectionHistoricalSale,
-  CollectionOrder,
-  HistoricalSalesTimeBucket
-} from '@infinityxyz/lib-frontend/types/core';
+import { ChainId, CollectionHistoricalSale, CollectionOrder } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { Spinner } from 'src/components/common';
 import { apiGet } from 'src/utils';
@@ -27,7 +22,6 @@ export const OrderbookCharts = ({ className = '', collectionAddress, collectionI
   const [salesChartData, setSalesChartData] = useState<SalesChartData[]>([]);
   const { chain } = useNetwork();
   const chainId = chain?.id ?? ChainId.Mainnet;
-  const [selectedTimeBucket, setSelectedTimeBucket] = useState(HistoricalSalesTimeBucket.ONE_WEEK);
   const [ordersData, setOrdersData] = useState<CollectionOrder[]>([]);
   const [selectedOrders, setSelectedOrders] = useState<CollectionOrder[]>([]);
   const [selectedOrderIndex, setSelectedOrderIndex] = useState(0);
@@ -48,13 +42,9 @@ export const OrderbookCharts = ({ className = '', collectionAddress, collectionI
     }
   };
 
-  const fetchSalesDataForTimeBucket = async (timeBucket: HistoricalSalesTimeBucket) => {
+  const fetchSalesDataForTimeBucket = async () => {
     setIsLoading(true);
-    const { result, error } = await apiGet(`/collections/${chainId}:${collectionAddress}/sales`, {
-      query: {
-        period: timeBucket
-      }
-    });
+    const { result, error } = await apiGet(`/collections/${chainId}:${collectionAddress}/sales`);
 
     if (error) {
       console.error(error);
@@ -88,15 +78,11 @@ export const OrderbookCharts = ({ className = '', collectionAddress, collectionI
     }
 
     setOrdersData(result);
-
     setIsLoading(false);
   };
 
   useEffect(() => {
-    fetchSalesDataForTimeBucket(selectedTimeBucket);
-  }, [selectedTimeBucket]);
-
-  useEffect(() => {
+    fetchSalesDataForTimeBucket();
     fetchOrdersData();
   }, []);
 
@@ -105,13 +91,7 @@ export const OrderbookCharts = ({ className = '', collectionAddress, collectionI
       <div className="flex">
         <div className="w-full p-2">
           {salesChartData.length > 0 && (
-            <ResponsiveSalesChart
-              key={selectedTimeBucket}
-              selectedTimeBucket={selectedTimeBucket}
-              setSelectedTimeBucket={setSelectedTimeBucket}
-              graphType={ScatterChartType.Sales}
-              data={salesChartData}
-            />
+            <ResponsiveSalesChart graphType={ScatterChartType.Sales} data={salesChartData} />
           )}
 
           {isLoading && <Loading />}
