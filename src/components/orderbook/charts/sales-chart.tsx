@@ -1,8 +1,7 @@
 import { HistoricalSalesTimeBucket } from '@infinityxyz/lib-frontend/types/core';
-import { AxisBottom, AxisLeft } from '@visx/axis';
 import { localPoint } from '@visx/event';
-import { GridRows } from '@visx/grid';
 import { Group } from '@visx/group';
+import { AnimatedAxis, AnimatedGridRows } from '@visx/react-spring';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { scaleLinear, scaleTime } from '@visx/scale';
 import { Circle } from '@visx/shape';
@@ -300,18 +299,18 @@ function SalesChart({ width, height, data, hideOutliers, selectedTimeBucket }: S
         onMouseMove={handleMouseMove}
         onMouseDown={handleMouseClick}
         onMouseLeave={() => hideTooltip()}
-        role="figure"
+        style={{ transition: 'all 0.7s ease-in-out' }}
       >
         <Group top={margin.top} left={margin.left}>
-          <GridRows
+          <AnimatedGridRows
             scale={yScale}
             width={boundedWidth}
-            height={boundedHeight}
             stroke={themeToUse.disabledFade}
             strokeDasharray="6,6"
             numTicks={6}
           />
-          <AxisLeft
+          <AnimatedAxis
+            orientation="left"
             numTicks={5}
             hideAxisLine={true}
             hideTicks={true}
@@ -324,7 +323,8 @@ function SalesChart({ width, height, data, hideOutliers, selectedTimeBucket }: S
               verticalAnchor: 'middle'
             })}
           />
-          <AxisBottom
+          <AnimatedAxis
+            orientation="bottom"
             numTicks={5}
             top={boundedHeight}
             hideAxisLine={true}
