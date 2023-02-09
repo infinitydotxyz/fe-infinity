@@ -6,7 +6,7 @@ import { secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { useNetwork } from 'wagmi';
 import { ResponsiveBarChart } from '../charts/bar-chart';
-import { OrdersChartDetails } from '../charts/chart-details';
+import { OrdersChartDetails, SalesChartDetails } from '../charts/chart-details';
 import { ResponsiveSalesChart, SalesChartData } from '../charts/sales-chart';
 import { BarChartType, ScatterChartType } from '../charts/types';
 
@@ -52,18 +52,17 @@ export const CollectionAXCharts = ({ className = '', collectionAddress, collecti
       return;
     }
 
-    setSalesChartData(
-      result.map((sale: CollectionHistoricalSale) => {
-        return {
-          salePrice: sale.salePriceEth,
-          tokenImage: sale.tokenImage,
-          collectionAddress,
-          tokenId: sale.tokenId,
-          timestamp: sale.timestamp
-        };
-      })
-    );
+    const chartData = result.map((sale: CollectionHistoricalSale) => {
+      return {
+        salePrice: sale.salePriceEth,
+        tokenImage: sale.tokenImage,
+        collectionAddress,
+        tokenId: sale.tokenId,
+        timestamp: sale.timestamp
+      } as SalesChartData;
+    });
 
+    setSalesChartData(chartData);
     setIsLoading(false);
   };
 
@@ -96,16 +95,7 @@ export const CollectionAXCharts = ({ className = '', collectionAddress, collecti
 
           {isLoading && <Loading />}
         </div>
-        <div className="w-1/4 p-2">
-          <OrdersChartDetails
-            orders={selectedOrders}
-            index={selectedOrderIndex}
-            valueClassName={secondaryTextColor}
-            setIndex={setSelectedOrderIndex}
-            collectionAddress={collectionAddress}
-            collectionImage={collectionImage}
-          />
-        </div>
+        <div className="w-1/4 p-2">{salesChartData.length > 0 && <SalesChartDetails data={salesChartData[0]} />}</div>
       </div>
 
       <div className="flex">

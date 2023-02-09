@@ -1,13 +1,14 @@
 import { CollectionOrder } from '@infinityxyz/lib-frontend/types/core';
+import { format } from 'date-fns';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { TokenCardModal } from 'src/components/astra/token-grid/token-card-modal';
 import { BasicTokenInfo } from 'src/utils/types';
-import { borderColor, secondaryBgColor } from 'src/utils/ui-constants';
+import { borderColor, secondaryBgColorDarker, secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { EthSymbol, EZImage } from '../common';
-import { OrderbookRowButton } from './chart-detail-button';
 import { ChartBox } from './chart-box';
+import { OrderbookRowButton } from './chart-detail-button';
 import { clamp } from './chart-utils';
 import { NextPrevArrows } from './next-prev-arrows';
 import { SalesChartData } from './sales-chart';
@@ -26,7 +27,7 @@ export const OrdersChartDetails = ({ orders, index, setIndex, collectionAddress,
     const order = orders[clamp(index, 0, orders.length - 1)];
 
     return (
-      <div className={twMerge(borderColor, 'border-[1px] rounded-lg pb-2')}>
+      <div className={twMerge(borderColor, 'border-[1px] rounded-lg pb-2.5')}>
         <OrderDetailViewer
           order={order}
           scroll={true}
@@ -39,7 +40,7 @@ export const OrdersChartDetails = ({ orders, index, setIndex, collectionAddress,
             orders={orders}
             index={index}
             setIndex={setIndex}
-            className="flex pointer-events-auto text-sm"
+            className="flex pointer-events-auto text-sm font-heading font-bold"
           />
         </div>
       </div>
@@ -80,7 +81,10 @@ const OrderDetailViewer = ({ order, collectionAddress }: Props2) => {
   return (
     <div className={twMerge('flex flex-col text-sm mt-4 items-center')}>
       <div
-        className={twMerge('cursor-pointer flex flex-col space-y-4 items-center w-62 p-2 rounded-lg', secondaryBgColor)}
+        className={twMerge(
+          'cursor-pointer flex flex-col space-y-4 items-center w-62 p-2 rounded-lg',
+          secondaryBgColorDarker
+        )}
         onClick={() => {
           const { pathname, query } = router;
           query['tokenId'] = order.tokenId;
@@ -106,38 +110,61 @@ const OrderDetailViewer = ({ order, collectionAddress }: Props2) => {
 };
 
 interface Props3 {
-  data?: SalesChartData;
+  data: SalesChartData;
 }
 
 export const SalesChartDetails = ({ data }: Props3) => {
-  if (data) {
-    return (
-      <ChartBox noCSSStyles className="px-4 py-4">
-        <div className={twMerge(secondaryBgColor, 'flex flex-col')} style={{ aspectRatio: '4 / 5' }}>
-          <div className="flex-1 rounded-lg overflow-clip">
-            <EZImage src={data?.tokenImage} className="duration-300 hover:scale-110" />
-          </div>
+  const router = useRouter();
+  const [modalOpen, setModalOpen] = useState(false);
 
-          <div className="font-bold truncate ml-1 mt-1">{data?.tokenId}</div>
+  const basicTokenInfo: BasicTokenInfo = {
+    tokenId: data?.tokenId ?? '',
+    collectionAddress: data?.collectionAddress ?? '',
+    chainId: '1' // todo dont hardcode
+  };
 
-          <div className={twMerge('flex flex-row space-x-3 m-1')}>
+  useEffect(() => {
+    const isModalOpen =
+      router.query?.tokenId === basicTokenInfo.tokenId &&
+      router.query?.collectionAddress === basicTokenInfo.collectionAddress;
+    setModalOpen(isModalOpen);
+  }, [router.query]);
+
+  return (
+    <div className={twMerge(borderColor, 'border-[1px] rounded-lg pb-[30px]')}>
+      <div className={twMerge('flex justify-center pt-4 font-heading font-bold')}>Most recent sale</div>
+      <div className={twMerge('flex flex-col text-sm mt-4 items-center')}>
+        <div
+          className={twMerge(
+            'cursor-pointer flex flex-col space-y-4 items-center w-62 p-2 rounded-lg',
+            secondaryBgColorDarker
+          )}
+          onClick={() => {
+            const { pathname, query } = router;
+            query['tokenId'] = data.tokenId;
+            query['collectionAddress'] = data.collectionAddress;
+            router.replace({ pathname, query }, undefined, { shallow: true });
+          }}
+        >
+          <EZImage src={data.tokenImage} className="w-60 h-60 shrink-0 overflow-clip rounded-lg" />
+
+          <div className={twMerge('flex justify-between border-[0px] rounded-lg w-60', borderColor)}>
             <div className="flex flex-col">
-              <div className="truncate">Sale price</div>
-              <div className="truncate">{data?.salePrice}</div>
+              <div className="flex truncate font-bold">{data.tokenId}</div>
+              <div>
+                {data.salePrice} {EthSymbol}
+              </div>
             </div>
-            <div className="flex flex-col">
-              <div className="truncate">Date</div>
-              <div className="truncate">{new Date(data?.timestamp ?? 0).toLocaleDateString()}</div>
+            <div className="flex flex-col space-y-1">
+              <div className={twMerge('font-medium text-xs', secondaryTextColor)}>Date</div>
+              <div className="truncate">{format(new Date(data?.timestamp ?? 0), 'MMM dd yyyy')}</div>
             </div>
           </div>
         </div>
-      </ChartBox>
-    );
-  }
-
-  return (
-    <ChartBox className={twMerge('flex items-center justify-center')}>
-      <div className="text-center">Click a dot to see more details</div>
-    </ChartBox>
+        {modalOpen && <TokenCardModal data={basicTokenInfo} modalOpen={modalOpen} />}
+      </div>
+    </div>
   );
+
+  return null;
 };

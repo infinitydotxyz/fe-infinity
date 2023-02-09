@@ -90,7 +90,7 @@ function convertRawDataToChartData(
   for (let i = 0; i <= numBars; i++) {
     listings.push({
       data: [],
-      axisLabel: numStr(Math.floor(minPrice + i * priceBucket)),
+      axisLabel: numStr(Math.floor(minPrice + (i + 1) * priceBucket)),
       start: minPrice + i * priceBucket,
       end: minPrice + (i + 1) * priceBucket,
       tooltip: ''
@@ -145,12 +145,12 @@ export const ResponsiveBarChart = ({ data, graphType, displayDetails }: Responsi
       </div>
 
       <ParentSize debounceTime={10}>
-        {({ width, height }) => (
+        {({ width }) => (
           <BarChart
             data={data}
             graphType={graphType}
             width={width}
-            height={height}
+            height={300}
             selectedPriceBucket={selectedPriceBucket}
             displayDetails={displayDetails}
             hideOutliers={!showOutliers}
