@@ -43,7 +43,6 @@ type BarChartEntry = {
 };
 
 const getPriceValue = (d: CollectionOrder) => d?.priceEth;
-const getOrder = (d: CollectionOrder) => d;
 const getOrderCount = (d: BarChartEntry) => d?.data?.length;
 const getAxisLabel = (d: BarChartEntry) => d?.axisLabel;
 
@@ -258,11 +257,12 @@ const BarChart: React.FC<BarChartProps> = ({
         yAccessor={getOrderCount}
         colorAccessor={(_, i) => (i === hoveredBarIndex ? saleDataPointColor : undefined)}
         onPointerMove={({ index }) => setHoveredBarIndex(index)}
-        onPointerDown={({ event, datum }) => {
+        onPointerDown={({ event, datum, index }) => {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const isLeftMouseClick = (event as unknown as any).button === 0;
           if (isLeftMouseClick) {
-            displayDetails(datum.data.map(getOrder), 0);
+            displayDetails(datum.data, 0);
+            setHoveredBarIndex(index);
           }
         }}
       />

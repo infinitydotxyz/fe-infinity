@@ -1,8 +1,7 @@
 import { CollectionOrder } from '@infinityxyz/lib-frontend/types/core';
-import { secondaryBgColor } from 'src/utils/ui-constants';
+import { borderColor, secondaryBgColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { EZImage } from '../../common';
-import { OrderbookRowButton } from '../list/orderbook-row-button';
 import { OrderDetailViewer } from '../order-detail-viewer';
 import { ChartBox } from './chart-box';
 import { clamp } from './chart-utils';
@@ -23,16 +22,7 @@ export const OrdersChartDetails = ({ orders, index, setIndex, collectionAddress,
     const order = orders[clamp(index, 0, orders.length - 1)];
 
     return (
-      <ChartBox noCSSStyles>
-        <div className={twMerge('flex items-center justify-center')}>
-          <NextPrevArrows
-            orders={orders}
-            index={index}
-            setIndex={setIndex}
-            className="flex pointer-events-auto text-sm"
-          />
-        </div>
-
+      <div className={twMerge(borderColor, 'border-[1px] rounded-lg pb-2')}>
         <OrderDetailViewer
           order={order}
           scroll={true}
@@ -40,10 +30,15 @@ export const OrdersChartDetails = ({ orders, index, setIndex, collectionAddress,
           collectionImage={collectionImage}
         />
 
-        <div className="mt-2 flex justify-center">
-          <OrderbookRowButton order={order} outlineButtons={false} />
+        <div className={twMerge('flex items-center justify-center my-4')}>
+          <NextPrevArrows
+            orders={orders}
+            index={index}
+            setIndex={setIndex}
+            className="flex pointer-events-auto text-sm"
+          />
         </div>
-      </ChartBox>
+      </div>
     );
   }
 

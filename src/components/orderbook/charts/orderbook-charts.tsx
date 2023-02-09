@@ -38,7 +38,7 @@ export const OrderbookCharts = ({ className = '', collectionAddress, collectionI
     }
 
     if (!arrayEquals) {
-      setSelectedOrders(orders);
+      setSelectedOrders(orders.sort((a, b) => a.priceEth - b.priceEth));
     }
   };
 
@@ -99,14 +99,14 @@ export const OrderbookCharts = ({ className = '', collectionAddress, collectionI
       </div>
 
       <div className="flex">
-        <div className="w-2/3 p-2">
+        <div className="w-3/4 p-2">
           {ordersData.length > 0 && (
             <ResponsiveBarChart graphType={BarChartType.Listings} data={ordersData} displayDetails={displayDetails} />
           )}
 
           {isLoading && <Loading />}
         </div>
-        <div className="w-1/3 p-2">
+        <div className="w-1/4 p-2">
           <OrdersChartDetails
             orders={selectedOrders}
             index={selectedOrderIndex}
@@ -118,7 +118,7 @@ export const OrderbookCharts = ({ className = '', collectionAddress, collectionI
         </div>
       </div>
 
-      {/* todo: uncomment <div className="w-full p-2 flex space-x-5 underline text-sm mt-6">
+      {/* todo uncomment <div className={twMerge('w-full p-2 flex space-x-5 text-xs mt-6', secondaryTextColor)}>
         <ExternalLink href="https://flow.so/terms">Terms</ExternalLink>
         <ExternalLink href="https://flow.so/privacy-policy">Privacy Policy</ExternalLink>
       </div> */}

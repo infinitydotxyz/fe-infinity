@@ -106,6 +106,12 @@ function SalesChart({ width, height, data, hideOutliers, selectedTimeBucket, set
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
 
+  const basicTokenInfo: BasicTokenInfo = {
+    tokenId: selectedSale?.tokenId ?? '',
+    collectionAddress: selectedSale?.collectionAddress ?? '',
+    chainId: '1' // todo dont hardcode
+  };
+
   useEffect(() => {
     const isModalOpen =
       router.query?.tokenId === basicTokenInfo.tokenId &&
@@ -285,12 +291,6 @@ function SalesChart({ width, height, data, hideOutliers, selectedTimeBucket, set
       )),
     [xScale, yScale]
   );
-
-  const basicTokenInfo: BasicTokenInfo = {
-    tokenId: selectedSale?.tokenId ?? '',
-    collectionAddress: selectedSale?.collectionAddress ?? '',
-    chainId: '1' // todo dont hardcode
-  };
 
   const { theme } = useTheme();
   const darkMode = theme === 'dark';
