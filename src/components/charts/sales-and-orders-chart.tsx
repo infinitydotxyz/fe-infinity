@@ -23,7 +23,7 @@ import {
   textColor
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import tailwindConfig from '../../../settings/tailwind/elements/foundations';
+import tailwindConfig from '../../settings/tailwind/elements/foundations';
 import { ChartBox } from './chart-box';
 import { SalesAndOrdersDataPointType, ScatterChartType } from './types';
 

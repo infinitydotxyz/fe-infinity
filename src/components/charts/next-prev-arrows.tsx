@@ -1,7 +1,7 @@
 import { CollectionOrder } from '@infinityxyz/lib-frontend/types/core';
 import { FaPlay } from 'react-icons/fa';
 import { twMerge } from 'tailwind-merge';
-import { Button, Spacer } from '../../common';
+import { Button, Spacer } from '../common';
 
 interface Props {
   orders: CollectionOrder[];

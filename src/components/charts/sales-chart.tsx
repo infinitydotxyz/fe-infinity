@@ -19,7 +19,7 @@ import { EZImage } from 'src/components/common';
 import { BasicTokenInfo } from 'src/utils/types';
 import { secondaryBgColor, secondaryTextColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import tailwindConfig from '../../../settings/tailwind/elements/foundations';
+import tailwindConfig from '../../settings/tailwind/elements/foundations';
 import { ChartBox } from './chart-box';
 import { ChartDimensions } from './chart-utils';
 import { ScatterChartType } from './types';

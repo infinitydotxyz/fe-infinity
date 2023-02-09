@@ -5,20 +5,20 @@ import { apiGet } from 'src/utils';
 import { secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { useNetwork } from 'wagmi';
-import { ResponsiveBarChart } from './bar-chart';
-import { OrdersChartDetails } from './chart-details';
-import { ResponsiveSalesChart, SalesChartData } from './sales-chart';
-import { BarChartType, ScatterChartType } from './types';
+import { ResponsiveBarChart } from '../charts/bar-chart';
+import { OrdersChartDetails } from '../charts/chart-details';
+import { ResponsiveSalesChart, SalesChartData } from '../charts/sales-chart';
+import { BarChartType, ScatterChartType } from '../charts/types';
 
 const infoBoxStyle = 'flex items-center justify-center opacity-60 font-bold text-lg h-full';
 
-export type OrderBookChartProps = {
+export type CollectionAXChartsProps = {
   className?: string;
   collectionAddress: string;
   collectionImage: string;
 };
 
-export const OrderbookCharts = ({ className = '', collectionAddress, collectionImage }: OrderBookChartProps) => {
+export const CollectionAXCharts = ({ className = '', collectionAddress, collectionImage }: CollectionAXChartsProps) => {
   const [salesChartData, setSalesChartData] = useState<SalesChartData[]>([]);
   const { chain } = useNetwork();
   const chainId = chain?.id ?? ChainId.Mainnet;
@@ -89,12 +89,22 @@ export const OrderbookCharts = ({ className = '', collectionAddress, collectionI
   return (
     <div className={twMerge('w-full h-full relative flex flex-col p-2', className)}>
       <div className="flex">
-        <div className="w-full p-2">
+        <div className="w-3/4 p-2">
           {salesChartData.length > 0 && (
             <ResponsiveSalesChart graphType={ScatterChartType.Sales} data={salesChartData} />
           )}
 
           {isLoading && <Loading />}
+        </div>
+        <div className="w-1/4 p-2">
+          <OrdersChartDetails
+            orders={selectedOrders}
+            index={selectedOrderIndex}
+            valueClassName={secondaryTextColor}
+            setIndex={setSelectedOrderIndex}
+            collectionAddress={collectionAddress}
+            collectionImage={collectionImage}
+          />
         </div>
       </div>
 

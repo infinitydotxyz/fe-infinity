@@ -15,7 +15,7 @@ import {
   textColor
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import tailwindConfig from '../../../settings/tailwind/elements/foundations';
+import tailwindConfig from '../../settings/tailwind/elements/foundations';
 import { ChartBox } from './chart-box';
 import { BarChartType } from './types';
 import { useChartTheme } from './use-theme';

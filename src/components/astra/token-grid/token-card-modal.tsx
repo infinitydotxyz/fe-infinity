@@ -1,8 +1,8 @@
 import { CollectionAttributes, Erc721Token, NftSaleAndOrder, Token } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { ResponsiveSalesAndOrdersChart } from 'src/components/orderbook/charts/sales-and-orders-chart';
-import { ScatterChartType } from 'src/components/orderbook/charts/types';
+import { ResponsiveSalesAndOrdersChart } from 'src/components/charts/sales-and-orders-chart';
+import { ScatterChartType } from 'src/components/charts/types';
 import { nftToCardDataWithOrderFields } from 'src/hooks/api/useTokenFetcher';
 import { apiGet, ellipsisAddress, getChainScannerBase, nFormatter, useFetch } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';

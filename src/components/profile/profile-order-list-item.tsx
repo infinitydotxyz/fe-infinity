@@ -8,7 +8,7 @@ import { secondaryTextColor, standardBorderCard } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
 import { useAccount } from 'wagmi';
-import { OrderbookItem } from '../orderbook/list/orderbook-item';
+import { OrderbookItem } from '../orderbook/orderbook-item';
 
 interface Props {
   order: ERC721OrderCartItem;

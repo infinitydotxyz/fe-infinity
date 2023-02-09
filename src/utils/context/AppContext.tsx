@@ -14,7 +14,7 @@ import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { toastError, toastSuccess, toastWarning } from 'src/components/common';
-import { WaitingForTxModal } from 'src/components/orderbook/waiting-for-tx-modal';
+import { WaitingForTxModal } from 'src/components/common/waiting-for-tx-modal';
 import { useCollectionSelection } from 'src/hooks/useCollectionSelection';
 import { useNFTSelection } from 'src/hooks/useNFTSelection';
 import { useOrderSelection } from 'src/hooks/useOrderSelection';

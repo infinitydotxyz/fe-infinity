@@ -15,7 +15,7 @@ import { TokenGrid } from 'src/components/astra/token-grid/token-grid';
 import { CollectionPageHeader, CollectionPageHeaderProps } from 'src/components/collection/collection-page-header';
 import { CenteredContent, ExternalLink, EZImage, Spacer, TextInputBox } from 'src/components/common';
 import { CollectionNftSearchInput } from 'src/components/common/search/collection-nft-search-input';
-import { OrderbookCharts } from 'src/components/orderbook/charts/orderbook-charts';
+import { CollectionAXCharts } from 'src/components/collection/collection-analytics-charts';
 import { useCollectionTokenFetcher } from 'src/hooks/api/useTokenFetcher';
 import { useScrollInfo } from 'src/hooks/useScrollHook';
 import { apiGet, nFormatter } from 'src/utils';
@@ -314,7 +314,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
           )}
 
           {selectedTab === 'Analytics' && (
-            <OrderbookCharts
+            <CollectionAXCharts
               collectionAddress={collection.address}
               collectionImage={collection.metadata.profileImage}
             />
