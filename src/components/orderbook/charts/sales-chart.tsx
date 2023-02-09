@@ -139,7 +139,7 @@ function SalesChart({ width, height, data, hideOutliers, selectedTimeBucket, set
       top: 10,
       right: 0,
       bottom: 50,
-      left: 75
+      left: 45
     };
 
     return {
@@ -232,7 +232,7 @@ function SalesChart({ width, height, data, hideOutliers, selectedTimeBucket, set
     }
 
     const { x, y } = point;
-    const neighborRadius = 50;
+    const neighborRadius = 20;
     const closest = voronoiLayout.find(x - margin.left, y - margin.top, neighborRadius);
 
     return closest;
@@ -246,7 +246,7 @@ function SalesChart({ width, height, data, hideOutliers, selectedTimeBucket, set
       }
 
       showTooltip({
-        tooltipLeft: xScale(xAccessor(closest.data)) - 1 * margin.left,
+        tooltipLeft: xScale(xAccessor(closest.data)) - 2 * margin.left,
         tooltipTop: yScale(yAccessor(closest.data)) + 30 * margin.top,
         tooltipData: {
           ...closest.data
