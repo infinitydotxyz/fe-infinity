@@ -114,7 +114,11 @@ export const ResponsiveBarChart = ({ data, graphType, displayDetails }: Responsi
   return (
     <ChartBox className="h-full">
       <div className="flex justify-between mb-4">
-        <div className="ml-6 font-medium mt-3">{graphType}</div>
+        <div className="ml-6">
+          <div className="font-medium mt-3 font-heading text-lg">{graphType}</div>
+          <div className={twMerge(secondaryTextColor, 'font-medium text-sm')}>{data.length} listings</div>
+        </div>
+
         <div className="items-center flex space-x-6">
           <div className="flex items-center space-x-2">
             <ASwitchButton

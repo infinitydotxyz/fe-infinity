@@ -43,15 +43,20 @@ interface SalesChartProps {
   data: SalesChartData[];
   hideOutliers?: boolean;
   selectedTimeBucket?: HistoricalSalesTimeBucket;
+  setNumSales?: (numSales: number) => void;
 }
 
 export const ResponsiveSalesChart = ({ data, graphType }: ResponsiveSalesChartProps) => {
   const [selectedTimeBucket, setSelectedTimeBucket] = useState(HistoricalSalesTimeBucket.ONE_MONTH);
   const [showOutliers, setShowOutliers] = useState(false);
+  const [numSales, setNumSales] = useState(data.length);
   return (
     <ChartBox className="h-full">
       <div className="flex justify-between mb-4">
-        <div className={twMerge('ml-5 mt-3 font-medium')}>{graphType}</div>
+        <div className="ml-5">
+          <div className="font-medium mt-3 font-heading text-lg">{graphType}</div>
+          <div className={twMerge(secondaryTextColor, 'font-medium text-sm')}>{numSales} sales</div>
+        </div>
 
         <div className="items-center flex space-x-6">
           <div className="flex items-center space-x-2">
@@ -88,6 +93,7 @@ export const ResponsiveSalesChart = ({ data, graphType }: ResponsiveSalesChartPr
             height={height}
             hideOutliers={!showOutliers}
             selectedTimeBucket={selectedTimeBucket}
+            setNumSales={setNumSales}
           />
         )}
       </ParentSize>
@@ -95,7 +101,7 @@ export const ResponsiveSalesChart = ({ data, graphType }: ResponsiveSalesChartPr
   );
 };
 
-function SalesChart({ width, height, data, hideOutliers, selectedTimeBucket }: SalesChartProps) {
+function SalesChart({ width, height, data, hideOutliers, selectedTimeBucket, setNumSales }: SalesChartProps) {
   const [selectedSale, setSelectedSale] = useState<SalesChartData>();
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
@@ -174,6 +180,7 @@ function SalesChart({ width, height, data, hideOutliers, selectedTimeBucket }: S
   }
 
   let dataToRender = data.filter((v) => v.timestamp >= prevTimestamp);
+  setNumSales?.(dataToRender.length);
   const values = dataToRender.map((d) => d.salePrice).sort((a, b) => a - b);
   if (hideOutliers) {
     const lowerHalfMedian = values[Math.floor(values.length / 4)];
