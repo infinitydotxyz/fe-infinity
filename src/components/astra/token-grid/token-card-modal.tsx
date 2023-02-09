@@ -135,6 +135,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
         {listingPrice && !isOwner && <span>{addedToCart ? 'Remove from Cart' : 'Add to Cart'}</span>}
         {listingPrice && isOwner && <span>{addedToCart ? 'Remove from Cart' : 'Edit in Cart'}</span>}
         {offerPrice && isOwner && <span>{addedToCart ? 'Added to Cart' : 'Sell Now'}</span>}
+        {!listingPrice && !offerPrice && <span>{addedToCart ? 'Added to Cart' : 'Add to Cart'}</span>}
       </AButton>
     );
   };
