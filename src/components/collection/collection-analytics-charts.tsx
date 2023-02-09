@@ -25,7 +25,8 @@ export const CollectionAXCharts = ({ className = '', collectionAddress, collecti
   const [ordersData, setOrdersData] = useState<CollectionOrder[]>([]);
   const [selectedOrders, setSelectedOrders] = useState<CollectionOrder[]>([]);
   const [selectedOrderIndex, setSelectedOrderIndex] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSalesLoading, setIsSalesLoading] = useState(true);
+  const [isOrdersLoading, setIsOrdersLoading] = useState(true);
 
   const displayDetails = (orders: CollectionOrder[], index: number) => {
     if (index !== selectedOrderIndex) {
@@ -43,12 +44,12 @@ export const CollectionAXCharts = ({ className = '', collectionAddress, collecti
   };
 
   const fetchSalesDataForTimeBucket = async () => {
-    setIsLoading(true);
+    setIsSalesLoading(true);
     const { result, error } = await apiGet(`/collections/${chainId}:${collectionAddress}/sales`);
 
     if (error) {
       console.error(error);
-      setIsLoading(false);
+      setIsSalesLoading(false);
       return;
     }
 
@@ -63,21 +64,21 @@ export const CollectionAXCharts = ({ className = '', collectionAddress, collecti
     });
 
     setSalesChartData(chartData);
-    setIsLoading(false);
+    setIsSalesLoading(false);
   };
 
   const fetchOrdersData = async () => {
-    setIsLoading(true);
+    setIsOrdersLoading(true);
     const { result, error } = await apiGet(`/collections/${chainId}:${collectionAddress}/orders`);
 
     if (error) {
-      setIsLoading(false);
+      setIsOrdersLoading(false);
       console.error(error);
       return;
     }
 
     setOrdersData(result);
-    setIsLoading(false);
+    setIsOrdersLoading(false);
   };
 
   useEffect(() => {
@@ -93,7 +94,7 @@ export const CollectionAXCharts = ({ className = '', collectionAddress, collecti
             <ResponsiveSalesChart graphType={ScatterChartType.Sales} data={salesChartData} />
           )}
 
-          {isLoading && <Loading />}
+          {isSalesLoading && <Loading graphType={ScatterChartType.Sales} />}
         </div>
         <div className="w-1/4 p-2">{salesChartData.length > 0 && <SalesChartDetails data={salesChartData[0]} />}</div>
       </div>
@@ -104,7 +105,7 @@ export const CollectionAXCharts = ({ className = '', collectionAddress, collecti
             <ResponsiveBarChart graphType={BarChartType.Listings} data={ordersData} displayDetails={displayDetails} />
           )}
 
-          {isLoading && <Loading />}
+          {isOrdersLoading && <Loading graphType={BarChartType.Listings} />}
         </div>
         <div className="w-1/4 p-2">
           <OrdersChartDetails
@@ -126,12 +127,16 @@ export const CollectionAXCharts = ({ className = '', collectionAddress, collecti
   );
 };
 
-const Loading = () => {
+interface Props {
+  graphType: ScatterChartType | BarChartType;
+}
+
+const Loading = ({ graphType }: Props) => {
   return (
     <div className={twMerge(infoBoxStyle, 'pointer-events-none')}>
-      <div className="flex flex-col items-center justify-center">
+      <div className="flex items-center justify-center space-x-2">
         <Spinner />
-        <div className="mt-4">Loading...</div>
+        <div className="text-sm">{`Loading ${graphType}...`}</div>
       </div>
     </div>
   );
