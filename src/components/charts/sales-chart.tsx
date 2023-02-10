@@ -42,14 +42,44 @@ interface SalesChartProps {
   height: number;
   data: SalesChartData[];
   hideOutliers?: boolean;
-  selectedTimeBucket?: HistoricalSalesTimeBucket;
-  setNumSales?: (numSales: number) => void;
 }
 
 export const ResponsiveSalesChart = ({ data, graphType }: ResponsiveSalesChartProps) => {
   const [selectedTimeBucket, setSelectedTimeBucket] = useState(HistoricalSalesTimeBucket.ONE_MONTH);
   const [showOutliers, setShowOutliers] = useState(false);
   const [numSales, setNumSales] = useState(data.length);
+  const [chartData, setChartData] = useState<SalesChartData[]>(data);
+
+  useEffect(() => {
+    const nowTimestamp = Date.now();
+    let prevTimestamp = nowTimestamp;
+    switch (selectedTimeBucket) {
+      case HistoricalSalesTimeBucket.ONE_HOUR:
+        prevTimestamp = nowTimestamp - 1000 * 60 * 60;
+        break;
+      case HistoricalSalesTimeBucket.SIX_HOURS:
+        prevTimestamp = nowTimestamp - 1000 * 60 * 60 * 6;
+        break;
+      case HistoricalSalesTimeBucket.ONE_DAY:
+        prevTimestamp = nowTimestamp - 1000 * 60 * 60 * 24;
+        break;
+      case HistoricalSalesTimeBucket.TWO_DAYS:
+        prevTimestamp = nowTimestamp - 1000 * 60 * 60 * 24 * 2;
+        break;
+      case HistoricalSalesTimeBucket.ONE_WEEK:
+        prevTimestamp = nowTimestamp - 1000 * 60 * 60 * 24 * 7;
+        break;
+      case HistoricalSalesTimeBucket.ONE_MONTH:
+        prevTimestamp = nowTimestamp - 1000 * 60 * 60 * 24 * 30;
+        break;
+      default:
+        break;
+    }
+
+    const filteredData = data.filter((v) => v.timestamp >= prevTimestamp);
+    setChartData(filteredData);
+    setNumSales(filteredData.length);
+  }, [selectedTimeBucket]);
 
   return (
     <ChartBox className="h-full">
@@ -89,12 +119,10 @@ export const ResponsiveSalesChart = ({ data, graphType }: ResponsiveSalesChartPr
         {({ width }) => (
           <SalesChart
             key={`${selectedTimeBucket}-${showOutliers}`}
-            data={data}
+            data={chartData}
             width={width}
             height={300}
             hideOutliers={!showOutliers}
-            selectedTimeBucket={selectedTimeBucket}
-            setNumSales={setNumSales}
           />
         )}
       </ParentSize>
@@ -102,7 +130,7 @@ export const ResponsiveSalesChart = ({ data, graphType }: ResponsiveSalesChartPr
   );
 };
 
-function SalesChart({ width, height, data, hideOutliers, selectedTimeBucket, setNumSales }: SalesChartProps) {
+function SalesChart({ width, height, data, hideOutliers }: SalesChartProps) {
   const [selectedSale, setSelectedSale] = useState<SalesChartData>();
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
@@ -175,33 +203,7 @@ function SalesChart({ width, height, data, hideOutliers, selectedTimeBucket, set
     height
   });
 
-  const nowTimestamp = Date.now();
-  let prevTimestamp = nowTimestamp;
-  switch (selectedTimeBucket) {
-    case HistoricalSalesTimeBucket.ONE_HOUR:
-      prevTimestamp = nowTimestamp - 1000 * 60 * 60;
-      break;
-    case HistoricalSalesTimeBucket.SIX_HOURS:
-      prevTimestamp = nowTimestamp - 1000 * 60 * 60 * 6;
-      break;
-    case HistoricalSalesTimeBucket.ONE_DAY:
-      prevTimestamp = nowTimestamp - 1000 * 60 * 60 * 24;
-      break;
-    case HistoricalSalesTimeBucket.TWO_DAYS:
-      prevTimestamp = nowTimestamp - 1000 * 60 * 60 * 24 * 2;
-      break;
-    case HistoricalSalesTimeBucket.ONE_WEEK:
-      prevTimestamp = nowTimestamp - 1000 * 60 * 60 * 24 * 7;
-      break;
-    case HistoricalSalesTimeBucket.ONE_MONTH:
-      prevTimestamp = nowTimestamp - 1000 * 60 * 60 * 24 * 30;
-      break;
-    default:
-      break;
-  }
-
-  let dataToRender = data.filter((v) => v.timestamp >= prevTimestamp);
-  setNumSales?.(dataToRender.length);
+  let dataToRender = data;
   const values = dataToRender.map((d) => d.salePrice).sort((a, b) => a - b);
   if (hideOutliers) {
     const lowerHalfMedian = values[Math.floor(values.length / 4)];
