@@ -54,8 +54,8 @@ export const AstraCart = ({
   const [sendToAddress, setSendToAddress] = useState('');
 
   const provider = useProvider();
-  const { chain } = useNetwork();
   const { address: user } = useAccount();
+  const { chain } = useNetwork();
   const chainId = String(chain?.id ?? 1) as ChainId;
 
   const { cartType, setCartType, getCurrentCartItems, cartItems } = useCartContext();
@@ -335,16 +335,18 @@ export const AstraCart = ({
           <span className={twMerge(secondaryTextColor, 'font-medium')}>Total: </span>
           <span className="font-heading">{nFormatter(Number(cartTotal))} WETH</span>
         </div>
-        <div className="">
-          <span className={twMerge(secondaryTextColor, 'font-medium')}>Wallet Balance: </span>
-          {isLoading ? (
-            <span>Loading...</span>
-          ) : (
-            <span className="font-heading">
-              {nFormatter(Number(wethBalance?.formatted))} {wethBalance?.symbol}
-            </span>
-          )}
-        </div>
+        {user && (
+          <div className="">
+            <span className={twMerge(secondaryTextColor, 'font-medium')}>Wallet Balance: </span>
+            {isLoading ? (
+              <span>Loading...</span>
+            ) : (
+              <span className="font-heading">
+                {nFormatter(Number(wethBalance?.formatted))} {wethBalance?.symbol}
+              </span>
+            )}
+          </div>
+        )}
       </div>
 
       {/* todo: change the chainId check here when more chains are supported */}
