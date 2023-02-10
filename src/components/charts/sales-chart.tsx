@@ -11,7 +11,7 @@ import { extent } from 'd3';
 import { format } from 'date-fns';
 import { useTheme } from 'next-themes';
 import { useRouter } from 'next/router';
-import { MouseEvent, TouchEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import { MouseEvent, TouchEvent, useEffect, useMemo, useState } from 'react';
 import { ASwitchButton } from 'src/components/astra/astra-button';
 import { ADropdown } from 'src/components/astra/astra-dropdown';
 import { TokenCardModal } from 'src/components/astra/token-grid/token-card-modal';
@@ -50,6 +50,7 @@ export const ResponsiveSalesChart = ({ data, graphType }: ResponsiveSalesChartPr
   const [selectedTimeBucket, setSelectedTimeBucket] = useState(HistoricalSalesTimeBucket.ONE_MONTH);
   const [showOutliers, setShowOutliers] = useState(false);
   const [numSales, setNumSales] = useState(data.length);
+
   return (
     <ChartBox className="h-full">
       <div className="flex justify-between mb-4">
@@ -105,6 +106,20 @@ function SalesChart({ width, height, data, hideOutliers, selectedTimeBucket, set
   const [selectedSale, setSelectedSale] = useState<SalesChartData>();
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const handleMouseMove = (event: any) => {
+      setMousePos({ x: event.clientX, y: event.clientY });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, []);
 
   const basicTokenInfo: BasicTokenInfo = {
     tokenId: selectedSale?.tokenId ?? '',
@@ -229,8 +244,6 @@ function SalesChart({ width, height, data, hideOutliers, selectedTimeBucket, set
     })(dataToRender);
   }, [boundedWidth, boundedHeight, xScale, yScale]);
 
-  const voronoiPolygons = useMemo(() => voronoiLayout.polygons(), [voronoiLayout]);
-
   const getClosestPoint = (e: TouchEvent<SVGSVGElement> | MouseEvent<SVGSVGElement>) => {
     const point = localPoint(e);
     if (!point) {
@@ -244,38 +257,31 @@ function SalesChart({ width, height, data, hideOutliers, selectedTimeBucket, set
     return closest;
   };
 
-  const handleMouseMove = useCallback(
-    (e: TouchEvent<SVGSVGElement> | MouseEvent<SVGSVGElement>) => {
-      const closest = getClosestPoint(e);
-      if (!closest) {
-        return;
+  const handleMouseMove = (e: TouchEvent<SVGSVGElement> | MouseEvent<SVGSVGElement>) => {
+    const closest = getClosestPoint(e);
+    if (!closest) {
+      return;
+    }
+    showTooltip({
+      tooltipLeft: mousePos.x,
+      tooltipTop: mousePos.y,
+      tooltipData: {
+        ...closest.data
       }
+    });
+  };
 
-      showTooltip({
-        tooltipLeft: xScale(xAccessor(closest.data)) - 2 * margin.left,
-        tooltipTop: yScale(yAccessor(closest.data)) + 30 * margin.top,
-        tooltipData: {
-          ...closest.data
-        }
-      });
-    },
-    [xScale, yScale, voronoiLayout, voronoiPolygons]
-  );
-
-  const handleMouseClick = useCallback(
-    (e: TouchEvent<SVGSVGElement> | MouseEvent<SVGSVGElement>) => {
-      const closest = getClosestPoint(e);
-      if (!closest) {
-        return;
-      }
-      const { pathname, query } = router;
-      query['tokenId'] = closest.data.tokenId;
-      query['collectionAddress'] = closest.data.collectionAddress;
-      router.replace({ pathname, query }, undefined, { shallow: true });
-      setSelectedSale(closest.data);
-    },
-    [xScale, yScale, voronoiLayout, voronoiPolygons]
-  );
+  const handleMouseClick = (e: TouchEvent<SVGSVGElement> | MouseEvent<SVGSVGElement>) => {
+    const closest = getClosestPoint(e);
+    if (!closest) {
+      return;
+    }
+    const { pathname, query } = router;
+    query['tokenId'] = closest.data.tokenId;
+    query['collectionAddress'] = closest.data.collectionAddress;
+    router.replace({ pathname, query }, undefined, { shallow: true });
+    setSelectedSale(closest.data);
+  };
 
   const dots = useMemo(
     () =>

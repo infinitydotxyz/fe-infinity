@@ -18,7 +18,8 @@ import { ASortButton } from 'src/components/astra/astra-sort-button';
 import { AStatusFilterButton } from 'src/components/astra/astra-status-button';
 import { ATraitFilter } from 'src/components/astra/astra-trait-filter';
 import { TokenGrid } from 'src/components/astra/token-grid/token-grid';
-import { CollectionAXCharts } from 'src/components/collection/collection-analytics-charts';
+import { CollectionCharts } from 'src/components/collection/collection-charts';
+import { CollectionItemsPageSidebar } from 'src/components/collection/collection-items-page-sidebar';
 import { CollectionPageHeader, CollectionPageHeaderProps } from 'src/components/collection/collection-page-header';
 import { CollectionSocialFeed } from 'src/components/collection/collection-social-feed';
 import { TopHolderList } from 'src/components/collection/collection-top-holders';
@@ -66,6 +67,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   const { cartType, setCartType } = useCartContext();
   const [numSweep, setNumSweep] = useState('');
   const [customSweep, setCustomSweep] = useState('');
+  const { showCart } = useAppContext();
 
   const MAX_NUM_SWEEP_ITEMS = 50;
 
@@ -302,29 +304,44 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                 </div>
               </div>
 
-              <TokenGrid
-                collectionCreator={collectionCreator}
-                collectionFloorPrice={floorPrice}
-                listMode={listMode}
-                className={twMerge(
-                  'px-4 py-4 min-h-[600px]',
-                  cartType === CartType.CollectionOffer ? 'opacity-30 duration-300 pointer-events-none' : 'duration-300'
-                )} // this min-height is to prevent the grid from collapsing when there are no items so filter menus can still render
-                onClick={onClickNFT}
-                isSelectable={isNFTSelectable}
-                isSelected={isNFTSelected}
-                data={data}
-                hasNextPage={hasNextPage}
-                onFetchMore={() => fetch(true)}
-                isError={!!error}
-                isLoading={!!isLoading}
-              />
+              <div className="flex">
+                <div className={(twMerge('flex'), showCart ? 'w-full' : 'w-2/3')}>
+                  <TokenGrid
+                    collectionCreator={collectionCreator}
+                    collectionFloorPrice={floorPrice}
+                    listMode={listMode}
+                    className={twMerge(
+                      'px-4 py-4 min-h-[600px]',
+                      cartType === CartType.CollectionOffer
+                        ? 'opacity-30 duration-300 pointer-events-none'
+                        : 'duration-300'
+                    )} // this min-height is to prevent the grid from collapsing when there are no items so filter menus can still render
+                    onClick={onClickNFT}
+                    isSelectable={isNFTSelectable}
+                    isSelected={isNFTSelected}
+                    data={data}
+                    hasNextPage={hasNextPage}
+                    onFetchMore={() => fetch(true)}
+                    isError={!!error}
+                    isLoading={!!isLoading}
+                  />
+                </div>
+
+                {!showCart && (
+                  <div className="flex w-1/3">
+                    <CollectionItemsPageSidebar
+                      collectionAddress={collection.address}
+                      collectionImage={collection.metadata.profileImage}
+                    />
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
           {selectedTab === 'Analytics' && (
             <div>
-              <CollectionAXCharts
+              <CollectionCharts
                 collectionAddress={collection.address}
                 collectionImage={collection.metadata.profileImage}
               />

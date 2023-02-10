@@ -38,8 +38,11 @@ export const Checkbox = ({
         disabled={disabled}
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
-        // NOTE: "focus-visible:ring focus:ring-0" shows the focus ring on tab, but not click
-        className="focus-visible:ring focus:ring-0 rounded h-5 w-5 cursor-pointer checked:text-brand-primary"
+        className="rounded h-5 w-5 cursor-pointer checked:bg-brand-primary hover:bg-brand-primary dark:hover:bg-brand-primary
+         focus:shadow-none dark:focus:shadow-none hover:shadow-none dark:hover:shadow-none
+         focus:outline-none dark:focus:outline-none hover:outline-none dark:hover:outline-none
+         focus:ring-0 dark:focus:ring-0 hover:ring-0 dark:hover:ring-0
+         focus:ring-offset-0 dark:ring-offset-0"
       />
 
       {boxOnLeft && checkLabel}

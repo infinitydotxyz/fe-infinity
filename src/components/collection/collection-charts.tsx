@@ -12,13 +12,13 @@ import { BarChartType, ScatterChartType } from '../charts/types';
 
 const infoBoxStyle = 'flex items-center justify-center opacity-60 font-bold text-lg h-full';
 
-export type CollectionAXChartsProps = {
+export type CollectionChartsProps = {
   className?: string;
   collectionAddress: string;
   collectionImage: string;
 };
 
-export const CollectionAXCharts = ({ className = '', collectionAddress, collectionImage }: CollectionAXChartsProps) => {
+export const CollectionCharts = ({ className = '', collectionAddress, collectionImage }: CollectionChartsProps) => {
   const [salesChartData, setSalesChartData] = useState<SalesChartData[]>([]);
   const { chain } = useNetwork();
   const chainId = chain?.id ?? ChainId.Mainnet;
@@ -43,7 +43,7 @@ export const CollectionAXCharts = ({ className = '', collectionAddress, collecti
     }
   };
 
-  const fetchSalesDataForTimeBucket = async () => {
+  const fetchSalesData = async () => {
     setIsSalesLoading(true);
     const { result, error } = await apiGet(`/collections/${chainId}:${collectionAddress}/sales`);
 
@@ -77,14 +77,31 @@ export const CollectionAXCharts = ({ className = '', collectionAddress, collecti
       return;
     }
 
-    setOrdersData(result);
+    setOrdersData(
+      result.map((order: CollectionOrder) => {
+        const tokenId = order.tokenId;
+        const tokenImage = order.tokenImage;
+
+        // for collection and other complex offers, tokenId and tokenImage could be blank
+        if (!order.isSellOrder) {
+          if (!tokenImage) {
+            order.tokenImage = collectionImage;
+          }
+          if (!tokenId) {
+            order.tokenId = 'Offer';
+          }
+        }
+
+        return order;
+      })
+    );
     setIsOrdersLoading(false);
   };
 
   useEffect(() => {
-    fetchSalesDataForTimeBucket();
+    fetchSalesData();
     fetchOrdersData();
-  }, []);
+  }, [collectionAddress, chainId]);
 
   return (
     <div className={twMerge('w-full h-full relative flex flex-col p-2', className)}>

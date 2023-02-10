@@ -1,11 +1,11 @@
 import { CollectionOrder } from '@infinityxyz/lib-frontend/types/core';
-import { format } from 'date-fns';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { TokenCardModal } from 'src/components/astra/token-grid/token-card-modal';
 import { BasicTokenInfo } from 'src/utils/types';
 import { borderColor, secondaryBgColorDarker, secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
+import { format } from 'timeago.js';
 import { EthSymbol, EZImage } from '../common';
 import { ChartBox } from './chart-box';
 import { OrderbookRowButton } from './chart-detail-button';
@@ -157,7 +157,7 @@ export const SalesChartDetails = ({ data }: Props3) => {
             </div>
             <div className="flex flex-col space-y-1">
               <div className={twMerge('font-medium text-xs', secondaryTextColor)}>Date</div>
-              <div className="truncate">{format(new Date(data?.timestamp ?? 0), 'MMM dd yyyy')}</div>
+              <div className="truncate">{format(data?.timestamp ?? 0)}</div>
             </div>
           </div>
         </div>

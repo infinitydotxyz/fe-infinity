@@ -18,15 +18,15 @@ export const AstraCartButton = () => {
       {numItems > 0 ? (
         <>
           <BsCartCheckFill className={twMerge(iconButtonStyle)} />
-          <span
+          <div
             className={twMerge(
-              'px-1 absolute top-0.5 right-0.5 rounded-full text-xs',
+              'absolute top-0.5 right-0.5 rounded-full text-xs h-4 w-4',
               inverseBgColor,
               inverseTextColor
             )}
           >
             {numItems}
-          </span>
+          </div>
         </>
       ) : (
         <BsCartDash className={twMerge(iconButtonStyle)} />
