@@ -13,7 +13,7 @@ import { CartContextProvider } from 'src/utils/context/CartContext';
 import { createClient, WagmiConfig } from 'wagmi';
 
 import NProgress from 'nprogress'; //nprogress module
-import 'nprogress/nprogress.css'; //styles of nprogress
+import '../styles/nprogress.css'; //styles of nprogress
 NProgress.configure({ showSpinner: false });
 //Binding events.
 Router.events.on('routeChangeStart', () => NProgress.start());
