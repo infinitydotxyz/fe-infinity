@@ -83,6 +83,12 @@ export const CollectionItemsPageSidebar = ({ className = '', collectionAddress, 
   useEffect(() => {
     fetchSalesChartData();
     fetchRecentSalesAndOrders();
+
+    const interval = setInterval(() => {
+      fetchRecentSalesAndOrders();
+    }, 10 * 1000);
+
+    return () => clearInterval(interval);
   }, [collectionAddress, chainId]);
 
   return (
