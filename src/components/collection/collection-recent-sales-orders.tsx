@@ -1,12 +1,12 @@
 import { CollectionSaleAndOrder } from '@infinityxyz/lib-frontend/types/core';
 import { useState } from 'react';
-import { nFormatter, timeAgo } from 'src/utils';
-import { borderColor, divideColor, iconButtonStyle, smallIconButtonStyle } from 'src/utils/ui-constants';
-import { twMerge } from 'tailwind-merge';
-import { Checkbox, EthSymbol, EZImage, HelpToolTip, Spacer } from '../common';
-import { CiShoppingCart } from 'react-icons/ci';
+import { FiShoppingCart } from 'react-icons/fi';
 import { HiOutlineTag } from 'react-icons/hi';
 import { VscMegaphone } from 'react-icons/vsc';
+import { nFormatter, timeAgo } from 'src/utils';
+import { borderColor, divideColor, smallIconButtonStyle } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
+import { Checkbox, EthSymbol, EZImage, HelpToolTip, Spacer } from '../common';
 
 interface Props {
   data: CollectionSaleAndOrder[];
@@ -78,7 +78,7 @@ export const CollectionRecentSalesOrders = ({ data }: Props) => {
                 <div>
                   {item.dataType === 'Sale' ? (
                     <HelpToolTip placement="top" content={<div className="whitespace-nowrap">Sale</div>}>
-                      <CiShoppingCart className={iconButtonStyle} />
+                      <FiShoppingCart className={smallIconButtonStyle} />
                     </HelpToolTip>
                   ) : item.dataType === 'Listing' ? (
                     <HelpToolTip placement="top" content={<div className="whitespace-nowrap">Listing</div>}>
