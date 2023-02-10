@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { OrderBy, TokensFilter } from 'src/utils/types';
 import { brandTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { TextInputBox } from '../common';
+import { Spacer, TextInputBox } from '../common';
 import { AOutlineButton } from './astra-button';
 import { ACustomMenuButton, ACustomMenuContents, ACustomMenuItems, ADropdownButton } from './astra-dropdown';
 
@@ -61,20 +61,24 @@ export const APriceFilter = ({ filter, setFilter }: Props) => {
                 }}
               />
             </div>
-            <Menu.Button
-              onClick={() => {
-                setMinPriceVal('');
-                setMaxPriceVal('');
-                const newFilter: TokensFilter = {};
-                newFilter.minPrice = '';
-                newFilter.maxPrice = '';
-                setFilter({ ...filter, ...newFilter });
-              }}
-              className={twMerge('mt-4 ml-1 text-sm', brandTextColor)}
-            >
-              Clear
-            </Menu.Button>
-            <Menu.Button className={twMerge('mt-4 mr-1 text-sm float-right', brandTextColor)}>Apply</Menu.Button>
+
+            <div className="flex mt-4 text-sm px-1">
+              <div
+                onClick={() => {
+                  setMinPriceVal('');
+                  setMaxPriceVal('');
+                  const newFilter: TokensFilter = {};
+                  newFilter.minPrice = '';
+                  newFilter.maxPrice = '';
+                  setFilter({ ...filter, ...newFilter });
+                }}
+                className={twMerge('cursor-pointer', brandTextColor)}
+              >
+                Clear
+              </div>
+              <Spacer />
+              <div className={twMerge('cursor-pointer', brandTextColor)}>Apply</div>
+            </div>
           </ACustomMenuItems>
         </ACustomMenuContents>
       )}
