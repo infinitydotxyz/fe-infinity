@@ -7,7 +7,6 @@ import {
 } from '@infinityxyz/lib-frontend/types/core';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
-import NotFound404Page from 'pages/not-found-404';
 import { useEffect, useState } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { FaDiscord } from 'react-icons/fa';
@@ -44,9 +43,6 @@ interface CollectionDashboardProps {
 
 export default function ItemsPage(props: CollectionDashboardProps) {
   const collection = props.collection;
-  if (!collection) {
-    return <NotFound404Page />;
-  }
 
   const {
     isNFTSelected,
@@ -100,14 +96,18 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     toggleNFTSelection(token);
   };
 
-  const isCollSupported = collection.isSupported ?? false;
+  const isCollSupported = collection?.isSupported ?? false;
 
   if (!isCollSupported) {
     return (
       <CenteredContent>
         <div className="flex flex-col items-center space-y-2">
-          <EZImage src={collection.metadata.profileImage} className="h-40 w-40 rounded-lg overflow-clip" />
-          <div className="text-3xl font-heading font-medium">{collection.metadata.name} is not supported on Flow</div>
+          {collection?.metadata?.profileImage && (
+            <EZImage src={collection.metadata.profileImage} className="h-40 w-40 rounded-lg overflow-clip" />
+          )}
+          <div className="text-3xl font-heading font-medium">
+            {collection?.metadata?.name ?? 'This collection'} is not supported on Flow
+          </div>
           <div className="flex flex-col text-md">
             <span>Common reasons a collection is not supported:</span>
             <ul className="list-disc list-inside mt-2 mb-2">
