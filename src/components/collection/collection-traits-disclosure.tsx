@@ -28,7 +28,7 @@ export function CollectionTraitsDisclosure({ traits, filter, setFilter, typeValu
   const getDisclosureContent = (traitType: string) => {
     return (
       <div className="flex flex-col">
-        {Object.entries(traits[traitType].values)?.map((val) => {
+        {Object.entries(traits?.[traitType]?.values)?.map((val) => {
           const traitValue = val[0];
           const traitValueData = val[1];
           const isChecked = typeValueMap[traitType]?.[traitValue];

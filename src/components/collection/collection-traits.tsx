@@ -1,4 +1,4 @@
-import { CollectionAttributes } from '@infinityxyz/lib-frontend/types/core';
+import { CollectionAttribute, CollectionAttributes } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { TokensFilter } from 'src/utils/types';
@@ -27,20 +27,10 @@ const CollectionTraits = ({ traits, filter, setFilter }: Props) => {
   const [typeValueMap, setTypeValueMap] = useState<TypeValueMap>({});
   const [selectedTraitType, setSelectedTraitType] = useState<string>('All');
   const [searchText, setSearchText] = useState<string>('');
-
-  const traitTypeAndNumValues: { name: string; numValues: number }[] = [];
-  let totalNumTraitValues = 0;
-  for (const traitName in traits) {
-    totalNumTraitValues += Object.keys(traits[traitName].values).length;
-    traitTypeAndNumValues.push({
-      name: traitName,
-      numValues: Object.keys(traits[traitName].values).length
-    });
-  }
-  traitTypeAndNumValues.unshift({
-    name: 'All',
-    numValues: totalNumTraitValues
-  });
+  const [filteredTraits, setFilteredTraits] = useState<CollectionAttributes>(traits);
+  const [traitTypeAndNumValues, setTraitTypeAndNumValues] = useState<{ name: string; numValues: number }[]>([]);
+  // Map of trait type to trait values to lower case string for searching
+  const traitTypeValueStrFlattenedMap = new Map<string, string>();
 
   useEffect(() => {
     const traitTypes = filter.traitTypes || [];
@@ -63,6 +53,71 @@ const CollectionTraits = ({ traits, filter, setFilter }: Props) => {
     setTypeValueMap(map);
   }, [filter]);
 
+  useEffect(() => {
+    let totalNumTraitValues = 0;
+    const newArr: { name: string; numValues: number }[] = [];
+    for (const traitName in filteredTraits) {
+      totalNumTraitValues += Object.keys(filteredTraits[traitName].values).length;
+      newArr.push({
+        name: traitName,
+        numValues: Object.keys(filteredTraits[traitName].values).length
+      });
+    }
+
+    // Add 'All' trait type to the beginning of the array
+    newArr.unshift({
+      name: 'All',
+      numValues: totalNumTraitValues
+    });
+
+    setTraitTypeAndNumValues(newArr);
+  }, [filteredTraits]);
+
+  // Flatten traitTypeAndValuesMap to a map of traitType:traitValue lower case string to traitType:traitValue original string for searching
+  for (const traitType of Object.keys(traits)) {
+    const traitValues = Object.keys(traits[traitType].values);
+    if (traitValues) {
+      for (const traitValue of traitValues) {
+        traitTypeValueStrFlattenedMap.set(`${traitType}:${traitValue}`.toLowerCase(), `${traitType}:${traitValue}`);
+      }
+    }
+  }
+
+  const handleSearch = (value: string) => {
+    const traitTypeValuesStrArr = Array.from(traitTypeValueStrFlattenedMap.keys());
+    const filteredTraitTypeAndValues = traitTypeValuesStrArr.filter((traitTypeAndValue) =>
+      traitTypeAndValue.includes(value.toLowerCase())
+    );
+
+    const filteredTraitTypesValuesMap = new Map<string, string[]>();
+    for (const traitTypeAndValue of filteredTraitTypeAndValues) {
+      const originalTraitTypeAndValue = traitTypeValueStrFlattenedMap.get(traitTypeAndValue) ?? '';
+      const [traitType, traitValue] = originalTraitTypeAndValue.split(':');
+      if (traitType && traitValue) {
+        filteredTraitTypesValuesMap.set(traitType, [...(filteredTraitTypesValuesMap.get(traitType) || []), traitValue]);
+      }
+    }
+
+    const filteredTraits: CollectionAttributes = {};
+    for (const traitType of filteredTraitTypesValuesMap.keys()) {
+      const filteredValues = Object.entries(traits[traitType].values).filter((value) => {
+        return filteredTraitTypesValuesMap.get(traitType)?.includes(value[0]) ?? false;
+      });
+      const filteredValuesObj = Object.fromEntries(filteredValues);
+      const collAttribute: CollectionAttribute = {
+        values: filteredValuesObj,
+        attributeType: Object.entries(traits[traitType]).find((entry) => entry[0] === 'attributeType')?.[1],
+        attributeTypeSlug: Object.entries(traits[traitType]).find((entry) => entry[0] === 'attributeTypeSlug')?.[1],
+        count: Object.entries(traits[traitType]).find((entry) => entry[0] === 'count')?.[1],
+        percent: Object.entries(traits[traitType]).find((entry) => entry[0] === 'percent')?.[1],
+        displayType: Object.entries(traits[traitType]).find((entry) => entry[0] === 'displayType')?.[1]
+      };
+      filteredTraits[traitType] = collAttribute;
+    }
+
+    setFilteredTraits(filteredTraits);
+  };
+
   return (
     <div className="w-full h-full">
       <div className={twMerge('border-b-[1px] px-2 py-4', borderColor)}>
@@ -75,6 +130,7 @@ const CollectionTraits = ({ traits, filter, setFilter }: Props) => {
           className="px-4 py-2 rounded-lg"
           onChange={(value) => {
             setSearchText(value);
+            handleSearch(value);
           }}
           stopEnterSpacePropagation
         ></TextInputBox>
@@ -105,9 +161,10 @@ const CollectionTraits = ({ traits, filter, setFilter }: Props) => {
 
         <div className={twMerge('w-2/3 overflow-y-scroll', bgColor)}>
           <CollectionTraitsDisclosure
+            key={JSON.stringify(filteredTraits)}
             typeValueMap={typeValueMap}
             selectedTraitType={selectedTraitType}
-            traits={traits}
+            traits={filteredTraits}
             filter={filter}
             setFilter={setFilter}
           />
