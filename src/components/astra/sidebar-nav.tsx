@@ -5,12 +5,13 @@ import { BiGlobeAlt, BiWalletAlt } from 'react-icons/bi';
 import { HiOutlineTag } from 'react-icons/hi';
 import { MdDarkMode, MdLightMode } from 'react-icons/md';
 import { AButton, ARoundButton } from 'src/components/astra/astra-button';
-import { HelpToolTip, NextLink, Spacer, SVG } from 'src/components/common';
+import { EZImage, HelpToolTip, NextLink, Spacer } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { borderColor, hoverColorBrandText, iconButtonStyle, secondaryBgColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { TbSend } from 'react-icons/tb';
 import { useAccount } from 'wagmi';
+import flowLogo from 'src/images/flow-logo.png';
 
 export const SidebarNav = () => {
   const { theme, setTheme } = useTheme();
@@ -27,11 +28,7 @@ export const SidebarNav = () => {
       )}
     >
       <NextLink href="/trending">
-        {theme === 'dark' ? (
-          <SVG.miniLogoDark className="shrink-0 h-9 w-9" />
-        ) : (
-          <SVG.miniLogo className="shrink-0 h-9 w-9" />
-        )}
+        <EZImage src={flowLogo.src} className="w-9 h-9" />
       </NextLink>
 
       <div className="h-12" />
