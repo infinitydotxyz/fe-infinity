@@ -1,7 +1,7 @@
 import { Menu } from '@headlessui/react';
 import { CollectionAttributes } from '@infinityxyz/lib-frontend/types/core';
 import CollectionTraits from '../collection/collection-traits';
-import { Spinner } from '../common';
+import { BouncingLogo } from '../common';
 import { TokensFilter } from 'src/utils/types';
 import { AOutlineButton } from './astra-button';
 import { ACustomMenuButton, ACustomMenuContents, ACustomMenuItems, ADropdownButton } from './astra-dropdown';
@@ -27,7 +27,7 @@ export const ATraitFilter = ({ collectionAddress, filter, setFilter, collectionA
           </span>
 
           <ACustomMenuItems open={open} innerClassName="w-[580px] border-0 px-0 py-0" alignMenuRight={true}>
-            {!collectionAttributes && <Spinner />}
+            {!collectionAttributes && <BouncingLogo />}
             {collectionAttributes && (
               <div className="h-[400px]">
                 <CollectionTraits

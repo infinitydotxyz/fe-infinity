@@ -10,7 +10,7 @@ import { useUnstake } from 'src/hooks/contract/staker/useUnstake';
 import { nFormatter } from 'src/utils';
 import { secondaryTextColor } from 'src/utils/ui-constants';
 import { useAccount } from 'wagmi';
-import { Spinner, toastError, toastSuccess } from '../common';
+import { BouncingLogo, toastError, toastSuccess } from '../common';
 import { Button } from '../common/button';
 import { TextInputBox } from '../common/input-box';
 import { Modal } from '../common/modal';
@@ -138,7 +138,7 @@ export const UnstakeTokensModal = ({ onClose }: Props) => {
 
         {isUnstaking && (
           <div className="mt-2 flex flex-row gap-2 items-center">
-            <Spinner />
+            <BouncingLogo />
             <span>Waiting for transaction to complete...</span>
           </div>
         )}

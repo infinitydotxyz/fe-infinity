@@ -15,7 +15,7 @@ import { useAccount, useNetwork, useSigner } from 'wagmi';
 import { AOutlineButton } from '../astra/astra-button';
 import { ADropdown } from '../astra/astra-dropdown';
 import { APriceFilter } from '../astra/astra-price-filter';
-import { CenteredContent, EZImage, ScrollLoader, Spacer, Spinner, toastError, toastSuccess } from '../common';
+import { CenteredContent, EZImage, ScrollLoader, Spacer, BouncingLogo, toastError, toastSuccess } from '../common';
 import { CollectionSearchInput } from '../common/search/collection-search-input';
 import { ProfileOrderListItem } from './profile-order-list-item';
 
@@ -159,7 +159,7 @@ export const ProfileOrderList = ({ userAddress, className = '' }: Props) => {
           {isLoading && (
             <div className="">
               <CenteredContent>
-                <Spinner />
+                <BouncingLogo />
               </CenteredContent>
             </div>
           )}

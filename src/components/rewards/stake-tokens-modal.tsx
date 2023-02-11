@@ -7,7 +7,7 @@ import { useTokenAllowance } from 'src/hooks/contract/token/useTokenAllowance';
 import { useTokenApprove } from 'src/hooks/contract/token/useTokenApprove';
 import { nFormatter } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
-import { Spinner, toastError, toastSuccess } from '../common';
+import { BouncingLogo, toastError, toastSuccess } from '../common';
 import { Button } from '../common/button';
 import { TextInputBox } from '../common/input-box';
 import { Modal } from '../common/modal';
@@ -152,7 +152,7 @@ export const StakeTokensModal = ({ onClose }: Props) => {
 
         {isStaking && (
           <div className="mt-2 flex flex-row gap-2 items-center">
-            <Spinner />
+            <BouncingLogo />
             <span>Waiting for transaction to complete...</span>
           </div>
         )}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { TokenomicsConfigDto, TokenomicsPhaseDto } from '@infinityxyz/lib-frontend/types/dto';
 import { TradingFeeDestination } from '@infinityxyz/lib-frontend/types/dto/rewards/tokenomics-phase.dto';
-import { CenteredContent, Spinner, TooltipWrapper } from 'src/components/common';
+import { CenteredContent, BouncingLogo, TooltipWrapper } from 'src/components/common';
 import { DistributionBar } from 'src/components/common/distribution-bar';
 import { InfoBox } from 'src/components/rewards/info-box';
 import { RewardPhase } from 'src/components/rewards/reward-phase';
@@ -105,7 +105,7 @@ const GlobalRewards = ({ showCount }: Props) => {
   if (isLoading) {
     return (
       <CenteredContent>
-        <Spinner />
+        <BouncingLogo />
       </CenteredContent>
     );
   }

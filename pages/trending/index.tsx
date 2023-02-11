@@ -3,7 +3,15 @@ import { useEffect, useState } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { AButton } from 'src/components/astra/astra-button';
 import { APageBox } from 'src/components/astra/astra-page-box';
-import { BlueCheckInline, CenterFixed, EthPrice, EZImage, NextLink, Spinner, ToggleTab } from 'src/components/common';
+import {
+  BlueCheckInline,
+  CenterFixed,
+  EthPrice,
+  EZImage,
+  NextLink,
+  BouncingLogo,
+  ToggleTab
+} from 'src/components/common';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import useScreenSize from 'src/hooks/useScreenSize';
 import { apiGet, formatNumber, getCollectionKeyId, nFormatter } from 'src/utils';
@@ -101,7 +109,7 @@ const TrendingPage = () => {
 
         {isLoading && (
           <CenterFixed>
-            <Spinner />
+            <BouncingLogo />
           </CenterFixed>
         )}
       </div>

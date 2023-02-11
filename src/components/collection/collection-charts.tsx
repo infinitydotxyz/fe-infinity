@@ -1,6 +1,6 @@
 import { ChainId, CollectionHistoricalSale, CollectionOrder } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
-import { Spinner } from 'src/components/common';
+import { BouncingLogo } from 'src/components/common';
 import { apiGet } from 'src/utils';
 import { secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
@@ -152,7 +152,7 @@ const Loading = ({ graphType }: Props) => {
   return (
     <div className={twMerge(infoBoxStyle, 'pointer-events-none')}>
       <div className="flex items-center justify-center space-x-2">
-        <Spinner />
+        <BouncingLogo />
         <div className="text-sm">{`Loading ${graphType}...`}</div>
       </div>
     </div>

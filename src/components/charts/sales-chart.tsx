@@ -79,7 +79,7 @@ export const ResponsiveSalesChart = ({ data, graphType }: ResponsiveSalesChartPr
     const filteredData = data.filter((v) => v.timestamp >= prevTimestamp);
     setChartData(filteredData);
     setNumSales(filteredData.length);
-  }, [selectedTimeBucket]);
+  }, [selectedTimeBucket, data]);
 
   return (
     <ChartBox className="h-full">

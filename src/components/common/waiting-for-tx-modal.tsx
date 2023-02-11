@@ -1,6 +1,6 @@
 import { TransactionReceipt } from '@ethersproject/abstract-provider';
 import { useEffect, useState } from 'react';
-import { Button, Modal, Spinner } from 'src/components/common';
+import { Button, Modal, BouncingLogo } from 'src/components/common';
 import { ellipsisAddress, ETHERSCAN_BASE_URL } from 'src/utils';
 import { useProvider } from 'wagmi';
 
@@ -46,7 +46,7 @@ export const WaitingForTxModal = ({ title, txHash, onClose }: Props) => {
           <>
             <div className="py-6 text-center font-heading">Waiting for txn confirmation</div>
             <div className="flex justify-center">
-              <Spinner />
+              <BouncingLogo />
             </div>
           </>
         )}
