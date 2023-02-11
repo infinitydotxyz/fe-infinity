@@ -90,7 +90,7 @@ function convertRawDataToChartData(
   for (let i = 0; i <= numBars; i++) {
     listings.push({
       data: [],
-      axisLabel: numStr(Math.floor(minPrice + (i + 1) * priceBucket)),
+      axisLabel: numStr(Math.floor(minPrice + i * priceBucket)),
       start: minPrice + i * priceBucket,
       end: minPrice + (i + 1) * priceBucket,
       tooltip: ''
@@ -221,6 +221,7 @@ const BarChart: React.FC<BarChartProps> = ({
       theme={chartTheme}
     >
       <AnimatedAxis
+        hideZero
         numTicks={5}
         orientation="bottom"
         tickFormat={(v) => `${v}`}
