@@ -23,11 +23,12 @@ interface Props {
 }
 
 const CollectionTraits = ({ traits, filter, setFilter }: Props) => {
+  // TypeValueMap is a map of trait type to trait value to booelan. E.g: { 'Background': { 'Red': true, 'Blue': false } }
   const [typeValueMap, setTypeValueMap] = useState<TypeValueMap>({});
   const [selectedTraitType, setSelectedTraitType] = useState<string>('All');
   const [searchText, setSearchText] = useState<string>('');
 
-  const traitTypeAndNumValues = [];
+  const traitTypeAndNumValues: { name: string; numValues: number }[] = [];
   let totalNumTraitValues = 0;
   for (const traitName in traits) {
     totalNumTraitValues += Object.keys(traits[traitName].values).length;
@@ -46,17 +47,17 @@ const CollectionTraits = ({ traits, filter, setFilter }: Props) => {
     const traitValues = filter.traitValues || [];
     const map: TypeValueMap = {};
     for (let i = 0; i < traitTypes.length; i++) {
-      const type = traitTypes[i];
-      if (!type) {
+      const traitType = traitTypes[i];
+      if (!traitType) {
         continue;
       }
       const values = traitValues[i].split('|');
-      map[type] = map[type] || {};
+      map[traitType] = map[traitType] || {};
       for (const val of values) {
         if (!val) {
           continue;
         }
-        map[type][val] = true;
+        map[traitType][val] = true;
       }
     }
     setTypeValueMap(map);
@@ -104,7 +105,6 @@ const CollectionTraits = ({ traits, filter, setFilter }: Props) => {
         <div className={twMerge('w-2/3 overflow-y-scroll', bgColor)}>
           <CollectionTraitsDisclosure
             typeValueMap={typeValueMap}
-            setTypeValueMap={setTypeValueMap}
             selectedTraitType={selectedTraitType}
             traits={traits}
             filter={filter}
@@ -117,11 +117,9 @@ const CollectionTraits = ({ traits, filter, setFilter }: Props) => {
         className={twMerge('float-left px-4 py-3 cursor-pointer text-sm', brandTextColor)}
         onClick={() => {
           setTypeValueMap({});
-
           const newFilter: TokensFilter = {};
           newFilter.traitTypes = [];
           newFilter.traitValues = [];
-          newFilter.orderBy = 'tokenIdNumeric';
           newFilter.cursor = '';
           setFilter({ ...filter, ...newFilter });
         }}
