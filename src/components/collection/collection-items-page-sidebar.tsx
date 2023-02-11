@@ -20,7 +20,6 @@ export const CollectionItemsPageSidebar = ({ className = '', collectionAddress, 
   const [salesChartData, setSalesChartData] = useState<SalesChartData[]>([]);
   const [recentSalesOrdersData, setRecentSalesOrdersData] = useState<CollectionSaleAndOrder[]>([]);
   const [isSalesChartLoading, setIsSalesChartLoading] = useState(true);
-  const [isRecentSalesOrdersLoading, setIsRecentSalesOrdersLoading] = useState(true);
 
   const fetchSalesChartData = async () => {
     setIsSalesChartLoading(true);
@@ -47,11 +46,9 @@ export const CollectionItemsPageSidebar = ({ className = '', collectionAddress, 
   };
 
   const fetchRecentSalesAndOrders = async () => {
-    setIsRecentSalesOrdersLoading(true);
     const { result, error } = await apiGet(`/collections/${chainId}:${collectionAddress}/salesorders`);
 
     if (error) {
-      setIsRecentSalesOrdersLoading(false);
       console.error(error);
       return;
     }
@@ -74,8 +71,6 @@ export const CollectionItemsPageSidebar = ({ className = '', collectionAddress, 
         return item;
       })
     );
-
-    setIsRecentSalesOrdersLoading(false);
   };
 
   useEffect(() => {
@@ -97,11 +92,7 @@ export const CollectionItemsPageSidebar = ({ className = '', collectionAddress, 
         {isSalesChartLoading && <BouncingLogo />}
       </div>
 
-      <div>
-        {recentSalesOrdersData.length > 0 && <CollectionRecentSalesOrders data={recentSalesOrdersData} />}
-
-        {isRecentSalesOrdersLoading && <BouncingLogo />}
-      </div>
+      <div>{recentSalesOrdersData.length > 0 && <CollectionRecentSalesOrders data={recentSalesOrdersData} />}</div>
     </div>
   );
 };
