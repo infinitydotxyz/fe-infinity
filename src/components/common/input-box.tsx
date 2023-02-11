@@ -88,6 +88,7 @@ interface Props4 {
   className?: string;
   inputClassName?: string;
   onEnter?: () => void;
+  stopEnterSpacePropagation?: boolean;
 }
 
 export const TextInputBox = ({
@@ -105,7 +106,8 @@ export const TextInputBox = ({
   renderLeftIcon,
   className,
   inputClassName = '',
-  onEnter
+  onEnter,
+  stopEnterSpacePropagation = false
 }: Props4) => {
   return (
     <InputBox
@@ -135,6 +137,9 @@ export const TextInputBox = ({
           onKeyDown={(e) => {
             if (e.key === 'Enter' && onEnter) {
               onEnter();
+            }
+            if ((e.key === 'Enter' || e.key === ' ') && stopEnterSpacePropagation) {
+              e.stopPropagation();
             }
           }}
         />

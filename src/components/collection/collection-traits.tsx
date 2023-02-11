@@ -76,6 +76,7 @@ const CollectionTraits = ({ traits, filter, setFilter }: Props) => {
           onChange={(value) => {
             setSearchText(value);
           }}
+          stopEnterSpacePropagation
         ></TextInputBox>
       </div>
 
