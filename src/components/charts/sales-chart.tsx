@@ -118,7 +118,7 @@ export const ResponsiveSalesChart = ({ data, graphType }: ResponsiveSalesChartPr
       <ParentSize debounceTime={10}>
         {({ width }) => (
           <SalesChart
-            key={`${selectedTimeBucket}-${showOutliers}`}
+            key={`${selectedTimeBucket}-${showOutliers}-${chartData.length}`}
             data={chartData}
             width={width}
             height={300}
