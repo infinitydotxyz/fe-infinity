@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { OrderBy, TokensFilter } from 'src/utils/types';
 import { brandTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { Spacer, TextInputBox } from '../common';
+import { TextInputBox } from '../common';
 import { AOutlineButton } from './astra-button';
 import { ACustomMenuButton, ACustomMenuContents, ACustomMenuItems, ADropdownButton } from './astra-dropdown';
 
