@@ -64,8 +64,8 @@ const TooltipContent = ({ tooltip }: Props3) => {
         secondaryBgColor
       )}
     >
-      {tooltip.title && <div className="font-bold text-md mb-1">{tooltip.title}</div>}
-      {tooltip.content && <div className="text-sm">{tooltip.content}</div>}
+      {tooltip.title ? <div className="font-bold text-md mb-1">{tooltip.title}</div> : null}
+      {tooltip.content ? <div className="text-sm">{tooltip.content}</div> : null}
     </div>
   );
 };

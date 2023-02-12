@@ -27,8 +27,8 @@ export const ATraitFilter = ({ collectionAddress, filter, setFilter, collectionA
           </span>
 
           <ACustomMenuItems open={open} innerClassName="w-[580px] border-0 px-0 py-0" alignMenuRight={true}>
-            {!collectionAttributes && <BouncingLogo />}
-            {collectionAttributes && (
+            {!collectionAttributes ? <BouncingLogo /> : null}
+            {collectionAttributes ? (
               <div className="h-[400px]">
                 <CollectionTraits
                   traits={collectionAttributes}
@@ -37,7 +37,7 @@ export const ATraitFilter = ({ collectionAddress, filter, setFilter, collectionA
                   setFilter={setFilter}
                 />
               </div>
-            )}
+            ) : null}
           </ACustomMenuItems>
         </ACustomMenuContents>
       )}

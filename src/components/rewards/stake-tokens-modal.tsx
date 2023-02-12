@@ -186,11 +186,11 @@ const RadioButtonCard: React.FC<{ value: string | number; label: string; descrip
                 {label}
               </RadioGroup.Label>
 
-              {description && (
+              {description ? (
                 <RadioGroup.Description as="span" className={twMerge(secondaryTextColor, 'block text-sm')}>
                   {description}
                 </RadioGroup.Description>
-              )}
+              ) : null}
             </div>
             <input type="radio" checked={checked} readOnly />
           </>

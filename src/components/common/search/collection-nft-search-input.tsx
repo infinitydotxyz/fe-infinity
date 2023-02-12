@@ -62,7 +62,7 @@ export const CollectionNftSearchInput = ({ expanded, slug, collectionFloorPrice 
         placeholder="Search by tokenId"
         data={result.data}
       />
-      {modalOpen && basicTokenInfo && <TokenCardModal data={basicTokenInfo} modalOpen={modalOpen} />}
+      {modalOpen && basicTokenInfo ? <TokenCardModal data={basicTokenInfo} modalOpen={modalOpen} /> : null}
     </>
   );
 };

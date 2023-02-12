@@ -32,9 +32,9 @@ export const InputBox = ({
   return (
     <TooltipWrapper show={showTooltip} tooltip={tooltip} className={isFullWidth ? 'w-full' : ''}>
       <div className={twMerge(borderColor, 'py-2 px-3 border rounded-lg w-full flex items-center', className)}>
-        {icon && <span>{icon}</span>}
+        {icon ? <span>{icon}</span> : null}
         <div className="w-full">
-          {label && (
+          {label ? (
             <label
               className={twMerge(
                 'block font-normal font-heading text-sm select-none',
@@ -44,7 +44,7 @@ export const InputBox = ({
             >
               {label}
             </label>
-          )}
+          ) : null}
           <div className="flex items-center w-full">
             {renderLeftIcon && (
               <div className="absolute top-0 bottom-0 left-4 flex flex-col justify-center">{renderLeftIcon()}</div>
@@ -53,16 +53,16 @@ export const InputBox = ({
             {/* NOTE: this centered positioning of the input field using % is kind of a hack, we should look into a better approach when more than one component needs to render a left icon */}
             <div className={twMerge('flex items-center w-full', renderLeftIcon ? 'ml-[40%]' : '')}>{children}</div>
 
-            {tooltip && (
+            {tooltip ? (
               <Tooltip
                 className="absolute top-0 bottom-0 right-4 flex flex-col justify-center"
                 setShow={setShowTooltip}
               >
                 <TooltipIcon />
               </Tooltip>
-            )}
+            ) : null}
 
-            {renderRightIcon && <div className="pl-2 flex flex-col justify-center">{renderRightIcon()}</div>}
+            {renderRightIcon ? <div className="pl-2 flex flex-col justify-center">{renderRightIcon()}</div> : null}
           </div>
         </div>
       </div>

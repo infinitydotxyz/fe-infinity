@@ -137,18 +137,18 @@ export const GridCard = ({
 
           <div className="flex mt-1 items-center">
             <div>
-              {buyNowPrice && (
+              {buyNowPrice ? (
                 <div className="flex items-center rounded-sm space-x-1 text-sm">
                   <div className={twMerge('truncate font-medium', borderColor)}>{buyNowPrice}</div>
                   <div className="text-xs">{EthSymbol}</div>
                 </div>
-              )}
+              ) : null}
 
-              {lastSalePrice && (
+              {lastSalePrice ? (
                 <div className={twMerge('text-[10px] font-medium', secondaryTextColor)}>
                   Last {lastSalePrice} {EthSymbol}
                 </div>
-              )}
+              ) : null}
             </div>
 
             <Spacer />

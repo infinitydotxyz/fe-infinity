@@ -52,7 +52,7 @@ export const ProfileNFTs = ({ userAddress }: Props) => {
             />
           </div>
 
-          {selectedCollection && (
+          {selectedCollection ? (
             <div className={twMerge('flex items-center rounded-lg border px-2 ml-2', borderColor)}>
               <div className="flex items-center">
                 <EZImage src={selectedCollection.profileImage} className="w-6 h-6 rounded-full mr-2" />
@@ -67,7 +67,7 @@ export const ProfileNFTs = ({ userAddress }: Props) => {
                 />
               </div>
             </div>
-          )}
+          ) : null}
         </div>
       </div>
 

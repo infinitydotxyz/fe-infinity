@@ -102,9 +102,9 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     return (
       <CenteredContent>
         <div className="flex flex-col items-center space-y-2">
-          {collection?.metadata?.profileImage && (
+          {collection?.metadata?.profileImage ? (
             <EZImage src={collection.metadata.profileImage} className="h-40 w-40 rounded-lg overflow-clip" />
-          )}
+          ) : null}
           <div className="text-3xl font-heading font-medium">
             {collection?.metadata?.name ?? 'This collection'} is not supported on Flow
           </div>
@@ -190,7 +190,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
         <CollectionPageHeader {...headerProps} />
 
         <div ref={setRef} className="overflow-y-auto scrollbar-hide">
-          {selectedTab === 'Items' && (
+          {selectedTab === 'Items' ? (
             <div>
               <div className="flex mt-2 px-4">
                 <div className="flex">
@@ -337,9 +337,9 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                 )}
               </div>
             </div>
-          )}
+          ) : null}
 
-          {selectedTab === 'Analytics' && (
+          {selectedTab === 'Analytics' ? (
             <div>
               <CollectionCharts
                 collectionAddress={collection.address}
@@ -348,14 +348,16 @@ export default function ItemsPage(props: CollectionDashboardProps) {
 
               <div className="flex px-4 mt-2 space-x-4">
                 <div className="flex space-x-4 w-1/2">
-                  <div className="w-1/2">{collection && <TopHolderList collection={collection}></TopHolderList>}</div>
                   <div className="w-1/2">
-                    {collection && <TwitterSupporterList collection={collection}></TwitterSupporterList>}
+                    {collection ? <TopHolderList collection={collection}></TopHolderList> : null}
+                  </div>
+                  <div className="w-1/2">
+                    {collection ? <TwitterSupporterList collection={collection}></TwitterSupporterList> : null}
                   </div>
                 </div>
 
                 <div className="w-1/2">
-                  {collection && (
+                  {collection ? (
                     <CollectionSocialFeed
                       types={[EventType.DiscordAnnouncement, EventType.TwitterTweet]}
                       collectionAddress={collection?.address ?? ''}
@@ -363,11 +365,11 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                       collectionSlug={collection?.slug ?? ''}
                       collectionProfileImage={collection?.metadata.profileImage ?? ''}
                     />
-                  )}
+                  ) : null}
                 </div>
               </div>
             </div>
-          )}
+          ) : null}
         </div>
       </div>
     </div>

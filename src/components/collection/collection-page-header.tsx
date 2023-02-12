@@ -80,7 +80,7 @@ export const CollectionPageHeader = ({
 
               <Spacer />
 
-              {collection?.metadata?.links?.external && (
+              {collection?.metadata?.links?.external ? (
                 <>
                   <AOutlineButton
                     className={hoverColor}
@@ -92,7 +92,7 @@ export const CollectionPageHeader = ({
                     </span>
                   </AOutlineButton>
                 </>
-              )}
+              ) : null}
 
               <AOutlineButton
                 className={hoverColor}
@@ -104,7 +104,7 @@ export const CollectionPageHeader = ({
                 </span>
               </AOutlineButton>
 
-              {collection?.metadata?.links?.twitter && (
+              {collection?.metadata?.links?.twitter ? (
                 <AOutlineButton
                   className={hoverColor}
                   onClick={() => window.open(collection?.metadata?.links?.twitter)}
@@ -116,9 +116,9 @@ export const CollectionPageHeader = ({
                     {twitterFollowers ?? ''}
                   </span>
                 </AOutlineButton>
-              )}
+              ) : null}
 
-              {collection?.metadata?.links?.discord && (
+              {collection?.metadata?.links?.discord ? (
                 <AOutlineButton
                   className={hoverColor}
                   onClick={() => window.open(collection?.metadata?.links?.discord)}
@@ -130,24 +130,24 @@ export const CollectionPageHeader = ({
                     {discordFollowers ?? ''}
                   </span>
                 </AOutlineButton>
-              )}
+              ) : null}
 
-              {collection?.metadata?.links?.instagram && (
+              {collection?.metadata?.links?.instagram ? (
                 <AOutlineButton
                   className={hoverColor}
                   onClick={() => window.open(collection?.metadata?.links?.instagram)}
                 >
                   <FaInstagram className="text-xl" />
                 </AOutlineButton>
-              )}
+              ) : null}
             </div>
           </div>
 
-          {description && (
+          {description ? (
             <div className="max-w-5xl text-sm">
               <ReadMoreText text={description} min={30} ideal={60} max={100} />
             </div>
-          )}
+          ) : null}
         </div>
       )}
 

@@ -15,9 +15,9 @@ export enum ProfileTabs {
 }
 
 export default function ProfileItemsPage() {
-  const { setRef, scrollTop } = useScrollInfo();
+  const { setRef } = useScrollInfo();
   const { address } = useAccount();
-  const expanded = scrollTop < 100;
+  const expanded = true;
   const tabs = [ProfileTabs.Items.toString(), ProfileTabs.Orders.toString()];
   const { selectedProfileTab } = useAppContext();
 

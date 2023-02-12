@@ -135,7 +135,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
         {listingPrice && !isOwner && <span>{addedToCart ? 'Remove from Cart' : 'Add to Cart'}</span>}
         {listingPrice && isOwner && <span>{addedToCart ? 'Remove from Cart' : 'Edit in Cart'}</span>}
         {offerPrice && isOwner && <span>{addedToCart ? 'Added to Cart' : 'Sell Now'}</span>}
-        {!listingPrice && !offerPrice && <span>{addedToCart ? 'Added to Cart' : 'Add to Cart'}</span>}
+        {!listingPrice && !offerPrice ? <span>{addedToCart ? 'Added to Cart' : 'Add to Cart'}</span> : null}
       </AButton>
     );
   };
@@ -176,7 +176,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
               <h3 className="font-body text-2xl font-bold mb-2">{token.tokenId}</h3>
 
               <div className="flex justify-between">
-                {data.collectionCreator && (
+                {data.collectionCreator ? (
                   <div>
                     <div className={twMerge('text-xs font-medium mb-1', secondaryTextColor)}>Creator</div>
                     <div>
@@ -188,9 +188,9 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
                       />
                     </div>
                   </div>
-                )}
+                ) : null}
 
-                {token?.owner && (
+                {token?.owner ? (
                   <div>
                     <div className={twMerge('text-xs font-medium mb-1', secondaryTextColor)}>Owner</div>
                     <div>
@@ -202,58 +202,58 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
                       />
                     </div>
                   </div>
-                )}
+                ) : null}
 
-                {data.mintPriceEth && (
+                {data.mintPriceEth ? (
                   <div>
                     <div className={twMerge('text-xs font-medium mb-1', secondaryTextColor)}>Mint Price</div>
                     <div>
                       {data.mintPriceEth} {EthSymbol}
                     </div>
                   </div>
-                )}
+                ) : null}
 
-                {data.lastSalePriceEth && (
+                {data.lastSalePriceEth ? (
                   <div>
                     <div className={twMerge('text-xs font-medium mb-1', secondaryTextColor)}>Last Price</div>
                     <div>
                       {data.lastSalePriceEth} {EthSymbol}
                     </div>
                   </div>
-                )}
+                ) : null}
 
-                {data.collectionFloorPrice && (
+                {data.collectionFloorPrice ? (
                   <div>
                     <div className={twMerge('text-xs font-medium mb-1', secondaryTextColor)}>Collection Floor</div>
                     <div>
                       {data.collectionFloorPrice} {EthSymbol}
                     </div>
                   </div>
-                )}
+                ) : null}
               </div>
 
-              {!(listingPrice || offerPrice) && addToCartBtn()}
+              {!(listingPrice || offerPrice) ? addToCartBtn() : null}
 
-              {(listingPrice || offerPrice) && (
+              {listingPrice || offerPrice ? (
                 <div className={twMerge(secondaryBgColor, borderColor, 'rounded-xl p-[30px] border')}>
                   <div className="flex flex-row">
                     <div className="space-y-1">
                       <div className="text-lg font-medium">
-                        {listingPrice && (
+                        {listingPrice ? (
                           <span>
                             On sale for {listingPrice} {EthSymbol}
                           </span>
-                        )}
-                        {!listingPrice && offerPrice && (
+                        ) : null}
+                        {!listingPrice && offerPrice ? (
                           <span>
                             Has an offer for {offerPrice} {EthSymbol}
                           </span>
-                        )}
+                        ) : null}
                       </div>
 
                       <div className={twMerge('text-xs font-medium', secondaryTextColor)}>
-                        {listingExpiry && <span>Expires {listingExpiryStr}</span>}
-                        {!listingExpiry && offerExpiry && <span>Expires {offerExpiryStr}</span>}
+                        {listingExpiry ? <span>Expires {listingExpiryStr}</span> : null}
+                        {!listingExpiry && offerExpiry ? <span>Expires {offerExpiryStr}</span> : null}
                       </div>
                     </div>
                     <Spacer />
@@ -263,12 +263,12 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
                   <div className="flex flex-row items-center justify-between mt-[26px]">
                     <div className="space-y-1">
                       <div className={twMerge('text-xs font-medium ml-[-1px]', secondaryTextColor)}>
-                        {listingTime && 'Listed'}
-                        {!listingTime && offerTime && 'Offered'}
+                        {listingTime ? 'Listed' : null}
+                        {!listingTime && offerTime ? 'Offered' : null}
                       </div>
                       <div>
-                        {listingTime && listingTimeStr}
-                        {!listingTime && offerTime && offerTimeStr}
+                        {listingTime ? listingTimeStr : null}
+                        {!listingTime && offerTime ? offerTimeStr : null}
                       </div>
                     </div>
 
@@ -296,7 +296,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
                     </div>
                   </div>
                 </div>
-              )}
+              ) : null}
 
               <div className="w-full py-2">
                 {salesAndOrdersChartData.length > 0 && (
@@ -305,8 +305,6 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
                     data={salesAndOrdersChartData}
                   />
                 )}
-
-                {/* {isLoading && <Loading />} */}
               </div>
             </div>
           </div>

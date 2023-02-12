@@ -16,7 +16,7 @@ interface Props {
 export const ShortAddress = ({ address, href, label, tooltip, className, textToCopy }: Props) => {
   return (
     <div className={twMerge('flex items-center', className)}>
-      {label && <div className="mr-2">{label}</div>}
+      {label ? <div className="mr-2">{label}</div> : null}
 
       <a className="text-blue-500" href={href} title={tooltip} target="_blank">
         {ellipsisAddress(address)}

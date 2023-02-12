@@ -73,7 +73,7 @@ export const UnstakeTokensModal = ({ onClose }: Props) => {
     >
       <div>
         <div className="mt-4">
-          {stakeAmounts.length > 0 && (
+          {stakeAmounts.length > 0 ? (
             <div className="text-md flex flex-col justify-between">
               <table>
                 <thead>
@@ -98,7 +98,7 @@ export const UnstakeTokensModal = ({ onClose }: Props) => {
                 </tbody>
               </table>
             </div>
-          )}
+          ) : null}
 
           <div className="text-m mt-4 flex justify-between">
             <span>Total staked</span>

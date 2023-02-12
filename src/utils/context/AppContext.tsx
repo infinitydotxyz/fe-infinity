@@ -449,7 +449,7 @@ export const AppContextProvider = ({ children }: Props) => {
     <AppContext.Provider value={value}>
       <>
         {children}{' '}
-        {txnHash && <WaitingForTxModal title={'Sending NFTs'} txHash={txnHash} onClose={() => setTxnHash('')} />}
+        {txnHash ? <WaitingForTxModal title={'Sending NFTs'} txHash={txnHash} onClose={() => setTxnHash('')} /> : null}
         <ToastContainer
           limit={3}
           position="top-right"
