@@ -76,8 +76,6 @@ export const APriceFilter = ({ filter, setFilter }: Props) => {
               >
                 Clear
               </div>
-              <Spacer />
-              <div className={twMerge('cursor-pointer', brandTextColor)}>Apply</div>
             </div>
           </ACustomMenuItems>
         </ACustomMenuContents>
