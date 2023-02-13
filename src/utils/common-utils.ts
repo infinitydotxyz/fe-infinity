@@ -4,6 +4,7 @@ import { BaseCollection } from '@infinityxyz/lib-frontend/types/core/Collection'
 import {
   Env,
   ETHEREUM_CHAIN_SCANNER_BASE,
+  GOERLI_CHAIN_SCANNER_BASE,
   POLYGON_CHAIN_SCANNER_BASE,
   trimLowerCase
 } from '@infinityxyz/lib-frontend/utils';
@@ -260,6 +261,8 @@ export const getChainScannerBase = (chainId: string): string | null => {
     return ETHEREUM_CHAIN_SCANNER_BASE;
   } else if (chainId === '137') {
     return POLYGON_CHAIN_SCANNER_BASE;
+  } else if (chainId === '5') {
+    return GOERLI_CHAIN_SCANNER_BASE;
   }
   return null;
 };

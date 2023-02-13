@@ -1,8 +1,8 @@
 import { TransactionReceipt } from '@ethersproject/abstract-provider';
 import { useEffect, useState } from 'react';
 import { Button, Modal, BouncingLogo } from 'src/components/common';
-import { ellipsisAddress, ETHERSCAN_BASE_URL } from 'src/utils';
-import { useProvider } from 'wagmi';
+import { ellipsisAddress, getChainScannerBase } from 'src/utils';
+import { useNetwork, useProvider } from 'wagmi';
 
 interface Props {
   title: string;
@@ -12,6 +12,8 @@ interface Props {
 
 export const WaitingForTxModal = ({ title, txHash, onClose }: Props) => {
   const provider = useProvider();
+  const { chain } = useNetwork();
+  const chainId = String(chain?.id) ?? '1';
 
   const [transactionReceipt, setTransactionReceipt] = useState<TransactionReceipt | undefined>(undefined);
 
@@ -52,7 +54,7 @@ export const WaitingForTxModal = ({ title, txHash, onClose }: Props) => {
         )}
 
         <div className="py-6 text-center">
-          <a href={`${ETHERSCAN_BASE_URL}/tx/${txHash}`} target="_blank" className="underline">
+          <a href={`${getChainScannerBase(chainId)}/tx/${txHash}`} target="_blank" className="underline">
             View transaction {ellipsisAddress(txHash)}
           </a>
         </div>

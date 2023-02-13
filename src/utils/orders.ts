@@ -6,7 +6,7 @@ import { Contract } from '@ethersproject/contracts';
 import { keccak256 } from '@ethersproject/keccak256';
 import { JsonRpcSigner } from '@ethersproject/providers';
 import { parseEther } from '@ethersproject/units';
-import { ERC20ABI, ERC721ABI, InfinityExchangeABI, InfinityOBComplicationABI } from '@infinityxyz/lib-frontend/abi';
+import { ERC20ABI, ERC721ABI, FlowExchangeABI, FlowOBComplicationABI } from '@infinityxyz/lib-frontend/abi';
 import {
   ChainNFTs,
   ChainOBOrder,
@@ -36,11 +36,11 @@ export async function signOrders(
   orders: OBOrder[]
 ): Promise<SignedOBOrder[] | undefined> {
   // sign
-  const infinityExchangeAddress = getExchangeAddress(chainId.toString());
-  const infinityExchange = new Contract(infinityExchangeAddress, InfinityExchangeABI, signer);
+  const flowExchangeAddress = getExchangeAddress(chainId.toString());
+  const flowExchange = new Contract(flowExchangeAddress, FlowExchangeABI, signer);
   const preSignedOrders: SignedOBOrder[] = [];
   for (const order of orders) {
-    const preparedOrder = await prepareOBOrder(chainId, signer, order, infinityExchange);
+    const preparedOrder = await prepareOBOrder(chainId, signer, order, flowExchange);
     if (!preparedOrder) {
       throw new Error('Failed to prepare order');
     }
@@ -517,11 +517,11 @@ export async function sendMultipleNfts(
   toAddress: string
 ) {
   const exchangeAddress = getExchangeAddress(chainId);
-  const infinityExchange = new Contract(exchangeAddress, InfinityExchangeABI, signer);
+  const flowExchange = new Contract(exchangeAddress, FlowExchangeABI, signer);
   // grant approvals
   await approveERC721ForChainNFTs(orderItems, signer, exchangeAddress);
   // perform send
-  const transferResult = await infinityExchange.transferMultipleNFTs(toAddress, orderItems);
+  const transferResult = await flowExchange.transferMultipleNFTs(toAddress, orderItems);
   return {
     hash: transferResult?.hash ?? ''
   };
@@ -529,9 +529,9 @@ export async function sendMultipleNfts(
 
 export async function cancelAllOrders(signer: JsonRpcSigner, chainId: string, minOrderNonce: number) {
   const exchangeAddress = getExchangeAddress(chainId);
-  const infinityExchange = new Contract(exchangeAddress, InfinityExchangeABI, signer);
+  const flowExchange = new Contract(exchangeAddress, FlowExchangeABI, signer);
   // perform cancel
-  const cancelResult = await infinityExchange.cancelAllOrders(minOrderNonce);
+  const cancelResult = await flowExchange.cancelAllOrders(minOrderNonce);
   return {
     hash: cancelResult?.hash ?? ''
   };
@@ -539,9 +539,9 @@ export async function cancelAllOrders(signer: JsonRpcSigner, chainId: string, mi
 
 export async function cancelMultipleOrders(signer: JsonRpcSigner, chainId: string, nonces: number[]) {
   const exchangeAddress = getExchangeAddress(chainId);
-  const infinityExchange = new Contract(exchangeAddress, InfinityExchangeABI, signer);
+  const flowExchange = new Contract(exchangeAddress, FlowExchangeABI, signer);
   // perform cancel
-  const cancelResult = await infinityExchange.cancelMultipleOrders(nonces);
+  const cancelResult = await flowExchange.cancelMultipleOrders(nonces);
   return {
     hash: cancelResult?.hash ?? ''
   };
@@ -556,7 +556,7 @@ export async function canTakeMultipleOneOrders(
     for (const makerOrder of makerOrders) {
       const complicationAddress = makerOrder.execParams[0];
       // todo: adi other complications in future
-      const complication = new Contract(complicationAddress, InfinityOBComplicationABI, signer);
+      const complication = new Contract(complicationAddress, FlowOBComplicationABI, signer);
       const canExec = await complication.canExecTakeOneOrder(makerOrder);
       if (!canExec) {
         return 'cannotExecute';
@@ -595,7 +595,7 @@ export async function takeOrders(
   takerItems: ChainNFTs[][]
 ) {
   const exchangeAddress = getExchangeAddress(chainId);
-  const infinityExchange = new Contract(exchangeAddress, InfinityExchangeABI, signer);
+  const flowExchange = new Contract(exchangeAddress, FlowExchangeABI, signer);
   const totalPrice = makerOrders
     .map((order) => getCurrentChainOBOrderPrice(order))
     .reduce((acc, curr) => acc.add(curr), BigNumber.from(0));
@@ -617,7 +617,7 @@ export async function takeOrders(
       value: totalPrice,
       gasLimit
     };
-    const result = await infinityExchange.takeOrders(makerOrders, takerItems, options);
+    const result = await flowExchange.takeOrders(makerOrders, takerItems, options);
     // const options = {
     //   value: totalPrice
     // };
@@ -639,7 +639,7 @@ export async function takeOrders(
       await signer.provider?.waitForTransaction(hash);
     }
 
-    const result = await infinityExchange.takeOrders(makerOrders, takerItems, { gasLimit });
+    const result = await flowExchange.takeOrders(makerOrders, takerItems, { gasLimit });
     // const result = await submitTransaction(infinityExchange, 'takeOrders', [makerOrders, takerItems]);
     return {
       hash: result?.hash ?? ''
@@ -649,7 +649,7 @@ export async function takeOrders(
 
 export async function takeMultipleOneOrders(signer: JsonRpcSigner, chainId: string, makerOrders: ChainOBOrder[]) {
   const exchangeAddress = getExchangeAddress(chainId);
-  const infinityExchange = new Contract(exchangeAddress, InfinityExchangeABI, signer);
+  const flowExchange = new Contract(exchangeAddress, FlowExchangeABI, signer);
   const totalPrice = makerOrders
     .map((order) => getCurrentChainOBOrderPrice(order))
     .reduce((acc, curr) => acc.add(curr), BigNumber.from(0));
@@ -670,7 +670,7 @@ export async function takeMultipleOneOrders(signer: JsonRpcSigner, chainId: stri
       value: totalPrice,
       gasLimit
     };
-    const result = await infinityExchange.takeMultipleOneOrders(makerOrders, options);
+    const result = await flowExchange.takeMultipleOneOrders(makerOrders, options);
     // const result = await submitTransaction(infinityExchange, 'takeMultipleOneOrders', [makerOrders], {
     //   value: totalPrice
     // });
@@ -691,7 +691,7 @@ export async function takeMultipleOneOrders(signer: JsonRpcSigner, chainId: stri
       await signer.provider?.waitForTransaction(hash);
     }
 
-    const result = await infinityExchange.takeMultipleOneOrders(makerOrders, { gasLimit });
+    const result = await flowExchange.takeMultipleOneOrders(makerOrders, { gasLimit });
     // const result = await submitTransaction(infinityExchange, 'takeMultipleOneOrders', [makerOrders]);
     return {
       hash: result?.hash ?? ''

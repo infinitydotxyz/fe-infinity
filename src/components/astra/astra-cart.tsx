@@ -1,6 +1,6 @@
 import { getAddress } from '@ethersproject/address';
 import { ChainId } from '@infinityxyz/lib-frontend/types/core';
-import { ETHEREUM_WETH_ADDRESS } from '@infinityxyz/lib-frontend/utils';
+import { ETHEREUM_WETH_ADDRESS, GOERLI_WETH_ADDRESS } from '@infinityxyz/lib-frontend/utils';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect, useState } from 'react';
 import { FiEdit3 } from 'react-icons/fi';
@@ -69,9 +69,13 @@ export const AstraCart = ({
   let cartItemList: ReactNode;
   const [cartContent, setCartContent] = useState<ReactNode>(cartItemList);
 
+  // todo change when supporting more chains
+  const WETH_ADDRESS =
+    chainId === ChainId.Mainnet ? ETHEREUM_WETH_ADDRESS : chainId === ChainId.Goerli ? GOERLI_WETH_ADDRESS : '';
+
   const { data: wethBalance, isLoading } = useBalance({
     address: user,
-    token: ETHEREUM_WETH_ADDRESS as `0x{string}` // todo change when supporting multiple chains
+    token: WETH_ADDRESS as `0x{string}`
   });
 
   const finalSendToAddress = async (addr: string) => {
