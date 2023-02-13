@@ -54,22 +54,24 @@ export const CollectionItemsPageSidebar = ({ className = '', collectionAddress, 
     }
 
     setRecentSalesOrdersData(
-      result.map((item: CollectionSaleAndOrder) => {
-        const tokenId = item.tokenId;
-        const tokenImage = item.tokenImage;
+      result
+        .map((item: CollectionSaleAndOrder) => {
+          const tokenId = item.tokenId;
+          const tokenImage = item.tokenImage;
 
-        // for collection and other complex offers, tokenId and tokenImage could be blank
-        if (item.dataType === 'Offer') {
-          if (!tokenImage) {
-            item.tokenImage = collectionImage;
+          // for collection and other complex offers, tokenId and tokenImage could be blank
+          if (item.dataType === 'Offer') {
+            if (!tokenImage) {
+              item.tokenImage = collectionImage;
+            }
+            if (!tokenId) {
+              item.tokenId = 'Offer';
+            }
           }
-          if (!tokenId) {
-            item.tokenId = 'Offer';
-          }
-        }
 
-        return item;
-      })
+          return item;
+        })
+        .sort((a: CollectionSaleAndOrder, b: CollectionSaleAndOrder) => b.timestamp - a.timestamp)
     );
   };
 
