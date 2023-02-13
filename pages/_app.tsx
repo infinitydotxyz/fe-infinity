@@ -10,7 +10,12 @@ import 'src/settings/tailwind/globals.scss';
 import { isLocalhost } from 'src/utils/common-utils';
 import { AppContextProvider } from 'src/utils/context/AppContext';
 import { CartContextProvider } from 'src/utils/context/CartContext';
-import { createClient, WagmiConfig } from 'wagmi';
+import { configureChains, createClient, WagmiConfig } from 'wagmi';
+import { mainnet, goerli } from 'wagmi/chains';
+import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
+import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
+import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet';
+import { alchemyProvider } from 'wagmi/providers/alchemy';
 
 import NProgress from 'nprogress'; //nprogress module
 import '../styles/nprogress.css'; //styles of nprogress
@@ -26,12 +31,25 @@ if (!isLocalhost()) {
   LogRocket.init('0pu9ak/nftco');
 }
 
-const alchemyApiKey = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY ?? '';
+const alchemyApiKeyMainnet = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY_MAINNET ?? '';
+const alchemyApiKeyGoerli = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY_GOERLI ?? '';
+const supportedChains = [mainnet, goerli];
+
+const { chains, provider } = configureChains(
+  [mainnet, goerli],
+  [alchemyProvider({ apiKey: alchemyApiKeyMainnet }), alchemyProvider({ apiKey: alchemyApiKeyGoerli })]
+);
 
 const client = createClient(
   getDefaultClient({
     appName: 'Flow',
-    alchemyId: alchemyApiKey
+    chains: supportedChains,
+    connectors: [
+      new MetaMaskConnector({ chains }),
+      new CoinbaseWalletConnector({ chains, options: { appName: 'Flow' } }),
+      new WalletConnectConnector({ chains, options: {} })
+    ],
+    provider
   })
 );
 
