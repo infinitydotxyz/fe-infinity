@@ -356,7 +356,7 @@ export const AstraCart = ({
           primary={true}
           disabled={
             !user ||
-            chainId !== ChainId.Mainnet ||
+            chainId !== ChainId.Goerli ||
             currentCartItems.length === 0 ||
             (cartType === CartType.Send && !sendToAddress)
           }

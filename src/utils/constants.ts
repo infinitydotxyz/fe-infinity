@@ -59,6 +59,7 @@ export const FLOW_TOKEN = getToken(ChainId.Mainnet) ?? {
 };
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
+export const ZERO_HASH = '0x0000000000000000000000000000000000000000000000000000000000000000';
 
 export const ORDER_ROOT_EIP712_TYPES = {
   Root: [{ name: 'root', type: 'bytes32' }]

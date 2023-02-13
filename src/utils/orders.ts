@@ -1,11 +1,10 @@
 import { defaultAbiCoder } from '@ethersproject/abi';
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
-import { splitSignature } from '@ethersproject/bytes';
+import { hexConcat } from '@ethersproject/bytes';
 import { MaxUint256 } from '@ethersproject/constants';
 import { Contract } from '@ethersproject/contracts';
 import { keccak256 } from '@ethersproject/keccak256';
 import { JsonRpcSigner } from '@ethersproject/providers';
-import { keccak256 as solidityKeccak256 } from '@ethersproject/solidity';
 import { parseEther } from '@ethersproject/units';
 import { ERC20ABI, ERC721ABI, InfinityExchangeABI, InfinityOBComplicationABI } from '@infinityxyz/lib-frontend/abi';
 import {
@@ -26,9 +25,10 @@ import {
   NULL_ADDRESS,
   trimLowerCase
 } from '@infinityxyz/lib-frontend/utils';
+import { _TypedDataEncoder } from 'ethers/lib/utils.js';
 import { MerkleTree } from 'merkletreejs';
 import { toastError } from 'src/components/common';
-import { DEFAULT_MAX_GAS_PRICE_WEI, FLOW_ORDER_EIP_712_TYPES, ORDER_ROOT_EIP712_TYPES } from './constants';
+import { DEFAULT_MAX_GAS_PRICE_WEI, FLOW_ORDER_EIP_712_TYPES, ZERO_ADDRESS, ZERO_HASH } from './constants';
 
 export async function signOrders(
   signer: JsonRpcSigner,
@@ -296,13 +296,11 @@ export const signSingleOrder = async (
 
   try {
     const sig = await signer._signTypedData(domain, FLOW_ORDER_EIP_712_TYPES, orderToSign.signedOrder);
-    const splitSig = splitSignature(sig ?? '');
-    const encodedSig = defaultAbiCoder.encode(['bytes32', 'bytes32', 'uint8'], [splitSig.r, splitSig.s, splitSig.v]);
     const signedOrder = {
       ...orderToSign,
       signedOrder: {
         ...orderToSign.signedOrder,
-        sig: encodedSig
+        sig
       }
     };
     return [signedOrder];
@@ -322,13 +320,6 @@ export const signBulkOrders = async (
   if (!complicationAddress) {
     complicationAddress = getOBComplicationAddress(chainId.toString());
   }
-
-  const domain = {
-    name: 'FlowComplication',
-    version: '1',
-    chainId: chainId,
-    verifyingContract: complicationAddress
-  };
 
   const preSignedOrders: SignedOBOrder[] = preparedOrders.map((order) => {
     const constraints = [
@@ -382,109 +373,98 @@ export const signBulkOrders = async (
     return { ...order, signedOrder: orderToSign };
   });
 
-  const { tree, root } = await getOrderTreeRoot(preSignedOrders);
+  const { signatureData, proofs } = getBulkSignatureDataWithProofs(
+    chainId,
+    complicationAddress,
+    preSignedOrders.map((order) => order.signedOrder)
+  );
 
-  const signedOrders: SignedOBOrder[] = [];
-  try {
-    const sig = await signer._signTypedData(domain, ORDER_ROOT_EIP712_TYPES, { root });
-    const splitSig = splitSignature(sig ?? '');
+  const signature = await signer._signTypedData(signatureData.domain, signatureData.types, signatureData.value);
 
-    // sign each order
-    for (let index = 0; index < preSignedOrders.length; index++) {
-      const order = preSignedOrders[index].signedOrder;
-      const hash = orderHash(order);
-      const merkleProof = tree.getHexProof(hash);
-      order.sig = defaultAbiCoder.encode(
-        ['bytes32', 'bytes32', 'uint8', 'bytes32[]'],
-        [splitSig.r, splitSig.s, splitSig.v, merkleProof]
-      );
+  preSignedOrders.forEach((order, i) => {
+    order.signedOrder.sig = hexConcat([
+      signature,
+      `0x${i.toString(16).padStart(6, '0')}`,
+      defaultAbiCoder.encode([`uint256[${proofs[i].length}]`], [proofs[i]])
+    ]);
+  });
 
-      signedOrders.push(preSignedOrders[index]);
-    }
-  } catch (e) {
-    console.error(e);
-    throw e;
-  }
-
-  return signedOrders;
+  return preSignedOrders;
 };
 
-async function getOrderTreeRoot(orders: SignedOBOrder[]) {
-  const leaves = await Promise.all(
-    orders.map((order) => {
-      return orderHash(order.signedOrder);
-    })
-  );
-  const tree = new MerkleTree(leaves, keccak256, { sort: true });
-  const root = tree.getHexRoot();
-  return { tree, root };
-}
+function getBulkSignatureDataWithProofs(
+  chainId: BigNumberish,
+  verifyingContractAddress: string,
+  orders: ChainOBOrder[]
+) {
+  const domain = {
+    name: 'FlowComplication',
+    version: '1',
+    chainId: chainId,
+    verifyingContract: verifyingContractAddress
+  };
 
-function orderHash(order: ChainOBOrder): string {
-  const fnSign =
-    'Order(bool isSellOrder,address signer,uint256[] constraints,OrderItem[] nfts,address[] execParams,bytes extraParams)OrderItem(address collection,TokenInfo[] tokens)TokenInfo(uint256 tokenId,uint256 numTokens)';
-  const orderTypeHash = solidityKeccak256(['string'], [fnSign]);
+  const height = Math.max(Math.ceil(Math.log2(orders.length)), 1);
+  const size = Math.pow(2, height);
 
-  const constraints = order.constraints;
-  const execParams = order.execParams;
-  const extraParams = order.extraParams;
+  const types = { ...FLOW_ORDER_EIP_712_TYPES };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (types as any).BulkOrder = [{ name: 'tree', type: `Order${`[2]`.repeat(height)}` }];
+  const encoder = _TypedDataEncoder.from(types);
 
-  const typesArr = [];
-  for (let i = 0; i < constraints.length; i++) {
-    typesArr.push('uint256');
+  const hashElement = (element: Omit<ChainOBOrder, 'sig'>) => encoder.hashStruct('Order', element);
+
+  const elements: Omit<ChainOBOrder, 'sig'>[] = orders.map((o) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { sig, ...order } = o;
+    return order;
+  });
+  const leaves = elements.map((e) => hashElement(e));
+
+  const defaultElement: Omit<ChainOBOrder, 'sig'> = {
+    isSellOrder: false,
+    signer: ZERO_ADDRESS,
+    constraints: [],
+    nfts: [],
+    execParams: [],
+    extraParams: ZERO_HASH
+  };
+  const defaultLeaf = hashElement(defaultElement);
+
+  // Ensure the tree is complete
+  while (elements.length < size) {
+    elements.push(defaultElement);
+    leaves.push(defaultLeaf);
   }
-  const constraintsHash = keccak256(defaultAbiCoder.encode(typesArr, constraints));
 
-  const orderItemsHash = nftsHash(order.nfts);
-  const execParamsHash = keccak256(defaultAbiCoder.encode(['address', 'address'], execParams));
+  const hexToBuffer = (value: string) => Buffer.from(value.slice(2), 'hex');
+  const bufferKeccak = (value: string) => hexToBuffer(keccak256(value));
 
-  const calcEncode = defaultAbiCoder.encode(
-    ['bytes32', 'bool', 'address', 'bytes32', 'bytes32', 'bytes32', 'bytes32'],
-    [
-      orderTypeHash,
-      order.isSellOrder,
-      order.signer,
-      constraintsHash,
-      orderItemsHash,
-      execParamsHash,
-      keccak256(extraParams)
-    ]
-  );
+  const tree = new MerkleTree(leaves.map(hexToBuffer), bufferKeccak, {
+    complete: true,
+    sort: false,
+    hashLeaves: false,
+    fillDefaultHash: hexToBuffer(defaultLeaf)
+  });
 
-  return keccak256(calcEncode);
-}
-
-function nftsHash(nfts: ChainNFTs[]): string {
-  const fnSign = 'OrderItem(address collection,TokenInfo[] tokens)TokenInfo(uint256 tokenId,uint256 numTokens)';
-  const typeHash = solidityKeccak256(['string'], [fnSign]);
-
-  const hashes: string[] = [];
-  for (const nft of nfts) {
-    const hash = keccak256(
-      defaultAbiCoder.encode(['bytes32', 'uint256', 'bytes32'], [typeHash, nft.collection, tokensHash(nft.tokens)])
-    );
-    hashes.push(hash);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let chunks: any[] = [...elements];
+  while (chunks.length > 2) {
+    const newSize = Math.ceil(chunks.length / 2);
+    chunks = Array(newSize)
+      .fill(0)
+      .map((_, i) => chunks.slice(i * 2, (i + 1) * 2));
   }
-  const encodeTypeArray = hashes.map(() => 'bytes32');
-  const nftsHash = keccak256(defaultAbiCoder.encode(encodeTypeArray, hashes));
 
-  return nftsHash;
-}
-
-function tokensHash(tokens: ChainNFTs['tokens']): string {
-  const fnSign = 'TokenInfo(uint256 tokenId,uint256 numTokens)';
-  const typeHash = solidityKeccak256(['string'], [fnSign]);
-
-  const hashes: string[] = [];
-  for (const token of tokens) {
-    const hash = keccak256(
-      defaultAbiCoder.encode(['bytes32', 'uint256', 'uint256'], [typeHash, token.tokenId, token.numTokens])
-    );
-    hashes.push(hash);
-  }
-  const encodeTypeArray = hashes.map(() => 'bytes32');
-  const tokensHash = keccak256(defaultAbiCoder.encode(encodeTypeArray, hashes));
-  return tokensHash;
+  return {
+    signatureData: {
+      signatureKind: 'eip712',
+      domain,
+      types: types,
+      value: { tree: chunks }
+    },
+    proofs: orders.map((_, i) => tree.getHexProof(leaves[i], i))
+  };
 }
 
 const getCurrentChainOBOrderPrice = (order: ChainOBOrder): BigNumber => {
