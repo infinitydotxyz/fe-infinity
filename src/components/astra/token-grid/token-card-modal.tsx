@@ -1,4 +1,5 @@
 import { CollectionAttributes, Erc721Token, NftSaleAndOrder, Token } from '@infinityxyz/lib-frontend/types/core';
+import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { ResponsiveSalesAndOrdersChart } from 'src/components/charts/sales-and-orders-chart';
@@ -107,7 +108,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
       : 0;
   const markupPricePercentDiff = markupPrice ? `${nFormatter((markupPriceDiff / Number(markupPrice)) * 100)}%` : 0;
 
-  const isOwner = user && user === token.owner?.toString();
+  const isOwner = user && trimLowerCase(user) === trimLowerCase(token.owner?.toString());
 
   const removeViewParams = () => {
     const { pathname, query } = router;

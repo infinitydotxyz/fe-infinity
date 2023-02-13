@@ -1,4 +1,5 @@
 import { CollectionOrder } from '@infinityxyz/lib-frontend/types/core';
+import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { AButton } from 'src/components/astra/astra-button';
 import { ButtonProps, toastError } from 'src/components/common';
 import { useAppContext } from 'src/utils/context/AppContext';
@@ -55,7 +56,7 @@ export const OrderbookRowButton = ({ order, outlineButtons = false, collectionAd
     toggleNFTSelection(token);
   };
 
-  const isOwner = user && order.maker === user;
+  const isOwner = user && trimLowerCase(order.maker) === trimLowerCase(user);
 
   let buttonProps: OrderButtonProps = { className: 'w-32' };
 
