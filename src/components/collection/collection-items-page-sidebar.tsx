@@ -81,7 +81,7 @@ export const CollectionItemsPageSidebar = ({ className = '', collectionAddress, 
 
     const interval = setInterval(() => {
       fetchRecentSalesAndOrders();
-    }, 10 * 1000);
+    }, 30 * 1000);
 
     return () => clearInterval(interval);
   }, [collectionAddress, chainId]);
