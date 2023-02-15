@@ -638,6 +638,9 @@ const PriceAndExpiry = ({ token, collection, className, editing, onEditComplete,
             onEnter={() => {
               onEditComplete?.(price);
             }}
+            onMouseLeave={() => {
+              onEditComplete?.(price);
+            }}
           />
         </>
       )}

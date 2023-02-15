@@ -63,7 +63,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   const { cartType, setCartType } = useCartContext();
   const [numSweep, setNumSweep] = useState('');
   const [customSweep, setCustomSweep] = useState('');
-  const { showCart } = useAppContext();
+  const { showCart, setShowCart } = useAppContext();
 
   const MAX_NUM_SWEEP_ITEMS = 50;
 
@@ -213,6 +213,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                     onClick={() => {
                       setCartType(CartType.CollectionOffer);
                       if (isCollSelectable(collection as ERC721CollectionCartItem)) {
+                        setShowCart(!showCart);
                         return toggleCollSelection(collection as ERC721CollectionCartItem);
                       }
                     }}

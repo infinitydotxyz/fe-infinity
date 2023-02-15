@@ -89,6 +89,7 @@ interface Props4 {
   inputClassName?: string;
   onEnter?: () => void;
   stopEnterSpacePropagation?: boolean;
+  onMouseLeave?: () => void;
 }
 
 export const TextInputBox = ({
@@ -107,7 +108,8 @@ export const TextInputBox = ({
   className,
   inputClassName = '',
   onEnter,
-  stopEnterSpacePropagation = false
+  stopEnterSpacePropagation = false,
+  onMouseLeave
 }: Props4) => {
   return (
     <InputBox
@@ -130,6 +132,7 @@ export const TextInputBox = ({
               onChange(e.target.value);
             }
           }}
+          onMouseLeave={onMouseLeave}
           className={twMerge(
             `p-0 bg-transparent border-none focus:ring-0 block w-full font-heading outline-none ring-transparent shadow-none ${inputClassName}`
           )}
