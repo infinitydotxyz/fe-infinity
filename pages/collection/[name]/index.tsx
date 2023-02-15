@@ -193,7 +193,14 @@ export default function ItemsPage(props: CollectionDashboardProps) {
           {selectedTab === 'Items' ? (
             <div>
               <div className="flex mt-2 px-4">
-                <div className="flex">
+                <div
+                  className={twMerge(
+                    'flex',
+                    cartType === CartType.CollectionOffer
+                      ? 'opacity-30 duration-300 pointer-events-none'
+                      : 'duration-300'
+                  )}
+                >
                   <CollectionNftSearchInput slug={collection.slug} expanded collectionFloorPrice={floorPrice} />
                 </div>
 
@@ -220,7 +227,15 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                     )}
                   </AButton>
 
-                  <div className={twMerge('flex flex-row rounded-lg border cursor-pointer', borderColor)}>
+                  <div
+                    className={twMerge(
+                      'flex flex-row rounded-lg border cursor-pointer',
+                      borderColor,
+                      cartType === CartType.CollectionOffer
+                        ? 'opacity-30 duration-300 pointer-events-none'
+                        : 'duration-300'
+                    )}
+                  >
                     <div className={twMerge('flex items-center border-r-[1px] px-6 cursor-default', borderColor)}>
                       <GiBroom className={twMerge(iconButtonStyle, brandTextColor)} />
                     </div>
@@ -292,15 +307,24 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                     </div>
                   </div>
 
-                  <ASortButton filter={filter} setFilter={setFilter} />
-                  <AStatusFilterButton filter={filter} setFilter={setFilter} />
-                  <APriceFilter filter={filter} setFilter={setFilter} />
-                  <ATraitFilter
-                    collectionAddress={collection.address}
-                    filter={filter}
-                    setFilter={setFilter}
-                    collectionAttributes={props.collectionAttributes}
-                  />
+                  <div
+                    className={twMerge(
+                      'flex',
+                      cartType === CartType.CollectionOffer
+                        ? 'opacity-30 duration-300 pointer-events-none'
+                        : 'duration-300'
+                    )}
+                  >
+                    <ASortButton filter={filter} setFilter={setFilter} />
+                    <AStatusFilterButton filter={filter} setFilter={setFilter} />
+                    <APriceFilter filter={filter} setFilter={setFilter} />
+                    <ATraitFilter
+                      collectionAddress={collection.address}
+                      filter={filter}
+                      setFilter={setFilter}
+                      collectionAttributes={props.collectionAttributes}
+                    />
+                  </div>
                 </div>
               </div>
 
