@@ -24,7 +24,7 @@ export default function ProfileItemsPage() {
   const router = useRouter();
   const addressFromPath = router.query.address as string;
   if (!addressFromPath || addressFromPath === 'undefined') {
-    router.replace('/profile', undefined, { shallow: true });
+    typeof window !== 'undefined' ? router.replace('/profile', undefined, { shallow: true }) : null;
     return (
       <CenteredContent>
         <ConnectButton />

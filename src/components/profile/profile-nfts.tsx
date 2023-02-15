@@ -3,9 +3,9 @@ import { useEffect, useState } from 'react';
 import { MdClose } from 'react-icons/md';
 import { TokenGrid } from 'src/components/astra/token-grid/token-grid';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { borderColor, hoverColorBrandText } from 'src/utils/ui-constants';
+import { borderColor, hoverColorBrandText, secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { EZImage } from '../common';
+import { EZImage, NextLink } from '../common';
 import { CollectionSearchInput } from '../common/search/collection-search-input';
 import { useProfileTokenFetcher } from 'src/hooks/api/useTokenFetcher';
 import { TokensFilter } from 'src/utils/types';
@@ -42,14 +42,20 @@ export const ProfileNFTs = ({ userAddress }: Props) => {
     <>
       <div className={twMerge(borderColor, 'flex border-t-[1px]')}>
         <div className="flex px-4 mt-2 w-full">
-          <div className="">
-            <CollectionSearchInput
-              expanded
-              profileSearch
-              setSelectedCollection={(value) => {
-                handleCollectionSearchResult(value);
-              }}
-            />
+          <div className="flex w-full items-center space-x-4">
+            <div className="flex flex-1">
+              <CollectionSearchInput
+                expanded
+                profileSearch
+                setSelectedCollection={(value) => {
+                  handleCollectionSearchResult(value);
+                }}
+              />
+            </div>
+
+            <div className={twMerge(secondaryTextColor, 'flex flex-1 text-xs')}>
+              Showing only NFTs from supported collections
+            </div>
           </div>
 
           {selectedCollection ? (
