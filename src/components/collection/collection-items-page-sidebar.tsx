@@ -94,7 +94,11 @@ export const CollectionItemsPageSidebar = ({ className = '', collectionAddress, 
         {isSalesChartLoading && <BouncingLogo />}
       </div>
 
-      <div>{recentSalesOrdersData.length > 0 && <CollectionRecentSalesOrders data={recentSalesOrdersData} />}</div>
+      <div>
+        {recentSalesOrdersData.length > 0 && (
+          <CollectionRecentSalesOrders data={recentSalesOrdersData} collectionAddress={collectionAddress} />
+        )}
+      </div>
     </div>
   );
 };

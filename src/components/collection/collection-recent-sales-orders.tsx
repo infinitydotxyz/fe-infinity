@@ -1,21 +1,50 @@
 import { CollectionSaleAndOrder } from '@infinityxyz/lib-frontend/types/core';
-import { useState } from 'react';
+import { defaultStyles, TooltipWithBounds, useTooltip } from '@visx/tooltip';
+import { format } from 'date-fns';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import { FiShoppingCart } from 'react-icons/fi';
 import { HiOutlineTag } from 'react-icons/hi';
 import { VscMegaphone } from 'react-icons/vsc';
 import { nFormatter, timeAgo } from 'src/utils';
-import { borderColor, divideColor, smallIconButtonStyle } from 'src/utils/ui-constants';
+import { BasicTokenInfo } from 'src/utils/types';
+import {
+  borderColor,
+  divideColor,
+  secondaryBgColor,
+  secondaryTextColor,
+  smallIconButtonStyle,
+  textColor
+} from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
+import { TokenCardModal } from '../astra/token-grid/token-card-modal';
 import { Checkbox, EthSymbol, EZImage, HelpToolTip, Spacer } from '../common';
 
 interface Props {
   data: CollectionSaleAndOrder[];
+  collectionAddress: string;
 }
 
-export const CollectionRecentSalesOrders = ({ data }: Props) => {
+export const CollectionRecentSalesOrders = ({ data, collectionAddress }: Props) => {
   const [salesSelected, setSalesSelected] = useState(true);
   const [listingsSelected, setListingsSelected] = useState(true);
   const [offersSelected, setOffersSelected] = useState(true);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<CollectionSaleAndOrder | null>(null);
+  const router = useRouter();
+
+  const basicTokenInfo: BasicTokenInfo = {
+    tokenId: selectedItem?.tokenId ?? '',
+    collectionAddress: collectionAddress,
+    chainId: '1' // todo dont hardcode
+  };
+
+  useEffect(() => {
+    const isModalOpen =
+      router.query?.tokenId === basicTokenInfo.tokenId &&
+      router.query?.collectionAddress === basicTokenInfo.collectionAddress;
+    setModalOpen(isModalOpen);
+  }, [router.query]);
 
   const dataToShow = data.filter((item) => {
     if (item.dataType === 'Sale' && salesSelected) {
@@ -26,6 +55,27 @@ export const CollectionRecentSalesOrders = ({ data }: Props) => {
       return true;
     }
     return false;
+  });
+
+  const {
+    showTooltip,
+    hideTooltip,
+    tooltipOpen,
+    tooltipData,
+    tooltipLeft = 0,
+    tooltipTop = 0
+  } = useTooltip<CollectionSaleAndOrder>({
+    tooltipOpen: false,
+    tooltipLeft: 0,
+    tooltipTop: 0,
+    tooltipData: {
+      timestamp: 0,
+      tokenId: '',
+      tokenImage: '',
+      priceEth: 0,
+      id: '',
+      dataType: 'Sale'
+    }
   });
 
   return (
@@ -92,17 +142,88 @@ export const CollectionRecentSalesOrders = ({ data }: Props) => {
                 </div>
                 <div className="text-xs">{timeAgo(new Date(item.timestamp))}</div>
               </div>
-              <div className="flex space-x-3 items-center">
+              <div
+                className="flex space-x-3 items-center cursor-pointer"
+                onMouseMove={(event) => {
+                  const coords = event.currentTarget.getBoundingClientRect();
+                  showTooltip({
+                    tooltipLeft: coords.left,
+                    tooltipTop: coords.top,
+                    tooltipData: item
+                  });
+                }}
+                onMouseLeave={() => {
+                  hideTooltip();
+                }}
+                onClick={() => {
+                  setSelectedItem(item);
+                  const { pathname, query } = router;
+                  query['tokenId'] = item.tokenId;
+                  query['collectionAddress'] = collectionAddress;
+                  router.replace({ pathname, query }, undefined, { shallow: true });
+                }}
+              >
                 <EZImage src={item.tokenImage} className="w-6 h-6 rounded" />
                 <span className="">{item.tokenId}</span>
               </div>
               <div className={twMerge(borderColor, 'border rounded-lg p-2')}>
                 {nFormatter(item.priceEth)} {EthSymbol}
               </div>
+
+              <ToolTip isTooltipOpen={tooltipOpen} left={tooltipLeft} top={tooltipTop} data={tooltipData} />
             </div>
           );
         })}
       </div>
+
+      {modalOpen && <TokenCardModal data={basicTokenInfo} modalOpen={modalOpen} />}
     </div>
   );
 };
+
+interface Props2 {
+  left: number;
+  top: number;
+  data?: CollectionSaleAndOrder;
+  isTooltipOpen: boolean;
+}
+
+function ToolTip({ left, top, data, isTooltipOpen }: Props2) {
+  return (
+    <TooltipWithBounds
+      key={isTooltipOpen ? 1 : 0} // needed for bounds to update correctly
+      style={{
+        ...defaultStyles,
+        background: 'none',
+        zIndex: 100,
+        borderRadius: 9,
+        padding: 0,
+        opacity: isTooltipOpen ? 1 : 0
+      }}
+      left={left}
+      top={top}
+    >
+      <div
+        className={twMerge(secondaryBgColor, textColor, 'flex flex-col p-2 rounded-lg')}
+        style={{ aspectRatio: '3.5 / 5' }}
+      >
+        <div className="flex-1 rounded-lg overflow-clip">
+          <EZImage src={data?.tokenImage} />
+        </div>
+
+        <div className="truncate py-2">{data?.tokenId}</div>
+
+        <div className={twMerge('flex flex-row space-x-3')}>
+          <div className="flex flex-col space-y-1">
+            <div className={twMerge('font-medium text-xs', secondaryTextColor)}>Price</div>
+            <div className="truncate">{data?.priceEth}</div>
+          </div>
+          <div className="flex flex-col space-y-1">
+            <div className={twMerge('font-medium text-xs', secondaryTextColor)}>Date</div>
+            <div className="truncate">{format(new Date(data?.timestamp ?? 0), 'MMM dd yyyy')}</div>
+          </div>
+        </div>
+      </div>
+    </TooltipWithBounds>
+  );
+}
