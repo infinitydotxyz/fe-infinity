@@ -5,7 +5,7 @@ import { TokenGrid } from 'src/components/astra/token-grid/token-grid';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { borderColor, hoverColorBrandText, secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { EZImage, NextLink } from '../common';
+import { EZImage } from '../common';
 import { CollectionSearchInput } from '../common/search/collection-search-input';
 import { useProfileTokenFetcher } from 'src/hooks/api/useTokenFetcher';
 import { TokensFilter } from 'src/utils/types';
