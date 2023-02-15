@@ -64,10 +64,26 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   const [numSweep, setNumSweep] = useState('');
   const [customSweep, setCustomSweep] = useState('');
   const { showCart, setShowCart } = useAppContext();
+  const [selectedTraits, setSelectedTraits] = useState<string[]>([]);
 
   const MAX_NUM_SWEEP_ITEMS = 50;
 
   useEffect(() => {
+    if (filter.traitTypes?.length) {
+      const traits = [];
+      for (let i = 0; i < filter.traitTypes.length; i++) {
+        const traitType = filter.traitTypes?.[i];
+        const traitValues = filter.traitValues?.[i]?.split('|') ?? [];
+        for (const traitValue of traitValues) {
+          traits.push(`${traitType}: ${traitValue}`);
+        }
+      }
+      setSelectedTraits(traits);
+    } else {
+      setSelectedTraits([]);
+    }
+
+    // refetch data
     fetch(false);
   }, [filter, collection.address]);
 
@@ -328,6 +344,21 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                   </div>
                 </div>
               </div>
+
+              {selectedTraits.length > 0 && (
+                <div className="flex px-4 mt-2 space-x-2">
+                  {selectedTraits.map((trait) => {
+                    return (
+                      <div
+                        key={trait}
+                        className={twMerge('flex items-center rounded-lg border p-2 text-sm font-medium', borderColor)}
+                      >
+                        {trait}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
 
               <div className="flex">
                 <div className={(twMerge('flex'), showCart ? 'w-full' : 'w-2/3')}>
