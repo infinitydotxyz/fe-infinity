@@ -79,7 +79,7 @@ export const Layout = ({ children }: Props) => {
     </NonSsrWrapper>
   );
 
-  const footer = <></>;
+  const footer = <>Sai</>;
 
   return Grid(<ANavbar />, <SidebarNav />, <>{children}</>, cart, footer, gridRef, containerRef);
 };
