@@ -1,60 +1,25 @@
-import { BsTwitter } from 'react-icons/bs';
-import { SiDiscord } from 'react-icons/si';
 import { AstraCartButton } from 'src/components/astra/astra-cart-button';
-import { borderColor, smallIconButtonStyle } from 'src/utils/ui-constants';
+import { borderColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-
-import { ConnectButton, Spacer } from 'src/components/common';
+import { ConnectButton, EZImage, NextLink, Spacer } from 'src/components/common';
 import { CollectionSearchInput } from '../common/search/collection-search-input';
-import { ADropdown, ADropdownItem } from './astra-dropdown';
+import flowLogo from 'src/images/flow-logo.png';
 
 export const ANavbar = () => {
   return (
-    <div className={twMerge('flex px-5 py-2 space-x-4 items-center border-b-[1px]', borderColor)}>
+    <div className={twMerge('flex px-6 py-2 space-x-4 items-center border-b-[1px]', borderColor)}>
+      <NextLink href="/trending">
+        <EZImage src={flowLogo.src} className="w-9 h-9" />
+      </NextLink>
+
       <div className="w-4/12">
         <CollectionSearchInput expanded />
       </div>
 
       <Spacer />
 
-      <ANavbarButtons />
-
       <ConnectButton />
       <AstraCartButton />
     </div>
-  );
-};
-
-// ===========================================================================
-
-export const ANavbarButtons = () => {
-  const menuItems = [
-    {
-      label: 'Twitter',
-      icon: <BsTwitter className={smallIconButtonStyle} />,
-      onClick: () => {
-        window.open('https://twitter.com/flowdotso');
-      }
-    } as ADropdownItem,
-    {
-      label: 'Discord',
-      icon: <SiDiscord className={smallIconButtonStyle} />,
-      onClick: () => {
-        window.open('https://discord.com/invite/flowdotso');
-      }
-    } as ADropdownItem
-    // {
-    //   label: 'Medium',
-    //   icon: <BsMedium className={smallIconButtonStyle} />,
-    //   onClick: () => {
-    //     window.open('https://flowdotso.medium.com');
-    //   }
-    // } as ADropdownItem
-  ];
-
-  return (
-    <>
-      <ADropdown label={`Community`} items={menuItems} alignMenuRight={true} />
-    </>
   );
 };

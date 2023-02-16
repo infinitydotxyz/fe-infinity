@@ -58,7 +58,7 @@ export const CollectionPageHeader = ({
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
 
   return (
-    <div className={twMerge(borderColor, secondaryBgColor, 'border-b px-8')}>
+    <div className={twMerge(borderColor, secondaryBgColor, 'border-b px-6')}>
       {expanded && (
         <div className="flex flex-col space-y-3">
           <div className="flex w-full items-center mt-2">

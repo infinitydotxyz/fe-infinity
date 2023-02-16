@@ -5,8 +5,8 @@ import { Grid } from 'src/components/astra/grid';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { toastError } from '../common';
 import { ANavbar } from './astra-navbar';
-import { SidebarNav } from './sidebar-nav';
 import NonSsrWrapper from './non-ssr-wrapper';
+import Dock from 'src/utils/context/Dock';
 
 interface Props {
   children: ReactNode;
@@ -79,7 +79,13 @@ export const Layout = ({ children }: Props) => {
     </NonSsrWrapper>
   );
 
+  const dock = (
+    <NonSsrWrapper>
+      <Dock />
+    </NonSsrWrapper>
+  );
+
   const footer = <></>;
 
-  return Grid(<ANavbar />, <SidebarNav />, <>{children}</>, cart, footer, gridRef, containerRef);
+  return Grid(<ANavbar />, <>{children}</>, cart, footer, dock, gridRef, containerRef);
 };

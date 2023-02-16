@@ -28,7 +28,7 @@ export const APageBox = ({
     <div
       className={twMerge(
         textColor,
-        'transition px-4 w-full h-full flex flex-col overflow-y-clip overflow-x-clip',
+        'transition px-6 w-full h-full flex flex-col overflow-y-clip overflow-x-clip',
         className
       )}
     >
