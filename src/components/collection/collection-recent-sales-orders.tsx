@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { FiShoppingCart } from 'react-icons/fi';
 import { HiOutlineTag } from 'react-icons/hi';
 import { VscMegaphone } from 'react-icons/vsc';
-import { nFormatter, timeAgo } from 'src/utils';
+import { ellipsisString, nFormatter, timeAgo } from 'src/utils';
 import { BasicTokenInfo } from 'src/utils/types';
 import {
   borderColor,
@@ -164,7 +164,7 @@ export const CollectionRecentSalesOrders = ({ data, collectionAddress }: Props) 
                 }}
               >
                 <EZImage src={item.tokenImage} className="w-6 h-6 rounded" />
-                <span className="">{item.tokenId}</span>
+                <span className="">{ellipsisString(item.tokenId)}</span>
               </div>
               <div className={twMerge(borderColor, 'border rounded-lg p-2')}>
                 {nFormatter(item.priceEth)} {EthSymbol}
@@ -211,7 +211,7 @@ function ToolTip({ left, top, data, isTooltipOpen }: Props2) {
           <EZImage src={data?.tokenImage} />
         </div>
 
-        <div className="truncate py-2">{data?.tokenId}</div>
+        <div className="truncate py-2">{ellipsisString(data?.tokenId)}</div>
 
         <div className={twMerge('flex flex-row space-x-3')}>
           <div className="flex flex-col space-y-1">

@@ -68,6 +68,7 @@ export const CollectionCharts = ({ className = '', collectionAddress, collection
   };
 
   const fetchOrdersData = async () => {
+    setSelectedOrders([]);
     setIsOrdersLoading(true);
     const { result, error } = await apiGet(`/collections/${chainId}:${collectionAddress}/orders`);
 

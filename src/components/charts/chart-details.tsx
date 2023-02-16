@@ -2,6 +2,7 @@ import { CollectionOrder } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { TokenCardModal } from 'src/components/astra/token-grid/token-card-modal';
+import { ellipsisString } from 'src/utils';
 import { BasicTokenInfo } from 'src/utils/types';
 import { borderColor, secondaryBgColorDarker, secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
@@ -96,7 +97,7 @@ const OrderDetailViewer = ({ order, collectionAddress }: Props2) => {
 
         <div className={twMerge('flex justify-between border-[0px] rounded-lg w-60', borderColor)}>
           <div className="flex flex-col">
-            <div className="flex truncate font-bold">{order.tokenId}</div>
+            <div className="flex truncate font-bold">{ellipsisString(order.tokenId)}</div>
             <div>
               {order.priceEth} {EthSymbol}
             </div>
@@ -150,7 +151,7 @@ export const SalesChartDetails = ({ data }: Props3) => {
 
           <div className={twMerge('flex justify-between border-[0px] rounded-lg w-60', borderColor)}>
             <div className="flex flex-col">
-              <div className="flex truncate font-bold">{data.tokenId}</div>
+              <div className="flex truncate font-bold">{ellipsisString(data.tokenId)}</div>
               <div>
                 {data.salePrice} {EthSymbol}
               </div>

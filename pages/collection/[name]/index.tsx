@@ -69,8 +69,6 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   const MAX_NUM_SWEEP_ITEMS = 50;
 
   useEffect(() => {
-    setSelectedTab(tabs[0]);
-
     if (filter.traitTypes?.length) {
       const traits = [];
       for (let i = 0; i < filter.traitTypes.length; i++) {
@@ -205,7 +203,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     <div className="h-full w-full overflow-y-auto overflow-x-hidden">
       {head}
       <div className="h-full w-full flex flex-col">
-        <CollectionPageHeader {...headerProps} key={selectedTab} />
+        <CollectionPageHeader {...headerProps} />
 
         <div ref={setRef} className="overflow-y-auto scrollbar-hide">
           {selectedTab === 'Items' ? (

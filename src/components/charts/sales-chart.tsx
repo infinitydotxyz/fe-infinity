@@ -16,6 +16,7 @@ import { ASwitchButton } from 'src/components/astra/astra-button';
 import { ADropdown } from 'src/components/astra/astra-dropdown';
 import { TokenCardModal } from 'src/components/astra/token-grid/token-card-modal';
 import { EZImage } from 'src/components/common';
+import { ellipsisString } from 'src/utils';
 import { BasicTokenInfo } from 'src/utils/types';
 import { secondaryBgColor, secondaryTextColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
@@ -393,7 +394,7 @@ function ToolTip({ left, top, data, isTooltipOpen }: Props2) {
           <EZImage src={data?.tokenImage} />
         </div>
 
-        <div className="truncate py-2">{data?.tokenId}</div>
+        <div className="truncate py-2">{ellipsisString(data?.tokenId)}</div>
 
         <div className={twMerge('flex flex-row space-x-3')}>
           <div className="flex flex-col space-y-1">
