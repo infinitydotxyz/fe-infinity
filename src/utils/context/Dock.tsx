@@ -35,7 +35,7 @@ const Dock = () => {
   const { theme, setTheme } = useTheme();
   const { address: user } = useAccount();
   const { selectedProfileTab, setSelectedProfileTab } = useAppContext();
-  const [dockHeight, setDockHeight] = useState('h-2');
+  const [dockHeight, setDockHeight] = useState('h-10');
   const [dockItemClassname, setDockItemClassname] = useState('bottom-0.5');
 
   useEffect(() => {
