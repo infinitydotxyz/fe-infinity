@@ -208,7 +208,7 @@ const BarChart: React.FC<BarChartProps> = ({
       height={height}
       xScale={{
         type: 'linear',
-        range: [100, boundedWidth],
+        range: [200, boundedWidth],
         round: true,
         domain: [chartData.minPrice, chartData.maxPrice]
       }}

@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { ResponsiveSalesAndOrdersChart } from 'src/components/charts/sales-and-orders-chart';
 import { ScatterChartType } from 'src/components/charts/types';
 import { nftToCardDataWithOrderFields } from 'src/hooks/api/useTokenFetcher';
-import { apiGet, ellipsisAddress, getChainScannerBase, nFormatter, useFetch } from 'src/utils';
+import { apiGet, ellipsisAddress, ellipsisString, getChainScannerBase, nFormatter, useFetch } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartType, useCartContext } from 'src/utils/context/CartContext';
 import { BasicTokenInfo } from 'src/utils/types';
@@ -14,7 +14,7 @@ import { useSWRConfig } from 'swr';
 import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
 import { useAccount } from 'wagmi';
-import { BlueCheck, EthSymbol, EZImage, Modal, NextLink, ShortAddress, Spacer } from '../../common';
+import { BlueCheck, ClipboardButton, EthSymbol, EZImage, Modal, NextLink, ShortAddress, Spacer } from '../../common';
 import { AButton } from '../astra-button';
 import { ATraitList } from '../astra-trait-list';
 import { ErrorOrLoading } from '../error-or-loading';
@@ -109,6 +109,10 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
   const markupPricePercentDiff = markupPrice ? `${nFormatter((markupPriceDiff / Number(markupPrice)) * 100)}%` : 0;
 
   const isOwner = user && trimLowerCase(user) === trimLowerCase(token.owner?.toString());
+  const newCartType = isOwner ? CartType.TokenList : CartType.TokenOffer;
+  const cartToken = nftToCardDataWithOrderFields(token as Erc721Token);
+  cartToken.cartType = newCartType;
+  setCartType(newCartType);
 
   const removeViewParams = () => {
     const { pathname, query } = router;
@@ -123,11 +127,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
         className="w-52 p-4"
         primary
         onClick={() => {
-          const newCartType = isOwner ? CartType.TokenList : CartType.TokenOffer;
-          const cartToken = nftToCardDataWithOrderFields(token as Erc721Token);
-          cartToken.cartType = newCartType;
           if (isNFTSelectable(cartToken)) {
-            setCartType(newCartType);
             setAddedToCart(!addedToCart);
             toggleNFTSelection(cartToken);
           }
@@ -135,8 +135,9 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
       >
         {listingPrice && !isOwner && <span>{addedToCart ? 'Remove from Cart' : 'Add to Cart'}</span>}
         {listingPrice && isOwner && <span>{addedToCart ? 'Remove from Cart' : 'Edit in Cart'}</span>}
+        {!listingPrice && isOwner && <span>{addedToCart ? 'Remove from Cart' : 'Sell'}</span>}
         {offerPrice && isOwner && <span>{addedToCart ? 'Added to Cart' : 'Sell Now'}</span>}
-        {!listingPrice && !offerPrice ? <span>{addedToCart ? 'Added to Cart' : 'Add to Cart'}</span> : null}
+        {!isOwner && !listingPrice && !offerPrice ? <span>{addedToCart ? 'Added to Cart' : 'Add to Cart'}</span> : null}
       </AButton>
     );
   };
@@ -174,7 +175,10 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
                 />
               </div>
 
-              <h3 className="font-body text-2xl font-bold mb-2">{token.tokenId}</h3>
+              <div className="flex space-x-2">
+                <h3 className="font-body text-2xl font-bold mb-2">{ellipsisString(token.tokenId)}</h3>
+                <ClipboardButton textToCopy={token.tokenId} className={'h-4 w-4 mt-2.5'} />
+              </div>
 
               <div className="flex justify-between">
                 {data.collectionCreator ? (

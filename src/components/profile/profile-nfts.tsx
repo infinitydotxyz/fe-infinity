@@ -2,13 +2,13 @@ import { CollectionSearchDto } from '@infinityxyz/lib-frontend/types/dto';
 import { useEffect, useState } from 'react';
 import { MdClose } from 'react-icons/md';
 import { TokenGrid } from 'src/components/astra/token-grid/token-grid';
+import { useProfileTokenFetcher } from 'src/hooks/api/useTokenFetcher';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { borderColor, hoverColorBrandText, secondaryTextColor } from 'src/utils/ui-constants';
+import { TokensFilter } from 'src/utils/types';
+import { borderColor, hoverColorBrandText } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { EZImage } from '../common';
 import { CollectionSearchInput } from '../common/search/collection-search-input';
-import { useProfileTokenFetcher } from 'src/hooks/api/useTokenFetcher';
-import { TokensFilter } from 'src/utils/types';
 
 interface Props {
   userAddress: string;
@@ -41,7 +41,7 @@ export const ProfileNFTs = ({ userAddress }: Props) => {
   return (
     <>
       <div className={twMerge(borderColor, 'flex border-t-[1px]')}>
-        <div className="flex px-4 mt-2 w-full">
+        <div className="flex px-4 mt-2">
           <div className="flex w-full items-center space-x-4">
             <div className="flex flex-1">
               <CollectionSearchInput
@@ -53,9 +53,9 @@ export const ProfileNFTs = ({ userAddress }: Props) => {
               />
             </div>
 
-            <div className={twMerge(secondaryTextColor, 'flex flex-1 text-xs')}>
+            {/* <div className={twMerge(secondaryTextColor, 'flex flex-1 text-xs')}>
               Showing only NFTs from supported collections
-            </div>
+            </div> */}
           </div>
 
           {selectedCollection ? (

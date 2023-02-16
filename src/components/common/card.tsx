@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { HiCheckCircle, HiPlusCircle } from 'react-icons/hi';
+import { ellipsisString } from 'src/utils';
 import { BasicTokenInfo, ERC721TokenCartItem } from 'src/utils/types';
 import {
   borderColor,
@@ -131,7 +132,7 @@ export const GridCard = ({
                 router.replace({ pathname, query }, undefined, { shallow: true });
               }}
             >
-              {tokenId}
+              {ellipsisString(tokenId)}
             </div>
           </div>
 

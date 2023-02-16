@@ -119,7 +119,7 @@ function SalesAndOrdersChart({ width, height, data, saleColor, listingColor, off
       top: 10,
       right: 0,
       bottom: 50,
-      left: 30
+      left: 45
     };
 
     return {
