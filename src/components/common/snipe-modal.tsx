@@ -1,4 +1,11 @@
-import { FaPlay } from 'react-icons/fa';
+import Lottie from 'lottie-react';
+import { useRouter } from 'next/router';
+import buyAnywhere from 'src/lotties/buyAnywhere.json';
+import fastSnipe from 'src/lotties/fastSnipe.json';
+import frontRunProtection from 'src/lotties/frontRunProtection.json';
+import matchingEngine from 'src/lotties/matchingEngine.json';
+import readableSign from 'src/lotties/readableSign.json';
+import txnFreeUX from 'src/lotties/txnFreeUX.json';
 import { dropShadow, hoverColor, primaryBtnBgColorText } from 'src/utils/ui-constants';
 import { Navigation, Pagination } from 'swiper';
 import 'swiper/css';
@@ -6,15 +13,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { twMerge } from 'tailwind-merge';
-import { Button, Modal } from '.';
-import Lottie from 'lottie-react';
-import buyAnywhere from 'src/lotties/buyAnywhere.json';
-import frontRunProtection from 'src/lotties/frontRunProtection.json';
-import matchingEngine from 'src/lotties/matchingEngine.json';
-import fastSnipe from 'src/lotties/fastSnipe.json';
-import readableSign from 'src/lotties/readableSign.json';
-import txnFreeUX from 'src/lotties/txnFreeUX.json';
-import { useRouter } from 'next/router';
+import { Modal } from '.';
 
 interface Props {
   modalOpen: boolean;
@@ -45,24 +44,9 @@ export const SnipeModal = ({ modalOpen, setModalOpen }: Props): JSX.Element | nu
         pagination={{
           clickable: true
         }}
-        navigation={{
-          prevEl: '.prev',
-          nextEl: '.next'
-        }}
         modules={[Pagination, Navigation]}
         className="h-96"
       >
-        <div className="prev absolute top-1/2 left-0 z-10">
-          <Button variant="round" className="transform rotate-180">
-            <FaPlay className="h-5 w-5" />
-          </Button>
-        </div>
-        <div className="next absolute top-1/2 right-0 z-10">
-          <Button variant="round">
-            <FaPlay className="h-5 w-5" />
-          </Button>
-        </div>
-
         <SwiperSlide className="flex items-center justify-center">
           <div className="flex flex-col h-full items-center justify-center space-y-4">
             <div className="text-lg">Bid Once. Buy from anywhere.</div>
