@@ -7,7 +7,14 @@ import { FiEdit3 } from 'react-icons/fi';
 import { MdClose } from 'react-icons/md';
 import { AButton } from 'src/components/astra/astra-button';
 import { EthSymbol, EZImage, Spacer, TextInputBox } from 'src/components/common';
-import { getCartType, getCollectionKeyId, getDefaultOrderExpiryTime, getTokenCartItemKey, nFormatter } from 'src/utils';
+import {
+  ellipsisString,
+  getCartType,
+  getCollectionKeyId,
+  getDefaultOrderExpiryTime,
+  getTokenCartItemKey,
+  nFormatter
+} from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartItem, CartType, useCartContext } from 'src/utils/context/CartContext';
 import { ERC721CollectionCartItem, ERC721OrderCartItem, ERC721TokenCartItem, ORDER_EXPIRY_TIME } from 'src/utils/types';
@@ -411,7 +418,7 @@ const AstraTokenCartItem = ({ token, onRemove, updateCartTotal }: Props2) => {
       </div>
 
       <div className="ml-3 flex w-full space-x-2 items-center">
-        <div className="font-bold font-heading w-1/3 text-sm">{token.tokenId}</div>
+        <div className="font-bold font-heading w-1/3 text-sm">{ellipsisString(token.tokenId)}</div>
         {cartType !== CartType.Send && (
           <PriceAndExpiry
             token={token}
@@ -512,7 +519,7 @@ const AstraCancelCartItem = ({ order, onRemove }: Props4) => {
             ? 'Multiple tokens'
             : order.nfts[0].tokens.length > 1
             ? 'Multiple tokens'
-            : order.nfts[0].tokens[0].tokenId}
+            : ellipsisString(order.nfts[0].tokens[0].tokenId)}
         </div>
       </div>
     </div>

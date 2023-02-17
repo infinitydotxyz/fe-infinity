@@ -211,7 +211,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
               <div className="flex mt-2 px-4">
                 <div
                   className={twMerge(
-                    'flex',
+                    'flex mr-1',
                     cartType === CartType.CollectionOffer
                       ? 'opacity-30 duration-300 pointer-events-none'
                       : 'duration-300'
@@ -326,7 +326,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
 
                   <div
                     className={twMerge(
-                      'flex',
+                      'flex space-x-1',
                       cartType === CartType.CollectionOffer
                         ? 'opacity-30 duration-300 pointer-events-none'
                         : 'duration-300'
