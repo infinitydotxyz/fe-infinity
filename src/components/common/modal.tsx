@@ -10,6 +10,7 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   title?: string | ReactNode;
+  titleClassName?: string;
 
   showCloseIcon?: boolean;
 
@@ -45,6 +46,7 @@ export const Modal = ({
   onClose, // X icon, or click outside dialog
   showActionButtons = true,
   wide = true,
+  titleClassName,
   panelClassName
 }: Props) => {
   const { theme } = useTheme();
@@ -128,7 +130,10 @@ export const Modal = ({
               >
                 <Dialog.Title
                   as="h3"
-                  className={twMerge('flex items-center tracking-tight text-lg font-bold leading-6 mb-5')}
+                  className={twMerge(
+                    'flex items-center tracking-tight text-lg font-bold leading-6 mb-5',
+                    titleClassName
+                  )}
                 >
                   {title}
 

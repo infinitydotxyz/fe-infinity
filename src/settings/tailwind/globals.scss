@@ -12,3 +12,7 @@
 @layer utilities {
   @import './styles/utils';
 }
+
+.swiper-pagination-bullet {
+  background-color: #3662D8 !important;
+}

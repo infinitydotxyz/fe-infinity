@@ -3,12 +3,14 @@ import { useRouter } from 'next/router';
 import { ProfileTabs } from 'pages/profile/[address]';
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { BiGlobeAlt, BiWalletAlt } from 'react-icons/bi';
+import { FiTarget } from 'react-icons/fi';
 import { HiOutlineTag } from 'react-icons/hi';
 import { MdOutlineDarkMode, MdOutlineLightMode } from 'react-icons/md';
 import { RxDiscordLogo } from 'react-icons/rx';
 import { TbSend } from 'react-icons/tb';
 import { TfiTwitter } from 'react-icons/tfi';
 import { HelpToolTip } from 'src/components/common';
+import { SnipeModal } from 'src/components/common/snipe-modal';
 import { MouseProvider } from 'src/utils/context/MouseProvider';
 import { twMerge } from 'tailwind-merge';
 import { useAccount } from 'wagmi';
@@ -38,6 +40,7 @@ const Dock = () => {
   const { selectedProfileTab, setSelectedProfileTab } = useAppContext();
   const [dockHeight, setDockHeight] = useState('h-10');
   const [dockItemClassname, setDockItemClassname] = useState('bottom-0.5');
+  const [snipeModalOpen, setSnipeModalOpen] = useState(false);
 
   useEffect(() => {
     setWidth(ref?.current?.clientWidth);
@@ -81,6 +84,19 @@ const Dock = () => {
                       className={twMerge(iconClassname, hoverColorBrandText)}
                       onClick={() => {
                         router.push('/trending');
+                      }}
+                    />
+                  </div>
+                </HelpToolTip>
+              </DockItem>
+
+              <DockItem className={dockItemClassname}>
+                <HelpToolTip placement="top" content={<div className="whitespace-nowrap">Snipe</div>}>
+                  <div className={itemClassname}>
+                    <FiTarget
+                      className={twMerge(iconClassname, hoverColorBrandText)}
+                      onClick={() => {
+                        setSnipeModalOpen(!snipeModalOpen);
                       }}
                     />
                   </div>
@@ -188,6 +204,8 @@ const Dock = () => {
           </nav>
         </DockContext.Provider>
       </footer>
+
+      {snipeModalOpen && <SnipeModal modalOpen={snipeModalOpen} setModalOpen={setSnipeModalOpen} />}
     </MouseProvider>
   );
 };

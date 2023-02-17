@@ -166,6 +166,4 @@ export const SalesChartDetails = ({ data }: Props3) => {
       </div>
     </div>
   );
-
-  return null;
 };
