@@ -3,10 +3,11 @@ import { useRouter } from 'next/router';
 import { ProfileTabs } from 'pages/profile/[address]';
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { BiGlobeAlt, BiWalletAlt } from 'react-icons/bi';
-import { FaDiscord, FaTwitter } from 'react-icons/fa';
 import { HiOutlineTag } from 'react-icons/hi';
-import { MdDarkMode, MdLightMode } from 'react-icons/md';
+import { MdOutlineDarkMode, MdOutlineLightMode } from 'react-icons/md';
+import { RxDiscordLogo } from 'react-icons/rx';
 import { TbSend } from 'react-icons/tb';
+import { TfiTwitter } from 'react-icons/tfi';
 import { HelpToolTip } from 'src/components/common';
 import { MouseProvider } from 'src/utils/context/MouseProvider';
 import { twMerge } from 'tailwind-merge';
@@ -151,7 +152,7 @@ const Dock = () => {
                     rel="external nofollow noopener noreferrer"
                     target="_blank"
                   >
-                    <FaDiscord className={twMerge(iconClassname, hoverColorBrandText)} aria-hidden="true" />
+                    <RxDiscordLogo className={twMerge(iconClassname, hoverColorBrandText)} aria-hidden="true" />
                   </a>
                 </HelpToolTip>
               </DockItem>
@@ -165,7 +166,7 @@ const Dock = () => {
                     rel="external nofollow noopener noreferrer"
                     target="_blank"
                   >
-                    <FaTwitter className={twMerge(iconClassname, hoverColorBrandText)} aria-hidden="true" />
+                    <TfiTwitter className={twMerge(iconClassname, hoverColorBrandText)} aria-hidden="true" />
                   </a>
                 </HelpToolTip>
               </DockItem>
@@ -176,9 +177,9 @@ const Dock = () => {
                 <HelpToolTip placement="top" content={<div className="whitespace-nowrap">Theme</div>}>
                   <div onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className={twMerge(itemClassname)}>
                     {theme === 'dark' ? (
-                      <MdLightMode className={twMerge(iconClassname, hoverColorBrandText)} />
+                      <MdOutlineLightMode className={twMerge(iconClassname, hoverColorBrandText)} />
                     ) : (
-                      <MdDarkMode className={twMerge(iconClassname, hoverColorBrandText)} />
+                      <MdOutlineDarkMode className={twMerge(iconClassname, hoverColorBrandText)} />
                     )}
                   </div>
                 </HelpToolTip>
