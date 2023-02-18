@@ -436,8 +436,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   context.res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=300');
 
   const id = context.query.name as string;
-  const chainId = ChainId.Mainnet; // todo do not hardcode
-  const collBaseDataPromise = apiGet(`/collections/${id}`); // todo: needs to send chainId in query for multi chain to work
+  const chainId = ChainId.Mainnet; // future-todo do not hardcode
+  const collBaseDataPromise = apiGet(`/collections/${id}`); // future-todo: needs to send chainId in query for multi chain to work
   const collAllTimeStatsPromise = apiGet(`/collections/${id}/stats`, {
     query: {
       chainId,

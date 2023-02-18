@@ -153,7 +153,7 @@ function SalesChart({ width, height, data, hideOutliers }: SalesChartProps) {
   const basicTokenInfo: BasicTokenInfo = {
     tokenId: selectedSale?.tokenId ?? '',
     collectionAddress: selectedSale?.collectionAddress ?? '',
-    chainId: '1' // todo dont hardcode
+    chainId: '1' // future-todo dont hardcode
   };
 
   useEffect(() => {

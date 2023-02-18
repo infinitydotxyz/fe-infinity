@@ -69,7 +69,7 @@ const OrderDetailViewer = ({ order, collectionAddress }: Props2) => {
   const basicTokenInfo: BasicTokenInfo = {
     tokenId: order?.tokenId ?? '',
     collectionAddress: collectionAddress ?? '',
-    chainId: '1' // todo dont hardcode
+    chainId: '1' // future-todo dont hardcode
   };
 
   useEffect(() => {
@@ -121,7 +121,7 @@ export const SalesChartDetails = ({ data }: Props3) => {
   const basicTokenInfo: BasicTokenInfo = {
     tokenId: data?.tokenId ?? '',
     collectionAddress: data?.collectionAddress ?? '',
-    chainId: '1' // todo dont hardcode
+    chainId: '1' // future-todo dont hardcode
   };
 
   useEffect(() => {

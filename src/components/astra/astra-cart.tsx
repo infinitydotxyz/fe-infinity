@@ -76,7 +76,7 @@ export const AstraCart = ({
   let cartItemList: ReactNode;
   const [cartContent, setCartContent] = useState<ReactNode>(cartItemList);
 
-  // todo change when supporting more chains
+  // future-todo change when supporting more chains
   const WETH_ADDRESS =
     chainId === ChainId.Mainnet ? ETHEREUM_WETH_ADDRESS : chainId === ChainId.Goerli ? GOERLI_WETH_ADDRESS : '';
 

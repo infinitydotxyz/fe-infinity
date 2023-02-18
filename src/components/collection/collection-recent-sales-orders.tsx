@@ -36,7 +36,7 @@ export const CollectionRecentSalesOrders = ({ data, collectionAddress }: Props) 
   const basicTokenInfo: BasicTokenInfo = {
     tokenId: selectedItem?.tokenId ?? '',
     collectionAddress: collectionAddress,
-    chainId: '1' // todo dont hardcode
+    chainId: '1' // future-todo dont hardcode
   };
 
   useEffect(() => {

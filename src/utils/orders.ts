@@ -265,7 +265,7 @@ async function checkERC721Ownership(user: string, contract: Contract, tokenId: B
   try {
     const owner = trimLowerCase(await contract.ownerOf(tokenId));
     if (owner !== trimLowerCase(user)) {
-      // todo: adi should continue to check if other nfts are owned
+      // future-todo: adi should continue to check if other nfts are owned
       console.error('Order on chain ownership check failed');
       return false;
     }
@@ -555,7 +555,7 @@ export async function canTakeMultipleOneOrders(
     // check if maker orders are valid and can be executed
     for (const makerOrder of makerOrders) {
       const complicationAddress = makerOrder.execParams[0];
-      // todo: adi other complications in future
+      // future-todo: adi other complications in future
       const complication = new Contract(complicationAddress, FlowOBComplicationABI, signer);
       const canExec = await complication.canExecTakeOneOrder(makerOrder);
       if (!canExec) {
