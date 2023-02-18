@@ -36,13 +36,12 @@ export const OrderbookRowButton = ({ order, outlineButtons = false, collectionAd
   };
 
   const onClickEdit = (order: CollectionOrder) => {
-    console.log('onClickEdit', order); // todo no action in this release
+    console.log('onClickEdit', order);
   };
 
   const onClickBidHigher = (order: CollectionOrder) => {
     console.log('onClickBidHigher', order);
-    // todo add to Cart as a New Buy Order:
-    // todo - addCartItem needs to know whether order is a single collection single nft order
+    // addCartItem needs to know whether order is a single collection single nft order
     // or single collection multi nft order or a multi-collection order for proper image display
   };
 

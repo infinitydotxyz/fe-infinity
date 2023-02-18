@@ -31,7 +31,6 @@ interface ATraitProps {
 }
 
 export const ATrait: FC<ATraitProps> = ({ trait, description }) => {
-  // TODO: improve style to look more like gem's?
   return (
     <div className={twMerge(borderColor, 'border rounded-lg flex flex-col py-1')}>
       <div className="text-center text-xs break-words">{trait.trait_type}</div>

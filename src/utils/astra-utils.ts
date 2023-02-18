@@ -34,7 +34,6 @@ export const fetchCollectionTokens = async (
     chainId,
     ...options,
     ...filters
-    // ...parseFiltersToApiQueryParams({ sort }) // TODO: update API to support v2 filters for collections like this?
   };
 
   const response = await httpGet(`/collections/${chainId}:${collectionAddress}/nfts`, query);
