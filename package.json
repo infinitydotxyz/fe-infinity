@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.7.8",
-    "@infinityxyz/lib-frontend": "^1.326.1",
+    "@infinityxyz/lib-frontend": "^1.326.2",
     "@next/bundle-analyzer": "^13.1.6",
     "@tailwindcss/forms": "^0.5.3",
     "@visx/legend": "2.18.0",

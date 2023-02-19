@@ -65,6 +65,7 @@ export default function SetsPage() {
         id: chainId + ':' + collectionAddress + ':' + tokenId,
         chainId: chainId,
         collectionName: data[i].collectionName,
+        collectionSlug: data[i].collectionSlug,
         address: collectionAddress,
         tokenId,
         cartType,
@@ -105,7 +106,7 @@ export default function SetsPage() {
 
   return (
     <div className="h-full w-full overflow-y-auto overflow-x-hidden scrollbar-hide">
-      <div className="text-sm px-4">
+      <div className="text-sm px-3">
         <div className="font-heading font-bold text-3xl mt-4 px-4">Sets</div>
 
         <div className="flex items-center px-4 space-x-2">
