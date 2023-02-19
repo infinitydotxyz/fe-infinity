@@ -107,7 +107,7 @@ export const SnipeModal = ({ modalOpen, setModalOpen }: Props): JSX.Element | nu
             <Lottie animationData={frontRunProtection} loop={true} style={{ height: 180 }} />
             <div className="w-3/4 text-center">
               Flow uses Flashbots to relay transactions to chain. This enables you to snipe NFTs without worrying about
-              frontrunning.
+              frontrunners.
             </div>
           </div>
         </SwiperSlide>
