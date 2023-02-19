@@ -23,7 +23,7 @@ export default function SetsPage() {
   const [customSweep, setCustomSweep] = useState('');
   const { cartType, setCartType } = useCartContext();
   const priceRanges = ['0 - 0.5', '0.5 - 1', '1 - 2', '2 - 5', '5 - 10', '10 - 20', '20 - 50', '50 - 100', '100+'];
-  const [selectedPriceRange, setSelectedPriceRange] = useState(priceRanges[0]);
+  const [selectedPriceRange, setSelectedPriceRange] = useState(priceRanges[3]);
   const MAX_NUM_SWEEP_ITEMS = 15;
 
   const updateItemsToShow = (items?: ERC721TokenCartItem[]) => {
