@@ -2,7 +2,7 @@ import { useTheme } from 'next-themes';
 import { useRouter } from 'next/router';
 import { ProfileTabs } from 'pages/profile/[address]';
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
-import { BiGlobeAlt, BiWalletAlt } from 'react-icons/bi';
+import { BiCarousel, BiGlobeAlt, BiWalletAlt } from 'react-icons/bi';
 import { FiTarget } from 'react-icons/fi';
 import { HiOutlineTag } from 'react-icons/hi';
 import { MdOutlineDarkMode, MdOutlineLightMode } from 'react-icons/md';
@@ -97,6 +97,19 @@ const Dock = () => {
                       className={twMerge(iconClassname, hoverColorBrandText)}
                       onClick={() => {
                         setSnipeModalOpen(!snipeModalOpen);
+                      }}
+                    />
+                  </div>
+                </HelpToolTip>
+              </DockItem>
+
+              <DockItem highlighted={router.asPath.startsWith('/sets')} className={dockItemClassname}>
+                <HelpToolTip placement="top" content={<div className="whitespace-nowrap">Sets</div>}>
+                  <div className={itemClassname}>
+                    <BiCarousel
+                      className={twMerge(iconClassname, hoverColorBrandText)}
+                      onClick={() => {
+                        router.push('/sets');
                       }}
                     />
                   </div>

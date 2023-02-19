@@ -42,6 +42,8 @@ export const GridCard = ({
   const hasBlueCheck = data?.hasBlueCheck ?? false;
   const buyNowPrice = data?.orderSnippet?.listing?.orderItem?.startPriceEth
     ? data?.orderSnippet?.listing?.orderItem?.startPriceEth
+    : data?.orderPriceEth
+    ? data?.orderPriceEth
     : '';
   const basicTokenInfo: BasicTokenInfo = {
     tokenId: data?.tokenId ?? '',

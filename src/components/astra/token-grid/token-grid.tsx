@@ -17,7 +17,7 @@ interface Props {
   isSelectable: (data: ERC721TokenCartItem) => boolean;
   data: ERC721TokenCartItem[];
   hasNextPage: boolean;
-  onFetchMore: () => void;
+  onFetchMore?: () => void;
   isError?: boolean;
   isLoading?: boolean;
   collectionFloorPrice?: string | number | null | undefined;
@@ -63,7 +63,7 @@ export const TokenGrid = ({
             })}
           </div>
 
-          {hasNextPage && <ScrollLoader onFetchMore={onFetchMore} />}
+          {hasNextPage && onFetchMore && <ScrollLoader onFetchMore={onFetchMore} />}
         </>
       );
     } else {
@@ -90,7 +90,7 @@ export const TokenGrid = ({
             })}
           </div>
 
-          {hasNextPage && <ScrollLoader onFetchMore={onFetchMore} />}
+          {hasNextPage && onFetchMore && <ScrollLoader onFetchMore={onFetchMore} />}
         </>
       );
     }

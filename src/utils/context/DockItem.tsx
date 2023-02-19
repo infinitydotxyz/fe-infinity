@@ -62,7 +62,7 @@ const DockItem = ({ id, children, highlighted, className, ...props }: DockItemPr
       </motion.button>
       {highlighted && (
         <span
-          className={twMerge('absolute left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-brand-primary', className)}
+          className={twMerge('absolute left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-brand-primaryFade', className)}
           aria-hidden="true"
         />
       )}
