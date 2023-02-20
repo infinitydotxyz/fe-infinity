@@ -107,7 +107,7 @@ export const AstraCart = ({
         const first = tokenArray[0];
 
         divList.push(
-          <div className="w-full font-bold font-heading truncate" key={`header-${first.id}`}>
+          <div className="w-full font-bold font-heading truncate min-h-[25px]" key={`header-${first.id}`}>
             {first.collectionName}
           </div>
         );
@@ -179,7 +179,7 @@ export const AstraCart = ({
         const orderId = first.id;
 
         divList.push(
-          <div className="w-full rounded-md truncate font-bold font-heading" key={`header-${first.id}`}>
+          <div className="w-full rounded-md truncate font-bold font-heading min-h-[25px]" key={`header-${first.id}`}>
             {first.nfts.length > 1 ? 'Multiple Collections' : first.nfts[0].collectionName}
           </div>
         );
