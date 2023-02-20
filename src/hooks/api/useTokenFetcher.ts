@@ -98,9 +98,9 @@ export const nftsToCardDataWithOrderFields = (tokens: ApiNftData[]): ERC721Token
 
 export const nftToCardDataWithOrderFields = (item: ApiNftData): ERC721TokenCartItem => {
   const image =
-    item?.metadata?.image ||
     item?.image?.url ||
     item?.alchemyCachedImage ||
+    item?.metadata?.image ||
     item?.image?.originalUrl ||
     item?.zoraImage?.url ||
     '';

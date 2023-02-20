@@ -26,6 +26,8 @@ export default function SetsPage() {
   const [selectedPriceRange, setSelectedPriceRange] = useState(priceRanges[3]);
   const MAX_NUM_SWEEP_ITEMS = 15;
 
+  setCartType(CartType.TokenOffer);
+
   const updateItemsToShow = (items?: ERC721TokenCartItem[]) => {
     // select 50 random items
     const data = items ?? tokens;
@@ -67,6 +69,7 @@ export default function SetsPage() {
         collectionName: data[i].collectionName,
         collectionSlug: data[i].collectionSlug,
         address: collectionAddress,
+        tokenAddress: collectionAddress,
         tokenId,
         cartType,
         image: data[i].tokenImage,
@@ -83,7 +86,6 @@ export default function SetsPage() {
   };
 
   useEffect(() => {
-    setCartType(CartType.TokenOffer);
     fetchSets();
   }, []);
 
