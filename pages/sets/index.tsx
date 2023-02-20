@@ -76,7 +76,8 @@ export default function SetsPage() {
         orderPriceEth: data[i].priceEth,
         lastSalePriceEth: data[i].lastPriceEth,
         hasBlueCheck: data[i].hasBlueCheck,
-        title: data[i].collectionName
+        title: data[i].collectionName,
+        mintPriceEth: data[i].mintPriceEth
       };
       items.push(item);
     }

@@ -44,9 +44,27 @@ const useFetchAssetInfo = (chainId: string, collection: string, tokenId: string)
   };
 };
 
+const useCollectionInfo = (chainId: string, collection: string) => {
+  const COLLECTION_FLOOR_CREATOR_API_ENDPOINT = `/collections/${chainId}:${collection}/floorandcreator`;
+  const collectionFloorAndCreator = useFetch<{ floorPrice: number; creator: string }>(
+    COLLECTION_FLOOR_CREATOR_API_ENDPOINT
+  );
+
+  return {
+    floorPrice: collectionFloorAndCreator.result?.floorPrice,
+    creator: collectionFloorAndCreator.result?.creator
+  };
+};
+
 export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.Element | null => {
-  const [salesAndOrdersChartData, setSalesAndOrdersChartData] = useState<NftSaleAndOrder[]>([]);
   const { token, error, collectionAttributes } = useFetchAssetInfo(data.chainId, data.collectionAddress, data.tokenId);
+
+  let collectionFloorAndCreator: { floorPrice?: number; creator?: string } = {};
+  if (!data.collectionFloorPrice || !data.collectionCreator) {
+    collectionFloorAndCreator = useCollectionInfo(data.chainId, data.collectionAddress);
+  }
+
+  const [salesAndOrdersChartData, setSalesAndOrdersChartData] = useState<NftSaleAndOrder[]>([]);
   const { address: user } = useAccount();
   const chainId = data.chainId;
   const { setCartType } = useCartContext();
@@ -91,7 +109,9 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
   const offerTime = token.ordersSnippet?.offer?.orderItem?.startTimeMs;
   const offerTimeStr = offerTime ? format(offerTime) : '-';
 
-  const floorPrice = data.collectionFloorPrice;
+  const collectionCreator = data.collectionCreator ?? collectionFloorAndCreator.creator;
+
+  const floorPrice = data.collectionFloorPrice ?? collectionFloorAndCreator.floorPrice;
   const floorPriceDiff = listingPrice
     ? Number(listingPrice) - Number(floorPrice)
     : offerPrice
@@ -181,15 +201,15 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
               </div>
 
               <div className="flex justify-between">
-                {data.collectionCreator ? (
+                {collectionCreator ? (
                   <div>
                     <div className={twMerge('text-xs font-medium mb-1', secondaryTextColor)}>Creator</div>
                     <div>
                       <ShortAddress
-                        address={isOwner ? 'You' : data.collectionCreator || ''}
-                        textToCopy={data.collectionCreator || ''}
-                        href={`https://flow.so/profile/${data.collectionCreator || ''}`}
-                        tooltip={data.collectionCreator || ''}
+                        address={isOwner ? 'You' : collectionCreator || ''}
+                        textToCopy={collectionCreator || ''}
+                        href={`https://flow.so/profile/${collectionCreator || ''}`}
+                        tooltip={collectionCreator || ''}
                       />
                     </div>
                   </div>
@@ -227,11 +247,11 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
                   </div>
                 ) : null}
 
-                {data.collectionFloorPrice ? (
+                {floorPrice ? (
                   <div>
                     <div className={twMerge('text-xs font-medium mb-1', secondaryTextColor)}>Collection Floor</div>
                     <div>
-                      {data.collectionFloorPrice} {EthSymbol}
+                      {nFormatter(parseFloat(String(floorPrice)))} {EthSymbol}
                     </div>
                   </div>
                 ) : null}
