@@ -34,7 +34,7 @@ export const SnipeModal = ({ modalOpen, setModalOpen }: Props): JSX.Element | nu
         }
         setModalOpen(false);
       }}
-      title="Auto Snipe"
+      title="Flow"
       titleClassName="justify-center text-2xl"
       panelClassName={twMerge('max-w-2xl rounded-lg', dropShadow)}
     >

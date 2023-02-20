@@ -77,6 +77,19 @@ const Dock = () => {
             }}
           >
             <ul className={twMerge('flex items-center justify-center space-x-3', dockHeight)}>
+              <DockItem className={dockItemClassname}>
+                <HelpToolTip placement="top" content={<div className="whitespace-nowrap">Flow</div>}>
+                  <div className={itemClassname}>
+                    <FiTarget
+                      className={twMerge(iconClassname, hoverColorBrandText)}
+                      onClick={() => {
+                        setSnipeModalOpen(!snipeModalOpen);
+                      }}
+                    />
+                  </div>
+                </HelpToolTip>
+              </DockItem>
+
               <DockItem highlighted={router.asPath.startsWith('/trending')} className={dockItemClassname}>
                 <HelpToolTip placement="top" content={<div className="whitespace-nowrap">Explore</div>}>
                   <div className={itemClassname}>
@@ -84,19 +97,6 @@ const Dock = () => {
                       className={twMerge(iconClassname, hoverColorBrandText)}
                       onClick={() => {
                         router.push('/trending');
-                      }}
-                    />
-                  </div>
-                </HelpToolTip>
-              </DockItem>
-
-              <DockItem className={dockItemClassname}>
-                <HelpToolTip placement="top" content={<div className="whitespace-nowrap">Snipe</div>}>
-                  <div className={itemClassname}>
-                    <FiTarget
-                      className={twMerge(iconClassname, hoverColorBrandText)}
-                      onClick={() => {
-                        setSnipeModalOpen(!snipeModalOpen);
                       }}
                     />
                   </div>
