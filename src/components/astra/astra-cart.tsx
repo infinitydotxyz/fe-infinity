@@ -363,7 +363,7 @@ export const AstraCart = ({
       {/* todo: change the chainId check here when more chains are supported */}
       <div className="m-6 flex flex-col">
         <AButton
-          className="p-3"
+          className="p-3 z-50"
           primary={true}
           disabled={
             !user ||
