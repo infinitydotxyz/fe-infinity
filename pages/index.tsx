@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { useSpring, animated } from '@react-spring/three';
 import { Canvas } from '@react-three/fiber';
 import { MeshDistortMaterial } from '@react-three/drei';
@@ -10,11 +10,13 @@ import { secondaryTextColor } from 'src/utils/ui-constants';
 const AnimatedMeshDistortMaterial = animated(MeshDistortMaterial);
 
 const MyScene = ({ isLoading, isComplete }: { isLoading: boolean; isComplete: boolean }) => {
-  const [springs, api] = useSpring(
+  const [springs] = useSpring(
     () => ({
       scale: 1,
       position: [0, 0],
-      color: '#ff6d6d',
+      color: isComplete ? '#569AFF' : '#ff6d6d',
+      distort: isLoading ? 0.4 : 0.25,
+      speed: isComplete ? 5 : 10,
       config: (key) => {
         switch (key) {
           case 'scale':
@@ -29,7 +31,7 @@ const MyScene = ({ isLoading, isComplete }: { isLoading: boolean; isComplete: bo
         }
       }
     }),
-    []
+    [isLoading, isComplete]
   );
 
   return (
@@ -38,11 +40,7 @@ const MyScene = ({ isLoading, isComplete }: { isLoading: boolean; isComplete: bo
       {/**
        * eslint-disable-next-line @typescript-eslint/ban-ts-comment
        * @ts-ignore */}
-      <AnimatedMeshDistortMaterial
-        speed={isComplete ? 5 : 10}
-        distort={isLoading ? 0.4 : 0.25}
-        color={isComplete ? '#569AFF' : '#ff6d6d'}
-      />
+      <AnimatedMeshDistortMaterial speed={springs.speed} distort={springs.distort} color={springs.color} />
     </animated.mesh>
   );
 };
