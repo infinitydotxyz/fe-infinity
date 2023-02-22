@@ -11,6 +11,7 @@ const HomePage = () => {
           <div>"Flow is the baddest marketplace on the planet" - Milk Road</div>
           <div>"Flow has the meanest listing sniper in the game" - Metaversal</div>
           <div>"Flow is the best place to bid on NFTs" - nftnow</div>
+          <div>"Flow has no txns, only signatures" - 0age</div>
           <div>"The world's only marketplace with auto executing orderbook" - Arthur Hayes</div>
           <div>"These chads figured out vampired liquidity without incentives" - Chef Nomi</div>
           <div>"Flow, the blockchain for open worlds" - Roham Gharegozlou</div>
