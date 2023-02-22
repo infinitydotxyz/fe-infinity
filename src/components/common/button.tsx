@@ -1,10 +1,19 @@
 import React, { ReactNode } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { inputBorderColor } from '../../utils/ui-constants';
+import {
+  activeColor,
+  hoverColor,
+  borderColor,
+  primaryBtnWithBgColorTextTransition,
+  textColor
+} from '../../utils/ui-constants';
 
 const classes = {
   // focus ring appears on keyboard tab key navigation for accessibility, not on clicks
-  base: 'select-none focus:outline-none focus-visible:ring focus:ring-black focus:ring-opacity-50 transition ease-in-out duration-300 active:bg-gray-900 active:text-white',
+  base: twMerge(
+    'select-none focus:outline-none focus-visible:ring focus:ring-dark-bg focus:ring-opacity-50 transition ease-in-out duration-300',
+    activeColor
+  ),
   disabled: 'opacity-50 cursor-not-allowed',
   pill: 'rounded-full',
   size: {
@@ -12,22 +21,24 @@ const classes = {
     round: 'p-2.5',
     small: 'px-3 py-1 text-xs',
     normal: 'px-6 py-2',
-    medium: 'px-5 py-2 text-sm',
-    large: 'px-8 py-3 text-lg'
+    medium: 'px-4 py-2 text-sm',
+    large: 'px-5 py-2 text-lg'
   },
   variant: {
     plain: '',
-    ghost: 'rounded-full', // hover fill needs to be rounded
-    primary: 'rounded-full border-gray-100 bg-gradient-to-b from-[#333] to-[#000] text-white hover:bg-theme-gray-900',
-    gray: 'border-none rounded-full bg-theme-gray-100 hover:bg-theme-gray-200',
-    outline: twMerge(inputBorderColor, 'border rounded-full text-gray-900 hover:bg-theme-gray-200'),
-    outlineWhite: twMerge(inputBorderColor, 'border bg-white rounded-full text-gray-900 hover:bg-theme-gray-200'),
-    danger: 'rounded-full bg-red-500 hover:bg-red-800 focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 text-white',
+    ghost: 'rounded-lg', // hover fill needs to be rounded
+    primary: twMerge(primaryBtnWithBgColorTextTransition, 'rounded-lg'),
+    gray: twMerge(hoverColor, 'border-none rounded-lg bg-gray-100'),
+    outline: twMerge(borderColor, hoverColor, textColor, 'border rounded-lg'),
+    outlineWhite: twMerge(borderColor, hoverColor, 'border rounded-lg'),
+    round: 'rounded-full',
+    roundBorder: twMerge(borderColor, hoverColor, textColor, 'border rounded-full'),
+    danger: twMerge(
+      textColor,
+      'rounded-lg bg-red-500 hover:bg-red-800 focus:ring-2 focus:ring-red-500 focus:ring-opacity-50'
+    ),
     outlineDanger:
-      'rounded-full border rounded-full text-gray-900 bg-theme-gray-100 hover:bg-theme-gray-200 border-red-500 hover:border-red-800 focus:ring-2 focus:ring-red-500 focus:ring-opacity-50',
-    round: 'rounded-full p-1', // use plain size
-    roundBorder: twMerge(inputBorderColor, 'border rounded-full bg-white text-black hover:bg-theme-gray-200'),
-    white: 'border rounded-full border-gray-100 bg-white text-black hover:bg-theme-gray-200'
+      'rounded-lg border rounded-full text-gray-900 bg-gray-100 hover:bg-gray-200 border-red-500 hover:border-red-800 focus:ring-2 focus:ring-red-500 focus:ring-opacity-50'
   }
 };
 

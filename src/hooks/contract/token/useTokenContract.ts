@@ -1,11 +1,14 @@
 import { ERC20ABI } from '@infinityxyz/lib-frontend/abi/erc20';
+import { ChainId } from '@infinityxyz/lib-frontend/types/core';
 import { getTokenAddress } from '@infinityxyz/lib-frontend/utils';
 import { ENV } from 'src/utils';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { useNetwork } from 'wagmi';
 import { useContract } from '../useContract';
 
 export function useTokenContract() {
-  const { chainId } = useOnboardContext();
+  const { chain } = useNetwork();
+  const chainId = String(chain?.id ?? 1) as ChainId;
+
   const address = getTokenAddress(chainId, ENV);
   const contract = useContract(address, ERC20ABI);
 

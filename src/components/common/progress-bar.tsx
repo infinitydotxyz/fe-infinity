@@ -1,6 +1,7 @@
 import { round } from '@infinityxyz/lib-frontend/utils';
 import React from 'react';
 import { nFormatter } from 'src/utils';
+import { secondaryBgColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 export type ProgressBarBaseProps = {
@@ -79,7 +80,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = (props) => {
   const { fillerClassName, overlayClassName, className, ...rest } = props;
   const percentage = getPercentage(props);
   return (
-    <div className={twMerge('bg-gray-100 rounded-sm w-full relative min-w-[250px]', `text-xl`, className)}>
+    <div className={twMerge(secondaryBgColor, 'rounded-sm w-full relative min-w-[250px]', `text-xl`, className)}>
       <ProgressBarFiller percentage={percentage} className={fillerClassName} />
       <ProgressBarOverlay className={overlayClassName} {...rest} percentage={percentage} />
     </div>

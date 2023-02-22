@@ -1,15 +1,15 @@
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { IoMdInformationCircleOutline } from 'react-icons/io';
+import { secondaryBgColor, smallIconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { smallIconButtonStyle } from 'src/utils/ui-constants';
 
 export interface TooltipSpec {
-  title: string;
-  content: string;
+  title?: string;
+  content?: string;
 }
 
 export const TooltipIcon = () => {
-  return <IoMdInformationCircleOutline className={`fill-gray-600 ${smallIconButtonStyle}`} />;
+  return <IoMdInformationCircleOutline className={`${secondaryBgColor} ${smallIconButtonStyle}`} />;
 };
 
 interface Props {
@@ -58,9 +58,14 @@ interface Props3 {
 
 const TooltipContent = ({ tooltip }: Props3) => {
   return (
-    <div className="absolute z-50 top-full mt-2 right-0 left-0 pointer-events-none px-4 py-4 bg-white shadow-ttip rounded-2xl">
-      <div className="font-bold text-md mb-1">{tooltip.title}</div>
-      <div className="text-sm">{tooltip.content}</div>
+    <div
+      className={twMerge(
+        'absolute z-50 top-full mt-2 right-0 left-0 pointer-events-none p-3 shadow-ttip rounded-lg',
+        secondaryBgColor
+      )}
+    >
+      {tooltip.title ? <div className="font-bold text-md mb-1">{tooltip.title}</div> : null}
+      {tooltip.content ? <div className="text-sm">{tooltip.content}</div> : null}
     </div>
   );
 };

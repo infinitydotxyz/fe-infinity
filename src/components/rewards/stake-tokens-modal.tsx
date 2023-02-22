@@ -7,11 +7,12 @@ import { useTokenAllowance } from 'src/hooks/contract/token/useTokenAllowance';
 import { useTokenApprove } from 'src/hooks/contract/token/useTokenApprove';
 import { nFormatter } from 'src/utils';
 import { twMerge } from 'tailwind-merge';
-import { Spinner, toastError, toastSuccess } from '../common';
+import { BouncingLogo, toastError, toastSuccess } from '../common';
 import { Button } from '../common/button';
 import { TextInputBox } from '../common/input-box';
 import { Modal } from '../common/modal';
 import { MaxUint256 } from '@ethersproject/constants';
+import { secondaryTextColor } from 'src/utils/ui-constants';
 
 interface Props {
   onClose: () => void;
@@ -124,7 +125,7 @@ export const StakeTokensModal = ({ onClose }: Props) => {
                 <Button
                   variant="gray"
                   size="small"
-                  className="rounded-full py-2 px-3"
+                  className="rounded-lg py-2 px-3"
                   onClick={() => setValue(tokenBalance.toString())}
                 >
                   Max
@@ -132,7 +133,7 @@ export const StakeTokensModal = ({ onClose }: Props) => {
               )}
             />
           </div>
-          <div className="text-right mr-2 mt-1 text-theme-gray-300">Balance: {nFormatter(tokenBalance)}</div>
+          <div className="text-right mr-2 mt-1">Balance: {nFormatter(tokenBalance)}</div>
 
           <div className="text-lg mt-8 flex justify-between">
             <span>Voting power</span>
@@ -151,7 +152,7 @@ export const StakeTokensModal = ({ onClose }: Props) => {
 
         {isStaking && (
           <div className="mt-2 flex flex-row gap-2 items-center">
-            <Spinner />
+            <BouncingLogo />
             <span>Waiting for transaction to complete...</span>
           </div>
         )}
@@ -170,11 +171,11 @@ const RadioButtonCard: React.FC<{ value: string | number; label: string; descrip
   description
 }) => {
   return (
-    <div className="bg-white cursor-pointer">
+    <div className="cursor-pointer">
       <RadioGroup.Option
         value={value}
         className={({ checked }) => `
-            ${checked ? 'border-theme-gray-200 bg-theme-gray-100' : 'border-gray-200'}
+            ${checked ? 'border-gray-200 bg-gray-100' : 'border-gray-200'}
             relative flex flex-row justify-between items-center border rounded-md p-4
           `}
       >
@@ -185,13 +186,13 @@ const RadioButtonCard: React.FC<{ value: string | number; label: string; descrip
                 {label}
               </RadioGroup.Label>
 
-              {description && (
-                <RadioGroup.Description as="span" className={twMerge('text-gray-500', 'block text-sm')}>
+              {description ? (
+                <RadioGroup.Description as="span" className={twMerge(secondaryTextColor, 'block text-sm')}>
                   {description}
                 </RadioGroup.Description>
-              )}
+              ) : null}
             </div>
-            <input type="radio" checked={checked} className="text-black" readOnly />
+            <input type="radio" checked={checked} readOnly />
           </>
         )}
       </RadioGroup.Option>

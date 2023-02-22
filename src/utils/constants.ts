@@ -3,20 +3,20 @@ import { getToken } from '@infinityxyz/lib-frontend/utils';
 import missingImage from 'src/images/missing-image.png';
 import newsImage from 'src/images/news.png';
 
-export const API_BASE = 'https://sv.infinity.xyz';
-export const SITE_HOST = 'https://infinity.xyz';
+export const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'https://sv.flow.so';
+export const SITE_HOST = 'https://flow.so';
 export const DISCORD_BOT_INVITE_URL =
   'https://discord.com/api/oauth2/authorize?client_id=956292440778743838&permissions=1024&scope=bot%20applications.commands';
 
 export const ETHERSCAN_BASE_URL = 'https://etherscan.io';
 
-export const INFINITY_FEE_PCT = 2.5;
-export const INFINITY_ROYALTY_PCT = 0;
+export const FLOW_FEE_PCT = 2.5;
+export const FLOW_ROYALTY_PCT = 0;
 
-// not sure why there are two of these.
-export const ITEMS_PER_PAGE = 30;
-export const DEFAULT_LIMIT = 24;
+export const DEFAULT_LIMIT = 30;
+export const SMALL_LIMIT = 10;
 export const LARGE_LIMIT = 50;
+export const EXTRA_LARGE_LIMIT = 100;
 
 export const NFT_DATA_SOURCES = {
   INFINITY: 0,
@@ -40,15 +40,46 @@ export const GRID_CSS =
 
 export const ENS_ADDRESS = '0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85'.toLowerCase();
 
-export const standardCard = 'rounded-xl border p-5 bg-theme-light-200 my-3';
-export const standardBorderCard = 'rounded-2xl border p-5 my-3';
-
 export const USER_API_END_POINT = '/user';
 
-export const TOKEN = getToken(ChainId.Mainnet) ?? {
+export const INFT_TOKEN = getToken(ChainId.Mainnet) ?? {
   address: '',
   name: 'Infinity',
   symbol: 'INFT',
   decimals: 18,
   chainId: ChainId.Mainnet
+};
+
+export const FLOW_TOKEN = getToken(ChainId.Mainnet) ?? {
+  address: '',
+  name: 'Flow',
+  symbol: 'FLOW',
+  decimals: 18,
+  chainId: ChainId.Mainnet
+};
+
+export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
+export const ZERO_HASH = '0x0000000000000000000000000000000000000000000000000000000000000000';
+
+export const ORDER_ROOT_EIP712_TYPES = {
+  Root: [{ name: 'root', type: 'bytes32' }]
+};
+
+export const FLOW_ORDER_EIP_712_TYPES = {
+  Order: [
+    { name: 'isSellOrder', type: 'bool' },
+    { name: 'signer', type: 'address' },
+    { name: 'constraints', type: 'uint256[]' },
+    { name: 'nfts', type: 'OrderItem[]' },
+    { name: 'execParams', type: 'address[]' },
+    { name: 'extraParams', type: 'bytes' }
+  ],
+  OrderItem: [
+    { name: 'collection', type: 'address' },
+    { name: 'tokens', type: 'TokenInfo[]' }
+  ],
+  TokenInfo: [
+    { name: 'tokenId', type: 'uint256' },
+    { name: 'numTokens', type: 'uint256' }
+  ]
 };

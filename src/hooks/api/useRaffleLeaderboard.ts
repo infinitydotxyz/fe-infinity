@@ -5,12 +5,13 @@ import {
   RaffleLeaderboardArrayDto,
   RaffleLeaderboardUser
 } from '@infinityxyz/lib-frontend/types/dto/raffle';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { useNetwork } from 'wagmi';
 
 export const useRaffleLeaderboard = (
   raffleId: string
 ): { result: RaffleLeaderboardUser[]; error: unknown; isLoading: boolean; fetchMore: () => void } => {
-  const { chainId } = useOnboardContext();
+  const { chain } = useNetwork();
+  const chainId = String(chain?.id ?? 1) as ChainId;
 
   const query: RaffleLeaderboardQueryDto = {
     cursor: '',

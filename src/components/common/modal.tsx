@@ -1,14 +1,16 @@
 import { Dialog, Transition } from '@headlessui/react';
+import { useTheme } from 'next-themes';
 import { Fragment, ReactNode } from 'react';
-import { Spacer, Button } from 'src/components/common';
-import { XIcon } from '@heroicons/react/outline';
-import { iconButtonStyle } from 'src/utils/ui-constants';
+import { MdClose } from 'react-icons/md';
+import { Button, Spacer } from 'src/components/common';
+import { bgColor, iconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
   title?: string | ReactNode;
+  titleClassName?: string;
 
   showCloseIcon?: boolean;
 
@@ -27,6 +29,7 @@ interface Props {
 
   showActionButtons?: boolean;
   wide?: boolean;
+  panelClassName?: string;
 }
 
 export const Modal = ({
@@ -42,8 +45,11 @@ export const Modal = ({
   title,
   onClose, // X icon, or click outside dialog
   showActionButtons = true,
-  wide = true
+  wide = true,
+  titleClassName,
+  panelClassName
 }: Props) => {
+  const { theme } = useTheme();
   const buttons = [];
 
   // pass in '' to hide button
@@ -89,7 +95,7 @@ export const Modal = ({
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={onClose}>
+      <Dialog as="div" className={twMerge('relative z-10')} onClose={onClose}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -99,10 +105,10 @@ export const Modal = ({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black bg-opacity-25" />
+          <div className={twMerge('fixed inset-0', theme === 'dark' ? 'bg-light-bg' : 'bg-dark-bg', 'bg-opacity-30')} />
         </Transition.Child>
 
-        <div className="fixed inset-0 overflow-y-auto overflow-x-clip">
+        <div className={twMerge('fixed inset-0 overflow-y-auto overflow-x-clip')}>
           <div className="flex min-h-full items-center justify-center p-4 text-center">
             <Transition.Child
               as={Fragment}
@@ -117,12 +123,17 @@ export const Modal = ({
                 className={twMerge(
                   'w-full',
                   wide ? 'max-w-xl' : 'max-w-md',
-                  'transform rounded-2xl bg-white py-8 px-9 text-left align-middle shadow-xl transition-all'
+                  'transform rounded-lg py-8 px-9 text-left align-middle shadow-xl transition-all text-sm',
+                  panelClassName,
+                  bgColor
                 )}
               >
                 <Dialog.Title
                   as="h3"
-                  className="flex items-center tracking-tight text-xl font-bold leading-6 text-gray-900 mb-5"
+                  className={twMerge(
+                    'flex items-center tracking-tight text-lg font-bold leading-6 mb-5',
+                    titleClassName
+                  )}
                 >
                   {title}
 
@@ -131,14 +142,14 @@ export const Modal = ({
                       <Spacer />
 
                       <Button size="plain" variant="round" onClick={onClose}>
-                        <XIcon className={iconButtonStyle} />
+                        <MdClose className={iconButtonStyle} />
                       </Button>
                     </>
                   )}
                 </Dialog.Title>
 
                 {children}
-                {showActionButtons && buttons.length > 0 && <div className="flex space-x-4 mt-10">{buttons}</div>}
+                {showActionButtons && buttons.length > 0 && <div className="flex space-x-4 mt-6">{buttons}</div>}
               </Dialog.Panel>
             </Transition.Child>
           </div>

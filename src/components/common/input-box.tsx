@@ -1,11 +1,8 @@
-import React, { ReactElement, ReactNode, useState } from 'react';
-import { DatePicker } from 'src/components/common';
-import { ComboBox, ComboBoxBaseType } from './combo-box';
-import { CalendarIcon } from '@heroicons/react/outline';
+import { ReactElement, ReactNode, useState } from 'react';
+import { twMerge } from 'tailwind-merge';
+import { borderColor, secondaryTextColor } from '../../utils/ui-constants';
 import { EthSymbol } from './eth-price';
 import { Tooltip, TooltipIcon, TooltipSpec, TooltipWrapper } from './tool-tip';
-import { twMerge } from 'tailwind-merge';
-import { inputBorderColor } from '../../utils/ui-constants';
 
 interface Props {
   label?: string;
@@ -34,25 +31,20 @@ export const InputBox = ({
 
   return (
     <TooltipWrapper show={showTooltip} tooltip={tooltip} className={isFullWidth ? 'w-full' : ''}>
-      <div
-        className={twMerge(
-          inputBorderColor,
-          'py-3 pl-6 pr-2 border rounded-2xl w-full flex items-center focus-within:border-theme-gray-700',
-          className
-        )}
-      >
-        {icon && <span>{icon}</span>}
+      <div className={twMerge(borderColor, 'py-2 px-3 border rounded-lg w-full flex items-center', className)}>
+        {icon ? <span>{icon}</span> : null}
         <div className="w-full">
-          {label && (
+          {label ? (
             <label
               className={twMerge(
-                'block font-normal font-heading text-sm text-theme-gray-700 select-none',
+                'block font-normal font-heading text-sm select-none',
+                secondaryTextColor,
                 labelClassname
               )}
             >
               {label}
             </label>
-          )}
+          ) : null}
           <div className="flex items-center w-full">
             {renderLeftIcon && (
               <div className="absolute top-0 bottom-0 left-4 flex flex-col justify-center">{renderLeftIcon()}</div>
@@ -61,16 +53,16 @@ export const InputBox = ({
             {/* NOTE: this centered positioning of the input field using % is kind of a hack, we should look into a better approach when more than one component needs to render a left icon */}
             <div className={twMerge('flex items-center w-full', renderLeftIcon ? 'ml-[40%]' : '')}>{children}</div>
 
-            {tooltip && (
+            {tooltip ? (
               <Tooltip
                 className="absolute top-0 bottom-0 right-4 flex flex-col justify-center"
                 setShow={setShowTooltip}
               >
                 <TooltipIcon />
               </Tooltip>
-            )}
+            ) : null}
 
-            {renderRightIcon && <div className="pl-2 flex flex-col justify-center">{renderRightIcon()}</div>}
+            {renderRightIcon ? <div className="pl-2 flex flex-col justify-center">{renderRightIcon()}</div> : null}
           </div>
         </div>
       </div>
@@ -78,51 +70,10 @@ export const InputBox = ({
   );
 };
 
-// =======================================================
-
-interface Props2 {
-  label: string;
-  value: Date;
-  placeholder?: string;
-  onChange: (value: Date) => void;
-  tooltip?: TooltipSpec;
-}
-
-export const DatePickerBox = ({ tooltip, label, value, onChange, placeholder }: Props2) => {
-  return (
-    <InputBox label={label} tooltip={tooltip}>
-      <div className="flex items-center w-full">
-        <div className="pr-2">
-          <CalendarIcon className="h-4 w-4" />
-        </div>
-        <DatePicker value={value} onChange={onChange} placeholder={placeholder} />
-      </div>
-    </InputBox>
-  );
-};
-
-// ================================================================
-
-interface Props3<T extends ComboBoxBaseType> {
-  label: string;
-  options: T[];
-  value: T;
-  onChange: (value: T) => void;
-  tooltip?: TooltipSpec;
-}
-
-export const ComboInputBox = <T extends ComboBoxBaseType>({ tooltip, label, options, onChange, value }: Props3<T>) => {
-  return (
-    <InputBox label={label} tooltip={tooltip}>
-      <ComboBox options={options} value={value} onChange={onChange} />
-    </InputBox>
-  );
-};
-
 // ================================================================
 
 interface Props4 {
-  label: string;
+  label?: string;
   value: string;
   type: string;
   placeholder: string;
@@ -136,6 +87,9 @@ interface Props4 {
   renderLeftIcon?: () => ReactElement;
   className?: string;
   inputClassName?: string;
+  onEnter?: () => void;
+  stopEnterSpacePropagation?: boolean;
+  onMouseLeave?: () => void;
 }
 
 export const TextInputBox = ({
@@ -152,7 +106,10 @@ export const TextInputBox = ({
   renderRightIcon,
   renderLeftIcon,
   className,
-  inputClassName = ''
+  inputClassName = '',
+  onEnter,
+  stopEnterSpacePropagation = false,
+  onMouseLeave
 }: Props4) => {
   return (
     <InputBox
@@ -165,7 +122,6 @@ export const TextInputBox = ({
       className={className}
     >
       <div className="flex items-center w-full">
-        {addEthSymbol && <div className="pr-2 select-none">{EthSymbol}</div>}
         <input
           autoFocus={autoFocus}
           type={type}
@@ -176,9 +132,21 @@ export const TextInputBox = ({
               onChange(e.target.value);
             }
           }}
-          className={twMerge(`p-0 border-none focus:ring-0 block w-full font-heading ${inputClassName}`)}
+          onMouseLeave={onMouseLeave}
+          className={twMerge(
+            `p-0 bg-transparent border-none focus:ring-0 block w-full font-heading outline-none ring-transparent shadow-none ${inputClassName}`
+          )}
           placeholder={placeholder}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && onEnter) {
+              onEnter();
+            }
+            if ((e.key === 'Enter' || e.key === ' ') && stopEnterSpacePropagation) {
+              e.stopPropagation();
+            }
+          }}
         />
+        {addEthSymbol && <div className="pr-2 select-none">{EthSymbol}</div>}
       </div>
     </InputBox>
   );

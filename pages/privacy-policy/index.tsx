@@ -1,23 +1,22 @@
-import React from 'react';
-import { PageBox } from 'src/components/common';
+import { APageBox } from 'src/components/astra/astra-page-box';
 
 const PrivacyPolicyPage = () => {
   return (
-    <PageBox title="Privacy Policy">
+    <APageBox title="Privacy Policy" className="overflow-x-clip overflow-y-auto">
       <div className="flex flex-col items-center justify-center space-y-2">
-        <div className="font-normal text-3xl">Infinity</div>
+        <div className="font-bold font-heading text-3xl">Flow</div>
         <div className="underline">Privacy Policy</div>
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-2 text-sm">
         <p dir="ltr">
           <span>Last Updated: </span>
           <span data-rich-links='{"dat_df":{"fres_frt":1,"dfie_ts":{"tv":{"tv_s":1654862400,"tv_n":0}},"dfie_l":"en","dfie_p":{"fres_frt":0,"tres_tv":"MMM d, y"},"dfie_dt":"Jun 10, 2022","dfie_pt":3},"type":"date"}'>
-            Jun 10, 2022
+            Jan 20, 2023
           </span>
         </p>
         <p dir="ltr">
-          <span>Infinity DAO Ltd. d/b/a Infinity </span>
+          <span>Infinity DAO Ltd. d/b/a Flow </span>
           <span>
             (&ldquo;Infinity,&rdquo; &ldquo;we,&rdquo; &ldquo;us&rdquo;, or &ldquo;our&rdquo;), a company owned by the
             Carteblanche Foundation,
@@ -25,7 +24,7 @@ const PrivacyPolicyPage = () => {
           <span>
             {' '}
             is committed to protecting your privacy. We have prepared this Privacy Policy to describe our practices
-            regarding the Personal Data (as defined below) we collect, use, and share in connection with the Infinity
+            regarding the Personal Data (as defined below) we collect, use, and share in connection with the Flow
             website and other software provided on or in connection with our services, as described in our Terms of
             Service (collectively, the &ldquo;Service&rdquo;). &ldquo;NFT&rdquo; in this Privacy Policy means a
             non-fungible token or similar digital item implemented on a blockchain (such as the Ethereum blockchain),
@@ -313,9 +312,9 @@ const PrivacyPolicyPage = () => {
             Regardless of any choices you make regarding your Personal Data (as described below), Infinity may disclose
             Personal Data if it believes in good faith that such disclosure is necessary: (a) in connection with any
             legal investigation; (b) to comply with relevant laws or to respond to subpoenas, warrants, or other legal
-            process served on Infinity; (c) to protect or defend the rights or property of Infinity or users of the
-            Service; and/or (d) to investigate or assist in preventing any violation or potential violation of the law,
-            this Privacy Policy, or our Terms of Service.
+            process served on Infinity; (c) to protect or defend the rights or property of Flow or users of the Service;
+            and/or (d) to investigate or assist in preventing any violation or potential violation of the law, this
+            Privacy Policy, or our Terms of Service.
           </span>
         </p>
         <p dir="ltr" className="font-bold">
@@ -467,14 +466,15 @@ const PrivacyPolicyPage = () => {
         <p dir="ltr">
           <span>
             If you have any questions or concerns or complaints about our Privacy Policy or our data collection or
-            processing practices, or if you want to report any security violations to us, please contact us.
+            processing practices, or if you want to report any security violations to us, please contact us on our
+            discord or email us at hi@flow.so
           </span>
         </p>
         <p>
           <span>&nbsp;</span>
         </p>
       </div>
-    </PageBox>
+    </APageBox>
   );
 };
 

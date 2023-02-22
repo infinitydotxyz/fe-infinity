@@ -1,72 +1,49 @@
+import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { useRouter } from 'next/router';
-import { CenteredContent, PageBox, Spinner } from 'src/components/common';
-import { UserPage } from 'src/components/user/user-page';
-import { User } from 'src/utils/context/AppContext';
-import { PleaseConnectMsg, useFetch, USER_API_END_POINT } from 'src/utils';
-import { UserProfileDto } from '@infinityxyz/lib-frontend/types/dto/user';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { CenteredContent, ConnectButton } from 'src/components/common';
+import { ProfileNFTs } from 'src/components/profile/profile-nfts';
+import { ProfileOrderList } from 'src/components/profile/profile-order-list';
+import { ProfilePageHeader } from 'src/components/profile/profile-page-header';
+import { useScrollInfo } from 'src/hooks/useScrollHook';
+import { useAppContext } from 'src/utils/context/AppContext';
+import { useAccount } from 'wagmi';
 
-const ProfilePage = () => {
-  const router = useRouter();
-  const {
-    query: { address }
-  } = router;
-  const { user } = useOnboardContext();
-
-  if (!address) {
-    return null;
-  }
-  const isMyProfile = address === 'me';
-  if (isMyProfile && !user) {
-    return (
-      <PageBox title="Account" className="mb-12">
-        <PleaseConnectMsg />
-      </PageBox>
-    );
-  }
-
-  return <ProfilePageContents userAddress={isMyProfile ? `${user?.address ?? ''}` : `${address ?? ''}`} user={user} />;
-};
-
-// ================================================
-
-interface Props {
-  user: User | null;
-  userAddress: string;
+export enum ProfileTabs {
+  Items = 'Items',
+  Orders = 'Orders',
+  Send = 'Send'
 }
 
-const ProfilePageContents = ({ user, userAddress }: Props) => {
-  const { result, isLoading, isError, error } = useFetch(`${USER_API_END_POINT}/${userAddress}`);
+export default function ProfileItemsPage() {
+  const { setRef } = useScrollInfo();
+  const { address } = useAccount();
+  const expanded = true;
+  const tabs = [ProfileTabs.Items.toString(), ProfileTabs.Orders.toString()];
+  const { selectedProfileTab } = useAppContext();
 
-  if (isLoading) {
+  const router = useRouter();
+  const addressFromPath = router.query.address as string;
+  if (!addressFromPath || addressFromPath === 'undefined') {
+    typeof window !== 'undefined' ? router.replace('/profile', undefined, { shallow: true }) : null;
     return (
-      <PageBox title="Loading..." showTitle={false}>
-        <CenteredContent>
-          <Spinner />
-        </CenteredContent>
-      </PageBox>
+      <CenteredContent>
+        <ConnectButton />
+      </CenteredContent>
     );
   }
 
-  if (isError) {
-    console.error(error);
-    return (
-      <PageBox title="Error" className="mb-12">
-        Failed fetching profile
-      </PageBox>
-    );
+  if (trimLowerCase(addressFromPath) === trimLowerCase(address)) {
+    tabs.push(ProfileTabs.Send.toString());
   }
-
-  const userInfo = (result ?? {}) as UserProfileDto;
-  userInfo.address = userInfo?.address || userAddress;
-
-  const isOwner = user?.address === userInfo.address;
 
   return (
-    <PageBox showTitle={false} title={'Profile'}>
-      <UserPage userInfo={userInfo} isOwner={isOwner} />
-    </PageBox>
+    <div className="flex flex-col h-full w-full">
+      <ProfilePageHeader expanded={expanded} tabs={tabs} />
+      <div ref={setRef} className="overflow-y-auto scrollbar-hide">
+        {selectedProfileTab === ProfileTabs.Items && <ProfileNFTs userAddress={addressFromPath} />}
+        {selectedProfileTab === ProfileTabs.Orders && <ProfileOrderList userAddress={addressFromPath} />}
+        {selectedProfileTab === ProfileTabs.Send && <ProfileNFTs userAddress={addressFromPath} />}
+      </div>
+    </div>
   );
-};
-
-export default ProfilePage;
+}

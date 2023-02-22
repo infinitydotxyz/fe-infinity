@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { MdOutlineContentCopy } from 'react-icons/md';
+import { AiOutlineCheckCircle } from 'react-icons/ai';
+import { RxCopy } from 'react-icons/rx';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { twMerge } from 'tailwind-merge';
 
@@ -16,15 +17,15 @@ export const ClipboardButton: React.FC<ClipboardButtonProps> = ({ textToCopy, cl
     navigator.clipboard.writeText(textToCopy).then(
       () => {
         setCopied(true);
-        // changing back to default state after 2 seconds.
+        // changing back to default state after a bit
         setTimeout(() => {
           if (isMounted()) {
             setCopied(false);
           }
-        }, 2000);
+        }, 1500);
       },
       (err) => {
-        console.log('failed to copy', err.mesage);
+        console.error('failed to copy', err.mesage);
       }
     );
   };
@@ -32,11 +33,11 @@ export const ClipboardButton: React.FC<ClipboardButtonProps> = ({ textToCopy, cl
   return (
     <>
       {copied ? (
-        <span className="pl-4 cursor-pointer">✓</span>
+        <AiOutlineCheckCircle className={className} />
       ) : (
-        <button className={twMerge(`ml-4 pt-1cursor-pointer ${className ?? ''}`)}>
-          <MdOutlineContentCopy width={16} height={16} onClick={copyToClipboard} />
-        </button>
+        <div>
+          <RxCopy onClick={copyToClipboard} className={twMerge(className, 'cursor-pointer')} />
+        </div>
       )}
     </>
   );

@@ -1,0 +1,89 @@
+::-webkit-scrollbar {
+  width: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #3662D8;
+  border-radius: 3px;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+/* For IE, Edge and Firefox */
+.scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+html,
+body {
+  @apply font-body;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply font-heading;
+}
+
+input:checked ~ .dot {
+  transform: translateX(100%);
+}
+
+/* remove updown arrows from html number input */
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type='number'] {
+  -moz-appearance: textfield;
+  appearance: none;
+}
+
+input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: #f3f3f3;
+}
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  background: #000;
+  cursor: pointer;
+  box-shadow: 0 0 2px 0 #555;
+}
+
+// .Toastify__toast - https://fkhadra.github.io/react-toastify/how-to-style/
+.Toastify__toast {
+  background-color: #f4f4f4 !important;
+  border-radius: 10px !important;
+  border: solid 1px #ddd !important;
+  color: #000 !important;
+  font-family: DM Sans !important;
+}
+.Toastify__toast-body {
+  padding: 15px !important;
+  word-break: break-word !important;
+}
+
+.Toastify__toast-container {
+  width: 400px !important;
+}

@@ -4,16 +4,16 @@ import { ethers } from 'ethers';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { apiPut } from 'src/utils';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { useAccount } from 'wagmi';
 
 export const useSaveReferral = (assetAddress: string, chainId: ChainId, tokenId?: string) => {
-  const { user, checkSignedIn } = useOnboardContext();
   const { query } = useRouter();
+  const { address: user, isConnected } = useAccount();
 
   useEffect(() => {
-    const userAddress = user?.address;
+    const userAddress = user;
 
-    const userValid = !!userAddress && checkSignedIn();
+    const userValid = !!userAddress && isConnected;
     const assetValid = ethers.utils.isAddress(assetAddress) && chainId;
     const referrerValid =
       !!query.referrer && typeof query.referrer === 'string' && ethers.utils.isAddress(query.referrer as string);
@@ -26,8 +26,7 @@ export const useSaveReferral = (assetAddress: string, chainId: ChainId, tokenId?
         assetTokenId: tokenId ?? ''
       };
 
-      console.log(`Saving referral for ${userAddress} from ${body.referrer} for ${chainId}:${assetAddress}:${tokenId}`);
-      apiPut(`/user/${user.address}/referrals`, { data: body }).catch((err) => console.error(err));
+      apiPut(`/user/${user}/referrals`, { data: body }).catch((err) => console.error(err));
     }
-  }, [user?.address, assetAddress, chainId, tokenId, query.referrer]);
+  }, [user, assetAddress, chainId, tokenId, query.referrer]);
 };

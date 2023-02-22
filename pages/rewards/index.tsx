@@ -1,33 +1,27 @@
-import { useRouter } from 'next/router';
-import React from 'react';
-import { PageBox, ToggleTab, useToggleTab } from 'src/components/common';
-import GlobalRewards from './global-rewards';
-import MyRewardsPage from './my-rewards';
-
-enum RewardTabs {
-  MyRewards = 'My Rewards',
-  GlobalRewards = 'Global Rewards'
-}
-
-const tabs = [RewardTabs.MyRewards, RewardTabs.GlobalRewards];
+import { useState } from 'react';
+import { APageBox } from 'src/components/astra/astra-page-box';
+import { ToggleTab } from 'src/components/common';
+import GlobalRewards from 'src/components/rewards/global-rewards';
+import MyRewards from 'src/components/rewards/my-rewards';
+import { textColor } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
 
 const RewardsPage = () => {
-  const router = useRouter();
-  const { options, onChange, selected } = useToggleTab(tabs, (router?.query?.tab as string) || tabs[0]);
-
+  const tabs = ['My Rewards', 'Global Rewards'];
+  const [selected, setSelected] = useState(tabs[0]);
   return (
-    <PageBox title="Rewards">
+    <APageBox title="Rewards">
       <ToggleTab
         className="font-heading pointer-events-auto"
-        options={options}
-        selected={selected}
-        onChange={onChange}
+        options={tabs}
+        defaultOption={tabs[0]}
+        onChange={setSelected}
       />
-      <div className="mt-4">
-        {selected === RewardTabs.MyRewards && <MyRewardsPage />}
-        {selected === RewardTabs.GlobalRewards && <GlobalRewards />}
+      <div className={twMerge(textColor, 'flex flex-col h-full w-full overflow-y-auto overflow-x-hidden')}>
+        {selected === 'My Rewards' && <MyRewards />}
+        {selected === 'Global Rewards' && <GlobalRewards />}
       </div>
-    </PageBox>
+    </APageBox>
   );
 };
 

@@ -1,6 +1,9 @@
-import { PageBox, Spinner } from 'src/components/common';
+import { BouncingLogo } from 'src/components/common';
 import { RaffleDescription } from 'src/components/raffles/raffle-description';
 import { useRaffles } from 'src/hooks/api/useRaffles';
+import { APageBox } from 'src/components/astra/astra-page-box';
+import { twMerge } from 'tailwind-merge';
+import { textColor } from 'src/utils/ui-constants';
 
 const RafflesPage = () => {
   const {
@@ -9,15 +12,15 @@ const RafflesPage = () => {
   } = useRaffles();
 
   return (
-    <PageBox title="Raffles" showTitle={true}>
-      <div className="space-y-4">
-        {isLoading && <Spinner />}
+    <APageBox title="Raffles">
+      <div className={twMerge(textColor, 'flex flex-col h-full w-full overflow-y-auto overflow-x-hidden')}>
+        {isLoading && <BouncingLogo />}
         {!isLoading &&
           raffles.map((raffle) => {
             return <RaffleDescription raffle={raffle} key={raffle.id} ethPrice={ethPrice} />;
           })}
       </div>
-    </PageBox>
+    </APageBox>
   );
 };
 

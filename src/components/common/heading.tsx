@@ -15,6 +15,7 @@ const sizes: Record<HeadingType, string> = {
 interface Props {
   as?: HeadingType;
   className?: string;
+  children?: React.ReactNode;
 }
 
 export const Heading: React.FC<Props> = ({ as = 'h1', children, className }) => {

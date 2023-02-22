@@ -3,358 +3,186 @@ import {
   ChainId,
   CollectionAttributes,
   CollectionStats,
-  ERC721CardData
+  EventType
 } from '@infinityxyz/lib-frontend/types/core';
-import { CollectionStatsDto } from '@infinityxyz/lib-frontend/types/dto/stats';
-import { NULL_ADDRESS, round } from '@infinityxyz/lib-frontend/utils';
-import { useRouter } from 'next/router';
-import NotFound404Page from 'pages/not-found-404';
-import { useEffect, useState } from 'react';
-import { BsCheck } from 'react-icons/bs';
-import { HiOutlineExternalLink } from 'react-icons/hi';
-import { AvatarImage } from 'src/components/collection/avatar-image';
-import { CollectionSalesTab } from 'src/components/collection/collection-activity-tab';
-import { StatsChips } from 'src/components/collection/stats-chips';
-import {
-  BlueCheck,
-  Button,
-  Chip,
-  EthPrice,
-  Heading,
-  PageBox,
-  Spinner,
-  ToggleTab,
-  useToggleTab
-} from 'src/components/common';
-import { FeesAprStats, FeesAccruedStats } from 'src/components/curation/statistics';
-import { VoteModal } from 'src/components/curation/vote-modal';
-import { VoteProgressBar } from 'src/components/curation/vote-progress-bar';
-import { CommunityFeed } from 'src/components/feed-list/community-feed';
-import { GalleryBox } from 'src/components/gallery/gallery-box';
-import { OrderbookContainer } from 'src/components/orderbook/orderbook-list';
-import { useFetchSignedOBOrder } from 'src/hooks/api/useFetchSignedOBOrder';
-import { ellipsisAddress, getChainScannerBase, isProd, nFormatter, standardCard } from 'src/utils';
-import { apiGet, useFetch } from 'src/utils/apiUtils';
-import { useDrawerContext } from 'src/utils/context/DrawerContext';
-import { useOrderContext } from 'src/utils/context/OrderContext';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import { iconButtonStyle } from 'src/utils/ui-constants';
-import { twMerge } from 'tailwind-merge';
-import ReactMarkdown from 'react-markdown';
-import Linkify from '@amit.rajput/react-linkify';
-import { UserCuratedCollectionDto } from '@infinityxyz/lib-frontend/types/dto';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
-import { useSaveReferral } from 'src/hooks/api/useSaveReferral';
-import { ReservoirCards } from 'src/components/token-card/reservoir-card-grid';
+import { useEffect, useState } from 'react';
+import { AiOutlineCheckCircle } from 'react-icons/ai';
+import { FaDiscord } from 'react-icons/fa';
+import { GiBroom } from 'react-icons/gi';
+import { AButton } from 'src/components/astra/astra-button';
+import { APriceFilter } from 'src/components/astra/astra-price-filter';
+import { ASortButton } from 'src/components/astra/astra-sort-button';
+import { AStatusFilterButton } from 'src/components/astra/astra-status-button';
+import { ATraitFilter } from 'src/components/astra/astra-trait-filter';
+import { TokenGrid } from 'src/components/astra/token-grid/token-grid';
+import { CollectionCharts } from 'src/components/collection/collection-charts';
+import { CollectionItemsPageSidebar } from 'src/components/collection/collection-items-page-sidebar';
+import { CollectionPageHeader, CollectionPageHeaderProps } from 'src/components/collection/collection-page-header';
+import { CollectionSocialFeed } from 'src/components/collection/collection-social-feed';
+import { TopHolderList } from 'src/components/collection/collection-top-holders';
+import { TwitterSupporterList } from 'src/components/collection/collection-top-twitter-supporters';
+import { CenteredContent, ExternalLink, EZImage, Spacer, TextInputBox } from 'src/components/common';
+import { CollectionNftSearchInput } from 'src/components/common/search/collection-nft-search-input';
+import { useCollectionTokenFetcher } from 'src/hooks/api/useTokenFetcher';
+import { useScrollInfo } from 'src/hooks/useScrollHook';
+import { apiGet, nFormatter } from 'src/utils';
+import { useAppContext } from 'src/utils/context/AppContext';
+import { CartType, useCartContext } from 'src/utils/context/CartContext';
+import { ERC721CollectionCartItem, ERC721TokenCartItem, TokensFilter } from 'src/utils/types';
+import { borderColor, brandTextColor, hoverColor, iconButtonStyle, selectedColor } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
 
-const CollectionPage = ({ collection, error }: { collection?: BaseCollection; error?: Error }) => {
-  /**
-   * handle saving referrals for this page
-   */
-  if (collection) {
-    useSaveReferral(collection.address, collection.chainId as ChainId);
-  }
+interface CollectionDashboardProps {
+  collection: BaseCollection;
+  collectionAllTimeStats?: CollectionStats;
+  collectionAttributes?: CollectionAttributes;
+  error?: Error;
+}
 
-  const { user, chainId, checkSignedIn } = useOnboardContext();
+export default function ItemsPage(props: CollectionDashboardProps) {
+  const collection = props.collection;
 
-  const { fetchSignedOBOrder } = useFetchSignedOBOrder();
-  const router = useRouter();
-  const { addCartItem, removeCartItem, ordersInCart, cartItems, addOrderToCart, updateOrders } = useOrderContext();
-  const [isBuyClicked, setIsBuyClicked] = useState(false);
-  const toggleOptions = isProd()
-    ? ['NFTs', 'Orders', 'Sales', 'Community']
-    : ['NFTs', 'Orders', 'Sales', 'Community', 'Reservoir'];
-  const { options, onChange, selected } = useToggleTab(toggleOptions, (router?.query?.tab as string) || 'NFTs');
   const {
-    query: { name }
-  } = router;
-  const [isStakeModalOpen, setIsStakeModalOpen] = useState(false);
-  const { fulfillDrawerParams } = useDrawerContext();
+    isNFTSelected,
+    isNFTSelectable,
+    listMode,
+    toggleNFTSelection,
+    toggleMultipleNFTSelection,
+    toggleCollSelection,
+    isCollSelected,
+    isCollSelectable,
+    collSelection
+  } = useAppContext();
+  const [filter, setFilter] = useState<TokensFilter>({});
+  const { data, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection.address, filter);
+  const { setRef } = useScrollInfo();
+  const tabs = ['Items', 'Analytics'];
+  const [selectedTab, setSelectedTab] = useState(tabs[0]);
+  const { cartType, setCartType } = useCartContext();
+  const [numSweep, setNumSweep] = useState('');
+  const [customSweep, setCustomSweep] = useState('');
+  const { showCart, setShowCart } = useAppContext();
+  const [selectedTraits, setSelectedTraits] = useState<string[]>([]);
+
+  const MAX_NUM_SWEEP_ITEMS = 50;
 
   useEffect(() => {
-    if (isBuyClicked === true) {
-      setIsBuyClicked(false);
-      addOrderToCart();
-    }
-  }, [isBuyClicked]);
-
-  const path = `/collections/${name}`;
-  const { result: collectionAttributes } = useFetch<CollectionAttributes>(
-    name ? `/collections/${name}/attributes` : '',
-    {
-      chainId: '1'
-    }
-  );
-
-  const { result: currentStats } = useFetch<CollectionStatsDto>(name ? `${path}/stats/current` : '', {
-    chainId
-  });
-  const { result: allTimeStats } = useFetch<{ data: CollectionStats[] }>(
-    name
-      ? path + '/stats?offset=0&limit=10&orderBy=volume&orderDirection=desc&minDate=0&maxDate=2648764957623&period=all'
-      : '',
-    { chainId }
-  );
-  const firstAllTimeStats = allTimeStats?.data[0]; // first row = latest daily stats
-
-  const createdBy = collection?.deployer ?? collection?.owner ?? '';
-
-  const { result: curatedCollection } = useFetch<UserCuratedCollectionDto>(
-    `${path}/curated/${chainId}:${user?.address ?? NULL_ADDRESS}`
-  );
-
-  const isAlreadyAdded = (data: ERC721CardData | undefined) => {
-    // check if this item was already added to cartItems or order.
-    const found1 =
-      cartItems.find((item) => item.collectionAddress === data?.address && item.tokenId === data?.tokenId) !==
-      undefined;
-    let found2 = false;
-    for (const order of ordersInCart) {
-      const foundInOrder = order.cartItems.find(
-        (item) => item.collectionAddress === data?.address && item.tokenId === data?.tokenId
-      );
-      if (foundInOrder) {
-        found2 = true;
-        break;
+    if (filter.traitTypes?.length) {
+      const traits = [];
+      for (let i = 0; i < filter.traitTypes.length; i++) {
+        const traitType = filter.traitTypes?.[i];
+        const traitValues = filter.traitValues?.[i]?.split('|') ?? [];
+        for (const traitValue of traitValues) {
+          traits.push(`${traitType}: ${traitValue}`);
+        }
       }
-    }
-    return found1 || found2;
-  };
-
-  // find & remove this item in cartItems & all orders' cartItems:
-  const findAndRemove = (data: ERC721CardData | undefined) => {
-    const foundItemIdx = cartItems.findIndex(
-      (item) => item.collectionAddress === data?.address && item.tokenId === data?.tokenId
-    );
-    removeCartItem(cartItems[foundItemIdx]);
-    ordersInCart.forEach((order) => {
-      order.cartItems = order.cartItems.filter(
-        (item) => !(item.collectionAddress === data?.address && item.tokenId === data?.tokenId)
-      );
-    });
-    updateOrders(ordersInCart.filter((order) => order.cartItems.length > 0));
-  };
-
-  // not sure if this is the best regex, but could not find anything better
-  const markdownRegex = /\[(.*?)\]\((.+?)\)/g;
-  const isMarkdown = markdownRegex.test(collection?.metadata?.description ?? '');
-
-  let description = <div>{collection?.metadata?.description ?? ''}</div>;
-
-  if (isMarkdown) {
-    description = (
-      <ReactMarkdown
-        components={{
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          a: ({ node, ...props }) => <a style={{ color: 'blue' }} {...props} />
-        }}
-        linkTarget="_blank"
-      >
-        {collection?.metadata?.description ?? ''}
-      </ReactMarkdown>
-    );
-  } else {
-    // convert \n to '<br />'
-    const escapedNewLineToLineBreakTag = (str: string) => {
-      return str.split('\n').map((item, index) => {
-        return index === 0 ? (
-          <Linkify
-            key={index + 1000}
-            componentDecorator={(decoratedHref, decoratedText, key) => (
-              <a href={decoratedHref} key={key} target="_blank">
-                {decoratedText}
-              </a>
-            )}
-          >
-            {item}
-          </Linkify>
-        ) : (
-          [
-            <br key={index} />,
-            <Linkify
-              key={index + 2000}
-              componentDecorator={(decoratedHref, decoratedText, key) => (
-                <a href={decoratedHref} key={key} target="_blank">
-                  {decoratedText}
-                </a>
-              )}
-            >
-              {item}
-            </Linkify>
-          ]
-        );
-      });
-    };
-    description = (
-      // className colors all a tags with blue
-      <div className="[&_a]:text-blue-700">{escapedNewLineToLineBreakTag(collection?.metadata?.description ?? '')}</div>
-    );
-  }
-
-  if (error) {
-    // failed to load collection (collection not indexed?)
-    return (
-      <NotFound404Page
-        collectionSlug={name?.toString()}
-        collectionAddress={collection?.address}
-        chainId={collection?.chainId}
-      />
-    );
-  }
-
-  if (!collection) {
-    return (
-      <PageBox showTitle={false} title={'Invalid collection'}>
-        <div className="flex flex-col mt-10">Unable to load this collection.</div>
-      </PageBox>
-    );
-  }
-
-  const galleryOnClick = async (
-    ev: React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>,
-    data?: ERC721CardData
-  ) => {
-    if (!checkSignedIn()) {
-      return;
-    }
-    if (isAlreadyAdded(data)) {
-      findAndRemove(data);
-      return;
-    }
-    const price = data?.orderSnippet?.listing?.orderItem?.startPriceEth ?? 0;
-    // setPrice(`${price}`);
-    // addCartItem...
-    if (price) {
-      // Buy a listing
-      // setIsBuyClicked(true); // to add to cart as a Buy order. (see: useEffect)
-      const signedOBOrder = await fetchSignedOBOrder(data?.orderSnippet?.listing?.orderItem?.id ?? '');
-      if (signedOBOrder) {
-        fulfillDrawerParams.addOrder(signedOBOrder);
-        fulfillDrawerParams.setShowDrawer(true);
-      }
+      setSelectedTraits(traits);
     } else {
-      // Add a Buy order to cart (Make offer)
-      addCartItem({
-        chainId: data?.chainId as ChainId,
-        collectionName: data?.collectionName ?? '',
-        collectionAddress: data?.tokenAddress ?? '',
-        collectionImage: data?.cardImage ?? data?.image ?? '',
-        collectionSlug: data?.collectionSlug ?? '',
-        tokenImage: data?.image ?? '',
-        tokenName: data?.name ?? '',
-        tokenId: data?.tokenId ?? '-1',
-        isSellOrder: false,
-        attributes: data?.attributes ?? []
-      });
+      setSelectedTraits([]);
     }
+
+    // refetch data
+    fetch(false);
+  }, [filter, collection.address]);
+
+  useEffect(() => {
+    if (collSelection.length > 0) {
+      setCartType(CartType.CollectionOffer);
+    } else {
+      setCartType(CartType.TokenOffer);
+    }
+  }, [collSelection]);
+
+  useEffect(() => {
+    const numToSelect = Math.min(data.length, parseInt(numSweep), MAX_NUM_SWEEP_ITEMS);
+    const tokens = [];
+    for (let i = 0; i < numToSelect; i++) {
+      tokens.push(data[i]);
+    }
+    toggleMultipleNFTSelection(tokens);
+  }, [numSweep]);
+
+  const onTabChange = (tab: string) => {
+    setSelectedTab(tab);
   };
 
-  const nfts = (
-    <GalleryBox
-      pageId="COLLECTION"
-      getEndpoint={`/collections/${collection.chainId}:${collection.address}/nfts`}
-      collection={collection}
-      showNftSearch={true}
-      collectionAttributes={collectionAttributes || undefined}
-      cardProps={{
-        cardActions: [
-          {
-            label: (data) => {
-              const price = data?.orderSnippet?.listing?.orderItem?.startPriceEth ?? '';
-              if (price) {
-                return (
-                  <div className="flex justify-center">
-                    <span className="mr-4 font-normal">Buy</span>
-                    <EthPrice label={`${price}`} />
-                  </div>
-                );
-              }
-              if (isAlreadyAdded(data)) {
-                return <div className="font-normal">✓ Added</div>;
-              }
-              return <div className="font-normal">Add to order</div>;
-            },
-            onClick: galleryOnClick
-          }
-        ]
-      }}
-    />
-  );
+  const onClickNFT = (token: ERC721TokenCartItem) => {
+    toggleNFTSelection(token);
+  };
 
-  const table = (
-    <table className="mt-8">
-      <thead>
-        <tr className="text-gray-400">
-          <th className="text-left font-medium font-heading">Items</th>
-          <th className="text-left font-medium font-heading">Owned by</th>
-          <th className="text-left font-medium font-heading">Floor price</th>
-          <th className="text-left font-medium font-heading">Volume traded</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr className="font-bold font-heading text-2xl">
-          <td className="pr-20">{nFormatter(firstAllTimeStats?.numNfts ?? currentStats?.numNfts) ?? '—'}</td>
-          <td className="pr-20">{nFormatter(firstAllTimeStats?.numOwners ?? currentStats?.numOwners) ?? '—'}</td>
-          <td className="pr-20">
-            {currentStats?.floorPrice ? (
-              <EthPrice label={`${nFormatter(currentStats?.floorPrice)}`} labelClassName="font-bold" />
-            ) : (
-              '—'
-            )}
-          </td>
-          <td className="pr-20">
-            {firstAllTimeStats?.volume ? (
-              <EthPrice
-                label={`${nFormatter(firstAllTimeStats?.volume ?? currentStats?.volume)}`}
-                labelClassName="font-bold"
-              />
-            ) : (
-              '—'
-            )}
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  );
+  const isCollSupported = collection?.isSupported ?? false;
 
-  const curateSection = (
-    <section className="mt-8 xl:mt-20 md:w-1/2 min-h-[280px] min-w-[28rem] max-h-[280px] max-w-[28rem]">
-      <div className={twMerge(standardCard, 'items-center space-y-8')}>
-        <Heading as="h2" className="font-body text-3xl font-medium">
-          Curate this collection
-        </Heading>
-        <FeesAprStats value={nFormatter(round(curatedCollection?.feesAPR || 0, 3)) ?? 0} className="mr-8" />
-        <FeesAccruedStats value={nFormatter(round(curatedCollection?.fees || 0, 3)) ?? 0} />
-        <div className="flex flex-row space-x-2 relative">
-          <VoteProgressBar
-            votes={curatedCollection?.curator?.votes || 0}
-            totalVotes={curatedCollection?.numCuratorVotes || 0}
-            className="max-w-[25rem] bg-white"
-          />
+  if (!isCollSupported) {
+    return (
+      <CenteredContent>
+        <div className="flex flex-col items-center space-y-2">
+          {collection?.metadata?.profileImage ? (
+            <EZImage src={collection.metadata.profileImage} className="h-40 w-40 rounded-lg overflow-clip" />
+          ) : null}
+          <div className="text-3xl font-heading font-medium">
+            {collection?.metadata?.name ?? 'This collection'} is not supported on Flow
+          </div>
+          <div className="flex flex-col text-md">
+            <span>Common reasons a collection is not supported:</span>
+            <ul className="list-disc list-inside mt-2 mb-2">
+              <li>Low volumes</li>
+              <li>Creator(s) rugged the project</li>
+              <li>Dead community</li>
+            </ul>
+            <div className="flex items-center space-x-2">
+              <div>If this is a mistake, let us know on</div>
+              <ExternalLink href="https://discord.gg/flowdotso">
+                <FaDiscord className={twMerge('text-brand-discord cursor-pointer mt-1', iconButtonStyle)} />
+              </ExternalLink>
+            </div>
+          </div>
         </div>
-        <Button onClick={() => checkSignedIn() && setIsStakeModalOpen(true)}>Vote</Button>
-      </div>
-      {curatedCollection && (
-        <VoteModal
-          collection={{
-            ...collection,
-            ...collection.metadata,
-            ...curatedCollection
-          }}
-          isOpen={isStakeModalOpen}
-          onClose={() => setIsStakeModalOpen(false)}
-        />
-      )}
-    </section>
+      </CenteredContent>
+    );
+  }
+
+  const collectionCreator = collection.owner;
+
+  const firstAllTimeStats = props.collectionAllTimeStats;
+
+  const twitterFollowers = nFormatter(firstAllTimeStats?.twitterFollowers);
+  const discordFollowers = nFormatter(
+    isNaN(firstAllTimeStats?.discordFollowers ?? 0)
+      ? firstAllTimeStats?.prevDiscordFollowers
+      : firstAllTimeStats?.discordFollowers
   );
+
+  const totalVol = nFormatter(firstAllTimeStats?.volume ? firstAllTimeStats.volume : 0);
+  const floorPrice = nFormatter(firstAllTimeStats?.floorPrice ? firstAllTimeStats.floorPrice : 0);
+  const numOwners = nFormatter(firstAllTimeStats?.numOwners ? firstAllTimeStats.numOwners : 0);
+  const numNfts = nFormatter(firstAllTimeStats?.numNfts ? firstAllTimeStats.numNfts : 0);
+
+  const headerProps: CollectionPageHeaderProps = {
+    expanded: true,
+    avatarUrl: collection.metadata.profileImage || collection.metadata.bannerImage,
+    title: collection.metadata.name,
+    description: collection.metadata.description,
+    hasBlueCheck: collection.hasBlueCheck,
+    slug: collection.slug,
+    collection: collection,
+    totalVol,
+    floorPrice,
+    numOwners,
+    numNfts,
+    twitterFollowers,
+    discordFollowers,
+    tabs,
+    onTabChange
+  };
 
   const head = (
     <Head>
       <meta property="og:title" content={collection.metadata?.name} />
       <meta property="og:type" content="website" />
-      <meta property="og:url" content={`https://infinity.xyz/collection/${collection.metadata?.name}`} />
-      <meta property="og:site_name" content="infinity.xyz" />
+      <meta property="og:url" content={`https://flow.so/collection/${collection?.slug}`} />
+      <meta property="og:site_name" content="flow.so" />
       <meta property="og:image" content={collection.metadata?.bannerImage || collection.metadata?.profileImage} />
       <meta property="og:image:alt" content={collection.metadata?.description} />
       <meta property="og:description" content={collection.metadata?.description} />
@@ -362,7 +190,7 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
       <meta name="theme-color" content="#000000" />
 
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:site" content="@infinitydotxyz" />
+      <meta name="twitter:site" content="@flowdotso" />
       <meta name="twitter:title" content={collection.metadata?.name} />
       <meta name="twitter:description" content={collection.metadata?.description} />
       <meta name="twitter:image" content={collection.metadata?.bannerImage || collection.metadata?.profileImage} />
@@ -371,146 +199,270 @@ const CollectionPage = ({ collection, error }: { collection?: BaseCollection; er
     </Head>
   );
 
-  const createdBySection = (
-    <div className="text-secondary mt-6 mb-6 font-heading">
-      {collection ? (
-        <>
-          {createdBy && (
-            <>
-              <span>Created by </span>
-              <button
-                onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection.owner)}
-                className="mr-12"
-              >
-                <span className="underline">{ellipsisAddress(createdBy)}</span>
-              </button>
-            </>
-          )}
-          <span className="font-heading">Collection address </span>
-          <button
-            onClick={() => window.open(getChainScannerBase('1') + '/address/' + collection.address)}
-            className="mr-8"
-          >
-            <span className="underline">{ellipsisAddress(collection.address ?? '')}</span>
-          </button>
-          {collection.metadata?.links?.external && (
-            <>
-              <Chip
-                content={<HiOutlineExternalLink className="text-md" />}
-                onClick={() => window.open(collection.metadata?.links?.external)}
-                iconOnly={true}
+  return (
+    <div className="h-full w-full overflow-y-auto overflow-x-hidden">
+      {head}
+      <div className="h-full w-full flex flex-col">
+        <CollectionPageHeader {...headerProps} />
+
+        <div ref={setRef} className="overflow-y-auto scrollbar-hide">
+          {selectedTab === 'Items' ? (
+            <div>
+              <div className="flex mt-2 px-4">
+                <div
+                  className={twMerge(
+                    'flex mr-1',
+                    cartType === CartType.CollectionOffer
+                      ? 'opacity-30 duration-300 pointer-events-none'
+                      : 'duration-300'
+                  )}
+                >
+                  <CollectionNftSearchInput slug={collection.slug} expanded collectionFloorPrice={floorPrice} />
+                </div>
+
+                <Spacer />
+
+                <div className="flex space-x-2 text-sm">
+                  <AButton
+                    primary
+                    className="px-5 py-1 rounded-lg text-sm"
+                    onClick={() => {
+                      setCartType(CartType.CollectionOffer);
+                      if (isCollSelectable(collection as ERC721CollectionCartItem)) {
+                        setShowCart(!showCart);
+                        return toggleCollSelection(collection as ERC721CollectionCartItem);
+                      }
+                    }}
+                  >
+                    {isCollSelected(collection as ERC721CollectionCartItem) ? (
+                      <div className="flex items-center space-x-1">
+                        <AiOutlineCheckCircle className={'h-4 w-4'} />
+                        <div>Collection Offer</div>
+                      </div>
+                    ) : (
+                      'Collection Offer'
+                    )}
+                  </AButton>
+
+                  <div
+                    className={twMerge(
+                      'flex flex-row rounded-lg border cursor-pointer',
+                      borderColor,
+                      cartType === CartType.CollectionOffer
+                        ? 'opacity-30 duration-300 pointer-events-none'
+                        : 'duration-300'
+                    )}
+                  >
+                    <div className={twMerge('flex items-center border-r-[1px] px-6 cursor-default', borderColor)}>
+                      <GiBroom className={twMerge(iconButtonStyle, brandTextColor)} />
+                    </div>
+                    <div
+                      className={twMerge(
+                        'px-4 h-full flex items-center border-r-[1px]',
+                        borderColor,
+                        hoverColor,
+                        numSweep === '5' && selectedColor
+                      )}
+                      onClick={() => {
+                        numSweep === '5' ? setNumSweep('') : setNumSweep('5');
+                      }}
+                    >
+                      5
+                    </div>
+                    <div
+                      className={twMerge(
+                        'px-4 h-full flex items-center border-r-[1px]',
+                        borderColor,
+                        hoverColor,
+                        numSweep === '10' && selectedColor
+                      )}
+                      onClick={() => {
+                        numSweep === '10' ? setNumSweep('') : setNumSweep('10');
+                      }}
+                    >
+                      10
+                    </div>
+                    <div
+                      className={twMerge(
+                        'px-4 h-full flex items-center border-r-[1px]',
+                        borderColor,
+                        hoverColor,
+                        numSweep === '20' && selectedColor
+                      )}
+                      onClick={() => {
+                        numSweep === '20' ? setNumSweep('') : setNumSweep('20');
+                      }}
+                    >
+                      20
+                    </div>
+                    <div
+                      className={twMerge(
+                        'px-4 h-full flex items-center border-r-[1px]',
+                        borderColor,
+                        hoverColor,
+                        numSweep === '50' && selectedColor
+                      )}
+                      onClick={() => {
+                        numSweep === '50' ? setNumSweep('') : setNumSweep('50');
+                      }}
+                    >
+                      50
+                    </div>
+                    <div className="px-4 h-full flex items-center">
+                      <TextInputBox
+                        autoFocus={true}
+                        inputClassName="text-sm"
+                        className="border-0 w-14 p-0 text-sm"
+                        type="number"
+                        placeholder="Custom"
+                        value={customSweep}
+                        onChange={(value) => {
+                          setNumSweep(value);
+                          setCustomSweep(value);
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div
+                    className={twMerge(
+                      'flex space-x-1',
+                      cartType === CartType.CollectionOffer
+                        ? 'opacity-30 duration-300 pointer-events-none'
+                        : 'duration-300'
+                    )}
+                  >
+                    <ASortButton filter={filter} setFilter={setFilter} />
+                    <AStatusFilterButton filter={filter} setFilter={setFilter} />
+                    <APriceFilter filter={filter} setFilter={setFilter} />
+                    <ATraitFilter
+                      collectionAddress={collection.address}
+                      filter={filter}
+                      setFilter={setFilter}
+                      collectionAttributes={props.collectionAttributes}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {selectedTraits.length > 0 && (
+                <div className="flex px-4 mt-2 space-x-2">
+                  {selectedTraits.map((trait) => {
+                    return (
+                      <div
+                        key={trait}
+                        className={twMerge('flex items-center rounded-lg border p-2 text-sm font-medium', borderColor)}
+                      >
+                        {trait}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              <div className="flex">
+                <div className={(twMerge('flex'), showCart ? 'w-full' : 'w-2/3')}>
+                  <TokenGrid
+                    collectionCreator={collectionCreator}
+                    collectionFloorPrice={floorPrice}
+                    listMode={listMode}
+                    className={twMerge(
+                      'px-4 py-4 min-h-[600px]',
+                      cartType === CartType.CollectionOffer
+                        ? 'opacity-30 duration-300 pointer-events-none'
+                        : 'duration-300'
+                    )} // this min-height is to prevent the grid from collapsing when there are no items so filter menus can still render
+                    onClick={onClickNFT}
+                    isSelectable={isNFTSelectable}
+                    isSelected={isNFTSelected}
+                    data={data}
+                    hasNextPage={hasNextPage}
+                    onFetchMore={() => fetch(true)}
+                    isError={!!error}
+                    isLoading={!!isLoading}
+                  />
+                </div>
+
+                {!showCart && (
+                  <div className="flex w-1/3">
+                    <CollectionItemsPageSidebar
+                      collectionAddress={collection.address}
+                      collectionImage={collection.metadata.profileImage}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : null}
+
+          {selectedTab === 'Analytics' ? (
+            <div>
+              <CollectionCharts
+                collectionAddress={collection.address}
+                collectionImage={collection.metadata.profileImage}
               />
-            </>
-          )}
-        </>
-      ) : (
-        <>
-          <span>&nbsp;</span>
-        </>
-      )}
+
+              <div className="flex px-4 mt-2 space-x-4">
+                <div className="flex space-x-4 w-1/2">
+                  <div className="w-1/2">
+                    {collection ? <TopHolderList collection={collection}></TopHolderList> : null}
+                  </div>
+                  <div className="w-1/2">
+                    {collection ? <TwitterSupporterList collection={collection}></TwitterSupporterList> : null}
+                  </div>
+                </div>
+
+                <div className="w-1/2">
+                  {collection ? (
+                    <CollectionSocialFeed
+                      types={[EventType.DiscordAnnouncement, EventType.TwitterTweet]}
+                      collectionAddress={collection?.address ?? ''}
+                      collectionName={collection?.metadata.name ?? ''}
+                      collectionSlug={collection?.slug ?? ''}
+                      collectionProfileImage={collection?.metadata.profileImage ?? ''}
+                    />
+                  ) : null}
+                </div>
+              </div>
+            </div>
+          ) : null}
+        </div>
+      </div>
     </div>
   );
-
-  return (
-    <PageBox showTitle={false} title={collection.metadata?.name ?? ''}>
-      {head}
-      <div className="flex flex-col mt-10">
-        <span>
-          <AvatarImage url={collection.metadata?.profileImage} className="mb-2" />
-          <div className="flex gap-3 items-center">
-            <div className="text-6xl">
-              {collection.metadata?.name ? (
-                collection.metadata?.name
-              ) : (
-                <div className="relative">
-                  &nbsp;
-                  <Spinner className="absolute top-10" />
-                </div>
-              )}
-            </div>
-            {collection.hasBlueCheck ? <BlueCheck className={twMerge(iconButtonStyle, 'mt-3')} /> : null}
-          </div>
-        </span>
-        <main>
-          <div className="flex flex-col space-x-0 xl:flex-row xl:space-x-10">
-            <section className="w-fit xl:w-1/2">
-              {createdBySection}
-              <StatsChips collection={collection} currentStatsData={currentStats || firstAllTimeStats} />
-
-              <div className="text-secondary mt-12 md:w-2/3">{description}</div>
-
-              {collection.metadata?.benefits && (
-                <div className="mt-7 md:w-2/3">
-                  <div className="font-medium">Ownership includes</div>
-                  <div className="flex space-x-8 mt-3 font-normal">
-                    {collection.metadata?.benefits?.slice(0, 3).map((benefit) => {
-                      const benefitStr = benefit.slice(0, 300);
-                      return (
-                        <div className="flex items-center text-secondary">
-                          <BsCheck className="text-2xl mr-2 text-black" />
-                          {benefitStr}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-              {collection.metadata?.partnerships && (
-                <div className="mt-7 md:w-2/3">
-                  <div className="font-medium">Partnerships</div>
-                  <div className="flex space-x-12 mt-3 ml-2 font-normal">
-                    {collection.metadata?.partnerships?.slice(0, 3).map((partnership) => {
-                      const partnershipStr = partnership?.name.slice(0, 100);
-                      return (
-                        <div
-                          className="flex items-center text-secondary hover:text-black cursor-pointer"
-                          onClick={() => {
-                            window.open(partnership.link);
-                          }}
-                        >
-                          {partnershipStr}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-              {table}
-            </section>
-            {curateSection}
-          </div>
-          <section>
-            <ToggleTab
-              className="mt-20 font-heading pointer-events-auto"
-              options={options}
-              selected={selected}
-              onChange={onChange}
-            />
-            <div className="mt-6">
-              {selected === 'NFTs' && collection && nfts}
-              {selected === 'Orders' && (
-                <OrderbookContainer collectionId={collection.address} className="mt-[-70px] pointer-events-none" />
-              )}
-              {/* {currentTab === 1 && <ActivityTab dailyStats={dailyStats} weeklyStats={weeklyStats} />} */}
-              {selected === 'Sales' && <CollectionSalesTab collectionAddress={collection.address} />}
-              {selected === 'Community' && <CommunityFeed collection={collection} className="mt-16" />}
-              {selected === 'Reservoir' && <ReservoirCards collection={collection} className="mt-16" />}
-            </div>
-          </section>
-        </main>
-      </div>
-    </PageBox>
-  );
-};
-
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const slug = context.query.name;
-  const res = await apiGet(`/collections/${slug}`);
-
-  return {
-    // undefined fails, must pass null
-    props: { collection: res.result ?? null, error: res.error ?? null }
-  };
 }
 
-export default CollectionPage;
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  context.res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=300');
+
+  const id = context.query.name as string;
+  const chainId = ChainId.Mainnet; // future-todo do not hardcode
+  const collBaseDataPromise = apiGet(`/collections/${id}`); // future-todo: needs to send chainId in query for multi chain to work
+  const collAllTimeStatsPromise = apiGet(`/collections/${id}/stats`, {
+    query: {
+      chainId,
+      period: 'all'
+    }
+  });
+
+  const attributesPromise = apiGet(`/collections/${id}/attributes`, {
+    query: {
+      chainId: '1'
+    }
+  });
+
+  const [collBaseData, { result: allTimeStatsResult }, { result: collectionAttributes }] = await Promise.all([
+    collBaseDataPromise,
+    collAllTimeStatsPromise,
+    attributesPromise
+  ]);
+
+  return {
+    props: {
+      collection: collBaseData.result ?? null,
+      collectionAllTimeStats: allTimeStatsResult ?? null,
+      collectionAttributes: collectionAttributes ?? null,
+      error: collBaseData.error ?? null
+    }
+  };
+}

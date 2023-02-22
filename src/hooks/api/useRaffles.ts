@@ -1,8 +1,7 @@
 import { ChainId, RaffleState } from '@infinityxyz/lib-frontend/types/core';
 import { UserRafflesArrayDto } from '@infinityxyz/lib-frontend/types/dto';
 import { useFetch } from 'src/utils';
-
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { useNetwork } from 'wagmi';
 
 const stateOrder = {
   [RaffleState.Unstarted]: 4,
@@ -13,7 +12,8 @@ const stateOrder = {
 };
 
 export const useRaffles = () => {
-  const { chainId } = useOnboardContext();
+  const { chain } = useNetwork();
+  const chainId = String(chain?.id ?? 1) as ChainId;
 
   const query = {
     chainId: (chainId || ChainId.Mainnet) as ChainId,

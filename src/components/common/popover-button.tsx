@@ -1,30 +1,45 @@
-import React, { Fragment, ReactNode } from 'react';
 import { Popover, Transition } from '@headlessui/react';
-import { Chip } from './chip';
-import { BiCaretDown } from 'react-icons/bi';
+import { Fragment, ReactNode } from 'react';
+import { RxCaretDown } from 'react-icons/rx';
+import {
+  borderColor,
+  dropShadow,
+  hoverColorBrandText,
+  secondaryBgColor,
+  secondaryTextColor,
+  smallIconButtonStyle
+} from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
+import { AOutlineButton } from '../astra/astra-button';
 
 interface Props {
   title: string;
   children: ReactNode;
+  alignMenuRight?: boolean;
 }
 
-export const PopoverButton = ({ title, children }: Props) => {
+export const PopoverButton = ({ title, children, alignMenuRight }: Props) => {
   return (
     // this is bullshit. pointer-events-auto, why are we turning off pointer events? fix at somepoint
-    <Popover className="relative pointer-events-auto">
-      {() => (
+    <Popover className="relative pointer-events-auto text-sm">
+      {({ open }) => (
         <>
           {/* without as="div", you get a button within button error */}
           <Popover.Button as="div">
-            <Chip
-              disableClick={true}
-              content={
-                <div className="flex items-center gap-1">
-                  <div className="whitespace-nowrap">{title}</div>
-                  <BiCaretDown />
+            <AOutlineButton>
+              <div className="flex items-center gap-1 py-1">
+                <div className={twMerge('whitespace-nowrap font-medium', secondaryTextColor, hoverColorBrandText)}>
+                  {title}
                 </div>
-              }
-            />
+                <RxCaretDown
+                  className={twMerge(smallIconButtonStyle)}
+                  style={{
+                    transition: 'all 0.1s ease',
+                    transform: `rotate(${!open ? 0 : '0.5turn'})`
+                  }}
+                />
+              </div>
+            </AOutlineButton>
           </Popover.Button>
 
           <Transition
@@ -36,9 +51,24 @@ export const PopoverButton = ({ title, children }: Props) => {
             leaveFrom="opacity-100 translate-y-0"
             leaveTo="opacity-0 translate-y-1"
           >
-            <Popover.Panel className="absolute z-10 max-w-sm px-4 mt-3 right-0 transform sm:px-0">
-              <div className="overflow-hidden rounded-3xl shadow-[0_20px_10px_-10px_rgba(0,0,0,0.07),0_0px_10px_-2px_rgba(0,0,0,0.08)] p-6 bg-theme-light-50">
-                <div className="px-4 bg-theme-light-50 w-80 space-y-4">{children}</div>
+            <Popover.Panel className="z-10">
+              <div
+                className={twMerge(
+                  secondaryBgColor,
+                  borderColor,
+                  dropShadow,
+                  alignMenuRight ? 'right-0' : '',
+                  'absolute mt-4 px-4 py-4 w-56 rounded-lg border-0 outline-none'
+                )}
+              >
+                <div
+                  className={twMerge(
+                    'h-4 w-4 rotate-45 absolute top-[-6px]',
+                    secondaryBgColor,
+                    alignMenuRight ? 'right-8' : 'left-8'
+                  )}
+                ></div>
+                {children}
               </div>
             </Popover.Panel>
           </Transition>

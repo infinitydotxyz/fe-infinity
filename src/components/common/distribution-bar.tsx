@@ -1,3 +1,4 @@
+import { secondaryBgColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { Spacer } from './spacer';
 
@@ -7,7 +8,7 @@ interface Props {
 
 export const DistributionBar = ({ distribution }: Props) => {
   return (
-    <div className="bg-gray-100 rounded-3xl px-5 py-3 w-full">
+    <div className={twMerge(secondaryBgColor, '  rounded-3xl px-5 py-3 w-full')}>
       {distribution.map((item, index) => {
         return (
           <div key={index} className="relative w-full">
@@ -20,11 +21,7 @@ export const DistributionBar = ({ distribution }: Props) => {
                 <div className="font-bold">{`${item.percent}%`}</div>
                 <Spacer />
                 <div className="text-right text-sm">{item.label}</div>
-                {item?.value && (
-                  <>
-                    <div className="text-right ml-4 text-sm text-light">{item.value}</div>
-                  </>
-                )}
+                {item?.value ? <div className="text-right ml-4 text-sm text-light">{item.value}</div> : null}
               </div>
             </div>
           </div>

@@ -1,14 +1,14 @@
 import { utils } from 'ethers';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
+import { useAccount } from 'wagmi';
 import { useStakerContract } from './useStakerContract';
 
 export function useStake() {
-  const { user } = useOnboardContext();
+  const { address: user } = useAccount();
 
   const { contract } = useStakerContract();
 
   const stake = async (amount: number, duration: number, address?: string) => {
-    address = address || user?.address;
+    address = address || user;
 
     if (address) {
       const tx = await contract.stake(utils.parseEther(amount.toString()).toString(), duration);

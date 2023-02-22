@@ -8,8 +8,9 @@ import {
 } from 'src/hooks/contract/staker/useRemainingLockTime';
 import { useUnstake } from 'src/hooks/contract/staker/useUnstake';
 import { nFormatter } from 'src/utils';
-import { useOnboardContext } from 'src/utils/OnboardContext/OnboardContext';
-import { Spinner, toastError, toastSuccess } from '../common';
+import { secondaryTextColor } from 'src/utils/ui-constants';
+import { useAccount } from 'wagmi';
+import { BouncingLogo, toastError, toastSuccess } from '../common';
 import { Button } from '../common/button';
 import { TextInputBox } from '../common/input-box';
 import { Modal } from '../common/modal';
@@ -20,8 +21,8 @@ interface Props {
 
 export const UnstakeTokensModal = ({ onClose }: Props) => {
   // const [hoverRef, isHovered] = useHover<HTMLDivElement>();
-  const { user } = useOnboardContext();
-  const { result: curationQuota } = useCurationQuota(user?.address ?? null);
+  const { address: user } = useAccount();
+  const { result: curationQuota } = useCurationQuota(user ?? null);
   const [value, setValue] = useState(0);
   const [isUnstaking, setIsUnstaking] = useState(false);
   // const [isRageQuitting, setIsRageQuitting] = useState(false);
@@ -72,11 +73,11 @@ export const UnstakeTokensModal = ({ onClose }: Props) => {
     >
       <div>
         <div className="mt-4">
-          {stakeAmounts.length > 0 && (
+          {stakeAmounts.length > 0 ? (
             <div className="text-md flex flex-col justify-between">
               <table>
                 <thead>
-                  <tr className="text-gray-400">
+                  <tr className={secondaryTextColor}>
                     <th className="text-left font-medium font-heading">Stake duration</th>
                     <th className="text-left font-medium font-heading">Amount</th>
                     <th className="text-left font-medium font-heading">Lock remaining</th>
@@ -97,7 +98,7 @@ export const UnstakeTokensModal = ({ onClose }: Props) => {
                 </tbody>
               </table>
             </div>
-          )}
+          ) : null}
 
           <div className="text-m mt-4 flex justify-between">
             <span>Total staked</span>
@@ -120,7 +121,7 @@ export const UnstakeTokensModal = ({ onClose }: Props) => {
               renderRightIcon={() => (
                 <Button
                   variant="gray"
-                  className="rounded-full py-2 px-3"
+                  className="rounded-lg py-2 px-3"
                   size="small"
                   onClick={() => setValue(unlockedAmount ?? 0)}
                 >
@@ -137,7 +138,7 @@ export const UnstakeTokensModal = ({ onClose }: Props) => {
 
         {isUnstaking && (
           <div className="mt-2 flex flex-row gap-2 items-center">
-            <Spinner />
+            <BouncingLogo />
             <span>Waiting for transaction to complete...</span>
           </div>
         )}

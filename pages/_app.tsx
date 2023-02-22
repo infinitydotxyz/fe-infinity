@@ -1,26 +1,59 @@
-import LogRocket from 'logrocket';
+import { ConnectKitProvider, getDefaultClient } from 'connectkit';
 import * as gtag from 'lib/ga/gtag';
-import { useRouter } from 'next/router';
+import LogRocket from 'logrocket';
+import { ThemeProvider } from 'next-themes';
 import type { AppProps } from 'next/app';
-import 'src/settings/theme/globals.scss';
-import { isLocalhost } from 'src/utils/commonUtils';
-import { OnboardContextProvider } from 'src/utils/OnboardContext/OnboardContext';
-import { OrderContextProvider } from 'src/utils/context/OrderContext';
-import { FilterContextProvider } from 'src/utils/context/FilterContext';
-import React, { FunctionComponent, memo, StrictMode, useEffect } from 'react';
-import { DrawerContextProvider } from 'src/utils/context/DrawerContext';
-import { CurationBulkVoteContextProvider } from 'src/utils/context/CurationBulkVoteContext';
+import { Router, useRouter } from 'next/router';
+import { memo, StrictMode, useEffect } from 'react';
+import { Layout } from 'src/components/astra/layout';
+import 'src/settings/tailwind/globals.scss';
+import { isLocalhost } from 'src/utils/common-utils';
 import { AppContextProvider } from 'src/utils/context/AppContext';
+import { CartContextProvider } from 'src/utils/context/CartContext';
+import { configureChains, createClient, WagmiConfig } from 'wagmi';
+import { mainnet, goerli } from 'wagmi/chains';
+import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
+import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
+import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet';
+import { alchemyProvider } from 'wagmi/providers/alchemy';
 
-const Page: FunctionComponent<AppProps> = ({ Component, pageProps }) => <Component {...pageProps} />;
-const Memoized = memo(Page, (p, n) => p.Component === n.Component && p.pageProps === n.pageProps);
+import NProgress from 'nprogress'; //nprogress module
+import '../styles/nprogress.css'; //styles of nprogress
+NProgress.configure({ showSpinner: false });
+//Binding events.
+Router.events.on('routeChangeStart', () => NProgress.start());
+Router.events.on('routeChangeComplete', () => NProgress.done());
+Router.events.on('routeChangeError', () => NProgress.done());
+
 const isProduction = process.env.NODE_ENV === 'production';
 
 if (!isLocalhost()) {
   LogRocket.init('0pu9ak/nftco');
 }
 
-const App: FunctionComponent<AppProps> = (props) => {
+const alchemyApiKeyMainnet = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY_MAINNET ?? '';
+const alchemyApiKeyGoerli = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY_GOERLI ?? '';
+const supportedChains = [mainnet, goerli];
+
+const { chains, provider } = configureChains(
+  [mainnet, goerli],
+  [alchemyProvider({ apiKey: alchemyApiKeyMainnet }), alchemyProvider({ apiKey: alchemyApiKeyGoerli })]
+);
+
+const client = createClient(
+  getDefaultClient({
+    appName: 'Flow',
+    chains: supportedChains,
+    connectors: [
+      new MetaMaskConnector({ chains }),
+      new CoinbaseWalletConnector({ chains, options: { appName: 'Flow' } }),
+      new WalletConnectConnector({ chains, options: {} })
+    ],
+    provider
+  })
+);
+
+const App = (props: AppProps) => {
   // For every route change in production,
   // we inject google analytics tracker.
   const router = useRouter();
@@ -33,20 +66,40 @@ const App: FunctionComponent<AppProps> = (props) => {
 
   return (
     <StrictMode>
-      <AppContextProvider>
-        <OnboardContextProvider>
-          <FilterContextProvider>
-            <OrderContextProvider>
-              <DrawerContextProvider>
-                <CurationBulkVoteContextProvider>
-                  <Memoized {...props} />
-                </CurationBulkVoteContextProvider>
-              </DrawerContextProvider>
-            </OrderContextProvider>
-          </FilterContextProvider>
-        </OnboardContextProvider>
-      </AppContextProvider>
+      <WagmiConfig client={client}>
+        <ConnectKitProvider
+          customTheme={{
+            '--ck-font-family': '"DM Sans"'
+          }}
+        >
+          <CartContextProvider>
+            <AppContextProvider>
+              <AppBody {...props} />
+            </AppContextProvider>
+          </CartContextProvider>
+        </ConnectKitProvider>
+      </WagmiConfig>
     </StrictMode>
+  );
+};
+
+// ======================================================================
+
+const Page = ({ Component, pageProps }: AppProps) => {
+  return (
+    <Layout>
+      <Component {...pageProps} />
+    </Layout>
+  );
+};
+
+const Memoized = memo(Page, (p, n) => p.Component === n.Component && p.pageProps === n.pageProps);
+
+const AppBody = (props: AppProps) => {
+  return (
+    <ThemeProvider attribute="class">
+      <Memoized {...props} />
+    </ThemeProvider>
   );
 };
 

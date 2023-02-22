@@ -1,27 +1,26 @@
-import React from 'react';
-import { PageBox } from 'src/components/common';
-import { TOKEN } from 'src/utils/constants';
+import { APageBox } from 'src/components/astra/astra-page-box';
+import { FLOW_TOKEN } from 'src/utils/constants';
 
 const TermsPage = () => {
   return (
-    <PageBox title="Terms and Conditions">
+    <APageBox title="Terms and Conditions" className="overflow-x-clip overflow-y-auto">
       <div className="flex flex-col items-center justify-center space-y-2">
-        <div className="font-normal text-3xl">Infinity</div>
+        <div className="font-bold font-heading text-3xl">Flow</div>
         <div className="underline">Terms and Conditions of Use</div>
       </div>
 
-      <div className="space-y-2">
-        <div>Last Updated: Jun 10, 2022</div>
+      <div className="space-y-2 text-sm">
+        <div>Last Updated: Jan 20, 2023</div>
         <div className="space-y-4">
           <p dir="ltr" className="font-bold">
             <span>Introduction</span>
           </p>
           <p dir="ltr">
-            <span>Infinity is owned and operated by Infinity DAO Ltd. </span>
+            <span>Flow is owned and operated by Infinity DAO Ltd. </span>
             <span>
               (&ldquo;Infinity,&rdquo; &ldquo;we,&rdquo; &ldquo;us&rdquo;, or &ldquo;our&rdquo;), a company owned by the
               Carteblanche foundation. These Terms of Service (&ldquo;Terms&rdquo;) govern your access to and use of the
-              Infinity website(s), and any other software, tools, features, or functionalities provided on or in
+              Infinity, Flow website(s), and any other software, tools, features, or functionalities provided on or in
               connection with our services; including without limitation using our services to view, explore, and create
               NFTs and use our tools, at your own discretion, to connect directly with others to purchase, sell, or
               transfer NFTs on public blockchains (collectively, the &ldquo;Service&rdquo;). &ldquo;NFT&rdquo; in these
@@ -56,49 +55,44 @@ const TermsPage = () => {
           </p>
           <p dir="ltr">
             <span>
-              Infinity is not a wallet provider, exchange, broker, financial institution, or creditor. Infinity provides
-              a peer-to-peer blockchain service that helps users discover and directly interact with each other and NFTs
+              Flow is not a wallet provider, exchange, broker, financial institution, or creditor. Flow provides a
+              peer-to-peer blockchain service that helps users discover and directly interact with each other and NFTs
               available on public blockchains. We do not have custody or control over the NFTs or blockchains you are
               interacting with and we do not execute or effectuate purchases, transfers, or sales of NFTs. To use our
               Service, you must use a third-party wallet which allows you to engage in transactions on blockchains.
             </span>
           </p>
           <p dir="ltr">
-            <span>Infinity comprises a native interoperable utility token (</span>
-            <span className="font-bold">${TOKEN.symbol}</span>
+            <span>Flow comprises a native interoperable utility token (</span>
+            <span className="font-bold">${FLOW_TOKEN.symbol}</span>
             <span>
-              ) which functions as the native platform currency and access token within the ecosystem. ${TOKEN.symbol}{' '}
-              has a variety of uses within the marketplace, including but not limited to providing discounts for fees
-              and curating NFTs.&nbsp;
+              ) which functions as the native platform currency and access token within the ecosystem. $
+              {FLOW_TOKEN.symbol} has a variety of uses within the marketplace, including but not limited to providing
+              discounts for fees and curating NFTs.&nbsp;
             </span>
           </p>
           <p dir="ltr">
             <span>
-              Holders of ${TOKEN.symbol} will be able to participate in governance to vote on features of the Infinity
-              ecosystem, for example on new developments to enhance the ecosystem.
-            </span>
-          </p>
-          <p dir="ltr">
-            <span>
-              ${TOKEN.symbol} has the following features: (a) it do not have any tangible or physical manifestation, and
-              does not have any intrinsic value (nor does any person make any representation or give any commitment as
-              to its value); (b) it cannot be exchanged for cash (or its equivalent value in any other digital asset) or
-              any payment obligation by Infinity or any of its affiliates; (c) it does not represent or confer on the
-              token holder any right of any form with respect to Infinity or any of its affiliates), or its revenues or
-              assets, including without limitation any right to receive future dividends, revenue, shares, ownership
-              right or stake, share or security, any voting, distribution, redemption, liquidation, proprietary
-              (including all forms of intellectual property or licence rights), right to receive accounts, financial
-              statements or other financial data, the right to requisition or participate in shareholder meetings, the
-              right to nominate a director, or other financial or legal rights or equivalent rights, or intellectual
-              property rights or any other form of participation in or relating to Infinity or any affiliate; (d) it is
-              not intended to represent any rights under a contract for differences or under any other contract the
-              purpose or pretended purpose of which is to secure a profit or avoid a loss; (e) it is not intended to be
-              a representation of money (including electronic money), security, commodity, bond, debt instrument, unit
-              in a collective investment scheme or any other kind of financial instrument or investment; (f) it is not a
-              loan to Infinity or any of its affiliates, is not intended to represent a debt owed by Infinity or any of
-              its affiliates, and there is no expectation of profit; (g) it does not provide the token holder with any
-              ownership or other interest in Infinity or any of its affiliates; and (h) it does not provide any economic
-              or legal right over or beneficial interest in the assets of Infinity or any of its affiliates.
+              ${FLOW_TOKEN.symbol} has the following features: (a) it does not have any tangible or physical
+              manifestation, and does not have any intrinsic value (nor does any person make any representation or give
+              any commitment as to its value); (b) it cannot be exchanged for cash (or its equivalent value in any other
+              digital asset) or any payment obligation by Infinity or any of its affiliates; (c) it does not represent
+              or confer on the token holder any right of any form with respect to Infinity or any of its affiliates), or
+              its revenues or assets, including without limitation any right to receive future dividends, revenue,
+              shares, ownership right or stake, share or security, any voting, distribution, redemption, liquidation,
+              proprietary (including all forms of intellectual property or licence rights), right to receive accounts,
+              financial statements or other financial data, the right to requisition or participate in shareholder
+              meetings, the right to nominate a director, or other financial or legal rights or equivalent rights, or
+              intellectual property rights or any other form of participation in or relating to Infinity or any
+              affiliate; (d) it is not intended to represent any rights under a contract for differences or under any
+              other contract the purpose or pretended purpose of which is to secure a profit or avoid a loss; (e) it is
+              not intended to be a representation of money (including electronic money), security, commodity, bond, debt
+              instrument, unit in a collective investment scheme or any other kind of financial instrument or
+              investment; (f) it is not a loan to Infinity or any of its affiliates, is not intended to represent a debt
+              owed by Infinity or any of its affiliates, and there is no expectation of profit; (g) it does not provide
+              the token holder with any ownership or other interest in Infinity or any of its affiliates; and (h) it
+              does not provide any economic or legal right over or beneficial interest in the assets of Infinity or any
+              of its affiliates.
             </span>
           </p>
           <p dir="ltr">
@@ -169,10 +163,8 @@ const TermsPage = () => {
               being compromised. You agree to immediately notify us if you discover or otherwise suspect any security
               issues related to the Service or your Account{' '}
             </span>
-            <a href="https://twitter.com/infinitydotxyz">
-              <a href="https://twitter.com/infinitydotxyz" className="underline">
-                here
-              </a>
+            <a href="https://twitter.com/flowdotso" className="underline">
+              here
             </a>
             <span>.&nbsp;</span>
           </p>
@@ -257,20 +249,20 @@ const TermsPage = () => {
           </p>
           <p dir="ltr">
             <span>
-              As a peer-to-peer blockchain service, Infinity helps you explore NFTs created by third parties and
-              interact with different blockchains. Infinity does not make any representations or warranties about this
+              As a peer-to-peer blockchain service, Flow helps you explore NFTs created by third parties and interact
+              with different blockchains. Infinity does not make any representations or warranties about this
               third-party content visible through our Service, including any content associated with NFTs displayed on
               the Service, and you bear responsibility for verifying the legitimacy, authenticity, and legality of NFTs
-              that you purchase from third-party sellers. We also cannot guarantee that any NFTs visible on Infinity
-              will always remain visible and/or available to be bought, sold, or transferred.
+              that you purchase from third-party sellers. We also cannot guarantee that any NFTs visible on Flow will
+              always remain visible and/or available to be bought, sold, or transferred.
             </span>
           </p>
           <p dir="ltr">
             <span>
               NFTs may be subject to terms directly between buyers and sellers with respect to the use of the NFT
               content and benefits associated with a given NFT (&ldquo;Purchase Terms&rdquo;). For example, when you
-              click to get more details about any of the NFTs visible on Infinity, you may notice a third party link to
-              the creator&rsquo;s website. Such website may include Purchase Terms governing the use of the NFT that you
+              click to get more details about any of the NFTs visible on Flow, you may notice a third party link to the
+              creator&rsquo;s website. Such website may include Purchase Terms governing the use of the NFT that you
               will be required to comply with. Infinity is not a party to any such Purchase Terms, which are solely
               between the buyer and the seller. The buyer and seller are entirely responsible for communicating,
               promulgating, agreeing to, and enforcing Purchase Terms. You are solely responsible for reviewing such
@@ -362,7 +354,7 @@ const TermsPage = () => {
             <span>
               "), (xii) you will not use VPN software or any other privacy or anonymization tools or techniques to
               circumvent or attempt to circumvent any restrictions that apply to use or access of the Service or the
-              services thereon, and (xiii) you will not use Infinity to finance, engage in, or otherwise support any
+              services thereon, and (xiii) you will not use Flow to finance, engage in, or otherwise support any
               unlawful activities or in a manner which aids or facilitates another party in the same. To the extent
               required by applicable laws and regulations, you shall fully comply with all Compliance Regulations.
             </span>
@@ -431,8 +423,8 @@ const TermsPage = () => {
           </p>
           <p dir="ltr">
             <span>
-              In addition to the Gas Fee, each time you utilize Infinity to conduct a transaction with another user via
-              the Service, you authorize us to collect a trading fee calculated based on the total value of that
+              In addition to the Gas Fee, each time you utilize Flow to conduct a transaction with another user via the
+              Service, you authorize us to collect a trading fee calculated based on the total value of that
               transaction, and as notified to you from time to time via the most updated fee schedule in the Service
               (the "
             </span>
@@ -453,9 +445,9 @@ const TermsPage = () => {
             <span className="font-bold">Taxes</span>
             <span>
               ") associated with your use of the Service (including, without limitation, any Taxes that may become
-              payable as the result of your ownership or transfer or interaction relating to Infinity). Except for
-              income taxes levied on Infinity, you: (i) will pay or reimburse us for all national, federal, state, local
-              or other taxes and assessments of any jurisdiction, including value added taxes and taxes as required by
+              payable as the result of your ownership or transfer or interaction relating to Flow). Except for income
+              taxes levied on Infinity, you: (i) will pay or reimburse us for all national, federal, state, local or
+              other taxes and assessments of any jurisdiction, including value added taxes and taxes as required by
               international tax treaties, customs or other import or export taxes, and amounts levied in lieu thereof
               based on charges set, services performed or payments made hereunder, as are now or hereafter may be
               imposed under the authority of any national, state, local or any other taxing jurisdiction; and (ii) shall
@@ -613,12 +605,12 @@ const TermsPage = () => {
           </p>
           <p dir="ltr">
             <span>
-              Because Infinity is based on blockchain technology, any malfunction, breakdown or abandonment of the
-              relevant Blockchain Network may have a material adverse effects. Moreover, advances in cryptography, or
-              technical advances such as the development of quantum computing, could present risks to Infinity, the
-              underlying digital assets, or the relevant Blockchain Network by rendering ineffective the cryptographic
-              consensus mechanism that underpins the relevant Blockchain Network. The future of cryptography and
-              security innovations are highly unpredictable.
+              Because Flow is based on blockchain technology, any malfunction, breakdown or abandonment of the relevant
+              Blockchain Network may have a material adverse effects. Moreover, advances in cryptography, or technical
+              advances such as the development of quantum computing, could present risks to Infinity, the underlying
+              digital assets, or the relevant Blockchain Network by rendering ineffective the cryptographic consensus
+              mechanism that underpins the relevant Blockchain Network. The future of cryptography and security
+              innovations are highly unpredictable.
             </span>
           </p>
           <p dir="ltr">
@@ -661,10 +653,10 @@ const TermsPage = () => {
           </p>
           <p dir="ltr">
             <span>
-              Cryptographic tokens such as ${TOKEN.symbol} are a new and untested technology. In addition to the
+              Cryptographic tokens such as ${FLOW_TOKEN.symbol} are a new and untested technology. In addition to the
               aforementioned risks, there may be other risks associated with your creation, holding and use of $
-              {TOKEN.symbol}, including those that Infinity cannot anticipate. Such risks may further materialise as
-              unanticipated variations or combinations of the risks discussed herein.
+              {FLOW_TOKEN.symbol}, including those that Infinity cannot anticipate. Such risks may further materialise
+              as unanticipated variations or combinations of the risks discussed herein.
             </span>
           </p>
           <p dir="ltr" className="font-bold">
@@ -792,7 +784,7 @@ const TermsPage = () => {
         </div>
         <div></div>
       </div>
-    </PageBox>
+    </APageBox>
   );
 };
 
