@@ -70,7 +70,7 @@ const HomePage = () => {
 
   const tweetText = `I just claimed the $FLUR airdrop by @flowdotso. $FLUR will be converted to $FLOW when Flow launches. $FLUR holders will also get access to Flow beta. Follow us on twitter and join our discord at https://discord.gg/flowdotso to keep up. Good stuff brewing.`;
   const sendTweet = () => {
-    window.open(`https://twitter.com/intent/tweet?text=${tweetText}&hashtags=FLOW,FLUR`, '_blank');
+    window.open(`https://twitter.com/intent/tweet?text=${tweetText}`, '_blank');
   };
 
   return (
