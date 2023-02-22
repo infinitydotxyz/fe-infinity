@@ -1,21 +1,16 @@
 import { useTheme } from 'next-themes';
 import { useRouter } from 'next/router';
-import { ProfileTabs } from 'pages/profile/[address]';
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
-import { BiCarousel, BiGlobeAlt, BiWalletAlt } from 'react-icons/bi';
+import { BiCarousel, BiGlobeAlt } from 'react-icons/bi';
 import { FiTarget } from 'react-icons/fi';
-import { HiOutlineTag } from 'react-icons/hi';
 import { MdOutlineDarkMode, MdOutlineLightMode } from 'react-icons/md';
 import { RxDiscordLogo } from 'react-icons/rx';
-import { TbSend } from 'react-icons/tb';
 import { TfiTwitter } from 'react-icons/tfi';
 import { HelpToolTip } from 'src/components/common';
 import { SnipeModal } from 'src/components/common/snipe-modal';
 import { MouseProvider } from 'src/utils/context/MouseProvider';
 import { twMerge } from 'tailwind-merge';
-import { useAccount } from 'wagmi';
 import { borderColor, hoverColorBrandText } from '../ui-constants';
-import { useAppContext } from './AppContext';
 import DockItem from './DockItem';
 import { DockContextType } from './types';
 
@@ -36,8 +31,8 @@ const Dock = () => {
   const [width, setWidth] = useState<number | undefined>();
   const router = useRouter();
   const { theme, setTheme } = useTheme();
-  const { address: user } = useAccount();
-  const { selectedProfileTab, setSelectedProfileTab } = useAppContext();
+  // const { address: user } = useAccount();
+  // const { selectedProfileTab, setSelectedProfileTab } = useAppContext();
   const [dockHeight, setDockHeight] = useState('h-10');
   const [dockItemClassname, setDockItemClassname] = useState('bottom-0.5');
   const [snipeModalOpen, setSnipeModalOpen] = useState(false);
@@ -118,7 +113,7 @@ const Dock = () => {
 
               {divider}
 
-              <DockItem
+              {/* <DockItem
                 highlighted={router.asPath.startsWith(`/profile`) && selectedProfileTab === ProfileTabs.Items}
                 className={dockItemClassname}
               >
@@ -133,9 +128,9 @@ const Dock = () => {
                     />
                   </div>
                 </HelpToolTip>
-              </DockItem>
+              </DockItem> */}
 
-              <DockItem
+              {/* <DockItem
                 highlighted={router.asPath.startsWith(`/profile`) && selectedProfileTab === ProfileTabs.Orders}
                 className={dockItemClassname}
               >
@@ -151,9 +146,9 @@ const Dock = () => {
                     />
                   </div>
                 </HelpToolTip>
-              </DockItem>
+              </DockItem> */}
 
-              <DockItem
+              {/* <DockItem
                 highlighted={router.asPath.startsWith(`/profile`) && selectedProfileTab === ProfileTabs.Send}
                 className={dockItemClassname}
               >
@@ -168,7 +163,7 @@ const Dock = () => {
                     />
                   </div>
                 </HelpToolTip>
-              </DockItem>
+              </DockItem> */}
 
               {divider}
 

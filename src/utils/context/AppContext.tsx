@@ -9,7 +9,6 @@ import {
 } from '@infinityxyz/lib-frontend/types/core';
 import { getOBComplicationAddress, getTxnCurrencyAddress, trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { useRouter } from 'next/router';
-import { ProfileTabs } from 'pages/profile/[address]';
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
@@ -82,7 +81,7 @@ interface Props {
 export const AppContextProvider = ({ children }: Props) => {
   const [showCart, setShowCart] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
-  const [selectedProfileTab, setSelectedProfileTab] = useState(ProfileTabs.Items.toString());
+  const [selectedProfileTab, setSelectedProfileTab] = useState('');
   const [listMode, setListMode] = useState(false);
   const [txnHash, setTxnHash] = useState<string>('');
 

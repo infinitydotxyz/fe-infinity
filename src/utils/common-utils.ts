@@ -8,7 +8,6 @@ import {
   POLYGON_CHAIN_SCANNER_BASE,
   trimLowerCase
 } from '@infinityxyz/lib-frontend/utils';
-import { ProfileTabs } from 'pages/profile/[address]';
 import { normalize } from 'path';
 import { ReactNode } from 'react';
 import { ERC721OrderCartItem, ERC721TokenCartItem, ORDER_EXPIRY_TIME } from 'src/utils/types';
@@ -72,9 +71,12 @@ export const getCartType = (path: string, selectedProfileTab: string): CartType 
   const isTrendingPage = path.includes('trending');
   const isCollectionPage = path.includes('collection');
   const isProfilePage = path.includes('profile');
-  const isProfileItems = selectedProfileTab === ProfileTabs.Items.toString();
-  const isProfileSend = selectedProfileTab === ProfileTabs.Send.toString();
-  const isProfileOrders = selectedProfileTab === ProfileTabs.Orders.toString();
+  // const isProfileItems = selectedProfileTab === ProfileTabs.Items.toString();
+  // const isProfileSend = selectedProfileTab === ProfileTabs.Send.toString();
+  // const isProfileOrders = selectedProfileTab === ProfileTabs.Orders.toString();
+  const isProfileItems = selectedProfileTab === '';
+  const isProfileSend = selectedProfileTab === '';
+  const isProfileOrders = selectedProfileTab === '';
 
   const isCollectionOfferCart = isTrendingPage;
   const isTokenListCart = isProfilePage && isProfileItems;

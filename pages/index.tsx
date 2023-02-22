@@ -1,7 +1,5 @@
-import TrendingPage from './trending';
-
 const HomePage = () => {
-  return <TrendingPage />;
+  return <div>Hi</div>;
 };
 
 export default HomePage;
