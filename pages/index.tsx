@@ -77,11 +77,13 @@ const HomePage = () => {
     <div className="h-screen">
       <CenteredContent>
         <div className="space-y-4">
-          <div className="relative">
-            <span className="h-[100px] w-[100px] absolute left-40 bottom-0.5 ">
-              <Spinner isLoading={isSubmitting} isComplete={isComplete} />
-            </span>
-            <div className="flex justify-center text-6xl font-heading font-bold">Flow</div>
+          <div className="flex text-6xl font-heading font-bold justify-center">
+            <p>Flow</p>
+            <div className="relative">
+              <span className="h-[100px] w-[100px] absolute right-[140px] bottom-0.5">
+                <Spinner isLoading={isSubmitting} isComplete={isComplete} />
+              </span>
+            </div>
           </div>
 
           <div>"Flow is the baddest marketplace on the planet" - Milk Road</div>
