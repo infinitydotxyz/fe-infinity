@@ -1,10 +1,12 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useSpring, animated } from '@react-spring/three';
-import { Canvas, useThree } from '@react-three/fiber';
+import { Canvas } from '@react-three/fiber';
 import { MeshDistortMaterial } from '@react-three/drei';
-import { Heading } from 'src/components/common';
+import { CenteredContent, Heading } from 'src/components/common';
 import { AButton } from 'src/components/astra/astra-button';
 import { DiscordIconLink, TwitterIconLink } from 'src/components/landing/icons';
+import { twMerge } from 'tailwind-merge';
+import { secondaryTextColor } from 'src/utils/ui-constants';
 const AnimatedMeshDistortMaterial = animated(MeshDistortMaterial);
 
 const MyScene = ({ isLoading, isComplete }: { isLoading: boolean; isComplete: boolean }) => {
@@ -30,21 +32,15 @@ const MyScene = ({ isLoading, isComplete }: { isLoading: boolean; isComplete: bo
     []
   );
 
-  const handleClick = useCallback(() => {
-    let clicked = false;
-
-    return () => {
-      clicked = !clicked;
-      api.start({});
-    };
-  }, []);
-
   return (
-    <animated.mesh onClick={handleClick()} scale={springs.scale} position={springs.position.to((x, y) => [x, y, 0])}>
+    <animated.mesh scale={springs.scale} position={springs.position.to((x, y) => [x, y, 0])}>
       <torusBufferGeometry args={[1.5, 0.5, 256, 256]} />
+      {/**
+       * eslint-disable-next-line @typescript-eslint/ban-ts-comment
+       * @ts-ignore */}
       <AnimatedMeshDistortMaterial
         speed={isComplete ? 5 : 10}
-        distort={isLoading ? 0.3 : 0.25}
+        distort={isLoading ? 0.4 : 0.25}
         color={isComplete ? '#569AFF' : '#ff6d6d'}
       />
     </animated.mesh>
@@ -79,60 +75,54 @@ const HomePage = () => {
     window.open(`https://twitter.com/intent/tweet?text=${tweetText}&hashtags=FLOW,FLUR`, '_blank');
   };
 
-  const blurbs = [
-    '"Flow is the baddest marketplace on the planet" - Milk Road',
-    '"Flow is the meanest listing sniper in the game" - The Daily Gwei',
-    '"Flow it the best place to bid on NFTs" - nftnow',
-    '"The world\' only marketplace with an auto executing orderbook" - Arthur Hayes',
-    '"Flow, the blockchain for open worlds" - Roham Gharegozlou'
-  ];
-
   return (
-    <div className="mx-40 mt-20 w-fill">
-      <div className="mt-20">
-        <Heading className=" text-center">Flow</Heading>
-        <Spinner isLoading={isSubmitting} isComplete={isComplete} />
-      </div>
-      <div>
-        {blurbs.map((blurb, index) => (
-          <p className="text-lg my-5" key={`${index}`}>
-            {blurb}
-          </p>
-        ))}
+    <div className="h-screen">
+      <CenteredContent>
+        <div className="space-y-4">
+          <div className="relative">
+            <span className="h-[100px] w-[100px] absolute left-40 bottom-0.5 ">
+              <Spinner isLoading={isSubmitting} isComplete={isComplete} />
+            </span>
+            <div className="flex justify-center text-6xl font-heading font-bold">Flow</div>
+          </div>
 
-        <p className="text-sm my-5">
-          <i>*These were not said but what is said is true.</i>
-        </p>
-        <p className="text-sm my-5">
-          <i>
+          <div>"Flow is the baddest marketplace on the planet" - Milk Road</div>
+          <div>"Flow has the meanest listing sniper in the game" - Metaversal</div>
+          <div>"Flow is the best place to bid on NFTs" - nftnow</div>
+          <div>"Flow has no txns, only signatures" - 0age</div>
+          <div>"The world's only marketplace with auto executing orderbook" - Arthur Hayes</div>
+          <div>"These chads figured out vampired liquidity without incentives" - Chef Nomi</div>
+          <div>"Flow, the blockchain for open worlds" - Roham Gharegozlou</div>
+          <div className={twMerge('text-xs font-medium italic', secondaryTextColor)}>
+            *These were not said but what is said is true.
+          </div>
+          <div className={twMerge('text-xs font-medium italic', secondaryTextColor)}>
             **Except for the last one. That was said. But flow.so ≠ flow.com. We might fuck around and build an NFT
             chain though.
-          </i>
-        </p>
-      </div>
+          </div>
 
-      <div>
-        <div className="flex flex-col items-center justify-center h-full">
-          <Heading as="h4" className="mb-4">
-            Claim your $FLUR
-          </Heading>
+          <div className="flex flex-col items-center justify-center h-full mb-40">
+            <Heading as="h4" className="mb-4">
+              Claim your $FLUR
+            </Heading>
 
-          <AButton primary onClick={handleClaim} disabled={isSubmitting || isComplete}>
-            Claim
-          </AButton>
-        </div>
-        <div className="flex flex-col justify-between space-y-2 md:flex-row md:items-center md:space-x-2 mt-20">
-          <div className="flex items-center space-x-6">
-            <DiscordIconLink />
-            <span className="mt-1">
-              <TwitterIconLink />
-            </span>
-            <AButton primary onClick={sendTweet} highlighted>
-              Excited?
+            <AButton primary onClick={handleClaim} disabled={isSubmitting || isComplete}>
+              Claim
             </AButton>
           </div>
+          <div className="flex flex-col justify-between space-y-2 md:flex-row md:items-center md:space-x-2 mt-20">
+            <div className="flex items-center space-x-6">
+              <DiscordIconLink />
+              <span className="mt-1">
+                <TwitterIconLink />
+              </span>
+              <AButton primary onClick={sendTweet} highlighted>
+                Excited?
+              </AButton>
+            </div>
+          </div>
         </div>
-      </div>
+      </CenteredContent>
     </div>
   );
 };
