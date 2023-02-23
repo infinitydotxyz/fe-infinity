@@ -1,4 +1,3 @@
-service: v3-fe
 runtime: nodejs
 env: flex
 automatic_scaling:
