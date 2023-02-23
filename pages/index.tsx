@@ -1,12 +1,13 @@
-import { useState } from 'react';
-import { useSpring, animated } from '@react-spring/three';
-import { Canvas } from '@react-three/fiber';
+import { animated, useSpring } from '@react-spring/three';
 import { MeshDistortMaterial } from '@react-three/drei';
-import { CenteredContent, Heading } from 'src/components/common';
+import { Canvas } from '@react-three/fiber';
+import { useState } from 'react';
 import { AButton } from 'src/components/astra/astra-button';
+import { CenteredContent, ExternalLink } from 'src/components/common';
 import { DiscordIconLink, TwitterIconLink } from 'src/components/landing/icons';
-import { twMerge } from 'tailwind-merge';
 import { secondaryTextColor } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
+
 const AnimatedMeshDistortMaterial = animated(MeshDistortMaterial);
 
 const MyScene = ({ isLoading, isComplete }: { isLoading: boolean; isComplete: boolean }) => {
@@ -68,7 +69,7 @@ const HomePage = () => {
     }, 10_000);
   };
 
-  const tweetText = `I just claimed the $FLUR airdrop by @flowdotso. $FLUR will be converted to $FLOW when Flow launches. $FLUR holders will also get access to Flow beta. Follow us on twitter and join our discord at https://discord.gg/flowdotso to keep up. Good stuff brewing.`;
+  const tweetText = `I just claimed the $FLUR airdrop by @flowdotso. Holders will get access to Flow beta. Follow us on twitter and join our discord at https://discord.gg/flowdotso to keep up. Good stuff brewing.`;
   const sendTweet = () => {
     window.open(`https://twitter.com/intent/tweet?text=${tweetText}`, '_blank');
   };
@@ -90,35 +91,37 @@ const HomePage = () => {
           <div>"Flow has the meanest listing sniper in the game" - Metaversal</div>
           <div>"Flow is the best place to bid on NFTs" - nftnow</div>
           <div>"Flow has no txns, only signatures" - 0age</div>
+          <div>"Early FTX vibes from Flow in terms of inauthenticity and soulless greed" - 0xfoobar</div>
+          <div>"Flow is the polar opposite of Blur" - H.H Tieshun Roquerre</div>
           <div>"The world's only marketplace with auto executing orderbook" - Arthur Hayes</div>
           <div>"These chads figured out vampired liquidity without incentives" - Chef Nomi</div>
           <div>"Flow, the blockchain for open worlds" - Roham Gharegozlou</div>
           <div className={twMerge('text-xs font-medium italic', secondaryTextColor)}>
             *These were not said but what is said is true.
           </div>
-          <div className={twMerge('text-xs font-medium italic', secondaryTextColor)}>
+          <div className={twMerge('text-xs font-medium italic w-[500px]', secondaryTextColor)}>
             **Except for the last one. That was said. But flow.so ≠ flow.com. We might fuck around and build an NFT
             chain though.
           </div>
 
-          <div className="flex flex-col items-center justify-center h-full mb-40">
-            <Heading as="h4" className="mb-4">
-              Claim your $FLUR
-            </Heading>
-
-            <AButton primary onClick={handleClaim} disabled={isSubmitting || isComplete}>
-              Claim
+          <div className="flex items-center space-x-2 text-sm">
+            <AButton primary onClick={handleClaim} disabled={isSubmitting || isComplete} className="p-3 rounded-lg">
+              Claim $FLUR
+            </AButton>
+            <AButton primary onClick={sendTweet} className="p-3 rounded-lg">
+              Spread the meme
             </AButton>
           </div>
-          <div className="flex flex-col justify-between space-y-2 md:flex-row md:items-center md:space-x-2 mt-20">
-            <div className="flex items-center space-x-6">
+
+          <div className="flex items-center space-y-2 md:flex-row md:items-center md:space-x-4 text-sm">
+            <div className="mt-2.5">
               <DiscordIconLink />
-              <span className="mt-1">
-                <TwitterIconLink />
-              </span>
-              <AButton primary onClick={sendTweet} highlighted>
-                Excited?
-              </AButton>
+            </div>
+            <TwitterIconLink />
+            <div className="items-center flex">
+              <ExternalLink href="https://docs.flow.so" className="underline">
+                WTF is $FLUR?
+              </ExternalLink>
             </div>
           </div>
         </div>
