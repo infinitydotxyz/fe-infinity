@@ -105,10 +105,10 @@ const HomePage = () => {
           </div>
 
           <div className="flex items-center space-x-2 text-sm">
-            <AButton primary onClick={handleClaim} disabled={isSubmitting || isComplete} className="p-3 rounded-lg">
+            <AButton primary onClick={handleClaim} disabled={true} className="p-3 rounded-lg">
               Claim $FLUR
             </AButton>
-            <AButton primary onClick={sendTweet} className="p-3 rounded-lg">
+            <AButton primary onClick={sendTweet} disabled className="p-3 rounded-lg">
               Spread the meme
             </AButton>
           </div>
