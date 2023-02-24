@@ -87,6 +87,8 @@ async function prepareOBOrder(
   ];
   if ('isTrustedExec' in order && order.isTrustedExec) {
     constraints.push(1);
+  } else {
+    constraints.push(0);
   }
 
   const nfts: ChainNFTs[] = order.nfts.reduce((acc: ChainNFTs[], { collectionAddress, tokens }) => {
@@ -333,6 +335,8 @@ export const signBulkOrders = async (
     ];
     if ('isTrustedExec' in order && order.isTrustedExec) {
       constraints.push(1);
+    } else {
+      constraints.push(0);
     }
 
     const nfts: ChainNFTs[] = order.nfts.reduce((acc: ChainNFTs[], { collectionAddress, tokens }) => {
