@@ -63,8 +63,6 @@ export const CollectionPageHeader = ({
     collection?.address ?? ''
   );
 
-  console.log(JSON.stringify(matchingEngineStatus, null, 2));
-
   return (
     <div className={twMerge(borderColor, secondaryBgColor, 'border-b px-6')}>
       {expanded && (
