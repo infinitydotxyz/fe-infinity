@@ -72,56 +72,59 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
           </div>
 
           {orderType === 'listings' || orderType === 'offers-made' ? (
-            <Button
-              onClick={() => {
-                if (!isConnected) {
-                  return;
-                }
-                const newCartType = orderType === 'listings' ? CartType.TokenList : CartType.TokenOffer;
-                editCartToken.cartType = newCartType;
-                if (isNFTSelectable(editCartToken)) {
-                  setCartType(newCartType);
-                  toggleNFTSelection(editCartToken);
-                }
-              }}
-            >
-              {addedToEditCart && (cartType === CartType.TokenList || cartType === CartType.TokenOffer) ? '✓' : ''} Edit
-              in Cart
-            </Button>
-          ) : null}
+            <div className="w-1/4 flex justify-end">
+              <Button
+                className="mr-2"
+                onClick={() => {
+                  if (!isConnected) {
+                    return;
+                  }
+                  const newCartType = orderType === 'listings' ? CartType.TokenList : CartType.TokenOffer;
+                  editCartToken.cartType = newCartType;
+                  if (isNFTSelectable(editCartToken)) {
+                    setCartType(newCartType);
+                    toggleNFTSelection(editCartToken);
+                  }
+                }}
+              >
+                {addedToEditCart && (cartType === CartType.TokenList || cartType === CartType.TokenOffer) ? '✓' : ''}{' '}
+                Edit in Cart
+              </Button>
 
-          {orderType === 'listings' || orderType === 'offers-made' ? (
-            <Button
-              onClick={() => {
-                if (!isConnected) {
-                  return;
-                }
-                const newCartType = CartType.Cancel;
-                order.cartType = newCartType;
-                setCartType(newCartType);
-                toggleOrderSelection(order);
-              }}
-            >
-              {addedToCancelCart && cartType === CartType.Cancel ? '✓' : ''} Cancel
-            </Button>
+              <Button
+                onClick={() => {
+                  if (!isConnected) {
+                    return;
+                  }
+                  const newCartType = CartType.Cancel;
+                  order.cartType = newCartType;
+                  setCartType(newCartType);
+                  toggleOrderSelection(order);
+                }}
+              >
+                {addedToCancelCart && cartType === CartType.Cancel ? '✓' : ''} Cancel
+              </Button>
+            </div>
           ) : null}
 
           {orderType === 'offers-received' ? (
-            <Button
-              onClick={() => {
-                if (!isConnected) {
-                  return;
-                }
-                const newCartType = CartType.TokenList;
-                editCartToken.cartType = newCartType;
-                if (isNFTSelectable(editCartToken)) {
-                  setCartType(newCartType);
-                  toggleNFTSelection(editCartToken);
-                }
-              }}
-            >
-              {addedToEditCart && cartType === CartType.TokenList ? '✓' : ''} Sell Now
-            </Button>
+            <div className="w-1/6 flex justify-end">
+              <Button
+                onClick={() => {
+                  if (!isConnected) {
+                    return;
+                  }
+                  const newCartType = CartType.TokenList;
+                  editCartToken.cartType = newCartType;
+                  if (isNFTSelectable(editCartToken)) {
+                    setCartType(newCartType);
+                    toggleNFTSelection(editCartToken);
+                  }
+                }}
+              >
+                {addedToEditCart && cartType === CartType.TokenList ? '✓' : ''} Sell Now
+              </Button>
+            </div>
           ) : null}
         </div>
       </div>
