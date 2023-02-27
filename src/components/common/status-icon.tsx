@@ -3,7 +3,7 @@ import { ExecutionStatus } from '@infinityxyz/lib-frontend/types/core';
 
 export const OrderMatchStatusIcon = ({ executionStatus }: { executionStatus: ExecutionStatus | null }) => {
   if (!executionStatus) {
-    return <StatusIcon status="error" label={'Not found'} />;
+    return <StatusIcon status="invalid" label={'Disabled'} />;
   }
 
   switch (executionStatus.status) {
@@ -29,7 +29,7 @@ export const OrderMatchStatusIcon = ({ executionStatus }: { executionStatus: Exe
 
 export const OrderExecutionStatusIcon = ({ executionStatus }: { executionStatus: ExecutionStatus | null }) => {
   if (!executionStatus) {
-    return <StatusIcon status="error" label={'Not found'} />;
+    return <StatusIcon status="invalid" label={'Disabled'} />;
   }
 
   switch (executionStatus.status) {
@@ -37,10 +37,10 @@ export const OrderExecutionStatusIcon = ({ executionStatus }: { executionStatus:
       return <StatusIcon status="invalid" label={'Invalid'} />;
     }
     case 'pending-matching': {
-      return <StatusIcon status="invalid" label={'Invalid'} />;
+      return <StatusIcon status="invalid" label={'Requires match'} />;
     }
     case 'matched-no-matches': {
-      return <StatusIcon status="invalid" label={'Invalid'} />;
+      return <StatusIcon status="invalid" label={'Requires match'} />;
     }
     case 'matched-pending-execution': {
       return <StatusIcon status="pending-indefinite" label={'Queued'} />;
@@ -63,7 +63,7 @@ export const OrderExecutionStatusIcon = ({ executionStatus }: { executionStatus:
 
 export const MatchAndExecutionOrderStatus = ({ executionStatus }: { executionStatus: ExecutionStatus | null }) => {
   if (!executionStatus) {
-    return <StatusIcon status="error" label={'Not found'} />;
+    return <StatusIcon status="invalid" label={'Disabled'} />;
   }
 
   switch (executionStatus.status) {
@@ -140,10 +140,14 @@ export const StatusIcon = ({
     return `${(duration / 3600000).toFixed(2)}h`;
   };
 
+  const isValid = status != 'invalid';
+
   return (
     <div className="flex items-center space-x-2">
       <span className="flex w-2.5 h-2.5 relative">
-        <span className={`animate-ping absolute w-full h-full rounded-full ${iconClass} opacity-75`}></span>
+        <span
+          className={`${isValid ? 'animate-ping' : ''} absolute w-full h-full rounded-full ${iconClass} opacity-75`}
+        ></span>
         <span className={`rounded-full w-full ${iconClass}`}></span>
       </span>
       <span className="ml-2">{duration != null ? `${label} (${formatDuration(duration)})` : label}</span>
