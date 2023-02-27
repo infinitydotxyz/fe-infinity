@@ -74,7 +74,8 @@ export const CollectionRecentSalesOrders = ({ data, collectionAddress }: Props) 
       tokenImage: '',
       priceEth: 0,
       id: '',
-      dataType: 'Sale'
+      dataType: 'Sale',
+      executionStatus: null
     }
   });
 
