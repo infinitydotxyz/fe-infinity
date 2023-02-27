@@ -127,6 +127,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
           <div className="flex flex-col text-md">
             <span>Common reasons a collection is not supported:</span>
             <ul className="list-disc list-inside mt-2 mb-2">
+              <li>Collection is not ERC-721</li>
               <li>Low volumes</li>
               <li>Creator(s) rugged the project</li>
               <li>Dead community</li>
