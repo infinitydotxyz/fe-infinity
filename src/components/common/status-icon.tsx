@@ -1,5 +1,7 @@
 /* eslint-disable eqeqeq */
 import { ExecutionStatus } from '@infinityxyz/lib-frontend/types/core';
+import { secondaryTextColor } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
 
 export const OrderMatchStatusIcon = ({ executionStatus }: { executionStatus: ExecutionStatus | null }) => {
   if (!executionStatus) {
@@ -150,7 +152,12 @@ export const StatusIcon = ({
         ></span>
         <span className={`rounded-full w-full ${iconClass}`}></span>
       </span>
-      <span className="ml-2">{duration != null ? `${label} (${formatDuration(duration)})` : label}</span>
+      <span className="ml-2">
+        {label}{' '}
+        {duration != null && (
+          <span className={twMerge(secondaryTextColor, 'text-xs font-medium')}>({formatDuration(duration)})</span>
+        )}
+      </span>
     </div>
   );
 };
