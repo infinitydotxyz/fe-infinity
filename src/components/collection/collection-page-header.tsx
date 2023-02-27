@@ -160,7 +160,7 @@ export const CollectionPageHeader = ({
       )}
 
       <div className="flex mt-4">
-        <div className="flex text-sm divide-x divide-light-border dark:divide-dark-border items-center">
+        <div className="flex text-sm items-center">
           <div className="flex pr-4 gap-2 whitespace-nowrap font-medium">
             <span className={secondaryTextColor}>Matching Engine </span>
             <span className="">
