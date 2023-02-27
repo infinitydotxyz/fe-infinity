@@ -1,9 +1,9 @@
 import { animated, useSpring } from '@react-spring/three';
 import { MeshDistortMaterial } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AButton } from 'src/components/astra/astra-button';
-import { CenteredContent, ConnectButton, ExternalLink, toastError, toastSuccess } from 'src/components/common';
+import { CenteredContent, ConnectButton, ExternalLink, toastSuccess } from 'src/components/common';
 import { DiscordIconLink, TwitterIconLink } from 'src/components/landing/icons';
 import { secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
@@ -63,14 +63,20 @@ function Spinner({ isLoading, isComplete }: { isLoading: boolean; isComplete: bo
   );
 }
 
-const HomePage = () => {
+const HomePageComponent = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
+  const [isClaimBtnDisabled, setIsClaimBtnDisabled] = useState(true);
   const { result: userRewards } = useUserRewards();
   const { claim } = useClaim();
   const { address: user } = useAccount();
   const { chain } = useNetwork();
   const chainId = String(chain?.id ?? 1) as ChainId;
+  const [claimTxnHash, setClaimTxnHash] = useState('');
+
+  useWaitForTransaction({
+    hash: claimTxnHash as `0x${string}`
+  });
 
   const handleClaim = async (props: UserCumulativeRewardsDto) => {
     setIsSubmitting(true);
@@ -83,36 +89,33 @@ const HomePage = () => {
       contractAddress: props.contractAddress
     });
     toastSuccess('Sent txn to chain for execution');
-
-    const { isError, isSuccess } = useWaitForTransaction({
-      hash: hash as `0x${string}`
-    });
-
-    if (isError) {
-      toastError('Failed to claim');
-      setIsSubmitting(false);
-      setIsComplete(true);
-    }
-    if (isSuccess) {
-      toastSuccess('Claimed');
-      setIsSubmitting(false);
-      setIsComplete(true);
-    }
+    setClaimTxnHash(hash);
+    setIsSubmitting(false);
+    setIsComplete(true);
   };
 
-  const tweetText = `I just claimed the $FLUR airdrop by @flowdotso. Holders will get access to Flow beta. Follow us on twitter and join our discord at https://discord.gg/flowdotso to keep up. Good stuff brewing.`;
+  const tweetText = `I just claimed the $FLUR airdrop by @flowdotso. Holders will get access to Flow beta and
+  allowlisted for the upcoming Goerli NFT mint. Follow us on twitter and join our discord at https://discord.gg/flowdotso to keep up.`;
   const sendTweet = () => {
-    window.open(`https://twitter.com/intent/tweet?text=${tweetText}`, '_blank');
+    window.open(`https://twitter.com/intent/tweet?text=${tweetText}&hashtags=letthememesflow`, '_blank');
   };
 
   const claimedAmount = nFormatter(round(userRewards?.totals?.flurAirdrop.claim.claimedEth ?? 0), 2);
   const claimableAmount = nFormatter(round(userRewards?.totals?.flurAirdrop.claim.claimableEth ?? 0), 2);
-  const isClaimBtnDisabled =
-    !user ||
-    chainId !== ChainId.Mainnet ||
-    isSubmitting ||
-    isComplete ||
-    userRewards?.totals?.flurAirdrop.claim.claimableWei === '0';
+
+  useEffect(() => {
+    const alreadyClaimed = userRewards?.totals?.flurAirdrop.claim.claimedWei !== '0';
+
+    const isClaimBtnDisabled =
+      !user ||
+      chainId !== ChainId.Mainnet ||
+      isSubmitting ||
+      isComplete ||
+      alreadyClaimed ||
+      userRewards?.totals?.flurAirdrop.claim.claimableWei === '0';
+
+    setIsClaimBtnDisabled(isClaimBtnDisabled);
+  }, [userRewards]);
 
   return (
     <div className="h-screen">
@@ -179,6 +182,10 @@ const HomePage = () => {
       </CenteredContent>
     </div>
   );
+};
+
+const HomePage = () => {
+  return <HomePageComponent />;
 };
 
 export default HomePage;
