@@ -3,10 +3,17 @@ import { MeshDistortMaterial } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { useState } from 'react';
 import { AButton } from 'src/components/astra/astra-button';
-import { CenteredContent, ExternalLink } from 'src/components/common';
+import { CenteredContent, ConnectButton, ExternalLink, toastError, toastSuccess } from 'src/components/common';
 import { DiscordIconLink, TwitterIconLink } from 'src/components/landing/icons';
 import { secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
+import { useUserRewards } from 'src/hooks/api/useUserRewards';
+import { useClaim } from 'src/hooks/contract/cm-distributor/claim';
+import { nFormatter } from 'src/utils';
+import { round } from '@infinityxyz/lib-frontend/utils';
+import { ChainId, DistributionType } from '@infinityxyz/lib-frontend/types/core';
+import { UserCumulativeRewardsDto } from '@infinityxyz/lib-frontend/types/dto';
+import { useAccount, useNetwork, useWaitForTransaction } from 'wagmi';
 
 const AnimatedMeshDistortMaterial = animated(MeshDistortMaterial);
 
@@ -59,20 +66,53 @@ function Spinner({ isLoading, isComplete }: { isLoading: boolean; isComplete: bo
 const HomePage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
+  const { result: userRewards } = useUserRewards();
+  const { claim } = useClaim();
+  const { address: user } = useAccount();
+  const { chain } = useNetwork();
+  const chainId = String(chain?.id ?? 1) as ChainId;
 
-  const handleClaim = () => {
+  const handleClaim = async (props: UserCumulativeRewardsDto) => {
     setIsSubmitting(true);
-    // Handle the claim here
-    setTimeout(() => {
+    const { hash } = await claim({
+      type: DistributionType.FLUR,
+      account: props.account,
+      cumulativeAmount: props.cumulativeAmount,
+      merkleRoot: props.merkleRoot,
+      merkleProof: props.merkleProof,
+      contractAddress: props.contractAddress
+    });
+    toastSuccess('Sent txn to chain for execution');
+
+    const { isError, isSuccess } = useWaitForTransaction({
+      hash: hash as `0x${string}`
+    });
+
+    if (isError) {
+      toastError('Failed to claim');
       setIsSubmitting(false);
       setIsComplete(true);
-    }, 10_000);
+    }
+    if (isSuccess) {
+      toastSuccess('Claimed');
+      setIsSubmitting(false);
+      setIsComplete(true);
+    }
   };
 
   const tweetText = `I just claimed the $FLUR airdrop by @flowdotso. Holders will get access to Flow beta. Follow us on twitter and join our discord at https://discord.gg/flowdotso to keep up. Good stuff brewing.`;
   const sendTweet = () => {
     window.open(`https://twitter.com/intent/tweet?text=${tweetText}`, '_blank');
   };
+
+  const claimedAmount = nFormatter(round(userRewards?.totals?.flurAirdrop.claim.claimedEth ?? 0), 2);
+  const claimableAmount = nFormatter(round(userRewards?.totals?.flurAirdrop.claim.claimableEth ?? 0), 2);
+  const isClaimBtnDisabled =
+    !user ||
+    chainId !== ChainId.Mainnet ||
+    isSubmitting ||
+    isComplete ||
+    userRewards?.totals?.flurAirdrop.claim.claimableWei === '0';
 
   return (
     <div className="h-screen">
@@ -105,10 +145,21 @@ const HomePage = () => {
           </div>
 
           <div className="flex items-center space-x-2 text-sm">
-            <AButton primary onClick={handleClaim} disabled={true} className="p-3 rounded-lg">
-              Claim $FLUR
+            <ConnectButton className="p-3 rounded-lg" />
+            <AButton
+              primary
+              onClick={() => {
+                if (!userRewards) {
+                  return;
+                }
+                handleClaim(userRewards.totals.flurAirdrop.claim);
+              }}
+              disabled={isClaimBtnDisabled}
+              className="p-3 rounded-lg"
+            >
+              {claimedAmount && claimedAmount > 0 ? `Claimed ${claimedAmount} $FLUR` : `Claim ${claimableAmount} $FLUR`}
             </AButton>
-            <AButton primary onClick={sendTweet} disabled className="p-3 rounded-lg">
+            <AButton primary onClick={sendTweet} className="p-3 rounded-lg">
               Spread the meme
             </AButton>
           </div>
