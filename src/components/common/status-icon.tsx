@@ -1,7 +1,35 @@
 /* eslint-disable eqeqeq */
 import { ExecutionStatus } from '@infinityxyz/lib-frontend/types/core';
+import { MatchingEngineStatus } from 'src/hooks/api/useMatchingEngineCollection';
+import { nFormatter } from 'src/utils';
 import { secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
+
+export const MatchingEngineStatusIcon = ({
+  matchingEngineStatus,
+  component
+}: {
+  matchingEngineStatus: MatchingEngineStatus | null;
+  component: 'matchingEngine' | 'orderRelay' | 'executionEngine';
+}) => {
+  if (!matchingEngineStatus) {
+    return <StatusIcon status="invalid" label={'Inactive'} />;
+  }
+
+  if (matchingEngineStatus[component].healthStatus.status === 'healthy') {
+    if (matchingEngineStatus[component].jobsProcessing < 100) {
+      return <StatusIcon status="complete" label={'Live'} />;
+    }
+    return (
+      <StatusIcon
+        status="pending"
+        label={`Syncing ${nFormatter(matchingEngineStatus[component].jobsProcessing, 2)} orders`}
+      />
+    );
+  } else {
+    return <StatusIcon status="invalid" label={'Inactive'} />;
+  }
+};
 
 export const OrderMatchStatusIcon = ({ executionStatus }: { executionStatus: ExecutionStatus | null }) => {
   if (!executionStatus) {
