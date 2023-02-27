@@ -135,9 +135,9 @@ export const StatusIcon = ({
       return `${(duration / 1000).toFixed(2)}s`;
     }
     if (duration < 3600000) {
-      return `${(duration / 60000).toFixed(2)}m`;
+      return `${(duration / 60000).toFixed(2)}mins`;
     }
-    return `${(duration / 3600000).toFixed(2)}h`;
+    return `${(duration / 3600000).toFixed(2)}hrs`;
   };
 
   const isValid = status != 'invalid';
