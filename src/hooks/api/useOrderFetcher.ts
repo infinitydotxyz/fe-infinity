@@ -1,6 +1,7 @@
 import {
   ChainId,
   ChainOBOrder,
+  ExecutionStatus,
   GetOrderItemsQuery,
   Order,
   OrderItemToken,
@@ -128,7 +129,7 @@ export const useTokenOrderFetcher = (
 const useOrderFetcher = (limit = DEFAULT_LIMIT, filter: TokensFilter, props: FetcherProps) => {
   const { chain } = useNetwork();
   const chainId = String(chain?.id ?? 1) as ChainId;
-  const [orders, setOrders] = useState<SignedOBOrder[]>([]);
+  const [orders, setOrders] = useState<(SignedOBOrder & { executionStatus: ExecutionStatus | null })[]>([]);
   const [error, setError] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
   const [cursor, setCursor] = useState('');
@@ -266,7 +267,7 @@ const useOrderFetcher = (limit = DEFAULT_LIMIT, filter: TokensFilter, props: Fet
         }
 
         setOrders(
-          newData.map((order: Order) => {
+          newData.map((order: Order & { executionStatus: ExecutionStatus | null }) => {
             const orderItems = order.kind === 'single-collection' ? [order.item] : order.items;
             const nfts = orderItems.map((item) => {
               let tokens: OrderItemToken[];
@@ -304,7 +305,7 @@ const useOrderFetcher = (limit = DEFAULT_LIMIT, filter: TokensFilter, props: Fet
               };
             });
 
-            const signedObOrder: SignedOBOrder = {
+            const signedObOrder: SignedOBOrder & { executionStatus: ExecutionStatus | null } = {
               id: order.id,
               chainId: order.chainId,
               isSellOrder: order.isSellOrder,
@@ -325,7 +326,9 @@ const useOrderFetcher = (limit = DEFAULT_LIMIT, filter: TokensFilter, props: Fet
               extraParams: {
                 buyer: order.isPrivate ? order.taker.address : ''
               },
-              signedOrder: {} as unknown as ChainOBOrder
+              signedOrder: {} as unknown as ChainOBOrder,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              executionStatus: (order as any)?.executionStatus ?? null
             };
 
             return signedObOrder;

@@ -19,6 +19,7 @@ import {
 import { twMerge } from 'tailwind-merge';
 import { TokenCardModal } from '../astra/token-grid/token-card-modal';
 import { Checkbox, EthSymbol, EZImage, HelpToolTip, Spacer } from '../common';
+import { MatchAndExecutionOrderStatus, StatusIcon } from '../common/status-icon';
 
 interface Props {
   data: CollectionSaleAndOrder[];
@@ -74,21 +75,15 @@ export const CollectionRecentSalesOrders = ({ data, collectionAddress }: Props) 
       tokenImage: '',
       priceEth: 0,
       id: '',
-      dataType: 'Sale'
+      dataType: 'Sale',
+      executionStatus: null
     }
   });
 
   return (
     <div className={twMerge('w-full flex flex-col mt-2 p-3 border rounded-lg text-sm space-y-3', borderColor)}>
       <div className={twMerge('flex space-x-4 px-3')}>
-        <div className="flex items-center space-x-2">
-          <span className="flex w-2 h-2 relative">
-            <span className="animate-ping absolute w-full h-full rounded-full bg-brand-primary opacity-75"></span>
-            <span className="rounded-full w-full bg-brand-primary"></span>
-          </span>
-          <span>Live</span>
-        </div>
-
+        <StatusIcon status="pending-indefinite" label="Live" />
         <Spacer />
 
         <Checkbox
@@ -121,50 +116,62 @@ export const CollectionRecentSalesOrders = ({ data, collectionAddress }: Props) 
               key={item.id}
               className="grid p-3 justify-between items-center w-full"
               style={{
-                gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 4fr) minmax(0, 1fr)'
+                gridTemplateColumns: 'minmax(0, 2fr) minmax(0, 1fr)'
               }}
             >
-              <div className="flex space-x-1 items-center">
-                <div>
-                  {item.dataType === 'Sale' ? (
-                    <HelpToolTip placement="top" content={<div className="whitespace-nowrap">Sale</div>}>
-                      <FiShoppingCart className={smallIconButtonStyle} />
-                    </HelpToolTip>
-                  ) : item.dataType === 'Listing' ? (
-                    <HelpToolTip placement="top" content={<div className="whitespace-nowrap">Listing</div>}>
-                      <HiOutlineTag style={{ transform: 'rotate(90deg)' }} className={twMerge(smallIconButtonStyle)} />
-                    </HelpToolTip>
-                  ) : (
-                    <HelpToolTip placement="top" content={<div className="whitespace-nowrap">Offer</div>}>
-                      <VscMegaphone className={smallIconButtonStyle} />
-                    </HelpToolTip>
-                  )}
+              <div className="flex">
+                <div className="flex space-x-1 items-center w-10">
+                  <div>
+                    {item.dataType === 'Sale' ? (
+                      <HelpToolTip placement="top" content={<div className="whitespace-nowrap">Sale</div>}>
+                        <FiShoppingCart className={smallIconButtonStyle} />
+                      </HelpToolTip>
+                    ) : item.dataType === 'Listing' ? (
+                      <HelpToolTip placement="top" content={<div className="whitespace-nowrap">Listing</div>}>
+                        <HiOutlineTag
+                          style={{ transform: 'rotate(90deg)' }}
+                          className={twMerge(smallIconButtonStyle)}
+                        />
+                      </HelpToolTip>
+                    ) : (
+                      <HelpToolTip placement="top" content={<div className="whitespace-nowrap">Offer</div>}>
+                        <VscMegaphone className={smallIconButtonStyle} />
+                      </HelpToolTip>
+                    )}
+                  </div>
+                  <div className="text-xs">{timeAgo(new Date(item.timestamp))}</div>
                 </div>
-                <div className="text-xs">{timeAgo(new Date(item.timestamp))}</div>
-              </div>
-              <div
-                className="flex space-x-3 items-center cursor-pointer"
-                onMouseMove={(event) => {
-                  const coords = event.currentTarget.getBoundingClientRect();
-                  showTooltip({
-                    tooltipLeft: coords.left,
-                    tooltipTop: coords.top,
-                    tooltipData: item
-                  });
-                }}
-                onMouseLeave={() => {
-                  hideTooltip();
-                }}
-                onClick={() => {
-                  setSelectedItem(item);
-                  const { pathname, query } = router;
-                  query['tokenId'] = item.tokenId;
-                  query['collectionAddress'] = collectionAddress;
-                  router.replace({ pathname, query }, undefined, { shallow: true });
-                }}
-              >
-                <EZImage src={item.tokenImage} className="w-6 h-6 rounded" />
-                <span className="">{ellipsisString(item.tokenId)}</span>
+                <div
+                  className="flex space-x-3 items-center cursor-pointer ml-4"
+                  onMouseMove={(event) => {
+                    const coords = event.currentTarget.getBoundingClientRect();
+                    showTooltip({
+                      tooltipLeft: coords.left,
+                      tooltipTop: coords.top,
+                      tooltipData: item
+                    });
+                  }}
+                  onMouseLeave={() => {
+                    hideTooltip();
+                  }}
+                  onClick={() => {
+                    setSelectedItem(item);
+                    const { pathname, query } = router;
+                    query['tokenId'] = item.tokenId;
+                    query['collectionAddress'] = collectionAddress;
+                    router.replace({ pathname, query }, undefined, { shallow: true });
+                  }}
+                >
+                  <EZImage src={item.tokenImage} className="w-6 h-6 rounded" />
+                  <div className="flex-col">
+                    <span className="">{ellipsisString(item.tokenId)}</span>
+                    <div className={twMerge(secondaryTextColor, 'text-xs font-medium flex space-x-3 items-center')}>
+                      {item.dataType !== 'Sale' && (
+                        <MatchAndExecutionOrderStatus executionStatus={item.executionStatus} />
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
               <div className={twMerge(borderColor, 'border rounded-lg p-2')}>
                 {nFormatter(item.priceEth)} {EthSymbol}

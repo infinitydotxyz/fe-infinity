@@ -365,12 +365,7 @@ export const AstraCart = ({
         <AButton
           className="p-3 z-50"
           primary={true}
-          disabled={
-            !user ||
-            chainId !== ChainId.Goerli ||
-            currentCartItems.length === 0 ||
-            (cartType === CartType.Send && !sendToAddress)
-          }
+          disabled={!user || currentCartItems.length === 0 || (cartType === CartType.Send && !sendToAddress)}
           onClick={async () => {
             cartType === CartType.Send ? onTokenSend(await finalSendToAddress(sendToAddress)) : onCheckout();
           }}

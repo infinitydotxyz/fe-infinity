@@ -9,6 +9,7 @@ import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
 import { useAccount } from 'wagmi';
 import { OrderbookItem } from '../orderbook/orderbook-item';
+import { OrderExecutionStatusIcon, OrderMatchStatusIcon } from '../common/status-icon';
 
 interface Props {
   order: ERC721OrderCartItem;
@@ -50,15 +51,24 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
               {orderType === 'listings' ? 'Listing' : orderType === 'offers-made' ? 'Offer made' : 'Offer received'}
             </div>
           </div>
+          <div className="w-1/4">
+            <div className={twMerge(secondaryTextColor, 'font-medium')}>Match Status</div>
+            <OrderMatchStatusIcon executionStatus={order.executionStatus} />
+          </div>
+
+          <div className="w-1/4">
+            <div className={twMerge(secondaryTextColor, 'font-medium')}>Execution Status</div>
+            <OrderExecutionStatusIcon executionStatus={order.executionStatus} />
+          </div>
+
           <div className="w-1/6">
             <div className={twMerge(secondaryTextColor, 'font-medium')}>Price</div>
             <div className="">
               <EthPrice label={`${startPriceEth}`} />
             </div>
-          </div>
-          <div className="w-1/6">
-            <div className={twMerge(secondaryTextColor, 'font-medium')}>Expiry</div>
-            <div className="">{format(order.endTimeMs)}</div>
+            <div className={twMerge(secondaryTextColor, 'text-xs font-medium')}>
+              Expires in {format(order.endTimeMs)}
+            </div>
           </div>
 
           {orderType === 'listings' || orderType === 'offers-made' ? (

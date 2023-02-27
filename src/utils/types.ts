@@ -1,4 +1,4 @@
-import { ERC721CardData, Erc721Collection, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
+import { ERC721CardData, Erc721Collection, ExecutionStatus, SignedOBOrder } from '@infinityxyz/lib-frontend/types/core';
 import { CartType } from './context/CartContext';
 
 export enum OrderBy {
@@ -48,6 +48,7 @@ export interface ERC721TokenCartItem extends ERC721CardData {
 
 export interface ERC721OrderCartItem extends SignedOBOrder {
   cartType: CartType.Cancel;
+  executionStatus: ExecutionStatus | null;
 }
 
 export interface BasicTokenInfo {
