@@ -25,12 +25,14 @@ import {
   inverseBgColor,
   inverseTextColor,
   secondaryBgColor,
+  secondaryBtnBgColorText,
   secondaryTextColor,
   smallIconButtonStyle,
   textColor
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { useAccount, useBalance, useNetwork, useProvider } from 'wagmi';
+import { UniswapModal } from '../common/uniswap-model';
 import { ADropdown } from './astra-dropdown';
 
 interface Props {
@@ -59,6 +61,7 @@ export const AstraCart = ({
   const [cartTitle, setCartTitle] = useState('Cart');
   const [checkoutBtnText, setCheckoutBtnText] = useState('Checkout');
   const [sendToAddress, setSendToAddress] = useState('');
+  const [showBuyTokensModal, setShowBuyTokensModal] = useState(false);
 
   const provider = useProvider();
   const { address: user } = useAccount();
@@ -361,6 +364,14 @@ export const AstraCart = ({
                   {nFormatter(Number(wethBalance?.formatted))} {EthSymbol}
                 </span>
               )}
+              <AButton
+                className={twMerge('rounded-md text-xs ml-2', secondaryBtnBgColorText)}
+                onClick={() => {
+                  setShowBuyTokensModal(true);
+                }}
+              >
+                Wrap ETH
+              </AButton>
             </div>
 
             <div className="">
@@ -390,6 +401,19 @@ export const AstraCart = ({
           {checkoutBtnText}
         </AButton>
       </div>
+
+      {showBuyTokensModal && (
+        <UniswapModal
+          onClose={() => setShowBuyTokensModal(false)}
+          title={'Wrap ETH'}
+          chainId={Number(chainId)}
+          tokenAddress={WETH_ADDRESS}
+          tokenName="WETH"
+          tokenDecimals={18}
+          tokenSymbol="WETH"
+          tokenLogoURI="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+        />
+      )}
     </div>
   );
 };
