@@ -85,6 +85,10 @@ export const AstraCart = ({
     token: WETH_ADDRESS as `0x{string}`
   });
 
+  const { data: ethBalance, isLoading: isEthBalanceLoading } = useBalance({
+    address: user
+  });
+
   const finalSendToAddress = async (addr: string) => {
     let finalAddress: string | null = addr;
     if (addr.endsWith('.eth')) {
@@ -347,15 +351,28 @@ export const AstraCart = ({
           <span className="font-heading">{nFormatter(Number(cartTotal))} WETH</span>
         </div>
         {user && (
-          <div className="">
-            <span className={twMerge(secondaryTextColor, 'font-medium')}>Wallet Balance: </span>
-            {isLoading ? (
-              <span>Loading...</span>
-            ) : (
-              <span className="font-heading">
-                {nFormatter(Number(wethBalance?.formatted))} {wethBalance?.symbol}
-              </span>
-            )}
+          <div className="space-y-2">
+            <div className="">
+              <span className={twMerge(secondaryTextColor, 'font-medium')}>WETH Balance: </span>
+              {isLoading ? (
+                <span>Loading...</span>
+              ) : (
+                <span className="font-heading">
+                  {nFormatter(Number(wethBalance?.formatted))} {EthSymbol}
+                </span>
+              )}
+            </div>
+
+            <div className="">
+              <span className={twMerge(secondaryTextColor, 'font-medium')}>ETH Balance: </span>
+              {isEthBalanceLoading ? (
+                <span>Loading...</span>
+              ) : (
+                <span className="font-heading">
+                  {nFormatter(Number(ethBalance?.formatted))} {EthSymbol}
+                </span>
+              )}
+            </div>
           </div>
         )}
       </div>

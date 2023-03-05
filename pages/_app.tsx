@@ -15,7 +15,7 @@ import { mainnet, goerli } from 'wagmi/chains';
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
 import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet';
-import { alchemyProvider } from 'wagmi/providers/alchemy';
+import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 
 import NProgress from 'nprogress'; //nprogress module
 import '../styles/nprogress.css'; //styles of nprogress
@@ -34,11 +34,16 @@ if (!isLocalhost()) {
 const alchemyApiKeyMainnet = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY_MAINNET ?? '';
 const alchemyApiKeyGoerli = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY_GOERLI ?? '';
 const supportedChains = [mainnet, goerli];
-
-const { chains, provider } = configureChains(
-  [mainnet, goerli],
-  [alchemyProvider({ apiKey: alchemyApiKeyMainnet }), alchemyProvider({ apiKey: alchemyApiKeyGoerli })]
-);
+const { chains, provider } = configureChains(supportedChains, [
+  jsonRpcProvider({
+    rpc: (chain) => {
+      if (chain === goerli) {
+        return { http: `https://eth-goerli.g.alchemy.com/v2/${alchemyApiKeyGoerli}` };
+      }
+      return { http: `https://eth-mainnet.g.alchemy.com/v2/${alchemyApiKeyMainnet}` };
+    }
+  })
+]);
 
 const client = createClient(
   getDefaultClient({
@@ -68,6 +73,7 @@ const App = (props: AppProps) => {
     <StrictMode>
       <WagmiConfig client={client}>
         <ConnectKitProvider
+          options={{ initialChainId: 0 }}
           customTheme={{
             '--ck-font-family': '"DM Sans"'
           }}
