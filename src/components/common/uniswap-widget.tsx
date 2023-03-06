@@ -2,16 +2,9 @@
 import { JsonRpcSigner } from '@ethersproject/providers';
 import { SwapWidget, Theme, TokenInfo } from '@uniswap/widgets';
 import '@uniswap/widgets/fonts.css';
+import { useTheme } from 'next-themes';
 import { useSigner } from 'wagmi';
-
-const theme: Theme = {
-  borderRadius: 1,
-  fontFamily: 'DM Sans',
-  accent: '#000000',
-  container: '#F0F0F0',
-  module: '#FFFFFF',
-  primary: '#000000'
-};
+import tailwindConfig from '../../settings/tailwind/elements/foundations';
 
 // Special address for native token
 const NATIVE = 'NATIVE';
@@ -33,13 +26,20 @@ export default function UniswapWidget({
   tokenSymbol,
   tokenLogoURI
 }: UniswapModalProps) {
-  // const provider = useProvider({
-  //   chainId
-  // });
-
   const provider = useSigner<JsonRpcSigner>().data?.provider;
 
-  console.log('provider', provider);
+  const { theme } = useTheme();
+  const darkMode = theme === 'dark';
+  const themeToUse = tailwindConfig.colors[darkMode ? 'dark' : 'light'];
+  const widgetTheme: Theme = {
+    borderRadius: 1,
+    fontFamily: 'DM Sans',
+    accent: tailwindConfig.colors.brand.primary,
+    interactive: tailwindConfig.colors.brand.primaryFade,
+    container: themeToUse.bg,
+    module: themeToUse.card,
+    primary: themeToUse.body
+  };
 
   const token: TokenInfo = {
     chainId,
@@ -54,7 +54,7 @@ export default function UniswapWidget({
     <div className="Uniswap">
       <SwapWidget
         provider={provider}
-        theme={theme}
+        theme={widgetTheme}
         tokenList={[token]}
         defaultInputTokenAddress={NATIVE}
         defaultOutputTokenAddress={token.address}
