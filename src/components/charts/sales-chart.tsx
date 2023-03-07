@@ -1,4 +1,4 @@
-import { HistoricalSalesTimeBucket } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId, HistoricalSalesTimeBucket } from '@infinityxyz/lib-frontend/types/core';
 import { localPoint } from '@visx/event';
 import { Group } from '@visx/group';
 import { AnimatedAxis, AnimatedGridRows } from '@visx/react-spring';
@@ -20,6 +20,7 @@ import { ellipsisString } from 'src/utils';
 import { BasicTokenInfo } from 'src/utils/types';
 import { secondaryBgColor, secondaryTextColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
+import { useNetwork } from 'wagmi';
 import tailwindConfig from '../../settings/tailwind/elements/foundations';
 import { ChartBox } from './chart-box';
 import { ChartDimensions } from './chart-utils';
@@ -136,6 +137,8 @@ function SalesChart({ width, height, data, hideOutliers }: SalesChartProps) {
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const { chain } = useNetwork();
+  const chainId = String(chain?.id ?? 1) as ChainId;
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -153,7 +156,7 @@ function SalesChart({ width, height, data, hideOutliers }: SalesChartProps) {
   const basicTokenInfo: BasicTokenInfo = {
     tokenId: selectedSale?.tokenId ?? '',
     collectionAddress: selectedSale?.collectionAddress ?? '',
-    chainId: '1' // future-todo dont hardcode
+    chainId
   };
 
   useEffect(() => {
