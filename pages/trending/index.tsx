@@ -1,4 +1,4 @@
-import { Collection, CollectionPeriodStatsContent, StatsPeriod } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId, Collection, CollectionPeriodStatsContent, StatsPeriod } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { AButton } from 'src/components/astra/astra-button';
@@ -19,6 +19,7 @@ import { useAppContext } from 'src/utils/context/AppContext';
 import { ERC721CollectionCartItem } from 'src/utils/types';
 import { borderColor, iconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
+import { useNetwork } from 'wagmi';
 
 const TrendingPage = () => {
   const queryBy = 'by_sales_volume';
@@ -29,6 +30,8 @@ const TrendingPage = () => {
   const { isCollSelected, isCollSelectable, toggleCollSelection } = useAppContext();
   const options = ['1 day', '7 days', '30 days', 'All Time'];
   const DEFAULT_TAB = '1 day';
+  const { chain } = useNetwork();
+  const chainId = String(chain?.id) ?? ChainId.Mainnet;
 
   const fetchData = async (refresh = false) => {
     setIsLoading(true);
@@ -37,6 +40,7 @@ const TrendingPage = () => {
     }
     const { result } = await apiGet('/collections/stats', {
       query: {
+        chainId,
         period,
         queryBy: queryBy
       }
