@@ -1,10 +1,4 @@
-import {
-  BaseCollection,
-  ChainId,
-  CollectionAttributes,
-  CollectionStats,
-  EventType
-} from '@infinityxyz/lib-frontend/types/core';
+import { BaseCollection, CollectionAttributes, CollectionStats, EventType } from '@infinityxyz/lib-frontend/types/core';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
@@ -437,20 +431,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   context.res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=300');
 
   const id = context.query.name as string;
-  const chainId = ChainId.Mainnet; // future-todo do not hardcode
-  const collBaseDataPromise = apiGet(`/collections/${id}`); // future-todo: needs to send chainId in query for multi chain to work
+  const collBaseDataPromise = apiGet(`/collections/${id}`);
   const collAllTimeStatsPromise = apiGet(`/collections/${id}/stats`, {
     query: {
-      chainId,
       period: 'all'
     }
   });
 
-  const attributesPromise = apiGet(`/collections/${id}/attributes`, {
-    query: {
-      chainId: '1'
-    }
-  });
+  const attributesPromise = apiGet(`/collections/${id}/attributes`);
 
   const [collBaseData, { result: allTimeStatsResult }, { result: collectionAttributes }] = await Promise.all([
     collBaseDataPromise,

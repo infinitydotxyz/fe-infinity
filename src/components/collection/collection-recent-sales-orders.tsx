@@ -1,4 +1,4 @@
-import { CollectionSaleAndOrder } from '@infinityxyz/lib-frontend/types/core';
+import { ChainId, CollectionSaleAndOrder } from '@infinityxyz/lib-frontend/types/core';
 import { defaultStyles, TooltipWithBounds, useTooltip } from '@visx/tooltip';
 import { format } from 'date-fns';
 import { useRouter } from 'next/router';
@@ -17,6 +17,7 @@ import {
   textColor
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
+import { useNetwork } from 'wagmi';
 import { TokenCardModal } from '../astra/token-grid/token-card-modal';
 import { Checkbox, EthSymbol, EZImage, HelpToolTip, Spacer } from '../common';
 import { MatchAndExecutionOrderStatus, StatusIcon } from '../common/status-icon';
@@ -33,11 +34,13 @@ export const CollectionRecentSalesOrders = ({ data, collectionAddress }: Props) 
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<CollectionSaleAndOrder | null>(null);
   const router = useRouter();
+  const { chain } = useNetwork();
+  const chainId = String(chain?.id) ?? ChainId.Mainnet;
 
   const basicTokenInfo: BasicTokenInfo = {
     tokenId: selectedItem?.tokenId ?? '',
     collectionAddress: collectionAddress,
-    chainId: '1' // future-todo dont hardcode
+    chainId
   };
 
   useEffect(() => {
