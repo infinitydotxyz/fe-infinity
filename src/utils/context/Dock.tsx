@@ -2,7 +2,7 @@ import { useTheme } from 'next-themes';
 import { useRouter } from 'next/router';
 import { ProfileTabs } from 'pages/profile/[address]';
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
-import { BiCarousel, BiGlobeAlt, BiWalletAlt } from 'react-icons/bi';
+import { BiGlobeAlt, BiWalletAlt } from 'react-icons/bi';
 import { FiTarget } from 'react-icons/fi';
 import { HiOutlineTag } from 'react-icons/hi';
 import { MdOutlineDarkMode, MdOutlineLightMode } from 'react-icons/md';
@@ -103,7 +103,7 @@ const Dock = () => {
                 </HelpToolTip>
               </DockItem>
 
-              <DockItem highlighted={router.asPath.startsWith('/sets')} className={dockItemClassname}>
+              {/* <DockItem highlighted={router.asPath.startsWith('/sets')} className={dockItemClassname}>
                 <HelpToolTip placement="top" content={<div className="whitespace-nowrap">Sets</div>}>
                   <div className={itemClassname}>
                     <BiCarousel
@@ -114,7 +114,7 @@ const Dock = () => {
                     />
                   </div>
                 </HelpToolTip>
-              </DockItem>
+              </DockItem> */}
 
               {divider}
 

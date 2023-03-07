@@ -14,6 +14,8 @@ import { twMerge } from 'tailwind-merge';
 import { useNetwork } from 'wagmi';
 
 export default function SetsPage() {
+  return null;
+
   const { chain } = useNetwork();
   const chainId = String(chain?.id ?? ChainId.Mainnet);
   const { isNFTSelected, isNFTSelectable, listMode, toggleNFTSelection, toggleMultipleNFTSelection } = useAppContext();
