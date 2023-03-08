@@ -10,6 +10,7 @@ import { useUserRewards } from 'src/hooks/api/useUserRewards';
 import { useClaim } from 'src/hooks/contract/cm-distributor/claim';
 import { nFormatter } from 'src/utils';
 import { INFT_TOKEN } from 'src/utils/constants';
+import { useAppContext } from 'src/utils/context/AppContext';
 import { bgColor, secondaryBgColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 
@@ -41,13 +42,14 @@ const MyRewards = () => {
   const { result: quota, mutate: mutateQuota } = useUserCurationQuota();
   const { result: userRewards } = useUserRewards();
   const { claim } = useClaim();
+  const { setTxnHash } = useAppContext();
 
   const onClaim = async (type: DistributionType, props?: UserCumulativeRewardsDto) => {
     if (!props || !props.claimableWei || props.claimableWei === '0') {
       throw new Error('Nothing to claim');
     }
 
-    await claim({
+    const { hash } = await claim({
       type,
       account: props.account,
       cumulativeAmount: props.cumulativeAmount,
@@ -56,9 +58,7 @@ const MyRewards = () => {
       contractAddress: props.contractAddress
     });
     toastSuccess('Sent txn to chain for execution');
-    // todo: waitForTransaction(hash, () => {
-    //   toastInfo(`Transaction confirmed ${ellipsisAddress(hash)}`);
-    // });
+    setTxnHash(hash);
   };
 
   return (

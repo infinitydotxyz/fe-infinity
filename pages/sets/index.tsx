@@ -1,4 +1,4 @@
-import { ChainId, SetsDataItem } from '@infinityxyz/lib-frontend/types/core';
+import { SetsDataItem } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { GiBroom } from 'react-icons/gi';
 import { MdOutlineRefresh } from 'react-icons/md';
@@ -14,8 +14,11 @@ import { twMerge } from 'tailwind-merge';
 import { useNetwork } from 'wagmi';
 
 export default function SetsPage() {
+  return null;
+
   const { chain } = useNetwork();
-  const chainId = String(chain?.id ?? ChainId.Mainnet);
+  const { selectedChain } = useAppContext();
+  const chainId = String(chain?.id ?? selectedChain);
   const { isNFTSelected, isNFTSelectable, listMode, toggleNFTSelection, toggleMultipleNFTSelection } = useAppContext();
   const [tokens, setTokens] = useState<ERC721TokenCartItem[]>([]);
   const [tokensToShow, setTokensToShow] = useState<ERC721TokenCartItem[]>([]);

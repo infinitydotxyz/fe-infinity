@@ -17,9 +17,11 @@ import { ADropdown } from 'src/components/astra/astra-dropdown';
 import { TokenCardModal } from 'src/components/astra/token-grid/token-card-modal';
 import { EZImage } from 'src/components/common';
 import { ellipsisString } from 'src/utils';
+import { useAppContext } from 'src/utils/context/AppContext';
 import { BasicTokenInfo } from 'src/utils/types';
 import { secondaryBgColor, secondaryTextColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
+import { useNetwork } from 'wagmi';
 import tailwindConfig from '../../settings/tailwind/elements/foundations';
 import { ChartBox } from './chart-box';
 import { ChartDimensions } from './chart-utils';
@@ -136,6 +138,9 @@ function SalesChart({ width, height, data, hideOutliers }: SalesChartProps) {
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const { chain } = useNetwork();
+  const { selectedChain } = useAppContext();
+  const chainId = String(chain?.id ?? selectedChain);
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -153,7 +158,7 @@ function SalesChart({ width, height, data, hideOutliers }: SalesChartProps) {
   const basicTokenInfo: BasicTokenInfo = {
     tokenId: selectedSale?.tokenId ?? '',
     collectionAddress: selectedSale?.collectionAddress ?? '',
-    chainId: '1' // future-todo dont hardcode
+    chainId
   };
 
   useEffect(() => {

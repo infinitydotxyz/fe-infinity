@@ -1,4 +1,3 @@
-import { ChainId } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import { HiOutlineExternalLink } from 'react-icons/hi';
 import { ClipboardButton, EZImage } from 'src/components/common';
@@ -9,9 +8,9 @@ import { useAppContext } from 'src/utils/context/AppContext';
 import {
   borderColor,
   brandBorderColor,
-  secondaryBgColor,
   hoverColor,
   hoverColorBrandText,
+  secondaryBgColor,
   secondaryTextColor,
   smallIconButtonStyle
 } from 'src/utils/ui-constants';
@@ -28,7 +27,8 @@ export const ProfilePageHeader = ({ expanded, tabs }: ProfileHeaderProps) => {
   const router = useRouter();
   const addressFromPath = router.query?.address as string;
   const { chain } = useNetwork();
-  const chainId = String(chain?.id ?? 1) as ChainId;
+  const { selectedChain } = useAppContext();
+  const chainId = String(chain?.id ?? selectedChain);
   const { selectedProfileTab, setSelectedProfileTab } = useAppContext();
 
   return (

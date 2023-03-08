@@ -1,5 +1,5 @@
 import { getAddress } from '@ethersproject/address';
-import { BaseToken, OrdersSnippet, OwnerInfo } from '@infinityxyz/lib-frontend/types/core';
+import { BaseToken, ChainId, OrdersSnippet, OwnerInfo } from '@infinityxyz/lib-frontend/types/core';
 import { BaseCollection } from '@infinityxyz/lib-frontend/types/core/Collection';
 import {
   Env,
@@ -447,6 +447,16 @@ export const erc721OrderCartItemToTokenCartItem = (order: ERC721OrderCartItem): 
   };
 
   return result;
+};
+
+export const chainIdToName = (chainId: ChainId) => {
+  return chainId === ChainId.Mainnet
+    ? 'Ethereum'
+    : chainId === ChainId.Goerli
+    ? 'Goerli'
+    : chainId === ChainId.Polygon
+    ? 'Polygon'
+    : 'Unknown';
 };
 
 export const ENV: Env = (process.env.NEXT_PUBLIC_ENV as Env | undefined | '') || Env.Prod;

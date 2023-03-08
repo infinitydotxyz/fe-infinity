@@ -3,10 +3,12 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { TokenCardModal } from 'src/components/astra/token-grid/token-card-modal';
 import { ellipsisString } from 'src/utils';
+import { useAppContext } from 'src/utils/context/AppContext';
 import { BasicTokenInfo } from 'src/utils/types';
 import { borderColor, secondaryBgColorDarker, secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
+import { useNetwork } from 'wagmi';
 import { EthSymbol, EZImage } from '../common';
 import { ChartBox } from './chart-box';
 import { OrderbookRowButton } from './chart-detail-button';
@@ -41,7 +43,7 @@ export const OrdersChartDetails = ({ orders, index, setIndex, collectionAddress,
             orders={orders}
             index={index}
             setIndex={setIndex}
-            className="flex pointer-events-auto text-sm font-heading font-bold"
+            className="flex pointer-events-auto text-sm font-heading font-bold z-50"
           />
         </div>
       </div>
@@ -65,11 +67,14 @@ interface Props2 {
 const OrderDetailViewer = ({ order, collectionAddress }: Props2) => {
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
+  const { chain } = useNetwork();
+  const { selectedChain } = useAppContext();
+  const chainId = String(chain?.id ?? selectedChain);
 
   const basicTokenInfo: BasicTokenInfo = {
     tokenId: order?.tokenId ?? '',
     collectionAddress: collectionAddress ?? '',
-    chainId: '1' // future-todo dont hardcode
+    chainId
   };
 
   useEffect(() => {
@@ -117,11 +122,14 @@ interface Props3 {
 export const SalesChartDetails = ({ data }: Props3) => {
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
+  const { chain } = useNetwork();
+  const { selectedChain } = useAppContext();
+  const chainId = String(chain?.id ?? selectedChain);
 
   const basicTokenInfo: BasicTokenInfo = {
     tokenId: data?.tokenId ?? '',
     collectionAddress: data?.collectionAddress ?? '',
-    chainId: '1' // future-todo dont hardcode
+    chainId
   };
 
   useEffect(() => {

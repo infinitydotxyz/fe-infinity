@@ -10,9 +10,9 @@ import {
 import * as Queries from '@infinityxyz/lib-frontend/types/dto/orders/orders-queries.dto';
 import { useState } from 'react';
 import { apiGet, DEFAULT_LIMIT } from 'src/utils';
+import { useAppContext } from 'src/utils/context/AppContext';
 import { TokensFilter, SORT_FILTERS } from 'src/utils/types';
 import { useNetwork } from 'wagmi';
-import { OrderCache } from '../../components/orderbook/order-cache';
 
 interface BaseProps {
   kind?: 'collection' | 'token' | 'profile';
@@ -46,7 +46,7 @@ type FetcherProps = CollectionProps | TokenProps | ProfileProps;
 
 export type OrdersContextProviderProps = CollectionProps | TokenProps | ProfileProps;
 
-const orderCache = new OrderCache();
+// const orderCache = new OrderCache();
 
 const parseFiltersToApiQueryParams = (filter: TokensFilter): GetOrderItemsQuery => {
   const parsedFilters: GetOrderItemsQuery = {};
@@ -128,7 +128,8 @@ export const useTokenOrderFetcher = (
 
 const useOrderFetcher = (limit = DEFAULT_LIMIT, filter: TokensFilter, props: FetcherProps) => {
   const { chain } = useNetwork();
-  const chainId = String(chain?.id ?? 1) as ChainId;
+  const { selectedChain } = useAppContext();
+  const chainId = String(chain?.id ?? selectedChain);
   const [orders, setOrders] = useState<(SignedOBOrder & { executionStatus: ExecutionStatus | null })[]>([]);
   const [error, setError] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
@@ -239,10 +240,11 @@ const useOrderFetcher = (limit = DEFAULT_LIMIT, filter: TokensFilter, props: Fet
         throw new Error('Invalid query');
       }
 
-      const cacheKey = JSON.stringify(options);
+      // const cacheKey = JSON.stringify(options);
 
-      // use cached value if exists
-      let response = orderCache.get(cacheKey);
+      // not using cache for now
+      // let response = orderCache.get(cacheKey);
+      let response;
       if (!response) {
         response = await apiGet(options.endpoint, {
           query: options.query,
@@ -256,8 +258,8 @@ const useOrderFetcher = (limit = DEFAULT_LIMIT, filter: TokensFilter, props: Fet
       }
 
       if (response && response.result?.data) {
-        // save in cache
-        orderCache.set(cacheKey, response);
+        // not saving in cache
+        // orderCache.set(cacheKey, response);
 
         let newData;
         if (loadMore) {

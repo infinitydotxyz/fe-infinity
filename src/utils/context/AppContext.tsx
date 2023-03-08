@@ -34,11 +34,19 @@ import { sendMultipleNfts, sendSingleNft, signOrders } from '../orders';
 import { CartType } from './CartContext';
 
 type AppContextType = {
+  selectedChain: ChainId;
+  setSelectedChain: (value: ChainId) => void;
+
   showCart: boolean;
   setShowCart: (value: boolean) => void;
 
   selectedProfileTab: string;
   setSelectedProfileTab: (value: string) => void;
+
+  isCheckingOut: boolean;
+  setIsCheckingOut: (value: boolean) => void;
+
+  setTxnHash: (value: string) => void;
 
   listMode: boolean;
   setListMode: (value: boolean) => void;
@@ -80,17 +88,19 @@ interface Props {
 }
 
 export const AppContextProvider = ({ children }: Props) => {
+  const [selectedChain, setSelectedChain] = useState<ChainId>(ChainId.Goerli); // adi-todo: change to mainnet
   const [showCart, setShowCart] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [selectedProfileTab, setSelectedProfileTab] = useState(ProfileTabs.Items.toString());
   const [listMode, setListMode] = useState(false);
   const [txnHash, setTxnHash] = useState<string>('');
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   const { data: signer } = useSigner();
   const provider = useProvider();
   const { chain } = useNetwork();
+  const chainId = String(chain?.id);
   const { address: user } = useAccount();
-  const chainId = String(chain?.id ?? 1) as ChainId;
 
   const {
     isNFTSelected,
@@ -271,12 +281,9 @@ export const AppContextProvider = ({ children }: Props) => {
     try {
       if (signer) {
         const nonces = ordersToCancel.map((order) => order.nonce);
-        await cancelMultipleOrders(signer as JsonRpcSigner, chainId, nonces);
+        const { hash } = await cancelMultipleOrders(signer as JsonRpcSigner, chainId, nonces);
         toastSuccess('Sent txn to chain for execution');
-        // todo: waitForTransaction(hash, () => {
-        //   toastInfo(`Transaction confirmed ${ellipsisAddress(hash)}`);
-        // });
-
+        setTxnHash(hash);
         return true;
       } else {
         throw 'Signer is null';
@@ -407,11 +414,19 @@ export const AppContextProvider = ({ children }: Props) => {
   };
 
   const value: AppContextType = {
+    selectedChain,
+    setSelectedChain,
+
     showCart,
     setShowCart,
 
     selectedProfileTab,
     setSelectedProfileTab,
+
+    isCheckingOut,
+    setIsCheckingOut,
+
+    setTxnHash,
 
     listMode,
     setListMode,
@@ -449,7 +464,9 @@ export const AppContextProvider = ({ children }: Props) => {
     <AppContext.Provider value={value}>
       <>
         {children}{' '}
-        {txnHash ? <WaitingForTxModal title={'Sending NFTs'} txHash={txnHash} onClose={() => setTxnHash('')} /> : null}
+        {txnHash ? (
+          <WaitingForTxModal title={'Awaiting transaction'} txHash={txnHash} onClose={() => setTxnHash('')} />
+        ) : null}
         <ToastContainer
           limit={3}
           position="top-right"

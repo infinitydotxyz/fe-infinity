@@ -6,7 +6,7 @@ import { ReactNode, useEffect, useState } from 'react';
 import { FiEdit3 } from 'react-icons/fi';
 import { MdClose } from 'react-icons/md';
 import { AButton } from 'src/components/astra/astra-button';
-import { EthSymbol, EZImage, Spacer, TextInputBox } from 'src/components/common';
+import { BouncingLogo, EthSymbol, EZImage, Spacer, TextInputBox } from 'src/components/common';
 import {
   ellipsisString,
   getCartType,
@@ -57,7 +57,7 @@ export const AstraCart = ({
   onTokenSend
 }: Props) => {
   const router = useRouter();
-  const { selectedProfileTab } = useAppContext();
+  const { selectedProfileTab, isCheckingOut, setIsCheckingOut } = useAppContext();
   const [cartTitle, setCartTitle] = useState('Cart');
   const [checkoutBtnText, setCheckoutBtnText] = useState('Checkout');
   const [sendToAddress, setSendToAddress] = useState('');
@@ -66,7 +66,8 @@ export const AstraCart = ({
   const provider = useProvider();
   const { address: user } = useAccount();
   const { chain } = useNetwork();
-  const chainId = String(chain?.id ?? 1) as ChainId;
+  const { selectedChain } = useAppContext();
+  const chainId = String(chain?.id);
 
   const { cartType, setCartType, getCurrentCartItems, cartItems } = useCartContext();
   const [currentCartItems, setCurrentCartItems] = useState<CartItem[]>([]);
@@ -268,10 +269,10 @@ export const AstraCart = ({
     } else if (cartType === CartType.CollectionOffer) {
       if (cartItems.length > 1) {
         setCartTitle('Collection Offers');
-        setCheckoutBtnText('Place offers');
+        setCheckoutBtnText('Bid');
       } else {
         setCartTitle('Collection Offer');
-        setCheckoutBtnText('Place offer');
+        setCheckoutBtnText('Bid');
       }
     } else if (cartType === CartType.TokenOffer) {
       setCartTitle('Buy');
@@ -388,17 +389,23 @@ export const AstraCart = ({
         )}
       </div>
 
-      {/* todo: change the chainId check here when more chains are supported */}
+      {/* future-todo: change the chainId check here when more chains are supported */}
       <div className="m-6 flex flex-col">
         <AButton
           className="p-3 z-50"
           primary={true}
-          disabled={!user || currentCartItems.length === 0 || (cartType === CartType.Send && !sendToAddress)}
+          disabled={
+            !user ||
+            currentCartItems.length === 0 ||
+            (cartType === CartType.Send && !sendToAddress) ||
+            chainId !== selectedChain
+          }
           onClick={async () => {
+            setIsCheckingOut(true);
             cartType === CartType.Send ? onTokenSend(await finalSendToAddress(sendToAddress)) : onCheckout();
           }}
         >
-          {checkoutBtnText}
+          {isCheckingOut ? <BouncingLogo /> : checkoutBtnText}
         </AButton>
       </div>
 

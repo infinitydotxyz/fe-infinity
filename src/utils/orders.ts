@@ -534,7 +534,6 @@ export async function sendMultipleNfts(
 export async function cancelAllOrders(signer: JsonRpcSigner, chainId: string, minOrderNonce: number) {
   const exchangeAddress = getExchangeAddress(chainId);
   const flowExchange = new Contract(exchangeAddress, FlowExchangeABI, signer);
-  // perform cancel
   const cancelResult = await flowExchange.cancelAllOrders(minOrderNonce);
   return {
     hash: cancelResult?.hash ?? ''
@@ -544,7 +543,6 @@ export async function cancelAllOrders(signer: JsonRpcSigner, chainId: string, mi
 export async function cancelMultipleOrders(signer: JsonRpcSigner, chainId: string, nonces: number[]) {
   const exchangeAddress = getExchangeAddress(chainId);
   const flowExchange = new Contract(exchangeAddress, FlowExchangeABI, signer);
-  // perform cancel
   const cancelResult = await flowExchange.cancelMultipleOrders(nonces);
   return {
     hash: cancelResult?.hash ?? ''

@@ -7,6 +7,7 @@ import { FiShoppingCart } from 'react-icons/fi';
 import { HiOutlineTag } from 'react-icons/hi';
 import { VscMegaphone } from 'react-icons/vsc';
 import { ellipsisString, nFormatter, timeAgo } from 'src/utils';
+import { useAppContext } from 'src/utils/context/AppContext';
 import { BasicTokenInfo } from 'src/utils/types';
 import {
   borderColor,
@@ -17,6 +18,7 @@ import {
   textColor
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
+import { useNetwork } from 'wagmi';
 import { TokenCardModal } from '../astra/token-grid/token-card-modal';
 import { Checkbox, EthSymbol, EZImage, HelpToolTip, Spacer } from '../common';
 import { MatchAndExecutionOrderStatus, StatusIcon } from '../common/status-icon';
@@ -33,11 +35,14 @@ export const CollectionRecentSalesOrders = ({ data, collectionAddress }: Props) 
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<CollectionSaleAndOrder | null>(null);
   const router = useRouter();
+  const { chain } = useNetwork();
+  const { selectedChain } = useAppContext();
+  const chainId = String(chain?.id ?? selectedChain);
 
   const basicTokenInfo: BasicTokenInfo = {
     tokenId: selectedItem?.tokenId ?? '',
     collectionAddress: collectionAddress,
-    chainId: '1' // future-todo dont hardcode
+    chainId
   };
 
   useEffect(() => {
