@@ -48,7 +48,10 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
           <div className="w-1/6">
             <div className={twMerge(secondaryTextColor, 'font-medium')}>Order type</div>
             <div className="">
-              {orderType === 'listings' ? 'Listing' : orderType === 'offers-made' ? 'Offer made' : 'Offer received'}
+              {orderType === 'listings' ? 'Listing' : orderType === 'offers-made' ? 'Bid' : 'Offer'}
+            </div>
+            <div className={twMerge(secondaryTextColor, 'text-xs font-medium')}>
+              Expires in {format(order.endTimeMs)}
             </div>
           </div>
           <div className="w-1/4">
@@ -65,9 +68,6 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
             <div className={twMerge(secondaryTextColor, 'font-medium')}>Price</div>
             <div className="">
               <EthPrice label={`${startPriceEth}`} />
-            </div>
-            <div className={twMerge(secondaryTextColor, 'text-xs font-medium')}>
-              Expires in {format(order.endTimeMs)}
             </div>
           </div>
 

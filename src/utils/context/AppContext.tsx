@@ -40,6 +40,9 @@ type AppContextType = {
   selectedProfileTab: string;
   setSelectedProfileTab: (value: string) => void;
 
+  isCheckingOut: boolean;
+  setIsCheckingOut: (value: boolean) => void;
+
   setTxnHash: (value: string) => void;
 
   listMode: boolean;
@@ -87,6 +90,7 @@ export const AppContextProvider = ({ children }: Props) => {
   const [selectedProfileTab, setSelectedProfileTab] = useState(ProfileTabs.Items.toString());
   const [listMode, setListMode] = useState(false);
   const [txnHash, setTxnHash] = useState<string>('');
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   const { data: signer } = useSigner();
   const provider = useProvider();
@@ -411,6 +415,9 @@ export const AppContextProvider = ({ children }: Props) => {
 
     selectedProfileTab,
     setSelectedProfileTab,
+
+    isCheckingOut,
+    setIsCheckingOut,
 
     setTxnHash,
 

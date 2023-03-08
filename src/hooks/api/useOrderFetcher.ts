@@ -12,7 +12,6 @@ import { useState } from 'react';
 import { apiGet, DEFAULT_LIMIT } from 'src/utils';
 import { TokensFilter, SORT_FILTERS } from 'src/utils/types';
 import { useNetwork } from 'wagmi';
-import { OrderCache } from '../../components/orderbook/order-cache';
 
 interface BaseProps {
   kind?: 'collection' | 'token' | 'profile';
@@ -46,7 +45,7 @@ type FetcherProps = CollectionProps | TokenProps | ProfileProps;
 
 export type OrdersContextProviderProps = CollectionProps | TokenProps | ProfileProps;
 
-const orderCache = new OrderCache();
+// const orderCache = new OrderCache();
 
 const parseFiltersToApiQueryParams = (filter: TokensFilter): GetOrderItemsQuery => {
   const parsedFilters: GetOrderItemsQuery = {};
@@ -239,10 +238,11 @@ const useOrderFetcher = (limit = DEFAULT_LIMIT, filter: TokensFilter, props: Fet
         throw new Error('Invalid query');
       }
 
-      const cacheKey = JSON.stringify(options);
+      // const cacheKey = JSON.stringify(options);
 
-      // use cached value if exists
-      let response = orderCache.get(cacheKey);
+      // not using cache for now
+      // let response = orderCache.get(cacheKey);
+      let response;
       if (!response) {
         response = await apiGet(options.endpoint, {
           query: options.query,
@@ -256,8 +256,8 @@ const useOrderFetcher = (limit = DEFAULT_LIMIT, filter: TokensFilter, props: Fet
       }
 
       if (response && response.result?.data) {
-        // save in cache
-        orderCache.set(cacheKey, response);
+        // not saving in cache
+        // orderCache.set(cacheKey, response);
 
         let newData;
         if (loadMore) {

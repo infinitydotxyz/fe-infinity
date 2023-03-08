@@ -6,7 +6,7 @@ import { ReactNode, useEffect, useState } from 'react';
 import { FiEdit3 } from 'react-icons/fi';
 import { MdClose } from 'react-icons/md';
 import { AButton } from 'src/components/astra/astra-button';
-import { EthSymbol, EZImage, Spacer, TextInputBox } from 'src/components/common';
+import { BouncingLogo, EthSymbol, EZImage, Spacer, TextInputBox } from 'src/components/common';
 import {
   ellipsisString,
   getCartType,
@@ -57,7 +57,7 @@ export const AstraCart = ({
   onTokenSend
 }: Props) => {
   const router = useRouter();
-  const { selectedProfileTab } = useAppContext();
+  const { selectedProfileTab, isCheckingOut, setIsCheckingOut } = useAppContext();
   const [cartTitle, setCartTitle] = useState('Cart');
   const [checkoutBtnText, setCheckoutBtnText] = useState('Checkout');
   const [sendToAddress, setSendToAddress] = useState('');
@@ -400,10 +400,11 @@ export const AstraCart = ({
             (chainId !== ChainId.Mainnet && chainId !== ChainId.Goerli)
           }
           onClick={async () => {
+            setIsCheckingOut(true);
             cartType === CartType.Send ? onTokenSend(await finalSendToAddress(sendToAddress)) : onCheckout();
           }}
         >
-          {checkoutBtnText}
+          {isCheckingOut ? <BouncingLogo /> : checkoutBtnText}
         </AButton>
       </div>
 

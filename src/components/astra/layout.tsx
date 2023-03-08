@@ -26,7 +26,8 @@ export const Layout = ({ children }: Props) => {
     removeCollFromSelection,
     orderSelection,
     clearOrderSelection,
-    removeOrderFromSelection
+    removeOrderFromSelection,
+    setIsCheckingOut
   } = useAppContext();
 
   const gridRef = useRef<HTMLDivElement>(null);
@@ -48,6 +49,8 @@ export const Layout = ({ children }: Props) => {
               const result = await handleOrdersCancel(orderSelection);
               result && clearOrderSelection();
             }
+
+            setIsCheckingOut(false);
           } catch (e) {
             console.error(e);
             toastError(String(e));
@@ -56,6 +59,7 @@ export const Layout = ({ children }: Props) => {
         onTokenSend={async (value) => {
           const result = await handleTokenSend(nftSelection, value);
           result && clearNFTSelection();
+          setIsCheckingOut(false);
         }}
         onTokenRemove={(value) => {
           removeNFTFromSelection(value);
