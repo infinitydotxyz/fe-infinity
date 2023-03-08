@@ -23,6 +23,16 @@ export interface MatchingEngineStatus {
     };
     jobsProcessing: number;
   };
+  averages: {
+    matchingEngine: {
+      globalAverage: number | null;
+      collectionAverage: number | null;
+    };
+    executionEngine: {
+      globalAverage: number | null;
+      collectionAverage: number | null;
+    };
+  };
 }
 
 export const useMatchingEngineCollection = (address: string, refreshInterval = 30_000) => {

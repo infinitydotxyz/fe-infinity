@@ -18,7 +18,13 @@ export const MatchingEngineStatusIcon = ({
 
   if (matchingEngineStatus[component].healthStatus.status === 'healthy') {
     if (matchingEngineStatus[component].jobsProcessing < 100) {
-      return <StatusIcon status="complete" label={'Live'} />;
+      return (
+        <StatusIcon
+          status="complete"
+          label={`Live`}
+          duration={component !== 'orderRelay' ? matchingEngineStatus.averages[component].collectionAverage : null}
+        />
+      );
     }
     return (
       <StatusIcon
@@ -132,7 +138,7 @@ export const StatusIcon = ({
 }: {
   status: 'complete' | 'pending' | 'pending-indefinite' | 'error' | 'invalid';
   label: string;
-  duration?: number;
+  duration?: number | null;
 }) => {
   let iconClass = '';
   switch (status) {
@@ -159,7 +165,7 @@ export const StatusIcon = ({
 
   const formatDuration = (duration: number) => {
     if (duration < 1000) {
-      return `${duration}ms`;
+      return `${Math.floor(duration)}ms`;
     }
     if (duration < 60000) {
       return `${(duration / 1000).toFixed(2)}s`;
@@ -173,8 +179,8 @@ export const StatusIcon = ({
   const isValid = status != 'invalid';
 
   return (
-    <div className="flex items-center space-x-2">
-      <span className="flex w-2.5 h-2.5 relative">
+    <div className="flex items-center space-x-1.5">
+      <span className="flex w-2 h-2 relative">
         <span
           className={`${isValid ? 'animate-ping' : ''} absolute w-full h-full rounded-full ${iconClass} opacity-75`}
         ></span>
