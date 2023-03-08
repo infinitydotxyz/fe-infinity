@@ -67,7 +67,7 @@ export const AstraCart = ({
   const { address: user } = useAccount();
   const { chain } = useNetwork();
   const { selectedChain } = useAppContext();
-  const chainId = String(chain?.id ?? selectedChain);
+  const chainId = String(chain?.id);
 
   const { cartType, setCartType, getCurrentCartItems, cartItems } = useCartContext();
   const [currentCartItems, setCurrentCartItems] = useState<CartItem[]>([]);
@@ -269,10 +269,10 @@ export const AstraCart = ({
     } else if (cartType === CartType.CollectionOffer) {
       if (cartItems.length > 1) {
         setCartTitle('Collection Offers');
-        setCheckoutBtnText('Place offers');
+        setCheckoutBtnText('Bid');
       } else {
         setCartTitle('Collection Offer');
-        setCheckoutBtnText('Place offer');
+        setCheckoutBtnText('Bid');
       }
     } else if (cartType === CartType.TokenOffer) {
       setCartTitle('Buy');
@@ -398,7 +398,7 @@ export const AstraCart = ({
             !user ||
             currentCartItems.length === 0 ||
             (cartType === CartType.Send && !sendToAddress) ||
-            (chainId !== ChainId.Mainnet && chainId !== ChainId.Goerli)
+            chainId !== selectedChain
           }
           onClick={async () => {
             setIsCheckingOut(true);

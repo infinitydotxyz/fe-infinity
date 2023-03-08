@@ -11,10 +11,10 @@ import { isLocalhost } from 'src/utils/common-utils';
 import { AppContextProvider } from 'src/utils/context/AppContext';
 import { CartContextProvider } from 'src/utils/context/CartContext';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
-import { mainnet, goerli } from 'wagmi/chains';
+import { goerli, mainnet } from 'wagmi/chains';
+import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet';
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
-import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 
 import NProgress from 'nprogress'; //nprogress module
@@ -39,8 +39,11 @@ const { chains, provider } = configureChains(supportedChains, [
     rpc: (chain) => {
       if (chain === goerli) {
         return { http: `https://eth-goerli.g.alchemy.com/v2/${alchemyApiKeyGoerli}` };
+      } else if (chain === mainnet) {
+        return { http: `https://eth-mainnet.g.alchemy.com/v2/${alchemyApiKeyMainnet}` };
+      } else {
+        throw Error('Unsupported chain');
       }
-      return { http: `https://eth-mainnet.g.alchemy.com/v2/${alchemyApiKeyMainnet}` };
     }
   })
 ]);

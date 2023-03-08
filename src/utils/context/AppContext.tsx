@@ -99,7 +99,7 @@ export const AppContextProvider = ({ children }: Props) => {
   const { data: signer } = useSigner();
   const provider = useProvider();
   const { chain } = useNetwork();
-  const chainId = String(chain?.id ?? selectedChain);
+  const chainId = String(chain?.id);
   const { address: user } = useAccount();
 
   const {
