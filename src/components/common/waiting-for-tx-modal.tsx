@@ -2,6 +2,7 @@ import { TransactionReceipt } from '@ethersproject/abstract-provider';
 import { useEffect, useState } from 'react';
 import { Button, Modal, BouncingLogo } from 'src/components/common';
 import { ellipsisAddress, getChainScannerBase } from 'src/utils';
+import { useAppContext } from 'src/utils/context/AppContext';
 import { dropShadow } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { useNetwork, useProvider } from 'wagmi';
@@ -15,7 +16,8 @@ interface Props {
 export const WaitingForTxModal = ({ title, txHash, onClose }: Props) => {
   const provider = useProvider();
   const { chain } = useNetwork();
-  const chainId = String(chain?.id) ?? '1';
+  const { selectedChain } = useAppContext();
+  const chainId = String(chain?.id ?? selectedChain);
 
   const [transactionReceipt, setTransactionReceipt] = useState<TransactionReceipt | undefined>(undefined);
 

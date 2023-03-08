@@ -1,15 +1,15 @@
-import { ChainId, Collection, CollectionPeriodStatsContent, StatsPeriod } from '@infinityxyz/lib-frontend/types/core';
+import { Collection, CollectionPeriodStatsContent, StatsPeriod } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { AButton } from 'src/components/astra/astra-button';
 import { APageBox } from 'src/components/astra/astra-page-box';
 import {
   BlueCheckInline,
+  BouncingLogo,
   CenterFixed,
   EthPrice,
   EZImage,
   NextLink,
-  BouncingLogo,
   ToggleTab
 } from 'src/components/common';
 import { useIsMounted } from 'src/hooks/useIsMounted';
@@ -31,7 +31,8 @@ const TrendingPage = () => {
   const options = ['1 day', '7 days', '30 days', 'All Time'];
   const DEFAULT_TAB = '1 day';
   const { chain } = useNetwork();
-  const chainId = String(chain?.id) ?? ChainId.Mainnet;
+  const { selectedChain } = useAppContext();
+  const chainId = String(chain?.id ?? selectedChain);
 
   const fetchData = async (refresh = false) => {
     setIsLoading(true);

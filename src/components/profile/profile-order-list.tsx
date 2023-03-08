@@ -30,7 +30,8 @@ const DEFAULT_ORDER_TYPE_FILTER = 'offers-made';
 export const ProfileOrderList = ({ userAddress, className = '' }: Props) => {
   const { data: signer } = useSigner();
   const { chain } = useNetwork();
-  const chainId = String(chain?.id ?? 1) as ChainId;
+  const { selectedChain } = useAppContext();
+  const chainId = String(chain?.id ?? selectedChain);
   const { address: user } = useAccount();
   const { setTxnHash } = useAppContext();
 

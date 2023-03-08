@@ -1,4 +1,4 @@
-import { ChainId, HistoricalSalesTimeBucket } from '@infinityxyz/lib-frontend/types/core';
+import { HistoricalSalesTimeBucket } from '@infinityxyz/lib-frontend/types/core';
 import { localPoint } from '@visx/event';
 import { Group } from '@visx/group';
 import { AnimatedAxis, AnimatedGridRows } from '@visx/react-spring';
@@ -17,6 +17,7 @@ import { ADropdown } from 'src/components/astra/astra-dropdown';
 import { TokenCardModal } from 'src/components/astra/token-grid/token-card-modal';
 import { EZImage } from 'src/components/common';
 import { ellipsisString } from 'src/utils';
+import { useAppContext } from 'src/utils/context/AppContext';
 import { BasicTokenInfo } from 'src/utils/types';
 import { secondaryBgColor, secondaryTextColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
@@ -138,7 +139,8 @@ function SalesChart({ width, height, data, hideOutliers }: SalesChartProps) {
   const [modalOpen, setModalOpen] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const { chain } = useNetwork();
-  const chainId = String(chain?.id ?? 1) as ChainId;
+  const { selectedChain } = useAppContext();
+  const chainId = String(chain?.id ?? selectedChain);
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

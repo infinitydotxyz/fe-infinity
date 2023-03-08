@@ -1,7 +1,8 @@
-import { ChainId, CollectionHistoricalSale, CollectionOrder } from '@infinityxyz/lib-frontend/types/core';
+import { CollectionHistoricalSale, CollectionOrder } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { BouncingLogo, ExternalLink } from 'src/components/common';
 import { apiGet } from 'src/utils';
+import { useAppContext } from 'src/utils/context/AppContext';
 import { secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { useNetwork } from 'wagmi';
@@ -21,7 +22,8 @@ export type CollectionChartsProps = {
 export const CollectionCharts = ({ className = '', collectionAddress, collectionImage }: CollectionChartsProps) => {
   const [salesChartData, setSalesChartData] = useState<SalesChartData[]>([]);
   const { chain } = useNetwork();
-  const chainId = chain?.id ?? ChainId.Mainnet;
+  const { selectedChain } = useAppContext();
+  const chainId = String(chain?.id ?? selectedChain);
   const [ordersData, setOrdersData] = useState<CollectionOrder[]>([]);
   const [selectedOrders, setSelectedOrders] = useState<CollectionOrder[]>([]);
   const [selectedOrderIndex, setSelectedOrderIndex] = useState(0);

@@ -34,6 +34,9 @@ import { sendMultipleNfts, sendSingleNft, signOrders } from '../orders';
 import { CartType } from './CartContext';
 
 type AppContextType = {
+  selectedChain: ChainId;
+  setSelectedChain: (value: ChainId) => void;
+
   showCart: boolean;
   setShowCart: (value: boolean) => void;
 
@@ -85,6 +88,7 @@ interface Props {
 }
 
 export const AppContextProvider = ({ children }: Props) => {
+  const [selectedChain, setSelectedChain] = useState<ChainId>(ChainId.Goerli); // adi-todo: change to mainnet
   const [showCart, setShowCart] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [selectedProfileTab, setSelectedProfileTab] = useState(ProfileTabs.Items.toString());
@@ -95,8 +99,8 @@ export const AppContextProvider = ({ children }: Props) => {
   const { data: signer } = useSigner();
   const provider = useProvider();
   const { chain } = useNetwork();
+  const chainId = String(chain?.id ?? selectedChain);
   const { address: user } = useAccount();
-  const chainId = String(chain?.id ?? 1) as ChainId;
 
   const {
     isNFTSelected,
@@ -410,6 +414,9 @@ export const AppContextProvider = ({ children }: Props) => {
   };
 
   const value: AppContextType = {
+    selectedChain,
+    setSelectedChain,
+
     showCart,
     setShowCart,
 

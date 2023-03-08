@@ -1,7 +1,8 @@
-import { ChainId, CollectionHistoricalSale, CollectionSaleAndOrder } from '@infinityxyz/lib-frontend/types/core';
+import { CollectionHistoricalSale, CollectionSaleAndOrder } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { BouncingLogo } from 'src/components/common';
 import { apiGet } from 'src/utils';
+import { useAppContext } from 'src/utils/context/AppContext';
 import { twMerge } from 'tailwind-merge';
 import { useNetwork } from 'wagmi';
 import { ResponsiveSalesChart, SalesChartData } from '../charts/sales-chart';
@@ -16,7 +17,8 @@ export type Props = {
 
 export const CollectionItemsPageSidebar = ({ className = '', collectionAddress, collectionImage }: Props) => {
   const { chain } = useNetwork();
-  const chainId = chain?.id ?? ChainId.Mainnet;
+  const { selectedChain } = useAppContext();
+  const chainId = String(chain?.id ?? selectedChain);
   const [salesChartData, setSalesChartData] = useState<SalesChartData[]>([]);
   const [recentSalesOrdersData, setRecentSalesOrdersData] = useState<CollectionSaleAndOrder[]>([]);
   const [isSalesChartLoading, setIsSalesChartLoading] = useState(true);

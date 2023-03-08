@@ -1,8 +1,9 @@
-import { ChainId, CollectionOrder } from '@infinityxyz/lib-frontend/types/core';
+import { CollectionOrder } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { TokenCardModal } from 'src/components/astra/token-grid/token-card-modal';
 import { ellipsisString } from 'src/utils';
+import { useAppContext } from 'src/utils/context/AppContext';
 import { BasicTokenInfo } from 'src/utils/types';
 import { borderColor, secondaryBgColorDarker, secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
@@ -67,7 +68,8 @@ const OrderDetailViewer = ({ order, collectionAddress }: Props2) => {
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
   const { chain } = useNetwork();
-  const chainId = String(chain?.id ?? 1) as ChainId;
+  const { selectedChain } = useAppContext();
+  const chainId = String(chain?.id ?? selectedChain);
 
   const basicTokenInfo: BasicTokenInfo = {
     tokenId: order?.tokenId ?? '',
@@ -121,7 +123,8 @@ export const SalesChartDetails = ({ data }: Props3) => {
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
   const { chain } = useNetwork();
-  const chainId = String(chain?.id ?? 1) as ChainId;
+  const { selectedChain } = useAppContext();
+  const chainId = String(chain?.id ?? selectedChain);
 
   const basicTokenInfo: BasicTokenInfo = {
     tokenId: data?.tokenId ?? '',

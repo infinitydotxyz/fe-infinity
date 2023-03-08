@@ -1,4 +1,4 @@
-import { BaseCollection, ChainId } from '@infinityxyz/lib-frontend/types/core';
+import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
 import { EventType } from '@infinityxyz/lib-frontend/types/core/feed';
 import { NftActivity } from '@infinityxyz/lib-frontend/types/dto';
 import { useEffect, useState } from 'react';
@@ -46,7 +46,8 @@ export const CollectionSocialFeed = ({
   className = ''
 }: Props) => {
   const { chain } = useNetwork();
-  const chainId = chain?.id ?? ChainId.Mainnet;
+  const { selectedChain } = useAppContext();
+  const chainId = String(chain?.id ?? selectedChain);
   const [filter] = useState<FeedFilter>({ collectionAddress, types });
   const [activities, setActivities] = useState<NftEventRec[]>([]);
 
@@ -135,6 +136,7 @@ interface Props2 {
 
 import { toHTML } from 'discord-markdown';
 import parse from 'html-react-parser';
+import { useAppContext } from 'src/utils/context/AppContext';
 
 const FeedItem = ({ activity }: Props2) => {
   const tweetItem = () => {

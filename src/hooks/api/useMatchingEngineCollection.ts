@@ -1,6 +1,6 @@
-import { ChainId } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { apiGet } from 'src/utils';
+import { useAppContext } from 'src/utils/context/AppContext';
 import { useNetwork } from 'wagmi';
 
 export interface MatchingEngineStatus {
@@ -27,7 +27,8 @@ export interface MatchingEngineStatus {
 
 export const useMatchingEngineCollection = (address: string, refreshInterval = 30_000) => {
   const { chain } = useNetwork();
-  const chainId = String(chain?.id ?? 1) as ChainId;
+  const { selectedChain } = useAppContext();
+  const chainId = String(chain?.id ?? selectedChain);
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState<MatchingEngineStatus | null>(null);
   const [isInitialLoadComplete, setIsInitialLoadComplete] = useState(false);

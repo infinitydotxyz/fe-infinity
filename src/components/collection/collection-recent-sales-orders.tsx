@@ -1,4 +1,4 @@
-import { ChainId, CollectionSaleAndOrder } from '@infinityxyz/lib-frontend/types/core';
+import { CollectionSaleAndOrder } from '@infinityxyz/lib-frontend/types/core';
 import { defaultStyles, TooltipWithBounds, useTooltip } from '@visx/tooltip';
 import { format } from 'date-fns';
 import { useRouter } from 'next/router';
@@ -7,6 +7,7 @@ import { FiShoppingCart } from 'react-icons/fi';
 import { HiOutlineTag } from 'react-icons/hi';
 import { VscMegaphone } from 'react-icons/vsc';
 import { ellipsisString, nFormatter, timeAgo } from 'src/utils';
+import { useAppContext } from 'src/utils/context/AppContext';
 import { BasicTokenInfo } from 'src/utils/types';
 import {
   borderColor,
@@ -35,7 +36,8 @@ export const CollectionRecentSalesOrders = ({ data, collectionAddress }: Props) 
   const [selectedItem, setSelectedItem] = useState<CollectionSaleAndOrder | null>(null);
   const router = useRouter();
   const { chain } = useNetwork();
-  const chainId = String(chain?.id) ?? ChainId.Mainnet;
+  const { selectedChain } = useAppContext();
+  const chainId = String(chain?.id ?? selectedChain);
 
   const basicTokenInfo: BasicTokenInfo = {
     tokenId: selectedItem?.tokenId ?? '',
