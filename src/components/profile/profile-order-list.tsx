@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { MdClose } from 'react-icons/md';
 import { useProfileOrderFetcher } from 'src/hooks/api/useOrderFetcher';
 import { extractErrorMsg } from 'src/utils';
+import { useAppContext } from 'src/utils/context/AppContext';
 import { CartType } from 'src/utils/context/CartContext';
 import { fetchOrderNonce } from 'src/utils/orderbook-utils';
 import { cancelAllOrders } from 'src/utils/orders';
@@ -30,6 +31,7 @@ export const ProfileOrderList = ({ userAddress, className = '' }: Props) => {
   const { data: signer } = useSigner();
   const { chain } = useNetwork();
   const { address: user } = useAccount();
+  const { setTxnHash } = useAppContext();
 
   const chainId = String(chain?.id ?? 1) as ChainId;
   const [isCancellingAll, setIsCancellingAll] = useState(false);
@@ -38,7 +40,6 @@ export const ProfileOrderList = ({ userAddress, className = '' }: Props) => {
     orderType: DEFAULT_ORDER_TYPE_FILTER
   });
   const [selectedCollection, setSelectedCollection] = useState<CollectionSearchDto>();
-
   const { orders, isLoading, hasNextPage, fetch } = useProfileOrderFetcher(50, filter, userAddress);
 
   const handleCollectionSearchResult = (result: CollectionSearchDto) => {
@@ -135,12 +136,10 @@ export const ProfileOrderList = ({ userAddress, className = '' }: Props) => {
             try {
               if (signer && user) {
                 const minOrderNonce = await fetchOrderNonce(user, chainId as ChainId);
-                await cancelAllOrders(signer as JsonRpcSigner, chainId, minOrderNonce);
+                const { hash } = await cancelAllOrders(signer as JsonRpcSigner, chainId, minOrderNonce);
                 toastSuccess('Sent txn to chain for execution');
                 setIsCancellingAll(true);
-                // todo waitForTransaction(hash, () => {
-                //   toastInfo(`Transaction confirmed ${ellipsisAddress(hash)}`);
-                // });
+                setTxnHash(hash);
                 setIsCancellingAll(false);
               } else {
                 throw 'User is null';

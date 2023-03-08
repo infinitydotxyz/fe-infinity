@@ -14,7 +14,7 @@ import { SnipeModal } from 'src/components/common/snipe-modal';
 import { MouseProvider } from 'src/utils/context/MouseProvider';
 import { twMerge } from 'tailwind-merge';
 import { useAccount } from 'wagmi';
-import { borderColor, hoverColorBrandText } from '../ui-constants';
+import { borderColor, hoverColorBrandText, secondaryBgColor } from '../ui-constants';
 import { useAppContext } from './AppContext';
 import DockItem from './DockItem';
 import { DockContextType } from './types';
@@ -61,10 +61,7 @@ const Dock = () => {
         <DockContext.Provider value={{ hovered, width }}>
           <nav
             ref={ref}
-            className={twMerge(
-              'flex justify-center items-center rounded-lg p-4 border bg-opacity-40 backdrop-blur-3xl',
-              borderColor
-            )}
+            className={twMerge('flex justify-center items-center rounded-lg p-4 border', borderColor, secondaryBgColor)}
             onMouseOver={() => {
               setHovered(true);
               setDockHeight('h-10');

@@ -2,6 +2,8 @@ import { TransactionReceipt } from '@ethersproject/abstract-provider';
 import { useEffect, useState } from 'react';
 import { Button, Modal, BouncingLogo } from 'src/components/common';
 import { ellipsisAddress, getChainScannerBase } from 'src/utils';
+import { dropShadow } from 'src/utils/ui-constants';
+import { twMerge } from 'tailwind-merge';
 import { useNetwork, useProvider } from 'wagmi';
 
 interface Props {
@@ -36,6 +38,7 @@ export const WaitingForTxModal = ({ title, txHash, onClose }: Props) => {
       showCloseIcon={true}
       onClose={() => onClose()}
       title={title}
+      panelClassName={twMerge(dropShadow)}
     >
       <div>
         {transactionReceipt ? (

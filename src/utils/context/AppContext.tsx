@@ -40,6 +40,8 @@ type AppContextType = {
   selectedProfileTab: string;
   setSelectedProfileTab: (value: string) => void;
 
+  setTxnHash: (value: string) => void;
+
   listMode: boolean;
   setListMode: (value: boolean) => void;
 
@@ -271,12 +273,9 @@ export const AppContextProvider = ({ children }: Props) => {
     try {
       if (signer) {
         const nonces = ordersToCancel.map((order) => order.nonce);
-        await cancelMultipleOrders(signer as JsonRpcSigner, chainId, nonces);
+        const { hash } = await cancelMultipleOrders(signer as JsonRpcSigner, chainId, nonces);
         toastSuccess('Sent txn to chain for execution');
-        // todo: waitForTransaction(hash, () => {
-        //   toastInfo(`Transaction confirmed ${ellipsisAddress(hash)}`);
-        // });
-
+        setTxnHash(hash);
         return true;
       } else {
         throw 'Signer is null';
@@ -413,6 +412,8 @@ export const AppContextProvider = ({ children }: Props) => {
     selectedProfileTab,
     setSelectedProfileTab,
 
+    setTxnHash,
+
     listMode,
     setListMode,
 
@@ -449,7 +450,9 @@ export const AppContextProvider = ({ children }: Props) => {
     <AppContext.Provider value={value}>
       <>
         {children}{' '}
-        {txnHash ? <WaitingForTxModal title={'Sending NFTs'} txHash={txnHash} onClose={() => setTxnHash('')} /> : null}
+        {txnHash ? (
+          <WaitingForTxModal title={'Awaiting transaction'} txHash={txnHash} onClose={() => setTxnHash('')} />
+        ) : null}
         <ToastContainer
           limit={3}
           position="top-right"

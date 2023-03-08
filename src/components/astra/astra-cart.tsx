@@ -388,12 +388,17 @@ export const AstraCart = ({
         )}
       </div>
 
-      {/* todo: change the chainId check here when more chains are supported */}
+      {/* future-todo: change the chainId check here when more chains are supported */}
       <div className="m-6 flex flex-col">
         <AButton
           className="p-3 z-50"
           primary={true}
-          disabled={!user || currentCartItems.length === 0 || (cartType === CartType.Send && !sendToAddress)}
+          disabled={
+            !user ||
+            currentCartItems.length === 0 ||
+            (cartType === CartType.Send && !sendToAddress) ||
+            (chainId !== ChainId.Mainnet && chainId !== ChainId.Goerli)
+          }
           onClick={async () => {
             cartType === CartType.Send ? onTokenSend(await finalSendToAddress(sendToAddress)) : onCheckout();
           }}
