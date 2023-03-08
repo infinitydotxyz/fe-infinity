@@ -19,7 +19,7 @@ export const ANavbar = () => {
   const [labelVal, setLabelVal] = useState(chainIdToName(selectedChain));
   return (
     <div>
-      {chain && chainId !== selectedChain ? <NetworkWarning /> : null}
+      {chain ? chainId !== selectedChain ? <NetworkWarning /> : null : null}
       <div className={twMerge('flex px-6 py-2 space-x-4 items-center border-b-[1px]', borderColor)}>
         <NextLink href="/trending">
           <EZImage src={flowLogo.src} className="w-9 h-9" />
