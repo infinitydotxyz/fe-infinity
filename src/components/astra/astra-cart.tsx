@@ -1,4 +1,5 @@
 import { getAddress } from '@ethersproject/address';
+import { RadioGroup } from '@headlessui/react';
 import { ChainId } from '@infinityxyz/lib-frontend/types/core';
 import { ETHEREUM_WETH_ADDRESS, GOERLI_WETH_ADDRESS } from '@infinityxyz/lib-frontend/utils';
 import { useRouter } from 'next/router';
@@ -6,7 +7,7 @@ import { ReactNode, useEffect, useState } from 'react';
 import { FiEdit3 } from 'react-icons/fi';
 import { MdClose } from 'react-icons/md';
 import { AButton } from 'src/components/astra/astra-button';
-import { BouncingLogo, EthSymbol, EZImage, Spacer, TextInputBox } from 'src/components/common';
+import { EthSymbol, EZImage, Spacer, TextInputBox, ToggleTab } from 'src/components/common';
 import {
   ellipsisString,
   getCartType,
@@ -32,6 +33,7 @@ import {
 } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { useAccount, useBalance, useNetwork, useProvider } from 'wagmi';
+import { RadioButtonCard } from '../common/radio-button-card';
 import { UniswapModal } from '../common/uniswap-model';
 import { ADropdown } from './astra-dropdown';
 
@@ -57,7 +59,7 @@ export const AstraCart = ({
   onTokenSend
 }: Props) => {
   const router = useRouter();
-  const { selectedProfileTab, isCheckingOut, setIsCheckingOut } = useAppContext();
+  const { selectedProfileTab, isCheckingOut, setIsCheckingOut, checkoutBtnStatus } = useAppContext();
   const [cartTitle, setCartTitle] = useState('Cart');
   const [checkoutBtnText, setCheckoutBtnText] = useState('Checkout');
   const [sendToAddress, setSendToAddress] = useState('');
@@ -72,13 +74,21 @@ export const AstraCart = ({
   const { cartType, setCartType, getCurrentCartItems, cartItems } = useCartContext();
   const [currentCartItems, setCurrentCartItems] = useState<CartItem[]>([]);
   const [cartTotal, setCartTotal] = useState(0);
+  const cartTabOptions = ['Totals', 'Options'];
+  const [selectedTab, setSelectedTab] = useState(cartTabOptions[0]);
+
+  enum ExecutionMode {
+    Fast = 'Fast',
+    Batched = 'Batched'
+  }
+  const [executionMode, setExecutionMode] = useState(ExecutionMode.Fast);
+
+  // collectionId -> price
+  // const [collectionCommonPrice, setCollectionCommonPrice] = useState<Map<string, string>>(new Map());
 
   const [tokenMap, setTokenMap] = useState<Map<string, ERC721TokenCartItem[]>>(new Map());
   const [collMap, setCollMap] = useState<Map<string, ERC721CollectionCartItem[]>>(new Map());
   const [orderMap, setOrderMap] = useState<Map<string, ERC721OrderCartItem[]>>(new Map());
-
-  let cartItemList: ReactNode;
-  const [cartContent, setCartContent] = useState<ReactNode>(cartItemList);
 
   // future-todo change when supporting more chains
   const WETH_ADDRESS =
@@ -86,12 +96,28 @@ export const AstraCart = ({
 
   const { data: wethBalance, isLoading } = useBalance({
     address: user,
-    token: WETH_ADDRESS as `0x{string}`
+    token: WETH_ADDRESS as `0x{string}`,
+    watch: true
   });
 
   const { data: ethBalance, isLoading: isEthBalanceLoading } = useBalance({
-    address: user
+    address: user,
+    watch: true
   });
+
+  let cartItemList: ReactNode;
+  const [cartContent, setCartContent] = useState<ReactNode>(cartItemList);
+
+  const onCartTabOptionsChange = (value: string) => {
+    switch (value) {
+      case 'Totals':
+        setSelectedTab('Totals');
+        break;
+      case 'Options':
+        setSelectedTab('Options');
+        break;
+    }
+  };
 
   const finalSendToAddress = async (addr: string) => {
     let finalAddress: string | null = addr;
@@ -115,8 +141,23 @@ export const AstraCart = ({
         const first = tokenArray[0];
 
         divList.push(
-          <div className="w-full font-bold font-heading truncate min-h-[25px]" key={`header-${first.id}`}>
+          <div
+            className={twMerge(
+              'w-full font-bold font-heading truncate',
+              cartType === CartType.TokenList ? 'min-h-[25px]' : 'min-h-[25px]'
+            )}
+            key={`header-${first.id}`}
+          >
             {first.collectionName}
+            {/* {cartType === CartType.TokenList && (
+              <div className="flex">
+                <CommonCollPrice
+                  collection={trimLowerCase(`${first.chainId}:${first.address}`)}
+                  collectionCommonPrice={collectionCommonPrice}
+                  setCollectionCommonPrice={setCollectionCommonPrice}
+                />
+              </div>
+            )} */}
           </div>
         );
 
@@ -129,10 +170,13 @@ export const AstraCart = ({
               : 0;
             newCartTotal += price;
           }
+          // const commonPrice = collectionCommonPrice.get(`${t.chainId}:${t.address}`) ?? '';
           divList.push(
             <AstraTokenCartItem
+              // key={getTokenCartItemKey(t) + commonPrice}
               key={getTokenCartItemKey(t)}
               token={t}
+              // collectionCommonPrice={commonPrice}
               onRemove={onTokenRemove}
               updateCartTotal={(newVal: string, oldVal: string) => {
                 newCartTotal += Number(newVal) - Number(oldVal);
@@ -144,9 +188,9 @@ export const AstraCart = ({
         divList.push(<div key={Math.random()} className={twMerge('h-2 w-full border-b-[1px]', borderColor)} />);
       });
 
-      // min-w-0 is important. otherwise text doesn't truncate
+      // min-w-0 is important otherwise text doesn't truncate
       cartItemList = (
-        <div className={twMerge(textColor, 'min-w-0 flex px-6 flex-col space-y-2 items-start flex-1 overflow-y-auto')}>
+        <div className={twMerge(textColor, 'min-w-0 flex px-4 flex-col space-y-2 items-start flex-1 overflow-y-auto')}>
           {divList}
         </div>
       );
@@ -174,9 +218,9 @@ export const AstraCart = ({
         divList.push(<div key={Math.random()} className={twMerge('h-2 w-full border-b-[1px]', borderColor)} />);
       });
 
-      // min-w-0 is important. otherwise text doesn't truncate
+      // min-w-0 is important otherwise text doesn't truncate
       cartItemList = (
-        <div className={twMerge(textColor, 'min-w-0 flex px-6 flex-col space-y-2 items-start flex-1 overflow-y-auto')}>
+        <div className={twMerge(textColor, 'min-w-0 flex px-4 flex-col space-y-2 items-start flex-1 overflow-y-auto')}>
           {divList}
         </div>
       );
@@ -199,9 +243,9 @@ export const AstraCart = ({
         divList.push(<div key={Math.random()} className={twMerge('h-2 w-full border-b-[1px]', borderColor)} />);
       });
 
-      // min-w-0 is important. otherwise text doesn't truncate
+      // min-w-0 is important otherwise text doesn't truncate
       cartItemList = (
-        <div className={twMerge(textColor, 'min-w-0 flex px-6 flex-col space-y-2 items-start flex-1 overflow-y-auto')}>
+        <div className={twMerge(textColor, 'min-w-0 flex px-4 flex-col space-y-2 items-start flex-1 overflow-y-auto')}>
           {divList}
         </div>
       );
@@ -304,7 +348,7 @@ export const AstraCart = ({
 
   return (
     <div className={twMerge('h-full flex flex-col border-l-[1px]', borderColor)}>
-      <div className=" m-4 flex items-center">
+      <div className="m-4 flex items-center">
         <div className={twMerge(textColor, 'text-3xl lg:text-2xl font-bold font-heading mr-3')}>{cartTitle}</div>
 
         <div className="flex items-center">
@@ -322,6 +366,7 @@ export const AstraCart = ({
                     cartType === CartType.TokenOffer
                   ) {
                     onTokensClear();
+                    // setCollectionCommonPrice(new Map());
                   } else if (cartType === CartType.CollectionOffer) {
                     onCollsClear();
                   } else if (cartType === CartType.Cancel) {
@@ -349,41 +394,75 @@ export const AstraCart = ({
 
       {cartContent}
 
-      <div className="m-6 flex flex-col text-sm space-y-2">
-        <div>
-          <span className={twMerge(secondaryTextColor, 'font-medium')}>Total: </span>
-          <span className="font-heading">{nFormatter(Number(cartTotal))} WETH</span>
-        </div>
-        {user && (
-          <div className="space-y-2">
-            <div className="">
-              <span className={twMerge(secondaryTextColor, 'font-medium')}>WETH Balance: </span>
-              {isLoading ? (
-                <span>Loading...</span>
-              ) : (
-                <span className="font-heading">
-                  {nFormatter(Number(wethBalance?.formatted))} {EthSymbol}
-                </span>
-              )}
-              <AButton
-                className={twMerge('rounded-md text-xs ml-2', secondaryBtnBgColorText)}
-                onClick={() => {
-                  setShowBuyTokensModal(true);
-                }}
-              >
-                Wrap ETH
-              </AButton>
-            </div>
+      <div className={twMerge('m-4 flex flex-col text-sm space-y-2 rounded-lg p-3', secondaryBgColor)}>
+        <ToggleTab
+          className="font-heading mb-2"
+          options={cartTabOptions}
+          defaultOption={cartTabOptions[0]}
+          onChange={onCartTabOptionsChange}
+        />
 
-            <div className="">
-              <span className={twMerge(secondaryTextColor, 'font-medium')}>ETH Balance: </span>
-              {isEthBalanceLoading ? (
-                <span>Loading...</span>
-              ) : (
-                <span className="font-heading">
-                  {nFormatter(Number(ethBalance?.formatted))} {EthSymbol}
-                </span>
-              )}
+        {selectedTab === 'Totals' && (
+          <div className="space-y-3 px-1">
+            <div className="flex justify-between">
+              <div className={twMerge(secondaryTextColor, 'font-medium')}>Cart total: </div>
+              <div className="font-heading">{nFormatter(Number(cartTotal))} WETH</div>
+            </div>
+            {user && (
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span className={twMerge(secondaryTextColor, 'font-medium')}>WETH Balance: </span>
+
+                  <div>
+                    {isLoading ? (
+                      <span>Loading...</span>
+                    ) : (
+                      <span className="font-heading">
+                        {nFormatter(Number(wethBalance?.formatted))} {EthSymbol}
+                      </span>
+                    )}
+                    <AButton
+                      className={twMerge('rounded-md text-xs ml-2', secondaryBtnBgColorText)}
+                      onClick={() => {
+                        setShowBuyTokensModal(true);
+                      }}
+                    >
+                      Wrap ETH
+                    </AButton>
+                  </div>
+                </div>
+
+                <div className="flex justify-between">
+                  <span className={twMerge(secondaryTextColor, 'font-medium')}>ETH Balance: </span>
+                  {isEthBalanceLoading ? (
+                    <span>Loading...</span>
+                  ) : (
+                    <span className="font-heading">
+                      {nFormatter(Number(ethBalance?.formatted))} {EthSymbol}
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {selectedTab === 'Options' && (
+          <div className="h-60 overflow-y-scroll">
+            <div className="space-y-3 px-1">
+              <RadioGroup value={executionMode} onChange={setExecutionMode} className="space-y-2">
+                <RadioGroup.Label>Execution mode:</RadioGroup.Label>
+                <RadioButtonCard
+                  value={ExecutionMode.Fast}
+                  label="Fast"
+                  description="Does not wait to batch with other orders. May cost more gas."
+                />
+                <RadioButtonCard
+                  value={ExecutionMode.Batched}
+                  label="Batched"
+                  description="Batches with other users' orders. Costs less gas."
+                />
+              </RadioGroup>
             </div>
           </div>
         )}
@@ -395,6 +474,7 @@ export const AstraCart = ({
           className="p-3 z-50"
           primary={true}
           disabled={
+            isCheckingOut ||
             !user ||
             currentCartItems.length === 0 ||
             (cartType === CartType.Send && !sendToAddress) ||
@@ -405,7 +485,7 @@ export const AstraCart = ({
             cartType === CartType.Send ? onTokenSend(await finalSendToAddress(sendToAddress)) : onCheckout();
           }}
         >
-          {isCheckingOut ? <BouncingLogo /> : checkoutBtnText}
+          {isCheckingOut ? <div className="animate-pulse">{checkoutBtnStatus}</div> : checkoutBtnText}
         </AButton>
       </div>
 
@@ -431,10 +511,21 @@ interface Props2 {
   token: ERC721TokenCartItem;
   onRemove: (token: ERC721TokenCartItem) => void;
   updateCartTotal: (prevPrice: string, newPrice: string) => void;
+  // collectionCommonPrice: string;
 }
 
 const AstraTokenCartItem = ({ token, onRemove, updateCartTotal }: Props2) => {
   const { cartType } = useCartContext();
+  // const collCommonPrice = cartType === CartType.TokenList && collectionCommonPrice ? collectionCommonPrice : '';
+
+  // const price = collCommonPrice
+  //   ? collCommonPrice
+  //   : token?.orderPriceEth
+  //   ? token?.orderPriceEth.toString()
+  //   : token?.orderSnippet?.listing?.orderItem?.startPriceEth
+  //   ? token?.orderSnippet?.listing?.orderItem?.startPriceEth.toString()
+  //   : '';
+
   const price = token?.orderPriceEth
     ? token?.orderPriceEth.toString()
     : token?.orderSnippet?.listing?.orderItem?.startPriceEth
@@ -670,15 +761,16 @@ const PriceAndExpiry = ({ token, collection, className, editing, onEditComplete,
           />
 
           <TextInputBox
-            inputClassName="font-heading font-bold"
+            inputClassName="font-heading text-sm text-right mr-2"
             className="p-[6.5px]"
             autoFocus={true}
             addEthSymbol={true}
             type="number"
             value={price}
-            placeholder=""
+            placeholder="Price"
             onChange={(value) => {
               setPrice(value);
+              onEditComplete?.(value);
               if (token) {
                 token.orderPriceEth = parseFloat(value);
               } else if (collection) {
@@ -697,3 +789,33 @@ const PriceAndExpiry = ({ token, collection, className, editing, onEditComplete,
     </div>
   );
 };
+
+// interface Props6 {
+//   collection: string;
+//   collectionCommonPrice: Map<string, string>;
+//   setCollectionCommonPrice: (newMap: Map<string, string>) => void;
+// }
+
+// const CommonCollPrice = ({ collection, collectionCommonPrice, setCollectionCommonPrice }: Props6) => {
+//   const [price, setPrice] = useState(collectionCommonPrice.get(collection) ?? '');
+//   return (
+//     <div className="flex w-full items-center space-x-2 py-4 justify-between">
+//       <div className="flex text-sm font-normal">Common Price:</div>
+//       <div className="flex w-2/5">
+//         <TextInputBox
+//           inputClassName="font-heading text-sm font-normal text-right mr-2"
+//           className="p-[6.5px]"
+//           autoFocus={true}
+//           addEthSymbol={true}
+//           type="number"
+//           value={price}
+//           placeholder="Price"
+//           onChange={(value) => {
+//             setPrice(value);
+//             setCollectionCommonPrice(new Map(collectionCommonPrice).set(collection, value));
+//           }}
+//         />
+//       </div>
+//     </div>
+//   );
+// };

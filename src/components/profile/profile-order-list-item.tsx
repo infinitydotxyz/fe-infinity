@@ -50,9 +50,7 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
             <div className="">
               {orderType === 'listings' ? 'Listing' : orderType === 'offers-made' ? 'Bid' : 'Offer'}
             </div>
-            <div className={twMerge(secondaryTextColor, 'text-xs font-medium')}>
-              Expires in {format(order.endTimeMs)}
-            </div>
+            <div className={twMerge(secondaryTextColor, 'text-xs font-medium')}>Expires {format(order.endTimeMs)}</div>
           </div>
           <div className="w-1/4">
             <div className={twMerge(secondaryTextColor, 'font-medium')}>Match Status</div>

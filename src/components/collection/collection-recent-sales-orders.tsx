@@ -89,6 +89,7 @@ export const CollectionRecentSalesOrders = ({ data, collectionAddress }: Props) 
     <div className={twMerge('w-full flex flex-col mt-2 p-3 border rounded-lg text-sm space-y-3', borderColor)}>
       <div className={twMerge('flex space-x-4 px-3')}>
         <StatusIcon status="pending-indefinite" label="Live" />
+
         <Spacer />
 
         <Checkbox
@@ -178,7 +179,7 @@ export const CollectionRecentSalesOrders = ({ data, collectionAddress }: Props) 
                   </div>
                 </div>
               </div>
-              <div className={twMerge(borderColor, 'border rounded-lg p-2')}>
+              <div className={twMerge(borderColor, 'border rounded-lg p-2 text-right')}>
                 {nFormatter(item.priceEth)} {EthSymbol}
               </div>
 

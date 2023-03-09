@@ -37,7 +37,7 @@ export const ProfilePageHeader = ({ expanded, tabs }: ProfileHeaderProps) => {
         <>
           <div className="flex flex-col items-start">
             <div className="flex w-full items-center">
-              <EZImage src={person.src} className="mr-4 h-14 w-14 rounded-lg overflow-clip" />
+              <EZImage src={person.src} className="mr-4 h-12 w-12 rounded-full overflow-clip" />
 
               <div className={twMerge('flex items-center mr-2')}>
                 <div className="font-heading font-bold text-xl mr-2">
