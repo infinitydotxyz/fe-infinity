@@ -15,7 +15,7 @@ import { MouseEvent, TouchEvent, useEffect, useMemo, useState } from 'react';
 import { ASwitchButton } from 'src/components/astra/astra-button';
 import { ADropdown } from 'src/components/astra/astra-dropdown';
 import { TokenCardModal } from 'src/components/astra/token-grid/token-card-modal';
-import { EZImage } from 'src/components/common';
+import { EthSymbol, EZImage } from 'src/components/common';
 import { ellipsisString } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { BasicTokenInfo } from 'src/utils/types';
@@ -404,7 +404,9 @@ function ToolTip({ left, top, data, isTooltipOpen }: Props2) {
         <div className={twMerge('flex flex-row space-x-3')}>
           <div className="flex flex-col space-y-1">
             <div className={twMerge('font-medium text-xs', secondaryTextColor)}>Sale price</div>
-            <div className="truncate">{data?.salePrice}</div>
+            <div className="truncate">
+              {data?.salePrice} {EthSymbol}
+            </div>
           </div>
           <div className="flex flex-col space-y-1">
             <div className={twMerge('font-medium text-xs', secondaryTextColor)}>Date</div>

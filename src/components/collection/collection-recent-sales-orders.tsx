@@ -229,7 +229,9 @@ function ToolTip({ left, top, data, isTooltipOpen }: Props2) {
         <div className={twMerge('flex flex-row space-x-3')}>
           <div className="flex flex-col space-y-1">
             <div className={twMerge('font-medium text-xs', secondaryTextColor)}>Price</div>
-            <div className="truncate">{data?.priceEth}</div>
+            <div className="truncate">
+              {data?.priceEth} {EthSymbol}
+            </div>
           </div>
           <div className="flex flex-col space-y-1">
             <div className={twMerge('font-medium text-xs', secondaryTextColor)}>Date</div>
