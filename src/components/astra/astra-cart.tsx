@@ -770,7 +770,7 @@ const PriceAndExpiry = ({ token, collection, className, editing, onEditComplete,
             placeholder="Price"
             onChange={(value) => {
               setPrice(value);
-              onEditComplete?.(value);
+              // onEditComplete?.(value);
               if (token) {
                 token.orderPriceEth = parseFloat(value);
               } else if (collection) {
