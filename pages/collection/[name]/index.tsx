@@ -232,10 +232,10 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                     {isCollSelected(collection as ERC721CollectionCartItem) ? (
                       <div className="flex items-center space-x-1">
                         <AiOutlineCheckCircle className={'h-4 w-4'} />
-                        <div>Collection Offer</div>
+                        <div>Collection Bid</div>
                       </div>
                     ) : (
-                      'Collection Offer'
+                      'Collection Bid'
                     )}
                   </AButton>
 
