@@ -8,9 +8,8 @@ import { secondaryTextColor, standardBorderCard } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
 import { useAccount } from 'wagmi';
-import { OrderbookItem } from '../orderbook/orderbook-item';
 import { OrderExecutionStatusIcon, OrderMatchStatusIcon } from '../common/status-icon';
-
+import { OrderbookItem } from '../orderbook/orderbook-item';
 interface Props {
   order: ERC721OrderCartItem;
   orderType: TokensFilter['orderType'];
@@ -26,6 +25,13 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
 
   const [addedToEditCart, setAddedToEditCart] = useState(isNFTSelected(editCartToken));
   const [addedToCancelCart, setAddedToCancelCart] = useState(isOrderSelected(order));
+
+  const orderStatus = order.executionStatus?.status;
+  const isActionable = !(
+    orderStatus === 'matched-executed' ||
+    orderStatus === 'matched-executing' ||
+    orderStatus === 'matched-pending-execution'
+  );
 
   useEffect(() => {
     setAddedToEditCart(isNFTSelected(editCartToken));
@@ -72,6 +78,7 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
           {orderType === 'listings' || orderType === 'offers-made' ? (
             <div className="w-1/4 flex justify-end">
               <Button
+                disabled={!isActionable}
                 className="mr-2"
                 onClick={() => {
                   if (!isConnected) {
@@ -90,6 +97,7 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
               </Button>
 
               <Button
+                disabled={!isActionable}
                 onClick={() => {
                   if (!isConnected) {
                     return;
@@ -108,6 +116,7 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
           {orderType === 'offers-received' ? (
             <div className="w-1/6 flex justify-end">
               <Button
+                disabled={!isActionable}
                 onClick={() => {
                   if (!isConnected) {
                     return;
