@@ -84,10 +84,7 @@ export const OrderExecutionStatusIcon = ({ executionStatus }: { executionStatus:
           return (
             <StatusIcon
               status="pending-indefinite"
-              label={`Waiting for gas to be below ${nFormatter(
-                parseFloat(executionStatus.bestMatchMaxFeePerGasGwei),
-                2
-              )} GWEI`}
+              label={`Gas too low. ${nFormatter(parseFloat(executionStatus.bestMatchMaxFeePerGasGwei), 0)} GWEI`}
             />
           );
         }
@@ -131,7 +128,22 @@ export const MatchAndExecutionOrderStatus = ({ executionStatus }: { executionSta
       return <StatusIcon status="pending-indefinite" label={'No matches'} />;
     }
     case 'matched-pending-execution': {
-      return <StatusIcon status="pending-indefinite" label={'Executing'} />;
+      switch (executionStatus.reason) {
+        case 'gas-too-low': {
+          return (
+            <StatusIcon
+              status="pending-indefinite"
+              label={`Gas too low. ${nFormatter(parseFloat(executionStatus.bestMatchMaxFeePerGasGwei), 0)} GWEI`}
+            />
+          );
+        }
+        case 'unknown': {
+          return <StatusIcon status="pending-indefinite" label={'Queued'} />;
+        }
+        default: {
+          return <StatusIcon status="pending-indefinite" label={'Queued'} />;
+        }
+      }
     }
     case 'matched-inexecutable': {
       return <StatusIcon status="pending-indefinite" label={'Inexecutable'} />;
