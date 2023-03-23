@@ -163,7 +163,8 @@ export const StatusIcon = ({
       break;
   }
 
-  const formatDuration = (duration: number) => {
+  const formatDuration = (_duration: number) => {
+    const duration = Math.abs(_duration);
     if (duration < 1000) {
       return `${Math.floor(duration)}ms`;
     }
