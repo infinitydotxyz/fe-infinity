@@ -99,11 +99,12 @@ export const useProfileOrderFetcher = (limit: number, filter: TokensFilter, user
   const props: ProfileProps = {
     kind: 'profile',
     limit,
+    orderBy: 'startTime',
     context: {
       userAddress,
       side
     }
-  };
+  } as unknown as ProfileProps;
 
   return useOrderFetcher(limit, filter, props);
 };

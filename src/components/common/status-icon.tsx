@@ -79,7 +79,22 @@ export const OrderExecutionStatusIcon = ({ executionStatus }: { executionStatus:
       return <StatusIcon status="invalid" label={'Requires match'} />;
     }
     case 'matched-pending-execution': {
-      return <StatusIcon status="pending-indefinite" label={'Queued'} />;
+      switch (executionStatus.reason) {
+        case 'gas-too-low': {
+          return (
+            <StatusIcon
+              status="pending-indefinite"
+              label={`Gas too low. ${nFormatter(parseFloat(executionStatus.bestMatchMaxFeePerGasGwei), 0)} GWEI`}
+            />
+          );
+        }
+        case 'unknown': {
+          return <StatusIcon status="pending-indefinite" label={'Queued'} />;
+        }
+        default: {
+          return <StatusIcon status="pending-indefinite" label={'Queued'} />;
+        }
+      }
     }
     case 'matched-inexecutable': {
       return <StatusIcon status="pending-indefinite" label={'Inexecutable'} />;
@@ -113,7 +128,22 @@ export const MatchAndExecutionOrderStatus = ({ executionStatus }: { executionSta
       return <StatusIcon status="pending-indefinite" label={'No matches'} />;
     }
     case 'matched-pending-execution': {
-      return <StatusIcon status="pending-indefinite" label={'Executing'} />;
+      switch (executionStatus.reason) {
+        case 'gas-too-low': {
+          return (
+            <StatusIcon
+              status="pending-indefinite"
+              label={`Gas too low. ${nFormatter(parseFloat(executionStatus.bestMatchMaxFeePerGasGwei), 0)} GWEI`}
+            />
+          );
+        }
+        case 'unknown': {
+          return <StatusIcon status="pending-indefinite" label={'Queued'} />;
+        }
+        default: {
+          return <StatusIcon status="pending-indefinite" label={'Queued'} />;
+        }
+      }
     }
     case 'matched-inexecutable': {
       return <StatusIcon status="pending-indefinite" label={'Inexecutable'} />;
@@ -163,7 +193,8 @@ export const StatusIcon = ({
       break;
   }
 
-  const formatDuration = (duration: number) => {
+  const formatDuration = (_duration: number) => {
+    const duration = Math.abs(_duration);
     if (duration < 1000) {
       return `${Math.floor(duration)}ms`;
     }
