@@ -1,4 +1,4 @@
-import { BaseCollection, CollectionAttributes, CollectionStats, EventType } from '@infinityxyz/lib-frontend/types/core';
+import { BaseCollection, CollectionAttributes, CollectionStats } from '@infinityxyz/lib-frontend/types/core';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
@@ -14,9 +14,6 @@ import { TokenGrid } from 'src/components/astra/token-grid/token-grid';
 import { CollectionCharts } from 'src/components/collection/collection-charts';
 import { CollectionItemsPageSidebar } from 'src/components/collection/collection-items-page-sidebar';
 import { CollectionPageHeader, CollectionPageHeaderProps } from 'src/components/collection/collection-page-header';
-import { CollectionSocialFeed } from 'src/components/collection/collection-social-feed';
-import { TopHolderList } from 'src/components/collection/collection-top-holders';
-import { TwitterSupporterList } from 'src/components/collection/collection-top-twitter-supporters';
 import { CenteredContent, ExternalLink, EZImage, Spacer, TextInputBox } from 'src/components/common';
 import { CollectionNftSearchInput } from 'src/components/common/search/collection-nft-search-input';
 import { useCollectionTokenFetcher } from 'src/hooks/api/useTokenFetcher';
@@ -397,7 +394,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                 collectionImage={collection.metadata.profileImage}
               />
 
-              <div className="flex px-4 mt-2 space-x-4">
+              {/* <div className="flex px-4 mt-2 space-x-4">
                 <div className="flex space-x-4 w-1/2">
                   <div className="w-1/2">
                     {collection ? <TopHolderList collection={collection}></TopHolderList> : null}
@@ -418,7 +415,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                     />
                   ) : null}
                 </div>
-              </div>
+              </div> */}
             </div>
           ) : null}
         </div>
