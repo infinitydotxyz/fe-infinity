@@ -18,7 +18,8 @@ type Props = {
 export const OrderbookRowButton = ({ order, outlineButtons = false, collectionAddress }: Props) => {
   const { address: user, isConnected } = useAccount();
   const { chain } = useNetwork();
-  const chainId = String(chain?.id) ?? '1';
+  const { selectedChain } = useAppContext();
+  const chainId = String(chain?.id ?? selectedChain);
   const { isNFTSelected, toggleNFTSelection } = useAppContext();
   const { setCartType } = useCartContext();
 

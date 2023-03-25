@@ -1,10 +1,12 @@
-import { BaseCollection, ChainId } from '@infinityxyz/lib-frontend/types/core';
+import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
 import { useState } from 'react';
 import { FaDiscord, FaInstagram, FaTwitter } from 'react-icons/fa';
 import { HiOutlineExternalLink } from 'react-icons/hi';
 import { BlueCheck, ClipboardButton, EthSymbol, EZImage, ReadMoreText, Spacer } from 'src/components/common';
+import { useMatchingEngineCollection } from 'src/hooks/api/useMatchingEngineCollection';
 import etherscanLogo from 'src/images/etherscan-logo.png';
 import { ellipsisAddress, getChainScannerBase } from 'src/utils';
+import { useAppContext } from 'src/utils/context/AppContext';
 import {
   borderColor,
   brandBorderColor,
@@ -17,6 +19,7 @@ import {
 import { twMerge } from 'tailwind-merge';
 import { useNetwork } from 'wagmi';
 import { AOutlineButton } from '../astra/astra-button';
+import { MatchingEngineStatusIcon, StatusIcon } from '../common/status-icon';
 
 export interface CollectionPageHeaderProps {
   expanded: boolean;
@@ -54,8 +57,13 @@ export const CollectionPageHeader = ({
   onTabChange
 }: CollectionPageHeaderProps) => {
   const { chain } = useNetwork();
-  const chainId = String(chain?.id ?? 1) as ChainId;
+  const { selectedChain } = useAppContext();
+  const chainId = String(chain?.id ?? selectedChain);
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
+
+  const { result: matchingEngineStatus, isInitialLoadComplete } = useMatchingEngineCollection(
+    collection?.address ?? ''
+  );
 
   return (
     <div className={twMerge(borderColor, secondaryBgColor, 'border-b px-6')}>
@@ -150,6 +158,41 @@ export const CollectionPageHeader = ({
           ) : null}
         </div>
       )}
+
+      <div className="flex mt-4">
+        <div className="flex text-sm items-center">
+          <div className="flex pr-4 gap-2 whitespace-nowrap font-medium">
+            <span className={secondaryTextColor}>Matching Engine </span>
+            <span className="">
+              {!isInitialLoadComplete ? (
+                <StatusIcon status="pending-indefinite" label="Loading..." />
+              ) : (
+                <MatchingEngineStatusIcon matchingEngineStatus={matchingEngineStatus} component="matchingEngine" />
+              )}
+            </span>
+          </div>
+          <div className="flex pr-4 gap-2 whitespace-nowrap font-medium">
+            <span className={secondaryTextColor}>Order Relay </span>
+            <span className="">
+              {!isInitialLoadComplete ? (
+                <StatusIcon status="pending-indefinite" label="Loading..." />
+              ) : (
+                <MatchingEngineStatusIcon matchingEngineStatus={matchingEngineStatus} component="orderRelay" />
+              )}
+            </span>
+          </div>
+          <div className="flex pr-4 gap-2 whitespace-nowrap font-medium">
+            <span className={secondaryTextColor}>Execution Engine </span>
+            <span className="">
+              {!isInitialLoadComplete ? (
+                <StatusIcon status="pending-indefinite" label="Loading..." />
+              ) : (
+                <MatchingEngineStatusIcon matchingEngineStatus={matchingEngineStatus} component="executionEngine" />
+              )}
+            </span>
+          </div>
+        </div>
+      </div>
 
       <div className="flex mt-4 text-sm">
         <div className="flex space-x-5">

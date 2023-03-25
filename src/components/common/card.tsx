@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { HiCheckCircle, HiPlusCircle } from 'react-icons/hi';
-import { ellipsisString } from 'src/utils';
+import { ellipsisString, nFormatter } from 'src/utils';
 import { BasicTokenInfo, ERC721TokenCartItem } from 'src/utils/types';
 import {
   borderColor,
@@ -142,7 +142,7 @@ export const GridCard = ({
             <div>
               {buyNowPrice ? (
                 <div className="flex items-center rounded-sm space-x-1 text-sm">
-                  <div className={twMerge('truncate font-medium', borderColor)}>{buyNowPrice}</div>
+                  <div className={twMerge('truncate font-medium', borderColor)}>{nFormatter(buyNowPrice, 4)}</div>
                   <div className="text-xs">{EthSymbol}</div>
                 </div>
               ) : null}

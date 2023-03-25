@@ -8,8 +8,8 @@ import { secondaryTextColor, standardBorderCard } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
 import { useAccount } from 'wagmi';
+import { OrderExecutionStatusIcon, OrderMatchStatusIcon } from '../common/status-icon';
 import { OrderbookItem } from '../orderbook/orderbook-item';
-
 interface Props {
   order: ERC721OrderCartItem;
   orderType: TokensFilter['orderType'];
@@ -25,6 +25,13 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
 
   const [addedToEditCart, setAddedToEditCart] = useState(isNFTSelected(editCartToken));
   const [addedToCancelCart, setAddedToCancelCart] = useState(isOrderSelected(order));
+
+  const orderStatus = order.executionStatus?.status;
+  const isActionable = !(
+    orderStatus === 'matched-executed' ||
+    orderStatus === 'matched-executing' ||
+    orderStatus === 'matched-pending-execution'
+  );
 
   useEffect(() => {
     setAddedToEditCart(isNFTSelected(editCartToken));
@@ -47,71 +54,84 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
           <div className="w-1/6">
             <div className={twMerge(secondaryTextColor, 'font-medium')}>Order type</div>
             <div className="">
-              {orderType === 'listings' ? 'Listing' : orderType === 'offers-made' ? 'Offer made' : 'Offer received'}
+              {orderType === 'listings' ? 'Listing' : orderType === 'offers-made' ? 'Bid' : 'Offer'}
             </div>
+            <div className={twMerge(secondaryTextColor, 'text-xs font-medium')}>Expires {format(order.endTimeMs)}</div>
           </div>
+          <div className="w-1/4">
+            <div className={twMerge(secondaryTextColor, 'font-medium')}>Match Status</div>
+            <OrderMatchStatusIcon executionStatus={order.executionStatus} />
+          </div>
+
+          <div className="w-1/4">
+            <div className={twMerge(secondaryTextColor, 'font-medium')}>Execution Status</div>
+            <OrderExecutionStatusIcon executionStatus={order.executionStatus} />
+          </div>
+
           <div className="w-1/6">
             <div className={twMerge(secondaryTextColor, 'font-medium')}>Price</div>
             <div className="">
               <EthPrice label={`${startPriceEth}`} />
             </div>
           </div>
-          <div className="w-1/6">
-            <div className={twMerge(secondaryTextColor, 'font-medium')}>Expiry</div>
-            <div className="">{format(order.endTimeMs)}</div>
-          </div>
 
           {orderType === 'listings' || orderType === 'offers-made' ? (
-            <Button
-              onClick={() => {
-                if (!isConnected) {
-                  return;
-                }
-                const newCartType = orderType === 'listings' ? CartType.TokenList : CartType.TokenOffer;
-                editCartToken.cartType = newCartType;
-                if (isNFTSelectable(editCartToken)) {
+            <div className="w-1/4 flex justify-end">
+              <Button
+                disabled={!isActionable}
+                className="mr-2"
+                onClick={() => {
+                  if (!isConnected) {
+                    return;
+                  }
+                  const newCartType = orderType === 'listings' ? CartType.TokenList : CartType.TokenOffer;
+                  editCartToken.cartType = newCartType;
+                  if (isNFTSelectable(editCartToken)) {
+                    setCartType(newCartType);
+                    toggleNFTSelection(editCartToken);
+                  }
+                }}
+              >
+                {addedToEditCart && (cartType === CartType.TokenList || cartType === CartType.TokenOffer) ? '✓' : ''}{' '}
+                Edit in Cart
+              </Button>
+
+              <Button
+                disabled={!isActionable}
+                onClick={() => {
+                  if (!isConnected) {
+                    return;
+                  }
+                  const newCartType = CartType.Cancel;
+                  order.cartType = newCartType;
                   setCartType(newCartType);
-                  toggleNFTSelection(editCartToken);
-                }
-              }}
-            >
-              {addedToEditCart && (cartType === CartType.TokenList || cartType === CartType.TokenOffer) ? '✓' : ''} Edit
-              in Cart
-            </Button>
-          ) : null}
-
-          {orderType === 'listings' || orderType === 'offers-made' ? (
-            <Button
-              onClick={() => {
-                if (!isConnected) {
-                  return;
-                }
-                const newCartType = CartType.Cancel;
-                order.cartType = newCartType;
-                setCartType(newCartType);
-                toggleOrderSelection(order);
-              }}
-            >
-              {addedToCancelCart && cartType === CartType.Cancel ? '✓' : ''} Cancel
-            </Button>
+                  toggleOrderSelection(order);
+                }}
+              >
+                {addedToCancelCart && cartType === CartType.Cancel ? '✓' : ''} Cancel
+              </Button>
+            </div>
           ) : null}
 
           {orderType === 'offers-received' ? (
-            <Button
-              onClick={() => {
-                if (!isConnected) {
-                  return;
-                }
-                const newCartType = CartType.TokenList;
-                editCartToken.cartType = newCartType;
-                if (isNFTSelectable(editCartToken)) {
-                  setCartType(newCartType);
-                  toggleNFTSelection(editCartToken);
-                }
-              }}
-            >
-              {addedToEditCart && cartType === CartType.TokenList ? '✓' : ''} Sell Now
-            </Button>
+            <div className="w-1/6 flex justify-end">
+              <Button
+                disabled={!isActionable}
+                onClick={() => {
+                  if (!isConnected) {
+                    return;
+                  }
+                  const newCartType = CartType.TokenList;
+                  editCartToken.cartType = newCartType;
+                  if (isNFTSelectable(editCartToken)) {
+                    setCartType(newCartType);
+                    toggleNFTSelection(editCartToken);
+                  }
+                }}
+              >
+                {addedToEditCart && cartType === CartType.TokenList ? '✓' : ''} Sell Now
+              </Button>
+            </div>
           ) : null}
         </div>
       </div>

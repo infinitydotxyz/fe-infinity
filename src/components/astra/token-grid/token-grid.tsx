@@ -46,7 +46,7 @@ export const TokenGrid = ({
     if (listMode) {
       contents = (
         <>
-          <div className={twMerge('space-y-1 flex flex-col')}>
+          <div className={twMerge('pb-20 space-y-1 flex flex-col')}>
             {cardData.map((data) => {
               return (
                 <GridItem
@@ -70,7 +70,7 @@ export const TokenGrid = ({
       contents = (
         <>
           <div
-            className="grid grid-flow-row-dense gap-2 3xl:grid-cols-[repeat(auto-fill,_minmax(200px,_1fr))]
+            className="pb-20 grid grid-flow-row-dense gap-2 3xl:grid-cols-[repeat(auto-fill,_minmax(200px,_1fr))]
                           sm:grid-cols-[repeat(auto-fill,_minmax(167px,_1fr))] grid-cols-[repeat(auto-fit,_minmax(160px,_1fr))]"
           >
             {cardData.map((data) => {

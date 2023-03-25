@@ -1,5 +1,5 @@
 import { getAddress } from '@ethersproject/address';
-import { BaseToken, OrdersSnippet, OwnerInfo } from '@infinityxyz/lib-frontend/types/core';
+import { BaseToken, ChainId, OrdersSnippet, OwnerInfo } from '@infinityxyz/lib-frontend/types/core';
 import { BaseCollection } from '@infinityxyz/lib-frontend/types/core/Collection';
 import {
   Env,
@@ -427,8 +427,8 @@ export const erc721OrderCartItemToTokenCartItem = (order: ERC721OrderCartItem): 
   }
 
   const result: ERC721TokenCartItem = {
-    id: collInfo.chainId + ':' + collInfo.collectionAddress + '_' + item.tokenId,
-    name: item.tokenName ?? '',
+    id: collInfo.chainId + ':' + collInfo.collectionAddress + '_' + item?.tokenId ?? '',
+    name: item?.tokenName ?? '',
     title: collInfo.collectionName ?? '',
     collectionName: collInfo.collectionName ?? '',
     collectionSlug: collInfo.collectionSlug ?? '',
@@ -440,7 +440,7 @@ export const erc721OrderCartItemToTokenCartItem = (order: ERC721OrderCartItem): 
     chainId: collInfo.chainId,
     tokenAddress: collInfo.collectionAddress ?? '',
     address: collInfo.collectionAddress ?? '',
-    tokenId: item.tokenId,
+    tokenId: item?.tokenId ?? '',
     rarityRank: 0,
     orderSnippet,
     hasBlueCheck: collInfo.hasBlueCheck ?? false,
@@ -449,6 +449,16 @@ export const erc721OrderCartItemToTokenCartItem = (order: ERC721OrderCartItem): 
   };
 
   return result;
+};
+
+export const chainIdToName = (chainId: ChainId) => {
+  return chainId === ChainId.Mainnet
+    ? 'Ethereum'
+    : chainId === ChainId.Goerli
+    ? 'Goerli'
+    : chainId === ChainId.Polygon
+    ? 'Polygon'
+    : 'Unknown';
 };
 
 export const ENV: Env = (process.env.NEXT_PUBLIC_ENV as Env | undefined | '') || Env.Prod;

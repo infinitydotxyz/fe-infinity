@@ -1,4 +1,3 @@
-import { ChainId } from '@infinityxyz/lib-frontend/types/core';
 import { useRouter } from 'next/router';
 import { HiOutlineExternalLink } from 'react-icons/hi';
 import { ClipboardButton, EZImage } from 'src/components/common';
@@ -9,9 +8,9 @@ import { useAppContext } from 'src/utils/context/AppContext';
 import {
   borderColor,
   brandBorderColor,
-  secondaryBgColor,
   hoverColor,
   hoverColorBrandText,
+  secondaryBgColor,
   secondaryTextColor,
   smallIconButtonStyle
 } from 'src/utils/ui-constants';
@@ -28,7 +27,8 @@ export const ProfilePageHeader = ({ expanded, tabs }: ProfileHeaderProps) => {
   const router = useRouter();
   const addressFromPath = router.query?.address as string;
   const { chain } = useNetwork();
-  const chainId = String(chain?.id ?? 1) as ChainId;
+  const { selectedChain } = useAppContext();
+  const chainId = String(chain?.id ?? selectedChain);
   const { selectedProfileTab, setSelectedProfileTab } = useAppContext();
 
   return (
@@ -37,7 +37,7 @@ export const ProfilePageHeader = ({ expanded, tabs }: ProfileHeaderProps) => {
         <>
           <div className="flex flex-col items-start">
             <div className="flex w-full items-center">
-              <EZImage src={person.src} className="mr-4 h-14 w-14 rounded-lg overflow-clip" />
+              <EZImage src={person.src} className="mr-4 h-12 w-12 rounded-full overflow-clip" />
 
               <div className={twMerge('flex items-center mr-2')}>
                 <div className="font-heading font-bold text-xl mr-2">

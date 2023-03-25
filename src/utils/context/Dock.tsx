@@ -1,7 +1,7 @@
 import { useTheme } from 'next-themes';
 import { useRouter } from 'next/router';
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
-import { BiCarousel, BiGlobeAlt } from 'react-icons/bi';
+import { BiGlobeAlt } from 'react-icons/bi';
 import { FiTarget } from 'react-icons/fi';
 import { MdOutlineDarkMode, MdOutlineLightMode } from 'react-icons/md';
 import { RxDiscordLogo } from 'react-icons/rx';
@@ -10,7 +10,7 @@ import { HelpToolTip } from 'src/components/common';
 import { SnipeModal } from 'src/components/common/snipe-modal';
 import { MouseProvider } from 'src/utils/context/MouseProvider';
 import { twMerge } from 'tailwind-merge';
-import { borderColor, hoverColorBrandText } from '../ui-constants';
+import { borderColor, hoverColorBrandText, secondaryBgColor } from '../ui-constants';
 import DockItem from './DockItem';
 import { DockContextType } from './types';
 
@@ -56,10 +56,7 @@ const Dock = () => {
         <DockContext.Provider value={{ hovered, width }}>
           <nav
             ref={ref}
-            className={twMerge(
-              'flex justify-center items-center rounded-lg p-4 border bg-opacity-40 backdrop-blur-3xl',
-              borderColor
-            )}
+            className={twMerge('flex justify-center items-center rounded-lg p-4 border', borderColor, secondaryBgColor)}
             onMouseOver={() => {
               setHovered(true);
               setDockHeight('h-10');
@@ -98,7 +95,7 @@ const Dock = () => {
                 </HelpToolTip>
               </DockItem>
 
-              <DockItem highlighted={router.asPath.startsWith('/sets')} className={dockItemClassname}>
+              {/* <DockItem highlighted={router.asPath.startsWith('/sets')} className={dockItemClassname}>
                 <HelpToolTip placement="top" content={<div className="whitespace-nowrap">Sets</div>}>
                   <div className={itemClassname}>
                     <BiCarousel
@@ -109,7 +106,7 @@ const Dock = () => {
                     />
                   </div>
                 </HelpToolTip>
-              </DockItem>
+              </DockItem> */}
 
               {divider}
 

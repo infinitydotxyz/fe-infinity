@@ -6,6 +6,7 @@ import { Contract } from '@ethersproject/contracts';
 import { keccak256 } from '@ethersproject/keccak256';
 import { JsonRpcSigner } from '@ethersproject/providers';
 import { parseEther } from '@ethersproject/units';
+import { TransactionResponse } from '@ethersproject/abstract-provider';
 import { ERC20ABI, ERC721ABI, FlowExchangeABI, FlowOBComplicationABI } from '@infinityxyz/lib-frontend/abi';
 import {
   ChainNFTs,
@@ -17,7 +18,6 @@ import {
 } from '@infinityxyz/lib-frontend/types/core';
 import {
   ETHEREUM_WETH_ADDRESS,
-  getCurrentOBOrderPrice,
   getExchangeAddress,
   getOBComplicationAddress,
   getTxnCurrencyAddress,
@@ -30,146 +30,7 @@ import { MerkleTree } from 'merkletreejs';
 import { toastError } from 'src/components/common';
 import { DEFAULT_MAX_GAS_PRICE_WEI, FLOW_ORDER_EIP_712_TYPES, ZERO_ADDRESS, ZERO_HASH } from './constants';
 
-export async function signOrders(
-  signer: JsonRpcSigner,
-  chainId: string,
-  orders: OBOrder[]
-): Promise<SignedOBOrder[] | undefined> {
-  // sign
-  const flowExchangeAddress = getExchangeAddress(chainId.toString());
-  const flowExchange = new Contract(flowExchangeAddress, FlowExchangeABI, signer);
-  const preSignedOrders: SignedOBOrder[] = [];
-  for (const order of orders) {
-    const preparedOrder = await prepareOBOrder(chainId, signer, order, flowExchange);
-    if (!preparedOrder) {
-      throw new Error('Failed to prepare order');
-    }
-    preSignedOrders.push({ ...order, signedOrder: preparedOrder });
-  }
-
-  let fullySignedOrders: SignedOBOrder[] | undefined = [];
-
-  if (preSignedOrders.length === 1) {
-    fullySignedOrders = await signSingleOrder(signer, chainId, preSignedOrders);
-  } else if (preSignedOrders.length > 1) {
-    fullySignedOrders = await signBulkOrders(signer, chainId, preSignedOrders);
-  }
-
-  return fullySignedOrders;
-}
-
-// Order book orders
-async function prepareOBOrder(
-  chainId: string,
-  signer: JsonRpcSigner,
-  order: OBOrder,
-  infinityExchange: Contract
-): Promise<ChainOBOrder | undefined> {
-  // grant approvals
-  const approvals = await grantApprovals(order, signer, infinityExchange.address);
-  if (!approvals) {
-    return undefined;
-  }
-
-  const validOrder = await isOrderValid(order, infinityExchange, signer);
-  if (!validOrder) {
-    return undefined;
-  }
-
-  const constraints = [
-    order.numItems,
-    parseEther(String(order.startPriceEth)),
-    parseEther(String(order.endPriceEth)),
-    Math.floor(order.startTimeMs / 1000),
-    Math.floor(order.endTimeMs / 1000),
-    order.nonce,
-    order.maxGasPriceWei
-  ];
-  if ('isTrustedExec' in order && order.isTrustedExec) {
-    constraints.push(1);
-  }
-
-  const nfts: ChainNFTs[] = order.nfts.reduce((acc: ChainNFTs[], { collectionAddress, tokens }) => {
-    let nft = acc.find(({ collection }) => collection === collectionAddress);
-    if (!nft) {
-      nft = { collection: collectionAddress, tokens: [] };
-      acc.push(nft);
-    }
-    const chainTokens = [];
-    for (const token of tokens) {
-      chainTokens.push({
-        tokenId: token.tokenId,
-        numTokens: token.numTokens
-      });
-    }
-    nft.tokens.push(...chainTokens);
-    return acc;
-  }, [] as ChainNFTs[]);
-
-  // don't use ?? operator here
-  const execParams = [
-    order.execParams.complicationAddress || getOBComplicationAddress(chainId.toString()),
-    order.execParams.currencyAddress || getTxnCurrencyAddress(chainId.toString())
-  ];
-  // don't use ?? operator here
-  const extraParams = defaultAbiCoder.encode(['address'], [order.extraParams.buyer || NULL_ADDRESS]);
-
-  const orderToSign: ChainOBOrder = {
-    isSellOrder: order.isSellOrder,
-    signer: order.makerAddress,
-    constraints: constraints.map((item) => item.toString()),
-    nfts,
-    execParams,
-    extraParams,
-    sig: ''
-  };
-
-  return orderToSign;
-}
-
-async function isOrderValid(order: OBOrder, infinityExchange: Contract, signer: JsonRpcSigner): Promise<boolean> {
-  const user = signer._address;
-  // check timestamps
-  if (Date.now() > order.endTimeMs) {
-    console.error('Order timestamps are not valid');
-    return false;
-  }
-
-  // check if nonce is valid
-  const isNonceValid = await infinityExchange.isNonceValid(user, order.nonce);
-  if (!isNonceValid) {
-    console.error('Order nonce is not valid');
-    return false;
-  }
-
-  // check on chain ownership
-  if (order.isSellOrder) {
-    const isCurrentOwner = await checkOnChainOwnership(user, order, signer);
-    if (!isCurrentOwner) {
-      return false;
-    }
-  }
-
-  // default
-  return true;
-}
-
-async function grantApprovals(order: OBOrder, signer: JsonRpcSigner, exchange: string): Promise<boolean> {
-  if (!order.isSellOrder) {
-    // approve currencies
-    const currentPrice = getCurrentOBOrderPrice(order);
-    await approveERC20(order.execParams.currencyAddress, currentPrice, signer, exchange);
-
-    // check if user has enough balance to fulfill this order
-    await checkERC20Balance(order.execParams.currencyAddress, currentPrice, signer);
-  } else {
-    // approve collections
-    await approveERC721(order.nfts, signer, exchange);
-  }
-  return true;
-}
-
-async function checkERC20Balance(currencyAddress: string, price: BigNumberish, signer: JsonRpcSigner) {
+export async function checkERC20Balance(currencyAddress: string, price: BigNumberish, signer: JsonRpcSigner) {
   const user = signer._address;
   if (currencyAddress !== NULL_ADDRESS) {
     const contract = new Contract(currencyAddress, ERC20ABI, signer);
@@ -184,19 +45,20 @@ async function checkERC20Balance(currencyAddress: string, price: BigNumberish, s
   }
 }
 
-async function approveERC20(
+export async function approveERC20(
   currencyAddress: string,
   price: BigNumberish,
   signer: JsonRpcSigner,
-  infinityExchangeAddress: string
-) {
+  flowExchangeAddress: string
+): Promise<TransactionResponse | null> {
   try {
     const user = signer._address;
     if (currencyAddress !== NULL_ADDRESS) {
       const contract = new Contract(currencyAddress, ERC20ABI, signer);
-      const allowance = BigNumber.from(await contract.allowance(user, infinityExchangeAddress));
+      const allowance = BigNumber.from(await contract.allowance(user, flowExchangeAddress));
       if (allowance.lt(price)) {
-        await contract.approve(infinityExchangeAddress, MaxUint256);
+        const txn: TransactionResponse = await contract.approve(flowExchangeAddress, MaxUint256);
+        return txn;
       }
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -204,20 +66,25 @@ async function approveERC20(
     console.error('failed granting erc20 approvals');
     throw new Error(e);
   }
+  return null;
 }
 
-async function approveERC721ForChainNFTs(items: ChainNFTs[], signer: JsonRpcSigner, exchange: string) {
+export async function approveERC721ForChainNFTs(
+  items: ChainNFTs[],
+  signer: JsonRpcSigner,
+  exchange: string
+): Promise<TransactionResponse[]> {
   try {
     const user = signer._address;
     const collectionsChecked = new Set<string>();
-    const results: unknown[] = [];
+    const results: TransactionResponse[] = [];
     for (const item of items) {
       const collection = item.collection;
       if (!collectionsChecked.has(collection)) {
         const contract = new Contract(collection, ERC721ABI, signer);
         const isApprovedForAll = await contract.isApprovedForAll(user, exchange);
         if (!isApprovedForAll) {
-          const result = await contract.setApprovalForAll(exchange, true);
+          const result: TransactionResponse = await contract.setApprovalForAll(exchange, true);
           results.push(result);
         }
         collectionsChecked.add(collection);
@@ -231,17 +98,24 @@ async function approveERC721ForChainNFTs(items: ChainNFTs[], signer: JsonRpcSign
   }
 }
 
-async function approveERC721(items: OBOrderItem[], signer: JsonRpcSigner, exchange: string) {
+export async function approveERC721(
+  items: OBOrderItem[],
+  signer: JsonRpcSigner,
+  exchange: string
+): Promise<TransactionResponse[]> {
   try {
     const user = signer._address;
+    const results: TransactionResponse[] = [];
     for (const item of items) {
       const collection = item.collectionAddress;
       const contract = new Contract(collection, ERC721ABI, signer);
       const isApprovedForAll = await contract.isApprovedForAll(user, exchange);
       if (!isApprovedForAll) {
-        await contract.setApprovalForAll(exchange, true);
+        const result: TransactionResponse = await contract.setApprovalForAll(exchange, true);
+        results.push(result);
       }
     }
+    return results;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
     console.error('failed granting erc721 approvals');
@@ -249,7 +123,7 @@ async function approveERC721(items: OBOrderItem[], signer: JsonRpcSigner, exchan
   }
 }
 
-async function checkOnChainOwnership(user: string, order: OBOrder, signer: JsonRpcSigner): Promise<boolean> {
+export async function checkOnChainOwnership(user: string, order: OBOrder, signer: JsonRpcSigner): Promise<boolean> {
   let result = true;
   for (const nft of order.nfts) {
     const collection = nft.collectionAddress;
@@ -333,6 +207,8 @@ export const signBulkOrders = async (
     ];
     if ('isTrustedExec' in order && order.isTrustedExec) {
       constraints.push(1);
+    } else {
+      constraints.push(0);
     }
 
     const nfts: ChainNFTs[] = order.nfts.reduce((acc: ChainNFTs[], { collectionAddress, tokens }) => {
@@ -495,42 +371,9 @@ const getCurrentChainOBOrderPrice = (order: ChainOBOrder): BigNumber => {
   return currentPrice;
 };
 
-export async function sendSingleNft(
-  signer: JsonRpcSigner,
-  collectionAddress: string,
-  tokenId: string,
-  toAddress: string
-) {
-  const erc721 = new Contract(collectionAddress, ERC721ABI, signer);
-  // perform send
-  const from = await signer.getAddress();
-  const transferResult = await erc721['safeTransferFrom(address,address,uint256)'](from, toAddress, tokenId);
-  return {
-    hash: transferResult?.hash ?? ''
-  };
-}
-
-export async function sendMultipleNfts(
-  signer: JsonRpcSigner,
-  chainId: string,
-  orderItems: ChainNFTs[],
-  toAddress: string
-) {
-  const exchangeAddress = getExchangeAddress(chainId);
-  const flowExchange = new Contract(exchangeAddress, FlowExchangeABI, signer);
-  // grant approvals
-  await approveERC721ForChainNFTs(orderItems, signer, exchangeAddress);
-  // perform send
-  const transferResult = await flowExchange.transferMultipleNFTs(toAddress, orderItems);
-  return {
-    hash: transferResult?.hash ?? ''
-  };
-}
-
 export async function cancelAllOrders(signer: JsonRpcSigner, chainId: string, minOrderNonce: number) {
   const exchangeAddress = getExchangeAddress(chainId);
   const flowExchange = new Contract(exchangeAddress, FlowExchangeABI, signer);
-  // perform cancel
   const cancelResult = await flowExchange.cancelAllOrders(minOrderNonce);
   return {
     hash: cancelResult?.hash ?? ''
@@ -540,7 +383,6 @@ export async function cancelAllOrders(signer: JsonRpcSigner, chainId: string, mi
 export async function cancelMultipleOrders(signer: JsonRpcSigner, chainId: string, nonces: number[]) {
   const exchangeAddress = getExchangeAddress(chainId);
   const flowExchange = new Contract(exchangeAddress, FlowExchangeABI, signer);
-  // perform cancel
   const cancelResult = await flowExchange.cancelMultipleOrders(nonces);
   return {
     hash: cancelResult?.hash ?? ''

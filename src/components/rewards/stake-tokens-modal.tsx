@@ -1,18 +1,17 @@
+import { MaxUint256 } from '@ethersproject/constants';
 import { RadioGroup } from '@headlessui/react';
 import { StakeDuration } from '@infinityxyz/lib-frontend/types/core';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useUserCurationQuota } from 'src/hooks/api/useCurationQuota';
 import { useStake } from 'src/hooks/contract/staker/useStake';
 import { useTokenAllowance } from 'src/hooks/contract/token/useTokenAllowance';
 import { useTokenApprove } from 'src/hooks/contract/token/useTokenApprove';
 import { nFormatter } from 'src/utils';
-import { twMerge } from 'tailwind-merge';
 import { BouncingLogo, toastError, toastSuccess } from '../common';
 import { Button } from '../common/button';
 import { TextInputBox } from '../common/input-box';
 import { Modal } from '../common/modal';
-import { MaxUint256 } from '@ethersproject/constants';
-import { secondaryTextColor } from 'src/utils/ui-constants';
+import { RadioButtonCard } from '../common/radio-button-card';
 
 interface Props {
   onClose: () => void;
@@ -158,44 +157,5 @@ export const StakeTokensModal = ({ onClose }: Props) => {
         )}
       </div>
     </Modal>
-  );
-};
-
-/**
- * Radio button component that's rendered on screen like a small card.
- * To be used within `RadioGroup`.
- */
-const RadioButtonCard: React.FC<{ value: string | number; label: string; description?: string }> = ({
-  value,
-  label,
-  description
-}) => {
-  return (
-    <div className="cursor-pointer">
-      <RadioGroup.Option
-        value={value}
-        className={({ checked }) => `
-            ${checked ? 'border-gray-200 bg-gray-100' : 'border-gray-200'}
-            relative flex flex-row justify-between items-center border rounded-md p-4
-          `}
-      >
-        {({ checked }) => (
-          <>
-            <div className="flex flex-col">
-              <RadioGroup.Label as="span" className={twMerge('block text-sm font-medium')}>
-                {label}
-              </RadioGroup.Label>
-
-              {description ? (
-                <RadioGroup.Description as="span" className={twMerge(secondaryTextColor, 'block text-sm')}>
-                  {description}
-                </RadioGroup.Description>
-              ) : null}
-            </div>
-            <input type="radio" checked={checked} readOnly />
-          </>
-        )}
-      </RadioGroup.Option>
-    </div>
   );
 };
