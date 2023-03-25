@@ -54,6 +54,7 @@ export const ANavbar = () => {
             {
               label: 'Ethereum (soon)',
               onClick: () => {
+                // todo-adi uncomment
                 // setLabelVal(chainIdToName(ChainId.Mainnet));
                 // setSelectedChain(ChainId.Mainnet);
               }
