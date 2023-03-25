@@ -1,6 +1,3 @@
-import { animated, useSpring } from '@react-spring/three';
-import { MeshDistortMaterial } from '@react-three/drei';
-import { Canvas } from '@react-three/fiber';
 import { useEffect, useState } from 'react';
 import { AButton } from 'src/components/astra/astra-button';
 import { CenteredContent, ConnectButton, ExternalLink, toastSuccess } from 'src/components/common';
@@ -15,53 +12,51 @@ import { ChainId, DistributionType } from '@infinityxyz/lib-frontend/types/core'
 import { UserCumulativeRewardsDto } from '@infinityxyz/lib-frontend/types/dto';
 import { useAccount, useNetwork, useWaitForTransaction } from 'wagmi';
 
-const AnimatedMeshDistortMaterial = animated(MeshDistortMaterial);
+// const MyScene = ({ isLoading, isComplete }: { isLoading: boolean; isComplete: boolean }) => {
+//   const [springs] = useSpring(
+//     () => ({
+//       scale: 1,
+//       position: [0, 0],
+//       color: isComplete ? '#569AFF' : '#ff6d6d',
+//       distort: isLoading ? 0.4 : 0.25,
+//       speed: isComplete ? 5 : 10,
+//       config: (key) => {
+//         switch (key) {
+//           case 'scale':
+//             return {
+//               mass: 4,
+//               friction: 10
+//             };
+//           case 'position':
+//             return { mass: 4, friction: 220 };
+//           default:
+//             return {};
+//         }
+//       }
+//     }),
+//     [isLoading, isComplete]
+//   );
 
-const MyScene = ({ isLoading, isComplete }: { isLoading: boolean; isComplete: boolean }) => {
-  const [springs] = useSpring(
-    () => ({
-      scale: 1,
-      position: [0, 0],
-      color: isComplete ? '#569AFF' : '#ff6d6d',
-      distort: isLoading ? 0.4 : 0.25,
-      speed: isComplete ? 5 : 10,
-      config: (key) => {
-        switch (key) {
-          case 'scale':
-            return {
-              mass: 4,
-              friction: 10
-            };
-          case 'position':
-            return { mass: 4, friction: 220 };
-          default:
-            return {};
-        }
-      }
-    }),
-    [isLoading, isComplete]
-  );
+//   return (
+//     <animated.mesh scale={springs.scale} position={springs.position.to((x, y) => [x, y, 0])}>
+//       <torusBufferGeometry args={[1.5, 0.5, 256, 256]} />
+//       {/**
+//        * eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//        * @ts-ignore */}
+//       <AnimatedMeshDistortMaterial speed={springs.speed} distort={springs.distort} color={springs.color} />
+//     </animated.mesh>
+//   );
+// };
 
-  return (
-    <animated.mesh scale={springs.scale} position={springs.position.to((x, y) => [x, y, 0])}>
-      <torusBufferGeometry args={[1.5, 0.5, 256, 256]} />
-      {/**
-       * eslint-disable-next-line @typescript-eslint/ban-ts-comment
-       * @ts-ignore */}
-      <AnimatedMeshDistortMaterial speed={springs.speed} distort={springs.distort} color={springs.color} />
-    </animated.mesh>
-  );
-};
-
-function Spinner({ isLoading, isComplete }: { isLoading: boolean; isComplete: boolean }) {
-  return (
-    <Canvas>
-      <ambientLight intensity={0.8} />
-      <pointLight intensity={1} position={[0, 6, 0]} />
-      <MyScene isLoading={isLoading} isComplete={isComplete} />
-    </Canvas>
-  );
-}
+// function Spinner({ isLoading, isComplete }: { isLoading: boolean; isComplete: boolean }) {
+//   return (
+//     <Canvas>
+//       <ambientLight intensity={0.8} />
+//       <pointLight intensity={1} position={[0, 6, 0]} />
+//       <MyScene isLoading={isLoading} isComplete={isComplete} />
+//     </Canvas>
+//   );
+// }
 
 const HomePageComponent = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -123,11 +118,11 @@ const HomePageComponent = () => {
         <div className="space-y-4">
           <div className="flex text-6xl font-heading font-bold justify-center">
             <p>Flow</p>
-            <div className="relative">
+            {/* <div className="relative">
               <span className="h-[100px] w-[100px] absolute right-[140px] bottom-0.5">
                 <Spinner isLoading={isSubmitting} isComplete={isComplete} />
               </span>
-            </div>
+            </div> */}
           </div>
 
           <div>"Flow is the baddest marketplace on the planet" - Milk Road</div>
