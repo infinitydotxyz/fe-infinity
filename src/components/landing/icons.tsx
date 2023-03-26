@@ -3,7 +3,7 @@ import { ExternalLink } from '../common';
 import { BsMedium, BsTwitter, BsInstagram } from 'react-icons/bs';
 import { SiDiscord } from 'react-icons/si';
 
-const size = 'h-5 w-5';
+const size = 'h-7 w-7';
 
 export const DiscordIconLink: React.FC = () => (
   <ExternalLink href="https://discord.com/invite/flowdotso" rel="noreferrer">

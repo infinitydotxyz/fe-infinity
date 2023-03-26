@@ -20,6 +20,7 @@ import {
 import { Contract } from 'ethers';
 import { defaultAbiCoder, parseEther } from 'ethers/lib/utils.js';
 import { useRouter } from 'next/router';
+import { ProfileTabs } from 'pages/profile/[address]';
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
@@ -112,7 +113,7 @@ export const AppContextProvider = ({ children }: Props) => {
   const [selectedChain, setSelectedChain] = useState<ChainId>(ChainId.Goerli); // adi-todo: change to mainnet
   const [showCart, setShowCart] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
-  const [selectedProfileTab, setSelectedProfileTab] = useState('');
+  const [selectedProfileTab, setSelectedProfileTab] = useState(ProfileTabs.Items.toString());
   const [listMode, setListMode] = useState(false);
   const [txnHash, setTxnHash] = useState<string>('');
   const [isCheckingOut, setIsCheckingOut] = useState(false);
