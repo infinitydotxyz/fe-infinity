@@ -54,16 +54,26 @@ export const OrderMatchStatusIcon = ({ executionStatus }: { executionStatus: Exe
     }
     case 'matched-pending-execution':
     case 'matched-inexecutable':
+    case 'matched-inexecutable-offer-weth-too-low':
     case 'matched-executing':
     case 'matched-executing-not-included':
     case 'matched-executed': {
       const duration = executionStatus.matchInfo.matchedAt - executionStatus.matchInfo.proposerInitiatedAt;
       return <StatusIcon status="complete" label={'Matched'} duration={duration} />;
     }
+    default: {
+      return <StatusIcon status="pending-indefinite" label={'Pending'} />;
+    }
   }
 };
 
-export const OrderExecutionStatusIcon = ({ executionStatus }: { executionStatus: ExecutionStatus | null }) => {
+export const OrderExecutionStatusIcon = ({
+  executionStatus,
+  isSellOrder
+}: {
+  executionStatus: ExecutionStatus | null;
+  isSellOrder: boolean;
+}) => {
   if (!executionStatus) {
     return <StatusIcon status="invalid" label={'Disabled'} />;
   }
@@ -96,6 +106,14 @@ export const OrderExecutionStatusIcon = ({ executionStatus }: { executionStatus:
         }
       }
     }
+
+    case 'matched-inexecutable-offer-weth-too-low': {
+      if (isSellOrder) {
+        return <StatusIcon status="invalid" label={'Requires match'} />;
+      }
+      return <StatusIcon status="pending-indefinite" label={'WETH balance too low'} />;
+    }
+
     case 'matched-inexecutable': {
       return <StatusIcon status="pending-indefinite" label={'Inexecutable'} />;
     }
@@ -109,10 +127,19 @@ export const OrderExecutionStatusIcon = ({ executionStatus }: { executionStatus:
       const duration = executionStatus.executionInfo.blockTimestampSeconds * 1000 - executionStatus.matchInfo.matchedAt;
       return <StatusIcon status="complete" label={'Executed'} duration={duration} />;
     }
+    default: {
+      return <StatusIcon status="pending-indefinite" label={'Pending'} />;
+    }
   }
 };
 
-export const MatchAndExecutionOrderStatus = ({ executionStatus }: { executionStatus: ExecutionStatus | null }) => {
+export const MatchAndExecutionOrderStatus = ({
+  executionStatus,
+  isSellOrder
+}: {
+  executionStatus: ExecutionStatus | null;
+  isSellOrder: boolean;
+}) => {
   if (!executionStatus) {
     return <StatusIcon status="invalid" label={'Disabled'} />;
   }
@@ -145,6 +172,12 @@ export const MatchAndExecutionOrderStatus = ({ executionStatus }: { executionSta
         }
       }
     }
+    case 'matched-inexecutable-offer-weth-too-low': {
+      if (isSellOrder) {
+        return <StatusIcon status="pending-indefinite" label={'No matches'} />;
+      }
+      return <StatusIcon status="pending-indefinite" label={'WETH balance too low'} />;
+    }
     case 'matched-inexecutable': {
       return <StatusIcon status="pending-indefinite" label={'Inexecutable'} />;
     }
@@ -157,6 +190,9 @@ export const MatchAndExecutionOrderStatus = ({ executionStatus }: { executionSta
     case 'matched-executed': {
       const duration = executionStatus.executionInfo.blockTimestampSeconds * 1000 - executionStatus.matchInfo.matchedAt;
       return <StatusIcon status="complete" label={'Executed'} duration={duration} />;
+    }
+    default: {
+      return <StatusIcon status="pending-indefinite" label={'Pending'} />;
     }
   }
 };

@@ -173,7 +173,10 @@ export const CollectionRecentSalesOrders = ({ data, collectionAddress }: Props) 
                     <span className="">{ellipsisString(item.tokenId)}</span>
                     <div className={twMerge(secondaryTextColor, 'text-xs font-medium flex space-x-3 items-center')}>
                       {item.dataType !== 'Sale' && (
-                        <MatchAndExecutionOrderStatus executionStatus={item.executionStatus} />
+                        <MatchAndExecutionOrderStatus
+                          executionStatus={item.executionStatus}
+                          isSellOrder={item.dataType === 'Listing'}
+                        />
                       )}
                     </div>
                   </div>
