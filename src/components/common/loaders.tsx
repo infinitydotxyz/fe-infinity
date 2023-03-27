@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import flowLogo from 'src/images/flow-logo.png';
+import flowLogo from 'src/images/flow-logo-mark.png';
 import { CenteredContent } from './centered-content';
 import { EZImage } from './ez-image';
 

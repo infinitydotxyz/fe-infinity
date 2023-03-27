@@ -92,7 +92,7 @@ const TrendingPage = () => {
           onChange={onChangeToggleTab}
         />
 
-        <div className="space-y-3 mt-8">
+        <div className="space-y-3 mt-8 pb-20">
           {data.map((coll, index) => {
             return (
               <TrendingPageCard
