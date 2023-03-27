@@ -372,20 +372,20 @@ export const getDefaultOrderExpiryTime = (): ORDER_EXPIRY_TIME => {
   return ORDER_EXPIRY_TIME.MONTH;
 };
 
-export const getOrderExpiryTimeInMsFromEnum = (expiry: ORDER_EXPIRY_TIME): number => {
+export const getOrderExpiryTimeInMsFromEnum = (startTimeMs: number, expiry: ORDER_EXPIRY_TIME): number => {
   switch (expiry) {
     case ORDER_EXPIRY_TIME.HOUR:
-      return Date.now() + 60 * 60 * 1000;
+      return startTimeMs + 60 * 60 * 1000;
     case ORDER_EXPIRY_TIME.DAY:
-      return Date.now() + 24 * 60 * 60 * 1000;
+      return startTimeMs + 24 * 60 * 60 * 1000;
     case ORDER_EXPIRY_TIME.WEEK:
-      return Date.now() + 7 * 24 * 60 * 60 * 1000;
+      return startTimeMs + 7 * 24 * 60 * 60 * 1000;
     case ORDER_EXPIRY_TIME.MONTH:
-      return Date.now() + 30 * 24 * 60 * 60 * 1000;
+      return startTimeMs + 30 * 24 * 60 * 60 * 1000;
     case ORDER_EXPIRY_TIME.YEAR:
-      return Date.now() + 365 * 24 * 60 * 60 * 1000;
+      return startTimeMs + 365 * 24 * 60 * 60 * 1000;
     default:
-      return Date.now() + 7 * 24 * 60 * 60 * 1000;
+      return startTimeMs + 7 * 24 * 60 * 60 * 1000;
   }
 };
 
