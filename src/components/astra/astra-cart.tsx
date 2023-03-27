@@ -683,7 +683,7 @@ const PriceAndExpiry = ({ token, collection, className, editing, onEditComplete,
           {useSpacer && <Spacer />}
           <div className={twMerge('flex flex-col items-end')}>
             <div className="flex flex-row">
-              <div className={twMerge('font-bold font-heading')}>{nFormatter(String(price))}</div>
+              <div className={twMerge('font-bold font-heading')}>{nFormatter(Number(price), 3)}</div>
               <div className={twMerge('font-bold font-heading ml-1')}>{EthSymbol}</div>
             </div>
             <div className={twMerge(secondaryTextColor, 'text-xs font-medium')}>{expiry}</div>
