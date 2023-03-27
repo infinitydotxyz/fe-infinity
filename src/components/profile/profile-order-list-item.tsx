@@ -65,7 +65,7 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
 
           <div className="w-1/4">
             <div className={twMerge(secondaryTextColor, 'font-medium')}>Execution Status</div>
-            <OrderExecutionStatusIcon executionStatus={order.executionStatus} />
+            <OrderExecutionStatusIcon executionStatus={order.executionStatus} isSellOrder={order.isSellOrder} />
           </div>
 
           <div className="w-1/6">
