@@ -369,7 +369,7 @@ export const getEstimatedGasPrice = async (provider: Provider | undefined): Prom
 };
 
 export const getDefaultOrderExpiryTime = (): ORDER_EXPIRY_TIME => {
-  return ORDER_EXPIRY_TIME.WEEK;
+  return ORDER_EXPIRY_TIME.MONTH;
 };
 
 export const getOrderExpiryTimeInMsFromEnum = (expiry: ORDER_EXPIRY_TIME): number => {
