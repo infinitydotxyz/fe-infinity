@@ -57,7 +57,7 @@ const Dock = () => {
 
   return (
     <MouseProvider>
-      <footer className="fixed inset-x-0 bottom-1 z-40 flex w-full justify-center">
+      <footer className="fixed inset-x-0 bottom-1 z-20 flex w-full justify-center">
         <DockContext.Provider value={{ hovered, width }}>
           <nav
             ref={ref}

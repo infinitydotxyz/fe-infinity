@@ -471,7 +471,7 @@ export const AstraCart = ({
       {/* future-todo: change the chainId check here when more chains are supported */}
       <div className="m-6 flex flex-col">
         <AButton
-          className="p-3 z-50"
+          className="p-3 z-30"
           primary={true}
           disabled={
             isCheckingOut ||
@@ -683,7 +683,7 @@ const PriceAndExpiry = ({ token, collection, className, editing, onEditComplete,
           {useSpacer && <Spacer />}
           <div className={twMerge('flex flex-col items-end')}>
             <div className="flex flex-row">
-              <div className={twMerge('font-bold font-heading')}>{price}</div>
+              <div className={twMerge('font-bold font-heading')}>{nFormatter(String(price))}</div>
               <div className={twMerge('font-bold font-heading ml-1')}>{EthSymbol}</div>
             </div>
             <div className={twMerge(secondaryTextColor, 'text-xs font-medium')}>{expiry}</div>
