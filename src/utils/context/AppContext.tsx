@@ -411,13 +411,14 @@ export const AppContextProvider = ({ children }: Props) => {
           const preSignedOrders: OBOrder[] = [];
           setCheckoutBtnStatus('Fetching nonce');
           let orderNonce = await fetchOrderNonce(user, chainId as ChainId);
+          const currentBlock = await provider.getBlock('latest');
           setCheckoutBtnStatus('Preparing orders');
           for (const token of tokens) {
             let order;
             if (isBuyCart) {
-              order = await tokenToOBOrder(token, orderNonce, false);
+              order = await tokenToOBOrder(token, orderNonce, false, currentBlock.timestamp);
             } else if (isSellCart) {
-              order = await tokenToOBOrder(token, orderNonce, true);
+              order = await tokenToOBOrder(token, orderNonce, true, currentBlock.timestamp);
             }
             orderNonce += 1;
             if (order) {
@@ -459,9 +460,10 @@ export const AppContextProvider = ({ children }: Props) => {
         const preSignedOrders: OBOrder[] = [];
         setCheckoutBtnStatus('Fetching nonce');
         let orderNonce = await fetchOrderNonce(user, chainId as ChainId);
+        const currentBlock = await provider.getBlock('latest');
         setCheckoutBtnStatus('Preparing orders');
         for (const collection of collections) {
-          const order = await collectionToOBOrder(collection, orderNonce);
+          const order = await collectionToOBOrder(collection, orderNonce, currentBlock.timestamp);
           orderNonce += 1;
           if (order) {
             preSignedOrders.push(order);
@@ -516,7 +518,8 @@ export const AppContextProvider = ({ children }: Props) => {
   const tokenToOBOrder = async (
     token: ERC721TokenCartItem,
     orderNonce: number,
-    isSellOrder: boolean
+    isSellOrder: boolean,
+    startTime: number
   ): Promise<OBOrder | undefined> => {
     try {
       let currencyAddress = getTxnCurrencyAddress(chainId);
@@ -528,8 +531,9 @@ export const AppContextProvider = ({ children }: Props) => {
       if (ethPrice === 0) {
         throw new Error('Price is 0');
       }
+      const startTimeMs = startTime * 1000;
       const expiry = token.orderExpiry ?? getDefaultOrderExpiryTime();
-      const endTimeMs = getOrderExpiryTimeInMsFromEnum(expiry);
+      const endTimeMs = getOrderExpiryTimeInMsFromEnum(startTimeMs, expiry);
       const obTokenInfo: OBTokenInfo = {
         tokenId: token.tokenId ?? '',
         tokenName: token.name ?? '',
@@ -554,7 +558,7 @@ export const AppContextProvider = ({ children }: Props) => {
         isSellOrder,
         makerAddress: user ?? '',
         numItems: 1, // defaulting to one for now; m of n orders not supported in this release via FE
-        startTimeMs: Date.now(),
+        startTimeMs,
         endTimeMs,
         startPriceEth: ethPrice,
         endPriceEth: ethPrice,
@@ -578,7 +582,8 @@ export const AppContextProvider = ({ children }: Props) => {
 
   const collectionToOBOrder = async (
     collection: ERC721CollectionCartItem,
-    orderNonce: number
+    orderNonce: number,
+    startTime: number
   ): Promise<OBOrder | undefined> => {
     try {
       const currencyAddress = getTxnCurrencyAddress(chainId);
@@ -587,8 +592,9 @@ export const AppContextProvider = ({ children }: Props) => {
       if (ethPrice === 0) {
         throw new Error('Price is 0');
       }
+      const startTimeMs = startTime * 1000;
       const expiry = collection.offerExpiry ?? getDefaultOrderExpiryTime();
-      const endTimeMs = getOrderExpiryTimeInMsFromEnum(expiry);
+      const endTimeMs = getOrderExpiryTimeInMsFromEnum(startTimeMs, expiry);
       const obOrderItem: OBOrderItem = {
         chainId: collection.chainId as ChainId,
         collectionAddress: collection.address,
@@ -604,7 +610,7 @@ export const AppContextProvider = ({ children }: Props) => {
         isSellOrder: false, // collection orders are always buys
         makerAddress: user ?? '',
         numItems: 1, // defaulting to one for now; m of n orders not supported in this release via FE
-        startTimeMs: Date.now(),
+        startTimeMs,
         endTimeMs,
         startPriceEth: ethPrice,
         endPriceEth: ethPrice,
