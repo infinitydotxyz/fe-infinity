@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button, EthPrice } from 'src/components/common';
-import { erc721OrderCartItemToTokenCartItem } from 'src/utils';
+import { erc721OrderCartItemToTokenCartItem, nFormatter } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartType, useCartContext } from 'src/utils/context/CartContext';
 import { ERC721OrderCartItem, TokensFilter } from 'src/utils/types';
@@ -71,7 +71,7 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
           <div className="w-1/6">
             <div className={twMerge(secondaryTextColor, 'font-medium')}>Price</div>
             <div className="">
-              <EthPrice label={`${startPriceEth}`} />
+              <EthPrice label={`${nFormatter(startPriceEth, 3)}`} />
             </div>
           </div>
 
