@@ -59,7 +59,7 @@ export default function ProfileItemsPage() {
         </div>
       );
     }
-  }, [router.isReady, router.asPath, selectedProfileTab]);
+  }, [router.isReady, router.asPath, selectedProfileTab, address]);
 
   return content;
 }
