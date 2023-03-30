@@ -59,6 +59,15 @@ export const ProfileOrderList = ({ userAddress, className = '' }: Props) => {
     setFilter(newFilter);
   };
 
+  const onClickOrderType = (newType: 'listings' | 'offers-made' | 'offers-received' | '') => {
+    setSelectedOrderType(newType);
+    const newFilter = {
+      ...filter,
+      orderType: newType
+    };
+    setFilter(newFilter);
+  };
+
   useEffect(() => {
     fetch(false);
 
@@ -69,17 +78,8 @@ export const ProfileOrderList = ({ userAddress, className = '' }: Props) => {
     return () => clearInterval(interval);
   }, [filter]);
 
-  const onClickOrderType = (newType: 'listings' | 'offers-made' | 'offers-received' | '') => {
-    setSelectedOrderType(newType);
-    const newFilter = {
-      ...filter,
-      orderType: newType
-    };
-    setFilter(newFilter);
-  };
-
   return (
-    <div className={twMerge('min-h-[50vh]', className)}>
+    <div className={twMerge('min-h-[50vh] pb-20', className)}>
       <div className={twMerge(borderColor, 'w-full flex py-2 px-4 border-t-[1px] space-x-2')}>
         <div className="">
           <CollectionSearchInput
