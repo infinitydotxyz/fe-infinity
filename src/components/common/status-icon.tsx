@@ -55,6 +55,7 @@ export const OrderMatchStatusIcon = ({ executionStatus }: { executionStatus: Exe
     case 'matched-pending-execution':
     case 'matched-inexecutable':
     case 'matched-inexecutable-offer-weth-too-low':
+    case 'matched-inexecutable-offer-weth-allowance-too-low':
     case 'matched-executing':
     case 'matched-executing-not-included':
     case 'matched-executed': {
@@ -112,6 +113,13 @@ export const OrderExecutionStatusIcon = ({
         return <StatusIcon status="invalid" label={'Requires match'} />;
       }
       return <StatusIcon status="pending-indefinite" label={'WETH balance too low'} />;
+    }
+
+    case 'matched-inexecutable-offer-weth-allowance-too-low': {
+      if (isSellOrder) {
+        return <StatusIcon status="invalid" label={'Requires match'} />;
+      }
+      return <StatusIcon status="pending-indefinite" label={'WETH allowance too low'} />;
     }
 
     case 'matched-inexecutable': {
@@ -177,6 +185,13 @@ export const MatchAndExecutionOrderStatus = ({
         return <StatusIcon status="pending-indefinite" label={'No matches'} />;
       }
       return <StatusIcon status="pending-indefinite" label={'WETH balance too low'} />;
+    }
+
+    case 'matched-inexecutable-offer-weth-allowance-too-low': {
+      if (isSellOrder) {
+        return <StatusIcon status="invalid" label={'Requires match'} />;
+      }
+      return <StatusIcon status="pending-indefinite" label={'WETH allowance too low'} />;
     }
     case 'matched-inexecutable': {
       return <StatusIcon status="pending-indefinite" label={'Inexecutable'} />;
