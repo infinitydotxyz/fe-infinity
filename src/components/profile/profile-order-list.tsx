@@ -164,7 +164,7 @@ export const ProfileOrderList = ({ userAddress, className = '' }: Props) => {
 
         <AOutlineButton
           className={twMerge('font-medium text-sm', secondaryTextColor, hoverColorBrandText)}
-          disabled={isCancellingAll}
+          disabled={isCancellingAll || selectedOrderType === 'offers-received'}
           onClick={async () => {
             try {
               if (signer && user) {
@@ -182,7 +182,7 @@ export const ProfileOrderList = ({ userAddress, className = '' }: Props) => {
             setIsCancellingAll(false);
           }}
         >
-          Cancel all
+          Cancel all bids and listings
         </AOutlineButton>
       </div>
 
