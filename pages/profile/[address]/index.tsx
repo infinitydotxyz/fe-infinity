@@ -40,7 +40,9 @@ export default function ProfileItemsPage() {
       typeof window !== 'undefined' ? router.replace('/profile', undefined, { shallow: true }) : null;
     } else {
       if (trimLowerCase(addressFromPath) === trimLowerCase(address)) {
-        tabs.push(ProfileTabs.Send.toString());
+        if (!tabs.includes(ProfileTabs.Send.toString())) {
+          tabs.push(ProfileTabs.Send.toString());
+        }
       }
       setContent(
         <div className="flex flex-col h-full w-full">

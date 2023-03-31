@@ -425,7 +425,7 @@ export const erc721OrderCartItemToTokenCartItem = (order: ERC721OrderCartItem): 
   }
 
   const result: ERC721TokenCartItem = {
-    id: collInfo.chainId + ':' + collInfo.collectionAddress + '_' + item?.tokenId ?? '',
+    id: collInfo.chainId + ':' + collInfo.collectionAddress + ':' + item?.tokenId ?? '',
     name: item?.tokenName ?? '',
     title: collInfo.collectionName ?? '',
     collectionName: collInfo.collectionName ?? '',
