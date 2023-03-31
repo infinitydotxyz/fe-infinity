@@ -167,6 +167,8 @@ export const AstraCart = ({
               ? t?.orderPriceEth
               : t?.orderSnippet?.listing?.orderItem?.startPriceEth
               ? t?.orderSnippet?.listing?.orderItem?.startPriceEth
+              : t?.price
+              ? t?.price
               : 0;
             newCartTotal += price;
           }
