@@ -233,7 +233,7 @@ export const AstraCart = ({
         const orderId = first.id;
 
         divList.push(
-          <div className="w-full rounded-md truncate font-bold font-heading min-h-[25px]" key={`header-${first.id}`}>
+          <div className="w-full rounded-md truncate font-bold font-heading min-h-[25px]" key={`header-${orderId}`}>
             {first.nfts.length > 1 ? 'Multiple Collections' : first.nfts[0].collectionName}
           </div>
         );
@@ -639,7 +639,7 @@ const AstraCancelCartItem = ({ order, onRemove }: Props4) => {
       <div className="relative">
         <EZImage
           className={twMerge('h-12 w-12 rounded-lg overflow-clip')}
-          src={order.nfts[0].tokens[0].tokenImage ?? order.nfts[0].collectionImage}
+          src={order.nfts[0]?.tokens[0]?.tokenImage ?? order.nfts[0].collectionImage}
         />
         <div className={twMerge('absolute top-[-5px] right-[-5px] rounded-full p-0.5 cursor-pointer', inverseBgColor)}>
           <MdClose
@@ -657,7 +657,9 @@ const AstraCancelCartItem = ({ order, onRemove }: Props4) => {
             ? 'Multiple tokens'
             : order.nfts[0].tokens.length > 1
             ? 'Multiple tokens'
-            : ellipsisString(order.nfts[0].tokens[0].tokenId)}
+            : order.nfts[0].tokens.length === 1
+            ? ellipsisString(order.nfts[0]?.tokens[0]?.tokenId)
+            : ''}
         </div>
       </div>
     </div>
