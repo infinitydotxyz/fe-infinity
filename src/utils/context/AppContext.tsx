@@ -10,16 +10,15 @@ import {
   SignedOBOrder
 } from '@infinityxyz/lib-frontend/types/core';
 import {
+  NULL_ADDRESS,
   getCurrentOBOrderPrice,
   getExchangeAddress,
   getOBComplicationAddress,
   getTxnCurrencyAddress,
-  NULL_ADDRESS,
   trimLowerCase
 } from '@infinityxyz/lib-frontend/utils';
 import { Contract } from 'ethers';
 import { defaultAbiCoder, parseEther } from 'ethers/lib/utils.js';
-import { useRouter } from 'next/router';
 import { ProfileTabs } from 'pages/profile/[address]';
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
@@ -43,14 +42,13 @@ import { ERC721CollectionCartItem, ERC721OrderCartItem, ERC721TokenCartItem } fr
 import { useAccount, useNetwork, useProvider, useSigner } from 'wagmi';
 import {
   extractErrorMsg,
-  getCartType,
   getDefaultOrderExpiryTime,
   getEstimatedGasPrice,
   getOrderExpiryTimeInMsFromEnum
 } from '../common-utils';
 import { DEFAULT_MAX_GAS_PRICE_WEI, ZERO_ADDRESS } from '../constants';
 import { fetchOrderNonce, postOrdersV2 } from '../orderbook-utils';
-import { CartType } from './CartContext';
+import { CartType, useCartContext } from './CartContext';
 
 type AppContextType = {
   selectedChain: ChainId;
@@ -124,6 +122,7 @@ export const AppContextProvider = ({ children }: Props) => {
   const { chain } = useNetwork();
   const chainId = String(chain?.id);
   const { address: user } = useAccount();
+  const { cartType } = useCartContext();
 
   const {
     isNFTSelected,
@@ -144,8 +143,6 @@ export const AppContextProvider = ({ children }: Props) => {
   } = useCollectionSelection();
   const { isOrderSelected, toggleOrderSelection, clearOrderSelection, orderSelection, removeOrderFromSelection } =
     useOrderSelection();
-
-  const router = useRouter();
 
   useEffect(() => {
     refreshData();
@@ -401,7 +398,6 @@ export const AppContextProvider = ({ children }: Props) => {
       if (!user || !signer) {
         toastError('No logged in user');
       } else {
-        const cartType = getCartType(router.asPath, selectedProfileTab);
         const isBuyCart = cartType === CartType.TokenOffer;
         const isSellCart = cartType === CartType.TokenList;
         const isSendCart = cartType === CartType.Send;
