@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Button, EthPrice } from 'src/components/common';
-import { erc721OrderCartItemToTokenCartItem, nFormatter } from 'src/utils';
+import { erc721OrderCartItemToCollectionCartItem, erc721OrderCartItemToTokenCartItem, nFormatter } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartType, useCartContext } from 'src/utils/context/CartContext';
-import { ERC721OrderCartItem, TokensFilter } from 'src/utils/types';
+import { ERC721CollectionCartItem, ERC721OrderCartItem, ERC721TokenCartItem, TokensFilter } from 'src/utils/types';
 import { secondaryTextColor, standardBorderCard } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
@@ -19,11 +19,30 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
   const [startPriceEth] = useState(order.startPriceEth);
   const { isConnected } = useAccount();
   const { cartType, cartItems, setCartType } = useCartContext();
-  const { isNFTSelectable, isNFTSelected, toggleNFTSelection, isOrderSelected, toggleOrderSelection } = useAppContext();
+  const {
+    isNFTSelectable,
+    isNFTSelected,
+    toggleNFTSelection,
+    isOrderSelected,
+    toggleOrderSelection,
+    isCollSelectable,
+    isCollSelected,
+    toggleCollSelection
+  } = useAppContext();
 
-  const editCartToken = erc721OrderCartItemToTokenCartItem(order);
+  let editableCartItem: ERC721CollectionCartItem | ERC721TokenCartItem;
+  const isCollBid = orderType === 'offers-made' && order.nfts[0].tokens.length === 0;
+  if (isCollBid) {
+    editableCartItem = erc721OrderCartItemToCollectionCartItem(order);
+  } else {
+    editableCartItem = erc721OrderCartItemToTokenCartItem(order);
+  }
 
-  const [addedToEditCart, setAddedToEditCart] = useState(isNFTSelected(editCartToken));
+  const [addedToEditCart, setAddedToEditCart] = useState(
+    isCollBid
+      ? isCollSelected(editableCartItem as ERC721CollectionCartItem)
+      : isNFTSelected(editableCartItem as ERC721TokenCartItem)
+  );
   const [addedToCancelCart, setAddedToCancelCart] = useState(isOrderSelected(order));
 
   const orderStatus = order.executionStatus?.status;
@@ -34,7 +53,11 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
   );
 
   useEffect(() => {
-    setAddedToEditCart(isNFTSelected(editCartToken));
+    setAddedToEditCart(
+      isCollBid
+        ? isCollSelected(editableCartItem as ERC721CollectionCartItem)
+        : isNFTSelected(editableCartItem as ERC721TokenCartItem)
+    );
     setAddedToCancelCart(isOrderSelected(order));
   }, [cartType, cartItems]);
 
@@ -84,11 +107,20 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
                   if (!isConnected) {
                     return;
                   }
-                  const newCartType = orderType === 'listings' ? CartType.TokenList : CartType.TokenOffer;
-                  editCartToken.cartType = newCartType;
-                  if (isNFTSelectable(editCartToken)) {
+                  const newCartType =
+                    orderType === 'listings'
+                      ? CartType.TokenList
+                      : isCollBid
+                      ? CartType.CollectionOffer
+                      : CartType.TokenOffer;
+                  editableCartItem.cartType = newCartType;
+                  if (!isCollBid && isNFTSelectable(editableCartItem as ERC721TokenCartItem)) {
                     setCartType(newCartType);
-                    toggleNFTSelection(editCartToken);
+                    toggleNFTSelection(editableCartItem as ERC721TokenCartItem);
+                  }
+                  if (isCollBid && isCollSelectable(editableCartItem as ERC721CollectionCartItem)) {
+                    setCartType(newCartType);
+                    toggleCollSelection(editableCartItem as ERC721CollectionCartItem);
                   }
                 }}
               >
@@ -122,10 +154,10 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
                     return;
                   }
                   const newCartType = CartType.TokenList;
-                  editCartToken.cartType = newCartType;
-                  if (isNFTSelectable(editCartToken)) {
+                  editableCartItem.cartType = newCartType;
+                  if (isNFTSelectable(editableCartItem as ERC721TokenCartItem)) {
                     setCartType(newCartType);
-                    toggleNFTSelection(editCartToken);
+                    toggleNFTSelection(editableCartItem as ERC721TokenCartItem);
                   }
                 }}
               >

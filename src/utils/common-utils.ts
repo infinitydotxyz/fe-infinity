@@ -1,7 +1,7 @@
 import { getAddress } from '@ethersproject/address';
 import { Provider } from '@ethersproject/providers';
-import { BaseToken, ChainId, OrdersSnippet, OwnerInfo } from '@infinityxyz/lib-frontend/types/core';
-import { BaseCollection } from '@infinityxyz/lib-frontend/types/core/Collection';
+import { BaseToken, ChainId, OrdersSnippet, OwnerInfo, TokenStandard } from '@infinityxyz/lib-frontend/types/core';
+import { BaseCollection, CreationFlow } from '@infinityxyz/lib-frontend/types/core/Collection';
 import {
   Env,
   ETHEREUM_CHAIN_SCANNER_BASE,
@@ -12,7 +12,7 @@ import {
 import { ProfileTabs } from 'pages/profile/[address]';
 import { normalize } from 'path';
 import { ReactNode } from 'react';
-import { ERC721OrderCartItem, ERC721TokenCartItem, ORDER_EXPIRY_TIME } from 'src/utils/types';
+import { ERC721CollectionCartItem, ERC721OrderCartItem, ERC721TokenCartItem, ORDER_EXPIRY_TIME } from 'src/utils/types';
 import { CartType } from './context/CartContext';
 
 export const base64Encode = (data: string) => Buffer.from(data).toString('base64');
@@ -444,6 +444,55 @@ export const erc721OrderCartItemToTokenCartItem = (order: ERC721OrderCartItem): 
     hasBlueCheck: collInfo.hasBlueCheck ?? false,
     attributes: [],
     cartType: CartType.None
+  };
+
+  return result;
+};
+
+export const erc721OrderCartItemToCollectionCartItem = (order: ERC721OrderCartItem): ERC721CollectionCartItem => {
+  // this function assumes single item orders only not m of n types
+  const collInfo = order.nfts[0];
+
+  const result: ERC721CollectionCartItem = {
+    chainId: collInfo.chainId,
+    address: collInfo.collectionAddress ?? '',
+    hasBlueCheck: collInfo.hasBlueCheck ?? false,
+    cartType: CartType.CollectionOffer,
+    tokenStandard: TokenStandard.ERC721,
+    offerPriceEth: order.startPriceEth,
+    deployer: '',
+    deployedAt: 0,
+    deployedAtBlock: 0,
+    owner: '',
+    numOwnersUpdatedAt: 0,
+    metadata: {
+      name: collInfo.collectionName ?? '',
+      description: '',
+      profileImage: collInfo.collectionImage ?? '',
+      bannerImage: '',
+      symbol: '',
+      links: {
+        timestamp: 0
+      }
+    },
+    slug: collInfo.collectionSlug ?? '',
+    numNfts: 0,
+    numTraitTypes: 0,
+    indexInitiator: '',
+    state: {
+      version: 0,
+      create: {
+        step: CreationFlow.Complete,
+        updatedAt: 0,
+        error: undefined,
+        progress: 0,
+        zoraCursor: undefined,
+        reservoirCursor: undefined
+      },
+      export: {
+        done: false
+      }
+    }
   };
 
   return result;
