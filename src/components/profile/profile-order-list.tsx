@@ -6,7 +6,7 @@ import { MdClose } from 'react-icons/md';
 import { useProfileOrderFetcher } from 'src/hooks/api/useOrderFetcher';
 import { extractErrorMsg } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
-import { CartType } from 'src/utils/context/CartContext';
+import { CartType, useCartContext } from 'src/utils/context/CartContext';
 import { fetchOrderNonce } from 'src/utils/orderbook-utils';
 import { cancelAllOrders } from 'src/utils/orders';
 import { ERC721OrderCartItem, TokensFilter } from 'src/utils/types';
@@ -34,6 +34,7 @@ export const ProfileOrderList = ({ userAddress, className = '' }: Props) => {
   const chainId = String(chain?.id ?? selectedChain);
   const { address: user } = useAccount();
   const { setTxnHash } = useAppContext();
+  const { setCartType } = useCartContext();
 
   const [isCancellingAll, setIsCancellingAll] = useState(false);
   const [selectedOrderType, setSelectedOrderType] = useState<'listings' | 'offers-made' | 'offers-received' | ''>(
@@ -59,6 +60,20 @@ export const ProfileOrderList = ({ userAddress, className = '' }: Props) => {
     setFilter(newFilter);
   };
 
+  const onClickOrderType = (newType: 'listings' | 'offers-made' | 'offers-received' | '') => {
+    setSelectedOrderType(newType);
+    if (newType === 'listings' || newType === 'offers-received') {
+      setCartType(CartType.TokenList);
+    } else if (newType === 'offers-made') {
+      setCartType(CartType.TokenOffer);
+    }
+    const newFilter = {
+      ...filter,
+      orderType: newType
+    };
+    setFilter(newFilter);
+  };
+
   useEffect(() => {
     fetch(false);
 
@@ -69,17 +84,8 @@ export const ProfileOrderList = ({ userAddress, className = '' }: Props) => {
     return () => clearInterval(interval);
   }, [filter]);
 
-  const onClickOrderType = (newType: 'listings' | 'offers-made' | 'offers-received' | '') => {
-    setSelectedOrderType(newType);
-    const newFilter = {
-      ...filter,
-      orderType: newType
-    };
-    setFilter(newFilter);
-  };
-
   return (
-    <div className={twMerge('min-h-[50vh]', className)}>
+    <div className={twMerge('min-h-[50vh] pb-20', className)}>
       <div className={twMerge(borderColor, 'w-full flex py-2 px-4 border-t-[1px] space-x-2')}>
         <div className="">
           <CollectionSearchInput
@@ -158,7 +164,7 @@ export const ProfileOrderList = ({ userAddress, className = '' }: Props) => {
 
         <AOutlineButton
           className={twMerge('font-medium text-sm', secondaryTextColor, hoverColorBrandText)}
-          disabled={isCancellingAll}
+          disabled={isCancellingAll || selectedOrderType === 'offers-received'}
           onClick={async () => {
             try {
               if (signer && user) {
@@ -176,7 +182,7 @@ export const ProfileOrderList = ({ userAddress, className = '' }: Props) => {
             setIsCancellingAll(false);
           }}
         >
-          Cancel all
+          Cancel all bids and listings
         </AOutlineButton>
       </div>
 
@@ -203,10 +209,10 @@ export const ProfileOrderList = ({ userAddress, className = '' }: Props) => {
             </CenteredContent>
           ) : null}
 
-          {orders?.map((order, idx) => {
+          {orders?.map((order) => {
             const orderCartItem = order as ERC721OrderCartItem;
             orderCartItem.cartType = CartType.Cancel;
-            return <ProfileOrderListItem key={idx} order={orderCartItem} orderType={filter.orderType} />;
+            return <ProfileOrderListItem key={order.id} order={orderCartItem} orderType={filter.orderType} />;
           })}
 
           {hasNextPage === true ? (

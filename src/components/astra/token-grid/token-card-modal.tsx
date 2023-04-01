@@ -129,6 +129,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
   const markupPricePercentDiff = markupPrice ? `${nFormatter((markupPriceDiff / Number(markupPrice)) * 100)}%` : 0;
 
   const isOwner = user && trimLowerCase(user) === trimLowerCase(token.owner?.toString());
+  const isUserCollectionCreator = user && collectionCreator && trimLowerCase(user) === trimLowerCase(collectionCreator);
   const newCartType = isOwner ? CartType.TokenList : CartType.TokenOffer;
   const cartToken = nftToCardDataWithOrderFields(token as Erc721Token);
   cartToken.cartType = newCartType;
@@ -207,7 +208,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
                     <div className={twMerge('text-xs font-medium mb-1', secondaryTextColor)}>Creator</div>
                     <div>
                       <ShortAddress
-                        address={isOwner ? 'You' : collectionCreator || ''}
+                        address={isUserCollectionCreator ? 'You' : collectionCreator || ''}
                         textToCopy={collectionCreator || ''}
                         href={`https://flow.so/profile/${collectionCreator || ''}`}
                         tooltip={collectionCreator || ''}

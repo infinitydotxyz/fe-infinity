@@ -74,7 +74,7 @@ export const AstraCart = ({
   const { cartType, setCartType, getCurrentCartItems, cartItems } = useCartContext();
   const [currentCartItems, setCurrentCartItems] = useState<CartItem[]>([]);
   const [cartTotal, setCartTotal] = useState(0);
-  const cartTabOptions = ['Totals', 'Options'];
+  const [cartTabOptions, setCartTabOptions] = useState(['Totals', 'Options']);
   const [selectedTab, setSelectedTab] = useState(cartTabOptions[0]);
 
   enum ExecutionMode {
@@ -107,6 +107,14 @@ export const AstraCart = ({
 
   let cartItemList: ReactNode;
   const [cartContent, setCartContent] = useState<ReactNode>(cartItemList);
+
+  useEffect(() => {
+    if (cartType === CartType.Send || cartType === CartType.Cancel) {
+      setCartTabOptions(['Totals']);
+    } else {
+      setCartTabOptions(['Totals', 'Options']);
+    }
+  }, [cartType]);
 
   const onCartTabOptionsChange = (value: string) => {
     switch (value) {
@@ -167,6 +175,8 @@ export const AstraCart = ({
               ? t?.orderPriceEth
               : t?.orderSnippet?.listing?.orderItem?.startPriceEth
               ? t?.orderSnippet?.listing?.orderItem?.startPriceEth
+              : t?.price
+              ? t?.price
               : 0;
             newCartTotal += price;
           }
@@ -231,7 +241,7 @@ export const AstraCart = ({
         const orderId = first.id;
 
         divList.push(
-          <div className="w-full rounded-md truncate font-bold font-heading min-h-[25px]" key={`header-${first.id}`}>
+          <div className="w-full rounded-md truncate font-bold font-heading min-h-[25px]" key={`header-${orderId}`}>
             {first.nfts.length > 1 ? 'Multiple Collections' : first.nfts[0].collectionName}
           </div>
         );
@@ -526,11 +536,14 @@ const AstraTokenCartItem = ({ token, onRemove, updateCartTotal }: Props2) => {
   //   ? token?.orderSnippet?.listing?.orderItem?.startPriceEth.toString()
   //   : '';
 
-  const price = token?.orderPriceEth
-    ? token?.orderPriceEth.toString()
-    : token?.orderSnippet?.listing?.orderItem?.startPriceEth
-    ? token?.orderSnippet?.listing?.orderItem?.startPriceEth.toString()
-    : '';
+  const price =
+    token?.orderPriceEth !== undefined
+      ? token?.orderPriceEth.toString()
+      : token?.orderSnippet?.listing?.orderItem?.startPriceEth
+      ? token?.orderSnippet?.listing?.orderItem?.startPriceEth.toString()
+      : token?.price
+      ? token?.price.toString()
+      : '';
 
   token.orderPriceEth = parseFloat(price);
 
@@ -635,7 +648,7 @@ const AstraCancelCartItem = ({ order, onRemove }: Props4) => {
       <div className="relative">
         <EZImage
           className={twMerge('h-12 w-12 rounded-lg overflow-clip')}
-          src={order.nfts[0].tokens[0].tokenImage ?? order.nfts[0].collectionImage}
+          src={order.nfts[0]?.tokens[0]?.tokenImage ?? order.nfts[0].collectionImage}
         />
         <div className={twMerge('absolute top-[-5px] right-[-5px] rounded-full p-0.5 cursor-pointer', inverseBgColor)}>
           <MdClose
@@ -653,7 +666,9 @@ const AstraCancelCartItem = ({ order, onRemove }: Props4) => {
             ? 'Multiple tokens'
             : order.nfts[0].tokens.length > 1
             ? 'Multiple tokens'
-            : ellipsisString(order.nfts[0].tokens[0].tokenId)}
+            : order.nfts[0].tokens.length === 1
+            ? ellipsisString(order.nfts[0]?.tokens[0]?.tokenId)
+            : ''}
         </div>
       </div>
     </div>
@@ -769,12 +784,16 @@ const PriceAndExpiry = ({ token, collection, className, editing, onEditComplete,
             value={price}
             placeholder="Price"
             onChange={(value) => {
-              setPrice(value);
+              let parsedValue = parseFloat(value);
+              if (parsedValue < 0) {
+                parsedValue = 0;
+              }
+              setPrice(String(parsedValue));
               // onEditComplete?.(value);
               if (token) {
-                token.orderPriceEth = parseFloat(value);
+                token.orderPriceEth = parsedValue;
               } else if (collection) {
-                collection.offerPriceEth = parseFloat(value);
+                collection.offerPriceEth = parsedValue;
               }
             }}
             onEnter={() => {

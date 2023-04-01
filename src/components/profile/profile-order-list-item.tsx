@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Button, EthPrice } from 'src/components/common';
-import { erc721OrderCartItemToTokenCartItem, nFormatter } from 'src/utils';
+import { erc721OrderCartItemToCollectionCartItem, erc721OrderCartItemToTokenCartItem, nFormatter } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { CartType, useCartContext } from 'src/utils/context/CartContext';
-import { ERC721OrderCartItem, TokensFilter } from 'src/utils/types';
+import { ERC721CollectionCartItem, ERC721OrderCartItem, ERC721TokenCartItem, TokensFilter } from 'src/utils/types';
 import { secondaryTextColor, standardBorderCard } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
@@ -19,11 +19,30 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
   const [startPriceEth] = useState(order.startPriceEth);
   const { isConnected } = useAccount();
   const { cartType, cartItems, setCartType } = useCartContext();
-  const { isNFTSelectable, isNFTSelected, toggleNFTSelection, isOrderSelected, toggleOrderSelection } = useAppContext();
+  const {
+    isNFTSelectable,
+    isNFTSelected,
+    toggleNFTSelection,
+    isOrderSelected,
+    toggleOrderSelection,
+    isCollSelectable,
+    isCollSelected,
+    toggleCollSelection
+  } = useAppContext();
 
-  const editCartToken = erc721OrderCartItemToTokenCartItem(order);
+  let editableCartItem: ERC721CollectionCartItem | ERC721TokenCartItem;
+  const isCollBid = orderType === 'offers-made' && order.nfts[0].tokens.length === 0;
+  if (isCollBid) {
+    editableCartItem = erc721OrderCartItemToCollectionCartItem(order);
+  } else {
+    editableCartItem = erc721OrderCartItemToTokenCartItem(order);
+  }
 
-  const [addedToEditCart, setAddedToEditCart] = useState(isNFTSelected(editCartToken));
+  const [addedToEditCart, setAddedToEditCart] = useState(
+    isCollBid
+      ? isCollSelected(editableCartItem as ERC721CollectionCartItem)
+      : isNFTSelected(editableCartItem as ERC721TokenCartItem)
+  );
   const [addedToCancelCart, setAddedToCancelCart] = useState(isOrderSelected(order));
 
   const orderStatus = order.executionStatus?.status;
@@ -34,106 +53,115 @@ export const ProfileOrderListItem = ({ order, orderType }: Props) => {
   );
 
   useEffect(() => {
-    setAddedToEditCart(isNFTSelected(editCartToken));
+    setAddedToEditCart(
+      isCollBid
+        ? isCollSelected(editableCartItem as ERC721CollectionCartItem)
+        : isNFTSelected(editableCartItem as ERC721TokenCartItem)
+    );
     setAddedToCancelCart(isOrderSelected(order));
   }, [cartType, cartItems]);
 
   return (
-    <div>
-      <div className={twMerge(standardBorderCard, 'flex mx-4 text-sm')}>
-        <div className="flex justify-between items-center w-full">
-          <div className="w-1/4">
-            <OrderbookItem
-              canShowAssetModal={true}
-              nameItem={true}
-              key={`${order.id} ${order.chainId}`}
-              order={order}
-            />
-          </div>
-
-          <div className="w-1/6">
-            <div className={twMerge(secondaryTextColor, 'font-medium')}>Order type</div>
-            <div className="">
-              {orderType === 'listings' ? 'Listing' : orderType === 'offers-made' ? 'Bid' : 'Offer'}
-            </div>
-            <div className={twMerge(secondaryTextColor, 'text-xs font-medium')}>Expires {format(order.endTimeMs)}</div>
-          </div>
-          <div className="w-1/4">
-            <div className={twMerge(secondaryTextColor, 'font-medium')}>Match Status</div>
-            <OrderMatchStatusIcon executionStatus={order.executionStatus} />
-          </div>
-
-          <div className="w-1/4">
-            <div className={twMerge(secondaryTextColor, 'font-medium')}>Execution Status</div>
-            <OrderExecutionStatusIcon executionStatus={order.executionStatus} isSellOrder={order.isSellOrder} />
-          </div>
-
-          <div className="w-1/6">
-            <div className={twMerge(secondaryTextColor, 'font-medium')}>Price</div>
-            <div className="">
-              <EthPrice label={`${nFormatter(startPriceEth, 3)}`} />
-            </div>
-          </div>
-
-          {orderType === 'listings' || orderType === 'offers-made' ? (
-            <div className="w-1/4 flex justify-end">
-              <Button
-                disabled={!isActionable}
-                className="mr-2"
-                onClick={() => {
-                  if (!isConnected) {
-                    return;
-                  }
-                  const newCartType = orderType === 'listings' ? CartType.TokenList : CartType.TokenOffer;
-                  editCartToken.cartType = newCartType;
-                  if (isNFTSelectable(editCartToken)) {
-                    setCartType(newCartType);
-                    toggleNFTSelection(editCartToken);
-                  }
-                }}
-              >
-                {addedToEditCart && (cartType === CartType.TokenList || cartType === CartType.TokenOffer) ? '✓' : ''}{' '}
-                Edit in Cart
-              </Button>
-
-              <Button
-                disabled={!isActionable}
-                onClick={() => {
-                  if (!isConnected) {
-                    return;
-                  }
-                  const newCartType = CartType.Cancel;
-                  order.cartType = newCartType;
-                  setCartType(newCartType);
-                  toggleOrderSelection(order);
-                }}
-              >
-                {addedToCancelCart && cartType === CartType.Cancel ? '✓' : ''} Cancel
-              </Button>
-            </div>
-          ) : null}
-
-          {orderType === 'offers-received' ? (
-            <div className="w-1/6 flex justify-end">
-              <Button
-                disabled={!isActionable}
-                onClick={() => {
-                  if (!isConnected) {
-                    return;
-                  }
-                  const newCartType = CartType.TokenList;
-                  editCartToken.cartType = newCartType;
-                  if (isNFTSelectable(editCartToken)) {
-                    setCartType(newCartType);
-                    toggleNFTSelection(editCartToken);
-                  }
-                }}
-              >
-                {addedToEditCart && cartType === CartType.TokenList ? '✓' : ''} Sell Now
-              </Button>
-            </div>
-          ) : null}
+    <div className={twMerge(standardBorderCard, 'flex mx-4 text-sm')}>
+      <div className="flex justify-between items-center w-full">
+        <div className="w-1/4">
+          <OrderbookItem canShowAssetModal={true} nameItem={true} key={`${order.id} ${order.chainId}`} order={order} />
         </div>
+
+        <div className="w-1/6">
+          <div className={twMerge(secondaryTextColor, 'font-medium')}>Order type</div>
+          <div className="">{orderType === 'listings' ? 'Listing' : orderType === 'offers-made' ? 'Bid' : 'Offer'}</div>
+          <div className={twMerge(secondaryTextColor, 'text-xs font-medium')}>Expires {format(order.endTimeMs)}</div>
+        </div>
+        <div className="w-1/4">
+          <div className={twMerge(secondaryTextColor, 'font-medium')}>Match Status</div>
+          <OrderMatchStatusIcon executionStatus={order.executionStatus} />
+        </div>
+
+        <div className="w-1/4">
+          <div className={twMerge(secondaryTextColor, 'font-medium')}>Execution Status</div>
+          <OrderExecutionStatusIcon executionStatus={order.executionStatus} isSellOrder={order.isSellOrder} />
+        </div>
+
+        <div className="w-1/6">
+          <div className={twMerge(secondaryTextColor, 'font-medium')}>Price</div>
+          <div className="">
+            <EthPrice label={`${nFormatter(startPriceEth, 3)}`} />
+          </div>
+        </div>
+
+        {orderType === 'listings' || orderType === 'offers-made' ? (
+          <div className="w-1/4 flex justify-end">
+            <Button
+              disabled={!isActionable}
+              className="mr-2"
+              onClick={() => {
+                if (!isConnected) {
+                  return;
+                }
+                const newCartType =
+                  orderType === 'listings'
+                    ? CartType.TokenList
+                    : isCollBid
+                    ? CartType.CollectionOffer
+                    : CartType.TokenOffer;
+                editableCartItem.cartType = newCartType;
+                if (!isCollBid && isNFTSelectable(editableCartItem as ERC721TokenCartItem)) {
+                  setCartType(newCartType);
+                  toggleNFTSelection(editableCartItem as ERC721TokenCartItem);
+                }
+                if (isCollBid && isCollSelectable(editableCartItem as ERC721CollectionCartItem)) {
+                  setCartType(newCartType);
+                  toggleCollSelection(editableCartItem as ERC721CollectionCartItem);
+                }
+              }}
+            >
+              {addedToEditCart &&
+              (cartType === CartType.TokenList ||
+                cartType === CartType.TokenOffer ||
+                cartType === CartType.CollectionOffer)
+                ? '✓'
+                : ''}{' '}
+              Edit in Cart
+            </Button>
+
+            <Button
+              disabled={!isActionable}
+              onClick={() => {
+                if (!isConnected) {
+                  return;
+                }
+                const newCartType = CartType.Cancel;
+                order.cartType = newCartType;
+                setCartType(newCartType);
+                toggleOrderSelection(order);
+              }}
+            >
+              {addedToCancelCart && cartType === CartType.Cancel ? '✓' : ''} Cancel
+            </Button>
+          </div>
+        ) : null}
+
+        {orderType === 'offers-received' ? (
+          <div className="w-1/6 flex justify-end">
+            <Button
+              disabled={!isActionable}
+              onClick={() => {
+                if (!isConnected) {
+                  return;
+                }
+                const newCartType = CartType.TokenList;
+                editableCartItem.cartType = newCartType;
+                if (isNFTSelectable(editableCartItem as ERC721TokenCartItem)) {
+                  setCartType(newCartType);
+                  toggleNFTSelection(editableCartItem as ERC721TokenCartItem);
+                }
+              }}
+            >
+              {addedToEditCart && cartType === CartType.TokenList ? '✓' : ''} Sell Now
+            </Button>
+          </div>
+        ) : null}
       </div>
     </div>
   );

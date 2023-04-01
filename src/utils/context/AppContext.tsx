@@ -10,16 +10,15 @@ import {
   SignedOBOrder
 } from '@infinityxyz/lib-frontend/types/core';
 import {
+  NULL_ADDRESS,
   getCurrentOBOrderPrice,
   getExchangeAddress,
   getOBComplicationAddress,
   getTxnCurrencyAddress,
-  NULL_ADDRESS,
   trimLowerCase
 } from '@infinityxyz/lib-frontend/utils';
 import { Contract } from 'ethers';
 import { defaultAbiCoder, parseEther } from 'ethers/lib/utils.js';
-import { useRouter } from 'next/router';
 import { ProfileTabs } from 'pages/profile/[address]';
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
@@ -43,14 +42,13 @@ import { ERC721CollectionCartItem, ERC721OrderCartItem, ERC721TokenCartItem } fr
 import { useAccount, useNetwork, useProvider, useSigner } from 'wagmi';
 import {
   extractErrorMsg,
-  getCartType,
   getDefaultOrderExpiryTime,
   getEstimatedGasPrice,
   getOrderExpiryTimeInMsFromEnum
 } from '../common-utils';
 import { DEFAULT_MAX_GAS_PRICE_WEI, ZERO_ADDRESS } from '../constants';
 import { fetchOrderNonce, postOrdersV2 } from '../orderbook-utils';
-import { CartType } from './CartContext';
+import { CartType, useCartContext } from './CartContext';
 
 type AppContextType = {
   selectedChain: ChainId;
@@ -124,6 +122,7 @@ export const AppContextProvider = ({ children }: Props) => {
   const { chain } = useNetwork();
   const chainId = String(chain?.id);
   const { address: user } = useAccount();
+  const { cartType } = useCartContext();
 
   const {
     isNFTSelected,
@@ -144,8 +143,6 @@ export const AppContextProvider = ({ children }: Props) => {
   } = useCollectionSelection();
   const { isOrderSelected, toggleOrderSelection, clearOrderSelection, orderSelection, removeOrderFromSelection } =
     useOrderSelection();
-
-  const router = useRouter();
 
   useEffect(() => {
     refreshData();
@@ -320,10 +317,12 @@ export const AppContextProvider = ({ children }: Props) => {
     // grant approvals
     setCheckoutBtnStatus('Awaiting approval confirmation');
     const results = await approveERC721ForChainNFTs(orderItems, signer, exchangeAddress);
-    const lastApprovalTx = results[results.length - 1];
-    setTxnHash(lastApprovalTx.hash);
-    setCheckoutBtnStatus('Awaiting approval txns');
-    await lastApprovalTx.wait();
+    if (results.length > 0) {
+      const lastApprovalTx = results[results.length - 1];
+      setTxnHash(lastApprovalTx.hash);
+      setCheckoutBtnStatus('Awaiting approval txns');
+      await lastApprovalTx.wait();
+    }
 
     // perform send
     setCheckoutBtnStatus('Awaiting wallet confirmation');
@@ -401,7 +400,6 @@ export const AppContextProvider = ({ children }: Props) => {
       if (!user || !signer) {
         toastError('No logged in user');
       } else {
-        const cartType = getCartType(router.asPath, selectedProfileTab);
         const isBuyCart = cartType === CartType.TokenOffer;
         const isSellCart = cartType === CartType.TokenList;
         const isSendCart = cartType === CartType.Send;
@@ -521,63 +519,59 @@ export const AppContextProvider = ({ children }: Props) => {
     isSellOrder: boolean,
     startTime: number
   ): Promise<OBOrder | undefined> => {
-    try {
-      let currencyAddress = getTxnCurrencyAddress(chainId);
-      if (isSellOrder) {
-        currencyAddress = ZERO_ADDRESS; // sell orders are always in ETH
-      }
-      const gasPrice = await getEstimatedGasPrice(provider);
-      const ethPrice = token.orderPriceEth ?? 0;
-      if (ethPrice === 0) {
-        throw new Error('Price is 0');
-      }
-      const startTimeMs = startTime * 1000;
-      const expiry = token.orderExpiry ?? getDefaultOrderExpiryTime();
-      const endTimeMs = getOrderExpiryTimeInMsFromEnum(startTimeMs, expiry);
-      const obTokenInfo: OBTokenInfo = {
-        tokenId: token.tokenId ?? '',
-        tokenName: token.name ?? '',
-        tokenImage: token.image ?? token.cardImage ?? token.imagePreview ?? '',
-        numTokens: 1, // always 1 for ERC721
-        takerAddress: '',
-        takerUsername: '',
-        attributes: token.attributes ?? []
-      };
-      const obOrderItem: OBOrderItem = {
-        chainId: token.chainId as ChainId,
-        collectionAddress: token.address ?? '',
-        collectionName: token.collectionName ?? '',
-        collectionImage: '',
-        collectionSlug: token.collectionSlug ?? '',
-        hasBlueCheck: token.hasBlueCheck ?? false,
-        tokens: [obTokenInfo]
-      };
-      const order: OBOrder = {
-        id: '',
-        chainId: token.chainId ?? '1',
-        isSellOrder,
-        makerAddress: user ?? '',
-        numItems: 1, // defaulting to one for now; m of n orders not supported in this release via FE
-        startTimeMs,
-        endTimeMs,
-        startPriceEth: ethPrice,
-        endPriceEth: ethPrice,
-        nfts: [obOrderItem],
-        makerUsername: '', // filled in BE
-        nonce: orderNonce,
-        maxGasPriceWei: gasPrice ?? DEFAULT_MAX_GAS_PRICE_WEI,
-        execParams: {
-          currencyAddress,
-          complicationAddress: getOBComplicationAddress(chainId)
-        },
-        extraParams: {
-          buyer: ''
-        }
-      };
-      return order;
-    } catch (err) {
-      console.error(err);
+    let currencyAddress = getTxnCurrencyAddress(chainId);
+    if (isSellOrder) {
+      currencyAddress = ZERO_ADDRESS; // sell orders are always in ETH
     }
+    const gasPrice = await getEstimatedGasPrice(provider);
+    const ethPrice = token.orderPriceEth ?? 0;
+    if (ethPrice === 0) {
+      throw new Error('Price cannot be 0');
+    }
+    const startTimeMs = startTime * 1000;
+    const expiry = token.orderExpiry ?? getDefaultOrderExpiryTime();
+    const endTimeMs = getOrderExpiryTimeInMsFromEnum(startTimeMs, expiry);
+    const obTokenInfo: OBTokenInfo = {
+      tokenId: token.tokenId ?? '',
+      tokenName: token.name ?? '',
+      tokenImage: token.image ?? token.cardImage ?? token.imagePreview ?? '',
+      numTokens: 1, // always 1 for ERC721
+      takerAddress: '',
+      takerUsername: '',
+      attributes: token.attributes ?? []
+    };
+    const obOrderItem: OBOrderItem = {
+      chainId: token.chainId as ChainId,
+      collectionAddress: token.address ?? '',
+      collectionName: token.collectionName ?? '',
+      collectionImage: '',
+      collectionSlug: token.collectionSlug ?? '',
+      hasBlueCheck: token.hasBlueCheck ?? false,
+      tokens: [obTokenInfo]
+    };
+    const order: OBOrder = {
+      id: '',
+      chainId: token.chainId ?? '1',
+      isSellOrder,
+      makerAddress: user ?? '',
+      numItems: 1, // defaulting to one for now; m of n orders not supported in this release via FE
+      startTimeMs,
+      endTimeMs,
+      startPriceEth: ethPrice,
+      endPriceEth: ethPrice,
+      nfts: [obOrderItem],
+      makerUsername: '', // filled in BE
+      nonce: orderNonce,
+      maxGasPriceWei: gasPrice ?? DEFAULT_MAX_GAS_PRICE_WEI,
+      execParams: {
+        currencyAddress,
+        complicationAddress: getOBComplicationAddress(chainId)
+      },
+      extraParams: {
+        buyer: ''
+      }
+    };
+    return order;
   };
 
   const collectionToOBOrder = async (
@@ -585,51 +579,47 @@ export const AppContextProvider = ({ children }: Props) => {
     orderNonce: number,
     startTime: number
   ): Promise<OBOrder | undefined> => {
-    try {
-      const currencyAddress = getTxnCurrencyAddress(chainId);
-      const gasPrice = await getEstimatedGasPrice(provider);
-      const ethPrice = collection.offerPriceEth ?? 0;
-      if (ethPrice === 0) {
-        throw new Error('Price is 0');
-      }
-      const startTimeMs = startTime * 1000;
-      const expiry = collection.offerExpiry ?? getDefaultOrderExpiryTime();
-      const endTimeMs = getOrderExpiryTimeInMsFromEnum(startTimeMs, expiry);
-      const obOrderItem: OBOrderItem = {
-        chainId: collection.chainId as ChainId,
-        collectionAddress: collection.address,
-        collectionName: collection.metadata.name,
-        collectionImage: collection.metadata.profileImage,
-        collectionSlug: collection.slug,
-        hasBlueCheck: collection.hasBlueCheck,
-        tokens: []
-      };
-      const order: OBOrder = {
-        id: '',
-        chainId: collection.chainId,
-        isSellOrder: false, // collection orders are always buys
-        makerAddress: user ?? '',
-        numItems: 1, // defaulting to one for now; m of n orders not supported in this release via FE
-        startTimeMs,
-        endTimeMs,
-        startPriceEth: ethPrice,
-        endPriceEth: ethPrice,
-        nfts: [obOrderItem],
-        makerUsername: '', // filled in BE
-        nonce: orderNonce,
-        maxGasPriceWei: gasPrice ?? DEFAULT_MAX_GAS_PRICE_WEI,
-        execParams: {
-          currencyAddress,
-          complicationAddress: getOBComplicationAddress(chainId)
-        },
-        extraParams: {
-          buyer: ''
-        }
-      };
-      return order;
-    } catch (err) {
-      console.error(err);
+    const currencyAddress = getTxnCurrencyAddress(chainId);
+    const gasPrice = await getEstimatedGasPrice(provider);
+    const ethPrice = collection.offerPriceEth ?? 0;
+    if (ethPrice === 0) {
+      throw new Error('Price cannot be 0');
     }
+    const startTimeMs = startTime * 1000;
+    const expiry = collection.offerExpiry ?? getDefaultOrderExpiryTime();
+    const endTimeMs = getOrderExpiryTimeInMsFromEnum(startTimeMs, expiry);
+    const obOrderItem: OBOrderItem = {
+      chainId: collection.chainId as ChainId,
+      collectionAddress: collection.address,
+      collectionName: collection.metadata.name,
+      collectionImage: collection.metadata.profileImage,
+      collectionSlug: collection.slug,
+      hasBlueCheck: collection.hasBlueCheck,
+      tokens: []
+    };
+    const order: OBOrder = {
+      id: '',
+      chainId: collection.chainId,
+      isSellOrder: false, // collection orders are always buys
+      makerAddress: user ?? '',
+      numItems: 1, // defaulting to one for now; m of n orders not supported in this release via FE
+      startTimeMs,
+      endTimeMs,
+      startPriceEth: ethPrice,
+      endPriceEth: ethPrice,
+      nfts: [obOrderItem],
+      makerUsername: '', // filled in BE
+      nonce: orderNonce,
+      maxGasPriceWei: gasPrice ?? DEFAULT_MAX_GAS_PRICE_WEI,
+      execParams: {
+        currencyAddress,
+        complicationAddress: getOBComplicationAddress(chainId)
+      },
+      extraParams: {
+        buyer: ''
+      }
+    };
+    return order;
   };
 
   const refreshData = () => {
