@@ -6,6 +6,7 @@ import { useSearchState } from 'src/hooks/api/useSearchState';
 import { BasicTokenInfo } from 'src/utils/types';
 import { TokenCardModal } from '../../astra/token-grid/token-card-modal';
 import { SearchInput } from './search-input';
+import { useAppContext } from 'src/utils/context/AppContext';
 
 interface Props {
   expanded?: boolean;
@@ -29,6 +30,13 @@ export const CollectionNftSearchInput = ({ expanded, slug, collectionFloorPrice 
 
   const [modalOpen, setModalOpen] = useState(false);
   const [basicTokenInfo, setBasicTokenInfo] = useState<BasicTokenInfo | null>(null);
+  const [placeholder, setPlaceholder] = useState('Search by tokenId');
+
+  const { showCart } = useAppContext();
+
+  useEffect(() => {
+    showCart ? setPlaceholder('Search') : setPlaceholder('Search by tokenId');
+  }, [showCart]);
 
   const router = useRouter();
   useEffect(() => {
@@ -59,7 +67,7 @@ export const CollectionNftSearchInput = ({ expanded, slug, collectionFloorPrice 
         expanded={expanded}
         query={'subTypeQuery' in search ? search.subTypeQuery : ''}
         setQuery={setSubTypeQuery}
-        placeholder="Search by tokenId"
+        placeholder={placeholder}
         data={result.data}
       />
       {modalOpen && basicTokenInfo ? <TokenCardModal data={basicTokenInfo} modalOpen={modalOpen} /> : null}

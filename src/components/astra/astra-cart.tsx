@@ -74,7 +74,7 @@ export const AstraCart = ({
   const { cartType, setCartType, getCurrentCartItems, cartItems } = useCartContext();
   const [currentCartItems, setCurrentCartItems] = useState<CartItem[]>([]);
   const [cartTotal, setCartTotal] = useState(0);
-  const cartTabOptions = ['Totals', 'Options'];
+  const [cartTabOptions, setCartTabOptions] = useState(['Totals', 'Options']);
   const [selectedTab, setSelectedTab] = useState(cartTabOptions[0]);
 
   enum ExecutionMode {
@@ -107,6 +107,14 @@ export const AstraCart = ({
 
   let cartItemList: ReactNode;
   const [cartContent, setCartContent] = useState<ReactNode>(cartItemList);
+
+  useEffect(() => {
+    if (cartType === CartType.Send || cartType === CartType.Cancel) {
+      setCartTabOptions(['Totals']);
+    } else {
+      setCartTabOptions(['Totals', 'Options']);
+    }
+  }, [cartType]);
 
   const onCartTabOptionsChange = (value: string) => {
     switch (value) {
