@@ -536,13 +536,14 @@ const AstraTokenCartItem = ({ token, onRemove, updateCartTotal }: Props2) => {
   //   ? token?.orderSnippet?.listing?.orderItem?.startPriceEth.toString()
   //   : '';
 
-  const price = token?.orderPriceEth
-    ? token?.orderPriceEth.toString()
-    : token?.orderSnippet?.listing?.orderItem?.startPriceEth
-    ? token?.orderSnippet?.listing?.orderItem?.startPriceEth.toString()
-    : token?.price
-    ? token?.price.toString()
-    : '';
+  const price =
+    token?.orderPriceEth !== undefined
+      ? token?.orderPriceEth.toString()
+      : token?.orderSnippet?.listing?.orderItem?.startPriceEth
+      ? token?.orderSnippet?.listing?.orderItem?.startPriceEth.toString()
+      : token?.price
+      ? token?.price.toString()
+      : '';
 
   token.orderPriceEth = parseFloat(price);
 
@@ -783,12 +784,16 @@ const PriceAndExpiry = ({ token, collection, className, editing, onEditComplete,
             value={price}
             placeholder="Price"
             onChange={(value) => {
-              setPrice(value);
+              let parsedValue = parseFloat(value);
+              if (parsedValue < 0) {
+                parsedValue = 0;
+              }
+              setPrice(String(parsedValue));
               // onEditComplete?.(value);
               if (token) {
-                token.orderPriceEth = parseFloat(value);
+                token.orderPriceEth = parsedValue;
               } else if (collection) {
-                collection.offerPriceEth = parseFloat(value);
+                collection.offerPriceEth = parsedValue;
               }
             }}
             onEnter={() => {
