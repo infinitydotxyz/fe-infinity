@@ -317,10 +317,12 @@ export const AppContextProvider = ({ children }: Props) => {
     // grant approvals
     setCheckoutBtnStatus('Awaiting approval confirmation');
     const results = await approveERC721ForChainNFTs(orderItems, signer, exchangeAddress);
-    const lastApprovalTx = results[results.length - 1];
-    setTxnHash(lastApprovalTx.hash);
-    setCheckoutBtnStatus('Awaiting approval txns');
-    await lastApprovalTx.wait();
+    if (results.length > 0) {
+      const lastApprovalTx = results[results.length - 1];
+      setTxnHash(lastApprovalTx.hash);
+      setCheckoutBtnStatus('Awaiting approval txns');
+      await lastApprovalTx.wait();
+    }
 
     // perform send
     setCheckoutBtnStatus('Awaiting wallet confirmation');
