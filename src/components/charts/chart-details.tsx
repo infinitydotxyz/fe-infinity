@@ -9,12 +9,13 @@ import { borderColor, secondaryBgColorDarker, secondaryTextColor } from 'src/uti
 import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
 import { useNetwork } from 'wagmi';
-import { EthSymbol, EZImage } from '../common';
+import { EthSymbol } from '../common';
 import { ChartBox } from './chart-box';
 import { OrderbookRowButton } from './chart-detail-button';
 import { clamp } from './chart-utils';
 import { NextPrevArrows } from './next-prev-arrows';
 import { SalesChartData } from './sales-chart';
+import { AImage } from '../astra/astra-image';
 
 interface Props {
   orders: CollectionOrder[];
@@ -98,7 +99,7 @@ const OrderDetailViewer = ({ order, collectionAddress }: Props2) => {
           router.replace({ pathname, query }, undefined, { shallow: true });
         }}
       >
-        <EZImage src={order.tokenImage} className="w-60 h-60 shrink-0 overflow-clip rounded-lg" />
+        <AImage src={order.tokenImage} className="w-60 h-60 shrink-0 overflow-clip rounded-lg" />
 
         <div className={twMerge('flex justify-between border-[0px] rounded-lg w-60', borderColor)}>
           <div className="flex flex-col">
@@ -155,7 +156,7 @@ export const SalesChartDetails = ({ data }: Props3) => {
             router.replace({ pathname, query }, undefined, { shallow: true });
           }}
         >
-          <EZImage src={data.tokenImage} className="w-60 h-60 shrink-0 overflow-clip rounded-lg" />
+          <AImage src={data.tokenImage} className="w-60 h-60 shrink-0 overflow-clip rounded-lg" />
 
           <div className={twMerge('flex justify-between border-[0px] rounded-lg w-60', borderColor)}>
             <div className="flex flex-col">

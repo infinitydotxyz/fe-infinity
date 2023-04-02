@@ -8,12 +8,19 @@ import { SearchInput } from './search-input';
 
 interface Props {
   expanded?: boolean;
+  setExpanded?: (expanded: boolean) => void;
   profileSearch?: boolean;
   orderSearch?: boolean;
   setSelectedCollection?: (collection: CollectionSearchDto) => void;
 }
 
-export const CollectionSearchInput = ({ expanded, profileSearch, orderSearch, setSelectedCollection }: Props) => {
+export const CollectionSearchInput = ({
+  expanded,
+  setExpanded,
+  profileSearch,
+  orderSearch,
+  setSelectedCollection
+}: Props) => {
   const { chain } = useNetwork();
   const { selectedChain } = useAppContext();
   const chainId = String(chain?.id ?? selectedChain);
@@ -33,6 +40,7 @@ export const CollectionSearchInput = ({ expanded, profileSearch, orderSearch, se
       profileSearch={profileSearch}
       setSelectedCollection={setSelectedCollection}
       expanded={expanded}
+      setExpanded={setExpanded}
       query={search.query}
       setQuery={setQuery}
       data={result.data}

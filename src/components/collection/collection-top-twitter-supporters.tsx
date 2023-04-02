@@ -5,7 +5,7 @@ import { apiGet, nFormatter } from 'src/utils';
 import { divideColor, standardBorderCard } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { AOutlineButton } from '../astra/astra-button';
-import { EZImage } from '../common/ez-image';
+import { AImage } from '../astra/astra-image';
 
 // @Get('/:id/mentions')  TweetArrayDto
 
@@ -72,7 +72,7 @@ const TwitterSupporter = ({ tweet }: Props2) => {
   return (
     <div className={twMerge('flex justify-between items-center overflow-clip text-sm p-4')}>
       <div className="flex items-center">
-        <EZImage src={tweet.author.profileImageUrl} className="w-11 h-11 overflow-clip rounded-lg" />
+        <AImage src={tweet.author.profileImageUrl} className="w-11 h-11 overflow-clip rounded-lg" />
         <div className="ml-3">
           <div className="truncate">{tweet.author.name}</div>
           <div className="truncate">{`${nFormatter(tweet.author.followersCount)} Followers`}</div>

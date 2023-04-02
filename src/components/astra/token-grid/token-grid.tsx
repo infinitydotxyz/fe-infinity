@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { BlueCheck, Checkbox, EZImage, ScrollLoader, Spacer } from 'src/components/common';
+import { BlueCheck, Checkbox, ScrollLoader, Spacer } from 'src/components/common';
 import { GridCard } from 'src/components/common/card';
 import { BasicTokenInfo, ERC721TokenCartItem } from 'src/utils/types';
 import { hoverColor, textColor } from 'src/utils/ui-constants';
@@ -8,6 +8,7 @@ import { twMerge } from 'tailwind-merge';
 import { AOutlineButton } from '../astra-button';
 import { ErrorOrLoading } from '../error-or-loading';
 import { TokenCardModal } from './token-card-modal';
+import { AImage } from '../astra-image';
 
 interface Props {
   listMode: boolean;
@@ -154,7 +155,7 @@ const GridItem = ({ data, onClick, selected, isSelectable, collectionFloorPrice 
           }}
         />
 
-        <EZImage src={data?.image} className=" w-12 h-12 mr-4 rounded-lg overflow-clip" />
+        <AImage src={data?.image} className=" w-12 h-12 mr-4 rounded-lg overflow-clip" />
 
         <div className={textColor}>
           <div className="flex items-center">

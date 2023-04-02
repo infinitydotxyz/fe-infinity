@@ -6,6 +6,7 @@ import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { FaDiscord } from 'react-icons/fa';
 import { GiBroom } from 'react-icons/gi';
 import { AButton } from 'src/components/astra/astra-button';
+import { AImage } from 'src/components/astra/astra-image';
 import { APriceFilter } from 'src/components/astra/astra-price-filter';
 import { ASortButton } from 'src/components/astra/astra-sort-button';
 import { AStatusFilterButton } from 'src/components/astra/astra-status-button';
@@ -14,7 +15,7 @@ import { TokenGrid } from 'src/components/astra/token-grid/token-grid';
 import { CollectionCharts } from 'src/components/collection/collection-charts';
 import { CollectionItemsPageSidebar } from 'src/components/collection/collection-items-page-sidebar';
 import { CollectionPageHeader, CollectionPageHeaderProps } from 'src/components/collection/collection-page-header';
-import { CenteredContent, ExternalLink, EZImage, Spacer, TextInputBox } from 'src/components/common';
+import { CenteredContent, ExternalLink, Spacer, TextInputBox } from 'src/components/common';
 import { CollectionNftSearchInput } from 'src/components/common/search/collection-nft-search-input';
 import { useCollectionTokenFetcher } from 'src/hooks/api/useTokenFetcher';
 import { useScrollInfo } from 'src/hooks/useScrollHook';
@@ -110,7 +111,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
       <CenteredContent>
         <div className="flex flex-col items-center space-y-2">
           {collection?.metadata?.profileImage ? (
-            <EZImage src={collection.metadata.profileImage} className="h-40 w-40 rounded-lg overflow-clip" />
+            <AImage src={collection.metadata.profileImage} className="h-40 w-40 rounded-lg overflow-clip" />
           ) : null}
           <div className="text-3xl font-heading font-medium">
             {collection?.metadata?.name ?? 'This collection'} is not supported on Flow

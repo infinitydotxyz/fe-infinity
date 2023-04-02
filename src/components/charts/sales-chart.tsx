@@ -15,7 +15,7 @@ import { MouseEvent, TouchEvent, useEffect, useMemo, useState } from 'react';
 import { ASwitchButton } from 'src/components/astra/astra-button';
 import { ADropdown } from 'src/components/astra/astra-dropdown';
 import { TokenCardModal } from 'src/components/astra/token-grid/token-card-modal';
-import { EthSymbol, EZImage } from 'src/components/common';
+import { EthSymbol } from 'src/components/common';
 import { ellipsisString } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { BasicTokenInfo } from 'src/utils/types';
@@ -26,6 +26,7 @@ import tailwindConfig from '../../settings/tailwind/elements/foundations';
 import { ChartBox } from './chart-box';
 import { ChartDimensions } from './chart-utils';
 import { ScatterChartType } from './types';
+import { AImage } from '../astra/astra-image';
 
 export interface SalesChartData {
   timestamp: number;
@@ -396,7 +397,7 @@ function ToolTip({ left, top, data, isTooltipOpen }: Props2) {
         style={{ aspectRatio: '3.5 / 5' }}
       >
         <div className="flex-1 rounded-lg overflow-clip">
-          <EZImage src={data?.tokenImage} />
+          <AImage src={data?.tokenImage} />
         </div>
 
         <div className="truncate py-2">{ellipsisString(data?.tokenId)}</div>

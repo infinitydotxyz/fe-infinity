@@ -16,7 +16,7 @@ export const AstraCartButton = () => {
       className={twMerge('relative py-2.5', showCart || numItems > 0 ? brandTextColor : '')}
     >
       {numItems > 0 ? (
-        <>
+        <div>
           <BsCartCheckFill className={twMerge(iconButtonStyle)} />
           <div
             className={twMerge(
@@ -27,7 +27,7 @@ export const AstraCartButton = () => {
           >
             {numItems}
           </div>
-        </>
+        </div>
       ) : (
         <BsCartDash className={twMerge(iconButtonStyle)} />
       )}

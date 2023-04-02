@@ -7,7 +7,7 @@ import { ReactNode, useEffect, useState } from 'react';
 import { FiEdit3 } from 'react-icons/fi';
 import { MdClose } from 'react-icons/md';
 import { AButton } from 'src/components/astra/astra-button';
-import { EthSymbol, EZImage, Spacer, TextInputBox, ToggleTab } from 'src/components/common';
+import { EthSymbol, Spacer, TextInputBox, ToggleTab } from 'src/components/common';
 import {
   ellipsisString,
   getCartType,
@@ -36,6 +36,7 @@ import { useAccount, useBalance, useNetwork, useProvider } from 'wagmi';
 import { RadioButtonCard } from '../common/radio-button-card';
 import { UniswapModal } from '../common/uniswap-model';
 import { ADropdown } from './astra-dropdown';
+import { AImage } from './astra-image';
 
 interface Props {
   onTokensClear: () => void;
@@ -553,7 +554,7 @@ const AstraTokenCartItem = ({ token, onRemove, updateCartTotal }: Props2) => {
   return (
     <div key={getTokenCartItemKey(token)} className="flex items-center w-full">
       <div className="relative">
-        <EZImage className={twMerge('h-12 w-12 rounded-lg overflow-clip')} src={token.image} />
+        <AImage className={twMerge('h-12 w-12 rounded-lg overflow-clip')} src={token.image} />
         <div className={twMerge('absolute top-[-5px] right-[-5px] rounded-full p-0.5 cursor-pointer', inverseBgColor)}>
           <MdClose
             className={twMerge(extraSmallIconButtonStyle, inverseTextColor)}
@@ -601,7 +602,7 @@ const AstraCollectionCartItem = ({ collection, onRemove, updateCartTotal }: Prop
   return (
     <div key={getCollectionKeyId(collection)} className="flex items-center w-full mt-3">
       <div className="relative">
-        <EZImage className={twMerge('h-12 w-12 rounded-lg overflow-clip')} src={collection.metadata.profileImage} />
+        <AImage className={twMerge('h-12 w-12 rounded-lg overflow-clip')} src={collection.metadata.profileImage} />
         <div className={twMerge('absolute top-[-5px] right-[-5px] rounded-full p-0.5 cursor-pointer', inverseBgColor)}>
           <MdClose
             className={twMerge(extraSmallIconButtonStyle, inverseTextColor)}
@@ -646,7 +647,7 @@ const AstraCancelCartItem = ({ order, onRemove }: Props4) => {
   return (
     <div key={order.id} className="flex items-center w-full">
       <div className="relative">
-        <EZImage
+        <AImage
           className={twMerge('h-12 w-12 rounded-lg overflow-clip')}
           src={order.nfts[0]?.tokens[0]?.tokenImage ?? order.nfts[0].collectionImage}
         />

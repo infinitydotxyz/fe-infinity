@@ -15,10 +15,11 @@ import { twMerge } from 'tailwind-merge';
 import { useAccount, useNetwork, useSigner } from 'wagmi';
 import { AOutlineButton } from '../astra/astra-button';
 import { APriceFilter } from '../astra/astra-price-filter';
-import { BouncingLogo, CenteredContent, EZImage, ScrollLoader, Spacer, toastError, toastSuccess } from '../common';
+import { BouncingLogo, CenteredContent, ScrollLoader, Spacer, toastError, toastSuccess } from '../common';
 import { CollectionSearchInput } from '../common/search/collection-search-input';
 import { StatusIcon } from '../common/status-icon';
 import { ProfileOrderListItem } from './profile-order-list-item';
+import { AImage } from '../astra/astra-image';
 
 interface Props {
   userAddress: string;
@@ -100,7 +101,7 @@ export const ProfileOrderList = ({ userAddress, className = '' }: Props) => {
         {selectedCollection ? (
           <div className={twMerge('flex items-center rounded-lg border px-2', borderColor)}>
             <div className="flex items-center">
-              <EZImage src={selectedCollection.profileImage} className="w-6 h-6 rounded-full mr-2" />
+              <AImage src={selectedCollection.profileImage} className="w-6 h-6 rounded-full mr-2" />
               <div className="text-sm font-medium">{selectedCollection.name}</div>
             </div>
             <div className="ml-2">

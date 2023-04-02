@@ -16,7 +16,8 @@ import {
 import { twMerge } from 'tailwind-merge';
 import { AButton } from '../astra/astra-button';
 import { TokenCardModal } from '../astra/token-grid/token-card-modal';
-import { BlueCheck, EthSymbol, EZImage, Spacer } from '../common';
+import { BlueCheck, EthSymbol, Spacer } from '../common';
+import { AImage } from '../astra/astra-image';
 
 interface Props {
   data: ERC721TokenCartItem;
@@ -95,7 +96,7 @@ export const GridCard = ({
           {/* we can't overflow clip the whole card or the tooltips get clipped
               so we do this absolute image below the pillbadges */}
           <div className="absolute top-0 bottom-0 left-0 right-0 rounded-t-lg overflow-clip">
-            <EZImage src={data?.image} className="hover:scale-110 transition-all" />
+            <AImage src={data?.image} className="hover:scale-110 transition-all" />
             {showPlusIcon && !selected && (
               <div className={twMerge('absolute top-2 right-2 rounded-full bg-gray-100')}>
                 <HiPlusCircle className={twMerge(iconButtonStyle, brandTextColor)} />

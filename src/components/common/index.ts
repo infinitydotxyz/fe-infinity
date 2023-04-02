@@ -9,7 +9,6 @@ export * from 'src/components/common/blue-check';
 export * from 'src/components/common/popover-button';
 export * from 'src/components/common/checkbox';
 export * from 'src/components/common/next-link';
-export * from 'src/components/common/ez-image';
 export * from 'src/components/common/tool-tip';
 export * from 'src/components/common/centered-content';
 export * from 'src/components/common/scroll-loader';

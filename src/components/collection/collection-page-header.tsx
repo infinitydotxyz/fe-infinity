@@ -2,7 +2,7 @@ import { BaseCollection } from '@infinityxyz/lib-frontend/types/core';
 import { useState } from 'react';
 import { FaDiscord, FaInstagram, FaTwitter } from 'react-icons/fa';
 import { HiOutlineExternalLink } from 'react-icons/hi';
-import { BlueCheck, ClipboardButton, EthSymbol, EZImage, ReadMoreText, Spacer } from 'src/components/common';
+import { BlueCheck, ClipboardButton, EthSymbol, ReadMoreText, Spacer } from 'src/components/common';
 import { useMatchingEngineCollection } from 'src/hooks/api/useMatchingEngineCollection';
 import etherscanLogo from 'src/images/etherscan-logo.png';
 import { ellipsisAddress, getChainScannerBase } from 'src/utils';
@@ -20,6 +20,7 @@ import { twMerge } from 'tailwind-merge';
 import { useNetwork } from 'wagmi';
 import { AOutlineButton } from '../astra/astra-button';
 import { MatchingEngineStatusIcon, StatusIcon } from '../common/status-icon';
+import { AImage } from '../astra/astra-image';
 
 export interface CollectionPageHeaderProps {
   expanded: boolean;
@@ -70,7 +71,7 @@ export const CollectionPageHeader = ({
       {expanded && (
         <div className="flex flex-col space-y-3">
           <div className="flex w-full items-center mt-2">
-            <EZImage
+            <AImage
               src={avatarUrl}
               className="mr-4 h-14 w-14 rounded-lg cursor-pointer hover:scale-90 duration-100"
               onClick={() => window.open(collection?.metadata?.links?.external)}
@@ -95,7 +96,7 @@ export const CollectionPageHeader = ({
                     onClick={() => window.open(collection.metadata?.links?.external)}
                   >
                     <span className="flex items-center">
-                      <EZImage src={avatarUrl} className="mr-2 h-5 w-5 rounded-full" />
+                      <AImage src={avatarUrl} className="mr-2 h-5 w-5 rounded-full" />
                       <HiOutlineExternalLink className="text-md" />
                     </span>
                   </AOutlineButton>
@@ -107,7 +108,7 @@ export const CollectionPageHeader = ({
                 onClick={() => window.open(getChainScannerBase(chainId) + '/address/' + collection?.address)}
               >
                 <span className="flex items-center">
-                  <EZImage src={etherscanLogo.src} className="mr-2 h-5 w-5 rounded-lg" />
+                  <AImage src={etherscanLogo.src} className="mr-2 h-5 w-5 rounded-lg" />
                   <HiOutlineExternalLink className="text-md" />
                 </span>
               </AOutlineButton>

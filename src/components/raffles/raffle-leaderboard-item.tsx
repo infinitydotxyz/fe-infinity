@@ -1,10 +1,11 @@
 import { RaffleLeaderboardUser } from '@infinityxyz/lib-frontend/types/dto';
 import { ellipsisAddress, nFormatter } from 'src/utils';
-import { EZImage, NextLink } from '../common';
+import { NextLink } from '../common';
 import person from 'src/images/person.png';
 import { twMerge } from 'tailwind-merge';
 import { secondaryBgColor } from 'src/utils/ui-constants';
 import { useEnsName } from 'wagmi';
+import { AImage } from '../astra/astra-image';
 
 export const RaffleLeaderboardItem = ({ entrant: item }: { entrant: RaffleLeaderboardUser }) => {
   const { data } = useEnsName({
@@ -24,7 +25,7 @@ export const RaffleLeaderboardItem = ({ entrant: item }: { entrant: RaffleLeader
       <div className="flex justify-between items-center w-full">
         <div className="flex items-center w-full">
           <NextLink href={`/user/${item.entrant.address}`}>
-            <EZImage
+            <AImage
               className="w-12 h-12 rounded-lg overflow-clip"
               src={item.entrant.profileImage}
               missingImage={person.src}

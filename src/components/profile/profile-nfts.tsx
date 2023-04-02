@@ -7,8 +7,9 @@ import { useAppContext } from 'src/utils/context/AppContext';
 import { TokensFilter } from 'src/utils/types';
 import { borderColor, hoverColor, hoverColorBrandText, selectedColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { EZImage, TextInputBox } from '../common';
+import { TextInputBox } from '../common';
 import { CollectionSearchInput } from '../common/search/collection-search-input';
+import { AImage } from '../astra/astra-image';
 
 interface Props {
   userAddress: string;
@@ -147,7 +148,7 @@ export const ProfileNFTs = ({ userAddress }: Props) => {
             <div className="flex">
               <div className={twMerge('flex items-center rounded-lg border px-2 ml-2', borderColor)}>
                 <div className="flex items-center">
-                  <EZImage src={selectedCollection.profileImage} className="w-6 h-6 rounded-full mr-2" />
+                  <AImage src={selectedCollection.profileImage} className="w-6 h-6 rounded-full mr-2" />
                   <div className="text-sm font-medium">{selectedCollection.name}</div>
                 </div>
                 <div className="ml-2">

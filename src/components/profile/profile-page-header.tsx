@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { HiOutlineExternalLink } from 'react-icons/hi';
-import { ClipboardButton, EZImage } from 'src/components/common';
+import { ClipboardButton } from 'src/components/common';
 import etherscanLogo from 'src/images/etherscan-logo.png';
 import person from 'src/images/person.png';
 import { ellipsisAddress, getChainScannerBase } from 'src/utils';
@@ -17,6 +17,7 @@ import {
 import { twMerge } from 'tailwind-merge';
 import { useNetwork } from 'wagmi';
 import { AOutlineButton } from '../astra/astra-button';
+import { AImage } from '../astra/astra-image';
 
 export interface ProfileHeaderProps {
   expanded: boolean;
@@ -37,7 +38,7 @@ export const ProfilePageHeader = ({ expanded, tabs }: ProfileHeaderProps) => {
         <>
           <div className="flex flex-col items-start">
             <div className="flex w-full items-center">
-              <EZImage src={person.src} className="mr-4 h-12 w-12 rounded-full overflow-clip" />
+              <AImage src={person.src} className="mr-4 h-12 w-12 rounded-full overflow-clip" />
 
               <div className={twMerge('flex items-center mr-2')}>
                 <div className="font-heading font-bold text-xl mr-2">
@@ -53,7 +54,7 @@ export const ProfilePageHeader = ({ expanded, tabs }: ProfileHeaderProps) => {
                 onClick={() => window.open(getChainScannerBase(chainId) + '/address/' + addressFromPath)}
               >
                 <span className="flex items-center">
-                  <EZImage src={etherscanLogo.src} className="mr-2 h-5 w-5 rounded-lg" />
+                  <AImage src={etherscanLogo.src} className="mr-2 h-5 w-5 rounded-lg" />
                   <HiOutlineExternalLink className="text-md" />
                 </span>
               </AOutlineButton>

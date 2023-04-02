@@ -13,6 +13,7 @@ import { SearchResult } from './types';
 
 interface Props {
   expanded?: boolean;
+  setExpanded?: (expanded: boolean) => void;
   query: string;
   placeholder: string;
   setQuery: (query: string) => void;
@@ -26,6 +27,7 @@ interface Props {
 
 export function SearchInput({
   expanded,
+  setExpanded,
   query,
   setQuery,
   placeholder,
@@ -37,24 +39,29 @@ export function SearchInput({
   setSelectedToken
 }: Props): JSX.Element {
   const router = useRouter();
-  const [isActive, setIsActive] = useState(false);
+  const [internalIsActive, setInternalIsActive] = useState(false);
+
   const [selected, setSelected] = useState<SearchResult | null>(null);
   const isMounted = useIsMounted();
   const inputRef: React.RefObject<HTMLInputElement> = useRef(null);
 
   useEffect(() => {
-    isActive ? inputRef?.current?.focus() : inputRef?.current?.blur();
-  }, [isActive]);
+    internalIsActive ? inputRef?.current?.focus() : inputRef?.current?.blur();
+  }, [internalIsActive]);
 
   const activate = () => {
     if (isMounted()) {
-      setIsActive(true);
+      setInternalIsActive(true);
+      setExpanded?.(true);
     }
   };
 
   const deactivate = () => {
     if (isMounted()) {
-      query.length === 0 && !expanded ? setIsActive(false) : null;
+      if (query.length === 0) {
+        setInternalIsActive(false);
+        setExpanded?.(false);
+      }
     }
   };
 
@@ -81,25 +88,23 @@ export function SearchInput({
   }, [selected]);
 
   useEffect(() => {
-    if (expanded) {
-      setIsActive(true);
+    if (typeof expanded === 'boolean') {
+      setInternalIsActive(expanded);
     }
   }, [expanded]);
 
+  const currentValue = typeof expanded === 'boolean' ? expanded : internalIsActive;
+
   return (
-    <div
-      className={twMerge(
-        textColor,
-        borderColor,
-        'border w-full px-4 rounded-lg text-center h-10 flex place-items-center'
-      )}
-    >
+    <div className={twMerge(textColor, borderColor, 'border px-4 rounded-lg text-center h-10 flex place-items-center')}>
       <div className="w-content h-content  hover:cursor-pointer" onClick={activate}>
         <AiOutlineSearch className={twMerge(textColor, 'flex-[1] w-[18px] h-[18px] max-h-full')}></AiOutlineSearch>
       </div>
       <Combobox
         as="div"
-        className={`w-full h-full max-h-full flex-[10] outline-none  ${isActive ? 'visible' : 'hidden'}`}
+        className={`h-full max-h-full flex-[10] outline-none  ${
+          currentValue ? 'visible w-full min-w-[10rem]' : 'hidden'
+        }`}
         value={selected}
         onChange={setSelected}
       >

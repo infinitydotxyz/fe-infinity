@@ -20,8 +20,9 @@ import {
 import { twMerge } from 'tailwind-merge';
 import { useNetwork } from 'wagmi';
 import { TokenCardModal } from '../astra/token-grid/token-card-modal';
-import { Checkbox, EthSymbol, EZImage, HelpToolTip, Spacer } from '../common';
+import { Checkbox, EthSymbol, HelpToolTip, Spacer } from '../common';
 import { MatchAndExecutionOrderStatus, StatusIcon } from '../common/status-icon';
+import { AImage } from '../astra/astra-image';
 
 interface Props {
   data: CollectionSaleAndOrder[];
@@ -168,7 +169,7 @@ export const CollectionRecentSalesOrders = ({ data, collectionAddress }: Props) 
                     router.replace({ pathname, query }, undefined, { shallow: true });
                   }}
                 >
-                  <EZImage src={item.tokenImage} className="w-6 h-6 rounded" />
+                  <AImage src={item.tokenImage} className="w-6 h-6 rounded" />
                   <div className="flex-col">
                     <span className="">{ellipsisString(item.tokenId)}</span>
                     <div className={twMerge(secondaryTextColor, 'text-xs font-medium flex space-x-3 items-center')}>
@@ -224,7 +225,7 @@ function ToolTip({ left, top, data, isTooltipOpen }: Props2) {
         style={{ aspectRatio: '3.5 / 5' }}
       >
         <div className="flex-1 rounded-lg overflow-clip">
-          <EZImage src={data?.tokenImage} />
+          <AImage src={data?.tokenImage} />
         </div>
 
         <div className="truncate py-2">{ellipsisString(data?.tokenId)}</div>

@@ -2,16 +2,9 @@ import { Collection, CollectionPeriodStatsContent, StatsPeriod } from '@infinity
 import { useEffect, useState } from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { AButton } from 'src/components/astra/astra-button';
+import { AImage } from 'src/components/astra/astra-image';
 import { APageBox } from 'src/components/astra/astra-page-box';
-import {
-  BlueCheckInline,
-  BouncingLogo,
-  CenterFixed,
-  EthPrice,
-  EZImage,
-  NextLink,
-  ToggleTab
-} from 'src/components/common';
+import { BlueCheckInline, BouncingLogo, CenterFixed, EthPrice, NextLink, ToggleTab } from 'src/components/common';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import useScreenSize from 'src/hooks/useScreenSize';
 import { apiGet, formatNumber, getCollectionKeyId, nFormatter } from 'src/utils';
@@ -162,7 +155,7 @@ const TrendingPageCard = ({ collection, onClickBuy, isCollSelected, isCollSelect
           <div className="text-lg mr-8 text-right">{index + 1}</div>
 
           <NextLink href={`/collection/${collection?.slug}`}>
-            <EZImage className="w-14 h-14 rounded-lg overflow-clip" src={collection?.metadata?.profileImage} />
+            <AImage className="w-14 h-14 rounded-lg overflow-clip" src={collection?.metadata?.profileImage} />
           </NextLink>
 
           <NextLink href={`/collection/${collection?.slug}`} className="ml-2 whitespace-normal">

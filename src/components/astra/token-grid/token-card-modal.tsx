@@ -14,10 +14,11 @@ import { useSWRConfig } from 'swr';
 import { twMerge } from 'tailwind-merge';
 import { format } from 'timeago.js';
 import { useAccount } from 'wagmi';
-import { BlueCheck, ClipboardButton, EthSymbol, EZImage, Modal, NextLink, ShortAddress, Spacer } from '../../common';
+import { BlueCheck, ClipboardButton, EthSymbol, Modal, NextLink, ShortAddress, Spacer } from '../../common';
 import { AButton } from '../astra-button';
 import { ATraitList } from '../astra-trait-list';
 import { ErrorOrLoading } from '../error-or-loading';
+import { AImage } from '../astra-image';
 
 interface Props {
   data: BasicTokenInfo;
@@ -338,7 +339,7 @@ export const TokenCardModal = ({ data, modalOpen, isNFTSelected }: Props): JSX.E
         </div>
 
         <div className="flex flex-col">
-          <EZImage
+          <AImage
             src={token?.image?.url ?? token.alchemyCachedImage ?? token.image?.originalUrl ?? ''}
             className="h-80 w-80 rounded-lg"
           />

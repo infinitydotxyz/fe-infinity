@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import flowLogo from 'src/images/flow-logo-mark.png';
 import { CenteredContent } from './centered-content';
-import { EZImage } from './ez-image';
+import { AImage } from '../astra/astra-image';
 
 export const BouncingLogo = () => {
   return (
     <CenteredContent>
-      <EZImage src={flowLogo.src} className="w-9 h-9 animate-bounce" />
+      <AImage src={flowLogo.src} className="w-9 h-9 animate-bounce" />
     </CenteredContent>
   );
 };
@@ -45,7 +45,7 @@ export const SplashScreen = () => {
 
   return (
     <CenteredContent>
-      <EZImage src={flowLogo.src} className="w-9 h-9 animate-bounce" />
+      <AImage src={flowLogo.src} className="w-9 h-9 animate-bounce" />
     </CenteredContent>
   );
 };

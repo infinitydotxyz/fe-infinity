@@ -5,11 +5,12 @@ import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { useRouter } from 'next/router';
 import { ReactNode, useEffect, useState } from 'react';
 import { TokenCardModal } from 'src/components/astra/token-grid/token-card-modal';
-import { BlueCheckInline, EZImage, NextLink } from 'src/components/common';
+import { BlueCheckInline, NextLink } from 'src/components/common';
 import { ellipsisString, ENS_ADDRESS } from 'src/utils';
 import { BasicTokenInfo } from 'src/utils/types';
 import { secondaryTextColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
+import { AImage } from '../astra/astra-image';
 
 type Props1 = {
   content?: ReactNode;
@@ -88,7 +89,7 @@ const MultiCollectionCell = ({ nfts, onClick }: Props2) => {
       <div className="flex -space-x-8 overflow-hidden">
         {nfts.map((nft: OBOrderItem) => {
           return (
-            <EZImage
+            <AImage
               key={nft.collectionAddress}
               className="inline-block h-12 w-12 rounded-lg overflow-clip ring-2"
               src={nft.collectionImage}
@@ -175,7 +176,7 @@ const SingleCollectionCell = ({
       )}
 
       <div className="flex justify-center shrink-0 h-14 w-14 mr-2">
-        <EZImage
+        <AImage
           className={twMerge('h-14 w-14 rounded-lg overflow-clip', canShowAssetModal ? 'cursor-pointer' : '')}
           src={image}
           onClick={() => {
@@ -305,7 +306,7 @@ interface Props5 {
 const SelectableImage = ({ name, checked, imageUrl, onChange }: Props5) => {
   return (
     <div onClick={() => onChange(!checked)} className="flex flex-col items-center">
-      <EZImage
+      <AImage
         className={twMerge(
           'h-14 w-14 rounded-lg overflow-clip border-4',
           checked ? ' border-blue-500' : 'border-transparent'
