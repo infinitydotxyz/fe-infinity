@@ -32,7 +32,9 @@ export const ANavbar = () => {
 
   return (
     <div>
-      {chain ? chainId !== selectedChain ? <NetworkWarning /> : null : null}
+      <div className={chain?.id && chainId !== selectedChain ? 'block' : 'hidden'}>
+        <NetworkWarning />
+      </div>
       <div className={twMerge('flex px-6 py-2 space-x-4 items-center border-b-[1px]', borderColor)}>
         <NextLink href="/trending">{logo}</NextLink>
 
