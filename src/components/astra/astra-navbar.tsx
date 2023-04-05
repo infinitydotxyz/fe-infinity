@@ -22,6 +22,12 @@ export const ANavbar = () => {
   const { theme } = useTheme();
   const [logo, setLogo] = useState<ReactNode>(<EZImage src={flowLogoDark.src} className="w-28 h-9" />);
 
+  const [networkWarning, setNetworkWarning] = useState(false);
+
+  useEffect(() => {
+    setNetworkWarning(!!chain?.id && chainId !== selectedChain);
+  }, [networkWarning, chain, selectedChain, chainId]);
+
   useEffect(() => {
     if (theme === 'dark') {
       setLogo(<EZImage src={flowLogoDark.src} className="w-28 h-9" />);
@@ -32,7 +38,7 @@ export const ANavbar = () => {
 
   return (
     <div>
-      <div className={chain?.id && chainId !== selectedChain ? 'block' : 'hidden'}>
+      <div className={networkWarning ? 'block' : 'hidden'}>
         <NetworkWarning />
       </div>
       <div className={twMerge('flex px-6 py-2 space-x-4 items-center border-b-[1px]', borderColor)}>
