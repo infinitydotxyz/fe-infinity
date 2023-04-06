@@ -16,7 +16,7 @@ import { MouseEvent, TouchEvent, useCallback, useMemo } from 'react';
 import { EthSymbol } from 'src/components/common';
 import {
   listingDataPointColor,
-  offerDataPointColor,
+  bidDataPointColor,
   saleDataPointColor,
   secondaryBgColor,
   secondaryTextColor,
@@ -46,14 +46,14 @@ interface SalesAndOrdersChartProps {
   height: number;
   saleColor?: string;
   listingColor?: string;
-  offerColor?: string;
+  bidColor?: string;
   data: NftSaleAndOrder[];
 }
 
 export const ResponsiveSalesAndOrdersChart = ({ data, graphType }: ResponsiveSalesAndOrdersChartProps) => {
   const ordinalColorScale = scaleOrdinal({
     domain: ['Sale', 'Listing', 'Offer'],
-    range: [saleDataPointColor, listingDataPointColor, offerDataPointColor]
+    range: [saleDataPointColor, listingDataPointColor, bidDataPointColor]
   });
 
   return (
@@ -70,7 +70,7 @@ export const ResponsiveSalesAndOrdersChart = ({ data, graphType }: ResponsiveSal
             height={height}
             saleColor={saleDataPointColor}
             listingColor={listingDataPointColor}
-            offerColor={offerDataPointColor}
+            bidColor={bidDataPointColor}
           />
         )}
       </ParentSize>
@@ -95,7 +95,7 @@ export const ResponsiveSalesAndOrdersChart = ({ data, graphType }: ResponsiveSal
   );
 };
 
-function SalesAndOrdersChart({ width, height, data, saleColor, listingColor, offerColor }: SalesAndOrdersChartProps) {
+function SalesAndOrdersChart({ width, height, data, saleColor, listingColor, bidColor }: SalesAndOrdersChartProps) {
   const {
     showTooltip,
     hideTooltip,
@@ -236,7 +236,7 @@ function SalesAndOrdersChart({ width, height, data, saleColor, listingColor, off
           return (
             <Circle
               key={`${d.timestamp}:${d.dataType}:${d.priceEth}`}
-              fill={offerColor}
+              fill={bidColor}
               cx={xScale(xAccessor(d))}
               cy={yScale(yAccessor(d))}
               r={5}
@@ -309,7 +309,7 @@ function SalesAndOrdersChart({ width, height, data, saleColor, listingColor, off
         data={tooltipData}
         saleColor={saleColor}
         listingColor={listingColor}
-        offerColor={offerColor}
+        bidColor={bidColor}
       />
     </div>
   );
@@ -321,11 +321,11 @@ interface Props2 {
   data?: NftSaleAndOrder;
   saleColor?: string;
   listingColor?: string;
-  offerColor?: string;
+  bidColor?: string;
   isTooltipOpen: boolean;
 }
 
-function ToolTip({ left, top, data, saleColor, listingColor, offerColor, isTooltipOpen }: Props2) {
+function ToolTip({ left, top, data, saleColor, listingColor, bidColor, isTooltipOpen }: Props2) {
   const circleColor = () => {
     const dataType = data?.dataType;
     if (dataType === 'Sale') {
@@ -333,7 +333,7 @@ function ToolTip({ left, top, data, saleColor, listingColor, offerColor, isToolt
     } else if (dataType === 'Listing') {
       return listingColor;
     } else if (dataType === 'Offer') {
-      return offerColor;
+      return bidColor;
     }
   };
 

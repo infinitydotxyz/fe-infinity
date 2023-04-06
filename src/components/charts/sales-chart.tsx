@@ -19,7 +19,7 @@ import { EthSymbol, EZImage } from 'src/components/common';
 import { ellipsisString } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { BasicTokenInfo } from 'src/utils/types';
-import { secondaryBgColor, secondaryTextColor, textColor } from 'src/utils/ui-constants';
+import { saleDataPointColor, secondaryBgColor, secondaryTextColor, textColor } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
 import { useNetwork } from 'wagmi';
 import tailwindConfig from '../../settings/tailwind/elements/foundations';
@@ -296,7 +296,7 @@ function SalesChart({ width, height, data, hideOutliers }: SalesChartProps) {
       dataToRender.map((d) => (
         <Circle
           key={`${d.timestamp}:${d.tokenId}:${d.salePrice}`}
-          fill={tailwindConfig.colors.brand.primaryFade}
+          fill={saleDataPointColor}
           cx={xScale(xAccessor(d))}
           cy={yScale(yAccessor(d))}
           r={5}

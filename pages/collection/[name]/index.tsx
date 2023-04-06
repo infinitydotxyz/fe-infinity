@@ -13,6 +13,7 @@ import { ATraitFilter } from 'src/components/astra/astra-trait-filter';
 import { TokenGrid } from 'src/components/astra/token-grid/token-grid';
 import { CollectionCharts } from 'src/components/collection/collection-charts';
 import { CollectionItemsPageSidebar } from 'src/components/collection/collection-items-page-sidebar';
+import { CollectionOrderList } from 'src/components/collection/collection-orders-list';
 import { CollectionPageHeader, CollectionPageHeaderProps } from 'src/components/collection/collection-page-header';
 import { CenteredContent, ExternalLink, EZImage, Spacer, TextInputBox } from 'src/components/common';
 import { CollectionNftSearchInput } from 'src/components/common/search/collection-nft-search-input';
@@ -50,7 +51,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   const chainId = collection.chainId as ChainId;
   const { data, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection.address, chainId, filter);
   const { setRef } = useScrollInfo();
-  const tabs = ['Items', 'Analytics'];
+  const tabs = ['Items', 'Bids', 'Analytics'];
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
   const { cartType, setCartType } = useCartContext();
   const [numSweep, setNumSweep] = useState('');
@@ -339,7 +340,6 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                 </div>
               </div>
             </div>
-
             {selectedTraits.length > 0 && (
               <div className="flex px-4 mt-2 space-x-2">
                 {selectedTraits.map((trait) => {
@@ -354,70 +354,49 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                 })}
               </div>
             )}
+            <div className={selectedTab === 'Bids' ? 'block' : 'hidden'}>
+              <CollectionOrderList collectionAddress={collection.address} />
+            </div>
+            <div className={selectedTab === 'Analytics' ? 'block' : 'hidden'}>
+              <CollectionCharts
+                collectionAddress={collection.address}
+                collectionChainId={chainId}
+                collectionImage={collection.metadata.profileImage}
+              />
 
-            <div className="flex">
-              <div className={(twMerge('flex'), showCart ? 'w-full' : 'w-2/3')}>
-                <TokenGrid
-                  collectionCreator={collectionCreator}
-                  collectionFloorPrice={floorPrice}
-                  listMode={listMode}
-                  className={twMerge(
-                    'px-4 py-4 min-h-[600px]',
-                    cartType === CartType.CollectionOffer
-                      ? 'opacity-30 duration-300 pointer-events-none'
-                      : 'duration-300'
-                  )} // this min-height is to prevent the grid from collapsing when there are no items so filter menus can still render
-                  onClick={onClickNFT}
-                  isSelectable={isNFTSelectable}
-                  isSelected={isNFTSelected}
-                  data={data}
-                  hasNextPage={hasNextPage}
-                  onFetchMore={() => fetch(true)}
-                  isError={!!error}
-                  isLoading={!!isLoading}
-                />
-              </div>
-
-              {!showCart && (
-                <div className="flex w-1/3">
-                  <CollectionItemsPageSidebar
-                    collectionAddress={collection.address}
-                    collectionImage={collection.metadata.profileImage}
+              <div className="flex">
+                <div className={(twMerge('flex'), showCart ? 'w-full' : 'w-2/3')}>
+                  <TokenGrid
+                    collectionCreator={collectionCreator}
+                    collectionFloorPrice={floorPrice}
+                    listMode={listMode}
+                    className={twMerge(
+                      'px-4 py-4 min-h-[600px]',
+                      cartType === CartType.CollectionOffer
+                        ? 'opacity-30 duration-300 pointer-events-none'
+                        : 'duration-300'
+                    )} // this min-height is to prevent the grid from collapsing when there are no items so filter menus can still render
+                    onClick={onClickNFT}
+                    isSelectable={isNFTSelectable}
+                    isSelected={isNFTSelected}
+                    data={data}
+                    hasNextPage={hasNextPage}
+                    onFetchMore={() => fetch(true)}
+                    isError={!!error}
+                    isLoading={!!isLoading}
                   />
                 </div>
-              )}
-            </div>
-          </div>
 
-          <div className={selectedTab === 'Analytics' ? 'block' : 'hidden'}>
-            <CollectionCharts
-              collectionAddress={collection.address}
-              collectionChainId={chainId}
-              collectionImage={collection.metadata.profileImage}
-            />
-
-            {/* <div className="flex px-4 mt-2 space-x-4">
-                <div className="flex space-x-4 w-1/2">
-                  <div className="w-1/2">
-                    {collection ? <TopHolderList collection={collection}></TopHolderList> : null}
-                  </div>
-                  <div className="w-1/2">
-                    {collection ? <TwitterSupporterList collection={collection}></TwitterSupporterList> : null}
-                  </div>
-                </div>
-
-                <div className="w-1/2">
-                  {collection ? (
-                    <CollectionSocialFeed
-                      types={[EventType.DiscordAnnouncement, EventType.TwitterTweet]}
-                      collectionAddress={collection?.address ?? ''}
-                      collectionName={collection?.metadata.name ?? ''}
-                      collectionSlug={collection?.slug ?? ''}
-                      collectionProfileImage={collection?.metadata.profileImage ?? ''}
+                {!showCart && (
+                  <div className="flex w-1/3">
+                    <CollectionItemsPageSidebar
+                      collectionAddress={collection.address}
+                      collectionImage={collection.metadata.profileImage}
                     />
-                  ) : null}
-                </div>
-              </div> */}
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>

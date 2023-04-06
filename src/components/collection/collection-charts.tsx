@@ -25,24 +25,43 @@ export const CollectionCharts = ({
   collectionImage
 }: CollectionChartsProps) => {
   const [salesChartData, setSalesChartData] = useState<SalesChartData[]>([]);
-  const [ordersData, setOrdersData] = useState<CollectionOrder[]>([]);
-  const [selectedOrders, setSelectedOrders] = useState<CollectionOrder[]>([]);
-  const [selectedOrderIndex, setSelectedOrderIndex] = useState(0);
+  const [listingsData, setListingsData] = useState<CollectionOrder[]>([]);
+  const [bidsData, setBidsData] = useState<CollectionOrder[]>([]);
+  const [selectedListings, setSelectedListings] = useState<CollectionOrder[]>([]);
+  const [selectedBids, setSelectedBids] = useState<CollectionOrder[]>([]);
+  const [selectedListingIndex, setSelectedListingIndex] = useState(0);
+  const [selectedBidIndex, setSelectedBidIndex] = useState(0);
   const [isSalesLoading, setIsSalesLoading] = useState(true);
-  const [isOrdersLoading, setIsOrdersLoading] = useState(true);
+  const [isListingsLoading, setIsListingsLoading] = useState(true);
+  const [isBidsLoading, setIsBidsLoading] = useState(true);
 
-  const displayDetails = (orders: CollectionOrder[], index: number) => {
-    if (index !== selectedOrderIndex) {
-      setSelectedOrderIndex(index);
+  const displayListingDetails = (orders: CollectionOrder[], index: number) => {
+    if (index !== selectedListingIndex) {
+      setSelectedListingIndex(index);
     }
 
     let arrayEquals = false;
-    if (orders.length === selectedOrders.length) {
-      arrayEquals = orders.every((v, i) => v.id === selectedOrders[i].id);
+    if (orders.length === selectedListings.length) {
+      arrayEquals = orders.every((v, i) => v.id === selectedListings[i].id);
     }
 
     if (!arrayEquals) {
-      setSelectedOrders(orders.sort((a, b) => a.priceEth - b.priceEth));
+      setSelectedListings(orders.sort((a, b) => a.priceEth - b.priceEth));
+    }
+  };
+
+  const displayBidDetails = (orders: CollectionOrder[], index: number) => {
+    if (index !== selectedBidIndex) {
+      setSelectedBidIndex(index);
+    }
+
+    let arrayEquals = false;
+    if (orders.length === selectedBids.length) {
+      arrayEquals = orders.every((v, i) => v.id === selectedBids[i].id);
+    }
+
+    if (!arrayEquals) {
+      setSelectedBids(orders.sort((a, b) => a.priceEth - b.priceEth));
     }
   };
 
@@ -70,41 +89,58 @@ export const CollectionCharts = ({
     setIsSalesLoading(false);
   };
 
-  const fetchOrdersData = async () => {
-    setSelectedOrders([]);
-    setIsOrdersLoading(true);
-    const { result, error } = await apiGet(`/collections/${collectionChainId}:${collectionAddress}/orders`);
+  const fetchOrdersData = async (orderSide: 'buy' | 'sell') => {
+    if (orderSide === 'buy') {
+      setSelectedBids([]);
+      setIsBidsLoading(true);
+    } else {
+      setSelectedListings([]);
+      setIsListingsLoading(true);
+    }
+    const { result, error } = await apiGet(`/collections/${collectionChainId}:${collectionAddress}/orders`, {
+      query: { orderSide }
+    });
 
-    if (error) {
-      setIsOrdersLoading(false);
+    if (error && orderSide === 'sell') {
+      setIsListingsLoading(false);
       console.error(error);
       return;
     }
 
-    setOrdersData(
-      result.map((order: CollectionOrder) => {
-        const tokenId = order.tokenId;
-        const tokenImage = order.tokenImage;
+    if (error && orderSide === 'buy') {
+      setIsBidsLoading(false);
+      console.error(error);
+      return;
+    }
 
-        // for collection and other complex offers, tokenId and tokenImage could be blank
-        if (!order.isSellOrder) {
+    if (orderSide === 'sell') {
+      setListingsData(result);
+      setIsListingsLoading(false);
+    } else {
+      setBidsData(
+        result.map((order: CollectionOrder) => {
+          const tokenId = order.tokenId;
+          const tokenImage = order.tokenImage;
+
+          // for collection and other complex offers, tokenId and tokenImage could be blank
           if (!tokenImage) {
             order.tokenImage = collectionImage;
           }
           if (!tokenId) {
-            order.tokenId = 'Offer';
+            order.tokenId = 'Collection Bid';
           }
-        }
 
-        return order;
-      })
-    );
-    setIsOrdersLoading(false);
+          return order;
+        })
+      );
+      setIsBidsLoading(false);
+    }
   };
 
   useEffect(() => {
     fetchSalesData();
-    fetchOrdersData();
+    fetchOrdersData('sell');
+    fetchOrdersData('buy');
   }, [collectionAddress, collectionChainId]);
 
   return (
@@ -122,18 +158,42 @@ export const CollectionCharts = ({
 
       <div className="flex">
         <div className="w-3/4 p-2">
-          {ordersData.length > 0 && (
-            <ResponsiveBarChart graphType={BarChartType.Listings} data={ordersData} displayDetails={displayDetails} />
+          {listingsData.length > 0 && (
+            <ResponsiveBarChart
+              graphType={BarChartType.Listings}
+              data={listingsData}
+              displayDetails={displayListingDetails}
+            />
           )}
 
-          {isOrdersLoading && <Loading graphType={BarChartType.Listings} />}
+          {isListingsLoading && <Loading graphType={BarChartType.Listings} />}
         </div>
         <div className="w-1/4 p-2">
           <OrdersChartDetails
-            orders={selectedOrders}
-            index={selectedOrderIndex}
+            orders={selectedListings}
+            index={selectedListingIndex}
             valueClassName={secondaryTextColor}
-            setIndex={setSelectedOrderIndex}
+            setIndex={setSelectedListingIndex}
+            collectionAddress={collectionAddress}
+            collectionImage={collectionImage}
+          />
+        </div>
+      </div>
+
+      <div className="flex">
+        <div className="w-3/4 p-2">
+          {bidsData.length > 0 && (
+            <ResponsiveBarChart graphType={BarChartType.Bids} data={bidsData} displayDetails={displayBidDetails} />
+          )}
+
+          {isBidsLoading && <Loading graphType={BarChartType.Bids} />}
+        </div>
+        <div className="w-1/4 p-2">
+          <OrdersChartDetails
+            orders={selectedBids}
+            index={selectedBidIndex}
+            valueClassName={secondaryTextColor}
+            setIndex={setSelectedBidIndex}
             collectionAddress={collectionAddress}
             collectionImage={collectionImage}
           />
