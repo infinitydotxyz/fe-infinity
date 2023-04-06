@@ -9,7 +9,7 @@ import { EthSymbol, SimpleTable, SimpleTableItem } from 'src/components/common';
 import { numStr } from 'src/utils';
 import {
   borderColor,
-  saleDataPointColor,
+  hoveredDataPointColor,
   secondaryBgColor,
   secondaryTextColor,
   textColor
@@ -18,7 +18,7 @@ import { twMerge } from 'tailwind-merge';
 import tailwindConfig from '../../settings/tailwind/elements/foundations';
 import { ChartBox } from './chart-box';
 import { BarChartType } from './types';
-import { useChartTheme } from './use-theme';
+import { useBidsChartTheme, useListingsChartTheme } from './use-theme';
 
 export interface ResponsiveBarChartProps extends Omit<BarChartProps, 'width' | 'height' | 'selectedPriceBucket'> {
   graphType: BarChartType;
@@ -56,18 +56,15 @@ function convertRawDataToChartData(
   width: number,
   priceBucket: number,
   hideOutliers = true
-): { listings: BarChartEntry[]; minPrice: number; maxPrice: number } {
+): { entries: BarChartEntry[]; minPrice: number; maxPrice: number } {
   const columnWidth = 80;
 
   if (width < columnWidth || data.length === 0) {
-    return { listings: [], minPrice: 0, maxPrice: 0 };
+    return { entries: [], minPrice: 0, maxPrice: 0 };
   }
 
-  const listings: BarChartEntry[] = [];
-  const values = data
-    .filter((v) => v.isSellOrder)
-    .map(getPriceValue)
-    .sort((a, b) => a - b);
+  const entries: BarChartEntry[] = [];
+  const values = data.map(getPriceValue).sort((a, b) => a - b);
 
   let dataToRender = data;
   let minPrice = Math.min(...values);
@@ -88,7 +85,7 @@ function convertRawDataToChartData(
   const numBars = Math.ceil((maxPrice - minPrice) / priceBucket);
 
   for (let i = 0; i <= numBars; i++) {
-    listings.push({
+    entries.push({
       data: [],
       axisLabel: numStr(Math.floor(minPrice + i * priceBucket)),
       start: minPrice + i * priceBucket,
@@ -99,12 +96,10 @@ function convertRawDataToChartData(
 
   for (const item of dataToRender) {
     const i = Math.floor((item.priceEth - minPrice) / priceBucket);
-    if (item.isSellOrder) {
-      listings[i].data.push(item);
-    }
+    entries[i].data.push(item);
   }
 
-  return { listings, minPrice, maxPrice };
+  return { entries, minPrice, maxPrice };
 }
 
 export const ResponsiveBarChart = ({ data, graphType, displayDetails }: ResponsiveBarChartProps) => {
@@ -115,7 +110,9 @@ export const ResponsiveBarChart = ({ data, graphType, displayDetails }: Responsi
       <div className="flex justify-between mb-4">
         <div className="ml-6">
           <div className="font-medium mt-3 font-heading text-lg">{graphType}</div>
-          <div className={twMerge(secondaryTextColor, 'font-medium text-sm')}>{data.length} listings</div>
+          <div className={twMerge(secondaryTextColor, 'font-medium text-sm')}>
+            {data.length} {graphType}
+          </div>
         </div>
 
         <div className="items-center flex space-x-6">
@@ -192,14 +189,14 @@ const BarChart: React.FC<BarChartProps> = ({
 
   const chartData = convertRawDataToChartData(data, boundedWidth, selectedPriceBucket, hideOutliers);
 
-  if (chartData.listings.every((d) => d.data.length === 0)) {
+  if (chartData.entries.every((d) => d.data.length === 0)) {
     return <strong className={twMerge(textColor, 'h-full flex justify-center items-center')}>No {graphType}</strong>;
   }
 
   const { theme } = useTheme();
   const darkMode = theme === 'dark';
   const themeToUse = tailwindConfig.colors[darkMode ? 'dark' : 'light'];
-  const { theme: chartTheme } = useChartTheme();
+  const { theme: chartTheme } = graphType === BarChartType.Listings ? useListingsChartTheme() : useBidsChartTheme();
   const [hoveredBarIndex, setHoveredBarIndex] = useState(-1);
 
   return (
@@ -216,7 +213,7 @@ const BarChart: React.FC<BarChartProps> = ({
         type: 'linear',
         range: [boundedHeight, 0],
         round: true,
-        domain: [0, Math.max(...chartData.listings.map(getOrderCount))]
+        domain: [0, Math.max(...chartData.entries.map(getOrderCount))]
       }}
       theme={chartTheme}
     >
@@ -251,12 +248,12 @@ const BarChart: React.FC<BarChartProps> = ({
       />
       <AnimatedGrid columns={false} strokeDasharray="6,6" stroke={themeToUse.disabledFade} numTicks={6} />
       <AnimatedBarSeries
-        data={chartData.listings}
-        dataKey="listings"
+        data={chartData.entries}
+        dataKey={graphType}
         xAccessor={getAxisLabel}
         barPadding={0.4}
         yAccessor={getOrderCount}
-        colorAccessor={(_, i) => (i === hoveredBarIndex ? saleDataPointColor : undefined)}
+        colorAccessor={(_, i) => (i === hoveredBarIndex ? hoveredDataPointColor : undefined)}
         onPointerMove={({ index }) => setHoveredBarIndex(index)}
         onPointerDown={({ event, datum, index }) => {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any

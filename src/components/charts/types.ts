@@ -6,7 +6,7 @@ export enum ScatterChartType {
 export enum BarChartType {
   Orders = 'Orders',
   Listings = 'Listings',
-  Offers = 'Offers'
+  Bids = 'Bids'
 }
 
 export type SalesAndOrdersDataPointType = 'Sale' | 'Listing' | 'Offer';
