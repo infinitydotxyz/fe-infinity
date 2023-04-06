@@ -355,7 +355,10 @@ export default function ItemsPage(props: CollectionDashboardProps) {
               </div>
             )}
             <div className={selectedTab === 'Bids' ? 'block' : 'hidden'}>
-              <CollectionOrderList collectionAddress={collection.address} />
+              <CollectionOrderList
+                collectionAddress={collection.address}
+                collectionChainId={collection.chainId as ChainId}
+              />
             </div>
             <div className={selectedTab === 'Analytics' ? 'block' : 'hidden'}>
               <CollectionCharts

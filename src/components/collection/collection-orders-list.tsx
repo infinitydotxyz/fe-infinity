@@ -8,21 +8,28 @@ import { APriceFilter } from '../astra/astra-price-filter';
 import { BouncingLogo, CenteredContent, ScrollLoader, Spacer } from '../common';
 import { StatusIcon } from '../common/status-icon';
 import { CollectionOrderListItem } from './collection-order-list-item';
+import { ChainId } from '@infinityxyz/lib-frontend/types/core';
 
 interface Props {
   collectionAddress: string;
+  collectionChainId: ChainId;
   className?: string;
 }
 
 const DEFAULT_ORDER_TYPE_FILTER = 'offers-made';
 
-export const CollectionOrderList = ({ collectionAddress, className }: Props) => {
+export const CollectionOrderList = ({ collectionAddress, collectionChainId, className }: Props) => {
   const [selectedOrderType] = useState<'listings' | 'offers-made'>(DEFAULT_ORDER_TYPE_FILTER);
   const [filter, setFilter] = useState<TokensFilter>({
     orderType: DEFAULT_ORDER_TYPE_FILTER,
     sort: SORT_FILTERS.highestPrice
   });
-  const { orders, isLoading, hasNextPage, fetch } = useCollectionOrderFetcher(50, filter, collectionAddress);
+  const { orders, isLoading, hasNextPage, fetch } = useCollectionOrderFetcher(
+    50,
+    filter,
+    collectionAddress,
+    collectionChainId
+  );
 
   useEffect(() => {
     fetch(false);

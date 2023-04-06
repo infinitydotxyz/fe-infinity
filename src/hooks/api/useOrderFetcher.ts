@@ -92,7 +92,12 @@ const parseFiltersToApiQueryParams = (filter: TokensFilter): GetOrderItemsQuery 
   return parsedFilters;
 };
 
-export const useCollectionOrderFetcher = (limit: number, filter: TokensFilter, collectionAddress: string) => {
+export const useCollectionOrderFetcher = (
+  limit: number,
+  filter: TokensFilter,
+  collectionAddress: string,
+  collectionChainId: ChainId
+) => {
   const props: CollectionProps = {
     kind: 'collection',
     limit,
@@ -101,7 +106,7 @@ export const useCollectionOrderFetcher = (limit: number, filter: TokensFilter, c
     }
   } as unknown as CollectionProps;
 
-  return useOrderFetcher(limit, filter, props);
+  return useOrderFetcher(limit, filter, collectionChainId, props);
 };
 
 export const useProfileOrderFetcher = (limit: number, filter: TokensFilter, userAddress: string) => {
