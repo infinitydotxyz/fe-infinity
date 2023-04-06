@@ -1,5 +1,5 @@
 import { BaseToken, ChainId, Erc721Token, OrdersSnippet } from '@infinityxyz/lib-frontend/types/core';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useIsMounted } from 'src/hooks/useIsMounted';
 import { ApiResponse, nFormatter } from 'src/utils';
 import { fetchCollectionTokens, fetchProfileTokens } from 'src/utils/astra-utils';
@@ -25,12 +25,18 @@ export function useCollectionTokenFetcher(
 }
 
 export function useProfileTokenFetcher(userAddress: string | undefined, chainId: ChainId, filter: TokensFilter) {
-  return useTokenFetcher<ApiNftData, ERC721TokenCartItem>({
+  const fetcher = useTokenFetcher<ApiNftData, ERC721TokenCartItem>({
     fetcher: (cursor, filters) => fetchProfileTokens(userAddress || '', chainId, { cursor, ...filters }),
     mapper: (data) => nftsToCardDataWithOrderFields(data),
     execute: userAddress !== '',
     filter
   });
+
+  useEffect(() => {
+    fetcher.fetch(false);
+  }, [userAddress, chainId, filter]);
+
+  return fetcher;
 }
 
 function useTokenFetcher<From, To>({
