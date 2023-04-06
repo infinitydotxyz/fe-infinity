@@ -1,7 +1,6 @@
 import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { useEffect, useState } from 'react';
-import { useAccount, useSigner } from 'wagmi';
-import { JsonRpcSigner } from '@ethersproject/providers';
+import { useAccount } from 'wagmi';
 import { ethers } from 'ethers';
 
 const load = (address: string) => {
@@ -38,13 +37,15 @@ export interface SignedInState {
 
 export type BetaSignatureState = NotConnectedState | NotSignedInState | SignedInState;
 
-export type BetaSignatureResult = { refresh: () => void; triggerSignature: () => void } & BetaSignatureState;
+export type BetaSignatureResult = {
+  refresh: () => void;
+  triggerSignature: () => void;
+  isReady: boolean;
+} & BetaSignatureState;
 
 export const useBetaSignature = (): BetaSignatureResult => {
-  const { address } = useAccount();
-  const { data: signer } = useSigner() as { data: JsonRpcSigner | undefined };
-  const [sigData, setSigData] = useState<{ signature: string; nonce: string } | null>(null);
-  const [triggerResultCounter, setTriggerResultCounter] = useState(0);
+  const [isReady, setIsReady] = useState(false);
+  const { isConnected, connector, address } = useAccount();
   const [triggerCounter, setTriggerCounter] = useState(0);
   const [result, setResult] = useState<BetaSignatureState>({
     state: 'not-connected',
@@ -57,6 +58,7 @@ export const useBetaSignature = (): BetaSignatureResult => {
   };
 
   const triggerSignature = async () => {
+    const signer = await connector?.getSigner();
     if (!signer) {
       return;
     }
@@ -103,49 +105,26 @@ export const useBetaSignature = (): BetaSignatureResult => {
   };
 
   useEffect(() => {
-    if (!address) {
-      setSigData((prev) => {
-        if (prev === null) {
-          setTriggerResultCounter((prev) => prev + 1);
-        }
-        return null;
-      });
-    } else if (!signer) {
-      setSigData((prev) => {
-        if (prev === null) {
-          setTriggerResultCounter((prev) => prev + 1);
-        }
-        return null;
-      });
+    if (!isConnected || !address) {
+      setResult({ state: 'not-connected', address: null, signatureData: null });
     } else {
       const storedSig = load(address);
       if (storedSig) {
-        setSigData(storedSig);
+        setResult({ state: 'signed-in', address, signatureData: storedSig });
       } else {
-        setSigData((prev) => {
-          if (prev === null) {
-            setTriggerResultCounter((prev) => prev + 1);
-          }
-          return null;
-        });
+        setResult({ state: 'not-signed-in', address, signatureData: null });
       }
     }
-  }, [address, signer, triggerCounter]);
 
-  useEffect(() => {
-    if (!address || !signer) {
-      setResult({ state: 'not-connected', address: null, signatureData: null });
-      return;
-    } else if (!sigData) {
-      setResult({ state: 'not-signed-in', address, signatureData: null });
-    } else {
-      setResult({ state: 'signed-in', address, signatureData: sigData });
+    if (!isConnected || (isConnected && address)) {
+      setIsReady(true);
     }
-  }, [sigData, triggerResultCounter]);
+  }, [address, triggerCounter, isConnected, setResult, setIsReady]);
 
   return {
     refresh,
     triggerSignature,
+    isReady,
     ...result
   };
 };

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ConnectKitProvider, getDefaultClient } from 'connectkit';
 import * as gtag from 'lib/ga/gtag';
 import LogRocket from 'logrocket';
@@ -10,16 +11,14 @@ import 'src/settings/tailwind/globals.scss';
 import { isLocalhost } from 'src/utils/common-utils';
 import { AppContextProvider } from 'src/utils/context/AppContext';
 import { CartContextProvider } from 'src/utils/context/CartContext';
-import { configureChains, createClient, WagmiConfig } from 'wagmi';
-import { goerli, mainnet } from 'wagmi/chains';
-import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet';
-import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
-import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
-import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 
+import { jsonRpcProvider } from '@wagmi/core/providers/jsonRpc';
 import NProgress from 'nprogress'; //nprogress module
 import '../styles/nprogress.css'; //styles of nprogress
+import { BetaProvider } from 'src/utils/context/BetaContext';
+import { WagmiConfig, configureChains, createClient, goerli, mainnet } from 'wagmi';
 NProgress.configure({ showSpinner: false });
+
 //Binding events.
 Router.events.on('routeChangeStart', () => NProgress.start());
 Router.events.on('routeChangeComplete', () => NProgress.done());
@@ -37,12 +36,12 @@ const supportedChains = [mainnet, goerli];
 const { chains, provider } = configureChains(supportedChains, [
   jsonRpcProvider({
     rpc: (chain) => {
-      if (chain === goerli) {
+      if (chain.id === goerli.id) {
         return { http: `https://eth-goerli.g.alchemy.com/v2/${alchemyApiKeyGoerli}` };
-      } else if (chain === mainnet) {
+      } else if (chain.id === mainnet.id) {
         return { http: `https://eth-mainnet.g.alchemy.com/v2/${alchemyApiKeyMainnet}` };
       } else {
-        throw Error('Unsupported chain');
+        throw new Error(`Unsupported chain ${chain?.id}`);
       }
     }
   })
@@ -51,12 +50,7 @@ const { chains, provider } = configureChains(supportedChains, [
 const client = createClient(
   getDefaultClient({
     appName: 'Flow',
-    chains: supportedChains,
-    connectors: [
-      new MetaMaskConnector({ chains }),
-      new CoinbaseWalletConnector({ chains, options: { appName: 'Flow' } }),
-      new WalletConnectConnector({ chains, options: {} })
-    ],
+    chains: chains,
     provider
   })
 );
@@ -76,14 +70,16 @@ const App = (props: AppProps) => {
     <StrictMode>
       <WagmiConfig client={client}>
         <ConnectKitProvider
-          options={{ initialChainId: 0 }}
+          options={{ initialChainId: 1 }}
           customTheme={{
             '--ck-font-family': '"DM Sans"'
           }}
         >
           <CartContextProvider>
             <AppContextProvider>
-              <AppBody {...props} />
+              <BetaProvider>
+                <AppBody {...props} />
+              </BetaProvider>
             </AppContextProvider>
           </CartContextProvider>
         </ConnectKitProvider>

@@ -80,13 +80,17 @@ export interface BetaSignUpFlowPostSig {
 export type BetaSignUpFlow = BetaSignUpFlowPreSig | BetaSignUpFlowPostSig;
 
 export interface SignUpState {
+  isReady: boolean;
+  triggerSignature: () => void;
   refresh: () => void;
   isLoading: boolean;
-  result: BetaAuthorization;
+  state: BetaSignUpFlow;
 }
 
-export const useSignUpState = () => {
-  const { state: sigState, address, signatureData, triggerSignature } = useBetaSignature();
+export const useSignUpState = (): SignUpState => {
+  const { state: sigState, address, signatureData, triggerSignature, isReady } = useBetaSignature();
+
+  const [isInternalReady, setIsInternalReady] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
   const [nonce, setNonce] = useState(0);
@@ -97,12 +101,17 @@ export const useSignUpState = () => {
 
   useEffect(() => {
     const signal = { aborted: false };
+    if (!isReady) {
+      return;
+    }
 
     if (sigState === 'not-connected') {
       setState({ state: 'not-connected' });
+      setIsInternalReady(false);
       return;
     } else if (sigState === 'not-signed-in') {
       setState({ state: 'not-signed-in' });
+      setIsInternalReady(true);
       return;
     }
     const normalizedAddress = trimLowerCase(address);
@@ -127,16 +136,19 @@ export const useSignUpState = () => {
           const data: BetaAuthorization = result;
           setState({ state, auth: data });
           setIsLoading(false);
+          setIsInternalReady(true);
         } else {
           console.error(error);
           console.error(status);
           setState({ state: 'not-signed-in' });
           setIsLoading(false);
+          setIsInternalReady(true);
         }
       } catch (err) {
         console.error(err);
         if (!signal.aborted) {
           setIsLoading(false);
+          setIsInternalReady(true);
         }
       }
     };
@@ -146,14 +158,15 @@ export const useSignUpState = () => {
     return () => {
       signal.aborted = true;
     };
-  }, [nonce, address, signatureData, sigState]);
+  }, [nonce, address, signatureData, sigState, isReady]);
 
   const refresh = () => {
     setNonce((prev) => prev + 1);
   };
 
   return {
-    result: state,
+    isReady: isInternalReady,
+    state: state,
     isLoading,
     refresh,
     triggerSignature

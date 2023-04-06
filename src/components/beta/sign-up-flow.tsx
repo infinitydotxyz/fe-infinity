@@ -1,12 +1,15 @@
-import { BetaAuthorizationStatus, useSignUpState } from 'src/hooks/useSignUpState';
+import { BetaAuthorizationStatus } from 'src/hooks/useSignUpState';
 import { BouncingLogo, ConnectButton } from '../common';
 import { AButton } from '../astra/astra-button';
 import { TwitterConnect } from './twitter-connect';
 import { DiscordConnect } from './discord-connect';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import { use } from 'src/utils/context/BetaContext';
 
 export const SignUpFlow = () => {
-  const { isLoading, result, triggerSignature, refresh } = useSignUpState();
+  const router = useRouter();
+  const { isLoading, state: result, triggerSignature, refresh } = use();
 
   const [, setIsWindowActive] = useState(true);
 
@@ -20,6 +23,9 @@ export const SignUpFlow = () => {
       setIsWindowActive((prev) => {
         if (prev === false) {
           if (result.state === 'signed-in' && result.auth.status === BetaAuthorizationStatus.Authorized) {
+            return true;
+          }
+          if (isLoading) {
             return true;
           }
           refresh();
@@ -37,6 +43,14 @@ export const SignUpFlow = () => {
       window.removeEventListener('blur', handleBlur);
     };
   }, [refresh]);
+
+  useEffect(() => {
+    if (result.state === 'signed-in' && result.auth.status === BetaAuthorizationStatus.Authorized) {
+      setTimeout(() => {
+        router.push('/trending');
+      }, 2000);
+    }
+  }, [result]);
 
   switch (result?.state) {
     case 'not-connected': {
