@@ -14,7 +14,7 @@ interface Props {
   children: ReactNode;
 }
 
-const allowedRoutes = ['/beta', '/callback', '/not-found-404', '/privacy-policy', '/terms', '/trending'];
+const allowedRoutes = ['/beta', '/callback', '/not-found-404', '/privacy-policy', '/terms'];
 const create = () => {
   const { isLoading, refresh, isReady, triggerSignature, state } = useSignUpState();
   const { selectedChain } = useAppContext();

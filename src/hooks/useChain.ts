@@ -2,6 +2,7 @@ import { ChainId } from '@infinityxyz/lib-frontend/types/core';
 import { useEffect, useState } from 'react';
 import { useNetwork } from 'wagmi';
 import { switchNetwork } from '@wagmi/core';
+import { useRouter } from 'next/router';
 
 const DEFAULT_CHAIN = ChainId.Goerli;
 

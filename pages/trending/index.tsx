@@ -19,7 +19,6 @@ import { useAppContext } from 'src/utils/context/AppContext';
 import { ERC721CollectionCartItem } from 'src/utils/types';
 import { borderColor, iconButtonStyle } from 'src/utils/ui-constants';
 import { twMerge } from 'tailwind-merge';
-import { useNetwork } from 'wagmi';
 
 const TrendingPage = () => {
   const queryBy = 'by_sales_volume';
@@ -30,11 +29,10 @@ const TrendingPage = () => {
   const { isCollSelected, isCollSelectable, toggleCollSelection } = useAppContext();
   const options = ['1 day', '7 days', '30 days', 'All Time'];
   const DEFAULT_TAB = '1 day';
-  const { chain } = useNetwork();
   const { selectedChain } = useAppContext();
-  const chainId = String(chain?.id ?? selectedChain);
 
   const fetchData = async (refresh = false) => {
+    const chainId = selectedChain;
     setIsLoading(true);
     if (refresh) {
       setData([]);
@@ -63,7 +61,7 @@ const TrendingPage = () => {
 
   useEffect(() => {
     fetchData(true);
-  }, [period]);
+  }, [period, selectedChain]);
 
   const onChangeToggleTab = (value: string) => {
     switch (value) {
