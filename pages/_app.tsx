@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ConnectKitProvider, getDefaultClient } from 'connectkit';
 import * as gtag from 'lib/ga/gtag';
 import LogRocket from 'logrocket';
