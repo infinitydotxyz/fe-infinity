@@ -1,4 +1,4 @@
-import { BaseCollection, CollectionAttributes, CollectionStats } from '@infinityxyz/lib-frontend/types/core';
+import { BaseCollection, ChainId, CollectionAttributes, CollectionStats } from '@infinityxyz/lib-frontend/types/core';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
@@ -47,7 +47,8 @@ export default function ItemsPage(props: CollectionDashboardProps) {
     collSelection
   } = useAppContext();
   const [filter, setFilter] = useState<TokensFilter>({});
-  const { data, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection.address, filter);
+  const chainId = collection.chainId as ChainId;
+  const { data, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection.address, chainId, filter);
   const { setRef } = useScrollInfo();
   const tabs = ['Items', 'Analytics'];
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
@@ -198,203 +199,204 @@ export default function ItemsPage(props: CollectionDashboardProps) {
         <CollectionPageHeader {...headerProps} />
 
         <div ref={setRef} className="overflow-y-auto scrollbar-hide">
-          {selectedTab === 'Items' ? (
-            <div>
-              <div className="flex mt-2 px-4">
+          <div className={selectedTab === 'Items' ? 'block' : 'hidden'}>
+            <div className="flex mt-2 px-4">
+              <div
+                className={twMerge(
+                  'flex mr-1',
+                  cartType === CartType.CollectionOffer ? 'opacity-30 duration-300 pointer-events-none' : 'duration-300'
+                )}
+              >
+                <CollectionNftSearchInput
+                  slug={collection.slug}
+                  expanded
+                  collectionFloorPrice={floorPrice}
+                  chainId={chainId}
+                />
+              </div>
+
+              <Spacer />
+
+              <div className="flex space-x-2 text-sm">
+                <AButton
+                  primary
+                  className="px-5 py-1 rounded-lg text-sm"
+                  onClick={() => {
+                    setCartType(CartType.CollectionOffer);
+                    if (isCollSelectable(collection as ERC721CollectionCartItem)) {
+                      setShowCart(!showCart);
+                      return toggleCollSelection(collection as ERC721CollectionCartItem);
+                    }
+                  }}
+                >
+                  {isCollSelected(collection as ERC721CollectionCartItem) ? (
+                    <div className="flex items-center space-x-1">
+                      <AiOutlineCheckCircle className={'h-4 w-4'} />
+                      <div>Collection Bid</div>
+                    </div>
+                  ) : (
+                    'Collection Bid'
+                  )}
+                </AButton>
+
                 <div
                   className={twMerge(
-                    'flex mr-1',
+                    'flex flex-row rounded-lg border cursor-pointer',
+                    borderColor,
                     cartType === CartType.CollectionOffer
                       ? 'opacity-30 duration-300 pointer-events-none'
                       : 'duration-300'
                   )}
                 >
-                  <CollectionNftSearchInput slug={collection.slug} expanded collectionFloorPrice={floorPrice} />
-                </div>
-
-                <Spacer />
-
-                <div className="flex space-x-2 text-sm">
-                  <AButton
-                    primary
-                    className="px-5 py-1 rounded-lg text-sm"
+                  <div className={twMerge('flex items-center border-r-[1px] px-6 cursor-default', borderColor)}>
+                    <GiBroom className={twMerge(iconButtonStyle, brandTextColor)} />
+                  </div>
+                  <div
+                    className={twMerge(
+                      'px-4 h-full flex items-center border-r-[1px]',
+                      borderColor,
+                      hoverColor,
+                      numSweep === '5' && selectedColor
+                    )}
                     onClick={() => {
-                      setCartType(CartType.CollectionOffer);
-                      if (isCollSelectable(collection as ERC721CollectionCartItem)) {
-                        setShowCart(!showCart);
-                        return toggleCollSelection(collection as ERC721CollectionCartItem);
-                      }
+                      numSweep === '5' ? setNumSweep('') : setNumSweep('5');
                     }}
                   >
-                    {isCollSelected(collection as ERC721CollectionCartItem) ? (
-                      <div className="flex items-center space-x-1">
-                        <AiOutlineCheckCircle className={'h-4 w-4'} />
-                        <div>Collection Bid</div>
-                      </div>
-                    ) : (
-                      'Collection Bid'
-                    )}
-                  </AButton>
-
-                  <div
-                    className={twMerge(
-                      'flex flex-row rounded-lg border cursor-pointer',
-                      borderColor,
-                      cartType === CartType.CollectionOffer
-                        ? 'opacity-30 duration-300 pointer-events-none'
-                        : 'duration-300'
-                    )}
-                  >
-                    <div className={twMerge('flex items-center border-r-[1px] px-6 cursor-default', borderColor)}>
-                      <GiBroom className={twMerge(iconButtonStyle, brandTextColor)} />
-                    </div>
-                    <div
-                      className={twMerge(
-                        'px-4 h-full flex items-center border-r-[1px]',
-                        borderColor,
-                        hoverColor,
-                        numSweep === '5' && selectedColor
-                      )}
-                      onClick={() => {
-                        numSweep === '5' ? setNumSweep('') : setNumSweep('5');
-                      }}
-                    >
-                      5
-                    </div>
-                    <div
-                      className={twMerge(
-                        'px-4 h-full flex items-center border-r-[1px]',
-                        borderColor,
-                        hoverColor,
-                        numSweep === '10' && selectedColor
-                      )}
-                      onClick={() => {
-                        numSweep === '10' ? setNumSweep('') : setNumSweep('10');
-                      }}
-                    >
-                      10
-                    </div>
-                    <div
-                      className={twMerge(
-                        'px-4 h-full flex items-center border-r-[1px]',
-                        borderColor,
-                        hoverColor,
-                        numSweep === '20' && selectedColor
-                      )}
-                      onClick={() => {
-                        numSweep === '20' ? setNumSweep('') : setNumSweep('20');
-                      }}
-                    >
-                      20
-                    </div>
-                    <div
-                      className={twMerge(
-                        'px-4 h-full flex items-center border-r-[1px]',
-                        borderColor,
-                        hoverColor,
-                        numSweep === '50' && selectedColor
-                      )}
-                      onClick={() => {
-                        numSweep === '50' ? setNumSweep('') : setNumSweep('50');
-                      }}
-                    >
-                      50
-                    </div>
-                    <div className="px-4 h-full flex items-center">
-                      <TextInputBox
-                        autoFocus={true}
-                        inputClassName="text-sm"
-                        className="border-0 w-14 p-0 text-sm"
-                        type="number"
-                        placeholder="Custom"
-                        value={customSweep}
-                        onChange={(value) => {
-                          setNumSweep(value);
-                          setCustomSweep(value);
-                        }}
-                      />
-                    </div>
+                    5
                   </div>
-
                   <div
                     className={twMerge(
-                      'flex space-x-1',
-                      cartType === CartType.CollectionOffer
-                        ? 'opacity-30 duration-300 pointer-events-none'
-                        : 'duration-300'
+                      'px-4 h-full flex items-center border-r-[1px]',
+                      borderColor,
+                      hoverColor,
+                      numSweep === '10' && selectedColor
                     )}
+                    onClick={() => {
+                      numSweep === '10' ? setNumSweep('') : setNumSweep('10');
+                    }}
                   >
-                    <ASortButton filter={filter} setFilter={setFilter} />
-                    <AStatusFilterButton filter={filter} setFilter={setFilter} />
-                    <APriceFilter filter={filter} setFilter={setFilter} />
-                    <ATraitFilter
-                      collectionAddress={collection.address}
-                      filter={filter}
-                      setFilter={setFilter}
-                      collectionAttributes={props.collectionAttributes}
+                    10
+                  </div>
+                  <div
+                    className={twMerge(
+                      'px-4 h-full flex items-center border-r-[1px]',
+                      borderColor,
+                      hoverColor,
+                      numSweep === '20' && selectedColor
+                    )}
+                    onClick={() => {
+                      numSweep === '20' ? setNumSweep('') : setNumSweep('20');
+                    }}
+                  >
+                    20
+                  </div>
+                  <div
+                    className={twMerge(
+                      'px-4 h-full flex items-center border-r-[1px]',
+                      borderColor,
+                      hoverColor,
+                      numSweep === '50' && selectedColor
+                    )}
+                    onClick={() => {
+                      numSweep === '50' ? setNumSweep('') : setNumSweep('50');
+                    }}
+                  >
+                    50
+                  </div>
+                  <div className="px-4 h-full flex items-center">
+                    <TextInputBox
+                      autoFocus={true}
+                      inputClassName="text-sm"
+                      className="border-0 w-14 p-0 text-sm"
+                      type="number"
+                      placeholder="Custom"
+                      value={customSweep}
+                      onChange={(value) => {
+                        setNumSweep(value);
+                        setCustomSweep(value);
+                      }}
                     />
                   </div>
                 </div>
-              </div>
 
-              {selectedTraits.length > 0 && (
-                <div className="flex px-4 mt-2 space-x-2">
-                  {selectedTraits.map((trait) => {
-                    return (
-                      <div
-                        key={trait}
-                        className={twMerge('flex items-center rounded-lg border p-2 text-sm font-medium', borderColor)}
-                      >
-                        {trait}
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-
-              <div className="flex">
-                <div className={(twMerge('flex'), showCart ? 'w-full' : 'w-2/3')}>
-                  <TokenGrid
-                    collectionCreator={collectionCreator}
-                    collectionFloorPrice={floorPrice}
-                    listMode={listMode}
-                    className={twMerge(
-                      'px-4 py-4 min-h-[600px]',
-                      cartType === CartType.CollectionOffer
-                        ? 'opacity-30 duration-300 pointer-events-none'
-                        : 'duration-300'
-                    )} // this min-height is to prevent the grid from collapsing when there are no items so filter menus can still render
-                    onClick={onClickNFT}
-                    isSelectable={isNFTSelectable}
-                    isSelected={isNFTSelected}
-                    data={data}
-                    hasNextPage={hasNextPage}
-                    onFetchMore={() => fetch(true)}
-                    isError={!!error}
-                    isLoading={!!isLoading}
+                <div
+                  className={twMerge(
+                    'flex space-x-1',
+                    cartType === CartType.CollectionOffer
+                      ? 'opacity-30 duration-300 pointer-events-none'
+                      : 'duration-300'
+                  )}
+                >
+                  <ASortButton filter={filter} setFilter={setFilter} />
+                  <AStatusFilterButton filter={filter} setFilter={setFilter} />
+                  <APriceFilter filter={filter} setFilter={setFilter} />
+                  <ATraitFilter
+                    collectionAddress={collection.address}
+                    filter={filter}
+                    setFilter={setFilter}
+                    collectionAttributes={props.collectionAttributes}
                   />
                 </div>
-
-                {!showCart && (
-                  <div className="flex w-1/3">
-                    <CollectionItemsPageSidebar
-                      collectionAddress={collection.address}
-                      collectionImage={collection.metadata.profileImage}
-                    />
-                  </div>
-                )}
               </div>
             </div>
-          ) : null}
 
-          {selectedTab === 'Analytics' ? (
-            <div>
-              <CollectionCharts
-                collectionAddress={collection.address}
-                collectionImage={collection.metadata.profileImage}
-              />
+            {selectedTraits.length > 0 && (
+              <div className="flex px-4 mt-2 space-x-2">
+                {selectedTraits.map((trait) => {
+                  return (
+                    <div
+                      key={trait}
+                      className={twMerge('flex items-center rounded-lg border p-2 text-sm font-medium', borderColor)}
+                    >
+                      {trait}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
 
-              {/* <div className="flex px-4 mt-2 space-x-4">
+            <div className="flex">
+              <div className={(twMerge('flex'), showCart ? 'w-full' : 'w-2/3')}>
+                <TokenGrid
+                  collectionCreator={collectionCreator}
+                  collectionFloorPrice={floorPrice}
+                  listMode={listMode}
+                  className={twMerge(
+                    'px-4 py-4 min-h-[600px]',
+                    cartType === CartType.CollectionOffer
+                      ? 'opacity-30 duration-300 pointer-events-none'
+                      : 'duration-300'
+                  )} // this min-height is to prevent the grid from collapsing when there are no items so filter menus can still render
+                  onClick={onClickNFT}
+                  isSelectable={isNFTSelectable}
+                  isSelected={isNFTSelected}
+                  data={data}
+                  hasNextPage={hasNextPage}
+                  onFetchMore={() => fetch(true)}
+                  isError={!!error}
+                  isLoading={!!isLoading}
+                />
+              </div>
+
+              {!showCart && (
+                <div className="flex w-1/3">
+                  <CollectionItemsPageSidebar
+                    collectionAddress={collection.address}
+                    collectionImage={collection.metadata.profileImage}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className={selectedTab === 'Analytics' ? 'block' : 'hidden'}>
+            <CollectionCharts
+              collectionAddress={collection.address}
+              collectionChainId={chainId}
+              collectionImage={collection.metadata.profileImage}
+            />
+
+            {/* <div className="flex px-4 mt-2 space-x-4">
                 <div className="flex space-x-4 w-1/2">
                   <div className="w-1/2">
                     {collection ? <TopHolderList collection={collection}></TopHolderList> : null}
@@ -416,8 +418,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                   ) : null}
                 </div>
               </div> */}
-            </div>
-          ) : null}
+          </div>
         </div>
       </div>
     </div>
