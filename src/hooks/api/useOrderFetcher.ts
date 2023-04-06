@@ -93,6 +93,18 @@ const parseFiltersToApiQueryParams = (filter: TokensFilter): GetOrderItemsQuery 
   return parsedFilters;
 };
 
+export const useCollectionOrderFetcher = (limit: number, filter: TokensFilter, collectionAddress: string) => {
+  const props: CollectionProps = {
+    kind: 'collection',
+    limit,
+    context: {
+      collectionAddress
+    }
+  } as unknown as CollectionProps;
+
+  return useOrderFetcher(limit, filter, props);
+};
+
 export const useProfileOrderFetcher = (limit: number, filter: TokensFilter, userAddress: string) => {
   const side =
     filter.orderType === 'listings' || filter.orderType === 'offers-made' ? Queries.Side.Maker : Queries.Side.Taker;
