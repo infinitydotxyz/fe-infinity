@@ -8,11 +8,10 @@ import {
   SignedOBOrder
 } from '@infinityxyz/lib-frontend/types/core';
 import * as Queries from '@infinityxyz/lib-frontend/types/dto/orders/orders-queries.dto';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { apiGet, DEFAULT_LIMIT } from 'src/utils';
 import { useAppContext } from 'src/utils/context/AppContext';
 import { TokensFilter, SORT_FILTERS } from 'src/utils/types';
-import { useNetwork } from 'wagmi';
 
 interface BaseProps {
   kind?: 'collection' | 'token' | 'profile';
@@ -106,13 +105,22 @@ export const useProfileOrderFetcher = (limit: number, filter: TokensFilter, user
     }
   } as unknown as ProfileProps;
 
-  return useOrderFetcher(limit, filter, props);
+  const { selectedChain } = useAppContext();
+
+  const fetcher = useOrderFetcher(limit, filter, selectedChain, props);
+
+  useEffect(() => {
+    fetcher.fetch(false);
+  }, [selectedChain]);
+
+  return fetcher;
 };
 
 export const useTokenOrderFetcher = (
   limit: number,
   filter: TokensFilter,
   collectionAddress: string,
+  collectionChainId: ChainId,
   tokenId: string
 ) => {
   const props: TokenProps = {
@@ -123,14 +131,10 @@ export const useTokenOrderFetcher = (
       tokenId
     }
   };
-
-  return useOrderFetcher(limit, filter, props);
+  return useOrderFetcher(limit, filter, collectionChainId, props);
 };
 
-const useOrderFetcher = (limit = DEFAULT_LIMIT, filter: TokensFilter, props: FetcherProps) => {
-  const { chain } = useNetwork();
-  const { selectedChain } = useAppContext();
-  const chainId = String(chain?.id ?? selectedChain);
+const useOrderFetcher = (limit = DEFAULT_LIMIT, filter: TokensFilter, chainId: ChainId, props: FetcherProps) => {
   const [orders, setOrders] = useState<(SignedOBOrder & { executionStatus: ExecutionStatus | null })[]>([]);
   const [error, setError] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
