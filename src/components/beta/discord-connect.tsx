@@ -13,7 +13,7 @@ export const DiscordConnect = (props: Props) => {
       const step = {
         title: 'Connect Discord',
         message: 'Connect',
-        href: '', // TODO
+        href: props.state.data.url,
         isComplete: false
       };
 
@@ -22,8 +22,8 @@ export const DiscordConnect = (props: Props) => {
     case Discord.Join: {
       const step = {
         title: 'Join Flow on Discord',
-        message: 'Follow',
-        href: '', // TODO
+        message: 'Join',
+        href: props.state.data.url,
         isComplete: false
       };
 

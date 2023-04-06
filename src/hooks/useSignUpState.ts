@@ -32,14 +32,19 @@ export enum Discord {
   Join,
   Complete
 }
+
 export interface ConnectDiscord {
   step: Discord.Connect;
-  data: unknown;
+  data: {
+    url: string;
+  };
 }
 
 export interface JoinDiscord {
   step: Discord.Join;
-  data: unknown;
+  data: {
+    url: string;
+  };
 }
 
 export interface CompletedDiscord {

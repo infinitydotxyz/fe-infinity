@@ -3,9 +3,40 @@ import { BouncingLogo, ConnectButton } from '../common';
 import { AButton } from '../astra/astra-button';
 import { TwitterConnect } from './twitter-connect';
 import { DiscordConnect } from './discord-connect';
+import { useEffect, useState } from 'react';
 
 export const SignUpFlow = () => {
-  const { isLoading, result, triggerSignature } = useSignUpState();
+  const { isLoading, result, triggerSignature, refresh } = useSignUpState();
+
+  const [, setIsWindowActive] = useState(true);
+
+  useEffect(() => {
+    const signal = { aborted: false };
+    const handleBlur = () => {
+      setIsWindowActive(false);
+    };
+
+    const handleFocus = () => {
+      setIsWindowActive((prev) => {
+        if (prev === false) {
+          if (result.state === 'signed-in' && result.auth.status === BetaAuthorizationStatus.Authorized) {
+            return true;
+          }
+          refresh();
+        }
+        return true;
+      });
+    };
+
+    window.addEventListener('focus', handleFocus);
+    window.addEventListener('blur', handleBlur);
+
+    return () => {
+      signal.aborted = true;
+      window.removeEventListener('focus', handleFocus);
+      window.removeEventListener('blur', handleBlur);
+    };
+  }, [refresh]);
 
   switch (result?.state) {
     case 'not-connected': {
