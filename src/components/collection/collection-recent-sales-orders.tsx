@@ -182,7 +182,7 @@ export const CollectionRecentSalesOrders = ({ data, collectionAddress }: Props) 
                   </div>
                 </div>
               </div>
-              <div className={twMerge(borderColor, 'border rounded-lg p-2 text-right')}>
+              <div className={twMerge('text-right')}>
                 {nFormatter(item.priceEth)} {EthSymbol}
               </div>
 
