@@ -13,6 +13,7 @@ import { ATraitFilter } from 'src/components/astra/astra-trait-filter';
 import { TokenGrid } from 'src/components/astra/token-grid/token-grid';
 import { CollectionCharts } from 'src/components/collection/collection-charts';
 import { CollectionItemsPageSidebar } from 'src/components/collection/collection-items-page-sidebar';
+import { CollectionOrderList } from 'src/components/collection/collection-orders-list';
 import { CollectionPageHeader, CollectionPageHeaderProps } from 'src/components/collection/collection-page-header';
 import { CenteredContent, ExternalLink, EZImage, Spacer, TextInputBox } from 'src/components/common';
 import { CollectionNftSearchInput } from 'src/components/common/search/collection-nft-search-input';
@@ -49,7 +50,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
   const [filter, setFilter] = useState<TokensFilter>({});
   const { data, error, hasNextPage, isLoading, fetch } = useCollectionTokenFetcher(collection.address, filter);
   const { setRef } = useScrollInfo();
-  const tabs = ['Items', 'Analytics'];
+  const tabs = ['Items', 'Bids', 'Analytics'];
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
   const { cartType, setCartType } = useCartContext();
   const [numSweep, setNumSweep] = useState('');
@@ -384,6 +385,12 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                   </div>
                 )}
               </div>
+            </div>
+          ) : null}
+
+          {selectedTab === 'Bids' ? (
+            <div>
+              <CollectionOrderList collectionAddress={collection.address} />
             </div>
           ) : null}
 
