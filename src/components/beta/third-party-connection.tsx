@@ -1,13 +1,6 @@
 import Link from 'next/link';
 import { AButton } from '../astra/astra-button';
 
-export interface ButtonStep {
-  title: string;
-  message: string;
-  onClick: () => void;
-  isComplete: boolean;
-}
-
 export interface LinkStep {
   title: string;
   message: string;
@@ -18,7 +11,8 @@ export interface LinkStep {
 export interface Props {
   connectionName: string;
   logo: React.ReactNode;
-  step: ButtonStep | LinkStep;
+  logoHref: string;
+  step: LinkStep;
 }
 
 export const ThirdPartyConnection = (props: Props) => {
@@ -27,20 +21,20 @@ export const ThirdPartyConnection = (props: Props) => {
       <div className=" h-max border-1 m-auto px-4 py-2 flex flex-col justify-center items-center">
         <div className="flex flex-row text-xl font-heading justify-center items-center">
           <h4 className={'m-4'}>{props.step.title}</h4>
-          <div>{props.logo}</div>
+          <Link href={props.logoHref} target="__blank">
+            {props.logo}
+          </Link>
         </div>
         <div className={props.step.isComplete ? 'hidden' : 'flex flex-col'}>
-          {'onClick' in props.step ? (
-            <AButton onClick={props.step.onClick}>{props.step.message}</AButton>
-          ) : (
-            <Link href={props.step.href} target="__blank">
-              <AButton primary>{props.step.message}</AButton>
-            </Link>
-          )}
+          <Link href={props.step.href} target="__blank">
+            <AButton primary>{props.step.message}</AButton>
+          </Link>
         </div>
 
         <div className={props.step.isComplete ? 'flex' : 'hidden'}>
-          <h4>Completed</h4>
+          <AButton primary disabled>
+            Complete
+          </AButton>
         </div>
       </div>
     </div>

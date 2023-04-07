@@ -6,7 +6,7 @@ const BetaPage = () => {
       <div className="w-full h-full flex flex-col m-auto text-center justify-center items-center">
         <div className="w-max h-max flex flex-col justify-center p-8">
           <div className="w-full my-4">
-            <h2 className="text-2xl font-heading font-bold center w-full">Welcome to Flow</h2>
+            <h2 className="text-2xl font-heading font-bold center w-full">Flow Beta Sign Up</h2>
           </div>
           <div>
             <SignUpFlow />

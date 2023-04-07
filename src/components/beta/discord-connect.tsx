@@ -7,6 +7,7 @@ interface Props {
 }
 
 export const DiscordConnect = (props: Props) => {
+  const discordLogoHref = 'https://discord.gg/flowdotso';
   const discordLogo = FaDiscord({});
   switch (props.state.step) {
     case Discord.Connect: {
@@ -17,27 +18,33 @@ export const DiscordConnect = (props: Props) => {
         isComplete: false
       };
 
-      return <ThirdPartyConnection connectionName="Discord" logo={discordLogo} step={step} />;
+      return (
+        <ThirdPartyConnection connectionName="Discord" logoHref={discordLogoHref} logo={discordLogo} step={step} />
+      );
     }
     case Discord.Join: {
       const step = {
-        title: 'Join Flow on Discord',
+        title: 'Join us on Discord',
         message: 'Join',
         href: props.state.data.url,
         isComplete: false
       };
 
-      return <ThirdPartyConnection connectionName="Discord" logo={discordLogo} step={step} />;
+      return (
+        <ThirdPartyConnection connectionName="Discord" logoHref={discordLogoHref} logo={discordLogo} step={step} />
+      );
     }
     case Discord.Complete: {
       const step = {
-        title: 'Join Flow on Discord',
+        title: 'Join us on Discord',
         message: 'Join',
         href: '',
         isComplete: true
       };
 
-      return <ThirdPartyConnection connectionName="Discord" logo={discordLogo} step={step} />;
+      return (
+        <ThirdPartyConnection connectionName="Discord" logoHref={discordLogoHref} logo={discordLogo} step={step} />
+      );
     }
   }
 };

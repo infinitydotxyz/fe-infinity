@@ -225,6 +225,7 @@ export const useSignUpState = (): SignUpState => {
             result;
 
           if (data.success) {
+            setReferralCode('');
             refresh();
             return;
           } else {

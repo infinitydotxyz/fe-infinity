@@ -119,14 +119,7 @@ export const SignUpFlow = () => {
             );
           }
           return (
-            <div className="mt-4 flex flex-col justify-center items-center">
-              <div className={isLoading ? 'flex' : 'hidden'}>
-                <BouncingLogo />
-              </div>
-              <div className={isLoading ? 'hidden' : 'flex'}>
-                Connect your Twitter and Discord accounts to continue.
-              </div>
-
+            <div className="mt-4 flex flex-col justify-start items-center">
               <div className="flex flex-row">
                 <div className="flex">
                   <TwitterConnect state={result.auth.twitter} />
