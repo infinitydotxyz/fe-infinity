@@ -197,7 +197,7 @@ export default function Callback() {
     if (successful) {
       setTimeout(() => {
         router.push('/beta');
-      }, 2000);
+      }, 1000);
     }
   }, [successful]);
 
