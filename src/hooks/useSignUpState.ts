@@ -1,6 +1,6 @@
 import { trimLowerCase } from '@infinityxyz/lib-frontend/utils';
 import { useEffect, useState } from 'react';
-import { apiGet } from 'src/utils';
+import { apiGet, apiPost } from 'src/utils';
 import { useBetaSignature } from './useBetaSignature';
 
 export enum Twitter {
@@ -56,30 +56,50 @@ export enum BetaAuthorizationStatus {
   Authorized
 }
 
+export enum ReferralStep {
+  Incomplete,
+  Complete
+}
+
+export interface InitialReferralStatus {
+  step: ReferralStep.Incomplete;
+}
+
+export interface CompletedReferralStatus {
+  step: ReferralStep.Complete;
+  referralCode: string;
+}
+
 export interface BetaAuthorizationIncomplete {
   status: BetaAuthorizationStatus;
+  referral: InitialReferralStatus | CompletedReferralStatus;
   twitter: ConnectTwitter | FollowOnTwitter | CompletedTwitter;
   discord: ConnectDiscord | JoinDiscord | CompletedDiscord;
 }
 
 export interface BetaAuthorizationComplete {
   status: BetaAuthorizationStatus.Authorized;
+  referralCode: string;
 }
 
 export type BetaAuthorization = BetaAuthorizationIncomplete | BetaAuthorizationComplete;
 
 export interface BetaSignUpFlowPreSig {
-  state: 'not-connected' | 'not-signed-in';
+  status: 'not-connected' | 'not-signed-in';
 }
 
 export interface BetaSignUpFlowPostSig {
-  state: 'signed-in';
+  status: 'signed-in';
   auth: BetaAuthorization;
 }
 
 export type BetaSignUpFlow = BetaSignUpFlowPreSig | BetaSignUpFlowPostSig;
 
 export interface SignUpState {
+  referralCode: string;
+  setReferralCode: (code: string) => void;
+  submitReferralCode: () => void;
+  referralCodeMessage: string;
   isReady: boolean;
   triggerSignature: () => void;
   refresh: () => void;
@@ -89,14 +109,22 @@ export interface SignUpState {
 
 export const useSignUpState = (): SignUpState => {
   const { state: sigState, address, signatureData, triggerSignature, isReady } = useBetaSignature();
-
+  const [referralCode, setReferralCode] = useState<string>('');
+  const [referralCodeNonce, setReferralCodeNonce] = useState(0);
+  const [referralCodeMessage, setReferralCodeMessage] = useState('');
   const [isInternalReady, setIsInternalReady] = useState(false);
+
+  useEffect(() => {
+    if (referralCodeMessage) {
+      setReferralCodeMessage('');
+    }
+  }, [referralCode]);
 
   const [isLoading, setIsLoading] = useState(false);
   const [nonce, setNonce] = useState(0);
 
   const [state, setState] = useState<BetaSignUpFlow>({
-    state: 'not-connected'
+    status: 'not-connected'
   });
 
   useEffect(() => {
@@ -106,22 +134,26 @@ export const useSignUpState = (): SignUpState => {
     }
 
     if (sigState === 'not-connected') {
-      setState({ state: 'not-connected' });
-      setIsInternalReady(false);
+      setState({ status: 'not-connected' });
+      setIsInternalReady(true);
       return;
     } else if (sigState === 'not-signed-in') {
-      setState({ state: 'not-signed-in' });
+      setState({ status: 'not-signed-in' });
       setIsInternalReady(true);
       return;
     }
     const normalizedAddress = trimLowerCase(address);
 
-    const state = 'signed-in';
+    const status = 'signed-in';
     const fetchSignUpState = async () => {
       setIsLoading(true);
 
       try {
-        const { status, error, result } = await apiGet(`/v2/users/${normalizedAddress}/beta/auth`, {
+        const {
+          status: statusCode,
+          error,
+          result
+        } = await apiGet(`/v2/users/${normalizedAddress}/beta/auth`, {
           options: {
             headers: {
               'x-auth-signature': signatureData.signature,
@@ -132,15 +164,15 @@ export const useSignUpState = (): SignUpState => {
         if (signal.aborted) {
           return;
         }
-        if (status === 200) {
+        if (statusCode === 200) {
           const data: BetaAuthorization = result;
-          setState({ state, auth: data });
+          setState({ status, auth: data });
           setIsLoading(false);
           setIsInternalReady(true);
         } else {
           console.error(error);
           console.error(status);
-          setState({ state: 'not-signed-in' });
+          setState({ status: 'not-signed-in' });
           setIsLoading(false);
           setIsInternalReady(true);
         }
@@ -160,8 +192,70 @@ export const useSignUpState = (): SignUpState => {
     };
   }, [nonce, address, signatureData, sigState, isReady]);
 
+  useEffect(() => {
+    const signal = { aborted: false };
+    if (!isReady) {
+      return;
+    }
+
+    if (sigState !== 'signed-in') {
+      return;
+    }
+
+    const submitReferralCode = async () => {
+      setIsLoading(true);
+      setReferralCodeMessage('');
+
+      try {
+        const normalizedAddress = trimLowerCase(address);
+        const { status, result } = await apiPost(`/v2/users/${normalizedAddress}/beta/auth/referral`, {
+          query: {
+            referralCode
+          },
+          options: {
+            headers: {
+              'x-auth-signature': signatureData.signature,
+              'x-auth-nonce': signatureData.nonce
+            }
+          }
+        });
+
+        if (status === 201) {
+          const data: { success: true; referralStatus: CompletedReferralStatus } | { success: false; message: string } =
+            result;
+
+          if (data.success) {
+            refresh();
+            return;
+          } else {
+            setReferralCodeMessage(data.message);
+          }
+        } else {
+          setReferralCodeMessage('Failed to submit, please try again.');
+        }
+        setIsLoading(false);
+      } catch (err) {
+        console.error(err);
+        if (!signal.aborted) {
+          setIsLoading(false);
+          setReferralCodeMessage('Failed to submit, please try again.');
+        }
+      }
+    };
+
+    submitReferralCode();
+
+    return () => {
+      signal.aborted = true;
+    };
+  }, [referralCodeNonce]);
+
   const refresh = () => {
     setNonce((prev) => prev + 1);
+  };
+
+  const submitReferralCode = () => {
+    setReferralCodeNonce((prev) => prev + 1);
   };
 
   return {
@@ -169,6 +263,10 @@ export const useSignUpState = (): SignUpState => {
     state: state,
     isLoading,
     refresh,
-    triggerSignature
+    triggerSignature,
+    referralCode,
+    setReferralCode,
+    submitReferralCode,
+    referralCodeMessage
   };
 };

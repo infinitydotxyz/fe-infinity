@@ -16,7 +16,17 @@ interface Props {
 
 const allowedRoutes = ['/beta', '/callback', '/not-found-404', '/privacy-policy', '/terms'];
 const create = () => {
-  const { isLoading, refresh, isReady, triggerSignature, state } = useSignUpState();
+  const {
+    isLoading,
+    refresh,
+    isReady,
+    triggerSignature,
+    state,
+    referralCode,
+    setReferralCode,
+    submitReferralCode,
+    referralCodeMessage
+  } = useSignUpState();
   const { selectedChain } = useAppContext();
   const router = useRouter();
 
@@ -45,8 +55,8 @@ const create = () => {
       return;
     }
     if (selectedChain === ChainId.Mainnet) {
-      // require the user is authorized
-      if (state.state !== 'signed-in') {
+      // require the user to be authorized
+      if (state.status !== 'signed-in') {
         router.push('/beta');
       } else if (state.auth.status !== BetaAuthorizationStatus.Authorized) {
         router.push('/beta');
@@ -55,6 +65,10 @@ const create = () => {
   }, [state, selectedChain, isLoading, nonce]);
 
   return {
+    referralCode,
+    setReferralCode,
+    submitReferralCode,
+    referralCodeMessage,
     isReady,
     isLoading,
     refresh,

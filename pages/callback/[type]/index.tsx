@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { BouncingLogo } from 'src/components/common';
 import { useBetaSignature } from 'src/hooks/useBetaSignature';
 import { apiPost } from 'src/utils';
+import * as BetaContext from 'src/utils/context/BetaContext';
 
 interface TwitterCallback {
   kind: 'twitter';
@@ -37,9 +38,7 @@ const useCallbackState = () => {
         setState({ kind: 'error', message: 'Failed to connect' });
         return;
       }
-      // if(router.query.code && router.query.state)
-      // const discordAccessToken = router.query['access_token'];
-      // const discordTokenType = router.query['token_type'];
+
       const code = router.query.code;
       const twitterState = router.query.state;
       if (type === 'discord' && code && typeof code === 'string') {
@@ -75,6 +74,7 @@ const useCallbackState = () => {
 
 export default function Callback() {
   const router = useRouter();
+  const { refresh } = BetaContext.use();
 
   const { state, isReady } = useCallbackState();
   const { state: sigState, signatureData, address } = useBetaSignature();
@@ -116,6 +116,7 @@ export default function Callback() {
 
         if (status === 201) {
           if (result.success) {
+            refresh();
             setSuccessful(true);
           }
         } else {
@@ -153,6 +154,7 @@ export default function Callback() {
 
         if (status === 201) {
           if (result.success) {
+            refresh();
             setSuccessful(true);
           }
         } else {

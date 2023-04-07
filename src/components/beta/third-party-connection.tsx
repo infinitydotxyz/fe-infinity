@@ -26,11 +26,10 @@ export const ThirdPartyConnection = (props: Props) => {
     <div className="flex-1 flex flex-col justify-center items-center mx-4 my-2">
       <div className=" h-max border-1 m-auto px-4 py-2 flex flex-col justify-center items-center">
         <div className="flex flex-row text-xl font-heading justify-center items-center">
-          <h4 className={'m-4'}>{props.connectionName}</h4>
+          <h4 className={'m-4'}>{props.step.title}</h4>
           <div>{props.logo}</div>
         </div>
         <div className={props.step.isComplete ? 'hidden' : 'flex flex-col'}>
-          <h4>{props.step.title}</h4>
           {'onClick' in props.step ? (
             <AButton onClick={props.step.onClick}>{props.step.message}</AButton>
           ) : (

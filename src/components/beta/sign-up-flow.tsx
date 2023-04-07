@@ -1,15 +1,24 @@
-import { BetaAuthorizationStatus } from 'src/hooks/useSignUpState';
-import { BouncingLogo, ConnectButton } from '../common';
+import { BetaAuthorizationComplete, BetaAuthorizationStatus, ReferralStep } from 'src/hooks/useSignUpState';
+import { BouncingLogo, ClipboardButton, ConnectButton, TextInputBox } from '../common';
 import { AButton } from '../astra/astra-button';
 import { TwitterConnect } from './twitter-connect';
 import { DiscordConnect } from './discord-connect';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { use } from 'src/utils/context/BetaContext';
+import * as BetaContext from 'src/utils/context/BetaContext';
 
 export const SignUpFlow = () => {
   const router = useRouter();
-  const { isLoading, state: result, triggerSignature, refresh } = use();
+  const {
+    isLoading,
+    state: result,
+    triggerSignature,
+    refresh,
+    referralCode,
+    setReferralCode,
+    referralCodeMessage,
+    submitReferralCode
+  } = BetaContext.use();
 
   const [, setIsWindowActive] = useState(true);
 
@@ -22,10 +31,18 @@ export const SignUpFlow = () => {
     const handleFocus = () => {
       setIsWindowActive((prev) => {
         if (prev === false) {
-          if (result.state === 'signed-in' && result.auth.status === BetaAuthorizationStatus.Authorized) {
+          if (result.status === 'signed-in' && result.auth.status === BetaAuthorizationStatus.Authorized) {
             return true;
           }
           if (isLoading) {
+            return true;
+          }
+
+          if (
+            result?.status === 'signed-in' &&
+            result.auth.status === BetaAuthorizationStatus.UnAuthorized &&
+            result.auth.referral.step === ReferralStep.Incomplete
+          ) {
             return true;
           }
           refresh();
@@ -42,17 +59,13 @@ export const SignUpFlow = () => {
       window.removeEventListener('focus', handleFocus);
       window.removeEventListener('blur', handleBlur);
     };
-  }, [refresh]);
+  }, [refresh, result, setIsWindowActive]);
 
-  useEffect(() => {
-    if (result.state === 'signed-in' && result.auth.status === BetaAuthorizationStatus.Authorized) {
-      setTimeout(() => {
-        router.push('/trending');
-      }, 2000);
-    }
-  }, [result]);
+  const redirectToTrending = () => {
+    router.push('/trending');
+  };
 
-  switch (result?.state) {
+  switch (result?.status) {
     case 'not-connected': {
       return (
         <div className="mt-4">
@@ -76,6 +89,35 @@ export const SignUpFlow = () => {
     case 'signed-in': {
       switch (result.auth.status) {
         case BetaAuthorizationStatus.UnAuthorized: {
+          if (result.auth.referral.step === ReferralStep.Incomplete) {
+            return (
+              <div className="mt-4 flex flex-col justify-center items-center">
+                <div className={isLoading ? 'flex' : 'hidden'}>
+                  <BouncingLogo />
+                </div>
+                <div className={isLoading ? 'hidden' : 'flex flex-col items-start'}>
+                  <p className="mb-2">Enter your referral code</p>
+
+                  <div className="flex flex-row">
+                    <TextInputBox
+                      value={referralCode}
+                      onChange={(value) => {
+                        setReferralCode(value);
+                      }}
+                      type={'text'}
+                      placeholder={'Referral code'}
+                    />
+                    <AButton primary className="ml-2" onClick={submitReferralCode}>
+                      Submit
+                    </AButton>
+                  </div>
+                  <div className={referralCodeMessage ? 'flex flex-row text-sm text-yellow-300' : 'hidden'}>
+                    {referralCodeMessage}
+                  </div>
+                </div>
+              </div>
+            );
+          }
           return (
             <div className="mt-4 flex flex-col justify-center items-center">
               <div className={isLoading ? 'flex' : 'hidden'}>
@@ -85,7 +127,7 @@ export const SignUpFlow = () => {
                 Connect your Twitter and Discord accounts to continue.
               </div>
 
-              <div className="border-1 flex flex-row">
+              <div className="flex flex-row">
                 <div className="flex">
                   <TwitterConnect state={result.auth.twitter} />
                 </div>
@@ -97,7 +139,20 @@ export const SignUpFlow = () => {
           );
         }
         case BetaAuthorizationStatus.Authorized: {
-          return <div>Authorized!</div>;
+          const referralCode = (result.auth as BetaAuthorizationComplete).referralCode;
+          return (
+            <div className="flex flex-col items-start">
+              <div className="flex flex-row justify-center items-center">
+                <div className="mb-2">Your referral code: {referralCode}</div>
+                <ClipboardButton textToCopy={referralCode} className={'h-4 w-4 ml-2.5 mb-1.5'} />
+              </div>
+              <div className="flex w-full justify-center">
+                <AButton onClick={redirectToTrending} primary>
+                  Get started
+                </AButton>
+              </div>
+            </div>
+          );
         }
       }
     }
