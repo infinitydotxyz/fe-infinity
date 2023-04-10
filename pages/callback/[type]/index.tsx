@@ -84,7 +84,10 @@ export default function Callback() {
 
   const [successful, setSuccessful] = useState(false);
 
+  const [errorMessage, setErrorMessage] = useState('');
+
   useEffect(() => {
+    setErrorMessage('');
     if (!isReady) {
       return;
     }
@@ -93,6 +96,7 @@ export default function Callback() {
       return;
     } else if (state.kind === 'error') {
       setSuccessful(false);
+      setErrorMessage('Invalid url, please close this tab and try again');
     }
 
     const signal = { aborted: false };
@@ -118,6 +122,8 @@ export default function Callback() {
           if (result.success) {
             refresh();
             setSuccessful(true);
+          } else {
+            setErrorMessage(result.message ?? 'Failed to connect. Please try again');
           }
         } else {
           console.error(`Unexpected status code: ${status} ${result}`);
@@ -156,6 +162,8 @@ export default function Callback() {
           if (result.success) {
             refresh();
             setSuccessful(true);
+          } else {
+            setErrorMessage(result.message ?? 'Failed to connect. Please try again');
           }
         } else {
           console.error(`Unexpected status code: ${status} ${result}`);
@@ -214,10 +222,8 @@ export default function Callback() {
           </div>
 
           <div className={redirectSuccessful && !isLoading ? 'flex' : 'hidden'}>
-            {successful ? 'Connected! Redirecting...' : 'Failed to connect. Please try again.'}
+            {successful ? 'Connected! Redirecting...' : `${errorMessage || 'Failed to connect. Please try again'}`}
           </div>
-
-          <div className={!redirectSuccessful ? 'flex' : 'hidden'}>Failed to connect. Please try again.</div>
         </div>
       </div>
     </div>

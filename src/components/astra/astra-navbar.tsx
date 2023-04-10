@@ -65,7 +65,7 @@ export const ANavbar = () => {
               }
             },
             {
-              label: 'Ethereum',
+              label: 'Ethereum (beta)',
               onClick: () => {
                 setSelectedChain(ChainId.Mainnet);
               }
