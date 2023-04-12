@@ -354,52 +354,53 @@ export default function ItemsPage(props: CollectionDashboardProps) {
                 })}
               </div>
             )}
-            <div className={selectedTab === 'Bids' ? 'block' : 'hidden'}>
+            {selectedTab === 'Bids' && (
               <CollectionOrderList
                 collectionAddress={collection.address}
                 collectionChainId={collection.chainId as ChainId}
               />
-            </div>
-            <div className={selectedTab === 'Analytics' ? 'block' : 'hidden'}>
+            )}
+            {selectedTab === 'Analytics' && (
               <CollectionCharts
                 collectionAddress={collection.address}
                 collectionChainId={chainId}
                 collectionImage={collection.metadata.profileImage}
               />
-            </div>
-
-            <div className={selectedTab === 'Items' ? 'block' : 'hidden'}>
-              <div className={(twMerge('flex'), showCart ? 'w-full' : 'w-2/3')}>
-                <TokenGrid
-                  collectionCreator={collectionCreator}
-                  collectionFloorPrice={floorPrice}
-                  listMode={listMode}
-                  className={twMerge(
-                    'px-4 py-4 min-h-[600px]',
-                    cartType === CartType.CollectionOffer
-                      ? 'opacity-30 duration-300 pointer-events-none'
-                      : 'duration-300'
-                  )} // this min-height is to prevent the grid from collapsing when there are no items so filter menus can still render
-                  onClick={onClickNFT}
-                  isSelectable={isNFTSelectable}
-                  isSelected={isNFTSelected}
-                  data={data}
-                  hasNextPage={hasNextPage}
-                  onFetchMore={() => fetch(true)}
-                  isError={!!error}
-                  isLoading={!!isLoading}
-                />
-              </div>
-
-              {!showCart && (
-                <div className="flex w-1/3">
-                  <CollectionItemsPageSidebar
-                    collectionAddress={collection.address}
-                    collectionImage={collection.metadata.profileImage}
+            )}
+            {selectedTab === 'Items' && (
+              <div>
+                <div className={(twMerge('flex'), showCart ? 'w-full' : 'w-2/3')}>
+                  <TokenGrid
+                    collectionCreator={collectionCreator}
+                    collectionFloorPrice={floorPrice}
+                    listMode={listMode}
+                    className={twMerge(
+                      'px-4 py-4 min-h-[600px]',
+                      cartType === CartType.CollectionOffer
+                        ? 'opacity-30 duration-300 pointer-events-none'
+                        : 'duration-300'
+                    )} // this min-height is to prevent the grid from collapsing when there are no items so filter menus can still render
+                    onClick={onClickNFT}
+                    isSelectable={isNFTSelectable}
+                    isSelected={isNFTSelected}
+                    data={data}
+                    hasNextPage={hasNextPage}
+                    onFetchMore={() => fetch(true)}
+                    isError={!!error}
+                    isLoading={!!isLoading}
                   />
                 </div>
-              )}
-            </div>
+
+                {!showCart && (
+                  <div className="flex w-1/3">
+                    <CollectionItemsPageSidebar
+                      collectionAddress={collection.address}
+                      collectionImage={collection.metadata.profileImage}
+                    />
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>

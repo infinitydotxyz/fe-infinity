@@ -48,15 +48,15 @@ export default function ProfileItemsPage() {
         <div className="flex flex-col h-full w-full">
           <ProfilePageHeader expanded={expanded} tabs={tabs} />
           <div ref={setRef} className="overflow-y-auto scrollbar-hide">
-            <div className={selectedProfileTab === ProfileTabs.Items ? 'block' : 'hidden'}>
+            {selectedProfileTab === ProfileTabs.Items && (
               <ProfileNFTs userAddress={addressFromPath} key={addressFromPath} />
-            </div>
-            <div className={selectedProfileTab === ProfileTabs.Orders ? 'block' : 'hidden'}>
+            )}
+            {selectedProfileTab === ProfileTabs.Orders && (
               <ProfileOrderList userAddress={addressFromPath} key={addressFromPath} />
-            </div>
-            <div className={selectedProfileTab === ProfileTabs.Send ? 'block' : 'hidden'}>
+            )}
+            {selectedProfileTab === ProfileTabs.Send && (
               <ProfileNFTs userAddress={addressFromPath} key={addressFromPath} />
-            </div>
+            )}
           </div>
         </div>
       );
