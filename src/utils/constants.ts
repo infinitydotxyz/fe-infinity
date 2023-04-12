@@ -53,7 +53,7 @@ export const INFT_TOKEN = getToken(ChainId.Mainnet) ?? {
 export const FLOW_TOKEN = getToken(ChainId.Mainnet) ?? {
   address: '',
   name: 'Flow',
-  symbol: 'FLOW',
+  symbol: 'XFL',
   decimals: 18,
   chainId: ChainId.Mainnet
 };
