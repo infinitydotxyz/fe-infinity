@@ -368,7 +368,7 @@ export default function ItemsPage(props: CollectionDashboardProps) {
               />
             )}
             {selectedTab === 'Items' && (
-              <div>
+              <div className="flex flex-row">
                 <div className={(twMerge('flex'), showCart ? 'w-full' : 'w-2/3')}>
                   <TokenGrid
                     collectionCreator={collectionCreator}
