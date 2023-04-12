@@ -30,6 +30,7 @@ export interface CompletedTwitter {
 export enum Discord {
   Connect,
   Join,
+  Verify,
   Complete
 }
 
@@ -45,6 +46,10 @@ export interface JoinDiscord {
   data: {
     url: string;
   };
+}
+
+export interface VerifyDiscord {
+  step: Discord.Verify;
 }
 
 export interface CompletedDiscord {
@@ -74,7 +79,7 @@ export interface BetaAuthorizationIncomplete {
   status: BetaAuthorizationStatus;
   referral: InitialReferralStatus | CompletedReferralStatus;
   twitter: ConnectTwitter | FollowOnTwitter | CompletedTwitter;
-  discord: ConnectDiscord | JoinDiscord | CompletedDiscord;
+  discord: ConnectDiscord | JoinDiscord | VerifyDiscord | CompletedDiscord;
 }
 
 export interface BetaAuthorizationComplete {

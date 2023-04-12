@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { AButton } from 'src/components/astra/astra-button';
 import { BouncingLogo } from 'src/components/common';
 import { useBetaSignature } from 'src/hooks/useBetaSignature';
 import { apiPost } from 'src/utils';
@@ -204,7 +205,7 @@ export default function Callback() {
   useEffect(() => {
     if (successful) {
       setTimeout(() => {
-        router.push('/beta');
+        router.push('/');
       }, 1000);
     }
   }, [successful]);
@@ -221,9 +222,18 @@ export default function Callback() {
             <BouncingLogo />
           </div>
 
-          <div className={redirectSuccessful && !isLoading ? 'flex' : 'hidden'}>
+          <div className={redirectSuccessful && !isLoading ? 'flex flex-col' : 'hidden'}>
             {successful ? 'Connected! Redirecting...' : `${errorMessage || 'Failed to connect. Please try again'}`}
           </div>
+          <AButton
+            onClick={() => {
+              router.push('/');
+            }}
+            primary
+            className={isLoading || successful ? 'hidden' : 'flex mt-2'}
+          >
+            Return
+          </AButton>
         </div>
       </div>
     </div>

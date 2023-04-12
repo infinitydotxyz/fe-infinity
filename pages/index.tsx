@@ -1,7 +1,7 @@
-import TrendingPage from './trending';
+import BetaPage from './beta';
 
 const HomePage = () => {
-  return <TrendingPage />;
+  return <BetaPage />;
 };
 
 export default HomePage;

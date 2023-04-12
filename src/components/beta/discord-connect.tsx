@@ -1,50 +1,83 @@
-import { CompletedDiscord, ConnectDiscord, Discord, JoinDiscord } from 'src/hooks/useSignUpState';
-import { ThirdPartyConnection } from './third-party-connection';
+import { CompletedDiscord, ConnectDiscord, Discord, JoinDiscord, VerifyDiscord } from 'src/hooks/useSignUpState';
+import { ButtonStep, LinkStep, ThirdPartyConnection } from './third-party-connection';
 import { FaDiscord } from 'react-icons/fa';
+import { useEffect, useState } from 'react';
 
 interface Props {
-  state: ConnectDiscord | JoinDiscord | CompletedDiscord;
+  state: ConnectDiscord | JoinDiscord | VerifyDiscord | CompletedDiscord;
 }
 
-export const DiscordConnect = (props: Props) => {
-  const discordLogoHref = 'https://discord.gg/flowdotso';
-  const discordLogo = FaDiscord({});
-  switch (props.state.step) {
+const discordLogoHref = 'https://discord.gg/flowdotso';
+const discordLogo = FaDiscord({});
+
+const getStep = (state: Props['state']): { step: LinkStep | ButtonStep; disabled: boolean } => {
+  switch (state.step) {
     case Discord.Connect: {
-      const step = {
-        title: 'Connect Discord',
-        message: 'Connect',
-        href: props.state.data.url,
-        isComplete: false
+      return {
+        step: {
+          title: 'Connect Discord',
+          message: 'Connect',
+          href: state.data.url,
+          isComplete: false
+        },
+        disabled: false
       };
-
-      return (
-        <ThirdPartyConnection connectionName="Discord" logoHref={discordLogoHref} logo={discordLogo} step={step} />
-      );
     }
+
     case Discord.Join: {
-      const step = {
-        title: 'Join us on Discord',
-        message: 'Join',
-        href: props.state.data.url,
-        isComplete: false
+      return {
+        step: {
+          title: 'Join us on Discord',
+          message: 'Join',
+          href: state.data.url,
+          isComplete: false
+        },
+        disabled: false
       };
-
-      return (
-        <ThirdPartyConnection connectionName="Discord" logoHref={discordLogoHref} logo={discordLogo} step={step} />
-      );
     }
-    case Discord.Complete: {
-      const step = {
-        title: 'Join us on Discord',
-        message: 'Join',
-        href: '',
-        isComplete: true
-      };
 
-      return (
-        <ThirdPartyConnection connectionName="Discord" logoHref={discordLogoHref} logo={discordLogo} step={step} />
-      );
+    case Discord.Verify: {
+      return {
+        step: {
+          title: 'Complete Discord verification',
+          message: 'Incomplete',
+          onClick: () => {
+            // no-op
+          },
+          isComplete: false
+        },
+        disabled: true
+      };
+    }
+
+    case Discord.Complete: {
+      return {
+        step: {
+          title: 'Discord Verification Complete',
+          message: 'Complete',
+          href: '',
+          isComplete: true
+        },
+        disabled: false
+      };
     }
   }
+};
+
+export const DiscordConnect = (props: Props) => {
+  const [step, setStep] = useState(getStep(props.state));
+
+  useEffect(() => {
+    setStep(getStep(props.state));
+  }, [props.state]);
+
+  return (
+    <ThirdPartyConnection
+      connectionName="Discord"
+      logoHref={discordLogoHref}
+      logo={discordLogo}
+      step={step.step}
+      disabled={step.disabled}
+    />
+  );
 };

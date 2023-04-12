@@ -48,7 +48,7 @@ const create = () => {
   }, []);
 
   useEffect(() => {
-    if (allowedRoutes.some((item) => router.route.includes(item))) {
+    if (allowedRoutes.some((item) => router.route.includes(item) || router.route === '/')) {
       return;
     }
     if (isLoading || !isReady) {
@@ -57,9 +57,9 @@ const create = () => {
     if (selectedChain === ChainId.Mainnet) {
       // require the user to be authorized
       if (state.status !== 'signed-in') {
-        router.push('/beta');
+        router.push('/');
       } else if (state.auth.status !== BetaAuthorizationStatus.Authorized) {
-        router.push('/beta');
+        router.push('/');
       }
     }
   }, [state, selectedChain, isLoading, nonce]);

@@ -8,14 +8,23 @@ export interface LinkStep {
   isComplete: boolean;
 }
 
+export interface ButtonStep {
+  title: string;
+  message: string;
+  onClick: () => void;
+  isComplete: boolean;
+}
+
 export interface Props {
   connectionName: string;
   logo: React.ReactNode;
   logoHref: string;
-  step: LinkStep;
+  step: LinkStep | ButtonStep;
+  disabled?: boolean;
 }
 
 export const ThirdPartyConnection = (props: Props) => {
+  const disabled = props.disabled ?? props.step.isComplete;
   return (
     <div className="flex-1 flex flex-col justify-center items-center mx-4 my-2">
       <div className=" h-max border-1 m-auto px-4 py-2 flex flex-col justify-center items-center">
@@ -26,13 +35,21 @@ export const ThirdPartyConnection = (props: Props) => {
           </Link>
         </div>
         <div className={props.step.isComplete ? 'hidden' : 'flex flex-col'}>
-          <Link href={props.step.href} target="__blank">
-            <AButton primary>{props.step.message}</AButton>
-          </Link>
+          {'onClick' in props.step ? (
+            <AButton primary onClick={props.step.onClick} disabled={disabled}>
+              {props.step.message}
+            </AButton>
+          ) : (
+            <Link href={props.step.href} target="__blank">
+              <AButton primary disabled={disabled}>
+                {props.step.message}
+              </AButton>
+            </Link>
+          )}
         </div>
 
         <div className={props.step.isComplete ? 'flex' : 'hidden'}>
-          <AButton primary disabled>
+          <AButton primary disabled={disabled}>
             Complete
           </AButton>
         </div>
